@@ -1,0 +1,2381 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only ledger,arch,stormwood_ending,legendary,raise_a_road,crown,session,build_catalogue,pickup,harvest,reward_delivery: 40 of 503 test files
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_a_candy_dressed_off_tree_is_phased_but_not_spinning (res://tests/test_band_pickups.gd:691)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_a_candy_dressed_off_tree_is_phased_but_not_spinning (res://tests/test_band_pickups.gd:691)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_a_candy_dressed_off_tree_is_phased_but_not_spinning (res://tests/test_band_pickups.gd:691)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_a_candy_dressed_off_tree_is_phased_but_not_spinning (res://tests/test_band_pickups.gd:691)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_a_candy_dressed_off_tree_is_phased_but_not_spinning (res://tests/test_band_pickups.gd:697)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_a_candy_dressed_off_tree_is_phased_but_not_spinning (res://tests/test_band_pickups.gd:697)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_a_candy_dressed_off_tree_is_phased_but_not_spinning (res://tests/test_band_pickups.gd:697)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_a_candy_dressed_off_tree_is_phased_but_not_spinning
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_a_collected_id_survives_a_save_round_trip (res://tests/test_band_pickups.gd:299)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_a_collected_id_survives_a_save_round_trip (res://tests/test_band_pickups.gd:299)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_a_collected_id_survives_a_save_round_trip (res://tests/test_band_pickups.gd:299)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_a_collected_id_survives_a_save_round_trip (res://tests/test_band_pickups.gd:299)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_a_collected_id_survives_a_save_round_trip (res://tests/test_band_pickups.gd:307)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_a_collected_id_survives_a_save_round_trip (res://tests/test_band_pickups.gd:307)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_a_collected_id_survives_a_save_round_trip (res://tests/test_band_pickups.gd:307)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_a_collected_id_survives_a_save_round_trip (res://tests/test_band_pickups.gd:307)
+       [2] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] detach (res://scripts/world/pickup_glow.gd:148)
+       [2] _deactivate (res://scripts/world/item_cache_pickup.gd:121)
+       [3] restore_progression_from_game (res://scripts/world/item_cache_pickup.gd:114)
+       [4] test_a_collected_id_survives_a_save_round_trip (res://tests/test_band_pickups.gd:308)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_a_collected_id_survives_a_save_round_trip
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_a_higher_tier_glows_harder (res://tests/test_band_pickups.gd:443)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_a_higher_tier_glows_harder
+  ok    test_band_pickups.gd :: test_a_higher_tier_glows_wider
+  ok    test_band_pickups.gd :: test_a_site_enclosed_past_the_new_ceiling_still_reports_unclear
+  ok    test_band_pickups.gd :: test_a_site_enclosed_past_the_old_ceiling_is_now_solved
+  ok    test_band_pickups.gd :: test_a_site_that_is_already_clear_is_never_moved
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:537)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:537)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:537)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:537)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:543)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:543)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:543)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:543)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:549)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:549)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:549)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:549)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:555)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:555)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_a_tier_is_an_additive_part_count (res://tests/test_band_pickups.gd:555)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_a_tier_is_an_additive_part_count
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:571)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:571)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:571)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:571)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:576)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:576)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:576)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:576)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:585)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:585)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:585)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_each_tier_wears_a_different_crest_shape (res://tests/test_band_pickups.gd:585)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_each_tier_wears_a_different_crest_shape
+  ok    test_band_pickups.gd :: test_every_authored_entry_is_well_formed
+  ok    test_band_pickups.gd :: test_every_item_exists_and_has_a_world_model_that_exists
+  ok    test_band_pickups.gd :: test_every_pickup_is_inside_its_own_band
+  ok    test_band_pickups.gd :: test_every_pickup_is_inside_the_authored_world
+  ok    test_band_pickups.gd :: test_every_tier_and_every_candy_grade_is_present_in_the_authored_bands
+  ok    test_band_pickups.gd :: test_flag_id_is_keyed_on_the_placement_not_the_item
+  ok    test_band_pickups.gd :: test_ids_are_unique_across_the_chapter
+  ok    test_band_pickups.gd :: test_label_follows_the_item_family
+  ok    test_band_pickups.gd :: test_load_all_drops_nothing_well_formed
+  ok    test_band_pickups.gd :: test_no_pickup_contests_a_harvest_node
+  ok    test_band_pickups.gd :: test_no_two_pickups_contest_the_same_prompt
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_rare_candy_grows_wings_and_a_medallion_and_good_candy_does_not_grow_wings (res://tests/test_band_pickups.gd:386)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_rare_candy_grows_wings_and_a_medallion_and_good_candy_does_not_grow_wings (res://tests/test_band_pickups.gd:386)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_rare_candy_grows_wings_and_a_medallion_and_good_candy_does_not_grow_wings (res://tests/test_band_pickups.gd:386)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_rare_candy_grows_wings_and_a_medallion_and_good_candy_does_not_grow_wings (res://tests/test_band_pickups.gd:386)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_rare_candy_grows_wings_and_a_medallion_and_good_candy_does_not_grow_wings (res://tests/test_band_pickups.gd:391)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_rare_candy_grows_wings_and_a_medallion_and_good_candy_does_not_grow_wings (res://tests/test_band_pickups.gd:391)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_rare_candy_grows_wings_and_a_medallion_and_good_candy_does_not_grow_wings (res://tests/test_band_pickups.gd:391)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_rare_candy_grows_wings_and_a_medallion_and_good_candy_does_not_grow_wings (res://tests/test_band_pickups.gd:391)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_rare_candy_grows_wings_and_a_medallion_and_good_candy_does_not_grow_wings
+  ok    test_band_pickups.gd :: test_realm_pickups_preserve_shipped_meadows_keys_and_isolate_other_realms
+  ok    test_band_pickups.gd :: test_the_authored_bands_are_actually_read
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_candy_tiers_step_up_in_size_not_only_in_hue (res://tests/test_band_pickups.gd:424)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_the_candy_tiers_step_up_in_size_not_only_in_hue
+  ok    test_band_pickups.gd :: test_the_critical_path_is_sparse_and_never_better_than_good
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white (res://tests/test_band_pickups.gd:639)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_the_ground_ring_lies_at_the_foot_clears_the_wrapper_ends_and_is_never_white
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_the_nodes_key_is_the_placement_id_not_the_item (res://tests/test_band_pickups.gd:342)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_the_nodes_key_is_the_placement_id_not_the_item (res://tests/test_band_pickups.gd:342)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_the_nodes_key_is_the_placement_id_not_the_item (res://tests/test_band_pickups.gd:342)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_the_nodes_key_is_the_placement_id_not_the_item (res://tests/test_band_pickups.gd:342)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_the_nodes_key_is_the_placement_id_not_the_item (res://tests/test_band_pickups.gd:346)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_the_nodes_key_is_the_placement_id_not_the_item (res://tests/test_band_pickups.gd:346)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_the_nodes_key_is_the_placement_id_not_the_item (res://tests/test_band_pickups.gd:346)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_the_nodes_key_is_the_placement_id_not_the_item (res://tests/test_band_pickups.gd:346)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_the_nodes_key_is_the_placement_id_not_the_item
+  ok    test_band_pickups.gd :: test_the_nudge_rings_are_ordered_and_bounded
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_rare_wings_are_rooted_and_sweep_upward (res://tests/test_band_pickups.gd:614)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_rare_wings_are_rooted_and_sweep_upward (res://tests/test_band_pickups.gd:614)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_rare_wings_are_rooted_and_sweep_upward (res://tests/test_band_pickups.gd:614)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_rare_wings_are_rooted_and_sweep_upward (res://tests/test_band_pickups.gd:614)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_the_rare_wings_are_rooted_and_sweep_upward
+  ok    test_band_pickups.gd :: test_the_search_takes_the_smallest_ring_that_clears
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_three_candy_tiers_are_tinted_differently (res://tests/test_band_pickups.gd:401)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_the_three_candy_tiers_are_tinted_differently
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] dress (res://scripts/world/band_pickups.gd:544)
+       [3] _built (res://tests/test_band_pickups.gd:374)
+       [4] test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream (res://tests/test_band_pickups.gd:669)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_the_tier_hues_are_far_apart_and_rare_is_amber_not_cream
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_wild_shroom_is_broader_than_the_stamina_shroom (res://tests/test_band_pickups.gd:466)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_wild_shroom_is_broader_than_the_stamina_shroom (res://tests/test_band_pickups.gd:466)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_wild_shroom_is_broader_than_the_stamina_shroom (res://tests/test_band_pickups.gd:466)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] _built (res://tests/test_band_pickups.gd:372)
+       [4] test_the_wild_shroom_is_broader_than_the_stamina_shroom (res://tests/test_band_pickups.gd:467)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] _built (res://tests/test_band_pickups.gd:372)
+       [5] test_the_wild_shroom_is_broader_than_the_stamina_shroom (res://tests/test_band_pickups.gd:467)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] _built (res://tests/test_band_pickups.gd:372)
+       [2] test_the_wild_shroom_is_broader_than_the_stamina_shroom (res://tests/test_band_pickups.gd:467)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_the_wild_shroom_is_broader_than_the_stamina_shroom
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_two_placements_of_the_same_item_have_independent_flags (res://tests/test_band_pickups.gd:321)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_two_placements_of_the_same_item_have_independent_flags (res://tests/test_band_pickups.gd:321)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_two_placements_of_the_same_item_have_independent_flags (res://tests/test_band_pickups.gd:321)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_two_placements_of_the_same_item_have_independent_flags (res://tests/test_band_pickups.gd:321)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_two_placements_of_the_same_item_have_independent_flags (res://tests/test_band_pickups.gd:325)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_two_placements_of_the_same_item_have_independent_flags (res://tests/test_band_pickups.gd:325)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_two_placements_of_the_same_item_have_independent_flags (res://tests/test_band_pickups.gd:325)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_two_placements_of_the_same_item_have_independent_flags (res://tests/test_band_pickups.gd:325)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_band_pickups.gd :: test_two_placements_of_the_same_item_have_independent_flags
+  ok    test_band_pickups.gd :: test_validate_refuses_each_missing_field
+  ok    test_build_catalogue.gd :: test_every_category_is_a_menu_tab
+  ok    test_build_catalogue.gd :: test_every_cost_amount_is_positive
+  ok    test_build_catalogue.gd :: test_every_cost_references_a_real_item
+  ok    test_build_catalogue.gd :: test_every_entry_has_a_thumbnail
+  ok    test_build_catalogue.gd :: test_every_entry_has_the_required_fields
+  ok    test_build_catalogue.gd :: test_every_id_is_unique
+  ok    test_build_catalogue.gd :: test_every_non_camp_entry_has_a_mesh_that_exists
+  ok    test_build_catalogue.gd :: test_tent_does_not_swallow_a_campfire_one_grid_cell_away
+  ok    test_build_catalogue.gd :: test_tent_floor_fits_the_bedroll_with_the_trainer_still_inside
+  ok    test_build_catalogue.gd :: test_tent_peak_clears_the_trainer_with_real_headroom
+  ok    test_build_catalogue.gd :: test_the_table_exists_and_is_not_empty
+  ok    test_cloudreach_broken_skyroad_arch.gd :: test_broken_arch_catalogue_no_longer_stands_between_the_old_slabs
+  ok    test_cloudreach_broken_skyroad_arch.gd :: test_broken_arch_uses_installed_gateway_asymmetry_and_no_collision
+  ok    test_cloudreach_broken_skyroad_arch.gd :: test_cloudreach_world_mounts_dedicated_broken_arch_presentation
+  ok    test_cloudreach_pickup_density.gd :: test_density_rows_are_stable_single_world_placements
+  ok    test_cloudreach_pickup_density.gd :: test_density_stays_clear_of_authored_interactions_camps_and_battle_entries
+  ok    test_cloudreach_pickup_density.gd :: test_owner_world_placement_totals_are_exact
+  ok    test_death_satchel_ledger.gd :: test_owned_transactions_and_reconnect_receipts
+  ok    test_death_satchel_ledger.gd :: test_wrong_or_missing_world_instance_refuses_before_any_host_mutation
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment (res://tests/test_harvest.gd:686)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment (res://tests/test_harvest.gd:686)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment (res://tests/test_harvest.gd:686)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment (res://tests/test_harvest.gd:686)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest.gd :: test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _box_visual (res://scripts/world/harvest_node.gd:424)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:240)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_a_missing_model_still_falls_back_to_the_box (res://tests/test_harvest.gd:694)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_a_missing_model_still_falls_back_to_the_box (res://tests/test_harvest.gd:694)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_a_missing_model_still_falls_back_to_the_box (res://tests/test_harvest.gd:694)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_a_missing_model_still_falls_back_to_the_box (res://tests/test_harvest.gd:694)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] test_a_missing_model_still_falls_back_to_the_box (res://tests/test_harvest.gd:694)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest.gd :: test_a_missing_model_still_falls_back_to_the_box
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_authored_node_exposes_read_only_resource_identity_for_route_selection (res://tests/test_harvest.gd:702)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_authored_node_exposes_read_only_resource_identity_for_route_selection (res://tests/test_harvest.gd:702)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_authored_node_exposes_read_only_resource_identity_for_route_selection (res://tests/test_harvest.gd:702)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] test_authored_node_exposes_read_only_resource_identity_for_route_selection (res://tests/test_harvest.gd:702)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest.gd :: test_authored_node_exposes_read_only_resource_identity_for_route_selection
+  ok    test_harvest.gd :: test_band1_naturally_supplies_the_gate_a_paid_build_session
+  ok    test_harvest.gd :: test_equipping_each_member_of_the_opening_set_gathers_everything_the_meadow_offers
+  ok    test_harvest.gd :: test_every_authored_harvest_spot_is_real_and_reachable
+  ok    test_harvest.gd :: test_every_harvest_item_named_in_vegetation_json_is_a_real_tool_gated_resource
+  ok    test_harvest.gd :: test_every_rootstone_deposit_is_past_the_south_bridge
+  ok    test_harvest.gd :: test_flag_id_is_the_harvest_node_prefix_plus_the_node_id
+  ok    test_harvest.gd :: test_gate_a_fiber_supply_nodes_are_safe_short_route_detours
+  ok    test_harvest.gd :: test_gather_of_an_untool_gated_resource_always_pays_the_full_amount
+  ok    test_harvest.gd :: test_gather_with_a_broken_equipped_tool_is_refused
+  ok    test_harvest.gd :: test_gather_with_no_equipped_tool_is_refused
+  ok    test_harvest.gd :: test_gather_with_the_right_tool_pays_the_full_amount
+  ok    test_harvest.gd :: test_gather_with_the_wrong_tool_pays_nothing
+WARNING: scatter anchor at (80.0, -64.0) placed 0 of 2 in 24 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest.gd:469)
+         [3] test_marking_is_deterministic_for_the_same_seed (res://tests/test_harvest.gd:535)
+         [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (2.0, 47.0) placed 3 of 4 in 48 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest.gd:469)
+         [3] test_marking_is_deterministic_for_the_same_seed (res://tests/test_harvest.gd:535)
+         [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-10.0, 1318.0) placed 5 of 8 in 96 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest.gd:469)
+         [3] test_marking_is_deterministic_for_the_same_seed (res://tests/test_harvest.gd:535)
+         [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest.gd:469)
+         [3] test_marking_is_deterministic_for_the_same_seed (res://tests/test_harvest.gd:535)
+         [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (80.0, -64.0) placed 0 of 2 in 24 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest.gd:469)
+         [3] test_marking_is_deterministic_for_the_same_seed (res://tests/test_harvest.gd:541)
+         [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (2.0, 47.0) placed 3 of 4 in 48 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest.gd:469)
+         [3] test_marking_is_deterministic_for_the_same_seed (res://tests/test_harvest.gd:541)
+         [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-10.0, 1318.0) placed 5 of 8 in 96 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest.gd:469)
+         [3] test_marking_is_deterministic_for_the_same_seed (res://tests/test_harvest.gd:541)
+         [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest.gd:469)
+         [3] test_marking_is_deterministic_for_the_same_seed (res://tests/test_harvest.gd:541)
+         [4] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest.gd :: test_marking_is_deterministic_for_the_same_seed
+  ok    test_harvest.gd :: test_marking_leaves_layers_with_no_harvest_item_untouched
+  ok    test_harvest.gd :: test_marking_produces_a_sane_slice_of_the_configured_layers
+  ok    test_harvest.gd :: test_no_two_authored_harvest_spots_contest_the_same_prompt
+  ok    test_harvest.gd :: test_nothing_the_opening_handoffs_give_leaves_a_tool_gated_resource_stranded
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_restore_deactivates_a_node_whose_flag_is_already_set (res://tests/test_harvest.gd:629)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_restore_deactivates_a_node_whose_flag_is_already_set (res://tests/test_harvest.gd:629)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_restore_deactivates_a_node_whose_flag_is_already_set (res://tests/test_harvest.gd:629)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] test_restore_deactivates_a_node_whose_flag_is_already_set (res://tests/test_harvest.gd:629)
+       [2] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] detach (res://scripts/world/pickup_glow.gd:148)
+       [2] _deactivate (res://scripts/world/harvest_node.gd:160)
+       [3] restore_progression_from_game (res://scripts/world/harvest_node.gd:147)
+       [4] test_restore_deactivates_a_node_whose_flag_is_already_set (res://tests/test_harvest.gd:633)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest.gd :: test_restore_deactivates_a_node_whose_flag_is_already_set
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_restore_leaves_an_ungathered_node_alone (res://tests/test_harvest.gd:642)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_restore_leaves_an_ungathered_node_alone (res://tests/test_harvest.gd:642)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_restore_leaves_an_ungathered_node_alone (res://tests/test_harvest.gd:642)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] test_restore_leaves_an_ungathered_node_alone (res://tests/test_harvest.gd:642)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest.gd :: test_restore_leaves_an_ungathered_node_alone
+  ok    test_harvest.gd :: test_rootstone_is_a_real_pickaxe_gated_resource
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _box_visual (res://scripts/world/harvest_node.gd:424)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:240)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_setup_derives_its_id_from_order_when_present (res://tests/test_harvest.gd:609)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_setup_derives_its_id_from_order_when_present (res://tests/test_harvest.gd:609)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_setup_derives_its_id_from_order_when_present (res://tests/test_harvest.gd:609)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_setup_derives_its_id_from_order_when_present (res://tests/test_harvest.gd:609)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] test_setup_derives_its_id_from_order_when_present (res://tests/test_harvest.gd:609)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest.gd :: test_setup_derives_its_id_from_order_when_present
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _box_visual (res://scripts/world/harvest_node.gd:424)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:240)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_setup_falls_back_to_item_and_position_when_order_is_absent (res://tests/test_harvest.gd:616)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_setup_falls_back_to_item_and_position_when_order_is_absent (res://tests/test_harvest.gd:616)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_setup_falls_back_to_item_and_position_when_order_is_absent (res://tests/test_harvest.gd:616)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_setup_falls_back_to_item_and_position_when_order_is_absent (res://tests/test_harvest.gd:616)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] test_setup_falls_back_to_item_and_position_when_order_is_absent (res://tests/test_harvest.gd:616)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest.gd :: test_setup_falls_back_to_item_and_position_when_order_is_absent
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_setup_on_a_fresh_flag_store_leaves_the_node_active (res://tests/test_harvest.gd:657)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] test_setup_on_a_fresh_flag_store_leaves_the_node_active (res://tests/test_harvest.gd:657)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] test_setup_on_a_fresh_flag_store_leaves_the_node_active (res://tests/test_harvest.gd:657)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] test_setup_on_a_fresh_flag_store_leaves_the_node_active (res://tests/test_harvest.gd:657)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest.gd :: test_setup_on_a_fresh_flag_store_leaves_the_node_active
+  ok    test_harvest.gd :: test_the_opening_tool_handoffs_cover_every_tool_gated_meadow_resource
+  ok    test_harvest.gd :: test_was_taken_is_false_with_no_game_at_all
+  ok    test_harvest.gd :: test_was_taken_is_per_node_not_global
+  ok    test_harvest.gd :: test_was_taken_reads_the_real_flag_store
+  ok    test_harvest_permanence.gd :: test_bit_get_out_of_range_is_false_not_a_crash
+  ok    test_harvest_permanence.gd :: test_bit_set_and_get_round_trip_every_bit_independently
+  ok    test_harvest_permanence.gd :: test_bitset_bytes_rounds_up_to_the_nearest_byte
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_clear_felled_forgets_the_tracking_entry (res://tests/test_harvest_permanence.gd:372)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_clear_felled_forgets_the_tracking_entry (res://tests/test_harvest_permanence.gd:372)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [4] fell (res://scripts/world/vegetation.gd:2152)
+       [5] test_clear_felled_forgets_the_tracking_entry (res://tests/test_harvest_permanence.gd:372)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_clear_felled_forgets_the_tracking_entry
+  ok    test_harvest_permanence.gd :: test_fell_on_an_unknown_key_still_chops_but_stands_nothing
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default (res://tests/test_harvest_permanence.gd:335)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default (res://tests/test_harvest_permanence.gd:335)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [4] fell (res://scripts/world/vegetation.gd:2152)
+       [5] test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default (res://tests/test_harvest_permanence.gd:335)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_fell_removes_the_standing_placement_and_stands_a_felled_pickup (res://tests/test_harvest_permanence.gd:317)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_fell_removes_the_standing_placement_and_stands_a_felled_pickup (res://tests/test_harvest_permanence.gd:317)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [4] fell (res://scripts/world/vegetation.gd:2152)
+       [5] test_fell_removes_the_standing_placement_and_stands_a_felled_pickup (res://tests/test_harvest_permanence.gd:317)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_fell_removes_the_standing_placement_and_stands_a_felled_pickup
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_fell_tracks_the_placement_in_felled_for_persistence (res://tests/test_harvest_permanence.gd:346)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_fell_tracks_the_placement_in_felled_for_persistence (res://tests/test_harvest_permanence.gd:346)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [4] fell (res://scripts/world/vegetation.gd:2152)
+       [5] test_fell_tracks_the_placement_in_felled_for_persistence (res://tests/test_harvest_permanence.gd:346)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_fell_tracks_the_placement_in_felled_for_persistence
+  ok    test_harvest_permanence.gd :: test_harvest_permanently_on_an_unknown_index_does_nothing
+  ok    test_harvest_permanence.gd :: test_harvest_permanently_sets_the_bit_and_forgets_the_lookup_entry
+  ok    test_harvest_permanence.gd :: test_harvest_permanently_twice_on_the_same_index_is_a_no_op_the_second_time
+  ok    test_harvest_permanence.gd :: test_harvested_count_reports_only_what_is_actually_chopped
+WARNING: scatter anchor at (80.0, -64.0) placed 0 of 2 in 24 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest_permanence.gd:90)
+         [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)
+         [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (2.0, 47.0) placed 3 of 4 in 48 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest_permanence.gd:90)
+         [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)
+         [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-10.0, 1318.0) placed 5 of 8 in 96 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest_permanence.gd:90)
+         [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)
+         [4] _init (res://tests/run_tests.gd:120)
+WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)
+         [1] placements_for (res://scripts/world/scatter_rules.gd:287)
+         [2] _layer_placements (res://tests/test_harvest_permanence.gd:90)
+         [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)
+         [4] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density
+  ok    test_harvest_permanence.gd :: test_marking_stamps_a_stable_layer_and_index_on_every_harvestable_placement
+  ok    test_harvest_permanence.gd :: test_new_bitset_starts_all_clear
+  ok    test_harvest_permanence.gd :: test_restore_from_game_applies_saved_chops_on_top_of_a_fresh_build
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_restore_from_game_does_not_restand_an_already_gathered_chop (res://tests/test_harvest_permanence.gd:440)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_restore_from_game_does_not_restand_an_already_gathered_chop (res://tests/test_harvest_permanence.gd:440)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [4] fell (res://scripts/world/vegetation.gd:2152)
+       [5] test_restore_from_game_does_not_restand_an_already_gathered_chop (res://tests/test_harvest_permanence.gd:440)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_restore_from_game_does_not_restand_an_already_gathered_chop
+  ok    test_harvest_permanence.gd :: test_restore_from_game_ignores_a_layer_whose_bitset_size_no_longer_matches
+  ok    test_harvest_permanence.gd :: test_restore_from_game_never_un_chops_something_already_removed_this_session
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:399)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:399)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [4] fell (res://scripts/world/vegetation.gd:2152)
+       [5] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:399)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] restore_from_game (res://scripts/world/vegetation.gd:2366)
+       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:410)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] restore_from_game (res://scripts/world/vegetation.gd:2366)
+       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:410)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [4] restore_from_game (res://scripts/world/vegetation.gd:2366)
+       [5] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:410)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_restore_from_game_restands_a_felled_pickup_the_save_still_owes
+  ok    test_harvest_permanence.gd :: test_sync_state_to_game_writes_a_base64_bitset_per_layer
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_sync_state_to_game_writes_felled_vegetation_alongside_harvested (res://tests/test_harvest_permanence.gd:383)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)
+       [1] setup (res://scripts/world/felled_resource.gd:109)
+       [2] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [3] fell (res://scripts/world/vegetation.gd:2152)
+       [4] test_sync_state_to_game_writes_felled_vegetation_alongside_harvested (res://tests/test_harvest_permanence.gd:383)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] setup (res://scripts/world/felled_resource.gd:109)
+       [3] _spawn_felled (res://scripts/world/vegetation.gd:2165)
+       [4] fell (res://scripts/world/vegetation.gd:2152)
+       [5] test_sync_state_to_game_writes_felled_vegetation_alongside_harvested (res://tests/test_harvest_permanence.gd:383)
+       [6] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_permanence.gd :: test_sync_state_to_game_writes_felled_vegetation_alongside_harvested
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [4] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [4] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [5] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [2] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [4] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [4] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [5] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [2] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:432)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [4] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:445)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [2] setup (res://scripts/world/harvest_node.gd:112)
+       [3] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [4] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/harvest_node.gd:248)
+       [3] setup (res://scripts/world/harvest_node.gd:112)
+       [4] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [5] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [6] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:122)
+       [1] _rock_material (res://tests/test_harvest_rock_tint.gd:13)
+       [2] test_every_deposit_rock_takes_a_light_presentation_tint (res://tests/test_harvest_rock_tint.gd:28)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_harvest_rock_tint.gd :: test_every_deposit_rock_takes_a_light_presentation_tint
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment (res://tests/test_item_cache_pickup.gd:158)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment (res://tests/test_item_cache_pickup.gd:158)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment (res://tests/test_item_cache_pickup.gd:158)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_a_gltf_model_builds_a_real_populated_mesh_not_a_dead_assignment
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_a_missing_model_still_falls_back_to_a_real_box (res://tests/test_item_cache_pickup.gd:166)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_a_missing_model_still_falls_back_to_a_real_box (res://tests/test_item_cache_pickup.gd:166)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_a_missing_model_still_falls_back_to_a_real_box (res://tests/test_item_cache_pickup.gd:166)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_a_missing_model_still_falls_back_to_a_real_box (res://tests/test_item_cache_pickup.gd:166)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_a_missing_model_still_falls_back_to_a_real_box
+  ok    test_item_cache_pickup.gd :: test_every_cache_placement_names_a_model_that_actually_exists
+  ok    test_item_cache_pickup.gd :: test_flag_id_is_stable_per_item_so_two_caches_never_collide
+  ok    test_item_cache_pickup.gd :: test_flag_id_is_the_cache_prefix_plus_the_item_id
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_restore_deactivates_a_node_whose_item_was_already_taken (res://tests/test_item_cache_pickup.gd:108)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_restore_deactivates_a_node_whose_item_was_already_taken (res://tests/test_item_cache_pickup.gd:108)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_restore_deactivates_a_node_whose_item_was_already_taken (res://tests/test_item_cache_pickup.gd:108)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_restore_deactivates_a_node_whose_item_was_already_taken (res://tests/test_item_cache_pickup.gd:108)
+       [2] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] detach (res://scripts/world/pickup_glow.gd:148)
+       [2] _deactivate (res://scripts/world/item_cache_pickup.gd:121)
+       [3] restore_progression_from_game (res://scripts/world/item_cache_pickup.gd:114)
+       [4] test_restore_deactivates_a_node_whose_item_was_already_taken (res://tests/test_item_cache_pickup.gd:112)
+       [5] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_restore_deactivates_a_node_whose_item_was_already_taken
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_restore_leaves_an_untaken_node_alone (res://tests/test_item_cache_pickup.gd:121)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_restore_leaves_an_untaken_node_alone (res://tests/test_item_cache_pickup.gd:121)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_restore_leaves_an_untaken_node_alone (res://tests/test_item_cache_pickup.gd:121)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_restore_leaves_an_untaken_node_alone (res://tests/test_item_cache_pickup.gd:121)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_restore_leaves_an_untaken_node_alone
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_restore_with_no_game_leaves_the_node_alone (res://tests/test_item_cache_pickup.gd:133)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_restore_with_no_game_leaves_the_node_alone (res://tests/test_item_cache_pickup.gd:133)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_restore_with_no_game_leaves_the_node_alone (res://tests/test_item_cache_pickup.gd:133)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_restore_with_no_game_leaves_the_node_alone (res://tests/test_item_cache_pickup.gd:133)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_restore_with_no_game_leaves_the_node_alone
+WARNING: item_cache_pickup: '' did not load as a Mesh or PackedScene
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _build_visual (res://scripts/world/item_cache_pickup.gd:160)
+         [1] setup (res://scripts/world/item_cache_pickup.gd:75)
+         [2] test_setup_on_a_fresh_flag_store_leaves_the_prompt_enabled (res://tests/test_item_cache_pickup.gd:148)
+         [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/item_cache_pickup.gd:130)
+       [1] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [2] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [3] test_setup_on_a_fresh_flag_store_leaves_the_prompt_enabled (res://tests/test_item_cache_pickup.gd:148)
+       [4] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _field_for (res://scripts/world/pickup_glow.gd:159)
+       [1] attach (res://scripts/world/pickup_glow.gd:115)
+       [2] _build_visual (res://scripts/world/item_cache_pickup.gd:177)
+       [3] setup (res://scripts/world/item_cache_pickup.gd:75)
+       [4] test_setup_on_a_fresh_flag_store_leaves_the_prompt_enabled (res://tests/test_item_cache_pickup.gd:148)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/item_cache_pickup.gd:84)
+       [1] test_setup_on_a_fresh_flag_store_leaves_the_prompt_enabled (res://tests/test_item_cache_pickup.gd:148)
+       [2] _init (res://tests/run_tests.gd:120)
+  ok    test_item_cache_pickup.gd :: test_setup_on_a_fresh_flag_store_leaves_the_prompt_enabled
+  ok    test_item_cache_pickup.gd :: test_was_taken_is_false_with_an_empty_item_id
+  ok    test_item_cache_pickup.gd :: test_was_taken_is_false_with_no_game_at_all
+  ok    test_item_cache_pickup.gd :: test_was_taken_is_per_item_not_global
+  ok    test_item_cache_pickup.gd :: test_was_taken_reads_the_real_flag_store
+  ok    test_ledger_admission_guards.gd :: test_actor_identity_does_not_outlive_its_commit
+  ok    test_ledger_admission_guards.gd :: test_host_overwrites_a_claimed_identity_with_the_registry_answer
+  ok    test_ledger_admission_guards.gd :: test_other_intent_kinds_cannot_smuggle_a_forged_receipt
+  ok    test_ledger_admission_guards.gd :: test_prefix_list_covers_all_chapters_and_matches_generically
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_cannot_clear_another_characters_receipt
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_cannot_write_another_characters_legendary_receipt
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_writes_only_its_own_receipt_and_host_stays_trusted
+  ok    test_ledger_admission_guards.gd :: test_second_arch_at_the_footing_edge_cannot_snap_onto_an_occupied_footing
+  ok    test_ledger_admission_guards.gd :: test_snapped_arch_takes_the_footing_facing
+  ok    test_ledger_admission_guards.gd :: test_stormglass_arch_commits_at_the_footing_centre
+  ok    test_legendary_per_participant.gd :: test_a_non_participant_receives_nothing
+  ok    test_legendary_per_participant.gd :: test_a_participant_receives_their_own_offer
+  ok    test_legendary_per_participant.gd :: test_a_solo_freeing_is_still_only_offered_once
+  ok    test_legendary_per_participant.gd :: test_a_solo_freeing_still_grants
+  ok    test_legendary_per_participant.gd :: test_an_unknown_character_is_refused_when_others_did_fight
+  ok    test_legendary_per_participant.gd :: test_every_participant_receives_one_not_just_the_first
+  ok    test_legendary_per_participant.gd :: test_no_character_is_offered_the_same_freeing_twice
+  ok    test_meadows_named_location_ledger_0912.gd :: test_final_polish_locations_have_complete_accepted_evidence_rounds
+  ok    test_meadows_named_location_ledger_0912.gd :: test_meadows_review_ledger_is_exactly_twenty_four_unique_places
+  ok    test_pickup_glow.gd :: test_a_dark_item_colour_still_produces_a_visible_glow
+  ok    test_pickup_glow.gd :: test_a_grey_item_is_not_given_an_invented_hue
+  ok    test_pickup_glow.gd :: test_a_short_prop_keeps_the_glow_down_on_itself
+  ok    test_pickup_glow.gd :: test_a_tall_prop_glows_through_its_own_body
+  ok    test_pickup_glow.gd :: test_every_pickup_path_attaches_the_shared_highlight
+  ok    test_pickup_glow.gd :: test_far_pickup_glow_never_exceeds_authored_world_size
+  ok    test_pickup_glow.gd :: test_it_reaches_over_the_grass_with_margin_not_by_a_hair
+  ok    test_pickup_glow.gd :: test_no_pickup_keeps_a_light_of_its_own
+  ok    test_pickup_glow.gd :: test_the_glow_does_not_paint_over_the_item
+  ok    test_pickup_glow.gd :: test_the_glow_gets_out_of_the_way_up_close
+  ok    test_pickup_glow.gd :: test_the_glow_keeps_the_items_own_hue
+  ok    test_pickup_glow.gd :: test_the_glow_never_drifts_off_the_object_it_marks
+  ok    test_pickup_glow.gd :: test_the_glow_reaches_above_the_grass_canopy_that_is_shipping
+  ok    test_pickup_glow.gd :: test_the_glow_sits_on_the_item_not_above_it
+  ok    test_pickup_glow.gd :: test_the_glow_stops_before_it_becomes_a_map_marker
+  ok    test_reward_delivery.gd :: test_accepted_delta_keeps_recipient_and_observer_worlds_equal_to_host
+  ok    test_reward_delivery.gd :: test_death_satchel_reconciliation_skips_reward_rows
+  ok    test_reward_delivery.gd :: test_delivery_identity_is_stable_and_character_scoped
+  ok    test_reward_delivery.gd :: test_full_bag_keeps_reward_pending_then_settles_exactly_once
+  ok    test_reward_delivery.gd :: test_huge_item_count_is_bounded_and_journals_nothing
+  ok    test_reward_delivery.gd :: test_ledger_journals_stable_deliveries_and_replay_adds_nothing
+  ok    test_reward_delivery.gd :: test_legacy_receipt_matching_requires_the_exact_source_and_numeric_peer
+  ok    test_reward_delivery.gd :: test_nonpositive_item_count_is_malformed_and_journals_nothing
+  ok    test_reward_delivery.gd :: test_only_the_source_with_a_legacy_peer_receipt_is_unresolved
+  ok    test_reward_delivery.gd :: test_reward_delta_replay_applies_the_same_namespace_and_journal
+  ok    test_reward_delivery.gd :: test_two_hosts_using_slot_zero_get_distinct_delivery_identities
+  ok    test_reward_delivery.gd :: test_world_snapshot_round_trips_namespace_and_pending_journal
+  ok    test_reward_delivery_rpc.gd :: test_ack_sender_must_own_the_journal_character
+  ok    test_reward_delivery_rpc.gd :: test_character_save_failure_rolls_back_personal_mutation_and_sends_no_ack
+  ok    test_reward_delivery_rpc.gd :: test_doss_commit_debits_and_delivers_only_after_durable_world_save
+  ok    test_reward_delivery_rpc.gd :: test_doss_save_failure_rolls_back_flag_rewards_and_cost_before_publication
+  ok    test_reward_delivery_rpc.gd :: test_host_ack_save_failure_keeps_delivery_pending_for_retry
+  ok    test_reward_delivery_rpc.gd :: test_host_world_save_failure_rolls_back_namespace_journal_and_sequence
+  ok    test_reward_delivery_rpc.gd :: test_paid_dock_retry_publishes_once_and_duplicate_does_not_charge_again
+  ok    test_reward_delivery_rpc.gd :: test_paid_dock_save_failure_rolls_back_before_publication
+  ok    test_reward_delivery_rpc.gd :: test_pre_admission_delta_stages_world_only_then_character_settles_after_gate
+  ok    test_reward_delivery_rpc.gd :: test_zero_cost_chart_save_failure_and_invalid_dock_inputs_do_not_publish
+  ok    test_session_physical_timeout.gd :: test_client_timeout_targets_server_and_skips_relayed_client_ids
+  ok    test_session_physical_timeout.gd :: test_host_still_configures_both_direct_clients_and_skips_itself
+[session] snapshot applied (3 keys, day 7)
+  ok    test_session_snapshot.gd :: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta
+  ok    test_session_snapshot.gd :: test_bootstrap_delta_overflow_fails_without_applying_entries
+  ok    test_session_snapshot.gd :: test_conflicting_early_chunk_fails_and_never_opens_readiness
+WARNING: [session] snapshot for peer 22 failed: The world snapshot transfer timed out before the client acknowledged it.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _abort_host_snapshot (res://scripts/net/session.gd:902)
+         [1] _expire_snapshot_sends (res://scripts/net/session.gd:1291)
+         [2] test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once (res://tests/test_session_snapshot.gd:185)
+         [3] _init (res://tests/run_tests.gd:120)
+  ok    test_session_snapshot.gd :: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once
+  ok    test_session_snapshot.gd :: test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one
+  ok    test_session_transport.gd :: test_client_character_is_not_saveable_until_snapshot_admission
+WARNING: Session.host_with_peer: capacity 5 is outside 1..4
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] host_with_peer (res://scripts/net/session.gd:253)
+         [1] test_disconnected_or_wrong_role_peers_are_refused_before_install (res://tests/test_session_transport.gd:40)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_session_transport.gd :: test_disconnected_or_wrong_role_peers_are_refused_before_install
+  ok    test_session_transport.gd :: test_enet_physical_timeout_routing_remains_transport_specific
+[session] client leave: handshake never applied a snapshot; portable character unchanged
+  ok    test_session_transport.gd :: test_failed_client_leave_does_not_call_the_character_store
+  ok    test_session_transport.gd :: test_transport_closed_fires_after_peer_and_kind_are_cleared
+  ok    test_session_transport.gd :: test_world_first_preparation_closes_authority_snapshot_and_save_gates
+  ok    test_stormwood_arch_building.gd :: test_crown_footing_refuses_the_ordinary_stormglass_grade
+  ok    test_stormwood_arch_building.gd :: test_dismantling_one_arch_clears_its_survivor_and_replacement_uses_it
+  ok    test_stormwood_arch_building.gd :: test_first_and_second_arches_commit_one_stable_mutual_pair
+  ok    test_stormwood_arch_building.gd :: test_save_load_preserves_constructed_pair_metadata
+  ok    test_stormwood_arch_building.gd :: test_still_grove_can_only_raise_the_crowns_one_fixed_twin
+  ok    test_stormwood_arch_building.gd :: test_three_road_limit_includes_the_player_built_crown_pair
+  ok    test_stormwood_arch_building.gd :: test_two_peers_placing_on_one_footing_are_serialised_to_one_winner
+  ok    test_stormwood_arch_building.gd :: test_unrelated_removal_never_relinks_a_completed_arch_pair
+  ok    test_stormwood_arch_building.gd :: test_wrong_realm_missing_recipe_locked_deepwood_and_island_are_refused
+  ok    test_stormwood_arch_ledger.gd :: test_first_claimant_relights_once_and_only_winner_pays_three
+  ok    test_stormwood_arch_ledger.gd :: test_half_lit_pair_has_no_twin_and_full_pair_links_both_directions
+  ok    test_stormwood_arch_ledger.gd :: test_rootgate_guards_c_and_d_until_released
+  ok    test_stormwood_arch_ledger.gd :: test_wrong_realm_id_and_insufficient_preflight_stock_refuse_without_cost
+  ok    test_stormwood_arch_piece.gd :: test_authored_display_reuses_finish_without_constructed_collision
+  ok    test_stormwood_arch_piece.gd :: test_ghost_has_no_collision_and_supports_existing_placer_tint_api
+  ok    test_stormwood_arch_piece.gd :: test_lit_hook_changes_only_the_arch_presentation_state
+  ok    test_stormwood_arch_piece.gd :: test_real_arch_is_normalized_to_four_metres_and_leaves_a_real_aperture
+  ok    test_stormwood_continuous_route_pickups.gd :: test_crown_extension_is_opt_in_and_inherits_only_the_successful_live_prefix
+  ok    test_stormwood_continuous_route_pickups.gd :: test_ondra_reward_precedes_the_exact_dialogue_and_retains_receipt_and_gain_checks
+  ok    test_stormwood_continuous_route_pickups.gd :: test_route_rewards_follow_the_actual_item_and_exact_quantity
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_frame_and_crown_costs_balance_the_authored_route
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_segment_parses_and_declares_the_paid_terminal_contract
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_segment_uses_live_controller_surfaces_and_contains_no_state_bypass
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_six_selected_sources_match_the_live_catalogue_and_indivisible_yields
+  ok    test_stormwood_crown_named_engage.gd :: test_explicit_engage_requires_exact_body_and_actionable_director_offer
+  ok    test_stormwood_crown_named_engage.gd :: test_missing_named_body_is_not_dereferenced_by_admission_diagnostics
+  ok    test_stormwood_crown_remembers.gd :: test_chapter_counts_exactly_the_runtime_records_and_declares_them_persistent
+[scatter bake] load phases (ms): read[108 regions, 33773 placements, 0 skipped]=87 reorder[7 layers]=28
+  ok    test_stormwood_crown_remembers.gd :: test_record_seats_are_clear_readable_island_ground
+  ok    test_stormwood_crown_remembers.gd :: test_three_distinct_records_then_wen_complete_the_chain
+  ok    test_stormwood_crown_remembers.gd :: test_wen_reports_records_only_after_truth_and_until_complete
+  ok    test_stormwood_dark_arches.gd :: test_arches_lit_before_the_chain_was_wired_still_count_as_inspected
+  ok    test_stormwood_dark_arches.gd :: test_dark_arches_are_pairs_c_and_d_outside_every_main_objective
+  ok    test_stormwood_dark_arches.gd :: test_hesk_report_outranks_ordinary_lines_only_while_owed
+  ok    test_stormwood_dark_arches.gd :: test_inspection_facts_are_declared_world_state
+  ok    test_stormwood_dark_arches.gd :: test_inspection_paid_relights_and_hesk_complete_the_chain
+  ok    test_stormwood_ending.gd :: test_ceremony_receipt_is_player_owned_despite_the_stormwood_world_prefix
+  ok    test_stormwood_ending.gd :: test_chapter_data_orders_release_offer_and_waterward_before_home_placement
+  ok    test_stormwood_ending.gd :: test_claims_are_kept_per_character_and_legacy_saves_migrate
+  ok    test_stormwood_ending.gd :: test_every_participant_gets_their_own_once_only_offer
+  ok    test_stormwood_ending.gd :: test_livewire_is_the_single_active_cooldown_power
+  ok    test_stormwood_ending.gd :: test_offer_asks_an_explicit_yes_or_no_and_receipts_each_answer
+  ok    test_stormwood_ending.gd :: test_production_wires_the_existing_five_slot_and_story_transports
+  ok    test_stormwood_ending.gd :: test_waterward_waits_for_the_roster_decision_and_is_once_only
+  ok    test_stormwood_harvest_ledger.gd :: test_break_grants_the_catalogue_yield_not_forged_request_contents
+  ok    test_stormwood_harvest_ledger.gd :: test_calm_refuses_a_charged_site_even_if_request_claims_break
+  ok    test_stormwood_harvest_ledger.gd :: test_generic_harvest_cannot_bypass_a_reserved_stormwood_site_flag
+  ok    test_stormwood_harvest_ledger.gd :: test_hollow_crown_site_refuses_before_its_route_gate_opens
+  ok    test_stormwood_harvest_ledger.gd :: test_two_peers_contending_for_one_site_create_one_grant
+  ok    test_stormwood_harvest_progression.gd :: test_authored_crown_claim_reconciles_through_the_chapter_event
+  ok    test_stormwood_harvest_progression.gd :: test_crown_reconciliation_does_not_change_cinder_verge_behavior
+  ok    test_stormwood_harvest_progression.gd :: test_readiness_uses_catalogue_amounts_and_unique_shared_claims
+  ok    test_stormwood_harvest_progression.gd :: test_saved_completion_and_authority_shell_are_not_rewritten
+  ok    test_stormwood_harvest_progression.gd :: test_sufficient_early_claims_reconcile_when_recipe_is_learned
+  ok    test_stormwood_harvests.gd :: test_authored_count_distribution_and_stable_ids
+  ok    test_stormwood_harvests.gd :: test_charged_stormglass_phase_and_grade_contracts
+  ok    test_stormwood_harvests.gd :: test_every_site_is_in_its_region_uses_existing_models_and_names_one_resource
+  ok    test_stormwood_harvests.gd :: test_first_two_region_charged_stormglass_lives_in_safe_marked_clearings
+  ok    test_stormwood_harvests.gd :: test_runtime_records_the_host_authority_contract
+  ok    test_stormwood_harvests.gd :: test_sites_keep_clear_of_authored_camps_people_and_critical_landmarks
+  ok    test_stormwood_harvests.gd :: test_sparkfur_is_not_authored_as_a_harvest_or_hunting_node
+  ok    test_stormwood_named_crown.gd :: test_crown_prerequisite_metadata_names_the_same_guardian_flag_as_the_encounter
+  ok    test_stormwood_named_crown.gd :: test_guardian_then_wen_truth_then_rootgate_is_the_only_accepted_sequence
+  ok    test_stormwood_named_crown.gd :: test_wen_refuses_the_truth_until_the_crown_guardian_is_durably_clear
+  ok    test_stormwood_pickup_runtime.gd :: test_catalogue_mounts_only_current_ordinary_item_definitions
+  ok    test_stormwood_pickup_runtime.gd :: test_every_mountable_item_resolves_to_installed_pickup_art
+  ok    test_stormwood_pickup_runtime.gd :: test_stable_placement_flags_are_realm_qualified
+  ok    test_stormwood_pickup_runtime.gd :: test_withheld_rows_are_story_events_or_missing_item_definitions
+  ok    test_stormwood_pickups.gd :: test_catalogue_has_exact_total_and_category_counts
+  ok    test_stormwood_pickups.gd :: test_distribution_and_off_path_contract
+  ok    test_stormwood_pickups.gd :: test_ids_are_stable_and_items_exist
+  ok    test_stormwood_pickups.gd :: test_positions_have_terrain_contact_envelope_and_crown_island_bounds
+  ok    test_stormwood_raise_a_road.gd :: test_chain_facts_are_declared_world_state
+  ok    test_stormwood_raise_a_road.gd :: test_choose_build_travel_and_report_complete_the_chain
+  ok    test_stormwood_raise_a_road.gd :: test_no_third_footing_is_offered_once_two_are_chosen
+  ok    test_stormwood_raise_a_road.gd :: test_ondra_report_outranks_ordinary_lines_only_while_owed
+  ok    test_stormwood_raise_a_road.gd :: test_road_footings_are_the_optional_sockets_and_never_the_crown
+  ok    test_stormwood_rod_ledger.gd :: test_each_disabled_station_flag_applies_its_region_surge_duration_modifier
+  ok    test_stormwood_rod_ledger.gd :: test_every_exact_station_requires_its_real_guard_and_prerequisite_then_disables_once
+  ok    test_stormwood_rod_ledger.gd :: test_saved_world_state_prevents_a_station_from_being_disabled_again
+  ok    test_stormwood_rod_ledger.gd :: test_two_peers_contending_for_one_station_commit_one_disabled_flag
+  ok    test_tether_relay_scale_hierarchy_0912.gd :: test_hero_is_primary_mass_without_stealing_console_clearance
+  ok    test_tether_relay_scale_hierarchy_0912.gd :: test_pad_supports_the_hero_with_an_industrial_scale_ladder
+  ok    test_trainer_reward_delivery.gd :: test_no_xp_payload_keeps_party_unchanged_and_empty_message_is_silent
+  ok    test_trainer_reward_delivery.gd :: test_persistent_reward_pays_only_nonfainted_owned_creatures
+  ok    test_water_harvest_density.gd :: test_island_harvest_minima_and_new_dry_approaches
+  ok    test_water_personal_pickup.gd :: test_authored_ownership_and_host_proximity
+  ok    test_world_ledger_races.gd :: test_a_client_replaying_the_hosts_deltas_ends_up_with_the_hosts_world
+  ok    test_world_ledger_races.gd :: test_a_dismantle_in_flight_takes_down_its_own_structure_not_the_renumbered_neighbour
+  ok    test_world_ledger_races.gd :: test_a_dismantle_pointed_at_another_realms_record_is_refused
+  ok    test_world_ledger_races.gd :: test_a_joiner_that_never_saw_a_chest_written_is_not_locked_out_of_it_forever
+  ok    test_world_ledger_races.gd :: test_a_placement_and_a_dismantle_go_through_the_ledger_into_the_world
+  ok    test_world_ledger_races.gd :: test_a_placement_verdict_names_the_ticket_it_answers
+  ok    test_world_ledger_races.gd :: test_a_player_flag_granted_to_two_peers_reaches_both_and_only_them
+  ok    test_world_ledger_races.gd :: test_a_replayed_drop_leaves_one_stack_on_the_ground
+  ok    test_world_ledger_races.gd :: test_a_replayed_transfer_moves_the_stack_exactly_once
+  ok    test_world_ledger_races.gd :: test_a_reward_pays_each_participant_once_and_refuses_a_replay
+  ok    test_world_ledger_races.gd :: test_a_storage_write_against_a_revision_two_behind_is_refused
+  ok    test_world_ledger_races.gd :: test_a_storage_write_that_quotes_the_current_revision_lands_in_the_record
+  ok    test_world_ledger_races.gd :: test_a_uid_is_never_reused_after_a_dismantle
+  ok    test_world_ledger_races.gd :: test_an_intent_with_no_realm_is_refused_rather_than_guessed_at
+  ok    test_world_ledger_races.gd :: test_an_unknown_intent_is_refused_with_a_reason
+  ok    test_world_ledger_races.gd :: test_apply_delta_ignores_an_op_it_does_not_understand_rather_than_dying
+  ok    test_world_ledger_races.gd :: test_doss_refuses_missing_materials_or_reward_room_without_any_ops
+  ok    test_world_ledger_races.gd :: test_setting_a_world_flag_that_is_already_set_is_a_noop_not_a_refusal
+  ok    test_world_ledger_races.gd :: test_the_same_flag_in_two_realms_is_two_different_finds
+  ok    test_world_ledger_races.gd :: test_the_winner_is_whoever_committed_first_not_whoever_is_the_host
+  ok    test_world_ledger_races.gd :: test_two_claims_on_one_pickup_leave_exactly_one_winner
+  ok    test_world_ledger_races.gd :: test_two_doss_claimants_charge_and_reward_only_the_first_commit
+  ok    test_world_ledger_races.gd :: test_two_gathers_of_one_harvest_node_yield_one_lot_of_wood
+  ok    test_world_ledger_races.gd :: test_two_identical_chest_writes_are_distinguishable_and_a_replay_is_refused
+  ok    test_world_ledger_races.gd :: test_two_peers_chopping_the_same_bush_duplicate_nothing
+  ok    test_world_ledger_races.gd :: test_two_withdrawals_of_one_stack_cannot_both_commit
+
+301 tests, 1083784 assertions, 0 failed

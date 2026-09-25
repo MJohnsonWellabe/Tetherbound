@@ -1,0 +1,35 @@
+run id:  net-20260925T042706Z-10192
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/mismatch/net-join_version_mismatch-20260925T042706Z
+smoke:   tests/smoke_net_join_version_mismatch.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=10216 control_port=39079 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/mismatch/net-join_version_mismatch-20260925T042706Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/mismatch/net-join_version_mismatch-20260925T042706Z/peer-0.log
+coordinator: launched peer 1 (client) pid=10217 control_port=41841 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/mismatch/net-join_version_mismatch-20260925T042706Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/mismatch/net-join_version_mismatch-20260925T042706Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":30641.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":0.0,"pid":10216.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/mismatch/net-join_version_mismatch-20260925T042706Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":30642.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":1.0,"pid":10217.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/mismatch/net-join_version_mismatch-20260925T042706Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: host reported an ENet port (30641)
+PASS: host opened a four-peer session (hosting udp/30641 as peer 1)
+PASS: host registry starts with one real row ([{ "appearance_id": "trainer", "character_id": "character-069e7db74fe0fcc401d778d807aeece4", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }])
+PASS: mismatched content was refused (Session.join(127.0.0.1, 30641) refused after 9 frames: You and the host have different game content (host c0387a73, yours 00000000). Both players need the same version.)
+PASS: client received the readable content-mismatch reason (Session.join(127.0.0.1, 30641) refused after 9 frames: You and the host have different game content (host c0387a73, yours 00000000). Both players need the same version.)
+PASS: the reason names the joiner's own content hash prefix (Session.join(127.0.0.1, 30641) refused after 9 frames: You and the host have different game content (host c0387a73, yours 00000000). Both players need the same version.)
+PASS: refusal arrived in 173 ms, not after the generic timeout
+PASS: mismatch arrived as a host admission verdict, not a transport failure
+PASS: mismatched client never applied a host snapshot
+PASS: mismatched client's transport closed after the reason arrived
+PASS: mismatch refusal left the host registry unchanged
+PASS: mismatch refusal left the host world state unchanged
+ALL CHECKS PASSED
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/mismatch/net-join_version_mismatch-20260925T042706Z/SUMMARY.md ===
+# Net smoke run net-20260925T042706Z-10192
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=10216 exited=true unexpected_exit=false
+- peer 1 (client) pid=10217 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
