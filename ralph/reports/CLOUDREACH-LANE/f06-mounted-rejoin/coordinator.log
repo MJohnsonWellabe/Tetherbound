@@ -1,0 +1,126 @@
+run id: net-f06-20260925T195427Z-10286
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=10324 control_port=38907 home=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/home-0 log=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/peer-0.log
+coordinator: launched peer 1 (client) pid=10325 control_port=40757 home=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/home-1 log=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/peer-1.log
+coordinator: peer 1 hello: {"enet_port":33962.0,"godot_version":"4.7-stable (official)","main_sha":"10b635d38e81","peer":1.0,"pid":10325.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":33961.0,"godot_version":"4.7-stable (official)","main_sha":"10b635d38e81","peer":0.0,"pid":10324.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #1 peer 1 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
+PASS: #2 peer 0 story_flag (setup: both worlds hold the Cloudreach key) -> PASS -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: #2 peer 1 story_flag (setup: both worlds hold the Cloudreach key) -> PASS -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: #3 peer 0 story_flag (setup: both worlds finished the Windscar flight trial (the Fly gate, not the counterweight gate)) -> PASS -- fly_traversal_unlocked: ok=true pending=false code='' reason=''
+PASS: #3 peer 1 story_flag (setup: both worlds finished the Windscar flight trial (the Fly gate, not the counterweight gate)) -> PASS -- fly_traversal_unlocked: ok=true pending=false code='' reason=''
+PASS: #4 peer 1 story_flag (setup: ONLY the guest's own world has the upper counterweight route open) -> PASS -- cloudreach_upper_route_unlocked: ok=true pending=false code='' reason=''
+PASS: #5 peer 1 party_grant -> PASS -- 'bramblebun' at level 20 joined the party (1 member(s))
+PASS: #6 peer 1 party_grant -> PASS -- 'terrapup' at level 20 joined the party (2 member(s))
+PASS: #7 peer 1 party_grant -> PASS -- 'brooktail' at level 20 joined the party (3 member(s))
+PASS: #8 peer 1 party_grant -> PASS -- 'mudsnout' at level 20 joined the party (4 member(s))
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #9 peer 0 enter_realm (host enters Cloudreach in its own world) -> PASS -- crossed 'meadows' -> 'cloudreach' after 265 observed physics frames / 216942 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #10 peer 1 enter_realm (guest enters Cloudreach in its own world) -> PASS -- crossed 'meadows' -> 'cloudreach' after 268 observed physics frames / 217575 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: #11 peer 1 fly_setup (setup: guest's fifth creature is its Fly carrier (galecrest)) -> PASS -- SETUP: fly_traversal_unlocked set, galecrest active, anchor=(0.0, 105.0302, -260.0), screen: no SequenceDirector here; nothing holding the screen, launch site: already clear where it stood (locomotion=true carried=false on_floor=true)
+PASS: #12 peer 1 assert (guest owns five) -> PASS -- party size 5 (wanted 5)
+PASS: #13 peer 1 teleport (setup: guest stands in Upper Cloudreach, past the gate (open in its own world)) -> PASS -- trainer stands at (-400.00, 780.03, 3890.00)
+PASS: #14 peer 1 probe position (guest pose in its own world) -> PASS -- [-400.0,780.030639648438,3890.0]
+PASS: #15 peer 1 assert (baseline: guest IS past the gate in its own world) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
+PASS: #16 peer 1 save_character_here (guest saves its own world + portable character past the gate) -> PASS -- character 'character-eb5b7cf6ff9e49160b0f319f7fa82485' is on disk (wrote_world=true)
+PASS: #17 peer 1 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-eb5b7cf6ff9e49160b0f319f7fa82485' on disk=true; copied 3 files to /tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/peer-1/guest_home_past_gate
+PASS: #18 peer 1 check_saved (guest's own saved world has the gate open) -> PASS -- missing []; unexpectedly present []; read ["slot-0/world.json"] under guest_home_past_gate/worlds
+PASS: #19 peer 1 check_saved (guest's saved character: Cloudreach pose, carrier owned) -> PASS -- missing []; unexpectedly present []; read ["character-eb5b7cf6ff9e49160b0f319f7fa82485/character.json"] under guest_home_past_gate/characters
+PASS: #20 peer 0 host -> PASS -- hosting udp/33961 as peer 1
+PASS: #21 peer 0 assert (host world: gate CLOSED before the join) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #22 peer 1 production_join (guest continues its own save through the title (world built from its autosave, then JoinDriver dials)) -> PASS -- title fresh entry built 'CloudreachCliffs' first, then JoinDriver joined 127.0.0.1:33961 as peer 591152581 after 51 frames
+PASS: #23 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #23 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #24 peer 1 probe player_identity (JOIN: guest in Cloudreach, five owned) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[-400.0,780.030639648438,3890.0]},"character_id":"character-eb5b7cf6ff9e49160b0f319f7fa82485","display_name"
+PASS: #25 peer 1 probe position (JOIN: guest position) -> PASS -- [-400.0,780.030639648438,3890.0]
+PASS: #26 peer 1 assert (JOIN: guest now reads the host's closed gate) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+FAIL: #27 peer 1 assert (JOIN: guest is NOT standing in sealed Upper Cloudreach) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
+PASS: #28 peer 0 assert (JOIN: host world flags unchanged) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+PASS: #29 peer 1 teleport (setup: guest stands at the gate's legal (south) side) -> PASS -- trainer stands at (-400.00, 780.03, 3890.00)
+PASS: #30 peer 1 probe position -> PASS -- [-400.0,780.0302734375,3890.0]
+PASS: #31 peer 1 save_character_here (guest saves its portable character at the gate) -> PASS -- character 'character-eb5b7cf6ff9e49160b0f319f7fa82485' is on disk (wrote_world=false)
+PASS: #32 peer 1 probe tournament (party ids before leave) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-95cad11f421610561f0d6f358f8542aa","creature-15a5d4099aa1d0a2be17bdca7006521d","creature-9750538067810ecd304a4bdac666c4a8","creature-c3b51c7d
+PASS: #33 peer 1 leave -> PASS -- client left cleanly after 0 frames
+PASS: #34 peer 0 expect_peers -> PASS -- registry reports 1 peer(s) after 4 frames
+PASS: #35 peer 1 join (guest rejoins) -> PASS -- joined 127.0.0.1:33961 as peer 264906796 after 5 frames; snapshot applied; 2 peer(s) in registry
+PASS: #36 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #36 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #37 peer 1 probe player_identity (REJOIN: guest in Cloudreach, five owned) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[-400.0,780.0302734375,3890.0]},"character_id":"character-eb5b7cf6ff9e49160b0f319f7fa82485","display_name":"
+PASS: #38 peer 1 probe tournament (REJOIN: party ids after (compare with the row before leave)) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-95cad11f421610561f0d6f358f8542aa","creature-15a5d4099aa1d0a2be17bdca7006521d","creature-9750538067810ecd304a4bdac666c4a8","creature-c3b51c7d
+PASS: #39 peer 1 probe position (REJOIN: guest position) -> PASS -- [-400.0,780.0302734375,3890.0]
+FAIL: #40 peer 1 assert (REJOIN: guest is NOT standing in sealed Upper Cloudreach) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
+FAIL: #41 peer 1 assert (REJOIN: guest stands at the gate's legal side) -> FAIL -- 1483.82 m from (-104.0, 2436.0), wanted within 20.00
+PASS: #42 peer 0 assert (REJOIN: host world flags unchanged) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+FAIL: #43 peer 1 fly_launch (MOUNTED: guest launches on its galecrest at the gate's legal side) -> FAIL -- the second airborne Jump did not launch; screen: no SequenceDirector here; nothing holding the screen; launch_blockers() said 'This wind route is still sealed: cloudreach_upper.', now 'Fly is unavailable while riding or in combat.'
+FAIL: #27 peer 1 assert (JOIN: guest is NOT standing in sealed Upper Cloudreach) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
+FAIL: #40 peer 1 assert (REJOIN: guest is NOT standing in sealed Upper Cloudreach) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
+FAIL: #41 peer 1 assert (REJOIN: guest stands at the gate's legal side) -> FAIL -- 1483.82 m from (-104.0, 2436.0), wanted within 20.00
+FAIL: #43 peer 1 fly_launch (MOUNTED: guest launches on its galecrest at the gate's legal side) -> FAIL -- the second airborne Jump did not launch; screen: no SequenceDirector here; nothing holding the screen; launch_blockers() said 'This wind route is still sealed: cloudreach_upper.', now 'Fly is unavailable while riding or in combat.'
+PROOF.md: /tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/PROOF.md (exit 1)
