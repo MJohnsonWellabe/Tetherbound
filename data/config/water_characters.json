@@ -67,6 +67,26 @@
       ],
       "purpose": "Opens the existing five-slot ceremony. Does not accept, release, replace or grant a creature by itself. Not gated on world settlement: each participant answers independently and the host refuses anyone already answered or not a participant. Edda's greeting only chooses this conversation for a character that may still answer (GuardianReward.local_may_answer) or holds its pending claim; anyone else hears water_edda_guardian_neutral, which requests nothing (water_guardian_reward.gd gate_edda_offer).",
       "effect": "water:water_guardian_offer_requested"
+    },
+    {
+      "conversation": "water_adair_gull_return",
+      "requires_world_flags": [
+        "water_claim:local:gull_research:satchel"
+      ],
+      "unless_world_flags": [
+        "water_claim:local:gull_research:complete"
+      ],
+      "purpose": "side_water_gull_research step 3: with the survey satchel recovered, the observations are returned to Adair on the next Brine Steps passage. Requests the host step; speech writes nothing.",
+      "effect": "water:local_step:gull_research_report"
+    },
+    {
+      "conversation": "water_adair_gull_lead",
+      "unless_world_flags": [
+        "water_claim:local:gull_research:lead",
+        "water_claim:local:gull_research:complete"
+      ],
+      "purpose": "side_water_gull_research step 1: Adair names Gull Rest and the stranded survey satchel, keeping her current-reading lesson. Requests the host-recorded lead.",
+      "effect": "water:local_step:gull_research_lead"
     }
   ],
   "npcs": [
@@ -239,7 +259,23 @@
         12.0
       ],
       "greeting": "water_adair_pre",
+      "_why_greeting_when": "side_water_gull_research: reminder while the lead is open; acknowledgement of the charted Gull Rest crossing before or after restoration. The guarded lead/return conversations take priority.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_claim:local:gull_research:complete"
+          ],
+          "conversation": "water_adair_post_gull"
+        },
+        {
+          "if_flag": "water_claim:local:gull_research:complete",
+          "conversation": "water_adair_gull_thanks"
+        },
+        {
+          "if_flag": "water_claim:local:gull_research:lead",
+          "conversation": "water_adair_gull_reminder"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_adair_post"

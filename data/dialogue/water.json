@@ -935,6 +935,48 @@
         "The currents feel gentler everywhere now. Even the Lantern Cove line you charted is an easy swim for the new arrivals.",
         "Keep teaching them that stopping in deep water does not refill their strength."
       ]
+    },
+    "water_adair_gull_lead": {
+      "speaker": "Surveyor Adair",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "See the foam moving past the rocks? That is the direction the current will carry your body. The sheltered line takes longer but pushes against you less.",
+        "My survey partner was stranded on Gull Rest, the gull-cliff island off Reedhaven's west shore. The boats brought her home, but her satchel of current readings stayed on the upper slope.",
+        "If you take Reedhaven's sheltered crossing out there, bring the observations back through Brine Steps. With them I can chart a safe line to Gull Rest for everyone."
+      ]
+    },
+    "water_adair_gull_reminder": {
+      "speaker": "Surveyor Adair",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "Gull Rest is reached from Reedhaven. Keep to the sheltered line and rest where your feet touch.",
+        "The satchel should be on the slope above the landing. Bring it back through here when you next pass Brine Steps."
+      ]
+    },
+    "water_adair_gull_return": {
+      "speaker": "Surveyor Adair",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "That is her satchel. Look at these readings: she timed the eddies around Gull Rest every hour for three days.",
+        "The sheltered crossing holds steady even when the tide turns. I can mark it as safe, landing to landing.",
+        "Whatever else she left on that slope is yours to keep. The observations belong on the survey board."
+      ]
+    },
+    "water_adair_gull_thanks": {
+      "speaker": "Surveyor Adair",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "The Gull Rest route is charted now: sheltered line from Reedhaven, rest at the shallows, land below the cliff.",
+        "Mark a safe landing by reaching it yourself. A drawing from this terrace cannot tell us whether its bank is climbable."
+      ]
+    },
+    "water_adair_post_gull": {
+      "speaker": "Surveyor Adair",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "Your landing notes and the Gull Rest readings have made a practical route guide. People choose the sheltered line before they enter the water.",
+        "The strongest current has shifted since the pumps stopped. The charted Gull Rest route still holds; the foam tells the new truth."
+      ]
     }
   }
 }

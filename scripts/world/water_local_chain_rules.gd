@@ -70,6 +70,15 @@ static func _island_point(island_id: String, offset: Variant) -> Vector2:
 	return Vector2.INF
 
 
+## Host reach from the step's standing point: speech steps measure from the
+## speaker, site steps from their prop (the prompt's own radius plus slack).
+static func reach_m(row: Dictionary) -> float:
+	var data := load_data()
+	if str(row.get("kind", "")) == "speech":
+		return float(data.get("speech_radius_m", 6.0))
+	return float(data.get("site_radius_m", 4.8))
+
+
 static func receipt(character: String, row_id: String) -> String:
 	return "water_claim:" + character + ":" + row_id
 
@@ -99,7 +108,7 @@ static func evaluate(intent: Dictionary, context: Dictionary, flags: Variant) ->
 		return _refuse("malformed", "The world record could not be checked.")
 	var position: Variant = context.get("position")
 	var target := step_xz(row)
-	var radius := float(load_data().get("speech_radius_m", 6.0))
+	var radius := reach_m(row)
 	if not position is Vector3 or not (position as Vector3).is_finite() or not target.is_finite() \
 			or Vector2(position.x, position.z).distance_to(target) > radius:
 		return _refuse("too_far", "Move closer first.")

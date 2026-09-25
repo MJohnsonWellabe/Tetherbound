@@ -2,6 +2,9 @@
   "_comment": "F13 Tidewake local chains (docs/design/WORLD.md, Tidewake - six new local chains). Each step is a host-validated record committed through the existing water_dock_action intent (scripts/world/water_local_chain_rules.gd): the host resolves the actor's identity and position, checks prerequisites and any per-character receipt, and writes world-scoped records under the declared world prefix water_claim: (water_claim:local:<chain>:<step>). Speech steps are requested by a guarded Water conversation (water_characters.json dialogue_event_guards, effect water:local_step:<id>); speech itself writes nothing. Rewards stay the existing pocket rows and their original receipts unless a step names a grant.",
   "speech_radius_m": 6.0,
   "_comment_speech_radius": "Water speech opens within 5 m of the speaker; the host allows 6 m of horizontal distance from the speaker's authored standing point for proxy/terrain slack.",
+  "site_radius_m": 4.8,
+  "site_prompt_radius_m": 3.6,
+  "_comment_site_radius": "Site prompts open within 3.6 m of their prop; the host allows 4.8 m horizontally for proxy slack.",
   "steps": [
     {
       "id": "lantern_return_lead",
@@ -25,6 +28,41 @@
       "claim_refusal": "Take the cache from the dry nook beneath Lantern Cove's rock arch first, then swim back to Pell.",
       "refusal": "Finish the sheltered swim lesson before Pell sends you further out.",
       "message": "Pell marks your Lantern Cove return line. The swim back from the arch is yours to reuse."
+    },
+    {
+      "id": "gull_research_lead",
+      "chain": "side_water_gull_research",
+      "kind": "speech",
+      "npc": "water_adair",
+      "flag": "water_claim:local:gull_research:lead",
+      "requires_flags": [],
+      "message": "Adair's request: recover the survey satchel left at Gull Rest, off Reedhaven's sheltered line."
+    },
+    {
+      "id": "gull_research_satchel",
+      "chain": "side_water_gull_research",
+      "kind": "site",
+      "at_xz": [-22.34, 883.98],
+      "_why_at": "Inside reward pocket gull_research_satchel (radius 5 m), 4.5 m uphill of its Skill Candy II row so the two prompts never overlap; analytic ground 24.0 m, 16 degree slope.",
+      "label": "Recover Adair's survey satchel",
+      "model": "res://assets/props/quaternius_fantasy/Pouch_Large.gltf",
+      "model_scale": 1.6,
+      "yaw_deg": 35.0,
+      "hide_when_done": true,
+      "flag": "water_claim:local:gull_research:satchel",
+      "requires_flags": ["water_claim:local:gull_research:lead"],
+      "refusal": "Surveyor Adair has not told you about this satchel yet.",
+      "message": "Survey satchel recovered: Adair's current observations. Carry them back on your next Brine Steps passage."
+    },
+    {
+      "id": "gull_research_report",
+      "chain": "side_water_gull_research",
+      "kind": "speech",
+      "npc": "water_adair",
+      "flag": "water_claim:local:gull_research:complete",
+      "requires_flags": ["water_claim:local:gull_research:satchel"],
+      "refusal": "Recover the survey satchel at Gull Rest first.",
+      "message": "Adair charts the safe Gull Rest crossing from the recovered observations."
     }
   ]
 }

@@ -22,3 +22,15 @@ AFTER
   Regression found and fixed during the change: test_water_dialogue_delivery failed when the
     refactored guard check read world truth for a guard that names no world flag (its fixture
     Game has no world). The guard now reads world flags only when it names them, as before.
+
+== 2. side_water_gull_research
+FAILING FIRST (new tests against the chain-1 commit)
+  run_tests --only=gull_research: 9 tests, 8 failed (no Adair steps/conversations/request row,
+    no site support). The Candy II row check passes on the base.
+  smoke_water_gull_research (chain-2 files restored from the chain-1 commit): aborts at the
+    missing WaterLocalChains.site_root() (no satchel site); 240 s watchdog failure.
+AFTER
+  run_tests --only=gull_research: 9 tests, 661 assertions, 0 failed.
+  smoke_water_gull_research: 27 checks, 0 failures.
+  run_tests --only=water 339/0, --only=quest 46/0, --only=dialogue 114/0, --only=flag_scopes 11/0.
+  smoke_water_scene_npcs 67/0, smoke_water_lantern_return 25/0.
