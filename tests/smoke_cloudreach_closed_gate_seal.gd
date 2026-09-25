@@ -28,6 +28,18 @@ extends SceneTree
 ##       only reachable through the upper one, so it is also witnessed on its
 ##       own by fault injection: a trainer placed on summit ground inside the
 ##       sealed volume cannot launch, and the refusal names `cloudreach_summit`.
+##   (e) Fly bypass of the closed ground gate (reproduction, expected to FAIL on
+##       main at bcf46366c): the owned Galecrest launches from the same aerie
+##       stand, climbs by holding Jump, steers by real input to the
+##       `windscar_counterweight_pass` polyline point [-650, 570, 3300] (behind
+##       the closed `upper_counterweight_gate`, outside every no-fly volume),
+##       descends with `fly_descend` and lands. SYSTEMS §8: the trainer must
+##       never stand on ground past the gate plane while
+##       `cloudreach_upper_route_unlocked` is unset. Checked every frame after
+##       launch and for 1 s after the flight ends: grounded on that route's
+##       corridor more than 1 m past the gate (arc length along the route
+##       polyline, i.e. the walking leg's signed distance along the route
+##       direction carried along the route) fails.
 ##   (b) The same flight with a full five-member party holding NO Fly carrier:
 ##       Maela's mentor loaner carries, the flight is equally sealed, and the
 ##       loaner never becomes a party member (no sixth slot, UIDs unchanged).
@@ -72,7 +84,14 @@ const AERIE_LIFT_ID := "cloudreach_aerie_lift"
 const SUMMIT_ROUTE_ID := "summit_overlook_loop"
 const TRIAL_REASON_PREFIX := "Complete the Windscar flight trial"
 const SEAL_REASON := "This wind route is still sealed: %s."
-const WATCHDOG_S := 900.0
+const WATCHDOG_S := 1200.0
+const BYPASS_ROUTE_ID := "windscar_counterweight_pass"
+## The coordinator's suggested landing; the leg uses the route polyline point
+## with z in [2600, 3500] nearest to it (the authored [-650, 570, 3300] pad).
+const BYPASS_HINT := Vector3(-650.0, 570.0, 3300.0)
+const BYPASS_CORRIDOR_M := 15.0
+const BYPASS_CORRIDOR_DY_M := 8.0
+const BYPASS_PAST_LIMIT_M := 1.0
 
 var _game: Node
 var _world: Node3D
@@ -89,6 +108,7 @@ var _lift_ceiling := 0.0
 var _gating_flags: Array[String] = []
 var _denials: Array[String] = []
 var _recoveries := 0
+var _landings: Array[Vector3] = []
 var _party_max_seen := 0
 var _failures: Array[String] = []
 var _checks := 0
@@ -148,6 +168,7 @@ func _run() -> void:
 	await _frames(30)
 	_fly.connect("denied", _on_denied)
 	_fly.connect("recovered", _on_recovered)
+	_fly.connect("landed", _on_landed)
 	_collect_gating_flags()
 	_check_registration()
 	_check(not bool(_flags.call("has", UPPER_FLAG)) and not bool(_flags.call("has", FLY_FLAG)),
@@ -177,6 +198,9 @@ func _run() -> void:
 	if _finished:
 		return
 	await _leg_summit_launch_inside()
+	if _finished:
+		return
+	await _leg_gate_bypass_by_fly(stand)
 	if _finished:
 		return
 
@@ -450,6 +474,167 @@ func _end_flight(label: String) -> void:
 		_check(back, "%s: fixture return to the launch anchor" % label)
 	await _frames(30)
 	print("%s END at %s flying=%s recoveries=%d" % [label, _player.global_position, bool(_fly.call("is_flying")), _recoveries])
+
+
+# --- (e): Fly over the closed ground gate onto the counterweight stair ---------------
+
+func _leg_gate_bypass_by_fly(stand: Vector3) -> void:
+	var label := "(e) Fly bypass"
+	var spec := _gate_spec(GATE_ID)
+	if not _require(not spec.is_empty(), "%s: %s is authored" % [label, GATE_ID]):
+		return
+	var gate := _vec3(spec["position"])
+	var along := _route_direction_at(str(spec.get("requires_unlock", "")), gate)
+	var line: Array[Vector3] = []
+	for raw: Variant in _route_polyline(BYPASS_ROUTE_ID):
+		line.append(_vec3(raw))
+	if not _require(along.length() > 0.5 and line.size() >= 2, "%s: the gate sits on %s" % [label, BYPASS_ROUTE_ID]):
+		return
+	var at_gate := _route_progress(line, gate)
+	var s_gate := float(at_gate["s"])
+	_check(float(at_gate["h"]) < 2.0, "%s: the gate lies on the %s polyline (%.2f m off)" % [label, BYPASS_ROUTE_ID, float(at_gate["h"])])
+	# The landing: the stair's authored polyline point with z in [2600, 3500]
+	# nearest the hint, confirmed as walkable ground behind the gate.
+	var target := Vector3.INF
+	for point: Vector3 in line:
+		if point.z >= 2600.0 and point.z <= 3500.0 \
+				and (not target.is_finite() or point.distance_to(BYPASS_HINT) < target.distance_to(BYPASS_HINT)):
+			target = point
+	if not _require(target.is_finite(), "%s: %s has a polyline point with z in [2600, 3500]" % [label, BYPASS_ROUTE_ID]):
+		return
+	var target_past := float(_route_progress(line, target)["s"]) - s_gate
+	var target_ground := float(_world.call("ground_height_near", target))
+	var ray := PhysicsRayQueryParameters3D.create(target + Vector3.UP * 6.0, target + Vector3.DOWN * 12.0,
+		_player.collision_mask, [_player.get_rid()])
+	var hit := _player.get_world_3d().direct_space_state.intersect_ray(ray)
+	print("%s TARGET %s past_gate_along_route=%.1f m plane_distance=%.1f m ground_near=%.2f collider=%s" % [
+		label, target, target_past, (target - gate).dot(along), target_ground,
+		str(hit.get("position", "none")) if not hit.is_empty() else "none"])
+	if not _require(target_past > 50.0 and not is_nan(target_ground) and absf(target_ground - target.y) < 3.0
+			and not hit.is_empty() and (hit["normal"] as Vector3).y > 0.7,
+			"%s: %s is walkable ground on the stair behind the closed gate" % [label, target]):
+		return
+	if not _require(not bool(_flags.call("has", UPPER_FLAG)) and bool(_flags.call("has", FLY_FLAG)),
+			"%s: Fly unlocked, %s unset" % [label, UPPER_FLAG]):
+		return
+
+	var seated: bool = await _seat(stand, label + " launch stand")
+	if not _require(seated, "%s: the trainer stands on the aerie launch stand" % label):
+		return
+	var party: RefCounted = _game.get("party")
+	var active: RefCounted = party.call("active")
+	_check(active != null and str(active.get("species_id")) == "galecrest", "%s: the owned Galecrest is active" % label)
+	var uids := _party_uids()
+	var before := _gating_state()
+	_player.get("vitals").call("rest")
+	var blockers := str(_fly.call("launch_blockers"))
+	_check(blockers.is_empty(), "%s: the aerie stand is a legal launch ('%s')" % [label, blockers])
+	_denials.clear()
+	_landings.clear()
+	_recoveries = 0
+	await _deploy()
+	if not _require(bool(_fly.call("is_flying")), "%s: Jump, then Jump airborne, deploys Fly (state %s, denials %s)" % [
+			label, str(_fly.get("state")), str(_denials)]):
+		return
+	_check(not bool(_fly.call("last_flight_used_mentor_loaner")), "%s: the owned carrier flies, not the loaner" % label)
+	var watch := {"max_past": -INF, "at": Vector3.INF}
+	var tps := Engine.physics_ticks_per_second
+	var climb_from := _player.global_position.y
+	Input.action_press("jump")
+	for _frame in 25 * tps:
+		await physics_frame
+		_watch_bypass(line, s_gate, watch)
+		if not bool(_fly.call("is_flying")) or _player.global_position.y >= _lift_ceiling - 6.0:
+			break
+	Input.action_release("jump")
+	print("%s CLIMB from %.1f to %s" % [label, climb_from, _player.global_position])
+
+	# Glide by the stick toward the stair; hold fly_descend once there is more
+	# height than the remaining glide needs, and over the landing.
+	var speed := float(_fly_data.get("speed_mps", 16.0))
+	var sink := float(_fly_data.get("sink_mps", 2.0))
+	var ended_frame := -1
+	for frame in 150 * tps:
+		if not bool(_fly.call("is_flying")):
+			ended_frame = frame
+			break
+		var offset := target - _player.global_position
+		offset.y = 0.0
+		var horizontal := offset.length()
+		if horizontal > 12.0:
+			_steer_toward(target)
+		else:
+			_release_move()
+		var spare := (_player.global_position.y - target_ground) - (horizontal / speed * sink + 15.0)
+		if horizontal <= 12.0 or spare > 0.0:
+			Input.action_press("fly_descend")
+		else:
+			Input.action_release("fly_descend")
+		await physics_frame
+		_watch_bypass(line, s_gate, watch)
+		if frame % (5 * tps) == 0:
+			print("%s GLIDE t=%.0fs at=%s state=%s stamina=%.1f to_target=%.1f m" % [label, float(frame) / tps,
+				_player.global_position, str(_fly.get("state")), float(_player.get("vitals").get("stamina")), horizontal])
+	_release_all()
+	for _frame in tps:
+		await physics_frame
+		_watch_bypass(line, s_gate, watch)
+	var end := _player.global_position
+	var why := "still flying after 150 s"
+	if not _landings.is_empty():
+		why = "landed at %s" % _landings[_landings.size() - 1]
+	if _recoveries > 0:
+		why += "; recovered to the anchor %d time(s)" % _recoveries
+	if not _denials.is_empty():
+		why += "; denials %s" % str(_denials)
+	var end_progress := _route_progress(line, end)
+	print("%s END at %s on_floor=%s flying=%s ended_frame=%d why: %s | route: past_gate=%.1f m off_route=%.1f m dy=%.1f m, gate-plane distance=%.1f m" % [
+		label, end, _player.is_on_floor(), bool(_fly.call("is_flying")), ended_frame, why,
+		float(end_progress["s"]) - s_gate, float(end_progress["h"]), float(end_progress["dy"]), (end - gate).dot(along)])
+	_check(float(watch["max_past"]) <= BYPASS_PAST_LIMIT_M,
+		"%s: SYSTEMS §8 -- with %s unset the trainer never stands on ground past the closed counterweight gate plane (max grounded %.1f m past it at %s; flight: %s)" % [
+			label, UPPER_FLAG, float(watch["max_past"]), str(watch["at"]), why])
+	_check(not bool(_flags.call("has", UPPER_FLAG)), "%s: the upper route is still locked" % label)
+	_check_unlocks_unchanged(label, before)
+	_check_party_same(label, uids)
+
+
+## Records the furthest a GROUNDED trainer stood past the gate along the locked
+## route, counting only ground on that route's corridor (so the aerie, which
+## is on the far side of the infinite gate plane but nowhere near the stair,
+## does not count).
+func _watch_bypass(line: Array[Vector3], s_gate: float, watch: Dictionary) -> void:
+	if not _player.is_on_floor() or bool(_fly.call("is_flying")):
+		return
+	var at := _player.global_position
+	var progress := _route_progress(line, at)
+	if float(progress["h"]) > BYPASS_CORRIDOR_M or absf(float(progress["dy"])) > BYPASS_CORRIDOR_DY_M:
+		return
+	var past := float(progress["s"]) - s_gate
+	if past > float(watch["max_past"]):
+		watch["max_past"] = past
+		watch["at"] = at
+
+
+## Closest point on the polyline in plan: arc length `s` to it, horizontal
+## distance `h` from it, and height `dy` above the polyline there.
+func _route_progress(line: Array[Vector3], p: Vector3) -> Dictionary:
+	var best := {"s": 0.0, "h": INF, "dy": INF}
+	var run := 0.0
+	var flat := Vector3(p.x, 0.0, p.z)
+	for i in line.size() - 1:
+		var a := line[i]
+		var b := line[i + 1]
+		var fa := Vector3(a.x, 0.0, a.z)
+		var fb := Vector3(b.x, 0.0, b.z)
+		var q := Geometry3D.get_closest_point_to_segment(flat, fa, fb)
+		var length := fa.distance_to(fb)
+		var t := 0.0 if length < 0.001 else fa.distance_to(q) / length
+		var h := flat.distance_to(q)
+		if h < float(best["h"]):
+			best = {"s": run + fa.distance_to(q), "h": h, "dy": p.y - lerpf(a.y, b.y, t)}
+		run += length
+	return best
 
 
 ## The summit volume on its own: a trainer standing inside it is refused.
@@ -730,6 +915,10 @@ func _on_denied(reason: String) -> void:
 
 func _on_recovered(_reason: String) -> void:
 	_recoveries += 1
+
+
+func _on_landed(at: Vector3, _species_id: String) -> void:
+	_landings.append(at)
 
 
 # --- input ----------------------------------------------------------------------------
