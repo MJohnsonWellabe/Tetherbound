@@ -79,3 +79,22 @@ AFTER
     --only=dialogue 114/0, --only=flag_scopes 11/0.
   smoke_water_scene_npcs 67/0, smoke_water_lantern_return 25/0, smoke_water_cradle_care 30/0,
     smoke_water_deep_watch_chart 28/0, smoke_water_gull_research 27/0.
+
+== 5. side_water_lastlight_shelter
+Reading of WORLD's constraints: "resources placed on exterior side" is taken as the delivery
+and the built shelter standing on the Veilfall exterior (the existing landing camp), never the
+interior. Veilfall's own exterior rows hold 9 driftwood and 3 reed fiber; the 4 reed fiber may
+have to be carried from earlier islands (141 reed / 135 driftwood harvestable world-wide; the
+solvency test covers repair + four saddles + shelter).
+FAILING FIRST (new tests against the chain-4 commit)
+  run_tests --only=lastlight_shelter: 9 tests, 8 failed (no Halen steps/conversations, no
+    delivery cost or rest step, no rest watcher, no request row). The solvency check passes.
+  smoke_water_lastlight_shelter (chain-5 files restored from the chain-4 commit): 2 checks,
+    1 failure -- no delivery site is built, so the run stops.
+AFTER
+  run_tests --only=lastlight_shelter 9/0 (95 assertions).
+  smoke_water_lastlight_shelter: 29 checks, 0 failures.
+  run_tests --only=water 366/0, --only=quest 46/0, --only=dialogue 114/0, --only=flag_scopes 11/0.
+  smoke_water_scene_npcs 67/0, smoke_water_scene_pickups 26/0, smoke_water_deep_watch_chart 28/0,
+    smoke_water_lantern_return 25/0, smoke_water_gull_research 27/0, smoke_water_cradle_care 30/0,
+    smoke_water_garden_records 22/0, smoke_water_dock_actions 57/0, smoke_water_camps 129/0.

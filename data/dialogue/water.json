@@ -1071,6 +1071,48 @@
         "The Compass marks a realm that can breathe again. Carry it home and place it at its stone in the Meadows shrine circle when you are ready.",
         "The docks are shared landings again, as the vault account says they always were."
       ]
+    },
+    "water_halen_shelter_lead": {
+      "speaker": "Campkeeper Halen",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": [
+        "You have reached the foot of the Veilfall. Rest before the hike; the waterfall hides the entrance higher on the mountain, and Officer Venn holds the approach.",
+        "Before or after you face him, there is a sheltered way down beside Lastlight, my old lamp post, to the camp at the landing. The spray never reaches that hollow.",
+        "The creature bed there sits in the open. Bring 4 driftwood and 4 reed fiber to the camp and we can roof it for good, for anyone who comes through.",
+        "Then let one of your companions rest in it, and tell me whether it holds."
+      ]
+    },
+    "water_halen_shelter_reminder": {
+      "speaker": "Campkeeper Halen",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": [
+        "Follow the sheltered way beside Lastlight down to the landing camp. Leave 4 driftwood and 4 reed fiber at the bed.",
+        "There is driftwood along this shore. Keep enough for a saddle if you mean to ride; the shelter can wait for a spare armful."
+      ]
+    },
+    "water_halen_shelter_rest": {
+      "speaker": "Campkeeper Halen",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": [
+        "The roof is up over the landing bed. Let one of your companions rest there before the climb, or after it.",
+        "I want to know it keeps the spray off a real sleeper, not just an empty mattress."
+      ]
+    },
+    "water_halen_shelter_thanks": {
+      "speaker": "Campkeeper Halen",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": [
+        "Your companion slept dry under the new shelter. That bed stays sheltered for everyone who lands here.",
+        "Bring a team ready to move between raised safe ground and the discharge lanes. The human never needs to attack the machinery."
+      ]
+    },
+    "water_halen_post_shelter": {
+      "speaker": "Campkeeper Halen",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": [
+        "The waterfall sounds different with the pump chambers quiet behind it. The sheltered bed at the landing is full most nights now.",
+        "This camp will stay open. People should get to visit the mountain without preparing for a siege."
+      ]
     }
   }
 }

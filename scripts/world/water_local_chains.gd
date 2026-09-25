@@ -17,6 +17,8 @@ var _pending: Dictionary = {}
 ## step id -> {"row", "root", "prompt"} for site steps.
 var _sites: Dictionary = {}
 var _last_revision := -1
+const REST_POLL_S := 0.5
+var _rest_poll_left := 0.0
 
 
 func build(world: Node3D) -> void:
@@ -65,6 +67,18 @@ func _build_site(row: Dictionary, prompt_radius: float) -> void:
 		root.add_child(visual)
 	else:
 		push_error("Water local-chain site model missing: " + str(row.get("model", "")))
+	var done_scene: Variant = load(str(row.get("done_model", ""))) if ResourceLoader.exists(str(row.get("done_model", ""))) else null
+	if done_scene is PackedScene:
+		# What the finished step leaves standing (the Lastlight bed shelter).
+		var built := (done_scene as PackedScene).instantiate() as Node3D
+		built.name = "Built"
+		var offset: Array = row.get("done_model_offset_xz", [0.0, 0.0])
+		var spot := Vector2(xz.x + float(offset[0]), xz.y + float(offset[1]))
+		built.position = Vector3(float(offset[0]), float(_world.ground_height_at(spot.x, spot.y)) - ground \
+			+ float(row.get("done_model_offset_y", 0.0)), float(offset[1]))
+		built.scale = Vector3.ONE * float(row.get("done_model_scale", 1.0))
+		built.rotation.y = deg_to_rad(float(row.get("done_yaw_deg", 0.0)))
+		root.add_child(built)
 	var prompt := INTERACT.new()
 	prompt.name = "Prompt"
 	root.add_child(prompt)
@@ -74,11 +88,50 @@ func _build_site(row: Dictionary, prompt_radius: float) -> void:
 	_sites[str(row.id)] = {"row": row, "root": root, "prompt": prompt}
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _game == null or _game.get("world") == null:
 		return
 	if int(_game.world.flags.revision) != _last_revision:
 		_refresh()
+	_rest_poll_left -= delta
+	if _rest_poll_left <= 0.0:
+		_rest_poll_left = REST_POLL_S
+		_watch_rests()
+
+
+## A rest step is wanted once its prerequisites hold, it is unrecorded, and one
+## of this peer's companions is resting in the step's camp bed.
+static func rest_wanted(row: Dictionary, world_flags: Variant, resting_beds: Array) -> bool:
+	return str(row.get("kind", "")) == "rest" and site_offered(row, world_flags) \
+		and resting_beds.has(int(row.get("bed_index", 0)))
+
+
+## Bed indices this peer's own resting companions occupy (beds are local
+## state; see creature_bed.gd occupant_index()).
+func _resting_beds() -> Array:
+	var out: Array = []
+	var party: Variant = _game.get("party") if _game != null else null
+	if party == null:
+		return out
+	for creature: Variant in party.call("members"):
+		if creature != null and bool((creature as Object).get("resting")):
+			out.append(int((creature as Object).get("rest_bed_index")))
+	return out
+
+
+func _watch_rests() -> void:
+	if _world == null or _world.simulation_only or str(_game.get("current_realm")) != "water":
+		return
+	var rig := _world.call("local_rig") as Node3D
+	var beds := _resting_beds()
+	for row: Variant in RULES.load_data().get("steps", []):
+		if not row is Dictionary or _pending.has(str(row.get("id", ""))) \
+				or not rest_wanted(row, _game.world.flags, beds):
+			continue
+		# Only from beside the bed, so the host never has to refuse a far request.
+		var at := RULES.step_xz(row)
+		if rig != null and Vector2(rig.global_position.x, rig.global_position.z).distance_to(at) <= RULES.reach_m(row):
+			request_step(str(row.id))
 
 
 func _refresh() -> void:
@@ -94,6 +147,13 @@ func _refresh() -> void:
 		# afar); only its prompt waits for the lead.
 		site.root.visible = not _world.simulation_only and (bool(row.get("always_visible", false)) \
 			or open or (done and not bool(row.get("hide_when_done", false))))
+		var visual: Node3D = site.root.get_node_or_null("Visual")
+		var built: Node3D = site.root.get_node_or_null("Built")
+		if built != null:
+			# A delivery site shows its marker while open and what it built after.
+			built.visible = done
+			if visual != null:
+				visual.visible = not done
 
 
 ## Ask the host to record one chain step for this peer's character. Returns
@@ -109,9 +169,18 @@ func request_step(step_id: String) -> Dictionary:
 			if not bool(_game.inventory.has_room_for(item, int(grant[item]))):
 				_game.push_world_message("Satchel is full.")
 				return {}
+	# Inventory proof for a delivery: this peer's own counts of the cost items.
+	var counts: Dictionary = {}
+	var cost: Variant = row.get("cost", {})
+	if cost is Dictionary and _game != null:
+		for item: String in cost:
+			counts[item] = int(_game.inventory.count(item))
 	_pending[step_id] = str(row.get("flag", ""))
-	var verdict := CLAIM.submit(self, {"kind": INTENT, "realm": "water", "action_id": step_id, "inventory": {},
-		"party_species": NPCS.party_species(_game)})
+	var intent := {"kind": INTENT, "realm": "water", "action_id": step_id, "inventory": counts,
+		"party_species": NPCS.party_species(_game)}
+	if str(row.get("kind", "")) == "rest":
+		intent["resting_bed_index"] = int(row.get("bed_index", 0))
+	var verdict := CLAIM.submit(self, intent)
 	if not CLAIM.in_flight(verdict):
 		_pending.erase(step_id)
 	return verdict

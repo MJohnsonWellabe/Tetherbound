@@ -160,7 +160,28 @@ static func evaluate(intent: Dictionary, context: Dictionary, flags: Variant) ->
 			return _refuse("claim", str(row.get("claim_refusal", "Collect what you were sent for first.")))
 	if not swimmer_condition_met(row, flags, intent.get("party_species", [])):
 		return _refuse("swimmer", str(row.get("swimmer_refusal", "Bring a swimmer of your own first.")))
+	# A rest step names the camp bed it watches; the requester's proof that one
+	# of their companions rests there follows the party-proof trust model.
+	if str(row.get("kind", "")) == "rest":
+		var bed: Variant = intent.get("resting_bed_index", null)
+		if not (bed is int or bed is float) or int(bed) != int(row.get("bed_index", 0)):
+			return _refuse("rest", str(row.get("rest_refusal", "Rest a companion in this camp's creature bed first.")))
+	# A delivery debits the actor's own materials (the same client inventory
+	# proof as a dock repair), in the same delta as the record.
+	var cost: Variant = row.get("cost", {})
+	var bag: Variant = context.get("inventory", {})
+	if cost is Dictionary and not (cost as Dictionary).is_empty():
+		if not bag is Dictionary:
+			return _refuse("malformed", "The delivered materials could not be checked.")
+		for item: String in cost:
+			var amount: Variant = bag.get(item, 0)
+			if not (amount is int or amount is float) or not is_finite(float(amount)) or float(amount) < float(cost[item]):
+				return _refuse("materials", str(row.get("materials_refusal", "Bring the materials first.")))
 	var ops: Array = []
+	if cost is Dictionary:
+		for item: String in cost:
+			ops.append({"op": "item_take", "scope": "player", "peers": [actor], "item": item,
+				"count": int(cost[item]), "txn_id": flag})
 	for extra: Variant in row.get("also_records", []):
 		if not flags.has(str(extra)):
 			ops.append(_flag_op(str(extra)))

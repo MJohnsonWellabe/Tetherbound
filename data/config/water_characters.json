@@ -131,6 +131,15 @@
       ],
       "purpose": "side_water_cradle_care step 1: Otto points to cradle_shell_nest and its Reef Stone, keeping his five-companion crossing advice. Requests the host-recorded lead.",
       "effect": "water:local_step:cradle_care_lead"
+    },
+    {
+      "conversation": "water_halen_shelter_lead",
+      "unless_world_flags": [
+        "water_claim:local:lastlight_shelter:lead",
+        "water_claim:local:lastlight_shelter:rested"
+      ],
+      "purpose": "side_water_lastlight_shelter step 1: Halen reveals the sheltered route beside Lastlight and asks for 4 driftwood and 4 reed fiber at the existing landing camp, keeping his climb and Venn guidance. Requests the host-recorded lead.",
+      "effect": "water:local_step:lastlight_shelter_lead"
     }
   ],
   "npcs": [
@@ -579,7 +588,27 @@
         23.0
       ],
       "greeting": "water_halen_pre",
+      "_why_greeting_when": "side_water_lastlight_shelter: a reminder while the delivery is open, a rest request once the shelter stands, and the acknowledgement after a companion rested there (before or after restoration). The guarded lead takes priority.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_claim:local:lastlight_shelter:rested"
+          ],
+          "conversation": "water_halen_post_shelter"
+        },
+        {
+          "if_flag": "water_claim:local:lastlight_shelter:rested",
+          "conversation": "water_halen_shelter_thanks"
+        },
+        {
+          "if_flag": "water_claim:local:lastlight_shelter:supplied",
+          "conversation": "water_halen_shelter_rest"
+        },
+        {
+          "if_flag": "water_claim:local:lastlight_shelter:lead",
+          "conversation": "water_halen_shelter_reminder"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_halen_post"

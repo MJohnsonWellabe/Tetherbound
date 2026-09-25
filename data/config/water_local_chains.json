@@ -125,6 +125,51 @@
       "requires_flags": ["water_claim:local:garden_records:account"],
       "refusal": "Copy the account on the Drowned Garden's vault wall first.",
       "message": "Edda adds the vault's dock account to the Salt Crown records."
+    },
+    {
+      "id": "lastlight_shelter_lead",
+      "chain": "side_water_lastlight_shelter",
+      "kind": "speech",
+      "npc": "water_halen",
+      "flag": "water_claim:local:lastlight_shelter:lead",
+      "requires_flags": [],
+      "message": "Halen's request: 4 driftwood and 4 reed fiber to roof the creature bed at the landing camp beside Lastlight."
+    },
+    {
+      "id": "lastlight_shelter_supply",
+      "chain": "side_water_lastlight_shelter",
+      "kind": "site",
+      "at_xz": [374.161, 3822.923],
+      "_why_at": "The existing legal camp water_camp_veilfall (camp at [381.661, 3822.923]; its creature bed at camp + (-4, 0)). The delivery prompt stands 3.5 m west of the bed on 6.6 degree ground, so it never overlaps the bed's own assign prompt. Veilfall exterior, beside the arrival landing; nowhere near the concealed interior staging area.",
+      "label": "Deliver shelter timber and reed",
+      "model": "res://assets/props/generated_camp/camp_firewood.glb",
+      "model_scale": 1.0,
+      "yaw_deg": 20.0,
+      "done_model": "res://assets/props/generated_camp/camp_tent.glb",
+      "_why_done_model": "The camp set's own tent, raised over the creature bed as its permanent shelter once the delivery is recorded (world-visible to every peer).",
+      "done_model_offset_xz": [3.5, 0.0],
+      "done_model_scale": 1.0,
+      "done_yaw_deg": 90.0,
+      "hide_when_done": false,
+      "cost": {"driftwood": 4, "reed_fiber": 4},
+      "materials_refusal": "Halen's shelter needs 4 driftwood and 4 reed fiber.",
+      "flag": "water_claim:local:lastlight_shelter:supplied",
+      "requires_flags": ["water_claim:local:lastlight_shelter:lead"],
+      "refusal": "Campkeeper Halen has not asked for a shelter here yet.",
+      "message": "The creature bed at the Veilfall camp is sheltered now. Rest a companion there."
+    },
+    {
+      "id": "lastlight_shelter_rest",
+      "chain": "side_water_lastlight_shelter",
+      "kind": "rest",
+      "at_xz": [377.661, 3822.923],
+      "bed_index": -48,
+      "_why_bed": "water_camp_veilfall creature_bed_index; the record follows the existing bed rest (creature_bed.gd), before or after Venn.",
+      "flag": "water_claim:local:lastlight_shelter:rested",
+      "requires_flags": ["water_claim:local:lastlight_shelter:supplied"],
+      "refusal": "Deliver the shelter materials first.",
+      "rest_refusal": "Rest one of your companions in the sheltered bed first.",
+      "message": "Your companion settles in the sheltered bed. Halen will want to hear it held."
     }
   ]
 }
