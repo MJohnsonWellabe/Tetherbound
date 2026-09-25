@@ -83,7 +83,9 @@ func _play(conversation_id: String) -> void:
 		await _tap(&"interact")
 		await _settle(6)
 	if bool(_panel.call("is_open")) or _dialogue_finished != conversation_id:
-		_fail("marshal input completed '%s', expected '%s'" % [_dialogue_finished, conversation_id])
+		_fail("marshal input completed '%s', expected '%s' (selection %s, readiness %s)" % [
+			_dialogue_finished, conversation_id, str(_party.call("tournament_selection")),
+			str(Array(TOURNAMENT.readiness_report(_party)))])
 
 
 func _enter_the_tournament() -> bool:

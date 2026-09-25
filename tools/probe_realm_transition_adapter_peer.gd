@@ -267,7 +267,8 @@ func _make_body(data: Variant, realm: String, kind: String) -> Node:
 	var baseline: Callable = Callable()
 	if kind == "Trainer":
 		baseline = func(observer: int) -> bool:
-			return TRAINERS.observer_may_receive(observer, str(session.call("realm_of", observer)), realm, true)
+			return TRAINERS.baseline_allows(observer, body.multiplayer.get_peers(),
+				func(peer: int) -> String: return str(session.call("realm_of", peer)), realm, true)
 		state.add_visibility_filter(baseline)
 	var origin := str(data.get("origin", ""))
 	SCOPE.wire_body(body, state, realm, owner, baseline, origin)

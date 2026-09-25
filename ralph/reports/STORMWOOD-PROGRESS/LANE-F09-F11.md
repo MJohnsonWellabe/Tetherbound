@@ -404,6 +404,7 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   - **Current by day:** the current is subtle in daylight, by design, since it is additive. It is judged at night / on the storm sky.
   - **Not verified:** no blind re-judge, no Ally profile, and the current's Surge coupling has not been seen live across a Break.
 
+
 ## WO-F10-06 — Surge phases readable without HUD (`ralph/stormwood-f10-surge-readability`)
 
 - **Anchor:** F10 / ACCEPTANCE §6.1 F10: lightning with a 1.2 s / 3 m telegraph, and Calm/Building/Break/Fading readable without HUD text. The restored-sky view has to be distinct. ART_DIRECTION and SYSTEMS define the Stormwood look for each phase.
@@ -435,3 +436,64 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
     - the flash has only been seen in stills;
     - no audio.
   - **Region-wide, outside this branch:** no sun shadows, an empty horizon, grass that stays bright under dark skies, and no rain wetness.
+
+
+### WO-F11-03: LB prompt after a Break faint
+
+- **Finding (step 1, real director):** LB already sends out the next creature during Break. `party_cycle` goes to `encounter_director.gd` `_read_creature_control_input()`, then `party.cycle_active(1)`. That step skips fainted and resting creatures and bumps `revision`. `_sync_active_creature()` sees a hidden but valid `_ally_body` whose creature is not the new active one. It dismisses that body (`queue_free`) and summons the new active creature as a visible follower. The field control then pilots the follower once it is within reach of the arena. `summon_active_creature()` alone (the `creature_recall` path) is a no-op while the hidden fainted body is still deployed. The only gap was that nothing told the player to press LB. No shared file is changed.
+- **Change:** `stormwood_dynamo.gd` `_apply_local_hazard()`, on a Break discharge faint, pushes one world message: "<name> fainted. Press <party_cycle> to send out <next>." The button name comes from `input_glyph.gd` `action_name()`, so it follows rebinding and shows LB on a pad. `next_available()` mirrors `cycle_active(1)`. The message is sent once per faint, because a fainted creature takes no more damage. It is not sent when no creature can take the field, since the existing full-party wipe runs instead. The game still does not switch creatures on its own.
+- **Witnesses:** all `test_stormwood_*` suites: 241 tests, 25103 assertions, 0 failed. Smokes: dynamo_break_faint 66/0, stormheart_choice 41/0, stormheart_participants 28/0. No SCRIPT ERROR.
+- **Negative controls:**
+
+  | Change reverted | Result |
+  |---|---|
+  | Prompt push removed | 1 smoke fail |
+  | `next_available` counts a resting creature | 2 smoke fails + 1 unit fail |
+  | In test: no LB press | The fainted creature stays active and hidden, and the prompt is not repeated |
+- **Review should-fix: pause while choosing a replacement.** COMBAT says a faint "pauses enemy attack issuance until a replacement is selected … in co-op other participants continue."
+  - **When it pauses.** The host freezes Break: no `rules.advance`, no bank fire and no countdown. It does this while no current participant has a live creature and at least one participant is waiting to replace a fainted one.
+  - **How liveness is read.** The host's own creature is the director's `ally_instance`. Another peer's is the card the host holds, down once that peer reports the creature fainted with `dynamo_ally_fainted`.
+  - **Publishing.** The state event carries the pause as `paused`.
+  - **What does not pause.** Only participants count. A recall with no faint behind it never pauses. The existing logic still drops a participant who leaves, and a full-party faint still takes the wipe path.
+  - **Prompt re-show.** A still-paused Break shows the prompt once more after 4 s, and never a third time.
+  - **Not changed.** The arena readout is outside this lane, so it shows the frozen seconds with no "paused" label.
+- **Witnesses:** all `test_stormwood_*` suites: 241 tests, 25103 assertions, 0 failed. Smokes: dynamo_break_faint 77/0, stormheart_choice 41/0, stormheart_participants 28/0.
+- **Pause negative controls:**
+
+  | Change reverted | Result |
+  |---|---|
+  | Pause disabled | 6 fails |
+  | A live partner ignored | 1 fail (the co-op check) |
+  | Re-show removed | 1 fail |
+
+## WO-F09-03 — Pocket spurs, junction lamps, review follow-ups (`ralph/stormwood-f09-pocket-spurs`, stacked on WO-F09-02)
+
+- **Finding:** pocket centres stood 112–351 m off their roads, and nothing on a road pointed to a pocket.
+- **Fix: one spur per pocket** (`stormwood_world.json`, `"kind": "spur"`, with `pocket_id`, `joins` and the joined road's `requires_unlock`). Each spur is a straight lane from the nearest point on its road to the mouth. The mouths already faced that point, so no bend was needed.
+  - Verge → `ash_road` 270 m; Hollows → `crown_sightline_loop` 137 m; Conductor → `conductor_road` 341 m; Deepwood → `hall_loop` 155 m; Dynamo → `dynamo_west_approach` 103 m.
+  - The steepest graded corridor sample is 17.7° (Dynamo). The others are at most 11.1°.
+  - **Why spurs, not moved pockets:** spurs are data plus one lamp. Moving pockets would re-validate five interiors, five moved rewards, spawn discs and region bounds, and 40–80 m would still leave a pocket out of sight of the road.
+- **Junction lamp** (`stormwood_pockets.json` `spur_marker`): a third `mouth_lure` lamp post. It stands 10 m up the spur and 3.5 m to its right, clear of every road corridor, faces the road, and has its own collider.
+- **Route consumers checked:**
+  - The ROAD visibility model, the audit/author tools and the four-biome observer read only `critical`.
+  - `smoke_stormwood_continuous._walk_route` selects routes by id.
+  - The trainers-near-routes test: no trainer's nearest route is a spur.
+  - The glass-sink and walkability tests grade spurs like roads, and they pass.
+  - `test_stormwood_pockets` now means "roads" as non-spur routes.
+- **Scatter:** spurs get the corridor clearing but no roadside stand. A stand would line a dead-end lane like a through road and claim tree cells the background forest now fills. The re-bake changed 34694 → 34691 placements. On the old bake, 3 of 5 spur lanes held a collider 0.47–1.58 m from the centre line.
+- **Review LOWs:**
+  - (a) The mouth-to-road search now sweeps the 0.4 m capsule past every committed baked collider and lamp post, and must reach a non-spur road. It has a built-in control: a closed ring of trunks outside the mouth must fail the same search, and it does.
+  - (b) An unpaired legacy arch with no saved footing no longer counts against the three-road cap, and no longer blocks the Crown twin. A legacy arch that is half of a standing pair still counts, because that road still travels. The existing cap tests use paired legacy roads and are unchanged. There are two new tests, and both fail on the old rule.
+  - (c) Config `draw_distance`: the 190 palisade trunks and the lamp art stop drawing at 250 m, with a 30 m fade. The 15 lamp lights use Light3D distance fade, ending at 60 m, because lights have no visibility range.
+  - (d) The frame maths is now in one place, `stormwood_pocket_frame.gd`, which is a bake source. The pocket collider reach is `max(collision_radius × scale_max)` and still equals 2.61.
+  - (e) A seat row without a position is skipped.
+- **Witnesses:**
+  - Two bakes are byte-identical.
+  - `--only=test_stormwood_,test_road_creature_visibility,test_scatter_,vegetation` ran 68 files and 348 tests, with 0 failed and 0 SCRIPT ERROR.
+  - `test_stormwood_pockets` has 10 tests, 0 failed.
+  - Both smokes pass: `smoke_stormwood_arches` and `smoke_stormwood_pickup_runtime`.
+- **Captures:** `visual/f09/wo03_after/` (5 road-side junction frames, 1 mid-spur frame, `frames_wo03.json`) and `visual/f09/sheet_wo03_spurs.jpg`. The frames were not self-judged; the blind judge is with the coordinator.
+- **Open:**
+  - The spur has no surface, like the roads. Much of the forest here is open grass with sparse trees, so the cleared corridor alone draws no visible line.
+  - WORLD.md says "nine top-level route records"; the data now has 15 (10 roads + 5 spurs). The coordinator owns that edit.
+  - There is still no night capture of the lamps.
