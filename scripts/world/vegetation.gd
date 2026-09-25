@@ -334,6 +334,10 @@ var _soft_occluder_state: PackedByteArray = PackedByteArray()
 const SOFT_VISIBLE := 0
 const SOFT_HIDDEN_BY_FIGHT := 1
 const SOFT_GONE := 2
+## How many open fight rings hide each entry. The last ring to close restores
+## it, so a ring that closes (even at the end of the frame another opens in)
+## never puts a plant back inside a ring that is still open.
+var _soft_occluder_fight_holds: PackedInt32Array = PackedInt32Array()
 ## W18-DENSITY-B4-B5-0904 found the gap this closes: the site validator that
 ## keeps band pickups clear of scatter saw only the collision batches, so a
 ## Rare-tier pickup at the herd bull sat under a shrub that covered 86% of it
@@ -486,6 +490,7 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_soft_occluder_harvest.clear()
 	_soft_occluder_layer.clear()
 	_soft_occluder_state.clear()
+	_soft_occluder_fight_holds.clear()
 	_next_mesh_id = 0
 	_harvested.clear()
 	_harvest_layer_counts.clear()
@@ -1555,6 +1560,7 @@ func _record_soft_occluders(model_path: String, layer_cfg: Dictionary, placement
 		_soft_occluder_harvest.append(int(placement.get("harvest_index", -1)))
 		_soft_occluder_layer.append(layer_index)
 		_soft_occluder_state.append(SOFT_VISIBLE)
+		_soft_occluder_fight_holds.append(0)
 
 
 ## Half the wider of a model's own glTF bounding box in X/Z, at scale 1 --
@@ -2590,23 +2596,31 @@ func stats() -> Dictionary:
 ##
 ## Each hidden entry is removed at its own stored position, exactly as
 ## `harvest_permanently()` does, and marked so a second overlapping ring does
-## not take it twice. Returns the indices hidden, which is the token.
+## not take it twice; that ring still counts a hold on it, so the entry comes
+## back only when the last ring holding it closes. Returns the indices this
+## ring holds, which is the token.
 func hide_fight_occluders(centre: Vector3, radius: float) -> PackedInt32Array:
 	var hidden := PackedInt32Array()
 	if simulation_only or _instancer == null or radius <= 0.0:
 		return hidden
 	var radius_sq := radius * radius
+	var removed := false
 	for i in _soft_occluder_positions.size():
-		if _soft_occluder_state[i] != SOFT_VISIBLE or _soft_occluder_mesh_ids[i] < 0:
+		var state := _soft_occluder_state[i]
+		if state == SOFT_GONE or _soft_occluder_mesh_ids[i] < 0:
 			continue
 		var spot: Vector3 = _soft_occluder_positions[i]
 		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
 			continue
+		_soft_occluder_fight_holds[i] += 1
+		hidden.append(i)
+		if state == SOFT_HIDDEN_BY_FIGHT:
+			continue
+		removed = true
 		_remove_render_instance(_soft_occluder_mesh_ids[i], spot, false)
 		_forget_instance_position(_soft_occluder_mesh_ids[i], spot)
 		_soft_occluder_state[i] = SOFT_HIDDEN_BY_FIGHT
-		hidden.append(i)
-	if not hidden.is_empty():
+	if removed:
 		_instancer.call("update_mmis", true)
 	return hidden
 
@@ -2614,7 +2628,9 @@ func hide_fight_occluders(centre: Vector3, radius: float) -> PackedInt32Array:
 ## Puts back what one `hide_fight_occluders()` call took out, except anything
 ## harvested in the meantime: a harvestable bush whose gather point is gone
 ## from `_harvest_lookup` was taken for good and stays gone. Returns how many
-## came back. Safe to call with an empty or stale token.
+## came back. Safe to call with an empty token or one from before a rebuild.
+## Each token releases its holds once: `combat_arena.gd` clears its token after
+## restoring, and a token released twice would drop another ring's hold.
 func restore_fight_occluders(token: PackedInt32Array) -> int:
 	if token.is_empty() or _instancer == null or not is_instance_valid(_instancer):
 		return 0
@@ -2622,6 +2638,9 @@ func restore_fight_occluders(token: PackedInt32Array) -> int:
 	for i: int in token:
 		if i < 0 or i >= _soft_occluder_state.size() \
 				or _soft_occluder_state[i] != SOFT_HIDDEN_BY_FIGHT:
+			continue
+		_soft_occluder_fight_holds[i] = maxi(_soft_occluder_fight_holds[i] - 1, 0)
+		if _soft_occluder_fight_holds[i] > 0:
 			continue
 		var harvest_index := _soft_occluder_harvest[i]
 		if harvest_index >= 0 and not _harvest_lookup.has("%s#%d" % [

@@ -1379,7 +1379,7 @@ func _poll_look() -> void:
 				AUDIO_CUES.play(&"ui_focus")
 	var percent := LOOK_PREFS.sensitivity_percent()
 	var span := maxi(1, _look_max - _look_min)
-	var filled := int(round(10.0 * float(percent - _look_min) / float(span)))
+	var filled := clampi(int(round(10.0 * float(percent - _look_min) / float(span))), 0, 10)
 	_look_sensitivity_button.text = "  %s:  [%s%s]  %d%%" % [
 		_look_sensitivity_label, "|".repeat(filled), " ".repeat(10 - filled), percent]
 	_look_sensitivity_button.add_theme_color_override("font_color",

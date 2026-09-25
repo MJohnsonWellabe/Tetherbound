@@ -3,13 +3,16 @@ extends RefCounted
 ## MEADOWS-VISUAL-PASS, the fight-framing gap three blind rounds ranked first:
 ## a large ally standing between the lens and a small foe hides the foe. The
 ## neutral tracker's 35-degree composition cannot clear a 3.85m Terrapup from a
-## 2m Bramblebun two metres ahead of it, and swinging the orbit further turns
-## camera-relative stick-forward away from the foe, which is a control change.
+## 2m Bramblebun two metres ahead of it.
 ##
-## So the ally steps aside visually instead: while it covers the foe from the
-## live camera, its meshes fade to `camera.occlusion_fade.transparency`, and
-## they come back when the foe is clear. Controls, collision, the camera and
-## every other peer are untouched; this is local presentation only.
+## The first answer (owner-delegated, round 5) is `combat_manager.gd` swinging
+## the neutral tracker wider while the foe is hidden. That rotates the camera
+## basis camera-relative movement reads, exactly as the neutral tracker already
+## does within COMBAT section 5's automatic framing; manual look still wins.
+## This file is the fallback: when the swing cannot clear the foe within
+## `dither_after_s`, the ally's meshes fade to
+## `camera.occlusion_fade.transparency` and come back when the foe is clear.
+## Collision and every other peer are untouched; local presentation only.
 ##
 ## "Covers" is measured against an ellipsoid inscribed in the ally's rendered
 ## bounds, not the bounds box itself: a box over-reports the empty corners

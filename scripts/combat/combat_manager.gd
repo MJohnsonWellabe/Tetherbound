@@ -172,6 +172,10 @@ var _ally_fade: float = 0.0
 var _ally_faded_model: Node3D = null
 var _ally_fade_state: Dictionary = {}
 var _ally_hidden_for := 0.0
+## Seconds the foe has been clear since the ally last hid it. The wider swing
+## holds for `composition_hold_s` of that before easing back, so the tracker
+## does not swing out, clear the foe, swing back into the ally and repeat.
+var _ally_clear_for := 0.0
 
 ## OP23-02: the point `_open_arena()` already asked `_arena_bounds()` about
 ## when it sized this fight's radius. `_combat_camera_profile()` re-asks the
@@ -1148,17 +1152,19 @@ func _update_ally_occlusion_fade(delta: float) -> void:
 		return
 	var hidden := bool(cfg.get("enabled", true)) and _ally_hides_wild(model, int(cfg.get("hidden_points", 2)))
 	_ally_hidden_for = _ally_hidden_for + delta if hidden else 0.0
+	_ally_clear_for = 0.0 if hidden else _ally_clear_for + delta
 	# First answer: the neutral tracker swings wider until the foe is clear,
 	# which a still frame reads as ordinary framing. The dither is the fallback
 	# for when that cannot happen -- the player is steering the camera, or a
 	# wall stops the orbit -- and only after the foe has stayed hidden a moment.
 	if _camera_rig != null and _camera_rig.has_method("set_composition_extra"):
-		var extra_target := float(cfg.get("composition_extra_deg", 40.0)) if hidden else 0.0
 		var current := float(_camera_rig.call("composition_extra"))
+		var holding := current > 0.0 and _ally_clear_for < float(cfg.get("composition_hold_s", 1.5))
+		var extra_target := float(cfg.get("composition_extra_deg", 40.0)) if hidden or holding else 0.0
 		var ease_rate := maxf(float(cfg.get("composition_ease_deg_per_s", 90.0)), 1.0)
 		_camera_rig.call("set_composition_extra", move_toward(current, extra_target, ease_rate * delta))
 	var target := 0.0
-	if hidden and _ally_hidden_for >= float(cfg.get("dither_after_s", 1.0)):
+	if hidden and _ally_hidden_for >= float(cfg.get("dither_after_s", 0.25)):
 		target = clampf(float(cfg.get("transparency", 0.6)), 0.0, 0.9)
 	var speed := maxf(float(cfg.get("speed", 4.0)), 0.01)
 	_ally_fade = move_toward(_ally_fade, target, speed * delta)
@@ -1192,6 +1198,7 @@ func _clear_ally_fade() -> void:
 	OCCLUSION_FADE.restore(_ally_fade_state)
 	_ally_fade = 0.0
 	_ally_hidden_for = 0.0
+	_ally_clear_for = 0.0
 	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_composition_extra"):
 		_camera_rig.call("set_composition_extra", 0.0)
 	_ally_faded_model = null

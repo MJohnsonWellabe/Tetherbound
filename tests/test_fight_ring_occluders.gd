@@ -93,11 +93,28 @@ func test_an_overlapping_second_ring_does_not_take_the_same_plant_twice() -> voi
 	var first: PackedInt32Array = veg.call("hide_fight_occluders", Vector3.ZERO, 11.0)
 	var second: PackedInt32Array = veg.call("hide_fight_occluders", Vector3(8.0, 0.0, 0.0), 11.0)
 	assert_eq(first.size(), 1)
-	assert_eq(second.size(), 0)
-	assert_eq(instancer.removed.size(), 1)
+	assert_eq(second.size(), 1, "the second ring holds the plant too")
+	assert_eq(instancer.removed.size(), 1, "but it is removed only once")
 	veg.call("restore_fight_occluders", second)
-	assert_eq(instancer.added.size(), 0, "the second ring gives back only what it took")
+	assert_eq(instancer.added.size(), 0, "the first ring still holds it")
 	veg.call("restore_fight_occluders", first)
+	assert_eq(instancer.added.size(), 1)
+	veg.free()
+
+
+## Review of PR215: the first arena can close (its `_exit_tree` runs at the end
+## of the frame) after a second ring has opened over the same plants. Closing
+## the first must not put a bush back inside the ring that is still open.
+func test_the_first_ring_closing_leaves_plants_the_second_still_holds_hidden() -> void:
+	var pair := _veg()
+	var veg: Node3D = pair[0]
+	var instancer: RecordingInstancer = pair[1]
+	_record(veg, "bushes", Vector3(5.0, 0.0, 0.0), 7)
+	var first: PackedInt32Array = veg.call("hide_fight_occluders", Vector3.ZERO, 11.0)
+	var second: PackedInt32Array = veg.call("hide_fight_occluders", Vector3(8.0, 0.0, 0.0), 11.0)
+	assert_eq(int(veg.call("restore_fight_occluders", first)), 0, "the second ring is still open")
+	assert_eq(instancer.added.size(), 0)
+	assert_eq(int(veg.call("restore_fight_occluders", second)), 1, "the last ring to close brings it back")
 	assert_eq(instancer.added.size(), 1)
 	veg.free()
 

@@ -166,11 +166,12 @@
       "manual_grace_seconds": 0.4
     },
     "occlusion_fade": {
-      "_comment": "MEADOWS-VISUAL-PASS: a large ally between the lens and a small foe hid the foe in every blind round. While the ally's inscribed ellipsoid covers at least `hidden_points` of the foe's three sample heights from the live camera, the neutral combat tracker first swings `composition_extra_deg` past its composition (eased at `composition_ease_deg_per_s`; manual look still wins). Only if the foe stays hidden for `dither_after_s` do the ally's surfaces dither to `transparency` at `speed` per second, returning when the foe is clear. A blind judge read an always-on dither as the companion turning into a ghost. Presentation only and local to each peer: controls and collision are unchanged (scripts/combat/ally_occlusion_fade.gd).",
+      "_comment": "MEADOWS-VISUAL-PASS: a large ally between the lens and a small foe hid the foe in every blind round. While the ally's inscribed ellipsoid covers at least `hidden_points` of the foe's three sample heights from the live camera, the neutral combat tracker first swings `composition_extra_deg` past its composition (eased at `composition_ease_deg_per_s`; manual look still wins). Once the foe is clear the swing holds for `composition_hold_s` before easing back, so it does not oscillate. Only if the foe stays hidden for `dither_after_s` (COMBAT section 5: no continuous actionable-tell occlusion longer than 0.25s) do the ally's surfaces dither to `transparency` at `speed` per second, returning when the foe is clear; the ease rate lets the swing finish inside that window. A blind judge read an always-on dither as the companion turning into a ghost. Presentation only and local to each peer; like the neutral tracker it extends, the swing moves the camera basis that camera-relative movement reads (scripts/combat/ally_occlusion_fade.gd).",
       "enabled": true,
       "composition_extra_deg": 40.0,
-      "composition_ease_deg_per_s": 90.0,
-      "dither_after_s": 1.0,
+      "composition_ease_deg_per_s": 160.0,
+      "composition_hold_s": 1.5,
+      "dither_after_s": 0.25,
       "transparency": 0.6,
       "hidden_points": 2,
       "speed": 4.0
