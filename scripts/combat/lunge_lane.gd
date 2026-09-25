@@ -40,6 +40,7 @@ var _edge_alpha := 0.9
 var _edge_width := 0.14
 var _end_depth := 0.35
 var _fade := 0.35
+var _depth_pull := 0.45
 
 var _locked := false
 var _released := false
@@ -77,6 +78,7 @@ static func begin(body: Node3D, start: float, length: float, half_width: float,
 	lane._edge_width = float(cfg.get("lane_edge_width", lane._edge_width))
 	lane._end_depth = float(cfg.get("lane_end_depth", lane._end_depth))
 	lane._fade = maxf(0.01, float(cfg.get("lane_fade", lane._fade)))
+	lane._depth_pull = maxf(0.0, float(cfg.get("lane_depth_pull", lane._depth_pull)))
 	lane.top_level = true
 	body.add_child(lane)
 	return lane
@@ -92,17 +94,41 @@ func _ready() -> void:
 	_refresh_aabb()
 
 
-func _material() -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material.disable_receive_shadows = true
-	material.vertex_color_use_as_albedo = true
-	# A mark on the ground, depth-tested for the reason telegraph_glow.gd
-	# records: without it the lane paints through the ally's back.
-	material.no_depth_test = false
+## Pulled toward the camera in view space by `depth_pull` metres, the same
+## ground-telegraph technique `stormwood_lightning.gd` uses. The first relay
+## capture drew the lane (and the feet ring) as scattered fragments: the
+## rendered terrain between height samples sits a few centimetres above the
+## sampled heights, so a depth-tested mark lifted a hair off those samples lost
+## to the ground in patches and read as litter. The pull wins against the
+## ground while a creature body standing in front of the lane (more than the
+## pull nearer the camera) still occludes it -- which is why this is not
+## `no_depth_test`, the defect `telegraph_glow.gd` records (a mark painted
+## through the ally's back).
+const LANE_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, shadows_disabled, depth_draw_never;
+uniform float depth_pull = 0.45;
+varying vec4 tint;
+void vertex() {
+	tint = COLOR;
+	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
+	float dist = length(view.xyz);
+	view.xyz *= max(0.2, 1.0 - depth_pull / max(dist, 0.001));
+	POSITION = PROJECTION_MATRIX * view;
+}
+void fragment() {
+	ALBEDO = tint.rgb;
+	ALPHA = tint.a;
+}
+"""
+
+
+func _material() -> Material:
+	var shader := Shader.new()
+	shader.code = LANE_SHADER
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter("depth_pull", _depth_pull)
 	return material
 
 
