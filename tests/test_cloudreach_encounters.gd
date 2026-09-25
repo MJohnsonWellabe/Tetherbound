@@ -51,9 +51,19 @@ class PayoutDirector:
 	## per-source receipt, so a repeat grant is `already_taken` with no `paid`.
 	var receipts: Dictionary = {}
 	var paid_log: Array = []
+	## Encounter intents a CLIENT sends to the host (the host-journaled
+	## `trainer_victory` route); host and solo paths never send.
+	var sent: Array = []
 
 	func _is_multi_peer() -> bool:
 		return multi
+
+	func _can_encounter_rpc() -> bool:
+		return multi and not host
+
+	func _send_realm_rpc(peer: int, method: String, arguments: Array, _completing: bool = false) -> bool:
+		sent.append({"peer": peer, "method": method, "arguments": arguments.duplicate(true)})
+		return true
 
 	func _is_host() -> bool:
 		return multi and host
@@ -188,21 +198,34 @@ func test_solo_veyra_defeat_is_unchanged_single_local_payout() -> void:
 		director.free()
 
 
-func test_client_run_veyra_fight_pays_only_itself_once_and_grants_nobody() -> void:
+func test_client_run_veyra_fight_is_sent_to_the_host_and_pays_nothing_locally() -> void:
 	# A client's own trainer battle has no encounter record of its own to pay
-	# from; the base's client path is "this peer pays itself", which the
-	# Cloudreach override now reaches with the world fact submitted only once.
+	# from. Under the host-journaled rule (every participant is paid and
+	# journaled by the host, whoever started the fight) the client sends one
+	# `trainer_victory` intent naming only the trainer; the host resolves the
+	# sender's character, pays it and writes the world fact. The client pays
+	# itself nothing and writes neither a reward nor the world fact.
 	for adapter_commits: bool in [true, false]:
 		var director := _veyra_director(true, false, adapter_commits)
 		var spec: Dictionary = director.trainer_specs[VEYRA]
 		director._record_trainer_defeat(spec)
-		assert_eq(director.solo_pays, 1, "client pays itself once (adapter_commits=%s)" % adapter_commits)
+		assert_eq(director.solo_pays, 0, "the client pays itself nothing (adapter_commits=%s)" % adapter_commits)
 		assert_true(_intents_of(director, "reward_grant").is_empty(), "a client never submits reward_grant")
-		assert_eq(_intents_of(director, "set_world_flag").size(), 1,
-			"the world fact is submitted exactly once as an intent")
+		assert_true(_intents_of(director, "set_world_flag").is_empty(),
+			"the client does not write the world fact; the host does")
+		assert_eq(director.sent.size(), 1, "exactly one request goes to the host")
+		if director.sent.size() == 1:
+			var request: Dictionary = director.sent[0]
+			assert_eq(int(request["peer"]), 1, "addressed to the host")
+			assert_eq(str(request["method"]), "_rpc_encounter_intent")
+			assert_eq((request["arguments"] as Array)[0].get("kind"), "trainer_victory")
+			assert_eq((request["arguments"] as Array)[0].get("trainer_id"), VEYRA,
+				"naming only the trainer, never a character or recipient")
+			assert_false((request["arguments"] as Array)[0].has("character_id"))
+			assert_false((request["arguments"] as Array)[0].has("peers"))
 		assert_true(director.told.is_empty())
 		director._record_trainer_defeat(spec)
-		assert_eq(director.solo_pays, 1, "a client repeat pays nothing")
+		assert_eq(director.solo_pays, 0, "a client repeat pays nothing")
 		assert_eq(director.victories.size(), 1)
 		director.free()
 
