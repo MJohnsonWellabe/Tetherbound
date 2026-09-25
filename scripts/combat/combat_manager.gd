@@ -178,8 +178,9 @@ var _ally_hidden_for := 0.0
 var _ally_clear_for := 0.0
 
 ## OP23-02: the point `_open_arena()` already asked `_arena_bounds()` about
-## when it sized this fight's radius. `_combat_camera_profile()` re-asks the
-## same question at the same point rather than at `_ally_body`'s own
+## when it sized this fight's radius. `_room_clearance()` (now diagnostics only;
+## the camera is not capped by it, see `_update_combat_camera_framing`) asks
+## the same question at the same point rather than at `_ally_body`'s own
 ## position -- a fighter placed near a wall (`_place_fighters()`, `deploy_offset`/
 ## `separation`) can end up a hair OUTSIDE a small room's rect even though
 ## the arena itself was correctly clamped to fit inside it, which read the

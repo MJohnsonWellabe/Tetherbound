@@ -3,7 +3,7 @@ extends "res://tests/smoke_stronghold_battle_camera.gd"
 ## F04 evidence for the Stronghold gauntlet camera (OP23-02) after the
 ## nearest-wall distance cap was removed: runs smoke_stronghold_battle_camera.gd
 ## unchanged -- every assertion, same fight, same room -- and additionally saves
-## the ordinary neutral fight frame and one frame per sampled orbit bearing.
+## the ordinary neutral fight frame and one frame after the orbit sampling.
 ##
 ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
 ##     --resolution 1280x720 --script tests/capture_hall_gauntlet_camera.gd -- --capture-dir=<abs dir>

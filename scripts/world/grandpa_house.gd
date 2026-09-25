@@ -760,8 +760,16 @@ func _on_body_exited(body: Node3D) -> void:
 ## respawn at home, the guardian witness's fixture move -- had the fight camera
 ## snapped back to the trainer on the exploration profile, facing away from the
 ## foe for the rest of the fight.
+##
+## And never while a fight runs, as `burrow_warrens.gd` and `stronghold.gd`
+## guard: throw aim puts the camera back on the trainer, with the aim profile,
+## mid-fight, and a trainer can walk through the door while aiming.
 func _camera_is_on_the_player() -> bool:
 	if _camera_rig == null or not is_instance_valid(_camera_rig):
+		return false
+	var parent := get_parent()
+	var manager: Node = parent.get_node_or_null(^"CombatManager") if parent != null else null
+	if manager != null and manager.has_method("is_fighting") and bool(manager.call("is_fighting")):
 		return false
 	var current: Variant = _camera_rig.get("_target")
 	return current == null or current == _player

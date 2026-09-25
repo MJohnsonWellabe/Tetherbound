@@ -65,3 +65,31 @@ func test_the_house_still_swaps_the_profile_when_the_camera_is_on_the_trainer() 
 	house.call("_on_body_exited", other)
 	assert_eq(rig.calls.size(), 2, "another body leaving changes nothing")
 	house.free(); rig.free(); player.free(); other.free()
+
+
+class FakeManager extends Node:
+	var fighting := true
+
+	func is_fighting() -> bool:
+		return fighting
+
+
+func test_throw_aim_mid_fight_keeps_its_profile_at_the_door() -> void:
+	# Throw aim puts the camera on the trainer mid-fight; the door must not
+	# replace the aim profile while the fight runs.
+	var world := Node3D.new()
+	var manager := FakeManager.new()
+	manager.name = "CombatManager"
+	world.add_child(manager)
+	var rig := Rig.new()
+	var player := Node3D.new()
+	var house := _house(rig, player)
+	world.add_child(house)
+	rig._target = player
+	house.call("_on_body_exited", player)
+	house.call("_on_body_entered", player)
+	assert_eq(rig.calls.size(), 0, "a running fight owns the camera even while it is on the trainer")
+	manager.fighting = false
+	house.call("_on_body_entered", player)
+	assert_eq(rig.calls.size(), 1, "after the fight the house swaps the profile again")
+	world.free(); rig.free(); player.free()
