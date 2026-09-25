@@ -51,6 +51,9 @@
       "stormwood:side_pims_parcels_1",
       "stormwood:side_pims_parcels_2",
       "stormwood:side_pims_parcels_complete",
+      "stormwood:side_pims_parcels_delivered:cook_marl",
+      "stormwood:side_pims_parcels_delivered:trader_oswin",
+      "stormwood:side_pims_parcels_delivered:caretaker_lio",
       "stormwood:side_crown_remembers_1",
       "stormwood:side_crown_remembers_2",
       "stormwood:side_crown_remembers_complete",
@@ -517,7 +520,13 @@
           "id": "step_2",
           "flag_id": "stormwood:side_pims_parcels_2",
           "scope": "world",
-          "label": "Deliver them to three households along the restored arch roads.",
+          "label": "Deliver them to Marl at Ashfoot, Oswin at Rodline Post and Lio at Lantern Hollow.",
+          "count_flags": [
+            "stormwood:side_pims_parcels_delivered:cook_marl",
+            "stormwood:side_pims_parcels_delivered:trader_oswin",
+            "stormwood:side_pims_parcels_delivered:caretaker_lio"
+          ],
+          "required_count": 3,
           "requires_flags": [
             "stormwood:side_pims_parcels_1"
           ],
