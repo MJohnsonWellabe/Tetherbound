@@ -98,3 +98,16 @@ AFTER
   smoke_water_scene_npcs 67/0, smoke_water_scene_pickups 26/0, smoke_water_deep_watch_chart 28/0,
     smoke_water_lantern_return 25/0, smoke_water_gull_research 27/0, smoke_water_cradle_care 30/0,
     smoke_water_garden_records 22/0, smoke_water_dock_actions 57/0, smoke_water_camps 129/0.
+
+== Co-op (two real processes, production Water scene)
+  tools/net/run_net_smoke.sh water_local_chains: 20/20 PASS.
+    Client hears Halen's lead -> host commits the world record, host truth holds it; host refuses
+    the client's short delivery (materials); the client's delivery commits, debits only the client
+    (4 + 4), leaves host materials untouched, and the shelter stands in both scenes; the host's
+    lead request before the swim lesson is refused (prerequisite); with only the HOST holding its
+    Lantern Cove claim the client's return is refused (claim); after the client claims its own
+    Candy I its return completes; host truth holds two per-character receipts and both peers hold
+    identical chain records.
+  Fixture note: a client teleport reaches the host proxy only after the host accepts the pose;
+    the fixture waits 150 physics frames before position-checked requests (a first run without
+    the wait was refused too_far).
