@@ -7,6 +7,25 @@ extends SceneTree
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const MOVEMENT_CONFIG := "res://data/config/movement.json"
+const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const PLAYER_SKILLS := ["running", "catching", "riding", "swimming", "flying"]
+## `--original-five` fixture for ACCEPTANCE F12 ("with the original five and no
+## owned swimmer"). The docs never name species, so the five are the typical
+## retained party the project's own data already declares:
+## data/config/chapter_curve.json `difficulty.party` -- the Ground starter
+## (opening.json) plus the four most-fielded Meadows Band 1 species. Levels are
+## PROGRESSION.md's Tidewake arrival: lead L44 (Stormwood exit, Tidewake "L43
+## overlap"), the other four within three levels of it. None is a Water-roster
+## species and none declares a compatible `swim_mount`, which is asserted.
+const ORIGINAL_FIVE := [
+	{"species": "terrapup", "level": 44},
+	{"species": "bramblebun", "level": 43},
+	{"species": "mudsnout", "level": 42},
+	{"species": "pipwing", "level": 42},
+	{"species": "trailpup", "level": 41},
+]
 
 var world: Node3D
 var player: CharacterBody3D
@@ -281,9 +300,18 @@ func _run_every_hop(game: Node, config: Dictionary, route_id: String) -> void:
 		if not _expect(point.is_finite(), "every-hop %s has an unresolved anchor" % route_id):
 			return
 	var vitals: RefCounted = player.get("vitals")
+	var original_five := _original_five_argument()
+	var party_species: Array[String] = []
+	if original_five:
+		party_species = _grant_original_five(game)
+		if party_species.is_empty():
+			return
 	var party: RefCounted = game.party
 	var party_size := int(party.call("size")) if party != null else 0
 	var riding := world.get_node_or_null("RidingController")
+	if original_five and not _expect(riding != null and world.get_node_or_null("MountedSwimming") != null,
+		"original-five fixture needs the production RidingController and MountedSwimming nodes"):
+		return
 	var departure_flag := str(route.get("required_departure_flag", ""))
 	if not departure_flag.is_empty():
 		game.world.flags.call("set_flag", departure_flag, true)
@@ -333,6 +361,8 @@ func _run_every_hop(game: Node, config: Dictionary, route_id: String) -> void:
 		if not _expect(riding == null or not bool(riding.call("is_mounted")),
 			"%s: fixture must not be mounted" % label):
 			return
+		if original_five and not _original_five_still_unmounted(game, party_species, label):
+			return
 		var health_before: float = vitals.health
 		observed_swim_distance = 0.0
 		route_minimum_stamina = float(vitals.stamina)
@@ -378,6 +408,8 @@ func _run_every_hop(game: Node, config: Dictionary, route_id: String) -> void:
 			swimming.state.safe_landing.z - finish.z).length() < 0.1,
 			"%s: did not earn the hop end's authored safe landing" % label):
 			return
+		if original_five and not _original_five_still_unmounted(game, party_species, label + " (arrival)"):
+			return
 	var stamina_before_regen: float = vitals.stamina
 	await _frames(60)
 	var stamina_after_regen: float = vitals.stamina
@@ -390,10 +422,94 @@ func _run_every_hop(game: Node, config: Dictionary, route_id: String) -> void:
 		"every-hop stamina gained too much in one physics frame: %.4f" % route_max_stamina_gain_per_frame):
 		return
 	finished = true
-	print("WATER EVERY HOP OK id=%s hops=%d assertions=%d worst_min_stamina_pct=%.2f party_size=%d elapsed_s=%.3f final_health=%.3f" % [
+	print("WATER EVERY HOP OK id=%s hops=%d assertions=%d worst_min_stamina_pct=%.2f party_size=%d party=%s elapsed_s=%.3f final_health=%.3f" % [
 		route_id, boundaries.size() - 1, assertions, worst_fraction * 100.0, party_size,
-		float(Time.get_ticks_msec() - started_msec) / 1000.0, vitals.health])
+		_party_label(game), float(Time.get_ticks_msec() - started_msec) / 1000.0, vitals.health])
 	quit(0)
+
+
+## Builds ORIGINAL_FIVE through the production party door (PartySeam.add into
+## Game.party, each creature made the way adopt_starter/party_grant make one:
+## SPECIES.spawn then set_level). Returns the species in party order, or an
+## empty array after a failed assertion.
+func _grant_original_five(game: Node) -> Array[String]:
+	var granted: Array[String] = []
+	if not _expect(PARTY_SEAM.has_game_state() and int(game.party.call("size")) == 0,
+		"original-five fixture must start from the fresh game's empty real Game.party"):
+		return []
+	var skills: RefCounted = game.local.skills
+	for skill: String in PLAYER_SKILLS:
+		if not _expect(skills.level(skill) == 0,
+			"original-five fixture requires a level-0 human; %s is level %d" % [skill, skills.level(skill)]):
+			return []
+	var cfg: Dictionary = PROGRESSION.config()
+	for entry: Dictionary in ORIGINAL_FIVE:
+		var species := str(entry.species)
+		if not _expect(SPECIES.has(species) and not species.begins_with("water_"),
+			"original-five species %s is not an installed pre-Tidewake species" % species):
+			return []
+		var creature: RefCounted = SPECIES.spawn(species)
+		creature.call("set_level", int(entry.level), cfg)
+		if not _expect(bool(PARTY_SEAM.add(creature)),
+			"PartySeam.add refused original-five member %s" % species):
+			return []
+		granted.append(species)
+	var members: Array = game.party.call("members")
+	if not _expect(int(game.party.call("size")) == 5 and members.size() == 5 and bool(game.party.call("is_full")),
+		"original-five party size is %d, not 5" % int(game.party.call("size"))):
+		return []
+	for index in members.size():
+		var member: RefCounted = members[index]
+		var entry: Dictionary = ORIGINAL_FIVE[index]
+		if not _expect(str(member.species_id) == str(entry.species) and int(member.level) == int(entry.level),
+			"original-five member %d is %s L%d, expected %s L%d" % [index, member.species_id, member.level, entry.species, entry.level]):
+			return []
+		if not _expect(not _is_compatible_swim_mount(str(member.species_id)),
+			"original-five member %s is a compatible swim mount; F12 requires no owned swimmer" % member.species_id):
+			return []
+	print("ORIGINAL FIVE party=%s" % _party_label(game))
+	return granted
+
+
+## The game's own compatibility check (water_mounted_swim.gd): the species
+## definition's `swim_mount.compatible`, from the merged species table that
+## water_roster.json registers into.
+func _is_compatible_swim_mount(species_id: String) -> bool:
+	return bool((SPECIES.definition(species_id).get("swim_mount", {}) as Dictionary).get("compatible", false))
+
+
+## Per-hop: still exactly the same five, none a compatible swim mount, the
+## player not mounted, and MountedSwimming holding no active swim-mount body.
+func _original_five_still_unmounted(game: Node, species: Array[String], label: String) -> bool:
+	var members: Array = game.party.call("members")
+	var now: Array[String] = []
+	for member: RefCounted in members:
+		now.append(str(member.species_id))
+		if not _expect(not _is_compatible_swim_mount(str(member.species_id)),
+			"%s: owned %s is a compatible swim mount" % [label, member.species_id]):
+			return false
+	if not _expect(now == species, "%s: party is no longer the original five: %s" % [label, now]):
+		return false
+	var riding := world.get_node("RidingController")
+	if not _expect(not bool(riding.call("is_mounted")) and riding.call("mount_body") == null,
+		"%s: player is mounted" % label):
+		return false
+	var director := world.get_node_or_null("EncounterDirector")
+	var ally: Variant = director.call("ally_body") if director != null else null
+	if ally != null and is_instance_valid(ally) and not _expect(not _is_compatible_swim_mount(str(ally.get("species_id"))),
+		"%s: deployed ally %s is a compatible swim mount" % [label, ally.get("species_id")]):
+		return false
+	var mounted_swim := world.get_node("MountedSwimming")
+	var active_body: Variant = mounted_swim.get("body")
+	return _expect(active_body == null or not is_instance_valid(active_body),
+		"%s: MountedSwimming has an active swim-mount body" % label)
+
+
+func _party_label(game: Node) -> String:
+	var parts: Array[String] = []
+	for member: RefCounted in game.party.call("members"):
+		parts.append("%s:L%d" % [member.species_id, member.level])
+	return "[" + ",".join(parts) + "]"
 
 
 ## The ~15 percent steering deviation along an authored polyline: seven
@@ -527,6 +643,10 @@ func _rest_route_argument() -> String:
 		if argument.begins_with("--rest-route="):
 			return argument.trim_prefix("--rest-route=").strip_edges()
 	return ""
+
+
+func _original_five_argument() -> bool:
+	return OS.get_cmdline_user_args().has("--original-five")
 
 
 func _every_hop_argument() -> bool:
