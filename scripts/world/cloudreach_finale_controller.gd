@@ -57,6 +57,9 @@ var ledger_transport: Node = null
 ## `trainer_battle_id()` surface. Read only by `restore_progression_from_game`.
 var fight_director: Node = null
 var _found_director: Node = null
+## `_committed_seq()` once the last committed delta this node heard of had
+## settled; -1 until a ledger is found. See `_delta_sweep`.
+var _seq_baseline := -1
 
 
 static func read_config() -> Dictionary:
@@ -93,6 +96,7 @@ func setup(progression: RefCounted, event_adapter: Callable, body_source: Callab
 
 func _ready() -> void:
 	add_to_group("progression_restore")
+	_listen_for_deltas()
 	if not config.is_empty():
 		build_interactions()
 
@@ -104,6 +108,10 @@ func _process(delta: float) -> void:
 		sync_progression()
 	elapsed += delta
 	_sync_prompt_access()
+	# A `seq` that moved without a `delta_applied` (a snapshot's own `seq`)
+	# must not make a later load read as a delta.
+	if _seq_baseline >= 0:
+		_settle_seq_baseline()
 
 
 ## Also the CLIENT's delta path: `ledger_rpc.gd::apply_remote_delta` sweeps
@@ -112,27 +120,38 @@ func _process(delta: float) -> void:
 ## landing -- and `sync_progression()` below settles whatever it set. Only a
 ## different store object drops them, since their flags belong to the old one.
 ##
-## The same reasoning keeps a live Veyra fight. `story_ledger.gd::restore_all`
-## runs the same sweep on a world-flag delta wherever a sequence director
-## listens, host included. A pickup or another peer's flag used to end the
-## encounter here: the phase dropped to
-## `dormant` and the crosswind/overload hazards and their clock reset mid-fight.
+## The same sweep used to end a live Veyra fight on a client whenever any
+## unrelated delta landed (a pickup, another peer's flag): the phase dropped to
+## `dormant` and the crosswind/overload hazards and their clock restarted. It
+## also restarted the break_the_eye wind on every relay another peer struck.
+## The host and solo reach this sweep only from a save load or a snapshot,
+## since `_commit_here` does not sweep and Cloudreach mounts no sequence
+## director to run `story_ledger.gd::restore_all`.
+##
 ## `Game.load_game()` and `apply_world_snapshot()` reload the SAME store in
 ## place (`Game.progression` is one merged view for the whole process), so the
-## store alone cannot tell a load from a delta. The fight decides instead
-## (`_encounter_survives`): the encounter state is kept only while the director
-## still runs this trainer battle and the reloaded flags still admit it. A load
-## or snapshot with the fight over, flags that no longer admit it, or a
+## store alone cannot tell a load from a delta. Two authorities decide instead:
+## - the encounter survives while the director still runs this trainer battle
+##   and the flags still admit it (`_encounter_survives`);
+## - otherwise the hazard clock, drift and pending recoveries survive only a
+##   sweep for a committed delta (`_delta_sweep`) that leaves the phase as it
+##   was.
+## A load or snapshot with the fight over, flags that no longer admit it, or a
 ## different store all reset as before.
 func restore_progression_from_game(game: Node) -> void:
+	_listen_for_deltas()
 	var restored: RefCounted = game.get("progression")
 	var same_store := restored == _progression
 	if not same_store:
 		_in_flight.clear()
 	_progression = restored
-	if not (same_store and _encounter_survives()):
+	var keep_encounter := same_store and _encounter_survives()
+	if not keep_encounter:
 		_in_encounter = false
 		_overload = false
+	if keep_encounter or (same_store and _delta_sweep() and _derived_phase() == phase):
+		_keep_deep_recoveries()
+	else:
 		elapsed = 0.0
 		_pending_recoveries.clear()
 		_hazard_drift.clear()
@@ -142,8 +161,8 @@ func restore_progression_from_game(game: Node) -> void:
 
 ## Whether a sweep leaves this encounter running: it was running, the store's
 ## flags still admit it (`encounter_started`'s own gate), and the fight it
-## mirrors has not ended. With no director to ask (a unit fixture), the flags
-## alone decide. The director can only END the encounter here; only
+## mirrors has not ended. With no director to ask it resets: nothing then says
+## the fight is still on. The director can only END the encounter here; only
 ## `encounter_started` begins one.
 func _encounter_survives() -> bool:
 	if not _in_encounter or not _prerequisites() \
@@ -151,7 +170,7 @@ func _encounter_survives() -> bool:
 		return false
 	var director := _fight_director()
 	if director == null:
-		return true
+		return false
 	return bool(director.call("trainer_battle_active")) \
 		and str(director.call("trainer_battle_id")) == str(config.get("encounter_id", ""))
 
@@ -170,6 +189,56 @@ func _fight_director() -> Node:
 			_found_director = sibling
 			return sibling
 	return null
+
+
+## The ledger's commit count (`world_ledger.gd::seq`), or -1 with no ledger.
+func _committed_seq() -> int:
+	var transport := _transport()
+	if transport == null:
+		return -1
+	var ledger: Variant = transport.get("ledger")
+	return int((ledger as Object).get("seq")) if ledger is Object else -1
+
+
+## Is this sweep running for a committed delta? A client's
+## `apply_remote_delta` advances the ledger's `seq` and sweeps BEFORE it emits
+## `delta_applied`; the baseline catches up only after that emit, deferred, so
+## a second sweep for the same delta in the same frame still reads as one. A
+## load or snapshot leaves `seq` where the last settled delta put it. No
+## ledger: not a delta, so the conservative reset.
+func _delta_sweep() -> bool:
+	var seq := _committed_seq()
+	return seq >= 0 and _seq_baseline >= 0 and seq > _seq_baseline
+
+
+func _listen_for_deltas() -> void:
+	var transport := _transport()
+	if transport == null or not transport.has_signal("delta_applied"):
+		return
+	if not transport.is_connected("delta_applied", _on_delta_applied):
+		transport.connect("delta_applied", _on_delta_applied)
+		if _seq_baseline < 0:
+			_seq_baseline = _committed_seq()
+
+
+func _on_delta_applied(_delta: Dictionary) -> void:
+	_settle_seq_baseline.call_deferred()
+
+
+func _settle_seq_baseline() -> void:
+	_seq_baseline = _committed_seq()
+
+
+## A kept sweep keeps a recovery handoff only for a body still below handoff
+## depth, so the same fall is not handed off twice; any other entry would be
+## erased by `_apply_recovery_current` anyway.
+func _keep_deep_recoveries() -> void:
+	var handoff := float(config.get("recovery", {}).get("handoff_below_deck_m", 0.0))
+	for id: int in _pending_recoveries.keys():
+		var body: Node3D = instance_from_id(id) as Node3D if is_instance_id_valid(id) else null
+		if body == null or not body.is_inside_tree() \
+				or body.global_position.y - _origin().y >= -handoff:
+			_pending_recoveries.erase(id)
 
 
 func _has(flag: String) -> bool:
@@ -300,15 +369,7 @@ func sync_progression() -> void:
 		var repair := _dispatch(str(config["network_event"]))
 		if bool(repair.get("accepted", false)) and bool(repair.get("pending", false)):
 			_track(network, "network")
-	var next := "dormant"
-	if _has(str(config["aftermath_flag"])):
-		next = "restored"
-	elif _has(str(config["network_flag"])):
-		next = "awaiting_restoration"
-	elif _has(str(config["captain_victory_flag"])):
-		next = "break_the_eye"
-	elif _in_encounter:
-		next = "anchor_overload" if _overload else "crosswind_command"
+	var next := _derived_phase()
 	if next != phase:
 		phase = next
 		phase_changed.emit(phase)
@@ -319,6 +380,21 @@ func sync_progression() -> void:
 		_presentation = state.duplicate(true)
 		presentation_changed.emit(state)
 	_settle_landed()
+
+
+## The phase the current flags and encounter state call for.
+func _derived_phase() -> String:
+	if config.is_empty():
+		return phase
+	if _has(str(config["aftermath_flag"])):
+		return "restored"
+	if _has(str(config["network_flag"])):
+		return "awaiting_restoration"
+	if _has(str(config["captain_victory_flag"])):
+		return "break_the_eye"
+	if _in_encounter:
+		return "anchor_overload" if _overload else "crosswind_command"
+	return "dormant"
 
 
 ## Finish, once, each pending intent whose committed delta has now set its flag.

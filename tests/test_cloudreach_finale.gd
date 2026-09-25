@@ -344,7 +344,9 @@ func _live_fight(flags: RefCounted) -> Array:
 	director.active_id = ENCOUNTER
 	finale.elapsed = 3.25
 	finale._hazard_drift[4242] = Vector3(1.5, 0, 0)
-	finale._pending_recoveries[4243] = true
+	var fallen := Node3D.new()
+	finale._pending_recoveries[fallen.get_instance_id()] = true
+	fallen.free()
 	var game := FakeGame.new()
 	game.progression = flags
 	return [finale, director, game]
@@ -369,7 +371,8 @@ func test_unrelated_delta_sweep_keeps_crosswind_and_overload_phases() -> void:
 	assert_true(finale._in_encounter, "Unrelated delta keeps the encounter running")
 	assert_true(is_equal_approx(finale.elapsed, 3.25), "Hazard clock is not restarted")
 	assert_true(finale._hazard_drift.has(4242), "Accumulated drift is kept")
-	assert_true(finale._pending_recoveries.has(4243), "A pending recovery handoff is kept")
+	assert_true(finale._pending_recoveries.is_empty(),
+		"A pending handoff whose body is gone is dropped, not kept blindly")
 	assert_true(bool(finale.presentation_state()["hazards_active"]))
 	finale.opposition_remaining(ENCOUNTER, 1, 3)
 	assert_eq(finale.phase, "anchor_overload")
@@ -439,18 +442,108 @@ func test_a_different_store_resets_even_mid_fight() -> void:
 	_free_all(fixture)
 
 
-## No director to ask (this fixture's controller is not in a tree): the flags
-## alone decide, and an unrelated delta still keeps the fight.
-func test_without_a_director_the_flags_decide() -> void:
+## No director to ask: nothing says the fight is still on, so the conservative
+## reset, even for an unrelated delta.
+func test_without_a_director_a_sweep_resets_the_encounter() -> void:
 	var flags := FLAGS.new()
 	var fixture := _live_fight(flags)
 	var finale: Node3D = fixture[0]
 	finale.fight_director = null
 	flags.set_flag("pickup:cloudreach_unrelated_crate")
 	finale.restore_progression_from_game(fixture[2])
-	assert_eq(finale.phase, "crosswind_command")
-	flags.set_flag(str(FINALE.read_config()["captain_victory_flag"]))
+	assert_eq(finale.phase, "dormant")
+	assert_false(finale._in_encounter)
+	assert_eq(finale.elapsed, 0.0)
+	_free_all(fixture)
+
+
+# --- the sweep in break_the_eye, outside the encounter -----------------------
+
+## `Game.ledger`'s shape as far as `_delta_sweep` reads it.
+class SeqLedger extends RefCounted:
+	var seq := 0
+
+
+class SeqTransport extends Node:
+	signal delta_applied(delta: Dictionary)
+	var ledger := SeqLedger.new()
+
+	## A committed delta: `seq` moves, the store changes, and only then the
+	## sweep runs (`apply_remote_delta`'s order).
+	func commit(flags: RefCounted, flag: String) -> void:
+		ledger.seq += 1
+		flags.call("set_flag", flag)
+
+
+func _break_the_eye(flags: RefCounted) -> Array:
+	_unlock(flags)
+	flags.call("set_flag", str(FINALE.read_config()["captain_victory_flag"]))
+	var finale := _controller(flags)
+	var transport := SeqTransport.new()
+	finale.ledger_transport = transport
+	finale._listen_for_deltas()
+	assert_eq(finale.phase, "break_the_eye")
+	finale.elapsed = 2.5
+	finale._hazard_drift[4242] = Vector3(0, 0, 2.0)
+	var game := FakeGame.new()
+	game.progression = flags
+	return [finale, transport, game]
+
+
+func test_break_the_eye_delta_sweep_keeps_the_wind_clock_and_drift() -> void:
+	var flags := FLAGS.new()
+	var fixture := _break_the_eye(flags)
+	var finale: Node3D = fixture[0]
+	var transport: SeqTransport = fixture[1]
+	var config := FINALE.read_config()
+	transport.commit(flags, "pickup:cloudreach_unrelated_crate")
 	finale.restore_progression_from_game(fixture[2])
 	assert_eq(finale.phase, "break_the_eye")
-	assert_false(finale._in_encounter, "A landed victory ends the mirrored encounter")
+	assert_true(is_equal_approx(finale.elapsed, 2.5), "An unrelated delta keeps the wind clock")
+	assert_true(finale._hazard_drift.has(4242), "An unrelated delta keeps the push")
+	finale._settle_seq_baseline()
+	# Another peer's relay lands: still break_the_eye, so still kept.
+	transport.commit(flags, str(config["relays"][0]["flag_id"]))
+	finale.restore_progression_from_game(fixture[2])
+	assert_eq(finale.phase, "break_the_eye")
+	assert_true(is_equal_approx(finale.elapsed, 2.5), "Another peer's relay keeps the wind clock")
+	finale._settle_seq_baseline()
+	# The network lands: the phase moves on, so the clock starts over.
+	for relay: Dictionary in config["relays"]:
+		flags.set_flag(str(relay["flag_id"]))
+	transport.commit(flags, str(config["network_flag"]))
+	finale.restore_progression_from_game(fixture[2])
+	assert_eq(finale.phase, "awaiting_restoration")
+	assert_eq(finale.elapsed, 0.0, "A phase change still resets the clock")
+	assert_true(finale._hazard_drift.is_empty())
+	_free_all(fixture)
+
+
+## A load or snapshot reloads the store in place and commits nothing: `seq` has
+## not moved since the last settled delta, so it resets as it always has.
+func test_break_the_eye_reload_without_a_delta_still_resets() -> void:
+	var flags := FLAGS.new()
+	var fixture := _break_the_eye(flags)
+	var finale: Node3D = fixture[0]
+	var transport: SeqTransport = fixture[1]
+	transport.commit(flags, "pickup:cloudreach_unrelated_crate")
+	finale.restore_progression_from_game(fixture[2])
+	finale._settle_seq_baseline()
+	flags.load_data(flags.save_data())
+	finale.restore_progression_from_game(fixture[2])
+	assert_eq(finale.phase, "break_the_eye")
+	assert_eq(finale.elapsed, 0.0, "A reload resets the wind clock")
+	assert_true(finale._hazard_drift.is_empty(), "A reload resets the push")
+	_free_all(fixture)
+
+
+func test_break_the_eye_without_a_ledger_resets_conservatively() -> void:
+	var flags := FLAGS.new()
+	var fixture := _break_the_eye(flags)
+	var finale: Node3D = fixture[0]
+	finale.ledger_transport = null
+	flags.set_flag("pickup:cloudreach_unrelated_crate")
+	finale.restore_progression_from_game(fixture[2])
+	assert_eq(finale.elapsed, 0.0)
+	assert_true(finale._hazard_drift.is_empty())
 	_free_all(fixture)

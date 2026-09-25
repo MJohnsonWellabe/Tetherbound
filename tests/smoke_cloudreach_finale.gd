@@ -33,6 +33,18 @@ extends SceneTree
 ## must still reset it whenever the fight is over or the reloaded flags no
 ## longer admit it. Disclosed: the director is a stub exposing only
 ## `trainer_battle_active()`/`trainer_battle_id()`.
+##
+## A fourth, BREAK-THE-EYE PILOT leg (`_break_the_eye_pilot_leg`): the real
+## `cloudreach_world_runtime.gd` `_process` hands the ally to a client in
+## break_the_eye, then an unrelated delta and another peer's relay arrive
+## through the same sweep. Field control, the arbiter viewer and the camera
+## target stay on the ally with no set_target call at all, sampled right after
+## the sweep; the wind clock, drift and a deep-fall recovery guard are kept; a
+## real `Game.load_game()` still restarts the clock; and a sweep during a fight
+## leaves the combat camera alone. Disclosed: the runtime is not `mount()`ed;
+## its world, camera rig, director, manager, atmosphere and bodies are stubs
+## wired onto its fields, and it joins `progression_restore` by hand as
+## `mount()` does.
 const FINALE := preload("res://scripts/world/cloudreach_finale_controller.gd")
 const CHAPTER := preload("res://scripts/world/realm_chapter_progression.gd")
 const ARBITER := preload("res://scripts/world/interaction_arbiter.gd")
@@ -102,6 +114,58 @@ class FightDirector extends Node:
 
 	func trainer_battle_id() -> String:
 		return active_id
+
+
+## The surface `cloudreach_world_runtime.gd` drives on the trainer and the ally.
+class PilotBody extends CharacterBody3D:
+	var following := true
+	var locomotion: Array = []
+
+	func register_environment_velocity_modifier(_id: StringName, _owner: Object, _fn: Callable, _priority: int) -> void:
+		pass
+
+	func clear_environment_velocity_modifier(_id: StringName) -> void:
+		pass
+
+	func set_following(value: bool) -> void:
+		following = value
+
+	func request_move(_direction: Vector3) -> void:
+		pass
+
+	func set_locomotion_enabled(value: bool) -> void:
+		locomotion.append(value)
+
+
+class PilotDirector extends FightDirector:
+	var ally: CharacterBody3D
+
+	func ally_body() -> CharacterBody3D:
+		return ally
+
+
+class CombatStub extends Node:
+	var fighting := false
+
+	func is_fighting() -> bool:
+		return fighting
+
+
+## Records every retarget, so a one-frame flip cannot hide.
+class CameraStub extends Node3D:
+	var target: Node
+	var calls: Array = []
+
+	func set_target(next: Node, _profile: Dictionary = {}) -> void:
+		target = next
+		calls.append(next)
+
+	func planar_basis() -> Basis:
+		return Basis()
+
+
+class AtmosphereStub extends Node:
+	var bindings: Dictionary = {}
 
 
 class DrivenBody extends CharacterBody3D:
@@ -321,7 +385,8 @@ func _run() -> void:
 	runtime.free()
 	await _pending_client_leg(game, data)
 	await _live_fight_sweep_leg(game, data)
-	print("CLOUDREACH FINALE FIXTURE %s: body/input/collision, three relays, saved phase, aftermath, recovery, pending client, live-fight sweep" % ("PASS" if failures.is_empty() else "FAIL"))
+	await _break_the_eye_pilot_leg(game, data)
+	print("CLOUDREACH FINALE FIXTURE %s: body/input/collision, three relays, saved phase, aftermath, recovery, pending client, live-fight sweep, break-the-eye pilot" % ("PASS" if failures.is_empty() else "FAIL"))
 	quit(0 if failures.is_empty() else 1)
 
 
@@ -554,6 +619,136 @@ func _live_fight_sweep_leg(game: Node, data: Dictionary) -> void:
 	await _enter_fight(finale, director, body, encounter, true, 2.0)
 	_check(bool(game.call("load_game", 0)), "Live sweep: early save loads")
 	_check(_reset_state(finale, body), "Live sweep: loading a save from before the encounter resets it (%s)" % finale.phase)
+
+	game.set("save_system", original_saver)
+	scene.queue_free()
+	await process_frame
+	_remove_tree(ProjectSettings.globalize_path(save_dir))
+
+
+## See the header.
+func _break_the_eye_pilot_leg(game: Node, data: Dictionary) -> void:
+	game.call("reset_for_new_game")
+	var progression: RefCounted = game.get("progression")
+	for flag: String in data["requires_flags"]:
+		progression.call("set_flag", flag)
+	progression.call("set_flag", str(data["captain_victory_flag"]))
+	var original_saver: RefCounted = game.get("save_system")
+	var save_dir := "user://test_cloudreach_finale_pilot_%d_%d/" % [OS.get_process_id(), Time.get_ticks_usec()]
+	var saves: RefCounted = SAVE.new(save_dir)
+	game.set("save_system", saves)
+
+	var scene := Node3D.new()
+	scene.name = "PilotSweepFixture"
+	root.add_child(scene)
+	var camera := CameraStub.new()
+	camera.name = "CameraRig"
+	scene.add_child(camera)
+	var arbiter := ARBITER.new()
+	arbiter.name = "InteractionArbiter"
+	scene.add_child(arbiter)
+	var trainer := PilotBody.new()
+	trainer.name = "Player"
+	scene.add_child(trainer)
+	trainer.global_position = Vector3(-6, 0.1, 0)
+	var ally := PilotBody.new()
+	ally.name = "Ally"
+	scene.add_child(ally)
+	ally.global_position = Vector3(0, 0.1, 0)
+	var deep := PilotBody.new()
+	deep.name = "FallingCompanion"
+	scene.add_child(deep)
+	var director := PilotDirector.new()
+	director.name = "EncounterDirector"
+	director.ally = ally
+	var manager := CombatStub.new()
+	manager.name = "CombatManager"
+	var atmosphere := AtmosphereStub.new()
+	var handoffs: Array = []
+	var finale: Node3D = FINALE.new()
+	finale.setup(progression, func(event: String) -> Dictionary: return CHAPTER.dispatch(progression, chapter, event),
+		func() -> CharacterBody3D: return ally, func() -> bool: return true,
+		func(body: CharacterBody3D, _camp: String, _at: Vector3) -> void: handoffs.append(body), data)
+	scene.add_child(finale)
+	scene.add_child(director)
+	scene.add_child(manager)
+	scene.add_child(atmosphere)
+	finale.set_process(false)
+	var runtime: Node = RUNTIME.new()
+	runtime.set("world", scene)
+	runtime.set("player", trainer)
+	runtime.set("finale", finale)
+	runtime.set("director", director)
+	runtime.set("manager", manager)
+	runtime.set("atmosphere", atmosphere)
+	runtime.set("_mounted", true)
+	scene.add_child(runtime)
+	runtime.set_process(false)
+	runtime.set_physics_process(false)
+	runtime.add_to_group("progression_restore")
+	_check(finale.phase == "break_the_eye", "Pilot: fixture opens in break_the_eye (%s)" % finale.phase)
+
+	runtime.call("_process", 1.0 / 60.0)
+	_check(runtime.call("controlled_body") == ally, "Pilot: the exam hands the ally to the trainer")
+	_check(camera.target == ally and arbiter.viewer() == ally, "Pilot: camera and arbiter follow the ally")
+	finale.elapsed = 2.5
+	for tick in range(10):
+		ally.velocity = Vector3.ZERO
+		finale.apply_hazards(ally, 1.0 / 60.0)
+	finale.elapsed = 2.5
+	var drift: Vector3 = (finale.get("_hazard_drift") as Dictionary).get(ally.get_instance_id(), Vector3.ZERO)
+	_check(not drift.is_zero_approx(), "Pilot: the break_the_eye wind has built drift on the ally")
+	# A companion already below handoff depth has been handed off once.
+	deep.global_position = Vector3(30, -30, 0)
+	finale.apply_hazards(deep, 1.0 / 60.0)
+	_check(handoffs.size() == 1, "Pilot: the deep fall is handed off once")
+
+	for step: Array in [["unrelated pickup", {"op": "flag", "scope": "world", "realm": "cloudreach",
+			"id": "pickup:cloudreach_pilot_crate", "value": true}],
+			["another peer's relay", {"op": "flag", "scope": "world", "realm": "cloudreach",
+			"id": str(data["relays"][0]["flag_id"]), "value": true}]]:
+		var label := str(step[0])
+		camera.calls.clear()
+		trainer.locomotion.clear()
+		_land_delta(game, step[1])
+		# Sampled straight after the sweep, before any `_process` could repair it.
+		_check(runtime.get("_field_body") == ally, "Pilot: %s keeps field control on the ally" % label)
+		_check(camera.calls.is_empty() and camera.target == ally,
+			"Pilot: %s never retargets the camera %s" % [label, camera.calls])
+		_check(arbiter.viewer() == ally, "Pilot: %s keeps the arbiter on the ally" % label)
+		_check(trainer.locomotion.is_empty() and not ally.following,
+			"Pilot: %s does not hand locomotion back %s" % [label, trainer.locomotion])
+		_check(finale.phase == "break_the_eye", "Pilot: %s keeps break_the_eye (%s)" % [label, finale.phase])
+		_check(is_equal_approx(finale.elapsed, 2.5), "Pilot: %s keeps the wind clock (%.2f)" % [label, finale.elapsed])
+		_check((finale.get("_hazard_drift") as Dictionary).get(ally.get_instance_id(), Vector3.ZERO) == drift,
+			"Pilot: %s keeps the ally's drift" % label)
+		finale.apply_hazards(deep, 1.0 / 60.0)
+		_check(handoffs.size() == 1, "Pilot: %s does not hand the same fall off twice (%d)" % [label, handoffs.size()])
+		runtime.call("_process", 1.0 / 60.0)
+		_check(camera.calls.is_empty() and runtime.call("controlled_body") == ally,
+			"Pilot: the next frame after %s changes nothing" % label)
+		await process_frame
+	_check(progression.has(str(data["relays"][0]["flag_id"])), "Pilot: the other peer's relay landed")
+
+	# A real save-load, a frame after the last delta: the clock restarts, and
+	# since the exam still applies the ally stays piloted.
+	_check(bool(saves.call("save", game, 0)), "Pilot: save written")
+	_check(bool(game.call("load_game", 0)), "Pilot: save loads")
+	_check(finale.phase == "break_the_eye", "Pilot: the load keeps break_the_eye from its flags")
+	_check(is_zero_approx(finale.elapsed) and (finale.get("_hazard_drift") as Dictionary).is_empty(),
+		"Pilot: a real load still restarts the wind clock and drift (%.2f)" % finale.elapsed)
+	_check(runtime.get("_field_body") == ally, "Pilot: the exam still applies after the load")
+
+	# A fight takes the camera; a sweep during it must leave the camera alone.
+	manager.fighting = true
+	runtime.call("_process", 1.0 / 60.0)
+	_check(runtime.get("_field_body") == null, "Pilot: a fight releases the exam pilot")
+	camera.set_target(ally, {})
+	camera.calls.clear()
+	_land_delta(game, {"op": "flag", "scope": "world", "realm": "cloudreach",
+		"id": "pickup:cloudreach_pilot_crate_two", "value": true})
+	_check(camera.calls.is_empty() and camera.target == ally,
+		"Pilot: a sweep mid-fight leaves the combat camera alone %s" % [camera.calls])
 
 	game.set("save_system", original_saver)
 	scene.queue_free()

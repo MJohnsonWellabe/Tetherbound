@@ -230,10 +230,7 @@ func _process(_delta: float) -> void:
 	var ally: CharacterBody3D = director.call("ally_body")
 	_register_actor(ally)
 	_register_actor(controlled_body())
-	var should_pilot := str(finale.get("phase")) == "break_the_eye" \
-		and not bool(manager.call("is_fighting")) and not bool(director.call("trainer_battle_active")) \
-		and is_instance_valid(ally) and ally.visible \
-		and ally.global_position.distance_to(finale.global_position) < 65.0
+	var should_pilot := _should_pilot(ally)
 	if should_pilot and ally != _field_body:
 		# The exam drives the ally itself; a rider comes off first so the
 		# riding controller and this pilot never both drive one body.
@@ -250,6 +247,17 @@ func _process(_delta: float) -> void:
 		_release_field_control()
 	if finale != null:
 		finale.call("witness_restoration", controlled_body())
+
+
+## Whether the break_the_eye exam hands `ally` to the trainer right now. Read
+## every frame by `_process`, and by the `progression_restore` sweep, which
+## releases the pilot only once this has turned false.
+func _should_pilot(ally: CharacterBody3D) -> bool:
+	return finale != null and manager != null and director != null \
+		and str(finale.get("phase")) == "break_the_eye" \
+		and not bool(manager.call("is_fighting")) and not bool(director.call("trainer_battle_active")) \
+		and is_instance_valid(ally) and ally.visible \
+		and ally.global_position.distance_to(finale.global_position) < 65.0
 
 
 func _sync_returning_travelers() -> void:
@@ -458,8 +466,17 @@ func _settle_companion_beside(body: CharacterBody3D) -> void:
 			companion.velocity = Vector3.ZERO
 
 
+## Also a client's per-delta sweep (`ledger_rpc.gd::apply_remote_delta`). It
+## used to release field control unconditionally: in break_the_eye every relay
+## strike or pickup handed locomotion and the camera back to the trainer for
+## one frame before `_process` took the ally again, and outside the exam it
+## re-targeted the camera at the trainer whatever else owned it. The pilot is
+## released only when the exam would no longer hand it over; `_process`
+## catches any later change on its next frame, as it always has.
 func restore_progression_from_game(_game: Node) -> void:
-	_release_field_control()
+	if is_instance_valid(_field_body) and not (director != null \
+			and _field_body == director.call("ally_body") and _should_pilot(_field_body)):
+		_release_field_control()
 	_traveler_revision = -1
 
 
