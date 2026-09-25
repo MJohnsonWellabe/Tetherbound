@@ -28,6 +28,11 @@ extends "res://scripts/world/riding_controller.gd"
 ##    authors its own climb (the legendary's 60).
 ## 5. The finale's creature-piloting exam owns the ally: no ride offer while
 ##    it does (`cloudreach_world_runtime.gd` dismounts before taking it).
+##
+## Overrides of `riding_controller.gd`: `_ready` (jump cap), `_riding_allowed`
+## (finale pilot), `mount` (per-ride state), `interaction_activate` (refusal),
+## `_physics_process` (mounted-ground watch), `_apply_climb_limit` (45 degrees)
+## and `_dismount_spot` (collision-true spot and forced fallbacks).
 
 const PROBE_UP_M := 2.0
 const PROBE_DOWN_M := 3.0
@@ -41,8 +46,11 @@ const ORDINARY_CLIMB_DEG := 45.0
 const MOUNTED_FALL_DROP_M := 100.0
 const GROUND_SAMPLE_S := 0.25
 const GROUND_HISTORY := 8
-## A remembered clear spot further than this from the mount is not "nearby".
-const REMEMBERED_SPOT_REACH_M := 25.0
+## A remembered clear spot further than this from the mount is not "nearby":
+## a forced dismount must not carry the trainer back along the route.
+const REMEMBERED_SPOT_REACH_M := 8.0
+## How much further out the second ring of dismount candidates sits.
+const OUTER_RING_EXTRA_M := 1.2
 ## A fall is sustained: a hop, or a step down, is airborne for about a second
 ## at most and never lands this far below its take-off.
 const MOUNTED_FALL_AIRBORNE_S := 0.6
@@ -55,7 +63,12 @@ var _clear_spot := Vector3.INF
 ## (`player_controller.set_carrier`), and the clearance probes run mid-ride.
 var _standing_mask := 1
 var _airborne_s := 0.0
+## Where the trainer stood, on their own feet, when this ride began.
+var _mounted_from := Vector3.INF
 var mounted_fall_recoveries := 0
+## Which rule placed the last dismount, for tests and diagnosis:
+## "clear", "remembered", "history", "mounted_from" or "saddle".
+var last_dismount_rule := ""
 
 
 func _ready() -> void:
@@ -83,8 +96,10 @@ func mount() -> bool:
 	var body := _player as CollisionObject3D
 	if body != null and body.collision_mask != 0:
 		_standing_mask = body.collision_mask
+	var standing_at := _player.global_position if _player != null else Vector3.INF
 	var ok := super.mount()
 	if ok:
+		_mounted_from = standing_at
 		_ground_history.clear()
 		_ground_sample_left = 0.0
 		_clear_spot = Vector3.INF
@@ -183,25 +198,47 @@ func _dismount_spot(body: Node3D) -> Vector3:
 	if body != null and is_instance_valid(body):
 		var spot := _find_clear_spot(body)
 		if spot != Vector3.INF:
+			last_dismount_rule = "clear"
 			return spot
-	# Forced ending with nowhere clear right here: the last clear spot this
-	# ride passed, if it is still nearby; else the mount's own footing.
+	# A forced ending (a fight, a modal, a freed mount) with nowhere clear right
+	# here. Every fallback is re-checked against the MOUNT's own body too
+	# (`_capsule_fits(..., null)` excludes only the trainer): at combat start the
+	# mount keeps its collision layer, and a trainer set down inside it is pushed
+	# out sideways -- off a bridge or a ridge.
 	var alive := body != null and is_instance_valid(body)
 	var at := body.global_position if alive else _last_mount_position
-	var probe_body: Node3D = body if alive else null
-	if _clear_spot != Vector3.INF and _clear_spot.distance_to(at) <= REMEMBERED_SPOT_REACH_M \
-			and _capsule_fits(_clear_spot, probe_body):
-		return _clear_spot
+	if _clear_spot != Vector3.INF and _clear_spot.distance_to(at) <= REMEMBERED_SPOT_REACH_M:
+		var floor_y := _supported_floor(_clear_spot, _clear_spot.y, null)
+		if not is_nan(floor_y):
+			var remembered := Vector3(_clear_spot.x, floor_y + SETTLE_LIFT_M, _clear_spot.z)
+			if _capsule_fits(remembered, null):
+				last_dismount_rule = "remembered"
+				return remembered
 	# Never mid-air: the last verified ground this ride stood on.
-	var ground := _supported_history(probe_body)
-	if ground != Vector3.INF and _capsule_fits(ground + Vector3.UP * SETTLE_LIFT_M, probe_body):
+	var ground := _supported_history(null)
+	if ground != Vector3.INF and _capsule_fits(ground + Vector3.UP * SETTLE_LIFT_M, null):
+		last_dismount_rule = "history"
 		return ground + Vector3.UP * SETTLE_LIFT_M
-	return at + Vector3.UP * SETTLE_LIFT_M
+	if _mounted_from != Vector3.INF and _mounted_from.distance_to(at) <= REMEMBERED_SPOT_REACH_M \
+			and _capsule_fits(_mounted_from, null):
+		last_dismount_rule = "mounted_from"
+		return _mounted_from
+	# Last resort: on the mount's back, where the rider already is -- never
+	# inside its body. The trainer steps or slides off it like any ledge.
+	last_dismount_rule = "saddle"
+	var seat := Vector3.UP * 1.6
+	if alive:
+		var block := SPECIES.rideable(str(body.get("species_id")))
+		var offset: Variant = block.get("mount_offset", seat)
+		if offset is Vector3:
+			seat = offset
+	return at + seat + Vector3.UP * SETTLE_LIFT_M
 
 
-## The first candidate beside (either side), behind or ahead of the mount with
-## walkable collision near the mount's level and room for the trainer's
-## capsule, or INF.
+## The first candidate beside (either side), behind, ahead of or diagonal to
+## the mount -- at the species' dismount distance, then a ring further out --
+## with walkable collision near the mount's level, room for the trainer's
+## capsule and a clear line from the saddle, or INF.
 func _find_clear_spot(body: Node3D) -> Vector3:
 	if body == null or not is_instance_valid(body) or _player == null or not is_instance_valid(_player):
 		return Vector3.INF
@@ -216,18 +253,25 @@ func _find_clear_spot(body: Node3D) -> Vector3:
 	ahead.y = 0.0
 	side = side.normalized() if side.length() > 0.01 else Vector3.RIGHT
 	ahead = ahead.normalized() if ahead.length() > 0.01 else Vector3.FORWARD
-	for direction: Vector3 in [side, -side, -ahead, ahead]:
-		var candidate := base + direction * distance
-		var floor_y := _supported_floor(candidate, base.y, body)
-		if is_nan(floor_y):
-			continue
-		var spot := Vector3(candidate.x, floor_y + SETTLE_LIFT_M, candidate.z)
-		if _capsule_fits(spot, body) and _line_clear(base, spot, body):
-			return spot
+	var directions: Array[Vector3] = [side, -side, -ahead, ahead,
+		(side - ahead).normalized(), (-side - ahead).normalized(),
+		(side + ahead).normalized(), (-side + ahead).normalized()]
+	for reach: float in [distance, distance + OUTER_RING_EXTRA_M]:
+		for direction: Vector3 in directions:
+			var candidate := base + direction * reach
+			var floor_y := _supported_floor(candidate, base.y, body)
+			if is_nan(floor_y):
+				continue
+			var spot := Vector3(candidate.x, floor_y + SETTLE_LIFT_M, candidate.z)
+			if _capsule_fits(spot, body) and _line_clear(base, spot, body):
+				return spot
 	return Vector3.INF
 
 
 ## Top of walkable collision under `at`, within reach of the mount's level.
+## The ray starts only 2 m up; beside a tall wall it can begin inside rock and
+## report a floor under it, which is why every caller also requires the
+## trainer's capsule to fit there -- a capsule inside rock never fits.
 func _supported_floor(at: Vector3, level: float, body: Node3D) -> float:
 	var query := PhysicsRayQueryParameters3D.create(
 		Vector3(at.x, level + PROBE_UP_M, at.z), Vector3(at.x, level - PROBE_DOWN_M, at.z),
@@ -261,6 +305,6 @@ func _line_clear(base: Vector3, spot: Vector3, body: Node3D) -> bool:
 
 func _excluded(body: Node3D) -> Array[RID]:
 	var exclude: Array[RID] = [_player.get_rid()]
-	if body is CollisionObject3D and is_instance_valid(body):
+	if is_instance_valid(body) and body is CollisionObject3D:
 		exclude.append((body as CollisionObject3D).get_rid())
 	return exclude

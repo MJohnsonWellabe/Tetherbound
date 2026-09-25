@@ -100,8 +100,10 @@ func _run() -> void:
 	await _dismount_by_interact("second dismount")
 	await _closed_gate_holds_a_mounted_run()
 	await _long_mounted_descent_is_not_a_fall()
-	await _mounted_ride_off_a_drop_is_recovered()
+	await _ride_off_edges_by_input()
+	await _no_room_refusal_and_forced_fallbacks()
 	await _mounted_save_reload_after_descent()
+	await _combat_start_forced_dismount()
 	_check_party("end of run")
 	_report()
 
@@ -319,44 +321,195 @@ func _long_mounted_descent_is_not_a_fall() -> void:
 		fly.disconnect("recovered", on_recovered)
 
 
-## Review finding: a carried trainer has no collision layer, so the kill plane
-## never saw a mount that walked off an edge. Fixture: after riding on the
-## road, the mounted pair is carried over open air beside it and falls until
-## the same 100 m a walker falls before recovery.
-func _mounted_ride_off_a_drop_is_recovered() -> void:
+## Coordinator review of #229: the fall legs must RIDE off an edge, not
+## teleport the mount over air. Fixture: the trainer and companion are stood
+## on the arrival road where it drops to a lower terrace (the follower was
+## seen walking off it at (9.5, 102.7, -240)); everything after the mount is
+## the stick. The ride heads off that edge, crosses the terrace and keeps going
+## toward open air. SYSTEMS §8 parity: a drop a walker survives is survived
+## mounted with no snap-back; a fall past 100 m (a walker's recovery depth) is
+## caught and returned to verified ground with the rider seated.
+const TERRACE_ROAD := Vector3(7.6, 105.41, -245.03)
+const TERRACE_TOWARD := Vector3(10.6, 83.9, -239.4)
+
+func _ride_off_edges_by_input() -> void:
+	_player.global_position = TERRACE_ROAD
+	_player.velocity = Vector3.ZERO
+	var ally: Node3D = _director.call("ally_body")
+	if ally != null:
+		ally.call("place_on_ground", TERRACE_ROAD + Vector3(-2.0, 0.0, -1.5))
+	for i in 60:
+		await physics_frame
 	await _walk_to_mount()
-	await _mount_by_interact("mount for the drop")
+	await _mount_by_interact("mount above the terrace")
 	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
-		_fail("not mounted; the drop leg cannot run")
 		return
-	Input.action_press("move_forward", 1.0)
+	var heading := TERRACE_TOWARD - body.global_position
+	heading.y = 0.0
+	heading = heading.normalized()
+	var drops: Array = []
+	var recovered_before: int = int(_riding.get("mounted_fall_recoveries"))
+	var takeoff := NAN
+	var lowest := INF
+	var was_airborne := false
+	var airborne_frames := 0
+	for frame in 3600:
+		if int(_riding.get("mounted_fall_recoveries")) > recovered_before:
+			break
+		_steer_toward(body.global_position + heading * 50.0)
+		await physics_frame
+		if not bool(_riding.call("is_mounted")):
+			break
+		if body.is_on_floor():
+			if was_airborne and airborne_frames > 20:
+				drops.append({"from": takeoff, "to": body.global_position.y, "fell": takeoff - body.global_position.y, "recovered": false})
+			was_airborne = false
+			airborne_frames = 0
+			takeoff = body.global_position.y
+		else:
+			if not was_airborne:
+				lowest = body.global_position.y
+			was_airborne = true
+			airborne_frames += 1
+			lowest = minf(lowest, body.global_position.y)
+	_release_move()
+	var recovered := int(_riding.get("mounted_fall_recoveries")) > recovered_before
+	if recovered:
+		drops.append({"from": takeoff, "to": lowest, "fell": takeoff - lowest, "recovered": true})
 	for i in 60:
 		await physics_frame
-	_release_move()
+	print("EDGE RIDE drops=%s end=%s mounted=%s" % [drops, body.global_position, _riding.call("is_mounted")])
+	var survived := drops.filter(func(d: Dictionary) -> bool: return not bool(d.recovered) and float(d.fell) > 3.0)
+	_check(not survived.is_empty(), "riding off the road by input drops to a lower level and lands (%s)" % [survived])
+	for d: Dictionary in survived:
+		_check(float(d.fell) < 100.0, "a %.1f m ride-off a walker would survive is not snapped back" % float(d.fell))
+	_check(recovered, "riding on off the terrace into open air is eventually caught by the mounted-fall recovery")
+	if recovered:
+		var last: Dictionary = drops[drops.size() - 1]
+		_check(float(last.fell) > 95.0, "the mount fell as far as a walker would before recovery (%.1f m)" % float(last.fell))
+		_check(body.is_on_floor() and bool(_riding.call("is_mounted")) and _player.call("carrier") == body,
+			"after the recovery the mount stands on ground with the rider seated (%s)" % body.global_position)
+	_check_party("edge ride")
+
+
+## SYSTEMS §8 "dismount at supported nearby clearance, otherwise show
+## refusal", and the forced-dismount fallbacks. Fixture: test-only walls are
+## raised around the ridden mount on open ground so no dismount spot is clear;
+## the refusal is the ordinary interact press.
+func _no_room_refusal_and_forced_fallbacks() -> void:
+	if not bool(_riding.call("is_mounted")):
+		await _walk_to_mount()
+		await _mount_by_interact("mount for the refusal leg")
+	var body: CharacterBody3D = _riding.call("mount_body")
+	if body == null:
+		return
+	# Let the ride record a clear spot on open ground first.
+	for i in 40:
+		await physics_frame
+	var remembered: Vector3 = _riding.get("_clear_spot")
+	_check(remembered != Vector3.INF, "riding on open ground records a clear dismount spot (%s)" % remembered)
+	var walls := _enclose(body)
+	for i in 4:
+		await physics_frame
+	var hud := _world.get_node_or_null(^"PlaygroundHUD")
+	await _press("interact")
+	var said := ""
+	for i in 20:
+		await physics_frame
+		var label: Variant = hud.get("_hotbar_message") if hud != null else null
+		if label is Label and (label as Label).visible:
+			said = (label as Label).text
+	_check(bool(_riding.call("is_mounted")), "boxed in, the interact press does not dismount")
+	_check(said.contains("No room to dismount"), "the refusal says why ('%s')" % said)
+	# A forced ending (what a fight or modal does) must still end the ride:
+	# at the remembered clear spot, never inside the mount.
+	_riding.call("dismount")
 	for i in 30:
 		await physics_frame
-	var void_at := _open_air_near(body.global_position)
-	if void_at == Vector3.INF:
-		_fail("no open drop within 200 m of the road for the fall fixture")
+	_check(not bool(_riding.call("is_mounted")), "a forced dismount ends the ride even boxed in")
+	_check(str(_riding.get("last_dismount_rule")) in ["remembered", "history", "mounted_from"],
+		"the forced dismount used a verified fallback (%s)" % str(_riding.get("last_dismount_rule")))
+	_check(_player.global_position.distance_to(body.global_position) <= 8.5,
+		"the fallback is nearby, not back along the route (%.1f m)" % _player.global_position.distance_to(body.global_position))
+	_check(not _trainer_overlaps(body), "the trainer is not set down inside the mount")
+	_check(_player.is_on_floor(), "the trainer stands on ground after the forced dismount (%s)" % _player.global_position)
+	for wall: Node in walls:
+		wall.queue_free()
+	for i in 10:
+		await physics_frame
+	_check_party("refusal and fallbacks")
+
+
+func _enclose(body: Node3D) -> Array:
+	var walls: Array = []
+	var radius := float(body.call("body_radius")) if body.has_method("body_radius") else 1.2
+	var inner := radius + 0.25
+	for side: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
+		var wall := StaticBody3D.new()
+		wall.name = "TestEnclosure"
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		var along := Vector3(absf(side.z), 0.0, absf(side.x))
+		box.size = along * (inner * 2.0 + 1.0) + Vector3.UP * 6.0 + side.abs() * 0.4
+		shape.shape = box
+		wall.add_child(shape)
+		_world.add_child(wall)
+		wall.global_position = body.global_position + side * (inner + 0.2) + Vector3.UP * 2.0
+		walls.append(wall)
+	return walls
+
+
+func _trainer_overlaps(body: Node3D) -> bool:
+	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
+	if collision == null or not body is CollisionObject3D:
+		return false
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = collision.shape
+	query.transform = Transform3D(Basis.IDENTITY, _player.global_position + collision.position)
+	query.collision_mask = 0xFFFFFFFF
+	var skip: Array[RID] = [_player.get_rid()]
+	query.exclude = skip
+	for hit: Dictionary in _player.get_world_3d().direct_space_state.intersect_shape(query, 16):
+		if hit["collider"] == body:
+			return true
+	return false
+
+
+## Coordinator review of #229: a forced dismount at combat start must not put
+## the trainer inside the mount, which keeps its collision while the fight
+## drives it. Fixture: a wild is spawned beside the ridden mount and the
+## director's own fight start is called, as an engage does.
+func _combat_start_forced_dismount() -> void:
+	await _press("creature_recall")
+	for i in 30:
+		await physics_frame
+	if _director.call("ally_body") == null:
+		await _press("creature_recall")
+		for i in 60:
+			await physics_frame
+	await _walk_to_mount()
+	await _mount_by_interact("mount before the fight")
+	var body: CharacterBody3D = _riding.call("mount_body")
+	if body == null:
 		return
-	var before: int = int(_riding.get("mounted_fall_recoveries"))
-	body.global_position = void_at
-	body.velocity = Vector3.ZERO
-	var lowest := void_at.y
-	for i in 900:
+	var wild: Node3D = _director.call("spawn_wild", "cloudling", body.global_position + Vector3(6.0, 0.5, 0.0), {"name": "TestFightWild"})
+	if wild == null:
+		wild = _director.call("spawn_wild", "bramblebun", body.global_position + Vector3(6.0, 0.5, 0.0), {"name": "TestFightWild"})
+	if wild == null:
+		_fail("could not spawn a wild for the combat-start leg")
+		return
+	for i in 10:
 		await physics_frame
-		lowest = minf(lowest, body.global_position.y)
-		if int(_riding.get("mounted_fall_recoveries")) > before:
-			break
-	for i in 60:
+	_director.call("_start_fight", wild)
+	for i in 90:
 		await physics_frame
-	# SYSTEMS §8 parity: no stricter than the walker's 100 m recovery.
-	_check(void_at.y - lowest > 95.0, "the mount is not snatched back before a walker would be (fell %.1f m)" % (void_at.y - lowest))
-	_check(int(_riding.get("mounted_fall_recoveries")) > before, "a mount that drops off an edge is caught by the mounted-fall recovery")
-	_check(body.is_on_floor() and bool(_riding.call("is_mounted")) and _player.call("carrier") == body,
-		"the mount stands on ground again with its rider still seated (mount %s)" % body.global_position)
-	await _dismount_by_interact("dismount after the drop recovery")
+	var manager := _world.get_node_or_null(^"CombatManager")
+	_check(manager != null and bool(manager.call("is_fighting")), "the fight started")
+	_check(not bool(_riding.call("is_mounted")), "combat admission ends the ride")
+	_check(not _trainer_overlaps(body), "combat admission does not leave the trainer inside the mount (rule %s)" % str(_riding.get("last_dismount_rule")))
+	_check(_player.collision_layer != 0, "the trainer is solid again in the fight")
+	_check_party("combat start")
 
 
 ## Review finding F1: the anchor frozen at the top of a ride made a reload
@@ -365,9 +518,17 @@ func _mounted_ride_off_a_drop_is_recovered() -> void:
 ## half. The ride began at the gate (~474 m) and the anchor has followed the
 ## mounted descent to the arrival road; save, reload, stay low.
 func _mounted_save_reload_after_descent() -> void:
-	var low_y := _player.global_position.y
+	if not bool(_riding.call("is_mounted")):
+		await _walk_to_mount()
+		await _mount_by_interact("mount before saving")
+	var body: Node3D = _riding.call("mount_body")
+	if body == null:
+		return
+	for i in 30:
+		await physics_frame
+	var level := body.global_position.y
 	_game.set("save_system", SAVE.new("user://cloudreach_saddle_remount_smoke/"))
-	_check(bool(_game.call("save_game", 0)), "save low on the arrival road after the mounted descent")
+	_check(bool(_game.call("save_game", 0)), "save WHILE MOUNTED on the arrival road after the descent")
 	_world.queue_free()
 	await physics_frame
 	_check(bool(_game.call("load_game", 0)), "load that save")
@@ -375,11 +536,24 @@ func _mounted_save_reload_after_descent() -> void:
 	root.add_child(_world)
 	current_scene = _world
 	_player = _world.get_node(^"Player") as CharacterBody3D
+	_rig = _world.get_node(^"CameraRig")
+	_arbiter = _world.get_node(^"InteractionArbiter")
 	for i in 240:
 		await physics_frame
+	_director = _world.get_node_or_null(^"EncounterDirector")
+	_riding = _world.get_node_or_null(^"RidingController")
 	var anchor: Vector3 = (_player.get("fly_controller") as Node).get("safe_anchor")
-	_check(absf(_player.global_position.y - low_y) < 6.0 and anchor.y < 400.0,
-		"after reload the trainer and Fly's anchor stay low, not at the gate the ride began from (trainer y %.1f, anchor y %.1f, saved at %.1f)" % [_player.global_position.y, anchor.y, low_y])
+	_check(not bool(_player.call("is_carried")) and _player.is_on_floor(),
+		"a mounted save reloads with the trainer standing on ground, not carried (%s)" % _player.global_position)
+	_check(absf(_player.global_position.y - level) < 4.0 and (anchor == Vector3.INF or anchor.y < 400.0),
+		"...where the ride was saved, not the top of the ride (trainer y %.1f, saved at %.1f, anchor %s)" % [_player.global_position.y, level, anchor])
+	_check_party("mounted save/reload")
+	await _press("creature_recall")
+	for i in 90:
+		await physics_frame
+	await _walk_to_mount()
+	await _mount_by_interact("remount after reloading a mounted save")
+	await _dismount_by_interact("dismount after the reload")
 
 
 func _open_air_near(from: Vector3) -> Vector3:
