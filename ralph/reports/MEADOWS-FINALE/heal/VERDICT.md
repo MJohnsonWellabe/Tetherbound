@@ -78,3 +78,20 @@ is at half size.
   - 29 pylons down, 0 left standing, 168 cable pieces hidden;
   - reload and reload+30 are identical;
   - the regreen fades in live and snaps on a load.
+
+## Follow-up: the hard-edged patch at the works (h09)
+
+- **Test:** an A/B capture at the works vantage, with `regreen.max_alpha` at
+  0.7 (shipped) and at 0.95, using `--fixed-fps 60` and the clock held.
+- **Result:** at 0.95 the olive patch is *stronger*, not weaker. So the patch
+  is the regreen overlay itself, not the baked scar showing through.
+- **Two causes:**
+  1. The overlay's tinted grass (`tint #e9dfc0` × the installed meadow grass)
+     is darker and more olive than the lit terrain grass around it.
+  2. Its straight hard edge is where the works slope, which is geometry above
+     the heightfield, hides part of an overlay laid at
+     `ground_height_at + lift`. That is an occlusion line, not an alpha edge.
+- **Fix, not attempted:** either lay the works group's overlay on the slope
+  mesh (a surface query per corner, which must stay deterministic), or match
+  the tint to the terrain's lit grass per group.
+- `max_alpha` stays 0.7.
