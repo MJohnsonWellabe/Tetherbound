@@ -322,7 +322,8 @@ func _unlock_water_gate_for(peer: int) -> void:
 
 func _receive_claim(claim: Dictionary) -> void:
 	var game := get_node("/root/Game")
-	if str(claim.get("recipient_character_id", "")) != str(game.get("local").get("character_id")):
+	var mine := _local_character_id(game)
+	if mine.is_empty() or str(claim.get("recipient_character_id", "")) != mine:
 		return
 	var player_flags: RefCounted = game.call("player_flags")
 	if player_flags != null and bool(player_flags.call("has", PERSONAL_RECEIPT_FLAG)):
@@ -440,7 +441,7 @@ func _finish_local_claim(kept: bool) -> void:
 		return
 	var game := get_node("/root/Game")
 	var saver: RefCounted = game.get("save_system")
-	var character := str(game.get("local").get("character_id"))
+	var character := _local_character_id(game)
 	# The world keeps the unresolved claim; this player-owned receipt makes a
 	# reconnect resume at the acknowledgement instead of replaying a farewell.
 	var player_flags: RefCounted = game.call("player_flags")
@@ -621,8 +622,16 @@ func _start_dialogue_when_free(id: String) -> bool:
 func _character_for_peer(peer: int) -> String:
 	var row: Dictionary = session.registry().row(peer)
 	if row.is_empty() and peer == session.local_peer_id():
-		return str(get_node("/root/Game").get("local").get("character_id"))
+		return _local_character_id(get_node("/root/Game"))
 	return str(row.get("character_id", ""))
+
+
+## This peer's stable character id, or "" while `Game.local` is not set yet.
+static func _local_character_id(game: Node) -> String:
+	var local: Variant = game.get("local") if game != null else null
+	if local is Object:
+		return str((local as Object).get("character_id"))
+	return ""
 
 
 func _saved_state() -> Dictionary:
@@ -761,7 +770,7 @@ static func resolution_flag(accepted: bool, character: String) -> String:
 func _local_offer_owed(game: Node) -> bool:
 	if game == null:
 		return false
-	var character := str(game.get("local").get("character_id"))
+	var character := _local_character_id(game)
 	var player_flags: RefCounted = game.call("player_flags")
 	var resolved := player_flags != null and bool(player_flags.call("has", PERSONAL_RECEIPT_FLAG))
 	var participants := _participants

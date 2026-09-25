@@ -194,3 +194,10 @@ func test_the_offer_accept_effect_is_consumed_by_the_ending() -> void:
 	var panel := FileAccess.get_file_as_string("res://scripts/ui/dialogue_panel.gd")
 	assert_true(panel.contains('Input.is_action_just_pressed("menu_cancel")'),
 		"the dialogue panel still declines a consent line on menu_cancel")
+
+
+func test_a_missing_local_record_reads_as_no_character_instead_of_crashing() -> void:
+	assert_eq(ENDING._local_character_id(null), "", "no Game yet reads as no character")
+	var bare := Node.new()
+	assert_eq(ENDING._local_character_id(bare), "", "a Game whose local record is not set yet reads as no character")
+	bare.free()
