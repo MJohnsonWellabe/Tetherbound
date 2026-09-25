@@ -42,8 +42,11 @@ const PROOF_PEER_SCRIPT := "res://tools/net/proof_peer_runner.gd"
 const PROOF_BUILD_ALLOWANCE_S := 150.0
 ## Rendered peers open a display and GL context before their first hello.
 const RENDER_HELLO_BUDGET_S := 900.0
+## The harness's world-build figure, for a rendered step's in-step forced draw.
+const RENDERED_DRAW_ALLOWANCE_S := 150.0
 const WORLD_BUILD_ACTIONS := ["load_save", "boot", "enter_realm", "screenshot"]
-## Steps after which a peer's session id or character id may have changed.
+## Steps after which a peer's session id may have changed (character ids persist unless the
+## peer loads a save or reboots; see _run_entry).
 const IDENTITY_ACTIONS := ["host", "join", "production_join", "load_save", "boot", "leave"]
 const SCENARIO_KEYS := ["name", "claim", "peers", "scene", "host_peer", "budget_s", "steps"]
 const STEP_KEYS := ["peer", "action", "probe", "args", "budget_frames", "expect", "expect_data",
@@ -203,16 +206,27 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 		var budget := int(entry.get("budget_frames",
 			WORLD_BUILD_BUDGET_FRAMES if action in WORLD_BUILD_ACTIONS else -1))
 		var p: Dictionary = _peers[peer]
-		if action in WORLD_BUILD_ACTIONS:
+		# World-building steps (a cold boot) and a rendered step that forces its
+		# own frame (an in-step `screenshot`, software-GL shader compile) both
+		# block for a named allowance; grant the deferral and, on PASS, the same
+		# liveness credit the harness gives its own named build step.
+		var draws := OS.get_environment("TB_NET_PROOF_RENDER") == "1" and args.has("screenshot")
+		var builds := action in WORLD_BUILD_ACTIONS
+		if builds:
 			p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 + PROOF_BUILD_ALLOWANCE_S
+		elif draws:
+			p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 + RENDERED_DRAW_ALLOWANCE_S
 		result = await step(peer, action, args, budget)
-		# The harness credits liveness when its own named build step passes; do
-		# the same for these, whose verdict can arrive before the next heartbeat.
-		if action in WORLD_BUILD_ACTIONS and str(result.get("verdict", "")) == "PASS":
+		if (builds or draws) and str(result.get("verdict", "")) == "PASS":
 			p["last_heartbeat_t"] = Time.get_ticks_msec() / 1000.0
 		if action in IDENTITY_ACTIONS:
+			# A peer id can change (rejoin mints a new one); a character id is the
+			# identity that survives, so it is kept for `$characterN` and only
+			# replaced when that peer's session reports a new one -- except after
+			# load_save/boot, which can put a different character on that peer.
 			_ids.clear()
-			_characters.clear()
+			if action in ["load_save", "boot"]:
+				_characters.erase(peer)
 	var verdict := str(result.get("verdict", ""))
 	var ok := want == "any" or verdict == want
 	var data_ok := expected.is_empty() or _subset(expected, result.get("data", {}))

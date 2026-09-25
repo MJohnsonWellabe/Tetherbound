@@ -22,6 +22,30 @@ extends RefCounted
 ##   stormheart_answer  {answer}          answer THIS peer's Stormheart offer through
 ##                                         the real dialogue: interact = Yes, menu_cancel = No
 ##   stormheart_state {}                  this peer's view of the F11 outcome
+##   release_for_catch {release, species, nickname}  SETUP: at a full party, let
+##                                         one companion go for a new catch, exactly as
+##                                         the release ceremony does (remove_at, then add)
+##   rename_member   {from, to}           SETUP: give a companion a distinct name
+##   await_probe     {what, path, equals, budget_frames?}  poll one of this peer's
+##                                         probes until the value at `path` equals `equals`
+##   rider_identity  {character_id}       F12: this peer's picture of ANOTHER player's
+##                                         ride, found by character (peer ids change on
+##                                         rejoin): registry row, trainer body, mount
+##   rider_self      {}                   F12: the rider's own identity and ride
+##   guardian_fixture {participants}      HOST, F14 SETUP: the Veilfall prerequisites,
+##                                         then Nerissa's defeat by `participants` (peer
+##                                         ids) through the director's own session path
+##   veilfall_press  {prompt}             press a Veilfall prompt: a control id, `invite`
+##                                         or `decline`
+##   guardian_answer {release?, until?, screenshot?}  answer THIS peer's Guardian offer
+##                                         with controller presses: Accept, or at a full
+##                                         belt let `release` go for it
+##   guardian_state  {}                   this peer's own Guardian outcome (+ host journal)
+##   guardian_offer_again {}              ask the HOST for this character's offer once more,
+##                                         past the hidden prompt: the intent the prompt sends
+##   grandpa_homecoming {screenshot?, must_name?, must_not_name?}  F15: walk up to
+##                                         Grandpa, press his real prompt, read the whole
+##                                         conversation, report every line and check names
 ##
 ## Output lands under `$TB_PROOF_OUT/peer-<index>/`. Nothing here is a game
 ## rule: the fixture only stands in for playing the Dynamo fight, and every
@@ -35,11 +59,15 @@ const STORMWOOD_CHAPTER := "res://data/config/stormwood_chapter.json"
 ## Loaded on first use, not preloaded: every proof peer loads this
 ## file, and only F11 scenarios need the ending.
 const ENDING_PATH := "res://scripts/world/stormwood_ending.gd"
+const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
+const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
+const NET_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 
 const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "stormheart_fixture",
-	"stormheart_answer", "stormheart_state",
+	"stormheart_answer", "stormheart_state", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
+	"rider_identity", "rider_self", "guardian_fixture", "veilfall_press", "guardian_answer", "guardian_state", "guardian_offer_again",
 	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state"]
 
 
@@ -63,6 +91,28 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _stormheart_answer(tree, args)
 		"stormheart_state":
 			return _stormheart_state(tree)
+		"release_for_catch":
+			return _release_for_catch(tree, args)
+		"rename_member":
+			return _rename_member(tree, args)
+		"grandpa_homecoming":
+			return await _grandpa_homecoming(tree, args)
+		"await_probe":
+			return await _await_probe(tree, args)
+		"rider_identity":
+			return _rider_identity(tree, args)
+		"rider_self":
+			return await _rider_self(tree)
+		"guardian_fixture":
+			return await _guardian_fixture(tree, args)
+		"veilfall_press":
+			return await _veilfall_press(tree, args)
+		"guardian_answer":
+			return await _guardian_answer(tree, args)
+		"guardian_state":
+			return _guardian_state(tree)
+		"guardian_offer_again":
+			return await _guardian_offer_again(tree)
 	if WATER_ACTIONS.has(action):
 		return await _water_run(tree, action, args)
 	return {"verdict": "ERROR", "detail": "proof_steps: unknown action '%s'" % action}
@@ -1035,3 +1085,612 @@ static func _relaunch_join(tree: SceneTree, args: Dictionary) -> Dictionary:
 		"budget_frames": int(args.get("budget_frames", 3000))})
 	result["data"] = {"character_id": _character_id(game), "realm": str(game.get("current_realm"))}
 	return result
+# --- F15: Grandpa's homecoming ------------------------------------------------------
+
+static func _party_names(game: Node) -> Array:
+	var names: Array = []
+	var party: RefCounted = game.get("party") if game != null else null
+	if party != null:
+		for member: Variant in (party.call("members") as Array):
+			var m := member as RefCounted
+			var nick := str(m.get("nickname"))
+			names.append(nick if not nick.is_empty() else str(m.get("display_name")))
+	return names
+
+
+## SETUP only: the release is not the clause under proof, Grandpa's reading
+## of the team afterwards is. This is `tab_creatures.gd::_do_release()`'s own
+## sequence for a new catch at a full party -- the only state in which the game
+## lets a companion go: `party.remove_at(slot)`, then `party.add(newcomer)` into
+## the freed holder, then the pending catch is cleared.
+static func _release_for_catch(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	if party == null:
+		return {"verdict": "ERROR", "detail": "no Game.party"}
+	var names := _party_names(game)
+	if names.size() < 5:
+		return {"verdict": "FAIL", "detail": "the game releases only at a full party; this one is %s" % str(names)}
+	var slot := names.find(str(args.get("release", "")))
+	if slot < 0:
+		return {"verdict": "FAIL", "detail": "no companion called '%s' in %s" % [str(args.get("release", "")), str(names)]}
+	var newcomer: RefCounted = SPECIES_DATA.spawn(str(args.get("species", "")))
+	if newcomer == null:
+		return {"verdict": "ERROR", "detail": "species.json has no '%s'" % str(args.get("species", ""))}
+	var cfg: Dictionary = NET_PROGRESSION.config()
+	newcomer.call("set_level", int((cfg.get("level", {}) as Dictionary).get("starter_level", 3)), cfg)
+	PARTY_SEAM.set_nickname(newcomer, str(args.get("nickname", "")))
+	game.set("pending_catch", newcomer)
+	var released: Variant = party.call("remove_at", slot)
+	var landed := released != null and bool(party.call("add", newcomer))
+	game.set("pending_catch", null)
+	return {"verdict": "PASS" if landed else "FAIL",
+		"detail": "released '%s' for new catch '%s'; party now %s" % [str(args.get("release", "")),
+			str(args.get("nickname", "")), str(_party_names(game))],
+		"data": {"party": _party_names(game)}}
+
+
+static func _rename_member(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	var names := _party_names(game)
+	var slot := names.find(str(args.get("from", "")))
+	if party == null or slot < 0:
+		return {"verdict": "FAIL", "detail": "no companion called '%s' in %s" % [str(args.get("from", "")), str(names)]}
+	PARTY_SEAM.set_nickname((party.call("members") as Array)[slot], str(args.get("to", "")))
+	return {"verdict": "PASS", "detail": "party now %s" % str(_party_names(game)), "data": {"party": _party_names(game)}}
+
+
+## The player's own visit: stand where Grandpa's prompt really offers itself,
+## read through any conversation already on screen, press `interact` through
+## the interaction arbiter, then read the conversation Grandpa starts to its
+## natural end with `interact`, recording every line as the panel substitutes
+## it. Grandpa's homecoming is local to each peer (sequence_director.gd), so
+## this runs on each peer separately.
+static func _grandpa_homecoming(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var director: Node = tree.call("_sequence_director")
+	if director == null:
+		return {"verdict": "ERROR", "detail": "no SequenceDirector in this peer's scene"}
+	var prompt := director.get("_grandpa_prompt") as Node3D
+	var panel: Node = director.get("_dialogue")
+	var player := (tree.get("_probe") as Object).call("player") as Node3D
+	if prompt == null or panel == null or player == null:
+		return {"verdict": "ERROR", "detail": "no Grandpa prompt, dialogue panel or player"}
+	var game := tree.root.get_node_or_null(^"Game")
+	var party_before := _party_names(game)
+	var standing := ""
+	for offset: Vector3 in [Vector3(0.9, 0.2, 0), Vector3(-0.9, 0.2, 0), Vector3(0, 0.2, 0.9),
+			Vector3(0, 0.2, -0.9), Vector3(1.6, 0.2, 1.6), Vector3(-1.6, 0.2, -1.6)]:
+		var at := prompt.global_position + offset
+		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 60})
+		if not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
+			standing = str(offset)
+			break
+	var cleared := 0
+	while cleared < 40 and bool(panel.call("is_open")):
+		if not await _tap(tree, "interact"):
+			return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
+		cleared += 1
+	var offer: Dictionary = prompt.call("interaction_offer", player.global_position)
+	if not bool(prompt.get("enabled")) or offer.is_empty():
+		return {"verdict": "FAIL", "detail": "Grandpa's prompt is not offering itself (enabled=%s, standing %s)"
+			% [str(prompt.get("enabled")), standing if not standing.is_empty() else "nowhere in reach"]}
+	# Every line the panel presents (substituted), whatever the press timing -- a press buffered through the panel's input guard can
+	# advance twice, so polling between presses would miss lines.
+	var runner: RefCounted = panel.call("runner")
+	var lines: Array = []
+	var record := func(_conversation: String, _is_last: bool) -> void:
+		# The panel redraws (and re-emits) every frame; keep each line once.
+		var line: Dictionary = runner.call("line")
+		var row := "%s: %s" % [str(line.get("speaker", "")), str(line.get("text", ""))]
+		if lines.is_empty() or lines[-1] != row:
+			lines.append(row)
+	panel.connect("line_presented", record)
+	if not await _tap(tree, "interact"):
+		panel.disconnect("line_presented", record)
+		return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
+	var conversation := str(runner.call("conversation_id")) if runner != null and bool(panel.call("is_open")) else ""
+	var shot := {}
+	var guard := 0
+	while guard < 60 and bool(panel.call("is_open")):
+		if args.has("screenshot") and shot.is_empty() and lines.size() >= 3:
+			shot = await _screenshot(tree, {"name": str(args.screenshot)})
+		if not await _tap(tree, "interact"):
+			panel.disconnect("line_presented", record)
+			return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
+		guard += 1
+	panel.disconnect("line_presented", record)
+	for f in 30:
+		await tree.physics_frame
+	var flags: RefCounted = game.call("player_flags") if game != null else null
+	var seen := flags != null and bool(flags.call("has", "homecoming_seen"))
+	var credits := tree.root.find_child("RegionalCredits", true, false) != null
+	var data := {"conversation_id": conversation, "lines": lines, "party": party_before,
+		"homecoming_seen": seen, "credits_opened": credits}
+	# The acknowledgement itself: one "<name> came home with you." per current
+	# companion, in party order, and no other such line.
+	var named_lines: Array = lines.filter(func(l: String) -> bool: return l.ends_with(" came home with you."))
+	var expected_lines: Array = party_before.map(func(n: String) -> String:
+		return "Grandpa Elias: %s came home with you." % n)
+	data["named_lines"] = named_lines
+	var text := "\n".join(lines)
+	var unnamed: Array = []
+	for name: Variant in (args.get("must_name", []) as Array):
+		if not text.contains(str(name)):
+			unnamed.append(str(name))
+	var wrongly_named: Array = []
+	for name: Variant in (args.get("must_not_name", []) as Array):
+		if text.contains(str(name)):
+			wrongly_named.append(str(name))
+	data["unnamed"] = unnamed
+	data["wrongly_named"] = wrongly_named
+	# The game's rule (regional_homecoming.gd): the first visit's conversation
+	# is chosen by the live party size, so it must match this player's team.
+	var expected := "regional_homecoming_%d" % mini(party_before.size(), 5)
+	data["expected_conversation"] = expected
+	var ok := conversation == expected and not bool(panel.call("is_open")) and seen \
+		and named_lines == expected_lines \
+		and unnamed.is_empty() and wrongly_named.is_empty()
+	return {"verdict": "PASS" if ok else "FAIL",
+		"detail": "conversation '%s' (expected '%s', %d lines) for party %s; homecoming_seen=%s; missing names %s; wrongly named %s; credits opened=%s%s; lines: %s"
+			% [conversation, expected, lines.size(), str(party_before), str(seen), str(unnamed), str(wrongly_named), str(credits),
+				"" if shot.is_empty() else "; " + str(shot.get("detail", "")), " | ".join(lines)],
+		"data": data}
+
+
+# --- generic: wait on a probe --------------------------------------------------------
+
+static func _dig(value: Variant, path: Array) -> Variant:
+	var at: Variant = value
+	for raw: Variant in path:
+		# Arguments arrive as JSON, so a peer id in a path is a float here.
+		var key := str(int(raw)) if raw is float and float(raw) == floorf(float(raw)) else str(raw)
+		if at is Dictionary and (at as Dictionary).has(key):
+			at = (at as Dictionary)[key]
+		else:
+			return null
+	return at
+
+
+static func _await_probe(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var what := str(args.get("what", ""))
+	var path: Array = args.get("path", []) as Array
+	var want: Variant = args.get("equals")
+	var budget := int(args.get("budget_frames", 1800))
+	var got: Variant = null
+	for i in budget:
+		got = _dig(await tree.call("_execute_probe", {"what": what, "args": args.get("args", {})}), path)
+		var numeric := typeof(got) in [TYPE_INT, TYPE_FLOAT] and typeof(want) in [TYPE_INT, TYPE_FLOAT]
+		if (numeric and is_equal_approx(float(got), float(want))) or (not numeric and typeof(got) == typeof(want) and got == want):
+			return {"verdict": "PASS", "detail": "%s.%s == %s after %d polls" % [what, ".".join(path), str(want), i],
+				"data": {"value": got}}
+		await tree.physics_frame
+	return {"verdict": "FAIL", "detail": "%s.%s was %s, not %s, after %d polls" % [what, ".".join(path),
+		str(got), str(want), budget], "data": {"value": got}}
+
+
+# --- F12: remote rider identity ----------------------------------------------------
+
+## What THIS peer shows of the player whose character is `character_id`,
+## found by character rather than by peer id (a rejoin mints a new peer id):
+## the registry row, the trainer body standing for them (its character,
+## nameplate and whether it is drawn riding and seated), and the mount carrying
+## them (its owner character and peer, authority, species, saddle and swim
+## mode). `agree` is true only when every one of those names the same person
+## and exactly one body and one mount do, with nothing left over from an
+## earlier peer id.
+static func _rider_identity(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var cid := str(args.get("character_id", ""))
+	if cid.is_empty():
+		return {"verdict": "ERROR", "detail": "rider_identity needs args.character_id"}
+	var sess: Node = tree.call("_session")
+	var rows: Array = (sess.call("peers") as Array) if sess != null else []
+	var matching_rows: Array = rows.filter(func(r: Variant) -> bool:
+		return r is Dictionary and str((r as Dictionary).get("character_id", "")) == cid)
+	var pid := int((matching_rows[0] as Dictionary).get("peer_id", 0)) if matching_rows.size() == 1 else 0
+	var row_name := str((matching_rows[0] as Dictionary).get("display_name", "")) if matching_rows.size() == 1 else ""
+	var live_peers: Array = (tree.call("_session_peer_ids") as Array)
+	var bodies: Array = []
+	var stale_bodies := 0
+	for body: Node in tree.get_nodes_in_group(&"remote_trainer"):
+		if not (body is Node3D) or body.is_multiplayer_authority():
+			continue
+		if not live_peers.has(int(body.get("peer_id"))):
+			stale_bodies += 1
+		if str(body.get("character_id")) == cid:
+			bodies.append(body)
+	var mounts: Array = []
+	var stale_mounts := 0
+	for mount: Node in tree.get_nodes_in_group(&"remote_creature"):
+		if not (mount is Node3D) or mount.is_multiplayer_authority():
+			continue
+		if not live_peers.has(int(mount.get("owner_peer_id"))):
+			stale_mounts += 1
+		if str(mount.get("owner_character_id")) == cid:
+			mounts.append(mount)
+	var body: Node3D = bodies[0] if bodies.size() == 1 else null
+	var mount: Node3D = mounts[0] if mounts.size() == 1 else null
+	var plate := body.get_node_or_null(^"Nameplate") as Label3D if body != null else null
+	var model: Node = body.get_node_or_null(^"Model") if body != null else null
+	var aquatic: Dictionary = (mount.get("aquatic") as RefCounted).call("snapshot") \
+		if mount != null and mount.get("aquatic") != null else {}
+	var data := {
+		"peer_id": pid, "registry_rows": matching_rows.size(), "registry_display_name": row_name,
+		"bodies": bodies.size(), "mounts": mounts.size(),
+		"stale_bodies": stale_bodies, "stale_mounts": stale_mounts,
+		"body_peer_id": int(body.get("peer_id")) if body != null else 0,
+		"nameplate": plate.text if plate != null else "",
+		"body_visible_in_scene": body != null and body.visible and tree.current_scene != null
+			and tree.current_scene.is_ancestor_of(body),
+		"riding": body != null and bool(body.get("net_riding")),
+		"seated": model != null and model.has_method("ride_pose_applied") and bool(model.call("ride_pose_applied")),
+		"mount_owner_peer_id": int(mount.get("owner_peer_id")) if mount != null else 0,
+		"mount_authority": mount.get_multiplayer_authority() if mount != null else 0,
+		"mount_species": str(mount.get("species_id")) if mount != null else "",
+		"mount_saddle_worn": mount != null and mount.get_node_or_null(^"RideSaddle") != null,
+		"mount_swim_mode": int(aquatic.get("mode", -1)),
+		"mount_swim_owner": int(aquatic.get("owner_peer_id", 0)),
+	}
+	var agree: bool = pid > 0 and matching_rows.size() == 1 and bodies.size() == 1 and mounts.size() == 1 \
+		and stale_bodies == 0 and stale_mounts == 0 and data.body_peer_id == pid \
+		and data.mount_owner_peer_id == pid and data.mount_authority == pid and data.mount_swim_owner == pid \
+		and str(data.nameplate) == row_name and bool(data.riding) and bool(data.mount_saddle_worn)
+	data["agree"] = agree
+	return {"verdict": "PASS" if agree else "FAIL",
+		"detail": "character %s: %s" % [cid.left(18), JSON.stringify(data)], "data": data}
+
+
+## The rider's own side of the same question: who this peer is and what it is
+## riding right now.
+static func _rider_self(tree: SceneTree) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var local: RefCounted = game.get("local") if game != null else null
+	var riding: Dictionary = await tree.call("_execute_probe", {"what": "riding"})
+	var swim: Dictionary = await tree.call("_execute_probe", {"what": "water_swimming"})
+	var own: Dictionary = riding.get("local", {}) as Dictionary
+	var aquatic: Dictionary = ((swim.get("local", {}) as Dictionary).get("aquatic", {}) as Dictionary)
+	var sess: Node = tree.call("_session")
+	var data := {
+		"character_id": str(local.get("character_id")) if local != null else "",
+		"peer_id": int(sess.call("local_peer_id")) if sess != null else 0,
+		"mounted": bool(own.get("mounted", false)),
+		"mount_species": str(own.get("species", "")),
+		"saddle_worn": bool(own.get("saddle_worn", false)),
+		"swim_mode": int(aquatic.get("mode", -1)),
+		"realm": str(game.get("current_realm")) if game != null else "",
+	}
+	return {"verdict": "PASS", "detail": JSON.stringify(data), "data": data}
+
+
+
+# --- F14: the Guardian's per-participant offer ---------------------------------------
+
+const GUARDIAN_SPECIES := "water_abyssal_guardian"
+const NERISSA_ID := "water_trainer_nerissa"
+## The Veilfall chain up to Nerissa (water_veilfall.json: the two controls'
+## and the captain's `requires`), set through the ledger as stand-ins for
+## playing the Veilfall.
+const VEILFALL_PREREQUISITES := ["water_dock_sluice_isle_both_controls_disabled",
+	"water_veilfall_intake_stopped", "water_veilfall_return_opened"]
+const GUARDIAN_REWARD_PATH := "res://scripts/world/water_guardian_reward.gd"
+
+
+static func _veilfall(tree: SceneTree) -> Node:
+	return tree.root.get_node_or_null(^"WaterArchipelago/WaterVeilfall")
+
+
+static func _claims(tree: SceneTree) -> Node:
+	return tree.root.get_node_or_null(^"Game/Session/LedgerRpc/WaterCaptureClaims")
+
+
+## HOST, SETUP only: stands in for playing the Nerissa fight. The fight's live
+## roster (`_trainer_battle_participants`, normally filled by
+## `_note_trainer_participants` during a round) is INJECTED here; the payout
+## then goes through the director's own session path --
+## `_record_trainer_defeat_for_the_session()` journals one Nerissa reward row
+## per participant (the rows that make a character a freeing-fight participant,
+## water_guardian_reward.gd) and submits her defeat as a world fact.
+static func _guardian_fixture(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var sess: Node = tree.call("_session")
+	if sess == null or not bool(sess.call("is_active")) or not bool(sess.call("is_host")):
+		return {"verdict": "ERROR", "detail": "guardian_fixture runs on the session host only"}
+	var scene := tree.current_scene
+	var director := scene.find_child("EncounterDirector", true, false) if scene != null else null
+	if director == null or not (director.get("trainer_specs") as Dictionary).has(NERISSA_ID):
+		return {"verdict": "ERROR", "detail": "no EncounterDirector holding Nerissa's encounter in the host's scene"}
+	var game := tree.root.get_node_or_null(^"Game")
+	var written: Array[String] = []
+	for flag: String in VEILFALL_PREREQUISITES:
+		if game.world.flags.has(flag):
+			continue
+		var verdict: Dictionary = STORY_LEDGER.set_world_flag(game, flag)
+		if not (bool(verdict.get("ok", false)) or bool(verdict.get("pending", false))):
+			return {"verdict": "FAIL", "detail": "%s refused: code='%s' reason='%s'"
+				% [flag, str(verdict.get("code", "")), str(verdict.get("reason", ""))]}
+		written.append(flag)
+	var fought: Dictionary = director.get("_trainer_battle_participants")
+	fought.clear()
+	for raw: Variant in (args.get("participants", []) as Array):
+		fought[int(raw)] = true
+	var spec: Dictionary = (director.get("trainer_specs") as Dictionary)[NERISSA_ID]
+	# A fight builds the host's encounter record on its first round; no round
+	# ran here, so build it the same way.
+	director.call("_ensure_encounter_arbiters")
+	var handled := bool(director.call("_record_trainer_defeat_for_the_session", spec))
+	var budget := 600
+	while budget > 0 and not game.world.flags.has(str(spec.get("defeat_flag", ""))):
+		await tree.physics_frame
+		budget -= 1
+	var reward: GDScript = load(GUARDIAN_REWARD_PATH)
+	var participants: Array = reward.call("participants", game.world)
+	var defeated: bool = game.world.flags.has(str(spec.get("defeat_flag", "")))
+	return {"verdict": "PASS" if handled and defeated and participants.size() == fought.size() else "FAIL",
+		"detail": "prerequisites committed %s; Nerissa fought by peers %s; session path handled=%s; '%s' set=%s; participant characters %s"
+			% [str(written), str(fought.keys()), str(handled), str(spec.get("defeat_flag", "")), str(defeated), str(participants)],
+		"data": {"participants": participants, "defeated": defeated}}
+
+
+## Stand where one of the Veilfall's own prompts offers itself and press
+## `interact` through the interaction arbiter. `prompt` is a control id from
+## water_veilfall.json (e.g. `guardian_tether`), `invite` or `decline`.
+static func _veilfall_press(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var veilfall := _veilfall(tree)
+	var which := str(args.get("prompt", ""))
+	if veilfall == null:
+		return {"verdict": "ERROR", "detail": "no WaterVeilfall in this peer's scene"}
+	var prompt: Node3D
+	match which:
+		"invite":
+			prompt = veilfall.get("_guardian_prompt")
+		"decline":
+			prompt = veilfall.get("_decline_prompt")
+		_:
+			prompt = (veilfall.get("_controls") as Dictionary).get(which)
+	var player := (tree.get("_probe") as Object).call("player") as Node3D
+	if prompt == null or player == null:
+		return {"verdict": "ERROR", "detail": "no Veilfall prompt '%s' (or no player)" % which}
+	var standing := ""
+	for offset: Vector3 in [Vector3(0, -1.2, -1.6), Vector3(0, -1.2, 1.6), Vector3(1.6, -1.2, 0),
+			Vector3(-1.6, -1.2, 0), Vector3(0, -0.4, 0)]:
+		var at := prompt.global_position + offset
+		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 30})
+		if bool(prompt.get("enabled")) and not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
+			standing = str(offset)
+			break
+	if standing.is_empty():
+		return {"verdict": "FAIL", "detail": "the '%s' prompt ('%s') does not offer itself (enabled=%s)"
+			% [which, str(prompt.get("label")), str(prompt.get("enabled"))],
+			"data": {"enabled": bool(prompt.get("enabled")), "label": str(prompt.get("label"))}}
+	# The host judges "beside the mechanism" on ITS copy of this body, which
+	# follows a 4 km teleport into the interior a few seconds late (a player
+	# walking up gives it that time). Stand still that long before pressing.
+	for f in int(args.get("arrive_frames", 240)):
+		await tree.physics_frame
+	if (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
+		return {"verdict": "FAIL", "detail": "the '%s' prompt stopped offering itself while standing" % which,
+			"data": {"enabled": bool(prompt.get("enabled"))}}
+	var label := str(prompt.get("label"))
+	if not await _tap(tree, "interact"):
+		return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
+	# A control's outcome is its world flag (water_veilfall.json); the invite's
+	# is the offer guardian_answer waits for.
+	var flag := ""
+	for control: Dictionary in ((veilfall.get("rules") as Dictionary).get("controls", []) as Array):
+		if str(control.get("id", "")) == which:
+			flag = str(control.get("flag", ""))
+	var game := tree.root.get_node_or_null(^"Game")
+	var budget := int(args.get("settle", 60)) if flag.is_empty() else int(args.get("budget_frames", 900))
+	for f in budget:
+		await tree.physics_frame
+		if not flag.is_empty() and game.world.flags.has(flag):
+			break
+	if not flag.is_empty() and not game.world.flags.has(flag):
+		return {"verdict": "FAIL", "detail": "pressed '%s' but '%s' was never set (HUD says '%s')"
+			% [label, flag, _label_containing(tree.root, "mechanism")], "data": {"label": label}}
+	return {"verdict": "PASS", "detail": "pressed '%s' standing at %s%s" % [label, standing,
+		"" if flag.is_empty() else "; '%s' set" % flag], "data": {"label": label}}
+
+
+static func _creatures_tab(game: Node) -> Node:
+	var menu: Node = game.call("menu") if game != null else null
+	if menu == null:
+		return null
+	var tabs: Array = menu.get("_tabs")
+	for i in tabs.size():
+		if str(tabs[i].id) == "creatures":
+			return (menu.get("_bodies") as Array)[i]
+	return null
+
+
+## Tap `dirs` until `target` holds focus (a controller player's own moves).
+static func _focus_on(tree: SceneTree, target: Control, dirs: Array) -> bool:
+	for dir: String in dirs:
+		for i in 7:
+			if tree.root.gui_get_focus_owner() == target:
+				return true
+			await _tap(tree, dir)
+	return tree.root.gui_get_focus_owner() == target
+
+
+## Answer this peer's OWN Guardian offer on the Creatures tab the game opens,
+## with controller presses only: with a free holder, Accept (`accept`); at a
+## full belt, choose the companion called `release` and "Let them go".
+## `until` = `presented` stops once the offer is on screen, unanswered.
+static func _guardian_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var tab := _creatures_tab(game)
+	var claims := _claims(tree)
+	if tab == null or claims == null:
+		return {"verdict": "ERROR", "detail": "no Creatures tab or WaterCaptureClaims on this peer"}
+	var budget := int(args.get("budget_frames", 1800))
+	var stage := ""
+	while budget > 0:
+		stage = str(tab.get("_release_stage"))
+		if stage in ["guardian", "choose"] and game.get("pending_catch") != null:
+			break
+		await tree.physics_frame
+		budget -= 1
+	var pending: RefCounted = game.get("pending_catch")
+	var species := str(pending.get("species_id")) if pending != null else ""
+	var claim_id := str(claims.call("pending_guardian_id"))
+	for f in 10:
+		await tree.physics_frame
+	var focus := tree.root.gui_get_focus_owner()
+	var presented := {"stage": stage, "pending_species": species, "claim_id": claim_id,
+		"party_before": _party_names(game), "tab_visible": (tab as CanvasItem).is_visible_in_tree(),
+		"focus": str(tab.get_path_to(focus)) if focus != null and tab.is_ancestor_of(focus) else ("outside: %s" % str(focus.get_path()) if focus != null else "")}
+	if not stage in ["guardian", "choose"] or species != GUARDIAN_SPECIES or claim_id.is_empty():
+		return {"verdict": "FAIL", "detail": "no Guardian offer on screen (stage '%s', pending '%s', claim '%s')"
+			% [stage, species, claim_id], "data": presented}
+	if args.has("screenshot"):
+		await _screenshot(tree, {"name": str(args.screenshot)})
+	if str(args.get("until", "")) == "presented":
+		return {"verdict": "PASS", "detail": "offer on screen at stage '%s' for party %s (tab visible=%s, focus '%s')"
+			% [stage, str(presented.party_before), str(presented.tab_visible), str(presented.focus)], "data": presented}
+	var release := str(args.get("release", ""))
+	if release.is_empty():
+		if stage != "guardian":
+			return {"verdict": "FAIL", "detail": "asked to accept into a free holder, but the belt is full (stage '%s')" % stage, "data": presented}
+		if not await _focus_on(tree, tab.get("_guardian_accept"), ["ui_up", "ui_left"]):
+			return {"verdict": "FAIL", "detail": "could not bring focus to Accept", "data": presented}
+		await _tap(tree, "ui_accept")
+	else:
+		if stage != "choose":
+			return {"verdict": "FAIL", "detail": "asked to release at a full belt, but stage is '%s'" % stage, "data": presented}
+		var slot := (presented.party_before as Array).find(release)
+		if slot < 0:
+			return {"verdict": "FAIL", "detail": "no companion '%s' to let go" % release, "data": presented}
+		if not await _focus_on(tree, (tab.get("_rows") as Array)[slot], ["ui_up", "ui_down"]):
+			var owner := tree.root.gui_get_focus_owner()
+			return {"verdict": "FAIL", "detail": "could not bring focus to %s's row (after the presses focus is on %s, menu open=%s, stage '%s'; when presented: tab visible=%s, focus '%s')"
+				% [release, str(owner.get_path()) if owner != null else "nothing", str(game.call("menu").call("is_open")),
+					str(tab.get("_release_stage")), str(presented.tab_visible), str(presented.focus)], "data": presented}
+		await _tap(tree, "ui_accept")
+		if str(tab.get("_release_stage")) != "confirm":
+			return {"verdict": "FAIL", "detail": "choosing %s did not ask to confirm (stage '%s')"
+				% [release, str(tab.get("_release_stage"))], "data": presented}
+		if not await _focus_on(tree, tab.get("_farewell_release"), ["ui_down", "ui_right", "ui_up", "ui_left"]):
+			return {"verdict": "FAIL", "detail": "could not bring focus to 'Let them go'", "data": presented}
+		await _tap(tree, "ui_accept")
+		if args.has("screenshot"):
+			await _screenshot(tree, {"name": str(args.screenshot) + "_done"})
+		if str(tab.get("_release_stage")) == "done":
+			await _focus_on(tree, tab.get("_farewell_done"), ["ui_down", "ui_right"])
+			await _tap(tree, "ui_accept")
+	# The receipt is saved first, then acknowledged; wait for the host's settlement.
+	budget = int(args.get("budget_frames", 1800))
+	while budget > 0 and not str(claims.call("pending_guardian_id")).is_empty():
+		await tree.physics_frame
+		budget -= 1
+	var state := _guardian_view(tree)
+	var data: Dictionary = presented.merged({"after": state})
+	var guardians := int(state.get("guardians_owned", 0))
+	var ok := guardians == 1 and game.get("pending_catch") == null \
+		and bool(state.get("receipt_saved", false)) \
+		and (release.is_empty() or not (state.get("party", []) as Array).has(release))
+	return {"verdict": "PASS" if ok else "FAIL",
+		"detail": "answered %s: party %s -> %s; Guardians owned %d; receipt on the saved character=%s"
+			% ["Accept" if release.is_empty() else "let %s go" % release, str(presented.party_before),
+				str(state.get("party", [])), guardians, str(state.get("receipt_saved", false))],
+		"data": data}
+
+
+## This peer's view of its own Guardian outcome, plus the host's journal when
+## this peer is the host.
+static func _guardian_view(tree: SceneTree) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var local: RefCounted = game.get("local") if game != null else null
+	var character := str(local.get("character_id")) if local != null else ""
+	var reward: GDScript = load(GUARDIAN_REWARD_PATH)
+	var world: RefCounted = game.get("world") if game != null else null
+	var claim_id := str(reward.call("claim_id", reward.call("world_instance", world), character)) \
+		if world != null and not character.is_empty() else ""
+	var guardians := 0
+	var party: RefCounted = game.get("party") if game != null else null
+	if party != null:
+		for member: Variant in (party.call("members") as Array):
+			if str((member as RefCounted).get("species_id")) == GUARDIAN_SPECIES:
+				guardians += 1
+	var saved := {}
+	var store: Object = (game.get("save_system") as Object).get("_characters") if game != null else null
+	if store != null and not character.is_empty():
+		saved = store.call("read", character)
+	var saved_flags: Array = ((saved.get("flags", {}) as Dictionary).get("flags", []) as Array) if saved.get("flags") is Dictionary else []
+	var saved_guardians := 0
+	for row: Variant in (saved.get("party", []) as Array):
+		if row is Dictionary and str((row as Dictionary).get("species_id", "")) == GUARDIAN_SPECIES:
+			saved_guardians += 1
+	var claims := _claims(tree)
+	var view := {"character_id": character, "claim_id": claim_id, "party": _party_names(game),
+		"party_size": _party_names(game).size(), "guardians_owned": guardians,
+		"saved_guardians": saved_guardians, "saved_party_size": (saved.get("party", []) as Array).size(),
+		"receipt_saved": saved_flags.has("water_capture_receipt:" + claim_id),
+		"pending_guardian_id": str(claims.call("pending_guardian_id")) if claims != null else "",
+		"guardian_freed": world != null and world.flags.has("water_guardian_freed"),
+		"offered": world != null and world.flags.has(str(reward.call("offered_flag", character)))}
+	var sess: Node = tree.call("_session")
+	if sess != null and bool(sess.call("is_active")) and bool(sess.call("is_host")) and world != null:
+		view["host_open_claims"] = (world.get("water_capture_claims") as Dictionary).keys()
+		view["host_settled"] = world.flags.has("water_guardian_settled")
+		view["participants"] = reward.call("participants", world)
+	return view
+
+
+static func _guardian_state(tree: SceneTree) -> Dictionary:
+	var view := _guardian_view(tree)
+	return {"verdict": "PASS", "detail": JSON.stringify(view), "data": view}
+
+
+## Once only, judged by the authority rather than the prompt: stand beside the
+## freed Guardian and send the very intent the invite prompt sends. The host's
+## `begin()` must refuse it (`already_resolved`); on a guest the refusal comes
+## back as the chamber's world message.
+static func _guardian_offer_again(tree: SceneTree) -> Dictionary:
+	var veilfall := _veilfall(tree)
+	var game := tree.root.get_node_or_null(^"Game")
+	if veilfall == null or game == null:
+		return {"verdict": "ERROR", "detail": "no WaterVeilfall/Game on this peer"}
+	var prompt := veilfall.get("_guardian_prompt") as Node3D
+	var at := prompt.global_position + Vector3(0, -1.2, -1.6)
+	await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 240})
+	if game.has_method("take_pending_world_message"):
+		game.call("take_pending_world_message")
+	var claims_before := _guardian_view(tree)
+	var result: Dictionary = (veilfall.get("_transport") as Object).call("submit", {"kind": "guardian_offer"})
+	# The HUD takes the world message the frame it lands, so read the verdict
+	# where it stays: the chamber clears `_invite_unanswered` on a refused
+	# offer, and the HUD's line keeps the host's reason.
+	var message := ""
+	var answered := not bool(result.get("pending", false))
+	for f in 600:
+		await tree.physics_frame
+		if not answered and not bool(veilfall.get("_invite_unanswered")):
+			answered = true
+		if answered:
+			message = _label_containing(tree.root, "already answered")
+			if not message.is_empty() or not bool(result.get("pending", false)):
+				break
+	var after := _guardian_view(tree)
+	var refused := (str(result.get("code", "")) == "already_resolved") \
+		or (bool(result.get("pending", false)) and message.contains("already answered"))
+	var data := {"ok": bool(result.get("ok", false)), "pending": bool(result.get("pending", false)),
+		"code": str(result.get("code", "")), "message": message, "refused": refused,
+		"pending_guardian_id": str(after.get("pending_guardian_id", "")),
+		"guardians_owned": int(after.get("guardians_owned", 0))}
+	return {"verdict": "PASS" if refused and str(after.get("pending_guardian_id", "")).is_empty() else "FAIL",
+		"detail": "asked the host again: ok=%s pending=%s code='%s' message '%s'; Guardians owned %d -> %d"
+			% [str(data.ok), str(data.pending), str(data.code), message,
+				int(claims_before.get("guardians_owned", 0)), int(after.get("guardians_owned", 0))],
+		"data": data}
+
+
+static func _label_containing(node: Node, needle: String) -> String:
+	if node is Label and (node as Label).text.contains(needle):
+		return (node as Label).text
+	if node is RichTextLabel and (node as RichTextLabel).text.contains(needle):
+		return (node as RichTextLabel).text
+	for child: Node in node.get_children():
+		var found := _label_containing(child, needle)
+		if not found.is_empty():
+			return found
+	return ""
