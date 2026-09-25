@@ -526,6 +526,7 @@ func _kill_the_tether_lights() -> int:
 	var dead_texture: Texture2D = null
 	if ResourceLoader.exists(dead_path):
 		dead_texture = load(dead_path)
+	var dead_darken := clampf(float(block.get("dead_darken", 0.25)), 0.0, 1.0)
 	var killed := 0
 	var seen: Array[Material] = []
 	for node: Node in _all_nodes(_world):
@@ -537,12 +538,13 @@ func _kill_the_tether_lights() -> int:
 			if standard == null or seen.has(standard):
 				continue
 			seen.append(standard)
-			if _kill_one(standard, lit_path, dead_texture):
+			if _kill_one(standard, lit_path, dead_texture, dead_darken):
 				killed += 1
 	return killed
 
 
-func _kill_one(material: StandardMaterial3D, lit_path: String, dead: Texture2D) -> bool:
+func _kill_one(material: StandardMaterial3D, lit_path: String, dead: Texture2D,
+		darken: float = 0.25) -> bool:
 	var changed := false
 	if material.albedo_texture != null and dead != null \
 			and material.albedo_texture.resource_path == lit_path:
@@ -550,7 +552,7 @@ func _kill_one(material: StandardMaterial3D, lit_path: String, dead: Texture2D) 
 		changed = true
 	if material.emission_enabled and _is_tether_teal(material.emission):
 		material.emission_enabled = false
-		material.albedo_color = material.albedo_color.darkened(0.25)
+		material.albedo_color = material.albedo_color.darkened(darken)
 		material.roughness = 0.92
 		changed = true
 	return changed
@@ -847,7 +849,7 @@ func _heightfield() -> RefCounted:
 ## and warns.
 ##
 ## The cables strung between pylons would float once they fall, so the pieces
-## hanging from a fallen pylon are hidden (`_hide_spans_of`), as are the spans
+## hanging from a fallen pylon tear as it starts to go (`_spans_hanging_from`), as are the spans
 ## in `pylons.cable_holders` that end on one.
 func _topple_the_pylons(immediate: bool) -> int:
 	var block: Dictionary = _config.get("pylons", {})
@@ -857,6 +859,7 @@ func _topple_the_pylons(immediate: bool) -> int:
 	var prefixes: Array = block.get("hide_prefixes", ["Conduit_", "DangleStub_"])
 	var fall := maxf(float(block.get("fall_seconds", 2.0)), 0.1)
 	var stagger := float(block.get("stagger_seconds", 0.35))
+	var lead := maxf(float(block.get("creak_seconds", 0.0)), 0.0) + maxf(float(block.get("creak_hold_seconds", 0.0)), 0.0)
 	var toppled := 0
 	for node: Node in _all_nodes(_world):
 		var holder := node as Node3D
@@ -868,13 +871,16 @@ func _topple_the_pylons(immediate: bool) -> int:
 				pylons.append(child as Node3D)
 		if pylons.is_empty():
 			continue
-		var fallen: Dictionary = {}
+		var claimed: Dictionary = {}
 		for i in pylons.size():
 			var delay := float(i) * stagger
 			if _topple_one(pylons[i], holder, block, 0.0 if immediate else fall, delay, i):
 				toppled += 1
-				fallen[_pylon_index(pylons[i])] = true
-		_cables_hidden += _hide_spans_of(holder, fallen)
+				# The cable pieces hanging from it tear as it starts to go, not
+				# before: counted now, hidden at the end of its creak.
+				var spans := _spans_hanging_from(holder, _pylon_index(pylons[i]), claimed)
+				_cables_hidden += spans.size()
+				_tear_after(spans, 0.0 if immediate else delay + lead)
 	for raw: Variant in (block.get("cable_holders", []) as Array):
 		for node: Node in _all_nodes(_world):
 			if str(node.name) == str(raw):
@@ -890,11 +896,14 @@ func _pylon_index(pylon: Node) -> int:
 ## `Conduit_<i>_<s>` spans list entry i to i+1, `DangleStub_<i>_<s>` hangs
 ## from entry i (severed_spokes.gd's own naming). A span between two pylons
 ## that both still stand stays up.
-func _hide_spans_of(holder: Node, fallen: Dictionary) -> int:
-	var hidden := 0
+## The visible cable pieces that hang from pylon `index` of `holder` and no
+## earlier fallen pylon has claimed: `Conduit_<i>_<s>` spans list entry i to
+## i+1, `DangleStub_<i>_<s>` hangs from entry i (severed_spokes.gd's naming).
+func _spans_hanging_from(holder: Node, index: int, claimed: Dictionary) -> Array[Node3D]:
+	var out: Array[Node3D] = []
 	for node: Node in holder.get_children():
 		var visual := node as Node3D
-		if visual == null or not visual.visible:
+		if visual == null or not visual.visible or claimed.has(visual):
 			continue
 		var parts := str(node.name).split("_")
 		if parts.size() < 3:
@@ -902,13 +911,28 @@ func _hide_spans_of(holder: Node, fallen: Dictionary) -> int:
 		var i := int(parts[1])
 		var hangs := false
 		if parts[0] == "Conduit":
-			hangs = fallen.has(i) or fallen.has(i + 1)
+			hangs = i == index or i + 1 == index
 		elif parts[0] == "DangleStub":
-			hangs = fallen.has(i)
+			hangs = i == index
 		if hangs:
-			visual.visible = false
-			hidden += 1
-	return hidden
+			claimed[visual] = true
+			out.append(visual)
+	return out
+
+
+func _tear_after(spans: Array[Node3D], seconds: float) -> void:
+	if spans.is_empty():
+		return
+	if seconds <= 0.0 or not is_inside_tree():
+		_tear(spans)
+		return
+	create_tween().tween_interval(seconds).finished.connect(_tear.bind(spans))
+
+
+func _tear(spans: Array[Node3D]) -> void:
+	for span: Node3D in spans:
+		if is_instance_valid(span):
+			span.visible = false
 
 
 func _name_matches(node_name: String, patterns: Array) -> bool:
@@ -988,13 +1012,73 @@ func _topple_one(pylon: Node3D, holder: Node3D, block: Dictionary, seconds: floa
 		_set_global(pylon, final)
 		_settle_colliders(colliders, pivot, dir, angle, remove)
 		return true
+	# Staged: a creak (it gives a few degrees and hangs there), then the fall
+	# gathering speed, then a dust burst where it lands.
+	var creak := maxf(float(block.get("creak_seconds", 0.0)), 0.0)
+	var creak_hold := maxf(float(block.get("creak_hold_seconds", 0.0)), 0.0)
+	var creak_part := clampf(float(block.get("creak_fraction", 0.0)), 0.0, 0.5) if creak > 0.0 else 0.0
+	var pose := _pose_pylon.bind(pylon, start, pivot, dir, angle)
 	var tween := create_tween()
 	if delay > 0.0:
 		tween.tween_interval(delay)
-	tween.tween_method(_pose_pylon.bind(pylon, start, pivot, dir, angle), 0.0, 1.0, seconds) \
+	if creak_part > 0.0:
+		tween.tween_method(pose, 0.0, creak_part, creak).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		if creak_hold > 0.0:
+			tween.tween_interval(creak_hold)
+	tween.tween_method(pose, creak_part, 1.0, seconds) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tween.tween_callback(_finish_fall.bind(pylon, final, colliders, pivot, dir, angle, remove))
+	tween.tween_callback(_raise_dust.bind(final, local, block.get("dust", {}) as Dictionary))
 	return true
+
+
+## A one-shot dust burst along a pylon that has just landed. Cosmetic only:
+## no collision, freed once its particles are gone; never on a load.
+func _raise_dust(final: Transform3D, local: AABB, spec: Dictionary) -> void:
+	if not bool(spec.get("enabled", false)) or not is_inside_tree():
+		return
+	var dust := CPUParticles3D.new()
+	dust.name = "PylonDust"
+	dust.one_shot = true
+	dust.explosiveness = 0.85
+	dust.amount = maxi(int(spec.get("amount", 40)), 1)
+	dust.lifetime = maxf(float(spec.get("lifetime", 1.8)), 0.1)
+	dust.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
+	dust.emission_box_extents = local.size * 0.5 * Vector3(0.9, 0.9, 0.9)
+	dust.direction = Vector3.UP
+	dust.spread = 70.0
+	dust.initial_velocity_min = float(spec.get("speed_min", 0.6))
+	dust.initial_velocity_max = float(spec.get("speed_max", 2.2))
+	dust.gravity = Vector3(0.0, -float(spec.get("gravity", 0.8)), 0.0)
+	dust.damping_min = 0.8
+	dust.damping_max = 1.6
+	dust.scale_amount_min = float(spec.get("size_min", 0.6))
+	dust.scale_amount_max = float(spec.get("size_max", 1.4))
+	var grow := Curve.new()
+	grow.add_point(Vector2(0.0, 0.4))
+	grow.add_point(Vector2(1.0, 1.0))
+	dust.scale_amount_curve = grow
+	var fade := Gradient.new()
+	var colour := Color(str(spec.get("colour", "#b9ab8c")))
+	fade.set_color(0, Color(colour, float(spec.get("alpha", 0.55))))
+	fade.set_color(1, Color(colour, 0.0))
+	dust.color_ramp = fade
+	var puff := SphereMesh.new()
+	puff.radius = float(spec.get("puff_radius", 0.45))
+	puff.height = puff.radius * 2.0
+	puff.radial_segments = 8
+	puff.rings = 4
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	puff.material = material
+	dust.mesh = puff
+	add_child(dust)
+	dust.global_transform = Transform3D(final.basis, final * local.get_center())
+	dust.emitting = true
+	get_tree().create_timer(dust.lifetime + 1.0).timeout.connect(dust.queue_free)
 
 
 func _pose_pylon(t: float, pylon: Node3D, start: Transform3D, pivot: Vector3, dir: Vector2,
@@ -1421,6 +1505,7 @@ func _return_the_herd() -> int:
 		body.global_position = at
 		body.call("setup", species, false)
 		body.rotation.y = deg_to_rad(float(place["facing_deg"]))
+		body.scale *= float(place["scale"])
 		body.set_physics_process(false)
 		body.set_process(false)
 		if body is CollisionObject3D:
@@ -1450,8 +1535,8 @@ func _start_idle(body: Node, phase: float) -> void:
 	player.seek(player.current_animation_length * phase, true)
 
 
-## The authored herd spots, `[x, z, facing_deg]` each, as
-## `{"at": Vector2, "facing_deg": float}`. Pure, for tests.
+## The authored herd spots, `[x, z, facing_deg, scale?]` each, as
+## `{"at": Vector2, "facing_deg": float, "scale": float >= 1}`. Pure, for tests.
 static func herd_placements(block: Dictionary) -> Array:
 	var out: Array = []
 	for raw: Variant in (block.get("members", []) as Array):
@@ -1461,6 +1546,8 @@ static func herd_placements(block: Dictionary) -> Array:
 		out.append({
 			"at": Vector2(float(entry[0]), float(entry[1])),
 			"facing_deg": float(entry[2]) if entry.size() > 2 else 0.0,
+			# Up only (hard rule: scale fixes never shrink a creature).
+			"scale": maxf(float(entry[3]), 1.0) if entry.size() > 3 else 1.0,
 		})
 	return out
 

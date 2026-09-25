@@ -362,3 +362,10 @@ func test_herd_placement_skips_malformed_entries() -> void:
 	assert_eq(places.size(), 2)
 	assert_almost_eq(float(places[0]["facing_deg"]), 30.0)
 	assert_almost_eq(float(places[1]["facing_deg"]), 0.0)
+	assert_almost_eq(float(places[1]["scale"]), 1.0, 0.0001, "no scale given: 1")
+
+
+func test_herd_scale_is_up_only() -> void:
+	var places := HEALING.herd_placements({"members": [[1.0, 2.0, 0.0, 0.5], [9.0, 2.0, 0.0, 1.2]]})
+	assert_almost_eq(float(places[0]["scale"]), 1.0, 0.0001, "a member is never shrunk below its species size")
+	assert_almost_eq(float(places[1]["scale"]), 1.2)

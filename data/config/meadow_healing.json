@@ -49,7 +49,9 @@
     "enabled": true,
     "_comment": "D41 in one sentence: the drain network dies with the stronghold machinery. Every LIT pylon on every road, every glowing conduit and every Team Tether fitting in the stronghold itself goes dark -- the same per-material live/dead pair severed_spokes.gd already ships (`_pylon_material`, `_conduit_material`), applied to what is already standing rather than rebuilt. This is also §9's 'stronghold effects change': the building's own tether lighting is drawn from the same reserved teal and goes out with the rest of the network. Nothing warm is touched, which is why the freed legendary's own #e8d79a light survives it.",
     "dead_albedo": "res://assets/environment/team_tether/tether_pylon_albedo_dead.png",
-    "lit_albedo": "res://assets/environment/team_tether/tether_pylon_albedo.png"
+    "lit_albedo": "res://assets/environment/team_tether/tether_pylon_albedo.png",
+    "dead_darken": 0.6,
+    "_comment_dead_darken": "How far a dead teal fitting's albedo darkens once its emission is off (0..1). 0.25 left a big flat screen (the waystop duty board) reading as an untextured teal quad after the network died (blind judge, F05 WO8 round 3)."
   },
   "pylons": {
     "enabled": true,
@@ -67,7 +69,7 @@
     "sink_deg": 3.0,
     "min_angle_deg": 70.0,
     "max_angle_deg": 108.0,
-    "fall_seconds": 2.0,
+    "fall_seconds": 2.6,
     "stagger_seconds": 0.35,
     "direction_candidates": 32,
     "collider": "remove",
@@ -106,7 +108,24 @@
       "TetherConduits/Pylon_1": 160.54,
       "TetherConduits/Pylon_2": 278.48,
       "TetherConduits/Pylon_3": 56.07
-    }
+    },
+    "creak_seconds": 0.9,
+    "creak_hold_seconds": 0.35,
+    "creak_fraction": 0.07,
+    "dust": {
+      "enabled": true,
+      "amount": 48,
+      "lifetime": 2.2,
+      "colour": "#b9ab8c",
+      "alpha": 0.55,
+      "speed_min": 0.6,
+      "speed_max": 2.4,
+      "gravity": 0.6,
+      "size_min": 0.7,
+      "size_max": 1.6,
+      "puff_radius": 0.45
+    },
+    "_comment_staging": "Staged fall (blind judge round 3: a 2 s ease-in read as a snap). Each pylon creaks `creak_fraction` of its fall over `creak_seconds` (ease out), hangs `creak_hold_seconds`, then falls over `fall_seconds` (ease in); its cable pieces tear at the end of the creak, not when the flag lands; `dust` is a one-shot cosmetic burst along it where it lands (no collision, never on a load)."
   },
   "barriers": {
     "enabled": true,
@@ -133,43 +152,51 @@
     "species": "meadowhart",
     "members": [
       [
-        371.0,
-        5850.0,
-        210.0
+        368.0,
+        5861.0,
+        20.0,
+        1.0
       ],
       [
-        375.5,
-        5862.5,
-        170.0
+        372.5,
+        5860.0,
+        95.0,
+        1.06
       ],
       [
-        366.5,
-        5858.0,
-        245.0
+        371.5,
+        5865.5,
+        300.0,
+        1.0
       ],
       [
-        389.5,
-        5848.5,
-        190.0
+        366.0,
+        5866.5,
+        160.0,
+        1.1
       ],
       [
-        378.0,
-        5844.0,
-        225.0
+        389.0,
+        5868.0,
+        60.0,
+        1.04
       ],
       [
-        362.0,
-        5849.5,
-        150.0
+        393.5,
+        5871.0,
+        250.0,
+        1.0
       ],
       [
-        392.0,
-        5864.0,
-        205.0
+        380.0,
+        5846.0,
+        330.0,
+        1.08
       ]
     ],
     "keep_clear_of_display_m": 8.0,
-    "idle_phase_step": 0.37
+    "idle_phase_step": 0.37,
+    "_comment_members": "[x, z, facing_deg, scale>=1]. A loose cluster of four west of the Veridian site, a pair to the north-east and one straggler south, facings mixed (not all toward the Highfield stands), slight up-only size variety (blind judge round 3: the previous seven stood evenly spaced, all facing the camera, one pose)."
   },
   "patrols": {
     "enabled": true,
