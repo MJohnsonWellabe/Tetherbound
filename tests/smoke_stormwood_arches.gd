@@ -172,6 +172,24 @@ func _run() -> void:
 	# The recipe unlock is a prerequisite only; the proof below is two real
 	# BuildPlacer presses, with the exact inventory that the host rechecks.
 	game.progression.set_flag("stormwood:arch_recipe_known")
+	# Raise a Road: the real footing prompts choose two optional footings
+	# before anything is built there.
+	runtime.restore_progression_from_game(game)
+	for footing: String in ["verge_road", "hollows_road"]:
+		var footing_prompt: Node3D = (runtime.get("_footing_prompts") as Dictionary)[footing]
+		_expect(str(footing_prompt.get("label")) == "Choose this footing for your road",
+			"%s offers the road choice once the recipe is known" % footing)
+		await _activate_at(arbiter, player, footing_prompt)
+		await process_frame
+		_expect(chapter.events.has("count:stormwood:side_raise_a_road_chosen:%s" % footing),
+			"choosing %s submits its road fact" % footing)
+		# The ChapterStub records events without dispatching; stand in for the
+		# host accepting each choice.
+		game.progression.set_flag("stormwood:side_raise_a_road_chosen:%s" % footing)
+	game.progression.set_flag("stormwood:side_raise_a_road_1")
+	runtime.restore_progression_from_game(game)
+	_expect(not chapter.events.has("side:stormwood_raise_a_road:step_2"),
+		"choosing footings alone does not build the road")
 	game.inventory.add("stormglass_crown", 6)
 	game.inventory.add("stormglass", 18)
 	game.inventory.add("thunderwood_frame", 6)
@@ -232,6 +250,17 @@ func _run() -> void:
 	if arches.has(pair_a_uid) and arches.has(pair_b_uid):
 		var pair_a: Node3D = (arches[pair_a_uid] as Dictionary).node
 		var pair_b: Node3D = (arches[pair_b_uid] as Dictionary).node
+		runtime.restore_progression_from_game(game)
+		_expect(chapter.events.has("side:stormwood_raise_a_road:step_2"),
+			"a bound pair on both chosen footings submits the road's build step")
+		game.progression.set_flag("stormwood:side_raise_a_road_2")
+		for trip: Array in [[pair_a, "verge_road"], [pair_b, "hollows_road"]]:
+			runtime.set("_arrival_until", {})
+			await _walk_into_passage(player, trip[0])
+			_expect(not _arrivals.is_empty() and bool(_arrivals.back().get("ok", false)),
+				"the chosen road carries the player from %s" % trip[1])
+			_expect(chapter.events.has("count:stormwood:side_raise_a_road_departed:%s" % trip[1]),
+				"travel from %s submits that direction's road fact" % trip[1])
 		var blocker := _destination_blocker(pair_b)
 		world.add_child(blocker)
 		await physics_frame

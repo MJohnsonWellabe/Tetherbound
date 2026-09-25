@@ -911,6 +911,16 @@
         "Rodkeeper Hesk: The Rodline arch answers Lantern Hollow again, and the old Hall arch answers the Fallen Giant. Travellers came down both roads this morning to tell me so.",
         "That is how the Rodfolk moved: crews stepping from the Hall to the deep trunks without ever crossing open ground in a Break. Those roads are yours now; use them both ways."
       ]
+    },
+    "stormwood_ondra_raise_a_road_report": {
+      "speaker": "Keeper Ondra",
+      "portrait": "res://assets/ui/portraits/craftsperson.png",
+      "state": "side_complete",
+      "requires_flags": ["stormwood:side_raise_a_road_3"],
+      "lines": [
+        "Keeper Ondra: You chose your own footings, raised both arches and walked the road there and back. That is a Rodfolk road, not a borrowed one.",
+        "It will stand as long as you leave it standing. Take it whenever a Break makes the ground road too slow."
+      ]
     }
   }
 }
