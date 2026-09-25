@@ -59,7 +59,7 @@
       "strike_bolt_top_radius_m":0.06,"strike_bolt_bottom_radius_m":0.16,"strike_bolt_emission":6.0}
   },
   "aftermath_seconds": {"calm":2400,"building":45,"break":45,"fading":60},
-  "strike": {"interval_min":4,"interval_max":8,"telegraph_seconds":1.2,"radius_m":3,"static_seconds":8,"static_regen_multiplier":0.5,"rod_radius_m":12,"max_health_fraction":0.25,"insulation_pieces_for_immunity":4},
+  "strike": {"interval_min":4,"interval_max":8,"telegraph_seconds":1.2,"radius_m":3,"static_seconds":8,"static_regen_multiplier":0.5,"rod_radius_m":12,"max_health_fraction":0.25,"insulation_pieces_for_immunity":4,"spare_trainer_in_fight":true,"_why_spare_trainer_in_fight":"Coordinator interim ruling 2026-09-25 (WO-F11-04, pending owner decision): while a trainer is committed to a creature fight, strikes do not target the trainer's position; they may still land as telegraphed hazards at the piloted creature, and strikes resume on the trainer when the fight ends. Host-authoritative and per peer. The earned witness measured 6 of 6 strikes on a trainer standing through one road fight (100 -> 0 health), because the stick drives the creature, not the trainer, during combat."},
   "regions": {
     "cinder_verge":{"gentle":true,"damage":12,"rod_flag":"stormwood:rod_verge_disabled"},
     "glowmoss_hollows":{"gentle":true,"damage":15,"rod_flag":"stormwood:rod_hollows_disabled"},
