@@ -78,6 +78,9 @@ var _regreen_nodes: Array[MeshInstance3D] = []
 var _regreen_material: StandardMaterial3D = null
 var _regreen_quads: int = 0
 var _herd_return: Node3D = null
+## Bake only: collidable scatter trunks by cell (see `_trunk_grid`).
+var _trunks: Variant = null
+var _tall: Variant = null
 var _toppled: Array[Node3D] = []
 var _cables_hidden: int = 0
 var _left_standing: int = 0
@@ -1154,7 +1157,11 @@ func _set_global(node: Node3D, value: Transform3D) -> void:
 func _plan_fall(holder_key: String, index: int, start: Transform3D, local: AABB,
 		own_colliders: Array[Node3D], block: Dictionary, use_bodies: bool = true) -> Dictionary:
 	var candidates := maxi(int(block.get("direction_candidates", 32)), 1)
-	_last_block_reasons = {"ground": 0, "road": 0, "body": 0}
+	_last_block_reasons = {"ground": 0, "road": 0, "body": 0, "trunk": 0}
+	# The first fall that is clear of everything but trees: taken when every
+	# direction lies through a tree (a pylon in a thicket still falls; the
+	# smoke fails on any left standing).
+	var through_trees: Dictionary = {}
 	for attempt in candidates:
 		var plan := _plan_along(start, local, fall_direction(holder_key, index, attempt, candidates), block)
 		if plan.is_empty() or not _rests_on_ground(plan["final"], local, block):
@@ -1170,8 +1177,13 @@ func _plan_fall(holder_key: String, index: int, start: Transform3D, local: AABB,
 		if use_bodies and not _footprint_clear_of_bodies(plan["final"], reach, own_colliders):
 			_last_block_reasons["body"] += 1
 			continue
+		if use_bodies and not _footprint_clear_of_trunks(fallen_footprint(plan["final"], reach), block):
+			_last_block_reasons["trunk"] += 1
+			if through_trees.is_empty():
+				through_trees = plan
+			continue
 		return plan
-	return {}
+	return through_trees
 
 
 ## The fall toward `dir`, settled on the terrain: {dir, pivot, angle, final},
@@ -1258,6 +1270,96 @@ func bake_fall_table() -> Dictionary:
 			index += 1
 	_bake_reasons = reasons
 	return out
+
+
+## OFFLINE, bake only (`use_bodies`): the fall must not newly lie through a
+## tree. Vegetation colliders stream in around the local player, so the live
+## physics query above cannot see them; the trunks come instead from
+## vegetation's collision batches -- every collidable scatter placement, loaded
+## from the baked scatter, whether streamed in or not -- as XZ circles of the
+## layer's collision radius times the placement's scale, plus `trunk_margin`.
+func _footprint_clear_of_trunks(points: PackedVector2Array, block: Dictionary) -> bool:
+	var margin := float(block.get("trunk_margin", 0.3))
+	for point: Vector2 in points:
+		for rect: Rect2 in _tall_props():
+			if rect.grow(margin).has_point(point):
+				return false
+		var cell := Vector2i(floori(point.x / TRUNK_CELL), floori(point.y / TRUNK_CELL))
+		for dx in range(-1, 2):
+			for dz in range(-1, 2):
+				for trunk: Vector3 in _trunk_grid().get(cell + Vector2i(dx, dz), []):
+					if point.distance_to(Vector2(trunk.x, trunk.y)) <= trunk.z + margin:
+						return false
+	return true
+
+
+const TRUNK_CELL := 8.0
+
+
+## Collidable scatter trunks bucketed by `TRUNK_CELL`: cell -> [Vector3(x, z,
+## radius)]. Built once per bake from `Vegetation._collision_batches`.
+func _trunk_grid() -> Dictionary:
+	if _trunks != null:
+		return _trunks
+	_trunks = {}
+	var vegetation := _find("Vegetation")
+	var batches: Variant = vegetation.get("_collision_batches") if vegetation != null else null
+	if not batches is Array:
+		return _trunks
+	for batch: Variant in batches:
+		var radius := float((batch as Dictionary).get("radius", 0.5))
+		for placement: Variant in ((batch as Dictionary).get("placements", []) as Array):
+			var at: Vector3 = (placement as Dictionary)["position"]
+			var cell := Vector2i(floori(at.x / TRUNK_CELL), floori(at.z / TRUNK_CELL))
+			if not _trunks.has(cell):
+				_trunks[cell] = []
+			(_trunks[cell] as Array).append(Vector3(at.x, at.z, radius * float((placement as Dictionary).get("scale", 1.0))))
+	# The visually solid scatter that does NOT collide (deadfall, big bushes):
+	# `has_solid_scatter_near()`'s own per-placement reach.
+	var soft_at: Variant = vegetation.get("_soft_occluder_positions") if vegetation != null else null
+	var soft_r: Variant = vegetation.get("_soft_occluder_radii") if vegetation != null else null
+	if soft_at is PackedVector3Array and soft_r is PackedFloat32Array:
+		for i in mini((soft_at as PackedVector3Array).size(), (soft_r as PackedFloat32Array).size()):
+			var at: Vector3 = (soft_at as PackedVector3Array)[i]
+			var cell := Vector2i(floori(at.x / TRUNK_CELL), floori(at.z / TRUNK_CELL))
+			if not _trunks.has(cell):
+				_trunks[cell] = []
+			(_trunks[cell] as Array).append(Vector3(at.x, at.z, (soft_r as PackedFloat32Array)[i]))
+	return _trunks
+
+
+## Bake only: authored standing meshes a pylon must not fall through -- any
+## MeshInstance3D outside the scatter, the pylon holders and the severed spokes
+## whose world bounds stand at least `tall_prop_min_height` and are at most
+## `tall_prop_max_width` across (trees, posts, statues; not the terrain or a
+## whole building, which the collider check owns). XZ rects of those bounds.
+func _tall_props() -> Array[Rect2]:
+	if _tall != null:
+		return _tall
+	var out: Array[Rect2] = []
+	var block: Dictionary = _config.get("pylons", {})
+	var min_height := float(block.get("tall_prop_min_height", 3.0))
+	var max_width := float(block.get("tall_prop_max_width", 10.0))
+	var skip: Array = (block.get("holders", []) as Array) + ["SeveredSpokes", "Vegetation", "MeadowHealing", "Player"]
+	for node: Node in _all_nodes(_world):
+		var mesh := node as MeshInstance3D
+		if mesh == null or mesh.mesh == null or not mesh.is_inside_tree():
+			continue
+		var skipped := false
+		var up: Node = mesh
+		while up != null and up != _world:
+			if _name_matches(str(up.name), skip):
+				skipped = true
+				break
+			up = up.get_parent()
+		if skipped:
+			continue
+		var box := mesh.global_transform * mesh.get_aabb()
+		if box.size.y < min_height or maxf(box.size.x, box.size.z) > max_width:
+			continue
+		out.append(Rect2(Vector2(box.position.x, box.position.z), Vector2(box.size.x, box.size.z)))
+	_tall = out
+	return _tall
 
 
 func bake_reasons() -> Dictionary:
