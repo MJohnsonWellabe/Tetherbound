@@ -1,0 +1,1443 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.36955642700195,
+			"camera_pos": [
+				-650.0,
+				54.3977470397949,
+				3414.81274414062
+			],
+			"description": "conductor_road at (-650,3420) looking north to the Rootgate, gate closed (no flag)",
+			"file": "rootgate_south_closed.jpg",
+			"gate_visible": true,
+			"id": "rootgate_south_closed",
+			"in_fight": false,
+			"label": "after",
+			"player": [
+				-650.0,
+				53.0104789733887,
+				3420.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.016612,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.36955642700195,
+			"camera_pos": [
+				-650.0,
+				54.3977470397949,
+				3414.81274414062
+			],
+			"description": "conductor_road at (-650,3420) looking north through the released Rootgate",
+			"file": "rootgate_south_open.jpg",
+			"gate_visible": false,
+			"id": "rootgate_south_open",
+			"in_fight": false,
+			"label": "after",
+			"player": [
+				-650.0,
+				53.0104789733887,
+				3420.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 60.995047,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42832946777344,
+			"camera_pos": [
+				-650.0,
+				42.2808036804199,
+				3685.19677734375
+			],
+			"description": "deepwood_road at (-650,3680) looking south to the released Rootgate",
+			"file": "rootgate_north_open.jpg",
+			"gate_visible": false,
+			"id": "rootgate_north_open",
+			"in_fight": false,
+			"label": "after",
+			"player": [
+				-650.0,
+				40.7122802734375,
+				3680.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.004624,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.65729808807373,
+			"camera_pos": [
+				-103.254249572754,
+				31.5036926269531,
+				412.373046875
+			],
+			"description": "verge_ash_hollow: 30 m outside the mouth on the road side, facing the mouth",
+			"file": "pocket_verge_ash_hollow_a_approach.jpg",
+			"id": "pocket_verge_ash_hollow_a_approach",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-68.6170654296875,
+				418.480590820312
+			],
+			"mouth_yaw_deg": -100.0,
+			"player": [
+				-98.1613006591797,
+				29.2101459503174,
+				413.271118164062
+			],
+			"pocket": "verge_ash_hollow",
+			"pocket_centre": [
+				-60.0,
+				420.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-57.0499992370605,
+				30.2199993133545,
+				420.519989013672
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 29.8740731209517,
+				"pos": [
+					-57.0499992370605,
+					30.2199993133545,
+					420.519989013672
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_008",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-98.1613006591797,
+				413.271118164062
+			],
+			"surge_elapsed": 60.9947136666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82120990753174,
+			"camera_pos": [
+				-73.6261520385742,
+				32.6008987426758,
+				417.597320556641
+			],
+			"description": "verge_ash_hollow: standing in the mouth, looking in at the reward",
+			"file": "pocket_verge_ash_hollow_b_mouth.jpg",
+			"id": "pocket_verge_ash_hollow_b_mouth",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-68.6170654296875,
+				418.480590820312
+			],
+			"mouth_yaw_deg": -100.0,
+			"player": [
+				-68.6170654296875,
+				29.7697563171387,
+				418.480590820312
+			],
+			"player_to_reward_m": 11.7454748153687,
+			"pocket": "verge_ash_hollow",
+			"pocket_centre": [
+				-60.0,
+				420.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-57.0499992370605,
+				30.2199993133545,
+				420.519989013672
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 29.8740731209517,
+				"pos": [
+					-57.0499992370605,
+					30.2199993133545,
+					420.519989013672
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_008",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-68.6170654296875,
+				418.480590820312
+			],
+			"surge_elapsed": 60.997066,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.92613410949707,
+			"camera_pos": [
+				-63.8696670532227,
+				33.0503387451172,
+				421.382110595703
+			],
+			"description": "verge_ash_hollow: 2 m from the moved reward, facing it (prompt range 2.4 m)",
+			"file": "pocket_verge_ash_hollow_b2_reward.jpg",
+			"id": "pocket_verge_ash_hollow_b2_reward",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-68.6170654296875,
+				418.480590820312
+			],
+			"mouth_yaw_deg": -100.0,
+			"player": [
+				-59.0196189880371,
+				29.8670234680176,
+				420.172729492188
+			],
+			"pocket": "verge_ash_hollow",
+			"pocket_centre": [
+				-60.0,
+				420.0
+			],
+			"pockets_node_present": true,
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Good Candy",
+			"reward_config_pos": [
+				-57.0499992370605,
+				30.2199993133545,
+				420.519989013672
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 29.8740731209517,
+				"pos": [
+					-57.0499992370605,
+					30.2199993133545,
+					420.519989013672
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_008",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-59.0196189880371,
+				420.172729492188
+			],
+			"surge_elapsed": 61.0,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60110139846802,
+			"camera_pos": [
+				-63.7659721374512,
+				31.547477722168,
+				441.357879638672
+			],
+			"description": "verge_ash_hollow: outside the side wall, 7 m from its outer face, facing the pocket centre",
+			"file": "pocket_verge_ash_hollow_c_side_wall.jpg",
+			"id": "pocket_verge_ash_hollow_c_side_wall",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-68.6170654296875,
+				418.480590820312
+			],
+			"mouth_yaw_deg": -100.0,
+			"player": [
+				-62.8651962280273,
+				29.4347438812256,
+				436.249328613281
+			],
+			"pocket": "verge_ash_hollow",
+			"pocket_centre": [
+				-60.0,
+				420.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-57.0499992370605,
+				30.2199993133545,
+				420.519989013672
+			],
+			"reward_pickup_id": "stormwood_pickup_pocket_008",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-62.8651962280273,
+				436.249328613281
+			],
+			"surge_elapsed": 60.99658,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.65730047225952,
+			"camera_pos": [
+				2.42490148544312,
+				28.1362724304199,
+				1788.63208007812
+			],
+			"description": "hollows_moss_nook: 30 m outside the mouth on the road side, facing the mouth",
+			"file": "pocket_hollows_moss_nook_a_approach.jpg",
+			"id": "pocket_hollows_moss_nook_a_approach",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-31.5481491088867,
+				1797.7353515625
+			],
+			"mouth_yaw_deg": 105.0,
+			"player": [
+				-2.57037353515625,
+				25.8427238464355,
+				1789.970703125
+			],
+			"pocket": "hollows_moss_nook",
+			"pocket_centre": [
+				-40.0,
+				1800.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-42.9000015258789,
+				27.0499992370605,
+				1800.78002929688
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 26.6984605312347,
+				"pos": [
+					-42.9000015258789,
+					27.0499992370605,
+					1800.78002929688
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_068",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-2.57037353515625,
+				1789.970703125
+			],
+			"surge_elapsed": 60.9966236666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82116508483887,
+			"camera_pos": [
+				-26.6351737976074,
+				28.8714962005615,
+				1796.41882324219
+			],
+			"description": "hollows_moss_nook: standing in the mouth, looking in at the reward",
+			"file": "pocket_hollows_moss_nook_b_mouth.jpg",
+			"id": "pocket_hollows_moss_nook_b_mouth",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-31.5481491088867,
+				1797.7353515625
+			],
+			"mouth_yaw_deg": 105.0,
+			"player": [
+				-31.5481491088867,
+				26.0403499603271,
+				1797.7353515625
+			],
+			"player_to_reward_m": 11.7530679702759,
+			"pocket": "hollows_moss_nook",
+			"pocket_centre": [
+				-40.0,
+				1800.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-42.9000015258789,
+				27.0499992370605,
+				1800.78002929688
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 26.6984605312347,
+				"pos": [
+					-42.9000015258789,
+					27.0499992370605,
+					1800.78002929688
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_068",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-31.5481491088867,
+				1797.7353515625
+			],
+			"surge_elapsed": 60.996999,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.92620706558228,
+			"camera_pos": [
+				-37.0843124389648,
+				29.8659439086914,
+				1797.11535644531
+			],
+			"description": "hollows_moss_nook: 2 m from the moved reward, facing it (prompt range 2.4 m)",
+			"file": "pocket_hollows_moss_nook_b2_reward.jpg",
+			"id": "pocket_hollows_moss_nook_b2_reward",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-31.5481491088867,
+				1797.7353515625
+			],
+			"mouth_yaw_deg": 105.0,
+			"player": [
+				-40.9682769775391,
+				26.6826095581055,
+				1800.26196289062
+			],
+			"pocket": "hollows_moss_nook",
+			"pocket_centre": [
+				-40.0,
+				1800.0
+			],
+			"pockets_node_present": true,
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy",
+			"reward_config_pos": [
+				-42.9000015258789,
+				27.0499992370605,
+				1800.78002929688
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 26.6984605312347,
+				"pos": [
+					-42.9000015258789,
+					27.0499992370605,
+					1800.78002929688
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_068",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-40.9682769775391,
+				1800.26196289062
+			],
+			"surge_elapsed": 60.999432,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.6009955406189,
+			"camera_pos": [
+				-45.6130867004395,
+				28.3706302642822,
+				1779.0517578125
+			],
+			"description": "hollows_moss_nook: outside the side wall, 7 m from its outer face, facing the pocket centre",
+			"file": "pocket_hollows_moss_nook_c_side_wall.jpg",
+			"id": "pocket_hollows_moss_nook_c_side_wall",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-31.5481491088867,
+				1797.7353515625
+			],
+			"mouth_yaw_deg": 105.0,
+			"player": [
+				-44.2705154418945,
+				26.2579154968262,
+				1784.06225585938
+			],
+			"pocket": "hollows_moss_nook",
+			"pocket_centre": [
+				-40.0,
+				1800.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-42.9000015258789,
+				27.0499992370605,
+				1800.78002929688
+			],
+			"reward_pickup_id": "stormwood_pickup_pocket_068",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-44.2705154418945,
+				1784.06225585938
+			],
+			"surge_elapsed": 61.0085336666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.65730619430542,
+			"camera_pos": [
+				-343.861328125,
+				42.1164054870605,
+				3382.29907226562
+			],
+			"description": "conductor_ridge_cleft: 30 m outside the mouth on the road side, facing the mouth",
+			"file": "pocket_conductor_ridge_cleft_a_approach.jpg",
+			"id": "pocket_conductor_ridge_cleft_a_approach",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-308.738006591797,
+				3380.4580078125
+			],
+			"mouth_yaw_deg": -87.0,
+			"player": [
+				-338.696899414062,
+				39.8228607177734,
+				3382.02807617188
+			],
+			"pocket": "conductor_ridge_cleft",
+			"pocket_centre": [
+				-300.0,
+				3380.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-297.0,
+				34.7799987792969,
+				3379.84008789062
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 34.4299945290997,
+				"pos": [
+					-297.0,
+					34.7799987792969,
+					3379.84008789062
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_077",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-338.696899414062,
+				3382.02807617188
+			],
+			"surge_elapsed": 61.0052526666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82123470306396,
+			"camera_pos": [
+				-313.817413330078,
+				38.7920799255371,
+				3380.724609375
+			],
+			"description": "conductor_ridge_cleft: standing in the mouth, looking in at the reward",
+			"file": "pocket_conductor_ridge_cleft_b_mouth.jpg",
+			"id": "pocket_conductor_ridge_cleft_b_mouth",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-308.738006591797,
+				3380.4580078125
+			],
+			"mouth_yaw_deg": -87.0,
+			"player": [
+				-308.738006591797,
+				35.9609451293945,
+				3380.4580078125
+			],
+			"player_to_reward_m": 11.7542591094971,
+			"pocket": "conductor_ridge_cleft",
+			"pocket_centre": [
+				-300.0,
+				3380.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-297.0,
+				34.7799987792969,
+				3379.84008789062
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 34.4299945290997,
+				"pos": [
+					-297.0,
+					34.7799987792969,
+					3379.84008789062
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_077",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-308.738006591797,
+				3380.4580078125
+			],
+			"surge_elapsed": 61.0,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.92610168457031,
+			"camera_pos": [
+				-303.4501953125,
+				37.9459762573242,
+				3382.21606445312
+			],
+			"description": "conductor_ridge_cleft: 2 m from the moved reward, facing it (prompt range 2.4 m)",
+			"file": "pocket_conductor_ridge_cleft_b2_reward.jpg",
+			"id": "pocket_conductor_ridge_cleft_b2_reward",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-308.738006591797,
+				3380.4580078125
+			],
+			"mouth_yaw_deg": -87.0,
+			"player": [
+				-298.997222900391,
+				34.7626762390137,
+				3379.9453125
+			],
+			"pocket": "conductor_ridge_cleft",
+			"pocket_centre": [
+				-300.0,
+				3380.0
+			],
+			"pockets_node_present": true,
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy",
+			"reward_config_pos": [
+				-297.0,
+				34.7799987792969,
+				3379.84008789062
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 34.4299945290997,
+				"pos": [
+					-297.0,
+					34.7799987792969,
+					3379.84008789062
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_077",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-298.997222900391,
+				3379.9453125
+			],
+			"surge_elapsed": 60.999253,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60079908370972,
+			"camera_pos": [
+				-298.864959716797,
+				37.0696144104004,
+				3401.6572265625
+			],
+			"description": "conductor_ridge_cleft: outside the side wall, 7 m from its outer face, facing the pocket centre",
+			"file": "pocket_conductor_ridge_cleft_c_side_wall.jpg",
+			"id": "pocket_conductor_ridge_cleft_c_side_wall",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-308.738006591797,
+				3380.4580078125
+			],
+			"mouth_yaw_deg": -87.0,
+			"player": [
+				-299.136444091797,
+				34.956901550293,
+				3396.47729492188
+			],
+			"pocket": "conductor_ridge_cleft",
+			"pocket_centre": [
+				-300.0,
+				3380.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-297.0,
+				34.7799987792969,
+				3379.84008789062
+			],
+			"reward_pickup_id": "stormwood_pickup_pocket_077",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-299.136444091797,
+				3396.47729492188
+			],
+			"surge_elapsed": 61.0,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.65744209289551,
+			"camera_pos": [
+				-1006.11273193359,
+				41.4034118652344,
+				3763.494140625
+			],
+			"description": "deepwood_ridge_shelter: 30 m outside the mouth on the road side, facing the mouth",
+			"file": "pocket_deepwood_ridge_shelter_a_approach.jpg",
+			"id": "pocket_deepwood_ridge_shelter_a_approach",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-1001.2177734375,
+				3728.66479492188
+			],
+			"mouth_yaw_deg": -8.0,
+			"player": [
+				-1005.39294433594,
+				39.1098442077637,
+				3758.37280273438
+			],
+			"pocket": "deepwood_ridge_shelter",
+			"pocket_centre": [
+				-1000.0,
+				3720.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-999.580017089844,
+				42.2299995422363,
+				3717.03002929688
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 41.8825886515525,
+				"pos": [
+					-999.580017089844,
+					42.2299995422363,
+					3717.03002929688
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_138",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-1005.39294433594,
+				3758.37280273438
+			],
+			"surge_elapsed": 61.0072146666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82119655609131,
+			"camera_pos": [
+				-1001.92559814453,
+				43.8184623718262,
+				3733.70166015625
+			],
+			"description": "deepwood_ridge_shelter: standing in the mouth, looking in at the reward",
+			"file": "pocket_deepwood_ridge_shelter_b_mouth.jpg",
+			"id": "pocket_deepwood_ridge_shelter_b_mouth",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-1001.2177734375,
+				3728.66479492188
+			],
+			"mouth_yaw_deg": -8.0,
+			"player": [
+				-1001.2177734375,
+				40.9873313903809,
+				3728.66479492188
+			],
+			"player_to_reward_m": 11.7494688034058,
+			"pocket": "deepwood_ridge_shelter",
+			"pocket_centre": [
+				-1000.0,
+				3720.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-999.580017089844,
+				42.2299995422363,
+				3717.03002929688
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 41.8825886515525,
+				"pos": [
+					-999.580017089844,
+					42.2299995422363,
+					3717.03002929688
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_138",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-1001.2177734375,
+				3728.66479492188
+			],
+			"surge_elapsed": 61.0037606666666,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.92606687545776,
+			"camera_pos": [
+				-998.482177734375,
+				44.8414001464844,
+				3723.81567382812
+			],
+			"description": "deepwood_ridge_shelter: 2 m from the moved reward, facing it (prompt range 2.4 m)",
+			"file": "pocket_deepwood_ridge_shelter_b2_reward.jpg",
+			"id": "pocket_deepwood_ridge_shelter_b2_reward",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-1001.2177734375,
+				3728.66479492188
+			],
+			"mouth_yaw_deg": -8.0,
+			"player": [
+				-999.858825683594,
+				41.6581001281738,
+				3719.01049804688
+			],
+			"pocket": "deepwood_ridge_shelter",
+			"pocket_centre": [
+				-1000.0,
+				3720.0
+			],
+			"pockets_node_present": true,
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Revive",
+			"reward_config_pos": [
+				-999.580017089844,
+				42.2299995422363,
+				3717.03002929688
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 41.8825886515525,
+				"pos": [
+					-999.580017089844,
+					42.2299995422363,
+					3717.03002929688
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_138",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-999.858825683594,
+				3719.01049804688
+			],
+			"surge_elapsed": 61.0108806666666,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60104179382324,
+			"camera_pos": [
+				-978.523803710938,
+				44.6318130493164,
+				3723.0185546875
+			],
+			"description": "deepwood_ridge_shelter: outside the side wall, 7 m from its outer face, facing the pocket centre",
+			"file": "pocket_deepwood_ridge_shelter_c_side_wall.jpg",
+			"id": "pocket_deepwood_ridge_shelter_c_side_wall",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-1001.2177734375,
+				3728.66479492188
+			],
+			"mouth_yaw_deg": -8.0,
+			"player": [
+				-983.660583496094,
+				42.5190811157227,
+				3722.29638671875
+			],
+			"pocket": "deepwood_ridge_shelter",
+			"pocket_centre": [
+				-1000.0,
+				3720.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-999.580017089844,
+				42.2299995422363,
+				3717.03002929688
+			],
+			"reward_pickup_id": "stormwood_pickup_pocket_138",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-983.660583496094,
+				3722.29638671875
+			],
+			"surge_elapsed": 61.0032393333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.65699005126953,
+			"camera_pos": [
+				-434.978149414062,
+				80.1202697753906,
+				5208.7275390625
+			],
+			"description": "dynamo_scorch_pen: 30 m outside the mouth on the road side, facing the mouth",
+			"file": "pocket_dynamo_scorch_pen_a_approach.jpg",
+			"id": "pocket_dynamo_scorch_pen_a_approach",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-447.00732421875,
+				5241.77783203125
+			],
+			"mouth_yaw_deg": 160.0,
+			"player": [
+				-436.746704101562,
+				77.8267517089844,
+				5213.5869140625
+			],
+			"pocket": "dynamo_scorch_pen",
+			"pocket_centre": [
+				-450.0,
+				5250.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-451.029998779297,
+				80.2200012207031,
+				5252.81982421875
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 79.8683490614662,
+				"pos": [
+					-451.029998779297,
+					80.2200012207031,
+					5252.81982421875
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_188",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-436.746704101562,
+				5213.5869140625
+			],
+			"surge_elapsed": 60.9833333333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.8214168548584,
+			"camera_pos": [
+				-445.267700195312,
+				82.2831115722656,
+				5236.998046875
+			],
+			"description": "dynamo_scorch_pen: standing in the mouth, looking in at the reward",
+			"file": "pocket_dynamo_scorch_pen_b_mouth.jpg",
+			"id": "pocket_dynamo_scorch_pen_b_mouth",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-447.00732421875,
+				5241.77783203125
+			],
+			"mouth_yaw_deg": 160.0,
+			"player": [
+				-447.00732421875,
+				79.4518127441406,
+				5241.77783203125
+			],
+			"player_to_reward_m": 11.7519149780273,
+			"pocket": "dynamo_scorch_pen",
+			"pocket_centre": [
+				-450.0,
+				5250.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-451.029998779297,
+				80.2200012207031,
+				5252.81982421875
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 79.8683490614662,
+				"pos": [
+					-451.029998779297,
+					80.2200012207031,
+					5252.81982421875
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_188",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-447.00732421875,
+				5241.77783203125
+			],
+			"surge_elapsed": 60.9935563333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.92548608779907,
+			"camera_pos": [
+				-450.692779541016,
+				82.9994659423828,
+				5245.95458984375
+			],
+			"description": "dynamo_scorch_pen: 2 m from the moved reward, facing it (prompt range 2.4 m)",
+			"file": "pocket_dynamo_scorch_pen_b2_reward.jpg",
+			"id": "pocket_dynamo_scorch_pen_b2_reward",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-447.00732421875,
+				5241.77783203125
+			],
+			"mouth_yaw_deg": 160.0,
+			"player": [
+				-450.345397949219,
+				79.8163681030273,
+				5250.9404296875
+			],
+			"pocket": "dynamo_scorch_pen",
+			"pocket_centre": [
+				-450.0,
+				5250.0
+			],
+			"pockets_node_present": true,
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Stoneguard Brew",
+			"reward_config_pos": [
+				-451.029998779297,
+				80.2200012207031,
+				5252.81982421875
+			],
+			"reward_node": {
+				"found": true,
+				"ground_below": 79.8683490614662,
+				"pos": [
+					-451.029998779297,
+					80.2200012207031,
+					5252.81982421875
+				],
+				"visible": true
+			},
+			"reward_pickup_id": "stormwood_pickup_pocket_188",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-450.345397949219,
+				5250.9404296875
+			],
+			"surge_elapsed": 61.000952,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60121583938599,
+			"camera_pos": [
+				-470.379333496094,
+				78.8735504150391,
+				5242.58154296875
+			],
+			"description": "dynamo_scorch_pen: outside the side wall, 7 m from its outer face, facing the pocket centre",
+			"file": "pocket_dynamo_scorch_pen_c_side_wall.jpg",
+			"id": "pocket_dynamo_scorch_pen_c_side_wall",
+			"in_fight": false,
+			"label": "after",
+			"mouth_centre": [
+				-447.00732421875,
+				5241.77783203125
+			],
+			"mouth_yaw_deg": 160.0,
+			"player": [
+				-465.504943847656,
+				76.7608108520508,
+				5244.3564453125
+			],
+			"pocket": "dynamo_scorch_pen",
+			"pocket_centre": [
+				-450.0,
+				5250.0
+			],
+			"pockets_node_present": true,
+			"prompt": "",
+			"reward_config_pos": [
+				-451.029998779297,
+				80.2200012207031,
+				5252.81982421875
+			],
+			"reward_pickup_id": "stormwood_pickup_pocket_188",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-465.504943847656,
+				5244.3564453125
+			],
+			"surge_elapsed": 60.9833333333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60120916366577,
+			"camera_pos": [
+				-707.051818847656,
+				47.6041870117188,
+				4808.87646484375
+			],
+			"description": "dynamo_west_approach near (-700,4820), looking along the road toward (-480,5120)",
+			"file": "dynamo_west_mid.jpg",
+			"id": "dynamo_west_mid",
+			"in_fight": false,
+			"label": "after",
+			"player": [
+				-703.994018554688,
+				45.4914398193359,
+				4813.06689453125
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-703.99169921875,
+				4813.06689453125
+			],
+			"surge_elapsed": 61.005133,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.65732860565186,
+			"camera_pos": [
+				-173.104888916016,
+				102.078826904297,
+				5230.12109375
+			],
+			"description": "dynamo_west_approach last leg, 30 m before Ember Bivouac, facing the camp",
+			"file": "dynamo_west_ember_arrival.jpg",
+			"id": "dynamo_west_ember_arrival",
+			"in_fight": false,
+			"label": "after",
+			"player": [
+				-168.237197875977,
+				99.785270690918,
+				5231.86767578125
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-168.237197875977,
+				5231.86767578125
+			],
+			"surge_elapsed": 60.9979876666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.57273864746094,
+			"camera_pos": [
+				-595.8818359375,
+				29.6462440490723,
+				1050.47717285156
+			],
+			"description": "ash_road near (-590,1060) looking north-east along the road toward (-380,1400)",
+			"file": "forest_ash_road_1060.jpg",
+			"id": "forest_ash_road_1060",
+			"in_fight": false,
+			"label": "after",
+			"player": [
+				-593.152954101562,
+				27.6240940093994,
+				1054.89526367188
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-593.152954101562,
+				1054.89526367188
+			],
+			"surge_elapsed": 60.997249,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.57264041900635,
+			"camera_pos": [
+				-531.807373046875,
+				31.6120414733887,
+				1510.93615722656
+			],
+			"description": "ash_road through Glowmoss Hollows at (-536,1514) looking north-west toward (-900,1780)",
+			"file": "forest_hollows_ash_road.jpg",
+			"id": "forest_hollows_ash_road",
+			"in_fight": false,
+			"label": "after",
+			"player": [
+				-536.0,
+				29.5898971557617,
+				1514.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-536.0,
+				1514.0
+			],
+			"surge_elapsed": 60.9856193333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.54386281967163,
+			"camera_pos": [
+				-472.212677001953,
+				52.8381652832031,
+				3900.29809570312
+			],
+			"description": "Deepwood near Lantern Hollow, the matrix_forest_day stand of the earlier lane tool",
+			"file": "forest_deepwood_matrix_stand.jpg",
+			"id": "forest_deepwood_matrix_stand",
+			"in_fight": false,
+			"label": "after",
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-470.0,
+				3905.0
+			],
+			"surge_elapsed": 61.0140103333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		}
+	],
+	"label": "after",
+	"scatter_bake_fresh": true
+}
