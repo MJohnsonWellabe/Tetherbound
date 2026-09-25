@@ -192,3 +192,62 @@ Disclosed fixture:
 - **Unbuilt activities.** Waycamp shelter and Observatory latch.
 - **Cadence.** The 885-second no-action stretch and the A7 intervals.
 - **Ledger.** The route resource/XP ledger.
+## WO-M · F08 / C2: the Cloudreach frame matrix and blind judgment
+
+**Tool:** `tools/capture_cloudreach_frame_matrix.gd`. It uses the production `CameraRig` following the real trainer, aimed only through its public yaw/pitch. Stands come from route data and are held until a floor collider exists. The HUD is hidden.
+
+**Disclosed fixture:** flags are seeded per row (Act I/II, pre-finale, post-finale), the clock is pinned for day and night, and the trainer is teleported to each stand. The fight itself is not played.
+
+**Output:** `captures/frame_matrix/`, 36 frames (JPEG), `manifest.txt`, five group sheets, and the 30 s motion sheet `_sheet_frame_matrix_motion.jpg` (60 frames). Rendered on main 835744b3 plus the tool; one stand fell back to its second candidate.
+
+**Blind judge.** A sub-agent that saw only the frames, the two Cloudreach boards, the Meadows key art and the Palworld references.
+- **A: does it belong to the key-art / Cloudreach-board world? No.**
+  - Sky, sunlit greens and the gate arch match the Meadows mood.
+  - Cloudreach's own identity is missing: the pale limestone / slate-blue / gold palette, verticality, waterfalls, a soft cloud sea and aviary architecture.
+- **B: beside Palworld, the same kind of game? Yes, at a clearly lower tier.** It is let down by density, the rock material mix, camera failures and creature texture quality.
+
+**The five biggest gaps, as the judge ranked them:**
+1. It doesn't read as a sky-cliff region. It is a green grass ridge, and the cloud sea shows as faceted ice slabs (01, 09, 12, 30).
+2. Landmarks fail:
+   - the stronghold is invisible at 400 m (33) and a "greenhouse on farmland" at 100 m (34);
+   - the shrine is a grey monolith (15) and the perches are silos (19, 20);
+   - nothing visibly changes after the finale (35 vs 34, 36 vs 05).
+3. The ground reads as generated:
+   - mown lawn fills half the frame;
+   - grass sits in rectangular strips;
+   - trees are evenly spaced single lollipops, with a tuft row in 33;
+   - path edges are dithered;
+   - untextured pale rocks sit beside textured ones.
+4. Staging and camera break frames:
+   - the camera sits in geometry (16, 18);
+   - creatures overlap (06, 21, 32, 33);
+   - the night route is black (31; mean luma 10.5/255).
+5. Creature texture and a world that doesn't feel lived-in: griffin speckle, Stormcapra reads as clay, Pebbik's face is smeared, and settlements are nearly empty.
+
+**Scene-fixable work orders (proposed; each ends with a matrix re-render and a re-judge):**
+
+| # | Work order | Frames | Owner scope |
+|---|---|---|---|
+| M1 | Placement bugs: floating logs and neon plant through the trainer (24), floating banner (20), magenta object (13), courtyard seam (29) | 13, 20, 24, 29 | lane |
+| M2 | **Oxblood rule:** crimson shrubs beside the friendly observatory (24); check the red boxes in the camp (34/35) | 24, 34 | lane |
+| M3 | Use one rock material: textured mossy rock on every pale untextured boulder and cliff mesh | 01, 08, 12, 15, 17, 26, 27 | lane |
+| M4 | Night fill: moon and ambient light on slopes facing away from the moon; the ram ignores night lighting | 30, 31, 32 | lane (atmosphere) |
+| M5 | Soft cloud sea: layered cloud cards plus height fog in place of faceted slabs; remove cloud meshes sitting on the ground | 01, 09, 12, 23, 26, 30 | lane |
+| M6 | Scatter authoring: tree groves with scale variety; no evenly spaced singles, tuft rows or neon plants; varied grass value; no hard-edged patches | 02, 03, 07, 08, 12, 13, 14, 17, 22, 33 | lane |
+| M7 | Stronghold as landmark: a sightline from the route at 400 m, no surrounding wheat field, and the lighter gate stone, gold dome ribs and blue banners already in the build | 29, 33, 34 | lane |
+| M8 | Visible homecoming: after the finale, banners go up, NPCs gather and Tether camp props go away | 35, 36 | lane |
+| M9 | Settlements: dress with installed props (cart, bells, banners, lanterns, rope lines, fences) and more NPCs; put Cliffhold on a cliff edge | 05, 25 | lane |
+| M10 | Capture tool: the empty "beacon" detail (14) and camera-in-geometry stands (16, 18, 10, 20); check whether the trainer's idle animation runs in held stands (A-pose in every frame) | 10, 14, 16, 18, 20 | lane (tool) |
+| M12 | **The camera goes inside scenery.** The 30 s walk (`_sheet_frame_matrix_motion.jpg`, 60 frames at 0.5 s, stick input) goes through the lower-cliffs gate arch. The camera then passes through the gate's timber beam (m37–m41), a wild creature fills the frame (m42–m44), and for about 15 frames the camera sits inside a dark rock mass beside the road (m45–m56). These visual rock masses have no collider, so the spring arm doesn't stop. The gate-seal review found the same kind of non-colliding rock spurs. Fix: give the visual rock masses along walkable routes a camera-blocking collider on a layer that doesn't block the trainer, or keep them out of the arm's reach. Either needs the spring arm's mask to include that layer, which is shared camera code. | m37–m56 | lane (collider layer) + **shared** (rig mask) |
+| M11 | Camera pull-in / occluder fade and companion separation, so creatures don't overlap and the griffin doesn't clip through bridge rails | 03, 06, 09, 21, 32, 33 | **shared** (camera, follower): needs a grant |
+
+**Needs art not in the build (owner/art-lane evidence):**
+- the aviary stronghold to the board;
+- waterfalls;
+- a vertical limestone cliff kit;
+- Sky Shrine and perch models;
+- broken stone causeway pieces;
+- Cloudreach foliage;
+- cliff-village architecture;
+- creature re-texture: the griffin's speckle, Stormcapra's plates, crystal and face, and Pebbik's face;
+- a trainer idle pose, if none exists.
