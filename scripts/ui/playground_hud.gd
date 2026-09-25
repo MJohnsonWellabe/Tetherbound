@@ -33,6 +33,7 @@ extends CanvasLayer
 ## visual review flagged the first value tried (0.28) as unreadable — the fill
 ## and track blended into each other and the low-alpha edges read as a
 ## rendering artefact rather than a calm bar.
+const PRESENTATION_HOLD := preload("res://scripts/ui/presentation_hold.gd")
 const FADE_ALPHA := 0.55
 const FADE_SPEED := 2.2
 
@@ -4482,8 +4483,14 @@ func _yield_bottom_to_build_menu() -> void:
 	var yielding := _bottom_dock_should_yield()
 	if _hotbar_panel != null:
 		_hotbar_panel.visible = not yielding and not _combat_is_running()
+	# F05 heal (X03): a story payoff holds the teaching lines -- the
+	# contextual prompt and the objective hint card -- so they do not sit over
+	# the moment (blind judge). They return the frame the hold ends.
+	var held := PRESENTATION_HOLD.active(get_tree())
 	if _prompt_label != null:
-		_prompt_label.visible = not yielding and not _prompt_label.text.is_empty()
+		_prompt_label.visible = not yielding and not held and not _prompt_label.text.is_empty()
+	if held and _objective_hint_card != null:
+		_objective_hint_card.visible = false
 
 
 ## Shared with `_yield_left_stack_to_combat_hud()`'s own `_health_bar_cluster`
