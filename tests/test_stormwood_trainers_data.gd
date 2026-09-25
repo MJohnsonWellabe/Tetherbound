@@ -22,9 +22,16 @@ func _distance_to_segment(point: Vector2, a: Vector2, b: Vector2) -> float:
 	return point.distance_to(a + delta * along)
 
 
+## Distance to the nearest THROUGH route. A trainer anchor is "route
+## grounded" when it stands on a road the player travels between places:
+## every route kind except `spur`. A spur (stormwood_world.json, WO-F09-03) is
+## a dead-end lane from a road to one pocket's mouth, so an anchor that is
+## only near a spur is off the travelled network and must fail.
 func _distance_to_routes(point: Vector2, world: Dictionary) -> float:
 	var closest := INF
 	for route: Dictionary in world.get("routes", []):
+		if str(route.get("kind", "")) == "spur":
+			continue
 		var points: Array = route.get("points", [])
 		for index in range(points.size() - 1):
 			var a: Array = points[index]
@@ -139,3 +146,21 @@ func test_anchors_are_unique_grounded_and_near_authored_routes() -> void:
 		else:
 			assert_true(str(trainer.get("surface_id", "")).is_empty(), "%s may not silently opt out of terrain grounding" % str(trainer.get("id", "")))
 			assert_almost_eq(float(position[1]), ground_y, 0.01, "%s is terrain-grounded" % str(trainer.get("id", "")))
+
+
+func test_route_grounding_ignores_pocket_spurs() -> void:
+	var world := _read(WORLD_PATH)
+	# The Verge pocket's mouth is the far end of its 270 m spur: on the spur,
+	# far from every through road.
+	var mouth := Vector2(-69.4, 418.4)
+	assert_true(_distance_to_routes(mouth, world) > 30.0,
+		"a point only on a spur is %.0f m from the through roads" % _distance_to_routes(mouth, world))
+	# Control: the same point IS on a route once spurs are counted, so the
+	# filter is what makes it fail.
+	var spur_only := {"routes": []}
+	for route: Dictionary in world.routes:
+		if str(route.get("kind", "")) == "spur":
+			var copy: Dictionary = route.duplicate(true)
+			copy.kind = "loop"
+			spur_only.routes.append(copy)
+	assert_true(_distance_to_routes(mouth, spur_only) < 1.0, "control: counted as a road, the spur grounds the point")
