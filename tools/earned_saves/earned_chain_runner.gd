@@ -45,7 +45,7 @@ const CAMP := preload("res://tests/helpers/meadows_earned_camp_segment.gd")
 const REST := preload("res://tests/helpers/meadows_earned_rest_segment.gd")
 const TOURNAMENT := preload("res://tests/helpers/meadows_earned_tournament_segment.gd")
 const BRIDGE := preload("res://tools/earned_saves/bridge_crossing.gd")
-const WARRENS := preload("res://tests/helpers/meadows_earned_warrens_segment.gd")
+const WARRENS := preload("res://tools/earned_saves/warrens_route.gd")
 const RELAY := preload("res://tests/helpers/meadows_earned_relay_segment.gd")
 const HALL := preload("res://tests/helpers/meadows_earned_hall_segment.gd")
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
@@ -214,6 +214,8 @@ func _take(result: Dictionary, key: String, label: String) -> bool:
 		var beat := str((row as Dictionary).get("beat", "")) if row is Dictionary else ""
 		if beat == "gate_prompt_assertion_bypassed":
 			disclosures.append("bridge: the Meadows helper's 'gate must own the interact prompt' assertion was bypassed because ordinary play had already opened the South Bridge (south_bridge_open set, key spent); the stale '%s' battle offer ('offered a battle that could not start') remains an open Meadows defect" % "south_bridge_grunt")
+		elif beat == "quarry_east_detour":
+			disclosures.append("warrens: added an ordinary controller-walk detour east of the quarry pylon before the fourth rootstone (helper's direct leg stalls; BLOCKERS.md B2)")
 		elif beat == "veridian_accepted":
 			disclosures.append("warden: Veridian offer ACCEPTED with a full belt through the production farewell ceremony; released lowest-level earned member %s" % JSON.stringify((row as Dictionary).get("released", {})))
 	if not bool(result.get(key, false)) and failures.is_empty():

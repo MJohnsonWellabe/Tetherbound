@@ -53,3 +53,19 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   (`south_bridge_crossed`, depth -11.57 → 9.43, 2 wins, 40 hits). **The stale
   `'south_bridge_grunt' offered a battle that could not start` offer remains an open Meadows
   defect.**
+
+## B2: quarry leg to the fourth rootstone stalls west of the foundation
+
+- Segment: `warrens`, loaded from the `bridge` save. Helper:
+  `tests/helpers/meadows_earned_warrens_segment.gd` `_travel()`. Three rootstones were gathered
+  (0→6); the direct stick leg (406,1800) → (401,1809) then timed out. No
+  `walk_confined_recovery` fired: the player kept moving, but drifted west into the pocket
+  south of the retained quarry foundation (397,1805, yaw 30) and the conduit pylon (404,1804).
+- Seed 4. Log line (attempt 1, 19:00 UTC, 297 s): `EARNED WARRENS FAIL — Ordinary quarry/Warrens movement did not reach (401.0, -0.329741, 1809.0); player=(397.9701, -0.499921, 1801.116)`.
+  Attempt 2 (19:06 UTC) ended the same way at player (395.62, -0.50, 1798.99).
+- Last good save: `/tmp/claude-0/earned_chain/seed4/bridge/save/`. Failed attempts:
+  `/tmp/claude-0/earned_chain/seed4_warrens_attempt{1,2}/`.
+- Honest alternative (one try, own file): `tools/earned_saves/warrens_route.gd` walks two extra
+  ordinary waypoints east of the pylon, (408.5,1803.5) and (406.5,1809.5), with the helper's
+  own controller walk before its leg to the node. Disclosed as receipt `quarry_east_detour`.
+  The direct route still stalls on main, which is a Meadows navigation/helper defect.
