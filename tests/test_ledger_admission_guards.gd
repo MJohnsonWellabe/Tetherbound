@@ -149,10 +149,11 @@ func test_actor_identity_does_not_outlive_its_commit() -> void:
 
 
 func test_arch_rules_are_judged_at_the_snapped_centre() -> void:
-	# With today's footing data the reorder is observable only through the
-	# refusal code: every request inside an occupied footing's radius is
-	# judged at the centre and refused as arch_occupied, never by the raw
-	# request position's own distance check (arch_locked).
+	# Rules are judged where the arch will stand. With today's footing data
+	# that changes two outcomes: a request inside an occupied footing's radius
+	# is refused as arch_occupied (previously arch_locked by the raw-position
+	# distance check), and a footing request near a free-standing arch 5-10 m
+	# from the centre is now accepted, because the committed centre is clear.
 	world.flags.set_flag("stormwood:arch_recipe_known")
 	var socket: Dictionary = ARCH_BUILD.footing_at(VERGE)
 	var centre := Vector3(float(socket.at[0]), 0.0, float(socket.at[1]))
