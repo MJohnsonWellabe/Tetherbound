@@ -67,6 +67,10 @@ signal finished(conversation_id: String)
 ## Emitted only after the player advances through the normal terminal line.
 ## `finished` remains the broader close/cancel lifecycle signal.
 signal completed(conversation_id: String)
+## Emitted only by an explicit No on a consent line (`confirm(false)`), just
+## before `finished`. A plain `close()` from anywhere else is not a refusal and
+## never emits it.
+signal declined(conversation_id: String)
 
 static var _table: Dictionary = {}
 
@@ -219,6 +223,7 @@ func confirm(accepted: bool) -> void:
 		_collect_confirm_effects(raw as Dictionary)
 		_complete()
 	else:
+		declined.emit(_id)
 		close()
 
 

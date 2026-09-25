@@ -32,8 +32,9 @@
           "level": 14,
           "combat": {
             "preferred_range": 4.5,
+            "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "lunge": 7.0,
-            "telegraph": 0.6,
+            "telegraph": 0.8,
             "recovery": 0.9,
             "attack_cooldown": 1.6,
             "power": 10.4
