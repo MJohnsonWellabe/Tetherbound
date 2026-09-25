@@ -15,6 +15,17 @@ const SATCHEL_COLUMNS := 6
 ## Exceeds the whole 0..10 health-fraction score range: any usable under-level
 ## member outranks every qualified one while carried care remains.
 const UNDERLEVEL_PILOT_BONUS := 10.0
+## The caller heals a chosen pilot to this fraction before engaging.
+const SAFE_PILOT_FRACTION := 0.5
+## data/items/items.json potion_small.heal; read once, 50 as the authored value.
+static var POTION_DOSE: float = _potion_dose()
+const PRACTICE_CENTRE := Vector2(30, -40)
+const PRACTICE_RADIUS := 160.0
+## Diagnostic snapshot also lists bodies just outside the training radius.
+const POOL_SNAPSHOT_MARGIN := 60.0
+## One production respawn cycle (data/config/spawns.json respawn_seconds 300)
+## plus slack; a longer pending timer means the pool is genuinely gone.
+const RESPAWN_WAIT_LIMIT_S := 330.0
 const BOUNDARY_CONFIG := "res://data/config/village_boundary.json"
 
 var _tree: SceneTree
@@ -81,6 +92,10 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 		_fail("Preparation starts after live opening/village with two earned creatures and world input")
 		return result()
 	_nav = NAV.new(tree, _player, _rig, _stick)
+	# A fresh save rolls its own world seed (spawn_tables.json roll_new_worlds),
+	# which re-rolls table clusters near the practice meadow. Record it so any
+	# run can be reproduced with TB_WORLD_SEED.
+	_receipt("world_seed", {"world_seed": int(_director.call("world_seed"))})
 	while not TOURNAMENT.team_ready(_party()):
 		if not await _prepare_pilot(false):
 			return result()
@@ -112,9 +127,9 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 			return result()
 		var wild := _choose_wild()
 		if wild == null:
-			_receipt("training_pool_exhausted", {"wins": wins, "pool": _pool_snapshot()})
-			_fail("No living low-level practice-meadow wild is available for earned training")
-			return result()
+			if not await _wait_for_training_respawn(wins):
+				return result()
+			continue
 		var before := _party_snapshot()
 		if not await _engage(wild) or not await _win_live_fight():
 			return result()
@@ -155,16 +170,7 @@ func _choose_wild() -> Node3D:
 		if not is_instance_valid(body) or not body.is_visible_in_tree() \
 				or not bool(body.call("is_alive")) or bool(body.get("engaged")):
 			continue
-		var creature: RefCounted = body.get("instance")
-		if creature == null or owned.has(creature.get_instance_id()):
-			continue
-		var level := int(creature.get("level"))
-		var species := str(creature.get("species_id"))
-		# S03 starts in the authored Bramblebun practice meadow. Nearby Mudsnout
-		# encounters extend that same opening route when its rabbits are spent.
-		if species not in ["bramblebun", "mudsnout"] or level > TOURNAMENT.required_level():
-			continue
-		if Vector2(body.global_position.x, body.global_position.z).distance_to(Vector2(30, -40)) > 160.0:
+		if not _training_eligible(body, owned):
 			continue
 		candidates.append(body)
 		distances.append(_player.global_position.distance_to(body.global_position))
@@ -185,7 +191,7 @@ func _pool_snapshot() -> Array[Dictionary]:
 		if not is_instance_valid(body):
 			continue
 		var flat := Vector2(body.global_position.x, body.global_position.z)
-		if flat.distance_to(Vector2(30, -40)) > 220.0:
+		if flat.distance_to(PRACTICE_CENTRE) > PRACTICE_RADIUS + POOL_SNAPSHOT_MARGIN:
 			continue
 		var creature: RefCounted = body.get("instance")
 		rows.append({"name": str(body.name),
@@ -193,8 +199,74 @@ func _pool_snapshot() -> Array[Dictionary]:
 			"level": int(creature.get("level")) if creature != null else -1,
 			"alive": bool(body.call("is_alive")), "visible": body.is_visible_in_tree(),
 			"engaged": bool(body.get("engaged")),
-			"meadow_distance": snappedf(flat.distance_to(Vector2(30, -40)), 0.1)})
+			"meadow_distance": snappedf(flat.distance_to(PRACTICE_CENTRE), 0.1),
+			"eligible_if_alive": _training_eligible(body, _party_ids())})
 	return rows
+
+
+## Species, level, ownership and practice-meadow radius. Liveness and
+## visibility are the caller's question: a fainted body waiting on its
+## respawn timer is still the same spawn point a player can wait for.
+func _training_eligible(body: Node3D, owned: Array[int]) -> bool:
+	var creature: RefCounted = body.get("instance")
+	if creature == null or owned.has(creature.get_instance_id()):
+		return false
+	# S03 starts in the authored Bramblebun practice meadow. Nearby Mudsnout
+	# encounters extend that same opening route when its rabbits are spent.
+	if str(creature.get("species_id")) not in ["bramblebun", "mudsnout"] \
+			or int(creature.get("level")) > TOURNAMENT.required_level():
+		return false
+	var home: Vector3 = body.get("home") if body.get("home") is Vector3 else body.global_position
+	return Vector2(home.x, home.z).distance_to(PRACTICE_CENTRE) <= PRACTICE_RADIUS
+
+
+## Seconds until the soonest eligible practice-meadow body respawns, or -1
+## when none is pending. Read-only view of the production respawn timers.
+func _soonest_training_respawn() -> float:
+	var timers: Variant = _director.get("_respawn_timers")
+	if not timers is Dictionary:
+		return -1.0
+	var owned := _party_ids()
+	var soonest := INF
+	for body: Variant in (timers as Dictionary).keys():
+		if body is Node3D and is_instance_valid(body) and _training_eligible(body, owned):
+			soonest = minf(soonest, float((timers as Dictionary)[body]))
+	return soonest if is_finite(soonest) else -1.0
+
+
+## An ordinary player whose nearby practice wilds are all down waits for the
+## meadow to refill (production respawn_seconds). No time skip, no teleport,
+## no state write: real physics frames pass with world input and a neutral
+## stick. A wild that engages meanwhile is fought as ordinary training.
+func _wait_for_training_respawn(wins: int) -> bool:
+	var left := _soonest_training_respawn()
+	_receipt("training_pool_exhausted", {"wins": wins, "soonest_respawn_s": left,
+		"world_seed": int(_director.call("world_seed")), "pool": _pool_snapshot()})
+	if left < 0.0 or left > RESPAWN_WAIT_LIMIT_S:
+		return _fail("No living low-level practice-meadow wild is available for earned training")
+	var started := Engine.get_physics_frames()
+	var budget := int((left + 10.0) * Engine.physics_ticks_per_second)
+	_stick(0, 0)
+	for _frame in budget:
+		if _fighting():
+			if not await _win_live_fight():
+				return false
+		if _frame % 30 == 0 and _choose_wild() != null:
+			_receipt("training_respawn_waited", {"wins": wins,
+				"waited_s": float(Engine.get_physics_frames() - started) / Engine.physics_ticks_per_second})
+			return true
+		await _tree.physics_frame
+	return _fail("A pending practice-meadow respawn never became engageable")
+
+
+static func _potion_dose() -> float:
+	var items: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/items/items.json"))
+	if items is Dictionary:
+		var table: Dictionary = (items as Dictionary).get("items", items)
+		var potion: Variant = table.get("potion_small", {})
+		if potion is Dictionary and (potion as Dictionary).has("heal"):
+			return float((potion as Dictionary)["heal"])
+	return 50.0
 
 
 static func preferred_candidate_index(distances: Array[float], offered_index: int) -> int:
@@ -512,7 +584,7 @@ func _prepare_pilot(training: bool) -> bool:
 			"hp": active.get("hp"), "max_hp": active.get("max_hp"),
 			"hp_fraction": float(active.get("hp")) / float(active.get("max_hp")),
 			"maximum_eligible_fraction": score / 10.0, "stock": potion_stock})
-	while float(active.get("hp")) < float(active.get("max_hp")) * 0.5:
+	while float(active.get("hp")) < float(active.get("max_hp")) * SAFE_PILOT_FRACTION:
 		if int((_game.get("inventory") as RefCounted).call("count", "potion_small")) < 1:
 			_receipt("care_depleted_pilot", {"creature_id": active.get_instance_id(),
 				"hp": active.get("hp"), "max_hp": active.get("max_hp"),
@@ -538,7 +610,7 @@ func _prepare_pilot(training: bool) -> bool:
 ## A depleted stock removes the under-level bonus, so the healthiest usable
 ## creature wins rather than selecting somebody who cannot be safely healed.
 static func pilot_selection(party: RefCounted, potion_stock: int, training: bool,
-		required_level: int) -> Dictionary:
+		required_level: int, potion_dose: float = POTION_DOSE) -> Dictionary:
 	var best := -1
 	var score := -INF
 	if party == null or not party.has_method("size") or not party.has_method("at"):
@@ -559,7 +631,10 @@ static func pilot_selection(party: RefCounted, potion_stock: int, training: bool
 		# under-level starter sat at 50% HP and ran out of practice wilds at L4.
 		# A player preparing for a level-5 entry gate fields the creatures
 		# that are still short of it.
-		if potion_stock > 0 and training and int(member.get("level")) < required_level:
+		# Only while the carried stock can actually lift this member to the
+		# caller's safe half-HP fraction; otherwise it would fight hurt.
+		if potion_stock > 0 and training and int(member.get("level")) < required_level \
+				and hp + potion_stock * potion_dose >= max_hp * SAFE_PILOT_FRACTION:
 			candidate += UNDERLEVEL_PILOT_BONUS
 		if candidate > score:
 			score = candidate

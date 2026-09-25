@@ -4,8 +4,12 @@ extends Node3D
 ## each holding one existing optional reward. Each clearing is closed on every
 ## side by a dead-trunk palisade with invisible static collision, except one
 ## mouth that faces its nearest road. `wall_boxes` is the single geometry
-## source for the runtime colliders, the palisade and the tests.
+## source for the runtime colliders, the palisade and the tests. Each pocket's
+## `spur` route (stormwood_world.json) runs from that road to the mouth, and a
+## lamp post at the spur's road junction marks the turn.
 const CONFIG_PATH := "res://data/config/stormwood_pockets.json"
+const WORLD_PATH := "res://data/config/stormwood_world.json"
+const FRAME := preload("res://scripts/world/stormwood_pocket_frame.gd")
 const TRUNKS: Array[String] = [
 	"res://assets/environment/stylized_nature/DeadTree_1.gltf",
 	"res://assets/environment/stylized_nature/DeadTree_2.gltf",
@@ -23,10 +27,32 @@ static func config() -> Dictionary:
 
 ## Horizontal frame of a pocket: `forward` points out through the mouth.
 static func frame(pocket: Dictionary) -> Dictionary:
-	var yaw := deg_to_rad(float(pocket.mouth_yaw_deg))
-	var forward := Vector2(sin(yaw), cos(yaw))
-	return {"centre": Vector2(float(pocket.at[0]), float(pocket.at[1])), "forward": forward,
-		"right": Vector2(forward.y, -forward.x)}
+	return FRAME.frame(pocket)
+
+
+## The pocket's own lane: the `spur` route whose `pocket_id` names it, or {}.
+static func spur(pocket: Dictionary, routes: Array = []) -> Dictionary:
+	if routes.is_empty():
+		routes = (JSON.parse_string(FileAccess.get_file_as_string(WORLD_PATH)) as Dictionary).routes
+	for route: Dictionary in routes:
+		if str(route.get("kind", "")) == "spur" and str(route.get("pocket_id", "")) == str(pocket.id):
+			return route
+	return {}
+
+
+## The junction lamp (config `spur_marker`) as {at: Vector2, facing: Vector2}:
+## `along_m` up the spur from its road junction, `side_m` to the spur's right,
+## its lantern turned back toward the road. {} without a spur or marker.
+static func spur_post(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> Dictionary:
+	var marker: Dictionary = cfg.get("spur_marker", {})
+	var lane := spur(pocket, routes)
+	if marker.is_empty() or lane.is_empty():
+		return {}
+	var points: Array = lane.points
+	var junction := Vector2(float(points[0][0]), float(points[0][1]))
+	var up := (Vector2(float(points[1][0]), float(points[1][1])) - junction).normalized()
+	var right := Vector2(up.y, -up.x)
+	return {"at": junction + up * float(marker.along_m) + right * float(marker.side_m), "facing": -up}
 
 
 ## Wall segments as {centre: Vector2, along: Vector2 (unit), length: float}.
@@ -88,6 +114,7 @@ func build(world: Node3D) -> void:
 	var height := float(cfg.wall_height_m)
 	var thick := float(cfg.wall_thickness_m)
 	var show_models := not bool(world.get("simulation_only"))
+	var routes: Array = (JSON.parse_string(FileAccess.get_file_as_string(WORLD_PATH)) as Dictionary).routes
 	for pocket: Dictionary in cfg.pockets:
 		var body := StaticBody3D.new()
 		body.name = "Pocket_%s" % str(pocket.id)
@@ -108,11 +135,11 @@ func build(world: Node3D) -> void:
 			body.add_child(collision)
 			if show_models:
 				_palisade(world, body, centre - along * float(wall.length) * 0.5, along, float(wall.length),
-					float(cfg.palisade_spacing_m), index)
-		_mouth_lure(world, body, pocket, cfg, show_models)
+					float(cfg.palisade_spacing_m), index, cfg.get("draw_distance", {}))
+		_mouth_lure(world, body, pocket, cfg, show_models, routes)
 
 
-func _palisade(world: Node3D, parent: Node3D, start: Vector2, along: Vector2, length: float, spacing: float, salt: int) -> void:
+func _palisade(world: Node3D, parent: Node3D, start: Vector2, along: Vector2, length: float, spacing: float, salt: int, draw: Dictionary) -> void:
 	# At most `spacing` apart: the trunks read as the solid wall the collider is.
 	var count := maxi(1, ceili(length / spacing))
 	for i in count:
@@ -121,83 +148,120 @@ func _palisade(world: Node3D, parent: Node3D, start: Vector2, along: Vector2, le
 		model.position = Vector3(at.x, float(world.call("ground_height_at", at.x, at.y)) - 0.3, at.y)
 		model.scale = Vector3.ONE * TRUNK_SCALE
 		model.rotation.y = float((salt * 7 + i * 13) % 360) * PI / 180.0
+		_draw_range(model, draw)
 		parent.add_child(model)
 
 
-## The mouth lure: a wayfinding lamp on a post either side of the mouth. The
-## posts collide on every peer; the lamps are art only.
-func _mouth_lure(world: Node3D, body: StaticBody3D, pocket: Dictionary, cfg: Dictionary, show_models: bool) -> void:
+## Config `draw_distance`: every mesh under `node` stops drawing past
+## `models_m`, fading itself out over the last `models_fade_m`.
+static func _draw_range(node: Node, draw: Dictionary) -> void:
+	if draw.is_empty():
+		return
+	if node is GeometryInstance3D:
+		var geometry := node as GeometryInstance3D
+		geometry.visibility_range_end = float(draw.models_m)
+		geometry.visibility_range_end_margin = float(draw.models_fade_m)
+		geometry.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+	for child: Node in node.get_children():
+		_draw_range(child, draw)
+
+
+## The mouth lure: a wayfinding lamp on a post either side of the mouth, and
+## one more at the spur's road junction (config `spur_marker`). The posts
+## collide on every peer; the lamps are art only.
+func _mouth_lure(world: Node3D, body: StaticBody3D, pocket: Dictionary, cfg: Dictionary, show_models: bool, routes: Array) -> void:
 	var lure: Dictionary = cfg.get("mouth_lure", {})
 	if lure.is_empty():
 		return
+	var materials := _lamp_materials(lure) if show_models else {}
+	var draw: Dictionary = cfg.get("draw_distance", {})
 	var forward: Vector2 = frame(pocket).forward
-	var width := float(lure.post_width_m)
-	var height := float(lure.post_height_m)
-	var wood: StandardMaterial3D = null
-	var flame: StandardMaterial3D = null
-	if show_models:
-		wood = StandardMaterial3D.new()
-		wood.albedo_color = Color(str(lure.post_colour))
-		wood.albedo_texture = load("res://assets/environment/stylized_nature/Bark_TwistedTree.png")
-		wood.uv1_scale = Vector3(0.35, 0.35, 1)
-		wood.roughness = 0.88
-		flame = StandardMaterial3D.new()
-		flame.albedo_color = Color(str(lure.flame_albedo))
-		flame.emission_enabled = true
-		flame.emission = Color(str(lure.flame_emission))
-		flame.emission_energy_multiplier = float(lure.flame_emission_energy)
-		flame.roughness = 0.45
 	var posts := lure_posts(pocket, cfg)
 	for index in posts.size():
-		var at: Vector2 = posts[index]
-		var ground := float(world.call("ground_height_at", at.x, at.y))
-		var collision := CollisionShape3D.new()
-		collision.name = "LurePost%d" % index
-		var shape := BoxShape3D.new()
-		shape.size = Vector3(width, height + FOOTING_DEPTH_M, width)
-		collision.shape = shape
-		collision.position = Vector3(at.x, ground + (height - FOOTING_DEPTH_M) * 0.5, at.y)
-		# Same yaw as the lamp holder below, so the collider matches the post.
-		collision.rotation.y = atan2(forward.x, forward.y)
-		body.add_child(collision)
-		if not show_models:
-			continue
-		var holder := Node3D.new()
-		holder.name = "MouthLamp%d" % index
-		holder.position = Vector3(at.x, ground, at.y)
-		# Local +Z (the lantern's arm) points out of the mouth along the approach.
-		holder.rotation.y = atan2(forward.x, forward.y)
-		body.add_child(holder)
-		var post := MeshInstance3D.new()
-		post.name = "Post"
-		var box := BoxMesh.new()
-		box.size = Vector3(width, height + 0.4, width)
-		post.mesh = box
-		post.material_override = wood
-		post.position.y = (height - 0.4) * 0.5
-		holder.add_child(post)
-		var lantern_scale := float(lure.lantern_scale)
-		var lantern := (load(str(lure.lantern_model)) as PackedScene).instantiate() as Node3D
-		lantern.name = "Lantern"
-		lantern.scale = Vector3.ONE * lantern_scale
-		lantern.position = Vector3(0.0, float(lure.lantern_mount_height_m), width * 0.5)
-		holder.add_child(lantern)
-		# The installed lantern's cage centre sits at (0, 0.85, 0.73) in its own units.
-		var cage := lantern.position + Vector3(0.0, 0.85, 0.73) * lantern_scale
-		var bulb := MeshInstance3D.new()
-		bulb.name = "AmberFlame"
-		var sphere := SphereMesh.new()
-		sphere.radius = float(lure.flame_radius_m)
-		sphere.height = float(lure.flame_radius_m) * 2.0
-		bulb.mesh = sphere
-		bulb.material_override = flame
-		bulb.position = cage
-		holder.add_child(bulb)
-		var light := OmniLight3D.new()
-		light.name = "WarmMouthLight"
-		light.position = cage + Vector3(0.0, 0.0, 0.3)
-		light.light_color = Color(str(lure.light_colour))
-		light.light_energy = float(lure.light_energy)
-		light.omni_range = float(lure.light_range_m)
-		light.shadow_enabled = false
-		holder.add_child(light)
+		_lamp_post(world, body, posts[index], forward, "LurePost%d" % index, "MouthLamp%d" % index,
+			lure, materials, draw)
+	var junction := spur_post(pocket, cfg, routes)
+	if not junction.is_empty():
+		_lamp_post(world, body, junction.at, junction.facing, "SpurPost", "SpurLamp", lure, materials, draw)
+
+
+static func _lamp_materials(lure: Dictionary) -> Dictionary:
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color(str(lure.post_colour))
+	wood.albedo_texture = load("res://assets/environment/stylized_nature/Bark_TwistedTree.png")
+	wood.uv1_scale = Vector3(0.35, 0.35, 1)
+	wood.roughness = 0.88
+	var flame := StandardMaterial3D.new()
+	flame.albedo_color = Color(str(lure.flame_albedo))
+	flame.emission_enabled = true
+	flame.emission = Color(str(lure.flame_emission))
+	flame.emission_energy_multiplier = float(lure.flame_emission_energy)
+	flame.roughness = 0.45
+	return {"wood": wood, "flame": flame}
+
+
+## One lamp post at `at`: a static collider on every peer, and (with
+## `materials`, i.e. not simulation-only) the post, lantern, flame and light,
+## the lantern's arm pointing along `facing`.
+func _lamp_post(world: Node3D, body: StaticBody3D, at: Vector2, facing: Vector2, collider_name: String,
+		lamp_name: String, lure: Dictionary, materials: Dictionary, draw: Dictionary) -> void:
+	var width := float(lure.post_width_m)
+	var height := float(lure.post_height_m)
+	var ground := float(world.call("ground_height_at", at.x, at.y))
+	var yaw := atan2(facing.x, facing.y)
+	var collision := CollisionShape3D.new()
+	collision.name = collider_name
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(width, height + FOOTING_DEPTH_M, width)
+	collision.shape = shape
+	collision.position = Vector3(at.x, ground + (height - FOOTING_DEPTH_M) * 0.5, at.y)
+	# Same yaw as the lamp holder below, so the collider matches the post.
+	collision.rotation.y = yaw
+	body.add_child(collision)
+	if materials.is_empty():
+		return
+	var holder := Node3D.new()
+	holder.name = lamp_name
+	holder.position = Vector3(at.x, ground, at.y)
+	# Local +Z (the lantern's arm) points along `facing`.
+	holder.rotation.y = yaw
+	body.add_child(holder)
+	var post := MeshInstance3D.new()
+	post.name = "Post"
+	var box := BoxMesh.new()
+	box.size = Vector3(width, height + 0.4, width)
+	post.mesh = box
+	post.material_override = materials.wood
+	post.position.y = (height - 0.4) * 0.5
+	holder.add_child(post)
+	var lantern_scale := float(lure.lantern_scale)
+	var lantern := (load(str(lure.lantern_model)) as PackedScene).instantiate() as Node3D
+	lantern.name = "Lantern"
+	lantern.scale = Vector3.ONE * lantern_scale
+	lantern.position = Vector3(0.0, float(lure.lantern_mount_height_m), width * 0.5)
+	holder.add_child(lantern)
+	# The installed lantern's cage centre sits at (0, 0.85, 0.73) in its own units.
+	var cage := lantern.position + Vector3(0.0, 0.85, 0.73) * lantern_scale
+	var bulb := MeshInstance3D.new()
+	bulb.name = "AmberFlame"
+	var sphere := SphereMesh.new()
+	sphere.radius = float(lure.flame_radius_m)
+	sphere.height = float(lure.flame_radius_m) * 2.0
+	bulb.mesh = sphere
+	bulb.material_override = materials.flame
+	bulb.position = cage
+	holder.add_child(bulb)
+	_draw_range(holder, draw)
+	var light := OmniLight3D.new()
+	light.name = "WarmMouthLight"
+	light.position = cage + Vector3(0.0, 0.0, 0.3)
+	light.light_color = Color(str(lure.light_colour))
+	light.light_energy = float(lure.light_energy)
+	light.omni_range = float(lure.light_range_m)
+	light.shadow_enabled = false
+	# A light has no visibility range; its own distance fade culls it instead.
+	if not draw.is_empty():
+		light.distance_fade_enabled = true
+		light.distance_fade_begin = float(draw.lights_m) - float(draw.lights_fade_m)
+		light.distance_fade_length = float(draw.lights_fade_m)
+	holder.add_child(light)

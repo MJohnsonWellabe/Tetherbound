@@ -178,8 +178,9 @@ var _ally_hidden_for := 0.0
 var _ally_clear_for := 0.0
 
 ## OP23-02: the point `_open_arena()` already asked `_arena_bounds()` about
-## when it sized this fight's radius. `_combat_camera_profile()` re-asks the
-## same question at the same point rather than at `_ally_body`'s own
+## when it sized this fight's radius. `_room_clearance()` (now diagnostics only;
+## the camera is not capped by it, see `_update_combat_camera_framing`) asks
+## the same question at the same point rather than at `_ally_body`'s own
 ## position -- a fighter placed near a wall (`_place_fighters()`, `deploy_offset`/
 ## `separation`) can end up a hair OUTSIDE a small room's rect even though
 ## the arena itself was correctly clamped to fit inside it, which read the
@@ -1120,18 +1121,15 @@ func _update_combat_camera_framing(delta: float) -> void:
 	var weight := 1.0 - exp(-lag * delta)
 	_camera_framing_extra = lerpf(_camera_framing_extra, target_extra, weight)
 	var desired := base_distance + _camera_framing_extra
-	# COMBAT-1's room cap, restored at the merge: the declaration sat on the
-	# side of this conflict that main replaced, and its two uses below survived
-	# without it. A wall closer than the requested distance pulls the camera in
-	# and drops the shoulder entirely, rather than swinging the pivot into
-	# geometry.
-	var clearance := _room_clearance()
-	if clearance >= 0.0:
-		desired = minf(desired, maxf(1.5, clearance))
+	# No nearest-wall distance cap (F04). 9b8c3d8a7 removed it for the Warrens
+	# guardian and merge 59e088560 restored it: the nearest wall to ANY fighter
+	# is not a camera-distance ceiling. Clamped to it, the den fight put the lens
+	# 2 m behind a 3.9 m ally, inside its body, with the guardian off-frame.
+	# SpringArm3D contracts depth against real geometry in the camera's actual
+	# direction, and CameraRig sweeps the shoulder pivot against walls, so a
+	# tight room still keeps the lens out of the rock.
 	_camera_rig.set("_distance", desired)
-	if clearance >= 0.0:
-		_camera_rig.set("_shoulder", 0.0)
-	elif float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
+	if float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
 		# Use the live pitch/distance, and never retarget/reset manual orbit.
 		var shoulder := _combat_shoulder_offset(desired, rad_to_deg(float(_camera_rig.get("pitch"))))
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
