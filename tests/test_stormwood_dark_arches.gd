@@ -21,7 +21,7 @@ func _entry(flags: RefCounted, chapter: Dictionary) -> Dictionary:
 	return {}
 
 
-func test_dark_arches_are_the_optional_ancient_pairs_c_and_d() -> void:
+func test_dark_arches_are_pairs_c_and_d_outside_every_main_objective() -> void:
 	var pairs := {}
 	for id: String in ARCH_RUNTIME.DARK_ARCHES:
 		var arch := RULES.definition(id)
@@ -49,7 +49,7 @@ func test_inspection_paid_relights_and_hesk_complete_the_chain() -> void:
 	assert_false(LOGIC.dispatch(flags, chapter, ARCH_RUNTIME.dark_inspection_event("d_hall")).changed,
 		"The same arch cannot be inspected twice")
 	assert_false(LOGIC.dispatch(flags, chapter, "count:" + RULES.lit_flag("d_hall")).changed,
-		"No chapter event can write a paid arch lit flag")
+		"No chain step declares a paid arch lit flag as a count fact")
 	assert_false(flags.has(RULES.lit_flag("d_hall")))
 	for id: String in ["c_rodline", "c_lantern", "d_hall"]:
 		flags.set_flag(RULES.lit_flag(id))
@@ -98,3 +98,20 @@ func test_hesk_report_outranks_ordinary_lines_only_while_owed() -> void:
 	var dialogue: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
 		"res://data/dialogue/stormwood.json")) as Dictionary).conversations
 	assert_true(dialogue.has(CHAPTER_RUNTIME.HESK_DARK_ARCHES_REPORT))
+
+
+func test_arches_lit_before_the_chain_was_wired_still_count_as_inspected() -> void:
+	var chapter := _chapter()
+	var flags := PROGRESSION.new()
+	for id: String in ARCH_RUNTIME.DARK_ARCHES:
+		flags.set_flag(RULES.lit_flag(id))
+	assert_true(ARCH_RUNTIME.owed_dark_inspections(flags).is_empty(), "Nothing is owed before the chain is revealed")
+	flags.set_flag("stormwood:ashfoot_arch_relit")
+	var owed := ARCH_RUNTIME.owed_dark_inspections(flags)
+	assert_eq(owed.size(), 4)
+	for event: String in owed:
+		LOGIC.dispatch(flags, chapter, event)
+	assert_true(flags.has("stormwood:side_dark_arches_1"), "An old all-lit save reaches step 1")
+	assert_true(ARCH_RUNTIME.owed_dark_inspections(flags).is_empty())
+	assert_true(LOGIC.dispatch(flags, chapter, "side:%s:step_2" % CHAIN).changed,
+		"and its already-paid relights complete step 2")
