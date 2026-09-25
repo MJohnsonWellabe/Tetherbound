@@ -65,6 +65,11 @@ var _activated_id := 0
 ## tell is on screen the pilot stops forcing the camera yaw, so those frames
 ## show the ordinary neutral fight camera. Without the flag nothing changes.
 var _tell_capture_dir := ""
+## `--tell-capture-member=<n>` (1-based) captures only from that team member
+## on. Earlier members are fought at Engine.time_scale 4 -- the same physics
+## and decisions, four physics steps per rendered frame -- so a software
+## renderer reaches the member under test inside the timeout.
+var _tell_capture_member := 1
 var _tells_seen := 0
 var _tell_shots: Array[Dictionary] = []
 var _tell_camera_free_until := -1
@@ -84,6 +89,8 @@ func _init() -> void:
 func _run() -> void:
 	_rescue_only = OS.get_cmdline_user_args().has("--rescue-only")
 	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--tell-capture-member="):
+			_tell_capture_member = maxi(1, int(arg.trim_prefix("--tell-capture-member=")))
 		if arg.begins_with("--tell-capture-dir="):
 			_tell_capture_dir = arg.trim_prefix("--tell-capture-dir=")
 			if not _tell_capture_dir.is_absolute_path() or DirAccess.make_dir_recursive_absolute(_tell_capture_dir) != OK:
@@ -471,8 +478,12 @@ func _fight_the_whole_team() -> void:
 			await physics_frame
 			continue
 		if not _tell_capture_dir.is_empty():
-			_hook_tell_capture(opponent)
-			await _save_due_tell_shots()
+			var capturing := _opponents_felled + 1 >= _tell_capture_member
+			Engine.time_scale = 1.0 if capturing else 4.0
+			Engine.max_physics_steps_per_frame = 8
+			if capturing:
+				_hook_tell_capture(opponent)
+				await _save_due_tell_shots()
 		var to := opponent.global_position - ally.global_position
 		to.y = 0.0
 		if Engine.get_physics_frames() > _tell_camera_free_until:
@@ -490,6 +501,7 @@ func _fight_the_whole_team() -> void:
 		else:
 			await physics_frame
 
+	Engine.time_scale = 1.0
 	if frames >= BATTLE_FRAME_LIMIT:
 		_fail("the captain's battle never resolved after %d action frames" % BATTLE_FRAME_LIMIT)
 		return
