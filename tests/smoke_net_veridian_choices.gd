@@ -282,6 +282,7 @@ func _run() -> void:
 
 	# 8. GUEST ACCEPTS, and its link dies at the claim acknowledgement.
 	var accept_at: Array = guest_choice.get("accept_at", []) as Array
+	await step(1, "dismiss_dialogue", {"presses": 16, "settle": 30})
 	var gw: Dictionary = await step(1, "move_to",
 		{"x": float(accept_at[0]), "z": float(accept_at[2]), "close_enough": 0.6, "budget_frames": 900})
 	check(str(gw.get("verdict", "")) == "PASS", "the guest walked to its accept prompt (%s)" % str(gw.get("detail", "")))
@@ -434,6 +435,9 @@ func _answer(peer: int, key: String) -> bool:
 	var at: Array = view.get(key, []) as Array
 	if at.size() != 3:
 		return false
+	# The choice is READ OUT a beat after the offer opens (F05 WO6); while that
+	# conversation is up the trainer does not walk. Read it through first.
+	await step(peer, "dismiss_dialogue", {"presses": 16, "settle": 30})
 	var walked: Dictionary = await step(peer, "move_to",
 		{"x": float(at[0]), "z": float(at[2]), "close_enough": 0.6, "budget_frames": 900})
 	check(str(walked.get("verdict", "")) == "PASS", "peer %d walked to its %s prompt (%s)"
