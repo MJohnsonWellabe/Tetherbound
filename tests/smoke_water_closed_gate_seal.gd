@@ -22,6 +22,7 @@ const GATE := "water_aquaryn_resolved"
 # Open-water flank outside both closed departure strips, south-west of the
 # barrier: beach 22 m lateral of the sheltered line, then water 45 m along and
 # 22 m lateral (sheltered half-width 9 m, direct 14 m), 52 m from the shoal.
+var spray_emitting := ""
 const FLANK_BEACH := Vector3(540.0, 0.0, 1722.7)
 const FLANK_WATER := Vector3(500.68, 0.0, 1750.3)
 
@@ -80,6 +81,15 @@ func _run() -> void:
 	if not _expect(fly != null and closed_flight > 0 and (fly.get("restrictions") as Array).size() >= closed_flight,
 		"sealed discs are not registered with this trainer's Fly controller"):
 		return
+	# A rebuilt local trainer (co-op rejoin) must get the restrictions back
+	# without waiting for a flag change. Stand in for the new rig by clearing
+	# the controller's list and invalidating the view's remembered rig.
+	(fly.get("restrictions") as Array).clear()
+	races.set("_rig_id", -1)
+	await _idle_frames(3)
+	if not _expect((fly.get("restrictions") as Array).size() == closed_flight,
+		"a changed local rig did not re-sync its Fly restrictions: %d of %d, view reports %d" % [(fly.get("restrictions") as Array).size(), closed_flight, int(races.get("flight_restrictions"))]):
+		return
 	departure.y = float(world.call("ground_height_at", departure.x, departure.z)) + 0.15
 	player.global_position = departure
 	player.velocity = Vector3.ZERO
@@ -87,6 +97,19 @@ func _run() -> void:
 	if not _expect(player.is_on_floor() and not swimming.is_swimming(), "departure anchor did not settle dry"):
 		return
 	var vitals: RefCounted = player.get("vitals")
+	# Distant races neither draw nor simulate spray: from the Cradle departure
+	# only races within draw range emit, however many seals are active.
+	await _idle_frames(3)
+	var emitting := 0
+	var total := 0
+	for spray: Node in races.find_children("Spray", "GPUParticles3D", true, false):
+		total += 1
+		if (spray as GPUParticles3D).emitting:
+			emitting += 1
+	if not _expect(total >= 20 and emitting > 0 and emitting < total,
+		"spray is not gated by distance: %d of %d emitting" % [emitting, total]):
+		return
+	spray_emitting = "%d/%d" % [emitting, total]
 	# Walk past the barrier's end on the beach, then swim outside both strips.
 	var beach_reached := await _attempt(FLANK_BEACH, 1.5, 900)
 	if not _expect(beach_reached <= 1.5, "could not walk around the barrier: %.2f m" % beach_reached):
@@ -119,7 +142,7 @@ func _run() -> void:
 	var stamina_when_opened: float = vitals.stamina
 	# Only the shared departure fact changes. The race must clear on its own.
 	game.world.flags.call("set_flag", GATE, true)
-	await _frames(2)
+	await _idle_frames(3)
 	if not _expect(not bool(races.call("is_race_visible", "tidal_cradle_to_salt_crown_rest_01")),
 		"opened gate still shows the first shoal race"):
 		return
@@ -137,8 +160,8 @@ func _run() -> void:
 		"first shoal did not become the safe landing"):
 		return
 	finished = true
-	print("WATER CLOSED GATE SEAL OK assertions=%d closed_first_closest_m=%.2f closed_second_closest_m=%.2f stamina_at_open=%.2f health=%.2f explanation='%s'" % [
-		assertions, closest, second_closest, stamina_when_opened, vitals.health, explanation])
+	print("WATER CLOSED GATE SEAL OK assertions=%d closed_first_closest_m=%.2f closed_second_closest_m=%.2f stamina_at_open=%.2f health=%.2f explanation='%s' spray_emitting=%s" % [
+		assertions, closest, second_closest, stamina_when_opened, vitals.health, explanation, spray_emitting])
 	quit(0)
 
 
@@ -182,6 +205,13 @@ func _anchor(config: Dictionary, id: String) -> Vector3:
 		if str(anchor.id) == id:
 			return Vector3(float(anchor.safe_position[0]), float(anchor.safe_position[1]), float(anchor.safe_position[2]))
 	return Vector3.INF
+
+
+## The race view reacts in _process; several physics steps can run before one
+## idle frame, so view-driven checks wait on process frames.
+func _idle_frames(count: int) -> void:
+	for _frame in count:
+		await process_frame
 
 
 func _frames(count: int) -> void:

@@ -28,6 +28,8 @@ var _message_cooldown := 0.0
 var last_message := ""
 ## Fly restrictions currently registered for this peer's trainer.
 var flight_restrictions := 0
+var _rig_id := 0
+var _spray_check := 0.0
 
 
 func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: Dictionary) -> void:
@@ -96,20 +98,44 @@ func _refresh() -> void:
 	for seal: Dictionary in _seals:
 		var ring: Node3D = _rings[str(seal.id)]
 		ring.visible = SEALS.is_sealed(seal, _game.world.flags)
-		# An opened race must not keep simulating spray it never draws.
-		var spray := ring.get_node_or_null("Spray") as GPUParticles3D
-		if spray != null:
-			spray.emitting = ring.visible
 	var player: Node = _world.local_rig()
+	_rig_id = player.get_instance_id() if player != null else 0
 	var fly: Node = player.get_node_or_null("FlyController") if player != null else null
 	flight_restrictions = SEALS.sync_flight(fly, _seals, _rules, _game.world.flags, _dock_names)
+	_gate_spray()
+
+
+## Spray simulates only for a visible race within its draw range of the
+## active camera; far or opened races neither draw nor simulate particles.
+func _gate_spray() -> void:
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	var cull_m := float(_rules.get("visibility_range_m", 700.0))
+	for seal: Dictionary in _seals:
+		var ring: Node3D = _rings[str(seal.id)]
+		var spray := ring.get_node_or_null("Spray") as GPUParticles3D
+		if spray == null:
+			continue
+		var near := camera == null
+		if camera != null:
+			var centre: Vector2 = seal.centre
+			var at := Vector2(camera.global_position.x, camera.global_position.z)
+			near = at.distance_to(centre) < SEALS.outer_radius(seal, _rules) + cull_m
+		spray.emitting = ring.visible and near
 
 
 func _process(delta: float) -> void:
 	if _game == null:
 		return
-	if int(_game.world.flags.revision) != _last_revision:
+	# A flag change or a rebuilt local trainer (co-op rejoin, respawned rig)
+	# both re-sync rings and this trainer's Fly restrictions.
+	var rig: Node = _world.local_rig()
+	var rig_id := rig.get_instance_id() if rig != null else 0
+	if int(_game.world.flags.revision) != _last_revision or rig_id != _rig_id:
 		_refresh()
+	_spray_check -= delta
+	if _spray_check <= 0.0:
+		_spray_check = 0.25
+		_gate_spray()
 	# Offset decreasing moves the pattern toward larger radius: outward flow.
 	_material.uv1_offset.y = wrapf(_material.uv1_offset.y - float(_rules.get("foam_flow_m_s", 3.0)) * delta / TILE_M, 0.0, 1.0)
 	_message_cooldown = maxf(0.0, _message_cooldown - delta)

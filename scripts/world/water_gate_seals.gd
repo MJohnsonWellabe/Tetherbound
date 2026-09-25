@@ -153,12 +153,13 @@ static func shore_gap(seal: Dictionary, position: Vector3) -> float:
 ## band keeps full strength; only the outer edge blends into open water.
 static func velocity_at(seal: Dictionary, rules: Dictionary, position: Vector3, flags: Object) -> Vector3:
 	var centre: Vector2 = seal.get("centre", Vector2.INF)
-	if not centre.is_finite() or not position.is_finite() or not is_sealed(seal, flags):
+	if not centre.is_finite() or not position.is_finite():
 		return Vector3.ZERO
+	# The cheap distance test first: most samples are far from most seals.
 	var outer := outer_radius(seal, rules)
 	var offset := Vector2(position.x, position.z) - centre
 	var distance := offset.length()
-	if distance >= outer:
+	if distance >= outer or not is_sealed(seal, flags):
 		return Vector3.ZERO
 	var blend := clampf(float(rules.get("edge_blend_m", 0.0)), 0.0, maxf(0.0, float(rules.get("width_m", 0.0))))
 	var influence := 1.0 if blend <= 0.0 else 1.0 - smoothstep(outer - blend, outer, distance)
