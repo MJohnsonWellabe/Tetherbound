@@ -40,7 +40,7 @@ const PROFILES := ["WALL", "CHARGER", "ACE", "DIVER", "CURRENT"]
 ## Meadows fights whose BOSSES row names a profile, and which therefore must
 ## carry an authored per-member override in trainer data.
 const MEADOWS_PROFILED := ["relay_captain", "captain_riverwatch", "captain_field",
-	"stronghold_elite", "warden_aldis"]
+	"captain_ridge", "stronghold_elite", "warden_aldis"]
 
 ## The sequences BOSSES writes, transcribed from its Meadows tables. Verified
 ## against the document itself by
@@ -51,6 +51,7 @@ const MEADOWS_PROFILED := ["relay_captain", "captain_riverwatch", "captain_field
 const MEADOWS_SEQUENCES := {
 	"captain_riverwatch": ["WALL", "baseline", "CURRENT"],
 	"captain_field": ["baseline", "CHARGER", "CURRENT"],
+	"captain_ridge": ["baseline", "baseline", "DIVER"],
 	"stronghold_elite": ["DIVER", "baseline", "WALL"],
 	"warden_aldis": ["WALL", "DIVER", "CURRENT", "CHARGER", "ACE"],
 }
@@ -291,3 +292,43 @@ func test_a_profile_means_the_same_thing_in_every_fight_that_uses_it() -> void:
 				% [profile, previous["fight"], id])
 	assert_true(compared >= 3,
 		"only %d profile reuses were compared; the rows changed and this test has gone quiet" % compared)
+
+
+## Minimum tells BOSSES writes into the profile rows themselves, so the player
+## can read the named attack at the normal camera (F04). CHARGER: "Tuskroot
+## closes 7 m after a .8 s minimum full-body charge cue" (Vance) and "7 m lunge,
+## .8 s visible charge floor" (the Warden's Meadowhart). ACE: the Warden's
+## Tuskroot has a "1.1 s signature tell". COMBAT's general floors (baseline
+## .80 s, heavy 1.10 s) say the same. DIVER is not held here: BOSSES authors its
+## ".4 s strike tell" behind a positional entry as the read.
+const TELL_FLOORS := {"CHARGER": 0.8, "ACE": 1.1}
+
+## `relay_captain` names its CHARGER in prose ("Tuskroot is the ace and CHARGER
+## target"), not as a sequence; its third member carries that profile.
+const PROSE_PROFILES := {"relay_captain": {2: "CHARGER"}}
+
+
+func test_named_attacks_keep_the_tell_bosses_writes_for_their_profile() -> void:
+	var checked := 0
+	for id: String in MEADOWS_PROFILED:
+		var members := _member_rows(_trainer(id))
+		var by_index := {}
+		var sequence := _profile_sequence(id)
+		if sequence.size() == members.size():
+			for index: int in range(sequence.size()):
+				by_index[index] = sequence[index]
+		for index: Variant in (PROSE_PROFILES.get(id, {}) as Dictionary).keys():
+			by_index[int(index)] = (PROSE_PROFILES[id] as Dictionary)[index]
+		for index: Variant in by_index.keys():
+			var profile := str(by_index[index])
+			if not TELL_FLOORS.has(profile) or int(index) >= members.size():
+				continue
+			var combat: Dictionary = (members[int(index)] as Dictionary).get("combat", {}) as Dictionary
+			assert_true(combat.has("telegraph"),
+				"'%s' member %d is %s but authors no telegraph" % [id, int(index) + 1, profile])
+			checked += 1
+			assert_true(float(combat.get("telegraph", 0.0)) >= float(TELL_FLOORS[profile]) - 0.0001,
+				"'%s' member %d is %s with a %.2fs tell; BOSSES writes at least %.2fs so it reads at the normal camera"
+				% [id, int(index) + 1, profile, float(combat.get("telegraph", 0.0)), float(TELL_FLOORS[profile])])
+	assert_true(checked >= 4,
+		"only %d CHARGER/ACE members were checked; the rows changed and this test has gone quiet" % checked)

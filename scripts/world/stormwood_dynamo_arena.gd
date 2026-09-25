@@ -8,6 +8,7 @@ const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd"
 var rules: RefCounted
 var _banks: Array[Dictionary] = []
 var _plates: Array[MeshInstance3D] = []
+var _readout: Label3D
 
 func build(policy: RefCounted, simulation_only: bool = false) -> void:
 	rules = policy
@@ -68,7 +69,25 @@ func build(policy: RefCounted, simulation_only: bool = false) -> void:
 			plate.material_override = _glow(Color("63d4b0"), 0.45)
 			add_child(plate)
 			_plates.append(plate)
+		# BOSSES §4.7's visible countdown and 0/4 progress, shown in the arena
+		# above the core rather than in the shared HUD.
+		_readout = Label3D.new()
+		_readout.name = "ConduitCountdown"
+		_readout.position = Vector3(0, 9.0, 0)
+		_readout.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		_readout.font_size = 96
+		_readout.outline_size = 18
+		_readout.modulate = Color("d9d0ff")
+		_readout.no_depth_test = true
+		add_child(_readout)
 	show_state(rules.bank_state())
+
+## "2/4 · 18" while the core is exposed; empty otherwise.
+static func readout_text(state: Dictionary, phase: String, bank_count: int) -> String:
+	if phase != "break_core":
+		return ""
+	return "Conduits %d/%d · %d s" % [int(state.get("struck", 0)), bank_count,
+		ceili(float(state.get("window_left", 0.0)))]
 
 func _glow(colour: Color, energy: float) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
@@ -80,6 +99,9 @@ func _glow(colour: Color, energy: float) -> StandardMaterial3D:
 	return material
 
 func show_state(state: Dictionary) -> void:
+	if _readout != null:
+		_readout.text = readout_text(state, str(rules.phase), int(rules.config.bank_count))
+		_readout.visible = not _readout.text.is_empty()
 	for i in _banks.size():
 		var row: Dictionary = _banks[i]
 		var active := i == int(state.get("bank", -1))
