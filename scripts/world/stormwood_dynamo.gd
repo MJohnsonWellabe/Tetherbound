@@ -235,6 +235,9 @@ func restore_progression_from_game(_game: Node) -> void:
 	if not is_instance_valid(fight):
 		_restore_saved_state()
 		phase = str(rules.phase)
+		# A reload ends every open faint prompt; a participant still down
+		# after it is asked again from its restored creature on the next tick.
+		_clear_break_pause()
 		if arena != null:
 			arena.show_state(rules.bank_state())
 
@@ -632,20 +635,29 @@ func _report_own_faint() -> void:
 ## least one of them is choosing a replacement after a faint. Only current
 ## participants count, so nobody outside the Break can hold it; a participant
 ## who leaves Stormwood or whose whole party is down has already been dropped.
+## A participant holds the pause only while its fainted creature is still the
+## deployed one: that is the open faint prompt. Every answer ends it: a
+## creature sent out ("live") or recalled with nothing sent out ("none").
 ## A plain recall with no faint behind it never pauses.
 func _choosing_replacement() -> bool:
 	var live := false
 	for peer: int in participants:
 		var state := _creature_state(peer)
-		if state == "live":
-			_awaiting_replacement.erase(peer)
-			live = true
-		elif state == "fainted":
+		if state == "fainted":
 			_awaiting_replacement[peer] = true
+		else:
+			_awaiting_replacement.erase(peer)
+			live = live or state == "live"
 	for peer: Variant in _awaiting_replacement.keys():
 		if not participants.has(int(peer)):
 			_awaiting_replacement.erase(peer)
 	return not live and not _awaiting_replacement.is_empty()
+
+
+## Host: every open faint prompt has ended; publish the resumed Break once.
+func _clear_break_pause() -> void:
+	_awaiting_replacement.clear()
+	_set_break_paused(false)
 
 
 ## "live", "fainted" or "none" for `peer`'s deployed creature. The host's own
