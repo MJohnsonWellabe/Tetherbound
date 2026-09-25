@@ -1,0 +1,504 @@
+{
+ "name": "F11 capacity: host full at five says Yes then lets the Stormheart go; guest with space says Yes (rerun, peer-log excerpts kept)",
+ "claim": "ACCEPTANCE F11 'at capacity', the other branch of the five-slot choice: the host's belt holds five when it says Yes. The ceremony offers the newcomer's own row; the host lets the Stormheart go, keeps all five, and the game records that as its refusal (stormwood_ending.gd: 'exactly as letting the newcomer go at five'). No sixth slot, no belt member lost. The guest, with space, says Yes and keeps its own, independently. Setup, disclosed: the Dynamo fight fixture and the host's five belt members (party_grant -> party_seam.add); everything from the offer on is the game's own code. Rerun of the same scenario to identify or clear the one unexplained SCRIPT ERROR in the first run's guest log.",
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 1800,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+   },
+   "expect_data": {
+    "realm": "meadows",
+    "form": "captured directory (split path)",
+    "character_id": "character-f41f4a49223483d6bfdf56715944bb7b"
+   },
+   "label": "named save: Meadows, Stormwood route open, loaded like Continue"
+  },
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 10000,
+   "label": "guest: a fresh trainer in the Meadows"
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "realm_gate_stormwood_unlocked"
+   },
+   "label": "the route comes from the host's save"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "bramblebun",
+    "level": 20
+   },
+   "label": "SETUP: host's belt member 1/5 (bramblebun) through party_seam.add"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "terrapup",
+    "level": 20
+   },
+   "label": "SETUP: host's belt member 2/5 (terrapup) through party_seam.add"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "ripplet",
+    "level": 20
+   },
+   "label": "SETUP: host's belt member 3/5 (ripplet) through party_seam.add"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "galewisp",
+    "level": 20
+   },
+   "label": "SETUP: host's belt member 4/5 (galewisp) through party_seam.add"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "mudsnout",
+    "level": 20
+   },
+   "label": "SETUP: host's belt member 5/5 (mudsnout) through party_seam.add"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "trailpup",
+    "level": 20
+   },
+   "expect": "FAIL",
+   "label": "host's belt is full: a sixth party_seam.add is refused (no sixth slot)"
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_state",
+   "expect_data": {
+    "party": [
+     "bramblebun",
+     "terrapup",
+     "ripplet",
+     "galewisp",
+     "mudsnout"
+    ],
+    "has_stormheart": false
+   },
+   "label": "host: exactly five before the offer"
+  },
+  {
+   "peer": 1,
+   "action": "stormheart_state",
+   "expect_data": {
+    "party": [],
+    "has_stormheart": false
+   },
+   "label": "guest: free slots before the offer"
+  },
+  {
+   "peer": "all",
+   "probe": "downed",
+   "label": "trainer vitals on arrival (health recorded, see the HUD note)"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "01_both_in_stormwood"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "before"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_fixture",
+   "args": {
+    "contributors": [
+     "$peer0",
+     "$peer1"
+    ]
+   },
+   "label": "both fought the Dynamo (setup)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:legendary_freed",
+    "budget_frames": 1800
+   }
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_answer",
+   "args": {
+    "answer": "accept",
+    "screenshot": "02_host_offer_yes_no",
+    "budget_frames": 900
+   },
+   "expect": "FAIL",
+   "expect_data": {
+    "party": [
+     "bramblebun",
+     "terrapup",
+     "ripplet",
+     "galewisp",
+     "mudsnout"
+    ],
+    "has_stormheart": false,
+    "world_accepted": false,
+    "world_refused": false
+   },
+   "label": "host (five) says Yes: no sixth slot, nothing added, nothing recorded yet; the ceremony holds the Stormheart"
+  },
+  {
+   "peer": 0,
+   "probe": "input_context",
+   "label": "the host is now in the Team tab's ceremony"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "03a_ceremony_choose"
+   },
+   "label": "host: the Team tab's release ceremony is on screen (newcomer row focused)"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "ui_accept",
+    "tap_frames": 2
+   },
+   "label": "A on the focused newcomer row: 'this one goes free'"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "03b_farewell_question"
+   },
+   "label": "the farewell question (Keep focused first)"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "ui_down",
+    "tap_frames": 2
+   },
+   "label": "down to 'Let them go'"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "ui_accept",
+    "tap_frames": 2
+   },
+   "label": "A: the one irreversible press"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "03c_goes_free"
+   },
+   "label": "the goodbye beat"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "ui_accept",
+    "tap_frames": 2
+   },
+   "label": "A on the done button: the ceremony ends"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:legendary_resolution:refused:$character0",
+    "budget_frames": 1800
+   },
+   "label": "letting the newcomer go at five is recorded as the host's refusal"
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_state",
+   "expect_data": {
+    "party": [
+     "bramblebun",
+     "terrapup",
+     "ripplet",
+     "galewisp",
+     "mudsnout"
+    ],
+    "has_stormheart": false,
+    "world_accepted": false,
+    "world_refused": true,
+    "accepted_anywhere": false
+   },
+   "label": "host: the same five, no Stormheart, a refusal on record"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "menu_cancel",
+    "tap_frames": 2
+   },
+   "label": "B closes the Team tab once the ceremony has let go"
+  },
+  {
+   "peer": 1,
+   "action": "stormheart_answer",
+   "args": {
+    "answer": "accept",
+    "screenshot": "04_guest_offer_yes_no"
+   },
+   "expect_data": {
+    "has_stormheart": true
+   },
+   "label": "guest (space) says Yes after the host's refusal: its own offer is still its own"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:legendary_resolution:accepted:$character1",
+    "budget_frames": 1800
+   }
+  },
+  {
+   "peer": 1,
+   "action": "stormheart_state",
+   "expect_data": {
+    "party": [
+     "fulgocobra"
+    ],
+    "has_stormheart": true,
+    "world_accepted": true,
+    "world_refused": false
+   },
+   "label": "guest kept exactly one of its own"
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_answer",
+   "args": {
+    "answer": "accept",
+    "budget_frames": 600
+   },
+   "expect": "FAIL",
+   "label": "the host cannot re-open its settled offer by pressing again"
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_state",
+   "expect_data": {
+    "party": [
+     "bramblebun",
+     "terrapup",
+     "ripplet",
+     "galewisp",
+     "mudsnout"
+    ],
+    "has_stormheart": false
+   },
+   "label": "host still the same five"
+  },
+  {
+   "peer": "all",
+   "probe": "downed",
+   "label": "trainer vitals at the end (health recorded, see the HUD note)"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "05_after_answers"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "realm_gate_stormwood_unlocked"
+    ],
+    "lacks": [
+     "stormwood:legendary_freed",
+     "stormwood:legendary_resolution:"
+    ]
+   },
+   "label": "host's pre-offer saved world held no answers (non-vacuous baseline)"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "characters",
+    "lacks": [
+     "fulgocobra",
+     "stormwood:legendary_answer:"
+    ]
+   },
+   "label": "host's pre-offer character held no answer"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "characters",
+    "lacks": [
+     "fulgocobra",
+     "stormwood:legendary_answer:"
+    ]
+   },
+   "label": "guest's pre-offer character held no answer"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "characters",
+    "contains": [
+     "bramblebun",
+     "terrapup",
+     "ripplet",
+     "galewisp",
+     "mudsnout"
+    ]
+   },
+   "label": "host's pre-offer save held the five (baseline)"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "stormwood:legendary_freed",
+     "stormwood:legendary_resolution:refused:$character0",
+     "stormwood:legendary_resolution:accepted:$character1"
+    ],
+    "lacks": [
+     "stormwood:legendary_resolution:accepted:$character0",
+     "stormwood:legendary_resolution:refused:$character1"
+    ]
+   },
+   "label": "host's saved world: host refused, guest accepted, each once"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "characters",
+    "contains": [
+     "bramblebun",
+     "terrapup",
+     "ripplet",
+     "galewisp",
+     "mudsnout",
+     ":refused"
+    ],
+    "lacks": [
+     "fulgocobra",
+     ":accepted",
+     "stormwood:legendary_offer_accepted"
+    ]
+   },
+   "label": "host's saved character: all five kept, no Stormheart, a refusal"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "characters",
+    "contains": [
+     "fulgocobra",
+     ":accepted"
+    ],
+    "lacks": [
+     ":refused"
+    ]
+   },
+   "label": "guest's saved character keeps its Stormheart"
+  }
+ ]
+}
