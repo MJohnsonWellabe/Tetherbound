@@ -15,32 +15,37 @@ extends "res://scripts/world/riding_controller.gd"
 ##    the trainer's real capsule has to fit there.
 ## 2. SYSTEMS §8 "dismount at supported nearby clearance, otherwise show
 ##    refusal": an asked-for dismount with no clear spot is refused with a
-##    reason, and the rider stays seated. A forced one (a fight, a modal, the
-##    finale pilot, a freed mount, a fall) walks one verified chain, in this
-##    order; see `_verified_spot`. Every rule except "vacated" checks what the
-##    ring does -- walkable floor under the spot ("airborne" excepted), the
-##    trainer's capsule fits there against world collision AND against the
-##    mount's own capsule measured geometrically (whatever its layer), and a
-##    clear line from the saddle -- and stays within REMEMBERED_SPOT_REACH_M
-##    of the mount:
+##    reason, and the rider stays seated. Every other ending (a modal, the
+##    finale pilot, combat admission, a freed mount, a fall) walks one
+##    verified chain, in this order; see `_verified_spot`. Every rule except
+##    "vacated" checks what the ring does -- walkable floor under the spot
+##    ("airborne" excepted), the trainer's capsule fits there against world
+##    collision AND against the mount's own capsule measured geometrically
+##    (whatever its layer, enabled or not), and a clear line from the saddle
+##    -- and stays within REMEMBERED_SPOT_REACH_M of the mount:
 ##      clear        the ring beside/behind/ahead of the mount;
-##      airborne     only while the mount is off the ground (mid-drop): the
-##                   ring at the mount's own level with no floor required --
-##                   the trainer comes off beside it into the same air and
-##                   falls as a walker would, never back up the route;
+##      airborne     only during a real drop (airborne for
+##                   MOUNTED_FALL_AIRBORNE_S, or no floor within the probe
+##                   under the mount): the ring at the mount's own level with
+##                   no floor required, so the trainer comes off beside it into
+##                   the same air and falls as a walker would. During a hop or
+##                   an edge flicker it is tried only after the ground rules;
 ##      remembered   the last clear spot this ride recorded;
 ##      history      the NEWEST ground sample the mount stood on;
 ##      mounted_from where the trainer stood when the ride began;
-##      mount_top    standing on the mount's back (capsule top plus
-##                   clearance, landing on the mount itself), only when the
-##                   body stays solid afterwards: a fight or the finale pilot
-##                   took it. A following mount has no collision layer, so a
-##                   trainer set on its back would drop into it;
 ##      vacated      the mount was freed: where it stood, its volume now empty;
-##      deferred     nothing verifiable: `dismount()` returns false, the rider
-##                   stays seated with the stick ignored, and the base's
-##                   per-frame "not allowed, dismount" retries until a spot
-##                   verifies. Never inside the mount, never inside geometry.
+##      deferred     nothing verifiable: `dismount()` returns false and the
+##                   rider stays seated, told once "No room to dismount here.".
+##                   The caller decides what that means: the base's per-frame
+##                   modal "not allowed, dismount" retries every frame; combat
+##                   admission is refused (`dismount_for_admission`, called by
+##                   `cloudreach_encounter_director.gd` BEFORE the fight
+##                   begins, so no fight ever starts with a rider on); the
+##                   finale pilot waits (`cloudreach_world_runtime.gd` takes
+##                   the ally only once the rider is off).
+##    Never inside the mount, never inside geometry, never on the mount.
+##    When a fight or the pilot already owns the body, the ride's end leaves
+##    the camera where its owner put it.
 ## 3. A mounted fall. A carried trainer has no collision layers, so the
 ##    realm's kill plane and grounded-fall anchor cannot see them. A mount that
 ##    falls as far as a walker would need to be recovered (100 m) is returned,
@@ -102,8 +107,10 @@ var mounted_fall_recoveries := 0
 ## attempt found nothing verifiable (see the header's chain), for tests and
 ## diagnosis.
 var last_dismount_rule := ""
-## Forced dismounts deferred for want of a verified spot, this session.
+## Deferral EPISODES this session: a run of refused attempts (one per frame
+## while a modal holds) counts once, and tells the player once.
 var deferred_dismounts := 0
+var _deferring := false
 ## The spot `dismount()` verified, consumed by `_dismount_spot()`.
 var _planned_spot := Vector3.INF
 
@@ -142,6 +149,7 @@ func mount() -> bool:
 		_ground_sample_left = 0.0
 		_clear_spot = Vector3.INF
 		_airborne_s = 0.0
+		_deferring = false
 	return ok
 
 
@@ -187,6 +195,8 @@ func _watch_mounted_ground(delta: float) -> void:
 			var spot := _find_clear_spot(body)
 			if spot != Vector3.INF:
 				_clear_spot = spot
+				# Room again: a later deferral is a new episode, told anew.
+				_deferring = false
 				# Fly's anchor is the clear spot BESIDE the mount, not the
 				# mount's own feet: it is ground the trainer could stand on
 				# (walkable to the trainer's 45 degrees, capsule fits), and a
@@ -210,12 +220,11 @@ func _watch_mounted_ground(delta: float) -> void:
 		return
 	var last_ground: Vector3 = _ground_history[_ground_history.size() - 1]
 	# Walker parity: a walking trainer is recovered 100 m below its anchor OR
-	# on crossing the cloud-sea kill plane (`fall_recovery.gd`, 50 m under the
-	# CloudSea), whichever comes first. The kill volume only reports the
-	# trainer's own body, which has no collision layer while carried, so the
-	# plane is checked here for the mount.
+	# on entering the cloud-sea kill volume (`fall_recovery.gd`), whichever
+	# comes first. The volume only reports the trainer's own body, which has
+	# no collision layer while carried, so its top face is checked here.
 	if body.global_position.y > last_ground.y - MOUNTED_FALL_DROP_M \
-			and body.global_position.y > _kill_plane_y():
+			and body.global_position.y > _kill_trigger_y():
 		return
 	# The newest still-supported sample, re-probed so a spot that no longer
 	# holds ground is never the answer, with a clear line from the take-off
@@ -260,13 +269,21 @@ func _supported_history(body: Node3D) -> Vector3:
 	return Vector3.INF
 
 
-## The realm's cloud-sea kill plane (`cloudreach_world_runtime.gd` builds
-## `FallRecovery` with it), or -INF where there is none.
-func _kill_plane_y() -> float:
+## The height at which a WALKER is caught: the top face of the realm's
+## cloud-sea kill volume (`fall_recovery.gd` builds `FallRecoveryKillVolume`, a
+## box KILL_PLANE_THICKNESS tall centred on the plane, and recovers the trainer
+## on entering it). Read from that public scene node, or -INF where there is
+## none.
+func _kill_trigger_y() -> float:
 	var world := get_parent()
-	var recovery := world.get_node_or_null(^"FallRecovery") if world != null else null
-	var y: Variant = recovery.get("_kill_plane_y") if recovery != null else null
-	return float(y) if y != null else -INF
+	var volume := world.get_node_or_null(^"FallRecovery/FallRecoveryKillVolume") as Node3D if world != null else null
+	if volume == null:
+		return -INF
+	for child: Node in volume.get_children():
+		var shape := child as CollisionShape3D
+		if shape != null and shape.shape is BoxShape3D:
+			return shape.global_position.y + (shape.shape as BoxShape3D).size.y * 0.5
+	return volume.global_position.y
 
 
 func _apply_climb_limit(body: Node3D, species_id: String) -> void:
@@ -280,15 +297,15 @@ func _apply_climb_limit(body: Node3D, species_id: String) -> void:
 
 
 ## The pilot, like a fight, keeps the body: the base must not hand it back to
-## following (which also takes its collision layer away) under the exam.
+## following (which also takes its collision layer away) under the exam, nor
+## take the camera off it (`dismount`).
 func _combat_took_the_mount() -> bool:
 	return super._combat_took_the_mount() or _creature_piloted()
 
 
-## Verify first, then get off. A forced ending with nothing verifiable is
-## deferred rather than guessed: the rider stays seated, and every caller that
-## forces a dismount (the base's per-frame "not allowed", the fall watch)
-## calls again next frame. An asked-for dismount never gets here unverified:
+## Verify first, then get off. With nothing verifiable the ending is
+## deferred rather than guessed: the rider stays seated, and the caller retries
+## (see the header). An asked-for dismount never gets here unverified:
 ## `interaction_activate` refuses first.
 func dismount() -> bool:
 	if not _riding_now:
@@ -300,28 +317,51 @@ func dismount() -> bool:
 		var chosen := _verified_spot(body)
 		if chosen.is_empty():
 			last_dismount_rule = "deferred"
-			deferred_dismounts += 1
+			if not _deferring:
+				_deferring = true
+				deferred_dismounts += 1
+				var game := get_node_or_null(^"/root/Game")
+				if game != null and game.has_method("push_world_message"):
+					game.call("push_world_message", NO_ROOM_MESSAGE)
 			return false
 		_planned_spot = chosen.spot
 		last_dismount_rule = str(chosen.rule)
 	else:
 		_planned_spot = _vacated_spot()
 		last_dismount_rule = "vacated"
-	return super.dismount()
+	_deferring = false
+	# A fight or the finale pilot already owns this body and the camera; the
+	# base's hand-back of the camera to the trainer would take it off the
+	# creature being piloted for the rest of that fight or exam.
+	var owned := _combat_took_the_mount()
+	var rig := _camera_rig
+	if owned:
+		_camera_rig = null
+	var ok := super.dismount()
+	_camera_rig = rig
+	return ok
 
 
-func _dismount_spot(body: Node3D) -> Vector3:
+## SYSTEMS §8 "Combat admission dismounts safely first. No mounted
+## catch/combat." Called by the encounter director before a fight (wild or
+## trainer) begins. True when no rider is on, or the rider is now standing on
+## a verified spot; false (the rider told why) refuses the admission.
+func dismount_for_admission() -> bool:
+	if not is_mounted():
+		return true
+	return dismount()
+
+
+## Only reached through `dismount()` above, which always plans the spot first
+## (a live mount: verified or deferred before the base runs; a freed one:
+## "vacated"; no trainer: the base never asks).
+func _dismount_spot(_body: Node3D) -> Vector3:
 	var spot := _planned_spot
 	_planned_spot = Vector3.INF
-	if spot != Vector3.INF:
-		return spot
-	# Only reachable if something calls the base path directly.
-	var chosen := _verified_spot(body) if is_instance_valid(body) else {}
-	if not chosen.is_empty():
-		last_dismount_rule = str(chosen.rule)
-		return chosen.spot
-	last_dismount_rule = "vacated"
-	return _vacated_spot()
+	if spot == Vector3.INF:
+		push_error("cloudreach riding: a dismount reached the base without a verified spot")
+		return _player.global_position
+	return spot
 
 
 ## The header's chain, for a live mount: {spot, rule}, or {} for "deferred".
@@ -330,7 +370,10 @@ func _verified_spot(body: Node3D) -> Dictionary:
 	if spot != Vector3.INF:
 		return {"spot": spot, "rule": "clear"}
 	var character := body as CharacterBody3D
-	if character != null and not character.is_on_floor():
+	var in_air := character != null and not character.is_on_floor()
+	var real_drop := in_air and (_airborne_s >= MOUNTED_FALL_AIRBORNE_S
+		or is_nan(_supported_floor(body.global_position, body.global_position.y, body)))
+	if real_drop:
 		spot = _find_clear_spot(body, true)
 		if spot != Vector3.INF:
 			return {"spot": spot, "rule": "airborne"}
@@ -348,10 +391,12 @@ func _verified_spot(body: Node3D) -> Dictionary:
 		spot = _verified_ground(_mounted_from, body)
 		if spot != Vector3.INF:
 			return {"spot": spot, "rule": "mounted_from"}
-	if _combat_took_the_mount():
-		spot = _mount_top_spot(body)
+	# A hop or an edge flicker with no ground rule answering: the air beside
+	# the mount, a step above whatever it is about to land on.
+	if in_air and not real_drop:
+		spot = _find_clear_spot(body, true)
 		if spot != Vector3.INF:
-			return {"spot": spot, "rule": "mount_top"}
+			return {"spot": spot, "rule": "airborne"}
 	return {}
 
 
@@ -369,25 +414,6 @@ func _verified_ground(candidate: Vector3, body: Node3D) -> Vector3:
 	if spot.distance_to(base) > REMEMBERED_SPOT_REACH_M:
 		return Vector3.INF
 	if not _capsule_fits(spot, body) or not _line_clear(base, spot, body):
-		return Vector3.INF
-	return spot
-
-
-## Standing on the mount's back: the top of its capsule plus clearance, landing
-## on the mount itself (a walkable normal straight down). Only offered when the
-## body stays solid (`_combat_took_the_mount`); the trainer then steps or
-## slides off it like any ledge.
-func _mount_top_spot(body: Node3D) -> Vector3:
-	var top := _mount_capsule_top(body)
-	if top == Vector3.INF:
-		return Vector3.INF
-	var spot := top + Vector3.UP * SETTLE_LIFT_M
-	if not _capsule_fits(spot, body) or not _line_clear(body.global_position, spot, body):
-		return Vector3.INF
-	var landing := PhysicsRayQueryParameters3D.create(spot + Vector3.UP * 0.2, spot + Vector3.DOWN * 0.5,
-		0xFFFFFFFF, [_player.get_rid()])
-	var hit := _player.get_world_3d().direct_space_state.intersect_ray(landing)
-	if hit.is_empty() or hit["collider"] != body or (hit["normal"] as Vector3).y < cos(_player.floor_max_angle):
 		return Vector3.INF
 	return spot
 
@@ -482,7 +508,9 @@ static func capsules_overlap(shape_node: CollisionShape3D, at: Transform3D, body
 	var a := _capsule_segment(mine, at)
 	for child: Node in body.get_children():
 		var other := child as CollisionShape3D
-		if other == null or other.disabled or not other.shape is CapsuleShape3D:
+		# Disabled too: a hidden mount turns its collider off, and its body
+		# is still where the trainer would be set down.
+		if other == null or not other.shape is CapsuleShape3D:
 			continue
 		var theirs := other.shape as CapsuleShape3D
 		var b := _capsule_segment(theirs, other.global_transform)
@@ -496,20 +524,6 @@ static func _capsule_segment(shape: CapsuleShape3D, at: Transform3D) -> Array[Ve
 	var half := maxf(shape.height * 0.5 - shape.radius, 0.0)
 	var up := at.basis.y.normalized()
 	return [at.origin - up * half, at.origin + up * half]
-
-
-## World-space point at the top of the mount's capsule, centred on it, or INF.
-static func _mount_capsule_top(body: Node) -> Vector3:
-	var best := Vector3.INF
-	for child: Node in body.get_children():
-		var other := child as CollisionShape3D
-		if other == null or other.disabled or not other.shape is CapsuleShape3D:
-			continue
-		var segment := _capsule_segment(other.shape as CapsuleShape3D, other.global_transform)
-		var top: Vector3 = segment[1] + Vector3.UP * (other.shape as CapsuleShape3D).radius
-		if best == Vector3.INF or top.y > best.y:
-			best = top
-	return best
 
 
 ## Nothing solid between the saddle height and the spot's standing height: a

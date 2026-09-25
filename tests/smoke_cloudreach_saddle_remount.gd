@@ -28,6 +28,9 @@ extends SceneTree
 ##     dismount is a direct `dismount()` call;
 ##   - the combat leg spawns a wild with `spawn_wild` and calls the director's
 ##     private `_start_fight`;
+##   - the finale leg moves the finale controller node to the causeway floor
+##     and sets (then clears) the captain-victory flag;
+##   - the camera assertions read the rig's private `_target`;
 ##   - Fly's pending-anchor flag is raised by hand for the M3 wiring check,
 ##     and the M3 timeout check runs a bare Fly controller with a fake client
 ##     session and a proxy that never answers.
@@ -47,8 +50,12 @@ extends SceneTree
 ##   8. Dismount placement, measured on the `dismounted` signal: rule, reach,
 ##      floor, no overlap with the mount's capsule (geometry, any layer), not
 ##      inside world collision, clear line from the saddle -- for the refusal
-##      and modal deferral, every fallback rung, a forced dismount mid-drop and
-##      a fight starting boxed in.
+##      and modal deferral, every fallback rung (a hop included), a closed wall
+##      behind the ride, and a forced dismount mid-drop.
+##  8b. The finale pilot waits for a boxed-in rider, then takes the ally with
+##      the camera, never while the trainer is carried; release does not
+##      resume a ride. Combat admission is refused boxed in and otherwise
+##      dismounts BEFORE the fight begins; the camera stays on the ally.
 ##   9. Saving while mounted after a descent reloads on the ground, at the
 ##      saved spot, with Fly's anchor there too.
 ##  10. The party is the same five, same order, no sixth, throughout.
@@ -139,7 +146,8 @@ func _run() -> void:
 	await _forced_dismount_never_crosses_a_closed_wall()
 	await _forced_dismount_mid_drop()
 	await _mounted_save_reload_after_descent()
-	await _combat_start_forced_dismount()
+	await _finale_pilot_handoff_while_mounted()
+	await _combat_admission_dismounts_first()
 	_check_party("end of run")
 	_report()
 
@@ -620,6 +628,10 @@ func _dismount_rule_ladder() -> void:
 	# H1: a sample beyond REMEMBERED_SPOT_REACH_M is never used.
 	await _ladder_case("history out of reach", {"history": ["FAR"]}, "deferred")
 	await _ladder_case("mounted_from", {"history": ["FAR"], "mounted_from": "P"}, "mounted_from")
+	# M-C: a forced dismount during a hop, with the ring blocked and a verified
+	# remembered spot in reach, stands the trainer on that ground rather than
+	# setting them down in the air beside the hopping mount.
+	await _ladder_case("mid-hop prefers ground", {"clear": "P", "hop": true}, "remembered")
 	_check_party("dismount rule ladder")
 
 
@@ -639,12 +651,24 @@ func _ladder_case(label: String, stage: Dictionary, expect: String) -> void:
 	p.y = _floor_y(p, base.y)
 	var far := base - p_dir * 20.0
 	far.y = _floor_y(far, base.y)
-	var pillars := _pillar_ring(body)
+	var hop := bool(stage.get("hop", false))
+	# A hop gets knee-high pillars: they block every ring spot on the ground
+	# but leave the air beside a hopping mount open, so an "airborne" answer
+	# is possible and only the rule ORDER keeps the trainer on ground.
+	var pillars := _pillar_ring(body, 0.4 if hop else 4.0)
 	var blockers: Array = []
 	if bool(stage.get("wall", false)):
 		blockers.append(_wall_across(base, p))
 	for i in 3:
 		await physics_frame
+	if hop:
+		await _press("jump")
+		for i in 40:
+			if not body.is_on_floor() and body.global_position.y > base.y + 0.7:
+				break
+			await physics_frame
+		_check(not body.is_on_floor() and body.global_position.y > base.y + 0.7,
+			"fixture: the mount is mid-hop (%.2f m up)" % (body.global_position.y - base.y))
 	var named := {"P": p, "FAR": far}
 	_riding.set("_clear_spot", named.get(str(stage.get("clear", "")), Vector3.INF))
 	var history: Array[Vector3] = []
@@ -844,7 +868,7 @@ func _outside_box(at: Vector3, centre: Vector3, half: float) -> bool:
 
 ## A 0.3 m pillar on each of the controller's 16 ring points (2 radii by 8
 ## directions, from the species' dismount distance and the mount's facing).
-func _pillar_ring(body: Node3D) -> Array:
+func _pillar_ring(body: Node3D, height: float = 4.0) -> Array:
 	var pillars: Array = []
 	var distance := float(SPECIES.rideable(MOUNT_SPECIES).get("dismount_distance", 1.6))
 	var basis := body.global_transform.basis
@@ -852,7 +876,8 @@ func _pillar_ring(body: Node3D) -> Array:
 	for reach: float in [distance, distance + 1.2]:
 		for step in 8:
 			var at := body.global_position + side.rotated(Vector3.UP, TAU * float(step) / 8.0) * reach
-			pillars.append(_static_box(at + Vector3.UP * 1.5, Vector3(0.3, 4.0, 0.3), Basis.IDENTITY, "TestPillar"))
+			pillars.append(_static_box(at + Vector3.UP * (height * 0.5 - 0.5 if height > 1.0 else height * 0.5),
+				Vector3(0.3, height, 0.3), Basis.IDENTITY, "TestPillar"))
 	return pillars
 
 
@@ -945,7 +970,7 @@ func _overlaps_mount_at(at: Vector3, body: Node3D) -> bool:
 	var found := false
 	for child: Node in body.get_children():
 		var other := child as CollisionShape3D
-		if other == null or other.disabled or not other.shape is CapsuleShape3D:
+		if other == null or not other.shape is CapsuleShape3D:
 			continue
 		found = true
 		var theirs := other.shape as CapsuleShape3D
@@ -964,13 +989,75 @@ func _segment(shape: CapsuleShape3D, at: Transform3D) -> Array[Vector3]:
 	return [at.origin - up * half, at.origin + up * half]
 
 
-## Coordinator review of #229, H3: a fight starting while the rider is boxed
-## in. Fixture: the pair stood on the arrival road, a wild spawned 6 m away
-## (`spawn_wild`), the director's private `_start_fight` called as an engage
-## does, and the refusal leg's walls raised around the mount before the riding
-## controller's next physics step. The mount stays solid (combat does not hand it
-## back to following), so the pinned rule is "mount_top": on its back.
-func _combat_start_forced_dismount() -> void:
+## Coordinator review H-A: the finale's creature-piloting exam taking the
+## ally while the trainer rides it. Fixture, disclosed: the pair is stood on
+## the causeway floor, the finale controller node is moved there and the
+## captain-victory flag set so the runtime's `break_the_eye` handoff runs
+## there; walls first box the mount in (nothing verified: the exam must WAIT),
+## then come down. The phase is cleared again to release the pilot.
+func _finale_pilot_handoff_while_mounted() -> void:
+	await _mount_on_causeway_floor("the finale pilot")
+	var body: CharacterBody3D = _riding.call("mount_body")
+	var runtime := _world.get_node_or_null(^"CloudreachRuntime")
+	var finale: Node3D = runtime.get("finale") if runtime != null else null
+	if body == null or finale == null:
+		_fail("the finale pilot leg has no mount or finale controller")
+		return
+	var flags: RefCounted = _game.get("progression")
+	var victory := str((finale.get("config") as Dictionary).get("captain_victory_flag", "captain_veyra_defeated"))
+	var finale_home := finale.global_position
+	for i in 20:
+		await physics_frame
+	var walls := _enclose(body)
+	for i in 4:
+		await physics_frame
+	var deferred_before := int(_riding.get("deferred_dismounts")) if _riding.get("deferred_dismounts") != null else 0
+	finale.global_position = body.global_position
+	flags.call("set_flag", victory)
+	var co_driven := 0
+	for i in 60:
+		await physics_frame
+		if bool(runtime.call("creature_piloted")) and bool(_player.call("is_carried")):
+			co_driven += 1
+	_check(str(finale.get("phase")) == "break_the_eye", "fixture: the finale is in break_the_eye (%s)" % finale.get("phase"))
+	_check(co_driven == 0, "boxed in: the creature is never piloted while the trainer is carried (%d frames)" % co_driven)
+	_check(bool(_riding.call("is_mounted")) and not bool(runtime.call("creature_piloted")),
+		"boxed in: the exam waits for the rider; the rider stays seated (piloted %s)" % runtime.call("creature_piloted"))
+	_check(_riding.get("deferred_dismounts") != null and int(_riding.get("deferred_dismounts")) == deferred_before + 1,
+		"60 frames of waiting are one deferral event, told once (%s)" % str(_riding.get("deferred_dismounts")))
+	_arm_placement(body)
+	for wall: Node in walls:
+		wall.queue_free()
+	for i in 60:
+		await physics_frame
+		if bool(runtime.call("creature_piloted")) and bool(_player.call("is_carried")):
+			co_driven += 1
+	_check(co_driven == 0, "the creature is never piloted while the trainer is carried (%d frames)" % co_driven)
+	_check(bool(runtime.call("creature_piloted")) and runtime.call("controlled_body") == body,
+		"with room, the rider comes off and the exam pilots the ally")
+	_check_placement("finale pilot handoff", ["clear", "remembered", "history", "mounted_from"])
+	_check(_rig.get("_target") == body, "a second into the exam the camera is on the piloted creature")
+	_check(not bool(_player.call("is_carried")) and _player.is_on_floor(), "the trainer stands, not carried, while the creature is piloted")
+	flags.call("set_flag", victory, false)
+	for i in 30:
+		await physics_frame
+	_check(not bool(runtime.call("creature_piloted")), "clearing the phase releases the pilot")
+	_check(not bool(_riding.call("is_mounted")) and _player.call("carrier") == null and bool(body.call("is_following")),
+		"after release the ally follows and no ride resumes on it (mounted %s)" % _riding.call("is_mounted"))
+	_check(_rig.get("_target") == _player, "after release the camera is back on the trainer")
+	finale.global_position = finale_home
+	_check_party("finale pilot handoff")
+
+
+## SYSTEMS §8 "Combat admission dismounts safely first. No mounted
+## catch/combat." (coordinator review M-A/M-B). Fixture: the pair stood on the
+## arrival road, a wild spawned 6 m away (`spawn_wild`), the director's
+## private `_start_fight` called as an engage does, first with the refusal
+## leg's walls around the mount (no verified ground: the admission is refused
+## and the rider stays seated), then with the walls gone (the rider comes off
+## onto the ground BEFORE the fight places anyone, and the fight's camera
+## stays on the ally).
+func _combat_admission_dismounts_first() -> void:
 	await _mount_on_open_ground(ARRIVAL_ROAD, "the fight")
 	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
@@ -983,40 +1070,47 @@ func _combat_start_forced_dismount() -> void:
 		if wild != null:
 			break
 	if wild == null:
-		_fail("could not spawn a wild for the combat-start leg")
+		_fail("could not spawn a wild for the combat-admission leg")
 		return
-	for i in 10:
+	var manager := _world.get_node_or_null(^"CombatManager")
+	var walls := _enclose(body)
+	for i in 4:
 		await physics_frame
-	# After this tick's node physics (a physics-processed timer resumes there):
-	# the fight starts (the director moves the ally as it admits it) and the
-	# walls go up around where the mount now stands. The physics step at the
-	# end of this tick registers them; the riding controller sees the fight on
-	# the next tick and forces the dismount inside them.
-	await physics_frame
-	await create_timer(0.0, true, true).timeout
+	var deferred_before := int(_riding.get("deferred_dismounts")) if _riding.get("deferred_dismounts") != null else 0
 	_arm_placement(body)
 	_director.call("_start_fight", wild)
-	var walls := _enclose(body)
-	var boxed_at := body.global_position
-	for i in 10:
+	for i in 30:
 		await physics_frame
-	_check(not _placement.is_empty() and (_placement.mount_at as Vector3).distance_to(boxed_at) < 0.3,
-		"fixture: the mount was still inside the walls when the ride ended (boxed at %s, dismounted at %s)" % [boxed_at, _placement.get("mount_at")])
-	var manager := _world.get_node_or_null(^"CombatManager")
-	_check(manager != null and bool(manager.call("is_fighting")), "the fight started")
-	_check(not bool(_riding.call("is_mounted")), "combat admission ends the ride")
-	_check(body.collision_layer != 0, "the mount is still solid in the fight (layer %d)" % body.collision_layer)
-	_check_placement("combat start, boxed in", ["mount_top"])
-	_check(not _placement.is_empty() and bool(_placement.floor_is_mount),
-		"combat start, boxed in: the trainer stands on the mount's back, the only verified spot inside the walls")
-	for i in 60:
-		await physics_frame
-	_check(not _overlaps_mount_at(_player.global_position, body),
-		"a second later the trainer is still not inside the mount (%s)" % _player.global_position)
-	_check(_player.collision_layer != 0, "the trainer is solid again in the fight")
+	_check(manager != null and not bool(manager.call("is_fighting")),
+		"boxed in, the fight is refused rather than begun with a rider on (fighting %s)" % (manager.call("is_fighting") if manager != null else "-"))
+	_check(bool(_riding.call("is_mounted")) and _player.call("carrier") == body and _placement.is_empty(),
+		"boxed in, the rider stays seated: no mounted combat, no spot guessed")
+	_check(str(_riding.get("last_dismount_rule")) == "deferred",
+		"the refused admission's dismount is 'deferred' (%s)" % str(_riding.get("last_dismount_rule")))
+	_check(_riding.get("deferred_dismounts") != null and int(_riding.get("deferred_dismounts")) == deferred_before + 1,
+		"the refused admission is one deferral event, however many frames (%s)" % str(_riding.get("deferred_dismounts")))
 	for wall: Node in walls:
 		wall.queue_free()
-	_check_party("combat start")
+	for i in 4:
+		await physics_frame
+	_arm_placement(body)
+	var fighting_at_placement := [false]
+	var watch := func() -> void: fighting_at_placement[0] = manager != null and bool(manager.call("is_fighting"))
+	_riding.connect("dismounted", watch)
+	_director.call("_start_fight", wild)
+	_riding.disconnect("dismounted", watch)
+	_check(not fighting_at_placement[0], "the rider came off BEFORE the fight began (fighting at placement: %s)" % fighting_at_placement[0])
+	_check(manager != null and bool(manager.call("is_fighting")), "with room, the fight starts")
+	_check_placement("combat admission", ["clear"])
+	for i in 60:
+		await physics_frame
+	_check(not bool(_riding.call("is_mounted")) and not bool(_player.call("is_carried")),
+		"in the fight nothing carries the trainer")
+	_check(_player.is_on_floor() and _player.collision_layer != 0,
+		"the trainer stands, solid, on ground in the fight (%s)" % _player.global_position)
+	_check(_rig.get("_target") == body, "a second into the fight the camera is on the ally, not the trainer (M-B)")
+	_check(not _overlaps_mount_at(_player.global_position, body), "the trainer is not inside the ally in the fight")
+	_check_party("combat admission")
 
 
 ## Review finding F1, reload half, and M4. Fixture, disclosed: the trainer

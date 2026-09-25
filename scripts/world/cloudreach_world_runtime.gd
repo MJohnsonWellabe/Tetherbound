@@ -234,12 +234,18 @@ func _process(_delta: float) -> void:
 		and not bool(manager.call("is_fighting")) and not bool(director.call("trainer_battle_active")) \
 		and is_instance_valid(ally) and ally.visible \
 		and ally.global_position.distance_to(finale.global_position) < 65.0
+	var rider_on := false
 	if should_pilot and ally != _field_body:
 		# The exam drives the ally itself; a rider comes off first so the
-		# riding controller and this pilot never both drive one body.
+		# riding controller and this pilot never both drive one body. With
+		# nowhere verified to stand the dismount defers (the rider is told
+		# once) and the exam waits, retried every frame, rather than taking a
+		# body somebody is still sitting on.
 		var riding := world.get_node_or_null(^"RidingController")
 		if riding != null and bool(riding.call("is_mounted")):
 			riding.call("dismount")
+			rider_on = bool(riding.call("is_mounted"))
+	if should_pilot and ally != _field_body and not rider_on:
 		_release_field_control()
 		_field_body = ally
 		_field_body.call("set_following", false)
