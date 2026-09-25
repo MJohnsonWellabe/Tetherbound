@@ -365,6 +365,11 @@ func _check_road_point(at: Vector3, centreline: bool, pre_existing: Dictionary) 
 		if not (overlap["collider"] is StaticBody3D):
 			continue
 		var path := str((overlap["collider"] as Node).get_path())
+		# A person standing on the road (Captain Veyra holds the pad at
+		# (100, 1160, 5350)) is not road geometry; npc_body.gd bodies are
+		# StaticBody3D and the trainer walks around them like anyone else.
+		if path.contains("/CloudreachPeople/"):
+			continue
 		if overlap["collider"] == crown_body or centreline:
 			_fail("(b) trainer capsule on the road at %s overlaps %s" % [at, path])
 		else:
