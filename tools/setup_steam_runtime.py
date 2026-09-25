@@ -9,18 +9,23 @@ Usage:
       beside the exported executable. Point the export preset's
       custom_template/debug and custom_template/release at the printed paths.
 
-Every archive and every extracted file is checked against a pinned SHA-256
-before anything is written; a mismatch installs nothing. The ordinary Godot
+The downloaded archive is checked against a pinned SHA-256 before it is
+opened. Each extracted file is written as a `.download` temporary beside its
+destination and checked against its own pin; only when every file has passed
+are they renamed into place, and any failure removes the temporaries. If a
+rename fails (for example a locked file on Windows), the error says which
+files were already replaced. The ordinary Godot
 installation and its stock templates are untouched. No AppID is configured
 here: it comes from TETHERBOUND_STEAM_APP_ID, SteamAppId or the local project
-setting (scripts/net/steam_lobby.gd). Hashes were recorded from the upstream
-Codeberg release and re-derived on a second machine; the publisher does not
-provide checksums.
+setting (scripts/net/steam_lobby.gd). The pins were recorded from the upstream
+Codeberg release on the owner's machine and re-derived independently in the X05
+lane (ralph/reports/INVITE-COOP); the publisher does not provide checksums.
 """
 import argparse
 import hashlib
 import os
 from pathlib import Path
+import shutil
 import tarfile
 import tempfile
 import urllib.request
@@ -85,28 +90,41 @@ def _download(url, expected, staging):
 def _extract_verified(archive, wanted, destination, exact_contents):
     """Extract `wanted` (member -> sha256 or None) as `.download` files in
     `destination`, verify every one, and only then rename them into place."""
-    staged = {}
-    with tarfile.open(archive, "r:xz") as package:
-        members = {member.name: member for member in package.getmembers()}
-        if exact_contents and set(members) != set(wanted):
-            raise SystemExit("Unexpected archive contents; nothing installed")
-        for name, expected in wanted.items():
-            member = members.get(name)
-            if member is None or not member.isfile():
-                raise SystemExit(f"Archive is missing {name}; nothing installed")
-            source = package.extractfile(member)
-            assert source is not None
-            temporary = destination / (Path(name).name + ".download")
-            temporary.write_bytes(source.read())
-            if expected is not None and _sha256(temporary) != expected:
-                for path in list(staged.values()) + [temporary]:
-                    path.unlink(missing_ok=True)
-                raise SystemExit(f"Checksum mismatch for {name}; nothing installed")
-            staged[name] = temporary
+    temporaries = []
+    committed = False
+    try:
+        with tarfile.open(archive, "r:xz") as package:
+            members = {member.name: member for member in package.getmembers()}
+            if exact_contents and set(members) != set(wanted):
+                raise SystemExit("Unexpected archive contents; nothing installed")
+            for name, expected in wanted.items():
+                member = members.get(name)
+                if member is None or not member.isfile():
+                    raise SystemExit(f"Archive is missing {name}; nothing installed")
+                source = package.extractfile(member)
+                assert source is not None
+                temporary = destination / (Path(name).name + ".download")
+                temporaries.append(temporary)
+                with open(temporary, "wb") as target:
+                    shutil.copyfileobj(source, target, 1 << 20)
+                if expected is not None and _sha256(temporary) != expected:
+                    raise SystemExit(f"Checksum mismatch for {name}; nothing installed")
+        committed = True
+    finally:
+        if not committed:
+            for path in temporaries:
+                path.unlink(missing_ok=True)
     installed = []
-    for name, temporary in staged.items():
-        final = destination / Path(name).name
-        os.replace(temporary, final)
+    for temporary in temporaries:
+        final = destination / temporary.name.removesuffix(".download")
+        try:
+            os.replace(temporary, final)
+        except OSError as error:
+            for path in temporaries:
+                path.unlink(missing_ok=True)
+            done = ", ".join(path.name for path in installed) or "none"
+            raise SystemExit(f"Could not replace {final} ({error}); already replaced: {done}. "
+                             "Close any running copy and run this again.")
         if final.suffix in ("", ".x86_64"):
             final.chmod(final.stat().st_mode | 0o111)
         installed.append(final)
