@@ -118,6 +118,10 @@ class DirectorFixture extends "res://scripts/combat/encounter_director.gd":
 		return progression_store
 	func _trainer_reward_line(spec: Dictionary) -> String:
 		return "%s's reward" % str(spec.get("name", "Trainer"))
+	## The player-facing line, captured (the fixture has no `/root/Game`).
+	var messages: Array = []
+	func _trainer_victory_refused(reason: String) -> void:
+		messages.append(reason)
 	func _submit_reward_intent(intent: Dictionary) -> Dictionary:
 		ledger_submissions.append(intent.duplicate(true))
 		if ledger_rpc == null:
@@ -379,6 +383,9 @@ func _assert_refused_without_writes(intent: Dictionary, peer: int, why: String) 
 	assert_false(bool(verdict.get("ok", true)), "%s is refused" % why)
 	assert_eq(str(verdict.get("kind", "")), "trainer_victory", "%s: the refusal names its intent" % why)
 	assert_false(str(verdict.get("reason", "")).is_empty(), "%s: with a reason a player can read" % why)
+	assert_true(verdict.has("trainer_id"), "%s: the refusal names the trainer it answers" % why)
+	assert_eq(str(verdict.get("trainer_id", "")), str(intent.get("trainer_id", "")),
+		"%s: the trainer id is the one asked about" % why)
 	assert_true(_deliveries().is_empty(), "%s: no row was journaled" % why)
 	assert_eq(_director.ledger_submissions.size(), 0, "%s: nothing was submitted to the ledger" % why)
 	assert_eq(_director.paid_notices.size(), 0, "%s: nobody was told they were paid" % why)
@@ -419,8 +426,11 @@ func test_a_failed_journal_commits_no_world_fact() -> void:
 	assert_eq(_director.paid_notices.size(), 0, "nobody was told they were paid")
 	assert_false(str(verdict.get("reason", "")).contains("Nothing was delivered"),
 		"the refusal never claims nothing landed: components journal one at a time")
-	assert_true(str(verdict.get("reason", "")).contains("still unbeaten"),
-		"it tells the player the trainer can be fought again: %s" % str(verdict.get("reason", "")))
+	assert_false(str(verdict.get("reason", "")).contains("still unbeaten"),
+		"it never promises the trainer is unbeaten: another path may have recorded the defeat")
+	assert_eq(str(verdict.get("trainer_id", "")), WARDEN, "the grant refusal names the trainer")
+	assert_false(bool(verdict.get("defeat_recorded", true)),
+		"and says the world does not hold the defeat")
 
 
 func test_a_chapter_host_never_resolves_another_chapters_trainer() -> void:
@@ -453,3 +463,175 @@ func test_a_host_run_fight_still_pays_every_participant() -> void:
 	told.sort()
 	assert_eq(told, [HOST, CLIENT], "and both participants are told")
 	assert_eq(_director.local_pays, 0, "and nobody took the solo payout as well")
+
+
+# --- a pending send the host later refuses (review MAJOR 1/2) -------------------
+
+const WARDEN_FLAG := "defeated_warden"
+
+
+func _refusal(code: String, extra: Dictionary = {}) -> Dictionary:
+	var verdict := {"ok": false, "kind": "trainer_victory", "peer": CLIENT, "code": code,
+		"reason": "host reason for %s" % code, "pending": false, "delta": {},
+		"trainer_id": WARDEN}
+	verdict.merge(extra, true)
+	return verdict
+
+
+func _client_sent_warden() -> void:
+	_as_client()
+	_director.call("_record_trainer_defeat", _warden())
+	assert_eq(_director.sent.size(), 1, "the first win is sent once")
+	assert_true(bool(_director.progression_store.call("has", WARDEN_FLAG)),
+		"and noted locally while pending")
+
+
+func _victories_sent() -> Dictionary:
+	return _director.get("_trainer_victories_sent") as Dictionary
+
+
+func _retry_armed(trainer_id: String) -> bool:
+	var entry: Variant = (_director.get("_trainer_victory_retries") as Dictionary).get(trainer_id)
+	return entry is Dictionary and bool((entry as Dictionary).get("armed", false))
+
+
+func test_a_transient_refusal_undoes_our_note_and_retries_the_same_intent_bounded() -> void:
+	_client_sent_warden()
+	_director.call("_deliver_encounter_verdict", _refusal("journal_failed"))
+	assert_false(bool(_director.progression_store.call("has", WARDEN_FLAG)),
+		"the local note this path wrote is undone: the host did not record the defeat")
+	assert_false(_victories_sent().has(WARDEN), "the send dedupe is cleared")
+	assert_true(_retry_armed(WARDEN), "a retry is scheduled")
+	var limit := int(_director.get("TRAINER_VICTORY_RETRY_LIMIT"))
+	assert_true(limit >= 1, "retries are bounded by a positive limit")
+	for attempt: int in range(limit):
+		_director.call("_retry_trainer_victory", WARDEN)
+		assert_eq(_director.sent.size(), 2 + attempt, "retry %d resends once" % (attempt + 1))
+		_director.call("_retry_trainer_victory", WARDEN)
+		assert_eq(_director.sent.size(), 2 + attempt,
+			"an unarmed retry step sends nothing (one send per attempt)")
+		var last: Dictionary = _director.sent[_director.sent.size() - 1]
+		assert_eq(last.arguments, [{"kind": "trainer_victory", "trainer_id": WARDEN}],
+			"the retry is the same trainer-id-only intent")
+		_director.call("_deliver_encounter_verdict", _refusal("reward_failed"))
+	assert_false(_retry_armed(WARDEN), "no retry after the last attempt")
+	_director.call("_retry_trainer_victory", WARDEN)
+	assert_eq(_director.sent.size(), 1 + limit, "the retries stop at the bound")
+	assert_false((_director.get("_trainer_victory_retries") as Dictionary).has(WARDEN),
+		"the retry record is dropped")
+	var final_line := str(_director.messages[_director.messages.size() - 1]) \
+		if not _director.messages.is_empty() else ""
+	assert_true(final_line.contains("could not record your victory over %s" % str(_warden().name)),
+		"the final line names the trainer: %s" % final_line)
+	assert_true(final_line.contains("not paid") or final_line.contains("not fully paid"),
+		"and says the reward was not paid: %s" % final_line)
+	assert_false(final_line.contains("winning again collects the rest"),
+		"and makes no promise it cannot keep")
+	assert_false(bool(_director.progression_store.call("has", WARDEN_FLAG)),
+		"the trainer is not left looking beaten locally")
+	assert_eq(_director.ledger_submissions.size(), 0, "the client never wrote the ledger")
+	assert_eq(_director.local_pays, 0, "and never paid itself")
+
+
+func test_a_win_after_a_refusal_can_be_sent_again() -> void:
+	_client_sent_warden()
+	_director.call("_deliver_encounter_verdict", _refusal("unknown_character"))
+	_director.call("_record_trainer_defeat", _warden())
+	assert_eq(_director.sent.size(), 2, "winning again after a refusal sends again")
+
+
+func test_an_ok_verdict_clears_the_retry() -> void:
+	_client_sent_warden()
+	_director.call("_deliver_encounter_verdict", _refusal("wrong_realm"))
+	_director.call("_retry_trainer_victory", WARDEN)
+	assert_eq(_director.sent.size(), 2, "one retry was sent")
+	_director.call("_deliver_encounter_verdict", {"ok": true, "kind": "trainer_victory",
+		"peer": CLIENT, "code": "ok", "reason": "", "pending": false, "delta": {},
+		"trainer_id": WARDEN, "paid": [CLIENT]})
+	assert_false((_director.get("_trainer_victory_retries") as Dictionary).has(WARDEN),
+		"an accepted victory clears its retry")
+	assert_true(_victories_sent().has(WARDEN), "and stays sent, so it is never sent again")
+	_director.call("_retry_trainer_victory", WARDEN)
+	_director.call("_record_trainer_defeat", _warden())
+	assert_eq(_director.sent.size(), 2, "nothing further is sent")
+
+
+func test_a_permanent_refusal_undoes_the_note_and_does_not_retry() -> void:
+	_client_sent_warden()
+	_director.call("_deliver_encounter_verdict", _refusal("unknown_trainer"))
+	assert_false(bool(_director.progression_store.call("has", WARDEN_FLAG)), "the note is undone")
+	assert_false(_victories_sent().has(WARDEN), "the dedupe is cleared")
+	assert_false(_retry_armed(WARDEN), "a permanent refusal is not retried")
+	_director.call("_retry_trainer_victory", WARDEN)
+	assert_eq(_director.sent.size(), 1, "nothing is resent")
+	assert_eq(_director.messages.size(), 1, "the player is told once")
+	if _director.messages.size() == 1:
+		assert_true(str(_director.messages[0]).contains("not paid"),
+			"that the reward was not paid: %s" % str(_director.messages[0]))
+
+
+func test_a_flag_set_before_the_note_is_never_removed() -> void:
+	_as_client()
+	_director.progression_store.call("set_flag", WARDEN_FLAG)
+	_director.call("_record_trainer_defeat", _warden())
+	assert_eq(_director.sent.size(), 1, "the victory is still sent")
+	_director.call("_deliver_encounter_verdict", _refusal("journal_failed"))
+	assert_true(bool(_director.progression_store.call("has", WARDEN_FLAG)),
+		"a flag this path did not write is left alone")
+	_director.call("_deliver_encounter_verdict", _refusal("unknown_trainer"))
+	assert_true(bool(_director.progression_store.call("has", WARDEN_FLAG)),
+		"even by a permanent refusal")
+
+
+func test_a_defeat_the_host_already_holds_keeps_the_note() -> void:
+	# Cloudreach: the chapter runtime committed the defeat fact before the
+	# routed send, so the world says beaten even though the payout failed.
+	_client_sent_warden()
+	_director.call("_deliver_encounter_verdict", _refusal("journal_failed",
+		{"defeat_recorded": true}))
+	assert_true(bool(_director.progression_store.call("has", WARDEN_FLAG)),
+		"the local mirror keeps agreeing with the host's world")
+	assert_true(_retry_armed(WARDEN), "and the payout is still retried")
+
+
+func test_teardown_drops_pending_retries() -> void:
+	_client_sent_warden()
+	_director.call("_deliver_encounter_verdict", _refusal("journal_failed"))
+	_director.call("_exit_tree")
+	assert_true((_director.get("_trainer_victory_retries") as Dictionary).is_empty(),
+		"a torn-down director keeps no retry")
+	_director.call("_retry_trainer_victory", WARDEN)
+	assert_eq(_director.sent.size(), 1, "and sends nothing afterwards")
+
+
+func test_host_pays_a_retry_even_when_the_defeat_is_already_a_world_fact() -> void:
+	# The host's own world half, as `Game.progression` reads it on a host.
+	_director.progression_store = _game.world.flags
+	var fact: Dictionary = _rpc.call("submit", {"kind": "set_world_flag", "realm": "meadows",
+		"id": WARDEN_FLAG})
+	assert_true(bool(fact.get("ok", false)), "another path committed the defeat first: %s" % str(fact))
+	(_game.save_system as Saver).fail_world = true
+	var refused: Dictionary = _director.call("_host_commit_encounter",
+		{"kind": "trainer_victory", "trainer_id": WARDEN}, CLIENT)
+	assert_eq(str(refused.get("code", "")), "journal_failed", "the payout failed first")
+	assert_eq(str(refused.get("trainer_id", "")), WARDEN, "naming the trainer")
+	assert_true(bool(refused.get("defeat_recorded", false)),
+		"and telling the client the world already holds the defeat")
+	assert_true(_rows_for("trainer:%s:" % WARDEN).is_empty(), "nothing was journaled")
+	(_game.save_system as Saver).fail_world = false
+	var retried: Dictionary = _director.call("_host_commit_encounter",
+		{"kind": "trainer_victory", "trainer_id": WARDEN}, CLIENT)
+	assert_true(bool(retried.get("ok", false)),
+		"a set world fact does not refuse the retry: %s" % str(retried))
+	assert_eq(str(retried.get("code", "")), "ok", "the retry paid")
+	assert_eq(str(retried.get("trainer_id", "")), WARDEN, "the ok verdict names the trainer")
+	assert_eq(_characters_for("trainer:%s:" % WARDEN), [CLIENT_CHARACTER], "the sender is journaled")
+	assert_eq(_sources_for("trainer:%s:" % WARDEN), _expected_warden_sources(), "every component")
+	assert_eq(_director.paid_notices.size(), 1, "and told once")
+	var rows_before := _deliveries().duplicate(true)
+	var again: Dictionary = _director.call("_host_commit_encounter",
+		{"kind": "trainer_victory", "trainer_id": WARDEN}, CLIENT)
+	assert_true(bool(again.get("ok", false)), "a further retry is not an error")
+	assert_eq(str(again.get("code", "")), "noop", "but pays nothing")
+	assert_eq(_deliveries(), rows_before, "no row is journaled twice")
+	assert_eq(_director.paid_notices.size(), 1, "nobody is told twice")
