@@ -89,7 +89,19 @@
 
     "accessibility": {
       "reduced_motion_label": "Reduced motion",
-      "reduced_motion_note": "Softens camera nudges, UI animation and nonessential flashes. The fight's timing does not change: attacks, wind-ups and recovery windows stay exactly the same."
+      "reduced_motion_note": "Softens camera nudges, UI animation and nonessential flashes. The fight's timing does not change: attacks, wind-ups and recovery windows stay exactly the same.",
+      "camera_shake_label": "Camera shake",
+      "aim_assist_label": "Aim assistance",
+      "dialogue_text_label": "Dialogue text size",
+      "dialogue_background_label": "Dialogue background",
+      "_comment_look": "UX §8 accessibility minimum: look sensitivity and inversion per axis, applied by camera_rig.gd through scripts/ui/look_prefs.gd on top of movement.json's tuned stick/mouse numbers. Bounds and step are TUNABLE.",
+      "look_sensitivity_label": "Look sensitivity",
+      "look_sensitivity_min_percent": 25,
+      "look_sensitivity_max_percent": 200,
+      "look_sensitivity_step_percent": 10,
+      "invert_look_x_label": "Invert horizontal look",
+      "invert_look_y_label": "Invert vertical look",
+      "look_note": "Left and right on the camera shake and sensitivity rows change them. Camera shake scales the small roll a charged hit gives the camera; reduced motion turns it off whatever the level. Sensitivity changes how fast the camera turns, for the stick and the mouse alike. A on aim assistance steps through Full, Reduced and Off: it changes only how much an orb throw helps you onto a creature, never your creature's attacks. A on dialogue text size steps through 100%, 125% and 150%; left and right on dialogue background make the panel behind conversation text more or less see-through. Both inversions apply everywhere the camera is yours to turn, including flying and aiming."
     },
 
     "audio": {

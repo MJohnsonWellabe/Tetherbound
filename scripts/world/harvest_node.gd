@@ -92,6 +92,7 @@ var _realm_id: String = "meadows"
 ## local changes while it is set. The satchel line, the sounds, the tool wear
 ## and the `home_materials_gathered` check all wait for the committed delta,
 ## which is what makes a lost race cost the loser nothing at all.
+var _fight_hides := 0
 var _claiming := false
 var _claim: Dictionary = {}
 var _taken := false
@@ -109,6 +110,8 @@ func setup(spec: Dictionary) -> void:
 	add_to_group("progression_restore")
 
 	_build_visual()
+	if _model_is_a_soft_occluder():
+		add_to_group(FIGHT_RING_OCCLUDER_GROUP)
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
 	_prompt.position = Vector3.UP * 0.6
@@ -157,6 +160,32 @@ func _deactivate() -> void:
 		PICKUP_GLOW.detach(_visual)
 	visible = false
 	queue_free()
+
+
+## MEADOWS-VISUAL-PASS: a deadwood node built from the same standing dead
+## tree the `deadfall` scatter uses stood in the middle of the survey's fight
+## ring, between the camera and both fighters. `combat_arena.gd` hides every
+## member of this group inside its ring for the fight, the same way it hides
+## that scatter (`vegetation.gd::hide_fight_occluders()`). Only the model is
+## hidden; a harvest node has no collider, and its record and prompt are
+## untouched. Only nodes built from a `bushes`/`deadfall` model join.
+const FIGHT_RING_OCCLUDER_GROUP := "fight_ring_occluder"
+const SOFT_OCCLUDER_LAYERS: Array[String] = ["bushes", "deadfall"]
+
+
+func _model_is_a_soft_occluder() -> bool:
+	var layers: Dictionary = RULES.config().get("layers", {})
+	for layer_name: String in SOFT_OCCLUDER_LAYERS:
+		if ((layers.get(layer_name, {}) as Dictionary).get("models", []) as Array).has(_model_path):
+			return true
+	return false
+
+
+## Counted, so two overlapping rings do not show it while one is still open.
+func set_fight_hidden(hidden: bool) -> void:
+	_fight_hides = maxi(0, _fight_hides + (1 if hidden else -1))
+	if _visual != null and is_instance_valid(_visual) and not _taken:
+		_visual.visible = _fight_hides == 0
 
 
 ## Read-only identity for controller-driven evidence and route selection.
@@ -251,14 +280,57 @@ func _apply_material_fixups(root: Node, model_path: String) -> void:
 			var source: Material = mesh.surface_get_material(surface)
 			var material_name := "" if source == null else source.resource_name
 			if material_name == ROCK_CEILING_MATERIAL:
-				mesh_instance.set_surface_override_material(surface,
-					_rock_ceiling_material(str(retint.get(material_name, ""))))
+				# MEADOWS-VISUAL-PASS round 5: one stone family. When the
+				# presentation overlay gives the scatter rocks a texture, a
+				# deposit wears the same texture and tint as the boulders beside
+				# it (a blind round counted three rock families: photo, pack and
+				# white). Rock030 stays the fallback.
+				var shared := _presentation_rock_look(model_path)
+				if not shared.is_empty():
+					mesh_instance.set_surface_override_material(surface, _fixed_up_material(
+						source, material_name, str(shared["tint"]), str(shared["texture"])))
+					continue
+				var rock_tint := _harvest_rock_retint(model_path)
+				mesh_instance.set_surface_override_material(surface, _rock_ceiling_material(
+					rock_tint if rock_tint != "" else str(retint.get(material_name, ""))))
 				continue
 			if not retint.has(material_name) and not retexture.has(material_name):
 				continue
 			mesh_instance.set_surface_override_material(surface, _fixed_up_material(
 				source, material_name, str(retint.get(material_name, "")),
 				str(retexture.get(material_name, ""))))
+
+
+## MEADOWS-VISUAL-PASS round 5: the Rock030 swap below needs its own tints,
+## because vegetation.json's rock tints were tuned against the pack texture it
+## replaces (see `harvest_rock_retint` in vegetation_presentation.json). Empty
+## when the overlay does not name this model.
+static var _presentation: Variant = null
+
+
+static func _presentation_overlay() -> Dictionary:
+	if _presentation == null:
+		_presentation = {}
+		var parsed: Variant = JSON.parse_string(
+			FileAccess.get_file_as_string("res://data/config/vegetation_presentation.json"))
+		if parsed is Dictionary:
+			_presentation = parsed
+	return _presentation
+
+
+static func _harvest_rock_retint(model_path: String) -> String:
+	return str((_presentation_overlay().get("harvest_rock_retint", {}) as Dictionary).get(model_path, ""))
+
+
+## {"texture", "tint"} the scatter gives this rock model through the overlay,
+## or {} when the overlay swaps no rock texture.
+static func _presentation_rock_look(model_path: String) -> Dictionary:
+	var overlay := _presentation_overlay()
+	var texture := str((overlay.get("retexture", {}) as Dictionary).get(ROCK_CEILING_MATERIAL, ""))
+	if texture == "":
+		return {}
+	var per_model: Dictionary = (overlay.get("variant_retint", {}) as Dictionary).get(model_path, {})
+	return {"texture": texture, "tint": str(per_model.get(ROCK_CEILING_MATERIAL, ""))}
 
 
 ## The first vegetation layer that claims `model_path` in its own `models`

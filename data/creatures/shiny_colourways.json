@@ -283,7 +283,7 @@
           "val_blend": 0.3
         },
         {
-          "_why": "cream chest, blaze, muzzle",
+          "_why": "cream blaze and muzzle on the head front (identity). MEADOWS-VISUAL-PASS round 5: this rule used to cover the whole front half of the body (z_min 0.45), which turned every light patch on the shoulders, flanks and paws into bright cream -- the random white splotches a blind round read as texture-generation errors.",
           "match": {
             "hue": [
               15,
@@ -298,7 +298,46 @@
           "set_val": 0.93,
           "val_blend": 0.25,
           "where": {
-            "z_min": 0.45
+            "z_min": 0.72,
+            "y_min": 0.55
+          }
+        },
+        {
+          "_why": "near-white on the head front: the same cream (a hue band cannot see a pixel with no saturation)",
+          "match": {
+            "sat_max": 0.12,
+            "val_min": 0.55
+          },
+          "where": {
+            "z_min": 0.72,
+            "y_min": 0.55
+          },
+          "set_hue": 38,
+          "set_sat": 0.2,
+          "set_val": 0.93,
+          "val_blend": 0.25
+        },
+        {
+          "_why": "cream chest panel: front, central, below the head",
+          "match": {
+            "hue": [
+              15,
+              65
+            ],
+            "sat_min": 0.04,
+            "sat_max": 0.36,
+            "val_min": 0.45
+          },
+          "set_hue": 38,
+          "set_sat": 0.2,
+          "set_val": 0.93,
+          "val_blend": 0.25,
+          "where": {
+            "z_min": 0.6,
+            "y_min": 0.15,
+            "y_max": 0.62,
+            "x_min": 0.3,
+            "x_max": 0.7
           }
         },
         {
@@ -316,7 +355,7 @@
           "val_blend": 0.3
         },
         {
-          "_why": "shell stone plates -> moss block (owner board: moss and leaves on the back)",
+          "_why": "shell stone plates -> moss block (owner board: moss and leaves on the back) MEADOWS-VISUAL-PASS round 5: limited to the upper, upward-facing body; unlimited, it painted any pale patch on a leg or paw mint.",
           "match": {
             "sat_max": 0.13,
             "val_min": 0.18
@@ -324,7 +363,22 @@
           "set_hue": 88,
           "set_sat": 0.52,
           "set_val": 0.46,
-          "val_blend": 0.35
+          "val_blend": 0.35,
+          "where": {
+            "y_min": 0.45,
+            "up_min": 0.1
+          }
+        },
+        {
+          "_why": "MEADOWS-VISUAL-PASS round 5: any other light or pale patch (legs, flanks, paws) joins the coat as a lighter brown, so no stray cream or mint splotch survives outside the face, the chest and the shell",
+          "match": {
+            "sat_max": 0.36,
+            "val_min": 0.4
+          },
+          "set_hue": 24,
+          "set_sat": 0.55,
+          "set_val": 0.5,
+          "val_blend": 0.3
         },
         {
           "_why": "existing moss",
@@ -1586,11 +1640,11 @@
           "val_blend": 0.25
         },
         {
-          "_why": "coat: one honey-brown block",
+          "_why": "coat: one chestnut block. MEADOWS-VISUAL-PASS round 5: the honey coat (value 0.44) matched the lightened meadow in value and a blind round read the opponent as \"a beige smudge on green grass\"; a deeper chestnut separates it by value, not just hue, with the cream bib, pink ears and leaf antlers unchanged.",
           "match": {},
-          "set_hue": 30,
-          "set_sat": 0.6,
-          "set_val": 0.44,
+          "set_hue": 24,
+          "set_sat": 0.64,
+          "set_val": 0.34,
           "val_blend": 0.3
         }
       ],

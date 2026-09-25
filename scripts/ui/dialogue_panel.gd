@@ -36,6 +36,7 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 ## (`scripts/player/conversation_camera.gd`); this panel is the one place that
 ## knows a conversation is on screen, so it is the one place that says so.
 const CONVERSATION_CAMERA := preload("res://scripts/player/conversation_camera.gd")
+const TEXT_PREFS := preload("res://scripts/ui/text_prefs.gd")
 
 ## Frames of deafness after opening.
 ##
@@ -68,6 +69,11 @@ signal completed(conversation_id: String)
 signal line_presented(conversation_id: String, is_last: bool)
 
 var _runner: RefCounted = RUNNER.new()
+## The scene's authored sizes and box height, which the player's text size
+## (`text_prefs.gd`) scales from. Read once in `_ready()`.
+var _base_sizes: Dictionary = {}
+var _base_box_top := 0.0
+var _panel_style: StyleBoxFlat = null
 var _guard: int = 0
 var _buffered_during_guard: bool = false
 ## True only for the first `_physics_process` tick after `start()`. That tick
@@ -129,6 +135,13 @@ func _dress() -> void:
 	box.corner_radius_bottom_right = 6
 	box.content_margin_left = 0.0
 	(_box as PanelContainer).add_theme_stylebox_override("panel", box)
+	_panel_style = box
+	_base_sizes = {
+		"speaker": _speaker.get_theme_font_size("font_size"),
+		"body": _body.get_theme_font_size("font_size"),
+		"hint": _hint.get_theme_font_size("normal_font_size"),
+	}
+	_base_box_top = _box.offset_top
 	_speaker.add_theme_color_override("font_color", SPEAKER_COLOUR)
 	# RichTextLabel's equivalent of Label's `font_color` is `default_color` --
 	# a different property name for the same role, easy to miss since both
@@ -177,9 +190,26 @@ func start(conversation_id: String, identity: Dictionary = {}, values: Dictionar
 	_guard = OPEN_GUARD_FRAMES
 	_buffered_during_guard = false
 	_skip_input_this_tick = true
+	apply_text_prefs()
 	_push_the_camera_in()
 	_draw()
 	return true
+
+
+## UX §8: the player's dialogue text size and background opacity. The box
+## grows upward by the same factor as the text, so a larger line wraps into
+## room it has rather than spilling out of a fixed box.
+func apply_text_prefs() -> void:
+	if _base_sizes.is_empty():
+		return
+	var scale_by := TEXT_PREFS.text_scale()
+	_speaker.add_theme_font_size_override("font_size", roundi(int(_base_sizes["speaker"]) * scale_by))
+	_body.add_theme_font_size_override("font_size", roundi(int(_base_sizes["body"]) * scale_by))
+	_hint.add_theme_font_size_override("normal_font_size", roundi(int(_base_sizes["hint"]) * scale_by))
+	var base_height := _box.offset_bottom - _base_box_top
+	_box.offset_top = _box.offset_bottom - base_height * scale_by
+	if _panel_style != null:
+		_panel_style.bg_color.a = TEXT_PREFS.background_alpha()
 
 
 ## The word the player typed, for a line written as `$name`.

@@ -16,6 +16,7 @@ const TEST_PATH := "user://__test_motion_prefs.json"
 
 func after_each() -> void:
 	MOTION.set_reduced_motion(false)
+	MOTION.set_camera_shake_percent(100)
 	AUDIO.set_bus_percent("Music", 1.0)
 	if FileAccess.file_exists(TEST_PATH):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(TEST_PATH))
@@ -85,3 +86,38 @@ func test_reduced_motion_drops_the_ready_flash_but_not_the_state() -> void:
 	assert_false(tweens.has(rect.get_instance_id()), "no flash tween starts under reduced motion")
 	rect.free()
 	hud.free()
+
+
+func test_camera_shake_scales_the_impulse_and_reduced_motion_wins() -> void:
+	assert_eq(MOTION.camera_shake_percent(), 100, "the default is the tuned, modest roll")
+	assert_almost_eq(MOTION.camera_shake_scale(), 1.0, 0.0001)
+	MOTION.set_camera_shake_percent(40)
+	assert_almost_eq(MOTION.camera_shake_scale(), 0.4, 0.0001)
+	MOTION.set_camera_shake_percent(250)
+	assert_eq(MOTION.camera_shake_percent(), 100, "clamped to 0-100")
+	MOTION.set_reduced_motion(true)
+	assert_almost_eq(MOTION.camera_shake_scale(), 0.0, 0.0001, "reduced motion removes shake at any level")
+
+
+func test_camera_shake_survives_a_relaunch_through_the_real_file() -> void:
+	var first: RefCounted = KEY_BINDINGS.new(TEST_PATH)
+	MOTION.set_camera_shake_percent(30)
+	MOTION.store_to(first)
+	assert_true(bool(first.call("save")))
+	MOTION.set_camera_shake_percent(100)
+	var second: RefCounted = KEY_BINDINGS.new(TEST_PATH)
+	assert_eq(int(second.call("load_overrides")), KEY_BINDINGS.LOAD_OK)
+	MOTION.load_from(second)
+	assert_eq(MOTION.camera_shake_percent(), 30)
+
+
+func test_the_charged_roll_follows_the_shake_level() -> void:
+	var rig = load("res://scripts/player/camera_rig.gd").new()
+	MOTION.set_camera_shake_percent(50)
+	rig.call("nudge_combat_impact", {"degrees": 1.0, "seconds": 0.2})
+	assert_almost_eq(float(rig.get("_impact_nudge_radians")), deg_to_rad(0.5), 0.00001)
+	MOTION.set_camera_shake_percent(0)
+	rig.set("_impact_nudge_left", 0.0)
+	rig.call("nudge_combat_impact", {"degrees": 1.0, "seconds": 0.2})
+	assert_almost_eq(float(rig.get("_impact_nudge_left")), 0.0, 0.00001, "0% means no roll at all")
+	rig.free()

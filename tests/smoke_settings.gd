@@ -124,6 +124,110 @@ func _cleanup() -> void:
 
 ## An action, sent both ways: as state for whatever polls, and as an event for
 ## the Control tree. See the note at the top.
+## UX §8 look rows, driven the way a player drives them: D-pad right/left on
+## the focused sensitivity row changes the value and keeps focus, A on an
+## inversion toggles it, and both reach the settings file. Starts and ends on
+## the reduced-motion row, so the walk above can carry on up.
+func _check_the_look_rows() -> void:
+	var look: Object = preload("res://scripts/ui/look_prefs.gd")
+	var sensitivity: Button = _tab.get("_look_sensitivity_button")
+	var invert_y: Button = _tab.get("_invert_y_button")
+	var motion: Object = preload("res://scripts/ui/motion_prefs.gd")
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	if _focused() != _tab.get("_shake_button"):
+		_fail("D-pad down from reduced motion did not reach camera shake")
+		return
+	var shake_before: int = motion.call("camera_shake_percent")
+	await _tap_pad(JOY_BUTTON_DPAD_LEFT)
+	if int(motion.call("camera_shake_percent")) >= shake_before:
+		_fail("D-pad left on camera shake did not lower it")
+		return
+	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
+	if int(motion.call("camera_shake_percent")) != shake_before:
+		_fail("D-pad right did not put camera shake back")
+		return
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	if _focused() != sensitivity:
+		_fail("D-pad down from reduced motion did not reach look sensitivity")
+		return
+	var before: int = look.call("sensitivity_percent")
+	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
+	var raised: int = look.call("sensitivity_percent")
+	if raised <= before:
+		_fail("D-pad right on look sensitivity did not raise it (%d -> %d)" % [before, raised])
+		return
+	if _focused() != sensitivity:
+		_fail("D-pad right on look sensitivity moved focus instead of changing the value")
+		return
+	var bindings: RefCounted = _menu.get("bindings")
+	var reloaded: RefCounted = KEY_BINDINGS.new(str(bindings.call("path")))
+	reloaded.call("load_overrides")
+	var stored: Dictionary = reloaded.get("accessibility")
+	if int(stored.get("look_sensitivity_percent", -1)) != raised:
+		_fail("look sensitivity %d did not reach the settings file (%s)" % [raised, str(stored)])
+	await _tap_pad(JOY_BUTTON_DPAD_LEFT)
+	if int(look.call("sensitivity_percent")) != before:
+		_fail("D-pad left did not put look sensitivity back to %d" % before)
+		return
+
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	if _focused() != invert_y:
+		_fail("D-pad could not reach the vertical inversion toggle")
+		return
+	var was: bool = look.call("invert_y")
+	await _tap_pad(JOY_BUTTON_A)
+	if bool(look.call("invert_y")) == was:
+		_fail("A on the vertical inversion toggle did not change it")
+		return
+	await _tap_pad(JOY_BUTTON_A)
+	if bool(look.call("invert_y")) != was:
+		_fail("a second A did not put vertical inversion back")
+		return
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	if _focused() != _tab.get("_aim_assist_button"):
+		_fail("D-pad could not reach aim assistance")
+		return
+	var assist_before: int = look.call("aim_assist_percent")
+	await _tap_pad(JOY_BUTTON_A)
+	if int(look.call("aim_assist_percent")) == assist_before:
+		_fail("A on aim assistance did not change it")
+		return
+	while int(look.call("aim_assist_percent")) != assist_before:
+		await _tap_pad(JOY_BUTTON_A)
+	var text: Object = preload("res://scripts/ui/text_prefs.gd")
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	if _focused() != _tab.get("_text_size_button"):
+		_fail("D-pad could not reach dialogue text size")
+		return
+	var size_before: int = text.call("text_percent")
+	await _tap_pad(JOY_BUTTON_A)
+	if int(text.call("text_percent")) == size_before:
+		_fail("A on dialogue text size did not change it")
+		return
+	while int(text.call("text_percent")) != size_before:
+		await _tap_pad(JOY_BUTTON_A)
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	if _focused() != _tab.get("_dialogue_bg_button"):
+		_fail("D-pad could not reach dialogue background")
+		return
+	var bg_before: int = text.call("background_percent")
+	await _tap_pad(JOY_BUTTON_DPAD_LEFT)
+	if int(text.call("background_percent")) >= bg_before:
+		_fail("D-pad left on dialogue background did not lower it")
+		return
+	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
+	if int(text.call("background_percent")) != bg_before:
+		_fail("D-pad right did not put dialogue background back")
+		return
+	for i in 7:
+		await _tap_pad(JOY_BUTTON_DPAD_UP)
+	if _focused() != _tab.get("_reduced_motion_button"):
+		_fail("D-pad up from the inversion rows did not return to reduced motion")
+		return
+	print("physical D-pad reaches reduced motion, camera shake and the look rows; left/right sets shake, sensitivity and dialogue background, A toggles inversion, aim assistance and text size, saved")
+
+
 func _press(action: String) -> void:
 	Input.action_press(action)
 	var down := InputEventAction.new()
@@ -403,9 +507,22 @@ func _check_the_dpad_reaches_the_audio_rows() -> void:
 		_fail("the Settings screen has no Audio section")
 		return
 
+	# Accessibility sits between Audio and the Gameplay toggles, drawn and
+	# linked in that order: reduced motion, look sensitivity, both inversions.
+	var lane: Array = [_tab.get("_dialogue_bg_button"), _tab.get("_text_size_button"),
+		_tab.get("_aim_assist_button"), _tab.get("_invert_y_button"), _tab.get("_invert_x_button"),
+		_tab.get("_look_sensitivity_button"), _tab.get("_shake_button"),
+		_tab.get("_reduced_motion_button")]
+	for expected: Variant in lane:
+		await _tap_pad(JOY_BUTTON_DPAD_UP)
+		if _focused() != expected:
+			_fail("D-pad skipped the Accessibility row '%s'" % (expected as Button).text.strip_edges() if expected != null else "missing")
+			return
+	await _check_the_look_rows()
+
 	await _tap_pad(JOY_BUTTON_DPAD_UP)
 	if _focused() != reset:
-		_fail("D-pad could not reach the volume reset above the Gameplay toggles")
+		_fail("D-pad could not reach the volume reset above the Accessibility rows")
 		return
 
 	# Up through the rows in reverse: the chain runs first row -> ... -> reset.
