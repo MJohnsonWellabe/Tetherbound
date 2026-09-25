@@ -25,6 +25,8 @@ const HALL_ONCE_FLAG := "wild_once_5001"
 const PACK_ORDER := 5001
 const HALL_PARTY := ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]
 const HALL_LEVEL := 18
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const SAVE_DIR := "user://smoke_hall_alpha_decline/"
 ## The spine, south to north past the pack (trail band points), starting a
 ## little up the first leg so the seat is on the road, not at its vertex.
 const START_XZ := Vector2(-68.0, 7146.0)
@@ -45,7 +47,19 @@ func _run() -> void:
 	if game == null:
 		_finish("no Game autoload")
 		return
+	# A fresh world of its own, the same isolation `--hall-activity` uses: a
+	# save from an earlier witness that already cleared this alpha must not be
+	# what this game resumes (a cleared once-only alpha is simply not built).
+	var dir := DirAccess.open("user://")
+	if dir != null and dir.dir_exists(SAVE_DIR.trim_prefix("user://")):
+		for file in DirAccess.get_files_at(SAVE_DIR):
+			DirAccess.remove_absolute(SAVE_DIR.path_join(file))
+	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 	game.call("reset_for_new_game")
+	game.set("save_system", SAVE_GAME.new(SAVE_DIR))
+	if bool((game.get("progression") as RefCounted).call("has", HALL_ONCE_FLAG)):
+		_finish("a fresh game already carries %s" % HALL_ONCE_FLAG)
+		return
 	var party: RefCounted = game.get("party") as RefCounted
 	party.call("clear")
 	for species_id: String in HALL_PARTY:
@@ -95,8 +109,9 @@ func _run() -> void:
 		if str((director.get("_once_only") as Dictionary).get(body, "")) == HALL_ONCE_FLAG:
 			alpha = body
 	if alpha == null or pack.size() < 2:
-		_finish("the authored Hall pack (order %d) was not built (alpha=%s, members=%d)" % [
-			PACK_ORDER, str(alpha), pack.size()])
+		_finish("the authored Hall pack (order %d) was not built (alpha=%s, members=%d, %s set=%s)" % [
+			PACK_ORDER, str(alpha), pack.size(), HALL_ONCE_FLAG,
+			str((game.get("progression") as RefCounted).call("has", HALL_ONCE_FLAG))])
 		return
 
 	var pilot := PILOT.new(self, manager, director, rig)
