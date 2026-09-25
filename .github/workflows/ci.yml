@@ -2214,6 +2214,29 @@ jobs:
   # push it lands on, same as every other required job. The gather route and
   # the tail (house, beds, nights, the bracket) are NOT run here -- see
   # `verify-gate-b-full-known-red` below for why and where they still run.
+      # F05 (ACCEPTANCE 6.1, card M4): the Veridian offer answered by a solo
+      # player, with room on the belt and at five, accepted and refused, each
+      # answer given by WALKING to its prompt, then a real save/reload that
+      # must not offer it again; full refusal must leave the saved herd
+      # display. Six world boots, measured 31 min locally (headless).
+      - name: Verify veridian_offer_choice
+        if: ${{ !cancelled() }}
+        timeout-minutes: 45
+        env: { SMOKE: veridian_offer_choice, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
 
   verify-gate-b-core:
     runs-on: ubuntu-latest
@@ -2259,29 +2282,6 @@ jobs:
       # lane exists to catch when it is 3 attempts on a job that fails
       # every time. 2 matches `verify-gate-a-ui-build-shard`'s own retry
       # budget for `smoke_opening.gd`, which plays the identical drive.
-      # F05 (ACCEPTANCE 6.1, card M4): the Veridian offer answered by a solo
-      # player, with room on the belt and at five, accepted and refused, each
-      # answer given by WALKING to its prompt, then a real save/reload that
-      # must not offer it again; full refusal must leave the saved herd
-      # display. Six world boots, measured 31 min locally (headless).
-      - name: Verify veridian_offer_choice
-        if: ${{ !cancelled() }}
-        timeout-minutes: 45
-        env: { SMOKE: veridian_offer_choice, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
       - name: Verify gate_b_continuous (CORE — opening through tournament readiness)
         env: { RETRIES: 2 }
         run: |
