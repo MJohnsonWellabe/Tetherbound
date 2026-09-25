@@ -1,6 +1,7 @@
 {
   "seed": 20260906,
   "_comment": "Installed nature family with the existing Meadows green leaf replacement: the source twisted-tree texture is crimson and cannot become green through multiplication. Baked route and grove composition; no runtime world generation.",
+  "encounter_clearings": {"_comment": "Named fights keep trunk and rock colliders out of their arena: 18 m covers the largest named wildlife envelope (voltarach 13.89 m: fitted body, idle motion, wander) plus the largest baked collider reach (crown_canopy 0.435 m x 6.0) and 1.5 m margin. tests/test_stormwood_named_fight_clearings.gd checks the bake against each species.", "collider_clear_radius_m": 18.0, "sites": [{"id": "hollows_alpha", "at": [-520, 1660]}, {"id": "capacitor_alpha", "at": [-1080, 3020]}, {"id": "crown_guardian", "at": [700, 2700]}, {"id": "old_rodfolk_hall_guardian", "at": [-1590, 4370]}, {"id": "blackwater_elder", "at": [-150, 4460]}, {"id": "glass_field_alpha", "at": [-250, 5080]}]},
   "road_sample_m": 18.0,
   "background_spacing_m": 55.0,
   "layers": {

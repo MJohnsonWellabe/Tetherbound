@@ -18,8 +18,8 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 	var cfg := config()
 	var settlements: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SETTLEMENTS))
 	cfg["structure_footprints"] = settlements.get("structures", [])
+	cfg["route_half_width"] = float((JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_stormwood.json")) as Dictionary).route_half_width)
 	var rng := RandomNumberGenerator.new()
-	rng.seed = int(cfg.seed)
 	var out: Dictionary = {}
 	for layer: String in cfg.layers:
 		out[layer] = []
@@ -27,6 +27,10 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 	# The roadside composition is deliberately asymmetric. A broadleaf stand
 	# leans over one shoulder, ferns and broken timber open the opposite view.
 	for route: Dictionary in world.routes:
+		# Each road and each background cell draws from its own seed, so an
+		# authored road edit re-rolls only the planting along that road rather
+		# than every tree in the forest.
+		rng.seed = _seed_for(int(cfg.seed), "route:" + str(route.id))
 		var points: Array = route.points
 		for i in range(1,points.size()):
 			var a := Vector2(float(points[i-1][0]),float(points[i-1][1]))
@@ -47,6 +51,7 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 	var spacing := float(cfg.background_spacing_m)
 	for z in range(int(bounds.min_z)+35,int(bounds.max_z)-35,int(spacing)):
 		for x in range(int(bounds.min_x)+35,int(bounds.max_x)-35,int(spacing)):
+			rng.seed = _seed_for(int(cfg.seed), "cell:%d:%d" % [x, z])
 			var at := Vector2(x+rng.randf_range(-24,24),z+rng.randf_range(-24,24))
 			if rng.randf()<0.18:
 				continue
@@ -59,8 +64,17 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 				_add(out,cfg,field,world,rng,occupied,"storm_rock",at+Vector2(12,7))
 	return out
 
+## FNV-1a over the key, mixed with the authored seed: stable across engine
+## versions and platforms, unlike Variant hashing.
+static func _seed_for(base: int, key: String) -> int:
+	var h := -3750763034362895579 ^ base  # FNV-1a 64-bit offset basis 0xcbf29ce484222325 as a signed int
+	for byte in key.to_utf8_buffer():
+		h = (h ^ byte) * 0x100000001b3
+	return h & 0x7FFFFFFFFFFFFFFF
+
 static func _add(out: Dictionary,cfg: Dictionary,field: RefCounted,world: Dictionary,rng: RandomNumberGenerator,occupied: Dictionary,layer: String,at: Vector2) -> void:
 	var is_tree := layer.contains("canopy") or layer=="storm_deadwood"
+	var collides := bool((cfg.layers[layer] as Dictionary).get("collides", false))
 	var cell := 9.0 if is_tree else 1.5
 	var key := "%s:%d:%d"%["tree" if is_tree else layer,floori(at.x/cell),floori(at.y/cell)]
 	if occupied.has(key):
@@ -87,13 +101,24 @@ static func _add(out: Dictionary,cfg: Dictionary,field: RefCounted,world: Dictio
 		var radius := 36.0 if str(landmark.category) in ["camp","settlement","stronghold"] else 13.0
 		if at.distance_to(Vector2(float(p[0]),float(p[2])))<radius:
 			return
-	if is_tree:
+	# Named fights keep trunk and rock colliders out of their arena.
+	var clearings: Dictionary = cfg.get("encounter_clearings", {})
+	if collides:
+		for site: Dictionary in clearings.get("sites", []):
+			if at.distance_to(Vector2(float(site.at[0]), float(site.at[1]))) < float(clearings.collider_clear_radius_m):
+				return
+	# Roads stay open: no trunk or colliding rock reaches into the terrain
+	# contract's road corridor (route_half_width), and trees keep their 9 m
+	# roadside setback.
+	if collides:
+		var spec_reach: Dictionary = cfg.layers[layer]
+		var setback := maxf(9.0 if is_tree else 0.0, float(cfg.route_half_width) + float(spec_reach.collision_radius) * float(spec_reach.scale_max))
 		for route: Dictionary in world.routes:
 			var points: Array = route.points
 			for i in range(1,points.size()):
 				var a := Vector2(float(points[i-1][0]),float(points[i-1][1]))
 				var b := Vector2(float(points[i][0]),float(points[i][1]))
-				if Geometry2D.get_closest_point_to_segment(at,a,b).distance_to(at)<9:
+				if Geometry2D.get_closest_point_to_segment(at,a,b).distance_to(at)<setback:
 					return
 	occupied[key]=true
 	var spec: Dictionary = cfg.layers[layer]
