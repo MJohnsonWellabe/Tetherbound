@@ -7,7 +7,10 @@ Usage:
       [--destination PATH]
       Matching export templates plus the Steam API library that must ship
       beside the exported executable. Point the export preset's
-      custom_template/debug and custom_template/release at the printed paths.
+      custom_template/debug and custom_template/release at the printed paths,
+      or add --configure-preset "Windows Desktop" to write them into
+      export_presets.cfg (the release workflow does this only for a run that
+      opted into the Steam runtime; do not commit machine paths).
 
 The downloaded archive is checked against a pinned SHA-256 before it is
 opened. Each extracted file is written as a `.download` temporary beside its
@@ -152,16 +155,68 @@ def install_templates(platform, destination):
     print("Ship the Steam API library beside the exported executable. No AppID configured.")
 
 
+TEMPLATE_FILES = {
+    "win64": ("godotsteam.47.debug.template.win64.exe", "godotsteam.47.template.win64.exe"),
+    "linux64": ("godotsteam.47.debug.template.x86_64", "godotsteam.47.template.x86_64"),
+}
+
+
+def configure_preset(presets_path, preset_name, debug_template, release_template):
+    """Set custom_template/debug and /release in the named preset's options
+    section of export_presets.cfg. Other presets and keys are untouched."""
+    lines = Path(presets_path).read_text(encoding="utf-8").splitlines(keepends=True)
+    index = None
+    for i, line in enumerate(lines):
+        if line.strip() == f'name="{preset_name}"':
+            for j in range(i, -1, -1):
+                header = lines[j].strip()
+                if header.startswith("[preset.") and header.endswith("]") and ".options" not in header:
+                    index = header[len("[preset."):-1]
+                    break
+            break
+    if index is None:
+        raise SystemExit(f"No export preset named {preset_name!r} in {presets_path}")
+    section = f"[preset.{index}.options]"
+    wanted = {"custom_template/debug": debug_template.as_posix(),
+              "custom_template/release": release_template.as_posix()}
+    inside = False
+    seen = set()
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped.startswith("["):
+            inside = stripped == section
+            continue
+        if inside:
+            key = stripped.split("=", 1)[0]
+            if key in wanted:
+                lines[i] = f'{key}="{wanted[key]}"\n'
+                seen.add(key)
+    if seen != set(wanted):
+        raise SystemExit(f"Preset {preset_name!r} has no custom_template keys to set")
+    Path(presets_path).write_text("".join(lines), encoding="utf-8")
+    print(f"Configured {preset_name!r} in {presets_path} to use the GodotSteam templates.")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--templates", action="store_true",
                         help="install export templates instead of the development editor")
     parser.add_argument("--platform", choices=sorted(TEMPLATE_PLATFORMS), default="win64")
     parser.add_argument("--destination", type=Path, default=None)
+    parser.add_argument("--configure-preset", metavar="NAME", default=None,
+                        help="with --templates: point this export preset at the installed templates")
+    parser.add_argument("--presets-file", type=Path, default=Path("export_presets.cfg"))
     args = parser.parse_args()
+    if args.configure_preset and not args.templates:
+        parser.error("--configure-preset needs --templates")
     if args.templates:
         default = CACHE / f"godotsteam-4.20-godot-4.7-templates-{args.platform}"
-        install_templates(args.platform, (args.destination or default).resolve())
+        destination = (args.destination or default).resolve()
+        install_templates(args.platform, destination)
+        if args.configure_preset:
+            debug_name, release_name = TEMPLATE_FILES[args.platform]
+            configure_preset(args.presets_file, args.configure_preset,
+                             destination / debug_name, destination / release_name)
     else:
         install_editor((args.destination or EDITOR["destination"]).resolve())
 
