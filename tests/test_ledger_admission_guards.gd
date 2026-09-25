@@ -177,9 +177,9 @@ func test_footing_request_near_a_free_standing_arch_is_judged_at_the_clear_centr
 	var materials := {"stormglass": 100, "stormglass_crown": 100, "thunderwood_frame": 100, "conductor_vine": 100}
 	var free_at := centre + Vector3(8.0, 0.0, 0.0)
 	assert_true(ARCH_BUILD.footing_at(free_at).is_empty(), "the free arch stands off every footing")
-	assert_true(bool(ledger.commit({"kind": "place_building", "realm": "stormwood",
-		"id": "stormglass_arch", "position": free_at, "available_materials": materials}, HOST).get("ok")),
-		"a free-standing arch off any footing is allowed")
+	# WORLD §5.3 refuses a new arch off a footing, so the free-standing arch is
+	# a legacy record saved before that rule, as a loaded world would carry it.
+	world.register_building("stormglass_arch", free_at, 0.0, true, "stormwood")
 	var edge := centre + Vector3(4.0, 0.0, 0.0)
 	assert_true(edge.distance_to(free_at) < 5.0, "the edge request is within 5 m of the free arch")
 	var verdict: Dictionary = ledger.commit({"kind": "place_building", "realm": "stormwood",
