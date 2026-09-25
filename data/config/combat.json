@@ -166,15 +166,15 @@
       "manual_grace_seconds": 0.4
     },
     "occlusion_fade": {
-      "_comment": "MEADOWS-VISUAL-PASS: a large ally between the lens and a small foe hid the foe in every blind round. While the ally's inscribed ellipsoid covers at least `hidden_points` of the foe's three sample heights from the live camera, the neutral combat tracker first swings `composition_extra_deg` past its composition (eased at `composition_ease_deg_per_s`; manual look still wins). Once the foe is clear the swing holds for `composition_hold_s` before easing back, so it does not oscillate. Only if the foe stays hidden for `dither_after_s` (COMBAT section 5: no continuous actionable-tell occlusion longer than 0.25s) do the ally's surfaces dither to `transparency` at `speed` per second, returning when the foe is clear; the ease rate lets the swing finish inside that window. A blind judge read an always-on dither as the companion turning into a ghost. Presentation only and local to each peer; like the neutral tracker it extends, the swing moves the camera basis that camera-relative movement reads (scripts/combat/ally_occlusion_fade.gd).",
+      "_comment": "MEADOWS-VISUAL-PASS: a large ally between the lens and a small foe hid the foe in every blind round. While the ally's inscribed ellipsoid covers at least `hidden_points` of the foe's three sample heights from the live camera, the neutral combat tracker first swings `composition_extra_deg` past its composition (eased at `composition_ease_deg_per_s`; manual look still wins). Once the foe is clear the swing holds for `composition_hold_s` before easing back, so it does not oscillate. Only if the foe stays hidden for `dither_after_s` do the ally's surfaces dither to `transparency` at `speed` per second, returning when the foe is clear. COMBAT section 5 allows no continuous actionable-tell occlusion longer than 0.25s: the dither starts at 0.2s and reaches `transparency` 0.6 at 12/s by 0.25s, and the swing's ease rate finishes 40 degrees in 0.25s. A blind judge read an always-on dither as the companion turning into a ghost. Presentation only and local to each peer; like the neutral tracker it extends, the swing moves the camera basis that camera-relative movement reads (scripts/combat/ally_occlusion_fade.gd).",
       "enabled": true,
       "composition_extra_deg": 40.0,
       "composition_ease_deg_per_s": 160.0,
       "composition_hold_s": 1.5,
-      "dither_after_s": 0.25,
+      "dither_after_s": 0.2,
       "transparency": 0.6,
       "hidden_points": 2,
-      "speed": 4.0
+      "speed": 12.0
     },
     "framing": {
       "_comment": "OP-0905-17: the base distance/fov/height above are the tightest the camera should ever sit, tuned for two fighters at a normal opening gap. This widens the frame further, every physics frame `combat_manager.gd::_update_combat_camera_framing()` runs, as the fight itself demands more room -- the fighters backing apart, or either body's authored presentation span exceeding the small-body reference. It only ever ADDS to the base distance up to max_extra_distance. CameraRig sweeps the lateral shoulder pivot against geometry and SpringArm limits actual depth in the current camera direction; the nearest wall to any fighter is not a camera-distance ceiling.",

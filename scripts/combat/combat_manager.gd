@@ -1137,9 +1137,10 @@ func _update_combat_camera_framing(delta: float) -> void:
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
 
 
-## MEADOWS-VISUAL-PASS: fade the piloted ally while it hides the foe from the
-## live camera, and bring it back when the foe is clear. Local presentation
-## only; see `ally_occlusion_fade.gd` for why this and not a wider orbit.
+## MEADOWS-VISUAL-PASS: while the piloted ally hides the foe from the live
+## camera, swing the neutral tracker wider first and fade the ally as the
+## fallback; both undo when the foe is clear. Local presentation only; see
+## `ally_occlusion_fade.gd`.
 func _update_ally_occlusion_fade(delta: float) -> void:
 	var cfg: Dictionary = (MATH.config().get("camera", {}) as Dictionary).get("occlusion_fade", {}) as Dictionary
 	var model: Node3D = null
@@ -1164,7 +1165,7 @@ func _update_ally_occlusion_fade(delta: float) -> void:
 		var ease_rate := maxf(float(cfg.get("composition_ease_deg_per_s", 90.0)), 1.0)
 		_camera_rig.call("set_composition_extra", move_toward(current, extra_target, ease_rate * delta))
 	var target := 0.0
-	if hidden and _ally_hidden_for >= float(cfg.get("dither_after_s", 0.25)):
+	if hidden and _ally_hidden_for >= float(cfg.get("dither_after_s", 0.2)):
 		target = clampf(float(cfg.get("transparency", 0.6)), 0.0, 0.9)
 	var speed := maxf(float(cfg.get("speed", 4.0)), 0.01)
 	_ally_fade = move_toward(_ally_fade, target, speed * delta)
