@@ -14,6 +14,10 @@ extends RefCounted
 ## reduces motion must fight exactly the same fight as one that does not.
 
 static var _reduced := false
+## UX §8 "camera shake 0–100%, default modest". The default IS the modest
+## setting: 100% plays the camera impulses exactly as combat.json tunes them
+## (the charged-hit roll is 0.65°). Reduced motion overrides it to nothing.
+static var _shake_percent := 100
 
 
 static func reduced_motion() -> bool:
@@ -31,6 +35,20 @@ static func impulse_scale() -> float:
 	return 0.0 if _reduced else 1.0
 
 
+static func camera_shake_percent() -> int:
+	return _shake_percent
+
+
+static func set_camera_shake_percent(value: int) -> void:
+	_shake_percent = clampi(value, 0, 100)
+
+
+## Scale for a camera impulse: the player's shake level, or nothing under
+## reduced motion.
+static func camera_shake_scale() -> float:
+	return 0.0 if _reduced else float(_shake_percent) / 100.0
+
+
 ## Read from the settings object's `accessibility` section. A missing or
 ## malformed section leaves the default (off).
 static func load_from(prefs: RefCounted) -> void:
@@ -40,6 +58,7 @@ static func load_from(prefs: RefCounted) -> void:
 	if typeof(stored) != TYPE_DICTIONARY:
 		return
 	_reduced = bool((stored as Dictionary).get("reduced_motion", false))
+	set_camera_shake_percent(int((stored as Dictionary).get("camera_shake_percent", 100)))
 
 
 ## Write back into `prefs.accessibility`. The caller saves.
@@ -49,4 +68,5 @@ static func store_to(prefs: RefCounted) -> void:
 	var table: Variant = prefs.get("accessibility")
 	var out: Dictionary = (table as Dictionary).duplicate() if typeof(table) == TYPE_DICTIONARY else {}
 	out["reduced_motion"] = _reduced
+	out["camera_shake_percent"] = _shake_percent
 	prefs.set("accessibility", out)

@@ -45,6 +45,8 @@ const READOUT_GAP := 40.0
 ## of clearance -- a render showed "CAPTURE CHANCE" crowding the percentage's
 ## own descender line.
 const CAPTION_GAP := 32.0
+## Fraction of the screen height kept clear under the readout.
+const READOUT_SAFE_MARGIN := 0.05
 ## How much wider the ring stands off the body while the aim is NOT on the
 ## creature. Enough to read as a different state at a glance rather than as the
 ## same ring in a different mood.
@@ -266,6 +268,13 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 	# answer, and off the body there is no honest answer to give -- the throw
 	# does not have a low catch chance, it has a miss chance this widget cannot
 	# compute. Saying "NOT ON TARGET" is the true statement.
+	# MEADOWS-VISUAL-PASS round 5: a target low in the frame pushed the caption
+	# under the bottom edge ("NOT ON TARGET" clipped in a blind round). Lift the
+	# readout, not the ring, so it always ends inside the safe area.
+	var safe_bottom := get_viewport_rect().size.y * (1.0 - READOUT_SAFE_MARGIN)
+	var readout_bottom := center.y + radius + READOUT_GAP + CAPTION_GAP + 4.0
+	if readout_bottom > safe_bottom:
+		center.y -= readout_bottom - safe_bottom
 	var pct_text := "%d%%" % int(round(chance * 100.0)) if locked else "--"
 	var pct_size := UITokens.FONT_BIG_NUMBER - 4
 	var pct_dims: Vector2 = font.get_string_size(pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1, pct_size)
