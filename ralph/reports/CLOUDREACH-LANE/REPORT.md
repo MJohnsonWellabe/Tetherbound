@@ -154,3 +154,15 @@ This work order does not cover:
 - mount state across a realm crossing
 - the capture tool's ride-off frames at this head (the lead's render chain owns the renders)
 - Peblik's paint rejection, which is visual and has no shared-art grant
+
+
+### Ride-off captures (production camera, `tools/capture_cloudreach_ride_off.gd`)
+
+`captures/ride_off/_sheet_ride_off_after.jpg` (this branch, 76138d367) and `_sheet_ride_off_before.jpg` (the #229 head the coordinator reviewed, 2b38cdeaf). `ride_off_log.txt` holds each frame's trainer and mount positions.
+- Both runs have 30.5 s of stick-held motion.
+- **Ledge** (the Broken Causeways road's 11 m side):
+  - Before: every ride-off is snapped back onto the road by the old 6 m rule, and the mount never reaches the floor below (the trainer stays at y 400–403).
+  - After: the mount rides off and lands on the 390 m floor, the rider is dismounted and remounted there, and the ride carries on.
+- **Terrace** (open air above the cloud sea): both heads recover the mount. After the recovery, this branch ends with the rider seated on verified ground (`last_dismount_rule=clear`).
+
+Disclosed fixture: the party, saddle and saddle flag are seeded, and the trainer and mount are stood on each edge's upper road. Every mount, ride, dismount and remount uses the real interact and stick input.
