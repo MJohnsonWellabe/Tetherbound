@@ -1,8 +1,7 @@
 extends SceneTree
 
 ## F05 (ROADMAP §3) / ACCEPTANCE §6.1 F05 and card M4, last clause: "The
-## opened physical gate carries the same five into Cloudreach", and "gate
-## opens exactly once".
+## opened physical gate carries the same five into Cloudreach".
 ##
 ##   godot --headless --path . --script tests/smoke_rift_crossing_same_five.gd
 ##
@@ -13,9 +12,13 @@ extends SceneTree
 ## Cloudreach, again after a real save and load there, and nothing may have
 ## been added, dropped or duplicated on the way.
 ##
-## "Exactly once": the walker keeps walking for the whole budget after it
-## reaches the far trigger, and the realm must still have changed exactly once;
-## `realm_gate_cloudreach_unlocked` is set by the crossing.
+## Also measured, and deliberately NOT claimed as "the gate opens exactly
+## once": the realm changes once, to Cloudreach, and does not roll back, and
+## the crossing records `realm_gate_cloudreach_unlocked`. A duplicate trigger
+## fire would NOT show here -- the realm router refuses a second
+## `enter_realm` without touching `current_realm`, and the scene change frees
+## the walker a few frames after the trigger -- so the crossing's own
+## `_entered` latch is not proven by this file.
 ##
 ## DISCLOSED FIXTURES, not earned play (ROADMAP §3: focused fixtures until the
 ## Meadows core lane's F01-F04 route exists; the M4 continuous-path card stays
@@ -26,8 +29,10 @@ extends SceneTree
 ##   * The five are built with `Game.make_creature`.
 ##   * The source side is `smoke_cloudreach_transition.gd`'s own flat stand-in
 ##     for the Meadows terrain, with the REAL `rift_crossing.gd` span on it,
-##     walked by a real CharacterBody3D. The Cloudreach side is the production
-##     scene through the production realm router.
+##     walked by a real CharacterBody3D. On flat ground the deck is built
+##     level: the production span's height difference and ramp are not
+##     exercised. The Cloudreach side is the production scene through the
+##     production realm router.
 
 const GAME := preload("res://autoload/game_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
@@ -62,6 +67,9 @@ func _run() -> void:
 	party.call("clear")
 	for species: String in ["terrapup", "mudsnout", "bramblebun", "brooktail", "veridian"]:
 		var creature: RefCounted = game.call("make_creature", species, species.capitalize())
+		_expect(creature != null, "could not build '%s' from species.json" % species)
+		if creature == null:
+			continue
 		creature.set("hp", float(creature.get("max_hp")))
 		party.call("add", creature)
 	var progression: RefCounted = game.get("progression")
@@ -128,7 +136,7 @@ func _run() -> void:
 				realm_changes += 1
 				last_realm = now
 		_expect(str(game.get("current_realm")) == "cloudreach", "walking the span did not reach Cloudreach")
-		_expect(realm_changes == 1, "the crossing changed realm %d times; it must happen exactly once" % realm_changes)
+		_expect(realm_changes == 1, "the realm changed %d times on the crossing; it must change once and not roll back" % realm_changes)
 		_expect(bool(progression.call("has", "realm_gate_cloudreach_unlocked")),
 			"crossing did not record the Cloudreach gate as open")
 
@@ -141,12 +149,15 @@ func _run() -> void:
 
 		# A real save in Cloudreach, then a real load: the same five, again.
 		_expect(bool(game.call("save_game", SLOT)), "Game.save_game() failed in Cloudreach")
+		# Blank what the load must restore from disk, including the realm, so
+		# every check below reads the file rather than memory. This is a
+		# mid-session load (no scene change), not a title-screen Continue.
 		party.call("clear")
 		progression.call("load_data", {})
+		game.set("current_realm", "meadows")
 		_expect(bool(game.call("load_game", SLOT)), "Game.load_game() failed")
-		var reloaded := await _wait_for_scene("CloudreachCliffs", 1200)
-		if reloaded != null:
-			await _wait_for_entry_settle(game, 240)
+		for _i in 30:
+			await physics_frame
 		_expect(str(game.get("current_realm")) == "cloudreach", "the reload did not resume in Cloudreach")
 		_expect(_five(game) == five, "the reloaded five differ: %s vs %s" % [str(_five(game)), str(five)])
 		for flag in ["legendary_joined", "legendary_freed", "realm_key_cloudreach", "realm_gate_cloudreach_unlocked"]:
@@ -154,7 +165,7 @@ func _run() -> void:
 
 	_cleanup_test_saves()
 	if failures.is_empty():
-		print("RIFT CROSSING SAME FIVE OK: %s crossed once and reloaded unchanged" % str(five))
+		print("RIFT CROSSING SAME FIVE OK: %s crossed, realm changed once, reloaded unchanged" % str(five))
 		quit(0)
 		return
 	for failure: String in failures:
