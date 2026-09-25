@@ -585,7 +585,7 @@
     {
       "id": "cloudreach_windscar_wild",
       "region_ids": ["windscar_ravine"],
-      "level_range": [22, 27],
+      "level_range": [24, 27],
       "selection_key": "cloudreach.wild.windscar",
       "replaceable": true,
       "catchable": true,
@@ -598,7 +598,7 @@
     {
       "id": "cloudreach_high_roost_wild",
       "region_ids": ["high_roost_sky_shrine"],
-      "level_range": [24, 28],
+      "level_range": [28, 30],
       "selection_key": "cloudreach.wild.high_roost",
       "replaceable": true,
       "catchable": true,
@@ -612,7 +612,7 @@
     {
       "id": "cloudreach_upper_wild",
       "region_ids": ["upper_cloudreach"],
-      "level_range": [26, 31],
+      "level_range": [28, 31],
       "selection_key": "cloudreach.wild.upper",
       "replaceable": true,
       "catchable": true,
@@ -641,7 +641,7 @@
     {
       "id": "cloudreach_summit_wild",
       "region_ids": ["summit_final_stronghold"],
-      "level_range": [29, 33],
+      "level_range": [30, 33],
       "selection_key": "cloudreach.wild.summit",
       "replaceable": true,
       "catchable": true,
