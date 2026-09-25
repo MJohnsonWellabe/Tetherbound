@@ -139,16 +139,21 @@ func _run() -> void:
 	_finish("")
 
 
+## The whole pack, alpha included. Spawning is async (each member awaits its
+## ground), so wait until the once-only alpha itself is registered.
 func _pack(director: Node) -> Array[Node3D]:
 	var found: Array[Node3D] = []
-	for _frame in 120:
+	for _frame in 900:
 		found.clear()
+		var has_alpha := false
 		for candidate: Variant in director.get("_wild_creatures"):
 			var body := candidate as Node3D
 			if body != null and is_instance_valid(body) \
 					and str(body.name).begins_with("Wild_galecrest_%d_" % PACK_ORDER):
 				found.append(body)
-		if not found.is_empty():
+				if str((director.get("_once_only") as Dictionary).get(body, "")) == HALL_ONCE_FLAG:
+					has_alpha = true
+		if has_alpha:
 			return found
 		await physics_frame
 	return found
