@@ -106,3 +106,66 @@ The last observed clock was 04:05 UTC; the next observation during the resumed c
 These are retrospective evidence reconstructions, not checkpoints actually performed on time. The broad run stops now; only preservation, final integration checks and the required fresh-session tail continue. No new feature phase is started. The goal is incomplete; neither a completion nor an external-blocker claim is justified.
 
 Recovery validation after the stop found a passing35-check actual Guardian offer/five-holder choice/disk receipt/world settlement/physical shrine placement and activation. The earlier16-check Nerissa battle/release path is also reviewed. Once preserved on the branch, final evidence score is **35/100**: Veilfall6/14 (+3), relic1/2 (+1), all other03:55 row values unchanged. This recovery credit does not retroactively rescue either missed window or restart the run. Visible current restoration, continuous finale travel, four-player authority and blind visual acceptance remain unproven. Main Water score remains0.
+
+## F13 reward pockets (branch `ralph/water-reward-pockets`)
+
+Six of the eight authored `reward_pockets` held nothing: no pickup sat within
+any pocket's radius. Each of the six single-item pockets now holds one
+existing Skill Candy row, moved to the pocket centre on dry ground reachable
+from its island's landing:
+- `brine_steps:pickup:001` (tier I)
+- `salt_crown:pickup:001` (tier I)
+- `lantern_cove:pickup:002` (tier I)
+- `gull_rest:pickup:002` (tier II)
+- `drowned_garden:pickup:002` (tier II)
+- `deep_watch:pickup:002` (tier III)
+
+Ids, items, tiers, quantities and the per-character claim are unchanged. The
+7/4/1 candy split holds, and so do the counts: 200 pickups, 182 harvest nodes.
+
+`tests/test_water_reward_pockets.gd` checks, for each pocket:
+- exactly one matching row;
+- the authored y equals the analytic ground;
+- dry-ground reachability from a landing;
+- the file's own clearances from NPCs, trainers, camps, dock equipment and
+  landings;
+- 5.99 m separation from other placements;
+- host claim acceptance from standing spots within 3D reach;
+- refusal at each row's former position.
+
+It fails on the old data. Local, on main `bcf46366`: 16 tests, 16,342
+assertions, 0 failed; `smoke_water_scene_pickups` 23/0.
+
+**Capture:** `_sheet_reward_pockets.png`, from
+`tools/capture_water_reward_pockets.gd` (production CameraRig and HUD, day,
+trainer standing 7 m from each pocket and facing it).
+
+**Finding:** the candy's glow is visible in 2 of 6 frames (Lantern Cove, Deep
+Watch). At Brine Steps and Salt Crown the tall grass hides it from 7 m. The
+data is in place, but pocket discoverability is not proven. The pockets'
+visual lure (cairn, torch, clearing) is an open F13 item.
+
+**Not done:** the Deep Watch chart gate
+(`water_named_deep_watch_tidecoil_resolved` must be declared in
+`flag_scopes.json`, which the coordinator owns).
+
+### Proposed conservative resolutions for open decisions (for STATE)
+
+1. **Drowned Garden and Deep Watch chains are reachable only with a swim
+   saddle,** which conflicts with the retained-five rule. Proposal: give their
+   sheltered routes rest shoals, as the 17 existing ones do (Salt Crown→Drowned
+   Garden 672 m, Sluice→Deep Watch 315 m). That makes them level-0
+   human-reachable at the ≥20% reserve bar, and mounts stay the faster option.
+   It needs a heightfield and Terrain3D re-bake (a Godot writer); no new
+   mechanic.
+2. **The composite pockets `reed_root_hollow` (`recipe_and_reed_fiber`) and
+   `cradle_shell_nest` (`reefstone_and_mount_care`) have no item.** Proposal:
+   pay existing materials through ordinary world-once pickup rows:
+   - reed fiber at Reed root hollow;
+   - reef stone plus berries at Cradle shell nest.
+
+   No new item and no recipe unlock. The personal (per-character) pickup path
+   accepts Skill Candy only, so shared world-once material finds match how
+   Water's other materials pay today.
+3. **Cradle "+3 berries once" has no grant path.** Proposal: the same
+   world-once berries ×3 pickup row at the nest (data only).
