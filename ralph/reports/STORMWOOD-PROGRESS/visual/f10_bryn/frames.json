@@ -1,0 +1,275 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-707.208801269531,
+				49.7867546081543,
+				2302.66528320312
+			],
+			"description": "The rod crews' shelter (Rodline workshop bay) before the chain: no supplies, no bed, no prompt",
+			"dialogue": "closed",
+			"file": "01_shelter_before.jpg",
+			"flags": {
+				"complete": false,
+				"step_1": false,
+				"step_2": false
+			},
+			"id": "01_shelter_before",
+			"player": [
+				-711.599975585938,
+				47.1337928771973,
+				2305.30004882812
+			],
+			"prompt": "",
+			"staged": [
+				"stormwood:chapter_started",
+				"stormwood:lantern_pools_linked",
+				"stormwood:rodline_linked",
+				"stormwood:bryn_met",
+				"stormwood:act_i_complete"
+			],
+			"surge_phase": "calm"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-701.073547363281,
+				45.7198867797852,
+				2296.12377929688
+			],
+			"description": "Bryn's offer through the live greeting branch (stormwood_bryn_glass_offer)",
+			"dialogue": "stormwood_bryn_glass_offer",
+			"file": "02_bryn_lure.jpg",
+			"flags": {
+				"complete": false,
+				"step_1": false,
+				"step_2": false
+			},
+			"id": "02_bryn_lure",
+			"player": [
+				-700.0,
+				43.7561225891113,
+				2297.39990234375
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Warden-Elect Bryn",
+			"staged": [
+				"stormwood:chapter_started",
+				"stormwood:lantern_pools_linked",
+				"stormwood:rodline_linked",
+				"stormwood:bryn_met",
+				"stormwood:act_i_complete"
+			],
+			"surge_phase": "calm"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-701.073547363281,
+				45.7198867797852,
+				2296.12377929688
+			],
+			"description": "Bryn names the exact delivery (stormwood_bryn_glass_request)",
+			"dialogue": "stormwood_bryn_glass_request",
+			"file": "03_bryn_request.jpg",
+			"flags": {
+				"complete": false,
+				"step_1": true,
+				"step_2": false
+			},
+			"id": "03_bryn_request",
+			"player": [
+				-700.0,
+				43.7561225891113,
+				2297.39990234375
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Warden-Elect Bryn",
+			"satchel": {
+				"conductor_vine": 3,
+				"stormglass": 4
+			},
+			"staged": [
+				"stormwood:chapter_started",
+				"stormwood:lantern_pools_linked",
+				"stormwood:rodline_linked",
+				"stormwood:bryn_met",
+				"stormwood:act_i_complete",
+				"satchel: +4 stormglass, +3 conductor_vine"
+			],
+			"surge_phase": "calm"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-702.417419433594,
+				46.2298622131348,
+				2292.85302734375
+			],
+			"description": "Delivery committed: HUD message and the satchel change",
+			"dialogue": "closed",
+			"file": "04_delivery_moment.jpg",
+			"flags": {
+				"complete": false,
+				"step_1": true,
+				"step_2": true
+			},
+			"id": "04_delivery_moment",
+			"player": [
+				-700.0,
+				43.7561225891113,
+				2297.39990234375
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Warden-Elect Bryn",
+			"satchel_after": {
+				"conductor_vine": 1,
+				"stormglass": 1
+			},
+			"satchel_before": {
+				"conductor_vine": 3,
+				"stormglass": 4
+			},
+			"staged": [
+				"stormwood:chapter_started",
+				"stormwood:lantern_pools_linked",
+				"stormwood:rodline_linked",
+				"stormwood:bryn_met",
+				"stormwood:act_i_complete",
+				"satchel: +4 stormglass, +3 conductor_vine"
+			],
+			"step_2": true,
+			"surge_phase": "calm"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-706.628479003906,
+				50.3336486816406,
+				2309.88061523438
+			],
+			"description": "Repaired supplies at the shelter with the live inspect prompt",
+			"dialogue": "closed",
+			"file": "05_inspect_supplies.jpg",
+			"flags": {
+				"complete": false,
+				"step_1": true,
+				"step_2": true
+			},
+			"id": "05_inspect_supplies",
+			"player": [
+				-711.600036621094,
+				47.1503143310547,
+				2310.39990234375
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Inspect the repaired supplies",
+			"staged": [
+				"stormwood:chapter_started",
+				"stormwood:lantern_pools_linked",
+				"stormwood:rodline_linked",
+				"stormwood:bryn_met",
+				"stormwood:act_i_complete",
+				"satchel: +4 stormglass, +3 conductor_vine"
+			],
+			"supplies_visible": true,
+			"surge_phase": "calm"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-707.208679199219,
+				49.7867431640625,
+				2302.66528320312
+			],
+			"care_point": true,
+			"description": "Same stand after the chain: supplies, the shelter's creature bed and its rest prompt",
+			"dialogue": "closed",
+			"file": "06_shelter_after.jpg",
+			"flags": {
+				"complete": true,
+				"step_1": true,
+				"step_2": true
+			},
+			"id": "06_shelter_after",
+			"player": [
+				-711.599975585938,
+				47.1337928771973,
+				2305.30004882812
+			],
+			"prompt": "",
+			"staged": [
+				"stormwood:chapter_started",
+				"stormwood:lantern_pools_linked",
+				"stormwood:rodline_linked",
+				"stormwood:bryn_met",
+				"stormwood:act_i_complete",
+				"satchel: +4 stormglass, +3 conductor_vine"
+			],
+			"surge_phase": "calm"
+		},
+		{
+			"bed_index": -37,
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-716.677551269531,
+				49.8439445495605,
+				2308.77319335938
+			],
+			"description": "The shelter's creature bed with its live Rest a Creature prompt",
+			"dialogue": "closed",
+			"file": "07_bed_prompt.jpg",
+			"flags": {
+				"complete": true,
+				"step_1": true,
+				"step_2": true
+			},
+			"id": "07_bed_prompt",
+			"player": [
+				-718.090026855469,
+				47.4247550964355,
+				2309.287109375
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Rest a Creature",
+			"staged": [
+				"stormwood:chapter_started",
+				"stormwood:lantern_pools_linked",
+				"stormwood:rodline_linked",
+				"stormwood:bryn_met",
+				"stormwood:act_i_complete",
+				"satchel: +4 stormglass, +3 conductor_vine"
+			],
+			"surge_phase": "calm"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-701.073547363281,
+				45.7198715209961,
+				2296.1240234375
+			],
+			"description": "Bryn's acknowledgement after completion (stormwood_bryn_glass_thanks)",
+			"dialogue": "stormwood_bryn_glass_thanks",
+			"file": "08_bryn_thanks.jpg",
+			"flags": {
+				"complete": true,
+				"step_1": true,
+				"step_2": true
+			},
+			"id": "08_bryn_thanks",
+			"player": [
+				-700.0,
+				43.7561225891113,
+				2297.39990234375
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Warden-Elect Bryn",
+			"staged": [
+				"stormwood:chapter_started",
+				"stormwood:lantern_pools_linked",
+				"stormwood:rodline_linked",
+				"stormwood:bryn_met",
+				"stormwood:act_i_complete",
+				"satchel: +4 stormglass, +3 conductor_vine"
+			],
+			"surge_phase": "calm"
+		}
+	]
+}
