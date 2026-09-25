@@ -122,8 +122,12 @@ class DirectorFixture extends "res://scripts/combat/encounter_director.gd":
 	var messages: Array = []
 	func _trainer_victory_refused(reason: String) -> void:
 		messages.append(reason)
+	## When true, world-fact writes (`set_world_flag`) are refused by the ledger.
+	var fail_facts := false
 	func _submit_reward_intent(intent: Dictionary) -> Dictionary:
 		ledger_submissions.append(intent.duplicate(true))
+		if fail_facts and str(intent.get("kind", "")) == "set_world_flag":
+			return {"ok": false, "pending": false, "code": "fact_refused", "paid": []}
 		if ledger_rpc == null:
 			return {"ok": false, "pending": false, "code": "offline", "paid": []}
 		return ledger_rpc.call("submit", intent)
@@ -378,6 +382,31 @@ func test_a_replayed_victory_pays_nobody_twice() -> void:
 	assert_false(str(second.get("code", "")) == "journal_failed", "a replay is not a failure")
 	assert_eq(_deliveries(), rows_before, "a replay journals no new rows")
 	assert_eq(_director.paid_notices.size(), notices_before, "and tells nobody a second time")
+
+
+func test_a_failed_world_fact_after_payment_is_a_transient_refusal_and_a_retry_completes() -> void:
+	# The payment journals, then the defeat fact write fails: the host must not
+	# answer ok (the client would drop its note while the world lacks the fact).
+	_director.set("fail_facts", true)
+	var first: Dictionary = _director.call("_host_commit_encounter",
+		{"kind": "trainer_victory", "trainer_id": WARDEN}, CLIENT)
+	assert_false(bool(first.get("ok", true)), "a failed fact write is not reported as ok")
+	assert_eq(str(first.get("code", "")), "fact_refused", "the refusal names the fact failure")
+	assert_false(bool(first.get("defeat_recorded", true)), "and says the defeat is not recorded")
+	assert_eq(str(first.get("trainer_id", "")), WARDEN)
+	assert_false(_flag("defeated_warden"), "the world does not hold the defeat yet")
+	assert_eq(_characters_for("trainer:%s:" % WARDEN), [CLIENT_CHARACTER], "the payment itself landed once")
+	var notices := _director.paid_notices.size()
+	assert_eq(notices, 1, "the paid peer is told once, since its reward landed")
+	var rows := _deliveries().duplicate(true)
+	# The client retries (a transient code); the fact now commits and nothing is paid twice.
+	_director.set("fail_facts", false)
+	var retry: Dictionary = _director.call("_host_commit_encounter",
+		{"kind": "trainer_victory", "trainer_id": WARDEN}, CLIENT)
+	assert_true(bool(retry.get("ok", false)), "the retry is accepted: %s" % str(retry))
+	assert_true(_flag("defeated_warden"), "the retry commits the defeat fact")
+	assert_eq(_deliveries(), rows, "the retry journals no new rows")
+	assert_eq(_director.paid_notices.size(), notices, "and tells nobody a second time")
 
 
 func _assert_refused_without_writes(intent: Dictionary, peer: int, why: String) -> void:

@@ -6040,10 +6040,24 @@ func _host_trainer_victory(intent: Dictionary, peer_id: int) -> Dictionary:
 		# the landed parts `already_taken`, and a fact already set is `noop`.
 		return refuse.call(code if not code.is_empty() else "reward_failed",
 			"The host could not save all of that victory. Anything already delivered is kept, and the rest is still owed.")
-	for fact: Variant in facts:
-		_submit_reward_intent(fact as Dictionary)
 	var paid: Array = granted.get("paid", []) as Array
+	# The payout is journaled; now the world facts. A fact the ledger refuses
+	# (anything but ok or `noop`) must not be answered ok: the client would drop
+	# its local note while the host's world lacks the defeat. Tell the paid peer
+	# what landed, then refuse transiently -- the client retries, the grants come
+	# back `already_taken` (nothing paid twice) and the fact commits then.
+	var fact_failure := ""
+	for fact: Variant in facts:
+		var written: Dictionary = _submit_reward_intent(fact as Dictionary)
+		if not bool(written.get("ok", false)) and str(written.get("code", "")) != "noop":
+			fact_failure = str(written.get("code", ""))
+			if fact_failure.is_empty():
+				fact_failure = "fact_failed"
+			break
 	_tell_the_paid(spec, paid)
+	if not fact_failure.is_empty():
+		return refuse.call(fact_failure,
+			"Your reward was delivered, but the host could not record the victory yet; trying again.")
 	return {"ok": true, "kind": "trainer_victory", "peer": peer_id,
 		"code": "ok" if not paid.is_empty() else "noop", "reason": "", "pending": false,
 		"delta": {}, "paid": paid, "trainer_id": trainer_id}
