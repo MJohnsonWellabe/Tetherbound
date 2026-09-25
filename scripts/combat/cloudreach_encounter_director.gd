@@ -6,6 +6,9 @@ extends "res://scripts/combat/encounter_director.gd"
 signal trainer_started(id: String)
 signal trainer_opposition_changed(id: String, remaining: int, initial: int)
 signal trainer_victory(id: String)
+## A session payout (`_pay_every_participant`) the ledger refused for a reason
+## other than "already paid". `codes` are the refusal codes, one per component.
+signal trainer_payout_refused(id: String, codes: Array)
 signal trainer_lost(id: String)
 signal population_ready()
 
@@ -644,14 +647,64 @@ func _finish_trainer_battle(won: bool) -> void:
 		trainer_lost.emit(id)
 
 
+## Defeat flags a CLIENT has submitted and the host has not answered, flag ->
+## true. They block a second victory emit while the committed delta is on its
+## way; a refusal releases them (`_on_client_refusal`). Session-only: nothing
+## here is durable, the world flag is.
+var _client_defeats: Dictionary = {}
+## Trainers whose client-side personal half has already run this session, so a
+## retry after a refusal submits the world facts again and nothing else.
+var _client_recorded: Dictionary = {}
+## True only while `_record_client_defeat` runs the base's own path; then
+## `_progression()` hands the base a view that cannot write a world flag.
+var _client_view := false
+## The last session payout's outcome: {"id", "paid": [peers], "refused": [codes]}.
+var _last_payout: Dictionary = {}
+
+
+## The store the base writes a defeat into. Pass-through except on a client
+## recording its own win (`_client_view`): a world-scope write is dropped there,
+## because on a client a world fact is an intent the host commits (D103).
+class ClientFlagView extends RefCounted:
+	const SCOPES := preload("res://autoload/progression_state.gd")
+	var inner: RefCounted
+	var dropped: Array[String] = []
+
+	func _init(store: RefCounted) -> void:
+		inner = store
+
+	func has(id: String) -> bool:
+		return bool(inner.call("has", id))
+
+	func completed(id: String) -> bool:
+		return has(id)
+
+	func set_flag(id: String, value: bool = true) -> void:
+		if SCOPES.scope_of(id) == SCOPES.SCOPE_WORLD:
+			dropped.append(id)
+			return
+		inner.call("set_flag", id, value)
+
+
+func _progression() -> RefCounted:
+	var store := _flag_store()
+	return ClientFlagView.new(store) if _client_view and store != null else store
+
+
+## `Game.progression`, the store every defeat is recorded against.
+func _flag_store() -> RefCounted:
+	return super._progression()
+
+
 func _record_trainer_defeat(spec: Dictionary) -> void:
 	var progression := _progression()
-	if progression == null or bool(progression.call("has", str(spec.get("defeat_flag", "")))):
+	var flag := str(spec.get("defeat_flag", ""))
+	if progression == null or bool(progression.call("has", flag)) or _client_defeats.has(flag):
 		return
 	# Emitted only from inherited final-round victory. A finale subscriber can
 	# dispatch its canonical chapter event before the defeat marker is written.
 	trainer_victory.emit(str(spec["id"]))
-	if bool(progression.call("has", str(spec["defeat_flag"]))):
+	if bool(progression.call("has", flag)):
 		# The canonical chapter adapter recorded the win (solo: locally; host:
 		# its `set_world_flag` committed synchronously). Still pay the ordinary
 		# trainer reward once; the initial durable guard prevents repeat payouts.
@@ -668,7 +721,93 @@ func _record_trainer_defeat(spec: Dictionary) -> void:
 		if _record_trainer_defeat_for_the_session(spec):
 			return
 		_pay_trainer_reward(spec)
+	elif _is_multi_peer() and not _is_host():
+		_record_client_defeat(spec)
 	else:
-		# Flag not yet local (a client's pending intent, or no adapter write):
-		# the base already routes this through the same session path first.
+		# Solo, or a host whose adapter did not write the flag: the base's own
+		# path (on a host, the session path first).
 		super._record_trainer_defeat(spec)
+
+
+## A CLIENT's win whose defeat flag is not local yet. The base routes it as it
+## routes every client win -- its session path submits the world facts as
+## intents, and its client personal half runs as the base defines it -- but
+## through a store view that drops world-scope writes. Before this, the base's
+## fallback wrote the world-scope defeat flag straight into this peer's world
+## store: an optimistic write the host could refuse, which the finale then
+## settled from as if the host had committed it. The flag now arrives only with
+## the host's committed delta. Whatever routing the base gives a client's
+## personal half (today a self-payout; a host-journaled one is the rule for
+## paying every participant) is inherited unchanged, and runs once per trainer
+## per session: a retry after a refusal submits the world facts again only.
+func _record_client_defeat(spec: Dictionary) -> void:
+	var flag := str(spec.get("defeat_flag", ""))
+	if not flag.is_empty():
+		_client_defeats[flag] = true
+	_listen_for_client_refusals()
+	var id := str(spec.get("id", ""))
+	if _client_recorded.has(id):
+		for fact: Variant in ENCOUNTER_REWARDS.world_facts(spec, _encounter_realm()):
+			_submit_reward_intent(fact as Dictionary)
+		return
+	_client_recorded[id] = true
+	_client_view = true
+	super._record_trainer_defeat(spec)
+	_client_view = false
+
+
+func _listen_for_client_refusals() -> void:
+	if not is_inside_tree():
+		return
+	var game := get_node_or_null(^"/root/Game")
+	var ledger: Node = game.get("ledger") as Node if game != null else null
+	if ledger != null and ledger.has_signal("intent_refused") \
+			and not ledger.is_connected("intent_refused", _on_client_refusal):
+		ledger.connect("intent_refused", _on_client_refusal)
+
+
+## The verdict does not name its flag (the finale controller's rule too), so a
+## refused world flag releases every pending defeat: the next win may submit
+## again.
+func _on_client_refusal(kind: String, _code: String, _reason: String, _detail: Dictionary) -> void:
+	if kind == "set_world_flag":
+		_client_defeats.clear()
+
+
+## The base's §7 payout with its outcome kept instead of dropped: the same
+## grants, receipts and "tell each newly paid participant". Every refusal other
+## than `already_taken` (the per-participant receipt saying "already paid",
+## which is the correct answer) is reported through `last_payout()`,
+## `trainer_payout_refused` and a warning. The session path still owns the
+## defeat either way: falling back to a local payout would pay the host outside
+## the ledger that just refused it.
+func _pay_every_participant(spec: Dictionary, realm: String, participants: Array) -> void:
+	var paid_any: Dictionary = {}
+	var refused: Array = []
+	for raw: Variant in ENCOUNTER_REWARDS.grants(spec, realm, participants):
+		var verdict: Dictionary = _submit_reward_intent(raw as Dictionary)
+		if not bool(verdict.get("ok", false)):
+			var code := str(verdict.get("code", ""))
+			if code != "already_taken":
+				refused.append(code)
+			continue
+		for peer: Variant in (verdict.get("paid", []) as Array):
+			paid_any[int(peer)] = true
+	var id := str(spec.get("id", ""))
+	_last_payout = {"id": id, "paid": paid_any.keys(), "refused": refused}
+	if not refused.is_empty():
+		push_warning("the ledger refused the payout for trainer '%s': %s" % [id, ", ".join(refused)])
+		trainer_payout_refused.emit(id, refused)
+	if paid_any.is_empty():
+		return
+	var payload := {
+		"trainer": str(spec.get("name", "Trainer")),
+		"xp": ENCOUNTER_REWARDS.xp_bonus(spec),
+		"line": _trainer_reward_line(spec),
+	}
+	for peer: Variant in paid_any.keys():
+		_tell_participant_they_were_paid(int(peer), payload)
+
+
+func last_payout() -> Dictionary:
+	return _last_payout.duplicate(true)
