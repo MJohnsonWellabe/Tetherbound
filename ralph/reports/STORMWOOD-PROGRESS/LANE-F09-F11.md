@@ -192,3 +192,16 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   | Camp rest restored | 1 fail (no-XP check) |
   | Bare `party_down` accepted | 2 fails |
   | Resting ignored | 1 unit fail |
+
+### WO-F11-03: LB prompt after a Break faint
+
+- **Finding (step 1, real director):** LB already sends out the next creature during Break. `party_cycle` goes to `encounter_director.gd` `_read_creature_control_input()`, then `party.cycle_active(1)`. That step skips fainted and resting creatures and bumps `revision`. `_sync_active_creature()` sees a hidden but valid `_ally_body` whose creature is not the new active one. It dismisses that body (`queue_free`) and summons the new active creature as a visible follower. The field control then pilots the follower once it is within reach of the arena. `summon_active_creature()` alone (the `creature_recall` path) is a no-op while the hidden fainted body is still deployed. The only gap was that nothing told the player to press LB. No shared file is changed.
+- **Change:** `stormwood_dynamo.gd` `_apply_local_hazard()`, on a Break discharge faint, pushes one world message: "<name> fainted. Press <party_cycle> to send out <next>." The button name comes from `input_glyph.gd` `action_name()`, so it follows rebinding and shows LB on a pad. `next_available()` mirrors `cycle_active(1)`. The message is sent once per faint, because a fainted creature takes no more damage. It is not sent when no creature can take the field, since the existing full-party wipe runs instead. The game still does not switch creatures on its own.
+- **Witnesses:** all `test_stormwood_*` suites: 241 tests, 25103 assertions, 0 failed. Smokes: dynamo_break_faint 66/0, stormheart_choice 41/0, stormheart_participants 28/0. No SCRIPT ERROR.
+- **Negative controls:**
+
+  | Change reverted | Result |
+  |---|---|
+  | Prompt push removed | 1 smoke fail |
+  | `next_available` counts a resting creature | 2 smoke fails + 1 unit fail |
+  | In test: no LB press | The fainted creature stays active and hidden, and the prompt is not repeated |

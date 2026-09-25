@@ -11,6 +11,7 @@ const HOSTED := preload("res://scripts/combat/stormwood_hosted_trainer.gd")
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 
 const TRAINER_ID := "captain_marrow_dynamo_core"
 const MARROW_FLAG := "stormwood:marrow_defeated"
@@ -352,6 +353,13 @@ func _apply_local_hazard(event: Dictionary) -> void:
 				# As combat_manager.gd does for a creature carried off the field.
 				CONDITION.note_faint(creature as RefCounted, CONDITION.config())
 				_hide_fainted(body, creature)
+				# COMBAT: no automatic switch on faint, but a clear LB prompt.
+				# Sent here, once per faint: a fainted creature takes no more
+				# damage, so this branch cannot run again until it is up.
+				var game := get_node_or_null("/root/Game")
+				var prompt := faint_prompt(game.get("party") if game != null else null, creature)
+				if not prompt.is_empty():
+					game.push_world_message(prompt)
 	# Static is a locomotion penalty, shared with ordinary Stormwood lightning.
 	# The piloted companion takes the core damage; its trainer's stamina regen
 	# is what the named status affects.
@@ -521,6 +529,37 @@ static func party_unavailable(party: Variant) -> bool:
 				and not bool((creature as Object).get("resting")):
 			return false
 	return true
+
+
+## COMBAT: "A faint leaves a clear LB prompt". The creature one `party_cycle`
+## press would send out (`party.gd` `cycle_active(1)`: the next member in
+## player order that is neither fainted nor resting), or null when none can.
+static func next_available(party: Variant) -> Object:
+	if party == null or not (party is Object):
+		return null
+	var members: Array = (party as Object).call("members")
+	var active := int((party as Object).call("active_index"))
+	for offset in range(1, members.size() + 1):
+		var index := posmod(active + offset, members.size())
+		var creature: Variant = members[index]
+		if index == active:
+			return null
+		if creature is Object and not bool((creature as Object).get("fainted")) \
+				and not bool((creature as Object).get("resting")):
+			return creature as Object
+	return null
+
+
+## The one line shown when the piloted creature faints during Break with a
+## creature left to send out. The button is named from the live bindings and
+## device (`input_glyph.gd` `action_name()`), so it follows rebinding and says
+## LB on a pad. "" when nobody can take the field: that is the full-party wipe.
+static func faint_prompt(party: Variant, fainted: Object) -> String:
+	var next := next_available(party)
+	if next == null or fainted == null:
+		return ""
+	return "%s fainted. Press %s to send out %s." % [str(fainted.call("label")),
+		INPUT_GLYPH.action_name("party_cycle"), str(next.call("label"))]
 
 
 ## Host: a remote fighter's report of its own faint. Only a Break participant
