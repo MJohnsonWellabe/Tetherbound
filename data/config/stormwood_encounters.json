@@ -785,14 +785,15 @@
       "id": "cinder_verge_cluster_19",
       "region_id": "cinder_verge",
       "position": [
-        -50,
-        28,
+        0,
+        31,
         414
       ],
       "radius": 36,
       "calm_table_id": "verge_calm",
       "surge_table_id": "verge_surge",
-      "replacement_point": "wild_clusters.cinder_verge_cluster_19"
+      "replacement_point": "wild_clusters.cinder_verge_cluster_19",
+      "_why_pocket_f09": "Moved 50 m east from [-50,28,414]: its 36 m spawn disc covered the verge_ash_hollow dead-end pocket, and spawn picking avoids baked scatter but not pocket walls. Same flat verge ground (<=9 deg within 30 m)."
     },
     {
       "id": "cinder_verge_cluster_20",

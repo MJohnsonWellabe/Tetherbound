@@ -178,3 +178,57 @@ func test_the_forest_bake_keeps_colliders_out_of_every_pocket() -> void:
 				var reach := float(scatter.layers[layer].collision_radius) * float(entry.placement.scale)
 				assert_true(at.distance_to(Vector2(point.x, point.z)) - reach > radius,
 					"%s: a baked %s stands inside the pocket" % [pocket.id, layer])
+
+
+func test_no_wild_spawn_disc_reaches_into_a_pocket() -> void:
+	# Spawn picking avoids baked scatter but not pocket walls, so a cluster's
+	# whole spawn disc plus its wander must stay clear of every enclosure.
+	var cfg := POCKETS.config()
+	var wander := float(_json("res://data/config/combat.json").wild.wander_radius)
+	var enclosure := (float(cfg.interior_half_m) + float(cfg.wall_thickness_m)) * sqrt(2.0)
+	for row: Dictionary in _json("res://data/config/stormwood_encounters.json").wild_clusters:
+		var at := Vector2(float(row.position[0]), float(row.position[2]))
+		for pocket: Dictionary in cfg.pockets:
+			var gap := at.distance_to(Vector2(float(pocket.at[0]), float(pocket.at[1]))) - float(row.radius) - wander
+			assert_true(gap > enclosure, "%s's spawn disc reaches into %s" % [row.id, pocket.id])
+
+
+## Every pocket's mouth connects to its nearest road over ground the player can
+## walk (true slope <= 45°), avoiding every pocket wall: a 2 m grid search
+## from just outside the mouth.
+func test_each_pocket_mouth_is_walkable_from_a_road() -> void:
+	var field := FIELD.new()
+	var cfg := POCKETS.config()
+	var world := _json("res://data/config/stormwood_world.json")
+	var walls: Array[Dictionary] = []
+	for pocket: Dictionary in cfg.pockets:
+		walls.append_array(POCKETS.wall_boxes(pocket, cfg))
+	for pocket: Dictionary in cfg.pockets:
+		var f := POCKETS.frame(pocket)
+		var start: Vector2 = (f.centre as Vector2) + (f.forward as Vector2) * (float(cfg.interior_half_m) + float(cfg.wall_thickness_m) + 2.0)
+		var reached := false
+		var seen := {Vector2i.ZERO: true}
+		var queue: Array[Vector2i] = [Vector2i.ZERO]
+		var head := 0
+		while head < queue.size() and not reached:
+			var c: Vector2i = queue[head]
+			head += 1
+			var at := start + Vector2(c) * 2.0
+			for route: Dictionary in world.routes:
+				var points: Array = route.points
+				for i in range(1, points.size()):
+					if Geometry2D.get_closest_point_to_segment(at, Vector2(float(points[i - 1][0]), float(points[i - 1][1])),
+							Vector2(float(points[i][0]), float(points[i][1]))).distance_to(at) <= 7.5:
+						reached = true
+			if absi(c.x) > 220 or absi(c.y) > 220:
+				continue
+			for d: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+				var n := c + d
+				if seen.has(n):
+					continue
+				seen[n] = true
+				var q := start + Vector2(n) * 2.0
+				if field.slope_degrees_at(q.x, q.y) > MAX_WALK_DEG or _in_wall(walls, cfg, q):
+					continue
+				queue.append(n)
+		assert_true(reached, "%s's mouth reaches a road on walkable ground" % pocket.id)

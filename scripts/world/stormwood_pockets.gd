@@ -100,7 +100,8 @@ func build(world: Node3D) -> void:
 
 
 func _palisade(world: Node3D, parent: Node3D, start: Vector2, along: Vector2, length: float, spacing: float, salt: int) -> void:
-	var count := maxi(1, floori(length / spacing))
+	# At most `spacing` apart: the trunks read as the solid wall the collider is.
+	var count := maxi(1, ceili(length / spacing))
 	for i in count:
 		var at := start + along * (float(i) + 0.5) * length / count
 		var model := (load(TRUNKS[(salt + i) % TRUNKS.size()]) as PackedScene).instantiate() as Node3D
