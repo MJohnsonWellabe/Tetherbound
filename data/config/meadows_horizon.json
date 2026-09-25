@@ -1,0 +1,47 @@
+{
+  "_comment": "MEADOWS-VISUAL-PASS round 5. Two camera-centred rings of lit mountain geometry for the Meadows horizon (scripts/world/horizon_ranges.gd): far snowy ranges and nearer forested foothills. Radii keep the back of the far ring inside the gameplay camera's 2000m far plane and the front of the foothills beyond 1500m, past where the corridor's own terrain is still distinct through the fog. Bearings are measured like atan(z, x) of a direction in the XZ plane; 128 degrees puts the hero peak over the spawn outlook toward the north-west. TUNABLE.",
+  "seed": 20260924,
+  "base_y": -40.0,
+  "layers": [
+    {
+      "name": "FarRanges",
+      "radius": 1640.0,
+      "depth": 300.0,
+      "height": 430.0,
+      "base": 0.12,
+      "frequency": 2.3,
+      "octaves": 6,
+      "ridged": true,
+      "massif_frequency": 0.45,
+      "hero_bearing_deg": 131.0,
+      "hero_width_deg": 6.0,
+      "hero_lift": 0.42,
+      "snow_line": 0.72,
+      "tree_line": 0.28,
+      "forest": "#34503a",
+      "rock": "#5b6474",
+      "snow": "#dfe6ee",
+      "segments": 360,
+      "rows": 14,
+      "sharpness": 1.6
+    },
+    {
+      "name": "Foothills",
+      "radius": 1500.0,
+      "depth": 160.0,
+      "height": 120.0,
+      "base": 0.25,
+      "frequency": 3.2,
+      "octaves": 3,
+      "ridged": false,
+      "seed_offset": 37,
+      "massif_frequency": 0.6,
+      "snow_line": 9.0,
+      "tree_line": 2.0,
+      "forest": "#2f4d2c",
+      "rock": "#4a5a42",
+      "segments": 360,
+      "rows": 8
+    }
+  ]
+}

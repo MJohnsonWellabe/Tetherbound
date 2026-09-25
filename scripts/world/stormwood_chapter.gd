@@ -5,13 +5,19 @@ extends Node
 const EVENTS := preload("res://scripts/world/realm_chapter_events.gd")
 const PEOPLE := preload("res://scripts/world/village_npcs.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
+const PIMS_PARCELS := preload("res://scripts/world/stormwood_pims_parcels.gd")
 const CROWN_GUARDIAN_CLEAR_FLAG := "stormwood:named:crown_guardian:cleared"
 const WEN_REFUSAL_CONVERSATION := "stormwood_archivist_wen_guardian_refusal"
+const WEN_RECORDS_RETURN_CONVERSATION := "stormwood_wen_crown_records_return"
+const ENGINE_TRUTH_FLAG := "stormwood:engine_truth_learned"
+const HESK_DARK_ARCHES_REPORT := "stormwood_hesk_dark_arches_report"
+const ONDRA_ROAD_REPORT := "stormwood_ondra_raise_a_road_report"
 var world: Node3D
 var events: Node
 var people: Node3D
 var chapter: Dictionary
 var _panel: Node
+var _parcels: Node3D
 var _local := false
 var _arrival_check_left := 0.0
 var _circuit_replay_revision := -1
@@ -57,6 +63,10 @@ func mount(owner_world: Node3D) -> void:
 	for actor: Dictionary in _read("res://data/config/stormwood_npcs.json").get("characters", []):
 		specs.append(npc_spec(actor))
 	people.build_specs(world.get_node("Player"), specs)
+	_parcels = PIMS_PARCELS.new()
+	_parcels.name = "PimsParcels"
+	world.add_child(_parcels)
+	_parcels.call("mount", world)
 	# A core NPC stands on the authored arena, not the terrain far below it.
 	for actor: Dictionary in _read("res://data/config/stormwood_npcs.json").get("characters", []):
 		if str(actor.get("surface_id", "")) == "dynamo_core":
@@ -90,12 +100,23 @@ func _process(delta: float) -> void:
 			events.emit_event(str(arrival.event))
 
 func _dialogue_finished(id: String) -> void:
+	if _parcels != null and bool(_parcels.call("dialogue_finished", id, self)):
+		return
 	if id == "stormwood_rook_circuit_offer":
 		events.emit_event("side:stormwood_deepwood_circuit:step_1")
 		_replay_circuit_wins_after_progression_change(true)
 		return
 	if id == "stormwood_rook_circuit_return":
 		events.emit_event("side:stormwood_deepwood_circuit:step_3")
+		return
+	if id == WEN_RECORDS_RETURN_CONVERSATION:
+		events.emit_event("side:stormwood_crown_remembers:step_3")
+		return
+	if id == HESK_DARK_ARCHES_REPORT:
+		events.emit_event("side:stormwood_dark_arches:step_3")
+		return
+	if id == ONDRA_ROAD_REPORT:
+		events.emit_event("side:stormwood_raise_a_road:step_4")
 		return
 	for actor: String in DIALOGUE_EVENTS:
 		if id == "stormwood_%s_in_progress" % actor:
@@ -150,7 +171,25 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 	var branches: Array = [
 		{"if_flag": "stormwood:long_storm_ended", "conversation": prefix + "post_storm"},
 	]
+	var chain_branches: Array = PIMS_PARCELS.branches_for(actor_id)
+	if actor_id == "rodkeeper_hesk":
+		# Hesk's report outranks his ordinary and post-storm lines while owed.
+		branches.push_front({"if_flag": "stormwood:side_dark_arches_2",
+			"unless_flag": "stormwood:side_dark_arches_complete",
+			"conversation": HESK_DARK_ARCHES_REPORT})
+	if actor_id == "keeper_ondra":
+		# The road report outranks Ondra's ordinary and post-storm lines while
+		# owed; it needs the recipe conversation long since finished.
+		branches.push_front({"if_flag": "stormwood:side_raise_a_road_3",
+			"unless_flag": "stormwood:side_raise_a_road_complete",
+			"conversation": ONDRA_ROAD_REPORT})
 	if actor_id == "archivist_wen":
+		# The records report never pre-empts the main truth conversation: Wen
+		# tells the truth first, then acknowledges the completed reading, even
+		# after the Long Storm has ended.
+		branches.push_front({"if_flag": ["stormwood:side_crown_remembers_2", ENGINE_TRUTH_FLAG],
+			"unless_flag": "stormwood:side_crown_remembers_complete",
+			"conversation": WEN_RECORDS_RETURN_CONVERSATION})
 		branches.append({"if_flag": ["stormwood:crown_reached", CROWN_GUARDIAN_CLEAR_FLAG],
 			"conversation": prefix + "in_progress"})
 		branches.append({"if_flag": "stormwood:crown_reached",
@@ -171,6 +210,9 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 	else:
 		branches.append({"if_flag": str(STORY_CONVERSATION_GATES.get(
 			actor_id, "stormwood:chapter_started")), "conversation": prefix + "in_progress"})
+	# Side-chain branches outrank ordinary and post-storm lines while active.
+	for i in range(chain_branches.size() - 1, -1, -1):
+		branches.push_front(chain_branches[i])
 	return {"name": str(actor.get("name", "")),
 		"config_key": str(actor.get("body_profile", "")),
 		"position": (actor.get("position", []) as Array).duplicate(),

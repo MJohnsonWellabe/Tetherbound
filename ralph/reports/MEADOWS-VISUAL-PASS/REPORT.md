@@ -205,3 +205,207 @@ The judge's top ask is still flat two-to-three-colour blocks.
   noisy dotted orange that blows out through the emission slot. That fails
   CLAUDE.md's "preserve established identity" rule.
 - **What shipped:** the local regrade stays. No further Meshy tasks were run.
+
+## Round 2 scene fixes: vines at night and occluders in the fight ring
+
+Two of round 2's "still open and fixable in the scene" items.
+
+**Vines rendering white at night.**
+- **Cause:** the kit's flat wall vines (`Prop_Vine1/2/4`) ship with every
+  normal pointing up (+Y), although each is a vertical sheet standing off its
+  wall toward +Z. They were lit as if they were ground. On the shop's side
+  wall, which faces away from the night moon (yaw 25°, pitch −20°), the plaster
+  went dark and the vine lit to near-white. By day the same vines washed out
+  pale.
+- **Ruled out first:** the shop's interior lamp stands 2.5m behind that wall
+  (`tools/_probe_village_vines.gd` lists every vine with the lights that reach
+  it). Taking the vines out of the interior lights' cull mask was built,
+  rendered, and changed nothing, so it was reverted.
+- **Fix:** `building_prefabs.gd::wall_foliage_mesh()` gives those three sheets
+  the wall's own outward normal (+Z) when a prefab is built. Geometry, UVs,
+  triangles and material are unchanged. The draped vines (`Prop_Vine5/6/9`)
+  wrap corners and keep their normals.
+- **Left as it was:** the stronghold's ruin ivy, built from the same sheets
+  in `stronghold.gd`. The fix was rendered at the gate stand. Facing a sunlit
+  wall, the corrected ivy lit a paler mint than before. That is a look
+  decision, not the night defect, so it was reverted.
+- **Result:** in the village-hub stand, the shop's vine now reads green at
+  night and a deeper green by day (`_sheet_round4_scene_fixes.png`, top pair).
+- **Tests:** `tests/test_wall_foliage_normals.gd`.
+
+**The dead tree in the fight ring.**
+- **What was in the frame:** the survey fight opens at (25, −44) on band 1's
+  "Gather deadwood" node, a `DeadTree_2` model with no collider. Other rings
+  hold `bushes`/`deadfall` scatter, which carries no collider either.
+- **Fix:** `combat_arena.gd` takes both out of view when a fight opens, within
+  its radius plus `arena.occluder_clear_margin` (2m), and puts them back when
+  the arena closes.
+  - Scatter goes through `vegetation.gd::hide_fight_occluders()` and
+    `restore_fight_occluders()`.
+  - Authored harvest nodes built from the same models hide their model
+    through `harvest_node.gd::set_fight_hidden()`.
+- **What stays as it was:**
+  - It is presentation only, and each peer does it locally.
+  - Nothing collides differently, and nothing is saved or replicated.
+  - Trees, saplings and rocks collide, so they stay.
+  - A bush harvested during the fight, or ground `clear_area()` already
+    cleared, never comes back.
+  - Overlapping rings count their hides.
+- **Tests:** `tests/test_fight_ring_occluders.gd`.
+
+**Harness:**
+- `tools/_capture_quick_tour_meadows.gd` gained `--stands=<ids>` and
+  `--locations-only`. One stand re-renders in about 7 minutes instead of 21.
+- It no longer writes `.png.png`.
+
+**Still open:**
+- **Frame 03 after the fix:** the opponent is hidden behind our own Terrapup.
+  That is the judge's ally-occlusion gap, which is camera framing, not
+  scatter.
+- **Frame 06 (charged hit):** the survey's charged pilot missed within its
+  240-frame window in both runs after this change. It landed in the one run
+  before.
+  - A control run on the same tree with `arena.clear_soft_occluders` set to
+    false also missed. So the miss does not come from the ring clear.
+  - The pilot presses charged from 2.8m at an enemy that circles on
+    cooldown. The miss belongs to the capture tool's pilot, and it stays
+    open there.
+
+## Ally hiding the foe (frame 03): investigated, owner decision
+
+- **Geometry:** the neutral combat tracker orbits at a fixed 35° off the
+  ally→foe axis (`combat.json` camera.tracking.composition_yaw_deg).
+  - Terrapup (3.85m, radius 1.46m) at the 9.5m/46° lens subtends about 11°
+    of half-width.
+  - A Bramblebun 2–3m in front of it moves only about 7° off Terrapup's
+    centre at 35°.
+  - Clearing it needs roughly 70–90°.
+- **Tried and reverted:** an occlusion-driven composition that widened the
+  angle while the foe was hidden.
+  - The combat survey cannot show it. The survey pilot sets the camera yaw
+    straight at the foe every frame to steer, so frame 03 is always taken
+    from dead behind.
+  - The screen-box overlap measure over-reports. An ally's bounding box
+    covers empty space, so frame 05 read "fully hidden" at 70° off-axis.
+  - Combat movement is camera-relative. Widening the composition toward 80°
+    would turn stick-forward nearly sideways to the foe. That is a control
+    change, so it needs the owner's decision.
+- **Options for the owner:**
+  - **(a)** A wider automatic composition for large-ally pairs, accepting
+    that stick-forward points off the foe.
+  - **(b)** A see-through silhouette of the foe while it is behind the ally.
+    Controls are unchanged; it adds a visual language element.
+  - **(c)** A larger shoulder offset (camera.max_shoulder_offset 4.5m) for
+    big allies.
+  - Whichever is chosen, the survey needs a neutral-look frame (no forced
+    yaw) to judge it.
+
+## Round 5 (owner: "get all visuals to pass"; branch claude/peaceful-brahmagupta-u0a94r)
+
+Changes judged in R7 (all presentation-only, local to each peer):
+- Fight framing, owner-delegated choice: the piloted ally dithers (OBJECT_DITHER, 40% coverage) while it hides the foe from the live camera. Alpha was tried first and drew the creature's far side through its back. `GeometryInstance3D.transparency` is ignored by the Compatibility renderer (measured).
+- Horizon: two ridge layers drawn in the sky shader (`meadows_look.json`, realm overlay).
+- Ground: macro variation taken most of the way to white and slightly cooler (`terrain_presentation.json`), softer grass tints and clumping. Ground band moved from S 0.86-0.95 / V 0.34-0.45 to about S 0.62-0.70 / V 0.60.
+- Stone: harvest deposits use their own light tints over Rock030. Scatter rocks swap to a lifted, desaturated copy of the pack texture (`Rocks_Diffuse_meadows.png`).
+  - A runtime `retexture_adjust` rendered white. So did the first import of the copy (2D lossless, no mipmaps). Importing it with the pack's own VRAM and mipmap settings fixed it.
+- Water: a mill-pond stand added to the quick tour.
+- Combat survey: the charged press waits for the opponent's recovery window. Frame 06 now lands.
+
+**R7 blind verdict** (19 frames: 5 survey, 6 tour, 8 combat)
+- **(A) key-art world: no.** The village day and night and the forest camp carry it. The survey meadows, the overlook, the yellow-olive palette and the stronghold's generic kit castle sink it.
+- **(B) same kind of game as Palworld: yes.** Genre reads at once. Creature quality, missing impact effects and the empty world mark it as a lower tier.
+
+Ranked gaps:
+1. The fight is not an event.
+   - The dithered ally reads as a ghost.
+   - No impact effect is visible on either hit.
+   - The capture throw does not show its target.
+   - Terrapup's clay-like body and white-splotch texture look generated.
+2. The world is empty and evenly scattered.
+   - Single-blade grass at even spacing.
+   - An empty plain from the overlook.
+   - Three buildings in an open field.
+3. Horizon and landmarks.
+   - The sky-drawn ranges read as a striped cardboard cutout.
+   - A hard green line in S-04.
+
+Other defects it named:
+- The hill crown's hard-edged grass islands (S-03).
+- Scatter rocks white (S-03, S-04, fixed after that render).
+- Three rock families.
+- Mixed tree families: leaf cards versus lollipops.
+- The same hero plant at bottom centre.
+- The aim camera inside grass cards (C-07).
+- "NOT ON TARGET" clipped at the bottom edge.
+- Black-dash aim arc.
+- Red stagger text on the player's own creature.
+- Magenta wind-up ring.
+- Squashed moon.
+- Trainer in a stiff pose in tour frames.
+- The ranger NPC in a different style.
+- Pale untextured slope beside the causeway (T-05).
+- A soft shadow smear in S-01.
+
+**Round 5 status at hand-off (b134abf8):**
+- **What changed after R7:** the R7 findings were addressed and rendered in R8.
+- **R8 frames showed:**
+  - real mountain ranges and a peak behind the survey, pond and village views;
+  - ally and foe composed side by side in most fight frames;
+  - the aim view clear of lens grass, with the capture readout visible;
+  - the orb frame showing its target.
+- **Adjusted after R8, not yet re-rendered:**
+  - the hero peak made smaller;
+  - the impact burst made brighter;
+  - the Terrapup and Bramblebun texture changes.
+- **Not done at hand-off:** the R9 capture and blind re-judge. Both were run after the merge, as recorded below.
+
+## Round 5, R9 blind re-judge (PR215 head 5dd9abb1c)
+
+Frames: 17 real in-game frames on the Compatibility renderer.
+- 5 landscape frames from `tools/survey.sh`.
+- 4 frames from `_capture_quick_tour_meadows.gd --locations-only`: village day, village night, quarry, relay. The tour ran past its 1200s budget and skipped the mill-pond and stronghold-gate stands.
+- 8 combat frames from `tools/survey_combat.sh`.
+
+The judge saw only the contact sheet, the frames and `docs/reference/`. Contact sheet: `_sheet_round5_r9.png`.
+
+**Verdict: (A) key art: no. (B) Palworld: yes.** This is unchanged from R7, so the bar is not met.
+- **What carried it:** the village, day and night (T-01).
+- **What sank it:** no water or winding paths in frame, no hero landmark, and a muddy low-sun frame (S-05).
+- **B, with the gap:** the genre reads at a glance, but the frames sit well below Palworld's tier.
+
+**Ranked gaps**
+1. **Creature art.**
+   - Every creature in frame is orange-tan clay with blotchy, generator-looking colour and scribbled creases (C-02 to C-07). At 30% they read as brown lumps on green.
+   - The creatures don't share a style with the village.
+   - The trainer is the best-made character in the build.
+2. **Fights aren't events.**
+   - The dithered ally reads as a ghost in C-03 and C-05. The survey pilot forces the camera yaw, so the tracker swing never runs and every occluded frame shows the dither fallback.
+   - The magenta tell ring and the faint hit chevrons don't read as impacts.
+   - In C-08 the camera is wedged against a leg, and the nameplate hides the orb.
+3. **Empty, flat land against a painted backdrop.**
+   - S-02 to S-04 show uniform scatter with no paths, clearings or water.
+   - The mountains are a flat card, with a hard seam behind the terrain in S-03.
+
+**Other defects named**
+- **Colour on friendly elements.** The player's HP bar turns salmon-red (C-07, C-08), the wild creature's bar turns red (C-06), and the tell ring is hot magenta (C-04, C-05). Oxblood reservation fails at the HUD.
+- **Low sun (S-05).** Khaki and muddy, with the sun disc still high; shadow-map stair-stepping in S-01 and S-05.
+- **Floating well slab (T-01).** The well's paving slab reads as floating.
+- **Moon (T-01 night).** The moon is still an ellipse.
+- **Unreadable HUD text.** Small type for the most urgent warning (C-04, C-05); ~11px LEVEL/GROUND labels (C-02); unboxed aim prompts (C-07); a faded 59% readout (C-08).
+- **Low-quality surfaces.** Smeared ground texture under the grass (S-01, S-02, S-05); a smooth blob boulder (S-02); a flat wall plane and a placeholder door (T-02); a low-poly campfire flame (T-03).
+- **Scale.** Bramblebun is knee-high and the boar about 1m against the 1.80m trainer (C-02, C-06). Terrapup is about 1.4× the trainer.
+
+**Fixable in the scene, now open work**
+- Survey pilot: take a neutral-look fight frame, so the swing is judged rather than the dither.
+- Dither: reconsider it as the fallback, since the judge reads it as a ghost again.
+- Fight VFX and hit feedback.
+- HUD: remove red and magenta from friendly elements; fix text hierarchy.
+- Camera clipping in C-01 and C-08.
+- Paths, clustering and clearings; composed landmarks; depth haze; low-sun grading.
+
+**Needs art not in the build**
+- Creature materials and colour identity for the whole roster. This is Meshy-eligible under the art rule; see the rejected Terrapup pilot above.
+- A 3D hero-mountain or terrain backdrop to replace the card.
+- A standing-stone or tower landmark.
+- Water in the survey stands.
+- One tree family to replace the lollipop trees.
