@@ -6,6 +6,7 @@ const EVENTS := preload("res://scripts/world/realm_chapter_events.gd")
 const PEOPLE := preload("res://scripts/world/village_npcs.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const PIMS_PARCELS := preload("res://scripts/world/stormwood_pims_parcels.gd")
+const GLASS_FOR_BRYN := preload("res://scripts/world/stormwood_glass_for_bryn.gd")
 const CROWN_GUARDIAN_CLEAR_FLAG := "stormwood:named:crown_guardian:cleared"
 const WEN_REFUSAL_CONVERSATION := "stormwood_archivist_wen_guardian_refusal"
 const WEN_RECORDS_RETURN_CONVERSATION := "stormwood_wen_crown_records_return"
@@ -18,6 +19,7 @@ var people: Node3D
 var chapter: Dictionary
 var _panel: Node
 var _parcels: Node3D
+var _glass_for_bryn: Node3D
 var _local := false
 var _arrival_check_left := 0.0
 var _circuit_replay_revision := -1
@@ -67,6 +69,10 @@ func mount(owner_world: Node3D) -> void:
 	_parcels.name = "PimsParcels"
 	world.add_child(_parcels)
 	_parcels.call("mount", world)
+	_glass_for_bryn = GLASS_FOR_BRYN.new()
+	_glass_for_bryn.name = "GlassForBryn"
+	world.add_child(_glass_for_bryn)
+	_glass_for_bryn.call("mount", world)
 	# A core NPC stands on the authored arena, not the terrain far below it.
 	for actor: Dictionary in _read("res://data/config/stormwood_npcs.json").get("characters", []):
 		if str(actor.get("surface_id", "")) == "dynamo_core":
@@ -172,6 +178,7 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 		{"if_flag": "stormwood:long_storm_ended", "conversation": prefix + "post_storm"},
 	]
 	var chain_branches: Array = PIMS_PARCELS.branches_for(actor_id)
+	chain_branches.append_array(GLASS_FOR_BRYN.branches_for(actor_id))
 	if actor_id == "rodkeeper_hesk":
 		# Hesk's report outranks his ordinary and post-storm lines while owed.
 		branches.push_front({"if_flag": "stormwood:side_dark_arches_2",

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "realm_id": "stormwood",
+  "chain_id": "stormwood_glass_for_bryn",
+  "_comment": "WORLD Stormwood table, row stormwood_glass_for_bryn. One world-scoped delivery of ordinary Stormglass and Conductor Vine to Warden-Elect Bryn repairs the rod crew's shelter beside the Rodline workshop. Inspecting the repaired supplies there completes the chain, and the shelter becomes a safe care point with one creature bed. The shelter adds no rod safe radius, no Surge rod flag and no Calm multiplier: Rodline Post is already a Surge safe zone and Conductor Run has no rod flag.",
+  "cost": {"stormglass": 3, "conductor_vine": 2},
+  "bryn": {"npc_id": "warden_elect_bryn", "at": [-700, 2300], "delivery_radius_m": 6.0},
+  "shelter": {
+    "id": "rodline_rod_shelter",
+    "display_name": "Rodline Rod Shelter",
+    "safe_zone_id": "rodline_post",
+    "at": [-712, 2290],
+    "yaw_deg": 200,
+    "props": [
+      {"model": "tent", "offset": [-2.2, 2.0], "yaw_deg": 200},
+      {"model": "lightning_rod", "offset": [2.8, 2.6], "yaw_deg": 0}
+    ],
+    "supplies": [
+      {"model": "crate", "offset": [1.6, -1.4], "yaw_deg": 15, "scale": 0.7},
+      {"model": "crate", "offset": [2.5, -0.9], "yaw_deg": -20, "scale": 0.6}
+    ],
+    "inspect": {"offset": [2.0, -1.2], "radius_m": 2.6, "label": "Inspect the repaired supplies"},
+    "care": {"radius_m": 3.2, "label": "Rest at the Rodline Rod Shelter"},
+    "creature_bed": {"offset": [-3.6, -3.4], "yaw_deg": 200, "bed_index": -37}
+  }
+}
