@@ -1075,6 +1075,17 @@ func _offer_to_join() -> void:
 ## waits, and survives a reload, until this character chooses.
 func _open_choice() -> void:
 	_close_choice()
+	# The join beat's approach may still be walking when the offer opens (a
+	# fast reader closes the join lines inside its 2 s). Its target was chosen
+	# from where the player stood THEN; left running, it walked through where
+	# the player stands NOW and shoved them 4.6 m off the spot both prompts are
+	# placed around (MEASURED, smoke_gate_e_finale position trace). The
+	# creature stops where it is, and that is where the choice is made.
+	if _step_tween != null and _step_tween.is_valid():
+		_step_tween.kill()
+		if _legendary != null:
+			_settle_target = _legendary.global_position
+			_landed()
 	var spec: Dictionary = _config.get("choice", {})
 	# Said a beat AFTER the offer opens, not on the same frame: the offer opens
 	# as the join conversation closes, while the world HUD is still hidden by
