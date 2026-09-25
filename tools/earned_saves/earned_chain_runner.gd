@@ -46,7 +46,7 @@ const REST := preload("res://tests/helpers/meadows_earned_rest_segment.gd")
 const TOURNAMENT := preload("res://tests/helpers/meadows_earned_tournament_segment.gd")
 const BRIDGE := preload("res://tools/earned_saves/bridge_crossing.gd")
 const WARRENS := preload("res://tools/earned_saves/warrens_route.gd")
-const RELAY := preload("res://tests/helpers/meadows_earned_relay_segment.gd")
+const RELAY := preload("res://tools/earned_saves/relay_route.gd")
 const HALL := preload("res://tests/helpers/meadows_earned_hall_segment.gd")
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
@@ -218,6 +218,8 @@ func _take(result: Dictionary, key: String, label: String) -> bool:
 			disclosures.append("warrens: harvest order 16 rootstone (393,1802) skipped as physically unreachable (BLOCKERS.md B2, open Meadows defect); nothing later consumes rootstone, so no replacement gathering was needed")
 		elif beat == "undertrail_mound_detour":
 			disclosures.append("warrens: added an ordinary controller-walk detour west of the Warrens mound on the undertrail approach (BLOCKERS.md B3)")
+		elif beat == "prompt_press_retry":
+			disclosures.append("relay: an Interact press did not activate the exact offered provider and was retried with no side effect: %s" % JSON.stringify(row))
 		elif beat == "quarry_east_detour":
 			disclosures.append("warrens: added an ordinary controller-walk detour east of the quarry pylon before the fourth rootstone (helper's direct leg stalls; BLOCKERS.md B2)")
 		elif beat == "veridian_accepted":

@@ -91,7 +91,7 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   party ripplet 9, bramblebun 8, mudsnout 8, mudsnout 7, bramblebun 6.
   Last good save: `/tmp/claude-0/earned_chain/seed4/bridge/save/`. Logs are in
   `/tmp/claude-0/earned_chain/seed4_warrens_attempt{1..4}/` and `seed4/warrens/`.
-- **Coordinator ruling (20:00 UTC):** the route may skip order 16 only if nothing later needs the
+- **Coordinator ruling:** the route may skip order 16 only if nothing later needs the
   stone. No later earned helper (relay/hall/warden) and no gate cost uses rootstone, so
   `tools/earned_saves/warrens_route.gd` skips it with receipt `unreachable_node_skipped`
   (no replacement nodes needed) and keeps the east detour for the fourth stone. The south
@@ -100,7 +100,7 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
 
 ## B3: undertrail approach stalls against the Warrens mound
 
-- Segment `warrens`, attempt 6 (20:03 UTC, seed 4, from `/tmp/claude-0/earned_chain/seed4/bridge/save/`).
+- Segment `warrens`, attempt 6 (seed 4, from `/tmp/claude-0/earned_chain/seed4/bridge/save/`).
   The quarry was completed with order 16 skipped (rootstone 12). On the helper's
   `warren_undertrail` leg (-420,2470) → (-380,2540), the player stalled at about (-406,2488),
   which is on the flank of `rises.peaks[5]` (centre -380,2488, r 30, the Warrens mound).
@@ -108,4 +108,17 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   (one `walk_confined_recovery` first). Attempt log: `/tmp/claude-0/earned_chain/seed4_warrens_attempt6/`.
 - Alternative 1 (own file, `warrens_route.gd`): walk ordinary ground west of the mound,
   (-432,2492) → (-418,2528), before the helper's leg. Disclosed as receipt `undertrail_mound_detour`.
-- Alternative 1 **worked** (attempt 7, 20:14 UTC): Warrens entered, guardian won (20 hits), exited at (-353.1, 4.56, 2606.1). B3 remains an open Meadows route defect: the authored undertrail leg crosses the mound.
+- Alternative 1 **worked** (attempt 7, 19:55 UTC): Warrens entered, guardian won (20 hits), exited at (-353.1, 4.56, 2606.1). B3 remains an open Meadows route defect: the authored undertrail leg crosses the mound.
+
+## B4: Relay prompt press activates a different provider
+
+- Segment `relay`, attempt 1 (20:05 UTC, seed 4, from `/tmp/claude-0/earned_chain/seed4/warrens/save/`).
+  After an ordinary wild win (14 hits), the helper reached the Relay site at (350.1, 4.36, 3759.8).
+  At the captain's actionable prompt, its physical Interact did not activate the offered provider.
+  The helper's `_activated_id` did not match, and no flag was gained.
+  Log: `EARNED RELAY FAIL — Physical Interact activated a different provider than the exact offered target`.
+  Wall time 541 s. Attempt log: `/tmp/claude-0/earned_chain/seed4_relay_attempt1/`.
+- Alternative 1 (own file, `tools/earned_saves/relay_route.gd`): keep the exact-provider check,
+  but when a press activated nothing, or activated something with no modal or fight side
+  effect, re-approach and press again (up to 3). Each retry is recorded as a
+  `prompt_press_retry` receipt naming what was activated.
