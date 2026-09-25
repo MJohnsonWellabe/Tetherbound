@@ -60,6 +60,12 @@
     "launch_assist_max_seconds": 0.85,
     "launch_assist_max_target_speed": 4.5,
     "launch_assist_max_distance": 2.6,
+    "_why_launch_assist_clearance": "THROW-AIM-SLOPE (ralph/reports/MEADOWS-PAYOFFS/throw-aim-slope/). The assist used to solve the low arc to the creature in empty space; the aim camera rides higher than the hand, so on rising ground (world seed 1376461701's tutorial catch) the eye saw the creature over a crest the low arc flew into, and three assisted orbs in a row ended `reason=ground`. throw_aim.gd now flies the candidate arc against real collision and, only when the default arc meets something first, steps the pitch up by `step_deg` (same speed and heading) to the lowest arc whose flight enters `hit_fraction` x (body_radius + radius) of the target first. `hit_fraction` below 1 keeps the chosen arc off the envelope's edge, which is exactly where the seed's misses sat (1.27 against 1.27); flat-ground throws already pass through the centre, so they never trigger the search and launch exactly as before. `max_pitch_deg` 45 is the max-range angle: past it the throw is a lob whose flight time outruns the bounded lead, so no arc is chosen and the preview keeps showing the blocked throw. TUNABLE.",
+    "launch_assist_clearance_step_deg": 1.0,
+    "launch_assist_clearance_max_pitch_deg": 45.0,
+    "launch_assist_clearance_hit_fraction": 0.8,
+    "_why_aim_surface_min_ahead": "THROW-AIM-SLOPE. The reticle's aim point is now the first collision on the camera's centre ray instead of a fixed 12 m down it (which ended inside any slope the ray crossed). A hit closer than this many metres in front of the trainer's hand -- the ray catching the ground at the trainer's feet or behind them with the camera pitched steeply down -- keeps the old fixed reach, so a steep look can never turn the throw backwards. TUNABLE.",
+    "aim_surface_min_ahead": 1.0,
     "_comment_lockout": "Seconds after a throw resolves before another can be started. Stops a failed catch from being instantly re-thrown while the wobble is still on screen.",
     "cooldown": 0.9
   },

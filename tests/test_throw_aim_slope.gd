@@ -99,42 +99,20 @@ func _space(height: Callable) -> PhysicsDirectSpaceState3D:
 	return PhysicsServer3D.space_get_direct_state(_world.space)
 
 
-## FAILING-FIRST SHIM (this commit only). The terrain-aware solve does not
-## exist yet, so these helpers fall back to what the unchanged code does: the
-## committed assist launches along `ballistic_direction()` to its point, and
-## the aim point sits `AIM_REACH` down the camera's centre ray. The next commit
-## replaces the shim with direct calls.
-func _throw_script() -> Object:
-	return THROW
-
-
-func _has(name: String) -> bool:
-	for method: Dictionary in (THROW as GDScript).get_script_method_list():
-		if str(method.get("name", "")) == name:
-			return true
-	return false
-
-
 func _clearance() -> Dictionary:
-	return _throw_script().call("clearance_from_config", _throw_cfg()) if _has("clearance_from_config") else {}
+	return THROW.clearance_from_config(_throw_cfg())
 
 
 ## The launch the committed assist makes toward `point`.
 func _assisted(space: PhysicsDirectSpaceState3D, point: Vector3) -> Vector3:
-	if _has("assisted_launch_direction"):
-		var none: Array[RID] = []
-		return _throw_script().call("assisted_launch_direction", space, none, HAND, point, Vector3.FORWARD,
-			_speed(), _gravity(), _spawn_forward(), _envelope(), _clearance())
-	return THROW.ballistic_direction(HAND, point, Vector3.FORWARD, _speed(), _gravity())
+	return THROW.assisted_launch_direction(space, [], HAND, point, Vector3.FORWARD,
+		_speed(), _gravity(), _spawn_forward(), _envelope(), _clearance())
 
 
 ## Where the reticle's aim point sits for a centre ray from `eye`.
 func _reticle(space: PhysicsDirectSpaceState3D, eye: Vector3, forward: Vector3) -> Vector3:
-	if _has("surface_aim_point"):
-		var none: Array[RID] = []
-		return _throw_script().call("surface_aim_point", space, none, eye, forward, THROW.AIM_REACH, HAND,
-			float(_throw_cfg().get("aim_surface_min_ahead", 1.0)))
-	return eye + forward * THROW.AIM_REACH
+	return THROW.surface_aim_point(space, [], eye, forward, THROW.AIM_REACH, HAND,
+		float(_throw_cfg().get("aim_surface_min_ahead", 1.0)))
 
 
 ## Fly the orb as orb.gd does and say how it ended.
