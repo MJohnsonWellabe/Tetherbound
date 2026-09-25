@@ -10,7 +10,7 @@ Result: **PASS.** All 7 mandatory routes (24 hops) passed with the original five
 - Code under test: commit `d64ad8f53` on `ralph/water-f12-swim-proof-five`. This is
   `origin/ralph/water-f12-swim-proof` merged with `origin/main` (a3ff511e7), plus the
   `--original-five` fixture in `tests/smoke_water_swimming.gd`.
-- Nothing under `scripts/**` or `data/**` was changed.
+- The fixture commit changed nothing under `scripts/**` or `data/**`. The branch does touch `data/config/water_world.json`: it adds test-only `requires_compatible_active_swim_mount: false` rows, which only tests read (no `scripts/` reader). There are 6 rows from the base branch, plus 4 rows for the early direct routes added in the review follow-up below.
 - Engine: Godot v4.7.stable.official.5b4e0cb0f, headless, Linux container.
 - The earlier empty-party evidence is `ralph/reports/WATER-HUMAN-ROUTE/f12_every_hop.txt`.
 
@@ -98,6 +98,17 @@ fixture, which drowns the player on purpose.
 | tidal_cradle_to_salt_crown_sheltered | 5 | 38.54 | yes | 192 | 5 |
 | salt_crown_to_sluice_isle_sheltered | 5 | 44.09 | yes | 192 | 5 |
 | sluice_isle_to_veilfall_sheltered | 7 | 30.14 | yes | 254 | 5 |
+
+**Review follow-up: the main-path direct alternatives.** The first four edges also offer a `direct` route marked `main_path: true` and `intended_traversal: human_level_0`, so a player may take either route. Those four rows gained the test-only field, and each was run with the same command form (`--rest-route=<id> --every-hop --original-five`). All exited 0, with party_size=5 and the same five members.
+
+| route | hops | worst stamina % | all hops PASS | assertions |
+|---|---|---|---|---|
+| first_shore_to_reedhaven_direct | 1 | 33.41 | yes | 67 |
+| reedhaven_to_brine_steps_direct | 1 | 74.99 | yes | 67 |
+| brine_steps_to_shellwatch_direct | 1 | 81.05 | yes | 67 |
+| shellwatch_to_tidal_cradle_direct | 1 | 72.70 | yes | 67 |
+
+The last three direct routes (`tidal_cradle_…`, `salt_crown_…`, `sluice_isle_…_direct`) are `main_path: false` and `swim_mount`. They are optional, gated mounted routes, so they are outside this clause.
 
 Per-hop lines (min stamina %):
 

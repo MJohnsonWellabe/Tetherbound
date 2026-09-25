@@ -3660,6 +3660,7 @@
       "required_departure_flag": "water_swim_lesson_complete",
       "required_equipment": [],
       "safe_channel_combat_policy": "No mandatory interception on lesson crossing.",
+      "requires_compatible_active_swim_mount": false,
       "to_anchor": "first_shore_to_reedhaven_arrival",
       "to_island": "reedhaven"
     },
@@ -3719,6 +3720,7 @@
       "required_departure_flag": "water_dock_reedhaven_repaired",
       "required_equipment": [],
       "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "requires_compatible_active_swim_mount": false,
       "to_anchor": "reedhaven_to_brine_steps_arrival",
       "to_island": "brine_steps"
     },
@@ -3778,6 +3780,7 @@
       "required_departure_flag": "water_dock_brine_steps_trial_won",
       "required_equipment": [],
       "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "requires_compatible_active_swim_mount": false,
       "to_anchor": "brine_steps_to_shellwatch_arrival",
       "to_island": "shellwatch"
     },
@@ -3837,6 +3840,7 @@
       "required_departure_flag": "water_dock_shellwatch_residents_freed_and_pump_disabled",
       "required_equipment": [],
       "safe_channel_combat_policy": "Any interception requires authored arena and traversal resume evidence.",
+      "requires_compatible_active_swim_mount": false,
       "to_anchor": "shellwatch_to_tidal_cradle_arrival",
       "to_island": "tidal_cradle"
     },
