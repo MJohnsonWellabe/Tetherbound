@@ -146,8 +146,15 @@ func test_runtime_builds_every_wall_as_static_collision() -> void:
 		if body == null:
 			continue
 		var walls := POCKETS.wall_boxes(pocket, cfg)
-		assert_eq(body.get_child_count(), walls.size(), "%s: one collider per wall segment (no models headless)" % pocket.id)
+		var posts := POCKETS.lure_posts(pocket, cfg)
+		assert_eq(posts.size(), 2, "%s: a lure post either side of the mouth" % pocket.id)
+		assert_eq(body.get_child_count(), walls.size() + posts.size(),
+			"%s: one collider per wall segment plus the two lure posts (no models headless)" % pocket.id)
+		for index in posts.size():
+			assert_true(body.get_node_or_null("LurePost%d" % index) is CollisionShape3D, "%s: lure post %d collides" % [pocket.id, index])
 		for child: Node in body.get_children():
+			if not str(child.name).begins_with("Wall"):
+				continue
 			var shape := (child as CollisionShape3D).shape as BoxShape3D
 			var top := (child as CollisionShape3D).position.y + shape.size.y * 0.5
 			var at := Vector2((child as CollisionShape3D).position.x, (child as CollisionShape3D).position.z)

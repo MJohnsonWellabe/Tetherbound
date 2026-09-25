@@ -38,7 +38,8 @@
   ],
   "landmark_sightlines": [
     {"id": "glass_field_to_stormheart", "from": [-310,5050], "to": [-100,5470], "clear_radius_m": 22, "purpose": "The split crown and machinery remain visible along the final approach; low understory remains."},
-    {"id": "ember_to_stormheart", "from": [-120,5270], "to": [-100,5470], "clear_radius_m": 24, "purpose": "Ember Bivouac faces the ascent and its landmark."}
+    {"id": "ember_to_stormheart", "from": [-120,5270], "to": [-100,5470], "clear_radius_m": 24, "purpose": "Ember Bivouac faces the ascent and its landmark."},
+    {"id": "dynamo_west_to_stormheart", "from": [-700,4820], "to": [-100,5470], "clear_radius_m": 22, "purpose": "The Dynamo tower stays in view from the middle of dynamo_west_approach (its bend at (-700,4820)); low understory remains."}
   ],
   "routes": [
     {"id": "ash_road", "kind": "critical", "points": [[-300,180],[-350,450],[-650,830],[-590,1060],[-380,1400],[-900,1780],[-700,2300]]},

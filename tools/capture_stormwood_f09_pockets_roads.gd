@@ -9,6 +9,9 @@ extends "res://tools/catalogue_survey.gd"
 ##     --script tools/capture_stormwood_f09_pockets_roads.gd -- \
 ##     --out=res://ralph/reports/STORMWOOD-PROGRESS/visual/f09/after \
 ##     [--label=after] [--only=rootgate,pockets,dynamo,forest] [--pockets=id,id]
+##     [--frames=pocket_verge_ash_hollow_a_approach,dynamo_west_mid,...]
+##
+## --frames keeps only the named frame ids (their stands are skipped too).
 ##
 ## Groups: rootgate (conductor_road south of the gate, closed and then open;
 ## deepwood_road north of it), pockets (per pocket: approach 30 m outside the
@@ -57,6 +60,7 @@ const REWARD_BACK_M := 2.0
 var _label := "after"
 var _only: Array[String] = []
 var _pocket_filter: Array[String] = []
+var _frame_filter: Array[String] = []
 var _game: Node
 var _arbiter: Node
 var _surge: Node
@@ -86,6 +90,9 @@ func _run() -> void:
 		elif arg.begins_with("--pockets="):
 			for part: String in arg.trim_prefix("--pockets=").split(",", false):
 				_pocket_filter.append(part.strip_edges())
+		elif arg.begins_with("--frames="):
+			for part: String in arg.trim_prefix("--frames=").split(",", false):
+				_frame_filter.append(part.strip_edges())
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
 	_scatter_fresh = _scatter_bake_fresh()
 	_log("scatter bake fresh for this checkout: %s" % str(_scatter_fresh))
@@ -113,6 +120,10 @@ func _run() -> void:
 
 func _want(group: String) -> bool:
 	return _only.is_empty() or _only.has(group)
+
+
+func _keep(frame_id: String) -> bool:
+	return _frame_filter.is_empty() or _frame_filter.has(frame_id)
 
 
 func _log(text: String) -> void:
@@ -318,25 +329,29 @@ func _pockets() -> void:
 			"pockets_node_present": _world.get_node_or_null(NodePath("StormwoodPockets/Pocket_%s" % id)) != null}
 		# (a) road-side approach, 30 m outside the mouth.
 		var approach := centre + forward * (wall_mid + APPROACH_OUT_M)
-		await _stand(approach, mouth_focus, -6.0)
-		await _capture("pocket_%s_a_approach" % id, "%s: 30 m outside the mouth on the road side, facing the mouth" % id,
-			_with(info, {"stand": [approach.x, approach.y], "reward_node": _reward_state(reward_id)}))
+		if _keep("pocket_%s_a_approach" % id):
+			await _stand(approach, mouth_focus, -6.0)
+			await _capture("pocket_%s_a_approach" % id, "%s: 30 m outside the mouth on the road side, facing the mouth" % id,
+				_with(info, {"stand": [approach.x, approach.y], "reward_node": _reward_state(reward_id)}))
 		# (b) standing in the mouth, looking in.
-		await _stand(mouth, centre_focus, -12.0)
-		await _capture("pocket_%s_b_mouth" % id, "%s: standing in the mouth, looking in at the reward" % id,
-			_with(info, {"stand": [mouth.x, mouth.y], "reward_node": _reward_state(reward_id),
-				"player_to_reward_m": Vector2(reward_at.x, reward_at.z).distance_to(mouth)}))
+		if _keep("pocket_%s_b_mouth" % id):
+			await _stand(mouth, centre_focus, -12.0)
+			await _capture("pocket_%s_b_mouth" % id, "%s: standing in the mouth, looking in at the reward" % id,
+				_with(info, {"stand": [mouth.x, mouth.y], "reward_node": _reward_state(reward_id),
+					"player_to_reward_m": Vector2(reward_at.x, reward_at.z).distance_to(mouth)}))
 		# (b2) close to the reward, so its 2.4 m prompt is in range.
 		var toward_mouth := (mouth - Vector2(reward_at.x, reward_at.z)).normalized()
 		var close := Vector2(reward_at.x, reward_at.z) + toward_mouth * REWARD_BACK_M
-		await _stand(close, reward_at, -16.0, 24.0)
-		await _capture("pocket_%s_b2_reward" % id, "%s: 2 m from the moved reward, facing it (prompt range 2.4 m)" % id,
-			_with(info, {"stand": [close.x, close.y], "reward_node": _reward_state(reward_id)}))
+		if _keep("pocket_%s_b2_reward" % id):
+			await _stand(close, reward_at, -16.0, 24.0)
+			await _capture("pocket_%s_b2_reward" % id, "%s: 2 m from the moved reward, facing it (prompt range 2.4 m)" % id,
+				_with(info, {"stand": [close.x, close.y], "reward_node": _reward_state(reward_id)}))
 		# (c) outside the right side wall, facing the pocket centre.
 		var side := centre + right * (wall_mid + thick * 0.5 + SIDE_OUT_M)
-		await _stand(side, centre_focus, -4.0)
-		await _capture("pocket_%s_c_side_wall" % id, "%s: outside the side wall, %d m from its outer face, facing the pocket centre" % [id, int(SIDE_OUT_M)],
-			_with(info, {"stand": [side.x, side.y]}))
+		if _keep("pocket_%s_c_side_wall" % id):
+			await _stand(side, centre_focus, -4.0)
+			await _capture("pocket_%s_c_side_wall" % id, "%s: outside the side wall, %d m from its outer face, facing the pocket centre" % [id, int(SIDE_OUT_M)],
+				_with(info, {"stand": [side.x, side.y]}))
 
 
 func _with(base: Dictionary, more: Dictionary) -> Dictionary:
@@ -377,15 +392,17 @@ func _dynamo() -> void:
 	var ahead := Vector3(-480.0, _ground(-480.0, 5120.0) + 4.0, 5120.0)
 	# Stand a few metres back along the first leg so the vertex is in frame.
 	var back := mid + (mid - Vector2(-890.0, 4490.0)).normalized() * -8.0
-	await _stand(back, ahead, -4.0)
-	await _capture("dynamo_west_mid", "dynamo_west_approach near (-700,4820), looking along the road toward (-480,5120)",
-		{"stand": [back.x, back.y]})
+	if _keep("dynamo_west_mid"):
+		await _stand(back, ahead, -4.0)
+		await _capture("dynamo_west_mid", "dynamo_west_approach near (-700,4820), looking along the road toward (-480,5120)",
+			{"stand": [back.x, back.y]})
 	var camp := Vector2(-140.0, 5242.0)
 	var leg := (camp - Vector2(-480.0, 5120.0)).normalized()
 	var arrive := camp - leg * 30.0
-	await _stand(arrive, Vector3(camp.x, _ground(camp.x, camp.y) + 1.5, camp.y), -6.0)
-	await _capture("dynamo_west_ember_arrival", "dynamo_west_approach last leg, 30 m before Ember Bivouac, facing the camp",
-		{"stand": [arrive.x, arrive.y]})
+	if _keep("dynamo_west_ember_arrival"):
+		await _stand(arrive, Vector3(camp.x, _ground(camp.x, camp.y) + 1.5, camp.y), -6.0)
+		await _capture("dynamo_west_ember_arrival", "dynamo_west_approach last leg, 30 m before Ember Bivouac, facing the camp",
+			{"stand": [arrive.x, arrive.y]})
 
 
 # ---------------------------------------------------------------- 4. Forest
