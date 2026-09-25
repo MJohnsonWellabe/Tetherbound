@@ -633,3 +633,184 @@ Seven other pickup/NPC overlaps remain (route_05, 07, 16, 18, 19 and pocket_203)
 - This is loopback ENet only.
 - The Rootgate release (opening pair C) is not shown.
 - The first host-full run's SCRIPT ERROR text was not retained.
+## WO-F10-07 — Rain around the camera, and gentler Break flashes (`ralph/stormwood-f10-rain-camera`)
+
+- **Anchor:** F10 visual acceptance. This closes the WO-F10-06 "rain, dry disc" item and the final review's reduced-motion finding (UX §8/§275: reduced motion lowers non-essential flashes).
+- **Found:**
+  - **Dry disc:** the lens-safe near rain ring was centred on the PLAYER with an inner radius of 10.6 m, so the nearest drop was about 9 m from the trainer. Rain only showed against the far sky (`visual/surge/after/r4_break_upwind.jpg`).
+  - **Lens test gap:** the test ignored the base emitter's 2° spread, which adds up to about 0.7 m of sideways drift.
+  - **Flash problems:** Break's distant sky flashes were up to 1.0 on the same 4–8 s cadence as real strikes. With no telegraph, one could read as a missed warning. They also ignored `MOTION_PREFS.reduced_motion()`.
+- **Player result** (`scripts/world/stormwood_surge.gd`, `data/config/stormwood_surge.json`):
+  - **Rain placement:** the rain emitter now sits 3 m above the ACTIVE CAMERA (`rain_centre`). Every peer follows its own camera, including the riding profile and a rig retargeted to a piloted creature.
+  - **Derived near ring:** its inner radius is 1.5 m lens clearance + half the wind drift + the spread drift + the streak's sideways half-extent (about 3.9 m), and it is 8 m wide. Rain now falls over the trainer and the near ground.
+  - **Distant flashes:** now 0.20–0.35 of a strike's flash (echo 0.25), on a separate 9–16 s cadence.
+  - **Reduced motion:** scales every sky flash, distant and strike, by 0.15. The telegraph ring and the local bolt are gameplay tells and are unchanged.
+- **Witnesses:**
+  - **New tests** in `tests/test_stormwood_surge_presentation.gd`:
+    - the lens test now models the camera-centred ring with `sin(spread)·v·t`;
+    - `test_rain_reaches_the_trainer` (≤ 3 m at every camera distance and yaw);
+    - distant flashes weaker and slower than strikes;
+    - reduced motion scales sky flashes.
+  - **Smoke:** `tests/smoke_stormwood_lightning_cleanup.gd` checks that under reduced motion the ring and bolt still draw and the sky flash is 0.15.
+  - **Negative controls:**
+    - the round-4 player-centred ring fails the reach test (8.37 m);
+    - dropping the spread term fails the lens test (0.80 m);
+    - ignoring reduced motion fails;
+    - round-4 flash strengths fail.
+  - **Frames:** `visual/surge/sheet_rain_camera.jpg`, with 4 frames compared against `r4_break_upwind.jpg`.
+- **Review follow-up (`7faf5d42c`): no rain under roofs, plus reduced-motion nits.**
+  - **Roof suppression:**
+    - Every 0.25 s, the shelter check casts physics rays up from the trainer (starting at head height) and from the camera.
+    - Any hit fades the near rain layer out over 0.6 s, and back in outside.
+    - Canopy and rod radius are ignored on purpose, so rain under trees stays.
+    - The far layer is untouched.
+    - The rain volume is clamped to at most 16 m above the ground under the camera.
+  - **Reduced motion:**
+    - The strike's local light is scaled by 0.15.
+    - The telegraph rim is steady; its growing fill still carries the 1.2 s timing.
+    - The config records why the scale is 0.15 rather than `impulse_scale()`'s 0: the flash rhythm is one of the cues that name Break without HUD text.
+  - **Test hygiene:** the presentation tests save and restore the static pref in `before_each`/`after_each`, so a failing test can't leave it set.
+  - **Witnesses:**
+    - Unit tests: roof fade without a snap, far layer untouched, height clamp, steady rim.
+    - The cleanup smoke puts a StaticBody roof over the trainer: near rain goes to 0.00, then back to 1.00 once the roof is removed. Under reduced motion the strike light reads 1.20 of 8.
+    - Negative controls, each failing: roof probe disabled, fade that snaps, strike light unscaled, rim pulsing under reduced motion.
+    - `visual/surge/sheet_rain_roof.jpg`: inside the real Ashfoot shelter (ranger station) the room is dry, while the same building from 11 m outside stands in rain.
+- **Foreground rain and review N1/N2** (`3947f56c0`, `5a10d9feb`)
+  - **Judge finding:** in the normal and night Break frames the bottom ~45% of the view (the grass between the camera and the trainer) was dry. Near streaks read as blunt, vertical, opaque "sticks".
+  - **How it was measured** (`tools/capture_stormwood_surge_phases.gd` `rainmeasure`, production camera, the four raincam poses):
+    - **Analytic:** 6000 points were sampled from the LIVE near emitter's parameters and projected through the production Camera3D. A point counts only if it is above the terrain and not occluded (physics ray).
+    - **Live:** a rain-on vs rain-off pixel diff, with the ground cover hidden.
+    - The raw numbers are in `visual/surge/after/rain_measure_{before,after}.json`. The masks are in `visual/surge/sheet_rain_foreground_measure.jpg`.
+
+    | Shot (Break) | Drops above ground before → after | Drops seen in bottom 45% (of 6000) | Live streaks in bottom 45% |
+    |---|---|---|---|
+    | day, normal camera | 25% → 53% | 122 → 387 | 45 → 98 |
+    | day, upwind camera | 28% → 59% | 75 → 318 | 27 → 76 |
+    | day, riding profile | 27% → 52% | 160 → 479 | 51 → 84 |
+    | night, normal camera | 25% → 53% | 122 → 387 | 44 → 73 |
+
+  - **Root cause:** geometry, not contrast. The camera-centred near column spawned from camera −4 m to +10 m and fell for 1.4 s (about 18 m). At any moment 72–75% of the drops were below the terrain, and the few above it were mostly above eye level.
+  - **Fix:**
+    - The near layer now spawns in a band 0.2–6.5 m above the floor. The floor is the higher of the terrain under the camera and the trainer. The band is still centred on the camera horizontally, and each drop lives 0.5 s.
+    - The shorter drift lets the derived lens-safe inner radius come in to 2.8 m, and lens clearance is still ≥ 1.5 m.
+    - Drops fade in and out over their life.
+    - Streaks are thin tapered translucent spindles (1.8 cm base) on a 14° wind slant, where they had been opaque boxes.
+    - Near and far layers have separate night tints.
+  - **Remaining trade-off:** the very bottom ~15% of a level-pitch frame (ground 2.5–4 m from the lens) stays sparse. Drops there would come within the lens clearance.
+  - **Tests:**
+    - `test_near_rain_fills_the_foreground` needs ≥ 35 drops in the bottom 45% in Break. The HEAD geometry gives 15.1 and fails; this is the negative control.
+    - N1 `test_rain_volume_follows_a_raised_trainer`: its control, a clamp against the terrain only, fails (centre at 16 m under a trainer at 60 m).
+    - N2 smoke `RAIN ROOF SUBJECT`: its control, probing the trainer instead of the framed subject, fails.
+  - **Frames:** `rc_day_break`, `rc_day_break_upwind`, `rc_day_break_riding`, `rc_night_break` and the two roof frames were re-captured under their existing names (older versions are in git). `sheet_rain_camera.jpg` is rebuilt.
+- **Open:**
+  - The riding frame uses the production riding camera PROFILE on the trainer, with no mount.
+  - Night rain is intentionally faint.
+  - No Ally GPU profile has been taken.
+
+## WO-F10-08: Stormwood is always the purple storm (`ralph/stormwood-f10-rain-camera`, `220bd0268`)
+
+- **Owner direction** (about `visual/surge/after/rc_day_break_upwind.jpg`): *"I love the purple sky look in some of the screenshots. We should not have day and night in stormwood. It should just always be that kind of purple rainy sky regardless of time of day."*
+- **Owner ruling on the aftermath:** Stormwood stays purple after the Long Storm is broken. *"The aftermath shows only through lighter rain, no lightning and the scars."*
+- **Player result.** Presentation only, in `scripts/world/stormwood_surge.gd` and `data/config/stormwood_surge.json`.
+  - **One storm look at every hour.** Stormwood's own WorldLook instance gets a config in which every time-of-day preset is the same storm reference: the day preset plus `presentation.storm_base.overrides`. Those overrides are the key light's angle (−44°/140°), its energy (1.4) and colour (#e8e0f4), and purple-grey clouds and haze.
+    - Sky, clouds, fog, ambient, exposure and the key light's angle, energy and colour are therefore the same at every hour. Shadows no longer rotate.
+    - The world clock, the day counter, `is_dark()`, the shared night-rest authority and encounter night roles are untouched.
+    - The pin lives on that WorldLook instance only, so the next realm loads `art.json` as before.
+    - Setting `storm_base.pin_time_of_day` to false brings the clock look back.
+  - **Phases, all in the purple family of the day-Break anchor.** They read from rain density (0.3 / 0.6 / 1.0 / 0.15), lightning cadence and flashes (Break only), ceiling value and motion, fog and key level (0.8 / 0.38 / 0.24 / 0.7). The sky is never blue or white and never night-black.
+  - **Aftermath (every aftermath phase).** It is separated from Calm by:
+    - lighter rain (0.1 against Calm's 0.3);
+    - no sky flashes;
+    - the stillest ceiling (speed 0.003 and contrast 0.1, against Calm's 0.006 and 0.18);
+    - the lightest ceiling (#9894b4);
+    - a steadier, higher key light (0.9 against 0.8).
+  - **Gameplay left alone.** The aftermath's Surge timings (`aftermath_seconds`) and real aftermath-Break strikes are rules, and are unchanged.
+  - **Night lights.** The capacitor grove's `night_light_*` and the glass field's `night_light` were already unconditional, not clock-gated. They needed no change and stay at their modest energies (1.45 and 0.84).
+- **Tests** (`tests/test_stormwood_surge_presentation.gd`):
+  - **New:**
+    - `test_look_is_identical_at_every_hour`: for every phase, and for the aftermath, the look WorldLook would layer is identical at hours 0/6/12/18. That covers sky top and horizon, fog colour and density, ambient colour and energy, exposure, and key energy, angle and colour.
+    - `test_leaving_stormwood_restores_the_clock_look`: the pin never mutates `art.json`, the day length and the `is_dark()` window are unchanged, and a fresh realm's WorldLook has moving sun and night again.
+  - **Rewritten to the new rule** (none skipped). Each old name maps to its replacement:
+    - `test_night_base_from_real_art_config_dims_storm_sky` → `test_storm_base_is_identical_at_every_hour`
+    - `test_cross_fade_through_native_sky_has_no_dip_at_night_dusk_or_dawn` → `test_cross_fade_between_phases_has_no_dip_at_any_hour`
+    - `test_storm_ambient_never_brightens_the_night` → `test_storm_ambient_never_exceeds_the_storm_base`
+    - `test_ceiling_builds_and_opens_in_the_aftermath` → `test_ceiling_builds_and_stays_in_the_aftermath`
+    - `test_aftermath_calm_restores_sky_and_is_distinct` → `test_aftermath_is_the_calmest_purple`
+    - `test_aftermath_flag_hides_rain_in_production_path` → `test_aftermath_flag_lightens_rain_in_production_path`
+    - `test_night_break_has_its_own_hue` → `test_break_keeps_its_violet_identity_at_every_hour`
+    - `test_ceiling_breakup_closes_at_night` → `test_fading_breakup_is_the_same_at_every_hour`
+    - `test_rain_slants_fades_with_depth_and_dims_at_night` → `test_rain_slants_and_fades_with_depth`
+    - `test_day_break_sky_is_clearly_lighter_than_night_break` → `test_break_sky_is_a_storm_afternoon_at_every_hour`
+    - `test_night_phases_separate_by_hue_and_value` → `test_phases_separate_within_the_purple_family`
+  - **Negative control:** setting `pin_time_of_day` to false (the clock blend restored) fails 6 tests, including the every-hour test ("Break sky_top same at 23:00: expected 545179, got 282639").
+- **Frames** (`visual/surge/sheet_purple_phases.jpg`, `after/purple_{calm,building,break,fading,aftermath}_h{12,00}.jpg`, records in `after/frames_after_purple.json`):
+  - Each hour-12/hour-0 pair matches: mean luminance of the sky region is identical to within 0.4/255. Break's ground differs only because a live strike telegraph happened to land in the hour-12 frame.
+  - The rain frames (`rc_*`, roof) were re-rendered with the pin as well. `rc_night_break` (hour 23) now matches the day look.
+- **Clock-keyed and NOT changed** (shared scripts outside this lane, or gameplay; listed for the owner's pending gameplay ruling):
+  - `scripts/player/torch.gd`: the trainer's torch auto-lights when `is_dark()`.
+  - `scripts/world/campfire_glow.gd` and `camp_fill_light.gd`: camp fire and fill light only when dark.
+  - `scripts/audio/world_audio.gd`: night ambience layer.
+  - `scripts/world/inn_interior.gd`: reads `time_of_day`.
+  - The HUD clock.
+  - Creature/character night emission floors come through WorldLook and are therefore pinned too. The encounter night roles and night rest are gameplay and were deliberately not touched.
+- **Open:**
+  - As stills, Calm, Fading and the aftermath sit close together. Their separation is mostly rain density, ceiling motion and flashes, which read best in motion.
+  - No blind judge has seen the purple set yet.
+
+
+### WO-F10-08, round 2: every phase in the deep purple (`cb067c58f`, `62f14e95f`)
+
+- **Owner direction** (about `sheet_purple_phases.jpg`, round 1): *"I like the building and break pictures. The other two aren't fantastic enough."* Calm, Fading and the post-release aftermath therefore move into the deep purple family of Building and Break. That covers sky, ceiling, fog, key and ambient; nothing is pale lavender or grey. The clock pin is kept.
+- **How phases separate now.** The sky changes only in small value steps inside the deep purple. The other cues are:
+
+  | Phase | Rain | Wind slant | Ceiling speed / contrast | Lightning | Fog + | Key / ambient | `surge_intensity()` |
+  |---|---|---|---|---|---|---|---|
+  | Calm | 0.4 | 0.45 | 0.008 / 0.3 (slow) | none | 0.0008 | 0.42 / 0.6 | 0.25 |
+  | Building | 0.65 | 0.85 | 0.03 / 0.5 (fast) | faint in-cloud flicker only (sheet glow 0.15) | 0.0016 | 0.3 / 0.45 | 0.65 |
+  | Break | 1.0 | 1.0 | 0.045 / 0.55 (fastest) | strikes, distant flashes and a persistent in-cloud sheet glow (0.9) | 0.0026 | 0.2 / 0.38 | 1.0 |
+  | Fading | 0.15 | 0.7 | 0.014 / 0.3 (slowing) | none | 0.0012 | 0.4 / 0.58 | 0.4 |
+  | Aftermath | 0.08 | 0.3 | 0.002 / 0.12 (almost still) | none | 0.0006 | 0.45 / 0.62 | 0.1 |
+
+- **Judge-7 findings folded in:**
+  1. **Break lightning a still can catch.** The ceiling shader has a new sheet glow: fbm patches that pulse slowly inside the cloud body. Break carries 0.9, and Building only 0.15, which reads as a rare, faint flicker. The glow is multiplied by the reduced-motion flash scale (floor 0.15, unchanged) and its clock freezes under reduced motion. There is no strobing.
+  2. **The ground darkens with the phase** through the key light and ambient, not a screen tint. Break's ground mean is 23/255, Building 33, Calm and Fading about 40, the aftermath 44.
+  3. **Fog and the distant rain curtain scale with the phase.** Fog density is added per phase as above. The far rain layer grows to 1200 drops and follows `rain_amount`.
+  4. **Ceiling motion order:** Calm slow, Building fast, Break fastest, Fading slowing, aftermath almost still. This is tested.
+  5. **Hue stays in the purple family.** Fading's pink horizon is gone. Every row is within 15° of Break's hue.
+- **Hook.** `StormwoodSurge.surge_intensity()` is a read-only 0–1 value, blended with the cross-fade. It is there for the ground-electricity effect on another branch; that effect is not built here.
+- **Review nits:**
+  - `is_instance_valid(target)` is checked before `target is Node3D`.
+  - The rain band anchors on the framed subject's last grounded height, so jumps don't bob the field.
+  - The camera ground is sampled every frame and eased at 8/s. It snaps on teleports of more than 20 m. The old 0.25 s steps are gone.
+  - On steep slopes, 6 ring samples at 6 m raise the band floor to (highest sample − 2 m).
+  - The `pin_time_of_day: false` branch is tested.
+  - Separation thresholds are visible margins, not token ones.
+- **Tests** (`tests/test_stormwood_surge_presentation.gd`, 41 tests):
+  - `test_every_phase_sits_in_the_deep_purple_band`: sky top, horizon and ceiling are 0.8–1.15× Break's luminance and within 15° of its hue.
+  - `test_phases_separate_by_non_sky_cues`: adjacent phases differ in at least two of these cues, and the ceiling-motion and rain orders hold:
+    - rain by at least 0.2;
+    - ceiling speed by at least 1.5×;
+    - wind by at least 0.2;
+    - sheet glow by at least 0.1;
+    - flashes.
+  - `test_sheet_glow_reaches_the_ceiling_and_respects_reduced_motion`
+  - `test_phase_wind_and_intensity_hook`
+  - `test_rain_anchor_holds_through_jumps_and_eases_on_slopes`
+  - `test_pin_off_restores_the_clock_look`
+  - `test_look_is_identical_at_every_hour` is kept.
+- **Negative control N24:** the round-1 pale Calm row fails `test_every_phase_sits_in_the_deep_purple_band`. Calm's sky top is 1.19×, its horizon 1.24× and its ceiling 1.27× Break's luminance.
+- **Frames:**
+  - `visual/surge/sheet_purple_phases.jpg` and `after/purple_{calm,building,break,fading,aftermath}_h{12,00}.jpg` were re-shot under the same names. Their records are in `after/frames_after_purple.json`.
+  - `visual/surge/sheet_purple_motion.jpg` holds 4 frames per phase, 0.25 s of game time apart, at hour 12. The capture group is `--only=purplemotion`, and the surge clocks are in `after/frames_after_purplemotion.json`.
+- **What I saw:**
+  - All five phases are now the deep purple. Sky means are 52–62/255 (the round-1 pale set was 86–98).
+  - The hour-12 and hour-0 pairs match: sky 55.1/55.0 (Calm), 59.5/59.5 (Building), 51.8/52.3 (Break), 54.7/54.6 (Fading) and 61.6/61.7 (aftermath).
+  - In the motion strip, Break shows lighter in-cloud glow patches low on the horizon that change from frame to frame. Its rain is the densest and most slanted.
+  - Building has heavy slanted rain and a textured ceiling, with no visible glow in these four frames.
+  - Calm and Fading show sparse, near-vertical rain.
+  - The aftermath is the stillest: a smooth ceiling and only a few drops.
+- **Open:**
+  - The grass still reads fairly green in Calm, Fading and the aftermath. The darkening is only through light and ambient, by design.
+  - Building has no distant flashes, only the faint glow, which rarely shows in stills.
+  - The slope-floor ring is exercised by the anchor test's easing but has no direct steep-terrain fixture.
+  - No blind judge has seen the round-2 set.

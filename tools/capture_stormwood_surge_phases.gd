@@ -118,6 +118,16 @@ func _run() -> void:
 		await _quick()
 	if _only.has("round4"):
 		await _round4()
+	if _only.has("raincam"):
+		await _raincam()
+	if _only.has("roof"):
+		await _roof()
+	if _only.has("rainmeasure"):
+		await _rainmeasure()
+	if _only.has("purple"):
+		await _purple()
+	if _only.has("purplemotion"):
+		await _purple_motion()
 	if _want("strips"):
 		await _strips()
 	if _want("motion"):
@@ -251,9 +261,9 @@ func _enter_phase(phase: String, aftermath: bool) -> float:
 
 # ---------------------------------------------------------------- placement
 
-func _floor_at(x: float, z: float) -> float:
+func _floor_at(x: float, z: float, probe_above: float = 4.0) -> float:
 	var terrain := float(_world.call("ground_height_at", x, z))
-	var top := terrain + 4.0
+	var top := terrain + probe_above
 	var query := PhysicsRayQueryParameters3D.create(Vector3(x, top, z), Vector3(x, top - 400.0, z), 1)
 	query.exclude = [_player.get_rid()]
 	var hit := _player.get_world_3d().direct_space_state.intersect_ray(query)
@@ -262,12 +272,12 @@ func _floor_at(x: float, z: float) -> float:
 	return resolve_capture_ground(_player, x, z, terrain)
 
 
-func _stand(xz: Vector2, look_at: Vector3, pitch_deg: float) -> void:
+func _stand(xz: Vector2, look_at: Vector3, pitch_deg: float, probe_above: float = 4.0) -> void:
 	if not bool(_game.call("debug_teleport_to", xz.x, xz.y, "stormwood", "")):
 		_failures.append("debug_teleport_to refused %s" % str(xz))
 	for _frame in 10:
 		await physics_frame
-	var ground := _floor_at(xz.x, xz.y)
+	var ground := _floor_at(xz.x, xz.y, probe_above)
 	var forward := Vector2(look_at.x - xz.x, look_at.z - xz.y).normalized()
 	_player.global_position = Vector3(xz.x, ground + TRAINER_CLEARANCE, xz.y)
 	_player.velocity = Vector3.ZERO
@@ -330,8 +340,14 @@ func _presentation_state() -> Dictionary:
 		state["rain_amount_ratio"] = (rain as GPUParticles3D).amount_ratio
 	if _surge.has_method("flash_level"):
 		state["flash_level"] = float(_surge.call("flash_level"))
+	if _surge.get("_roofed") != null:
+		state["roofed"] = bool(_surge.get("_roofed"))
 	if _surge.has_method("presentation_key"):
 		state["presentation_key"] = str(_surge.call("presentation_key"))
+	# Round 3 signatures.
+	for method: String in ["phase_progress", "steam_level", "cloud_flash_level", "bolt_level"]:
+		if _surge.has_method(method):
+			state[method] = snappedf(float(_surge.call(method)), 0.001)
 	return state
 
 
@@ -474,6 +490,319 @@ func _round4() -> void:
 	_heal()
 	await _capture("r4_break_upwind", "Day Break, camera upwind of the trainer (looking downwind): slanted-rain lens check", false,
 		{"wind_dir_xz": [slant.x, slant.z]})
+
+
+## Task #8 (explicit --only=raincam), 640x360: day Break with the normal
+## camera, the camera upwind, the production RIDING camera profile
+## (movement.json riding.camera via CameraRig.set_target, staged on the
+## trainer with no mount), and night Break. Each record notes where the rain
+## emitter sits relative to the camera.
+func _raincam() -> void:
+	var rain := _surge.get("_rain") as GPUParticles3D
+	var shots := [["rc_day_break", "normal"], ["rc_day_break_upwind", "upwind"],
+		["rc_day_break_riding", "riding"], ["rc_night_break", "night"]]
+	for shot: Array in shots:
+		var kind := str(shot[1])
+		_pin_clock("night" if kind == "night" else "day")
+		var focus := _station_focus()
+		if kind == "upwind" and rain != null:
+			var d := (rain.process_material as ParticleProcessMaterial).direction
+			var at := _player.global_position
+			focus = at + Vector3(d.x, 0.0, d.z).normalized() * 20.0
+		await _stand(STAND, focus, 2.0)
+		if kind == "riding":
+			var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
+			_rig.call("set_target", _player, movement.riding.camera)
+			_note("riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount")
+			for _frame in 60:
+				await physics_frame
+		await _enter_phase("break", false)
+		_heal()
+		var offset := rain.global_position - _camera.global_position if rain != null else Vector3.ZERO
+		await _capture(str(shot[0]), "Break, %s camera: rain centred on the camera" % kind, false,
+			{"rain_minus_camera": _vec3(offset), "camera_player_m": _camera.global_position.distance_to(_player.global_position)})
+		if kind == "riding":
+			_rig.call("set_target", _player)
+	_pin_clock("day")
+
+
+## Rain-under-roof check (explicit --only=roof), 640x360, day Break: the
+## trainer inside the Ashfoot shelter (stormwood_settlements.json
+## ashfoot_shelter, a ranger_station with a cottage interior), then the
+## same shelter from 11 m outside. The floor probe starts 1.6 m above the
+## terrain so it lands on the floor, not the roof.
+func _roof() -> void:
+	var centre := Vector2(-365.0, 460.0)
+	var ground := float(_world.call("ground_height_at", centre.x, centre.y))
+	var shelter := Vector3(centre.x, ground + 1.5, centre.y)
+	var yaw := deg_to_rad(135.0)
+	var along := Vector2(sin(yaw), cos(yaw))
+	_pin_clock("day")
+	await _stand(centre + along * 0.6, Vector3(centre.x - along.x * 6.0, ground + 1.4, centre.y - along.y * 6.0), -4.0, 1.6)
+	await _enter_phase("break", false)
+	for _frame in 60:
+		await physics_frame
+	_heal()
+	await _capture("roof_inside_ashfoot_shelter", "Day Break, trainer inside the Ashfoot shelter (ranger station): near rain suppressed", false)
+	var outside := centre + Vector2(along.y, -along.x) * 11.0
+	await _stand(outside, shelter, 4.0)
+	for _frame in 60:
+		await physics_frame
+	_heal()
+	await _capture("roof_outside_ashfoot_shelter", "Day Break, the same shelter from 11 m outside: rain falls in the open", false)
+
+
+## WO-F10-08 owner direction (explicit --only=purple), 640x360: Calm,
+## Building, Break and Fading, then the aftermath (Calm, flag
+## stormwood:long_storm_ended set), each at world hour 12 and hour 0 at the
+## strip stand. The WorldLook clock is set to the exact hour and frozen.
+func _purple() -> void:
+	var targets: Array = []
+	for phase: String in PHASES:
+		targets.append([phase, false])
+	targets.append(["calm", true])
+	for target: Array in targets:
+		var aftermath := bool(target[1])
+		if aftermath:
+			var flags: RefCounted = _game.get("progression")
+			if not bool(flags.call("has", "stormwood:long_storm_ended")):
+				flags.call("set_flag", "stormwood:long_storm_ended", true)
+			_note("flag stormwood:long_storm_ended set (aftermath)")
+		for hour: float in [12.0, 0.0]:
+			_set_hour(hour)
+			await _stand(STAND, _station_focus(), 2.0)
+			await _enter_phase(str(target[0]), aftermath)
+			for _frame in 30:
+				await physics_frame
+			var name := "aftermath" if aftermath else str(target[0])
+			if name == "break":
+				await _capture_bolt("purple_%s_h%02d" % [name, int(hour)], "%s at world hour %d" % [name.capitalize(), int(hour)],
+					{"world_hour": float(_look.call("hour"))})
+				continue
+			await _capture("purple_%s_h%02d" % [name, int(hour)], "%s at world hour %d" % [name.capitalize(), int(hour)], false,
+				{"world_hour": float(_look.call("hour"))})
+
+
+## Round 3: a Break still is taken on the first rendered frame (up to 120)
+## in which a decorative sky bolt is fully lit and inside the view, read
+## right after that frame is drawn. Break shows lightning in ~99% of 1 s
+## windows in play (tests); a slow software render cannot sample it at 60
+## fps, so the frame is chosen and the staging says so.
+func _capture_bolt(frame_id: String, description: String, extra: Dictionary) -> void:
+	_note("Break stills: first frame with a lit decorative bolt in view (waited)")
+	var waited := 0
+	var image: Image = null
+	while waited < 120:
+		await RenderingServer.frame_post_draw
+		waited += 1
+		if float(_surge.call("bolt_level")) >= 0.9 and _bolt_in_view():
+			image = root.get_texture().get_image()
+			break
+	if image == null:
+		_failures.append("%s: no bolt in view within 120 frames" % frame_id)
+		image = root.get_texture().get_image()
+	if not _save(image, "%s/%s.jpg" % [_output_dir, frame_id], STRIP_W, STRIP_H):
+		return
+	var record := {"id": frame_id, "file": frame_id + ".jpg", "label": _label, "description": description,
+		"size": [STRIP_W, STRIP_H], "camera": "player camera (production CameraRig/Camera3D)", "hud": false,
+		"surge_phase": str(_surge.get("phase")), "surge_elapsed": _surge_elapsed(), "frames_waited": waited,
+		"presentation": _presentation_state(), "staged": _staged.duplicate()}
+	record.merge(extra, true)
+	_frames.append(record)
+	_log("captured %s after %d frames %s" % [frame_id, waited, str(record.presentation)])
+
+
+func _bolt_in_view() -> bool:
+	for bolt: Variant in _surge.get("_bolts"):
+		var instance := bolt as MeshInstance3D
+		if instance != null and instance.visible and instance.mesh != null:
+			if _camera.is_position_in_frustum(instance.mesh.get_aabb().get_center()):
+				return true
+	return false
+
+
+## WO-F10-08 motion strips (explicit --only=purplemotion): per phase (and the
+## aftermath last, since its flag is permanent), 4 frames 0.25 s of game time
+## apart at world hour 12. Rendering here is far below 4 fps, so the physics
+## step cap is set to 15 ticks (0.25 s) per rendered frame and 4 consecutive
+## rendered frames are grabbed: particles, ceiling and flashes advance by the
+## real process delta between them. Written to --motion-out (scratch) for a
+## sheet; the per-frame surge clock is recorded.
+func _purple_motion() -> void:
+	var out := _motion_out if not _motion_out.is_empty() else _output_dir
+	DirAccess.make_dir_recursive_absolute(out)
+	var targets: Array = []
+	for phase: String in PHASES:
+		targets.append([phase, false])
+	targets.append(["calm", true])
+	_set_hour(12.0)
+	for target: Array in targets:
+		var aftermath := bool(target[1])
+		if aftermath:
+			var flags: RefCounted = _game.get("progression")
+			if not bool(flags.call("has", "stormwood:long_storm_ended")):
+				flags.call("set_flag", "stormwood:long_storm_ended", true)
+			_note("flag stormwood:long_storm_ended set (aftermath)")
+		await _stand(STAND, _station_focus(), 2.0)
+		await _enter_phase(str(target[0]), aftermath)
+		for _frame in 30:
+			await physics_frame
+		var name := "aftermath" if aftermath else str(target[0])
+		_fine(15)
+		var times: Array[float] = []
+		var states: Array = []
+		for index in 4:
+			await RenderingServer.frame_post_draw
+			times.append(snappedf(_surge_elapsed(), 0.01))
+			states.append(_presentation_state())
+			_save(root.get_texture().get_image(), "%s/motion_%s_%d.jpg" % [out, name, index], STRIP_W, STRIP_H)
+		_coarse()
+		_frames.append({"id": "motion_%s" % name, "surge_elapsed": times, "presentation": states, "staged": _staged.duplicate()})
+		_log("motion %s %s" % [name, str(times)])
+
+
+func _set_hour(hour: float) -> void:
+	if _look.has_method("set_clock_frozen"):
+		_look.call("set_clock_frozen", false)
+	var cycle: RefCounted = _look.get("_cycle")
+	_look.set("_elapsed_seconds", float(cycle.call("elapsed_for_hour", hour)))
+	_look.call("set_weather", _look.get("_weather"))
+	if _look.has_method("set_clock_frozen"):
+		_look.call("set_clock_frozen", true)
+	_note("world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen")
+
+
+## Foreground-rain measurement (explicit --only=rainmeasure). At each
+## production camera pose of the raincam shots, day/night Break:
+## 1. analytic: N particles sampled from the LIVE near emitter's parameters
+##    (ring radii, spawn height band, upwind offset, velocity, lifetime,
+##    world position) are projected through the production Camera3D; a
+##    particle counts as seen when it is in front of the camera, inside the
+##    viewport, above the terrain and not occluded (physics ray camera->drop);
+##    counts are split top 55% / bottom 45% of the screen;
+## 2. live pixels: the ground cover is hidden, the frame is grabbed with rain
+##    and again with both rain layers hidden, and pixels whose luminance
+##    changed by more than 0.04 are counted per region (so it measures what
+##    the real GPU particles actually draw, including contrast).
+## Results go to measure_<label>.json in --out; nothing is rendered to disk
+## except small diff masks for inspection.
+func _rainmeasure() -> void:
+	var rain := _surge.get("_rain") as GPUParticles3D
+	var far := _surge.get("_rain_far") as GPUParticles3D
+	var cover := _world.get_node_or_null(^"StormwoodGroundCover") as Node3D
+	var results: Array = []
+	var shots := [["normal", "day"], ["upwind", "day"], ["riding", "day"], ["normal", "night"]]
+	for shot: Array in shots:
+		var kind := str(shot[0])
+		_pin_clock(str(shot[1]))
+		var focus := _station_focus()
+		if kind == "upwind":
+			var d := (rain.process_material as ParticleProcessMaterial).direction
+			focus = _player.global_position + Vector3(d.x, 0.0, d.z).normalized() * 20.0
+		await _stand(STAND, focus, 2.0)
+		if kind == "riding":
+			var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
+			_rig.call("set_target", _player, movement.riding.camera)
+			for _frame in 60:
+				await physics_frame
+		await _enter_phase("break", false)
+		for _frame in 90:
+			await physics_frame
+		var row := {"shot": "%s_%s" % [str(shot[1]), kind]}
+		row.merge(_project_near_rain(rain))
+		# live pixel diff with the ground cover hidden
+		if cover != null:
+			cover.visible = false
+		for _frame in 3:
+			await process_frame
+		var with_rain := await _grab()
+		rain.visible = false
+		if far != null:
+			far.visible = false
+		var without := await _grab()
+		rain.visible = true
+		if far != null:
+			far.visible = true
+		if cover != null:
+			cover.visible = true
+		row.merge(_diff_counts(with_rain, without, "%s/diff_%s.png" % [_output_dir, row.shot]))
+		row["flash_level"] = float(_surge.call("flash_level"))
+		results.append(row)
+		_log("MEASURE %s" % JSON.stringify(row))
+		if kind == "riding":
+			_rig.call("set_target", _player)
+	_pin_clock("day")
+	var file := FileAccess.open("%s/measure_%s.json" % [_output_dir, _label], FileAccess.WRITE)
+	file.store_string(JSON.stringify(results, "\t"))
+	file.close()
+
+
+func _project_near_rain(rain: GPUParticles3D) -> Dictionary:
+	var process := rain.process_material as ParticleProcessMaterial
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 1234
+	var size := root.get_visible_rect().size
+	var space := _player.get_world_3d().direct_space_state
+	var counts := {"samples": 0, "above_ground": 0, "seen": 0, "seen_top55": 0, "seen_bottom45": 0}
+	var inner := process.emission_ring_inner_radius
+	var outer := process.emission_ring_radius
+	var height := process.emission_ring_height
+	var direction := process.direction.normalized()
+	var n := 6000
+	for i in n:
+		var r := sqrt(rng.randf_range(inner * inner, outer * outer))
+		var a := rng.randf() * TAU
+		var local := process.emission_shape_offset + Vector3(cos(a) * r, rng.randf_range(-height * 0.5, height * 0.5), sin(a) * r)
+		var age := rng.randf() * rain.lifetime
+		var speed := rng.randf_range(process.initial_velocity_min, process.initial_velocity_max)
+		var at := rain.global_transform * local + direction * speed * age
+		counts.samples += 1
+		if at.y <= float(_world.call("ground_height_at", at.x, at.z)):
+			continue
+		counts.above_ground += 1
+		if _camera.is_position_behind(at):
+			continue
+		var screen := _camera.unproject_position(at)
+		if screen.x < 0 or screen.y < 0 or screen.x > size.x or screen.y > size.y:
+			continue
+		var query := PhysicsRayQueryParameters3D.create(_camera.global_position, at, 1)
+		query.exclude = [_player.get_rid()]
+		if not space.intersect_ray(query).is_empty():
+			continue
+		counts.seen += 1
+		if screen.y > size.y * 0.55:
+			counts.seen_bottom45 += 1
+		else:
+			counts.seen_top55 += 1
+	counts["alive_above_ground_fraction"] = snappedf(float(counts.above_ground) / n, 0.001)
+	counts["seen_bottom45_fraction_of_seen"] = snappedf(float(counts.seen_bottom45) / maxf(1.0, counts.seen), 0.001)
+	counts["emitter_minus_camera"] = _vec3(rain.global_position - _camera.global_position)
+	counts["ring"] = [inner, outer, height]
+	counts["lifetime"] = rain.lifetime
+	return counts
+
+
+func _diff_counts(a: Image, b: Image, mask_path: String) -> Dictionary:
+	var w := a.get_width()
+	var h := a.get_height()
+	var mask := Image.create(w / 2, h / 2, false, Image.FORMAT_L8)
+	var top := 0
+	var bottom := 0
+	for y in range(0, h, 2):
+		for x in range(0, w, 2):
+			var d := absf(a.get_pixel(x, y).get_luminance() - b.get_pixel(x, y).get_luminance())
+			if d > 0.04:
+				if y > h * 0.55:
+					bottom += 1
+				else:
+					top += 1
+				mask.set_pixel(x / 2, y / 2, Color(1, 1, 1))
+	mask.save_png(ProjectSettings.globalize_path(mask_path) if mask_path.begins_with("res://") else mask_path)
+	var bottom_px := (w / 2) * int(h * 0.45 / 2)
+	var top_px := (w / 2) * int(h * 0.55 / 2)
+	return {"diff_top55_px": top, "diff_bottom45_px": bottom,
+		"diff_top55_density": snappedf(float(top) / top_px, 0.0001),
+		"diff_bottom45_density": snappedf(float(bottom) / bottom_px, 0.0001)}
 
 
 ## Tuning pass only (--only=quick): one settled frame per phase.

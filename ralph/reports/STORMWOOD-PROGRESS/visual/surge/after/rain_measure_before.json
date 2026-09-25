@@ -1,0 +1,106 @@
+[
+	{
+		"above_ground": 1516,
+		"alive_above_ground_fraction": 0.253,
+		"diff_bottom45_density": 0.0152,
+		"diff_bottom45_px": 1572,
+		"diff_top55_density": 0.0247,
+		"diff_top55_px": 3129,
+		"emitter_minus_camera": [
+			0.0,
+			3.0,
+			0.0
+		],
+		"flash_level": 0.0,
+		"lifetime": 1.4,
+		"ring": [
+			3.87375426292419,
+			11.8737545013428,
+			14.0
+		],
+		"samples": 6000,
+		"seen": 413,
+		"seen_bottom45": 122,
+		"seen_bottom45_fraction_of_seen": 0.295,
+		"seen_top55": 291,
+		"shot": "day_normal"
+	},
+	{
+		"above_ground": 1688,
+		"alive_above_ground_fraction": 0.281,
+		"diff_bottom45_density": 0.0177,
+		"diff_bottom45_px": 1838,
+		"diff_top55_density": 0.0299,
+		"diff_top55_px": 3791,
+		"emitter_minus_camera": [
+			0.0,
+			3.0,
+			0.0
+		],
+		"flash_level": 0.0,
+		"lifetime": 1.4,
+		"ring": [
+			3.87375426292419,
+			11.8737545013428,
+			14.0
+		],
+		"samples": 6000,
+		"seen": 337,
+		"seen_bottom45": 75,
+		"seen_bottom45_fraction_of_seen": 0.223,
+		"seen_top55": 262,
+		"shot": "day_upwind"
+	},
+	{
+		"above_ground": 1614,
+		"alive_above_ground_fraction": 0.269,
+		"diff_bottom45_density": 0.0187,
+		"diff_bottom45_px": 1941,
+		"diff_top55_density": 0.0276,
+		"diff_top55_px": 3503,
+		"emitter_minus_camera": [
+			0.0,
+			3.0,
+			0.0
+		],
+		"flash_level": 0.0,
+		"lifetime": 1.4,
+		"ring": [
+			3.87375426292419,
+			11.8737545013428,
+			14.0
+		],
+		"samples": 6000,
+		"seen": 451,
+		"seen_bottom45": 160,
+		"seen_bottom45_fraction_of_seen": 0.355,
+		"seen_top55": 291,
+		"shot": "day_riding"
+	},
+	{
+		"above_ground": 1516,
+		"alive_above_ground_fraction": 0.253,
+		"diff_bottom45_density": 0.0166,
+		"diff_bottom45_px": 1718,
+		"diff_top55_density": 0.0223,
+		"diff_top55_px": 2824,
+		"emitter_minus_camera": [
+			0.0,
+			3.0,
+			0.0
+		],
+		"flash_level": 0.0,
+		"lifetime": 1.4,
+		"ring": [
+			3.87375426292419,
+			11.8737545013428,
+			14.0
+		],
+		"samples": 6000,
+		"seen": 413,
+		"seen_bottom45": 122,
+		"seen_bottom45_fraction_of_seen": 0.295,
+		"seen_top55": 291,
+		"shot": "night_normal"
+	}
+]

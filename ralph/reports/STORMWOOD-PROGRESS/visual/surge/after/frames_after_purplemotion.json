@@ -1,0 +1,77 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"id": "motion_calm",
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": [
+				4.49,
+				4.76,
+				5.0,
+				5.24
+			]
+		},
+		{
+			"id": "motion_building",
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": [
+				328.5,
+				328.74,
+				328.99,
+				329.25
+			]
+		},
+		{
+			"id": "motion_break",
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": [
+				418.52,
+				418.77,
+				419.01,
+				419.25
+			]
+		},
+		{
+			"id": "motion_fading",
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": [
+				538.5,
+				538.75,
+				539.0,
+				539.24
+			]
+		},
+		{
+			"id": "motion_aftermath",
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"flag stormwood:long_storm_ended set (aftermath)"
+			],
+			"surge_elapsed": [
+				4.49,
+				4.75,
+				5.01,
+				5.26
+			]
+		}
+	],
+	"label": "after_purplemotion"
+}
