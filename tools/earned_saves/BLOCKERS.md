@@ -91,3 +91,9 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   party ripplet 9, bramblebun 8, mudsnout 8, mudsnout 7, bramblebun 6.
   Last good save: `/tmp/claude-0/earned_chain/seed4/bridge/save/`. Logs are in
   `/tmp/claude-0/earned_chain/seed4_warrens_attempt{1..4}/` and `seed4/warrens/`.
+- **Coordinator ruling (20:00 UTC):** the route may skip order 16 only if nothing later needs the
+  stone. No later earned helper (relay/hall/warden) and no gate cost uses rootstone, so
+  `tools/earned_saves/warrens_route.gd` skips it with receipt `unreachable_node_skipped`
+  (no replacement nodes needed) and keeps the east detour for the fourth stone. The south
+  approach was dropped. **B2 remains an open Meadows defect:** order 16 cannot be reached by
+  walking.
