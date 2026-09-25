@@ -56,6 +56,7 @@ class ChapterStub extends Node:
 class DynamoStub extends Node:
 	var participants: Array[int] = []
 	var contributors: Array[int] = []
+	var fighter_characters: Array[String] = []
 
 
 func _init() -> void:
@@ -96,6 +97,9 @@ func _run() -> void:
 	dynamo.name = "StormwoodDynamo"
 	dynamo.participants = [local_peer, 2]
 	dynamo.contributors = [2]
+	# D fought, then disconnected before the release: no registry row, but the
+	# Dynamo captured D's stable character when D joined.
+	dynamo.fighter_characters = ["character-host-a", "character-fought-b", "character-left-d"]
 	world.add_child(dynamo)
 	var ending := ENDING.new()
 	ending.name = "StormwoodEnding"
@@ -115,16 +119,23 @@ func _run() -> void:
 	_check(game.progression.has("stormwood:legendary_freed"), "Marrow's defeat frees the Stormheart once")
 	var state: Dictionary = ENDING.migrate_state(game.realm_environment.stormwood.ending)
 	_check((state.participants as Array).has(host_character) and (state.participants as Array).has("character-fought-b")
+		and (state.participants as Array).has("character-left-d")
 		and not (state.participants as Array).has("character-watched-c"),
-		"the freeing records the two fighting characters, not the onlooker")
+		"the freeing records every fighter, including one who disconnected, and not the onlooker")
 
 	ending.dispatch(3, {"kind": "ending_claim"})
 	_check(hub.offers_for(3).is_empty() and hub.refusals_for(3).size() == 1,
 		"a character who did not fight receives no offer")
+	_check(game.progression.has("stormwood:legendary_offer_made"),
+		"an onlooker can still let the world's single offer fact land, so Waterward never waits on absent fighters")
+	ending.dispatch(local_peer, {"kind": "ending_claim", "already_resolved": true})
+	_check(hub.offers_for(local_peer).is_empty(),
+		"a character already holding a Stormheart receipt from another world gets no second creature")
+	# Stand-in for the portable receipt being absent (a fresh character).
 	ending.dispatch(local_peer, {"kind": "ending_claim"})
-	_check(hub.offers_for(local_peer).size() >= 1, "the host's participating character receives an offer")
+	_check(hub.offers_for(local_peer).size() >= 1,
+		"the host's participating character receives an offer after the world fact landed")
 	ending.dispatch(local_peer, {"kind": "ending_settled", "kept": true})
-	_check(game.progression.has("stormwood:legendary_offer_made"), "the first decision records the world's offer fact")
 	ending.dispatch(2, {"kind": "ending_claim"})
 	var b_offers := hub.offers_for(2)
 	_check(b_offers.size() >= 1, "the second participant still receives their own offer after the first settles")

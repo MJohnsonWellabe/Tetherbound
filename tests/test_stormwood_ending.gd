@@ -35,7 +35,8 @@ func test_claims_are_kept_per_character_and_legacy_saves_migrate() -> void:
 		"settled": false, "kept": false}
 	var migrated := ENDING.migrate_state(legacy)
 	assert_false(migrated.has("recipient_character_id"))
-	assert_false(migrated.has("participants"), "An unknown participant list is not invented")
+	assert_eq(migrated.participants, ["trainer-a"],
+		"Only the legacy recipient is known to have fought; no one else may claim a fresh Stormheart")
 	assert_eq((migrated.claims as Dictionary).keys(), ["trainer-a"])
 	assert_false(ENDING.claim_for_character(migrated, "trainer-a").is_empty(),
 		"An interrupted single-recipient ceremony resumes for its character")

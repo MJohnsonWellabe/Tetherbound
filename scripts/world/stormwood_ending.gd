@@ -82,7 +82,7 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		return
 	match str(intent.get("kind", "")):
 		"ending_claim":
-			_claim_for(peer)
+			_claim_for(peer, bool(intent.get("already_resolved", false)))
 		"ending_settled":
 			_settle_for(peer, intent)
 		"ending_waterward_view":
@@ -164,7 +164,7 @@ func _process(delta: float) -> void:
 				_send_claim(peer, character, claim)
 
 
-func _claim_for(peer: int) -> void:
+func _claim_for(peer: int, already_resolved := false) -> void:
 	if not _has(FREED_FLAG):
 		_refuse(peer, "The Stormheart is still bound inside the Dynamo.")
 		return
@@ -179,12 +179,22 @@ func _claim_for(peer: int) -> void:
 	var state := _saved_state()
 	var claims: Dictionary = state.get("claims", {})
 	var existing: Dictionary = claims.get(character, {})
-	if bool(existing.get("settled", false)):
-		_refuse(peer, "You have already answered the Stormheart.")
-		return
-	if not claim_allowed([FREED_FLAG] if _has(FREED_FLAG) else [],
-			state.get("participants", []), character, false):
-		_refuse(peer, "The Stormheart answers the trainers who fought for its release.")
+	var owed := not bool(existing.get("settled", false)) and claim_allowed([FREED_FLAG],
+		state.get("participants", []), character, already_resolved and existing.is_empty())
+	if not owed:
+		# No creature for this character (did not fight, already walks with a
+		# Stormheart from another world, or already answered here). It can
+		# still let the world move on: the freeing's single offer fact must
+		# never wait on a participant who is absent or already resolved.
+		if not _has(OFFER_FLAG):
+			var result: Dictionary = _chapter.call("emit_event", "legendary:offer_shown")
+			if bool(result.get("accepted", false)) or _has(OFFER_FLAG):
+				_save_world_claim()
+				_broadcast(_state_event())
+				_refuse(peer, "The Stormheart has seen you. Its bond is for the trainers who fought for it, and they may still answer.")
+				return
+		_refuse(peer, "You have already answered the Stormheart." if not existing.is_empty() or already_resolved
+			else "The Stormheart answers the trainers who fought for its release.")
 		return
 	if existing.is_empty():
 		var creature := _make_legendary()
@@ -281,9 +291,6 @@ func _receive_claim(claim: Dictionary) -> void:
 	var game := get_node("/root/Game")
 	if str(claim.get("recipient_character_id", "")) != str(game.get("local").get("character_id")):
 		return
-	if not _local_claim.is_empty() and str(_local_claim.get("recipient_character_id", "")) \
-			== str(claim.get("recipient_character_id", "")):
-		return
 	var player_flags: RefCounted = game.call("player_flags")
 	if player_flags != null and bool(player_flags.call("has", PERSONAL_RECEIPT_FLAG)):
 		_local_claim = claim.duplicate(true)
@@ -294,6 +301,8 @@ func _receive_claim(claim: Dictionary) -> void:
 		_save_retry_left = 0.0
 		_finish_local_claim(true)
 		return
+	# A resend of the claim already being answered is ignored here, after the
+	# receipt/legendary branches above so a failed save can still retry.
 	if not _local_claim.is_empty() or game.get("pending_catch") != null:
 		return
 	_local_claim = claim.duplicate(true)
@@ -364,7 +373,10 @@ func _finish_local_claim(kept: bool) -> void:
 
 
 func _on_offer() -> void:
-	session.request_stormwood_encounter({"kind": "ending_claim"})
+	var game := get_node("/root/Game")
+	var player_flags: RefCounted = game.call("player_flags")
+	session.request_stormwood_encounter({"kind": "ending_claim",
+		"already_resolved": player_flags != null and bool(player_flags.call("has", PERSONAL_RECEIPT_FLAG))})
 
 
 func _on_waterward_view() -> void:
@@ -385,7 +397,11 @@ func _refresh_presentation() -> void:
 	if _cage != null:
 		_cage.visible = not freed
 	if _offer_prompt != null:
-		_offer_prompt.set("enabled", owed and not bool(world.get("simulation_only")))
+		# Anyone may answer until the world's offer fact exists; afterwards only
+		# a participant still owed their own Stormheart sees the prompt.
+		var answerable := freed and (owed or not _has(OFFER_FLAG))
+		_offer_prompt.set("enabled", answerable and not bool(world.get("simulation_only")))
+		_offer_prompt.set("label", "Accept the Stormheart's offer" if owed else "Answer the freed Stormheart")
 	if _view_prompt != null:
 		var revealed := _has(WATERWARD_FLAG) or _aftermath_announced
 		_view_prompt.set("enabled", _has(OFFER_FLAG) and not bool(world.get("simulation_only")))
@@ -538,7 +554,7 @@ func _saved_state() -> Dictionary:
 
 ## The earlier single-recipient shape (`recipient_character_id` + one claim)
 ## becomes that character's entry in `claims`. Its participant list is unknown,
-## so none is invented: `participants` stays absent and the solo rule applies.
+## so it is seeded with that recipient only.
 static func migrate_state(saved: Dictionary) -> Dictionary:
 	var state := saved.duplicate(true)
 	var legacy := str(state.get("recipient_character_id", ""))
@@ -548,6 +564,10 @@ static func migrate_state(saved: Dictionary) -> Dictionary:
 			claims[legacy] = {"creature": state.get("creature", {}),
 				"settled": bool(state.get("settled", false)), "kept": bool(state.get("kept", false))}
 		state["claims"] = claims
+		# The old shape proves only that its recipient fought; seeding it keeps
+		# a character who never fought from claiming a fresh Stormheart.
+		if not state.has("participants"):
+			state["participants"] = [legacy]
 		for key: String in ["recipient_character_id", "creature", "settled", "kept"]:
 			state.erase(key)
 	return state
@@ -623,12 +643,17 @@ func _record_participants() -> void:
 		return
 	var dynamo := world.get_node_or_null("StormwoodDynamo")
 	var peers: Array = []
+	var characters: Array = []
 	if dynamo != null:
+		# Captured when each fighter joined, so a later disconnect cannot drop
+		# them; live peers below cover a fighter added before this was recorded.
+		for character: Variant in dynamo.get("fighter_characters"):
+			if not str(character).is_empty() and not characters.has(str(character)):
+				characters.append(str(character))
 		for key: String in ["participants", "contributors"]:
 			for peer: Variant in dynamo.get(key):
 				if not peers.has(int(peer)):
 					peers.append(int(peer))
-	var characters: Array = []
 	for peer: int in peers:
 		var character := _character_for_peer(peer)
 		if not character.is_empty() and not characters.has(character):
