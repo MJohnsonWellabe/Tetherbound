@@ -233,7 +233,9 @@ func restore_progression_from_game(game: Node) -> void:
 	if _rootgate != null:
 		var opened := bool(flags.call("has","stormwood:rootgate_released"))
 		_rootgate.visible = not opened
-		_rootgate.get_node("CollisionShape3D").set_deferred("disabled",opened)
+		for shape: Node in _rootgate.get_children():
+			if shape is CollisionShape3D:
+				shape.set_deferred("disabled",opened)
 
 func map_terrain_texture() -> Texture2D:
 	return _map.call("bake_terrain",self) as Texture2D if _map != null else null
@@ -247,19 +249,50 @@ func _build_return_gate() -> void:
 	gate.call("setup","cloudreach","cloudreach_return_from_stormwood","Cloudreach Cliffs","realm_key_stormwood","realm_gate_stormwood_unlocked")
 	add_child(gate)
 
+## The Rootgate seals the whole walkable crossing of the ridge, not just its
+## flat pass floor: the ridge flanks stay climbable for about 15 m beyond the
+## central barrier (measured on the heightfield at z 3550), so flank columns
+## follow the local ground there. Each entry is [x_centre, width_m].
+const ROOTGATE_Z := 3550.0
+const ROOTGATE_DEPTH_M := 15.0
+
+static func rootgate_blockers() -> Array:
+	var out: Array = [[-650.0, 90.0]]
+	for offset: float in [48.0, 56.0, 64.0, 72.0, 80.0]:
+		out.append([-650.0 - offset, 10.0])
+		out.append([-650.0 + offset, 10.0])
+	return out
+
+
 func _build_rootgate() -> void:
 	_rootgate = StaticBody3D.new()
 	_rootgate.name = "Rootgate"
-	_rootgate.position = Vector3(-650,ground_height_at(-650,3550)+15,3550)
+	_rootgate.position = Vector3(-650,ground_height_at(-650,ROOTGATE_Z)+15,ROOTGATE_Z)
 	add_child(_rootgate)
-	var collision := CollisionShape3D.new()
-	collision.name = "CollisionShape3D"
-	var shape := BoxShape3D.new()
-	shape.size = Vector3(90,40,15)
-	collision.shape = shape
-	_rootgate.add_child(collision)
+	var index := 0
+	for blocker: Array in rootgate_blockers():
+		var x := float(blocker[0])
+		var collision := CollisionShape3D.new()
+		collision.name = "CollisionShape3D" if index == 0 else "FlankCollision%02d" % index
+		var shape := BoxShape3D.new()
+		if index == 0:
+			shape.size = Vector3(float(blocker[1]),40,ROOTGATE_DEPTH_M)
+		else:
+			# A tall column centred on this flank's own ground, so the barrier
+			# still meets a hillside that rises or falls across its width.
+			shape.size = Vector3(float(blocker[1]),60,ROOTGATE_DEPTH_M)
+			collision.position = Vector3(x + 650.0, ground_height_at(x, ROOTGATE_Z) + 10.0 - _rootgate.position.y, 0)
+		collision.shape = shape
+		_rootgate.add_child(collision)
+		index += 1
 	for i in 6:
 		_model(_rootgate,"res://assets/environment/stylized_nature/DeadTree_3.gltf",Vector3(-40+i*16,-15,0),3.8,PI*0.1*i)
+	# Tangled roots on the flanks make the sealed hillside read as the gate too.
+	for side: float in [-1.0, 1.0]:
+		for offset: float in [56.0, 72.0]:
+			var x: float = -650.0 + side * offset
+			_model(_rootgate,"res://assets/environment/stylized_nature/DeadTree_3.gltf",
+				Vector3(x + 650.0, ground_height_at(x, ROOTGATE_Z) - _rootgate.position.y, 0),3.2,PI*0.17*offset)
 
 func _stand_up_ground_cover() -> void:
 	if simulation_only or not GROUND_COVER.is_enabled():
