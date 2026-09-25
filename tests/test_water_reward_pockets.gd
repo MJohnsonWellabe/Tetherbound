@@ -92,7 +92,8 @@ func _dry_footing(p: Vector2) -> bool:
 			return false
 	return true
 
-## 2 m grid flood fill over dry, gentle cells within the island's bounds.
+## 2 m grid flood fill over cells that are dry and within the MAX_SLOPE_DEG
+## walk-slope limit, inside the island's bounds.
 func _connected(a: Vector2, b: Vector2, island_id: String) -> bool:
 	var island: Dictionary = {}
 	for spec: Dictionary in _world.islands:
@@ -138,13 +139,15 @@ func test_eight_pockets_are_six_filled_cradle_paid_and_one_unresolved() -> void:
 	assert_eq(FILLED.size() + UNRESOLVED.size() + 1, 8)
 
 ## The shared placement contract every pocket row meets: on the pocket's
-## island, analytic y, dry gentle footing, landing-connected, spaced from every
-## other placement and clear of people, camps, dock equipment and landings.
+## island, analytic y, footing dry and within the MAX_SLOPE_DEG walk-slope
+## limit (not "gentle": pockets sit on 8-31 degree ground), connected to a
+## landing, spaced from every other placement and clear of people, camps, dock
+## equipment and landings.
 func _assert_pocket_placement(row: Dictionary, pocket: Dictionary) -> void:
 	var at := _xz(row.position)
 	assert_eq(row.island_id, pocket.island_id, "Row stays on the pocket's island")
 	assert_true(_xz(pocket.position).distance_to(at) <= float(pocket.radius_m), "Row inside pocket radius: " + str(row.id))
-	assert_true(_dry_footing(at), "Dry, gentle footing at " + str(row.id))
+	assert_true(_dry_footing(at), "Dry footing within the walk-slope limit at " + str(row.id))
 	assert_almost_eq(float(row.position[1]), _field.height_at(at.x, at.y), 0.01, "Authored y is the analytic ground: " + str(row.id))
 	assert_eq(_field.island_id_at(at.x, at.y), pocket.island_id, "Ground belongs to the pocket island")
 	var landing_connected := false
@@ -152,7 +155,7 @@ func _assert_pocket_placement(row: Dictionary, pocket: Dictionary) -> void:
 		if anchor.island_id == pocket.island_id and anchor.kind != "rest_shoal":
 			assert_true(_xz(anchor.safe_position).distance_to(at) >= 12.0, "Landing stays clear")
 			landing_connected = landing_connected or _connected(_xz(anchor.safe_position), at, str(pocket.island_id))
-	assert_true(landing_connected, "Dry, gentle ground connects a landing to " + str(row.id))
+	assert_true(landing_connected, "Dry ground within the walk-slope limit connects a landing to " + str(row.id))
 	for other: Dictionary in _data.pickups + _data.harvest:
 		if other.id != row.id:
 			assert_true(at.distance_to(_xz(other.position)) >= 5.99, "Placement spacing kept: " + str(row.id))

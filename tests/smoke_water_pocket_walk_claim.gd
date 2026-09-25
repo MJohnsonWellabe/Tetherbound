@@ -49,9 +49,6 @@ var failures: Array[String] = []
 var checks := 0
 var finished := false
 var _refusal := ""
-## Last planned route: metres off the graded trail and steepest baked cell.
-var _spur_m := 0.0
-var _spur_max_slope := 0.0
 
 
 func _init() -> void:
@@ -221,7 +218,8 @@ func _walk_from(landing: Vector3, target: Vector3, tolerance: float, label: Stri
 	player.global_position = Vector3(landing.x, maxf(deck, landing.y) + 0.3, landing.z)
 	player.velocity = Vector3.ZERO
 	await _frames(60)
-	var route := _plan(Vector2(landing.x, landing.z), Vector2(target.x, target.z))
+	var plan := plan_route(world, Vector2(landing.x, landing.z), Vector2(target.x, target.z))
+	var route: Array[Vector2] = plan.points
 	if not _check(route.size() >= 1, "%s: no dry route over the baked ground from %s to %s" % [label, landing, target]):
 		return null
 	var metres := 0.0
@@ -241,7 +239,7 @@ func _walk_from(landing: Vector3, target: Vector3, tolerance: float, label: Stri
 			return null
 	_stick(0.0, 0.0)
 	await _frames(20)
-	return {"metres": metres, "legs": route.size(), "spur_m": _spur_m, "spur_max_slope": _spur_max_slope}
+	return {"metres": metres, "legs": route.size(), "spur_m": float(plan.spur_m), "spur_max_slope": float(plan.spur_max_slope)}
 
 
 ## Steps toward the body until the arbiter's winning provider is `prompt`.
@@ -270,13 +268,18 @@ func _approach_prompt(prompt: Node, at: Vector3) -> bool:
 ## authored graded land routes (`land_routes`, a 4 m trail) are always
 ## walkable and preferred: the route leaves the trail only for the spur to the
 ## pocket. Cells within 8 m of the landing are walkable (the deck stands over
-## water), and so is the target's own neighbourhood.
-func _plan(from: Vector2, to: Vector2) -> Array[Vector2]:
+## water), and so is the target's own neighbourhood. Static so the pocket
+## capture tool frames the same approach. Returns {points, spur_m,
+## spur_max_slope}: waypoints ending at `to`, the metres walked off the graded
+## trail and the steepest off-trail cell.
+static func plan_route(world: Node3D, from: Vector2, to: Vector2) -> Dictionary:
+	var cfg: Dictionary = world.get("config")
+	var heightfield: RefCounted = FIELD.new()
 	var lo := Vector2(minf(from.x, to.x), minf(from.y, to.y)) - Vector2(MARGIN_M, MARGIN_M)
 	var hi := Vector2(maxf(from.x, to.x), maxf(from.y, to.y)) + Vector2(MARGIN_M, MARGIN_M)
 	# The whole island is searchable: a pocket may be reached around its far side.
-	var island_id: String = field.island_id_at(to.x, to.y)
-	for island: Dictionary in config.islands:
+	var island_id: String = heightfield.island_id_at(to.x, to.y)
+	for island: Dictionary in cfg.islands:
 		if str(island.id) == island_id:
 			var centre := Vector2(float(island.center_xz_m[0]), float(island.center_xz_m[1]))
 			var reach := float(island.shore_radius_m) + 20.0
@@ -298,7 +301,7 @@ func _plan(from: Vector2, to: Vector2) -> Array[Vector2]:
 			heights[j * fine.x + i] = float(world.call("ground_height_at", w.x, w.y))
 	var off_trail := {}
 	var segments: Array = []
-	for route: Dictionary in config.land_routes:
+	for route: Dictionary in cfg.land_routes:
 		var line: Array = route.polyline
 		for k in line.size() - 1:
 			segments.append([Vector2(float(line[k][0]), float(line[k][2])), Vector2(float(line[k + 1][0]), float(line[k + 1][2])),
@@ -336,20 +339,20 @@ func _plan(from: Vector2, to: Vector2) -> Array[Vector2]:
 	var b := Vector2i(roundi((to.x - lo.x) / CELL_M), roundi((to.y - lo.y) / CELL_M))
 	var cells := grid.get_id_path(a, b)
 	var out: Array[Vector2] = []
-	_spur_m = 0.0
-	_spur_max_slope = 0.0
+	var spur_m := 0.0
+	var spur_max_slope := 0.0
 	if cells.is_empty():
-		return out
+		return {"points": out, "spur_m": 0.0, "spur_max_slope": 0.0}
 	for index in range(1, cells.size()):
 		var cell: Vector2i = cells[index]
 		if not off_trail.has(cell):
 			continue
-		_spur_m += Vector2(cells[index] - cells[index - 1]).length() * CELL_M
-		_spur_max_slope = maxf(_spur_max_slope, float(off_trail[cell]))
+		spur_m += Vector2(cells[index] - cells[index - 1]).length() * CELL_M
+		spur_max_slope = maxf(spur_max_slope, float(off_trail[cell]))
 	for index in range(WAYPOINT_EVERY, cells.size() - 1, WAYPOINT_EVERY):
 		out.append(lo + Vector2(cells[index]) * CELL_M)
 	out.append(to)
-	return out
+	return {"points": out, "spur_m": spur_m, "spur_max_slope": spur_max_slope}
 
 
 func _landing(island_id: String) -> Vector3:
