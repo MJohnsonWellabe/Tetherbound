@@ -1090,7 +1090,20 @@ func _open_choice() -> void:
 	if _step_tween != null and _step_tween.is_valid():
 		_step_tween.kill()
 		if _legendary != null:
-			_settle_target = _legendary.global_position
+			var stop_at := _legendary.global_position
+			# Stopped mid STEP-OUT (the same tween carries both moves) it may
+			# still be over the machine's plinth: then it takes its freed stand,
+			# which is measured clear of the machine (MEASURED: gate E caught
+			# it 5.4 m off axis inside an 8 m footprint).
+			if not _cage_measure.is_empty():
+				var axis: Vector3 = _cage_measure["axis"]
+				var off := Vector2(stop_at.x - axis.x, stop_at.z - axis.z)
+				var want := _clear_distance(off,
+					(_config.get("legendary", {}) as Dictionary).get("stage", {}) as Dictionary)
+				if off.length() < want:
+					stop_at = _freed_spot
+			_legendary.global_position = stop_at
+			_settle_target = stop_at
 			_landed()
 	var spec: Dictionary = _config.get("choice", {})
 	# Said a beat AFTER the offer opens, not on the same frame: the offer opens
