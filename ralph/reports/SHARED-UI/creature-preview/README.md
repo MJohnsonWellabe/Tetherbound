@@ -18,5 +18,12 @@ refilled with one creature of the species under test; the widget's own
 `_process` is off so the angle is deterministic, and the spin sequence
 advances the turntable by IDLE_SPIN_SPEED x 1 s per frame.
 
-Known trade-off: the fit reserves the full spin radius inside a narrow
-portrait widget, so long bodies (Guardian, Solmane, Tidecoil) sit small.
+Framing (after): the camera fits the posed silhouette at the current turntable
+angle (instant zoom-out, eased zoom-in; reduced motion keeps the whole-turn
+fit). The tool steps the widget's 3 s settle before stills (header).
+
+Remaining limit, measured: the Abyssal Guardian's geometry is 9.8 x 7.2 x
+16.5 m (no stray vertices; 1st-99th percentile 15 m long), so in this
+280x401 portrait widget it fills the width while its head stays small.
+Readable faces for very long bodies need a wider preview in the offer layout,
+not tighter fitting (next work order).

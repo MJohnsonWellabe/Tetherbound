@@ -174,6 +174,12 @@ func _stage(id: String) -> Node:
 		_failures.append("%s: no creature_viewport under the menu" % id)
 		return null
 	preview.set_process(false)
+	# The widget re-measures its body once the authored rest pose has landed
+	# (REMEASURE_AT). With `_process` off, step that settle explicitly: the
+	# same call play makes, as if the tab had been open for 3 s, no rotation.
+	if preview.has_method("advance"):
+		await _settle(30)
+		preview.call("advance", 0.0, 3.0)
 	var turntable := preview.get("_turntable") as Node3D
 	if turntable != null:
 		turntable.rotation = Vector3.ZERO
@@ -211,7 +217,11 @@ func _spin_species(id: String, dir: String) -> void:
 		if _label == "after":
 			_save(image, dir.path_join("%s_%02d.jpg" % [id, i]))
 		frames.append(image)
-		if turntable != null:
+		# The widget's own step when it has one, so the camera follows the
+		# turn exactly as in play (per-angle fit); older widgets just rotate.
+		if preview.has_method("advance"):
+			preview.call("advance", IDLE_SPIN_SPEED * SPIN_STEP_SECONDS, SPIN_STEP_SECONDS)
+		elif turntable != null:
 			turntable.rotate_y(IDLE_SPIN_SPEED * SPIN_STEP_SECONDS)
 		await _settle(2)
 	# Sheet crops each frame to the widget's area so the rotation is legible.
