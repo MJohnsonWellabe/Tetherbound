@@ -1,0 +1,47 @@
+run id:  net-20260925T041315Z-8489
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z
+smoke:   tests/smoke_net_reconnect_reservation.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=8510 control_port=40237 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z/peer-0.log
+coordinator: launched peer 1 (client) pid=8511 control_port=39601 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z/peer-1.log
+coordinator: launched peer 2 (client) pid=8512 control_port=38851 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z/home-2 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z/peer-2.log
+coordinator: peer 0 hello: {"enet_port":32461.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":0.0,"pid":8510.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 2 hello: {"enet_port":32463.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":2.0,"pid":8512.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z/home-2/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":32462.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":1.0,"pid":8511.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 3 peer(s) said hello
+PASS: host reported an ENet port (32461)
+PASS: host opened two seats (hosting udp/32461 as peer 1)
+PASS: guest A joined (joined 127.0.0.1:32461 as peer 1138042038 after 10 frames; snapshot applied; 2 peer(s) in registry)
+PASS: guest A's link dropped (transport closed without a Session.leave())
+PASS: host noticed the drop (registry reports 1 peer(s) after 0 frames)
+PASS: guest B was refused while A's seat is held (Session.join(127.0.0.1, 32461) refused after 10 frames: This session is full (2/2). A seat is being held for a player who is reconnecting; try again in a couple of minutes.)
+PASS: guest B heard the held-seat reason (Session.join(127.0.0.1, 32461) refused after 10 frames: This session is full (2/2). A seat is being held for a player who is reconnecting; try again in a couple of minutes.)
+PASS: the held-seat refusal arrived in 200 ms
+PASS: guest B got a host verdict and no snapshot
+PASS: the refusal left the host registry at one row ([{ "appearance_id": "trainer", "character_id": "character-e0f3b5ff33f7361055dd46c1190b1f2a", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }])
+PASS: the refusal left the host world unchanged
+PASS: guest A reclaimed its held seat (joined 127.0.0.1:32461 as peer 97737959 after 14 frames; snapshot applied; 2 peer(s) in registry)
+PASS: the returning character arrived on a new transport peer
+PASS: host counts host plus A again
+PASS: guest A left deliberately
+PASS: host noticed A leave
+FAIL: a deliberate leave holds no seat, so guest B joined at once (Session.join(127.0.0.1, 32461) refused after 10 frames: This session is full (2/2). A seat is being held for a player who is reconnecting; try again in a couple of minutes.)
+FAIL: host registry is host plus B (["character-e0f3b5ff33f7361055dd46c1190b1f2a"])
+FAIL: a deliberate leave holds no seat, so guest B joined at once (Session.join(127.0.0.1, 32461) refused after 10 frames: This session is full (2/2). A seat is being held for a player who is reconnecting; try again in a couple of minutes.)
+FAIL: host registry is host plus B (["character-e0f3b5ff33f7361055dd46c1190b1f2a"])
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/reservation/net-reconnect_reservation-20260925T041315Z/SUMMARY.md ===
+# Net smoke run net-20260925T041315Z-8489
+
+Scene: world
+Peers: 3
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=8510 exited=true unexpected_exit=false
+- peer 1 (client) pid=8511 exited=true unexpected_exit=false
+- peer 2 (client) pid=8512 exited=true unexpected_exit=false
+
+FAILURES:
+- a deliberate leave holds no seat, so guest B joined at once (Session.join(127.0.0.1, 32461) refused after 10 frames: This session is full (2/2). A seat is being held for a player who is reconnecting; try again in a couple of minutes.)
+- host registry is host plus B (["character-e0f3b5ff33f7361055dd46c1190b1f2a"])
