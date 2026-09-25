@@ -488,6 +488,42 @@ The remaining levers need an animated foam shader. That was requested on
 PR226 as a shared-file request. **Readability stays failed and open.** #226
 stays draft until a blind judge passes it.
 
+### Animated tide-race shader (branch `ralph/water-tide-race-shader`)
+
+The grant was `shaders/water_tide_race.gdshader`, used only by
+`water_gate_seal_view.gd`. It streams foam cells outward over churned sea-teal,
+runs crest pulses round the ring, and gives the breakers a teal face with foam
+toward the crest. The motion sheet was re-rendered on this branch.
+
+**Blind judge on the shader frames (renamed):**
+- Not an invisible wall: yes.
+- Surf read: **weakly.** Its defects:
+  - triangular wedges along the band;
+  - spray that reads as fog;
+  - a hard rim;
+  - a calm strip before the sand;
+  - no swimmer reaction to the push.
+
+**Readability stays failed and open under F13's T2 visual matrix.** The stop
+rule has been reached for this visual track.
+
+**Wedge diagnosis.** Three isolation renders, using the same motion tool and
+frame 06:
+1. Switching the shader to `depth_prepass_alpha` leaves the wedges
+   unchanged, so alpha sorting is not the cause.
+2. Hiding the flat race, trough and spray (breakers only) leaves the wedges,
+   so they come from the breaker meshes (`_wave`).
+3. Zeroing the crest-pulse amplitude only fades them, so the pulse is not the
+   cause.
+
+The sea shader has no vertex displacement and the sea is an unsubdivided
+plane, so the wedges are not the sea cutting the breaker.
+
+What remains is the breaker cross-section geometry. The most likely
+candidate: the teal face rows, seen through the fading lip where the height
+noise varies. The next step would be a per-row debug colour render. It is not
+taken here because of the stop rule.
+
 ### Verification
 
 Stock Godot 4.7-stable in a Linux container, from a source checkout. There is
