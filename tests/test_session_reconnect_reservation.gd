@@ -80,17 +80,23 @@ func test_live_or_empty_characters_are_not_reserved_and_clear_drops_seats() -> v
 	assert_eq(reg.reservation_count(T0), 0, "ending the session releases every held seat")
 
 
-func test_pending_client_goodbye_finishes_before_a_new_join() -> void:
+func test_goodbye_teardown_ends_the_session_and_detaches_only_the_transport() -> void:
 	const SESSION := preload("res://scripts/net/session.gd")
 	var session := SESSION.new()
+	var transport := ENetMultiplayerPeer.new()
+	assert_eq(transport.create_client("127.0.0.1", 9), OK)
+	session.set("_peer", transport)
 	session.set("_mode", "client")
-	session.set("_closing_frames", 3)
-	session.set("_closing_reason", "left")
-	var ended: Array = []
-	session.session_ended.connect(func(reason: String) -> void: ended.append(reason))
-	assert_false(session.join_with_peer(null, {}, "test"), "a null peer is still refused")
-	assert_eq(session.mode(), "", "the old client close finished instead of blocking the new join")
-	assert_eq(ended, ["left"], "and it ended with the leave's own reason")
+	session.call("_teardown", true)
+	assert_false(session.is_active(), "no closing client session remains for a title to trip over")
+	assert_true(session.is_host(), "the process may host straight away")
+	assert_true(session.get("_lingering_peer") == transport, "only the transport waits for the host")
+	assert_ne(transport.get_connection_status(), MultiplayerPeer.CONNECTION_DISCONNECTED,
+		"the goodbye's transport is not closed under it")
+	session.set("_lingering_deadline_ms", 0)
+	session.call("_poll_lingering_peer")
+	assert_true(session.get("_lingering_peer") == null, "the bound closes a silent host's link")
+	assert_eq(transport.get_connection_status(), MultiplayerPeer.CONNECTION_DISCONNECTED)
 	session.free()
 
 

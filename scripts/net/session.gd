@@ -176,6 +176,9 @@ var _rejected_disconnect_frames: Dictionary = {}
 ## safe direction.
 var _departing_peers: Dictionary = {}
 
+## Admitted peers whose character took a held reconnect seat at hello.
+var _reserved_rejoins: Dictionary = {}
+
 ## One snapshot chunk may be in flight per joining peer. The receiver boundary
 ## is raised only by BEGIN on the ledger channel; chunks remain independently
 ## ordered on the snapshot channel and are acknowledged one at a time.
@@ -741,6 +744,8 @@ func _rpc_hello(summary: Dictionary) -> void:
 			str(verdict.get("reason", "The host refused this connection.")))
 		return
 	var character_id: String = raw_character_id
+	if bool(_registry.call("has_reservation", character_id)):
+		_reserved_rejoins[sender] = true
 	var display_name := str(summary.get("display_name", ""))
 	var realm := str(summary.get("realm", "meadows"))
 	var appearance_id := str(summary.get("appearance_id", "trainer"))
@@ -1217,9 +1222,10 @@ func _rpc_goodbye() -> void:
 			_peer.disconnect_peer(sender)
 
 
-## Returns whether a goodbye went out; the caller then waits for the host to
-## close the link (or GOODBYE_LINGER_S) before tearing down. A goodbye that is
-## lost anyway only means the seat is held for the reconnect window.
+## Returns whether a goodbye went out. The caller then tears the session down
+## at once and leaves only the old transport polling (`_lingering_peer`) until
+## the host closes it. A goodbye that is lost anyway only means the seat is
+## held for the reconnect window.
 func _say_goodbye() -> bool:
 	# Only an admitted client holds a seat worth freeing. A failed or
 	# unfinished join tears down at once, so the title can host or join again
@@ -1257,8 +1263,11 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	_rejected_disconnect_frames.erase(peer_id)
 	# A joiner whose world snapshot was never acknowledged never played here;
 	# it gets no held seat (it can still rejoin like anyone else).
-	var mid_snapshot := _snapshot_sends.has(peer_id)
+	# A character that came back through its own held seat keeps it even if a
+	# flaky link drops it again mid-snapshot -- the case the seat exists for.
+	var mid_snapshot := _snapshot_sends.has(peer_id) and not _reserved_rejoins.has(peer_id)
 	_snapshot_sends.erase(peer_id)
+	_reserved_rejoins.erase(peer_id)
 	var departed := bool(_departing_peers.get(peer_id, false)) or mid_snapshot
 	_departing_peers.erase(peer_id)
 	if realm_transition != null:
@@ -1388,6 +1397,12 @@ func _linger_then_disconnect(peer_id: int) -> void:
 
 ## Service a leaving client's detached transport until the host has closed it
 ## (so the goodbye was read) or the bound passes, then close it.
+func _exit_tree() -> void:
+	if _lingering_peer != null:
+		_lingering_peer.close()
+		_lingering_peer = null
+
+
 func _poll_lingering_peer() -> void:
 	if _lingering_peer == null:
 		return
@@ -1634,6 +1649,7 @@ func _teardown(linger_transport: bool = false) -> void:
 	_closing_deadline_ms = 0
 	_rejected_disconnect_frames.clear()
 	_departing_peers.clear()
+	_reserved_rejoins.clear()
 	_snapshot_sends.clear()
 	_clear_snapshot_bootstrap()
 	_clock_accum = 0.0
