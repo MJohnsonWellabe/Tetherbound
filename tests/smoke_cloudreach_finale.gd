@@ -3,10 +3,22 @@ extends SceneTree
 ## Isolated real-physics fixture, NOT production captain/combat or route proof.
 ## Exercises the production Interactable/arbiter on a moving CharacterBody,
 ## collision under wind, save restoration and recovery handoff. No owner saves.
+##
+## State is the `Game` autoload's own, not a detached store: the controller is
+## bound to `Game.progression` (the merged view `cloudreach_world_runtime.gd`
+## passes in `mount()`), a relay strike commits through `Game.ledger` (solo is
+## the host) into `Game.world.flags`, the relay prompts are the ones the runtime
+## installs (`_install_creature_relay_prompts`, `cloudreach_relay_interactable.gd`)
+## and save/reload round-trips `Game.progression`'s save payload (the one
+## `save_game.gd` writes) after a New Game reset. Disclosed shortcuts: chapter
+## events go through the pure `realm_chapter_progression.gd` against that same
+## store rather than a `realm_chapter_events.gd` node, the captain win is the
+## injected callback, and the "creature" is a driven capsule.
 const FINALE := preload("res://scripts/world/cloudreach_finale_controller.gd")
-const FLAGS := preload("res://autoload/progression_state.gd")
 const CHAPTER := preload("res://scripts/world/realm_chapter_progression.gd")
 const ARBITER := preload("res://scripts/world/interaction_arbiter.gd")
+const RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd")
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 class DrivenBody extends CharacterBody3D:
 	var finale: Node3D
@@ -28,6 +40,8 @@ var creature_piloted := true
 var recovered := 0
 var _body: DrivenBody
 var _finale: Node3D
+## world flag id -> how many committed `Game.ledger` deltas set it.
+var _flag_commits: Dictionary = {}
 
 
 func _initialize() -> void:
@@ -56,6 +70,15 @@ func _event(event: String) -> Dictionary:
 	return CHAPTER.dispatch(flags, chapter, event)
 
 
+func _count_commits(delta: Dictionary) -> void:
+	for op: Variant in (delta.get("ops", []) as Array):
+		if typeof(op) != TYPE_DICTIONARY:
+			continue
+		var id := str((op as Dictionary).get("id", ""))
+		if LEDGER_CLAIM.sets_world_flag(delta, id):
+			_flag_commits[id] = int(_flag_commits.get(id, 0)) + 1
+
+
 func _recover(body: CharacterBody3D, camp_id: String, at: Vector3) -> void:
 	recovered += 1
 	_check(camp_id == "summit_bivouac", "Recovery uses authored camp identity")
@@ -77,9 +100,15 @@ func _box(parent: Node, at: Vector3, size: Vector3) -> void:
 func _run() -> void:
 	await process_frame
 	var game := root.get_node_or_null("Game")
-	if game != null:
-		game.set_process(false)
-	flags = FLAGS.new()
+	if game == null or game.get("ledger") == null:
+		push_error("Game autoload with a mounted ledger is required")
+		quit(1)
+		return
+	game.set_process(false)
+	game.call("reset_for_new_game")
+	flags = game.get("progression")
+	var ledger: Node = game.get("ledger")
+	ledger.connect("delta_applied", _count_commits)
 	chapter = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_chapter.json"))
 	var scene := Node3D.new()
 	scene.name = "FinaleFixture"
@@ -110,6 +139,17 @@ func _run() -> void:
 	_finale.setup(flags, _event, func() -> CharacterBody3D: return _body,
 		func() -> bool: return creature_piloted, _recover, data)
 	scene.add_child(_finale)
+	# The production relay prompts: the runtime's own installer, on a runtime
+	# that is not mounted. Its `controlled_body()` answers `player` while there
+	# is no field body or manager, which is this driven body.
+	var runtime: Node = RUNTIME.new()
+	runtime.set("finale", _finale)
+	runtime.set("player", _body)
+	runtime.call("_install_creature_relay_prompts")
+	for relay: Dictionary in data["relays"]:
+		var installed: Node = _finale.get_node_or_null("Relay_" + str(relay["id"]))
+		_check(installed != null and installed.get_script() == preload("res://scripts/world/cloudreach_relay_interactable.gd"),
+			"Runtime installs the creature relay prompt for " + str(relay["id"]))
 	_body.finale = _finale
 	await _frames(20)
 	_check(_body.is_on_floor(), "CharacterBody rests on a real floor")
@@ -155,12 +195,25 @@ func _run() -> void:
 		_press("interact", false)
 		await _frames(3)
 		_check(flags.has(str(relay["flag_id"])), "Shared input arbiter strikes " + str(relay["id"]))
+	# A second press at the last relay once it is dark must not commit again.
+	_press("interact", true)
+	await _frames(3)
+	_press("interact", false)
+	await _frames(3)
+	var world_flags: RefCounted = game.call("world_flags")
+	for relay: Dictionary in data["relays"]:
+		var flag := str(relay["flag_id"])
+		_check(bool(world_flags.call("has", flag)), "Relay flag lands in Game world flags: " + flag)
+		_check(int(_flag_commits.get(flag, 0)) == 1,
+			"Relay flag committed exactly once through Game.ledger: %s (%d)" % [flag, int(_flag_commits.get(flag, 0))])
 	_check(flags.has("storm_anchor_network_disabled"), "Three physical relay interactions disable network")
 	_check(not flags.has("cloudreach_winds_restored"), "Network does not auto-witness restoration")
-	var saved: Dictionary = JSON.parse_string(JSON.stringify(flags.save_data()))
-	flags = FLAGS.new()
-	flags.load_data(saved)
-	_finale.setup(flags, _event, func() -> CharacterBody3D: return _body,
+	var saved: Dictionary = JSON.parse_string(JSON.stringify(flags.call("save_data")))
+	game.call("reset_for_new_game")
+	_check(not flags.has("storm_anchor_network_disabled"), "New-game reset empties the live store before reload")
+	flags.call("load_data", saved)
+	_check(flags == game.get("progression"), "Reload keeps the controller on Game.progression")
+	_finale.setup(game.get("progression"), _event, func() -> CharacterBody3D: return _body,
 		func() -> bool: return creature_piloted, _recover, data)
 	_check(_finale.phase == "awaiting_restoration", "Saved network restores presentation without replay")
 	_body.position = Vector3(0, 0.1, -10)
@@ -178,7 +231,9 @@ func _run() -> void:
 	_check(_body.position.distance_to(Vector3(-10, 0.2, -10)) < 0.01, "Recovery callback physically places body safely")
 	_check(flags.has("cloudreach_winds_restored"), "Recovery retains finale state")
 	_body.finale = null
+	ledger.disconnect("delta_applied", _count_commits)
 	scene.queue_free()
 	await process_frame
+	runtime.free()
 	print("CLOUDREACH FINALE FIXTURE %s: body/input/collision, three relays, saved phase, aftermath, recovery" % ("PASS" if failures.is_empty() else "FAIL"))
 	quit(0 if failures.is_empty() else 1)
