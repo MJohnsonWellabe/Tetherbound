@@ -385,14 +385,14 @@ static func chance_tier_color(chance: float) -> Color:
 ## depend on colour alone). Drawn here rather than typed as U+26A0 because
 ## the UI font (Kenney Future) has no such glyph and a fallback font is not
 ## guaranteed on the Ally. An amber triangle, dark-outlined, with a dark "!".
-## Cached per pixel size; pure image work, safe headless.
-static var _warning_icons: Dictionary = {}
+## Pure image work, safe headless. Not cached: a `static var` on this
+## constants module changed unrelated world behaviour in
+## `smoke_water_guardian_ceremony` (reproduced 3/3), and callers build their
+## panel once, so they hold the texture themselves.
 
 
 static func warning_icon(px: int = 24) -> Texture2D:
 	px = maxi(px, 8)
-	if _warning_icons.has(px):
-		return _warning_icons[px]
 	var ss := 4
 	var n := px * ss
 	var image := Image.create(px, px, false, Image.FORMAT_RGBA8)
@@ -425,7 +425,5 @@ static func warning_icon(px: int = 24) -> Texture2D:
 			if acc.a > 0.0:
 				acc = Color(acc.r / acc.a, acc.g / acc.a, acc.b / acc.a, acc.a)
 			image.set_pixel(x, y, acc)
-	var texture := ImageTexture.create_from_image(image)
-	_warning_icons[px] = texture
-	return texture
+	return ImageTexture.create_from_image(image)
 

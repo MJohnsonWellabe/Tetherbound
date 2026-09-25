@@ -210,5 +210,4 @@ func test_warning_icon_is_an_amber_caution_triangle() -> void:
 		"the triangle body is not WARNING amber (%s)" % body.to_html())
 	var mark := image.get_pixel(14, 13)
 	assert_true(mark.get_luminance() < 0.3, "the '!' must be dark ink on the amber (%s)" % mark.to_html())
-	assert_true(UI_TOKENS.warning_icon(28) == texture, "the icon is cached per size")
 
