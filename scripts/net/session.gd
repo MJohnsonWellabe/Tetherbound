@@ -71,6 +71,10 @@ const CLOSE_FLUSH_FRAMES := 6
 ## 150+-30 ms delay: ralph/reports/INVITE-COOP.
 const REFUSAL_LINGER_S := 10.0
 const HOST_CLOSE_LINGER_S := 5.0
+## A client that says goodbye waits this long for the host to close the link.
+## The host closes only after it has read the goodbye; closing from the client
+## side straight away lets ENet discard the unread goodbye with the disconnect.
+const GOODBYE_LINGER_S := 1.5
 
 const HOST_PEER_ID := PEER_REGISTRY.HOST_PEER_ID
 
@@ -487,7 +491,12 @@ func leave(reason: String = "left") -> void:
 			return
 	else:
 		_save_character_here()
-		_say_goodbye()
+		if _say_goodbye():
+			_closing_reason = reason
+			_closing_frames = CLOSE_FLUSH_FRAMES
+			_closing_deadline_ms = Time.get_ticks_msec() + int(
+				1000.0 * float(_cfg("goodbye_linger_s", GOODBYE_LINGER_S)))
+			return
 	_teardown()
 	session_ended.emit(reason)
 
@@ -690,6 +699,11 @@ func _rpc_hello(summary: Dictionary) -> void:
 	# could be admitted during the short flush window and then disconnected when
 	# the old rejection timer expires.
 	if _rejected_disconnect_frames.has(sender):
+		return
+	if _closing_frames > 0:
+		# The host is saving and closing; nothing admitted now would ever hear
+		# `session_ended`.
+		_reject_hello(sender, "host_closing", "The host is closing this world.")
 		return
 	if _transport_kind == "steam":
 		var game := _game()
@@ -1189,19 +1203,21 @@ func _rpc_goodbye() -> void:
 	var sender := multiplayer.get_remote_sender_id()
 	if bool(_registry.call("has", sender)):
 		_departing_peers[sender] = true
+		# Close from this side, after the goodbye has been read, so the
+		# leaving client's disconnect cannot discard it. See GOODBYE_LINGER_S.
+		if _peer != null:
+			_peer.disconnect_peer(sender)
 
 
-func _say_goodbye() -> void:
+## Returns whether a goodbye went out; the caller then waits for the host to
+## close the link (or GOODBYE_LINGER_S) before tearing down. A goodbye that is
+## lost anyway only means the seat is held for the reconnect window.
+func _say_goodbye() -> bool:
 	if _peer == null or not is_inside_tree() or multiplayer.multiplayer_peer != _peer \
 			or not bool(_box.get("connected", false)):
-		return
+		return false
 	rpc_id(HOST_PEER_ID, "_rpc_goodbye")
-	# ENet sends queued packets on the next service; flush now so the goodbye
-	# leaves before `_teardown()` closes the socket. Other transports keep
-	# their own close semantics, and a lost goodbye only holds the seat.
-	var enet := _peer as ENetMultiplayerPeer
-	if enet != null and enet.host != null:
-		enet.host.flush()
+	return true
 
 
 ## Host -> everyone (or one kicked peer), ledger channel.
@@ -1299,6 +1315,11 @@ func _on_server_disconnected() -> void:
 	# edge rather than replacing that specific reason with `host_gone`.
 	if _mode != "client":
 		return
+	if _closing_frames > 0:
+		# The host closed the link in answer to our goodbye: finish the leave
+		# with its own reason, not `host_gone`, and without a second save.
+		_finish_closing()
+		return
 	if _box.get("ended", "") == "":
 		_box["ended"] = "host_gone"
 	_save_character_here()
@@ -1316,11 +1337,7 @@ func _process(delta: float) -> void:
 			return
 		if not _host_close_flushed():
 			return
-		_closing_frames = 0
-		_closing_deadline_ms = 0
-		_teardown()
-		session_ended.emit(_closing_reason)
-		_closing_reason = ""
+		_finish_closing()
 		return
 	_flush_rejected_peers()
 	_expire_snapshot_sends()
@@ -1358,7 +1375,16 @@ func _linger_then_disconnect(peer_id: int) -> void:
 	}
 
 
-## The final frame of a host close waits here until every remote peer has
+func _finish_closing() -> void:
+	var reason := _closing_reason
+	_closing_frames = 0
+	_closing_deadline_ms = 0
+	_closing_reason = ""
+	_teardown()
+	session_ended.emit(reason)
+
+
+## The final frame of a host or goodbye close waits here until every remote peer has
 ## closed its side, or the bound passes. A dead or silent client cannot hold
 ## the host open.
 func _host_close_flushed() -> bool:
