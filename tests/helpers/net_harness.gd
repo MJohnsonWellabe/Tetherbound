@@ -226,6 +226,7 @@ func launch(peer_count: int, scene: String, extra_args: Array = [],
 
 	_run_dir = _resolve_run_dir()
 	DirAccess.make_dir_recursive_absolute(_run_dir)
+	_isolate_coordinator()
 
 	# ENet still needs a predictable port before child argv is built. TCP control
 	# ports do not: reserve OS-selected listeners atomically, before any child.
@@ -265,6 +266,9 @@ func launch(peer_count: int, scene: String, extra_args: Array = [],
 		if mine is Array:
 			args_for_peer.append_array(mine as Array)
 		var pid := _spawn_peer(i, role, control_port, enet_base + i, scene, home, log_path, args_for_peer)
+		# `_spawn_peer` points XDG_DATA_HOME/APPDATA at the peer's home for the
+		# child; point THIS process back at its own before anything saves.
+		_isolate_coordinator()
 		if pid <= 0:
 			var why2 := "coordinator: OS.create_process failed for peer %d" % i
 			failures.append(why2)
@@ -338,6 +342,25 @@ func enet_port_for(index: int) -> int:
 ## comfortably inside the ephemeral port range.
 func _port_offset_from_run_id(run_id: String) -> int:
 	return (absi(hash(run_id)) % 400) * 20
+
+
+## The coordinator process has its own `Game` autoload. `_spawn_peer` sets
+## XDG_DATA_HOME/APPDATA for each child, and those are this process's own env
+## vars too: left there, this process's `user://` WAS the last peer's home, and
+## its blank Game's fallback autosave (every 180 s, as a session-less "host")
+## rewrote that peer's slot_0 with a freshly minted character -- the measured
+## cause of a guest rejoining as a blank character (F05 WO4, grant on #221).
+## So: a private home under the run dir (never the developer's real one), and
+## the coordinator's Game gives up world-save ownership so it never autosaves.
+func _isolate_coordinator() -> void:
+	var own_home := _run_dir.path_join("home-coordinator")
+	DirAccess.make_dir_recursive_absolute(own_home)
+	OS.set_environment("XDG_DATA_HOME", own_home)
+	if _is_windows():
+		OS.set_environment("APPDATA", own_home)
+	var game := root.get_node_or_null(^"Game")
+	if game != null and game.has_method("relinquish_world_save_ownership"):
+		game.call("relinquish_world_save_ownership")
 
 
 func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene: String,
