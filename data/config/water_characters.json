@@ -36,7 +36,7 @@
       "requires_world_flags": [
         "water_guardian_freed"
       ],
-      "purpose": "Opens the existing five-slot ceremony. Does not accept, release, replace or grant a creature by itself. Not gated on world settlement: each participant answers independently and the host refuses anyone already answered or not a participant.",
+      "purpose": "Opens the existing five-slot ceremony. Does not accept, release, replace or grant a creature by itself. Not gated on world settlement: each participant answers independently and the host refuses anyone already answered or not a participant. Edda's greeting only chooses this conversation for a character that may still answer (GuardianReward.local_may_answer) or holds its pending claim; anyone else hears water_edda_guardian_neutral, which requests nothing (water_guardian_reward.gd gate_edda_offer).",
       "effect": "water:water_guardian_offer_requested"
     }
   ],

@@ -123,8 +123,11 @@ func test_each_participant_has_an_independent_claim_id() -> void:
 	assert_ne(REWARD.claim_id("other-world", "A"), REWARD.claim_id(game.world.world_id, "A"))
 	var a := REWARD.begin(game, ledger, "A", guardian())
 	var b := REWARD.begin(game, ledger, "B", guardian())
-	assert_eq(a.id, REWARD.claim_id(game.world.world_id, "A"))
-	assert_eq(b.id, REWARD.claim_id(game.world.world_id, "B"))
+	# begin() establishes the world instance first (live hosts never fall back
+	# to the slot locator), so ids hash that instance.
+	assert_ne(REWARD.world_instance(game.world), game.world.world_id)
+	assert_eq(a.id, REWARD.claim_id(REWARD.world_instance(game.world), "A"))
+	assert_eq(b.id, REWARD.claim_id(REWARD.world_instance(game.world), "B"))
 	# B refusing does not touch A's pending claim.
 	assert_true(REWARD.decline(game, ledger, "B").ok)
 	assert_true(game.world.water_capture_claims.has(a.id))
@@ -391,6 +394,8 @@ func test_legacy_settled_recipient_is_never_granted_a_duplicate() -> void:
 	var legacy := REWARD.legacy_claim_id(game.world.world_id)
 	for flag: String in ["water_guardian_claimed"] + REWARD.SETTLEMENT:
 		game.world.flags.set_flag(flag)
+	# This host observed its legacy claim's recipient (A) before erasing it.
+	game.world.flags.set_flag(REWARD.legacy_recipient_flag("A"))
 	# The legacy recipient's own character holds the old receipt.
 	game.local.character_id = "A"
 	game.local.flags.set_flag("water_capture_receipt:" + legacy)
@@ -410,15 +415,19 @@ func test_legacy_settled_recipient_is_never_granted_a_duplicate() -> void:
 	for op: Dictionary in resolved.delta.ops:
 		assert_false(REWARD.SETTLEMENT.has(str(op.get("id", ""))), "legacy settlement is not written again")
 	assert_true(claim.get("legacy_world", false), "the legacy instance stamps its own claims")
+	assert_true(claim.get("legacy_recipient", false), "only the recorded legacy recipient's claim honours the old receipt")
 	# The same receipt does not count for an unstamped claim naming the SAME
 	# slot locator: only the world instance that made the legacy offer may
 	# honour it (another slot-0 world's claim is never legacy-stamped).
 	var unstamped := claim.duplicate()
 	unstamped.erase("legacy_world")
+	unstamped.erase("legacy_recipient")
 	unstamped["id"] = REWARD.claim_id("another-instance", "A")
 	assert_false(REWARD.already_received(game.local.flags, unstamped))
 	unstamped["legacy_world"] = true
-	assert_true(REWARD.already_received(game.local.flags, unstamped), "control: stamping is what enables the legacy match")
+	assert_false(REWARD.already_received(game.local.flags, unstamped), "a legacy WORLD alone no longer honours any legacy receipt")
+	unstamped["legacy_recipient"] = true
+	assert_true(REWARD.already_received(game.local.flags, unstamped), "control: the recipient stamp is what enables the legacy match")
 
 # --- WaterCaptureClaims sender -> character mapping (fake peers) --------------
 
@@ -453,7 +462,12 @@ class Claims extends "res://scripts/net/water_capture_claims.gd":
 	func _bridge() -> Node: return fake_bridge
 	func _sender() -> int: return sender
 
-func claims_fixture(game: RefCounted) -> Claims:
+## Records refusals instead of sending them (no transport in unit tests).
+class SpyClaims extends Claims:
+	var sent_declines: Array = []
+	func _send_decline(id: String) -> void: sent_declines.append(id)
+
+func claims_fixture(game: RefCounted, spy: bool = false) -> Claims:
 	var fake := FakeGame.new()
 	fake.world = game.world
 	fake.local = game.local
@@ -461,7 +475,7 @@ func claims_fixture(game: RefCounted) -> Claims:
 	var bridge := FakeBridge.new()
 	bridge.ledger = LEDGER.new(game.world)
 	bridge.peers = {1: "host-char", 2: "A", 3: "B"}
-	var claims := Claims.new()
+	var claims: Claims = SpyClaims.new() if spy else Claims.new()
 	claims.fake_game = fake
 	claims.fake_bridge = bridge
 	return claims
@@ -541,3 +555,264 @@ func test_receive_claim_keeps_separate_characters_and_world_instances_apart() ->
 	claims.receive_claim(for_c)
 	assert_eq(claims.pending_guardian_id(), str(for_c.id), "C's offer in this instance is presented, not acked away")
 	free_claims(claims)
+
+# --- review fixes: decline confirmation, stale claims, legacy recipient ------
+
+func test_chamber_decline_refused_by_host_leaves_the_next_invite_presentable() -> void:
+	var game := instance_fixture("decline-refused-instance", ["C"])
+	game.local.character_id = "C"
+	var claims := claims_fixture(game, true)
+	claims.fake_game.host = false
+	var ledger: RefCounted = claims.fake_bridge.ledger
+	var id := REWARD.claim_id(REWARD.world_instance(game.world), "C")
+	# The chamber decline intent is in flight: only a provisional hold.
+	claims.hold_for_decline(id)
+	assert_true(claims.held_for_decline(id))
+	assert_false(claims.is_declined(id), "nothing is recorded as declined before the host answers")
+	# The host refuses the decline (journal failure) and says so.
+	game.save_system.fail_write = true
+	assert_false(REWARD.refuse(game, ledger, "C").ok)
+	game.save_system.fail_write = false
+	claims.release_decline(id)
+	assert_false(claims.held_for_decline(id))
+	assert_false(claims.is_declined(id))
+	# A later Invite: the same id is minted, reaches this peer and is presented.
+	var offer := REWARD.begin(game, ledger, "C", guardian())
+	assert_true(offer.ok)
+	assert_eq(offer.id, id)
+	var claim: Dictionary = game.world.water_capture_claims[id]
+	claims.receive_claim(claim)
+	assert_eq(claims.pending_guardian_id(), id, "the invite's claim is presented")
+	assert_true((claims.get("sent_declines") as Array).is_empty(), "no silent automatic refusal")
+	var granted := TX.settle(game, claim, guardian(), -1)
+	assert_true(granted.ok, "and it can be accepted")
+	assert_false(granted.already)
+	assert_eq(game.local.party.size(), 1)
+	free_claims(claims)
+
+func test_decline_in_flight_holds_a_crossing_claim_until_the_host_answers() -> void:
+	var game := instance_fixture("decline-crossing-instance", ["C"])
+	game.local.character_id = "C"
+	var claims := claims_fixture(game, true)
+	claims.fake_game.host = false
+	var ledger: RefCounted = claims.fake_bridge.ledger
+	var offer := REWARD.begin(game, ledger, "C", guardian())
+	var claim: Dictionary = game.world.water_capture_claims[offer.id]
+	claims.hold_for_decline(offer.id)
+	claims.receive_claim(claim)
+	assert_true(claims.held_for_decline(offer.id), "a claim crossing the decline is held, not presented")
+	assert_false(claims.presentable(), "held claims never open the roster choice")
+	assert_true((claims.get("sent_declines") as Array).is_empty(), "and it is not refused before the host confirms")
+	# Host confirms: the held claim is dropped and later resends are refused.
+	assert_true(REWARD.refuse(game, ledger, "C").ok)
+	claims.confirm_declined(offer.id)
+	assert_true(claims.is_declined(offer.id))
+	assert_eq(claims.pending_guardian_id(), "")
+	claims.receive_claim(claim)
+	assert_eq(claims.get("sent_declines"), [offer.id], "a stale resend after the confirmed refusal is refused")
+	# Control: a released hold presents the claim again.
+	var other := claims_fixture(game, true)
+	other.fake_game.host = false
+	other.hold_for_decline(offer.id)
+	other.receive_claim(claim)
+	other.release_decline(offer.id)
+	assert_true(other.presentable())
+	free_claims(other)
+	free_claims(claims)
+
+func test_stale_queued_claim_from_another_world_or_character_cannot_drive_a_decline() -> void:
+	var game := instance_fixture("stale-queue-instance", ["C"])
+	game.local.character_id = "C"
+	var claims := claims_fixture(game, true)
+	claims.fake_game.host = false
+	var ledger: RefCounted = claims.fake_bridge.ledger
+	var claim: Dictionary = game.world.water_capture_claims[REWARD.begin(game, ledger, "C", guardian()).id]
+	claims.receive_claim(claim)
+	assert_eq(claims.pending_guardian_id(), str(claim.id), "control: queued while it matched")
+	# The peer moves to another world instance (same slot locator).
+	var elsewhere := instance_fixture("another-host-instance", ["C"])
+	claims.fake_game.world = elsewhere.world
+	assert_eq(claims.pending_guardian_id(), "", "a queued claim from another world is not this peer's Guardian claim")
+	assert_false(claims.decline_pending().ok, "and cannot drive a phantom decline")
+	assert_true((claims.get("sent_declines") as Array).is_empty())
+	claims._process(2.0)
+	assert_eq(claims.get("_pending"), {}, "_process drops the mismatched queued claim")
+	# Same world, but the local character changed.
+	claims.fake_game.world = game.world
+	claims.receive_claim(claim)
+	assert_eq(claims.pending_guardian_id(), str(claim.id))
+	game.local.character_id = "D"
+	assert_eq(claims.pending_guardian_id(), "", "another character's queued claim is not ours")
+	assert_false(claims.decline_pending().ok)
+	assert_true((claims.get("sent_declines") as Array).is_empty())
+	claims._process(2.0)
+	assert_eq(claims.get("_pending"), {})
+	free_claims(claims)
+
+func legacy_world_fixture(legacy_recipient: String) -> RefCounted:
+	var game := fixture(["A", "B"])
+	game.world.world_id = "slot-0"
+	game.world.reward_delivery_namespace = "legacy-instance"
+	for flag: String in ["water_guardian_claimed"] + REWARD.SETTLEMENT:
+		game.world.flags.set_flag(flag)
+	if not legacy_recipient.is_empty():
+		game.world.flags.set_flag(REWARD.legacy_recipient_flag(legacy_recipient))
+	return game
+
+func test_foreign_legacy_receipt_in_a_legacy_world_does_not_ack_away_a_participant() -> void:
+	# A received this legacy world's single offer; B is another participant who
+	# carries a legacy receipt from B's OWN slot-0 world (same legacy id).
+	var game := legacy_world_fixture("A")
+	game.local.character_id = "B"
+	game.local.flags.set_flag("water_capture_receipt:" + REWARD.legacy_claim_id("slot-0"))
+	var ledger := LEDGER.new(game.world)
+	assert_true(REWARD.is_legacy_world(game.world))
+	var offer := REWARD.begin(game, ledger, "B", guardian())
+	assert_true(offer.ok)
+	var claim: Dictionary = game.world.water_capture_claims[offer.id]
+	assert_false(claim.get("legacy_recipient", false), "B is not this world's legacy recipient")
+	assert_false(REWARD.already_received(game.local.flags, claim), "B's foreign legacy receipt blocks nothing")
+	var granted := TX.settle(game, claim, guardian(), -1)
+	assert_true(granted.ok)
+	assert_false(granted.already, "B really receives its own Guardian")
+	assert_eq(game.local.party.size(), 1)
+
+func test_unknown_legacy_recipient_is_presented_normally_never_acknowledged() -> void:
+	# The legacy claim was erased before recipients were recorded: the host
+	# cannot tell who received it, so nobody is silently acknowledged away.
+	var game := legacy_world_fixture("")
+	game.local.character_id = "A"
+	game.local.flags.set_flag("water_capture_receipt:" + REWARD.legacy_claim_id("slot-0"))
+	var ledger := LEDGER.new(game.world)
+	var offer := REWARD.begin(game, ledger, "A", guardian())
+	var claim: Dictionary = game.world.water_capture_claims[offer.id]
+	assert_false(claim.get("legacy_recipient", false))
+	assert_false(REWARD.already_received(game.local.flags, claim), "owner decision: unknown legacy recipient is offered normally")
+
+func test_legacy_recipient_is_recorded_when_the_legacy_claim_is_observed_or_resolved() -> void:
+	var game := fixture(["A", "B"])
+	game.world.world_id = "slot-0"
+	var ledger := LEDGER.new(game.world)
+	var legacy := REWARD.legacy_claim_id("slot-0")
+	game.world.flags.set_flag("water_guardian_claimed")
+	game.world.water_capture_claims[legacy] = {"id": legacy, "source": "guardian", "world_id": "slot-0",
+		"character_id": "A", "creature": preload("res://scripts/save/water_capture_codec.gd").encode(guardian())}
+	# B's offer is the first host transaction to observe the pending legacy claim.
+	var b := REWARD.begin(game, ledger, "B", guardian())
+	assert_true(b.ok)
+	assert_true(game.world.flags.has(REWARD.legacy_recipient_flag("A")), "observed legacy recipient is journaled with B's offer")
+	assert_false(game.world.flags.has(REWARD.legacy_recipient_flag("B")))
+	assert_false(game.world.water_capture_claims[b.id].get("legacy_recipient", false))
+	var restored := WORLD.new()
+	restored.load_data(game.save_system.store.read(game.world.world_id))
+	assert_true(restored.flags.has(REWARD.legacy_recipient_flag("A")), "recipient marker is in the world journal")
+	# Resolving the legacy claim also records its recipient (fresh world copy).
+	var other := fixture(["A"])
+	other.world.world_id = "slot-0"
+	other.world.flags.set_flag("water_guardian_claimed")
+	other.world.water_capture_claims[legacy] = game.world.water_capture_claims[legacy].duplicate(true)
+	var other_ledger := LEDGER.new(other.world)
+	assert_true(REWARD.resolve(other, other_ledger, legacy, "A", true).ok)
+	assert_true(other.world.flags.has(REWARD.legacy_recipient_flag("A")))
+
+func test_begin_and_refuse_establish_world_identity_before_minting() -> void:
+	var game := fixture(["A", "B"])
+	game.world.world_id = "slot-0"
+	assert_eq(game.world.reward_delivery_namespace, "")
+	var ledger := LEDGER.new(game.world)
+	var offer := REWARD.begin(game, ledger, "A", guardian())
+	assert_true(offer.ok)
+	var instance: String = game.world.reward_delivery_namespace
+	assert_false(instance.is_empty(), "begin() ensures the world identity first")
+	var claim: Dictionary = game.world.water_capture_claims[offer.id]
+	assert_eq(claim.world_instance, instance, "the claim never falls back to the slot locator on a live host")
+	assert_ne(claim.world_instance, "slot-0")
+	assert_eq(offer.id, REWARD.claim_id(instance, "A"))
+	# A later save (which ensures identity again) does not orphan the claim.
+	preload("res://scripts/save/world_identity.gd").ensure(game.world)
+	assert_true(REWARD.claim_matches_world(claim, game.world))
+	var reloaded := WORLD.new()
+	reloaded.load_data(game.save_system.store.read(game.world.world_id))
+	assert_eq(reloaded.reward_delivery_namespace, instance, "identity is journaled with the claim")
+	assert_true(REWARD.claim_matches_world(claim, reloaded))
+	# refuse() likewise ensures identity (no claim, but the same rule).
+	var refusing := fixture(["A"])
+	assert_true(REWARD.refuse(refusing, LEDGER.new(refusing.world), "A").ok)
+	assert_false(str(refusing.world.reward_delivery_namespace).is_empty())
+
+# --- Edda's offer line is gated per character ---------------------------------
+
+func test_edda_offers_only_to_a_character_that_may_still_answer() -> void:
+	var game := fixture(["A", "B"])
+	var ledger := LEDGER.new(game.world)
+	var view := GameFixture.new()
+	view.host = false
+	view.world = game.world
+	view.local.character_id = "A"
+	assert_eq(REWARD.edda_conversation(view, false), REWARD.EDDA_OFFER, "participant with no answer yet")
+	view.local.character_id = "C"
+	assert_eq(REWARD.edda_conversation(view, false), REWARD.EDDA_NEUTRAL, "non-participant hears the neutral line")
+	view.local.character_id = "A"
+	REWARD.begin(game, ledger, "A", guardian())
+	assert_eq(REWARD.edda_conversation(view, false), REWARD.EDDA_NEUTRAL, "an offered/answered character is not re-invited")
+	assert_eq(REWARD.edda_conversation(view, true), REWARD.EDDA_OFFER, "a locally pending claim may still be opened")
+	REWARD.decline(game, ledger, "A")
+	assert_true(game.world.flags.has("water_currents_restored"))
+	assert_eq(REWARD.edda_conversation(view, false), REWARD.EDDA_POST, "after restoration: her ordinary post greeting, still no offer")
+	view.local.character_id = "B"
+	assert_eq(REWARD.edda_conversation(view, false), REWARD.EDDA_OFFER, "B's own offer is unaffected by A's answer")
+	var tethered := fixture(["A"])
+	tethered.world.flags.set_flag("water_guardian_freed", false)
+	assert_eq(REWARD.edda_conversation(tethered, false), "", "before the freeing Edda keeps her ordinary greeting")
+
+func test_edda_fallback_is_authored_speech_without_effects() -> void:
+	var dialogue: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/dialogue/water.json"))
+	var conversations: Dictionary = dialogue.conversations
+	assert_true(conversations.has(REWARD.EDDA_OFFER))
+	assert_true(conversations.has(REWARD.EDDA_NEUTRAL))
+	var neutral: Dictionary = conversations[REWARD.EDDA_NEUTRAL]
+	assert_eq(str(neutral.speaker), str(conversations[REWARD.EDDA_OFFER].speaker))
+	assert_false((neutral.lines as Array).is_empty())
+	for fallback: String in [REWARD.EDDA_NEUTRAL, REWARD.EDDA_POST]:
+		assert_eq(str(conversations[fallback].speaker), str(conversations[REWARD.EDDA_OFFER].speaker))
+		for line: Variant in conversations[fallback].lines:
+			assert_true(line is String, "fallback speech carries no effect or flag")
+	var cast: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_characters.json"))
+	var guarded: Array = []
+	for guard: Dictionary in cast.dialogue_event_guards:
+		guarded.append(str(guard.conversation))
+	assert_true(guarded.has(REWARD.EDDA_OFFER))
+	assert_false(guarded.has(REWARD.EDDA_NEUTRAL), "the fallback requests nothing")
+	assert_false(guarded.has(REWARD.EDDA_POST))
+
+class FakePrompt extends Node:
+	signal activated()
+
+class FakeBody extends Node:
+	var prompt: Node = FakePrompt.new()
+	func prompt_node() -> Node: return prompt
+
+class FakeCast extends Node:
+	var started: Array = []
+	var greeted: Array = []
+	func _on_greeted(id: String) -> void: greeted.append(id)
+	func start_conversation(id: String, requested: String = "") -> bool:
+		started.append([id, requested])
+		return true
+
+func test_edda_greeting_is_rerouted_through_the_participant_gate() -> void:
+	var game := fixture(["A"])
+	game.local.character_id = "C"
+	var cast := FakeCast.new()
+	var body := FakeBody.new()
+	body.prompt.activated.connect(cast._on_greeted.bind(REWARD.EDDA_ID))
+	REWARD.gate_edda_offer(cast, {REWARD.EDDA_ID: body}, game)
+	body.prompt.activated.emit()
+	assert_eq(cast.greeted, [], "the cast's ungated greet handler no longer opens the offer")
+	assert_eq(cast.started, [[REWARD.EDDA_ID, REWARD.EDDA_NEUTRAL]])
+	game.local.character_id = "A"
+	body.prompt.activated.emit()
+	assert_eq(cast.started[1], [REWARD.EDDA_ID, REWARD.EDDA_OFFER])
+	body.prompt.free()
+	body.free()
+	cast.free()

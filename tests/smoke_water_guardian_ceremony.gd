@@ -5,6 +5,9 @@ extends SceneTree
 ## claimed/settled/restored/earned/placed flags or captured Guardian injected.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+## One synchronous refused journal write (the host refuses the decline).
+class RefusingSaver extends RefCounted:
+	func save_world(_game: Object, _id: String) -> bool: return false
 var checks := 0
 var failures := 0
 
@@ -61,6 +64,28 @@ func _run() -> void:
 	check(cave.decline_armed() and str(decline.label).begins_with("Confirm"), "First decline press arms a confirmation")
 	check(not game.world.flags.has(preload("res://scripts/world/water_guardian_reward.gd").offered_flag(game.local.character_id))
 		and not game.world.flags.has("water_guardian_settled"), "Consequence step commits nothing")
+	# A second press inside the 0.5 s guard is ignored (no accidental double tap).
+	cave.request_guardian_decline()
+	check(cave.decline_armed() and not game.world.flags.has(reward_offered(game)), "Immediate second press is ignored, still armed, nothing committed")
+	# Leaving the prompt radius disarms.
+	var near_at: Vector3 = player.global_position
+	player.global_position = decline.global_position + Vector3(0, 0, -12)
+	await _frames(4)
+	check(not cave.decline_armed() and str(decline.label) == cave.DECLINE_LABEL, "Walking out of the prompt radius disarms the decline")
+	player.global_position = near_at
+	player.velocity = Vector3.ZERO
+	await _frames(4)
+	# The host REFUSES the confirmed decline (journal failure): nothing may be
+	# remembered as declined, so the later Invite is still presented.
+	cave.request_guardian_decline()
+	await create_timer(0.6).timeout
+	var real_saver: RefCounted = game.save_system
+	game.save_system = RefusingSaver.new()
+	game.take_pending_world_message()
+	cave.request_guardian_decline()
+	game.save_system = real_saver
+	check(not game.world.flags.has(reward_offered(game)) and game.take_pending_world_message() != cave.DECLINE_DONE,
+		"A decline the host refused commits nothing and does not claim success")
 	prompt.interaction_activate()
 	check(not cave.decline_armed(), "Inviting disarms a pending decline confirmation")
 	deadline = Time.get_ticks_msec() + 10000
@@ -124,14 +149,35 @@ func _run() -> void:
 	check(decline_prompt.enabled and prompt.enabled, "A character that has not answered sees invite and decline")
 	var party_before: int = game.local.party.size()
 	cave.request_guardian_decline()
+	await create_timer(0.6).timeout
+	game.take_pending_world_message()
 	cave.request_guardian_decline()
+	check(game.take_pending_world_message() == cave.DECLINE_DONE, "Host-confirmed decline shows the done message")
 	var decliner_flag: String = reward.offered_flag(game.local.character_id)
 	check(game.world.flags.has(decliner_flag), "Confirmed decline journals this character's answer through the host")
 	check(game.local.party.size() == party_before and game.pending_catch == null, "Decline grants no creature")
 	check(game.save_system.get("_worlds").read(game.world.world_id).get("flags", {}).get("flags", []).has(decliner_flag), "Decline answer is in the world journal")
 	for i in 4: await process_frame
 	check(not decline_prompt.enabled and not prompt.enabled, "Answered character no longer sees the ceremony prompts")
+	# Edda's real greet prompt is routed through the per-character gate: an
+	# answered character hears no offer (currents restored: her post line).
+	var cast: Node = world.get_node("WaterNPCs")
+	var edda: Node3D = world.get_node("WaterChapter").npc_bodies.get("water_edda")
+	player.global_position = edda.global_position + Vector3(0, 0, 1.5)
+	player.velocity = Vector3.ZERO
+	await _frames(2)
+	edda.prompt_node().activated.emit()
+	check(str(cast.get("_active_conversation")) == reward.EDDA_POST, "Answered character greeting Edda hears no Guardian offer")
+	world.get_node("DialoguePanel").close()
+	await _frames(2)
+	game.local.character_id = "guardian-ceremony-unanswered"
+	edda.prompt_node().activated.emit()
+	check(str(cast.get("_active_conversation")) == reward.EDDA_OFFER, "A character that may still answer is offered by Edda")
+	world.get_node("DialoguePanel").close()
 	_finish()
+
+func reward_offered(game: Node) -> String:
+	return preload("res://scripts/world/water_guardian_reward.gd").offered_flag(game.local.character_id)
 
 func _offer_at(world: Node3D, player: Node3D, prompt: Node3D) -> bool:
 	for i in 8:

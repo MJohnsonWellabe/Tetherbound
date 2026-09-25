@@ -857,6 +857,14 @@
           "effect": "water:water_guardian_offer_requested"
         }
       ]
+    },
+    "water_edda_guardian_neutral": {
+      "speaker": "Shrinekeeper Edda",
+      "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
+      "lines": [
+        "The Deep Watcher is free of the crystal. Its offer belongs to those who stood against Nerissa beneath the Veilfall, and each of them answers it once.",
+        "Nothing more is asked of you at the chamber. Rest here before you go on."
+      ]
     }
   }
 }

@@ -8,9 +8,18 @@ const GUARDIAN := preload("res://scripts/world/water_guardian_reward.gd")
 const CHANNEL := preload("res://scripts/net/session.gd").CHANNEL_LEDGER
 var _pending: Dictionary = {}
 var _active: Dictionary = {}
-## Claim ids this character refused this session. The host keeps re-sending a
-## claim until its refusal is journaled, so a lost refusal is simply resent.
+## Claim ids whose refusal the host CONFIRMED this session (a host-confirmed
+## chamber decline), or that this character refused while holding the claim
+## itself (decline_pending: the host keeps re-sending that claim until its
+## refusal is journaled, so a lost refusal is simply resent). A resend of one
+## of these is refused again, never presented.
 var _declined: Dictionary = {}
+## Chamber decline intents still awaiting the host's verdict. A claim with this
+## id that arrives meanwhile (an Invite crossing the decline) is HELD: neither
+## presented nor refused. The host's ok verdict promotes the hold to _declined;
+## a refusal (or a new Invite) releases it, so a decline the host refused can
+## never silently refuse a later offer.
+var _decline_holds: Dictionary = {}
 var _poll := 0.0
 
 ## Seams (overridden by unit fixtures): the Game autoload, the host ledger
@@ -37,9 +46,12 @@ func _process(delta: float) -> void:
 	# and pure unit fixtures may never create player/world state at all.
 	if game == null or game.get("world") == null or game.get("local") == null:
 		return
-	if not _active.is_empty() and (game.pending_catch == null or not GUARDIAN.claim_matches_world(_active, game.world) \
-			or str(_active.character_id) != game.local.character_id):
+	if not _active.is_empty() and (game.pending_catch == null or not _is_local_claim(_active)):
 		_active = {}
+	# A queued claim from another world instance or character (world change,
+	# character switch) is dropped rather than left to drive a decline.
+	if not _pending.is_empty() and not _is_local_claim(_pending):
+		_pending = {}
 	if game.is_host():
 		for raw: Variant in game.world.water_capture_claims.values().duplicate():
 			if not raw is Dictionary or str(raw.get("character_id", "")).is_empty():
@@ -61,12 +73,19 @@ func _process(delta: float) -> void:
 func _claim(claim: Dictionary) -> void:
 	receive_claim(claim)
 
+## This peer's own character, in this world INSTANCE (not only the slot
+## locator: another host's "slot-0" world is never this one).
+func _is_local_claim(claim: Dictionary) -> bool:
+	var game := _game()
+	if claim.is_empty() or game == null or game.get("world") == null or game.get("local") == null:
+		return false
+	return not str(claim.get("id", "")).is_empty() \
+		and str(claim.get("character_id", "")) == str(game.local.character_id) \
+		and GUARDIAN.claim_matches_world(claim, game.world)
+
 func receive_claim(claim: Dictionary) -> void:
 	var game := _game()
-	# World INSTANCE, not only the slot locator: another host's "slot-0"
-	# world must never be mistaken for this one (water_guardian_reward.gd).
-	if str(claim.get("character_id", "")) != game.local.character_id \
-			or not GUARDIAN.claim_matches_world(claim, game.world) or str(claim.get("id", "")).is_empty():
+	if not _is_local_claim(claim):
 		return
 	if _declined.has(str(claim.id)):
 		_send_decline(str(claim.id))
@@ -81,7 +100,7 @@ func receive_claim(claim: Dictionary) -> void:
 	_pending = claim.duplicate(true)
 
 func _offer_pending() -> void:
-	if _pending.is_empty() or not _active.is_empty():
+	if _pending.is_empty() or not _active.is_empty() or _decline_holds.has(str(_pending.get("id", ""))):
 		return
 	var game := _game()
 	if GUARDIAN.already_received(game.local.flags, _pending):
@@ -133,10 +152,11 @@ func complete_pending_capture(release_index: int) -> Dictionary:
 ## settles the offer exactly as an acceptance would, minus the creature.
 func decline_pending() -> Dictionary:
 	var game := _game()
-	var claim: Dictionary = _active if not _active.is_empty() else _pending
-	if claim.is_empty() or str(claim.get("source", "")) != "guardian":
+	var claim := _local_guardian_claim()
+	if claim.is_empty():
 		return {"ok": false, "reason": "No Guardian offer is waiting."}
 	var id := str(claim.id)
+	_decline_holds.erase(id)
 	_declined[id] = true
 	if not _active.is_empty() and str(_active.id) == id:
 		_active = {}
@@ -147,18 +167,52 @@ func decline_pending() -> Dictionary:
 	_send_decline(id)
 	return {"ok": true}
 
-## This character's Guardian claim held locally (pending or presented).
+## This character's Guardian claim held locally (pending or presented), only
+## while it still belongs to this world instance and local character.
 func pending_guardian_id() -> String:
-	for claim: Dictionary in [_active, _pending]:
-		if not claim.is_empty() and str(claim.get("source", "")) == "guardian":
-			return str(claim.id)
-	return ""
+	return str(_local_guardian_claim().get("id", ""))
 
-## Remember a refusal made before the claim reached this peer (the chamber's
-## decline intent), so a claim still in flight is refused, never presented.
-func mark_declined(id: String) -> void:
+func _local_guardian_claim() -> Dictionary:
+	for claim: Dictionary in [_active, _pending]:
+		if str(claim.get("source", "")) == "guardian" and _is_local_claim(claim):
+			return claim
+	return {}
+
+## A queued claim that the next poll may present (not held for a decline).
+func presentable() -> bool:
+	return _active.is_empty() and _is_local_claim(_pending) and not _decline_holds.has(str(_pending.id))
+
+## Chamber decline sent to the host: hold (never present, never refuse) a claim
+## with this id until the host's verdict arrives.
+func hold_for_decline(id: String) -> void:
 	if not id.is_empty():
-		_declined[id] = true
+		_decline_holds[id] = true
+
+func held_for_decline(id: String) -> bool:
+	return _decline_holds.has(id)
+
+## The host refused the decline, or the player invited again: forget the hold
+## so the claim is presented normally.
+func release_decline(id: String) -> void:
+	_decline_holds.erase(id)
+
+## The host confirmed the refusal: drop a held/queued copy of the claim and
+## refuse any stale resend of it.
+func confirm_declined(id: String) -> void:
+	if id.is_empty():
+		return
+	_decline_holds.erase(id)
+	_declined[id] = true
+	var game := _game()
+	if str(_active.get("id", "")) == id:
+		_active = {}
+		if game != null and game.pending_catch != null and str(game.pending_catch.get_meta("water_capture_claim", "")) == id:
+			game.pending_catch = null
+	if str(_pending.get("id", "")) == id:
+		_pending = {}
+
+func is_declined(id: String) -> bool:
+	return _declined.has(id)
 
 func _send_decline(id: String) -> void:
 	var game := _game()
