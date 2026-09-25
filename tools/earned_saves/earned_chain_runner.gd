@@ -218,6 +218,8 @@ func _take(result: Dictionary, key: String, label: String) -> bool:
 			disclosures.append("warrens: harvest order 16 rootstone (393,1802) skipped as physically unreachable (BLOCKERS.md B2, open Meadows defect); nothing later consumes rootstone, so no replacement gathering was needed")
 		elif beat == "undertrail_mound_detour":
 			disclosures.append("warrens: added an ordinary controller-walk detour west of the Warrens mound on the undertrail approach (BLOCKERS.md B3)")
+		elif beat == "prompt_press_delayed_dialogue":
+			disclosures.append("relay: the exact Interact press opened its dialogue without the arbiter's activated signal; accepted on the real panel opening, the helper still verified the exact conversation: %s" % JSON.stringify(row))
 		elif beat == "prompt_press_retry":
 			disclosures.append("relay: an Interact press did not activate the exact offered provider and was retried with no side effect: %s" % JSON.stringify(row))
 		elif beat == "quarry_east_detour":

@@ -30,6 +30,24 @@ func _press_prompt(prompt: Node3D) -> bool:
 		await _input._tap("interact")
 		if _activated_id == expected:
 			return true
+		# Attempt 2 showed the press does reach the trainer: with nothing
+		# reported through the arbiter's `activated` signal, a modal opened a
+		# moment later during the re-approach. Give the real press time to
+		# open its dialogue; `_talk()` still requires the exact expected
+		# conversation to finish, so a wrong provider cannot pass.
+		if _activated_id == 0:
+			for _frame in 240:
+				if _activated_id == expected:
+					return true
+				if bool(_panel.call("is_open")) and not _fighting():
+					_receipt("prompt_press_delayed_dialogue", {"target": str(prompt.get_path()),
+						"frames_waited": _frame, "activated_signal": "<none>", "player": _player.global_position})
+					return true
+				if _fighting() or _activated_id != 0:
+					break
+				await _tree.physics_frame
+		if _activated_id == expected:
+			return true
 		var side_effect := INPUT_OWNER.current(_tree) != null or _fighting() or bool(_panel.call("is_open"))
 		_receipt("prompt_press_retry", {"attempt": attempt + 1, "target": str(prompt.get_path()),
 			"activated": _activated_path if _activated_id != 0 else "<nothing>", "side_effect": side_effect,

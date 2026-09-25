@@ -122,3 +122,9 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   but when a press activated nothing, or activated something with no modal or fight side
   effect, re-approach and press again (up to 3). Each retry is recorded as a
   `prompt_press_retry` receipt naming what was activated.
+- Attempt 2 (alternative 1): the first press at `Trainers/Captain Vance/Interactable` activated
+  `<nothing>` through the arbiter signal, with no immediate side effect. During the re-approach a
+  modal opened ("target or ordinary input disappeared"), so the press had reached the captain
+  with a delay. Alternative 2 (attempt 3) waits up to 240 frames after an unsignalled press for
+  the real dialogue panel. `_talk()` still requires the exact challenge conversation.
+  Disclosed as `prompt_press_delayed_dialogue`.
