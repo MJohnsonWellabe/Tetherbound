@@ -1532,6 +1532,15 @@ jobs:
       - name: Verify Stormwood heartstone interaction
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_heartstone.gd
+      - name: Verify Stormwood Crown records side chain
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_records.gd
+      - name: Verify Stormwood per-participant Stormheart offers
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_stormheart_participants.gd
+      - name: Verify Stormwood Stormheart accept/refuse choice
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_stormheart_choice.gd
       - name: Verify Stormwood ordinary and electric TM pickups
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_pickup_runtime.gd
