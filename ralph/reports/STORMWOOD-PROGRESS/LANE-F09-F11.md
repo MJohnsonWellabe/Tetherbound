@@ -112,3 +112,25 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   - A rendered fight run.
   - Capacitor Alpha's 1.1 s route-line cue.
   - A captain-fight joiner who never passed `_add_participant` and disconnects before the release drops out of the offer set (existing limit).
+
+## WO-F11-02 — Stormheart offer: landing-review follow-ups (`ralph/stormwood-f11-followups`)
+
+- **Anchor:** F11 / ACCEPTANCE §6.1 F11 (per-participant accept/refuse at space and capacity, through disconnect/reload, without duplicate grants); CLAUDE.md legendary rule; MULTIPLAYER.md:95.
+- **Player result:**
+  - **Only an explicit No refuses.** That is B on the Yes/No line, which the panel draws as "[A] Yes  [B] No". Any other close, before or on that line, answers nothing and the offer is asked again. This matches the Meadows finale, which settles only from an explicit answer.
+  - **Yes during another catch ceremony** waits for that ceremony, then starts the Stormheart's own. It no longer stalls for the rest of the session.
+  - **Old saves with no recorded fighters** give an offer to their first claimant only. Every later character gets no creature, but can still land the world offer fact, so Waterward is never softlocked.
+  - **The host decides from its own claims and world receipts.** A client's "already answered" value can only withhold a creature, never grant one.
+  - **The Yes effect** queued on the dialogue panel is consumed by the ending.
+- **Witnesses:**
+  - `tests/test_stormwood_ending.gd`: 12 tests / 65 assertions.
+  - `tests/smoke_stormwood_stormheart_choice.gd`: 22/0. It uses a real `menu_cancel` press, closes before and on the Yes/No line, and answers Yes during a stand-in catch ceremony.
+  - `tests/smoke_stormwood_stormheart_participants.gd`: 23/0. It covers a legacy later claimant, and a lying client refused from the host's own receipt.
+  - Negative controls: each fix, when reverted, fails its test. With the old ending, the new smoke segment hangs instead of passing.
+  - Merged with WO-F10-05: all `test_stormwood_*` suites 231 tests / 25047 assertions / 0 failed.
+- **Independent review:** approved in two rounds. Should-fix 3 (the stall after Yes) is fixed in 73650882d and re-approved.
+- **Open:**
+  - **(shared grant requested)** A No in one world still withholds a real offer in another. The portable receipt does not record Yes vs No; fixing it needs a player flag in `flag_scopes.json`.
+  - **(shared grant requested)** The No is read from input state on the panel's tick, not from a runner `declined` signal. The reviewer verified this correct today for keyboard and joypad.
+  - A claim that deterministically fails to decode now re-asks rather than stalling. No is the exit.
+  - No two-process network run and no rendered ceremony yet.
