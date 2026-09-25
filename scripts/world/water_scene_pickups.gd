@@ -108,11 +108,13 @@ func refresh() -> void:
 	if _game == null:
 		return
 	var wanted: Dictionary = {}
+	var world_state: Variant = _game.get("world")
+	var world_flags: Variant = world_state.get("flags") if world_state is Object else null
 	for focus: Vector3 in _focus_positions():
 		var candidates: Array = []
 		for id: String in _rows:
 			var row: Dictionary = _rows[id]
-			if _taken(row):
+			if _taken(row) or not admitted(row, world_flags):
 				continue
 			var at: Array = row.position
 			var distance := Vector2(focus.x - float(at[0]), focus.z - float(at[2])).length_squared()
@@ -130,6 +132,12 @@ func refresh() -> void:
 	for id: String in wanted:
 		if not _nodes.has(id) and not _errors.has(id):
 			_spawn(_rows[id])
+
+## A row gated by `requires_world_flags` stays out of the scene until the
+## world (host truth, or a client's delta-fed mirror) holds them; the 0.5 s
+## refresh then spawns it. Same rule the host claim applies.
+static func admitted(row: Dictionary, world_flags: Variant) -> bool:
+	return PERSONAL.requirements_met(row, world_flags)
 
 func _taken(row: Dictionary) -> bool:
 	if str(row.placement_kind) == "harvest":

@@ -163,7 +163,15 @@ func test_single_item_pockets_hold_exactly_one_matching_existing_row() -> void:
 		# The host claim rule accepts a character standing at the new spot.
 		var context := {"peer": 7, "character_id": "pocket-check", "realm": "water",
 			"position": Vector3(at.x, _field.height_at(at.x, at.y), at.y)}
-		var verdict := RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {})
+		# Disclosed fixture: a pocket gated by its named resolution (Deep Watch's
+		# Tidecoil cache) is proven locked here, then checked with its gate met.
+		var unlocked := {}
+		for flag: Variant in row.get("requires_world_flags", []):
+			unlocked[str(flag)] = true
+		if not unlocked.is_empty():
+			assert_eq(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {}).code,
+				"locked", "Gated pocket refuses before its world flag: " + str(row.id))
+		var verdict := RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, unlocked)
 		assert_true(verdict.ok, "Host claim accepted at the pocket: " + str(row.id))
 		# Just inside the host's claim reach still succeeds; the row's former
 		# position (the empty pocket's old occupant spot) is now out of reach.
@@ -179,13 +187,13 @@ func test_single_item_pockets_hold_exactly_one_matching_existing_row() -> void:
 				continue
 			reachable += 1
 			context.position = stand
-			assert_true(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {}).ok,
+			assert_true(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, unlocked).ok,
 				"Host claim accepted 3 m away within reach: " + str(row.id))
 		assert_true(reachable > 0, "Some standing spot 3 m away can claim " + str(row.id))
 		var old_at: Vector2 = OLD_POSITIONS[row.id]
 		context.position = Vector3(old_at.x, _field.height_at(old_at.x, old_at.y), old_at.y)
-		assert_false(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {}).ok,
-			"Former position no longer claims: " + str(row.id))
+		assert_eq(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, unlocked).code,
+			"too_far", "Former position no longer claims: " + str(row.id))
 		# The file's own clearances: people, camps and dock equipment.
 		var clearance := float(_data.validation.npc_and_trainer_clearance_m)
 		for person: Vector2 in _people(str(pocket.island_id)):

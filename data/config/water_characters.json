@@ -356,10 +356,27 @@
         23.0
       ],
       "greeting": "water_orsen_pre",
+      "_why_greeting_when": "side_water_deep_watch_chart: Orsen names Deep Watch in pre/post; Tidecoil resolution reveals the chart lead; the chart is acknowledged before or after restoration. First matching branch wins.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_dock_deep_watch_current_charted"
+          ],
+          "conversation": "water_orsen_post_charted"
+        },
+        {
+          "if_flag": "water_named_deep_watch_tidecoil_resolved",
+          "unless_flag": "water_dock_deep_watch_current_charted",
+          "conversation": "water_orsen_deep_watch_chart_lead"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_orsen_post"
+        },
+        {
+          "if_flag": "water_dock_deep_watch_current_charted",
+          "conversation": "water_orsen_deep_watch_charted"
         }
       ],
       "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."

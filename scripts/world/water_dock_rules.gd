@@ -36,7 +36,7 @@ static func evaluate(intent: Dictionary, context: Dictionary, flags: RefCounted)
 		return _refuse("already_done", "This dock task is already complete.")
 	for flag: String in action.requires_flags:
 		if not flags.has(flag):
-			return _refuse("prerequisite", "Resolve the dock's challenge first.")
+			return _refuse("prerequisite", str(action.get("refusal", "Resolve the dock's challenge first.")))
 	var bag: Variant = context.get("inventory", {})
 	if not bag is Dictionary:
 		return _refuse("malformed", "The repair materials could not be checked.")

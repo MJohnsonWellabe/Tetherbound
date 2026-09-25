@@ -9,7 +9,7 @@
     {"id":"salt_crown_chart","anchor":"salt_crown_to_sluice_isle_departure","offset_xz":[-7,-4],"label":"Chart the Sluice Isle channel","flag":"water_dock_salt_crown_landing_charted","requires_flags":["water_aquaryn_resolved"],"cost":{},"kind":"chart"},
     {"id":"sluice_west_control","anchor":"salt_crown_to_sluice_isle_arrival","offset_xz":[18,20],"label":"Disable western current control","flag":"water_sluice_west_disabled","requires_flags":["water_dock_salt_crown_landing_charted","defeated_water_trainer_bex"],"cost":{},"kind":"pump"},
     {"id":"sluice_east_control","anchor":"sluice_isle_to_veilfall_departure","offset_xz":[10,-18],"label":"Open the eastern sluice","flag":"water_sluice_east_disabled","requires_flags":["water_dock_salt_crown_landing_charted","defeated_water_trainer_calder"],"cost":{},"kind":"sluice"},
-    {"id":"deep_watch_chart","anchor":"sluice_isle_to_deep_watch_arrival","offset_xz":[8,10],"label":"Chart the Deep Watch return current","flag":"water_dock_deep_watch_current_charted","requires_flags":[],"cost":{},"kind":"chart"}
+    {"id":"deep_watch_chart","anchor":"sluice_isle_to_deep_watch_arrival","offset_xz":[8,10],"label":"Chart the Deep Watch return current","flag":"water_dock_deep_watch_current_charted","requires_flags":["water_named_deep_watch_tidecoil_resolved"],"refusal":"Tidecoil's sweeps still scramble the return current. Resolve Tidecoil at the reef edge, then chart it.","_why_requires":"WORLD side_water_deep_watch_chart: resolve Tidecoil, then operate this separate control; victory alone never sets the chart flag.","cost":{},"kind":"chart"}
   ],
   "completions":[
     {"flag":"water_dock_brine_steps_trial_won","requires_flags":["defeated_water_trainer_tovin"]},

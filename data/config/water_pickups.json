@@ -3616,6 +3616,11 @@
       "sampled_slope_deg": 22.177,
       "placement_reason": "Placed at the centre of authored reward pocket deep_watch_tidecoil_cache (water_world.json reward_pockets); analytic heightfield dry, gentle and flood-fill connected to the island landing.",
       "reward_pocket_id": "deep_watch_tidecoil_cache",
+      "requires_world_flags": [
+        "water_named_deep_watch_tidecoil_resolved"
+      ],
+      "locked_reason": "Tidecoil still sweeps the lookout. Resolve Tidecoil at the reef edge before taking this cache.",
+      "_why_requires_world_flags": "WORLD side_water_deep_watch_chart / BOSSES Tidecoil: catch-or-defeat makes this Skill Candy III claimable. Host claim rule and streamer both read this list.",
       "claim_policy": "character_once",
       "registration": "planned",
       "glow_colour": "#17121c",

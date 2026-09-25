@@ -231,7 +231,9 @@
       "lines": [
         "The patrol control and the channel-routing switch do different jobs. Clearing only one leaves the preparation channel unsafe.",
         "Read the visible flow before operating the sluice. Use the raised path to reach the switch instead of fighting the intake.",
-        "Rest at the camp before leaving Sluice Isle. Take the sheltered shoals one at a time, and recover on dry ground."
+        "Rest at the camp before leaving Sluice Isle. Take the sheltered shoals one at a time, and recover on dry ground.",
+        "Beyond the reef off this isle lies Deep Watch. Tidecoil hunts its reef edge, and while it does nobody can chart that island's current home.",
+        "It is optional water, and dangerous. Go only with a rested team and a way back."
       ]
     },
     "water_orsen_post": {
@@ -239,6 +241,32 @@
       "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "lines": [
         "The two controls now serve the landing instead of the barricade. We can keep the shelter supplied from Salt Crown.",
+        "I still check the raised paths each morning. A freed channel deserves maintenance as much as a guarded one did.",
+        "Deep Watch is still out past the reef. Tidecoil did not leave with the Tether; if you want that return current charted, settle it first."
+      ]
+    },
+    "water_orsen_deep_watch_chart_lead": {
+      "speaker": "Channel Keeper Orsen",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "The reef edge at Deep Watch has gone quiet. With Tidecoil settled, the return current finally runs in a line you can read.",
+        "There is a chart table beside the Deep Watch landing. Mark the eddy there yourself; one honest reading gives every swimmer a shorter way back.",
+        "And the cache on the lookout that Tidecoil kept everyone away from is reachable now. Whoever made the crossing should take what is theirs."
+      ]
+    },
+    "water_orsen_deep_watch_charted": {
+      "speaker": "Channel Keeper Orsen",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You charted the Deep Watch eddy. I can see the calm line from the landing now; I will add it to the keepers' map.",
+        "That was the optional water. The patrol control and the channel-routing switch here still need doing before the last approach is safe."
+      ]
+    },
+    "water_orsen_post_charted": {
+      "speaker": "Channel Keeper Orsen",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "The two controls now serve the landing instead of the barricade, and the Deep Watch eddy you charted runs calm all the way back.",
         "I still check the raised paths each morning. A freed channel deserves maintenance as much as a guarded one did."
       ]
     },

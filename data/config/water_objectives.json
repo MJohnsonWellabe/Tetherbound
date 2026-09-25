@@ -14,6 +14,7 @@
     {"flag_id":"water_currents_restored","scope":"world","label":"Restore the archipelago's currents.","how":"Complete the release ceremony and witness the islands respond."}
   ],
   "local": [
-    {"flag_id":"water_swim_saddle_recipe_learned","scope":"player","revealed_by":"water_swim_stone_earned","label":"Learn Iona's optional Swim Saddle recipe.","how":"Ask Iona at Tidal Cradle if you would like to ride a compatible companion. The saddle costs 8 reed fiber, 6 driftwood and 4 Reef Stone at a workbench."}
+    {"flag_id":"water_swim_saddle_recipe_learned","scope":"player","revealed_by":"water_swim_stone_earned","label":"Learn Iona's optional Swim Saddle recipe.","how":"Ask Iona at Tidal Cradle if you would like to ride a compatible companion. The saddle costs 8 reed fiber, 6 driftwood and 4 Reef Stone at a workbench."},
+    {"id":"side_water_deep_watch_chart","flag_id":"water_dock_deep_watch_current_charted","scope":"world","revealed_by":"water_named_deep_watch_tidecoil_resolved","label":"Chart the Deep Watch return current.","how":"Tidecoil is settled. Use {interact} at the chart table beside the Deep Watch landing, then take the lookout cache Orsen mentioned."}
   ]
 }
