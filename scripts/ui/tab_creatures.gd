@@ -1957,8 +1957,8 @@ func _ensure_guardian_controls() -> void:
 	# Safe answer first and focused first, as "Keep them" is in the farewell.
 	_guardian_back = _guardian_button("Back", _back_to_guardian_offer)
 	_guardian_confirm_decline = _guardian_button("Confirm", _answer_guardian.bind(false))
-	_guardian_confirm_decline.add_theme_color_override("font_color", UITokens.DANGER)
-	_guardian_confirm_decline.add_theme_color_override("font_hover_color", UITokens.DANGER)
+	_guardian_confirm_decline.add_theme_color_override("font_color", UITokens.WARNING)
+	_guardian_confirm_decline.add_theme_color_override("font_hover_color", UITokens.WARNING)
 	for button: Button in [_guardian_accept, _guardian_decline, _guardian_back, _guardian_confirm_decline]:
 		body.add_child(button)
 		body.move_child(button, _farewell_keep.get_index())

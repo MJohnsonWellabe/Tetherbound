@@ -41,10 +41,23 @@ extends RefCounted
 ##     source starts `trainer:water_trainer_nerissa:`, WHATEVER its status.
 ##     The host decided who took part when it wrote the row; `pending` only
 ##     means that character has not yet saved the payout (offline, full bag).
-##   * Only when there is NO such row at all (a solo world, or a world whose
-##     Nerissa payout predates delivery rows) is the host's own local
-##     character the one participant. Unlike the Meadows reader, an empty set
-##     is NOT "anyone": in co-op an unidentified guest must not qualify.
+##   * Only when there is NO such row at all AND the session is SOLO (a solo
+##     world, or a world whose Nerissa payout predates delivery rows) is the
+##     host's own local character the one participant. Unlike the Meadows
+##     reader, an empty set is NOT "anyone": in co-op an unidentified guest
+##     must not qualify. INTERIM (same rule as F05): in a MULTI-PEER session
+##     an empty journal offers NOBODY -- a guest may have fought Nerissa alone
+##     on its own client (no rows), and the host who did not fight must not be
+##     presumed the participant. The real fix journals client-run wins on the
+##     host (branch ralph/trainer-participants-host). Known gaps of this
+##     interim rule, both until that branch lands:
+##       - a host left solo after such a guest disconnects is treated as solo
+##         (and offered) although it may not have fought;
+##       - a SOLO Nerissa win journals no rows either (the director pays solo
+##         with one peer), so a host who beat her alone and then invites a guest
+##         BEFORE answering cannot answer while the guest is connected (prompt
+##         hidden, begin/refuse `not_participant`); the offer returns when the
+##         session is solo again. Legacy worlds without rows behave the same.
 ##
 ## World instance. Offers are keyed by the WORLD INSTANCE (MULTIPLAYER §95:
 ## "keyed by world instance, source and stable character ID"), never by
@@ -177,14 +190,19 @@ static func participants(world: RefCounted) -> Array:
 	return out
 
 ## Pure rule, testable without a world. `participant_characters` empty means
-## "no Nerissa row exists at all": only the host's local character qualifies.
+## "no Nerissa row exists at all": solo, only the host's local character
+## qualifies; in a multi-peer session nobody does (header: Participants).
 static func may_receive(character_id: String, participant_characters: Array,
-		host_local_character: String, already_resolved: bool) -> bool:
+		host_local_character: String, already_resolved: bool, multi_peer: bool = false) -> bool:
 	if already_resolved or character_id.is_empty():
 		return false
 	if not participant_characters.is_empty():
 		return participant_characters.has(character_id)
-	return character_id == host_local_character
+	return not multi_peer and character_id == host_local_character
+
+## Whether somebody else is in this game's session (false solo / no session).
+static func is_multi_peer(game: Object) -> bool:
+	return game != null and game.has_method("is_multi_peer") and bool(game.call("is_multi_peer"))
 
 static func host_local_character(game: Object) -> String:
 	var local: Variant = game.get("local") if game != null else null
@@ -205,7 +223,7 @@ static func local_may_answer(game: Object) -> bool:
 	var found := participants(game.world)
 	if not found.is_empty():
 		return found.has(character)
-	return game.has_method("is_host") and bool(game.call("is_host"))
+	return game.has_method("is_host") and bool(game.call("is_host")) and not is_multi_peer(game)
 
 ## True when this character already resolved its Guardian or still holds an
 ## unresolved offer in this world (any peer's view of the world flags).
@@ -355,7 +373,7 @@ static func begin(game: Object, ledger: RefCounted, character: String, creature:
 		# Conservative (header: Legacy): never a new Guardian offer here.
 		_restore(game, ledger, before, revision, sequence)
 		return _refuse("legacy_world", "The Guardian's companionship was already given in this world.")
-	if not may_receive(character, participants(game.world), host_local_character(game), false):
+	if not may_receive(character, participants(game.world), host_local_character(game), false, is_multi_peer(game)):
 		return _refuse("not_participant", "Only those who fought Captain Nerissa to free the Guardian receive its offer.")
 	var payload := CODEC.encode(creature)
 	if str(payload.get("species_id", "")) != "water_abyssal_guardian":
@@ -436,7 +454,7 @@ static func refuse(game: Object, ledger: RefCounted, character: String) -> Dicti
 		# Nothing offered here, so nothing to refuse (header: Legacy).
 		_restore(game, ledger, before, revision, sequence)
 		return _refuse("legacy_world", "The Guardian's companionship was already given in this world.")
-	if not may_receive(character, participants(game.world), host_local_character(game), false):
+	if not may_receive(character, participants(game.world), host_local_character(game), false, is_multi_peer(game)):
 		return _refuse("not_participant", "Only those who fought Captain Nerissa to free the Guardian receive its offer.")
 	var flags: Array = [offered_flag(character)]
 	flags.append_array(_settlement_flags(game.world))
