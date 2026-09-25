@@ -32,6 +32,7 @@ const CONFIG_PATH := "res://data/config/stronghold_climax.json"
 
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
+const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const OCCUPATION := preload("res://scripts/world/stronghold_occupation.gd")
@@ -40,12 +41,18 @@ const OCCUPATION := preload("res://scripts/world/stronghold_occupation.gd")
 const STAGE_CHAMBER := "chamber"
 const STAGE_FREED := "freed"
 const STAGE_JOIN := "join"
+## F05: the character's own accept/refuse choice, waiting on one of two prompts.
+const STAGE_CHOICE := "choice"
 const STAGE_CEREMONY := "ceremony"
 const STAGE_FAILURE := "failure"
 const STAGE_DONE := "done"
 
 ## Polar bins the machine's plinth reach is measured into; see `_measure_cage`.
 const PLINTH_BINS := 16
+## F05: world receipt prefix, one per character's answer (`flag_scopes.json`).
+const RESOLUTION_PREFIX := "legendary_resolution:"
+## The receipt key for a save that predates stable character ids.
+const SOLO_CHARACTER := "solo"
 
 var _config: Dictionary = {}
 var _world: Node = null
@@ -76,6 +83,12 @@ var _freed_visual: bool = false
 var _seen_warden_defeat: bool = false
 var _chamber_told: bool = false
 var _joined: RefCounted = null
+## F05: the two choice prompts, built when this character's offer is open.
+var _accept_prompt: Node3D = null
+var _refuse_prompt: Node3D = null
+## F05: world resolution receipts already submitted this session, so a pending
+## client verdict is not resubmitted every frame.
+var _receipts_submitted: Dictionary = {}
 
 
 func build(world: Node, player: Node3D) -> bool:
@@ -319,7 +332,11 @@ func _place_legendary() -> void:
 	var spec: Dictionary = _config.get("legendary", {})
 	if spec.is_empty():
 		return
-	if _has_flag(_flag("legendary_settled")):
+	# F05: the world's `legendary_settled` says SOMEBODY resolved. It does not
+	# say THIS character did: a co-op participant who disconnected before
+	# answering still has their own once-only offer waiting. Only skip the
+	# chamber when this character has nothing outstanding.
+	if _has_flag(_flag("legendary_settled")) and not _offer_outstanding_after_settle():
 		# A save from a PAST session already resolved the roster decision --
 		# joined the belt, or walked free after the player kept their five.
 		# `build()` runs again on every load (this is a fresh node, `_stage`
@@ -660,6 +677,7 @@ func _process(delta: float) -> void:
 	_pulse_cage(delta)
 	_sync_gate()
 	_advance()
+	_reconcile_world_receipt()
 
 
 func _pulse_cage(delta: float) -> void:
@@ -707,21 +725,41 @@ func _advance() -> void:
 			# and resolves its own offer, for itself, against its own belt.
 			# `may_receive()` still decides -- a peer that did not fight, or
 			# has already resolved this freeing, is refused exactly as before.
+			#
+			# F05: that offer is the same voluntary offer the lever-puller
+			# gets -- the join beat, then this character's own accept/refuse
+			# choice -- never a silent grant.
 			if legendary_is_freed() and not _panel_busy() and _may_receive_now():
-				_stage = STAGE_CEREMONY
-				_hand_over_the_legendary()
+				_release_visual(true)
+				_chamber_told = true
+				_stage = STAGE_FREED
 		STAGE_CHAMBER:
 			if not _panel_busy():
 				_stage = STAGE_FREED
 				_free_the_legendary()
 		STAGE_FREED:
 			if not _panel_busy():
-				_stage = STAGE_JOIN
-				_offer_to_join()
+				if _may_receive_now():
+					_stage = STAGE_JOIN
+					_offer_to_join()
+				else:
+					# F05: a character with no offer of their own (did not
+					# fight, or already answered) is not walked to and not
+					# told it is offering.
+					_stage = STAGE_CEREMONY
 		STAGE_JOIN:
 			if not _panel_busy():
-				_stage = STAGE_CEREMONY
-				_hand_over_the_legendary()
+				if _may_receive_now():
+					_stage = STAGE_CHOICE
+					_open_choice()
+				else:
+					print("[climax] this character did not fight the Warden, or already resolved its freeing; no offer")
+					_stage = STAGE_CEREMONY
+		STAGE_CHOICE:
+			# Waits on this character's own answer: `accept_offer()` or
+			# `refuse_offer()`, reached through the two prompts. Nothing here
+			# times out into either answer.
+			pass
 		STAGE_CEREMONY:
 			# R4.10's ceremony is on screen for as long as the player needs.
 			# The machinery does not fail until they have answered it, which
@@ -929,13 +967,97 @@ func _offer_to_join() -> void:
 	_start(str((_config.get("machine", {}) as Dictionary).get("join_conversation", "")))
 
 
-## Step 4: the five-creature decision, if one is needed.
+## Step 4: THIS character's answer, then the five-creature decision if needed.
+##
+## F05 / ACCEPTANCE §6.1: accept and refuse must both be reachable with room
+## on the belt AND at five. The offer therefore opens two in-world prompts
+## rather than joining silently: step toward the creature to walk out with it,
+## step back to leave it free. Neither prompt is live where the player stands
+## when the offer lands, so no press that was meant for the dialogue can
+## answer it, and walking away without pressing answers nothing -- the offer
+## waits, and survives a reload, until this character chooses.
+func _open_choice() -> void:
+	_close_choice()
+	var spec: Dictionary = _config.get("choice", {})
+	_say(str(spec.get("announce", "")))
+	if _player == null:
+		return
+	var here := _player.global_position
+	var toward := (_settle_target if _settle_target != Vector3.ZERO else
+		(_legendary.global_position if _legendary != null else here + Vector3.FORWARD)) - here
+	toward.y = 0.0
+	toward = toward.normalized() if toward.length() > 0.01 else Vector3.FORWARD
+	var radius := float(spec.get("radius", 1.0))
+	_accept_prompt = _choice_prompt("VeridianAcceptPrompt",
+		here + toward * float(spec.get("accept_offset", 1.4)),
+		str(spec.get("accept_label", "Walk out with the Veridian Stag")), radius)
+	_accept_prompt.connect("activated", accept_offer)
+	_refuse_prompt = _choice_prompt("VeridianRefusePrompt",
+		here - toward * float(spec.get("refuse_offset", 1.4)),
+		str(spec.get("refuse_label", "Leave the Veridian Stag free")), radius)
+	_refuse_prompt.connect("activated", refuse_offer)
+
+
+func _choice_prompt(node_name: String, at: Vector3, label: String, radius: float) -> Node3D:
+	var anchor := Node3D.new()
+	anchor.name = node_name + "Anchor"
+	add_child(anchor)
+	anchor.global_position = Vector3(at.x, _ground_at(at.x, at.z), at.z) \
+		if _world != null and _world.has_method("ground_height_at") else at
+	var prompt: Node3D = INTERACTABLE.new()
+	prompt.name = node_name
+	prompt.position = Vector3(0.0, float((_config.get("choice", {}) as Dictionary).get("height", 1.1)), 0.0)
+	anchor.add_child(prompt)
+	prompt.call("configure", label, radius, true)
+	return prompt
+
+
+func _close_choice() -> void:
+	for prompt: Node3D in [_accept_prompt, _refuse_prompt]:
+		if prompt != null and is_instance_valid(prompt):
+			prompt.call("set_enabled", false)
+			prompt.get_parent().queue_free()
+	_accept_prompt = null
+	_refuse_prompt = null
+
+
+## Whether this character's accept/refuse choice is open right now.
+func choice_open() -> bool:
+	return _stage == STAGE_CHOICE
+
+
+## The two answers. Public so a witness can drive the exact same path the
+## prompts drive; each refuses unless THIS character's choice is open.
+func accept_offer() -> bool:
+	if _stage != STAGE_CHOICE or not _may_receive_now():
+		return false
+	_close_choice()
+	_stage = STAGE_CEREMONY
+	_hand_over_the_legendary()
+	return true
+
+
+func refuse_offer() -> bool:
+	if _stage != STAGE_CHOICE or not _may_receive_now():
+		return false
+	_close_choice()
+	_joined = null
+	_record_resolution(false)
+	_stage = STAGE_CEREMONY
+	_say(str((_config.get("choice", {}) as Dictionary).get("refused_message", "")))
+	print("[climax] this character refused the legendary; it stays free")
+	return true
+
+
+## The accepted offer: joins a belt with room, or hands the full-belt decision
+## to R4.10's release ceremony.
 ##
 ## `Game.pending_catch` is R4.10's ONE seam and this hands the creature to it
 ## rather than reimplementing a single beat of the ceremony: the Game autoload
 ## notices the seam, opens the menu on the creatures tab, and will not let it
-## be closed until the player has chosen. With room on the belt it simply
-## joins, which is the same seam behaving the way it behaves for any catch.
+## be closed until the player has chosen -- release one of the five for it, or
+## let the newcomer go, which is still a refusal. There is no sixth holder at
+## any point.
 func _hand_over_the_legendary() -> void:
 	var game := _game()
 	if game == null:
@@ -958,16 +1080,14 @@ func _hand_over_the_legendary() -> void:
 	# for ITSELF -- whether THIS character fought and has not already resolved
 	# this freeing -- which is why no host arbitration is needed and why two
 	# peers cannot race for one grant.
-	if not may_receive(_local_character_id(), _warden_participant_characters(),
-			_has_player_flag(_flag("legendary_joined"))):
+	if not _may_receive_now():
 		print("[climax] this character did not fight the Warden, or already resolved its freeing; no offer")
-		_settle()
+		_joined = null
 		return
 	var party: RefCounted = game.get("party")
 	if party != null and not bool(party.call("is_full")):
 		party.call("add", creature)
-		_set_player_flag(_flag("legendary_joined"))
-		_settle()
+		_record_resolution(true)
 		print("[climax] the legendary joined a belt with room on it")
 		return
 	# Full belt: the decision, through the system that already ships it.
@@ -981,14 +1101,104 @@ func _ceremony_pending() -> bool:
 		return false
 	if game.get("pending_catch") != null:
 		return true
-	# The ceremony resolved: record which way it went, once.
-	if _joined != null and not _has_flag(_flag("legendary_joined")):
+	# The ceremony resolved: record which way it went, once. Letting the
+	# newcomer go at five is this character's refusal, and is recorded as one.
+	if _joined != null and not _character_resolved():
 		var party: RefCounted = game.get("party")
-		if party != null and (party.call("members") as Array).has(_joined):
-			_set_player_flag(_flag("legendary_joined"))
-	if _joined != null:
-		_settle()
+		_record_resolution(party != null and (party.call("members") as Array).has(_joined))
 	return false
+
+
+## F05: this character's answer, recorded once and durably.
+##
+##   * PERSONAL: `legendary_joined` or `legendary_refused` in this character's
+##     own store -- the receipt `may_receive()` reads, so no reload, rejoin or
+##     second world offers the same freeing twice.
+##   * WORLD: `legendary_resolution:<accepted|refused>:<character>` through the
+##     ledger, committed once by the host and mirrored to every peer. It is how
+##     the world knows every eligible participant has answered, and how
+##     `meadow_healing.gd` knows whether the herd display stands.
+##   * On a CLIENT the character file is written at the acknowledgement, so a
+##     disconnect right after answering cannot lose the answer or the creature.
+func _record_resolution(accepted: bool) -> void:
+	_set_player_flag(_flag("legendary_joined") if accepted else _flag("legendary_refused"))
+	_settle()
+	_reconcile_world_receipt()
+	var game := _game()
+	var session: Variant = game.get("session") if game != null else null
+	if session != null and bool((session as Node).call("is_active")) \
+			and not bool((session as Node).call("is_host")):
+		var saver: Variant = game.get("save_system")
+		var character := _local_character_id()
+		if saver != null and not character.is_empty() \
+				and not bool((saver as RefCounted).call("save_character", game, character)):
+			push_warning("[climax] could not write this character's legendary answer yet")
+
+
+## Whether this character has answered this freeing, either way.
+func _character_resolved() -> bool:
+	return _has_player_flag(_flag("legendary_joined")) or _has_player_flag(_flag("legendary_refused"))
+
+
+## The world receipt for this character's answer, submitted whenever the
+## personal receipt exists and the world does not yet hold it -- which is also
+## the reconnect repair: a client that answered, saved and dropped before the
+## host acknowledged resubmits on its next session. Idempotent at the ledger.
+func _reconcile_world_receipt() -> void:
+	if not legendary_is_freed():
+		return
+	var accepted := _has_player_flag(_flag("legendary_joined"))
+	if not accepted and not _has_player_flag(_flag("legendary_refused")):
+		return
+	var receipt := resolution_flag(accepted, _receipt_character_id())
+	if _has_flag(receipt) or _receipts_submitted.has(receipt):
+		return
+	_receipts_submitted[receipt] = true
+	var verdict: Dictionary = STORY_LEDGER.set_world_flag(self, receipt)
+	if str(verdict.get("code", "")) == "offline":
+		# A bare scene with no ledger (solo tests, or before the world is up):
+		# write the world store directly, as the rest of this file does.
+		_set_flag(receipt)
+
+
+## The world receipt id for one character's answer. Static so the herd display
+## and tests read the exact same id this file writes.
+static func resolution_flag(accepted: bool, character_id: String) -> String:
+	return "%s%s:%s" % [RESOLUTION_PREFIX, "accepted" if accepted else "refused",
+		character_id if not character_id.is_empty() else SOLO_CHARACTER]
+
+
+## Every eligible participant has answered, and none accepted. Pure, so the
+## herd display's rule is testable without a world: `participants` is the
+## Warden fight's recorded characters (empty solo, where `solo_character` is
+## the only participant), `world_flags` the ids the world holds.
+static func all_refused(participants: Array, solo_character: String, world_flags: Array) -> bool:
+	for raw: Variant in world_flags:
+		if str(raw).begins_with(RESOLUTION_PREFIX + "accepted:"):
+			return false
+	var eligible: Array = participants.duplicate()
+	if eligible.is_empty():
+		eligible = [solo_character if not solo_character.is_empty() else SOLO_CHARACTER]
+	for raw: Variant in eligible:
+		if not world_flags.has(resolution_flag(false, str(raw))):
+			return false
+	return true
+
+
+func _receipt_character_id() -> String:
+	var character := _local_character_id()
+	return character if not character.is_empty() else SOLO_CHARACTER
+
+
+## F05: after the world has settled, does THIS character still have an
+## unanswered offer? Only a recorded participant can: a solo or legacy save
+## (no participant journal) that reached `legendary_settled` answered it at
+## that moment, because solo settle and the personal answer are one step.
+func _offer_outstanding_after_settle() -> bool:
+	var participants := _warden_participant_characters()
+	if participants.is_empty():
+		return false
+	return may_receive(_local_character_id(), participants, _character_resolved())
 
 
 ## GATE-E: the roster decision is OVER, whichever way the player answered it.
@@ -1053,6 +1263,14 @@ func _on_conversation_finished(conversation_id: String) -> void:
 		_pending_conversation = ""
 
 
+## One line on the world message feed, which is how a region speaks outside a
+## conversation. Silent in a bare scene with no Game.
+func _say(text: String) -> void:
+	var game := _game()
+	if game != null and not text.is_empty() and game.has_method("push_world_message"):
+		game.call("push_world_message", text)
+
+
 func _game() -> Node:
 	return get_node_or_null(^"/root/Game")
 
@@ -1091,7 +1309,7 @@ func _set_flag(flag: String) -> void:
 ## Whether this peer, right now, is a participant owed an unresolved offer.
 func _may_receive_now() -> bool:
 	return may_receive(_local_character_id(), _warden_participant_characters(),
-		_has_player_flag(_flag("legendary_joined")))
+		_character_resolved())
 
 
 ## --- owner decision: every participant keeps their own ----------------------
