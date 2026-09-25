@@ -318,6 +318,18 @@
           "val_blend": 0.25
         },
         {
+          "_why": "OWNER DECISION 2026-09-25 (X04 creature-art lane): Terrapup's plates are grey STONE, per sheet docs/art/reference/01_Ground_Starter_Terrapup.png. The source albedo already paints them as low-saturation (<=0.26) mid-value warm grey; before this rule the coat rules below caught those warm greys and turned the plates brown. Kept as one stone block (fur is saturated, the cream face is brighter, so neither matches). Placed after the head-front rules so the face keeps its mask and cream; set_val 0.42 because field_emission brightens the coat in the field and a 0.52 grey rendered white.",
+          "match": {
+            "sat_max": 0.26,
+            "val_min": 0.2,
+            "val_max": 0.72
+          },
+          "set_hue": 35,
+          "set_sat": 0.06,
+          "set_val": 0.3,
+          "val_blend": 0.55
+        },
+        {
           "_why": "cream chest panel: front, central, below the head",
           "match": {
             "hue": [
@@ -411,7 +423,7 @@
       "overlays": [
         {
           "id": "leaf_collar",
-          "_why": "Board: the Ground starter is a PUPPY WEARING FOLIAGE -- leaf collar, shoulder growth and leaves carried well down the back. At coverage 0.45 over a y_min of 0.52 almost none of that survived into the render, which a blind round named ('leaf and bramble growth -- almost none of it survives'). Coverage up and the band reaches further down the flank, because this foliage is half of what separates the starter from burrowback -- which it does NOT share a mesh with, contrary to what round 2 reported and this lane was briefed: the two glbs differ in vertex count (15,616 vs 17,204), bounds and POSITION data, and no two species in the roster share a mesh file. They share an ARCHETYPE, a badger-shaped quadruped at similar mass, which is why they read alike at thumbnail size -- and that is a problem paint can genuinely work on, unlike the mesh-sharing version of the story. z_max still keeps it off the muzzle -- terrapup's head sits at the high-z end of its own box.",
+          "_why": "Board: the Ground starter is a PUPPY WEARING FOLIAGE -- leaf collar, shoulder growth and leaves carried well down the back. At coverage 0.45 over a y_min of 0.52 almost none of that survived into the render, which a blind round named ('leaf and bramble growth -- almost none of it survives'). Coverage up and the band reaches further down the flank, because this foliage is half of what separates the starter from burrowback -- which it does NOT share a mesh with, contrary to what round 2 reported and this lane was briefed: the two glbs differ in vertex count (15,616 vs 17,204), bounds and POSITION data, and no two species in the roster share a mesh file. They share an ARCHETYPE, a badger-shaped quadruped at similar mass, which is why they read alike at thumbnail size -- and that is a problem paint can genuinely work on, unlike the mesh-sharing version of the story. z_max still keeps it off the muzzle -- terrapup's head sits at the high-z end of its own box. OWNER DECISION 2026-09-25: at coverage 0.74 this overlay painted a solid dark-green dome over the stone plates, which field_emission brightened to lime in every render (the judges' 'mottled rear shell'). Sheet 01 has moss only in the plate seams and as tufts, so coverage drops to 0.3: an accent, not the shell colour.",
           "where": {
             "y_min": 0.4,
             "z_max": 0.58,
@@ -420,7 +432,7 @@
           "mode": "grow",
           "color": "#41572f",
           "shade": "#1a2713",
-          "coverage": 0.74,
+          "coverage": 0.0,
           "grain": 5.0,
           "softness": 0.1,
           "relief": 0.6
