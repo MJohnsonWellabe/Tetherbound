@@ -399,7 +399,7 @@ uniform vec3 drain_disc[32];
 uniform vec2 drain_shape[32];
 uniform int drain_count = 0;
 uniform float drain_amount = 0.0;
-uniform float drain_thin = 0.7;
+uniform float drain_thin = 0.85;
 uniform vec3 drain_tint : source_color = vec3(0.55, 0.47, 0.31);
 varying float v_drain;
 
