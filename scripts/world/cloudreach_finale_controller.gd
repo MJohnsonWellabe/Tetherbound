@@ -46,25 +46,20 @@ var _hazard_drift: Dictionary = {}
 ## place and never put anything here. Never persisted: no intent survives a
 ## reload.
 var _in_flight: Dictionary = {}
-## Seconds each `_in_flight` entry has waited. The host answers a refusal with a
-## verdict and a commit with a delta; a missing host ledger, a dropped message
-## or a `noop` whose flag never reaches this peer answers nothing at all, and
-## the guard would then hold the prompt off until a reload. After
-## `pending_intent_timeout_s` the entry stops guarding (`_age_in_flight`).
-var _in_flight_age: Dictionary = {}
-## Timed-out entries, flag -> tag: no longer guarding a retry, but a late
-## delta still settles them once (`_settle_landed`), so a slow host never
-## costs the signal or, for the win, the end of the encounter.
-var _released: Dictionary = {}
 ## Injected transport with `Game.ledger`'s `submit()` shape, for a unit fixture
 ## that has to answer `pending`. Null in production: `LEDGER_CLAIM.transport()`.
 var ledger_transport: Node = null
 ## The fight this encounter mirrors: the encounter director whose
 ## `trainer_started`/`trainer_victory`/`trainer_lost` reach `encounter_started`/
-## `encounter_won`/`encounter_lost`. Set by `cloudreach_world_runtime.gd::mount()`
-## right after it builds the director (a fixture sets its own). Read only by
-## `restore_progression_from_game`; null means nothing says a fight is on.
+## `encounter_won`/`encounter_lost` (`cloudreach_world_runtime.gd` mounts it
+## beside this node). Injected by a fixture; null in production, where
+## `_fight_director()` finds that sibling by its `trainer_battle_active()` /
+## `trainer_battle_id()` surface. Read only by `restore_progression_from_game`.
 var fight_director: Node = null
+var _found_director: Node = null
+## `_committed_seq()` once the last committed delta this node heard of had
+## settled; -1 until a ledger is found. See `_delta_sweep`.
+var _seq_baseline := -1
 
 
 static func read_config() -> Dictionary:
@@ -92,7 +87,7 @@ func setup(progression: RefCounted, event_adapter: Callable, body_source: Callab
 	elapsed = 0.0
 	_pending_recoveries.clear()
 	_hazard_drift.clear()
-	_clear_in_flight()
+	_in_flight.clear()
 	_revision = -1
 	sync_progression()
 	if is_inside_tree():
@@ -101,6 +96,7 @@ func setup(progression: RefCounted, event_adapter: Callable, body_source: Callab
 
 func _ready() -> void:
 	add_to_group("progression_restore")
+	_listen_for_deltas()
 	if not config.is_empty():
 		build_interactions()
 
@@ -110,11 +106,12 @@ func _process(delta: float) -> void:
 		return
 	if int(_progression.get("revision")) != _revision:
 		sync_progression()
-	# A pending win holds the arena still (`_win_pending`).
-	if not _win_pending():
-		elapsed += delta
-	_age_in_flight(delta)
+	elapsed += delta
 	_sync_prompt_access()
+	# A `seq` that moved without a `delta_applied` (a snapshot's own `seq`)
+	# must not make a later load read as a delta.
+	if _seq_baseline >= 0:
+		_settle_seq_baseline()
 
 
 ## Also the CLIENT's delta path: `ledger_rpc.gd::apply_remote_delta` sweeps
@@ -142,10 +139,11 @@ func _process(delta: float) -> void:
 ## A load or snapshot with the fight over, flags that no longer admit it, or a
 ## different store all reset as before.
 func restore_progression_from_game(game: Node) -> void:
+	_listen_for_deltas()
 	var restored: RefCounted = game.get("progression")
 	var same_store := restored == _progression
 	if not same_store:
-		_clear_in_flight()
+		_in_flight.clear()
 	_progression = restored
 	var keep_encounter := same_store and _encounter_survives()
 	if not keep_encounter:
@@ -178,17 +176,65 @@ func _encounter_survives() -> bool:
 
 
 func _fight_director() -> Node:
-	return fight_director if is_instance_valid(fight_director) else null
+	if is_instance_valid(fight_director):
+		return fight_director
+	if is_instance_valid(_found_director):
+		return _found_director
+	var parent := get_parent()
+	if parent == null:
+		return null
+	for sibling: Node in parent.get_children():
+		if sibling != self and sibling.has_method("trainer_battle_active") \
+				and sibling.has_method("trainer_battle_id"):
+			_found_director = sibling
+			return sibling
+	return null
 
 
-## Is this sweep a committed delta's? `ledger_rpc.gd::apply_remote_delta`
-## raises `sweeping_for_delta` around exactly that sweep; a save load, a
-## snapshot or any other sweep runs with it down. Asked of the transport, so
-## it is `Game.ledger`'s own answer (or a fixture's). No transport, or one
-## without the marker: not a delta, so the conservative reset.
-func _delta_sweep() -> bool:
+## The ledger's commit count (`world_ledger.gd::seq`), or -1 with no ledger.
+func _committed_seq() -> int:
 	var transport := _transport()
-	return transport != null and transport.get("sweeping_for_delta") == true
+	if transport == null:
+		return -1
+	var ledger: Variant = transport.get("ledger")
+	return int((ledger as Object).get("seq")) if ledger is Object else -1
+
+
+## Is this sweep running for a committed delta? A client's
+## `apply_remote_delta` advances the ledger's `seq` and sweeps BEFORE it emits
+## `delta_applied`; the baseline catches up only after that emit, deferred, so
+## a second sweep for the same delta in the same frame still reads as one. A
+## load or snapshot leaves `seq` where the last settled delta put it. No
+## ledger: not a delta, so the conservative reset.
+##
+## Known limitation: this reads the ledger's counter rather than being told.
+## Where a client's `seq` already stands above the host's (the same process
+## committed solo and then joined, or the host restarted), `apply_remote_delta`
+## leaves `seq` unmoved (`world_ledger.gd` keeps the max) and every delta reads
+## as a load: the conservative reset, i.e. the pre-fix behaviour outside a live
+## fight. The proper fix is an explicit "sweeping for a delta" marker set by
+## `ledger_rpc.gd::apply_remote_delta` around its sweep (another lane's file).
+func _delta_sweep() -> bool:
+	var seq := _committed_seq()
+	return seq >= 0 and _seq_baseline >= 0 and seq > _seq_baseline
+
+
+func _listen_for_deltas() -> void:
+	var transport := _transport()
+	if transport == null or not transport.has_signal("delta_applied"):
+		return
+	if not transport.is_connected("delta_applied", _on_delta_applied):
+		transport.connect("delta_applied", _on_delta_applied)
+		if _seq_baseline < 0:
+			_seq_baseline = _committed_seq()
+
+
+func _on_delta_applied(_delta: Dictionary) -> void:
+	_settle_seq_baseline.call_deferred()
+
+
+func _settle_seq_baseline() -> void:
+	_seq_baseline = _committed_seq()
 
 
 ## A kept sweep keeps each recovery handoff exactly as long as
@@ -233,8 +279,6 @@ func _transport() -> Node:
 ## for the rest of the session (`item_cache_pickup.gd`'s `_claiming` rule).
 func _track(flag: String, tag: String) -> void:
 	_in_flight[flag] = tag
-	_in_flight_age[flag] = 0.0
-	_released.erase(flag)
 	var transport := _transport()
 	if transport != null and transport.has_signal("intent_refused") \
 			and not transport.is_connected("intent_refused", _on_intent_refused):
@@ -247,51 +291,7 @@ func _on_intent_refused(kind: String, _code: String, _reason: String, _detail: D
 	if _in_flight.is_empty() or kind not in ["set_world_flag", "grant_player_flag"]:
 		return
 	_in_flight.clear()
-	_in_flight_age.clear()
-	# A refused win lifts the hold on the arena: nothing was ever granted.
-	sync_progression()
-
-
-func _clear_in_flight() -> void:
-	_in_flight.clear()
-	_in_flight_age.clear()
-	_released.clear()
-
-
-## Release every entry that has waited `pending_intent_timeout_s` (config,
-## default 8 s): it stops guarding, so the relay prompt comes back, the
-## witness poll and the network repair submit again, and a win is submitted
-## again while the encounter still stands -- all of which the host commits once
-## or answers with `noop`. The entry moves to `_released`, so a late delta
-## still settles it exactly once.
-func _age_in_flight(delta: float) -> void:
-	if _in_flight.is_empty():
-		return
-	var limit := float(config.get("pending_intent_timeout_s", 8.0))
-	var expired: Array = []
-	for flag: String in _in_flight.keys():
-		_in_flight_age[flag] = float(_in_flight_age.get(flag, 0.0)) + delta
-		if float(_in_flight_age[flag]) >= limit:
-			expired.append(flag)
-	if expired.is_empty():
-		return
-	var retry_win := false
-	for flag: String in expired:
-		_released[flag] = _in_flight[flag]
-		retry_win = retry_win or str(_in_flight[flag]) == "win"
-		_in_flight.erase(flag)
-		_in_flight_age.erase(flag)
-	sync_progression()
-	if retry_win and _in_encounter:
-		encounter_won(str(config.get("encounter_id", "")))
-
-
-## A win this peer has submitted and the host has not answered. The encounter
-## still stands (the phase stays crosswind_command/anchor_overload, so a
-## refusal cannot leave the world and this peer apart), but the arena holds:
-## no hazard clock, no overload escalation, no wind or arc force.
-func _win_pending() -> bool:
-	return _in_flight.values().has("win")
+	_sync_prompt_access()
 
 
 func _prerequisites() -> bool:
@@ -326,7 +326,7 @@ func encounter_started(encounter_id: String) -> bool:
 
 ## Combat reports the ACTUAL surviving opposition count; no HP multiplier.
 func opposition_remaining(encounter_id: String, remaining: int, initial: int) -> void:
-	if not _in_encounter or encounter_id != str(config.get("encounter_id", "")) or _win_pending():
+	if not _in_encounter or encounter_id != str(config.get("encounter_id", "")):
 		return
 	if initial > 0 and remaining > 0 and remaining <= initial / 2.0 and not _overload:
 		_overload = true
@@ -351,7 +351,6 @@ func encounter_won(encounter_id: String) -> bool:
 		# nothing will ever clear.
 		if bool(result.get("accepted", false)) and bool(result.get("pending", false)):
 			_track(victory, "win")
-			sync_progression()
 		return false
 	_in_encounter = false
 	elapsed = 0.0
@@ -414,19 +413,13 @@ func _derived_phase() -> String:
 ## BEFORE its signal, so a handler that re-enters `sync_progression()` cannot
 ## emit it twice. Phase is already current when this runs.
 func _settle_landed() -> void:
-	var waiting: Array = _in_flight.keys()
-	for flag: String in _released.keys():
-		if not waiting.has(flag):
-			waiting.append(flag)
-	for flag: String in waiting:
+	for flag: String in _in_flight.keys():
 		# A handler re-entering `sync_progression()` may already have settled
 		# and erased a later entry of this same pass.
-		if not (_in_flight.has(flag) or _released.has(flag)) or not _has(flag):
+		if not _in_flight.has(flag) or not _has(flag):
 			continue
-		var tag := str(_in_flight.get(flag, _released.get(flag, "")))
+		var tag := str(_in_flight[flag])
 		_in_flight.erase(flag)
-		_in_flight_age.erase(flag)
-		_released.erase(flag)
 		if tag == "win":
 			_in_encounter = false
 			elapsed = 0.0
@@ -445,8 +438,7 @@ func presentation_state() -> Dictionary:
 		relays[str(relay["id"])] = _has(str(relay["flag_id"])) or _has(str(config["network_flag"]))
 	var freed := _has(str(config.get("aftermath_flag", "")))
 	return {"phase": phase, "relays_disabled": relays,
-		"hazards_active": phase in ["crosswind_command", "anchor_overload", "break_the_eye"] \
-			and not _win_pending(),
+		"hazards_active": phase in ["crosswind_command", "anchor_overload", "break_the_eye"],
 		"anchor_drone_active": not _has(str(config.get("network_flag", ""))),
 		"natural_wind_trails": freed, "travelers_reconnected": freed,
 		"restored_route_currents": freed, "waterward_visible": _has("stormward_route_revealed")}
@@ -589,7 +581,7 @@ static func cycle_stage(at: float, spec: Dictionary) -> String:
 func hazard_at(world_position: Vector3, at: float = -1.0) -> Dictionary:
 	var result := {"wind": Vector3.ZERO, "arc": Vector3.ZERO, "sheltered": false,
 		"wind_stage": "idle", "arc_stage": "idle"}
-	if phase not in ["crosswind_command", "anchor_overload", "break_the_eye"] or _win_pending():
+	if phase not in ["crosswind_command", "anchor_overload", "break_the_eye"]:
 		return result
 	var local := world_position - _origin()
 	var point := Vector2(local.x, local.z)

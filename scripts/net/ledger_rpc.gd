@@ -68,9 +68,6 @@ signal delta_applied(delta: Dictionary)
 ## three-argument handlers written before `detail` existed keep working
 ## untouched; nothing has to care about a field it does not read.
 signal intent_refused(kind: String, code: String, reason: String, detail: Dictionary)
-## True only while `apply_remote_delta` sweeps `progression_restore`, so a
-## consumer can tell a committed delta's sweep from a save load or snapshot.
-var sweeping_for_delta := false
 
 var ledger: RefCounted = null
 const SATCHEL_ESCROW := preload("res://scripts/net/satchel_escrow.gd")
@@ -535,9 +532,7 @@ func apply_remote_delta(delta: Dictionary) -> void:
 	ledger.call("apply", delta)
 	_apply_player_ops(delta)
 	_settle_satchel_receipts()
-	sweeping_for_delta = true
 	_restore_progression()
-	sweeping_for_delta = false
 	delta_applied.emit(delta)
 
 

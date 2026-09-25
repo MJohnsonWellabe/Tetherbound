@@ -100,9 +100,6 @@ func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted,
 	presentation.call("bind_finale", finale)
 	director = ENCOUNTERS.new()
 	director.name = "EncounterDirector"
-	# The finale mirrors this director's Veyra battle across a sweep
-	# (`cloudreach_finale_controller.gd::_encounter_survives`).
-	finale.set("fight_director", director)
 	director.set("chapter_source", chapter)
 	director.set("authored_yard_positions",battle_yards.get("trainer_positions"))
 	director.set("player_path", NodePath("../Player"))

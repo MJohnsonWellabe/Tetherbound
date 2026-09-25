@@ -25,7 +25,7 @@ extends SceneTree
 ## commits whatever was asked, and the entry flags are set directly as setup.
 ##
 ## A third, LIVE-FIGHT SWEEP leg (`_live_fight_sweep_leg`): a controller mid-
-## Veyra, handed a stand-in encounter director as `mount()` hands it the real one,
+## Veyra, beside a stand-in encounter director it finds the way production does,
 ## receives unrelated committed deltas through the same
 ## `Game.ledger.apply_remote_delta` sweep and must stay in crosswind_command and
 ## then anchor_overload with its hazards and clock intact. A real
@@ -70,14 +70,6 @@ class PendingClientHost extends Node:
 	var events: Array[String] = []
 	var submitted: Array[Dictionary] = []
 	var queued: Array[String] = []
-	## The production `Game.ledger` while this stand-in is swapped into its
-	## place (`_director_client_leg`); null when it is not.
-	var real_ledger: Node = null
-	## `ledger_rpc.gd`'s delta-sweep marker, answered by the real ledger whose
-	## `apply_remote_delta` this stand-in's `land()` runs.
-	var sweeping_for_delta: bool:
-		get:
-			return real_ledger != null and real_ledger.get("sweeping_for_delta") == true
 
 	## The same call `realm_chapter_events.gd::emit_event` makes, with a writer.
 	func emit_event(event: String) -> Dictionary:
@@ -107,15 +99,10 @@ class PendingClientHost extends Node:
 				ops.append({"op": "flag", "scope": "world", "realm": "cloudreach", "id": flag,
 					"value": true})
 		queued.clear()
-		var transport: Node = real_ledger if real_ledger != null else game.get("ledger")
+		var transport: Node = game.get("ledger")
 		var world_ledger: RefCounted = transport.get("ledger")
 		transport.call("apply_remote_delta",
 			{"seq": int(world_ledger.get("seq")) + 1, "realm": "cloudreach", "ops": ops})
-
-	## The host refusing the queued intents: a verdict, and no delta.
-	func refuse() -> void:
-		queued.clear()
-		intent_refused.emit("set_world_flag", "refused", "", {})
 
 	func submits_of(flag: String) -> int:
 		var count := 0
@@ -123,40 +110,6 @@ class PendingClientHost extends Node:
 			if str(intent.get("id", "")) == flag:
 				count += 1
 		return count
-
-
-## The real Cloudreach director with only its scene bootstrap and per-frame
-## ticking skipped: both want a player, a manager and a world to spawn into.
-## `_record_trainer_defeat`, the base session path, `_submit_reward_intent`
-## (to `Game.ledger`), `_progression()` and `_pay_trainer_reward` are the real
-## ones.
-class ClientDirector extends "res://scripts/combat/cloudreach_encounter_director.gd":
-	func _ready() -> void:
-		# No player, manager or world to tick against: the leg drives the
-		# defeat itself.
-		set_process(false)
-		set_physics_process(false)
-
-
-## A joined client's session, as the director asks it.
-class ClientSession extends Node:
-	func is_active() -> bool:
-		return true
-
-	func is_host() -> bool:
-		return false
-
-	func is_multi_peer() -> bool:
-		return true
-
-	func local_peer_id() -> int:
-		return 424242
-
-
-## A world root answers which realm its director fights in.
-class CloudreachRoot extends Node3D:
-	func world_realm() -> String:
-		return "cloudreach"
 
 
 ## The encounter director's trainer-battle surface (`encounter_director.gd`).
@@ -440,8 +393,7 @@ func _run() -> void:
 	await _pending_client_leg(game, data)
 	await _live_fight_sweep_leg(game, data)
 	await _break_the_eye_pilot_leg(game, data)
-	await _director_client_leg(game, data)
-	print("CLOUDREACH FINALE FIXTURE %s: body/input/collision, three relays, saved phase, aftermath, recovery, pending client, live-fight sweep, break-the-eye pilot, director client" % ("PASS" if failures.is_empty() else "FAIL"))
+	print("CLOUDREACH FINALE FIXTURE %s: body/input/collision, three relays, saved phase, aftermath, recovery, pending client, live-fight sweep, break-the-eye pilot" % ("PASS" if failures.is_empty() else "FAIL"))
 	quit(0 if failures.is_empty() else 1)
 
 
@@ -613,10 +565,9 @@ func _live_fight_sweep_leg(game: Node, data: Dictionary) -> void:
 	finale.setup(progression, func(event: String) -> Dictionary: return CHAPTER.dispatch(progression, chapter, event),
 		func() -> CharacterBody3D: return body, func() -> bool: return true, Callable(), data)
 	scene.add_child(finale)
-	# Added after the controller and handed to it, as
-	# `cloudreach_world_runtime.gd::mount()` does.
+	# Added after the controller, as `cloudreach_world_runtime.gd::mount()` does,
+	# and never injected: the controller has to find it.
 	scene.add_child(director)
-	finale.set("fight_director", director)
 	finale.set_process(false)
 	var phases: Array = []
 	finale.connect("phase_changed", func(phase: String) -> void: phases.append(phase))
@@ -766,7 +717,6 @@ func _break_the_eye_pilot_leg(game: Node, data: Dictionary) -> void:
 	scene.add_child(director)
 	scene.add_child(manager)
 	scene.add_child(atmosphere)
-	finale.set("fight_director", director)
 	finale.set_process(false)
 	runtime.add_to_group("progression_restore")
 	var swept: Array = get_nodes_in_group("progression_restore")
@@ -896,122 +846,3 @@ func _break_the_eye_pilot_leg(game: Node, data: Dictionary) -> void:
 	scene.queue_free()
 	await process_frame
 	_remove_tree(ProjectSettings.globalize_path(save_dir))
-
-
-## The integrated client path: the REAL Cloudreach director's final-round
-## victory reaches the finale through `trainer_victory` (as
-## `cloudreach_world_runtime.gd::_trainer_won` wires it), with `Game.ledger`
-## answering as a joined client's does. The host refuses once, then commits.
-## Disclosed: the win is `_record_trainer_defeat` called directly (what the
-## inherited final round calls), `_trainer_spec` is set as
-## `begin_trainer_battle` would, and `Game.ledger` is the stand-in for the leg.
-func _director_client_leg(game: Node, data: Dictionary) -> void:
-	game.call("reset_for_new_game")
-	var progression: RefCounted = game.get("progression")
-	var world_flags: RefCounted = game.call("world_flags")
-	for flag: String in data["requires_flags"]:
-		progression.call("set_flag", flag)
-	var encounter := str(data["encounter_id"])
-	var victory := str(data["captain_victory_flag"])
-	var victory_event := str(data["captain_victory_event"])
-	var real_ledger: Node = game.get("ledger")
-	var host := PendingClientHost.new()
-	host.game = game
-	host.chapter = chapter
-	host.real_ledger = real_ledger
-	game.set("ledger", host)
-	var session := ClientSession.new()
-
-	var scene := CloudreachRoot.new()
-	scene.name = "DirectorClientFixture"
-	root.add_child(scene)
-	var body := CharacterBody3D.new()
-	body.name = "DirectorClientCreature"
-	scene.add_child(body)
-	var director := ClientDirector.new()
-	director.name = "EncounterDirector"
-	director.setup(scene)
-	director.set("_session", session)
-	var finale: Node3D = FINALE.new()
-	finale.setup(progression, Callable(host, "emit_event"), func() -> CharacterBody3D: return body,
-		func() -> bool: return true, Callable(), data)
-	scene.add_child(director)
-	scene.add_child(finale)
-	finale.set("fight_director", director)
-	finale.set_process(false)
-	director.connect("trainer_victory", func(id: String) -> void:
-		if id == encounter:
-			finale.encounter_won(id))
-	var wins: Array = []
-	finale.connect("captain_defeated", func() -> void: wins.append("win"))
-	var spec: Dictionary = (director.get("trainer_specs") as Dictionary)[encounter]
-	_check(str(spec["defeat_flag"]) == victory, "Director client: Veyra's defeat flag is the finale's victory flag")
-	var inventory: RefCounted = game.get("inventory")
-
-	_check(finale.encounter_started(encounter), "Director client: encounter starts")
-	director.set("_trainer_spec", spec)
-	var world_before: Dictionary = JSON.parse_string(JSON.stringify(world_flags.call("save_data")))
-	director.call("_record_trainer_defeat", spec)
-	director.set("_trainer_spec", {})
-	_check(not progression.has(victory) and not bool(world_flags.call("has", victory)),
-		"Director client: a client's win writes no captain_veyra_defeated before the host commits")
-	_check(host.events.count(victory_event) == 1, "Director client: one victory event submitted")
-	finale.sync_progression()
-	finale.call("_process", 0.1)
-	_check(finale.phase == "crosswind_command" and wins.is_empty(),
-		"Director client: nothing settles before the host answers (%s)" % finale.phase)
-	# Whatever the base pays a client for its own win (today a self-payout), it
-	# pays it once: neither the retry nor the landing pays again.
-	var coins_after_win := int(inventory.call("count", "coin"))
-
-	host.refuse()
-	finale.sync_progression()
-	finale.call("_process", 0.1)
-	_check(finale.phase != "break_the_eye" and wins.is_empty(),
-		"Director client: a host refusal leaves the client out of break_the_eye (%s)" % finale.phase)
-	_check(JSON.stringify(world_flags.call("save_data")) == JSON.stringify(world_before),
-		"Director client: a host refusal leaves the client's world store unchanged")
-
-	# The fight is won again and this time the host commits.
-	if not bool(finale.get("_in_encounter")):
-		finale.encounter_started(encounter)
-	director.set("_trainer_spec", spec)
-	director.call("_record_trainer_defeat", spec)
-	director.set("_trainer_spec", {})
-	_check(not progression.has(victory), "Director client: the retried win is still only an intent")
-	host.land()
-	_check(progression.has(victory), "Director client: the committed delta sets the flag")
-	_check(wins == ["win"], "Director client: captain_defeated once when the delta lands %s" % [wins])
-	_check(finale.phase == "break_the_eye", "Director client: the landed win opens the relays")
-	finale.sync_progression()
-	finale.call("_process", 0.1)
-	director.call("_record_trainer_defeat", spec)
-	_check(wins == ["win"], "Director client: settled exactly once %s" % [wins])
-	_check(int(inventory.call("count", "coin")) == coins_after_win,
-		"Director client: the client is paid once, not again on the retry or the landing")
-
-	# A relay the host never answers comes back after the timeout, and its late
-	# delta still settles once.
-	var relay: Dictionary = data["relays"][0]
-	var relay_id := str(relay["id"])
-	var relays: Array = []
-	finale.connect("relay_disabled", func(id: String) -> void: relays.append(id))
-	body.global_position = FINALE.vec(relay["offset"]) + Vector3(0, 0.1, -1.0)
-	var prompt: Node3D = finale.get_node("Relay_" + relay_id)
-	_check(not finale.strike_relay(relay_id, body), "Director client: relay strike waits for the host")
-	_check(prompt.interaction_offer(body.global_position).is_empty(), "Director client: the in-flight relay stops offering")
-	var timeout := float(data.get("pending_intent_timeout_s", 8.0))
-	finale.call("_process", timeout - 1.0)
-	_check(prompt.interaction_offer(body.global_position).is_empty(), "Director client: held while the timeout runs")
-	finale.call("_process", 1.5)
-	_check(not prompt.interaction_offer(body.global_position).is_empty(),
-		"Director client: an unanswered relay offers again after the timeout")
-	host.land()
-	finale.call("_process", 0.1)
-	_check(relays == [relay_id], "Director client: the late relay delta settles once %s" % [relays])
-
-	game.set("ledger", real_ledger)
-	scene.queue_free()
-	await process_frame
-	host.free()
-	session.free()

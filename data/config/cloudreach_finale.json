@@ -12,7 +12,6 @@
   "network_event": "summit_engine_relays_disabled",
   "aftermath_flag": "cloudreach_winds_restored",
   "aftermath_event": "aftermath:cloudreach_winds_restored",
-  "pending_intent_timeout_s": 8.0,
   "wind": {
     "lane_offsets_m": [-19.0, 0.0, 19.0],
     "lane_half_width_m": 3.2,

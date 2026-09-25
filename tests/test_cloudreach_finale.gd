@@ -475,32 +475,20 @@ func test_without_a_director_a_sweep_resets_the_encounter() -> void:
 
 # --- the sweep in break_the_eye, outside the encounter -----------------------
 
-## `Game.ledger` as `_delta_sweep` reads it: `ledger_rpc.gd` raises
-## `sweeping_for_delta` around `apply_remote_delta`'s sweep. Its world ledger's
-## `seq` sits stale-high and never moves, as on a client whose own counter
-## already stood above the host's (the case a `seq` heuristic misreads).
-class MarkerLedger extends RefCounted:
-	var seq := 500
+## `Game.ledger`'s shape as far as `_delta_sweep` reads it.
+class SeqLedger extends RefCounted:
+	var seq := 0
 
 
-class MarkerTransport extends Node:
+class SeqTransport extends Node:
 	signal delta_applied(delta: Dictionary)
-	var sweeping_for_delta := false
-	var ledger := MarkerLedger.new()
+	var ledger := SeqLedger.new()
 
-	## A committed delta, in `apply_remote_delta`'s order: the store changes,
-	## the sweep runs under the marker, then `delta_applied`.
-	func deliver(finale: Node3D, game: Node, flags: RefCounted, flag: String) -> void:
+	## A committed delta: `seq` moves, the store changes, and only then the
+	## sweep runs (`apply_remote_delta`'s order).
+	func commit(flags: RefCounted, flag: String) -> void:
+		ledger.seq += 1
 		flags.call("set_flag", flag)
-		sweeping_for_delta = true
-		finale.restore_progression_from_game(game)
-		sweeping_for_delta = false
-		delta_applied.emit({})
-
-
-## A transport from before the marker existed.
-class UnmarkedTransport extends Node:
-	var ledger := MarkerLedger.new()
 
 
 func _break_the_eye(flags: RefCounted) -> Array:
@@ -508,13 +496,19 @@ func _break_the_eye(flags: RefCounted) -> Array:
 	flags.call("set_flag", str(FINALE.read_config()["captain_victory_flag"]))
 	var finale := _controller(flags)
 	# `run_tests.gd` reports a test that aborts on a script error as ok, so a
-	# controller without the transport seam has to FAIL here, not crash.
+	# controller without the delta seam has to FAIL here, not crash.
+	for seam: String in ["_listen_for_deltas", "_settle_seq_baseline"]:
+		if not finale.has_method(seam):
+			assert_true(false, "Finale controller has no %s delta seam" % seam)
+			finale.free()
+			return []
 	if not "ledger_transport" in finale:
 		assert_true(false, "Finale controller has no ledger_transport seam")
 		finale.free()
 		return []
-	var transport := MarkerTransport.new()
+	var transport := SeqTransport.new()
 	finale.ledger_transport = transport
+	finale._listen_for_deltas()
 	assert_eq(finale.phase, "break_the_eye")
 	finale.elapsed = 2.5
 	finale._hazard_drift[4242] = Vector3(0, 0, 2.0)
@@ -529,70 +523,43 @@ func test_break_the_eye_delta_sweep_keeps_the_wind_clock_and_drift() -> void:
 	if fixture.is_empty():
 		return
 	var finale: Node3D = fixture[0]
-	var transport: MarkerTransport = fixture[1]
+	var transport: SeqTransport = fixture[1]
 	var config := FINALE.read_config()
-	transport.deliver(finale, fixture[2], flags, "pickup:cloudreach_unrelated_crate")
+	transport.commit(flags, "pickup:cloudreach_unrelated_crate")
+	finale.restore_progression_from_game(fixture[2])
 	assert_eq(finale.phase, "break_the_eye")
 	assert_true(is_equal_approx(finale.elapsed, 2.5), "An unrelated delta keeps the wind clock")
 	assert_true(finale._hazard_drift.has(4242), "An unrelated delta keeps the push")
+	finale._settle_seq_baseline()
 	# Another peer's relay lands: still break_the_eye, so still kept.
-	transport.deliver(finale, fixture[2], flags, str(config["relays"][0]["flag_id"]))
+	transport.commit(flags, str(config["relays"][0]["flag_id"]))
+	finale.restore_progression_from_game(fixture[2])
 	assert_eq(finale.phase, "break_the_eye")
 	assert_true(is_equal_approx(finale.elapsed, 2.5), "Another peer's relay keeps the wind clock")
+	finale._settle_seq_baseline()
 	# The network lands: the phase moves on, so the clock starts over.
 	for relay: Dictionary in config["relays"]:
 		flags.set_flag(str(relay["flag_id"]))
-	transport.deliver(finale, fixture[2], flags, str(config["network_flag"]))
+	transport.commit(flags, str(config["network_flag"]))
+	finale.restore_progression_from_game(fixture[2])
 	assert_eq(finale.phase, "awaiting_restoration")
 	assert_eq(finale.elapsed, 0.0, "A phase change still resets the clock")
 	assert_true(finale._hazard_drift.is_empty())
 	_free_all(fixture)
 
 
-## M-2: this client's world ledger `seq` stands above the host's, so a committed
-## delta does not move it. The ledger's marker still says "this is a delta".
-func test_a_delta_reads_as_a_delta_even_with_a_stale_high_client_seq() -> void:
-	var flags := FLAGS.new()
-	var fixture := _break_the_eye(flags)
-	if fixture.is_empty():
-		return
-	var finale: Node3D = fixture[0]
-	var transport: MarkerTransport = fixture[1]
-	for pickup: String in ["pickup:cloudreach_one", "pickup:cloudreach_two", "pickup:cloudreach_three"]:
-		transport.deliver(finale, fixture[2], flags, pickup)
-		assert_true(is_equal_approx(finale.elapsed, 2.5), "Delta %s keeps the wind clock" % pickup)
-	assert_eq(int(transport.ledger.seq), 500, "the client's seq never moved")
-	_free_all(fixture)
-
-
-## The transport did not exist yet when `_ready` ran: the first delta must
-## still read as a delta, not as a load.
-func test_the_first_delta_after_ready_without_a_transport_reads_as_a_delta() -> void:
-	var flags := FLAGS.new()
-	var fixture := _break_the_eye(flags)
-	if fixture.is_empty():
-		return
-	var finale: Node3D = fixture[0]
-	var transport: MarkerTransport = fixture[1]
-	finale.ledger_transport = null
-	finale._ready()
-	finale.ledger_transport = transport
-	transport.deliver(finale, fixture[2], flags, "pickup:cloudreach_first_crate")
-	assert_eq(finale.phase, "break_the_eye")
-	assert_true(is_equal_approx(finale.elapsed, 2.5), "The first delta keeps the wind clock")
-	assert_true(finale._hazard_drift.has(4242), "The first delta keeps the push")
-	_free_all(fixture)
-
-
-## A load or snapshot reloads the store in place with the marker down.
+## A load or snapshot reloads the store in place and commits nothing: `seq` has
+## not moved since the last settled delta, so it resets as it always has.
 func test_break_the_eye_reload_without_a_delta_still_resets() -> void:
 	var flags := FLAGS.new()
 	var fixture := _break_the_eye(flags)
 	if fixture.is_empty():
 		return
 	var finale: Node3D = fixture[0]
-	var transport: MarkerTransport = fixture[1]
-	transport.deliver(finale, fixture[2], flags, "pickup:cloudreach_unrelated_crate")
+	var transport: SeqTransport = fixture[1]
+	transport.commit(flags, "pickup:cloudreach_unrelated_crate")
+	finale.restore_progression_from_game(fixture[2])
+	finale._settle_seq_baseline()
 	flags.load_data(flags.save_data())
 	finale.restore_progression_from_game(fixture[2])
 	assert_eq(finale.phase, "break_the_eye")
@@ -601,7 +568,7 @@ func test_break_the_eye_reload_without_a_delta_still_resets() -> void:
 	_free_all(fixture)
 
 
-func test_break_the_eye_without_a_ledger_or_its_marker_resets_conservatively() -> void:
+func test_break_the_eye_without_a_ledger_resets_conservatively() -> void:
 	var flags := FLAGS.new()
 	var fixture := _break_the_eye(flags)
 	if fixture.is_empty():
@@ -612,129 +579,4 @@ func test_break_the_eye_without_a_ledger_or_its_marker_resets_conservatively() -
 	finale.restore_progression_from_game(fixture[2])
 	assert_eq(finale.elapsed, 0.0)
 	assert_true(finale._hazard_drift.is_empty())
-	finale.elapsed = 2.5
-	var unmarked := UnmarkedTransport.new()
-	finale.ledger_transport = unmarked
-	flags.set_flag("pickup:cloudreach_unrelated_crate_two")
-	finale.restore_progression_from_game(fixture[2])
-	assert_eq(finale.elapsed, 0.0, "A transport without the marker is never read as a delta")
-	unmarked.free()
 	_free_all(fixture)
-
-
-# --- a pending intent the host never answers, and a pending win --------------
-
-func _pending_client(flags: RefCounted) -> Array:
-	var host := PendingHost.new()
-	host.flags = flags
-	host.chapter = _chapter()
-	var finale := FINALE.new()
-	finale.setup(flags, Callable(host, "emit_event"), Callable(), Callable())
-	if not "ledger_transport" in finale or not finale.has_method("_age_in_flight"):
-		assert_true(false, "Finale controller has no pending-intent timeout")
-		finale.free()
-		host.free()
-		return []
-	finale.ledger_transport = host
-	return [finale, host]
-
-
-func _advance(finale: Node3D, seconds: float) -> void:
-	var left := seconds
-	while left > 0.0:
-		finale._process(minf(0.5, left))
-		left -= 0.5
-
-
-## A missing host ledger or a `noop` that never reaches this peer answers
-## nothing: the guard must not hold forever, and a late delta still settles once.
-func test_unanswered_network_repair_is_released_after_the_timeout_and_settles_once() -> void:
-	var config := FINALE.read_config()
-	var flags := FLAGS.new()
-	_unlock(flags)
-	flags.set_flag(str(config["captain_victory_flag"]))
-	var fixture := _pending_client(flags)
-	if fixture.is_empty():
-		return
-	var finale: Node3D = fixture[0]
-	var host: PendingHost = fixture[1]
-	var networks: Array = []
-	finale.network_disabled.connect(func() -> void: networks.append("network"))
-	for relay: Dictionary in config["relays"]:
-		flags.set_flag(str(relay["flag_id"]))
-	finale._process(0.016)
-	assert_eq(host.events.count(str(config["network_event"])), 1)
-	_advance(finale, float(config["pending_intent_timeout_s"]) - 1.0)
-	assert_eq(host.events.count(str(config["network_event"])), 1, "held while the timeout runs")
-	_advance(finale, 1.5)
-	assert_eq(host.events.count(str(config["network_event"])), 2, "released and submitted again")
-	host.land()
-	finale._process(0.016)
-	finale._process(0.016)
-	assert_eq(networks, ["network"], "the landed repair settles exactly once")
-	assert_eq(finale.phase, "awaiting_restoration")
-	finale.free()
-	host.free()
-
-
-## Released at the timeout but still unanswered, the host's delta arriving late
-## settles the entry once rather than never.
-func test_a_timed_out_win_is_resubmitted_and_a_late_delta_settles_it_once() -> void:
-	var config := FINALE.read_config()
-	var flags := FLAGS.new()
-	_unlock(flags)
-	var fixture := _pending_client(flags)
-	if fixture.is_empty():
-		return
-	var finale: Node3D = fixture[0]
-	var host: PendingHost = fixture[1]
-	var wins: Array = []
-	finale.captain_defeated.connect(func() -> void: wins.append("win"))
-	finale.encounter_started(ENCOUNTER)
-	assert_false(finale.encounter_won(ENCOUNTER))
-	var event := str(config["captain_victory_event"])
-	_advance(finale, float(config["pending_intent_timeout_s"]) + 0.5)
-	assert_eq(host.events.count(event), 2, "the unanswered win is submitted again")
-	assert_eq(finale.phase, "crosswind_command", "nothing was granted")
-	host.land()
-	finale._process(0.016)
-	finale._process(0.016)
-	assert_eq(wins, ["win"], "captain_defeated exactly once")
-	assert_eq(finale.phase, "break_the_eye")
-	finale.free()
-	host.free()
-
-
-## While the host has not answered the win the arena holds: no hazard clock,
-## no escalation, no push. A refusal lifts the hold without having granted
-## anything, so the client cannot end up ahead of the world.
-func test_pending_win_holds_the_arena_and_a_refusal_resumes_it() -> void:
-	var config := FINALE.read_config()
-	var flags := FLAGS.new()
-	_unlock(flags)
-	var fixture := _pending_client(flags)
-	if fixture.is_empty():
-		return
-	var finale: Node3D = fixture[0]
-	var host: PendingHost = fixture[1]
-	finale.encounter_started(ENCOUNTER)
-	finale.elapsed = 2.5
-	var lane := finale.position
-	assert_false((finale.hazard_at(lane)["wind"] as Vector3).is_zero_approx(), "the wind pushes before the win")
-	assert_false(finale.encounter_won(ENCOUNTER))
-	assert_true((finale.hazard_at(lane)["wind"] as Vector3).is_zero_approx(), "a pending win stops the push")
-	assert_false(bool(finale.presentation_state()["hazards_active"]))
-	finale._process(1.0)
-	assert_true(is_equal_approx(finale.elapsed, 2.5), "the hazard clock is held")
-	finale.opposition_remaining(ENCOUNTER, 1, 3)
-	assert_eq(finale.phase, "crosswind_command", "no overload escalation while the win is pending")
-	host.intent_refused.emit("set_world_flag", "refused", "", {})
-	assert_eq(finale.phase, "crosswind_command", "a refusal leaves the client out of break_the_eye")
-	assert_false(flags.has(str(config["captain_victory_flag"])))
-	assert_true(bool(finale.presentation_state()["hazards_active"]), "the arena resumes")
-	finale._process(1.0)
-	assert_true(is_equal_approx(finale.elapsed, 3.5), "the clock runs again")
-	finale.opposition_remaining(ENCOUNTER, 1, 3)
-	assert_eq(finale.phase, "anchor_overload")
-	finale.free()
-	host.free()
