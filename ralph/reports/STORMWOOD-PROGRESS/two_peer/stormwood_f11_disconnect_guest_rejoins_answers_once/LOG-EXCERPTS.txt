@@ -1,0 +1,6 @@
+== net/net-proof_two_peer-20260925T200502Z/peer-0.log
+3573:[downed] peer 1665870138 is down ('')
+3575:[downed] local player is down; 45.0 s to be revived
+== net/net-proof_two_peer-20260925T200502Z/peer-1.log
+6186:[downed] local player is down; 45.0 s to be revived
+6187:[downed] peer 1 is down ('')
