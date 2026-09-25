@@ -113,3 +113,68 @@ func test_the_shipped_cloudreach_night_is_darker_than_its_day() -> void:
 	assert_true(Color(str(night["horizon_colour"])).get_luminance()
 		< Color(str(look["sky"]["horizon_colour"])).get_luminance(),
 		"night horizon is darker than the day haze")
+
+
+## Frame-matrix M4. The realm's night override lifts the moon-shadow fill but
+## leaves the preset a night: the budget is world_look.gd's own light_budget
+## arithmetic (Compatibility ambient share, weighted by colour luma).
+func _budget(env: Dictionary, sun: Dictionary) -> Dictionary:
+	var exposure := float(env.get("exposure", 1.0))
+	var direct := float(sun.get("energy", 1.25)) * exposure \
+		* Color(str(sun.get("colour", "#ffffff"))).get_luminance()
+	var ambient := float(env.get("ambient_energy", 1.0)) \
+		* (1.0 - float(env.get("ambient_sky_contribution", 0.55))) * exposure \
+		* Color(str(env.get("ambient_colour", "#9fb4c6"))).get_luminance()
+	return {"direct": direct, "ambient": ambient, "total": direct + ambient}
+
+
+func _night_budget(times: Dictionary, base: Dictionary) -> Dictionary:
+	var env: Dictionary = (base.get("environment", {}) as Dictionary).duplicate()
+	env.merge(times["night"]["environment"], true)
+	var sun: Dictionary = (base.get("sun", {}) as Dictionary).duplicate()
+	sun.merge(times["night"]["sun"], true)
+	return _budget(env, sun)
+
+
+func test_the_cloudreach_night_override_lifts_shadow_fill_but_stays_night() -> void:
+	var art := _read_art()
+	var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json"))
+	var shared_times: Dictionary = (art["times"] as Dictionary).duplicate(true)
+	var realm_times: Dictionary = (art["times"] as Dictionary).duplicate(true)
+	assert_eq(WORLD.apply_time_overrides(realm_times, visual.get("time_overrides", {})), 1)
+	var shared := _night_budget(shared_times, art)
+	var realm := _night_budget(realm_times, art)
+	var day := _budget(art["environment"], art["sun"])
+	assert_true(float(realm.ambient) >= float(shared.ambient) * 1.8,
+		"moon-shadow fill at least 1.8x the shared night (%.3f vs %.3f)" % [realm.ambient, shared.ambient])
+	assert_almost_eq(float(realm.direct), float(shared.direct), 0.0001,
+		"the moon itself is the shared night's")
+	assert_true(float(realm.ambient) <= float(day.ambient) * 1.6,
+		"the fill stays in the range of the daytime fill, not a flood")
+	var realm_env: Dictionary = realm_times["night"]["environment"]
+	var shared_env: Dictionary = shared_times["night"]["environment"]
+	assert_almost_eq(float(realm_env.exposure), float(shared_env.exposure), 0.0001,
+		"exposure stays the shared night's, so the sky stays dark")
+	assert_true(Color(str(realm_env.ambient_colour)).b > Color(str(realm_env.ambient_colour)).r * 1.8,
+		"the fill stays a night blue")
+	assert_true(float(realm_env.creature_emission_floor) < float(shared_env.creature_emission_floor),
+		"creatures lean on the night light rather than a fixed self-glow")
+	assert_eq(shared_times["night"]["environment"]["ambient_energy"],
+		art["times"]["night"]["environment"]["ambient_energy"], "the shared preset is untouched")
+
+
+func test_time_overrides_win_skip_comments_and_ignore_unknown_presets() -> void:
+	var times := {"_c": "comment", "night": {"sun": {"energy": 0.5}, "environment": {"a": 1, "b": 2}}}
+	var touched := WORLD.apply_time_overrides(times, {
+		"_comment": "skip",
+		"night": {"_why": "skip", "environment": {"a": 9, "_note": "skip"}},
+		"missing": {"environment": {"a": 3}},
+	})
+	assert_eq(touched, 1)
+	assert_eq(times["night"]["environment"]["a"], 9)
+	assert_eq(times["night"]["environment"]["b"], 2)
+	assert_false((times["night"]["environment"] as Dictionary).has("_note"))
+	assert_false((times["night"] as Dictionary).has("_why"))
+	assert_false(times.has("missing"))
+	assert_eq(WORLD.apply_time_overrides(null, {}), 0)
+	assert_eq(WORLD.apply_time_overrides(times, "nope"), 0)

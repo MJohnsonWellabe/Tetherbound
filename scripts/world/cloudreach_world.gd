@@ -282,6 +282,7 @@ func _ready() -> void:
 		var sky_profile: Dictionary = _visual_config.get("sky_profile", {})
 		(local_look.get("sky", {}) as Dictionary).merge(sky_profile, true)
 		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
+		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
 		look.set("_config", local_look)
 		look.call("set_weather", atmosphere_delta)
@@ -568,6 +569,42 @@ static func merge_sky_profile_into_times(times: Variant, sky_profile: Dictionary
 		((preset as Dictionary)["sky"] as Dictionary).merge(sky_profile, false)
 		merged += 1
 	return merged
+
+
+## Realm-scoped per-preset overrides from `cloudreach_visual.json`'s
+## `time_overrides`, laid onto this realm's own copy of `art.json`'s `times`
+## (the shared presets drive the Meadows too and are never touched). Unlike the
+## sky profile, an override WINS over what the preset authors: it exists to
+## retune a preset for this realm. One level of nesting (sun/sky/environment)
+## is merged key by key; `_`-prefixed keys are comments and are skipped.
+## Frame-matrix M4: the shared night ambient left every Cloudreach slope facing
+## away from the moon pure black (frame 31, mean luma 10.5/255).
+## Returns how many preset blocks were touched.
+static func apply_time_overrides(times: Variant, overrides: Variant) -> int:
+	if not times is Dictionary or not overrides is Dictionary:
+		return 0
+	var touched := 0
+	for preset_name: Variant in (overrides as Dictionary).keys():
+		if str(preset_name).begins_with("_"):
+			continue
+		var preset: Variant = (times as Dictionary).get(preset_name)
+		var over: Variant = (overrides as Dictionary)[preset_name]
+		if not preset is Dictionary or not over is Dictionary:
+			continue
+		for block: Variant in (over as Dictionary).keys():
+			if str(block).begins_with("_"):
+				continue
+			var value: Variant = (over as Dictionary)[block]
+			if value is Dictionary:
+				if not (preset as Dictionary).get(block) is Dictionary:
+					(preset as Dictionary)[block] = {}
+				for key: Variant in (value as Dictionary).keys():
+					if not str(key).begins_with("_"):
+						((preset as Dictionary)[block] as Dictionary)[key] = (value as Dictionary)[key]
+			else:
+				(preset as Dictionary)[block] = value
+		touched += 1
+	return touched
 
 
 ## The other half. `cloudreach_visual.json`'s `atmosphere` block used to go to
