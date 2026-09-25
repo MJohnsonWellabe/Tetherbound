@@ -1,0 +1,4 @@
+== net/net-proof_two_peer-20260925T202421Z/peer-0.log
+3547:[downed] local player is down; 45.0 s to be revived
+== net/net-proof_two_peer-20260925T202421Z/peer-1.log
+3349:[downed] peer 1 is down ('')

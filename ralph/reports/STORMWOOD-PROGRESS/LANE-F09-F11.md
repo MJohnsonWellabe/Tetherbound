@@ -554,3 +554,82 @@ Seven other pickup/NPC overlaps remain (route_05, 07, 16, 18, 19 and pocket_203)
 - **Last result:** two real ENet processes; the staged Dynamo frees the Stormheart; both characters are recorded as participants; the host's own offer, Yes and receipt pass.
 - **Where it stops:** the guest's offer is refused because the host's proxy for the guest never leaves the Stormwood arrival point. Not yet diagnosed.
 - **Consequence:** F11-B (two-peer, disconnect, capacity, no duplicate grants over the network) has no live proof from this lane.
+
+## WO-F11-05: two-peer Stormheart proof at space and capacity (`ralph/stormwood-f11-two-peer`)
+
+**Result: every scenario below is a rendered two-peer PASS.** Game code is unchanged from `origin/main` 10b635d38. Every commit on this branch adds only scenario JSON under `tools/net/proof_scenarios/stormwood_f*` and evidence under `ralph/reports/STORMWOOD-PROGRESS/two_peer/`. No game fix was needed. `tools/net/proof_steps.gd` (lane X05) was not edited.
+
+- **Platform:** Linux container, Godot 4.7-stable. Two real peer processes over loopback ENet, rendered with `--render` (xvfb, opengl3, 960x540 captures). This is local evidence, not internet or Steam acceptance.
+- **Tool:** lane X05's `tools/net/run_two_peer_proof.sh` + `tools/net/proof_steps.gd` + `tests/smoke_net_proof_two_peer.gd`.
+- **Command, per scenario `<S>`:** `tools/net/run_two_peer_proof.sh tools/net/proof_scenarios/<S>.json --render --out=ralph/reports/STORMWOOD-PROGRESS/two_peer/<S>`. The runs were serial, one render at a time.
+- **Starting saves:**
+  - The host always loads the named save `tools/net/proof_saves/host_meadows_stormwood_route_open/`: Meadows, Stormwood route open, party empty.
+  - The guest is a fresh trainer (`boot world`).
+  - Both enter Stormwood through `Game.enter_realm`.
+- **Disclosed setup:**
+  - x05's `stormheart_fixture` stands in for playing the Dynamo fight. It sets both peers as Dynamo contributors and commits Marrow's defeat flag through the ledger.
+  - Capacity scenarios fill one belt with five through `party_grant` (the game's `party_seam.add`). No named five-creature save exists.
+  - The Waterward scenario uses `teleport` to stand beside the view and gate prompts.
+  - The F09 scenario uses `storage_grant` for Stormglass and `explore_at` to stand at each arch.
+  - Everything from the offer on is the game's own code, driven by ordinary presses: the Yes/No dialogue, the Team-tab release ceremony (`ui_down` / `ui_accept` / `menu_cancel`), the prompts and the saves.
+- **Input:** the harness injects the physical joypad/key binding plus the action (`peer_runner.gd` `_press_edge`), guarded by `input_contexts.json`.
+- **Evidence kept:** `PROOF.md`, 256-colour PNGs, gzipped `worlds/` and `characters/` receipts, `NET-SUMMARY.md`, `NET_RUN.json` and `LOG-EXCERPTS.txt` (every SCRIPT ERROR with context and every `[downed]` line; from the Arch run on). Raw logs and `saves/` slot copies were deleted for disk.
+
+| Scenario (`<S>`) | Evidence commit | Run id | Verdict | SCRIPT ERROR |
+|---|---|---|---|---|
+| `stormwood_f11_mirror_host_refuses_guest_accepts`: space both sides, host No, guest Yes, double press | ad9806d8a | net-20260925T191033Z-20478 | PASS | 0 |
+| `stormwood_f11_mirror_clean_health`: the same mirror, asserting trainers up (DownedState `local_downed=false`, none expired or revived; the host as authority reports `downed_peers=[]`) on arrival, just before each answer and right after each answer | (the commit that adds this section) | net-20260925T203118Z-3042 | PASS (100/100 both, no `[downed]` line) | 0 |
+| `stormwood_f11_capacity_guest_full_releases_belt`: guest at five says Yes and releases bramblebun; host (space) Yes | b0f610b1b | net-20260925T191830Z-22102 | PASS | 0 |
+| `stormwood_f11_capacity_host_full_lets_stormheart_go`: host at five says Yes, lets the Stormheart go (a refusal); guest (space) Yes | 8f0e62409 | net-20260925T192701Z-23676 | PASS | 1 (guest; text lost, see below) |
+| `…_host_full_lets_stormheart_go_rerun`: same steps | 14416a5c5 | net-20260925T202421Z-1718 | PASS | 0 |
+| `stormwood_f09_arch_gates_two_peer_reload`: pair A relit by both peers, B dark, C gated, save/reload | 481676ff1 | net-20260925T194551Z-27097 | PASS | 0 |
+| `stormwood_f11_disconnect_guest_rejoins_answers_once`: two drop/rejoins, save/reload, replays | 47d2a4a71 | net-20260925T200502Z-30959 | PASS | 0 |
+| `stormwood_f11_waterward_gate_two_peer_reload`: host charts the sky, guest opens the gate once, save/reload | 9faec484d | net-20260925T201217Z-32081 | PASS | 1 (identified, shared code) |
+
+### What the runs show
+
+- **Space.** In the x05 original and in both mirror runs, each peer keeps its own answer on both sides. Each peer's world and character receipts carry its own accept or refuse, and the host's saved world holds each answer exactly once. The pre-offer saves hold no answer (non-vacuous baseline).
+- **Capacity.**
+  - A sixth `party_seam.add` is refused.
+  - A Yes at five does not settle by itself. `stormwood_ending.gd` `_begin_local_ceremony` puts the Stormheart in `Game.pending_catch`. The Team tab opens on the release ceremony ("You caught the Stormheart. The belt holds five, and one of the six goes free."; `input_context` `menu_creatures`). While the choice is open nothing is added and nothing is recorded.
+  - Guest run: the guest lets bramblebun go ("Let Bramblebun go? … the Stormheart takes it"). The belt becomes terrapup, ripplet, galewisp, mudsnout, fulgocobra. The world records the guest's acceptance.
+  - Host run: the host lets the newcomer go ("Let the Stormheart go? … your five keep their holders"). Its five are unchanged. The world and the host's character record a refusal, "exactly as letting the newcomer go at five".
+  - In both runs the other peer's own offer is still its own, and it keeps one.
+- **No duplicate grant.** A second press on an answered prompt finds it dark ("Answer the freed Stormheart", `enabled=false`) on the host and on the guest. This holds in the mirror run, the capacity runs, after reconnects, and after `save_reload_here`. Party lists stay at exactly one fulgocobra per accepting peer.
+- **Disconnect/reload, partial.**
+  - A dropped client lands on the title (`session.gd` `_on_server_disconnected` → `_return_to_title`).
+  - It rejoins through `production_join` (title `_join_via` → JoinDriver) as the same character. Its owed offer is still its own. It says Yes once.
+  - A second drop and rejoin, then `save_reload_here` on both peers (host `autosave_here` + `load_slot`; guest character save + apply), grant nothing further.
+  - **Both drops happen while the offer is owed but not yet opened.** No proof step opens the offer and stops before Yes/No. The step needed is `stormheart_open_offer` in `tools/net/proof_steps.gd`: walk up, press the prompt, wait for the offer panel, return without answering. It is left to lane X05.
+- **Waterward gate.**
+  - The host's view press sets `stormwood:waterward_revealed` and the one-time `realm_key_water` on both peers.
+  - The guest reads the 3-line `stormwood_waterward_aftermath` conversation, then presses the gate once. The host commits the key consumption and `realm_gate_water_unlocked` together.
+  - The frame reads "The Waterward gate is open." / "Enter Tidewake".
+  - After reload, both peers keep the open gate and the charted sky. The host's saved world lacks the quoted `"realm_key_water"` flag.
+  - A second gate press is not made, because it enters Tidewake.
+- **F09 gates.**
+  - The host and the guest each relight one arch of pair A through its "Relight … · 3 Stormglass" prompt, and each pays its own Stormglass.
+  - Stepping into Ashfoot carries the host to its twin (z 500 → 1436.5). Dark pair B carries nobody (z 1350 stays). Pair C, behind the closed Rootgate, is unavailable (z 2260 stays).
+  - After reload the lit flags hold on both peers, and the guest travels the pair back (→ z 503.5). The host's saved world has A lit and B/C unlit, and lacks `stormwood:rootgate_released`.
+  - The closed-pair rows are recorded positions, not numeric assertions.
+
+### Findings (not fixed here: shared files)
+
+- **Freed `winning_provider`.** `scripts/world/interaction_arbiter.gd` `_recompute()` returns early while the arbiter is disabled (lines 384-386, for example while a dialogue holds input). A provider freed meanwhile stays cached in `_winning_provider`, and `winning_provider()` (line 305) returns it unvalidated.
+  - It surfaced as `SCRIPT ERROR: Trying to cast a freed object` at `scripts/player/conversation_camera.gd:175` (`_arbiter.call("winning_provider") as Node3D`). That happens when the guest's Stormheart release conversation starts (`stormwood_ending.gd:152` → `:732` → `dialogue_panel.gd:197/367`). The effect is that the camera does not push in for that conversation.
+  - It also crashed the `downed` probe (`tools/net/peer_runner.gd:5939`).
+  - It is intermittent. It is the likely source of the first host-full run's lost SCRIPT ERROR, which did not recur in the rerun.
+  - Minimal fix, for the owner: validate the provider before the cast, or clear it on the disabled path.
+- **`stormheart_answer` stand-offsets (X05 step).** On an already-dark prompt the step tries all six stand-offsets and leaves the trainer at the last one, below or at the edge of the core platform. The trainer then falls and goes down (the 0/100 HUD frames and `[downed]` lines after double-press rows).
+  - The first mirror run's guest was already at 0/100 in its arrival frame, before any answer, so that one is a separate, unexplained arrival fall. The clean-health mirror rerun has no double press. It asserts both trainers up around every answer and ends at 100/100 on both peers.
+  - In the clean rerun the guest's own `downed` probe is taken on arrival and after the answers, not just before. During its release conversation the freed-`winning_provider` fault above crashes that probe (first attempt, not committed), so the pre-answer check reads the host's authority view (`downed_peers=[]`).
+
+### Limitations
+
+- The Dynamo fight is not played in these runs (the fixture stands in for it). The five-creature belts come from `party_grant`. The platform walk, the arch roads and the realm arrival are placement or teleport.
+- Disconnect is not tested with the offer panel open (see the missing `stormheart_open_offer` step above).
+- Process kill or relaunch is not tested (the process stays alive).
+- The host is not disconnected.
+- This is loopback ENet only.
+- The Rootgate release (opening pair C) is not shown.
+- The first host-full run's SCRIPT ERROR text was not retained.
