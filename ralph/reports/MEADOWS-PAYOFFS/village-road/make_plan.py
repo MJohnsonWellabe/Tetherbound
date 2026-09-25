@@ -6,8 +6,8 @@ topology, drawn straight from the data files (no engine, no screenshots).
 
 OLD_REV (default 47774c350) is the git revision whose
 data/config/terrain_playground.json is drawn as OLD; NEW is the working tree.
-Buildings, gates and NPCs are read at the same revision as each panel's roads;
-harvest nodes come from the working tree for both. Moves still only proposed
+Buildings, gates, NPCs, harvest nodes and the work_area props are read at the
+same revision as each panel's roads. Moves still only proposed
 (proposed_moves.json) are drawn dashed on the NEW panel.
 """
 import json
@@ -141,7 +141,7 @@ def draw_panel(main, ox, oy, title, terrain, topo_kind, shared, proposed):
         d.line([P.p(gx, Z0), P.p(gx, Z1)], fill=(210, 222, 190), width=1)
     for gz in range(int(math.ceil(Z0 / 10) * 10), int(Z1) + 1, 10):
         d.line([P.p(X0, gz), P.p(X1, gz)], fill=(210, 222, 190), width=1)
-    boundary, village, npcs, harvest = shared
+    boundary, village, npcs, harvest, props = shared
     outline = boundary["outline"]["points"]
     P.poly(outline, fill=(236, 242, 220), outline=(120, 90, 60), width=3)
     # flats (level pads) faint
@@ -214,6 +214,16 @@ def draw_panel(main, ox, oy, title, terrain, topo_kind, shared, proposed):
             P.circle_m(x, z, 2.2, outline=(40, 90, 40), width=2, fill=(110, 160, 90))
         elif s["prefab"] == "wagon":
             P.dot(x, z, 4, (140, 110, 70))
+    # the work_area prop cluster (band1 props.json), at this panel's revision
+    for c in props.get("clusters", []):
+        if c.get("name") != "work_area":
+            continue
+        for pr in c.get("props", []):
+            x, z = pr["at"][:2]
+            cx, cy = P.p(x, z)
+            d.rectangle([cx - 3, cy - 3, cx + 3, cy + 3], fill=(60, 60, 70))
+        x, z = c["props"][0]["at"][:2]
+        P.text(x, z + 2.4, "work_area props", font(10), fill=(40, 40, 50))
     # harvest nodes near the village
     colours = {"stone": (120, 120, 130), "berries": (170, 40, 120), "wood": (110, 70, 30),
                "fiber": (150, 170, 60)}
@@ -280,10 +290,13 @@ def main():
     harvest = load("data/config/bands/band1_lower_meadows/harvest.json")
     old = load(TERRAIN, OLD_REV)
     new = load(TERRAIN)
-    shared = (boundary, village, npcs, harvest)
+    props_path = "data/config/bands/band1_lower_meadows/props.json"
+    shared = (boundary, village, npcs, harvest, load(props_path))
     shared_old = (load("data/config/village_boundary.json", OLD_REV),
                   load("data/config/village.json", OLD_REV),
-                  load("data/config/village_npcs.json", OLD_REV), harvest)
+                  load("data/config/village_npcs.json", OLD_REV),
+                  load("data/config/bands/band1_lower_meadows/harvest.json", OLD_REV),
+                  load(props_path, OLD_REV))
     prop_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "proposed_moves.json")
     proposed = json.load(open(prop_path))["moves"] if os.path.exists(prop_path) else []
     W = PANEL_W * 2 + GAP * 3
@@ -292,7 +305,7 @@ def main():
     draw_panel(img, GAP, PAD_TOP, "OLD (%s): radial spokes from the well" % OLD_REV, old, "old",
                shared_old, [])
     draw_panel(img, GAP * 2 + PANEL_W, PAD_TOP,
-               "NEW (F01-a/b): through-road, lanes, Berry Field / Grove / Stoneyard", new, "new", shared,
+               "NEW (F01 branch): through-road, lanes, Berry Field / Grove / Stoneyard", new, "new", shared,
                proposed)
     d = ImageDraw.Draw(img)
     y = PAD_TOP + PANEL_H + 14
@@ -320,7 +333,7 @@ def main():
              ((40, 120, 60), "side lane to named subarea", 6),
              ((120, 84, 48), "other road", 4),
              ((196, 60, 40), "OLD: route radiating from the well", 5),
-             ((200, 0, 160), "proposed shared-file move (needs grant)", 2)]
+             ((200, 0, 160), "proposed move (proposed_moves.json; none pending)", 2)]
     lx = GAP
     for col, label, w in items:
         d.line([(lx, ly + 8), (lx + 40, ly + 8)], fill=col, width=w)

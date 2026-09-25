@@ -1,10 +1,10 @@
-# F01 village road topology (work orders F01-a and F01-b)
+# F01 village road topology (work orders F01-a, F01-b and F01-c)
 
 Evidence for WORLD §3.2 and ACCEPTANCE F01/M1, part a: the overhead plan comparing the old and new traversable road topology. The in-engine day/night walk and the bakes still belong to the lead.
 
 - `plan_old_new.png` is the labelled overhead plan. OLD is 47774c350; NEW is this branch. `make_plan.py` regenerates it from the JSON, and each panel reads the village, boundary and NPC data at its own revision.
 - `topology.py` holds the road-graph rules. `tests/test_village_road_topology.gd` implements the same rules.
-- `proposed_moves.json` lists the moves held in the two `PENDING GRANT` commits. The NEW panel draws them as dashed lines.
+- `proposed_moves.json` is empty: no moves are pending. The NEW panel draws the work_area props where they now stand.
 - `tools/_probe_f01_road_slope.gd` measures road grades and the slope across each subarea, using the heightfield the bake uses.
 
 ## Topology (computed from the data)
@@ -22,18 +22,20 @@ Each subarea is named by a one-arm fingerpost on the road that serves it.
 
 - **The Stoneyard** (stone-working area): centre (16.5,-33), radius 7.
   - Holds stone nodes 4 [22,-34] and 1037 [11,-32], with deadwood 0 at its rim.
+  - Holds the `work_area` props (anvil, workbench, whetstone, crate, pickaxe), moved here from inside the inn apron by ee6cf86ca.
   - Its own scatter clearing is band1 `clearings` order 1929.
   - It is the end of **Stoneyard Lane**: (-1.5,-11.64) → (4,-18) → (13.6,-20) → (14.2,-26) → (14.6,-31). The lane passes 2.8 m in front of the stone cottage's threshold, so cottage_b keeps its 0912 pose.
   - The fingerpost stands at (-4.2,-15.6).
 - **Berry Field**: centre (-8.5,-23), radius 6.
-  - Holds berry node 1036 [-9,-19].
-  - A planted row of 7 Bush_Common_Flowers bushes (a band1 `layer_anchors.bushes` entry), sized like a harvest node.
+  - Holds berry node 1036 [-9,-19], the only harvestable bush in the field.
+  - Planted rows: 10 low Bush_Common shrubs from a band1 `layer_anchors.bushes` entry. These are deliberately flowerless and about knee height, not the flowering Bush_Common_Flowers the harvest nodes use, so the one pickable bush is the one that looks pickable.
   - An L of fence rails from `village.json`: north rail at [-9,-28.5], west rail at [-12,-25.5].
   - It is the end of **Berry Lane**: (-8,-13.96) → (-7.2,-20.5).
   - The fingerpost stands at (-11,-17.2).
 - **The Grove**: centre (-20,6), radius 8.
   - Six `village.json` oaks with trunk-only colliders, standing 3.7 m or more from the road.
   - A 6-bush understorey anchor, round stone node 6.
+  - Its own scatter clearing (band1 order 1930, radius 9.5) keeps baked random trees and rocks off the oaks. The understorey anchor opts out of that clearing.
   - The Pond lane runs through its east margin.
   - The fingerpost stands at (-15,1.5).
 
@@ -45,7 +47,7 @@ Each subarea is named by a one-arm fingerpost on the road that serves it.
 
 ## Bakes the lead must run
 
-Run these as Godot writers, serialized, under the lane's Godot writer lock (for example `flock <lane lock file> <command>`). Run them after deciding on the two `PENDING GRANT` commits, so that the bake sees the final data.
+Run these as Godot writers, serialized, under the lane's Godot writer lock (for example `flock <lane lock file> <command>`). Run them on the branch head, after the F01-c commit.
 
 ```
 ~/godot-bin/godot --headless --path . --script scripts/world/build_playground_terrain.gd
@@ -55,8 +57,13 @@ Run these as Godot writers, serialized, under the lane's Godot writer lock (for 
 
 Then commit `data/terrain/playground/` (the regions and `manifest.json`) and `data/scatter/playground/`.
 
-## Pending-grant commits (drop or keep)
+## Shared-file decisions
 
-- **work_area → The Stoneyard.** In band1 `props.json`, the anvil, workbench, whetstone, crate and pickaxe move by (+17.5,-32.5), from about (-5,-3), inside the inn apron, to about (12.5,-35.5). The commit also corrects the tournament cluster's `_why_vp5`, which still describes the removed spine leg.
-- **Berry nodes → Berry Field.** In band1 `harvest.json`, node 10 moves from [20,-16] to [-5.8,-24] and node 1033 from [-32,-1] to [-10.8,-25.8]. Node 10 has sat inside cottage_b's walls since the 0912 move. The village node count stays 28.
-  - Risk: gate-F segments S03, S03C, S03p3, S03Cp3 and diag_night_preconditions_0919 script a walk to node 10 at [20,-16]. They need re-pointing if this commit is kept.
+- **Kept: work_area moves to The Stoneyard** (ee6cf86ca). The live band1 `props.json` and its baseline mirror move together, which `test_band_content` requires. The commit also corrects the tournament cluster's `_why_vp5`.
+- **Reverted: berry nodes 10 and 1033 into the Berry Field** (5645fb3f9, reverted in 3d1cb7cd9). Gate-F segments S03, S03C, S03p3, S03Cp3 and diag_night_preconditions_0919 script a walk to node 10 at [20,-16].
+  - Node 10 therefore still sits inside cottage_b's walls, 3.66 m from its door. That is outside the door prompt's 3.0 m radius, and the door test guards the 3.2 m margin.
+  - Moving the node needs those segments re-pointed first.
+- **Stale references in shared files, left for the lead to update:**
+  - `tests/test_gate_a_build_segment_contract.gd:49` pins the `(18,-24)` "Practice Meadow road bend" waypoint line, which is now open ground and no longer on the road.
+  - `data/config/map_landmarks.json:9,12` gives reveal circles for "the village square" (10,-10) and "Practice Meadow road, midpoint" (18,-24). Both are still inside the village, but the labels are stale.
+  - `tools/capture_prop_clusters.gd:28` frames the work_area cluster at its old site: `WORK_AREA_CENTRE` (-5,-2.8).

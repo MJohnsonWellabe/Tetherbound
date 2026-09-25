@@ -1,8 +1,4 @@
 {
-  "_comment": "F01-b moves held in the two 'PENDING GRANT' commits (band1 props.json / harvest.json), drawn dashed on the NEW panel only.",
-  "moves": [
-    {"label": "work_area anvil/whetstone -> Stoneyard", "from": [-5.0, -3.0], "to": [12.5, -35.5]},
-    {"label": "berry node 10 (inside cottage_b) -> Berry Field", "from": [20.0, -16.0], "to": [-5.8, -24.0]},
-    {"label": "berry node 1033 -> Berry Field", "from": [-32.0, -1.0], "to": [-10.8, -25.8]}
-  ]
+  "_comment": "No moves are pending. The work_area -> Stoneyard move (ee6cf86ca) was kept and is drawn as real data. The berry-node move into the Berry Field (5645fb3f9) was reverted by the lead in 3d1cb7cd9 because gate-F segments S03/S03C/S03p3/S03Cp3/diag_night_preconditions_0919 walk to node 10 at [20,-16]; nothing is drawn for it.",
+  "moves": []
 }
