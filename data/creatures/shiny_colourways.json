@@ -318,7 +318,7 @@
           "val_blend": 0.25
         },
         {
-          "_why": "OWNER DECISION 2026-09-25 (X04 creature-art lane): Terrapup's plates are grey STONE, per sheet docs/art/reference/01_Ground_Starter_Terrapup.png. The source albedo already paints them as low-saturation (<=0.26) mid-value warm grey; before this rule the coat rules below caught those warm greys and turned the plates brown. Kept as one stone block (fur is saturated, the cream face is brighter, so neither matches). Placed after the head-front rules so the face keeps its mask and cream; set_val 0.42 because field_emission brightens the coat in the field and a 0.52 grey rendered white.",
+          "_why": "OWNER DECISION 2026-09-25 (X04 creature-art lane): Terrapup's plates are grey STONE, per sheet docs/art/reference/01_Ground_Starter_Terrapup.png. The source albedo already paints them as low-saturation (<=0.26) mid-value warm grey; before this rule the coat rules below caught those warm greys and turned the plates brown. Kept as one stone block (fur is saturated, the cream face is brighter, so neither matches). Placed after the head-front rules so the face keeps its mask and cream; set_val lowered in steps (0.52 rendered white, 0.42 still bright); final value 0.3 with sat 0.12 hue 35 after the blind judge asked for darker, warmer stone.",
           "match": {
             "sat_max": 0.26,
             "val_min": 0.2,
