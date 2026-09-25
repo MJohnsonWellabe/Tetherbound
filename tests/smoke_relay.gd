@@ -66,14 +66,18 @@ var _activated_id := 0
 ## show the ordinary neutral fight camera. Without the flag nothing changes.
 var _tell_capture_dir := ""
 ## `--tell-capture-member=<n>` (1-based) captures only from that team member
-## on. Earlier members are fought at Engine.time_scale 4 -- the same physics
-## and decisions, four physics steps per rendered frame -- so a software
-## renderer reaches the member under test inside the timeout.
+## on. Earlier members are fought at Engine.time_scale 4 so a software
+## renderer reaches the member under test inside the timeout. That is NOT the
+## same simulation: Godot scales each physics step's delta, so those members
+## are fought with coarser steps and a slower-reacting pilot. Only the captured
+## member, fought on a fresh body at time_scale 1, is evidence.
 var _tell_capture_member := 1
 var _tells_seen := 0
 var _tell_shots: Array[Dictionary] = []
 var _tell_camera_free_until := -1
 var _tell_hooked: Dictionary = {}
+## Body instance id -> label of its tell still waiting for a strike.
+var _open_tell_label: Dictionary = {}
 var _sequence_started := -1
 var _next_sequence_at := -1
 var _sequence_index := 0
@@ -318,11 +322,19 @@ func _hook_tell_capture(opponent: Node3D) -> void:
 		_tell_shots.append({"at": now + 1, "name": "%s_a_start" % label})
 		_tell_shots.append({"at": now + tell_frames / 2, "name": "%s_b_mid" % label})
 		print("tell capture: %s (telegraph %.2fs, lunge %.1f)" % [label, seconds, float(cfg.get("lunge", 0.0))])
-		opponent.connect("strike_ready", func() -> void:
-			var at := Engine.get_physics_frames()
-			_tell_shots.append({"at": at + 1, "name": "%s_c_strike" % label})
-			_tell_shots.append({"at": at + int(physics_hz * 0.5), "name": "%s_d_recovery" % label}),
-			CONNECT_ONE_SHOT)
+		_open_tell_label[key] = label
+	)
+	# One strike handler per body, reading the tell it belongs to: a stagger
+	# can cancel a wind-up without a strike, so a per-tell one-shot handler
+	# could fire later under a stale label.
+	opponent.connect("strike_ready", func() -> void:
+		var label := str(_open_tell_label.get(key, ""))
+		if label.is_empty():
+			return
+		_open_tell_label.erase(key)
+		var at := Engine.get_physics_frames()
+		_tell_shots.append({"at": at + 1, "name": "%s_c_strike" % label})
+		_tell_shots.append({"at": at + int(physics_hz * 0.5), "name": "%s_d_recovery" % label})
 	)
 
 
@@ -480,7 +492,6 @@ func _fight_the_whole_team() -> void:
 		if not _tell_capture_dir.is_empty():
 			var capturing := _opponents_felled + 1 >= _tell_capture_member
 			Engine.time_scale = 1.0 if capturing else 4.0
-			Engine.max_physics_steps_per_frame = 8
 			if capturing:
 				_hook_tell_capture(opponent)
 				await _save_due_tell_shots()

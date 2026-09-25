@@ -99,7 +99,7 @@ under this lane, not by this file.
 
 ## Captain Vance at the normal camera (F04 witness, blind judge)
 
-**Capture.** `tests/smoke_relay.gd --tell-capture-dir` (with `--tell-capture-member=3` for the ace). Each enemy tell is captured at the start of the tell, mid-tell, the strike, and 0.5 s into recovery, through the ordinary neutral fight camera: the pilot stops forcing yaw during a tell. The run was on `ralph/f04-named-fight-captures` with F04's tells, a 0.80 s CHARGER telegraph and a 7 m lunge. The default headless `smoke_relay` passes with those tells.
+**Capture.** `tests/smoke_relay.gd --tell-capture-dir` (with `--tell-capture-member=3` for the ace; the earlier members are fast-forwarded at Engine.time_scale 4, which coarsens their physics steps, so only the captured member's frames are evidence). Each enemy tell is captured at the start of the tell, mid-tell, the strike, and 0.5 s into recovery, through the ordinary neutral fight camera: the pilot stops forcing yaw during a tell. The run was on `ralph/f04-named-fight-captures` with F04's tells, a 0.80 s CHARGER telegraph and a 7 m lunge. The default headless `smoke_relay` passes with those tells.
 
 **Sheet:** `relay-tells/sheet_relay_tells.jpg`. Rows 1–2 are Galecrest and Duskhush; rows 3–4 are Tuskroot, the CHARGER.
 
