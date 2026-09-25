@@ -1222,6 +1222,7 @@ func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSIL
 		"arbiter_provider": str((provider as Node).get_path()) if provider is Node else str(provider),
 		"arbiter_winner": _arbiter.call("winner") if _arbiter != null and _arbiter.has_method("winner") else {},
 		"slide_contacts": contacts,
+		"bodies_near_target": _bodies_near(target, 6.0),
 	}))
 	_fail("controller movement could not reach %s (stopped %.1fm short at %s)" % [
 		purpose,
@@ -1229,6 +1230,24 @@ func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSIL
 			target.z - _player.global_position.z).length(),
 		str(_player.global_position.round())])
 	return false
+
+
+## Diagnostic only: every physics body whose origin lies within `radius` of
+## `target` (planar), with its path, position and visibility.
+func _bodies_near(target: Vector3, radius: float) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	var flat := Vector2(target.x, target.z)
+	for node: Node in _world.find_children("*", "PhysicsBody3D", true, false):
+		var body := node as Node3D
+		if body == null or body == _player:
+			continue
+		var at := body.global_position
+		if Vector2(at.x, at.z).distance_to(flat) > radius:
+			continue
+		rows.append({"path": str(body.get_path()), "position": str(at.snapped(Vector3.ONE * 0.01)),
+			"visible": body.is_visible_in_tree(),
+			"layer": (body as CollisionObject3D).collision_layer if body is CollisionObject3D else -1})
+	return rows
 
 
 func _tap(action: StringName) -> void:
