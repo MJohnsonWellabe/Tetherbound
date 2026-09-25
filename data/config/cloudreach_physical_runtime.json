@@ -39,7 +39,15 @@
   "restrictions": [
     {"id": "cloudreach_high_roost", "position": [700,760,2350], "size": [850,1000,1150], "requires_flag": "fly_traversal_unlocked"},
     {"id": "cloudreach_upper", "position": [-1800,620,3600], "size": [3600,1500,1350], "requires_flag": "cloudreach_upper_route_unlocked"},
-    {"id": "cloudreach_summit", "position": [-1800,800,4950], "size": [3600,1500,1250], "requires_flag": "cloudreach_upper_route_unlocked"}
+    {"id": "cloudreach_summit", "position": [-1800,800,4950], "size": [3600,1500,1250], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_stair_1", "position": [-808.5,590.0,3563.8], "size": [26.8,1530.0,37.2], "requires_flag": "cloudreach_upper_route_unlocked", "_comment": "F06: the Fly side of the moved upper_counterweight_gate. Seven slices of the stair ridge out to +/-28.5 m lateral (ridge +/-24.3 m walkable, gate piers to +/-27.28 m), each overlapping its neighbours by 0.5 m, from the gate plane (gate [-782.5,650,3555], route direction (100,0,200)) to z=3601 where cloudreach_upper takes over; y 590 is below the ridge's deepest dropped edge (650-54), the 2120 top matches cloudreach_upper. Axis-aligned slices of a diagonal plane reach at most 4.75 m (with the 0.75 m swept margin) back over the approach crest. Generated from the route polyline; tests/test_cloudreach_counterweight_seal.gd checks coverage and clearances."},
+    {"id": "cloudreach_counterweight_stair_2", "position": [-801.2,590.0,3560.2], "size": [28.7,1530.0,40.8], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_stair_3", "position": [-793.9,590.0,3556.5], "size": [30.5,1530.0,44.5], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_stair_4", "position": [-786.6,590.0,3552.9], "size": [32.3,1530.0,48.1], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_stair_5", "position": [-779.4,590.0,3549.3], "size": [34.2,1530.0,51.7], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_stair_6", "position": [-772.1,590.0,3545.6], "size": [36.0,1530.0,55.4], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_stair_7", "position": [-764.8,590.0,3542.0], "size": [37.8,1530.0,59.0], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_gate_crown", "position": [-808.9,657.0,3540.4], "size": [52.8,1463.0,29.2], "requires_flag": "cloudreach_upper_route_unlocked", "_comment": "F06 review: the closed gate's own collidable masonry (54 m counterweight beam, top y 659.7; piers to +/-27.28 m lateral, top y 659; both 2.2 m deep) plus the 0.7 m flyer radius, so nobody lands on the beam and walks off it behind the gate. The bottom, 657 (652.5 with the 4.5 m carried-height sweep), stays above the approach crest (649.3 at the gate plane)."}
   ],
   "landing_objectives": [
     {"id": "sky_shrine", "position": [1110,1050,2940], "radius_m": 22, "height_tolerance_m": 3, "requires_flags": ["fly_traversal_unlocked"], "completion_flag": "sky_shrine_reached", "event": "landmark:sky_shrine_heartstone_reached"},

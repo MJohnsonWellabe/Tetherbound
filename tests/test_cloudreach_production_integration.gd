@@ -28,8 +28,10 @@ func test_counterweight_barrier_is_on_restricted_branch_not_lower_junction() -> 
 	var at: Vector3=world.call("_vec3",gate.position)
 	var junction:=Vector3(-100,470,2440)
 	assert_true(at.distance_to(junction)>40.0,"locked gate leaves the mandatory lower junction open")
-	assert_true(Geometry3D.get_closest_point_to_segment(at,junction,Vector3(-360,520,2900)).distance_to(at)<0.1,"gate still belongs to the protected upper route")
-	assert_true(absf(float(world.call("_gate_yaw_for",gate.requires_unlock,at))-atan2(-260.0,460.0))<0.001,"offset gate faces across its own slope")
+	# F06: the gate stands where the pass enters Upper Cloudreach, on the
+	# [-820,620,3480]->[-720,700,3680] segment, past the Windscar beacon crown.
+	assert_true(Geometry3D.get_closest_point_to_segment(at,Vector3(-820,620,3480),Vector3(-720,700,3680)).distance_to(at)<0.1,"gate still belongs to the protected upper route")
+	assert_true(absf(float(world.call("_gate_yaw_for",gate.requires_unlock,at))-atan2(100.0,200.0))<0.001,"offset gate faces across its own slope")
 	world.free()
 
 

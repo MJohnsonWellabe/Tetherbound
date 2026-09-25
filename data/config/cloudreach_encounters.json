@@ -963,7 +963,7 @@
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_01",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -262.505,
         500.146,
@@ -972,11 +972,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_02",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -311.755,
         511.45,
@@ -985,11 +985,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_03",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -476.115,
         539.055,
@@ -998,11 +998,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_04",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -537.333,
         551.137,
@@ -1011,11 +1011,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_05",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -616.271,
         563.219,
@@ -1024,11 +1024,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_06",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -682.867,
         580.424,
@@ -1037,11 +1037,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_07",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -771.47,
         604.178,
@@ -1050,11 +1050,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_08",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -785.021,
         643.604,
@@ -1063,7 +1063,7 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_09",
