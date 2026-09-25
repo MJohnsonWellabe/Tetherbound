@@ -18,7 +18,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 240
-const SLOT := 6
+const SLOT := 4
 const FLAG := "legendary_freed"
 const FADE_TIMEOUT_MS := 40000
 
@@ -126,9 +126,6 @@ func _run() -> void:
 		await physics_frame
 	_check_end_state(fresh, reloaded, "reload+30")
 	print("pylons toppled: %d" % live_count)
-	var dir := DirAccess.open("user://saves/")
-	if dir != null:
-		dir.remove("slot_%d.json" % SLOT)
 	_finish()
 
 
@@ -161,6 +158,9 @@ func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 		if not is_nan(ground):
 			if absf(top.y - ground) > absf(worst_tip):
 				worst_tip = top.y - ground
+			if absf(top.y - ground) > 1.5:
+				print("(%s) %s/%s tip %.2f m off the ground at %s (up.y %.2f)" % [tag,
+					pylon.get_parent().name, pylon.name, top.y - ground, str(top), up])
 		for sibling: Node in pylon.get_parent().get_children():
 			var body := sibling as StaticBody3D
 			if body == null:

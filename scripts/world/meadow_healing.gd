@@ -951,8 +951,9 @@ func _set_global(node: Node3D, value: Transform3D) -> void:
 ## The fall direction: an azimuth hashed from the pylon's holder and name, so
 ## every peer and every load picks the same one; then stepped round by
 ## `TAU / candidates` until the fallen body would not lie across a road or a
-## building apron (sampled along its length). Falls back to the hashed
-## azimuth if every candidate is blocked.
+## building apron (sampled along its length) and its tip can meet the ground
+## within the allowed angles. Falls back to the hashed azimuth if every
+## candidate is blocked.
 func _fall_direction(key: String, base: Vector3, height: float, block: Dictionary) -> Vector2:
 	var candidates := maxi(int(block.get("direction_candidates", 8)), 1)
 	var limit := float(block.get("avoid_road_above", 0.05))
@@ -970,9 +971,25 @@ func _fall_direction(key: String, base: Vector3, height: float, block: Dictionar
 			if maxf(road, apron) > limit:
 				clear = false
 				break
+		if clear and not _lands_flat(base, dir, height, block):
+			clear = false
 		if clear:
 			return dir
 	return fall_direction(key, 0, candidates)
+
+
+## Whether falling toward `dir` lets the tip meet the ground within the
+## allowed angles. A pylon falling across a gully or off a bank would need more
+## than `max_angle_deg` and end with its tip in the air; another direction is
+## tried instead.
+func _lands_flat(base: Vector3, dir: Vector2, height: float, block: Dictionary) -> bool:
+	var tip := Vector2(base.x, base.z) + dir * height
+	var from := _ground(base.x, base.z)
+	var to := _ground(tip.x, tip.y)
+	if is_nan(from) or is_nan(to):
+		return true
+	var raw := 90.0 - rad_to_deg(atan2(to - from, maxf(height, 0.01))) + float(block.get("sink_deg", 3.0))
+	return raw >= float(block.get("min_angle_deg", 70.0)) and raw <= float(block.get("max_angle_deg", 108.0))
 
 
 ## Deterministic unit XZ direction for `key`, candidate `attempt` of `count`.
