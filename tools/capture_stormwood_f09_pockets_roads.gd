@@ -301,6 +301,15 @@ func _capture(frame_id: String, description: String, extra: Dictionary = {}) -> 
 		"staged": {"flags": _staged_flags.duplicate(), "clock": "day pinned; surge elapsed re-pinned to %d s (Calm) before the frame" % int(CALM_PIN_SECONDS),
 			"placement": "debug_teleport_to + Player transform at stand point"},
 	}
+	var current := _world.get_node_or_null(^"StormwoodRoadCurrent")
+	if current != null:
+		var near := 0
+		for chunk: Node in current.get_children():
+			if chunk is MeshInstance3D and (chunk as MeshInstance3D).global_position.distance_to(_camera.global_position) \
+					< (chunk as MeshInstance3D).visibility_range_end + 30.0:
+				near += 1
+		record["road_current"] = {"chunks": current.get_child_count() - 1, "chunks_in_draw_range": near,
+			"frame_draw_calls": RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)}
 	record.merge(extra, true)
 	_frames.append(record)
 	_log("captured %s prompt='%s' phase=%s cam=%.1fm" % [frame_id, record.prompt, record.surge_phase,
@@ -477,14 +486,36 @@ func _current_motion() -> void:
 	var stand := a.lerp(b, float(stretch.at))
 	var look := stand + (b - a).normalized() * 25.0
 	await _stand(stand, Vector3(look.x, _ground(look.x, look.y), look.y), -14.0)
+	# The software renderer runs at a few frames per second, so wall-clock
+	# waits would space the frames seconds apart in shader time. The road
+	# current's `clock_override` pins its shader clock to exact 0.25 s steps.
+	var current := _world.get_node_or_null(^"StormwoodRoadCurrent")
+	var material: ShaderMaterial = current.get("material") if current != null else null
 	var started := Time.get_ticks_msec()
 	for n in 4:
-		if n > 0:
-			await create_timer(0.25).timeout
+		if material != null:
+			material.set_shader_parameter("clock_override", 100.0 + 0.25 * n)
 		await _capture("current_motion_%d" % n, "%s, night preset, motion strip frame %d (0.25 s apart)" % [str(stretch.route), n],
 			{"route": str(stretch.route), "stand": [stand.x, stand.y], "time_preset": "night",
-				"strip_ms": Time.get_ticks_msec() - started})
+				"strip_ms": Time.get_ticks_msec() - started, "shader_clock_s": 100.0 + 0.25 * n})
+	if material != null:
+		material.set_shader_parameter("clock_override", -1.0)
+	# Cost: total draw calls in this frame with the current shown and hidden.
+	if current != null:
+		var shown := await _draw_calls()
+		(current as Node3D).visible = false
+		var hidden := await _draw_calls()
+		(current as Node3D).visible = true
+		_log("road current cost at the strip stand: frame draw calls %d shown, %d hidden" % [shown, hidden])
+		_frames.append({"id": "road_current_cost", "draw_calls_shown": shown, "draw_calls_hidden": hidden})
 	_time_name = "day"
+
+
+func _draw_calls() -> int:
+	for _frame in 4:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	return RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 
 
 ## Travel direction of `road` through `at`: the first segment whose closest

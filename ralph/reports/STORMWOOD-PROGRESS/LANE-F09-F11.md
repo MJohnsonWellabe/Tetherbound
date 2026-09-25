@@ -301,6 +301,109 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   - WORLD.md says "nine top-level route records"; the data now has 15 (10 roads + 5 spurs). The coordinator owns that edit.
   - There is still no night capture of the lamps.
 
+## WO-F09-04 — Routes visible on the ground, junction lamps, electrified roads (`ralph/stormwood-f09-road-surface`, stacked on WO-F09-03, merged with main fe07d0d28)
+
+- **Finding (code-blind judge on `sheet_wo03_spurs.jpg`):** a player walking the road would not notice a side path. Roads and spurs were invisible on the ground. The junction lamp read as decoration.
+  - **Root cause:** the Stormwood bake wrote heights only, and every control texel stayed on Terrain3D's auto shader.
+- **Route paint** (`build_stormwood_terrain.gd`, new `data/config/stormwood_road_surface.json`):
+  - **What is painted:** every one of the 15 routes, including the 5 spurs.
+  - **Texel value:** `base = overlay = path` (terrain_playground slot 3), blend 0, auto bit cleared. This is Meadows' measured base-id rule; a partial blend does not draw on this build. Every other texel keeps the default auto texel.
+  - **Lane half-width by kind:** critical 2.8 m, alternate and loop 2.5 m, island 2.3 m, spur 2.0 m.
+  - **Edge:** 0.45 m of coherent wander on a 26 m wavelength, plus a 0.6 m per-texel fringe. The fringe uses an integer hash, so it is the same on every machine.
+  - **Spur junction:** the spur flares 2.4 m wider at the junction, easing out over 14 m.
+  - **Result:** 29,580 texels painted.
+  - **Grass:** `grass_field.gd` reads the same control map, so grass leaves the lanes and its stone tier fills them. No shared file was edited.
+- **Height proof:**
+  - `tools/probe_stormwood_terrain_channels.gd` decodes every region, old against new. In all 108 regions the height_map, color_map and height_range are identical. The sha256 over all height bytes is `56dcc98c…65e7d2` both before and after.
+  - Only the control map differs: 40 regions, 29,580 texels, every one `0x18c00000`.
+  - `test_committed_heights_still_match_the_heightfield` samples about 3,000 committed heights against `stormwood_heightfield.gd`. The worst difference is under 1 mm.
+- **Determinism:**
+  - Godot's resource saver had been giving every region's map images a random `Image_xxxxx` id. Two bakes of the same content therefore differed in bytes, including the previously committed files.
+  - The bake now names the three map sub-resources before saving.
+  - Two full in-place bakes are byte-identical over all 109 files (108 regions + manifest). The sha256 of the sorted `sha256sum` list is `d045fbf2…4dbfe`.
+  - The manifest fingerprint now covers the surface config and `terrain_playground.json` too (it already covered `stormwood_world.json`). Moving a route stales the bake.
+- **Scatter:** the `stormwood_pockets.json` edit stales the scatter fingerprint (the whole file is a source). I re-baked it. All 108 bins are byte-identical and only `manifest.json` changed.
+- **Junction lamps** (`spur_marker.lamp` overrides `mouth_lure` for the junction post only):
+  - Post 5.2 m, lantern ×2.1, flame centre 4.7 m up (2.6× the trainer).
+  - Pale post `#e2cfa4`, which separates from the dark trunks.
+  - Unshaded flame at emission 8, plus a 1.2 m additive glow billboard built from a generated radial gradient (no new asset).
+  - It stands on the verge of the painted spur, inside its tree-cleared corridor. The mouth lamps are unchanged.
+- **Compatibility fades, measured** (`tools/probe_compat_fade_synthetic.gd`: a still scene with the pocket config's exact settings; in-world diffs were swamped by wind and sky motion even with a noise floor):
+  - **Lamp light (Light3D distance fade, gone by 60 m): works.**
+    - Floor light under the lamp by camera distance: 20 m 42.9, 44 m 6.9, 50 m 4.4, 55 m 1.9, 59 m 0.08, 62 m 0, 70 m 0.
+    - No fallback needed.
+  - **Palisade and lamp meshes (visibility_range_end 250 m, margin 30 m, FADE_SELF): no fade in Compatibility.**
+    - The box is at full brightness at 249, 265 and 279 m, and gone at 285 m. That is a hard pop at `models_m + models_fade_m` = 280 m.
+    - The config comment's "fading over models_fade_m" is therefore not true on this renderer. I did not re-tune it: any `stormwood_pockets.json` edit stales the scatter bake.
+  - **In-world frame pairs:** `wo04_fade/` and `sheet_wo04_fade.jpg`, with numbers in `world_fade_probe.txt`.
+    - Lamp at 40 m and 70 m, light on and hidden. The light was raised to energy 40 for the probe, and rain was hidden.
+    - Palisade at 230 m and 270 m.
+    - At 40 m the warm ground pool shows with the light on. In the 70 m pair a wild bird creature stands between the camera and the lamp. The palisade is a small grey clump on the horizon at both 230 and 270 m, as expected for a cut at 280 m.
+- **Review nit, route grounding:** `test_stormwood_trainers_data` measured the trainer anchor's route distance against every route, spurs included.
+  - **Rule now:** a trainer is route-grounded only against **through routes**, which is every kind except `spur` (a spur is a dead-end lane to one pocket).
+  - A new control shows that the Verge pocket mouth (on its spur, far from any road) fails the check, and passes only if the spur is counted as a road.
+  - **Proposed WORLD.md wording, for the coordinator:** "Route-grounded placements (trainer anchors) measure distance to through routes only; `kind: spur` lanes to pockets do not count."
+- **Owner direction (verbatim):** "Can you make the path and roads electrified with yellow electricity flowing through them somehow in the ground."
+  - **Build:** `scripts/world/stormwood_road_current.gd`, `shaders/stormwood_road_current.gdshader`, and `data/config/stormwood_road_current.json`. The config is kept separate from the surface config so tuning the look never stales the terrain bake.
+  - **Geometry:**
+    - Every route and spur gets terrain-conforming ribbon chunks: at most 48 m long, 1 m rows, 5 columns, lifted 8 cm on the live Terrain3D height.
+    - The ribbon is 0.85 of the painted lane width, and the shader feathers it to nothing well inside that.
+    - 574 chunks share one ShaderMaterial. They have no colliders and cast no shadow, and each has a visibility_range_end of 150 m.
+    - The shader fades the current out over the last 25 m itself, because FADE_SELF does not work in Compatibility.
+    - A vertex depth-pull (a slide along the view ray, so nothing moves on screen) keeps the far, coarser terrain mesh from swallowing the ribbon.
+  - **Look:**
+    - Additive and unshaded: three meandering, jagged, broken cracks per lane plus a hairline web.
+    - Comet-shaped charge pulses run along each crack on its own phase, with a pointed head. They flow at 7 m/s with 11 m spacing.
+    - A light crackle flicker plays on top.
+    - Colours are `#fff4b0` core and `#ffc21a` edge (yellow/gold). They are not the magenta telegraph `#ff40e6` and not Team Tether oxblood.
+  - **Flow direction:** toward the Dynamo `(-100, 5470)`. Each open route flows from its end farther from the Dynamo to its nearer end.
+    - Closed loops (the five loops and `crown_ring`, whose first point equals their last) have no nearer end. They flow in polyline order.
+  - **Presentation only:** nothing is built when `simulation_only`. The only script work after build is a 0.5 s timer.
+  - **Reduced motion** (`motion_prefs`): flow drops to 1.2 m/s and flicker to 0. The timer follows the setting live.
+  - **Storm coupling:** `set_storm_intensity(0..1)` sets one uniform.
+    - The timer reads `StormwoodSurge.phase`. Main's surge-readability exposes no phase signal, so this reads its public field; `stormwood_surge.gd` is not edited.
+    - Per-phase values come from config: Calm 0.55, Building 0.78, Break 1.0, Fading 0.4, eased over 2.5 s.
+    - After `stormwood:long_storm_ended` (the flag the surge itself reads for its aftermath) the value is 0.18.
+    - No OmniLights were added at junctions.
+  - **Cost** (per-frame records in `frames_wo04_current.json`):
+    - 8–14 chunks are within draw range at any stand, out of 574.
+    - At the motion-strip stand, frame draw calls are 5,744 with the current and 5,740 without: +4.
+    - Build time is not separately measured; it is inside the world build.
+    - Not profiled on an Ally.
+- **Tests (each with its negative control):**
+  - `test_stormwood_road_surface`, 10 tests:
+    - Every centreline has at least 97% path texels. Control: routes moved 40 m sideways, and an unpainted map.
+    - No path texel is more than 7.8 m from every route. Control: a stray painted patch is found.
+    - The last 12 m to each spur's mouth and its first 20 m are painted. Control: 12 m inside the pocket is not path.
+    - Painted width per kind is within 0.9 m of config. Controls: double width is rejected, and a 1.2 m synthetic lane measures as its own width.
+    - The junction flare is wider at 7 m than at 30 m. Control: no flare gives a flat half-width.
+    - The bake is fresh against its fingerprint. Control: moving a spur point 1 m stales it.
+    - Committed heights equal the heightfield. Control: a field 1 m higher is caught.
+    - Junction lamp size, emission, halo and collider all come from config. Control: the unchanged mouth lamp fails the 2.4× height check.
+    - Config validation. Control: an unknown route kind and an unknown slot are refused.
+  - `test_stormwood_road_current`, 7 tests:
+    - Chunks cover at least 98% of every route and spur. Control: stripping the spur chunks is caught.
+    - Chunks have a range limit, no shadow, one shared material and no collision. Control: an added body is found.
+    - Nothing is built on simulation_only. Control: a presentation world does build.
+    - Reduced motion gives calm flow and 0 flicker. Control: the live toggle back restores both.
+    - Colours come from config and have a yellow-gold hue (35–65°). Controls: magenta and oxblood are rejected.
+    - The ribbon lies inside the lane and flows toward the Dynamo. Controls: width fraction 1.3 leaves the lane, and an outbound polyline is reversed.
+    - Intensity comes from config per phase and is clamped. Control: an unknown phase reads as Calm.
+  - `test_stormwood_trainers_data`: the spur rule above.
+  - Tests, SCRIPT ERROR grep: the final run of the added/changed files (`test_stormwood_road_surface`, `test_stormwood_road_current`, `test_stormwood_pockets`, `test_stormwood_trainers_data` and `test_stormwood_terrain_bake`): 35 tests, 3,665 assertions, 0 failed, 0 SCRIPT ERROR. Before the main merge, `--only=test_stormwood_,test_road_creature_visibility,test_scatter_,vegetation` ran 365 tests, 0 failed, 0 SCRIPT ERROR.
+- **Captures** (production CameraRig, HUD off, Calm; `visual/f09/README.md` has per-frame notes):
+  - `wo04_after/`, sheet `sheet_wo04_spurs.jpg`: road paint only (the current not mounted); the six spur frames and two road stretches.
+  - `wo04_current/`, sheets `sheet_wo04_current_day.jpg` and `sheet_wo04_current_night_motion.jpg`: the same eight frames with the current, two stretches at the art.json `night` preset, and a four-frame motion strip at a pinned shader clock of 100.00, 100.25, 100.50 and 100.75 s.
+  - `wo04_fade/`, sheet `sheet_wo04_fade.jpg`: see above.
+  - **Sky:** main's new surge skies are merged, so these show the Calm overcast. The always-purple sky is not on this branch.
+  - The frames were not re-judged blind.
+- **Open:**
+  - **Understory on the lanes:** the scatter's non-colliding understory (ferns, mushroom shelves, bushes) still stands on painted lanes in places, e.g. Conductor's junction. Only colliders keep the road corridor. Fixing this means a `stormwood_scatter.gd` rule and a re-bake.
+  - **Palisade pop:** it pops at 280 m instead of fading, and the config comment overstates it (see above).
+  - **Path colour:** the path slot keeps the Stormwood `737080` multiplier, so the dirt is mid-brown rather than Palworld-pale.
+  - **Current by day:** the current is subtle in daylight, by design, since it is additive. It is judged at night / on the storm sky.
+  - **Not verified:** no blind re-judge, no Ally profile, and the current's Surge coupling has not been seen live across a Break.
+
 ## WO-F10-06 — Surge phases readable without HUD (`ralph/stormwood-f10-surge-readability`)
 
 - **Anchor:** F10 / ACCEPTANCE §6.1 F10: lightning with a 1.2 s / 3 m telegraph, and Calm/Building/Break/Fading readable without HUD text. The restored-sky view has to be distinct. ART_DIRECTION and SYSTEMS define the Stormwood look for each phase.

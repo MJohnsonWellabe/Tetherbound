@@ -13,6 +13,7 @@ const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
 const STRUCK_SENTINEL := preload("res://scripts/world/stormwood_struck_sentinel.gd")
 const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
+const ROAD_CURRENT := preload("res://scripts/world/stormwood_road_current.gd")
 const GLASS_FIELD := preload("res://scripts/world/stormwood_glass_field.gd")
 const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
 const SETTLEMENTS := preload("res://scripts/world/village.gd")
@@ -109,6 +110,7 @@ func _ready() -> void:
 	_build_return_gate()
 	_build_rootgate()
 	_build_pockets()
+	_build_road_current()
 	var settlements := SETTLEMENTS.new()
 	settlements.name = "RodfolkSettlements"
 	settlements.config_path = "res://data/config/stormwood_settlements.json"
@@ -273,6 +275,21 @@ func _build_pockets() -> void:
 	pockets.name = "StormwoodPockets"
 	add_child(pockets)
 	pockets.build(self)
+
+## Owner direction on WO-F09-04: yellow current in every painted road and
+## spur lane. Client presentation only (the node builds nothing on a
+## simulation_only world); it lies on the live Terrain3D surface.
+func _build_road_current() -> void:
+	var current := ROAD_CURRENT.new()
+	current.name = "StormwoodRoadCurrent"
+	add_child(current)
+	var data: Object = _terrain.get("data") if _terrain != null else null
+	var height := Callable()
+	if data != null and data.has_method("get_height"):
+		height = func(x: float, z: float) -> float:
+			var y := float(data.call("get_height", Vector3(x, 0.0, z)))
+			return y if is_finite(y) else ground_height_at(x, z)
+	current.build(self, height)
 
 func _stand_up_ground_cover() -> void:
 	if simulation_only or not GROUND_COVER.is_enabled():
