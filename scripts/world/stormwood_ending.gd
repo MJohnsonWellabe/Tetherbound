@@ -28,6 +28,9 @@ const PERSONAL_RECEIPT_FLAG := "stormwood:legendary_ceremony_settled"
 ## `legendary_resolution:<accepted|refused>:<character>`; world-scoped by the
 ## `stormwood:` prefix and committed once by the host.
 const RESOLUTION_PREFIX := "stormwood:legendary_resolution:"
+## Its last line carries `confirm_effect: stormheart:accept` only to make it a
+## Yes/No consent line; the answer is read from the panel's `completed` signal
+## and nothing drains that effect.
 const OFFER_CONVERSATION := "stormwood_stormheart_offer"
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
@@ -241,7 +244,6 @@ func _settle_for(peer: int, intent: Dictionary) -> void:
 	claims[character] = claim
 	state["claims"] = claims
 	_store_state(state)
-	_submit_resolution(claim["kept"], character)
 	# The first decision records the world's single offer fact; later
 	# participants' decisions are personal and need no second world write.
 	if not _has(OFFER_FLAG):
@@ -253,6 +255,7 @@ func _settle_for(peer: int, intent: Dictionary) -> void:
 			_store_state(state)
 			_refuse(peer, "The world could not record the ceremony. Try again.")
 			return
+	_submit_resolution(bool(claim["kept"]), character)
 	_save_world_claim()
 	_broadcast(_state_event())
 
