@@ -117,12 +117,23 @@ const KEY_ENERGY := 1.2
 const KEY_COLOUR := Color(1.0, 0.96, 0.90)
 const RIM_ENERGY := 0.55
 const RIM_COLOUR := Color(0.78, 0.87, 1.0)
+## Showcase (a legendary's offer, X03): the moment is the game's biggest
+## reward, and a grey model viewer undersold it (blind judge). A warm rim picks
+## the silhouette out of the slate and a thin halo ring rings the ground disc.
+## Gold is the UI's progression accent (UX: "warm gold progression accents"),
+## never red; it also separates from a blue creature.
+const SHOWCASE_RIM_COLOUR := Color(1.0, 0.84, 0.52)
+const SHOWCASE_RIM_ENERGY := 1.3
+const SHOWCASE_HALO_COLOUR := Color(0.85, 0.75, 0.54)
+const SHOWCASE_HALO_ENERGY := 0.9
 
 var _world: Node3D = null
 var _viewport: SubViewport = null
 var _turntable: Node3D = null
 var _camera: Camera3D = null
 var _ground: MeshInstance3D = null
+var _rim: DirectionalLight3D = null
+var _halo: MeshInstance3D = null
 var _body: Node3D = null
 var _species_id: String = ""
 ## OF27: tracked alongside `_species_id` so a same-species swap (releasing a
@@ -193,11 +204,11 @@ func _build_world() -> void:
 	key.light_color = KEY_COLOUR
 	_world.add_child(key)
 
-	var rim := DirectionalLight3D.new()
-	rim.rotation = Vector3(deg_to_rad(-20.0), deg_to_rad(200.0), 0.0)
-	rim.light_energy = RIM_ENERGY
-	rim.light_color = RIM_COLOUR
-	_world.add_child(rim)
+	_rim = DirectionalLight3D.new()
+	_rim.rotation = Vector3(deg_to_rad(-20.0), deg_to_rad(200.0), 0.0)
+	_rim.light_energy = RIM_ENERGY
+	_rim.light_color = RIM_COLOUR
+	_world.add_child(_rim)
 
 	# A subtle disc for the creature to stand on, so it reads as grounded
 	# rather than floating in a flat field. Sized to the spin cylinder in
@@ -220,6 +231,28 @@ func _build_world() -> void:
 	_ground.position = Vector3(0.0, -0.011, 0.0)
 	_world.add_child(_ground)
 
+	# The showcase halo: a thin ring at the disc's rim, a child of the disc so
+	# it follows its scale; hidden unless `set_showcase(true)`.
+	_halo = MeshInstance3D.new()
+	_halo.name = "ShowcaseHalo"
+	var ring := TorusMesh.new()
+	ring.inner_radius = 0.955
+	ring.outer_radius = 1.0
+	ring.rings = 64
+	_halo.mesh = ring
+	var halo_material := StandardMaterial3D.new()
+	halo_material.albedo_color = SHOWCASE_HALO_COLOUR
+	halo_material.emission_enabled = true
+	halo_material.emission = SHOWCASE_HALO_COLOUR
+	halo_material.emission_energy_multiplier = SHOWCASE_HALO_ENERGY
+	halo_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	_halo.material_override = halo_material
+	_halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_halo.scale = Vector3(1.0, 0.4, 1.0)
+	_halo.position = Vector3(0.0, 0.012, 0.0)
+	_halo.visible = false
+	_ground.add_child(_halo)
+
 	_camera = Camera3D.new()
 	_camera.fov = CAMERA_FOV_DEG
 	_camera.current = true
@@ -231,6 +264,20 @@ func _build_world() -> void:
 	_turntable = Node3D.new()
 	_world.add_child(_turntable)
 	_refit()
+
+
+## Present the creature as a prize (a legendary's offer): warm rim light and a
+## halo ring on the ground disc. Off restores the ordinary preview.
+func set_showcase(on: bool) -> void:
+	if _rim != null:
+		_rim.light_color = SHOWCASE_RIM_COLOUR if on else RIM_COLOUR
+		_rim.light_energy = SHOWCASE_RIM_ENERGY if on else RIM_ENERGY
+	if _halo != null:
+		_halo.visible = on
+
+
+func showcase() -> bool:
+	return _halo != null and _halo.visible
 
 
 ## Build (or rebuild) the preview for `species_id`. Safe to call repeatedly —

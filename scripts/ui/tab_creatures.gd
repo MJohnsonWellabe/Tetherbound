@@ -1838,6 +1838,7 @@ func _begin_guardian_confirm(pending: RefCounted) -> void:
 	_farewell_panel.visible = true
 	# The viewport shows the volunteer itself while the question is up, wide.
 	_viewport.custom_minimum_size.x = GUARDIAN_PREVIEW_WIDTH
+	_viewport.call("set_showcase", true)
 	_farewell_title.add_theme_font_size_override("font_size", GUARDIAN_TITLE_FONT)
 	_focused = PARTY.MAX_CREATURES
 	menu.call("hold_input", true)
@@ -2140,6 +2141,7 @@ func _end_guardian_confirm(land: int) -> void:
 	_release_stage = ""
 	if _viewport != null:
 		_viewport.custom_minimum_size.x = float(CREATURE_VIEWPORT.VIEWPORT_SIZE.x)
+		_viewport.call("set_showcase", false)
 	if _farewell_title != null:
 		_farewell_title.add_theme_font_size_override("font_size", UITokens.FONT_TITLE)
 	if menu != null:

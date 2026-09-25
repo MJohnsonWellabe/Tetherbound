@@ -417,3 +417,18 @@ func _box(points: PackedVector3Array) -> AABB:
 		box = box.expand(p)
 	return box
 
+
+func test_showcase_is_warm_never_red_and_switches_off() -> void:
+	var widget: SubViewportContainer = VIEWPORT.new()
+	widget.call("_build_world")
+	assert_false(bool(widget.call("showcase")), "ordinary preview by default")
+	widget.call("set_showcase", true)
+	assert_true(bool(widget.call("showcase")), "showcase on")
+	for colour: Color in [VIEWPORT.SHOWCASE_RIM_COLOUR, VIEWPORT.SHOWCASE_HALO_COLOUR]:
+		var hue := colour.h * 360.0
+		assert_true(hue > 25.0 and hue < 60.0, "showcase light is warm gold, not red (hue %.0f)" % hue)
+	widget.call("set_showcase", false)
+	assert_false(bool(widget.call("showcase")), "showcase off restores the ordinary preview")
+	assert_eq((widget.get("_rim") as DirectionalLight3D).light_color, VIEWPORT.RIM_COLOUR)
+	widget.free()
+
