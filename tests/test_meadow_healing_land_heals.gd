@@ -250,16 +250,21 @@ func test_by_default_a_fallen_pylon_leaves_no_collider() -> void:
 	healing.free()
 
 
-func test_a_pylon_with_no_clear_direction_stays_standing_and_is_counted() -> void:
+func test_an_unbaked_pylon_with_no_clear_direction_stays_standing_and_is_counted() -> void:
 	var healing: Node3D = HEALING.new()
-	# Standing ON a road: every direction's footprint starts inside the band.
+	# The holder is not in the baked table, so this exercises the search
+	# fallback; the road check is made impossible to pass.
 	var bands: Array = preload("res://scripts/world/playground_heightfield.gd").new().call("road_bands")
 	assert_false(bands.is_empty())
-	var on_road: Vector2 = ((bands[0] as Dictionary)["line"] as PackedVector2Array)[1]
+	var line: PackedVector2Array = (bands[0] as Dictionary)["line"]
+	var on_road: Vector2 = line[1]
 	var parts := _bare_pylon(Vector3(on_road.x, 3, on_road.y))
 	var holder: Node3D = parts[0]
+	holder.name = "UnbakedConduits"
 	var pylon: MeshInstance3D = parts[1]
 	var block: Dictionary = (_config().get("pylons", {}) as Dictionary).duplicate()
+	# A carriageway margin wider than any fall: every direction is blocked.
+	block["road_margin"] = 1000.0
 	var before := pylon.transform
 	assert_false(bool(healing.call("_topple_one", pylon, holder, block, 0.0, 0.0, 0)))
 	assert_true(pylon.transform.is_equal_approx(before), "left exactly where it stood")
@@ -267,6 +272,55 @@ func test_a_pylon_with_no_clear_direction_stays_standing_and_is_counted() -> voi
 	assert_eq((healing.call("toppled_pylons") as Array).size(), 0)
 	holder.free()
 	healing.free()
+
+
+func test_an_authored_null_stays_standing_and_a_baked_azimuth_is_obeyed() -> void:
+	var block: Dictionary = (_config().get("pylons", {}) as Dictionary).duplicate()
+	block["falls"] = {"ApproachConduits/Pylon_0": null}
+	var healing: Node3D = HEALING.new()
+	var parts := _bare_pylon(OFF_MAP)
+	assert_false(bool(healing.call("_topple_one", parts[1], parts[0], block, 0.0, 0.0, 0)), "null = stays standing")
+	assert_eq(int(healing.call("pylons_left_standing")), 1)
+	(parts[0] as Node).free()
+	healing.free()
+
+	block["falls"] = {"ApproachConduits/Pylon_0": 90.0}
+	healing = HEALING.new()
+	parts = _bare_pylon(OFF_MAP)
+	var pylon: MeshInstance3D = parts[1]
+	assert_true(bool(healing.call("_topple_one", pylon, parts[0], block, 0.0, 0.0, 0)))
+	var up := pylon.transform.basis.y.normalized()
+	assert_true(up.x > 0.9, "azimuth 90 = falls toward +X, up now %s" % str(up))
+	(parts[0] as Node).free()
+	healing.free()
+
+
+func test_the_baked_table_covers_every_pylon_run_with_real_azimuths() -> void:
+	var block: Dictionary = _config().get("pylons", {})
+	var table: Dictionary = block.get("falls", {})
+	assert_eq(table.size(), 29, "15 approach + 4 quarry + 10 relay")
+	var left := 0
+	for key: String in table.keys():
+		assert_true(key.begins_with("ApproachConduits/") or key.begins_with("TetherConduits/")
+			or key.begins_with("Conduits_"), key)
+		if table[key] == null:
+			left += 1
+			continue
+		assert_between(float(table[key]), 0.0, 360.0, key)
+	assert_eq(left, 0, "owner decision: the dark pylons are fallen -- none authored to stand")
+	# Neighbours in the baked table do not fall alike either.
+	for i in 14:
+		var a := HEALING.azimuth_direction(float(table["ApproachConduits/Pylon_%d" % i]))
+		var b := HEALING.azimuth_direction(float(table["ApproachConduits/Pylon_%d" % (i + 1)]))
+		assert_true(rad_to_deg(absf(a.angle_to(b))) >= 20.0, "approach %d/%d" % [i, i + 1])
+
+
+func test_resting_half_depth_is_half_the_lying_thickness() -> void:
+	var local := AABB(Vector3(-0.85, -3.0, -0.85), Vector3(1.7, 6.0, 1.7))
+	var fallen := HEALING.topple_transform(Transform3D(Basis.IDENTITY, Vector3(0, 3, 0)),
+		Vector3(0.85, 0, 0), Vector2(1, 0), deg_to_rad(90.0))
+	assert_almost_eq(HEALING.resting_half_depth(fallen, local), 0.85, 0.001)
+	assert_almost_eq(HEALING.resting_half_depth(Transform3D.IDENTITY, local), 0.0, 0.001, "upright: no lying thickness")
 
 
 func test_the_severed_spokes_stay_standing() -> void:

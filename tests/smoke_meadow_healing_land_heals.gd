@@ -52,7 +52,15 @@ func _run() -> void:
 		print("land-heals FAIL: '%s' was already set on boot" % FLAG)
 		quit(1)
 		return
+	if OS.get_cmdline_user_args().has("--bake-falls"):
+		# OFFLINE: print the `pylons.falls` table for meadow_healing.json.
+		var table: Dictionary = healing.call("bake_fall_table")
+		print("FALLS_JSON:" + JSON.stringify(table))
+		print("FALLS_REASONS:" + JSON.stringify(healing.call("bake_reasons")))
+		quit(0)
+		return
 	var spokes_before := _spoke_pylon_transforms(world)
+	_check_table_covers_the_world(world)
 
 	# --- 1. live: the flag lands ---------------------------------------------
 	_game.get("progression").call("set_flag", FLAG)
@@ -83,6 +91,19 @@ func _run() -> void:
 	_check_spokes_untouched(world, spokes_before, "live")
 
 	# --- 2. a real save, and a Continue into a fresh world --------------------
+	# Saved from a DIFFERENT place than the live run stood (home spawn): the
+	# reload boots with the player at the relay, so vegetation colliders,
+	# streaming and everything else local to the player differ. The pylons
+	# must not.
+	var player := world.get_node_or_null(^"Player") as Node3D
+	if player == null:
+		_fail("no Player to move before saving")
+	else:
+		var relay := Vector3(346.5, 0.0, 3749.1 + 30.0)
+		relay.y = float(world.call("ground_height_at", relay.x, relay.z)) + 0.5
+		player.global_position = relay
+		for i in 30:
+			await physics_frame
 	_fill_party()
 	if not bool(_game.call("save_game", SLOT)):
 		_fail("Game.save_game(%d) failed" % SLOT)
@@ -136,7 +157,11 @@ func _run() -> void:
 	for key: String in reload_poses.keys():
 		if not live_poses.has(key):
 			_fail("(reload) %s fell after the reload but not live" % key)
-	print("(reload) %d fallen pylons compared per pylon against the live world" % live_poses.size())
+	var reloaded_player := fresh.get_node_or_null(^"Player") as Node3D
+	var where := reloaded_player.global_position if reloaded_player != null else Vector3.INF
+	if reloaded_player == null or Vector2(where.x - 346.5, where.z - 3779.1).length() > 20.0:
+		_fail("(reload) the player did not come back at the relay (%s): the different-position reload was not exercised" % str(where))
+	print("(reload) %d fallen pylons compared per pylon against the live world; reloaded player at %s" % [live_poses.size(), str(where)])
 	for i in 30:
 		await physics_frame
 	_check_end_state(fresh, reloaded, "reload+30")
@@ -236,8 +261,13 @@ func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 ## static collider -- ApproachRamp above all. Checked from the pylon's actual
 ## final transform, independently of the direction search.
 func _check_walkable(world: Node, pylon: MeshInstance3D, tag: String) -> void:
-	var local := pylon.mesh.get_aabb()
 	var xform := pylon.global_transform
+	# The root (one base width out from the pivot) lies where the standing
+	# pylon already stood; check what the fall newly covers.
+	var full := pylon.mesh.get_aabb()
+	var sc := xform.basis.get_scale()
+	var trim := minf(maxf(full.size.x * sc.x, full.size.z * sc.z) / sc.y, full.size.y * 0.5)
+	var local := AABB(full.position + Vector3(0, trim, 0), full.size - Vector3(0, trim, 0))
 	var points: Array[Vector2] = []
 	var steps := maxi(int(ceil((xform.basis.y * local.size.y).length())), 1)
 	for s in steps + 1:
@@ -250,12 +280,14 @@ func _check_walkable(world: Node, pylon: MeshInstance3D, tag: String) -> void:
 	var label := "%s/%s" % [pylon.get_parent().name, pylon.name]
 	for raw: Variant in (_heightfield().call("road_bands") as Array):
 		var band: Dictionary = raw
-		var clearance := float(band["half"]) + float(band["shoulder"])
+		# The carriageway: a fallen pylon has no collider, so lying on a shoulder
+		# blocks nothing.
+		var clearance := float(band["half"])
 		var line: PackedVector2Array = band["line"]
 		for point: Vector2 in points:
 			var d := _polyline_distance(point, line)
 			if d < clearance:
-				_fail("(%s) %s lies %.2f m from a road band's centreline (half-width + shoulder %.2f)"
+				_fail("(%s) %s lies %.2f m from a road band's centreline (carriageway half-width %.2f)"
 					% [tag, label, d, clearance])
 				return
 	var space := (world as Node3D).get_world_3d().direct_space_state
@@ -277,7 +309,8 @@ func _check_walkable(world: Node, pylon: MeshInstance3D, tag: String) -> void:
 		var skip := false
 		var node: Node = other
 		while node != null:
-			if node.is_in_group("placed_building") or node.has_method("open_permanently"):
+			if node.is_in_group("placed_building") or node.has_method("open_permanently") \
+					or str(node.name) == "Vegetation":
 				skip = true
 			node = node.get_parent()
 		if not skip:
@@ -316,6 +349,42 @@ func _check_colliders_removed(pylons: Array, tag: String) -> void:
 	print("(%s) colliders checked in %d holders; %d fallen pylons checked clear of roads and static bodies"
 		% [tag, checked, _walk_checked])
 	_walk_checked = 0
+
+
+## Every pylon in every falling holder is in the authored `pylons.falls`
+## table, and the pylons authored to stay standing (null) are exactly
+## EXPECTED_STANDING -- a new one is a decision to record, not a surprise.
+const EXPECTED_STANDING: Array[String] = []
+
+
+func _check_table_covers_the_world(world: Node) -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/meadow_healing.json"))
+	var block: Dictionary = (parsed as Dictionary).get("pylons", {})
+	var table: Dictionary = block.get("falls", {})
+	var patterns: Array = block.get("holders", [])
+	var seen := 0
+	for node: Node in _all(world):
+		var matched := false
+		for raw: Variant in patterns:
+			matched = matched or str(node.name).match(str(raw))
+		if not matched:
+			continue
+		for child: Node in node.get_children():
+			if child is MeshInstance3D and str(child.name).begins_with("Pylon_"):
+				seen += 1
+				var key := "%s/%s" % [node.name, child.name]
+				if not table.has(key):
+					_fail("pylon %s is not in pylons.falls -- re-bake the table" % key)
+	var standing: Array[String] = []
+	for key: String in table.keys():
+		if table[key] == null:
+			standing.append(key)
+	standing.sort()
+	if standing != EXPECTED_STANDING:
+		_fail("authored left-standing pylons are %s, expected %s" % [str(standing), str(EXPECTED_STANDING)])
+	if table.size() != seen:
+		_fail("pylons.falls has %d entries for %d pylons in the world" % [table.size(), seen])
+	print("pylons.falls covers %d pylons; %d authored to stay standing %s" % [seen, standing.size(), str(standing)])
 
 
 func _pylon_poses(world: Node, healing: Node) -> Dictionary:

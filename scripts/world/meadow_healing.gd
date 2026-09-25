@@ -82,6 +82,7 @@ var _toppled: Array[Node3D] = []
 var _cables_hidden: int = 0
 var _left_standing: int = 0
 var _last_block_reasons: Dictionary = {}
+var _bake_reasons: Dictionary = {}
 ## [grown Rect2, band] per road band, built once for the pre-filters.
 var _band_rects: Array = []
 
@@ -831,17 +832,23 @@ func _heightfield() -> RefCounted:
 ## box collider (a SIBLING `StaticBody3D` at the pylon's XZ, see
 ## `severed_spokes.gd::_add_box_collider`) is switched off for the fall and
 ## REMOVED when it lands (`collider: "remove"`; `"lay_down"` keeps it, laid
-## along the ground). And the fall direction is chosen so the fallen body lies
-## clear of every road band (full width, out to the tip) and building apron,
-## overlaps no other static collider in the world (ramps, walls, ruins, gates),
-## and rests on the ground (top within `tip_tolerance`, nothing buried deeper
-## than `bury_tolerance`) within the allowed angles. A pylon with no clear
-## direction is LEFT STANDING (dead), warned about and counted
-## (`pylons_left_standing`) -- never dropped somewhere it should not lie.
+## along the ground).
 ##
-## The cables strung between pylons would float once they fall, so the
-## holder's `Conduit_*`/`DangleStub_*` pieces are hidden, as are the spans in
-## `pylons.cable_holders` that end on one.
+## DETERMINISM. Which way each pylon falls is AUTHORED data, `pylons.falls`,
+## baked offline by `bake_fall_table()`: it chose, per pylon, a direction whose
+## fall rests on the ground, newly covers no road carriageway or building
+## apron, and newly overlaps no fixed authored collider (ramps, walls, ruins).
+## The run-time fall reads only that table and the terrain, so it is the same
+## on every peer and every load -- it never asks the physics space, whose
+## vegetation colliders stream in around the LOCAL player and are removed by
+## harvesting. A pylon authored `null` stays standing (none today), counted in
+## `pylons_left_standing`; one missing from the table (unbaked new content)
+## falls back to the road/ground search, still without the collider query,
+## and warns.
+##
+## The cables strung between pylons would float once they fall, so the pieces
+## hanging from a fallen pylon are hidden (`_hide_spans_of`), as are the spans
+## in `pylons.cable_holders` that end on one.
 func _topple_the_pylons(immediate: bool) -> int:
 	var block: Dictionary = _config.get("pylons", {})
 	if not bool(block.get("enabled", true)) or _world == null:
@@ -861,16 +868,47 @@ func _topple_the_pylons(immediate: bool) -> int:
 				pylons.append(child as Node3D)
 		if pylons.is_empty():
 			continue
-		_cables_hidden += _hide_named(holder, prefixes)
+		var fallen: Dictionary = {}
 		for i in pylons.size():
 			var delay := float(i) * stagger
 			if _topple_one(pylons[i], holder, block, 0.0 if immediate else fall, delay, i):
 				toppled += 1
+				fallen[_pylon_index(pylons[i])] = true
+		_cables_hidden += _hide_spans_of(holder, fallen)
 	for raw: Variant in (block.get("cable_holders", []) as Array):
 		for node: Node in _all_nodes(_world):
 			if str(node.name) == str(raw):
 				_cables_hidden += _hide_named(node, prefixes)
 	return toppled
+
+
+func _pylon_index(pylon: Node) -> int:
+	return int(str(pylon.name).trim_prefix("Pylon_"))
+
+
+## Hide only the cable pieces that hang from a pylon that fell:
+## `Conduit_<i>_<s>` spans list entry i to i+1, `DangleStub_<i>_<s>` hangs
+## from entry i (severed_spokes.gd's own naming). A span between two pylons
+## that both still stand stays up.
+func _hide_spans_of(holder: Node, fallen: Dictionary) -> int:
+	var hidden := 0
+	for node: Node in holder.get_children():
+		var visual := node as Node3D
+		if visual == null or not visual.visible:
+			continue
+		var parts := str(node.name).split("_")
+		if parts.size() < 3:
+			continue
+		var i := int(parts[1])
+		var hangs := false
+		if parts[0] == "Conduit":
+			hangs = fallen.has(i) or fallen.has(i + 1)
+		elif parts[0] == "DangleStub":
+			hangs = fallen.has(i)
+		if hangs:
+			visual.visible = false
+			hidden += 1
+	return hidden
 
 
 func _name_matches(node_name: String, patterns: Array) -> bool:
@@ -916,13 +954,26 @@ func _topple_one(pylon: Node3D, holder: Node3D, block: Dictionary, seconds: floa
 		if Vector2(at.x, at.z).distance_to(Vector2(start.origin.x, start.origin.z)) <= reach:
 			colliders.append(body)
 
-	var plan := _plan_fall(str(holder.name), index, start, local, colliders, block)
+	# The direction is AUTHORED: `pylons.falls` holds one baked azimuth per
+	# pylon (see `bake_fall_table`), so the result is a pure function of
+	# config and terrain -- identical on every peer and every load, whatever
+	# vegetation has streamed in around whichever player, whatever has been
+	# harvested or repaired. A pylon missing from the table (new content not
+	# yet baked) falls back to the road/ground search WITHOUT the collider
+	# query, which is equally deterministic, and says so.
+	var key := "%s/%s" % [str(holder.name), str(pylon.name)]
+	var table: Dictionary = block.get("falls", {})
+	var plan: Dictionary = {}
+	if table.has(key):
+		if table[key] != null:
+			plan = _plan_along(start, local, azimuth_direction(float(table[key])), block)
+	else:
+		push_warning("meadow_healing: %s is not in pylons.falls; searching (roads and ground only) -- re-bake the table" % key)
+		plan = _plan_fall(str(holder.name), index, start, local, colliders, block, false)
 	pylon.set_meta(TOPPLED_META, true)
 	if plan.is_empty():
 		_left_standing += 1
-		push_warning("meadow_healing: %s/%s has no clear direction to fall (of the candidates: %d onto bad ground, %d across a road/apron, %d through another collider); left standing"
-			% [str(holder.name), str(pylon.name), int(_last_block_reasons["ground"]),
-				int(_last_block_reasons["road"]), int(_last_block_reasons["body"])])
+		push_warning("meadow_healing: %s is left standing (authored null in pylons.falls, or no clear direction)" % key)
 		return false
 	var pivot: Vector3 = plan["pivot"]
 	var dir: Vector2 = plan["dir"]
@@ -1001,50 +1052,116 @@ func _set_global(node: Node3D, value: Transform3D) -> void:
 ## when none of `direction_candidates` is clear. Candidate 0 is the pylon's own
 ## deterministic azimuth (see `fall_direction`); later candidates step round.
 func _plan_fall(holder_key: String, index: int, start: Transform3D, local: AABB,
-		own_colliders: Array[Node3D], block: Dictionary) -> Dictionary:
+		own_colliders: Array[Node3D], block: Dictionary, use_bodies: bool = true) -> Dictionary:
+	var candidates := maxi(int(block.get("direction_candidates", 32)), 1)
+	_last_block_reasons = {"ground": 0, "road": 0, "body": 0}
+	for attempt in candidates:
+		var plan := _plan_along(start, local, fall_direction(holder_key, index, attempt, candidates), block)
+		if plan.is_empty() or not _rests_on_ground(plan["final"], local, block):
+			_last_block_reasons["ground"] += 1
+			continue
+		# The root -- one base-width out from the pivot -- lies where the
+		# standing pylon already stood; only what the fall NEWLY covers must
+		# be clear of the carriageway and of other colliders.
+		var reach := beyond_root(local, plan["final"])
+		if not _footprint_clear_of_roads(fallen_footprint(plan["final"], reach), block):
+			_last_block_reasons["road"] += 1
+			continue
+		if use_bodies and not _footprint_clear_of_bodies(plan["final"], reach, own_colliders):
+			_last_block_reasons["body"] += 1
+			continue
+		return plan
+	return {}
+
+
+## The fall toward `dir`, settled on the terrain: {dir, pivot, angle, final},
+## or {} when the tip cannot reach the ground inside the angle clamp (a pylon
+## falling across a gully would end with its tip in the air). The first angle
+## reads the ground at one point; the top lands wherever the rotation puts it,
+## so it is measured twice and turned by the gap until the pylon's UNDERSIDE
+## (not its centre line) meets the ground at the tip.
+func _plan_along(start: Transform3D, local: AABB, dir: Vector2, block: Dictionary) -> Dictionary:
 	var box := start * local
 	var height := maxf(box.size.y, 0.5)
 	var base := Vector3(start.origin.x, box.position.y, start.origin.z)
-	var candidates := maxi(int(block.get("direction_candidates", 16)), 1)
 	var sink := float(block.get("sink_deg", 3.0))
 	var min_deg := float(block.get("min_angle_deg", 70.0))
 	var max_deg := float(block.get("max_angle_deg", 108.0))
-	_last_block_reasons = {"ground": 0, "road": 0, "body": 0}
-	for attempt in candidates:
-		var dir := fall_direction(holder_key, index, attempt, candidates)
-		var pivot := base + Vector3(dir.x, 0.0, dir.y) * float(block.get("pivot_offset", 0.85))
-		var tip := Vector2(pivot.x, pivot.z) + dir * height
-		var ground_pivot := _ground(pivot.x, pivot.z)
-		var ground_tip := _ground(tip.x, tip.y)
-		# The tip has to reach the ground inside the clamp: a pylon falling
-		# across a gully would otherwise end with its tip in the air.
-		if not is_nan(ground_pivot) and not is_nan(ground_tip):
-			var raw := 90.0 - rad_to_deg(atan2(ground_tip - ground_pivot, height)) + sink
-			if raw < min_deg or raw > max_deg:
-				_last_block_reasons["ground"] += 1
+	var pivot := base + Vector3(dir.x, 0.0, dir.y) * float(block.get("pivot_offset", 0.85))
+	var tip := Vector2(pivot.x, pivot.z) + dir * height
+	var ground_pivot := _ground(pivot.x, pivot.z)
+	var ground_tip := _ground(tip.x, tip.y)
+	if not is_nan(ground_pivot) and not is_nan(ground_tip):
+		var raw := 90.0 - rad_to_deg(atan2(ground_tip - ground_pivot, height)) + sink
+		if raw < min_deg or raw > max_deg:
+			return {}
+	var angle := deg_to_rad(fall_angle_deg(height, ground_pivot, ground_tip, sink, min_deg, max_deg))
+	var final := topple_transform(start, pivot, dir, angle)
+	for _pass in 2:
+		var gap := _tip_gap(final, local)
+		if is_nan(gap):
+			break
+		gap -= resting_half_depth(final, local) * float(block.get("tip_rest_fraction", 0.6))
+		angle = clampf(angle + atan2(gap, height), deg_to_rad(min_deg), deg_to_rad(max_deg))
+		final = topple_transform(start, pivot, dir, angle)
+	return {"dir": dir, "pivot": pivot, "angle": angle, "final": final}
+
+
+## Half the vertical thickness of the box as it lies: how far its centre line
+## sits above its underside once fallen.
+static func resting_half_depth(final: Transform3D, local: AABB) -> float:
+	var b := final.basis
+	return 0.5 * (absf(b.x.y) * local.size.x + absf(b.z.y) * local.size.z)
+
+
+## Unit XZ direction for an authored azimuth (degrees; 0 = +Z, 90 = +X, the
+## same convention as `fall_direction`).
+static func azimuth_direction(deg: float) -> Vector2:
+	return Vector2(sin(deg_to_rad(deg)), cos(deg_to_rad(deg)))
+
+
+## OFFLINE: the full search (ground, carriageway, other authored colliders)
+## over every standing pylon, as the `pylons.falls` table to paste into
+## meadow_healing.json -- `{"Holder/Pylon_i": azimuth_deg or null}`. Run by
+## `tests/smoke_meadow_healing_land_heals.gd -- --bake-falls` on a fresh world
+## before the flag; never at run time. Vegetation and other mutable bodies are
+## excluded from the collider query even here (`is_fixed_world_collider`), so
+## the table does not depend on where the baking player stood.
+func bake_fall_table() -> Dictionary:
+	var block: Dictionary = _config.get("pylons", {})
+	var out: Dictionary = {}
+	var reasons: Dictionary = {}
+	for node: Node in _all_nodes(_world):
+		var holder := node as Node3D
+		if holder == null or not _name_matches(str(holder.name), block.get("holders", []) as Array):
+			continue
+		var index := 0
+		for child: Node in holder.get_children():
+			if not (child is MeshInstance3D and str(child.name).begins_with("Pylon_")):
 				continue
-		var angle := deg_to_rad(fall_angle_deg(height, ground_pivot, ground_tip, sink, min_deg, max_deg))
-		var final := topple_transform(start, pivot, dir, angle)
-		# Settle onto the real ground: the first angle reads the terrain at
-		# one point, but the top lands wherever the rotation puts it. Measure
-		# where the top actually is and turn by the gap, twice.
-		for _pass in 2:
-			var gap := _tip_gap(final, local)
-			if is_nan(gap):
-				break
-			angle = clampf(angle + atan2(gap, height), deg_to_rad(min_deg), deg_to_rad(max_deg))
-			final = topple_transform(start, pivot, dir, angle)
-		if not _rests_on_ground(final, local, block):
-			_last_block_reasons["ground"] += 1
-			continue
-		if not _footprint_clear_of_roads(fallen_footprint(final, local), block):
-			_last_block_reasons["road"] += 1
-			continue
-		if not _footprint_clear_of_bodies(final, local, own_colliders):
-			_last_block_reasons["body"] += 1
-			continue
-		return {"dir": dir, "pivot": pivot, "angle": angle, "final": final}
-	return {}
+			var pylon := child as MeshInstance3D
+			var start := pylon.global_transform
+			var own: Array[Node3D] = []
+			for sibling: Node in holder.get_children():
+				var body := sibling as StaticBody3D
+				if body != null and Vector2(body.global_position.x, body.global_position.z).distance_to(
+						Vector2(start.origin.x, start.origin.z)) <= float(block.get("collider_match_radius", 0.35)):
+					own.append(body)
+			var key := "%s/%s" % [str(holder.name), str(pylon.name)]
+			var plan := _plan_fall(str(holder.name), index, start, pylon.mesh.get_aabb(), own, block, true)
+			if plan.is_empty():
+				out[key] = null
+				reasons[key] = _last_block_reasons.duplicate()
+			else:
+				var dir: Vector2 = plan["dir"]
+				out[key] = snappedf(fposmod(rad_to_deg(atan2(dir.x, dir.y)), 360.0), 0.01)
+			index += 1
+	_bake_reasons = reasons
+	return out
+
+
+func bake_reasons() -> Dictionary:
+	return _bake_reasons
 
 
 ## Height of a fallen pylon's top (the centre of its top face) above the
@@ -1056,14 +1173,15 @@ func _tip_gap(final: Transform3D, local: AABB) -> float:
 	return NAN if is_nan(ground) else top.y - ground
 
 
-## The fallen pylon rests ON the ground: its top within `tip_tolerance` of the
-## terrain, and no point of its centre line buried deeper than
+## The fallen pylon rests ON the ground: its top's underside within
+## `tip_tolerance` of the terrain, and no point of its centre line buried deeper than
 ## `bury_tolerance` (a pylon lying through a hump, tip in the air over the dip
 ## beyond, fails both).
 func _rests_on_ground(final: Transform3D, local: AABB, block: Dictionary) -> bool:
 	var gap := _tip_gap(final, local)
 	if is_nan(gap):
 		return true
+	gap -= resting_half_depth(final, local) * float(block.get("tip_rest_fraction", 0.6))
 	if absf(gap) > float(block.get("tip_tolerance", 1.2)):
 		return false
 	var bury := float(block.get("bury_tolerance", 1.5))
@@ -1079,6 +1197,13 @@ func _rests_on_ground(final: Transform3D, local: AABB, block: Dictionary) -> boo
 ## World XZ points covering a fallen pylon's box: the full length, root to
 ## tip, at <= 1 m steps, across its whole width (both edges and the middle)
 ## in both of its horizontal-ish local axes.
+static func beyond_root(local: AABB, final: Transform3D) -> AABB:
+	var scale := final.basis.get_scale()
+	var width := maxf(local.size.x * scale.x, local.size.z * scale.z)
+	var trim := minf(width / maxf(scale.y, 0.001), local.size.y * 0.5)
+	return AABB(local.position + Vector3(0.0, trim, 0.0), local.size - Vector3(0.0, trim, 0.0))
+
+
 static func fallen_footprint(final: Transform3D, local: AABB) -> PackedVector2Array:
 	var out := PackedVector2Array()
 	var steps := maxi(int(ceil(local.size.y * final.basis.get_scale().y)), 1)
@@ -1096,13 +1221,15 @@ func _footprint_clear_of_roads(points: PackedVector2Array, block: Dictionary) ->
 	var field := _heightfield()
 	if field == null or points.is_empty():
 		return true
-	var margin := float(block.get("road_margin", 1.0))
+	var margin := float(block.get("road_margin", 0.25))
 	var bounds := Rect2(points[0], Vector2.ZERO)
 	for point: Vector2 in points:
 		bounds = bounds.expand(point)
 	for raw: Variant in _bands_near(bounds, margin):
 		var band: Dictionary = raw
-		var clearance := float(band["half"]) + float(band["shoulder"]) + margin
+		# The CARRIAGEWAY only: a fallen pylon has no collider, so one lying
+		# beside or along the road on its shoulder blocks nothing.
+		var clearance := float(band["half"]) + margin
 		var line: PackedVector2Array = band["line"]
 		for point: Vector2 in points:
 			if polyline_distance(point, line) < clearance:
@@ -1177,6 +1304,11 @@ func _footprint_clear_of_bodies(final: Transform3D, local: AABB, own: Array[Node
 		var other := hit.get("collider") as Object
 		if not is_fixed_world_collider(other):
 			continue
+		var hits: Array = _last_block_reasons.get("bodies", [])
+		var label := str(other.get("name"))
+		if not hits.has(label):
+			hits.append(label)
+		_last_block_reasons["bodies"] = hits
 		return false
 	return true
 
@@ -1190,7 +1322,8 @@ static func is_fixed_world_collider(other: Object) -> bool:
 	while node != null:
 		# Player-built pieces, and gates (whose pose depends on flags that
 		# land in a different order live and on a load).
-		if node.is_in_group("placed_building") or node.has_method("open_permanently"):
+		if node.is_in_group("placed_building") or node.has_method("open_permanently") \
+				or str(node.name) == "Vegetation":
 			return false
 		node = node.get_parent()
 	return true
