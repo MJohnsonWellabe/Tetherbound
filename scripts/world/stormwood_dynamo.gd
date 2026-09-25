@@ -27,6 +27,10 @@ var fight: Node
 var phase := "bank_cycle"
 var participants: Array[int] = []
 var contributors: Array[int] = []
+## Stable character ids of everyone who joined this attempt, captured when they
+## join so a later disconnect cannot erase them. The Stormheart ending reads
+## this to give each fight participant their own offer.
+var fighter_characters: Array[String] = []
 var _moves := MOVE_DB.new()
 var _actions: Dictionary = {}
 var _cooldowns: Dictionary = {}
@@ -327,6 +331,7 @@ func _reset_after_loss() -> void:
 	phase = str(rules.phase)
 	participants.clear()
 	contributors.clear()
+	fighter_characters.clear()
 	_actions.clear()
 	_cooldowns.clear()
 	_last_fired_serial = -1
@@ -348,6 +353,12 @@ func _apply_local_recovery() -> void:
 func _add_participant(peer: int) -> void:
 	if not participants.has(peer):
 		participants.append(peer)
+	var row: Dictionary = session.registry().row(peer)
+	var character := str(row.get("character_id", ""))
+	if character.is_empty() and peer == session.local_peer_id():
+		character = str(get_node("/root/Game").get("local").get("character_id"))
+	if not character.is_empty() and not fighter_characters.has(character):
+		fighter_characters.append(character)
 	if not contributors.has(peer):
 		contributors.append(peer)
 
@@ -395,7 +406,7 @@ func _restore_saved_state() -> void:
 
 func save_payload() -> Dictionary:
 	return {"rules": rules.save_data(), "participants": participants.duplicate(),
-		"contributors": contributors.duplicate()}
+		"contributors": contributors.duplicate(), "fighter_characters": fighter_characters.duplicate()}
 
 
 func load_payload(saved: Dictionary) -> void:
@@ -406,6 +417,10 @@ func load_payload(saved: Dictionary) -> void:
 		rules.load_data(rule_data as Dictionary)
 	participants = _unique_peers(saved.get("participants", []))
 	contributors = _unique_peers(saved.get("contributors", []))
+	fighter_characters.clear()
+	for raw: Variant in saved.get("fighter_characters", []):
+		if not str(raw).is_empty() and not fighter_characters.has(str(raw)):
+			fighter_characters.append(str(raw))
 
 
 func _progression() -> RefCounted:
