@@ -71,9 +71,11 @@ const CLOSE_FLUSH_FRAMES := 6
 ## 150+-30 ms delay: ralph/reports/INVITE-COOP.
 const REFUSAL_LINGER_S := 10.0
 const HOST_CLOSE_LINGER_S := 5.0
-## A client that says goodbye waits this long for the host to close the link.
-## The host closes only after it has read the goodbye; closing from the client
-## side straight away lets ENet discard the unread goodbye with the disconnect.
+## A client that says goodbye keeps its old transport open this long for the
+## host to close the link. The host closes only after it has read the goodbye;
+## closing from the client side straight away lets ENet discard the unread
+## goodbye with the disconnect. Only the detached transport waits: the session
+## itself ends at once (`_lingering_peer`).
 const GOODBYE_LINGER_S := 1.5
 
 const HOST_PEER_ID := PEER_REGISTRY.HOST_PEER_ID
@@ -150,6 +152,13 @@ var _pending_hello: Dictionary = {}
 ## for every remote peer to close (they tear down on the reason) or for
 ## `_closing_deadline_ms`, whichever is first.
 var _closing_frames: int = 0
+
+## A leaving client's old transport, detached from this Session and polled on
+## its own until the host closes it or GOODBYE_LINGER_S passes. The session is
+## already over (`is_active()` false, `session_ended` emitted), so the title can
+## host, load or join again straight away.
+var _lingering_peer: MultiplayerPeer = null
+var _lingering_deadline_ms := 0
 var _closing_deadline_ms: int = 0
 var _closing_reason: String = ""
 
@@ -166,6 +175,9 @@ var _rejected_disconnect_frames: Dictionary = {}
 ## reconnect window. A lost goodbye only means the seat is held, which is the
 ## safe direction.
 var _departing_peers: Dictionary = {}
+
+## Admitted peers whose character took a held reconnect seat at hello.
+var _reserved_rejoins: Dictionary = {}
 
 ## One snapshot chunk may be in flight per joining peer. The receiver boundary
 ## is raised only by BEGIN on the ledger channel; chunks remain independently
@@ -247,7 +259,6 @@ func max_peers() -> int:
 ## down box) leaves the session inactive, which is a solo game that cannot be
 ## joined -- not a game that refuses to start. `title_screen.gd` relies on that.
 func host(port: int = -1, peers: int = -1) -> bool:
-	_finish_pending_client_close()
 	if is_active():
 		return is_host()
 	var use_port := port if port > 0 else default_port()
@@ -274,7 +285,6 @@ func host(port: int = -1, peers: int = -1) -> bool:
 ## still pass through this Session rather than growing a parallel handshake.
 func host_with_peer(peer: MultiplayerPeer, cap: int = -1,
 		transport_kind: String = "steam") -> bool:
-	_finish_pending_client_close()
 	if is_active():
 		return is_host() and _peer == peer
 	if not transport_peer_valid(peer, true):
@@ -323,7 +333,6 @@ func host_with_peer(peer: MultiplayerPeer, cap: int = -1,
 ## finish" so a polling caller does not have to run its budget out to learn the
 ## connection was refused.
 func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> bool:
-	_finish_pending_client_close()
 	if is_active():
 		leave()
 		if is_active():
@@ -346,7 +355,6 @@ func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> boo
 ## `_on_connected_to_server()` drives the same hello path used by ENet.
 func join_with_peer(peer: MultiplayerPeer, character_summary: Dictionary = {},
 		transport_kind: String = "steam") -> bool:
-	_finish_pending_client_close()
 	if is_active():
 		leave()
 		if is_active():
@@ -495,12 +503,11 @@ func leave(reason: String = "left") -> void:
 			return
 	else:
 		_save_character_here()
-		if _say_goodbye():
-			_closing_reason = reason
-			_closing_frames = CLOSE_FLUSH_FRAMES
-			_closing_deadline_ms = Time.get_ticks_msec() + int(
-				1000.0 * float(_cfg("goodbye_linger_s", GOODBYE_LINGER_S)))
-			return
+		# The goodbye is sent into the transport now; the transport alone then
+		# waits for the host while the session ends below, synchronously.
+		_teardown(_say_goodbye())
+		session_ended.emit(reason)
+		return
 	_teardown()
 	session_ended.emit(reason)
 
@@ -737,6 +744,8 @@ func _rpc_hello(summary: Dictionary) -> void:
 			str(verdict.get("reason", "The host refused this connection.")))
 		return
 	var character_id: String = raw_character_id
+	if bool(_registry.call("has_reservation", character_id)):
+		_reserved_rejoins[sender] = true
 	var display_name := str(summary.get("display_name", ""))
 	var realm := str(summary.get("realm", "meadows"))
 	var appearance_id := str(summary.get("appearance_id", "trainer"))
@@ -1213,9 +1222,10 @@ func _rpc_goodbye() -> void:
 			_peer.disconnect_peer(sender)
 
 
-## Returns whether a goodbye went out; the caller then waits for the host to
-## close the link (or GOODBYE_LINGER_S) before tearing down. A goodbye that is
-## lost anyway only means the seat is held for the reconnect window.
+## Returns whether a goodbye went out. The caller then tears the session down
+## at once and leaves only the old transport polling (`_lingering_peer`) until
+## the host closes it. A goodbye that is lost anyway only means the seat is
+## held for the reconnect window.
 func _say_goodbye() -> bool:
 	# Only an admitted client holds a seat worth freeing. A failed or
 	# unfinished join tears down at once, so the title can host or join again
@@ -1251,8 +1261,14 @@ func _on_peer_connected(peer_id: int) -> void:
 
 func _on_peer_disconnected(peer_id: int) -> void:
 	_rejected_disconnect_frames.erase(peer_id)
+	# A joiner whose world snapshot was never acknowledged never played here;
+	# it gets no held seat (it can still rejoin like anyone else).
+	# A character that came back through its own held seat keeps it even if a
+	# flaky link drops it again mid-snapshot -- the case the seat exists for.
+	var mid_snapshot := _snapshot_sends.has(peer_id) and not _reserved_rejoins.has(peer_id)
 	_snapshot_sends.erase(peer_id)
-	var departed := bool(_departing_peers.get(peer_id, false))
+	_reserved_rejoins.erase(peer_id)
+	var departed := bool(_departing_peers.get(peer_id, false)) or mid_snapshot
 	_departing_peers.erase(peer_id)
 	if realm_transition != null:
 		realm_transition.call("peer_disconnected", peer_id)
@@ -1323,11 +1339,6 @@ func _on_server_disconnected() -> void:
 	# edge rather than replacing that specific reason with `host_gone`.
 	if _mode != "client":
 		return
-	if _closing_frames > 0:
-		# The host closed the link in answer to our goodbye: finish the leave
-		# with its own reason, not `host_gone`, and without a second save.
-		_finish_closing()
-		return
 	if _box.get("ended", "") == "":
 		_box["ended"] = "host_gone"
 	_save_character_here()
@@ -1339,6 +1350,7 @@ func _on_server_disconnected() -> void:
 # --- host clock (D105) -----------------------------------------------------------
 
 func _process(delta: float) -> void:
+	_poll_lingering_peer()
 	if _closing_frames > 0:
 		if _closing_frames > 1:
 			_closing_frames -= 1
@@ -1383,11 +1395,23 @@ func _linger_then_disconnect(peer_id: int) -> void:
 	}
 
 
-## A deliberate client leave may still be waiting on the host. Starting a new
-## host or join ends that wait now rather than inheriting a closing session.
-func _finish_pending_client_close() -> void:
-	if _mode == "client" and _closing_frames > 0:
-		_finish_closing()
+## Service a leaving client's detached transport until the host has closed it
+## (so the goodbye was read) or the bound passes, then close it.
+func _exit_tree() -> void:
+	if _lingering_peer != null:
+		_lingering_peer.close()
+		_lingering_peer = null
+
+
+func _poll_lingering_peer() -> void:
+	if _lingering_peer == null:
+		return
+	_lingering_peer.poll()
+	if _lingering_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED \
+			and Time.get_ticks_msec() < _lingering_deadline_ms:
+		return
+	_lingering_peer.close()
+	_lingering_peer = null
 
 
 func _finish_closing() -> void:
@@ -1399,10 +1423,9 @@ func _finish_closing() -> void:
 	session_ended.emit(reason)
 
 
-## The final frame of a close waits here. A host waits until every remote peer
-## has closed its side; a leaving client's host link ends it through
-## `_on_server_disconnected`. Either way the deadline bounds it, so a dead or
-## silent peer cannot hold the close open.
+## The final frame of a host close waits here until every remote peer has
+## closed its side, or the deadline passes, so a dead or silent client cannot
+## hold the host open.
 func _close_flushed() -> bool:
 	if _peer == null or not is_inside_tree() or multiplayer.multiplayer_peer != _peer:
 		return true
@@ -1589,7 +1612,10 @@ func _restore_character_here(wanted_id: String) -> bool:
 	return true
 
 
-func _teardown() -> void:
+## `linger_transport`: a client that just sent its goodbye. The session state is
+## torn down exactly as always, but the transport is detached and handed to
+## `_poll_lingering_peer()` instead of being closed under the goodbye.
+func _teardown(linger_transport: bool = false) -> void:
 	var had_transport := _peer != null
 	if realm_transition != null:
 		realm_transition.call("reset")
@@ -1602,7 +1628,14 @@ func _teardown() -> void:
 			and multiplayer.multiplayer_peer == _peer and _peer != null:
 		multiplayer.multiplayer_peer = null
 	if _peer != null:
-		_peer.close()
+		if linger_transport:
+			if _lingering_peer != null:
+				_lingering_peer.close()
+			_lingering_peer = _peer
+			_lingering_deadline_ms = Time.get_ticks_msec() + int(
+				1000.0 * float(_cfg("goodbye_linger_s", GOODBYE_LINGER_S)))
+		else:
+			_peer.close()
 	_peer = null
 	_mode = ""
 	_transport_kind = ""
@@ -1616,6 +1649,7 @@ func _teardown() -> void:
 	_closing_deadline_ms = 0
 	_rejected_disconnect_frames.clear()
 	_departing_peers.clear()
+	_reserved_rejoins.clear()
 	_snapshot_sends.clear()
 	_clear_snapshot_bootstrap()
 	_clock_accum = 0.0
