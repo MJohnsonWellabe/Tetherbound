@@ -180,6 +180,27 @@ func test_crown_road_and_two_legacy_roads_fill_the_cap() -> void:
 	_assert_refused(_place(VERGE), ROADS_FULL, "no ordinary road beside the Crown and two others")
 
 
+func test_an_unpaired_legacy_arch_without_a_footing_does_not_count_against_the_cap() -> void:
+	# The stray can never be half of a road (it is never a new arch's twin),
+	# so it must not hold a road's slot. Two legacy roads plus the stray leave
+	# room for exactly one more road.
+	_load_legacy_save(LEGACY_PAIRS.slice(0, 2), [Vector3(-1000.0, 0.0, 2000.0)])
+	assert_eq(BUILT.records(world.placed_buildings).size(), 5, "two legacy roads and one legacy stray load")
+	var first := _place(VERGE)
+	assert_true(bool(first.get("ok")), "a third road may start beside two legacy roads")
+	var second := _place(HOLLOWS)
+	assert_true(bool(second.get("ok")), "the stray does not hold the third road's slot")
+	assert_eq(str(_record(str(first.get("uid", ""))).get("arch_twin", "")), str(second.get("uid", "")),
+		"the two legal arches pair with each other, never with the stray")
+	_assert_refused(_place(CAPACITOR), ROADS_FULL, "three roads now stand: the cap refuses a fourth")
+
+
+func test_an_unpaired_legacy_arch_never_crowds_out_the_crown_twin() -> void:
+	_load_legacy_save(LEGACY_PAIRS.slice(0, 2), [Vector3(-1000.0, 0.0, 2000.0)])
+	assert_true(bool(_place(STILL_GROVE).get("ok")), "two legacy roads plus a stray still leave the Crown road")
+	_assert_refused(_place(VERGE), ROADS_FULL, "the Crown road is the third road")
+
+
 func test_an_arch_stands_only_on_a_legal_footing() -> void:
 	# WORLD §5.3: free-build waives material cost only, never the legal footing.
 	for at: Vector3 in [Vector3(-800.0, 0.0, 1000.0), VERGE + Vector3(6.0, 0.0, 0.0)]:
