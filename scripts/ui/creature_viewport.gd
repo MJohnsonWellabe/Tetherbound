@@ -95,6 +95,12 @@ const BOUNDS_IGNORED_NAMES := ["ContactShadow"]
 const ZOOM_IN_RATE := 2.5
 ## Height bands in the silhouette sample (see `silhouette_sample`).
 const HULL_BANDS := 32
+## Seconds after a body is framed at which it is measured again. The creature
+## plays its authored rest pose after it loads, so the first measurement can
+## be the bind pose while the drawn body is curled or folded (the Guardian
+## read as a thumbnail for exactly that reason); re-measuring from the live
+## skeleton once the pose has landed frames what is actually drawn.
+const REMEASURE_AT := [0.25, 1.0, 2.5]
 
 ## --- look ---------------------------------------------------------------
 
@@ -137,6 +143,12 @@ var _hull := PackedVector3Array()
 ## The camera's current aim and distance under the per-angle fit.
 var _aim := Vector3.ZERO
 var _distance := -1.0
+## The body being framed and its placeholder extents, kept so the fit can be
+## re-measured once the model's pose settles (REMEASURE_AT).
+var _framed: Node3D = null
+var _fallback_size := Vector2(1.0, 0.4)
+var _since_framed := 0.0
+var _remeasures_done := 0
 
 
 func _ready() -> void:
@@ -255,6 +267,16 @@ func set_species(species_id: String, shiny: bool = false) -> void:
 func frame_body(body: Node3D, fallback_height: float = 1.0, fallback_radius: float = 0.4) -> void:
 	if body == null or _turntable == null:
 		return
+	_framed = body
+	_fallback_size = Vector2(fallback_height, fallback_radius)
+	_since_framed = 0.0
+	_remeasures_done = 0
+	_measure(body, fallback_height, fallback_radius)
+	_distance = -1.0
+	_refit()
+
+
+func _measure(body: Node3D, fallback_height: float, fallback_radius: float) -> void:
 	var box := visible_bounds(_turntable)
 	var fallback := box.size.y <= 0.0001 and box.size.x <= 0.0001 and box.size.z <= 0.0001
 	if fallback:
@@ -277,8 +299,9 @@ func frame_body(body: Node3D, fallback_height: float = 1.0, fallback_radius: flo
 	if fallback:
 		for i in 8:
 			_hull.append(box.get_endpoint(i))
-	_distance = -1.0
-	_apply_extents(extents)
+	_extents = extents
+	if _ground != null:
+		_ground.scale = Vector3(extents.x, 1.0, extents.x)
 
 
 func _apply_extents(extents: Vector3) -> void:
@@ -406,21 +429,110 @@ func _clear_body() -> void:
 ## (tight) and the mesh's `get_aabb()` otherwise (conservative).
 ## Zero-size AABB = nothing found.
 static func visible_bounds(root: Node3D) -> AABB:
-	var box := AABB()
-	var started := false
+	var points := render_points(root)
+	if points.is_empty():
+		return AABB()
+	var box := AABB(points[0], Vector3.ZERO)
+	for p: Vector3 in points:
+		box = box.expand(p)
+	return box
+
+
+## Every visible vertex under `root`, in `root`'s space, where the renderer
+## draws it NOW: a skinned vertex is skinned on the CPU through the live
+## skeleton pose (skeleton chain x bone global pose x inverse bind x vertex,
+## weighted -- the renderer's own formula, see render_bounds.gd), so a body
+## that has settled into its authored rest pose is measured as posed, not as
+## its bind pose. Unskinned meshes, or skins that do not resolve, fall back
+## to render_bounds.gd's rest-pose transform; meshes without readable vertices
+## contribute their AABB corners.
+static func render_points(root: Node3D) -> PackedVector3Array:
+	var out := PackedVector3Array()
 	for mesh: MeshInstance3D in _visible_meshes(root):
+		var skinned := _posed_vertices(mesh, root)
+		if not skinned.is_empty():
+			out.append_array(skinned)
+			continue
 		var xf: Transform3D = RENDER_BOUNDS._render_transform(mesh, root)
-		var local := AABB()
 		var vertices := _mesh_vertices(mesh.mesh)
 		if vertices.is_empty():
-			local = xf * mesh.mesh.get_aabb()
-		else:
-			local = AABB(xf * vertices[0], Vector3.ZERO)
-			for v: Vector3 in vertices:
-				local = local.expand(xf * v)
-		box = box.merge(local) if started else local
-		started = true
-	return box
+			var box := xf * mesh.mesh.get_aabb()
+			for i in 8:
+				out.append(box.get_endpoint(i))
+			continue
+		for v: Vector3 in vertices:
+			out.append(xf * v)
+	return out
+
+
+## Each bone's skeleton-space pose composed from the local poses. Not
+## `get_bone_global_pose`, whose cache only refreshes inside the tree, so a
+## detached (headless) measurement would silently read a stale pose.
+static func _bone_globals(skeleton: Skeleton3D) -> Array[Transform3D]:
+	var globals: Array[Transform3D] = []
+	globals.resize(skeleton.get_bone_count())
+	var done: Array[bool] = []
+	done.resize(skeleton.get_bone_count())
+	for b in skeleton.get_bone_count():
+		var chain: Array[int] = []
+		var at := b
+		while at >= 0 and not done[at]:
+			chain.push_front(at)
+			at = skeleton.get_bone_parent(at)
+		for c in chain:
+			var parent := skeleton.get_bone_parent(c)
+			var local := skeleton.get_bone_pose(c)
+			globals[c] = globals[parent] * local if parent >= 0 else local
+			done[c] = true
+	return globals
+
+
+static func _posed_vertices(mesh: MeshInstance3D, root: Node3D) -> PackedVector3Array:
+	var out := PackedVector3Array()
+	if mesh.skin == null or not mesh.mesh is ArrayMesh:
+		return out
+	var skeleton: Skeleton3D = RENDER_BOUNDS._skeleton_for(mesh)
+	if skeleton == null:
+		return out
+	var skin: Skin = mesh.skin
+	var globals := _bone_globals(skeleton)
+	var binds: Array[Transform3D] = []
+	for i in skin.get_bind_count():
+		var bone := skin.get_bind_bone(i)
+		if bone < 0:
+			bone = skeleton.find_bone(skin.get_bind_name(i))
+		if bone < 0 or bone >= skeleton.get_bone_count():
+			return PackedVector3Array()
+		binds.append(globals[bone] * skin.get_bind_pose(i))
+	var chain: Transform3D = RENDER_BOUNDS._chain(skeleton, root)
+	for surface in mesh.mesh.get_surface_count():
+		var arrays: Array = mesh.mesh.surface_get_arrays(surface)
+		if arrays.size() <= Mesh.ARRAY_WEIGHTS:
+			return PackedVector3Array()
+		var vertices = arrays[Mesh.ARRAY_VERTEX]
+		var bones = arrays[Mesh.ARRAY_BONES]
+		var weights = arrays[Mesh.ARRAY_WEIGHTS]
+		if not vertices is PackedVector3Array or bones == null or weights == null or (vertices as PackedVector3Array).is_empty():
+			return PackedVector3Array()
+		var count := (vertices as PackedVector3Array).size()
+		var per := int(weights.size() / count)
+		if per <= 0 or bones.size() < count * per:
+			return PackedVector3Array()
+		for v in count:
+			var at := Vector3.ZERO
+			var total := 0.0
+			for k in per:
+				var w: float = weights[v * per + k]
+				if w <= 0.0:
+					continue
+				var b := int(bones[v * per + k])
+				if b < 0 or b >= binds.size():
+					continue
+				at += (binds[b] * vertices[v]) * w
+				total += w
+			if total > 0.0:
+				out.append(chain * (at / total))
+	return out
 
 
 ## The farthest horizontal reach of any visible geometry under `root` from
@@ -428,19 +540,10 @@ static func visible_bounds(root: Node3D) -> AABB:
 ## creature sweeps over a full turn. Vertex-exact where the mesh exposes its
 ## vertices, the mesh AABB's corners otherwise.
 static func spin_radius(root: Node3D) -> float:
-	var radius := 0.0
-	for mesh: MeshInstance3D in _visible_meshes(root):
-		var xf: Transform3D = RENDER_BOUNDS._render_transform(mesh, root)
-		var vertices := _mesh_vertices(mesh.mesh)
-		if vertices.is_empty():
-			radius = maxf(radius, spin_extents(xf * mesh.mesh.get_aabb()).x)
-			continue
-		var reach_sq := 0.0
-		for v: Vector3 in vertices:
-			var p := xf * v
-			reach_sq = maxf(reach_sq, p.x * p.x + p.z * p.z)
-		radius = maxf(radius, sqrt(reach_sq))
-	return radius
+	var reach_sq := 0.0
+	for p: Vector3 in render_points(root):
+		reach_sq = maxf(reach_sq, p.x * p.x + p.z * p.z)
+	return sqrt(reach_sq)
 
 
 static func _visible_meshes(root: Node3D) -> Array[MeshInstance3D]:
@@ -507,17 +610,7 @@ static func spin_extents(box: AABB) -> Vector3:
 ## cheap enough to fit every frame. Vertex-exact where
 ## meshes expose vertices, AABB corners otherwise.
 static func silhouette_sample(root: Node3D) -> PackedVector3Array:
-	var all := PackedVector3Array()
-	for mesh: MeshInstance3D in _visible_meshes(root):
-		var xf: Transform3D = RENDER_BOUNDS._render_transform(mesh, root)
-		var vertices := _mesh_vertices(mesh.mesh)
-		if vertices.is_empty():
-			var box := xf * mesh.mesh.get_aabb()
-			for i in 8:
-				all.append(box.get_endpoint(i))
-			continue
-		for v: Vector3 in vertices:
-			all.append(xf * v)
+	var all := render_points(root)
 	var out := PackedVector3Array()
 	if all.is_empty():
 		return out
@@ -725,12 +818,28 @@ func _process(delta: float) -> void:
 	advance(yaw, delta)
 
 
+## Re-measure the framed body at REMEASURE_AT seconds after framing (see
+## there). Driven by `advance`, so a capture that steps time by hand sees the
+## same settle as play.
+func _poll_remeasure(delta: float) -> void:
+	if _framed == null or not is_instance_valid(_framed) or _remeasures_done >= REMEASURE_AT.size():
+		return
+	_since_framed += delta
+	if _since_framed < float(REMEASURE_AT[_remeasures_done]):
+		return
+	while _remeasures_done < REMEASURE_AT.size() and _since_framed >= float(REMEASURE_AT[_remeasures_done]):
+		_remeasures_done += 1
+	_measure(_framed, _fallback_size.x, _fallback_size.y)
+	_refit()
+
+
 ## Turn the turntable by `yaw` radians over `delta` seconds and follow it with
 ## the per-angle fit. Public so a capture can step the idle spin exactly.
 func advance(yaw: float, delta: float) -> void:
 	if _turntable == null:
 		return
 	_turntable.rotate_y(yaw)
+	_poll_remeasure(delta)
 	if per_angle_fit():
 		_refit(false, delta)
 

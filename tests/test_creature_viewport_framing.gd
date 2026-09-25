@@ -374,3 +374,46 @@ func _independent_ndc(point: Vector3, target: Vector3, distance: float, fov: flo
 	var proj := Projection.create_perspective(fov, aspect, 0.05, 1000.0)
 	var clip: Vector4 = proj * _v4(xf.affine_inverse() * point)
 	return Vector2(clip.x, clip.y) / clip.w
+
+
+## The widget measures skinned bodies through the LIVE skeleton pose (so a
+## creature that settled into its authored rest pose is framed as drawn). At
+## the untouched pose that must agree with render_bounds.gd's rest-pose
+## measurement -- the renderer's formula both ways -- and bending a bone must
+## move the measurement with it.
+func test_the_posed_measurement_follows_the_skeleton() -> void:
+	var widget: SubViewportContainer = VIEWPORT.new()
+	widget.call("_build_world")
+	var turntable := widget.get("_turntable") as Node3D
+	var body := _build_body_like_the_viewport(turntable, "abyssal_guardian")
+	var skeletons := body.find_children("*", "Skeleton3D", true, false)
+	assert_true(not skeletons.is_empty(), "the Guardian model is skinned")
+	if skeletons.is_empty():
+		widget.free()
+		return
+	var posed: PackedVector3Array = VIEWPORT.render_points(turntable)
+	var rest := _rendered_points(turntable)
+	var a := _box(posed)
+	var b := _box(rest)
+	assert_true(a.position.distance_to(b.position) < 0.02 and a.end.distance_to(b.end) < 0.02,
+		"at the untouched pose the live-skeleton measurement (%s) must match the rest-pose one (%s)" % [a, b])
+	var skeleton := skeletons[0] as Skeleton3D
+	var bone := -1
+	for i in skeleton.get_bone_count():
+		if skeleton.get_bone_parent(i) >= 0 and not skeleton.get_bone_children(i).is_empty():
+			bone = i
+			break
+	assert_true(bone >= 0, "the rig has an inner bone to bend")
+	skeleton.set_bone_pose_rotation(bone, skeleton.get_bone_pose_rotation(bone) * Quaternion(Vector3.RIGHT, PI * 0.5))
+	var bent := _box(VIEWPORT.render_points(turntable))
+	assert_true(bent.position.distance_to(a.position) > 0.05 or bent.end.distance_to(a.end) > 0.05,
+		"bending bone %d by 90 degrees did not move the measured bounds (%s vs %s)" % [bone, bent, a])
+	widget.free()
+
+
+func _box(points: PackedVector3Array) -> AABB:
+	var box := AABB(points[0], Vector3.ZERO)
+	for p: Vector3 in points:
+		box = box.expand(p)
+	return box
+

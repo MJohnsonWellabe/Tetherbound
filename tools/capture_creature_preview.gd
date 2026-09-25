@@ -174,6 +174,12 @@ func _stage(id: String) -> Node:
 		_failures.append("%s: no creature_viewport under the menu" % id)
 		return null
 	preview.set_process(false)
+	# The widget re-measures its body once the authored rest pose has landed
+	# (REMEASURE_AT). With `_process` off, step that settle explicitly: the
+	# same call play makes, as if the tab had been open for 3 s, no rotation.
+	if preview.has_method("advance"):
+		await _settle(30)
+		preview.call("advance", 0.0, 3.0)
 	var turntable := preview.get("_turntable") as Node3D
 	if turntable != null:
 		turntable.rotation = Vector3.ZERO
