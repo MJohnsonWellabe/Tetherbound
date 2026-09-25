@@ -10,7 +10,7 @@
       "position": "boot",
       "simulated_seconds": 0.0,
       "stage": "persistence_tail_exact",
-      "wall_seconds": 0.173071
+      "wall_seconds": 0.629425
     },
     {
       "kind": "assertion",
@@ -18,7 +18,7 @@
       "position": "boot",
       "simulated_seconds": 0.0,
       "stage": "persistence_tail_exact",
-      "wall_seconds": 0.173332
+      "wall_seconds": 0.630074
     },
     {
       "after": [
@@ -460,7 +460,7 @@
       "position": "boot",
       "simulated_seconds": 0.0,
       "stage": "persistence_tail_exact",
-      "wall_seconds": 0.173501
+      "wall_seconds": 0.630731
     },
     {
       "kind": "assertion",
@@ -468,7 +468,7 @@
       "position": "boot",
       "simulated_seconds": 0.0,
       "stage": "persistence_tail_exact",
-      "wall_seconds": 0.17483
+      "wall_seconds": 0.63292
     },
     {
       "kind": "assertion",
@@ -476,7 +476,95 @@
       "position": "boot",
       "simulated_seconds": 0.0,
       "stage": "persistence_tail_exact",
-      "wall_seconds": 0.175492
+      "wall_seconds": 0.63394
+    },
+    {
+      "count": 1,
+      "flag": "cloudreach_winds_restored",
+      "kind": "persistence_f08_flag",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "unsaved_control": false,
+      "wall_seconds": 0.634958
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored cloudreach_winds_restored exactly once (count 1)",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.635855
+    },
+    {
+      "count": 1,
+      "flag": "realm_heart_cloudreach_earned",
+      "kind": "persistence_f08_flag",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "unsaved_control": false,
+      "wall_seconds": 0.636737
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored realm_heart_cloudreach_earned exactly once (count 1)",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.637598
+    },
+    {
+      "count": 1,
+      "flag": "sky_shrine_reached",
+      "kind": "persistence_f08_flag",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "unsaved_control": false,
+      "wall_seconds": 0.638513
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored sky_shrine_reached exactly once (count 1)",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.639389
+    },
+    {
+      "count": 1,
+      "flag": "realm_key_stormwood",
+      "kind": "persistence_f08_flag",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "unsaved_control": false,
+      "wall_seconds": 0.64022
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored realm_key_stormwood exactly once (count 1)",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.641088
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored the Wings of Cloudreach as earned",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.642023
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored the Stormwood key: the realm opens",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.643092
     }
   ],
   "evidence_scope": "mechanics_only_test_lethal",
