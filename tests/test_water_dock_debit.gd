@@ -575,3 +575,141 @@ func test_rollback_unsent_returns_reservation_when_persist_fails() -> void:
 	var retry := DEBIT.begin(s, ACTION, COST, WORLD)
 	assert_true(retry.ok, "a fresh attempt follows an unsent rollback")
 	assert_eq(int(retry.intent.attempt), 2)
+
+
+func _row_for(character: String, attempt: int, status: String, world: String = WORLD) -> Dictionary:
+	var txn := DEBIT.txn_id(world, ACTION, character, attempt)
+	var row := {"kind": DEBIT.KIND, "version": DEBIT.VERSION, "txn_id": txn,
+		"world_instance_id": world, "action_id": ACTION, "character_id": character,
+		"attempt": attempt, "status": status, "reason": ""}
+	if status == "pending":
+		row["cost"] = COST.duplicate()
+	return row
+
+
+func test_begin_corrupt_matching_pending_row_is_never_handed_back() -> void:
+	# m1: a pending row for this action that fails _row validation is corrupt.
+	var s := _state("cid-1", 6, 4)
+	var bad := _row_for("cid-1", 1, "pending")
+	bad["txn_id"] = "bogus"
+	s.escrow["bogus"] = bad
+	var r := DEBIT.begin(s, ACTION, COST, WORLD)
+	assert_false(r.ok)
+	assert_false(r.changed)
+	assert_eq(r.code, "txn_collision", "corrupt pending row is not already_pending")
+	assert_eq(r.txn_id, "", "corrupt txn never handed back")
+	assert_false(r.has("intent"))
+	assert_eq(s.inventory.count("reed_fiber"), 6, "nothing reserved")
+	assert_eq(s.escrow.size(), 1)
+	# A wrong attempt field (txn id no longer recomputes) is corrupt too.
+	var t := _state("cid-1", 6, 4)
+	var odd := _row_for("cid-1", 1, "pending")
+	odd["attempt"] = 3
+	t.escrow[odd.txn_id] = odd
+	assert_eq(DEBIT.begin(t, ACTION, COST, WORLD).code, "txn_collision")
+	assert_eq(t.inventory.count("reed_fiber"), 6)
+
+
+func test_begin_pending_wins_over_settled_tombstone_in_any_order() -> void:
+	# m2: a settled T1 plus a pending T2 always answers already_pending T2.
+	var t1 := _row_for("cid-1", 1, "settled")
+	var t2 := _row_for("cid-1", 2, "pending")
+	for order: Array in [[t1, t2], [t2, t1]]:
+		var s := _state("cid-1", 6, 4)
+		for row: Dictionary in order:
+			s.escrow[row.txn_id] = row.duplicate(true)
+		var r := DEBIT.begin(s, ACTION, COST, WORLD)
+		assert_eq(r.code, "already_pending", "order " + str(order[0].attempt))
+		assert_eq(r.txn_id, t2.txn_id, "pending txn handed back: order " + str(order[0].attempt))
+		assert_false(r.changed)
+		assert_eq(s.inventory.count("reed_fiber"), 6)
+		assert_eq(DEBIT.begin(s, ACTION, COST, WORLD, {}).txn_id, t2.txn_id, "restored facts too")
+
+
+func test_begin_txn_collision_on_next_key_reserves_nothing() -> void:
+	# A foreign-kind row squats on txn_id(..., attempt 1): never overwrite it.
+	var s := _state("cid-1", 6, 4)
+	var key := DEBIT.txn_id(WORLD, ACTION, "cid-1", 1)
+	s.escrow[key] = {"kind": "death_satchel", "note": "not ours"}
+	var r := DEBIT.begin(s, ACTION, COST, WORLD)
+	assert_false(r.ok)
+	assert_false(r.changed)
+	assert_eq(r.code, "txn_collision")
+	assert_eq(s.escrow[key], {"kind": "death_satchel", "note": "not ours"}, "row untouched")
+	assert_eq(s.inventory.count("reed_fiber"), 6)
+	assert_eq(s.inventory.count("driftwood"), 4)
+
+
+func test_begin_ignores_another_characters_row() -> void:
+	# _same_action's character filter: cid-2's pending row never blocks cid-1.
+	var s := _state("cid-1", 6, 4)
+	var theirs := _row_for("cid-2", 1, "pending")
+	s.escrow[theirs.txn_id] = theirs
+	var r := DEBIT.begin(s, ACTION, COST, WORLD)
+	assert_true(r.ok and r.changed, "another character's row does not block")
+	assert_eq(r.txn_id, DEBIT.txn_id(WORLD, ACTION, "cid-1", 1))
+	assert_eq(s.escrow[theirs.txn_id].status, "pending")
+
+
+func test_begin_rejects_mixed_invalid_cost_entries() -> void:
+	for bad: Dictionary in [{"reed_fiber": 6, "driftwood": -4}, {"reed_fiber": 6, "driftwood": 1.5}]:
+		var s := _state("cid-1", 6, 4)
+		var r := DEBIT.begin(s, ACTION, bad, WORLD)
+		assert_false(r.ok, "invalid cost refused: " + str(bad))
+		assert_eq(r.code, "no_cost", str(bad))
+		assert_true(s.escrow.is_empty())
+		assert_eq(s.inventory.count("reed_fiber"), 6)
+		assert_eq(s.inventory.count("driftwood"), 4)
+
+
+func test_refund_requires_world_instance() -> void:
+	var s := _state("cid-1", 6, 4)
+	var txn: String = DEBIT.begin(s, ACTION, COST, WORLD).txn_id
+	for reason: Dictionary in [{"txn_id": txn, "world_instance_id": "", "code": "journal_failed"},
+			{"txn_id": txn, "code": "journal_failed"}]:
+		var r := DEBIT.refund(s, reason)
+		assert_eq(r.code, "wrong_world", "missing instance is not authoritative")
+		assert_false(r.changed)
+	assert_eq(s.escrow[txn].status, "pending")
+	assert_eq(s.inventory.count("reed_fiber"), 0)
+
+
+func test_malformed_receipt_with_empty_txn_or_payer_never_refunds() -> void:
+	# Matching world and action, but an empty txn or payer proves nothing.
+	for bad: Dictionary in [_receipt("", "cid-2"), _receipt(DEBIT.txn_id(WORLD, ACTION, "cid-2"), "")]:
+		var s := _state("cid-1", 6, 4)
+		var txn: String = DEBIT.begin(s, ACTION, COST, WORLD).txn_id
+		var rec := DEBIT.reconcile(s, {ACTION: bad}, WORLD)
+		assert_false(rec.changed, "reconcile: " + str(bad))
+		assert_eq(rec.refunded, [])
+		assert_eq(rec.waiting, [txn])
+		var r := DEBIT.refund(s, {"txn_id": txn, "world_instance_id": WORLD, "code": "already_done", "receipt": bad})
+		assert_eq(r.code, "needs_receipt", "refund: " + str(bad))
+		assert_false(r.changed)
+		assert_eq(s.escrow[txn].status, "pending")
+		assert_eq(s.inventory.count("reed_fiber"), 0)
+
+
+func test_receipt_for_another_action_never_settles() -> void:
+	var s := _state("cid-1", 6, 4)
+	var txn: String = DEBIT.begin(s, ACTION, COST, WORLD).txn_id
+	var wrong := _receipt(txn, "cid-1")
+	wrong["action_id"] = "other_paid"
+	var r := DEBIT.settle(s, wrong)
+	assert_false(r.changed)
+	assert_eq(r.code, "receipt_mismatch")
+	var rec := DEBIT.reconcile(s, {ACTION: wrong}, WORLD)
+	assert_false(rec.changed)
+	assert_eq(rec.settled, [])
+	assert_eq(s.escrow[txn].status, "pending")
+
+
+func test_open_txns_filters_by_world() -> void:
+	var s := _state("cid-1", 12, 8)
+	var here: String = DEBIT.begin(s, ACTION, COST, WORLD).txn_id
+	var there: String = DEBIT.begin(s, ACTION, COST, OTHER_WORLD).txn_id
+	assert_eq(DEBIT.open_txns(s, WORLD), [here])
+	assert_eq(DEBIT.open_txns(s, OTHER_WORLD), [there])
+	var both := [here, there]
+	both.sort()
+	assert_eq(DEBIT.open_txns(s), both)
