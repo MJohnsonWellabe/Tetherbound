@@ -31,6 +31,7 @@ const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PARTY := preload("res://autoload/party.gd")
 const RIDING := preload("res://scripts/world/riding_controller.gd")
+const SAVE := preload("res://scripts/save/save_game.gd")
 
 const MOUNT_SPECIES := "meadowhart"
 const TEAM := ["meadowhart", "bramblebun", "mudsnout", "terrapup", "brooktail"]
@@ -100,6 +101,7 @@ func _run() -> void:
 	await _closed_gate_holds_a_mounted_run()
 	await _long_mounted_descent_is_not_a_fall()
 	await _mounted_ride_off_a_drop_is_recovered()
+	await _mounted_save_reload_after_descent()
 	_check_party("end of run")
 	_report()
 
@@ -302,14 +304,28 @@ func _long_mounted_descent_is_not_a_fall() -> void:
 	_check(anchor.y - body.global_position.y > 100.0, "the fixture puts the rider more than 100 m below the last anchor (%.1f m)" % (anchor.y - body.global_position.y))
 	_check(recoveries[0] == 0 and bool(_riding.call("is_mounted")) and _player.call("carrier") == body,
 		"a mounted descent past 100 m is not treated as a fall (recoveries %d)" % recoveries[0])
+	var followed: Vector3 = fly.get("safe_anchor")
+	_check(absf(followed.y - body.global_position.y) < 3.0,
+		"the ride keeps Fly's safe anchor on the mount's ground (anchor y %.1f, mount y %.1f)" % [followed.y, body.global_position.y])
+	# Review finding: the stale anchor bit at the END of the ride. Get off low
+	# and stay low.
+	var low_y := body.global_position.y
+	await _dismount_by_interact("dismount after the long descent")
+	for i in 60:
+		await physics_frame
+	_check(recoveries[0] == 0 and absf(_player.global_position.y - low_y) < 4.0,
+		"getting off after the descent leaves the trainer where they got off (y %.1f, recoveries %d)" % [_player.global_position.y, recoveries[0]])
 	if fly.has_signal("recovered"):
 		fly.disconnect("recovered", on_recovered)
 
 
 ## Review finding: a carried trainer has no collision layer, so the kill plane
 ## never saw a mount that walked off an edge. Fixture: after riding on the
-## road, the mounted pair is carried over open air beside it.
+## road, the mounted pair is carried over open air beside it and falls until
+## the same 100 m a walker falls before recovery.
 func _mounted_ride_off_a_drop_is_recovered() -> void:
+	await _walk_to_mount()
+	await _mount_by_interact("mount for the drop")
 	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
 		_fail("not mounted; the drop leg cannot run")
@@ -327,12 +343,43 @@ func _mounted_ride_off_a_drop_is_recovered() -> void:
 	var before: int = int(_riding.get("mounted_fall_recoveries"))
 	body.global_position = void_at
 	body.velocity = Vector3.ZERO
-	for i in 240:
+	var lowest := void_at.y
+	for i in 900:
 		await physics_frame
+		lowest = minf(lowest, body.global_position.y)
+		if int(_riding.get("mounted_fall_recoveries")) > before:
+			break
+	for i in 60:
+		await physics_frame
+	# SYSTEMS §8 parity: no stricter than the walker's 100 m recovery.
+	_check(void_at.y - lowest > 95.0, "the mount is not snatched back before a walker would be (fell %.1f m)" % (void_at.y - lowest))
 	_check(int(_riding.get("mounted_fall_recoveries")) > before, "a mount that drops off an edge is caught by the mounted-fall recovery")
 	_check(body.is_on_floor() and bool(_riding.call("is_mounted")) and _player.call("carrier") == body,
 		"the mount stands on ground again with its rider still seated (mount %s)" % body.global_position)
 	await _dismount_by_interact("dismount after the drop recovery")
+
+
+## Review finding F1: the anchor frozen at the top of a ride made a reload
+## after a long descent "recover" the trainer back up to where it began. The
+## in-ride anchor check above is the direct witness; this leg is the reload
+## half. The ride began at the gate (~474 m) and the anchor has followed the
+## mounted descent to the arrival road; save, reload, stay low.
+func _mounted_save_reload_after_descent() -> void:
+	var low_y := _player.global_position.y
+	_game.set("save_system", SAVE.new("user://cloudreach_saddle_remount_smoke/"))
+	_check(bool(_game.call("save_game", 0)), "save low on the arrival road after the mounted descent")
+	_world.queue_free()
+	await physics_frame
+	_check(bool(_game.call("load_game", 0)), "load that save")
+	_world = SCENE.instantiate()
+	root.add_child(_world)
+	current_scene = _world
+	_player = _world.get_node(^"Player") as CharacterBody3D
+	for i in 240:
+		await physics_frame
+	var anchor: Vector3 = (_player.get("fly_controller") as Node).get("safe_anchor")
+	_check(absf(_player.global_position.y - low_y) < 6.0 and anchor.y < 400.0,
+		"after reload the trainer and Fly's anchor stay low, not at the gate the ride began from (trainer y %.1f, anchor y %.1f, saved at %.1f)" % [_player.global_position.y, anchor.y, low_y])
 
 
 func _open_air_near(from: Vector3) -> Vector3:
