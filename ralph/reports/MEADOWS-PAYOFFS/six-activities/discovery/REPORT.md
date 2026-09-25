@@ -47,4 +47,18 @@ The script made no state writes. The only flag the game set itself during the wa
 
 ## Code-blind judge verdict
 
-(appended below)
+The judge was given only these frames and WORLD.md §11's eight-activity section. Its per-activity verdicts, verbatim:
+
+- Bram: FAIL. The lure can't be read, no champion is visible at the prompt, and the payoff isn't shown.
+- Herd: FAIL. The herd is never on screen, including at the prompt.
+- Vault: PARTIAL. It is distinct and readable up close with an appealing pedestal, but it can't be seen from the road, the lure is red, and the camera is broken at the prompt frame.
+- Doss: PARTIAL. It is readable only on arrival, the bank doesn't look blocked, and the payoff isn't shown.
+- Juno: FAIL. The designed lure (patrol and Meadowhart) is absent, and the prompt is a generic trainer challenge.
+- Hall: FAIL. The alpha is clearly visible from the road in hall_03, but you can't reach or finish it (hall_04 has no prompt, and r3-hall_06 ends stuck).
+
+The three biggest problems, ranked, verbatim:
+1. **Most lures aren't on screen where the labels say they are.** herd_03/04/05 show no herd at all. In bram_03 and doss_03/04 the lure is a speck of 10–15px. juno_02/03 show wild birds, not the patrol or the Meadowhart. hall_02 labels a fox as the first sighting. For four of the six, the first readable information is the button prompt itself (bram_05, herd_05, doss_05, juno_04). That is a proximity prompt, not a lure you can see and walk toward.
+2. **The alpha activity is unfinishable, and the camera breaks at arrival.** hall_04 has no prompt under the alpha. The r3-hall run chains four wild Galecrest fights and ends stuck in r3-hall_06. The camera clips into terrain in vault_06 (prompt frame, player not visible) and r3-hall_02 (in-fight). Companion bodies block the lure area in herd_02–05 and doss_02.
+3. **None of the payoffs is shown, and the activities as presented blur together.** Bram and Juno are both "Challenge X" trainer prompts in a field. Juno's actual design activity, the patrol fight and reunion, is absent. Doss's "blocked bank" is a plank that doesn't look blocked. No frame shows a reward, a world change or map knowledge. The only one that looks rewarding is the heartstone pedestal (r1-vault_05), and even that isn't explained. The vault's lure is red, the colour reserved for Team Tether (vault_04/05).
+
+**Result: F03 "a player can see the lure / ordinary discovery" is NOT met.** The staged mechanics pass; the ordinary-play presentation does not.
