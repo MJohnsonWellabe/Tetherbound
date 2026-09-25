@@ -136,6 +136,34 @@ const MULTIPLAYER_CONFIG := "res://data/config/multiplayer.json"
 ## entry such as "stormwood:" cannot silently lock ordinary world flags.
 const OWNED_FLAG_PREFIX_MARK := "legendary_resolution:"
 const HOST_PEER := preload("res://scripts/net/peer_registry.gd").HOST_PEER_ID
+## `reward_grant` sources only host code may journal. These trainers' delivery
+## rows are the Guardian's and the Warden climax's participant journals, and
+## since client trainer wins are host-journaled (`trainer_victory`) the host is
+## their only honest writer. Deliberately not every `trainer:` source: a
+## guest's own local named-wild completion reward is journaled under
+## `trainer:<once id>:` too. (A guest can still ASK the host to journal a win
+## through `trainer_victory`; that request's own checks are the director's.)
+const HOST_ONLY_GRANT_SOURCE_PREFIXES := [
+	"trainer:water_trainer_nerissa:",
+	"trainer:warden_aldis:",
+]
+## World flags only host code may write or clear. The Tidewake Guardian's
+## claim markers, its claimed/settled/freed facts and its settlement flags
+## decide who is offered the Guardian (a settlement flag with no offer marker
+## makes the world "legacy"); the host writes every one of them
+## (`water_guardian_reward.gd`), so a remote write can only be a forgery. The
+## legacy `reward:<source>:<n>` receipts of the journals above are included:
+## one forged receipt makes every later grant of that source
+## `legacy_unresolved`, emptying the journal. Matched as prefixes, so the two
+## exact settlement ids also cover any future flag named after them.
+const HOST_ONLY_FLAG_PREFIXES := [
+	"water_claim:guardian:",
+	"water_guardian_",
+	"water_currents_restored",
+	"realm_relic_water_earned",
+	"reward:trainer:water_trainer_nerissa:",
+	"reward:trainer:warden_aldis:",
+]
 
 static var _owned_prefixes: Array = []
 
@@ -171,6 +199,15 @@ static func owned_flag_allowed(id: String, peer_id: int, actor_character_id: Str
 				return true
 			var owner := id.trim_prefix(prefix)
 			return not owner.is_empty() and owner == actor_character_id
+	return true
+
+
+static func host_only_allowed(id: String, peer_id: int, prefixes: Array) -> bool:
+	if peer_id == HOST_PEER:
+		return true
+	for prefix: String in prefixes:
+		if id.begins_with(prefix):
+			return false
 	return true
 
 
@@ -734,6 +771,8 @@ func _reward_grant(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 	var source := str(intent.get("source", ""))
 	if source.is_empty():
 		return _refuse("reward_grant", peer_id, "malformed", "That reward has no source to record.")
+	if not host_only_allowed(source, peer_id, HOST_ONLY_GRANT_SOURCE_PREFIXES):
+		return _refuse("reward_grant", peer_id, "host_only", "Only the host can record that reward.")
 	var world_id := str(intent.get("world_id", world.get("world_id")))
 	var recipients: Variant = intent.get("_reward_recipients", [])
 	if not recipients is Array or recipients.is_empty():
@@ -996,6 +1035,10 @@ func _commit(ops: Array, kind: String, peer_id: int, realm: String) -> Dictionar
 				and not owned_flag_allowed(str((op as Dictionary).get("id", "")), peer_id, _actor_character):
 			return _refuse(kind, peer_id, "not_your_character",
 				"Only that character can record their own choice.")
+		if op is Dictionary and str((op as Dictionary).get("op", "")) == "flag" \
+				and str((op as Dictionary).get("scope", "")) == "world" \
+				and not host_only_allowed(str((op as Dictionary).get("id", "")), peer_id, HOST_ONLY_FLAG_PREFIXES):
+			return _refuse(kind, peer_id, "host_only", "Only the host can record that.")
 	seq += 1
 	var delta := {"seq": seq, "realm": realm, "ops": ops}
 	apply(delta)

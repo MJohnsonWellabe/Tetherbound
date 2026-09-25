@@ -2946,6 +2946,10 @@ func _finalize_shared_host_fight(encounter_id: String, outcome: String) -> void:
 	elif outcome == CAUGHT:
 		wild.visible = false
 		if once_id.is_empty():
+			# `_host_catch_finished`, the only CAUGHT caller, encoded the
+			# capture card from this body's instance before calling this; the
+			# spawn point refills with someone new.
+			_refill_caught_spawn(wild)
 			_respawn_timers[wild] = _respawn_delay_for(wild)
 	if outcome == "won" or outcome == CAUGHT:
 		var completed := _award_once_completion_reward(wild, once_id,
@@ -2957,6 +2961,35 @@ func _finalize_shared_host_fight(encounter_id: String, outcome: String) -> void:
 			_mark_once_cleared(once_id)
 		elif not once_id.is_empty():
 			_respawn_timers[wild] = _respawn_delay_for(wild)
+
+
+## A caught wild's spawn point refills with a NEW individual of the same
+## species and level. Without this the hidden body kept the CreatureInstance
+## it was caught as: on the local path that object IS the party's creature, so
+## `revive_at_home()` healed it to full for free; on both paths the same
+## individual (same uid, IVs, traits) walked back into the meadow to be caught
+## a second time. Same level as the one caught, so a pinned or banded cluster
+## keeps its strength; its own rng, so no spawn draw is consumed (see
+## `_roll_wild_level`). Only species and level carry over: per-instance
+## dressing (a title, a nickname, move overrides) is lost, which is safe only
+## because every dressed or named individual is once-only and never respawns.
+func _refill_caught_spawn(wild: Node3D) -> void:
+	var caught: RefCounted = wild.get("instance") as RefCounted
+	if caught == null:
+		return
+	var species := str(caught.get("species_id"))
+	var cfg: Dictionary = PROGRESSION.config()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("refill_%s_%s" % [wild.name, str(caught.get("uid"))])
+	var fresh: RefCounted = CREATURE_INSTANCE.from_species(
+		species, SPECIES.definition(species), rng.randf(), cfg,
+		[rng.randf(), rng.randf(), rng.randf()], [rng.randf(), rng.randf()]
+	)
+	fresh.call("set_level", int(caught.get("level")), cfg)
+	var is_shiny: bool = rng.randf() < VISUAL.shiny_chance()
+	fresh.shiny = is_shiny
+	wild.set("instance", fresh)
+	wild.call("set_shiny", is_shiny)
 
 
 func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> void:
@@ -3715,11 +3748,21 @@ func interaction_offer(from: Vector3) -> Dictionary:
 		return PROMPTS.offer("%s is out of the fight." % _ally.display_name, 9999.0, 0, false)
 	var candidate := _engageable()
 	if candidate != null:
+		var radius := float(candidate.call("body_radius")) if candidate.has_method("body_radius") else 0.0
 		return PROMPTS.offer(
 			"Engage %s" % str(candidate.get("display_name")),
-			from.distance_to(candidate.global_position)
+			engage_offer_distance(from, candidate.global_position, radius)
 		)
 	return _creature_control_offer()
+
+
+## The engage offer's distance for the arbiter: to the creature's body
+## surface, not its centre. Harvest prompts are points at a trunk or rock, so a
+## centre measurement let a tree beside an idling creature out-bid it from most
+## bearings -- "Chop" offered to a player standing next to the creature. Never
+## negative, so a player inside the body's radius reads as touching it.
+static func engage_offer_distance(from: Vector3, centre: Vector3, body_radius: float) -> float:
+	return maxf(0.0, from.distance_to(centre) - maxf(body_radius, 0.0))
 
 
 func interaction_activate() -> void:
@@ -4886,6 +4929,7 @@ func _on_combat_exited(outcome: String) -> void:
 					# usual delay — the caught instance now lives in the party (or
 					# on the ceremony's seam), and the meadow does not empty out
 					# one catch at a time.
+					_refill_caught_spawn(wild)
 					_respawn_timers[wild] = _respawn_delay_for(wild)
 		if outcome == "won" or outcome == CAUGHT:
 			var completed := _award_once_completion_reward(wild, once_id, [_local_peer_id()])

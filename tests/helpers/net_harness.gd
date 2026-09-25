@@ -76,9 +76,16 @@ const PRODUCTION_JOIN_BUILD_ALLOWANCE_S := 90.0
 ## the outer bound. The measured return crossing took 87.8 s and 89.1 s, so a
 ## crossing gets its own figure with headroom rather than the join's 90 s.
 const REALM_CROSSING_BUILD_ALLOWANCE_S := 150.0
+## A `boot` step and the proof command's `load_save` (tools/net/proof_steps.gd)
+## build a whole world scene the same way, so they take the crossing figure.
 const WORLD_BUILD_ALLOWANCE_S := {
 	"production_join": PRODUCTION_JOIN_BUILD_ALLOWANCE_S,
 	"enter_realm": REALM_CROSSING_BUILD_ALLOWANCE_S,
+	"boot": REALM_CROSSING_BUILD_ALLOWANCE_S,
+	"load_save": REALM_CROSSING_BUILD_ALLOWANCE_S,
+	# A rendered peer's first forced frame compiles every shader of the scene
+	# in software GL in one blocking draw (the proof command's --render).
+	"screenshot": REALM_CROSSING_BUILD_ALLOWANCE_S,
 }
 ## Contract §6's own budgets are frame-denominated per PEER; the coordinator
 ## itself only ever waits in wall-clock (it does not tick the peer's physics),
@@ -231,6 +238,11 @@ func _init_budgets() -> void:
 func launch(peer_count: int, scene: String, extra_args: Array = [],
 		per_peer_args: Dictionary = {}) -> bool:
 	_init_budgets()
+	# Rendered peers (TB_NET_PROOF_RENDER, the proof command's --render) start a real
+	# display and GL context; give the cold world boot more than the headless
+	# hello budget.
+	if OS.get_environment("TB_NET_PROOF_RENDER") == "1":
+		_budgets["hello_budget_s"] = maxf(float(_budgets.get("hello_budget_s", DEFAULT_HELLO_BUDGET_S)), 900.0)
 	_read_net_conditions_env()
 	_scene_for_run = scene
 	_peer_count_for_run = peer_count
@@ -383,6 +395,17 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 	var args := [
 		"--headless", "--path", project_path,
 	]
+	# Opt-in rendering for the two-peer proof command's screenshots (only
+	# `tools/net/run_two_peer_proof.sh --render` sets this; it needs a display): the
+	# command runs the whole coordinator under one `xvfb-run` display. The
+	# render loop stays off, so a peer simulates at headless speed and draws a
+	# frame only when a `screenshot` step forces one. Unset (every smoke, CI)
+	# keeps peers headless.
+	if OS.get_environment("TB_NET_PROOF_RENDER") == "1":
+		args = ["--path", project_path, "--rendering-driver", "opengl3", "--disable-render-loop",
+			"--audio-driver", "Dummy",
+			"--resolution", OS.get_environment("TB_NET_PROOF_RESOLUTION") \
+				if not OS.get_environment("TB_NET_PROOF_RESOLUTION").is_empty() else "960x540"]
 	if _is_windows():
 		# Godot 4.7 has no --user-data-dir command line option. On Windows its
 		# supported user-data lookup honors APPDATA, so set a fresh APPDATA root

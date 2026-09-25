@@ -85,6 +85,7 @@ const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 ## Stage B lane 5.A. How a story trigger reaches the ledger, and how a story
 ## restore path asks the WORLD (never the merged view) what has happened.
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
+const PROOF_STEPS := preload("res://tools/net/proof_steps.gd")
 
 
 ## Lane 4.D. The trainer table, read the way the game reads it.
@@ -709,7 +710,12 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"stormwood_hosted_deadline_window":
 			out = await _step_stormwood_hosted_deadline_window(args)
 		_:
-			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
+			# The two-peer proof command's steps (named saves, screenshots,
+			# save capture, F11): see tools/net/proof_steps.gd.
+			if PROOF_STEPS.handles(action):
+				out = await PROOF_STEPS.run(self, action, args)
+			else:
+				out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
 	return out
 

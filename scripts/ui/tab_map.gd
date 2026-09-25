@@ -1892,7 +1892,10 @@ static func label_core_colour(colour: Color) -> Color:
 		return colour
 	# luma(lerp(c, white, t)) == (1 - t) * luma(c) + t, so the t that lands
 	# exactly on the target is closed-form rather than searched for.
-	var t := clampf((CANVAS_LABEL_MIN_LUMA - current) / maxf(1.0 - current, 0.0001), 0.0, 1.0)
+	# Aim a hair above the floor: the closed form lands ON it, and float
+	# rounding then leaves some hues (DANGER's orange, X03) at 0.89999.
+	var target := minf(CANVAS_LABEL_MIN_LUMA + 0.0005, 1.0)
+	var t := clampf((target - current) / maxf(1.0 - current, 0.0001), 0.0, 1.0)
 	var lifted := colour.lerp(Color(1.0, 1.0, 1.0), t)
 	lifted.a = colour.a
 	return lifted
