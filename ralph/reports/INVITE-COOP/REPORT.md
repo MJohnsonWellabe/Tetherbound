@@ -719,3 +719,21 @@ produced by `tools/net/capture_join_refusal.gd`:
   720p readability belongs to X03.
 - Not captured: the held-seat reason and the Steam lobby mismatch reason.
   The Steam reason needs a native Steam client.
+
+**Opt-in Steam release packaging** (`ralph/x05-steam-release`, under a
+coordinator SHARED-FILE GRANT for `.github/workflows/release.yml`).
+- A new `ship_steam_runtime` dispatch input and a repository variable,
+  `TETHERBOUND_SHIP_STEAM_RUNTIME`, both default off. When on, the release
+  job:
+  - installs the pinned win64 templates;
+  - points only that run's Windows preset at them
+    (`setup_steam_runtime.py --configure-preset`);
+  - copies `steam_api64.dll` beside the exe.
+- Switching templates and shipping the DLL are one switch on purpose: the
+  exported exe imports `steam_api64.dll` and cannot start without it.
+- Off, the release is the unchanged stock path. `export_presets.cfg` is not
+  modified in git.
+- Dry run of the opt-in steps: `x05-windows-steam-export-dryrun.log`.
+- Open, and the owner's call: Steamworks redistribution sign-off before
+  anyone turns it on. Not run: the exe on Windows, and the CI release job
+  itself.
