@@ -2631,15 +2631,9 @@ jobs:
           echo "  - verify-gate-b-core"
           exit 0
 
-  # Main only. Ralph dispatches CI after a clean branch rebase; treating that
-  # workflow_dispatch as an export request made every rebase pay this tail.
-  # The export tail was ~40% of every branch
-  # run, and it duplicates work: Release re-exports main itself before
-  # publishing, so a broken export can never reach the download link through
-  # a branch — it would surface on main's own run, where fixing red main is
-  # the loop's standing first priority. Split into its own job (rather than
-  # trailing steps in a verify job) so it starts only once EVERY verify-*
-  # job has actually passed — `needs:` on all of them waits for every one.
+  # Spec-driven delivery verifies the package before automatic merge. This
+  # costs an export on code PRs, but prevents a branch whose source tests pass
+  # and whose shipped binary fails from reaching the rolling download.
   export:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -2657,8 +2651,7 @@ jobs:
       - verify-gate-evidence-shard
       - verify-gate-b-core
     if: |
-      needs.changes.outputs.code == 'true' &&
-      github.ref == 'refs/heads/main'
+      needs.changes.outputs.code == 'true'
 
     steps:
       - uses: actions/checkout@v4
@@ -2735,3 +2728,43 @@ jobs:
           name: Tetherbound-windows-debug
           path: build/windows/
           retention-days: 14
+
+  # One stable required status for branch protection. A skipped known-red job
+  # is an explicit exclusion; an active failure/cancellation or a missing
+  # export on a code change cannot become a green merge gate.
+  ci-gate:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - changes
+      - verify-scatter-bake-freshness
+      - verify-terrain-bake-freshness
+      - verify-unit-tests
+      - verify-veg-corridor
+      - verify-scatter-rules
+      - verify-harvest
+      - verify-core-verb-shard
+      - verify-gate-a-ui-build-shard
+      - verify-combat-shard
+      - verify-regions-shard
+      - verify-owner-regressions-shard
+      - verify-gate-evidence-shard
+      - verify-gate-b-core
+      - verify-continuous-core-known-red
+      - verify-gate-b-full-known-red
+      - discover-net-smokes
+      - verify-multiplayer-shard
+      - verify-solo-regression
+      - export
+    steps:
+      - name: Confirm active verification and export
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          set -euo pipefail
+          echo "$RESULTS" | jq -e 'all(.[]; .result == "success" or .result == "skipped")'
+          code=$(echo "$RESULTS" | jq -r '.changes.outputs.code')
+          export_result=$(echo "$RESULTS" | jq -r '.export.result')
+          if [ "$code" = true ]; then
+            test "$export_result" = success
+          fi

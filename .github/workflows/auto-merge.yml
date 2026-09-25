@@ -1,0 +1,27 @@
+name: Auto merge settled work
+
+# This trusted base workflow only arms auto merge for branches in this repo.
+# Branch protection waits for traceability and ci-gate on the PR head.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  enable-auto-merge:
+    if: >-
+      !github.event.pull_request.draft &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Merge automatically after required checks pass
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: gh pr merge --repo "$REPO" --auto --merge "$PR_NUMBER"
