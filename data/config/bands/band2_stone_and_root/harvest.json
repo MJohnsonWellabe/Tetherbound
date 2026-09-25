@@ -58,10 +58,10 @@
       "amount": 2,
       "label": "Prise out rootstone",
       "at": [
-        398.5,
-        1796.5
+        395.0,
+        1812.0
       ],
-      "_why": "B2 (#229): at (393,1802) this deposit stood inside the solid ground behind foundation_0's long wall and the cut face; no ordinary approach came within 3.6m, outside its 2.4m prompt (tests/probe_quarry_floor.gd). Moved onto the open quarry floor, 4.5m from orders 12 and 13 and 6m or more from both foundations and the conduit head, so it is walkable from the road threshold and no two prompts contest.",
+      "_why": "B2 (#229): at (393,1802) this deposit stood inside the solid ground behind foundation_0's long wall and the cut face; no ordinary approach came within 3.6m, outside its 2.4m prompt (tests/probe_quarry_floor.gd). Moved onto the open floor SOUTH of that wall, 6.7m from order 15 and 7m from the foundation: the wall (z 1802-1804, open only past x 409) splits the floor, and the earned route visits deposits in order, so 15 -> 16 -> 2020 now stays on one side instead of crossing it twice",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 1.0
     },
