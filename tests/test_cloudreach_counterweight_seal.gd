@@ -27,6 +27,8 @@ const PRE_UPPER_FLAGS := ["", "fly_traversal_unlocked", "cloudreach_act_i_comple
 ## shoulder flare (irregular = 0.84 + 0.18 sin + 0.08 cos).
 const DEFAULT_ROUTE_WIDTH_M := 7.5
 const MAX_SHOULDER_FLARE := 1.10
+## cloudreach_world.gd _build_progression_gates: a ground gate's opening height.
+const GROUND_GATE_OPENING_HEIGHT_M := 7.5
 ## scenes/player/player.tscn capsule radius.
 const TRAINER_RADIUS_M := 0.4
 ## The authored beacon crown is 46 x 44 m around its anchor (beacon visual note).
@@ -105,6 +107,48 @@ func test_every_stair_point_past_the_gate_is_fly_sealed() -> void:
 		if float(_progress(line, vertex)["s"]) > s_gate and not _inside_any(vertex, seals):
 			misses.append("polyline vertex %s" % vertex)
 	assert_true(misses.is_empty(), "stair points past the gate outside every %s seal: %s" % [UPPER_FLAG, str(misses)])
+
+
+## The closed gate's own collidable masonry must not be a landing pad: a flyer
+## on the counterweight beam could walk it and step off behind the gate. Every
+## collidable top face (beam, piers), widened by the flyer's body radius, is
+## sampled on a 5 cm grid against fly_controller._restricted_reason's grown
+## AABB. The gate geometry mirrors cloudreach_world.gd _build_progression_gates.
+func test_every_collidable_top_face_of_the_closed_gate_is_fly_sealed() -> void:
+	var gate := _gate()
+	var at := _vec(gate.get("position", []))
+	var line := _line()
+	var along := _dir_at(line, float(_progress(line, at)["s"]))
+	var right := Vector3(along.z, 0.0, -along.x)
+	var width := float(gate.get("opening_width_m", 16.0))
+	var below := maxf(0.0, float(gate.get("barrier_depth_below_m", 0.0)))
+	var opening_height := GROUND_GATE_OPENING_HEIGHT_M
+	var radius := float(_fly.get("collision_radius_m", 0.7))
+	var seals := _upper_seals()
+	var pier_x := width * 0.5 + 1.28
+	var pier_top := (opening_height - below) * 0.5 + (opening_height + 3.0 + below) * 0.5
+	# [lateral min, lateral max, along half-depth, top y above the gate point]
+	var faces := [
+		["counterweight beam", -(width + 4.0) * 0.5, (width + 4.0) * 0.5, 1.1, opening_height + 1.1 + 1.1],
+		["left pier", -pier_x - 1.0, -pier_x + 1.0, 1.1, pier_top],
+		["right pier", pier_x - 1.0, pier_x + 1.0, 1.1, pier_top],
+	]
+	var samples := 0
+	var misses: Array[String] = []
+	for face: Array in faces:
+		var lateral := float(face[1]) - radius
+		while lateral <= float(face[2]) + radius + 0.0001:
+			var depth := -float(face[3]) - radius
+			while depth <= float(face[3]) + radius + 0.0001:
+				var p := at + right * lateral + along * depth
+				p.y = at.y + float(face[4])
+				samples += 1
+				if not _inside_any_swept(p, seals) and misses.size() < 8:
+					misses.append("%s lateral %.2f depth %.2f %s" % [face[0], lateral, depth, p])
+				depth += 0.05
+			lateral += 0.05
+	assert_true(samples > 40000, "the gate's top faces were sampled (%d)" % samples)
+	assert_true(misses.is_empty(), "landable gate masonry outside every %s seal: %s" % [UPPER_FLAG, str(misses)])
 
 
 func test_legal_pre_unlock_content_is_outside_every_upper_seal() -> void:
@@ -196,6 +240,13 @@ func _swept(box: AABB) -> AABB:
 	var margin := float(_fly.get("body_clearance_m", 0.5))
 	var height := float(_fly.get("collision_height_m", 4.5))
 	return AABB(box.position - Vector3(margin, height, margin), box.size + Vector3(2.0 * margin, height + margin, 2.0 * margin))
+
+
+func _inside_any_swept(p: Vector3, seals: Array[Dictionary]) -> bool:
+	for seal: Dictionary in seals:
+		if _swept(seal["bounds"]).has_point(p):
+			return true
+	return false
 
 
 func _inside_any(p: Vector3, seals: Array[Dictionary]) -> bool:

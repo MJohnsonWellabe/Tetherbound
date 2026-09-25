@@ -105,6 +105,7 @@ func test_bounded_currents_reach_shrine_and_trial_does_not_grant_global_access()
 	for gate: Dictionary in trial["gates"]:
 		assert_true(volume.has_point(RULES.vec(gate["position"])))
 	assert_false(volume.has_point(Vector3(1110,1050,2940)))
-	# cloudreach_high_roost, cloudreach_upper, cloudreach_summit, plus the five
-	# F06 counterweight-stair slices behind the moved upper_counterweight_gate.
-	assert_eq(data["restrictions"].size(), 8)
+	# cloudreach_high_roost, cloudreach_upper, cloudreach_summit, plus the F06
+	# seal behind the moved upper_counterweight_gate: seven stair slices and the
+	# gate-crown volume over its beam and piers.
+	assert_eq(data["restrictions"].size(), 11)
