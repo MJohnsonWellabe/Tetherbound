@@ -38,7 +38,20 @@ const TEAL := Color("#36D6CB")
 const TEAL_SOFT := Color("#73E6DD")
 const SUCCESS := Color("#4BD28B")
 const WARNING := Color("#E8B74A")
-const DANGER := Color("#E7605B")
+## Urgent state: low HP, a failed catch, a missing ingredient, "your
+## weakness". Hot orange, NOT red or coral. Oxblood/red is reserved for Team
+## Tether (CLAUDE.md hard rule; ART_DIRECTION: "oxblood appears only with Team
+## Tether"), and this token used to be coral #E7605B -- so every low-HP bar,
+## KO badge and release button on the player's own side was painted in the
+## enemy faction's hue. Re-pointed here rather than at each call site so the
+## role keeps one definition. Kept visibly apart from WARNING amber by hue
+## (~26 deg vs ~41 deg) and by value, and never the only cue: the words
+## ("KO", "Out of", the effect arrows) carry the meaning, colour reinforces it.
+##
+## A destructive or irreversible CONFIRMATION (releasing a companion) is not
+## an urgent state and does not use this role: it is WARNING amber plus the
+## word and `warning_icon()`, never red (coordinator decision, X03).
+const DANGER := Color("#F07A22")
 
 # --- Stat / type-adjacent colors -------------------------------------------
 
@@ -365,3 +378,54 @@ static func chance_tier_color(chance: float) -> Color:
 		return SUCCESS
 	else:
 		return TEAL_SOFT.lerp(WARNING, 0.5)
+
+
+## The caution glyph that accompanies WARNING wherever colour alone would
+## otherwise carry "this cannot be undone" (UX §8: danger/valid/invalid never
+## depend on colour alone). Drawn here rather than typed as U+26A0 because
+## the UI font (Kenney Future) has no such glyph and a fallback font is not
+## guaranteed on the Ally. An amber triangle, dark-outlined, with a dark "!".
+## Cached per pixel size; pure image work, safe headless.
+static var _warning_icons: Dictionary = {}
+
+
+static func warning_icon(px: int = 24) -> Texture2D:
+	px = maxi(px, 8)
+	if _warning_icons.has(px):
+		return _warning_icons[px]
+	var ss := 4
+	var n := px * ss
+	var image := Image.create(px, px, false, Image.FORMAT_RGBA8)
+	var ink := Color(BG_DEEP, 1.0)
+	var top := Vector2(n * 0.5, n * 0.06)
+	var left := Vector2(n * 0.03, n * 0.94)
+	var right := Vector2(n * 0.97, n * 0.94)
+	var inset := n * 0.09
+	var i_top := Vector2(n * 0.5, n * 0.06 + inset * 1.9)
+	var i_left := Vector2(n * 0.03 + inset * 1.7, n * 0.94 - inset)
+	var i_right := Vector2(n * 0.97 - inset * 1.7, n * 0.94 - inset)
+	for y in px:
+		for x in px:
+			var acc := Color(0, 0, 0, 0)
+			for sy in ss:
+				for sx in ss:
+					var p := Vector2(x * ss + sx + 0.5, y * ss + sy + 0.5)
+					var c := Color(0, 0, 0, 0)
+					if Geometry2D.point_is_inside_triangle(p, top, left, right):
+						c = ink
+						if Geometry2D.point_is_inside_triangle(p, i_top, i_left, i_right):
+							c = WARNING
+							var bar_w := n * 0.11
+							var in_bar := absf(p.x - n * 0.5) <= bar_w * 0.5 and p.y >= n * 0.34 and p.y <= n * 0.66
+							var in_dot := p.distance_to(Vector2(n * 0.5, n * 0.77)) <= bar_w * 0.62
+							if in_bar or in_dot:
+								c = ink
+					acc += c
+			acc /= float(ss * ss)
+			if acc.a > 0.0:
+				acc = Color(acc.r / acc.a, acc.g / acc.a, acc.b / acc.a, acc.a)
+			image.set_pixel(x, y, acc)
+	var texture := ImageTexture.create_from_image(image)
+	_warning_icons[px] = texture
+	return texture
+

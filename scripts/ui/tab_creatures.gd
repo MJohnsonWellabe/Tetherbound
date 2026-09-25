@@ -97,7 +97,13 @@ const DETAIL_HINT_BASE := "A  pick up, then A again to reorder      E / X  send 
 	+ "      R  set as Best Creature      H / R3  rename      TMs are taught from the backpack"
 
 const HEALTH_FULL := Color(0.35, 0.62, 0.28)
-const HEALTH_LOW := Color(0.72, 0.22, 0.18)
+## Was a hand-picked brick red (0.72, 0.22, 0.18) -- Team Tether's hue on the
+## player's own roster. Now the shared urgent role, which is orange.
+const HEALTH_LOW := UITokens.DANGER
+
+## The caution glyph on the irreversible "Let them go forever" button. At
+## least the 24 px the lane's glyph floor asks of this screen.
+const FAREWELL_WARNING_ICON_PX := 28
 
 ## Appraisal pips (blind-judge pass: "[***--]" read as ASCII debug styling,
 ## not a rating a player was meant to see). Drawn the same filled/open-circle
@@ -810,10 +816,17 @@ func _build_farewell_panel() -> Control:
 	_farewell_keep.pressed.connect(_back_to_choosing)
 	body.add_child(_farewell_keep)
 
-	_farewell_release = _farewell_button("Let them go")
-	_farewell_release.add_theme_color_override("font_color", UITokens.DANGER)
-	_farewell_release.add_theme_color_override("font_focus_color", UITokens.DANGER)
-	_farewell_release.add_theme_color_override("font_hover_color", UITokens.DANGER)
+	# Irreversible, so it says so three ways -- amber WARNING, the caution
+	# glyph and the word "forever" -- and none of them is red: oxblood/red is
+	# Team Tether's alone, and this is the player's own goodbye (X03 red rule;
+	# destructive confirmations use WARNING, never DANGER).
+	_farewell_release = _farewell_button("Let them go forever")
+	_farewell_release.icon = UITokens.warning_icon(FAREWELL_WARNING_ICON_PX)
+	_farewell_release.add_theme_constant_override("h_separation", 10)
+	_farewell_release.add_theme_color_override("font_color", UITokens.WARNING)
+	_farewell_release.add_theme_color_override("font_focus_color", UITokens.WARNING)
+	_farewell_release.add_theme_color_override("font_hover_color", UITokens.WARNING)
+	_farewell_release.add_theme_color_override("font_pressed_color", UITokens.WARNING)
 	_farewell_release.pressed.connect(_do_release)
 	body.add_child(_farewell_release)
 
