@@ -1441,8 +1441,10 @@ func _announce_deployment(creature: RefCounted) -> void:
 		if hearts is RefCounted:
 			_heart_revision_seen = int((hearts as RefCounted).get("revision"))
 	if not _is_multi_peer():
-		if _session != null and not _is_host() and bool(_session.call("is_active")):
-			_deployment_waiting_for_receiver = true
+		# No receiver yet: a one-peer session, or no session at all because the
+		# returning route restores a mid-water ride before it dials. Hold the
+		# announcement; `_process` sends it once the session is multi-peer.
+		_deployment_waiting_for_receiver = true
 		return
 	var row := {
 		"creature_uid": str(creature.get("uid")),
@@ -1458,6 +1460,12 @@ func _announce_deployment(creature: RefCounted) -> void:
 		_host_set_deployed(_local_peer_id(), row)
 		return
 	_deployment_waiting_for_receiver = not _send_realm_rpc(1, "_rpc_creature_deployed", [row])
+
+
+## A held announcement goes out once there is a receiver to hear it.
+func _resend_waiting_deployment() -> void:
+	if _deployment_waiting_for_receiver and _ally != null and _is_multi_peer() and _realm_rpc_allowed(1):
+		_announce_deployment(_ally)
 
 
 ## The mirror: this process put its creature away.
@@ -3789,8 +3797,7 @@ func _process(delta: float) -> void:
 	_tick_streaming(delta)
 	_sync_active_creature()
 	_sync_active_relic_card()
-	if _deployment_waiting_for_receiver and _ally != null and _is_multi_peer() and _realm_rpc_allowed(1):
-		_announce_deployment(_ally)
+	_resend_waiting_deployment()
 	_show_a_revived_follower()
 	_update_prompt()
 
