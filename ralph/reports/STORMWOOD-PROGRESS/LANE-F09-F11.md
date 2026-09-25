@@ -349,3 +349,60 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   - As stills, Calm, Fading and the aftermath sit close together. Their separation is mostly rain density, ceiling motion and flashes, which read best in motion.
   - No blind judge has seen the purple set yet.
 
+
+### WO-F10-08, round 2: every phase in the deep purple (`cb067c58f`, `62f14e95f`)
+
+- **Owner direction** (about `sheet_purple_phases.jpg`, round 1): *"I like the building and break pictures. The other two aren't fantastic enough."* Calm, Fading and the post-release aftermath therefore move into the deep purple family of Building and Break. That covers sky, ceiling, fog, key and ambient; nothing is pale lavender or grey. The clock pin is kept.
+- **How phases separate now.** The sky changes only in small value steps inside the deep purple. The other cues are:
+
+  | Phase | Rain | Wind slant | Ceiling speed / contrast | Lightning | Fog + | Key / ambient | `surge_intensity()` |
+  |---|---|---|---|---|---|---|---|
+  | Calm | 0.4 | 0.45 | 0.008 / 0.3 (slow) | none | 0.0008 | 0.42 / 0.6 | 0.25 |
+  | Building | 0.65 | 0.85 | 0.03 / 0.5 (fast) | faint in-cloud flicker only (sheet glow 0.15) | 0.0016 | 0.3 / 0.45 | 0.65 |
+  | Break | 1.0 | 1.0 | 0.045 / 0.55 (fastest) | strikes, distant flashes and a persistent in-cloud sheet glow (0.9) | 0.0026 | 0.2 / 0.38 | 1.0 |
+  | Fading | 0.15 | 0.7 | 0.014 / 0.3 (slowing) | none | 0.0012 | 0.4 / 0.58 | 0.4 |
+  | Aftermath | 0.08 | 0.3 | 0.002 / 0.12 (almost still) | none | 0.0006 | 0.45 / 0.62 | 0.1 |
+
+- **Judge-7 findings folded in:**
+  1. **Break lightning a still can catch.** The ceiling shader has a new sheet glow: fbm patches that pulse slowly inside the cloud body. Break carries 0.9, and Building only 0.15, which reads as a rare, faint flicker. The glow is multiplied by the reduced-motion flash scale (floor 0.15, unchanged) and its clock freezes under reduced motion. There is no strobing.
+  2. **The ground darkens with the phase** through the key light and ambient, not a screen tint. Break's ground mean is 23/255, Building 33, Calm and Fading about 40, the aftermath 44.
+  3. **Fog and the distant rain curtain scale with the phase.** Fog density is added per phase as above. The far rain layer grows to 1200 drops and follows `rain_amount`.
+  4. **Ceiling motion order:** Calm slow, Building fast, Break fastest, Fading slowing, aftermath almost still. This is tested.
+  5. **Hue stays in the purple family.** Fading's pink horizon is gone. Every row is within 15° of Break's hue.
+- **Hook.** `StormwoodSurge.surge_intensity()` is a read-only 0–1 value, blended with the cross-fade. It is there for the ground-electricity effect on another branch; that effect is not built here.
+- **Review nits:**
+  - `is_instance_valid(target)` is checked before `target is Node3D`.
+  - The rain band anchors on the framed subject's last grounded height, so jumps don't bob the field.
+  - The camera ground is sampled every frame and eased at 8/s. It snaps on teleports of more than 20 m. The old 0.25 s steps are gone.
+  - On steep slopes, 6 ring samples at 6 m raise the band floor to (highest sample − 2 m).
+  - The `pin_time_of_day: false` branch is tested.
+  - Separation thresholds are visible margins, not token ones.
+- **Tests** (`tests/test_stormwood_surge_presentation.gd`, 41 tests):
+  - `test_every_phase_sits_in_the_deep_purple_band`: sky top, horizon and ceiling are 0.8–1.15× Break's luminance and within 15° of its hue.
+  - `test_phases_separate_by_non_sky_cues`: adjacent phases differ in at least two of these cues, and the ceiling-motion and rain orders hold:
+    - rain by at least 0.2;
+    - ceiling speed by at least 1.5×;
+    - wind by at least 0.2;
+    - sheet glow by at least 0.1;
+    - flashes.
+  - `test_sheet_glow_reaches_the_ceiling_and_respects_reduced_motion`
+  - `test_phase_wind_and_intensity_hook`
+  - `test_rain_anchor_holds_through_jumps_and_eases_on_slopes`
+  - `test_pin_off_restores_the_clock_look`
+  - `test_look_is_identical_at_every_hour` is kept.
+- **Negative control N24:** the round-1 pale Calm row fails `test_every_phase_sits_in_the_deep_purple_band`. Calm's sky top is 1.19×, its horizon 1.24× and its ceiling 1.27× Break's luminance.
+- **Frames:**
+  - `visual/surge/sheet_purple_phases.jpg` and `after/purple_{calm,building,break,fading,aftermath}_h{12,00}.jpg` were re-shot under the same names. Their records are in `after/frames_after_purple.json`.
+  - `visual/surge/sheet_purple_motion.jpg` holds 4 frames per phase, 0.25 s of game time apart, at hour 12. The capture group is `--only=purplemotion`, and the surge clocks are in `after/frames_after_purplemotion.json`.
+- **What I saw:**
+  - All five phases are now the deep purple. Sky means are 52–62/255 (the round-1 pale set was 86–98).
+  - The hour-12 and hour-0 pairs match: sky 55.1/55.0 (Calm), 59.5/59.5 (Building), 51.8/52.3 (Break), 54.7/54.6 (Fading) and 61.6/61.7 (aftermath).
+  - In the motion strip, Break shows lighter in-cloud glow patches low on the horizon that change from frame to frame. Its rain is the densest and most slanted.
+  - Building has heavy slanted rain and a textured ceiling, with no visible glow in these four frames.
+  - Calm and Fading show sparse, near-vertical rain.
+  - The aftermath is the stillest: a smooth ceiling and only a few drops.
+- **Open:**
+  - The grass still reads fairly green in Calm, Fading and the aftermath. The darkening is only through light and ambient, by design.
+  - Building has no distant flashes, only the faint glow, which rarely shows in stills.
+  - The slope-floor ring is exercised by the anchor test's easing but has no direct steep-terrain fixture.
+  - No blind judge has seen the round-2 set.
