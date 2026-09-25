@@ -228,6 +228,15 @@ func test_native_identity_must_be_a_member_of_the_claimed_lobby() -> void:
 	assert_false(STEAM_LOBBY.member_admission_error(501, members, 101, hello).is_empty())
 
 
+func test_protocol_refusal_text_is_the_one_session_maps_to_incompatible_version() -> void:
+	const SESSION := preload("res://scripts/net/session.gd")
+	assert_eq(STEAM_LOBBY.PROTOCOL_REFUSAL, SESSION.STEAM_PROTOCOL_REFUSAL)
+	var hello := {"steam_protocol": "tetherbound-invite-v2", "steam_lobby_id": 101}
+	var members: Array[int] = [500, 501]
+	assert_eq(STEAM_LOBBY.member_admission_error(501, members, 101, hello),
+		SESSION.STEAM_PROTOCOL_REFUSAL)
+
+
 func test_connect_lobby_launch_argument_parsing() -> void:
 	assert_eq(STEAM_LOBBY.connect_lobby_from_args(["+connect_lobby", "7654"]), 7654)
 	assert_eq(STEAM_LOBBY.connect_lobby_from_args(["+connect_lobby=8765"]), 8765)

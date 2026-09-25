@@ -23,6 +23,9 @@ const PRODUCT := "tetherbound"
 # v5 adds exact host confirmation for ordinary shared-wild catch completion.
 # Bump the value in build_fingerprint.gd; ENet and Steam admission share it.
 const PROTOCOL := BUILD_FINGERPRINT.WIRE_PROTOCOL
+## Session maps this exact refusal to `incompatible_version`, the same code as
+## a build/content mismatch.
+const PROTOCOL_REFUSAL := "This connection uses an incompatible Tetherbound protocol."
 const LOBBY_CAPACITY := 4
 const FRIENDS_ONLY := 1
 const CALLBACK_OK := 1
@@ -280,7 +283,7 @@ static func member_admission_error(steam_id: int, members: Array[int],
 	if steam_id <= 0 or not members.has(steam_id):
 		return "Join the friends lobby before connecting to this world."
 	if summary.get("steam_protocol") != PROTOCOL:
-		return "This connection uses an incompatible Tetherbound protocol."
+		return PROTOCOL_REFUSAL
 	if summary.get("steam_lobby_id") != lobby_id:
 		return "This connection belongs to a different friends lobby."
 	return ""

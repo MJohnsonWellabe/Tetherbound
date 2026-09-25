@@ -44,6 +44,9 @@ const REALM_TRANSITION := preload("res://scripts/net/realm_transition.gd")
 const SNAPSHOT_TRANSFER := preload("res://scripts/net/snapshot_transfer.gd")
 const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
 const BUILD_FINGERPRINT := preload("res://scripts/net/build_fingerprint.gd")
+## Kept as text rather than preloading steam_lobby.gd, which Session must not
+## depend on. test_steam_lobby.gd pins the two strings together.
+const STEAM_PROTOCOL_REFUSAL := "This connection uses an incompatible Tetherbound protocol."
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 
@@ -287,6 +290,9 @@ func host_with_peer(peer: MultiplayerPeer, cap: int = -1,
 	_registry.call("clear")
 	_registry.call("add", HOST_PEER_ID, _local_character_id(), _local_display_name(),
 		_local_realm(), _local_appearance_id())
+	# Hash the content now, while the host is opening, so the first joiner's
+	# hello does not pay for it (build_fingerprint.gd caches per process).
+	BUILD_FINGERPRINT.current()
 	if _realms != null:
 		_realms.call("reconcile")
 	print("[session] hosting via %s (cap %d); local peer id %d"
@@ -685,7 +691,9 @@ func _rpc_hello(summary: Dictionary) -> void:
 		if lobby != null and lobby.has_method("admission_error"):
 			reason = str(lobby.call("admission_error", sender, summary))
 		if not reason.is_empty():
-			_reject_hello(sender, "steam_lobby_refused", reason)
+			var code := "incompatible_version" \
+				if reason == STEAM_PROTOCOL_REFUSAL else "steam_lobby_refused"
+			_reject_hello(sender, code, reason)
 			return
 	# Build/content compatibility precedes identity and capacity, so a
 	# mismatched joiner hears the specific reason even when the session is
