@@ -171,8 +171,19 @@ func _run() -> void:
 		await step(peer, "wait", {"frames": 120})
 		await step(peer, "dismiss_dialogue", {"presses": 40, "settle": 30})
 
-	# 4. The guest frees the legendary at the machine control.
 	var control_at := Vector3(float(control[0]), float(control[1]), float(control[2]))
+	# 3b. The host walks into the chamber BEFORE the lever. Walking in after
+	# it is a harness trap, measured twice (runs 2 and 3: "no verdict"): the
+	# host's offer opens its conversation mid-walk, locomotion is switched off,
+	# and `stick_navigator.walk_to` waits without spending its frame budget, so
+	# the step never answers. A player who is in the room when the tether goes
+	# is the ordinary case anyway.
+	var host_walk: Dictionary = await step(0, "move_to",
+		{"x": control_at.x, "z": control_at.z, "close_enough": 7.0, "budget_frames": 2400})
+	check(str(host_walk.get("verdict", "")) == "PASS",
+		"the host walked into the chamber before the lever (%s)" % str(host_walk.get("detail", "")))
+
+	# 4. The guest frees the legendary at the machine control.
 	var reached := false
 	for _attempt in 3:
 		var walked: Dictionary = await step(1, "move_to",
@@ -199,23 +210,18 @@ func _run() -> void:
 		quit(await finish())
 		return
 
-	# 5. The host walks into the chamber too; its offer waits for it there.
-	# The offer opens as soon as the host is within the configured radius of
-	# the freed creature, and its conversation takes the host's legs mid-walk,
-	# so "in the chamber" is: arrived near the control, OR its own offer began.
+	# 5. The host was already standing in the chamber when the tether went
+	# (it walked in before the lever, step 3b), so its own offer opens where it
+	# stands -- the way it reaches a player who watched the lever pulled.
 	var host_in := false
-	var host_walk := ""
-	for _attempt in 3:
-		var hw: Dictionary = await step(0, "move_to",
-			{"x": control_at.x, "z": control_at.z, "close_enough": 5.0, "budget_frames": 2400})
-		host_walk = str(hw.get("detail", ""))
-		var host_stage := str((await _choice(0)).get("stage", ""))
-		if str(hw.get("verdict", "")) == "PASS" or host_stage != "":
+	var host_stage := ""
+	for _poll in 60:
+		host_stage = str((await _choice(0)).get("stage", ""))
+		if host_stage != "":
 			host_in = true
-			host_walk += " (host climax stage '%s')" % host_stage
 			break
-		await step(0, "dismiss_dialogue", {"presses": 8, "settle": 30})
-	check(host_in, "the host walked into the chamber and its own offer began (%s)" % host_walk)
+		await step(0, "wait", {"frames": 10})
+	check(host_in, "the host, standing in the chamber, had its own offer begin (stage '%s')" % host_stage)
 	await _diagnose_participants("after the freeing")
 
 	# 6. Each peer's own choice opens.
