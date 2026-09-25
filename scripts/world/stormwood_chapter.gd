@@ -7,6 +7,7 @@ const PEOPLE := preload("res://scripts/world/village_npcs.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const CROWN_GUARDIAN_CLEAR_FLAG := "stormwood:named:crown_guardian:cleared"
 const WEN_REFUSAL_CONVERSATION := "stormwood_archivist_wen_guardian_refusal"
+const ONDRA_ROAD_REPORT := "stormwood_ondra_raise_a_road_report"
 var world: Node3D
 var events: Node
 var people: Node3D
@@ -97,6 +98,9 @@ func _dialogue_finished(id: String) -> void:
 	if id == "stormwood_rook_circuit_return":
 		events.emit_event("side:stormwood_deepwood_circuit:step_3")
 		return
+	if id == ONDRA_ROAD_REPORT:
+		events.emit_event("side:stormwood_raise_a_road:step_4")
+		return
 	for actor: String in DIALOGUE_EVENTS:
 		if id == "stormwood_%s_in_progress" % actor:
 			events.emit_event(str(DIALOGUE_EVENTS[actor]))
@@ -150,6 +154,12 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 	var branches: Array = [
 		{"if_flag": "stormwood:long_storm_ended", "conversation": prefix + "post_storm"},
 	]
+	if actor_id == "keeper_ondra":
+		# The road report outranks Ondra's ordinary and post-storm lines while
+		# owed; it needs the recipe conversation long since finished.
+		branches.push_front({"if_flag": "stormwood:side_raise_a_road_3",
+			"unless_flag": "stormwood:side_raise_a_road_complete",
+			"conversation": ONDRA_ROAD_REPORT})
 	if actor_id == "archivist_wen":
 		branches.append({"if_flag": ["stormwood:crown_reached", CROWN_GUARDIAN_CLEAR_FLAG],
 			"conversation": prefix + "in_progress"})

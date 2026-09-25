@@ -14,6 +14,10 @@ var _revision := -1
 var _world_revision := -1
 var _pending_id := ""
 var _arrival_until: Dictionary = {}
+var _footing_prompts: Dictionary = {}
+const ROAD_REVEALED := "stormwood:arch_recipe_known"
+const ROAD_STEP_1 := "stormwood:side_raise_a_road_1"
+const ROAD_STEP_2 := "stormwood:side_raise_a_road_2"
 
 func mount(owner_world: Node3D) -> void:
 	world = owner_world
@@ -51,8 +55,8 @@ func _build_footings() -> void:
 		prompt.position = Vector3(0, 0.8, -5)
 		footing.add_child(prompt)
 		prompt.configure("Inspect the shattered Crown footing" if str(socket.id) == "still_grove" else "Inspect the old arch footing", 2.5, true)
-		prompt.activated.connect(func() -> void:
-			game.push_world_message("Open Build and choose Stormglass Arch. The Crown footing needs six Crown-grade Stormglass." if str(socket.id) == "still_grove" else "This footing holds a Stormglass Arch. The next raised arch becomes its twin."))
+		prompt.activated.connect(_inspect_footing.bind(str(socket.id)))
+		_footing_prompts[str(socket.id)] = prompt
 		if str(socket.id) == "capacitor_grove":
 			var grove := CAPACITOR_GROVE.new()
 			grove.name = "CapacitorGrovePresentation"
@@ -178,6 +182,43 @@ func restore_progression_from_game(_game: Node) -> void:
 			chapter.emit_event("arch:pair_b_linked")
 		if not _twin("e_crown").is_empty():
 			chapter.emit_event("arch:crown_constructed")
+		if flags.has(ROAD_STEP_1) and not flags.has(ROAD_STEP_2) \
+				and not BUILT.chosen_road(flags, game.get("placed_buildings")).is_empty():
+			chapter.emit_event("side:stormwood_raise_a_road:step_2")
+		for footing: String in _footing_prompts:
+			(_footing_prompts[footing] as Node).call("configure",
+				footing_prompt_label(footing, flags), 2.5, true)
+
+## Raise a Road: before two footings are chosen, an optional footing's prompt
+## records it as one of the player's road ends; otherwise it explains the
+## footing as before. The choice is separate from building on it.
+static func footing_prompt_label(footing: String, flags: RefCounted) -> String:
+	if footing == "still_grove":
+		return "Inspect the shattered Crown footing"
+	var socket := {}
+	for row: Dictionary in RULES.config().footings:
+		if str(row.id) == footing:
+			socket = row
+	if BUILT.ROAD_FOOTINGS.has(footing) and flags.has(ROAD_REVEALED) and RULES.is_available(socket, flags):
+		if flags.has(BUILT.ROAD_CHOSEN_PREFIX + footing):
+			return "Your chosen road footing"
+		if not flags.has(ROAD_STEP_1):
+			return "Choose this footing for your road"
+	return "Inspect the old arch footing"
+
+
+func _inspect_footing(footing: String) -> void:
+	var flags: RefCounted = game.get("progression")
+	if footing == "still_grove":
+		game.push_world_message("Open Build and choose Stormglass Arch. The Crown footing needs six Crown-grade Stormglass.")
+		return
+	if footing_prompt_label(footing, flags) == "Choose this footing for your road":
+		world.get_node("StormwoodChapter").emit_event("count:" + BUILT.ROAD_CHOSEN_PREFIX + footing)
+		game.push_world_message("Chosen for your road. Raise a Stormglass Arch here and at your second footing.")
+		restore_progression_from_game(game)
+		return
+	game.push_world_message("This footing holds a Stormglass Arch. The next raised arch becomes its twin.")
+
 
 func _relight(id: String) -> void:
 	if not _pending_id.is_empty():
@@ -262,3 +303,7 @@ func _arrive(event: Dictionary) -> void:
 		world.get_node("StormwoodChapter").emit_event("arch:pair_a_travel")
 	if str(event.get("target", "")) == "e_crown":
 		world.get_node("StormwoodChapter").emit_event("arch:crown_arrived")
+	var departure := BUILT.road_departure_event(str(event.get("source", "")),
+		str(event.get("target", "")), game.get("progression"), game.get("placed_buildings"))
+	if not departure.is_empty():
+		world.get_node("StormwoodChapter").emit_event(departure)

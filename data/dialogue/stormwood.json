@@ -781,6 +781,16 @@
         "Rook: Three posts, one continuous road. That is a circuit.",
         "You learned where the forest opens and where it closes. Keep that rhythm when the storm turns."
       ]
+    },
+    "stormwood_ondra_raise_a_road_report": {
+      "speaker": "Keeper Ondra",
+      "portrait": "res://assets/ui/portraits/villager_female.png",
+      "state": "side_complete",
+      "requires_flags": ["stormwood:side_raise_a_road_3"],
+      "lines": [
+        "Keeper Ondra: You chose your own footings, raised both arches and walked the road there and back. That is a Rodfolk road, not a borrowed one.",
+        "It will stand as long as you leave it standing. Take it whenever a Break makes the ground road too slow."
+      ]
     }
   }
 }

@@ -59,7 +59,16 @@
       "stormwood:side_glass_for_bryn_complete",
       "stormwood:side_raise_a_road_1",
       "stormwood:side_raise_a_road_2",
+      "stormwood:side_raise_a_road_3",
       "stormwood:side_raise_a_road_complete",
+      "stormwood:side_raise_a_road_chosen:verge_road",
+      "stormwood:side_raise_a_road_chosen:hollows_road",
+      "stormwood:side_raise_a_road_chosen:capacitor_grove",
+      "stormwood:side_raise_a_road_chosen:deepwood_road",
+      "stormwood:side_raise_a_road_departed:verge_road",
+      "stormwood:side_raise_a_road_departed:hollows_road",
+      "stormwood:side_raise_a_road_departed:capacitor_grove",
+      "stormwood:side_raise_a_road_departed:deepwood_road",
       "stormwood:side_deepwood_circuit_1",
       "stormwood:side_deepwood_circuit_2",
       "stormwood:side_deepwood_circuit_complete",
@@ -622,6 +631,13 @@
           "flag_id": "stormwood:side_raise_a_road_1",
           "scope": "world",
           "label": "Choose two optional ancient footings.",
+          "count_flags": [
+            "stormwood:side_raise_a_road_chosen:verge_road",
+            "stormwood:side_raise_a_road_chosen:hollows_road",
+            "stormwood:side_raise_a_road_chosen:capacitor_grove",
+            "stormwood:side_raise_a_road_chosen:deepwood_road"
+          ],
+          "required_count": 2,
           "requires_flags": [
             "stormwood:arch_recipe_known"
           ],
@@ -639,13 +655,30 @@
         },
         {
           "id": "step_3",
-          "flag_id": "stormwood:side_raise_a_road_complete",
+          "flag_id": "stormwood:side_raise_a_road_3",
           "scope": "world",
-          "label": "Travel your new road and report to Ondra.",
+          "label": "Travel your new road in both directions.",
+          "count_flags": [
+            "stormwood:side_raise_a_road_departed:verge_road",
+            "stormwood:side_raise_a_road_departed:hollows_road",
+            "stormwood:side_raise_a_road_departed:capacitor_grove",
+            "stormwood:side_raise_a_road_departed:deepwood_road"
+          ],
+          "required_count": 2,
           "requires_flags": [
             "stormwood:side_raise_a_road_2"
           ],
           "completion_event": "side:stormwood_raise_a_road:step_3"
+        },
+        {
+          "id": "step_4",
+          "flag_id": "stormwood:side_raise_a_road_complete",
+          "scope": "world",
+          "label": "Report your new road to Keeper Ondra.",
+          "requires_flags": [
+            "stormwood:side_raise_a_road_3"
+          ],
+          "completion_event": "side:stormwood_raise_a_road:step_4"
         }
       ],
       "revealed_by": "stormwood:arch_recipe_known"
