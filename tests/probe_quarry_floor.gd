@@ -31,6 +31,7 @@ const SEEDS := [Vector2(389.0, 1784.0), Vector2(397.5, 1801.4)]
 var _world: Node3D
 var _terrain_data: Object
 var _space: PhysicsDirectSpaceState3D
+var _who: Array = []
 
 
 func _init() -> void:
@@ -46,6 +47,9 @@ func _run() -> void:
 			extra.append(Vector2(float(p[0]), float(p[1])))
 		elif a == "--map":
 			draw_map = true
+		elif a.begins_with("--who="):
+			var w := a.trim_prefix("--who=").split(",")
+			_who.append(Vector2(float(w[0]), float(w[1])))
 	_world = (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(_world)
 	current_scene = _world
@@ -65,6 +69,20 @@ func _run() -> void:
 	var exclude: Array[RID] = []
 	if player != null:
 		exclude.append(player.get_rid())
+	for p: Vector2 in _who:
+		var probe := CapsuleShape3D.new()
+		probe.radius = BODY_RADIUS
+		probe.height = BODY_HEIGHT
+		var wq := PhysicsShapeQueryParameters3D.new()
+		wq.shape = probe
+		wq.exclude = exclude
+		var g0 := _ground(p.x, p.y)
+		wq.transform = Transform3D(Basis(), Vector3(p.x, g0 + STEP_CLEAR_M + BODY_HEIGHT * 0.5, p.y))
+		var names: Array[String] = []
+		for hit: Dictionary in _space.intersect_shape(wq, 8):
+			var c := hit.get("collider") as Node
+			names.append(str(c.get_path()) if c != null else "?")
+		print("[quarry] who %s ground %.2f: %s" % [p, g0, names])
 	var w := int((MAX.x - MIN.x) / GRID_M) + 1
 	var h := int((MAX.y - MIN.y) / GRID_M) + 1
 	var free := PackedByteArray()
