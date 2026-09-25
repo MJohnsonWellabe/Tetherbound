@@ -508,14 +508,16 @@ func test_break_keeps_its_violet_identity_at_every_hour() -> void:
 			assert_true(hb >= 220.0 and hb <= 280.0, "Break %s violet at hour %.0f (hue %.0f)" % [key, hour, hb])
 	surge.free()
 
-## Rewritten for WO-F10-08 (was night-gated): Fading's breakup is the same
-## at every hour; there is no night to close it.
-func test_fading_breakup_is_the_same_at_every_hour() -> void:
+## Rewritten for WO-F10-08: ceiling breakup (and every ceiling value) is the
+## same at every hour; there is no night to close gaps.
+func test_ceiling_breakup_is_the_same_at_every_hour() -> void:
 	var surge := SURGE.new()
-	var fading := surge._resolved(surge.presentation_for("fading"))
-	var noon := float(surge._final(fading, _real_base(surge, 12.0)).ceiling_breakup)
-	assert_true(noon > 0.2, "Fading clears")
-	assert_almost_eq(float(surge._final(fading, _real_base(surge, 23.0)).ceiling_breakup), noon, 0.0001)
+	for phase: String in PHASES:
+		var row := surge._resolved(surge.presentation_for(phase))
+		var noon: Dictionary = surge._final(row, _real_base(surge, 12.0))
+		var midnight: Dictionary = surge._final(row, _real_base(surge, 23.0))
+		assert_almost_eq(float(midnight.ceiling_breakup), float(noon.ceiling_breakup), 0.0001, phase)
+		assert_eq((midnight.ceiling_colour as Color).to_html(false), (noon.ceiling_colour as Color).to_html(false), phase)
 	surge.free()
 
 ## Nit: day Break stays readable (replaces the old raw sun-energy guard):
@@ -648,28 +650,67 @@ func test_break_sky_is_a_storm_afternoon_at_every_hour() -> void:
 		assert_eq((night[key] as Color).to_html(false), (day[key] as Color).to_html(false), "Break %s same at 23:00" % key)
 	surge.free()
 
-## Item 7, rewritten for WO-F10-08: all phases live in the purple family
-## (no blue/white/olive/warm sky), and adjacent phases separate by their
-## non-sky cues: rain density, ceiling value/motion and key level.
-func test_phases_separate_within_the_purple_family() -> void:
+## WO-F10-08 round 2 (owner: "I like the building and break pictures. The
+## other two aren't fantastic enough"): every phase and the aftermath sit in
+## Break's deep purple band: sky top and ceiling luminance within
+## 0.8-1.15x of Break's (the owner-liked Building sits at 0.84/1.12; the
+## rejected pale Calm was 1.19/1.27), horizon within the same band, and hue
+## within 15 degrees of Break's.
+func test_every_phase_sits_in_the_deep_purple_band() -> void:
 	var surge := SURGE.new()
 	var base := _real_base(surge, 12.0)
+	var reference: Dictionary = surge._final(surge._resolved(surge.presentation_for("break")), base)
 	var rows := {}
 	for phase: String in PHASES:
 		rows[phase] = surge._final(surge._resolved(surge.presentation_for(phase)), base)
+	rows["aftermath"] = surge._final(surge._resolved(surge.presentation_for("calm", true)), base)
+	for name: String in rows:
 		for key: String in ["sky_top", "sky_horizon", "ceiling_colour"]:
-			var hue: float = (rows[phase][key] as Color).h * 360.0
-			assert_true(hue >= 235.0 and hue <= 300.0, "%s %s is in the purple family (hue %.0f)" % [phase, key, hue])
-	for pair: Array in [["calm", "building"], ["building", "break"], ["break", "fading"], ["fading", "calm"]]:
+			var c: Color = rows[name][key]
+			var r: Color = reference[key]
+			var ratio := c.get_luminance() / maxf(0.001, r.get_luminance())
+			assert_true(ratio >= 0.8 and ratio <= 1.15, "%s %s luminance %.2fx Break's (band 0.8-1.15)" % [name, key, ratio])
+			var dh := absf(c.h - r.h) * 360.0
+			dh = minf(dh, 360.0 - dh)
+			assert_true(dh <= 15.0, "%s %s hue %.0f deg from Break's" % [name, key, dh])
+	surge.free()
+
+
+## Adjacent phases (and the aftermath against Calm) still differ in at least
+## two non-sky cues, each by a margin a blind viewer can see (reviewer: no
+## token thresholds): rain amount by >= 0.2 of full (visible streak density),
+## ceiling speed by >= 1.5x (visibly faster churn), wind by >= 0.2 (streak
+## lean), sheet glow by >= 0.1, or flashes on/off. Ceiling motion is ordered
+## Calm slow < Building < Break fastest, Fading slowing below Building,
+## aftermath almost still (judge finding 4).
+func test_phases_separate_by_non_sky_cues() -> void:
+	var surge := SURGE.new()
+	var rows := {}
+	for phase: String in PHASES:
+		rows[phase] = surge._resolved(surge.presentation_for(phase))
+	rows["aftermath"] = surge._resolved(surge.presentation_for("calm", true))
+	for pair: Array in [["calm", "building"], ["building", "break"], ["break", "fading"], ["fading", "calm"], ["aftermath", "calm"]]:
 		var a: Dictionary = rows[pair[0]]
 		var b: Dictionary = rows[pair[1]]
 		var cues := 0
-		if absf(float(a.rain_amount) - float(b.rain_amount)) >= 0.15: cues += 1
-		if absf(float(a.sun_energy_mult) - float(b.sun_energy_mult)) >= 0.1: cues += 1
-		if absf(float(a.ceiling_speed) - float(b.ceiling_speed)) >= 0.005: cues += 1
-		if absf((a.ceiling_colour as Color).get_luminance() - (b.ceiling_colour as Color).get_luminance()) >= 0.04: cues += 1
+		if absf(float(a.rain_amount) - float(b.rain_amount)) >= 0.2: cues += 1
+		if absf(float(a.wind) - float(b.wind)) >= 0.2: cues += 1
+		var fast := maxf(float(a.ceiling_speed), float(b.ceiling_speed))
+		var slow := maxf(0.0001, minf(float(a.ceiling_speed), float(b.ceiling_speed)))
+		if fast / slow >= 1.5: cues += 1
+		if absf(float(a.sheet_glow) - float(b.sheet_glow)) >= 0.1: cues += 1
 		if bool(a.flashes) != bool(b.flashes): cues += 1
 		assert_true(cues >= 2, "%s vs %s differ by only %d non-sky cues" % [pair[0], pair[1], cues])
+	var speed := func(n: String) -> float: return float(rows[n].ceiling_speed)
+	assert_true(speed.call("calm") < speed.call("building") and speed.call("building") < speed.call("break"), "Calm < Building < Break")
+	assert_true(speed.call("fading") < speed.call("building") and speed.call("aftermath") < speed.call("calm"), "Fading slows, aftermath almost still")
+	assert_true(float(rows.aftermath.rain_amount) < float(rows.fading.rain_amount) and float(rows.fading.rain_amount) < float(rows.calm.rain_amount),
+		"rain: aftermath drizzle < Fading easing < Calm")
+	assert_true(float(rows["break"].sheet_glow) >= 0.4, "Break carries persistent in-cloud lightning a still can catch")
+	assert_true(float(rows.building.sheet_glow) > 0.0 and float(rows.building.sheet_glow) < float(rows["break"].sheet_glow) * 0.5, "Building: faint flicker only")
+	for name: String in ["calm", "fading", "aftermath"]:
+		assert_almost_eq(float(rows[name].sheet_glow), 0.0, 0.0001, "%s has no lightning" % name)
+		assert_false(bool(rows[name].flashes))
 	surge.free()
 
 ## Runs a settled Break for `seconds` and returns each flash onset's time and
@@ -945,3 +986,82 @@ func test_leaving_stormwood_restores_the_clock_look() -> void:
 	next_look.free()
 	surge.free()
 	parts.world.free()
+
+
+## Judge finding 1 + UX 8: the sheet lightning reaches the ceiling shader in
+## Break, and under reduced motion it drops to the flash floor and stops
+## pulsing (glow_time frozen).
+func test_sheet_glow_reaches_the_ceiling_and_respects_reduced_motion() -> void:
+	var parts := _world_with_look()
+	var surge := SURGE.new()
+	surge.world = parts.world
+	surge.call("_build_ceiling")
+	surge.phase = "break"
+	surge.settle_presentation()
+	surge.call("_advance_flash", 0.1)
+	var glow := float(surge._ceiling_material.get_shader_parameter("sheet_glow"))
+	assert_almost_eq(glow, float(_config().presentation.phases["break"].sheet_glow), 0.0001)
+	var t0 := float(surge._ceiling_material.get_shader_parameter("glow_time"))
+	surge.call("_advance_flash", 0.5)
+	assert_true(float(surge._ceiling_material.get_shader_parameter("glow_time")) > t0, "glow moves")
+	MOTION_PREFS.set_reduced_motion(true)
+	surge.call("_advance_flash", 0.1)
+	var t1 := float(surge._ceiling_material.get_shader_parameter("glow_time"))
+	surge.call("_advance_flash", 0.5)
+	assert_almost_eq(float(surge._ceiling_material.get_shader_parameter("glow_time")), t1, 0.0001, "no pulse under reduced motion")
+	assert_true(float(surge._ceiling_material.get_shader_parameter("sheet_glow")) <= glow * 0.2, "glow at the flash floor")
+	surge.free()
+	parts.world.free()
+
+
+## Wind response per phase stays inside the lens-safe maximum slant, and the
+## intensity hook reports the phase.
+func test_phase_wind_and_intensity_hook() -> void:
+	var surge := SURGE.new()
+	surge._rain = surge._build_rain()
+	surge._style_rain()
+	var process := surge._rain.process_material as ParticleProcessMaterial
+	var full := Vector2(process.direction.x, process.direction.z).length()
+	surge.call("_update_rain", surge._resolved(surge.presentation_for("calm")))
+	var calm := Vector2(process.direction.x, process.direction.z).length()
+	assert_true(calm < full * 0.7 and calm > 0.0, "Calm leans less than Break")
+	for phase: String in PHASES:
+		assert_true(float(surge.presentation_for(phase).wind) <= 1.0, "%s wind within the lens-safe maximum" % phase)
+	surge.phase = "break"
+	surge.settle_presentation()
+	assert_almost_eq(surge.surge_intensity(), 1.0, 0.0001)
+	surge.phase = "calm"
+	surge.settle_presentation()
+	assert_true(surge.surge_intensity() < 0.5)
+	surge._rain.free()
+	surge.free()
+
+
+## Review: a jump does not bob the rain field (the anchor holds the last
+## grounded height), the floor eases instead of stepping, and a big jump
+## (teleport, realm change) snaps.
+func test_rain_anchor_holds_through_jumps_and_eases_on_slopes() -> void:
+	var anchor: float = SURGE.grounded_anchor(NAN, 10.0, false)
+	assert_almost_eq(anchor, 10.0, 0.0001, "unset anchor takes the current height")
+	anchor = SURGE.grounded_anchor(anchor, 10.0, true)
+	anchor = SURGE.grounded_anchor(anchor, 11.4, false)
+	assert_almost_eq(anchor, 10.0, 0.0001, "mid-jump: still the grounded height")
+	anchor = SURGE.grounded_anchor(anchor, 12.0, true)
+	assert_almost_eq(anchor, 12.0, 0.0001, "landed higher: follows")
+	var eased: float = SURGE.smooth_floor(0.0, 2.0, 0.016, 8.0)
+	assert_true(eased > 0.0 and eased < 0.5, "a 2 m slope step eases in (%.2f after one frame)" % eased)
+	assert_almost_eq(SURGE.smooth_floor(0.0, 50.0, 0.016, 8.0), 50.0, 0.0001, "a teleport snaps")
+
+
+## Review: the storm pin's off switch really restores the clock blend.
+func test_pin_off_restores_the_clock_look() -> void:
+	var surge := SURGE.new()
+	var art := _art()
+	surge.rules.config.presentation.storm_base.pin_time_of_day = false
+	assert_true(is_same(surge.pinned_look_config(art), art), "pin off: WorldLook keeps art.json as loaded")
+	var cycle := DAY_CYCLE.new(art)
+	var noon: Dictionary = surge.base_look_at(art, cycle, 12.0)
+	var midnight: Dictionary = surge.base_look_at(art, cycle, 0.0)
+	assert_ne((noon.sky_top as Color).to_html(false), (midnight.sky_top as Color).to_html(false), "the clock look is back")
+	assert_true(float(midnight.night_scale) < 1.0, "night scaling applies again")
+	surge.free()

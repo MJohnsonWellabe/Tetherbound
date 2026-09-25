@@ -30,6 +30,11 @@ uniform float cloud_time = 0.0;
 uniform float contrast = 0.3;
 uniform float breakup = 0.0;
 uniform float flash = 0.0;
+// Sheet lightning inside the ceiling (Break strong, Building faint): a slow
+// smooth glow in cloud patches, not a strobe, so most Break stills catch
+// some. glow_time is accumulated by the script (0 rate under reduced motion).
+uniform float sheet_glow = 0.0;
+uniform float glow_time = 0.0;
 uniform vec3 flash_colour : source_color = vec3(0.9, 0.86, 1.0);
 varying vec3 dir;
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -58,6 +63,9 @@ void fragment() {
 	float body = clamp(n * 0.75 + m * 0.35, 0.0, 1.0);
 	vec3 colour = ceiling_colour * mix(1.0 - contrast, 1.0 + contrast * 0.6, body);
 	colour += flash_colour * flash * (0.35 + 0.9 * body);
+	float patch = smoothstep(0.45, 0.8, fbm(uv * 0.45 + vec2(glow_time * 0.07, -glow_time * 0.05)));
+	float pulse = 0.5 + 0.5 * sin(glow_time * 6.2832 + fbm(uv * 0.3) * 9.0);
+	colour += flash_colour * sheet_glow * patch * pulse * (0.4 + 0.6 * body);
 	ALBEDO = colour;
 	// Opaque almost down to eye level: the art.json sky's lit cumulus band
 	// must not show under a storm ceiling.
@@ -115,6 +123,7 @@ var _last_night_scale := -1.0
 var _last_base: Dictionary = {"night_scale": 1.0}
 var _dirty := true
 var _cloud_time := 0.0
+var _glow_time := 0.0
 ## _final() of the target, cached while the same `_to` and base dictionaries
 ## are in use (base changes only on a WorldLook re-apply, every 0.2-2 s).
 var _final_cache: Dictionary = {}
@@ -128,6 +137,12 @@ var _roofed := false
 var _roof_fade := 0.0
 var _rain_amount := 0.0
 var _camera_ground := NAN
+## Rain height anchor (review): the framed subject's last GROUNDED height, so
+## a jump does not bob the rain field; `_slope_floor` from ring samples; and
+## `_floor_smoothed`, the per-frame eased floor the emitter actually uses.
+var _anchor_y := NAN
+var _slope_floor := -INF
+var _floor_smoothed := NAN
 var _flash := 0.0
 var _flash_next := 0.0
 var _flash_echo := -1.0
@@ -266,12 +281,13 @@ func light_delta_for_phase(for_phase: String, aftermath: bool = false, base: Dic
 
 const _COLOUR_KEYS := ["ambient_colour", "sky_top", "sky_horizon", "sky_ground_horizon", "ceiling_colour"]
 const _NUMBER_KEYS := ["sun_energy_mult", "shadow_opacity", "ambient_energy_mult", "fog_density_add",
-	"ceiling_opacity", "ceiling_speed", "ceiling_contrast", "ceiling_breakup", "rain_amount"]
+	"ceiling_opacity", "ceiling_speed", "ceiling_contrast", "ceiling_breakup", "rain_amount",
+	"wind", "sheet_glow", "sheet_glow_rate", "intensity"]
 
 ## Authored row → typed values, still in authored (daylight) colours.
 func _resolved(row: Dictionary) -> Dictionary:
 	var defaults := {"sun_energy_mult": 1.0, "shadow_opacity": 1.0, "ambient_energy_mult": 1.0,
-		"ceiling_contrast": 0.3}
+		"ceiling_contrast": 0.3, "wind": 1.0}
 	var out := {}
 	for key: String in _NUMBER_KEYS:
 		out[key] = float(row.get(key, defaults.get(key, 0.0)))
@@ -553,6 +569,7 @@ func _update_rain(p: Dictionary) -> void:
 	_rain.emitting = _rain.visible
 	_rain_amount = clampf(float(p.rain_amount), 0.0, 1.0)
 	_rain.amount_ratio = _rain_amount * (1.0 - _roof_fade)
+	_apply_wind(float(p.get("wind", 1.0)))
 	if _rain_far != null:
 		_rain_far.emitting = _rain.visible
 		_rain_far.amount_ratio = _rain_amount
@@ -687,6 +704,51 @@ func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 	emitter.amount = int(cfg.get("max_drops", emitter.amount))
 
 ## Horizontal drift of the fastest drop over its whole life (vector, m).
+## Wind response: the phase's `wind` (0..1) scales the configured maximum
+## wind_slant. The lens-safe inner radius is derived from the MAXIMUM slant
+## (see _style_emitter) and the upwind offset from the maximum drift, so a
+## calmer phase's smaller drift stays inside the same +-half-drift envelope.
+func _apply_wind(wind: float) -> void:
+	var slant: Array = _pres_cfg().get("rain", {}).get("wind_slant", [0.0, 0.0])
+	var k := clampf(wind, 0.0, 1.0)
+	for emitter: GPUParticles3D in [_rain, _rain_far]:
+		if emitter == null:
+			continue
+		var process := emitter.process_material as ParticleProcessMaterial
+		if process != null:
+			process.direction = Vector3(float(slant[0]) * k, -1.0, float(slant[1]) * k).normalized()
+
+## The grounded height anchor: follows `y` while grounded (or when unset),
+## holds the last grounded value while airborne.
+static func grounded_anchor(previous: float, y: float, grounded: bool) -> float:
+	return y if grounded or is_nan(previous) else previous
+
+## Terrain floor under the camera, sampled every frame (cheap) and bounded by
+## the slope samples, then eased so riding over slopes never steps the
+## field vertically.
+func _smoothed_floor(camera: Camera3D) -> float:
+	if camera == null or world == null or not world.has_method("ground_height_at"):
+		return _camera_ground
+	var target := maxf(float(world.call("ground_height_at", camera.global_position.x, camera.global_position.z)), _slope_floor)
+	var dt := get_process_delta_time() if is_inside_tree() else 0.016
+	_floor_smoothed = smooth_floor(_floor_smoothed, target, dt,
+		float(_pres_cfg().get("rain", {}).get("floor_smoothing_per_s", 8.0)))
+	_camera_ground = _floor_smoothed
+	return _floor_smoothed
+
+static func smooth_floor(previous: float, target: float, delta: float, rate: float) -> float:
+	if is_nan(previous) or absf(target - previous) > 20.0:
+		return target
+	return lerpf(previous, target, 1.0 - exp(-rate * delta))
+
+## Read-only hook for other presentation (e.g. a ground-electricity effect):
+## the current Surge intensity 0..1 from presentation rows (`intensity`),
+## cross-faded with the phase. Nothing here depends on its readers.
+func surge_intensity() -> float:
+	if _to.is_empty():
+		return float(presentation_for(phase, _aftermath).get("intensity", 0.0))
+	return clampf(float(_current(_last_base).get("intensity", 0.0)), 0.0, 1.0)
+
 static var _streak_shader: Shader
 
 static func _rain_streak_shader() -> Shader:
@@ -757,7 +819,7 @@ func roof_over(at: Vector3, exclude: Array[RID] = [], start_lift: float = 0.3) -
 func framed_subject(player: Node3D) -> Node3D:
 	var rig := world.get_node_or_null("CameraRig") if world != null else null
 	var target: Variant = rig.get("_target") if rig != null else null
-	return target as Node3D if target is Node3D and is_instance_valid(target) else player
+	return target as Node3D if is_instance_valid(target) and target is Node3D else player
 
 func _refresh_roof(player: Node3D) -> void:
 	var subject := framed_subject(player)
@@ -771,8 +833,18 @@ func _refresh_roof(player: Node3D) -> void:
 	var camera := get_viewport().get_camera_3d()
 	if not _roofed and camera != null:
 		_roofed = roof_over(camera.global_position, exclude, 0.2)
+	# Steep ground: the ring's uphill side would spawn underground, so the
+	# highest of a few ring samples (less `slope_allowance_m`) also bounds
+	# the floor. Sampled at this 0.25 s cadence; the result is smoothed.
 	if camera != null and world != null and world.has_method("ground_height_at"):
-		_camera_ground = float(world.call("ground_height_at", camera.global_position.x, camera.global_position.z))
+		var rain_cfg: Dictionary = _pres_cfg().get("rain", {})
+		var radius := float(rain_cfg.get("slope_sample_radius_m", 6.0))
+		var top := -INF
+		for k in 6:
+			var angle := TAU * k / 6.0
+			top = maxf(top, float(world.call("ground_height_at",
+				camera.global_position.x + cos(angle) * radius, camera.global_position.z + sin(angle) * radius)))
+		_slope_floor = top - float(rain_cfg.get("slope_allowance_m", 2.0))
 
 ## Ease the near layer out under a roof and back in outside (no snap).
 func _advance_roof(delta: float) -> void:
@@ -844,8 +916,13 @@ func _follow_player() -> void:
 		var camera_position: Variant = null
 		if camera != null:
 			camera_position = camera.global_position
-		_rain.global_position = rain_centre(camera_position,
-			player.global_position if player != null else Vector3.ZERO, _camera_ground)
+		var subject := framed_subject(player) if player != null else null
+		var anchor_position := subject.global_position if subject != null else Vector3.ZERO
+		if subject != null:
+			_anchor_y = grounded_anchor(_anchor_y, subject.global_position.y,
+				not (subject is CharacterBody3D) or (subject as CharacterBody3D).is_on_floor())
+			anchor_position.y = _anchor_y
+		_rain.global_position = rain_centre(camera_position, anchor_position, _smoothed_floor(camera))
 	if _ceiling != null and camera != null:
 		_ceiling.global_position = camera.global_position
 
@@ -910,3 +987,11 @@ func _advance_flash(delta: float) -> void:
 		_flash_light.light_energy = _flash * float(cfg.get("light_energy", 2.2))
 	if _ceiling_material != null:
 		_ceiling_material.set_shader_parameter("flash", _flash * float(cfg.get("sky_strength", 1.0)))
+		# Sheet lightning: the phase's glow, scaled like any flash under
+		# reduced motion, and held still (no pulse) there.
+		var shown := _current(_last_base) if not _to.is_empty() else {}
+		var reduced := MOTION_PREFS.reduced_motion()
+		if not reduced:
+			_glow_time = fposmod(_glow_time + delta * float(shown.get("sheet_glow_rate", 0.0)), 1000.0)
+		_ceiling_material.set_shader_parameter("glow_time", _glow_time)
+		_ceiling_material.set_shader_parameter("sheet_glow", float(shown.get("sheet_glow", 0.0)) * flash_motion_scale())
