@@ -299,3 +299,53 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   - Night rain is intentionally faint.
   - No Ally GPU profile has been taken.
 
+## WO-F10-08: Stormwood is always the purple storm (`ralph/stormwood-f10-rain-camera`, `220bd0268`)
+
+- **Owner direction** (about `visual/surge/after/rc_day_break_upwind.jpg`): *"I love the purple sky look in some of the screenshots. We should not have day and night in stormwood. It should just always be that kind of purple rainy sky regardless of time of day."*
+- **Owner ruling on the aftermath:** Stormwood stays purple after the Long Storm is broken. *"The aftermath shows only through lighter rain, no lightning and the scars."*
+- **Player result.** Presentation only, in `scripts/world/stormwood_surge.gd` and `data/config/stormwood_surge.json`.
+  - **One storm look at every hour.** Stormwood's own WorldLook instance gets a config in which every time-of-day preset is the same storm reference: the day preset plus `presentation.storm_base.overrides`. Those overrides are the key light's angle (−44°/140°), its energy (1.4) and colour (#e8e0f4), and purple-grey clouds and haze.
+    - Sky, clouds, fog, ambient, exposure and the key light's angle, energy and colour are therefore the same at every hour. Shadows no longer rotate.
+    - The world clock, the day counter, `is_dark()`, the shared night-rest authority and encounter night roles are untouched.
+    - The pin lives on that WorldLook instance only, so the next realm loads `art.json` as before.
+    - Setting `storm_base.pin_time_of_day` to false brings the clock look back.
+  - **Phases, all in the purple family of the day-Break anchor.** They read from rain density (0.3 / 0.6 / 1.0 / 0.15), lightning cadence and flashes (Break only), ceiling value and motion, fog and key level (0.8 / 0.38 / 0.24 / 0.7). The sky is never blue or white and never night-black.
+  - **Aftermath (every aftermath phase).** It is separated from Calm by:
+    - lighter rain (0.1 against Calm's 0.3);
+    - no sky flashes;
+    - the stillest ceiling (speed 0.003 and contrast 0.1, against Calm's 0.006 and 0.18);
+    - the lightest ceiling (#9894b4);
+    - a steadier, higher key light (0.9 against 0.8).
+  - **Gameplay left alone.** The aftermath's Surge timings (`aftermath_seconds`) and real aftermath-Break strikes are rules, and are unchanged.
+  - **Night lights.** The capacitor grove's `night_light_*` and the glass field's `night_light` were already unconditional, not clock-gated. They needed no change and stay at their modest energies (1.45 and 0.84).
+- **Tests** (`tests/test_stormwood_surge_presentation.gd`):
+  - **New:**
+    - `test_look_is_identical_at_every_hour`: for every phase, and for the aftermath, the look WorldLook would layer is identical at hours 0/6/12/18. That covers sky top and horizon, fog colour and density, ambient colour and energy, exposure, and key energy, angle and colour.
+    - `test_leaving_stormwood_restores_the_clock_look`: the pin never mutates `art.json`, the day length and the `is_dark()` window are unchanged, and a fresh realm's WorldLook has moving sun and night again.
+  - **Rewritten to the new rule** (none skipped). Each old name maps to its replacement:
+    - `test_night_base_from_real_art_config_dims_storm_sky` → `test_storm_base_is_identical_at_every_hour`
+    - `test_cross_fade_through_native_sky_has_no_dip_at_night_dusk_or_dawn` → `test_cross_fade_between_phases_has_no_dip_at_any_hour`
+    - `test_storm_ambient_never_brightens_the_night` → `test_storm_ambient_never_exceeds_the_storm_base`
+    - `test_ceiling_builds_and_opens_in_the_aftermath` → `test_ceiling_builds_and_stays_in_the_aftermath`
+    - `test_aftermath_calm_restores_sky_and_is_distinct` → `test_aftermath_is_the_calmest_purple`
+    - `test_aftermath_flag_hides_rain_in_production_path` → `test_aftermath_flag_lightens_rain_in_production_path`
+    - `test_night_break_has_its_own_hue` → `test_break_keeps_its_violet_identity_at_every_hour`
+    - `test_ceiling_breakup_closes_at_night` → `test_fading_breakup_is_the_same_at_every_hour`
+    - `test_rain_slants_fades_with_depth_and_dims_at_night` → `test_rain_slants_and_fades_with_depth`
+    - `test_day_break_sky_is_clearly_lighter_than_night_break` → `test_break_sky_is_a_storm_afternoon_at_every_hour`
+    - `test_night_phases_separate_by_hue_and_value` → `test_phases_separate_within_the_purple_family`
+  - **Negative control:** setting `pin_time_of_day` to false (the clock blend restored) fails 6 tests, including the every-hour test ("Break sky_top same at 23:00: expected 545179, got 282639").
+- **Frames** (`visual/surge/sheet_purple_phases.jpg`, `after/purple_{calm,building,break,fading,aftermath}_h{12,00}.jpg`, records in `after/frames_after_purple.json`):
+  - Each hour-12/hour-0 pair matches: mean luminance of the sky region is identical to within 0.4/255. Break's ground differs only because a live strike telegraph happened to land in the hour-12 frame.
+  - The rain frames (`rc_*`, roof) were re-rendered with the pin as well. `rc_night_break` (hour 23) now matches the day look.
+- **Clock-keyed and NOT changed** (shared scripts outside this lane, or gameplay; listed for the owner's pending gameplay ruling):
+  - `scripts/player/torch.gd`: the trainer's torch auto-lights when `is_dark()`.
+  - `scripts/world/campfire_glow.gd` and `camp_fill_light.gd`: camp fire and fill light only when dark.
+  - `scripts/audio/world_audio.gd`: night ambience layer.
+  - `scripts/world/inn_interior.gd`: reads `time_of_day`.
+  - The HUD clock.
+  - Creature/character night emission floors come through WorldLook and are therefore pinned too. The encounter night roles and night rest are gameplay and were deliberately not touched.
+- **Open:**
+  - As stills, Calm, Fading and the aftermath sit close together. Their separation is mostly rain density, ceiling motion and flashes, which read best in motion.
+  - No blind judge has seen the purple set yet.
+

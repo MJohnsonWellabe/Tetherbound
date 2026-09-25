@@ -124,6 +124,8 @@ func _run() -> void:
 		await _roof()
 	if _only.has("rainmeasure"):
 		await _rainmeasure()
+	if _only.has("purple"):
+		await _purple()
 	if _want("strips"):
 		await _strips()
 	if _want("motion"):
@@ -542,6 +544,44 @@ func _roof() -> void:
 		await physics_frame
 	_heal()
 	await _capture("roof_outside_ashfoot_shelter", "Day Break, the same shelter from 11 m outside: rain falls in the open", false)
+
+
+## WO-F10-08 owner direction (explicit --only=purple), 640x360: Calm,
+## Building, Break and Fading, then the aftermath (Calm, flag
+## stormwood:long_storm_ended set), each at world hour 12 and hour 0 at the
+## strip stand. The WorldLook clock is set to the exact hour and frozen.
+func _purple() -> void:
+	var targets: Array = []
+	for phase: String in PHASES:
+		targets.append([phase, false])
+	targets.append(["calm", true])
+	for target: Array in targets:
+		var aftermath := bool(target[1])
+		if aftermath:
+			var flags: RefCounted = _game.get("progression")
+			if not bool(flags.call("has", "stormwood:long_storm_ended")):
+				flags.call("set_flag", "stormwood:long_storm_ended", true)
+			_note("flag stormwood:long_storm_ended set (aftermath)")
+		for hour: float in [12.0, 0.0]:
+			_set_hour(hour)
+			await _stand(STAND, _station_focus(), 2.0)
+			await _enter_phase(str(target[0]), aftermath)
+			for _frame in 30:
+				await physics_frame
+			var name := "aftermath" if aftermath else str(target[0])
+			await _capture("purple_%s_h%02d" % [name, int(hour)], "%s at world hour %d" % [name.capitalize(), int(hour)], false,
+				{"world_hour": float(_look.call("hour"))})
+
+
+func _set_hour(hour: float) -> void:
+	if _look.has_method("set_clock_frozen"):
+		_look.call("set_clock_frozen", false)
+	var cycle: RefCounted = _look.get("_cycle")
+	_look.set("_elapsed_seconds", float(cycle.call("elapsed_for_hour", hour)))
+	_look.call("set_weather", _look.get("_weather"))
+	if _look.has_method("set_clock_frozen"):
+		_look.call("set_clock_frozen", true)
+	_note("world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen")
 
 
 ## Foreground-rain measurement (explicit --only=rainmeasure). At each

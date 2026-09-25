@@ -25,6 +25,14 @@ Work order: ACCEPTANCE §6.1 F10 / S2. Calm, Building, Break and Fading must be 
   - The Break strip, telegraph and flash were re-rendered after the telegraph fill-colour fix; their records are in `after/frames_after_break_r2.json`, and the Break records in `frames_after.json` are superseded.
   - Night frames were re-rendered after the night sun-cut fix; their records are in `after/frames_after_night_r2.json`.
 
+## WO-F10-08: always purple (`sheet_purple_phases.jpg`)
+
+Owner direction: Stormwood has no day and night look; it is always the purple rainy storm, including after the Long Storm. The storm phases and the aftermath were captured at world hour 12 and hour 0 with the production camera and no HUD (`after/purple_*_h12.jpg` / `_h00.jpg`, records in `after/frames_after_purple.json`); every frame was looked at.
+
+- Each hour-12/hour-0 pair is identical apart from gameplay: a live strike telegraph landed in the Break hour-12 frame.
+- The aftermath is the calmest purple: lightest rain, stillest ceiling, no flashes.
+- The rain frames were re-rendered with the pinned look; `rc_night_break` (hour 23) now matches the day look.
+
 ## Task #8: rain around the camera, and gentler flashes (`sheet_rain_camera.jpg`)
 
 Branch `ralph/stormwood-f10-rain-camera`, stacked on the pinned Surge head. The frames were captured with the tool's `raincam` group, and their records (which include the rain emitter's offset from the camera, 0/+3/0 in each) are in `after/frames_after_raincam.json`. Every frame was looked at.
