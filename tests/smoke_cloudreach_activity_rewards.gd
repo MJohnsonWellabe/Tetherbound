@@ -56,8 +56,17 @@ func _run() -> void:
 		return
 	var neri := Vector3(-296.0, 180.0, 534.0)
 	var d := Vector2(reward.global_position.x - neri.x, reward.global_position.z - neri.z).length()
-	_check(d > 5.0 and d < 12.0, "it sits at Galefoot near Neri but clear of her and the returned pair (%.1f m, %s)" % [d, reward.global_position])
+	var nearest := INF
+	for npc: Vector3 in [neri, Vector3(-295, 180, 536), Vector3(-292, 180, 536), Vector3(-290, 180, 526), Vector3(-275, 180, 520)]:
+		nearest = minf(nearest, Vector2(reward.global_position.x - npc.x, reward.global_position.z - npc.z).length())
+	_check(nearest >= 8.0 and d < 25.0, "it sits on the Galefoot plaza, clear of every Galefoot talk prompt (nearest person %.1f m, %s)" % [nearest, reward.global_position])
 
+	# Seen from the open Galefoot plaza a player crosses, not hidden in a
+	# house (the first placement at (-288, 529) was inside a terrace house).
+	var eye := Vector3(-281.0, 181.6, 521.0)
+	var sight := PhysicsRayQueryParameters3D.create(eye, reward.global_position + Vector3.UP * 0.5)
+	var blocker := _world.get_world_3d().direct_space_state.intersect_ray(sight)
+	_check(blocker.is_empty(), "the thanks is in plain sight from the Galefoot plaza (blocked by %s)" % (str((blocker["collider"] as Node).get_path()) if not blocker.is_empty() else "nothing"))
 	var inventory: RefCounted = _game.get("inventory")
 	var before := int(inventory.call("count", "potion_small"))
 	var player := _world.get_node(^"Player") as CharacterBody3D

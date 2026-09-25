@@ -18,6 +18,10 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const POLL_S := 0.25
+## A claim the host never answers (a disconnect, a refusal that never reached
+## this peer) must not leave a dead prompt on a visible offer forever. The
+## ledger's own delivery reconcile still settles an escrowed grant on its own.
+const CLAIM_TIMEOUT_S := 8.0
 
 var spec: Dictionary = {}
 var claims_paid := 0
@@ -25,6 +29,7 @@ var _prompt: Node3D
 var _claiming := false
 var _poll_left := 0.0
 var _count_before := 0
+var _claim_left := 0.0
 
 
 func setup(reward: Dictionary) -> void:
@@ -48,6 +53,11 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if _claiming:
+		_claim_left -= delta
+		if _claim_left <= 0.0:
+			_claiming = false
+			_refresh()
 	_poll_left -= delta
 	if _poll_left <= 0.0:
 		_poll_left = POLL_S
@@ -97,6 +107,7 @@ func _on_activated() -> void:
 		return
 	_count_before = int(inventory.call("count", item))
 	_claiming = true
+	_claim_left = CLAIM_TIMEOUT_S
 	_refresh()
 	var verdict := LEDGER_CLAIM.submit(self, {
 		"kind": "reward_grant",
@@ -146,7 +157,10 @@ func _build_visual() -> void:
 	var definition: Dictionary = {}
 	if game != null and game.get("items") != null:
 		definition = game.get("items").call("definition", str(spec.get("item_id", "")))
-	var path := str(definition.get("world_model", ""))
+	# An authored presentation (the couriers' thanks is a courier bag, the same
+	# installed prop as Neri's pack) reads at plaza distance where a lone item
+	# model does not; the item's own world model is the fallback.
+	var path := str(spec.get("model", definition.get("world_model", "")))
 	var visual: Node3D = null
 	if path != "" and ResourceLoader.exists(path):
 		var resource: Resource = load(path)
@@ -162,6 +176,6 @@ func _build_visual() -> void:
 		(box.mesh as BoxMesh).size = Vector3.ONE * 0.3
 		visual = box
 	visual.name = "RewardVisual"
-	visual.scale *= float(definition.get("world_model_scale", 1.0))
+	visual.scale *= float(spec.get("model_scale", definition.get("world_model_scale", 1.0)))
 	add_child(visual)
 	PICKUP_GLOW.attach(self, Color("#e7e0bb"))
