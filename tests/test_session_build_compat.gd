@@ -8,7 +8,7 @@ const TMP_ROOT := "user://test_build_fingerprint_tree"
 
 
 func _local() -> Dictionary:
-	return {"wire_protocol": "tetherbound-invite-v5", "engine": "4.7.0.stable",
+	return {"wire_protocol": FINGERPRINT.WIRE_PROTOCOL, "engine": "4.7.0.stable",
 		"content": "0123456789abcdef0123456789abcdef"}
 
 
@@ -27,7 +27,7 @@ func test_current_fingerprint_matches_itself_and_names_every_part() -> void:
 
 
 func test_missing_or_malformed_fingerprint_is_refused_not_admitted() -> void:
-	for claim: Variant in [null, "v5", 5, {}, {"wire_protocol": "tetherbound-invite-v5"},
+	for claim: Variant in [null, "v5", 5, {}, {"wire_protocol": FINGERPRINT.WIRE_PROTOCOL},
 			{"wire_protocol": 5, "engine": "4.7.0.stable", "content": "x"}]:
 		var verdict := FINGERPRINT.compare(_local(), claim)
 		assert_false(bool(verdict["ok"]), "claim %s must be refused" % str(claim))
@@ -37,11 +37,11 @@ func test_missing_or_malformed_fingerprint_is_refused_not_admitted() -> void:
 
 func test_each_mismatch_names_what_differs() -> void:
 	var theirs := _local()
-	theirs["wire_protocol"] = "tetherbound-invite-v4"
+	theirs["wire_protocol"] = FINGERPRINT.WIRE_PROTOCOL + "-older"
 	var verdict := FINGERPRINT.compare(_local(), theirs)
 	assert_eq(verdict["code"], "incompatible_version")
 	assert_true(str(verdict["reason"]).contains("network versions"), str(verdict["reason"]))
-	assert_true(str(verdict["reason"]).contains("host tetherbound-invite-v5, yours tetherbound-invite-v4"))
+	assert_true(str(verdict["reason"]).contains("host %s, yours %s-older" % [FINGERPRINT.WIRE_PROTOCOL, FINGERPRINT.WIRE_PROTOCOL]))
 
 	theirs = _local()
 	theirs["engine"] = "4.6.2.stable"
@@ -78,7 +78,7 @@ func test_content_hash_is_order_independent_and_sensitive_to_bytes_and_paths() -
 
 
 func test_token_is_the_short_display_form() -> void:
-	assert_eq(FINGERPRINT.token(_local()), "tetherbound-invite-v5|4.7.0.stable|01234567")
+	assert_eq(FINGERPRINT.token(_local()), "%s|4.7.0.stable|01234567" % FINGERPRINT.WIRE_PROTOCOL)
 
 
 func _write_tree(files: Dictionary) -> void:
