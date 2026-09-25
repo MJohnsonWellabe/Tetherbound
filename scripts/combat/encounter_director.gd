@@ -1863,7 +1863,7 @@ func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 		return _host_commit_encounter(outbound, _local_peer_id())
 	if not _can_encounter_rpc():
 		return _encounter_pending(outbound, false, "You are not connected to this world.")
-	var completing := str(outbound.get("kind", "")) in ["catch_finished", "disengage"]
+	var completing := str(outbound.get("kind", "")) in ["catch_finished", "disengage", "trainer_victory"]
 	if not _send_realm_rpc(1, "_rpc_encounter_intent", [outbound], completing):
 		return _encounter_pending(outbound, false, "This realm is closing for travel.")
 	return _encounter_pending(outbound, true, "")
@@ -2099,6 +2099,12 @@ func _rpc_encounter_caught_by(encounter_id: String, peer_id: int, species_id: St
 
 
 func _deliver_encounter_verdict(verdict: Dictionary) -> void:
+	if str(verdict.get("kind", "")) == "trainer_victory":
+		# Only a refusal crosses back; success arrives as the host's reward
+		# delivery, world delta and `_rpc_trainer_reward`. Never pays locally.
+		if not bool(verdict.get("ok", false)):
+			_trainer_victory_refused(str(verdict.get("reason", "")))
+		return
 	if _manager == null:
 		return
 	match str(verdict.get("kind", "")):
@@ -2145,6 +2151,8 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 			return _host_catch(intent, peer_id)
 		"catch_finished":
 			return _host_catch_finished(intent, peer_id)
+		"trainer_victory":
+			return _host_trainer_victory(intent, peer_id)
 		"disengage":
 			var runtime := _shared_host_fight(encounter_id)
 			if runtime != null and int(runtime.get("catch_claimant")) == peer_id:
@@ -5666,6 +5674,17 @@ func _record_trainer_defeat_for_the_session(spec: Dictionary) -> bool:
 	if not _is_multi_peer():
 		return false
 	var realm := _encounter_realm()
+	if not _is_host() and _routes_trainer_victory_to_host(spec, realm):
+		# A client's local win of a records-participant trainer. The host owns
+		# who fought (per-character reward journal) and the world fact, so the
+		# client asks with the trainer id alone and changes nothing itself:
+		# items/flags arrive as the host's reward delivery, XP and the line as
+		# `_rpc_trainer_reward`, the defeat flag as the host's world delta.
+		var sent := submit_encounter_intent({"kind": "trainer_victory",
+			"trainer_id": ENCOUNTER_REWARDS.trainer_key(spec)})
+		if not bool(sent.get("pending", false)) and not bool(sent.get("ok", false)):
+			_trainer_victory_refused(str(sent.get("reason", "")))
+		return true
 	# D103/D99: a trainer's defeat is a WORLD fact and the only way a world fact
 	# may change is an intent -- `alpha_pins.gd::clear_alpha()` is the precedent.
 	# Submitted whether this peer is the host or a client, because either can be
@@ -5696,22 +5715,113 @@ func _record_trainer_defeat_for_the_session(spec: Dictionary) -> bool:
 ## world flag instead would refuse to pay a second player for a trainer their
 ## friend had beaten earlier -- who is exactly the person §7 exists to pay.
 func _pay_every_participant(spec: Dictionary, realm: String, participants: Array) -> void:
+	_tell_the_paid(spec, (_grant_to(spec, realm, participants).get("paid", []) as Array))
+
+
+## Every component of `spec`'s payout, addressed to `participants`. `ok` only
+## when each component was journaled or had already been (`already_taken`), so a
+## caller that must not commit a world fact over a failed payout can tell;
+## `code`/`reason` are the first failure's. Every component is still attempted,
+## exactly as the host-run fight always has.
+func _grant_to(spec: Dictionary, realm: String, participants: Array) -> Dictionary:
 	var paid_any: Dictionary = {}
+	var failure: Dictionary = {}
 	for raw: Variant in ENCOUNTER_REWARDS.grants(spec, realm, participants):
 		var verdict: Dictionary = _submit_reward_intent(raw as Dictionary)
 		if not bool(verdict.get("ok", false)):
+			if failure.is_empty() and str(verdict.get("code", "")) != "already_taken":
+				failure = verdict
 			continue
 		for peer: Variant in (verdict.get("paid", []) as Array):
 			paid_any[int(peer)] = true
-	if paid_any.is_empty():
+	return {"ok": failure.is_empty(), "code": str(failure.get("code", "")),
+		"reason": str(failure.get("reason", "")), "paid": paid_any.keys()}
+
+
+func _tell_the_paid(spec: Dictionary, paid: Array) -> void:
+	if paid.is_empty():
 		return
 	var payload := {
 		"trainer": str(spec.get("name", "Trainer")),
 		"xp": ENCOUNTER_REWARDS.xp_bonus(spec),
 		"line": _trainer_reward_line(spec),
 	}
-	for peer: Variant in paid_any.keys():
+	for peer: Variant in paid:
 		_tell_participant_they_were_paid(int(peer), payload)
+
+
+## Client-side gate for `trainer_victory`: a session, a trainer whose defeat is
+## a world fact and whose id the host can resolve, and not a tournament round
+## (those are host-run records with their own roster rules).
+func _routes_trainer_victory_to_host(spec: Dictionary, realm: String) -> bool:
+	var trainer_id := ENCOUNTER_REWARDS.trainer_key(spec)
+	return _is_multi_peer() and not trainer_id.is_empty() \
+		and not TOURNAMENT.is_round(trainer_id) \
+		and not _trainer_spec_by_id(trainer_id).is_empty() \
+		and not ENCOUNTER_REWARDS.world_facts(spec, realm).is_empty()
+
+
+## The trainer row this director would fight, by id. Chapter directors that
+## translate their own trainers (Water, Cloudreach) hold them in `trainer_specs`
+## -- including in-place overrides such as Veilfall's defeat flag for Nerissa --
+## so that table wins; otherwise the shared `trainers.json` row.
+func _trainer_spec_by_id(trainer_id: String) -> Dictionary:
+	if trainer_id.is_empty():
+		return {}
+	var table: Variant = get("trainer_specs")
+	if table is Dictionary and (table as Dictionary).get(trainer_id) is Dictionary:
+		return (table as Dictionary)[trainer_id] as Dictionary
+	return TRAINERS.trainer(trainer_id)
+
+
+func _trainer_victory_refused(reason: String) -> void:
+	var game := get_node_or_null(^"/root/Game") if is_inside_tree() else null
+	if game != null and game.has_method("push_world_message"):
+		game.call("push_world_message", reason if not reason.is_empty() \
+			else "The host could not record that victory.")
+
+
+## Host: a client won a records-participant trainer in its own local fight.
+## Identity is the transport sender and this host's registry ONLY -- nothing in
+## the payload but `trainer_id` is read. Pays that one character first; the
+## world fact is committed only once the payout is journaled, so a failed
+## journal never leaves the trainer beaten with nobody paid. Replays are
+## `already_taken` per (source, character) and pay nobody twice.
+func _host_trainer_victory(intent: Dictionary, peer_id: int) -> Dictionary:
+	var refuse := func(code: String, reason: String) -> Dictionary:
+		return {"ok": false, "kind": "trainer_victory", "peer": peer_id, "code": code,
+			"reason": reason, "pending": false, "delta": {}}
+	if peer_id <= 0 or peer_id == _local_peer_id():
+		return refuse.call("not_participant", "Only a guest's own victory is reported this way.")
+	var row := _session_peer_row(peer_id)
+	var character_id := str(row.get("character_id", ""))
+	if row.is_empty() or character_id.is_empty():
+		return refuse.call("unknown_character", "Your character is not connected to this world.")
+	var realm := _encounter_realm()
+	if realm.is_empty() or str(row.get("realm", "")) != realm:
+		return refuse.call("wrong_realm", "That victory belongs to another realm.")
+	var trainer_id := str(intent.get("trainer_id", ""))
+	var spec := _trainer_spec_by_id(trainer_id)
+	if spec.is_empty():
+		return refuse.call("unknown_trainer", "The host does not know that trainer.")
+	if TOURNAMENT.is_round(trainer_id):
+		return refuse.call("tournament_round", "Tournament rounds are recorded by their own fight.")
+	var facts: Array = ENCOUNTER_REWARDS.world_facts(spec, realm)
+	if facts.is_empty():
+		return refuse.call("no_world_fact", "That trainer's defeat changes nothing to record.")
+	var granted := _grant_to(spec, realm, [peer_id])
+	if not bool(granted.get("ok", false)):
+		var code := str(granted.get("code", ""))
+		return refuse.call(code if not code.is_empty() else "reward_failed",
+			str(granted.get("reason", "")) if not str(granted.get("reason", "")).is_empty() \
+				else "The host could not record that reward. Nothing was delivered.")
+	for fact: Variant in facts:
+		_submit_reward_intent(fact as Dictionary)
+	var paid: Array = granted.get("paid", []) as Array
+	_tell_the_paid(spec, paid)
+	return {"ok": true, "kind": "trainer_victory", "peer": peer_id,
+		"code": "ok" if not paid.is_empty() else "noop", "reason": "", "pending": false,
+		"delta": {}, "paid": paid}
 
 
 ## The one line a newly-paid participant is shown, built from the AUTHORED
