@@ -174,7 +174,7 @@ func _annulus(inner: float, outer: float, blend: float) -> ArrayMesh:
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var circumference_tiles := maxf(1.0, roundf(TAU * inner / TILE_M))
 	var edge_noise := _ring_noise(int(hash(str(inner))) + 3, 0.35)
-	var wobble := float(_rules.get("outline_wobble_m", 2.5))
+	var wobble := minf(float(_rules.get("outline_wobble_m", 2.5)), float(_rules.get("edge_blend_m", 4.0)) * 0.5)
 	for index in segments:
 		for band in 2:
 			var a0 := TAU * float(index) / float(segments)
@@ -281,7 +281,9 @@ func _wave(radius: float, height: float, seed: int) -> ArrayMesh:
 	# One closed breaker around the landform. Its cross-section curls outward
 	# with the flow: dark teal face, white crest, falling lip fading to spray.
 	# Height and radius wander so the ring breaks up instead of a bullseye.
-	var wobble := float(_rules.get("outline_wobble_m", 2.5))
+	# The drawn edge may wander only within the race's own outer blend, so it
+	# never strays past the physical boundary or under the shoreline.
+	var wobble := minf(float(_rules.get("outline_wobble_m", 2.5)), float(_rules.get("edge_blend_m", 4.0)) * 0.5)
 	var height_noise := _ring_noise(seed, float(_rules.get("wave_height_frequency", 0.22)))
 	var radius_noise := _ring_noise(seed + 1, 0.35)
 	var face := Color(str(_rules.get("wave_face_colour", "#2f6f6c")))
@@ -294,13 +296,12 @@ func _wave(radius: float, height: float, seed: int) -> ArrayMesh:
 		[1.6, 0.8, crest, 0.75],
 		[2.4, 0.25, crest, 0.0],
 	]
-	var segments := maxi(64, ceili(TAU * radius / 0.8))
+	var segments := maxi(64, ceili(TAU * radius / float(_rules.get("wave_segment_m", 2.5))))
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var rows: Array = []
 	for index in segments + 1:
 		var angle := TAU * float(index % segments) / float(segments)
-		var arc := radius * TAU * float(index % segments) / float(segments)
 		var direction := Vector2(cos(angle), sin(angle))
 		# Sampling on a circle keeps the noise seamless where the ring closes.
 		var sample := direction * radius / TAU * 2.0
@@ -312,8 +313,6 @@ func _wave(radius: float, height: float, seed: int) -> ArrayMesh:
 			row.append([Vector3(direction.x * r, -SURFACE_LIFT_M + local_height * float(point[1]), direction.y * r),
 				Color(point[2].r, point[2].g, point[2].b, float(point[3]))])
 		rows.append(row)
-		if arc < 0.0:
-			break
 	for index in segments:
 		var a: Array = rows[index]
 		var b: Array = rows[index + 1]
@@ -322,6 +321,7 @@ func _wave(radius: float, height: float, seed: int) -> ArrayMesh:
 				var vertex: Array = corner[0][corner[1]]
 				tool.set_color(vertex[1])
 				tool.add_vertex(vertex[0])
+	tool.index()
 	tool.generate_normals()
 	return tool.commit()
 

@@ -499,7 +499,7 @@ no exported package and no device run.
   `road_creature` selection passed 238 tests / 78,456 assertions, 0 failed,
   on 945ffa7d, before the corrections. Its printed FAIL lines are known
   negative controls.
-- **`smoke_water_closed_gate_seal.gd`: 21 checks pass on the final source.**
+- **`smoke_water_closed_gate_seal.gd`: 21 checks on 7569ae8c; 23 after the b8bb1e13 follow-ups.**
   - Disclosed fixtures: the four earlier facts are set directly, and one start
     position is placed at the Cradle departure. All later movement is real
     input.
@@ -525,13 +525,26 @@ no exported package and no device run.
   - `smoke_water_opening_continuous.gd`.
   The later-fact change only opens more land, and none of these fixtures holds
   a gapped flag set except the continuous one below.
-- **Dock-smoke fixture correction.** The fresh world drove Shellwatch and Deep
-  Watch equipment without the upstream facts that open those islands. The
-  fixture now sets them and leaves every fact under test unset. The Reedhaven
-  6 m/s closed-strip check samples a point where that strip, not a race, owns
-  the water. The Shellwatch pre-reward reload compares against the authored
-  unreduced strength. Its old 6.0 value came from the Brine Steps gate, which
-  is not the one under test.
+- **Dock-smoke fixture (corrected after the coordinator's review).** The
+  fresh world drove Shellwatch and Deep Watch equipment without the facts that
+  open those islands.
+  - The fixture now sets only the later facts `water_aquaryn_resolved` and
+    `water_dock_salt_crown_landing_charted`. Through the later-fact rule they
+    lift the races on every landform before them.
+  - Every fact under test stays unset: lesson, Reedhaven repair, Brine Steps
+    trial, Shellwatch and Deep Watch.
+  - All original assertions are restored unchanged. That includes "Closed dock
+    current pushes at configured 6m/s" and "Pre-reward reload restores the
+    still-gated Shellwatch current" (6.0).
+  - The only other change: `current_probe` tries more points along each segment
+    and still requires full influence on the exact current.
+  - An intermediate version (c3ae9bb9) had set the Brine Steps fact and
+    weakened the Shellwatch reload assertion. The coordinator's review caught
+    it, and b8bb1e13 reverted it.
+  - Local runs on b8bb1e13: `smoke_water_dock_actions.gd` 55 checks, 0 failed;
+    `smoke_water_closed_gate_seal.gd` 23 checks, 0 failed. The seal smoke adds
+    a Fly re-sync after a changed local rig, and spray gated by distance: 6 of
+    27 emitters live from the Cradle departure.
 - **`smoke_water_continuous.gd` is unresolved and not claimed.**
   - Its gapped fixture holds only the Aquaryn fact. Under the old last-fact
     rule, and again with the race strength set to 0 (reverted, never

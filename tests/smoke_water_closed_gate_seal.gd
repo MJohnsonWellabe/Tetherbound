@@ -22,11 +22,11 @@ const GATE := "water_aquaryn_resolved"
 # Open-water flank outside both closed departure strips, south-west of the
 # barrier: beach 22 m lateral of the sheltered line, then water 45 m along and
 # 22 m lateral (sheltered half-width 9 m, direct 14 m), 52 m from the shoal.
-var spray_emitting := ""
 const FLANK_BEACH := Vector3(540.0, 0.0, 1722.7)
 const FLANK_WATER := Vector3(500.68, 0.0, 1750.3)
 
 var world: Node3D
+var spray_emitting := ""
 var player: CharacterBody3D
 var camera: Node3D
 var swimming: Node
