@@ -28,6 +28,11 @@ extends SceneTree
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const OUT_DIR := "res://shots"
+## `-- --out=<dir>` writes somewhere other than res://shots, and
+## `-- --only=01-spawn-outward,03-rise-overlook` renders just those viewpoints,
+## so a lane can iterate on one frame without disturbing the standing survey.
+var _out_dir := OUT_DIR
+var _only: PackedStringArray = PackedStringArray()
 
 ## Terrain streams in over several frames and builds collision after that.
 const SETTLE_FRAMES := 240
@@ -187,8 +192,13 @@ func _run() -> void:
 	_fast_mode = "--fast" in OS.get_cmdline_user_args() or OS.get_environment("VP_FAST") == "1"
 	if _fast_mode:
 		print("[fast] iteration mode: settle halved, msaa off")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--out="):
+			_out_dir = arg.substr("--out=".length())
+		elif arg.begins_with("--only="):
+			_only = arg.substr("--only=".length()).split(",", false)
 
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out_dir))
 
 	var packed: PackedScene = load(SCENE)
 	if packed == null:
@@ -314,6 +324,8 @@ func _run() -> void:
 	for entry: Variant in VIEWPOINTS:
 		var view: Dictionary = entry
 		var name: String = str(view["name"])
+		if not _only.is_empty() and not _only.has(name):
+			continue
 
 		_pose(camera, field, view)
 		_place_actor(player, field, camera, view)
@@ -343,7 +355,7 @@ func _run() -> void:
 			continue
 
 		var flat := _flatness(image)
-		var path := "%s/%s.png" % [OUT_DIR, name]
+		var path := "%s/%s.png" % [_out_dir, name]
 		var error := image.save_png(path)
 		if error != OK:
 			failures.append("%s: save_png failed (%d)" % [name, error])
@@ -368,7 +380,7 @@ func _run() -> void:
 				name, cam_player_dist, MAX_CAMERA_PLAYER_DISTANCE])
 
 	print("")
-	print("%d frames -> %s" % [written.size(), OUT_DIR])
+	print("%d frames -> %s" % [written.size(), _out_dir])
 	print("Software rendering. Frame times from this harness are NOT a performance measurement.")
 
 	if not failures.is_empty():
