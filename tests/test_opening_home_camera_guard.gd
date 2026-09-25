@@ -68,6 +68,7 @@ func test_the_house_still_swaps_the_profile_when_the_camera_is_on_the_trainer() 
 
 
 class FakeManager extends Node:
+	signal exited(outcome: String)
 	var fighting := true
 
 	func is_fighting() -> bool:
@@ -93,3 +94,50 @@ func test_throw_aim_mid_fight_keeps_its_profile_at_the_door() -> void:
 	house.call("_on_body_entered", player)
 	assert_eq(rig.calls.size(), 1, "after the fight the house swaps the profile again")
 	world.free(); rig.free(); player.free()
+
+
+
+## Where the trainer stands is the house's own box measurement; stubbed here so
+## the test needs no scene tree.
+class PlacedHouse extends "res://scripts/world/grandpa_house.gd":
+	var inside := true
+
+	func _player_is_inside() -> bool:
+		return inside
+
+
+func test_a_fight_that_ends_indoors_restores_the_interior_profile() -> void:
+	# The crossing is skipped while the fight owns the camera; the fight then
+	# hands the trainer back on the default profile. Indoors that is wrong, so
+	# the skipped crossing settles itself when the fight exits.
+	var world := Node3D.new()
+	var manager := FakeManager.new()
+	manager.name = "CombatManager"
+	world.add_child(manager)
+	var rig := Rig.new()
+	var player := Node3D.new()
+	var ally := Node3D.new()
+	var house := PlacedHouse.new()
+	house.set("_camera_rig", rig)
+	house.set("_player", player)
+	world.add_child(house)
+	rig._target = ally
+	house.call("_on_body_entered", player)
+	assert_eq(rig.calls.size(), 0, "mid-fight the crossing is skipped")
+	var settle := Callable(house, "_on_fight_exited_after_crossing")
+	assert_true(manager.is_connected("exited", settle), "the skipped crossing waits for the fight to end")
+	house.call("_on_body_exited", player)
+	house.call("_on_body_entered", player)
+	# The fight ends: released to the trainer on the default profile.
+	manager.fighting = false
+	rig._target = player
+	manager.exited.emit("won")
+	assert_false(manager.is_connected("exited", settle), "one settle per fight")
+	house.call("_apply_profile_for_where_the_player_is")
+	assert_eq(rig.calls.size(), 1, "indoors after the fight: the interior profile is restored")
+	assert_false((rig.calls[0][1] as Dictionary).is_empty())
+	# Outdoors after a fight nothing changes: the default profile is right.
+	house.inside = false
+	house.call("_apply_profile_for_where_the_player_is")
+	assert_eq(rig.calls.size(), 1, "outdoors the fight's default profile stands")
+	world.free(); rig.free(); player.free(); ally.free()
