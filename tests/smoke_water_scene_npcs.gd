@@ -97,6 +97,28 @@ func run() -> void:
 	check(not service.start_conversation("water_iona", "water_iona_attunement"), "An already rewarded character cannot replay attunement")
 	check(game.get("local").flags.save_data() == unlocked_flags, "Teaching request itself grants no recipe flag")
 	check(game.get("local").save_data().inventory == inventory_before.inventory, "Teaching request grants no inventory items")
+	# Explicit restored-currents fixture (F15): Mara's First Shore afterword is
+	# optional speech. Hearing it must write nothing to either store, so compare
+	# the FULL world and personal flag snapshots, not one id.
+	game.get("world").flags.set_flag("water_currents_restored", true)
+	var world_before_afterword: Dictionary = game.get("world").flags.save_data()
+	var personal_before_afterword: Dictionary = game.get("local").flags.save_data()
+	var events_before_afterword := events.size()
+	player.global_position = bodies.water_mara.global_position + Vector3(1, 0, 0)
+	bodies.water_mara.call("prompt_node").activated.emit()
+	await frames()
+	check(panel.call("is_open"), "Restored-world Mara prompt opens production panel")
+	check(panel.call("runner").call("conversation_id") == "water_mara_post", "Restored currents select Mara's afterword")
+	var afterword_lines := 0
+	while panel.call("is_open"):
+		afterword_lines += 1
+		panel.call("advance")
+		await frames()
+	check(afterword_lines == 5, "Mara's afterword plays all five authored lines")
+	check(panel.call("drain_effects").is_empty(), "Mara's afterword leaves no effect to drain")
+	check(events.size() == events_before_afterword, "Mara's afterword emits no guarded request")
+	check(game.get("world").flags.save_data() == world_before_afterword, "Mara's afterword leaves every world flag unchanged")
+	check(game.get("local").flags.save_data() == personal_before_afterword, "Mara's afterword leaves every personal flag unchanged")
 	player.global_position += Vector3(100, 0, 0)
 	check(not service.start_conversation("water_pell"), "Remote call cannot talk from across the island")
 	print("Water NPC smoke: ", checks, " checks, ", failures.size(), " failures")
