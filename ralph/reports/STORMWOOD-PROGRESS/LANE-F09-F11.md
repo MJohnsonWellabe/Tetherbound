@@ -88,3 +88,39 @@ because the report follows the main truth conversation by design.
 ## Consolidated landing (`ralph/stormwood-landing`)
 
 Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as one branch/PR after #215, with the granted `ci.yml` steps for `smoke_stormwood_crown_records.gd` and `smoke_stormwood_stormheart_participants.gd`. After merging main at `47774c35` (#215): all `test_stormwood_*` suites plus flag-scope/chapter/portrait suites pass; smokes Crown records 22/0, Stormheart participants 16/0, Stormheart choice 13/0, arches PASS, heartstone 12/0.
+
+## WO-F09-01 — Walkable roads, second Dynamo road, footing rule, five pockets (`ralph/stormwood-f09-walkable-roads`)
+
+- **Anchor:** F09 / ACCEPTANCE §6.1 F09 ("four loops, three shortcuts, five pockets and alternate routes; a closed Arch cannot be bypassed"). WORLD §5.1/§5.3 and the coordinator's F09 rulings: C, D and the player road are the far-side shortcuts; for the arch-only Crown and the single Rootgate pass, the arch is the second route; a walled dead-end clearing with a moved reward is a pocket.
+- **Measured baseline** (read-only audit, production heightfield, true slope, 45° floor limit):
+  - The closed Rootgate and the arch-only Crown cannot be bypassed.
+  - 5 walkable loops.
+  - conductor_road's last leg climbed 73.8° and deepwood_road's first leg 52–58°.
+  - Deepwood→Dynamo had one road.
+  - 0 pockets.
+- **Player result:**
+  - **Roads:** both Rootgate legs follow the pass floor, now at most 23.4°. `dynamo_west_approach` (Deepwood Rod Station → Ember Bivouac, at most 19.7°) is the second Deepwood→Dynamo road.
+  - **Roadside creatures:** the 13 pairs that lined the old legs are re-seated beside the new road (`tools/stormwood_reroute_road_visibility.py`, using the ROAD author's own placer). Every critical road keeps two forward-visible creatures at every 10 m sample.
+  - **Arches:** a Stormglass arch stands only on one of the five footings, and only one arch per footing. The three-road cap is proven with an old-save fixture, free-build is still refused off a footing, and a legacy off-footing arch never captures a legal twin.
+  - **Pockets:** five walled dead-end pockets, one per walkable region. Each is 16 × 16 m with a dead-trunk palisade plus static collision, and a 5 m mouth facing its road, 112–351 m off the road. Each holds an existing optional reward moved inside.
+  - **Forest scatter:**
+    - It is re-baked with per-road and per-cell seeds, so a future road edit re-plants only near that road.
+    - An 18 m collider clearing at each named fight; the nearest collider to any named fight is 18.96 m away, where the largest envelope is 13.89 m.
+    - No trunk or rock inside any road corridor (the old bake had 25 rocks on roads).
+    - No collider inside any pocket.
+- **Witnesses:**
+  - `test_stormwood_route_walkability` (fails on the old data)
+  - `test_stormwood_pockets` (dead end, walkable interior, reachable from a road, rewards, spawn discs clear, runtime colliders, bake clear)
+  - `test_stormwood_named_fight_clearings`
+  - `test_stormwood_arch_building`
+  - `test_road_creature_visibility` (granted baseline update: conductor 249→259 and deepwood 300→302 samples, 0 failing on both builds)
+  - `test_stormwood_glass_field_approach`, `test_stormwood_scatter_bake`
+  - smokes: arches, pickup runtime, hosted rewards
+  - In total, 456+ headless tests pass in the reviewer's broad run. A second bake is byte-identical.
+- **Independent review:** request changes (2 blocking, 3 should-fix), then approve. The follow-up fixed the palisade spacing and moved `cinder_verge_cluster_19` off the Verge pocket.
+- **Open:**
+  - No in-engine capture of the pockets or of the re-planted forest yet (render slot).
+  - The scatter still does not clear trainer, NPC, harvest or pickup seats. There are 7 near-contacts, the same count as the old bake.
+  - `blackwater_elder` stands on a deepwood_road vertex.
+  - The arch commit at the footing centre is routed to the co-op lane.
+  - The coordinator edits WORLD.md's route count (nine → ten) on landing.
