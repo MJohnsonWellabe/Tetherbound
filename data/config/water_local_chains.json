@@ -88,6 +88,43 @@
       "swimmer_refusal": "Otto would rather meet the swimmer you travel with. Bring one of your own, or come back once Aquaryn's trial is settled either way.",
       "grant": {"berries": 3},
       "message": "Otto shares 3 berries and marks where Mosshell, Riverdrake and Sirenseal swim."
+    },
+    {
+      "id": "garden_records_lead",
+      "chain": "side_water_garden_records",
+      "kind": "speech",
+      "npc": "water_edda",
+      "flag": "water_claim:local:garden_records:lead",
+      "requires_flags": [],
+      "message": "Edda's request: copy the account on the Drowned Garden's exposed vault wall and bring it to Salt Crown."
+    },
+    {
+      "id": "garden_records_wall",
+      "chain": "side_water_garden_records",
+      "kind": "site",
+      "at_xz": [1204.5, 2337.6],
+      "_why_at": "Inside reward pocket garden_exposed_vault (radius 5 m), 4.5 m east of its Skill Candy II row along the slope's contour, so the 4 m wall piece sits within 0.06 m of level ground end to end; analytic ground 27.8 m, well above the sea: no diving.",
+      "label": "Copy the vault wall's account",
+      "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf",
+      "model_scale": 1.0,
+      "model_offset_y": -0.3,
+      "yaw_deg": 0.0,
+      "hide_when_done": false,
+      "always_visible": true,
+      "flag": "water_claim:local:garden_records:account",
+      "requires_flags": ["water_claim:local:garden_records:lead"],
+      "refusal": "Shrinekeeper Edda has not asked you to record this wall yet.",
+      "message": "Vault wall account copied: the old dock ledgers carved before the Tether. Bring it to Edda at Salt Crown."
+    },
+    {
+      "id": "garden_records_report",
+      "chain": "side_water_garden_records",
+      "kind": "speech",
+      "npc": "water_edda",
+      "flag": "water_claim:local:garden_records:complete",
+      "requires_flags": ["water_claim:local:garden_records:account"],
+      "refusal": "Copy the account on the Drowned Garden's vault wall first.",
+      "message": "Edda adds the vault's dock account to the Salt Crown records."
     }
   ]
 }

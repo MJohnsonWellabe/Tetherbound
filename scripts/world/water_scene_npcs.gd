@@ -12,6 +12,7 @@ const GREETINGS := preload("res://scripts/world/village_npcs.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const LEDGER := preload("res://scripts/story/story_ledger.gd")
 const CHAIN_RULES := preload("res://scripts/world/water_local_chain_rules.gd")
+const LOCAL_STEP_EFFECT := "water:local_step:"
 const CAST_PATH := "res://data/config/water_characters.json"
 const DIALOGUE_PATH := "res://data/dialogue/water.json"
 var _world: Node3D
@@ -156,6 +157,30 @@ static func choose_conversation(spec: Dictionary, guards: Array, conversations: 
 				and guard_holds(guard, personal_flags, world_flags, progression, party):
 			return candidate
 	return GREETINGS.greeting_for(spec, progression)
+
+## The first local-chain conversation this speaker may open now that is marked
+## `outranks_routed_greeting` (a step already under way), or "". Lets a speaker
+## whose greeting is routed elsewhere (Edda after the Guardian's freeing) still
+## hear a chain report; a chain's lead is not offered through that route.
+static func chain_conversation_for(spec: Dictionary, guards: Array, conversations: Dictionary,
+		progression: Variant, personal_flags: Variant, world_flags: Variant, party: Array = []) -> String:
+	for guard: Variant in guards:
+		if not guard is Dictionary or not str(guard.get("effect", "")).begins_with(LOCAL_STEP_EFFECT) \
+				or not bool(guard.get("outranks_routed_greeting", false)):
+			continue
+		var candidate := str(guard.get("conversation", ""))
+		if speaker_matches(conversations, candidate, spec) \
+				and guard_holds(guard, personal_flags, world_flags, progression, party):
+			return candidate
+	return ""
+
+func chain_conversation(id: String) -> String:
+	var game := get_node_or_null("/root/Game")
+	if game == null or not _specs.has(id):
+		return ""
+	var personal: RefCounted = game.get("local")
+	return chain_conversation_for(_specs[id], _guards, _conversations, game.get("progression"),
+		personal.flags if personal != null else null, LEDGER.world_flags(self), party_species(game))
 
 ## Species ids of this peer's own party: the proof a swimmer-gated guard reads.
 static func party_species(game: Object) -> Array:

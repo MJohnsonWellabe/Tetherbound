@@ -61,6 +61,27 @@
       "effect": "water:water_swim_saddle_recipe_taught"
     },
     {
+      "conversation": "water_edda_garden_return",
+      "requires_world_flags": [
+        "water_claim:local:garden_records:account"
+      ],
+      "unless_world_flags": [
+        "water_claim:local:garden_records:complete"
+      ],
+      "purpose": "side_water_garden_records step 3: the vault wall's account is brought back to Salt Crown; Edda explains the pre-Tether dock history. Requests the host step; speech writes nothing. After the Guardian's freeing this report (outranks_routed_greeting) outranks Edda's neutral/post line but never the offer (water_guardian_reward.gd edda_with_chain); the lead is given through her ordinary greeting before the freeing.",
+      "effect": "water:local_step:garden_records_report",
+      "outranks_routed_greeting": true
+    },
+    {
+      "conversation": "water_edda_garden_lead",
+      "unless_world_flags": [
+        "water_claim:local:garden_records:lead",
+        "water_claim:local:garden_records:complete"
+      ],
+      "purpose": "side_water_garden_records step 1: Edda points to the visible above-water Drowned Garden vault, keeping her relic and Deep Watcher guidance. Requests the host-recorded lead.",
+      "effect": "water:local_step:garden_records_lead"
+    },
+    {
       "conversation": "water_edda_guardian_offer",
       "requires_world_flags": [
         "water_guardian_freed"
@@ -433,7 +454,23 @@
         23.0
       ],
       "greeting": "water_edda_pre",
+      "_why_greeting_when": "side_water_garden_records: reminder while the lead is open; acknowledgement once the account is recorded (before or after restoration). The guarded lead/return conversations take priority; after the Guardian's freeing her greet is routed by water_guardian_reward.gd.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_claim:local:garden_records:complete"
+          ],
+          "conversation": "water_edda_post_garden"
+        },
+        {
+          "if_flag": "water_claim:local:garden_records:complete",
+          "conversation": "water_edda_garden_thanks"
+        },
+        {
+          "if_flag": "water_claim:local:garden_records:lead",
+          "conversation": "water_edda_garden_reminder"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_edda_post"

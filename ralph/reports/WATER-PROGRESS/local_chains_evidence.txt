@@ -57,3 +57,25 @@ AFTER
     smoke_water_gull_research 27/0, smoke_water_deep_watch_chart 28/0.
   Found while building: swim-mount species are registered as water_<species> (the Meadows
     `mosshell` is not a swim mount); the rule reads the live catalogue, not roster keys.
+
+== 4. side_water_garden_records
+FAILING FIRST (new tests against the chain-3 commit)
+  run_tests --only=garden_records: 10 tests, 9 failed (no Edda steps/conversations, no vault
+    wall site, no chain route through the Guardian gate, no request row). The Candy II row
+    check passes on the base.
+  smoke_water_garden_records (chain-4 files restored from the chain-3 commit): 2 checks,
+    1 failure -- no vault wall site is built, so the run stops.
+AFTER
+  run_tests --only=garden_records 10/0 (482 assertions), --only=guardian_participants 35/0.
+  smoke_water_garden_records: 22 checks, 0 failures.
+  smoke_water_guardian_ceremony: 120 checks, 0 failures. (A first version offered Edda's
+    garden LEAD through the Guardian-routed greeting and failed this smoke's "answered
+    character hears her post line" check; only a report already under way now outranks the
+    routed neutral/post line, never the offer.)
+  Also fixed while building: site prompts refreshed only on the next idle frame, so a prompt
+    could stay offered for a few physics frames after its record committed; WaterLocalChains
+    now refreshes on the committed delta.
+  run_tests --only=water 357/0, --only=quest 46/0,
+    --only=dialogue 114/0, --only=flag_scopes 11/0.
+  smoke_water_scene_npcs 67/0, smoke_water_lantern_return 25/0, smoke_water_cradle_care 30/0,
+    smoke_water_deep_watch_chart 28/0, smoke_water_gull_research 27/0.

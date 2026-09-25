@@ -61,6 +61,7 @@ func _build_site(row: Dictionary, prompt_radius: float) -> void:
 		visual.name = "Visual"
 		visual.scale = Vector3.ONE * float(row.get("model_scale", 1.0))
 		visual.rotation.y = deg_to_rad(float(row.get("yaw_deg", 0.0)))
+		visual.position.y = float(row.get("model_offset_y", 0.0))
 		root.add_child(visual)
 	else:
 		push_error("Water local-chain site model missing: " + str(row.get("model", "")))
@@ -89,8 +90,10 @@ func _refresh() -> void:
 		var open := site_offered(row, flags)
 		var done: bool = flags != null and flags.has(str(row.get("flag", "")))
 		site.prompt.enabled = open and not _world.simulation_only
-		site.root.visible = not _world.simulation_only \
-			and (open or (done and not bool(row.get("hide_when_done", false))))
+		# `always_visible`: the place itself is the lure (a vault wall seen from
+		# afar); only its prompt waits for the lead.
+		site.root.visible = not _world.simulation_only and (bool(row.get("always_visible", false)) \
+			or open or (done and not bool(row.get("hide_when_done", false))))
 
 
 ## Ask the host to record one chain step for this peer's character. Returns
@@ -119,6 +122,8 @@ func pending_steps() -> Array:
 
 
 func _on_delta(delta: Dictionary) -> void:
+	# Prompts follow the committed record at once, not on the next idle frame.
+	_refresh()
 	for step_id: String in _pending.keys():
 		if CLAIM.sets_world_flag(delta, str(_pending[step_id])):
 			_pending.erase(step_id)

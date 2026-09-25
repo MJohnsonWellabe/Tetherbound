@@ -1027,6 +1027,50 @@
         "I watched a traveler leave on a Mosshell today. Slow, steady, and enough strength left to enjoy the landing.",
         "The shell nest is quiet now the currents have calmed. Swimmers still gather where I showed you."
       ]
+    },
+    "water_edda_garden_lead": {
+      "speaker": "Shrinekeeper Edda",
+      "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
+      "lines": [
+        "Salt Crown is the last full settlement before the occupied channels. Our realm keeps the Tideglass Compass; its blessing is Tidal Guard, one choice among your relic powers.",
+        "The Deep Watcher is held beneath the Veilfall. Freeing it must come before any offer of companionship.",
+        "Before you go on: east of here, the Drowned Garden's old vault still stands above the water. You can see its wall from our terrace.",
+        "The keepers carved the dock accounts into that wall long before Team Tether came. Copy what is written there and bring it to me; our own records burned."
+      ]
+    },
+    "water_edda_garden_reminder": {
+      "speaker": "Shrinekeeper Edda",
+      "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
+      "lines": [
+        "The vault is on the Drowned Garden, east of Salt Crown, above the waterline. Take the lawful route; no one needs to dive for it.",
+        "Rest here before you cross. The Compass and the Deep Watcher will wait for a fresh team."
+      ]
+    },
+    "water_edda_garden_return": {
+      "speaker": "Shrinekeeper Edda",
+      "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
+      "lines": [
+        "You copied the whole wall. Here: the dock tallies, landing by landing, and the names of the keepers who kept them.",
+        "Before Team Tether, every dock was a shared landing. Each island kept its own mooring and answered to no one; the crossings were charted together each spring.",
+        "The Tether never built those docks. It barricaded them, and called the barricades order. This account proves the landings were always ours to share.",
+        "Keep what you found in the vault. The account belongs in Salt Crown's records, where anyone can read it."
+      ]
+    },
+    "water_edda_garden_thanks": {
+      "speaker": "Shrinekeeper Edda",
+      "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
+      "lines": [
+        "The vault account sits with our records now. The dockkeepers come to read their grandparents' names.",
+        "Rest here and look at the crossing ahead with a fresh team."
+      ]
+    },
+    "water_edda_post_garden": {
+      "speaker": "Shrinekeeper Edda",
+      "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
+      "lines": [
+        "The Compass marks a realm that can breathe again. Carry it home and place it at its stone in the Meadows shrine circle when you are ready.",
+        "The docks are shared landings again, as the vault account says they always were."
+      ]
     }
   }
 }
