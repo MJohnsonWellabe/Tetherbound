@@ -85,15 +85,29 @@ func _run() -> void:
 	_check(is_equal_approx(controller.rules.window_left(), frozen) and is_equal_approx(frozen, 30.0),
 		"Break waits with a fresh 30 s window while nobody is there")
 
-	# A fighter climbs back and rejoins the waiting Break.
+	# Reloading a waiting Break neither replays the wipe nor loses the wait.
+	var saved: Dictionary = controller.save_payload()
+	var reloaded := CONTROLLER.new()
+	reloaded.rules = RULES.new()
+	reloaded.load_payload(saved.duplicate(true))
+	_check(reloaded.get("_awaiting_break_party") == true and reloaded.participants.is_empty()
+		and reloaded.rules.phase == "break_core", "a reload keeps Break waiting with no stale fighters")
+	reloaded.free()
+
+	# A fighter climbs back: their creature reaches the arena edge, where the
+	# field control takes it over short of Marrow's prompt, and joins Break.
 	session.present[2] = true
 	var body := Node3D.new()
 	root.add_child(body)
 	hub.bodies[2] = body
-	controller.begin_for_peer(2)
+	body.global_position = controller.global_position + Vector3(0, 0, CONTROLLER.BREAK_JOIN_RADIUS_M + 20.0)
 	for _i in 3:
 		await process_frame
-	_check(controller.participants == [2], "the returning fighter rejoins Break")
+	_check(controller.participants.is_empty(), "a creature still outside the arena does not join")
+	body.global_position = controller.global_position + Vector3(0, 0, CONTROLLER.BREAK_JOIN_RADIUS_M - 2.0)
+	for _i in 3:
+		await process_frame
+	_check(controller.participants == [2], "the returning fighter's creature at the arena edge rejoins Break")
 	_check(controller.rules.window_left() < 30.0, "the window runs again once someone is there")
 	_check(hub.recoveries() == 1, "no further recovery after rejoining")
 	for bank in 4:
@@ -102,6 +116,30 @@ func _run() -> void:
 	controller.set_process(false)
 	root.remove_child(controller)
 	controller.free()
+
+	# A save taken mid-Break reloads with fighter ids from the old session:
+	# they are dropped quietly and Break waits; nobody is thrown back.
+	var stale := CONTROLLER.new()
+	stale.session = session
+	stale.hub = hub
+	stale.arena = arena
+	stale.rules = RULES.new()
+	var mid := RULES.new()
+	mid.update_team(0, 5)
+	mid.strike_conduit(1, mid.bank_position(1), true)
+	stale.load_payload({"rules": mid.save_data(), "participants": [9], "contributors": [9]})
+	stale.phase = "break_core"
+	hub.bodies.erase(2)
+	var before := hub.recoveries()
+	root.add_child(stale)
+	for _i in 5:
+		await process_frame
+	_check(hub.recoveries() == before and stale.rules.conduits == [1] and stale.participants.is_empty()
+		and stale.get("_awaiting_break_party") == true,
+		"a reloaded Break with stale fighter ids waits without a recovery or a reset")
+	stale.set_process(false)
+	root.remove_child(stale)
+	stale.free()
 	_finish()
 
 

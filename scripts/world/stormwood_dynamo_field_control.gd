@@ -27,12 +27,12 @@ func _process(_delta: float) -> void:
 		return
 	var ally: CharacterBody3D = director.call("ally_body")
 	var creature: RefCounted = ally.get("instance") if is_instance_valid(ally) else null
-	var pilot := str(dynamo.get("phase")) == "break_core" \
+	var pilot: bool = str(dynamo.get("phase")) == "break_core" \
 		and not bool(manager.call("is_fighting")) \
 		and not bool(director.call("trainer_battle_active")) \
 		and is_instance_valid(ally) and ally.visible \
 		and creature != null and not bool(creature.get("fainted")) \
-		and ally.global_position.distance_to(dynamo.global_position) <= 48.0
+		and ally.global_position.distance_to(dynamo.global_position) <= dynamo.BREAK_JOIN_RADIUS_M
 	if pilot and ally != _body:
 		_release()
 		_body = ally
