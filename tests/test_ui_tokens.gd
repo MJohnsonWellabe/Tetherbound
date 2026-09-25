@@ -211,3 +211,31 @@ func test_warning_icon_is_an_amber_caution_triangle() -> void:
 	var mark := image.get_pixel(14, 13)
 	assert_true(mark.get_luminance() < 0.3, "the '!' must be dark ink on the amber (%s)" % mark.to_html())
 
+
+## The vendored Xbox/mouse glyph pack drew red on friendly UI: a coral B
+## disc, and a red "pressed" highlight on the D-pad and mouse buttons (every
+## hotbar slot showed one). The red rule outranks platform convention for
+## friendly UI (coordinator decision, X03): B is a neutral disc and the
+## highlights are teal. Scans every glyph image the prompts can draw.
+func test_no_input_glyph_is_red_or_coral() -> void:
+	var dir_path := "res://assets/ui/input_prompts/"
+	var dir := DirAccess.open(dir_path)
+	assert_true(dir != null, "input prompt glyphs must be readable")
+	var files := 0
+	for file_name in dir.get_files():
+		if not file_name.ends_with(".png"):
+			continue
+		files += 1
+		var image := Image.load_from_file(ProjectSettings.globalize_path(dir_path + file_name))
+		assert_true(image != null and not image.is_empty(), "%s did not load" % file_name)
+		if image == null or image.is_empty():
+			continue
+		var red := 0
+		for y in image.get_height():
+			for x in image.get_width():
+				var c := image.get_pixel(x, y)
+				if c.a > 0.15 and _is_red_or_coral(Color(c.r, c.g, c.b)):
+					red += 1
+		assert_eq(red, 0, "%s draws %d red/coral pixels; red is Team Tether's alone" % [file_name, red])
+	assert_true(files >= 20, "expected the glyph pack, scanned %d images" % files)
+
