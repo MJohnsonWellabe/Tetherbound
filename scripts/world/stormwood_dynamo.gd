@@ -20,6 +20,9 @@ const SNAPSHOT_INTERVAL_S := 0.1
 ## A deployed creature this close to the core is piloted onto the conduits by
 ## the field control, so during Break it is also in the Break.
 const BREAK_JOIN_RADIUS_M := 48.0
+## A creature knocked out by a discharge outside a fight leaves the field after
+## its faint plays, as `combat_manager.gd::_finish()` hides a fainted ally.
+const FAINT_HIDE_S := 1.0
 
 var world: Node3D
 var hub: Node
@@ -222,8 +225,10 @@ func _process(delta: float) -> void:
 		_admit_break_arrivals()
 		if _awaiting_break_party:
 			return
+		# A fighter whose creature fainted, was hidden or was put away is out of
+		# the Break; when nobody is left that is a full-party faint.
 		for peer: int in participants.duplicate():
-			if session.realm_of(peer) != "stormwood" or not is_instance_valid(hub.call("body_for", peer)):
+			if _live_break_body(peer) == null:
 				participants.erase(peer)
 		if participants.is_empty() and _restored_break:
 			_awaiting_break_party = true
@@ -252,8 +257,8 @@ func _validate_conduit_strike(peer: int, intent: Dictionary) -> Dictionary:
 	var refused := {"ok": false, "reason": "That conduit strike is no longer available."}
 	if phase != "break_core" or not participants.has(peer) or session.realm_of(peer) != "stormwood":
 		return refused
-	var body: Node3D = hub.call("body_for", peer)
-	if not is_instance_valid(body):
+	var body := _live_break_body(peer)
+	if body == null:
 		return refused
 	var card: Dictionary = hub.call("card_for", peer)
 	var slot := str(intent.get("slot", ""))
@@ -309,12 +314,20 @@ func _apply_local_hazard(event: Dictionary) -> void:
 		manager.call("apply_host_enemy_hit", {"damage": float(event.get("damage", 0.0)),
 			"move_id": "dynamo_discharge", "lunge": 0.0})
 	else:
-		var body: Node3D = hub.call("body_for", session.local_peer_id())
-		if is_instance_valid(body):
-			var creature: RefCounted = body.get("instance")
-			if creature != null:
-				var killed := bool(creature.call("take_damage", float(event.get("damage", 0.0))))
-				body.call("play_faint" if killed else "play_hit")
+		# The piloted body and its creature are the director's own ally: a
+		# follower body carries no creature instance of its own.
+		var director := _director()
+		var body: Node3D = director.call("ally_body") if director != null else null
+		if not is_instance_valid(body):
+			body = hub.call("body_for", session.local_peer_id())
+		var creature: Object = director.call("ally_instance") if director != null else null
+		if creature == null and is_instance_valid(body):
+			creature = body.get("instance")
+		if is_instance_valid(body) and creature != null:
+			var killed := bool(creature.call("take_damage", float(event.get("damage", 0.0))))
+			body.call("play_faint" if killed else "play_hit")
+			if killed:
+				_hide_fainted(body, creature)
 	# Static is a locomotion penalty, shared with ordinary Stormwood lightning.
 	# The piloted companion takes the core damage; its trainer's stamina regen
 	# is what the named status affects.
@@ -364,8 +377,26 @@ func _reset_after_loss() -> void:
 	_completion_committed = false
 	_persist_state()
 	_publish_state()
-	for peer: int in peers:
+	for peer: int in recovery_peers(peers):
 		hub.call("send_to", peer, {"kind": "dynamo_recovery"})
+
+
+## A full-party faint restores everyone (BOSSES §4.7): the fight's contributors
+## wherever they are, and every Stormwood peer whose trainer stands within the
+## arena, observers included.
+func recovery_peers(contributing: Array) -> Array[int]:
+	var out: Array[int] = []
+	for peer: Variant in contributing:
+		if int(peer) > 0 and not out.has(int(peer)):
+			out.append(int(peer))
+	var radius := float(rules.config.get("arena_radius_m", BREAK_JOIN_RADIUS_M)) if rules != null else BREAK_JOIN_RADIUS_M
+	for peer: int in session.peers_in_realm("stormwood") + ([] if session.is_active() else [session.local_peer_id()]):
+		if out.has(peer):
+			continue
+		var actor: Node3D = hub.call("actor_for", peer)
+		if is_instance_valid(actor) and actor.global_position.distance_to(global_position) <= radius:
+			out.append(peer)
+	return out
 
 
 ## A fighter who walks back after a wipe has their creature taken over by the
@@ -391,10 +422,47 @@ func _apply_local_recovery() -> void:
 
 
 func _in_break_reach(peer: int) -> bool:
+	var body := _live_break_body(peer)
+	return body != null and body.global_position.distance_to(global_position) <= BREAK_JOIN_RADIUS_M
+
+
+## The body `peer`'s creature fights the Break with, under the same terms the
+## field control pilots it: in Stormwood, visible, and its creature not fainted.
+## The host's own creature is the director's ally and its live instance. Another
+## peer's creature lives in its owner's process; the host holds the card it was
+## deployed with, so a remote body counts while that card has hit points.
+func _live_break_body(peer: int) -> Node3D:
 	if session.realm_of(peer) != "stormwood":
-		return false
+		return null
 	var body: Node3D = hub.call("body_for", peer)
-	return is_instance_valid(body) and body.global_position.distance_to(global_position) <= BREAK_JOIN_RADIUS_M
+	var creature: Object = null
+	var director := _director()
+	if peer == int(session.local_peer_id()) and director != null:
+		var ally: Variant = director.call("ally_body")
+		if is_instance_valid(ally):
+			body = ally as Node3D
+		creature = director.call("ally_instance")
+	if not is_instance_valid(body) or not body.is_inside_tree() or not body.is_visible_in_tree():
+		return null
+	if creature == null:
+		creature = body.get("instance")
+	if creature != null:
+		return null if bool(creature.get("fainted")) else body
+	var card: Dictionary = hub.call("card_for", peer)
+	return body if float(card.get("hp", 0.0)) > 0.0 else null
+
+
+func _hide_fainted(body: Node3D, creature: Object) -> void:
+	if not is_inside_tree():
+		body.visible = false
+		return
+	get_tree().create_timer(FAINT_HIDE_S).timeout.connect(func() -> void:
+		if is_instance_valid(body) and creature != null and bool(creature.get("fainted")):
+			body.visible = false)
+
+
+func _director() -> Node:
+	return world.get_node_or_null("EncounterDirector") if world != null else null
 
 
 func _add_participant(peer: int, contributes := true) -> void:

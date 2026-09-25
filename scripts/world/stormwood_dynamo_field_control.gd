@@ -26,7 +26,8 @@ func _process(_delta: float) -> void:
 		_release()
 		return
 	var ally: CharacterBody3D = director.call("ally_body")
-	var creature: RefCounted = ally.get("instance") if is_instance_valid(ally) else null
+	# A follower body carries no creature instance; the director's ally is it.
+	var creature: RefCounted = director.call("ally_instance") if is_instance_valid(ally) else null
 	var pilot: bool = str(dynamo.get("phase")) == "break_core" \
 		and not bool(manager.call("is_fighting")) \
 		and not bool(director.call("trainer_battle_active")) \
