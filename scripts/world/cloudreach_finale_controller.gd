@@ -212,7 +212,10 @@ func encounter_won(encounter_id: String) -> bool:
 		return false
 	var result := _dispatch(str(config["captain_victory_event"]))
 	if not bool(result.get("accepted", false)) or not _has(victory):
-		if bool(result.get("pending", false)):
+		# Only this event's own accepted-but-pending write is tracked; a
+		# `pending` merged in from an unrelated reconcile must not set a guard
+		# nothing will ever clear.
+		if bool(result.get("accepted", false)) and bool(result.get("pending", false)):
 			_track(victory, "win")
 		return false
 	_in_encounter = false
@@ -239,7 +242,8 @@ func sync_progression() -> void:
 	var network := str(config["network_flag"])
 	if _has(str(config["captain_victory_flag"])) and _all_relays_disabled() \
 			and not _has(network) and not _in_flight.has(network):
-		if bool(_dispatch(str(config["network_event"])).get("pending", false)):
+		var repair := _dispatch(str(config["network_event"]))
+		if bool(repair.get("accepted", false)) and bool(repair.get("pending", false)):
 			_track(network, "network")
 	var next := "dormant"
 	if _has(str(config["aftermath_flag"])):
@@ -269,7 +273,9 @@ func sync_progression() -> void:
 ## emit it twice. Phase is already current when this runs.
 func _settle_landed() -> void:
 	for flag: String in _in_flight.keys():
-		if not _has(flag):
+		# A handler re-entering `sync_progression()` may already have settled
+		# and erased a later entry of this same pass.
+		if not _in_flight.has(flag) or not _has(flag):
 			continue
 		var tag := str(_in_flight[flag])
 		_in_flight.erase(flag)
@@ -405,7 +411,7 @@ func witness_restoration(body: CharacterBody3D) -> bool:
 		return false
 	var result := _dispatch(str(config["aftermath_event"]))
 	if not bool(result.get("accepted", false)) or not _has(aftermath):
-		if bool(result.get("pending", false)):
+		if bool(result.get("accepted", false)) and bool(result.get("pending", false)):
 			_track(aftermath, "witness")
 		return false
 	sync_progression()
