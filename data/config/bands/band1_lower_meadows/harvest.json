@@ -133,13 +133,12 @@
    "amount": 3,
    "label": "Pick berries",
    "at": [
-    -5.8,
-    -24.0
+    20.0,
+    -16.0
    ],
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.52,
-   "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale.",
-   "_why_f01": "F01-b (PENDING GRANT). Was [20,-16], which the OWNER-0912 cottage_b move left inside the cottage's own walls (local (1.54,-1.62) against a 3.05m half-extent), 3.66m from its door. Now in the Berry Field (terrain_playground.json paths.village_topology.subareas berry_field, centre [-8.5,-23] r6), 3.8m from Berry Lane's end, beside the planted bush row. Same item, amount, model and order, so harvest ledger ids are unchanged."
+   "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale."
   },
   {
    "order": 11,
@@ -442,14 +441,13 @@
    "amount": 3,
    "label": "Pick berries",
    "at": [
-    -10.8,
-    -25.8
+    -32.0,
+    -1.0
    ],
    "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
    "model_scale": 0.52,
    "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Third of the three new village berry stops, west of the farmhouse, >=4m clear of the boundary and of every existing node.",
-   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change.",
-   "_why_f01": "F01-b (PENDING GRANT). Was [-32,-1], alone in open grass west of the farmhouse. Now in the Berry Field (subareas berry_field), 1.2m inside its west rail, so the field holds three harvestable berry bushes, not one. Same item, amount, model and order; still inside the village fence, so test_village_boundary's 28-node count is unchanged."
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
   },
   {
    "order": 1034,
