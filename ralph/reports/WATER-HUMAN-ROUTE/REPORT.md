@@ -378,93 +378,123 @@ the closed strips are unchanged.
 
 ### Review corrections
 
-The independent review found no blocker and two major issues. Both are fixed.
+**First independent review: no blocker, two majors.**
 
-**Worlds with a gap in their flags.** Only the landform's own final fact
-opened a seal. So a legacy or fixture world holding a later fact, but missing
-an earlier one, sealed islands the player had already passed. That broke
-every dock's authored `return_policy`. Now a landform opens with its own
-final fact or any later fact on a chain through it. Fly restrictions are
-re-synced from the same state on every flag revision, and the refusal names
-the dock to clear.
-
-**Invisible-wall risk.** The first capture drew the race as a dark grey band.
-The foam is now unshaded white water whose noise drives alpha, drawn above
-the sea surface.
+- **Worlds with a gap in their flags (fixed).** Only the landform's own final
+  fact opened a seal. So a legacy or fixture world holding a later fact, but
+  missing an earlier one, sealed islands the player had already passed.
+  That broke every dock's authored `return_policy`. Now a seal opens with its
+  own final fact or any later fact on a chain through it. Fly restrictions
+  are re-synced from the same state on every flag revision, and the refusal
+  names the dock to clear.
+- **Visibility (only partly fixed; see the visual result below).**
 
 Also added:
-- tests for later-fact worlds, island reachability and the seam where the
-  Shellwatch and shoal races overlap;
+- tests for later-fact worlds, island reachability and simulated overlap seams;
 - no push-back message during a combat pause;
 - runtime checks that this trainer's Fly restrictions register while closed
   and release once open;
-- an `push_error` in `compile()` when no dock reaches an island;
-- corrected comments.
+- a `push_error` when no dock reaches an island.
+
+**Second independent review: FAIL.** It confirmed the gapped-world fix, the
+Fly re-sync and the dock-smoke fixture as sound. It failed the PR because
+the race was not readable from the departure beach in daylight, and because
+this report had called the visibility major fixed. That wording is
+withdrawn here.
+
+### Visual result: failed at swimmer height, open under F13
+
+`tools/capture_water_gate_seals.gd` writes the six-frame
+`_sheet_gate_seals.png`. It runs under `xvfb-run`, `--rendering-driver
+opengl3`, 1280x720, with HUD layers hidden. The top row shows the closed gate
+from the beach at 3.2 m, from the swimmer's flank position at 0.9 m, and from
+a 70 m overview. The bottom row shows night, then the beach and swimmer views
+after the gate opens.
+
+Presentation went through three approaches:
+1. a flat foam annulus (alpha 0.62, then 0.9);
+2. standing crest ribbons;
+3. a dark trough, lit foam with low emission, and ring-emitted spray particles.
+
+Two fresh code-blind judges saw only renamed frames and the references.
+
+- **Round 1 (flat foam plus crests): no.** The race read as haze, fog, markers
+  or ice, and was brighter at night than by day.
+- **Round 2 (final): still no for surf.** "Is it at least clearly not an
+  invisible wall? Yes, barely." The judge said the race "explains *that* there
+  is a boundary, not *why*": a flat white rim with no height or curl, a
+  bullseye from above, and pale glowing ice at night.
+
+Its ranked fixes:
+1. breaking height and spray along the whole ring;
+2. an irregular reef outline;
+3. scale that holds up at a distance;
+4. darker churned water with flow streaks;
+5. night lighting;
+6. mounded sandbars.
+
+The pushed-back swimmer also gets the explanation text. The stop rule ends
+iteration here. Readable currents (seals and route currents alike, since
+closed strips and ordinary currents on main have no visuals at all) belong to
+F13's "currents … read pass T2's visual matrix" and are **not** claimed. The
+gate is visible but not yet explained by readable surf.
 
 ### Verification
 
-Everything uses stock Godot 4.7-stable in a Linux container, from a source
-checkout. There is no exported package and no device run.
+Stock Godot 4.7-stable in a Linux container, from a source checkout. There is
+no exported package and no device run.
 
-- **Unit tests.** The focused run of `test_water_closed_gate_seals.gd` and
-  `test_water_current_field.gd` passes 20 tests / 51,123 assertions, 0 failed.
-  Before the review corrections, the full `water`, `swim`, `flag_scopes` and
-  `road_creature` selection passed 238 tests / 78,456 assertions, 0 failed.
-  The FAIL lines it prints are its known negative controls.
-- **`smoke_water_closed_gate_seal.gd`: 21 checks pass.**
-  - Disclosed fixtures: the four earlier facts are set directly, and one
-    start position is placed at the Cradle departure. All later movement is
-    real input.
+- **Unit tests.** `test_water_closed_gate_seals.gd` with
+  `test_water_current_field.gd`: 20 tests / 51,123 assertions, 0 failed, on
+  the final source. The broader `water`, `swim`, `flag_scopes` and
+  `road_creature` selection passed 238 tests / 78,456 assertions, 0 failed,
+  on 945ffa7d, before the corrections. Its printed FAIL lines are known
+  negative controls.
+- **`smoke_water_closed_gate_seal.gd`: 21 checks pass on the final source.**
+  - Disclosed fixtures: the four earlier facts are set directly, and one start
+    position is placed at the Cradle departure. All later movement is real
+    input.
   - Route: walk the beach round the barrier's south-west end, then swim the
-    open-water flank 22 m outside both closed strips, where the current is
-    under 0.5 m/s.
-  - Closed result: the swimmer's closest approach is 34.50 m to the first
-    shoal centre (shore at 20 m) and 116.70 m to the second. They are told:
-    "The tide race on the Salt Crown crossing throws you back. Clear the
-    Tidal Cradle dock first."
-  - Open result: after only `water_aquaryn_resolved` is set, the race and
-    this trainer's Fly restrictions clear. The same swimmer reaches the shoal
-    and stands dry on its safe landing.
-- **`smoke_water_swimming.gd` passes**, both the lesson (60.142 m) and
-  `--rest-route=sluice_isle_to_veilfall_sheltered`. The rest route matches
-  the earlier receipt: 84.147 m swum, 33.750 minimum stamina, 1.153 steering
-  ratio.
-- **Other passing smokes:**
-  - `smoke_water_mounted_swimming.gd`: 91 checks, all five mounts;
+    open-water flank 22 m outside both closed strips (current under 0.5 m/s).
+  - Closed result: closest approach 34.50 m to the first shoal centre (shore at
+    20 m) and 116.70 m to the second. The explanation names the Tidal Cradle
+    dock. This trainer's Fly restrictions are registered.
+  - Open result: after only `water_aquaryn_resolved` is set, the race and the
+    Fly restrictions clear. The same swimmer lands dry on the shoal's safe
+    landing.
+- **Rerun on acedb91d, after the later-fact change:**
+  - `smoke_water_dock_actions.gd`: 55 checks, 0 failed.
+  - `smoke_water_mounted_swimming.gd`: 91 checks, all five mounts.
+- **Passed on 945ffa7d or c3ae9bb9, before the later-fact change:**
+  - `smoke_water_swimming.gd`: the lesson (60.142 m) and
+    `--rest-route=sluice_isle_to_veilfall_sheltered` (84.147 m, 33.750 minimum
+    stamina, 1.153 steering ratio, identical to the earlier receipt);
   - `smoke_net_water_swimming.gd`;
-  - `smoke_net_water_mounted_swimming.gd`: the host-`MOUNTED` defect did not
-    appear on this run;
+  - `smoke_net_water_mounted_swimming.gd`, which did not show the host-`MOUNTED`
+    defect on this run;
   - `smoke_stormwood_water_gate_path.gd`;
   - `smoke_water_opening_continuous.gd`.
-- **`smoke_water_dock_actions.gd`: 55 checks, 0 failed, after a fixture
-  correction.** Its fresh world drove Shellwatch and Deep Watch equipment
-  without the upstream facts that open those islands. The fixture now sets
-  those upstream facts and leaves every fact under test unset. The Reedhaven
-  closed-strip probe runs after the lesson; with no lesson done, Reedhaven's
-  own race correctly owns that water. The Shellwatch pre-reward reload now
-  compares against the authored unreduced strength. Its old 6.0 value was a
-  Brine Steps closed-dock artefact.
-- **`smoke_water_continuous.gd` fails, and the failure is pre-existing:**
-  "Mounted route timed out … from (299.831, 0.0, 2097.513)
-  (stamina=1.000 …)". With the race strength temporarily set to 0 and
-  nothing else changed, the same failure reproduces at 70.9 m. That config
-  change was reverted, never committed. This is a separate open late-route
-  defect, not caused by the seals, and it is not in CI.
-- **Visual check.** `tools/capture_water_gate_seals.gd` under `xvfb-run`,
-  `--rendering-driver opengl3`, 1280x720, with HUD layers hidden. Frames go
-  to `_sheet_gate_seals.png`: closed day from the departure beach, closed
-  night, closed overview from 70 m, and open day.
-  - Root inspection: from above, the four shoal rings read clearly as white
-    water. At night, broken foam is visible around the first shoal. The open
-    frame shows no ring.
-  - **Open visual finding:** at eye level in daylight, the ring about 90 m
-    out is only a faint white line. After two tuning attempts (alpha 0.62,
-    then 0.9 with denser coverage), more opacity does not fix the grazing
-    angle. It likely needs a raised surf or spray element.
-  - No code-blind judge has run yet. This is not a visual acceptance.
+  The later-fact change only opens more land, and none of these fixtures holds
+  a gapped flag set except the continuous one below.
+- **Dock-smoke fixture correction.** The fresh world drove Shellwatch and Deep
+  Watch equipment without the upstream facts that open those islands. The
+  fixture now sets them and leaves every fact under test unset. The Reedhaven
+  6 m/s closed-strip check samples a point where that strip, not a race, owns
+  the water. The Shellwatch pre-reward reload compares against the authored
+  unreduced strength. Its old 6.0 value came from the Brine Steps gate, which
+  is not the one under test.
+- **`smoke_water_continuous.gd` is unresolved and not claimed.**
+  - Its gapped fixture holds only the Aquaryn fact. Under the old last-fact
+    rule, and again with the race strength set to 0 (reverted, never
+    committed), it timed out 72.5 m and then 70.9 m short of the Salt Crown
+    arrival, with the mount at full stamina.
+  - On acedb91d it landed Salt Crown and Sluice Isle, then hit the 900 s
+    wall-clock limit while the renderer shared the CPU.
+  - The mounted late route needs its own uncontended work order. The smoke is
+    not in CI.
 
-**Remaining.** A runtime glide into a seal, a network guest seeing the race
-clear on a host delta, and a mounted runtime flank attempt are all
-unexercised. The Fly check calls the real controller's restriction test
-directly. The mounted case is covered analytically (10 m/s against 12 m/s).
-The new smoke is not in CI; adding it needs a `.github` grant.
+**Remaining.** A runtime Fly glide into a seal, a network guest seeing the
+race clear on a host delta, and a mounted runtime flank are all unexercised.
+The mounted case is covered analytically (10 m/s against 12 m/s), and Fly
+through the real controller's restriction test. The new smoke is not in CI; a
+`.github` grant was requested on PR226.

@@ -19,6 +19,8 @@ var _rules: Dictionary = {}
 var _rings: Dictionary = {}
 var _material: StandardMaterial3D
 var _crest_material: StandardMaterial3D
+var _trough_material: StandardMaterial3D
+var _spray_texture: Texture2D
 var _dock_names: Dictionary = {}
 var _last_revision := -1
 var _message_cooldown := 0.0
@@ -41,6 +43,8 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 	_material = _foam_material()
 	# Breakers are denser white water than the flat race they stand in.
 	_crest_material = _foam_material(0.12, 0.42)
+	_trough_material = _trough()
+	_spray_texture = _spray_sprite()
 	var sea := float(config.get("terrain", {}).get("sea_level_m", 0.0))
 	for seal: Dictionary in _seals:
 		var ring := MeshInstance3D.new()
@@ -52,6 +56,16 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 		var centre: Vector2 = seal.centre
 		ring.position = Vector3(centre.x, sea + SURFACE_LIFT_M, centre.y)
 		add_child(ring)
+		# A dark churned trough under the foam gives the white water the value
+		# contrast calm pale cyan cannot; outside the race the sea stays calm.
+		var trough := MeshInstance3D.new()
+		trough.name = "Trough"
+		trough.mesh = ring.mesh
+		trough.material_override = _trough_material
+		trough.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		trough.position.y = -SURFACE_LIFT_M * 0.5
+		ring.add_child(trough)
+		ring.add_child(_spray(float(seal.shore_radius_m), SEALS.outer_radius(seal, _rules)))
 		# Standing breakers read at the swimmer's grazing eye height, where a
 		# flat ring alone collapses to a hairline at the horizon.
 		for raw: Variant in _rules.get("crests", []):
@@ -144,6 +158,73 @@ func _annulus(inner: float, outer: float, blend: float) -> ArrayMesh:
 	return tool.commit()
 
 
+func _spray(inner: float, outer: float) -> GPUParticles3D:
+	# Spray bursting up through the race breaks the horizon line at swimming
+	# eye height, where flat foam collapses to a sliver.
+	var particles := GPUParticles3D.new()
+	particles.name = "Spray"
+	var circumference := TAU * (inner + outer) * 0.5
+	particles.amount = clampi(int(circumference / float(_rules.get("spray_spacing_m", 2.5))), 24, 1600)
+	particles.lifetime = 1.4
+	particles.preprocess = 1.4
+	particles.visibility_aabb = AABB(Vector3(-outer - 4.0, -1.0, -outer - 4.0), Vector3(outer * 2.0 + 8.0, 8.0, outer * 2.0 + 8.0))
+	var process := ParticleProcessMaterial.new()
+	process.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
+	process.emission_ring_axis = Vector3.UP
+	process.emission_ring_radius = outer - float(_rules.get("edge_blend_m", 4.0))
+	process.emission_ring_inner_radius = inner + 2.0
+	process.emission_ring_height = 0.2
+	process.direction = Vector3.UP
+	process.spread = 25.0
+	process.initial_velocity_min = 2.0
+	process.initial_velocity_max = 4.0
+	process.gravity = Vector3(0, -5.0, 0)
+	process.scale_min = 0.8
+	process.scale_max = 1.8
+	var fade := Gradient.new()
+	fade.set_color(0, Color(1, 1, 1, 0.0))
+	fade.add_point(0.2, Color(1, 1, 1, 0.9))
+	fade.set_color(fade.get_point_count() - 1, Color(1, 1, 1, 0.0))
+	var ramp := GradientTexture1D.new()
+	ramp.gradient = fade
+	process.color_ramp = ramp
+	particles.process_material = process
+	var quad := QuadMesh.new()
+	quad.size = Vector2(1.2, 1.2)
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	material.vertex_color_use_as_albedo = true
+	material.albedo_texture = _spray_texture
+	material.emission_enabled = true
+	material.emission = Color(0.55, 0.6, 0.62)
+	material.emission_energy_multiplier = 0.35
+	quad.material = material
+	particles.draw_pass_1 = quad
+	particles.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	return particles
+
+
+func _spray_sprite() -> Texture2D:
+	var image := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	for y in 64:
+		for x in 64:
+			var d := Vector2(x - 31.5, y - 31.5).length() / 31.5
+			image.set_pixel(x, y, Color(1, 1, 1, clampf(1.0 - d, 0.0, 1.0) ** 1.5))
+	return ImageTexture.create_from_image(image)
+
+
+func _trough() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	material.albedo_color = Color(str(_rules.get("trough_colour", "#27514f"))) * Color(1, 1, 1, float(_rules.get("trough_alpha", 0.55)))
+	material.roughness = 0.6
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.render_priority = 0
+	return material
+
+
 func _crest(radius: float, height: float, lean: float) -> ArrayMesh:
 	# A closed vertical ribbon leaning outward with the flow: opaque foam at
 	# the waterline fading to spray at its lip.
@@ -180,12 +261,17 @@ func _foam_material(low: float = 0.28, high: float = 0.62) -> StandardMaterial3D
 			var value := smoothstep(low, high, grey.get_pixel(x, y).r)
 			foam.set_pixel(x, y, Color(1, 1, 1, value))
 	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	# Lit like the sea it churns, with a little self-light so daylight white
+	# holds against the bright horizon without glowing at night.
+	material.emission_enabled = true
+	material.emission = Color(0.6, 0.64, 0.66)
+	material.emission_energy_multiplier = 0.35
+	material.roughness = 0.5
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.vertex_color_use_as_albedo = true
 	material.albedo_color = Color(0.94, 0.98, 1.0, float(_rules.get("foam_alpha", 0.62)))
 	material.albedo_texture = ImageTexture.create_from_image(foam)
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	# Draw after the translucent sea surface it lies on.
-	material.render_priority = 1
+	material.render_priority = 2
 	return material
