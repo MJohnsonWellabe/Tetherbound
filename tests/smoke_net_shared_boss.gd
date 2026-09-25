@@ -264,7 +264,7 @@ const TOURNAMENT_ROUNDS := [
 ## inside it -- frame budgets, poll counts, reach tolerances -- is untouched.
 func _init_budgets() -> void:
 	super._init_budgets()
-	if "--handoff" in OS.get_cmdline_user_args():
+	if "--handoff" in OS.get_cmdline_user_args() or "--client-handoff" in OS.get_cmdline_user_args():
 		_budgets["smoke_step_budget_s_2peer"] = float(_budgets.get("smoke_step_budget_s_2peer", 120.0)) * 3.0
 		_budgets["hello_budget_s"] = 360.0
 
@@ -279,6 +279,9 @@ func _run() -> void:
 		return
 	if "--hall" in OS.get_cmdline_user_args():
 		await _run_hall_approach()
+		return
+	if "--client-handoff" in OS.get_cmdline_user_args():
+		await _run_client_chapter_handoff()
 		return
 	if "--handoff" in OS.get_cmdline_user_args():
 		await _run_chapter_handoff()
@@ -1132,6 +1135,181 @@ func _run_chapter_handoff() -> void:
 	# already caught there.
 	_report_flag_difference(host_world, guest_world)
 	quit(await finish())
+
+
+## The Warden beaten by the GUEST alone; the host never fights.
+##
+##   godot --headless --path . --script tests/smoke_net_shared_boss.gd -- --client-handoff
+##
+## `--handoff`'s leg with the roles changed. The legendary offer is read off the
+## world's per-character reward journal (`trainer:warden_aldis:*`), which only a
+## host-run Warden used to write. Here peer 1 challenges and wins in its own
+## local fight, so the host must journal peer 1's character from the victory it
+## reports, and the freed legendary must reach peer 1's belt and NOT peer 0's.
+## DISCLOSED FIXTURES, as `--handoff`: four level-18 creatures per peer, both
+## seated in the arena, and `enemy_hp_ceiling` on the Warden's creatures.
+##
+## KNOWN RED at introduction: the host-holds-no-veridian check. The journal
+## checks pass (only the guest's character, accepted), but
+## `stronghold_climax.gd::_warden_participant_characters()` asks `Game.world`
+## (a WorldState) for `world_snapshot()`, which only GameState defines, so it
+## reads no participants and `may_receive()` treats the freeing as solo.
+func _run_client_chapter_handoff() -> void:
+	if not await launch(2, "world"):
+		quit(await finish())
+		return
+	var hosted: Dictionary = await step(0, "host", {})
+	check(str(hosted.get("verdict", "")) == "PASS", "client-handoff host opened a world")
+	var session = await probe(0, "session")
+	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1",
+		"port": int((session as Dictionary).get("enet_port", 0)) if session is Dictionary else 0})
+	check(str(joined.get("verdict", "")) == "PASS", "second peer joined the client-handoff world")
+	if str(joined.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
+	for peer in 2:
+		for species: String in HANDOFF_PARTY:
+			var granted: Dictionary = await step(peer, "party_grant",
+				{"species": species, "level": 18})
+			check(str(granted.get("verdict", "")) == "PASS",
+				"peer %d received a level-18 %s" % [peer, species])
+		await step(peer, "deploy_creature", {})
+	var guest_character := ""
+	var guest_session = await probe(1, "session")
+	var guest_id := int((guest_session as Dictionary).get("peer_id", 0)) if guest_session is Dictionary else 0
+	var host_session = await probe(0, "session")
+	if host_session is Dictionary:
+		for raw: Variant in ((host_session as Dictionary).get("rows", []) as Array):
+			if raw is Dictionary and int((raw as Dictionary).get("peer_id", 0)) == guest_id:
+				guest_character = str((raw as Dictionary).get("character_id", ""))
+	check(not guest_character.is_empty(), "the host's registry names the guest's stable character")
+	var hold: Dictionary = await _hall(0)
+	var markers: Dictionary = hold.get("markers", {}) as Dictionary
+	var arena: Array = _hall_marker(markers, "warden_arena")
+	check(arena.size() == 3, "the Hall names its own Warden arena")
+	if arena.size() != 3:
+		quit(await finish())
+		return
+	for peer in 2:
+		await step(peer, "explore_at",
+			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2])], "settle": 60})
+
+	# 1. The GUEST fights the Warden; the host does not join.
+	var began: Dictionary = await step(1, "trainer_battle", {"trainer": WARDEN_TRAINER, "settle": 45})
+	check(str(began.get("verdict", "")) == "PASS",
+		"guest challenged the Warden (%s)" % str(began.get("detail", "")))
+	if str(began.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
+	var won: Dictionary = await step(1, "win_trainer_battle",
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+	check(str(won.get("verdict", "")) == "PASS", "the guest felled the Warden alone (%s)" % str(won.get("detail", "")))
+	if str(won.get("verdict", "")) != "PASS":
+		quit(await finish())
+		return
+	for peer in 2:
+		await step(peer, "wait", {"frames": 120})
+		check(_hall_says(await _handoff_story(peer), "defeated_warden") == true,
+			"peer %d received the guest's Warden defeat as a shared world fact" % peer)
+	for peer in 2:
+		await step(peer, "dismiss_dialogue", {"presses": 40, "settle": 30})
+
+	# 2. The host journaled exactly the guest, and the guest's ack accepted it.
+	var journal_characters: Array[String] = []
+	var accepted_characters: Array[String] = []
+	for _poll in 60:
+		var host_world := await _world_snapshot(0)
+		journal_characters = _warden_characters(host_world, false)
+		accepted_characters = _warden_characters(host_world, true)
+		if accepted_characters == [guest_character]:
+			break
+		await step(0, "wait", {"frames": 10})
+	check(journal_characters == [guest_character],
+		"the host's Warden journal names only the guest's character (got %s)" % str(journal_characters))
+	check(accepted_characters == [guest_character],
+		"and the guest accepted its own Warden deliveries (got %s)" % str(accepted_characters))
+
+	# 3. The tether, pulled by the guest as in `--handoff`.
+	var control: Array = _hall_marker(markers, "machine_foot")
+	if control.size() != 3:
+		control = (hold.get("machine_at", []) as Array)
+	check(control.size() == 3, "the Hall names its machine control")
+	if control.size() != 3:
+		quit(await finish())
+		return
+	var control_at := Vector3(float(control[0]), float(control[1]), float(control[2]))
+	var puller := 1
+	var reached := false
+	for _attempt in 3:
+		var walked: Dictionary = await step(puller, "move_to",
+			{"x": control_at.x, "z": control_at.z,
+			 "close_enough": 3.5, "budget_frames": 2400})
+		if str(walked.get("verdict", "")) == "PASS":
+			reached = true
+			break
+		await step(puller, "move_to", {"x": float(arena[0]), "z": float(arena[2]),
+			"close_enough": 6.0, "budget_frames": 1200})
+	check(reached, "the guest walked to the machine control on its own legs")
+	if not reached:
+		quit(await finish())
+		return
+	var pulled: Dictionary = await step(puller, "press", {"action": "interact", "settle": 90})
+	check(str(pulled.get("verdict", "")) == "PASS", "the guest used the machine control")
+	await step(puller, "dismiss_dialogue", {"presses": 16, "settle": 90})
+	var freed := false
+	for _poll in 60:
+		if _hall_says(await _handoff_story(puller), FREED_FLAG) == true:
+			freed = true
+			break
+		await step(puller, "wait", {"frames": 10})
+	check(freed, "the guest pulling the tether freed the legendary")
+	if not freed:
+		quit(await finish())
+		return
+	for peer in 2:
+		await step(peer, "wait", {"frames": 120})
+		check(_hall_says(await _handoff_story(peer), FREED_FLAG) == true,
+			"peer %d received '%s' as a shared world fact" % [peer, FREED_FLAG])
+	for peer in 2:
+		await step(peer, "dismiss_dialogue", {"presses": 16, "settle": 60})
+
+	# 4. The owner's rule: the participant keeps its own; the non-participant gets none.
+	for peer in 2:
+		var party = await probe(peer, "party")
+		var species: Array = []
+		if party is Array:
+			for raw: Variant in (party as Array):
+				if raw is Dictionary:
+					species.append(str((raw as Dictionary).get("species", "")))
+		if peer == 1:
+			check(species.has(LEGENDARY_SPECIES),
+				"the guest, who fought the Warden, holds its own %s (party: %s)"
+					% [LEGENDARY_SPECIES, str(species)])
+		else:
+			check(not species.has(LEGENDARY_SPECIES),
+				"the host, who never fought the Warden, holds no %s (party: %s)"
+					% [LEGENDARY_SPECIES, str(species)])
+	quit(await finish())
+
+
+func _warden_characters(world: Dictionary, accepted_only: bool) -> Array[String]:
+	var out: Array[String] = []
+	var deliveries: Variant = world.get("reward_deliveries", {})
+	if deliveries is not Dictionary:
+		return out
+	for raw: Variant in (deliveries as Dictionary).values():
+		if raw is not Dictionary:
+			continue
+		var row := raw as Dictionary
+		if not str(row.get("source", "")).begins_with("trainer:%s:" % WARDEN_TRAINER):
+			continue
+		if accepted_only and str(row.get("status", "")) != "accepted":
+			continue
+		var character := str(row.get("character_id", ""))
+		if not character.is_empty() and not out.has(character):
+			out.append(character)
+	out.sort()
+	return out
 
 
 func _handoff_story(peer: int) -> Variant:

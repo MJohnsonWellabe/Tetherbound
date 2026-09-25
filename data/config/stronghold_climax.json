@@ -100,12 +100,32 @@
     "height": 1.2
   },
 
+  "_comment_choice": "F05 / ACCEPTANCE 6.1: accept and refuse are both reachable with room on the belt and at five. After the join offer `announce` names both answers as final, then two prompts open: accept `accept_offset` metres to the player's side, at the creature's shoulder (straight ahead is inside its 2.13 m capsule, which stops 2.6 m away), and refuse `refuse_offset` metres behind where the player stood. Each is `height` up and live within `radius`, measured in 3D from the player's feet, so neither is live where the player stands when the offer lands (a press meant for the dialogue cannot answer it) and each is reached with one deliberate step. MEASURED: at radius 1.0 / height 1.1 neither prompt could ever be reached, because the height alone exceeded the radius. Accepting at five still goes through R4.10's release ceremony, where letting the newcomer go is also a refusal. TUNABLE.",
+  "choice": {
+    "announce": "Step toward it to walk out together, or step back to leave it free. Only you can answer for yourself, and either answer is final.",
+    "refused_message": "The Veridian Stag turns for the door and the open country. It leaves free, and your team stays as it is.",
+    "hold_message": "It stands free and waits. It will offer itself to whoever fought for it once that can be told.",
+    "accept_label": "Walk out with the Veridian Stag (final)",
+    "refuse_label": "Leave the Veridian Stag free (final)",
+    "accept_offset": 2.4,
+    "refuse_offset": 2.4,
+    "radius": 1.6,
+    "height": 0.9,
+    "announce_delay": 1.0,
+    "message_hold": 2.4,
+    "near_offset": 1.9,
+    "min_separation": 2.8,
+    "offer_radius": 30.0
+  },
+
   "_comment_flags": "Every flag this item introduces, in the order the climax sets them. `legendary_freed` is the one SG44 reads -- the world event is a SEPARATE item and this file must never try to run it; it only records, once, that the thing which causes it has happened.",
   "flags": {
     "reveal_read": "learned_legendary_is_the_source",
     "warden_defeated": "defeated_warden",
     "legendary_freed": "legendary_freed",
     "legendary_joined": "legendary_joined",
+    "legendary_refused": "legendary_refused",
+    "_comment_legendary_refused": "F05. This character's personal refusal receipt, the mirror of `legendary_joined`: either one means THIS character has answered this freeing and is never offered it again. Player scope.",
     "legendary_settled": "legendary_settled",
     "_comment_legendary_settled": "GATE-E. `legendary_joined` records that the freed creature ended up on the belt; this records only that the roster DECISION is over, which is a different fact and the one prompt 68's objective chain has to wait on. A player with five they will not give up may let the legendary walk away, and that is a finished ending rather than an unfinished objective -- see stronghold_climax.gd::_settle() for why the chain cannot key on `legendary_joined`.",
     "gate": "defeated_warden",

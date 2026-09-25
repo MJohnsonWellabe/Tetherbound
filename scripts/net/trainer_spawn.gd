@@ -426,8 +426,9 @@ func _scope_to_realm(node: Node, realm: String, origin: String = "") -> void:
 		if session == null or not session.has_method("realm_of"):
 			return true
 		var active := bool(session.call("is_active"))
-		var where := str(session.call("realm_of", observer)) if active else ""
-		return observer_may_receive(observer, where, realm, active)
+		var realm_for := func(peer: int) -> String:
+			return str(session.call("realm_of", peer)) if active else ""
+		return baseline_allows(observer, node.multiplayer.get_peers(), realm_for, realm, active)
 	sync.add_visibility_filter(baseline)
 	REPLICATION_SCOPE.wire_body(node, sync, realm,
 		node.get_multiplayer_authority(), baseline, origin)
@@ -448,6 +449,25 @@ static func observer_may_receive(observer: int, observer_realm: String,
 	# a spawn withheld is never retried, and a body seen one frame early
 	# corrects itself on the next evaluation.
 	return observer_realm.is_empty() or observer_realm == body_realm
+
+
+## The baseline filter's answer for one engine visibility question.
+##
+## Godot asks with observer 0 when it re-evaluates a synchronizer for
+## everybody at once, and a true answer there means PUBLIC: the engine then
+## sends the spawn to every connected peer without asking about any of them.
+## Observer 0 has no registry row, so `observer_may_receive()` alone answers
+## true for it, and a body spawned in Cloudreach while a guest was still in
+## the Meadows reached that guest addressed to a spawner it did not have
+## (`Node not found: "CloudreachCliffs/Spawned/TrainerSpawner"`, then a
+## poisoned path cache on its arrival). Zero is therefore public only when
+## every real recipient passes -- the same composition
+## `realm_replication_scope.gd` uses for its own filters.
+static func baseline_allows(observer: int, recipients: PackedInt32Array,
+		realm_for: Callable, body_realm: String, session_active: bool) -> bool:
+	return REPLICATION_SCOPE.public_or_recipient_allowed(observer, recipients,
+		func(peer: int) -> bool:
+			return observer_may_receive(peer, realm_for.call(peer), body_realm, session_active))
 
 
 ## Test/inspection door: the remote bodies standing in this world right now.

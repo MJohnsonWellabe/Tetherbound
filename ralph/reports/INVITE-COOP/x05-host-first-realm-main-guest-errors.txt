@@ -1,0 +1,7 @@
+140:ERROR: Node not found: "CloudreachCliffs/Spawned/TrainerSpawner" (relative to "/root").
+144:ERROR: ID 6 not found in cache of peer 1.
+146:ERROR: Parameter "spawner" is null.
+395:ERROR: ID 6 not found in cache of peer 1.
+397:ERROR: Parameter "spawner" is null.
+399:ERROR: ID 6 not found in cache of peer 1.
+401:ERROR: Parameter "spawner" is null.

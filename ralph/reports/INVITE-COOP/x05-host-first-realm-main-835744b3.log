@@ -1,0 +1,59 @@
+run id:  net-20260925T101954Z-14096
+run dir: /tmp/net-session_host_first_realm-20260925T101954Z
+smoke:   tests/smoke_net_session_host_first_realm.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=14118 control_port=45495 home=/tmp/net-session_host_first_realm-20260925T101954Z/home-0 log=/tmp/net-session_host_first_realm-20260925T101954Z/peer-0.log
+coordinator: launched peer 1 (client) pid=14119 control_port=37385 home=/tmp/net-session_host_first_realm-20260925T101954Z/home-1 log=/tmp/net-session_host_first_realm-20260925T101954Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":31121.0,"godot_version":"4.7-stable (official)","main_sha":"835744b35db1","peer":0.0,"pid":14118.0,"role":"host","type":"hello","user_data_dir":"/tmp/net-session_host_first_realm-20260925T101954Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":31122.0,"godot_version":"4.7-stable (official)","main_sha":"835744b35db1","peer":1.0,"pid":14119.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-session_host_first_realm-20260925T101954Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join
+PASS: peer 0 hosted a world (hosting udp/31121 as peer 1)
+PASS: peer 1 joined peer 0's world on port 31121 (joined 127.0.0.1:31121 as peer 1595040756 after 11 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: the Cloudreach route is open (realm_key_cloudreach: ok=true pending=false code='' reason='')
+PASS: peer 0 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: peer 1 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: the host crossed into Cloudreach first (crossed 'meadows' -> 'cloudreach' after 512 observed physics frames / 38057 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: the host is standing in Cloudreach
+PASS: the guest is still standing in the Meadows
+PASS: the guest in the Meadows draws no body for the host in Cloudreach (drew 0)
+PASS: the guest followed the host into Cloudreach (crossed 'meadows' -> 'cloudreach' after 631 observed physics frames / 31168 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: peer 0 is still in a 2-peer session after both crossings (2.0)
+PASS: peer 0's current scene is Cloudreach
+PASS: peer 1 is still in a 2-peer session after both crossings (2.0)
+PASS: peer 1's current scene is Cloudreach
+PASS: peer 0 draws exactly one other trainer in Cloudreach (drew 1)
+PASS: peer 0's view of the other trainer is visible
+FAIL: peer 1 draws exactly one other trainer in Cloudreach (drew 0)
+FAIL: host-first crossing leaves no misaddressed spawn or cache errors (peer 1: Node not found: "CloudreachCliffs/Spawned/ x1; peer 1: not found in cache of peer x3; peer 1: Parameter "spawner" is null x3)
+FAIL: peer 1 draws exactly one other trainer in Cloudreach (drew 0)
+FAIL: host-first crossing leaves no misaddressed spawn or cache errors (peer 1: Node not found: "CloudreachCliffs/Spawned/ x1; peer 1: not found in cache of peer x3; peer 1: Parameter "spawner" is null x3)
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=14118 exited=true unexpected_exit=false
+- peer 1 (client) pid=14119 exited=true unexpected_exit=false
+
+FAILURES:
+- peer 1 draws exactly one other trainer in Cloudreach (drew 0)
+- host-first crossing leaves no misaddressed spawn or cache errors (peer 1: Node not found: "CloudreachCliffs/Spawned/ x1; peer 1: not found in cache of peer x3; peer 1: Parameter "spawner" is null x3)
+
+=== /tmp/net-session_host_first_realm-20260925T101954Z/SUMMARY.md ===
+# Net smoke run net-20260925T101954Z-14096
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=14118 exited=true unexpected_exit=false
+- peer 1 (client) pid=14119 exited=true unexpected_exit=false
+
+FAILURES:
+- peer 1 draws exactly one other trainer in Cloudreach (drew 0)
+- host-first crossing leaves no misaddressed spawn or cache errors (peer 1: Node not found: "CloudreachCliffs/Spawned/ x1; peer 1: not found in cache of peer x3; peer 1: Parameter "spawner" is null x3)
+exit 1
