@@ -137,3 +137,4 @@ route reads only as the valley floor.
   trainer is grounded in every frame.
 - **No visible road surface.** The rerouted legs and `dynamo_west_approach` are
   visually indistinguishable from the surrounding grass in these views.
+- `wo03_after/` (WO-F09-03, branch `ralph/stormwood-f09-pocket-spurs`): the same tool's `spurs` group. It holds one frame per pocket from its joined road 18 m before the spur junction, facing 30 m up the spur, plus one mid-spur frame (Verge), with records in `frames_wo03.json`. The sheet is `sheet_wo03_spurs.jpg`.

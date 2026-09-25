@@ -44,6 +44,8 @@ const CONFIG_PATH := "res://data/config/meadow_healing.json"
 ## it undoes are answering the same numbers.
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
+const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 
 var _config: Dictionary = {}
 var _world: Node3D = null
@@ -52,7 +54,14 @@ var _applied: bool = false
 var _flag := "legendary_freed"
 ## Last `progression.revision` this node compared the flag against.
 var _revision: int = -1
+var _journal_check_in: float = 1.0
 var _report: Dictionary = {}
+## F05 / WORLD §3.2: the unengageable Stag among the healed Highfield herd,
+## standing only while every eligible participant has refused. Null otherwise.
+var _herd_display: Node3D = null
+## The `legendary_resolution:` receipts the display was last decided from, so
+## the (snapshot-reading) full-refusal rule only runs when an answer lands.
+var _herd_signature: String = "-"
 
 
 func build(world: Node3D) -> void:
@@ -70,6 +79,9 @@ func build(world: Node3D) -> void:
 		# A save loaded after the ending: no fade, no ceremony. The world has
 		# been this way since before the player pressed Continue.
 		apply(true)
+		# F05: the herd display is not a one-shot, so it keeps watching.
+		_flag = flag
+		set_process(true)
 		return
 	# Otherwise: POLL. progression_state.gd has no signal, by design and by its
 	# own header, and every other consumer of the flag store watches `revision`
@@ -82,16 +94,110 @@ func build(world: Node3D) -> void:
 
 
 func _process(_delta: float) -> void:
-	if _applied or _progression == null:
+	if _progression == null:
 		set_process(false)
 		return
 	var revision := int(_progression.get("revision"))
 	if revision == _revision:
+		# The Warden journal is not a flag, so a journal row landing alone does
+		# not move the revision: re-check the display about once a second.
+		_journal_check_in -= _delta
+		if _journal_check_in <= 0.0 and _applied:
+			_journal_check_in = 1.0
+			sync_herd_display()
 		return
 	_revision = revision
-	if bool(_progression.call("has", _flag)):
+	if not _applied and bool(_progression.call("has", _flag)):
 		apply(false)
-		set_process(false)
+	# F05: re-read on every flag change rather than once. In co-op the answers
+	# arrive one character at a time and in any order, so the display can only
+	# be decided when the last eligible participant's receipt lands -- and a
+	# later acceptance must take it down again.
+	sync_herd_display()
+
+
+## --- F05 / WORLD §3.2: the herd display ---------------------------------------
+##
+## "If every eligible participant refuses the Veridian offer, an unengageable
+## Stag appears among the healed Highfield herd after the climax. If any
+## participant accepts, that world display is absent." The rule itself is
+## `stronghold_climax.gd::all_refused()`, read off the per-character WORLD
+## receipts, so it is the same answer on every peer and after every reload.
+##
+## Unengageable by construction: a creature body with its physics and AI off,
+## in no encounter group, with no interactable -- nothing here can reopen the
+## offer, start a fight, be caught or pay anything. It exists in the world and
+## nowhere else: no flag of its own, nothing saved; it is re-derived.
+func sync_herd_display() -> bool:
+	var spec: Dictionary = _config.get("herd_display", {})
+	var signature := _resolution_signature()
+	if signature == _herd_signature:
+		return _herd_display != null
+	_herd_signature = signature
+	var want := bool(spec.get("enabled", true)) and _applied and _full_refusal()
+	if want and _herd_display == null:
+		_herd_display = _build_herd_display(spec)
+	elif not want and _herd_display != null:
+		_herd_display.queue_free()
+		_herd_display = null
+	return _herd_display != null
+
+
+func _resolution_signature() -> String:
+	if _progression == null or not _applied:
+		return ""
+	var receipts: Array = []
+	for raw: Variant in (_progression.call("all_set") as Array):
+		if str(raw).begins_with("legendary_resolution:"):
+			receipts.append(str(raw))
+	receipts.sort()
+	# The Warden journal decides who is eligible, so a journal row arriving
+	# (a late snapshot, a pending delivery acknowledged) re-decides the
+	# display as surely as a new receipt does.
+	var participants: Array = []
+	var climax := _find(str((_config.get("herd_display", {}) as Dictionary).get("climax_node", "StrongholdClimax")))
+	if climax != null and climax.has_method("warden_participants"):
+		participants = (climax.call("warden_participants") as Array).duplicate()
+	participants.sort()
+	return ",".join(receipts) + "|" + ",".join(participants)
+
+
+func herd_display() -> Node3D:
+	return _herd_display
+
+
+func _full_refusal() -> bool:
+	var climax := _find(str((_config.get("herd_display", {}) as Dictionary).get("climax_node", "StrongholdClimax")))
+	return climax != null and climax.has_method("full_refusal") and bool(climax.call("full_refusal"))
+
+
+func _build_herd_display(spec: Dictionary) -> Node3D:
+	var at_raw: Variant = spec.get("at", [])
+	if not at_raw is Array or (at_raw as Array).size() < 2:
+		return null
+	var at := Vector3(float((at_raw as Array)[0]), 0.0, float((at_raw as Array)[1]))
+	if _world != null and _world.has_method("ground_height_at"):
+		at.y = float(_world.call("ground_height_at", at.x, at.z))
+	var body: Node3D = CREATURE_SCENE.instantiate()
+	body.name = "HighfieldHerdStag"
+	body.set_script(CREATURE_BODY)
+	add_child(body)
+	body.global_position = at
+	body.call("setup", str(spec.get("species", "veridian")), false)
+	body.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
+	# Stands, and is not simulated: no gravity walk, no AI, and on no
+	# collision LAYER, so nothing can bump, target or engage it. Its MASK is
+	# kept: `creature_body` turns physics back on whenever it becomes visible
+	# again, and with a mask it then stands on the ground instead of falling
+	# through it.
+	body.set_physics_process(false)
+	body.set_process(false)
+	if body is CollisionObject3D:
+		(body as CollisionObject3D).collision_layer = 0
+	if body.has_method("place_on_ground"):
+		body.call("place_on_ground", at)
+	print("[meadow] every participant refused: the freed stag stands with the Highfield herd at %s" % str(body.global_position))
+	return body
 
 
 ## Everything, in one call, so a test can drive it without a boss fight.

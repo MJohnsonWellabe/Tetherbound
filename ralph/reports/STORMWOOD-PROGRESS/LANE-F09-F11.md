@@ -328,3 +328,35 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   | Pause disabled | 6 fails |
   | A live partner ignored | 1 fail (the co-op check) |
   | Re-show removed | 1 fail |
+
+## WO-F09-03 — Pocket spurs, junction lamps, review follow-ups (`ralph/stormwood-f09-pocket-spurs`, stacked on WO-F09-02)
+
+- **Finding:** pocket centres stood 112–351 m off their roads, and nothing on a road pointed to a pocket.
+- **Fix: one spur per pocket** (`stormwood_world.json`, `"kind": "spur"`, with `pocket_id`, `joins` and the joined road's `requires_unlock`). Each spur is a straight lane from the nearest point on its road to the mouth. The mouths already faced that point, so no bend was needed.
+  - Verge → `ash_road` 270 m; Hollows → `crown_sightline_loop` 137 m; Conductor → `conductor_road` 341 m; Deepwood → `hall_loop` 155 m; Dynamo → `dynamo_west_approach` 103 m.
+  - The steepest graded corridor sample is 17.7° (Dynamo). The others are at most 11.1°.
+  - **Why spurs, not moved pockets:** spurs are data plus one lamp. Moving pockets would re-validate five interiors, five moved rewards, spawn discs and region bounds, and 40–80 m would still leave a pocket out of sight of the road.
+- **Junction lamp** (`stormwood_pockets.json` `spur_marker`): a third `mouth_lure` lamp post. It stands 10 m up the spur and 3.5 m to its right, clear of every road corridor, faces the road, and has its own collider.
+- **Route consumers checked:**
+  - The ROAD visibility model, the audit/author tools and the four-biome observer read only `critical`.
+  - `smoke_stormwood_continuous._walk_route` selects routes by id.
+  - The trainers-near-routes test: no trainer's nearest route is a spur.
+  - The glass-sink and walkability tests grade spurs like roads, and they pass.
+  - `test_stormwood_pockets` now means "roads" as non-spur routes.
+- **Scatter:** spurs get the corridor clearing but no roadside stand. A stand would line a dead-end lane like a through road and claim tree cells the background forest now fills. The re-bake changed 34694 → 34691 placements. On the old bake, 3 of 5 spur lanes held a collider 0.47–1.58 m from the centre line.
+- **Review LOWs:**
+  - (a) The mouth-to-road search now sweeps the 0.4 m capsule past every committed baked collider and lamp post, and must reach a non-spur road. It has a built-in control: a closed ring of trunks outside the mouth must fail the same search, and it does.
+  - (b) An unpaired legacy arch with no saved footing no longer counts against the three-road cap, and no longer blocks the Crown twin. A legacy arch that is half of a standing pair still counts, because that road still travels. The existing cap tests use paired legacy roads and are unchanged. There are two new tests, and both fail on the old rule.
+  - (c) Config `draw_distance`: the 190 palisade trunks and the lamp art stop drawing at 250 m, with a 30 m fade. The 15 lamp lights use Light3D distance fade, ending at 60 m, because lights have no visibility range.
+  - (d) The frame maths is now in one place, `stormwood_pocket_frame.gd`, which is a bake source. The pocket collider reach is `max(collision_radius × scale_max)` and still equals 2.61.
+  - (e) A seat row without a position is skipped.
+- **Witnesses:**
+  - Two bakes are byte-identical.
+  - `--only=test_stormwood_,test_road_creature_visibility,test_scatter_,vegetation` ran 68 files and 348 tests, with 0 failed and 0 SCRIPT ERROR.
+  - `test_stormwood_pockets` has 10 tests, 0 failed.
+  - Both smokes pass: `smoke_stormwood_arches` and `smoke_stormwood_pickup_runtime`.
+- **Captures:** `visual/f09/wo03_after/` (5 road-side junction frames, 1 mid-spur frame, `frames_wo03.json`) and `visual/f09/sheet_wo03_spurs.jpg`. The frames were not self-judged; the blind judge is with the coordinator.
+- **Open:**
+  - The spur has no surface, like the roads. Much of the forest here is open grass with sparse trees, so the cleared corridor alone draws no visible line.
+  - WORLD.md says "nine top-level route records"; the data now has 15 (10 roads + 5 spurs). The coordinator owns that edit.
+  - There is still no night capture of the lamps.
