@@ -265,6 +265,15 @@ func _check_releasing_a_belt_member_resolves() -> void:
 	if _focused_control() != _tab.get("_farewell_release"):
 		_fail("ui_down did not reach the 'Let them go' button")
 		return
+	# X03 red rule: the irreversible goodbye is amber WARNING plus a caution
+	# glyph and the word, never Team Tether red/coral.
+	var release_button := _tab.get("_farewell_release") as Button
+	if release_button.get_theme_color("font_focus_color") != UITokens.WARNING:
+		_fail("the focused 'Let them go' button is not WARNING amber (%s)" % release_button.get_theme_color("font_focus_color"))
+	if release_button.icon == null:
+		_fail("the 'Let them go' button has no caution glyph; colour alone carries 'irreversible'")
+	if release_button.text.find("forever") < 0:
+		_fail("the 'Let them go' button does not say the release is permanent ('%s')" % release_button.text)
 	await _press("ui_accept")
 
 	if str(_tab.get("_release_stage")) != "done":
