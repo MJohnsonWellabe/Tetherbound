@@ -132,7 +132,9 @@ func _run() -> void:
 		check(disk.get("flags", {}).get("flags", []).has(flag), "World journal persists " + flag)
 	tab.get("_farewell_done").pressed.emit()
 	menu.close()
-	await _frames(4)
+	# The chamber view refreshes in `_process`; physics frames can pass before
+	# an idle frame in a headless run, so wait on process frames here.
+	for _frame in 4: await process_frame
 	check(not cave.get("_guardian").visible, "Settled Guardian no longer duplicates the owned companion in chamber")
 	check(cave.get_node_or_null("TideglassCompassShrine") == null,
 		"Water realm leaves relic placement to the Meadows shrine circle")
