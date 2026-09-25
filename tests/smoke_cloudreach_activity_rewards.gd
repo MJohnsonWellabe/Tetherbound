@@ -63,10 +63,20 @@ func _run() -> void:
 
 	# Seen from the open Galefoot plaza a player crosses, not hidden in a
 	# house (the first placement at (-288, 529) was inside a terrace house).
-	var eye := Vector3(-281.0, 181.6, 521.0)
-	var sight := PhysicsRayQueryParameters3D.create(eye, reward.global_position + Vector3.UP * 0.5)
+	# The hearth at (-284, 180.1, 519) is drawn without a collider, so a ray
+	# alone cannot see it: the eye (the capture stand, east of the bag) is
+	# chosen so the sight line also clears the hearth's 2.1 m footprint.
+	var eye := Vector3(-282.0, 181.6, 516.0)
+	var target := reward.global_position + Vector3.UP * 0.5
+	var sight := PhysicsRayQueryParameters3D.create(eye, target)
 	var blocker := _world.get_world_3d().direct_space_state.intersect_ray(sight)
-	_check(blocker.is_empty(), "the thanks is in plain sight from the Galefoot plaza (blocked by %s)" % (str((blocker["collider"] as Node).get_path()) if not blocker.is_empty() else "nothing"))
+	var hearth := Vector2(-284.0, 519.0)
+	var a := Vector2(eye.x, eye.z)
+	var b := Vector2(target.x, target.z)
+	var t := clampf((hearth - a).dot(b - a) / (b - a).length_squared(), 0.0, 1.0)
+	var hearth_clear := hearth.distance_to(a + (b - a) * t)
+	_check(blocker.is_empty() and hearth_clear > 2.3,
+		"the thanks is in plain sight from the plaza stand: no collider and not behind the hearth (blocked by %s, hearth clearance %.1f m)" % [str((blocker["collider"] as Node).get_path()) if not blocker.is_empty() else "nothing", hearth_clear])
 	var inventory: RefCounted = _game.get("inventory")
 	var before := int(inventory.call("count", "potion_small"))
 	var player := _world.get_node(^"Player") as CharacterBody3D

@@ -233,10 +233,11 @@ func _build_markers() -> void:
 		label.text = str(spec.label)
 		label.font_size = 36
 		label.pixel_size = 0.012
-		label.position = Vector3(0,2.9,0)
+		label.position = Vector3(0,3.9,0)
 		label.modulate = Color("#f5ecd2")
 		# Faces the camera around the vertical: a flat sign read mirrored from
-		# half the directions a flyer lands from.
+		# half the directions a flyer lands from. Set above the 3.2 m poles so
+		# a billboard never has a pole through its middle.
 		label.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 		marker.add_child(label)
 		marker.visible = false

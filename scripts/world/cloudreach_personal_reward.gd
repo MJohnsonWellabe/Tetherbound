@@ -160,22 +160,33 @@ func _build_visual() -> void:
 	# An authored presentation (the couriers' thanks is a courier bag, the same
 	# installed prop as Neri's pack) reads at plaza distance where a lone item
 	# model does not; the item's own world model is the fallback.
-	var path := str(spec.get("model", definition.get("world_model", "")))
 	var visual: Node3D = null
-	if path != "" and ResourceLoader.exists(path):
-		var resource: Resource = load(path)
-		if resource is PackedScene:
-			visual = (resource as PackedScene).instantiate() as Node3D
-		elif resource is Mesh:
-			var mesh := MeshInstance3D.new()
-			mesh.mesh = resource as Mesh
-			visual = mesh
+	var scale := 1.0
+	for candidate: Array in [[spec.get("model", ""), spec.get("model_scale", 1.0)],
+			[definition.get("world_model", ""), definition.get("world_model_scale", 1.0)]]:
+		visual = _load_visual(str(candidate[0]))
+		if visual != null:
+			scale = maxf(float(candidate[1]), 0.01)
+			break
 	if visual == null:
 		var box := MeshInstance3D.new()
 		box.mesh = BoxMesh.new()
 		(box.mesh as BoxMesh).size = Vector3.ONE * 0.3
 		visual = box
 	visual.name = "RewardVisual"
-	visual.scale *= float(spec.get("model_scale", definition.get("world_model_scale", 1.0)))
+	visual.scale *= scale
 	add_child(visual)
 	PICKUP_GLOW.attach(self, Color("#e7e0bb"))
+
+
+func _load_visual(path: String) -> Node3D:
+	if path == "" or not ResourceLoader.exists(path):
+		return null
+	var resource: Resource = load(path)
+	if resource is PackedScene:
+		return (resource as PackedScene).instantiate() as Node3D
+	if resource is Mesh:
+		var mesh := MeshInstance3D.new()
+		mesh.mesh = resource as Mesh
+		return mesh
+	return null

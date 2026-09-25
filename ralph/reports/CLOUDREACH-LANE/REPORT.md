@@ -148,7 +148,7 @@ This work order does not cover:
 **`smoke_cloudreach_activity_rewards.gd`: 19 checks, 0 failures.**
 - The fixture saves once first, which gives the fresh test character the stable identity that a personal reward is delivered to.
 - Nothing is offered before the report. Neri's report goes through the real dialogue guard.
-- The offer sits 8 m or more from every Galefoot person, and a ray from the fire-side eye point (-281, 181.6, 521) reaches it unobstructed. The prompt reads "Take the couriers' thanks".
+- The offer sits 8 m or more from every Galefoot person. From the plaza stand (-282, 181.6, 516), no collider blocks the sight line, and it clears the hearth, which has no collider, by more than 2.3 m. The prompt reads "Take the couriers' thanks".
 - The interact press gives exactly two potions and sets this character's player-scoped receipt. No world cache flag is written.
 - The offer is withdrawn, and pressing again pays nothing.
 - After save and reload, the receipt holds, nothing is offered again, and there are still exactly two potions.
@@ -171,13 +171,17 @@ This work order does not cover:
 2. After the report: the bag beside the fire.
 3. The prompt.
 4. After the press: the bag is gone and there are ×2 potions in the hotbar.
-5. The surveyed High Perches aerie with its now-readable sign.
+5. The surveyed High Perches aerie. Its sign now billboards, and it is raised above the 3.2 m poles so no pole cuts through it.
 6. Landing with low stamina: the stamina arc is shown.
 7. After the landing: the arc is gone because stamina is full.
 
 **Before sheet:** `_sheet_activity_payoffs_before_placement_fix.png` is the first version. The thanks was an unreadable small potion model, partly hidden behind the trainer, and the aerie's landing sign read mirrored. Inspecting those frames led to the placement and model change.
 
-Disclosed fixture: the chain's step flags and the survey are seeded, the trainer is stood at each viewpoint, and the landing is the Fly `landed` signal emitted on the ring. The claim is the real interact press. The tool renders only the saved frames, at `--fixed-fps 60`.
+Disclosed fixture:
+- A five-creature party is seeded, and `fly_traversal_unlocked` is set.
+- The trainer's stamina is set to 12 before the landing.
+- The frames are converted to JPEG outside the tool.
+- The chain's step flags and the survey are seeded, the trainer is stood at each viewpoint, and the landing is the Fly `landed` signal emitted on the ring. The claim is the real interact press. The tool renders only the saved frames, at `--fixed-fps 60`.
 
 ### Open under F07
 
