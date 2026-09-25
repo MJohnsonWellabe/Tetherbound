@@ -392,7 +392,10 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		if not CHARACTER_IDENTITY.is_valid(character_only):
 			push_warning("save: refusing unsafe character id")
 			return {}
-	var host := _is_host(game)
+	# World identity, the world document and the slot locator belong to the
+	# process that owns the world save, not merely one that reads as host: a
+	# former client is host-shaped after teardown (see `_owns_world`).
+	var host := _owns_world(game)
 	# Only the authority mints world identity. Scratch hashing must not mutate
 	# live state, and a client saving its character carries the host identity it
 	# received in the baseline snapshot.
@@ -1008,6 +1011,14 @@ func _world_id_for(game: Object, slot: int) -> String:
 ## The live character's id. A local with no id gets a new one only when the
 ## slot does not already point at a character: minting over an existing
 ## locator would silently re-point the slot and orphan that character.
+##
+## Scope of this guard: the Game autoload always carries an id by the time it
+## saves (`reset_for_new_game()` mints one for any new run, and the title's
+## New Game chooses one first), so for Game it never fires. A deliberate new
+## run into an occupied slot (New Game, or `--mp-host`) therefore re-points
+## that slot's locator to the new character, by design; the previous
+## character's own file is left untouched. The guard protects other callers
+## (tools, fixtures, legacy paths) that reach a save with no identity.
 func _character_id_for(game: Object, slot: int = -1) -> String:
 	var local: Variant = game.get("local") if game != null else null
 	if local == null:
