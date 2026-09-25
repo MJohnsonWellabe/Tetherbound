@@ -45,6 +45,13 @@ const DECLINE_DONE := "You declined the Deep Watcher. It remains free, and Tidew
 ## Shown while a refusal of a HELD claim (decline_pending) waits for the host
 ## to journal it; DECLINE_DONE follows only on the host's confirmation.
 const DECLINE_PENDING := "Declining the Deep Watcher..."
+## The Creatures tab's own result line once the host journaled its Decline (the
+## tab shows this INSTEAD of DECLINE_DONE, never both: see decline_held_guardian).
+const DECLINE_RESULT := "The Deep Watcher stays free."
+const INVITE_LABEL := "Invite the Deep Watcher"
+## The same prompt while this character holds an offer it put off ("Decide
+## later" on the Creatures tab): pressing it asks the question again.
+const ANSWER_LABEL := "Answer the Deep Watcher"
 ## Held-claim decline awaiting the host's journaled confirmation.
 var _decline_claim_id := ""
 ## _local_may_answer() cache: the rule walks every reward delivery and hashes,
@@ -227,7 +234,7 @@ func _build_guardian() -> void:
 	_guardian.collision_layer = 0
 	_guardian.collision_mask = 0
 	_guardian.set_physics_process(false)
-	_guardian_prompt = _prompt(interior, "Invite the Deep Watcher", _v(rules.guardian_freed_position) + Vector3(0, 1.4, -2.5), request_guardian_offer)
+	_guardian_prompt = _prompt(interior, INVITE_LABEL, _v(rules.guardian_freed_position) + Vector3(0, 1.4, -2.5), request_guardian_offer)
 	_decline_prompt = _prompt(interior, DECLINE_LABEL, _v(rules.guardian_freed_position) + Vector3(2.5, 1.4, -2.5), request_guardian_decline)
 
 ## Chamber refusal. First press: consequence only, nothing is sent. Second
@@ -275,8 +282,12 @@ func request_guardian_decline() -> void:
 ## durable claim service, with the chamber's host-confirmed wording: pending
 ## until the host journals it, done only on its confirmation. Shared by the
 ## chamber's second decline press and the Creatures tab's Decline button.
-## `message` is the wording shown now.
-func decline_held_guardian() -> Dictionary:
+## `message` is the wording shown now. `announce` false (the Creatures tab):
+## no world message now -- the tab says `message` itself -- and an immediate
+## host confirmation is marked shown silently, so the answer is said once.
+## A confirmation that arrives later is claimed by the tab while it is on
+## screen (take_held_decline_result) or announced here once otherwise.
+func decline_held_guardian(announce: bool = true) -> Dictionary:
 	var claims: Node = _claims()
 	var held_id := str(claims.call("pending_guardian_id")) if claims != null else ""
 	if held_id.is_empty():
@@ -289,10 +300,28 @@ func decline_held_guardian() -> Dictionary:
 	_disarm_decline()
 	_decline_claim_id = held_id
 	_decline_done_shown = false
+	if not announce:
+		var settled := take_held_decline_result()
+		result["settled"] = settled
+		result["message"] = DECLINE_RESULT if settled else DECLINE_PENDING
+		return result
 	if not _check_held_decline():
 		_game.push_world_message(DECLINE_PENDING)
+	result["settled"] = _decline_done_shown
 	result["message"] = DECLINE_DONE if _decline_done_shown else DECLINE_PENDING
 	return result
+
+## The held-claim decline is now host-confirmed: mark it shown WITHOUT a world
+## message (the caller says the result itself). False while still pending.
+func take_held_decline_result() -> bool:
+	if _decline_claim_id.is_empty():
+		return false
+	var claims := _claims()
+	if claims == null or not bool(claims.call("decline_settled", _decline_claim_id)):
+		return false
+	_decline_claim_id = ""
+	_decline_done_shown = true
+	return true
 
 func _claims() -> Node:
 	return _game.ledger.get_node_or_null("WaterCaptureClaims") if _game.get("ledger") != null else null
@@ -358,6 +387,14 @@ func _near_ceremony(actor: Dictionary) -> bool:
 
 func request_guardian_offer() -> void:
 	_disarm_decline()
+	# This character put its offer off ("Decide later"): asking Edda or the
+	# chamber again re-presents that same pending claim. Nothing is sent to
+	# the host -- the offer already exists and is still this character's.
+	var claims := _claims()
+	if claims != null and bool(claims.call("has_deferred")):
+		if not bool(claims.call("resume_deferred")):
+			_game.push_world_message("The Deep Watcher's offer will come back when you are clear to answer.")
+		return
 	# Inviting again supersedes an unanswered decline: never let its hold keep
 	# this offer from being presented.
 	_decline_refused()
@@ -510,7 +547,9 @@ func _refresh() -> void:
 		# can still answer (a participant without its own offer yet), never as
 		# an always-failing prompt to a non-participant. The host still decides.
 		var freed_here: bool = inside and _game.world.flags.has("water_guardian_freed")
-		_guardian_prompt.enabled = freed_here and _local_may_answer()
+		var put_off := _local_deferred_guardian()
+		_guardian_prompt.enabled = freed_here and (_local_may_answer() or put_off)
+		_guardian_prompt.label = ANSWER_LABEL if put_off else INVITE_LABEL
 		if _decline_prompt != null:
 			var can_decline: bool = freed_here and (_local_may_answer() or _local_pending_guardian())
 			_decline_prompt.enabled = can_decline
@@ -565,6 +604,11 @@ func _may_answer_key() -> Array:
 	return [world_state.get_instance_id(), int(world_state.flags.revision),
 		str(local.character_id) if local != null else "", _game.is_host(),
 		(world_state.reward_deliveries as Dictionary).size(), (world_state.water_capture_claims as Dictionary).size()]
+
+## This character put its offer off and may answer it here.
+func _local_deferred_guardian() -> bool:
+	var claims := _claims()
+	return claims != null and bool(claims.call("has_deferred"))
 
 func _local_pending_guardian() -> bool:
 	var claims := _claims()

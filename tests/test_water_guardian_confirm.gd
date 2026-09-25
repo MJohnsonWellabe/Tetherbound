@@ -5,7 +5,9 @@ extends "res://tests/test_case.gd"
 ## free holder a presented Guardian claim is never auto-accepted: the Creatures
 ## tab asks Accept (complete_pending_capture), Decline (decline_pending, the
 ## host-journaled refusal) or puts it off with menu_cancel (defer_pending: still
-## pending, not declined; resume_deferred when the player returns to the tab).
+## pending, not declined). A put-off offer is answered again only through Edda
+## or the Deep Watcher's chamber (water_veilfall.gd request_guardian_offer ->
+## resume_deferred), never by merely opening the Creatures tab.
 ## Ordinary (non-Guardian) Water captures with room still complete at once, and
 ## a full belt is still left to the five-slot release choice.
 ##
@@ -54,6 +56,7 @@ class FakeGame extends Node:
 	var session: RefCounted = FakeSession.new()
 	var inventory: RefCounted = INVENTORY.new(ITEM_DB.new())
 	var messages: Array = []
+	var ledger: Node = null
 	var party: RefCounted:
 		get: return local.party
 	func is_host() -> bool: return true
@@ -71,7 +74,27 @@ class FakeCombat extends Node:
 
 class FakeRealm extends Node:
 	var simulation_only := false
-	func shell_build_complete() -> bool: return true
+	var built := true
+	func shell_build_complete() -> bool: return built
+
+## The shell the Creatures tab talks to (state(), say(), input hold).
+class FakeMenu extends Node:
+	var game: Node
+	var said: Array = []
+	var held := false
+	func say(text: String) -> void: said.append(text)
+	func hold_input(on: bool) -> void: held = on
+	func override_footer(_text: String) -> void: pass
+	func is_open() -> bool: return true
+	func close() -> void: pass
+
+## The real tab script; only its node-path lookups are pointed at fixtures.
+class Tab extends "res://scripts/ui/tab_creatures.gd":
+	var fake_claims: Node = null
+	func _water_capture_service(creature: RefCounted) -> Node:
+		return fake_claims if fake_claims != null and fake_claims.owns_pending(creature) else null
+	func _water_claims() -> Node: return fake_claims
+	func _water_veilfall() -> Node: return null
 
 class Claims extends "res://scripts/net/water_capture_claims.gd":
 	var fake_game: Node
@@ -191,8 +214,8 @@ func test_cancel_puts_the_offer_off_without_declining_it() -> void:
 	claims._offer_pending()
 	assert_eq(game.pending_catch, null, "nor does the host's resend")
 	assert_false(claims.defer_pending().ok, "nothing on screen to put off")
-	# The Creatures tab asks for it again: the same question returns.
-	assert_true(claims.resume_deferred(), "returning to the tab re-presents the offer")
+	# The player asks to answer it (Edda / the chamber): the same question returns.
+	assert_true(claims.resume_deferred(), "asking to answer it re-presents the offer")
 	assert_true(claims.is_guardian_offer(game.pending_catch))
 	assert_eq(game.local.party.size(), 4, "re-presenting still answers nothing")
 	assert_false(claims.resume_deferred(), "nothing left deferred")
@@ -251,3 +274,145 @@ func test_full_party_guardian_is_left_to_the_release_choice() -> void:
 	assert_eq(game.local.party.size(), 5)
 	for member: RefCounted in game.local.party.members():
 		assert_ne(str(member.species_id), "water_abyssal_guardian")
+
+## Review M1/m1: resume_deferred only clears the put-off state once the offer
+## is actually on screen; while it cannot be shown it stays put off.
+func test_resume_keeps_the_offer_put_off_until_it_is_really_presented() -> void:
+	var claims := _setup(4)
+	var game: FakeGame = claims.fake_game
+	var id := _offer(claims)
+	assert_true(claims.defer_pending().ok)
+	game.current_realm = "meadows"
+	assert_false(claims.resume_deferred(), "outside Water nothing can be presented")
+	assert_true(claims.has_deferred(), "so the offer is still put off, not lost to the ordinary queue")
+	game.current_realm = "water"
+	claims.fake_realm.built = false
+	assert_false(claims.resume_deferred(), "nor before the shell is built")
+	assert_true(claims.has_deferred())
+	claims._process(2.0)
+	assert_eq(game.pending_catch, null, "the ordinary poll still does not present a put-off offer")
+	claims.fake_realm.built = true
+	claims._process(2.0)
+	assert_eq(game.pending_catch, null, "not even once presentation is possible again")
+	assert_true(claims.resume_deferred(), "only asking to answer it presents it")
+	assert_false(claims.has_deferred())
+	assert_true(claims.is_guardian_offer(game.pending_catch) and claims.pending_guardian_id() == id)
+	assert_eq(game.local.party.size(), 4)
+
+## Review m2: a put-off Guardian lives in its own slot, so the host's resend of
+## it never overwrites (starves) another claim of the same character.
+func test_a_put_off_guardian_does_not_starve_other_claims() -> void:
+	var claims := _setup(3)
+	var game: FakeGame = claims.fake_game
+	var guardian_id := _offer(claims)
+	assert_true(claims.defer_pending().ok)
+	var wild_id := "wild-while-guardian-put-off"
+	var wild := {"id": wild_id, "source": "wild", "world_id": game.world.world_id,
+		"character_id": "host-char", "creature": CODEC.encode(SPECIES.spawn("water_mosshell"))}
+	game.world.water_capture_claims[wild_id] = wild
+	# The host's poll delivers both; the Guardian's resend arrives LAST.
+	claims.receive_claim(wild)
+	claims.receive_claim(game.world.water_capture_claims[guardian_id])
+	claims._offer_pending()
+	assert_true(_receipt(game, wild_id), "the ordinary capture is presented and completed")
+	assert_eq(game.local.party.size(), 4, "it takes a free holder")
+	assert_false(game.world.water_capture_claims.has(wild_id))
+	assert_true(claims.has_deferred() and claims.pending_guardian_id() == guardian_id, "the Guardian is still put off")
+	assert_eq(game.pending_catch, null, "and still not re-presented by the poll")
+	assert_true(claims.resume_deferred())
+	assert_true(claims.is_guardian_offer(game.pending_catch))
+
+## Review M1 (tab): opening the Creatures tab with an offer put off leaves the
+## ordinary tab usable -- no confirm, nothing presented, the offer still waits.
+func test_opening_the_tab_does_not_re_present_a_put_off_offer() -> void:
+	var claims := _setup(4)
+	var game: FakeGame = claims.fake_game
+	var tab := _tab(claims)
+	_offer(claims)
+	assert_true(claims.defer_pending().ok)
+	for i in 5:
+		tab._maybe_begin_release()
+	assert_eq(str(tab.get("_release_stage")), "", "no confirm is put back up")
+	assert_eq(game.pending_catch, null, "nothing is presented by the tab")
+	assert_false(tab.get("menu").held, "the shell's input stays free")
+	assert_true(claims.has_deferred(), "the offer still waits for a deliberate answer")
+
+## Review M1 (veilfall): asking Edda / the chamber to answer re-presents the
+## put-off offer from the claim service, without a new host intent.
+func test_the_veilfall_answer_path_re_presents_a_put_off_offer() -> void:
+	var claims := _setup(4)
+	var game: FakeGame = claims.fake_game
+	var ledger := _keep(Node.new()) as Node
+	claims.name = "WaterCaptureClaims"
+	ledger.add_child(claims)
+	game.ledger = ledger
+	var cave: Node = _keep(load("res://scripts/world/water_veilfall.gd").new()) as Node
+	cave.set("_game", game)
+	var id := _offer(claims)
+	assert_true(claims.defer_pending().ok)
+	cave.request_guardian_offer()
+	assert_true(claims.is_guardian_offer(game.pending_catch) and claims.pending_guardian_id() == id,
+		"Edda's request / the chamber prompt puts the same offer back on screen")
+	assert_false(claims.has_deferred())
+	assert_eq(game.local.party.size(), 4, "re-presenting answers nothing")
+	ledger.remove_child(claims)
+
+## Review m3: a creature carrying a durable Water claim that the claim service
+## does not own is never added by the tab's "room opened" fallback (no receipt,
+## no host settlement: a second grant). It is taken off the screen instead and
+## the host's claim is left to the service.
+func test_tab_fallback_refuses_a_claim_creature_the_service_does_not_own() -> void:
+	var claims := _setup(4)
+	var game: FakeGame = claims.fake_game
+	var tab := _tab(claims)
+	var stale: RefCounted = SPECIES.spawn("water_abyssal_guardian")
+	stale.set_meta("water_capture_claim", "some-guardian-claim")
+	game.pending_catch = stale
+	tab._maybe_begin_release()
+	assert_eq(game.local.party.size(), 4, "the fallback does not add a claim creature")
+	assert_eq(game.pending_catch, null, "it is taken off the screen for the service to present again")
+	assert_eq(str(tab.get("_release_stage")), "")
+	# Full belt: never staged for a service-less release either.
+	game.local.party.add(SPECIES.spawn("water_mosshell"))
+	game.pending_catch = stale
+	tab._maybe_begin_release()
+	assert_eq(str(tab.get("_release_stage")), "", "no release choice for a claim the service does not own")
+	assert_eq(game.pending_catch, null)
+	assert_eq(game.local.party.size(), 5)
+	# An ordinary pending catch (no claim) still takes a free holder, as before.
+	game.local.party.remove_at(4)
+	var plain: RefCounted = SPECIES.spawn("water_mosshell")
+	game.pending_catch = plain
+	tab._maybe_begin_release()
+	assert_eq(game.local.party.size(), 5, "the fallback still serves ordinary pending catches")
+	assert_eq(game.pending_catch, null)
+
+## Review m3: the confirm's own no-service branches (Accept/Confirm-decline and
+## "Decide later") clear a stale claim creature instead of leaving it for the
+## fallback, and grant nothing.
+func test_confirm_no_service_branches_clear_the_stale_claim_creature() -> void:
+	var claims := _setup(4)
+	var game: FakeGame = claims.fake_game
+	var tab := _tab(claims)
+	for answer: String in ["accept", "decline", "later"]:
+		var stale: RefCounted = SPECIES.spawn("water_abyssal_guardian")
+		stale.set_meta("water_capture_claim", "stale-" + answer)
+		game.pending_catch = stale
+		tab.set("_release_stage", "guardian_decline" if answer == "decline" else "guardian")
+		match answer:
+			"accept": tab._answer_guardian(true)
+			"decline": tab._answer_guardian(false)
+			"later": tab._put_off_guardian()
+		assert_eq(game.pending_catch, null, "%s: the stale claim creature is cleared" % answer)
+		assert_eq(str(tab.get("_release_stage")), "", "%s: the confirm ends" % answer)
+		tab._maybe_begin_release()
+		assert_eq(game.local.party.size(), 4, "%s: and nothing is granted afterwards" % answer)
+	assert_true(game.messages.is_empty(), "no 'waits for your answer' message for an offer that is not there")
+
+func _tab(claims: Claims) -> Tab:
+	var menu := _keep(FakeMenu.new()) as FakeMenu
+	menu.game = claims.fake_game
+	var tab := _keep(Tab.new()) as Tab
+	tab.menu = menu
+	tab.fake_claims = claims
+	return tab

@@ -229,26 +229,64 @@ func _run() -> void:
 		"A free holder does not auto-accept: nothing granted or receipted before the answer")
 	check(root.gui_get_focus_owner() == tab.get("_guardian_accept"), "Controller focus lands on Accept")
 	check(bool(menu.get("_deaf")) and tab.get("_farewell_panel").visible, "The confirm holds the shell's input in the farewell panel")
-	check(str(tab.get("_farewell_title").text) == "The Deep Watcher offers to travel with you.", "The confirm names the volunteer's offer as the chamber does")
+	check(str(tab.get("_farewell_title").text) == "The Deep Watcher offers to join you", "The confirm names the volunteer's offer as the chamber does")
+	check(str(tab.get("_guardian_subtitle").text) == "Abyssal Guardian · Lv %d" % int(room_pending.level), "Subtitle names the species and level")
+	check(str(tab.get("_guardian_final").text) == "This choice is final." and tab.get("_guardian_final").visible,
+		"'This choice is final.' stands on its own line")
+	check(not str(tab.get("_farewell_body").text).contains("holder") and str(tab.get("_farewell_body").text).contains("free slot"),
+		"The body says it plainly: joins your party in the free slot")
+	check((tab.get("_guardian_accept") as Button).icon != null and (tab.get("_guardian_decline") as Button).icon == null,
+		"The A glyph rides on the focused answer (Accept)")
+	check(str(tab.get("_farewell_hint").text).ends_with("Decide later") and str(tab.get("_farewell_hint").text).contains("[img"),
+		"'Decide later' carries the B glyph")
 	await _frames(20)
 	check(game.local.party.size() == 4 and game.pending_catch == room_pending, "Waiting never answers the offer")
-	# B puts it off: out of the confirm and the menu, the offer still pending.
+	# B puts it off: back to the ordinary Creatures tab, the offer still pending.
 	game.take_pending_world_message()
 	await _press("menu_cancel")
-	check(not menu.is_open() and str(tab.get("_release_stage")) == "" and game.pending_catch == null,
-		"menu_cancel backs out of the confirm and closes the menu")
+	check(menu.is_open() and str(tab.get("_release_stage")) == "" and game.pending_catch == null and not bool(menu.get("_deaf")),
+		"Decide later returns to the ordinary Creatures tab with the shell's input free")
+	check(tab.get("_rows").has(root.gui_get_focus_owner()), "Focus returns to the belt rows")
 	check(claim_service.pending_guardian_id() == room_id and not claim_service.is_declined(room_id)
 		and game.world.water_capture_claims.has(room_id) and game.local.party.size() == 4,
 		"Backing out leaves the offer pending: neither granted nor declined")
 	var told: String = game.take_pending_world_message()
 	if told.is_empty(): told = str((hud.get("_hotbar_message") as Label).text)
-	check(told.contains("Creatures tab"), "A world message tells the player where to answer")
+	check(told.contains("Edda") and told.contains("chamber"), "A world message tells the player where to answer: Edda or the chamber")
+	check(str(menu.get("_status").text) == told, "The tab says the same where-to-answer line, once")
+	# M1: the ordinary tab is usable -- no confirm comes back by itself, by
+	# staying on the tab, cycling away and back, or closing and reopening it.
 	await create_timer(1.5).timeout
-	check(not menu.is_open() and game.pending_catch == null, "A put-off offer does not force the menu back open")
-	check(menu.open("creatures"), "Player reopens the menu on Creatures")
+	check(str(tab.get("_release_stage")) == "" and game.pending_catch == null, "Staying on the Creatures tab does not re-present the offer")
+	var row_before: Control = root.gui_get_focus_owner()
+	await _press("ui_down")
+	check(root.gui_get_focus_owner() != row_before and tab.get("_rows").has(root.gui_get_focus_owner()), "The belt rows take the stick again")
+	menu.next_tab()
 	await _frames(2)
-	if not check(str(tab.get("_release_stage")) == "guardian" and root.gui_get_focus_owner() == tab.get("_guardian_accept"),
-			"Returning to the Creatures tab asks again, focus on Accept"):
+	menu.previous_tab()
+	await _frames(4)
+	check(tab.visible and str(tab.get("_release_stage")) == "" and not bool(menu.get("_deaf")), "Cycling away and back onto Creatures does not trap the player")
+	menu.close()
+	await _frames(4)
+	check(menu.open("creatures"), "Player reopens the menu on Creatures")
+	await _frames(4)
+	check(str(tab.get("_release_stage")) == "" and game.pending_catch == null and claim_service.has_deferred(),
+		"Reopening the Creatures tab does not re-present it either; the offer still waits")
+	menu.close()
+	await _frames(4)
+	# The deliberate answer path: the chamber's prompt now asks to answer it.
+	player.global_position = prompt.global_position + Vector3(0, -1.3, -1.8)
+	player.velocity = Vector3.ZERO
+	await _frames(4)
+	check(prompt.enabled and str(prompt.label) == cave.ANSWER_LABEL, "The chamber offers 'Answer the Deep Watcher' for a put-off offer")
+	prompt.interaction_activate()
+	deadline = Time.get_ticks_msec() + 5000
+	while (not menu.is_open() or str(tab.get("_release_stage")) != "guardian") and Time.get_ticks_msec() < deadline:
+		await process_frame
+	await _frames(2)
+	if not check(str(tab.get("_release_stage")) == "guardian" and root.gui_get_focus_owner() == tab.get("_guardian_accept")
+			and game.pending_catch != null and claim_service.pending_guardian_id() == room_id,
+			"Answering at the chamber asks again on the Creatures tab, focus on Accept"):
 		_finish()
 		return
 	await _press("ui_accept")
@@ -277,21 +315,49 @@ func _run() -> void:
 	check(root.gui_get_focus_owner() == tab.get("_guardian_accept"), "Focus is fenced to the two answers")
 	await _press("ui_down")
 	await _press("ui_accept")
+	# Decline asks once more (two presses, no held input); Back returns.
+	check(str(tab.get("_release_stage")) == "guardian_decline" and root.gui_get_focus_owner() == tab.get("_guardian_back"),
+		"Decline first asks to confirm, focus on Back")
+	check(str(tab.get("_farewell_title").text) == "Let the Deep Watcher go?" and str(tab.get("_guardian_final").text) == "This is final.",
+		"The decline step says: Let the Deep Watcher go? This is final.")
+	check(game.pending_catch != null and game.world.water_capture_claims.has(decline_id) and not claim_service.is_declined(decline_id),
+		"The decline step commits nothing")
+	await _press("ui_accept")
+	check(str(tab.get("_release_stage")) == "guardian" and root.gui_get_focus_owner() == tab.get("_guardian_accept"),
+		"Back returns to the offer with focus on Accept")
+	await _press("ui_down")
+	await _press("ui_accept")
+	await _press("menu_cancel")
+	check(str(tab.get("_release_stage")) == "guardian" and root.gui_get_focus_owner() == tab.get("_guardian_accept")
+		and menu.is_open() and game.pending_catch != null, "B on the decline step is Back too, never Decide later")
+	await _press("ui_down")
+	await _press("ui_accept")
+	await _press("ui_down")
+	check(root.gui_get_focus_owner() == tab.get("_guardian_confirm_decline"), "Down moves from Back to Confirm")
+	# Clear the HUD's last line (the earlier chamber decline's) so any repeat
+	# of the answer after this press is visible to the "said once" check.
+	game.take_pending_world_message()
+	(hud.get("_hotbar_message") as Label).text = ""
+	await _press("ui_accept")
 	check(game.local.party.size() == party_before and game.pending_catch == null, "Pressing the real Decline button grants nothing")
 	check(not game.world.water_capture_claims.has(decline_id) and claim_service.is_declined(decline_id)
 		and game.world.flags.has(reward.offered_flag(game.local.character_id)), "Decline is the host-journaled refusal")
-	check(str(menu.get("_status").text) == cave.DECLINE_DONE, "The tab says the host-confirmed decline")
+	check(str(menu.get("_status").text) == cave.DECLINE_RESULT and not str(menu.get("_status").text).contains("..."),
+		"The tab says the host-confirmed result, no ellipsis: The Deep Watcher stays free.")
 	check(str(tab.get("_release_stage")) == "" and not bool(menu.get("_deaf")), "Decline ends the confirm")
 	menu.close()
 	await _frames(4)
+	check(game.take_pending_world_message().is_empty() and str((hud.get("_hotbar_message") as Label).text) != cave.DECLINE_DONE,
+		"The tab's decline is said once: no second world message from the chamber")
 	# Decline whose first host journal write fails: pending wording, then done.
 	game.local.character_id = "guardian-ceremony-room-decline-pending"
 	if not await _invite_with_room(game, menu, tab, prompt, player):
 		_finish()
 		return
 	var pending_id: String = reward.claim_id(reward.world_instance(game.world), game.local.character_id)
-	game.save_system = RefusingSaver.new()
 	(tab.get("_guardian_decline") as Button).pressed.emit()
+	game.save_system = RefusingSaver.new()
+	(tab.get("_guardian_confirm_decline") as Button).pressed.emit()
 	game.save_system = real_saver
 	check(str(menu.get("_status").text) == cave.DECLINE_PENDING, "Decline shows the pending wording until the host journals it")
 	check(game.world.water_capture_claims.has(pending_id) and game.pending_catch == null
@@ -303,6 +369,60 @@ func _run() -> void:
 	check(not game.world.water_capture_claims.has(pending_id) and cave.get("_decline_done_shown"),
 		"The resend journals the tab's refusal and the done message follows")
 	check(game.local.party.size() == party_before and game.pending_catch == null, "Journaled tab decline still grants nothing")
+	# The same pending decline with the tab still on screen: "Declining..."
+	# only while the host has not journaled it, then the result line in its
+	# place -- and the chamber does not announce it a second time.
+	game.local.character_id = "guardian-ceremony-room-decline-open"
+	if not await _invite_with_room(game, menu, tab, prompt, player):
+		_finish()
+		return
+	var open_id: String = reward.claim_id(reward.world_instance(game.world), game.local.character_id)
+	await _press("ui_down")
+	await _press("ui_accept")
+	await _press("ui_down")
+	game.take_pending_world_message()
+	(hud.get("_hotbar_message") as Label).text = ""
+	game.save_system = RefusingSaver.new()
+	await _press("ui_accept")
+	game.save_system = real_saver
+	check(str(menu.get("_status").text) == cave.DECLINE_PENDING and game.world.water_capture_claims.has(open_id),
+		"Declining... while the host has not journaled the refusal")
+	deadline = Time.get_ticks_msec() + 6000
+	while str(menu.get("_status").text) != cave.DECLINE_RESULT and Time.get_ticks_msec() < deadline:
+		await process_frame
+	check(str(menu.get("_status").text) == cave.DECLINE_RESULT and not game.world.water_capture_claims.has(open_id),
+		"Once the host journals it the tab replaces Declining... with: The Deep Watcher stays free.")
+	menu.close()
+	await _frames(6)
+	check(game.take_pending_world_message().is_empty() and str((hud.get("_hotbar_message") as Label).text) != cave.DECLINE_DONE,
+		"Said once: the chamber does not repeat the tab's result")
+	# Edda is the other deliberate answer path for a put-off offer.
+	game.local.character_id = "guardian-ceremony-edda-answer"
+	if not await _invite_with_room(game, menu, tab, prompt, player):
+		_finish()
+		return
+	var edda_id: String = reward.claim_id(reward.world_instance(game.world), game.local.character_id)
+	await _press("menu_cancel")
+	menu.close()
+	await _frames(4)
+	player.global_position = edda.global_position + Vector3(0, 0, 1.5)
+	player.velocity = Vector3.ZERO
+	await _frames(4)
+	edda.prompt_node().activated.emit()
+	check(str(cast.get("_active_conversation")) == reward.EDDA_OFFER, "Edda offers the conversation to a character holding a put-off offer")
+	world.get_node("DialoguePanel").close()
+	await _frames(2)
+	world.get_node("WaterChapter")._on_dialogue_request("water:water_guardian_offer_requested", "water_edda", int(game.session.local_peer_id()))
+	deadline = Time.get_ticks_msec() + 5000
+	while (not menu.is_open() or str(tab.get("_release_stage")) != "guardian") and Time.get_ticks_msec() < deadline:
+		await process_frame
+	await _frames(2)
+	check(str(tab.get("_release_stage")) == "guardian" and root.gui_get_focus_owner() == tab.get("_guardian_accept")
+		and claim_service.pending_guardian_id() == edda_id, "Edda's offer request re-presents the same put-off offer")
+	await _press("ui_accept")
+	check(game.local.party.size() == party_before + 1 and game.pending_catch == null
+		and not game.world.water_capture_claims.has(edda_id), "Accepting after Edda grants it once")
+	menu.close()
 	_finish()
 
 ## Invite as the current character (belt has room) and wait for the real
