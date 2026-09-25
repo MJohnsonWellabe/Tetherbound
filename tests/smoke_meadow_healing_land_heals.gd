@@ -199,18 +199,23 @@ func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 		var local := pylon.mesh.get_aabb()
 		var top := pylon.global_transform * Vector3(local.get_center().x, local.end.y, local.get_center().z)
 		var ground := float(world.call("ground_height_at", top.x, top.z))
+		# Rests ON the ground, not half-buried along its width: the top's
+		# centre line sits above the terrain, and its underside (centre minus
+		# half its lying thickness) is not floating.
+		var b := pylon.global_transform.basis
+		var half_depth := 0.5 * (absf(b.x.y) * local.size.x + absf(b.z.y) * local.size.z)
 		if not is_nan(ground):
-			if absf(top.y - ground) > absf(worst_tip):
-				worst_tip = top.y - ground
-			if absf(top.y - ground) > 1.5:
-				print("(%s) %s/%s tip %.2f m off the ground at %s (up.y %.2f)" % [tag,
-					pylon.get_parent().name, pylon.name, top.y - ground, str(top), up])
+			var centre_gap := top.y - ground
+			var underside := centre_gap - half_depth
+			if absf(underside) > absf(worst_tip):
+				worst_tip = underside
+			if centre_gap < 0.2 * half_depth or underside > 1.0:
+				_fail("(%s) %s/%s top rests badly: centre line %.2f m, underside %.2f m off the ground (half depth %.2f)"
+					% [tag, pylon.get_parent().name, pylon.name, centre_gap, underside, half_depth])
 		_check_walkable(world, pylon, tag)
 	if worst_up > 0.45:
 		_fail("(%s) a toppled pylon is still %.0f deg from lying down" % [tag, rad_to_deg(acos(clampf(worst_up, -1.0, 1.0)))])
-	if absf(worst_tip) > 2.0:
-		_fail("(%s) a fallen pylon's tip is %.2f m off the terrain" % [tag, worst_tip])
-	print("(%s) %d pylons down (%d left standing); max up.y %.2f; worst tip-to-ground %.2f m" % [tag,
+	print("(%s) %d pylons down (%d left standing); max up.y %.2f; worst top-underside-to-ground %.2f m" % [tag,
 		pylons.size(), int(report.get("pylons_left_standing", -1)), worst_up, worst_tip])
 	_check_colliders_removed(pylons, tag)
 	var visible_cables := 0
