@@ -488,6 +488,25 @@ The respawn was at Rodline Refuge, and the satchel was then recovered by ordinar
 
 SCRIPT ERROR count is 0 in both runs.
 
+### Run 14 and the lightning ruling (commits 42f7b8dc7, 49d9ab27f)
+
+- **Run 14** (ccbd1d4ba, 80067c1ec diagnostics).
+  - **Prefix:** PASS in 1257.9 s. The same lightning death happened in a conductor-road fight (6 hits, 108 damage); the satchel was recovered and the tools kept.
+  - **Rest:** Still Grove rest OK over 3 nights.
+  - **Call-out failure, now with its cause:** `ordinary LB did not send out the fittest member before after resting at still_grove_shelter (best=terrapup active=bramblebun ally=bramblebun ally_body=true no_usable_ally=false arbiter_enabled=true input_owner=<none> paused=false fighting=false time_scale=1.0)`.
+  - **Reading:** a creature was out and nothing blocked input, but the Crown helper's joypad-event LB taps changed nothing. The prefix Segment's action-event taps do send out its fittest member.
+  - **Classification:** harness-side, but not proven to be harness-only. Whether a physical LB on a real pad works after a camp rest is not measured here.
+  - **Fix** (49d9ab27f): the same action-event taps as the prefix, each LB press logged, recall if nobody is out, and one retry of the whole send-out.
+- **Coordinator interim ruling** (pending the owner's decision): "While the local trainer is committed to a creature fight, storm strikes do not target the trainer's position. They may still land in the arena as telegraphed hazards the piloted creature can avoid. Strikes resume on the trainer when the fight ends."
+  - **Change** (42f7b8dc7): `stormwood_surge.json` strike `spare_trainer_in_fight: true`, with a `_why` note.
+  - **Aim:** host-side per peer in `stormwood_lightning.gd`. A strike chosen for a fighting trainer aims at that peer's piloted creature with the normal 1.2 s / 3 m telegraph, or is skipped if no creature is out. Impacts never damage a fighting trainer.
+  - **Who counts as fighting:** the host's own combat manager or hosted trainer battle; any open encounter record listing the peer; or a registered Stormwood hosted fight.
+  - **Limitation:** a guest's unshared local wild fight is not visible to the host.
+  - **Tests:**
+    - `test_stormwood_lightning_spare`, 5 tests and 16 assertions: a fighting trainer is never aimed at or hit and the creature is; targeting resumes when the record is done; only the fighting peer is exempt; the flag-false negative control aims at and hits the trainer.
+    - `smoke_stormwood_lightning` 24/0 and `smoke_stormwood_lightning_cleanup` PASS.
+  - **Not changed:** strikes still cannot damage a creature (none are wired to). The ruling's "hazards the creature can avoid" are presentation only.
+
 ### Not produced
 
 - The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.
