@@ -543,6 +543,7 @@ func _accept_the_offer() -> void:
 	# The offer is read out (both answers, at dialogue size) a beat after it
 	# opens, and no answer is taken while it is open: read it through first,
 	# as a player does, rather than walking into the middle of it.
+	print("  DIAG before read-out: player %s, accept %s (%.2f m), stag %s" % [_player.global_position, accept.global_position, _player.global_position.distance_to(accept.global_position), (_climax.call("legendary_body") as Node3D).global_position])
 	var read_out := false
 	for i in 240:
 		await physics_frame
@@ -554,7 +555,9 @@ func _accept_the_offer() -> void:
 	if not read_out:
 		_fail("the choice opened but its two answers were never read out")
 		return
+	print("  DIAG after read-out: player %s (%.2f m to accept), stag %s" % [_player.global_position, _player.global_position.distance_to(accept.global_position), (_climax.call("legendary_body") as Node3D).global_position])
 	await _walk_toward(accept.get_parent().global_position, 0.4)
+	print("  DIAG after walk: player %s (%.2f m to accept)" % [_player.global_position, _player.global_position.distance_to(accept.global_position)])
 	for i in 20:
 		await physics_frame
 	var offer: Dictionary = accept.call("interaction_offer", _player.global_position)
