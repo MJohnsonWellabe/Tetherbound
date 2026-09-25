@@ -22,8 +22,10 @@ extends RefCounted
 ##   stormheart_answer  {answer}          answer THIS peer's Stormheart offer through
 ##                                         the real dialogue: interact = Yes, menu_cancel = No
 ##   stormheart_state {}                  this peer's view of the F11 outcome
-##   release_member  {nickname}           SETUP: let one companion go, the same
-##                                         `party.remove_at` the release ceremony calls
+##   release_for_catch {release, species, nickname}  SETUP: at a full party, let
+##                                         one companion go for a new catch, exactly as
+##                                         the release ceremony does (remove_at, then add)
+##   rename_member   {from, to}           SETUP: give a companion a distinct name
 ##   await_probe     {what, path, equals, budget_frames?}  poll one of this peer's
 ##                                         probes until the value at `path` equals `equals`
 ##   rider_identity  {character_id}       F12: this peer's picture of ANOTHER player's
@@ -46,11 +48,14 @@ const STORMWOOD_CHAPTER := "res://data/config/stormwood_chapter.json"
 ## Loaded on first use, not preloaded: every peer of every smoke loads this
 ## file through peer_runner.gd, and only F11 scenarios need the ending.
 const ENDING_PATH := "res://scripts/world/stormwood_ending.gd"
+const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
+const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
+const NET_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 
 const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "stormheart_fixture",
-	"stormheart_answer", "stormheart_state", "release_member", "grandpa_homecoming", "await_probe",
+	"stormheart_answer", "stormheart_state", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
 	"rider_identity", "rider_self"]
 
 
@@ -74,8 +79,10 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _stormheart_answer(tree, args)
 		"stormheart_state":
 			return _stormheart_state(tree)
-		"release_member":
-			return _release_member(tree, args)
+		"release_for_catch":
+			return _release_for_catch(tree, args)
+		"rename_member":
+			return _rename_member(tree, args)
 		"grandpa_homecoming":
 			return await _grandpa_homecoming(tree, args)
 		"await_probe":
@@ -526,23 +533,47 @@ static func _party_names(game: Node) -> Array:
 	return names
 
 
-## SETUP only: the release itself is not the clause under proof, Grandpa's
-## reading of the team afterwards is. `tab_creatures.gd::_do_release()` ends in
-## this same `party.remove_at(slot)`.
-static func _release_member(tree: SceneTree, args: Dictionary) -> Dictionary:
+## SETUP only: the release is not the clause under proof, Grandpa's reading
+## of the team afterwards is. This is `tab_creatures.gd::_do_release()`'s own
+## sequence for a new catch at a full party -- the only state in which the game
+## lets a companion go: `party.remove_at(slot)`, then `party.add(newcomer)` into
+## the freed holder, then the pending catch is cleared.
+static func _release_for_catch(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var game := tree.root.get_node_or_null(^"Game")
 	var party: RefCounted = game.get("party") if game != null else null
 	if party == null:
 		return {"verdict": "ERROR", "detail": "no Game.party"}
-	var want := str(args.get("nickname", ""))
 	var names := _party_names(game)
-	var slot := names.find(want)
+	if names.size() < 5:
+		return {"verdict": "FAIL", "detail": "the game releases only at a full party; this one is %s" % str(names)}
+	var slot := names.find(str(args.get("release", "")))
 	if slot < 0:
-		return {"verdict": "FAIL", "detail": "no companion called '%s' in %s" % [want, str(names)]}
+		return {"verdict": "FAIL", "detail": "no companion called '%s' in %s" % [str(args.get("release", "")), str(names)]}
+	var newcomer: RefCounted = SPECIES_DATA.spawn(str(args.get("species", "")))
+	if newcomer == null:
+		return {"verdict": "ERROR", "detail": "species.json has no '%s'" % str(args.get("species", ""))}
+	var cfg: Dictionary = NET_PROGRESSION.config()
+	newcomer.call("set_level", int((cfg.get("level", {}) as Dictionary).get("starter_level", 3)), cfg)
+	PARTY_SEAM.set_nickname(newcomer, str(args.get("nickname", "")))
+	game.set("pending_catch", newcomer)
 	var released: Variant = party.call("remove_at", slot)
-	return {"verdict": "PASS" if released != null else "FAIL",
-		"detail": "released '%s' from slot %d; party now %s" % [want, slot, str(_party_names(game))],
+	var landed := released != null and bool(party.call("add", newcomer))
+	game.set("pending_catch", null)
+	return {"verdict": "PASS" if landed else "FAIL",
+		"detail": "released '%s' for new catch '%s'; party now %s" % [str(args.get("release", "")),
+			str(args.get("nickname", "")), str(_party_names(game))],
 		"data": {"party": _party_names(game)}}
+
+
+static func _rename_member(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	var names := _party_names(game)
+	var slot := names.find(str(args.get("from", "")))
+	if party == null or slot < 0:
+		return {"verdict": "FAIL", "detail": "no companion called '%s' in %s" % [str(args.get("from", "")), str(names)]}
+	PARTY_SEAM.set_nickname((party.call("members") as Array)[slot], str(args.get("to", "")))
+	return {"verdict": "PASS", "detail": "party now %s" % str(_party_names(game)), "data": {"party": _party_names(game)}}
 
 
 ## The player's own visit: stand where Grandpa's prompt really offers itself,
@@ -611,6 +642,12 @@ static func _grandpa_homecoming(tree: SceneTree, args: Dictionary) -> Dictionary
 	var credits := tree.root.find_child("RegionalCredits", true, false) != null
 	var data := {"conversation_id": conversation, "lines": lines, "party": party_before,
 		"homecoming_seen": seen, "credits_opened": credits}
+	# The acknowledgement itself: one "<name> came home with you." per current
+	# companion, in party order, and no other such line.
+	var named_lines: Array = lines.filter(func(l: String) -> bool: return l.ends_with(" came home with you."))
+	var expected_lines: Array = party_before.map(func(n: String) -> String:
+		return "Grandpa Elias: %s came home with you." % n)
+	data["named_lines"] = named_lines
 	var text := "\n".join(lines)
 	var unnamed: Array = []
 	for name: Variant in (args.get("must_name", []) as Array):
@@ -627,6 +664,7 @@ static func _grandpa_homecoming(tree: SceneTree, args: Dictionary) -> Dictionary
 	var expected := "regional_homecoming_%d" % mini(party_before.size(), 5)
 	data["expected_conversation"] = expected
 	var ok := conversation == expected and not bool(panel.call("is_open")) and seen \
+		and named_lines == expected_lines \
 		and unnamed.is_empty() and wrongly_named.is_empty()
 	return {"verdict": "PASS" if ok else "FAIL",
 		"detail": "conversation '%s' (expected '%s', %d lines) for party %s; homecoming_seen=%s; missing names %s; wrongly named %s; credits opened=%s%s; lines: %s"
@@ -657,12 +695,12 @@ static func _await_probe(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var got: Variant = null
 	for i in budget:
 		got = _dig(await tree.call("_execute_probe", {"what": what, "args": args.get("args", {})}), path)
-		if got == want or (typeof(got) in [TYPE_INT, TYPE_FLOAT] and typeof(want) in [TYPE_INT, TYPE_FLOAT]
-				and is_equal_approx(float(got), float(want))):
-			return {"verdict": "PASS", "detail": "%s.%s == %s after %d frames" % [what, ".".join(path), str(want), i],
+		var numeric := typeof(got) in [TYPE_INT, TYPE_FLOAT] and typeof(want) in [TYPE_INT, TYPE_FLOAT]
+		if (numeric and is_equal_approx(float(got), float(want))) or (not numeric and typeof(got) == typeof(want) and got == want):
+			return {"verdict": "PASS", "detail": "%s.%s == %s after %d polls" % [what, ".".join(path), str(want), i],
 				"data": {"value": got}}
 		await tree.physics_frame
-	return {"verdict": "FAIL", "detail": "%s.%s was %s, not %s, after %d frames" % [what, ".".join(path),
+	return {"verdict": "FAIL", "detail": "%s.%s was %s, not %s, after %d polls" % [what, ".".join(path),
 		str(got), str(want), budget], "data": {"value": got}}
 
 
