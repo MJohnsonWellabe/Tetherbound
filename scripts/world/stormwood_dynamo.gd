@@ -235,9 +235,12 @@ func restore_progression_from_game(_game: Node) -> void:
 	if not is_instance_valid(fight):
 		_restore_saved_state()
 		phase = str(rules.phase)
-		# A reload ends every open faint prompt; a participant still down
-		# after it is asked again from its restored creature on the next tick.
-		_clear_break_pause()
+		# This runs after every ledger commit, not only a reload. Only the
+		# host owns the pause: it clears here and the next host tick rebuilds
+		# the hold from the participants still down. A client waits for the
+		# host's published `paused` instead of clearing its own copy.
+		if session.is_host():
+			_clear_break_pause()
 		if arena != null:
 			arena.show_state(rules.bank_state())
 
