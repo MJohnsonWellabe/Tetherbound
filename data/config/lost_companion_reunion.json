@@ -1,10 +1,45 @@
 {
+  "_comment": "F03, Juno's lost companion (scripts/world/lost_companion_reunion.gd, rules in lost_companion_escort_rules.gd). Beating the Tether patrol frees one display-only Meadowhart; the player then taps the prompt and leads her home to Juno. Arrival commits `return_flag` once on the host. The patrol's battle reward stays on the trainer; the return pays nothing new.",
   "species": "meadowhart",
   "defeat_flag": "defeated_lost_creature_rue",
+  "return_flag": "lost_creature_rue_returned",
+  "_why_return_flag": "World scope (flag_scopes.json): the Meadowhart standing beside Juno is a fact about the shared world, and band4_lost_creature completes on it.",
+  "acknowledgement": "lost_creature_rue_returned",
   "patrol_trainer_id": "lost_creature_rue",
   "owner_trainer_id": "pasture_drover_juno",
-  "waiting_offset": [3.6, 2.8],
-  "reunited_offset": [3.1, 1.9],
+  "waiting_offset": [
+    3.6,
+    2.8
+  ],
+  "reunited_offset": [
+    3.1,
+    1.9
+  ],
   "waiting_yaw_deg": -35.0,
-  "reunited_yaw_deg": 38.0
+  "reunited_yaw_deg": 38.0,
+  "prompt_label": "Lead the Meadowhart home",
+  "prompt_height_m": 1.2,
+  "prompt_radius_m": 3.6,
+  "_why_prompt_radius_m": "Interactable's ordinary reach; she waits about 4.5 m from the patrol, so the prompt does not reach the patrol's own spot.",
+  "prompt_priority": 5,
+  "_why_prompt_priority": "The beaten patrol stands a few metres away; leading her must win the press, the same priority the herd visit uses over nearby wild offers.",
+  "follow_distance_m": 3.0,
+  "_why_follow_distance_m": "Close enough to read as following, far enough that she never walks into the trainer's 0.4 m capsule.",
+  "leash_m": 40.0,
+  "_why_leash_m": "About eight seconds of sprint ahead of her; losing her is deliberate, never a stumble. Also the furthest the host honours a press from.",
+  "arrival_radius_m": 6.0,
+  "_why_arrival_radius_m": "Juno's reunited spot is ~3.7 m from her; 6 m counts once the player stops beside Juno with the Meadowhart trailing 3 m behind.",
+  "max_speed_mps": 10.0,
+  "_why_max_speed_mps": "Above the 8.6 m/s sprint (movement.json) so she keeps up; also the animator's top speed, so walking pace plays walk and sprint plays run.",
+  "catchup_gain": 3.0,
+  "_why_catchup_gain": "Speed per metre of gap: at walking pace she settles under 2 m behind her trailing point instead of snapping to it.",
+  "lines": {
+    "start": "The Meadowhart falls in behind you. Lead her to Juno in the high pasture.",
+    "leash": "The Meadowhart lost sight of you and went back to wait by the patrol.",
+    "returned": "Juno's Meadowhart is home in the high pasture."
+  },
+  "refusal_lines": {
+    "busy": "Someone else is already leading the Meadowhart home.",
+    "far": "Move closer to the Meadowhart."
+  }
 }
