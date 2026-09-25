@@ -9,6 +9,10 @@ var phase := "bank_cycle"
 var elapsed := 0.0
 var conduits: Array[int] = []
 var attempt := 0
+## BOSSES §4.7: seconds into the current shared 30 s conduit window. The window
+## spans bank serials; only its expiry with fewer than four distinct conduits
+## clears the partial set and starts a fresh window.
+var window_elapsed := 0.0
 var _last_cycle := 0
 
 func _init() -> void:
@@ -19,6 +23,7 @@ func reset() -> void:
 	elapsed = 0.0
 	conduits.clear()
 	_last_cycle = 0
+	window_elapsed = 0.0
 	attempt += 1
 
 func update_team(remaining: int, total: int) -> void:
@@ -33,17 +38,29 @@ func _set_phase(next: String) -> void:
 	phase = next
 	elapsed = 0.0
 	_last_cycle = 0
+	window_elapsed = 0.0
 	conduits.clear()
+
+func break_window_seconds() -> float:
+	return float(config.get("break_window_seconds", 30.0))
+
+func window_left() -> float:
+	return maxf(0.0, break_window_seconds() - window_elapsed) if phase == "break_core" else 0.0
 
 func advance(seconds: float) -> Dictionary:
 	if phase == "released" or not is_finite(seconds) or seconds <= 0.0:
 		return bank_state()
 	elapsed += seconds
+	if phase == "break_core":
+		window_elapsed += seconds
+		if window_elapsed >= break_window_seconds():
+			# Timing out retries Break only: the partial conduit set clears and
+			# a fresh 30 s window begins. It never awards victory or respawns
+			# a defeated trainer team.
+			if conduits.size() < int(config.bank_count):
+				conduits.clear()
+			window_elapsed = 0.0
 	var current := bank_state()
-	if phase == "break_core" and int(current.cycle) > _last_cycle:
-		# Missing the four-conduit window restarts that challenge; it never
-		# silently awards victory or respawns a defeated trainer team.
-		conduits.clear()
 	_last_cycle = int(current.cycle)
 	return current
 
@@ -59,7 +76,8 @@ func bank_state() -> Dictionary:
 	return {"bank": serial % int(config.bank_count),
 		"state": "charge" if within < charge else ("fire" if within < charge + fire else "recovery"),
 		"charge": clampf(within / charge, 0.0, 1.0),
-		"cycle": floori(float(serial) / float(config.bank_count)), "serial": serial}
+		"cycle": floori(float(serial) / float(config.bank_count)), "serial": serial,
+		"window_left": window_left(), "struck": conduits.size()}
 
 func bank_position(index: int) -> Vector2:
 	return Vector2.RIGHT.rotated(TAU * float(index) / float(config.bank_count)) * float(config.bank_radius_m)
@@ -87,7 +105,8 @@ func strike_conduit(index: int, creature_local: Vector2, piloted: bool) -> bool:
 	return true
 
 func save_data() -> Dictionary:
-	return {"phase": phase, "elapsed": elapsed, "conduits": conduits.duplicate(), "attempt": attempt, "cycle": _last_cycle}
+	return {"phase": phase, "elapsed": elapsed, "conduits": conduits.duplicate(), "attempt": attempt,
+		"cycle": _last_cycle, "window_elapsed": window_elapsed}
 
 func load_data(data: Dictionary) -> void:
 	phase = str(data.get("phase", "bank_cycle"))
@@ -102,4 +121,9 @@ func load_data(data: Dictionary) -> void:
 			if (id is int or id is float) and int(id) >= 0 and int(id) < int(config.bank_count) and not conduits.has(int(id)):
 				conduits.append(int(id))
 	attempt = maxi(0, int(data.get("attempt", 0)))
+	# Saves from before the 30 s window begin a fresh window rather than
+	# inheriting a bank-cycle position.
+	var window: Variant = data.get("window_elapsed", 0.0)
+	window_elapsed = clampf(float(window), 0.0, break_window_seconds()) \
+		if (window is int or window is float) and is_finite(float(window)) else 0.0
 	_last_cycle = int(bank_state().cycle) if phase != "released" else maxi(0, int(data.get("cycle", 0)))
