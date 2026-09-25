@@ -222,6 +222,8 @@ func _take(result: Dictionary, key: String, label: String) -> bool:
 			disclosures.append(segment + ": the exact Interact press opened its dialogue without the arbiter's activated signal; accepted on the real panel opening, the helper still verified the exact conversation: %s" % JSON.stringify(row))
 		elif beat == "prompt_press_retry":
 			disclosures.append(segment + ": an Interact press did not activate the exact offered provider and was retried with no side effect: %s" % JSON.stringify(row))
+		elif beat == "pre_sigil_camp_night":
+			disclosures.append("hall: earned rest at the authored riverwatch_rest before the Sigil loop (walked back over the Mill; production bed panel + Rest until morning): %s" % JSON.stringify(row))
 		elif beat == "between_fight_care":
 			disclosures.append(segment + ": ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)")
 		elif beat == "quarry_east_detour":

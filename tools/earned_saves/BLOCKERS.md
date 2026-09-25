@@ -166,3 +166,32 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   engagement or ally state) then blocks the helper's own pilot selection. Suggested next honest
   step, not taken because of the cap: drop the `_prepare()` call after bench care and rely on the
   helper's own pre-captain `_prepare()`. Or rest at an earned camp before the Sigil loop.
+
+### B5a: possible Meadows core input defect: `party_cycle` does not move the active slot outside combat
+
+- Seen in `hall` attempt 3 (seed 4, from `/tmp/claude-0/earned_chain/seed4/relay/save/`). The
+  helper chain `meadows_earned_team_segment.gd::_prepare_pilot()` → `_tap_party_cycle()` pressed the
+  real `party_cycle` action three times in world input (no fight, no modal). The active index
+  stayed at 3 each time:
+
+      [meadows_earned_team] {"after":3,"beat":"party_cycle","before":3,"wanted":0}
+      [meadows_earned_team] {"after":3,"beat":"party_cycle","before":3,"wanted":0}
+      [meadows_earned_team] {"after":3,"beat":"party_cycle","before":3,"wanted":0}
+      [meadows_earned_team] FAIL: Party-cycle input did not select the available training creature
+
+- Active/bench state at that moment: active slot 3 = mudsnout L9 96/…; wanted slot 0 = ripplet L11
+  117 HP. Bench: bramblebun L10 68 HP (just given a potion through the Satchel), mudsnout L10
+  86 HP, bramblebun L9 78 HP. None fainted. Player (-152.26, -4.95, 4233.56), right after two
+  ordinary wild wins on the Mill's far bank.
+- Not fixed here (Meadows core owns it). Possible causes to check: a deployed ally's recall or
+  cooldown blocking the cycle, or the Satchel menu's close leaving `party_cycle` swallowed.
+
+### B5 ruling applied (attempt 4)
+
+- Step 1: `hall_route.gd` now walks back over the open Mill to the authored `riverwatch_rest`
+  (211,3700). Up to 3 nights, it beds the most drained member (under 80% HP) through the production
+  creature-bed panel and uses "Rest until morning" (`gate_b_tail_segment.gd`
+  `_assign_to_bed`/`_sleep_at_camp`). It then walks back and runs the helper's Sigil loop.
+  Receipts: `pre_sigil_camp_route`, `pre_sigil_camp_night`, `pre_sigil_camp_done`. Bench care
+  from alternative 2 is unchanged for this attempt; step 2 (`BENCH_CARE_PREPARES := false`) is
+  held for a recurrence.
