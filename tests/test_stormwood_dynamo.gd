@@ -193,3 +193,39 @@ func test_a_party_is_down_only_when_no_creature_can_take_the_field() -> void:
 	party.call("set_resting", 3, false)
 	assert_false(CONTROLLER.party_unavailable(party), "one creature able to take the field keeps the party in")
 	assert_false(CONTROLLER.party_unavailable(null))
+
+
+func test_a_break_faint_prompt_names_the_next_available_creature_and_the_live_button() -> void:
+	var party: RefCounted = preload("res://autoload/party.gd").new()
+	var names := ["Volt", "Drowse", "Gale", "Ash"]
+	var members: Array = []
+	for label: String in names:
+		var creature: RefCounted = preload("res://scripts/world/trainer_npc.gd").creature_for(
+			{"species": "fulgocobra", "level": 20})
+		creature.set("nickname", label)
+		party.call("add", creature)
+		members.append(creature)
+	var lead: RefCounted = members[0]
+	lead.set("fainted", true)
+	party.call("set_resting", 1, true, -32)
+	assert_eq(CONTROLLER.next_available(party), members[2],
+		"the next creature is the one LB's cycle_active(1) would pick: past the resting one")
+	# Rebinding moves the named button with it.
+	var saved: Array = InputMap.action_get_events("party_cycle")
+	InputMap.action_erase_events("party_cycle")
+	var key := InputEventKey.new()
+	key.physical_keycode = KEY_G
+	InputMap.action_add_event("party_cycle", key)
+	var rebound: String = CONTROLLER.faint_prompt(party, lead)
+	InputMap.action_erase_events("party_cycle")
+	for event: InputEvent in saved:
+		InputMap.action_add_event("party_cycle", event)
+	assert_eq(rebound, "Volt fainted. Press G to send out Gale.",
+		"the prompt names the party_cycle binding the player actually has")
+	assert_true(CONTROLLER.faint_prompt(party, lead).contains(
+		preload("res://scripts/ui/input_glyph.gd").action_name("party_cycle")))
+	for index in [2, 3]:
+		(members[index] as RefCounted).set("fainted", true)
+	assert_eq(CONTROLLER.next_available(party), null, "no conscious, available creature left: nobody to send out")
+	assert_eq(CONTROLLER.faint_prompt(party, lead), "", "a full-party faint gets no LB prompt; the wipe path runs")
+	assert_eq(CONTROLLER.faint_prompt(null, lead), "")
