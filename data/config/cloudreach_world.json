@@ -489,7 +489,9 @@
       "barrier_depth_below_m": 56.0,
       "required_traversal": "ground",
       "requires_unlock": "cloudreach_upper_route_unlocked",
-      "protects_region_ids": ["upper_cloudreach", "summit_final_stronghold"]
+      "protects_region_ids": ["upper_cloudreach", "summit_final_stronghold"],
+      "_comment_approach_position": "F06 rejoin gate: where cloudreach_world.gd::enforce_sealed_placement seats a trainer whose loaded or carried-over pose lies in a protected region while this gate is closed in the current (host) world. The counterweight pass's own first point, on the gate's legal (south) side in windscar_ravine.",
+      "approach_position": [-100.0, 470.0, 2440.0]
     }
   ]
 }

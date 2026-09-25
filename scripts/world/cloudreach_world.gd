@@ -86,6 +86,7 @@ const OLD_WIND_OBSERVATORY_PRESENTATION := preload(
 	"res://scripts/world/cloudreach_old_wind_observatory_presentation.gd")
 const STORMWARD_OVERLOOK_PRESENTATION := preload("res://scripts/world/cloudreach_stormward_overlook.gd")
 const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
+const MAP_STATE := preload("res://scripts/world/cloudreach_map_state.gd")
 
 ## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — this
 ## process's one local rig, in the `local_player` group — and `$CameraRig` is
@@ -150,6 +151,9 @@ var crown_cut_build_usec := 0
 ## The summit region's crown cut, kept so the stronghold (built after the
 ## regions) can seat its pieces on the carved ground (review MEDIUM-2).
 var _summit_crown_cut: Dictionary = {}
+## True once `_place_player()` has seated the local trainer, so a progression
+## restore that lands mid-build leaves the placement to `_place_player()`.
+var _player_placed := false
 
 
 ## D101 deliverable 5 — the one door onto this process's local rig and its
@@ -455,6 +459,12 @@ func _process(_delta: float) -> void:
 
 func restore_progression_from_game(game: Node) -> void:
 	_progression_revision = -1
+	# F06 rejoin gate. A host snapshot (join/rejoin) or a mid-session load can
+	# replace the world's flags under a trainer already standing here. Deferred
+	# so a load's own `apply_loaded_player_pose()`, which runs right after this
+	# group call, has placed the trainer before the pose is judged.
+	if _player_placed:
+		enforce_sealed_placement.call_deferred()
 	_sync_progression_gates(game)
 
 
@@ -4710,9 +4720,11 @@ func _castle_piece_collision(instance: MeshInstance3D) -> StaticBody3D:
 
 
 func _place_player() -> void:
+	_player_placed = true
 	var game := get_node_or_null(^"/root/Game")
 	var pending := str(game.call("pending_entry_for", REALM_ID)) if game != null and game.has_method("pending_entry_for") else ""
 	if pending == "" and game != null and game.has_method("apply_loaded_player_pose") and bool(game.call("apply_loaded_player_pose")):
+		enforce_sealed_placement()
 		return
 	var anchor := entry_anchor(pending)
 	if anchor.is_empty():
@@ -4731,8 +4743,98 @@ func _place_player() -> void:
 		model.rotation.y = yaw
 	if _camera_rig != null:
 		_camera_rig.set("yaw", yaw)
+	enforce_sealed_placement()
 	if pending != "" and game != null and game.has_method("complete_realm_entry"):
 		_settle_realm_arrival.call_deferred(game)
+
+
+## F06 rejoin gate (ACCEPTANCE F06: "two-peer rejoin does not bypass a closed
+## gate"). A pose is portable character state; gates are world state
+## (MULTIPLAYER §3). A guest whose own world had the upper counterweight route
+## open can carry a pose inside Upper Cloudreach into a host world where that
+## gate is closed; a saved pose that is "no longer legal" is re-seated, never
+## honoured and never used to rewind the world (MULTIPLAYER §4). Pure: the
+## region test is the map's own `region_at`, the gate list and approach point
+## are `data/config/cloudreach_world.json::gates`, and `progression` is the
+## current (on a guest: the host's snapshot) flag view. Empty when the pose is
+## legal. Only ground gates: the Fly gate's region is held by Fly's own
+## restriction volumes.
+static func sealed_region_relocation(config: Dictionary, at: Vector3, progression: Variant) -> Dictionary:
+	var region_id := MAP_STATE.region_at(config, at)
+	if region_id.is_empty():
+		return {}
+	for raw: Variant in config.get("gates", []):
+		if not raw is Dictionary:
+			continue
+		var gate := raw as Dictionary
+		if str(gate.get("required_traversal", "ground")) != "ground":
+			continue
+		var protects: Variant = gate.get("protects_region_ids", [])
+		if not protects is Array or not (protects as Array).has(region_id):
+			continue
+		var flag := str(gate.get("requires_unlock", ""))
+		if flag.is_empty():
+			continue
+		if progression is Object and (progression as Object).has_method("has") \
+				and bool((progression as Object).call("has", flag)):
+			continue
+		var raw_target: Variant = gate.get("approach_position", [])
+		if not raw_target is Array or (raw_target as Array).size() < 3:
+			var arrival: Variant = (config.get("transition_points", {}) as Dictionary).get("meadows_entry", {})
+			raw_target = (arrival as Dictionary).get("position", [0.0, 5.0, 0.0]) if arrival is Dictionary else [0.0, 5.0, 0.0]
+		var target := Vector3(float(raw_target[0]), float(raw_target[1]), float(raw_target[2]))
+		return {"gate_id": str(gate.get("id", "")), "flag": flag, "region_id": region_id,
+			"from": at, "position": target}
+	return {}
+
+
+## Seat the local trainer on the closed gate's legal side when its current pose
+## is inside a region that gate seals in THIS world's progression. Called by
+## `_place_player()` (every load/arrival) and after a progression restore (host
+## snapshot on join/rejoin, mid-session load). A no-op when the gate is open,
+## so solo load with the route earned is unchanged.
+##
+## Authority: the destination is judged against the host's flags, and the move
+## is an ordinary relocation the host's proxy follows (`remote_trainer.gd`
+## snaps a teleport). The Fly recovery anchor is CLEARED rather than written:
+## the old anchor is the sealed pose itself, and `cloudreach_physical_runtime.gd`
+## would "recover" a 300 m drop straight back to it (the F06 proof's step #29
+## setup teleport was undone exactly that way). The next grounded frame asks
+## for a new anchor through the normal path (the host decides on a client).
+##
+## `progression` defaults to `Game.progression`; a headless test passes its own.
+func enforce_sealed_placement(progression: Variant = null) -> Dictionary:
+	if simulation_only or _player == null or not is_instance_valid(_player) or not _player.is_inside_tree():
+		return {}
+	if progression == null:
+		var game := _game()
+		progression = game.get("progression") if game != null else null
+	var verdict := sealed_region_relocation(_config, _player.global_position, progression)
+	if verdict.is_empty():
+		return {}
+	var riding := get_node_or_null(^"RidingController")
+	if riding != null and riding.has_method("is_mounted") and bool(riding.call("is_mounted")):
+		riding.call("dismount")
+	var spot: Vector3 = verdict["position"]
+	var floor_y := ground_height_near(spot + Vector3.UP * 4.0)
+	if not is_nan(floor_y):
+		spot.y = floor_y + 0.15
+	_player.global_position = spot
+	_player.velocity = Vector3.ZERO
+	var fly := _player.get_node_or_null(^"FlyController")
+	if fly != null:
+		# A load's pending Fly payload would otherwise land on the next physics
+		# frame and restore the sealed anchor over the cleared one.
+		if fly.has_method("apply_pending_load"):
+			fly.call("apply_pending_load")
+		if fly.has_method("clear_recovery_anchor"):
+			fly.call("clear_recovery_anchor")
+	if _camera_rig != null:
+		_camera_rig.global_position = spot
+	verdict["position"] = spot
+	print("[cloudreach] pose %s is inside %s, sealed by closed %s (%s): seated at %s"
+		% [str(verdict["from"]), verdict["region_id"], verdict["gate_id"], verdict["flag"], str(spot)])
+	return verdict
 
 
 func _settle_realm_arrival(game: Node) -> void:
