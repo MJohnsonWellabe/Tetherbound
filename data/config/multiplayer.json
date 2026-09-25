@@ -39,7 +39,7 @@
     "peer_timeout_max_ms": 180000,
     "_comment_peer_timeout_max_ms": "Hard ceiling for an unacknowledged reliable packet. The independent net-harness heartbeat still fails a frozen process after 15 s; this value only prevents ENet from mistaking a bounded procedural load for a dead peer.",
     "reconnect_window_s": 120.0,
-    "_comment_reconnect_window_s": "How long a dropped character id keeps its registry row for a rejoin. Wave 2 keeps the row for the process lifetime and reads this only as the documented intent; the timed eviction lands with Wave 5's downed/revive window.",
+    "_comment_reconnect_window_s": "How long a dropped admitted character keeps a reserved seat for a rejoin. Read by session.gd::_on_peer_disconnected, which reserves the seat in peer_registry.gd; a different character is refused session_full while it is held, and a deliberate leave (goodbye) or kick reserves nothing. The window starts when the host detects the drop, which after a crash is the ENet peer timeout below.",
     "clock_sync_interval_s": 1.0,
     "_comment_clock_sync_interval_s": "D105: how often the host broadcasts `day` and `clock_elapsed_seconds` as host truth. One second is far finer than the 600 s in-game day, so a client's sky never visibly steps."
   },

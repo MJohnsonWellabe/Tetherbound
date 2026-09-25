@@ -1,0 +1,27 @@
+run id:  net-20260925T040319Z-6862
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossfixS2/net-join_version_mismatch-20260925T040319Z
+smoke:   tests/smoke_net_join_version_mismatch.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: net_conditions active -- delay 150 ms, jitter 30 ms, loss 30.0% (contract §9)
+coordinator: launched peer 0 (host) pid=6884 control_port=46329 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossfixS2/net-join_version_mismatch-20260925T040319Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossfixS2/net-join_version_mismatch-20260925T040319Z/peer-0.log
+coordinator: launched peer 1 (client) pid=6885 control_port=37353 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossfixS2/net-join_version_mismatch-20260925T040319Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossfixS2/net-join_version_mismatch-20260925T040319Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":32701.0,"godot_version":"4.7-stable (official)","main_sha":"f592dbc5b434","peer":0.0,"pid":6884.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossfixS2/net-join_version_mismatch-20260925T040319Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":32702.0,"godot_version":"4.7-stable (official)","main_sha":"f592dbc5b434","peer":1.0,"pid":6885.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossfixS2/net-join_version_mismatch-20260925T040319Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: host reported an ENet port (32701)
+PASS: host opened a four-peer session (hosting udp/32701 as peer 1)
+PASS: host registry starts with one real row ([{ "appearance_id": "trainer", "character_id": "character-1c6fd0690e78834d9b9751c4018c4ec0", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }])
+coordinator: udp_proxy pid=7324 relaying 127.0.0.1:32711 -> 127.0.0.1:32701 (log /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossfixS2/net-join_version_mismatch-20260925T040319Z/udp-proxy-32711.log)
+coordinator: udp_proxy never bound udp/32711 within 15 s; see /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossfixS2/net-join_version_mismatch-20260925T040319Z/udp-proxy-32711.log
+FAIL: mismatched content was refused (ERROR: could not start udp_proxy for target port 32701)
+FAIL: client received the readable content-mismatch reason (ERROR: could not start udp_proxy for target port 32701)
+FAIL: the reason names the joiner's own content hash prefix (ERROR: could not start udp_proxy for target port 32701)
+FAIL: refusal arrived in 15021 ms, not after the generic timeout
+SCRIPT ERROR: Invalid cast: could not convert value to 'Dictionary'.
+          at: _run (res://tests/smoke_net_join_version_mismatch.gd:63)
+          GDScript backtrace (most recent call first):
+              [0] _run (res://tests/smoke_net_join_version_mismatch.gd:63)
+              [1] probe (res://tests/helpers/net_harness.gd:821)
+Terminated
+(no SUMMARY.md written to /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossfixS2/net-join_version_mismatch-20260925T040319Z)

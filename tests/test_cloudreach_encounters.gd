@@ -6,10 +6,205 @@ const MODEL := preload("res://scripts/characters/character_model.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FLAGS := preload("res://autoload/progression_state.gd")
 const SURFACE := preload("res://scripts/combat/cloudreach_combat_surface.gd")
+const VEYRA := "captain_veyra_storm_anchor"
+const VEYRA_FLAG := "captain_veyra_defeated"
+const VEYRA_COINS_SOURCE := "trainer:captain_veyra_storm_anchor:coins"
+const VEYRA_CANDY_SOURCE := "trainer:captain_veyra_storm_anchor:item:rare_candy"
+## A joiner's peer id: never 1 (only the listen server is 1).
+const GUEST_PEER := 424242
 const NATIVE_WILD_SITE_IDS: Array[String] = [
 	"lower_cliff_foragers", "causeway_watch", "ravine_wind",
 	"roost_perches", "upper_scouts", "summit_watch",
 ]
+
+
+## `Game.progression` stand-in: the same `has`/`set_flag` surface the director
+## reads, with no autoload (`--script` boots none).
+class FlagStore extends RefCounted:
+	var flags: Dictionary = {}
+
+	func has(id: String) -> bool:
+		return flags.has(id)
+
+	func set_flag(id: String, value: bool = true) -> void:
+		if value:
+			flags[id] = true
+		else:
+			flags.erase(id)
+
+
+## The real Cloudreach `_record_trainer_defeat()` and the real base §7 session
+## path, with only the session, ledger and satchel edges stubbed.
+class PayoutDirector:
+	extends "res://scripts/combat/cloudreach_encounter_director.gd"
+	var multi := false
+	var host := false
+	## Whether the chapter/finale adapter's write is already visible locally
+	## when `trainer_victory` returns (solo/host commit; a client's is pending).
+	var adapter_commits := true
+	var store := FlagStore.new()
+	var intents: Array[Dictionary] = []
+	var victories: Array = []
+	var told: Array = []
+	var solo_pays := 0
+	## source -> {peer: true}; `world_ledger.gd::_reward_grant()`'s per-recipient
+	## per-source receipt, so a repeat grant is `already_taken` with no `paid`.
+	var receipts: Dictionary = {}
+	var paid_log: Array = []
+
+	func _is_multi_peer() -> bool:
+		return multi
+
+	func _is_host() -> bool:
+		return multi and host
+
+	func _encounter_realm() -> String:
+		return "cloudreach"
+
+	func _progression() -> RefCounted:
+		return store
+
+	func _pay_trainer_reward(_spec: Dictionary) -> void:
+		solo_pays += 1
+
+	func _trainer_reward_line(_spec: Dictionary) -> String:
+		return ""
+
+	func _tell_participant_they_were_paid(peer_id: int, _payload: Dictionary) -> void:
+		told.append(peer_id)
+
+	func _submit_reward_intent(intent: Dictionary) -> Dictionary:
+		intents.append(intent.duplicate(true))
+		if str(intent.get("kind", "")) == "set_world_flag":
+			if _is_host():
+				store.set_flag(str(intent.get("id", "")))
+				return {"ok": true, "pending": false, "code": "noop", "paid": []}
+			return {"ok": false, "pending": true, "code": "", "paid": []}
+		var source := str(intent.get("source", ""))
+		var seen: Dictionary = receipts.get(source, {})
+		var paid: Array = []
+		for raw: Variant in (intent.get("peers", []) as Array):
+			var peer := int(raw)
+			if not seen.has(peer):
+				seen[peer] = true
+				paid.append(peer)
+				paid_log.append("%s|%d" % [source, peer])
+		receipts[source] = seen
+		if paid.is_empty():
+			return {"ok": false, "pending": false, "code": "already_taken", "paid": []}
+		return {"ok": true, "pending": false, "code": "", "paid": paid}
+
+	func adapter(id: String) -> void:
+		victories.append(id)
+		if adapter_commits:
+			store.set_flag(str((trainer_specs[id] as Dictionary)["defeat_flag"]))
+
+
+func _veyra_director(multi: bool, host: bool, adapter_commits: bool) -> PayoutDirector:
+	var director := PayoutDirector.new()
+	director.setup(null)
+	director.multi = multi
+	director.host = host
+	director.adapter_commits = adapter_commits
+	director.trainer_victory.connect(director.adapter)
+	return director
+
+
+func _intents_of(director: PayoutDirector, kind: String) -> Array:
+	var out: Array = []
+	for intent: Dictionary in director.intents:
+		if str(intent.get("kind", "")) == kind:
+			out.append(intent)
+	return out
+
+
+func test_host_run_veyra_pays_each_participant_once_through_the_session_path() -> void:
+	var director := _veyra_director(true, true, true)
+	var spec: Dictionary = director.trainer_specs[VEYRA]
+	assert_eq(str(spec["defeat_flag"]), VEYRA_FLAG)
+	director._encounter_host = RefCounted.new()
+	director._trainer_battle_participants = {1: true, GUEST_PEER: true}
+	director._record_trainer_defeat(spec)
+	assert_eq(director.victories, [VEYRA], "the finale hook still fires exactly once")
+	assert_eq(director.solo_pays, 0, "the host does not also pay itself a local satchel reward")
+	var facts := _intents_of(director, "set_world_flag")
+	assert_eq(facts.size(), 1, "the world fact is submitted once")
+	assert_eq(str((facts[0] as Dictionary).get("id", "")), VEYRA_FLAG)
+	var grants := _intents_of(director, "reward_grant")
+	assert_eq(grants.size(), 2, "one reward_grant per component: coins and rare_candy")
+	var sources: Array = []
+	for grant: Dictionary in grants:
+		sources.append(str(grant["source"]))
+		assert_eq(grant["peers"], [1, GUEST_PEER], "every participant is named on %s" % grant["source"])
+		assert_eq(str(grant["realm"]), "cloudreach")
+		if str(grant["source"]) == VEYRA_COINS_SOURCE:
+			assert_eq(str(grant["item"]), "coin")
+			assert_eq(int(grant["count"]), 150, "Veyra's authored coins, not divided")
+		else:
+			assert_eq(str(grant["item"]), "rare_candy")
+			assert_eq(int(grant["count"]), 1)
+	sources.sort()
+	assert_eq(sources, [VEYRA_COINS_SOURCE, VEYRA_CANDY_SOURCE])
+	assert_eq(director.paid_log.size(), 4, "two components x two participants, each once")
+	var told := director.told.duplicate()
+	told.sort()
+	assert_eq(told, [1, GUEST_PEER], "each participant is told once, the guest included")
+	director.free()
+
+
+func test_repeat_veyra_defeat_pays_nobody_again() -> void:
+	var director := _veyra_director(true, true, true)
+	var spec: Dictionary = director.trainer_specs[VEYRA]
+	director._encounter_host = RefCounted.new()
+	director._trainer_battle_participants = {1: true, GUEST_PEER: true}
+	director._record_trainer_defeat(spec)
+	var intents_after_first := director.intents.size()
+	director._record_trainer_defeat(spec)
+	assert_eq(director.intents.size(), intents_after_first, "the world guard stops a repeat before any intent")
+	assert_eq(director.victories.size(), 1, "the finale hook is once-only")
+	assert_eq(director.told.size(), 2)
+	assert_eq(director.solo_pays, 0)
+	# Even with the world flag somehow cleared, the per-participant receipts
+	# refuse a second grant: nobody is paid or told twice.
+	director.store.set_flag(VEYRA_FLAG, false)
+	director._record_trainer_defeat(spec)
+	assert_eq(director.paid_log.size(), 4, "receipts refuse every second grant")
+	assert_eq(director.told.size(), 2, "nobody is told they were paid twice")
+	assert_eq(director.solo_pays, 0)
+	director.free()
+
+
+func test_solo_veyra_defeat_is_unchanged_single_local_payout() -> void:
+	for adapter_commits: bool in [true, false]:
+		var director := _veyra_director(false, false, adapter_commits)
+		var spec: Dictionary = director.trainer_specs[VEYRA]
+		director._record_trainer_defeat(spec)
+		assert_eq(director.solo_pays, 1, "solo pays once (adapter_commits=%s)" % adapter_commits)
+		assert_true(director.store.has(VEYRA_FLAG))
+		assert_true(director.intents.is_empty(), "solo submits no intents at all")
+		director._record_trainer_defeat(spec)
+		assert_eq(director.solo_pays, 1, "a solo repeat pays nothing")
+		assert_eq(director.victories.size(), 1)
+		director.free()
+
+
+func test_client_run_veyra_fight_pays_only_itself_once_and_grants_nobody() -> void:
+	# A client's own trainer battle has no encounter record of its own to pay
+	# from; the base's client path is "this peer pays itself", which the
+	# Cloudreach override now reaches with the world fact submitted only once.
+	for adapter_commits: bool in [true, false]:
+		var director := _veyra_director(true, false, adapter_commits)
+		var spec: Dictionary = director.trainer_specs[VEYRA]
+		director._record_trainer_defeat(spec)
+		assert_eq(director.solo_pays, 1, "client pays itself once (adapter_commits=%s)" % adapter_commits)
+		assert_true(_intents_of(director, "reward_grant").is_empty(), "a client never submits reward_grant")
+		assert_eq(_intents_of(director, "set_world_flag").size(), 1,
+			"the world fact is submitted exactly once as an intent")
+		assert_true(director.told.is_empty())
+		director._record_trainer_defeat(spec)
+		assert_eq(director.solo_pays, 1, "a client repeat pays nothing")
+		assert_eq(director.victories.size(), 1)
+		director.free()
 
 
 func test_seven_trainers_use_real_species_models_curve_and_rewards() -> void:
