@@ -33,6 +33,15 @@ const HOST_PEER_ID := 1
 ## duplicates, so a caller cannot mutate the registry by holding a row.
 var _rows: Dictionary = {}
 
+## Host-only reconnect seats (MULTIPLAYER §1.1/§5, `session.reconnect_window_s`).
+## character_id:String -> expiry in `Time.get_ticks_msec()` milliseconds.
+## When an admitted joiner's connection drops, its character keeps a seat for
+## the window, so a friend who lost their connection is not locked out of a
+## session that filled while they were away. Reservations are not rows: they
+## are not replicated, not in `fingerprint()`, and no gameplay code sees them.
+## They only count against capacity in `admission_verdict()`.
+var _reservations: Dictionary = {}
+
 ## Bumped on every mutation, the same "did anything move" counter
 ## `world_state.gd` keeps. `session.gd` replicates when this changes.
 var revision: int = 0
@@ -63,7 +72,12 @@ static func make_row(peer_id: int, character_id: String = "", display_name: Stri
 ## GUID or platform-account format. It enforces the invariant the authority
 ## consumers already rely on: one nonempty, edge-trimmed String belongs to one
 ## live peer. A reconnect is legal after the old peer row has been removed.
-func admission_verdict(peer_id: int, raw_character_id: Variant, max_peers: int) -> Dictionary:
+##
+## `now_ms` lets expired reconnect seats lapse at the moment of the decision;
+## a negative value reads the clock. A character holding a seat may take it
+## even when every other seat is filled or held.
+func admission_verdict(peer_id: int, raw_character_id: Variant, max_peers: int,
+		now_ms: int = -1) -> Dictionary:
 	if peer_id <= HOST_PEER_ID:
 		return _refuse("invalid_peer", "The joining connection could not be identified.")
 	if not raw_character_id is String:
@@ -76,9 +90,44 @@ func admission_verdict(peer_id: int, raw_character_id: Variant, max_peers: int) 
 	var holder := peer_for_character(character_id)
 	if holder != 0:
 		return _refuse("character_in_use", "That character is already connected to this world.")
-	if _rows.size() >= maxi(1, max_peers):
-		return _refuse("session_full", "This session is full (%d/%d)." % [_rows.size(), maxi(1, max_peers)])
+	expire_reservations(now_ms)
+	var cap := maxi(1, max_peers)
+	var held_for_others := _reservations.size() - (1 if _reservations.has(character_id) else 0)
+	if _rows.size() + held_for_others >= cap:
+		if held_for_others > 0 and _rows.size() < cap:
+			return _refuse("session_full",
+				"This session is full (%d/%d). A seat is being held for a player who is reconnecting; try again in a couple of minutes."
+				% [_rows.size() + held_for_others, cap])
+		return _refuse("session_full", "This session is full (%d/%d)." % [_rows.size(), cap])
 	return {"ok": true, "code": "", "reason": ""}
+
+
+## Hold a seat for `character_id` until `expires_ms`. Host-only bookkeeping;
+## see `_reservations`. Empty ids and live characters are not reserved.
+func reserve(character_id: String, expires_ms: int) -> bool:
+	if character_id.is_empty() or peer_for_character(character_id) != 0:
+		return false
+	_reservations[character_id] = expires_ms
+	return true
+
+
+func has_reservation(character_id: String, now_ms: int = -1) -> bool:
+	expire_reservations(now_ms)
+	return _reservations.has(character_id)
+
+
+func reservation_count(now_ms: int = -1) -> int:
+	expire_reservations(now_ms)
+	return _reservations.size()
+
+
+func expire_reservations(now_ms: int = -1) -> void:
+	if _reservations.is_empty():
+		return
+	var now := now_ms if now_ms >= 0 else Time.get_ticks_msec()
+	for character_id: String in _reservations.keys():
+		if now >= int(_reservations[character_id]):
+			_reservations.erase(character_id)
 
 
 func _refuse(code: String, reason: String) -> Dictionary:
@@ -97,6 +146,8 @@ func add(peer_id: int, character_id: String = "", display_name: String = "",
 			return {}
 	var row := make_row(peer_id, character_id, display_name, realm, appearance_id)
 	_rows[peer_id] = row
+	# A returning character takes its own held seat.
+	_reservations.erase(character_id)
 	revision += 1
 	return row.duplicate(true)
 
@@ -111,6 +162,7 @@ func remove(peer_id: int) -> bool:
 
 func clear() -> void:
 	_rows.clear()
+	_reservations.clear()
 	revision += 1
 
 

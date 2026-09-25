@@ -601,6 +601,125 @@ coverage. This is deferred implementation, not an accepted multiplayer path.
 Latest allowance check:42% remaining; guard unchanged. No additional engine
 run or guest-entry branch code was produced after the priority correction.
 
+## X05 lane: compatibility, lossy refusal, reconnect seat and export runtime
+
+Baseline `origin/main` 47774c350. Linux container, 4 cores, stock
+Godot 4.7.stable.official.5b4e0cb0f, headless. All net runs used
+`tools/net/run_net_smoke.sh` with isolated `TB_NET_RUN_ID`/`--out`, one
+at a time. The one parallel attempt starved a 4-core machine and is
+discarded. Loopback and the harness loss proxy (`tools/net/udp_proxy.gd`)
+are not internet or relay proof.
+
+**Build/content compatibility gate** (`ralph/x05-compat-gate`).
+- The hello carries `build_fingerprint.gd::current()`: wire protocol, engine
+  major.minor.patch.status, and SHA-256 over sorted `res://data/**/*.json`.
+- The host refuses a mismatch with `incompatible_version` before the Steam
+  membership result is used, and before identity, capacity, realm
+  preparation or snapshot. The reason names which part differs.
+- The Steam lobby publishes the short token. A joiner refuses a mismatched
+  lobby before dialling, and a Steam protocol refusal now uses the same code.
+- Two-process smoke `smoke_net_join_version_mismatch.gd`: 12/0. The refusal
+  arrived in 193–207 ms, and the host registry and world hash were
+  unchanged (`x05-compat-mismatch-smoke.log`, `x05-stack1-mismatch.log`).
+- Units: `test_session_build_compat.gd` plus Steam lobby cases.
+- Open: nothing yet proves an exported PCK hashes identically to the editor
+  run. JSON ships as-is under `all_resources`, but no export was compared.
+
+**A refusal lost on a lossy link** (`ralph/x05-refusal-linger`).
+- Measured on main's six-frame flush at 30% loss and 150±30 ms delay. In
+  both valid baseline runs the host logged the `incompatible_version`
+  refusal and the client never received it. The client waited out the
+  36 s join budget (`x05-refusal-loss30-before-*.log`). The third baseline
+  run failed to launch peers and is excluded.
+- Cause: ENet's disconnect discards unacknowledged reliable packets, and
+  the 135 s realm-loading peer timeout hides the drop.
+- Fix: refusal, kick, snapshot abort and host exit keep the link until the
+  other side closes it (10 s per peer, 5 s for a host close).
+- After the fix, at 30% loss, four of four valid runs received the specific
+  reason in 3.1, 3.3, 5.1 and 6.4 s (`x05-refusal-loss30-after-*.log`).
+  One run was a proxy-start infrastructure failure under CPU contention
+  and was stopped.
+- These are small samples on a synthetic proxy, not a delivery guarantee.
+- A host-exit run at 30% loss could not test exit at all: the joiner never
+  finished the snapshot (`x05-stack1-hostexit_loss.log`). At 10% loss,
+  host/join/leave passed 27/0 (`x05-stack2-hjl_loss10.log`).
+
+**120 s reconnect seat** (`ralph/x05-reconnect-reservation`, stacked on
+both branches above).
+- When an admitted joiner's link drops, the host holds a seat for that
+  character for `session.reconnect_window_s`. Other characters get a
+  readable `session_full` reason. The same character takes the seat back
+  under a new transport peer.
+- A deliberate leave sends a goodbye and waits up to 1.5 s for the host to
+  close the link, so no seat is held.
+- Kick, refusal and snapshot abort never reserve. Hellos are refused while
+  the host is closing. Ledger intents from peers outside the registry are
+  dropped.
+- Smoke `smoke_net_reconnect_reservation.gd` (three processes) first
+  failed on the deliberate-leave step: the goodbye was discarded by the
+  client's own disconnect (`x05-stack1-reservation.log`). After the
+  host-side close it passes 18/0 (`x05-stack2-reservation.log`).
+- Units: `test_session_reconnect_reservation.gd`, which also lapses the
+  seat at exactly 120 s with an explicit clock.
+- Limitation: a seat is held only once the host detects the drop. A clean
+  close is detected immediately. A crash or cable pull is detected only
+  after ENet's 135–180 s timeout, and until then the returning character is
+  refused as `character_in_use`. That behaviour is unchanged from main and
+  is not fixed here.
+
+**Final runs on the stacked branch** (`x05-final-*.log`, after both review
+rounds):
+- `reconnect_reservation` 18/0
+- `join_version_mismatch` 12/0 clean and 12/0 at 30% loss
+- `identity_admission` 23/0
+- `host_join_leave` 27/0
+- `four_peer_session` 31/0 (host + 3 on loopback)
+- `reconnect_keeps_character` 84/0
+- `join_by_address` 17/0
+- focused units 108/0
+
+**Invites accepted with the game open, closed or hosting.** Coordinator
+tests in `test_steam_lobby.gd` check that:
+- a running `join_requested` and a cold `getLaunchCommandLine`
+  `+connect_lobby` produce the same single pending invite and signal;
+- nothing is joined before character selection;
+- an invite that arrives while hosting stays pending with a reason.
+
+This is mock-native coverage. Real Steam accept paths need the owner
+dependencies in PR #233.
+
+**Export runtime** (`ralph/x05-steam-templates`).
+- The current release export is stock Godot. Its Windows preset
+  `custom_template/*` is blank and `release.yml` installs stock templates,
+  so invitations are unavailable in a release build.
+- `setup_steam_runtime.py --templates` now installs the pinned GodotSteam
+  4.20 templates. The archive `06216a20…` and all three win64 file hashes
+  were re-derived here and match the values recorded earlier.
+- A PCK exported by stock 4.7 runs under the GodotSteam linux64 template
+  with the `Steam` singleton and `SteamMultiplayerPeer` present.
+- Without the Steam API library beside the executable, the game does not
+  launch (exit 127).
+- The template accepts neither `--path` nor `--main-pack`
+  (`x05-godotsteam-linux-template-probe.log`).
+- Windows was not run here. The preset, release workflow and packaging
+  changes belong to X07 and need a coordinator grant.
+
+**Refusal capture.** `x05-refusal-mismatch-title-1280x720.png` was
+produced by `tools/net/capture_join_refusal.gd`:
+- A headless `--mp-host 27150` host and a rendered 1280×720 opengl3 client,
+  launched with `--mp-join` and a mismatched content override. Nothing is
+  staged.
+- The client builds the world, dials, receives the host's
+  `incompatible_version` verdict (host log line in
+  `x05-refusal-capture-host.log`) and returns to Join a Game.
+- The reason is shown in the status line, with controller focus on Enter an
+  Address.
+- This is evidence that the text reaches the player. It is not a visual or
+  UX verdict. The reason uses the existing small amber status style, and
+  720p readability belongs to X03.
+- Not captured: the held-seat reason and the Steam lobby mismatch reason.
+  The Steam reason needs a native Steam client.
+
 **Opt-in Steam release packaging** (`ralph/x05-steam-release`, under a
 coordinator SHARED-FILE GRANT for `.github/workflows/release.yml`).
 - A new `ship_steam_runtime` dispatch input and a repository variable,

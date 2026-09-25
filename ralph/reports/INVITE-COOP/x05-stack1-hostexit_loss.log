@@ -1,0 +1,72 @@
+run id:  net-20260925T041517Z-8930
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/hostexit_loss/net-host_join_leave-20260925T041517Z
+smoke:   tests/smoke_net_host_join_leave.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: net_conditions active -- delay 150 ms, jitter 30 ms, loss 30.0% (contract §9)
+coordinator: launched peer 0 (host) pid=8951 control_port=42403 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/hostexit_loss/net-host_join_leave-20260925T041517Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/hostexit_loss/net-host_join_leave-20260925T041517Z/peer-0.log
+coordinator: launched peer 1 (client) pid=8952 control_port=38197 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/hostexit_loss/net-host_join_leave-20260925T041517Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/hostexit_loss/net-host_join_leave-20260925T041517Z/peer-1.log
+coordinator: peer 1 hello: {"enet_port":30762.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":1.0,"pid":8952.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/hostexit_loss/net-host_join_leave-20260925T041517Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":30761.0,"godot_version":"4.7-stable (official)","main_sha":"996a14d7f381","peer":0.0,"pid":8951.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/hostexit_loss/net-host_join_leave-20260925T041517Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: host reported its ENet port in hello (30761)
+PASS: peer 0 hosted a listen server (hosting udp/30761 as peer 1)
+PASS: peer 0 reports is_host
+PASS: the listen server's own peer id is 1 (got 1.0)
+coordinator: udp_proxy pid=9195 relaying 127.0.0.1:30771 -> 127.0.0.1:30761 (log /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/hostexit_loss/net-host_join_leave-20260925T041517Z/udp-proxy-30771.log)
+coordinator: udp_proxy bound udp/30771
+FAIL: peer 1 joined and applied the world snapshot (Session.join(127.0.0.1, 30771) never applied a snapshot within 3000 frames)
+PASS: peer 1 reports is_host false
+FAIL: peer 1's snapshot_applied gate is open
+PASS: peer 1's ENet id is a real assigned id, not the server's 1 (got 381342571)
+FAIL: peer 0's registry reports 2 peers (registry reports 1 peer(s), wanted 2)
+FAIL: peer 1's registry reports 2 peers (registry reports 1 peer(s), wanted 2)
+FAIL: both registries hold 2 rows (host 1, client 0)
+FAIL: registry rows agree across peers: host ["character-cc8f79a4096a1b1e936e27c3651a02e5@1"] vs client []
+FAIL: the joiner's character id landed in the host's registry under its real peer id
+PASS: peer 1 left cleanly (client left cleanly after 0 frames)
+PASS: the host's registry is back to 1 peer (registry reports 1 peer(s) after 0 frames)
+FAIL: the client had written no autosave before the host exited (true)
+PASS: the host exited its session (host left cleanly after 0 frames)
+PASS: the host wrote its world autosave on exit (true)
+FAIL: the client wrote NO world save, on join or on leave (true)
+PASS: the host wrote a world file to user://worlds/ (["slot-0"])
+FAIL: the client's user://worlds/ is empty (["slot-0"])
+PASS: the client wrote exactly one character file, its own (["character-f49c80f97cdeb6971418e06f1a838075"])
+PASS: and it is addressed by a character id ({ "id": "character-f49c80f97cdeb6971418e06f1a838075", "keys": ["character_id", "chosen_character", "created_at", "display_name", "equipment", "flags", "hotbar", "inventory", "last_played", "last_world_id", "last_world_instance_id", "migrated_from", "party", "pending_realm_entry", "player_pose", "realm", "realm_hearts", "realm_maps", "satchel_escrow", "satiety", "skills", "tournament_selection", "version"], "party": 0.0 })
+PASS: the client's character file carries its team, its maps and its own flags (["character_id", "chosen_character", "created_at", "display_name", "equipment", "flags", "hotbar", "inventory", "last_played", "last_world_id", "last_world_instance_id", "migrated_from", "party", "pending_realm_entry", "player_pose", "realm", "realm_hearts", "realm_maps", "satchel_escrow", "satiety", "skills", "tournament_selection", "version"])
+PASS: and no world key -- a trainer is not a world (["character_id", "chosen_character", "created_at", "display_name", "equipment", "flags", "hotbar", "inventory", "last_played", "last_world_id", "last_world_instance_id", "migrated_from", "party", "pending_realm_entry", "player_pose", "realm", "realm_hearts", "realm_maps", "satchel_escrow", "satiety", "skills", "tournament_selection", "version"])
+PASS: the host wrote its own character file too (["character-cc8f79a4096a1b1e936e27c3651a02e5"])
+FAIL: peer 1 joined and applied the world snapshot (Session.join(127.0.0.1, 30771) never applied a snapshot within 3000 frames)
+FAIL: peer 1's snapshot_applied gate is open
+FAIL: peer 0's registry reports 2 peers (registry reports 1 peer(s), wanted 2)
+FAIL: peer 1's registry reports 2 peers (registry reports 1 peer(s), wanted 2)
+FAIL: both registries hold 2 rows (host 1, client 0)
+FAIL: registry rows agree across peers: host ["character-cc8f79a4096a1b1e936e27c3651a02e5@1"] vs client []
+FAIL: the joiner's character id landed in the host's registry under its real peer id
+FAIL: the client had written no autosave before the host exited (true)
+FAIL: the client wrote NO world save, on join or on leave (true)
+FAIL: the client's user://worlds/ is empty (["slot-0"])
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack/hostexit_loss/net-host_join_leave-20260925T041517Z/SUMMARY.md ===
+# Net smoke run net-20260925T041517Z-8930
+
+Scene: world
+Peers: 2
+Net conditions: delay 150 ms / jitter 30 ms / loss 30.0%
+
+- peer 0 (host) pid=8951 exited=true unexpected_exit=false
+- peer 1 (client) pid=8952 exited=true unexpected_exit=false
+
+FAILURES:
+- peer 1 joined and applied the world snapshot (Session.join(127.0.0.1, 30771) never applied a snapshot within 3000 frames)
+- peer 1's snapshot_applied gate is open
+- peer 0's registry reports 2 peers (registry reports 1 peer(s), wanted 2)
+- peer 1's registry reports 2 peers (registry reports 1 peer(s), wanted 2)
+- both registries hold 2 rows (host 1, client 0)
+- registry rows agree across peers: host ["character-cc8f79a4096a1b1e936e27c3651a02e5@1"] vs client []
+- the joiner's character id landed in the host's registry under its real peer id
+- the client had written no autosave before the host exited (true)
+- the client wrote NO world save, on join or on leave (true)
+- the client's user://worlds/ is empty (["slot-0"])
