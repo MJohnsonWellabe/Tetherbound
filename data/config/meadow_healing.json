@@ -43,7 +43,9 @@
     "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
     "normal_depth": 0.34,
     "uv_scale": 0.27,
-    "tint": "#e9dfc0"
+    "tint": "#e9dfc0",
+    "edge_jitter_m": 4.0,
+    "_comment_edge": "edge_jitter_m: the falloff is read at a deterministic per-corner offset of up to this many metres, so the regreen's contour is ragged, not a stencil (blind round 4)."
   },
   "tether_lights": {
     "enabled": true,
@@ -214,5 +216,24 @@
       "stronghold_courtyard",
       "stronghold_elite"
     ]
+  },
+  "drain": {
+    "_comment": "Coordinator ruling 2026-09-25 (F05 heal before-state): keep no re-bake; the runtime owns both halves. meadow_healing.gd::_build_the_drain lays dry browned grass over every station in regreen.groups (their own authored strength/radius/inner from terrain_playground.json drains.stations) and a disc round every pylon of pylons.holders (pylon_radius/inner/strength), joined to the station group within join_m. Built only while legendary_freed is unset; faded out over fade_seconds on the freeing (as the regreen fades in); never built on a load after it. edge_jitter_m ragged-edges the contour deterministically. The grass-field half (thin and brown the live blades) is a shared-file request on grass_field.gd.",
+    "enabled": true,
+    "cell": 3.0,
+    "lift": 0.13,
+    "max_alpha": 0.85,
+    "fade_seconds": 12.0,
+    "spare_roads": true,
+    "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+    "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
+    "normal_depth": 0.34,
+    "uv_scale": 0.27,
+    "tint": "#a08a5c",
+    "edge_jitter_m": 4.0,
+    "pylon_radius": 7.0,
+    "pylon_inner": 2.0,
+    "pylon_strength": 0.7,
+    "join_m": 30.0
   }
 }

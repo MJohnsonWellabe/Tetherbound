@@ -80,6 +80,10 @@ var _regreen_quads: int = 0
 var _herd_return: Node3D = null
 ## Bake only: collidable scatter trunks by cell (see `_trunk_grid`).
 var _trunks: Variant = null
+## The runtime drain (before-state): overlay meshes, their shared material.
+var _drain_nodes: Array[MeshInstance3D] = []
+var _drain_material: StandardMaterial3D = null
+var _drain_quads := 0
 var _tall: Variant = null
 var _toppled: Array[Node3D] = []
 var _cables_hidden: int = 0
@@ -101,6 +105,10 @@ func build(world: Node3D) -> void:
 	if _progression == null:
 		return
 	var flag := str(_config.get("flag", "legendary_freed"))
+	if not bool(_progression.call("has", flag)):
+		# The machine is live: the land around every station and pylon reads
+		# drained until the freeing lifts it (never built on a load after it).
+		_build_the_drain()
 	if bool(_progression.call("has", flag)):
 		# A save loaded after the ending: no fade, no ceremony. The world has
 		# been this way since before the player pressed Continue.
@@ -240,6 +248,7 @@ func apply(immediate: bool = false) -> Dictionary:
 		"dead_ground_faded": _fade_the_drain_skins(immediate),
 		"regreened": _regreen_the_scars(immediate),
 		"lights_killed": _kill_the_tether_lights(),
+		"drain_lifted": _lift_the_drain(immediate),
 		# After the lights: what falls is already dead.
 		"pylons_toppled": _topple_the_pylons(immediate),
 		"herd_returned": _return_the_herd(),
@@ -682,8 +691,9 @@ func _regreen_the_scars(immediate: bool) -> int:
 
 
 func _regreen_group(group_name: String, discs: Array, block: Dictionary,
-		global_strength: float, material: StandardMaterial3D) -> MeshInstance3D:
+		global_strength: float, material: StandardMaterial3D, prefix: String = "Regreen") -> MeshInstance3D:
 	var cell := maxf(float(block.get("cell", 3.0)), 1.0)
+	var jitter := maxf(float(block.get("edge_jitter_m", 0.0)), 0.0)
 	var lift := float(block.get("lift", 0.11))
 	var max_alpha := clampf(float(block.get("max_alpha", 0.7)), 0.0, 1.0)
 	var field := _heightfield()
@@ -716,7 +726,7 @@ func _regreen_group(group_name: String, discs: Array, block: Dictionary,
 				else:
 					var path := float(field.call("path_factor", x, z)) if ask_roads else 0.0
 					corners[at] = [Vector3(x, ground + lift, z),
-						regreen_alpha(Vector2(x, z), discs, global_strength, max_alpha, path)]
+						regreen_alpha(Vector2(x, z) + edge_jitter(at, jitter), discs, global_strength, max_alpha, path)]
 			if corners[at] == null:
 				quad.clear()
 				break
@@ -735,14 +745,137 @@ func _regreen_group(group_name: String, discs: Array, block: Dictionary,
 	surface.generate_normals()
 	surface.set_material(material)
 	var skin := MeshInstance3D.new()
-	skin.name = "Regreen_%s" % group_name
+	skin.name = "%s_%s" % [prefix, group_name]
 	skin.top_level = true
 	skin.mesh = surface.commit()
 	skin.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(skin)
 	skin.global_transform = Transform3D.IDENTITY
-	_regreen_quads += quads
+	if prefix == "Regreen":
+		_regreen_quads += quads
+	else:
+		_drain_quads += quads
 	return skin
+
+
+## A deterministic offset of up to `metres` for grid corner `at`: the falloff
+## is read there instead, so the overlay's contour is ragged rather than a
+## clean ring or a straight grid-aligned edge (blind round 4: "hard stencil").
+## A pure function of the integer corner, identical on every peer and load.
+static func edge_jitter(at: Vector2i, metres: float) -> Vector2:
+	if metres <= 0.0:
+		return Vector2.ZERO
+	var h := int(rand_from_seed(("%d,%d" % [at.x, at.y]).hash())[0])
+	var u := float(h & 0xFFFF) / 65535.0 * 2.0 - 1.0
+	var v := float((h >> 16) & 0xFFFF) / 65535.0 * 2.0 - 1.0
+	return Vector2(u, v) * metres
+
+
+## (0) THE DRAIN -- the BEFORE state, owned at runtime (coordinator ruling,
+## 2026-09-25: keep "no re-bake"; the runtime owns both halves). While the
+## Warden's machine is live (`legendary_freed` not set), an overlay of dry,
+## browned grass lies over every station in `regreen.groups` (each station's
+## own authored strength/radius/inner) and a smaller disc round every pylon in
+## `pylons.holders` (`drain.pylon_*`), one mesh per group so each culls on its
+## own bounds. The freeing fades it out over `drain.fade_seconds` while the
+## regreen fades in; a load after the freeing never builds it. Pure function of
+## config, the stations and the authored pylon positions: identical on every
+## peer and every load. The grass-field half (thinning and browning the live
+## blades) is a SHARED-FILE REQUEST on grass_field.gd; not here.
+func _build_the_drain() -> int:
+	var block: Dictionary = _config.get("drain", {})
+	if not bool(block.get("enabled", false)) or _world == null or not _world.has_method("ground_height_at"):
+		return 0
+	if not _drain_nodes.is_empty():
+		return _drain_quads
+	var groups := drain_groups()
+	if groups.is_empty():
+		return 0
+	var drains: Dictionary = _load_json(TERRAIN_PATH).get("drains", {})
+	var global_strength := clampf(float(drains.get("strength", 1.0)), 0.0, 1.0)
+	var material := _regreen_material_for(block)
+	material.albedo_color.a = 1.0
+	var names: Array = groups.keys()
+	names.sort()
+	for group_name: Variant in names:
+		var skin := _regreen_group(str(group_name), groups[group_name] as Array, block, global_strength, material, "Drain")
+		if skin != null:
+			_drain_nodes.append(skin)
+	_drain_material = material
+	print("[meadow] the land lies drained: %d quads over %d groups" % [_drain_quads, _drain_nodes.size()])
+	return _drain_quads
+
+
+## Group name -> disc list for the drain: each `regreen.groups` entry's
+## stations, plus every pylon of `pylons.holders` as a disc, joined to the
+## station group it stands within `drain.join_m` of (else a group of its own
+## holder). Stable order. Public for tests.
+func drain_groups() -> Dictionary:
+	var block: Dictionary = _config.get("drain", {})
+	var out: Dictionary = {}
+	var groups: Dictionary = (_config.get("regreen", {}) as Dictionary).get("groups", {})
+	for group_name: Variant in groups:
+		var discs := _station_discs(groups[group_name] as Array)
+		if not discs.is_empty():
+			out[str(group_name)] = discs
+	var radius := float(block.get("pylon_radius", 7.0))
+	var inner := float(block.get("pylon_inner", 2.0))
+	var strength := float(block.get("pylon_strength", 0.7))
+	var join := float(block.get("join_m", 30.0))
+	var patterns: Array = (_config.get("pylons", {}) as Dictionary).get("holders", [])
+	if radius <= 0.0 or _world == null:
+		return out
+	for node: Node in _all_nodes(_world):
+		var holder := node as Node3D
+		if holder == null or not _name_matches(str(holder.name), patterns):
+			continue
+		for child: Node in holder.get_children():
+			if not (child is MeshInstance3D and str(child.name).begins_with("Pylon_")):
+				continue
+			var at := _global_of(child as Node3D).origin
+			var spot := Vector2(at.x, at.z)
+			var home := str(holder.name)
+			var best := INF
+			for group_name: Variant in groups:
+				for disc: Dictionary in (out.get(str(group_name), []) as Array):
+					var gap := spot.distance_to(disc["centre"] as Vector2) - float(disc["radius"])
+					if gap < join and gap < best:
+						best = gap
+						home = str(group_name)
+			if not out.has(home):
+				out[home] = []
+			(out[home] as Array).append({"id": "%s/%s" % [holder.name, child.name], "centre": spot,
+				"radius": radius, "inner": inner, "strength": strength})
+	return out
+
+
+func _lift_the_drain(immediate: bool) -> int:
+	if _drain_nodes.is_empty() or _drain_material == null:
+		return 0
+	var seconds := 0.0 if immediate else float((_config.get("drain", {}) as Dictionary).get("fade_seconds", 12.0))
+	if seconds <= 0.0 or not is_inside_tree():
+		_hide_the_drain()
+	else:
+		var tween := create_tween()
+		tween.tween_property(_drain_material, "albedo_color:a", 0.0, seconds)
+		tween.tween_callback(_hide_the_drain)
+	return _drain_nodes.size()
+
+
+func _hide_the_drain() -> void:
+	if _drain_material != null:
+		_drain_material.albedo_color.a = 0.0
+	for skin: MeshInstance3D in _drain_nodes:
+		if is_instance_valid(skin):
+			skin.visible = false
+
+
+func drain_nodes() -> Array[MeshInstance3D]:
+	return _drain_nodes.duplicate()
+
+
+func drain_alpha_now() -> float:
+	return _drain_material.albedo_color.a if _drain_material != null else 0.0
 
 
 func _regreen_material_for(block: Dictionary) -> StandardMaterial3D:

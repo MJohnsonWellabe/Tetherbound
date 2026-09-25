@@ -62,6 +62,18 @@ func _run() -> void:
 	var spokes_before := _spoke_pylon_transforms(world)
 	_check_table_covers_the_world(world)
 
+	# --- 0. before: the machine is live, the land lies drained ------------------
+	var drained: Array = healing.call("drain_nodes")
+	if drained.size() < 3:
+		_fail("(before) %d drain meshes; expected at least one per station group" % drained.size())
+	for raw: Variant in drained:
+		var skin := raw as MeshInstance3D
+		if skin == null or not skin.visible or skin.mesh == null:
+			_fail("(before) drain mesh %s is not standing" % (str(skin.name) if skin != null else "null"))
+	if float(healing.call("drain_alpha_now")) < 0.999:
+		_fail("(before) the drain stands at alpha %.2f, not 1" % float(healing.call("drain_alpha_now")))
+	print("(before) the land lies drained: %d drain meshes at alpha %.2f" % [drained.size(), float(healing.call("drain_alpha_now"))])
+
 	# --- 1. live: the flag lands ---------------------------------------------
 	_game.get("progression").call("set_flag", FLAG)
 	while not bool(healing.call("applied")):
@@ -86,6 +98,10 @@ func _run() -> void:
 		float(healing.call("regreen_alpha_now")), float(Time.get_ticks_msec() - started) / 1000.0, str(mid_seen)])
 	if not mid_seen:
 		_fail("(live) never saw a mid-fade regreen frame")
+	for raw: Variant in (healing.call("drain_nodes") as Array):
+		if (raw as MeshInstance3D).visible:
+			_fail("(live) drain mesh %s still stands after the fade" % str((raw as MeshInstance3D).name))
+	print("(live) the drain lifted: alpha %.3f, %d meshes hidden" % [float(healing.call("drain_alpha_now")), (healing.call("drain_nodes") as Array).size()])
 	_check_end_state(world, healing, "live")
 	var live_poses := _pylon_poses(world, healing)
 	_check_spokes_untouched(world, spokes_before, "live")
@@ -132,6 +148,8 @@ func _run() -> void:
 		_fail("(reload) the fresh world never re-applied the healing from the saved flag")
 		_finish()
 		return
+	if not (reloaded.call("drain_nodes") as Array).is_empty():
+		_fail("(reload) a load after the freeing built the drain (%d meshes)" % (reloaded.call("drain_nodes") as Array).size())
 	# The very frame it applied: a load must SNAP -- alpha 1 and pylons already
 	# down, not starting a fade or a fall.
 	var snap_alpha := float(reloaded.call("regreen_alpha_now"))

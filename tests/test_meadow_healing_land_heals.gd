@@ -369,3 +369,14 @@ func test_herd_scale_is_up_only() -> void:
 	var places := HEALING.herd_placements({"members": [[1.0, 2.0, 0.0, 0.5], [9.0, 2.0, 0.0, 1.2]]})
 	assert_almost_eq(float(places[0]["scale"]), 1.0, 0.0001, "a member is never shrunk below its species size")
 	assert_almost_eq(float(places[1]["scale"]), 1.2)
+
+
+func test_edge_jitter_is_deterministic_and_bounded() -> void:
+	for x in range(-3, 4):
+		for z in range(-3, 4):
+			var at := Vector2i(x * 17, z * 31)
+			var j := HEALING.edge_jitter(at, 4.0)
+			assert_true(j.is_equal_approx(HEALING.edge_jitter(at, 4.0)), "same corner, same offset")
+			assert_true(absf(j.x) <= 4.0 and absf(j.y) <= 4.0, "inside the bound")
+	assert_true(HEALING.edge_jitter(Vector2i(5, 9), 0.0) == Vector2.ZERO, "0 m = no jitter")
+	assert_false(HEALING.edge_jitter(Vector2i(0, 0), 4.0).is_equal_approx(HEALING.edge_jitter(Vector2i(1, 0), 4.0)), "neighbours differ")
