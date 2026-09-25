@@ -193,6 +193,82 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   | Bare `party_down` accepted | 2 fails |
   | Resting ignored | 1 unit fail |
 
+## WO-F09-01 — Walkable roads, second Dynamo road, footing rule, five pockets (`ralph/stormwood-f09-walkable-roads`)
+
+- **Anchor:** F09 / ACCEPTANCE §6.1 F09 ("four loops, three shortcuts, five pockets and alternate routes; a closed Arch cannot be bypassed"). WORLD §5.1/§5.3 and the coordinator's F09 rulings: C, D and the player road are the far-side shortcuts; for the arch-only Crown and the single Rootgate pass, the arch is the second route; a walled dead-end clearing with a moved reward is a pocket.
+- **Measured baseline** (read-only audit, production heightfield, true slope, 45° floor limit):
+  - The closed Rootgate and the arch-only Crown cannot be bypassed.
+  - 5 walkable loops.
+  - conductor_road's last leg climbed 73.8° and deepwood_road's first leg 52–58°.
+  - Deepwood→Dynamo had one road.
+  - 0 pockets.
+- **Player result:**
+  - **Roads:** both Rootgate legs follow the pass floor, now at most 23.4°. `dynamo_west_approach` (Deepwood Rod Station → Ember Bivouac, at most 19.7°) is the second Deepwood→Dynamo road.
+  - **Roadside creatures:** the 13 pairs that lined the old legs are re-seated beside the new road (`tools/stormwood_reroute_road_visibility.py`, using the ROAD author's own placer). Every critical road keeps two forward-visible creatures at every 10 m sample.
+  - **Arches:** a Stormglass arch stands only on one of the five footings, and only one arch per footing. The three-road cap is proven with an old-save fixture, free-build is still refused off a footing, and a legacy off-footing arch never captures a legal twin.
+  - **Pockets:** five walled dead-end pockets, one per walkable region. Each is 16 × 16 m with a dead-trunk palisade plus static collision, and a 5 m mouth facing its road, 112–351 m off the road. Each holds an existing optional reward moved inside.
+  - **Forest scatter:**
+    - It is re-baked with per-road and per-cell seeds, so a future road edit re-plants only near that road.
+    - An 18 m collider clearing at each named fight; the nearest collider to any named fight is 18.96 m away, where the largest envelope is 13.89 m.
+    - No trunk or rock inside any road corridor (the old bake had 25 rocks on roads).
+    - No collider inside any pocket.
+- **Witnesses:**
+  - `test_stormwood_route_walkability` (fails on the old data)
+  - `test_stormwood_pockets` (dead end, walkable interior, reachable from a road, rewards, spawn discs clear, runtime colliders, bake clear)
+  - `test_stormwood_named_fight_clearings`
+  - `test_stormwood_arch_building`
+  - `test_road_creature_visibility` (granted baseline update: conductor 249→259 and deepwood 300→302 samples, 0 failing on both builds)
+  - `test_stormwood_glass_field_approach`, `test_stormwood_scatter_bake`
+  - smokes: arches, pickup runtime, hosted rewards
+  - In total, 456+ headless tests pass in the reviewer's broad run. A second bake is byte-identical.
+- **Independent review:** request changes (2 blocking, 3 should-fix), then approve. The follow-up fixed the palisade spacing and moved `cinder_verge_cluster_19` off the Verge pocket.
+- **Captures:** 36 player-camera frames under `visual/f09/`, with HUD on, day and Calm pinned, and state staged (`stormwood:rootgate_released`). See `sheet_pockets_after.jpg` and `sheet_roads_forest_before_after.jpg`; the before frames are main's data and bake.
+  - At walking height each pocket reads as an enclosure of giant dead trunks with touching bases.
+  - The rewards and their prompts are inside, and nothing is floating or buried.
+  - The rerouted Rootgate valley and the new Dynamo road read as tree-lined routes. The Ember Bivouac arrival is no longer blocked by two trunks.
+- **Open:**
+  - **Visual (from the captures):**
+    - Crowns show sky through the palisade at 2–5 m, above head height; the bases are closed.
+    - From 30 m out, three of the five pocket mouths are hard to read (hidden by a nearby tree, the slope or a boulder). No lure yet.
+    - The new scatter hides the rod-station tower from the middle of `dynamo_west_approach`.
+    - Roads have no visible surface; this is pre-existing, since roads are corridors, not carved paths.
+  - The scatter still does not clear trainer, NPC, harvest or pickup seats. There are 7 near-contacts, the same count as the old bake.
+  - `blackwater_elder` stands on a deepwood_road vertex.
+  - The arch commit at the footing centre is routed to the co-op lane.
+  - The coordinator edits WORLD.md's route count (nine → ten) on landing.
+
+## WO-F09-02 — Pocket mouths, Dynamo tower sightline, seat clearings (`ralph/stormwood-f09-pocket-polish`, stacked on WO-F09-01)
+
+- **Pocket lure** (`stormwood_pockets.gd`, `stormwood_pockets.json` `mouth_lure`): two wayfinding lamps flank each mouth, on posts against the wall's outer face. They use the Stormheart ascent-lamp vocabulary: the installed `Lantern_Wall.gltf`, an amber flame, a short warm OmniLight and a bark-finish post. Each post has a static collider on every peer; the lamp art is client-only. Nothing is red.
+- **Approach cone** (`stormwood_pockets.json` `approach_clear`, read by the scatter): the cone starts 6 m either side of the mouth, widens at 20°, and runs out 45 m. No tree or colliding rock stands inside it. Ground cover is kept out of its first 18 m.
+  - On the old bake, 4 of the 5 cones held a trunk or boulder. This includes the 6 m trunk at Verge, the boulder at 15 m at Hollows and the trunk at 30 m at Conductor.
+- **Dynamo tower** (`stormwood_world.json` `landmark_sightlines.dynamo_west_to_stormheart`): a 22 m clearing runs from the road bend (-700,4820) to the Dynamo core (-100,5470), which removes 28 trees.
+  - The tower the captures showed is the Dynamo core. The rod station is a 9 m pylon and is not visible at this range.
+- **Seats** (`stormwood_vegetation.json` `seat_clearings`):
+  - No collider surface within 3.5 m of a trainer or NPC, and within 2.0 m of a harvest node or pickup. Collider reach is taken at the layer's scale_max.
+  - No ground cover centred within 3.0 m of a trainer or NPC, or within 1.5 m of a harvest node or pickup.
+  - Result: the nearest surfaces are trainer 6.93 m, NPC 5.99 m, harvest 2.37 m and pickup 2.54 m. On the old bake they were 0.69, 5.99, −0.21 and 0.53 m.
+  - **Bake staleness:** the seat files are *not* whole-file SOURCES. Only each seat's kind, id and XZ position enter the fingerprint (`seat_fingerprint_text`). Moving, adding or removing a trainer, NPC, harvest or pickup stales the bake, and production refuses vegetation until it is re-baked. Dialogue, party or item edits do not stale it. Every `stormwood_pockets.json` edit, including the lamp tunables, still stales the bake as before.
+- **Comment:** the scatter comment now says what the per-road seeds do and do not isolate. The shared `occupied` table and a rejection's skipped draws can re-plant later roads and cells.
+- **Witnesses:**
+  - The new `test_stormwood_scatter_clearances` covers seats, sightlines and approach cones. On the WO-F09-01 bake it fails 3 of 5: 19 crowded seats, 28 sightline trees and 4 dirty cones.
+  - `test_stormwood_pockets` now counts the two lure-post colliders.
+  - Two bakes are byte-identical.
+  - `--only=test_stormwood_,test_road_creature_visibility,test_scatter_,vegetation` ran 68 files, 344 tests, 0 failed and 0 SCRIPT ERROR.
+  - Smokes pass: pickup runtime, hosted rewards and arches.
+- **Captures:** `visual/f09/wo02_after/` (6 frames plus `frames_wo02.json`) and `visual/f09/sheet_wo02_mouths_sightline_before_after.jpg`. The before frames are WO-F09-01's `after/`.
+  - At 30 m, every mouth now has a clear axis and is marked by two pale amber lamps at head height. The Verge trunk, the Hollows boulder and the Conductor trunk are gone.
+  - The lamps are small, roughly 8 px at 1280×720, and the flame reads pale yellow rather than warm in daylight. They mark the mouth, but they are not a strong lure from road distance (112–351 m).
+  - The gap itself still shows back-wall trunks through it.
+  - `dynamo_west_mid`: the tower is fully visible again on the hill.
+  - This container's import cache lacks `Rocks_Diffuse_meadows.png`, so the renders logged load errors for it. The rocks look the same pale grey as in WO-F09-01's frames.
+- **Open:**
+  - The lure is not visible from the road itself.
+  - The flames overexpose in daylight.
+  - The lamps have no night capture.
+  - The sightline is a straight 44 m-wide lane that could read as cut from above.
+  - The WO-F09-01 open items still stand.
+
 ## WO-F10-06 — Surge phases readable without HUD (`ralph/stormwood-f10-surge-readability`)
 
 - **Anchor:** F10 / ACCEPTANCE §6.1 F10: lightning with a 1.2 s / 3 m telegraph, and Calm/Building/Break/Fading readable without HUD text. The restored-sky view has to be distinct. ART_DIRECTION and SYSTEMS define the Stormwood look for each phase.

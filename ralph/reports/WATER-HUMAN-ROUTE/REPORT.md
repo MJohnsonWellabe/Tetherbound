@@ -457,6 +457,73 @@ closed strips and ordinary currents on main have no visuals at all) belong to
 F13's "currents … read pass T2's visual matrix" and are **not** claimed. The
 gate is visible but not yet explained by readable surf.
 
+### Production-camera motion capture (before and after)
+
+`tools/capture_water_gate_seal_motion.gd` drives the production player,
+swim controller, CameraRig and HUD with real input. It walks round the
+closed barrier, swims the open-water flank and steers at the first shoal,
+taking 16 frames over 40 s.
+
+Disclosed fixtures: the four earlier Water facts are set directly, and the
+trainer starts on the Cradle departure anchor.
+
+- **`_sheet_gate_seal_motion_before.png`** (main 49ef712f, via worktree
+  commit ec35fec2c, which adds tests only): the swimmer reaches the shoal
+  centre (0.13 m) at 12.5 s and stands on it with the gate closed. This is
+  the flank defect, shown on screen.
+- **`_sheet_gate_seal_motion_after.png`** (this branch): the same input is
+  held at 34.5 m from the shoal centre for the whole 40 s, in front of
+  breaking-wave geometry with a wandering outline and height.
+
+Blind judge round 3, on renamed sheets:
+- **"Clearly not an invisible wall: yes."**
+- Surf read: **weakly or no.** It reads as an ice shelf or snowbank. It is
+  flat-topped and matte, with hard slab edges, sorting slivers under the
+  front band, the islet ghosting through, a straight lower edge, no motion
+  over 32 s, and health dropping (drowning after stamina runs out) with no
+  on-screen cue.
+- Bars A and B: no.
+
+The remaining levers need an animated foam shader. That was requested on
+PR226 as a shared-file request. **Readability stays failed and open.** #226
+stays draft until a blind judge passes it.
+
+### Animated tide-race shader (branch `ralph/water-tide-race-shader`)
+
+The grant was `shaders/water_tide_race.gdshader`, used only by
+`water_gate_seal_view.gd`. It streams foam cells outward over churned sea-teal,
+runs crest pulses round the ring, and gives the breakers a teal face with foam
+toward the crest. The motion sheet was re-rendered on this branch.
+
+**Blind judge on the shader frames (renamed):**
+- Not an invisible wall: yes.
+- Surf read: **weakly.** Its defects:
+  - triangular wedges along the band;
+  - spray that reads as fog;
+  - a hard rim;
+  - a calm strip before the sand;
+  - no swimmer reaction to the push.
+
+**Readability stays failed and open under F13's T2 visual matrix.** The stop
+rule has been reached for this visual track.
+
+**Wedge diagnosis.** Three isolation renders, using the same motion tool and
+frame 06:
+1. Switching the shader to `depth_prepass_alpha` leaves the wedges
+   unchanged, so alpha sorting is not the cause.
+2. Hiding the flat race, trough and spray (breakers only) leaves the wedges,
+   so they come from the breaker meshes (`_wave`).
+3. Zeroing the crest-pulse amplitude only fades them, so the pulse is not the
+   cause.
+
+The sea shader has no vertex displacement and the sea is an unsubdivided
+plane, so the wedges are not the sea cutting the breaker.
+
+What remains is the breaker cross-section geometry. The most likely
+candidate: the teal face rows, seen through the fading lip where the height
+noise varies. The next step would be a per-row debug colour render. It is not
+taken here because of the stop rule.
+
 ### Verification
 
 Stock Godot 4.7-stable in a Linux container, from a source checkout. There is
@@ -468,7 +535,7 @@ no exported package and no device run.
   `road_creature` selection passed 238 tests / 78,456 assertions, 0 failed,
   on 945ffa7d, before the corrections. Its printed FAIL lines are known
   negative controls.
-- **`smoke_water_closed_gate_seal.gd`: 21 checks pass on the final source.**
+- **`smoke_water_closed_gate_seal.gd`: 21 checks on 7569ae8c; 23 after the b8bb1e13 follow-ups.**
   - Disclosed fixtures: the four earlier facts are set directly, and one start
     position is placed at the Cradle departure. All later movement is real
     input.
@@ -494,13 +561,26 @@ no exported package and no device run.
   - `smoke_water_opening_continuous.gd`.
   The later-fact change only opens more land, and none of these fixtures holds
   a gapped flag set except the continuous one below.
-- **Dock-smoke fixture correction.** The fresh world drove Shellwatch and Deep
-  Watch equipment without the upstream facts that open those islands. The
-  fixture now sets them and leaves every fact under test unset. The Reedhaven
-  6 m/s closed-strip check samples a point where that strip, not a race, owns
-  the water. The Shellwatch pre-reward reload compares against the authored
-  unreduced strength. Its old 6.0 value came from the Brine Steps gate, which
-  is not the one under test.
+- **Dock-smoke fixture (corrected after the coordinator's review).** The
+  fresh world drove Shellwatch and Deep Watch equipment without the facts that
+  open those islands.
+  - The fixture now sets only the later facts `water_aquaryn_resolved` and
+    `water_dock_salt_crown_landing_charted`. Through the later-fact rule they
+    lift the races on every landform before them.
+  - Every fact under test stays unset: lesson, Reedhaven repair, Brine Steps
+    trial, Shellwatch and Deep Watch.
+  - All original assertions are restored unchanged. That includes "Closed dock
+    current pushes at configured 6m/s" and "Pre-reward reload restores the
+    still-gated Shellwatch current" (6.0).
+  - The only other change: `current_probe` tries more points along each segment
+    and still requires full influence on the exact current.
+  - An intermediate version (c3ae9bb9) had set the Brine Steps fact and
+    weakened the Shellwatch reload assertion. The coordinator's review caught
+    it, and b8bb1e13 reverted it.
+  - Local runs on b8bb1e13: `smoke_water_dock_actions.gd` 55 checks, 0 failed;
+    `smoke_water_closed_gate_seal.gd` 23 checks, 0 failed. The seal smoke adds
+    a Fly re-sync after a changed local rig, and spray gated by distance: 6 of
+    27 emitters live from the Cradle departure.
 - **`smoke_water_continuous.gd` is unresolved and not claimed.**
   - Its gapped fixture holds only the Aquaryn fact. Under the old last-fact
     rule, and again with the race strength set to 0 (reverted, never
@@ -508,8 +588,13 @@ no exported package and no device run.
     arrival, with the mount at full stamina.
   - On acedb91d it landed Salt Crown and Sluice Isle, then hit the 900 s
     wall-clock limit while the renderer shared the CPU.
-  - The mounted late route needs its own uncontended work order. The smoke is
-    not in CI.
+  - **Main baseline (49ef712f, uncontended, headless):** it also fails. It
+    lands Salt Crown (+76.3 s), charts it and lands Sluice Isle (+304.2 s),
+    then times out 2.8 m short of the Sluice→Veilfall waypoint
+    (447.924, 3444.751), with mount stamina 0.696 and hp 195.3.
+  - So the mounted late route is unstable on main and fails at a different
+    leg on each run. It is not introduced by this PR. It needs its own work
+    order. The smoke is not in CI.
 
 **Remaining.** A runtime Fly glide into a seal, a network guest seeing the
 race clear on a host delta, and a mounted runtime flank are all unexercised.
