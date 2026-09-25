@@ -4,11 +4,12 @@
   "_comment_aspect_variant_0830": "T3-CREATURES, from the owner's creature-expansion brief. This entry is an ASPECT VARIANT -- a rare individual whose environmental exposure changed its typing, authored as a species in data/creatures/species.json with a `variant_of` back-link. Read the brief's 'Spawn Protection Rules' section before touching count, gates or placement: its stated failure mode is exact -- 'Avoid a situation where the player walks through one clearing and sees Sparkit + Cindercub + Shadelet + Frostclaw + Nightburrow. That would destroy the rarity.' RARITY HERE IS HEADCOUNT, NOT PROBABILITY. This director does not roll a species per encounter; every cluster names its own and spawns it deterministically at load, so the brief's percentages are translated into how MANY individuals exist, WHERE, and behind WHICH gates. The chapter holds 881 wild creatures across 261 clusters, so one individual is 0.11% of the world. `respawn_seconds` overrides the table's global 45s so a rare encounter does not become a farmable resource a minute after it is beaten.",
   "_comment_why_this_file_was_empty": "WILD-ECOLOGY. Prompt 60: 'Current Band 5 empty spawn file must be reconciled' and 'not an empty faction-only corridor.' The approach to the Meadows Hall fielded Team Tether's gauntlet and nothing else alive -- so the chapter's last region, the one the whole climb has been preparing for, was also the only region where the world itself had no presence. GATEC-CURVE had authored this band's wild range as [14, 17], the strongest field in the chapter and the one that makes a late catch a genuine argument against a raised member of the five; with no clusters here that range applied to nothing at all.",
   "_comment_habitat": "Short region (z 7000-7560, ~560m of spine) and a hostile one. The read is a drained land whose animals have not left it: what is here is dug in, roosting on Team Tether's own stonework, or hunting the approach. Density is higher per metre than any other band because the region is short -- four clusters over 560m -- and that is deliberate: the last corridor should feel occupied by something other than trainers. Levels come from chapter_curve.json's band for this z, not from this file.",
+  "_comment_f02_route_spacing": "F02.4 route spacing: see band4's `_comment_f02_route_spacing`. The Hall approach keeps two authored ambushes on the road (5006's five-Galecrest flock, then the 5001 alpha pack, untouched and witnessed optional) plus the off-road 5011 and 5021 pockets, so it stays harder than the river crossing; the rest of its on-road clusters roll from the `*_trailside` tables so a rolled aggressor cannot stack a third and fourth forced fight inside 150m of the alpha.",
   "spawns": [
     {
       "order": 5000,
       "species": "burrowback",
-      "table": "meadows_rock",
+      "table": "meadows_rock_trailside",
       "count": 2,
       "centre": [
         -85.0,
@@ -17,7 +18,8 @@
       ],
       "radius": 18.0,
       "_why": "The mouth of the approach ((-80,7120) is the spine's first point past the band boundary). A burrowing ground species is the believable survivor of drained ground -- it went under it. First thing met in the region, and the least dangerous of the four.",
-      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before.",
+      "_why_f02_route_spacing": "F02.4 route spacing: this cluster's envelope reaches the earned Band 4/5 road, whose forced ambushes are now the authored ones at >=150m spacing, so a rolled Galecrest or Frostclaw here would add an unspaced forced fight -- the S08 fight chain -- in some worlds. Rolled from `meadows_rock_trailside` instead of `meadows_rock`: the same ecology minus the aggressive species, so position, count, level band, its seed-0 species and every non-aggressive roll are unchanged. tests/test_meadows_route_ambush_spacing.gd sweeps seeds 0-200."
     },
     {
       "order": 5001,
@@ -49,7 +51,7 @@
     {
       "order": 5002,
       "species": "duskhush",
-      "table": "meadows_air",
+      "table": "meadows_air_trailside",
       "count": 2,
       "centre": [
         85.0,
@@ -58,7 +60,8 @@
       ],
       "radius": 18.0,
       "_why": "Roosting at the Sigil gate (playground_world.gd's SIGIL_GATE_AT, (0,7400)) on Team Tether's own masonry -- the image the region is for. Deliberately NOT night-gated: the gate is a fixed beat every player passes through once, and a nocturnal cluster there would simply be absent for most players.",
-      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before."
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before.",
+      "_why_f02_route_spacing": "F02.4 route spacing: this cluster's envelope reaches the earned Band 4/5 road, whose forced ambushes are now the authored ones at >=150m spacing, so a rolled Galecrest here would add an unspaced forced fight -- the S08 fight chain -- in some worlds. Rolled from `meadows_air_trailside` instead of `meadows_air`: the same ecology minus the aggressive species, so position, count, level band, its seed-0 species and every non-aggressive roll are unchanged. tests/test_meadows_route_ambush_spacing.gd sweeps seeds 0-200."
     },
     {
       "order": 5003,
@@ -87,7 +90,7 @@
     {
       "order": 5005,
       "species": "burrowback",
-      "table": "meadows_rock",
+      "table": "meadows_rock_trailside",
       "count": 4,
       "centre": [
         -31.1,
@@ -96,7 +99,8 @@
       ],
       "radius": 16.0,
       "_why": "40m past the band boundary, west flank -- dug in before the mouth cluster proper",
-      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before.",
+      "_why_f02_route_spacing": "F02.4 route spacing: this cluster's envelope reaches the earned Band 4/5 road, whose forced ambushes are now the authored ones at >=150m spacing, so a rolled Galecrest or Frostclaw here would add an unspaced forced fight -- the S08 fight chain -- in some worlds. Rolled from `meadows_rock_trailside` instead of `meadows_rock`: the same ecology minus the aggressive species, so position, count, level band, its seed-0 species and every non-aggressive roll are unchanged. tests/test_meadows_route_ambush_spacing.gd sweeps seeds 0-200."
     },
     {
       "order": 5006,
@@ -115,7 +119,7 @@
     {
       "order": 5007,
       "species": "duskhush",
-      "table": "meadows_air",
+      "table": "meadows_air_trailside",
       "count": 4,
       "centre": [
         -76.5,
@@ -124,7 +128,8 @@
       ],
       "radius": 16.0,
       "_why": "roosting close behind the outer watch (trainers.json order 5005) -- the post did not clear the ground around it",
-      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before."
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before.",
+      "_why_f02_route_spacing": "F02.4 route spacing: this cluster's envelope reaches the earned Band 4/5 road, whose forced ambushes are now the authored ones at >=150m spacing, so a rolled Galecrest here would add an unspaced forced fight -- the S08 fight chain -- in some worlds. Rolled from `meadows_air_trailside` instead of `meadows_air`: the same ecology minus the aggressive species, so position, count, level band, its seed-0 species and every non-aggressive roll are unchanged. tests/test_meadows_route_ambush_spacing.gd sweeps seeds 0-200."
     },
     {
       "order": 5008,
@@ -157,7 +162,7 @@
     {
       "order": 5010,
       "species": "burrowback",
-      "table": "meadows_rock",
+      "table": "meadows_rock_trailside",
       "count": 3,
       "centre": [
         18.0,
@@ -166,7 +171,8 @@
       ],
       "radius": 14.0,
       "_why": "east flank, clear of the aggressor cluster's own 22m ring",
-      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before.",
+      "_why_f02_route_spacing": "F02.4 route spacing: this cluster's envelope reaches the earned Band 4/5 road, whose forced ambushes are now the authored ones at >=150m spacing, so a rolled Galecrest or Frostclaw here would add an unspaced forced fight -- the S08 fight chain -- in some worlds. Rolled from `meadows_rock_trailside` instead of `meadows_rock`: the same ecology minus the aggressive species, so position, count, level band, its seed-0 species and every non-aggressive roll are unchanged. tests/test_meadows_route_ambush_spacing.gd sweeps seeds 0-200."
     },
     {
       "order": 5011,
@@ -174,18 +180,19 @@
       "table": "meadows_air",
       "count": 3,
       "centre": [
-        3.2,
+        -41.6,
         0.0,
-        7312.2
+        7349.5
       ],
       "radius": 14.0,
       "_why": "a second, smaller aggressive pocket on the exposed stretch -- thin, not empty",
-      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before.",
+      "_why_f02_route_spacing": "F02.4 route spacing (WORLD \u00a73.1 150-250m beat cadence, ACCEPTANCE A7): this aggressive cluster's notice envelope (radius + wander + catching.json notice_range + path half-width, tests/helpers/meadows_route_ambush_spacing.gd) reached the earned Band 4/5 road within 150m of another forced ambush, which is how a real S08 walk met four Galecrest in 118s/~320m. Centre stepped straight back from the road (was [3.2, 7312.2], 22.0m from the centreline) until the envelope clears it: the pack, its species, count, radius, level band and order are unchanged and it is still in plain view, so the fight is now the player's choice rather than a toll. tests/test_meadows_route_ambush_spacing.gd."
     },
     {
       "order": 5012,
       "species": "duskhush",
-      "table": "meadows_air",
+      "table": "meadows_air_trailside",
       "count": 4,
       "centre": [
         62.5,
@@ -194,7 +201,8 @@
       ],
       "radius": 16.0,
       "_why": "east flank ahead of the Sigil gate",
-      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before."
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before.",
+      "_why_f02_route_spacing": "F02.4 route spacing: this cluster's envelope reaches the earned Band 4/5 road, whose forced ambushes are now the authored ones at >=150m spacing, so a rolled Galecrest here would add an unspaced forced fight -- the S08 fight chain -- in some worlds. Rolled from `meadows_air_trailside` instead of `meadows_air`: the same ecology minus the aggressive species, so position, count, level band, its seed-0 species and every non-aggressive roll are unchanged. tests/test_meadows_route_ambush_spacing.gd sweeps seeds 0-200."
     },
     {
       "order": 5013,
@@ -227,7 +235,7 @@
     {
       "order": 5015,
       "species": "burrowback",
-      "table": "meadows_rock",
+      "table": "meadows_rock_trailside",
       "count": 5,
       "centre": [
         -20.0,
@@ -250,7 +258,8 @@
           "stagger_seconds": 0.85
         }
       },
-      "_why_alpha": "R-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903, Fable). 'The last one more, visible from the fire' -- this cluster's first member, promoted through the same `alpha` block order 5001's galecrest pack already uses, is the strongest wild creature in the chapter: `level_bonus: 2` over the band's [14,17] roll (16-19) puts it at parity with the elite the player is about to fight, in silhouette against the Hall from the waystop fire 60m north. `combat` is the WALL profile from G-3 (`slow, heavy, stands its ground; the punish window is long and the hit is expensive`) -- inert data until G-2's merge in `wild_creature.gd::set_engaged()` lands (the encounter lane's own work, not this one's); absent that code it changes nothing about how this cluster fights today, per G-2's own contract. The four ordinary members of this cluster are untouched."
+      "_why_alpha": "R-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903, Fable). 'The last one more, visible from the fire' -- this cluster's first member, promoted through the same `alpha` block order 5001's galecrest pack already uses, is the strongest wild creature in the chapter: `level_bonus: 2` over the band's [14,17] roll (16-19) puts it at parity with the elite the player is about to fight, in silhouette against the Hall from the waystop fire 60m north. `combat` is the WALL profile from G-3 (`slow, heavy, stands its ground; the punish window is long and the hit is expensive`) -- inert data until G-2's merge in `wild_creature.gd::set_engaged()` lands (the encounter lane's own work, not this one's); absent that code it changes nothing about how this cluster fights today, per G-2's own contract. The four ordinary members of this cluster are untouched.",
+      "_why_f02_route_spacing": "F02.4 route spacing: this cluster's envelope reaches the earned Band 4/5 road, whose forced ambushes are now the authored ones at >=150m spacing, so a rolled Galecrest or Frostclaw here would add an unspaced forced fight -- the S08 fight chain -- in some worlds. Rolled from `meadows_rock_trailside` instead of `meadows_rock`: the same ecology minus the aggressive species, so position, count, level band, its seed-0 species and every non-aggressive roll are unchanged. tests/test_meadows_route_ambush_spacing.gd sweeps seeds 0-200."
     },
     {
       "order": 5016,
@@ -339,7 +348,7 @@
     {
       "order": 5022,
       "species": "duskhush",
-      "table": "meadows_air",
+      "table": "meadows_air_trailside",
       "count": 3,
       "centre": [
         30.0,
@@ -348,7 +357,8 @@
       ],
       "radius": 18.0,
       "_why": "BAND5-DEADTRAVEL. This lane's driven run (`tools/_probe_band5_approach.gd`) walked the authored spine and measured a 123m stretch with nothing within reach of the road -- the whole eastward diagonal from (-6,7267) to (73,7361), the longest dead-travel interval in the region and the one the player crosses immediately before the gate. The density pass above added 65 creatures but sited six of its clusters OFF-spine on purpose, and this leg is where that left the road itself bare. Centred on the leg rather than beside it. Duskhush because the two nearest clusters are already duskhush (orders 5002, 5012) and the band's habitat note calls this the ground that is hunted rather than dug into -- one more of the same animal reads as a range, where a fifth species here would read as a menu.",
-      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before."
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being duskhush -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up duskhush exactly as before.",
+      "_why_f02_route_spacing": "F02.4 route spacing: this cluster's envelope reaches the earned Band 4/5 road, whose forced ambushes are now the authored ones at >=150m spacing, so a rolled Galecrest here would add an unspaced forced fight -- the S08 fight chain -- in some worlds. Rolled from `meadows_air_trailside` instead of `meadows_air`: the same ecology minus the aggressive species, so position, count, level band, its seed-0 species and every non-aggressive roll are unchanged. tests/test_meadows_route_ambush_spacing.gd sweeps seeds 0-200."
     },
     {
       "order": 5023,
