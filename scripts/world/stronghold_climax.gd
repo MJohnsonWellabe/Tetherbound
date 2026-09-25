@@ -65,9 +65,11 @@ const LIVE_MARKER := "legendary_resolution:live"
 ## nobody is offered a second freeing in any world.
 const ANSWER_WORLD_PREFIX := "legendary_answer_world:"
 ## A refused receipt is asked again after this long rather than never: a
-## `not_your_character` refusal that lands before the host's registry row
-## carries this character's id is transient (coordinator review, item 3).
+## `not_your_character` refusal (integration-3's X05 ledger guard) that lands
+## before the host's registry row carries this character's id is transient
+## (coordinator review, item 3). Doubles per refusal, capped.
 const RECEIPT_REFUSED_RETRY_MS := 30000
+const RECEIPT_REFUSED_MAX_MS := 600000
 const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 
 var _config: Dictionary = {}
@@ -125,7 +127,19 @@ var _pulled_here: bool = false
 ## True once this peer answered, or settled, THIS world's freeing this
 ## session -- as opposed to carrying a personal receipt in from elsewhere.
 var _answered_live: bool = false
-## World ids whose submission the host refused outright: not retried.
+## True only once THIS character has answered IN THIS WORLD this session
+## (`_record_resolution`). Unlike `_answered_live`, a settle never sets it, so
+## an answer carried in from another world is never mistaken for this one's.
+var _answered_here: bool = false
+## The character an offer BEGAN for (the join beat). Once begun it runs to its
+## answer even if another peer joins meanwhile; see `_offer_continues()`.
+var _offer_began_for: String = ""
+var _offer_began: bool = false
+## Whether the hold's one-line explanation has been said this session.
+var _hold_told: bool = false
+var _answer_tagged: bool = false
+## World ids the host refused: id -> [refused_at_ms, refusals]. Backed off,
+## doubling from RECEIPT_REFUSED_RETRY_MS up to RECEIPT_REFUSED_MAX_MS.
 var _receipts_refused: Dictionary = {}
 ## `_warden_participant_characters()`'s one-second cache.
 var _participants_cache: Array = []
@@ -789,7 +803,7 @@ func _advance() -> void:
 				_release_visual(true)
 				_chamber_told = true
 				_stage = STAGE_FREED
-			elif legendary_is_freed() and not _may_receive_now():
+			elif legendary_is_freed():
 				_reconcile_bound_creature()
 		STAGE_CHAMBER:
 			if not _panel_busy():
@@ -797,9 +811,21 @@ func _advance() -> void:
 				_free_the_legendary()
 		STAGE_FREED:
 			if not _panel_busy():
-				if _may_receive_now():
+				if _participants_unknown_in_company():
+					# Coordinator review item 1, and its re-review: in company
+					# with no participant journal nobody is OFFERED -- but the
+					# world is not settled either, which would take the offer
+					# from every real participant for good. Hold, with the
+					# creature standing freed, until the journal can say (or
+					# the company leaves).
+					if not _hold_told and _player_near_legendary():
+						_hold_told = true
+						_say(str((_config.get("choice", {}) as Dictionary).get("hold_message", "")))
+				elif _may_receive_now():
 					if _pulled_here or _player_near_legendary():
 						_settled_before_offer = _has_flag(_flag("legendary_settled"))
+						_offer_began_for = _local_character_id()
+						_offer_began = true
 						_stage = STAGE_JOIN
 						_offer_to_join()
 				else:
@@ -811,7 +837,7 @@ func _advance() -> void:
 					_stage = STAGE_CEREMONY
 		STAGE_JOIN:
 			if not _panel_busy():
-				if _may_receive_now():
+				if _offer_continues():
 					_stage = STAGE_CHOICE
 					_open_choice()
 				else:
@@ -1174,7 +1200,7 @@ func choice_open() -> bool:
 ## The two answers. Public so a witness can drive the exact same path the
 ## prompts drive; each refuses unless THIS character's choice is open.
 func accept_offer() -> bool:
-	if _stage != STAGE_CHOICE or not _may_receive_now():
+	if _stage != STAGE_CHOICE or not _offer_continues():
 		return false
 	_close_choice()
 	_stage = STAGE_CEREMONY
@@ -1183,7 +1209,7 @@ func accept_offer() -> bool:
 
 
 func refuse_offer() -> bool:
-	if _stage != STAGE_CHOICE or not _may_receive_now():
+	if _stage != STAGE_CHOICE or not _offer_continues():
 		return false
 	_close_choice()
 	_joined = null
@@ -1227,7 +1253,7 @@ func _hand_over_the_legendary() -> void:
 	# for ITSELF -- whether THIS character fought and has not already resolved
 	# this freeing -- which is why no host arbitration is needed and why two
 	# peers cannot race for one grant.
-	if not _may_receive_now():
+	if not _offer_continues():
 		print("[climax] this character did not fight the Warden, or already resolved its freeing; no offer")
 		_joined = null
 		return
@@ -1283,9 +1309,8 @@ func _ceremony_pending() -> bool:
 ##     disconnect right after answering cannot lose the answer or the creature.
 func _record_resolution(accepted: bool) -> void:
 	_set_player_flag(_flag("legendary_joined") if accepted else _flag("legendary_refused"))
-	var here := _world_identity()
-	if not here.is_empty():
-		_set_player_flag(ANSWER_WORLD_PREFIX + here)
+	_answered_here = true
+	_tag_answer_world()
 	_answered_live = true
 	_write_world_flag(LIVE_MARKER)
 	_settle()
@@ -1313,19 +1338,21 @@ func _character_resolved() -> bool:
 func _reconcile_world_receipt() -> void:
 	if not legendary_is_freed():
 		return
+	# What this peer settled is resubmitted until the world holds it: a client
+	# settle that was offline or lost is repaired here, not only on a rejoin.
+	if _answered_live and not _has_flag(LIVE_MARKER):
+		_retry_world_flag(LIVE_MARKER)
+	if _answered_live and not _has_flag(_flag("legendary_settled")):
+		_retry_world_flag(_flag("legendary_settled"))
+	if _answered_here and not _answer_tagged:
+		# A client that answered before its snapshot carried the world's
+		# identity tags the answer as soon as it does.
+		_tag_answer_world()
 	var accepted := _has_player_flag(_flag("legendary_joined"))
 	if not accepted and not _has_player_flag(_flag("legendary_refused")):
 		return
 	var receipt := resolution_flag(accepted, _receipt_character_id())
-	if _answered_live and not _has_flag(LIVE_MARKER):
-		_retry_world_flag(LIVE_MARKER)
 	if _has_flag(receipt) or _refused_recently(receipt):
-		return
-	# Only the world the answer was GIVEN in records it (coordinator review,
-	# item 2): a character who answered in world A and fought again in world
-	# B is not offered twice, but A's answer is never written into B, where
-	# it would decide B's herd display on an answer nobody gave there.
-	if not answered_in_this_world(_answer_worlds(), _world_identity(), _answered_live):
 		return
 	# Throttled, not once-only: a host refusal, a drop or a lost verdict leaves
 	# the world without the receipt, and it is asked again after
@@ -1335,9 +1362,26 @@ func _reconcile_world_receipt() -> void:
 	if _receipts_submitted.has(receipt) and now - int(_receipts_submitted[receipt]) < RECEIPT_RETRY_MS:
 		return
 	_receipts_submitted[receipt] = now
+	# Only the world the answer was GIVEN in records it (coordinator review,
+	# item 2): a character who answered in world A and fought again in world
+	# B is not offered twice, but A's answer is never written into B, where
+	# it would decide B's herd display on an answer nobody gave there. Inside
+	# the throttle, so a carried-in answer costs one read per interval.
+	if not answered_in_this_world(_answer_worlds(), _world_identity(), _answered_here):
+		return
 	if not _eligible_here():
 		return
 	_write_world_flag(receipt)
+
+
+## This character's answer, tagged with the world it was given in. Once.
+func _tag_answer_world() -> void:
+	var here := _world_identity()
+	if here.is_empty():
+		return
+	_answer_tagged = true
+	if not _has_player_flag(ANSWER_WORLD_PREFIX + here):
+		_set_player_flag(ANSWER_WORLD_PREFIX + here)
 
 
 ## The live marker, resubmitted on the receipt's throttle while it is missing.
@@ -1370,18 +1414,23 @@ func _write_world_flag(id: String) -> void:
 		_set_flag(id)
 	elif not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
 		# A refusal is backed off, not cached for the session: some are
-		# transient (a `not_your_character` that lands before the host's
-		# registry row carries this character's id), and a session-long cache
+		# transient (integration-3's X05 ledger guard refuses
+		# `not_your_character` when a receipt lands before the host's registry
+		# row carries this character's id), and a session-long cache
 		# left the herd display missing for everyone. Asked again after
 		# RECEIPT_REFUSED_RETRY_MS rather than every 5 s.
-		_receipts_refused[id] = Time.get_ticks_msec()
+		var refusals := 1 + (int((_receipts_refused[id] as Array)[1]) if _receipts_refused.has(id) else 0)
+		_receipts_refused[id] = [Time.get_ticks_msec(), refusals]
 		print("[climax] the world refused '%s' (%s); asking again later" % [id, code])
 
 
 func _refused_recently(id: String) -> bool:
 	if not _receipts_refused.has(id):
 		return false
-	return Time.get_ticks_msec() - int(_receipts_refused[id]) < RECEIPT_REFUSED_RETRY_MS
+	var entry: Array = _receipts_refused[id]
+	# Doubling, so a refusal that is permanent is not re-shown every 30 s.
+	var wait := mini(RECEIPT_REFUSED_MAX_MS, RECEIPT_REFUSED_RETRY_MS * int(pow(2.0, float(mini(int(entry[1]) - 1, 5)))))
+	return Time.get_ticks_msec() - int(entry[0]) < wait
 
 
 ## The worlds this character has answered a freeing in (their personal tags).
@@ -1413,12 +1462,12 @@ func _world_identity() -> String:
 
 
 ## Whether an answer this character holds was given in THIS world, so its
-## world receipt belongs here. Pure, for the tests. An answer given this
-## session is always this world's. A personal answer with no world tag at all
+## world receipt belongs here. Pure, for the tests. `answered_here` is an
+## answer given in this world this session (never merely a settle here). A personal answer with no world tag at all
 ## was recorded before answers carried one: it is not written into any world
 ## (its own world already holds its receipt, or was migrated).
-static func answered_in_this_world(answer_worlds: Array, here: String, answered_live: bool) -> bool:
-	if answered_live:
+static func answered_in_this_world(answer_worlds: Array, here: String, answered_here: bool) -> bool:
+	if answered_here:
 		return true
 	return not here.is_empty() and answer_worlds.has(here)
 
@@ -1496,7 +1545,7 @@ func _eligible_here() -> bool:
 		# No fight journal: solo. With other peers present there is no way to
 		# know this character fought HERE, so its answer (possibly carried in
 		# from another world) is not recorded as this world's.
-		return not _is_client() and (_answered_live or not _multi_peer())
+		return not _is_client() and (_answered_here or not _multi_peer())
 	var character := _local_character_id()
 	return not character.is_empty() and participants.has(character)
 
@@ -1607,13 +1656,61 @@ func _settle() -> void:
 func _reconcile_bound_creature() -> void:
 	if _legendary == null:
 		return
-	if _has_flag(_flag("legendary_settled")) and not _offer_outstanding_after_settle():
+	if _may_receive_now():
+		# This character still has an offer here: the creature waits for them,
+		# freed, in the room.
+		if not _freed_visual:
+			_release_visual(true)
+		return
+	# Gone only once EVERY recorded participant has answered, not at the first
+	# settle: another peer may still be mid-offer with it (re-review). The
+	# world's flags are only listed once the cheap checks pass.
+	if _has_flag(_flag("legendary_settled")) and not _offer_outstanding_after_settle() \
+			and _every_participant_answered():
 		_legendary.queue_free()
 		_legendary = null
 		_stage = STAGE_DONE
 		print("[climax] the freeing was already settled here; the caged creature is gone")
 	elif not _freed_visual:
 		_release_visual(true)
+
+
+## An offer that BEGAN for this character (the join beat) runs to its answer:
+## another peer joining meanwhile does not withdraw it, and an unanswered
+## choice stays answerable. Never for a different character, never twice.
+func _offer_continues() -> bool:
+	if _pre_f05_settled_world() or _character_resolved():
+		return false
+	# Compared as ids, and also as "an offer began on this node for whoever
+	# was here" -- a character with no id yet (a save that has not minted one)
+	# still keeps the offer it began.
+	if _offer_began and _local_character_id() == _offer_began_for:
+		return true
+	return _may_receive_now()
+
+
+## In company, with no participant journal to say who fought (a Warden fight
+## a client started journals nobody). Nobody is offered and nothing settles.
+func _participants_unknown_in_company() -> bool:
+	return _multi_peer() and _warden_participant_characters().is_empty() \
+		and not _character_resolved() and not _offer_began
+
+
+func _every_participant_answered() -> bool:
+	for raw: Variant in _warden_participant_characters():
+		if not _has_flag(resolution_flag(true, str(raw))) and not _has_flag(resolution_flag(false, str(raw))):
+			return false
+	return true
+
+
+## Every recorded participant has an answer in the world. With no journal,
+## true: a solo world's one answer is its settle. Pure, for the tests.
+static func all_answered(participants: Array, world_flags: Array) -> bool:
+	for raw: Variant in participants:
+		if not world_flags.has(resolution_flag(true, str(raw))) \
+				and not world_flags.has(resolution_flag(false, str(raw))):
+			return false
+	return true
 
 
 ## --- plumbing -----------------------------------------------------------------

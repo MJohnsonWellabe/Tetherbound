@@ -224,7 +224,7 @@ func test_an_empty_journal_in_company_offers_nobody() -> void:
 ## given in; the once-per-character rule itself still travels.
 func test_an_answer_is_only_recorded_in_the_world_it_was_given_in() -> void:
 	assert_true(CLIMAX.answered_in_this_world([], "world-b", true),
-		"an answer given in this session is this world's")
+		"an answer GIVEN here this session is this world's (a settle here is not an answer: the caller passes _answered_here, which only _record_resolution sets)")
 	assert_true(CLIMAX.answered_in_this_world(["world-a"], "world-a", false),
 		"a reconnect to the world the answer was given in resubmits its receipt")
 	assert_false(CLIMAX.answered_in_this_world(["world-a"], "world-b", false),
@@ -235,3 +235,26 @@ func test_an_answer_is_only_recorded_in_the_world_it_was_given_in() -> void:
 		"a world with no identity yet records nothing carried in")
 	assert_false(CLIMAX.may_receive(ME, [ME], true, false, true),
 		"and the character who answered in world A is still not offered again in B")
+
+
+## Re-review B2: the flag the reconcile passes must be set by answering, never
+## by settling. Asserted on the source, because the regression was exactly a
+## settle setting the "answered" flag the world check reads.
+func test_settling_is_never_mistaken_for_answering_here() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/world/stronghold_climax.gd")
+	var settle := source.substr(source.find("func _settle() -> void:"))
+	settle = settle.substr(0, settle.find("\nfunc ", 10))
+	assert_false(settle.contains("_answered_here"), "_settle() must not mark this world as answered")
+	var record := source.substr(source.find("func _record_resolution(accepted: bool) -> void:"))
+	record = record.substr(0, record.find("\nfunc ", 10))
+	assert_true(record.contains("_answered_here = true"), "only answering marks this world as answered")
+
+
+## Re-review: the caged creature is only removed once EVERY recorded
+## participant has answered, not at the first settle.
+func test_the_creature_leaves_only_when_every_participant_has_answered() -> void:
+	var one := [CLIMAX.resolution_flag(false, ME)]
+	assert_false(CLIMAX.all_answered([ME, FRIEND], one), "FRIEND is still mid-offer")
+	one.append(CLIMAX.resolution_flag(true, FRIEND))
+	assert_true(CLIMAX.all_answered([ME, FRIEND], one), "both answered")
+	assert_true(CLIMAX.all_answered([], []), "a solo world's one answer is its settle")
