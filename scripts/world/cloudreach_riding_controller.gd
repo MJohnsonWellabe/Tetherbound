@@ -19,8 +19,10 @@ extends "res://scripts/world/riding_controller.gd"
 ##    ride, so it uses the last clear spot seen during this ride.
 ## 3. A mounted fall. A carried trainer has no collision layers, so the
 ##    realm's kill plane and grounded-fall anchor cannot see them. A mount that
-##    drops well below the ground it last stood on is returned, rider and all,
-##    to where it stood a moment before.
+##    falls as far as a walker would need to be recovered (100 m) is returned,
+##    rider and all, to verified ground it stood on a moment before. Its floor
+##    contact also keeps Fly's safe anchor current during the ride, so ending
+##    the ride or reloading never reads a long descent as a fall.
 ## 4. SYSTEMS §8 limits: mounted jump apex no higher than the trainer's
 ##    1.35 m, and no climbing beyond the ordinary 45 degrees unless the species
 ##    authors its own climb (the legendary's 60).
@@ -33,8 +35,10 @@ const SETTLE_LIFT_M := 0.05
 ## Fallback only; the live cap is the trainer's own `movement.json` jump.
 const TRAINER_JUMP_APEX_M := 1.35
 const ORDINARY_CLIMB_DEG := 45.0
-## A drop this far below the mount's last ground is a fall, not a slope.
-const MOUNTED_FALL_DROP_M := 6.0
+## SYSTEMS §8: "Same physical keys/barriers whether mounted or walking." A
+## walking trainer is only recovered 100 m below their verified anchor
+## (`cloudreach_physical_runtime.gd`); a mount gets the same, no stricter.
+const MOUNTED_FALL_DROP_M := 100.0
 const GROUND_SAMPLE_S := 0.25
 const GROUND_HISTORY := 8
 ## A remembered clear spot further than this from the mount is not "nearby".
@@ -120,6 +124,9 @@ func _watch_mounted_ground(delta: float) -> void:
 			_ground_history.append(body.global_position)
 			if _ground_history.size() > GROUND_HISTORY:
 				_ground_history.pop_front()
+			var fly: Node = _player.get("fly_controller") if _player != null else null
+			if fly != null and fly.has_method("observe_carried_ground"):
+				fly.call("observe_carried_ground", body.global_position)
 			var spot := _find_clear_spot(body)
 			if spot != Vector3.INF:
 				_clear_spot = spot
@@ -130,8 +137,11 @@ func _watch_mounted_ground(delta: float) -> void:
 	var last_ground: Vector3 = _ground_history[_ground_history.size() - 1]
 	if body.global_position.y > last_ground.y - MOUNTED_FALL_DROP_M:
 		return
-	# Oldest sample: a moment back from the edge rather than on its lip.
-	var back_from_edge: Vector3 = _ground_history[0]
+	# Oldest still-supported sample: a moment back from the edge, re-probed so
+	# a spot that no longer holds ground is never the answer.
+	var back_from_edge := _supported_history(body)
+	if back_from_edge == Vector3.INF:
+		return
 	body.global_position = back_from_edge + Vector3.UP * SETTLE_LIFT_M
 	body.velocity = Vector3.ZERO
 	_ground_history.clear()
@@ -141,6 +151,14 @@ func _watch_mounted_ground(delta: float) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	if game != null and game.has_method("push_world_message"):
 		game.call("push_world_message", "Your mount scrambled back from the drop.")
+
+
+func _supported_history(body: Node3D) -> Vector3:
+	for sample: Vector3 in _ground_history:
+		var floor_y := _supported_floor(sample, sample.y, body)
+		if not is_nan(floor_y):
+			return Vector3(sample.x, floor_y, sample.z)
+	return Vector3.INF
 
 
 func _apply_climb_limit(body: Node3D, species_id: String) -> void:
@@ -160,9 +178,16 @@ func _dismount_spot(body: Node3D) -> Vector3:
 			return spot
 	# Forced ending with nowhere clear right here: the last clear spot this
 	# ride passed, if it is still nearby; else the mount's own footing.
-	var at := body.global_position if body != null and is_instance_valid(body) else _last_mount_position
-	if _clear_spot != Vector3.INF and _clear_spot.distance_to(at) <= REMEMBERED_SPOT_REACH_M:
+	var alive := body != null and is_instance_valid(body)
+	var at := body.global_position if alive else _last_mount_position
+	var probe_body: Node3D = body if alive else null
+	if _clear_spot != Vector3.INF and _clear_spot.distance_to(at) <= REMEMBERED_SPOT_REACH_M \
+			and _capsule_fits(_clear_spot, probe_body):
 		return _clear_spot
+	# Never mid-air: the last verified ground this ride stood on.
+	var ground := _supported_history(probe_body)
+	if ground != Vector3.INF and _capsule_fits(ground + Vector3.UP * SETTLE_LIFT_M, probe_body):
+		return ground + Vector3.UP * SETTLE_LIFT_M
 	return at + Vector3.UP * SETTLE_LIFT_M
 
 
