@@ -363,7 +363,7 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
 
 ## WO-F11-04: earned Dynamo → aftermath witness (`ralph/stormwood-f11-proof`)
 
-**Status: IN PROGRESS.** This section is updated as each run finishes.
+**Status: STOPPED at the named Capacitor Alpha (first step after Ondra's recipe), after three real attempts.** The Dynamo, the Stormheart offer, the aftermath, the reload and the captures were not reached. No F11 clause is met by this witness.
 
 - **Platform:** Linux container, Godot 4.7-stable, headless `--script` runs (no render for the witness itself).
 - **Input:** ordinary controller actions injected as `InputEventAction` (stick, interact, combat_quick, party_cycle, creature_recall, ui_*, menu_cancel) through the existing segment helpers. Each helper lists its own exceptions.
@@ -380,8 +380,57 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
 | 4 | Route-09 reward press taken by Keeper Ondra | The pickup stood exactly on Ondra | Pickup moved 7 m along the road. Regression: `test_stormwood_pickups` overlap check (fails on the old data) |
 | 5 | Capacitor Alpha lost with a 113/436 lead | Same worn-lead cause, in the Crown chain | `_ensure_usable_ally` in the Crown helper also leads with the fittest member |
 | 6 | Hollows rod switch press taken by route-06 | The pickup stood exactly on the rod station and Dace | Pickup moved 9 m along the road; the overlap test pins it |
+| 6 | Alpha: no fight in four approaches | Engage offers the nearest body, always a Tanglevolt escort; the helper refused to press it | Answer an escort that holds Engage, then approach again (up to 8 approaches) |
+
+| 7 | Alpha: whole party wiped | See below | None. Stopped: third Alpha attempt |
+
+### Per-step timing (headless wall clock, commit 9407429a0 for run 7)
+
+| Run | Prefix: arrival → Ondra's recipe | Capacitor Alpha → paid Crown | Total |
+|---|---|---|---|
+| 4 (a91d59ec5) | PASS 1062.3 s | FAIL 100.1 s (lost with a 113/436 lead) | 19m36s |
+| 6 (5ca1a839e) | PASS 1058.6 s | FAIL 69.4 s (no fight: Engage always offered an escort) | 19m00s |
+| 7 (9407429a0) | PASS 1094.8 s | FAIL 223.1 s (party wiped) | 22m11s |
+
+SCRIPT ERROR count is 0 in every run log. Across the last three runs the prefix passed from the disk-saved arrival. It includes Hesk, Tamsin, the sheltered Break, pair A, Maren, Dace, pair B, Act I, Varga, and route 09 and Ondra's recipe.
+
+### The Capacitor Alpha stop (run 7, exact log lines)
+
+- `PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 0/363 fainted, bramblebun 185/345, terrapup 94/436, brooktail 0/334 fainted`
+  - This is how the party reaches the Alpha, with no rest since Ashfoot. The conductor-road wilds on the way there fainted two members.
+- `ENGAGING the Alpha's escort Wild_tanglevolt_881250888_1` → `FIGHT end Capacitor Alpha escort outcome=won` (sparkit 117/320 left).
+- The second escort: `outcome=lost` (bramblebun fainted, escort at 54/318). Sparkit then finished that escort (`live approach 3 outcome=won`).
+- `FIGHT start Capacitor Alpha ally=sparkit 100/320 enemy=voltarach L40 511/511` → `lost`, with the Alpha at 314.9/511.
+- `FIGHT start ... live approach 4 ally=terrapup 94/436` → `lost`, with the Alpha at 121.3/511.
+- `F11 WITNESS STEP FAIL Capacitor Alpha, Crown gathering, two frames, paid Crown arch wall=223.1s`, then `ordinary party-cycle/recall left no usable ally before Capacitor Alpha re-engagement (healthy=0)`.
+
+**Diagnosis.** This is not a softlock and not a production defect in the Alpha's code path. The fight admits, runs host-validated strikes and publishes outcomes. The harness mashes quick attacks with no dodge. It arrives with two of five fainted and two worn, because the route never rests. It must then beat two L35 escorts and an L40 Alpha of 511 HP in sequence.
+
+**The next step, not taken because of the attempt limit:** rest at Rodline Refuge (its camp bed and rest prompt are 0.7 km back along the same road) before the Conductor Road. Then answer the escorts and the Alpha with a full party. That is ordinary player preparation, not a fixture.
+
+**Open question for owner or design:** is a named alpha with two escorts, fought one at a time from the road, intended to require a rest stop before it? C2/C3 tuning belongs to COMBAT, not this lane.
+
+### Not produced
+
+- The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.
+- The disk save, restart and load were not reached either. `--verify-reload` exists but has not run.
+- The captures were not taken. `tools/capture_stormwood_f11_proof.gd` is committed and unrun. No render was started.
+
+### Verdict (ACCEPTANCE §6.1 F11)
+
+- "Dynamo and Stormheart resolve from the earned route": **NOT MET.** The earned route stops at the Capacitor Alpha, three segments before the Dynamo.
+- "Long Storm aftermath, Spark/shrine … persist": **NOT MET by earned evidence.** The existing focused tests remain staged-only.
+- "Eligible peers accept/refuse independently at space and capacity through disconnect/reload, without duplicated grants": **NOT MET.** The two-peer WIP is parked (see the sub-note below).
 
 Seven other pickup/NPC overlaps remain (route_05, 07, 16, 18, 19 and pocket_203). The test lists them so the list can only shrink. They are an open finding.
+
+### Batch-5 nit: Break faint prompt pause (commit 091f54cab)
+
+- **Bug.** Recalling the fainted creature with nothing sent out ("none") left the host's Break paused forever.
+- **Fix.** A participant now holds the pause only while its fainted creature is still the deployed one. A reload (`restore_progression_from_game`) ends every open prompt and publishes the resumed Break.
+- **Tests.** `smoke_stormwood_dynamo_break_faint` now has 90/0 assertions, with one test per exit: creature, none, cancel by reload, cancel by wipe, disconnect, and timeout. `test_stormwood_dynamo` is 12/0.
+- **Negative control.** The unfixed controller fails 3 of 90 (none, reload, disconnect).
+- **Timeout.** COMBAT says "no timer in solo", so a lapsed faint toast is not a choice, and the test pins that the solo pause holds. The coordinator's list named timeout as an exit that must clear the pause. That conflicts with COMBAT and is left for an owner/coordinator decision rather than adding a timer.
 
 ### Sub-note: parked two-peer WIP (superseded by coordinator order)
 
