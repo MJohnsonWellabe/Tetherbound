@@ -51,7 +51,10 @@ func _record(uid: String) -> Dictionary:
 
 func _assert_refused(verdict: Dictionary, reason: String, note: String) -> void:
 	assert_false(bool(verdict.get("ok")), note)
-	assert_eq(str(verdict.get("code", "")), "arch_locked", note)
+	# The ledger refuses an occupied footing before placement() runs, with its
+	# own code; every other placement refusal keeps arch_locked.
+	var code := "arch_occupied" if reason == OCCUPIED else "arch_locked"
+	assert_eq(str(verdict.get("code", "")), code, note)
 	assert_eq(str(verdict.get("reason", "")), reason, note)
 
 
