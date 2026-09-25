@@ -300,3 +300,142 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
     - the flash has only been seen in stills;
     - no audio.
   - **Region-wide, outside this branch:** no sun shadows, an empty horizon, grass that stays bright under dark skies, and no rain wetness.
+
+### WO-F11-03: LB prompt after a Break faint
+
+- **Finding (step 1, real director):** LB already sends out the next creature during Break. `party_cycle` goes to `encounter_director.gd` `_read_creature_control_input()`, then `party.cycle_active(1)`. That step skips fainted and resting creatures and bumps `revision`. `_sync_active_creature()` sees a hidden but valid `_ally_body` whose creature is not the new active one. It dismisses that body (`queue_free`) and summons the new active creature as a visible follower. The field control then pilots the follower once it is within reach of the arena. `summon_active_creature()` alone (the `creature_recall` path) is a no-op while the hidden fainted body is still deployed. The only gap was that nothing told the player to press LB. No shared file is changed.
+- **Change:** `stormwood_dynamo.gd` `_apply_local_hazard()`, on a Break discharge faint, pushes one world message: "<name> fainted. Press <party_cycle> to send out <next>." The button name comes from `input_glyph.gd` `action_name()`, so it follows rebinding and shows LB on a pad. `next_available()` mirrors `cycle_active(1)`. The message is sent once per faint, because a fainted creature takes no more damage. It is not sent when no creature can take the field, since the existing full-party wipe runs instead. The game still does not switch creatures on its own.
+- **Witnesses:** all `test_stormwood_*` suites: 241 tests, 25103 assertions, 0 failed. Smokes: dynamo_break_faint 66/0, stormheart_choice 41/0, stormheart_participants 28/0. No SCRIPT ERROR.
+- **Negative controls:**
+
+  | Change reverted | Result |
+  |---|---|
+  | Prompt push removed | 1 smoke fail |
+  | `next_available` counts a resting creature | 2 smoke fails + 1 unit fail |
+  | In test: no LB press | The fainted creature stays active and hidden, and the prompt is not repeated |
+- **Review should-fix: pause while choosing a replacement.** COMBAT says a faint "pauses enemy attack issuance until a replacement is selected … in co-op other participants continue."
+  - **When it pauses.** The host freezes Break: no `rules.advance`, no bank fire and no countdown. It does this while no current participant has a live creature and at least one participant is waiting to replace a fainted one.
+  - **How liveness is read.** The host's own creature is the director's `ally_instance`. Another peer's is the card the host holds, down once that peer reports the creature fainted with `dynamo_ally_fainted`.
+  - **Publishing.** The state event carries the pause as `paused`.
+  - **What does not pause.** Only participants count. A recall with no faint behind it never pauses. The existing logic still drops a participant who leaves, and a full-party faint still takes the wipe path.
+  - **Prompt re-show.** A still-paused Break shows the prompt once more after 4 s, and never a third time.
+  - **Not changed.** The arena readout is outside this lane, so it shows the frozen seconds with no "paused" label.
+- **Witnesses:** all `test_stormwood_*` suites: 241 tests, 25103 assertions, 0 failed. Smokes: dynamo_break_faint 77/0, stormheart_choice 41/0, stormheart_participants 28/0.
+- **Pause negative controls:**
+
+  | Change reverted | Result |
+  |---|---|
+  | Pause disabled | 6 fails |
+  | A live partner ignored | 1 fail (the co-op check) |
+  | Re-show removed | 1 fail |
+
+## WO-F09-03 — Pocket spurs, junction lamps, review follow-ups (`ralph/stormwood-f09-pocket-spurs`, stacked on WO-F09-02)
+
+- **Finding:** pocket centres stood 112–351 m off their roads, and nothing on a road pointed to a pocket.
+- **Fix: one spur per pocket** (`stormwood_world.json`, `"kind": "spur"`, with `pocket_id`, `joins` and the joined road's `requires_unlock`). Each spur is a straight lane from the nearest point on its road to the mouth. The mouths already faced that point, so no bend was needed.
+  - Verge → `ash_road` 270 m; Hollows → `crown_sightline_loop` 137 m; Conductor → `conductor_road` 341 m; Deepwood → `hall_loop` 155 m; Dynamo → `dynamo_west_approach` 103 m.
+  - The steepest graded corridor sample is 17.7° (Dynamo). The others are at most 11.1°.
+  - **Why spurs, not moved pockets:** spurs are data plus one lamp. Moving pockets would re-validate five interiors, five moved rewards, spawn discs and region bounds, and 40–80 m would still leave a pocket out of sight of the road.
+- **Junction lamp** (`stormwood_pockets.json` `spur_marker`): a third `mouth_lure` lamp post. It stands 10 m up the spur and 3.5 m to its right, clear of every road corridor, faces the road, and has its own collider.
+- **Route consumers checked:**
+  - The ROAD visibility model, the audit/author tools and the four-biome observer read only `critical`.
+  - `smoke_stormwood_continuous._walk_route` selects routes by id.
+  - The trainers-near-routes test: no trainer's nearest route is a spur.
+  - The glass-sink and walkability tests grade spurs like roads, and they pass.
+  - `test_stormwood_pockets` now means "roads" as non-spur routes.
+- **Scatter:** spurs get the corridor clearing but no roadside stand. A stand would line a dead-end lane like a through road and claim tree cells the background forest now fills. The re-bake changed 34694 → 34691 placements. On the old bake, 3 of 5 spur lanes held a collider 0.47–1.58 m from the centre line.
+- **Review LOWs:**
+  - (a) The mouth-to-road search now sweeps the 0.4 m capsule past every committed baked collider and lamp post, and must reach a non-spur road. It has a built-in control: a closed ring of trunks outside the mouth must fail the same search, and it does.
+  - (b) An unpaired legacy arch with no saved footing no longer counts against the three-road cap, and no longer blocks the Crown twin. A legacy arch that is half of a standing pair still counts, because that road still travels. The existing cap tests use paired legacy roads and are unchanged. There are two new tests, and both fail on the old rule.
+  - (c) Config `draw_distance`: the 190 palisade trunks and the lamp art stop drawing at 250 m, with a 30 m fade. The 15 lamp lights use Light3D distance fade, ending at 60 m, because lights have no visibility range.
+  - (d) The frame maths is now in one place, `stormwood_pocket_frame.gd`, which is a bake source. The pocket collider reach is `max(collision_radius × scale_max)` and still equals 2.61.
+  - (e) A seat row without a position is skipped.
+- **Witnesses:**
+  - Two bakes are byte-identical.
+  - `--only=test_stormwood_,test_road_creature_visibility,test_scatter_,vegetation` ran 68 files and 348 tests, with 0 failed and 0 SCRIPT ERROR.
+  - `test_stormwood_pockets` has 10 tests, 0 failed.
+  - Both smokes pass: `smoke_stormwood_arches` and `smoke_stormwood_pickup_runtime`.
+- **Captures:** `visual/f09/wo03_after/` (5 road-side junction frames, 1 mid-spur frame, `frames_wo03.json`) and `visual/f09/sheet_wo03_spurs.jpg`. The frames were not self-judged; the blind judge is with the coordinator.
+- **Open:**
+  - The spur has no surface, like the roads. Much of the forest here is open grass with sparse trees, so the cleared corridor alone draws no visible line.
+  - WORLD.md says "nine top-level route records"; the data now has 15 (10 roads + 5 spurs). The coordinator owns that edit.
+  - There is still no night capture of the lamps.
+
+## WO-F11-04: earned Dynamo → aftermath witness (`ralph/stormwood-f11-proof`)
+
+**Status: STOPPED at the named Capacitor Alpha (first step after Ondra's recipe), after three real attempts.** The Dynamo, the Stormheart offer, the aftermath, the reload and the captures were not reached. No F11 clause is met by this witness.
+
+- **Platform:** Linux container, Godot 4.7-stable, headless `--script` runs (no render for the witness itself).
+- **Input:** ordinary controller actions injected as `InputEventAction` (stick, interact, combat_quick, party_cycle, creature_recall, ui_*, menu_cancel) through the existing segment helpers. Each helper lists its own exceptions.
+- **Starting save origin:** `tests/smoke_stormwood_continuous.gd` with its disclosed in-memory seam. That seam supplies nine completed-Cloudreach world flags, a party of five at level 44 (sparkit, mudsnout, bramblebun, terrapup, brooktail) and knife/axe/pickaxe on the hotbar. It sets no `stormwood:*` flag. With `--witness-dir=user://f11_witness`, the first real disk save (autosave slot 0 plus the world/character split) is written at the authored Stormwood arrival, before any Stormwood action. The same live run then continues.
+- **Route:** the normal route by ordinary input, with the instrumented timing the segments already declare: 8x weather/locomotion clock, and combat at 1x.
+- **Command:** `godot --headless --path . --script tests/smoke_stormwood_continuous.gd -- --through-aftermath --witness-dir=user://f11_witness`, then the same command with `--verify-reload` in a new process.
+
+### Fixes the runs showed (all Stormwood-owned, each committed before the next run)
+
+| Run | First failure | Diagnosis | Fix |
+|---|---|---|---|
+| 2 (`--through-crown`) | Varga's 3rd round lost | Prefix route fights ran at the 8x clock, but the press cadence is wall-clock | `_fight_current_encounter` runs combat at 1x, as the Crown helper already did |
+| 3 | Varga lost again (worn lead) | A trainer sequence is fought by one creature; the lead was worn by road fights | Before a named trainer, send out the fittest member with ordinary LB presses |
+| 4 | Route-09 reward press taken by Keeper Ondra | The pickup stood exactly on Ondra | Pickup moved 7 m along the road. Regression: `test_stormwood_pickups` overlap check (fails on the old data) |
+| 5 | Capacitor Alpha lost with a 113/436 lead | Same worn-lead cause, in the Crown chain | `_ensure_usable_ally` in the Crown helper also leads with the fittest member |
+| 6 | Hollows rod switch press taken by route-06 | The pickup stood exactly on the rod station and Dace | Pickup moved 9 m along the road; the overlap test pins it |
+| 6 | Alpha: no fight in four approaches | Engage offers the nearest body, always a Tanglevolt escort; the helper refused to press it | Answer an escort that holds Engage, then approach again (up to 8 approaches) |
+
+| 7 | Alpha: whole party wiped | See below | None. Stopped: third Alpha attempt |
+
+### Per-step timing (headless wall clock, commit 9407429a0 for run 7)
+
+| Run | Prefix: arrival → Ondra's recipe | Capacitor Alpha → paid Crown | Total |
+|---|---|---|---|
+| 4 (a91d59ec5) | PASS 1062.3 s | FAIL 100.1 s (lost with a 113/436 lead) | 19m36s |
+| 6 (5ca1a839e) | PASS 1058.6 s | FAIL 69.4 s (no fight: Engage always offered an escort) | 19m00s |
+| 7 (9407429a0) | PASS 1094.8 s | FAIL 223.1 s (party wiped) | 22m11s |
+
+SCRIPT ERROR count is 0 in every run log. Across the last three runs the prefix passed from the disk-saved arrival. It includes Hesk, Tamsin, the sheltered Break, pair A, Maren, Dace, pair B, Act I, Varga, and route 09 and Ondra's recipe.
+
+### The Capacitor Alpha stop (run 7, exact log lines)
+
+- `PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 0/363 fainted, bramblebun 185/345, terrapup 94/436, brooktail 0/334 fainted`
+  - This is how the party reaches the Alpha, with no rest since Ashfoot. The conductor-road wilds on the way there fainted two members.
+- `ENGAGING the Alpha's escort Wild_tanglevolt_881250888_1` → `FIGHT end Capacitor Alpha escort outcome=won` (sparkit 117/320 left).
+- The second escort: `outcome=lost` (bramblebun fainted, escort at 54/318). Sparkit then finished that escort (`live approach 3 outcome=won`).
+- `FIGHT start Capacitor Alpha ally=sparkit 100/320 enemy=voltarach L40 511/511` → `lost`, with the Alpha at 314.9/511.
+- `FIGHT start ... live approach 4 ally=terrapup 94/436` → `lost`, with the Alpha at 121.3/511.
+- `F11 WITNESS STEP FAIL Capacitor Alpha, Crown gathering, two frames, paid Crown arch wall=223.1s`, then `ordinary party-cycle/recall left no usable ally before Capacitor Alpha re-engagement (healthy=0)`.
+
+**Diagnosis.** This is not a softlock and not a production defect in the Alpha's code path. The fight admits, runs host-validated strikes and publishes outcomes. The harness mashes quick attacks with no dodge. It arrives with two of five fainted and two worn, because the route never rests. It must then beat two L35 escorts and an L40 Alpha of 511 HP in sequence.
+
+**The next step, not taken because of the attempt limit:** rest at Rodline Refuge (its camp bed and rest prompt are 0.7 km back along the same road) before the Conductor Road. Then answer the escorts and the Alpha with a full party. That is ordinary player preparation, not a fixture.
+
+**Open question for owner or design:** is a named alpha with two escorts, fought one at a time from the road, intended to require a rest stop before it? C2/C3 tuning belongs to COMBAT, not this lane.
+
+### Not produced
+
+- The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.
+- The disk save, restart and load were not reached either. `--verify-reload` exists but has not run.
+- The captures were not taken. `tools/capture_stormwood_f11_proof.gd` is committed and unrun. No render was started.
+
+### Verdict (ACCEPTANCE §6.1 F11)
+
+- "Dynamo and Stormheart resolve from the earned route": **NOT MET.** The earned route stops at the Capacitor Alpha, three segments before the Dynamo.
+- "Long Storm aftermath, Spark/shrine … persist": **NOT MET by earned evidence.** The existing focused tests remain staged-only.
+- "Eligible peers accept/refuse independently at space and capacity through disconnect/reload, without duplicated grants": **NOT MET.** The two-peer WIP is parked (see the sub-note below).
+
+Seven other pickup/NPC overlaps remain (route_05, 07, 16, 18, 19 and pocket_203). The test lists them so the list can only shrink. They are an open finding.
+
+### Batch-5 nit: Break faint prompt pause (commit 091f54cab)
+
+- **Bug.** Recalling the fainted creature with nothing sent out ("none") left the host's Break paused forever.
+- **Fix.** A participant now holds the pause only while its fainted creature is still the deployed one. A reload (`restore_progression_from_game`) ends every open prompt and publishes the resumed Break.
+- **Tests.** `smoke_stormwood_dynamo_break_faint` now has 90/0 assertions, with one test per exit: creature, none, cancel by reload, cancel by wipe, disconnect, and timeout. `test_stormwood_dynamo` is 12/0.
+- **Negative control.** The unfixed controller fails 3 of 90 (none, reload, disconnect).
+- **Timeout.** COMBAT says "no timer in solo", so a lapsed faint toast is not a choice, and the test pins that the solo pause holds. The coordinator's list named timeout as an exit that must clear the pause. That conflicts with COMBAT and is left for an owner/coordinator decision rather than adding a timer.
+
+### Sub-note: parked two-peer WIP (superseded by coordinator order)
+
+`tests/smoke_net_stormwood_stormheart_offers.gd` and `tests/helpers/stormheart_peer_runner.gd` (commit 2ac6f9b23) are parked until the X05 two-peer proof command lands. The smoke is held out of CI discovery.
+
+- **Last result:** two real ENet processes; the staged Dynamo frees the Stormheart; both characters are recorded as participants; the host's own offer, Yes and receipt pass.
+- **Where it stops:** the guest's offer is refused because the host's proxy for the guest never leaves the Stormwood arrival point. Not yet diagnosed.
+- **Consequence:** F11-B (two-peer, disconnect, capacity, no duplicate grants over the network) has no live proof from this lane.

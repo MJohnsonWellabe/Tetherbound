@@ -2523,11 +2523,29 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			if _harvest_nodes.has(key):
 				(_harvest_nodes[key] as Node).queue_free()
 				_harvest_nodes.erase(key)
+				_harvest_points = maxi(0, _harvest_points - 1)
 			_harvest_collision_lookup.erase(key)
 			_solid = maxi(0, _solid - 1)
 			dropped += 1
 		if dropped > 0:
 			_reindex_batch_cells(batch)
+
+	# Then every OTHER layer's gather point. Harvestable non-collidable layers
+	# (fibre's "Gather") have no collision batch, so the pass above never
+	# reaches them, and their render instance is already gone -- an invisible
+	# prompt standing in cleared ground. In the Burrow Warrens vault one won the
+	# interaction arbiter at 0.6 m and the Heartstone could not be picked up.
+	for key_value: Variant in _harvest_lookup.keys():
+		var key := str(key_value)
+		var spot: Vector3 = (_harvest_lookup[key] as Dictionary).get("position", Vector3.INF)
+		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
+			continue
+		_harvest_lookup.erase(key)
+		_harvest_collision_lookup.erase(key)
+		if _harvest_nodes.has(key):
+			(_harvest_nodes[key] as Node).queue_free()
+			_harvest_nodes.erase(key)
+			_harvest_points = maxi(0, _harvest_points - 1)
 	_placed = maxi(0, _placed - removed)
 	return removed
 
