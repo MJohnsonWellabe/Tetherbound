@@ -226,7 +226,23 @@ func _run() -> void:
 			_log_phase("charging (%d/24 attempts)" % charge_waited)
 	if not bool(_manager.call("charged_ready")):
 		_failures.append("06-charged-attack-lands: energy never reached charged_cost after %d quick-attack attempts" % charge_waited)
-	await _drive_creature_towards_enemy(60, 2.8)
+	# The charged blow has a 0.55s windup and a 75-degree cone: pressed at
+	# 2.8m against an opponent that circles on its cooldown, the opponent had
+	# left the cone by the time it resolved, and frame 06 kept showing the
+	# lull (MEADOWS-VISUAL-PASS: a control run with the ring clear off missed
+	# too). Pressed during the opponent's wind-up it fared no better: the
+	# opponent's blow lands inside our windup and staggers it away. So punish,
+	# the way the fight teaches: close in, let the opponent commit and swing,
+	# and press in its recovery, when it is standing still.
+	await _drive_creature_towards_enemy(60, 2.0)
+	var punish_waited := 0
+	while not bool(_manager.call("enemy_is_winding_up")) and bool(_manager.call("is_fighting")) and punish_waited < 600:
+		await _drive_creature_towards_enemy(1, 2.0)
+		punish_waited += 1
+	while bool(_manager.call("enemy_is_winding_up")) and bool(_manager.call("is_fighting")) and punish_waited < 900:
+		await physics_frame
+		punish_waited += 1
+	await _drive_creature_towards_enemy(6, 1.8)
 	await _press("combat_charged")
 	await _capture_the_impact("06-charged-attack-lands-offaxis", 45.0)
 
@@ -339,8 +355,14 @@ func _approach() -> void:
 
 
 ## Pilot the player's creature towards the opponent for a while, stopping once it is
-## inside `stop_at` metres. Steered through the camera, which is the same path
-## the player's stick takes.
+## inside `stop_at` metres.
+##
+## MEADOWS-VISUAL-PASS round 5: steered with the stick, relative to wherever the
+## camera is looking, the way a player does -- the camera is left to the game's
+## own combat tracker. This used to set the rig's yaw straight at the opponent
+## every frame and push forward, which put the lens dead behind the ally in
+## every fight frame: a framing no neutral-stick player ever sees, and the one
+## that made a large ally hide a small opponent.
 func _drive_creature_towards_enemy(frames: int, stop_at: float) -> void:
 	if _ally == null:
 		for i in frames:
@@ -349,17 +371,26 @@ func _drive_creature_towards_enemy(frames: int, stop_at: float) -> void:
 	var rig := _world.get_node_or_null(^"CameraRig")
 	for i in frames:
 		if not bool(_manager.call("is_fighting")):
-			return
+			break
 		var to := _wild.global_position - _ally.global_position
 		to.y = 0.0
-		if rig != null:
-			rig.set("yaw", atan2(-to.x, -to.z))
-		if to.length() > stop_at:
-			Input.action_press("move_forward")
+		if to.length() > stop_at and rig != null and rig.has_method("planar_basis"):
+			# combat_manager.gd moves along planar_basis * (x, 0, y) of the stick.
+			var local: Vector3 = (rig.call("planar_basis") as Basis).inverse() * to.normalized()
+			_stick(local.x, local.z)
 		else:
-			Input.action_release("move_forward")
+			_stick(0.0, 0.0)
 		await physics_frame
-	Input.action_release("move_forward")
+	_stick(0.0, 0.0)
+
+
+func _stick(x: float, y: float) -> void:
+	for pair: Array in [["move_right", x], ["move_left", -x], ["move_back", y], ["move_forward", -y]]:
+		var strength := float(pair[1])
+		if strength > 0.05:
+			Input.action_press(str(pair[0]), clampf(strength, 0.0, 1.0))
+		else:
+			Input.action_release(str(pair[0]))
 
 
 ## Lead the target so a thrown orb would land on it. The orb flies a real arc,
@@ -378,7 +409,15 @@ func _aim_at_the_enemy() -> void:
 	var flight := flat / maxf(speed, 0.01)
 
 	rig.set("yaw", atan2(-to.x, -to.z))
-	rig.set("pitch", atan2(to.y + 0.5 * gravity * flight * flight, maxf(flat, 0.01)))
+	# MEADOWS-VISUAL-PASS round 5: put the reticle ON the creature, the way a
+	# player does, and let throw_aim.gd's launch assist supply the lob. Pitching
+	# the camera up by the whole lead angle pointed the lens at the sky, and the
+	# orb-in-flight frame showed the orb climbing into the sun with no target in
+	# it. `gravity`/`flight` stay computed for the log line only.
+	rig.set("pitch", atan2(to.y, maxf(flat, 0.01)))
+	print("  [aim] direct pitch %.1f deg (manual lob would be %.1f)" % [
+		rad_to_deg(atan2(to.y, maxf(flat, 0.01))),
+		rad_to_deg(atan2(to.y + 0.5 * gravity * flight * flight, maxf(flat, 0.01)))])
 
 
 ## Rotate the combat camera off whatever line `_drive_creature_towards_enemy` last
@@ -507,6 +546,19 @@ func _capture_the_impact(name: String, yaw_offset_deg: float = 0.0) -> void:
 		_failures.append("%s: no hit landed within %d frames; the frame shows the lull, not the blow" % [
 			name, IMPACT_TIMEOUT
 		])
+	else:
+		# MEADOWS-VISUAL-PASS round 5: a projectile move reports the hit when it
+		# resolves, but its burst spawns when the projectile ARRIVES
+		# (combat_manager.gd, `shot.connect("arrived", ...)`), so five frames
+		# after the signal the frame showed the stone still in the air and a
+		# blind judge found "no impact effect at all" on both hits. Wait for the
+		# burst itself before the settle below.
+		var burst_waited := 0
+		while not _impact_burst_present() and burst_waited < 90:
+			await physics_frame
+			burst_waited += 1
+		print("  [impact] %s: burst %s after %d frames" % [
+			name, "present" if _impact_burst_present() else "NOT FOUND", burst_waited])
 
 	# Let the burst open, THEN stop the clock before composing the shot.
 	#
@@ -538,3 +590,13 @@ func _capture_the_impact(name: String, yaw_offset_deg: float = 0.0) -> void:
 	paused = true
 	await _capture(name)
 	paused = false
+
+
+func _impact_burst_present() -> bool:
+	var flash_script := load("res://scripts/combat/impact_flash.gd")
+	var arena: Node = _manager.get("_arena")
+	var host: Node = arena if arena != null else _world
+	for node: Node in host.find_children("*", "Node3D", true, false):
+		if node.get_script() == flash_script:
+			return true
+	return false

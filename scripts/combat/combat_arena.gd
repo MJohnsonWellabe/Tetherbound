@@ -13,11 +13,19 @@ extends Node3D
 ## the world scene has to know arenas exist.
 
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 
 var radius: float = 11.0
 
 var _boundary_height: float = 3.5
 var _boundary_alpha: float = 0.16
+
+## The scatter that stood aside for this fight, and the node that holds it.
+## See `vegetation.gd::hide_fight_occluders()`.
+var _vegetation: Node = null
+var _hidden_occluders := PackedInt32Array()
+## Authored nodes built from the same models (`harvest_node.gd`'s group).
+var _hidden_nodes: Array = []
 
 
 func configure(centre: Vector3, cfg: Dictionary) -> void:
@@ -26,6 +34,42 @@ func configure(centre: Vector3, cfg: Dictionary) -> void:
 	_boundary_height = float(cfg.get("boundary_height", _boundary_height))
 	_boundary_alpha = float(cfg.get("boundary_alpha", _boundary_alpha))
 	_build_boundary()
+	if bool(cfg.get("clear_soft_occluders", false)):
+		_clear_soft_occluders(radius + maxf(float(cfg.get("occluder_clear_margin", 0.0)), 0.0))
+
+
+## Bushes and standing dead trees inside the ring stand aside for the fight
+## and come back when the arena closes. Presentation only: neither layer
+## collides, and nothing here is saved or sent to another peer.
+func _clear_soft_occluders(reach: float) -> void:
+	var parent := get_parent()
+	if parent == null:
+		return
+	for node: Node in get_tree().get_nodes_in_group(HARVEST_NODE.FIGHT_RING_OCCLUDER_GROUP):
+		var spot := node as Node3D
+		if spot == null or not spot.is_inside_tree():
+			continue
+		var offset := spot.global_position - global_position
+		if Vector2(offset.x, offset.z).length() <= reach:
+			spot.call("set_fight_hidden", true)
+			_hidden_nodes.append(spot)
+	_vegetation = parent.get_node_or_null(^"Vegetation")
+	if _vegetation == null or not _vegetation.has_method("hide_fight_occluders"):
+		_vegetation = null
+		return
+	_hidden_occluders = _vegetation.call("hide_fight_occluders", global_position, reach)
+
+
+func _exit_tree() -> void:
+	for node: Variant in _hidden_nodes:
+		if is_instance_valid(node):
+			(node as Node).call("set_fight_hidden", false)
+	_hidden_nodes.clear()
+	if _vegetation != null and is_instance_valid(_vegetation) and not _hidden_occluders.is_empty() \
+			and _vegetation.is_inside_tree() and not _vegetation.is_queued_for_deletion():
+		_vegetation.call("restore_fight_occluders", _hidden_occluders)
+	_hidden_occluders = PackedInt32Array()
+	_vegetation = null
 
 
 ## Pull a body back inside the circle and kill the outward part of its velocity.

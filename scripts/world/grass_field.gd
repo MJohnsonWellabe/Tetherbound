@@ -1604,6 +1604,7 @@ func _apply_config(cfg: Dictionary) -> void:
 		"height_jitter", "bend", "shade_jitter", "density_gain", "clump_scale", "clump_contrast",
 		"ground_blend", "translucency", "wind_strength", "wind_scale",
 		"gust", "gust_speed", "gust_length", "edge_shorten_floor", "edge_shorten_bias",
+		"lens_clear_m", "lens_clear_band",
 	]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, float(cfg[key]))
@@ -2151,6 +2152,7 @@ func _process(delta: float) -> void:
 	var at := _camera.global_position
 	var eye := Vector3(at.x, 0.0, at.z)
 	_material.set_shader_parameter("field_centre", eye)
+	_material.set_shader_parameter("eye_height", at.y)
 	if _stone_material != null:
 		_stone_material.set_shader_parameter("field_centre", eye)
 	for cover: ShaderMaterial in _cover_materials:

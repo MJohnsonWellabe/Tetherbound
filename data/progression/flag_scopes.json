@@ -169,6 +169,8 @@
       "water_swim_lesson_briefed",
       "water_chapter_started",
       "stormwood:legendary_ceremony_settled",
+      "stormwood:legendary_offer_accepted",
+      "stormwood:pims_parcels_reward_received",
       "tournament_team_ready",
       "tournament_training_ready",
       "tournament_condition_ready",
@@ -200,7 +202,8 @@
       "cloudreach_payout:",
       "saddle_fitted_",
       "creature_bed_built_",
-      "oskar_swap_taken_"
+      "oskar_swap_taken_",
+      "stormwood:legendary_answer:"
     ]
   }
 }
