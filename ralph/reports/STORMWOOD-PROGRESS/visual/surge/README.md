@@ -25,6 +25,24 @@ Work order: ACCEPTANCE §6.1 F10 / S2. Calm, Building, Break and Fading must be 
   - The Break strip, telegraph and flash were re-rendered after the telegraph fill-colour fix; their records are in `after/frames_after_break_r2.json`, and the Break records in `frames_after.json` are superseded.
   - Night frames were re-rendered after the night sun-cut fix; their records are in `after/frames_after_night_r2.json`.
 
+## Task #8: rain around the camera, and gentler flashes (`sheet_rain_camera.jpg`)
+
+Branch `ralph/stormwood-f10-rain-camera`, stacked on the pinned Surge head. The frames were captured with the tool's `raincam` group, and their records (which include the rain emitter's offset from the camera, 0/+3/0 in each) are in `after/frames_after_raincam.json`. Every frame was looked at.
+
+**What changed**
+- **Rain around the camera:** the near rain is now centred on the active camera, not the player. Its inner radius is derived as 1.5 m lens clearance + half the wind drift + the 2° spread drift + the streak half-extent, about 3.9 m. The ring is 8 m wide.
+- **Gentler distant flashes:** Break's distant sky flashes are now 0.20–0.35 of a strike's flash, on a 9–16 s cadence.
+- **Reduced motion:** scales every sky flash by 0.15.
+
+**Frames**
+
+| Frame | What it shows |
+|---|---|
+| `after/rc_day_break.jpg` | Normal camera. Slanted streaks fall across the trainer and near grass, and a magenta telegraph happened to be live. |
+| `after/rc_day_break_upwind.jpg` | Same framing as `r4_break_upwind.jpg`. Streaks now reach the near grass around the trainer, and none is frame-filling. |
+| `after/rc_day_break_riding.jpg` | Production riding camera profile (7.1 m from the trainer), staged with no mount. Rain falls over and in front of the trainer. |
+| `after/rc_night_break.jpg` | Night Break. Faint streaks over the near ground and around the trainer. |
+
 ## Round 4 (final): `sheet_round4.jpg`
 
 Ten 640×360 frames. The records are in `after/frames_after_r4.json`, and every frame was looked at. Camera and staging are as described above, and the telegraph and upwind frames are both day Break.

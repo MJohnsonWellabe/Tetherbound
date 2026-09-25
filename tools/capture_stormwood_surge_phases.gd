@@ -118,6 +118,8 @@ func _run() -> void:
 		await _quick()
 	if _only.has("round4"):
 		await _round4()
+	if _only.has("raincam"):
+		await _raincam()
 	if _want("strips"):
 		await _strips()
 	if _want("motion"):
@@ -474,6 +476,40 @@ func _round4() -> void:
 	_heal()
 	await _capture("r4_break_upwind", "Day Break, camera upwind of the trainer (looking downwind): slanted-rain lens check", false,
 		{"wind_dir_xz": [slant.x, slant.z]})
+
+
+## Task #8 (explicit --only=raincam), 640x360: day Break with the normal
+## camera, the camera upwind, the production RIDING camera profile
+## (movement.json riding.camera via CameraRig.set_target, staged on the
+## trainer with no mount), and night Break. Each record notes where the rain
+## emitter sits relative to the camera.
+func _raincam() -> void:
+	var rain := _surge.get("_rain") as GPUParticles3D
+	var shots := [["rc_day_break", "normal"], ["rc_day_break_upwind", "upwind"],
+		["rc_day_break_riding", "riding"], ["rc_night_break", "night"]]
+	for shot: Array in shots:
+		var kind := str(shot[1])
+		_pin_clock("night" if kind == "night" else "day")
+		var focus := _station_focus()
+		if kind == "upwind" and rain != null:
+			var d := (rain.process_material as ParticleProcessMaterial).direction
+			var at := _player.global_position
+			focus = at + Vector3(d.x, 0.0, d.z).normalized() * 20.0
+		await _stand(STAND, focus, 2.0)
+		if kind == "riding":
+			var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
+			_rig.call("set_target", _player, movement.riding.camera)
+			_note("riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount")
+			for _frame in 60:
+				await physics_frame
+		await _enter_phase("break", false)
+		_heal()
+		var offset := rain.global_position - _camera.global_position if rain != null else Vector3.ZERO
+		await _capture(str(shot[0]), "Break, %s camera: rain centred on the camera" % kind, false,
+			{"rain_minus_camera": _vec3(offset), "camera_player_m": _camera.global_position.distance_to(_player.global_position)})
+		if kind == "riding":
+			_rig.call("set_target", _player)
+	_pin_clock("day")
 
 
 ## Tuning pass only (--only=quick): one settled frame per phase.

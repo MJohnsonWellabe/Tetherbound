@@ -224,3 +224,34 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
     - the flash has only been seen in stills;
     - no audio.
   - **Region-wide, outside this branch:** no sun shadows, an empty horizon, grass that stays bright under dark skies, and no rain wetness.
+
+## WO-F10-07 — Rain around the camera, and gentler Break flashes (`ralph/stormwood-f10-rain-camera`)
+
+- **Anchor:** F10 visual acceptance. This closes the WO-F10-06 "rain, dry disc" item and the final review's reduced-motion finding (UX §8/§275: reduced motion lowers non-essential flashes).
+- **Found:**
+  - **Dry disc:** the lens-safe near rain ring was centred on the PLAYER with an inner radius of 10.6 m, so the nearest drop was about 9 m from the trainer. Rain only showed against the far sky (`visual/surge/after/r4_break_upwind.jpg`).
+  - **Lens test gap:** the test ignored the base emitter's 2° spread, which adds up to about 0.7 m of sideways drift.
+  - **Flash problems:** Break's distant sky flashes were up to 1.0 on the same 4–8 s cadence as real strikes. With no telegraph, one could read as a missed warning. They also ignored `MOTION_PREFS.reduced_motion()`.
+- **Player result** (`scripts/world/stormwood_surge.gd`, `data/config/stormwood_surge.json`):
+  - **Rain placement:** the rain emitter now sits 3 m above the ACTIVE CAMERA (`rain_centre`). Every peer follows its own camera, including the riding profile and a rig retargeted to a piloted creature.
+  - **Derived near ring:** its inner radius is 1.5 m lens clearance + half the wind drift + the spread drift + the streak's sideways half-extent (about 3.9 m), and it is 8 m wide. Rain now falls over the trainer and the near ground.
+  - **Distant flashes:** now 0.20–0.35 of a strike's flash (echo 0.25), on a separate 9–16 s cadence.
+  - **Reduced motion:** scales every sky flash, distant and strike, by 0.15. The telegraph ring and the local bolt are gameplay tells and are unchanged.
+- **Witnesses:**
+  - **New tests** in `tests/test_stormwood_surge_presentation.gd`:
+    - the lens test now models the camera-centred ring with `sin(spread)·v·t`;
+    - `test_rain_reaches_the_trainer` (≤ 3 m at every camera distance and yaw);
+    - distant flashes weaker and slower than strikes;
+    - reduced motion scales sky flashes.
+  - **Smoke:** `tests/smoke_stormwood_lightning_cleanup.gd` checks that under reduced motion the ring and bolt still draw and the sky flash is 0.15.
+  - **Negative controls:**
+    - the round-4 player-centred ring fails the reach test (8.37 m);
+    - dropping the spread term fails the lens test (0.80 m);
+    - ignoring reduced motion fails;
+    - round-4 flash strengths fail.
+  - **Frames:** `visual/surge/sheet_rain_camera.jpg`, with 4 frames compared against `r4_break_upwind.jpg`.
+- **Open:**
+  - The riding frame uses the production riding camera PROFILE on the trainer, with no mount.
+  - Night rain is intentionally faint.
+  - No Ally GPU profile has been taken.
+
