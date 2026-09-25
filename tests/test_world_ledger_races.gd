@@ -117,6 +117,15 @@ func test_two_doss_claimants_charge_and_reward_only_the_first_commit() -> void:
 		"the losing request neither pays nor receives a reward")
 
 
+func test_the_ledgers_doss_stands_where_the_world_builds_him() -> void:
+	# The authority checks reach against its own copy of Doss's site; if the
+	# world moves him and this copy stays, every real claim is out of reach.
+	var world_at: Vector2 = (load("res://scripts/world/playground_world.gd") as GDScript) \
+		.get_script_constant_map().get("RIVER_NEST_AT", Vector2.INF)
+	assert_eq(Vector2(WORLD_LEDGER.DOSS_AT.x, WORLD_LEDGER.DOSS_AT.z), world_at,
+		"world_ledger.gd::DOSS_AT drifted from playground_world.gd::RIVER_NEST_AT")
+
+
 func test_doss_refuses_missing_materials_or_reward_room_without_any_ops() -> void:
 	var missing := _doss_intent(PEER_A, "char-a")
 	missing._doss_actor.inventory_slots = [{"id": "wood", "n": 1}]
@@ -365,7 +374,7 @@ func test_an_unknown_intent_is_refused_with_a_reason() -> void:
 func _doss_intent(peer: int, character_id: String) -> Dictionary:
 	return {"kind": "river_nest_clear", "realm": "meadows", "_doss_actor": {
 		"peer": peer, "character_id": character_id, "realm": "meadows",
-		"position": Vector3(72.0, 0.0, 4187.4),
+		"position": WORLD_LEDGER.DOSS_AT,
 		"inventory_slots": [{"id": "wood", "n": 1}, {"id": "fiber", "n": 1}],
 	}}
 

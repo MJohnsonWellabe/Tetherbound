@@ -120,7 +120,7 @@ func _dock_intent(id: String, inventory: Dictionary = {}) -> Dictionary:
 
 func _doss_intent() -> Dictionary:
 	(_rpc as RpcFixture).dock_actor = {"peer": 1, "character_id": "host-a",
-		"realm": "meadows", "position": Vector3(72.0, 0.0, 4187.4)}
+		"realm": "meadows", "position": WORLD_LEDGER.DOSS_AT}
 	return {"kind": "river_nest_clear", "realm": "meadows", "inventory_slots": [
 		{"id": "wood", "n": 1}, {"id": "fiber", "n": 1},
 	]}

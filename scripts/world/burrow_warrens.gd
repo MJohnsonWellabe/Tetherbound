@@ -7454,14 +7454,18 @@ func _build_prize() -> void:
 	# so the plinth's own OmniLight models the cut faces. It is still the
 	# brightest object in the chamber -- that is what the light beside it is
 	# for -- it is now an object rather than a decal.
-	var stone := _material(Color("#c8564a"), 0.75).duplicate() as StandardMaterial3D
-	stone.albedo_color = Color("#a8322c")
+	# Colours are the prize block's (burrow_warrens.json `prize.colours`): warm
+	# amber, not red -- ART_DIRECTION keeps oxblood/red for Team Tether, and a
+	# code-blind judge read the old red glow as that faction's colour.
+	var colours: Dictionary = prize.get("colours", {}) as Dictionary
+	var stone := _material(Color(str(colours.get("emission", "#d8923a"))), 0.75).duplicate() as StandardMaterial3D
+	stone.albedo_color = Color(str(colours.get("albedo", "#b0701e")))
 	stone.roughness = 0.35
 	stone.metallic = 0.0
 	gem.material_override = stone
 	holder.add_child(gem)
 	var glow := OmniLight3D.new()
-	glow.light_color = Color("#e08a6a")
+	glow.light_color = Color(str(colours.get("light", "#f0b468")))
 	glow.light_energy = 1.4
 	glow.omni_range = 5.0
 	holder.add_child(glow)

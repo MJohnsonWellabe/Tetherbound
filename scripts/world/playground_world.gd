@@ -463,9 +463,20 @@ const BROKEN_CART_AT := Vector2(80.0, 1240.0)
 const BROKEN_CART_YAW_DEG := 40.0
 
 ## T3-ACTIVITIES / CI-TRAINER-CENSUS. Band 3's "River Nest" Local Request.
-## Near-bank perch beside the actual river course. Ground probe at the
-## rotated platform centre (70,4192): 0.15m relief, 4.4-degree worst slope.
-const RIVER_NEST_AT := Vector2(72.0, 4187.4)
+## Near-bank perch beside the actual river course.
+##
+## _why (F03 lure legibility): WORLD sec11 says "Doss's blocked bank is visible
+## from the river loop", but the first site (72,4187.4) stood 152m from the
+## nearest road and no road sample within 120m had a clear line to him
+## (tests/probe_lure_road_visibility.gd: 4 clear samples, nearest 153.6m).
+## Moved 91m west along the SAME north bank (water edge ~21m away, as before
+## ~17m) to the flattest scatter-free spot that the river loop
+## (near_bank_river_walk) sees: 62.8m off the loop, 16 clear road samples,
+## nearest at (-80,4165) 62.8m, 3.7-degree worst slope over a 5m pad, no solid
+## or soft scatter within 6m, no authored Meadows content within 45m. Closer to
+## the loop the bank is steeper than 5 degrees. `world_ledger.gd::DOSS_AT` is
+## the authority's copy and must move with it (tests/test_world_ledger_races.gd).
+const RIVER_NEST_AT := Vector2(-19.0, 4180.0)
 const RIVER_NEST_FACING_DEG := 30.0
 
 ## Where Grandpa's house stands: the west building pad in

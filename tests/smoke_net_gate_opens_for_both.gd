@@ -458,7 +458,7 @@ func _run_earned_crossings() -> void:
 	# Doss is a bounded second production interaction: declared placement at the
 	# authored NPC site, real wood/fiber debit and parsed interact, then the
 	# shared world repair plus the personal reward only on the client.
-	const DOSS_SITE := [74.0, 4187.4]
+	const DOSS_SITE := [-17.0, 4180.0]  # two metres east of playground_world.gd::RIVER_NEST_AT
 	var host_before: Dictionary = await _inventory(0)
 	var client_grant_wood: Dictionary = await step(1, "storage_grant", {"item": "wood", "n": 1})
 	var client_grant_fiber: Dictionary = await step(1, "storage_grant", {"item": "fiber", "n": 1})
