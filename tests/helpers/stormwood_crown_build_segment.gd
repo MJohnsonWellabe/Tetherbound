@@ -770,6 +770,17 @@ func _rest_nights(camp_id: String) -> bool:
 	return await _ensure_usable_ally("after resting at " + camp_id)
 
 
+## One ordinary press as an action event, held across four physics ticks so
+## the director's `_physics_process` read sees its just-pressed edge.
+func _action_tap(action: StringName) -> void:
+	_set_action(action, true)
+	for _frame in 4:
+		await _tree.physics_frame
+	_set_action(action, false)
+	for _frame in 8:
+		await _tree.physics_frame
+
+
 func _ui_tap(action: StringName) -> void:
 	_set_action(action, true)
 	for _frame in 3:
@@ -889,19 +900,30 @@ func _lead_with_fittest(label: String) -> bool:
 	_note("PARTY before %s: %s" % [label, ", ".join(rows)])
 	if best == null:
 		return _fail("no conscious party member left before " + label)
-	for _press in members.size():
-		if party.call("active") == best:
+	# Run 14's one-line cause: active=bramblebun, best=terrapup, nobody
+	# fighting, no input owner, arbiter enabled, and the joypad-event LB taps
+	# changed nothing. The prefix Segment's action-event taps (which do send
+	# out the fittest member there) are used instead: each press waits for the
+	# director's own physics read, and the whole send-out is retried once.
+	for attempt in 2:
+		for _press in members.size():
+			if party.call("active") == best:
+				break
+			var before: RefCounted = party.call("active")
+			await _action_tap(&"party_cycle")
+			var after: RefCounted = party.call("active")
+			_note("LB press %d: active %s -> %s" % [attempt + 1, str(before.get("species_id")) if before != null else "none",
+				str(after.get("species_id")) if after != null else "none"])
+		# LB only changes which creature is active; with nobody out (a creature
+		# just rested in the camp bed is put away) the player calls it out.
+		if _director.call("ally_body") == null:
+			await _action_tap(&"creature_recall")
+		for _frame in 240:
+			if _director.call("ally_instance") == best and _director.call("ally_body") != null:
+				break
+			await _tree.physics_frame
+		if _director.call("ally_instance") == best:
 			break
-		await _tap(&"party_cycle")
-	# LB only changes which creature is active; with nobody out (a creature
-	# just rested in the camp bed is put away) the player calls it out with
-	# the recall button. Run 12 stopped here after the camp rest.
-	if _director.call("ally_body") == null:
-		await _tap(&"creature_recall")
-	for _frame in 240:
-		if _director.call("ally_instance") == best and _director.call("ally_body") != null:
-			break
-		await _tree.physics_frame
 	if _director.call("ally_instance") != best:
 		var ally: RefCounted = _director.call("ally_instance")
 		var active: RefCounted = party.call("active")
