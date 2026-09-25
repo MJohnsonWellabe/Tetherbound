@@ -1,0 +1,688 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.76740407943726,
+			"camera_pos": [
+				661.606140136719,
+				76.6532821655273,
+				2717.15625
+			],
+			"conversation_camera": false,
+			"description": "Crown record rain_ledger, approach from 13 m",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "crown_rain_ledger_approach.jpg",
+			"id": "crown_rain_ledger_approach",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				664.543518066406,
+				74.0003204345703,
+				2721.35107421875
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.8678913333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.87409162521362,
+			"camera_pos": [
+				666.24267578125,
+				77.00830078125,
+				2727.90698242188
+			],
+			"conversation_camera": false,
+			"description": "Crown record rain_ledger, close with interaction prompt",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "crown_rain_ledger_prompt.jpg",
+			"id": "crown_rain_ledger_prompt",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				670.738159179688,
+				74.0003204345703,
+				2730.19775390625
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 63.6,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.87409162521362,
+			"camera_pos": [
+				666.24267578125,
+				77.00830078125,
+				2727.90698242188
+			],
+			"conversation_camera": false,
+			"description": "Crown record rain_ledger after pressing interact",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "crown_rain_ledger_dialogue.jpg",
+			"id": "crown_rain_ledger_dialogue",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				670.738159179688,
+				74.0003204345703,
+				2730.19775390625
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 64.801383,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.76728057861328,
+			"camera_pos": [
+				750.028137207031,
+				76.6532669067383,
+				2709.80249023438
+			],
+			"conversation_camera": false,
+			"description": "Crown record root_census, approach from 13 m",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "crown_root_census_approach.jpg",
+			"id": "crown_root_census_approach",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				745.216003417969,
+				74.0003204345703,
+				2711.5537109375
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.877297,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.87403011322021,
+			"camera_pos": [
+				738.443359375,
+				77.0082702636719,
+				2711.498046875
+			],
+			"conversation_camera": false,
+			"description": "Crown record root_census, close with interaction prompt",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "crown_root_census_prompt.jpg",
+			"id": "crown_root_census_prompt",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				735.067321777344,
+				74.0003204345703,
+				2715.24755859375
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 63.611924,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.87403011322021,
+			"camera_pos": [
+				738.443359375,
+				77.0082702636719,
+				2711.498046875
+			],
+			"conversation_camera": false,
+			"description": "Crown record root_census after pressing interact",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "crown_root_census_dialogue.jpg",
+			"id": "crown_root_census_dialogue",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				735.067321777344,
+				74.0003204345703,
+				2715.24755859375
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 64.8068606666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.76749992370605,
+			"camera_pos": [
+				683.802185058594,
+				76.6528167724609,
+				2701.0283203125
+			],
+			"conversation_camera": false,
+			"description": "Crown record reversal_mark, approach from 13 m",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "crown_reversal_mark_approach.jpg",
+			"id": "crown_reversal_mark_approach",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				685.5537109375,
+				73.9998168945312,
+				2696.21606445312
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.8833333333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.8740553855896,
+			"camera_pos": [
+				689.949829101562,
+				77.0071563720703,
+				2691.06372070312
+			],
+			"conversation_camera": false,
+			"description": "Crown record reversal_mark, close with interaction prompt",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "crown_reversal_mark_prompt.jpg",
+			"id": "crown_reversal_mark_prompt",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				689.24755859375,
+				73.9991760253906,
+				2686.0673828125
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 63.6163706666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.8740553855896,
+			"camera_pos": [
+				689.949829101562,
+				77.0071563720703,
+				2691.06372070312
+			],
+			"conversation_camera": false,
+			"description": "Crown record reversal_mark after pressing interact",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "crown_reversal_mark_dialogue.jpg",
+			"id": "crown_reversal_mark_dialogue",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				689.24755859375,
+				73.9991760253906,
+				2686.0673828125
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 64.8,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.8211784362793,
+			"camera_pos": [
+				-358.796325683594,
+				33.537036895752,
+				435.413665771484
+			],
+			"conversation_camera": false,
+			"description": "Marl at Ashfoot with delivered parcel crate and talk prompt",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "parcels_marl_prompt.jpg",
+			"id": "parcels_marl_prompt",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-359.799987792969,
+				30.705904006958,
+				440.399993896484
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Marl",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared",
+					"stormwood:lantern_pools_linked",
+					"stormwood:side_pims_parcels_1",
+					"stormwood:side_pims_parcels_delivered:cook_marl"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.8551676666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.76737022399902,
+			"camera_pos": [
+				-347.835784912109,
+				32.8419952392578,
+				457.041168212891
+			],
+			"conversation_camera": false,
+			"description": "Rodkeeper Hesk with talk prompt, dark-arches report owed",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "hesk_report_prompt.jpg",
+			"id": "hesk_report_prompt",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-350.0,
+				30.1890277862549,
+				452.399993896484
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Rodkeeper Hesk",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared",
+					"stormwood:lantern_pools_linked",
+					"stormwood:side_pims_parcels_1",
+					"stormwood:side_pims_parcels_delivered:cook_marl",
+					"stormwood:rootgate_released",
+					"stormwood:side_dark_arches_1",
+					"stormwood:side_dark_arches_2"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.742464,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 2.48733615875244,
+			"camera_pos": [
+				-348.926544189453,
+				31.9165229797363,
+				453.831878662109
+			],
+			"conversation_camera": true,
+			"description": "Hesk conversation after pressing interact",
+			"dialogue_line": "You came down from Cloudreach? Then you remember what a storm sounds like when it ends. Ours no longer does.",
+			"dialogue_open": true,
+			"dialogue_speaker": "Rodkeeper Hesk",
+			"file": "hesk_report_dialogue.jpg",
+			"id": "hesk_report_dialogue",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-350.0,
+				30.1890277862549,
+				452.399993896484
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Rodkeeper Hesk",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared",
+					"stormwood:lantern_pools_linked",
+					"stormwood:side_pims_parcels_1",
+					"stormwood:side_pims_parcels_delivered:cook_marl",
+					"stormwood:rootgate_released",
+					"stormwood:side_dark_arches_1",
+					"stormwood:side_dark_arches_2"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 62.9333333333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60100936889648,
+			"camera_pos": [
+				-720.0,
+				45.3603706359863,
+				2238.81274414062
+			],
+			"conversation_camera": false,
+			"description": "Dark Rodline Long Road Arch (pair C), approach from 16 m",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "arch_c_rodline_approach.jpg",
+			"id": "arch_c_rodline_approach",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-720.0,
+				43.2476272583008,
+				2244.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared",
+					"stormwood:lantern_pools_linked",
+					"stormwood:side_pims_parcels_1",
+					"stormwood:side_pims_parcels_delivered:cook_marl",
+					"stormwood:rootgate_released",
+					"stormwood:side_dark_arches_1",
+					"stormwood:side_dark_arches_2"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.857871,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.65748691558838,
+			"camera_pos": [
+				-721.768737792969,
+				45.346378326416,
+				2251.5400390625
+			],
+			"conversation_camera": false,
+			"description": "Dark Rodline Long Road Arch, close with relight/inspect prompt",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "arch_c_rodline_prompt.jpg",
+			"id": "arch_c_rodline_prompt",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-720.0,
+				43.0528106689453,
+				2256.39990234375
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Relight Rodline Long Road Arch · 3 Stormglass",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared",
+					"stormwood:lantern_pools_linked",
+					"stormwood:side_pims_parcels_1",
+					"stormwood:side_pims_parcels_delivered:cook_marl",
+					"stormwood:rootgate_released",
+					"stormwood:side_dark_arches_1",
+					"stormwood:side_dark_arches_2"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 63.5876736666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.97713661193848,
+			"camera_pos": [
+				-631.69140625,
+				26.1238822937012,
+				788.152770996094
+			],
+			"conversation_camera": false,
+			"description": "Verge road arch footing with Raise-a-Road footing prompt",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "footing_verge_road_prompt.jpg",
+			"id": "footing_verge_road_prompt",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-630.0,
+				22.766996383667,
+				792.799987792969
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Inspect the old arch footing",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared",
+					"stormwood:lantern_pools_linked",
+					"stormwood:side_pims_parcels_1",
+					"stormwood:side_pims_parcels_delivered:cook_marl",
+					"stormwood:rootgate_released",
+					"stormwood:side_dark_arches_1",
+					"stormwood:side_dark_arches_2",
+					"stormwood:arch_recipe_known"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.7309513333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.36976480484009,
+			"camera_pos": [
+				-96.2148132324219,
+				263.446594238281,
+				5496.87060546875
+			],
+			"conversation_camera": false,
+			"description": "Freed Stormheart with its offer prompt",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "stormheart_offer_prompt.jpg",
+			"id": "stormheart_offer_prompt",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-98.0,
+				262.059265136719,
+				5492.0
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Accept the Stormheart's offer",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared",
+					"stormwood:lantern_pools_linked",
+					"stormwood:side_pims_parcels_1",
+					"stormwood:side_pims_parcels_delivered:cook_marl",
+					"stormwood:rootgate_released",
+					"stormwood:side_dark_arches_1",
+					"stormwood:side_dark_arches_2",
+					"stormwood:arch_recipe_known",
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 64.804407,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.36976480484009,
+			"camera_pos": [
+				-96.2148132324219,
+				263.446594238281,
+				5496.87060546875
+			],
+			"conversation_camera": true,
+			"conversation_started": "DialoguePanel.start (staged; real path needs a host participant claim)",
+			"description": "Stormheart offer conversation at its final Yes/No line",
+			"dialogue_line": "The Spark it guarded is yours either way. Carry it home to its stone in the Meadows shrine circle.",
+			"dialogue_open": true,
+			"dialogue_speaker": "The Stormheart",
+			"file": "stormheart_offer_yes_no.jpg",
+			"id": "stormheart_offer_yes_no",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-98.0,
+				262.059265136719,
+				5492.0
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Accept the Stormheart's offer",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:crown_reached",
+					"stormwood:named:crown_guardian:cleared",
+					"stormwood:lantern_pools_linked",
+					"stormwood:side_pims_parcels_1",
+					"stormwood:side_pims_parcels_delivered:cook_marl",
+					"stormwood:rootgate_released",
+					"stormwood:side_dark_arches_1",
+					"stormwood:side_dark_arches_2",
+					"stormwood:arch_recipe_known",
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 66.1416896666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		}
+	],
+	"label": "before"
+}
