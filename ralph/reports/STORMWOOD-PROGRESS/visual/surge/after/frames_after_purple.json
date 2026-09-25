@@ -3,276 +3,6 @@
 	"frames": [
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.42840433120728,
-			"camera_pos": [
-				-600.770690917969,
-				26.4313831329346,
-				767.928283691406
-			],
-			"description": "Break, normal camera: rain centred on the camera",
-			"file": "rc_day_break.jpg",
-			"hud": false,
-			"id": "rc_day_break",
-			"label": "after_purple",
-			"long_storm_ended": false,
-			"player": [
-				-604.0,
-				24.8628616333008,
-				772.0
-			],
-			"presentation": {
-				"flash_level": 0.0,
-				"presentation_key": "break",
-				"rain_amount_ratio": 1.0,
-				"rain_emitting": true,
-				"rain_visible": true,
-				"roofed": false
-			},
-			"rain_minus_camera": [
-				0.0,
-				2.02339553833008,
-				0.0
-			],
-			"region": "cinder_verge",
-			"size": [
-				640,
-				360
-			],
-			"staged": [
-				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
-			],
-			"surge_elapsed": 418.510652,
-			"surge_phase": "break",
-			"time_of_day": "day"
-		},
-		{
-			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.42837047576904,
-			"camera_pos": [
-				-608.8896484375,
-				26.4313850402832,
-				770.239807128906
-			],
-			"description": "Break, upwind camera: rain centred on the camera",
-			"file": "rc_day_break_upwind.jpg",
-			"hud": false,
-			"id": "rc_day_break_upwind",
-			"label": "after_purple",
-			"long_storm_ended": false,
-			"player": [
-				-604.0,
-				24.8628616333008,
-				772.0
-			],
-			"presentation": {
-				"flash_level": 0.0,
-				"presentation_key": "break",
-				"rain_amount_ratio": 1.0,
-				"rain_emitting": true,
-				"rain_visible": true,
-				"roofed": false
-			},
-			"rain_minus_camera": [
-				0.0,
-				1.7814769744873,
-				0.0
-			],
-			"region": "cinder_verge",
-			"size": [
-				640,
-				360
-			],
-			"staged": [
-				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames"
-			],
-			"surge_elapsed": 418.499314333333,
-			"surge_phase": "break",
-			"time_of_day": "day"
-		},
-		{
-			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 7.11674308776855,
-			"camera_pos": [
-				-599.777038574219,
-				26.9755439758301,
-				766.675415039062
-			],
-			"description": "Break, riding camera: rain centred on the camera",
-			"file": "rc_day_break_riding.jpg",
-			"hud": false,
-			"id": "rc_day_break_riding",
-			"label": "after_purple",
-			"long_storm_ended": false,
-			"player": [
-				-604.0,
-				24.8628616333008,
-				772.0
-			],
-			"presentation": {
-				"flash_level": 0.0,
-				"presentation_key": "break",
-				"rain_amount_ratio": 1.0,
-				"rain_emitting": true,
-				"rain_visible": true,
-				"roofed": false
-			},
-			"rain_minus_camera": [
-				0.0,
-				1.55693817138672,
-				0.0
-			],
-			"region": "cinder_verge",
-			"size": [
-				640,
-				360
-			],
-			"staged": [
-				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount"
-			],
-			"surge_elapsed": 418.492744666667,
-			"surge_phase": "break",
-			"time_of_day": "day"
-		},
-		{
-			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.42840433120728,
-			"camera_pos": [
-				-600.770690917969,
-				26.4313831329346,
-				767.928283691406
-			],
-			"description": "Break, night camera: rain centred on the camera",
-			"file": "rc_night_break.jpg",
-			"hud": false,
-			"id": "rc_night_break",
-			"label": "after_purple",
-			"long_storm_ended": false,
-			"player": [
-				-604.0,
-				24.8628616333008,
-				772.0
-			],
-			"presentation": {
-				"flash_level": 0.0,
-				"presentation_key": "break",
-				"rain_amount_ratio": 1.0,
-				"rain_emitting": true,
-				"rain_visible": true,
-				"roofed": false
-			},
-			"rain_minus_camera": [
-				0.0,
-				2.02339553833008,
-				0.0
-			],
-			"region": "cinder_verge",
-			"size": [
-				640,
-				360
-			],
-			"staged": [
-				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
-			],
-			"surge_elapsed": 418.516666666667,
-			"surge_phase": "break",
-			"time_of_day": "night"
-		},
-		{
-			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_pos": [
-				-363.214569091797,
-				32.6349220275879,
-				458.214569091797
-			],
-			"description": "Day Break, trainer inside the Ashfoot shelter (ranger station): near rain suppressed",
-			"file": "roof_inside_ashfoot_shelter.jpg",
-			"hud": false,
-			"id": "roof_inside_ashfoot_shelter",
-			"label": "after_purple",
-			"long_storm_ended": false,
-			"player": [
-				-364.575744628906,
-				30.7503108978271,
-				459.575744628906
-			],
-			"presentation": {
-				"flash_level": 0.0,
-				"presentation_key": "break",
-				"rain_amount_ratio": 0.0,
-				"rain_emitting": true,
-				"rain_visible": true,
-				"roofed": true
-			},
-			"region": "cinder_verge",
-			"size": [
-				640,
-				360
-			],
-			"staged": [
-				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
-			],
-			"surge_elapsed": 419.491929333333,
-			"surge_phase": "break",
-			"time_of_day": "day"
-		},
-		{
-			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_pos": [
-				-376.446166992188,
-				31.9591693878174,
-				448.553833007812
-			],
-			"description": "Day Break, the same shelter from 11 m outside: rain falls in the open",
-			"file": "roof_outside_ashfoot_shelter.jpg",
-			"hud": false,
-			"id": "roof_outside_ashfoot_shelter",
-			"label": "after_purple",
-			"long_storm_ended": false,
-			"player": [
-				-372.778167724609,
-				30.5718975067139,
-				452.221832275391
-			],
-			"presentation": {
-				"flash_level": 0.0,
-				"presentation_key": "break",
-				"rain_amount_ratio": 1.0,
-				"rain_emitting": true,
-				"rain_visible": true,
-				"roofed": false
-			},
-			"region": "cinder_verge",
-			"size": [
-				640,
-				360
-			],
-			"staged": [
-				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
-			],
-			"surge_elapsed": 422.491547333333,
-			"surge_phase": "break",
-			"time_of_day": "day"
-		},
-		{
-			"camera": "player camera (production CameraRig/Camera3D)",
 			"camera_pos": [
 				-600.770690917969,
 				26.4313831329346,
@@ -292,7 +22,7 @@
 			"presentation": {
 				"flash_level": 0.0,
 				"presentation_key": "calm",
-				"rain_amount_ratio": 0.300000011920929,
+				"rain_amount_ratio": 0.400000005960464,
 				"rain_emitting": true,
 				"rain_visible": true,
 				"roofed": false
@@ -304,13 +34,10 @@
 			],
 			"staged": [
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
-				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen"
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
 			],
-			"surge_elapsed": 5.01666666666667,
+			"surge_elapsed": 5.0,
 			"surge_phase": "calm",
 			"time_of_day": "day",
 			"world_hour": 12.0
@@ -336,7 +63,7 @@
 			"presentation": {
 				"flash_level": 0.0,
 				"presentation_key": "calm",
-				"rain_amount_ratio": 0.300000011920929,
+				"rain_amount_ratio": 0.400000005960464,
 				"rain_emitting": true,
 				"rain_visible": true,
 				"roofed": false
@@ -348,13 +75,10 @@
 			],
 			"staged": [
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
-				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen"
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
 			],
-			"surge_elapsed": 5.01561966666667,
+			"surge_elapsed": 4.99497866666667,
 			"surge_phase": "calm",
 			"time_of_day": "day",
 			"world_hour": 0.0
@@ -380,7 +104,7 @@
 			"presentation": {
 				"flash_level": 0.0,
 				"presentation_key": "building",
-				"rain_amount_ratio": 0.600000023841858,
+				"rain_amount_ratio": 0.649999976158142,
 				"rain_emitting": true,
 				"rain_visible": true,
 				"roofed": false
@@ -392,13 +116,10 @@
 			],
 			"staged": [
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
-				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen"
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
 			],
-			"surge_elapsed": 329.012055666667,
+			"surge_elapsed": 328.999533333333,
 			"surge_phase": "building",
 			"time_of_day": "day",
 			"world_hour": 12.0
@@ -424,7 +145,7 @@
 			"presentation": {
 				"flash_level": 0.0,
 				"presentation_key": "building",
-				"rain_amount_ratio": 0.600000023841858,
+				"rain_amount_ratio": 0.649999976158142,
 				"rain_emitting": true,
 				"rain_visible": true,
 				"roofed": false
@@ -436,13 +157,10 @@
 			],
 			"staged": [
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
-				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen"
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
 			],
-			"surge_elapsed": 329.016666666667,
+			"surge_elapsed": 329.0,
 			"surge_phase": "building",
 			"time_of_day": "day",
 			"world_hour": 0.0
@@ -480,13 +198,10 @@
 			],
 			"staged": [
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
-				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen"
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
 			],
-			"surge_elapsed": 418.996899666667,
+			"surge_elapsed": 419.015702,
 			"surge_phase": "break",
 			"time_of_day": "day",
 			"world_hour": 12.0
@@ -510,7 +225,7 @@
 				772.0
 			],
 			"presentation": {
-				"flash_level": 0.0,
+				"flash_level": 1.0,
 				"presentation_key": "break",
 				"rain_amount_ratio": 1.0,
 				"rain_emitting": true,
@@ -524,13 +239,10 @@
 			],
 			"staged": [
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
-				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen"
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
 			],
-			"surge_elapsed": 419.0,
+			"surge_elapsed": 419.016326666667,
 			"surge_phase": "break",
 			"time_of_day": "day",
 			"world_hour": 0.0
@@ -568,13 +280,10 @@
 			],
 			"staged": [
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
-				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen"
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
 			],
-			"surge_elapsed": 539.013223,
+			"surge_elapsed": 539.016666666667,
 			"surge_phase": "fading",
 			"time_of_day": "day",
 			"world_hour": 12.0
@@ -612,13 +321,10 @@
 			],
 			"staged": [
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
-				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen"
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
 			],
-			"surge_elapsed": 538.995433,
+			"surge_elapsed": 539.0,
 			"surge_phase": "fading",
 			"time_of_day": "day",
 			"world_hour": 0.0
@@ -644,7 +350,7 @@
 			"presentation": {
 				"flash_level": 0.0,
 				"presentation_key": "aftermath:calm",
-				"rain_amount_ratio": 0.100000001490116,
+				"rain_amount_ratio": 0.0799999982118607,
 				"rain_emitting": true,
 				"rain_visible": true,
 				"roofed": false
@@ -656,14 +362,11 @@
 			],
 			"staged": [
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
 				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
 				"flag stormwood:long_storm_ended set (aftermath)"
 			],
-			"surge_elapsed": 5.00116566666667,
+			"surge_elapsed": 4.99806433333333,
 			"surge_phase": "calm",
 			"time_of_day": "day",
 			"world_hour": 12.0
@@ -689,7 +392,7 @@
 			"presentation": {
 				"flash_level": 0.0,
 				"presentation_key": "aftermath:calm",
-				"rain_amount_ratio": 0.100000001490116,
+				"rain_amount_ratio": 0.0799999982118607,
 				"rain_emitting": true,
 				"rain_visible": true,
 				"roofed": false
@@ -701,14 +404,11 @@
 			],
 			"staged": [
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
-				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
-				"player health restored between Break frames",
-				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
-				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
 				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
 				"flag stormwood:long_storm_ended set (aftermath)"
 			],
-			"surge_elapsed": 5.0,
+			"surge_elapsed": 5.00270533333333,
 			"surge_phase": "calm",
 			"time_of_day": "day",
 			"world_hour": 0.0

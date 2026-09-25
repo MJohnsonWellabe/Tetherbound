@@ -126,6 +126,8 @@ func _run() -> void:
 		await _rainmeasure()
 	if _only.has("purple"):
 		await _purple()
+	if _only.has("purplemotion"):
+		await _purple_motion()
 	if _want("strips"):
 		await _strips()
 	if _want("motion"):
@@ -571,6 +573,44 @@ func _purple() -> void:
 			var name := "aftermath" if aftermath else str(target[0])
 			await _capture("purple_%s_h%02d" % [name, int(hour)], "%s at world hour %d" % [name.capitalize(), int(hour)], false,
 				{"world_hour": float(_look.call("hour"))})
+
+
+## WO-F10-08 motion strips (explicit --only=purplemotion): per phase (and the
+## aftermath last, since its flag is permanent), 4 frames 0.25 s of game time
+## apart at world hour 12. Rendering here is far below 4 fps, so the physics
+## step cap is set to 15 ticks (0.25 s) per rendered frame and 4 consecutive
+## rendered frames are grabbed: particles, ceiling and flashes advance by the
+## real process delta between them. Written to --motion-out (scratch) for a
+## sheet; the per-frame surge clock is recorded.
+func _purple_motion() -> void:
+	var out := _motion_out if not _motion_out.is_empty() else _output_dir
+	DirAccess.make_dir_recursive_absolute(out)
+	var targets: Array = []
+	for phase: String in PHASES:
+		targets.append([phase, false])
+	targets.append(["calm", true])
+	_set_hour(12.0)
+	for target: Array in targets:
+		var aftermath := bool(target[1])
+		if aftermath:
+			var flags: RefCounted = _game.get("progression")
+			if not bool(flags.call("has", "stormwood:long_storm_ended")):
+				flags.call("set_flag", "stormwood:long_storm_ended", true)
+			_note("flag stormwood:long_storm_ended set (aftermath)")
+		await _stand(STAND, _station_focus(), 2.0)
+		await _enter_phase(str(target[0]), aftermath)
+		for _frame in 30:
+			await physics_frame
+		var name := "aftermath" if aftermath else str(target[0])
+		_fine(15)
+		var times: Array[float] = []
+		for index in 4:
+			await RenderingServer.frame_post_draw
+			times.append(snappedf(_surge_elapsed(), 0.01))
+			_save(root.get_texture().get_image(), "%s/motion_%s_%d.jpg" % [out, name, index], STRIP_W, STRIP_H)
+		_coarse()
+		_frames.append({"id": "motion_%s" % name, "surge_elapsed": times, "staged": _staged.duplicate()})
+		_log("motion %s %s" % [name, str(times)])
 
 
 func _set_hour(hour: float) -> void:
