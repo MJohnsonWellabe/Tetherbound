@@ -157,6 +157,12 @@ var _closing_reason: String = ""
 ## they linger, so they are never admitted and never receive a snapshot.
 var _rejected_disconnect_frames: Dictionary = {}
 
+## Admitted peers that said goodbye before closing (`leave()` on a client).
+## Their disconnect frees the seat at once instead of reserving it for the
+## reconnect window. A lost goodbye only means the seat is held, which is the
+## safe direction.
+var _departing_peers: Dictionary = {}
+
 ## One snapshot chunk may be in flight per joining peer. The receiver boundary
 ## is raised only by BEGIN on the ledger channel; chunks remain independently
 ## ordered on the snapshot channel and are acknowledged one at a time.
@@ -481,6 +487,7 @@ func leave(reason: String = "left") -> void:
 			return
 	else:
 		_save_character_here()
+		_say_goodbye()
 	_teardown()
 	session_ended.emit(reason)
 
@@ -1174,6 +1181,29 @@ func _rpc_stormwood_arch_arrival(event: Dictionary) -> void:
 		stormwood_arch_arrival.emit(event)
 
 
+## Client -> host. Best effort: a deliberate leave frees the seat at once.
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_goodbye() -> void:
+	if not is_host():
+		return
+	var sender := multiplayer.get_remote_sender_id()
+	if bool(_registry.call("has", sender)):
+		_departing_peers[sender] = true
+
+
+func _say_goodbye() -> void:
+	if _peer == null or not is_inside_tree() or multiplayer.multiplayer_peer != _peer \
+			or not bool(_box.get("connected", false)):
+		return
+	rpc_id(HOST_PEER_ID, "_rpc_goodbye")
+	# ENet sends queued packets on the next service; flush now so the goodbye
+	# leaves before `_teardown()` closes the socket. Other transports keep
+	# their own close semantics, and a lost goodbye only holds the seat.
+	var enet := _peer as ENetMultiplayerPeer
+	if enet != null and enet.host != null:
+		enet.host.flush()
+
+
 ## Host -> everyone (or one kicked peer), ledger channel.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_session_ended(reason: String) -> void:
@@ -1198,11 +1228,20 @@ func _on_peer_connected(peer_id: int) -> void:
 func _on_peer_disconnected(peer_id: int) -> void:
 	_rejected_disconnect_frames.erase(peer_id)
 	_snapshot_sends.erase(peer_id)
+	var departed := bool(_departing_peers.get(peer_id, false))
+	_departing_peers.erase(peer_id)
 	if realm_transition != null:
 		realm_transition.call("peer_disconnected", peer_id)
 	if not is_host():
 		return
+	var lost_character := str((_registry.call("row", peer_id) as Dictionary).get("character_id", ""))
 	if bool(_registry.call("remove", peer_id)):
+		if not departed and _closing_frames == 0 and peer_id != HOST_PEER_ID:
+			var window_ms := int(1000.0 * float(_cfg("reconnect_window_s", 120.0)))
+			if window_ms > 0 and bool(_registry.call("reserve", lost_character,
+					Time.get_ticks_msec() + window_ms)):
+				print("[session] holding a seat for '%s' for %d s"
+					% [lost_character, window_ms / 1000])
 		_broadcast_registry()
 		peer_left.emit(peer_id)
 		print("[session] peer %d left; %d remain" % [peer_id, peer_count()])
@@ -1534,6 +1573,7 @@ func _teardown() -> void:
 	_closing_frames = 0
 	_closing_deadline_ms = 0
 	_rejected_disconnect_frames.clear()
+	_departing_peers.clear()
 	_snapshot_sends.clear()
 	_clear_snapshot_bootstrap()
 	_clock_accum = 0.0
