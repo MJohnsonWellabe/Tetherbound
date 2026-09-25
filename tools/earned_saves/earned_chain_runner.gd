@@ -48,7 +48,7 @@ const BRIDGE := preload("res://tests/helpers/meadows_earned_bridge_segment.gd")
 const WARRENS := preload("res://tests/helpers/meadows_earned_warrens_segment.gd")
 const RELAY := preload("res://tests/helpers/meadows_earned_relay_segment.gd")
 const HALL := preload("res://tests/helpers/meadows_earned_hall_segment.gd")
-const WARDEN_ACCEPT := preload("res://tools/earned_saves/warden_accept.gd")
+const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CHAIN_SLOT := 1
 const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall", "warden"]
@@ -198,7 +198,7 @@ func _resumed_segment() -> void:
 		"hall":
 			_take(await HALL.new().run(self, world, game), "passed", "hall")
 		"warden":
-			_take(await WARDEN_ACCEPT.new().run(self, world, game), "passed", "warden_accept")
+			_take(await (load(WARDEN_ACCEPT_PATH) as GDScript).new().run(self, world, game), "passed", "warden_accept")
 			# The helper follows the production Rift callback into Cloudreach.
 			for _i in 120:
 				await physics_frame
