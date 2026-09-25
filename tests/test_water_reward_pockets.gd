@@ -9,6 +9,16 @@ const FIELD := preload("res://scripts/world/water_heightfield.gd")
 const RULE := preload("res://scripts/world/water_personal_pickup.gd")
 const PICKUPS := "res://data/config/water_pickups.json"
 const DRY_MIN_M := 0.8
+const DOCK_RULES := preload("res://scripts/world/water_dock_rules.gd")
+## Positions before this change, to prove each move actually took the claim.
+const OLD_POSITIONS := {
+	"water:deep_watch:pickup:002": Vector2(1398.0, 3542.0),
+	"water:lantern_cove:pickup:002": Vector2(-326.0, 158.0),
+	"water:gull_rest:pickup:002": Vector2(-52.0, 804.0),
+	"water:salt_crown:pickup:001": Vector2(6.0, 2316.0),
+	"water:drowned_garden:pickup:002": Vector2(1158.0, 2270.0),
+	"water:brine_steps:pickup:001": Vector2(372.0, 552.0),
+}
 const MAX_SLOPE_DEG := 35.0
 ## Pocket -> the existing row placed in it. Lantern Cove uses pickup:002
 ## (97 m from the pocket) rather than pickup:001 (163 m): the nearer tier-I row.
@@ -30,15 +40,40 @@ const UNRESOLVED := {
 var _field
 var _world: Dictionary
 var _data: Dictionary
+var _camps: Array = []
+var _dock: Dictionary
+var _characters: Dictionary
 
 func before_each() -> void:
 	super.before_each()
 	_field = FIELD.new()
 	_world = FIELD.load_config()
 	_data = JSON.parse_string(FileAccess.get_file_as_string(PICKUPS))
+	_camps = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_camps.json")).camps
+	_dock = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_dock_actions.json"))
+	_characters = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_characters.json"))
 
 func _xz(at: Array) -> Vector2:
 	return Vector2(float(at[0]), float(at[2]))
+
+func _claim_radius() -> float:
+	var tuning: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
+	return float(tuning.get("pickups", {}).get("claim_radius_m", 3.6))
+
+
+func _people(island_id: String) -> Array[Vector2]:
+	var centre := Vector2.ZERO
+	for island: Dictionary in _world.islands:
+		if str(island.id) == island_id:
+			centre = Vector2(float(island.center_xz_m[0]), float(island.center_xz_m[1]))
+	var out: Array[Vector2] = []
+	for list: String in ["npcs", "trainers"]:
+		for person: Dictionary in _characters.get(list, []):
+			if str(person.get("island_id", "")) == island_id and person.has("island_local_offset"):
+				var offset: Array = person.island_local_offset
+				out.append(centre + Vector2(float(offset[0]), float(offset[2])))
+	return out
+
 
 func _dry_footing(p: Vector2) -> bool:
 	for offset: Vector2 in [Vector2.ZERO, Vector2(-1, -1), Vector2(-1, 1), Vector2(1, -1), Vector2(1, 1)]:
@@ -130,6 +165,37 @@ func test_single_item_pockets_hold_exactly_one_matching_existing_row() -> void:
 			"position": Vector3(at.x, _field.height_at(at.x, at.y), at.y)}
 		var verdict := RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {})
 		assert_true(verdict.ok, "Host claim accepted at the pocket: " + str(row.id))
+		# Just inside the host's claim reach still succeeds; the row's former
+		# position (the empty pocket's old occupant spot) is now out of reach.
+		# The host measures 3D distance, so on a slope a sideways step reaches
+		# less far; every standing spot 3 m out that is within 3D reach must be
+		# accepted, and at least one such spot must exist around the pocket.
+		var target := Vector3(at.x, _field.height_at(at.x, at.y), at.y)
+		var reachable := 0
+		for step in 16:
+			var near := at + Vector2(cos(TAU * step / 16.0), sin(TAU * step / 16.0)) * 3.0
+			var stand := Vector3(near.x, _field.height_at(near.x, near.y), near.y)
+			if stand.distance_to(target) > _claim_radius() - 0.05:
+				continue
+			reachable += 1
+			context.position = stand
+			assert_true(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {}).ok,
+				"Host claim accepted 3 m away within reach: " + str(row.id))
+		assert_true(reachable > 0, "Some standing spot 3 m away can claim " + str(row.id))
+		var old_at: Vector2 = OLD_POSITIONS[row.id]
+		context.position = Vector3(old_at.x, _field.height_at(old_at.x, old_at.y), old_at.y)
+		assert_false(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {}).ok,
+			"Former position no longer claims: " + str(row.id))
+		# The file's own clearances: people, camps and dock equipment.
+		var clearance := float(_data.validation.npc_and_trainer_clearance_m)
+		for person: Vector2 in _people(str(pocket.island_id)):
+			assert_true(person.distance_to(at) >= clearance, "NPC/trainer clearance at " + str(row.id))
+		for camp: Dictionary in _camps:
+			assert_true(Vector2(float(camp.at[0]), float(camp.at[1])).distance_to(at) >= clearance, "Camp clearance at " + str(row.id))
+		for action: Dictionary in _dock.actions:
+			var equipment := DOCK_RULES.action_position(action, _world, _field.height_at)
+			if equipment.is_finite():
+				assert_true(Vector2(equipment.x, equipment.z).distance_to(at) >= clearance, "Dock equipment clearance at " + str(row.id))
 
 func test_composite_pockets_remain_explicitly_unresolved() -> void:
 	var registered := {}
@@ -164,3 +230,5 @@ func test_every_pickup_keeps_dry_spawn_ground() -> void:
 		var at := _xz(row.position)
 		var height: float = _field.height_at(at.x, at.y)
 		assert_true(is_finite(height) and height >= 0.0, "Pickup has dry spawn ground: " + str(row.id))
+		if row.has("reward_pocket_id"):
+			assert_true(height >= DRY_MIN_M, "Pocket row meets the file's dry minimum: " + str(row.id))
