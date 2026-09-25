@@ -1,6 +1,6 @@
 Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
 
-only ledger,arch,stormwood_ending,legendary,raise_a_road,crown,session,build_catalogue,pickup,harvest,reward_delivery: 40 of 503 test files
+only ledger,arch,stormwood_ending,legendary,session,pickup,harvest,reward_delivery,raise_a_road,crown,build_catalogue: 40 of 505 test files
 ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
    at: get_node_or_null (scene/main/node.cpp:1910)
    GDScript backtrace (most recent call first):
@@ -2181,6 +2181,7 @@ ERROR: Can't use get_node() with absolute paths from outside the active scene tr
   ok    test_item_cache_pickup.gd :: test_was_taken_is_per_item_not_global
   ok    test_item_cache_pickup.gd :: test_was_taken_reads_the_real_flag_store
   ok    test_ledger_admission_guards.gd :: test_actor_identity_does_not_outlive_its_commit
+  ok    test_ledger_admission_guards.gd :: test_arch_rules_are_judged_at_the_snapped_centre
   ok    test_ledger_admission_guards.gd :: test_host_overwrites_a_claimed_identity_with_the_registry_answer
   ok    test_ledger_admission_guards.gd :: test_other_intent_kinds_cannot_smuggle_a_forged_receipt
   ok    test_ledger_admission_guards.gd :: test_prefix_list_covers_all_chapters_and_matches_generically
@@ -2291,7 +2292,7 @@ WARNING: Session.host_with_peer: capacity 5 is outside 1..4
   ok    test_stormwood_crown_named_engage.gd :: test_explicit_engage_requires_exact_body_and_actionable_director_offer
   ok    test_stormwood_crown_named_engage.gd :: test_missing_named_body_is_not_dereferenced_by_admission_diagnostics
   ok    test_stormwood_crown_remembers.gd :: test_chapter_counts_exactly_the_runtime_records_and_declares_them_persistent
-[scatter bake] load phases (ms): read[108 regions, 33773 placements, 0 skipped]=87 reorder[7 layers]=28
+[scatter bake] load phases (ms): read[108 regions, 33773 placements, 0 skipped]=85 reorder[7 layers]=27
   ok    test_stormwood_crown_remembers.gd :: test_record_seats_are_clear_readable_island_ground
   ok    test_stormwood_crown_remembers.gd :: test_three_distinct_records_then_wen_complete_the_chain
   ok    test_stormwood_crown_remembers.gd :: test_wen_reports_records_only_after_truth_and_until_complete
@@ -2300,13 +2301,23 @@ WARNING: Session.host_with_peer: capacity 5 is outside 1..4
   ok    test_stormwood_dark_arches.gd :: test_hesk_report_outranks_ordinary_lines_only_while_owed
   ok    test_stormwood_dark_arches.gd :: test_inspection_facts_are_declared_world_state
   ok    test_stormwood_dark_arches.gd :: test_inspection_paid_relights_and_hesk_complete_the_chain
+  ok    test_stormwood_ending.gd :: test_a_bare_legacy_receipt_is_an_acceptance_and_is_never_cleared
+  ok    test_stormwood_ending.gd :: test_a_legacy_freeing_without_recorded_fighters_never_offers_whoever_claims_first
+  ok    test_stormwood_ending.gd :: test_a_missing_local_record_reads_as_no_character_instead_of_crashing
+  ok    test_stormwood_ending.gd :: test_a_saved_answer_resumes_only_the_claim_it_answered
+  ok    test_stormwood_ending.gd :: test_an_unknown_participant_list_is_never_published_as_a_solo_freeing
   ok    test_stormwood_ending.gd :: test_ceremony_receipt_is_player_owned_despite_the_stormwood_world_prefix
   ok    test_stormwood_ending.gd :: test_chapter_data_orders_release_offer_and_waterward_before_home_placement
   ok    test_stormwood_ending.gd :: test_claims_are_kept_per_character_and_legacy_saves_migrate
   ok    test_stormwood_ending.gd :: test_every_participant_gets_their_own_once_only_offer
   ok    test_stormwood_ending.gd :: test_livewire_is_the_single_active_cooldown_power
   ok    test_stormwood_ending.gd :: test_offer_asks_an_explicit_yes_or_no_and_receipts_each_answer
+  ok    test_stormwood_ending.gd :: test_only_a_portable_acceptance_withholds_an_offer_in_another_world
   ok    test_stormwood_ending.gd :: test_production_wires_the_existing_five_slot_and_story_transports
+  ok    test_stormwood_ending.gd :: test_the_host_decides_an_offer_from_its_own_receipts_not_the_clients_flag
+  ok    test_stormwood_ending.gd :: test_the_offer_accept_effect_is_consumed_by_the_ending
+  ok    test_stormwood_ending.gd :: test_the_portable_acceptance_is_player_owned_despite_the_stormwood_world_prefix
+  ok    test_stormwood_ending.gd :: test_the_scoped_answer_prefix_is_player_owned
   ok    test_stormwood_ending.gd :: test_waterward_waits_for_the_roster_decision_and_is_once_only
   ok    test_stormwood_harvest_ledger.gd :: test_break_grants_the_catalogue_yield_not_forged_request_contents
   ok    test_stormwood_harvest_ledger.gd :: test_calm_refuses_a_charged_site_even_if_request_claims_break
@@ -2378,4 +2389,4 @@ WARNING: Session.host_with_peer: capacity 5 is outside 1..4
   ok    test_world_ledger_races.gd :: test_two_peers_chopping_the_same_bush_duplicate_nothing
   ok    test_world_ledger_races.gd :: test_two_withdrawals_of_one_stack_cannot_both_commit
 
-301 tests, 1083784 assertions, 0 failed
+312 tests, 1083842 assertions, 0 failed

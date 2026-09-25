@@ -204,7 +204,7 @@ Contract floor: 16 landmarks and 330 wild clusters. The recovered floor allowed 
 
 The four authored Stormwood TMs retain their source power bands: 1.15 quick, 1.30 charged and the two stronger authored values 1.60 and 2.00. They are chapter rewards, not permission to replace the global 1.25/0.80 type graph.
 
-Current config contains six regions, 19 landmarks, nine top-level route records, 401 wild clusters, 12 tables, six named fights, 26 trainers, 19 characters, 229 pickups, 210 harvest sites and six side chains.
+Current config contains six regions, 19 landmarks, ten top-level route records, 401 wild clusters, 12 tables, six named fights, 26 trainers, 19 characters, 229 pickups, 210 harvest sites and six side chains.
 
 `scripts/world/stormwood_world.gd` mounts both `StormwoodDynamo` and `StormwoodEnding`. Focused Dynamo and ending tests pass, including host authority and Livewire consumption. Continuous ordinary play is proved only through the early chapter prefix into pair B; later acts and the entire chapter are not fresh-campaign accepted.
 
