@@ -430,8 +430,13 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 				held = 0
 			await _tree.physics_frame
 	var winner := _arbiter.call("winning_provider") as Node
-	return _fail("%s never won the InteractionArbiter (winner=%s offer=%s)" % [label,
-		str(winner.get_path()) if winner != null else "<none>", str(_arbiter.call("winner"))])
+	var own_offer: Variant = prompt.call("interaction_offer", _player.global_position) \
+		if prompt.has_method("interaction_offer") else "n/a"
+	return _fail("%s never won the InteractionArbiter (winner=%s offer=%s; target enabled=%s visible=%s in_tree=%s own_offer=%s player=%s prompt_at=%s distance=%.2f equipped=%s)" % [label,
+		str(winner.get_path()) if winner != null else "<none>", str(_arbiter.call("winner")),
+		str(prompt.get("enabled")), str(body.is_visible_in_tree()), str(body.is_inside_tree()), str(own_offer),
+		str(_player.global_position), str(prompt.global_position),
+		_player.global_position.distance_to(prompt.global_position), str(_game.get("equipped_tool"))])
 
 
 func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
