@@ -103,7 +103,9 @@
   "_comment_choice": "F05 / ACCEPTANCE 6.1: accept and refuse are both reachable with room on the belt and at five. After the join offer `announce` names both answers as final, then two prompts open: accept `accept_offset` metres to the player's side, at the creature's shoulder (straight ahead is inside its 2.13 m capsule, which stops 2.6 m away), and refuse `refuse_offset` metres behind where the player stood. Each is `height` up and live within `radius`, measured in 3D from the player's feet, so neither is live where the player stands when the offer lands (a press meant for the dialogue cannot answer it) and each is reached with one deliberate step. MEASURED: at radius 1.0 / height 1.1 neither prompt could ever be reached, because the height alone exceeded the radius. Accepting at five still goes through R4.10's release ceremony, where letting the newcomer go is also a refusal. TUNABLE.",
   "choice": {
     "announce": "Step toward it to walk out together, or step back to leave it free. Only you can answer for yourself, and either answer is final.",
+    "conversation": "veridian_choice",
     "refused_message": "The Veridian Stag turns for the door and the open country. It leaves free, and your team stays as it is.",
+    "refused_conversation": "veridian_choice_refused",
     "accept_label": "Walk out with the Veridian Stag (final)",
     "refuse_label": "Leave the Veridian Stag free (final)",
     "accept_offset": 2.0,

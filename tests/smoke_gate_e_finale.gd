@@ -540,6 +540,20 @@ func _accept_the_offer() -> void:
 	if accept == null:
 		_fail("the choice opened without an accept prompt")
 		return
+	# The offer is read out (both answers, at dialogue size) a beat after it
+	# opens, and no answer is taken while it is open: read it through first,
+	# as a player does, rather than walking into the middle of it.
+	var read_out := false
+	for i in 240:
+		await physics_frame
+		if bool(_panel.call("is_open")):
+			read_out = true
+			await _press("interact")
+		elif read_out:
+			break
+	if not read_out:
+		_fail("the choice opened but its two answers were never read out")
+		return
 	await _walk_toward(accept.get_parent().global_position, 0.4)
 	for i in 20:
 		await physics_frame

@@ -715,7 +715,7 @@ func _process(delta: float) -> void:
 	if _announce_in >= 0.0:
 		_announce_in -= delta
 		if _announce_in < 0.0 and _stage == STAGE_CHOICE and not _panel_busy():
-			_say(str((_config.get("choice", {}) as Dictionary).get("announce", "")))
+			_announce_choice()
 		elif _announce_in < 0.0 and _stage == STAGE_CHOICE:
 			_announce_in = 0.25
 
@@ -744,6 +744,17 @@ func _sync_gate() -> void:
 
 
 ## §28's order, and the only thing in this file that is genuinely its own.
+## The offer is read out as a conversation that names BOTH answers, where each
+## is and that each is final -- at dialogue size, with the world paused behind
+## it -- rather than as a line on the one-slot message strip, which the blind
+## visual verdict measured at ~12 px, under a stale hint. The strip line stays
+## the fallback when no panel can take it.
+func _announce_choice() -> void:
+	var spec: Dictionary = _config.get("choice", {})
+	if not _start(str(spec.get("conversation", ""))):
+		_say(str(spec.get("announce", "")))
+
+
 ## Each stage waits for the dialogue panel to close before the next begins, so
 ## nothing lands on top of an open box, and the five-creature decision gets a
 ## whole stage of its own because it is a decision the player may sit with.
@@ -1161,7 +1172,9 @@ func choice_open() -> bool:
 ## The two answers. Public so a witness can drive the exact same path the
 ## prompts drive; each refuses unless THIS character's choice is open.
 func accept_offer() -> bool:
-	if _stage != STAGE_CHOICE or not _may_receive_now():
+	# Never while the choice is still being read out: an answer is only given
+	# by a press made after both answers were on screen.
+	if _stage != STAGE_CHOICE or not _may_receive_now() or _panel_busy():
 		return false
 	_close_choice()
 	_stage = STAGE_CEREMONY
@@ -1170,14 +1183,20 @@ func accept_offer() -> bool:
 
 
 func refuse_offer() -> bool:
-	if _stage != STAGE_CHOICE or not _may_receive_now():
+	if _stage != STAGE_CHOICE or not _may_receive_now() or _panel_busy():
 		return false
 	_close_choice()
 	_joined = null
 	_record_resolution(false)
 	_stage = STAGE_CEREMONY
-	_say(str((_config.get("choice", {}) as Dictionary).get("refused_message", "")))
-	_ceremony_hold = float((_config.get("choice", {}) as Dictionary).get("message_hold", 2.4))
+	var spec: Dictionary = _config.get("choice", {})
+	# Said in the dialogue panel, at dialogue size: the blind visual verdict
+	# measured the message-strip version as ~12 px under the hotbar. The
+	# ceremony already waits for the panel to close. With no panel (a bare
+	# scene) the strip line and its hold remain the fallback.
+	if not _start(str(spec.get("refused_conversation", ""))):
+		_say(str(spec.get("refused_message", "")))
+		_ceremony_hold = float(spec.get("message_hold", 2.4))
 	print("[climax] this character refused the legendary; it stays free")
 	return true
 
