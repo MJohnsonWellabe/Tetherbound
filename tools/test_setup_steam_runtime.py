@@ -69,19 +69,30 @@ class ArchiveCacheTest(unittest.TestCase):
         self.assertEqual(hashlib.sha256(self.entry().read_bytes()).hexdigest(), self.pin)
 
     def test_symlinked_entry_is_never_read(self):
-        decoy = self.tmp / "decoy.tar.xz"
-        decoy.write_bytes(b"not the archive")
+        # The link points at a VALID copy, so only the symlink guard can make
+        # this download: without it the valid bytes would be used from cache.
+        target = self.tmp / "valid-copy.tar.xz"
+        shutil.copyfile(self.archive, target)
         self.entry().parent.mkdir(parents=True)
-        self.entry().symlink_to(decoy)
+        self.entry().symlink_to(target)
         self.assertEqual(self.fetch(), (True, self.pin))
-        self.assertEqual(self.downloads, 1, "the symlink is ignored and the archive fetched")
-        self.assertEqual(decoy.read_bytes(), b"not the archive", "the link target is never written")
+        self.assertEqual(self.downloads, 1, "a symlinked entry is not trusted, even when valid")
+        self.assertFalse(self.entry().is_symlink(), "the fresh download replaced the link itself")
+        self.assertEqual(hashlib.sha256(target.read_bytes()).hexdigest(), self.pin,
+                         "the link target was never written through")
 
     def test_unwritable_cache_does_not_fail_the_install(self):
         blocker = self.tmp / "not-a-directory"
         blocker.write_text("x")
         self.assertEqual(self.fetch(cache_dir=blocker / "cache"), (True, self.pin))
-        self.assertEqual(list(self.tmp.glob("**/*.part")), [], "no partial cache file is left")
+
+    def test_failed_cache_rename_leaves_no_partial_file(self):
+        # The cache directory is writable (mkstemp succeeds) but the entry
+        # path is a directory, so the final rename fails after the copy.
+        self.entry().mkdir(parents=True)
+        self.assertEqual(self.fetch(), (True, self.pin))
+        self.assertEqual(list(self.cache.glob("*.part")), [], "the temporary copy is removed")
+        self.assertTrue(self.entry().is_dir(), "the install succeeded without touching the entry")
 
     def test_bad_pin_installs_and_caches_nothing(self):
         bad = "0" * 64

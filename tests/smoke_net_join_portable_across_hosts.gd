@@ -101,16 +101,17 @@ func _run() -> void:
 			and (characters as Array).size() == 1,
 		"the traveller keeps exactly its own portable character (%s)" % str(characters))
 
-	# Read both hosts' saved worlds back OFF DISK, not from memory: each host
-	# leaves (which writes its world save) and its autosave file is re-read.
+	# Read both hosts' saves back OFF DISK, not from memory: each host leaves
+	# (which writes its autosave slot) and that slot file is re-read. The slot
+	# file carries the world flags; the split worlds/<id> document is not read.
 	check(_passed(await step(0, "leave", {"reason": "portable_smoke_end"})), "host A saved and closed")
 	check(_passed(await step(1, "leave", {"reason": "portable_smoke_end"})), "host B saved and closed")
 	var a_file := _flag_ids(_as_dict(await probe(0, "autosave_dict")))
 	var b_file := _flag_ids(_as_dict(await probe(1, "autosave_dict")))
 	check(a_file.has(WORLD_A_FLAG) and not a_file.has(WORLD_B_FLAG),
-		"host A's world file on disk holds A's flag and not B's (%d flags)" % a_file.size())
+		"host A's saved slot file on disk holds A's flag and not B's (%d flags)" % a_file.size())
 	check(b_file.has(WORLD_B_FLAG) and not b_file.has(WORLD_A_FLAG),
-		"host B's world file on disk holds B's flag and not A's (%d flags)" % b_file.size())
+		"host B's saved slot file on disk holds B's flag and not A's (%d flags)" % b_file.size())
 	check(not a_file.has(PERSONAL_FLAG) and not b_file.has(PERSONAL_FLAG),
 		"neither host's saved file carries the traveller's personal flag")
 

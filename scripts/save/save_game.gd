@@ -803,7 +803,8 @@ func load_slot(game: Object, slot: int) -> bool:
 ##
 ## Ownership, exactly as D100 states it: the host writes the world file, EVERY
 ## peer writes its own character file, and a client never writes a world file.
-## `_is_host()` asks the game, never `multiplayer.is_server()` -- with an
+## `request["host"]` comes from `_owns_world()`, which asks the game (host and
+## world-save ownership), never `multiplayer.is_server()` -- with an
 ## `OfflineMultiplayerPeer` that call is true and `get_unique_id()` is 1, so it
 ## cannot tell a solo player from a host and cannot tell a client from either.
 func _write_split(request: Dictionary,
