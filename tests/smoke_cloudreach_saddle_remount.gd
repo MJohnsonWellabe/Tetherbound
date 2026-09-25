@@ -914,10 +914,10 @@ func _segment(shape: CapsuleShape3D, at: Transform3D) -> Array[Vector3]:
 
 
 ## Coordinator review of #229, H3: a fight starting while the rider is boxed
-## in. Fixture: the pair stood on the arrival road, the refusal leg's walls
-## around the ridden mount, a wild spawned
-## outside them (`spawn_wild`), and the director's private `_start_fight`
-## called as an engage does. The mount stays solid (combat does not hand it
+## in. Fixture: the pair stood on the arrival road, a wild spawned 6 m away
+## (`spawn_wild`), the director's private `_start_fight` called as an engage
+## does, and the refusal leg's walls raised around the mount before the riding
+## controller's next physics step. The mount stays solid (combat does not hand it
 ## back to following), so the pinned rule is "mount_top": on its back.
 func _combat_start_forced_dismount() -> void:
 	await _mount_on_open_ground(ARRIVAL_ROAD, "the fight")
@@ -925,9 +925,6 @@ func _combat_start_forced_dismount() -> void:
 	if body == null:
 		return
 	for i in 30:
-		await physics_frame
-	var walls := _enclose(body)
-	for i in 4:
 		await physics_frame
 	var wild: Node3D = null
 	for offset: Vector3 in [Vector3(6.0, 0.5, 0.0), Vector3(-6.0, 0.5, 0.0), Vector3(0.0, 0.5, 6.0), Vector3(0.0, 0.5, -6.0)]:
@@ -939,10 +936,21 @@ func _combat_start_forced_dismount() -> void:
 		return
 	for i in 10:
 		await physics_frame
+	# After this tick's node physics (a physics-processed timer resumes there):
+	# the fight starts (the director moves the ally as it admits it) and the
+	# walls go up around where the mount now stands. The physics step at the
+	# end of this tick registers them; the riding controller sees the fight on
+	# the next tick and forces the dismount inside them.
+	await physics_frame
+	await create_timer(0.0, true, true).timeout
 	_arm_placement(body)
 	_director.call("_start_fight", wild)
+	var walls := _enclose(body)
+	var boxed_at := body.global_position
 	for i in 10:
 		await physics_frame
+	_check(not _placement.is_empty() and (_placement.mount_at as Vector3).distance_to(boxed_at) < 0.3,
+		"fixture: the mount was still inside the walls when the ride ended (boxed at %s, dismounted at %s)" % [boxed_at, _placement.get("mount_at")])
 	var manager := _world.get_node_or_null(^"CombatManager")
 	_check(manager != null and bool(manager.call("is_fighting")), "the fight started")
 	_check(not bool(_riding.call("is_mounted")), "combat admission ends the ride")
