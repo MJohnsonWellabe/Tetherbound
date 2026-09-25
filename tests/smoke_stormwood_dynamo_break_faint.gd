@@ -11,8 +11,17 @@ var failures: Array[String] = []
 var assertions := 0
 
 
+class RegistryStub extends RefCounted:
+	func row(peer: int) -> Dictionary:
+		return {"character_id": "character-%d" % peer}
+
+
 class SessionStub extends Node:
 	var present := {}
+	var _registry := RegistryStub.new()
+
+	func registry() -> RefCounted:
+		return _registry
 
 	func is_host() -> bool:
 		return true
@@ -69,6 +78,7 @@ func _run() -> void:
 	controller.phase = "break_core"
 	controller.participants = [2]
 	controller.contributors = [2]
+	controller.fighter_characters = ["character-2"]
 	root.add_child(controller)
 	_check(controller.rules.strike_conduit(0, controller.rules.bank_position(0), true), "one conduit struck before the wipe")
 
@@ -79,6 +89,7 @@ func _run() -> void:
 	_check(controller.rules.phase == "break_core", "the captain win stands: Break, not a fresh captain fight")
 	_check(controller.rules.conduits.is_empty(), "the partial conduit set clears")
 	_check(controller.contributors == [2], "the captain win's contributors are kept for the release")
+	_check(controller.fighter_characters == ["character-2"], "the fainted fighter keeps their Stormheart offer")
 	var frozen: float = controller.rules.window_left()
 	for _i in 5:
 		await process_frame
@@ -128,6 +139,8 @@ func _run() -> void:
 		await process_frame
 	_check(controller.participants.has(3) and not controller.contributors.has(3),
 		"a Break arrival strikes conduits but earns no captain-win reward")
+	_check(controller.fighter_characters == ["character-2", "character-3"],
+		"a Break arrival is in the fight that frees the Stormheart and gets their own offer")
 	for bank in 4:
 		controller.rules.strike_conduit(bank, controller.rules.bank_position(bank), true)
 	_check(controller.rules.phase == "released", "the restarted Break can still release the Stormheart")

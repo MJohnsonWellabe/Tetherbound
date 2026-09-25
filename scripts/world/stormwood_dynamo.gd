@@ -35,6 +35,10 @@ var contributors: Array[int] = []
 var _awaiting_break_party := false
 ## A reloaded Break drops fighters who are not back without replaying a wipe.
 var _restored_break := false
+## Stable character ids of everyone who joined this attempt, captured when they
+## join so a later disconnect cannot erase them. The Stormheart ending reads
+## this to give each fight participant their own offer.
+var fighter_characters: Array[String] = []
 var _moves := MOVE_DB.new()
 var _actions: Dictionary = {}
 var _cooldowns: Dictionary = {}
@@ -353,6 +357,7 @@ func _reset_after_loss() -> void:
 	participants.clear()
 	if not in_break:
 		contributors.clear()
+		fighter_characters.clear()
 	_actions.clear()
 	_cooldowns.clear()
 	_last_fired_serial = -1
@@ -396,6 +401,15 @@ func _add_participant(peer: int, contributes := true) -> void:
 	_awaiting_break_party = false
 	if not participants.has(peer):
 		participants.append(peer)
+	# Everyone who strikes toward the release is in the fight that frees the
+	# Stormheart and gets their own offer; the captain win's trainer reward
+	# stays with its contributors.
+	var row: Dictionary = session.registry().row(peer)
+	var character := str(row.get("character_id", ""))
+	if character.is_empty() and peer == session.local_peer_id():
+		character = str(get_node("/root/Game").get("local").get("character_id"))
+	if not character.is_empty() and not fighter_characters.has(character):
+		fighter_characters.append(character)
 	if contributes and not contributors.has(peer):
 		contributors.append(peer)
 
@@ -443,7 +457,8 @@ func _restore_saved_state() -> void:
 
 func save_payload() -> Dictionary:
 	return {"rules": rules.save_data(), "participants": participants.duplicate(),
-		"contributors": contributors.duplicate(), "awaiting_break_party": _awaiting_break_party}
+		"contributors": contributors.duplicate(), "fighter_characters": fighter_characters.duplicate(),
+		"awaiting_break_party": _awaiting_break_party}
 
 
 func load_payload(saved: Dictionary) -> void:
@@ -454,6 +469,10 @@ func load_payload(saved: Dictionary) -> void:
 		rules.load_data(rule_data as Dictionary)
 	participants = _unique_peers(saved.get("participants", []))
 	contributors = _unique_peers(saved.get("contributors", []))
+	fighter_characters.clear()
+	for raw: Variant in saved.get("fighter_characters", []):
+		if not str(raw).is_empty() and not fighter_characters.has(str(raw)):
+			fighter_characters.append(str(raw))
 	_awaiting_break_party = bool(saved.get("awaiting_break_party", false))
 	_restored_break = str(rules.phase) == "break_core"
 
