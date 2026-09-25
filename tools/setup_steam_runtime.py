@@ -81,12 +81,28 @@ def _sha256(path):
     return digest.hexdigest()
 
 
-def _download(url, expected, staging):
+ARCHIVE_CACHE = CACHE / "archives"
+
+
+def _download(url, expected, staging, cache_dir=ARCHIVE_CACHE):
+    """Return a verified archive. A cached copy is keyed by its pinned SHA-256
+    and re-verified before use; a download is verified before it is cached.
+    A cached file that no longer matches is discarded, never used."""
+    cached = Path(cache_dir) / f"{expected}.tar.xz" if cache_dir else None
+    if cached is not None and cached.is_file():
+        if _sha256(cached) == expected:
+            return cached
+        cached.unlink(missing_ok=True)
     archive = Path(staging) / "archive.tar.xz"
     urllib.request.urlretrieve(url, archive)
     actual = _sha256(archive)
     if actual != expected:
         raise SystemExit(f"Archive checksum mismatch for {url}: {actual}; nothing installed")
+    if cached is not None:
+        cached.parent.mkdir(parents=True, exist_ok=True)
+        temporary = cached.with_suffix(".download")
+        shutil.copyfile(archive, temporary)
+        os.replace(temporary, cached)
     return archive
 
 
@@ -134,20 +150,20 @@ def _extract_verified(archive, wanted, destination, exact_contents):
     return installed
 
 
-def install_editor(destination):
+def install_editor(destination, cache_dir=ARCHIVE_CACHE):
     destination.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="tetherbound-steam-") as staging:
-        archive = _download(EDITOR["url"], EDITOR["sha256"], staging)
+        archive = _download(EDITOR["url"], EDITOR["sha256"], staging, cache_dir)
         _extract_verified(archive, EDITOR["files"], destination, exact_contents=True)
     print(destination / "godotsteam.47.editor.win64.console.exe")
     print("GodotSteam 4.20 / Godot 4.7 / Steamworks 1.64. No AppID configured; no game launched.")
 
 
-def install_templates(platform, destination):
+def install_templates(platform, destination, cache_dir=ARCHIVE_CACHE):
     destination.mkdir(parents=True, exist_ok=True)
     wanted = TEMPLATE_PLATFORMS[platform]
     with tempfile.TemporaryDirectory(prefix="tetherbound-steam-templates-") as staging:
-        archive = _download(TEMPLATES_URL, TEMPLATES_SHA256, staging)
+        archive = _download(TEMPLATES_URL, TEMPLATES_SHA256, staging, cache_dir)
         installed = _extract_verified(archive, wanted, destination, exact_contents=False)
     for path in installed:
         print(path)
@@ -210,19 +226,24 @@ def main():
     parser.add_argument("--configure-preset", metavar="NAME", default=None,
                         help="with --templates: point this export preset at the installed templates")
     parser.add_argument("--presets-file", type=Path, default=Path("export_presets.cfg"))
+    parser.add_argument("--archive-cache", type=Path, default=ARCHIVE_CACHE,
+                        help="directory of verified archives keyed by pinned SHA-256")
+    parser.add_argument("--no-archive-cache", action="store_true",
+                        help="always download; never read or write the archive cache")
     args = parser.parse_args()
     if args.configure_preset and not args.templates:
         parser.error("--configure-preset needs --templates")
     if args.templates:
         default = CACHE / f"godotsteam-4.20-godot-4.7-templates-{args.platform}"
         destination = (args.destination or default).resolve()
-        install_templates(args.platform, destination)
+        install_templates(args.platform, destination, None if args.no_archive_cache else args.archive_cache)
         if args.configure_preset:
             debug_name, release_name = template_files(args.platform)
             configure_preset(args.presets_file, args.configure_preset,
                              destination / debug_name, destination / release_name)
     else:
-        install_editor((args.destination or EDITOR["destination"]).resolve())
+        install_editor((args.destination or EDITOR["destination"]).resolve(),
+                       None if args.no_archive_cache else args.archive_cache)
 
 
 if __name__ == "__main__":
