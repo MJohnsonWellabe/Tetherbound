@@ -12,6 +12,7 @@ extends "res://scripts/world/world_weather.gd"
 const RULES := preload("res://scripts/world/stormwood_surge_rules.gd")
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 const LONG_STORM_ENDED := "stormwood:long_storm_ended"
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 
 ## The overcast ceiling. A dome rather than the shared sky shader because
 ## WorldLook's weather layer can recolour the sky gradient but not its clouds,
@@ -547,13 +548,27 @@ func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 		var slant: Array = cfg.get("wind_slant", [0.0, 0.0])
 		process.direction = Vector3(float(slant[0]), -1.0, float(slant[1])).normalized()
 		process.particle_flag_align_y = true
-		# Review round 4: a slanted drop drifts downwind over its life, which
-		# would carry drops spawned outside the ring back through the camera
-		# (the R5.2 near-lens streak defect). Shift the ring upwind by part of
-		# that drift and keep its inner radius clear of the longest camera arm.
-		process.emission_ring_inner_radius = float(cfg.get("inner_radius_m", process.emission_ring_inner_radius))
-		process.emission_ring_radius = float(cfg.get("outer_radius_m", process.emission_ring_radius))
-		process.emission_shape_offset = -rain_drift(process, emitter.lifetime) * float(cfg.get("upwind_offset_fraction", 0.0))
+		# The rain is centred on the CAMERA (see rain_centre), so a ring
+		# around it rains over the trainer and near ground in every camera
+		# mode. A slanted drop drifts downwind over its life and the base
+		# emitter's `spread` adds sideways drift, either of which could carry
+		# a drop through the lens (the R5.2 near-lens streak defect). So the
+		# ring is shifted upwind by upwind_offset_fraction of the drift, and
+		# its inner radius is DERIVED: lens_clearance_m plus the larger drift
+		# share, the spread drift and the streak's own sideways half-extent.
+		var fraction := float(cfg.get("upwind_offset_fraction", 0.0))
+		var drift := rain_drift(process, emitter.lifetime)
+		process.emission_shape_offset = -drift * fraction
+		if cfg.has("inner_radius_m"):
+			process.emission_ring_inner_radius = float(cfg.inner_radius_m)
+			process.emission_ring_radius = float(cfg.get("outer_radius_m", process.emission_ring_radius))
+		elif cfg.has("lens_clearance_m"):
+			var streak_h := float(cfg.get("streak_length_m", 0.4)) * process.scale_max * 0.5 \
+				* Vector2(process.direction.x, process.direction.z).length()
+			process.emission_ring_inner_radius = float(cfg.lens_clearance_m) \
+				+ drift.length() * maxf(fraction, 1.0 - fraction) \
+				+ rain_spread_drift(process, emitter.lifetime) + streak_h
+			process.emission_ring_radius = process.emission_ring_inner_radius + float(cfg.get("ring_width_m", 8.0))
 		var reach := process.emission_ring_radius + process.emission_shape_offset.length() + 1.0
 		emitter.visibility_aabb = AABB(Vector3(-reach, -RAIN_RING_HEIGHT * 0.5 - 1.0 - 20.0, -reach),
 			Vector3(reach * 2.0, RAIN_RING_HEIGHT + 22.0, reach * 2.0))
@@ -563,6 +578,19 @@ func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 static func rain_drift(process: ParticleProcessMaterial, lifetime: float) -> Vector3:
 	var direction := process.direction.normalized()
 	return Vector3(direction.x, 0.0, direction.z) * process.initial_velocity_max * lifetime
+
+## Worst sideways drift from the emitter's `spread` cone over a whole life (m).
+static func rain_spread_drift(process: ParticleProcessMaterial, lifetime: float) -> float:
+	return sin(deg_to_rad(process.spread)) * process.initial_velocity_max * lifetime
+
+## Where the rain emitter sits: above the active camera when there is one,
+## so rain falls around and over whatever the camera frames (the trainer on
+## foot or riding, or a piloted creature when the rig retargets), on every
+## peer; the player otherwise (world_weather.gd's original placement).
+func rain_centre(camera_position: Variant, player_position: Vector3) -> Vector3:
+	if camera_position is Vector3:
+		return (camera_position as Vector3) + Vector3(0.0, float(_pres_cfg().get("rain", {}).get("camera_height_offset_m", 3.0)), 0.0)
+	return player_position + Vector3(0.0, RAIN_HEIGHT_OFFSET, 0.0)
 
 func _update_ceiling(p: Dictionary) -> void:
 	if _ceiling_material == null:
@@ -619,11 +647,16 @@ func _build_flash_light() -> void:
 ## Rain follows the player; the ceiling follows the camera so its horizon
 ## fade stays level with the eye.
 func _follow_player() -> void:
-	super._follow_player()
-	if _ceiling != null:
-		var camera := get_viewport().get_camera_3d()
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	var player := get_node_or_null(player_path) as Node3D
+	if _rain != null and (camera != null or player != null):
+		var camera_position: Variant = null
 		if camera != null:
-			_ceiling.global_position = camera.global_position
+			camera_position = camera.global_position
+		_rain.global_position = rain_centre(camera_position,
+			player.global_position if player != null else Vector3.ZERO)
+	if _ceiling != null and camera != null:
+		_ceiling.global_position = camera.global_position
 
 # ------------------------------------------------------------ flash rhythm
 
@@ -631,9 +664,17 @@ func _follow_player() -> void:
 func flash_level() -> float:
 	return _flash
 
-## A white-violet sky flash of `strength` 0..1.
+## A white-violet sky flash of `strength` 0..1. Sky flashes are
+## non-essential presentation (the telegraph ring and the local bolt are the
+## gameplay tells and stay untouched), so under UX §8 reduced motion they are
+## scaled by presentation.flash.reduced_motion_scale.
 func flash(strength: float = 1.0) -> void:
-	_flash = maxf(_flash, clampf(strength, 0.0, 1.0))
+	_flash = maxf(_flash, clampf(strength, 0.0, 1.0) * flash_motion_scale())
+
+func flash_motion_scale() -> float:
+	if not MOTION_PREFS.reduced_motion():
+		return 1.0
+	return clampf(float(_pres_cfg().get("flash", {}).get("reduced_motion_scale", 0.15)), 0.0, 1.0)
 
 ## B1: how much whole-sky flash a strike impact at `at` earns for THIS peer.
 ## The host broadcasts every impact to every Stormwood peer, and glass-sink
@@ -658,8 +699,11 @@ func _advance_flash(delta: float) -> void:
 	if active:
 		_flash_next -= delta
 		if _flash_next <= 0.0:
-			_flash_next = _flash_rng.randf_range(float(cfg.get("interval_min", 4.0)), float(cfg.get("interval_max", 8.0)))
-			flash(_flash_rng.randf_range(float(cfg.get("distant_strength_min", 0.55)), 1.0))
+			# Distant, telegraph-less flashes are deliberately weaker than a
+			# real strike's (1.0) and on their own slower cadence, so a flash
+			# with no ring never reads as a missed warning.
+			_flash_next = _flash_rng.randf_range(float(cfg.get("distant_interval_min", 9.0)), float(cfg.get("distant_interval_max", 16.0)))
+			flash(_flash_rng.randf_range(float(cfg.get("distant_strength_min", 0.2)), float(cfg.get("distant_strength_max", 0.35))))
 			if _flash_rng.randf() < float(cfg.get("double_chance", 0.5)):
 				_flash_echo = float(cfg.get("double_gap_seconds", 0.14))
 	else:
@@ -667,7 +711,7 @@ func _advance_flash(delta: float) -> void:
 	if _flash_echo >= 0.0:
 		_flash_echo -= delta
 		if _flash_echo < 0.0:
-			flash(float(cfg.get("double_strength", 0.8)))
+			flash(float(cfg.get("double_strength", 0.25)))
 	if _flash > 0.0:
 		_flash = maxf(0.0, _flash - delta / maxf(0.01, float(cfg.get("decay_seconds", 0.35))))
 	if _flash_light != null:

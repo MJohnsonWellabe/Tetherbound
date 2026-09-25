@@ -7,6 +7,7 @@ extends SceneTree
 ## and in Break every impact does.
 const LIGHTNING := preload("res://scripts/world/stormwood_lightning.gd")
 const SURGE := preload("res://scripts/world/stormwood_surge.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 
 class WorldFixture extends Node3D:
 	var simulation_only := false
@@ -80,10 +81,25 @@ func _run() -> void:
 	lightning._receive({"id": 5, "kind": "impact", "at": Vector3(250, 0, 0), "hits": {}})
 	var far_break_flash := surge.flash_level()
 
+	# UX 8 reduced motion: the sky flash drops to reduced_motion_scale, but
+	# the gameplay tells (telegraph ring and local bolt) still draw.
+	MOTION_PREFS.set_reduced_motion(true)
+	surge._flash = 0.0
+	for old_bolt: Node in lightning.find_children("StrikeBolt", "", false, false):
+		old_bolt.free()
+	lightning._receive({"id": 6, "kind": "warning", "at": Vector3(1, 0, 1)})
+	var reduced_ring := lightning._visuals.has(6)
+	lightning._receive({"id": 6, "kind": "impact", "at": Vector3(1, 0, 1), "hits": {}})
+	var reduced_flash := surge.flash_level()
+	var reduced_bolt := lightning.find_children("StrikeBolt", "", false, false).size() == 1
+	MOTION_PREFS.set_reduced_motion(false)
+	var reduced_ok := reduced_ring and reduced_bolt and reduced_flash <= 0.2 and reduced_flash > 0.0
+
 	var ok := impact_freed and expiry_freed and clean and strike_freed \
 		and bolts_after_impact == 1 and lights_after_impact == 1 and is_equal_approx(break_flash, 1.0) \
 		and is_equal_approx(rim, 3.0) and is_equal_approx(seconds, 1.2) \
-		and far_calm_flash == 0.0 and bolt_local and near_calm_flash > 0.8 and is_equal_approx(far_break_flash, 1.0)
+		and far_calm_flash == 0.0 and bolt_local and near_calm_flash > 0.8 and is_equal_approx(far_break_flash, 1.0) \
+		and reduced_ok
 	print("LIGHTNING CLEANUP impact_freed=%s expiry_freed=%s registry_empty=%s strike_freed=%s bolt=%d light=%d" % [
 		impact_freed, expiry_freed, clean, strike_freed, bolts_after_impact, lights_after_impact])
 	# Informational CPU cost of one warning build (headless: no GPU work).
@@ -95,6 +111,7 @@ func _run() -> void:
 		rim, seconds, build_us, lightning.last_telegraph_height_calls])
 	print("LIGHTNING SKY GATE break=%.2f far_calm=%.2f near_calm=%.2f far_break=%.2f bolt_local=%s" % [
 		break_flash, far_calm_flash, near_calm_flash, far_break_flash, bolt_local])
+	print("LIGHTNING REDUCED MOTION ring=%s bolt=%s sky_flash=%.2f" % [reduced_ring, reduced_bolt, reduced_flash])
 	print("LIGHTNING CLEANUP RESULT %s" % ("PASS" if ok else "FAIL"))
 	world.free()
 	quit(0 if ok else 1)

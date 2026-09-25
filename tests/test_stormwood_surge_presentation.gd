@@ -10,6 +10,7 @@ const SURGE := preload("res://scripts/world/stormwood_surge.gd")
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 const LIGHTNING := preload("res://scripts/world/stormwood_lightning.gd")
 const DAY_CYCLE := preload("res://scripts/world/day_cycle.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const PHASES := ["calm", "building", "break", "fading"]
 
 
@@ -567,34 +568,89 @@ func test_rain_slants_fades_with_depth_and_dims_at_night() -> void:
 	surge.free()
 
 
-## Round 4 item 5: a slanted drop must never pass within 1.5 m of the camera
-## (the R5.2 near-lens streak defect), at the longest camera arm (riding), any
-## yaw and pitch. Horizontal distance is a lower bound on the 3D distance;
-## the worst case puts the camera horizontally at full arm length toward the
-## drop, and the streak's own horizontal half-extent is subtracted.
+## Horizontal (x, z) positions a drop of `emitter` can occupy over its life,
+## relative to the emitter centre: spawn points round the inner ring edge
+## (shifted by the upwind offset) moved by the mean drift, then pushed
+## sideways by the worst `spread` drift (sin(spread) * v * t) toward `toward`.
+func _drop_path(emitter: GPUParticles3D, radius: float, toward: Vector2) -> Array[Vector2]:
+	var process := emitter.process_material as ParticleProcessMaterial
+	var drift: Vector3 = SURGE.rain_drift(process, emitter.lifetime)
+	var spread: float = SURGE.rain_spread_drift(process, emitter.lifetime)
+	var offset := process.emission_shape_offset
+	var points: Array[Vector2] = []
+	for step in 72:
+		var angle := TAU * step / 72.0
+		var spawn := Vector2(cos(angle), sin(angle)) * radius + Vector2(offset.x, offset.z)
+		for k in 21:
+			var t := k / 20.0
+			var at := spawn + Vector2(drift.x, drift.z) * t
+			var push := (toward - at)
+			if push.length() > 0.0001:
+				at += push.normalized() * minf(spread * t, push.length())
+			points.append(at)
+	return points
+
+
+func _camera_arms() -> Array[float]:
+	var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
+	var margin := float(movement.camera.get("collision_margin", 0.6))
+	var longest := maxf(float(movement.camera.distance), float(movement.riding.camera.distance)) + margin
+	var pitch_min := deg_to_rad(float(movement.camera.pitch_min_deg))
+	# Horizontal camera-to-trainer distance: from the steepest pitch on foot
+	# to the riding arm at level pitch.
+	return [(float(movement.camera.distance) + margin) * cos(pitch_min), float(movement.camera.distance) + margin, longest]
+
+
+## Task #8: the rain is centred on the camera. No drop may pass within 1.5 m
+## of the lens horizontally (a lower bound on 3D distance), including the
+## base emitter's 2-degree spread (sin(spread) * v * t) and the streak's own
+## sideways half-extent, for the near and far layers.
 func test_slanted_rain_never_crosses_the_lens() -> void:
 	var surge := SURGE.new()
 	surge._rain = surge._build_rain()
 	surge._style_rain()
-	var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
-	var arm := maxf(float(movement.camera.distance), float(movement.riding.camera.distance)) \
-		+ float(movement.camera.get("collision_margin", 0.6))
+	var camera := Vector3(40.0, 12.0, -7.0)
+	var centre: Vector3 = surge.rain_centre(camera, camera + Vector3(5, -3, 0))
+	var lens := Vector2(camera.x - centre.x, camera.z - centre.z)
+	assert_true(lens.length() < 0.001, "the rain emitter is centred on the camera")
 	for emitter: GPUParticles3D in [surge._rain, surge._rain_far]:
 		var process := emitter.process_material as ParticleProcessMaterial
-		var drift: Vector3 = SURGE.rain_drift(process, emitter.lifetime)
 		var streak := emitter.draw_pass_1 as BoxMesh
-		var slant_h := Vector2(process.direction.x, process.direction.z).length()
-		var streak_h := streak.size.y * process.scale_max * 0.5 * slant_h
-		var offset := process.emission_shape_offset
+		var streak_h := streak.size.y * process.scale_max * 0.5 * Vector2(process.direction.x, process.direction.z).length()
 		var closest := INF
-		for step in 72:
-			var angle := TAU * step / 72.0
-			var spawn := Vector3(cos(angle), 0.0, sin(angle)) * process.emission_ring_inner_radius + offset
-			for k in 21:
-				var at := spawn + drift * (k / 20.0)
-				closest = minf(closest, Vector2(at.x, at.z).length() - arm - streak_h)
-		assert_true(closest >= 1.5, "%s: a drop passes %.2f m from the camera (needs >= 1.5)" % [emitter.name, closest])
-		assert_true(drift.length() > 1.0, "the wind slant is real (drift %.1f m)" % drift.length())
+		for at: Vector2 in _drop_path(emitter, process.emission_ring_inner_radius, lens):
+			closest = minf(closest, at.distance_to(lens) - streak_h)
+		assert_true(closest >= 1.5, "%s: a drop passes %.2f m from the lens (needs >= 1.5)" % [emitter.name, closest])
+		assert_true(SURGE.rain_drift(process, emitter.lifetime).length() > 1.0, "the wind slant is real")
+		assert_true(SURGE.rain_spread_drift(process, emitter.lifetime) > 0.3, "spread drift is modelled")
+	surge._rain.free()
+	surge.free()
+
+
+## Task #8: the trainer stands in rain, not a dry disc. For every camera
+## distance (steep on foot, level on foot, riding) and yaw, some near-layer
+## drop passes within 3 m of the trainer horizontally.
+func test_rain_reaches_the_trainer() -> void:
+	var surge := SURGE.new()
+	surge._rain = surge._build_rain()
+	surge._style_rain()
+	var process := surge._rain.process_material as ParticleProcessMaterial
+	var worst := 0.0
+	for arm: float in _camera_arms():
+		for step in 24:
+			var yaw := TAU * step / 24.0
+			var player := Vector3(100.0, 5.0, 50.0)
+			var camera := player - Vector3(sin(yaw), 0.0, cos(yaw)) * arm + Vector3(0, 2.0, 0)
+			var centre: Vector3 = surge.rain_centre(camera, player)
+			var trainer := Vector2(player.x - centre.x, player.z - centre.z)
+			var nearest := INF
+			for radius: float in [process.emission_ring_inner_radius,
+					(process.emission_ring_inner_radius + process.emission_ring_radius) * 0.5,
+					process.emission_ring_radius]:
+				for at: Vector2 in _drop_path(surge._rain, radius, Vector2(1e6, 1e6)):
+					nearest = minf(nearest, at.distance_to(trainer))
+			worst = maxf(worst, nearest)
+	assert_true(worst <= 3.0, "the nearest drop is %.2f m from the trainer in the worst framing (needs <= 3)" % worst)
 	surge._rain.free()
 	surge.free()
 
@@ -648,4 +704,72 @@ func test_night_phases_separate_by_hue_and_value() -> void:
 	assert_true(h.call(ceiling.fading) >= 20.0 and h.call(ceiling.fading) <= 45.0 and (ceiling.fading as Color).s >= 0.2, "night Fading stays warm")
 	var brk_h := surge._final(surge._resolved(surge.presentation_for("break")), night).sky_horizon as Color
 	assert_true(brk_h.get_luminance() > (ceiling["break"] as Color).get_luminance(), "night Break has a lit horizon under its ceiling")
+	surge.free()
+
+
+## Runs a settled Break for `seconds` and returns each flash onset's time and
+## peak level.
+func _break_flashes(surge: Node, seconds: float) -> Array[Vector2]:
+	surge.phase = "break"
+	surge.settle_presentation()
+	surge._flash = 0.0
+	var onsets: Array[Vector2] = []
+	var t := 0.0
+	var last := 0.0
+	while t < seconds:
+		surge.call("_advance_flash", 0.02)
+		var level: float = surge.flash_level()
+		if level > last + 0.001:
+			if onsets.is_empty() or t - onsets[-1].x > 0.3:
+				onsets.append(Vector2(t, level))
+			else:
+				onsets[-1].y = maxf(onsets[-1].y, level)
+		last = level
+		t += 0.02
+	return onsets
+
+
+## Coordinator review (MEDIUM): a telegraph-less distant flash must never read
+## as a missed warning: clearly weaker than a real strike's full flash and
+## on its own cadence, slower than the 4-8 s strike spacing.
+func test_distant_flashes_are_weaker_and_slower_than_strikes() -> void:
+	var cfg: Dictionary = _config().presentation.flash
+	var strike: Dictionary = _config().strike
+	assert_true(float(cfg.distant_strength_max) <= 0.4, "distant flash max %.2f vs strike 1.0" % float(cfg.distant_strength_max))
+	assert_true(float(cfg.double_strength) <= float(cfg.distant_strength_max), "echo no brighter than a distant flash")
+	assert_true(float(cfg.distant_interval_min) > float(strike.interval_max), "distant cadence apart from strikes")
+	MOTION_PREFS.set_reduced_motion(false)
+	var surge := SURGE.new()
+	var onsets := _break_flashes(surge, 200.0)
+	assert_true(onsets.size() >= 8, "Break keeps a flash rhythm (%d flashes in 200 s)" % onsets.size())
+	for i in onsets.size():
+		assert_true(onsets[i].y <= float(cfg.distant_strength_max) + 0.001, "distant flash %.2f too strong" % onsets[i].y)
+		if i > 0:
+			assert_true(onsets[i].x - onsets[i - 1].x >= float(cfg.distant_interval_min) - 0.05,
+				"distant flashes %.1f s apart (min %.1f)" % [onsets[i].x - onsets[i - 1].x, float(cfg.distant_interval_min)])
+	surge.flash(surge.sky_flash_for_strike(Vector3(500, 0, 0)))
+	assert_almost_eq(surge.flash_level(), 1.0, 0.0001, "a real strike still flashes at full strength")
+	surge.free()
+
+
+## UX 8: reduced motion lowers these non-essential sky flashes (distant and
+## strike); the telegraph and bolt are covered in the lightning cleanup smoke.
+func test_reduced_motion_scales_sky_flashes_down() -> void:
+	var scale := float(_config().presentation.flash.reduced_motion_scale)
+	assert_true(scale <= 0.2, "reduced motion scales sky flashes down strongly")
+	var surge := SURGE.new()
+	MOTION_PREFS.set_reduced_motion(true)
+	surge.phase = "break"
+	surge.settle_presentation()
+	surge._flash = 0.0
+	surge.flash(surge.sky_flash_for_strike(Vector3(500, 0, 0)))
+	assert_true(surge.flash_level() <= scale + 0.0001, "strike sky flash %.2f under reduced motion" % surge.flash_level())
+	var onsets := _break_flashes(surge, 120.0)
+	for onset: Vector2 in onsets:
+		assert_true(onset.y <= float(_config().presentation.flash.distant_strength_max) * scale + 0.001,
+			"distant flash %.3f under reduced motion" % onset.y)
+	MOTION_PREFS.set_reduced_motion(false)
+	surge._flash = 0.0
+	surge.flash(1.0)
+	assert_almost_eq(surge.flash_level(), 1.0, 0.0001, "full flashes return with reduced motion off")
 	surge.free()
