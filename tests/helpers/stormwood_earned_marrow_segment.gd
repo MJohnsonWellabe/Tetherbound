@@ -165,13 +165,14 @@ func _attempt_marrow(dynamo: Node) -> void:
 					_note("CONDUIT feasibility start_world=%s local=%s base_speed=%.3f remaining_cycle_s=%.3f conservative_travel_s=%.3f ally=%s" % [
 						phase_ally.global_position, at, speed, remaining,
 						travel_lower_bound_seconds(rules, Vector2(at.x, at.z), speed),
-						_fighter_snapshot(phase_ally.get("instance"))])
+						_fighter_snapshot(_director.call("ally_instance"))])
 			if int(state.cycle) != conduit_cycle:
 				_fail("first actual four-conduit window expired; no additional cycle")
 				return
+			# The follower body carries no creature; the director owns it.
 			var ally := _director.call("ally_body") as Node3D
-			if not is_instance_valid(ally) or ally.get("instance") == null \
-					or bool(ally.get("instance").get("fainted")):
+			var ally_creature: RefCounted = _director.call("ally_instance")
+			if not is_instance_valid(ally) or ally_creature == null or bool(ally_creature.get("fainted")):
 				_fail("no surviving deployed ally for the real conduit window")
 				return
 			if control.get("_body") == ally:
@@ -196,7 +197,7 @@ func _attempt_marrow(dynamo: Node) -> void:
 						_set_action(&"combat_quick", true)
 						release_tick = tick + 2
 						# Use the exact equipped quick move's production cooldown.
-						var creature: RefCounted = ally.get("instance")
+						var creature: RefCounted = ally_creature
 						var moves := preload("res://scripts/creatures/move_db.gd").new()
 						var profile: Dictionary = COMBAT_REACH.host_move_profile(moves, "player_quick",
 							str(creature.get("move_quick")), float(ally.call("body_radius")), 1.25)

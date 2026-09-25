@@ -2,7 +2,10 @@ extends RefCounted
 
 ## Identical field queries on every peer and for the visible foam. Overlapping
 ## routes select one authored current; they never accidentally add strength.
+const SEALS := preload("res://scripts/world/water_gate_seals.gd")
 var _currents: Array = []
+var _seals: Array = []
+var _seal_rules: Dictionary = {}
 var _flags: RefCounted
 
 
@@ -13,7 +16,25 @@ func _init(config: Dictionary = {}, flags: RefCounted = null) -> void:
 	# mounted swimming. The live flag store is retained below, so a just-earned
 	# flag and a flag restored from a completed save take the same path.
 	_currents = bind_return_shortcuts(config).get("currents", []).duplicate(true)
+	_seals = config.get("seals", []).duplicate(true)
+	_seal_rules = config.get("seal_rules", {}).duplicate(true)
 	_flags = flags
+
+
+## The production current config: each closed mandatory dock pushes back along
+## its own departure strips, and every landform behind it is sealed by its race.
+## Water world and the analytical gate tests share this one construction.
+static func with_closed_gates(config: Dictionary, traversal: Dictionary) -> Dictionary:
+	var bound := config.duplicate(true)
+	var docks: Dictionary = traversal.get("docks", {})
+	for current: Dictionary in bound.get("currents", []):
+		for dock: Dictionary in config.get("docks", []):
+			if str(current.route_id).begins_with(str(dock.outbound_edge) + "_") and not str(dock.unlock_flag).is_empty():
+				current.required_unlock_flag = dock.unlock_flag
+				current.closed_strength_m_s = float(docks.get("closed_current_strength_m_s", 0.0))
+	bound["seals"] = SEALS.compile(config)
+	bound["seal_rules"] = docks.get("seal_race", {}).duplicate(true)
+	return bound
 
 
 static func bind_return_shortcuts(config: Dictionary) -> Dictionary:
@@ -42,6 +63,22 @@ static func bind_return_shortcuts(config: Dictionary) -> Dictionary:
 func sample(position: Vector3, liberated: bool = false) -> Dictionary:
 	var result := {"id": "", "velocity": Vector3.ZERO, "influence": 0.0}
 	if not position.is_finite():
+		return result
+	# A closed-gate tide race outranks every route current: it is the physical
+	# gate, so no authored channel may carry a swimmer through it.
+	# Where two races overlap, the nearest shore owns the water: each point is
+	# pushed away from its closest sealed landform at full race strength, never
+	# a vector sum that could cancel into a calm corridor. Flow along the seam
+	# carries a swimmer out past the overlap tips.
+	var race_gap := INF
+	for seal: Dictionary in _seals:
+		var race: Vector3 = SEALS.velocity_at(seal, _seal_rules, position, _flags)
+		var gap: float = SEALS.shore_gap(seal, position)
+		if race != Vector3.ZERO and gap < race_gap:
+			race_gap = gap
+			var full := maxf(0.0001, float(_seal_rules.get("strength_m_s", 0.0)))
+			result = {"id": "seal:" + str(seal.get("id", "")), "velocity": race, "influence": race.length() / full, "seal": str(seal.get("id", ""))}
+	if race_gap < INF:
 		return result
 	var best_priority := -2147483648
 	var best_distance := INF

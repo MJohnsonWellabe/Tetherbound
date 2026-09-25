@@ -65,6 +65,8 @@ const SHADOW := Color(0.0, 0.0, 0.0, 0.55)
 
 signal finished(conversation_id: String)
 signal completed(conversation_id: String)
+## The runner's explicit No on a consent line, forwarded before `finished`.
+signal declined(conversation_id: String)
 ## Delivered synchronously with the text, including physics-tick advances.
 signal line_presented(conversation_id: String, is_last: bool)
 
@@ -107,6 +109,7 @@ func _ready() -> void:
 	_make_text_legible($Root)
 	_runner.finished.connect(_on_runner_finished)
 	_runner.completed.connect(_on_runner_completed)
+	_runner.declined.connect(_on_runner_declined)
 	_box.visible = false
 	# `game_menu.gd::STORY_MODAL_GROUP`: while a conversation is on screen the
 	# pause shell refuses to open over it. Joined here rather than in the scene
@@ -331,6 +334,10 @@ func _on_runner_finished(conversation_id: String) -> void:
 
 func _on_runner_completed(conversation_id: String) -> void:
 	completed.emit(conversation_id)
+
+
+func _on_runner_declined(conversation_id: String) -> void:
+	declined.emit(conversation_id)
 
 
 func _clear_scoped_values() -> void:
