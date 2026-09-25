@@ -54,8 +54,11 @@ func test_glass_field_dressing_keeps_the_authored_route_and_encounter_clear() ->
 	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(WORLD_CONFIG))
 	assert_eq(_entry(world.landmarks, "glass_field").position, [-310.0, 100.0, 5050.0],
 		"map/discovery seat moved during visual recovery")
+	# F09 moved only the Rootgate descent onto walkable ground ([-650,3700]);
+	# the Glass Field and Dynamo legs this location was dressed around are
+	# unchanged (test_stormwood_route_walkability owns the slope contract).
 	assert_eq(_entry(world.routes, "deepwood_road").points,
-		[[-650.0,3550.0],[-450.0,3960.0],[-890.0,4490.0],[-150.0,4460.0],[-310.0,5050.0],[-100.0,5350.0],[-100.0,5470.0]],
+		[[-650.0,3550.0],[-650.0,3700.0],[-450.0,3960.0],[-890.0,4490.0],[-150.0,4460.0],[-310.0,5050.0],[-100.0,5350.0],[-100.0,5470.0]],
 		"critical Dynamo route moved during visual recovery")
 	var encounters: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ENCOUNTER_CONFIG))
 	var alpha := _entry(encounters.named_encounters, "glass_field_alpha")
