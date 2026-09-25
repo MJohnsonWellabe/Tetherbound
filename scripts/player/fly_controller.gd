@@ -422,6 +422,9 @@ func observe_ground() -> void:
 ## the anchor stayed wherever the trainer last stood on foot: after a long
 ## mounted descent, a dismount or reload mid-air read as a 100 m fall and was
 ## "recovered" back up to where the ride began. Same authority path as a walk.
+## Like `observe_ground`, a proposal consumes `_touched_down`: a Fly landing
+## that ends on a mount (never today; Fly refuses while carried) would be
+## proposed as this ordinary carried observation, not as a landing.
 func observe_carried_ground(at: Vector3) -> void:
 	if is_flying() or not bool(_player.call("is_carried")) or not at.is_finite():
 		return
@@ -431,6 +434,17 @@ func observe_carried_ground(at: Vector3) -> void:
 		_anchor_host_granted = false
 		return
 	_propose_anchor(at)
+
+
+## The carried half of `physics_step`'s pending clock. `player_controller`
+## returns before `physics_step` while carried, so without this an unanswered
+## proposal (a lost packet, or a host that drops it without a reply) stayed
+## pending for the whole ride and every `observe_carried_ground` bounced off
+## it. The carrier ticks this every frame of the ride; after
+## `pending_timeout_s` the next observation re-proposes, exactly as on foot.
+func tick_carried_anchor(delta: float) -> void:
+	if _anchor_pending and bool(_player.call("is_carried")):
+		_anchor_pending_for += delta
 
 
 # --- Stage B lane 6.C: the host decides where a client may land ---------------

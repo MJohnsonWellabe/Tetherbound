@@ -601,8 +601,22 @@ func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	if wild == _engaged_with or (_manager != null and bool(_manager.call("is_fighting"))):
 		return
+	if not _rider_off_for_admission():
+		return
 	_surface_for(wild, Vector3(wild.global_position.x, _player.global_position.y, wild.global_position.z))
 	super._start_fight(wild, opponent_owned)
+
+
+## SYSTEMS §8 "Combat admission dismounts safely first. No mounted
+## catch/combat." A rider comes off onto verified ground BEFORE the manager
+## places fighters and takes the camera; with nowhere verified to stand the
+## admission is refused and the rider told why
+## (`cloudreach_riding_controller.gd::dismount_for_admission`).
+func _rider_off_for_admission() -> bool:
+	var riding := get_parent().get_node_or_null(^"RidingController") if get_parent() != null else null
+	if riding == null or not riding.has_method("dismount_for_admission"):
+		return true
+	return bool(riding.call("dismount_for_admission"))
 
 
 func _reground_if_fallen(wild: Node3D) -> void:
@@ -625,6 +639,8 @@ func _reground_if_fallen(wild: Node3D) -> void:
 
 
 func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
+	if not _rider_off_for_admission():
+		return false
 	var started := super.begin_trainer_battle(spec, trainer)
 	if started:
 		trainer_started.emit(str(spec["id"]))
