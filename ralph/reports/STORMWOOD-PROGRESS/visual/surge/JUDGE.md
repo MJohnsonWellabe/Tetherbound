@@ -46,3 +46,34 @@ The answer key was revealed only after the verdict.
 **Judge's split:**
 - **Scene-fixable:** grove density, distant massing and relief, flower drifts and grass coverage, key light and shadows, the storm darkening the ground, rain variation, the hazard ring's hue, glow and projection, creature placement, and landmark framing.
 - **Needs new art:** turf and ground material, rock meshes, higher-poly foreground flowers, a bark material, Stormwood-specific landmark pieces, a hazard-marker VFX asset, and identifying frame 10's ghost shape.
+
+# Round 2: blind re-judge of the round-2 frames, day and night
+
+A fresh blind judge saw 11 shuffled frames: 4 day phases, 4 night phases, Break telegraph, Break flash and aftermath Calm, together with the same references. Nothing else was said.
+
+## Grouping against the answer key
+
+**Weather state: 10 of 11 correct.**
+- The judge paired each day state with its night version: Calm and night Calm; Fading and night Fading; Building and night Building.
+- It inferred the order Calm → Building → Break peak → Fading, with the end state last.
+- **Miss:** night Break (08) was grouped with night Building as "the same picture at two brightness levels".
+
+**Time of day: weak.**
+- Day Break (06, 09) was read as "night or storm darkness". The sky went dark while the grass stayed day-bright.
+- Night Break was judged "too dark": the top 60% of the frame is black and the trees are gone.
+
+## New defects
+
+1. **Night Break** is too dark and loses the trees. It is indistinguishable from night Building except in exposure. It needs a floor and a distinct hue.
+2. **Ground vs sky mismatch.** Day Break's sky reads as night over bright grass. Ground, grass and exposure should follow the storm.
+3. **Telegraph ring (06).** It is now the brightest element and reads first at 30% size, but it signals friendly: "selection circle, camp radius, heal zone". Both judges asked for a warning hue: amber or orange, never oxblood. Other suggestions were a darker interior, chevrons and drawing above the grass.
+4. **Rain still reads as a screen overlay.** There is no wind slant, no depth fade and no splashes. In night Building the rain is the brightest element.
+5. **Sky artefacts:**
+   - bright-blue cloud flecks on the black night sky in night Fading (03);
+   - a pale horizon shelf on the left (03, 10);
+   - a faint ghost disc near the left horizon in the Break frames (05, 06).
+6. **Unchanged, region-wide:** no directional sun or cast shadows in any state; an empty plain with a horizon cutting through the trainer; small creatures.
+
+**Verdict:**
+- **A:** key-art world, **no**.
+- **B:** same kind of game as the Palworld bar, **yes**.
