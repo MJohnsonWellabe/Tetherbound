@@ -98,10 +98,16 @@ func test_the_choice_announces_both_answers_as_final_and_neither_prompt_starts_l
 	assert_ne(str(choice.get("accept_label", "")), "", "no accept prompt label")
 	assert_ne(str(choice.get("refuse_label", "")), "", "no refuse prompt label")
 	var radius := float(choice.get("radius", 0.0))
+	var height := float(choice.get("height", 0.0))
 	assert_true(radius > 0.0, "the prompts need a radius")
+	# The radius is measured in 3D from the player's feet to the prompt, which
+	# stands `height` up. Measured defect: at radius 1.0 / height 1.1 neither
+	# prompt could be reached from anywhere, so the choice was unanswerable.
+	assert_true(height < radius * 0.75,
+		"a prompt %.2f m up with a %.2f m radius leaves no ground to press it from" % [height, radius])
 	# Neither prompt may be live where the player stands when the offer lands,
 	# or a press meant for the dialogue answers an irreversible question.
-	assert_true(float(choice.get("accept_offset", 0.0)) > radius,
-		"the accept prompt is live under the player's feet")
-	assert_true(float(choice.get("refuse_offset", 0.0)) > radius,
-		"the refuse prompt is live under the player's feet")
+	for key: String in ["accept_offset", "refuse_offset"]:
+		var offset := float(choice.get(key, 0.0))
+		assert_true(sqrt(offset * offset + height * height) > radius,
+			"'%s' puts its prompt in reach of where the player already stands" % key)

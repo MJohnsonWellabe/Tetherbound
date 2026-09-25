@@ -971,8 +971,9 @@ func _offer_to_join() -> void:
 ##
 ## F05 / ACCEPTANCE §6.1: accept and refuse must both be reachable with room
 ## on the belt AND at five. The offer therefore opens two in-world prompts
-## rather than joining silently: step toward the creature to walk out with it,
-## step back to leave it free. Neither prompt is live where the player stands
+## rather than joining silently: step to its shoulder to walk out with it,
+## step back to leave it free. (Not straight toward it: it stops 2.6 m away
+## and its capsule is 2.13 m, so there is no room in front.) Neither prompt is live where the player stands
 ## when the offer lands, so no press that was meant for the dialogue can
 ## answer it, and walking away without pressing answers nothing -- the offer
 ## waits, and survives a reload, until this character chooses.
@@ -987,13 +988,14 @@ func _open_choice() -> void:
 		(_legendary.global_position if _legendary != null else here + Vector3.FORWARD)) - here
 	toward.y = 0.0
 	toward = toward.normalized() if toward.length() > 0.01 else Vector3.FORWARD
-	var radius := float(spec.get("radius", 1.0))
+	var radius := float(spec.get("radius", 1.6))
+	var side := toward.cross(Vector3.UP).normalized()
 	_accept_prompt = _choice_prompt("VeridianAcceptPrompt",
-		here + toward * float(spec.get("accept_offset", 1.4)),
+		here + side * float(spec.get("accept_offset", 2.0)),
 		str(spec.get("accept_label", "Walk out with the Veridian Stag")), radius)
 	_accept_prompt.connect("activated", accept_offer)
 	_refuse_prompt = _choice_prompt("VeridianRefusePrompt",
-		here - toward * float(spec.get("refuse_offset", 1.4)),
+		here - toward * float(spec.get("refuse_offset", 2.0)),
 		str(spec.get("refuse_label", "Leave the Veridian Stag free")), radius)
 	_refuse_prompt.connect("activated", refuse_offer)
 
@@ -1006,7 +1008,7 @@ func _choice_prompt(node_name: String, at: Vector3, label: String, radius: float
 		if _world != null and _world.has_method("ground_height_at") else at
 	var prompt: Node3D = INTERACTABLE.new()
 	prompt.name = node_name
-	prompt.position = Vector3(0.0, float((_config.get("choice", {}) as Dictionary).get("height", 1.1)), 0.0)
+	prompt.position = Vector3(0.0, float((_config.get("choice", {}) as Dictionary).get("height", 0.9)), 0.0)
 	anchor.add_child(prompt)
 	prompt.call("configure", label, radius, true)
 	return prompt
@@ -1183,6 +1185,16 @@ static func all_refused(participants: Array, solo_character: String, world_flags
 		if not world_flags.has(resolution_flag(false, str(raw))):
 			return false
 	return true
+
+
+## WORLD §3.2: every eligible participant of THIS world's freeing refused.
+## Read by `meadow_healing.gd` for the herd display. False before the freeing.
+func full_refusal() -> bool:
+	if not legendary_is_freed():
+		return false
+	var progression := _progression()
+	var world_flags: Array = progression.call("all_set") if progression != null else []
+	return all_refused(_warden_participant_characters(), _local_character_id(), world_flags)
 
 
 func _receipt_character_id() -> String:

@@ -1,0 +1,36 @@
+--- space-accept
+[climax] the legendary joined a belt with room on it
+(space-accept) answered: party 5, veridian 1, receipt legendary_resolution:accepted:solo
+(space-accept) reload: no re-offer, same party, receipts kept
+--- space-refuse
+[climax] this character refused the legendary; it stays free
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (408.0, -5.73746, 5862.0)
+(space-refuse) herd display stands at (408.0, -5.73746, 5862.0) after the answer
+(space-refuse) answered: party 4, veridian 0, receipt legendary_resolution:refused:character-08d10f1727055c4441cc28a4ce199fb9
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (408.0, -5.73746, 5862.0)
+(space-refuse) herd display stands at (408.0, -5.73746, 5862.0) after reload
+(space-refuse) reload: no re-offer, same party, receipts kept
+--- capacity-refuse-at-prompt
+[climax] this character refused the legendary; it stays free
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (408.0, -5.73746, 5862.0)
+(capacity-refuse-at-prompt) herd display stands at (408.0, -5.73746, 5862.0) after the answer
+(capacity-refuse-at-prompt) answered: party 5, veridian 0, receipt legendary_resolution:refused:character-08d10f1727055c4441cc28a4ce199fb9
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (408.0, -5.73746, 5862.0)
+(capacity-refuse-at-prompt) herd display stands at (408.0, -5.73746, 5862.0) after reload
+(capacity-refuse-at-prompt) reload: no re-offer, same party, receipts kept
+--- capacity-accept-then-let-newcomer-go
+[climax] the belt is full; R4.10's release ceremony has the decision
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (408.0, -5.73746, 5862.0)
+(capacity-accept-then-let-newcomer-go) herd display stands at (408.0, -5.73746, 5862.0) after the answer
+(capacity-accept-then-let-newcomer-go) answered: party 5, veridian 0, receipt legendary_resolution:refused:character-08d10f1727055c4441cc28a4ce199fb9
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (408.0, -5.73746, 5862.0)
+(capacity-accept-then-let-newcomer-go) herd display stands at (408.0, -5.73746, 5862.0) after reload
+(capacity-accept-then-let-newcomer-go) reload: no re-offer, same party, receipts kept
+--- capacity-accept-release-one
+[climax] the belt is full; R4.10's release ceremony has the decision
+(capacity-accept-release-one) answered: party 5, veridian 1, receipt legendary_resolution:accepted:character-08d10f1727055c4441cc28a4ce199fb9
+(capacity-accept-release-one) reload: no re-offer, same party, receipts kept
+--- save-while-choice-open
+(save-while-choice-open) reload brought the same unanswered choice back
+veridian offer choice smoke test passed
+real	21m5.159s
