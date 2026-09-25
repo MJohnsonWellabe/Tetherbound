@@ -3748,11 +3748,21 @@ func interaction_offer(from: Vector3) -> Dictionary:
 		return PROMPTS.offer("%s is out of the fight." % _ally.display_name, 9999.0, 0, false)
 	var candidate := _engageable()
 	if candidate != null:
+		var radius := float(candidate.call("body_radius")) if candidate.has_method("body_radius") else 0.0
 		return PROMPTS.offer(
 			"Engage %s" % str(candidate.get("display_name")),
-			from.distance_to(candidate.global_position)
+			engage_offer_distance(from, candidate.global_position, radius)
 		)
 	return _creature_control_offer()
+
+
+## The engage offer's distance for the arbiter: to the creature's body
+## surface, not its centre. Harvest prompts are points at a trunk or rock, so a
+## centre measurement let a tree beside an idling creature out-bid it from most
+## bearings -- "Chop" offered to a player standing next to the creature. Never
+## negative, so a player inside the body's radius reads as touching it.
+static func engage_offer_distance(from: Vector3, centre: Vector3, body_radius: float) -> float:
+	return maxf(0.0, from.distance_to(centre) - maxf(body_radius, 0.0))
 
 
 func interaction_activate() -> void:

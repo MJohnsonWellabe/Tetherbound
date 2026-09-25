@@ -96,7 +96,8 @@ func _run() -> void:
 
 	if not await _stage_published_engage():
 		_fail("bounded production approaches never published the exact target's " \
-			+ "actionable engage offer (observed_winners=%s)" % JSON.stringify(_approach_winners))
+			+ "actionable engage offer (observed_winners=%s, first_loss=%s)" % [
+				JSON.stringify(_approach_winners), str(_approach_geometry)])
 		_report()
 		return
 	var wild_instance_before: RefCounted = _wild.get("instance") as RefCounted
@@ -256,9 +257,21 @@ func _is_exact_published_offer() -> bool:
 		and bool(offer.get("actionable", false))
 
 
+var _approach_geometry: Dictionary = {}
+
+
 func _record_approach_winner() -> void:
 	var winner := _arbiter.call("winning_provider") as Node
 	var winner_name := str(winner.name) if winner != null else "<none>"
+	if winner is Node3D and winner != _director and _approach_geometry.is_empty():
+		var offer := _arbiter.call("winner") as Dictionary
+		_approach_geometry = {
+			"player": _player.global_position, "wild": _wild.global_position,
+			"wild_home": _wild.get("home"), "winner_at": (winner as Node3D).global_position,
+			"winner_distance": offer.get("distance"),
+			"wild_distance": _player.global_position.distance_to(_wild.global_position),
+			"engageable": str(_director.call("_engageable")),
+		}
 	var key := "%s | %s" % [winner_name, str(_arbiter.call("prompt"))]
 	_approach_winners[key] = int(_approach_winners.get(key, 0)) + 1
 
