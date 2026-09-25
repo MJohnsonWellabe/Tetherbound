@@ -2,8 +2,9 @@ extends "res://tests/test_case.gd"
 
 ## F14 / CLAUDE.md freed-legendary rule for the Abyssal Guardian: every
 ## participant in the fight that freed it (every journaled Nerissa reward
-## delivery row, whatever its status, or the host's own character only when no
-## such row exists) receives their own once-only offer per WORLD INSTANCE;
+## delivery row, whatever its status; with no such row, the host's own character
+## only in a SOLO session and nobody in a multi-peer one) receives their own
+## once-only offer per WORLD INSTANCE;
 ## non-participants receive nothing; world restoration settles exactly once on
 ## the first participant resolution.
 

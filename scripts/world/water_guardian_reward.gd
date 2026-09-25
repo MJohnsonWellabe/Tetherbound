@@ -49,8 +49,15 @@ extends RefCounted
 ##     an empty journal offers NOBODY -- a guest may have fought Nerissa alone
 ##     on its own client (no rows), and the host who did not fight must not be
 ##     presumed the participant. The real fix journals client-run wins on the
-##     host (branch ralph/trainer-participants-host). A host left solo after
-##     such a guest disconnects is still treated as solo (disclosed gap).
+##     host (branch ralph/trainer-participants-host). Known gaps of this
+##     interim rule, both until that branch lands:
+##       - a host left solo after such a guest disconnects is treated as solo
+##         (and offered) although it may not have fought;
+##       - a SOLO Nerissa win journals no rows either (the director pays solo
+##         with one peer), so a host who beat her alone and then invites a guest
+##         BEFORE answering cannot answer while the guest is connected (prompt
+##         hidden, begin/refuse `not_participant`); the offer returns when the
+##         session is solo again. Legacy worlds without rows behave the same.
 ##
 ## World instance. Offers are keyed by the WORLD INSTANCE (MULTIPLAYER §95:
 ## "keyed by world instance, source and stable character ID"), never by
