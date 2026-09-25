@@ -56,7 +56,7 @@ func _run() -> void:
 		return
 	player = world.get_node("Player")
 	swimming = player.get("swim_controller")
-	var riding: Node = world.get_node_or_null("RidingController")
+	riding = world.get_node_or_null("RidingController")
 	if not _expect(swimming != null and riding != null and not bool(riding.call("is_mounted")),
 		"production swim controller and an unmounted riding controller are required"):
 		return
@@ -146,6 +146,9 @@ func _real_dismounts(config: Dictionary) -> bool:
 		var entry_depth := float(config.human.entry_depth_m)
 		var allowed: Array = [STATE.Mode.HUMAN] if depth >= entry_depth else \
 			([STATE.Mode.LAND] if depth <= exit_depth else [STATE.Mode.HUMAN, STATE.Mode.LAND])
+		# A live ride handed back in the band keeps swimming as a human.
+		if before == STATE.Mode.MOUNTED and depth > exit_depth and depth < entry_depth:
+			allowed = [STATE.Mode.HUMAN]
 		if not _expect(allowed.has(same_frame),
 			"real dismount at %.2f m (mode before %d) left mode %d in the same frame" % [depth, before, same_frame]):
 			return false
