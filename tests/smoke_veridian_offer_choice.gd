@@ -123,6 +123,12 @@ func _scenario(label: String, party_size: int, answer: String, ceremony: String)
 			_fail("(%s) accepted into %d, holding %d" % [label, expected_size, members.size()])
 		if ceremony == "slot0" and members.has(before[0]):
 			_fail("(%s) the chosen creature was not the one released" % label)
+		if party_size < 5:
+			# Room on the belt: every creature already there stays, by identity
+			# (independent verifier: this scenario only checked the size).
+			for member: Variant in before:
+				if not members.has(member):
+					_fail("(%s) accepted with room, but %s left the belt" % [label, str((member as RefCounted).get("nickname"))])
 		if ceremony == "slot0":
 			for i in range(1, before.size()):
 				if not members.has(before[i]):
@@ -312,11 +318,22 @@ func _answer_at_prompt(climax: Node, answer: String, label: String) -> bool:
 			_fail("(%s) '%s' was live where the player stood when the offer landed" % [label, str(offer.get("label", ""))])
 	var target: Node3D = accept_prompt if answer == "accept" else refuse_prompt
 	var anchor := target.get_parent() as Node3D
-	player.global_position = anchor.global_position + Vector3(0.0, 0.2, 0.0)
-	if player is CharacterBody3D:
-		(player as CharacterBody3D).velocity = Vector3.ZERO
-	for i in 8:
-		await _frame()
+	# WALKED, not placed (coordinator, criterion proof): the player's own
+	# body moves across the chamber floor to the prompt the way a player
+	# steers there, so a prompt that cannot be reached on foot -- or a creature
+	# that shoves the player off the spot, the measured 4.3 m WO7 defect --
+	# fails here.
+	var start := player.global_position
+	if not await _walk_to(player, anchor.global_position, 0.35):
+		_fail("(%s) could not walk to the %s prompt: stopped %.2f m short (from %.2f m)" % [label, answer,
+			_flat_distance(player.global_position, anchor.global_position), _flat_distance(start, anchor.global_position)])
+		return false
+	var offer_here: Dictionary = target.call("interaction_offer", player.global_position)
+	if offer_here.is_empty():
+		_fail("(%s) standing at the %s prompt after walking there, it offers nothing" % [label, answer])
+		return false
+	print("(%s) walked %.2f m to the %s prompt; offered '%s'" % [label, _flat_distance(start, anchor.global_position),
+		answer, str(offer_here.get("label", ""))])
 	await _press("interact")
 	for i in 20:
 		await _frame()
@@ -324,6 +341,38 @@ func _answer_at_prompt(climax: Node, answer: String, label: String) -> bool:
 			return true
 	_fail("(%s) pressing interact at the %s prompt did not answer the offer" % [label, answer])
 	return false
+
+
+## Walk the player's own body toward `to` with move_and_slide until within
+## `stop` metres (flat), the way `smoke_gate_e_finale::_walk_toward` does.
+## False if it never got there within the budget (blocked or shoved).
+func _walk_to(player: Node3D, to: Vector3, stop: float) -> bool:
+	if not player is CharacterBody3D:
+		return false
+	var body := player as CharacterBody3D
+	body.set_physics_process(false)
+	var arrived := false
+	for i in 600:
+		var d := to - body.global_position
+		d.y = 0.0
+		if d.length() <= stop:
+			arrived = true
+			break
+		var flat := d.normalized()
+		body.velocity.x = flat.x * 3.0
+		body.velocity.z = flat.z * 3.0
+		body.velocity.y = 0.0 if body.is_on_floor() else body.velocity.y - 0.5
+		body.move_and_slide()
+		await _frame()
+	body.velocity = Vector3.ZERO
+	body.set_physics_process(true)
+	for i in 8:
+		await _frame()
+	return arrived
+
+
+func _flat_distance(a: Vector3, b: Vector3) -> float:
+	return Vector2(a.x - b.x, a.z - b.z).length()
 
 
 ## At five, the release ceremony, pressed through its own buttons:
