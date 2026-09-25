@@ -1186,6 +1186,58 @@
       "radius": 6.0,
       "habitat": "long_field_wayfarer_grazing",
       "_why_owner_0912_off_path_pull": "Owner playtest 2026-09-12 asks for distinctive creature clusters that visibly pull the player off the main trail. This small Meadowhart herd occupies the Long Field wayfarer-signal clearing authored in props.json at [160,710], about 17m from its fire and supplies but about 80m from the road. It is a composed optional discovery rather than road-density camouflage: the fire first draws the eye, the herd gives the detour a living silhouette, and the Great Candy and potion at the site make curiosity pay. Meadowhart is an existing installed Meadows species and remains uncommon in this band; this adds no mesh, table roll, gate or new gameplay rule. Production sightline and ground acceptance are still required."
+    },
+    {
+      "order": 1920,
+      "species": "mudsnout",
+      "count": 5,
+      "centre": [
+        -85.0,
+        0.0,
+        0.0
+      ],
+      "radius": 10.0,
+      "habitat": "practice_supply_west_field",
+      "_why_f02b_practice_supply": "F02-b owner decision (relayed 2026-09-25): 'Raise the practice-wild supply on the Meadows route so that level 5 for the South Bridge is reachable with margin and no repeated wilds.' PROGRESSION 7 requires XP solvency on an earned route with zero repeat wild encounters. Measured before this change (spawn_tables.plan_for, seeds 0-1000; ralph/reports/MEADOWS-PAYOFFS/earned-bridge/RESULT.md): the practice-meadow training pool (level<=5 Bramblebun/Mudsnout within 160m of the practice meadow) was 7-14 bodies depending on what rolled clusters 1006/1007 drew, against 14 needed (one opening catch, three team catches, about ten training wins), so 71% of seeds could only reach level 5 by re-fighting respawned wilds. Orders 1920-1923 are four ANCHORED (no `table`) practice-supply clusters of the two practice species, so the supply no longer depends on the world seed. Levels are NOT pinned: each rolls Band 1's own [2,6] band like every other band-1 cluster. Sited outside the village fence, with every centre at least 33m from a road centreline, and placed so that no straight walk between any two outside practice clusters (orders 1, 1006, 1007, 1920-1923) cuts through the village; none is within 60m of the aggressive Galecrest (order 12) or 25m of the night Duskhush stand (order 1050). Appended with fresh orders, so no existing cluster moves or rerolls. This one: the open field west of Grandpa's fence, about 32m from the existing order-1 Mudsnout pair, reached through the Pond gate."
+    },
+    {
+      "order": 1921,
+      "species": "bramblebun",
+      "count": 5,
+      "centre": [
+        -92.0,
+        0.0,
+        25.0
+      ],
+      "radius": 9.0,
+      "habitat": "practice_supply_west_field",
+      "_why_f02b_practice_supply": "F02-b owner decision (relayed 2026-09-25): 'Raise the practice-wild supply on the Meadows route so that level 5 for the South Bridge is reachable with margin and no repeated wilds.' PROGRESSION 7 requires XP solvency on an earned route with zero repeat wild encounters. Measured before this change (spawn_tables.plan_for, seeds 0-1000; ralph/reports/MEADOWS-PAYOFFS/earned-bridge/RESULT.md): the practice-meadow training pool (level<=5 Bramblebun/Mudsnout within 160m of the practice meadow) was 7-14 bodies depending on what rolled clusters 1006/1007 drew, against 14 needed (one opening catch, three team catches, about ten training wins), so 71% of seeds could only reach level 5 by re-fighting respawned wilds. Orders 1920-1923 are four ANCHORED (no `table`) practice-supply clusters of the two practice species, so the supply no longer depends on the world seed. Levels are NOT pinned: each rolls Band 1's own [2,6] band like every other band-1 cluster. Sited outside the village fence, with every centre at least 33m from a road centreline, and placed so that no straight walk between any two outside practice clusters (orders 1, 1006, 1007, 1920-1923) cuts through the village; none is within 60m of the aggressive Galecrest (order 12) or 25m of the night Duskhush stand (order 1050). Appended with fresh orders, so no existing cluster moves or rerolls. This one: the northern half of the same west field, beside order 1's Mudsnout pair."
+    },
+    {
+      "order": 1922,
+      "species": "bramblebun",
+      "count": 4,
+      "centre": [
+        55.0,
+        0.0,
+        82.0
+      ],
+      "radius": 9.0,
+      "habitat": "practice_supply_north_edge",
+      "_why_f02b_practice_supply": "F02-b owner decision (relayed 2026-09-25): 'Raise the practice-wild supply on the Meadows route so that level 5 for the South Bridge is reachable with margin and no repeated wilds.' PROGRESSION 7 requires XP solvency on an earned route with zero repeat wild encounters. Measured before this change (spawn_tables.plan_for, seeds 0-1000; ralph/reports/MEADOWS-PAYOFFS/earned-bridge/RESULT.md): the practice-meadow training pool (level<=5 Bramblebun/Mudsnout within 160m of the practice meadow) was 7-14 bodies depending on what rolled clusters 1006/1007 drew, against 14 needed (one opening catch, three team catches, about ten training wins), so 71% of seeds could only reach level 5 by re-fighting respawned wilds. Orders 1920-1923 are four ANCHORED (no `table`) practice-supply clusters of the two practice species, so the supply no longer depends on the world seed. Levels are NOT pinned: each rolls Band 1's own [2,6] band like every other band-1 cluster. Sited outside the village fence, with every centre at least 33m from a road centreline, and placed so that no straight walk between any two outside practice clusters (orders 1, 1006, 1007, 1920-1923) cuts through the village; none is within 60m of the aggressive Galecrest (order 12) or 25m of the night Duskhush stand (order 1050). Appended with fresh orders, so no existing cluster moves or rerolls. This one: open ground north-east of the spine between the order-1007 cluster and the Duskhush oak stand, reached through TrailGate."
+    },
+    {
+      "order": 1923,
+      "species": "mudsnout",
+      "count": 4,
+      "centre": [
+        -24.0,
+        0.0,
+        80.0
+      ],
+      "radius": 9.0,
+      "habitat": "practice_supply_north_edge",
+      "_why_f02b_practice_supply": "F02-b owner decision (relayed 2026-09-25): 'Raise the practice-wild supply on the Meadows route so that level 5 for the South Bridge is reachable with margin and no repeated wilds.' PROGRESSION 7 requires XP solvency on an earned route with zero repeat wild encounters. Measured before this change (spawn_tables.plan_for, seeds 0-1000; ralph/reports/MEADOWS-PAYOFFS/earned-bridge/RESULT.md): the practice-meadow training pool (level<=5 Bramblebun/Mudsnout within 160m of the practice meadow) was 7-14 bodies depending on what rolled clusters 1006/1007 drew, against 14 needed (one opening catch, three team catches, about ten training wins), so 71% of seeds could only reach level 5 by re-fighting respawned wilds. Orders 1920-1923 are four ANCHORED (no `table`) practice-supply clusters of the two practice species, so the supply no longer depends on the world seed. Levels are NOT pinned: each rolls Band 1's own [2,6] band like every other band-1 cluster. Sited outside the village fence, with every centre at least 33m from a road centreline, and placed so that no straight walk between any two outside practice clusters (orders 1, 1006, 1007, 1920-1923) cuts through the village; none is within 60m of the aggressive Galecrest (order 12) or 25m of the night Duskhush stand (order 1050). Appended with fresh orders, so no existing cluster moves or rerolls. This one: open ground west of the spine beyond order 1006, reached through TrailGate or the Pond gate."
     }
   ]
 }
