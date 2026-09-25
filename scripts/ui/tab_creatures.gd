@@ -107,6 +107,15 @@ const HEALTH_LOW := UITokens.DANGER
 ## matching the button text's cap height.
 const FAREWELL_WARNING_ICON_PX := 40
 
+## Guardian offer (F14) layout, X03. Logical px for the A/B glyphs on the
+## answer buttons and in the card's own legend. The vendored disc fills ~3/4
+## of its box and the menu draws at 2/3 scale at 1280x720, so 52 lands a
+## ~26 px disc -- the 24 px floor with room, where 40/44 measured 20/22 px.
+const GUARDIAN_GLYPH_PX := 52
+## Occupied belt rows recede to this while the offer is up, so the free slot
+## the volunteer would take (highlighted) and the card are what reads.
+const GUARDIAN_ROSTER_DIM := 0.45
+
 ## Appraisal pips (blind-judge pass: "[***--]" read as ASCII debug styling,
 ## not a rating a player was meant to see). Drawn the same filled/open-circle
 ## way `bond_meter.gd` already draws this screen's bond nodes, rather than a
@@ -984,7 +993,8 @@ func poll() -> void:
 	# -- the same "pay attention" tone `_detail_status` already uses elsewhere
 	# on this screen, not a new colour invented for this one line.
 	_header.add_theme_color_override(
-		"font_color", UITokens.WARNING if _release_stage != "" else UITokens.TEXT_PRIMARY
+		"font_color", UITokens.WARNING if _release_stage != "" and not _release_stage.begins_with("guardian")
+			else UITokens.TEXT_PRIMARY
 	)
 
 	var cfg: Dictionary = PROGRESSION.config()
@@ -993,6 +1003,8 @@ func poll() -> void:
 		_poll_row(i, party, cfg, active, size)
 	if _pending_wrap != null and _pending_wrap.visible:
 		_poll_row(PARTY.MAX_CREATURES, party, cfg, active, size)
+	_apply_guardian_roster(size)
+	_poll_guardian_result()
 
 	# During the goodbye beat the viewport belongs to the creature that just
 	# left — `_do_release` pointed it there — and `_describe` would wrench it
@@ -1776,7 +1788,15 @@ var _guardian_decline: Button = null
 var _guardian_back: Button = null
 var _guardian_confirm_decline: Button = null
 var _guardian_subtitle: Label = null
+var _guardian_tag: Label = null
+var _guardian_stats: Label = null
 var _guardian_final: Label = null
+var _guardian_final_row: HBoxContainer = null
+## The answer's result, shown in the card's place (X03) until the player moves
+## off the row focus it landed on. Not modal: the shell's input is already
+## free and the belt is live underneath.
+var _guardian_result_shown := false
+var _guardian_result_focus := -1
 var _guardian_hint_before := ""
 var _guardian_name_shown := ""
 ## Claim id of a Decline from this tab still awaiting the host's journal: the
@@ -1794,8 +1814,12 @@ func _begin_guardian_confirm(pending: RefCounted) -> void:
 	_farewell_release.visible = false
 	_farewell_done.visible = false
 	_farewell_hint.visible = true
+	_hide_guardian_result()
 	_guardian_subtitle.visible = true
+	_guardian_tag.visible = true
+	_guardian_stats.visible = true
 	_guardian_final.visible = true
+	_guardian_final_row.visible = true
 	_detail_panel.visible = false
 	if _detail_scroll != null:
 		_detail_scroll.visible = false
@@ -1806,6 +1830,10 @@ func _begin_guardian_confirm(pending: RefCounted) -> void:
 	menu.call("override_footer", " ")
 	_guardian_name_shown = _guardian_name(pending)
 	_guardian_subtitle.text = "%s · Lv %d" % [str(pending.call("label")), int(pending.get("level"))]
+	_guardian_tag.text = "LEGENDARY  ·  %s" % str(pending.get("creature_type")).capitalize()
+	_guardian_stats.text = "HP %d      ATK %d      DEF %d" % [
+		int(round(float(pending.get("max_hp")))), int(round(float(pending.get("attack")))),
+		int(round(float(pending.get("defence"))))]
 	_show_guardian_offer()
 
 
@@ -1881,13 +1909,21 @@ func _answer_guardian(accept: bool) -> void:
 		return
 	if accept:
 		say("%s joins your party." % who)
-		_end_guardian_confirm(int(_party().call("size")) - 1)
+		var landed := int(_party().call("size")) - 1
+		_end_guardian_confirm(landed)
+		_show_guardian_result("%s joined your party" % who,
+			"Slot %d. Move along the belt to look them over." % (landed + 1), landed)
 		return
 	# Said once, here: the chamber was told not to announce it as well.
 	var settled := bool(result.get("settled", service.call("decline_settled", claim_id)))
 	_guardian_decline_wait = "" if settled else claim_id
-	say(("%s stays free." % who) if settled else str(result.get("message", "Declining %s..." % _mid_sentence(who))))
+	var line := ("%s stays free." % who) if settled else str(result.get("message", "Declining %s..." % _mid_sentence(who)))
+	say(line)
 	_end_guardian_confirm(0)
+	# A title drops a sentence's full stop, but never eats an ellipsis's dot
+	# ("Declining the Deep Watcher..." read ".." in the capture).
+	var title := line if line.ends_with("...") or line.ends_with("…") else line.trim_suffix(".")
+	_show_guardian_result(title, "They will not offer to join you again.", 0)
 
 
 ## A Decline from this tab that the host journals later: replace the pending
@@ -1904,8 +1940,11 @@ func _poll_guardian_decline_result() -> void:
 		return
 	_guardian_decline_wait = ""
 	var veilfall := _water_veilfall()
+	var who := _guardian_name_shown if not _guardian_name_shown.is_empty() else "The Guardian"
 	if veilfall == null or bool(veilfall.call("take_held_decline_result")):
-		say("%s stays free." % (_guardian_name_shown if not _guardian_name_shown.is_empty() else "The Guardian"))
+		say("%s stays free." % who)
+	if _guardian_result_shown:
+		_farewell_title.text = "%s stays free" % who
 
 
 func _put_off_guardian() -> void:
@@ -1965,14 +2004,37 @@ func _ensure_guardian_controls() -> void:
 	_guardian_subtitle = _guardian_label(UITokens.FONT_BODY, UITokens.TEXT_PRIMARY)
 	body.add_child(_guardian_subtitle)
 	body.move_child(_guardian_subtitle, _farewell_title.get_index() + 1)
+	# X03: the legendary tag and its numbers stay on screen while the offer is
+	# up -- the detail column is hidden for the card's width, so without this
+	# the player answers a "final" choice without seeing what they are taking.
+	_guardian_tag = _guardian_label(UITokens.FONT_LABEL, UITokens.BUILD_ACCENT)
+	body.add_child(_guardian_tag)
+	body.move_child(_guardian_tag, _guardian_subtitle.get_index() + 1)
+	_guardian_stats = _guardian_label(UITokens.FONT_LABEL, UITokens.TEXT_SECONDARY)
+	body.add_child(_guardian_stats)
+	body.move_child(_guardian_stats, _guardian_tag.get_index() + 1)
+	# "This choice is final." is the one amber line on the card, and it carries
+	# the caution glyph beside the word, so the warning never rides on colour.
 	_guardian_final = _guardian_label(UITokens.FONT_BODY, UITokens.WARNING)
-	body.add_child(_guardian_final)
-	body.move_child(_guardian_final, _farewell_body.get_index() + 1)
+	_guardian_final_row = HBoxContainer.new()
+	_guardian_final_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_guardian_final_row.add_theme_constant_override("separation", 10)
+	var caution := TextureRect.new()
+	caution.texture = UITokens.warning_icon(FAREWELL_WARNING_ICON_PX)
+	caution.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	caution.custom_minimum_size = Vector2(FAREWELL_WARNING_ICON_PX, FAREWELL_WARNING_ICON_PX)
+	_guardian_final_row.add_child(caution)
+	_guardian_final.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_guardian_final_row.add_child(_guardian_final)
+	body.add_child(_guardian_final_row)
+	body.move_child(_guardian_final_row, _farewell_body.get_index() + 1)
 	_guardian_accept = _guardian_button("Accept", _answer_guardian.bind(true))
 	_guardian_decline = _guardian_button("Decline", _show_guardian_decline_step)
 	# Safe answer first and focused first, as "Keep them" is in the farewell.
-	_guardian_back = _guardian_button("Back", _back_to_guardian_offer)
-	_guardian_confirm_decline = _guardian_button("Confirm", _answer_guardian.bind(false))
+	# Named for what it keeps rather than "Back", which the B legend under the
+	# buttons already says -- two "Back"s on one card read as a layout slip.
+	_guardian_back = _guardian_button("Keep the offer", _back_to_guardian_offer)
+	_guardian_confirm_decline = _guardian_button("Decline for good", _answer_guardian.bind(false))
 	_guardian_confirm_decline.add_theme_color_override("font_color", UITokens.WARNING)
 	_guardian_confirm_decline.add_theme_color_override("font_hover_color", UITokens.WARNING)
 	for button: Button in [_guardian_accept, _guardian_decline, _guardian_back, _guardian_confirm_decline]:
@@ -2003,7 +2065,8 @@ func _guardian_button(text: String, action: Callable) -> Button:
 		focus.set_border_width(side, 3)
 	button.add_theme_stylebox_override("focus", focus)
 	button.add_theme_color_override("font_focus_color", UITokens.TEXT_PRIMARY)
-	button.add_theme_constant_override("icon_max_width", 44)
+	button.add_theme_constant_override("icon_max_width", GUARDIAN_GLYPH_PX)
+	button.add_theme_constant_override("h_separation", 10)
 	button.visible = false
 	return button
 
@@ -2024,9 +2087,12 @@ func _guardian_show_pair(first: Button, second: Button) -> void:
 		it.focus_previous = to_other
 
 
-## "B  Decide later" / "B  Back" at body size, with the live device's glyph.
+## The card's own controller legend -- "A  Choose    B  Decide later" (or
+## "B  Back" on the decline step) -- with the live device's glyphs at the
+## 24 px floor. It stands in for the shell footer, which the offer blanks.
 func _guardian_hint(action_text: String) -> void:
-	var text := "%s  %s" % [INPUT_GLYPH.icon("cancel", 40), action_text]
+	var text := "%s  Choose        %s  %s" % [
+		INPUT_GLYPH.icon("confirm", GUARDIAN_GLYPH_PX), INPUT_GLYPH.icon("cancel", GUARDIAN_GLYPH_PX), action_text]
 	if _farewell_hint.text != text:
 		_farewell_hint.text = text
 
@@ -2048,7 +2114,7 @@ func _refresh_guardian_glyphs() -> void:
 ## The same device-aware glyph `input_glyph.gd` draws into rich text, as a
 ## texture a Button can carry. Null when that binding has no glyph art.
 func _glyph_texture(id: String) -> Texture2D:
-	var code := INPUT_GLYPH.icon(id, 44)
+	var code := INPUT_GLYPH.icon(id, GUARDIAN_GLYPH_PX)
 	var start := code.find("]")
 	var stop := code.find("[/img]")
 	if not code.begins_with("[img") or start < 0 or stop <= start:
@@ -2065,7 +2131,7 @@ func _end_guardian_confirm(land: int) -> void:
 		if button != null and is_instance_valid(button):
 			button.visible = false
 			button.icon = null
-	for label: Label in [_guardian_subtitle, _guardian_final]:
+	for label: Control in [_guardian_subtitle, _guardian_tag, _guardian_stats, _guardian_final, _guardian_final_row]:
 		if label != null and is_instance_valid(label):
 			label.visible = false
 	if _farewell_panel == null:
@@ -2092,6 +2158,74 @@ func _resettle_detail_scroll() -> void:
 		await get_tree().process_frame
 	if is_instance_valid(_detail_scroll) and _detail_scroll.visible:
 		_keep_move_stats_visible()
+
+
+## The answer's outcome in the card's own slot, beside the belt it changed,
+## instead of only a status line under a card that vanished (X03).
+func _show_guardian_result(title: String, body: String, land: int) -> void:
+	if _farewell_panel == null:
+		return
+	_guardian_result_shown = true
+	_guardian_result_focus = land
+	_farewell_title.text = title
+	_farewell_body.text = body
+	_farewell_keep.visible = false
+	_farewell_release.visible = false
+	_farewell_done.visible = false
+	_farewell_hint.visible = false
+	_detail_panel.visible = false
+	if _detail_scroll != null:
+		_detail_scroll.visible = false
+	_farewell_panel.visible = true
+
+
+func _hide_guardian_result() -> void:
+	if not _guardian_result_shown:
+		return
+	_guardian_result_shown = false
+	_guardian_result_focus = -1
+	if _release_stage != "" or _farewell_panel == null:
+		return
+	_farewell_hint.visible = true
+	_farewell_panel.visible = false
+	if _detail_scroll != null:
+		_detail_scroll.visible = true
+	_detail_panel.visible = true
+	_resettle_detail_scroll()
+
+
+## Polled: the result gives the column back once the player moves along the
+## belt, or another ceremony takes the card.
+func _poll_guardian_result() -> void:
+	if not _guardian_result_shown:
+		return
+	if _release_stage != "":
+		_guardian_result_shown = false
+		return
+	if _focused != _guardian_result_focus:
+		_hide_guardian_result()
+
+
+## While the offer is up: the occupied rows recede and the free slot the
+## volunteer would take is outlined and named, so "the free slot" in the body
+## text has a place on screen. Everything returns to normal afterwards.
+func _apply_guardian_roster(size: int) -> void:
+	var offering := _release_stage.begins_with("guardian")
+	var destination := size if offering and size < PARTY.MAX_CREATURES else -1
+	for i in mini(_rows.size(), PARTY.MAX_CREATURES):
+		var wrap := _row_wraps[i] as Control
+		var dim := offering and i != destination
+		wrap.modulate = Color(1, 1, 1, GUARDIAN_ROSTER_DIM) if dim else Color.WHITE
+		if i == destination:
+			var button := _rows[i] as Button
+			var box := UITokens.slot_box(true)
+			box.border_color = UITokens.TEAL
+			for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+				box.set_border_width(side, 3)
+			button.add_theme_stylebox_override("normal", box)
+			button.text = "  %d.  %s joins here" % [i + 1,
+				"The Guardian" if _guardian_name_shown.is_empty() else _guardian_name_shown]
+			button.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
 
 
 func _water_claims() -> Node:
