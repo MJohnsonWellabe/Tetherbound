@@ -2,8 +2,9 @@ extends SceneTree
 
 ## Client-side Stormheart answer through the real dialogue panel. The real
 ## `stormwood_ending.gd` receives this character's claim, plays the offer and
-## reads the panel's own signals: Yes with room on the belt, No, and a
-## conversation closed before its Yes/No line. Hub/chapter/Dynamo are stubs;
+## reads the panel's own signals: Yes with room on the belt, No through the
+## panel's real menu_cancel input, and conversations closed before and on the
+## Yes/No line (neither is an answer). Hub/chapter/Dynamo are stubs;
 ## the host settle intent is not observed here (the participants smoke covers
 ## the host side).
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
@@ -88,12 +89,14 @@ func _run() -> void:
 	await _frames(3)
 	_check(_holds_stormheart(game), "Yes with room: the Stormheart joins this character's belt")
 	_check(_receipt(game), "Yes records this character's personal receipt")
+	_check(panel.drain_effects().is_empty(),
+		"the Yes effect was consumed by the ending, not left queued on the panel")
 
 	# No: nothing joins, and the refusal is still this character's answer.
 	_reset_character(game)
 	await _offer(ending, panel, game)
 	await _to_question(panel)
-	panel.runner().confirm(false)
+	await _press_decline()
 	await _frames(3)
 	_check(not _holds_stormheart(game), "No: the Stormheart stays free")
 	_check(_receipt(game), "No records this character's personal receipt as an answer")
@@ -109,6 +112,25 @@ func _run() -> void:
 		"a conversation closed before its Yes/No line answers nothing")
 	_check(panel.is_open() and panel.runner().conversation_id() == ENDING.OFFER_CONVERSATION,
 		"the unanswered offer is asked again")
+
+	# Closed ON the Yes/No line without an answer (a cutscene, a teardown):
+	# still no refusal, and the offer returns.
+	await _to_question(panel)
+	_check(bool(panel.runner().line().get("confirmation", false)), "the re-asked offer reaches its Yes/No line")
+	panel.close()
+	await _frames(3)
+	_check(not _receipt(game) and not _holds_stormheart(game),
+		"a close on the Yes/No line without an explicit No is not a refusal")
+	_check(panel.is_open() and panel.runner().conversation_id() == ENDING.OFFER_CONVERSATION,
+		"the offer interrupted on its Yes/No line is asked again")
+
+	# And the decline is still available after that interruption.
+	await _to_question(panel)
+	await _press_decline()
+	await _frames(3)
+	_check(_receipt(game) and not _holds_stormheart(game),
+		"an explicit No after an interruption records this character's refusal")
+	_check(panel.drain_effects().is_empty(), "a No queues no accept effect")
 	panel.close()
 	world.queue_free()
 	await _frames(2)
@@ -122,6 +144,24 @@ func _offer(ending: Node, panel: Node, game: Node) -> void:
 		"settled": false, "kept": false}})
 	await _frames(2)
 	_check(panel.is_open(), "the claim opens the Stormheart's offer")
+
+
+## The panel's real decline: a menu_cancel press through Input, read by the
+## panel's own `_physics_process` on the next physics tick.
+func _press_decline() -> void:
+	var press := InputEventAction.new()
+	press.action = "menu_cancel"
+	press.pressed = true
+	Input.parse_input_event(press)
+	Input.flush_buffered_events()
+	await physics_frame
+	await physics_frame
+	var release := InputEventAction.new()
+	release.action = "menu_cancel"
+	release.pressed = false
+	Input.parse_input_event(release)
+	Input.flush_buffered_events()
+	await physics_frame
 
 
 func _to_question(panel: Node) -> void:

@@ -133,3 +133,64 @@ func test_offer_asks_an_explicit_yes_or_no_and_receipts_each_answer() -> void:
 	assert_eq(ENDING.resolution_flag(false, "trainer-a"), "stormwood:legendary_resolution:refused:trainer-a")
 	assert_eq(PROGRESSION_STATE.scope_of(ENDING.resolution_flag(false, "trainer-a")), "world",
 		"the per-character answer receipt is a world fact every peer sees")
+
+
+func test_a_legacy_freeing_without_recorded_fighters_offers_only_its_first_claimant() -> void:
+	var freed := [ENDING.FREED_FLAG]
+	var legacy := {}
+	assert_true(ENDING.offer_owed(legacy, "trainer-a", freed),
+		"a freed-but-unclaimed legacy save still offers its first claimant a Stormheart")
+	assert_eq(ENDING.participants_for_claim(legacy, "trainer-a"), ["trainer-a"],
+		"with no recorded fighters the first claimant is the one participant")
+	var claimed := {"claims": {"trainer-a": {"creature": {"species_id": "fulgocobra"},
+		"settled": false, "kept": false}}}
+	assert_false(ENDING.offer_owed(claimed, "trainer-b", freed),
+		"a later character on a legacy save receives no creature: nothing proves they fought")
+	assert_true(ENDING.offer_owed(claimed, "trainer-a", freed),
+		"the first claimant's own unsettled claim still resumes")
+	var recorded_empty := {"participants": []}
+	assert_true(ENDING.offer_owed(recorded_empty, "solo", freed),
+		"a solo freeing that recorded nobody still offers its only player")
+	recorded_empty["claims"] = {"solo": {"creature": {}, "settled": true, "kept": true}}
+	assert_false(ENDING.offer_owed(recorded_empty, "joiner", freed),
+		"a character joining a solo freeing after its claim receives nothing")
+	assert_false(ENDING.offer_owed({"participants": ["trainer-a"]}, "trainer-b", freed),
+		"a recorded participant list is used as is")
+
+
+func test_the_host_decides_an_offer_from_its_own_receipts_not_the_clients_flag() -> void:
+	var state := {"participants": ["trainer-a", "trainer-b"]}
+	var freed := [ENDING.FREED_FLAG]
+	for accepted: bool in [true, false]:
+		var flags := freed + [ENDING.resolution_flag(accepted, "trainer-b")]
+		assert_false(ENDING.offer_owed(state, "trainer-b", flags, false),
+			"a world receipt for B's answer refuses a second offer even when B's client says it never answered")
+	assert_true(ENDING.offer_owed(state, "trainer-a", freed + [ENDING.resolution_flag(false, "trainer-b")], false),
+		"B's receipt is B's alone; A is still owed their own offer")
+	var settled := {"participants": ["trainer-a"], "claims": {"trainer-a": {"creature": {}, "settled": true, "kept": false}}}
+	assert_false(ENDING.offer_owed(settled, "trainer-a", freed, false),
+		"a settled claim the host holds refuses whatever the client reports")
+	assert_false(ENDING.offer_owed(state, "trainer-a", freed, true),
+		"the client's own receipt can withhold its fresh creature")
+	var pending := {"participants": ["trainer-a"], "claims": {"trainer-a": {"creature": {}, "settled": false, "kept": false}}}
+	assert_true(ENDING.offer_owed(pending, "trainer-a", freed, true),
+		"the hint never cancels a claim the host already holds; the client resumes and settles it")
+	assert_false(ENDING.offer_owed(state, "trainer-c", freed, false),
+		"a non-participant is refused whatever it reports")
+
+
+func test_the_offer_accept_effect_is_consumed_by_the_ending() -> void:
+	var dialogue: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/dialogue/stormwood.json")) as Dictionary).conversations
+	var last: Dictionary = (dialogue[ENDING.OFFER_CONVERSATION].lines as Array).back()
+	assert_eq(str(last.get("confirm_effect", "")), ENDING.OFFER_ACCEPT_EFFECT,
+		"the consent line's effect is the one the ending drains and reads as Yes")
+	var ending := FileAccess.get_file_as_string("res://scripts/world/stormwood_ending.gd")
+	assert_true(ending.contains('panel.call("drain_effects")'),
+		"the ending drains the panel on completion, so the Yes effect is never queued forever")
+	assert_true(ending.contains("Input.is_action_just_pressed(DECLINE_ACTION)"),
+		"only the panel's explicit decline input records a refusal")
+	assert_eq(ENDING.DECLINE_ACTION, "menu_cancel", "the decline is the panel's own B/Escape action")
+	var panel := FileAccess.get_file_as_string("res://scripts/ui/dialogue_panel.gd")
+	assert_true(panel.contains('Input.is_action_just_pressed("menu_cancel")'),
+		"the dialogue panel still declines a consent line on menu_cancel")
