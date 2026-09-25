@@ -30,12 +30,13 @@ const APPROACH_SEAT_RADII := [2.4, 3.2, 4.0, 4.8, 5.5]
 const APPROACH_SEATS_PER_RING := 16
 const APPROACH_SETTLE_FRAMES := 3
 ## A player waits for a wandering creature to step away from a tree before
-## walking up to it: the tree's own Chop prompt is genuinely nearer from every
-## seat while the creature stands against the trunk (batch-7 CI: Chop point
-## 0.99 m from the player, the creature 3.23 m). Approach only once the target
-## is this far (flat) from every other interaction prompt, bounded by
-## CLEAR_WAIT_FRAMES; the engage assertion itself is unchanged.
-const TARGET_CLEAR_M := 3.0
+## walking up to it: while the creature stands against the trunk, the tree's
+## own Chop prompt is genuinely nearer from every seat (batch-7 CI: Chop point
+## 0.99 m from the player, the creature 3.23 m). Approach only once at least
+## one approach seat would put the creature's body nearer than every other
+## interaction prompt by SEAT_MARGIN_M, bounded by CLEAR_WAIT_FRAMES; the
+## engage assertion itself is unchanged.
+const SEAT_MARGIN_M := 0.5
 const CLEAR_WAIT_FRAMES := 3600
 ## A caught creature's HP when the respawn fires. Anything below max shows a
 ## free heal; 1.0 makes the failure message unambiguous.
@@ -104,8 +105,8 @@ func _run() -> void:
 
 	var clear := await _wait_until_target_clear()
 	if not _require(bool(clear.get("clear", false)),
-			"%s never stood %.1f m clear of other interaction prompts within %d frames (closest %s)" % [
-				TARGET_NAME, TARGET_CLEAR_M, CLEAR_WAIT_FRAMES, str(clear)]):
+			"%s never offered an approach seat where it beats every other prompt by %.1f m within %d frames (%s)" % [
+				TARGET_NAME, SEAT_MARGIN_M, CLEAR_WAIT_FRAMES, str(clear)]):
 		_report()
 		return
 	if not await _stage_published_engage():
@@ -226,29 +227,33 @@ func _place_player_near(point: Vector3, distance: float) -> void:
 	_player.reset_physics_interpolation()
 
 
-## Wait, as a player would, until the wandering target stands clear of every
-## other interaction prompt (a tree's Chop, a Gather point, an NPC). Returns
-## {clear, frames, closest_m, closest}.
+## Wait, as a player would, until some approach seat would put the wandering
+## target's body nearer than every other interaction prompt. Returns
+## {clear, frames, seat, margin_m}.
 func _wait_until_target_clear() -> Dictionary:
-	var closest_m := INF
-	var closest := ""
+	var best_margin := -INF
 	for frame in CLEAR_WAIT_FRAMES:
-		closest_m = INF
-		closest = ""
+		var others: Array[Vector3] = []
 		for provider: Variant in (_arbiter.get("_provider_set") as Dictionary).keys():
 			var node := provider as Node3D
-			if node == null or not is_instance_valid(node) or node == _director or not node.is_inside_tree():
-				continue
-			var d := node.global_position - _wild.global_position
-			d.y = 0.0
-			if d.length() < closest_m:
-				closest_m = d.length()
-				closest = str(node.get_path())
-		if closest_m >= TARGET_CLEAR_M:
-			_clear_wait = {"clear": true, "frames": frame, "closest_m": snappedf(closest_m, 0.01), "closest": closest}
+			if node != null and is_instance_valid(node) and node != _director and node.is_inside_tree():
+				others.append(node.global_position)
+		var radius := float(_wild.call("body_radius")) if _wild.has_method("body_radius") else 0.0
+		best_margin = -INF
+		for raw_radius: Variant in APPROACH_SEAT_RADII:
+			for seat_index in APPROACH_SEATS_PER_RING:
+				var angle := TAU * float(seat_index) / float(APPROACH_SEATS_PER_RING)
+				var seat := _wild.global_position + Vector3(cos(angle), 0.0, sin(angle)) * float(raw_radius)
+				var engage := maxf(0.0, float(raw_radius) - radius)
+				var nearest := INF
+				for at: Vector3 in others:
+					nearest = minf(nearest, Vector2(at.x - seat.x, at.z - seat.z).length())
+				best_margin = maxf(best_margin, nearest - engage)
+		if best_margin >= SEAT_MARGIN_M:
+			_clear_wait = {"clear": true, "frames": frame, "margin_m": snappedf(best_margin, 0.01)}
 			return _clear_wait
 		await physics_frame
-	_clear_wait = {"clear": false, "frames": CLEAR_WAIT_FRAMES, "closest_m": snappedf(closest_m, 0.01), "closest": closest}
+	_clear_wait = {"clear": false, "frames": CLEAR_WAIT_FRAMES, "margin_m": snappedf(best_margin, 0.01)}
 	return _clear_wait
 
 
