@@ -111,3 +111,44 @@ Carried from the earlier rounds and outside this branch:
 ## Verdict
 - **A: yes (narrowly).** The key-art trainer, the tree language and the violet storm fit the board's swatches.
 - **B: no.** No creature or action appears in 10 frames, and the grass cards are coarse and unshadowed.
+
+# Round 4: blind re-judge of the round-4 frames
+
+A fresh blind judge saw 9 shuffled frames: 4 day phases, 4 night phases and the Break telegraph, with the same references.
+
+## Scored against the answer key: 9/9
+
+| Judge's state | Day | Night | Actual |
+|---|---|---|---|
+| S1 grey overcast, light drizzle | 09 | 02 | Calm / night Calm |
+| S2 dust / brown haze | 01 | 04 | Fading / night Fading |
+| S3 olive pre-storm | 08 | 03 | Building / night Building |
+| S4 purple thunderstorm | 06, 07 | 05 | Break (+ telegraph) / night Break |
+
+- **Time of day:** 9 of 9 correct. Day Break now reads as day; it had been misread as night in rounds 2 and 3.
+- **Weather state:** 9 of 9 frames grouped and day/night paired correctly.
+- **Order:** the judge inferred Break as the peak with medium confidence. It placed Fading (S2) before Building and noted it "could also be a post-storm aftermath". That is correct: nothing in a still shows direction.
+- **At 30% size, night Calm, Building and Fading merge** into "dark with a green floor". Only night Break separates.
+
+## Telegraph (combat hazard magenta #ff40e6)
+The ring is readable as a shape at 30% size. It communicates "a zone boundary", but not unambiguously "move out", and the magenta sits close to the lilac flowers and the violet storm.
+
+The colour is the game-wide combat telegraph decision in `combat.json` (`_why_colour_0905`), so the lane keeps it. A still also cannot show the ring's charge pulse (2 → 7 Hz over 1.2 s).
+
+For the owner: if magenta-on-violet is judged too close in play, the change belongs to the shared combat telegraph colour, not to a Stormwood-only colour.
+
+## Unchanged and region-wide
+Outside this branch; carried from earlier rounds:
+- The world is an empty flat disc with a horizon band.
+- No shadows, and the grass stays self-lit under dark skies.
+- The rain has no wetness, splashes, curtains or wind response.
+- No companion creature is readable at genre scale.
+- The red-brown soil sits near the oxblood swatches; desaturating it toward umber is suggested.
+
+## Verdict
+- **A: no.** No layered landscape, no warm sun, no depth haze, no blue night.
+- **B: yes.** Same kind of game, a tier below on quality.
+
+**Lane conclusion for ACCEPTANCE F10 "Calm/Building/Break/Fading readable without HUD text":**
+- Met by blind grouping at full size, day and night: 9/9 in round 4. Rounds 1–3 scored 12/13, 10/11 and a partial.
+- Night separation at 30% size remains a known weakness.
