@@ -3,10 +3,13 @@ extends SceneTree
 ## Client-side Stormheart answer through the real dialogue panel. The real
 ## `stormwood_ending.gd` receives this character's claim, plays the offer and
 ## reads the panel's own signals: Yes with room on the belt, No through the
-## panel's real menu_cancel input, and conversations closed before and on the
-## Yes/No line (neither is an answer). Hub/chapter/Dynamo are stubs;
-## the host settle intent is not observed here (the participants smoke covers
-## the host side).
+## panel's real menu_cancel input (delivered to the ending as the panel's
+## `declined` signal), and conversations closed before and on the Yes/No line
+## (neither is an answer). It also covers the portable acceptance: only a Yes
+## that keeps the Stormheart marks it, and a refusal left from another world
+## no longer refuses a new world's offer. Hub/chapter/Dynamo are stubs; the
+## hub stub only records the claim intent, and the host settle is not observed
+## here (the participants smoke covers the host side).
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
 const PANEL := preload("res://scenes/ui/dialogue_panel.tscn")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
@@ -28,8 +31,18 @@ class FixtureWorld extends Node3D:
 
 
 class HubStub extends Node:
+	var intents: Array = []
+
 	func send_to(_peer: int, _event: Dictionary) -> void:
 		pass
+
+	## Reached through Session's real offline-host dispatch; recorded only.
+	func dispatch(_peer: int, intent: Dictionary) -> void:
+		intents.append(intent.duplicate(true))
+
+	func claims() -> Array:
+		return intents.filter(func(intent: Dictionary) -> bool:
+			return str(intent.get("kind", "")) == "ending_claim")
 
 	func actor_for(_peer: int) -> Node3D:
 		return null
@@ -75,10 +88,15 @@ func _run() -> void:
 			"StormwoodDynamo": DynamoStub}[node_name].new()
 		stub.name = node_name
 		world.add_child(stub)
+		if stub is HubStub:
+			stub.add_to_group("stormwood_encounter_hub")
+	var hub: HubStub = world.get_node("StormwoodEncounterHub")
 	var ending := ENDING.new()
 	ending.name = "StormwoodEnding"
 	world.add_child(ending)
 	ending.mount(world)
+	var declines: Array[String] = []
+	panel.declined.connect(func(id: String) -> void: declines.append(id))
 	await process_frame
 
 	# Yes with room on the belt: the Stormheart joins and the answer is recorded.
@@ -89,6 +107,7 @@ func _run() -> void:
 	await _frames(3)
 	_check(_holds_stormheart(game), "Yes with room: the Stormheart joins this character's belt")
 	_check(_receipt(game), "Yes records this character's personal receipt")
+	_check(_accepted(game), "a Yes that joins marks this character's portable acceptance")
 	_check(panel.drain_effects().is_empty(),
 		"the Yes effect was consumed by the ending, not left queued on the panel")
 
@@ -101,6 +120,26 @@ func _run() -> void:
 	_check(not _holds_stormheart(game), "No: the Stormheart stays free")
 	_check(_receipt(game), "No records this character's personal receipt as an answer")
 	_check(game.pending_catch == null, "No opens no release ceremony")
+	_check(declines == [ENDING.OFFER_CONVERSATION], "the real menu_cancel press reached the ending as the panel's declined signal")
+	_check(not _accepted(game), "a refusal is not an acceptance")
+
+	# That refusal, then this character fights in another world: asking there
+	# sends no withholding hint, drops the stale receipt, and the new world's
+	# offer is asked instead of being silently refused.
+	hub.intents.clear()
+	ending.call("_on_offer")
+	var asked := hub.claims()
+	_check(asked.size() == 1 and asked.back().get("already_accepted") == false and not asked.back().has("already_resolved"),
+		"refused in world A: the claim in world B carries no withholding hint")
+	_check(not _receipt(game), "the other world's leftover receipt is dropped when this character asks here")
+	await _offer(ending, panel, game)
+	_check(panel.is_open() and panel.runner().conversation_id() == ENDING.OFFER_CONVERSATION,
+		"refused in world A, fought in world B: world B's offer is asked, not auto-refused")
+	await _to_question(panel)
+	await _press_decline()
+	await _frames(3)
+	_check(_receipt(game) and not _holds_stormheart(game) and not _accepted(game),
+		"world B's own No is recorded as its own answer")
 
 	# Closed before the question: nothing is answered and the offer returns.
 	_reset_character(game)
@@ -153,6 +192,14 @@ func _run() -> void:
 	await _frames(3)
 	_check(_holds_stormheart(game) and _receipt(game),
 		"the Stormheart joins as soon as the other ceremony ends")
+	_check(_accepted(game), "the Stormheart kept after a waited ceremony is an acceptance")
+	# Accepted here, then this character asks in another world: the hint
+	# withholds a second creature there.
+	hub.intents.clear()
+	ending.call("_on_offer")
+	asked = hub.claims()
+	_check(asked.size() == 1 and asked.back().get("already_accepted") == true,
+		"accepted in world A: the claim in world B says so, and the host withholds a second creature")
 	panel.close()
 	world.queue_free()
 	await _frames(2)
@@ -202,6 +249,7 @@ func _reset_character(game: Node) -> void:
 		if str(party.at(i).get("species_id")) == ENDING.LEGENDARY_SPECIES:
 			party.remove_at(i)
 	game.player_flags().set_flag(ENDING.PERSONAL_RECEIPT_FLAG, false)
+	game.player_flags().set_flag(ENDING.ACCEPTED_FLAG, false)
 	game.pending_catch = null
 
 
@@ -214,6 +262,10 @@ func _holds_stormheart(game: Node) -> bool:
 
 func _receipt(game: Node) -> bool:
 	return bool(game.player_flags().has(ENDING.PERSONAL_RECEIPT_FLAG))
+
+
+func _accepted(game: Node) -> bool:
+	return bool(game.player_flags().has(ENDING.ACCEPTED_FLAG))
 
 
 func _frames(count: int) -> void:

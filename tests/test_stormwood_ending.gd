@@ -135,27 +135,72 @@ func test_offer_asks_an_explicit_yes_or_no_and_receipts_each_answer() -> void:
 		"the per-character answer receipt is a world fact every peer sees")
 
 
-func test_a_legacy_freeing_without_recorded_fighters_offers_only_its_first_claimant() -> void:
+func test_a_legacy_freeing_without_recorded_fighters_never_offers_whoever_claims_first() -> void:
 	var freed := [ENDING.FREED_FLAG]
 	var legacy := {}
-	assert_true(ENDING.offer_owed(legacy, "trainer-a", freed),
-		"a freed-but-unclaimed legacy save still offers its first claimant a Stormheart")
-	assert_eq(ENDING.participants_for_claim(legacy, "trainer-a"), ["trainer-a"],
-		"with no recorded fighters the first claimant is the one participant")
-	var claimed := {"claims": {"trainer-a": {"creature": {"species_id": "fulgocobra"},
+	# (a) The Dynamo's persisted fighters, plus contributor peers still mapped
+	# to a character, are the fallback; the claimant's own id never is.
+	var dynamo := {"fighter_characters": ["trainer-a"], "contributors": [1, 7, 9]}
+	var fallback := ENDING.fallback_participants(dynamo, {1: "host", 7: "trainer-b"}, "host")
+	assert_eq(fallback, ["trainer-a", "host", "trainer-b"],
+		"the Dynamo's fighters and mapped contributors are the participants; an unmapped peer is skipped")
+	assert_eq(ENDING.participants_for_claim(legacy, fallback), fallback)
+	assert_true(ENDING.offer_owed(legacy, "trainer-a", freed, false, fallback),
+		"a recorded Dynamo fighter is still owed their Stormheart on a legacy save")
+	assert_true(ENDING.offer_owed(legacy, "trainer-b", freed, false, fallback),
+		"a contributor mapped to a character is owed their Stormheart")
+	assert_false(ENDING.offer_owed(legacy, "guest", freed, false, fallback),
+		"a guest the Dynamo never recorded receives nothing, even claiming first")
+	# (b) With no Dynamo record at all, only the world owner's character.
+	var host_only := ENDING.fallback_participants({}, {}, "host")
+	assert_eq(host_only, ["host"], "with no Dynamo record the host's own character is the one participant")
+	assert_false(ENDING.offer_owed(legacy, "guest", freed, false, host_only),
+		"a guest claiming first on a legacy save gets no creature")
+	assert_true(ENDING.offer_owed(legacy, "host", freed, false, host_only),
+		"the host who freed it keeps its offer after a guest claimed first")
+	assert_false(ENDING.offer_owed(legacy, "guest", freed),
+		"with no recorded list and no fallback nobody is owed, rather than whoever arrives")
+	var claimed := {"claims": {"host": {"creature": {"species_id": "fulgocobra"},
 		"settled": false, "kept": false}}}
-	assert_false(ENDING.offer_owed(claimed, "trainer-b", freed),
+	assert_false(ENDING.offer_owed(claimed, "trainer-b", freed, false, host_only),
 		"a later character on a legacy save receives no creature: nothing proves they fought")
-	assert_true(ENDING.offer_owed(claimed, "trainer-a", freed),
-		"the first claimant's own unsettled claim still resumes")
+	assert_true(ENDING.offer_owed(claimed, "host", freed, false, host_only),
+		"the host's own unsettled claim still resumes")
 	var recorded_empty := {"participants": []}
-	assert_true(ENDING.offer_owed(recorded_empty, "solo", freed),
-		"a solo freeing that recorded nobody still offers its only player")
+	assert_true(ENDING.offer_owed(recorded_empty, "solo", freed, false, ["solo"]),
+		"a solo freeing that recorded nobody still offers its only player, the host")
 	recorded_empty["claims"] = {"solo": {"creature": {}, "settled": true, "kept": true}}
-	assert_false(ENDING.offer_owed(recorded_empty, "joiner", freed),
+	assert_false(ENDING.offer_owed(recorded_empty, "joiner", freed, false, ["solo"]),
 		"a character joining a solo freeing after its claim receives nothing")
-	assert_false(ENDING.offer_owed({"participants": ["trainer-a"]}, "trainer-b", freed),
-		"a recorded participant list is used as is")
+	assert_false(ENDING.offer_owed({"participants": ["trainer-a"]}, "trainer-b", freed, false, ["trainer-b"]),
+		"a recorded participant list is used as is; the fallback never widens it")
+
+
+func test_only_a_portable_acceptance_withholds_an_offer_in_another_world() -> void:
+	var state := {"participants": ["trainer-a"]}
+	var freed := [ENDING.FREED_FLAG]
+	var flags := PROGRESSION_STATE.new()
+	flags.set_flag(ENDING.PERSONAL_RECEIPT_FLAG)
+	var intent := ENDING.claim_intent(flags)
+	assert_false(bool(intent.get("already_accepted", true)),
+		"a refusal in world A (ceremony receipt, no acceptance) sends no withholding hint")
+	assert_false(intent.has("already_resolved"), "the old answered-anywhere hint is gone")
+	assert_true(ENDING.offer_owed(state, "trainer-a", freed, bool(intent.already_accepted)),
+		"refused in world A, fought in world B: world B offers its Stormheart")
+	flags.set_flag(ENDING.ACCEPTED_FLAG)
+	intent = ENDING.claim_intent(flags)
+	assert_true(bool(intent.get("already_accepted", false)), "an acceptance anywhere is sent as the hint")
+	assert_false(ENDING.offer_owed(state, "trainer-a", freed, bool(intent.already_accepted)),
+		"accepted in world A: no second creature in world B")
+	assert_true(ENDING.claim_intent(null).get("already_accepted") == false)
+
+
+func test_the_portable_acceptance_is_player_owned_despite_the_stormwood_world_prefix() -> void:
+	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/progression/flag_scopes.json"))
+	assert_true((parsed.player.ids as Array).has(ENDING.ACCEPTED_FLAG),
+		"the acceptance travels with the character, so it must be declared a player flag")
+	assert_eq(PROGRESSION_STATE.scope_of(ENDING.ACCEPTED_FLAG), "player")
 
 
 func test_the_host_decides_an_offer_from_its_own_receipts_not_the_clients_flag() -> void:
@@ -188,12 +233,15 @@ func test_the_offer_accept_effect_is_consumed_by_the_ending() -> void:
 	var ending := FileAccess.get_file_as_string("res://scripts/world/stormwood_ending.gd")
 	assert_true(ending.contains('panel.call("drain_effects")'),
 		"the ending drains the panel on completion, so the Yes effect is never queued forever")
-	assert_true(ending.contains("Input.is_action_just_pressed(DECLINE_ACTION)"),
-		"only the panel's explicit decline input records a refusal")
-	assert_eq(ENDING.DECLINE_ACTION, "menu_cancel", "the decline is the panel's own B/Escape action")
+	assert_true(ending.contains("panel.declined.connect(_dialogue_declined)"),
+		"only the panel's explicit decline signal records a refusal")
+	assert_false(ending.contains("Input.is_action_just_pressed"),
+		"the ending no longer reads raw input to decide a refusal")
 	var panel := FileAccess.get_file_as_string("res://scripts/ui/dialogue_panel.gd")
 	assert_true(panel.contains('Input.is_action_just_pressed("menu_cancel")'),
 		"the dialogue panel still declines a consent line on menu_cancel")
+	assert_true(panel.contains('_runner.call("confirm", false)') and panel.contains("declined.emit("),
+		"the panel's menu_cancel decline reaches its forwarded declined signal")
 
 
 func test_a_missing_local_record_reads_as_no_character_instead_of_crashing() -> void:
