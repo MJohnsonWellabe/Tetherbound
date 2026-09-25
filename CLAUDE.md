@@ -58,6 +58,8 @@ Reproduce/audit before trusting a document. Make the smallest coherent player-fa
 
 Senior owns design/architecture/integration/acceptance; delegate mechanical bounded work to lower tiers when authorized, with exact file ownership and stop conditions. Serialize shared-file work and render/import/export writers; independent read-only tests can parallelize. An agent's self-report is not verification. **Once the owner has settled a spec, agents perform implementation, independent review, gameplay/visual validation, PR merge and rolling development-download publication without another human review gate.** The named acceptance proof still has to pass; a failed or unavailable check stays open. New pillar/hard-rule decisions, purchases and a commercial platform launch are separate owner decisions. WORKFLOW §1.1 defines the four lanes and proof chain.
 
+For this four-chapter pass, use ROADMAP F01–F15 as the feature-request/PRD boundaries, X01–X07 for shared work, and ACCEPTANCE §6.1 for each feature's pass/fail criteria. Decompose the active feature into bounded work orders under its ID as WORKFLOW §1.1 specifies; the 13 chapter cards are integrated exit gates, not interchangeable feature requests.
+
 Update STATE in place. Evidence in `ralph/reports/<LANE>/`. The authorized live set is these routing twins; GAME_BIBLE, PRODUCT, ACCEPTANCE, ROADMAP, TECHNICAL, WORKFLOW, STATE; and the ten design specs above. **No new live planning/status documents, no dated documents, no per-session goals/handoffs.** `.github/pull_request_template.md` is the process input form, not a second specification. Existing reference art/history may be read; new evidence is an artifact, not another live status document.
 
 ## Imported skills: local adapters and precedence

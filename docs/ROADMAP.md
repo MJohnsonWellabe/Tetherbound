@@ -37,6 +37,44 @@ Evidence remains in existing `ralph/reports/<LANE>/` paths. Update `docs/STATE.m
 
 Each numbered slice should be independently reviewable, decomposed into 30–90 minute implementation tasks before focused proof; a chapter-sized outcome below is multiple tasks, not a promised 90-minute chapter. Fix the originating production path. Reuse an existing smoke or helper where it directly covers the change; do not add a broad campaign harness for a local defect. Full-world runs are serialized after source freeze because import/render contention can invalidate them.
 
+### Feature request register and PRD boundaries
+
+These **15 player-facing feature requests (F01–F15)** are the agreed split for the current four-chapter pass. Each row is one PRD boundary: its player outcome here, the owning design sections in `docs/design/`, and its separate pass/fail criteria in ACCEPTANCE §6.1 together form the PRD. Do not create another live PRD document or turn a chapter card into a single giant PR. The numbered steps below give implementation order within these boundaries. The task ranges are **estimates, not created tickets or acceptance evidence**; after checking the current build, decompose each active feature into 30–90 minute work orders tied to its ID and one named acceptance criterion. A work order gets a bounded PR and proof. Update the estimate in place if real defects change it.
+
+| ID | Feature request / player outcome | Chapter card | Estimated tasks |
+|---|---|---|---:|
+| F01 | Meadows village has a new road-settlement form and the starter/camp/tournament opening works. | M1 | 8–12 |
+| F02 | The Meadows bridge, Quarry, Warrens, river, Sigils and Hall form one earned, solvent route. | M2 | 8–12 |
+| F03 | The selected Meadows detours become meaningful saved activities; at least six qualify. | M3 | 12–18 |
+| F04 | Meadows named fights ask distinct, readable combat questions at the normal camera. | M3 | 6–10 |
+| F05 | Veridian choices, healed world and physical Cloudreach handoff persist for each character. | M4 | 6–10 |
+| F06 | Cloudreach's six regions teach and safely use Fly, landing and remounting. | C1 | 8–12 |
+| F07 | Cloudreach offers six qualified activities, useful rewards and sustained route cadence. | C2 | 10–14 |
+| F08 | Veyra, wind-road restoration, Wings and the Stormwood handoff work in solo/co-op. | C2–C3 | 6–10 |
+| F09 | Stormwood's Surge, rods, safe routes and Arches make its six-region path traversable. | S1 | 8–12 |
+| F10 | Its six chains and named fights provide distinct actions, rewards and presentation. | S2 | 10–14 |
+| F11 | Dynamo, Stormheart choice, aftermath and Tidewake gate persist for each peer. | S3 | 6–10 |
+| F12 | A human swimmer can finish Tidewake with the retained five; optional mounts remain reliable. | T1 | 8–12 |
+| F13 | Six island groups, currents, shortcuts and six activities form a useful circuit. | T2 | 10–14 |
+| F14 | Veilfall, Guardian and regional restoration culminate in readable fights and choices. | T2 and legendary rule | 6–10 |
+| F15 | Dock exchange, physical return, current-team homecoming, credits and continued play close the story. | T3 | 6–10 |
+
+F01–F05 are Meadows, F06–F08 Cloudreach, F09–F11 Stormwood and F12–F15 Tidewake. Their initial estimate is **118–180 bounded tasks**; the eight selected Meadows and six selected activities in each later biome are inside F03/F07/F10/F13, not 26 additional feature requests. Finish each chapter's cards before claiming it accepted or advancing its critical path. Reusable repairs may run in parallel when their file ownership and evidence do not collide.
+
+Seven shared technical workstreams support those features without counting the same work twice. They use Task or Bug lanes unless a settled player-visible requirement is being changed:
+
+| ID | Shared workstream | Acceptance anchor | Estimated tasks |
+|---|---|---|---:|
+| X01 | Combat calibration and large-body camera | C1–C3; BOSSES | 5–10 |
+| X02 | Progression, care, resources and traversal solvency | C5, S1–S5 | 5–10 |
+| X03 | Controller UX and accessibility | U1–U2 | 5–10 |
+| X04 | Art, animation and audio consistency | Visual §4, A12, ART_DIRECTION/AUDIO | 5–10 |
+| X05 | Invitation co-op and authority | M1–M2, MULTIPLAYER | 5–10 |
+| X06 | Saves, reward transactions and migration | M1, S3, §7 | 5–10 |
+| X07 | Ally performance, exports and final package/campaign proof | §7, A1–A11 | 5–10 |
+
+That adds an estimated **35–70 shared tasks**, or **153–250 tasks overall**. This is a sizing range for work order generation, not a promise to create all tasks upfront or a reason to pad work. A repair in X01–X07 must be cited by every affected F card but implemented and tested once.
+
 ### Phase 0 — integrate the current Meadows stack
 
 1. **Main integration completed; finish current CI and package inspection.** STATE owns the current main SHA, open PRs, active CI and release receipt. Resolve actual new regressions before adding gameplay scope. Do not remerge old stacked branches; inspect recovered work selectively against current main.
