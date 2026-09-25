@@ -78,6 +78,10 @@ func _run() -> void:
 	crossing.name = "RiftCrossing"
 	world_a.add_child(crossing)
 	crossing.call("build", world_a)
+	# The hand-driven clock below is only honest if build() itself turned the
+	# crossing's own clock on: otherwise disabling it here would hide a crossing
+	# that never processes in the game.
+	_check(crossing.is_processing(), "(a) build() enables the crossing's own processing")
 	crossing.set_process(false)
 	await process_frame
 	_check(_decks(crossing) == 0 and _triggers(crossing) == 0 and int(crossing.call("openings")) == 0,
