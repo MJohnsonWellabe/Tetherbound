@@ -11,7 +11,7 @@ const PRESS_TRIES := 3
 ## Before each road leg, when the active creature is fainted or under this
 ## fraction, run the helper's own `_prepare()` (real Satchel revive/potion and
 ## party-cycle input) first. Disclosed as `between_fight_care`.
-const CARE_BELOW_FRACTION := 0.35
+const CARE_BELOW_FRACTION := 0.4
 
 var _activated_path := ""
 
@@ -62,15 +62,38 @@ func _press_prompt(prompt: Node3D) -> bool:
 
 func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
 	if not _fighting() and INPUT_OWNER.current(_tree) == null:
-		var active: RefCounted = (_game.get("party") as RefCounted).call("active")
-		if active != null and (bool(active.get("fainted"))
-				or float(active.get("hp")) < float(active.get("max_hp")) * CARE_BELOW_FRACTION):
-			var before := {"species": str(active.get("species_id")), "hp": float(active.get("hp")),
-				"max_hp": float(active.get("max_hp")), "fainted": bool(active.get("fainted"))}
-			if not await _prepare():
-				return false
-			var now: RefCounted = (_game.get("party") as RefCounted).call("active")
-			_receipt("between_fight_care", {"before": before, "after": {"species": str(now.get("species_id")),
-				"hp": float(now.get("hp")), "max_hp": float(now.get("max_hp"))},
-				"potions_left": _count("potion_small"), "revives_left": _count("revive")})
+		if not await _bench_care():
+			return false
 	return await super._walk_ground(at, radius)
+
+
+## Attempt 2 of B5: the live pilot voluntarily cycles to benched members, and
+## the 22 HP bramblebun it cycled to fainted and stalled the fight. So keep
+## every member usable, not just the active one: revive the fainted and give
+## a small potion to anyone under CARE_BELOW_FRACTION while stock lasts, each
+## through the team helper's real Satchel seam (`care_existing`), then the
+## helper's own `_prepare()` for pilot selection.
+func _bench_care() -> bool:
+	var party: RefCounted = _game.get("party")
+	var acted := false
+	for index in int(party.call("size")):
+		var member: RefCounted = party.call("at", index)
+		var item := ""
+		if bool(member.get("fainted")) and _count("revive") > 0:
+			item = "revive"
+		elif not bool(member.get("fainted")) and _count("potion_small") > 0 \
+				and float(member.get("hp")) < float(member.get("max_hp")) * CARE_BELOW_FRACTION:
+			item = "potion_small"
+		if item.is_empty():
+			continue
+		var before := {"index": index, "species": str(member.get("species_id")), "hp": float(member.get("hp")),
+			"max_hp": float(member.get("max_hp")), "fainted": bool(member.get("fainted")), "item": item}
+		var observed: Dictionary = await CARE.new().care_existing(_tree, _world, _game, item, index)
+		if not bool(observed.get("passed", false)):
+			return _fail("Real Satchel care failed: " + str(observed.get("failures", [])))
+		before["hp_after"] = float(member.get("hp"))
+		_receipt("between_fight_care", before)
+		acted = true
+	if acted:
+		return await _prepare()
+	return true

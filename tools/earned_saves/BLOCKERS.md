@@ -145,3 +145,10 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   active creature is fainted or under 35% HP, run the helper's own `_prepare()` (real Satchel
   revive/potion and party-cycle input). Disclosed as `between_fight_care`. The file also carries
   B4's disclosed prompt-press handling for the Hall and gauntlet trainers.
+- Attempt 2 (alternative 1) failed straight away, 145 s in and about 7 m from the start. `_prepare()`
+  had put the ripplet (117 HP) up, but the live pilot's voluntary `party_cycle` switched to the
+  22 HP bramblebun. That fainted and the fight ran out its budget, so benched members matter too.
+  Alternative 2 (attempt 3): before each road leg, revive fainted members and give a small potion
+  to anyone under 40% HP while stock lasts. Each dose goes through the team helper's real Satchel
+  seam (`care_existing`), then `_prepare()`. Disclosed as `between_fight_care` with per-dose
+  receipts.
