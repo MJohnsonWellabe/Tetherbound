@@ -100,7 +100,10 @@ const HULL_BANDS := 32
 ## be the bind pose while the drawn body is curled or folded (the Guardian
 ## read as a thumbnail for exactly that reason); re-measuring from the live
 ## skeleton once the pose has landed frames what is actually drawn.
-const REMEASURE_AT := [0.25, 1.0, 2.5]
+const REMEASURE_AT := [1.0]
+## Directions of each band's support polygon (see `silhouette_from_points`).
+## 24 over-reaches a band's true hull by at most 1/cos(pi/24) ~ 0.9%.
+const HULL_DIRECTIONS := 24
 
 ## --- look ---------------------------------------------------------------
 
@@ -149,6 +152,7 @@ var _framed: Node3D = null
 var _fallback_size := Vector2(1.0, 0.4)
 var _since_framed := 0.0
 var _remeasures_done := 0
+var _was_per_angle := true
 
 
 func _ready() -> void:
@@ -277,7 +281,11 @@ func frame_body(body: Node3D, fallback_height: float = 1.0, fallback_radius: flo
 
 
 func _measure(body: Node3D, fallback_height: float, fallback_radius: float) -> void:
-	var box := visible_bounds(_turntable)
+	# One skinning pass per measurement: bounds, spin reach and silhouette all
+	# come from this same point set (independent review: three passes per
+	# measure hitched on the 17.8k-vertex Guardian).
+	var points := render_points(_turntable)
+	var box := _points_box(points)
 	var fallback := box.size.y <= 0.0001 and box.size.x <= 0.0001 and box.size.z <= 0.0001
 	if fallback:
 		box = fallback_bounds(fallback_height, fallback_radius)
@@ -288,14 +296,16 @@ func _measure(body: Node3D, fallback_height: float, fallback_radius: float) -> v
 	var shift := Vector3(-centre.x, 0.0, -centre.z)
 	body.position += shift
 	box.position += shift
+	for i in points.size():
+		points[i] += shift
 	var extents := spin_extents(box)
 	if not fallback:
 		# Exact reach of the geometry about the (now centred) axis. The AABB
 		# corners overstate it -- a body is not a box, and imported skinned
 		# meshes carry a padded AABB -- which made long creatures needlessly
 		# small (Guardian: corner reach 12.7 m, real reach 9.1 m).
-		extents.x = spin_radius(_turntable)
-	_hull = PackedVector3Array() if fallback else silhouette_sample(_turntable)
+		extents.x = _points_spin_radius(points)
+	_hull = PackedVector3Array() if fallback else silhouette_from_points(points)
 	if fallback:
 		for i in 8:
 			_hull.append(box.get_endpoint(i))
@@ -429,13 +439,23 @@ func _clear_body() -> void:
 ## (tight) and the mesh's `get_aabb()` otherwise (conservative).
 ## Zero-size AABB = nothing found.
 static func visible_bounds(root: Node3D) -> AABB:
-	var points := render_points(root)
+	return _points_box(render_points(root))
+
+
+static func _points_box(points: PackedVector3Array) -> AABB:
 	if points.is_empty():
 		return AABB()
 	var box := AABB(points[0], Vector3.ZERO)
 	for p: Vector3 in points:
 		box = box.expand(p)
 	return box
+
+
+static func _points_spin_radius(points: PackedVector3Array) -> float:
+	var reach_sq := 0.0
+	for p: Vector3 in points:
+		reach_sq = maxf(reach_sq, p.x * p.x + p.z * p.z)
+	return sqrt(reach_sq)
 
 
 ## Every visible vertex under `root`, in `root`'s space, where the renderer
@@ -498,9 +518,12 @@ static func _posed_vertices(mesh: MeshInstance3D, root: Node3D) -> PackedVector3
 	var globals := _bone_globals(skeleton)
 	var binds: Array[Transform3D] = []
 	for i in skin.get_bind_count():
-		var bone := skin.get_bind_bone(i)
-		if bone < 0:
+		# Godot's own resolution order: a non-empty bind name wins.
+		var bone := -1
+		if not String(skin.get_bind_name(i)).is_empty():
 			bone = skeleton.find_bone(skin.get_bind_name(i))
+		if bone < 0:
+			bone = skin.get_bind_bone(i)
 		if bone < 0 or bone >= skeleton.get_bone_count():
 			return PackedVector3Array()
 		binds.append(globals[bone] * skin.get_bind_pose(i))
@@ -540,10 +563,7 @@ static func _posed_vertices(mesh: MeshInstance3D, root: Node3D) -> PackedVector3
 ## creature sweeps over a full turn. Vertex-exact where the mesh exposes its
 ## vertices, the mesh AABB's corners otherwise.
 static func spin_radius(root: Node3D) -> float:
-	var reach_sq := 0.0
-	for p: Vector3 in render_points(root):
-		reach_sq = maxf(reach_sq, p.x * p.x + p.z * p.z)
-	return sqrt(reach_sq)
+	return _points_spin_radius(render_points(root))
 
 
 static func _visible_meshes(root: Node3D) -> Array[MeshInstance3D]:
@@ -610,7 +630,16 @@ static func spin_extents(box: AABB) -> Vector3:
 ## cheap enough to fit every frame. Vertex-exact where
 ## meshes expose vertices, AABB corners otherwise.
 static func silhouette_sample(root: Node3D) -> PackedVector3Array:
-	var all := render_points(root)
+	return silhouette_from_points(render_points(root))
+
+
+## The same, from points already in turntable space. Per height band, the
+## band's points are bounded by a HULL_DIRECTIONS-sided support polygon in XZ
+## (each side the tightest line in its direction, so the polygon contains
+## every point), emitted at the band's top and bottom. At most
+## HULL_BANDS x HULL_DIRECTIONS x 2 points, however dense the mesh: cheap to
+## fit every frame (independent review: raw hull vertices ran to thousands).
+static func silhouette_from_points(all: PackedVector3Array) -> PackedVector3Array:
 	var out := PackedVector3Array()
 	if all.is_empty():
 		return out
@@ -620,23 +649,42 @@ static func silhouette_sample(root: Node3D) -> PackedVector3Array:
 		y_lo = minf(y_lo, p.y)
 		y_hi = maxf(y_hi, p.y)
 	var span := maxf(y_hi - y_lo, 0.0001)
-	var bands: Array[PackedVector2Array] = []
+	var dirs: Array[Vector2] = []
+	for k in HULL_DIRECTIONS:
+		var a := TAU * float(k) / HULL_DIRECTIONS
+		dirs.append(Vector2(cos(a), sin(a)))
+	var support: Array[PackedFloat64Array] = []
 	var band_lo: Array[float] = []
 	var band_hi: Array[float] = []
 	for i in HULL_BANDS:
-		bands.append(PackedVector2Array())
+		var row := PackedFloat64Array()
+		row.resize(HULL_DIRECTIONS)
+		row.fill(-INF)
+		support.append(row)
 		band_lo.append(INF)
 		band_hi.append(-INF)
 	for p: Vector3 in all:
 		var band := clampi(int((p.y - y_lo) / span * HULL_BANDS), 0, HULL_BANDS - 1)
-		bands[band].append(Vector2(p.x, p.z))
 		band_lo[band] = minf(band_lo[band], p.y)
 		band_hi[band] = maxf(band_hi[band], p.y)
+		var row: PackedFloat64Array = support[band]
+		for k in HULL_DIRECTIONS:
+			var h := p.x * dirs[k].x + p.z * dirs[k].y
+			if h > row[k]:
+				row[k] = h
+		support[band] = row
 	for i in HULL_BANDS:
-		if bands[i].is_empty():
+		if band_lo[i] == INF:
 			continue
-		var hull := Geometry2D.convex_hull(bands[i]) if bands[i].size() >= 3 else bands[i]
-		for q: Vector2 in hull:
+		var row: PackedFloat64Array = support[i]
+		for k in HULL_DIRECTIONS:
+			# Corner of the support lines k and k+1: solve d_k.x = h_k,
+			# d_k1.x = h_k1 (adjacent directions are never parallel).
+			var k1 := (k + 1) % HULL_DIRECTIONS
+			var a := dirs[k]
+			var b := dirs[k1]
+			var det := a.x * b.y - a.y * b.x
+			var q := Vector2((row[k] * b.y - a.y * row[k1]) / det, (a.x * row[k1] - row[k] * b.x) / det)
 			out.append(Vector3(q.x, band_lo[i], q.y))
 			out.append(Vector3(q.x, band_hi[i], q.y))
 	return out
@@ -684,24 +732,33 @@ static func fit_points(points: PackedVector3Array, yaw: float, vfov_deg: float, 
 		hi = hi.max(p)
 	var target := Vector3((lo.x + hi.x) * 0.5, (lo.y + hi.y) * 0.5, 0.0)
 	var distance := points_distance(turned, target, vfov_deg, aspect, margin, pitch_deg)
+	# `project_ndc` inlined with its trig hoisted: this runs every frame.
+	var pitch := deg_to_rad(pitch_deg)
+	var back := Vector3(0.0, sin(pitch), cos(pitch))
+	var up := Vector3(0.0, cos(pitch), -sin(pitch))
 	var tan_v := tan(deg_to_rad(vfov_deg) * 0.5)
+	var cos_pitch := cos(pitch)
 	for i in 6:
 		var x_lo := INF
 		var x_hi := -INF
 		var y_lo := INF
 		var y_hi := -INF
+		var eye := target + back * distance
 		for p: Vector3 in turned:
-			var ndc := project_ndc(p, target, distance, vfov_deg, aspect, pitch_deg)
-			x_lo = minf(x_lo, ndc.x)
-			x_hi = maxf(x_hi, ndc.x)
-			y_lo = minf(y_lo, ndc.y)
-			y_hi = maxf(y_hi, ndc.y)
+			var rel := p - eye
+			var depth := maxf(-rel.dot(back), 0.0001)
+			var nx := rel.x / (depth * tan_v * aspect)
+			var ny := rel.dot(up) / (depth * tan_v)
+			x_lo = minf(x_lo, nx)
+			x_hi = maxf(x_hi, nx)
+			y_lo = minf(y_lo, ny)
+			y_hi = maxf(y_hi, ny)
 		var dx := (x_lo + x_hi) * 0.5
 		var dy := (y_lo + y_hi) * 0.5
 		if absf(dx) < 0.002 and absf(dy) < 0.002:
 			break
 		target.x += dx * distance * tan_v * aspect
-		target.y += dy * distance * tan_v / cos(deg_to_rad(pitch_deg))
+		target.y += dy * distance * tan_v / cos_pitch
 		distance = points_distance(turned, target, vfov_deg, aspect, margin, pitch_deg)
 	return {"distance": distance, "target": target}
 
@@ -829,8 +886,15 @@ func _poll_remeasure(delta: float) -> void:
 		return
 	while _remeasures_done < REMEASURE_AT.size() and _since_framed >= float(REMEASURE_AT[_remeasures_done]):
 		_remeasures_done += 1
+	var before := _extents
 	_measure(_framed, _fallback_size.x, _fallback_size.y)
-	_refit()
+	if per_angle_fit():
+		# Eased like any other zoom-in; a pull-back is still instant.
+		_refit(false, delta)
+	elif _extents.x > before.x or _extents.z > before.z or _extents.y < before.y:
+		# Reduced motion: re-place only when the settled pose would crop, never
+		# to tighten, so the calm view does not jump.
+		_refit()
 
 
 ## Turn the turntable by `yaw` radians over `delta` seconds and follow it with
@@ -840,7 +904,14 @@ func advance(yaw: float, delta: float) -> void:
 		return
 	_turntable.rotate_y(yaw)
 	_poll_remeasure(delta)
-	if per_angle_fit():
+	var per_angle := per_angle_fit()
+	if per_angle != _was_per_angle:
+		# The motion preference flipped while the preview is up: snap to the
+		# other fit rather than leave a close per-angle view over a spin.
+		_was_per_angle = per_angle
+		_distance = -1.0
+		_refit()
+	elif per_angle:
 		_refit(false, delta)
 
 
