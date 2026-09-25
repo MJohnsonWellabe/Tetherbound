@@ -28,8 +28,9 @@ void fragment() {
 	// Crest pulses travel around the ring: brighter bands of breaking foam.
 	float pulse = 0.5 + 0.5 * sin(UV.x * 6.2831853 / crest_spacing_tiles - TIME * crest_cycle_speed);
 	float cover = foam_cover - 0.14 * pulse;
-	// Breakers: foam gathers toward the lip (UV.y up the face).
-	cover -= breaker * clamp(UV.y * 1.4, 0.0, 0.35);
+	// Breakers: a sea-teal face with foam only gathering toward the crest
+	// (UV.y runs up the face), so a standing wave never reads as a white wall.
+	cover += breaker * (0.28 - 0.5 * clamp(UV.y, 0.0, 1.0));
 	float foam = smoothstep(cover - foam_softness, cover + foam_softness, cells);
 	vec3 base = mix(churn_colour.rgb, face_colour.rgb, breaker);
 	ALBEDO = mix(base, foam_colour.rgb, foam);
