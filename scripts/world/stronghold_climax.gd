@@ -93,6 +93,11 @@ var _joined: RefCounted = null
 ## (a disconnect, a wipe, a different character loaded), the offer is dropped
 ## rather than answered for whoever is there now.
 var _offer_character: String = ""
+## Seconds until the choice's "both answers are final" line is said; <0 = done.
+var _announce_in: float = -1.0
+## Seconds the ceremony waits before the machinery line, so a line just said
+## on the message strip is read before a conversation hides the HUD.
+var _ceremony_hold: float = 0.0
 ## F05: the two choice prompts, built when this character's offer is open.
 var _accept_prompt: Node3D = null
 var _refuse_prompt: Node3D = null
@@ -707,6 +712,12 @@ func _process(delta: float) -> void:
 	_sync_gate()
 	_advance()
 	_reconcile_world_receipt()
+	if _announce_in >= 0.0:
+		_announce_in -= delta
+		if _announce_in < 0.0 and _stage == STAGE_CHOICE and not _panel_busy():
+			_say(str((_config.get("choice", {}) as Dictionary).get("announce", "")))
+		elif _announce_in < 0.0 and _stage == STAGE_CHOICE:
+			_announce_in = 0.25
 
 
 func _pulse_cage(delta: float) -> void:
@@ -804,7 +815,9 @@ func _advance() -> void:
 			# The machinery does not fail until they have answered it, which
 			# is §28's order: join, then the five-creature decision, then the
 			# machinery.
-			if not _ceremony_pending() and not _panel_busy():
+			if _ceremony_hold > 0.0:
+				_ceremony_hold -= get_process_delta_time()
+			elif not _ceremony_pending() and not _panel_busy():
 				# HERE, not only on the way out of STAGE_FAILURE: the ceremony
 				# PAUSES THE TREE, and a paused tree freezes the step-out
 				# tween mid-flight. Measured: the creature sat at 2.6 m off
@@ -1024,7 +1037,11 @@ func _offer_to_join() -> void:
 func _open_choice() -> void:
 	_close_choice()
 	var spec: Dictionary = _config.get("choice", {})
-	_say(str(spec.get("announce", "")))
+	# Said a beat AFTER the offer opens, not on the same frame: the offer opens
+	# as the join conversation closes, while the world HUD is still hidden by
+	# the dialogue and fading back in, and the one-slot message strip consumed
+	# and expired the line unseen (measured in the finale capture's frame 04).
+	_announce_in = float(spec.get("announce_delay", 1.0))
 	# With no player body (a bare scene) the prompts still open, around the
 	# creature, so the stage never waits on prompts that do not exist.
 	var here := _player.global_position if _player != null else \
@@ -1160,6 +1177,7 @@ func refuse_offer() -> bool:
 	_record_resolution(false)
 	_stage = STAGE_CEREMONY
 	_say(str((_config.get("choice", {}) as Dictionary).get("refused_message", "")))
+	_ceremony_hold = float((_config.get("choice", {}) as Dictionary).get("message_hold", 2.4))
 	print("[climax] this character refused the legendary; it stays free")
 	return true
 
