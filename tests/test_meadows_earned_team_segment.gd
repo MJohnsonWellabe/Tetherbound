@@ -186,6 +186,23 @@ func test_supplied_training_fields_underlevel_even_when_a_qualified_lead_is_heal
 		"outside training the health-only selection is unchanged")
 
 
+func test_underlevel_bonus_requires_stock_that_can_reach_the_safe_fraction() -> void:
+	var party := PARTY.new()
+	var qualified := _pilot_creature(6, 0.9)
+	var starter := _pilot_creature(4, 0.01)
+	party.add(qualified)
+	party.add(starter)
+	var max_hp := float(starter.get("max_hp"))
+	var short := max_hp * 0.5 - float(starter.get("hp")) - 1.0
+	assert_eq(int(SEGMENT.pilot_selection(party, 1, true, 5, short).index), 0,
+		"one dose that cannot lift the under-level member to half HP keeps the healthy pilot")
+	assert_eq(int(SEGMENT.pilot_selection(party, 1, true, 5, max_hp).index), 1,
+		"a dose that reaches the safe fraction fields the under-level member")
+	assert_eq(int(SEGMENT.pilot_selection(party, 2, true, 5, short).index), 1,
+		"enough carried doses together also qualify")
+	assert_almost_eq(SEGMENT.POTION_DOSE, 50.0, 0.001, "reads items.json potion_small.heal")
+
+
 func test_depleted_pilot_selection_compares_usable_health_fraction() -> void:
 	var party := PARTY.new()
 	var fuller := _pilot_creature(2, 0.95)

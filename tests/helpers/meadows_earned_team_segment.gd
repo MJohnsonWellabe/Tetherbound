@@ -15,8 +15,14 @@ const SATCHEL_COLUMNS := 6
 ## Exceeds the whole 0..10 health-fraction score range: any usable under-level
 ## member outranks every qualified one while carried care remains.
 const UNDERLEVEL_PILOT_BONUS := 10.0
+## The caller heals a chosen pilot to this fraction before engaging.
+const SAFE_PILOT_FRACTION := 0.5
+## data/items/items.json potion_small.heal; read once, 50 as the authored value.
+static var POTION_DOSE: float = _potion_dose()
 const PRACTICE_CENTRE := Vector2(30, -40)
 const PRACTICE_RADIUS := 160.0
+## Diagnostic snapshot also lists bodies just outside the training radius.
+const POOL_SNAPSHOT_MARGIN := 60.0
 ## One production respawn cycle (data/config/spawns.json respawn_seconds 300)
 ## plus slack; a longer pending timer means the pool is genuinely gone.
 const RESPAWN_WAIT_LIMIT_S := 330.0
@@ -185,7 +191,7 @@ func _pool_snapshot() -> Array[Dictionary]:
 		if not is_instance_valid(body):
 			continue
 		var flat := Vector2(body.global_position.x, body.global_position.z)
-		if flat.distance_to(PRACTICE_CENTRE) > 220.0:
+		if flat.distance_to(PRACTICE_CENTRE) > PRACTICE_RADIUS + POOL_SNAPSHOT_MARGIN:
 			continue
 		var creature: RefCounted = body.get("instance")
 		rows.append({"name": str(body.name),
@@ -251,6 +257,16 @@ func _wait_for_training_respawn(wins: int) -> bool:
 			return true
 		await _tree.physics_frame
 	return _fail("A pending practice-meadow respawn never became engageable")
+
+
+static func _potion_dose() -> float:
+	var items: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/items/items.json"))
+	if items is Dictionary:
+		var table: Dictionary = (items as Dictionary).get("items", items)
+		var potion: Variant = table.get("potion_small", {})
+		if potion is Dictionary and (potion as Dictionary).has("heal"):
+			return float((potion as Dictionary)["heal"])
+	return 50.0
 
 
 static func preferred_candidate_index(distances: Array[float], offered_index: int) -> int:
@@ -568,7 +584,7 @@ func _prepare_pilot(training: bool) -> bool:
 			"hp": active.get("hp"), "max_hp": active.get("max_hp"),
 			"hp_fraction": float(active.get("hp")) / float(active.get("max_hp")),
 			"maximum_eligible_fraction": score / 10.0, "stock": potion_stock})
-	while float(active.get("hp")) < float(active.get("max_hp")) * 0.5:
+	while float(active.get("hp")) < float(active.get("max_hp")) * SAFE_PILOT_FRACTION:
 		if int((_game.get("inventory") as RefCounted).call("count", "potion_small")) < 1:
 			_receipt("care_depleted_pilot", {"creature_id": active.get_instance_id(),
 				"hp": active.get("hp"), "max_hp": active.get("max_hp"),
@@ -594,7 +610,7 @@ func _prepare_pilot(training: bool) -> bool:
 ## A depleted stock removes the under-level bonus, so the healthiest usable
 ## creature wins rather than selecting somebody who cannot be safely healed.
 static func pilot_selection(party: RefCounted, potion_stock: int, training: bool,
-		required_level: int) -> Dictionary:
+		required_level: int, potion_dose: float = POTION_DOSE) -> Dictionary:
 	var best := -1
 	var score := -INF
 	if party == null or not party.has_method("size") or not party.has_method("at"):
@@ -615,7 +631,10 @@ static func pilot_selection(party: RefCounted, potion_stock: int, training: bool
 		# under-level starter sat at 50% HP and ran out of practice wilds at L4.
 		# A player preparing for a level-5 entry gate fields the creatures
 		# that are still short of it.
-		if potion_stock > 0 and training and int(member.get("level")) < required_level:
+		# Only while the carried stock can actually lift this member to the
+		# caller's safe half-HP fraction; otherwise it would fight hurt.
+		if potion_stock > 0 and training and int(member.get("level")) < required_level \
+				and hp + potion_stock * potion_dose >= max_hp * SAFE_PILOT_FRACTION:
 			candidate += UNDERLEVEL_PILOT_BONUS
 		if candidate > score:
 			score = candidate
