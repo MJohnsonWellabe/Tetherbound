@@ -40,6 +40,14 @@ extends SceneTree
 ##       corridor more than 1 m past the gate (arc length along the route
 ##       polyline, i.e. the walking leg's signed distance along the route
 ##       direction carried along the route) fails.
+##   (f) On-foot walk-around (reproduction): with the upper route locked, walk
+##       by real input from 9 m before the gate, at 11 m and 18 m lateral
+##       offset on both sides where a physics ray finds ground, toward a point
+##       40 m past the gate at the same offset. The trainer must never stand
+##       more than 1 m past the gate plane on the stair (nearest ground route
+##       is windscar_counterweight_pass). Expected to FAIL on bcf46366c, where
+##       the barrier and piers span +/-10.28 m but the walkable track is
+##       +/-11.5 m and the route shoulders +/-21.75 m.
 ##   (b) The same flight with a full five-member party holding NO Fly carrier:
 ##       Maela's mentor loaner carries, the flight is equally sealed, and the
 ##       loaner never becomes a party member (no sixth slot, UIDs unchanged).
@@ -92,6 +100,7 @@ const BYPASS_HINT := Vector3(-650.0, 570.0, 3300.0)
 const BYPASS_CORRIDOR_M := 15.0
 const BYPASS_CORRIDOR_DY_M := 8.0
 const BYPASS_PAST_LIMIT_M := 1.0
+const WALK_AROUND_OFFSETS := [11.0, -11.0, 18.0, -18.0]
 
 var _game: Node
 var _world: Node3D
@@ -175,6 +184,9 @@ func _run() -> void:
 		"fixture starts with Fly and the upper route both locked")
 
 	await _leg_locked_launch_and_gate_walk()
+	if _finished:
+		return
+	await _leg_gate_walk_around()
 	if _finished:
 		return
 
@@ -474,6 +486,114 @@ func _end_flight(label: String) -> void:
 		_check(back, "%s: fixture return to the launch anchor" % label)
 	await _frames(30)
 	print("%s END at %s flying=%s recoveries=%d" % [label, _player.global_position, bool(_fly.call("is_flying")), _recoveries])
+
+
+# --- (f): on foot around the ends of the closed gate -------------------------------
+
+func _leg_gate_walk_around() -> void:
+	var label := "(f) walk around"
+	var spec := _gate_spec(GATE_ID)
+	if not _require(not spec.is_empty(), "%s: %s is authored" % [label, GATE_ID]):
+		return
+	var gate := _vec3(spec["position"])
+	var along := _route_direction_at(str(spec.get("requires_unlock", "")), gate)
+	if not _require(along.length() > 0.5, "%s: the gate sits on its route" % label):
+		return
+	var right := Vector3.UP.cross(along).normalized()
+	var line: Array[Vector3] = []
+	for raw: Variant in _route_polyline(BYPASS_ROUTE_ID):
+		line.append(_vec3(raw))
+	var others: Array = []
+	for raw: Variant in (_world.call("config_data") as Dictionary).get("routes", []):
+		var route := raw as Dictionary
+		if str(route.get("id", "")) == BYPASS_ROUTE_ID or str(route.get("traversal_mode", "ground")) != "ground":
+			continue
+		var other: Array[Vector3] = []
+		for point: Variant in route.get("polyline", []):
+			other.append(_vec3(point))
+		others.append(other)
+	var tps := Engine.physics_ticks_per_second
+	var attempted := 0
+	for raw_offset: Variant in WALK_AROUND_OFFSETS:
+		var offset := float(raw_offset)
+		var start_xz := gate - along * 9.0 + right * offset
+		var goal_xz := gate + along * 40.0 + right * offset
+		var start_y := _ray_ground(start_xz, gate.y + 30.0, 100.0)
+		var goal_y := _ray_ground(goal_xz, gate.y + 45.0, 120.0)
+		print("%s offset %.0f: start %s ground %s, goal %s ground %s" % [label, offset,
+			Vector2(start_xz.x, start_xz.z), str(start_y), Vector2(goal_xz.x, goal_xz.z), str(goal_y)])
+		if is_nan(start_y) or is_nan(goal_y):
+			print("%s offset %.0f: no walkable ground at the start or goal; side skipped" % [label, offset])
+			continue
+		var seated: bool = await _seat_exact(Vector3(start_xz.x, start_y, start_xz.z), "%s %.0f" % [label, offset])
+		if not seated:
+			continue
+		attempted += 1
+		var start := _player.global_position
+		var max_past := -INF
+		var at_max := Vector3.INF
+		for _frame in 25 * tps:
+			_steer_toward(Vector3(goal_xz.x, 0.0, goal_xz.z))
+			await physics_frame
+			var at := _player.global_position
+			if _player.is_on_floor() and _on_stair(at, line, others):
+				var past := (at - gate).dot(along)
+				if past > max_past:
+					max_past = past
+					at_max = at
+			if Vector2(goal_xz.x - at.x, goal_xz.z - at.z).length() < 1.5:
+				break
+			if at.y < start.y - 60.0 or float(_player.get("vitals").get("health")) <= 0.0:
+				break
+		_release_all()
+		await _frames(10)
+		print("%s offset %.0f: end %s on_floor=%s max_grounded_past_plane_on_stair=%.1f at %s" % [
+			label, offset, _player.global_position, _player.is_on_floor(), max_past, at_max])
+		_check(max_past <= BYPASS_PAST_LIMIT_M,
+			"%s: on foot at %.0f m lateral offset the trainer never stands more than 1 m past the closed gate plane on the stair (max %.1f m at %s)" % [
+				label, offset, max_past, str(at_max)])
+	_check(attempted >= 2, "%s: the walk-around has ground to try on at least two offsets (%d tried)" % [label, attempted])
+	_check(not bool(_flags.call("has", UPPER_FLAG)), "%s: the upper route is still locked" % label)
+
+
+## Grounded "on the stair": nearest authored ground route in plan is the locked
+## pass, within its shoulders, and not far above it.
+func _on_stair(at: Vector3, line: Array[Vector3], others: Array) -> bool:
+	var progress := _route_progress(line, at)
+	var h := float(progress["h"])
+	if h > 25.0 or float(progress["dy"]) > 8.0 or float(progress["dy"]) < -60.0:
+		return false
+	for other: Variant in others:
+		var points: Array[Vector3] = other
+		if points.size() >= 2 and float(_route_progress(points, at)["h"]) <= h:
+			return false
+	return true
+
+
+## Walkable ground under (x, z) by a physics ray from `top_y`; NAN when none.
+func _ray_ground(xz: Vector3, top_y: float, depth: float) -> float:
+	var from := Vector3(xz.x, top_y, xz.z)
+	var query := PhysicsRayQueryParameters3D.create(from, from + Vector3.DOWN * depth,
+		_player.collision_mask, [_player.get_rid()])
+	var hit := _player.get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty() or (hit["normal"] as Vector3).y < cos(_player.floor_max_angle):
+		return NAN
+	return (hit["position"] as Vector3).y
+
+
+## Fixture 2 with a measured height: stand exactly on ground a ray found.
+func _seat_exact(at: Vector3, label: String) -> bool:
+	_release_all()
+	if bool(_fly.call("is_flying")):
+		_fly.call("recover_to_anchor", "Smoke fixture relocation.")
+		await _frames(2)
+	_fly.call("clear_recovery_anchor")
+	_player.global_position = at + Vector3.UP * 0.4
+	_player.velocity = Vector3.ZERO
+	await _frames(45)
+	var standing := _player.is_on_floor() and not bool(_fly.call("is_flying"))
+	print("SEAT %s: asked %s -> %s on_floor=%s" % [label, at, _player.global_position, standing])
+	return standing
 
 
 # --- (e): Fly over the closed ground gate onto the counterweight stair ---------------
