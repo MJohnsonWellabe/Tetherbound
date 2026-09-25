@@ -73,10 +73,12 @@ const PRODUCTION_JOIN_BUILD_ALLOWANCE_S := 90.0
 ## Measured: smoke_net_split_realms went "peer silent" on the return crossing
 ## on a 4-core container, identically on main and on a lane branch. Only these
 ## named in-flight actions defer the detector; each step's own deadline stays
-## the outer bound.
+## the outer bound. The measured return crossing took 87.8 s and 89.1 s, so a
+## crossing gets its own figure with headroom rather than the join's 90 s.
+const REALM_CROSSING_BUILD_ALLOWANCE_S := 150.0
 const WORLD_BUILD_ALLOWANCE_S := {
 	"production_join": PRODUCTION_JOIN_BUILD_ALLOWANCE_S,
-	"enter_realm": PRODUCTION_JOIN_BUILD_ALLOWANCE_S,
+	"enter_realm": REALM_CROSSING_BUILD_ALLOWANCE_S,
 }
 ## Contract §6's own budgets are frame-denominated per PEER; the coordinator
 ## itself only ever waits in wall-clock (it does not tick the peer's physics),
@@ -729,8 +731,8 @@ static func world_build_allowance_s(action: String) -> float:
 
 
 ## End the named world-build allowance when its real step verdict arrives.
-## A successful production join is itself fresh proof that the peer's control
-## loop returned from the build, so the ordinary 15-second watchdog starts at
+## A successful world-building step (production join or realm crossing) is
+## itself fresh proof that the peer's control loop returned from the build, so the ordinary 15-second watchdog starts at
 ## that completion rather than at the last heartbeat sent before the build.
 ## FAIL/ERROR verdicts and unrelated actions do not receive that liveness
 ## credit; all completion paths still remove any in-flight allowance.
