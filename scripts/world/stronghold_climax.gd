@@ -134,6 +134,10 @@ var _answered_here: bool = false
 ## The character an offer BEGAN for (the join beat). Once begun it runs to its
 ## answer even if another peer joins meanwhile; see `_offer_continues()`.
 var _offer_began_for: String = ""
+var _offer_began: bool = false
+## Whether the hold's one-line explanation has been said this session.
+var _hold_told: bool = false
+var _answer_tagged: bool = false
 ## World ids the host refused: id -> [refused_at_ms, refusals]. Backed off,
 ## doubling from RECEIPT_REFUSED_RETRY_MS up to RECEIPT_REFUSED_MAX_MS.
 var _receipts_refused: Dictionary = {}
@@ -814,11 +818,14 @@ func _advance() -> void:
 					# from every real participant for good. Hold, with the
 					# creature standing freed, until the journal can say (or
 					# the company leaves).
-					pass
+					if not _hold_told and _player_near_legendary():
+						_hold_told = true
+						_say(str((_config.get("choice", {}) as Dictionary).get("hold_message", "")))
 				elif _may_receive_now():
 					if _pulled_here or _player_near_legendary():
 						_settled_before_offer = _has_flag(_flag("legendary_settled"))
 						_offer_began_for = _local_character_id()
+						_offer_began = true
 						_stage = STAGE_JOIN
 						_offer_to_join()
 				else:
@@ -1337,7 +1344,7 @@ func _reconcile_world_receipt() -> void:
 		_retry_world_flag(LIVE_MARKER)
 	if _answered_live and not _has_flag(_flag("legendary_settled")):
 		_retry_world_flag(_flag("legendary_settled"))
-	if _answered_here:
+	if _answered_here and not _answer_tagged:
 		# A client that answered before its snapshot carried the world's
 		# identity tags the answer as soon as it does.
 		_tag_answer_world()
@@ -1370,9 +1377,11 @@ func _reconcile_world_receipt() -> void:
 ## This character's answer, tagged with the world it was given in. Once.
 func _tag_answer_world() -> void:
 	var here := _world_identity()
-	if here.is_empty() or _has_player_flag(ANSWER_WORLD_PREFIX + here):
+	if here.is_empty():
 		return
-	_set_player_flag(ANSWER_WORLD_PREFIX + here)
+	_answer_tagged = true
+	if not _has_player_flag(ANSWER_WORLD_PREFIX + here):
+		_set_player_flag(ANSWER_WORLD_PREFIX + here)
 
 
 ## The live marker, resubmitted on the receipt's throttle while it is missing.
@@ -1420,7 +1429,7 @@ func _refused_recently(id: String) -> bool:
 		return false
 	var entry: Array = _receipts_refused[id]
 	# Doubling, so a refusal that is permanent is not re-shown every 30 s.
-	var wait := mini(RECEIPT_REFUSED_MAX_MS, RECEIPT_REFUSED_RETRY_MS * int(pow(2.0, float(int(entry[1]) - 1))))
+	var wait := mini(RECEIPT_REFUSED_MAX_MS, RECEIPT_REFUSED_RETRY_MS * int(pow(2.0, float(mini(int(entry[1]) - 1, 5)))))
 	return Time.get_ticks_msec() - int(entry[0]) < wait
 
 
@@ -1653,12 +1662,11 @@ func _reconcile_bound_creature() -> void:
 		if not _freed_visual:
 			_release_visual(true)
 		return
-	var progression := _progression()
-	var world_flags: Array = progression.call("all_set") if progression != null else []
 	# Gone only once EVERY recorded participant has answered, not at the first
-	# settle: another peer may still be mid-offer with it (re-review).
+	# settle: another peer may still be mid-offer with it (re-review). The
+	# world's flags are only listed once the cheap checks pass.
 	if _has_flag(_flag("legendary_settled")) and not _offer_outstanding_after_settle() \
-			and all_answered(_warden_participant_characters(), world_flags):
+			and _every_participant_answered():
 		_legendary.queue_free()
 		_legendary = null
 		_stage = STAGE_DONE
@@ -1673,8 +1681,10 @@ func _reconcile_bound_creature() -> void:
 func _offer_continues() -> bool:
 	if _pre_f05_settled_world() or _character_resolved():
 		return false
-	var character := _local_character_id()
-	if not _offer_began_for.is_empty() and character == _offer_began_for:
+	# Compared as ids, and also as "an offer began on this node for whoever
+	# was here" -- a character with no id yet (a save that has not minted one)
+	# still keeps the offer it began.
+	if _offer_began and _local_character_id() == _offer_began_for:
 		return true
 	return _may_receive_now()
 
@@ -1683,7 +1693,14 @@ func _offer_continues() -> bool:
 ## a client started journals nobody). Nobody is offered and nothing settles.
 func _participants_unknown_in_company() -> bool:
 	return _multi_peer() and _warden_participant_characters().is_empty() \
-		and not _character_resolved() and _offer_began_for.is_empty()
+		and not _character_resolved() and not _offer_began
+
+
+func _every_participant_answered() -> bool:
+	for raw: Variant in _warden_participant_characters():
+		if not _has_flag(resolution_flag(true, str(raw))) and not _has_flag(resolution_flag(false, str(raw))):
+			return false
+	return true
 
 
 ## Every recorded participant has an answer in the world. With no journal,
