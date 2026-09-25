@@ -88,6 +88,11 @@ var _freed_visual: bool = false
 var _seen_warden_defeat: bool = false
 var _chamber_told: bool = false
 var _joined: RefCounted = null
+## The character `_joined` was offered to. The answer is recorded for that
+## character only: if the local character changes underneath an open ceremony
+## (a disconnect, a wipe, a different character loaded), the offer is dropped
+## rather than answered for whoever is there now.
+var _offer_character: String = ""
 ## F05: the two choice prompts, built when this character's offer is open.
 var _accept_prompt: Node3D = null
 var _refuse_prompt: Node3D = null
@@ -1185,6 +1190,7 @@ func _hand_over_the_legendary() -> void:
 		push_error("could not build the legendary from species.json; it cannot join")
 		return
 	_joined = creature
+	_offer_character = _local_character_id()
 
 	# Owner decision: every participant keeps their own. This peer decides only
 	# for ITSELF -- whether THIS character fought and has not already resolved
@@ -1198,6 +1204,7 @@ func _hand_over_the_legendary() -> void:
 	if party != null and not bool(party.call("is_full")):
 		party.call("add", creature)
 		_record_resolution(true)
+		_joined = null
 		print("[climax] the legendary joined a belt with room on it")
 		return
 	# Full belt: the decision, through the system that already ships it.
@@ -1213,9 +1220,19 @@ func _ceremony_pending() -> bool:
 		return true
 	# The ceremony resolved: record which way it went, once. Letting the
 	# newcomer go at five is this character's refusal, and is recorded as one.
+	if _joined != null and _local_character_id() != _offer_character:
+		# The character this ceremony was offered to is gone (disconnect,
+		# wipe, another character loaded). Never answer for whoever is here
+		# now -- measured by the two-peer witness: that recorded a refusal for
+		# a blank character and saved it over the real one.
+		print("[climax] the offered character left before the ceremony resolved; dropping it unanswered")
+		_joined = null
+		return false
 	if _joined != null and not _character_resolved():
 		var party: RefCounted = game.get("party")
 		_record_resolution(party != null and (party.call("members") as Array).has(_joined))
+	# Recorded once; never re-read a belt that may since have changed hands.
+	_joined = null
 	return false
 
 
@@ -1655,23 +1672,36 @@ func _warden_participant_characters() -> Array:
 
 
 func _read_warden_participant_characters() -> Array:
+	# The world's reward journal itself (`WorldState.reward_deliveries`).
+	# MEASURED DEFECT, fixed here: this used to call `world_snapshot()` on the
+	# WorldState, which has no such method (it is Game's), so the journal was
+	# never read and the participant list was ALWAYS empty -- every peer,
+	# fighter or not, counted as "the only player". Found by the two-peer
+	# witness (`smoke_net_veridian_choices.gd`): both peers' answers were
+	# withheld from the world because neither could be shown to have fought.
 	var game := _game()
 	var world: Variant = game.get("world") if game != null else null
-	if world == null or not (world as Object).has_method("world_snapshot"):
+	if world == null:
 		return []
-	var snapshot: Dictionary = world.call("world_snapshot")
-	var deliveries: Variant = snapshot.get("reward_deliveries", {})
-	if deliveries is not Dictionary:
-		return []
-	var prefix := "trainer:%s:" % _warden_trainer_id()
+	var deliveries: Variant = (world as Object).get("reward_deliveries")
+	return participants_from(deliveries as Dictionary if deliveries is Dictionary else {},
+		_warden_trainer_id())
+
+
+## The characters a reward journal shows fought `trainer_id`: every journaled
+## delivery from that trainer's payout, pending or accepted. A pending row is
+## still proof of participation -- a fighter whose satchel was full when the
+## payout landed fought all the same. Pure, for the tests.
+static func participants_from(deliveries: Dictionary, trainer_id: String) -> Array:
+	var prefix := "trainer:%s:" % trainer_id
 	var out: Array = []
-	for raw: Variant in (deliveries as Dictionary).values():
+	for raw: Variant in deliveries.values():
 		if raw is not Dictionary:
 			continue
 		var row: Dictionary = raw
 		if not str(row.get("source", "")).begins_with(prefix):
 			continue
-		if str(row.get("status", "")) != "accepted":
+		if not str(row.get("status", "")) in ["pending", "accepted"]:
 			continue
 		var character := str(row.get("character_id", ""))
 		if not character.is_empty() and not out.has(character):

@@ -171,3 +171,31 @@ func test_an_empty_journal_herd_display_is_the_same_for_every_peer() -> void:
 		"host and a joining guest read one world the same way")
 	assert_true(CLIMAX.all_refused([], FRIEND, world),
 		"the only recorded answer is a refusal: full refusal, whoever asks")
+
+
+# --- the participant journal (found by the two-peer witness) -------------------
+
+func test_the_journal_names_every_warden_fighter_pending_or_accepted() -> void:
+	var journal := {
+		"a": {"source": "trainer:warden_aldis:coins", "status": "accepted", "character_id": ME},
+		"b": {"source": "trainer:warden_aldis:item:revive", "status": "accepted", "character_id": ME},
+		"c": {"source": "trainer:warden_aldis:item:revive", "status": "pending", "character_id": FRIEND},
+		"d": {"source": "trainer:stronghold_elite:coins", "status": "accepted", "character_id": "stranger"},
+		"e": {"source": "trainer:warden_aldis:coins", "status": "accepted", "character_id": ""},
+	}
+	var fighters: Array = CLIMAX.participants_from(journal, "warden_aldis")
+	fighters.sort()
+	var expected := [ME, FRIEND]
+	expected.sort()
+	assert_eq(fighters, expected,
+		"both fighters, once each; a pending payout still proves the fight; other trainers and blank ids never count")
+
+
+func test_the_climax_reads_the_journal_from_the_world_not_a_missing_method() -> void:
+	# The reader used to call `world_snapshot()` on WorldState, which has none,
+	# so the list was always empty. Pin that the journal lives where it reads.
+	var world_state: Script = load("res://autoload/world_state.gd")
+	var world: Object = world_state.new()
+	assert_true("reward_deliveries" in world, "WorldState holds the reward journal the climax reads")
+	assert_false(world.has_method("world_snapshot"),
+		"WorldState has no world_snapshot(); reading the journal through it returns nothing")
