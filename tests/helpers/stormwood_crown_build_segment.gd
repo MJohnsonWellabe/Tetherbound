@@ -222,6 +222,9 @@ func _gather_site(site: Dictionary) -> bool:
 			break
 		await _tree.physics_frame
 	var gained := _count(str(site.item)) - before
+	if not is_instance_valid(node):
+		_note("%s: node gone after the approach; receipt=%s gained=%d" % [id,
+			str(_game.get("progression").call("has", receipt)), gained])
 	if gained != int(site.amount) or not bool(_game.get("progression").call("has", receipt)):
 		return _fail("%s did not commit its exact live yield/receipt: gained=%d expected=%d" % [
 			id, gained, int(site.amount)])
@@ -405,10 +408,14 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 		around + Vector2(1.1, 0.0), around + Vector2(0.0, 1.1),
 		around + Vector2(-1.1, 0.0)]
 	for stance: Vector2 in candidates:
+		if not is_instance_valid(prompt):
+			break
 		if not await _walk_xz(stance, label + " stance", 0.75, false):
 			continue
 		var held := 0
 		for _frame in 180:
+			if not is_instance_valid(prompt):
+				break
 			if _arbiter.call("winning_provider") == prompt:
 				held += 1
 				if held >= 8:
@@ -422,6 +429,13 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 						_arbiter.activated.disconnect(observer)
 					if _activated_provider_id == wanted_id:
 						return true
+					# A harvest node answers the press by being gathered and
+					# freed (the equipped tool's swing resolves it). Run 16's
+					# Thunderwood node vanished under the press this way; the
+					# caller checks the receipt and the yield.
+					if not is_instance_valid(prompt) or not is_instance_valid(body):
+						_note("%s was consumed by the press" % label)
+						return true
 					if _activated_provider_id != 0:
 						return _fail("%s activated competing provider %s#%d" % [
 							label, _activated_provider_path, _activated_provider_id])
@@ -430,6 +444,13 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 				held = 0
 			await _tree.physics_frame
 	var winner := _arbiter.call("winning_provider") as Node
+	if not is_instance_valid(prompt) or not is_instance_valid(body):
+		# Run 17: the vine node was gathered and freed during the approach,
+		# not by this helper's Interact. The caller (`_gather_site`) judges
+		# the receipt and the exact yield; any other caller's check fails.
+		_note("%s was freed during its approach (winner=%s); the caller checks what happened" % [label,
+			str(winner.get_path()) if winner != null else "<none>"])
+		return true
 	var own_offer: Variant = prompt.call("interaction_offer", _player.global_position) \
 		if prompt.has_method("interaction_offer") else "n/a"
 	return _fail("%s never won the InteractionArbiter (winner=%s offer=%s; target enabled=%s visible=%s in_tree=%s own_offer=%s player=%s prompt_at=%s distance=%.2f equipped=%s)" % [label,

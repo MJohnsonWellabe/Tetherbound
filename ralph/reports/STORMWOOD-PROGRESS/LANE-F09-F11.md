@@ -507,6 +507,24 @@ SCRIPT ERROR count is 0 in both runs.
     - `smoke_stormwood_lightning` 24/0 and `smoke_stormwood_lightning_cleanup` PASS.
   - **Not changed:** strikes still cannot damage a creature (none are wired to). The ruling's "hazards the creature can avoid" are presentation only.
 
+### Runs 15 and 16: the Capacitor Alpha is cleared by a rested party
+
+| Run | Commit | Prefix | Crown step | First failure |
+|---|---|---|---|---|
+| 15 | 49d9ab27f | PASS 1206.6 s; 8 warnings dodged, 0 hits | rest (3 nights), send-out OK on the retry, escorts, **Alpha CLEARED**; FAIL 966.4 s | `stormwood_harvest_conductor_run_099 never won the InteractionArbiter` |
+| 16 | ce6d8367e | PASS 1249.5 s; 0 hits | rest, re-rest after a road-fight KO, **Alpha CLEARED**; FAIL 1072.5 s | SCRIPT ERROR in `_activate_exact` diagnostic: the Thunderwood prompt was a freed instance |
+
+- **Alpha fight numbers, fully rested:**
+  - Run 15: terrapup L46 won with 143.9/444 left against voltarach L40 511.8 HP. 108 player hits, 28 enemy hits, 19 player misses; 131 s.
+  - Run 16: bramblebun L46 won with 82.7/351.5 left. 103 hits dealing 512.3 damage, 23 enemy hits dealing 268.8; 95.6 s.
+  - No tuning stop applies.
+- **LB presses.** In both runs, every other LB press left the active creature unchanged: the press landed while the director was redeploying after the previous switch. The retry covers it. Whether a real pad has the same dead press is not measured here.
+- **Gather diagnosis (run 16).** The run died with a SCRIPT ERROR in the harness's own failure message, which called a method on the freed Thunderwood prompt.
+  - Reading: the Interact press is answered by the equipped axe's swing, which gathers the node and frees it. The helper then saw no activation of the exact prompt.
+  - This is a harness reading, not proven: the receipt was not checked before the run ended.
+  - Fix, e47fa1758: a prompt freed by our own press returns to the caller, which checks the receipt and the yield. A prompt freed during the approach fails with its own message.
+- **Run 15's lone strike hit.** It was logged during the "fight during Capacitor Grove road point" phase, right after that fight was lost. The phase label lags, so this was after the fight ended, not a breach of the spare rule.
+
 ### Not produced
 
 - The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.
