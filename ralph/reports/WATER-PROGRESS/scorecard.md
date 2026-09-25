@@ -171,14 +171,25 @@ side.
 **Cradle care payout (`side_water_cradle_care`).** WORLD specifies 4 Reef
 Stone plus 3 berries, once, at `cradle_shell_nest`. Two existing Tidal Cradle
 rows now sit in the nest:
-- `tidal_cradle:harvest:007`: Reef Stone, yield 2→4, one pickaxe gather;
+- `tidal_cradle:harvest:007`: Reef Stone, yield 2→4, one pickaxe gather.
+  Harvest nodes never regrow: a world progression flag is set and the node is
+  freed, so this is once per world.
 - `tidal_cradle:pickup:009`: berries, quantity 1→3, an ordinary once-per-world
   find.
+
+**Co-op consequence:** both rows are world-once. In a 1–4 player session, only
+the first gatherer gets the Cradle care payout. A second participant cannot
+complete WORLD's "gather 4 Reef Stone" step at the nest after it is taken.
+**The payout also comes before its chain:** WORLD grants the +3 berries on
+returning to Otto, but here they can be picked up at the nest from a new game
+onward, with no Otto step.
 
 The world total changes by the spec's amounts (+2 Reef Stone, +2 berries).
 Row, island and item counts are unchanged, and so are the saddle's 4 Reef
 Stone by the Cradle arrival (harvest 005/006). The smoke walks 500 m from the
-arrival and gains exactly +4 Reef Stone and +3 berries through Interact.
+arrival and gains exactly +4 Reef Stone and +3 berries through Interact. The
+walk legs do not assert that the trainer stayed on land. A route that swam
+round a headland would still pass, though no run has shown swimming.
 
 Not built, because they need code outside this lane's data:
 - Otto's pointer;
@@ -187,16 +198,27 @@ Not built, because they need code outside this lane's data:
 
 **Deep Watch gate: not implemented.** Water pickup rows have no gate field,
 and neither the host rule (`water_personal_pickup.gd`) nor the streamer
-(`water_scene_pickups.gd`) reads one. No code anywhere sets
-`water_named_deep_watch_tidecoil_resolved`. Candy III is still claimable
-without the Tidecoil chain.
+(`water_scene_pickups.gd`) reads one.
+
+The flag does have a writer. The Tidecoil named encounter's
+`completion_flag` (`water_encounters.json`) is its `once_id`, and a win or
+catch records it through `_mark_once_cleared` → `progression.set_flag`. That
+write goes to local progression, not through the ledger, so in co-op it is not
+host-routed.
+
+What is missing is the gate itself:
+- a `requires_world_flags` reader in the host rule and in the streamer;
+- host or ledger routing of the Tidecoil resolution, for co-op.
+
+Candy III is still claimable without the Tidecoil chain.
 
 **Capture:** `_sheet_reward_pockets.jpg` (1278×720, 229 KB; replaces the
 2.1 MB PNG), from `tools/capture_water_reward_pockets.gd`. The trainer stands
 on the planned approach 5 m short of each find. The camera looks along the
 approach, pitched down 24° and turned 14°. The candy glow is visible in 6 of
-6 candy frames. In the seventh frame (Cradle), the berries find is visible;
-the Reef Stone seam is only a small grey rock and not clearly identifiable.
+6 candy frames (frames 1 and 3–7). Frame 2, top middle, is the Cradle nest:
+the berries are visible, but the Reef Stone seam is only a small grey rock and
+not clearly identifiable.
 These frames are from a close approach; long-range discoverability (a cairn,
 torch or clearing) is still an open F13 item.
 
