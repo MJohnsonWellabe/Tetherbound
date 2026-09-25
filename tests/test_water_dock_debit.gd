@@ -376,3 +376,19 @@ func test_callable_dictionary_adapter() -> void:
 		"inventory": {"count": bag.count, "add": bag.add, "remove": bag.remove}}
 	assert_true(DEBIT.begin(s, ACTION, COST, WORLD).ok)
 	assert_eq(bag.count("driftwood"), 0)
+
+
+func test_same_txn_receipt_with_foreign_payer_never_refunds() -> void:
+	# The receipt proves THIS txn committed; a payer mismatch is a host-side
+	# contradiction, not proof that someone else paid. Nothing is returned.
+	var state := _state("cid-1", 9, 7)
+	var begun: Dictionary = DEBIT.begin(state, ACTION, COST, WORLD)
+	var txn := str(begun.txn_id)
+	var odd := _receipt(txn, "someone-else")
+	var bag: Object = state.inventory
+	var before: Dictionary = bag.get("items").duplicate()
+	var reconciled: Dictionary = DEBIT.reconcile(state, {ACTION: odd}, WORLD)
+	assert_false(bool(reconciled.changed), "same-txn foreign-payer receipt changes nothing on reconcile")
+	var refused: Dictionary = DEBIT.refund(state, {"txn_id": txn, "world_instance_id": WORLD, "code": "already_done", "receipt": odd})
+	assert_false(bool(refused.changed), "same-txn foreign-payer receipt never refunds")
+	assert_eq(bag.get("items"), before, "inventory untouched")

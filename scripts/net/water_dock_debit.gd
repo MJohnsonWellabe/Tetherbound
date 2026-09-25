@@ -87,10 +87,28 @@ extends RefCounted
 ##    `snapshot_ready()` is true; the host after its world load), call
 ##    reconcile() with in_flight_txn_ids = []; every txn in its `needs_submit`
 ##    is resubmitted unchanged (same txn id and intent, after a character
-##    persist). Resubmission is the ONLY absence handler. A lost verdict is
-##    handled the same way: resubmit under a per-txn timeout like
-##    `_satchel_retry_at` (ledger_rpc.gd:123), passing still-throttled txns as
-##    in_flight_txn_ids. There is no timer-driven refund anywhere.
+##    persist). Resubmission is the ONLY absence handler. There is no
+##    timer-driven refund anywhere.
+##
+## --- Wiring preconditions (MANDATORY; the module is only safe under them) --
+## Refusal codes are final for ONE submission, not for a txn. The wiring must
+## therefore guarantee:
+##  P1 (client) At most one outstanding submission per txn per connection.
+##     A lost verdict is NOT retried on a timer; the txn is resubmitted only
+##     after a verdict for the previous copy or after a reconnect's
+##     snapshot_applied. Otherwise copy A can be refused (prerequisite /
+##     journal_failed) and refunded while copy B later commits: a free repair.
+##  P2 (host) Refused paid-dock txn ids are remembered for the connection
+##     outside the journal_failed rollback (which clears _seen_txns), and any
+##     later copy of a refused txn gets the same refusal.
+##  P3 (host) The receipt lookup for intent.txn_id runs first; a receipt's
+##     txn_id must equal txn_id(instance, action, resolved character,
+##     attempt) or the intent is refused as malformed.
+##  P4 (host) Loading a world whose dock flag predates receipts writes a
+##     placeholder receipt {txn_id:"legacy", payer_character_id:"legacy"} so
+##     open rows refund instead of resubmitting forever.
+## A wiring change that cannot meet P1-P4 must not call refund() on
+## prerequisite/journal_failed.
 ##    :562 `item_take` stays for other kinds only.
 ## 5. No character schema change: rows ride in satchel_escrow
 ##    (scripts/save/character_save.gd:45). satchel_escrow.gd reconcile skips
@@ -350,8 +368,12 @@ static func _receipt_pays(receipt: Dictionary, row: Dictionary) -> bool:
 
 ## A well-formed receipt for this row's action in this row's world that does
 ## NOT pay this row: durable proof another txn/character paid the action.
+## A receipt proving ANOTHER txn paid this action in this world. A receipt
+## for this very txn with a different payer is a contradiction (this txn did
+## commit), so it is never grounds for a refund: the row keeps waiting.
 static func _receipt_for(receipt: Dictionary, row: Dictionary) -> bool:
 	return not _receipt_pays(receipt, row) \
+		and str(receipt.get("txn_id", "")) != str(row.get("txn_id", "")) \
 		and not str(receipt.get("txn_id", "")).is_empty() \
 		and not str(receipt.get("payer_character_id", "")).is_empty() \
 		and str(receipt.get("action_id", "")) == str(row.action_id) \
