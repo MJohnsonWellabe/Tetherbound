@@ -699,7 +699,11 @@
       "lines": [
         "The Stormheart lowers its crown of sparks and crosses the ruined ring to you. This is an offer, not another tether.",
         "If your belt already holds five companions, accepting means choosing one farewell. You may also keep the five who carried you here and let the Stormheart walk free.",
-        "The Spark it guarded is yours either way. Carry it home to its stone in the Meadows shrine circle."
+        "The Spark it guarded is yours either way. Carry it home to its stone in the Meadows shrine circle.",
+        {
+          "text": "Will you walk out with the Stormheart? Yes: it joins you, and at five you choose one farewell. No: it stays free.",
+          "confirm_effect": "stormheart:accept"
+        }
       ]
     },
     "stormwood_waterward_aftermath": {

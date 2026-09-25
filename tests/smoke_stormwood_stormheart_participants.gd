@@ -153,6 +153,10 @@ func _run() -> void:
 		and bool(state.claims["character-fought-b"].settled),
 		"each character's accept or refuse is recorded separately")
 	_check((state.claims as Dictionary).size() == 2, "exactly one claim per participating character")
+	_check(game.progression.has(ENDING.resolution_flag(true, host_character))
+		and game.progression.has(ENDING.resolution_flag(false, "character-fought-b"))
+		and not game.progression.has(ENDING.resolution_flag(true, "character-fought-b")),
+		"each answer leaves its own world receipt: accepted for the host, refused for B")
 
 	var saved: Dictionary = game.world.save_data()
 	var environment: Dictionary = game.realm_environment.duplicate(true)

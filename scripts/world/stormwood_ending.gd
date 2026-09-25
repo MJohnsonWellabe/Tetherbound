@@ -24,6 +24,12 @@ const FREED_FLAG := "stormwood:legendary_freed"
 const OFFER_FLAG := "stormwood:legendary_offer_made"
 const WATERWARD_FLAG := "stormwood:waterward_revealed"
 const PERSONAL_RECEIPT_FLAG := "stormwood:legendary_ceremony_settled"
+## World receipt per character's answer, mirroring the Meadows finale's
+## `legendary_resolution:<accepted|refused>:<character>`; world-scoped by the
+## `stormwood:` prefix and committed once by the host.
+const RESOLUTION_PREFIX := "stormwood:legendary_resolution:"
+const OFFER_CONVERSATION := "stormwood_stormheart_offer"
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 const LEGENDARY_NAME := "the Stormheart"
 const LEGENDARY_LEVEL := 44
@@ -46,6 +52,9 @@ var _waterward_sea: MeshInstance3D
 var _local_claim: Dictionary = {}
 var _local_creature: RefCounted
 var _waiting_for_offer_dialogue := false
+## This conversation reached its Yes/No line, and whether Yes was chosen.
+var _offer_reached_choice := false
+var _offer_accepted := false
 var _save_retry_left := 0.0
 var _resend_left := 0.0
 var _released_announced := false
@@ -69,6 +78,8 @@ func mount(owner_world: Node3D) -> void:
 	var panel := world.get_node_or_null("DialoguePanel")
 	if panel != null:
 		panel.finished.connect(_dialogue_finished)
+		panel.completed.connect(_dialogue_completed)
+		panel.line_presented.connect(_line_presented)
 	add_to_group("progression_restore")
 	_refresh_presentation()
 	_released_announced = _has(FREED_FLAG)
@@ -230,6 +241,7 @@ func _settle_for(peer: int, intent: Dictionary) -> void:
 	claims[character] = claim
 	state["claims"] = claims
 	_store_state(state)
+	_submit_resolution(claim["kept"], character)
 	# The first decision records the world's single offer fact; later
 	# participants' decisions are personal and need no second world write.
 	if not _has(OFFER_FLAG):
@@ -326,11 +338,46 @@ func _process_local_claim(delta: float) -> void:
 	_finish_local_claim((game.get("party").call("members") as Array).has(_local_creature))
 
 
+func _line_presented(id: String, is_last: bool) -> void:
+	if id == OFFER_CONVERSATION and is_last:
+		_offer_reached_choice = true
+
+
+func _dialogue_completed(id: String) -> void:
+	if id == OFFER_CONVERSATION:
+		_offer_accepted = true
+
+
+## The runner closes (`finished`) before it reports `completed` for a Yes, so
+## the answer is read one frame later. A conversation cut off before its Yes/No
+## line answers nothing and is offered again; No is this character's refusal.
 func _dialogue_finished(id: String) -> void:
-	if id != "stormwood_stormheart_offer" or not _waiting_for_offer_dialogue:
+	if id != OFFER_CONVERSATION or not _waiting_for_offer_dialogue:
 		return
 	_waiting_for_offer_dialogue = false
-	_begin_local_ceremony()
+	_resolve_offer_choice.call_deferred()
+
+
+func _resolve_offer_choice() -> void:
+	var reached := _offer_reached_choice
+	var accepted := _offer_accepted
+	_offer_reached_choice = false
+	_offer_accepted = false
+	if accepted:
+		_begin_local_ceremony()
+	elif reached:
+		refuse_offer()
+	else:
+		_waiting_for_offer_dialogue = true
+
+
+## This character's explicit refusal: no creature, a personal receipt and the
+## host's world receipt, exactly as letting the newcomer go at five.
+func refuse_offer() -> void:
+	if _local_claim.is_empty():
+		return
+	get_node("/root/Game").push_world_message("The Stormheart stays free. The Spark is yours either way.")
+	_finish_local_claim(false)
 
 
 func _begin_local_ceremony() -> void:
@@ -661,6 +708,17 @@ func _record_participants() -> void:
 	state["participants"] = characters
 	_store_state(state)
 	_save_world_claim()
+
+
+## Host: the once-only world receipt of one character's answer.
+func _submit_resolution(accepted: bool, character: String) -> void:
+	var flag := resolution_flag(accepted, character)
+	if not _has(flag):
+		LEDGER_CLAIM.submit(self, {"kind": "set_world_flag", "realm": "stormwood", "id": flag, "value": true})
+
+
+static func resolution_flag(accepted: bool, character: String) -> String:
+	return "%s%s:%s" % [RESOLUTION_PREFIX, "accepted" if accepted else "refused", character]
 
 
 ## This peer's own character may still answer the Stormheart.

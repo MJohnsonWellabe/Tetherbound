@@ -5,6 +5,7 @@ extends "res://tests/test_case.gd"
 ## loudly in the fast suite before a long Stormwood run is attempted. The
 ## Stormheart follows the owner's per-participant legendary rule.
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
+const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 
 
 func test_every_participant_gets_their_own_once_only_offer() -> void:
@@ -119,3 +120,16 @@ func test_ceremony_receipt_is_player_owned_despite_the_stormwood_world_prefix() 
 		"res://data/progression/flag_scopes.json"))
 	assert_true((parsed.player.ids as Array).has(ENDING.PERSONAL_RECEIPT_FLAG),
 		"the party owner's decision must persist in that character, not the shared world")
+
+
+func test_offer_asks_an_explicit_yes_or_no_and_receipts_each_answer() -> void:
+	var dialogue: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/dialogue/stormwood.json")) as Dictionary).conversations
+	var lines: Array = dialogue[ENDING.OFFER_CONVERSATION].lines
+	var last: Variant = lines.back()
+	assert_true(last is Dictionary and str((last as Dictionary).get("confirm_effect", "")) != "",
+		"the offer ends on a Yes/No consent line, so accepting with room is a choice, not a silent grant")
+	assert_eq(ENDING.resolution_flag(true, "trainer-a"), "stormwood:legendary_resolution:accepted:trainer-a")
+	assert_eq(ENDING.resolution_flag(false, "trainer-a"), "stormwood:legendary_resolution:refused:trainer-a")
+	assert_eq(PROGRESSION_STATE.scope_of(ENDING.resolution_flag(false, "trainer-a")), "world",
+		"the per-character answer receipt is a world fact every peer sees")
