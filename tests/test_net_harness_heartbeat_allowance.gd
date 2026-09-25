@@ -60,3 +60,14 @@ func test_successful_realm_crossing_restarts_the_ordinary_watchdog() -> void:
 	var failed := {"last_heartbeat_t": 1.0, "heartbeat_deferred_until_s": 190.0}
 	NET_HARNESS._complete_step_heartbeat_allowance(failed, "enter_realm", {"verdict": "FAIL"}, 80.0)
 	assert_eq(failed["last_heartbeat_t"], 1.0, "a failed crossing earns no liveness credit")
+
+
+func test_world_building_steps_and_first_rendered_frame_have_named_allowances() -> void:
+	for action: String in ["enter_realm", "boot", "load_save", "screenshot"]:
+		assert_eq(NET_HARNESS.world_build_allowance_s(action), NET_HARNESS.REALM_CROSSING_BUILD_ALLOWANCE_S,
+			"%s builds a world (or a first rendered frame) in blocking frames" % action)
+	assert_eq(NET_HARNESS.world_build_allowance_s("production_join"), NET_HARNESS.PRODUCTION_JOIN_BUILD_ALLOWANCE_S)
+	for action: String in ["join", "host", "stick", "wait", "capture_saves"]:
+		assert_eq(NET_HARNESS.world_build_allowance_s(action), 0.0,
+			"%s keeps the ordinary 15-second detector" % action)
+
