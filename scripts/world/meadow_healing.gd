@@ -1044,7 +1044,11 @@ func _raise_dust(final: Transform3D, local: AABB, spec: Dictionary) -> void:
 	dust.amount = maxi(int(spec.get("amount", 40)), 1)
 	dust.lifetime = maxf(float(spec.get("lifetime", 1.8)), 0.1)
 	dust.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
-	dust.emission_box_extents = local.size * 0.5 * Vector3(0.9, 0.9, 0.9)
+	# Upright in the world, spread over the landed pylon's world bounds: the
+	# pylon's own basis is lying down, so "up" in it would blow the dust
+	# sideways along the ground.
+	var bounds := final * local
+	dust.emission_box_extents = Vector3(bounds.size.x * 0.45, maxf(bounds.size.y * 0.3, 0.2), bounds.size.z * 0.45)
 	dust.direction = Vector3.UP
 	dust.spread = 70.0
 	dust.initial_velocity_min = float(spec.get("speed_min", 0.6))
@@ -1063,20 +1067,32 @@ func _raise_dust(final: Transform3D, local: AABB, spec: Dictionary) -> void:
 	fade.set_color(0, Color(colour, float(spec.get("alpha", 0.55))))
 	fade.set_color(1, Color(colour, 0.0))
 	dust.color_ramp = fade
-	var puff := SphereMesh.new()
-	puff.radius = float(spec.get("puff_radius", 0.45))
-	puff.height = puff.radius * 2.0
-	puff.radial_segments = 8
-	puff.rings = 4
+	# A soft round puff: a camera-facing quad with a radial falloff drawn in
+	# code (a sphere read as hard white balls in the blind round).
+	var puff := QuadMesh.new()
+	var across := float(spec.get("puff_radius", 0.45)) * 2.0
+	puff.size = Vector2(across, across)
+	var falloff := Gradient.new()
+	falloff.set_color(0, Color(1.0, 1.0, 1.0, 1.0))
+	falloff.set_color(1, Color(1.0, 1.0, 1.0, 0.0))
+	falloff.add_point(0.45, Color(1.0, 1.0, 1.0, 0.55))
+	var soft := GradientTexture2D.new()
+	soft.gradient = falloff
+	soft.fill = GradientTexture2D.FILL_RADIAL
+	soft.fill_from = Vector2(0.5, 0.5)
+	soft.fill_to = Vector2(0.5, 0.0)
+	soft.width = 64
+	soft.height = 64
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.vertex_color_use_as_albedo = true
+	material.albedo_texture = soft
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
 	puff.material = material
 	dust.mesh = puff
 	add_child(dust)
-	dust.global_transform = Transform3D(final.basis, final * local.get_center())
+	dust.global_transform = Transform3D(Basis.IDENTITY, bounds.get_center())
 	dust.emitting = true
 	get_tree().create_timer(dust.lifetime + 1.0).timeout.connect(dust.queue_free)
 

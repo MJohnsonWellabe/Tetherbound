@@ -114,16 +114,16 @@
     "creak_fraction": 0.07,
     "dust": {
       "enabled": true,
-      "amount": 48,
+      "amount": 90,
       "lifetime": 2.2,
-      "colour": "#b9ab8c",
-      "alpha": 0.55,
+      "colour": "#dccfb2",
+      "alpha": 0.6,
       "speed_min": 0.6,
-      "speed_max": 2.4,
+      "speed_max": 2.8,
       "gravity": 0.6,
       "size_min": 0.7,
       "size_max": 1.6,
-      "puff_radius": 0.45
+      "puff_radius": 1.1
     },
     "_comment_staging": "Staged fall (blind judge round 3: a 2 s ease-in read as a snap). Each pylon creaks `creak_fraction` of its fall over `creak_seconds` (ease out), hangs `creak_hold_seconds`, then falls over `fall_seconds` (ease in); its cable pieces tear at the end of the creak, not when the flag lands; `dust` is a one-shot cosmetic burst along it where it lands (no collision, never on a load)."
   },
