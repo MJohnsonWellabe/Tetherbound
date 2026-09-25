@@ -410,6 +410,28 @@ SCRIPT ERROR count is 0 in every run log. Across the last three runs the prefix 
 
 **Open question for owner or design:** is a named alpha with two escorts, fought one at a time from the road, intended to require a rest stop before it? C2/C3 tuning belongs to COMBAT, not this lane.
 
+### Run 8 onward: rest before the Alpha (coordinator order after 0a653a7c2)
+
+- **Rest step** (c46170432 and 62dcc3009): at the start of the Crown segment the player rests at **Still Grove Shelter**. That is the camp beside Ondra, where the segment begins, and the nearest camp on the route; Rodline Refuge is 630 m back. It takes one night per worn creature. Each night uses ordinary input: Interact with the creature bed, pad Down/A to that creature's row, B to close, then Interact with the camp's "Rest at" prompt. If the road fights leave a creature fainted before the grove, the segment walks back and rests again. The rest runs at the 1x clock: at 8x, run 9 pressed the bed five times and nothing activated.
+- **Pickup seats** (f7266aaaf): route pickups 05, 07, 16 and 18 moved 8 m along the route, off Pim, Bryn, Rook and Kestrel. Run 10 lost a press to Bryn on route 07, which had passed in earlier runs. The scatter is re-baked (manifest fingerprint only). test_stormwood_scatter_bake, pickups, pickup_runtime and continuous_route_pickups: 13 tests, 0 failed.
+
+| Run | Commit | Prefix | Crown step |
+|---|---|---|---|
+| 8 | c46170432 | PASS 1121.3 s | FAIL 0.0 s: precondition "knife on the controller hotbar" |
+| 9 | e1166322b | PASS 1114.3 s. Tools `knife x1 axe x1 pickaxe x1` | FAIL 13.1 s: `still_grove_shelter creature bed never won the InteractionArbiter` (winner was that bed; the 8x tap was lost) |
+| 10 | 62dcc3009 | FAIL 829.9 s: `stormwood_pickup_route_07 route reward press activated competing provider .../Warden-Elect Bryn/Interactable` | not reached |
+| 11 | f7266aaaf | PASS 1115.3 s. `F11 WITNESS TOOLS after prefix: knife x0 axe x0 pickaxe x0 hotbar=["knife", "axe", "pickaxe", "", ""]` | FAIL 0.0 s: `Crown segment requires the campaign-earned knife on the controller hotbar (inventory knife x0, axe x0, pickaxe x0, hotbar [...], equipped 'pickaxe')` |
+
+SCRIPT ERROR count is 0 in runs 8 to 11.
+
+**Stopped (stop rule: second failure of the same new step, runs 8 and 11).**
+
+- **What the evidence shows.** The whole inventory is empty while the hotbar still binds the tools. Only `player_death.gd::_die_now()` does that: it moves the inventory into a death satchel and respawns the trainer at the nearest safe camp. Still Grove Shelter, the respawn camp, is 30 m from Ondra, so the harness walk would hide the teleport.
+- **Most likely killer.** Stormwood lightning on the 116-second Conductor Road walk, run at the wrapper's 8x weather clock with no dodge or shelter.
+- **Not confirmed.** Neither run logged the death. 083e0348f now prints each finalized death with the active walk; it has not been run.
+- **Proposed next step** (a harness change, not a game change): after a logged death, walk back to the satchel and take it with its ordinary prompt, as a player would. Or run the Conductor Road walk at the 1x weather clock so telegraphs can be avoided.
+- **Alpha.** Not reached with a rested party, so there are no fight numbers for the tuning question.
+
 ### Not produced
 
 - The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.
