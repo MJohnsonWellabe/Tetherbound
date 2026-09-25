@@ -57,6 +57,17 @@ const CHANNEL_SNAPSHOT := 2
 ## over the 6.9 ms median loopback RTT the ENet spike measured, and still
 ## imperceptible to the player who just chose to quit.
 const CLOSE_FLUSH_FRAMES := 6
+## Terminal reasons (refusal, kick, snapshot abort, host exit) are reliable
+## RPCs. ENet's disconnect discards reliable packets the other side has not
+## acknowledged yet, so on a lossy link a fixed frame count can drop the
+## reason. The client learns nothing, and with the long realm-loading
+## peer timeout it waits out the generic handshake timeout. Instead the
+## host keeps the link up after CLOSE_FLUSH_FRAMES until the other side
+## closes it (clients tear down as soon as a terminal reason arrives) or
+## these bounds pass. Measured on the harness proxy at 30% loss and
+## 150+-30 ms delay: ralph/reports/INVITE-COOP.
+const REFUSAL_LINGER_S := 10.0
+const HOST_CLOSE_LINGER_S := 5.0
 
 const HOST_PEER_ID := PEER_REGISTRY.HOST_PEER_ID
 
@@ -125,17 +136,22 @@ var _box: Dictionary = {
 ## connection up (`_on_connected_to_server`).
 var _pending_hello: Dictionary = {}
 
-## Frames left before a leaving host actually closes its socket. A reliable
+## Frames left before a leaving host may close its socket. A reliable
 ## `session_ended` broadcast has to get off the wire before the peer under it
 ## goes away, and counting frames in `_process` is how that happens without
-## this function becoming a coroutine.
+## this function becoming a coroutine. After the frames, the host still waits
+## for every remote peer to close (they tear down on the reason) or for
+## `_closing_deadline_ms`, whichever is first.
 var _closing_frames: int = 0
+var _closing_deadline_ms: int = 0
 var _closing_reason: String = ""
 
-## Unadmitted transport peer -> frames left for its reliable refusal packet to
-## flush. This is the per-peer form of the proven host-close lifecycle above:
-## queue the terminal reason, keep the socket alive for CLOSE_FLUSH_FRAMES, then
-## disconnect. Rejected peers never enter the registry during this window.
+## Unadmitted, kicked or aborted transport peer -> `{frames, deadline_ms}`.
+## The per-peer form of the host-close lifecycle above: queue the terminal
+## reason, keep the socket alive for at least CLOSE_FLUSH_FRAMES, and then
+## until the peer closes it (`_on_peer_disconnected` erases the entry) or
+## the refusal deadline passes. These peers are not in the registry while
+## they linger, so they are never admitted and never receive a snapshot.
 var _rejected_disconnect_frames: Dictionary = {}
 
 ## One snapshot chunk may be in flight per joining peer. The receiver boundary
@@ -454,6 +470,8 @@ func leave(reason: String = "left") -> void:
 			rpc("_rpc_session_ended", reason)
 			_closing_reason = reason
 			_closing_frames = CLOSE_FLUSH_FRAMES
+			_closing_deadline_ms = Time.get_ticks_msec() + int(
+				1000.0 * float(_cfg("host_close_linger_s", HOST_CLOSE_LINGER_S)))
 			return
 	else:
 		_save_character_here()
@@ -468,7 +486,7 @@ func kick(peer_id: int) -> bool:
 	if not bool(_registry.call("has", peer_id)):
 		return false
 	rpc_id(peer_id, "_rpc_session_ended", "kicked")
-	_peer.disconnect_peer(peer_id)
+	_linger_then_disconnect(peer_id)
 	_registry.call("remove", peer_id)
 	_broadcast_registry()
 	peer_left.emit(peer_id)
@@ -706,7 +724,7 @@ func _reject_hello(sender: int, code: String, reason: String) -> void:
 	# reason. Keep the peer alive for the same measured frame flush used by a
 	# coordinated host close; an immediate disconnect can drop the queued reason.
 	rpc_id(sender, "_rpc_admission_rejected", code, reason)
-	_rejected_disconnect_frames[sender] = CLOSE_FLUSH_FRAMES
+	_linger_then_disconnect(sender)
 	print("[session] refused peer %d (%s): %s" % [sender, code, reason])
 
 
@@ -910,7 +928,7 @@ func _abort_host_snapshot(peer_id: int, reason: String, notify: bool = true) -> 
 		peer_left.emit(peer_id)
 		if _realms != null:
 			_realms.call("reconcile")
-	_rejected_disconnect_frames[peer_id] = CLOSE_FLUSH_FRAMES
+	_linger_then_disconnect(peer_id)
 	push_warning("[session] snapshot for peer %d failed: %s" % [peer_id, reason])
 
 
@@ -1246,11 +1264,16 @@ func _on_server_disconnected() -> void:
 
 func _process(delta: float) -> void:
 	if _closing_frames > 0:
-		_closing_frames -= 1
-		if _closing_frames == 0:
-			_teardown()
-			session_ended.emit(_closing_reason)
-			_closing_reason = ""
+		if _closing_frames > 1:
+			_closing_frames -= 1
+			return
+		if not _host_close_flushed():
+			return
+		_closing_frames = 0
+		_closing_deadline_ms = 0
+		_teardown()
+		session_ended.emit(_closing_reason)
+		_closing_reason = ""
 		return
 	_flush_rejected_peers()
 	_expire_snapshot_sends()
@@ -1278,14 +1301,37 @@ func _process(delta: float) -> void:
 		rpc("_rpc_realm_environment", environment)
 
 
+## Hold one peer's link open until its terminal reason is delivered. See
+## REFUSAL_LINGER_S.
+func _linger_then_disconnect(peer_id: int) -> void:
+	_rejected_disconnect_frames[peer_id] = {
+		"frames": CLOSE_FLUSH_FRAMES,
+		"deadline_ms": Time.get_ticks_msec() + int(
+			1000.0 * float(_cfg("refusal_linger_s", REFUSAL_LINGER_S))),
+	}
+
+
+## The final frame of a host close waits here until every remote peer has
+## closed its side, or the bound passes. A dead or silent client cannot hold
+## the host open.
+func _host_close_flushed() -> bool:
+	if _peer == null or not is_inside_tree() or multiplayer.multiplayer_peer != _peer:
+		return true
+	if multiplayer.get_peers().is_empty():
+		return true
+	return Time.get_ticks_msec() >= _closing_deadline_ms
+
+
 func _flush_rejected_peers() -> void:
 	if _rejected_disconnect_frames.is_empty():
 		return
+	var now := Time.get_ticks_msec()
 	for raw_peer: Variant in _rejected_disconnect_frames.keys():
 		var peer_id := int(raw_peer)
-		var frames := int(_rejected_disconnect_frames[raw_peer]) - 1
-		if frames > 0:
-			_rejected_disconnect_frames[raw_peer] = frames
+		var state: Dictionary = _rejected_disconnect_frames[raw_peer]
+		var frames := int(state.get("frames", 0)) - 1
+		if frames > 0 or now < int(state.get("deadline_ms", 0)):
+			state["frames"] = maxi(frames, 0)
 			continue
 		_rejected_disconnect_frames.erase(raw_peer)
 		if _peer != null:
@@ -1478,6 +1524,7 @@ func _teardown() -> void:
 	_box["snapshot"] = true
 	_pending_hello = {}
 	_closing_frames = 0
+	_closing_deadline_ms = 0
 	_rejected_disconnect_frames.clear()
 	_snapshot_sends.clear()
 	_clear_snapshot_bootstrap()
