@@ -34,8 +34,12 @@ const FAR := Vector2(-34.78, 7548.10)
 const TRIGGER := Vector2(-35.34, 7558.09)
 ## 20 m back down the span's own axis from the near anchor.
 const ROAD := Vector2(-32.26, 7503.17)
+## Past the far anchor: the trigger box's near edge (7 m) plus 0.3 m.
+const EDGE_IN_M := 7.3
 const SPAN_WAIT_FRAMES := 1200
-const REALM_POLLS := 60
+## A client's crossing is a coordinated transition (scripts/net/realm_transition.gd
+## begin_client: a host grant, then the load) with a 120 s TIMEOUT_MS; poll past it.
+const REALM_POLLS := 180
 
 var _port := 0
 
@@ -51,6 +55,11 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	# Both peers change realm after hello, and the host stands a Meadows shell
+	# up (then folds it) when the guest leaves -- a blocking scene build, the
+	# same ~85 s single frame smoke_net_join_by_address.gd allows for. The
+	# peer is working, not hung; the other scene-changing smokes use 240 s.
+	heartbeat_silence_tolerance_s = 240.0
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
@@ -107,23 +116,31 @@ func _run() -> void:
 			"peer %d holds five creatures with UIDs before the walk: %s" % [peer, str(before[peer])])
 	check(before[0] != before[1], "the two peers' parties are different creatures (distinct UIDs)")
 
-	# 5. Each peer walks over the span into the far trigger.
-	for peer in 2:
+	# 5. Each peer walks over the span into the far trigger -- the guest first.
+	# A client's crossing needs the host's grant (realm_transition.gd); a host
+	# that crossed first spends ~65 s standing a Meadows shell up for the peer
+	# still there, and a request landing mid-build went ungranted (run 4).
+	for peer: int in [1, 0]:
 		await step(peer, "teleport", {"at": [ROAD.x, 2.0, ROAD.y], "settle": 60})
 		var leg1: Dictionary = await step(peer, "move_to", {"x": NEAR.x, "z": NEAR.y, "close_enough": 1.5, "budget_frames": 1800})
 		check(str(leg1.get("verdict", "")) == "PASS", "peer %d walked the storm road onto the span (%s)" % [peer, str(leg1.get("detail", ""))])
 		var leg2: Dictionary = await step(peer, "move_to", {"x": FAR.x, "z": FAR.y, "close_enough": 1.5, "budget_frames": 1800})
 		check(str(leg2.get("verdict", "")) == "PASS", "peer %d walked the span to the far rim (%s)" % [peer, str(leg2.get("detail", ""))])
-		# Into the trigger: the scene changes under this step, so its own
-		# verdict is not the proof; the realm below is.
-		await step(peer, "move_to", {"x": TRIGGER.x, "z": TRIGGER.y, "close_enough": 0.5, "budget_frames": 900})
+		# Into the trigger. Its box (rift_crossing.gd::_build_trigger) is
+		# `trigger_length_m` 6 m long, centred `trigger_depth_m` 10 m past the
+		# far anchor, so its near edge is 7 m past it. A move_to still walking
+		# when the realm changes loses its player mid-step (an ERROR the harness
+		# treats as fatal), so this leg ends just across the edge: the step
+		# returns on arrival and the body's own overlap fires `body_entered`.
+		var into := FAR + (TRIGGER - FAR).normalized() * EDGE_IN_M
+		await step(peer, "move_to", {"x": into.x, "z": into.y, "close_enough": 0.6, "budget_frames": 900})
 		var realm := ""
 		for i in REALM_POLLS:
 			var who: Variant = await probe(peer, "player_identity")
 			realm = str((who as Dictionary).get("realm", "")) if who is Dictionary else ""
 			if realm == "cloudreach":
 				break
-			await step(peer, "wait", {"frames": 30})
+			await step(peer, "wait", {"frames": 60})
 		check(realm == "cloudreach", "peer %d entered Cloudreach through the far trigger (realm '%s')" % [peer, realm])
 
 	# 6. After: the same five, each peer.

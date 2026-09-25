@@ -1,0 +1,44 @@
+# tests/smoke_net_veridian_same_five.gd, two real peers (tools/net/run_net_smoke.sh veridian_same_five), Godot 4.7 headless, loopback
+# run on ralph/f05-same-five-proof (smoke as committed with this file); EXIT 0, 4m08s. Verdict lines unedited.
+
+PASS: host reported its ENet port in hello (35061)
+PASS: FIXTURE: peer 0 received a level-18 terrapup
+PASS: FIXTURE: peer 0 received a level-18 bramblebun
+PASS: FIXTURE: peer 0 received a level-18 trailpup
+PASS: FIXTURE: peer 0 received a level-18 mudsnout
+PASS: FIXTURE: peer 0 received a level-18 brooktail
+PASS: FIXTURE: peer 1 received a level-18 terrapup
+PASS: FIXTURE: peer 1 received a level-18 bramblebun
+PASS: FIXTURE: peer 1 received a level-18 trailpup
+PASS: FIXTURE: peer 1 received a level-18 mudsnout
+PASS: FIXTURE: peer 1 received a level-18 brooktail
+PASS: two distinct stable characters (host 'character-8cbbb0cf00dd72a4d509d4ef2da467bc', guest 'character-bb89842654a105e297c2f7df1bdfcc2e')
+PASS: peer 0 hosted (hosting udp/35061 as peer 1)
+PASS: peer 1 joined (joined 127.0.0.1:35061 as peer 1644752746 after 18 frames; snapshot applied; 2 peer(s) in registry)
+PASS: world fact 'defeated_warden' committed (defeated_warden: ok=true pending=false code='' reason='')
+PASS: world fact 'legendary_freed' committed (legendary_freed: ok=true pending=false code='' reason='')
+PASS: world fact 'realm_key_cloudreach' committed (realm_key_cloudreach: ok=true pending=false code='' reason='')
+PASS: peer 0 sees 'defeated_warden' (flag defeated_warden (any) set after 0 frames)
+PASS: peer 0 sees 'legendary_freed' (flag legendary_freed (any) set after 0 frames)
+PASS: peer 0 sees 'realm_key_cloudreach' (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: peer 1 sees 'defeated_warden' (flag defeated_warden (any) set after 0 frames)
+PASS: peer 1 sees 'legendary_freed' (flag legendary_freed (any) set after 0 frames)
+PASS: peer 1 sees 'realm_key_cloudreach' (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: peer 0 stands in the Meadows before the walk ('meadows')
+PASS: peer 0 holds five creatures with UIDs before the walk: ["creature-482f7f354cc389121ca3404208e115e3", "creature-87d5043d4cfec438fbb325dc9924bf08", "creature-ee98321eeb4d47f513f01067e5c33435", "creature-fbc86097a5fc8cdfd9e18124cb777af8", "creature-6594335b439e4d62f344d460c7076c3b"]
+PASS: peer 1 stands in the Meadows before the walk ('meadows')
+PASS: peer 1 holds five creatures with UIDs before the walk: ["creature-abb09d3006069336271e23b46a5a49a1", "creature-7039bd3b407faa7f19e0afe8a29f36f6", "creature-1461699b8d8a882b16576896b4693984", "creature-269eeadacd61617970ccb597db48ce3d", "creature-2a45f147487dc333998c4b882f14a21a"]
+PASS: the two peers' parties are different creatures (distinct UIDs)
+PASS: peer 1 walked the storm road onto the span (arrived within 1.50 m of (-33.4, 7523.1))
+PASS: peer 1 walked the span to the far rim (arrived within 1.50 m of (-34.8, 7548.1))
+PASS: peer 1 entered Cloudreach through the far trigger (realm 'cloudreach')
+PASS: peer 0 walked the storm road onto the span (arrived within 1.50 m of (-33.4, 7523.1))
+PASS: peer 0 walked the span to the far rim (arrived within 1.50 m of (-34.8, 7548.1))
+PASS: peer 0 entered Cloudreach through the far trigger (realm 'cloudreach')
+PASS: peer 0 arrived in Cloudreach with the SAME five (before ["creature-482f7f354cc389121ca3404208e115e3", "creature-87d5043d4cfec438fbb325dc9924bf08", "creature-ee98321eeb4d47f513f01067e5c33435", "creature-fbc86097a5fc8cdfd9e18124cb777af8", "creature-6594335b439e4d62f344d460c7076c3b"], after ["creature-482f7f354cc389121ca3404208e115e3", "creature-87d5043d4cfec438fbb325dc9924bf08", "creature-ee98321eeb4d47f513f01067e5c33435", "creature-fbc86097a5fc8cdfd9e18124cb777af8", "creature-6594335b439e4d62f344d460c7076c3b"])
+PASS: peer 0 holds exactly five in Cloudreach, no sixth (5)
+[same-five] peer 0 UIDs before ["creature-482f7f354cc389121ca3404208e115e3", "creature-87d5043d4cfec438fbb325dc9924bf08", "creature-ee98321eeb4d47f513f01067e5c33435", "creature-fbc86097a5fc8cdfd9e18124cb777af8", "creature-6594335b439e4d62f344d460c7076c3b"] after ["creature-482f7f354cc389121ca3404208e115e3", "creature-87d5043d4cfec438fbb325dc9924bf08", "creature-ee98321eeb4d47f513f01067e5c33435", "creature-fbc86097a5fc8cdfd9e18124cb777af8", "creature-6594335b439e4d62f344d460c7076c3b"]
+PASS: peer 1 arrived in Cloudreach with the SAME five (before ["creature-abb09d3006069336271e23b46a5a49a1", "creature-7039bd3b407faa7f19e0afe8a29f36f6", "creature-1461699b8d8a882b16576896b4693984", "creature-269eeadacd61617970ccb597db48ce3d", "creature-2a45f147487dc333998c4b882f14a21a"], after ["creature-abb09d3006069336271e23b46a5a49a1", "creature-7039bd3b407faa7f19e0afe8a29f36f6", "creature-1461699b8d8a882b16576896b4693984", "creature-269eeadacd61617970ccb597db48ce3d", "creature-2a45f147487dc333998c4b882f14a21a"])
+PASS: peer 1 holds exactly five in Cloudreach, no sixth (5)
+[same-five] peer 1 UIDs before ["creature-abb09d3006069336271e23b46a5a49a1", "creature-7039bd3b407faa7f19e0afe8a29f36f6", "creature-1461699b8d8a882b16576896b4693984", "creature-269eeadacd61617970ccb597db48ce3d", "creature-2a45f147487dc333998c4b882f14a21a"] after ["creature-abb09d3006069336271e23b46a5a49a1", "creature-7039bd3b407faa7f19e0afe8a29f36f6", "creature-1461699b8d8a882b16576896b4693984", "creature-269eeadacd61617970ccb597db48ce3d", "creature-2a45f147487dc333998c4b882f14a21a"]
+real	4m8.010s
