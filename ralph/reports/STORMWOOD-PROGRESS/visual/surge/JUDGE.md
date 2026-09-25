@@ -77,3 +77,37 @@ A fresh blind judge saw 11 shuffled frames: 4 day phases, 4 night phases, Break 
 **Verdict:**
 - **A:** key-art world, **no**.
 - **B:** same kind of game as the Palworld bar, **yes**.
+
+# Round 3: blind re-judge of the round-3 frames
+
+A fresh blind judge saw 10 shuffled frames: 4 day phases, 4 night phases, the Break telegraph and the Break flash.
+
+## Scored against the answer key
+
+**Day weather.** All four phases were placed in their own groups: Calm, Building, Break (flash frame) and Fading.
+
+**Day Break read as night.** Frames 02 and 03 (the Break telegraph and a Break frame) were read as night. That was also true in round 2. The violet-indigo daytime sky is still too dark.
+
+**Night pairing:**
+- Building was correct (08 paired with 07).
+- Calm and Fading were swapped, and at 30% size they merge.
+- Night Break (09) was not paired with Break.
+- Night separation is weak: "only three [states] can be told apart" at night.
+
+**Telegraph (amber #ffb040).** It is very readable, but it reads as "quest objective, pickup zone or summoning circle". The judge's reason: "gold is reward or objective colour in this genre". The black interior reads as a hole.
+
+**Lane decision on the telegraph colour.** Round 2 asked for amber, and round 3 reads amber as reward. `data/config/combat.json`'s `telegraph._why_colour_0905` records the same finding from an earlier lane: warning amber sat 3° from the reward gold and read as "a dropped coin". The game's hazard colour is therefore the combat telegraph's own magenta #ff40e6 (hue 308): the complement of the meadow green, used nowhere else in the world or the reward layer, and clear of oxblood.
+
+The Stormwood lightning telegraph will read that single config value instead of choosing its own. The whole game then shares one "move off" colour, and the judge-to-judge colour swings stop.
+
+## Unchanged, region-wide
+Carried from the earlier rounds and outside this branch:
+- no directional light or shadows;
+- an empty plain with a hard horizon;
+- no creatures at genre scale;
+- oversized flowers;
+- rain drawn with unlit sprites and no wetness.
+
+## Verdict
+- **A: yes (narrowly).** The key-art trainer, the tree language and the violet storm fit the board's swatches.
+- **B: no.** No creature or action appears in 10 frames, and the grass cards are coarse and unshadowed.
