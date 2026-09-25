@@ -326,8 +326,9 @@
           "combat": {
             "_comment": "GATE3_ENCOUNTER_CONTRACTS.md G-3/V-2 CHARGER profile, relative to combat.json's `enemy` defaults (power 8, telegraph 0.55, recovery 0.75, attack_cooldown 1.1, preferred_range 2.1, lunge 3.4). Read by scripts/creatures/wild_creature.gd's per-body `combat` override (G-2, landing separately from the G3-ENCOUNTERS lane) -- absent or unread, this body fights exactly as before. Closes from range in one lunge; the tell is the distance it keeps, not the wind-up time, which is what makes it read as different from Dell's or a picket's creatures rather than the same fight at a higher number.",
             "preferred_range": 4.5,
+            "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "lunge": 7.0,
-            "telegraph": 0.6,
+            "telegraph": 0.8,
             "recovery": 0.9,
             "attack_cooldown": 1.6,
             "power": 10.4
@@ -540,8 +541,9 @@
           "level": 14,
           "combat": {
             "preferred_range": 4.5,
+            "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "lunge": 7.0,
-            "telegraph": 0.6,
+            "telegraph": 0.8,
             "recovery": 0.9,
             "attack_cooldown": 1.6,
             "power": 10.4
@@ -814,8 +816,9 @@
           "_why_combat": "G-2/G-3, W-2. CHARGER, sent fourth -- the stag that closes the distance in one lunge, tell is distance not time. The second-to-last send-out is where the contract asks for the fight's own tension to visibly rise before the ace; a long-range closer that punishes standing still is the shape of that rise. Inert until G-2 lands.",
           "combat": {
             "preferred_range": 4.5,
+            "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "lunge": 7.0,
-            "telegraph": 0.6,
+            "telegraph": 0.8,
             "recovery": 0.9,
             "attack_cooldown": 1.6,
             "power": 10.4
@@ -829,7 +832,8 @@
           },
           "_why_combat": "G-2/G-3, W-2. ACE, sent last -- the one telegraph in the chapter worth reading. `lunge`/`cone_degrees` widened past the base ACE profile to Earth Fist's own shape (G-9, the Warrens guardian's signature move at level 14): the chapter's first telegraph-worth-respecting and its last are the same shape, on the same move family, eighteen levels and every fight in this file apart. A player who learned to step out of Earth Fist in the first hour gets to feel that lesson pay off in the last one. Inert until G-2 lands.",
           "combat": {
-            "telegraph": 1.0,
+            "_why_telegraph_f04": "F04: BOSSES writes the Warden ace a 1.1 s signature tell and COMBAT a 1.10 s heavy floor; 1.0 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "telegraph": 1.1,
             "recovery": 1.2,
             "power": 14.4,
             "lunge": 6.5,

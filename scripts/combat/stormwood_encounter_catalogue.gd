@@ -34,6 +34,9 @@ const BEHAVIOR_PROFILES := {
 		"lunge": 6.0, "attack_cooldown": 1.8, "first_attack_delay": 2.5},
 }
 
+const STORMWOOD_TELL_FLOOR_S := 0.8
+const STORMWOOD_RECOVERY_FLOOR_S := 0.6
+
 static var _encounters: Dictionary = {}
 static var _trainers: Dictionary = {}
 
@@ -133,8 +136,7 @@ static func _named_spawn(authored: Dictionary, field: RefCounted) -> Dictionary:
 		"centre": [x, field.call("height_at", x, z), z],
 		"radius": 0.0,
 		"level": level,
-		"alpha": {"scale": 1.0,
-			"combat": (BEHAVIOR_PROFILES[profile] as Dictionary).duplicate(true)},
+		"alpha": named_alpha(authored),
 		"stormwood_named_id": id,
 		"stormwood_region_id": str(authored.get("region_id", "")),
 		"stormwood_behavior_profile": profile,
@@ -143,6 +145,39 @@ static func _named_spawn(authored: Dictionary, field: RefCounted) -> Dictionary:
 		"once_only": bool(authored.get("once_only", false)),
 		"fixed_encounter": true,
 	}
+
+
+## The alpha block the shared director reads: combat numbers and, where BOSSES
+## §7 names one, the once-only personal payoff it pays each admitted
+## participant through its deduplicated `reward_grant` receipts.
+static func named_alpha(authored: Dictionary) -> Dictionary:
+	var alpha := {"scale": 1.0, "combat": named_combat(authored)}
+	var reward: Variant = authored.get("completion_reward", {})
+	if reward is Dictionary and not (reward as Dictionary).is_empty():
+		alpha["completion_reward"] = (reward as Dictionary).duplicate(true)
+	return alpha
+
+
+## A named body's combat numbers: its behaviour profile, with the per-fight
+## values BOSSES §7 authors for that encounter laid over it
+## (`named_encounters[].combat`), then clamped up to the Stormwood teaching
+## floor (BOSSES §2 step 3: tell .8 s, recovery .6 s).
+static func named_combat(authored: Dictionary) -> Dictionary:
+	var combat := (BEHAVIOR_PROFILES.get(str(authored.get("behavior_profile", "")), {}) as Dictionary).duplicate(true)
+	var own: Variant = authored.get("combat", {})
+	if own is Dictionary:
+		for key: String in own:
+			combat[key] = own[key]
+	# Keys present after the profile merge are clamped; a key neither the
+	# profile nor the encounter authors keeps combat.json's `enemy` default
+	# (tell .8, recovery .75), which already meets the floor. Note: the live
+	# body floors reposition_distance at preferred_range + 2.4
+	# (wild_creature.gd), so WALL/CURRENT's short §7 hops play wider.
+	if combat.has("telegraph"):
+		combat["telegraph"] = maxf(STORMWOOD_TELL_FLOOR_S, float(combat.telegraph))
+	if combat.has("recovery"):
+		combat["recovery"] = maxf(STORMWOOD_RECOVERY_FLOOR_S, float(combat.recovery))
+	return combat
 
 
 static func _named_order(id: String) -> int:
