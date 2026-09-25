@@ -92,7 +92,8 @@ class DirectorFixture extends "res://scripts/combat/encounter_director.gd":
 	var paid_notices: Array = []
 	var local_pays := 0
 	## Duck-typed like the Water/Cloudreach directors' own `trainer_specs`.
-	var trainer_specs: Dictionary = {}
+	## A Meadows director has no such table (null); `_as_water()` installs one.
+	var trainer_specs: Variant = null
 	func _ensure_encounter_arbiters() -> void:
 		pass
 	func _is_host() -> bool: return host
@@ -138,6 +139,11 @@ func before_each() -> void:
 	_director = DirectorFixture.new()
 	_director.set("_session", _game.session)
 	_director.ledger_rpc = _rpc
+
+
+## The fixture acts as the Water director: its own translated trainer table.
+func _as_water() -> void:
+	_director.realm = "water"
 	_director.trainer_specs = {NERISSA: _nerissa_spec()}
 
 
@@ -264,7 +270,7 @@ func test_client_warden_victory_is_sent_to_the_host_with_only_the_trainer_id() -
 
 
 func test_client_nerissa_victory_is_sent_to_the_host_with_only_the_trainer_id() -> void:
-	_director.realm = "water"
+	_as_water()
 	_assert_client_routes_to_host(_director.trainer_specs[NERISSA], NERISSA)
 
 
@@ -309,7 +315,7 @@ func test_host_journals_the_warden_for_the_sender_only() -> void:
 
 
 func test_host_journals_nerissa_through_the_water_director_spec() -> void:
-	_director.realm = "water"
+	_as_water()
 	_game.session.rows.call("set_realm", CLIENT, "water")
 	var verdict: Dictionary = _director.call("_host_commit_encounter",
 		{"kind": "trainer_victory", "trainer_id": NERISSA}, CLIENT)
@@ -390,6 +396,25 @@ func test_a_failed_journal_commits_no_world_fact() -> void:
 	assert_false(_flag("defeated_warden"),
 		"the Warden is NOT marked beaten while nobody could be paid for it")
 	assert_eq(_director.paid_notices.size(), 0, "nobody was told they were paid")
+	assert_false(str(verdict.get("reason", "")).contains("Nothing was delivered"),
+		"the refusal never claims nothing landed: components journal one at a time")
+	assert_true(str(verdict.get("reason", "")).contains("still unbeaten"),
+		"it tells the player the trainer can be fought again: %s" % str(verdict.get("reason", "")))
+
+
+func test_a_chapter_host_never_resolves_another_chapters_trainer() -> void:
+	# A Water host fights only its own translated table; a guest standing in
+	# Water must not be able to claim the Meadows Warden through the shared
+	# trainers.json fallback.
+	_as_water()
+	_game.session.rows.call("set_realm", CLIENT, "water")
+	_assert_refused_without_writes({"kind": "trainer_victory", "trainer_id": WARDEN}, CLIENT,
+		"the Warden claimed in a Water host")
+	assert_true(_rows_for("trainer:%s:" % WARDEN).is_empty(), "no Warden row exists")
+	# And a Water client never routes a trainer its own director cannot fight.
+	_as_client()
+	assert_false(bool(_director.call("_routes_trainer_victory_to_host", _warden(), "water")),
+		"a Water client does not route the Warden to the host")
 
 
 # --- regression: the host-run fight is unchanged -------------------------------

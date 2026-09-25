@@ -5752,7 +5752,10 @@ func _tell_the_paid(spec: Dictionary, paid: Array) -> void:
 
 ## Client-side gate for `trainer_victory`: a session, a trainer whose defeat is
 ## a world fact and whose id the host can resolve, and not a tournament round
-## (those are host-run records with their own roster rules).
+## (those are host-run records with their own roster rules). This routes EVERY
+## client-run trainer with a world-fact defeat, not only the ones whose rows
+## feed a per-participant offer, so all client trainer rewards arrive as host
+## deliveries; a refusal means the trainer stays unbeaten and can be fought again.
 func _routes_trainer_victory_to_host(spec: Dictionary, realm: String) -> bool:
 	var trainer_id := ENCOUNTER_REWARDS.trainer_key(spec)
 	return _is_multi_peer() and not trainer_id.is_empty() \
@@ -5762,15 +5765,18 @@ func _routes_trainer_victory_to_host(spec: Dictionary, realm: String) -> bool:
 
 
 ## The trainer row this director would fight, by id. Chapter directors that
-## translate their own trainers (Water, Cloudreach) hold them in `trainer_specs`
-## -- including in-place overrides such as Veilfall's defeat flag for Nerissa --
-## so that table wins; otherwise the shared `trainers.json` row.
+## translate their own trainers (Water, Cloudreach) fight ONLY from their
+## `trainer_specs` -- including in-place overrides such as Veilfall's defeat flag
+## for Nerissa -- so for them that table is the whole answer: a chapter host never
+## resolves another chapter's trainer (e.g. the Warden) from the shared table.
+## Directors without such a table use the shared `trainers.json` row.
 func _trainer_spec_by_id(trainer_id: String) -> Dictionary:
 	if trainer_id.is_empty():
 		return {}
 	var table: Variant = get("trainer_specs")
-	if table is Dictionary and (table as Dictionary).get(trainer_id) is Dictionary:
-		return (table as Dictionary)[trainer_id] as Dictionary
+	if table is Dictionary:
+		var entry: Variant = (table as Dictionary).get(trainer_id)
+		return entry as Dictionary if entry is Dictionary else {}
 	return TRAINERS.trainer(trainer_id)
 
 
@@ -5785,8 +5791,14 @@ func _trainer_victory_refused(reason: String) -> void:
 ## Identity is the transport sender and this host's registry ONLY -- nothing in
 ## the payload but `trainer_id` is read. Pays that one character first; the
 ## world fact is committed only once the payout is journaled, so a failed
-## journal never leaves the trainer beaten with nobody paid. Replays are
-## `already_taken` per (source, character) and pay nobody twice.
+## journal never leaves the trainer beaten with nobody paid. Item and flag rows
+## are `already_taken` per (source, character) on replay. The XP bonus uses the
+## ledger's legacy per-PEER receipt, so the same character under a new peer id
+## can be told the XP bonus again (XP is applied client-side; no item or row is
+## duplicated). Residual trust: the host has no record of the client's local
+## fight and believes a registered, same-realm client that says it won -- no
+## wider than main, where the client paid itself and could already submit
+## arbitrary `reward_grant`s (shared-ledger gap, owned by the co-op lane).
 func _host_trainer_victory(intent: Dictionary, peer_id: int) -> Dictionary:
 	var refuse := func(code: String, reason: String) -> Dictionary:
 		return {"ok": false, "kind": "trainer_victory", "peer": peer_id, "code": code,
@@ -5812,9 +5824,12 @@ func _host_trainer_victory(intent: Dictionary, peer_id: int) -> Dictionary:
 	var granted := _grant_to(spec, realm, [peer_id])
 	if not bool(granted.get("ok", false)):
 		var code := str(granted.get("code", ""))
+		# Components are journaled one at a time, so some may already have
+		# landed: say so instead of the ledger's per-component "nothing was
+		# delivered". The trainer stays unbeaten; winning again pays only what
+		# is missing (receipts make the landed parts already_taken).
 		return refuse.call(code if not code.is_empty() else "reward_failed",
-			str(granted.get("reason", "")) if not str(granted.get("reason", "")).is_empty() \
-				else "The host could not record that reward. Nothing was delivered.")
+			"The host could not save all of that victory. Anything already delivered is kept; the trainer is still unbeaten, so winning again collects the rest.")
 	for fact: Variant in facts:
 		_submit_reward_intent(fact as Dictionary)
 	var paid: Array = granted.get("paid", []) as Array
