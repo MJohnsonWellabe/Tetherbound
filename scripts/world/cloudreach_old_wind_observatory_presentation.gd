@@ -24,12 +24,20 @@ const DOOR := preload("res://assets/buildings/quaternius_medieval/Door_8_Flat.gl
 const WINDOW := preload("res://assets/buildings/quaternius_medieval/Window_Thin_Flat1.gltf")
 
 var _built := false
+## The Cloudreach world, when this is built inside it. Its `_apply_tree_palette`
+## and `apply_stone_palette` are the region's one foliage/stone policy: the
+## installed TwistedTree leaf sheet is crimson, and oxblood/red is reserved for
+## Team Tether, so an edge tree placed without it read as the red shrubs the
+## blind frame-matrix verdict found beside this friendly landmark (M2, frame 24).
+var _palette_host: Object = null
 
 
-func build(materials: Dictionary, simulation_only: bool = false) -> void:
+func build(materials: Dictionary, simulation_only: bool = false,
+		palette_host: Object = null) -> void:
 	if _built:
 		return
 	_built = true
+	_palette_host = palette_host
 	if simulation_only:
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
@@ -210,6 +218,8 @@ func _build_edge_ecology(cfg: Dictionary) -> void:
 		tree.rotation.y = deg_to_rad(float(spec.yaw_deg))
 		tree.set_meta("observatory_role", "edge_ecology")
 		add_child(tree)
+		if _palette_host != null and _palette_host.has_method("_apply_tree_palette"):
+			_palette_host.call("_apply_tree_palette", tree, index * 7 + model_index)
 	var rocks := cfg.rock_positions as Array
 	for index in rocks.size():
 		var rock := ROCKS[index % ROCKS.size()].instantiate() as Node3D
@@ -218,6 +228,8 @@ func _build_edge_ecology(cfg: Dictionary) -> void:
 		rock.rotation.y = float(index) * 0.83
 		rock.set_meta("observatory_role", "edge_ecology")
 		add_child(rock)
+		if _palette_host != null and _palette_host.has_method("apply_stone_palette"):
+			_palette_host.call("apply_stone_palette", rock)
 
 
 func _add_imported(parent: Node3D, label: String, packed: PackedScene,

@@ -3046,7 +3046,7 @@ func _build_landmarks() -> void:
 			var observatory_identity := OLD_WIND_OBSERVATORY_PRESENTATION.new()
 			observatory_identity.name = "OldWindObservatoryPresentation"
 			landmark.add_child(observatory_identity)
-			observatory_identity.build(_materials, simulation_only)
+			observatory_identity.build(_materials, simulation_only, self)
 		elif landmark_id == "waterward_overlook":
 			_build_waterward_overlook(landmark)
 		elif identity.contains("settlement") or identity.contains("village"):
