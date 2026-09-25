@@ -189,6 +189,9 @@ func _run() -> void:
 		_failures.append(str(line))
 	_prefix_complete = _failures.is_empty() and bool(result.get("passed", false))
 	_step_end("prefix: arrival through Ondra's arch recipe", _prefix_complete)
+	print("F11 WITNESS TOOLS after prefix: knife x%d axe x%d pickaxe x%d hotbar=%s" % [
+		int(game.get("inventory").call("count", "knife")), int(game.get("inventory").call("count", "axe")),
+		int(game.get("inventory").call("count", "pickaxe")), str(game.get("local").get("hotbar"))])
 	if _prefix_complete and through_crown(OS.get_cmdline_user_args()):
 		# The helper inherits this exact live world and earned recipe. It is
 		# never reached after a failed prefix, and creates no new entry fixture.

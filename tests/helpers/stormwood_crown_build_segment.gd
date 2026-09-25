@@ -182,7 +182,11 @@ func _preconditions_hold() -> bool:
 	for item: String in ["knife", "axe", "pickaxe"]:
 		if int(_game.get("inventory").call("count", item)) <= 0 \
 				or int(_game.call("hotbar_slot_of", item)) < 0:
-			return _fail("Crown segment requires the campaign-earned %s on the controller hotbar" % item)
+			var stacks: Array = []
+			for id: String in ["knife", "axe", "pickaxe"]:
+				stacks.append("%s x%d" % [id, int(_game.get("inventory").call("count", id))])
+			return _fail("Crown segment requires the campaign-earned %s on the controller hotbar (inventory %s, hotbar %s, equipped '%s')" % [
+				item, ", ".join(stacks), str(_game.get("local").get("hotbar")), str(_game.get("equipped_tool"))])
 	for site: Dictionary in SITE_PLAN:
 		var id := str(site.id)
 		if bool(progression.call("has", "harvest_node:order:" + id)):
