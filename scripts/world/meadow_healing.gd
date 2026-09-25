@@ -802,8 +802,28 @@ func _build_the_drain() -> int:
 		if skin != null:
 			_drain_nodes.append(skin)
 	_drain_material = material
-	print("[meadow] the land lies drained: %d quads over %d groups" % [_drain_quads, _drain_nodes.size()])
+	# The live blades: the grass field thins and browns inside the same discs
+	# (grass_field.gd::set_drain, found by method, inert on a build without it).
+	var field := _grass_field()
+	if field != null:
+		var flat: Array = []
+		for group_name: Variant in names:
+			for disc: Dictionary in (groups[group_name] as Array):
+				flat.append({"centre": disc["centre"], "radius": float(disc["radius"]),
+					"inner": float(disc.get("inner", 0.0)), "strength": float(disc.get("strength", 1.0)) * global_strength})
+		field.call("set_drain", flat, 1.0)
+	print("[meadow] the land lies drained: %d quads over %d groups%s" % [_drain_quads, _drain_nodes.size(),
+		", grass field thinned" if field != null else ""])
 	return _drain_quads
+
+
+func _grass_field() -> Node:
+	if _world == null:
+		return null
+	for node: Node in _all_nodes(_world):
+		if node.has_method("set_drain") and node.has_method("set_drain_amount"):
+			return node
+	return null
 
 
 ## Group name -> disc list for the drain: each `regreen.groups` entry's
@@ -853,11 +873,16 @@ func _lift_the_drain(immediate: bool) -> int:
 	if _drain_nodes.is_empty() or _drain_material == null:
 		return 0
 	var seconds := 0.0 if immediate else float((_config.get("drain", {}) as Dictionary).get("fade_seconds", 12.0))
+	var field := _grass_field()
 	if seconds <= 0.0 or not is_inside_tree():
 		_hide_the_drain()
+		if field != null:
+			field.call("set_drain_amount", 0.0)
 	else:
 		var tween := create_tween()
 		tween.tween_property(_drain_material, "albedo_color:a", 0.0, seconds)
+		if field != null:
+			tween.parallel().tween_method(Callable(field, "set_drain_amount"), 1.0, 0.0, seconds)
 		tween.tween_callback(_hide_the_drain)
 	return _drain_nodes.size()
 
