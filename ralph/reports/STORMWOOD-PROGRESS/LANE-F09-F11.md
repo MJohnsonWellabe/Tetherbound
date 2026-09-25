@@ -267,6 +267,33 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
     - The cleanup smoke puts a StaticBody roof over the trainer: near rain goes to 0.00, then back to 1.00 once the roof is removed. Under reduced motion the strike light reads 1.20 of 8.
     - Negative controls, each failing: roof probe disabled, fade that snaps, strike light unscaled, rim pulsing under reduced motion.
     - `visual/surge/sheet_rain_roof.jpg`: inside the real Ashfoot shelter (ranger station) the room is dry, while the same building from 11 m outside stands in rain.
+- **Foreground rain and review N1/N2** (`3947f56c0`, `5a10d9feb`)
+  - **Judge finding:** in the normal and night Break frames the bottom ~45% of the view (the grass between the camera and the trainer) was dry. Near streaks read as blunt, vertical, opaque "sticks".
+  - **How it was measured** (`tools/capture_stormwood_surge_phases.gd` `rainmeasure`, production camera, the four raincam poses):
+    - **Analytic:** 6000 points were sampled from the LIVE near emitter's parameters and projected through the production Camera3D. A point counts only if it is above the terrain and not occluded (physics ray).
+    - **Live:** a rain-on vs rain-off pixel diff, with the ground cover hidden.
+    - The raw numbers are in `visual/surge/after/rain_measure_{before,after}.json`. The masks are in `visual/surge/sheet_rain_foreground_measure.jpg`.
+
+    | Shot (Break) | Drops above ground before → after | Drops seen in bottom 45% (of 6000) | Live streaks in bottom 45% |
+    |---|---|---|---|
+    | day, normal camera | 25% → 53% | 122 → 387 | 45 → 98 |
+    | day, upwind camera | 28% → 59% | 75 → 318 | 27 → 76 |
+    | day, riding profile | 27% → 52% | 160 → 479 | 51 → 84 |
+    | night, normal camera | 25% → 53% | 122 → 387 | 44 → 73 |
+
+  - **Root cause:** geometry, not contrast. The camera-centred near column spawned from camera −4 m to +10 m and fell for 1.4 s (about 18 m). At any moment 72–75% of the drops were below the terrain, and the few above it were mostly above eye level.
+  - **Fix:**
+    - The near layer now spawns in a band 0.2–6.5 m above the floor. The floor is the higher of the terrain under the camera and the trainer. The band is still centred on the camera horizontally, and each drop lives 0.5 s.
+    - The shorter drift lets the derived lens-safe inner radius come in to 2.8 m, and lens clearance is still ≥ 1.5 m.
+    - Drops fade in and out over their life.
+    - Streaks are thin tapered translucent spindles (1.8 cm base) on a 14° wind slant, where they had been opaque boxes.
+    - Near and far layers have separate night tints.
+  - **Remaining trade-off:** the very bottom ~15% of a level-pitch frame (ground 2.5–4 m from the lens) stays sparse. Drops there would come within the lens clearance.
+  - **Tests:**
+    - `test_near_rain_fills_the_foreground` needs ≥ 35 drops in the bottom 45% in Break. The HEAD geometry gives 15.1 and fails; this is the negative control.
+    - N1 `test_rain_volume_follows_a_raised_trainer`: its control, a clamp against the terrain only, fails (centre at 16 m under a trainer at 60 m).
+    - N2 smoke `RAIN ROOF SUBJECT`: its control, probing the trainer instead of the framed subject, fails.
+  - **Frames:** `rc_day_break`, `rc_day_break_upwind`, `rc_day_break_riding`, `rc_night_break` and the two roof frames were re-captured under their existing names (older versions are in git). `sheet_rain_camera.jpg` is rebuilt.
 - **Open:**
   - The riding frame uses the production riding camera PROFILE on the trainer, with no mount.
   - Night rain is intentionally faint.

@@ -25,11 +25,12 @@
 				"presentation_key": "break",
 				"rain_amount_ratio": 1.0,
 				"rain_emitting": true,
-				"rain_visible": true
+				"rain_visible": true,
+				"roofed": false
 			},
 			"rain_minus_camera": [
 				0.0,
-				3.0,
+				2.02339553833008,
 				0.0
 			],
 			"region": "cinder_verge",
@@ -41,17 +42,17 @@
 				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
 				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
 			],
-			"surge_elapsed": 418.488698,
+			"surge_elapsed": 418.499715333333,
 			"surge_phase": "break",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.42841768264771,
+			"camera_player_m": 5.42837047576904,
 			"camera_pos": [
-				-608.879211425781,
-				26.4313869476318,
-				770.2109375
+				-608.8896484375,
+				26.4313850402832,
+				770.239807128906
 			],
 			"description": "Break, upwind camera: rain centred on the camera",
 			"file": "rc_day_break_upwind.jpg",
@@ -69,11 +70,12 @@
 				"presentation_key": "break",
 				"rain_amount_ratio": 1.0,
 				"rain_emitting": true,
-				"rain_visible": true
+				"rain_visible": true,
+				"roofed": false
 			},
 			"rain_minus_camera": [
 				0.0,
-				3.0,
+				1.7814769744873,
 				0.0
 			],
 			"region": "cinder_verge",
@@ -86,7 +88,7 @@
 				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
 				"player health restored between Break frames"
 			],
-			"surge_elapsed": 418.493852,
+			"surge_elapsed": 418.508550666667,
 			"surge_phase": "break",
 			"time_of_day": "day"
 		},
@@ -114,11 +116,12 @@
 				"presentation_key": "break",
 				"rain_amount_ratio": 1.0,
 				"rain_emitting": true,
-				"rain_visible": true
+				"rain_visible": true,
+				"roofed": false
 			},
 			"rain_minus_camera": [
 				0.0,
-				3.0,
+				1.55693817138672,
 				0.0
 			],
 			"region": "cinder_verge",
@@ -132,7 +135,7 @@
 				"player health restored between Break frames",
 				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount"
 			],
-			"surge_elapsed": 418.5,
+			"surge_elapsed": 418.515078666667,
 			"surge_phase": "break",
 			"time_of_day": "day"
 		},
@@ -160,11 +163,12 @@
 				"presentation_key": "break",
 				"rain_amount_ratio": 1.0,
 				"rain_emitting": true,
-				"rain_visible": true
+				"rain_visible": true,
+				"roofed": false
 			},
 			"rain_minus_camera": [
 				0.0,
-				3.0,
+				2.02339553833008,
 				0.0
 			],
 			"region": "cinder_verge",
@@ -179,9 +183,93 @@
 				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
 				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
 			],
-			"surge_elapsed": 418.5,
+			"surge_elapsed": 418.516666666667,
 			"surge_phase": "break",
 			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-363.214569091797,
+				32.6349220275879,
+				458.214569091797
+			],
+			"description": "Day Break, trainer inside the Ashfoot shelter (ranger station): near rain suppressed",
+			"file": "roof_inside_ashfoot_shelter.jpg",
+			"hud": false,
+			"id": "roof_inside_ashfoot_shelter",
+			"label": "after_raincam",
+			"long_storm_ended": false,
+			"player": [
+				-364.575744628906,
+				30.7503108978271,
+				459.575744628906
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 0.0,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 419.502127,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-376.446166992188,
+				31.9591693878174,
+				448.553833007812
+			],
+			"description": "Day Break, the same shelter from 11 m outside: rain falls in the open",
+			"file": "roof_outside_ashfoot_shelter.jpg",
+			"hud": false,
+			"id": "roof_outside_ashfoot_shelter",
+			"label": "after_raincam",
+			"long_storm_ended": false,
+			"player": [
+				-372.778167724609,
+				30.5718975067139,
+				452.221832275391
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"riding camera profile staged: CameraRig.set_target(Player, movement.json riding.camera), no mount",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 422.489878333333,
+			"surge_phase": "break",
+			"time_of_day": "day"
 		}
 	],
 	"label": "after_raincam"
