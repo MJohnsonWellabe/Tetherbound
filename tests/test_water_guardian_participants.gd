@@ -181,21 +181,34 @@ func test_two_worlds_sharing_slot_zero_have_independent_claims_and_no_erasure() 
 	assert_true(REWARD.resolve(other, other_ledger, second.id, "C", true).ok)
 	assert_eq(REWARD.begin(other, other_ledger, "C", guardian()).code, "already_resolved")
 
-func test_legacy_receipt_from_another_slot_zero_instance_does_not_block() -> void:
+func test_legacy_receipt_for_the_same_slot_is_treated_as_received_conservatively() -> void:
 	var game := instance_fixture("fresh-instance")
 	game.local.character_id = "C"
-	# C holds a pre-F14 receipt that some OTHER slot-0 world issued.
+	# C holds a pre-F14 receipt for a "slot-0" Guardian. The bare receipt cannot
+	# say which slot-0 world issued it, so it may be THIS world's: never risk a
+	# second Guardian (open owner question whether it should block elsewhere).
 	game.local.flags.set_flag("water_capture_receipt:" + REWARD.legacy_claim_id("slot-0"))
 	var ledger := LEDGER.new(game.world)
 	assert_false(REWARD.is_legacy_world(game.world))
 	var offer := REWARD.begin(game, ledger, "C", guardian())
 	var claim: Dictionary = game.world.water_capture_claims[offer.id]
 	assert_false(claim.has("legacy_world"))
-	assert_false(REWARD.already_received(game.local.flags, claim))
+	assert_true(REWARD.already_received(game.local.flags, claim), "a legacy receipt holder is already received")
 	var granted := TX.settle(game, claim, guardian(), -1)
 	assert_true(granted.ok)
-	assert_false(granted.already)
-	assert_eq(game.local.party.size(), 1)
+	assert_true(granted.already, "no creature is granted over a legacy receipt")
+	assert_eq(game.local.party.size(), 0)
+	# The acknowledgement still answers the offer and restores the world once.
+	assert_true(REWARD.resolve(game, ledger, offer.id, "C", true).ok)
+	assert_eq(settled_count(game), 3)
+	assert_eq(REWARD.begin(game, ledger, "C", guardian()).code, "already_resolved")
+	# Control: a receipt for a different slot locator does not match.
+	var other := instance_fixture("other-instance")
+	other.world.world_id = "slot-3"
+	other.local.character_id = "C"
+	other.local.flags.set_flag("water_capture_receipt:" + REWARD.legacy_claim_id("slot-0"))
+	var other_offer := REWARD.begin(other, LEDGER.new(other.world), "C", guardian())
+	assert_false(REWARD.already_received(other.local.flags, other.world.water_capture_claims[other_offer.id]))
 
 # --- refuse path -------------------------------------------------------------
 
@@ -383,51 +396,105 @@ func test_legacy_pending_claim_is_replayed_for_its_recipient_and_marked_on_resol
 	assert_true(replay.ok)
 	assert_eq(replay.id, legacy, "the legacy recipient keeps their original claim, no duplicate")
 	assert_eq(game.world.water_capture_claims.size(), 1)
-	assert_true(REWARD.begin(game, ledger, "B", guardian()).ok, "other participants now receive their own offer")
+	# Open owner question, not granted: other legacy participants get no offer.
+	assert_eq(REWARD.begin(game, ledger, "B", guardian()).code, "legacy_world")
+	assert_eq(game.world.water_capture_claims.size(), 1, "no new Guardian claim is minted in a legacy world")
 	assert_true(REWARD.resolve(game, ledger, legacy, "A", true).ok)
 	assert_true(REWARD.has_been_offered(game.world, "A"), "legacy resolution writes the per-character marker")
+	assert_true(game.world.flags.has(REWARD.LEGACY_FLAG), "the world stays legacy after its claim resolves")
 	assert_false(REWARD.begin(game, ledger, "A", guardian()).ok)
+	assert_eq(REWARD.begin(game, ledger, "B", guardian()).code, "legacy_world", "still nothing once the offer marker exists")
+	assert_true(game.world.water_capture_claims.is_empty())
+
+## A world exactly as origin/main (pre-F14) leaves it after the legacy
+## recipient accepted: its begin() set `water_guardian_claimed` and a claim with
+## the slot-locator id; TX.settle saved the receipt with the creature; the ack
+## erased the claim and set the settlement flags. No offered marker, no legacy
+## recipient marker, no delivery rows (solo), and the recipient is the host.
+func old_model_settled_world(instance_ns: String) -> RefCounted:
+	var game := fixture([])
+	game.world.world_id = "slot-0"
+	game.world.reward_delivery_namespace = instance_ns
+	game.local.character_id = "A"
+	var legacy := REWARD.legacy_claim_id("slot-0")
+	var claim := {"id": legacy, "source": "guardian", "world_id": "slot-0", "character_id": "A",
+		"creature": preload("res://scripts/save/water_capture_codec.gd").encode(guardian())}
+	game.world.flags.set_flag("water_guardian_claimed")
+	game.world.water_capture_claims[legacy] = claim
+	var accepted := TX.settle(game, claim, guardian(), -1)
+	assert_true(accepted.ok and not accepted.already, "fixture: the old model really delivered one Guardian")
+	for flag: String in REWARD.SETTLEMENT:
+		game.world.flags.set_flag(flag)
+	game.world.water_capture_claims.erase(legacy)
+	return game
+
+func assert_no_new_guardian_offer(game: RefCounted, characters: Array) -> void:
+	var ledger := LEDGER.new(game.world)
+	var before: Dictionary = game.world.save_data()
+	var sequence: int = ledger.seq
+	var writes: int = game.save_system.writes
+	for character: String in characters:
+		var began := REWARD.begin(game, ledger, character, guardian())
+		assert_false(began.ok, "no new Guardian offer for %s in a legacy-settled world" % character)
+		assert_eq(began.code, "legacy_world")
+		var refused := REWARD.refuse(game, ledger, character)
+		assert_false(refused.ok)
+		assert_eq(refused.code, "legacy_world", "and nothing to refuse")
+	assert_true(game.world.water_capture_claims.is_empty(), "no claim is minted")
+	assert_eq(game.world.save_data(), before, "nothing is written to the world")
+	assert_eq(ledger.seq, sequence)
+	assert_eq(game.save_system.writes, writes)
 
 func test_legacy_settled_recipient_is_never_granted_a_duplicate() -> void:
-	var game := fixture()
-	var ledger := LEDGER.new(game.world)
-	var legacy := REWARD.legacy_claim_id(game.world.world_id)
-	for flag: String in ["water_guardian_claimed"] + REWARD.SETTLEMENT:
-		game.world.flags.set_flag(flag)
-	# This host observed its legacy claim's recipient (A) before erasing it.
-	game.world.flags.set_flag(REWARD.legacy_recipient_flag("A"))
-	# The legacy recipient's own character holds the old receipt.
-	game.local.character_id = "A"
-	game.local.flags.set_flag("water_capture_receipt:" + legacy)
-	var original := guardian()
-	game.local.party.add(original)
-	var a := REWARD.begin(game, ledger, "A", guardian())
-	assert_true(a.ok)
-	var claim: Dictionary = game.world.water_capture_claims[a.id]
-	assert_true(REWARD.already_received(game.local.flags, claim))
-	var settled := TX.settle(game, claim, guardian(), -1)
-	assert_true(settled.ok)
-	assert_true(settled.already, "the legacy recipient keeps its original creature only")
-	assert_eq(game.local.party.size(), 1)
-	assert_true(game.local.party.at(0) == original)
-	var resolved := REWARD.resolve(game, ledger, a.id, "A", true)
-	assert_true(resolved.ok)
-	for op: Dictionary in resolved.delta.ops:
-		assert_false(REWARD.SETTLEMENT.has(str(op.get("id", ""))), "legacy settlement is not written again")
-	assert_true(claim.get("legacy_world", false), "the legacy instance stamps its own claims")
-	assert_true(claim.get("legacy_recipient", false), "only the recorded legacy recipient's claim honours the old receipt")
-	# The same receipt does not count for an unstamped claim naming the SAME
-	# slot locator: only the world instance that made the legacy offer may
-	# honour it (another slot-0 world's claim is never legacy-stamped).
-	var unstamped := claim.duplicate()
-	unstamped.erase("legacy_world")
-	unstamped.erase("legacy_recipient")
-	unstamped["id"] = REWARD.claim_id("another-instance", "A")
-	assert_false(REWARD.already_received(game.local.flags, unstamped))
-	unstamped["legacy_world"] = true
-	assert_false(REWARD.already_received(game.local.flags, unstamped), "a legacy WORLD alone no longer honours any legacy receipt")
-	unstamped["legacy_recipient"] = true
-	assert_true(REWARD.already_received(game.local.flags, unstamped), "control: the recipient stamp is what enables the legacy match")
+	# (a) A world exactly as origin/main leaves it: no legacy_recipient flag.
+	for instance_ns: String in ["", "old-model-instance"]:
+		var game := old_model_settled_world(instance_ns)
+		var original: RefCounted = game.local.party.at(0)
+		assert_eq(game.local.party.size(), 1)
+		assert_true(REWARD.is_legacy_world(game.world))
+		assert_false(REWARD.local_may_answer(game), "the original recipient sees no Invite prompt")
+		assert_ne(REWARD.edda_conversation(game, false), REWARD.EDDA_OFFER, "Edda does not offer it again")
+		assert_no_new_guardian_offer(game, ["A", "B", "host-char"])
+		# Even a Guardian claim for this world_id could never deliver a second
+		# creature to the holder of the legacy receipt.
+		var hypothetical := {"id": REWARD.claim_id(REWARD.world_instance(game.world), "A"), "source": "guardian",
+			"world_id": "slot-0", "world_instance": REWARD.world_instance(game.world), "character_id": "A",
+			"creature": preload("res://scripts/save/water_capture_codec.gd").encode(guardian())}
+		assert_true(REWARD.already_received(game.local.flags, hypothetical))
+		var settled := TX.settle(game, hypothetical, guardian(), -1)
+		assert_true(settled.ok and settled.already, "the legacy recipient keeps its original creature only")
+		assert_eq(game.local.party.size(), 1)
+		assert_true(game.local.party.at(0) == original)
+		# The same world reloaded from its own journal stays closed.
+		var reloaded := GameFixture.new()
+		reloaded.save_system = game.save_system
+		reloaded.local = game.local
+		assert_true(game.save_system.save_world(game, "slot-0"))
+		reloaded.world.load_data(game.save_system.store.read("slot-0"))
+		assert_no_new_guardian_offer(reloaded, ["A"])
+	# (b) Only the settlement flags survived (no `water_guardian_claimed`).
+	var settled_only := old_model_settled_world("settled-only")
+	settled_only.world.flags.set_flag("water_guardian_claimed", false)
+	assert_true(REWARD.is_legacy_world(settled_only.world))
+	assert_no_new_guardian_offer(settled_only, ["A", "B"])
+	# (c) A legacy world whose recipient this host recorded (A): still nothing
+	# new for anyone, A included.
+	var recorded := legacy_world_fixture("A")
+	recorded.local.character_id = "A"
+	recorded.local.flags.set_flag("water_capture_receipt:" + REWARD.legacy_claim_id("slot-0"))
+	assert_false(REWARD.local_may_answer(recorded))
+	assert_no_new_guardian_offer(recorded, ["A", "B"])
+	# already_received honours the legacy receipt for any Guardian claim naming
+	# that world_id, with or without host stamps; never another world_id or a
+	# non-Guardian claim.
+	var unstamped := {"id": REWARD.claim_id("another-instance", "A"), "source": "guardian", "world_id": "slot-0"}
+	assert_true(REWARD.already_received(recorded.local.flags, unstamped))
+	var other_slot := unstamped.duplicate()
+	other_slot["world_id"] = "slot-1"
+	assert_false(REWARD.already_received(recorded.local.flags, other_slot))
+	var capture := unstamped.duplicate()
+	capture["source"] = "wild"
+	assert_false(REWARD.already_received(recorded.local.flags, capture))
 
 # --- WaterCaptureClaims sender -> character mapping (fake peers) --------------
 
@@ -649,6 +716,62 @@ func test_stale_queued_claim_from_another_world_or_character_cannot_drive_a_decl
 	assert_eq(claims.get("_pending"), {})
 	free_claims(claims)
 
+## Records host -> peer decline confirmations (no transport in unit tests).
+class ConfirmSpyClaims extends Claims:
+	var confirmed: Array = []
+	func _confirm_decline_to(peer: int, id: String) -> void:
+		confirmed.append([peer, id])
+		super(peer, id)
+
+func test_held_claim_decline_is_confirmed_only_after_the_host_journals_it() -> void:
+	# Host-local character: decline_pending() reaches the host synchronously.
+	var game := fixture(["host-char", "A"])
+	var claims: Claims = ConfirmSpyClaims.new()
+	var fake := FakeGame.new()
+	fake.world = game.world
+	fake.local = game.local
+	fake.save_system = game.save_system
+	var bridge := FakeBridge.new()
+	bridge.ledger = LEDGER.new(game.world)
+	bridge.peers = {1: "host-char", 2: "A", 3: "B"}
+	claims.fake_game = fake
+	claims.fake_bridge = bridge
+	var offer := REWARD.begin(game, bridge.ledger, "host-char", guardian())
+	var claim: Dictionary = game.world.water_capture_claims[offer.id]
+	claims.receive_claim(claim)
+	assert_eq(claims.pending_guardian_id(), str(offer.id))
+	game.save_system.fail_write = true
+	assert_true(claims.decline_pending().ok, "the refusal is sent")
+	assert_true(game.world.water_capture_claims.has(offer.id), "the host could not journal it")
+	assert_false(claims.decline_settled(str(offer.id)), "an unjournaled refusal is not confirmed")
+	assert_eq(claims.get("confirmed"), [])
+	# The host's next resend of the claim retries the refusal, which now lands.
+	game.save_system.fail_write = false
+	claims.receive_claim(claim)
+	assert_false(game.world.water_capture_claims.has(offer.id))
+	assert_true(claims.decline_settled(str(offer.id)), "confirmed once journaled")
+	# A remote participant: confirmed to ITS peer only after its own journal.
+	var a := REWARD.begin(game, bridge.ledger, "A", guardian())
+	game.save_system.fail_write = true
+	claims.sender = 2
+	claims._decline(a.id)
+	assert_eq(claims.get("confirmed"), [[1, str(offer.id)]], "a failed journal confirms nothing")
+	game.save_system.fail_write = false
+	claims.sender = 3
+	claims._decline(a.id)
+	assert_eq(claims.get("confirmed"), [[1, str(offer.id)]], "another peer cannot get A's refusal confirmed")
+	claims.sender = 2
+	claims._decline(a.id)
+	assert_eq(claims.get("confirmed"), [[1, str(offer.id)], [2, str(a.id)]])
+	# The joiner side records the host's confirmation.
+	var joiner := claims_fixture(game)
+	joiner.fake_game.host = false
+	assert_false(joiner.decline_settled(str(a.id)))
+	joiner._decline_done(str(a.id))
+	assert_true(joiner.decline_settled(str(a.id)))
+	free_claims(joiner)
+	free_claims(claims)
+
 func legacy_world_fixture(legacy_recipient: String) -> RefCounted:
 	var game := fixture(["A", "B"])
 	game.world.world_id = "slot-0"
@@ -659,37 +782,30 @@ func legacy_world_fixture(legacy_recipient: String) -> RefCounted:
 		game.world.flags.set_flag(REWARD.legacy_recipient_flag(legacy_recipient))
 	return game
 
-func test_foreign_legacy_receipt_in_a_legacy_world_does_not_ack_away_a_participant() -> void:
-	# A received this legacy world's single offer; B is another participant who
-	# carries a legacy receipt from B's OWN slot-0 world (same legacy id).
+func test_other_participants_in_a_legacy_world_get_no_new_offer() -> void:
+	# A received this legacy world's single offer; B is another participant.
+	# Whether B should later get its own offer is an open owner question: not
+	# granted, whatever receipt B carries.
 	var game := legacy_world_fixture("A")
 	game.local.character_id = "B"
-	game.local.flags.set_flag("water_capture_receipt:" + REWARD.legacy_claim_id("slot-0"))
-	var ledger := LEDGER.new(game.world)
 	assert_true(REWARD.is_legacy_world(game.world))
-	var offer := REWARD.begin(game, ledger, "B", guardian())
-	assert_true(offer.ok)
-	var claim: Dictionary = game.world.water_capture_claims[offer.id]
-	assert_false(claim.get("legacy_recipient", false), "B is not this world's legacy recipient")
-	assert_false(REWARD.already_received(game.local.flags, claim), "B's foreign legacy receipt blocks nothing")
-	var granted := TX.settle(game, claim, guardian(), -1)
-	assert_true(granted.ok)
-	assert_false(granted.already, "B really receives its own Guardian")
-	assert_eq(game.local.party.size(), 1)
+	assert_false(REWARD.local_may_answer(game), "B sees no Invite prompt")
+	assert_no_new_guardian_offer(game, ["B"])
+	game.local.flags.set_flag("water_capture_receipt:" + REWARD.legacy_claim_id("slot-0"))
+	assert_no_new_guardian_offer(game, ["B"])
+	assert_eq(game.local.party.size(), 0)
 
-func test_unknown_legacy_recipient_is_presented_normally_never_acknowledged() -> void:
+func test_unknown_legacy_recipient_world_mints_no_new_offer() -> void:
 	# The legacy claim was erased before recipients were recorded: the host
-	# cannot tell who received it, so nobody is silently acknowledged away.
+	# cannot tell who received it, so nobody -- the unknown original recipient
+	# included -- is offered a new Guardian.
 	var game := legacy_world_fixture("")
 	game.local.character_id = "A"
 	game.local.flags.set_flag("water_capture_receipt:" + REWARD.legacy_claim_id("slot-0"))
-	var ledger := LEDGER.new(game.world)
-	var offer := REWARD.begin(game, ledger, "A", guardian())
-	var claim: Dictionary = game.world.water_capture_claims[offer.id]
-	assert_false(claim.get("legacy_recipient", false))
-	assert_false(REWARD.already_received(game.local.flags, claim), "owner decision: unknown legacy recipient is offered normally")
+	assert_false(REWARD.local_may_answer(game))
+	assert_no_new_guardian_offer(game, ["A", "B"])
 
-func test_legacy_recipient_is_recorded_when_the_legacy_claim_is_observed_or_resolved() -> void:
+func test_legacy_recipient_is_recorded_when_the_legacy_claim_is_answered() -> void:
 	var game := fixture(["A", "B"])
 	game.world.world_id = "slot-0"
 	var ledger := LEDGER.new(game.world)
@@ -697,12 +813,23 @@ func test_legacy_recipient_is_recorded_when_the_legacy_claim_is_observed_or_reso
 	game.world.flags.set_flag("water_guardian_claimed")
 	game.world.water_capture_claims[legacy] = {"id": legacy, "source": "guardian", "world_id": "slot-0",
 		"character_id": "A", "creature": preload("res://scripts/save/water_capture_codec.gd").encode(guardian())}
-	# B's offer is the first host transaction to observe the pending legacy claim.
-	var b := REWARD.begin(game, ledger, "B", guardian())
-	assert_true(b.ok)
-	assert_true(game.world.flags.has(REWARD.legacy_recipient_flag("A")), "observed legacy recipient is journaled with B's offer")
+	# B is refused (no offers in a legacy world) and that refusal writes nothing.
+	var writes: int = game.save_system.writes
+	assert_eq(REWARD.begin(game, ledger, "B", guardian()).code, "legacy_world")
+	assert_eq(game.save_system.writes, writes)
 	assert_false(game.world.flags.has(REWARD.legacy_recipient_flag("B")))
-	assert_false(game.world.water_capture_claims[b.id].get("legacy_recipient", false))
+	# The pending legacy claim is presented to its own recipient only.
+	var view := GameFixture.new()
+	view.host = false
+	view.world = game.world
+	view.local.character_id = "A"
+	assert_true(REWARD.local_may_answer(view), "the pending legacy recipient may still answer")
+	view.local.character_id = "B"
+	assert_false(REWARD.local_may_answer(view))
+	var legacy_claim: Dictionary = game.world.water_capture_claims[legacy].duplicate(true)
+	# Refusing the pending legacy claim records its recipient in the journal.
+	assert_true(REWARD.refuse(game, ledger, "A").ok)
+	assert_true(game.world.flags.has(REWARD.legacy_recipient_flag("A")))
 	var restored := WORLD.new()
 	restored.load_data(game.save_system.store.read(game.world.world_id))
 	assert_true(restored.flags.has(REWARD.legacy_recipient_flag("A")), "recipient marker is in the world journal")
@@ -710,7 +837,7 @@ func test_legacy_recipient_is_recorded_when_the_legacy_claim_is_observed_or_reso
 	var other := fixture(["A"])
 	other.world.world_id = "slot-0"
 	other.world.flags.set_flag("water_guardian_claimed")
-	other.world.water_capture_claims[legacy] = game.world.water_capture_claims[legacy].duplicate(true)
+	other.world.water_capture_claims[legacy] = legacy_claim
 	var other_ledger := LEDGER.new(other.world)
 	assert_true(REWARD.resolve(other, other_ledger, legacy, "A", true).ok)
 	assert_true(other.world.flags.has(REWARD.legacy_recipient_flag("A")))

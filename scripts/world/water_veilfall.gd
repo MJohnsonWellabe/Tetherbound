@@ -42,6 +42,15 @@ const DECLINE_CONFIRM_WINDOW_MSEC := 8000
 const DECLINE_MIN_CONFIRM_MSEC := 500
 const DECLINE_CONSEQUENCE := "Declining is final for this character in this world: the Deep Watcher will not join your team and will not be offered to you here again. Tidewake's currents are restored either way. Pause, then press again to decline; step away to cancel."
 const DECLINE_DONE := "You declined the Deep Watcher. It remains free, and Tidewake's currents are restored."
+## Shown while a refusal of a HELD claim (decline_pending) waits for the host
+## to journal it; DECLINE_DONE follows only on the host's confirmation.
+const DECLINE_PENDING := "Declining the Deep Watcher..."
+## Held-claim decline awaiting the host's journaled confirmation.
+var _decline_claim_id := ""
+## _local_may_answer() cache: the rule walks every reward delivery and hashes,
+## so it is recomputed only when its inputs change (see _may_answer_key()).
+var _may_answer_cached := false
+var _may_answer_cache_key: Array = []
 var exterior_presentation: Node3D
 
 func build(realm: Node3D) -> void:
@@ -238,8 +247,17 @@ func request_guardian_decline() -> void:
 	var reward := preload("res://scripts/world/water_guardian_reward.gd")
 	var claims: Node = _claims()
 	var result: Dictionary
-	if claims != null and not str(claims.call("pending_guardian_id")).is_empty():
+	var held_id := str(claims.call("pending_guardian_id")) if claims != null else ""
+	if not held_id.is_empty():
 		result = claims.call("decline_pending")
+		if result.get("ok", false):
+			# Sent, not yet journaled: the host keeps resending the claim until
+			# it records the refusal, and confirms it (host-local: at once).
+			_decline_claim_id = held_id
+			_decline_done_shown = false
+			if not _check_held_decline():
+				_game.push_world_message(DECLINE_PENDING)
+			return
 	else:
 		var character := str(_game.local.character_id)
 		var id := reward.claim_id(reward.world_instance(_game.world), character)
@@ -256,9 +274,7 @@ func request_guardian_decline() -> void:
 			return
 		if not result.get("pending", false):
 			_decline_refused()
-	if result.get("ok", false):
-		_game.push_world_message(DECLINE_DONE)
-	elif not result.get("pending", false):
+	if not result.get("ok", false) and not result.get("pending", false):
 		_game.push_world_message(str(result.get("reason", "The Guardian is not ready.")))
 
 func _claims() -> Node:
@@ -281,6 +297,19 @@ func _decline_refused() -> void:
 	if claims != null and not _decline_awaiting_id.is_empty():
 		claims.call("release_decline", _decline_awaiting_id)
 	_decline_awaiting_id = ""
+
+## True once the host confirmed the held-claim decline (shows DECLINE_DONE once).
+func _check_held_decline() -> bool:
+	if _decline_claim_id.is_empty():
+		return false
+	var claims := _claims()
+	if claims == null or not bool(claims.call("decline_settled", _decline_claim_id)):
+		return false
+	_decline_claim_id = ""
+	if not _decline_done_shown:
+		_game.push_world_message(DECLINE_DONE)
+	_decline_done_shown = true
+	return true
 
 func decline_armed() -> bool:
 	return Time.get_ticks_msec() <= _decline_armed_until_msec
@@ -445,6 +474,7 @@ func built_floor_height_at(x: float, z: float) -> float:
 func _process(_delta: float) -> void:
 	if not ready_for_intents:
 		return
+	_check_held_decline()
 	_refresh()
 	if _guardian != null and interior.visible:
 		var animator: RefCounted = _guardian.get("_animator")
@@ -501,7 +531,23 @@ func _refresh() -> void:
 		gate.collision_layer = 0 if opened else 1
 
 func _local_may_answer() -> bool:
-	return preload("res://scripts/world/water_guardian_reward.gd").local_may_answer(_game)
+	var key := _may_answer_key()
+	if key != _may_answer_cache_key:
+		_may_answer_cache_key = key
+		_may_answer_cached = preload("res://scripts/world/water_guardian_reward.gd").local_may_answer(_game)
+	return _may_answer_cached
+
+## Everything local_may_answer() reads: the flags revision and local character
+## (offered/legacy markers), plus the world object, host role and the sizes of
+## the delivery journal (participants) and claim table (legacy claim).
+func _may_answer_key() -> Array:
+	var world_state: Variant = _game.get("world")
+	var local: Variant = _game.get("local")
+	if world_state == null:
+		return [0]
+	return [world_state.get_instance_id(), int(world_state.flags.revision),
+		str(local.character_id) if local != null else "", _game.is_host(),
+		(world_state.reward_deliveries as Dictionary).size(), (world_state.water_capture_claims as Dictionary).size()]
 
 func _local_pending_guardian() -> bool:
 	var claims := _claims()

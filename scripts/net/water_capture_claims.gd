@@ -20,6 +20,9 @@ var _declined: Dictionary = {}
 ## a refusal (or a new Invite) releases it, so a decline the host refused can
 ## never silently refuse a later offer.
 var _decline_holds: Dictionary = {}
+## Claim ids whose decline (decline_pending) the HOST has journaled and told
+## this peer about. Until then the chamber shows a pending wording only.
+var _decline_settled: Dictionary = {}
 var _poll := 0.0
 
 ## Seams (overridden by unit fixtures): the Game autoload, the host ledger
@@ -214,6 +217,10 @@ func confirm_declined(id: String) -> void:
 func is_declined(id: String) -> bool:
 	return _declined.has(id)
 
+## The host journaled this character's refusal of claim `id` and said so.
+func decline_settled(id: String) -> bool:
+	return _decline_settled.has(id)
+
 func _send_decline(id: String) -> void:
 	var game := _game()
 	if game.is_host():
@@ -227,14 +234,32 @@ func _decline(id: String) -> void:
 		_accept_decline(_sender(), id)
 
 func _accept_decline(peer: int, id: String) -> void:
-	_resolve_guardian(peer, id, false)
+	var result := _resolve_guardian(peer, id, false)
+	# Only a journaled (or already journaled) refusal of the sender's own claim
+	# is confirmed; a failed journal is not, and the claim resend retries it.
+	if result.get("ok", false):
+		_confirm_decline_to(peer, id)
 
-func _resolve_guardian(peer: int, id: String, accepted: bool) -> void:
+## Host -> the declining peer: its refusal is in the world journal.
+func _confirm_decline_to(peer: int, id: String) -> void:
+	var game := _game()
+	if peer == int(game.session.local_peer_id()):
+		_decline_settled[id] = true
+	elif is_inside_tree() and multiplayer.has_multiplayer_peer():
+		_decline_done.rpc_id(peer, id)
+
+@rpc("authority", "call_remote", "reliable", CHANNEL)
+func _decline_done(id: String) -> void:
+	if not id.is_empty():
+		_decline_settled[id] = true
+
+func _resolve_guardian(peer: int, id: String, accepted: bool) -> Dictionary:
 	var game := _game()
 	var actor: Dictionary = _bridge()._water_actor_context(peer, {})
 	var result: Dictionary = GUARDIAN.resolve(game, _bridge().ledger, id, str(actor.get("character_id", "")), accepted)
 	if result.get("ok", false) and result.has("delta") and not (result.delta.ops as Array).is_empty():
 		_bridge().publish_journaled_delta(result.delta)
+	return result
 
 func _acknowledge(id: String) -> void:
 	var game := _game()

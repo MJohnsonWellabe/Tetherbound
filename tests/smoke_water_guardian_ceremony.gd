@@ -174,6 +174,44 @@ func _run() -> void:
 	edda.prompt_node().activated.emit()
 	check(str(cast.get("_active_conversation")) == reward.EDDA_OFFER, "A character that may still answer is offered by Edda")
 	world.get_node("DialoguePanel").close()
+	await _frames(2)
+	# A character HOLDING its claim declines through the real chamber route.
+	# A full belt would put the roster ceremony on screen at once, so the claim
+	# is held the way a fight holds it: received and queued, not yet presented
+	# (the claim service's poll is paused for this step only). The host's first
+	# journal write fails: the chamber must say "Declining..." and never claim
+	# success until the host journals the refusal.
+	var claim_service: Node = game.ledger.get_node("WaterCaptureClaims")
+	player.global_position = prompt.global_position + Vector3(0, -1.3, -1.8)
+	player.velocity = Vector3.ZERO
+	await _frames(4)
+	claim_service.set("_poll", 1000.0)
+	prompt.interaction_activate()
+	var held_id: String = reward.claim_id(reward.world_instance(game.world), game.local.character_id)
+	if not check(game.world.water_capture_claims.has(held_id), "Third character's own Guardian claim is journaled"):
+		_finish()
+		return
+	claim_service.receive_claim(game.world.water_capture_claims[held_id])
+	check(claim_service.pending_guardian_id() == held_id and game.pending_catch == null, "The claim is held locally, not yet presented")
+	cave.request_guardian_decline()
+	# Real-clock pause past the double-tap guard (scene timers follow time scale).
+	var armed_at := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - armed_at < cave.DECLINE_MIN_CONFIRM_MSEC + 150:
+		await process_frame
+	game.save_system = RefusingSaver.new()
+	game.take_pending_world_message()
+	cave.request_guardian_decline()
+	game.save_system = real_saver
+	check(game.take_pending_world_message() == cave.DECLINE_PENDING, "Held-claim decline shows a pending wording before the host journals it")
+	check(game.world.water_capture_claims.has(held_id) and not cave.get("_decline_done_shown"), "No done message while the host still holds the claim")
+	check(game.pending_catch == null and game.local.party.size() == party_before, "Declining the held claim grants nothing")
+	claim_service.set("_poll", 0.0)
+	deadline = Time.get_ticks_msec() + 6000
+	while (game.world.water_capture_claims.has(held_id) or not cave.get("_decline_done_shown")) and Time.get_ticks_msec() < deadline:
+		await process_frame
+	check(not game.world.water_capture_claims.has(held_id), "The claim resend retries the refusal until the host journals it")
+	check(cave.get("_decline_done_shown") and str(cave.get("_decline_claim_id")).is_empty(), "Done message follows the host's confirmation")
+	check(game.local.party.size() == party_before and game.pending_catch == null, "Journaled decline still grants nothing")
 	_finish()
 
 func reward_offered(game: Node) -> String:
