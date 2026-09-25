@@ -36,7 +36,7 @@ func _run() -> void:
 	var a_in: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port,
 		"character": {"character_id": A_CHAR, "display_name": "Guest A"}})
 	check(str(a_in.get("verdict", "")) == "PASS", "guest A joined (%s)" % str(a_in.get("detail", "")))
-	var a_peer_before := int(((await probe(1, "session")) as Dictionary).get("peer_id", 0))
+	var a_peer_before := int(_as_dict(await probe(1, "session")).get("peer_id", 0))
 
 	var dropped: Dictionary = await step(1, "drop_link", {"settle_frames": 60})
 	check(str(dropped.get("verdict", "")) == "PASS", "guest A's link dropped (%s)"
@@ -55,11 +55,11 @@ func _run() -> void:
 	check(b_detail.contains("A seat is being held for a player who is reconnecting"),
 		"guest B heard the held-seat reason (%s)" % b_detail)
 	check(refused_ms < 15_000, "the held-seat refusal arrived in %d ms" % refused_ms)
-	var b_client: Dictionary = await probe(2, "session") as Dictionary
+	var b_client := _as_dict(await probe(2, "session"))
 	check(bool(b_client.get("handshake_rejected_by_host", false)) \
 			and not bool(b_client.get("handshake_snapshot_applied", true)),
 		"guest B got a host verdict and no snapshot")
-	var host_rows: Array = ((await probe(0, "session")) as Dictionary).get("rows", []) as Array
+	var host_rows: Array = _as_dict(await probe(0, "session")).get("rows", []) as Array
 	check(host_rows.size() == 1, "the refusal left the host registry at one row (%s)" % str(host_rows))
 	check((await probe(0, "state_hash")) == before_world, "the refusal left the host world unchanged")
 
@@ -67,7 +67,7 @@ func _run() -> void:
 		"character": {"character_id": A_CHAR, "display_name": "Guest A"}})
 	check(str(a_back.get("verdict", "")) == "PASS", "guest A reclaimed its held seat (%s)"
 		% str(a_back.get("detail", "")))
-	var a_session: Dictionary = await probe(1, "session") as Dictionary
+	var a_session := _as_dict(await probe(1, "session"))
 	check(int(a_session.get("peer_id", 0)) != a_peer_before,
 		"the returning character arrived on a new transport peer")
 	var both: Dictionary = await step(0, "expect_peers", {"count": 2}, 900)
@@ -81,11 +81,17 @@ func _run() -> void:
 		"character": {"character_id": B_CHAR, "display_name": "Guest B"}})
 	check(str(b_in.get("verdict", "")) == "PASS",
 		"a deliberate leave holds no seat, so guest B joined at once (%s)" % str(b_in.get("detail", "")))
-	var rows: Array = ((await probe(0, "session")) as Dictionary).get("rows", []) as Array
+	var rows: Array = _as_dict(await probe(0, "session")).get("rows", []) as Array
 	var ids: Array = []
 	for r: Variant in rows:
-		ids.append(str((r as Dictionary).get("character_id", "")))
+		ids.append(str(_as_dict(r).get("character_id", "")))
 	check(ids.has(B_CHAR) and not ids.has(A_CHAR) and ids.size() == 2,
 		"host registry is host plus B (%s)" % str(ids))
 
 	quit(await finish())
+
+
+## A failed probe returns error text, not a Dictionary; see
+## smoke_net_join_version_mismatch.gd.
+func _as_dict(value: Variant) -> Dictionary:
+	return value if value is Dictionary else {}
