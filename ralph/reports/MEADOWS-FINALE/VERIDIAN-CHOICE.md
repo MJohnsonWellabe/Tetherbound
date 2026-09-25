@@ -41,12 +41,28 @@ accepts F05 or M4.
    smoke pulls the real lever inside the chamber, and `smoke_gate_e_finale`
    walks a player to the accept prompt and is offered it at 1.0 m.
 
+5. **Found by the two-peer witness (WO4):** the Warden participant journal
+   was never read. `_read_warden_participant_characters()` called a
+   `WorldState.world_snapshot()` that does not exist, so the list was always
+   empty on main and every participant was judged by the empty-journal rule.
+   It now reads `reward_deliveries`, and a unit test pins that
+   `world_snapshot` is absent. Fixed in `13c92555`.
+6. **Found by the same witness:** an open ceremony could record an answer for
+   whichever character was loaded when it closed. The answer is now recorded
+   only for the character the offer was made to (`13c92555`).
+7. **Found by the in-engine captures:** the "both answers are final" line was
+   pushed while the join dialogue still hid the HUD, and the refusal line was
+   replaced by the ceremony a frame later, so a player saw neither. The line
+   now waits `choice.announce_delay` (1.0 s) after the offer opens, and a
+   refusal holds the ceremony for `choice.message_hold` (2.4 s). Fixed in
+   `636cf28d`; frames 04 and 06b show both lines.
+
 ## Witnesses
 
 | Witness | Result |
 |---|---|
 | `tests/test_veridian_offer_choice.gd` (the rule, pure: once-only receipts, scopes, full-refusal rule for solo, mixed, partial and stranger cases, prompt reachability) | PASS locally, 160 tests / 0 failed in the selected set. The set includes flag_scopes, stronghold, legendary, dialogue_runner and quest_log. Needs the `flag_scopes.json` grant for CI. |
-| `tests/smoke_veridian_offer_choice.gd`. Setup: the production Meadows world, with the player placed on the machine control inside the Legendary Chamber, pulling the real lever with `interact`. Each answer is given by standing at a prompt on the chamber floor and pressing `interact` through the live arbiter. The ceremony is driven by `ui_*` presses. After each answer there is a real `save_game`, then `load_game` into a fresh world. The no-re-offer check reads through dialogue for 240 frames, watching the join and choice stages and the ceremony seam. It is then repeated with `legendary_settled` removed, so the personal receipt alone is tested. Party size is checked every frame. | See the PR evidence table for the run on the current commit. Log: `veridian-offer-choice.txt` |
+| `tests/smoke_veridian_offer_choice.gd`. Setup: the production Meadows world, with the player placed on the machine control inside the Legendary Chamber, pulling the real lever with `interact`. Each answer is given by standing at a prompt on the chamber floor and pressing `interact` through the live arbiter. The ceremony is driven by `ui_*` presses. After each answer there is a real `save_game`, then `load_game` into a fresh world. The no-re-offer check reads through dialogue for 240 frames, watching the join and choice stages and the ceremony seam. It is then repeated with `legendary_settled` removed, so the personal receipt alone is tested. Party size is checked every frame. | PASS on `d804518b`, all six scenarios, 28m59s. Log: `veridian-offer-choice.txt` |
 | `tests/smoke_gate_e_finale.gd` (granted edit: an accept step): a full five, walked in, walks to the accept prompt on the chamber floor and is offered it | PASS locally on `8edc5c4d`: "accept prompt offered at 1.0 m" |
 | `tests/smoke_boss.gd` (granted edit: an accept step through the accept prompt's `interaction_activate()`) | PASS locally on `8edc5c4d` |
 
@@ -83,9 +99,10 @@ In every frame of every scenario the party never exceeded five.
 - **No new dialogue.** The choice text is config (`choice.announce`,
   `choice.refused_message`). The dialogue system has no branching, and the
   stronghold's dialogue file is outside this lane's paths.
-- **Herd display site.** `[408, 5862]` on the Highfield, 25 m from the herd
-  bull (band 4 spawn order 4101), toward -x/+z. **Not yet captured in engine: the
-  frame check is open.**
+- **Herd display site.** `[390, 5860]` on the Highfield, among the ordinary
+  herd around `[377.5, 5855.3]`, seen from the Highfield's authored hero
+  stand `[400, 5832]`. Two earlier sites (`[408, 5862]`, `[432, 5851]`) were
+  rejected on in-engine frames because the stag read as off on its own.
 
 ## Receipts
 
@@ -109,12 +126,39 @@ In every frame of every scenario the party never exceeded five.
 | 3 (`8edc5c4d`) | coordinator, code-blind | changes | Migration could stamp a joining guest; an empty journal let a non-fighter be offered. Fixed in `eeb4adeb`: `should_migrate` and `may_receive(..., is_client)`, with unit tests that fail on `8edc5c4d`. |
 | 4 (`eeb4adeb`) | independent, code-blind | changes | A no-offer settle left no live marker, so a reconnecting participant was never offered. Fixed in `b5a9af1d`: `_settle()` carries the marker, and `_is_client()` covers join preparation. |
 | 5 (`b5a9af1d`) | same, re-review | **approve** | Nits only. The client-side refusal retry is kept, but the only refusal it can hit is a malformed intent. |
+| 6 (`d804518b`) | independent, fresh reviewer, delta `b5a9af1d..d804518b` | **approve** | None blocking in the delta. It found one open spec gap that predates F05 (below, under "Not claimed"), a stale comment and a self-contradicting config comment (fixed in the next commit). Residual risks are recorded under "Not claimed". |
 
 ## Not claimed
 
-- Two peers, mixed choices, disconnect at the claim acknowledgement, and
-  reconnect. That is WO4, on its own branch (the `peer_runner` probe is
-  granted).
+- **A Warden fight started by a CLIENT.** Open, and it breaks the
+  participant rule in both directions. `encounter_director.gd` pays a
+  client-run Warden by the solo path (`_pay_trainer_reward`). That path writes
+  no reward-journal rows, and `begin_trainer_battle` has no host-only guard.
+  With an empty journal, the host is offered the Veridian as though it were
+  the only player, even if it never fought, and the client who fought is
+  never offered. This behaved the same way before this change, when the
+  journal was never read. The fix belongs in the combat/encounter owner's
+  file: either pay a client-run Warden through the journaled `reward_grant`
+  path, or refuse a client's Warden challenge. It is reported to the
+  coordinator.
+- **A character switch while the release ceremony is open**, without a
+  scene change that resets the local player. The switched-in character's
+  answer is dropped rather than recorded for it. In one narrow ordering (a
+  release, then taking the Veridian, then the switch) the original character
+  could be offered again later. Loads change scene and reset the local
+  player, so no normal path reaches this. It has no test.
+- **An answer given within `choice.announce_delay` (1.0 s) of the offer
+  opening** is not followed by the "both answers are final" line. Neither
+  prompt is in reach from where the player stands, so in practice the line
+  always comes first.
+
+- Two peers, mixed choices, disconnect and reconnect. That is WO4, on
+  `ralph/f05-coop-veridian` (the `peer_runner` probe is granted). Its run 4
+  on this code records `accepted:<guest>`, `refused:<host>` and the live
+  marker, with no herd display and no re-offer. It stays **red** on one
+  defect outside this lane: the reconnecting guest's `slot_0` is rewritten
+  with a new blank character, so the guest's personal receipt does not come
+  back. That was reported to the coordinator with a STATE-REPORT.
 - End-to-end: a world settled by a no-offer lever pull, followed by a
   participant reconnecting. The code path is reviewed, but no test drives it.
   WO4's witness is the place for it.
@@ -122,7 +166,9 @@ In every frame of every scenario the party never exceeded five.
   the submitter's own (coordinator nit 6). It is requested as a shared-file
   grant.
 - The earned route to the chamber.
-- The herd display's visual read.
+- The herd display's visual read. In-engine frames exist (see
+  `VISUAL-EVIDENCE.md`), and the code-blind judge's verdict is
+  recorded there. Neither is a pass on the art bar.
 - A falsification run for the smoke's re-offer check. The first-run red above
   is a different defect. The re-offer rule is pinned in the unit test.
 

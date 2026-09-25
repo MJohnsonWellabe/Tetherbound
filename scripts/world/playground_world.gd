@@ -20,6 +20,10 @@ const REALM_ID := "meadows"
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const LONG_WATER_VISUAL_CONFIG := "res://data/config/long_water_visual.json"
+## MEADOWS-VISUAL-PASS round 5: runtime terrain shader values that are
+## presentation only, kept out of terrain_playground.json for the same reason
+## the Long Water bank treatment is -- that file fingerprints both bakes.
+const GROUND_PRESENTATION_CONFIG := "res://data/config/terrain_presentation.json"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
 const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
 const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
@@ -1220,6 +1224,11 @@ func _apply_ground_shader(material: Object) -> void:
 	var long_water_cfg := _load_long_water_visual_config()
 	for key: String in long_water_cfg.keys():
 		cfg[key] = long_water_cfg[key]
+	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROUND_PRESENTATION_CONFIG))
+	if presentation is Dictionary:
+		var overrides: Dictionary = (presentation as Dictionary).get("shader", {})
+		for key: String in overrides.keys():
+			cfg[key] = overrides[key]
 	if cfg.is_empty():
 		# FLAT rather than NOISE, matching the shader's own default, so a missing
 		# config is the old look rather than an unlit void.

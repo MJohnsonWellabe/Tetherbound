@@ -158,8 +158,7 @@
       "farm:",
       "wild_once_",
       "warrens_once_",
-      "stormwood:",
-      "legendary_resolution:"
+      "stormwood:"
     ]
   },
   "player": {
@@ -169,6 +168,8 @@
       "water_swim_lesson_briefed",
       "water_chapter_started",
       "stormwood:legendary_ceremony_settled",
+      "stormwood:legendary_offer_accepted",
+      "stormwood:pims_parcels_reward_received",
       "tournament_team_ready",
       "tournament_training_ready",
       "tournament_condition_ready",
@@ -184,7 +185,6 @@
       "home_materials_gathered",
       "creature_bed_built",
       "legendary_joined",
-      "legendary_refused",
       "alpha_pin_intro_seen",
       "band1_meadowhart_herd_found",
       "south_bridge_team_prompt_heard",
@@ -200,7 +200,8 @@
       "cloudreach_payout:",
       "saddle_fitted_",
       "creature_bed_built_",
-      "oskar_swap_taken_"
+      "oskar_swap_taken_",
+      "stormwood:legendary_answer:"
     ]
   }
 }

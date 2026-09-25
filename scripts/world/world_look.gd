@@ -35,6 +35,12 @@ const GROUP := "day_cycle"
 
 @export var sun_path: NodePath
 @export var environment_path: NodePath
+## MEADOWS-VISUAL-PASS round 5: a realm's own look, deep-merged over art.json
+## when this node loads it. Every realm shares art.json's time-of-day presets,
+## so a value only one chapter wants (the Meadows distance haze)
+## belongs in that chapter's overlay rather than in the shared file. Empty
+## (the default) is art.json unchanged.
+@export_file("*.json") var realm_look_path := ""
 
 var _config: Dictionary = {}
 var _time: String = DEFAULT_TIME
@@ -820,7 +826,27 @@ func _load() -> Dictionary:
 	if file == null:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	return parsed if parsed is Dictionary else {}
+	if not parsed is Dictionary:
+		return {}
+	if realm_look_path == "":
+		return parsed
+	var overlay: Variant = JSON.parse_string(FileAccess.get_file_as_string(realm_look_path))
+	if not overlay is Dictionary:
+		push_warning("realm look %s is missing or invalid; using art.json alone" % realm_look_path)
+		return parsed
+	return merged_look(parsed as Dictionary, overlay as Dictionary)
+
+
+## `overlay` over `base`, recursively for dictionaries, key by key; anything
+## else in `overlay` replaces the base value outright. Neither input changes.
+static func merged_look(base: Dictionary, overlay: Dictionary) -> Dictionary:
+	var out := base.duplicate(true)
+	for key: Variant in overlay.keys():
+		if out.get(key) is Dictionary and overlay[key] is Dictionary:
+			out[key] = merged_look(out[key] as Dictionary, overlay[key] as Dictionary)
+		else:
+			out[key] = overlay[key]
+	return out
 
 
 ## The single highest-leverage thing in the whole art pass.

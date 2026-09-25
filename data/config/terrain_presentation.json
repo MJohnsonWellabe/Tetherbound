@@ -1,0 +1,13 @@
+{
+  "_comment": "MEADOWS-VISUAL-PASS round 5. Runtime-only terrain shader values for the Meadows ground, merged over terrain_playground.json's `shader` block by playground_world.gd::_apply_ground_shader. Separate because terrain_playground.json fingerprints the terrain and scatter bakes, and none of this moves a vertex or a placement.",
+  "shader": {
+    "_comment_macro": "The macro variation colours multiply the whole ground. At #b8b58c/#8ea369 they darkened and yellowed it into large olive and mustard blotches: measured on the survey's ground band at saturation 0.86-0.95 and value 0.34-0.45, against 0.52-0.66 and 0.49-0.60 across the Palworld references. Taking them most of the way to white (a render A/B through tools/survey.gd at 01, 02 and 04) brought the ground to saturation 0.62-0.70 and value 0.60-0.64 and kept a soft large-scale variation. TUNABLE. A second pass took a little red out of both (#dde3c8/#cfdfc6): at the first values the lit meadow rendered a yellow-lime (hue 62) and the paths orange. A third pass cooled both again (#d9e4cb/#cadec8): a blind round still read the ground as a yellow-olive cast against the key art's cooler greens.",
+    "macro_variation1": "#d9e4cb",
+    "macro_variation2": "#cadec8",
+    "_comment_aerial": "The terrain's own distance fade (terrain_ground.gdshader) desaturated the far plain by 0.55 on top of the fog, which read as a white wall from the overlook. Halved, so distance stays green under the haze. TUNABLE.",
+    "aerial_desaturate": 0.3,
+    "aerial_fade_strength": 0.18,
+    "_comment_blend": "terrain_ground.gdshader raises each control texel's weight to the power 8 + 56 * blend_sharpness; at terrain_playground.json's 0.5 that is 36, so every 2m texel boundary between two surfaces rendered as a hard polygon edge -- a blind round read the grass on The Rise's rocky crown as 'yellow-grass islands with hard polygonal edges, like camouflage'. 0.12 (exponent about 15) keeps the height-aware blend but feathers the boundary. TUNABLE.",
+    "blend_sharpness": 0.12
+  }
+}

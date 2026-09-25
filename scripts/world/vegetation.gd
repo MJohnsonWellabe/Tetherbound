@@ -317,6 +317,27 @@ var _ridgeline_rock_exclusions: Array[Dictionary] = []
 ## lookup per instance.
 var _soft_occluder_positions: PackedVector3Array = PackedVector3Array()
 var _soft_occluder_radii: PackedFloat32Array = PackedFloat32Array()
+## What `hide_fight_occluders()` needs to put a soft occluder BACK once it has
+## taken it out of the instancer: its render mesh id, yaw and scale (neither
+## layer aligns to slope, so no normal), its harvest index (-1 if none) and
+## which of `SOFT_OCCLUDER_LAYERS` it came from. Packed, parallel to
+## `_soft_occluder_positions`, for the same tens-of-thousands reason.
+var _soft_occluder_mesh_ids: PackedInt32Array = PackedInt32Array()
+var _soft_occluder_yaws: PackedFloat32Array = PackedFloat32Array()
+var _soft_occluder_scales: PackedFloat32Array = PackedFloat32Array()
+var _soft_occluder_harvest: PackedInt32Array = PackedInt32Array()
+var _soft_occluder_layer: PackedByteArray = PackedByteArray()
+## SOFT_VISIBLE, SOFT_HIDDEN_BY_FIGHT or SOFT_GONE per entry. GONE is set by
+## `clear_area()` and by a restore that finds the plant was harvested, so a
+## fight never puts back something the world has removed for good.
+var _soft_occluder_state: PackedByteArray = PackedByteArray()
+const SOFT_VISIBLE := 0
+const SOFT_HIDDEN_BY_FIGHT := 1
+const SOFT_GONE := 2
+## How many open fight rings hide each entry. The last ring to close restores
+## it, so a ring that closes (even at the end of the frame another opens in)
+## never puts a plant back inside a ring that is still open.
+var _soft_occluder_fight_holds: PackedInt32Array = PackedInt32Array()
 ## W18-DENSITY-B4-B5-0904 found the gap this closes: the site validator that
 ## keeps band pickups clear of scatter saw only the collision batches, so a
 ## Rare-tier pickup at the herd bull sat under a shrub that covered 86% of it
@@ -463,6 +484,13 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_ridgeline_rock_exclusions.clear()
 	_soft_occluder_positions.clear()
 	_soft_occluder_radii.clear()
+	_soft_occluder_mesh_ids.clear()
+	_soft_occluder_yaws.clear()
+	_soft_occluder_scales.clear()
+	_soft_occluder_harvest.clear()
+	_soft_occluder_layer.clear()
+	_soft_occluder_state.clear()
+	_soft_occluder_fight_holds.clear()
 	_next_mesh_id = 0
 	_harvested.clear()
 	_harvest_layer_counts.clear()
@@ -1119,7 +1147,18 @@ func _make_mesh_asset(model_path: String) -> Object:
 	if not extra_variant.is_empty():
 		tint_overrides = tint_overrides.duplicate()
 		tint_overrides.merge(extra_variant, true)
-	var retinted := _retint(mesh, tint_overrides, layer_cfg.get("retexture", {}), jitter > 0.0,
+	# MEADOWS-VISUAL-PASS round 5: the presentation overlay may also swap a
+	# material's texture (keyed by material name), for the same reason its
+	# tints live there: vegetation.json is fingerprinted by the scatter bake.
+	# A swap to a real file, not a runtime `retexture_adjust`: a derived runtime
+	# texture on the rock layer did not survive the mesh-asset round trip and
+	# the boulders rendered as flat white tint.
+	var swaps: Dictionary = layer_cfg.get("retexture", {})
+	var extra_swaps: Dictionary = _presentation_retint().get("retexture", {})
+	if not extra_swaps.is_empty():
+		swaps = swaps.duplicate()
+		swaps.merge(extra_swaps, true)
+	var retinted := _retint(mesh, tint_overrides, swaps, jitter > 0.0,
 		layer_cfg.get("retexture_adjust", {}))
 
 	var holder := MeshInstance3D.new()
@@ -1416,7 +1455,7 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 		known.append(spot)
 	_instance_positions[mesh_id] = known
 
-	_record_soft_occluders(model_path, layer_cfg, placements)
+	_record_soft_occluders(model_path, layer_cfg, placements, mesh_id)
 
 	_placed += placements.size()
 	_draw_calls += 1
@@ -1503,10 +1542,11 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 ## are nowhere near. `SOFT_OCCLUDER_FLOOR_RADIUS` is applied per entry so a
 ## small instance is never treated as more permissive than the bushes-only
 ## check this replaced.
-func _record_soft_occluders(model_path: String, layer_cfg: Dictionary, placements: Array) -> void:
+func _record_soft_occluders(model_path: String, layer_cfg: Dictionary, placements: Array, mesh_id: int = -1) -> void:
 	if bool(layer_cfg.get("collides", false)):
 		return
-	if not SOFT_OCCLUDER_LAYERS.has(_layer_name_for(model_path)):
+	var layer_index := SOFT_OCCLUDER_LAYERS.find(_layer_name_for(model_path))
+	if layer_index < 0:
 		return
 	var span := _model_footprint_radius(model_path)
 	for i in placements.size():
@@ -1514,6 +1554,13 @@ func _record_soft_occluders(model_path: String, layer_cfg: Dictionary, placement
 		_soft_occluder_positions.append(placement["position"])
 		_soft_occluder_radii.append(
 			maxf(span * float(placement.get("scale", 1.0)), SOFT_OCCLUDER_FLOOR_RADIUS))
+		_soft_occluder_mesh_ids.append(mesh_id)
+		_soft_occluder_yaws.append(float(placement.get("yaw", 0.0)))
+		_soft_occluder_scales.append(float(placement.get("scale", 1.0)))
+		_soft_occluder_harvest.append(int(placement.get("harvest_index", -1)))
+		_soft_occluder_layer.append(layer_index)
+		_soft_occluder_state.append(SOFT_VISIBLE)
+		_soft_occluder_fight_holds.append(0)
 
 
 ## Half the wider of a model's own glTF bounding box in X/Z, at scale 1 --
@@ -2447,6 +2494,11 @@ func clear_area(centre: Vector3, radius: float) -> int:
 		_instance_positions[mesh_id_value] = kept
 	if removed > 0 and _instancer != null:
 		_instancer.call("update_mmis", true)
+	# A fight ring opened here later must not put these back.
+	for i in _soft_occluder_positions.size():
+		var soft: Vector3 = _soft_occluder_positions[i]
+		if Vector2(soft.x - centre.x, soft.z - centre.z).length_squared() <= radius_sq:
+			_soft_occluder_state[i] = SOFT_GONE
 
 	# Then the collidable layers' own bookkeeping: the collider itself, the
 	# gather point standing on it, and the counters. Their render instances
@@ -2526,3 +2578,101 @@ func stats() -> Dictionary:
 		"regrown": _regrown,
 		"harvested_permanently": harvested_count(),
 	}
+
+
+# --- Fight ring: soft occluders stand aside while a fight runs --------------
+
+
+## MEADOWS-VISUAL-PASS: a standing dead tree or a bush inside the fight ring
+## sits between the combat camera and the fight -- round 2's judge found one in
+## the middle of the ring, and "never let a sapling hide the target" was the
+## report's first scene fix. `combat_arena.gd` calls this when it opens and
+## `restore_fight_occluders()` when it closes, with the token this returns.
+##
+## Presentation only, and local to this peer: `bushes` and `deadfall` carry no
+## collider (`collides: false`), so nothing a body or the host resolves against
+## changes, and nothing here is saved or replicated. Trees, saplings and rocks
+## collide and stay; encounter siting already keeps spawns off them.
+##
+## Each hidden entry is removed at its own stored position, exactly as
+## `harvest_permanently()` does, and marked so a second overlapping ring does
+## not take it twice; that ring still counts a hold on it, so the entry comes
+## back only when the last ring holding it closes. Returns the indices this
+## ring holds, which is the token.
+func hide_fight_occluders(centre: Vector3, radius: float) -> PackedInt32Array:
+	var hidden := PackedInt32Array()
+	if simulation_only or _instancer == null or radius <= 0.0:
+		return hidden
+	var radius_sq := radius * radius
+	var removed := false
+	for i in _soft_occluder_positions.size():
+		var state := _soft_occluder_state[i]
+		if state == SOFT_GONE or _soft_occluder_mesh_ids[i] < 0:
+			continue
+		var spot: Vector3 = _soft_occluder_positions[i]
+		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
+			continue
+		_soft_occluder_fight_holds[i] += 1
+		hidden.append(i)
+		if state == SOFT_HIDDEN_BY_FIGHT:
+			continue
+		removed = true
+		_remove_render_instance(_soft_occluder_mesh_ids[i], spot, false)
+		_forget_instance_position(_soft_occluder_mesh_ids[i], spot)
+		_soft_occluder_state[i] = SOFT_HIDDEN_BY_FIGHT
+	if removed:
+		_instancer.call("update_mmis", true)
+	return hidden
+
+
+## Puts back what one `hide_fight_occluders()` call took out, except anything
+## harvested in the meantime: a harvestable bush whose gather point is gone
+## from `_harvest_lookup` was taken for good and stays gone. Returns how many
+## came back. Safe to call with an empty token or one from before a rebuild.
+## Each token releases its holds once: `combat_arena.gd` clears its token after
+## restoring, and a token released twice would drop another ring's hold.
+func restore_fight_occluders(token: PackedInt32Array) -> int:
+	if token.is_empty() or _instancer == null or not is_instance_valid(_instancer):
+		return 0
+	var by_mesh: Dictionary = {}
+	for i: int in token:
+		if i < 0 or i >= _soft_occluder_state.size() \
+				or _soft_occluder_state[i] != SOFT_HIDDEN_BY_FIGHT:
+			continue
+		_soft_occluder_fight_holds[i] = maxi(_soft_occluder_fight_holds[i] - 1, 0)
+		if _soft_occluder_fight_holds[i] > 0:
+			continue
+		var harvest_index := _soft_occluder_harvest[i]
+		if harvest_index >= 0 and not _harvest_lookup.has("%s#%d" % [
+				SOFT_OCCLUDER_LAYERS[_soft_occluder_layer[i]], harvest_index]):
+			_soft_occluder_state[i] = SOFT_GONE
+			continue
+		var mesh_id := _soft_occluder_mesh_ids[i]
+		if not by_mesh.has(mesh_id):
+			by_mesh[mesh_id] = []
+		(by_mesh[mesh_id] as Array).append(i)
+	var restored := 0
+	for mesh_id: int in by_mesh.keys():
+		var transforms: Array[Transform3D] = []
+		var known: PackedVector3Array = _instance_positions.get(mesh_id, PackedVector3Array())
+		for i: int in (by_mesh[mesh_id] as Array):
+			var spot: Vector3 = _soft_occluder_positions[i]
+			var basis := Basis(Vector3.UP, _soft_occluder_yaws[i]).scaled(
+				Vector3.ONE * _soft_occluder_scales[i])
+			transforms.append(Transform3D(basis, spot - Vector3.UP * SINK))
+			known.append(spot)
+			_soft_occluder_state[i] = SOFT_VISIBLE
+			restored += 1
+		_instance_positions[mesh_id] = known
+		_instancer.call("add_transforms", mesh_id, transforms, PackedColorArray(), false)
+	if restored > 0:
+		_instancer.call("update_mmis", true)
+	return restored
+
+
+func _forget_instance_position(mesh_id: int, spot: Vector3) -> void:
+	var positions: PackedVector3Array = _instance_positions.get(mesh_id, PackedVector3Array())
+	var at := positions.find(spot)
+	if at >= 0:
+		positions.remove_at(at)
+		_instance_positions[mesh_id] = positions

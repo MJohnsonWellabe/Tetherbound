@@ -5,19 +5,19 @@ extends RefCounted
 ## text with a real icon) and, since `HD1`, combat's own Actions row. Bible
 ## sec18.
 ##
-## KNOWN LIMITATION, inherited from the bracket text this replaces rather than
-## introduced by it: this maps each action's DEFAULT device binding
-## (project.godot), not whatever the player rebound it to in tab_settings.gd.
-## The bracket hints had the identical gap -- "[X] / [E]" never read
-## key_bindings.gd either. Making this rebinding-aware needs that live
-## InputMap lookup threaded through every call site, which is real work and a
-## separate ship from "put an icon where a bracket used to be".
+## REBIND-AWARE (UX §8/§10): `GLYPHS` below is the art for each action's
+## DEFAULT binding (project.godot). When the player has moved an action in
+## Settings, `icon()` draws the glyph for the button they actually bound
+## instead -- or names it in text when the vendored pack has no art for it --
+## so a prompt never shows a button that no longer does the thing. An action
+## still on its default draws exactly what it always did.
 ##
 ## `HD1`: device is now the LAST INPUT USED, tracked by the `Game` autoload
 ## (the project's one singleton -- this does not add a second one) rather
 ## than "is a pad connected", which is what bible sec18 actually asks for:
 ## live switching as the player's hands move between keyboard and pad.
 
+const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 const DIR := "res://assets/ui/input_prompts/"
 
 ## One file per id/device, EXCEPT "horizontal": a blind visual-judge pass
@@ -168,7 +168,10 @@ const GLYPHS := {
 	## until a real Shift PNG is vendored, the same way combat_hud.gd reaches
 	## for the `cancel` id instead of a `combat_run` entry that was never added.
 	"build_snap_cycle": {"gamepad": "xbox_dpad_up.png"},
-	"build_dismantle": {"keyboard": "keyboard_b.png", "gamepad": "xbox_button_y.png"},
+	## Keyboard dismantle is bound to X (project.godot), but this entry drew
+	## the B keycap, a button that does not dismantle. No X keycap is vendored,
+	## so the keyboard half is left out and `icon()` names the bound key.
+	"build_dismantle": {"gamepad": "xbox_button_y.png"},
 
 	## OF21 input groundwork, wired for real by OF24: `playground_hud.gd`'s
 	## `_read_world_hotkeys()` reads both straight from the world -- `build_open`
@@ -451,6 +454,13 @@ static func icon(id: String, px: int = 36, tint: Color = Color.WHITE, device_ove
 	var device := device_override
 	if device.is_empty():
 		device = "gamepad" if using_gamepad() else "keyboard"
+	var rebound := rebound_glyph(id, device)
+	if not rebound.is_empty():
+		var file := str(rebound.get("file", ""))
+		if file.is_empty():
+			return "[%s]" % str(rebound.get("text", id))
+		var attr := "" if tint == Color.WHITE else " color=#%s" % tint.to_html(true)
+		return "[img=%dx%d%s]%s%s[/img]" % [px, px, attr, DIR, file]
 	# A glyph entry may cover only one device — build_snap_cycle has a pad
 	# icon but no Shift keycap PNG exists to give it a keyboard one. Degrade
 	# to the action's real bound key name ("[Shift]") rather than the raw
@@ -481,3 +491,74 @@ static func icon(id: String, px: int = 36, tint: Color = Color.WHITE, device_ove
 	for file: String in files:
 		tags.append("[img=%dx%d%s]%s%s[/img]" % [px, px, colour_attr, DIR, file])
 	return "".join(tags)
+
+
+## `{}` when `id`'s live binding for `device` is still its project default,
+## so `GLYPHS` stands. Otherwise `{"file": <vendored png or "">, "text": <the
+## bound button's name>}` for what the player actually bound. An action with
+## no binding at all on that device also returns `{}`: its default was
+## already nothing, or the player cleared it and the old fallbacks apply.
+static func rebound_glyph(id: String, device: String) -> Dictionary:
+	if not InputMap.has_action(id):
+		return {}
+	var live := _first_event_for(InputMap.action_get_events(id), device)
+	var default_events: Array = []
+	var setting: Variant = ProjectSettings.get_setting("input/%s" % id)
+	if setting is Dictionary:
+		default_events = (setting as Dictionary).get("events", []) as Array
+	var original := _first_event_for(default_events, device)
+	if live == null or KEY_BINDINGS.code(live) == KEY_BINDINGS.code(original):
+		return {}
+	var file := glyph_file_for_event(live)
+	if not file.is_empty() and not ResourceLoader.exists(DIR + file):
+		file = ""
+	var text := pad_button_name_for_action(id) if device == "gamepad" else key_name_for_action(id)
+	return {"file": file, "text": text}
+
+
+static func _first_event_for(events: Array, device: String) -> InputEvent:
+	for raw: Variant in events:
+		var event := raw as InputEvent
+		if event == null:
+			continue
+		var pad := event is InputEventJoypadButton or event is InputEventJoypadMotion
+		var keys := event is InputEventKey or event is InputEventMouseButton
+		if (device == "gamepad" and pad) or (device == "keyboard" and keys):
+			return event
+	return null
+
+
+const _KEY_FILE_NAMES := {
+	"enter": "return", "escape": "escape", "left": "arrow_left", "right": "arrow_right",
+}
+const _PAD_FILES := {
+	JOY_BUTTON_A: "xbox_button_a.png", JOY_BUTTON_B: "xbox_button_b.png",
+	JOY_BUTTON_X: "xbox_button_x.png", JOY_BUTTON_Y: "xbox_button_y.png",
+	JOY_BUTTON_LEFT_SHOULDER: "xbox_lb.png", JOY_BUTTON_RIGHT_SHOULDER: "xbox_rb.png",
+	JOY_BUTTON_BACK: "xbox_button_view.png", JOY_BUTTON_START: "xbox_button_start.png",
+	JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press.png",
+	JOY_BUTTON_DPAD_UP: "xbox_dpad_up.png", JOY_BUTTON_DPAD_DOWN: "xbox_dpad_down.png",
+	JOY_BUTTON_DPAD_LEFT: "xbox_dpad_left.png", JOY_BUTTON_DPAD_RIGHT: "xbox_dpad_right.png",
+}
+
+
+## The vendored Kenney filename for one bound event, or "" when the pack has
+## no art for it (the caller then names the button in text).
+static func glyph_file_for_event(event: InputEvent) -> String:
+	if event is InputEventKey:
+		var key := event as InputEventKey
+		var code := key.physical_keycode if key.physical_keycode != 0 else key.keycode
+		var name := OS.get_keycode_string(code).to_lower()
+		return "keyboard_%s.png" % str(_KEY_FILE_NAMES.get(name, name))
+	if event is InputEventMouseButton:
+		match (event as InputEventMouseButton).button_index:
+			MOUSE_BUTTON_LEFT: return "mouse_left.png"
+			MOUSE_BUTTON_RIGHT: return "mouse_right.png"
+		return ""
+	if event is InputEventJoypadButton:
+		return str(_PAD_FILES.get((event as InputEventJoypadButton).button_index, ""))
+	if event is InputEventJoypadMotion:
+		match (event as InputEventJoypadMotion).axis:
+			JOY_AXIS_TRIGGER_LEFT: return "xbox_lt.png"
+			JOY_AXIS_TRIGGER_RIGHT: return "xbox_rt.png"
+	return ""
