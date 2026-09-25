@@ -230,7 +230,7 @@ func _inspect_footing(footing: String) -> void:
 		if not _pending_choices.has(footing):
 			_pending_choices.append(footing)
 		world.get_node("StormwoodChapter").emit_event("count:" + BUILT.ROAD_CHOSEN_PREFIX + footing)
-		game.push_world_message("Chosen for your road. Raise its two arches one after the other: a new arch binds to the last unpaired one.")
+		game.push_world_message("Chosen for your road. Raise its two arches one after the other: a new arch binds to an unpaired arch.")
 		restore_progression_from_game(game)
 		return
 	if flags.has(BUILT.ROAD_CHOSEN_PREFIX + footing):
