@@ -522,8 +522,14 @@ func restore_progression_from_game(game: Node) -> void:
 	sync_progression()
 
 
+## Route pickups plus WORLD §11 activity payoffs. A payoff uses the same
+## flag-gated, per-character once-only cache receipt as any placed pickup,
+## but is kept out of `chapter.pickups` so the route pickup census (100
+## candy, 75 recovery, three TMs) stays the route's own.
 func _sync_pickups_and_camps() -> void:
-	for spec: Dictionary in chapter.get("pickups", []):
+	var specs: Array = chapter.get("pickups", []).duplicate()
+	specs.append_array(config.get("activity_rewards", []))
+	for spec: Dictionary in specs:
 		var id := str(spec["id"])
 		var flag := str(spec.get("requires_unlock", ""))
 		if (not flag.is_empty() and not _flags.call("has", flag)) or CACHE.was_taken(_game, spec["item_id"], id, "cloudreach"):

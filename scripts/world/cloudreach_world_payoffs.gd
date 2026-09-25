@@ -5,7 +5,11 @@ extends Node3D
 const DATA := preload("res://scripts/world/cloudreach_physical_rules.gd")
 const PEOPLE := preload("res://scripts/world/village_npcs.gd")
 const CLOTH := preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
-const REST := preload("res://scripts/world/rest_point.gd")
+## WORLD §11 aeries_of_cloudreach: "Rest anchor restores traversal stamina on
+## safe landing only; not creature injury/HP." A surveyed aerie is a place to
+## land, not a bed: no night rest, no healing, no day advance.
+const AERIE_REST_RADIUS_M := 12.0
+const AERIE_REST_HEIGHT_M := 3.0
 var config: Dictionary = {}
 var world: Node3D
 var chapter: Node
@@ -21,6 +25,7 @@ var _revision := -1
 var _signal_left := 0.0
 var _state: Dictionary = {}
 var _configured := false
+var aerie_rests := 0
 
 
 static func state_for(flags: RefCounted, data: Dictionary) -> Dictionary:
@@ -50,6 +55,9 @@ func configure(owner_world: Node3D, chapter_node: Node, arena: Node) -> void:
 	_build_markers()
 	_build_board()
 	_build_anchor_states()
+	var fly: Node = player.get("fly_controller")
+	if fly != null and fly.has_signal("landed") and not fly.is_connected("landed", _on_aerie_landing):
+		fly.connect("landed", _on_aerie_landing)
 	add_to_group("progression_restore")
 	_configured = true
 	sync_progression()
@@ -218,12 +226,6 @@ func _build_markers() -> void:
 		ring.material_override = _material(Color("#d6d4b4"))
 		ring.position.y = 0.10
 		marker.add_child(ring)
-		var rest := REST.new()
-		rest.name = "SurveyRest"
-		marker.add_child(rest)
-		rest.call("build",{"at":[at.x,at.z],"height":at.y,"label":str(spec.label)+" · rest","craft":false,"radius":3.2})
-		# RestPoint builds in world coordinates; this marker supplies the parent transform.
-		rest.position -= at
 		var label := Label3D.new()
 		label.name = "LandingLabel"
 		label.text = str(spec.label)
@@ -233,6 +235,29 @@ func _build_markers() -> void:
 		label.modulate = Color("#f5ecd2")
 		marker.add_child(label)
 		marker.visible = false
+
+
+## A Fly landing on a surveyed aerie's floor refills the trainer's traversal
+## stamina, every time, and nothing else.
+func _on_aerie_landing(at: Vector3, _species_id: String = "") -> void:
+	if not _configured or not is_instance_valid(player) or not bool(player.call("is_on_floor")):
+		return
+	for id: String in markers:
+		var marker: Node3D = markers[id]
+		if not marker.visible:
+			continue
+		var offset := at - marker.global_position
+		if absf(offset.y) > AERIE_REST_HEIGHT_M or Vector2(offset.x, offset.z).length() > AERIE_REST_RADIUS_M:
+			continue
+		var vitals: RefCounted = player.get("vitals")
+		if vitals == null:
+			return
+		vitals.set("stamina", float(vitals.get("max_stamina")))
+		aerie_rests += 1
+		var game := get_node_or_null(^"/root/Game")
+		if game != null and game.has_method("push_world_message"):
+			game.call("push_world_message", "A safe aerie landing: stamina restored.")
+		return
 
 
 func _build_board() -> void:
