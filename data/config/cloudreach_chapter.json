@@ -863,18 +863,18 @@
     "nodes": [
       {"id": "cr_node_gale_fiber_gate", "resource_id": "gale_fiber", "region_id": "gate_lower_cliffs", "position": [180.0, 210.0, 620.0], "amount": 3, "respawn_policy": "world_day_regrow"},
       {"id": "cr_node_cloudberry_waycamp", "resource_id": "cloudberry", "region_id": "gate_lower_cliffs", "position": [-400.0, 175.0, 570.0], "amount": 4, "respawn_policy": "world_day_regrow"},
-      {"id": "cr_node_heartwood_west", "resource_id": "windworn_heartwood", "region_id": "broken_causeways", "position": [-1080.0, 390.0, 1500.0], "amount": 4, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_heartwood_west", "resource_id": "windworn_heartwood", "region_id": "broken_causeways", "position": [-1089.4, 382.0, 1495.1], "amount": 4, "respawn_policy": "world_day_regrow"},
       {"id": "cr_node_gale_fiber_bridge", "resource_id": "gale_fiber", "region_id": "broken_causeways", "position": [-420.0, 350.0, 1420.0], "amount": 3, "respawn_policy": "world_day_regrow"},
       {"id": "cr_node_gale_fiber_causeway", "resource_id": "gale_fiber", "region_id": "broken_causeways", "position": [-245.0, 390.0, 1582.0], "amount": 2, "respawn_policy": "world_day_regrow"},
       {"id": "cr_node_gale_fiber_anchor_picket", "resource_id": "gale_fiber", "region_id": "broken_causeways", "position": [30.0, 435.0, 2025.0], "amount": 2, "respawn_policy": "world_day_regrow"},
-      {"id": "cr_node_cliffglass_ravine", "resource_id": "cliffglass_ore", "region_id": "windscar_ravine", "position": [-600.0, 420.0, 2900.0], "amount": 3, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_cliffglass_ravine", "resource_id": "cliffglass_ore", "region_id": "windscar_ravine", "position": [-268.3, 463.5, 3117.5], "amount": 3, "respawn_policy": "world_day_regrow"},
       {"id": "cr_node_skyplume_aerie", "resource_id": "skyplume", "region_id": "windscar_ravine", "position": [500.0, 640.0, 3220.0], "amount": 2, "respawn_policy": "encounter_cycle"},
       {"id": "cr_node_sunleaf_shrine", "resource_id": "sunleaf", "region_id": "high_roost_sky_shrine", "position": [1200.0, 1080.0, 3100.0], "amount": 3, "respawn_policy": "world_day_regrow"},
       {"id": "cr_node_skyplume_perches", "resource_id": "skyplume", "region_id": "high_roost_sky_shrine", "position": [850.0, 980.0, 2800.0], "amount": 2, "respawn_policy": "encounter_cycle"},
-      {"id": "cr_node_heartwood_upper", "resource_id": "windworn_heartwood", "region_id": "upper_cloudreach", "position": [-850.0, 780.0, 4300.0], "amount": 5, "respawn_policy": "world_day_regrow"},
-      {"id": "cr_node_cloudberry_cliffhold", "resource_id": "cloudberry", "region_id": "upper_cloudreach", "position": [-500.0, 820.0, 4100.0], "amount": 4, "respawn_policy": "world_day_regrow"},
-      {"id": "cr_node_cliffglass_observatory", "resource_id": "cliffglass_ore", "region_id": "upper_cloudreach", "position": [520.0, 900.0, 4450.0], "amount": 4, "respawn_policy": "world_day_regrow"},
-      {"id": "cr_node_cliffglass_summit", "resource_id": "cliffglass_ore", "region_id": "summit_final_stronghold", "position": [-350.0, 1080.0, 5200.0], "amount": 5, "respawn_policy": "world_day_regrow"}
+      {"id": "cr_node_heartwood_upper", "resource_id": "windworn_heartwood", "region_id": "upper_cloudreach", "position": [-850.0, 798.7, 4300.0], "amount": 5, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_cloudberry_cliffhold", "resource_id": "cloudberry", "region_id": "upper_cloudreach", "position": [-587.6, 732.4, 3763.3], "amount": 4, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_cliffglass_observatory", "resource_id": "cliffglass_ore", "region_id": "upper_cloudreach", "position": [297.6, 900.0, 4671.5], "amount": 4, "respawn_policy": "world_day_regrow"},
+      {"id": "cr_node_cliffglass_summit", "resource_id": "cliffglass_ore", "region_id": "summit_final_stronghold", "position": [-217.2, 1119.1, 5327.4], "amount": 5, "respawn_policy": "world_day_regrow"}
     ]
   },
   "camping_contract": {
