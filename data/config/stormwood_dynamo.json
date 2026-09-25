@@ -14,6 +14,7 @@
   "strike_max_health_fraction": 0.25,
   "static_seconds": 8.0,
   "conduit_reach_m": 3.2,
+  "break_window_seconds": 30.0,
   "captain_trainer_id": "captain_marrow_dynamo_core",
   "replacement_point": "stormwood_dynamo.captive.placeholder_species",
   "captive": {"placeholder_species": "sparkit", "level": 44, "scale": 1.8, "nickname": "the Stormheart"}
