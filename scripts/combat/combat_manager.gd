@@ -2683,8 +2683,18 @@ func _on_enemy_strike() -> void:
 	var facing: Vector3 = _wild.call("facing")
 	var target: Vector3 = _ally_body.call("centre")
 
-	_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
-	_wild.call("play_attack")
+	# F04: a named CHARGER's lunge has already travelled by the time it strikes
+	# (`wild_creature.gd`, combat.json `charger_lunge`), and it reports whether
+	# its body actually reached the target on the way. That report replaces the
+	# cone test below, so a player who read the lane and stepped off it is
+	# missed. Every other opponent returns nothing here and strikes exactly as
+	# before: impulse, attack animation, cone test.
+	var lunge: Dictionary = _wild.call("take_lunge_outcome") \
+		if _wild.has_method("take_lunge_outcome") else {}
+	var travelled := not lunge.is_empty()
+	if not travelled:
+		_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
+		_wild.call("play_attack")
 
 	# Stage B lane 4.C, protocol §2 and §5, and 4.B's handover H1.
 	#
@@ -2699,10 +2709,19 @@ func _on_enemy_strike() -> void:
 	if _encounter_link != null:
 		if not bool(_encounter_link.call("is_encounter_host")):
 			return
+		if travelled and not bool(lunge.get("contact", false)):
+			# The charge reached nobody: a miss for everybody, decided here.
+			attack_missed.emit(false)
+			state_changed.emit()
+			return
+		# On contact the host still picks who was struck, from where the
+		# charging body actually stopped.
 		if _host_resolve_enemy_strike_for_a_participant(cfg, origin, facing):
 			return
 
-	if not MATH.move_connects(cfg, origin, facing, target):
+	var connects: bool = bool(lunge.get("contact", false)) if travelled \
+		else MATH.move_connects(cfg, origin, facing, target)
+	if not connects:
 		attack_missed.emit(false)
 		state_changed.emit()
 		return
