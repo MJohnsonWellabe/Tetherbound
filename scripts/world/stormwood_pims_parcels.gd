@@ -23,11 +23,14 @@ const DELIVERED_PREFIX := "stormwood:side_pims_parcels_delivered:"
 const REWARD_SOURCE := "stormwood_pims_parcels"
 const REWARD_ITEM := "potion_small"
 const REWARD_COUNT := 2
-const REWARD_FLAG := "stormwood_pims_parcels_reward_received"
+const REWARD_FLAG := "stormwood:pims_parcels_reward_received"
 const PIM := "courier_pim"
 const OFFER := "stormwood_pim_parcels_offer"
 const PROGRESS := "stormwood_pim_parcels_progress"
 const RETURN := "stormwood_pim_parcels_return"
+## The same character already holds Pim's receipt (from an earlier world): Pim
+## thanks them without promising a second payment.
+const RETURN_PAID := "stormwood_pim_parcels_return_paid"
 const THANKS := "stormwood_pim_parcels_thanks"
 ## Recipients, in the order the quest text names them. Each is an existing
 ## resident at an arch-road settlement (pairs A, B and C).
@@ -38,6 +41,7 @@ var game: Node
 var _crates := {}
 var _revision := -1
 var _claiming := false
+var _announce_payment := false
 
 
 static func delivered_flag(recipient: String) -> String:
@@ -53,6 +57,7 @@ static func branches_for(actor_id: String) -> Array:
 	if actor_id == PIM:
 		return [
 			{"if_flag": COMPLETE, "unless_flag": REWARD_FLAG, "conversation": THANKS},
+			{"if_flag": [STEP_2, REWARD_FLAG], "unless_flag": COMPLETE, "conversation": RETURN_PAID},
 			{"if_flag": STEP_2, "unless_flag": COMPLETE, "conversation": RETURN},
 			{"if_flag": STEP_1, "unless_flag": STEP_2, "conversation": PROGRESS},
 			{"if_flag": REVEALED, "unless_flag": STEP_1, "conversation": OFFER},
@@ -71,6 +76,8 @@ static func outcome_for(conversation_id: String) -> Dictionary:
 			return {"events": ["side:%s:step_1" % CHAIN], "claim": false}
 		RETURN:
 			return {"events": ["side:%s:step_3" % CHAIN], "claim": true}
+		RETURN_PAID:
+			return {"events": ["side:%s:step_3" % CHAIN], "claim": false}
 		THANKS:
 			return {"events": [], "claim": true}
 	for recipient: String in RECIPIENTS:
@@ -110,6 +117,9 @@ func mount(owner_world: Node3D) -> void:
 		crate.visible = false
 		add_child(crate)
 		_crates[recipient] = crate
+	var transport := LEDGER_CLAIM.transport(self)
+	if transport != null:
+		transport.connect("intent_refused", _on_intent_refused)
 	restore_progression_from_game(game)
 
 
@@ -123,9 +133,13 @@ func restore_progression_from_game(_game: Node) -> void:
 		return
 	var flags: RefCounted = game.get("progression")
 	_revision = int(flags.get("revision"))
-	# A committed delta or a client's refusal both advance or settle the
-	# claim; either way another finished conversation may try again.
-	_claiming = false
+	# The receipt arriving in this character's flags is the payment's
+	# acknowledgement for host, solo and client alike.
+	if bool(flags.has(REWARD_FLAG)):
+		_claiming = false
+		if _announce_payment:
+			_announce_payment = false
+			game.call("push_world_message", "Pim's courier rate — 2 Small Potions.")
 	for recipient: String in _crates:
 		(_crates[recipient] as Node3D).visible = bool(flags.has(delivered_flag(recipient)))
 
@@ -156,7 +170,17 @@ func claim_reward() -> void:
 		game.call("push_world_message", "Make room for Pim's two small potions, then speak to Pim again.")
 		return
 	_claiming = true
+	_announce_payment = true
 	var verdict := LEDGER_CLAIM.submit(self, reward_intent())
-	_claiming = bool(verdict.get("pending", false))
-	if bool(verdict.get("ok", false)):
-		game.call("push_world_message", "Pim's courier rate — 2 Small Potions.")
+	if not LEDGER_CLAIM.in_flight(verdict):
+		_claiming = false
+		_announce_payment = false
+	restore_progression_from_game(game)
+
+
+## A client's refusal arrives here, not as the submit verdict. The ledger has
+## already spoken the reason; release the latch so Pim can be asked again.
+func _on_intent_refused(kind: String, _code: String, _reason: String, _detail: Dictionary) -> void:
+	if kind == "reward_grant" and _claiming:
+		_claiming = false
+		_announce_payment = false
