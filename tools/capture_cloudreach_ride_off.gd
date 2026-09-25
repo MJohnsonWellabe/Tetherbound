@@ -119,7 +119,7 @@ func _run() -> void:
 			var back := -_heading_from_rig()
 			_aim(back)
 			await _advance(0.3)
-			await _ride_for(minf(30.0 - _motion_s + 0.5, 12.0), 1.5, "terrace_road_back", back)
+			await _ride_for(minf(30.0 - _motion_s + 0.5, 16.0), 1.5, "terrace_road_back", back)
 	if _motion_s < 30.0:
 		print("CAPTURE ERROR %s: only %.1f s of stick-held motion (need 30)" % [_tag, _motion_s])
 		_errors += 1
