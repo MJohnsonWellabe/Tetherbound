@@ -11,8 +11,6 @@ const HOSTED := preload("res://scripts/combat/stormwood_hosted_trainer.gd")
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
-const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
-const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
 const TRAINER_ID := "captain_marrow_dynamo_core"
 const MARROW_FLAG := "stormwood:marrow_defeated"
@@ -442,8 +440,9 @@ func _admit_break_arrivals() -> void:
 
 
 ## BOSSES §4.7: a full-party faint "restores everyone at Ember Bivouac". The
-## trainer is returned there and every party member gets the same rest a camp
-## creature bed gives (`home_recovery.gd::rest()`).
+## trainer is returned there and every party member is healed and revived with
+## `heal_fully()`, the heal inside a camp bed's rest, without that rest's XP:
+## a deliberate wipe must never become a repeatable XP loop (PROGRESSION).
 func _apply_local_recovery() -> void:
 	var player := world.get_node("Player") as Node3D
 	var x := -120.0
@@ -452,9 +451,8 @@ func _apply_local_recovery() -> void:
 	var game := get_node("/root/Game")
 	var party: RefCounted = game.get("party")
 	if party != null:
-		var cfg := PROGRESSION.config()
 		for creature: RefCounted in party.call("members"):
-			HOME_RECOVERY.rest(creature, cfg)
+			creature.call("heal_fully")
 	_reported_ally_uid = ""
 	_reported_party_down = false
 	game.push_world_message("The Dynamo throws you back to Ember Bivouac. Your party is restored; climb again.")
@@ -505,9 +503,24 @@ func _party_out(peer: int) -> bool:
 		return true
 	if peer == int(session.local_peer_id()):
 		var game := get_node_or_null("/root/Game")
-		var party: RefCounted = game.get("party") if game != null else null
-		return party != null and bool(party.call("all_fainted"))
+		return party_unavailable(game.get("party") if game != null else null)
 	return _party_down.has(peer)
+
+
+## The party model's own availability rule (`party.gd` `set_active()` and
+## `cycle_active()`): a creature that is fainted or resting cannot take the
+## field. With none left able to, the whole party is down for the Break.
+static func party_unavailable(party: Variant) -> bool:
+	if party == null or not (party is Object):
+		return false
+	var members: Array = (party as Object).call("members")
+	if members.is_empty():
+		return false
+	for creature: Variant in members:
+		if creature is Object and not bool((creature as Object).get("fainted")) \
+				and not bool((creature as Object).get("resting")):
+			return false
+	return true
 
 
 ## Host: a remote fighter's report of its own faint. Only a Break participant
@@ -517,9 +530,14 @@ func _note_reported_faint(peer: int, intent: Dictionary) -> void:
 		return
 	var uid := str(intent.get("creature_uid", ""))
 	var card: Dictionary = hub.call("card_for", peer)
-	if not uid.is_empty() and uid == str(card.get("creature_uid", "")):
+	var deployed := str(card.get("creature_uid", ""))
+	if not uid.is_empty() and uid == deployed:
 		_ally_down[peer] = uid
-	if bool(intent.get("party_down", false)):
+	# A whole-party faint counts only after this attempt heard that the
+	# creature this peer has deployed fainted (in this or an earlier report),
+	# so a bare party_down cannot restart the Break on demand.
+	if bool(intent.get("party_down", false)) and not deployed.is_empty() \
+			and str(_ally_down.get(peer, "")) == deployed:
 		_party_down[peer] = true
 
 
@@ -536,7 +554,7 @@ func _report_own_faint() -> void:
 	var uid := str(creature.get("uid")) if creature != null and bool(creature.get("fainted")) else ""
 	var game := get_node_or_null("/root/Game")
 	var party: RefCounted = game.get("party") if game != null else null
-	var party_down := party != null and bool(party.call("all_fainted"))
+	var party_down := party_unavailable(party)
 	var new_ally := not uid.is_empty() and uid != _reported_ally_uid
 	if not new_ally and (not party_down or _reported_party_down):
 		return

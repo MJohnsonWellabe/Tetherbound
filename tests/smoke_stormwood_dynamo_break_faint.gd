@@ -362,6 +362,10 @@ func _real_faint_path(session: SessionStub) -> void:
 		"a non-participant cannot report someone else's creature")
 	controller.dispatch(4, {"kind": "dynamo_ally_fainted", "creature_uid": "creature-other", "party_down": false})
 	_check(controller.call("_in_break_reach", 4), "a report naming a creature other than the deployed one is ignored")
+	controller.dispatch(4, {"kind": "dynamo_ally_fainted", "creature_uid": "creature-other", "party_down": true})
+	controller.dispatch(4, {"kind": "dynamo_ally_fainted", "creature_uid": "", "party_down": true})
+	_check(not controller.call("_party_out", 4),
+		"a whole-party report with no matching faint of the deployed creature cannot restart the Break")
 	controller.dispatch(4, {"kind": "dynamo_ally_fainted", "creature_uid": "creature-remote-4", "party_down": false})
 	var refused: Dictionary = controller.call("_validate_conduit_strike", 4,
 		{"slot": "quick", "move_id": "spark", "action": 1, "index": 0})
@@ -452,12 +456,18 @@ func _real_faint_path(session: SessionStub) -> void:
 	_check(hub.recoveries_for(1) == 1 and controller.participants.is_empty(),
 		"the waiting Break does not throw anyone back twice")
 
-	# The recovery restores: the trainer at Ember Bivouac, every creature up.
+	# The recovery restores: the trainer at Ember Bivouac, every creature up,
+	# and no rest XP for a wipe.
+	var xp_before := [int(creature.get("xp")), int(reserve.get("xp"))]
+	var level_before := [int(creature.get("level")), int(reserve.get("level"))]
 	controller.receive({"kind": "dynamo_recovery"})
+	_check([int(creature.get("xp")), int(reserve.get("xp"))] == xp_before
+		and [int(creature.get("level")), int(reserve.get("level"))] == level_before,
+		"the wipe recovery grants no XP: a deliberate wipe is not an XP loop")
 	_check(not bool(creature.get("fainted")) and not bool(reserve.get("fainted"))
 		and is_equal_approx(float(creature.get("hp")), float(creature.get("max_hp")))
 		and is_equal_approx(float(reserve.get("hp")), float(reserve.get("max_hp"))),
-		"the recovery restores the whole party with a camp bed's rest")
+		"the recovery heals and revives the whole party")
 	_check(Vector2(player.global_position.x, player.global_position.z).distance_to(Vector2(-120, 5270)) < 0.01,
 		"the recovery returns the trainer to Ember Bivouac")
 	controller.set_process(false)
