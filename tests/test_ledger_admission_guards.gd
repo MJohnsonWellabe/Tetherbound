@@ -4,7 +4,9 @@ extends "res://tests/test_case.gd"
 ## - F05 finding 6 (#221): an owned receipt such as
 ##   `legendary_resolution:accepted:<character_id>` can only be written by that
 ##   character (host-originated writes stay trusted);
-## - Stormwood: a Stormglass arch commits at its footing centre.
+## - Stormwood: a Stormglass arch commits at its footing centre;
+## - Tidewake F14 (#226): the Guardian's claim markers and facts, and the
+##   Nerissa/Aldis delivery journal, are host-only.
 
 const WORLD_STATE := preload("res://autoload/world_state.gd")
 const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
@@ -187,3 +189,45 @@ func test_footing_request_near_a_free_standing_arch_is_judged_at_the_clear_centr
 	assert_true(bool(verdict.get("ok")), "judged at the clear centre (8 m from the free arch): accepted")
 	var record: Dictionary = world.placed_buildings[int(world.building_index_of(str(verdict.uid)))]
 	assert_almost_eq(float((record.position as Array)[0]), centre.x, 0.001, "and it stands at the centre")
+
+
+func test_remote_peer_cannot_write_or_clear_guardian_claim_facts() -> void:
+	for id: String in ["water_claim:guardian:offered:victim-char", "water_claim:guardian:legacy_recipient",
+			"water_guardian_claimed", "water_guardian_settled", "water_guardian_freed"]:
+		var verdict: Dictionary = ledger.commit(_flag(id, "guest-char"), GUEST)
+		assert_false(bool(verdict.get("ok")), "a guest must not write %s" % id)
+		assert_eq(str(verdict.get("code")), "host_only")
+		assert_false(world.flags.has(id))
+		assert_true(bool(ledger.commit(_flag(id, "host-char"), HOST).get("ok")),
+			"the host still writes %s" % id)
+		var clear := _flag(id, "guest-char")
+		clear["value"] = false
+		assert_false(bool(ledger.commit(clear, GUEST).get("ok")), "a guest must not clear %s" % id)
+		assert_true(world.flags.has(id))
+	assert_true(bool(ledger.commit(_flag("water_currents_restored", "guest-char"), GUEST).get("ok")),
+		"ordinary Tidewake world flags stay guest-writable")
+
+
+func test_other_intent_kinds_cannot_smuggle_a_guardian_fact() -> void:
+	var intent := {"kind": "claim_pickup", "realm": "water", "flag": "water_guardian_freed",
+		"item": "stick", "count": 1, "_actor_character_id": "guest-char"}
+	assert_false(bool(ledger.commit(intent, GUEST).get("ok")))
+	assert_false(world.flags.has("water_guardian_freed"))
+
+
+func test_only_the_host_journals_the_guardian_participant_trainers() -> void:
+	for source: String in ["trainer:water_trainer_nerissa:coins", "trainer:warden_aldis:item:tide_charm"]:
+		var grant := _grant(source)
+		var forged: Dictionary = ledger.commit(grant, GUEST)
+		assert_false(bool(forged.get("ok")), "a guest must not journal %s" % source)
+		assert_eq(str(forged.get("code")), "host_only")
+		assert_true(bool(ledger.commit(_grant(source), HOST).get("ok")),
+			"the host still pays %s" % source)
+	assert_true(bool(ledger.commit(_grant("trainer:meadows_alpha_bramble:item:stick"), GUEST).get("ok")),
+		"a guest's own named-wild completion reward shares the prefix and stays allowed")
+
+
+func _grant(source: String) -> Dictionary:
+	return {"kind": "reward_grant", "realm": "water", "source": source, "item": "stick", "count": 1,
+		"_reward_recipients": [{"peer": GUEST, "character_id": "guest-char"}]}
+
