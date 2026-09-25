@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "_comment": "Stormwood encounter catalogue only. Its authored role and replacement-point schema now names the installed biome roster; runtime injection, visualisation, and playability are separate work.",
+  "_comment": "Stormwood encounter catalogue only. Its authored role and replacement-point schema now names the installed biome roster; runtime injection, visualisation, and playability are separate work. Stormwood has no day or night (owner ruling): each table is one always-on list, so every role in `roles` can appear at any hour and there is no night_role_weights variant.",
   "realm_id": "stormwood",
   "table_count_contract": 12,
   "wild_cluster_count_contract": 401,
@@ -15,20 +15,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "cinder_forager",
-          "weight": 1
-        },
-        {
-          "role": "edge_scout",
-          "weight": 1
-        },
-        {
-          "role": "ash_digger",
-          "weight": 1
-        }
-      ],
       "roles": [
         {
           "role": "cinder_forager",
@@ -60,20 +46,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "storm_runner",
-          "weight": 1
-        },
-        {
-          "role": "edge_scout",
-          "weight": 1
-        },
-        {
-          "role": "glass_lurker",
-          "weight": 3
-        }
-      ],
       "roles": [
         {
           "role": "storm_runner",
@@ -105,20 +77,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "pool_drifter",
-          "weight": 1
-        },
-        {
-          "role": "moss_grazer",
-          "weight": 1
-        },
-        {
-          "role": "spark_darter",
-          "weight": 1
-        }
-      ],
       "roles": [
         {
           "role": "pool_drifter",
@@ -150,20 +108,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "spark_darter",
-          "weight": 1
-        },
-        {
-          "role": "night_glider",
-          "weight": 3
-        },
-        {
-          "role": "pool_ambusher",
-          "weight": 1
-        }
-      ],
       "roles": [
         {
           "role": "spark_darter",
@@ -195,20 +139,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "ridge_stalker",
-          "weight": 1
-        },
-        {
-          "role": "spark_darter",
-          "weight": 1
-        },
-        {
-          "role": "vine_climber",
-          "weight": 1
-        }
-      ],
       "roles": [
         {
           "role": "ridge_stalker",
@@ -240,20 +170,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "storm_runner",
-          "weight": 1
-        },
-        {
-          "role": "arc_diver",
-          "weight": 1
-        },
-        {
-          "role": "ridge_stalker",
-          "weight": 1
-        }
-      ],
       "roles": [
         {
           "role": "storm_runner",
@@ -285,20 +201,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "crown_keeper",
-          "weight": 1
-        },
-        {
-          "role": "spark_darter",
-          "weight": 1
-        },
-        {
-          "role": "glass_lurker",
-          "weight": 3
-        }
-      ],
       "roles": [
         {
           "role": "crown_keeper",
@@ -330,20 +232,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "crown_wisp",
-          "weight": 1
-        },
-        {
-          "role": "glass_lurker",
-          "weight": 3
-        },
-        {
-          "role": "spark_darter",
-          "weight": 1
-        }
-      ],
       "roles": [
         {
           "role": "crown_wisp",
@@ -375,20 +263,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "giant_rooter",
-          "weight": 1
-        },
-        {
-          "role": "canopy_hunter",
-          "weight": 1
-        },
-        {
-          "role": "ember_scavenger",
-          "weight": 1
-        }
-      ],
       "roles": [
         {
           "role": "giant_rooter",
@@ -420,20 +294,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "storm_runner",
-          "weight": 1
-        },
-        {
-          "role": "night_glider",
-          "weight": 3
-        },
-        {
-          "role": "ash_charger",
-          "weight": 1
-        }
-      ],
       "roles": [
         {
           "role": "storm_runner",
@@ -465,20 +325,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "fence_prowler",
-          "weight": 1
-        },
-        {
-          "role": "conduit_gnawer",
-          "weight": 3
-        },
-        {
-          "role": "spark_darter",
-          "weight": 1
-        }
-      ],
       "roles": [
         {
           "role": "fence_prowler",
@@ -510,20 +356,6 @@
       ],
       "catchable": true,
       "replaceable": true,
-      "night_role_weights": [
-        {
-          "role": "arc_diver",
-          "weight": 1
-        },
-        {
-          "role": "spark_darter",
-          "weight": 1
-        },
-        {
-          "role": "ash_charger",
-          "weight": 1
-        }
-      ],
       "roles": [
         {
           "role": "arc_diver",

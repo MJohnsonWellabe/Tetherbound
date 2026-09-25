@@ -1,0 +1,82 @@
+run id:  net-20260925T083558Z-19987
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmfix/r1/net-split_realms-20260925T083558Z
+smoke:   tests/smoke_net_split_realms.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=20010 control_port=39109 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmfix/r1/net-split_realms-20260925T083558Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmfix/r1/net-split_realms-20260925T083558Z/peer-0.log
+coordinator: launched peer 1 (client) pid=20011 control_port=36389 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmfix/r1/net-split_realms-20260925T083558Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmfix/r1/net-split_realms-20260925T083558Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":32221.0,"godot_version":"4.7-stable (official)","main_sha":"835744b35db1","peer":0.0,"pid":20010.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmfix/r1/net-split_realms-20260925T083558Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":32222.0,"godot_version":"4.7-stable (official)","main_sha":"835744b35db1","peer":1.0,"pid":20011.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmfix/r1/net-split_realms-20260925T083558Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join (lane 2.A); without it there are no remote bodies to see
+PASS: peer 0 hosted a world (hosting udp/32221 as peer 1)
+PASS: peer 1 joined peer 0's world on port 32221 (joined 127.0.0.1:32221 as peer 1896370970 after 15 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 0 starts in the Meadows (got 'meadows')
+PASS: peer 1 starts in the Meadows (got 'meadows')
+PASS: the host holds no realm shell while everybody is in one realm (holds [])
+PASS: the Cloudreach route is open before anyone tries to walk it (realm_key_cloudreach: ok=true pending=false code='' reason='')
+PASS: peer 0 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: peer 1 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: peer 1 crossed into Cloudreach without leaving the session (crossed 'meadows' -> 'cloudreach' after 533 observed physics frames / 28996 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: peer 0's session is still active after the crossing
+PASS: peer 0 still counts 2 peers after the crossing (got 2)
+PASS: peer 1's session is still active after the crossing
+PASS: peer 1 still counts 2 peers after the crossing (got 2)
+PASS: peer 0's registry carries a realm for both players
+PASS: peer 0 sees one player in each realm (got ["cloudreach", "meadows"])
+PASS: peer 1's registry carries a realm for both players
+PASS: peer 1 sees one player in each realm (got ["cloudreach", "meadows"])
+PASS: the host is still standing in the Meadows
+PASS: the client is standing in Cloudreach
+PASS: the client's CURRENT SCENE is Cloudreach, not merely its realm id (got 'CloudreachCliffs')
+PASS: the host stands a headless Cloudreach shell up for the peer who went there (holds ["cloudreach"])
+PASS: the Cloudreach shell holds the body of the peer who crossed (holds 1)
+6A-SHELL-COST peer=0 realm=cloudreach attach_ms=54 build_ms=2693 ready=true static_delta_kb=3959 process_static_kb=1781356 vm_hwm_kb=2282776 bodies=1
+PASS: the client hosts nothing: shells are the HOST's, not every peer's (holds [])
+PASS: the client's real visible sliced Cloudreach scene built grass, flowers and bushes ({ "bushes": 778.0, "flowers": 13342.0, "grass": 1048134.0, "present": true, "world": "CloudreachCliffs" })
+PASS: the host's simulation-only Cloudreach shell omits decorative cover ({ "bushes": 0.0, "flowers": 0.0, "grass": 0.0, "present": false, "world": "CloudreachCliffs" })
+PASS: peer 0 draws no trainer body, in the world on its own screen, for a player in another realm (drew 0)
+PASS: peer 1 draws no trainer body, in the world on its own screen, for a player in another realm (drew 0)
+PASS: the host committed a Meadows world record while the client was elsewhere (chest record at index 0)
+PASS: the client committed a CLOUDREACH world record from Cloudreach (chest record at index 1)
+PASS: the host put a creature out in the Meadows (deployed AllyCreature)
+PASS: the host fought a wild in the Meadows while a Cloudreach shell was standing (engaged mudsnout as encounter 1:1 (bound after 0 frame(s)))
+PASS: the Cloudreach shell survived the host's own fight (holds ["cloudreach"])
+PASS: peer 1 crossed back into the Meadows (crossed 'cloudreach' -> 'meadows' after 1344 observed physics frames / 87779 ms (budget 6000 physics frames); current scene is /root/MeadowsPlayground)
+PASS: the HOST crossed into Cloudreach, the other way round (crossed 'meadows' -> 'cloudreach' after 525 observed physics frames / 35591 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: the host is now in Cloudreach
+PASS: the host's real visible sliced Cloudreach scene built all cover tiers after the swap ({ "bushes": 778.0, "flowers": 13342.0, "grass": 1048134.0, "present": true, "world": "CloudreachCliffs" })
+PASS: the client is now back in the Meadows
+PASS: the client's current scene really is the Meadows again (got 'MeadowsPlayground')
+PASS: the host now holds a Meadows shell and no Cloudreach one (holds ["meadows"])
+6A-SHELL-COST peer=0 realm=meadows attach_ms=164 build_ms=-1 ready=false static_delta_kb=8909 process_static_kb=1290410 vm_hwm_kb=2341548 bodies=1
+PASS: peer 0 host-crossing log suffix is available for stale-cache inspection
+PASS: peer 0 logs zero stale Trainer_*/Sync paths during host crossing (got 0)
+PASS: peer 0 logs zero stale cached-node errors during host crossing (got 0)
+PASS: departure leaves no stale trainer synchronizer/cache errors
+ALL CHECKS PASSED
+# Net smoke run net-20260925T083558Z-19987
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=20010 exited=true unexpected_exit=false
+- peer 1 (client) pid=20011 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmfix/r1/net-split_realms-20260925T083558Z/SUMMARY.md ===
+# Net smoke run net-20260925T083558Z-19987
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=20010 exited=true unexpected_exit=false
+- peer 1 (client) pid=20011 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED

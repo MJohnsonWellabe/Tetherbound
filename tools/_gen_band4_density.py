@@ -137,5 +137,25 @@ for pts, every in [(SPINE, 3), (WIND_RIDGE, 4), (HIGH_PASTURE, 3), (WATCHTOWER, 
 print("generated", len(all_new), "clusters,", sum(e["count"] for e in all_new), "creatures")
 print("orders", all_new[0]["order"], "..", all_new[-1]["order"])
 
+# F02.4 route spacing: several generated clusters were later moved or re-tabled by
+# hand so aggressive ambushes on the earned road stay >= 150m apart
+# (tests/test_meadows_route_ambush_spacing.gd). Carry the live placement over so a
+# rerun of this generator cannot silently undo those moves.
+_LIVE = "data/config/bands/band4_upper_meadows_ironwood/spawns.json"
+try:
+    with open(_LIVE) as f:
+        _live = {s["order"]: s for s in json.load(f)["spawns"]}
+except OSError:
+    _live = {}
+for e in all_new:
+    live = _live.get(e["order"], {})
+    if "_why_f02_route_spacing" in live:
+        e["centre"] = live["centre"]
+        for key in ("table", "wander_radius", "_why_f02_route_spacing"):
+            if key in live:
+                e[key] = live[key]
+            else:
+                e.pop(key, None)
+
 with open("/tmp/band4_density_new.json","w") as f:
     json.dump(all_new, f, indent=2)

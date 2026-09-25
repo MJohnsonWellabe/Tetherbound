@@ -33,6 +33,34 @@ func test_pre_handshake_and_offline_visibility_still_allow_the_spawn() -> void:
 	assert_true(TRAINER_SPAWN.observer_may_receive(42, "meadows", "stormwood", false))
 
 
+func test_all_peers_question_is_public_only_when_every_recipient_may_receive() -> void:
+	var realms := {1: "cloudreach", 42: "meadows", 77: "cloudreach"}
+	var realm_for := func(peer: int) -> String: return str(realms.get(peer, ""))
+	assert_false(TRAINER_SPAWN.baseline_allows(0, PackedInt32Array([42, 77]), realm_for,
+		"cloudreach", true),
+		"observer 0 must not make a Cloudreach body public while a guest stands in the Meadows")
+	assert_false(TRAINER_SPAWN.baseline_allows(42, PackedInt32Array([42, 77]), realm_for,
+		"cloudreach", true))
+	assert_true(TRAINER_SPAWN.baseline_allows(77, PackedInt32Array([42, 77]), realm_for,
+		"cloudreach", true), "a same-realm guest is still asked for individually")
+	realms[42] = "cloudreach"
+	assert_true(TRAINER_SPAWN.baseline_allows(0, PackedInt32Array([42, 77]), realm_for,
+		"cloudreach", true), "public once every recipient stands in the body's realm")
+
+
+func test_all_peers_question_keeps_host_pre_hello_and_offline_rules() -> void:
+	var realm_for := func(peer: int) -> String: return "meadows" if peer == 1 else ""
+	assert_true(TRAINER_SPAWN.baseline_allows(0, PackedInt32Array([1]), realm_for,
+		"cloudreach", true), "on a client, the host recipient still receives every realm")
+	assert_true(TRAINER_SPAWN.baseline_allows(0, PackedInt32Array([42]), realm_for,
+		"cloudreach", true), "a recipient with no registry row yet is still shown the body")
+	assert_true(TRAINER_SPAWN.baseline_allows(0, PackedInt32Array(), realm_for,
+		"cloudreach", true))
+	var elsewhere := func(_peer: int) -> String: return "meadows"
+	assert_true(TRAINER_SPAWN.baseline_allows(0, PackedInt32Array([42]), elsewhere,
+		"cloudreach", false), "no session means no realm scoping")
+
+
 func test_remote_spawn_data_uses_the_selected_body_not_the_viewers_body() -> void:
 	var spawner := TRAINER_SPAWN.new()
 	var session := FakeSession.new()
@@ -102,3 +130,19 @@ func test_remote_replica_releases_reciprocal_exception_when_its_side_is_already_
 
 	remote.free()
 	rig.free()
+
+
+func test_replicas_ignore_each_other() -> void:
+	var a := REMOTE_TRAINER.new()
+	var b := REMOTE_TRAINER.new()
+	REMOTE_TRAINER.exempt_replica_pair(a, b)
+	assert_true(a.get_collision_exceptions().has(b),
+		"two stacked replicas must not pin each other while following their owners")
+	assert_true(b.get_collision_exceptions().has(a), "the exemption is symmetric")
+	# The other side may already have been cleared by PhysicsServer teardown.
+	b.remove_collision_exception_with(a)
+	REMOTE_TRAINER.release_replica_pair(a, b)
+	assert_false(a.get_collision_exceptions().has(b))
+	assert_false(b.get_collision_exceptions().has(a))
+	a.free()
+	b.free()

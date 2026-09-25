@@ -234,6 +234,7 @@ func _ready() -> void:
 	# drive-by-edited during a five-lane wave; fixed here at integration.
 	_apply_ownership()
 	_sync_local_collision_exception()
+	_exempt_other_replicas()
 	print("[trainers] %s stands up: authority %d, this peer is %d (%s)"
 		% [name, get_multiplayer_authority(), multiplayer.get_unique_id(),
 			"our own proxy" if _owned_here == true else "another player"])
@@ -304,6 +305,7 @@ func _exit_tree() -> void:
 	# tree. Release ours first so it never tries to disconnect the reciprocal
 	# body after that teardown has already happened.
 	_bind_local_collision_exception(null)
+	_release_other_replicas()
 
 
 func _authority_query_available() -> bool:
@@ -510,6 +512,47 @@ func _bind_local_collision_exception(rig: PhysicsBody3D) -> void:
 	if _local_collision_rig != null:
 		add_collision_exception_with(_local_collision_rig)
 		_local_collision_rig.add_collision_exception_with(self)
+
+
+## Replicas never collide with one another. Each trainer's owner resolves
+## that trainer's collision against its own world; a replica only follows the
+## replicated pose. Every replica spawns at the world's spawn point, so from the
+## third peer on a viewer holds two replicas stacked in one place, and
+## `move_and_slide()` toward the owner's pose left both pinned there: a guest
+## watched another guest stand still while it walked (and the host's copy, which
+## its distance checks read, stayed behind too). World collision is unchanged.
+##
+## Pairwise and symmetric, set up by whichever of the two readies second.
+## Only `_ready()` sets these up: a replica that left the tree and re-entered
+## would not get them back (nothing re-parents a replica today).
+func _exempt_other_replicas() -> void:
+	if not is_inside_tree():
+		return
+	for other: Node in get_tree().get_nodes_in_group(GROUP):
+		if other != self and other is PhysicsBody3D and is_instance_valid(other):
+			exempt_replica_pair(self, other as PhysicsBody3D)
+
+
+## Replica pairs only; the local-rig exception is
+## `_bind_local_collision_exception()`'s to release.
+func _release_other_replicas() -> void:
+	for body: PhysicsBody3D in get_collision_exceptions():
+		if is_instance_valid(body) and body.is_in_group(GROUP):
+			release_replica_pair(self, body)
+
+
+static func exempt_replica_pair(a: PhysicsBody3D, b: PhysicsBody3D) -> void:
+	if not a.get_collision_exceptions().has(b):
+		a.add_collision_exception_with(b)
+	if not b.get_collision_exceptions().has(a):
+		b.add_collision_exception_with(a)
+
+
+static func release_replica_pair(a: PhysicsBody3D, b: PhysicsBody3D) -> void:
+	if a.get_collision_exceptions().has(b):
+		a.remove_collision_exception_with(b)
+	if b.get_collision_exceptions().has(a):
+		b.remove_collision_exception_with(a)
 
 
 static func _bool_call(node: Object, method: StringName) -> bool:

@@ -863,7 +863,9 @@ static func label_core_colour(colour: Color) -> Color:
 	var current := 0.2126 * colour.r + 0.7152 * colour.g + 0.0722 * colour.b
 	if current >= LABEL_MIN_LUMA:
 		return colour
-	var t := clampf((LABEL_MIN_LUMA - current) / maxf(1.0 - current, 0.0001), 0.0, 1.0)
+	# Same hair-above-the-floor target as `tab_map.gd::label_core_colour`.
+	var target := minf(LABEL_MIN_LUMA + 0.0005, 1.0)
+	var t := clampf((target - current) / maxf(1.0 - current, 0.0001), 0.0, 1.0)
 	var lifted := colour.lerp(Color(1.0, 1.0, 1.0), t)
 	lifted.a = colour.a
 	return lifted

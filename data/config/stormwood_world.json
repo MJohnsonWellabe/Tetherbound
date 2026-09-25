@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "_comment": "Root-authored six-region layout. All positions are realm-local metres. Ordinary routes never enter the Glass Sink. The Crown has only a linked-arch entry. The Stormheart Tree is the Dynamo and must dominate neighbouring views.",
+  "_comment": "Root-authored six-region layout. All positions are realm-local metres. Ordinary routes never enter the Glass Sink. The Crown has only a linked-arch entry. The Stormheart Tree is the Dynamo and must dominate neighbouring views. A `spur` route is one dead-end pocket's own lane: it leaves the road it `joins` and ends at the mouth of `pocket_id` (stormwood_pockets.json). The forest bake keeps every collider out of its corridor, like any route, but plants no roadside stand along it.",
   "realm": {"id": "stormwood", "display_name": "The Stormwood", "world_bounds": {"min_x": -2560, "max_x": 2048, "min_y": -100, "max_y": 360, "min_z": 0, "max_z": 6144}},
   "transition_points": {
     "cloudreach_entry": {"id": "stormwood_arrival_from_cloudreach", "position": [-300, 30, 180], "facing_yaw_deg": 180, "peer_realm_id": "cloudreach", "peer_anchor_id": "cloudreach_return_from_stormwood", "save_anchor": true},
@@ -51,7 +51,12 @@
     {"id": "conductor_west_loop", "kind": "loop", "points": [[-700,2300],[-1550,2460],[-1720,3040],[-1120,3290],[-1080,3020],[-700,2300]]},
     {"id": "hall_loop", "kind": "loop", "requires_unlock": "stormwood:rootgate_released", "points": [[-450,3960],[-1120,3870],[-1590,4370],[-890,4490],[-450,3960]]},
     {"id": "blackwater_loop", "kind": "loop", "requires_unlock": "stormwood:rootgate_released", "points": [[-450,3960],[550,4050],[820,4520],[-150,4460],[-450,3960]]},
-    {"id": "crown_ring", "kind": "island", "points": [[485,2700],[590,2540],[805,2545],[890,2710],[780,2850],[585,2840],[485,2700]]}
+    {"id": "crown_ring", "kind": "island", "points": [[485,2700],[590,2540],[805,2545],[890,2710],[780,2850],[585,2840],[485,2700]]},
+    {"id": "spur_verge_ash_hollow", "kind": "spur", "pocket_id": "verge_ash_hollow", "joins": "ash_road", "points": [[-335.0,369.2],[-69.4,418.4]]},
+    {"id": "spur_hollows_moss_nook", "kind": "spur", "pocket_id": "hollows_moss_nook", "joins": "crown_sightline_loop", "points": [[101.5,1762.0],[-30.8,1797.5]]},
+    {"id": "spur_conductor_ridge_cleft", "kind": "spur", "pocket_id": "conductor_ridge_cleft", "joins": "conductor_road", "points": [[-650.0,3400.0],[-309.5,3380.5]]},
+    {"id": "spur_deepwood_ridge_shelter", "kind": "spur", "pocket_id": "deepwood_ridge_shelter", "joins": "hall_loop", "requires_unlock": "stormwood:rootgate_released", "points": [[-1022.0,3883.2],[-1001.3,3729.4]]},
+    {"id": "spur_dynamo_scorch_pen", "kind": "spur", "pocket_id": "dynamo_scorch_pen", "joins": "dynamo_west_approach", "requires_unlock": "stormwood:rootgate_released", "points": [[-412.1,5144.4],[-446.8,5241.1]]}
   ],
   "no_fly": {"reason": "The storm canopy leaves no safe sky to launch into.", "all_realm": true}
 }

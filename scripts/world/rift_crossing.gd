@@ -85,6 +85,13 @@ var _deck_body: StaticBody3D = null
 var _trigger: Area3D = null
 var _entered := false
 
+## Read-only counters for `tests/smoke_rift_gate_opens_once.gd` (ACCEPTANCE
+## M4/F05 "the gate opens exactly once"): how many times the span was actually
+## built, and how many times the far trigger got past its latch to call
+## `Game.enter_realm`. Neither is read by gameplay.
+var _openings := 0
+var _crossings_fired := 0
+
 
 func build(world: Node3D) -> void:
 	_world = world
@@ -183,6 +190,7 @@ func _spawn_span(instant: bool) -> void:
 	if _spawned:
 		return
 	_spawned = true
+	_openings += 1
 	_waiting_for_collapse = false
 	_appear_seconds = maxf(float(_crossing_config.get("appear_seconds", 3.0)), 0.05)
 	_build_deck()
@@ -394,6 +402,7 @@ func _on_trigger_entered(body: Node3D) -> void:
 	_entered = true
 	if _progression != null and not bool(_progression.call("has", REALM_UNLOCK_FLAG)):
 		_progression.call("set_flag", REALM_UNLOCK_FLAG)
+	_crossings_fired += 1
 	print("[rift_crossing] the player crossed the rebuilt storm road span into Cloudreach")
 	game.call("enter_realm", "cloudreach", "cloudreach_arrival_from_meadows")
 
@@ -412,6 +421,16 @@ func far_anchor() -> Vector3:
 ## own appear animation) with a live collider.
 func span_ready() -> bool:
 	return _spawned and not _appearing
+
+
+## How many times the span (deck + far trigger) has been built on this node.
+func openings() -> int:
+	return _openings
+
+
+## How many times the far trigger has called `Game.enter_realm`.
+func crossings_fired() -> int:
+	return _crossings_fired
 
 
 ## Returns `Vector2.INF` on malformed input — `severed_spokes.gd`'s own

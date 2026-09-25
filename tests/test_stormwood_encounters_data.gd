@@ -32,7 +32,10 @@ func test_tables_are_replaceable_and_obey_role_and_crown_limits() -> void:
 	for table: Dictionary in tables:
 		assert_true(bool(table.get("replaceable", false)))
 		assert_true((table.get("roles", []) as Array).size() >= 3)
-		assert_false((table.get("night_role_weights", []) as Array).is_empty())
+		# Owner ruling: Stormwood has no day or night, so a table is one
+		# always-on list. A night variant would hide roles behind a clock the
+		# player never sees.
+		assert_false(table.has("night_role_weights"), str(table.get("id", "")) + " must not carry a night table")
 		var levels: Array = table.get("level_range", [])
 		assert_eq(levels.size(), 2)
 		if str(table.get("id", "")) == "crown_surge":

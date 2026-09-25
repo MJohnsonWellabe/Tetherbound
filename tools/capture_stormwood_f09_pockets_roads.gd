@@ -8,7 +8,7 @@ extends "res://tools/catalogue_survey.gd"
 ##     --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_stormwood_f09_pockets_roads.gd -- \
 ##     --out=res://ralph/reports/STORMWOOD-PROGRESS/visual/f09/after \
-##     [--label=after] [--only=rootgate,pockets,dynamo,forest] [--pockets=id,id]
+##     [--label=after] [--only=rootgate,pockets,spurs,dynamo,forest] [--pockets=id,id]
 ##     [--frames=pocket_verge_ash_hollow_a_approach,dynamo_west_mid,...]
 ##
 ## --frames keeps only the named frame ids (their stands are skipped too).
@@ -17,7 +17,10 @@ extends "res://tools/catalogue_survey.gd"
 ## deepwood_road north of it), pockets (per pocket: approach 30 m outside the
 ## mouth, standing in the mouth, close to the reward with its prompt, and the
 ## outside of the side wall), dynamo (dynamo_west_approach mid-road and
-## arriving at Ember Bivouac), forest (ash_road near (-590,1060), ash_road
+## arriving at Ember Bivouac), spurs (WO-F09-03, per pocket: on its joined
+## road 18 m before the spur junction, facing 30 m up the spur so the junction
+## lamp and the lane are in frame; plus one mid-spur frame facing the mouth,
+## for the first pocket kept), forest (ash_road near (-590,1060), ash_road
 ## through Glowmoss Hollows, and the earlier matrix_forest_day stand).
 ##
 ## Camera: always the production CameraRig/Camera3D following the real Player,
@@ -50,6 +53,12 @@ const CALM_PIN_SECONDS := 60.0
 const COARSE_STEPS := 20
 const POCKETS_PATH := "res://data/config/stormwood_pockets.json"
 const PICKUPS_PATH := "res://data/config/stormwood_pickups.json"
+const WORLD_PATH := "res://data/config/stormwood_world.json"
+const POCKET_FRAME := preload("res://scripts/world/stormwood_pocket_frame.gd")
+## Spur stands: metres back along the road from the junction, and how far up
+## the spur the camera looks.
+const SPUR_ROAD_BACK_M := 18.0
+const SPUR_LOOK_UP_M := 30.0
 const SCATTER_BAKE := preload("res://scripts/world/scatter_bake.gd")
 const SCATTER_PATH := "res://scripts/world/stormwood_scatter.gd"
 ## Mouth/approach distances, measured from the pocket centre along its mouth.
@@ -111,6 +120,8 @@ func _run() -> void:
 	_flag("stormwood:rootgate_released")
 	if _want("pockets"):
 		await _pockets()
+	if _want("spurs"):
+		await _spurs()
 	if _want("dynamo"):
 		await _dynamo()
 	if _want("forest"):
@@ -314,10 +325,10 @@ func _pockets() -> void:
 		var id := str(pocket.id)
 		if not _pocket_filter.is_empty() and not _pocket_filter.has(id):
 			continue
-		var yaw := deg_to_rad(float(pocket.mouth_yaw_deg))
-		var forward := Vector2(sin(yaw), cos(yaw))
-		var right := Vector2(forward.y, -forward.x)
-		var centre := Vector2(float(pocket.at[0]), float(pocket.at[1]))
+		var f := POCKET_FRAME.frame(pocket)
+		var forward: Vector2 = f.forward
+		var right: Vector2 = f.right
+		var centre: Vector2 = f.centre
 		var mouth := centre + forward * wall_mid
 		var mouth_focus := Vector3(mouth.x, _ground(mouth.x, mouth.y) + 2.0, mouth.y)
 		var centre_focus := Vector3(centre.x, _ground(centre.x, centre.y) + 1.0, centre.y)
@@ -352,6 +363,62 @@ func _pockets() -> void:
 			await _stand(side, centre_focus, -4.0)
 			await _capture("pocket_%s_c_side_wall" % id, "%s: outside the side wall, %d m from its outer face, facing the pocket centre" % [id, int(SIDE_OUT_M)],
 				_with(info, {"stand": [side.x, side.y]}))
+
+
+# ---------------------------------------------------------------- 1b. Spurs
+
+func _spurs() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(POCKETS_PATH))
+	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(WORLD_PATH))
+	var roads := {}
+	var spurs := {}
+	for route: Dictionary in world.routes:
+		if str(route.get("kind", "")) == "spur":
+			spurs[str(route.get("pocket_id", ""))] = route
+		else:
+			roads[str(route.id)] = route
+	var mid_done := false
+	for pocket: Dictionary in cfg.pockets:
+		var id := str(pocket.id)
+		if not _pocket_filter.is_empty() and not _pocket_filter.has(id):
+			continue
+		var spur: Dictionary = spurs.get(id, {})
+		if spur.is_empty():
+			_failures.append("%s has no spur route on this checkout" % id)
+			continue
+		var points: Array = spur.points
+		var junction := Vector2(float(points[0][0]), float(points[0][1]))
+		var end := Vector2(float(points[points.size() - 1][0]), float(points[points.size() - 1][1]))
+		var up := (Vector2(float(points[1][0]), float(points[1][1])) - junction).normalized()
+		var along := _road_direction(roads.get(str(spur.joins), {}), junction)
+		var stand := junction - along * SPUR_ROAD_BACK_M
+		var look := junction + up * SPUR_LOOK_UP_M
+		var info := {"pocket": id, "spur": str(spur.id), "joins": str(spur.joins),
+			"junction": [junction.x, junction.y], "spur_length_m": junction.distance_to(end),
+			"spur_lamp_present": _world.get_node_or_null(NodePath("StormwoodPockets/Pocket_%s/SpurLamp" % id)) != null}
+		if _keep("spur_%s_junction" % id):
+			await _stand(stand, Vector3(look.x, _ground(look.x, look.y) + 2.5, look.y), -4.0)
+			await _capture("spur_%s_junction" % id, "%s: on %s, %d m before the spur junction, facing %d m up the spur toward the pocket" % [
+				id, str(spur.joins), int(SPUR_ROAD_BACK_M), int(SPUR_LOOK_UP_M)], _with(info, {"stand": [stand.x, stand.y]}))
+		if not mid_done and _keep("spur_%s_mid" % id):
+			mid_done = true
+			var mid := junction.lerp(end, 0.5)
+			await _stand(mid, Vector3(end.x, _ground(end.x, end.y) + 2.0, end.y), -4.0)
+			await _capture("spur_%s_mid" % id, "%s: halfway along the spur, facing the mouth %d m ahead" % [
+				id, int(mid.distance_to(end))], _with(info, {"stand": [mid.x, mid.y]}))
+
+
+## Travel direction of `road` through `at`: the first segment whose closest
+## point to `at` is within 1 m, from its earlier vertex to its later one.
+func _road_direction(road: Dictionary, at: Vector2) -> Vector2:
+	var points: Array = road.get("points", [])
+	for i in range(1, points.size()):
+		var a := Vector2(float(points[i - 1][0]), float(points[i - 1][1]))
+		var b := Vector2(float(points[i][0]), float(points[i][1]))
+		if Geometry2D.get_closest_point_to_segment(at, a, b).distance_to(at) <= 1.0:
+			return (b - a).normalized()
+	_failures.append("no segment of %s passes %s" % [str(road.get("id", "?")), str(at)])
+	return Vector2(0, 1)
 
 
 func _with(base: Dictionary, more: Dictionary) -> Dictionary:
