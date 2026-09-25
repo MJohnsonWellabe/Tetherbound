@@ -5,11 +5,14 @@ extends SceneTree
 ## reads the panel's own signals: Yes with room on the belt, No through the
 ## panel's real menu_cancel input (delivered to the ending as the panel's
 ## `declined` signal), and conversations closed before and on the Yes/No line
-## (neither is an answer). It also covers the portable acceptance: only a Yes
-## that keeps the Stormheart marks it, and a refusal left from another world
-## no longer refuses a new world's offer. Hub/chapter/Dynamo are stubs; the
-## hub stub only records the claim intent, and the host settle is not observed
-## here (the participants smoke covers the host side).
+## (neither is an answer). It also covers the portable acceptance (only a Yes
+## that keeps the Stormheart marks it) and answers scoped to one world's
+## claim, across two separately mounted worlds with different world ids and
+## different reserved Stormhearts: an unanswered offer in world B survives a
+## refusal in world A, and world A's own unacknowledged answer resumes there.
+## Hub/chapter/Dynamo are stubs; the hub stub only records intents, so the
+## host never acknowledges a settle here (the participants smoke covers the
+## host side).
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
 const PANEL := preload("res://scenes/ui/dialogue_panel.tscn")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
@@ -123,23 +126,14 @@ func _run() -> void:
 	_check(declines == [ENDING.OFFER_CONVERSATION], "the real menu_cancel press reached the ending as the panel's declined signal")
 	_check(not _accepted(game), "a refusal is not an acceptance")
 
-	# That refusal, then this character fights in another world: asking there
-	# sends no withholding hint, drops the stale receipt, and the new world's
-	# offer is asked instead of being silently refused.
+	# A refusal sends no withholding hint when this character asks elsewhere,
+	# and the ceremony receipt is never cleared.
 	hub.intents.clear()
 	ending.call("_on_offer")
 	var asked := hub.claims()
 	_check(asked.size() == 1 and asked.back().get("already_accepted") == false and not asked.back().has("already_resolved"),
-		"refused in world A: the claim in world B carries no withholding hint")
-	_check(not _receipt(game), "the other world's leftover receipt is dropped when this character asks here")
-	await _offer(ending, panel, game)
-	_check(panel.is_open() and panel.runner().conversation_id() == ENDING.OFFER_CONVERSATION,
-		"refused in world A, fought in world B: world B's offer is asked, not auto-refused")
-	await _to_question(panel)
-	await _press_decline()
-	await _frames(3)
-	_check(_receipt(game) and not _holds_stormheart(game) and not _accepted(game),
-		"world B's own No is recorded as its own answer")
+		"refused: the next claim carries no withholding hint")
+	_check(_receipt(game), "asking again never clears the ceremony receipt")
 
 	# Closed before the question: nothing is answered and the offer returns.
 	_reset_character(game)
@@ -203,7 +197,100 @@ func _run() -> void:
 	panel.close()
 	world.queue_free()
 	await _frames(2)
+	await _two_worlds(game)
 	_finish()
+
+
+## Two genuinely different worlds, each with its own mounted ending, panel and
+## world id, and each host holding its own reserved Stormheart for this
+## character. No settle reaches either host (the hub stub records it only).
+func _two_worlds(game: Node) -> void:
+	_reset_character(game)
+	var claim_a := _claim()
+	var claim_b := _claim()
+	_check(ENDING.claim_id(claim_a) != ENDING.claim_id(claim_b) and not ENDING.claim_id(claim_a).is_empty(),
+		"each world's claim carries its own Stormheart uid")
+	# World B: the offer opens, and this character disconnects unanswered.
+	var b := await _mount(game, "stormwood-world-b")
+	b.ending.receive({"kind": "ending_offer", "claim": claim_b})
+	await _frames(2)
+	_check(b.panel.is_open(), "world B's offer opens")
+	await _unmount(b)
+	# World A: this character refuses. Its host never hears it.
+	var a := await _mount(game, "stormwood-world-a")
+	a.ending.receive({"kind": "ending_offer", "claim": claim_a})
+	await _frames(2)
+	await _to_question(a.panel)
+	await _press_decline()
+	await _frames(3)
+	_check(_receipt(game) and not _holds_stormheart(game), "world A's No is answered")
+	_check((a.hub as HubStub).intents.filter(func(intent: Dictionary) -> bool:
+		return str(intent.kind) == "ending_settled" and intent.kept == false).size() == 1,
+		"world A's refusal is sent to its host")
+	await _unmount(a)
+	# Back in world B: its host resends B's unsettled claim.
+	b = await _mount(game, "stormwood-world-b")
+	(b.hub as HubStub).intents.clear()
+	b.ending.receive({"kind": "ending_offer", "claim": claim_b})
+	await _frames(2)
+	_check(b.panel.is_open() and b.panel.runner().conversation_id() == ENDING.OFFER_CONVERSATION,
+		"a refusal in world A does not auto-refuse world B's unanswered offer: it is asked")
+	_check((b.hub as HubStub).intents.filter(func(intent: Dictionary) -> bool:
+		return str(intent.kind) == "ending_settled").is_empty(), "nothing was settled in world B for it")
+	await _to_question(b.panel)
+	b.panel.runner().advance()
+	await _frames(3)
+	_check(_holds_stormheart(game) and _accepted(game), "world B's own Yes keeps world B's Stormheart")
+	await _unmount(b)
+	# World A again: its host still holds the claim it never heard answered.
+	# This character's saved answer to THAT claim resumes it without asking.
+	a = await _mount(game, "stormwood-world-a")
+	(a.hub as HubStub).intents.clear()
+	a.ending.receive({"kind": "ending_offer", "claim": claim_a})
+	await _frames(2)
+	var settled: Array = (a.hub as HubStub).intents.filter(func(intent: Dictionary) -> bool:
+		return str(intent.kind) == "ending_settled")
+	_check(not a.panel.is_open() and settled.size() == 1 and settled[0].kept == false,
+		"world A's own unacknowledged refusal resumes as a refusal, without asking again")
+	await _unmount(a)
+
+
+func _claim() -> Dictionary:
+	var maker := ENDING.new()
+	var creature: RefCounted = maker.call("_make_legendary")
+	maker.free()
+	return {"recipient_character_id": CHARACTER, "creature": CAPTURE_CODEC.encode(creature),
+		"settled": false, "kept": false}
+
+
+func _mount(game: Node, world_id: String) -> Dictionary:
+	game.world.set("world_id", world_id)
+	var world := FixtureWorld.new()
+	world.name = "StormheartWorld_%s" % world_id.replace("-", "_")
+	root.add_child(world)
+	var panel := PANEL.instantiate()
+	panel.name = "DialoguePanel"
+	world.add_child(panel)
+	var hub := HubStub.new()
+	hub.name = "StormwoodEncounterHub"
+	world.add_child(hub)
+	hub.add_to_group("stormwood_encounter_hub")
+	for pair: Array in [["StormwoodChapter", ChapterStub], ["StormwoodDynamo", DynamoStub]]:
+		var stub: Node = pair[1].new()
+		stub.name = str(pair[0])
+		world.add_child(stub)
+	var ending := ENDING.new()
+	ending.name = "StormwoodEnding"
+	world.add_child(ending)
+	ending.mount(world)
+	await _frames(1)
+	return {"world": world, "panel": panel, "hub": hub, "ending": ending}
+
+
+func _unmount(mounted: Dictionary) -> void:
+	(mounted.panel as Node).call("close")
+	(mounted.world as Node).queue_free()
+	await _frames(2)
 
 
 func _offer(ending: Node, panel: Node, game: Node) -> void:

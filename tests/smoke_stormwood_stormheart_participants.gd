@@ -138,7 +138,7 @@ func _run() -> void:
 	# The client's hint is built from its portable acceptance only: a refusal
 	# in another world (ceremony receipt, no acceptance) is no hint at all.
 	var refused_elsewhere: RefCounted = preload("res://autoload/progression_state.gd").new()
-	refused_elsewhere.set_flag(ENDING.PERSONAL_RECEIPT_FLAG)
+	ENDING.record_answer(refused_elsewhere, "creature-from-another-world", false)
 	ending.dispatch(local_peer, ENDING.claim_intent(refused_elsewhere))
 	_check(hub.offers_for(local_peer).size() >= 1,
 		"refused in another world, fought here: the host's participating character receives this world's offer")
@@ -224,8 +224,9 @@ func _run() -> void:
 	_check(hub.offers_for(local_peer).size() == host_before + 2, "the host's own unsettled claim still resumes")
 
 	# The same legacy save where the Dynamo's persisted payload still names its
-	# fighter and contributor peers: those characters are owed, the guest is not,
-	# whoever arrives first.
+	# fighter characters: those are owed, the guest is not, whoever arrives
+	# first. Its contributor peer ids come from the session that fought, so
+	# they are not mapped through today's registry (peer 1 is whoever hosts now).
 	reset_legacy.call({"fighter_characters": ["character-fought-b"], "contributors": [local_peer, 77]})
 	b_before = hub.offers_for(2).size()
 	c_before = hub.offers_for(3).size()
@@ -236,12 +237,12 @@ func _run() -> void:
 	ending.dispatch(2, {"kind": "ending_claim"})
 	_check(hub.offers_for(2).size() == b_before + 1, "the Dynamo's persisted fighter receives an offer")
 	ending.dispatch(local_peer, {"kind": "ending_claim"})
-	_check(hub.offers_for(local_peer).size() == host_before + 1,
-		"a contributor peer mapped to its character (the host) receives an offer")
+	_check(hub.offers_for(local_peer).size() == host_before,
+		"an old-session contributor peer id is not mapped to today's host character")
 	state = ENDING.migrate_state(game.realm_environment.stormwood.ending)
-	_check(state.get("participants", []) == ["character-fought-b", host_character]
-		and (state.claims as Dictionary).size() == 2 and not (state.claims as Dictionary).has("character-watched-c"),
-		"the legacy save records the Dynamo's fighters as participants; an unmapped stale peer adds nobody")
+	_check(state.get("participants", []) == ["character-fought-b"]
+		and (state.claims as Dictionary).keys() == ["character-fought-b"],
+		"the legacy save records only the Dynamo's fighter characters as participants")
 	world.queue_free()
 	await process_frame
 	_finish()
