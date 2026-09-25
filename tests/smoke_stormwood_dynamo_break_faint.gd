@@ -139,8 +139,8 @@ func _run() -> void:
 		await process_frame
 	_check(controller.participants.has(3) and not controller.contributors.has(3),
 		"a Break arrival strikes conduits but earns no captain-win reward")
-	_check(controller.fighter_characters == ["character-2", "character-3"],
-		"a Break arrival is in the fight that frees the Stormheart and gets their own offer")
+	_check(controller.fighter_characters == ["character-2"],
+		"a Break arrival is an observer: no Stormheart offer from proximity alone")
 	for bank in 4:
 		controller.rules.strike_conduit(bank, controller.rules.bank_position(bank), true)
 	_check(controller.rules.phase == "released", "the restarted Break can still release the Stormheart")

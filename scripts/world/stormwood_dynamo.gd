@@ -401,16 +401,20 @@ func _add_participant(peer: int, contributes := true) -> void:
 	_awaiting_break_party = false
 	if not participants.has(peer):
 		participants.append(peer)
-	# Everyone who strikes toward the release is in the fight that frees the
-	# Stormheart and gets their own offer; the captain win's trainer reward
-	# stays with its contributors.
+	# A Break arrival strikes conduits but, with no send-out left to admit
+	# them, earns neither the captain-win reward nor a Stormheart offer
+	# (BOSSES §3). Only admitted fighters are recorded.
+	if not contributes:
+		return
 	var row: Dictionary = session.registry().row(peer)
 	var character := str(row.get("character_id", ""))
 	if character.is_empty() and peer == session.local_peer_id():
-		character = str(get_node("/root/Game").get("local").get("character_id"))
+		var local: Variant = get_node("/root/Game").get("local")
+		if local is Object:
+			character = str((local as Object).get("character_id"))
 	if not character.is_empty() and not fighter_characters.has(character):
 		fighter_characters.append(character)
-	if contributes and not contributors.has(peer):
+	if not contributors.has(peer):
 		contributors.append(peer)
 
 
@@ -470,7 +474,8 @@ func load_payload(saved: Dictionary) -> void:
 	participants = _unique_peers(saved.get("participants", []))
 	contributors = _unique_peers(saved.get("contributors", []))
 	fighter_characters.clear()
-	for raw: Variant in saved.get("fighter_characters", []):
+	var saved_characters: Variant = saved.get("fighter_characters", [])
+	for raw: Variant in (saved_characters if saved_characters is Array else []):
 		if not str(raw).is_empty() and not fighter_characters.has(str(raw)):
 			fighter_characters.append(str(raw))
 	_awaiting_break_party = bool(saved.get("awaiting_break_party", false))
