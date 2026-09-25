@@ -3,7 +3,7 @@ extends RefCounted
 ## Peer-side steps for the two-peer proof command
 ## (`tools/net/run_two_peer_proof.sh`, runner `tests/smoke_net_proof_two_peer.gd`).
 ##
-## `tools/net/peer_runner.gd` hands any action it does not know to `run()`
+## `tools/net/proof_peer_runner.gd` (the proof command's peer process) hands these actions to `run()`
 ## here, so a proof scenario can use every existing peer step plus these:
 ##
 ##   load_save       {from, slot?}        a NAMED save (a captured save directory, or a
@@ -32,8 +32,8 @@ const WORLD_SCENES := {"meadows": "world", "cloudreach": "cloudreach", "stormwoo
 const SAVE_DIRS := ["saves", "worlds", "characters"]
 const MARROW_FLAG := "stormwood:marrow_defeated"
 const STORMWOOD_CHAPTER := "res://data/config/stormwood_chapter.json"
-## Loaded on first use, not preloaded: every peer of every smoke loads this
-## file through peer_runner.gd, and only F11 scenarios need the ending.
+## Loaded on first use, not preloaded: every proof peer loads this
+## file, and only F11 scenarios need the ending.
 const ENDING_PATH := "res://scripts/world/stormwood_ending.gd"
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
@@ -164,7 +164,7 @@ static func _screenshot(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if DisplayServer.get_name() == "headless":
 		return {"verdict": "PASS", "detail": "headless peer: no frame to capture (run with --render)",
 			"data": {"captured": false}}
-	# Rendered peers run with the render loop off (net_harness.gd); draw this
+	# Rendered peers run with the render loop off (the proof runner's _spawn_peer); draw this
 	# frame on demand. Two draws, so post-processing reads a settled frame.
 	for i in maxi(1, int(args.get("draws", 2))):
 		RenderingServer.force_draw(true, 0.0)
