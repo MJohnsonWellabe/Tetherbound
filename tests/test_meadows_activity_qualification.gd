@@ -170,7 +170,8 @@ const QUALIFIED := [
 		"ack": "meadowhart_herd_found", "local_row": true},
 	{"id": "band2_warrens_vault_elder", "region": "stone_and_root", "kind": "warrens_elder",
 		"nickname": "Elder Trailpup", "flag": "warrens_once_elder_trailpup",
-		"reveal": "warrens_cleared", "local_row": true},
+		"reveal": "warrens_cleared", "local_row": true,
+		"conditional": "the last vault rerun (before 744aa37ff's arbiter wait) failed the Heartstone pickup and reload; WORLD §11 counts catalyst access as part of the payoff; rerun open"},
 	{"id": "band3_river_nest", "region": "river_lock", "kind": "doss",
 		"flag": "river_nest_doss_cleared", "reveal": "river_nest_doss_met",
 		"reveal_conversation": "river_nest_doss_challenge",
@@ -304,7 +305,7 @@ func test_the_f03_record_is_internally_consistent() -> void:
 	for row: Dictionary in conditional:
 		assert_false(str(row["conditional"]).strip_edges().is_empty(),
 			"conditional activity '%s' records no reason" % row["id"])
-	assert_eq(outright.size(), 4, "the record counts Bram, herd, vault Elder and Juno as qualified outright")
+	assert_eq(outright.size(), 3, "the record counts Bram, herd and Juno as qualified outright")
 	assert_true(outright.size() + conditional.size() >= MIN_QUALIFIED,
 		"F03 needs at least %d candidates; the record has %d outright and %d conditional"
 			% [MIN_QUALIFIED, outright.size(), conditional.size()])
