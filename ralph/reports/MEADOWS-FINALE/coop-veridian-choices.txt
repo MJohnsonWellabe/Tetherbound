@@ -1,14 +1,15 @@
-run id:  net-20260925T030747Z-7757
-run dir: /tmp/claude-0/-home-user/36828009-77a8-5268-ac41-05bc9f37269f/scratchpad/runs/net-veridian_choices-20260925T030747Z
+# run 4 (after the journal fix 13c92555): receipts recorded; 2 unique FAIL = blank rejoin
+run id:  net-20260925T040253Z-14727
+run dir: /tmp/net-veridian_choices-20260925T040253Z
 smoke:   tests/smoke_net_veridian_choices.gd  (--peers=2 advisory, see this script's header)
 Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
 
-coordinator: launched peer 0 (host) pid=7787 control_port=43841 home=/tmp/claude-0/-home-user/36828009-77a8-5268-ac41-05bc9f37269f/scratchpad/runs/net-veridian_choices-20260925T030747Z/home-0 log=/tmp/claude-0/-home-user/36828009-77a8-5268-ac41-05bc9f37269f/scratchpad/runs/net-veridian_choices-20260925T030747Z/peer-0.log
-coordinator: launched peer 1 (client) pid=7788 control_port=43117 home=/tmp/claude-0/-home-user/36828009-77a8-5268-ac41-05bc9f37269f/scratchpad/runs/net-veridian_choices-20260925T030747Z/home-1 log=/tmp/claude-0/-home-user/36828009-77a8-5268-ac41-05bc9f37269f/scratchpad/runs/net-veridian_choices-20260925T030747Z/peer-1.log
-coordinator: peer 1 hello: {"enet_port":32542.0,"godot_version":"4.7-stable (official)","main_sha":"211f5591190b","peer":1.0,"pid":7788.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/36828009-77a8-5268-ac41-05bc9f37269f/scratchpad/runs/net-veridian_choices-20260925T030747Z/home-1/godot/app_userdata/Tetherbound"}
-coordinator: peer 0 hello: {"enet_port":32541.0,"godot_version":"4.7-stable (official)","main_sha":"211f5591190b","peer":0.0,"pid":7787.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/36828009-77a8-5268-ac41-05bc9f37269f/scratchpad/runs/net-veridian_choices-20260925T030747Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: launched peer 0 (host) pid=14753 control_port=32891 home=/tmp/net-veridian_choices-20260925T040253Z/home-0 log=/tmp/net-veridian_choices-20260925T040253Z/peer-0.log
+coordinator: launched peer 1 (client) pid=14754 control_port=46607 home=/tmp/net-veridian_choices-20260925T040253Z/home-1 log=/tmp/net-veridian_choices-20260925T040253Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":30381.0,"godot_version":"4.7-stable (official)","main_sha":"ec432ebc6a9f","peer":0.0,"pid":14753.0,"role":"host","type":"hello","user_data_dir":"/tmp/net-veridian_choices-20260925T040253Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":30382.0,"godot_version":"4.7-stable (official)","main_sha":"ec432ebc6a9f","peer":1.0,"pid":14754.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-veridian_choices-20260925T040253Z/home-1/godot/app_userdata/Tetherbound"}
 coordinator: all 2 peer(s) said hello
-PASS: host reported its ENet port in hello (32541)
+PASS: host reported its ENet port in hello (30381)
 PASS: FIXTURE: peer 0 received a level-18 terrapup
 PASS: FIXTURE: peer 0 received a level-18 bramblebun
 PASS: FIXTURE: peer 0 received a level-18 trailpup
@@ -17,100 +18,113 @@ PASS: FIXTURE: peer 1 received a level-18 terrapup
 PASS: FIXTURE: peer 1 received a level-18 bramblebun
 PASS: FIXTURE: peer 1 received a level-18 trailpup
 PASS: FIXTURE: peer 1 received a level-18 mudsnout
-PASS: both homes autosaved distinct stable characters (host 'character-5e8760f497bc36c411fc9cb42416c5dd', guest 'character-964f3794d90f5b1301325520e6b9a647')
-PASS: peer 0 hosted (hosting udp/32541 as peer 1)
-PASS: peer 1 joined as 'character-964f3794d90f5b1301325520e6b9a647' (joined 127.0.0.1:32541 as peer 772213933 after 19 frames; snapshot applied; 2 peer(s) in registry)
+PASS: both homes autosaved distinct stable characters (host 'character-31da58b45f99185d047baa0793c54772', guest 'character-314455d1b9c99c44964eef615189249f')
+coordinator: [04:05:15] DIAG guest slot_0 after the seed saves: locator { "character_id": "character-314455d1b9c99c44964eef615189249f", "world_id": "slot-0" }, party 4, live id character-314455d1b9c99c44964eef615189249f
+PASS: peer 0 hosted (hosting udp/30381 as peer 1)
+PASS: peer 1 joined as 'character-314455d1b9c99c44964eef615189249f' (joined 127.0.0.1:30381 as peer 1266978566 after 19 frames; snapshot applied; 2 peer(s) in registry)
 PASS: peer 0 starts with four creatures and no Veridian ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": [], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
 PASS: peer 1 starts with four creatures and no Veridian ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": [], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
 PASS: the Hall names its Warden arena and machine control
 PASS: host challenged the Warden (challenged warden_aldis; bound to encounter '1:1' (4 creatures to come))
 PASS: guest joined the Warden's own fight
-PASS: both peers felled the Warden (battle won in 1073 frames / 7 swings against 5 of their creatures)
+PASS: both peers felled the Warden (battle won in 1059 frames / 6 swings against 5 of their creatures)
+PASS: the host walked into the chamber before the lever (arrived within 7.00 m of (-17.0, 7650.2))
 PASS: the guest walked to the machine control
 PASS: the guest's lever pull freed the legendary
-FAIL: the host walked into the chamber
-PASS: the host's own choice opened ({ "accept_at": [4.95385599136353, 6.17194271087646, 7652.3818359375], "choice_open": true, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": [], "refuse_at": [6.44444561004639, 6.17194271087646, 7654.78564453125], "refused": false, "stage": "choice", "veridian_count": 0.0 })
-PASS: the guest's own choice opened ({ "accept_at": [-13.7378263473511, 6.17194271087646, 7651.73583984375], "choice_open": true, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": [], "refuse_at": [-15.8226766586304, 6.17194271087646, 7649.82470703125], "refused": false, "stage": "choice", "veridian_count": 0.0 })
-PASS: peer 0 walked to its refuse_at prompt (arrived within 0.60 m of (6.4, 7654.8))
-PASS: the host refused through its own prompt ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": true, "stage": "failure", "veridian_count": 0.0 })
-PASS: the host's belt is unchanged by refusing ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": true, "stage": "failure", "veridian_count": 0.0 })
+PASS: the host, standing in the chamber, had its own offer begin (stage 'freed')
+coordinator: [04:06:16] DIAG after the freeing: peer 0 live id character-31da58b45f99185d047baa0793c54772; Warden journal rows ["character-314455d1b9c99c44964eef615189249f/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-314455d1b9c99c44964eef615189249f/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-314455d1b9c99c44964eef615189249f/accepted"]; receipts []
+coordinator: [04:06:17] DIAG after the freeing: peer 1 live id character-314455d1b9c99c44964eef615189249f; Warden journal rows ["character-314455d1b9c99c44964eef615189249f/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-314455d1b9c99c44964eef615189249f/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-314455d1b9c99c44964eef615189249f/accepted"]; receipts []
+PASS: the host's own choice opened ({ "accept_at": [-8.50084209442139, 6.17194271087646, 7649.18212890625], "choice_open": true, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": [], "refuse_at": [-7.64979553222656, 6.17194271087646, 7651.8798828125], "refused": false, "stage": "choice", "veridian_count": 0.0 })
+PASS: the guest's own choice opened ({ "accept_at": [-13.7371978759766, 6.17194271087646, 7651.73583984375], "choice_open": true, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": [], "refuse_at": [-15.8226461410522, 6.17194271087646, 7649.8251953125], "refused": false, "stage": "choice", "veridian_count": 0.0 })
+PASS: peer 0 walked to its refuse_at prompt (arrived within 0.60 m of (-7.6, 7651.9))
+PASS: the host refused through its own prompt ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": true, "stage": "ceremony", "veridian_count": 0.0 })
+PASS: the host's belt is unchanged by refusing ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": true, "stage": "ceremony", "veridian_count": 0.0 })
 PASS: the guest walked to its accept prompt (arrived within 0.60 m of (-13.7, 7651.7))
 PASS: the guest pressed interact at the accept prompt
 PASS: the guest's link was cut right after accepting (transport closed without a Session.leave())
 PASS: the host noticed the guest drop (registry reports 1 peer(s) after 0 frames)
-PASS: the press was the guest's acceptance ({ "accept_at": [], "choice_open": false, "climax_found": false, "healing_found": false, "herd_display": false, "joined": true, "party_size": 5.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 1.0 })
-PASS: the guest's CHARACTER FILE already held the Veridian and 'legendary_joined' at the drop ({ "display_name": "", "equipment": { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "" }, "party": ["terrapup@18", "bramblebun@18", "trailpup@18", "mudsnout@18", "veridian@22"], "party_size": 5.0, "player_flags": { "legendary_joined": true, "legendary_refused": false }, "satchel": { "coin": 150.0, "potion_small": 4.0, "revive": 2.0 }, "satiety": 91.2213333334162 })
-coordinator: host receipts while the guest is away: ["legendary_resolution:live"]
+PASS: the press was the guest's acceptance ({ "accept_at": [], "choice_open": false, "climax_found": false, "healing_found": false, "herd_display": false, "joined": true, "party_size": 5.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 1.0 })
+PASS: the guest's CHARACTER FILE already held the Veridian and 'legendary_joined' at the drop ({ "display_name": "", "equipment": { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "" }, "party": ["terrapup@18", "bramblebun@18", "trailpup@18", "mudsnout@18", "veridian@22"], "party_size": 5.0, "player_flags": { "legendary_joined": true, "legendary_refused": false }, "satchel": { "coin": 150.0, "potion_small": 4.0, "revive": 2.0 }, "satiety": 99.3333333333396 })
+coordinator: host receipts while the guest is away: ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"]
+coordinator: [04:06:27] DIAG guest slot_0 after the drop and leave: locator { "character_id": "character-8c0c7de99b85d843c293513a1ca750e3", "world_id": "slot-0" }, party 0, live id character-314455d1b9c99c44964eef615189249f
+coordinator: [04:06:27] DIAG while the guest is away: peer 0 live id character-31da58b45f99185d047baa0793c54772; Warden journal rows ["character-314455d1b9c99c44964eef615189249f/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-314455d1b9c99c44964eef615189249f/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-314455d1b9c99c44964eef615189249f/accepted"]; receipts ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"]
+coordinator: [04:06:27] DIAG while the guest is away: peer 1 live id character-314455d1b9c99c44964eef615189249f; Warden journal rows ["character-314455d1b9c99c44964eef615189249f/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-314455d1b9c99c44964eef615189249f/accepted", "character-31da58b45f99185d047baa0793c54772/accepted", "character-314455d1b9c99c44964eef615189249f/accepted"]; receipts ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"]
 PASS: the guest's in-memory character was blanked
-PASS: the blanked guest holds no party and no answer; the file is the only copy ({ "accept_at": [], "choice_open": false, "climax_found": false, "healing_found": false, "herd_display": false, "joined": false, "party_size": 0.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
-PASS: the guest rejoined as 'character-964f3794d90f5b1301325520e6b9a647' (title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:32541 as peer 1254910735 after 127 frames)
+PASS: the blanked guest holds no party and no answer; the file is the only copy ({ "accept_at": [], "choice_open": false, "climax_found": false, "healing_found": false, "herd_display": false, "joined": false, "party_size": 0.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+coordinator: [04:06:27] DIAG guest slot_0 after the wipe: locator { "character_id": "character-8c0c7de99b85d843c293513a1ca750e3", "world_id": "slot-0" }, party 0, live id character-314455d1b9c99c44964eef615189249f
+PASS: the guest rejoined as 'character-314455d1b9c99c44964eef615189249f' (title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:30381 as peer 817410586 after 112 frames)
+coordinator: [04:07:53] DIAG guest slot_0 after the rejoin: locator { "character_id": "character-8c0c7de99b85d843c293513a1ca750e3", "world_id": "slot-0" }, party 0, live id character-8c0c7de99b85d843c293513a1ca750e3
+coordinator: [04:07:54] DIAG rejoined guest identity: character-8c0c7de99b85d843c293513a1ca750e3
 PASS: the host is back to two peers
 PASS: the rejoined guest was never offered the freeing again (stages seen: [""])
-FAIL: after the rejoin: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+FAIL: after the rejoin: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
 FAIL: after the rejoin: the guest's personal receipt is accepted only
-PASS: after the rejoin: the host holds no Veridian and its four ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": true, "stage": "done", "veridian_count": 0.0 })
+PASS: after the rejoin: the host holds no Veridian and its four ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": true, "stage": "done", "veridian_count": 0.0 })
 PASS: after the rejoin: the host's personal receipt is refused only
-FAIL: after the rejoin: peer 0's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
+PASS: after the rejoin: peer 0's WORLD holds exactly ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"] (got ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"])
 PASS: after the rejoin: peer 0 has no herd display after a mixed answer (healing found true)
 PASS: after the rejoin: peer 0's world holds 'legendary_freed'
 PASS: after the rejoin: peer 0's world holds 'realm_key_cloudreach'
-FAIL: after the rejoin: peer 0's world holds 'realm_gate_cloudreach_unlocked'
-FAIL: after the rejoin: peer 1's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
+PASS: after the rejoin: peer 1's WORLD holds exactly ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"] (got ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"])
 PASS: after the rejoin: peer 1 has no herd display after a mixed answer (healing found true)
 PASS: after the rejoin: peer 1's world holds 'legendary_freed'
 PASS: after the rejoin: peer 1's world holds 'realm_key_cloudreach'
-FAIL: after the rejoin: peer 1's world holds 'realm_gate_cloudreach_unlocked'
+PASS: after the rejoin: both peers agree on 'realm_gate_cloudreach_unlocked' (host false / guest false; set only at the physical gate, not walked here)
 PASS: peer 0 completed a production save/reload (host slot reload preserved party=true selection=true hosted_world=true)
 PASS: peer 1 completed a production save/reload (client character reload preserved party=true selection=true hosted_world=true)
-FAIL: after save/reload: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+FAIL: after save/reload: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
 FAIL: after save/reload: the guest's personal receipt is accepted only
-PASS: after save/reload: the host holds no Veridian and its four ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": true, "stage": "done", "veridian_count": 0.0 })
+PASS: after save/reload: the host holds no Veridian and its four ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": true, "stage": "done", "veridian_count": 0.0 })
 PASS: after save/reload: the host's personal receipt is refused only
-FAIL: after save/reload: peer 0's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
+PASS: after save/reload: peer 0's WORLD holds exactly ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"] (got ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"])
 PASS: after save/reload: peer 0 has no herd display after a mixed answer (healing found true)
 PASS: after save/reload: peer 0's world holds 'legendary_freed'
 PASS: after save/reload: peer 0's world holds 'realm_key_cloudreach'
-FAIL: after save/reload: peer 0's world holds 'realm_gate_cloudreach_unlocked'
-FAIL: after save/reload: peer 1's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
+PASS: after save/reload: peer 1's WORLD holds exactly ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"] (got ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"])
 PASS: after save/reload: peer 1 has no herd display after a mixed answer (healing found true)
 PASS: after save/reload: peer 1's world holds 'legendary_freed'
 PASS: after save/reload: peer 1's world holds 'realm_key_cloudreach'
-FAIL: after save/reload: peer 1's world holds 'realm_gate_cloudreach_unlocked'
-FAIL: the host walked into the chamber
-FAIL: after the rejoin: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+PASS: after save/reload: both peers agree on 'realm_gate_cloudreach_unlocked' (host false / guest false; set only at the physical gate, not walked here)
+FAIL: after the rejoin: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
 FAIL: after the rejoin: the guest's personal receipt is accepted only
-FAIL: after the rejoin: peer 0's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
-FAIL: after the rejoin: peer 0's world holds 'realm_gate_cloudreach_unlocked'
-FAIL: after the rejoin: peer 1's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
-FAIL: after the rejoin: peer 1's world holds 'realm_gate_cloudreach_unlocked'
-FAIL: after save/reload: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+FAIL: after save/reload: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
 FAIL: after save/reload: the guest's personal receipt is accepted only
-FAIL: after save/reload: peer 0's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
-FAIL: after save/reload: peer 0's world holds 'realm_gate_cloudreach_unlocked'
-FAIL: after save/reload: peer 1's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
-FAIL: after save/reload: peer 1's world holds 'realm_gate_cloudreach_unlocked'
 
-=== /tmp/claude-0/-home-user/36828009-77a8-5268-ac41-05bc9f37269f/scratchpad/runs/net-veridian_choices-20260925T030747Z/SUMMARY.md ===
-# Net smoke run net-20260925T030747Z-7757
+=== /tmp/net-veridian_choices-20260925T040253Z/SUMMARY.md ===
+# Net smoke run net-20260925T040253Z-14727
 
 Scene: world
 Peers: 2
 Net conditions: clean (no proxy)
 
-- peer 0 (host) pid=7787 exited=true unexpected_exit=false
-- peer 1 (client) pid=7788 exited=true unexpected_exit=false
+- peer 0 (host) pid=14753 exited=true unexpected_exit=false
+- peer 1 (client) pid=14754 exited=true unexpected_exit=false
 
 FAILURES:
-- the host walked into the chamber
-- after the rejoin: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+- after the rejoin: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
 - after the rejoin: the guest's personal receipt is accepted only
-- after the rejoin: peer 0's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
-- after the rejoin: peer 0's world holds 'realm_gate_cloudreach_unlocked'
-- after the rejoin: peer 1's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
-- after the rejoin: peer 1's world holds 'realm_gate_cloudreach_unlocked'
-- after save/reload: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:live"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+- after save/reload: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-314455d1b9c99c44964eef615189249f", "legendary_resolution:live", "legendary_resolution:refused:character-31da58b45f99185d047baa0793c54772"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
 - after save/reload: the guest's personal receipt is accepted only
-- after save/reload: peer 0's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
-- after save/reload: peer 0's world holds 'realm_gate_cloudreach_unlocked'
-- after save/reload: peer 1's WORLD holds exactly ["legendary_resolution:accepted:character-964f3794d90f5b1301325520e6b9a647", "legendary_resolution:live", "legendary_resolution:refused:character-5e8760f497bc36c411fc9cb42416c5dd"] (got ["legendary_resolution:live"])
-- after save/reload: peer 1's world holds 'realm_gate_cloudreach_unlocked'
+EXIT 1
+
+# run 5: slot_0 diagnostics bisecting the blank rejoin
+coordinator: [04:13:28] DIAG guest slot_0 after the seed saves: locator { "character_id": "character-b0666792c045d4315fb41c5131a68620", "world_id": "slot-0" }, party 4, live id character-b0666792c045d4315fb41c5131a68620
+coordinator: [04:14:29] DIAG after the freeing: peer 0 live id character-62360b9709d85225eeccad2a830d79b7; Warden journal rows ["character-62360b9709d85225eeccad2a830d79b7/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-62360b9709d85225eeccad2a830d79b7/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-62360b9709d85225eeccad2a830d79b7/accepted"]; receipts []
+coordinator: [04:14:29] DIAG after the freeing: peer 1 live id character-b0666792c045d4315fb41c5131a68620; Warden journal rows ["character-62360b9709d85225eeccad2a830d79b7/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-62360b9709d85225eeccad2a830d79b7/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-62360b9709d85225eeccad2a830d79b7/accepted"]; receipts []
+coordinator: [04:14:35] DIAG guest slot_0 after the accept press, before the drop: locator { "character_id": "character-c33d94fd2a0b436890ad9729b30fb290", "world_id": "slot-0" }, party 0, live id character-b0666792c045d4315fb41c5131a68620
+coordinator: [04:14:40] DIAG guest slot_0 after the drop and leave: locator { "character_id": "character-c33d94fd2a0b436890ad9729b30fb290", "world_id": "slot-0" }, party 0, live id character-b0666792c045d4315fb41c5131a68620
+coordinator: [04:14:40] DIAG while the guest is away: peer 0 live id character-62360b9709d85225eeccad2a830d79b7; Warden journal rows ["character-62360b9709d85225eeccad2a830d79b7/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-62360b9709d85225eeccad2a830d79b7/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-62360b9709d85225eeccad2a830d79b7/accepted"]; receipts ["legendary_resolution:accepted:character-b0666792c045d4315fb41c5131a68620", "legendary_resolution:live", "legendary_resolution:refused:character-62360b9709d85225eeccad2a830d79b7"]
+coordinator: [04:14:40] DIAG while the guest is away: peer 1 live id character-b0666792c045d4315fb41c5131a68620; Warden journal rows ["character-62360b9709d85225eeccad2a830d79b7/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-62360b9709d85225eeccad2a830d79b7/accepted", "character-b0666792c045d4315fb41c5131a68620/accepted", "character-62360b9709d85225eeccad2a830d79b7/accepted"]; receipts ["legendary_resolution:accepted:character-b0666792c045d4315fb41c5131a68620", "legendary_resolution:live", "legendary_resolution:refused:character-62360b9709d85225eeccad2a830d79b7"]
+coordinator: [04:14:40] DIAG guest slot_0 after the wipe: locator { "character_id": "character-c33d94fd2a0b436890ad9729b30fb290", "world_id": "slot-0" }, party 0, live id character-b0666792c045d4315fb41c5131a68620
+coordinator: [04:16:07] DIAG guest slot_0 after the rejoin: locator { "character_id": "character-c33d94fd2a0b436890ad9729b30fb290", "world_id": "slot-0" }, party 0, live id character-c33d94fd2a0b436890ad9729b30fb290
+coordinator: [04:16:07] DIAG rejoined guest identity: character-c33d94fd2a0b436890ad9729b30fb290
+FAIL: after the rejoin: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-b0666792c045d4315fb41c5131a68620", "legendary_resolution:live", "legendary_resolution:refused:character-62360b9709d85225eeccad2a830d79b7"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+FAIL: after the rejoin: the guest's personal receipt is accepted only
+FAIL: after save/reload: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-b0666792c045d4315fb41c5131a68620", "legendary_resolution:live", "legendary_resolution:refused:character-62360b9709d85225eeccad2a830d79b7"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+FAIL: after save/reload: the guest's personal receipt is accepted only
+FAIL: after the rejoin: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-b0666792c045d4315fb41c5131a68620", "legendary_resolution:live", "legendary_resolution:refused:character-62360b9709d85225eeccad2a830d79b7"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+FAIL: after the rejoin: the guest's personal receipt is accepted only
+FAIL: after save/reload: the guest holds exactly one Veridian in a party of five ({ "accept_at": [], "choice_open": false, "climax_found": true, "healing_found": true, "herd_display": false, "joined": false, "party_size": 1.0, "pending_catch": false, "receipts": ["legendary_resolution:accepted:character-b0666792c045d4315fb41c5131a68620", "legendary_resolution:live", "legendary_resolution:refused:character-62360b9709d85225eeccad2a830d79b7"], "refuse_at": [], "refused": false, "stage": "", "veridian_count": 0.0 })
+FAIL: after save/reload: the guest's personal receipt is accepted only
+FAILURES:
+EXIT 1
