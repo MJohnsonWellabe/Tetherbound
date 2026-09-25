@@ -337,7 +337,8 @@ func _ride_off_edges_by_input() -> void:
 	_player.velocity = Vector3.ZERO
 	var ally: Node3D = _director.call("ally_body")
 	if ally != null:
-		ally.call("place_on_ground", TERRACE_ROAD + Vector3(-2.0, 0.0, -1.5))
+		# On the road ribbon itself, not its steep shoulder.
+		ally.call("place_on_ground", TERRACE_ROAD + Vector3(-1.0, 0.0, -2.5))
 	for i in 60:
 		await physics_frame
 	await _walk_to_mount()
@@ -345,6 +346,9 @@ func _ride_off_edges_by_input() -> void:
 	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
 		return
+	for i in 30:
+		await physics_frame
+	_check(body.is_on_floor(), "the mount stands on the road before the ride-off (%s)" % body.global_position)
 	var heading := TERRACE_TOWARD - body.global_position
 	heading.y = 0.0
 	heading = heading.normalized()

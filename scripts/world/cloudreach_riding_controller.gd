@@ -65,6 +65,10 @@ var _standing_mask := 1
 var _airborne_s := 0.0
 ## Where the trainer stood, on their own feet, when this ride began.
 var _mounted_from := Vector3.INF
+## Where the mount stood when this ride began: the fall reference before any
+## ground sample exists (a mount set on a slope steeper than 45 degrees can
+## slide off before it is ever "on floor").
+var _ride_start := Vector3.INF
 var mounted_fall_recoveries := 0
 ## Which rule placed the last dismount, for tests and diagnosis:
 ## "clear", "remembered", "history", "mounted_from" or "saddle".
@@ -100,6 +104,7 @@ func mount() -> bool:
 	var ok := super.mount()
 	if ok:
 		_mounted_from = standing_at
+		_ride_start = _mount.global_position if _mount != null else Vector3.INF
 		_ground_history.clear()
 		_ground_sample_left = 0.0
 		_clear_spot = Vector3.INF
@@ -151,7 +156,14 @@ func _watch_mounted_ground(delta: float) -> void:
 				_clear_spot = spot
 		return
 	_airborne_s += delta
-	if _ground_history.is_empty() or _airborne_s < MOUNTED_FALL_AIRBORNE_S:
+	if _airborne_s < MOUNTED_FALL_AIRBORNE_S:
+		return
+	# Never "no reference": with no ground sample yet, the fall is measured
+	# from where this ride began, and that spot is the first recovery candidate.
+	if _ground_history.is_empty() and _ride_start != Vector3.INF:
+		_ground_history.append(_ride_start)
+	if _ground_history.is_empty():
+		dismount()
 		return
 	var last_ground: Vector3 = _ground_history[_ground_history.size() - 1]
 	if body.global_position.y > last_ground.y - MOUNTED_FALL_DROP_M:
