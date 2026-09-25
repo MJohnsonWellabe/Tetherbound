@@ -250,7 +250,7 @@ Critical wayfinding uses four aligned channels: landmark composition, road/route
 
 Task presentation remains finite: one main story line, authored local chains, and a bounded transient event feed. No generic branching quest engine, abandon timers, repeatable daily list or indiscriminate unseen pins are in minimum scope. Rewards and flags commit exactly once; a map pin is derived presentation, never the authority that grants completion.
 
-Wild defeat persistence remains an unresolved owner decision: defeated wilds either never return, or return only after a long/meaningful authored interval. No UX copy, timer or respawn icon may present either outcome as settled until that decision is made. Permanent resources and placed pickups remain the clearer one-time rule.
+Ordinary wild sites follow WORLD §2.5: they may repopulate after two world days and a full-party exit from their principal region. Do not show a precise countdown or imply that a named alpha, trainer, reward or permanent resource returns. The map/journal may describe a habitat as living without promising a specific creature. A re-entering peer sees the host's same current site state; save/reload does not flash a premature spawn.
 
 ## 8. ROG Ally legibility and accessibility
 

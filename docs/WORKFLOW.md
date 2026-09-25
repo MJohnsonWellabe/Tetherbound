@@ -18,6 +18,85 @@ The hard rules are in `AGENTS.md` / `CLAUDE.md`. What "done" means is in
 
 Everything below is in service of that one sentence.
 
+## 1.1 Spec-driven delivery, with one owner decision point
+
+The owner settles **what the game must do** in the existing owning design file
+and its acceptance criterion before implementation starts. Record the decision,
+its scope and the spec commit in STATE. An unresolved pillar, story, art-bar or
+hard-rule choice remains a spec question; an agent must not answer it by coding.
+Once the spec is settled, agents execute, inspect, test and judge the work
+without asking the owner to review each design note, code diff or test result.
+Before an unattended Meadows-to-later-regions run, inventory each next
+criterion against its owning spec and an observable pass/fail witness. Work
+the settled slices in dependency order; keep genuinely undecided product
+choices open and continue independent slices. No count of passing checks
+alone closes a chapter.
+For the current four-chapter pass, ROADMAP §3 registers exactly **15 feature
+requests F01–F15** and seven supporting X01–X07 workstreams. Each F row,
+its owning design sections and ACCEPTANCE §6.1 are that feature's PRD; do
+not invent a parallel PRD file or use the 13 chapter cards/31 roadmap steps
+as feature-request IDs. Start concurrent sessions using ROADMAP §3's lane
+ownership; integrate chapter acceptance in earned route order. Split each active F
+into 30–90 minute work orders after checking current code and evidence. Each
+work order names its F/X ID, one criterion, baseline, exact owned paths,
+expected player result, proof, dependencies and exclusions. Put the ID and
+criterion in its draft PR's Anchor, update STATE with actual progress and
+revise estimates when evidence changes. A failed card names the next repair,
+not a request for routine owner review.
+ROADMAP §3 fixes concurrent lane ownership: Meadows core F01–F04, Meadows
+finale F05, Cloudreach F06–F08, Stormwood F09–F11 and Tidewake F12–F15 may
+work at the same time. The coordinating integrator assigns exact paths and
+serializes shared-file edits and local Godot writers. A session continues an
+unfinished F from STATE and current main; it does not declare that F accepted.
+Full chapter acceptance waits for the preceding chapter's earned saved handoff,
+even when regional implementation and focused proof finish earlier.
+An agent's own completion report is never its review: another agent (or an
+independent review pass with no implementation context) checks the actual diff,
+runtime evidence and criterion before landing. If an automated or agent check
+cannot establish a criterion, mark it **unproven**, keep that criterion open and
+continue independent work. Do not turn missing proof into a passing checkbox.
+
+Route work by its source, not by its apparent size:
+
+| Lane | Entry anchor | Proof and write-back |
+|---|---|---|
+| Feature | A settled new or changed player-visible requirement in GAME_BIBLE or the owning design file, with observable acceptance in ACCEPTANCE or that spec. | Named criterion → named test or ordinary-play witness → result on an identified build. Write implementation decisions back to the owning design/TECHNICAL file. If the spec is silent, settle it before changing behavior. |
+| Bug | A current build demonstrably violates an existing accepted criterion or an explicit owner report. | Reproduce the failure, preferably with a test that fails before the fix and passes after; run the affected real player path. Strengthen the test that allowed the escape and update STATE. A new behavior request is a Feature, even if it is called a bug. |
+| Task | A cited repository rule, dependency, maintenance defect or measured cost, with no intended player-behavior change. | Name the invariant, show focused regression evidence and verify that player behavior did not change. Do not invent a product requirement to justify housekeeping. |
+| Hotfix | A released build has a confirmed severe regression and the normal path is too slow. | First establish the affected package and last working package; prefer a reversible rollback where authorized. A patch still gets build and affected-path checks. Reconcile the fix, tests and STATE on main after the incident. A CI failure alone is not a production incident. |
+
+For any lane that changes the game, use this delivery chain:
+
+1. **Anchor.** State the spec/criterion or defect, its baseline commit/package,
+   the player-visible result and what is out of scope. A new-area architecture
+   decision goes in TECHNICAL or the owning design file, not a disposable
+   parallel spec. Only an unresolved product decision returns to the owner.
+2. **Slice.** Make a bounded branch and draft PR from current main. The PR
+   carries a traceability table: requirement/criterion, named test or gameplay
+   witness, expected result, observed result and build/commit. No `TBD` counts
+   as coverage. Every changed behavior has a row; a Task names its invariant.
+3. **Build and prove.** Implement a small slice, run focused tests and the
+   ordinary runtime path that can falsify the claim. For a Bug, demonstrate the
+   pre-fix failure when feasible. For visual work, capture the production camera
+   in motion and use the blind judgment in ACCEPTANCE. Do not count a test that
+   mirrors a constant or a staged screenshot as player-path proof.
+4. **Independent agent review.** Inspect the PR's exact diff against the
+   settled spec, hard rules, neighboring behavior, evidence and migration/
+   authority effects. Record findings in the PR; fix them and repeat affected
+   checks. This replaces routine human code-owner and post-merge QA review.
+5. **Integration gate.** Check CI's actual jobs, then verify the PR combined
+   with current main. Re-run affected checks when either side changed. A skipped
+   export, retried smoke, or green docs-only job is not a passing game build.
+   Land only the exact reviewed and verified head through a PR; confirm the
+   commit on main. Report a criterion as accepted only at the scope its evidence
+   supports, and write the result and remaining gaps into STATE.
+
+This deliberately uses the repo's current live document set (§11), CI and
+runtime witnesses. It does not create four files per feature, a second task
+tracker, or a claim that every spec has a meaningful test merely because a row
+exists. A chapter still requires its continuous ACCEPTANCE path; small PRs do
+not add up to chapter acceptance by themselves.
+
 ---
 
 # 2. Two tiers, one owner of judgment
@@ -265,9 +344,12 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
 - **CI runs only on `pull_request` events and on pushes to `main`.** A branch
   with no pull request is **never verified** — open a draft PR early and batch
   pushes to it (a newer push cancels the run in flight on the same ref).
-- **Never push to `main` directly.** Land through a pull request. Verify the
-  landing with `git merge-base --is-ancestor <sha> origin/main`, never with a
-  badge or a summary line.
+- **Never push to `main` directly.** Land through a pull request. A ready PR
+  with a settled spec, filled proof mapping, independent agent review and the
+  required CI/process checks is eligible for GitHub auto-merge without owner
+  code review. GitHub branch protection requires `ci-gate` and `traceability`.
+  Verify the landing with `git merge-base --is-ancestor <sha> origin/main`,
+  never with a badge or a summary line.
 - **A CI run under five minutes is not a verification.** A full run is 35–45
   minutes. CI skips every code job when the diff against the base is
   documentation-only — check the run duration **and** that code jobs actually
@@ -279,9 +361,11 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   branch another agent is live on — and push again.
 - `[skip ci]` is for WIP checkpoints only. The commit you want verified carries
   no marker.
-- **A landed branch does not reliably publish a Windows build.** Before telling
-  the owner a fix is playable, check the release asset timestamp. The owner has
-  playtested stale builds.
+- **A landed branch publishes the rolling development download automatically.**
+  Release exports, boots and packages the game before replacing the asset/tag;
+  failure leaves the previous download in place and is an open release defect.
+  Before telling the owner a fix is playable, verify the asset timestamp and
+  `latest` tag against the landed commit. The owner has playtested stale builds.
 - Do not rewrite history on a branch someone else is on. No empty commits or
   close-and-reopen to kick CI.
 
@@ -340,7 +424,7 @@ The authorized live document set is:
 | docs/STATE.md | live status, next work, feedback/dependencies |
 | docs/TECHNICAL.md | architecture, source/run map and migration risks |
 
-Session state, progress and owner feedback go in STATE, updated in place and kept under25KB. Remove obsolete repetition using Git history and existing evidence references; do not create dated archive/status documents to evade the cap. Evidence artifacts remain in ralph/reports/<LANE>/; they are not a parallel status ledger. No new documents outside the authorized set, no dated documents, no per-session goals/handoffs.
+Session state, progress and owner feedback go in STATE, updated in place and kept under25KB. Remove obsolete repetition using Git history and existing evidence references; do not create dated archive/status documents to evade the cap. Evidence artifacts remain in ralph/reports/<LANE>/; they are not a parallel status ledger. `.github/pull_request_template.md` is the process input form and creates no new source of product truth. No new live planning/status documents, no dated documents, no per-session goals/handoffs.
 
 The plan-rewrite recovery and findings are in ralph/reports/PLAN-REWRITE/FINDINGS.md. Archive sources are historical context, not automatic work assignments. Unsuperseded owner instructions retain their scope. Read exact recovered sources when necessary; do not cold-read the whole archive routinely, and do not claim every archived constraint fits in one short Bible.
 

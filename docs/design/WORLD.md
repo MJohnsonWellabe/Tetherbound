@@ -29,7 +29,7 @@ Every chapter provides:
 - Loops, far-side shortcuts, overlooks and optional pockets that make a finite map worth learning.
 - A safe preparation point before a major commitment.
 - Visible changes after local Team Tether machinery is disabled.
-- **6–10 meaningful optional activities per chapter**, **24–40 total**, with at least one in every principal region. These remain release content, not prerequisites for the initial owner check or reasons to pad runtime.
+- **6–10 meaningful optional activities per chapter**, **24–40 total**, with at least one in every principal region. These remain release content, not prerequisites for the initial brief loop check or reasons to pad runtime.
 
 An optional activity counts only when it has a discoverable lure, a distinct action or decision, a useful reward, acknowledgement, saved completion and a route that works through ordinary play. Pickups and spawn rows do not count individually.
 
@@ -50,7 +50,7 @@ Relics are Heart of the Meadows (**2× max stamina**), Wings of Cloudreach/Skybo
 
 When a chapter frees a legendary, that creature volunteers. The player never weakens it for capture and never throws an Orb at it. With fewer than five companions it may join directly. With five, the existing ceremony presents the volunteer beside the five companions' names and history and requires one permanent release or a refusal. Refusal completes the chapter. This contract applies to Meadows, Stormwood and Tidewake; Cloudreach has no offer.
 
-In co-op there is one host-owned world offer and one stable-character recipient. Other participants share the world resolution and relic outcome; they do not receive copied legendary companions. The UI must say this before a player accepts the one claim.
+In co-op the host owns the shared freeing result, then records a separate, once-only offer for **each participant in that fight** against that participant's stable character. Each may accept or refuse independently; a non-participant receives no offer. Every accepter keeps their own legendary within the five-creature cap. The UI states this and the permanent-release consequence before each personal commitment. The world relic and gate remain shared. This supersedes the historical single-recipient interpretation everywhere in this file.
 
 ### 2.4 Progression envelope
 
@@ -62,6 +62,10 @@ In co-op there is one host-owned world offer and one stable-character recipient.
 | Tidewake | 43 | 55 | Trainer ladder 43–55; Aquaryn49, Tidecoil54, Guardian55 |
 
 The overlaps let a normal party enter without grind and still find optional challenge. The global creature level cap is **100**. No route uses a generic level wall where a person, creature, machine, current or physical gate can explain the boundary.
+
+### 2.5 Ordinary wild return policy
+
+An ordinary wild site may repopulate only after **two complete 600-second world days** have elapsed since its defeat or catch **and** every player has left that principal region at least once. The host persists the site's stable ID and next-eligible world time; reload, rest, reconnect and realm transition cannot move the deadline backward or instantly respawn it. A new wild is a new encounter with the site's authored table, not a resurrection of an owned/caught instance. Named alphas, trainers, quest fights, rewards, pickups and permanent harvests remain once-only under their existing receipts. The journal need not show a countdown. This policy makes optional later catching possible without making respawn farming a route requirement. Acceptance uses a deterministic world clock, solo and two-peer exit/re-entry, save/reload before and after eligibility, and exact reward/XP receipts; the required route and four-player supply ledger must still clear when **no wild respawns at all**.
 
 ## 3. Chapter 1 — The Meadows
 
@@ -81,6 +85,8 @@ The live Bible's 11,518 m value conflicts with the archived segment sum by 76 m.
 
 **Home and village.** The opening cannot be skipped. Grandpa gives the starter choice, the player names the creature, learns a real fight and physical catch, and understands that the team is being built for a journey. The tournament is an eight-slot bracket with three player-played fights and four simulated entrants around the player. **Current source** requires a five-creature party, level 5 and care readiness, and `progression.json.home.required_pieces` asks for tent, campfire, bedroll and one creature bed. **Owner target:** three usable creature beds must be present before bracket entry; this deliberately exceeds the current one-bed source and needs implementation/economy reconciliation. The target order places the South Bridge grunt before Oskar's final, teaches the saddle recipe early enough to use it in the chapter, and lets Oskar's Meadowhart final demonstrate the mount payoff. Current source/probe order still completes the tournament before `south_bridge_grunt`, so that reordering is not built. A tournament loss heals the entered team and permits a clean retry without duplicating bracket rewards.
 
+**Village form is fixed for this pass.** Rebuild the existing footprint as a road settlement, not the old compact radial/circular arrangement. A traversable through-road must connect the home/opening side to the South Bridge exit, with at least one visible side lane that leads to the berry field, grove or stone-working area. Face house fronts/doors and civic activity onto those roads; vary roof lines and building setbacks so the approach, centre and departure read as different silhouettes. Keep at most five street villagers, all required interactions, protected starter/tournament/camp flow and every authored boundary gate. Roads at the boundary have working gates; other edges are dressed and cannot be bypassed. The new geometry may move buildings, paths and props but must preserve stable IDs, saves, quest triggers and accessibility. **Acceptance:** compare a labelled overhead plan of old/new traversable road topology, then walk home→centre→bridge and one side lane with the normal camera and controller at day and night; verify that the three named subareas and exit are visible without map overlays, all key interactions and NPCs are reachable, no path or gate can be skirted, and save/reload/co-op peers see the same layout. A paint or prop pass on the former circular road plan fails this criterion.
+
 **Lower Meadows.** Broad readable grassland, local habitats, trainers and the first voluntary detours lead to the South Bridge. The bridge opens through story/trainer progression, never a floating level message.
 
 **Stone & Root.** The Old Quarry and Burrow Warrens introduce Rootstone, stronger Ground creatures and the required compact dungeon. The L14 guardian controls the visible vault door; victory opens the Heartstone, Greater Orbs, Rootstone and useful equipment branch. Disabling later machinery can restore the quarry's live vegetation and fittings, but its baked colour/control-map scar cannot repaint at runtime. An aftermath NPC must explain that visible remainder instead of letting it read as a failed world change.
@@ -93,7 +99,7 @@ The live Bible's 11,518 m value conflicts with the archived segment sum by 76 m.
 
 Warden Aldis believes separation prevents disaster; he warns and does not recant. Defeating his full five opens the tether. The player frees the Veridian Stag, resolves its voluntary offer, and watches the region heal. Team Tether recedes, rescued people return, and the Heart and existing Cloudreach key entitlement are awarded. The rift first holds, then dissipates across the storm-road carve while a physical bridge grows through it. This is the Meadows-to-Cloudreach return gate; it is not a Meadows portal or menu teleport.
 
-If the Veridian offer is refused, the desired story disposition is an unengageable Stag among the healed Highfield herd. This remains an owner decision until implemented and accepted.
+If every eligible participant refuses the Veridian offer, an unengageable Stag appears among the healed Highfield herd after the climax. If any participant accepts, that world display is absent; each refuser still receives the personal refusal journal result and the shared healing. The display never reopens the offer, becomes catchable or pays another reward. Verify solo refusal, mixed co-op choices, save/reload and reconnect against the exact world and character receipts.
 
 ### 3.3 Band 1 visual contract
 
@@ -157,7 +163,7 @@ Envelope: about **4.5 × 6.0 km**, critical route about **6.5 km**, authored rou
 5. Deepwood / Lantern Hollow / Fallen Giant / Old Rodfolk Hall.
 6. Dynamo outer works, core and legendary chamber.
 
-The chapter requires at least four loops, three far-side shortcuts, five dead-end pockets and two alternate routes between consecutive regions after region 2. Every principal landmark must read from a neighboring region. These remain release constraints, not prerequisites for the initial owner check.
+The chapter requires at least four loops, three far-side shortcuts, five dead-end pockets and two alternate routes between consecutive regions after region 2. Every principal landmark must read from a neighboring region. These remain release constraints, not prerequisites for the initial brief loop check.
 
 ### 5.2 Surge and lightning
 
@@ -189,7 +195,7 @@ The containment opens and the Stormheart voluntarily offers companionship. Relea
 
 ### 5.5 Content and status
 
-Contract floor: 16 landmarks and 330 wild clusters. The recovered floor allowed Hollow Crown only 12 clusters; the **selected target supersedes that exception** with at least 40 wild clusters in each of all six regions. Require 12 Calm/Surge tables with at least three roles in every table, six named wilds, 26 trainers, 18 NPCs plus the Crown resident, three inhabited settlements with 4/4/8 residents, six safe camps, ten rod clearings, 210 harvests, 24 charged nodes, 200–230 pickups with at least 80% off the principal path, 24–30 objectives, six side chains of at least three steps, four buildables, six resources and at least 12 recipes. Ordinary Hollow Crown opposition caps at L40; its named guardian may exceed that cap, and Captain Marrow's ace remains L44. These remain release constraints, not prerequisites for the initial owner check.
+Contract floor: 16 landmarks and 330 wild clusters. The recovered floor allowed Hollow Crown only 12 clusters; the **selected target supersedes that exception** with at least 40 wild clusters in each of all six regions. Require 12 Calm/Surge tables with at least three roles in every table, six named wilds, 26 trainers, 18 NPCs plus the Crown resident, three inhabited settlements with 4/4/8 residents, six safe camps, ten rod clearings, 210 harvests, 24 charged nodes, 200–230 pickups with at least 80% off the principal path, 24–30 objectives, six side chains of at least three steps, four buildables, six resources and at least 12 recipes. Ordinary Hollow Crown opposition caps at L40; its named guardian may exceed that cap, and Captain Marrow's ace remains L44. These remain release constraints, not prerequisites for the initial brief loop check.
 
 The four authored Stormwood TMs retain their source power bands: 1.15 quick, 1.30 charged and the two stronger authored values 1.60 and 2.00. They are chapter rewards, not permission to replace the global 1.25/0.80 type graph.
 
@@ -218,7 +224,7 @@ Tidewake is one authored realm of open water and twelve islands. Bounds are x **
 | Drowned Garden | (1200,2240), 160 m | Optional mounted ruins |
 | Deep Watch | (1350,3500), 150 m | Optional Tidecoil/current shortcut |
 
-The first four exposed gaps were historically measured at **80.00 m, 104.13 m, 90.74 m and 109.02 m** across the early route samples. Those source measurements must be remeasured against the baked production shore before becoming current acceptance truth. Late gaps are 400–660 m. The chapter requires four land loops, three return shortcuts, eight reward pockets, at least 8 km land routes and 2 km water routes. Each of the eight main islands provides a camp at least 7 m inland from its legal landing. Shallows are slopes, beaches are landings and currents/cliffs explain every gate. Adjacent gentle beaches may not bypass a dock or story boundary. These remain release constraints, not prerequisites for the initial owner check.
+The first four exposed gaps were historically measured at **80.00 m, 104.13 m, 90.74 m and 109.02 m** across the early route samples. Those source measurements must be remeasured against the baked production shore before becoming current acceptance truth. Late gaps are 400–660 m. The chapter requires four land loops, three return shortcuts, eight reward pockets, at least 8 km land routes and 2 km water routes. Each of the eight main islands provides a camp at least 7 m inland from its legal landing. Shallows are slopes, beaches are landings and currents/cliffs explain every gate. Adjacent gentle beaches may not bypass a dock or story boundary. These remain release constraints, not prerequisites for the initial brief loop check.
 
 ### 6.2 Explicit exclusions
 
@@ -277,15 +283,20 @@ No new gate, ferry, party teleport, mandatory catch or companion replacement
 is added. **Pacing remains unaccepted:** the configured gate endpoints imply
 roughly19km across the three return realms before counting Water crossings
 or actual route bends. Guidance alone does not make that a good farewell.
-An earned shorter return is an open owner preference; keep the existing route
-until that change is settled. Physical civilian exchange/shared departure,
+The existing physical return is the selected four-chapter ending route. Do not
+add a teleport, ferry or new gate solely to shorten it. Measure its actual
+travel time on the finished build, apply already-authored far-side shortcuts
+where legally unlocked, and ensure A7's no-empty-120-second rule on the return
+as well as the outward journey. Cut repeated compulsory fights and dead travel
+by improving that route within its existing gate network; do not claim the
+ending accepted from a waypoint jump. Physical civilian exchange/shared departure,
 the earned continuous return and the complete ending remain separate gates.
 
 ### 6.6 Content and status
 
-Current data has 12 islands, six regions, 18 landmarks, four land loops, 12 land-route records, 22 water-route/current records, three shortcuts, eight pockets, 303 wild-site rows, 16 tables, five data-named encounters, 24 trainers, 18 NPCs, 182 harvest rows and 200 pickups. It now has 11 main objective rows and one optional saddle-recipe hint; no local objective chains are complete. Six to ten chapter-level optional activities therefore require authored packaging of existing islands/fights/rewards rather than more scatter. This packaging remains release content, not a prerequisite for the initial owner check.
+Current data has 12 islands, six regions, 18 landmarks, four land loops, 12 land-route records, 22 water-route/current records, three shortcuts, eight pockets, 303 wild-site rows, 16 tables, five data-named encounters, 24 trainers, 18 NPCs, 182 harvest rows and 200 pickups. It now has 11 main objective rows and one optional saddle-recipe hint; no local objective chains are complete. Six to ten chapter-level optional activities therefore require authored packaging of existing islands/fights/rewards rather than more scatter. This packaging remains release content, not a prerequisite for the initial brief loop check.
 
-The recovered content target was 240 wild clusters, 16 tables, **six** data-named encounters, 24 trainers split 12 critical/12 optional, 18 NPCs, three settlements, eight camps, 160 harvests, 200 pickups with at least 80% off the principal route, 28–32 objectives, six side chains, at least 150 dialogue lines, five resources, ten recipes and ten current routes. These are provenance, not new release quotas. Current data has five existing data-named encounters; retain and differentiate them rather than add a sixth row for its own sake. Aquaryn already supplies a major optional-capture test and the non-combat Guardian offer remains distinct. The six local chains in §11 are candidates after the owner check, not prerequisites for the four-biome pass.
+The recovered content target was 240 wild clusters, 16 tables, **six** data-named encounters, 24 trainers split 12 critical/12 optional, 18 NPCs, three settlements, eight camps, 160 harvests, 200 pickups with at least 80% off the principal route, 28–32 objectives, six side chains, at least 150 dialogue lines, five resources, ten recipes and ten current routes. These are provenance, not new release quotas. Current data has five existing data-named encounters; retain and differentiate them rather than add a sixth row for its own sake. Aquaryn already supplies a major optional-capture test and the non-combat Guardian offer remains distinct. The six local chains in §11 are candidates after the initial brief loop check, not prerequisites for the four-biome pass.
 
 WaterChapter, Veilfall, Aquaryn, Nerissa, Guardian ceremony, relic award and restored-current state are landed and focused-tested. Continuous opening through Iona passed from a disclosed synthetic L44 party. The late one-creature diagnostic failed during Nerissa and proves neither normal difficulty nor a full ending. The return gates exist; continuous earned return/pacing remains unaccepted. Physical civilian exchange/departure remains **not built**; return guidance, homecoming and credits are partial ending slices. On `ralph/regional-homecoming`, the existing Grandpa prompt gains a partial homecoming conversation after current-world `water_currents_restored`: it names the current local party, including nicknames, without recreating former companions. Natural conversation completion saves only that character's `homecoming_seen`; interruption or failed save permits retry. A brief repeat greeting follows successful acknowledgement. The subsequent `ralph/regional-credits` slice opens a local, skippable roll after saved normal completion, or after the repeat greeting for an older acknowledged save. Continue/Skip saves player-scoped `regional_credits_seen`; save refusal permits retry. It returns to the same live world without party changes or global pause. UX§2.6 owns timings/input and `data/config/regional_credits.json` the credit content. This does not teleport the party, award a relic, complete the campaign or prove the full ending. Source: `scripts/story/regional_homecoming.gd`, `sequence_director.gd`, `data/dialogue/homecoming.json`, player scope in `data/progression/flag_scopes.json`.
 
@@ -297,7 +308,7 @@ One shared world can contain players in different realms. World changes, gates, 
 
 Mixed-realm simulation must not remove terrain, bosses or Veilfall state needed by another player. A gate spend and unlock is atomic. A disconnect during a boss, flight or crossing restores a saved safe state without granting progress. Late join reconstructs all chapter aftermath before enabling interaction.
 
-The campaign requires 1–4 player smoke coverage, including two players on separate islands, host in another realm, simultaneous combat/traversal, competing gate/dock actions, legendary one-recipient settlement and reconnect during a crossing.
+The campaign requires 1–4 player smoke coverage, including two players on separate islands, host in another realm, simultaneous combat/traversal, competing gate/dock actions, per-participant legendary settlement and reconnect during a crossing.
 
 ## 8. Visual and performance bar
 
@@ -313,22 +324,22 @@ Performance acceptance uses real hardware and representative chapter views with 
 - Creature storage, breeding, factory labor or automated production.
 - Hunger escalation, thirst, cold, fatigue stacks or forced starvation.
 - Boats, diving, fishing minigame, grappling or underwater construction.
-- Copying one world legendary reward to every co-op participant.
+- Copying one creature instance or one character's offer receipt to peers; each actual fight participant receives their own independently journaled offer under §2.3.
 - Claiming that data counts prove route quality, emotional attachment or commercial visuals.
 
 ## 10. Acceptance boundary
 
-A chapter is **built** when source/configs mount its systems, **integrated** when its ordered state and rewards work together, **continuously earned** when ordinary actions traverse it without state injection, and **accepted** only after representative players understand the route, choose optional content, use recovery, read major fights and reach the intended aftermath.
+A chapter is **built** when source/configs mount its systems, **integrated** when its ordered state and rewards work together, **continuously earned** when ordinary actions traverse it without state injection, and **accepted** only after the agent-piloted and independent-review evidence in ACCEPTANCE covers route comprehension, optional content, recovery, major fights and the intended aftermath. Real-player preference remains unmeasured without people.
 
-Before expanding content or adding candidate mechanics, run one 15–30 minute owner expedition through existing systems. That check asks whether movement, route reading, catching, direct creature combat, switching, recovery and co-op already produce a compelling loop. It does not require L4 skills, Strain, revised bond, normalized poise or completion of the optional-activity ledger. Keep testing these mechanics to the minimum needed for that decision; do not create a repeated cohort or harness programme.
+Before expanding content, run one 15–30 minute agent-piloted expedition through existing systems. It checks movement, route reading, catching, direct creature combat, switching, recovery and co-op against observable criteria. The L4 skill, Strain, revised bond and normalized poise are outside this four-chapter completion pass unless the spec is explicitly revised from a failed witness; do not create a repeated cohort or harness programme.
 
-Release verification still requires the relevant target regression, network and save/reconnect tests, including a fresh earned four-chapter save and solo/co-op witnesses for the final route. Automated walkers may prove reachability and persistence. Owner observation is required for geography comprehension, five-companion attachment and the ending, but retaining the same beloved five for the full campaign is success and later catches remain optional.
+Release verification still requires the relevant target regression, network and save/reconnect tests, including a fresh earned four-chapter save and solo/co-op witnesses for the final route. Automated walkers may prove reachability and persistence; ordinary player-camera motion and independent agent review judge presentation. Felt attachment remains unmeasured without human players, but retaining the same five companions for the full campaign is a valid route and later catches remain optional.
 
 Primary recovered provenance is indexed file by file in `ralph/reports/PLAN-REWRITE/FINDINGS.md` B01–B33 and its archive coverage table. Current implementation evidence lives under `data/config/`, `scripts/world/`, `scripts/combat/`, `scripts/player/` and `tests/`. Archive paths were sparse-excluded from this worktree, so the checked-in recovery index is the resolvable citation rather than a nonexistent local archive path.
 
 ## 11. Minimum optional-activity implementation ledger
 
-This is the **selected release content**, not a claim that current rows already qualify as complete activities. It is not a prerequisite for the initial owner check. Prefer rewards that strengthen the retained five. Existing object/quest/defeat IDs retain their flags and reward receipts. New wrapper flags below are **target IDs, not built**; declare world completion and per-character reward scope before implementation. A wrapper cannot pay an item already awarded by its source pickup/quest. Claim existing pickups through their original receipt. These activities replace the inflated per-subregion quota and do not add a second quest engine.
+This is the **selected release content**, not a claim that current rows already qualify as complete activities. It is not a prerequisite for the initial brief loop check. Prefer rewards that strengthen the retained five. Existing object/quest/defeat IDs retain their flags and reward receipts. New wrapper flags below are **target IDs, not built**; declare world completion and per-character reward scope before implementation. A wrapper cannot pay an item already awarded by its source pickup/quest. Claim existing pickups through their original receipt. These activities replace the inflated per-subregion quota and do not add a second quest engine.
 
 Shared state: hidden → discovered (physical lure/NPC knowledge) → in progress → action complete → acknowledged/rewarded. No timers, repeatable payout or abandon penalty. Existing valid actions count even if done before the conversation. On failure retain discoveries and item claims, reset only the encounter/attempt. Every target has a3–10minute detour budget beyond its approach; a longer multi-region chain accrues while traveling the main route, not in a mandatory return trip. A reward blocked by full inventory stays pending at its original authority rather than disappearing. No optional objective gates the main story.
 

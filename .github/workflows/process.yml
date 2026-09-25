@@ -1,0 +1,35 @@
+name: Process traceability
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  traceability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            tools
+            tests
+          ref: ${{ github.event.pull_request.base.sha }}
+      # On this workflow's introducing PR only, the base lacks the validator.
+      # Once merged, every later PR executes the trusted copy from main above.
+      - name: Bootstrap validator on introducing PR
+        if: hashFiles('tools/check_pr_traceability.mjs') == ''
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            tools
+            tests
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Check PR traceability validator
+        run: node --test tests/test_pr_traceability.mjs
+      - name: Check PR lane, anchor, evidence and independent review
+        run: node tools/check_pr_traceability.mjs

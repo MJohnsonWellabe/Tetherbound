@@ -4,7 +4,7 @@
 
 Tetherbound is a Windows-first, controller-first creature expedition action RPG for one to four players. The current production pass covers the Meadows, Cloudreach Cliffs, the Stormwood and Tidewake. Eight good hours is an acceptable first clear, not a duration floor; density, finish and a complete homecoming matter more than stretching playtime. Eight biomes remain a future ambition and do not expand this four-biome pass. Its visual job is to make a finite authored journey feel lush, legible, inhabited and worth exploring while keeping the five-creature relationship at the centre of every frame.
 
-This document defines the target and the production boundaries. It does not declare the current game visually accepted. A configuration value, placed prop, imported mesh or passing screenshot test proves only that the element exists. Final visual acceptance requires current production captures, motion checks, code-blind review and owner judgment on the target hardware.
+This document defines the target and the production boundaries. It does not declare the current game visually accepted. A configuration value, placed prop, imported mesh or passing screenshot test proves only that the element exists. Final visual acceptance requires current production captures, motion checks, an independent code-blind agent verdict against the settled references and recorded target-hardware telemetry.
 
 The two existing comparison questions remain open and explicitly **aspirational**:
 
@@ -63,6 +63,8 @@ Principal landmarks must read at about **400 m** as a silhouette and again at **
 
 Settlements use coherent modules and human-scale thresholds. The Meadows village is a road settlement: recognizable village-house silhouettes sit along roads, with a berry field, tree grove and stone-working area. It has at most five street villagers; population is redistributed into the journey. Every authored road that crosses the village boundary has a functioning gate, and dressed terrain/fencing prevents jumping or walking around the boundary elsewhere. Team Tether hardware escalates toward each finale through pylons, drained ground, occupation geometry and disciplined oxblood accents.
 
+For the Meadows village, WORLD §3.2 fixes the new road topology. The visual witness must include a comparable overhead road plan and production-camera approach, centre, side-lane and departure motion at day and night. A blind reviewer must be able to identify the through-road, a meaningful side lane, the berry field/grove/stone-work areas and the bridge exit from the actual scene. The old compact circular silhouette with new colour or props does not pass.
+
 ### 3.3 Lighting, sky and weather
 
 Day uses warm directional sunlight and cooler fill while keeping shaded materials readable. Golden hour and night are distinct looks, not exposure multipliers. Night must preserve the trainer's lower-body and route readability. Painted clouds and the existing day/golden/night mood are strengths to preserve.
@@ -79,6 +81,8 @@ True gameplay dark is the narrower 22:00–03:00 semantic window even when dusk 
 | **Tidewake** | Open cyan/navy water, warm inhabited docks, pale foam, wet dark rock and Veilfall white; avoid generic pirate sepia. | Twelve authored islands, readable shallows/beaches, reeds/marsh, salt rock, docks/pumps/sluices, current lines and the white-falls mountain. Water surface stays closed and readable around trainer and mount. | Veilfall is visible from First Shore and gains detail over the journey. Docks read as lived destinations; currents and cliffs visually explain gated approaches. Restored currents and civilian dock use close the regional story, without a fifth-chapter tease. |
 
 Each chapter preserves the shared family while changing dominant landform, lighting direction, vegetation rhythm and Team Tether intrusion. Repainting Meadows assets alone is insufficient if the land silhouette and structure language remain unchanged.
+
+For Bar A's chapter-specific comparison, use the Meadows key art with `docs/art/reference/19_Meadows_Asset_Boards_Visual_Direction.png` in Meadows; `docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png` and its creature-roster board in Cloudreach; both Stormwood boards in that folder with its creature-roster board in Stormwood; and the water-veilfall-stronghold plus water-realm creature-roster boards there in Tidewake. These are identity and composition references, never export assets or a request to trace their pixels. Bar B uses the same existing gameplay comparison frames for every chapter. A code-blind reviewer records Bar A and Bar B separately for the correct chapter; a Meadows-only comparison cannot certify later-biome identity.
 
 ## 5. Creatures, characters and presentation subjects
 
@@ -152,7 +156,7 @@ For each chapter, capture the same representative matrix from the shipping build
 
 A fresh code-blind critic receives only current frames, the approved reference set and the rubric. It names frame-specific defects, ranks the largest three gaps and answers Bars A/B. It is not told what changed or the performance budget. Two rounds with no new defect and no measured movement establish a mechanism ceiling; change the asset or approach instead of repeating tint/scatter tuning.
 
-Owner/external acceptance is required for final reference parity, final creature style and any asset-dependent silhouette compromise. Performance approval requires device telemetry; a screenshot cannot prove it.
+Final reference parity, creature style and any asset-dependent silhouette compromise receive a code-blind independent agent verdict against the owner-settled Bars A/B and the saved reference set. Record exact frame, defect, chosen repair and the re-captured result. If an authorized asset path cannot meet the bar, keep it open rather than silently accepting a weaker silhouette. Performance acceptance requires device telemetry; a screenshot cannot prove it. Real audience appeal remains unmeasured without human players.
 
 ## 10. Out of scope
 
