@@ -594,18 +594,22 @@ func _local_may_answer() -> bool:
 	return _may_answer_cached
 
 ## Everything local_may_answer() reads: the flags revision and local character
-## (offered/legacy markers), plus the world object, host role and the sizes of
-## the delivery journal (participants) and claim table (legacy claim), and
-## whether anyone else is in the session (the multi-peer empty-journal rule).
+## (offered/legacy markers), the local character's own flags revision (its
+## legacy receipt), plus the world object, host role and the sizes of the
+## delivery journal (participants) and claim table (legacy claim), and
+## whether anyone else is in the session (the multi-peer empty-journal rule,
+## which can flip at runtime as peers join and leave).
 func _may_answer_key() -> Array:
 	var world_state: Variant = _game.get("world")
 	var local: Variant = _game.get("local")
 	if world_state == null:
 		return [0]
+	var local_flags: Variant = local.get("flags") if local != null else null
 	return [world_state.get_instance_id(), int(world_state.flags.revision),
 		str(local.character_id) if local != null else "", _game.is_host(),
 		preload("res://scripts/world/water_guardian_reward.gd").is_multi_peer(_game),
-		(world_state.reward_deliveries as Dictionary).size(), (world_state.water_capture_claims as Dictionary).size()]
+		(world_state.reward_deliveries as Dictionary).size(), (world_state.water_capture_claims as Dictionary).size(),
+		int(local_flags.revision) if local_flags != null else -1]
 
 ## This character put its offer off and may answer it here.
 func _local_deferred_guardian() -> bool:
