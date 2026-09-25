@@ -36,6 +36,20 @@ uniform float flash = 0.0;
 uniform float sheet_glow = 0.0;
 uniform float glow_time = 0.0;
 uniform vec3 flash_colour : source_color = vec3(0.9, 0.86, 1.0);
+// Round 3 (blind judge 8): decorative Break sky lightning lights the cloud
+// body around one direction (the "undersides" of the deck over a distant
+// bolt); Fading's afterglow is a decaying warm-violet band low in the
+// clouds; the aftermath's still deck is given structure (definition sharpens
+// the cloud body, rim lightens its edges, thin_glow lights thin spots).
+uniform float cloud_flash = 0.0;
+uniform vec3 cloud_flash_dir = vec3(0.0, 0.4, -1.0);
+uniform float cloud_flash_size = 0.06;
+uniform float afterglow = 0.0;
+uniform vec3 afterglow_colour : source_color = vec3(0.62, 0.45, 0.76);
+uniform float definition = 0.0;
+uniform float rim = 0.0;
+uniform float thin_glow = 0.0;
+uniform vec3 rim_colour : source_color = vec3(0.66, 0.62, 0.84);
 varying vec3 dir;
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
@@ -60,12 +74,23 @@ void fragment() {
 	float t = cloud_time;
 	float n = fbm(uv + vec2(t, t * 0.35));
 	float m = fbm(uv * 2.2 - vec2(t * 1.6, t * 0.2));
-	float body = clamp(n * 0.75 + m * 0.35, 0.0, 1.0);
+	float raw_body = clamp(n * 0.75 + m * 0.35, 0.0, 1.0);
+	float body = mix(raw_body, smoothstep(0.38, 0.62, raw_body), definition);
 	vec3 colour = ceiling_colour * mix(1.0 - contrast, 1.0 + contrast * 0.6, body);
+	// Nothing lights the band just above the horizon: a bright sliver there
+	// read as a low sun breaking through (blind judge 8).
+	float aloft = smoothstep(0.14, 0.3, dir.y);
+	float edge = 1.0 - smoothstep(0.0, 0.16, abs(raw_body - 0.5));
+	colour += rim_colour * (rim * edge + thin_glow * (1.0 - smoothstep(0.18, 0.42, raw_body))) * smoothstep(0.05, 0.2, dir.y);
 	colour += flash_colour * flash * (0.35 + 0.9 * body);
 	float patch = smoothstep(0.45, 0.8, fbm(uv * 0.45 + vec2(glow_time * 0.07, -glow_time * 0.05)));
 	float pulse = 0.5 + 0.5 * sin(glow_time * 6.2832 + fbm(uv * 0.3) * 9.0);
-	colour += flash_colour * sheet_glow * patch * pulse * (0.4 + 0.6 * body);
+	colour += flash_colour * sheet_glow * patch * pulse * (0.4 + 0.6 * body) * aloft;
+	float spot = smoothstep(1.0 - cloud_flash_size, 1.0, dot(dir, normalize(cloud_flash_dir)));
+	colour += flash_colour * cloud_flash * spot * (0.2 + 1.1 * body) * aloft;
+	float low = smoothstep(0.04, 0.14, dir.y) * (1.0 - smoothstep(0.2, 0.5, dir.y));
+	float warm = low * (0.4 + 0.6 * smoothstep(0.3, 0.75, body)) * (0.55 + 0.45 * fbm(uv * 0.2 + vec2(3.1, 7.3)));
+	colour = mix(colour, afterglow_colour, clamp(afterglow * warm, 0.0, 0.75));
 	ALBEDO = colour;
 	// Opaque almost down to eye level: the art.json sky's lit cumulus band
 	// must not show under a storm ceiling.
@@ -147,6 +172,28 @@ var _flash := 0.0
 var _flash_next := 0.0
 var _flash_echo := -1.0
 var _flash_rng := RandomNumberGenerator.new()
+## Round 3: the third, farthest rain layer (a distant curtain), Fading's
+## ground steam, and how far through its phase the local Surge is (0..1,
+## drives presentation `ramp`s such as Fading's easing steam and slant).
+var _rain_curtain: GPUParticles3D
+var _steam: GPUParticles3D
+var _phase_progress := 0.0
+var _ramp_left := 0.0
+## Decorative Break sky lightning (no telegraph, no damage): pending pulses
+## {at, kind, strength, dir, restrike}, the cloud-flash level and direction,
+## the bolt pool and every flash onset in the last second (UX 8 cap).
+var _sky_rng := RandomNumberGenerator.new()
+var _sky_clock := 0.0
+var _sky_next := 0.0
+var _sky_pulses: Array = []
+var _cloud_flash := 0.0
+var _cloud_flash_dir := Vector3(0.0, 0.4, -1.0)
+var _bolts: Array[MeshInstance3D] = []
+var _bolt_levels: Array[float] = []
+var _bolt_cursor := 0
+var _onsets: Array[float] = []
+## Every decorative onset (clock time, kind); tests and capture read it.
+var sky_log: Array = []
 
 func _ready() -> void:
 	world = get_parent() as Node3D
@@ -162,7 +209,9 @@ func _ready() -> void:
 		_rain.emitting = true
 		_build_ceiling()
 		_build_flash_light()
+		_build_steam()
 		_flash_rng.randomize()
+		_sky_rng.randomize()
 		var layer := CanvasLayer.new()
 		layer.name = "SurgeStatus"
 		add_child(layer)
@@ -195,7 +244,9 @@ func _process(delta: float) -> void:
 	var player := world.get_node("Player") as Node3D
 	var region := region_at(player.global_position)
 	var flags: RefCounted = game.get("progression")
-	phase = phase_at_position(player.global_position)
+	var info := phase_info_at(player.global_position)
+	phase = str(info.get("phase", "calm"))
+	_phase_progress = clampf(float(info.get("elapsed", 0.0)) / maxf(0.01, float(info.get("duration", 1.0))), 0.0, 1.0)
 	_aftermath = flags.has(LONG_STORM_ENDED)
 	var lightning := world.get_node_or_null("StormwoodLightning")
 	_shelter_check_left -= delta
@@ -235,9 +286,13 @@ func charged_nodes_open() -> bool:
 ## Queries use the shared host clock and the target's region, including when
 ## this node is a simulation shell with no local player presentation.
 func phase_at_position(at: Vector3) -> String:
+	return str(phase_info_at(at).get("phase", "calm"))
+
+## rules.phase_at() for `at`: phase, elapsed and duration within it, cycle.
+func phase_info_at(at: Vector3) -> Dictionary:
 	var game := get_node_or_null("/root/Game")
 	if game == null:
-		return "calm"
+		return {"phase": "calm"}
 	var environment: Dictionary = game.get("realm_environment")
 	var saved: Variant = environment.get("stormwood", {})
 	var raw: Variant = saved.get("elapsed", 0.0) if saved is Dictionary else 0.0
@@ -245,7 +300,7 @@ func phase_at_position(at: Vector3) -> String:
 	var region := region_at(at)
 	var flags: RefCounted = game.get("progression")
 	var rod_flag := str(rules.config.regions.get(region, {}).get("rod_flag", ""))
-	return str(rules.phase_at(elapsed, region, not rod_flag.is_empty() and flags.has(rod_flag), flags.has(LONG_STORM_ENDED)).phase)
+	return rules.phase_at(elapsed, region, not rod_flag.is_empty() and flags.has(rod_flag), flags.has(LONG_STORM_ENDED))
 
 func charged_nodes_open_at(at: Vector3) -> bool:
 	return rules.charged_nodes_open(phase_at_position(at))
@@ -282,7 +337,8 @@ func light_delta_for_phase(for_phase: String, aftermath: bool = false, base: Dic
 const _COLOUR_KEYS := ["ambient_colour", "sky_top", "sky_horizon", "sky_ground_horizon", "ceiling_colour"]
 const _NUMBER_KEYS := ["sun_energy_mult", "shadow_opacity", "ambient_energy_mult", "fog_density_add",
 	"ceiling_opacity", "ceiling_speed", "ceiling_contrast", "ceiling_breakup", "rain_amount",
-	"wind", "sheet_glow", "sheet_glow_rate", "intensity"]
+	"wind", "sheet_glow", "sheet_glow_rate", "intensity", "steam", "afterglow",
+	"ceiling_definition", "ceiling_rim", "ceiling_thin_glow"]
 
 ## Authored row → typed values, still in authored (daylight) colours.
 func _resolved(row: Dictionary) -> Dictionary:
@@ -293,6 +349,8 @@ func _resolved(row: Dictionary) -> Dictionary:
 		out[key] = float(row.get(key, defaults.get(key, 0.0)))
 	out["rain_visible"] = bool(row.get("rain_visible", false))
 	out["flashes"] = bool(row.get("flashes", false))
+	var ramp: Variant = row.get("ramp", {})
+	out["ramp"] = (ramp as Dictionary).duplicate(true) if ramp is Dictionary else {}
 	for key: String in _COLOUR_KEYS:
 		if row.has(key) and row[key] != null:
 			out[key] = Color(str(row[key]))
@@ -407,8 +465,31 @@ func _current(base: Dictionary) -> Dictionary:
 		_final_cache = _final(_to, base)
 		_final_cache_to = _to
 		_final_cache_base = base
-	var target := _final_cache
+	var target := ramped(_final_cache, _to.get("ramp", {}), _phase_progress)
 	return target if _blend >= 1.0 else _mix(_from, target, _blend, base)
+
+## Round 3 (blind judge 8: "give each phase a structural signature"): a row's
+## `ramp` eases values across the phase, {key: [start, end, power]}, with
+## progress^power (default 1). Fading uses it to carry Break's slant and rain
+## over at its start and straighten and thin them, and to ease its steam and
+## afterglow to zero by its end.
+static func ramped(p: Dictionary, ramp: Variant, progress: float) -> Dictionary:
+	if not ramp is Dictionary or (ramp as Dictionary).is_empty():
+		return p
+	var out := p.duplicate()
+	for key: String in ramp:
+		var pair: Array = ramp[key]
+		var power := float(pair[2]) if pair.size() > 2 else 1.0
+		out[key] = lerpf(float(pair[0]), float(pair[1]), pow(clampf(progress, 0.0, 1.0), maxf(0.01, power)))
+	return out
+
+## The local phase's progress 0..1 (production sets it from the Surge clock;
+## capture tools and tests may pin it).
+func set_phase_progress(progress: float) -> void:
+	_phase_progress = clampf(progress, 0.0, 1.0)
+
+func phase_progress() -> float:
+	return _phase_progress
 
 ## OWNER DIRECTION (WO-F10-08): Stormwood has no day and night look. Its
 ## presentation is one purple storm at every hour, including the Long Storm
@@ -530,6 +611,13 @@ func _advance_presentation(delta: float) -> void:
 	# fastest authored speed the wrap comes after days of continuous Break.
 	_cloud_time = fposmod(_cloud_time + delta * float(shown.get("ceiling_speed", 0.0)),
 		float(_pres_cfg().get("ceiling", {}).get("time_wrap", 10000.0)))
+	_update_steam(shown)
+	var ramp: Variant = _to.get("ramp", {})
+	if ramp is Dictionary and not (ramp as Dictionary).is_empty():
+		_ramp_left -= delta
+		if _ramp_left <= 0.0:
+			_ramp_left = float(cfg.get("reapply_fading_seconds", 0.2))
+			_update_rain(shown)
 	_reapply_left -= delta
 	if _reapply_left > 0.0:
 		_update_ceiling(shown)
@@ -552,6 +640,7 @@ func _apply_current(force: bool) -> void:
 	if look != null:
 		look.call("set_weather", _delta_from(current))
 	_update_rain(current)
+	_update_steam(current)
 
 ## Apply the current phase immediately (kept for existing callers/tests).
 func _apply_phase_light() -> void:
@@ -570,9 +659,10 @@ func _update_rain(p: Dictionary) -> void:
 	_rain_amount = clampf(float(p.rain_amount), 0.0, 1.0)
 	_rain.amount_ratio = _rain_amount * (1.0 - _roof_fade)
 	_apply_wind(float(p.get("wind", 1.0)))
-	if _rain_far != null:
-		_rain_far.emitting = _rain.visible
-		_rain_far.amount_ratio = _rain_amount
+	for layer: GPUParticles3D in [_rain_far, _rain_curtain]:
+		if layer != null:
+			layer.emitting = _rain.visible
+			layer.amount_ratio = _rain_amount
 	# The streaks are unshaded, so they would glow on a dark night (judge
 	# (d): in night Building the rain was the brightest thing on screen):
 	# their tint follows the night factor down to rain.night_floor and their
@@ -584,19 +674,22 @@ func _update_rain(p: Dictionary) -> void:
 	_night_tint(_rain, cfg, p)
 	if _rain_far != null:
 		_night_tint(_rain_far, _far_rain_cfg(cfg), p)
+	if _rain_curtain != null:
+		_night_tint(_rain_curtain, _far_rain_cfg(cfg, "curtain_layer"), p)
 
 func _night_tint(emitter: GPUParticles3D, cfg: Dictionary, p: Dictionary) -> void:
 	var shade := maxf(float(cfg.get("night_floor", 0.12)), float(p.get("night_scale", 1.0)))
 	var alpha_scale := lerpf(float(cfg.get("night_alpha_fraction", 0.5)), 1.0, float(p.get("day_t", 1.0)))
 	_tint_emitter(emitter, cfg, shade, alpha_scale)
 
-func _far_rain_cfg(cfg: Dictionary) -> Dictionary:
+func _far_rain_cfg(cfg: Dictionary, layer: String = "far_layer") -> Dictionary:
 	var far_cfg := cfg.duplicate()
-	# Near-layer-only geometry never leaks into the far layer.
+	# Near-layer-only geometry never leaks into the far layers.
 	for key: String in ["spawn_band_above_ground_m", "lens_clearance_m", "ring_width_m", "lifetime_s"]:
 		far_cfg.erase(key)
-	for key: String in cfg.get("far_layer", {}):
-		far_cfg[key] = cfg.far_layer[key]
+	var over: Dictionary = cfg.get(layer, {})
+	for key: String in over:
+		far_cfg[key] = over[key]
 	return far_cfg
 
 func _tint_emitter(emitter: GPUParticles3D, cfg: Dictionary, shade: float, alpha_scale: float = 1.0) -> void:
@@ -624,6 +717,17 @@ func _style_rain() -> void:
 		_rain_far.position = Vector3(0.0, float(far.get("centre_offset_m", 0.0)), 0.0)
 		_rain_far.visible = true
 		_rain.add_child(_rain_far)
+	# Round 3 (blind judge 8: Break's rain read as "sparse thin streaks"): a
+	# third, distant curtain of long faint streaks well beyond the far layer,
+	# scaled by the phase's rain like the others.
+	var curtain: Dictionary = cfg.get("curtain_layer", {})
+	if not curtain.is_empty():
+		_rain_curtain = _build_rain()
+		_rain_curtain.name = "RainCurtain"
+		_style_emitter(_rain_curtain, _far_rain_cfg(cfg, "curtain_layer"))
+		_rain_curtain.position = Vector3(0.0, float(curtain.get("centre_offset_m", 0.0)), 0.0)
+		_rain_curtain.visible = true
+		_rain.add_child(_rain_curtain)
 
 func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 	var colour := Color(str(cfg.get("colour", "#c0ccd6")))
@@ -711,7 +815,7 @@ func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 func _apply_wind(wind: float) -> void:
 	var slant: Array = _pres_cfg().get("rain", {}).get("wind_slant", [0.0, 0.0])
 	var k := clampf(wind, 0.0, 1.0)
-	for emitter: GPUParticles3D in [_rain, _rain_far]:
+	for emitter: GPUParticles3D in [_rain, _rain_far, _rain_curtain]:
 		if emitter == null:
 			continue
 		var process := emitter.process_material as ParticleProcessMaterial
@@ -866,6 +970,10 @@ func _update_ceiling(p: Dictionary) -> void:
 	_ceiling_material.set_shader_parameter("cloud_time", _cloud_time)
 	_ceiling_material.set_shader_parameter("contrast", float(p.get("ceiling_contrast", 0.3)))
 	_ceiling_material.set_shader_parameter("breakup", float(p.get("ceiling_breakup", 0.0)))
+	_ceiling_material.set_shader_parameter("afterglow", float(p.get("afterglow", 0.0)))
+	_ceiling_material.set_shader_parameter("definition", float(p.get("ceiling_definition", 0.0)))
+	_ceiling_material.set_shader_parameter("rim", float(p.get("ceiling_rim", 0.0)))
+	_ceiling_material.set_shader_parameter("thin_glow", float(p.get("ceiling_thin_glow", 0.0)))
 	_ceiling.visible = float(p.get("ceiling_opacity", 0.0)) > 0.001
 
 func _build_ceiling() -> void:
@@ -879,6 +987,10 @@ func _build_ceiling() -> void:
 	_ceiling_material.render_priority = Material.RENDER_PRIORITY_MIN
 	var flash: Dictionary = _pres_cfg().get("flash", {})
 	_ceiling_material.set_shader_parameter("flash_colour", Color(str(flash.get("colour", "#e6dcff"))))
+	_ceiling_material.set_shader_parameter("afterglow_colour", Color(str(cfg.get("afterglow_colour", "#9e72c2"))))
+	_ceiling_material.set_shader_parameter("rim_colour", Color(str(cfg.get("rim_colour", "#a89ed6"))))
+	var sky: Dictionary = _pres_cfg().get("sky_lightning", {})
+	_ceiling_material.set_shader_parameter("cloud_flash_size", float(sky.get("cloud_flash_size", 0.06)))
 	var radius := float(cfg.get("radius_m", 2400.0))
 	var dome := SphereMesh.new()
 	dome.radius = radius
@@ -923,6 +1035,9 @@ func _follow_player() -> void:
 				not (subject is CharacterBody3D) or (subject as CharacterBody3D).is_on_floor())
 			anchor_position.y = _anchor_y
 		_rain.global_position = rain_centre(camera_position, anchor_position, _smoothed_floor(camera))
+		if _steam != null and subject != null:
+			# Steam rises from the ground around the framed subject.
+			_steam.global_position = anchor_position
 	if _ceiling != null and camera != null:
 		_ceiling.global_position = camera.global_position
 
@@ -937,7 +1052,10 @@ func flash_level() -> float:
 ## gameplay tells and stay untouched), so under UX §8 reduced motion they are
 ## scaled by presentation.flash.reduced_motion_scale.
 func flash(strength: float = 1.0) -> void:
-	_flash = maxf(_flash, clampf(strength, 0.0, 1.0) * flash_motion_scale())
+	var level := clampf(strength, 0.0, 1.0) * flash_motion_scale()
+	_flash = maxf(_flash, level)
+	if level > 0.01:
+		_note_onset("scene")
 
 func flash_motion_scale() -> float:
 	if not MOTION_PREFS.reduced_motion():
@@ -963,10 +1081,13 @@ func sky_flash_for_strike(at: Vector3) -> float:
 
 func _advance_flash(delta: float) -> void:
 	var cfg: Dictionary = _pres_cfg().get("flash", {})
+	_advance_sky_lightning(delta)
 	var active := not _to.is_empty() and bool(_to.get("flashes", false)) and _blend >= 1.0
 	if active:
 		_flash_next -= delta
-		if _flash_next <= 0.0:
+		if _flash_next <= 0.0 and not decorative_onset_allowed():
+			_flash_next = 0.1
+		elif _flash_next <= 0.0:
 			# Distant, telegraph-less flashes are deliberately weaker than a
 			# real strike's (1.0) and on their own slower cadence, so a flash
 			# with no ring never reads as a missed warning.
@@ -978,7 +1099,7 @@ func _advance_flash(delta: float) -> void:
 		_flash_next = minf(_flash_next, 1.5)
 	if _flash_echo >= 0.0:
 		_flash_echo -= delta
-		if _flash_echo < 0.0:
+		if _flash_echo < 0.0 and decorative_onset_allowed() and not MOTION_PREFS.reduced_motion():
 			flash(float(cfg.get("double_strength", 0.25)))
 	if _flash > 0.0:
 		_flash = maxf(0.0, _flash - delta / maxf(0.01, float(cfg.get("decay_seconds", 0.35))))
@@ -995,3 +1116,330 @@ func _advance_flash(delta: float) -> void:
 			_glow_time = fposmod(_glow_time + delta * float(shown.get("sheet_glow_rate", 0.0)), 1000.0)
 		_ceiling_material.set_shader_parameter("glow_time", _glow_time)
 		_ceiling_material.set_shader_parameter("sheet_glow", float(shown.get("sheet_glow", 0.0)) * flash_motion_scale())
+		_ceiling_material.set_shader_parameter("cloud_flash", _cloud_flash)
+		_ceiling_material.set_shader_parameter("cloud_flash_dir", _cloud_flash_dir)
+
+# ------------------------------------------------------- Fading's ground steam
+
+## Round 3 (blind judge 8; ART_DIRECTION 3.3 "post-strike steam or
+## afterglow"): Fading's own signature is low steam rising from the ground
+## around the framed subject, easing to nothing across the phase
+## (presentation.phases.fading.ramp.steam). Procedural soft billboards with a
+## generated radial-gradient texture, no texture art. Only a row with
+## `steam` > 0 shows it: Calm, Building, Break and the aftermath carry 0.
+func _build_steam() -> void:
+	var cfg: Dictionary = _pres_cfg().get("steam", {})
+	if cfg.is_empty():
+		return
+	_steam = GPUParticles3D.new()
+	_steam.name = "GroundSteam"
+	_steam.amount = int(cfg.get("max_puffs", 90))
+	_steam.lifetime = float(cfg.get("lifetime_s", 5.0))
+	_steam.preprocess = _steam.lifetime
+	_steam.local_coords = false
+	_steam.amount_ratio = 0.0
+	_steam.emitting = false
+	_steam.visible = false
+	_steam.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var process := ParticleProcessMaterial.new()
+	process.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
+	process.emission_ring_axis = Vector3.UP
+	process.emission_ring_inner_radius = float(cfg.get("inner_radius_m", 2.0))
+	process.emission_ring_radius = float(cfg.get("outer_radius_m", 14.0))
+	process.emission_ring_height = float(cfg.get("spawn_height_m", 0.4))
+	process.direction = Vector3.UP
+	process.spread = float(cfg.get("spread_deg", 25.0))
+	process.gravity = Vector3.ZERO
+	process.initial_velocity_min = float(cfg.get("rise_min", 0.15))
+	process.initial_velocity_max = float(cfg.get("rise_max", 0.4))
+	process.angle_min = -180.0
+	process.angle_max = 180.0
+	process.scale_min = float(cfg.get("scale_min", 0.8))
+	process.scale_max = float(cfg.get("scale_max", 1.4))
+	var grow := Curve.new()
+	grow.add_point(Vector2(0.0, float(cfg.get("start_scale", 0.45))))
+	grow.add_point(Vector2(1.0, 1.0))
+	var grow_texture := CurveTexture.new()
+	grow_texture.curve = grow
+	process.scale_curve = grow_texture
+	var colour := Color(str(cfg.get("colour", "#8e88ac")))
+	colour.a = float(cfg.get("alpha", 0.22))
+	process.color = colour
+	var life := Gradient.new()
+	life.offsets = PackedFloat32Array([0.0, 0.25, 0.65, 1.0])
+	life.colors = PackedColorArray([Color(1, 1, 1, 0), Color.WHITE, Color(1, 1, 1, 0.7), Color(1, 1, 1, 0)])
+	var life_ramp := GradientTexture1D.new()
+	life_ramp.gradient = life
+	process.color_ramp = life_ramp
+	_steam.process_material = process
+	var quad := QuadMesh.new()
+	var size := float(cfg.get("puff_size_m", 2.4))
+	quad.size = Vector2(size, size * float(cfg.get("puff_aspect", 0.6)))
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	material.billboard_keep_scale = true
+	material.vertex_color_use_as_albedo = true
+	material.albedo_texture = soft_puff_texture()
+	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_DISABLED
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	quad.material = material
+	_steam.draw_pass_1 = quad
+	var reach := process.emission_ring_radius + size + 1.0
+	_steam.visibility_aabb = AABB(Vector3(-reach, -2.0, -reach), Vector3(reach * 2.0, 14.0, reach * 2.0))
+	add_child(_steam)
+
+static var _puff_texture: GradientTexture2D
+
+## A soft radial puff: white at the centre fading to transparent at the edge.
+static func soft_puff_texture() -> GradientTexture2D:
+	if _puff_texture == null:
+		var gradient := Gradient.new()
+		gradient.offsets = PackedFloat32Array([0.0, 0.45, 1.0])
+		gradient.colors = PackedColorArray([Color(1, 1, 1, 1), Color(1, 1, 1, 0.45), Color(1, 1, 1, 0)])
+		_puff_texture = GradientTexture2D.new()
+		_puff_texture.gradient = gradient
+		_puff_texture.fill = GradientTexture2D.FILL_RADIAL
+		_puff_texture.fill_from = Vector2(0.5, 0.5)
+		_puff_texture.fill_to = Vector2(1.0, 0.5)
+		_puff_texture.width = 64
+		_puff_texture.height = 64
+	return _puff_texture
+
+func _update_steam(p: Dictionary) -> void:
+	if _steam == null:
+		return
+	var amount := clampf(float(p.get("steam", 0.0)), 0.0, 1.0)
+	var on := amount > 0.001
+	if _steam.visible != on:
+		_steam.visible = on
+		_steam.emitting = on
+	if absf(_steam.amount_ratio - amount) > 0.005 or (amount == 0.0 and _steam.amount_ratio != 0.0):
+		_steam.amount_ratio = amount
+
+## Steam level now (0..1): capture tools and tests read it.
+func steam_level() -> float:
+	return clampf(float(_current(_last_base).get("steam", 0.0)), 0.0, 1.0) if not _to.is_empty() else 0.0
+
+# --------------------------------------------- Break's decorative sky lightning
+
+## Round 3 (blind judge 8: "Break has no real lightning in stills or
+## strips"): decorative, non-gameplay lightning while the local presentation
+## is Break and settled: in-cloud flashes that light the cloud body around one
+## direction, visible distant cloud-to-ground bolts (the strike bolt's
+## white-violet, drawn as a jagged ribbon far out in the sky, no telegraph and
+## no damage) and the existing occasional whole-scene distant flash. Cadence
+## is presentation.sky_lightning. UX 8 photosensitivity: every flash onset
+## (decorative, echo and real strike) is logged, and decorative onsets are
+## refused while the last second already holds max_flashes_per_second (<= 3)
+## minus strike_reserve (so a real strike still fits); there is no
+## whole-scene white strobe (scene flashes stay <= flash.distant_strength_max
+## and 9-16 s apart). Reduced motion: cloud flashes scale by
+## flash.reduced_motion_scale, flickers and restrikes are dropped, and bolts
+## stay visible (they are not flashes).
+func _sky_cfg() -> Dictionary:
+	return _pres_cfg().get("sky_lightning", {})
+
+func max_flashes_per_second() -> int:
+	return mini(3, int(_sky_cfg().get("max_flashes_per_second", 3)))
+
+func _note_onset(kind: String) -> void:
+	_onsets.append(_sky_clock)
+	sky_log.append([_sky_clock, kind])
+	if sky_log.size() > 4096:
+		sky_log = sky_log.slice(2048)
+
+func _onsets_in_last_second() -> int:
+	while not _onsets.is_empty() and _onsets[0] <= _sky_clock - 1.0:
+		_onsets.pop_front()
+	return _onsets.size()
+
+func decorative_onset_allowed() -> bool:
+	var budget := max_flashes_per_second() - int(_sky_cfg().get("strike_reserve", 1))
+	return _onsets_in_last_second() < budget
+
+## True while any Break sky lightning is on screen (cloud flash, bolt or
+## scene flash): the cadence test samples it.
+func sky_lightning_visible() -> bool:
+	if _cloud_flash > 0.02 or _flash > 0.02:
+		return true
+	for level: float in _bolt_levels:
+		if level > 0.02:
+			return true
+	return false
+
+func cloud_flash_level() -> float:
+	return _cloud_flash
+
+func bolt_level() -> float:
+	var top := 0.0
+	for level: float in _bolt_levels:
+		top = maxf(top, level)
+	return top
+
+func _advance_sky_lightning(delta: float) -> void:
+	var cfg := _sky_cfg()
+	_sky_clock += delta
+	# Decay first, then fire: a pulse fired this frame is drawn at full
+	# strength even when a frame is long (slow capture renders).
+	var reduced := MOTION_PREFS.reduced_motion()
+	_cloud_flash = maxf(0.0, _cloud_flash - delta / maxf(0.01, float(cfg.get("cloud_seconds", 0.45))))
+	var bolt_seconds := float(cfg.get("bolt_seconds", 0.22)) * (float(cfg.get("reduced_motion_bolt_hold", 2.0)) if reduced else 1.0)
+	for index in _bolt_levels.size():
+		_bolt_levels[index] = maxf(0.0, _bolt_levels[index] - delta / maxf(0.01, bolt_seconds))
+	var active := not cfg.is_empty() and not _to.is_empty() and bool(_to.get("flashes", false)) and _blend >= 1.0
+	if active:
+		_sky_next -= delta
+		if _sky_next <= 0.0:
+			if decorative_onset_allowed():
+				_sky_next = _sky_rng.randf_range(float(cfg.get("interval_min", 0.6)), float(cfg.get("interval_max", 1.4)))
+				_schedule_sky_event(cfg)
+			else:
+				_sky_next = 0.1
+	else:
+		_sky_next = minf(_sky_next, 0.5)
+		_sky_pulses.clear()
+	var due: Array = []
+	for pulse: Dictionary in _sky_pulses:
+		if float(pulse.at) <= _sky_clock:
+			due.append(pulse)
+	for pulse: Dictionary in due:
+		_sky_pulses.erase(pulse)
+		# The first pulse of an event was cleared by the scheduler; a flicker
+		# or restrike only fires if the budget still allows it.
+		if bool(pulse.get("first", false)) or decorative_onset_allowed():
+			_fire_sky_pulse(pulse, cfg)
+	for index in mini(_bolts.size(), _bolt_levels.size()):
+		var bolt := _bolts[index]
+		if not is_instance_valid(bolt):
+			continue
+		bolt.visible = _bolt_levels[index] > 0.0
+		var material := bolt.material_override as StandardMaterial3D
+		if material != null:
+			material.albedo_color.a = clampf(_bolt_levels[index], 0.0, 1.0)
+
+## One event: an in-cloud flash (with a chance of one flicker) or a distant
+## bolt (lighting the cloud above it, with a chance of one restrike).
+func _schedule_sky_event(cfg: Dictionary) -> void:
+	var reduced := MOTION_PREFS.reduced_motion()
+	var kind := "bolt" if _sky_rng.randf() < float(cfg.get("bolt_chance", 0.35)) else "cloud"
+	var event := {"kind": kind, "at": _sky_clock, "first": true, "dir": _sky_direction(cfg, kind),
+		"seed": _sky_rng.randi(), "strength": _sky_rng.randf_range(float(cfg.get("cloud_strength_min", 0.35)), float(cfg.get("cloud_strength_max", 0.7)))}
+	_sky_pulses.append(event)
+	if not reduced and _sky_rng.randf() < float(cfg.get("flicker_chance", 0.35)):
+		var echo := event.duplicate()
+		echo["first"] = false
+		echo["at"] = _sky_clock + _sky_rng.randf_range(float(cfg.get("flicker_gap_min", 0.12)), float(cfg.get("flicker_gap_max", 0.2)))
+		echo["strength"] = float(event.strength) * float(cfg.get("flicker_strength", 0.6))
+		_sky_pulses.append(echo)
+
+## Where an event sits: an azimuth around the camera's forward (bolts within
+## bolt_azimuth_deg so they are in view more often; cloud flashes anywhere
+## within cloud_azimuth_deg), at an elevation above the horizon band.
+func _sky_direction(cfg: Dictionary, kind: String) -> Vector3:
+	var forward := Vector3(0.0, 0.0, -1.0)
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	if camera != null:
+		forward = -camera.global_transform.basis.z
+	var yaw := atan2(forward.x, forward.z)
+	var spread := deg_to_rad(float(cfg.get("bolt_azimuth_deg" if kind == "bolt" else "cloud_azimuth_deg", 70.0)))
+	var azimuth := yaw + _sky_rng.randf_range(-spread, spread)
+	var elevation := deg_to_rad(_sky_rng.randf_range(float(cfg.get("elevation_min_deg", 16.0)), float(cfg.get("elevation_max_deg", 34.0))))
+	return Vector3(sin(azimuth) * cos(elevation), sin(elevation), cos(azimuth) * cos(elevation)).normalized()
+
+func _fire_sky_pulse(pulse: Dictionary, cfg: Dictionary) -> void:
+	_note_onset(str(pulse.kind) + ("" if bool(pulse.get("first", false)) else "_flicker"))
+	var strength := float(pulse.strength)
+	var dir: Vector3 = pulse.dir
+	_cloud_flash_dir = dir
+	var scale := flash_motion_scale()
+	if str(pulse.kind) == "bolt":
+		_cloud_flash = maxf(_cloud_flash, strength * float(cfg.get("bolt_cloud_fraction", 0.8)) * scale)
+		_show_bolt(dir, int(pulse.seed), cfg, bool(pulse.get("first", false)))
+	else:
+		_cloud_flash = maxf(_cloud_flash, strength * scale)
+
+## Shows a distant bolt under `dir` (a pooled mesh; a restrike re-lights the
+## same bolt). Without a camera (tests) only the level is tracked.
+func _show_bolt(dir: Vector3, seed: int, cfg: Dictionary, first: bool) -> void:
+	var pool := int(cfg.get("bolt_pool", 2))
+	while _bolt_levels.size() < pool:
+		_bolt_levels.append(0.0)
+	if first:
+		_bolt_cursor = (_bolt_cursor + 1) % pool
+	_bolt_levels[_bolt_cursor] = 1.0
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	if camera == null or not first:
+		return
+	while _bolts.size() < pool:
+		var instance := MeshInstance3D.new()
+		instance.name = "SkyBolt%d" % _bolts.size()
+		instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		var material := StandardMaterial3D.new()
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		material.vertex_color_use_as_albedo = true
+		material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		material.albedo_color = Color(str(_pres_cfg().get("flash", {}).get("colour", "#e6dcff")))
+		# Far out in the storm the fog would swallow a bolt; it is light.
+		material.set_flag(BaseMaterial3D.FLAG_DISABLE_FOG, true)
+		instance.material_override = material
+		instance.visible = false
+		add_child(instance)
+		_bolts.append(instance)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed
+	var distance := rng.randf_range(float(cfg.get("bolt_distance_min_m", 260.0)), float(cfg.get("bolt_distance_max_m", 520.0)))
+	var flat := Vector3(dir.x, 0.0, dir.z).normalized()
+	var origin := camera.global_position
+	var base := origin + flat * distance
+	var ground := origin.y - 2.0
+	if world != null and world.has_method("ground_height_at"):
+		ground = float(world.call("ground_height_at", base.x, base.z))
+	var top := base + Vector3.UP * (distance * dir.y / maxf(0.2, Vector2(dir.x, dir.z).length()) + origin.y - base.y)
+	var bolt := _bolts[_bolt_cursor]
+	bolt.mesh = bolt_mesh(top, Vector3(base.x, ground, base.z), flat.cross(Vector3.UP).normalized(), rng, cfg)
+	bolt.global_transform = Transform3D.IDENTITY
+
+## A jagged ribbon from `top` (fading in out of the cloud) to `bottom`, faced
+## across `side`, with one short branch: triangles with per-vertex alpha.
+static func bolt_mesh(top: Vector3, bottom: Vector3, side: Vector3, rng: RandomNumberGenerator, cfg: Dictionary) -> ArrayMesh:
+	var segments := maxi(3, int(cfg.get("bolt_segments", 10)))
+	var length := top.distance_to(bottom)
+	var jitter := float(cfg.get("bolt_jitter", 0.09)) * length
+	var width := float(cfg.get("bolt_width_m", 1.6))
+	var points: Array[Vector3] = []
+	var drift := 0.0
+	for i in segments + 1:
+		var t := float(i) / segments
+		if i > 0 and i < segments:
+			drift = clampf(drift + rng.randf_range(-jitter, jitter), -jitter * 2.0, jitter * 2.0)
+		points.append(top.lerp(bottom, t) + side * (drift if i > 0 and i < segments else 0.0))
+	var vertices := PackedVector3Array()
+	var colours := PackedColorArray()
+	var add_strip := func(path: Array[Vector3], w: float, alpha_top: float) -> void:
+		for i in path.size() - 1:
+			var a := path[i]
+			var b := path[i + 1]
+			var wa := w * lerpf(1.0, 0.55, float(i) / path.size())
+			var wb := w * lerpf(1.0, 0.55, float(i + 1) / path.size())
+			var ca := Color(1, 1, 1, alpha_top if i == 0 else 1.0)
+			var cb := Color(1, 1, 1, 1.0)
+			vertices.append_array(PackedVector3Array([a - side * wa * 0.5, a + side * wa * 0.5, b + side * wb * 0.5,
+				a - side * wa * 0.5, b + side * wb * 0.5, b - side * wb * 0.5]))
+			colours.append_array(PackedColorArray([ca, ca, cb, ca, cb, cb]))
+	add_strip.call(points, width, 0.0)
+	var from := rng.randi_range(2, maxi(2, segments / 2))
+	var branch: Array[Vector3] = [points[from]]
+	var direction := (1.0 if rng.randf() < 0.5 else -1.0)
+	for k in 3:
+		branch.append(branch[-1] + side * direction * jitter * rng.randf_range(0.6, 1.2) + (bottom - top) / segments * 0.8)
+	add_strip.call(branch, width * 0.5, 1.0)
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_COLOR] = colours
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh

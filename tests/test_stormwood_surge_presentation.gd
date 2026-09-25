@@ -437,7 +437,9 @@ func test_aftermath_is_the_calmest_purple() -> void:
 		assert_true(float(row.rain_amount) < float(calm.rain_amount), "aftermath rain is lighter than Calm")
 		assert_false(bool(row.flashes), "no flashes in the aftermath")
 		assert_true(float(row.ceiling_speed) < float(calm.ceiling_speed), "stiller ceiling than Calm")
-		assert_true(float(row.ceiling_contrast) < float(calm.ceiling_contrast), "less ceiling flicker than Calm")
+		# Round 3 (blind judge 8: "a flat, blank lavender card"): still, but a
+		# structured deck; see test_aftermath_deck_is_still_but_structured.
+		assert_true(float(row.ceiling_contrast) > float(calm.ceiling_contrast), "a more defined deck than Calm's")
 		assert_true(float(row.sun_energy_mult) >= float(calm.sun_energy_mult), "steadier, not darker, key light")
 	surge.free()
 
@@ -484,7 +486,10 @@ func test_production_phase_application_reaches_world_look_and_live_sun() -> void
 func test_storm_horizon_and_fog_have_a_floor() -> void:
 	var surge := SURGE.new()
 	var fraction := float(_config().presentation.floors.horizon_fraction)
-	assert_true(fraction >= 0.6, "floor stays near the reviewed 65%")
+	# Round 3: 0.55 (was the reviewed 0.65, set for a night that the pinned
+	# storm no longer has) so Break's horizon can sit below Building's and
+	# Calm's in the monotonic ladder; still well clear of night-black.
+	assert_true(fraction >= 0.55, "floor stays near the reviewed 55-65%")
 	for hour: float in [8.0, 18.5, 23.0, 5.5]:
 		var base := _real_base(surge, hour)
 		var native := (base.sky_horizon as Color).get_luminance()
@@ -669,7 +674,7 @@ func test_every_phase_sits_in_the_deep_purple_band() -> void:
 			var c: Color = rows[name][key]
 			var r: Color = reference[key]
 			var ratio := c.get_luminance() / maxf(0.001, r.get_luminance())
-			assert_true(ratio >= 0.8 and ratio <= 1.15, "%s %s luminance %.2fx Break's (band 0.8-1.15)" % [name, key, ratio])
+			assert_true(ratio >= 0.85 and ratio <= 1.2, "%s %s luminance %.2fx Break's (band 0.85-1.2)" % [name, key, ratio])
 			var dh := absf(c.h - r.h) * 360.0
 			dh = minf(dh, 360.0 - dh)
 			assert_true(dh <= 15.0, "%s %s hue %.0f deg from Break's" % [name, key, dh])
@@ -700,12 +705,15 @@ func test_phases_separate_by_non_sky_cues() -> void:
 		if fast / slow >= 1.5: cues += 1
 		if absf(float(a.sheet_glow) - float(b.sheet_glow)) >= 0.1: cues += 1
 		if bool(a.flashes) != bool(b.flashes): cues += 1
+		if absf(float(a.steam) - float(b.steam)) >= 0.3: cues += 1
 		assert_true(cues >= 2, "%s vs %s differ by only %d non-sky cues" % [pair[0], pair[1], cues])
 	var speed := func(n: String) -> float: return float(rows[n].ceiling_speed)
 	assert_true(speed.call("calm") < speed.call("building") and speed.call("building") < speed.call("break"), "Calm < Building < Break")
 	assert_true(speed.call("fading") < speed.call("building") and speed.call("aftermath") < speed.call("calm"), "Fading slows, aftermath almost still")
-	assert_true(float(rows.aftermath.rain_amount) < float(rows.fading.rain_amount) and float(rows.fading.rain_amount) < float(rows.calm.rain_amount),
-		"rain: aftermath drizzle < Fading easing < Calm")
+	var fading_end := SURGE.ramped(rows.fading, rows.fading.ramp, 1.0)
+	assert_true(float(rows.aftermath.rain_amount) < float(fading_end.rain_amount) and float(fading_end.rain_amount) < float(rows.calm.rain_amount)
+		and float(rows.calm.rain_amount) < float(rows.fading.rain_amount),
+		"rain: aftermath drizzle < Fading's end < Calm < Fading's opening")
 	assert_true(float(rows["break"].sheet_glow) >= 0.4, "Break carries persistent in-cloud lightning a still can catch")
 	assert_true(float(rows.building.sheet_glow) > 0.0 and float(rows.building.sheet_glow) < float(rows["break"].sheet_glow) * 0.5, "Building: faint flicker only")
 	for name: String in ["calm", "fading", "aftermath"]:
@@ -1024,7 +1032,10 @@ func test_phase_wind_and_intensity_hook() -> void:
 	var full := Vector2(process.direction.x, process.direction.z).length()
 	surge.call("_update_rain", surge._resolved(surge.presentation_for("calm")))
 	var calm := Vector2(process.direction.x, process.direction.z).length()
-	assert_true(calm < full * 0.7 and calm > 0.0, "Calm leans less than Break")
+	assert_true(calm < 0.01, "Calm's rain falls straight down (lean %.3f)" % calm)
+	surge.call("_update_rain", surge._resolved(surge.presentation_for("building")))
+	var building := Vector2(process.direction.x, process.direction.z).length()
+	assert_true(building > full * 0.7, "Building leans with the wind (%.3f of %.3f)" % [building, full])
 	for phase: String in PHASES:
 		assert_true(float(surge.presentation_for(phase).wind) <= 1.0, "%s wind within the lens-safe maximum" % phase)
 	surge.phase = "break"
@@ -1064,4 +1075,257 @@ func test_pin_off_restores_the_clock_look() -> void:
 	var midnight: Dictionary = surge.base_look_at(art, cycle, 0.0)
 	assert_ne((noon.sky_top as Color).to_html(false), (midnight.sky_top as Color).to_html(false), "the clock look is back")
 	assert_true(float(midnight.night_scale) < 1.0, "night scaling applies again")
+	surge.free()
+
+
+# ------------------------------------------------ round 3 (blind judge 8)
+
+## Judge 8: Building read brighter and greyer than Calm, so the tension read
+## as falling. The sky (ceiling, horizon/fog and sky top) darkens and
+## saturates strictly from Calm to Building to Break, by a visible step.
+func test_sky_darkens_and_saturates_from_calm_to_break() -> void:
+	var surge := SURGE.new()
+	var base := _real_base(surge, 12.0)
+	var rows := {}
+	for phase: String in ["calm", "building", "break"]:
+		rows[phase] = surge._final(surge._resolved(surge.presentation_for(phase)), base)
+	for key: String in ["ceiling_colour", "sky_horizon", "sky_top"]:
+		var calm: Color = rows.calm[key]
+		var building: Color = rows.building[key]
+		var brk: Color = rows["break"][key]
+		assert_true(calm.get_luminance() > building.get_luminance() * 1.03 and building.get_luminance() > brk.get_luminance() * 1.03,
+			"%s value falls Calm %.3f > Building %.3f > Break %.3f (>= 3%% steps)" % [key, calm.get_luminance(), building.get_luminance(), brk.get_luminance()])
+		assert_true(calm.s + 0.03 <= building.s and building.s + 0.03 <= brk.s,
+			"%s saturation rises Calm %.2f < Building %.2f < Break %.2f" % [key, calm.s, building.s, brk.s])
+	surge.free()
+
+
+## Judge 8: the aftermath was "a flat, blank lavender card". It stays the
+## stillest ceiling but is a defined, high-contrast deck with lit rims and
+## thin spots, in the deep purple.
+func test_aftermath_deck_is_still_but_structured() -> void:
+	var surge := SURGE.new()
+	var calm: Dictionary = surge._resolved(surge.presentation_for("calm"))
+	for phase: String in PHASES:
+		var row: Dictionary = surge._resolved(surge.presentation_for(phase, true))
+		assert_true(float(row.ceiling_contrast) >= 0.55, "%s aftermath deck contrast %.2f (>= 0.55)" % [phase, float(row.ceiling_contrast)])
+		assert_true(float(row.ceiling_definition) >= 0.5, "%s aftermath cloud body is defined" % phase)
+		assert_true(float(row.ceiling_rim) >= 0.2 and float(row.ceiling_thin_glow) > 0.0, "%s aftermath deck has lit rims and thin spots" % phase)
+		assert_true(float(row.ceiling_speed) <= float(calm.ceiling_speed) * 0.5, "%s aftermath still almost still" % phase)
+	for phase: String in PHASES:
+		assert_almost_eq(float(surge._resolved(surge.presentation_for(phase)).ceiling_rim), 0.0, 0.0001, "%s storm deck has no aftermath rims" % phase)
+	surge.free()
+
+
+## Judge 8 swapped Calm and Fading twice: Fading gets its own signature
+## carried over from Break. Steam and afterglow exist only in Fading, start
+## strong and ease to zero across it; nothing else (the aftermath included)
+## carries any.
+func test_steam_and_afterglow_only_in_fading_and_ease_to_zero() -> void:
+	var surge := SURGE.new()
+	for phase: String in PHASES:
+		for aftermath: bool in [false, true]:
+			var row: Dictionary = surge._resolved(surge.presentation_for(phase, aftermath))
+			if phase == "fading" and not aftermath:
+				continue
+			for progress: float in [0.0, 0.5, 1.0]:
+				var shown := SURGE.ramped(row, row.ramp, progress)
+				assert_almost_eq(float(shown.steam), 0.0, 0.0001, "%s%s has no steam" % ["aftermath " if aftermath else "", phase])
+				assert_almost_eq(float(shown.afterglow), 0.0, 0.0001, "%s%s has no afterglow" % ["aftermath " if aftermath else "", phase])
+	var fading: Dictionary = surge._resolved(surge.presentation_for("fading"))
+	var last := INF
+	for step in 11:
+		var shown := SURGE.ramped(fading, fading.ramp, step / 10.0)
+		assert_true(float(shown.steam) <= last + 0.0001, "steam never rises across Fading")
+		last = float(shown.steam)
+		if step == 0:
+			assert_true(float(shown.steam) >= 0.9 and float(shown.afterglow) >= 0.9, "Fading opens with full steam and afterglow")
+	var end := SURGE.ramped(fading, fading.ramp, 1.0)
+	assert_almost_eq(float(end.steam), 0.0, 0.0001, "steam eased to zero by Fading's end")
+	assert_almost_eq(float(end.afterglow), 0.0, 0.0001, "afterglow decayed by Fading's end")
+	# Production path: the steam emitter follows the phase and its progress.
+	surge._build_steam()
+	var steam: GPUParticles3D = surge._steam
+	assert_true(steam != null, "the steam emitter is built from presentation.steam")
+	surge.phase = "fading"
+	surge.set_phase_progress(0.05)
+	surge.settle_presentation()
+	surge.call("_advance_presentation", 0.016)
+	assert_true(steam.visible and steam.emitting and steam.amount_ratio > 0.8, "early Fading steams (%.2f)" % steam.amount_ratio)
+	surge.set_phase_progress(0.6)
+	surge.call("_advance_presentation", 0.016)
+	assert_true(steam.amount_ratio < 0.6 and steam.amount_ratio > 0.0, "mid Fading steam is thinning (%.2f)" % steam.amount_ratio)
+	surge.set_phase_progress(1.0)
+	surge.call("_advance_presentation", 0.016)
+	assert_false(steam.visible, "no steam at Fading's end")
+	for phase: String in ["calm", "building", "break"]:
+		surge.phase = phase
+		surge.set_phase_progress(0.05)
+		surge.settle_presentation()
+		surge.call("_advance_presentation", 0.016)
+		assert_false(steam.visible, "%s shows no steam" % phase)
+	surge.free()
+
+
+## Fading carries Break's slant and heavier rain over at its start and
+## straightens and thins them; Calm is straight-down light rain at about
+## half of Fading's opening count.
+func test_fading_rain_carries_break_slant_then_straightens() -> void:
+	var surge := SURGE.new()
+	var brk: Dictionary = surge._resolved(surge.presentation_for("break"))
+	var calm: Dictionary = surge._resolved(surge.presentation_for("calm"))
+	var fading: Dictionary = surge._resolved(surge.presentation_for("fading"))
+	var start := SURGE.ramped(fading, fading.ramp, 0.0)
+	var end := SURGE.ramped(fading, fading.ramp, 1.0)
+	assert_true(float(start.wind) >= float(brk.wind) * 0.9, "Fading opens with Break's slant")
+	assert_true(float(end.wind) <= 0.25, "Fading's rain straightens (%.2f)" % float(end.wind))
+	assert_true(float(calm.wind) <= 0.05, "Calm's rain falls straight down")
+	var ratio := float(calm.rain_amount) / float(start.rain_amount)
+	assert_true(ratio >= 0.4 and ratio <= 0.6, "Calm rains about half of Fading's opening (%.2f)" % ratio)
+	# Production path: the emitter's lean follows the ramp.
+	surge._rain = surge._build_rain()
+	surge._style_rain()
+	var process := surge._rain.process_material as ParticleProcessMaterial
+	surge.phase = "fading"
+	surge.set_phase_progress(0.0)
+	surge.settle_presentation()
+	var early := Vector2(process.direction.x, process.direction.z).length()
+	surge.set_phase_progress(1.0)
+	surge._ramp_left = 0.0
+	surge.call("_advance_presentation", 0.016)
+	var late := Vector2(process.direction.x, process.direction.z).length()
+	assert_true(late < early * 0.3, "the live rain straightens across Fading (%.3f -> %.3f)" % [early, late])
+	assert_almost_eq(surge._rain.amount_ratio, float(end.rain_amount), 0.01, "and thins")
+	surge._rain.free()
+	surge.free()
+
+
+## Judge 8: Break's rain was "sparse thin streaks". Break draws a denser near
+## sheet, the far layer and a distant curtain beyond it, within the lens rule
+## (test_slanted_rain_never_crosses_the_lens) and a stated particle budget.
+func test_break_rain_has_a_near_sheet_and_a_distant_curtain() -> void:
+	var cfg: Dictionary = _config().presentation.rain
+	var near := int(cfg.max_drops)
+	var far := int(cfg.far_layer.max_drops)
+	var curtain := int(cfg.curtain_layer.max_drops)
+	assert_true(near >= 1500, "near sheet %d drops at Break (was 1100)" % near)
+	assert_true(near + far + curtain >= 3800 and near + far + curtain <= 4500, "Break total %d within the 4500 budget" % (near + far + curtain))
+	assert_true(float(cfg.curtain_layer.inner_radius_m) > float(cfg.far_layer.outer_radius_m), "the curtain is beyond the far layer")
+	var surge := SURGE.new()
+	surge._rain = surge._build_rain()
+	surge._style_rain()
+	var layer: GPUParticles3D = surge._rain_curtain
+	assert_true(layer != null and layer.get_parent() == surge._rain, "the curtain rides with the rain")
+	assert_eq(layer.amount, curtain)
+	surge.call("_update_rain", surge._resolved(surge.presentation_for("calm")))
+	assert_almost_eq(layer.amount_ratio, float(surge.presentation_for("calm").rain_amount), 0.001, "the curtain scales with the phase")
+	surge._rain.free()
+	surge.free()
+
+
+## Runs a settled phase for `seconds` at 60 fps with seeded generators and
+## real strikes every 4-8 s; returns {onsets: [[t, kind]], visible: fraction
+## of 1 s windows with lightning on screen, cloud_peak, bolt_peak}.
+func _run_sky(surge: Node, phase: String, aftermath: bool, seconds: float) -> Dictionary:
+	surge.phase = phase
+	surge._aftermath = aftermath
+	surge.settle_presentation()
+	surge._sky_rng.seed = 8
+	surge._flash_rng.seed = 9
+	surge.sky_log.clear()
+	var strike_rng := RandomNumberGenerator.new()
+	strike_rng.seed = 10
+	var next_strike := strike_rng.randf_range(4.0, 8.0)
+	var dt := 1.0 / 60.0
+	var t := 0.0
+	var windows := 0
+	var lit_windows := 0
+	var window_lit := false
+	var cloud_peak := 0.0
+	var bolt_peak := 0.0
+	while t < seconds:
+		surge.call("_advance_flash", dt)
+		t += dt
+		if t >= next_strike:
+			next_strike += strike_rng.randf_range(4.0, 8.0)
+			surge.flash(surge.sky_flash_for_strike(Vector3.ZERO))
+		cloud_peak = maxf(cloud_peak, surge.cloud_flash_level())
+		bolt_peak = maxf(bolt_peak, surge.bolt_level())
+		window_lit = window_lit or surge.sky_lightning_visible()
+		if floori(t) != floori(t - dt):
+			windows += 1
+			lit_windows += 1 if window_lit else 0
+			window_lit = false
+	return {"onsets": surge.sky_log.duplicate(), "visible": float(lit_windows) / maxf(1.0, windows),
+		"cloud_peak": cloud_peak, "bolt_peak": bolt_peak}
+
+
+static func _max_in_any_second(onsets: Array) -> int:
+	var worst := 0
+	for i in onsets.size():
+		var count := 0
+		for j in range(i, onsets.size()):
+			if float(onsets[j][0]) - float(onsets[i][0]) < 1.0:
+				count += 1
+		worst = maxi(worst, count)
+	return worst
+
+
+## Judge 8: Break needs real lightning a still or a strip can catch. Most
+## 1 s windows show some (cloud flash, bolt or scene flash), bolts are
+## frequent, and UX 8's photosensitivity limit holds: no second ever holds
+## more than 3 flash onsets, real strikes included; the decorative events
+## alone stay within the configured cap less the strike reserve.
+func test_break_sky_lightning_cadence_and_photosensitivity() -> void:
+	MOTION_PREFS.set_reduced_motion(false)
+	var cfg: Dictionary = _config().presentation.get("sky_lightning", {})
+	assert_false(cfg.is_empty(), "Break's sky lightning is configured")
+	assert_true(int(cfg.get("max_flashes_per_second", 3)) <= 3, "configured cap within UX 8's 3 per second")
+	var surge := SURGE.new()
+	var run := _run_sky(surge, "break", false, 600.0)
+	var onsets: Array = run.onsets
+	assert_true(_max_in_any_second(onsets) <= 3, "at most 3 flash onsets in any second (worst %d)" % _max_in_any_second(onsets))
+	var decorative := onsets.filter(func(o: Array) -> bool: return str(o[1]) != "scene")
+	assert_true(_max_in_any_second(decorative) <= int(cfg.get("max_flashes_per_second", 3)) - int(cfg.get("strike_reserve", 1)),
+		"decorative onsets leave room for a strike (worst %d)" % _max_in_any_second(decorative))
+	var per_second := float(onsets.size()) / 600.0
+	assert_true(per_second <= 2.0, "well below the limit in practice (%.2f onsets/s)" % per_second)
+	assert_true(float(run.visible) >= 0.8, "lightning on screen in %.0f%% of 1 s windows (>= 80%%)" % (float(run.visible) * 100.0))
+	var bolts := onsets.filter(func(o: Array) -> bool: return str(o[1]) == "bolt")
+	assert_true(bolts.size() >= 100, "%d distant bolts in 10 min" % bolts.size())
+	assert_true(float(run.cloud_peak) >= 0.35, "in-cloud flashes light the cloud (%.2f)" % float(run.cloud_peak))
+	surge.free()
+
+
+## UX 8 reduced motion: the in-cloud and scene flashes drop to the 0.15
+## floor, flickers, restrikes and scene echoes are dropped, and the bolts
+## stay visible (a bolt is not a flash).
+func test_break_sky_lightning_reduced_motion() -> void:
+	var scale := float(_config().presentation.flash.reduced_motion_scale)
+	var cfg: Dictionary = _config().presentation.sky_lightning
+	MOTION_PREFS.set_reduced_motion(true)
+	var surge := SURGE.new()
+	var run := _run_sky(surge, "break", false, 300.0)
+	assert_true(float(run.cloud_peak) <= float(cfg.cloud_strength_max) * scale + 0.001, "cloud flash %.3f under reduced motion" % float(run.cloud_peak))
+	assert_true(float(run.cloud_peak) > 0.0, "a faint cloud cue remains")
+	assert_true(float(run.bolt_peak) >= 0.95, "bolts stay fully visible (%.2f)" % float(run.bolt_peak))
+	var onsets: Array = run.onsets
+	var bolts := onsets.filter(func(o: Array) -> bool: return str(o[1]) == "bolt")
+	assert_true(bolts.size() >= 40, "%d bolts in 5 min under reduced motion" % bolts.size())
+	var flickers := onsets.filter(func(o: Array) -> bool: return str(o[1]).ends_with("_flicker"))
+	assert_eq(flickers.size(), 0, "no flickers or restrikes under reduced motion")
+	assert_true(_max_in_any_second(onsets) <= 3)
+	surge.free()
+
+
+## The decorative lightning is Break's alone: no other phase, and no
+## aftermath phase, shows any.
+func test_only_break_shows_sky_lightning() -> void:
+	MOTION_PREFS.set_reduced_motion(false)
+	var surge := SURGE.new()
+	for target: Array in [["calm", false], ["building", false], ["fading", false], ["break", true], ["calm", true]]:
+		var run := _run_sky(surge, str(target[0]), bool(target[1]), 60.0)
+		var decorative := (run.onsets as Array).filter(func(o: Array) -> bool: return str(o[1]) != "scene")
+		assert_eq(decorative.size(), 0, "%s%s has no sky lightning" % ["aftermath " if bool(target[1]) else "", str(target[0])])
+		assert_almost_eq(float(run.bolt_peak), 0.0, 0.0001)
 	surge.free()

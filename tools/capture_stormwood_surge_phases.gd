@@ -344,6 +344,10 @@ func _presentation_state() -> Dictionary:
 		state["roofed"] = bool(_surge.get("_roofed"))
 	if _surge.has_method("presentation_key"):
 		state["presentation_key"] = str(_surge.call("presentation_key"))
+	# Round 3 signatures.
+	for method: String in ["phase_progress", "steam_level", "cloud_flash_level", "bolt_level"]:
+		if _surge.has_method(method):
+			state[method] = snappedf(float(_surge.call(method)), 0.001)
 	return state
 
 
@@ -571,8 +575,50 @@ func _purple() -> void:
 			for _frame in 30:
 				await physics_frame
 			var name := "aftermath" if aftermath else str(target[0])
+			if name == "break":
+				await _capture_bolt("purple_%s_h%02d" % [name, int(hour)], "%s at world hour %d" % [name.capitalize(), int(hour)],
+					{"world_hour": float(_look.call("hour"))})
+				continue
 			await _capture("purple_%s_h%02d" % [name, int(hour)], "%s at world hour %d" % [name.capitalize(), int(hour)], false,
 				{"world_hour": float(_look.call("hour"))})
+
+
+## Round 3: a Break still is taken on the first rendered frame (up to 120)
+## in which a decorative sky bolt is fully lit and inside the view, read
+## right after that frame is drawn. Break shows lightning in ~99% of 1 s
+## windows in play (tests); a slow software render cannot sample it at 60
+## fps, so the frame is chosen and the staging says so.
+func _capture_bolt(frame_id: String, description: String, extra: Dictionary) -> void:
+	_note("Break stills: first frame with a lit decorative bolt in view (waited)")
+	var waited := 0
+	var image: Image = null
+	while waited < 120:
+		await RenderingServer.frame_post_draw
+		waited += 1
+		if float(_surge.call("bolt_level")) >= 0.9 and _bolt_in_view():
+			image = root.get_texture().get_image()
+			break
+	if image == null:
+		_failures.append("%s: no bolt in view within 120 frames" % frame_id)
+		image = root.get_texture().get_image()
+	if not _save(image, "%s/%s.jpg" % [_output_dir, frame_id], STRIP_W, STRIP_H):
+		return
+	var record := {"id": frame_id, "file": frame_id + ".jpg", "label": _label, "description": description,
+		"size": [STRIP_W, STRIP_H], "camera": "player camera (production CameraRig/Camera3D)", "hud": false,
+		"surge_phase": str(_surge.get("phase")), "surge_elapsed": _surge_elapsed(), "frames_waited": waited,
+		"presentation": _presentation_state(), "staged": _staged.duplicate()}
+	record.merge(extra, true)
+	_frames.append(record)
+	_log("captured %s after %d frames %s" % [frame_id, waited, str(record.presentation)])
+
+
+func _bolt_in_view() -> bool:
+	for bolt: Variant in _surge.get("_bolts"):
+		var instance := bolt as MeshInstance3D
+		if instance != null and instance.visible and instance.mesh != null:
+			if _camera.is_position_in_frustum(instance.mesh.get_aabb().get_center()):
+				return true
+	return false
 
 
 ## WO-F10-08 motion strips (explicit --only=purplemotion): per phase (and the
@@ -604,12 +650,14 @@ func _purple_motion() -> void:
 		var name := "aftermath" if aftermath else str(target[0])
 		_fine(15)
 		var times: Array[float] = []
+		var states: Array = []
 		for index in 4:
 			await RenderingServer.frame_post_draw
 			times.append(snappedf(_surge_elapsed(), 0.01))
+			states.append(_presentation_state())
 			_save(root.get_texture().get_image(), "%s/motion_%s_%d.jpg" % [out, name, index], STRIP_W, STRIP_H)
 		_coarse()
-		_frames.append({"id": "motion_%s" % name, "surge_elapsed": times, "staged": _staged.duplicate()})
+		_frames.append({"id": "motion_%s" % name, "surge_elapsed": times, "presentation": states, "staged": _staged.duplicate()})
 		_log("motion %s %s" % [name, str(times)])
 
 

@@ -152,3 +152,25 @@ Outside this branch; carried from earlier rounds:
 **Lane conclusion for ACCEPTANCE F10 "Calm/Building/Break/Fading readable without HUD text":**
 - Met by blind grouping at full size, day and night: 9/9 in round 4. Rounds 1–3 scored 12/13, 10/11 and a partial.
 - Night separation at 30% size remains a known weakness.
+
+# Round 5: rain frames (WO-F10-07)
+Run by the coordinator on the rain-camera frames.
+- **Finding:** the foreground was dry in `rc_night_break` and `rc_day_break`, and the near streaks read as sticks.
+- **Verdict:** NO.
+- **Fix:** the ground-anchored near band. Drops now spawn 0.2–6.5 m above the ground around the camera, as tapered, fading spindles. Measured drops in the bottom 45% of the frame went from 122 to 387 (`sheet_rain_foreground_measure.jpg`).
+
+# Round 7: pale purple set (WO-F10-08, round 1)
+Run by the coordinator on the first always-purple set.
+- 3 of 5 phases identified correctly; Calm and Fading were swapped.
+- Break showed no evidence of lightning.
+- The foreground ignored the storm: the ground did not darken with the phase.
+
+# Round 8: deep purple set plus motion strips (WO-F10-08, round 2)
+Run by the coordinator on the 10 deep-purple stills and 5 motion strips, shuffled and with labels cropped.
+- **Identified:** Break (high confidence), Building (high) and the aftermath (medium-high). Calm and Fading were swapped again ("close to a coin flip").
+- **Clock:** time of day was invisible, so the pin works.
+- **Break:** no real lightning in stills or strips. A thin white sliver on the horizon (`break_h12`, strip frames 1–2) read as a low sun breaking through, a sunset cue.
+- **Aftermath:** a flat, blank lavender card that reads as overcast dusk.
+- **Building:** brighter and greyer than Calm, so the tension reads as falling.
+- **Break rain:** still "sparse thin streaks".
+- **Coordinator direction:** a second failed attempt to separate Calm and Fading by tuning values. Change approach and give each phase a structural signature (WO-F10-08, round 3).
