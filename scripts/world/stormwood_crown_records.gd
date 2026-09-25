@@ -5,8 +5,9 @@ extends Node3D
 ## Each record is a readable glass-scored stone on the Crown island around the
 ## heartstone grove. Reading one plays its authored conversation; reading it to
 ## its last line (the panel's `completed`, not a cancelled `finished`) submits
-## the record's count fact through the chapter's existing realm-ledger writer. The chain's steps count those facts, so any first record
-## finds the chain and all three complete the reading. Nothing here writes the
+## the record's count fact through the chapter's existing realm-ledger writer.
+## The chain's steps count those facts, so any first record finds the chain and
+## all three complete the reading. Nothing here writes the
 ## main Heartstone/Rootgate flags or grants an item: Wen points to the existing
 ## Crown cache pickup, which keeps its original one-time receipt.
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
