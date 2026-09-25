@@ -5712,7 +5712,13 @@ func _record_trainer_defeat_for_the_session(spec: Dictionary) -> bool:
 		var sent := submit_encounter_intent({"kind": "trainer_victory",
 			"trainer_id": trainer_key})
 		if not bool(sent.get("pending", false)) and not bool(sent.get("ok", false)):
-			_trainer_victory_refused(str(sent.get("reason", "")))
+			# The request could not leave (offline / realm closing). Treat it as
+			# a transient refusal so the bounded retry still asks the host: in a
+			# chapter whose runtime already wrote the defeat fact, winning again
+			# is impossible and only a retry can collect the reward.
+			_receive_trainer_victory_verdict({"ok": false, "kind": "trainer_victory",
+				"trainer_id": trainer_key, "code": str(sent.get("code", "offline")),
+				"reason": str(sent.get("reason", ""))})
 			return true
 		# Sent: note the defeat in this client's LOCAL progression only, as the
 		# former client path did, so a repeat defeat (or a chapter override that
@@ -5859,8 +5865,9 @@ func _receive_trainer_victory_verdict(verdict: Dictionary) -> void:
 	if code in TRAINER_VICTORY_PERMANENT_REFUSALS:
 		_trainer_victory_retries.erase(trainer_id)
 		var reason := str(verdict.get("reason", ""))
-		_trainer_victory_refused("%sYour victory over %s was not recorded and its reward was not paid." \
-			% [reason + " " if not reason.is_empty() else "", trainer_name])
+		var outcome := "Your reward for beating %s was not paid." % trainer_name if defeat_recorded \
+			else "Your victory over %s was not recorded and its reward was not paid." % trainer_name
+		_trainer_victory_refused("%s%s" % [reason + " " if not reason.is_empty() else "", outcome])
 		return
 	var entry: Dictionary = _trainer_victory_retries.get(trainer_id, {"attempts": 0, "token": 0})
 	var attempts := int(entry.get("attempts", 0))

@@ -294,6 +294,8 @@ func test_a_client_whose_send_fails_notes_nothing_and_can_win_again() -> void:
 	assert_false(bool(_director.progression_store.call("has", str(spec.get("defeat_flag", "")))),
 		"a victory the host never received is not noted locally")
 	assert_eq(_director.local_pays, 0, "and is not paid locally either")
+	assert_true((_director.get("_trainer_victory_retries") as Dictionary).has(WARDEN),
+		"a send that could not leave arms the bounded retry, like a transient refusal")
 	_director.set("fail_send", false)
 	_director.call("_record_trainer_defeat", spec)
 	assert_eq(_director.sent.size(), 1, "winning again sends it once the host can be reached")

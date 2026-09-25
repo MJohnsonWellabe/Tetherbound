@@ -226,6 +226,7 @@ func test_client_run_veyra_fight_is_sent_to_the_host_and_pays_nothing_locally() 
 		assert_true(director.told.is_empty())
 		director._record_trainer_defeat(spec)
 		assert_eq(director.solo_pays, 0, "a client repeat pays nothing")
+		assert_eq(director.sent.size(), 1, "a client repeat sends nothing new to the host")
 		assert_eq(director.victories.size(), 1)
 		director.free()
 
