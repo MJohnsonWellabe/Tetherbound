@@ -248,6 +248,8 @@ func _run() -> void:
 	check(str(gw.get("verdict", "")) == "PASS", "the guest walked to its accept prompt (%s)" % str(gw.get("detail", "")))
 	var pressed: Dictionary = await step(1, "press", {"action": "interact"})
 	check(str(pressed.get("verdict", "")) == "PASS", "the guest pressed interact at the accept prompt")
+	await step(1, "wait", {"frames": 30})
+	await _diagnose_guest_slot("after the accept press, before the drop")
 	var dropped: Dictionary = await step(1, "drop_link", {"settle_frames": 60})
 	check(str(dropped.get("verdict", "")) == "PASS", "the guest's link was cut right after accepting (%s)"
 		% str(dropped.get("detail", "")))
