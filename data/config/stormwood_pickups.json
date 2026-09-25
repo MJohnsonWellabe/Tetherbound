@@ -432,16 +432,17 @@
       "count": 1,
       "region_id": "cinder_verge",
       "position": [
-        -91,
-        29.53,
-        451
+        -57.05,
+        30.22,
+        420.52
       ],
       "placement": "optional_reward_pocket",
       "persistent": true,
       "one_time": true,
       "runtime_kind": "item",
       "collectible": true,
-      "requires_unlock": ""
+      "requires_unlock": "",
+      "pocket_id": "verge_ash_hollow"
     },
     {
       "id": "stormwood_pickup_pocket_009",
@@ -1452,16 +1453,17 @@
       "count": 1,
       "region_id": "glowmoss_hollows",
       "position": [
-        -313,
-        33.64,
-        1677
+        -42.9,
+        27.05,
+        1800.78
       ],
       "placement": "optional_reward_pocket",
       "persistent": true,
       "one_time": true,
       "runtime_kind": "item",
       "collectible": true,
-      "requires_unlock": ""
+      "requires_unlock": "",
+      "pocket_id": "hollows_moss_nook"
     },
     {
       "id": "stormwood_pickup_pocket_069",
@@ -1605,16 +1607,17 @@
       "count": 1,
       "region_id": "conductor_run",
       "position": [
-        -522,
-        61.78,
-        2590
+        -297.0,
+        34.78,
+        3379.84
       ],
       "placement": "optional_reward_pocket",
       "persistent": true,
       "one_time": true,
       "runtime_kind": "item",
       "collectible": true,
-      "requires_unlock": ""
+      "requires_unlock": "",
+      "pocket_id": "conductor_ridge_cleft"
     },
     {
       "id": "stormwood_pickup_pocket_078",
@@ -2642,16 +2645,17 @@
       "count": 1,
       "region_id": "deepwood",
       "position": [
-        -666,
-        40.87,
-        3692
+        -999.58,
+        42.23,
+        3717.03
       ],
       "placement": "optional_reward_pocket",
       "persistent": true,
       "one_time": true,
       "runtime_kind": "item",
       "collectible": true,
-      "requires_unlock": "stormwood:rootgate_released"
+      "requires_unlock": "stormwood:rootgate_released",
+      "pocket_id": "deepwood_ridge_shelter"
     },
     {
       "id": "stormwood_pickup_pocket_139",
@@ -3492,16 +3496,17 @@
       "count": 1,
       "region_id": "dynamo",
       "position": [
-        -256,
-        108.49,
-        5366
+        -451.03,
+        80.22,
+        5252.82
       ],
       "placement": "optional_reward_pocket",
       "persistent": true,
       "one_time": true,
       "runtime_kind": "item",
       "collectible": true,
-      "requires_unlock": "stormwood:rootgate_released"
+      "requires_unlock": "stormwood:rootgate_released",
+      "pocket_id": "dynamo_scorch_pen"
     },
     {
       "id": "stormwood_pickup_pocket_189",
