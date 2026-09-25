@@ -214,6 +214,8 @@ func _take(result: Dictionary, key: String, label: String) -> bool:
 		var beat := str((row as Dictionary).get("beat", "")) if row is Dictionary else ""
 		if beat == "gate_prompt_assertion_bypassed":
 			disclosures.append("bridge: the Meadows helper's 'gate must own the interact prompt' assertion was bypassed because ordinary play had already opened the South Bridge (south_bridge_open set, key spent); the stale '%s' battle offer ('offered a battle that could not start') remains an open Meadows defect" % "south_bridge_grunt")
+		elif beat == "quarry_south_detour":
+			disclosures.append("warrens: added an ordinary controller-walk detour back round the pylon to the ruin's south side before the fifth rootstone, in place of the helper's two routing-only clearance waypoints (BLOCKERS.md B2)")
 		elif beat == "quarry_east_detour":
 			disclosures.append("warrens: added an ordinary controller-walk detour east of the quarry pylon before the fourth rootstone (helper's direct leg stalls; BLOCKERS.md B2)")
 		elif beat == "veridian_accepted":

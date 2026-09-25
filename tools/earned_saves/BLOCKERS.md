@@ -69,3 +69,11 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   ordinary waypoints east of the pylon, (408.5,1803.5) and (406.5,1809.5), with the helper's
   own controller walk before its leg to the node. Disclosed as receipt `quarry_east_detour`.
   The direct route still stalls on main, which is a Meadows navigation/helper defect.
+- Attempt 3 (with the east detour) reached the fourth stone (6→8). It then stalled on the helper's
+  leg from its own clearance points to the fifth stone (393,1802), at player (396.60, -0.15, 1809.32).
+  Attempt 4 walked the foundation's west end instead, but the cut face closes it: `walk_confined_recovery`
+  fired, and the run failed short of (389.5,1807.5) at player (391.05, 0.67, 1809.61).
+  Attempt 5 replaces the helper's two routing-only clearance waypoints, (394.1,1809) and
+  (392.85,1806.82), with an ordinary walk back round the pylon's east side to the ruin's open
+  south side, (406.5,1809.5) → (408.5,1803.5) → (403,1797.5) → (396,1797.5). The helper then
+  takes its own leg to the node. Disclosed as receipt `quarry_south_detour`.
