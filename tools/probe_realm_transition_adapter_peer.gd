@@ -92,7 +92,8 @@ var policy_seen_before_snapshot := false
 var latejoin_reported := false
 var pending_origin := ""
 var departed_motion_before := 0.0
-## Shutdown order (see `_finish`): clients report done, the host closes last.
+## Shutdown order (see `_ordered_shutdown`): clients report done, the host
+## closes last.
 var _clients_done: Dictionary = {}
 const SHUTDOWN_WAIT_MS := 10_000
 
@@ -616,7 +617,8 @@ func _finish_local() -> void:
 	# connected client is done. ENetMultiplayerPeer.close() disconnects its
 	# peers directly, with no relay broadcast. Both waits are bounded and no
 	# check depends on them.
-	await _ordered_shutdown()
+	if not failed:
+		await _ordered_shutdown()
 	# Explicitly release the fixture's own transport after terminal notification
 	# flush. No admission/fence check relies on this shutdown-only timer.
 	var owned_peer: MultiplayerPeer = multiplayer.multiplayer_peer
@@ -640,11 +642,14 @@ func _ordered_shutdown() -> void:
 			if not waiting:
 				return
 			await get_tree().process_frame
+		print("ADAPTER SHUTDOWN %s gave up waiting for clients after %d ms" % [role, SHUTDOWN_WAIT_MS])
 		return
 	_client_finished.rpc_id(1)
 	while Time.get_ticks_msec() < deadline and multiplayer.multiplayer_peer == transport \
 			and transport.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
 		await get_tree().process_frame
+	if transport.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
+		print("ADAPTER SHUTDOWN %s gave up waiting for the host after %d ms" % [role, SHUTDOWN_WAIT_MS])
 
 func _check(ok: bool, description: String) -> bool:
 	checks += 1
