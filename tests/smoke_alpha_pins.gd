@@ -457,8 +457,12 @@ func _hall_decline(pilot: RefCounted, player: CharacterBody3D, manager: Node,
 	var pack: Array[Node3D] = []
 	for candidate: Variant in director.get("_wild_creatures"):
 		var body := candidate as Node3D
-		if body != null and is_instance_valid(body) and str(body.name).begins_with("Wild_galecrest_5001_"):
+		if body != null and is_instance_valid(body) \
+				and (body == alpha or str(body.name).begins_with("Wild_galecrest_5001_")):
 			pack.append(body)
+	if not pack.has(alpha):
+		pack.append(alpha)
+	var other_fights: Array[String] = []
 	var closest_alpha := INF
 	var closest_pack := INF
 	for raw: Variant in HALL_DECLINE_WAYPOINTS:
@@ -478,9 +482,18 @@ func _hall_decline(pilot: RefCounted, player: CharacterBody3D, manager: Node,
 						closest_alpha = minf(closest_alpha, d.length())
 			if bool(manager.call("is_fighting")):
 				var foe := manager.call("enemy_body") as Node3D
-				_fail("hall decline: walking the road started a fight with %s (closest alpha %.1f m, pack %.1f m)" % [
-					str(foe.name) if foe != null else "?", closest_alpha, closest_pack])
-				break
+				if foe != null and pack.has(foe):
+					_fail("hall decline: walking the road started a fight with the alpha's pack (%s; closest alpha %.1f m, pack %.1f m)" % [
+						str(foe.name), closest_alpha, closest_pack])
+					break
+				# Another road ambush (a table-rolled aggressor on the spine) is
+				# the route's ordinary danger, not this activity: fight it out
+				# as a player would, then keep walking.
+				var result: Dictionary = await pilot.call("fight_to_the_end")
+				other_fights.append("%s:%s" % [str(foe.name) if foe != null else "?", str(result.get("outcome", "?"))])
+				if bool(manager.call("is_fighting")) or str(result.get("outcome", "")) != "won":
+					_fail("hall decline: could not clear the road ambush %s (%s)" % [str(foe.name) if foe != null else "?", str(result)])
+					break
 		if not _failures.is_empty():
 			break
 		if left > 2.5:
@@ -495,7 +508,8 @@ func _hall_decline(pilot: RefCounted, player: CharacterBody3D, manager: Node,
 					_fail("hall decline: %s followed the trainer to the far waypoint" % body.name)
 	Input.action_release("move_forward")
 	print("hall alpha decline receipt: " + JSON.stringify({"closest_alpha_m": snappedf(closest_alpha, 0.1),
-		"closest_pack_m": snappedf(closest_pack, 0.1), "pack_members": pack.size()}))
+		"closest_pack_m": snappedf(closest_pack, 0.1), "pack_members": pack.size(),
+		"other_road_fights": other_fights}))
 	if _failures.is_empty():
 		print("hall alpha decline: OK -- road input walked the spine past the Hall pack without a fight")
 	for failure in _failures:
