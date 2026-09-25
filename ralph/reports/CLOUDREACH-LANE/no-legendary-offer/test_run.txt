@@ -1,0 +1,41 @@
+# ~/godot-bin/godot --headless --path . --script tests/run_tests.gd -- --only=cloudreach_no_legendary_offer
+# tree: 48e403d53 (full checkout, /home/user/wt-test), 2026-09-25T13:49:07Z
+  ok    test_cloudreach_no_legendary_offer.gd :: test_chapter_rewards_grant_no_creature_legendary_or_offer
+  ok    test_cloudreach_no_legendary_offer.gd :: test_cloudreach_dialogue_effects_grant_no_creature_or_offer
+  ok    test_cloudreach_no_legendary_offer.gd :: test_every_cloudreach_owned_script_makes_no_offer
+  ok    test_cloudreach_no_legendary_offer.gd :: test_every_input_exists_and_parses
+  ok    test_cloudreach_no_legendary_offer.gd :: test_finale_config_and_whole_cloudreach_corpus_name_no_legendary_offer
+  ok    test_cloudreach_no_legendary_offer.gd :: test_harmless_cloudreach_words_do_not_fail
+  ok    test_cloudreach_no_legendary_offer.gd :: test_legendary_species_and_offer_vocabulary_are_derived_from_every_realm
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_aftermath_changes_the_party
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_cross_scan_line
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_derived_tidewake_vocabulary
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_dialogue_guard_event
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_fake_activity_reward_grant
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_fake_ceremony_in_finale_controller
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_fake_cloudreach_receipt_registry
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_fake_dialogue_offer_effect
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_fake_legendary_chapter_grant
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_fake_legendary_trainer_slot
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_fake_offer_controller_preload
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_fake_offer_in_finale_config
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_fake_trainer_creature_reward
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_non_cloudreach_named_helper_is_owned_and_scanned
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_objective_grants_flags
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_offer_config_names_cloudreach
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_offer_controller_names_cloudreach
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_party_alias_add
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_party_seam_route
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_pending_entry_cannot_grow
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_realm_root_instantiated
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_second_wild_legendary
+  ok    test_cloudreach_no_legendary_offer.gd :: test_negative_control_species_named_effect
+    INFO the Cloudreach closure statically references meadows's root script, not followed further: res://scripts/world/playground_world.gd <- res://scripts/world/world_look.gd <- res://scenes/world/cloudreach_cliffs.tscn
+  ok    test_cloudreach_no_legendary_offer.gd :: test_no_cloudreach_script_or_scene_reaches_another_realms_offer_controller
+  ok    test_cloudreach_no_legendary_offer.gd :: test_no_legendary_species_anywhere_in_cloudreach_data_but_the_pending_entry
+  ok    test_cloudreach_no_legendary_offer.gd :: test_no_line_in_scripts_ties_cloudreach_to_a_legendary
+  ok    test_cloudreach_no_legendary_offer.gd :: test_other_realms_offer_registries_do_not_name_cloudreach
+    INFO PENDING OWNER DECISION: cloudreach_chapter.json 'cloudreach_summit_wild' lists 'solmane' (roster_identity legendary) as a catchable wild. It is not an adoption offer and is tolerated only until ruled on; flip PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD in tests/test_cloudreach_no_legendary_offer.gd.
+  ok    test_cloudreach_no_legendary_offer.gd :: test_pending_solmane_is_the_only_wild_legendary_in_cloudreach
+  ok    test_cloudreach_no_legendary_offer.gd :: test_trainer_and_activity_rewards_grant_no_creature
+36 tests, 208 assertions, 0 failed
