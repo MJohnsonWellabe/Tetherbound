@@ -15,6 +15,7 @@ extends Node
 ## Split out of combat_manager.gd, which already owns the fight. This owns the
 ## aim: the camera profile, the reticle, the orb, and the stock.
 
+const LOOK_PREFS := preload("res://scripts/ui/look_prefs.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const ORB_SCENE := preload("res://scenes/combat/orb.tscn")
 
@@ -477,6 +478,8 @@ func _slow_the_stick_near_the_target(camera: Camera3D) -> void:
 			var off_line := (eye + forward * along).distance_to(centre)
 			if off_line <= body:
 				scale_value = float(CATCH.config().get("aim", {}).get("near_target_scale", 0.6))
+	# The player's aim-assistance strength (UX §8) scales the slowdown away.
+	scale_value = lerpf(1.0, scale_value, LOOK_PREFS.aim_assist_strength())
 	_camera_rig.call("set_look_scale", scale_value)
 
 
@@ -614,6 +617,8 @@ func _commit_launch_assist() -> void:
 	_committed_assist_point = Vector3.INF
 	var diagnostics := launch_assist_diagnostics()
 	_log_launch_assist("commit", diagnostics)
+	if not bool(diagnostics.get("eligible", false)) and str(diagnostics.get("reason", "")) == "assist_off":
+		return
 	var camera := _aim_camera()
 	if camera == null or _target == null or not is_instance_valid(_target) \
 			or not _target.visible or not _target.has_method("centre"):
@@ -673,6 +678,11 @@ func launch_assist_diagnostics() -> Dictionary:
 		"line_of_sight": false,
 		"reason": "unavailable",
 	}
+	if LOOK_PREFS.aim_assist_percent() <= 0:
+		# Aim assistance switched off: no launch lead, and the reticle's
+		# catch chance must not assume one.
+		report["reason"] = "assist_off"
+		return report
 	var camera := _aim_camera()
 	if camera == null or _player == null or _target == null or not is_instance_valid(_target) \
 			or not _target.visible or not _target.has_method("centre"):
@@ -820,7 +830,8 @@ func _aim_direction(camera: Camera3D, origin: Vector3) -> Vector3:
 			# binary version made the aim jump as the reticle swept past, the
 			# "grabbed the stick" feel from an earlier playtest -- so this is a
 			# larger, gentler magnet, not a snap.
-			var pull := aim_pull_weight(nearest.distance_to(centre), body, along)
+			var pull := aim_pull_weight(nearest.distance_to(centre), body, along) \
+				* LOOK_PREFS.aim_assist_strength()
 			aim_point = aim_point.lerp(centre, pull)
 
 	# BALLISTIC, not a straight line. This is the fix for the throw mechanic's
