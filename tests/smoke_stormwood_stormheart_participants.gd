@@ -4,8 +4,10 @@ extends SceneTree
 ## `stormwood_ending.gd` runs against the offline host Session with two extra
 ## registered characters; a hub stub records what each peer is sent, a chapter
 ## stub commits the two chapter events it would dispatch, and a Dynamo stub
-## supplies the fight's participant peers. It does not play the fight, the
-## dialogue or the five-slot ceremony UI.
+## supplies the fight's participant peers. It also covers the host refusing
+## from its own answer receipt against a client's flag, and a legacy save freed
+## before participants were recorded (first claimant only). It does not play
+## the fight, the dialogue or the five-slot ceremony UI.
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
 
 var failures: Array[String] = []
@@ -167,6 +169,46 @@ func _run() -> void:
 	var offers_before := hub.offers_for(2).size()
 	ending.dispatch(2, {"kind": "ending_claim"})
 	_check(hub.offers_for(2).size() == offers_before, "after reload a settled character is not offered again")
+
+	# The host's own receipt decides, whatever the client reports: with B's
+	# claim record gone but B's world answer receipt still standing, B's client
+	# claiming it never answered is refused.
+	state = ENDING.migrate_state(game.realm_environment.stormwood.ending)
+	(state.claims as Dictionary).erase("character-fought-b")
+	game.realm_environment.stormwood.ending = state
+	offers_before = hub.offers_for(2).size()
+	ending.dispatch(2, {"kind": "ending_claim", "already_resolved": false})
+	_check(hub.offers_for(2).size() == offers_before,
+		"the host refuses from its own answer receipt even when the client says it never answered")
+
+	# A legacy save: freed before participants were recorded and never claimed.
+	# The first claimant alone is owed; a joining non-fighter gets nothing but
+	# can still land the world's offer fact.
+	game.progression.set_flag("stormwood:legendary_offer_made", false)
+	for character: String in [host_character, "character-fought-b", "character-watched-c"]:
+		for accepted: bool in [true, false]:
+			game.progression.set_flag(ENDING.resolution_flag(accepted, character), false)
+	var legacy_environment: Dictionary = game.realm_environment.duplicate(true)
+	legacy_environment.stormwood.ending = {}
+	game.realm_environment = legacy_environment
+	var b_before := hub.offers_for(2).size()
+	var c_before := hub.offers_for(3).size()
+	var host_before := hub.offers_for(local_peer).size()
+	ending.dispatch(2, {"kind": "ending_claim"})
+	_check(hub.offers_for(2).size() == b_before + 1, "the legacy save's first claimant receives an offer")
+	ending.dispatch(3, {"kind": "ending_claim"})
+	_check(hub.offers_for(3).size() == c_before,
+		"a later character on a legacy save receives no creature")
+	ending.dispatch(local_peer, {"kind": "ending_claim"})
+	_check(hub.offers_for(local_peer).size() == host_before,
+		"no second character claims a fresh Stormheart on a legacy save")
+	_check(game.progression.has("stormwood:legendary_offer_made"),
+		"a refused later character still lands the world offer fact, so Waterward never softlocks")
+	state = ENDING.migrate_state(game.realm_environment.stormwood.ending)
+	_check(state.get("participants", []) == ["character-fought-b"] and (state.claims as Dictionary).keys() == ["character-fought-b"],
+		"the legacy save records its first claimant as the one participant, with one claim")
+	ending.dispatch(2, {"kind": "ending_claim"})
+	_check(hub.offers_for(2).size() == b_before + 2, "the first claimant's own unsettled claim still resumes")
 	world.queue_free()
 	await process_frame
 	_finish()

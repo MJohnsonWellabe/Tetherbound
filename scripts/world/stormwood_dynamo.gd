@@ -17,6 +17,9 @@ const KESTREL_FLAG := "stormwood:kestrel_defeated"
 const CORE_FLAG := "stormwood:core_reached"
 const CORE_POSITION := Vector3(-100.0, 262.21, 5470.0)
 const SNAPSHOT_INTERVAL_S := 0.1
+## A deployed creature this close to the core is piloted onto the conduits by
+## the field control, so during Break it is also in the Break.
+const BREAK_JOIN_RADIUS_M := 48.0
 
 var world: Node3D
 var hub: Node
@@ -27,6 +30,11 @@ var fight: Node
 var phase := "bank_cycle"
 var participants: Array[int] = []
 var contributors: Array[int] = []
+## After a full-party faint during Break the captain win stands and Break waits,
+## window frozen, until a fighter climbs back and rejoins.
+var _awaiting_break_party := false
+## A reloaded Break drops fighters who are not back without replaying a wipe.
+var _restored_break := false
 ## Stable character ids of everyone who joined this attempt, captured when they
 ## join so a later disconnect cannot erase them. The Stormheart ending reads
 ## this to give each fight participant their own offer.
@@ -77,7 +85,9 @@ func begin_for_peer(peer: int) -> void:
 	if not session.is_host():
 		return
 	if phase == "break_core":
-		_add_participant(peer)
+		# Break has no further send-out: a new arrival strikes conduits but
+		# does not enter the captain win's reward ledger (BOSSES §3).
+		_add_participant(peer, false)
 		_publish_state()
 		return
 	if not arena_ready():
@@ -148,8 +158,8 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		return
 	var kind := str(intent.get("kind", ""))
 	if kind == "dynamo_join":
-		if phase == "break_core":
-			_add_participant(peer)
+		if phase == "break_core" and _in_break_reach(peer):
+			_add_participant(peer, false)
 			_publish_state()
 		return
 	if kind != "dynamo_conduit_strike":
@@ -209,9 +219,17 @@ func _process(delta: float) -> void:
 		rules.update_team(remaining, team.size())
 		phase = str(rules.phase)
 	elif phase == "break_core":
+		_admit_break_arrivals()
+		if _awaiting_break_party:
+			return
 		for peer: int in participants.duplicate():
 			if session.realm_of(peer) != "stormwood" or not is_instance_valid(hub.call("body_for", peer)):
 				participants.erase(peer)
+		if participants.is_empty() and _restored_break:
+			_awaiting_break_party = true
+			_restored_break = false
+			return
+		_restored_break = false
 		if participants.is_empty():
 			_reset_after_loss()
 			return
@@ -327,11 +345,19 @@ func _complete_marrow() -> void:
 
 func _reset_after_loss() -> void:
 	var peers := contributors.duplicate()
-	rules.reset()
+	var in_break := str(rules.phase) == "break_core"
+	if in_break:
+		# The captain team is already beaten: keep that win and its
+		# contributors, and only restart the conduit Break (BOSSES §4.7).
+		rules.restart_break()
+		_awaiting_break_party = true
+	else:
+		rules.reset()
 	phase = str(rules.phase)
 	participants.clear()
-	contributors.clear()
-	fighter_characters.clear()
+	if not in_break:
+		contributors.clear()
+		fighter_characters.clear()
 	_actions.clear()
 	_cooldowns.clear()
 	_last_fired_serial = -1
@@ -342,6 +368,20 @@ func _reset_after_loss() -> void:
 		hub.call("send_to", peer, {"kind": "dynamo_recovery"})
 
 
+## A fighter who walks back after a wipe has their creature taken over by the
+## field control at the arena edge, short of Marrow's prompt; admit them here.
+func _admit_break_arrivals() -> void:
+	var joined := false
+	for peer: int in session.peers_in_realm("stormwood") + ([] if session.is_active() else [session.local_peer_id()]):
+		if participants.has(peer) or not _in_break_reach(peer):
+			continue
+		_add_participant(peer, false)
+		joined = true
+	if joined:
+		_persist_state()
+		_publish_state()
+
+
 func _apply_local_recovery() -> void:
 	var player := world.get_node("Player") as Node3D
 	var x := -120.0
@@ -350,13 +390,28 @@ func _apply_local_recovery() -> void:
 	get_node("/root/Game").push_world_message("The Dynamo throws you back to Ember Bivouac. Recover, then climb again.")
 
 
-func _add_participant(peer: int) -> void:
+func _in_break_reach(peer: int) -> bool:
+	if session.realm_of(peer) != "stormwood":
+		return false
+	var body: Node3D = hub.call("body_for", peer)
+	return is_instance_valid(body) and body.global_position.distance_to(global_position) <= BREAK_JOIN_RADIUS_M
+
+
+func _add_participant(peer: int, contributes := true) -> void:
+	_awaiting_break_party = false
 	if not participants.has(peer):
 		participants.append(peer)
+	# A Break arrival strikes conduits but, with no send-out left to admit
+	# them, earns neither the captain-win reward nor a Stormheart offer
+	# (BOSSES §3). Only admitted fighters are recorded.
+	if not contributes:
+		return
 	var row: Dictionary = session.registry().row(peer)
 	var character := str(row.get("character_id", ""))
 	if character.is_empty() and peer == session.local_peer_id():
-		character = str(get_node("/root/Game").get("local").get("character_id"))
+		var local: Variant = get_node("/root/Game").get("local")
+		if local is Object:
+			character = str((local as Object).get("character_id"))
 	if not character.is_empty() and not fighter_characters.has(character):
 		fighter_characters.append(character)
 	if not contributors.has(peer):
@@ -406,7 +461,8 @@ func _restore_saved_state() -> void:
 
 func save_payload() -> Dictionary:
 	return {"rules": rules.save_data(), "participants": participants.duplicate(),
-		"contributors": contributors.duplicate(), "fighter_characters": fighter_characters.duplicate()}
+		"contributors": contributors.duplicate(), "fighter_characters": fighter_characters.duplicate(),
+		"awaiting_break_party": _awaiting_break_party}
 
 
 func load_payload(saved: Dictionary) -> void:
@@ -418,9 +474,12 @@ func load_payload(saved: Dictionary) -> void:
 	participants = _unique_peers(saved.get("participants", []))
 	contributors = _unique_peers(saved.get("contributors", []))
 	fighter_characters.clear()
-	for raw: Variant in saved.get("fighter_characters", []):
+	var saved_characters: Variant = saved.get("fighter_characters", [])
+	for raw: Variant in (saved_characters if saved_characters is Array else []):
 		if not str(raw).is_empty() and not fighter_characters.has(str(raw)):
 			fighter_characters.append(str(raw))
+	_awaiting_break_party = bool(saved.get("awaiting_break_party", false))
+	_restored_break = str(rules.phase) == "break_core"
 
 
 func _progression() -> RefCounted:

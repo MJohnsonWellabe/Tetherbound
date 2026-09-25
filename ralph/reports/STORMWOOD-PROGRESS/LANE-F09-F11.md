@@ -62,9 +62,8 @@ because the report follows the main truth conversation by design.
 ## WO-F10-02 — Pim's Parcels (`stormwood_pims_parcels`)
 
 - **Anchor:** F10 / WORLD §11 row "Collect sealed parcels; deliver to three existing households on restored arch roads; return to Pim … two small potions per eligible character once. Delivery is three flags."
-- **Player result:** Pim (Lantern Pools) offers parcels after pair A links; Marl (Ashfoot), Oswin (Rodline Post) and Lio (Lantern Hollow, after the Rootgate) each receive one (a delivery conversation plus a crate that appears beside them). Pim's return pays 2 Small Potions per character, once, through the existing `reward_grant` delivery (keyed by source + stable character; the receipt `stormwood:pims_parcels_reward_received` is portable, so "once" is once per character across worlds — a character paid elsewhere is thanked without a second promise).
-- **Open:** the receipt needs a `player.ids` entry in `data/progression/flag_scopes.json` (shared, held by the Meadows finale lane); `test_stormwood_pims_parcels.gd::test_reward_is_per_character_potions_with_a_player_receipt` fails until then.
-- **Witnesses:** `tests/test_stormwood_pims_parcels.gd` (chain, greetings, recipients, ledger pays each character once, paid-elsewhere branch).
+- **Player result:** Pim (Lantern Pools) offers parcels after pair A links; Marl (Ashfoot), Oswin (Rodline Post) and Lio (Lantern Hollow, after the Rootgate) each receive one (a delivery conversation plus a crate that appears beside them). Pim's return pays 2 Small Potions per character, once per world, through the existing `reward_grant` delivery; its (world namespace, source, stable character) receipt — MULTIPLAYER's personal-once rule — is both the host's duplicate guard and, via the replicated delivery journal, how a peer knows it has been paid. Any other character who later speaks to Pim collects their own share once. No new flag, so no shared `flag_scopes.json` change is needed (an earlier portable-flag design was withdrawn).
+- **Witnesses:** `tests/test_stormwood_pims_parcels.gd` (chain, greetings, recipients, ledger pays each character once and the journal shows it, other worlds keep their own receipt).
 
 ## WO-F10-03 — Dark Arches (`stormwood_dark_arches`)
 
@@ -88,4 +87,50 @@ because the report follows the main truth conversation by design.
 
 ## Consolidated landing (`ralph/stormwood-landing`)
 
-Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as one branch/PR after #215, with the granted `ci.yml` steps for `smoke_stormwood_crown_records.gd` and `smoke_stormwood_stormheart_participants.gd`. Local verification on the landing head: Stormwood/flag-scope/chapter unit suites 90 tests, 1 expected failure (Pim scope grant); smokes Crown records 22/0, Stormheart participants 16/0, arches PASS, heartstone 12/0.
+Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as one branch/PR after #215, with the granted `ci.yml` steps for `smoke_stormwood_crown_records.gd` and `smoke_stormwood_stormheart_participants.gd`. After merging main at `47774c35` (#215): all `test_stormwood_*` suites plus flag-scope/chapter/portrait suites pass; smokes Crown records 22/0, Stormheart participants 16/0, Stormheart choice 13/0, arches PASS, heartstone 12/0.
+
+## WO-F10-05 — Named-fight identities and the Dynamo Break faint (`ralph/stormwood-f10-named-profiles`)
+
+- **Anchor:** F10 / ACCEPTANCE §6.1 F10 (named fights pass C2/C3); BOSSES §7 named payoffs and §4.7 Dynamo ("a full-party faint … resets only the Break attempt").
+- **Player result:**
+  - Each named wild carries its own BOSSES §7 combat block and a personal once-only payoff. Tells and recoveries are floored at 0.8 s and 0.6 s.
+    - Hollows Alpha pays great_candy.
+    - Old Rodfolk Hall Guardian pays rare_candy.
+    - Blackwater Elder pays glowmoss_tonic.
+    - Glass Field Alpha pays stormglass×2.
+  - The Dynamo's conduit Break has a 30 s window, shown in-world as "Conduits n/4 · s".
+  - A full-party faint during Break keeps the captain win. It clears the partial conduits and sends the party to Ember Bivouac once, and Break then waits until a fighter's creature is back inside the 48 m arena.
+  - A reload keeps that wait and does not replay the wipe.
+  - A player who arrives during Break can strike conduits. Under BOSSES §3 they are an observer: no captain-win reward and no Stormheart offer. `dynamo_join` needs a live creature inside the arena.
+- **Witnesses:** `tests/test_stormwood_named_fight_profiles.gd`, `tests/test_stormwood_dynamo.gd`, `tests/smoke_stormwood_dynamo_break_faint.gd` (17/0, with a CI step added under the Stormwood grant). A negative control with the arena re-admit removed fails the rejoin assertions. After merging `ralph/stormwood-landing`: all `test_stormwood_*` suites 227 tests / 25026 assertions / 0 failed; Stormheart participants 16/0, choice 13/0.
+- **Independent review:** payoffs approved. The Break-faint change first got "request changes":
+  - (blocking) a returning fighter could not reach Marrow's prompt;
+  - (should-fix) a reload replayed the wipe;
+  - (should-fix) late arrivals earned rewards and offers.
+  All three are fixed and re-reviewed (approve).
+- **Not proven:**
+  - A rendered fight run.
+  - Capacitor Alpha's 1.1 s route-line cue.
+  - A captain-fight joiner who never passed `_add_participant` and disconnects before the release drops out of the offer set (existing limit).
+
+## WO-F11-02 — Stormheart offer: landing-review follow-ups (`ralph/stormwood-f11-followups`)
+
+- **Anchor:** F11 / ACCEPTANCE §6.1 F11 (per-participant accept/refuse at space and capacity, through disconnect/reload, without duplicate grants); CLAUDE.md legendary rule; MULTIPLAYER.md:95.
+- **Player result:**
+  - **Only an explicit No refuses.** That is B on the Yes/No line, which the panel draws as "[A] Yes  [B] No". Any other close, before or on that line, answers nothing and the offer is asked again. This matches the Meadows finale, which settles only from an explicit answer.
+  - **Yes during another catch ceremony** waits for that ceremony, then starts the Stormheart's own. It no longer stalls for the rest of the session.
+  - **Old saves with no recorded fighters** give an offer to their first claimant only. Every later character gets no creature, but can still land the world offer fact, so Waterward is never softlocked.
+  - **The host decides from its own claims and world receipts.** A client's "already answered" value can only withhold a creature, never grant one.
+  - **The Yes effect** queued on the dialogue panel is consumed by the ending.
+- **Witnesses:**
+  - `tests/test_stormwood_ending.gd`: 12 tests / 65 assertions.
+  - `tests/smoke_stormwood_stormheart_choice.gd`: 22/0. It uses a real `menu_cancel` press, closes before and on the Yes/No line, and answers Yes during a stand-in catch ceremony.
+  - `tests/smoke_stormwood_stormheart_participants.gd`: 23/0. It covers a legacy later claimant, and a lying client refused from the host's own receipt.
+  - Negative controls: each fix, when reverted, fails its test. With the old ending, the new smoke segment hangs instead of passing.
+  - Merged with WO-F10-05: all `test_stormwood_*` suites 231 tests / 25047 assertions / 0 failed.
+- **Independent review:** approved in two rounds. Should-fix 3 (the stall after Yes) is fixed in 73650882d and re-approved.
+- **Open:**
+  - **(shared grant requested)** A No in one world still withholds a real offer in another. The portable receipt does not record Yes vs No; fixing it needs a player flag in `flag_scopes.json`.
+  - **(shared grant requested)** The No is read from input state on the panel's tick, not from a runner `declined` signal. The reviewer verified this correct today for keyboard and joypad.
+  - A claim that deterministically fails to decode now re-asks rather than stalling. No is the exit.
+  - No two-process network run and no rendered ceremony yet.

@@ -28,10 +28,15 @@ const PERSONAL_RECEIPT_FLAG := "stormwood:legendary_ceremony_settled"
 ## `legendary_resolution:<accepted|refused>:<character>`; world-scoped by the
 ## `stormwood:` prefix and committed once by the host.
 const RESOLUTION_PREFIX := "stormwood:legendary_resolution:"
-## Its last line carries `confirm_effect: stormheart:accept` only to make it a
-## Yes/No consent line; the answer is read from the panel's `completed` signal
-## and nothing drains that effect.
+## Its last line is a Yes/No consent line carrying `confirm_effect:
+## stormheart:accept`. Nothing else in Stormwood drains the panel, so this
+## controller drains it when the offer completes and reads Yes from that effect.
 const OFFER_CONVERSATION := "stormwood_stormheart_offer"
+const OFFER_ACCEPT_EFFECT := "stormheart:accept"
+## The panel's own decline input on a consent line (`dialogue_panel.gd`
+## `_physics_process`, drawn as "No"). Only this press is a refusal; a close
+## from anywhere else leaves the offer unanswered.
+const DECLINE_ACTION := "menu_cancel"
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 const LEGENDARY_NAME := "the Stormheart"
@@ -55,9 +60,14 @@ var _waterward_sea: MeshInstance3D
 var _local_claim: Dictionary = {}
 var _local_creature: RefCounted
 var _waiting_for_offer_dialogue := false
-## This conversation reached its Yes/No line, and whether Yes was chosen.
+## This conversation reached its Yes/No line, and whether Yes or the panel's
+## explicit No was chosen. Neither set means the conversation was cut off.
 var _offer_reached_choice := false
 var _offer_accepted := false
+var _offer_declined := false
+## Yes was answered while another catch ceremony held the belt; the Stormheart's
+## own ceremony starts as soon as that one ends.
+var _ceremony_waiting := false
 var _save_retry_left := 0.0
 var _resend_left := 0.0
 var _released_announced := false
@@ -96,6 +106,8 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		return
 	match str(intent.get("kind", "")):
 		"ending_claim":
+			# The client's portable receipt is only a hint: it can withhold this
+			# character's own creature, never grant one (see offer_owed()).
 			_claim_for(peer, bool(intent.get("already_resolved", false)))
 		"ending_settled":
 			_settle_for(peer, intent)
@@ -178,7 +190,7 @@ func _process(delta: float) -> void:
 				_send_claim(peer, character, claim)
 
 
-func _claim_for(peer: int, already_resolved := false) -> void:
+func _claim_for(peer: int, client_hint_resolved := false) -> void:
 	if not _has(FREED_FLAG):
 		_refuse(peer, "The Stormheart is still bound inside the Dynamo.")
 		return
@@ -193,8 +205,7 @@ func _claim_for(peer: int, already_resolved := false) -> void:
 	var state := _saved_state()
 	var claims: Dictionary = state.get("claims", {})
 	var existing: Dictionary = claims.get(character, {})
-	var owed := not bool(existing.get("settled", false)) and claim_allowed([FREED_FLAG],
-		state.get("participants", []), character, already_resolved and existing.is_empty())
+	var owed := offer_owed(state, character, _world_flags_for(character), client_hint_resolved)
 	if not owed:
 		# No creature for this character (did not fight, already walks with a
 		# Stormheart from another world, or already answered here). It can
@@ -207,7 +218,9 @@ func _claim_for(peer: int, already_resolved := false) -> void:
 				_broadcast(_state_event())
 				_refuse(peer, "The Stormheart has seen you. Its bond is for the trainers who fought for it, and they may still answer.")
 				return
-		_refuse(peer, "You have already answered the Stormheart." if not existing.is_empty() or already_resolved
+		var answered := not existing.is_empty() or client_hint_resolved \
+			or _has(resolution_flag(true, character)) or _has(resolution_flag(false, character))
+		_refuse(peer, "You have already answered the Stormheart." if answered
 			else "The Stormheart answers the trainers who fought for its release.")
 		return
 	if existing.is_empty():
@@ -219,6 +232,12 @@ func _claim_for(peer: int, already_resolved := false) -> void:
 		existing = {"creature": payload, "settled": false, "kept": false}
 		claims[character] = existing
 		state["claims"] = claims
+		# A freeing with no recorded fighters (a save from before the list
+		# existed) names its first claimant as the one participant, saved with
+		# the claim, so no later character can take a second Stormheart.
+		var unrecorded := (state.get("participants", []) as Array).is_empty()
+		if unrecorded:
+			state["participants"] = participants_for_claim(state, character)
 		var game := get_node("/root/Game")
 		var before: Dictionary = (game.get("realm_environment") as Dictionary).duplicate(true)
 		_store_state(state)
@@ -226,6 +245,8 @@ func _claim_for(peer: int, already_resolved := false) -> void:
 			game.set("realm_environment", before)
 			_refuse(peer, "The world could not save the ceremony. Try again.")
 			return
+		if unrecorded:
+			_broadcast(_state_event())
 	_send_claim(peer, character, existing)
 
 
@@ -304,7 +325,8 @@ func _unlock_water_gate_for(peer: int) -> void:
 
 func _receive_claim(claim: Dictionary) -> void:
 	var game := get_node("/root/Game")
-	if str(claim.get("recipient_character_id", "")) != str(game.get("local").get("character_id")):
+	var mine := _local_character_id(game)
+	if mine.is_empty() or str(claim.get("recipient_character_id", "")) != mine:
 		return
 	var player_flags: RefCounted = game.call("player_flags")
 	if player_flags != null and bool(player_flags.call("has", PERSONAL_RECEIPT_FLAG)):
@@ -326,14 +348,18 @@ func _receive_claim(claim: Dictionary) -> void:
 
 
 func _process_local_claim(delta: float) -> void:
-	if _waiting_for_offer_dialogue:
+	var game := get_node("/root/Game")
+	var catch_open := game.get("pending_catch") != null
+	if _waiting_for_offer_dialogue and not catch_open:
 		var panel := world.get_node_or_null("DialoguePanel")
 		if panel == null or not bool(panel.call("is_open")):
 			_start_dialogue_when_free("stormwood_stormheart_offer")
+	if _ceremony_waiting and not catch_open:
+		_ceremony_waiting = false
+		_begin_local_ceremony()
 	if _local_claim.is_empty() or _local_creature == null:
 		return
-	var game := get_node("/root/Game")
-	if game.get("pending_catch") != null:
+	if catch_open:
 		return
 	_save_retry_left -= delta
 	if _save_retry_left > 0.0:
@@ -346,29 +372,44 @@ func _line_presented(id: String, is_last: bool) -> void:
 		_offer_reached_choice = true
 
 
+## Yes queues the consent line's effect; draining it here is its only consumer,
+## so it is never left queued. Any other effect is a loud no-op, as the runner's
+## contract asks of a caller that does not know it.
 func _dialogue_completed(id: String) -> void:
-	if id == OFFER_CONVERSATION:
-		_offer_accepted = true
+	if id != OFFER_CONVERSATION:
+		return
+	var panel := world.get_node_or_null("DialoguePanel")
+	if panel == null:
+		return
+	for effect: String in panel.call("drain_effects"):
+		if effect == OFFER_ACCEPT_EFFECT:
+			_offer_accepted = true
+		else:
+			push_warning("the Stormheart offer ignored dialogue effect '%s'" % effect)
 
 
 ## The runner closes (`finished`) before it reports `completed` for a Yes, so
-## the answer is read one frame later. A conversation cut off before its Yes/No
-## line answers nothing and is offered again; No is this character's refusal.
+## the answer is read one frame later. The panel declines a consent line on the
+## same physics tick as its menu_cancel press, so that press is read here. Only
+## Yes or that explicit No answers; any other close (before or on the Yes/No
+## line) answers nothing and the offer is asked again.
 func _dialogue_finished(id: String) -> void:
 	if id != OFFER_CONVERSATION or not _waiting_for_offer_dialogue:
 		return
 	_waiting_for_offer_dialogue = false
+	_offer_declined = _offer_reached_choice and Input.is_action_just_pressed(DECLINE_ACTION)
 	_resolve_offer_choice.call_deferred()
 
 
 func _resolve_offer_choice() -> void:
-	var reached := _offer_reached_choice
 	var accepted := _offer_accepted
+	var declined := _offer_declined
 	_offer_reached_choice = false
 	_offer_accepted = false
+	_offer_declined = false
 	if accepted:
 		_begin_local_ceremony()
-	elif reached:
+	elif declined:
 		refuse_offer()
 	else:
 		_waiting_for_offer_dialogue = true
@@ -388,10 +429,14 @@ func _begin_local_ceremony() -> void:
 		return
 	var game := get_node("/root/Game")
 	if game.get("pending_catch") != null:
+		_ceremony_waiting = true
 		return
 	_local_creature = CAPTURE_CODEC.decode(_local_claim.get("creature", {}))
 	if _local_creature == null:
+		# Nothing was answered or saved: drop the unreadable copy so the host's
+		# next resend of this claim offers it afresh instead of being ignored.
 		game.push_world_message("The Stormheart's offer could not be restored yet.")
+		_local_claim.clear()
 		return
 	_local_creature.set("caught_on_day", maxi(1, int(game.get("day"))))
 	var party: RefCounted = game.get("party")
@@ -407,7 +452,7 @@ func _finish_local_claim(kept: bool) -> void:
 		return
 	var game := get_node("/root/Game")
 	var saver: RefCounted = game.get("save_system")
-	var character := str(game.get("local").get("character_id"))
+	var character := _local_character_id(game)
 	# The world keeps the unresolved claim; this player-owned receipt makes a
 	# reconnect resume at the acknowledgement instead of replaying a farewell.
 	var player_flags: RefCounted = game.call("player_flags")
@@ -588,8 +633,16 @@ func _start_dialogue_when_free(id: String) -> bool:
 func _character_for_peer(peer: int) -> String:
 	var row: Dictionary = session.registry().row(peer)
 	if row.is_empty() and peer == session.local_peer_id():
-		return str(get_node("/root/Game").get("local").get("character_id"))
+		return _local_character_id(get_node("/root/Game"))
 	return str(row.get("character_id", ""))
+
+
+## This peer's stable character id, or "" while `Game.local` is not set yet.
+static func _local_character_id(game: Node) -> String:
+	var local: Variant = game.get("local") if game != null else null
+	if local is Object:
+		return str((local as Object).get("character_id"))
+	return ""
 
 
 func _saved_state() -> Dictionary:
@@ -700,10 +753,11 @@ func _record_participants() -> void:
 		for character: Variant in dynamo.get("fighter_characters"):
 			if not str(character).is_empty() and not characters.has(str(character)):
 				characters.append(str(character))
-		for key: String in ["participants", "contributors"]:
-			for peer: Variant in dynamo.get(key):
-				if not peers.has(int(peer)):
-					peers.append(int(peer))
+		# Contributors only: a Break arrival is an observer with no send-out
+		# left to admit them (BOSSES §3), so proximity alone earns no offer.
+		for peer: Variant in dynamo.get("contributors"):
+			if not peers.has(int(peer)):
+				peers.append(int(peer))
 	for peer: int in peers:
 		var character := _character_for_peer(peer)
 		if not character.is_empty() and not characters.has(character):
@@ -728,13 +782,22 @@ static func resolution_flag(accepted: bool, character: String) -> String:
 func _local_offer_owed(game: Node) -> bool:
 	if game == null:
 		return false
-	var character := str(game.get("local").get("character_id"))
+	var character := _local_character_id(game)
 	var player_flags: RefCounted = game.call("player_flags")
 	var resolved := player_flags != null and bool(player_flags.call("has", PERSONAL_RECEIPT_FLAG))
 	var participants := _participants
 	if session != null and session.is_host():
-		participants = _saved_state().get("participants", [])
+		participants = participants_for_claim(_saved_state(), character)
 	return claim_allowed([FREED_FLAG], participants, character, resolved)
+
+
+## Host: the world facts `offer_owed()` reads for `character`.
+func _world_flags_for(character: String) -> Array:
+	var flags: Array = []
+	for flag: String in [FREED_FLAG, resolution_flag(true, character), resolution_flag(false, character)]:
+		if _has(flag):
+			flags.append(flag)
+	return flags
 
 
 func _has(flag: String) -> bool:
@@ -757,13 +820,45 @@ func _glow(colour: Color, energy: float, alpha: float) -> StandardMaterial3D:
 ## Pure policy helpers: tests pin the per-participant and chapter-order rules
 ## without needing a network peer or loading the world scene.
 ##
-## An empty participant list is a solo freeing (or a save from before the list
-## was recorded): the only player present may answer, as in the Meadows ending.
+## An empty participant list is a solo freeing: the only player present may
+## answer, as in the Meadows ending. The host never passes an empty list for a
+## claim; `participants_for_claim()` narrows an unrecorded one to its first
+## claimant first.
 static func claim_allowed(flags: Array, participants: Array, character: String,
 		already_resolved: bool) -> bool:
 	if not flags.has(FREED_FLAG) or character.is_empty() or already_resolved:
 		return false
 	return participants.is_empty() or participants.has(character)
+
+
+## The participant list a claim by `character` is judged against. A recorded
+## list is used as is. With none recorded (a save freed before the list
+## existed), nothing proves who fought: the characters already holding a claim
+## are the participants, and if there are none the first claimant alone is.
+static func participants_for_claim(state: Dictionary, character: String) -> Array:
+	var recorded: Array = state.get("participants", [])
+	if not recorded.is_empty():
+		return recorded.duplicate()
+	var claimed: Array = (state.get("claims", {}) as Dictionary).keys()
+	if not claimed.is_empty():
+		return claimed
+	return [character] if not character.is_empty() else []
+
+
+## Host decision for one claim, from the host's own state: the world's claims,
+## its recorded participants and its per-character answer receipts in
+## `world_flags`. `client_hint_resolved` is the requester's own portable
+## receipt; it can only withhold a fresh creature and is ignored while this
+## world already holds that character's unsettled claim (a resume).
+static func offer_owed(state: Dictionary, character: String, world_flags: Array,
+		client_hint_resolved := false) -> bool:
+	var claim: Variant = (state.get("claims", {}) as Dictionary).get(character, {})
+	var existing: Dictionary = claim if claim is Dictionary else {}
+	var resolved := bool(existing.get("settled", false)) \
+		or world_flags.has(resolution_flag(true, character)) \
+		or world_flags.has(resolution_flag(false, character)) \
+		or (client_hint_resolved and existing.is_empty())
+	return claim_allowed(world_flags, participants_for_claim(state, character), character, resolved)
 
 
 static func waterward_allowed(flags: Array) -> bool:
