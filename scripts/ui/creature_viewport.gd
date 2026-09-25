@@ -1,25 +1,41 @@
 extends SubViewportContainer
 
 ## A live, orbitable 3D view of one creature, for the TEAM screen's centre column
-## (spec §8.2).
+## (spec §8.2) and the legendary-offer ceremony that shows its volunteer here.
 ##
-## Lifts `scripts/ui/starter_picker.gd::_build_preview`'s construction almost
-## verbatim — own_world_3d SubViewport, a warm key + cool rim light, `creature.tscn`
-## fitted and framed from `body_height()`/`body_radius()` — rather than
-## reinventing creature-preview lighting a second time. The one thing added is
-## interactivity: the starter orbs only ever auto-spin, this widget also reads
-## the right stick (and a mouse drag, for keyboard/mouse testing) so a player
-## can actually look a party member over.
+## Construction started as a lift of `scripts/ui/starter_picker.gd::_build_preview`
+## (own_world_3d SubViewport, key + rim light, `creature.tscn` on a turntable);
+## the one thing added then was interactivity: this widget also reads the right
+## stick (and a mouse drag, for keyboard/mouse testing) so a player can actually
+## look a party member over.
+##
+## X03-WO2 (ACCEPTANCE U2) replaced two things that had drifted from that job:
+##
+## * FRAMING. The camera used to be placed from `body_height()`/`body_radius()`,
+##   the gameplay COLLIDER size. Long bodies render far outside that capsule --
+##   the Abyssal Guardian's head sat on the top edge with its body and fins off
+##   frame, Mosshell's shell ran off the left. The camera is now fitted to the
+##   body's ACTUAL render bounds (`visible_bounds`, skinned meshes included),
+##   centred on the spin axis, and fitted as the bounding CYLINDER about that
+##   axis so no yaw of the turntable can swing any part out of frame. Both the
+##   vertical and the horizontal FOV are honoured (`fit_camera`), from the live
+##   SubViewport aspect, with FRAME_MARGIN kept clear on every side.
+## * EXPOSURE. Near-white ambient at 2.0 plus a 2.0 key and 1.3 rim, on a
+##   near-black backdrop, clipped every light-coloured creature and flattened
+##   eyes/shading. Lighting is now a moderate key/fill/rim on a neutral slate
+##   backdrop with a subtle ground disc (see `_build_world`). No red/coral.
 ##
 ## Defensive by design, not by afterthought: `set_species()` can be called
 ## from a headless test with no renderer worth the name behind it, and
 ## `smoke_menu.gd` must stay green either way. If `creature.tscn` fails to build a
-## real model the widget falls back to a flat colour chip — see `_fallback` —
-## and never raises past that.
+## real model the widget falls back to a flat colour chip -- see `_fallback` --
+## and never raises past that; framing then uses the species' placeholder
+## extents (`fallback_bounds`).
 
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 const VIEWPORT_SIZE := Vector2i(420, 460)
 
@@ -44,9 +60,52 @@ const STICK_DEADZONE := 0.18
 ## project.godot's input map.
 const JOY_AXIS_RIGHT_X := 2
 
+## The authored build angle: a front three-quarter towards the camera.
+const BUILD_YAW_DEG := 200.0
+
+## --- framing ------------------------------------------------------------
+
+## Vertical field of view (Camera3D keeps height, so this IS the vertical FOV;
+## the horizontal one follows from the viewport aspect). 34 matches
+## starter_picker's calm, full-body lens.
+const CAMERA_FOV_DEG := 34.0
+## Degrees the camera looks DOWN onto the creature. A little elevation shows
+## the back line and grounds the creature on its disc; it is small so the face
+## still reads.
+const CAMERA_PITCH_DEG := 10.0
+## Fraction of the viewport's width AND height kept clear on EACH side of the
+## creature's spin cylinder, at every turntable angle.
+const FRAME_MARGIN := 0.11
+## Rim samples used to approximate the spin cylinder when fitting. The sampled
+## polygon is inflated to circumscribe the true circle, so the fit is never
+## tighter than the cylinder itself.
+const FIT_RIM_SAMPLES := 48
+## Mesh names never counted as the creature's body when measuring bounds: the
+## flat contact-shadow blob `creature_body.gd` lays on the ground is wider than
+## some bodies and is not something the player needs to see whole.
+const BOUNDS_IGNORED_NAMES := ["ContactShadow"]
+
+## --- look ---------------------------------------------------------------
+
+## Neutral mid slate: dark enough that pale creatures (Guardian, Galewisp)
+## hold their edge, light enough that dark ones (Duskhush, Shadelet) are not a
+## silhouette on black. Cool, never red.
+const BACKDROP_COLOUR := Color(0.24, 0.28, 0.32)
+const GROUND_COLOUR := Color(0.29, 0.33, 0.37)
+## Ambient is a fill, not the main light: at 2.0 near-white it flattened every
+## form. Slightly cool so the warm key reads as the light direction.
+const AMBIENT_COLOUR := Color(0.72, 0.76, 0.82)
+const AMBIENT_ENERGY := 0.6
+const KEY_ENERGY := 1.2
+const KEY_COLOUR := Color(1.0, 0.96, 0.90)
+const RIM_ENERGY := 0.55
+const RIM_COLOUR := Color(0.78, 0.87, 1.0)
+
 var _world: Node3D = null
 var _viewport: SubViewport = null
 var _turntable: Node3D = null
+var _camera: Camera3D = null
+var _ground: MeshInstance3D = null
 var _body: Node3D = null
 var _species_id: String = ""
 ## OF27: tracked alongside `_species_id` so a same-species swap (releasing a
@@ -57,6 +116,10 @@ var _species_id: String = ""
 var _shiny: bool = false
 var _dragging: bool = false
 var _drag_device: int = -1
+## The framed spin cylinder: x = radius about the spin axis, y = lowest point,
+## z = highest point, in turntable space. Kept so a viewport resize can re-fit
+## without re-measuring.
+var _extents := Vector3(0.4, 0.0, 1.0)
 
 
 func _ready() -> void:
@@ -74,9 +137,12 @@ func _build_world() -> void:
 	_viewport.size = VIEWPORT_SIZE
 	# Its own World3D, exactly for the reason starter_picker's has one: without
 	# it this preview and its lights would render into the meadow behind the
-	# menu instead of the dark backdrop built for it below.
+	# menu instead of the backdrop built for it below.
 	_viewport.own_world_3d = true
 	add_child(_viewport)
+	# `stretch` resizes the SubViewport to whatever the TEAM layout gives this
+	# container; the horizontal fit depends on that aspect, so re-fit on it.
+	_viewport.size_changed.connect(_refit)
 
 	_world = Node3D.new()
 	_viewport.add_child(_world)
@@ -84,32 +150,58 @@ func _build_world() -> void:
 	var env_node := WorldEnvironment.new()
 	var env := Environment.new()
 	env.background_mode = Environment.BG_COLOR
-	# Dark, plain, and cooler than the starter orbs' warm amber — this is a
-	# party roster, not the mystery of an unopened orb.
-	env.background_color = Color(0.05, 0.07, 0.08)
+	env.background_color = BACKDROP_COLOUR
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.90, 0.92, 0.95)
-	env.ambient_light_energy = 2.0
+	env.ambient_light_color = AMBIENT_COLOUR
+	env.ambient_light_energy = AMBIENT_ENERGY
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env_node.environment = env
 	_world.add_child(env_node)
 
 	var key := DirectionalLight3D.new()
 	key.rotation = Vector3(deg_to_rad(-35.0), deg_to_rad(35.0), 0.0)
-	key.light_energy = 2.0
+	key.light_energy = KEY_ENERGY
+	key.light_color = KEY_COLOUR
 	_world.add_child(key)
 
 	var rim := DirectionalLight3D.new()
 	rim.rotation = Vector3(deg_to_rad(-20.0), deg_to_rad(200.0), 0.0)
-	rim.light_energy = 1.3
-	rim.light_color = Color(0.78, 0.87, 1.0)
+	rim.light_energy = RIM_ENERGY
+	rim.light_color = RIM_COLOUR
 	_world.add_child(rim)
 
+	# A subtle disc for the creature to stand on, so it reads as grounded
+	# rather than floating in a flat field. Sized to the spin cylinder in
+	# `_apply_extents`, so it is always inside the fitted frame. Not on the
+	# turntable: the ground stays put while the creature turns on it.
+	_ground = MeshInstance3D.new()
+	_ground.name = "PreviewGround"
+	var disc := CylinderMesh.new()
+	disc.top_radius = 1.0
+	disc.bottom_radius = 1.0
+	disc.height = 0.02
+	disc.radial_segments = 64
+	disc.rings = 1
+	_ground.mesh = disc
+	var ground_material := StandardMaterial3D.new()
+	ground_material.albedo_color = GROUND_COLOUR
+	ground_material.roughness = 1.0
+	_ground.material_override = ground_material
+	_ground.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_ground.position = Vector3(0.0, -0.011, 0.0)
+	_world.add_child(_ground)
+
+	_camera = Camera3D.new()
+	_camera.fov = CAMERA_FOV_DEG
+	_camera.current = true
+	_world.add_child(_camera)
+
 	# The turntable is what orbit spins — the camera stays put and looks at
-	# the pivot, exactly like starter_picker's camera does, so reframing on a
-	# species change is one look_at_from_position call, not a rotation reset.
+	# the spin axis, so reframing on a species change never fights the
+	# player's orbit angle.
 	_turntable = Node3D.new()
 	_world.add_child(_turntable)
+	_refit()
 
 
 ## Build (or rebuild) the preview for `species_id`. Safe to call repeatedly —
@@ -127,22 +219,73 @@ func set_species(species_id: String, shiny: bool = false) -> void:
 	if species_id == "":
 		return
 
+	var look: Dictionary = SPECIES.placeholder(species_id)
 	var body: Node3D = null
-	var height := 1.0
-	var radius := 0.4
 	if not Engine.is_editor_hint():
 		body = _try_build_body(species_id, shiny)
 	if body != null:
-		height = float(body.call("body_height")) if body.has_method("body_height") else 1.0
-		radius = float(body.call("body_radius")) if body.has_method("body_radius") else 0.4
 		_body = body
 	else:
-		var look: Dictionary = SPECIES.placeholder(species_id)
-		height = float(look.get("height", 1.0))
-		radius = float(look.get("radius", 0.4))
 		_body = _fallback(look)
+	frame_body(_body, float(look.get("height", 1.0)), float(look.get("radius", 0.4)))
 
-	_frame_camera(height, radius)
+
+## Centre `body` on the spin axis and fit the camera to what it renders.
+##
+## `body` must already be a child of `_turntable`. When nothing measurable is
+## rendered under it (a detached/headless build whose model never loaded) the
+## species' placeholder extents stand in, so framing is never degenerate.
+func frame_body(body: Node3D, fallback_height: float = 1.0, fallback_radius: float = 0.4) -> void:
+	if body == null or _turntable == null:
+		return
+	var box := visible_bounds(_turntable)
+	var fallback := box.size.y <= 0.0001 and box.size.x <= 0.0001 and box.size.z <= 0.0001
+	if fallback:
+		box = fallback_bounds(fallback_height, fallback_radius)
+	# Put the box's XZ centre on the spin axis, so the creature turns in place
+	# instead of swinging round an off-centre pivot (a long tail would sweep
+	# the frame and a head-heavy body would orbit its own feet).
+	var centre := box.get_center()
+	var shift := Vector3(-centre.x, 0.0, -centre.z)
+	body.position += shift
+	box.position += shift
+	var extents := spin_extents(box)
+	if not fallback:
+		# Exact reach of the geometry about the (now centred) axis. The AABB
+		# corners overstate it -- a body is not a box, and imported skinned
+		# meshes carry a padded AABB -- which made long creatures needlessly
+		# small (Guardian: corner reach 12.7 m, real reach 9.1 m).
+		extents.x = spin_radius(_turntable)
+	_apply_extents(extents)
+
+
+func _apply_extents(extents: Vector3) -> void:
+	_extents = extents
+	if _ground != null:
+		_ground.scale = Vector3(extents.x, 1.0, extents.x)
+	_refit()
+
+
+## Re-place the camera for the current extents and viewport aspect.
+func _refit() -> void:
+	if _camera == null or _viewport == null:
+		return
+	var size := Vector2(_viewport.size)
+	var aspect := size.x / size.y if size.y > 0.0 else float(VIEWPORT_SIZE.x) / VIEWPORT_SIZE.y
+	# The ground disc sits at y = 0 with the spin radius, so the fitted
+	# cylinder always reaches down to the floor even for a hovering creature.
+	var y_min := minf(_extents.y, 0.0)
+	var fit := fit_camera(_extents.x, y_min, _extents.z, CAMERA_FOV_DEG, aspect, FRAME_MARGIN, CAMERA_PITCH_DEG)
+	var target := Vector3(0.0, float(fit.target_y), 0.0)
+	var distance := float(fit.distance)
+	_camera.fov = CAMERA_FOV_DEG
+	_camera.near = maxf(0.05, (distance - _extents.x) * 0.25)
+	_camera.far = distance + _extents.x * 4.0 + 50.0
+	# Set as a local transform (the camera's parent `_world` sits at the
+	# origin), not via look_at_from_position: that reads the global transform,
+	# which is only valid once in a tree, and a headless test frames detached.
+	var eye := camera_eye(target, distance, CAMERA_PITCH_DEG)
+	_camera.transform = Transform3D(Basis.looking_at(target - eye, Vector3.UP), eye)
 
 
 func _try_build_body(species_id: String, shiny: bool = false) -> Node3D:
@@ -154,7 +297,7 @@ func _try_build_body(species_id: String, shiny: bool = false) -> Node3D:
 	_turntable.add_child(instance)
 	instance.call("setup", species_id, shiny)
 	instance.set_physics_process(false)
-	instance.rotation.y = deg_to_rad(200.0)
+	instance.rotation.y = deg_to_rad(BUILD_YAW_DEG)
 	return instance
 
 
@@ -182,31 +325,211 @@ func _clear_body() -> void:
 	if _body != null and is_instance_valid(_body):
 		_body.queue_free()
 	_body = null
+	if _turntable == null:
+		return
 	for child in _turntable.get_children():
+		# Detach now, not only at the end of the frame: the next body is
+		# measured on the very next line, and a queued-for-deletion sibling
+		# would otherwise be counted in its bounds.
+		_turntable.remove_child(child)
 		child.queue_free()
 
 
-## Blind-judge pass: "the creature portrait is an unidentifiable close-up of
-## fur on the screen whose job is looking at your creatures." This file's own
-## header says it lifts `starter_picker.gd::_build_preview`'s camera "almost
-## verbatim", but the numbers had drifted CLOSER than that source: fov 32 here
-## against 34 there, and a 2.4x/+0.8 distance formula against 2.7x/+0.6 --
-## both push the frame tighter, in the wrong direction for a widget whose job
-## (this file's own header again: "so a player can actually look a party
-## member over") is calm, full-body inspection, not the starter orb's
-## deliberate dramatic close reveal. Matched back to starter_picker's own
-## values, which this same critic pass raised no framing complaint against.
-func _frame_camera(height: float, radius: float) -> void:
-	for child in _world.get_children():
-		if child is Camera3D:
-			child.queue_free()
-	var camera := Camera3D.new()
-	camera.fov = 34.0
-	camera.current = true
-	_world.add_child(camera)
-	var distance := maxf(height, radius * 2.2) * 2.7 + 0.6
-	var eye := Vector3(0.0, height * 0.55, distance)
-	camera.look_at_from_position(eye, Vector3(0.0, height * 0.5, 0.0), Vector3.UP)
+## --- framing math (pure, unit-tested in tests/test_creature_viewport_framing.gd)
+
+## The merged render-space bounds of every VISIBLE mesh under `root`, in
+## `root`'s own space (root's transform excluded). Skinned meshes go through
+## `render_bounds.gd`'s skin-aware transform -- the renderer's own answer, not
+## the MeshInstance's node chain -- at the rest pose the preview shows (the
+## preview never plays a clip: `_try_build_body` switches physics off, which
+## is what drives the animator). A mesh counts only if it and every ancestor
+## up to `root` is visible -- `creature_body.gd` hides its placeholder capsule
+## once a model loads. Uses the actual vertices where the mesh exposes them
+## (tight) and the mesh's `get_aabb()` otherwise (conservative).
+## Zero-size AABB = nothing found.
+static func visible_bounds(root: Node3D) -> AABB:
+	var box := AABB()
+	var started := false
+	for mesh: MeshInstance3D in _visible_meshes(root):
+		var xf: Transform3D = RENDER_BOUNDS._render_transform(mesh, root)
+		var local := AABB()
+		var vertices := _mesh_vertices(mesh.mesh)
+		if vertices.is_empty():
+			local = xf * mesh.mesh.get_aabb()
+		else:
+			local = AABB(xf * vertices[0], Vector3.ZERO)
+			for v: Vector3 in vertices:
+				local = local.expand(xf * v)
+		box = box.merge(local) if started else local
+		started = true
+	return box
+
+
+## The farthest horizontal reach of any visible geometry under `root` from
+## the spin (Y) axis through `root`'s origin -- the radius of the cylinder the
+## creature sweeps over a full turn. Vertex-exact where the mesh exposes its
+## vertices, the mesh AABB's corners otherwise.
+static func spin_radius(root: Node3D) -> float:
+	var radius := 0.0
+	for mesh: MeshInstance3D in _visible_meshes(root):
+		var xf: Transform3D = RENDER_BOUNDS._render_transform(mesh, root)
+		var vertices := _mesh_vertices(mesh.mesh)
+		if vertices.is_empty():
+			radius = maxf(radius, spin_extents(xf * mesh.mesh.get_aabb()).x)
+			continue
+		var reach_sq := 0.0
+		for v: Vector3 in vertices:
+			var p := xf * v
+			reach_sq = maxf(reach_sq, p.x * p.x + p.z * p.z)
+		radius = maxf(radius, sqrt(reach_sq))
+	return radius
+
+
+static func _visible_meshes(root: Node3D) -> Array[MeshInstance3D]:
+	var found: Array[MeshInstance3D] = []
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node != root:
+			if node is Node3D and not (node as Node3D).visible:
+				continue
+			if str(node.name) in BOUNDS_IGNORED_NAMES:
+				continue
+		if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+			found.append(node as MeshInstance3D)
+		for child in node.get_children():
+			stack.append(child)
+	return found
+
+
+## Every surface's vertex positions, or empty when any surface cannot supply
+## them (a primitive mesh, or a renderer that keeps no readable copy) -- the
+## caller then falls back to the AABB, never to a partial vertex set.
+static func _mesh_vertices(mesh: Mesh) -> PackedVector3Array:
+	var out := PackedVector3Array()
+	if not mesh is ArrayMesh:
+		return out
+	for surface in mesh.get_surface_count():
+		var arrays: Array = mesh.surface_get_arrays(surface)
+		if arrays.size() <= Mesh.ARRAY_VERTEX or not arrays[Mesh.ARRAY_VERTEX] is PackedVector3Array:
+			return PackedVector3Array()
+		var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		if vertices.is_empty():
+			return PackedVector3Array()
+		out.append_array(vertices)
+	return out
+
+
+## Placeholder extents for a body that rendered nothing measurable: the
+## species' collider capsule, standing on the origin.
+static func fallback_bounds(height: float, radius: float) -> AABB:
+	var r := maxf(radius, 0.05)
+	var h := maxf(height, r * 2.0)
+	return AABB(Vector3(-r, 0.0, -r), Vector3(r * 2.0, h, r * 2.0))
+
+
+## The bounding cylinder about the spin (Y) axis through the origin of `box`'s
+## space: x = the farthest horizontal reach of any corner from the axis (the
+## maximum over every yaw), y = bottom, z = top.
+static func spin_extents(box: AABB) -> Vector3:
+	var radius := 0.0
+	for x: float in [box.position.x, box.end.x]:
+		for z: float in [box.position.z, box.end.z]:
+			radius = maxf(radius, Vector2(x, z).length())
+	return Vector3(radius, box.position.y, box.end.y)
+
+
+## Where the camera sits for a look at `target` from `distance` away, pitched
+## down by `pitch_deg`, on the +Z side of the turntable.
+static func camera_eye(target: Vector3, distance: float, pitch_deg: float) -> Vector3:
+	var pitch := deg_to_rad(pitch_deg)
+	return target + Vector3(0.0, sin(pitch), cos(pitch)) * distance
+
+
+## Normalised device coordinates (-1..1 each axis, +y up) of `point` for a
+## camera at `camera_eye(target, distance, pitch_deg)` looking at `target`,
+## vertical FOV `vfov_deg`, width/height `aspect`. z carries view depth
+## (negative = behind the camera).
+static func project_ndc(point: Vector3, target: Vector3, distance: float, vfov_deg: float, aspect: float, pitch_deg: float) -> Vector3:
+	var pitch := deg_to_rad(pitch_deg)
+	var back := Vector3(0.0, sin(pitch), cos(pitch))
+	var up := Vector3(0.0, cos(pitch), -sin(pitch))
+	var rel := point - (target + back * distance)
+	var depth := -rel.dot(back)
+	var tan_v := tan(deg_to_rad(vfov_deg) * 0.5)
+	if depth <= 0.0001:
+		return Vector3(INF, INF, depth)
+	return Vector3(rel.x / (depth * tan_v * aspect), rel.dot(up) / (depth * tan_v), depth)
+
+
+## The smallest camera distance at which every point of the spin cylinder
+## (`radius`, from `y_min` to `y_max`) projects inside the viewport with
+## `margin` of the width and of the height kept clear on each side, looking
+## at `target_y` on the spin axis. Both the vertical FOV and the horizontal FOV
+## (vertical x aspect) are honoured. Pure: no scene, no renderer.
+static func fit_distance(radius: float, y_min: float, y_max: float, target_y: float, vfov_deg: float, aspect: float, margin: float, pitch_deg: float = 0.0) -> float:
+	var points := _cylinder_samples(radius, y_min, y_max)
+	var limit := 1.0 - 2.0 * clampf(margin, 0.0, 0.45)
+	var target := Vector3(0.0, target_y, 0.0)
+	var lo := 0.0
+	var hi := maxf(maxf(radius, y_max - y_min), 0.1) * 2.0
+	while not _fits(points, target, hi, vfov_deg, aspect, pitch_deg, limit):
+		hi *= 2.0
+		if hi > 1.0e6:
+			return hi
+	for i in 40:
+		var mid := (lo + hi) * 0.5
+		if _fits(points, target, mid, vfov_deg, aspect, pitch_deg, limit):
+			hi = mid
+		else:
+			lo = mid
+	return hi
+
+
+## `fit_distance` plus the aim point: the target height is re-centred so the
+## cylinder's top and bottom margins come out equal under the pitched view,
+## then the distance is re-fitted for that target. Returns
+## {"distance": float, "target_y": float}.
+static func fit_camera(radius: float, y_min: float, y_max: float, vfov_deg: float, aspect: float, margin: float, pitch_deg: float = 0.0) -> Dictionary:
+	var target_y := (y_min + y_max) * 0.5
+	var distance := fit_distance(radius, y_min, y_max, target_y, vfov_deg, aspect, margin, pitch_deg)
+	var points := _cylinder_samples(radius, y_min, y_max)
+	var tan_v := tan(deg_to_rad(vfov_deg) * 0.5)
+	for i in 6:
+		var low := INF
+		var high := -INF
+		for p: Vector3 in points:
+			var ndc := project_ndc(p, Vector3(0.0, target_y, 0.0), distance, vfov_deg, aspect, pitch_deg)
+			low = minf(low, ndc.y)
+			high = maxf(high, ndc.y)
+		var imbalance := (low + high) * 0.5
+		if absf(imbalance) < 0.002:
+			break
+		# Shift the aim along world Y by the NDC imbalance at the target's depth.
+		target_y += imbalance * distance * tan_v / cos(deg_to_rad(pitch_deg))
+		distance = fit_distance(radius, y_min, y_max, target_y, vfov_deg, aspect, margin, pitch_deg)
+	return {"distance": distance, "target_y": target_y}
+
+
+static func _cylinder_samples(radius: float, y_min: float, y_max: float) -> Array[Vector3]:
+	# Inflate so the sampled polygon circumscribes the true circle.
+	var r := maxf(radius, 0.0) / cos(PI / FIT_RIM_SAMPLES)
+	var points: Array[Vector3] = []
+	for i in FIT_RIM_SAMPLES:
+		var a := TAU * float(i) / FIT_RIM_SAMPLES
+		var x := cos(a) * r
+		var z := sin(a) * r
+		points.append(Vector3(x, y_min, z))
+		points.append(Vector3(x, y_max, z))
+	return points
+
+
+static func _fits(points: Array[Vector3], target: Vector3, distance: float, vfov_deg: float, aspect: float, pitch_deg: float, limit: float) -> bool:
+	for p: Vector3 in points:
+		var ndc := project_ndc(p, target, distance, vfov_deg, aspect, pitch_deg)
+		if ndc.z <= 0.0001 or absf(ndc.x) > limit or absf(ndc.y) > limit:
+			return false
+	return true
 
 
 ## --- orbit -------------------------------------------------------------
