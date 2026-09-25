@@ -254,6 +254,36 @@ func _two_worlds(game: Node) -> void:
 		"world A's own unacknowledged refusal resumes as a refusal, without asking again")
 	await _unmount(a)
 
+	# Unanswered in world D, then Yes in world C, then back to world D: D's
+	# resent claim must not become a second Stormheart.
+	_reset_character(game)
+	var claim_c := _claim()
+	var claim_d := _claim()
+	var d := await _mount(game, "stormwood-world-d")
+	d.ending.receive({"kind": "ending_offer", "claim": claim_d})
+	await _frames(2)
+	_check(d.panel.is_open(), "world D's offer opens")
+	await _unmount(d)
+	var c := await _mount(game, "stormwood-world-c")
+	c.ending.receive({"kind": "ending_offer", "claim": claim_c})
+	await _frames(2)
+	await _to_question(c.panel)
+	c.panel.runner().advance()
+	await _frames(3)
+	_check(_stormheart_count(game) == 1 and _accepted(game), "world C's Yes keeps one Stormheart")
+	await _unmount(c)
+	d = await _mount(game, "stormwood-world-d")
+	(d.hub as HubStub).intents.clear()
+	d.ending.receive({"kind": "ending_offer", "claim": claim_d})
+	await _frames(3)
+	settled = (d.hub as HubStub).intents.filter(func(intent: Dictionary) -> bool:
+		return str(intent.kind) == "ending_settled")
+	_check(not d.panel.is_open() and _stormheart_count(game) == 1,
+		"back in world D after a Yes in world C: no second Stormheart is offered")
+	_check(settled.size() == 1 and settled[0].kept == false,
+		"world D's unanswered claim settles as not kept")
+	await _unmount(d)
+
 
 func _claim() -> Dictionary:
 	var maker := ENDING.new()
@@ -338,6 +368,14 @@ func _reset_character(game: Node) -> void:
 	game.player_flags().set_flag(ENDING.PERSONAL_RECEIPT_FLAG, false)
 	game.player_flags().set_flag(ENDING.ACCEPTED_FLAG, false)
 	game.pending_catch = null
+
+
+func _stormheart_count(game: Node) -> int:
+	var count := 0
+	for creature: RefCounted in game.party.members():
+		if str(creature.get("species_id")) == ENDING.LEGENDARY_SPECIES:
+			count += 1
+	return count
 
 
 func _holds_stormheart(game: Node) -> bool:

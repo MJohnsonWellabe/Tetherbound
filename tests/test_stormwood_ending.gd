@@ -270,8 +270,12 @@ func test_the_host_decides_an_offer_from_its_own_receipts_not_the_clients_flag()
 	assert_false(ENDING.offer_owed(state, "trainer-a", freed, true),
 		"the client's own receipt can withhold its fresh creature")
 	var pending := {"participants": ["trainer-a"], "claims": {"trainer-a": {"creature": {}, "settled": false, "kept": false}}}
-	assert_true(ENDING.offer_owed(pending, "trainer-a", freed, true),
-		"the hint never cancels a claim the host already holds; the client resumes and settles it")
+	assert_false(ENDING.offer_owed(pending, "trainer-a", freed, true),
+		"an acceptance hint withholds even a claim the host already holds: no fresh Stormheart is sent")
+	assert_true(ENDING.offer_owed(pending, "trainer-a", freed, false),
+		"without the hint that held claim resumes")
+	assert_false(ENDING.claim_for_character(pending, "trainer-a").is_empty(),
+		"the held claim still reaches its client through the host's resend, which settles it from its own answer")
 	assert_false(ENDING.offer_owed(state, "trainer-c", freed, false),
 		"a non-participant is refused whatever it reports")
 

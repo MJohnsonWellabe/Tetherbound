@@ -150,6 +150,14 @@ func _run() -> void:
 		var claim: Dictionary = b_offers.back().event.claim
 		_check(str(claim.recipient_character_id) == "character-fought-b" and not (claim.creature as Dictionary).is_empty(),
 			"B's offer is bound to B's stable character and carries its own creature")
+	# Second guard: B's client now reports an acceptance from another world.
+	# The host sends no fresh creature even though it holds B's unsettled claim.
+	var b_offers_before := hub.offers_for(2).size()
+	ending.dispatch(2, {"kind": "ending_claim", "already_accepted": true})
+	var b_refusals := hub.refusals_for(2)
+	_check(hub.offers_for(2).size() == b_offers_before and not b_refusals.is_empty()
+		and str(b_refusals.back().event.reason) == "A Stormheart already walks with you.",
+		"an acceptance hint withholds a creature even while the host holds that character's unsettled claim")
 	var before_refusals := hub.refusals_for(local_peer).size()
 	ending.dispatch(local_peer, {"kind": "ending_claim"})
 	_check(hub.refusals_for(local_peer).size() == before_refusals + 1,

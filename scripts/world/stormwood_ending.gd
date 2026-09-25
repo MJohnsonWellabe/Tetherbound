@@ -241,10 +241,10 @@ func _claim_for(peer: int, client_hint_accepted := false) -> void:
 		var answered := not existing.is_empty() \
 			or _has(resolution_flag(true, character)) or _has(resolution_flag(false, character))
 		var reason := "The Stormheart answers the trainers who fought for its release."
-		if answered:
-			reason = "You have already answered the Stormheart."
-		elif client_hint_accepted:
+		if client_hint_accepted:
 			reason = "A Stormheart already walks with you."
+		elif answered:
+			reason = "You have already answered the Stormheart."
 		_refuse(peer, reason)
 		return
 	if existing.is_empty():
@@ -368,6 +368,15 @@ func _receive_claim(claim: Dictionary) -> void:
 	# A resend of the claim already being answered is ignored here, after the
 	# answer branches above so a failed save can still retry.
 	if not _local_claim.is_empty() or game.get("pending_catch") != null:
+		return
+	# This character already keeps a Stormheart from another world (or holds an
+	# older build's bare receipt): this world's claim was never answered, so it
+	# settles as not kept instead of offering a second creature. Accepting THIS
+	# claim always writes its own scoped `accepted` answer first, caught above.
+	if accepted_anywhere(player_flags):
+		_local_claim = claim.duplicate(true)
+		game.push_world_message("A Stormheart already walks with you.")
+		_finish_local_claim(false)
 		return
 	_local_claim = claim.duplicate(true)
 	_waiting_for_offer_dialogue = true
@@ -987,9 +996,11 @@ static func fallback_participants(dynamo_payload: Dictionary, host_character: St
 ## Host decision for one claim, from the host's own state: the world's claims,
 ## its recorded participants (or `fallback` when none were recorded) and its
 ## per-character answer receipts in `world_flags`. `client_hint_accepted` is
-## the requester's portable acceptance; it can only withhold a fresh creature
-## and is ignored while this world already holds that character's unsettled
-## claim (a resume). A refusal elsewhere is not a hint at all.
+## the requester's portable acceptance; it can only withhold, including while
+## this world holds that character's unsettled claim. Such a claim still
+## reaches the client through the host's resend (`claim_for_character()`),
+## where the character's own scoped answer settles it, or it settles as not
+## kept. A refusal elsewhere is not a hint at all.
 static func offer_owed(state: Dictionary, character: String, world_flags: Array,
 		client_hint_accepted := false, fallback: Array = []) -> bool:
 	var participants := participants_for_claim(state, fallback)
@@ -1000,7 +1011,7 @@ static func offer_owed(state: Dictionary, character: String, world_flags: Array,
 	var resolved := bool(existing.get("settled", false)) \
 		or world_flags.has(resolution_flag(true, character)) \
 		or world_flags.has(resolution_flag(false, character)) \
-		or (client_hint_accepted and existing.is_empty())
+		or client_hint_accepted
 	return claim_allowed(world_flags, participants, character, resolved)
 
 
