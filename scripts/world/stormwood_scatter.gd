@@ -3,7 +3,8 @@ extends RefCounted
 const BAKE := preload("res://scripts/world/scatter_bake.gd")
 const PATH := "res://data/config/stormwood_vegetation.json"
 const SETTLEMENTS := "res://data/config/stormwood_settlements.json"
-const SOURCES: Array[String] = [PATH, SETTLEMENTS, "res://data/config/terrain_stormwood.json", "res://data/config/stormwood_world.json", "res://scripts/world/stormwood_heightfield.gd", "res://scripts/world/stormwood_scatter.gd"]
+const POCKETS_PATH := "res://data/config/stormwood_pockets.json"
+const SOURCES: Array[String] = [PATH, SETTLEMENTS, "res://data/config/terrain_stormwood.json", "res://data/config/stormwood_world.json", "res://scripts/world/stormwood_heightfield.gd", "res://scripts/world/stormwood_scatter.gd", POCKETS_PATH]
 
 static func config() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(PATH)) as Dictionary
@@ -18,6 +19,12 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 	var cfg := config()
 	var settlements: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SETTLEMENTS))
 	cfg["structure_footprints"] = settlements.get("structures", [])
+	# Dead-end pockets (stormwood_pockets.gd) keep every collider off their
+	# palisade and interior: the walled square's corner radius plus the
+	# largest baked collider reach.
+	var pockets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(POCKETS_PATH))
+	cfg["pocket_clearings"] = pockets.pockets
+	cfg["pocket_clear_radius_m"] = (float(pockets.interior_half_m) + float(pockets.wall_thickness_m)) * sqrt(2.0) + 2.61
 	cfg["route_half_width"] = float((JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_stormwood.json")) as Dictionary).route_half_width)
 	var rng := RandomNumberGenerator.new()
 	var out: Dictionary = {}
@@ -106,6 +113,10 @@ static func _add(out: Dictionary,cfg: Dictionary,field: RefCounted,world: Dictio
 	if collides:
 		for site: Dictionary in clearings.get("sites", []):
 			if at.distance_to(Vector2(float(site.at[0]), float(site.at[1]))) < float(clearings.collider_clear_radius_m):
+				return
+	if collides:
+		for pocket: Dictionary in cfg.get("pocket_clearings", []):
+			if at.distance_to(Vector2(float(pocket.at[0]), float(pocket.at[1]))) < float(cfg.pocket_clear_radius_m):
 				return
 	# Roads stay open: no trunk or colliding rock reaches into the terrain
 	# contract's road corridor (route_half_width), and trees keep their 9 m
