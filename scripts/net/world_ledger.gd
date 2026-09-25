@@ -134,22 +134,32 @@ const MULTIPLAYER_CONFIG := "res://data/config/multiplayer.json"
 ## entry such as "stormwood:" cannot silently lock ordinary world flags.
 const OWNED_FLAG_PREFIX_MARK := "legendary_resolution:"
 const HOST_PEER := preload("res://scripts/net/peer_registry.gd").HOST_PEER_ID
-## World flags only host code may write or clear. The Tidewake Guardian's
-## claim markers and its claimed/settled/freed facts decide who is offered the
-## Guardian; the host writes every one of them (`water_guardian_reward.gd`), so
-## a remote write can only be a forgery.
-const HOST_ONLY_FLAG_PREFIXES := [
-	"water_claim:guardian:",
-	"water_guardian_",
-]
 ## `reward_grant` sources only host code may journal. These trainers' delivery
-## rows are the Guardian's participant journal, and since client trainer wins
-## are host-journaled (`trainer_victory`) the host is their only honest writer.
-## Deliberately not every `trainer:` source: a guest's own local named-wild
-## completion reward is journaled under `trainer:<once id>:` too.
+## rows are the Guardian's and the Warden climax's participant journals, and
+## since client trainer wins are host-journaled (`trainer_victory`) the host is
+## their only honest writer. Deliberately not every `trainer:` source: a
+## guest's own local named-wild completion reward is journaled under
+## `trainer:<once id>:` too. (A guest can still ASK the host to journal a win
+## through `trainer_victory`; that request's own checks are the director's.)
 const HOST_ONLY_GRANT_SOURCE_PREFIXES := [
 	"trainer:water_trainer_nerissa:",
 	"trainer:warden_aldis:",
+]
+## World flags only host code may write or clear. The Tidewake Guardian's
+## claim markers, its claimed/settled/freed facts and its settlement flags
+## decide who is offered the Guardian (a settlement flag with no offer marker
+## makes the world "legacy"); the host writes every one of them
+## (`water_guardian_reward.gd`), so a remote write can only be a forgery. The
+## legacy `reward:<source>:<n>` receipts of the journals above are included:
+## one forged receipt makes every later grant of that source
+## `legacy_unresolved`, emptying the journal.
+const HOST_ONLY_FLAG_PREFIXES := [
+	"water_claim:guardian:",
+	"water_guardian_",
+	"water_currents_restored",
+	"realm_relic_water_earned",
+	"reward:trainer:water_trainer_nerissa:",
+	"reward:trainer:warden_aldis:",
 ]
 
 static var _owned_prefixes: Array = []
