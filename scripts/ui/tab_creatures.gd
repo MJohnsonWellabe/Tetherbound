@@ -120,7 +120,13 @@ const GUARDIAN_ROSTER_DIM := 0.45
 ## width with its head a few pixels high (blind judge: "no readable face"). The
 ## detail column is hidden for the question, so the preview takes a landscape
 ## share of the row instead and the card beside it narrows.
-const GUARDIAN_PREVIEW_WIDTH := 640.0
+const GUARDIAN_PREVIEW_WIDTH := 520.0
+## The card's title size while the offer is up: the UX §8 heading floor
+## (24 px at 1280x720 is 36 logical). The row has no spare width, so the wider
+## preview is paid for by a one-line title instead of a taller card -- at
+## 640 px and the full title size the card wrapped and pushed the menu frame
+## off the bottom of the screen (capture).
+const GUARDIAN_TITLE_FONT := 36
 
 ## Appraisal pips (blind-judge pass: "[***--]" read as ASCII debug styling,
 ## not a rating a player was meant to see). Drawn the same filled/open-circle
@@ -1832,6 +1838,7 @@ func _begin_guardian_confirm(pending: RefCounted) -> void:
 	_farewell_panel.visible = true
 	# The viewport shows the volunteer itself while the question is up, wide.
 	_viewport.custom_minimum_size.x = GUARDIAN_PREVIEW_WIDTH
+	_farewell_title.add_theme_font_size_override("font_size", GUARDIAN_TITLE_FONT)
 	_focused = PARTY.MAX_CREATURES
 	menu.call("hold_input", true)
 	menu.call("override_footer", " ")
@@ -2133,6 +2140,8 @@ func _end_guardian_confirm(land: int) -> void:
 	_release_stage = ""
 	if _viewport != null:
 		_viewport.custom_minimum_size.x = float(CREATURE_VIEWPORT.VIEWPORT_SIZE.x)
+	if _farewell_title != null:
+		_farewell_title.add_theme_font_size_override("font_size", UITokens.FONT_TITLE)
 	if menu != null:
 		menu.call("hold_input", false)
 		menu.call("override_footer", "")
