@@ -1220,11 +1220,15 @@ func _local_entry(objective_id: String, progression: RefCounted) -> Dictionary:
 
 
 func _press(action: String) -> void:
-	Input.action_press(action)
+	# ONE input path. Pairing Input.action_press() with a parsed
+	# InputEventAction produced two "just pressed" edges on different frames
+	# for a single press -- the parsed event is flushed a frame or more later.
+	# When the first edge dismissed Doss's thanks, the late second edge could
+	# land after the release and greet him again (the repeat-greeting flake:
+	# the same conversation reopened on line 0 with no press from this smoke).
 	_send(action, true)
 	await physics_frame
 	await physics_frame
-	Input.action_release(action)
 	_send(action, false)
 	for i in 4:
 		await physics_frame
