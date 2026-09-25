@@ -1,0 +1,52 @@
+run id:  net-20260925T063608Z-5386
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z
+smoke:   tests/smoke_net_join_portable_across_hosts.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=5408 control_port=40423 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z/peer-0.log
+coordinator: launched peer 1 (client) pid=5409 control_port=33147 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z/peer-1.log
+coordinator: launched peer 2 (client) pid=5410 control_port=39601 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z/home-2 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z/peer-2.log
+coordinator: peer 2 hello: {"enet_port":32183.0,"godot_version":"4.7-stable (official)","main_sha":"dd5b728f9487","peer":2.0,"pid":5410.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z/home-2/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":32182.0,"godot_version":"4.7-stable (official)","main_sha":"dd5b728f9487","peer":1.0,"pid":5409.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":32181.0,"godot_version":"4.7-stable (official)","main_sha":"dd5b728f9487","peer":0.0,"pid":5408.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 3 peer(s) said hello
+PASS: two hosts on two ports (32181, 32182)
+PASS: host A opened its world
+PASS: host B opened its world
+PASS: host A recorded its world flag
+PASS: host B recorded its world flag
+PASS: host B's own world flag reads back, so its later absence checks are live
+PASS: the traveller joined host A
+PASS: in world A the traveller sees A's world flag
+PASS: host A's ledger approved the traveller's personal flag
+PASS: the personal flag landed on the traveller
+PASS: the traveller saved its character
+PASS: the saved file is the traveller's ({ "id": "portable-smoke-traveller", "keys": ["character_id", "chosen_character", "created_at", "display_name", "equipment", "flags", "hotbar", "inventory", "last_played", "last_world_id", "last_world_instance_id", "migrated_from", "party", "pending_realm_entry", "player_pose", "realm", "realm_hearts", "realm_maps", "satchel_escrow", "satiety", "skills", "tournament_selection", "version"], "party": 0.0 })
+PASS: the traveller left world A
+PASS: host A is alone again
+PASS: the traveller's memory was blanked
+PASS: after the wipe the personal flag is gone from memory
+PASS: the same character joined host B
+PASS: its personal progress came back from its own character file
+PASS: in world B it sees B's world flag
+PASS: world A's flag did not come along (no world import)
+PASS: host B admitted the same stable id (["character-2745cbef622cbac5e48bb7e239362f5c", "portable-smoke-traveller"])
+PASS: host B's world never received world A's flag
+PASS: host A still holds its own world flag
+PASS: host A's own trainer never gained the traveller's flag
+PASS: the traveller never wrote a world file ([])
+PASS: the traveller keeps exactly its own portable character (["portable-smoke-traveller"])
+ALL CHECKS PASSED
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/portable5/net-join_portable_across_hosts-20260925T063608Z/SUMMARY.md ===
+# Net smoke run net-20260925T063608Z-5386
+
+Scene: world
+Peers: 3
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=5408 exited=true unexpected_exit=false
+- peer 1 (client) pid=5409 exited=true unexpected_exit=false
+- peer 2 (client) pid=5410 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED

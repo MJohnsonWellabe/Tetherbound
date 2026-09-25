@@ -117,11 +117,76 @@ func _init(world_state: RefCounted = null) -> void:
 	world = world_state
 
 
+## World flags whose id ends in a character id, so a receipt can only be
+## written by that character. `legendary_resolution` receipts record each
+## participant's own accept/refuse under the per-participant legendary rule.
+## Override or extend with `ledger.owned_flag_prefixes` in multiplayer.json.
+const OWNED_FLAG_PREFIXES := [
+	"legendary_resolution:accepted:",
+	"legendary_resolution:refused:",
+	"stormwood:legendary_resolution:accepted:",
+	"stormwood:legendary_resolution:refused:",
+	"tidewake:legendary_resolution:accepted:",
+	"tidewake:legendary_resolution:refused:",
+]
+const MULTIPLAYER_CONFIG := "res://data/config/multiplayer.json"
+## Configured prefixes must name a legendary resolution receipt, so a broad
+## entry such as "stormwood:" cannot silently lock ordinary world flags.
+const OWNED_FLAG_PREFIX_MARK := "legendary_resolution:"
+const HOST_PEER := preload("res://scripts/net/peer_registry.gd").HOST_PEER_ID
+
+static var _owned_prefixes: Array = []
+
+var _actor_character := ""
+
+
+static func owned_flag_prefixes() -> Array:
+	if _owned_prefixes.is_empty():
+		_owned_prefixes = OWNED_FLAG_PREFIXES.duplicate()
+		var file := FileAccess.open(MULTIPLAYER_CONFIG, FileAccess.READ)
+		if file != null:
+			var parsed: Variant = JSON.parse_string(file.get_as_text())
+			if parsed is Dictionary:
+				var configured: Variant = ((parsed as Dictionary).get("ledger", {}) as Dictionary) \
+					.get("owned_flag_prefixes", []) if (parsed as Dictionary).get("ledger") is Dictionary else []
+				if configured is Array:
+					for prefix: Variant in configured:
+						if prefix is String and (prefix as String).contains(OWNED_FLAG_PREFIX_MARK) \
+								and (prefix as String).ends_with(":") and not _owned_prefixes.has(prefix):
+							_owned_prefixes.append(prefix)
+	return _owned_prefixes
+
+
+## A remote peer may write an owned receipt only for its own registered
+## character. The host's own writes stay trusted: host code records receipts
+## for participants it has already validated. `actor_character_id` is filled
+## in by the host from the session registry (`ledger_rpc.gd`), never taken
+## from the request.
+static func owned_flag_allowed(id: String, peer_id: int, actor_character_id: String) -> bool:
+	for prefix: String in owned_flag_prefixes():
+		if id.begins_with(prefix):
+			if peer_id == HOST_PEER:
+				return true
+			var owner := id.trim_prefix(prefix)
+			return not owner.is_empty() and owner == actor_character_id
+	return true
+
+
 # --- the one entry point ------------------------------------------------------
 
 ## Validate `intent` and, if it survives, commit it. `peer_id` is who asked --
 ## the requesting peer on the host, the local peer solo.
 func commit(intent: Dictionary, peer_id: int = 1) -> Dictionary:
+	# Filled in by the host from the session registry (ledger_rpc.gd), never
+	# taken from the request; `_commit` checks owned receipts against it. It
+	# lives only for this call, so no later `_commit` caller inherits it.
+	_actor_character = str(intent.get("_actor_character_id", ""))
+	var verdict := _commit_intent(intent, peer_id)
+	_actor_character = ""
+	return verdict
+
+
+func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 	var kind := str(intent.get("kind", ""))
 	var realm := str(intent.get("realm", ""))
 	if world == null:
@@ -435,7 +500,27 @@ func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Diction
 	var arch_at := Vector3(float(request_position[0]), float(request_position[1]), float(request_position[2]))
 	if realm == "stormwood" and id != "stormglass_arch" and not STORMWOOD_ARCH_BUILD.footing_at(arch_at).is_empty():
 		return _refuse("place_building", peer_id, "arch_footing", "This old footing accepts only a Stormglass Arch.")
+	var committed_position: Variant = intent.get("position")
+	var committed_yaw := float(intent.get("yaw_deg", 0.0))
 	if id == "stormglass_arch":
+		# Snap first, then judge: the footing centre and facing the client
+		# preview snaps to (build_placer.gd) are what gets committed, so the
+		# placement rules, occupancy and cost are evaluated there too, not at
+		# wherever inside the 5 m footing radius the request landed. Height
+		# stays the request's ground-clamped y.
+		var socket := STORMWOOD_ARCH_BUILD.footing_at(arch_at)
+		if not socket.is_empty():
+			var centre := Vector3(float(socket.at[0]), arch_at.y, float(socket.at[1]))
+			for row: Dictionary in STORMWOOD_ARCH_BUILD.records(world.get("placed_buildings")):
+				var raw: Array = row.get("position", [])
+				var here := Vector2(float(raw[0]), float(raw[2])) if raw.size() == 3 else Vector2.INF
+				if str(row.get("arch_footing", "")) == str(socket.get("id", "")) \
+						or here.distance_to(Vector2(centre.x, centre.z)) < 5.0:
+					return _refuse("place_building", peer_id, "arch_occupied",
+						"Another arch already occupies this footing.")
+			arch_at = centre
+			committed_position = centre
+			committed_yaw = float(socket.get("yaw_deg", committed_yaw))
 		arch_plan = STORMWOOD_ARCH_BUILD.placement(arch_at, realm, world.get("flags"), world.get("placed_buildings"))
 		if not bool(arch_plan.ok):
 			return _refuse("place_building", peer_id, "arch_locked", str(arch_plan.reason))
@@ -450,8 +535,8 @@ func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Diction
 		"realm": realm,
 		"uid": uid,
 		"id": id,
-		"position": _position(intent.get("position")),
-		"yaw_deg": float(intent.get("yaw_deg", 0.0)),
+		"position": _position(committed_position),
+		"yaw_deg": committed_yaw,
 		"paid": bool(intent.get("paid", true)),
 	}
 	if not txn.is_empty():
@@ -901,6 +986,14 @@ func _position(raw: Variant) -> Array:
 ## mutating here is deliberate: the host and every client then run the exact
 ## same apply code over the exact same ops.
 func _commit(ops: Array, kind: String, peer_id: int, realm: String) -> Dictionary:
+	# One gate for every intent kind that writes a world flag: an owned receipt
+	# can only be written (or cleared) by the character it names.
+	for op: Variant in ops:
+		if op is Dictionary and str((op as Dictionary).get("op", "")) == "flag" \
+				and str((op as Dictionary).get("scope", "")) == "world" \
+				and not owned_flag_allowed(str((op as Dictionary).get("id", "")), peer_id, _actor_character):
+			return _refuse(kind, peer_id, "not_your_character",
+				"Only that character can record their own choice.")
 	seq += 1
 	var delta := {"seq": seq, "realm": realm, "ops": ops}
 	apply(delta)

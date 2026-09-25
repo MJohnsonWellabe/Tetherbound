@@ -106,3 +106,132 @@ The last observed clock was 04:05 UTC; the next observation during the resumed c
 These are retrospective evidence reconstructions, not checkpoints actually performed on time. The broad run stops now; only preservation, final integration checks and the required fresh-session tail continue. No new feature phase is started. The goal is incomplete; neither a completion nor an external-blocker claim is justified.
 
 Recovery validation after the stop found a passing35-check actual Guardian offer/five-holder choice/disk receipt/world settlement/physical shrine placement and activation. The earlier16-check Nerissa battle/release path is also reviewed. Once preserved on the branch, final evidence score is **35/100**: Veilfall6/14 (+3), relic1/2 (+1), all other03:55 row values unchanged. This recovery credit does not retroactively rescue either missed window or restart the run. Visible current restoration, continuous finale travel, four-player authority and blind visual acceptance remain unproven. Main Water score remains0.
+
+## F13 reward pockets (branch `ralph/water-reward-pockets`)
+
+Six of the eight authored `reward_pockets` held nothing: no pickup sat within
+any pocket's radius. Each of the six single-item pockets now holds one
+existing Skill Candy row, moved to the pocket centre on dry ground reachable
+from its island's landing:
+- `brine_steps:pickup:001` (tier I)
+- `salt_crown:pickup:001` (tier I)
+- `lantern_cove:pickup:002` (tier I)
+- `gull_rest:pickup:002` (tier II)
+- `drowned_garden:pickup:002` (tier II)
+- `deep_watch:pickup:002` (tier III)
+
+Ids, items, tiers, quantities and the per-character claim are unchanged. The
+7/4/1 candy split holds, and so do the counts: 200 pickups, 182 harvest nodes.
+
+`tests/test_water_reward_pockets.gd` checks, for each pocket:
+- exactly one matching row;
+- the authored y equals the analytic ground;
+- dry-ground reachability from a landing;
+- the file's own clearances from NPCs, trainers, camps, dock equipment and
+  landings;
+- 5.99 m separation from other placements;
+- host claim acceptance from standing spots within 3D reach;
+- refusal at each row's former position.
+
+It fails on the old data. Local, on main `bcf46366`: 16 tests, 16,342
+assertions, 0 failed; `smoke_water_scene_pickups` 23/0.
+
+### Follow-ups (branch `ralph/water-pockets-followups`)
+
+**Walked and claimed in engine.** `tests/smoke_water_pocket_walk_claim.gd`
+runs in the production Water scene, which has baked Terrain3D ground, the
+production pickup streamer, the interaction arbiter and the host ledger.
+
+For each pocket, the trainer is placed once on the island's authored arrival
+landing (a disclosed fixture). From there the trainer walks with stick input
+only. The route is planned by the harness over baked ground: dry cells within
+35° (1 m central difference), keeping to the island's graded `land_routes`
+trail and leaving it only for the spur to the pocket. The claim is one real
+Interact press on the production prompt. The smoke asserts that the item
+reaches the inventory, that the personal receipt is recorded, and that the
+pickup is no longer resident.
+
+| Pocket | Walked | Off-trail spur (steepest) | Baked y | Analytic y | Claim distance, 3D | Result |
+|---|---|---|---|---|---|---|
+| brine_upper_shelf | 483 m | 149 m (32.9°) | 46.317 | 46.318 | 1.31 m | accepted |
+| salt_bell_terrace | 463 m | 159 m (31.9°) | 56.080 | 56.080 | 1.19 m | accepted |
+| lantern_hidden_cache | 204 m | 63 m (8.2°) | 15.829 | 15.829 | 1.14 m | accepted |
+| gull_research_satchel | 129 m | 21 m (34.2°) | 22.677 | 22.677 | 1.19 m | accepted |
+| garden_exposed_vault | 224 m | 40 m (33.0°) | 27.864 | 27.864 | 1.14 m | accepted |
+| deep_watch_tidecoil_cache | 231 m | 18 m (32.0°) | 36.123 | 36.123 | 1.20 m | accepted |
+
+The baked and analytic ground agree within 1 mm at every candy. The feared
+`too_far` refusal does not occur: every claim is made at about 1.2 m, and the
+host limit is 3.6 m. No row needed moving.
+
+The Brine Steps arrival basin does not connect to the shelf over terrain
+within 35°. The walk reaches it by the graded spine and then around the far
+side.
+
+**Cradle care payout (`side_water_cradle_care`).** WORLD specifies 4 Reef
+Stone plus 3 berries, once, at `cradle_shell_nest`. Two existing Tidal Cradle
+rows now sit in the nest:
+- `tidal_cradle:harvest:007`: Reef Stone, yield 2→4, one pickaxe gather.
+  Harvest nodes never regrow: a world progression flag is set and the node is
+  freed, so this is once per world.
+- `tidal_cradle:pickup:009`: berries, quantity 1→3, an ordinary once-per-world
+  find.
+
+**Co-op consequence:** both rows are world-once. In a 1–4 player session, only
+the first gatherer gets the Cradle care payout. A second participant cannot
+complete WORLD's "gather 4 Reef Stone" step at the nest after it is taken.
+**The payout also comes before its chain:** WORLD grants the +3 berries on
+returning to Otto, but here they can be picked up at the nest from a new game
+onward, with no Otto step.
+
+The world total changes by the spec's amounts (+2 Reef Stone, +2 berries).
+Row, island and item counts are unchanged, and so are the saddle's 4 Reef
+Stone by the Cradle arrival (harvest 005/006). The smoke walks 500 m from the
+arrival and gains exactly +4 Reef Stone and +3 berries through Interact. The
+walk legs do not assert that the trainer stayed on land. A route that swam
+round a headland would still pass, though no run has shown swimming.
+
+Not built, because they need code outside this lane's data:
+- Otto's pointer;
+- return-to-Otto acknowledgement;
+- the alternate-swimmer map lead.
+
+**Deep Watch gate: not implemented.** Water pickup rows have no gate field,
+and neither the host rule (`water_personal_pickup.gd`) nor the streamer
+(`water_scene_pickups.gd`) reads one.
+
+The flag does have a writer. The Tidecoil named encounter's
+`completion_flag` (`water_encounters.json`) is its `once_id`, and a win or
+catch records it through `_mark_once_cleared` → `progression.set_flag`. That
+write goes to local progression, not through the ledger, so in co-op it is not
+host-routed.
+
+What is missing is the gate itself:
+- a `requires_world_flags` reader in the host rule and in the streamer;
+- host or ledger routing of the Tidecoil resolution, for co-op.
+
+Candy III is still claimable without the Tidecoil chain.
+
+**Capture:** `_sheet_reward_pockets.jpg` (1278×720, 229 KB; replaces the
+2.1 MB PNG), from `tools/capture_water_reward_pockets.gd`. The trainer stands
+on the planned approach 5 m short of each find. The camera looks along the
+approach, pitched down 24° and turned 14°. The candy glow is visible in 6 of
+6 candy frames (frames 1 and 3–7). Frame 2, top middle, is the Cradle nest:
+the berries are visible, but the Reef Stone seam is only a small grey rock and
+not clearly identifiable.
+These frames are from a close approach; long-range discoverability (a cairn,
+torch or clearing) is still an open F13 item.
+
+### Proposed conservative resolutions for open decisions (for STATE)
+
+1. **Drowned Garden and Deep Watch chains are reachable only with a swim
+   saddle,** which conflicts with the retained-five rule. Proposal: give their
+   sheltered routes rest shoals, as the 17 existing ones do (Salt Crown→Drowned
+   Garden 672 m, Sluice→Deep Watch 315 m). That makes them level-0
+   human-reachable at the ≥20% reserve bar, and mounts stay the faster option.
+   It needs a heightfield and Terrain3D re-bake (a Godot writer); no new
+   mechanic.
+2. **The composite pocket `reed_root_hollow` (`recipe_and_reed_fiber`) has no
+   item.** Proposal: pay reed fiber through an ordinary world-once row, with no
+   new item and no recipe unlock. (`cradle_shell_nest` is now paid; see the
+   follow-ups above.)

@@ -962,14 +962,15 @@
       "item_id": "skill_candy_i",
       "quantity": 1,
       "position": [
-        372.0,
-        40.1194,
-        552.0
+        516.431,
+        46.3178,
+        615.033
       ],
       "off_main_route": true,
-      "main_route_distance_m": 72.998,
-      "sampled_slope_deg": 27.997,
-      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "main_route_distance_m": 145.649,
+      "sampled_slope_deg": 27.37,
+      "placement_reason": "Placed at the centre of authored reward pocket brine_upper_shelf (water_world.json reward_pockets); analytic heightfield dry (at least 0.8 m above sea) and within the 35° walkable slope limit (measured 27.4°), flood-fill connected to the island landing; walked from the arrival landing and claimed in tests/smoke_water_pocket_walk_claim.gd.",
+      "reward_pocket_id": "brine_upper_shelf",
       "claim_policy": "character_once",
       "registration": "planned",
       "glow_colour": "#17121c",
@@ -1830,18 +1831,19 @@
       "island_id": "tidal_cradle",
       "category": "food",
       "item_id": "berries",
-      "quantity": 1,
+      "quantity": 3,
       "position": [
-        592.0,
-        30.7692,
-        1668.0
+        813.703,
+        55.1823,
+        1647.945
       ],
       "off_main_route": true,
-      "main_route_distance_m": 49.403,
-      "sampled_slope_deg": 34.786,
-      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "main_route_distance_m": 25.489,
+      "sampled_slope_deg": 31.102,
+      "placement_reason": "Moved into authored reward pocket cradle_shell_nest (water_world.json reward_pockets) for side_water_cradle_care (docs/design/WORLD.md, Tidewake local chains): the chain's '+3 berries, once' as one ordinary world-once find (quantity 1 -> 3). Analytic dry footing within the 35° walkable slope limit (measured 31.1°). Census item counts remain row counts. Walked and claimed in tests/smoke_water_pocket_walk_claim.gd.",
       "claim_policy": "existing_world_pickup_policy",
-      "registration": "installed"
+      "registration": "installed",
+      "reward_pocket_id": "cradle_shell_nest"
     },
     {
       "id": "water:tidal_cradle:pickup:010",
@@ -2048,14 +2050,15 @@
       "item_id": "skill_candy_i",
       "quantity": 1,
       "position": [
-        6.0,
-        56.7837,
-        2316.0
+        30.731,
+        56.0802,
+        2393.513
       ],
       "off_main_route": true,
-      "main_route_distance_m": 79.076,
-      "sampled_slope_deg": 25.446,
-      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "main_route_distance_m": 136.782,
+      "sampled_slope_deg": 25.534,
+      "placement_reason": "Placed at the centre of authored reward pocket salt_bell_terrace (water_world.json reward_pockets); analytic heightfield dry (at least 0.8 m above sea) and within the 35° walkable slope limit (measured 25.5°), flood-fill connected to the island landing; walked from the arrival landing and claimed in tests/smoke_water_pocket_walk_claim.gd.",
+      "reward_pocket_id": "salt_bell_terrace",
       "claim_policy": "character_once",
       "registration": "planned",
       "glow_colour": "#17121c",
@@ -3080,14 +3083,15 @@
       "item_id": "skill_candy_i",
       "quantity": 1,
       "position": [
-        -326.0,
-        18.7614,
-        158.0
+        -407.668,
+        15.8292,
+        210.38
       ],
       "off_main_route": true,
-      "main_route_distance_m": 296.357,
-      "sampled_slope_deg": 13.085,
-      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "main_route_distance_m": 356.296,
+      "sampled_slope_deg": 8.062,
+      "placement_reason": "Placed at the centre of authored reward pocket lantern_hidden_cache (water_world.json reward_pockets); analytic heightfield dry (at least 0.8 m above sea) and within the 35° walkable slope limit (measured 8.1°), flood-fill connected to the island landing; walked from the arrival landing and claimed in tests/smoke_water_pocket_walk_claim.gd.",
+      "reward_pocket_id": "lantern_hidden_cache",
       "claim_policy": "character_once",
       "registration": "planned",
       "glow_colour": "#17121c",
@@ -3230,14 +3234,15 @@
       "item_id": "skill_candy_ii",
       "quantity": 1,
       "position": [
-        -52.0,
-        3.6197,
-        804.0
+        -17.84,
+        22.677,
+        883.976
       ],
       "off_main_route": true,
-      "main_route_distance_m": 295.295,
-      "sampled_slope_deg": 15.459,
-      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "main_route_distance_m": 294.932,
+      "sampled_slope_deg": 16.803,
+      "placement_reason": "Placed at the centre of authored reward pocket gull_research_satchel (water_world.json reward_pockets); analytic heightfield dry (at least 0.8 m above sea) and within the 35° walkable slope limit (measured 16.8°), flood-fill connected to the island landing; walked from the arrival landing and claimed in tests/smoke_water_pocket_walk_claim.gd.",
+      "reward_pocket_id": "gull_research_satchel",
       "claim_policy": "character_once",
       "registration": "planned",
       "glow_colour": "#17121c",
@@ -3344,14 +3349,15 @@
       "item_id": "skill_candy_ii",
       "quantity": 1,
       "position": [
-        1158.0,
-        41.732,
-        2270.0
+        1200.0,
+        27.8642,
+        2337.6
       ],
       "off_main_route": true,
-      "main_route_distance_m": 646.115,
-      "sampled_slope_deg": 13.152,
-      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "main_route_distance_m": 603.868,
+      "sampled_slope_deg": 19.034,
+      "placement_reason": "Placed at the centre of authored reward pocket garden_exposed_vault (water_world.json reward_pockets); analytic heightfield dry (at least 0.8 m above sea) and within the 35° walkable slope limit (measured 19.0°), flood-fill connected to the island landing; walked from the arrival landing and claimed in tests/smoke_water_pocket_walk_claim.gd.",
+      "reward_pocket_id": "garden_exposed_vault",
       "claim_policy": "character_once",
       "registration": "planned",
       "glow_colour": "#17121c",
@@ -3602,14 +3608,15 @@
       "item_id": "skill_candy_iii",
       "quantity": 1,
       "position": [
-        1398.0,
-        41.6145,
-        3542.0
+        1409.751,
+        36.1234,
+        3550.137
       ],
       "off_main_route": true,
-      "main_route_distance_m": 619.154,
-      "sampled_slope_deg": 19.868,
-      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine.",
+      "main_route_distance_m": 633.252,
+      "sampled_slope_deg": 22.177,
+      "placement_reason": "Placed at the centre of authored reward pocket deep_watch_tidecoil_cache (water_world.json reward_pockets); analytic heightfield dry (at least 0.8 m above sea) and within the 35° walkable slope limit (measured 22.2°), flood-fill connected to the island landing; walked from the arrival landing and claimed in tests/smoke_water_pocket_walk_claim.gd.",
+      "reward_pocket_id": "deep_watch_tidecoil_cache",
       "claim_policy": "character_once",
       "registration": "planned",
       "glow_colour": "#17121c",
@@ -5178,17 +5185,18 @@
       "id": "water:tidal_cradle:harvest:007",
       "island_id": "tidal_cradle",
       "item_id": "reef_stone",
-      "yield": 2,
+      "yield": 4,
       "position": [
-        568.0,
-        7.998,
-        1698.0
+        817.945,
+        55.1823,
+        1643.703
       ],
-      "sampled_slope_deg": 23.314,
-      "main_route_distance_m": 26.768,
+      "sampled_slope_deg": 31.102,
+      "main_route_distance_m": 31.397,
       "registration": "planned",
       "gather_action": "pickaxe",
-      "placement_reason": "Dry exposed stone on a reachable shore or low terrace."
+      "placement_reason": "Moved into authored reward pocket cradle_shell_nest (water_world.json reward_pockets) for side_water_cradle_care (docs/design/WORLD.md, Tidewake local chains): the nest's exposed seam pays the chain's 4 Reef Stone in one pickaxe gather (yield 2 -> 4; bare hands pay nothing for a pickaxe resource). Analytic dry footing within the 35° walkable slope limit (measured 31.1°); walked and gathered in tests/smoke_water_pocket_walk_claim.gd.",
+      "reward_pocket_id": "cradle_shell_nest"
     },
     {
       "id": "water:tidal_cradle:harvest:008",

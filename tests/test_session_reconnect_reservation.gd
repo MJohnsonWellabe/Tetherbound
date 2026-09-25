@@ -1,0 +1,126 @@
+extends "res://tests/test_case.gd"
+
+## X05 / MULTIPLAYER §1.1 and §5: a dropped joiner's character keeps its seat
+## for `session.reconnect_window_s`.
+
+const REGISTRY := preload("res://scripts/net/peer_registry.gd")
+const T0 := 1_000_000
+const WINDOW := 120_000
+
+
+func _full_two_seat_registry_with_one_drop() -> RefCounted:
+	var reg := REGISTRY.new()
+	reg.add(1, "host-char")
+	reg.add(222, "friend-char")
+	reg.remove(222)
+	assert_true(reg.reserve("friend-char", T0 + WINDOW))
+	return reg
+
+
+func test_held_seat_refuses_a_different_character_with_a_readable_reason() -> void:
+	var reg := _full_two_seat_registry_with_one_drop()
+	var verdict: Dictionary = reg.admission_verdict(333, "stranger-char", 2, T0 + 1000)
+	assert_false(bool(verdict["ok"]))
+	assert_eq(verdict["code"], "session_full")
+	assert_true(str(verdict["reason"]).contains("A seat is being held for a player who is reconnecting"),
+		str(verdict["reason"]))
+	assert_true(str(verdict["reason"]).begins_with("This session is full (2/2)."), str(verdict["reason"]))
+
+
+func test_returning_character_reclaims_its_held_seat_under_a_new_peer_id() -> void:
+	var reg := _full_two_seat_registry_with_one_drop()
+	var verdict: Dictionary = reg.admission_verdict(444, "friend-char", 2, T0 + WINDOW - 1)
+	assert_true(bool(verdict["ok"]), str(verdict))
+	assert_false(reg.add(444, "friend-char").is_empty())
+	assert_false(reg.has_reservation("friend-char", T0 + WINDOW - 1), "the rejoin consumed the seat")
+	assert_eq(reg.size(), 2)
+	var after: Dictionary = reg.admission_verdict(555, "stranger-char", 2, T0 + WINDOW - 1)
+	assert_eq(after["reason"], "This session is full (2/2).", "no seat is held any more")
+
+
+func test_held_seat_lapses_at_the_window() -> void:
+	var reg := _full_two_seat_registry_with_one_drop()
+	assert_eq(reg.reservation_count(T0 + WINDOW - 1), 1)
+	var verdict: Dictionary = reg.admission_verdict(333, "stranger-char", 2, T0 + WINDOW)
+	assert_true(bool(verdict["ok"]), "the seat is free once the window has passed")
+	assert_eq(reg.reservation_count(T0 + WINDOW), 0)
+
+
+func test_reservation_counts_only_against_others_when_seats_remain() -> void:
+	var reg := REGISTRY.new()
+	reg.add(1, "host-char")
+	reg.add(222, "a")
+	reg.remove(222)
+	reg.reserve("a", T0 + WINDOW)
+	assert_true(bool(reg.admission_verdict(333, "b", 4, T0)["ok"]), "1 live + 1 held of 4 leaves room")
+	reg.add(333, "b")
+	assert_true(bool(reg.admission_verdict(444, "c", 4, T0)["ok"]))
+	reg.add(444, "c")
+	assert_false(bool(reg.admission_verdict(555, "d", 4, T0)["ok"]), "3 live + 1 held fills 4")
+	assert_true(bool(reg.admission_verdict(556, "a", 4, T0)["ok"]), "but 'a' still has its seat")
+
+
+func test_reservation_is_host_bookkeeping_not_replicated_state() -> void:
+	var reg := _full_two_seat_registry_with_one_drop()
+	var shape: Dictionary = reg.save_data()
+	assert_eq((shape["rows"] as Array).size(), 1)
+	assert_false(JSON.stringify(shape).contains("friend-char"), "the held seat is not on the wire")
+	var bare := REGISTRY.new()
+	bare.add(1, "host-char")
+	assert_eq(reg.fingerprint(), bare.fingerprint())
+
+
+func test_live_or_empty_characters_are_not_reserved_and_clear_drops_seats() -> void:
+	var reg := REGISTRY.new()
+	reg.add(1, "host-char")
+	assert_false(reg.reserve("", T0 + WINDOW))
+	assert_false(reg.reserve("host-char", T0 + WINDOW), "a connected character needs no seat")
+	assert_true(reg.reserve("gone", T0 + WINDOW))
+	reg.clear()
+	assert_eq(reg.reservation_count(T0), 0, "ending the session releases every held seat")
+
+
+func test_goodbye_teardown_ends_the_session_and_detaches_only_the_transport() -> void:
+	const SESSION := preload("res://scripts/net/session.gd")
+	var session := SESSION.new()
+	var transport := ENetMultiplayerPeer.new()
+	assert_eq(transport.create_client("127.0.0.1", 9), OK)
+	session.set("_peer", transport)
+	session.set("_mode", "client")
+	session.call("_teardown", true)
+	assert_false(session.is_active(), "no closing client session remains for a title to trip over")
+	assert_true(session.is_host(), "the process may host straight away")
+	assert_true(session.get("_lingering_peer") == transport, "only the transport waits for the host")
+	assert_ne(transport.get_connection_status(), MultiplayerPeer.CONNECTION_DISCONNECTED,
+		"the goodbye's transport is not closed under it")
+	session.set("_lingering_deadline_ms", 0)
+	session.call("_poll_lingering_peer")
+	assert_true(session.get("_lingering_peer") == null, "the bound closes a silent host's link")
+	assert_eq(transport.get_connection_status(), MultiplayerPeer.CONNECTION_DISCONNECTED)
+	session.free()
+
+
+func test_unadmitted_client_leave_tears_down_at_once() -> void:
+	const SESSION := preload("res://scripts/net/session.gd")
+	var session := SESSION.new()
+	session.set("_mode", "client")
+	session.set("_box", {"connected": true, "handshake_snapshot_applied": false})
+	session.leave("join_failed")
+	assert_eq(session.mode(), "", "no goodbye wait for a client that was never admitted")
+	assert_eq(int(session.get("_closing_frames")), 0)
+	session.free()
+
+
+func test_a_new_join_closes_a_still_lingering_transport_first() -> void:
+	const SESSION := preload("res://scripts/net/session.gd")
+	var session := SESSION.new()
+	var old := ENetMultiplayerPeer.new()
+	assert_eq(old.create_client("127.0.0.1", 9), OK)
+	session.set("_peer", old)
+	session.set("_mode", "client")
+	session.call("_teardown", true)
+	assert_true(session.get("_lingering_peer") == old)
+	assert_false(session.join_with_peer(null, {}, "test"), "a null peer is still refused")
+	assert_true(session.get("_lingering_peer") == null, "the old transport was closed before dialling")
+	assert_eq(old.get_connection_status(), MultiplayerPeer.CONNECTION_DISCONNECTED)
+	session.free()

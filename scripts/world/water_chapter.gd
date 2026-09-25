@@ -22,6 +22,8 @@ func build(owner_world: Node3D) -> void:
 	world.add_child(cast)
 	npc_bodies = cast.build(world)
 	cast.guarded_event_requested.connect(_on_dialogue_request)
+	# Edda's Guardian offer only for a character that may still answer.
+	preload("res://scripts/world/water_guardian_reward.gd").gate_edda_offer(cast, npc_bodies, _game)
 	if world.simulation_only:
 		cast.visible = false
 		for body: Node3D in npc_bodies.values():
