@@ -260,11 +260,15 @@ func _final(p: Dictionary, base: Dictionary) -> Dictionary:
 			out[key] = Color(c.r * k, c.g * k, c.b * k)
 	# Night readability (ART_DIRECTION: night keeps the trainer and route
 	# readable) is art.json's night tuning; a storm neither lifts nor sinks
-	# it, so the phase's ambient-energy cut releases toward 1.0 as night
-	# falls (squared, so it holds through dusk).
+	# it, so the phase's ambient- and sun-energy cuts release toward 1.0 as
+	# night falls (squared, so they hold through dusk). At night the phases
+	# read from sky, ceiling, rain and flash instead.
 	var floor_k := float(_pres_cfg().get("night_scale_floor", 0.12))
 	var day_t := clampf((k - floor_k) / maxf(0.001, 1.0 - floor_k), 0.0, 1.0)
 	out["ambient_energy_mult"] = lerpf(1.0, float(out.get("ambient_energy_mult", 1.0)), day_t * day_t)
+	# Same for the key light: at night it is art.json's moonlight, which
+	# carries the trainer/route read; the storm's daytime sun cut releases.
+	out["sun_energy_mult"] = lerpf(1.0, float(out.get("sun_energy_mult", 1.0)), day_t * day_t)
 	out["night_scale"] = k
 	if out.has("ambient_colour") and base.has("ambient_colour"):
 		var storm: Color = out.ambient_colour

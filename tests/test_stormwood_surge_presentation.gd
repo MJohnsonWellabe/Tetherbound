@@ -190,6 +190,7 @@ func test_storm_ambient_never_brightens_the_night() -> void:
 		assert_true(float(delta.environment.ambient_energy_mult) <= 1.0, "%s: no ambient energy boost" % phase)
 		assert_true(float(delta.environment.ambient_energy_mult) >= 0.9,
 			"%s: at night the storm does not sink art.json's night readability either" % phase)
+		assert_true(float(delta.sun.energy_mult) >= 0.9, "%s: moonlight keeps the night read" % phase)
 		var day_base := _real_base(surge, 8.0)
 		var day := Color(str(surge.light_delta_for_phase(phase, false, day_base).environment.ambient_colour))
 		var authored := Color(str(rows[phase].ambient_colour))
