@@ -175,7 +175,7 @@ const QUALIFIED := [
 		"flag": "river_nest_doss_cleared", "reveal": "river_nest_doss_met",
 		"reveal_conversation": "river_nest_doss_challenge",
 		"ack": "river_nest_doss_defeated", "local_row": true,
-		"conditional": "current-main repeat/reload step fails in smoke_local_requests; reload rests on an older rendered log"},
+		"conditional": "passes alone on current main (smoke_local_requests --only=doss), but its repeat step fails when run after herd/bram/juno in one session: order-dependent, open"},
 	{"id": "band4_lost_creature", "region": "upper_meadows", "kind": "trainer",
 		"trainer": "lost_creature_rue", "flag": "defeated_lost_creature_rue",
 		"reveal": "lost_creature_rue_met", "reveal_conversation": "pasture_drover_juno_challenge",
