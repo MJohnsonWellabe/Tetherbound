@@ -46,10 +46,10 @@ Reusable authored behavior profiles are starting tuning:
 | Profile | Target behavior |
 |---|---|
 | WALL | telegraph .85 s, recovery 1.1 s, power ×1.5, chase 3.4, reposition 2.5; holds ground and gives a long punish window |
-| CHARGER | preferred range 4.5 m, lunge 7 m, telegraph .6 s, recovery .9 s, cooldown 1.6 s, power ×1.3; distance is part of the cue |
+| CHARGER | preferred range 4.5 m, lunge 7 m, telegraph .8 s, recovery .9 s, cooldown 1.6 s, power ×1.3; distance is part of the cue |
 | DIVER | telegraph .4 s only with long positional cue, lunge 5.5 m, reposition 7 m/1.6 s, cooldown .9 s, power ×.9 |
 | CURRENT | cooldown .7 s, recovery .55 s, reposition .5 s/2 m, power ×.8; sustained pressure rather than burst damage |
-| ACE | telegraph 1.0 s, recovery 1.2 s, lunge 6 m, cooldown 1.8 s, first delay 2.5 s, power ×1.8 |
+| ACE | telegraph 1.1 s, recovery 1.2 s, lunge 6 m, cooldown 1.8 s, first delay 2.5 s, power ×1.8 |
 
 These profile values came from the recovered Gate 3 contract. Per-body combat overrides exist in some Meadows data, but each consumer must be source-verified before the row is called built.
 
@@ -210,7 +210,7 @@ Venn is the exterior Veilfall exam. Cannonback uses WALL space control, Riptusk 
 
 ### 4.12 Abyssal Guardian — Tidewake, L55 offer
 
-This is not a combat boss. The Guardian is captive until Nerissa falls. Interacting with the tether records `water_tether_disabled` and `water_guardian_freed`; the freed creature then volunteers. The first valid nearby stable character may reserve the one offer. Save occurs before delivery. A full team opens the existing ceremony; refusal still settles the offer.
+This is not a combat boss. The Guardian is captive until Nerissa falls. Interacting with the tether records `water_tether_disabled` and `water_guardian_freed`; the freed creature then volunteers. Under the settled legendary rule (CLAUDE.md, WORLD §2.3, ACCEPTANCE §6), freeing the Guardian is one world freeing, and **every participant in the Nerissa fight that freed it receives their own once-only offer** bound to their stable character; a non-participant receives nothing and no character is offered twice. Each participant may accept or refuse, with space or through the existing full-team ceremony; a refusal settles that character's offer. World restoration settles on the first resolution (accept or refuse) and never waits on an absent participant. Save occurs before delivery. The superseded one-recipient-per-world reading is withdrawn; current code still implements it and is an open F14 defect.
 
 Settlement records `water_guardian_settled`, `water_currents_restored` and `realm_relic_water_earned`. Tideglass is placed later at the Meadows home shrine. All present peers see the restored-current world, but only the chosen stable character can receive the creature.
 

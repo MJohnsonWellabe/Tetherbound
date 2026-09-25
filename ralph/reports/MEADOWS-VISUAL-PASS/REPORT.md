@@ -357,5 +357,55 @@ Other defects it named:
   - the hero peak made smaller;
   - the impact burst made brighter;
   - the Terrapup and Bramblebun texture changes.
-- **Not done:** the R9 capture and blind re-judge were stopped at the owner's request.
-- **Next step:** run `tools/survey.sh`, the quick tour with `--locations-only` and `tools/survey_combat.sh`, then the visual-judge skill.
+- **Not done at hand-off:** the R9 capture and blind re-judge. Both were run after the merge, as recorded below.
+
+## Round 5, R9 blind re-judge (PR215 head 5dd9abb1c)
+
+Frames: 17 real in-game frames on the Compatibility renderer.
+- 5 landscape frames from `tools/survey.sh`.
+- 4 frames from `_capture_quick_tour_meadows.gd --locations-only`: village day, village night, quarry, relay. The tour ran past its 1200s budget and skipped the mill-pond and stronghold-gate stands.
+- 8 combat frames from `tools/survey_combat.sh`.
+
+The judge saw only the contact sheet, the frames and `docs/reference/`. Contact sheet: `_sheet_round5_r9.png`.
+
+**Verdict: (A) key art: no. (B) Palworld: yes.** This is unchanged from R7, so the bar is not met.
+- **What carried it:** the village, day and night (T-01).
+- **What sank it:** no water or winding paths in frame, no hero landmark, and a muddy low-sun frame (S-05).
+- **B, with the gap:** the genre reads at a glance, but the frames sit well below Palworld's tier.
+
+**Ranked gaps**
+1. **Creature art.**
+   - Every creature in frame is orange-tan clay with blotchy, generator-looking colour and scribbled creases (C-02 to C-07). At 30% they read as brown lumps on green.
+   - The creatures don't share a style with the village.
+   - The trainer is the best-made character in the build.
+2. **Fights aren't events.**
+   - The dithered ally reads as a ghost in C-03 and C-05. The survey pilot forces the camera yaw, so the tracker swing never runs and every occluded frame shows the dither fallback.
+   - The magenta tell ring and the faint hit chevrons don't read as impacts.
+   - In C-08 the camera is wedged against a leg, and the nameplate hides the orb.
+3. **Empty, flat land against a painted backdrop.**
+   - S-02 to S-04 show uniform scatter with no paths, clearings or water.
+   - The mountains are a flat card, with a hard seam behind the terrain in S-03.
+
+**Other defects named**
+- **Colour on friendly elements.** The player's HP bar turns salmon-red (C-07, C-08), the wild creature's bar turns red (C-06), and the tell ring is hot magenta (C-04, C-05). Oxblood reservation fails at the HUD.
+- **Low sun (S-05).** Khaki and muddy, with the sun disc still high; shadow-map stair-stepping in S-01 and S-05.
+- **Floating well slab (T-01).** The well's paving slab reads as floating.
+- **Moon (T-01 night).** The moon is still an ellipse.
+- **Unreadable HUD text.** Small type for the most urgent warning (C-04, C-05); ~11px LEVEL/GROUND labels (C-02); unboxed aim prompts (C-07); a faded 59% readout (C-08).
+- **Low-quality surfaces.** Smeared ground texture under the grass (S-01, S-02, S-05); a smooth blob boulder (S-02); a flat wall plane and a placeholder door (T-02); a low-poly campfire flame (T-03).
+- **Scale.** Bramblebun is knee-high and the boar about 1m against the 1.80m trainer (C-02, C-06). Terrapup is about 1.4× the trainer.
+
+**Fixable in the scene, now open work**
+- Survey pilot: take a neutral-look fight frame, so the swing is judged rather than the dither.
+- Dither: reconsider it as the fallback, since the judge reads it as a ghost again.
+- Fight VFX and hit feedback.
+- HUD: remove red and magenta from friendly elements; fix text hierarchy.
+- Camera clipping in C-01 and C-08.
+- Paths, clustering and clearings; composed landmarks; depth haze; low-sun grading.
+
+**Needs art not in the build**
+- Creature materials and colour identity for the whole roster. This is Meshy-eligible under the art rule; see the rejected Terrapup pilot above.
+- A 3D hero-mountain or terrain backdrop to replace the card.
+- A standing-stone or tower landmark.
+- Water in the survey stands.
+- One tree family to replace the lollipop trees.
