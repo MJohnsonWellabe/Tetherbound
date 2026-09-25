@@ -10,6 +10,9 @@ const FIELD_CONTROL := preload("res://scripts/world/stormwood_dynamo_field_contr
 const HOSTED := preload("res://scripts/combat/stormwood_hosted_trainer.gd")
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
+const HOME_RECOVERY := preload("res://scripts/creatures/home_recovery.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 
 const TRAINER_ID := "captain_marrow_dynamo_core"
 const MARROW_FLAG := "stormwood:marrow_defeated"
@@ -49,6 +52,15 @@ var _snapshot_left := 0.0
 var _last_fired_serial := -1
 var _local_action := 0
 var _completion_committed := false
+## Host: what remote fighters reported about their own creatures during Break
+## (`dynamo_ally_fainted`). A remote creature's hit points never replicate to
+## the host, so its owner says so; reporting it can only take yourself out.
+## `_ally_down` holds the reported creature uid, `_party_down` whole parties.
+var _ally_down: Dictionary = {}
+var _party_down: Dictionary = {}
+## Client: what this peer last reported, so each faint is sent once.
+var _reported_ally_uid := ""
+var _reported_party_down := false
 
 
 func mount(owner_world: Node3D) -> void:
@@ -160,6 +172,9 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 	if not session.is_host():
 		return
 	var kind := str(intent.get("kind", ""))
+	if kind == "dynamo_ally_fainted":
+		_note_reported_faint(peer, intent)
+		return
 	if kind == "dynamo_join":
 		if phase == "break_core" and _in_break_reach(peer):
 			_add_participant(peer, false)
@@ -212,7 +227,10 @@ func restore_progression_from_game(_game: Node) -> void:
 
 
 func _process(delta: float) -> void:
-	if rules == null or not session.is_host():
+	if rules == null:
+		return
+	if not session.is_host():
+		_report_own_faint()
 		return
 	if is_instance_valid(fight) and not bool(fight.get("finished")):
 		participants = _unique_peers(fight.get("participants"))
@@ -225,10 +243,12 @@ func _process(delta: float) -> void:
 		_admit_break_arrivals()
 		if _awaiting_break_party:
 			return
-		# A fighter whose creature fainted, was hidden or was put away is out of
-		# the Break; when nobody is left that is a full-party faint.
+		# A fighter is out of the Break only when they leave Stormwood or their
+		# whole party is down (COMBAT: "All five unavailable means loss"). With a
+		# conscious creature left they stay, and may send it out. When nobody
+		# is left that is the full-party faint of BOSSES §4.7.
 		for peer: int in participants.duplicate():
-			if _live_break_body(peer) == null:
+			if _party_out(peer):
 				participants.erase(peer)
 		if participants.is_empty() and _restored_break:
 			_awaiting_break_party = true
@@ -313,7 +333,11 @@ func _apply_local_hazard(event: Dictionary) -> void:
 	if manager.call("is_fighting"):
 		manager.call("apply_host_enemy_hit", {"damage": float(event.get("damage", 0.0)),
 			"move_id": "dynamo_discharge", "lunge": 0.0})
-	else:
+	elif phase == "break_core" and not _trainer_battle_active():
+		# Only the Break damages the piloted creature directly. During the
+		# captain fight, between two of Marrow's rounds (not fighting, but a
+		# trainer battle), a direct faint would make the next send-out refuse
+		# the fainted lead and lose a roster with healthy creatures left.
 		# The piloted body and its creature are the director's own ally: a
 		# follower body carries no creature instance of its own.
 		var director := _director()
@@ -327,6 +351,8 @@ func _apply_local_hazard(event: Dictionary) -> void:
 			var killed := bool(creature.call("take_damage", float(event.get("damage", 0.0))))
 			body.call("play_faint" if killed else "play_hit")
 			if killed:
+				# As combat_manager.gd does for a creature carried off the field.
+				CONDITION.note_faint(creature as RefCounted, CONDITION.config())
 				_hide_fainted(body, creature)
 	# Static is a locomotion penalty, shared with ordinary Stormwood lightning.
 	# The piloted companion takes the core damage; its trainer's stamina regen
@@ -373,6 +399,8 @@ func _reset_after_loss() -> void:
 		fighter_characters.clear()
 	_actions.clear()
 	_cooldowns.clear()
+	_ally_down.clear()
+	_party_down.clear()
 	_last_fired_serial = -1
 	_completion_committed = false
 	_persist_state()
@@ -413,12 +441,23 @@ func _admit_break_arrivals() -> void:
 		_publish_state()
 
 
+## BOSSES §4.7: a full-party faint "restores everyone at Ember Bivouac". The
+## trainer is returned there and every party member gets the same rest a camp
+## creature bed gives (`home_recovery.gd::rest()`).
 func _apply_local_recovery() -> void:
 	var player := world.get_node("Player") as Node3D
 	var x := -120.0
 	var z := 5270.0
 	player.global_position = Vector3(x, world.call("ground_height_at", x, z) + 0.3, z)
-	get_node("/root/Game").push_world_message("The Dynamo throws you back to Ember Bivouac. Recover, then climb again.")
+	var game := get_node("/root/Game")
+	var party: RefCounted = game.get("party")
+	if party != null:
+		var cfg := PROGRESSION.config()
+		for creature: RefCounted in party.call("members"):
+			HOME_RECOVERY.rest(creature, cfg)
+	_reported_ally_uid = ""
+	_reported_party_down = false
+	game.push_world_message("The Dynamo throws you back to Ember Bivouac. Your party is restored; climb again.")
 
 
 func _in_break_reach(peer: int) -> bool:
@@ -429,8 +468,8 @@ func _in_break_reach(peer: int) -> bool:
 ## The body `peer`'s creature fights the Break with, under the same terms the
 ## field control pilots it: in Stormwood, visible, and its creature not fainted.
 ## The host's own creature is the director's ally and its live instance. Another
-## peer's creature lives in its owner's process; the host holds the card it was
-## deployed with, so a remote body counts while that card has hit points.
+## peer's creature lives in its owner's process: its body counts while the
+## host holds its card and its owner has not reported that creature fainted.
 func _live_break_body(peer: int) -> Node3D:
 	if session.realm_of(peer) != "stormwood":
 		return null
@@ -448,8 +487,69 @@ func _live_break_body(peer: int) -> Node3D:
 		creature = body.get("instance")
 	if creature != null:
 		return null if bool(creature.get("fainted")) else body
+	# Another peer's creature: the host holds the card it was deployed with, and
+	# that peer's own report (`dynamo_ally_fainted`) that this creature fainted.
 	var card: Dictionary = hub.call("card_for", peer)
-	return body if float(card.get("hp", 0.0)) > 0.0 else null
+	if card.is_empty() or float(card.get("hp", 0.0)) <= 0.0:
+		return null
+	if _ally_down.has(peer) and str(_ally_down[peer]) == str(card.get("creature_uid", "")):
+		return null
+	return body
+
+
+## Whether `peer` is out of the Break: gone from Stormwood, or every creature in
+## their party is down. The host reads its own party; another peer's comes from
+## that peer's own report.
+func _party_out(peer: int) -> bool:
+	if session.realm_of(peer) != "stormwood":
+		return true
+	if peer == int(session.local_peer_id()):
+		var game := get_node_or_null("/root/Game")
+		var party: RefCounted = game.get("party") if game != null else null
+		return party != null and bool(party.call("all_fainted"))
+	return _party_down.has(peer)
+
+
+## Host: a remote fighter's report of its own faint. Only a Break participant
+## in Stormwood is heard, and only about the creature its card names.
+func _note_reported_faint(peer: int, intent: Dictionary) -> void:
+	if phase != "break_core" or not participants.has(peer) or session.realm_of(peer) != "stormwood":
+		return
+	var uid := str(intent.get("creature_uid", ""))
+	var card: Dictionary = hub.call("card_for", peer)
+	if not uid.is_empty() and uid == str(card.get("creature_uid", "")):
+		_ally_down[peer] = uid
+	if bool(intent.get("party_down", false)):
+		_party_down[peer] = true
+
+
+## Client: tell the host once when this peer's piloted creature faints during
+## Break, and once when its whole party is down.
+func _report_own_faint() -> void:
+	var local := int(session.local_peer_id())
+	if phase != "break_core" or not participants.has(local):
+		_reported_ally_uid = ""
+		_reported_party_down = false
+		return
+	var director := _director()
+	var creature: Object = director.call("ally_instance") if director != null else null
+	var uid := str(creature.get("uid")) if creature != null and bool(creature.get("fainted")) else ""
+	var game := get_node_or_null("/root/Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	var party_down := party != null and bool(party.call("all_fainted"))
+	var new_ally := not uid.is_empty() and uid != _reported_ally_uid
+	if not new_ally and (not party_down or _reported_party_down):
+		return
+	if new_ally:
+		_reported_ally_uid = uid
+	_reported_party_down = _reported_party_down or party_down
+	session.request_stormwood_encounter({"kind": "dynamo_ally_fainted",
+		"creature_uid": _reported_ally_uid, "party_down": party_down})
+
+
+func _trainer_battle_active() -> bool:
+	var director := _director()
+	return director != null and bool(director.call("trainer_battle_active"))
 
 
 func _hide_fainted(body: Node3D, creature: Object) -> void:
@@ -467,6 +567,9 @@ func _director() -> Node:
 
 func _add_participant(peer: int, contributes := true) -> void:
 	_awaiting_break_party = false
+	# Admitted with a live creature: any earlier faint report is out of date.
+	_ally_down.erase(peer)
+	_party_down.erase(peer)
 	if not participants.has(peer):
 		participants.append(peer)
 	# A Break arrival strikes conduits but, with no send-out left to admit

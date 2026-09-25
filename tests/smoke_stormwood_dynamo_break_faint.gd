@@ -10,9 +10,11 @@ extends SceneTree
 ## `deployed_body_for()`), a real `follower_creature.gd` body in the
 ## `deployed_creature` group, a real creature instance knocked out through the
 ## Dynamo's own discharge handler, and the real field control. Still stubbed
-## there: the session (offline, fixed peers), the hub transport (records
-## events; `body_for` answers from the real director), the combat manager
-## (never fighting), the arena, camera, interaction arbiter and player rig.
+## there: the session (offline, fixed peers; a client-mode copy records the
+## faint report instead of sending it), the hub transport (records events;
+## `body_for` answers from the real director, cards are hand-built as the
+## director's `_creature_card_for()` would), the combat manager (never
+## fighting), the arena, camera, interaction arbiter and player rig.
 ## The director is attached without its `_ready()` (no spawner, no wild
 ## population, no process tick), so its ally is assigned directly rather than
 ## summoned, and the recovery teleport is not applied.
@@ -35,13 +37,18 @@ class RegistryStub extends RefCounted:
 
 class SessionStub extends Node:
 	var present := {}
+	var host := true
+	var requests: Array = []
 	var _registry := RegistryStub.new()
 
 	func registry() -> RefCounted:
 		return _registry
 
 	func is_host() -> bool:
-		return true
+		return host
+
+	func request_stormwood_encounter(intent: Dictionary) -> void:
+		requests.append(intent.duplicate(true))
 
 	func is_active() -> bool:
 		return false
@@ -90,6 +97,9 @@ class HubStub extends Node:
 
 class FixtureWorld extends Node3D:
 	var simulation_only := false
+
+	func ground_height_at(_x: float, _z: float) -> float:
+		return 0.0
 
 
 class ManagerStub extends Node:
@@ -309,7 +319,16 @@ func _real_faint_path(session: SessionStub) -> void:
 	controller.set_process(false)
 	ally.global_position = controller.global_position + Vector3(6, 0, 0)
 
-	# Item: the Break admits only a visible body whose creature has not fainted.
+	# The host's own party: the piloted creature and one conscious reserve.
+	var game := root.get_node("Game")
+	var party: RefCounted = game.get("party")
+	while int(party.call("size")) > 0:
+		party.call("remove_at", 0)
+	var reserve: RefCounted = TRAINER_NPC.creature_for({"species": "fulgocobra", "level": 20})
+	party.call("add", creature)
+	party.call("add", reserve)
+
+	# The Break admits only a visible body whose creature has not fainted.
 	_check(controller.call("_in_break_reach", 1), "a visible, conscious ally in the arena is in the Break")
 	ally.visible = false
 	_check(not controller.call("_in_break_reach", 1), "a hidden ally body is refused")
@@ -318,23 +337,57 @@ func _real_faint_path(session: SessionStub) -> void:
 	_check(not controller.call("_in_break_reach", 1), "an ally whose creature has fainted is refused")
 	creature.set("fainted", false)
 	session.present[4] = true
+	session.present[7] = true
 	var remote := Node3D.new()
 	world.add_child(remote)
 	remote.global_position = controller.global_position + Vector3(0, 0, 8)
 	hub.bodies[4] = remote
-	hub.cards[4] = {"hp": 0.0, "max_hp": 40.0}
-	controller.dispatch(4, {"kind": "dynamo_join"})
-	_check(not controller.participants.has(4), "another peer whose creature card has no hit points is refused")
-	hub.cards[4] = {"hp": 25.0, "max_hp": 40.0}
+	hub.cards[4] = {"hp": 25.0, "max_hp": 40.0, "creature_uid": "creature-remote-4", "move_quick": "spark"}
 	remote.visible = false
 	controller.dispatch(4, {"kind": "dynamo_join"})
 	_check(not controller.participants.has(4), "another peer's hidden body is refused")
 	remote.visible = true
 	controller.dispatch(4, {"kind": "dynamo_join"})
 	_check(controller.participants == [4], "another peer's visible, conscious creature joins")
+
+	# A remote creature's faint reaches the host only from its owner, through
+	# the real Stormwood intent path; reporting it can only hurt the reporter.
+	controller.phase = "overload"
+	controller.dispatch(4, {"kind": "dynamo_ally_fainted", "creature_uid": "creature-remote-4", "party_down": true})
+	controller.phase = "break_core"
+	_check(controller.call("_in_break_reach", 4) and not controller.call("_party_out", 4),
+		"a faint report outside Break is ignored")
+	controller.dispatch(7, {"kind": "dynamo_ally_fainted", "creature_uid": "creature-remote-4", "party_down": true})
+	_check(controller.call("_in_break_reach", 4) and not controller.call("_party_out", 4),
+		"a non-participant cannot report someone else's creature")
+	controller.dispatch(4, {"kind": "dynamo_ally_fainted", "creature_uid": "creature-other", "party_down": false})
+	_check(controller.call("_in_break_reach", 4), "a report naming a creature other than the deployed one is ignored")
+	controller.dispatch(4, {"kind": "dynamo_ally_fainted", "creature_uid": "creature-remote-4", "party_down": false})
+	var refused: Dictionary = controller.call("_validate_conduit_strike", 4,
+		{"slot": "quick", "move_id": "spark", "action": 1, "index": 0})
+	_check(not controller.call("_in_break_reach", 4) and not bool(refused.get("ok", true)),
+		"a reported fainted remote creature no longer joins or strikes")
+	_check(not controller.call("_party_out", 4),
+		"with conscious creatures left that peer stays in the Break and may send out the next")
+	controller.dispatch(4, {"kind": "dynamo_ally_fainted", "creature_uid": "creature-remote-4", "party_down": true})
+	_check(controller.call("_party_out", 4), "a reported full-party faint takes that peer out of the Break")
 	controller.participants.clear()
 	hub.bodies.erase(4)
 	session.present.erase(4)
+	session.present.erase(7)
+
+	# Between two of Marrow's rounds (captain phase, not fighting, a trainer
+	# battle running) a discharge never faints the active creature directly.
+	var before_hp := float(creature.get("hp"))
+	controller.phase = "overload"
+	controller.receive({"kind": "dynamo_hazard_hit", "damage": 100000.0, "static_seconds": 1.0})
+	_check(not bool(creature.get("fainted")) and is_equal_approx(float(creature.get("hp")), before_hp),
+		"a discharge during the captain fight's send-out gap does not faint the lead")
+	controller.phase = "break_core"
+	director.set("_trainer_spec", {"id": CONTROLLER.TRAINER_ID})
+	controller.receive({"kind": "dynamo_hazard_hit", "damage": 100000.0, "static_seconds": 1.0})
+	_check(not bool(creature.get("fainted")), "no direct discharge damage while a trainer battle is active")
+	director.set("_trainer_spec", {})
 
 	# The real field control pilots only that same live ally.
 	var control := FIELD_CONTROL.new()
@@ -363,12 +416,30 @@ func _real_faint_path(session: SessionStub) -> void:
 	await process_frame
 	_check(controller.participants == [1] and hub.recoveries() == 0, "a live fighter keeps the Break running")
 
-	# A discharge knocks the ally out through the Dynamo's own hazard handler.
+	# A discharge knocks the piloted creature out through the Dynamo's own
+	# hazard handler. A conscious reserve is left: not a full-party faint.
+	creature.set("rested", true)
+	var happiness := float(creature.get("happiness"))
 	controller.receive({"kind": "dynamo_hazard_hit", "damage": 100000.0, "static_seconds": 1.0})
 	_check(bool(creature.get("fainted")), "the discharge faints the real creature instance")
+	_check(not bool(creature.get("rested")) and float(creature.get("happiness")) < happiness,
+		"the faint is noted on the creature's condition, as a fight's faint is")
 	for _i in 4:
 		await process_frame
 	_check(control.get("_body") == null and player.locomotion, "the field control releases a fainted ally")
+	_check(controller.participants == [1] and hub.recoveries() == 0 and controller.rules.conduits == [0],
+		"one fainted creature with a conscious reserve is not a full-party faint: the Break goes on")
+	var waited := 0.0
+	while ally.visible and waited < CONTROLLER.FAINT_HIDE_S + 1.0:
+		await process_frame
+		waited += 1.0 / 60.0
+		await create_timer(1.0 / 60.0).timeout
+	_check(not ally.visible, "the fainted follower leaves the field, as a fight hides a fainted ally")
+
+	# The reserve goes down too: now the whole party is.
+	reserve.call("take_damage", 100000.0)
+	for _i in 4:
+		await process_frame
 	_check(hub.recoveries_for(1) == 1, "the full-party faint sends the fighter back to Ember Bivouac once")
 	_check(hub.recoveries_for(5) == 1, "an observer standing in the arena is restored too")
 	_check(hub.recoveries_for(6) == 0, "a Stormwood peer far from the arena is not moved")
@@ -376,17 +447,55 @@ func _real_faint_path(session: SessionStub) -> void:
 		"only the Break restarts: the captain win stands and the partial conduits clear")
 	_check(controller.contributors == [1] and controller.fighter_characters == ["character-1"],
 		"the fainted fighter keeps the captain win and their Stormheart offer")
-	var waited := 0.0
-	while ally.visible and waited < CONTROLLER.FAINT_HIDE_S + 1.0:
-		await process_frame
-		waited += 1.0 / 60.0
-		await create_timer(1.0 / 60.0).timeout
-	_check(not ally.visible, "the fainted follower leaves the field, as a fight hides a fainted ally")
 	for _i in 3:
 		await process_frame
 	_check(hub.recoveries_for(1) == 1 and controller.participants.is_empty(),
 		"the waiting Break does not throw anyone back twice")
+
+	# The recovery restores: the trainer at Ember Bivouac, every creature up.
+	controller.receive({"kind": "dynamo_recovery"})
+	_check(not bool(creature.get("fainted")) and not bool(reserve.get("fainted"))
+		and is_equal_approx(float(creature.get("hp")), float(creature.get("max_hp")))
+		and is_equal_approx(float(reserve.get("hp")), float(reserve.get("max_hp"))),
+		"the recovery restores the whole party with a camp bed's rest")
+	_check(Vector2(player.global_position.x, player.global_position.z).distance_to(Vector2(-120, 5270)) < 0.01,
+		"the recovery returns the trainer to Ember Bivouac")
 	controller.set_process(false)
+
+	# The owning client's side: it reports its own piloted creature's faint
+	# once, and its whole party once, through the Stormwood intent.
+	var client_session := SessionStub.new()
+	client_session.host = false
+	client_session.present[1] = true
+	root.add_child(client_session)
+	var client := CONTROLLER.new()
+	client.name = "ClientDynamo"
+	client.world = world
+	client.session = client_session
+	client.hub = hub
+	client.arena = arena
+	client.rules = RULES.new()
+	client.rules.update_team(0, 5)
+	client.phase = "break_core"
+	client.participants = [1]
+	world.add_child(client)
+	creature.call("take_damage", 100000.0)
+	for _i in 3:
+		await process_frame
+	var reports: Array = client_session.requests.filter(func(intent: Dictionary) -> bool:
+		return str(intent.kind) == "dynamo_ally_fainted")
+	_check(reports.size() == 1 and str(reports[0].creature_uid) == str(creature.get("uid"))
+		and reports[0].party_down == false, "the client reports its own creature's faint once, reserve still up")
+	reserve.call("take_damage", 100000.0)
+	for _i in 3:
+		await process_frame
+	reports = client_session.requests.filter(func(intent: Dictionary) -> bool:
+		return str(intent.kind) == "dynamo_ally_fainted")
+	_check(reports.size() == 2 and reports[1].party_down == true, "and its whole party's faint once")
+	client.set_process(false)
+	client_session.queue_free()
+	while int(party.call("size")) > 0:
+		party.call("remove_at", 0)
 	world.queue_free()
 	await process_frame
 
