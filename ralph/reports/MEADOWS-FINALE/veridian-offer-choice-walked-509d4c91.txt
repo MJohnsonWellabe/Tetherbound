@@ -1,0 +1,40 @@
+# tests/smoke_veridian_offer_choice.gd on ralph/f05-solo-walk 509d4c91 (Godot 4.7, headless)
+# The player WALKS (move_and_slide, 3 m/s) from the freed stand to each prompt; the offer is read at the player's own position.
+# Scenario lines only (grep '^(' and '^---'), unedited; full run 31m09s, EXIT 0.
+
+--- space-accept
+(space-accept) walked 2.41 m to the accept prompt; offered 'Walk out with the Veridian Stag (final)'
+(space-accept) answered: party 5, veridian 1, receipt legendary_resolution:accepted:character-5722396d69ed79975a31b2de8b5a188c
+(space-accept) reload: no re-offer, same party, receipts kept
+(space-accept) the personal receipt alone prevents a second offer
+--- space-refuse
+(space-refuse) walked 2.41 m to the refuse prompt; offered 'Leave the Veridian Stag free (final)'
+(space-refuse) herd display stands at (390.0, -5.701609, 5860.0) after the answer
+(space-refuse) answered: party 4, veridian 0, receipt legendary_resolution:refused:character-5722396d69ed79975a31b2de8b5a188c
+(space-refuse) herd display stands at (390.0, -5.701609, 5860.0) after reload
+(space-refuse) reload: no re-offer, same party, receipts kept
+(space-refuse) the personal receipt alone prevents a second offer
+--- capacity-refuse-at-prompt
+(capacity-refuse-at-prompt) walked 2.41 m to the refuse prompt; offered 'Leave the Veridian Stag free (final)'
+(capacity-refuse-at-prompt) herd display stands at (390.0, -5.701609, 5860.0) after the answer
+(capacity-refuse-at-prompt) answered: party 5, veridian 0, receipt legendary_resolution:refused:character-5722396d69ed79975a31b2de8b5a188c
+(capacity-refuse-at-prompt) herd display stands at (390.0, -5.701609, 5860.0) after reload
+(capacity-refuse-at-prompt) reload: no re-offer, same party, receipts kept
+(capacity-refuse-at-prompt) the personal receipt alone prevents a second offer
+--- capacity-accept-then-let-newcomer-go
+(capacity-accept-then-let-newcomer-go) walked 2.40 m to the accept prompt; offered 'Walk out with the Veridian Stag (final)'
+(capacity-accept-then-let-newcomer-go) herd display stands at (390.0, -5.701609, 5860.0) after the answer
+(capacity-accept-then-let-newcomer-go) answered: party 5, veridian 0, receipt legendary_resolution:refused:character-5722396d69ed79975a31b2de8b5a188c
+(capacity-accept-then-let-newcomer-go) herd display stands at (390.0, -5.701609, 5860.0) after reload
+(capacity-accept-then-let-newcomer-go) reload: no re-offer, same party, receipts kept
+(capacity-accept-then-let-newcomer-go) the personal receipt alone prevents a second offer
+--- capacity-accept-release-one
+(capacity-accept-release-one) walked 2.40 m to the accept prompt; offered 'Walk out with the Veridian Stag (final)'
+(capacity-accept-release-one) answered: party 5, veridian 1, receipt legendary_resolution:accepted:character-5722396d69ed79975a31b2de8b5a188c
+(capacity-accept-release-one) reload: no re-offer, same party, receipts kept
+(capacity-accept-release-one) the personal receipt alone prevents a second offer
+--- save-while-choice-open
+(save-while-choice-open) reload brought the same unanswered choice back
+veridian offer choice smoke test passed
+real	31m9.422s
+EXIT 0
