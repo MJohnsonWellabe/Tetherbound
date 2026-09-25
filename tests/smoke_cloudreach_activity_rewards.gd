@@ -5,14 +5,15 @@ extends SceneTree
 ##   godot --headless --path . --script tests/smoke_cloudreach_activity_rewards.gd
 ##
 ## packs_on_the_wrong_side: "one eligible personal small-potion x2 reward,
-## once". Disclosed fixture: the chain's first two step flags are seeded, the
+## once" -- per CHARACTER through the ledger's `reward_grant` delivery, never a
+## first-come world cache. Disclosed fixture: the chain's first two step flags are seeded, the
 ## report step goes through the chapter's real dialogue-effect guard, and the
 ## trainer is placed beside Galefoot's fire. Collection is the ordinary
 ## interact press through the arbiter.
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
-const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
+const CLAIMED_FLAG := "cloudreach_payout:couriers_thanks"
 const REWARD_ID := "cr_reward_couriers_potions"
 const REPORT_EFFECT := "cloudreach:side:packs_on_the_wrong_side:report_to_neri"
 const SLOT := 0
@@ -38,20 +39,24 @@ func _run() -> void:
 			"causeway_survivors_reconnected", "side_courier_pack_recovered", "side_courier_medicine_delivered"]:
 		flags.call("set_flag", flag)
 	await _load_world()
+	# A character arriving in Cloudreach has saved before; the save is what
+	# gives this fresh test character its stable identity, which a personal
+	# reward is delivered to.
+	_check(bool(_game.call("save_game", SLOT)), "the arriving character has a saved identity")
 	var physical := _physical()
-	_check(physical.get_node_or_null(NodePath(REWARD_ID)) == null, "the couriers' thanks is not placed before Neri hears the report")
+	_check(not _offered(physical), "the couriers' thanks is not offered before Neri hears the report")
 
 	_check(bool(physical.call("consume_dialogue_effect", REPORT_EFFECT)), "Neri's report line completes the chain through the dialogue guard")
 	_check(bool(flags.call("has", "side_stranded_couriers_complete")), "the chain's completion flag is set")
 	await _frames(10)
 	var reward := physical.get_node_or_null(NodePath(REWARD_ID)) as Node3D
-	_check(reward != null, "the couriers' thanks appears once the chain completes")
+	_check(reward != null and _offered(physical), "the couriers' thanks is offered once the chain completes")
 	if reward == null:
 		_report()
 		return
 	var neri := Vector3(-296.0, 180.0, 534.0)
-	_check(Vector2(reward.global_position.x - neri.x, reward.global_position.z - neri.z).length() < 6.0,
-		"it sits by Neri at Galefoot (%s)" % reward.global_position)
+	var d := Vector2(reward.global_position.x - neri.x, reward.global_position.z - neri.z).length()
+	_check(d > 5.0 and d < 12.0, "it sits at Galefoot near Neri but clear of her and the returned pair (%.1f m, %s)" % [d, reward.global_position])
 
 	var inventory: RefCounted = _game.get("inventory")
 	var before := int(inventory.call("count", "potion_small"))
@@ -61,16 +66,23 @@ func _run() -> void:
 	await _frames(20)
 	var arbiter := _world.get_node(^"InteractionArbiter")
 	arbiter.call("_recompute")
-	print("prompt beside the thanks: '%s'" % str(arbiter.call("prompt")))
+	_check(str(arbiter.call("prompt")).contains("Take the couriers' thanks"),
+		"the prompt beside it is the couriers' thanks, not a talk prompt ('%s')" % str(arbiter.call("prompt")))
 	Input.action_press("interact")
 	await _frames(2)
 	Input.action_release("interact")
 	await _frames(20)
 	_check(int(inventory.call("count", "potion_small")) == before + 2, "the interact press gives two small potions (%d -> %d)" % [before, int(inventory.call("count", "potion_small"))])
-	_check(CACHE.was_taken(_game, "potion_small", REWARD_ID, "cloudreach"), "the per-character receipt records it taken")
+	_check(_character_claimed(), "this character's own player-scoped receipt records the claim")
+	_check(not bool((_game.get("progression") as RefCounted).call("has", "cache:cloudreach:" + REWARD_ID)),
+		"no first-come world cache flag was written; another character's thanks is untouched")
 	await _frames(10)
-	_check(physical.get_node_or_null(NodePath(REWARD_ID)) == null or not (physical.get_node(NodePath(REWARD_ID)) as Node3D).visible,
-		"the thanks is gone after collection")
+	_check(not _offered(physical), "the thanks is no longer offered to this character")
+	Input.action_press("interact")
+	await _frames(2)
+	Input.action_release("interact")
+	await _frames(20)
+	_check(int(inventory.call("count", "potion_small")) == before + 2, "pressing again pays nothing more")
 
 	_check(bool(_game.call("save_game", SLOT)), "save after collection")
 	_world.queue_free()
@@ -78,7 +90,8 @@ func _run() -> void:
 	_check(bool(_game.call("load_game", SLOT)), "load the saved game")
 	await _load_world()
 	_check(bool((_game.get("progression") as RefCounted).call("has", "side_stranded_couriers_complete")), "chain completion survives reload")
-	_check(_physical().get_node_or_null(NodePath(REWARD_ID)) == null, "the collected thanks does not return after reload")
+	_check(_character_claimed(), "the character's receipt survives reload")
+	_check(not _offered(_physical()), "the collected thanks is not offered again after reload")
 	_check(int((_game.get("inventory") as RefCounted).call("count", "potion_small")) == before + 2, "the potions survive reload exactly once")
 	_report()
 
@@ -88,6 +101,16 @@ func _load_world() -> void:
 	root.add_child(_world)
 	current_scene = _world
 	await _frames(30)
+
+
+func _offered(physical: Node) -> bool:
+	var reward := physical.get_node_or_null(NodePath(REWARD_ID))
+	return reward != null and bool(reward.call("offered")) and (reward as Node3D).visible
+
+
+func _character_claimed() -> bool:
+	var local: RefCounted = _game.get("local")
+	return local != null and bool((local.get("flags") as RefCounted).call("has", CLAIMED_FLAG))
 
 
 func _physical() -> Node:

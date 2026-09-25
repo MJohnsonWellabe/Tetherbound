@@ -72,6 +72,14 @@ func _run() -> void:
 	check(payoffs.people.shelter_traveler.body==first_pair and payoffs.people.shelter_courier.body==second_pair,"same pair relocates without duplicate bodies")
 	check(absf(first_pair.global_position.y-180)<1 and absf(second_pair.global_position.y-180)<1,"both travelers visibly return to Galefoot")
 	for spec: Dictionary in payoffs.config.survey_markers:
+		var unsurveyed: Node3D=payoffs.markers[spec.id]
+		if not game.progression.has(spec.flag):
+			player.global_position=unsurveyed.global_position+Vector3(1.5,0.2,0)
+			player.velocity=Vector3.ZERO
+			await frames(20)
+			var rests_before: int=payoffs.aerie_rests
+			player.fly_controller.landed.emit(player.global_position,"galewisp")
+			check(payoffs.aerie_rests==rests_before,"an unsurveyed "+str(spec.id)+" aerie gives no rest")
 		game.progression.set_flag(spec.flag)
 		await frames(3)
 		var marker: Node3D=payoffs.markers[spec.id]
@@ -89,6 +97,9 @@ func _run() -> void:
 		player.fly_controller.landed.emit(player.global_position,"galewisp")
 		check(payoffs.aerie_rests==before+1 and player.vitals.stamina>=player.vitals.max_stamina-0.01,"a landing on the "+str(spec.id)+" aerie restores traversal stamina")
 		check(absf(player.vitals.health-hurt)<0.01,"the "+str(spec.id)+" aerie does not heal")
+		var far_rests: int=payoffs.aerie_rests
+		player.fly_controller.landed.emit(marker.global_position+Vector3(30,0,0),"galewisp")
+		check(payoffs.aerie_rests==far_rests,"a landing 30 m from the "+str(spec.id)+" aerie gives no rest")
 		player.vitals.health=player.vitals.max_health
 	game.progression.set_flag("cloudreach_upper_route_unlocked")
 	game.progression.set_flag("side_cliff_circuit_complete")

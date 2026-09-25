@@ -1,7 +1,9 @@
 extends Node3D
 
-## Read-only projection of canonical quest facts into the inhabited world.
-## No inventory, quest completion, save file or new creature is owned here.
+## Projection of canonical quest facts into the inhabited world. No
+## inventory, quest completion, save file or new creature is owned here; the
+## one thing it changes is the local trainer's traversal stamina on a safe
+## landing at a surveyed aerie (`_on_aerie_landing`).
 const DATA := preload("res://scripts/world/cloudreach_physical_rules.gd")
 const PEOPLE := preload("res://scripts/world/village_npcs.gd")
 const CLOTH := preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
