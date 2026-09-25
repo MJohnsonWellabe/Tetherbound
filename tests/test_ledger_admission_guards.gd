@@ -165,3 +165,25 @@ func test_arch_rules_are_judged_at_the_snapped_centre() -> void:
 		"available_materials": materials}, GUEST)
 	assert_false(bool(near.get("ok")))
 	assert_eq(str(near.get("code", "")), "arch_occupied")
+
+
+func test_footing_request_near_a_free_standing_arch_is_judged_at_the_clear_centre() -> void:
+	# The other outcome the reorder comment claims: a free-standing arch 5-10 m
+	# from a footing centre no longer blocks a request at the footing's edge,
+	# because the arch that would be committed stands at the clear centre.
+	world.flags.set_flag("stormwood:arch_recipe_known")
+	var socket: Dictionary = ARCH_BUILD.footing_at(VERGE)
+	var centre := Vector3(float(socket.at[0]), 0.0, float(socket.at[1]))
+	var materials := {"stormglass": 100, "stormglass_crown": 100, "thunderwood_frame": 100, "conductor_vine": 100}
+	var free_at := centre + Vector3(8.0, 0.0, 0.0)
+	assert_true(ARCH_BUILD.footing_at(free_at).is_empty(), "the free arch stands off every footing")
+	assert_true(bool(ledger.commit({"kind": "place_building", "realm": "stormwood",
+		"id": "stormglass_arch", "position": free_at, "available_materials": materials}, HOST).get("ok")),
+		"a free-standing arch off any footing is allowed")
+	var edge := centre + Vector3(4.0, 0.0, 0.0)
+	assert_true(edge.distance_to(free_at) < 5.0, "the edge request is within 5 m of the free arch")
+	var verdict: Dictionary = ledger.commit({"kind": "place_building", "realm": "stormwood",
+		"id": "stormglass_arch", "position": edge, "available_materials": materials}, GUEST)
+	assert_true(bool(verdict.get("ok")), "judged at the clear centre (8 m from the free arch): accepted")
+	var record: Dictionary = world.placed_buildings[int(world.building_index_of(str(verdict.uid)))]
+	assert_almost_eq(float((record.position as Array)[0]), centre.x, 0.001, "and it stands at the centre")
