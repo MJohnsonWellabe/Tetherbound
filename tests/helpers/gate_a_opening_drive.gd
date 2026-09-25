@@ -978,7 +978,15 @@ func _aim_at_wild(seconds: float = AIM_CONVERGE_SECONDS) -> bool:
 		if not is_instance_valid(_wild) or not bool(_combat.call("is_fighting")):
 			return false
 		var gap := _player.global_position.distance_to(_wild.global_position)
-		if gap > AIM_THROWABLE_METRES:
+		var recovery := aim_recovery(gap, _launch_reason())
+		if recovery == "reposition":
+			# Run 7 (seed 1787955782): 7.3 m away with the reticle inside the
+			# body but the game reporting line_of_sight_blocked for 12 s, three
+			# times, from the same spot. Standing still cannot clear a blocked
+			# line; a player steps round the creature for another angle.
+			print("aim: line of sight blocked at %.1fm; circling for another angle" % gap)
+			await _wander_for_a_new_angle()
+		elif gap > AIM_THROWABLE_METRES:
 			print("aim: %.1fm is past the orb's reach; closing in" % gap)
 			await _close_to_wild(AIM_THROWABLE_METRES, 900)
 		elif gap < AIM_TOO_CLOSE_METRES:
@@ -1020,6 +1028,29 @@ func _close_to_wild(within: float, budget: int) -> bool:
 
 
 ## The game's own answer to "would this throw get its launch assist right now".
+## What a player does when the aim did not settle, from the distance and the
+## game's own pre-launch reason: close in past the orb's reach, back off when
+## too steep to centre, and walk to another angle when something blocks the
+## line at a comfortable range. `retry` otherwise.
+static func aim_recovery(gap: float, reason: String) -> String:
+	if gap > AIM_THROWABLE_METRES:
+		return "close"
+	if gap < AIM_TOO_CLOSE_METRES:
+		return "back_off"
+	if reason == "line_of_sight_blocked":
+		return "reposition"
+	return "retry"
+
+
+func _launch_reason() -> String:
+	if _combat == null:
+		return ""
+	var throw: Node = _combat.call("throw_aim")
+	if throw == null or not throw.has_method("launch_assist_diagnostics"):
+		return ""
+	return str((throw.call("launch_assist_diagnostics") as Dictionary).get("reason", ""))
+
+
 func _shot_is_eligible() -> bool:
 	if _combat == null or not bool(_combat.call("is_fighting")):
 		return false
