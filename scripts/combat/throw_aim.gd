@@ -94,6 +94,10 @@ var _launch_assist_reticle_fraction: float = 1.0
 var _launch_assist_max_seconds: float = 0.85
 var _launch_assist_max_target_speed: float = 4.5
 var _launch_assist_max_distance: float = 2.6
+## Terrain clearance for the launch (see "terrain-aware arcs" below).
+var _orb_radius: float = 0.6
+var _clearance: Dictionary = clearance_from_config({})
+var _aim_surface_min_ahead: float = 1.0
 
 
 ## Pure screen-ray/body geometry, shared with the controller regression. A
@@ -154,6 +158,9 @@ func _ready() -> void:
 		"launch_assist_max_target_speed", _launch_assist_max_target_speed))
 	_launch_assist_max_distance = float(cfg.get(
 		"launch_assist_max_distance", _launch_assist_max_distance))
+	_orb_radius = float(cfg.get("radius", _orb_radius))
+	_clearance = clearance_from_config(cfg)
+	_aim_surface_min_ahead = float(cfg.get("aim_surface_min_ahead", _aim_surface_min_ahead))
 	set_physics_process(false)
 
 
@@ -572,6 +579,14 @@ func _release() -> void:
 	var forward := _launch_direction(camera, origin)
 	origin += forward * _spawn_forward
 	_released_assist_point = _committed_assist_point
+	if _committed_assist_point != Vector3.INF:
+		var low := _ballistic_direction(origin - forward * _spawn_forward,
+			_committed_assist_point, forward)
+		if not low.is_equal_approx(forward):
+			print("catch launch: clearance raised pitch=%.1f->%.1f deg" % [
+				rad_to_deg(asin(clampf(low.y, -1.0, 1.0))),
+				rad_to_deg(asin(clampf(forward.y, -1.0, 1.0))),
+			])
 	var throw_range := -1.0
 	if _target != null and is_instance_valid(_target) and _target.has_method("centre"):
 		throw_range = origin.distance_to(_target.call("centre"))
@@ -782,7 +797,7 @@ func _launch_direction(camera: Camera3D, origin: Vector3) -> Vector3:
 		var fallback := -_player.global_transform.basis.z
 		if camera != null:
 			fallback = -camera.global_transform.basis.z
-		return _ballistic_direction(origin, _committed_assist_point, fallback)
+		return _terrain_clear_direction(origin, _committed_assist_point, fallback)
 	return _aim_direction(camera, origin)
 
 
@@ -798,7 +813,10 @@ func _aim_direction(camera: Camera3D, origin: Vector3) -> Vector3:
 
 	var eye := camera.global_position
 	var forward := -camera.global_transform.basis.z
-	var aim_point := eye + forward * AIM_REACH
+	# THROW-AIM-SLOPE: where the centre ray meets the world, not a fixed reach
+	# that ends inside whatever slope the ray met first. See
+	# `surface_aim_point()`.
+	var aim_point := _surface_aim_point(eye, forward, origin)
 
 	if _target != null and is_instance_valid(_target) and _target.has_method("centre"):
 		var centre: Vector3 = _target.call("centre")
@@ -833,6 +851,12 @@ func _aim_direction(camera: Camera3D, origin: Vector3) -> Vector3:
 			var pull := aim_pull_weight(nearest.distance_to(centre), body, along) \
 				* LOOK_PREFS.aim_assist_strength()
 			aim_point = aim_point.lerp(centre, pull)
+			# A full lock on a creature the camera can see is a throw AT the
+			# creature, so the preview must draw the arc the committed assist
+			# will actually fly -- otherwise it shows the low arc burying itself
+			# in a crest right up to the press, then switches.
+			if pull >= 0.999 and _target_is_visible(eye, centre):
+				return _terrain_clear_direction(origin, centre, forward)
 
 	# BALLISTIC, not a straight line. This is the fix for the throw mechanic's
 	# deepest problem, found by instrumenting the smoke test: the aim used to
@@ -846,6 +870,186 @@ func _aim_direction(camera: Camera3D, origin: Vector3) -> Vector3:
 	# numbers) falls back to the straight line, which visibly falls short —
 	# with the arc preview drawing exactly that truth.
 	return _ballistic_direction(origin, aim_point, forward)
+
+
+## --- terrain-aware arcs ------------------------------------------------------
+##
+## THROW-AIM-SLOPE. The assist solved the low ballistic arc to the target in
+## EMPTY space. The aim camera rides higher than the trainer's hand, so on
+## rising ground the eye sees a creature standing beyond a crest that the hand's
+## low arc flies straight into: world seed 1376461701's tutorial catch lost three
+## consecutive assisted orbs that way (`reason=ground`, closest approach 1.27 m
+## against a 1.27 m envelope -- the orb struck the rise just short of the
+## predicted point). The preview drew exactly that truth, and the assist threw
+## it anyway.
+##
+## So the committed assist, and an aim locked on a visible creature, now fly the
+## candidate arc against the real collision world before trusting it. The default
+## low arc is kept untouched whenever it already reaches -- which is every throw
+## on open ground -- and only when it meets something first does the solve step
+## the launch pitch upward (same speed, same gravity, same heading) to the lowest
+## arc that reaches the target's envelope first. No arc clears inside the ceiling:
+## the default stands, and the preview keeps showing the player why.
+
+## Physics ticks between two probe rays. The orb integrates at the physics rate;
+## a chord over three ticks sags g*(3*dt)^2/8, about 4.4 mm below the flight at 60 Hz,
+## far inside any margin here, and cuts the rays a candidate costs to a third.
+const ARC_PROBE_STRIDE := 3
+
+
+## The terrain-clearance knobs from catching.json's `throw` section, in one
+## place so the runtime and the tests read the same numbers.
+static func clearance_from_config(cfg: Dictionary) -> Dictionary:
+	return {
+		"step_deg": float(cfg.get("launch_assist_clearance_step_deg", 1.0)),
+		"max_pitch_deg": float(cfg.get("launch_assist_clearance_max_pitch_deg", 45.0)),
+		"hit_fraction": float(cfg.get("launch_assist_clearance_hit_fraction", 0.8)),
+		"max_flight": float(cfg.get("max_flight_time", 4.0)),
+	}
+
+
+## The launch direction toward `point` that the orb can actually fly. Returns
+## `ballistic_direction()`'s low arc unchanged when that arc reaches the target's
+## envelope before meeting any collision (or when there is no world to ask);
+## otherwise the lowest higher-pitched arc, in `step_deg` steps up to the high
+## root or `max_pitch_deg`, whose flight enters `hit_fraction` of the envelope
+## first. `exclude` is what the orb itself flies through (trainer, own creature,
+## target). `envelope` is `body_radius + orb radius`, orb.gd's hit test.
+static func assisted_launch_direction(
+	space: PhysicsDirectSpaceState3D, exclude: Array[RID],
+	hand: Vector3, point: Vector3, fallback: Vector3,
+	speed: float, gravity: float, spawn_forward: float,
+	envelope: float, clearance: Dictionary
+) -> Vector3:
+	var low := ballistic_direction(hand, point, fallback, speed, gravity)
+	if space == null or envelope <= 0.0 or speed <= 0.0 or gravity <= 0.0:
+		return low
+	var flat := Vector2(point.x - hand.x, point.z - hand.z)
+	var reach := flat.length()
+	if reach < 0.01:
+		return low
+	var s2 := speed * speed
+	var disc := s2 * s2 - gravity * (gravity * reach * reach + 2.0 * (point.y - hand.y) * s2)
+	if disc < 0.0:
+		# Out of reach: `_release()`'s range guard owns that refusal.
+		return low
+	var radius := envelope * clampf(float(clearance.get("hit_fraction", 0.8)), 0.05, 1.0)
+	if arc_reaches(space, exclude, hand, low, point, speed, gravity, spawn_forward,
+			radius, float(clearance.get("max_flight", 4.0))):
+		return low
+	var horizontal := Vector3(flat.x, 0.0, flat.y) / reach
+	var low_pitch := atan((s2 - sqrt(disc)) / (gravity * reach))
+	var high_pitch := atan((s2 + sqrt(disc)) / (gravity * reach))
+	var ceiling := minf(high_pitch, deg_to_rad(float(clearance.get("max_pitch_deg", 45.0))))
+	var step := deg_to_rad(maxf(float(clearance.get("step_deg", 1.0)), 0.1))
+	var pitch := low_pitch + step
+	while pitch <= ceiling + 0.00001:
+		var candidate := horizontal * cos(pitch) + Vector3.UP * sin(pitch)
+		if arc_reaches(space, exclude, hand, candidate, point, speed, gravity, spawn_forward,
+				radius, float(clearance.get("max_flight", 4.0))):
+			return candidate
+		pitch += step
+	return low
+
+
+## Whether an orb launched from `hand` along `direction` enters `radius` of
+## `point` before its flight meets any collision. Mirrors `orb.gd::_tick_flight()`:
+## spawned `spawn_forward` along the direction, semi-implicit Euler at the physics
+## rate (closed form: p_n = p0 + v0*n*dt - g*dt^2*n(n+1)/2), target test before
+## the ground ray on each step.
+static func arc_reaches(
+	space: PhysicsDirectSpaceState3D, exclude: Array[RID],
+	hand: Vector3, direction: Vector3, point: Vector3,
+	speed: float, gravity: float, spawn_forward: float,
+	radius: float, max_flight: float
+) -> bool:
+	var dir := direction.normalized()
+	var start := hand + dir * spawn_forward
+	var velocity := dir * speed
+	var dt := 1.0 / float(maxi(Engine.physics_ticks_per_second, 1))
+	var last := int(ceil(maxf(max_flight, 0.0) / dt))
+	var heading := Vector2(dir.x, dir.z)
+	var beyond := Vector2(point.x - hand.x, point.z - hand.z).length() + radius
+	var previous := start
+	var n := 0
+	while n < last:
+		n = mini(n + ARC_PROBE_STRIDE, last)
+		var position := start + velocity * (dt * n) \
+			+ Vector3.DOWN * (gravity * dt * dt * float(n * (n + 1)) * 0.5)
+		if Geometry3D.get_closest_point_to_segment(point, previous, position) \
+				.distance_to(point) <= radius:
+			return true
+		var query := PhysicsRayQueryParameters3D.create(previous, position)
+		query.collide_with_areas = false
+		query.exclude = exclude
+		if not space.intersect_ray(query).is_empty():
+			return false
+		# Every arc here heads straight at the point, so once it is further out
+		# than the point plus the radius it can only move away.
+		if heading.length() > 0.001 \
+				and Vector2(position.x - hand.x, position.z - hand.z).length() > beyond:
+			return false
+		previous = position
+	return false
+
+
+## Where the reticle's aim point actually is: the first collision down the
+## camera's centre ray, or `reach` along it when nothing is in the way. The old
+## fixed reach put the aim point INSIDE any ground the ray met first -- on a
+## slope, metres into the hill behind the surface the player is looking at --
+## and the arc was solved to that buried point. A hit closer than `min_ahead`
+## in front of the hand (the ray catching ground at the trainer's own feet, or
+## behind them, with the camera pitched steeply down) keeps the old reach, so a
+## steep look can never turn the throw backwards.
+static func surface_aim_point(
+	space: PhysicsDirectSpaceState3D, exclude: Array[RID],
+	eye: Vector3, forward: Vector3, reach: float, hand: Vector3, min_ahead: float
+) -> Vector3:
+	var far := eye + forward * reach
+	if space == null:
+		return far
+	var query := PhysicsRayQueryParameters3D.create(eye, far)
+	query.collide_with_areas = false
+	query.exclude = exclude
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return far
+	var surface: Vector3 = hit["position"]
+	var level := Vector3(forward.x, 0.0, forward.z)
+	if level.length() < 0.01:
+		return far
+	if (surface - hand).dot(level.normalized()) < min_ahead:
+		return far
+	return surface
+
+
+func _space_state() -> PhysicsDirectSpaceState3D:
+	if _player == null or not is_instance_valid(_player):
+		return null
+	var world := _player.get_world_3d()
+	return world.direct_space_state if world != null else null
+
+
+## What the orb flies through: the trainer, the trainer's own creature, and the
+## target it is thrown at (orb.gd's `_excluded_rids()` plus `_release()`'s list).
+func _flight_exclusions() -> Array[RID]:
+	var out := _sight_exclusions()
+	if _target != null and is_instance_valid(_target) and _target is CollisionObject3D:
+		out.append((_target as CollisionObject3D).get_rid())
+	return out
+
+
+func _terrain_clear_direction(origin: Vector3, point: Vector3, fallback: Vector3) -> Vector3:
+	var body_radius := 0.5
+	if _target != null and is_instance_valid(_target) and _target.has_method("body_radius"):
+		body_radius = float(_target.call("body_radius"))
+	return assisted_launch_direction(_space_state(), _flight_exclusions(), origin, point,
+		fallback, _speed, _gravity, _spawn_forward, body_radius + _orb_radius, _clearance)
+
+
+func _surface_aim_point(eye: Vector3, forward: Vector3, origin: Vector3) -> Vector3:
+	return surface_aim_point(_space_state(), _flight_exclusions(), eye, forward, AIM_REACH,
+		origin, _aim_surface_min_ahead)
 
 
 ## Pure form of the soft magnet so its body-size and angular contracts can be
