@@ -38,8 +38,10 @@ Fixtures, disclosed:
   `legendary_settled`, `realm_key_cloudreach`) are set directly.
 - The five are built with `Game.make_creature`.
 - The Meadows side is `smoke_cloudreach_transition.gd`'s flat stand-in terrain
-  with the real span on it. The Cloudreach side is the production scene reached
-  through the production realm router.
+  with the real span on it. On flat ground the deck is built level, so the
+  production span's height difference and ramp are not exercised. The
+  Cloudreach side is the production scene reached through the production realm
+  router.
 
 Not claimed:
 
