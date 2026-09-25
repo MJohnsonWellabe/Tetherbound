@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+ARCH PASSAGE linked={ "id": "a_ashfoot", "pair": "a", "name": "Ashfoot Arch", "at": [-350.0, 500.0], "yaw_deg": 0.0 } overlaps=[Footing:<StaticBody3D#105327363962>, Player:<CharacterBody3D#105042151276>]
+STORMWOOD ARCHES: PASS
+WARNING: 2 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)
+ERROR: 1 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

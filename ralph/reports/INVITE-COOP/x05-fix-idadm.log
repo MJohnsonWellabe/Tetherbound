@@ -1,0 +1,56 @@
+run id:  net-20260925T065248Z-7761
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/idadm/net-identity_admission-20260925T065248Z
+smoke:   tests/smoke_net_identity_admission.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=7785 control_port=35163 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/idadm/net-identity_admission-20260925T065248Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/idadm/net-identity_admission-20260925T065248Z/peer-0.log
+coordinator: launched peer 1 (client) pid=7786 control_port=46651 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/idadm/net-identity_admission-20260925T065248Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/idadm/net-identity_admission-20260925T065248Z/peer-1.log
+coordinator: peer 1 hello: {"enet_port":35722.0,"godot_version":"4.7-stable (official)","main_sha":"e794bf7bde2d","peer":1.0,"pid":7786.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/idadm/net-identity_admission-20260925T065248Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":35721.0,"godot_version":"4.7-stable (official)","main_sha":"e794bf7bde2d","peer":0.0,"pid":7785.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/idadm/net-identity_admission-20260925T065248Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: host reported an ENet port (35721)
+PASS: host opened the session (hosting udp/35721 as peer 1)
+PASS: host registry starts with one real row ([{ "appearance_id": "trainer", "character_id": "character-188afc24aadd67d7bceec900cfc3354d", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }])
+PASS: host has a stable nonempty character id
+PASS: full admitted session refused the overflow handshake (Session.join(127.0.0.1, 35721) refused after 13 frames: This session is full (1/1).)
+PASS: overflow client received the readable full-session reason ({ "data": {  }, "detail": "Session.join(127.0.0.1, 35721) refused after 13 frames: This session is full (1/1).", "frames_used": 13.0, "id": "s3", "type": "verdict", "verdict": "FAIL" })
+PASS: full-session refusal arrived as a host admission verdict
+PASS: full-session client never applied a host snapshot
+PASS: full-session refusal left the complete registry at one host
+PASS: full-session refusal left the host world state unchanged
+PASS: one-peer host closed cleanly before rehost
+PASS: host reopened at the production four-peer cap
+PASS: live host identity was refused (Session.join(127.0.0.1, 35721) refused after 9 frames: That character is already connected to this world.)
+PASS: client received the readable identity-conflict reason ({ "data": {  }, "detail": "Session.join(127.0.0.1, 35721) refused after 9 frames: That character is already connected to this world.", "frames_used": 9.0, "id": "s11", "type": "verdict", "verdict": "FAIL" })
+PASS: client recorded a terminal handshake failure
+PASS: client distinguishes host refusal from a retryable transport failure
+PASS: rejected client never applied a host snapshot
+PASS: rejected transport was closed after the reason arrived
+PASS: identity refusal left the complete host registry unchanged
+PASS: identity refusal left the host world state unchanged
+PASS: same transport process can join with a free stable identity (joined 127.0.0.1:35721 as peer 1838438986 after 13 frames; snapshot applied; 2 peer(s) in registry)
+PASS: host registry has exactly host plus admitted guest
+PASS: legal guest identity is registered
+ALL CHECKS PASSED
+# Net smoke run net-20260925T065248Z-7761
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=7785 exited=true unexpected_exit=false
+- peer 1 (client) pid=7786 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/idadm/net-identity_admission-20260925T065248Z/SUMMARY.md ===
+# Net smoke run net-20260925T065248Z-7761
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=7785 exited=true unexpected_exit=false
+- peer 1 (client) pid=7786 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED

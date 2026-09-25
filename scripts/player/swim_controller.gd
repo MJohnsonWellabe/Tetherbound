@@ -119,6 +119,11 @@ func physics_step(delta: float, input_blocked: bool, combat_paused: bool) -> boo
 	elif depth <= float(human.exit_depth_m):
 		state.leave_water()
 		return false
+	# Only a live ride may publish MOUNTED. However control came back to the
+	# trainer (shallow dismount, fainted mount, load), an unmounted swimmer is
+	# a human swimmer; remote peers draw the ride and saves record it from this.
+	if state.mode == STATE.Mode.MOUNTED and not _is_riding():
+		state.enter_water(false, sea)
 	if combat_paused:
 		state.pause_for_combat()
 	elif state.mode == STATE.Mode.COMBAT_PAUSED:
@@ -158,6 +163,11 @@ func physics_step(delta: float, input_blocked: bool, combat_paused: bool) -> boo
 	if alive and vitals.is_dead():
 		_player.emit_signal("died")
 	return true
+
+
+func _is_riding() -> bool:
+	var riding := _world.get_node_or_null("RidingController")
+	return riding != null and bool(riding.call("is_mounted"))
 
 
 ## Leaving the swim depth can still be underwater. Earn recovery only after

@@ -652,8 +652,23 @@ func _record_trainer_defeat(spec: Dictionary) -> void:
 	# dispatch its canonical chapter event before the defeat marker is written.
 	trainer_victory.emit(str(spec["id"]))
 	if bool(progression.call("has", str(spec["defeat_flag"]))):
-		# The canonical chapter adapter recorded the win. Still pay its ordinary
+		# The canonical chapter adapter recorded the win (solo: locally; host:
+		# its `set_world_flag` committed synchronously). Still pay the ordinary
 		# trainer reward once; the initial durable guard prevents repeat payouts.
+		#
+		# ROADMAP F08 / MULTIPLAYER per-participant rewards: in a session this
+		# must be the base's §7 path, not a local payout. On the host it submits
+		# the world facts (the ledger answers the already-committed flag with
+		# `noop`) and one `reward_grant` per component addressed to every
+		# participant, each guarded per character per source, so a guest who
+		# fought Veyra is paid exactly once and the host's own share arrives as
+		# a ledger delivery rather than a second local `inventory.add()`. Solo
+		# and a client running its own fight get `false` here and keep the
+		# unchanged self-payout below, as the base's client path does.
+		if _record_trainer_defeat_for_the_session(spec):
+			return
 		_pay_trainer_reward(spec)
 	else:
+		# Flag not yet local (a client's pending intent, or no adapter write):
+		# the base already routes this through the same session path first.
 		super._record_trainer_defeat(spec)

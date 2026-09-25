@@ -1,0 +1,19 @@
+# GodotSteam 4.20 linux64 debug template runtime probe (X05 export question)
+# Tiny scratch project (main.gd prints Engine.has_singleton("Steam") and
+# ClassDB.class_exists("SteamMultiplayerPeer")), exported with stock
+# Godot 4.7.stable.official.5b4e0cb0f via --export-pack, then laid out as an
+# export: probe.x86_64 (the template) + probe.pck + libsteam_api.so.
+# Template installed by: python3 tools/setup_steam_runtime.py --templates --platform linux64
+# Pinned file SHA-256 verified by the script (archive 06216a20...).
+--- stock 4.7 editor (same probe, unpacked project)
+STEAM_RUNTIME {"debug_build":true,"engine":"4.7.0.stable","engine_hash":"5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88","steam_multiplayer_peer":false,"steam_singleton":false}
+exit 1
+--- GodotSteam template, --path / --main-pack
+ERROR: `--path` was specified on the command line, but this Godot binary was compiled without support for path overrides. Aborting.
+ERROR: `--main-pack` was specified on the command line, but this Godot binary was compiled without support for path overrides. Aborting.
+--- GodotSteam template with libsteam_api.so beside the exe
+STEAM_RUNTIME {"engine":"4.7.0.stable","engine_hash":"unknown","steam_multiplayer_peer":true,"steam_singleton":true}
+exit 0
+--- GodotSteam template without libsteam_api.so
+./probe.x86_64: error while loading shared libraries: libsteam_api.so: cannot open shared object file: No such file or directory
+exit 127

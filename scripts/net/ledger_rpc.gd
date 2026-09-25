@@ -304,6 +304,9 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	if kind == "river_nest_clear":
 		intent = intent.duplicate(true)
 		intent["_doss_actor"] = _water_actor_context(peer_id, intent)
+	# Every kind can write world flags, so every intent carries the admitted
+	# identity; a claimed `_actor_character_id` is always overwritten.
+	intent = with_host_actor(intent, _registered_character(peer_id))
 	var verdict: Dictionary = ledger.call("commit", intent, peer_id)
 	if satchel_transaction:
 		var host_instance: Variant = ledger.world.get("reward_delivery_namespace")
@@ -392,6 +395,37 @@ func _reward_recipients(intent: Dictionary, requesting_peer: int) -> Array:
 	return out
 
 
+## A copy of `intent` whose actor identity is the host's answer, whatever the
+## request claimed.
+static func with_host_actor(intent: Dictionary, character_id: String) -> Dictionary:
+	var out := intent.duplicate(true)
+	out["_actor_character_id"] = character_id
+	return out
+
+
+## The stable character id the session admitted for `peer_id`, or "".
+static func registered_character(peer_id: int, local_peer_id: int,
+		local_character_id: String, roster: Object) -> String:
+	if peer_id == local_peer_id:
+		return local_character_id
+	if roster == null or not roster.has_method("row"):
+		return ""
+	return str((roster.call("row", peer_id) as Dictionary).get("character_id", ""))
+
+
+func _registered_character(peer_id: int) -> String:
+	var game := _game()
+	if game == null:
+		return ""
+	var local: Variant = game.get("local")
+	var local_character := str(local.get("character_id")) if local is Object else ""
+	var session: Variant = game.get("session")
+	var roster: Variant = (session as Object).call("registry") \
+		if session is Object and (session as Object).has_method("registry") else null
+	return registered_character(peer_id, _local_peer_id(), local_character,
+		roster as Object if roster is Object else null)
+
+
 func _water_actor_context(peer_id: int, intent: Dictionary) -> Dictionary:
 	var game := _game()
 	if game == null:
@@ -452,6 +486,15 @@ func _rpc_intent(intent: Dictionary) -> void:
 	if ledger == null:
 		return
 	var sender := multiplayer.get_remote_sender_id()
+	# Only admitted session members may ask. A transport peer that is still in
+	# its handshake, or lingering after a refusal or kick so its reason can be
+	# delivered, is not a player in this world.
+	var session: Variant = game.get("session") if game != null else null
+	if session is Object and (session as Object).has_method("registry") \
+			and bool((session as Object).call("is_active")):
+		var roster: Variant = (session as Object).call("registry")
+		if roster is Object and not bool((roster as Object).call("has", sender)):
+			return
 	var verdict := _commit_here(intent, sender)
 	if not bool(verdict.get("ok", false)):
 		# The whole verdict crosses, not three strings pulled out of it. A

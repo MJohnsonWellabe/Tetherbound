@@ -157,6 +157,22 @@ func test_pilot_selection_uses_underlevel_bonus_only_with_supplied_stock() -> vo
 	assert_eq(int(depleted.index), 1, "depleted care removes the under-level bonus and chooses the healthiest pilot")
 
 
+func test_supplied_training_fields_underlevel_even_when_a_qualified_lead_is_healthier() -> void:
+	# Observed earned-run shape: an L6 lead at 78% HP out-scored an L4
+	# starter at 50% under the old +2 bonus and took every training fight.
+	var party := PARTY.new()
+	var qualified := _pilot_creature(6, 0.78)
+	var starter := _pilot_creature(4, 0.5)
+	party.add(qualified)
+	party.add(starter)
+	assert_eq(int(SEGMENT.pilot_selection(party, 1, true, 5).index), 1,
+		"supplied care fields the under-level creature regardless of relative health")
+	assert_eq(int(SEGMENT.pilot_selection(party, 0, true, 5).index), 0,
+		"depleted care still chooses the healthiest usable pilot")
+	assert_eq(int(SEGMENT.pilot_selection(party, 1, false, 5).index), 0,
+		"outside training the health-only selection is unchanged")
+
+
 func test_depleted_pilot_selection_compares_usable_health_fraction() -> void:
 	var party := PARTY.new()
 	var fuller := _pilot_creature(2, 0.95)

@@ -1,0 +1,6 @@
+[join] world is up; dialling 127.0.0.1:27150
+[session] dialling via enet as 'Trainer' (character-23d0fef5d4268a6d3c05ccd57fe405f3)
+[session] dialling 127.0.0.1:27150 as 'Trainer' (character-23d0fef5d4268a6d3c05ccd57fe405f3)
+[session] transport: peer 1 connected
+[session] connected as peer 1563652907; sending hello
+capture_join_refusal: status='You and the host have different game content (host c0387a73, yours 00000000). Both players need the same version.' saved=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/cap/refusal-mismatch.png err=0

@@ -7,18 +7,25 @@ extends Node
 ## that Steam friends are unavailable. GodotSteam 4.20 (Godot 4.7 / SDK 1.64)
 ## exposes the singleton and SteamMultiplayerPeer dynamically.
 ##
-## Lobby metadata proves only the product and wire-protocol marker below. An
-## exact build/content fingerprint is still missing and must not be inferred
-## from this compatibility check.
+## Lobby metadata carries the product, the wire protocol and the short
+## build/content token from `build_fingerprint.gd`, so a joiner can refuse a
+## mismatched friend before dialling. The token is a convenience check. The
+## host's `session.gd::_rpc_hello` still compares the full fingerprint before
+## admission.
 ##
 ## GodotSteam's native SteamPacketPeer reads
 ## `steam/multiplayer_peer/max_channels`; the project setting is pinned to 4
 ## by the integration owner. That leaves Session's application lanes 1 and 2
 ## valid (ledger/encounters and snapshots) under the Steam transport.
 
+const BUILD_FINGERPRINT := preload("res://scripts/net/build_fingerprint.gd")
 const PRODUCT := "tetherbound"
 # v5 adds exact host confirmation for ordinary shared-wild catch completion.
-const PROTOCOL := "tetherbound-invite-v5"
+# Bump the value in build_fingerprint.gd; ENet and Steam admission share it.
+const PROTOCOL := BUILD_FINGERPRINT.WIRE_PROTOCOL
+## Session maps this exact refusal to `incompatible_version`, the same code as
+## a build/content mismatch.
+const PROTOCOL_REFUSAL := "This connection uses an incompatible Tetherbound protocol."
 const LOBBY_CAPACITY := 4
 const FRIENDS_ONLY := 1
 const CALLBACK_OK := 1
@@ -276,7 +283,7 @@ static func member_admission_error(steam_id: int, members: Array[int],
 	if steam_id <= 0 or not members.has(steam_id):
 		return "Join the friends lobby before connecting to this world."
 	if summary.get("steam_protocol") != PROTOCOL:
-		return "This connection uses an incompatible Tetherbound protocol."
+		return PROTOCOL_REFUSAL
 	if summary.get("steam_lobby_id") != lobby_id:
 		return "This connection belongs to a different friends lobby."
 	return ""
@@ -505,8 +512,10 @@ func _publish_metadata(lobby_id: int) -> bool:
 	var product_ok := bool(_steam.call("setLobbyData", lobby_id, "product", PRODUCT))
 	var protocol_ok := bool(_steam.call("setLobbyData", lobby_id, "protocol", PROTOCOL))
 	var host_ok := bool(_steam.call("setLobbyData", lobby_id, "host_steam_id", str(_expected_host)))
+	var build_ok := bool(_steam.call("setLobbyData", lobby_id, "build",
+		BUILD_FINGERPRINT.token(BUILD_FINGERPRINT.current())))
 	var ready_ok := bool(_steam.call("setLobbyData", lobby_id, "ready", "0"))
-	return product_ok and protocol_ok and host_ok and ready_ok
+	return product_ok and protocol_ok and build_ok and host_ok and ready_ok
 
 
 func _compatibility_error(lobby_id: int) -> String:
@@ -518,6 +527,11 @@ func _compatibility_error(lobby_id: int) -> String:
 		return "That invitation belongs to a different game."
 	if str(_steam.call("getLobbyData", lobby_id, "protocol")) != PROTOCOL:
 		return "That friend is using an incompatible Tetherbound protocol."
+	var host_build := str(_steam.call("getLobbyData", lobby_id, "build"))
+	var own_build := BUILD_FINGERPRINT.token(BUILD_FINGERPRINT.current())
+	if host_build != own_build:
+		return "Your friend is running a different version of Tetherbound (theirs %s, yours %s). Both players need the same version." \
+			% [host_build if not host_build.is_empty() else "unknown", own_build]
 	var host_text := str(_steam.call("getLobbyData", lobby_id, "host_steam_id")).strip_edges()
 	if not host_text.is_valid_int() or int(host_text) <= 0:
 		return "That lobby is missing its original host identity."

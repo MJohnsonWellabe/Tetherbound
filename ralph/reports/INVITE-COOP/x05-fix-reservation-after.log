@@ -1,0 +1,47 @@
+run id:  net-20260925T064207Z-6324
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z
+smoke:   tests/smoke_net_reconnect_reservation.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=6345 control_port=39491 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z/peer-0.log
+coordinator: launched peer 1 (client) pid=6346 control_port=40149 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z/peer-1.log
+coordinator: launched peer 2 (client) pid=6347 control_port=36563 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z/home-2 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z/peer-2.log
+coordinator: peer 2 hello: {"enet_port":31003.0,"godot_version":"4.7-stable (official)","main_sha":"a671a093f253","peer":2.0,"pid":6347.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z/home-2/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":31001.0,"godot_version":"4.7-stable (official)","main_sha":"a671a093f253","peer":0.0,"pid":6345.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":31002.0,"godot_version":"4.7-stable (official)","main_sha":"a671a093f253","peer":1.0,"pid":6346.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 3 peer(s) said hello
+PASS: host reported an ENet port (31001)
+PASS: host opened two seats (hosting udp/31001 as peer 1)
+PASS: guest A joined (joined 127.0.0.1:31001 as peer 486452442 after 10 frames; snapshot applied; 2 peer(s) in registry)
+PASS: guest A's link dropped (transport closed without a Session.leave())
+PASS: host noticed the drop (registry reports 1 peer(s) after 0 frames)
+PASS: guest B was refused while A's seat is held (Session.join(127.0.0.1, 31001) refused after 12 frames: This session is full (2/2). A seat is being held for a player who is reconnecting; try again in a couple of minutes.)
+PASS: guest B heard the held-seat reason (Session.join(127.0.0.1, 31001) refused after 12 frames: This session is full (2/2). A seat is being held for a player who is reconnecting; try again in a couple of minutes.)
+PASS: the held-seat refusal arrived in 256 ms
+PASS: guest B got a host verdict and no snapshot
+PASS: the refusal left the host registry at one row ([{ "appearance_id": "trainer", "character_id": "character-d26bb3a677f74ca58f763c1acd6e2a8e", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }])
+PASS: the refusal left the host world unchanged
+PASS: guest A reclaimed its held seat (joined 127.0.0.1:31001 as peer 1073887650 after 15 frames; snapshot applied; 2 peer(s) in registry)
+PASS: the returning character arrived on a new transport peer
+PASS: host counts host plus A again
+PASS: guest A left deliberately
+PASS: guest A's session ended in the same frame as its leave (client left cleanly after 0 frames)
+PASS: guest A can host its own joinable world immediately after leaving (hosting udp/31002 as peer 1)
+PASS: guest A's new session is a real host ({ "active": true, "available": true, "enet_port": 31002.0, "handshake_failed": false, "handshake_failure_reason": "", "handshake_rejected_by_host": false, "handshake_snapshot_applied": false, "is_host": true, "mode": "host", "peer_count": 1.0, "peer_id": 1.0, "registry_fingerprint": 2384681496.0, "rows": [{ "appearance_id": "trainer", "character_id": "reservation-smoke-a", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }], "snapshot_ready": true })
+PASS: host noticed A leave
+PASS: a deliberate leave holds no seat, so guest B joined at once (joined 127.0.0.1:31001 as peer 603452197 after 9 frames; snapshot applied; 2 peer(s) in registry)
+PASS: host registry is host plus B (["character-d26bb3a677f74ca58f763c1acd6e2a8e", "reservation-smoke-b"])
+ALL CHECKS PASSED
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/fix/after/net-reconnect_reservation-20260925T064207Z/SUMMARY.md ===
+# Net smoke run net-20260925T064207Z-6324
+
+Scene: world
+Peers: 3
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=6345 exited=true unexpected_exit=false
+- peer 1 (client) pid=6346 exited=true unexpected_exit=false
+- peer 2 (client) pid=6347 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED

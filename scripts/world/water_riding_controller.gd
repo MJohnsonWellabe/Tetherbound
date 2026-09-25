@@ -1,4 +1,5 @@
 extends "res://scripts/world/riding_controller.gd"
+const STATE := preload("res://scripts/player/swim_state.gd")
 var water_world: Node3D
 
 func _is_in_water() -> bool:
@@ -21,9 +22,17 @@ func dismount() -> bool:
 	var result := super.dismount()
 	if result and water_world != null and _player != null:
 		var depth: float = water_world.water_depth_at(_player.global_position)
-		if depth >= 1.2:
-			var swim: Node = _player.swim_controller
-			var config: Dictionary = swim.get("_config")
+		var swim: Node = _player.swim_controller
+		var config: Dictionary = swim.get("_config")
+		if depth >= float(config.human.entry_depth_m):
 			_player.global_position.y = water_world.field.water_level() + float(config.human.surface_body_offset_m)
 			swim.state.enter_water(false, water_world.field.water_level())
+		elif swim.state.mode == STATE.Mode.MOUNTED:
+			# Between the exit and entry depths the trainer keeps swimming as a
+			# human until the next landing; at wading depth they stand. Either
+			# way the ride's state must end with the ride.
+			if depth > float(config.human.exit_depth_m):
+				swim.state.enter_water(false, water_world.field.water_level())
+			else:
+				swim.state.leave_water()
 	return result

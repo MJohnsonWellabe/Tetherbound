@@ -21,6 +21,7 @@ class MockSteam:
 	var metadata: Dictionary = {
 		"product": "tetherbound",
 		"protocol": STEAM_LOBBY.PROTOCOL,
+		"build": STEAM_LOBBY.BUILD_FINGERPRINT.token(STEAM_LOBBY.BUILD_FINGERPRINT.current()),
 		"host_steam_id": "500",
 		"ready": "1",
 	}
@@ -54,6 +55,11 @@ class MockSteam:
 
 	func isOverlayEnabled() -> bool:
 		return overlay_enabled
+
+	var launch_command_line := ""
+
+	func getLaunchCommandLine() -> String:
+		return launch_command_line
 
 	func activateGameOverlayInviteDialog(lobby_id: int) -> void:
 		overlay_opened = lobby_id
@@ -162,6 +168,36 @@ func test_protocol_mismatch_leaves_metadata_lobby() -> void:
 	steam.free()
 
 
+func test_build_mismatch_leaves_metadata_lobby_before_dial() -> void:
+	var steam := MockSteam.new()
+	steam.metadata["build"] = "%s|0.0.0.other|deadbeef" % STEAM_LOBBY.PROTOCOL
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	assert_true(lobby.request_join(444))
+	steam.lobby_joined.emit(444, 0, false, 1)
+	assert_true(lobby.last_error().begins_with(
+		"Your friend is running a different version of Tetherbound (theirs %s|0.0.0.other|deadbeef, yours "
+			% STEAM_LOBBY.PROTOCOL), lobby.last_error())
+	assert_eq(steam.left, [444], "a mismatched build is refused before any peer connection")
+	lobby.free()
+	steam.free()
+
+
+func test_missing_build_metadata_is_refused_as_unknown_version() -> void:
+	var steam := MockSteam.new()
+	steam.metadata.erase("build")
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	assert_true(lobby.request_join(445))
+	steam.lobby_joined.emit(445, 0, false, 1)
+	assert_true(lobby.last_error().contains("(theirs unknown, yours "), lobby.last_error())
+	assert_eq(steam.left, [445])
+	lobby.free()
+	steam.free()
+
+
 func test_invite_overlay_unavailable_is_actionable() -> void:
 	var steam := MockSteam.new()
 	var lobby := STEAM_LOBBY.new()
@@ -195,6 +231,63 @@ func test_native_identity_must_be_a_member_of_the_claimed_lobby() -> void:
 	hello["steam_lobby_id"] = 101
 	hello["steam_protocol"] = "tetherbound-invite-v2"
 	assert_false(STEAM_LOBBY.member_admission_error(501, members, 101, hello).is_empty())
+
+
+func test_protocol_refusal_text_is_the_one_session_maps_to_incompatible_version() -> void:
+	const SESSION := preload("res://scripts/net/session.gd")
+	assert_eq(STEAM_LOBBY.PROTOCOL_REFUSAL, SESSION.STEAM_PROTOCOL_REFUSAL)
+	var hello := {"steam_protocol": "tetherbound-invite-v2", "steam_lobby_id": 101}
+	var members: Array[int] = [500, 501]
+	assert_eq(STEAM_LOBBY.member_admission_error(501, members, 101, hello),
+		SESSION.STEAM_PROTOCOL_REFUSAL)
+
+
+func test_invite_accepted_while_running_becomes_one_pending_invite() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	var seen: Array[int] = []
+	lobby.invite_received.connect(func(id: int) -> void: seen.append(id))
+	assert_eq(lobby.pending_invite_id(), 0, "no invite before Steam delivers one")
+	steam.join_requested.emit(9001, 500)
+	assert_eq(seen, [9001], "the running game raises the invite for the title flow")
+	assert_eq(lobby.pending_invite_id(), 9001)
+	assert_eq(steam.joined, [], "accepting in Steam does not join before the player picks a character")
+	assert_true(lobby.request_join(9001))
+	assert_eq(lobby.pending_invite_id(), 0, "joining consumes the pending invite")
+	assert_eq(steam.joined, [9001])
+	lobby.free()
+	steam.free()
+
+
+func test_invite_accepted_while_closed_is_read_from_the_steam_launch_line() -> void:
+	var steam := MockSteam.new()
+	steam.launch_command_line = "+connect_lobby 9002"
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	var seen: Array[int] = []
+	lobby.invite_received.connect(func(id: int) -> void: seen.append(id))
+	assert_true(lobby.initialize())
+	assert_eq(seen, [9002], "a cold launch raises the same invite signal as a running accept")
+	assert_eq(lobby.pending_invite_id(), 9002)
+	assert_eq(steam.joined, [], "a cold launch waits for character selection too")
+	lobby.free()
+	steam.free()
+
+
+func test_invite_while_hosting_stays_pending_with_a_reason() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	lobby._hosting = true
+	assert_false(lobby.request_join(9003))
+	assert_eq(lobby.last_error(), "Leave the current world before joining this invitation.")
+	assert_eq(lobby.pending_invite_id(), 9003, "the invite is kept for after the player leaves")
+	assert_eq(steam.joined, [])
+	lobby.free()
+	steam.free()
 
 
 func test_connect_lobby_launch_argument_parsing() -> void:

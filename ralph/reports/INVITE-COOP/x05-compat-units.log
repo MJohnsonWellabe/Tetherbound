@@ -1,0 +1,68 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only session_build_compat,steam_lobby,steam_invite_ui,session_transport,session_snapshot,snapshot_transfer,peer_registry_admission,join_driver_admission_reason: 8 of 498 test files
+  ok    test_join_driver_admission_reason.gd :: test_host_admission_reason_is_terminal_and_readable
+  ok    test_join_driver_admission_reason.gd :: test_transport_failure_text_does_not_disable_existing_retry_budget
+  ok    test_peer_registry_admission.gd :: test_character_can_reconnect_only_after_old_peer_is_gone
+  ok    test_peer_registry_admission.gd :: test_full_session_refuses_before_mutation
+  ok    test_peer_registry_admission.gd :: test_invalid_identity_is_refused_without_registry_mutation
+  ok    test_peer_registry_admission.gd :: test_live_character_conflict_preserves_host_and_every_other_peer
+  ok    test_session_build_compat.gd :: test_content_hash_is_order_independent_and_sensitive_to_bytes_and_paths
+  ok    test_session_build_compat.gd :: test_current_fingerprint_matches_itself_and_names_every_part
+  ok    test_session_build_compat.gd :: test_each_mismatch_names_what_differs
+  ok    test_session_build_compat.gd :: test_identical_fingerprint_is_admitted
+  ok    test_session_build_compat.gd :: test_missing_or_malformed_fingerprint_is_refused_not_admitted
+  ok    test_session_build_compat.gd :: test_token_is_the_short_display_form
+[session] snapshot applied (3 keys, day 7)
+  ok    test_session_snapshot.gd :: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta
+  ok    test_session_snapshot.gd :: test_bootstrap_delta_overflow_fails_without_applying_entries
+  ok    test_session_snapshot.gd :: test_conflicting_early_chunk_fails_and_never_opens_readiness
+WARNING: [session] snapshot for peer 22 failed: The world snapshot transfer timed out before the client acknowledged it.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _abort_host_snapshot (res://scripts/net/session.gd:914)
+         [1] _expire_snapshot_sends (res://scripts/net/session.gd:1303)
+         [2] test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once (res://tests/test_session_snapshot.gd:185)
+         [3] _init (res://tests/run_tests.gd:120)
+  ok    test_session_snapshot.gd :: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once
+  ok    test_session_snapshot.gd :: test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one
+  ok    test_session_transport.gd :: test_client_character_is_not_saveable_until_snapshot_admission
+WARNING: Session.host_with_peer: capacity 5 is outside 1..4
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] host_with_peer (res://scripts/net/session.gd:254)
+         [1] test_disconnected_or_wrong_role_peers_are_refused_before_install (res://tests/test_session_transport.gd:40)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_session_transport.gd :: test_disconnected_or_wrong_role_peers_are_refused_before_install
+  ok    test_session_transport.gd :: test_enet_physical_timeout_routing_remains_transport_specific
+[session] client leave: handshake never applied a snapshot; portable character unchanged
+  ok    test_session_transport.gd :: test_failed_client_leave_does_not_call_the_character_store
+  ok    test_session_transport.gd :: test_transport_closed_fires_after_peer_and_kind_are_cleared
+  ok    test_session_transport.gd :: test_world_first_preparation_closes_authority_snapshot_and_save_gates
+  ok    test_snapshot_transfer.gd :: test_corrupt_complete_payload_never_becomes_ready
+  ok    test_snapshot_transfer.gd :: test_descriptor_limits_and_reset_release_partial_state
+  ok    test_snapshot_transfer.gd :: test_invalid_chunks_are_rejected_without_replacing_accepted_data
+  ok    test_snapshot_transfer.gd :: test_missing_chunk_and_identical_duplicate_never_complete_early
+  ok    test_snapshot_transfer.gd :: test_snapshot_larger_than_steam_packet_limit_round_trips_out_of_order
+  ok    test_snapshot_transfer.gd :: test_valid_variant_bytes_that_are_not_a_dictionary_are_rejected
+  ok    test_steam_invite_ui.gd :: test_cold_steam_invite_parser_accepts_both_launch_forms
+  ok    test_steam_invite_ui.gd :: test_deliberate_new_friend_character_clears_stale_identity_and_world
+  ok    test_steam_invite_ui.gd :: test_native_lobby_failure_invalidates_a_ready_join_before_character_selection
+  ok    test_steam_invite_ui.gd :: test_players_invite_button_preserves_specific_coordinator_error
+  ok    test_steam_invite_ui.gd :: test_selected_portable_character_replaces_run_state_without_loading_its_world
+  ok    test_steam_invite_ui.gd :: test_unresolved_native_request_cannot_advertise_actionable_retry
+  ok    test_steam_lobby.gd :: test_app_id_has_no_spacewars_default
+  ok    test_steam_lobby.gd :: test_build_mismatch_leaves_metadata_lobby_before_dial
+  ok    test_steam_lobby.gd :: test_cancelled_join_leaves_late_successful_callback
+  ok    test_steam_lobby.gd :: test_connect_lobby_launch_argument_parsing
+  ok    test_steam_lobby.gd :: test_invite_overlay_unavailable_is_actionable
+  ok    test_steam_lobby.gd :: test_mismatched_success_callback_is_left_without_stealing_attempt
+  ok    test_steam_lobby.gd :: test_missing_build_metadata_is_refused_as_unknown_version
+  ok    test_steam_lobby.gd :: test_native_identity_must_be_a_member_of_the_claimed_lobby
+  ok    test_steam_lobby.gd :: test_native_unavailable_is_optional_and_actionable
+  ok    test_steam_lobby.gd :: test_original_host_departure_refuses_lobby_before_dial
+  ok    test_steam_lobby.gd :: test_protocol_mismatch_leaves_metadata_lobby
+  ok    test_steam_lobby.gd :: test_timed_out_host_request_stays_pending_until_callback_finishes
+  ok    test_steam_lobby.gd :: test_timed_out_join_stays_pending_until_late_callback_then_allows_retry
+
+48 tests, 292 assertions, 0 failed
