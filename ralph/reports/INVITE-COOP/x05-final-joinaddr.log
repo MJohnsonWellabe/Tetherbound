@@ -1,0 +1,41 @@
+run id:  net-20260925T050012Z-14810
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack3/joinaddr/net-join_by_address-20260925T050012Z
+smoke:   tests/smoke_net_join_by_address.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=14831 control_port=40645 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack3/joinaddr/net-join_by_address-20260925T050012Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack3/joinaddr/net-join_by_address-20260925T050012Z/peer-0.log
+coordinator: launched peer 1 (client) pid=14832 control_port=33481 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack3/joinaddr/net-join_by_address-20260925T050012Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack3/joinaddr/net-join_by_address-20260925T050012Z/peer-1.log
+coordinator: peer 1 hello: {"enet_port":34282.0,"godot_version":"4.7-stable (official)","main_sha":"843fea740098","peer":1.0,"pid":14832.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack3/joinaddr/net-join_by_address-20260925T050012Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":34281.0,"godot_version":"4.7-stable (official)","main_sha":"843fea740098","peer":0.0,"pid":14831.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack3/joinaddr/net-join_by_address-20260925T050012Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: derived the host's ENet port before launch (34281)
+PASS: peer 0 has a Session node
+PASS: --mp-host bound a live listen server with no step telling it to (mode 'host')
+PASS: peer 0's session mode is 'host' (got 'host')
+PASS: the listen server's own peer id is 1 (got 1)
+PASS: --mp-host left the title screen and entered the world (context 'world')
+PASS: the host's registry reached 2 peers with only --mp-join driving the joiner (registry reports 2 peer(s) after 0 frames)
+PASS: --mp-join carried the joiner off the title screen into the world (input_context=world after 0 frames)
+PASS: peer 1 has a Session node
+PASS: peer 1's session mode is 'client' (got 'client')
+PASS: peer 1 reports is_host false
+PASS: peer 1 applied the host's world snapshot -- the handshake finished, not just the socket
+PASS: peer 1 holds a real assigned ENet id, not the session-less 1 (got 1818783129)
+PASS: both registries hold 2 rows (host 2, client 2)
+PASS: the registries agree across peers: host [1, 1818783129] vs client [1, 1818783129]
+PASS: the joiner's own registry reports 2 peers (registry reports 2 peer(s) after 0 frames)
+assertions run: 17
+ALL CHECKS PASSED
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/stack3/joinaddr/net-join_by_address-20260925T050012Z/SUMMARY.md ===
+# Net smoke run net-20260925T050012Z-14810
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=14831 exited=true unexpected_exit=false
+- peer 1 (client) pid=14832 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
