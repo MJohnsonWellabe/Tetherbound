@@ -49,6 +49,14 @@ var _in_flight: Dictionary = {}
 ## Injected transport with `Game.ledger`'s `submit()` shape, for a unit fixture
 ## that has to answer `pending`. Null in production: `LEDGER_CLAIM.transport()`.
 var ledger_transport: Node = null
+## The fight this encounter mirrors: the encounter director whose
+## `trainer_started`/`trainer_victory`/`trainer_lost` reach `encounter_started`/
+## `encounter_won`/`encounter_lost` (`cloudreach_world_runtime.gd` mounts it
+## beside this node). Injected by a fixture; null in production, where
+## `_fight_director()` finds that sibling by its `trainer_battle_active()` /
+## `trainer_battle_id()` surface. Read only by `restore_progression_from_game`.
+var fight_director: Node = null
+var _found_director: Node = null
 
 
 static func read_config() -> Dictionary:
@@ -103,18 +111,65 @@ func _process(delta: float) -> void:
 ## here -- clearing it would drop exactly the win/relay/witness whose delta is
 ## landing -- and `sync_progression()` below settles whatever it set. Only a
 ## different store object drops them, since their flags belong to the old one.
+##
+## The same reasoning keeps a live Veyra fight. `story_ledger.gd::restore_all`
+## runs the same sweep on a world-flag delta wherever a sequence director
+## listens, host included. A pickup or another peer's flag used to end the
+## encounter here: the phase dropped to
+## `dormant` and the crosswind/overload hazards and their clock reset mid-fight.
+## `Game.load_game()` and `apply_world_snapshot()` reload the SAME store in
+## place (`Game.progression` is one merged view for the whole process), so the
+## store alone cannot tell a load from a delta. The fight decides instead
+## (`_encounter_survives`): the encounter state is kept only while the director
+## still runs this trainer battle and the reloaded flags still admit it. A load
+## or snapshot with the fight over, flags that no longer admit it, or a
+## different store all reset as before.
 func restore_progression_from_game(game: Node) -> void:
 	var restored: RefCounted = game.get("progression")
-	if restored != _progression:
+	var same_store := restored == _progression
+	if not same_store:
 		_in_flight.clear()
 	_progression = restored
-	_in_encounter = false
-	_overload = false
-	elapsed = 0.0
-	_pending_recoveries.clear()
-	_hazard_drift.clear()
+	if not (same_store and _encounter_survives()):
+		_in_encounter = false
+		_overload = false
+		elapsed = 0.0
+		_pending_recoveries.clear()
+		_hazard_drift.clear()
 	_revision = -1
 	sync_progression()
+
+
+## Whether a sweep leaves this encounter running: it was running, the store's
+## flags still admit it (`encounter_started`'s own gate), and the fight it
+## mirrors has not ended. With no director to ask (a unit fixture), the flags
+## alone decide. The director can only END the encounter here; only
+## `encounter_started` begins one.
+func _encounter_survives() -> bool:
+	if not _in_encounter or not _prerequisites() \
+			or _has(str(config.get("captain_victory_flag", ""))):
+		return false
+	var director := _fight_director()
+	if director == null:
+		return true
+	return bool(director.call("trainer_battle_active")) \
+		and str(director.call("trainer_battle_id")) == str(config.get("encounter_id", ""))
+
+
+func _fight_director() -> Node:
+	if is_instance_valid(fight_director):
+		return fight_director
+	if is_instance_valid(_found_director):
+		return _found_director
+	var parent := get_parent()
+	if parent == null:
+		return null
+	for sibling: Node in parent.get_children():
+		if sibling != self and sibling.has_method("trainer_battle_active") \
+				and sibling.has_method("trainer_battle_id"):
+			_found_director = sibling
+			return sibling
+	return null
 
 
 func _has(flag: String) -> bool:

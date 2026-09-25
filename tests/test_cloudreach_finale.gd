@@ -56,6 +56,17 @@ class FakeGame extends Node:
 	var progression: RefCounted
 
 
+## The encounter director's trainer-battle surface (`encounter_director.gd`).
+class FightDirector extends Node:
+	var active_id := ""
+
+	func trainer_battle_active() -> bool:
+		return not active_id.is_empty()
+
+	func trainer_battle_id() -> String:
+		return active_id
+
+
 func _chapter() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_chapter.json"))
 
@@ -319,3 +330,127 @@ func test_client_pending_network_repair_submits_once_and_settles_once() -> void:
 	finale.free()
 	game.free()
 	host.free()
+
+
+# --- the progression_restore sweep during a live Veyra fight -----------------
+
+## A controller mid-Veyra with some live transient state, and the fight director.
+func _live_fight(flags: RefCounted) -> Array:
+	_unlock(flags)
+	var finale := _controller(flags)
+	var director := FightDirector.new()
+	finale.fight_director = director
+	assert_true(finale.encounter_started(ENCOUNTER))
+	director.active_id = ENCOUNTER
+	finale.elapsed = 3.25
+	finale._hazard_drift[4242] = Vector3(1.5, 0, 0)
+	finale._pending_recoveries[4243] = true
+	var game := FakeGame.new()
+	game.progression = flags
+	return [finale, director, game]
+
+
+func _free_all(nodes: Array) -> void:
+	for node: Node in nodes:
+		node.free()
+
+
+## `ledger_rpc.gd::apply_remote_delta` sweeps after EVERY committed delta; an
+## unrelated one must not end the fight, drop the overload, or restart hazards.
+func test_unrelated_delta_sweep_keeps_crosswind_and_overload_phases() -> void:
+	var flags := FLAGS.new()
+	var fixture := _live_fight(flags)
+	var finale: Node3D = fixture[0]
+	var game: Node = fixture[2]
+	assert_eq(finale.phase, "crosswind_command")
+	flags.set_flag("pickup:cloudreach_unrelated_crate")
+	finale.restore_progression_from_game(game)
+	assert_eq(finale.phase, "crosswind_command", "Unrelated delta keeps crosswind_command")
+	assert_true(finale._in_encounter, "Unrelated delta keeps the encounter running")
+	assert_true(is_equal_approx(finale.elapsed, 3.25), "Hazard clock is not restarted")
+	assert_true(finale._hazard_drift.has(4242), "Accumulated drift is kept")
+	assert_true(finale._pending_recoveries.has(4243), "A pending recovery handoff is kept")
+	assert_true(bool(finale.presentation_state()["hazards_active"]))
+	finale.opposition_remaining(ENCOUNTER, 1, 3)
+	assert_eq(finale.phase, "anchor_overload")
+	finale.elapsed = 1.75
+	flags.set_flag("tam_tools_given")
+	finale.restore_progression_from_game(game)
+	assert_eq(finale.phase, "anchor_overload", "Unrelated delta keeps anchor_overload")
+	assert_true(finale._overload)
+	assert_true(is_equal_approx(finale.elapsed, 1.75))
+	assert_eq(finale.hazard_at(finale.position)["arc_stage"], "active",
+		"Overload arc still samples the kept clock, not a restarted telegraph")
+	_free_all(fixture)
+
+
+func test_restore_resets_once_the_fight_is_over() -> void:
+	var flags := FLAGS.new()
+	var fixture := _live_fight(flags)
+	var finale: Node3D = fixture[0]
+	var director: Node = fixture[1]
+	finale.opposition_remaining(ENCOUNTER, 1, 3)
+	director.active_id = ""
+	finale.restore_progression_from_game(fixture[2])
+	assert_eq(finale.phase, "dormant")
+	assert_false(finale._in_encounter)
+	assert_false(finale._overload)
+	assert_eq(finale.elapsed, 0.0)
+	assert_true(finale._hazard_drift.is_empty())
+	assert_true(finale._pending_recoveries.is_empty())
+	_free_all(fixture)
+
+
+func test_restore_resets_when_another_trainer_is_being_fought() -> void:
+	var flags := FLAGS.new()
+	var fixture := _live_fight(flags)
+	var finale: Node3D = fixture[0]
+	fixture[1].active_id = "cloudreach_tavi"
+	finale.restore_progression_from_game(fixture[2])
+	assert_eq(finale.phase, "dormant")
+	_free_all(fixture)
+
+
+## A load of an earlier save reloads the same store in place, without the
+## encounter's entry flags: the running fight cannot keep it.
+func test_reloaded_flags_that_no_longer_admit_the_encounter_reset_it() -> void:
+	var flags := FLAGS.new()
+	var fixture := _live_fight(flags)
+	var finale: Node3D = fixture[0]
+	flags.load_data({})
+	finale.restore_progression_from_game(fixture[2])
+	assert_eq(finale.phase, "dormant")
+	assert_false(finale._in_encounter)
+	assert_eq(finale.elapsed, 0.0)
+	_free_all(fixture)
+
+
+func test_a_different_store_resets_even_mid_fight() -> void:
+	var flags := FLAGS.new()
+	var fixture := _live_fight(flags)
+	var finale: Node3D = fixture[0]
+	var other := FLAGS.new()
+	_unlock(other)
+	fixture[2].progression = other
+	finale.restore_progression_from_game(fixture[2])
+	assert_eq(finale.phase, "dormant")
+	assert_false(finale._in_encounter)
+	assert_true(finale._hazard_drift.is_empty())
+	_free_all(fixture)
+
+
+## No director to ask (this fixture's controller is not in a tree): the flags
+## alone decide, and an unrelated delta still keeps the fight.
+func test_without_a_director_the_flags_decide() -> void:
+	var flags := FLAGS.new()
+	var fixture := _live_fight(flags)
+	var finale: Node3D = fixture[0]
+	finale.fight_director = null
+	flags.set_flag("pickup:cloudreach_unrelated_crate")
+	finale.restore_progression_from_game(fixture[2])
+	assert_eq(finale.phase, "crosswind_command")
+	flags.set_flag(str(FINALE.read_config()["captain_victory_flag"]))
+	finale.restore_progression_from_game(fixture[2])
+	assert_eq(finale.phase, "break_the_eye")
+	assert_false(finale._in_encounter, "A landed victory ends the mirrored encounter")
+	_free_all(fixture)
