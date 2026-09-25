@@ -105,6 +105,8 @@ var _pulled_here: bool = false
 var _participants_cache: Array = []
 var _participants_read_at: int = -1
 const PARTICIPANT_CACHE_MS := 1000
+## How long an unacknowledged world receipt waits before it is submitted again.
+const RECEIPT_RETRY_MS := 5000
 
 
 func build(world: Node, player: Node3D) -> bool:
@@ -1013,9 +1015,10 @@ func _open_choice() -> void:
 	_close_choice()
 	var spec: Dictionary = _config.get("choice", {})
 	_say(str(spec.get("announce", "")))
-	if _player == null:
-		return
-	var here := _player.global_position
+	# With no player body (a bare scene) the prompts still open, around the
+	# creature, so the stage never waits on prompts that do not exist.
+	var here := _player.global_position if _player != null else \
+		(_legendary.global_position if _legendary != null else global_position)
 	var toward := (_settle_target if _settle_target != Vector3.ZERO else
 		(_legendary.global_position if _legendary != null else here + Vector3.FORWARD)) - here
 	toward.y = 0.0
@@ -1242,11 +1245,16 @@ func _reconcile_world_receipt() -> void:
 	if not accepted and not _has_player_flag(_flag("legendary_refused")):
 		return
 	var receipt := resolution_flag(accepted, _receipt_character_id())
-	if _has_flag(receipt) or _receipts_submitted.has(receipt):
+	if _has_flag(receipt):
 		return
-	# Marked before the eligibility read, so a character who answered in some
-	# OTHER world is asked once per session, not every frame.
-	_receipts_submitted[receipt] = true
+	# Throttled, not once-only: a host refusal, a drop or a lost verdict leaves
+	# the world without the receipt, and it is asked again after
+	# RECEIPT_RETRY_MS. The eligibility read is inside the throttle, so a
+	# character who answered in some OTHER world costs one read per interval.
+	var now := Time.get_ticks_msec()
+	if _receipts_submitted.has(receipt) and now - int(_receipts_submitted[receipt]) < RECEIPT_RETRY_MS:
+		return
+	_receipts_submitted[receipt] = now
 	if not _eligible_here():
 		return
 	_write_world_flag(receipt)
@@ -1273,12 +1281,24 @@ static func resolution_flag(accepted: bool, character_id: String) -> String:
 
 ## Every eligible participant has answered, and none accepted. Pure, so the
 ## herd display's rule is testable without a world: `participants` is the
-## Warden fight's recorded characters (empty solo, where `solo_character` is
-## the only participant), `world_flags` the ids the world holds.
+## Warden fight's recorded characters, `world_flags` the ids the world holds.
+##
+## With NO fight journal (a solo freeing, or a pre-journal save) the answers
+## the world itself holds are the eligible set: it is a full refusal when at
+## least one answer is recorded and none of them accepted. Deliberately not
+## keyed to the local character, so a host and a guest who joined later read
+## the same world the same way. `solo_character` is kept for callers.
 static func all_refused(participants: Array, solo_character: String, world_flags: Array) -> bool:
 	var eligible: Array = participants.duplicate()
 	if eligible.is_empty():
-		eligible = [solo_character if not solo_character.is_empty() else SOLO_CHARACTER]
+		var answered := false
+		for raw: Variant in world_flags:
+			var id := str(raw)
+			if id.begins_with(RESOLUTION_PREFIX + "accepted:"):
+				return false
+			if id.begins_with(RESOLUTION_PREFIX + "refused:"):
+				answered = true
+		return answered
 	# Only an eligible participant's answer counts either way: a stranger's
 	# receipt can neither complete a full refusal nor veto one.
 	for raw: Variant in eligible:
@@ -1320,9 +1340,16 @@ func _eligible_here() -> bool:
 		# No fight journal: solo. With other peers present there is no way to
 		# know this character fought HERE, so its answer (possibly carried in
 		# from another world) is not recorded as this world's.
-		return not _multi_peer()
+		return not _multi_peer() and not _is_client()
 	var character := _local_character_id()
 	return not character.is_empty() and participants.has(character)
+
+
+func _is_client() -> bool:
+	var game := _game()
+	var session: Variant = game.get("session") if game != null else null
+	return session != null and bool((session as Node).call("is_active")) \
+		and not bool((session as Node).call("is_host"))
 
 
 func _multi_peer() -> bool:
@@ -1364,15 +1391,17 @@ func _offer_outstanding_after_settle() -> bool:
 ## different character loading this world must not be stamped as having
 ## answered. The once-only rule on such a world is `_pre_f05_settled_world()`.
 func _migrate_legacy_solo_answer() -> void:
-	if not _has_flag(_flag("legendary_settled")) or _has_flag(LIVE_MARKER):
+	if not _has_flag(_flag("legendary_settled")) or _has_flag(LIVE_MARKER) or _is_client():
 		return
-	if _multi_peer() or not _warden_participant_characters().is_empty():
-		return
+	var any_receipt := false
 	var progression := _progression()
 	if progression != null:
 		for raw: Variant in (progression.call("all_set") as Array):
 			if str(raw).begins_with(RESOLUTION_PREFIX):
-				return
+				any_receipt = true
+	if not should_migrate(true, false, _is_client(), _multi_peer(),
+			_warden_participant_characters().is_empty(), any_receipt):
+		return
 	var game := _game()
 	var party: Variant = game.get("party") if game != null else null
 	var holds := _has_player_flag(_flag("legendary_joined"))
@@ -1494,7 +1523,7 @@ func _may_receive_now() -> bool:
 	if _pre_f05_settled_world():
 		return false
 	return may_receive(_local_character_id(), _warden_participant_characters(),
-		_character_resolved())
+		_character_resolved(), _is_client())
 
 
 ## A world that settled its freeing before F05 existed: no offer is made on it
@@ -1520,13 +1549,30 @@ func _pre_f05_settled_world() -> bool:
 ## set would strand every solo ending -- which is why it reads as "this is the
 ## only player", which is what it is.
 static func may_receive(character_id: String, participant_characters: Array,
-		already_resolved: bool) -> bool:
+		already_resolved: bool, is_client: bool = false) -> bool:
 	if already_resolved:
 		return false
 	for raw: Variant in participant_characters:
 		if str(raw) == character_id and not character_id.is_empty():
 			return true
-	return participant_characters.is_empty()
+	# An empty journal means a solo freeing -- and only the peer that holds the
+	# world can have been that solo player. A CLIENT reading an empty journal
+	# either joined a world freed without it or has not received the snapshot
+	# yet; neither is proof it fought, so it is offered nothing (re-read once
+	# the journal arrives).
+	return participant_characters.is_empty() and not is_client
+
+
+## Whether a settled world with no F05 answer should have its pre-F05 solo
+## answer migrated into a world receipt. Pure, for the tests. Only the peer
+## that owns the world, alone, with no fight journal and no receipt of any
+## kind: a client (whose journal may simply not have synced yet) or anyone in
+## a multi-peer session never migrates, so nobody who was never offered is
+## recorded as having answered.
+static func should_migrate(settled: bool, live_marker: bool, is_client: bool, multi_peer: bool,
+		participants_empty: bool, any_receipt: bool) -> bool:
+	return settled and not live_marker and not is_client and not multi_peer \
+		and participants_empty and not any_receipt
 
 
 ## This peer's stable character id, or "" on a save that predates them.

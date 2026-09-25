@@ -125,3 +125,49 @@ func test_the_choice_announces_both_answers_as_final_and_neither_prompt_starts_l
 		var offset := float(choice.get(key, 0.0))
 		assert_true(sqrt(offset * offset + height * height) > radius,
 			"'%s' puts its prompt in reach of where the player already stands" % key)
+
+
+# --- coordinator review of #221 (8edc5c4d) ------------------------------------
+
+func test_a_guest_joining_a_solo_freed_world_is_offered_nothing() -> void:
+	# The host freed the Stag alone, so no fight journal exists. A guest who
+	# never fought joins: the empty journal is not proof it fought.
+	assert_false(CLIMAX.may_receive(FRIEND, [], false, true),
+		"a client reading an empty journal is not the solo fighter")
+	assert_true(CLIMAX.may_receive(ME, [], false, false),
+		"the peer that holds the world still gets its own solo offer")
+
+
+func test_an_empty_journal_before_the_snapshot_syncs_offers_a_client_nothing_yet() -> void:
+	# Before the host's snapshot lands, a real participant's client reads an
+	# empty journal. It must wait, not be offered or refused; once the journal
+	# arrives with its id it is offered.
+	assert_false(CLIMAX.may_receive(FRIEND, [], false, true))
+	assert_true(CLIMAX.may_receive(FRIEND, [ME, FRIEND], false, true),
+		"once the journal names it, the client is offered its own")
+
+
+func test_migration_never_runs_for_a_client_or_in_company() -> void:
+	# settled, live, client, multi_peer, participants_empty, any_receipt
+	assert_true(CLIMAX.should_migrate(true, false, false, false, true, false),
+		"a settled pre-F05 solo world migrates once")
+	assert_false(CLIMAX.should_migrate(true, false, true, false, true, false),
+		"a joining guest (a client) never migrates: it was never offered anything")
+	assert_false(CLIMAX.should_migrate(true, false, false, true, true, false),
+		"with other peers present nobody migrates")
+	assert_false(CLIMAX.should_migrate(true, false, false, false, false, false),
+		"a world with a fight journal is not a solo world")
+	assert_false(CLIMAX.should_migrate(true, true, false, false, true, false),
+		"a world with a live F05 answer needs no migration")
+	assert_false(CLIMAX.should_migrate(true, false, false, false, true, true),
+		"a world that already holds a receipt is not migrated again")
+	assert_false(CLIMAX.should_migrate(false, false, false, false, true, false),
+		"an unsettled world has nothing to migrate")
+
+
+func test_an_empty_journal_herd_display_is_the_same_for_every_peer() -> void:
+	var world := [CLIMAX.resolution_flag(false, ME)]
+	assert_eq(CLIMAX.all_refused([], ME, world), CLIMAX.all_refused([], FRIEND, world),
+		"host and a joining guest read one world the same way")
+	assert_true(CLIMAX.all_refused([], FRIEND, world),
+		"the only recorded answer is a refusal: full refusal, whoever asks")
