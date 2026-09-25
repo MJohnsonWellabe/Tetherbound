@@ -1,0 +1,2 @@
+toast: game_time_since_post=1.80s wall_since_post=197.25s visible=true text='Toast hold check: posted 1.8 s ago'
+drowning still: mode=HUMAN drowning=true stamina=0.0 health=91.9 cue=visible
