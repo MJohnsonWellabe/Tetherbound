@@ -785,14 +785,15 @@
       "id": "cinder_verge_cluster_19",
       "region_id": "cinder_verge",
       "position": [
-        -50,
-        28,
+        0,
+        31,
         414
       ],
       "radius": 36,
       "calm_table_id": "verge_calm",
       "surge_table_id": "verge_surge",
-      "replacement_point": "wild_clusters.cinder_verge_cluster_19"
+      "replacement_point": "wild_clusters.cinder_verge_cluster_19",
+      "_why_pocket_f09": "Moved 50 m east from [-50,28,414]: its 36 m spawn disc covered the verge_ash_hollow dead-end pocket, and spawn picking avoids baked scatter but not pocket walls. Same flat verge ground (<=9 deg within 30 m)."
     },
     {
       "id": "cinder_verge_cluster_20",
@@ -4425,15 +4426,16 @@
       "id": "dynamo_cluster_24",
       "region_id": "dynamo",
       "position": [
-        -170,
+        -168,
         115,
-        5450
+        5448
       ],
       "radius": 40,
       "calm_table_id": "dynamo_calm",
       "surge_table_id": "dynamo_surge",
       "replacement_point": "wild_clusters.dynamo_cluster_24",
-      "_why_broad_visual_0910": "The former [-116,5460] 40m spawn disc covered the Stormheart Tree destination and terminal critical-road segment at x=-100. Production catalogue evidence placed a Tanglevolt 2.68m from the trainer and collapsed the camera into its render body. Re-sited 70m west of the road and 72.8m from the landmark: nearby wildlife stays forward-visible on the final approach, while the full 40m spawn disc plus fitted footprint, 7m wander and 5.2m exploration camera arm clears the critical road. Count, tables, stable id/order, radius and levels are unchanged."
+      "_why_broad_visual_0910": "The former [-116,5460] 40m spawn disc covered the Stormheart Tree destination and terminal critical-road segment at x=-100. Production catalogue evidence placed a Tanglevolt 2.68m from the trainer and collapsed the camera into its render body. Re-sited 70m west of the road and 72.8m from the landmark: nearby wildlife stays forward-visible on the final approach, while the full 40m spawn disc plus fitted footprint, 7m wander and 5.2m exploration camera arm clears the critical road. Count, tables, stable id/order, radius and levels are unchanged.",
+      "_why_route_reroute_f09": "F09 lengthened deepwood_road by 2 m at the Rootgate, shifting its 10 m ROAD samples; the sample at z=5415 sat 78.3 m from the former [-170,5450] centre, just past the 77.5 m forward-visibility range. Moved 2 m toward the road (75.6 m) instead of adding a roadside pair inside the Dynamo arena; the terminal-road envelope clearance still holds."
     },
     {
       "id": "dynamo_cluster_25",
@@ -5487,9 +5489,9 @@
       "id": "road_visibility_conductor_road_25",
       "region_id": "conductor_run",
       "position": [
-        -1059.363,
+        -1050.818,
         0.0,
-        3329.829
+        3311.84
       ],
       "radius": 3.0,
       "calm_table_id": "run_calm",
@@ -5502,9 +5504,9 @@
       "id": "road_visibility_conductor_road_26",
       "region_id": "conductor_run",
       "position": [
-        -992.786,
+        -960.679,
         0.0,
-        3354.088
+        3321.639
       ],
       "radius": 3.0,
       "calm_table_id": "run_calm",
@@ -5517,9 +5519,9 @@
       "id": "road_visibility_conductor_road_27",
       "region_id": "conductor_run",
       "position": [
-        -936.859,
+        -895.028,
         0.0,
-        3397.598
+        3348.302
       ],
       "radius": 3.0,
       "calm_table_id": "run_calm",
@@ -5532,9 +5534,9 @@
       "id": "road_visibility_conductor_road_28",
       "region_id": "conductor_run",
       "position": [
-        -870.282,
+        -824.363,
         0.0,
-        3421.857
+        3353.543
       ],
       "radius": 3.0,
       "calm_table_id": "run_calm",
@@ -5547,9 +5549,9 @@
       "id": "road_visibility_conductor_road_29",
       "region_id": "conductor_run",
       "position": [
-        -814.354,
+        -758.712,
         0.0,
-        3465.366
+        3380.206
       ],
       "radius": 3.0,
       "calm_table_id": "run_calm",
@@ -5562,9 +5564,9 @@
       "id": "road_visibility_conductor_road_30",
       "region_id": "conductor_run",
       "position": [
-        -747.777,
+        -688.047,
         0.0,
-        3489.625
+        3385.447
       ],
       "radius": 3.0,
       "calm_table_id": "run_calm",
@@ -5577,9 +5579,9 @@
       "id": "road_visibility_conductor_road_31",
       "region_id": "conductor_run",
       "position": [
-        -691.849,
+        -655.5,
         0.0,
-        3533.135
+        3439.638
       ],
       "radius": 3.0,
       "calm_table_id": "run_calm",
@@ -5592,9 +5594,9 @@
       "id": "road_visibility_conductor_road_32",
       "region_id": "conductor_run",
       "position": [
-        -645.588,
+        -644.5,
         0.0,
-        3546.155
+        3509.638
       ],
       "radius": 3.0,
       "calm_table_id": "run_calm",
@@ -5607,9 +5609,9 @@
       "id": "road_visibility_deepwood_road_01",
       "region_id": "deepwood",
       "position": [
-        -627.761,
+        -655.5,
         0.0,
-        3608.135
+        3622.0
       ],
       "radius": 3.0,
       "calm_table_id": "deepwood_calm",
@@ -5622,9 +5624,9 @@
       "id": "road_visibility_deepwood_road_02",
       "region_id": "deepwood",
       "position": [
-        -587.185,
+        -644.5,
         0.0,
-        3666.226
+        3692.0
       ],
       "radius": 3.0,
       "calm_table_id": "deepwood_calm",
@@ -5637,9 +5639,9 @@
       "id": "road_visibility_deepwood_road_03",
       "region_id": "deepwood",
       "position": [
-        -566.382,
+        -616.557,
         0.0,
-        3733.963
+        3752.496
       ],
       "radius": 3.0,
       "calm_table_id": "deepwood_calm",
@@ -5652,9 +5654,9 @@
       "id": "road_visibility_deepwood_road_04",
       "region_id": "deepwood",
       "position": [
-        -525.806,
+        -565.159,
         0.0,
-        3792.054
+        3801.273
       ],
       "radius": 3.0,
       "calm_table_id": "deepwood_calm",
@@ -5667,9 +5669,9 @@
       "id": "road_visibility_deepwood_road_05",
       "region_id": "deepwood",
       "position": [
-        -505.002,
+        -531.198,
         0.0,
-        3859.79
+        3863.463
       ],
       "radius": 3.0,
       "calm_table_id": "deepwood_calm",

@@ -1,0 +1,268 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.36955642700195,
+			"camera_pos": [
+				-650.0,
+				54.3977470397949,
+				3414.81274414062
+			],
+			"description": "conductor_road at (-650,3420) looking north to the Rootgate, gate closed (no flag)",
+			"file": "rootgate_south_closed.jpg",
+			"gate_visible": true,
+			"id": "rootgate_south_closed",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-650.0,
+				53.0104789733887,
+				3420.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.0,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.36955642700195,
+			"camera_pos": [
+				-650.0,
+				54.3977470397949,
+				3414.81274414062
+			],
+			"description": "conductor_road at (-650,3420) looking north through the released Rootgate",
+			"file": "rootgate_south_open.jpg",
+			"gate_visible": false,
+			"id": "rootgate_south_open",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-650.0,
+				53.0104789733887,
+				3420.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 60.98627,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42832946777344,
+			"camera_pos": [
+				-650.0,
+				42.2808036804199,
+				3685.19677734375
+			],
+			"description": "deepwood_road at (-650,3680) looking south to the released Rootgate",
+			"file": "rootgate_north_open.jpg",
+			"gate_visible": false,
+			"id": "rootgate_north_open",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-650.0,
+				40.7122802734375,
+				3680.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.0118193333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60168027877808,
+			"camera_pos": [
+				-707.052001953125,
+				47.6042022705078,
+				4808.8759765625
+			],
+			"description": "dynamo_west_approach near (-700,4820), looking along the road toward (-480,5120)",
+			"file": "dynamo_west_mid.jpg",
+			"id": "dynamo_west_mid",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-703.994018554688,
+				45.4914398193359,
+				4813.06689453125
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-703.99169921875,
+				4813.06689453125
+			],
+			"surge_elapsed": 60.9858543333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.65723037719727,
+			"camera_pos": [
+				-173.104782104492,
+				102.078811645508,
+				5230.12109375
+			],
+			"description": "dynamo_west_approach last leg, 30 m before Ember Bivouac, facing the camp",
+			"file": "dynamo_west_ember_arrival.jpg",
+			"id": "dynamo_west_ember_arrival",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-168.237197875977,
+				99.785270690918,
+				5231.86767578125
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-168.237197875977,
+				5231.86767578125
+			],
+			"surge_elapsed": 61.0072493333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.57276773452759,
+			"camera_pos": [
+				-595.881896972656,
+				29.6462421417236,
+				1050.47717285156
+			],
+			"description": "ash_road near (-590,1060) looking north-east along the road toward (-380,1400)",
+			"file": "forest_ash_road_1060.jpg",
+			"id": "forest_ash_road_1060",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-593.152954101562,
+				27.6240940093994,
+				1054.89526367188
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-593.152954101562,
+				1054.89526367188
+			],
+			"surge_elapsed": 61.000469,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.5727801322937,
+			"camera_pos": [
+				-531.807189941406,
+				31.6120471954346,
+				1510.93615722656
+			],
+			"description": "ash_road through Glowmoss Hollows at (-536,1514) looking north-west toward (-900,1780)",
+			"file": "forest_hollows_ash_road.jpg",
+			"id": "forest_hollows_ash_road",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-536.0,
+				29.5898971557617,
+				1514.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-536.0,
+				1514.0
+			],
+			"surge_elapsed": 61.0100333333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.54410886764526,
+			"camera_pos": [
+				-472.212768554688,
+				52.8381729125977,
+				3900.2978515625
+			],
+			"description": "Deepwood near Lantern Hollow, the matrix_forest_day stand of the earlier lane tool",
+			"file": "forest_deepwood_matrix_stand.jpg",
+			"id": "forest_deepwood_matrix_stand",
+			"in_fight": false,
+			"label": "before",
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-470.0,
+				3905.0
+			],
+			"surge_elapsed": 60.9915816666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		}
+	],
+	"label": "before",
+	"scatter_bake_fresh": true
+}

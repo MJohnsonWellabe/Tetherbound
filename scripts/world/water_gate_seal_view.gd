@@ -17,8 +17,9 @@ var _game: Node
 var _seals: Array[Dictionary] = []
 var _rules: Dictionary = {}
 var _rings: Dictionary = {}
-var _material: StandardMaterial3D
-var _crest_material: StandardMaterial3D
+const RACE_SHADER := preload("res://shaders/water_tide_race.gdshader")
+var _material: ShaderMaterial
+var _crest_material: ShaderMaterial
 var _trough_material: StandardMaterial3D
 var _spray_texture: Texture2D
 var _dock_names: Dictionary = {}
@@ -28,6 +29,8 @@ var _message_cooldown := 0.0
 var last_message := ""
 ## Fly restrictions currently registered for this peer's trainer.
 var flight_restrictions := 0
+var _rig_id := 0
+var _spray_check := 0.0
 
 
 func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: Dictionary) -> void:
@@ -40,9 +43,8 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 		island_names[str(island.id)] = str(island.get("name", island.id))
 	for dock: Dictionary in config.get("docks", []):
 		_dock_names[str(dock.id)] = str(island_names.get(str(dock.island_id), dock.island_id))
-	_material = _foam_material()
-	# Breakers are denser white water than the flat race they stand in.
-	_crest_material = _foam_material(0.12, 0.42)
+	_material = _race_material(0.0)
+	_crest_material = _race_material(1.0)
 	_trough_material = _trough()
 	_spray_texture = _spray_sprite()
 	var sea := float(config.get("terrain", {}).get("sea_level_m", 0.0))
@@ -66,17 +68,18 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 		trough.position.y = -SURFACE_LIFT_M * 0.5
 		ring.add_child(trough)
 		ring.add_child(_spray(float(seal.shore_radius_m), SEALS.outer_radius(seal, _rules)))
-		# Standing breakers read at the swimmer's grazing eye height, where a
-		# flat ring alone collapses to a hairline at the horizon.
+		# Breaking waves with real height read at the swimmer's grazing eye
+		# level, where a flat ring collapses to a hairline at the horizon.
+		var seed := int(hash(str(seal.id)))
 		for raw: Variant in _rules.get("crests", []):
 			var crest_spec: Array = raw
 			var crest := MeshInstance3D.new()
 			crest.name = "Crest_%d" % int(float(crest_spec[0]))
-			crest.mesh = _crest(float(seal.shore_radius_m) + float(crest_spec[0]), float(crest_spec[1]),
-					float(_rules.get("crest_lean_m", 0.6)))
+			crest.mesh = _wave(float(seal.shore_radius_m) + float(crest_spec[0]), float(crest_spec[1]), seed)
 			crest.material_override = _crest_material
 			crest.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			ring.add_child(crest)
+			seed += 7919
 		# Far races are sub-pixel; cull the ring and everything on it.
 		var cull_m := float(_rules.get("visibility_range_m", 700.0))
 		for part: Node in [ring] + ring.get_children():
@@ -96,25 +99,44 @@ func _refresh() -> void:
 	for seal: Dictionary in _seals:
 		var ring: Node3D = _rings[str(seal.id)]
 		ring.visible = SEALS.is_sealed(seal, _game.world.flags)
-		# An opened race must not keep simulating spray it never draws.
-		var spray := ring.get_node_or_null("Spray") as GPUParticles3D
-		if spray != null:
-			spray.emitting = ring.visible
 	var player: Node = _world.local_rig()
+	_rig_id = player.get_instance_id() if player != null else 0
 	var fly: Node = player.get_node_or_null("FlyController") if player != null else null
 	flight_restrictions = SEALS.sync_flight(fly, _seals, _rules, _game.world.flags, _dock_names)
+	_gate_spray()
+
+
+## Spray simulates only for a visible race within its draw range of the
+## active camera; far or opened races neither draw nor simulate particles.
+func _gate_spray() -> void:
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	var cull_m := float(_rules.get("visibility_range_m", 700.0))
+	for seal: Dictionary in _seals:
+		var ring: Node3D = _rings[str(seal.id)]
+		var spray := ring.get_node_or_null("Spray") as GPUParticles3D
+		if spray == null:
+			continue
+		var near := camera == null
+		if camera != null:
+			var centre: Vector2 = seal.centre
+			var at := Vector2(camera.global_position.x, camera.global_position.z)
+			near = at.distance_to(centre) < SEALS.outer_radius(seal, _rules) + cull_m
+		spray.emitting = ring.visible and near
 
 
 func _process(delta: float) -> void:
 	if _game == null:
 		return
-	if int(_game.world.flags.revision) != _last_revision:
+	# A flag change or a rebuilt local trainer (co-op rejoin, respawned rig)
+	# both re-sync rings and this trainer's Fly restrictions.
+	var rig: Node = _world.local_rig()
+	var rig_id := rig.get_instance_id() if rig != null else 0
+	if int(_game.world.flags.revision) != _last_revision or rig_id != _rig_id:
 		_refresh()
-	# Offset decreasing moves the pattern toward larger radius: outward flow.
-	_material.uv1_offset.y = wrapf(_material.uv1_offset.y - float(_rules.get("foam_flow_m_s", 3.0)) * delta / TILE_M, 0.0, 1.0)
-	# Breakers churn along the ring rather than drift, like surf on a reef.
-	_crest_material.uv1_offset.x = wrapf(_crest_material.uv1_offset.x
-			+ float(_rules.get("crest_churn_m_s", 0.6)) * delta / TILE_M, 0.0, 1.0)
+	_spray_check -= delta
+	if _spray_check <= 0.0:
+		_spray_check = 0.25
+		_gate_spray()
 	_message_cooldown = maxf(0.0, _message_cooldown - delta)
 	if _message_cooldown > 0.0:
 		return
@@ -150,6 +172,8 @@ func _annulus(inner: float, outer: float, blend: float) -> ArrayMesh:
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var circumference_tiles := maxf(1.0, roundf(TAU * inner / TILE_M))
+	var edge_noise := _ring_noise(int(hash(str(inner))) + 3, 0.35)
+	var wobble := minf(float(_rules.get("outline_wobble_m", 2.5)), float(_rules.get("edge_blend_m", 4.0)) * 0.5)
 	for index in segments:
 		for band in 2:
 			var a0 := TAU * float(index) / float(segments)
@@ -162,6 +186,10 @@ func _annulus(inner: float, outer: float, blend: float) -> ArrayMesh:
 				var angle: float = corner[0]
 				var ring: int = corner[1]
 				var radius: float = radii[ring]
+				if ring > 0:
+					# The race's visible edge wanders like water, not a decal.
+					var probe := Vector2(cos(angle), sin(angle)) * inner / TAU * 2.0
+					radius += wobble * edge_noise.get_noise_2d(probe.x, probe.y)
 				tool.set_color(Color(1, 1, 1, alphas[ring]))
 				tool.set_normal(Vector3.UP)
 				tool.set_uv(Vector2(angle / TAU * circumference_tiles, (radius - inner) / TILE_M))
@@ -201,7 +229,8 @@ func _spray(inner: float, outer: float) -> GPUParticles3D:
 	process.color_ramp = ramp
 	particles.process_material = process
 	var quad := QuadMesh.new()
-	quad.size = Vector2(1.2, 1.2)
+	var size := float(_rules.get("spray_size_m", 2.4))
+	quad.size = Vector2(size, size)
 	var material := StandardMaterial3D.new()
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
@@ -238,53 +267,98 @@ func _trough() -> StandardMaterial3D:
 	return material
 
 
-func _crest(radius: float, height: float, lean: float) -> ArrayMesh:
-	# A closed vertical ribbon leaning outward with the flow: opaque foam at
-	# the waterline fading to spray at its lip.
-	var segments := maxi(48, ceili(TAU * radius / 3.0))
-	var tiles := maxf(1.0, roundf(TAU * radius / TILE_M))
+## Noise in [-1, 1] around the ring, continuous across the seam.
+func _ring_noise(seed: int, frequency: float) -> FastNoiseLite:
+	var noise := FastNoiseLite.new()
+	noise.seed = seed
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.frequency = frequency
+	return noise
+
+
+func _wave(radius: float, height: float, seed: int) -> ArrayMesh:
+	# One closed breaker around the landform. Its cross-section curls outward
+	# with the flow: dark teal face, white crest, falling lip fading to spray.
+	# Height and radius wander so the ring breaks up instead of a bullseye.
+	# The drawn edge may wander only within the race's own outer blend, so it
+	# never strays past the physical boundary or under the shoreline.
+	var wobble := minf(float(_rules.get("outline_wobble_m", 2.5)), float(_rules.get("edge_blend_m", 4.0)) * 0.5)
+	var height_noise := _ring_noise(seed, float(_rules.get("wave_height_frequency", 0.22)))
+	var radius_noise := _ring_noise(seed + 1, 0.35)
+	var face := Color(str(_rules.get("wave_face_colour", "#2f6f6c")))
+	var crest := Color(0.95, 0.98, 1.0)
+	# (outward m, height fraction, colour, alpha)
+	var profile := [
+		[0.0, -0.05, face, 0.85],
+		[0.35, 0.55, face.lerp(crest, 0.45), 0.95],
+		[0.95, 0.95, crest, 1.0],
+		[1.6, 0.8, crest, 0.75],
+		[2.4, 0.25, crest, 0.0],
+	]
+	var segments := maxi(64, ceili(TAU * radius / float(_rules.get("wave_segment_m", 2.5))))
 	var tool := SurfaceTool.new()
 	tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var rows: Array = []
+	for index in segments + 1:
+		var angle := TAU * float(index % segments) / float(segments)
+		var direction := Vector2(cos(angle), sin(angle))
+		# Sampling on a circle keeps the noise seamless where the ring closes.
+		var sample := direction * radius / TAU * 2.0
+		var local_height := height * clampf(0.55 + 0.9 * (height_noise.get_noise_2d(sample.x, sample.y) * 0.5 + 0.5), 0.35, 1.45)
+		var local_radius := radius + wobble * radius_noise.get_noise_2d(sample.x, sample.y)
+		var row: Array = []
+		var along := TAU * float(index % segments) / float(segments) * radius / TILE_M
+		for k in profile.size():
+			var point: Array = profile[k]
+			var r := local_radius + float(point[0])
+			row.append([Vector3(direction.x * r, -SURFACE_LIFT_M + local_height * float(point[1]), direction.y * r),
+				Color(point[2].r, point[2].g, point[2].b, float(point[3])),
+				Vector2(along, float(k) / float(profile.size() - 1))])
+		rows.append(row)
 	for index in segments:
-		var a0 := TAU * float(index) / float(segments)
-		var a1 := TAU * float(index + 1) / float(segments)
-		for corner: Array in [[a0, 0], [a1, 0], [a1, 1], [a0, 0], [a1, 1], [a0, 1]]:
-			var angle: float = corner[0]
-			var top: int = corner[1]
-			var r := radius + lean * float(top)
-			tool.set_color(Color(1, 1, 1, 1.0 - float(top)))
-			tool.set_normal(Vector3(cos(angle), 0.0, sin(angle)))
-			tool.set_uv(Vector2(angle / TAU * tiles, float(top) * height / TILE_M))
-			tool.add_vertex(Vector3(cos(angle) * r, -SURFACE_LIFT_M + height * float(top), sin(angle) * r))
+		var a: Array = rows[index]
+		var b: Array = rows[index + 1]
+		for k in profile.size() - 1:
+			for corner: Array in [[a, k], [b, k], [b, k + 1], [a, k], [b, k + 1], [a, k + 1]]:
+				var vertex: Array = corner[0][corner[1]]
+				tool.set_color(vertex[1])
+				tool.set_uv(vertex[2])
+				tool.add_vertex(vertex[0])
+	tool.index()
+	tool.generate_normals()
 	return tool.commit()
 
 
-func _foam_material(low: float = 0.28, high: float = 0.62) -> StandardMaterial3D:
-	# White water whose coverage, not brightness, varies: the noise drives
-	# alpha so broken foam reads over the water instead of a grey band.
-	var noise := FastNoiseLite.new()
-	noise.seed = 31
-	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	noise.frequency = 0.045
-	noise.fractal_octaves = 3
-	var grey := noise.get_seamless_image(256, 256)
-	var foam := Image.create(256, 256, false, Image.FORMAT_RGBA8)
-	for y in 256:
-		for x in 256:
-			var value := smoothstep(low, high, grey.get_pixel(x, y).r)
-			foam.set_pixel(x, y, Color(1, 1, 1, value))
-	var material := StandardMaterial3D.new()
-	# Lit like the sea it churns, with a little self-light so daylight white
-	# holds against the bright horizon without glowing at night.
-	material.emission_enabled = true
-	material.emission = Color(0.6, 0.64, 0.66)
-	material.emission_energy_multiplier = float(_rules.get("foam_emission_energy", 0.35))
-	material.roughness = 0.5
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.vertex_color_use_as_albedo = true
-	material.albedo_color = Color(0.94, 0.98, 1.0, float(_rules.get("foam_alpha", 0.62)))
-	material.albedo_texture = ImageTexture.create_from_image(foam)
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	# Draw after the translucent sea surface it lies on.
-	material.render_priority = 2
+func _race_material(breaker: float) -> ShaderMaterial:
+	# Animated white water from the Tidewake-only tide-race shader: foam cells
+	# stream outward at the race's direction, crest pulses travel round the
+	# ring, and churned sea-teal shows between the cells. Lit, never self-lit.
+	var params: Dictionary = _rules.get("shader", {})
+	var material := ShaderMaterial.new()
+	material.shader = RACE_SHADER
+	material.set_shader_parameter("foam_noise", _noise_texture(31, 0.045))
+	material.set_shader_parameter("detail_noise", _noise_texture(57, 0.11))
+	material.set_shader_parameter("breaker", breaker)
+	for key: String in params:
+		if key.begins_with("_"):
+			continue
+		var value: Variant = params[key]
+		material.set_shader_parameter(key, Color(str(value)) if value is String else value)
+	# Above the translucent sea; breakers over the flat race.
+	material.render_priority = 2 if breaker > 0.0 else 1
 	return material
+
+
+func _noise_texture(seed_value: int, frequency: float) -> NoiseTexture2D:
+	var noise := FastNoiseLite.new()
+	noise.seed = seed_value
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.frequency = frequency
+	noise.fractal_octaves = 3
+	var texture := NoiseTexture2D.new()
+	texture.noise = noise
+	texture.seamless = true
+	texture.width = 256
+	texture.height = 256
+	texture.generate_mipmaps = true
+	return texture
