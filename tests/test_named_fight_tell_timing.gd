@@ -101,11 +101,14 @@ const PINS := [
 	["warrens_guardian", -1, "burrowback", "quick", "recovery", "eq", 1.1, GUARDIAN_QUICK],
 	["warrens_guardian", -1, "burrowback", "charged", "telegraph", "eq", 1.1, GUARDIAN_FIST],
 	["warrens_guardian", -1, "burrowback", "charged", "recovery", "eq", 1.2, GUARDIAN_FIST],
-	# §5 relay_officer_dell: "relay officer composition", no §4 row -> §2.1 clamp.
-	["relay_officer_dell", 0, "mosshell", "quick", "telegraph", "ge", 0.9, DELL_ROW, CLAMP_POST_BRIDGE],
-	["relay_officer_dell", 0, "mosshell", "quick", "recovery", "ge", 0.75, DELL_ROW, CLAMP_POST_BRIDGE],
-	["relay_officer_dell", 1, "burrowback", "quick", "telegraph", "ge", 0.9, DELL_ROW, CLAMP_POST_BRIDGE],
-	["relay_officer_dell", 1, "burrowback", "quick", "recovery", "ge", 0.75, DELL_ROW, CLAMP_POST_BRIDGE],
+	# §5 relay_officer_dell: "relay officer composition", no §4 row -> the full
+	# §2.1 recipe: step 2 maps mosshell ("endurance anchor") and burrowback
+	# ("front-line wall", CREATURES.md:123/127) to WALL, step 3 clamps WALL
+	# .85/1.1 up to .9/1.1; galecrest stays baseline-clamped (.9/.75).
+	["relay_officer_dell", 0, "mosshell", "quick", "telegraph", "eq", 0.9, WALL_ROW, CLAMP_POST_BRIDGE],
+	["relay_officer_dell", 0, "mosshell", "quick", "recovery", "eq", 1.1, WALL_ROW, CLAMP_POST_BRIDGE],
+	["relay_officer_dell", 1, "burrowback", "quick", "telegraph", "eq", 0.9, WALL_ROW, CLAMP_POST_BRIDGE],
+	["relay_officer_dell", 1, "burrowback", "quick", "recovery", "eq", 1.1, WALL_ROW, CLAMP_POST_BRIDGE],
 	["relay_officer_dell", 2, "galecrest", "quick", "telegraph", "ge", 0.9, DELL_ROW, CLAMP_POST_BRIDGE],
 	["relay_officer_dell", 2, "galecrest", "quick", "recovery", "ge", 0.75, DELL_ROW, CLAMP_POST_BRIDGE],
 	# §4.2 Captain Vance.
