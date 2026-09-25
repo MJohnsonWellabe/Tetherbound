@@ -93,6 +93,34 @@ func test_tournament_consent_emits_nothing_when_declined() -> void:
 	assert_eq(_runner.drain_effects(), [])
 
 
+func test_declined_fires_on_an_explicit_no_and_never_on_a_plain_close() -> void:
+	var declined: Array[String] = []
+	var finished: Array[String] = []
+	_runner.declined.connect(func(id: String) -> void: declined.append(id))
+	_runner.finished.connect(func(id: String) -> void:
+		# `declined` must already be delivered when the close lands.
+		finished.append("%s:%d" % [id, declined.size()]))
+	assert_true(_runner.start("tournament_halda_signup"))
+	while _runner.is_active() and not bool(_runner.line().get("confirmation", false)):
+		_runner.advance()
+	_runner.confirm(false)
+	assert_eq(declined, ["tournament_halda_signup"], "an explicit No emits declined with its conversation id")
+	assert_eq(finished, ["tournament_halda_signup:1"], "declined is emitted before the runner closes")
+
+	declined.clear()
+	assert_true(_runner.start("tournament_halda_signup"))
+	while _runner.is_active() and not bool(_runner.line().get("confirmation", false)):
+		_runner.advance()
+	_runner.close()
+	assert_eq(declined, [], "a plain close on the consent line is not a refusal")
+	assert_true(_runner.start("tournament_halda_signup"))
+	_runner.close()
+	assert_eq(declined, [], "a close before the consent line is not a refusal")
+	assert_true(_runner.start("tournament_quarter_begin"))
+	_runner.confirm(true)
+	assert_eq(declined, [], "a Yes never emits declined")
+
+
 func test_each_tournament_round_requires_affirmative_consent() -> void:
 	for row: Array in [
 		["tournament_quarter_begin", "battle:tournament_quarter_mira"],

@@ -4,8 +4,12 @@ extends SceneTree
 ## `stormwood_ending.gd` runs against the offline host Session with two extra
 ## registered characters; a hub stub records what each peer is sent, a chapter
 ## stub commits the two chapter events it would dispatch, and a Dynamo stub
-## supplies the fight's participant peers. It does not play the fight, the
-## dialogue or the five-slot ceremony UI.
+## supplies the fight's participant peers. It also covers the host refusing
+## from its own answer receipt against a client's flag, the portable
+## acceptance hint (an acceptance elsewhere withholds, a refusal does not), and
+## a legacy save freed before participants were recorded: the Dynamo's own
+## record, else only the host, never whoever claims first. It does not play the
+## fight, the dialogue or the five-slot ceremony UI.
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
 
 var failures: Array[String] = []
@@ -128,13 +132,16 @@ func _run() -> void:
 		"a character who did not fight receives no offer")
 	_check(game.progression.has("stormwood:legendary_offer_made"),
 		"an onlooker can still let the world's single offer fact land, so Waterward never waits on absent fighters")
-	ending.dispatch(local_peer, {"kind": "ending_claim", "already_resolved": true})
+	ending.dispatch(local_peer, {"kind": "ending_claim", "already_accepted": true})
 	_check(hub.offers_for(local_peer).is_empty(),
-		"a character already holding a Stormheart receipt from another world gets no second creature")
-	# Stand-in for the portable receipt being absent (a fresh character).
-	ending.dispatch(local_peer, {"kind": "ending_claim"})
+		"a character who accepted a Stormheart in another world gets no second creature")
+	# The client's hint is built from its portable acceptance only: a refusal
+	# in another world (ceremony receipt, no acceptance) is no hint at all.
+	var refused_elsewhere: RefCounted = preload("res://autoload/progression_state.gd").new()
+	ENDING.record_answer(refused_elsewhere, "creature-from-another-world", false)
+	ending.dispatch(local_peer, ENDING.claim_intent(refused_elsewhere))
 	_check(hub.offers_for(local_peer).size() >= 1,
-		"the host's participating character receives an offer after the world fact landed")
+		"refused in another world, fought here: the host's participating character receives this world's offer")
 	ending.dispatch(local_peer, {"kind": "ending_settled", "kept": true})
 	ending.dispatch(2, {"kind": "ending_claim"})
 	var b_offers := hub.offers_for(2)
@@ -143,6 +150,14 @@ func _run() -> void:
 		var claim: Dictionary = b_offers.back().event.claim
 		_check(str(claim.recipient_character_id) == "character-fought-b" and not (claim.creature as Dictionary).is_empty(),
 			"B's offer is bound to B's stable character and carries its own creature")
+	# Second guard: B's client now reports an acceptance from another world.
+	# The host sends no fresh creature even though it holds B's unsettled claim.
+	var b_offers_before := hub.offers_for(2).size()
+	ending.dispatch(2, {"kind": "ending_claim", "already_accepted": true})
+	var b_refusals := hub.refusals_for(2)
+	_check(hub.offers_for(2).size() == b_offers_before and not b_refusals.is_empty()
+		and str(b_refusals.back().event.reason) == "A Stormheart already walks with you.",
+		"an acceptance hint withholds a creature even while the host holds that character's unsettled claim")
 	var before_refusals := hub.refusals_for(local_peer).size()
 	ending.dispatch(local_peer, {"kind": "ending_claim"})
 	_check(hub.refusals_for(local_peer).size() == before_refusals + 1,
@@ -167,6 +182,75 @@ func _run() -> void:
 	var offers_before := hub.offers_for(2).size()
 	ending.dispatch(2, {"kind": "ending_claim"})
 	_check(hub.offers_for(2).size() == offers_before, "after reload a settled character is not offered again")
+
+	# The host's own receipt decides, whatever the client reports: with B's
+	# claim record gone but B's world answer receipt still standing, B's client
+	# claiming it never answered is refused.
+	state = ENDING.migrate_state(game.realm_environment.stormwood.ending)
+	(state.claims as Dictionary).erase("character-fought-b")
+	game.realm_environment.stormwood.ending = state
+	offers_before = hub.offers_for(2).size()
+	ending.dispatch(2, {"kind": "ending_claim", "already_accepted": false})
+	_check(hub.offers_for(2).size() == offers_before,
+		"the host refuses from its own answer receipt even when the client says it never answered")
+
+	# A legacy save: freed before participants were recorded and never claimed,
+	# and the Dynamo kept no fighter record either. A guest who never fought
+	# claims first: they get nothing (but can land the world's offer fact), and
+	# the host who freed it still gets its offer.
+	var reset_legacy := func(dynamo_payload: Dictionary) -> void:
+		game.progression.set_flag("stormwood:legendary_offer_made", false)
+		for character: String in [host_character, "character-fought-b", "character-watched-c"]:
+			for accepted: bool in [true, false]:
+				game.progression.set_flag(ENDING.resolution_flag(accepted, character), false)
+		var legacy_environment: Dictionary = game.realm_environment.duplicate(true)
+		legacy_environment.stormwood.ending = {}
+		legacy_environment.stormwood.dynamo = dynamo_payload.duplicate(true)
+		game.realm_environment = legacy_environment
+	dynamo.fighter_characters = []
+	dynamo.contributors = []
+	dynamo.participants = []
+	reset_legacy.call({})
+	var b_before := hub.offers_for(2).size()
+	var c_before := hub.offers_for(3).size()
+	var host_before := hub.offers_for(local_peer).size()
+	ending.dispatch(3, {"kind": "ending_claim"})
+	_check(hub.offers_for(3).size() == c_before,
+		"a guest claiming first on a legacy save with no fighter record gets no creature")
+	_check(game.progression.has("stormwood:legendary_offer_made"),
+		"the refused guest still lands the world offer fact, so Waterward never softlocks")
+	ending.dispatch(local_peer, {"kind": "ending_claim"})
+	_check(hub.offers_for(local_peer).size() == host_before + 1,
+		"the host who freed it still receives its own offer after a guest claimed first")
+	ending.dispatch(2, {"kind": "ending_claim"})
+	_check(hub.offers_for(2).size() == b_before,
+		"with no Dynamo record only the host is a participant; another guest gets nothing")
+	state = ENDING.migrate_state(game.realm_environment.stormwood.ending)
+	_check(state.get("participants", []) == [host_character] and (state.claims as Dictionary).keys() == [host_character],
+		"the legacy save records the host as its one participant, with one claim")
+	ending.dispatch(local_peer, {"kind": "ending_claim"})
+	_check(hub.offers_for(local_peer).size() == host_before + 2, "the host's own unsettled claim still resumes")
+
+	# The same legacy save where the Dynamo's persisted payload still names its
+	# fighter characters: those are owed, the guest is not, whoever arrives
+	# first. Its contributor peer ids come from the session that fought, so
+	# they are not mapped through today's registry (peer 1 is whoever hosts now).
+	reset_legacy.call({"fighter_characters": ["character-fought-b"], "contributors": [local_peer, 77]})
+	b_before = hub.offers_for(2).size()
+	c_before = hub.offers_for(3).size()
+	host_before = hub.offers_for(local_peer).size()
+	ending.dispatch(3, {"kind": "ending_claim"})
+	_check(hub.offers_for(3).size() == c_before,
+		"a guest claiming first is refused against the Dynamo's persisted fighters")
+	ending.dispatch(2, {"kind": "ending_claim"})
+	_check(hub.offers_for(2).size() == b_before + 1, "the Dynamo's persisted fighter receives an offer")
+	ending.dispatch(local_peer, {"kind": "ending_claim"})
+	_check(hub.offers_for(local_peer).size() == host_before,
+		"an old-session contributor peer id is not mapped to today's host character")
+	state = ENDING.migrate_state(game.realm_environment.stormwood.ending)
+	_check(state.get("participants", []) == ["character-fought-b"]
+		and (state.claims as Dictionary).keys() == ["character-fought-b"],
+		"the legacy save records only the Dynamo's fighter characters as participants")
 	world.queue_free()
 	await process_frame
 	_finish()
