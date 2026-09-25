@@ -78,3 +78,65 @@ func test_stormglass_arch_commits_at_the_footing_centre() -> void:
 	assert_almost_eq(float(at[0]), float(socket.at[0]), 0.001, "x snapped to the footing centre")
 	assert_almost_eq(float(at[2]), float(socket.at[1]), 0.001, "z snapped to the footing centre")
 	assert_almost_eq(float(at[1]), 4.25, 0.001, "height stays the request's ground height")
+
+
+func test_other_intent_kinds_cannot_smuggle_a_forged_receipt() -> void:
+	var id := "stormwood:legendary_resolution:accepted:victim-char"
+	for intent: Dictionary in [
+			{"kind": "claim_pickup", "realm": "stormwood", "flag": id, "item": "stick", "count": 1},
+			{"kind": "harvest", "realm": "stormwood", "flag": id, "item": "stick", "amount": 1}]:
+		intent["_actor_character_id"] = "forger-char"
+		var verdict: Dictionary = ledger.commit(intent, GUEST)
+		assert_false(bool(verdict.get("ok")), "%s must not write another character's receipt" % intent.kind)
+		assert_false(world.flags.has(id))
+
+
+func test_remote_peer_cannot_clear_another_characters_receipt() -> void:
+	var id := "legendary_resolution:accepted:victim-char"
+	assert_true(bool(ledger.commit(_flag(id, "host-char"), HOST).get("ok")))
+	var clear := _flag(id, "forger-char")
+	clear["value"] = false
+	assert_false(bool(ledger.commit(clear, GUEST).get("ok")))
+	assert_true(world.flags.has(id), "the victim's receipt survives")
+
+
+func test_second_arch_at_the_footing_edge_cannot_snap_onto_an_occupied_footing() -> void:
+	world.flags.set_flag("stormwood:arch_recipe_known")
+	var socket: Dictionary = ARCH_BUILD.footing_at(VERGE)
+	var centre := Vector3(float(socket.at[0]), 0.0, float(socket.at[1]))
+	var materials := {"stormglass": 100, "stormglass_crown": 100, "thunderwood_frame": 100, "conductor_vine": 100}
+	assert_true(bool(ledger.commit({"kind": "place_building", "realm": "stormwood",
+		"id": "stormglass_arch", "position": centre, "available_materials": materials}, HOST).get("ok")))
+	for edge: Vector3 in [centre + Vector3(5.0, 0.0, 0.0), centre + Vector3(4.0, 3.0, 0.0)]:
+		var verdict: Dictionary = ledger.commit({"kind": "place_building", "realm": "stormwood",
+			"id": "stormglass_arch", "position": edge, "available_materials": materials}, GUEST)
+		assert_false(bool(verdict.get("ok")), "edge request %s refused" % str(edge))
+	assert_eq(ARCH_BUILD.records(world.placed_buildings).size(), 1, "still one arch on the footing")
+
+
+func test_snapped_arch_takes_the_footing_facing() -> void:
+	world.flags.set_flag("stormwood:arch_recipe_known")
+	var socket: Dictionary = ARCH_BUILD.footing_at(VERGE)
+	var verdict: Dictionary = ledger.commit({"kind": "place_building", "realm": "stormwood",
+		"id": "stormglass_arch", "position": VERGE + Vector3(1.0, 0.0, 1.0), "yaw_deg": 137.0,
+		"available_materials": {"stormglass": 100, "stormglass_crown": 100,
+			"thunderwood_frame": 100, "conductor_vine": 100}}, GUEST)
+	var record: Dictionary = world.placed_buildings[int(world.building_index_of(str(verdict.uid)))]
+	assert_almost_eq(float(record.get("yaw_deg", -1.0)), float(socket.get("yaw_deg", 0.0)), 0.001)
+
+
+func test_host_overwrites_a_claimed_identity_with_the_registry_answer() -> void:
+	const LEDGER_RPC := preload("res://scripts/net/ledger_rpc.gd")
+	const REGISTRY := preload("res://scripts/net/peer_registry.gd")
+	var claimed := {"kind": "set_world_flag", "_actor_character_id": "victim-char"}
+	var stamped: Dictionary = LEDGER_RPC.with_host_actor(claimed, "guest-char")
+	assert_eq(stamped["_actor_character_id"], "guest-char")
+	assert_eq(claimed["_actor_character_id"], "victim-char", "the request itself is not mutated")
+	var roster := REGISTRY.new()
+	roster.add(HOST, "host-char")
+	roster.add(GUEST, "guest-char")
+	assert_eq(LEDGER_RPC.registered_character(GUEST, HOST, "host-char", roster), "guest-char")
+	assert_eq(LEDGER_RPC.registered_character(HOST, HOST, "host-char", roster), "host-char")
+	assert_eq(LEDGER_RPC.registered_character(424242, HOST, "host-char", roster), "",
+		"a transport peer outside the registry has no character")
+	assert_eq(LEDGER_RPC.registered_character(GUEST, HOST, "host-char", null), "")

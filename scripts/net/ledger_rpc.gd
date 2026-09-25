@@ -304,10 +304,9 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	if kind == "river_nest_clear":
 		intent = intent.duplicate(true)
 		intent["_doss_actor"] = _water_actor_context(peer_id, intent)
-	if kind == "set_world_flag":
-		intent = intent.duplicate(true)
-		# Never trust a claimed identity: overwrite with the registry's answer.
-		intent["_actor_character_id"] = _registered_character(peer_id)
+	# Every kind can write world flags, so every intent carries the admitted
+	# identity; a claimed `_actor_character_id` is always overwritten.
+	intent = with_host_actor(intent, _registered_character(peer_id))
 	var verdict: Dictionary = ledger.call("commit", intent, peer_id)
 	if satchel_transaction:
 		var host_instance: Variant = ledger.world.get("reward_delivery_namespace")
@@ -396,21 +395,35 @@ func _reward_recipients(intent: Dictionary, requesting_peer: int) -> Array:
 	return out
 
 
+## A copy of `intent` whose actor identity is the host's answer, whatever the
+## request claimed.
+static func with_host_actor(intent: Dictionary, character_id: String) -> Dictionary:
+	var out := intent.duplicate(true)
+	out["_actor_character_id"] = character_id
+	return out
+
+
 ## The stable character id the session admitted for `peer_id`, or "".
+static func registered_character(peer_id: int, local_peer_id: int,
+		local_character_id: String, roster: Object) -> String:
+	if peer_id == local_peer_id:
+		return local_character_id
+	if roster == null or not roster.has_method("row"):
+		return ""
+	return str((roster.call("row", peer_id) as Dictionary).get("character_id", ""))
+
+
 func _registered_character(peer_id: int) -> String:
 	var game := _game()
 	if game == null:
 		return ""
-	if peer_id == _local_peer_id():
-		var local: Variant = game.get("local")
-		return str(local.get("character_id")) if local is Object else ""
+	var local: Variant = game.get("local")
+	var local_character := str(local.get("character_id")) if local is Object else ""
 	var session: Variant = game.get("session")
-	if not session is Object or not (session as Object).has_method("registry"):
-		return ""
-	var roster: Variant = (session as Object).call("registry")
-	if not roster is Object:
-		return ""
-	return str(((roster as Object).call("row", peer_id) as Dictionary).get("character_id", ""))
+	var roster: Variant = (session as Object).call("registry") \
+		if session is Object and (session as Object).has_method("registry") else null
+	return registered_character(peer_id, _local_peer_id(), local_character,
+		roster as Object if roster is Object else null)
 
 
 func _water_actor_context(peer_id: int, intent: Dictionary) -> Dictionary:
