@@ -274,6 +274,9 @@ func _check_releasing_a_belt_member_resolves() -> void:
 		_fail("the 'Let them go' button has no caution glyph; colour alone carries 'irreversible'")
 	if release_button.text.find("forever") < 0:
 		_fail("the 'Let them go' button does not say the release is permanent ('%s')" % release_button.text)
+	var keep_button := _tab.get("_farewell_keep") as Button
+	if absf(release_button.size.x - keep_button.size.x) > 0.5:
+		_fail("the destructive answer is %.0f px wide against Keep's %.0f; neither may be the bigger target" % [release_button.size.x, keep_button.size.x])
 	await _press("ui_accept")
 
 	if str(_tab.get("_release_stage")) != "done":

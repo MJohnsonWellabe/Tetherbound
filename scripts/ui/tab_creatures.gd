@@ -101,9 +101,11 @@ const HEALTH_FULL := Color(0.35, 0.62, 0.28)
 ## player's own roster. Now the shared urgent role, which is orange.
 const HEALTH_LOW := UITokens.DANGER
 
-## The caution glyph on the irreversible "Let them go forever" button. At
-## least the 24 px the lane's glyph floor asks of this screen.
-const FAREWELL_WARNING_ICON_PX := 28
+## The caution glyph on the irreversible "Let them go forever" button, in
+## logical px. The menu draws at 2/3 scale at 1280x720 and 28 measured ~12 px
+## in the capture (blind judge: "marginal at arm's length"); 40 lands ~18 px,
+## matching the button text's cap height.
+const FAREWELL_WARNING_ICON_PX := 40
 
 ## Appraisal pips (blind-judge pass: "[***--]" read as ASCII debug styling,
 ## not a rating a player was meant to see). Drawn the same filled/open-circle
@@ -851,6 +853,7 @@ func _build_farewell_panel() -> Control:
 	body.add_child(_farewell_hint)
 
 	_fence_farewell_buttons()
+	_equalize_farewell_widths.call_deferred()
 	return _panel(body)
 
 
@@ -2299,6 +2302,22 @@ func _fence_choose_focus(on: bool) -> void:
 
 ## Same fence for the farewell Buttons: keep/release wrap onto each other,
 ## the lone done button points every direction at itself.
+## "Let them go forever" plus its glyph outgrew the 300 px minimum, so the
+## destructive answer was the WIDER target beside "Keep them" (blind judge).
+## Once the fonts resolve in the tree, every farewell answer takes the widest
+## one's width, so neither is bigger than the other.
+func _equalize_farewell_widths() -> void:
+	var buttons: Array[Button] = []
+	for button in [_farewell_keep, _farewell_release, _farewell_done]:
+		if button != null and is_instance_valid(button):
+			buttons.append(button)
+	var width := 0.0
+	for button in buttons:
+		width = maxf(width, button.get_combined_minimum_size().x)
+	for button in buttons:
+		button.custom_minimum_size.x = width
+
+
 func _fence_farewell_buttons() -> void:
 	for pair in [[_farewell_keep, _farewell_release], [_farewell_release, _farewell_keep]]:
 		var it := pair[0] as Button
