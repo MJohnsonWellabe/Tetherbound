@@ -21,6 +21,7 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const PICKUPS := preload("res://scripts/world/stormwood_pickup_runtime.gd")
 const CROWN_SEGMENT := preload("res://tests/helpers/stormwood_crown_build_segment.gd")
+const SAFETY := preload("res://tests/helpers/stormwood_field_safety.gd")
 const ROOTGATE_SEGMENT := preload("res://tests/helpers/stormwood_earned_rootgate_segment.gd")
 const DYNAMO_SEGMENT := preload("res://tests/helpers/stormwood_earned_dynamo_segment.gd")
 const MARROW_SEGMENT := preload("res://tests/helpers/stormwood_earned_marrow_segment.gd")
@@ -189,6 +190,9 @@ func _run() -> void:
 		_failures.append(str(line))
 	_prefix_complete = _failures.is_empty() and bool(result.get("passed", false))
 	_step_end("prefix: arrival through Ondra's arch recipe", _prefix_complete)
+	if _segment.get("safety") != null:
+		print("F11 WITNESS STRIKES prefix %s" % JSON.stringify(_segment.safety.counts))
+		_segment.safety.detach()
 	print("F11 WITNESS TOOLS after prefix: knife x%d axe x%d pickaxe x%d hotbar=%s" % [
 		int(game.get("inventory").call("count", "knife")), int(game.get("inventory").call("count", "axe")),
 		int(game.get("inventory").call("count", "pickaxe")), str(game.get("local").get("hotbar"))])
@@ -204,6 +208,7 @@ func _run() -> void:
 			_failures.append(str(line))
 		_crown_complete = bool(built.get("passed", false))
 		_step_end("Capacitor Alpha, Crown gathering, two frames, paid Crown arch", _crown_complete)
+		print("F11 WITNESS STRIKES crown %s" % JSON.stringify(crown.strike_counts()))
 		_expect(_crown_complete, "same live chapter path reached the paid Crown arch")
 	if _crown_complete and through_aftermath(OS.get_cmdline_user_args()):
 		_aftermath_watchdog.call_deferred()
@@ -212,7 +217,10 @@ func _run() -> void:
 				[MARROW_SEGMENT, "Marrow five rounds and the real four-conduit Break"],
 				[AFTERMATH_SEGMENT, "Stormheart offer kept at five, Waterward aftermath"]]:
 			_step_begin()
-			var later: Dictionary = await (entry[0] as GDScript).new().run(self, current_scene as Node3D, game)
+			var later_segment: RefCounted = (entry[0] as GDScript).new()
+			var later: Dictionary = await later_segment.run(self, current_scene as Node3D, game)
+			if later_segment.has_method("strike_counts"):
+				print("F11 WITNESS STRIKES %s %s" % [str(entry[1]), JSON.stringify(later_segment.strike_counts())])
 			_print_transcript(later)
 			for line: Variant in later.get("failures", []):
 				_failures.append(str(line))
@@ -478,6 +486,7 @@ class Segment extends RefCounted:
 	var _active_target_valid := false
 	var _active_walk_budget := 0
 	var _active_walked := 0
+	var safety: RefCounted
 
 
 	static func route_pickup_reward(id: String) -> Dictionary:
@@ -505,16 +514,10 @@ class Segment extends RefCounted:
 			_fail("Stormwood lacks the production hosted-encounter result signal")
 			return _result()
 		session.connect("stormwood_encounter_message", _on_stormwood_encounter_message)
-		# F11 witness runs 8 and 11 ended the prefix with all three tools gone
-		# from the inventory (still bound on the hotbar), which only the
-		# trainer's death satchel does. Record every finalized death with the
-		# active phase so the next run proves or clears that.
-		var death := tree.get_first_node_in_group(&"player_death")
-		if death != null and death.has_signal("finalized_death"):
-			death.connect("finalized_death", func() -> void:
-				print("F11 WITNESS TRAINER DEATH during '%s' at %s (inventory used slots %d)" % [
-					_active_phase, str(player.global_position),
-					int(game.get("inventory").call("used_slots"))]))
+		# F11 witness: react to lightning warnings, log hits/deaths, and take
+		# back the satchel after a death (tests/helpers/stormwood_field_safety.gd).
+		safety = SAFETY.new()
+		safety.attach(tree, world, game, player, camera, _send_stick)
 		manager.connect("exited", _on_combat_exited)
 		navigator = NAVIGATOR.new(tree, player, camera, _send_stick)
 		if game.get("progression").call("has", "stormwood:chapter_started"):
@@ -1162,8 +1165,29 @@ class Segment extends RefCounted:
 		return false
 
 
+	## The Conductor Road is walked at the real 1x clock (coordinator order
+	## for run 12): lightning telegraphs there are answered in real time.
 	func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
 			record_failure: bool = true) -> bool:
+		if not label.to_lower().contains("conductor") or is_equal_approx(Engine.time_scale, 1.0):
+			return await _walk_xz_clocked(point, label, tolerance, record_failure)
+		var previous_scale := Engine.time_scale
+		var previous_hz := Engine.physics_ticks_per_second
+		await tree.process_frame
+		Engine.time_scale = 1.0
+		Engine.physics_ticks_per_second = 60
+		await tree.process_frame
+		var arrived := await _walk_xz_clocked(point, label, tolerance, record_failure)
+		await tree.process_frame
+		Engine.time_scale = previous_scale
+		Engine.physics_ticks_per_second = previous_hz
+		return arrived
+
+
+	func _walk_xz_clocked(point: Vector2, label: String, tolerance: float = 1.3,
+			record_failure: bool = true) -> bool:
+		if safety != null:
+			safety.set("phase", "walk to " + label)
 		var target := Vector3(point.x, world.call("ground_height_at", point.x, point.y), point.y)
 		var distance := Vector2(player.global_position.x, player.global_position.z).distance_to(point)
 		var budget := maxi(1800, int(distance * 80.0))
@@ -1181,6 +1205,17 @@ class Segment extends RefCounted:
 			if remaining <= tolerance:
 				arrived = true
 				break
+			if safety != null and bool(safety.call("needs_recovery")):
+				if not bool(await safety.call("recover", Callable(self, "_walk_xz"), Callable(self, "_activate_node"))):
+					_fail("could not take back the trainer's death satchel during " + label)
+					return false
+				_begin_phase("walk to %s" % label, point)
+				navigator.call("reset")
+				continue
+			if safety != null and bool(await safety.call("dodge_step", target)):
+				walked += 1
+				navigator.call("reset")
+				continue
 			if bool(navigator.call("can_walk")):
 				walked += 1
 				held = 0
@@ -1251,6 +1286,8 @@ class Segment extends RefCounted:
 	## for exploration to restore itself. Every strike below is an Input action;
 	## no HP, manager state, reward, or encounter flag is written by the harness.
 	func _fight_current_encounter(route_label: String) -> bool:
+		if safety != null:
+			safety.set("phase", "fight during " + route_label)
 		var started := Time.get_ticks_msec()
 		var tick := 0
 		_last_combat_outcome = ""

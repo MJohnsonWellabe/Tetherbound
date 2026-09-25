@@ -12,6 +12,7 @@ extends RefCounted
 
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const SAFETY := preload("res://tests/helpers/stormwood_field_safety.gd")
 
 const RECIPE_FLAG := "stormwood:arch_recipe_known"
 const BUILT_FLAG := "stormwood:crown_arch_built"
@@ -55,6 +56,11 @@ var _navigator: RefCounted
 var _activated_provider_id := 0
 var _activated_provider_path := ""
 var _last_combat_outcome := ""
+var _safety: RefCounted
+## Only the Crown segment itself walks at the real 1x clock (the Conductor
+## Road and west loop, coordinator order for run 12); later segments keep
+## their own declared clocks.
+var _walk_real_clock := false
 
 
 static func resource_contract() -> Dictionary:
@@ -85,6 +91,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	if not _preconditions_hold():
 		return result()
 	_navigator = NAVIGATOR.new(_tree, _player, _camera, _drive_stick)
+	_walk_real_clock = true
 	if not _manager.exited.is_connected(_on_combat_exited):
 		_manager.exited.connect(_on_combat_exited)
 
@@ -429,6 +436,32 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 
 func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
 		record_failure: bool = true) -> bool:
+	if _safety == null:
+		_safety = SAFETY.new()
+		_safety.attach(_tree, _world, _game, _player, _camera, _drive_stick)
+	_safety.set("phase", "walk to " + label)
+	if not _walk_real_clock or is_equal_approx(Engine.time_scale, 1.0):
+		return await _walk_xz_clocked(point, label, tolerance, record_failure)
+	var previous_scale := Engine.time_scale
+	var previous_hz := Engine.physics_ticks_per_second
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
+	var arrived := await _walk_xz_clocked(point, label, tolerance, record_failure)
+	await _tree.process_frame
+	Engine.time_scale = previous_scale
+	Engine.physics_ticks_per_second = previous_hz
+	return arrived
+
+
+## Lightning log and satchel state for this segment (null before any walk).
+func strike_counts() -> Dictionary:
+	return (_safety.get("counts") as Dictionary).duplicate() if _safety != null else {}
+
+
+func _walk_xz_clocked(point: Vector2, label: String, tolerance: float = 1.3,
+		record_failure: bool = true) -> bool:
 	var target := _grounded(point)
 	var distance := Vector2(_player.global_position.x, _player.global_position.z).distance_to(point)
 	var budget := maxi(1800, int(distance * 80.0))
@@ -440,6 +473,15 @@ func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
 			_drive_stick.call(0.0, 0.0)
 			await _settle(4)
 			return true
+		if bool(_safety.call("needs_recovery")):
+			if not bool(await _safety.call("recover", Callable(self, "_walk_xz"), Callable(self, "_activate_exact"))):
+				return _fail("could not take back the trainer's death satchel during " + label)
+			_navigator.call("reset")
+			continue
+		if bool(await _safety.call("dodge_step", target)):
+			walked += 1
+			_navigator.call("reset")
+			continue
 		if bool(_navigator.call("can_walk")):
 			walked += 1
 			held = 0
@@ -463,6 +505,8 @@ func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
 
 
 func _fight_current(label: String) -> bool:
+	if _safety != null:
+		_safety.set("phase", "fight during " + label)
 	_last_combat_outcome = ""
 	var started := Time.get_ticks_msec()
 	var previous_scale := Engine.time_scale
