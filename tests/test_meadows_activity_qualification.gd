@@ -39,9 +39,12 @@ func _local_activities() -> Array:
 
 
 func test_the_chapter_carries_at_least_the_six_activity_floor() -> void:
-	var activities := _local_activities()
+	# A `counts_as_activity: false` row is a story log line (first Ironwood
+	# completes on a required Sigil captain) and does not count toward the floor.
+	var activities := _local_activities().filter(func(row: Dictionary) -> bool:
+		return bool(row.get("counts_as_activity", true)))
 	assert_true(activities.size() >= REQUIRED_ACTIVITIES,
-		"ROADMAP item 6 sets a floor of %d optional activities; objectives.json carries %d"
+		"ROADMAP item 6 sets a floor of %d optional activities; objectives.json carries %d that count"
 			% [REQUIRED_ACTIVITIES, activities.size()])
 
 
@@ -152,9 +155,10 @@ const WORLD_EIGHT := [
 	"band4_lost_creature", "band5_hall_alpha_galecrest",
 ]
 
-## The six counted toward F03. `kind` selects which shipping source owns each
-## column. `local_row` says whether objectives.json must already carry the row
-## (vault and Hall alpha rows are a proposed SHARED change, not yet landed).
+## The six candidates counted toward F03. `kind` selects which shipping source
+## owns each column. `local_row` says objectives.json must carry the row. A
+## `conditional` entry passes every file-checkable column but has an open
+## runtime question (its reason); it is not counted as qualified outright.
 const QUALIFIED := [
 	{"id": "band1_old_champion", "region": "lower_meadows", "kind": "trainer",
 		"trainer": "old_champion_bram", "flag": "defeated_old_bram",
@@ -166,17 +170,19 @@ const QUALIFIED := [
 		"ack": "meadowhart_herd_found", "local_row": true},
 	{"id": "band2_warrens_vault_elder", "region": "stone_and_root", "kind": "warrens_elder",
 		"nickname": "Elder Trailpup", "flag": "warrens_once_elder_trailpup",
-		"reveal": "warrens_cleared", "local_row": false},
+		"reveal": "warrens_cleared", "local_row": true},
 	{"id": "band3_river_nest", "region": "river_lock", "kind": "doss",
 		"flag": "river_nest_doss_cleared", "reveal": "river_nest_doss_met",
 		"reveal_conversation": "river_nest_doss_challenge",
-		"ack": "river_nest_doss_defeated", "local_row": true},
+		"ack": "river_nest_doss_defeated", "local_row": true,
+		"conditional": "current-main repeat/reload step fails in smoke_local_requests; reload rests on an older rendered log"},
 	{"id": "band4_lost_creature", "region": "upper_meadows", "kind": "trainer",
 		"trainer": "lost_creature_rue", "flag": "defeated_lost_creature_rue",
 		"reveal": "lost_creature_rue_met", "reveal_conversation": "pasture_drover_juno_challenge",
 		"ack": "lost_creature_rue_defeated", "local_row": true},
 	{"id": "band5_hall_alpha_galecrest", "region": "hall_approach", "kind": "alpha",
-		"order": 5001, "flag": "wild_once_5001", "local_row": false},
+		"order": 5001, "flag": "wild_once_5001", "reveal": "hall_approach_open", "local_row": true,
+		"conditional": "optionality unproven: 18m from the spine in the chapter's largest aggressive cluster"},
 ]
 
 ## Recorded rejections (reasons in the report). Two are WORLD §11 candidates;
@@ -291,8 +297,17 @@ func _assert_items_exist(activity: String, items: Array, db: RefCounted) -> int:
 ## it cannot show the six-activity floor is met; the data tests below and the
 ## runtime witnesses in MEADOWS-PAYOFFS carry that.
 func test_the_f03_record_is_internally_consistent() -> void:
-	assert_true(QUALIFIED.size() >= MIN_QUALIFIED,
-		"F03 needs at least %d qualified activities; the record counts %d" % [MIN_QUALIFIED, QUALIFIED.size()])
+	# Qualified outright and conditional are kept apart: this record does not
+	# claim the six-floor is met while any candidate is conditional.
+	var outright := QUALIFIED.filter(func(row: Dictionary) -> bool: return not row.has("conditional"))
+	var conditional := QUALIFIED.filter(func(row: Dictionary) -> bool: return row.has("conditional"))
+	for row: Dictionary in conditional:
+		assert_false(str(row["conditional"]).strip_edges().is_empty(),
+			"conditional activity '%s' records no reason" % row["id"])
+	assert_eq(outright.size(), 4, "the record counts Bram, herd, vault Elder and Juno as qualified outright")
+	assert_true(outright.size() + conditional.size() >= MIN_QUALIFIED,
+		"F03 needs at least %d candidates; the record has %d outright and %d conditional"
+			% [MIN_QUALIFIED, outright.size(), conditional.size()])
 	var regions := {}
 	var ids := {}
 	for row: Dictionary in QUALIFIED:
@@ -559,6 +574,8 @@ func test_a_local_row_credited_by_the_main_route_is_recorded_as_rejected() -> vo
 		if main.has(str(local.get("flag_id", ""))):
 			assert_false(qualified_ids.has(id), "%s is main-route credit but counted as qualified" % id)
 			assert_true(REJECTED.has(id), "%s is main-route credit and has no recorded rejection" % id)
+			assert_false(bool(local.get("counts_as_activity", true)),
+				"%s is main-route credit, so objectives.json must mark it counts_as_activity: false" % id)
 	assert_true(REJECTED.size() >= 2, "the record lists no rejected candidates")
 	for id: String in REJECTED:
 		assert_false(str(REJECTED[id]).strip_edges().is_empty(), "rejection of '%s' records no reason" % id)
