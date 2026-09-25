@@ -472,6 +472,31 @@ var _has_trainer_battle_anchor: bool = false
 ## Also §6's "arriving late costs nothing": a peer that joined for the ace alone
 ## is in here exactly like the one that was there from the first send-out.
 var _trainer_battle_participants: Dictionary = {}
+## Trainer ids this CLIENT already sent to the host as `trainer_victory`, so a
+## repeat defeat never asks twice (the host would answer `noop` anyway). A
+## refusal erases the id, so a later win or a retry may ask again.
+var _trainer_victories_sent: Dictionary = {}
+## trainer id -> the defeat flag THIS client wrote into its local progression
+## when it sent `trainer_victory`. Only present when the flag was not already
+## set before the note, so a refusal undoes exactly what this path wrote and
+## never a flag the world (or an earlier win) had already set.
+var _trainer_victory_local_notes: Dictionary = {}
+## trainer id -> {"attempts": resends so far, "armed": a resend is due,
+## "token": which timer may fire it}. A transient host refusal of a
+## `trainer_victory` is resent automatically, bounded, because the host pays
+## idempotently per (source, character) and commits the world fact only after
+## paying. Cloudreach's chapter runtime commits the defeat fact itself before the
+## routed send, so re-winning cannot be the recovery there; the retry is.
+## Cleared by an ok verdict, the final attempt, a permanent refusal and teardown.
+var _trainer_victory_retries: Dictionary = {}
+## Resends after the first send, and the spacing between them (seconds).
+const TRAINER_VICTORY_RETRY_LIMIT := 5
+const TRAINER_VICTORY_RETRY_SECONDS := 5.0
+## Host refusal codes a resend can never change: the trainer or the sender is
+## not one this route may pay. Every other refusal (a grant/journal failure,
+## `wrong_realm`, `unknown_character`) is transient and retried.
+const TRAINER_VICTORY_PERMANENT_REFUSALS := ["unknown_trainer", "tournament_round",
+	"no_world_fact", "not_participant"]
 ## encounter id -> peer id -> frozen ordered three durable creature ids.
 ## Remote portable parties live on their owners, so this validates protocol
 ## consistency rather than proving ownership from host-held character state.
@@ -1863,7 +1888,7 @@ func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 		return _host_commit_encounter(outbound, _local_peer_id())
 	if not _can_encounter_rpc():
 		return _encounter_pending(outbound, false, "You are not connected to this world.")
-	var completing := str(outbound.get("kind", "")) in ["catch_finished", "disengage"]
+	var completing := str(outbound.get("kind", "")) in ["catch_finished", "disengage", "trainer_victory"]
 	if not _send_realm_rpc(1, "_rpc_encounter_intent", [outbound], completing):
 		return _encounter_pending(outbound, false, "This realm is closing for travel.")
 	return _encounter_pending(outbound, true, "")
@@ -1950,10 +1975,10 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
 		return
 	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent",
-			"catch_attempt", "catch_finished"]:
+			"catch_attempt", "catch_finished", "trainer_victory"]:
 		# An accepted strike or throw carries numbers only its own author needs
 		# (the damage it did, the wobble it earned). Everybody else gets the
-		# record.
+		# record. An accepted `trainer_victory` tells its sender to stop retrying.
 		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
 
 
@@ -2099,6 +2124,13 @@ func _rpc_encounter_caught_by(encounter_id: String, peer_id: int, species_id: St
 
 
 func _deliver_encounter_verdict(verdict: Dictionary) -> void:
+	if str(verdict.get("kind", "")) == "trainer_victory":
+		# The payout itself arrives as the host's reward delivery, world delta
+		# and `_rpc_trainer_reward`; this verdict only settles the send (ok:
+		# stop retrying; refusal: undo the local note, maybe retry). Never pays
+		# locally.
+		_receive_trainer_victory_verdict(verdict)
+		return
 	if _manager == null:
 		return
 	match str(verdict.get("kind", "")):
@@ -2145,6 +2177,8 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 			return _host_catch(intent, peer_id)
 		"catch_finished":
 			return _host_catch_finished(intent, peer_id)
+		"trainer_victory":
+			return _host_trainer_victory(intent, peer_id)
 		"disengage":
 			var runtime := _shared_host_fight(encounter_id)
 			if runtime != null and int(runtime.get("catch_claimant")) == peer_id:
@@ -2912,6 +2946,10 @@ func _finalize_shared_host_fight(encounter_id: String, outcome: String) -> void:
 	elif outcome == CAUGHT:
 		wild.visible = false
 		if once_id.is_empty():
+			# `_host_catch_finished`, the only CAUGHT caller, encoded the
+			# capture card from this body's instance before calling this; the
+			# spawn point refills with someone new.
+			_refill_caught_spawn(wild)
 			_respawn_timers[wild] = _respawn_delay_for(wild)
 	if outcome == "won" or outcome == CAUGHT:
 		var completed := _award_once_completion_reward(wild, once_id,
@@ -2923,6 +2961,35 @@ func _finalize_shared_host_fight(encounter_id: String, outcome: String) -> void:
 			_mark_once_cleared(once_id)
 		elif not once_id.is_empty():
 			_respawn_timers[wild] = _respawn_delay_for(wild)
+
+
+## A caught wild's spawn point refills with a NEW individual of the same
+## species and level. Without this the hidden body kept the CreatureInstance
+## it was caught as: on the local path that object IS the party's creature, so
+## `revive_at_home()` healed it to full for free; on both paths the same
+## individual (same uid, IVs, traits) walked back into the meadow to be caught
+## a second time. Same level as the one caught, so a pinned or banded cluster
+## keeps its strength; its own rng, so no spawn draw is consumed (see
+## `_roll_wild_level`). Only species and level carry over: per-instance
+## dressing (a title, a nickname, move overrides) is lost, which is safe only
+## because every dressed or named individual is once-only and never respawns.
+func _refill_caught_spawn(wild: Node3D) -> void:
+	var caught: RefCounted = wild.get("instance") as RefCounted
+	if caught == null:
+		return
+	var species := str(caught.get("species_id"))
+	var cfg: Dictionary = PROGRESSION.config()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("refill_%s_%s" % [wild.name, str(caught.get("uid"))])
+	var fresh: RefCounted = CREATURE_INSTANCE.from_species(
+		species, SPECIES.definition(species), rng.randf(), cfg,
+		[rng.randf(), rng.randf(), rng.randf()], [rng.randf(), rng.randf()]
+	)
+	fresh.call("set_level", int(caught.get("level")), cfg)
+	var is_shiny: bool = rng.randf() < VISUAL.shiny_chance()
+	fresh.shiny = is_shiny
+	wild.set("instance", fresh)
+	wild.call("set_shiny", is_shiny)
 
 
 func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> void:
@@ -3681,11 +3748,21 @@ func interaction_offer(from: Vector3) -> Dictionary:
 		return PROMPTS.offer("%s is out of the fight." % _ally.display_name, 9999.0, 0, false)
 	var candidate := _engageable()
 	if candidate != null:
+		var radius := float(candidate.call("body_radius")) if candidate.has_method("body_radius") else 0.0
 		return PROMPTS.offer(
 			"Engage %s" % str(candidate.get("display_name")),
-			from.distance_to(candidate.global_position)
+			engage_offer_distance(from, candidate.global_position, radius)
 		)
 	return _creature_control_offer()
+
+
+## The engage offer's distance for the arbiter: to the creature's body
+## surface, not its centre. Harvest prompts are points at a trunk or rock, so a
+## centre measurement let a tree beside an idling creature out-bid it from most
+## bearings -- "Chop" offered to a player standing next to the creature. Never
+## negative, so a player inside the body's radius reads as touching it.
+static func engage_offer_distance(from: Vector3, centre: Vector3, body_radius: float) -> float:
+	return maxf(0.0, from.distance_to(centre) - maxf(body_radius, 0.0))
 
 
 func interaction_activate() -> void:
@@ -4852,6 +4929,7 @@ func _on_combat_exited(outcome: String) -> void:
 					# usual delay — the caught instance now lives in the party (or
 					# on the ceremony's seam), and the meadow does not empty out
 					# one catch at a time.
+					_refill_caught_spawn(wild)
 					_respawn_timers[wild] = _respawn_delay_for(wild)
 		if outcome == "won" or outcome == CAUGHT:
 			var completed := _award_once_completion_reward(wild, once_id, [_local_peer_id()])
@@ -5666,6 +5744,40 @@ func _record_trainer_defeat_for_the_session(spec: Dictionary) -> bool:
 	if not _is_multi_peer():
 		return false
 	var realm := _encounter_realm()
+	if not _is_host() and _routes_trainer_victory_to_host(spec, realm):
+		# A client's local win of a records-participant trainer. The host owns
+		# who fought (per-character reward journal) and the world fact, so the
+		# client asks with the trainer id alone and changes nothing itself:
+		# items/flags arrive as the host's reward delivery, XP and the line as
+		# `_rpc_trainer_reward`, the defeat flag as the host's world delta.
+		var trainer_key := ENCOUNTER_REWARDS.trainer_key(spec)
+		if _trainer_victories_sent.has(trainer_key):
+			return true # this client already asked the host: never ask twice
+		var sent := submit_encounter_intent({"kind": "trainer_victory",
+			"trainer_id": trainer_key})
+		if not bool(sent.get("pending", false)) and not bool(sent.get("ok", false)):
+			# The request could not leave (offline / realm closing). Treat it as
+			# a transient refusal so the bounded retry still asks the host: in a
+			# chapter whose runtime already wrote the defeat fact, winning again
+			# is impossible and only a retry can collect the reward.
+			_receive_trainer_victory_verdict({"ok": false, "kind": "trainer_victory",
+				"trainer_id": trainer_key, "code": str(sent.get("code", "offline")),
+				"reason": str(sent.get("reason", ""))})
+			return true
+		# Sent: note the defeat in this client's LOCAL progression only, as the
+		# former client path did, so a repeat defeat (or a chapter override that
+		# guards on the local flag before its once-only victory hook) does not
+		# fire or send twice while the host's world delta is in flight. This is
+		# not a ledger write; the host's delta/snapshot stays authoritative. A
+		# later host refusal undoes this note (only if this path wrote it).
+		_trainer_victories_sent[trainer_key] = true
+		var local_progression := _progression()
+		var flag := str(spec.get("defeat_flag", ""))
+		if local_progression != null and flag != "":
+			if not bool(local_progression.call("has", flag)):
+				_trainer_victory_local_notes[trainer_key] = flag
+			local_progression.call("set_flag", flag)
+		return true
 	# D103/D99: a trainer's defeat is a WORLD fact and the only way a world fact
 	# may change is an intent -- `alpha_pins.gd::clear_alpha()` is the precedent.
 	# Submitted whether this peer is the host or a client, because either can be
@@ -5696,22 +5808,254 @@ func _record_trainer_defeat_for_the_session(spec: Dictionary) -> bool:
 ## world flag instead would refuse to pay a second player for a trainer their
 ## friend had beaten earlier -- who is exactly the person §7 exists to pay.
 func _pay_every_participant(spec: Dictionary, realm: String, participants: Array) -> void:
+	_tell_the_paid(spec, (_grant_to(spec, realm, participants).get("paid", []) as Array))
+
+
+## Every component of `spec`'s payout, addressed to `participants`. `ok` only
+## when each component was journaled or had already been (`already_taken`), so a
+## caller that must not commit a world fact over a failed payout can tell;
+## `code`/`reason` are the first failure's. Every component is still attempted,
+## exactly as the host-run fight always has.
+func _grant_to(spec: Dictionary, realm: String, participants: Array) -> Dictionary:
 	var paid_any: Dictionary = {}
+	var failure: Dictionary = {}
 	for raw: Variant in ENCOUNTER_REWARDS.grants(spec, realm, participants):
 		var verdict: Dictionary = _submit_reward_intent(raw as Dictionary)
 		if not bool(verdict.get("ok", false)):
+			if failure.is_empty() and str(verdict.get("code", "")) != "already_taken":
+				failure = verdict
 			continue
 		for peer: Variant in (verdict.get("paid", []) as Array):
 			paid_any[int(peer)] = true
-	if paid_any.is_empty():
+	return {"ok": failure.is_empty(), "code": str(failure.get("code", "")),
+		"reason": str(failure.get("reason", "")), "paid": paid_any.keys()}
+
+
+func _tell_the_paid(spec: Dictionary, paid: Array) -> void:
+	if paid.is_empty():
 		return
 	var payload := {
 		"trainer": str(spec.get("name", "Trainer")),
 		"xp": ENCOUNTER_REWARDS.xp_bonus(spec),
 		"line": _trainer_reward_line(spec),
 	}
-	for peer: Variant in paid_any.keys():
+	for peer: Variant in paid:
 		_tell_participant_they_were_paid(int(peer), payload)
+
+
+## Client-side gate for `trainer_victory`: a session, a trainer whose defeat is
+## a world fact and whose id the host can resolve, and not a tournament round
+## (those are host-run records with their own roster rules). This routes EVERY
+## client-run trainer with a world-fact defeat, not only the ones whose rows
+## feed a per-participant offer, so all client trainer rewards arrive as host
+## deliveries. A host refusal undoes the client's local defeat note (unless the
+## host's world already holds the defeat) and a transient one is resent, bounded
+## (`_receive_trainer_victory_verdict`).
+func _routes_trainer_victory_to_host(spec: Dictionary, realm: String) -> bool:
+	var trainer_id := ENCOUNTER_REWARDS.trainer_key(spec)
+	return _is_multi_peer() and not trainer_id.is_empty() \
+		and not TOURNAMENT.is_round(trainer_id) \
+		and not _trainer_spec_by_id(trainer_id).is_empty() \
+		and not ENCOUNTER_REWARDS.world_facts(spec, realm).is_empty()
+
+
+## The trainer row this director would fight, by id. Chapter directors that
+## translate their own trainers (Water, Cloudreach) fight ONLY from their
+## `trainer_specs` -- including in-place overrides such as Veilfall's defeat flag
+## for Nerissa -- so for them that table is the whole answer: a chapter host never
+## resolves another chapter's trainer (e.g. the Warden) from the shared table.
+## Directors without such a table use the shared `trainers.json` row.
+func _trainer_spec_by_id(trainer_id: String) -> Dictionary:
+	if trainer_id.is_empty():
+		return {}
+	var table: Variant = get("trainer_specs")
+	if table is Dictionary:
+		var entry: Variant = (table as Dictionary).get(trainer_id)
+		return entry as Dictionary if entry is Dictionary else {}
+	return TRAINERS.trainer(trainer_id)
+
+
+func _trainer_victory_refused(reason: String) -> void:
+	var game := get_node_or_null(^"/root/Game") if is_inside_tree() else null
+	if game != null and game.has_method("push_world_message"):
+		game.call("push_world_message", reason if not reason.is_empty() \
+			else "The host could not record that victory.")
+
+
+## Client: the host's answer to a `trainer_victory` this client sent. An ok
+## verdict ends any retry; the send stays deduped. A refusal:
+## - erases the dedupe, so a later win (or the retry) may ask again;
+## - undoes the local defeat note, but only one this path wrote, and not when
+##   the host says its world already holds the defeat (Cloudreach's runtime
+##   commits the fact itself; the local mirror must keep agreeing with it);
+## - transient codes are resent up to `TRAINER_VICTORY_RETRY_LIMIT` times,
+##   `TRAINER_VICTORY_RETRY_SECONDS` apart; permanent ones are not.
+## A verdict without `trainer_id` (an older host) only shows its reason.
+func _receive_trainer_victory_verdict(verdict: Dictionary) -> void:
+	var trainer_id := str(verdict.get("trainer_id", ""))
+	if bool(verdict.get("ok", false)):
+		if not trainer_id.is_empty():
+			_trainer_victory_retries.erase(trainer_id)
+			_trainer_victory_local_notes.erase(trainer_id) # the host's delta owns it now
+		return
+	if trainer_id.is_empty():
+		_trainer_victory_refused(str(verdict.get("reason", "")))
+		return
+	_trainer_victories_sent.erase(trainer_id)
+	var defeat_recorded := bool(verdict.get("defeat_recorded", false))
+	_undo_trainer_victory_note(trainer_id, defeat_recorded)
+	var code := str(verdict.get("code", ""))
+	var trainer_name := str(_trainer_spec_by_id(trainer_id).get("name", "that trainer"))
+	if code in TRAINER_VICTORY_PERMANENT_REFUSALS:
+		_trainer_victory_retries.erase(trainer_id)
+		var reason := str(verdict.get("reason", ""))
+		var outcome := "Your reward for beating %s was not paid." % trainer_name if defeat_recorded \
+			else "Your victory over %s was not recorded and its reward was not paid." % trainer_name
+		_trainer_victory_refused("%s%s" % [reason + " " if not reason.is_empty() else "", outcome])
+		return
+	var entry: Dictionary = _trainer_victory_retries.get(trainer_id, {"attempts": 0, "token": 0})
+	var attempts := int(entry.get("attempts", 0))
+	if attempts >= TRAINER_VICTORY_RETRY_LIMIT:
+		_trainer_victory_retries.erase(trainer_id)
+		_trainer_victory_refused(_trainer_victory_final_line(trainer_name, defeat_recorded))
+		return
+	if attempts == 0:
+		_trainer_victory_refused("The host could not record your victory over %s yet; trying again." \
+			% trainer_name)
+	_arm_trainer_victory_retry(trainer_id, entry)
+
+
+func _trainer_victory_final_line(trainer_name: String, defeat_recorded: bool) -> String:
+	var line := "The host could not record your victory over %s; its reward was not fully paid. Anything already delivered is kept." \
+		% trainer_name
+	if not defeat_recorded:
+		line += " %s is still unbeaten, so winning again can collect the rest." % trainer_name
+	return line
+
+
+func _undo_trainer_victory_note(trainer_id: String, keep: bool) -> void:
+	if not _trainer_victory_local_notes.has(trainer_id):
+		return
+	var flag := str(_trainer_victory_local_notes[trainer_id])
+	_trainer_victory_local_notes.erase(trainer_id)
+	if keep or flag.is_empty():
+		return
+	var progression := _progression()
+	if progression != null:
+		progression.call("set_flag", flag, false)
+
+
+func _arm_trainer_victory_retry(trainer_id: String, entry: Dictionary) -> void:
+	var token := int(entry.get("token", 0)) + 1
+	_trainer_victory_retries[trainer_id] = {"attempts": int(entry.get("attempts", 0)),
+		"armed": true, "token": token}
+	if is_inside_tree():
+		get_tree().create_timer(TRAINER_VICTORY_RETRY_SECONDS).timeout.connect(
+			_on_trainer_victory_retry_timer.bind(trainer_id, token))
+
+
+func _on_trainer_victory_retry_timer(trainer_id: String, token: int) -> void:
+	var entry: Variant = _trainer_victory_retries.get(trainer_id)
+	if entry is Dictionary and int((entry as Dictionary).get("token", -1)) == token:
+		_retry_trainer_victory(trainer_id)
+
+
+## One armed resend of the same trainer-id-only `trainer_victory`. The timer
+## calls it; tests call it directly. A no-op unless a refusal armed it, so each
+## refusal buys exactly one resend. A resend that cannot even leave (offline,
+## realm closing) counts as a refused attempt.
+func _retry_trainer_victory(trainer_id: String) -> void:
+	var entry: Variant = _trainer_victory_retries.get(trainer_id)
+	if not entry is Dictionary or not bool((entry as Dictionary).get("armed", false)):
+		return
+	var next := (entry as Dictionary).duplicate()
+	next["armed"] = false
+	next["attempts"] = int(next.get("attempts", 0)) + 1
+	_trainer_victory_retries[trainer_id] = next
+	var sent := submit_encounter_intent({"kind": "trainer_victory", "trainer_id": trainer_id})
+	if bool(sent.get("pending", false)) or bool(sent.get("ok", false)):
+		_trainer_victories_sent[trainer_id] = true
+		return
+	_receive_trainer_victory_verdict({"ok": false, "kind": "trainer_victory",
+		"trainer_id": trainer_id, "code": str(sent.get("code", "offline")),
+		"reason": str(sent.get("reason", ""))})
+
+
+func _clear_trainer_victory_retries() -> void:
+	_trainer_victory_retries.clear()
+
+
+func _exit_tree() -> void:
+	_clear_trainer_victory_retries()
+
+
+## Host: a client won a records-participant trainer in its own local fight.
+## Identity is the transport sender and this host's registry ONLY -- nothing in
+## the payload but `trainer_id` is read. Pays that one character first; the
+## world fact is committed only once the payout is journaled, so a failed
+## journal never leaves the trainer beaten with nobody paid. Item and flag rows
+## are `already_taken` per (source, character) on replay. The XP bonus uses the
+## ledger's legacy per-PEER receipt, so the same character under a new peer id
+## can be told the XP bonus again (XP is applied client-side; no item or row is
+## duplicated). Residual trust: the host has no record of the client's local
+## fight and believes a registered, same-realm client that says it won -- no
+## wider than main, where the client paid itself and could already submit
+## arbitrary `reward_grant`s (shared-ledger gap, owned by the co-op lane).
+func _host_trainer_victory(intent: Dictionary, peer_id: int) -> Dictionary:
+	var trainer_id := str(intent.get("trainer_id", ""))
+	# Every verdict names the trainer, so the client can settle that one send.
+	# A refusal also says whether this host's world already holds the defeat
+	# (another path, e.g. Cloudreach's runtime, committed it), so the client
+	# keeps its local mirror agreeing with the world.
+	var refuse := func(code: String, reason: String) -> Dictionary:
+		return {"ok": false, "kind": "trainer_victory", "peer": peer_id, "code": code,
+			"reason": reason, "pending": false, "delta": {}, "trainer_id": trainer_id,
+			"defeat_recorded": _host_holds_trainer_defeat(trainer_id)}
+	if peer_id <= 0 or peer_id == _local_peer_id():
+		return refuse.call("not_participant", "Only a guest's own victory is reported this way.")
+	var row := _session_peer_row(peer_id)
+	var character_id := str(row.get("character_id", ""))
+	if row.is_empty() or character_id.is_empty():
+		return refuse.call("unknown_character", "Your character is not connected to this world.")
+	var realm := _encounter_realm()
+	if realm.is_empty() or str(row.get("realm", "")) != realm:
+		return refuse.call("wrong_realm", "That victory belongs to another realm.")
+	var spec := _trainer_spec_by_id(trainer_id)
+	if spec.is_empty():
+		return refuse.call("unknown_trainer", "The host does not know that trainer.")
+	if TOURNAMENT.is_round(trainer_id):
+		return refuse.call("tournament_round", "Tournament rounds are recorded by their own fight.")
+	var facts: Array = ENCOUNTER_REWARDS.world_facts(spec, realm)
+	if facts.is_empty():
+		return refuse.call("no_world_fact", "That trainer's defeat changes nothing to record.")
+	var granted := _grant_to(spec, realm, [peer_id])
+	if not bool(granted.get("ok", false)):
+		var code := str(granted.get("code", ""))
+		# Components are journaled one at a time, so some may already have
+		# landed: say so instead of the ledger's per-component "nothing was
+		# delivered". This route commits no world fact over a failed payout, but
+		# another path may already have (`defeat_recorded`), so the reason does
+		# not promise the trainer is unbeaten. The client resends this intent
+		# (bounded); a resend pays only what is missing, because receipts make
+		# the landed parts `already_taken`, and a fact already set is `noop`.
+		return refuse.call(code if not code.is_empty() else "reward_failed",
+			"The host could not save all of that victory. Anything already delivered is kept, and the rest is still owed.")
+	for fact: Variant in facts:
+		_submit_reward_intent(fact as Dictionary)
+	var paid: Array = granted.get("paid", []) as Array
+	_tell_the_paid(spec, paid)
+	return {"ok": true, "kind": "trainer_victory", "peer": peer_id,
+		"code": "ok" if not paid.is_empty() else "noop", "reason": "", "pending": false,
+		"delta": {}, "paid": paid, "trainer_id": trainer_id}
+
+
+## Host: whether this host's world already holds `trainer_id`'s defeat flag.
+## `_progression()` on the host is the merged view whose world half is the
+## authoritative `Game.world.flags` (a trainer defeat flag is world-scoped).
+func _host_holds_trainer_defeat(trainer_id: String) -> bool:
+	var flag := str(_trainer_spec_by_id(trainer_id).get("defeat_flag", ""))
+	var progression := _progression()
+	return not flag.is_empty() and progression != null and bool(progression.call("has", flag))
 
 
 ## The one line a newly-paid participant is shown, built from the AUTHORED

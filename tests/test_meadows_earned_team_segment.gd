@@ -8,6 +8,19 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
 
 
+class RespawnDirector extends Node:
+	var _respawn_timers: Dictionary = {}
+
+
+class StubWild extends Node3D:
+	var instance: RefCounted
+	var home := Vector3.ZERO
+
+
+class StubGame extends Node:
+	var party: RefCounted
+
+
 class Admission extends Node:
 	var admitted: Node3D
 	var fighting := true
@@ -173,6 +186,23 @@ func test_supplied_training_fields_underlevel_even_when_a_qualified_lead_is_heal
 		"outside training the health-only selection is unchanged")
 
 
+func test_underlevel_bonus_requires_stock_that_can_reach_the_safe_fraction() -> void:
+	var party := PARTY.new()
+	var qualified := _pilot_creature(6, 0.9)
+	var starter := _pilot_creature(4, 0.01)
+	party.add(qualified)
+	party.add(starter)
+	var max_hp := float(starter.get("max_hp"))
+	var short := max_hp * 0.5 - float(starter.get("hp")) - 1.0
+	assert_eq(int(SEGMENT.pilot_selection(party, 1, true, 5, short).index), 0,
+		"one dose that cannot lift the under-level member to half HP keeps the healthy pilot")
+	assert_eq(int(SEGMENT.pilot_selection(party, 1, true, 5, max_hp).index), 1,
+		"a dose that reaches the safe fraction fields the under-level member")
+	assert_eq(int(SEGMENT.pilot_selection(party, 2, true, 5, short).index), 1,
+		"enough carried doses together also qualify")
+	assert_almost_eq(SEGMENT.POTION_DOSE, 50.0, 0.001, "reads items.json potion_small.heal")
+
+
 func test_depleted_pilot_selection_compares_usable_health_fraction() -> void:
 	var party := PARTY.new()
 	var fuller := _pilot_creature(2, 0.95)
@@ -198,6 +228,38 @@ func test_pilot_selection_excludes_fainted_resting_and_dead_instances() -> void:
 	party.add(usable)
 	var selected := SEGMENT.pilot_selection(party, 0, false, 5)
 	assert_eq(int(selected.index), 3, "only a living, non-resting instance is eligible")
+
+
+func test_respawn_wait_targets_only_eligible_unowned_practice_spawns() -> void:
+	var segment := SEGMENT.new()
+	var director := RespawnDirector.new()
+	var game := StubGame.new()
+	game.party = PARTY.new()
+	var owned := _pilot_creature(3, 1.0)
+	game.party.add(owned)
+	segment._director = director
+	segment._game = game
+	var near := _stub_wild(_pilot_creature(3, 0.0), Vector3(40, 0, -30))
+	var far := _stub_wild(_pilot_creature(3, 0.0), Vector3(400, 0, 400))
+	var overlevel := _stub_wild(_pilot_creature(9, 0.0), Vector3(30, 0, -40))
+	# A caught body's spawn keeps the owned instance; waiting on it is futile.
+	var caught := _stub_wild(owned, Vector3(30, 0, -40))
+	assert_eq(segment._soonest_training_respawn(), -1.0, "no pending timers")
+	director._respawn_timers = {far: 5.0, overlevel: 6.0, caught: 7.0}
+	assert_eq(segment._soonest_training_respawn(), -1.0,
+		"far, over-level and owned spawn points are not worth waiting for")
+	director._respawn_timers[near] = 120.0
+	assert_almost_eq(segment._soonest_training_respawn(), 120.0, 0.001)
+	assert_true(SEGMENT.RESPAWN_WAIT_LIMIT_S >= 300.0, "one production respawn cycle fits the wait")
+	for node: Node in [near, far, overlevel, caught, director, game]:
+		node.free()
+
+
+func _stub_wild(creature: RefCounted, home: Vector3) -> StubWild:
+	var wild := StubWild.new()
+	wild.instance = creature
+	wild.home = home
+	return wild
 
 
 func _pilot_creature(level: int, hp_fraction: float) -> RefCounted:

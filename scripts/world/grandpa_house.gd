@@ -743,18 +743,36 @@ func _build_interior_area() -> void:
 
 
 func _on_body_entered(body: Node3D) -> void:
-	if body != _player or _camera_rig == null:
+	if body != _player or not _camera_is_on_the_player():
 		return
-	# Only take the camera if it is on the PLAYER — a fight or an aim owns it
-	# otherwise, and neither can happen indoors today; the guard is for the day
-	# one can.
 	_camera_rig.call("set_target", _player, INTERIOR_PROFILE)
 
 
 func _on_body_exited(body: Node3D) -> void:
-	if body != _player or _camera_rig == null:
+	if body != _player or not _camera_is_on_the_player():
 		return
 	_camera_rig.call("set_target", _player, {})
+
+
+## Only take the camera if it is on the PLAYER: a fight (the piloted ally), the
+## catch close-up (the orb) or any other owner keeps it. F04: without this, a
+## player who left the house as a fight opened -- a new game's first steps, a
+## respawn at home, the guardian witness's fixture move -- had the fight camera
+## snapped back to the trainer on the exploration profile, facing away from the
+## foe for the rest of the fight.
+##
+## And never while a fight runs, as `burrow_warrens.gd` and `stronghold.gd`
+## guard: throw aim puts the camera back on the trainer, with the aim profile,
+## mid-fight, and a trainer can walk through the door while aiming.
+func _camera_is_on_the_player() -> bool:
+	if _camera_rig == null or not is_instance_valid(_camera_rig):
+		return false
+	var parent := get_parent()
+	var manager: Node = parent.get_node_or_null(^"CombatManager") if parent != null else null
+	if manager != null and manager.has_method("is_fighting") and bool(manager.call("is_fighting")):
+		return false
+	var current: Variant = _camera_rig.get("_target")
+	return current == null or current == _player
 
 
 ## SA2 (spec sec1D): "the player cannot leave Grandpa's house until the
