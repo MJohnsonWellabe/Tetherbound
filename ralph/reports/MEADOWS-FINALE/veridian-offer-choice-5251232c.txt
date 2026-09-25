@@ -1,0 +1,49 @@
+# tests/smoke_veridian_offer_choice.gd on 5251232cb (ralph/f05-veridian-choice-b4, in integration-5), headless, 30m23.249s wall clock. Scenario lines only.
+--- space-accept
+[climax] choice prompts: accept 2.57 m, refuse 2.57 m from the player (reach 1.60 m)
+[climax] the legendary joined a belt with room on it
+(space-accept) answered: party 5, veridian 1, receipt legendary_resolution:accepted:solo
+(space-accept) reload: no re-offer, same party, receipts kept
+(space-accept) the personal receipt alone prevents a second offer
+--- space-refuse
+[climax] choice prompts: accept 2.57 m, refuse 2.57 m from the player (reach 1.60 m)
+[climax] this character refused the legendary; it stays free
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (390.0, -5.701609, 5860.0)
+(space-refuse) herd display stands at (390.0, -5.701609, 5860.0) after the answer
+(space-refuse) answered: party 4, veridian 0, receipt legendary_resolution:refused:character-f51fe4c531937b5188dab43d3d1490ef
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (390.0, -5.701609, 5860.0)
+(space-refuse) herd display stands at (390.0, -5.701609, 5860.0) after reload
+(space-refuse) reload: no re-offer, same party, receipts kept
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (390.0, -5.701609, 5860.0)
+(space-refuse) the personal receipt alone prevents a second offer
+--- capacity-refuse-at-prompt
+[climax] choice prompts: accept 2.57 m, refuse 2.57 m from the player (reach 1.60 m)
+[climax] this character refused the legendary; it stays free
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (390.0, -5.701609, 5860.0)
+(capacity-refuse-at-prompt) herd display stands at (390.0, -5.701609, 5860.0) after the answer
+(capacity-refuse-at-prompt) answered: party 5, veridian 0, receipt legendary_resolution:refused:character-f51fe4c531937b5188dab43d3d1490ef
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (390.0, -5.701609, 5860.0)
+(capacity-refuse-at-prompt) herd display stands at (390.0, -5.701609, 5860.0) after reload
+(capacity-refuse-at-prompt) reload: no re-offer, same party, receipts kept
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (390.0, -5.701609, 5860.0)
+(capacity-refuse-at-prompt) the personal receipt alone prevents a second offer
+--- capacity-accept-then-let-newcomer-go
+[climax] choice prompts: accept 2.56 m, refuse 2.56 m from the player (reach 1.60 m)
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (390.0, -5.701609, 5860.0)
+(capacity-accept-then-let-newcomer-go) herd display stands at (390.0, -5.701609, 5860.0) after the answer
+(capacity-accept-then-let-newcomer-go) answered: party 5, veridian 0, receipt legendary_resolution:refused:character-f51fe4c531937b5188dab43d3d1490ef
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (390.0, -5.701609, 5860.0)
+(capacity-accept-then-let-newcomer-go) herd display stands at (390.0, -5.701609, 5860.0) after reload
+(capacity-accept-then-let-newcomer-go) reload: no re-offer, same party, receipts kept
+[meadow] every participant refused: the freed stag stands with the Highfield herd at (390.0, -5.701609, 5860.0)
+(capacity-accept-then-let-newcomer-go) the personal receipt alone prevents a second offer
+--- capacity-accept-release-one
+[climax] choice prompts: accept 2.57 m, refuse 2.57 m from the player (reach 1.60 m)
+(capacity-accept-release-one) answered: party 5, veridian 1, receipt legendary_resolution:accepted:character-f51fe4c531937b5188dab43d3d1490ef
+(capacity-accept-release-one) reload: no re-offer, same party, receipts kept
+(capacity-accept-release-one) the personal receipt alone prevents a second offer
+--- save-while-choice-open
+[climax] choice prompts: accept 2.57 m, refuse 2.57 m from the player (reach 1.60 m)
+[climax] choice prompts: accept 2.56 m, refuse 2.56 m from the player (reach 1.60 m)
+(save-while-choice-open) reload brought the same unanswered choice back
+veridian offer choice smoke test passed
