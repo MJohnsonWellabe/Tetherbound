@@ -9,12 +9,16 @@ extends Node3D
 ## systems and forgets the fourth. What it does, all of it keyed on that flag:
 ##
 ##   * THE LAND HEALS. `vegetation.restore_drained()` puts back the exact
-##     instances the drain took out of the scatter, and the relay's runtime
-##     drain skin fades. What CANNOT heal is the baked half — see below.
+##     instances the drain took out of the scatter, the relay's and the
+##     approach's runtime drain skins fade, and a runtime REGREEN fades in over
+##     the baked scars (see below).
 ##   * THE NETWORK DIES. Every lit pylon, glowing conduit and Team Tether
 ##     fitting in the region and inside the stronghold goes to its own dead
 ##     material. §9's "stronghold effects change", D41's "the drain network
-##     dies with the stronghold machinery", one pass.
+##     dies with the stronghold machinery", one pass. Then the dead pylons of
+##     the quarry, relay and approach runs FALL, and their hanging cables go.
+##   * THE HERD COMES BACK. A returning Meadowhart herd stands on the Highfield
+##     around the freed Veridian's site, whatever the Veridian answer was.
 ##   * BARRIERS DEACTIVATE. The keyed gates stand open, through their own
 ##     flags, so a reload opens them for the ordinary reason.
 ##   * PATROLS THIN. Team Tether trainers the player has ALREADY BEATEN are
@@ -22,16 +26,18 @@ extends Node3D
 ##     beaten trainers stay beaten, which is the half of "density drops" that
 ##     is easy to break by being clever.
 ##
-## WHAT DOES NOT HEAL, STATED OUT LOUD. `D45` decided the drained-ground
-## grammar as one authored radius with three consumers, and priced this exact
-## moment while doing it: two of those consumers are live scene state and the
-## third is the terrain BAKE. The quarry's stations are painted into the baked
-## colour and control maps; nothing at run time can repaint a texel, SG46 is
-## explicitly not allowed to re-run a ~15-minute bake, and inventing a green
-## overlay to cancel a baked tint would be a second, undecided vocabulary for
-## the repair. So the quarry floor keeps its sun-killed cast, its vegetation
-## comes back over it, and `docs/decisions/D45-the-drained-ground-grammar.md`
-## carries the note. That is the honest state, not an oversight.
+## THE BAKED HALF, AND THE OWNER'S ANSWER TO IT. `D45` decided the drained-
+## ground grammar as one authored radius with three consumers: the scatter and
+## the runtime skins are live scene state, the third is the terrain BAKE, whose
+## colour and control maps nothing at run time can repaint. This node used to
+## leave that discolouration standing as "the honest remainder". The owner has
+## since decided "the land heals" at the finale WITHOUT a re-bake and with
+## installed assets only: the baked tint stays as the BEFORE state, and a
+## runtime regreen overlay -- the installed meadow grass texture, world
+## triplanar, alpha shaped by each station's own authored falloff -- fades in
+## over it and persists. Same shape as the dead-ground skins it crossfades
+## with, the opposite colour. All of it is re-derived from `legendary_freed`
+## on every peer and every load; nothing new is saved.
 ##
 ## Nothing here is built from scratch on the flag: this node re-uses the live/
 ## dead material pair `severed_spokes.gd` already ships, the placements
@@ -46,6 +52,10 @@ const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+## Set on a pylon the moment it is committed to falling, so a second `apply`
+## (or any second pass) can never rotate an already-fallen pylon again.
+const TOPPLED_META := &"meadow_toppled"
 
 var _config: Dictionary = {}
 var _world: Node3D = null
@@ -62,6 +72,14 @@ var _herd_display: Node3D = null
 ## The `legendary_resolution:` receipts the display was last decided from, so
 ## the (snapshot-reading) full-refusal rule only runs when an answer lands.
 var _herd_signature: String = "-"
+## The land heals: the regreen overlay, the returning herd, the fallen pylons.
+var _field: RefCounted = null
+var _regreen: MeshInstance3D = null
+var _regreen_material: StandardMaterial3D = null
+var _regreen_quads: int = 0
+var _herd_return: Node3D = null
+var _toppled: Array[Node3D] = []
+var _cables_hidden: int = 0
 
 
 func build(world: Node3D) -> void:
@@ -209,13 +227,19 @@ func apply(immediate: bool = false) -> Dictionary:
 	_report = {
 		"regrown": _heal_the_scatter(),
 		"dead_ground_faded": _fade_the_drain_skins(immediate),
+		"regreened": _regreen_the_scars(immediate),
 		"lights_killed": _kill_the_tether_lights(),
+		# After the lights: what falls is already dead.
+		"pylons_toppled": _topple_the_pylons(immediate),
+		"herd_returned": _return_the_herd(),
 		"barriers_opened": _open_the_barriers(),
 		"patrols_withdrawn": _withdraw_beaten_patrols(),
 	}
-	print("[meadow] the tether let go: %d plants back, %d tether lights out, %d barriers open, %d beaten patrols withdrawn"
-		% [_report["regrown"], _report["lights_killed"], _report["barriers_opened"],
-			_report["patrols_withdrawn"]])
+	_report["cables_hidden"] = _cables_hidden
+	print("[meadow] the tether let go: %d plants back, %d regreen quads, %d tether lights out, %d pylons down (%d cable pieces gone), %d of the herd back, %d barriers open, %d beaten patrols withdrawn"
+		% [_report["regrown"], _report["regreened"], _report["lights_killed"],
+			_report["pylons_toppled"], _report["cables_hidden"], _report["herd_returned"],
+			_report["barriers_opened"], _report["patrols_withdrawn"]])
 	return _report
 
 
@@ -251,10 +275,10 @@ func applied() -> bool:
 ## ending, then a console pressed — every disc's placements are already gone
 ## from `_drained` and `restore_drained()` returns 0 rather than double-placing.
 ##
-## What it CANNOT do is repaint the ground: the baked colour and control maps
-## are D45's stated remainder and no run-time pass can touch a texel. The
-## relay's own skin is a runtime overlay and does fade; the terrain under it
-## keeps its cast. See D45 and this file's header.
+## It does not regreen: the relay's ground was never baked (its skin stands in
+## for the bake), so fading that skin IS its repair. The chapter-wide regreen
+## of the BAKED scars belongs to `apply()` alone, at the finale -- see
+## `_regreen_the_scars()` and this file's header for the owner decision.
 func heal_stations(station_ids: Array, immediate: bool = false) -> Dictionary:
 	var discs := _station_discs(station_ids)
 	if discs.is_empty():
@@ -296,6 +320,8 @@ func _station_discs(station_ids: Array) -> Array:
 			"id": id,
 			"centre": Vector2(float(centre[0]), float(centre[1])),
 			"radius": float(station.get("radius", 0.0)),
+			"inner": float(station.get("inner", 0.0)),
+			"strength": float(station.get("strength", 1.0)),
 		})
 	for missing: String in wanted.keys():
 		push_warning("meadow_healing: no drain station '%s' in terrain_playground.json" % missing)
@@ -577,6 +603,501 @@ func _withdraw_beaten_patrols() -> int:
 		body.queue_free()
 		withdrawn += 1
 	return withdrawn
+
+
+## --- the land heals: regreen, fallen pylons, the herd back -------------------
+##
+## Owner decision (F05, "the land heals"): at the Meadows finale the baked scar
+## stations regreen over the finale beat and stay green, the Highfield herd is
+## back around the freed Veridian's site, and the dark tether pylons are down.
+## Installed assets only; NO terrain re-bake -- D45's baked discolouration is
+## the BEFORE state and stays in the texture. Every part is re-derived from
+## `legendary_freed` (world scope), deterministically, so every peer and every
+## load builds the same world; nothing below writes a flag or a save field.
+
+
+## (A) THE REGREEN. One runtime overlay mesh over the configured baked
+## stations, in WORLD coordinates (top_level, the same convention the drain
+## skins use). A global grid aligned to world multiples of `cell`, so where two
+## station discs overlap their cells coincide and each cell is drawn ONCE --
+## overlapping per-disc grids would stack two alpha layers into a darker seam.
+## Each corner's alpha is the listed stations' own authored falloff (the same
+## `strength * (1 - smoothstep(inner, radius, d))` `drain_factor()` uses, so it
+## greens exactly the contour the bake browned) times `max_alpha`, times
+## `1 - path_factor` so a road through a station stays a road. The material is
+## the installed meadow grass texture, world-triplanar at the terrain's own UV
+## scale and tint; its `albedo_color.a` fades 0 -> 1 over `fade_seconds`, the
+## same seconds the dark skins fade out over, so the two crossfade.
+func _regreen_the_scars(immediate: bool) -> int:
+	var block: Dictionary = _config.get("regreen", {})
+	if not bool(block.get("enabled", true)):
+		return 0
+	if _regreen != null:
+		return _regreen_quads
+	if _world == null or not _world.has_method("ground_height_at"):
+		return 0
+	var discs := _station_discs(block.get("stations", []) as Array)
+	if discs.is_empty():
+		return 0
+	var drains: Dictionary = _load_json(TERRAIN_PATH).get("drains", {})
+	var global_strength := clampf(float(drains.get("strength", 1.0)), 0.0, 1.0)
+	var cell := maxf(float(block.get("cell", 3.0)), 1.0)
+	var lift := float(block.get("lift", 0.11))
+	var max_alpha := clampf(float(block.get("max_alpha", 0.7)), 0.0, 1.0)
+	var keep_roads := bool(block.get("spare_roads", true))
+	var field := _heightfield()
+
+	var cells := regreen_cells(discs, cell)
+	var corners: Dictionary = {}  # Vector2i -> [Vector3 point, alpha] or null
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var quads := 0
+	for key: Vector2i in cells:
+		var quad: Array = []
+		var peak := 0.0
+		for offset: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1)]:
+			var at := key + offset
+			if not corners.has(at):
+				var x := float(at.x) * cell
+				var z := float(at.y) * cell
+				var ground := float(_world.call("ground_height_at", x, z))
+				if is_nan(ground):
+					corners[at] = null
+				else:
+					var path := 0.0
+					if keep_roads and field != null:
+						path = float(field.call("path_factor", x, z))
+					corners[at] = [Vector3(x, ground + lift, z),
+						regreen_alpha(Vector2(x, z), discs, global_strength, max_alpha, path)]
+			if corners[at] == null:
+				quad.clear()
+				break
+			quad.append(corners[at])
+			peak = maxf(peak, float((corners[at] as Array)[1]))
+		if quad.size() < 4 or peak <= 0.01:
+			continue
+		for triangle: Array in [[0, 1, 2], [0, 2, 3]]:
+			for index: int in triangle:
+				var point: Array = quad[index]
+				surface.set_color(Color(1.0, 1.0, 1.0, float(point[1])))
+				surface.add_vertex(point[0] as Vector3)
+		quads += 1
+	if quads == 0:
+		return 0
+	surface.generate_normals()
+	var material := _regreen_material_for(block)
+	surface.set_material(material)
+	var skin := MeshInstance3D.new()
+	skin.name = "Regreen"
+	skin.top_level = true
+	skin.mesh = surface.commit()
+	skin.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(skin)
+	skin.global_transform = Transform3D.IDENTITY
+	_regreen = skin
+	_regreen_material = material
+	_regreen_quads = quads
+	var seconds := 0.0 if immediate else float(block.get("fade_seconds", 12.0))
+	if seconds <= 0.0:
+		material.albedo_color.a = 1.0
+	else:
+		material.albedo_color.a = 0.0
+		create_tween().tween_property(material, "albedo_color:a", 1.0, seconds)
+	return quads
+
+
+func _regreen_material_for(block: Dictionary) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.vertex_color_use_as_albedo = true
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
+	material.roughness = 1.0
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var tint := Color(str(block.get("tint", "#e9dfc0")))
+	material.albedo_color = Color(tint.r, tint.g, tint.b, 0.0)
+	var albedo_path := str(block.get("albedo", ""))
+	if albedo_path != "" and ResourceLoader.exists(albedo_path):
+		material.albedo_texture = load(albedo_path)
+	var normal_path := str(block.get("normal", ""))
+	if normal_path != "" and ResourceLoader.exists(normal_path):
+		material.normal_enabled = true
+		material.normal_texture = load(normal_path)
+		material.normal_scale = float(block.get("normal_depth", 0.34))
+	var uv := float(block.get("uv_scale", 0.27))
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
+	material.uv1_scale = Vector3(uv, uv, uv)
+	return material
+
+
+## One station's authored falloff at `distance` -- the per-station term of
+## `playground_heightfield.drain_factor()`, restated so a disc list can be
+## evaluated without the rest of the network.
+static func station_falloff(distance: float, inner: float, radius: float, strength: float) -> float:
+	if radius <= 0.0 or distance >= radius:
+		return 0.0
+	var core := clampf(inner, 0.0, radius - 0.001)
+	return clampf(strength, 0.0, 1.0) * (1.0 - smoothstep(core, radius, distance))
+
+
+## The regreen alpha at a world XZ: the worst listed station there, scaled by
+## the global drain strength and `max_alpha`, and spared on roads.
+static func regreen_alpha(spot: Vector2, discs: Array, global_strength: float,
+		max_alpha: float, path: float) -> float:
+	var worst := 0.0
+	for raw: Variant in discs:
+		var disc: Dictionary = raw
+		worst = maxf(worst, station_falloff(spot.distance_to(disc["centre"] as Vector2),
+			float(disc.get("inner", 0.0)), float(disc["radius"]), float(disc.get("strength", 1.0))))
+	return clampf(worst * global_strength * max_alpha * (1.0 - clampf(path, 0.0, 1.0)), 0.0, 1.0)
+
+
+## Every world-aligned grid cell (index = floor(world / cell)) any disc
+## touches, each once, in a stable order.
+static func regreen_cells(discs: Array, cell: float) -> Array[Vector2i]:
+	var seen: Dictionary = {}
+	var out: Array[Vector2i] = []
+	for raw: Variant in discs:
+		var disc: Dictionary = raw
+		var centre: Vector2 = disc["centre"]
+		var radius := float(disc["radius"])
+		for i in range(int(floor((centre.x - radius) / cell)), int(ceil((centre.x + radius) / cell))):
+			for j in range(int(floor((centre.y - radius) / cell)), int(ceil((centre.y + radius) / cell))):
+				var key := Vector2i(i, j)
+				if not seen.has(key):
+					seen[key] = true
+					out.append(key)
+	return out
+
+
+func regreen_node() -> MeshInstance3D:
+	return _regreen
+
+
+func regreen_alpha_now() -> float:
+	return _regreen_material.albedo_color.a if _regreen_material != null else 0.0
+
+
+func _heightfield() -> RefCounted:
+	if _field == null:
+		_field = HEIGHTFIELD.new()
+	return _field
+
+
+## (C) THE PYLONS FALL. Every `Pylon_<i>` under a holder whose name matches
+## `pylons.holders` tips over about its own base edge, in a deterministic
+## direction, until its tip rests on the terrain. Which holders is a config
+## decision: the quarry spur, the relay's runs and the stronghold approach
+## trunk were the LIVE network the finale kills; the severed spokes at the map
+## edges were dead before the game began and their standing, leaning pylons
+## are the severance story, so they stay up.
+##
+## Each pylon's box collider (a SIBLING `StaticBody3D` at the pylon's XZ, see
+## `severed_spokes.gd::_add_box_collider`) is disabled for the fall and then
+## laid down with the same pivot transform (or removed, per config) -- never
+## left standing as an invisible wall. The cables strung between pylons would
+## float once they fall, so the holder's `Conduit_*`/`DangleStub_*` pieces are
+## hidden, as are the spans in `pylons.cable_holders` that end on one.
+func _topple_the_pylons(immediate: bool) -> int:
+	var block: Dictionary = _config.get("pylons", {})
+	if not bool(block.get("enabled", true)) or _world == null:
+		return 0
+	var patterns: Array = block.get("holders", [])
+	var prefixes: Array = block.get("hide_prefixes", ["Conduit_", "DangleStub_"])
+	var fall := maxf(float(block.get("fall_seconds", 2.0)), 0.1)
+	var stagger := float(block.get("stagger_seconds", 0.35))
+	var toppled := 0
+	for node: Node in _all_nodes(_world):
+		var holder := node as Node3D
+		if holder == null or not _name_matches(str(holder.name), patterns):
+			continue
+		var pylons: Array[Node3D] = []
+		for child: Node in holder.get_children():
+			if child is MeshInstance3D and str(child.name).begins_with("Pylon_"):
+				pylons.append(child as Node3D)
+		if pylons.is_empty():
+			continue
+		_cables_hidden += _hide_named(holder, prefixes)
+		for i in pylons.size():
+			var delay := float(i) * stagger
+			if _topple_one(pylons[i], holder, block, 0.0 if immediate else fall, delay):
+				toppled += 1
+	for raw: Variant in (block.get("cable_holders", []) as Array):
+		for node: Node in _all_nodes(_world):
+			if str(node.name) == str(raw):
+				_cables_hidden += _hide_named(node, prefixes)
+	return toppled
+
+
+func _name_matches(node_name: String, patterns: Array) -> bool:
+	for raw: Variant in patterns:
+		if node_name.match(str(raw)):
+			return true
+	return false
+
+
+func _hide_named(root: Node, prefixes: Array) -> int:
+	var hidden := 0
+	for node: Node in _all_nodes(root):
+		var visual := node as Node3D
+		if visual == null or not visual.visible:
+			continue
+		for raw: Variant in prefixes:
+			if str(node.name).begins_with(str(raw)):
+				visual.visible = false
+				hidden += 1
+				break
+	return hidden
+
+
+## One pylon. False (and nothing moved) when it has already fallen.
+func _topple_one(pylon: Node3D, holder: Node3D, block: Dictionary, seconds: float,
+		delay: float) -> bool:
+	if pylon == null or pylon.has_meta(TOPPLED_META):
+		return false
+	pylon.set_meta(TOPPLED_META, true)
+	var start := _global_of(pylon)
+	var box := AABB(start.origin, Vector3.ZERO)
+	var mesh_instance := pylon as MeshInstance3D
+	if mesh_instance != null and mesh_instance.mesh != null:
+		box = start * mesh_instance.mesh.get_aabb()
+	var height := maxf(box.size.y, 0.5)
+	var base := Vector3(start.origin.x, box.position.y, start.origin.z)
+	var key := "%s/%s" % [str(holder.name), str(pylon.name)]
+	var dir := _fall_direction(key, base, height, block)
+	var pivot := base + Vector3(dir.x, 0.0, dir.y) * float(block.get("pivot_offset", 0.85))
+	var ground_pivot := _ground(pivot.x, pivot.z)
+	var tip := Vector2(pivot.x, pivot.z) + dir * height
+	var angle := deg_to_rad(fall_angle_deg(height, ground_pivot, _ground(tip.x, tip.y),
+		float(block.get("sink_deg", 3.0)), float(block.get("min_angle_deg", 70.0)),
+		float(block.get("max_angle_deg", 108.0))))
+	var final := topple_transform(start, pivot, dir, angle)
+
+	var colliders: Array[Node3D] = []
+	var reach := float(block.get("collider_match_radius", 0.35))
+	for sibling: Node in holder.get_children():
+		var body := sibling as StaticBody3D
+		if body == null:
+			continue
+		var at := _global_of(body).origin
+		if Vector2(at.x, at.z).distance_to(Vector2(start.origin.x, start.origin.z)) <= reach:
+			colliders.append(body)
+	var remove := str(block.get("collider", "lay_down")) == "remove"
+	for body: Node3D in colliders:
+		_set_shapes_disabled(body, true)
+
+	_toppled.append(pylon)
+	if seconds <= 0.0 or not is_inside_tree():
+		_set_global(pylon, final)
+		_settle_colliders(colliders, pivot, dir, angle, remove)
+		return true
+	var tween := create_tween()
+	if delay > 0.0:
+		tween.tween_interval(delay)
+	tween.tween_method(_pose_pylon.bind(pylon, start, pivot, dir, angle), 0.0, 1.0, seconds) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.tween_callback(_finish_fall.bind(pylon, final, colliders, pivot, dir, angle, remove))
+	return true
+
+
+func _pose_pylon(t: float, pylon: Node3D, start: Transform3D, pivot: Vector3, dir: Vector2,
+		angle: float) -> void:
+	if is_instance_valid(pylon):
+		_set_global(pylon, topple_transform(start, pivot, dir, angle * t))
+
+
+func _finish_fall(pylon: Node3D, final: Transform3D, colliders: Array[Node3D], pivot: Vector3,
+		dir: Vector2, angle: float, remove: bool) -> void:
+	if is_instance_valid(pylon):
+		_set_global(pylon, final)
+	_settle_colliders(colliders, pivot, dir, angle, remove)
+
+
+func _settle_colliders(colliders: Array[Node3D], pivot: Vector3, dir: Vector2,
+		angle: float, remove: bool) -> void:
+	for body: Node3D in colliders:
+		if not is_instance_valid(body):
+			continue
+		if remove:
+			body.queue_free()
+			continue
+		_set_global(body, topple_transform(_global_of(body), pivot, dir, angle))
+		_set_shapes_disabled(body, false)
+
+
+func _set_shapes_disabled(body: Node, disabled: bool) -> void:
+	for child: Node in body.get_children():
+		if not child is CollisionShape3D:
+			continue
+		if child.is_inside_tree():
+			(child as CollisionShape3D).set_deferred("disabled", disabled)
+		else:
+			(child as CollisionShape3D).disabled = disabled
+
+
+## World transform of a node, or its local one outside the tree (the unit
+## tests drive the topple on bare nodes, where local IS world).
+func _global_of(node: Node3D) -> Transform3D:
+	return node.global_transform if node.is_inside_tree() else node.transform
+
+
+func _set_global(node: Node3D, value: Transform3D) -> void:
+	if node.is_inside_tree():
+		node.global_transform = value
+	else:
+		node.transform = value
+
+
+## The fall direction: an azimuth hashed from the pylon's holder and name, so
+## every peer and every load picks the same one; then stepped round by
+## `TAU / candidates` until the fallen body would not lie across a road or a
+## building apron (sampled along its length). Falls back to the hashed
+## azimuth if every candidate is blocked.
+func _fall_direction(key: String, base: Vector3, height: float, block: Dictionary) -> Vector2:
+	var candidates := maxi(int(block.get("direction_candidates", 8)), 1)
+	var limit := float(block.get("avoid_road_above", 0.05))
+	var field := _heightfield()
+	for attempt in candidates:
+		var dir := fall_direction(key, attempt, candidates)
+		if field == null:
+			return dir
+		var clear := true
+		for s in range(1, 6):
+			var spot := Vector2(base.x, base.z) + dir * (height * float(s) / 5.0)
+			var road := float(field.call("path_factor", spot.x, spot.y))
+			var apron := float(field.call("building_apron_factor", spot.x, spot.y)) \
+				if field.has_method("building_apron_factor") else 0.0
+			if maxf(road, apron) > limit:
+				clear = false
+				break
+		if clear:
+			return dir
+	return fall_direction(key, 0, candidates)
+
+
+## Deterministic unit XZ direction for `key`, candidate `attempt` of `count`.
+static func fall_direction(key: String, attempt: int = 0, count: int = 8) -> Vector2:
+	var turn := float(key.hash() & 0xffff) / 65536.0 * TAU
+	turn += float(attempt) * TAU / float(maxi(count, 1))
+	return Vector2(sin(turn), cos(turn))
+
+
+## How far (degrees from upright) a pylon of `height` falls before its tip
+## meets the ground: 90 on the level, less when the ground rises ahead of it,
+## more when it falls away; plus a few degrees of sink so the tip rests IN the
+## grass rather than hovering. NaN ground reads as level.
+static func fall_angle_deg(height: float, ground_pivot: float, ground_tip: float,
+		sink_deg: float, min_deg: float, max_deg: float) -> float:
+	var rise := 0.0
+	if not is_nan(ground_pivot) and not is_nan(ground_tip):
+		rise = ground_tip - ground_pivot
+	var slope := rad_to_deg(atan2(rise, maxf(height, 0.01)))
+	return clampf(90.0 - slope + sink_deg, min_deg, max_deg)
+
+
+## `transform` rotated by `angle` about the horizontal axis through `pivot`
+## perpendicular to `dir`, tipping its up axis toward `dir`. The same axis
+## convention `severed_spokes.gd` leans its pylons with.
+static func topple_transform(transform: Transform3D, pivot: Vector3, dir: Vector2,
+		angle: float) -> Transform3D:
+	var along := Vector3(dir.x, 0.0, dir.y)
+	if along.length() < 0.0001:
+		return transform
+	var axis := along.normalized().cross(Vector3.UP).normalized()
+	var turn := Basis(axis, -angle)
+	return Transform3D(turn * transform.basis, pivot + turn * (transform.origin - pivot))
+
+
+func toppled_pylons() -> Array[Node3D]:
+	return _toppled.duplicate()
+
+
+func _ground(x: float, z: float) -> float:
+	if _world == null or not _world.has_method("ground_height_at"):
+		return NAN
+	return float(_world.call("ground_height_at", x, z))
+
+
+## (B) THE HERD COMES BACK. Inert Meadowharts -- built exactly the way the
+## Veridian herd display is (no AI, no physics, on no collision layer, so
+## nothing can engage, catch or bump them) -- at authored spots around the
+## Highfield herd point, in their own holder. Built whenever the healing is
+## applied, whatever the Veridian answer; `herd_display()` still returns only
+## the Veridian. Idle clip started once and phase-shifted per index so they do
+## not breathe in unison.
+func _return_the_herd() -> int:
+	var block: Dictionary = _config.get("herd_return", {})
+	if not bool(block.get("enabled", true)) or _world == null:
+		return 0
+	if _herd_return != null:
+		return _herd_return.get_child_count()
+	var holder := Node3D.new()
+	holder.name = "HighfieldHerdReturn"
+	add_child(holder)
+	_herd_return = holder
+	var species := str(block.get("species", "meadowhart"))
+	var phase := float(block.get("idle_phase_step", 0.37))
+	var places := herd_placements(block)
+	for i in places.size():
+		var place: Dictionary = places[i]
+		var spot: Vector2 = place["at"]
+		var at := Vector3(spot.x, 0.0, spot.y)
+		var ground := _ground(at.x, at.z)
+		if not is_nan(ground):
+			at.y = ground
+		var body: Node3D = CREATURE_SCENE.instantiate()
+		body.name = "HerdReturn_%d" % i
+		body.set_script(CREATURE_BODY)
+		holder.add_child(body)
+		body.global_position = at
+		body.call("setup", species, false)
+		body.rotation.y = deg_to_rad(float(place["facing_deg"]))
+		body.set_physics_process(false)
+		body.set_process(false)
+		if body is CollisionObject3D:
+			(body as CollisionObject3D).collision_layer = 0
+		# creature_body turns physics back on whenever it becomes visible; this
+		# runs after its own handler and keeps a display body standing.
+		body.visibility_changed.connect(_hold_still.bind(body))
+		if body.has_method("place_on_ground"):
+			body.call("place_on_ground", at)
+		_start_idle(body, fposmod(float(i) * phase, 1.0))
+	return holder.get_child_count()
+
+
+func _hold_still(body: Node) -> void:
+	if is_instance_valid(body):
+		body.set_physics_process(false)
+
+
+func _start_idle(body: Node, phase: float) -> void:
+	var animator: Variant = body.get("_animator")
+	if not animator is Object or animator == null:
+		return
+	(animator as Object).call("tick", 0.0, 0.0, 1.0)
+	var player := (animator as Object).get("_player") as AnimationPlayer
+	if player == null or player.current_animation == "":
+		return
+	player.seek(player.current_animation_length * phase, true)
+
+
+## The authored herd spots, `[x, z, facing_deg]` each, as
+## `{"at": Vector2, "facing_deg": float}`. Pure, for tests.
+static func herd_placements(block: Dictionary) -> Array:
+	var out: Array = []
+	for raw: Variant in (block.get("members", []) as Array):
+		if not raw is Array or (raw as Array).size() < 2:
+			continue
+		var entry: Array = raw
+		out.append({
+			"at": Vector2(float(entry[0]), float(entry[1])),
+			"facing_deg": float(entry[2]) if entry.size() > 2 else 0.0,
+		})
+	return out
+
+
+func herd_return() -> Node3D:
+	return _herd_return
 
 
 ## --- plumbing ----------------------------------------------------------------
