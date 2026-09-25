@@ -48,6 +48,8 @@ func test_the_refusal_receipt_is_personal_and_the_resolution_receipt_is_world() 
 		var receipt := CLIMAX.resolution_flag(accepted, ME)
 		assert_eq(PROGRESSION.scope_of(receipt), PROGRESSION.SCOPE_WORLD,
 			"'%s' is a world receipt every peer mirrors" % receipt)
+	assert_eq(PROGRESSION.scope_of(CLIMAX.ANSWER_WORLD_PREFIX + "0123abcd"), PROGRESSION.SCOPE_PLAYER,
+		"which world an answer was given in travels with the character who gave it")
 
 
 func test_resolution_receipts_name_the_character_and_the_answer() -> void:
@@ -199,3 +201,37 @@ func test_the_climax_reads_the_journal_from_the_world_not_a_missing_method() -> 
 	assert_true("reward_deliveries" in world, "WorldState holds the reward journal the climax reads")
 	assert_false(world.has_method("world_snapshot"),
 		"WorldState has no world_snapshot(); reading the journal through it returns nothing")
+
+
+## Coordinator review of 710fbcda, item 1 (BLOCKING). A Warden fight a CLIENT
+## starts journals nobody, so in company an empty journal cannot tell the
+## fighter from the bystander. It offers nobody; alone, it is still the solo
+## freeing and the one player there is offered.
+func test_an_empty_journal_in_company_offers_nobody() -> void:
+	assert_false(CLIMAX.may_receive(ME, [], false, false, true),
+		"a host in company with an empty journal is not handed the creature")
+	assert_false(CLIMAX.may_receive(FRIEND, [], false, true, true),
+		"nor is the guest (who may have fought) handed it on nobody's say-so")
+	assert_true(CLIMAX.may_receive(ME, [], false, false, false),
+		"alone, an empty journal is the solo freeing and the player is offered")
+	assert_true(CLIMAX.may_receive(FRIEND, [ME, FRIEND], false, true, true),
+		"a journaled participant in company is offered as before")
+	assert_false(CLIMAX.may_receive("character-cccc", [ME, FRIEND], false, false, true),
+		"a non-participant in company is still offered nothing")
+
+
+## Item 2 (MAJOR). An answer's world receipt belongs only to the world it was
+## given in; the once-per-character rule itself still travels.
+func test_an_answer_is_only_recorded_in_the_world_it_was_given_in() -> void:
+	assert_true(CLIMAX.answered_in_this_world([], "world-b", true),
+		"an answer given in this session is this world's")
+	assert_true(CLIMAX.answered_in_this_world(["world-a"], "world-a", false),
+		"a reconnect to the world the answer was given in resubmits its receipt")
+	assert_false(CLIMAX.answered_in_this_world(["world-a"], "world-b", false),
+		"world A's answer is never written into world B")
+	assert_false(CLIMAX.answered_in_this_world([], "world-b", false),
+		"an answer with no world tag is written into no world")
+	assert_false(CLIMAX.answered_in_this_world(["world-a"], "", false),
+		"a world with no identity yet records nothing carried in")
+	assert_false(CLIMAX.may_receive(ME, [ME], true, false, true),
+		"and the character who answered in world A is still not offered again in B")

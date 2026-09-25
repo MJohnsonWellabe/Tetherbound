@@ -144,7 +144,15 @@ func _resolution_signature() -> String:
 		if str(raw).begins_with("legendary_resolution:"):
 			receipts.append(str(raw))
 	receipts.sort()
-	return ",".join(receipts)
+	# The Warden journal decides who is eligible, so a journal row arriving
+	# (a late snapshot, a pending delivery acknowledged) re-decides the
+	# display as surely as a new receipt does.
+	var participants: Array = []
+	var climax := _find(str((_config.get("herd_display", {}) as Dictionary).get("climax_node", "StrongholdClimax")))
+	if climax != null and climax.has_method("warden_participants"):
+		participants = (climax.call("warden_participants") as Array).duplicate()
+	participants.sort()
+	return ",".join(receipts) + "|" + ",".join(participants)
 
 
 func herd_display() -> Node3D:
