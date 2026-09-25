@@ -1208,7 +1208,10 @@ func _on_staggered(on_enemy: bool) -> void:
 	if not on_enemy and mine != null:
 		who = "%s " % mine.label()
 	_effect_banner.text = "STAGGERED — punish now" if on_enemy else "%sSTAGGERED — recovering" % who
-	_effect_banner.add_theme_color_override("font_color", UITokens.TEAL_SOFT if on_enemy else UITokens.DANGER)
+	# Amber, not red, on your own creature: a blind round read the red line
+	# about a friendly body as the reserved villain colour leaking onto the
+	# player's side. Still a warning; no longer the enemy's colour.
+	_effect_banner.add_theme_color_override("font_color", UITokens.TEAL_SOFT if on_enemy else UITokens.WARNING)
 	_position_effect_banner()
 	_effect_banner.visible = true
 	_effect_left = maxf(_effect_banner_seconds(), 0.8)

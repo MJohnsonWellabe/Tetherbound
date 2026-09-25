@@ -121,6 +121,9 @@
     "_comment_boundary_visual_pass": "Meadows visual pass: a blind judge read the 1.1m, 0.5-alpha cyan wall as cutting through the trees and fence behind every fight. 0.8m at 0.3 alpha still marks the edge you cannot cross without painting a band across the scenery.",
     "boundary_height": 0.8,
     "boundary_alpha": 0.3,
+    "_comment_soft_occluders": "Meadows visual pass round 2: a standing dead tree in the middle of the ring sat between the combat camera and the fight. Bushes and deadfall (vegetation.json layers with collides:false) inside radius + occluder_clear_margin are taken out of the instancer when the arena opens and put back when it closes (vegetation.gd::hide_fight_occluders). Presentation only and local to each peer; colliding trees and rocks are untouched. The margin reaches the ring's near edge, where the camera looks across. TUNABLE.",
+    "clear_soft_occluders": true,
+    "occluder_clear_margin": 2.0,
     "_comment_deploy": "Where the two fighters start, measured forward from the trainer along the line they were engaged on. The trainer is never moved and never targeted.",
     "deploy_offset": 2.6,
     "separation": 5.0,
@@ -162,6 +165,17 @@
       "max_speed_deg": 120.0,
       "manual_grace_seconds": 0.4
     },
+    "occlusion_fade": {
+      "_comment": "MEADOWS-VISUAL-PASS: a large ally between the lens and a small foe hid the foe in every blind round. While the ally's inscribed ellipsoid covers at least `hidden_points` of the foe's three sample heights from the live camera, the neutral combat tracker first swings `composition_extra_deg` past its composition (eased at `composition_ease_deg_per_s`; manual look still wins). Once the foe is clear the swing holds for `composition_hold_s` before easing back, so it does not oscillate. Only if the foe stays hidden for `dither_after_s` do the ally's surfaces dither to `transparency` at `speed` per second, returning when the foe is clear. COMBAT section 5 allows no continuous actionable-tell occlusion longer than 0.25s: the dither starts at 0.2s and reaches `transparency` 0.6 at 12/s by 0.25s, and the swing's ease rate finishes 40 degrees in 0.25s. A blind judge read an always-on dither as the companion turning into a ghost. Presentation only and local to each peer; like the neutral tracker it extends, the swing moves the camera basis that camera-relative movement reads (scripts/combat/ally_occlusion_fade.gd).",
+      "enabled": true,
+      "composition_extra_deg": 40.0,
+      "composition_ease_deg_per_s": 160.0,
+      "composition_hold_s": 1.5,
+      "dither_after_s": 0.2,
+      "transparency": 0.6,
+      "hidden_points": 2,
+      "speed": 12.0
+    },
     "framing": {
       "_comment": "OP-0905-17: the base distance/fov/height above are the tightest the camera should ever sit, tuned for two fighters at a normal opening gap. This widens the frame further, every physics frame `combat_manager.gd::_update_combat_camera_framing()` runs, as the fight itself demands more room -- the fighters backing apart, or either body's authored presentation span exceeding the small-body reference. It only ever ADDS to the base distance up to max_extra_distance. CameraRig sweeps the lateral shoulder pivot against geometry and SpringArm limits actual depth in the current camera direction; the nearest wall to any fighter is not a camera-distance ceiling.",
       "enabled": true,
@@ -192,18 +206,19 @@
     "_comment": "The visual event of a blow landing. ALL tunable presentation; nothing here touches damage, reach or timing.",
     "_comment_measured": "The blind critic counted bright warm pixels at the instant of contact: 10 in `combat/05-quick-attack-lands`, 295 in `combat/06`, and 24,623 in `palworld-01` \u2014 roughly ten thousand times the visual energy for the same beat. Its reading was that the only difference between the frame before a hit and the frame of the hit was that the health bar got shorter. Turn `enabled` off to get that back.",
     "enabled": true,
+    "_comment_round5": "MEADOWS-VISUAL-PASS round 5: at 0.85m/strength 1.0 the burst rendered (isolated probe) as a pale ring about 60 pixels across at fight distance, and two blind rounds found no impact effect on either hit. `strength` scales the radius, so the burst grows a little (about 1.2m quick, 1.8m charged, well short of the 5m ground-decal read) and impact_flash.gd now holds its opacity through the beat instead of halving it in the first quarter.",
     "quick": {
-      "colour": "#ffd27a",
-      "radius": 0.85,
-      "duration": 0.26,
-      "strength": 1.0
+      "colour": "#ffe19a",
+      "radius": 0.9,
+      "duration": 0.3,
+      "strength": 1.3
     },
     "_comment_charged": "Bigger and warmer than a quick hit. If the expensive move looks like the free one, building energy was never worth doing.",
     "charged": {
-      "colour": "#ffb257",
-      "radius": 1.15,
-      "duration": 0.34,
-      "strength": 1.3
+      "colour": "#ffc063",
+      "radius": 1.2,
+      "duration": 0.4,
+      "strength": 1.5
     },
     "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion."
   },

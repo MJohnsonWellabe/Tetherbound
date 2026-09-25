@@ -170,7 +170,11 @@ func _physics_process(delta: float) -> void:
 	# Fast out, slow settle. A linear expansion reads as a growing circle; an
 	# eased one reads as something having happened.
 	var eased: float = 1.0 - pow(1.0 - t, 3.0)
-	var fade: float = pow(1.0 - t, 2.4)
+	# MEADOWS-VISUAL-PASS round 5: 2.4 had faded the burst to half strength a
+	# quarter of the way through its life, which is where every still of a hit
+	# lands; two blind rounds saw no impact at all. 1.3 holds it bright through
+	# the beat and still clears it by the end.
+	var fade: float = pow(1.0 - t, 1.3)
 
 	_draw_ring(_radius * (0.3 + eased * 0.7), fade)
 	_draw_streaks(_radius * (0.35 + eased * 1.0), fade)
@@ -234,7 +238,7 @@ func _draw_streaks(reach: float, alpha: float) -> void:
 		var angle: float = TAU * float(i) / float(STREAKS) + float(i * i) * 0.37
 		var length: float = reach * (0.55 + 0.45 * fmod(float(i) * 0.618, 1.0))
 		var direction: Vector3 = right * cos(angle) + up * sin(angle)
-		var side: Vector3 = (right * -sin(angle) + up * cos(angle)) * reach * 0.055
+		var side: Vector3 = (right * -sin(angle) + up * cos(angle)) * reach * 0.08
 
 		_streak_mesh.surface_set_color(Color(1.0, 1.0, 1.0, base_alpha * edge_alpha))
 		_streak_mesh.surface_add_vertex(direction * reach * 0.3 + side)

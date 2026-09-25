@@ -282,8 +282,9 @@ func _ready() -> void:
 		var sky_profile: Dictionary = _visual_config.get("sky_profile", {})
 		(local_look.get("sky", {}) as Dictionary).merge(sky_profile, true)
 		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
+		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
 		look.set("_config", local_look)
-		look.call("set_weather", _visual_config.get("atmosphere", {}))
+		look.call("set_weather", atmosphere_delta)
 	# D97 / lane MP-REALM-REOPEN. A shell builds in fine slices; a real arrival
 	# in a live session uses the coarser crossing slice so its connection keeps
 	# pumping. Solo still resumes every `await` below in the same frame.
@@ -546,6 +547,12 @@ func ground_height_near(at: Vector3) -> float:
 ## `_ready()`, left the entire Cloudreach world unbuilt on `main` (found by the
 ## Stage B host-cost spike, `ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/`).
 ## Mutates `times` in place; returns how many presets were merged.
+## A value a preset authors for itself wins over the profile: night's own
+## sky `energy` (0.75) must not be lifted to the realm's daytime 1.3. The
+## Cloudreach production-camera pass's blind judge read the night frame as "a
+## desaturated day filter" -- the sky brighter than the ground -- and this was
+## half of why. The profile's cloud keys, which no preset authors, still reach
+## every preset.
 static func merge_sky_profile_into_times(times: Variant, sky_profile: Dictionary) -> int:
 	if not times is Dictionary:
 		return 0
@@ -558,9 +565,38 @@ static func merge_sky_profile_into_times(times: Variant, sky_profile: Dictionary
 			continue
 		if not (preset as Dictionary).has("sky"):
 			(preset as Dictionary)["sky"] = {}
-		((preset as Dictionary)["sky"] as Dictionary).merge(sky_profile, true)
+		((preset as Dictionary)["sky"] as Dictionary).merge(sky_profile, false)
 		merged += 1
 	return merged
+
+
+## The other half. `cloudreach_visual.json`'s `atmosphere` block used to go to
+## `world_look.gd` whole as a WEATHER delta, and a weather delta's colours
+## replace every time of day's -- so the pale daytime haze horizon (#a2bdc8)
+## and fog colour also stood behind the night sky. The colours now become the
+## realm's BASE sky/environment, which a time preset that authors its own
+## (night, dawn, golden) overrides and one that does not (day) inherits, the
+## way the Meadows base palette already works. Only the additive fog density,
+## a genuine delta, stays weather. Returns that weather delta.
+static func fold_atmosphere_into_base(look_config: Dictionary, atmosphere: Dictionary) -> Dictionary:
+	var delta := {}
+	var sky_colours: Dictionary = atmosphere.get("sky", {}) as Dictionary
+	if not sky_colours.is_empty():
+		if not look_config.get("sky") is Dictionary:
+			look_config["sky"] = {}
+		(look_config["sky"] as Dictionary).merge(sky_colours, true)
+	var env: Dictionary = atmosphere.get("environment", {}) as Dictionary
+	var env_delta := {}
+	for key: String in env.keys():
+		if key == "fog_density_add" or key == "ambient_energy_mult":
+			env_delta[key] = env[key]
+		else:
+			if not look_config.get("environment") is Dictionary:
+				look_config["environment"] = {}
+			(look_config["environment"] as Dictionary)[key] = env[key]
+	if not env_delta.is_empty():
+		delta["environment"] = env_delta
+	return delta
 
 
 static func _preferred_surface(current: float, candidate: float, preferred_y: float) -> float:
