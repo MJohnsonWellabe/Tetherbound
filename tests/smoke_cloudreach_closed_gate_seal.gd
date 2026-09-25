@@ -62,9 +62,9 @@ extends SceneTree
 ##       trainer back on the verified launch anchor, never inside the seal or
 ##       under the stair.
 ##   (j) The same with the flyer's recovery anchor cleared first (production
-##       clear_recovery_anchor()): the fly_controller guard must let the stick
-##       take it out of the sealed volume (not hang it), and it lands on the
-##       open approach, never past the gate.
+##       clear_recovery_anchor()): the fly_controller guard must carry it
+##       out of the sealed volumes (not hang it), and it lands on the open
+##       approach, never past the gate.
 ##   (e), (h) also end their flights: once refused, the flyer turns back (as
 ##       a player would) and must land -- not hang at the seal -- on verified
 ##       ground (a floor-grade ray from 6 m above the feet hits within 0.6 m)
@@ -816,8 +816,9 @@ func _leg_gate_beam_glide(stand: Vector3) -> void:
 	_check(float(stats["max_plane_past"]) <= BYPASS_PAST_LIMIT_M,
 		"%s: never grounded past the closed gate plane within +/-%.0f m lateral (max %.1f m at %s)" % [
 			label, GATE_WATCH_LATERAL_M, float(stats["max_plane_past"]), str(stats["max_plane_past_at"])])
-	_check(float(stats["closest_beam"]) <= 12.0,
-		"%s: the glide actually reached the beam end (closest %.1f m)" % [label, float(stats["closest_beam"])])
+	_check(float(stats["closest_seal"]) <= 2.0,
+		"%s: the glide actually reached the seal round the beam end (closest %.2f m from a counterweight volume; %.1f m from the beam end)" % [
+			label, float(stats["closest_seal"]), float(stats["closest_beam"])])
 	_check(not str(stats["seal_denial"]).is_empty(),
 		"%s: the counterweight seal refused the glide ('%s'; denials %s)" % [label, stats["seal_denial"], str(stats["denials"])])
 	await _assert_settled(label, stats)
@@ -917,9 +918,10 @@ func _leg_seal_closes_around_flyer(stand: Vector3, without_anchor: bool = false)
 
 ## (j) M3: the same closing seal around a flyer whose recovery anchor is gone
 ## (fixture: production clear_recovery_anchor(), as a deliberate relocation
-## leaves it). Before the guard the flyer hung in the air forever; now it may
-## only steer OUT of the sealed volume. It steers by real input back over the
-## open approach and lands there.
+## leaves it). Before the guard the flyer hung in the air forever; now the
+## sealed wind carries it out along the shortest horizontal way out of the
+## closed volumes. Then it steers by real input back over the open approach
+## and lands there.
 func _escape_without_anchor(label: String, ctx: Dictionary, inside_at: Vector3, before: Dictionary,
 		uids: Array[String]) -> void:
 	var gate: Vector3 = ctx["gate"]
@@ -935,7 +937,7 @@ func _escape_without_anchor(label: String, ctx: Dictionary, inside_at: Vector3, 
 	var near := {"closest_plane": INF, "closest_beam": INF, "max_plane_past": -INF, "max_plane_past_at": Vector3.INF,
 		"on_gate": false, "on_gate_at": Vector3.INF}
 	var start := _player.global_position
-	var depth_start := float(_fly.call("sealed_depth", start))
+	var depth_start := (_fly.call("sealed_exit", start) as Vector3).length()
 	var left_after := -1.0
 	var recoveries_before := _recoveries
 	for frame in 90 * tps:
@@ -951,17 +953,17 @@ func _escape_without_anchor(label: String, ctx: Dictionary, inside_at: Vector3, 
 			Input.action_press("fly_descend")
 		await physics_frame
 		_watch_gate(line, s_gate, gate, along, right, home, watch, near)
-		if left_after < 0.0 and float(_fly.call("sealed_depth", _player.global_position)) <= 0.0:
+		if left_after < 0.0 and (_fly.call("sealed_exit", _player.global_position) as Vector3) == Vector3.ZERO:
 			left_after = float(frame) / float(tps)
 			print("%s out of the sealed volume after %.2f s at %s" % [label, left_after, _player.global_position])
 	_release_all()
 	await _frames(30)
 	var end := _player.global_position
-	print("%s re-sealed inside at %s depth %.1f m; end %s flying=%s left_after=%.2f s recoveries +%d" % [
+	print("%s re-sealed inside at %s, %.1f m from the nearest way out; end %s flying=%s left_after=%.2f s recoveries +%d" % [
 		label, start, depth_start, end, bool(_fly.call("is_flying")), left_after, _recoveries - recoveries_before])
-	_check(depth_start > 0.0, "%s: the fixture closed the seal with the flyer inside it (%.1f m deep)" % [label, depth_start])
+	_check(depth_start > 0.0, "%s: the fixture closed the seal with the flyer inside it (%.1f m from a way out)" % [label, depth_start])
 	_check(left_after >= 0.0 and left_after < 10.0,
-		"%s: the flyer did not hang -- the stick took it out of the sealed volume (%.2f s)" % [label, left_after])
+		"%s: the flyer did not hang -- the guard carried it out of the sealed volume (%.2f s)" % [label, left_after])
 	_check(float(watch["max_past"]) <= BYPASS_PAST_LIMIT_M and float(near["max_plane_past"]) <= BYPASS_PAST_LIMIT_M,
 		"%s: it never stood past the closed gate (route %.1f m, plane %.1f m)" % [
 			label, float(watch["max_past"]), float(near["max_plane_past"])])
@@ -1182,7 +1184,7 @@ func _seal_flight(label: String, stand: Vector3, ctx: Dictionary, approach: Vect
 	var before := _gating_state()
 	var watch := {"max_past": -INF, "at": Vector3.INF}
 	var near := {"closest_plane": INF, "closest_beam": INF, "max_plane_past": -INF, "max_plane_past_at": Vector3.INF,
-		"on_gate": false, "on_gate_at": Vector3.INF}
+		"on_gate": false, "on_gate_at": Vector3.INF, "closest_seal": INF, "seal_boxes": _counterweight_seal_boxes()}
 	var launched: bool = await _launch_and_climb(label, stand, ctx, target, watch, near)
 	if not launched:
 		return {}
@@ -1193,8 +1195,8 @@ func _seal_flight(label: String, stand: Vector3, ctx: Dictionary, approach: Vect
 	var ended_frame := -1
 	var settling := false
 	var heading_for := approach
-	# Once a counterweight seal has refused it, the flyer turns back, as a
-	# player would, to land on the open approach crest.
+	# Once a counterweight seal has refused it with nothing to land on below,
+	# the flyer turns back, as a player would, to land on the open approach.
 	var home := gate - along * 18.0
 	var refused_frame := -1
 	for frame in 300 * tps:
@@ -1212,7 +1214,10 @@ func _seal_flight(label: String, stand: Vector3, ctx: Dictionary, approach: Vect
 			offset.y = 0.0
 		if refused_frame < 0 and _seal_denied():
 			refused_frame = frame
-		if heading_for == target and refused_frame >= 0 and frame - refused_frame > 2 * tps:
+		# Refused: keep coming down while there is ridge-top ground below to
+		# land on; with only void or cliff below, turn back to the approach.
+		if heading_for == target and refused_frame >= 0 and frame % 15 == 0 \
+				and is_nan(_ray_ground(_player.global_position, _player.global_position.y, 160.0)):
 			heading_for = home
 			print("%s refused at %s; turning back to land at %s" % [label, _player.global_position, home])
 			offset = heading_for - _player.global_position
@@ -1270,7 +1275,16 @@ func _seal_flight(label: String, stand: Vector3, ctx: Dictionary, approach: Vect
 		"max_past": watch["max_past"], "max_past_at": watch["at"], "why": why, "denials": _denials.duplicate(),
 		"seal_denial": seal_denial, "closest_plane": near["closest_plane"], "closest_beam": near["closest_beam"],
 		"max_plane_past": near["max_plane_past"], "max_plane_past_at": near["max_plane_past_at"],
-		"on_gate": near["on_gate"], "on_gate_at": near["on_gate_at"], "end": end}
+		"on_gate": near["on_gate"], "on_gate_at": near["on_gate_at"], "end": end,
+		"closest_seal": near["closest_seal"]}
+
+
+func _counterweight_seal_boxes() -> Array:
+	var out: Array = []
+	for spec: Dictionary in _physical_data.get("restrictions", []):
+		if str(spec.get("id", "")).begins_with("cloudreach_counterweight_"):
+			out.append(_box_of(spec))
+	return out
 
 
 func _seal_denied() -> bool:
@@ -1292,6 +1306,8 @@ func _watch_gate(line: Array[Vector3], s_gate: float, gate: Vector3, along: Vect
 	var plane := rel.dot(along)
 	var lateral := rel.dot(right)
 	near["closest_beam"] = minf(float(near["closest_beam"]), at.distance_to(target))
+	for box: Variant in near.get("seal_boxes", []):
+		near["closest_seal"] = minf(float(near.get("closest_seal", INF)), _distance_to_box(at, box as AABB))
 	if absf(lateral) <= GATE_WATCH_LATERAL_M:
 		near["closest_plane"] = minf(float(near["closest_plane"]), absf(plane))
 	if not _player.is_on_floor() or bool(_fly.call("is_flying")):

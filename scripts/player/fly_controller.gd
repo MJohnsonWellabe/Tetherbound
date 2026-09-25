@@ -338,12 +338,10 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 				return true
 			# F06: a volume can close around a flyer whose anchor no longer
 			# passes its ground ray (or who has none). Zeroing velocity every
-			# frame would hang that flyer in the air forever. Let the stick take
-			# it OUT of the sealed volume -- horizontally, and only when the step
-			# leaves it less deep inside -- never deeper and never down onto
-			# what the volume seals.
-			sealed_escape = sealed_escape_velocity(_player.global_position,
-				direction * float(config.get("speed_mps", 16.0)), delta)
+			# frame would hang that flyer in the air forever. The sealed wind
+			# instead carries it out, horizontally, along the shortest way out
+			# of the closed volumes -- never down onto what they seal.
+			sealed_escape = sealed_escape_velocity(_player.global_position, delta)
 			_player.velocity = sealed_escape
 	else:
 		last_denial = ""
@@ -403,35 +401,84 @@ func _restricted_reason(from: Vector3, to: Vector3) -> String:
 	return ""
 
 
-## How far `p` is inside the deepest closed restriction, swept exactly as
-## `_restricted_reason` sweeps it (0.0 when inside none).
-func sealed_depth(p: Vector3) -> float:
+## The grown boxes `_restricted_reason` tests, for every closed restriction.
+func _closed_boxes() -> Array[AABB]:
 	var margin := float(config.get("body_clearance_m", 0.5))
 	var height := float(config.get("collision_height_m", 4.5))
-	var deepest := 0.0
+	var out: Array[AABB] = []
 	for restriction: Dictionary in restrictions:
 		if _has_flag(str(restriction["requires_flag"])):
 			continue
 		var box: AABB = restriction["bounds"]
 		box.position -= Vector3(margin, height, margin)
 		box.size += Vector3(2.0 * margin, height + margin, 2.0 * margin)
-		if not box.has_point(p):
-			continue
-		var inside := minf(minf(p.x - box.position.x, box.end.x - p.x),
-			minf(minf(p.z - box.position.z, box.end.z - p.z), minf(p.y - box.position.y, box.end.y - p.y)))
-		deepest = maxf(deepest, inside)
-	return deepest
+		out.append(box)
+	return out
 
 
-## The horizontal part of `wanted` if one step of it takes a flyer standing
-## inside a closed volume out towards its edge, else zero. Never deeper,
-## never vertical: a flyer caught inside can steer out, not sink in.
-func sealed_escape_velocity(from: Vector3, wanted: Vector3, delta: float) -> Vector3:
-	var depth := sealed_depth(from)
-	var flat := Vector3(wanted.x, 0.0, wanted.z)
-	if depth <= 0.0 or flat.length_squared() < 0.0001:
+## The shortest horizontal way out of the union of closed volumes from `p`:
+## an offset (direction x distance) to the nearest point outside all of them,
+## sampled over 16 headings and stepped exactly box to box. Zero when `p` is
+## inside none. Overlapping volumes are one region here: the nearest face of
+## one box can lead straight into the next.
+func sealed_exit(p: Vector3) -> Vector3:
+	var boxes := _closed_boxes()
+	if not _inside_any(boxes, p):
 		return Vector3.ZERO
-	return flat if sealed_depth(from + flat * delta) < depth else Vector3.ZERO
+	var best := Vector3.ZERO
+	var best_distance := INF
+	for i in 16:
+		var angle := TAU * float(i) / 16.0
+		var heading := Vector3(cos(angle), 0.0, sin(angle))
+		var travelled := 0.0
+		for _step in 64:
+			var at := p + heading * travelled
+			var holding := AABB()
+			var found := false
+			for box: AABB in boxes:
+				if box.has_point(at):
+					holding = box
+					found = true
+					break
+			if not found:
+				break
+			travelled += _slab_exit(holding, at, heading) + 0.01
+		if travelled < best_distance:
+			best_distance = travelled
+			best = heading * travelled
+	return best
+
+
+## Velocity that carries a trapped flyer out of the closed volumes at half
+## glide speed, landing exactly on the edge rather than overshooting it.
+func sealed_escape_velocity(from: Vector3, delta: float) -> Vector3:
+	var out := sealed_exit(from)
+	var distance := out.length()
+	if distance <= 0.0:
+		return Vector3.ZERO
+	var speed := minf(float(config.get("speed_mps", 16.0)) * 0.5, distance / maxf(delta, 0.001))
+	return out / distance * speed
+
+
+static func _inside_any(boxes: Array[AABB], p: Vector3) -> bool:
+	for box: AABB in boxes:
+		if box.has_point(p):
+			return true
+	return false
+
+
+## Distance along a horizontal `heading` from `at` (inside `box`) to its edge.
+static func _slab_exit(box: AABB, at: Vector3, heading: Vector3) -> float:
+	var t := INF
+	if heading.x > 0.0001:
+		t = minf(t, (box.end.x - at.x) / heading.x)
+	elif heading.x < -0.0001:
+		t = minf(t, (box.position.x - at.x) / heading.x)
+	if heading.z > 0.0001:
+		t = minf(t, (box.end.z - at.z) / heading.z)
+	elif heading.z < -0.0001:
+		t = minf(t, (box.position.z - at.z) / heading.z)
+	return maxf(0.0, t)
 
 
 ## Take note of the ground under the trainer's feet. Called every physics frame

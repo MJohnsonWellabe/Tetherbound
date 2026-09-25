@@ -119,32 +119,37 @@ func test_restrictions_are_swept_and_three_dimensional() -> void:
 
 ## F06 review M3: a volume that closes around a flyer whose anchor fails its
 ## ground ray used to zero the flyer's velocity every frame, forever. The
-## guard lets the stick take it out, horizontally, only while that leaves it
-## less deep inside -- never deeper, never down, never while outside.
-func test_flyer_trapped_in_a_closed_volume_can_steer_out_but_never_in() -> void:
+## guard carries it out along the shortest horizontal way out of the union of
+## closed volumes -- never down, never while outside, never stuck in a pocket
+## where one box's nearest face leads into the next.
+func test_flyer_trapped_in_closed_volumes_is_carried_out_not_hung() -> void:
 	game.progression.set_flag("fly_traversal_unlocked")
 	fly.register_restriction("stair", AABB(Vector3(0, 0, 0), Vector3(40, 100, 40)), "stair_open")
 	var inside := Vector3(30, 50, 20)
-	var depth: float = fly.sealed_depth(inside)
-	assert_almost_eq(depth, 10.75, 0.001, "10 m from the +x face, plus the 0.75 m body clearance")
+	var out: Vector3 = fly.sealed_exit(inside)
+	assert_almost_eq(out.x, 10.76, 0.02, "nearest edge is +x, 10 m plus the 0.75 m body clearance")
+	assert_almost_eq(out.y, 0.0, 0.0001, "never vertical")
+	assert_almost_eq(out.z, 0.0, 0.02)
 	var dt := 1.0 / 60.0
-	var out: Vector3 = fly.sealed_escape_velocity(inside, Vector3(16, 0, 0), dt)
-	assert_eq(out, Vector3(16, 0, 0), "steering towards the nearest face is allowed")
-	assert_true(fly.sealed_depth(inside + out * dt) < depth)
-	assert_eq(fly.sealed_escape_velocity(inside, Vector3(-16, 0, 0), dt), Vector3.ZERO, "deeper is refused")
-	assert_eq(fly.sealed_escape_velocity(inside, Vector3(16, -8, 0), dt), Vector3(16, 0, 0), "never downward onto what it seals")
-	assert_eq(fly.sealed_escape_velocity(inside, Vector3.ZERO, dt), Vector3.ZERO, "no input, no drift")
-	assert_eq(fly.sealed_escape_velocity(Vector3(-20, 50, 20), Vector3(16, 0, 0), dt), Vector3.ZERO,
-		"outside every closed volume the guard grants nothing")
-	var position := inside
-	for i in 60 * 3:
-		var step: Vector3 = fly.sealed_escape_velocity(position, Vector3(16, 0, 0), dt)
-		if step == Vector3.ZERO:
-			break
-		position += step * dt
-	assert_almost_eq(fly.sealed_depth(position), 0.0, 0.3, "held stick walks the flyer out to the volume's edge")
+	var escape: Vector3 = fly.sealed_escape_velocity(inside, dt)
+	assert_almost_eq(escape.length(), 8.0, 0.001, "carried at half glide speed")
+	assert_eq(fly.sealed_exit(Vector3(-20, 50, 20)), Vector3.ZERO, "outside every closed volume the guard grants nothing")
+	assert_eq(fly.sealed_escape_velocity(Vector3(-20, 50, 20), dt), Vector3.ZERO)
+	# A second volume overlapping the first's nearest face: the way out is no
+	# longer +z, which leads 80 m deeper, but +/-x across both.
+	fly.register_restriction("crown", AABB(Vector3(0, 0, 38), Vector3(40, 100, 82)), "stair_open")
+	var pocket := Vector3(20, 50, 36)
+	var way: Vector3 = fly.sealed_exit(pocket)
+	assert_almost_eq(absf(way.x), 20.75, 0.03, "exit across both volumes, not into the second one (%s)" % way)
+	var position := pocket
+	var frames := 0
+	while fly.sealed_exit(position) != Vector3.ZERO and frames < 60 * 10:
+		position += fly.sealed_escape_velocity(position, dt) * dt
+		frames += 1
+	assert_true(frames < 60 * 4, "carried out of the union in %.2f s" % (float(frames) / 60.0))
+	assert_almost_eq(position.y, pocket.y, 0.0001, "and never lowered onto what the volumes seal")
 	game.progression.set_flag("stair_open")
-	assert_almost_eq(fly.sealed_depth(inside), 0.0, 0.0001, "an opened volume holds nobody")
+	assert_eq(fly.sealed_exit(inside), Vector3.ZERO, "an opened volume holds nobody")
 
 
 func test_trial_authorization_does_not_unlock_fly_or_allow_leaving_trial() -> void:
