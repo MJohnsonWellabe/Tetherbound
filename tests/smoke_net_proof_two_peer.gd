@@ -33,6 +33,15 @@ extends "res://tests/helpers/net_harness.gd"
 ## what it expected, and every file captured. A missing scenario fails.
 
 const WORLD_BUILD_BUDGET_FRAMES := 10000
+## Peers run `proof_peer_runner.gd`: the shared peer runner plus the proof steps.
+const PROOF_PEER_SCRIPT := "res://tools/net/proof_peer_runner.gd"
+## A world build (a named save's realm, a boot) or a rendered peer's first
+## forced frame blocks for a cold world boot's time. The harness's own named
+## allowance covers `enter_realm`; this runner grants the same figure to the
+## proof's other world-building steps itself, so the shared harness is unchanged.
+const PROOF_BUILD_ALLOWANCE_S := 150.0
+## Rendered peers open a display and GL context before their first hello.
+const RENDER_HELLO_BUDGET_S := 900.0
 const WORLD_BUILD_ACTIONS := ["load_save", "boot", "enter_realm", "screenshot"]
 ## Steps after which a peer's session id or character id may have changed.
 const IDENTITY_ACTIONS := ["host", "join", "production_join", "load_save", "boot", "leave"]
@@ -103,6 +112,57 @@ func _end(scenario: Dictionary, path: String) -> void:
 	quit(code)
 
 
+static func _render() -> bool:
+	return OS.get_environment("TB_NET_PROOF_RENDER") == "1"
+
+
+func _init_budgets() -> void:
+	super()
+	if _render():
+		_budgets["hello_budget_s"] = maxf(float(_budgets.get("hello_budget_s", DEFAULT_HELLO_BUDGET_S)),
+			RENDER_HELLO_BUDGET_S)
+
+
+## `net_harness.gd::_spawn_peer` for the proof: the same isolation (own
+## XDG_DATA_HOME/APPDATA, run id, pinned world seed, `exec` so the pid is
+## Godot's), launching `PROOF_PEER_SCRIPT`. With `--render`
+## (TB_NET_PROOF_RENDER=1) peers open opengl3 on the command's xvfb display
+## with the render loop off -- a `screenshot` step forces its own frame -- and
+## the dummy audio driver; otherwise they are headless like every smoke.
+func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene: String,
+		home: String, log_path: String, extra_args: Array) -> int:
+	var exe := OS.get_executable_path()
+	var project_path := ProjectSettings.globalize_path("res://")
+	var args: Array = ["--headless", "--path", project_path]
+	if _render():
+		var resolution := OS.get_environment("TB_NET_PROOF_RESOLUTION")
+		args = ["--path", project_path, "--rendering-driver", "opengl3", "--disable-render-loop",
+			"--audio-driver", "Dummy", "--resolution", resolution if not resolution.is_empty() else "960x540"]
+	if _is_windows():
+		args.append_array(["--log-file", log_path])
+	args.append_array([
+		"--script", PROOF_PEER_SCRIPT, "--",
+		"--role=%s" % role, "--peer=%d" % i,
+		"--control-port=%d" % control_port, "--enet-port=%d" % enet_port,
+		"--scene=%s" % scene,
+		"TB_NET_RUN_ID=%s" % _run_id,
+	])
+	for extra in extra_args:
+		args.append(str(extra))
+	OS.set_environment("XDG_DATA_HOME", home)
+	if _is_windows():
+		OS.set_environment("APPDATA", home)
+	OS.set_environment("TB_NET_RUN_ID", _run_id)
+	OS.set_environment("TB_WORLD_SEED", OS.get_environment("TB_NET_WORLD_SEED") \
+		if not OS.get_environment("TB_NET_WORLD_SEED").is_empty() else "0")
+	if _is_windows():
+		return OS.create_process(exe, args)
+	var parts: Array[String] = [_shq(exe)]
+	for a in args:
+		parts.append(_shq(str(a)))
+	return OS.create_process("/bin/sh", ["-c", "exec %s >%s 2>&1" % [" ".join(parts), _shq(log_path)]])
+
+
 func _targets(raw: Variant, peers: int) -> Array[int]:
 	var out: Array[int] = []
 	if str(raw) == "all":
@@ -142,7 +202,14 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 				args["port"] = _host_port()
 		var budget := int(entry.get("budget_frames",
 			WORLD_BUILD_BUDGET_FRAMES if action in WORLD_BUILD_ACTIONS else -1))
+		var p: Dictionary = _peers[peer]
+		if action in WORLD_BUILD_ACTIONS:
+			p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 + PROOF_BUILD_ALLOWANCE_S
 		result = await step(peer, action, args, budget)
+		# The harness credits liveness when its own named build step passes; do
+		# the same for these, whose verdict can arrive before the next heartbeat.
+		if action in WORLD_BUILD_ACTIONS and str(result.get("verdict", "")) == "PASS":
+			p["last_heartbeat_t"] = Time.get_ticks_msec() / 1000.0
 		if action in IDENTITY_ACTIONS:
 			_ids.clear()
 			_characters.clear()
