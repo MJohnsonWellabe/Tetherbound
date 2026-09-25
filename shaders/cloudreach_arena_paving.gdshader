@@ -4,6 +4,10 @@ uniform sampler2D albedo_tex : source_color,filter_linear_mipmap_anisotropic,rep
 uniform sampler2D soil_tex : source_color,filter_linear_mipmap_anisotropic,repeat_enable;
 uniform vec4 tint : source_color=vec4(0.56,0.54,0.44,1.0);
 uniform vec3 origin=vec3(100.0,1160.0,5450.0);
+// Radial joints belong to the round deck only. Unbounded, the joint whose
+// angle is -90 deg ran straight down the approach's centre line (x = origin.x)
+// as a seam through the cobbles (frame-matrix M1, frame 29).
+uniform float joint_outer_radius=36.5;
 varying vec3 world_at;
 void vertex(){world_at=(MODEL_MATRIX*vec4(VERTEX,1.0)).xyz;}
 void fragment(){
@@ -18,6 +22,7 @@ void fragment(){
 	paving*=mix(1.10,0.80,perimeter)*(0.94+0.12*wear);
 	float ring=1.0-smoothstep(0.10,0.19,abs(r-25.0));
 	float joint=1.0-smoothstep(0.035,0.10,abs(sin(atan(p.y,p.x)*6.0))*max(r,1.0));
+	joint*=1.0-smoothstep(joint_outer_radius-1.0,joint_outer_radius,r);
 	paving=mix(paving,paving*0.52,max(ring,joint*perimeter)*0.42);
 	float activity=sin(p.x*0.12+sin(p.y*0.16)*1.7)+sin(p.y*0.095-p.x*0.07)*0.7;
 	float dust=smoothstep(-0.40,1.10,activity)*0.84;

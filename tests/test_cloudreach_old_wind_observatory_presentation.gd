@@ -34,6 +34,36 @@ func test_observatory_visual_build_has_a_complete_collisionless_hierarchy() -> v
 	visual.free()
 
 
+func test_sighting_tubes_rest_on_mounts_that_stand_on_the_plinth() -> void:
+	# M1 (frame 24): the tube used to float 0.26 m over the ledger stand.
+	var visual := PRESENTATION.new() as Node3D
+	visual.build(_materials(), false)
+	var stations := visual.find_children("WindKeeperStation*", "Node3D", true, false)
+	assert_eq(stations.size(), 3)
+	for station: Node in stations:
+		var tube := station.get_node_or_null(^"SightingTube") as MeshInstance3D
+		var plinth := station.get_node_or_null(^"InstrumentPlinth") as MeshInstance3D
+		assert_true(tube != null and plinth != null)
+		if tube == null or plinth == null:
+			continue
+		var plinth_top := plinth.position.y + (plinth.mesh as CylinderMesh).height * 0.5
+		var tube_mesh := tube.mesh as CylinderMesh
+		var tube_bottom := tube.position.y - tube_mesh.top_radius
+		var tube_half := tube_mesh.height * 0.5
+		var mounts := station.find_children("SightingMount*", "MeshInstance3D", false, false)
+		assert_eq(mounts.size(), 2, "%s tube stands on two mounts" % station.name)
+		for mount: Node in mounts:
+			var post := mount as MeshInstance3D
+			var half := (post.mesh as CylinderMesh).height * 0.5
+			assert_almost_eq(post.position.y - half, plinth_top, 0.02,
+				"%s %s stands on the plinth" % [station.name, post.name])
+			assert_almost_eq(post.position.y + half, tube_bottom, 0.02,
+				"%s %s reaches the tube" % [station.name, post.name])
+			assert_true(absf(post.position.z - tube.position.z) <= tube_half,
+				"%s %s is under the tube's length" % [station.name, post.name])
+	visual.free()
+
+
 func test_observatory_config_stays_inside_the_existing_crown() -> void:
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	assert_eq(cfg.landmark_id, "old_wind_observatory")
