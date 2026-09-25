@@ -170,8 +170,9 @@ func _finish() -> void:
 ## Waits out the credits' authored input guard (regional_credits.json
 ## motion.input_guard_seconds), read from config rather than restated here.
 func _past_input_guard(credits: CanvasLayer) -> void:
-	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/regional_credits.json"))
-	var guard := float((config as Dictionary).get("motion", {}).get("input_guard_seconds", 0.0)) if config is Dictionary else 0.0
+	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(CREDITS.CONFIG_PATH))
+	var motion: Variant = (config as Dictionary).get("motion", {}) if config is Dictionary else {}
+	var guard := float((motion as Dictionary).get("input_guard_seconds", 0.0)) if motion is Dictionary else 0.0
 	_check(guard > 0.0, "credits declare an input guard")
 	var deadline := Time.get_ticks_msec() + GUARD_TIMEOUT_MSEC
 	while float(credits.get("_elapsed")) < guard and Time.get_ticks_msec() < deadline:
