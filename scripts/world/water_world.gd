@@ -13,6 +13,7 @@ const PICKUPS := preload("res://scripts/world/water_scene_pickups.gd")
 const DEATH := preload("res://scripts/world/water_player_death.gd")
 const ENCOUNTERS := preload("res://scripts/world/water_scene_encounters.gd")
 const DOCKS := preload("res://scripts/world/water_dock_actions.gd")
+const LOCAL_CHAINS := preload("res://scripts/world/water_local_chains.gd")
 const RIDING := preload("res://scripts/world/water_riding_controller.gd")
 const MOUNTED_SWIM := preload("res://scripts/world/water_mounted_swim.gd")
 const CAMPS := preload("res://scripts/world/water_camps.gd")
@@ -130,6 +131,10 @@ func _ready() -> void:
 	docks.name = "WaterDocks"
 	add_child(docks)
 	docks.build(self)
+	var local_chains := LOCAL_CHAINS.new()
+	local_chains.name = "WaterLocalChains"
+	add_child(local_chains)
+	local_chains.build(self)
 	var director := ENCOUNTERS.build(self, chapter.npc_bodies)
 	var alpha := preload("res://scripts/combat/water_alpha.gd").new()
 	alpha.name = "WaterAlpha"

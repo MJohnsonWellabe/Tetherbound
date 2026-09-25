@@ -9,8 +9,37 @@
     {
       "requires_flags": [],
       "conversation": "water_pell_lesson_briefing",
-      "purpose": "Acknowledges advice only; actual inlet crossing completes the lesson objective.",
-      "effect": "water:water_swim_lesson_briefed"
+      "purpose": "Acknowledges advice only; actual inlet crossing completes the lesson objective. Once this character has been briefed, Pell's other conversations (greeting_when and the side_water_lantern_return guards below) are reachable.",
+      "effect": "water:water_swim_lesson_briefed",
+      "unless_personal_flags": [
+        "water_swim_lesson_briefed"
+      ]
+    },
+    {
+      "conversation": "water_pell_lantern_return",
+      "requires_world_flags": [
+        "water_swim_lesson_complete"
+      ],
+      "unless_world_flags": [
+        "water_claim:local:lantern_return:complete"
+      ],
+      "requires_personal_flags": [
+        "water_candy:water:lantern_cove:pickup:002"
+      ],
+      "purpose": "side_water_lantern_return step 3: a character holding their own Lantern Cove cache claim reports the swim back at Pell's First Shore landing. Requests the host step; the host re-checks position and that character's own receipt and writes the world record. No item.",
+      "effect": "water:local_step:lantern_return_report"
+    },
+    {
+      "conversation": "water_pell_lantern_lead",
+      "requires_world_flags": [
+        "water_swim_lesson_complete"
+      ],
+      "unless_world_flags": [
+        "water_claim:local:lantern_return:lead",
+        "water_claim:local:lantern_return:complete"
+      ],
+      "purpose": "side_water_lantern_return step 1: after the lesson, Pell points to Lantern Cove's visible rock arch. Requests the host-recorded lead; speech writes nothing.",
+      "effect": "water:local_step:lantern_return_lead"
     },
     {
       "requires_world_flags": [
@@ -32,12 +61,85 @@
       "effect": "water:water_swim_saddle_recipe_taught"
     },
     {
+      "conversation": "water_edda_garden_return",
+      "requires_world_flags": [
+        "water_claim:local:garden_records:account"
+      ],
+      "unless_world_flags": [
+        "water_claim:local:garden_records:complete"
+      ],
+      "purpose": "side_water_garden_records step 3: the vault wall's account is brought back to Salt Crown; Edda explains the pre-Tether dock history. Requests the host step; speech writes nothing. After the Guardian's freeing this report (outranks_routed_greeting) outranks Edda's neutral/post line but never the offer (water_guardian_reward.gd edda_with_chain); the lead is given through her ordinary greeting before the freeing.",
+      "effect": "water:local_step:garden_records_report",
+      "outranks_routed_greeting": true
+    },
+    {
+      "conversation": "water_edda_garden_lead",
+      "unless_world_flags": [
+        "water_claim:local:garden_records:lead",
+        "water_claim:local:garden_records:complete"
+      ],
+      "purpose": "side_water_garden_records step 1: Edda points to the visible above-water Drowned Garden vault, keeping her relic and Deep Watcher guidance. Requests the host-recorded lead.",
+      "effect": "water:local_step:garden_records_lead"
+    },
+    {
       "conversation": "water_edda_guardian_offer",
       "requires_world_flags": [
         "water_guardian_freed"
       ],
       "purpose": "Opens the existing five-slot ceremony. Does not accept, release, replace or grant a creature by itself. Not gated on world settlement: each participant answers independently and the host refuses anyone already answered or not a participant. Edda's greeting only chooses this conversation for a character that may still answer (GuardianReward.local_may_answer) or holds its pending claim; anyone else hears water_edda_guardian_neutral, which requests nothing (water_guardian_reward.gd gate_edda_offer).",
       "effect": "water:water_guardian_offer_requested"
+    },
+    {
+      "conversation": "water_adair_gull_return",
+      "requires_world_flags": [
+        "water_claim:local:gull_research:satchel"
+      ],
+      "unless_world_flags": [
+        "water_claim:local:gull_research:complete"
+      ],
+      "purpose": "side_water_gull_research step 3: with the survey satchel recovered, the observations are returned to Adair on the next Brine Steps passage. Requests the host step; speech writes nothing.",
+      "effect": "water:local_step:gull_research_report"
+    },
+    {
+      "conversation": "water_adair_gull_lead",
+      "unless_world_flags": [
+        "water_claim:local:gull_research:lead",
+        "water_claim:local:gull_research:complete"
+      ],
+      "purpose": "side_water_gull_research step 1: Adair names Gull Rest and the stranded survey satchel, keeping her current-reading lesson. Requests the host-recorded lead.",
+      "effect": "water:local_step:gull_research_lead"
+    },
+    {
+      "conversation": "water_otto_nest_return",
+      "requires_world_flags": [
+        "harvest_node:order:water:tidal_cradle:harvest:007"
+      ],
+      "unless_world_flags": [
+        "water_claim:local:cradle_care:complete"
+      ],
+      "requires_swimmer_or_world_flags": [
+        "water_aquaryn_resolved"
+      ],
+      "purpose": "side_water_cradle_care step 3: the nest's Reef Stone is mined and this character travels with a swim-mount compatible companion, or Aquaryn's shared trial is settled (declined or otherwise). Requests the host step, which re-checks party proof and pays 3 berries once. Never asks anyone to catch Aquaryn.",
+      "effect": "water:local_step:cradle_care_report"
+    },
+    {
+      "conversation": "water_otto_nest_lead",
+      "unless_world_flags": [
+        "water_claim:local:cradle_care:lead",
+        "water_claim:local:cradle_care:complete"
+      ],
+      "purpose": "side_water_cradle_care step 1: Otto points to cradle_shell_nest and its Reef Stone, keeping his five-companion crossing advice. Requests the host-recorded lead.",
+      "effect": "water:local_step:cradle_care_lead"
+    },
+    {
+      "conversation": "water_halen_shelter_lead",
+      "unless_world_flags": [
+        "water_claim:local:lastlight_shelter:lead",
+        "water_claim:local:lastlight_shelter:rested"
+      ],
+      "purpose": "side_water_lastlight_shelter step 1: Halen reveals the sheltered route beside Lastlight and asks for 4 driftwood and 4 reed fiber at the existing landing camp, keeping his climb and Venn guidance. Requests the host-recorded lead.",
+      "effect": "water:local_step:lastlight_shelter_lead"
     }
   ],
   "npcs": [
@@ -79,7 +181,23 @@
         151.502
       ],
       "greeting": "water_pell_pre",
+      "_why_greeting_when": "side_water_lantern_return: Pell's acknowledgement once the return is recorded (before or after restoration); a reminder while the lead is open. First matching branch wins; the guarded lead/return conversations take priority.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_claim:local:lantern_return:complete"
+          ],
+          "conversation": "water_pell_post_lantern"
+        },
+        {
+          "if_flag": "water_claim:local:lantern_return:complete",
+          "conversation": "water_pell_lantern_thanks"
+        },
+        {
+          "if_flag": "water_claim:local:lantern_return:lead",
+          "conversation": "water_pell_lantern_reminder"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_pell_post"
@@ -194,7 +312,23 @@
         12.0
       ],
       "greeting": "water_adair_pre",
+      "_why_greeting_when": "side_water_gull_research: reminder while the lead is open; acknowledgement of the charted Gull Rest crossing before or after restoration. The guarded lead/return conversations take priority.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_claim:local:gull_research:complete"
+          ],
+          "conversation": "water_adair_post_gull"
+        },
+        {
+          "if_flag": "water_claim:local:gull_research:complete",
+          "conversation": "water_adair_gull_thanks"
+        },
+        {
+          "if_flag": "water_claim:local:gull_research:lead",
+          "conversation": "water_adair_gull_reminder"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_adair_post"
@@ -286,7 +420,27 @@
         12.0
       ],
       "greeting": "water_otto_pre",
+      "_why_greeting_when": "side_water_cradle_care: acknowledgement once the return is recorded (before or after restoration); a wait line when the nest is mined but this character has no swimmer and Aquaryn's trial is unsettled; a reminder while the lead is open. The guarded lead/return conversations take priority.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_claim:local:cradle_care:complete"
+          ],
+          "conversation": "water_otto_post_nest"
+        },
+        {
+          "if_flag": "water_claim:local:cradle_care:complete",
+          "conversation": "water_otto_nest_thanks"
+        },
+        {
+          "if_flag": "harvest_node:order:water:tidal_cradle:harvest:007",
+          "conversation": "water_otto_nest_wait"
+        },
+        {
+          "if_flag": "water_claim:local:cradle_care:lead",
+          "conversation": "water_otto_nest_reminder"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_otto_post"
@@ -309,7 +463,23 @@
         23.0
       ],
       "greeting": "water_edda_pre",
+      "_why_greeting_when": "side_water_garden_records: reminder while the lead is open; acknowledgement once the account is recorded (before or after restoration). The guarded lead/return conversations take priority; after the Guardian's freeing her greet is routed by water_guardian_reward.gd.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_claim:local:garden_records:complete"
+          ],
+          "conversation": "water_edda_post_garden"
+        },
+        {
+          "if_flag": "water_claim:local:garden_records:complete",
+          "conversation": "water_edda_garden_thanks"
+        },
+        {
+          "if_flag": "water_claim:local:garden_records:lead",
+          "conversation": "water_edda_garden_reminder"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_edda_post"
@@ -355,10 +525,27 @@
         23.0
       ],
       "greeting": "water_orsen_pre",
+      "_why_greeting_when": "side_water_deep_watch_chart: Orsen names Deep Watch in pre/post; Tidecoil resolution reveals the chart lead; the chart is acknowledged before or after restoration. First matching branch wins.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_dock_deep_watch_current_charted"
+          ],
+          "conversation": "water_orsen_post_charted"
+        },
+        {
+          "if_flag": "water_named_deep_watch_tidecoil_resolved",
+          "unless_flag": "water_dock_deep_watch_current_charted",
+          "conversation": "water_orsen_deep_watch_chart_lead"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_orsen_post"
+        },
+        {
+          "if_flag": "water_dock_deep_watch_current_charted",
+          "conversation": "water_orsen_deep_watch_charted"
         }
       ],
       "_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions."
@@ -401,7 +588,27 @@
         23.0
       ],
       "greeting": "water_halen_pre",
+      "_why_greeting_when": "side_water_lastlight_shelter: a reminder while the delivery is open, a rest request once the shelter stands, and the acknowledgement after a companion rested there (before or after restoration). The guarded lead takes priority.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_claim:local:lastlight_shelter:rested"
+          ],
+          "conversation": "water_halen_post_shelter"
+        },
+        {
+          "if_flag": "water_claim:local:lastlight_shelter:rested",
+          "conversation": "water_halen_shelter_thanks"
+        },
+        {
+          "if_flag": "water_claim:local:lastlight_shelter:supplied",
+          "conversation": "water_halen_shelter_rest"
+        },
+        {
+          "if_flag": "water_claim:local:lastlight_shelter:lead",
+          "conversation": "water_halen_shelter_reminder"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_halen_post"

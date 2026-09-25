@@ -5,8 +5,21 @@ extends RefCounted
 const DATA := "res://data/config/water_pickups.json"
 const FIELD := preload("res://scripts/world/water_heightfield.gd")
 const TUNING := "res://data/config/water_swimming.json"
+const LOCKED_REASON := "Something still guards this find."
 static func personal_flag(id: String) -> String:
 	return "water_candy:" + id
+## A row's optional `requires_world_flags` must all be set in the world store
+## (a flag store or a Dictionary). The host claim rule and the scene streamer
+## both ask this, so a locked row is neither spawned nor claimable. Malformed
+## data or missing world state fails closed.
+static func requirements_met(row: Dictionary, world_flags: Variant) -> bool:
+	var required: Variant = row.get("requires_world_flags", [])
+	if not required is Array:
+		return false
+	for flag: Variant in required:
+		if world_flags == null or not world_flags.has(str(flag)):
+			return false
+	return true
 static func evaluate(intent: Dictionary, host_context: Dictionary, world_flags: Variant) -> Dictionary:
 	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(DATA))
 	var id := str(intent.get("pickup_id", ""))
@@ -23,6 +36,8 @@ static func evaluate(intent: Dictionary, host_context: Dictionary, world_flags: 
 	var character := str(host_context.get("character_id", ""))
 	if peer <= 0 or character.is_empty():
 		return _refuse("unknown_character", "Your character is not connected to this world.")
+	if not requirements_met(selected, world_flags):
+		return _refuse("locked", str(selected.get("locked_reason", LOCKED_REASON)))
 	var position: Variant = host_context.get("position")
 	if not position is Vector3 or not position.is_finite():
 		return _refuse("missing_position", "Your position is not ready yet.")

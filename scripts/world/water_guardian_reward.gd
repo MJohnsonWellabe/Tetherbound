@@ -280,6 +280,14 @@ static func edda_conversation(game: Object, holds_pending_claim: bool) -> String
 		return EDDA_OFFER
 	return EDDA_POST if game.world.flags.has("water_currents_restored") else EDDA_NEUTRAL
 
+## side_water_garden_records: a local-chain step Edda can take now outranks
+## her neutral/post line, never the Guardian offer (nor her pre-freeing pick,
+## where the cast's own guard order already reaches it).
+static func edda_with_chain(chosen: String, chain: String) -> String:
+	if chosen == EDDA_OFFER or chain.is_empty():
+		return chosen
+	return chain
+
 ## Routes Edda's greet prompt through edda_conversation(): the cast's own
 ## dialogue guards read flags only and cannot express "this character may still
 ## answer". Her other conversations are unchanged (requested "" = cast's pick).
@@ -296,7 +304,10 @@ static func gate_edda_offer(cast: Node, bodies: Dictionary, game: Object) -> voi
 		var ledger: Variant = game.get("ledger")
 		var claims: Node = (ledger as Node).get_node_or_null("WaterCaptureClaims") if ledger is Node else null
 		var holds := claims != null and not str(claims.call("pending_guardian_id")).is_empty()
-		cast.call("start_conversation", EDDA_ID, edda_conversation(game, holds)))
+		var chosen := edda_conversation(game, holds)
+		if not chosen.is_empty() and cast.has_method("chain_conversation"):
+			chosen = edda_with_chain(chosen, str(cast.call("chain_conversation", EDDA_ID)))
+		cast.call("start_conversation", EDDA_ID, chosen))
 
 static func has_been_offered(world: RefCounted, character_id: String) -> bool:
 	return world != null and not character_id.is_empty() and world.flags.has(offered_flag(character_id))

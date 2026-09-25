@@ -122,6 +122,19 @@ func run() -> void:
 	service.active_cap_per_peer = 382
 	service.refresh()
 	var all := service.census()
+	# side_water_deep_watch_chart: Deep Watch's Candy III stays out of the scene
+	# until Tidecoil is resolved. Disclosed fixture: the world flag the shared
+	# director records on catch/defeat is set directly, then the ordinary
+	# refresh must admit the row with no other change.
+	var gated := "water:deep_watch:pickup:002"
+	var resolved := "water_named_deep_watch_tidecoil_resolved"
+	check(not game.get("world").flags.has(resolved) and service.node_for(gated) == null,
+		"Locked Tidecoil cache is withheld from the full residency pass")
+	check(all.active_pickups == 197 and all.active_harvest == 181 and all.errors.is_empty(), "Every remaining ungated authored pickup and harvest body builds with registered items and dry ground")
+	game.get("world").flags.set_flag(resolved)
+	service.refresh()
+	all = service.census()
+	check(service.node_for(gated) != null, "Resolution admits the Tidecoil cache on the next refresh")
 	check(all.active_pickups == 198 and all.active_harvest == 181 and all.errors.is_empty(), "Every remaining authored pickup and harvest body builds with registered items and dry ground")
 	print("Water pickup smoke: ", checks, " checks, ", failures.size(), " failures; census=", service.census())
 	world.queue_free()
