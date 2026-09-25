@@ -875,9 +875,16 @@ func _pillar_ring(body: Node3D, height: float = 4.0) -> Array:
 	var side := Vector3(basis.x.x, 0.0, basis.x.z).normalized()
 	for reach: float in [distance, distance + 1.2]:
 		for step in 8:
-			var at := body.global_position + side.rotated(Vector3.UP, TAU * float(step) / 8.0) * reach
-			pillars.append(_static_box(at + Vector3.UP * (height * 0.5 - 0.5 if height > 1.0 else height * 0.5),
-				Vector3(0.3, height, 0.3), Basis.IDENTITY, "TestPillar"))
+			var dir := side.rotated(Vector3.UP, TAU * float(step) / 8.0)
+			var at := body.global_position + dir * reach
+			if height > 1.0:
+				pillars.append(_static_box(at + Vector3.UP * (height * 0.5 - 0.5), Vector3(0.3, height, 0.3), Basis.IDENTITY, "TestPillar"))
+			else:
+				# A knee-high post just beside the point, so the ring's floor ray
+				# still meets the ground (a post top would be a floor to stand
+				# on) while the trainer's capsule there overlaps the post.
+				var beside := at + dir.cross(Vector3.UP).normalized() * 0.18
+				pillars.append(_static_box(beside + Vector3.UP * height * 0.5, Vector3(0.14, height, 0.14), Basis.IDENTITY, "TestPost"))
 	return pillars
 
 
