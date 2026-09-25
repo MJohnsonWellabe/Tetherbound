@@ -10,7 +10,6 @@ extends "res://tests/test_case.gd"
 const GAME_STATE := preload("res://autoload/game_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const FORMAT_TEST := preload("res://tests/test_save_format.gd")
-const TEST_DIR := "user://test_saves_format/"
 
 
 class SaveSpy:
