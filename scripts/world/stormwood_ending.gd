@@ -3,12 +3,15 @@ extends Node3D
 ## The Stormwood chapter's playable release and aftermath.
 ##
 ## Marrow's Dynamo remains the authority for combat. Once its fourth conduit
-## commits the victory flag, this host-owned controller opens the prison,
-## reserves the one freed Stormheart for the first nearby character who accepts
-## its offer, and addresses that character's existing five-slot ceremony. The
-## party choice stays personal; release, the quieted storm and the Waterward
-## reveal are world facts committed through the chapter ledger. The Spark is
-## placed later at the Meadows shrine circle, like the other relic powers.
+## commits the victory flag, this host-owned controller opens the prison and
+## records which characters fought for the release. Owner rule (CLAUDE.md):
+## every participant receives their own once-only offer, bound to their stable
+## character, and each who accepts keeps their own; a non-participant receives
+## nothing. Each claim addresses that character's existing five-slot ceremony,
+## so a sixth slot never exists. The freeing, the quieted storm and the
+## Waterward reveal stay single world facts committed through the chapter
+## ledger; the first settled decision records the world's offer fact. The Spark
+## is placed later at the Meadows shrine circle, like the other relic powers.
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
@@ -21,6 +24,15 @@ const FREED_FLAG := "stormwood:legendary_freed"
 const OFFER_FLAG := "stormwood:legendary_offer_made"
 const WATERWARD_FLAG := "stormwood:waterward_revealed"
 const PERSONAL_RECEIPT_FLAG := "stormwood:legendary_ceremony_settled"
+## World receipt per character's answer, mirroring the Meadows finale's
+## `legendary_resolution:<accepted|refused>:<character>`; world-scoped by the
+## `stormwood:` prefix and committed once by the host.
+const RESOLUTION_PREFIX := "stormwood:legendary_resolution:"
+## Its last line carries `confirm_effect: stormheart:accept` only to make it a
+## Yes/No consent line; the answer is read from the panel's `completed` signal
+## and nothing drains that effect.
+const OFFER_CONVERSATION := "stormwood_stormheart_offer"
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 const LEGENDARY_NAME := "the Stormheart"
 const LEGENDARY_LEVEL := 44
@@ -43,11 +55,17 @@ var _waterward_sea: MeshInstance3D
 var _local_claim: Dictionary = {}
 var _local_creature: RefCounted
 var _waiting_for_offer_dialogue := false
+## This conversation reached its Yes/No line, and whether Yes was chosen.
+var _offer_reached_choice := false
+var _offer_accepted := false
 var _save_retry_left := 0.0
 var _resend_left := 0.0
 var _released_announced := false
 var _aftermath_announced := false
 var _progression_revision := -1
+## Character ids the host recorded as the freeing fight's participants, as last
+## published. Empty means a solo freeing or a save from before the list existed.
+var _participants: Array = []
 
 
 func mount(owner_world: Node3D) -> void:
@@ -63,6 +81,8 @@ func mount(owner_world: Node3D) -> void:
 	var panel := world.get_node_or_null("DialoguePanel")
 	if panel != null:
 		panel.finished.connect(_dialogue_finished)
+		panel.completed.connect(_dialogue_completed)
+		panel.line_presented.connect(_line_presented)
 	add_to_group("progression_restore")
 	_refresh_presentation()
 	_released_announced = _has(FREED_FLAG)
@@ -76,7 +96,7 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		return
 	match str(intent.get("kind", "")):
 		"ending_claim":
-			_claim_for(peer)
+			_claim_for(peer, bool(intent.get("already_resolved", false)))
 		"ending_settled":
 			_settle_for(peer, intent)
 		"ending_waterward_view":
@@ -92,6 +112,7 @@ func receive(event: Dictionary) -> void:
 		"ending_state":
 			_released_announced = bool(event.get("released", false))
 			_aftermath_announced = bool(event.get("waterward_revealed", false))
+			_participants = (event.get("participants", []) as Array).duplicate()
 			_refresh_presentation()
 		"ending_release":
 			_released_announced = true
@@ -115,15 +136,11 @@ func receive(event: Dictionary) -> void:
 func send_snapshot(peer: int) -> void:
 	if not session.is_host():
 		return
-	hub.call("send_to", peer, {
-		"kind": "ending_state",
-		"released": _has(FREED_FLAG),
-		"offer_made": _has(OFFER_FLAG),
-		"waterward_revealed": _has(WATERWARD_FLAG),
-	})
-	var state := _saved_state()
-	if not _has(OFFER_FLAG) and str(state.get("recipient_character_id", "")) == _character_for_peer(peer):
-		_send_claim(peer, state)
+	hub.call("send_to", peer, _state_event())
+	var character := _character_for_peer(peer)
+	var claim := claim_for_character(_saved_state(), character)
+	if not claim.is_empty():
+		_send_claim(peer, character, claim)
 
 
 func restore_progression_from_game(_game: Node) -> void:
@@ -141,27 +158,29 @@ func _process(delta: float) -> void:
 	# realm_chapter_events admits the matching host simulation shell, so the
 	# authority that completed Marrow also owns every shared ending mutation.
 	if _has(MARROW_FLAG) and not _has(FREED_FLAG):
+		_record_participants()
 		_chapter.call("emit_event", "dynamo:release")
 	if _has(FREED_FLAG) and not _released_announced:
 		_released_announced = true
+		_broadcast(_state_event())
 		_broadcast({"kind": "ending_release"})
 	if _has(WATERWARD_FLAG) and not _aftermath_announced:
 		_aftermath_announced = true
 		_broadcast({"kind": "ending_aftermath"})
 	_resend_left -= delta
-	if _resend_left <= 0.0 and _has(FREED_FLAG) and not _has(OFFER_FLAG):
+	if _resend_left <= 0.0 and _has(FREED_FLAG):
 		_resend_left = RESEND_SECONDS
 		var state := _saved_state()
-		var recipient := str(state.get("recipient_character_id", ""))
-		if not recipient.is_empty():
-			for peer: int in session.peers_in_realm("stormwood"):
-				if _character_for_peer(peer) == recipient:
-					_send_claim(peer, state)
+		for peer: int in session.peers_in_realm("stormwood"):
+			var character := _character_for_peer(peer)
+			var claim := claim_for_character(state, character)
+			if not claim.is_empty():
+				_send_claim(peer, character, claim)
 
 
-func _claim_for(peer: int) -> void:
-	if not _has(FREED_FLAG) or _has(OFFER_FLAG):
-		_refuse(peer, "The Stormheart's offer is no longer waiting.")
+func _claim_for(peer: int, already_resolved := false) -> void:
+	if not _has(FREED_FLAG):
+		_refuse(peer, "The Stormheart is still bound inside the Dynamo.")
 		return
 	var actor: Node3D = hub.call("actor_for", peer)
 	if not is_instance_valid(actor) or actor.global_position.distance_to(_offer_prompt.global_position) > OFFER_RADIUS_M:
@@ -172,22 +191,34 @@ func _claim_for(peer: int) -> void:
 		_refuse(peer, "Your character record is not ready for this ceremony.")
 		return
 	var state := _saved_state()
-	var reserved := str(state.get("recipient_character_id", ""))
-	if not reserved.is_empty() and reserved != character:
-		_refuse(peer, "The Stormheart has already offered its bond to another trainer.")
+	var claims: Dictionary = state.get("claims", {})
+	var existing: Dictionary = claims.get(character, {})
+	var owed := not bool(existing.get("settled", false)) and claim_allowed([FREED_FLAG],
+		state.get("participants", []), character, already_resolved and existing.is_empty())
+	if not owed:
+		# No creature for this character (did not fight, already walks with a
+		# Stormheart from another world, or already answered here). It can
+		# still let the world move on: the freeing's single offer fact must
+		# never wait on a participant who is absent or already resolved.
+		if not _has(OFFER_FLAG):
+			var result: Dictionary = _chapter.call("emit_event", "legendary:offer_shown")
+			if bool(result.get("accepted", false)) or _has(OFFER_FLAG):
+				_save_world_claim()
+				_broadcast(_state_event())
+				_refuse(peer, "The Stormheart has seen you. Its bond is for the trainers who fought for it, and they may still answer.")
+				return
+		_refuse(peer, "You have already answered the Stormheart." if not existing.is_empty() or already_resolved
+			else "The Stormheart answers the trainers who fought for its release.")
 		return
-	if reserved.is_empty():
+	if existing.is_empty():
 		var creature := _make_legendary()
 		var payload := CAPTURE_CODEC.encode(creature)
 		if payload.is_empty():
 			_refuse(peer, "The Stormheart could not begin the ceremony.")
 			return
-		state = {
-			"recipient_character_id": character,
-			"creature": payload,
-			"settled": false,
-			"kept": false,
-		}
+		existing = {"creature": payload, "settled": false, "kept": false}
+		claims[character] = existing
+		state["claims"] = claims
 		var game := get_node("/root/Game")
 		var before: Dictionary = (game.get("realm_environment") as Dictionary).duplicate(true)
 		_store_state(state)
@@ -195,25 +226,37 @@ func _claim_for(peer: int) -> void:
 			game.set("realm_environment", before)
 			_refuse(peer, "The world could not save the ceremony. Try again.")
 			return
-	_send_claim(peer, state)
+	_send_claim(peer, character, existing)
 
 
 func _settle_for(peer: int, intent: Dictionary) -> void:
-	if _has(OFFER_FLAG):
-		return
+	var character := _character_for_peer(peer)
 	var state := _saved_state()
-	if str(state.get("recipient_character_id", "")) != _character_for_peer(peer):
-		_refuse(peer, "Only the trainer receiving the offer can settle it.")
+	var claims: Dictionary = state.get("claims", {})
+	var claim: Dictionary = claims.get(character, {})
+	if claim.is_empty():
+		_refuse(peer, "Only a trainer answering the Stormheart can settle its offer.")
 		return
-	state["kept"] = bool(intent.get("kept", false))
-	state["settled"] = true
+	if bool(claim.get("settled", false)):
+		return
+	claim["kept"] = bool(intent.get("kept", false))
+	claim["settled"] = true
+	claims[character] = claim
+	state["claims"] = claims
 	_store_state(state)
-	var result: Dictionary = _chapter.call("emit_event", "legendary:offer_shown")
-	if not bool(result.get("accepted", false)) and not _has(OFFER_FLAG):
-		state["settled"] = false
-		_store_state(state)
-		_refuse(peer, "The world could not record the ceremony. Try again.")
-		return
+	# The first decision records the world's single offer fact; later
+	# participants' decisions are personal and need no second world write.
+	if not _has(OFFER_FLAG):
+		var result: Dictionary = _chapter.call("emit_event", "legendary:offer_shown")
+		if not bool(result.get("accepted", false)) and not _has(OFFER_FLAG):
+			claim["settled"] = false
+			claims[character] = claim
+			state["claims"] = claims
+			_store_state(state)
+			_refuse(peer, "The world could not record the ceremony. Try again.")
+			return
+	_submit_resolution(bool(claim["kept"]), character)
+	_save_world_claim()
 	_broadcast(_state_event())
 
 
@@ -273,6 +316,8 @@ func _receive_claim(claim: Dictionary) -> void:
 		_save_retry_left = 0.0
 		_finish_local_claim(true)
 		return
+	# A resend of the claim already being answered is ignored here, after the
+	# receipt/legendary branches above so a failed save can still retry.
 	if not _local_claim.is_empty() or game.get("pending_catch") != null:
 		return
 	_local_claim = claim.duplicate(true)
@@ -296,11 +341,46 @@ func _process_local_claim(delta: float) -> void:
 	_finish_local_claim((game.get("party").call("members") as Array).has(_local_creature))
 
 
+func _line_presented(id: String, is_last: bool) -> void:
+	if id == OFFER_CONVERSATION and is_last:
+		_offer_reached_choice = true
+
+
+func _dialogue_completed(id: String) -> void:
+	if id == OFFER_CONVERSATION:
+		_offer_accepted = true
+
+
+## The runner closes (`finished`) before it reports `completed` for a Yes, so
+## the answer is read one frame later. A conversation cut off before its Yes/No
+## line answers nothing and is offered again; No is this character's refusal.
 func _dialogue_finished(id: String) -> void:
-	if id != "stormwood_stormheart_offer" or not _waiting_for_offer_dialogue:
+	if id != OFFER_CONVERSATION or not _waiting_for_offer_dialogue:
 		return
 	_waiting_for_offer_dialogue = false
-	_begin_local_ceremony()
+	_resolve_offer_choice.call_deferred()
+
+
+func _resolve_offer_choice() -> void:
+	var reached := _offer_reached_choice
+	var accepted := _offer_accepted
+	_offer_reached_choice = false
+	_offer_accepted = false
+	if accepted:
+		_begin_local_ceremony()
+	elif reached:
+		refuse_offer()
+	else:
+		_waiting_for_offer_dialogue = true
+
+
+## This character's explicit refusal: no creature, a personal receipt and the
+## host's world receipt, exactly as letting the newcomer go at five.
+func refuse_offer() -> void:
+	if _local_claim.is_empty():
+		return
+	get_node("/root/Game").push_world_message("The Stormheart stays free. The Spark is yours either way.")
+	_finish_local_claim(false)
 
 
 func _begin_local_ceremony() -> void:
@@ -343,7 +423,10 @@ func _finish_local_claim(kept: bool) -> void:
 
 
 func _on_offer() -> void:
-	session.request_stormwood_encounter({"kind": "ending_claim"})
+	var game := get_node("/root/Game")
+	var player_flags: RefCounted = game.call("player_flags")
+	session.request_stormwood_encounter({"kind": "ending_claim",
+		"already_resolved": player_flags != null and bool(player_flags.call("has", PERSONAL_RECEIPT_FLAG))})
 
 
 func _on_waterward_view() -> void:
@@ -355,14 +438,20 @@ func _refresh_presentation() -> void:
 	var progression: RefCounted = game.get("progression") if game != null else null
 	_progression_revision = int(progression.get("revision")) if progression != null else -1
 	var freed := _has(FREED_FLAG) or _released_announced
-	var offered := _has(OFFER_FLAG)
+	# Each participant sees their own Stormheart until they have answered it;
+	# a non-participant sees it leave once the world's first offer is settled.
+	var owed := freed and _local_offer_owed(game)
 	if _legendary != null:
-		_legendary.visible = not offered
+		_legendary.visible = owed or not _has(OFFER_FLAG)
 		_legendary.position = Vector3(0.0, 0.0, 8.0) if freed else Vector3.ZERO
 	if _cage != null:
 		_cage.visible = not freed
 	if _offer_prompt != null:
-		_offer_prompt.set("enabled", freed and not offered and not bool(world.get("simulation_only")))
+		# Anyone may answer until the world's offer fact exists; afterwards only
+		# a participant still owed their own Stormheart sees the prompt.
+		var answerable := freed and (owed or not _has(OFFER_FLAG))
+		_offer_prompt.set("enabled", answerable and not bool(world.get("simulation_only")))
+		_offer_prompt.set("label", "Accept the Stormheart's offer" if owed else "Answer the freed Stormheart")
 	if _view_prompt != null:
 		var revealed := _has(WATERWARD_FLAG) or _aftermath_announced
 		_view_prompt.set("enabled", _has(OFFER_FLAG) and not bool(world.get("simulation_only")))
@@ -509,7 +598,39 @@ func _saved_state() -> Dictionary:
 	if stormwood is Dictionary:
 		var ending: Variant = (stormwood as Dictionary).get("ending", {})
 		if ending is Dictionary:
-			return (ending as Dictionary).duplicate(true)
+			return migrate_state(ending as Dictionary)
+	return {}
+
+
+## The earlier single-recipient shape (`recipient_character_id` + one claim)
+## becomes that character's entry in `claims`. Its participant list is unknown,
+## so it is seeded with that recipient only.
+static func migrate_state(saved: Dictionary) -> Dictionary:
+	var state := saved.duplicate(true)
+	var legacy := str(state.get("recipient_character_id", ""))
+	if not legacy.is_empty():
+		var claims: Dictionary = state.get("claims", {})
+		if not claims.has(legacy):
+			claims[legacy] = {"creature": state.get("creature", {}),
+				"settled": bool(state.get("settled", false)), "kept": bool(state.get("kept", false))}
+		state["claims"] = claims
+		# The old shape proves only that its recipient fought; seeding it keeps
+		# a character who never fought from claiming a fresh Stormheart.
+		if not state.has("participants"):
+			state["participants"] = [legacy]
+		for key: String in ["recipient_character_id", "creature", "settled", "kept"]:
+			state.erase(key)
+	return state
+
+
+## The unsettled claim waiting for `character`, or {} when there is none.
+static func claim_for_character(state: Dictionary, character: String) -> Dictionary:
+	if character.is_empty():
+		return {}
+	var claim: Variant = (state.get("claims", {}) as Dictionary).get(character, {})
+	if claim is Dictionary and not (claim as Dictionary).is_empty() \
+			and not bool((claim as Dictionary).get("settled", false)):
+		return (claim as Dictionary).duplicate(true)
 	return {}
 
 
@@ -534,10 +655,12 @@ func _save_world_claim() -> bool:
 	return saved
 
 
-func _send_claim(peer: int, state: Dictionary) -> void:
-	if bool(state.get("settled", false)):
+func _send_claim(peer: int, character: String, claim: Dictionary) -> void:
+	if bool(claim.get("settled", false)):
 		return
-	hub.call("send_to", peer, {"kind": "ending_offer", "claim": state.duplicate(true)})
+	var payload := claim.duplicate(true)
+	payload["recipient_character_id"] = character
+	hub.call("send_to", peer, {"kind": "ending_offer", "claim": payload})
 
 
 func _refuse(peer: int, reason: String) -> void:
@@ -557,7 +680,61 @@ func _state_event() -> Dictionary:
 		"released": _has(FREED_FLAG),
 		"offer_made": _has(OFFER_FLAG),
 		"waterward_revealed": _has(WATERWARD_FLAG),
+		"participants": (_saved_state().get("participants", []) as Array).duplicate(),
 	}
+
+
+## Host, at the freeing: the characters who fought Marrow and struck the
+## conduits. Recorded once with the world so reload and reconnect keep the
+## same eligible set; peers become stable character ids here.
+func _record_participants() -> void:
+	var state := _saved_state()
+	if state.has("participants"):
+		return
+	var dynamo := world.get_node_or_null("StormwoodDynamo")
+	var peers: Array = []
+	var characters: Array = []
+	if dynamo != null:
+		# Captured when each fighter joined, so a later disconnect cannot drop
+		# them; live peers below cover a fighter added before this was recorded.
+		for character: Variant in dynamo.get("fighter_characters"):
+			if not str(character).is_empty() and not characters.has(str(character)):
+				characters.append(str(character))
+		for key: String in ["participants", "contributors"]:
+			for peer: Variant in dynamo.get(key):
+				if not peers.has(int(peer)):
+					peers.append(int(peer))
+	for peer: int in peers:
+		var character := _character_for_peer(peer)
+		if not character.is_empty() and not characters.has(character):
+			characters.append(character)
+	state["participants"] = characters
+	_store_state(state)
+	_save_world_claim()
+
+
+## Host: the once-only world receipt of one character's answer.
+func _submit_resolution(accepted: bool, character: String) -> void:
+	var flag := resolution_flag(accepted, character)
+	if not _has(flag):
+		LEDGER_CLAIM.submit(self, {"kind": "set_world_flag", "realm": "stormwood", "id": flag, "value": true})
+
+
+static func resolution_flag(accepted: bool, character: String) -> String:
+	return "%s%s:%s" % [RESOLUTION_PREFIX, "accepted" if accepted else "refused", character]
+
+
+## This peer's own character may still answer the Stormheart.
+func _local_offer_owed(game: Node) -> bool:
+	if game == null:
+		return false
+	var character := str(game.get("local").get("character_id"))
+	var player_flags: RefCounted = game.call("player_flags")
+	var resolved := player_flags != null and bool(player_flags.call("has", PERSONAL_RECEIPT_FLAG))
+	var participants := _participants
+	if session != null and session.is_host():
+		participants = _saved_state().get("participants", [])
+	return claim_allowed([FREED_FLAG], participants, character, resolved)
 
 
 func _has(flag: String) -> bool:
@@ -577,11 +754,16 @@ func _glow(colour: Color, energy: float, alpha: float) -> StandardMaterial3D:
 	return material
 
 
-## Pure policy helpers: tests pin the unique-recipient and chapter-order rules
+## Pure policy helpers: tests pin the per-participant and chapter-order rules
 ## without needing a network peer or loading the world scene.
-static func claim_allowed(flags: Array, reserved_character: String, character: String) -> bool:
-	return flags.has(FREED_FLAG) and not flags.has(OFFER_FLAG) and not character.is_empty() \
-		and (reserved_character.is_empty() or reserved_character == character)
+##
+## An empty participant list is a solo freeing (or a save from before the list
+## was recorded): the only player present may answer, as in the Meadows ending.
+static func claim_allowed(flags: Array, participants: Array, character: String,
+		already_resolved: bool) -> bool:
+	if not flags.has(FREED_FLAG) or character.is_empty() or already_resolved:
+		return false
+	return participants.is_empty() or participants.has(character)
 
 
 static func waterward_allowed(flags: Array) -> bool:
