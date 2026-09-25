@@ -250,6 +250,23 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
     - ignoring reduced motion fails;
     - round-4 flash strengths fail.
   - **Frames:** `visual/surge/sheet_rain_camera.jpg`, with 4 frames compared against `r4_break_upwind.jpg`.
+- **Review follow-up (`7faf5d42c`): no rain under roofs, plus reduced-motion nits.**
+  - **Roof suppression:**
+    - Every 0.25 s, the shelter check casts physics rays up from the trainer (starting at head height) and from the camera.
+    - Any hit fades the near rain layer out over 0.6 s, and back in outside.
+    - Canopy and rod radius are ignored on purpose, so rain under trees stays.
+    - The far layer is untouched.
+    - The rain volume is clamped to at most 16 m above the ground under the camera.
+  - **Reduced motion:**
+    - The strike's local light is scaled by 0.15.
+    - The telegraph rim is steady; its growing fill still carries the 1.2 s timing.
+    - The config records why the scale is 0.15 rather than `impulse_scale()`'s 0: the flash rhythm is one of the cues that name Break without HUD text.
+  - **Test hygiene:** the presentation tests save and restore the static pref in `before_each`/`after_each`, so a failing test can't leave it set.
+  - **Witnesses:**
+    - Unit tests: roof fade without a snap, far layer untouched, height clamp, steady rim.
+    - The cleanup smoke puts a StaticBody roof over the trainer: near rain goes to 0.00, then back to 1.00 once the roof is removed. Under reduced motion the strike light reads 1.20 of 8.
+    - Negative controls, each failing: roof probe disabled, fade that snaps, strike light unscaled, rim pulsing under reduced motion.
+    - `visual/surge/sheet_rain_roof.jpg`: inside the real Ashfoot shelter (ranger station) the room is dry, while the same building from 11 m outside stands in rain.
 - **Open:**
   - The riding frame uses the production riding camera PROFILE on the trainer, with no mount.
   - Night rain is intentionally faint.

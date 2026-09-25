@@ -43,6 +43,15 @@ Branch `ralph/stormwood-f10-rain-camera`, stacked on the pinned Surge head. The 
 | `after/rc_day_break_riding.jpg` | Production riding camera profile (7.1 m from the trainer), staged with no mount. Rain falls over and in front of the trainer. |
 | `after/rc_night_break.jpg` | Night Break. Faint streaks over the near ground and around the trainer. |
 
+### Task #8 follow-up: no rain under roofs (`sheet_rain_roof.jpg`)
+
+A physics roof over the trainer or the camera fades the near rain out over 0.6 s. The two frames below are day Break with the production camera; records are in `after/frames_after_roof.json`, and both frames were looked at.
+
+| Frame | What it shows |
+|---|---|
+| `after/roof_inside_ashfoot_shelter.jpg` | The trainer inside the Ashfoot shelter (ranger station, cottage interior) at `roofed=true` and near-rain amount 0.0. The room is dry and no streak shows. |
+| `after/roof_outside_ashfoot_shelter.jpg` | The same shelter from 11 m outside at `roofed=false` and near-rain amount 1.0. Rain falls around the trainer and the building. |
+
 ## Round 4 (final): `sheet_round4.jpg`
 
 Ten 640×360 frames. The records are in `after/frames_after_r4.json`, and every frame was looked at. Camera and staging are as described above, and the telegraph and upwind frames are both day Break.

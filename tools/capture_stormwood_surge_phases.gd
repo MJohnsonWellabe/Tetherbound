@@ -120,6 +120,8 @@ func _run() -> void:
 		await _round4()
 	if _only.has("raincam"):
 		await _raincam()
+	if _only.has("roof"):
+		await _roof()
 	if _want("strips"):
 		await _strips()
 	if _want("motion"):
@@ -253,9 +255,9 @@ func _enter_phase(phase: String, aftermath: bool) -> float:
 
 # ---------------------------------------------------------------- placement
 
-func _floor_at(x: float, z: float) -> float:
+func _floor_at(x: float, z: float, probe_above: float = 4.0) -> float:
 	var terrain := float(_world.call("ground_height_at", x, z))
-	var top := terrain + 4.0
+	var top := terrain + probe_above
 	var query := PhysicsRayQueryParameters3D.create(Vector3(x, top, z), Vector3(x, top - 400.0, z), 1)
 	query.exclude = [_player.get_rid()]
 	var hit := _player.get_world_3d().direct_space_state.intersect_ray(query)
@@ -264,12 +266,12 @@ func _floor_at(x: float, z: float) -> float:
 	return resolve_capture_ground(_player, x, z, terrain)
 
 
-func _stand(xz: Vector2, look_at: Vector3, pitch_deg: float) -> void:
+func _stand(xz: Vector2, look_at: Vector3, pitch_deg: float, probe_above: float = 4.0) -> void:
 	if not bool(_game.call("debug_teleport_to", xz.x, xz.y, "stormwood", "")):
 		_failures.append("debug_teleport_to refused %s" % str(xz))
 	for _frame in 10:
 		await physics_frame
-	var ground := _floor_at(xz.x, xz.y)
+	var ground := _floor_at(xz.x, xz.y, probe_above)
 	var forward := Vector2(look_at.x - xz.x, look_at.z - xz.y).normalized()
 	_player.global_position = Vector3(xz.x, ground + TRAINER_CLEARANCE, xz.y)
 	_player.velocity = Vector3.ZERO
@@ -332,6 +334,8 @@ func _presentation_state() -> Dictionary:
 		state["rain_amount_ratio"] = (rain as GPUParticles3D).amount_ratio
 	if _surge.has_method("flash_level"):
 		state["flash_level"] = float(_surge.call("flash_level"))
+	if _surge.get("_roofed") != null:
+		state["roofed"] = bool(_surge.get("_roofed"))
 	if _surge.has_method("presentation_key"):
 		state["presentation_key"] = str(_surge.call("presentation_key"))
 	return state
@@ -510,6 +514,32 @@ func _raincam() -> void:
 		if kind == "riding":
 			_rig.call("set_target", _player)
 	_pin_clock("day")
+
+
+## Rain-under-roof check (explicit --only=roof), 640x360, day Break: the
+## trainer inside the Ashfoot shelter (stormwood_settlements.json
+## ashfoot_shelter, a ranger_station with a cottage interior), then the
+## same shelter from 11 m outside. The floor probe starts 1.6 m above the
+## terrain so it lands on the floor, not the roof.
+func _roof() -> void:
+	var centre := Vector2(-365.0, 460.0)
+	var ground := float(_world.call("ground_height_at", centre.x, centre.y))
+	var shelter := Vector3(centre.x, ground + 1.5, centre.y)
+	var yaw := deg_to_rad(135.0)
+	var along := Vector2(sin(yaw), cos(yaw))
+	_pin_clock("day")
+	await _stand(centre + along * 0.6, Vector3(centre.x - along.x * 6.0, ground + 1.4, centre.y - along.y * 6.0), -4.0, 1.6)
+	await _enter_phase("break", false)
+	for _frame in 60:
+		await physics_frame
+	_heal()
+	await _capture("roof_inside_ashfoot_shelter", "Day Break, trainer inside the Ashfoot shelter (ranger station): near rain suppressed", false)
+	var outside := centre + Vector2(along.y, -along.x) * 11.0
+	await _stand(outside, shelter, 4.0)
+	for _frame in 60:
+		await physics_frame
+	_heal()
+	await _capture("roof_outside_ashfoot_shelter", "Day Break, the same shelter from 11 m outside: rain falls in the open", false)
 
 
 ## Tuning pass only (--only=quick): one settled frame per phase.
