@@ -205,3 +205,18 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   | Prompt push removed | 1 smoke fail |
   | `next_available` counts a resting creature | 2 smoke fails + 1 unit fail |
   | In test: no LB press | The fainted creature stays active and hidden, and the prompt is not repeated |
+- **Review should-fix: pause while choosing a replacement.** COMBAT says a faint "pauses enemy attack issuance until a replacement is selected … in co-op other participants continue."
+  - **When it pauses.** The host freezes Break: no `rules.advance`, no bank fire and no countdown. It does this while no current participant has a live creature and at least one participant is waiting to replace a fainted one.
+  - **How liveness is read.** The host's own creature is the director's `ally_instance`. Another peer's is the card the host holds, down once that peer reports the creature fainted with `dynamo_ally_fainted`.
+  - **Publishing.** The state event carries the pause as `paused`.
+  - **What does not pause.** Only participants count. A recall with no faint behind it never pauses. The existing logic still drops a participant who leaves, and a full-party faint still takes the wipe path.
+  - **Prompt re-show.** A still-paused Break shows the prompt once more after 4 s, and never a third time.
+  - **Not changed.** The arena readout is outside this lane, so it shows the frozen seconds with no "paused" label.
+- **Witnesses:** all `test_stormwood_*` suites: 241 tests, 25103 assertions, 0 failed. Smokes: dynamo_break_faint 77/0, stormheart_choice 41/0, stormheart_participants 28/0.
+- **Pause negative controls:**
+
+  | Change reverted | Result |
+  |---|---|
+  | Pause disabled | 6 fails |
+  | A live partner ignored | 1 fail (the co-op check) |
+  | Re-show removed | 1 fail |

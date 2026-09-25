@@ -25,6 +25,9 @@ const BREAK_JOIN_RADIUS_M := 48.0
 ## A creature knocked out by a discharge outside a fight leaves the field after
 ## its faint plays, as `combat_manager.gd::_finish()` hides a fainted ally.
 const FAINT_HIDE_S := 1.0
+## The faint prompt is a transient toast (`playground_hud.gd` shows one for
+## 2.2 s). Still choosing this long after it, the player sees it once more.
+const FAINT_PROMPT_RESHOW_S := 4.0
 
 var world: Node3D
 var hub: Node
@@ -60,6 +63,16 @@ var _party_down: Dictionary = {}
 ## Client: what this peer last reported, so each faint is sent once.
 var _reported_ally_uid := ""
 var _reported_party_down := false
+## COMBAT: a faint "pauses enemy attack issuance until a replacement is
+## selected ... no timer in solo; in co-op other participants continue."
+## Host: participants whose deployed creature fainted and who have not sent out
+## a live one since. Published as `paused`, so every peer knows.
+var _awaiting_replacement: Dictionary = {}
+var _break_paused := false
+## Local: the faint prompt last shown, for its one re-show while paused.
+var _faint_prompt := ""
+var _faint_prompt_creature: Object = null
+var _faint_prompt_left := 0.0
 
 
 func mount(owner_world: Node3D) -> void:
@@ -200,6 +213,7 @@ func receive(event: Dictionary) -> void:
 				rules.load_data(state as Dictionary)
 				phase = str(rules.phase)
 			participants = _unique_peers(event.get("participants", []))
+			_break_paused = bool(event.get("paused", false))
 			if arena != null:
 				arena.show_state(rules.bank_state())
 		"dynamo_hazard_hit":
@@ -228,6 +242,7 @@ func restore_progression_from_game(_game: Node) -> void:
 func _process(delta: float) -> void:
 	if rules == null:
 		return
+	_tick_faint_prompt(delta)
 	if not session.is_host():
 		_report_own_faint()
 		return
@@ -256,6 +271,10 @@ func _process(delta: float) -> void:
 		_restored_break = false
 		if participants.is_empty():
 			_reset_after_loss()
+			return
+		# Everyone left in the Break is choosing a replacement: no bank fires
+		# and the conduit window holds until one of them sends a creature out.
+		if _set_break_paused(_choosing_replacement()):
 			return
 	var before: Dictionary = rules.bank_state()
 	rules.advance(delta)
@@ -360,6 +379,9 @@ func _apply_local_hazard(event: Dictionary) -> void:
 				var prompt := faint_prompt(game.get("party") if game != null else null, creature)
 				if not prompt.is_empty():
 					game.push_world_message(prompt)
+					_faint_prompt = prompt
+					_faint_prompt_creature = creature
+					_faint_prompt_left = FAINT_PROMPT_RESHOW_S
 	# Static is a locomotion penalty, shared with ordinary Stormwood lightning.
 	# The piloted companion takes the core damage; its trainer's stamina regen
 	# is what the named status affects.
@@ -407,6 +429,8 @@ func _reset_after_loss() -> void:
 	_cooldowns.clear()
 	_ally_down.clear()
 	_party_down.clear()
+	_awaiting_replacement.clear()
+	_break_paused = false
 	_last_fired_serial = -1
 	_completion_committed = false
 	_persist_state()
@@ -604,6 +628,73 @@ func _report_own_faint() -> void:
 		"creature_uid": _reported_ally_uid, "party_down": party_down})
 
 
+## Host: whether every Break participant is out of a live creature while at
+## least one of them is choosing a replacement after a faint. Only current
+## participants count, so nobody outside the Break can hold it; a participant
+## who leaves Stormwood or whose whole party is down has already been dropped.
+## A plain recall with no faint behind it never pauses.
+func _choosing_replacement() -> bool:
+	var live := false
+	for peer: int in participants:
+		var state := _creature_state(peer)
+		if state == "live":
+			_awaiting_replacement.erase(peer)
+			live = true
+		elif state == "fainted":
+			_awaiting_replacement[peer] = true
+	for peer: Variant in _awaiting_replacement.keys():
+		if not participants.has(int(peer)):
+			_awaiting_replacement.erase(peer)
+	return not live and not _awaiting_replacement.is_empty()
+
+
+## "live", "fainted" or "none" for `peer`'s deployed creature. The host's own
+## is the director's ally instance; another peer's is the card the host holds,
+## down once its owner reported that creature fainted (`dynamo_ally_fainted`).
+func _creature_state(peer: int) -> String:
+	var director := _director()
+	if peer == int(session.local_peer_id()) and director != null:
+		var creature: Object = director.call("ally_instance")
+		if creature == null:
+			return "none"
+		return "fainted" if bool(creature.get("fainted")) else "live"
+	var card: Dictionary = hub.call("card_for", peer)
+	if card.is_empty():
+		return "none"
+	if float(card.get("hp", 0.0)) <= 0.0 or (_ally_down.has(peer)
+			and str(_ally_down[peer]) == str(card.get("creature_uid", ""))):
+		return "fainted"
+	return "live"
+
+
+## Records and publishes a change of the Break pause; returns the new state.
+func _set_break_paused(paused: bool) -> bool:
+	if paused != _break_paused:
+		_break_paused = paused
+		_publish_state()
+	return paused
+
+
+## Local: show the faint prompt once more if the Break is still paused on this
+## peer's choice after the first toast has gone. Never a third time.
+func _tick_faint_prompt(delta: float) -> void:
+	if _faint_prompt.is_empty():
+		return
+	var director := _director()
+	var creature: Object = director.call("ally_instance") if director != null else null
+	if creature != _faint_prompt_creature or creature == null or not bool(creature.get("fainted")):
+		_faint_prompt = ""
+		_faint_prompt_creature = null
+		return
+	_faint_prompt_left -= delta
+	if _faint_prompt_left > 0.0:
+		return
+	if _break_paused and phase == "break_core":
+		get_node("/root/Game").push_world_message(_faint_prompt)
+	_faint_prompt = ""
+	_faint_prompt_creature = null
+
+
 func _trainer_battle_active() -> bool:
 	var director := _director()
 	return director != null and bool(director.call("trainer_battle_active"))
@@ -627,6 +718,7 @@ func _add_participant(peer: int, contributes := true) -> void:
 	# Admitted with a live creature: any earlier faint report is out of date.
 	_ally_down.erase(peer)
 	_party_down.erase(peer)
+	_awaiting_replacement.erase(peer)
 	if not participants.has(peer):
 		participants.append(peer)
 	# A Break arrival strikes conduits but, with no send-out left to admit
@@ -658,7 +750,8 @@ func _publish_state() -> void:
 
 func _state_event() -> Dictionary:
 	return {"kind": "dynamo_state", "state": rules.save_data(),
-		"participants": participants.duplicate(), "trainer_id": TRAINER_ID}
+		"participants": participants.duplicate(), "trainer_id": TRAINER_ID,
+		"paused": _break_paused}
 
 
 func _persist_state() -> void:
