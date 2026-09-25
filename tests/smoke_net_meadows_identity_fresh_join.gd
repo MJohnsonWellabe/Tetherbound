@@ -47,6 +47,11 @@ const MAP_MARKER_NEAR_M := 1.5
 
 var _assertions := 0
 var _opening_together := false
+## `--host-starter=N` / `--guest-starter=N` (opening-together only): how many
+## `ui_right` presses each peer makes in the real starter picker, i.e. which of
+## opening.json's `starters.species` it takes. One press (the second starter)
+## when not given.
+var _starter_presses: Array = [1, 1]
 
 
 func _initialize() -> void:
@@ -55,6 +60,10 @@ func _initialize() -> void:
 
 func _run() -> void:
 	_opening_together = OS.get_cmdline_user_args().has("--opening-together")
+	for arg: String in OS.get_cmdline_user_args():
+		for pair: Array in [["--host-starter=", 0], ["--guest-starter=", 1]]:
+			if arg.begins_with(str(pair[0])):
+				_starter_presses[int(pair[1])] = int(arg.trim_prefix(str(pair[0])))
 	# Both production title transitions can spend one long blocking frame
 	# building the Meadows. The ordinary step deadline remains the hard bound;
 	# this only tells the heartbeat guard that a silent build is expected.
@@ -173,6 +182,12 @@ func _run() -> void:
 	# The moved-on world's catch-up must grant one, and the starter receipt must
 	# live on this character. A non-empty count is not enough: exactly one is
 	# the contract and the row is retained for the later equality check.
+	if _opening_together:
+		for peer in 2:
+			var chosen := _starter_species(int(_starter_presses[peer]))
+			var rows: Array = (host_identity if peer == 0 else client_identity).get("party", []) as Array
+			_check(rows.size() == 1 and str(rows[0]).begins_with(chosen + "@"),
+				"peer %d holds the starter it picked in the real picker, %s (%s)" % [peer, chosen, str(rows)])
 	var first_party: Array = client_identity.get("party", []) as Array
 	_check(int(client_identity.get("party_size", -1)) == 1 and first_party.size() == 1,
 		("the completed opening left the fresh client exactly one starter (%s)" if _opening_together \
@@ -187,6 +202,10 @@ func _run() -> void:
 			_check(str(reloaded.get("verdict", "")) == "PASS",
 				"peer %d preserved its starter UID through production save/load (%s)" % [
 					peer, str(reloaded.get("detail", ""))])
+			var reloaded_rows: Array = (await _identity(peer)).get("party", []) as Array
+			var picked := _starter_species(int(_starter_presses[peer]))
+			_check(reloaded_rows.size() == 1 and str(reloaded_rows[0]).begins_with(picked + "@"),
+				"peer %d still holds its %s after load (%s)" % [peer, picked, str(reloaded_rows)])
 			var saved_story := await _story(peer, [STARTER_FLAG])
 			_check(_player_flag(saved_story, STARTER_FLAG) == true,
 				"peer %d retained its starter receipt after load" % peer)
@@ -254,8 +273,9 @@ func _complete_fresh_opening(peer: int) -> bool:
 		"peer %d's starter picker opened after the briefing" % peer)
 	if not bool((opening.get("starter_picker", {}) as Dictionary).get("is_open", false)):
 		return false
-	if not await _press_opening(peer, "ui_right", "moved the starter choice"):
-		return false
+	for press in int(_starter_presses[peer]):
+		if not await _press_opening(peer, "ui_right", "moved the starter choice"):
+			return false
 	if not await _press_opening(peer, "menu_confirm", "chose the starter orb"):
 		return false
 	opening = await _wait_opening_modal(peer, "name_prompt", 120)
@@ -464,6 +484,14 @@ func _planar_gap(a: Variant, b: Variant) -> float:
 		return -1.0
 	return Vector2(float((a as Array)[0]) - float((b as Array)[0]),
 		float((a as Array)[2]) - float((b as Array)[2])).length()
+
+
+## opening.json's starter at picker index `index` (the picker opens on 0).
+func _starter_species(index: int) -> String:
+	var opening: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/opening.json"))
+	var species: Array = ((opening as Dictionary).get("starters", {}) as Dictionary).get("species", []) \
+		if opening is Dictionary else []
+	return str(species[index]) if index >= 0 and index < species.size() else "?"
 
 
 func _session(peer: int) -> Dictionary:
