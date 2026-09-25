@@ -165,8 +165,9 @@
           "combat": {
             "_comment": "GATE3_ENCOUNTER_CONTRACTS.md G-3/V-2 CHARGER profile, relative to combat.json's `enemy` defaults (power 8, telegraph 0.55, recovery 0.75, attack_cooldown 1.1, preferred_range 2.1, lunge 3.4). Read by scripts/creatures/wild_creature.gd's per-body `combat` override (G-2, landing separately from the G3-ENCOUNTERS lane) -- absent or unread, this body fights exactly as before. Closes from range in one lunge; the tell is the distance it keeps, not the wind-up time, which is what makes it read as different from Dell's or a picket's creatures rather than the same fight at a higher number.",
             "preferred_range": 4.5,
+            "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "lunge": 7.0,
-            "telegraph": 0.6,
+            "telegraph": 0.8,
             "recovery": 0.9,
             "attack_cooldown": 1.6,
             "power": 10.4

@@ -1,0 +1,128 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only session,steam,peer_registry,join_driver,snapshot_transfer,ledger: 17 of 506 test files
+  ok    test_death_satchel_ledger.gd :: test_owned_transactions_and_reconnect_receipts
+  ok    test_death_satchel_ledger.gd :: test_wrong_or_missing_world_instance_refuses_before_any_host_mutation
+  ok    test_join_driver_admission_reason.gd :: test_host_admission_reason_is_terminal_and_readable
+  ok    test_join_driver_admission_reason.gd :: test_transport_failure_text_does_not_disable_existing_retry_budget
+  ok    test_meadows_named_location_ledger_0912.gd :: test_final_polish_locations_have_complete_accepted_evidence_rounds
+  ok    test_meadows_named_location_ledger_0912.gd :: test_meadows_review_ledger_is_exactly_twenty_four_unique_places
+  ok    test_peer_registry_admission.gd :: test_character_can_reconnect_only_after_old_peer_is_gone
+  ok    test_peer_registry_admission.gd :: test_full_session_refuses_before_mutation
+  ok    test_peer_registry_admission.gd :: test_invalid_identity_is_refused_without_registry_mutation
+  ok    test_peer_registry_admission.gd :: test_live_character_conflict_preserves_host_and_every_other_peer
+  ok    test_peer_registry_appearance.gd :: test_appearance_survives_registry_replication
+  ok    test_peer_registry_appearance.gd :: test_old_registry_payload_defaults_to_original_trainer
+  ok    test_peer_registry_appearance.gd :: test_rows_always_carry_a_normalized_appearance_id
+  ok    test_session_build_compat.gd :: test_content_hash_is_order_independent_and_sensitive_to_bytes_and_paths
+  ok    test_session_build_compat.gd :: test_current_fingerprint_matches_itself_and_names_every_part
+  ok    test_session_build_compat.gd :: test_each_mismatch_names_what_differs
+  ok    test_session_build_compat.gd :: test_identical_fingerprint_is_admitted
+  ok    test_session_build_compat.gd :: test_missing_or_malformed_fingerprint_is_refused_not_admitted
+  ok    test_session_build_compat.gd :: test_token_is_the_short_display_form
+  ok    test_session_physical_timeout.gd :: test_client_timeout_targets_server_and_skips_relayed_client_ids
+  ok    test_session_physical_timeout.gd :: test_host_still_configures_both_direct_clients_and_skips_itself
+  ok    test_session_reconnect_reservation.gd :: test_goodbye_teardown_ends_the_session_and_detaches_only_the_transport
+  ok    test_session_reconnect_reservation.gd :: test_held_seat_lapses_at_the_window
+  ok    test_session_reconnect_reservation.gd :: test_held_seat_refuses_a_different_character_with_a_readable_reason
+  ok    test_session_reconnect_reservation.gd :: test_live_or_empty_characters_are_not_reserved_and_clear_drops_seats
+  ok    test_session_reconnect_reservation.gd :: test_reservation_counts_only_against_others_when_seats_remain
+  ok    test_session_reconnect_reservation.gd :: test_reservation_is_host_bookkeeping_not_replicated_state
+  ok    test_session_reconnect_reservation.gd :: test_returning_character_reclaims_its_held_seat_under_a_new_peer_id
+  ok    test_session_reconnect_reservation.gd :: test_unadmitted_client_leave_tears_down_at_once
+[session] snapshot applied (3 keys, day 7)
+  ok    test_session_snapshot.gd :: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta
+  ok    test_session_snapshot.gd :: test_bootstrap_delta_overflow_fails_without_applying_entries
+  ok    test_session_snapshot.gd :: test_conflicting_early_chunk_fails_and_never_opens_readiness
+WARNING: [session] snapshot for peer 22 failed: The world snapshot transfer timed out before the client acknowledged it.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _abort_host_snapshot (res://scripts/net/session.gd:974)
+         [1] _expire_snapshot_sends (res://scripts/net/session.gd:1461)
+         [2] test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once (res://tests/test_session_snapshot.gd:185)
+         [3] _init (res://tests/run_tests.gd:120)
+  ok    test_session_snapshot.gd :: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once
+  ok    test_session_snapshot.gd :: test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one
+  ok    test_session_transport.gd :: test_client_character_is_not_saveable_until_snapshot_admission
+WARNING: Session.host_with_peer: capacity 5 is outside 1..4
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] host_with_peer (res://scripts/net/session.gd:295)
+         [1] test_disconnected_or_wrong_role_peers_are_refused_before_install (res://tests/test_session_transport.gd:40)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_session_transport.gd :: test_disconnected_or_wrong_role_peers_are_refused_before_install
+  ok    test_session_transport.gd :: test_enet_physical_timeout_routing_remains_transport_specific
+[session] client leave: handshake never applied a snapshot; portable character unchanged
+  ok    test_session_transport.gd :: test_failed_client_leave_does_not_call_the_character_store
+  ok    test_session_transport.gd :: test_transport_closed_fires_after_peer_and_kind_are_cleared
+  ok    test_session_transport.gd :: test_world_first_preparation_closes_authority_snapshot_and_save_gates
+  ok    test_snapshot_transfer.gd :: test_corrupt_complete_payload_never_becomes_ready
+  ok    test_snapshot_transfer.gd :: test_descriptor_limits_and_reset_release_partial_state
+  ok    test_snapshot_transfer.gd :: test_invalid_chunks_are_rejected_without_replacing_accepted_data
+  ok    test_snapshot_transfer.gd :: test_missing_chunk_and_identical_duplicate_never_complete_early
+  ok    test_snapshot_transfer.gd :: test_snapshot_larger_than_steam_packet_limit_round_trips_out_of_order
+  ok    test_snapshot_transfer.gd :: test_valid_variant_bytes_that_are_not_a_dictionary_are_rejected
+  ok    test_steam_invite_ui.gd :: test_cold_steam_invite_parser_accepts_both_launch_forms
+  ok    test_steam_invite_ui.gd :: test_deliberate_new_friend_character_clears_stale_identity_and_world
+  ok    test_steam_invite_ui.gd :: test_native_lobby_failure_invalidates_a_ready_join_before_character_selection
+  ok    test_steam_invite_ui.gd :: test_players_invite_button_preserves_specific_coordinator_error
+  ok    test_steam_invite_ui.gd :: test_selected_portable_character_replaces_run_state_without_loading_its_world
+  ok    test_steam_invite_ui.gd :: test_unresolved_native_request_cannot_advertise_actionable_retry
+  ok    test_steam_lobby.gd :: test_app_id_has_no_spacewars_default
+  ok    test_steam_lobby.gd :: test_build_mismatch_leaves_metadata_lobby_before_dial
+  ok    test_steam_lobby.gd :: test_cancelled_join_leaves_late_successful_callback
+  ok    test_steam_lobby.gd :: test_connect_lobby_launch_argument_parsing
+  ok    test_steam_lobby.gd :: test_invite_accepted_while_closed_is_read_from_the_steam_launch_line
+  ok    test_steam_lobby.gd :: test_invite_accepted_while_running_becomes_one_pending_invite
+  ok    test_steam_lobby.gd :: test_invite_overlay_unavailable_is_actionable
+  ok    test_steam_lobby.gd :: test_invite_while_hosting_stays_pending_with_a_reason
+  ok    test_steam_lobby.gd :: test_mismatched_success_callback_is_left_without_stealing_attempt
+  ok    test_steam_lobby.gd :: test_missing_build_metadata_is_refused_as_unknown_version
+  ok    test_steam_lobby.gd :: test_native_identity_must_be_a_member_of_the_claimed_lobby
+  ok    test_steam_lobby.gd :: test_native_unavailable_is_optional_and_actionable
+  ok    test_steam_lobby.gd :: test_original_host_departure_refuses_lobby_before_dial
+  ok    test_steam_lobby.gd :: test_protocol_mismatch_leaves_metadata_lobby
+  ok    test_steam_lobby.gd :: test_protocol_refusal_text_is_the_one_session_maps_to_incompatible_version
+  ok    test_steam_lobby.gd :: test_timed_out_host_request_stays_pending_until_callback_finishes
+  ok    test_steam_lobby.gd :: test_timed_out_join_stays_pending_until_late_callback_then_allows_retry
+  ok    test_stormwood_arch_ledger.gd :: test_first_claimant_relights_once_and_only_winner_pays_three
+  ok    test_stormwood_arch_ledger.gd :: test_half_lit_pair_has_no_twin_and_full_pair_links_both_directions
+  ok    test_stormwood_arch_ledger.gd :: test_rootgate_guards_c_and_d_until_released
+  ok    test_stormwood_arch_ledger.gd :: test_wrong_realm_id_and_insufficient_preflight_stock_refuse_without_cost
+  ok    test_stormwood_harvest_ledger.gd :: test_break_grants_the_catalogue_yield_not_forged_request_contents
+  ok    test_stormwood_harvest_ledger.gd :: test_calm_refuses_a_charged_site_even_if_request_claims_break
+  ok    test_stormwood_harvest_ledger.gd :: test_generic_harvest_cannot_bypass_a_reserved_stormwood_site_flag
+  ok    test_stormwood_harvest_ledger.gd :: test_hollow_crown_site_refuses_before_its_route_gate_opens
+  ok    test_stormwood_harvest_ledger.gd :: test_two_peers_contending_for_one_site_create_one_grant
+  ok    test_stormwood_rod_ledger.gd :: test_each_disabled_station_flag_applies_its_region_surge_duration_modifier
+  ok    test_stormwood_rod_ledger.gd :: test_every_exact_station_requires_its_real_guard_and_prerequisite_then_disables_once
+  ok    test_stormwood_rod_ledger.gd :: test_saved_world_state_prevents_a_station_from_being_disabled_again
+  ok    test_stormwood_rod_ledger.gd :: test_two_peers_contending_for_one_station_commit_one_disabled_flag
+  ok    test_world_ledger_races.gd :: test_a_client_replaying_the_hosts_deltas_ends_up_with_the_hosts_world
+  ok    test_world_ledger_races.gd :: test_a_dismantle_in_flight_takes_down_its_own_structure_not_the_renumbered_neighbour
+  ok    test_world_ledger_races.gd :: test_a_dismantle_pointed_at_another_realms_record_is_refused
+  ok    test_world_ledger_races.gd :: test_a_joiner_that_never_saw_a_chest_written_is_not_locked_out_of_it_forever
+  ok    test_world_ledger_races.gd :: test_a_placement_and_a_dismantle_go_through_the_ledger_into_the_world
+  ok    test_world_ledger_races.gd :: test_a_placement_verdict_names_the_ticket_it_answers
+  ok    test_world_ledger_races.gd :: test_a_player_flag_granted_to_two_peers_reaches_both_and_only_them
+  ok    test_world_ledger_races.gd :: test_a_replayed_drop_leaves_one_stack_on_the_ground
+  ok    test_world_ledger_races.gd :: test_a_replayed_transfer_moves_the_stack_exactly_once
+  ok    test_world_ledger_races.gd :: test_a_reward_pays_each_participant_once_and_refuses_a_replay
+  ok    test_world_ledger_races.gd :: test_a_storage_write_against_a_revision_two_behind_is_refused
+  ok    test_world_ledger_races.gd :: test_a_storage_write_that_quotes_the_current_revision_lands_in_the_record
+  ok    test_world_ledger_races.gd :: test_a_uid_is_never_reused_after_a_dismantle
+  ok    test_world_ledger_races.gd :: test_an_intent_with_no_realm_is_refused_rather_than_guessed_at
+  ok    test_world_ledger_races.gd :: test_an_unknown_intent_is_refused_with_a_reason
+  ok    test_world_ledger_races.gd :: test_apply_delta_ignores_an_op_it_does_not_understand_rather_than_dying
+  ok    test_world_ledger_races.gd :: test_doss_refuses_missing_materials_or_reward_room_without_any_ops
+  ok    test_world_ledger_races.gd :: test_setting_a_world_flag_that_is_already_set_is_a_noop_not_a_refusal
+  ok    test_world_ledger_races.gd :: test_the_same_flag_in_two_realms_is_two_different_finds
+  ok    test_world_ledger_races.gd :: test_the_winner_is_whoever_committed_first_not_whoever_is_the_host
+  ok    test_world_ledger_races.gd :: test_two_claims_on_one_pickup_leave_exactly_one_winner
+  ok    test_world_ledger_races.gd :: test_two_doss_claimants_charge_and_reward_only_the_first_commit
+  ok    test_world_ledger_races.gd :: test_two_gathers_of_one_harvest_node_yield_one_lot_of_wood
+  ok    test_world_ledger_races.gd :: test_two_identical_chest_writes_are_distinguishable_and_a_replay_is_refused
+  ok    test_world_ledger_races.gd :: test_two_peers_chopping_the_same_bush_duplicate_nothing
+  ok    test_world_ledger_races.gd :: test_two_withdrawals_of_one_stack_cannot_both_commit
+
+108 tests, 680 assertions, 0 failed
