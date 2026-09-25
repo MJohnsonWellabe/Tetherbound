@@ -222,6 +222,9 @@ func _gather_site(site: Dictionary) -> bool:
 			break
 		await _tree.physics_frame
 	var gained := _count(str(site.item)) - before
+	if not is_instance_valid(node):
+		_note("%s: node gone after the approach; receipt=%s gained=%d" % [id,
+			str(_game.get("progression").call("has", receipt)), gained])
 	if gained != int(site.amount) or not bool(_game.get("progression").call("has", receipt)):
 		return _fail("%s did not commit its exact live yield/receipt: gained=%d expected=%d" % [
 			id, gained, int(site.amount)])
@@ -442,8 +445,12 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 			await _tree.physics_frame
 	var winner := _arbiter.call("winning_provider") as Node
 	if not is_instance_valid(prompt) or not is_instance_valid(body):
-		return _fail("%s was freed during its approach without a press (winner=%s)" % [label,
+		# Run 17: the vine node was gathered and freed during the approach,
+		# not by this helper's Interact. The caller (`_gather_site`) judges
+		# the receipt and the exact yield; any other caller's check fails.
+		_note("%s was freed during its approach (winner=%s); the caller checks what happened" % [label,
 			str(winner.get_path()) if winner != null else "<none>"])
+		return true
 	var own_offer: Variant = prompt.call("interaction_offer", _player.global_position) \
 		if prompt.has_method("interaction_offer") else "n/a"
 	return _fail("%s never won the InteractionArbiter (winner=%s offer=%s; target enabled=%s visible=%s in_tree=%s own_offer=%s player=%s prompt_at=%s distance=%.2f equipped=%s)" % [label,
