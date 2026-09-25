@@ -341,3 +341,36 @@ Mara is on **First Shore**, not beside the Reedhaven action anchor; an eventual
 speech-triggered action must not bind her to a distant4.2m dock check. The
 physical exchange/departure and guided earned return remain unimplemented.
 This prerequisite fix does not claim a new departure scene or chapter acceptance.
+
+
+## Closed-gate tide races (flank repair)
+
+Branch `ralph/water-closed-gate-seals`, PR226, based on main `49ef712f`. F12,
+ACCEPTANCE §6.1 "no optional mount opens an uncleared gate", under WORLD §6.1.
+This repairs the physical flank reproduced above. It does not accept the whole
+route, co-op recovery or chapter T1.
+
+**Cause.** A closed dock only strengthened its own departure strips (sheltered
+18 m / direct 28 m wide) to 6 m/s. Open water on either side stayed calm, so a
+swimmer could walk round the 10 m barrier and swim to the first shoal. Every
+swim mount (6.3–10.0 m/s) could also outswim the 6 m/s strip itself. Fly had no
+Water restriction at all: a 16 m/s glide that sinks 2 m/s covers roughly
+900 m from the Cradle peak.
+
+**Change.** `scripts/world/water_gate_seals.gd` walks the dock graph from the
+realm arrival. Each island and rest shoal gets the ordered chain of mandatory
+dock facts before it: 10 islands and all 17 shoals are sealed, while First
+Shore and Lantern Cove stay open. A seal is active while its landform's own
+final fact is missing. In an earned world the facts are monotonic, and a
+fixture or legacy world holding only the final fact has already reached it.
+
+While active, the shared current field (`water_current_field.gd::with_closed_gates`,
+also used by `water_world.gd`) adds a radial outward race from the shoreline to
+16 m offshore: 12 m/s, with a 4 m smooth outer blend. The race outranks route
+currents, and where two races overlap the nearest shore owns the water.
+`water_gate_seal_view.gd` draws the same ring as streaming white water and,
+every 12 s, tells a turned-back swimmer which dock to clear. The same discs,
+as disc-fitted z-strips, go through Fly's existing `register_restriction`
+API. The tunables are in `water_swimming.json::docks.seal_race`. There is no
+new flag, save field, RPC, mount rule or invisible wall. The dock barrier and
+the closed strips are unchanged.
