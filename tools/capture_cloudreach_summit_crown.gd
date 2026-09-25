@@ -25,7 +25,12 @@ extends SceneTree
 ##  02 the arena deck's southern throat seen from the plateau.
 ##  03 a perimeter bay and the south-west watch tower, trainer beside them.
 ##  04 the overlook loop's east leg near (115, 5358), looking along the road.
-##  05+ a stick walk (>= 30 s of motion): up the summit road onto the crown,
+##  05 the east leg's fill further out, x 230-300: from the road, the crown
+##     meeting the raised road with a bank (review MEDIUM-1: fins before).
+##  06 the upper road's cutting under the stronghold's south-east quarter,
+##     from the road looking up to the pad: the drum wall spanning the road
+##     on masonry footings (review MEDIUM-2: pieces floated before).
+##  07+ a stick walk (>= 30 s of motion): up the summit road onto the crown,
 ##     across the plateau to the arena throat, over the deck and into the
 ##     deck edge at a perimeter bay, where it must be blocked. A frame every
 ##     2.5 s; each prints the trainer's position and is_on_floor.
@@ -121,6 +126,16 @@ func _run() -> void:
 	await _stand_and_look(Vector3(112.0, 1160.8, 5356.0), Vector3(170.0, 1167.0, 5380.0), -6.0, 0.0)
 	await _shoot("04_overlook_east_leg")
 
+	# 05: the same leg ~130 m on, where the old 16 m fill cutoff left fins
+	# beside a hollow road; the view is turned south of the road to the bank.
+	await _stand_and_look(Vector3(230.0, 1175.2, 5402.7), Vector3(300.0, 1183.7, 5431.0), -14.0, 28.0)
+	await _shoot("05_east_leg_fill_bank")
+
+	# 06: on the upper summit road 35 m below its pad join, looking up the
+	# cutting into the stronghold's south-east quarter.
+	await _stand_and_look(Vector3(127.0, 1150.8, 5316.3), Vector3(105.1, 1160.0, 5343.6), -2.0, 10.0)
+	await _shoot("06_stronghold_cutting")
+
 	await _walk_sequence()
 	_release()
 	LANE.contact_sheet(_frames, _out + "/_sheet_summit_crown.png", 3)
@@ -192,7 +207,7 @@ func _walk_shot(label: String) -> void:
 	var at := _player.global_position
 	print("CAPTURE walk frame %02d t=%.1fs pos=(%.2f, %.2f, %.2f) on_floor=%s arena_r=%.2f" % [
 		_walk_shots, float(_walk_frames) / 60.0, at.x, at.y, at.z, _player.is_on_floor(), _radius()])
-	await _shoot("%02d_%s_%02d" % [4 + _walk_shots, label, _walk_shots])
+	await _shoot("%02d_%s_%02d" % [6 + _walk_shots, label, _walk_shots])
 
 
 func _radius() -> float:

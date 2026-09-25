@@ -72,8 +72,24 @@ extends SceneTree
 ##      static surface under the ribbon's height -- the carved crown, a pad's
 ##      landing crown, a shoulder -- must be within the 0.35 m step of the
 ##      ribbon or too steep to stand on.
+##  (h) Nothing authored at the stronghold floats over the carve (review
+##      MEDIUM-2): every visible stronghold piece standing at crown level within
+##      25 m of a road the carve cuts for has a static collider within 0.5 m
+##      under every point of its base outline -- except where it spans a road
+##      in the road's own clearance with at least 2.3 m of headroom (the drum
+##      wall as the cutting's portal lintel), or is sunk in ground standing
+##      over its base (a fill bank, a ledge crown). Solo only: the co-op build has no
+##      stronghold pieces.
+##  (i) The fill meets the roads with banks, not fins (review MEDIUM-1): no
+##      `CarvedCrown` triangle edge up to 6 m long climbs faster than 1.25 x
+##      the bank slope (+0.4 m), rim strips aside; and wherever a road line
+##      runs over the drawn crown its centreline sits 0.45 m or less over it
+##      -- nothing hollow under a road.
 ##  (g) The co-op (sliced shell) build, which skips the route shoulders, is
-##      built headless after the solo world is freed and gets (d), (e) and (f).
+##      built headless after the solo world is freed. Its stripped trainer is
+##      re-enabled and it gets (a), (b), (c), (d), (e), (f) and (i), plus a
+##      stick walk up each carved road into the summit pad (review HIGH-1: a
+##      hidden 34 m placeholder slab roofed and walled both).
 ##
 ## Fixtures, disclosed: the summit route's story flags are set directly
 ## (as smoke_cloudreach_summit_road does), and (c) makes one position write.
@@ -165,6 +181,8 @@ func _run() -> void:
 	_check_arena_ring("(d)")
 	_check_masonry("(e)")
 	_check_road_boxes("(f)")
+	_check_stronghold_seated("(h)")
+	_check_crown_smooth("(i)")
 	await _coop_leg()
 	_finish()
 
@@ -187,20 +205,32 @@ func _coop_leg() -> void:
 		if bool(world.call("shell_build_complete")):
 			break
 		await process_frame
+	leg = "(g) "
 	if not bool(world.call("shell_build_complete")):
-		_fail("(g) co-op shell build did not complete")
+		_fail("co-op shell build did not complete")
 		return
 	print("SUMMIT CROWN (g): co-op shell built in %d ms" % (Time.get_ticks_msec() - started))
 	for _frame in 6:
 		await physics_frame
 	space = world.get_world_3d().direct_space_state
 	if not _load_crown():
-		failures[failures.size() - 1] = "(g) " + failures[failures.size() - 1]
 		return
 	_print_build_timing()
-	_check_arena_ring("(g)")
-	_check_masonry("(g)")
-	_check_road_boxes("(g)")
+	# The shell strips its local trainer (`_shell_strip`); (c) and the walks
+	# need one, so it is handed back its ordinary process mode and layers.
+	if player != null:
+		player.process_mode = Node.PROCESS_MODE_INHERIT
+		player.collision_layer = 1
+		player.collision_mask = 1
+	_check_grid()
+	_check_centroids()
+	_check_roads()
+	await _check_stand_landing()
+	_check_arena_ring("(d)")
+	_check_masonry("(e)")
+	_check_road_boxes("(f)")
+	_check_crown_smooth("(i)")
+	await _check_pad_walks()
 
 
 func _print_build_timing() -> void:
@@ -234,7 +264,7 @@ func _is_person(collider: Object) -> bool:
 func _finish() -> void:
 	for line: String in failures:
 		printerr("SUMMIT CROWN FAIL: " + line)
-	for check: String in ["(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)"]:
+	for check: String in ["(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(h)", "(i)", "(g)"]:
 		var count := 0
 		for line: String in failures:
 			if line.begins_with(check):
@@ -246,7 +276,7 @@ func _finish() -> void:
 
 
 func _fail(line: String) -> void:
-	failures.append(line)
+	failures.append(leg + line)
 
 
 ## ---- the carved crown's own render triangles --------------------------------
@@ -824,3 +854,268 @@ func _check_road_boxes(label: String) -> void:
 					worst = 0.0
 	print("SUMMIT CROWN %s road boxes: %d samples beside ribbons over the crown, %d wall runs" % [
 		label, samples, walls])
+
+
+## ---- (h) the stronghold stands on the carved ground ----------------------
+
+## The summit's crown cut: the world's own record of it, or (a build from
+## before that record existed) the one its crown surface carries.
+func _crown_cut() -> Dictionary:
+	var kept: Variant = world.get("_summit_crown_cut")
+	if kept is Dictionary and not (kept as Dictionary).is_empty():
+		return kept
+	for raw: Variant in world.get("_surfaces"):
+		if raw is Dictionary and (raw as Dictionary).has("crown_cut"):
+			return (raw as Dictionary)["crown_cut"]
+	return {}
+
+
+func _carving_lines() -> Array:
+	var out: Array = []
+	for line: Dictionary in _crown_cut().get("lines", []):
+		# An older cut kept only the lines that carve.
+		if bool(line.get("carves", true)):
+			out.append(line)
+	return out
+
+
+## Nearest carving road line: {distance, road_y}.
+func _nearest_carved_road(at: Vector3, lines: Array) -> Dictionary:
+	var best := {"distance": INF, "road_y": NAN}
+	for line: Dictionary in lines:
+		var a: Vector3 = line["a"]
+		var b: Vector3 = line["b"]
+		var flat := Vector2(b.x - a.x, b.z - a.z)
+		var len2 := flat.length_squared()
+		var t := 0.0
+		if len2 > 0.0001:
+			t = clampf(((at.x - a.x) * flat.x + (at.z - a.z) * flat.y) / len2, 0.0, 1.0)
+		var d := Vector2(at.x - a.x - flat.x * t, at.z - a.z - flat.y * t).length()
+		if d < float(best["distance"]):
+			best = {"distance": d, "road_y": lerpf(a.y, b.y, t)}
+	return best
+
+
+## Ground (the carved crown or a landmark ledge's crown) standing up to 3 m
+## over a base point: the piece's foot is sunk in it, not floating.
+func _buried(w: Vector3, own: Array[RID]) -> bool:
+	var exclude := own.duplicate()
+	for _attempt in 8:
+		var query := PhysicsRayQueryParameters3D.create(w + Vector3.UP * 3.0, w + Vector3.DOWN * 0.05)
+		query.exclude = exclude
+		var hit := space.intersect_ray(query)
+		if hit.is_empty():
+			return false
+		var path := str((hit["collider"] as Node).get_path())
+		if hit["collider"] == crown_body or path.contains("Ledge") or path.contains("CliffMass"):
+			return true
+		exclude.append(hit["rid"])
+	return false
+
+
+func _check_stronghold_seated(label: String) -> void:
+	var stronghold := world.get_node_or_null(^"Landmarks/SummitEyrieStronghold") as Node3D
+	if stronghold == null:
+		print("SUMMIT CROWN %s INFO: no stronghold landmark in this build" % label)
+		return
+	var lines := _carving_lines()
+	var groups: Array[Node3D] = []
+	for child: Node in stronghold.get_children():
+		if not child is Node3D:
+			continue
+		if str(child.name).begins_with("Aviary") and child.get_child_count() > 0 \
+				and not child is MeshInstance3D:
+			for grandchild: Node in child.get_children():
+				if grandchild is Node3D:
+					groups.append(grandchild as Node3D)
+		else:
+			groups.append(child as Node3D)
+	var checked := 0
+	for group in groups:
+		var meshes: Array[MeshInstance3D] = []
+		if group is MeshInstance3D:
+			meshes.append(group as MeshInstance3D)
+		for node: Node in group.find_children("*", "MeshInstance3D", true, false):
+			meshes.append(node as MeshInstance3D)
+		var bottom := INF
+		var box := AABB()
+		var first := true
+		var visible_meshes: Array[MeshInstance3D] = []
+		for mesh in meshes:
+			if mesh.mesh == null or not mesh.is_visible_in_tree():
+				continue
+			visible_meshes.append(mesh)
+			var world_box := mesh.global_transform * mesh.get_aabb()
+			box = world_box if first else box.merge(world_box)
+			first = false
+		if visible_meshes.is_empty():
+			continue
+		bottom = box.position.y
+		if bottom < CROWN_Y - 0.7 or bottom > CROWN_Y + 0.9:
+			continue # not a piece standing at crown level (a footing, a banner)
+		var centre := box.get_center()
+		var near := _nearest_carved_road(centre, lines)
+		if float(near["distance"]) - Vector2(box.size.x, box.size.z).length() * 0.5 > 25.0:
+			continue
+		checked += 1
+		var own: Array[RID] = _player_rids()
+		for body: Node in group.find_children("*", "StaticBody3D", true, false):
+			own.append((body as StaticBody3D).get_rid())
+		# The base outline: every drawn vertex within 0.15 m of the bottom, one
+		# per metre cell.
+		var samples: Dictionary = {}
+		for mesh in visible_meshes:
+			var xform := mesh.global_transform
+			for vertex: Vector3 in mesh.mesh.get_faces():
+				var w := xform * vertex
+				if w.y > bottom + 0.15:
+					continue
+				var key := Vector2i(floori(w.x), floori(w.z))
+				if not samples.has(key) or (samples[key] as Vector3).y > w.y:
+					samples[key] = w
+		var floating := 0
+		var worst := 0.0
+		var worst_at := Vector3.ZERO
+		for raw: Variant in samples.values():
+			var w: Vector3 = raw
+			var road := _nearest_carved_road(w, lines)
+			# Spans the road inside its clearance (4.4 m + up to a 2 m-deep
+			# lintel's overhang of its footing), with a trainer's headroom.
+			if float(road["distance"]) < 6.4 and w.y >= float(road["road_y"]) + 2.3:
+				continue
+			var exclude := own.duplicate()
+			var hit: Dictionary = {}
+			for _attempt in 8:
+				var query := PhysicsRayQueryParameters3D.create(w + Vector3.UP * 0.25, w + Vector3.DOWN * 30.0)
+				query.exclude = exclude
+				hit = space.intersect_ray(query)
+				if hit.is_empty() or (hit["collider"] is StaticBody3D and not _is_person(hit["collider"])):
+					break
+				exclude.append(hit["rid"])
+			# Measured from the piece's base (its lowest drawn point), so a
+			# wheel hub a hand's width over the bottom is not a float.
+			var gap := 30.0 if hit.is_empty() else bottom - (hit["position"] as Vector3).y
+			if gap > 0.5 and _buried(w, own):
+				continue # the ground stands over its base (a fill, a ledge crown)
+			if gap > 0.5:
+				floating += 1
+				if gap > worst:
+					worst = gap
+					worst_at = w
+		if floating > 0:
+			_fail("%s stronghold piece %s floats: %d of %d base points have no ground within 0.5 m (worst %.2f m at %s)" % [
+				label, str(stronghold.get_path_to(group)), floating, samples.size(), worst, worst_at])
+	print("SUMMIT CROWN %s stronghold: %d pieces at crown level within 25 m of a carved road checked" % [label, checked])
+
+
+## ---- (i) banks, not fins; nothing hollow under a road ---------------------
+
+func _check_crown_smooth(label: String) -> void:
+	var slope := float(_crown_cut().get("bank_slope", 2.5)) * 1.25
+	var steps := 0
+	var edges := 0
+	var reported := 0
+	for t in triangles.size() / 3:
+		var tri := [triangles[t * 3], triangles[t * 3 + 1], triangles[t * 3 + 2]]
+		var vertical := false
+		for e in 3:
+			var p: Vector3 = tri[e]
+			var q: Vector3 = tri[(e + 1) % 3]
+			if Vector2(q.x - p.x, q.z - p.z).length() < 0.05:
+				vertical = true
+		if vertical:
+			continue # a rim strip closing a filled rim to the side wall
+		for e in 3:
+			var p: Vector3 = tri[e]
+			var q: Vector3 = tri[(e + 1) % 3]
+			var run := Vector2(q.x - p.x, q.z - p.z).length()
+			if run > 6.0:
+				continue
+			edges += 1
+			if absf(q.y - p.y) > slope * run + 0.4:
+				steps += 1
+				if reported < 6:
+					reported += 1
+					_fail("%s crown steps %.2f m over %.2f m between %s and %s (limit %.2f m)" % [
+						label, absf(q.y - p.y), run, p, q, slope * run + 0.4])
+	var hollow := 0
+	var samples := 0
+	for raw: Variant in world.get("_all_route_lines"):
+		var line: Dictionary = raw
+		if str(line["route_id"]).begins_with("crown:"):
+			continue
+		var a: Vector3 = line["a"]
+		var b: Vector3 = line["b"]
+		var n := maxi(1, ceili(Vector2(b.x - a.x, b.z - a.z).length() / 2.0))
+		for i in n + 1:
+			var at := a.lerp(b, float(i) / float(n))
+			var drawn := _drawn_height(at.x, at.z)
+			if is_nan(drawn):
+				continue
+			samples += 1
+			if at.y - drawn > 0.45:
+				hollow += 1
+				if hollow <= 6:
+					_fail("%s %s runs %.2f m over the drawn crown at %s: hollow under the road" % [
+						label, str(line["route_id"]), at.y - drawn, at])
+	print("SUMMIT CROWN %s crown: %d short edges, %d steeper than %.2f/m; %d road centreline points over the crown, %d hollow" % [
+		label, edges, steps, slope, samples, hollow])
+
+
+## ---- (g) walks into the co-op pad -------------------------------------------
+
+var _input_values: Dictionary = {}
+
+
+func _check_pad_walks() -> void:
+	var rig := world.get_node_or_null(^"CameraRig")
+	if player == null or rig == null or not rig.has_method("planar_basis"):
+		_fail("no trainer/camera rig to walk the co-op pad approaches")
+		return
+	# 30 m down each carved road from its pad join, then stick input to the
+	# join: the upper summit road and the overlook loop's west leg.
+	for walk: Array in [["upper_summit_road", Vector3(294.9, 1080.0, 5106.4), Vector3(105.1, 1160.0, 5343.6)],
+			["summit_overlook_loop west leg", Vector3(-513.7, 1080.0, 5300.5), Vector3(93.7, 1160.0, 5349.5)]]:
+		var from: Vector3 = walk[1]
+		var join: Vector3 = walk[2]
+		var start := join + (from - join).normalized() * 30.0
+		start.y = join.y + (from.y - join.y) * 30.0 / from.distance_to(join) + 0.3
+		player.global_position = start
+		player.velocity = Vector3.ZERO
+		var reached := false
+		var frames := 0
+		for frame in 1200:
+			var offset := join - player.global_position
+			offset.y = 0.0
+			if offset.length() < 1.5:
+				reached = true
+				break
+			rig.set("yaw", atan2(-offset.x, -offset.z))
+			var local := (rig.call("planar_basis") as Basis).inverse() * offset.normalized()
+			_input("move_right", maxf(local.x, 0.0))
+			_input("move_left", maxf(-local.x, 0.0))
+			_input("move_back", maxf(local.z, 0.0))
+			_input("move_forward", maxf(-local.z, 0.0))
+			await physics_frame
+			frames = frame + 1
+		for action: String in ["move_left", "move_right", "move_forward", "move_back"]:
+			_input(action, 0.0)
+		await physics_frame
+		var at := player.global_position
+		if reached and at.y > join.y - 0.6:
+			print("SUMMIT CROWN (g) walk: %s reached the pad join %s from %s in %d frames, at %s on_floor=%s" % [
+				walk[0], join, start, frames, at, player.is_on_floor()])
+		else:
+			_fail("walk up %s from %s did not reach the pad join %s: stopped at %s on_floor=%s" % [
+				walk[0], start, join, at, player.is_on_floor()])
+
+
+func _input(action: String, strength: float) -> void:
+	if is_equal_approx(float(_input_values.get(action, -1.0)), strength):
+		return
+	_input_values[action] = strength
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = strength > 0.0
+	event.strength = strength
+	Input.parse_input_event(event)

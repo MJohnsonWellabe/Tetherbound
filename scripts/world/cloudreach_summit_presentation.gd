@@ -91,10 +91,12 @@ func build(world: Node3D) -> void:
 		model.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*factor
 		mount.add_child(model)
 		_relays[str(relay.id)] = mount
-		# The crown relay is deliberately centred over the arena's only authored
-		# approach. Keep its visible machinery intact, but leave that housing
-		# non-colliding so the same narrow centreline remains a real entrance and
-		# post-finale exit. Side housings retain their honest physical footprint.
+		# The crown relay is deliberately centred on the arena's approach axis,
+		# over the 12 m SummitArenaApproach deck. Its housing is left
+		# non-colliding (its machinery can be walked through), so the approach
+		# deck's centreline stays clear for the entrance and post-finale exit;
+		# the entrance itself is the ~30 m southern gap in the perimeter bays.
+		# Side housings retain their honest physical footprint.
 		if str(relay.id) != "crown":
 			var housing:=StaticBody3D.new()
 			housing.name="RelayHousingCollision"
@@ -503,7 +505,9 @@ func _build_occupied_perimeter(world: Node3D,materials: Dictionary) -> void:
 	for index in 24:
 		var angle:=TAU*index/24.0
 		var outward:=Vector3(sin(angle),0,cos(angle))
-		# Clear southern entry and northern recovery/afterward path, each 22 m.
+		# Skip the three bays either side of due south and due north: the
+		# southern entry (the arena's one way in off the plateau) and the
+		# northern recovery/afterward side, each ~30 m between bay ends.
 		if absf(outward.x)<0.30:
 			continue
 		var segment:=Node3D.new()
