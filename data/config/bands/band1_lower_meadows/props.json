@@ -8,8 +8,8 @@
         {
           "model": "Anvil_Log",
           "at": [
-            -5.0,
-            -3.0
+            12.5,
+            -35.5
           ],
           "yaw_deg": 30.0,
           "scale": 1.0,
@@ -18,8 +18,8 @@
         {
           "model": "Workbench",
           "at": [
-            -6.0,
-            -2.0
+            11.5,
+            -34.5
           ],
           "yaw_deg": 110.0,
           "scale": 1.0,
@@ -28,8 +28,8 @@
         {
           "model": "Whetstone",
           "at": [
-            -4.2,
-            -1.8
+            13.3,
+            -34.3
           ],
           "yaw_deg": 0.0,
           "scale": 1.0,
@@ -38,8 +38,8 @@
         {
           "model": "Crate_Wooden",
           "at": [
-            -6.0,
-            -3.6
+            11.5,
+            -36.1
           ],
           "yaw_deg": 200.0,
           "scale": 1.0,
@@ -48,14 +48,15 @@
         {
           "model": "Pickaxe_Bronze",
           "at": [
-            -3.8,
-            -3.6
+            13.7,
+            -36.1
           ],
           "yaw_deg": -40.0,
           "scale": 1.0,
           "_why": "a tool left leaning, mid-repair -- pulled in 0.3m, same reason"
         }
-      ]
+      ],
+      "_why_f01": "F01-b (PENDING GRANT). Moved by (+17.5,-32.5) from beside the old workshop site (-5,-3) -- which the OWNER-0912 inn replan left inside the inn's own apron -- into The Stoneyard (terrain_playground.json paths.village_topology.subareas the_stoneyard, centre [16.5,-33] r7), so the stone-working area reads as a working yard: anvil, workbench, whetstone, pickaxe and crate between stone nodes 1037 [11,-32] and 4 [22,-34], 4.2m+ off the Practice Meadow road."
     },
     {
       "order": 1,
@@ -329,6 +330,7 @@
         }
       ],
       "_why_vp5": "VP5 (visual-parity village lane), 2026-09-02. Two blind judges (ralph/reports/visual-parity/VP0-baseline/JUDGE-village-pond.md, ralph/reports/audit/E-locations/JUDGE-AUDIT-E-locations-2026-08-31.md) read this ground as 'a plain open meadow ... no arena, ring, stands, or banner'. The geography fixes what a ring can be: the corridor spine (terrain_playground.json trail.bands[0], (27.5,-16)->(14,20)) runs straight through the field 4m west of the board, the three tournament trainers stand at (20,12) (band1 trainers.json) with an 11m combat arena (combat_arena.gd) around the fight, and the village fence runs 3.3m behind the board. So the ring is the road's east verge, bounded by the fence: the two spectator benches face the ring from outside the trainers' axis (E1's east bench stood 0.4m from Halda, on top of her); and a small staging pile (crate, bucket, bag) by the board for the team waiting its turn, with a barrel by the east bench. Everything solid sits >= 7m from the arena centre (20,10) except the board-side staging pile, 4.5m off its axis. Positions checked against the built scene (board node (20,15) yaw -155, Halda (23.5,11.5), Bryn (13,9), the berry node (28,6), the trail road's actual line, and the NEW boundary edge (30,11)->(15.98,22.59), which is 2.5-4m from the pile and the west bench).",
+      "_why_vp5_f01": "F01-a/b correction to _why_vp5 above: the corridor spine no longer starts at (27.5,-16) and crosses this field -- it now continues South Street from (11.5,2) to TrailGate (14,20), 6m+ west of the board, so the ring's road-side verge is South Street's east verge. tests/test_tournament_ground_presentation.gd reads that clearance from the live road data.",
       "_why_vp5_removed_0903": "TOURNAMENT-FLOW-0903, owner playtest 2026-09-03 item 3: 'I don't like the flags around the tournament area.' VP5 above added three flat cloth-quad `Banner` props (quaternius_castle's Banner.obj -- the same bolt-of-cloth mesh band3_the_river_lock/props.json and tether_relay.json already retint oxblood for Team Tether's own checkpoints, retinted village green here instead) to answer two blind judges' 'no arena, ring, stands, or banner'. It is the only cloth/pennant mesh installed in the project (checked: no other pennant/flag geometry exists under assets/), so there is no different asset to swap it for without a new Meshy generation, which CLAUDE.md reserves for Team Tether hero objects and forbids for the Meadows outright. Removed rather than reworked: `Banner_gate_west`, `Banner_gate_east` and `Banner_west_ring` are gone, and the ring's event read now comes from the benches, the staging pile, the board and the ceremony itself (tournament.gd's begin-the-round/win/next-round beats, same lane) rather than from set dressing the owner explicitly said he does not like."
     },
     {

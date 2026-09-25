@@ -10,8 +10,8 @@
         {
           "model": "Anvil_Log",
           "at": [
-            -5.0,
-            -3.0
+            12.5,
+            -35.5
           ],
           "yaw_deg": 30.0,
           "scale": 1.0,
@@ -20,8 +20,8 @@
         {
           "model": "Workbench",
           "at": [
-            -6.0,
-            -2.0
+            11.5,
+            -34.5
           ],
           "yaw_deg": 110.0,
           "scale": 1.0,
@@ -30,8 +30,8 @@
         {
           "model": "Whetstone",
           "at": [
-            -4.2,
-            -1.8
+            13.3,
+            -34.3
           ],
           "yaw_deg": 0.0,
           "scale": 1.0,
@@ -40,8 +40,8 @@
         {
           "model": "Crate_Wooden",
           "at": [
-            -6.0,
-            -3.6
+            11.5,
+            -36.1
           ],
           "yaw_deg": 200.0,
           "scale": 1.0,
@@ -50,14 +50,15 @@
         {
           "model": "Pickaxe_Bronze",
           "at": [
-            -3.8,
-            -3.6
+            13.7,
+            -36.1
           ],
           "yaw_deg": -40.0,
           "scale": 1.0,
           "_why": "a tool left leaning, mid-repair -- pulled in 0.3m, same reason"
         }
-      ]
+      ],
+      "_why_f01": "F01-b (PENDING GRANT). Moved by (+17.5,-32.5) from beside the old workshop site (-5,-3) -- which the OWNER-0912 inn replan left inside the inn's own apron -- into The Stoneyard (terrain_playground.json paths.village_topology.subareas the_stoneyard, centre [16.5,-33] r7), so the stone-working area reads as a working yard: anvil, workbench, whetstone, pickaxe and crate between stone nodes 1037 [11,-32] and 4 [22,-34], 4.2m+ off the Practice Meadow road."
     },
     {
       "name": "farmhouse_yard",

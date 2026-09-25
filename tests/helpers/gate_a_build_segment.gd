@@ -28,15 +28,20 @@ const MOVE_FRAME_LIMIT := 360
 const WALK_FRAME_FLOOR := 3600
 
 ## The Practice Meadow's authored clearing, centred at (30,-40). It has a
-## 16m vegetation exclusion and the ordinary village route ends here via
-## (10,-10)->(18,-24)->(30,-40). This segment still walks to it; the smoke
+## 16m vegetation exclusion. The village route used to end here via
+## (10,-10)->(18,-24)->(30,-40); since F01-a the authored Practice Meadow road
+## runs west from the square to the inn crossroads, up Stoneyard Lane and
+## through The Stoneyard (terrain_playground.json paths.routes), so the
+## waypoints below are an open-ground walk across the green, no longer the
+## painted road. Behaviour is unchanged. This segment still walks to it; the smoke
 ## wrapper may stage a player only for mechanical placement regression.
 ## Canonical evidence must arrive through ordinary traversal with naturally
 ## earned stock.
 const BUILD_PATCH_XZ := Vector2(30.0, -40.0)
 const BUILD_PATCH_APPROACH_EPSILON := 0.55
 ## The reusable paid segment begins only after ordinary exploration has reached
-## the Village Square. From there it follows the authored Practice Meadow road,
+## the Village Square. From there it follows the documented walk toward the
+## Practice Meadow (the pre-F01 road's line, now open ground -- see above),
 ## never a fixture-only diagonal across settlement collision.
 const BUILD_ROUTE_XZ: Array[Vector2] = [
 	# BESIDE the well, not on top of it.
@@ -53,6 +58,9 @@ const BUILD_ROUTE_XZ: Array[Vector2] = [
 	# head. Three metres south of it is on that apron, clear of every
 	# structure, and on the way to the Practice Meadow road bend.
 	Vector2(10.0, -13.0), # Village Square, on the apron south of the well
+	# F01-a: (18,-24) was the old Practice Meadow road's bend. That road now
+	# goes via Stoneyard Lane; this waypoint is kept as an open-ground walk
+	# point (unchanged behaviour), not a point on the authored road.
 	Vector2(18.0, -24.0), # Practice Meadow road bend
 	BUILD_PATCH_XZ, # Practice Meadow clearing
 ]

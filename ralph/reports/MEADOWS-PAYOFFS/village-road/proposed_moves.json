@@ -1,0 +1,4 @@
+{
+  "_comment": "No moves are pending. The work_area -> Stoneyard move (ee6cf86ca) was kept and is drawn as real data. The berry-node move into the Berry Field (5645fb3f9) was reverted by the lead in 3d1cb7cd9 because gate-F segments S03/S03C/S03p3/S03Cp3/diag_night_preconditions_0919 walk to node 10 at [20,-16]; nothing is drawn for it.",
+  "moves": []
+}
