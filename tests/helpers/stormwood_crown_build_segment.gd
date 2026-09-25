@@ -88,6 +88,12 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	if not _manager.exited.is_connected(_on_combat_exited):
 		_manager.exited.connect(_on_combat_exited)
 
+	# A player who has fought the whole road to Ondra rests before setting out
+	# for a named alpha: Still Grove Shelter is the camp beside Ondra, on the
+	# route, and its creature bed plus a night's rest heal the party. F11
+	# witness run 7 wiped at the Alpha with no rest since Ashfoot.
+	if not await _rest_party_at_camp("still_grove_shelter"):
+		return result()
 	var before := _inventory_snapshot()
 	# Follow the production conductor road to the west-loop resources. This
 	# passes the Capacitor Alpha's authored road point; any proximity fight is
@@ -98,6 +104,17 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	]:
 		if not await _walk_xz(step.at, str(step.label), 2.0):
 			return result()
+	# The road to the grove has its own wild fights. If they left a creature
+	# fainted, walk back to the same camp and rest again, as a player would.
+	if _party_worn(0.75):
+		for back: Vector2 in [Vector2(-630.0, 2930.0), Vector2(-160.0, 2700.0)]:
+			if not await _walk_xz(back, "conductor road back to Still Grove Shelter", 2.0):
+				return result()
+		if not await _rest_party_at_camp("still_grove_shelter"):
+			return result()
+		for step: Vector2 in [Vector2(-630.0, 2930.0), Vector2(-1080.0, 3020.0)]:
+			if not await _walk_xz(step, "conductor road to the Capacitor Grove again", 2.0):
+				return result()
 	if not await _clear_capacitor_alpha():
 		return result()
 	for index in 2:
@@ -599,6 +616,101 @@ func _clear_capacitor_alpha() -> bool:
 		str(body.get_path()) if is_instance_valid(body) else "<none>",
 		_player.global_position.distance_to(body.global_position) if is_instance_valid(body) else INF,
 		_last_combat_outcome])
+
+
+## True when a party member is fainted or the party holds less than `share`
+## of its total hit points.
+func _party_worn(share: float) -> bool:
+	var hp := 0.0
+	var most := 0.0
+	for member: RefCounted in (_game.get("party").call("members") as Array):
+		if bool(member.get("fainted")):
+			return true
+		hp += float(member.get("hp"))
+		most += float(member.get("max_hp"))
+	return most > 0.0 and hp < most * share
+
+
+## Ordinary camp recovery: for each worn creature, one night. Interact with the
+## camp's creature bed, choose that creature's row with the pad (Down, A),
+## close the panel (B), then Interact with the camp's own "Rest at" prompt.
+## The night completes the bedded creature's rest (full heal, revives a KO).
+func _rest_party_at_camp(camp_id: String) -> bool:
+	var camp := _world.get_node_or_null(NodePath("StormwoodCamps/" + camp_id)) as Node3D
+	var bed := camp.get_node_or_null(^"CampCreatureBed") as Node3D if camp != null else null
+	var bed_prompt := bed.get_node_or_null(^"Interactable") as Node3D if bed != null else null
+	var rest_prompt := camp.get_node_or_null(^"Interactable") as Node3D if camp != null else null
+	if bed_prompt == null or rest_prompt == null:
+		return _fail("camp %s lacks its creature bed or rest prompt" % camp_id)
+	var party: RefCounted = _game.get("party") as RefCounted
+	var nights := 0
+	for _night in 6:
+		var index := -1
+		var rows: Array[String] = []
+		for i in int(party.call("size")):
+			var member: RefCounted = party.call("at", i)
+			rows.append("%s %d/%d%s" % [str(member.get("species_id")), int(member.get("hp")),
+				int(member.get("max_hp")), " KO" if bool(member.get("fainted")) else ""])
+			if index < 0 and (bool(member.get("fainted")) or float(member.get("hp")) < float(member.get("max_hp")) - 0.5):
+				index = i
+		if index < 0:
+			break
+		_note("CAMP %s night %d: %s; bedding row %d" % [camp_id, nights + 1, ", ".join(rows), index])
+		if not await _activate_exact(bed, bed_prompt, Vector2(bed_prompt.global_position.x,
+				bed_prompt.global_position.z - 1.1), camp_id + " creature bed"):
+			return false
+		var panel: Node = null
+		for _frame in 60:
+			panel = bed.get("_panel") as Node
+			if panel != null and bool(panel.call("is_open")):
+				break
+			await _tree.process_frame
+		if panel == null or not bool(panel.call("is_open")):
+			return _fail("the creature bed did not open its rest panel")
+		await _ui_tap(&"ui_up")
+		await _ui_tap(&"ui_down")
+		var buttons: Array = panel.get("_rows")
+		for _press in 6:
+			var focus := _tree.root.gui_get_focus_owner()
+			if buttons.find(focus) == index:
+				break
+			await _ui_tap(&"ui_down" if buttons.find(focus) < index else &"ui_up")
+			buttons = panel.get("_rows")
+		if buttons.find(_tree.root.gui_get_focus_owner()) != index:
+			return _fail("pad focus never reached bed row %d" % index)
+		await _ui_tap(&"ui_accept")
+		var creature: RefCounted = party.call("at", index)
+		if not bool(creature.get("resting")):
+			return _fail("choosing bed row %d did not bed %s" % [index, str(creature.get("species_id"))])
+		await _ui_tap(&"menu_cancel")
+		for _frame in 30:
+			if not bool(panel.call("is_open")) and not _tree.paused:
+				break
+			await _tree.process_frame
+		if not await _activate_exact(camp, rest_prompt, Vector2(rest_prompt.global_position.x,
+				rest_prompt.global_position.z - 1.1), camp_id + " rest"):
+			return false
+		for _frame in 600:
+			if not bool(creature.get("resting")):
+				break
+			await _tree.physics_frame
+		if bool(creature.get("resting")) or bool(creature.get("fainted")) \
+				or float(creature.get("hp")) < float(creature.get("max_hp")) - 0.5:
+			return _fail("a night at %s did not complete %s's rest" % [camp_id, str(creature.get("species_id"))])
+		nights += 1
+	if _party_worn(0.999):
+		return _fail("six nights at %s left the party worn" % camp_id)
+	_note("RESTED the whole party at %s over %d night(s) with ordinary bed and rest prompts" % [camp_id, nights])
+	return await _ensure_usable_ally("after resting at " + camp_id)
+
+
+func _ui_tap(action: StringName) -> void:
+	_set_action(action, true)
+	for _frame in 3:
+		await _tree.process_frame
+	_set_action(action, false)
+	for _frame in 5:
+		await _tree.process_frame
 
 
 func _named_engage_ready(body: Node3D) -> bool:
