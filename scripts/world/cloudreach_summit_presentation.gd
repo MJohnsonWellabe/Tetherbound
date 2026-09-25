@@ -91,10 +91,12 @@ func build(world: Node3D) -> void:
 		model.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*factor
 		mount.add_child(model)
 		_relays[str(relay.id)] = mount
-		# The crown relay is deliberately centred over the arena's only authored
-		# approach. Keep its visible machinery intact, but leave that housing
-		# non-colliding so the same narrow centreline remains a real entrance and
-		# post-finale exit. Side housings retain their honest physical footprint.
+		# The crown relay is deliberately centred on the arena's approach axis,
+		# over the 12 m SummitArenaApproach deck. Its housing is left
+		# non-colliding (its machinery can be walked through), so the approach
+		# deck's centreline stays clear for the entrance and post-finale exit;
+		# the entrance itself is the ~30 m southern gap in the perimeter bays.
+		# Side housings retain their honest physical footprint.
 		if str(relay.id) != "crown":
 			var housing:=StaticBody3D.new()
 			housing.name="RelayHousingCollision"
@@ -492,7 +494,11 @@ func _build_relay_runner(world: Node3D,materials: Dictionary,relay_at: Vector3,l
 
 func _build_occupied_perimeter(world: Node3D,materials: Dictionary) -> void:
 	# Define the work court beyond the existing 36 m fight deck. Nothing here
-	# changes collision, lee pockets, relay offers or hazard dimensions.
+	# changes lee pockets, relay offers or hazard dimensions. F06 / C1 review
+	# H1: the summit crown collides now, so the court's southern half is
+	# walkable ground and this masonry is its wall. Every bay (wall, foot and
+	# buttress) and watch tower is solid as drawn; the court's only opening
+	# onto the plateau is the southern entry the bays leave clear.
 	var root:=Node3D.new()
 	root.name="OccupiedArenaPerimeter"
 	add_child(root)
@@ -500,7 +506,9 @@ func _build_occupied_perimeter(world: Node3D,materials: Dictionary) -> void:
 	for index in 24:
 		var angle:=TAU*index/24.0
 		var outward:=Vector3(sin(angle),0,cos(angle))
-		# Clear southern entry and northern recovery/afterward path, each 22 m.
+		# Skip the three bays either side of due south and due north: the
+		# southern entry (the arena's one way in off the plateau) and the
+		# northern recovery/afterward side, each ~30 m between bay ends.
 		if absf(outward.x)<0.30:
 			continue
 		var segment:=Node3D.new()
@@ -509,16 +517,16 @@ func _build_occupied_perimeter(world: Node3D,materials: Dictionary) -> void:
 		segment.rotation.y=angle
 		root.add_child(segment)
 		var height:=bay_heights[index%bay_heights.size()]
-		world.call("_castle_piece",segment,"RetainedMasonry",CASTLE_WALL,
-			Vector3(0,-1.6,0),Vector3(10.8,height,2.6),materials.stone)
-		world.call("_box",segment,"ServiceWallFoot",Vector3(0,-0.8,0),Vector3(11,1.6,3.2),materials.masonry,false)
+		world.call("_castle_piece_collision",world.call("_castle_piece",segment,"RetainedMasonry",
+			CASTLE_WALL,Vector3(0,-1.6,0),Vector3(10.8,height,2.6),materials.stone))
+		world.call("_box",segment,"ServiceWallFoot",Vector3(0,-0.8,0),Vector3(11,1.6,3.2),materials.masonry,true)
 		if index in [3,5,8,16,19,21]:
 			world.call("_hang_cloudreach_banner",segment,Vector3(0,height-2.0,-1.4),Vector2(1.7,2.9),0.0)
 		if index in [4,7,17,20]:
 			world.call("_box",segment,"OxbloodButtress",Vector3(-4.4,height*0.35,-1.5),
-				Vector3(0.55,height*0.70,0.65),materials.tether,false)
-	# Unequal visual towers break the low circular wall into an occupied skyline.
-	# All four sit outside the 36 m deck and intentionally carry no bodies.
+				Vector3(0.55,height*0.70,0.65),materials.tether,true)
+	# Unequal towers break the low circular wall into an occupied skyline. All
+	# four sit outside the 36 m deck; each is solid as drawn (H1).
 	for tower: Dictionary in [
 		{"at":Vector3(-37.5,0.0,-16.5),"size":Vector3(7.0,8.2,7.0),"yaw":-0.20},
 		{"at":Vector3(40.0,0.0,10.5),"size":Vector3(8.0,11.5,8.0),"yaw":0.18},
@@ -531,8 +539,8 @@ func _build_occupied_perimeter(world: Node3D,materials: Dictionary) -> void:
 		tower_root.position=tower_at
 		tower_root.rotation.y=float(tower["yaw"])
 		root.add_child(tower_root)
-		world.call("_castle_piece",tower_root,"PerimeterWatchTower",CASTLE_TOWER,
-			Vector3.ZERO,tower_size,materials.stone)
+		world.call("_castle_piece_collision",world.call("_castle_piece",tower_root,
+			"PerimeterWatchTower",CASTLE_TOWER,Vector3.ZERO,tower_size,materials.stone))
 		world.call("_box",tower_root,"TowerOxbloodBand",Vector3(0,tower_size.y*0.68,-3.65),
 			Vector3(tower_size.x*0.76,0.52,0.32),materials.tether,false)
 	# Asymmetric occupied bays, all beyond the relay/camera circulation ring.

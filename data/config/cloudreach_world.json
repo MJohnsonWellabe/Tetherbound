@@ -149,6 +149,17 @@
         "blocks_ground_route": false,
         "visible_from_region_ids": ["windscar_ravine", "upper_cloudreach"]
       },
+      "crown_cut": {
+        "_comment": "F06 / C1 (CLOUDREACH-PLAYER-CAMERA 'the summit crown has no floor'). The upper_summit_road and the summit_overlook_loop's western leg climb up INSIDE this region's drawn crown (up to 33 m under it). cloudreach_world.gd carves the crown down to each such road -- a flat floor floor_drop_m under the road out to floor_half_width_m, then banks rising bank_slope metres per metre back to the crown -- and draws AND collides that one carved surface, so the whole crown can be stood on without roofing or walling the roads. A vertex is carved only when that lowers it by more than min_lowering_m; cell_m is the tessellation of the carved wedges and must stay under floor_half_width_m - 3.9 (ribbon half-width + trainer radius) divided by 1.42, so no triangle can reach from the bank over the ribbon. Banks steeper than bank_normal_y draw in the cliff material. The same cut FILLS the crown up toward a road standing over it (the overlook loop's rising east leg, both trench mouths): the same floor out to floor_half_width_m with banks falling bank_slope metres per metre, raising a vertex only by more than min_raise_m (so the ribbon never stands more than floor_drop_m + min_raise_m over it) -- with no height cutoff, so the crown always meets a road with a bank however high the road stands, never with fins or a hollow under it (review MEDIUM-1) -- so the road's hidden 7 m collision ribbon never walls or roofs walkable crown -- the co-op build has no route shoulders over it (review M1). A road's carve wins wherever it lowers the crown; elsewhere a fill never rises over any road's carve profile taken with a floor only fill_clearance_m wide (ribbon half-width + trainer radius + one cell diagonal, 3.9 + 1.42 x cell_m), so it cannot roof or wall a neighbouring road yet may bank up beside a level pad stub.",
+        "floor_half_width_m": 10.0,
+        "floor_drop_m": 0.25,
+        "bank_slope": 2.5,
+        "bank_normal_y": 0.64,
+        "min_lowering_m": 0.3,
+        "min_raise_m": 0.05,
+        "fill_clearance_m": 8.9,
+        "cell_m": 3.5
+      },
       "purpose": "The authored final approach, elite stronghold, chapter climax and distant Water-biome setup."
     }
   ],
