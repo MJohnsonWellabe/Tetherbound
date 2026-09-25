@@ -1,0 +1,8 @@
+{
+  "_comment": "MEADOWS-VISUAL-PASS round 5. The Meadows realm's own look, deep-merged over data/config/art.json by world_look.gd (realm_look_path on the Meadows WorldLook). art.json's presets are shared by every realm; what only the Meadows wants lives here.",
+  "_comment_environment": "Distance haze. art.json's shared #a6bccb at 0.00055 turned the far plain into a white band under every elevated Meadows view (survey 03: a 'white fog wall'); a bluer, lighter haze keeps the depth cue while the hills and groves still read at a kilometre. Golden, dawn and night keep their own preset fog, which overrides this base. TUNABLE.",
+  "environment": {
+    "fog_colour": "#98b2cb",
+    "fog_density": 0.0004
+  }
+}

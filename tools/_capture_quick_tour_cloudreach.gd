@@ -61,6 +61,8 @@ const STANDS := [
 ]
 
 var _out_dir := DEFAULT_OUT
+## `--locations-only` skips every step after the location stands.
+var _locations_only := false
 var _budget_s := DEFAULT_BUDGET_S
 var _start_ms := 0
 var _world: Node3D = null
@@ -81,13 +83,18 @@ var _notes: Array[String] = []
 
 
 func _init() -> void:
-	_run()
+	# Deferred: autoloads (the Game singleton this reads first) are only added
+	# to the tree after _init returns. tools/capture_cloudreach_act_one.gd does
+	# the same.
+	_run.call_deferred()
 
 
 func _parse_args() -> void:
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--budget-seconds="):
 			_budget_s = maxf(60.0, float(a.substr("--budget-seconds=".length())))
+		elif a == "--locations-only":
+			_locations_only = true
 		elif a.begins_with("--out="):
 			_out_dir = a.substr("--out=".length())
 			if not _out_dir.begins_with("res://"):
@@ -184,6 +191,9 @@ func _run() -> void:
 	_freeze_weather()
 
 	await _step_locations()
+	if _locations_only:
+		_finish()
+		return
 	if _budget_left():
 		await _step_menu()
 	else:
@@ -218,6 +228,17 @@ func _ground(xz: Vector2) -> float:
 	return 0.0
 
 
+const COLLISION_WAIT_FRAMES := 600
+
+
+func _collider_under(xz: Vector2) -> bool:
+	var ground := _ground(xz)
+	var query := PhysicsRayQueryParameters3D.create(
+		Vector3(xz.x, ground + 4.0, xz.y), Vector3(xz.x, ground - 4.0, xz.y))
+	query.exclude = [_player.get_rid()]
+	return not _world.get_world_3d().direct_space_state.intersect_ray(query).is_empty()
+
+
 func _place_player(stand_xz: Vector2, look_xz: Vector2) -> void:
 	_player.global_position = Vector3(stand_xz.x, _ground(stand_xz) + 0.2, stand_xz.y)
 	_player.velocity = Vector3.ZERO
@@ -230,18 +251,50 @@ func _place_player(stand_xz: Vector2, look_xz: Vector2) -> void:
 ## Unlike the Meadows stands, Cloudreach's `target` carries its own authored
 ## elevation (a distant landmark, not the ground under it) -- `look_y` is
 ## used as-is, never re-derived from `_ground()`.
-func _pose_standing(stand_xz: Vector2, look_xz: Vector2, look_y: float) -> void:
-	var ahead := look_xz - stand_xz
+##
+## PRODUCTION CAMERA GEOMETRY (ROADMAP step 11: recapture Cloudreach only with
+## the production player camera). The earlier free camera looked straight at
+## the target's authored elevation, which tilted steeply up and left the player
+## at the bottom edge or out of frame. This poses the shot the way
+## `camera_rig.gd` would: pivot at the player plus movement.json's camera
+## height, arm length its distance, yaw toward the target, and the rig's resting
+## pitch, tilted up only as far as keeps the target in frame and clamped to the
+## rig's own pitch range -- so a landmark higher than a
+## player can tilt to is shown only as far as a player could see it.
+func _pose_standing(stand_xz: Vector2, look_xz: Vector2, look_y: float, feet_y: float = NAN) -> void:
+	var cam_cfg := _rig_config()
+	var base_y := _ground(stand_xz) if is_nan(feet_y) else feet_y
+	var pivot := Vector3(stand_xz.x, base_y + float(cam_cfg.get("height", 1.75)), stand_xz.y)
+	var ahead := Vector3(look_xz.x - stand_xz.x, 0.0, look_xz.y - stand_xz.y)
 	if ahead.length() < 0.01:
-		ahead = Vector2(0.0, 1.0)
-	ahead = ahead.normalized()
-	var eye_xz := stand_xz - ahead * BACK_M
-	var eye := Vector3(eye_xz.x, _ground(eye_xz) + UP_M, eye_xz.y)
-	eye.y = maxf(eye.y, _ground(stand_xz) + 0.5)
-	var target := Vector3(look_xz.x, look_y, look_xz.y)
-	_camera.global_position = eye
-	_camera.look_at(target, Vector3.UP)
+		ahead = Vector3(0.0, 0.0, 1.0)
+	var yaw := atan2(-ahead.x, -ahead.z)
+	var flat := Vector2(ahead.x, ahead.z).length()
+	# The rig's resting pitch, tilted up only as far as keeps the target
+	# inside the top of the frame, and never past the rig's own limit.
+	var resting := deg_to_rad(float(cam_cfg.get("pitch_start_deg", -12.0)))
+	var to_target := atan2(look_y - pivot.y, flat)
+	var pitch := clampf(maxf(resting, to_target - deg_to_rad(FOV * 0.5 - 6.0)),
+		deg_to_rad(float(cam_cfg.get("pitch_min_deg", -60.0))),
+		deg_to_rad(float(cam_cfg.get("pitch_max_deg", 32.0))))
+	var basis := Basis.from_euler(Vector3(pitch, yaw, 0.0))
+	var eye := pivot + basis * Vector3(0.0, 0.0, float(cam_cfg.get("distance", 5.2)))
+	# The rig's spring arm keeps the lens above ground; this is its stand-in.
+	var eye_floor := _ground(Vector2(eye.x, eye.z)) + 0.5
+	if eye.y < eye_floor:
+		eye.y = eye_floor
+	_camera.global_transform = Transform3D(basis, eye)
 	_camera.make_current()
+
+
+func _rig_config() -> Dictionary:
+	var file := FileAccess.open("res://data/config/movement.json", FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return {}
+	return (parsed as Dictionary).get("camera", {}) as Dictionary
 
 
 func _pin_clock(time: String) -> void:
@@ -283,7 +336,7 @@ func _shoot(name: String) -> bool:
 	if image == null:
 		_notes.append("%s: viewport returned no image" % name)
 		return false
-	var path := "%s/%s.png" % [_out_dir, name]
+	var path := "%s/%s.png" % [_out_dir, name.trim_suffix(".png")]
 	var err := image.save_png(path)
 	if err != OK:
 		_notes.append("%s: save_png failed (%d)" % [name, err])
@@ -312,8 +365,29 @@ func _step_locations() -> void:
 		_last_look_y = look_y
 		_place_player(stand_xz, look_xz)
 		_pose_standing(stand_xz, look_xz, look_y)
+		# A teleport arrives before collision streams in around the new spot,
+		# and the trainer then falls through the visible floor (the summit
+		# stand dropped 8 m). A walking player cannot outrun streaming; hold
+		# the trainer on the stand until a real collider is under it, bounded,
+		# the same fix smoke_local_requests.gd's herd seat took.
+		var held := 0
+		while held < COLLISION_WAIT_FRAMES and not _collider_under(stand_xz):
+			_place_player(stand_xz, look_xz)
+			held += 1
+			await physics_frame
+		if held >= COLLISION_WAIT_FRAMES:
+			_notes.append("%s: no collider under the stand after %d frames" % [str(entry["id"]), held])
+		_place_player(stand_xz, look_xz)
 		for i in SETTLE_FRAMES:
 			await physics_frame
+		# Frame the trainer where they actually settled, the way the rig
+		# follows them: a stand whose ground probe disagrees with the floor
+		# otherwise leaves the trainer out of shot (the summit stand did).
+		var feet := _player.global_position
+		if Vector2(feet.x, feet.z).distance_to(stand_xz) > 0.5 or absf(feet.y - _ground(stand_xz)) > 0.5:
+			_notes.append("%s: trainer settled at %s, not on the stand (%.1f, %.1f) ground %.2f" % [
+				str(entry["id"]), feet, stand_xz.x, stand_xz.y, _ground(stand_xz)])
+		_pose_standing(Vector2(feet.x, feet.z), look_xz, look_y, feet.y)
 		for i in POSE_FRAMES:
 			await process_frame
 
