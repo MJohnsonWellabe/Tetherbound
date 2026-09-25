@@ -38,6 +38,11 @@ on:
         required: false
         type: boolean
         default: false
+      ship_steam_runtime:
+        description: Build with the pinned GodotSteam templates and ship steam_api64.dll (needs owner sign-off on Steamworks redistribution)
+        required: false
+        type: boolean
+        default: false
 
 # Needed to create releases and to publish the Pages site.
 permissions:
@@ -47,6 +52,17 @@ permissions:
 
 env:
   GODOT_VERSION: 4.7-stable
+  # Steam invitations need the GodotSteam runtime, and a GodotSteam build does
+  # not start without steam_api64.dll beside it. Both therefore switch
+  # together, and OFF by default: redistributing the Steamworks library is the
+  # owner's decision. Turn on per run with the `ship_steam_runtime` dispatch
+  # input, or for every main build with the repository variable
+  # TETHERBOUND_SHIP_STEAM_RUNTIME=true. The variable wins: while it is true,
+  # every build ships the runtime even if a dispatch leaves the input off.
+  # Off, the export is exactly the stock path below. No automated check
+  # launches the Steam exe on Windows; that belongs to the owner's sign-off.
+  # Evidence: ralph/reports/INVITE-COOP.
+  SHIP_STEAM_RUNTIME: ${{ (github.event_name == 'workflow_dispatch' && inputs.ship_steam_runtime) || vars.TETHERBOUND_SHIP_STEAM_RUNTIME == 'true' }}
 
 concurrency:
   # QUEUE, do not cancel. `cancel-in-progress: true` sounds right for "a
@@ -108,6 +124,16 @@ jobs:
           godot --headless --path . --import || true
           godot --headless --path . --import
 
+      - name: Install the pinned GodotSteam Windows templates (opt-in)
+        if: env.SHIP_STEAM_RUNTIME == 'true'
+        # Checksum-verified archive and files; nothing installs on a mismatch.
+        # Points only this run's Windows preset at the templates; the
+        # committed export_presets.cfg keeps blank custom templates.
+        run: |
+          set -euo pipefail
+          python3 tools/setup_steam_runtime.py --templates --platform win64 \
+            --destination "$RUNNER_TEMP/godotsteam-win64" --configure-preset "Windows Desktop"
+
       - name: Export Windows release build
         run: |
           set -euo pipefail
@@ -141,6 +167,14 @@ jobs:
           path: build/linux/run.log
           if-no-files-found: ignore
           retention-days: 3
+
+      - name: Ship the Steam API library beside the executable (opt-in)
+        if: env.SHIP_STEAM_RUNTIME == 'true'
+        run: |
+          set -euo pipefail
+          cp "$RUNNER_TEMP/godotsteam-win64/steam_api64.dll" build/windows/
+          test -s build/windows/steam_api64.dll
+          echo "GodotSteam runtime packaged: $(sha256sum build/windows/steam_api64.dll)"
 
       - name: Stage GDExtension libraries for shipping
         # Godot writes them flat next to the executable; the engine looks for
@@ -176,7 +210,8 @@ jobs:
             Automatic build of `main`, commit ${{ github.sha }}.
 
             **Windows / ROG Ally.** Unzip and run `Tetherbound.exe` — keep the
-            `.pck` and the `.dll` next to it.
+            `.pck` and every `.dll` (including `steam_api64.dll` when present)
+            next to it.
 
             **Evidence run.** Double-click `KICKOFF.cmd` from the same folder
             and walk away; it fetches the repo, plays the chapter with video,
