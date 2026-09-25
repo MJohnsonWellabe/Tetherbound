@@ -26,11 +26,17 @@ extends SceneTree
 ##   * `defeated_warden` is set directly. No Warden fight is played here;
 ##     `smoke_boss.gd` owns that.
 ##   * The party is built with `Game.make_creature`.
-##   * The player is placed on the machine control, and later on each prompt's
-##     anchor, rather than walked there. The prompts are one step from where
-##     the player stands; the ordinary walk is not the claim.
+##   * The player is placed on the machine control, then moved to each
+##     prompt by `_walk_to`: the controller is off and velocity is set
+##     directly through move_and_slide (no input events). The printed
+##     "walked" distance is straight-line, start to prompt.
+##   * Reload is in-process: save, clear progression and party, boot a fresh
+##     world, load. The Game autoload survives.
+##   * The release-one choice focuses row 0 in code; the presses are real.
 ##
-## Checked every frame of every scenario: the party never holds a sixth.
+## Checked each scenario frame (`_frame`), plus the ceremony and the end
+## state: the party never holds a sixth. Frames inside `_press` and
+## `_boot_world` are not sampled; the end-state size asserts cover them.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 300

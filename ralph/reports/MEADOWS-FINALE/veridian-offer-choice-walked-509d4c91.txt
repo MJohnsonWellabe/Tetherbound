@@ -1,5 +1,6 @@
 # tests/smoke_veridian_offer_choice.gd on ralph/f05-solo-walk 509d4c91 (Godot 4.7, headless)
-# The player WALKS (move_and_slide, 3 m/s) from the freed stand to each prompt; the offer is read at the player's own position.
+# The player is moved (move_and_slide, 3 m/s, controller off, no input events) from the machine control to each prompt; the offer is read at the player's own position. 'walked' = straight-line distance.
+# Any '  FAIL:' lines would not match this filter; the proof is the 'passed' line and EXIT 0 (the smoke quits 1 on any failure).
 # Scenario lines only (grep '^(' and '^---'), unedited; full run 31m09s, EXIT 0.
 
 --- space-accept
