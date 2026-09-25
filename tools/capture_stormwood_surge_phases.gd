@@ -122,6 +122,8 @@ func _run() -> void:
 		await _raincam()
 	if _only.has("roof"):
 		await _roof()
+	if _only.has("rainmeasure"):
+		await _rainmeasure()
 	if _want("strips"):
 		await _strips()
 	if _want("motion"):
@@ -540,6 +542,139 @@ func _roof() -> void:
 		await physics_frame
 	_heal()
 	await _capture("roof_outside_ashfoot_shelter", "Day Break, the same shelter from 11 m outside: rain falls in the open", false)
+
+
+## Foreground-rain measurement (explicit --only=rainmeasure). At each
+## production camera pose of the raincam shots, day/night Break:
+## 1. analytic: N particles sampled from the LIVE near emitter's parameters
+##    (ring radii, spawn height band, upwind offset, velocity, lifetime,
+##    world position) are projected through the production Camera3D; a
+##    particle counts as seen when it is in front of the camera, inside the
+##    viewport, above the terrain and not occluded (physics ray camera->drop);
+##    counts are split top 55% / bottom 45% of the screen;
+## 2. live pixels: the ground cover is hidden, the frame is grabbed with rain
+##    and again with both rain layers hidden, and pixels whose luminance
+##    changed by more than 0.04 are counted per region (so it measures what
+##    the real GPU particles actually draw, including contrast).
+## Results go to measure_<label>.json in --out; nothing is rendered to disk
+## except small diff masks for inspection.
+func _rainmeasure() -> void:
+	var rain := _surge.get("_rain") as GPUParticles3D
+	var far := _surge.get("_rain_far") as GPUParticles3D
+	var cover := _world.get_node_or_null(^"StormwoodGroundCover") as Node3D
+	var results: Array = []
+	var shots := [["normal", "day"], ["upwind", "day"], ["riding", "day"], ["normal", "night"]]
+	for shot: Array in shots:
+		var kind := str(shot[0])
+		_pin_clock(str(shot[1]))
+		var focus := _station_focus()
+		if kind == "upwind":
+			var d := (rain.process_material as ParticleProcessMaterial).direction
+			focus = _player.global_position + Vector3(d.x, 0.0, d.z).normalized() * 20.0
+		await _stand(STAND, focus, 2.0)
+		if kind == "riding":
+			var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
+			_rig.call("set_target", _player, movement.riding.camera)
+			for _frame in 60:
+				await physics_frame
+		await _enter_phase("break", false)
+		for _frame in 90:
+			await physics_frame
+		var row := {"shot": "%s_%s" % [str(shot[1]), kind]}
+		row.merge(_project_near_rain(rain))
+		# live pixel diff with the ground cover hidden
+		if cover != null:
+			cover.visible = false
+		for _frame in 3:
+			await process_frame
+		var with_rain := await _grab()
+		rain.visible = false
+		if far != null:
+			far.visible = false
+		var without := await _grab()
+		rain.visible = true
+		if far != null:
+			far.visible = true
+		if cover != null:
+			cover.visible = true
+		row.merge(_diff_counts(with_rain, without, "%s/diff_%s.png" % [_output_dir, row.shot]))
+		row["flash_level"] = float(_surge.call("flash_level"))
+		results.append(row)
+		_log("MEASURE %s" % JSON.stringify(row))
+		if kind == "riding":
+			_rig.call("set_target", _player)
+	_pin_clock("day")
+	var file := FileAccess.open("%s/measure_%s.json" % [_output_dir, _label], FileAccess.WRITE)
+	file.store_string(JSON.stringify(results, "\t"))
+	file.close()
+
+
+func _project_near_rain(rain: GPUParticles3D) -> Dictionary:
+	var process := rain.process_material as ParticleProcessMaterial
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 1234
+	var size := root.get_visible_rect().size
+	var space := _player.get_world_3d().direct_space_state
+	var counts := {"samples": 0, "above_ground": 0, "seen": 0, "seen_top55": 0, "seen_bottom45": 0}
+	var inner := process.emission_ring_inner_radius
+	var outer := process.emission_ring_radius
+	var height := process.emission_ring_height
+	var direction := process.direction.normalized()
+	var n := 6000
+	for i in n:
+		var r := sqrt(rng.randf_range(inner * inner, outer * outer))
+		var a := rng.randf() * TAU
+		var local := process.emission_shape_offset + Vector3(cos(a) * r, rng.randf_range(-height * 0.5, height * 0.5), sin(a) * r)
+		var age := rng.randf() * rain.lifetime
+		var speed := rng.randf_range(process.initial_velocity_min, process.initial_velocity_max)
+		var at := rain.global_transform * local + direction * speed * age
+		counts.samples += 1
+		if at.y <= float(_world.call("ground_height_at", at.x, at.z)):
+			continue
+		counts.above_ground += 1
+		if _camera.is_position_behind(at):
+			continue
+		var screen := _camera.unproject_position(at)
+		if screen.x < 0 or screen.y < 0 or screen.x > size.x or screen.y > size.y:
+			continue
+		var query := PhysicsRayQueryParameters3D.create(_camera.global_position, at, 1)
+		query.exclude = [_player.get_rid()]
+		if not space.intersect_ray(query).is_empty():
+			continue
+		counts.seen += 1
+		if screen.y > size.y * 0.55:
+			counts.seen_bottom45 += 1
+		else:
+			counts.seen_top55 += 1
+	counts["alive_above_ground_fraction"] = snappedf(float(counts.above_ground) / n, 0.001)
+	counts["seen_bottom45_fraction_of_seen"] = snappedf(float(counts.seen_bottom45) / maxf(1.0, counts.seen), 0.001)
+	counts["emitter_minus_camera"] = _vec3(rain.global_position - _camera.global_position)
+	counts["ring"] = [inner, outer, height]
+	counts["lifetime"] = rain.lifetime
+	return counts
+
+
+func _diff_counts(a: Image, b: Image, mask_path: String) -> Dictionary:
+	var w := a.get_width()
+	var h := a.get_height()
+	var mask := Image.create(w / 2, h / 2, false, Image.FORMAT_L8)
+	var top := 0
+	var bottom := 0
+	for y in range(0, h, 2):
+		for x in range(0, w, 2):
+			var d := absf(a.get_pixel(x, y).get_luminance() - b.get_pixel(x, y).get_luminance())
+			if d > 0.04:
+				if y > h * 0.55:
+					bottom += 1
+				else:
+					top += 1
+				mask.set_pixel(x / 2, y / 2, Color(1, 1, 1))
+	mask.save_png(ProjectSettings.globalize_path(mask_path) if mask_path.begins_with("res://") else mask_path)
+	var bottom_px := (w / 2) * int(h * 0.45 / 2)
+	var top_px := (w / 2) * int(h * 0.55 / 2)
+	return {"diff_top55_px": top, "diff_bottom45_px": bottom,
+		"diff_top55_density": snappedf(float(top) / top_px, 0.0001),
+		"diff_bottom45_density": snappedf(float(bottom) / bottom_px, 0.0001)}
 
 
 ## Tuning pass only (--only=quick): one settled frame per phase.

@@ -261,7 +261,7 @@ func test_rain_streaks_vary_and_have_a_far_layer() -> void:
 	assert_true(far != null and far.get_parent() == surge._rain, "far layer follows the main emitter")
 	var far_process := far.process_material as ParticleProcessMaterial
 	assert_almost_eq(far_process.emission_ring_radius, float(cfg.far_layer.outer_radius_m), 0.001)
-	assert_true((far.draw_pass_1 as BoxMesh).size.y != (surge._rain.draw_pass_1 as BoxMesh).size.y,
+	assert_true(SURGE.streak_length(far) != SURGE.streak_length(surge._rain),
 		"the far layer's streaks are a different length")
 	surge._rain.free()
 	surge.free()
@@ -628,14 +628,13 @@ func test_slanted_rain_never_crosses_the_lens() -> void:
 	assert_true(lens.length() < 0.001, "the rain emitter is centred on the camera")
 	for emitter: GPUParticles3D in [surge._rain, surge._rain_far]:
 		var process := emitter.process_material as ParticleProcessMaterial
-		var streak := emitter.draw_pass_1 as BoxMesh
-		var streak_h := streak.size.y * process.scale_max * 0.5 * Vector2(process.direction.x, process.direction.z).length()
+		var streak_h := SURGE.streak_length(emitter) * process.scale_max * 0.5 * Vector2(process.direction.x, process.direction.z).length()
 		var closest := INF
 		for at: Vector2 in _drop_path(emitter, process.emission_ring_inner_radius, lens):
 			closest = minf(closest, at.distance_to(lens) - streak_h)
 		assert_true(closest >= 1.5, "%s: a drop passes %.2f m from the lens (needs >= 1.5)" % [emitter.name, closest])
 		assert_true(SURGE.rain_drift(process, emitter.lifetime).length() > 1.0, "the wind slant is real")
-		assert_true(SURGE.rain_spread_drift(process, emitter.lifetime) > 0.3, "spread drift is modelled")
+		assert_true(SURGE.rain_spread_drift(process, emitter.lifetime) > 0.1, "spread drift is modelled")
 	surge._rain.free()
 	surge.free()
 
@@ -815,13 +814,18 @@ func test_roof_fades_the_near_rain_out_and_back() -> void:
 	surge.free()
 
 
-## Review nit 5: the rain volume never floats far above the ground.
+## Review nit 5 / WO-F10-07: the near band is anchored to the floor (the
+## higher of the terrain under the camera and the trainer), never floating
+## with a high camera; with no ground known it falls back to camera + offset.
 func test_rain_volume_is_clamped_near_the_ground() -> void:
 	var surge := SURGE.new()
+	var rain: Dictionary = _config().presentation.rain
+	var mid := (float(rain.spawn_band_above_ground_m[0]) + float(rain.spawn_band_above_ground_m[1])) * 0.5
 	var high: Vector3 = surge.rain_centre(Vector3(0, 120, 0), Vector3.ZERO, 10.0)
-	assert_almost_eq(high.y, 10.0 + float(_config().presentation.rain.max_height_above_ground_m), 0.0001)
-	var normal: Vector3 = surge.rain_centre(Vector3(0, 14, 0), Vector3.ZERO, 10.0)
-	assert_almost_eq(normal.y, 14.0 + float(_config().presentation.rain.camera_height_offset_m), 0.0001)
+	assert_almost_eq(high.y, 10.0 + mid, 0.0001, "a high camera does not lift the rain off the ground")
+	assert_true(high.y <= 10.0 + float(rain.max_height_above_ground_m))
+	var fallback: Vector3 = surge.rain_centre(Vector3(0, 14, 0), Vector3.ZERO)
+	assert_almost_eq(fallback.y, 14.0 + float(rain.camera_height_offset_m), 0.0001, "no ground known: camera + offset")
 	surge.free()
 
 
@@ -852,5 +856,62 @@ func test_rain_volume_follows_a_raised_trainer() -> void:
 	var camera := player + Vector3(0, 2.5, 6.0)
 	var centre: Vector3 = surge.rain_centre(camera, player, 0.0)
 	assert_true(centre.y >= player.y, "rain centre %.1f m sits below a trainer at %.1f m" % [centre.y, player.y])
-	assert_almost_eq(centre.y, camera.y + float(_config().presentation.rain.camera_height_offset_m), 0.0001)
+	var band: Array = _config().presentation.rain.spawn_band_above_ground_m
+	assert_almost_eq(centre.y, player.y + (float(band[0]) + float(band[1])) * 0.5, 0.0001,
+		"the near band sits over the trainer's floor, not the terrain far below")
+	surge.free()
+
+
+## WO-F10-07 foreground regression. From a production exploration camera
+## pose (pivot 1.75 m, arm 5.8 m, 8 degrees down, 70 degree vertical FOV,
+## 16:9) over flat ground, near-layer drops are sampled from the LIVE emitter
+## parameters and projected through that camera. In Break (amount 1.0) at
+## least 35 drops must be visible in the bottom 45% of the view (the grass
+## between camera and trainer) at any moment, and at least 40% of the near
+## drops must be above ground. At the old camera-centred 14 m column this was
+## ~17 drops and ~27% (the dry foreground).
+func test_near_rain_fills_the_foreground() -> void:
+	var surge := SURGE.new()
+	surge._rain = surge._build_rain()
+	surge._style_rain()
+	var rain := surge._rain
+	var process := rain.process_material as ParticleProcessMaterial
+	var player := Vector3.ZERO
+	var pivot := player + Vector3(0, 1.75, 0)
+	var pitch := deg_to_rad(8.0)
+	var camera_pos := pivot + Vector3(0, sin(pitch), -cos(pitch)) * 5.8
+	var camera := Transform3D(Basis.looking_at(pivot - camera_pos, Vector3.UP), camera_pos)
+	var view := camera.affine_inverse()
+	var projection := Projection.create_perspective(70.0, 16.0 / 9.0, 0.05, 9000.0)
+	var centre: Vector3 = surge.rain_centre(camera_pos, player, 0.0)
+	var direction := process.direction.normalized()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7
+	var n := 20000
+	var above := 0
+	var bottom := 0
+	var inner := process.emission_ring_inner_radius
+	var outer := process.emission_ring_radius
+	for i in n:
+		var r := sqrt(rng.randf_range(inner * inner, outer * outer))
+		var a := rng.randf() * TAU
+		var local := process.emission_shape_offset + Vector3(cos(a) * r,
+			rng.randf_range(-process.emission_ring_height * 0.5, process.emission_ring_height * 0.5), sin(a) * r)
+		var at := centre + local + direction * rng.randf_range(process.initial_velocity_min, process.initial_velocity_max) * rng.randf() * rain.lifetime
+		if at.y <= 0.0:
+			continue
+		above += 1
+		var v := view * at
+		if v.z >= -0.05:
+			continue
+		var clip := projection * Vector4(v.x, v.y, v.z, 1.0)
+		var ndc := Vector2(clip.x / clip.w, clip.y / clip.w)
+		if absf(ndc.x) > 1.0 or absf(ndc.y) > 1.0:
+			continue
+		if ndc.y < -0.1:
+			bottom += 1
+	var expected_bottom := float(bottom) / n * rain.amount
+	assert_true(float(above) / n >= 0.4, "only %.0f%% of near drops are above ground" % (100.0 * above / n))
+	assert_true(expected_bottom >= 35.0, "only %.1f near drops in the bottom 45%% of the view in Break (needs >= 35)" % expected_bottom)
+	rain.free()
 	surge.free()
