@@ -90,3 +90,44 @@ static func linked_twin(id: String, flags: RefCounted, buildings: Array) -> Dict
 	if twin.is_empty() or str(twin.arch_twin) != id:
 		return {}
 	return twin
+
+
+## `stormwood_raise_a_road`: the four optional ancient footings a player may
+## choose for their own road. The mandatory Still Grove/Crown footing is never
+## a choice, so the Crown pair cannot satisfy the side chain.
+const ROAD_FOOTINGS: Array[String] = ["verge_road", "hollows_road", "capacitor_grove", "deepwood_road"]
+const ROAD_CHOSEN_PREFIX := "stormwood:side_raise_a_road_chosen:"
+const ROAD_DEPARTED_PREFIX := "stormwood:side_raise_a_road_departed:"
+
+static func footing_of(uid: String, buildings: Array) -> String:
+	for row: Dictionary in records(buildings):
+		if str(row.get("uid", "")) == uid:
+			return str(row.get("arch_footing", ""))
+	return ""
+
+## The player's own road: a mutually linked constructed pair standing on two
+## different chosen optional footings. Empty when none stands.
+static func chosen_road(flags: RefCounted, buildings: Array) -> Dictionary:
+	for row: Dictionary in records(buildings):
+		var uid := str(row.get("uid", ""))
+		var footing := str(row.get("arch_footing", ""))
+		if not ROAD_FOOTINGS.has(footing) or not flags.has(ROAD_CHOSEN_PREFIX + footing):
+			continue
+		var twin := linked_twin(uid, flags, buildings)
+		if twin.is_empty() or not bool(twin.get("constructed", false)):
+			continue
+		var twin_footing := footing_of(str(twin.id), buildings)
+		if twin_footing != footing and ROAD_FOOTINGS.has(twin_footing) \
+				and flags.has(ROAD_CHOSEN_PREFIX + twin_footing):
+			return {"a": uid, "b": str(twin.id), "footings": [footing, twin_footing]}
+	return {}
+
+## The chapter fact a travel from `source` to `target` earns, or "" when that
+## trip is not along the player's chosen road.
+static func road_departure_event(source: String, target: String, flags: RefCounted, buildings: Array) -> String:
+	var road := chosen_road(flags, buildings)
+	if road.is_empty():
+		return ""
+	if not ((source == road.a and target == road.b) or (source == road.b and target == road.a)):
+		return ""
+	return "count:" + ROAD_DEPARTED_PREFIX + footing_of(source, buildings)

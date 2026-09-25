@@ -196,6 +196,10 @@ func _ready() -> void:
 	crown.name = "CrownHeartstone"
 	add_child(crown)
 	crown.mount(self)
+	var crown_records := preload("res://scripts/world/stormwood_crown_records.gd").new()
+	crown_records.name = "CrownRecords"
+	add_child(crown_records)
+	crown_records.mount(self)
 	if not simulation_only:
 		var placer := preload("res://scripts/build/build_placer.gd").new()
 		placer.name = "BuildPlacer"

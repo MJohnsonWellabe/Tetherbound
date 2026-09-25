@@ -158,7 +158,10 @@ func _physics_process(delta: float) -> void:
 	_previous = at
 	# Fly handles aerial recovery. This extends the same verified anchor to an
 	# ordinary grounded walk off a cliff; it cannot snap to an upper XZ surface.
-	if _fly != null and not flying:
+	# Not while carried: `observe_ground()` does not advance the anchor under a
+	# rider, so an ordinary mounted descent would read as a fall every frame.
+	# `cloudreach_riding_controller.gd` recovers a mount that falls.
+	if _fly != null and not flying and not bool(_player.call("is_carried")):
 		var anchor: Vector3 = _fly.get("safe_anchor")
 		if anchor != Vector3.INF and at.y < anchor.y - 100.0:
 			_fly.call("recover_to_anchor", "Recovered at your last safe landing.")
