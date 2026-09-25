@@ -1,6 +1,6 @@
 # F02-a — earned route passes the South Bridge
 
-Status: **prefix passed once (`--through-bridge`, run 4); robustness still open.** That pass predates the harness changes in de7d240bf, dfe2e9dee and f759b4b4e. No run has passed with the current harness, and the run-6 and run-7 fixes have not yet been exercised end to end. F02 is not claimed.
+Status: **F02-b supply tuning committed; 0 of 3 seeded runs executed (stopped by coordinator). Prefix passed once (`--through-bridge`, run 4); robustness still open.** That pass predates the harness changes in de7d240bf, dfe2e9dee and f759b4b4e. No run has passed with the current harness, and the run-6 and run-7 fixes have not yet been exercised end to end. F02 is not claimed.
 
 Command (headless, fresh isolated save, no injection/teleport):
 
@@ -106,3 +106,73 @@ Result: 1 pass (run 4) against a target of 3, from 8 attempts (runs 1–7 plus 5
 **The respawn wait passes through a shared defect.** While waiting, the caught members were fully healed by the shared catch-respawn defect (run 5: 62→118, 31→124, 24→118, 16→104), and a revived caught body is the player's own creature standing in the world. Until that defect is fixed (filed with the coordinator), a pass that includes a respawn wait is easier than intended play. It must be re-run after the fix before it can count.
 Remaining: the marshal refusal (needs a run with the e06b56965 print), the shared
 throw-assist ground miss, and the shared catch-respawn defect.
+
+## F02-b M2 pacing — practice-wild supply (owner decision, config tuning)
+
+Owner decision (relayed by the coordinator): "Raise the practice-wild supply on the Meadows
+route so that level 5 for the South Bridge is reachable with margin and no repeated wilds."
+
+**Change (data only).** `data/config/bands/band1_lower_meadows/spawns.json` appends four
+ANCHORED clusters (no `table`, so the supply does not depend on the world seed). The new orders are
+1920–1923 in Band 1's reserved range. No existing entry, `order` or draw changed:
+
+| order | species | count | centre (x,z) | site |
+|---|---|---|---|---|
+| 1920 | mudsnout | 5 | (-85, 0) r10 | west field, through the Pond gate |
+| 1921 | bramblebun | 5 | (-92, 25) r9 | west field, beside the order-1 pair |
+| 1922 | bramblebun | 4 | (55, 82) r9 | north-east edge, through TrailGate |
+| 1923 | mudsnout | 4 | (-24, 80) r9 | north edge west of the spine |
+
+Levels are not pinned; they roll Band 1's [2,6] like every other band-1 cluster. All four clusters
+are outside the village fence. Each centre is at least 33 m from a road centreline. The clusters
+are placed so that no straight walk between any two outside practice clusters (orders 1, 1006, 1007,
+1920–1923) crosses the fence. Checked with 8 m and 12 m lateral buffers. This matters because
+`boundary_approach` refuses such chords. Each cluster is at least 165 m from the aggressive
+Galecrest (order 12) and at least 36 m from Duskhush order 1050. The world-boot ground sample within
+20 m of each centre gives a maximum slope of 10.8–16.0°. Village, vegetation, spawn_tables,
+combat, XP and guardian data are untouched.
+
+**Harness (record-only).** `tests/helpers/meadows_earned_team_segment.gd` records every fought
+body's spawn-slot name. `team_ready` now also reports `world_seed`, `training_wins`,
+`respawn_waits`, `fought`, `repeated_wilds` and `unused_eligible`. No selection or pass rule
+changed. A unit test covers `repeated_names`.
+
+**Seed sweep (seeds 0–1000).** The sweep used `spawn_tables.plan_for` for the species and alpha
+draws. It was combined with a world-boot census for real levels and homes: TB_WORLD_SEED=0, on
+the scratch probe `probe_practice_pool.gd`. Anchored levels depend on `order`, not on the seed.
+An eligible body is a Bramblebun/Mudsnout at L≤5, with any rolled alpha +3 applied, whose home
+is within 160 m of the practice meadow. The need is 14 bodies: 1 opening catch, 3 team catches
+and 10 training wins, as observed in runs 4 and 5.
+
+| before: eligible | seeds | after: eligible | spare after 14 |
+|---|---|---|---|
+| 7 | 22.9% | 21 | 7 |
+| 10 | 27.6% | 24 | 10 |
+| 11 | 20.7% | 25 | 11 |
+| 13 | 0.9% | 27 | 13 |
+| 14 | 28.0% | 28 | 14 |
+
+Before the change, 721 of 1001 seeds were short, and the best seeds had 0 spare. After it, no
+seed is short and the minimum spare is 7 bodies, 50% over need. Of the 18 new bodies, 14 are
+eligible: 1921_3, 1922_1, 1922_4 and 1923_1 roll L6. The rolled plan for every existing cluster
+is byte-identical before and after the change, and the census bodies of all existing clusters are
+identical.
+
+**Tests run on the merged tree** (`godot --headless --path . --script tests/run_tests.gd -- --only=<name>`),
+all 0 failed: test_spawns_data, test_spawn_tables, test_band_content, test_chapter_curve,
+test_practice_fight_level, test_wild_cluster_body_spacing, test_village_boundary,
+test_meadows_economy_solvency (includes the two-loss and four-player ledgers),
+test_meadows_earned_team_segment, test_wild_once, test_wild_alphas, test_alpha_pins,
+test_starters_are_exclusive, test_trainers_data, test_meadows_south_trail_pulls_0912,
+test_trail_camp_composition, test_meadows_activity_qualification, test_map_landmarks,
+test_chapter_content_map, test_gate_f_harness_predicates, test_title_new_game.
+
+**Not done (open).** The seeded `--through-bridge` runs have not been executed. The plan was
+seeds 15 and 26 (both from the worst, formerly 7-body class) and seed 1 (formerly the 10-body
+class), using `TB_WORLD_SEED=<seed>`. Those runs were queued behind other lanes' Godot writers,
+and the coordinator's stop order cancelled them before any started. So there is **no in-engine
+proof yet** that the earned team reaches L5 with zero respawn waits and zero repeated wilds. The
+sweep is an arithmetic margin, not gameplay proof. The fight count could also differ from 10,
+because the new bodies are mostly L3–5. The catch-respawn fix (ralph/f02-catch-respawn) was not
+merged: the target is zero respawn waits, and a run that waits fails that target anyway.
+Smoke/visual acceptance of the four new stands has not been captured.
