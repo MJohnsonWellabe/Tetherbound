@@ -1080,8 +1080,17 @@ func _wild_offer_ready(target: Node3D) -> bool:
 		and _encounter.call("_engageable") == target
 
 
+const STALL_FRAMES := 90
+const SIDESTEP_FRAMES := 45
+var _stall_best := INF
+var _stall_frames := 0
+var _stall_side := 1.0
+
+
 func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 	var closest := INF
+	_stall_best = INF
+	_stall_frames = 0
 	for _i in budget:
 		if not is_instance_valid(target):
 			print("wild approach: target despawned")
@@ -1102,6 +1111,24 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 				])
 				await _tap_action("interact")
 				return true
+		# A player who walks into a fence post or a tree between them and the
+		# creature steps around it; the straight drive would press into it for
+		# the rest of the budget (CI: stalled 9 m short behind the F01 village
+		# props while the wanderer stood on their far side). No progress for
+		# STALL_FRAMES -> side-step perpendicular, alternating sides.
+		if distance < _stall_best - 0.3:
+			_stall_best = distance
+			_stall_frames = 0
+		else:
+			_stall_frames += 1
+		if _stall_frames >= STALL_FRAMES:
+			var to_target := target.global_position - _player.global_position
+			var side := Vector3(-to_target.z, 0.0, to_target.x).normalized() * (4.0 * _stall_side)
+			_stall_side = -_stall_side
+			_stall_frames = 0
+			_stall_best = INF
+			await _drive_body_toward(_player, _player.global_position + side, SIDESTEP_FRAMES)
+			continue
 		await _drive_body_toward(_player, target.global_position, 1)
 	_stop_left_stick()
 	print("wild approach: exhausted after closest %.2fm; final %.2fm; visible=%s alive=%s prompt='%s' winner=%s" % [
