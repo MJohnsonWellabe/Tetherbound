@@ -77,3 +77,17 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   (392.85,1806.82), with an ordinary walk back round the pylon's east side to the ruin's open
   south side, (406.5,1809.5) → (408.5,1803.5) → (403,1797.5) → (396,1797.5). The helper then
   takes its own leg to the node. Disclosed as receipt `quarry_south_detour`.
+- Attempt 5 (19:38 UTC) reached (396,1797.5) south of the ruin by ordinary walking. The helper's
+  own leg to the fifth stone then stalled in the same pocket:
+  `EARNED WARRENS FAIL — Ordinary quarry/Warrens movement did not reach (393.0, -0.497714, 1802.0); player=(397.4855, -0.499157, 1801.353)`.
+  Across attempts, the player gets no closer than about 4 m to (393,1802) from the north, west
+  or south. Radius 2.2 is the harvest prompt distance.
+- Status: **blocking.** Harvest node order 16 (rootstone at 393,1802 in
+  `data/config/bands/band2_stone_and_root/harvest.json`) looks physically enclosed by the
+  retained quarry foundation (`data/config/old_quarry.json`, 397,1805, yaw 30) and the cut face
+  on main 10b635d38. This is a Meadows content/collision defect, or the node should move. The
+  helper cannot collect all seven stops. Nothing was injected; the chain stops here.
+  Receipt at stop: rootstone 8 carried (4 of 7 stops); flags gained `harvest_node:order:12..15`;
+  party ripplet 9, bramblebun 8, mudsnout 8, mudsnout 7, bramblebun 6.
+  Last good save: `/tmp/claude-0/earned_chain/seed4/bridge/save/`. Logs are in
+  `/tmp/claude-0/earned_chain/seed4_warrens_attempt{1..4}/` and `seed4/warrens/`.
