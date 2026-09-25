@@ -760,24 +760,64 @@ func _named_cloudreach(files: Array[String]) -> Array[String]:
 	return out
 
 
-## {"seen": {path: parent}, "starts": [...]} over preload/load/extends and
-## .tscn ext_resource edges from every Cloudreach-named script and scene.
-func _cloudreach_closure(overrides: Dictionary) -> Dictionary:
+## Root scripts of the other realms' scenes (realm_hearts.json `realms`), read
+## from each scene's root node. A realm root builds that realm's world, its
+## offer controller included, only when it IS the running scene; shared code
+## may preload one for a static helper (world_look.gd calls
+## `playground_world.gd::set_aerial_fade_colour`). Empty when the scenes are
+## not checked out.
+func _realm_root_scripts() -> Dictionary:
+	var out := {}
+	var realms: Variant = _dict(REALM_HEARTS_PATH).get("realms", {})
+	if not realms is Dictionary:
+		return out
+	var ext_re := RegEx.create_from_string("(?m)^\\[ext_resource[^\\]\\n]*path=\"([^\"]+)\"[^\\]\\n]*id=\"([^\"]+)\"")
+	var root_re := RegEx.create_from_string("(?m)^\\[node (?![^\\]\\n]*parent=)[^\\]\\n]*\\]\\s*\\nscript = ExtResource\\(\"([^\"]+)\"\\)")
+	for realm: String in realms:
+		if realm == "cloudreach":
+			continue
+		var scene := str(_at(realms, [realm, "scene"]))
+		var text := _text(scene) if FileAccess.file_exists(scene) else ""
+		var root := root_re.search(text)
+		if root == null:
+			continue
+		for ext: RegExMatch in ext_re.search_all(text):
+			if ext.get_string(2) == root.get_string(1):
+				out[ext.get_string(1)] = realm
+	return out
+
+
+## {"seen": {path: true}, "parent": {path: referrer}, "starts": [...],
+## "stopped": [realm roots reached]} over preload/load/extends and .tscn
+## ext_resource edges from every Cloudreach-named script and scene. The walk
+## does not continue past another realm's root script (see above).
+func _cloudreach_closure(overrides: Dictionary, stops: Dictionary = {}) -> Dictionary:
 	var starts := _named_cloudreach(_all_sources(overrides))
 	var parent := {}
 	var seen := {}
+	var stopped: Array[String] = []
 	var stack: Array[String] = starts.duplicate()
 	while not stack.is_empty():
 		var path: String = stack.pop_back()
 		if seen.has(path):
 			continue
 		seen[path] = true
+		if stops.has(path):
+			stopped.append(path)
+			continue
 		for dep: String in _refs(path, overrides):
 			if not seen.has(dep):
 				if not parent.has(dep):
 					parent[dep] = path
 				stack.append(dep)
-	return {"seen": seen, "parent": parent, "starts": starts}
+	return {"seen": seen, "parent": parent, "starts": starts, "stopped": stopped}
+
+
+static func _chain(from: String, parent: Dictionary) -> String:
+	var chain: Array[String] = [from]
+	while parent.has(chain[-1]) and chain.size() < 64:
+		chain.append(str(parent[chain[-1]]))
+	return " <- ".join(chain)
 
 
 ## Cloudreach-owned scripts: named *cloudreach*, or in the Cloudreach closure
@@ -818,20 +858,40 @@ func _cloudreach_owned_scripts(overrides: Dictionary) -> Array[String]:
 	return out
 
 
-## No Cloudreach script or scene reaches an offer controller.
-func _closure_violations(overrides: Dictionary) -> Array[String]:
+## No Cloudreach script or scene reaches an offer controller, and nothing in
+## the Cloudreach closure instantiates another realm's root script (which would
+## build that realm's world and its offer). `roots` defaults to the derived
+## realm roots; controls pass their own.
+func _closure_violations(overrides: Dictionary, roots: Variant = null) -> Array[String]:
 	var bad: Array[String] = []
-	var closure := _cloudreach_closure(overrides)
+	var stops: Dictionary = roots if roots is Dictionary else _realm_root_scripts()
+	var closure := _cloudreach_closure(overrides, stops)
 	var seen: Dictionary = closure["seen"]
 	var parent: Dictionary = closure["parent"]
 	if (closure["starts"] as Array).size() < 30:
 		bad.append("only %d Cloudreach-named scripts/scenes found; the closure would judge nothing" % (closure["starts"] as Array).size())
 	for controller: String in OFFER_CONTROLLERS:
 		if seen.has(controller):
-			var chain: Array[String] = [controller]
-			while parent.has(chain[-1]):
-				chain.append(str(parent[chain[-1]]))
-			bad.append("Cloudreach reaches offer controller: %s" % " <- ".join(chain))
+			bad.append("Cloudreach reaches offer controller: %s" % _chain(controller, parent))
+	for root: String in stops:
+		for path: String in seen:
+			if not path.ends_with(".gd") or stops.has(path):
+				continue
+			var code := _code_only(_source_of(path, overrides))
+			if not root in code:
+				continue
+			var names: Array[String] = []
+			var const_re := RegEx.create_from_string("(?m)^\\s*(?:const|var)\\s+(\\w+)[^=\\n]*=\\s*(?:pre)?load\\(\\s*\"%s\"" % root)
+			for m: RegExMatch in const_re.search_all(code):
+				names.append(m.get_string(1))
+			var use_res: Array[String] = ["(?:pre)?load\\(\\s*\"%s\"\\s*\\)\\s*\\.new\\(" % root]
+			for name: String in names:
+				use_res.append("\\b%s\\s*\\.\\s*new\\(" % name)
+				use_res.append("set_script\\(\\s*%s\\b" % name)
+			for pattern: String in use_res:
+				var m := RegEx.create_from_string(pattern).search(code)
+				if m != null:
+					bad.append("%s instantiates %s's root %s: '%s'" % [path, stops[root], root, m.get_string()])
 	return bad
 
 
@@ -1011,7 +1071,14 @@ func test_no_line_in_scripts_ties_cloudreach_to_a_legendary() -> void:
 
 
 func test_no_cloudreach_script_or_scene_reaches_another_realms_offer_controller() -> void:
-	_report("closure", _closure_violations({}))
+	var roots := _realm_root_scripts()
+	var closure := _cloudreach_closure({}, roots)
+	for root: String in closure["stopped"]:
+		print("    INFO the Cloudreach closure statically references %s's root script, not followed further: %s"
+			% [roots[root], _chain(root, closure["parent"])])
+	if roots.is_empty():
+		print("    INFO realm scenes are not checked out; realm roots are unknown and every edge is followed")
+	_report("closure", _closure_violations({}, roots))
 
 
 func test_cloudreach_dialogue_effects_grant_no_creature_or_offer() -> void:
@@ -1187,6 +1254,13 @@ func test_negative_control_non_cloudreach_named_helper_is_owned_and_scanned() ->
 	assert_true(owned.has(helper), "a helper referenced only by Cloudreach is Cloudreach-owned")
 	var bad := _source_violations(_sources(owned, fake), _legendary_species(), _offer_vocabulary())
 	_control("owned helper", bad, helper)
+
+
+func test_negative_control_realm_root_instantiated() -> void:
+	var path := "res://scripts/world/cloudreach_world.gd"
+	var meadows := "res://scripts/world/playground_world.gd"
+	var fake := {path: _text(path) + "\nconst MEADOWS_WORLD := preload(\"%s\")\nfunc _fake() -> void:\n\tadd_child(MEADOWS_WORLD.new())\n" % meadows}
+	_control("realm root", _closure_violations(fake, {meadows: "meadows"}), "instantiates meadows's root")
 
 
 func test_negative_control_fake_offer_controller_preload() -> void:
