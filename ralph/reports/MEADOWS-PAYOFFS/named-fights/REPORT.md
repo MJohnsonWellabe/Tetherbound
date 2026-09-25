@@ -96,3 +96,47 @@ against the running fight camera, which is item 2's open guardian readability
 work and the owner's to accept. This slice does not claim it. The complete
 Hall/Warden route is covered by the two-peer `--hall` leg (46 checks, 0 failed)
 under this lane, not by this file.
+
+## Captain Vance at the normal camera (F04 witness, blind judge)
+
+**Capture.** `tests/smoke_relay.gd --tell-capture-dir` (with `--tell-capture-member=3` for the ace; the earlier members are fast-forwarded at Engine.time_scale 4, which coarsens their physics steps, so only the captured member's frames are evidence). Each enemy tell is captured at the start of the tell, mid-tell, the strike, and 0.5 s into recovery, through the ordinary neutral fight camera: the pilot stops forcing yaw during a tell. The run was on `ralph/f04-named-fight-captures` with F04's tells, a 0.80 s CHARGER telegraph and a 7 m lunge. The default headless `smoke_relay` passes with those tells.
+
+**Sheet:** `relay-tells/sheet_relay_tells.jpg`. Rows 1–2 are Galecrest and Duskhush; rows 3–4 are Tuskroot, the CHARGER.
+
+**Blind verdict:** tell readable at the normal camera: **partly**. Distinct tactical question for the charger: **no**. F04 stays open for this fight.
+
+**Ranked defects**
+1. **No spatial telegraph.** No ring, cone or lane shows where to dodge. The magenta ground quads are fragmented, partly under bodies, and read as litter. For the charger, the player cannot see the 7 m line to sidestep.
+2. **The enemy is hidden during its own wind-up.** It is covered by the player's creature (R1a, R1b, R2d, R4a–d), the nameplate panel (R1a, R3a) and clipped relay scenery: a dark wall/pillar over about 35% of R3a, and a plank and stone in R3d.
+3. **The charger is always at contact.** No lunge build-up or close is visible, and "it's open — hit it" fires at the strike frame, so "landed" and "safe to punish" are the same instant.
+   - The contact is at least partly the capture pilot's doing: it walks the ally forward until within reach. The next capture must hold position through tells before this is called an AI defect.
+
+**HUD defects**
+- Stale hit-feedback lines ("STRONG — you hit a weakness", "your type held…") sit under "incoming — move" in near-identical teal.
+- Amber versus teal is the only difference between the tell and recovery text.
+- Ghosted text sits behind the "Captain Vance · LEVEL" line.
+- A "FOOD" row overlaps the Terrapup panel.
+- The quest panel outweighs the combat prompts.
+
+**What carries it:** the amber "incoming — move" line and the strike impact (smoke and starburst). Galecrest's wing raise (R1a→b) is the only real anticipation pose.
+
+**Next work orders**
+- **F04-c (lane):** hold the pilot through tells so the CHARGER's 4.5 m spacing and 7 m lunge can show. If they still don't, check the CHARGER profile's use of `preferred_range` in the AI.
+- **Shared, by request:** a readable ground telegraph (ring or lane) per profile, in the COMBAT/X01 visuals under `scripts/combat/**`; recovery text shown only after the strike resolves; clearing stale hit feedback when a tell starts (`combat_hud.gd`).
+
+### Charger re-capture with the pilot sidestepping through tells (F04-c)
+
+The first capture's pilot walked into contact. With the pilot now sidestepping during each tell, as BOSSES asks of a player facing a CHARGER, Tuskroot winds up from 4–6 m. One lunge whiffs ("it missed you"), then "it's open — hit it"; another lands. Sheet: `relay-tells/sheet_charger_sidestep.jpg`.
+
+**Blind verdict:** tell readable at the normal camera **partly**; distinct tactical question for the charger **partly**, up from "no".
+
+**Ranked remaining defects**
+1. **No visible lunge.** The boar covers no ground: hit or miss is decided at range (T02c, T04c), so the 7 m charge is never seen. BOSSES §4.1 already notes that "the existing instantaneous hit/lunge remains".
+2. **No path or direction marker.** The ring only circles the enemy, and in T02 it is hidden, so the sidestep has no visual target.
+3. **Tell and recovery are mostly text.**
+   - The wind-up and recovery poses are weak.
+   - A grey wash in T04a reads as a spawn effect.
+   - The nameplate panel sits over the enemy.
+   - "it's open" shows at the strike frame, even when the player has just been hit.
+
+All three are in shared combat and HUD code, and are requested from the coordinator (lunge travel, a path telegraph, recovery-text timing).

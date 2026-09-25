@@ -1,0 +1,918 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only session,steam,peer_registry,join_driver,snapshot_transfer,ledger,save,realm,character,autosave,identity,split,migration,water_reconnect: 78 of 510 test files
+  ok    test_atomic_save_file.gd :: test_backup_rename_refusal_leaves_canonical_untouched
+  ok    test_atomic_save_file.gd :: test_canonical_wins_over_leftover_previous
+[save] minted character id 'character-df6516b0806b4d4e9399d914b636e9a4' for slot 3 (no existing locator)
+  ok    test_atomic_save_file.gd :: test_character_half_failure_rolls_slot_and_world_back_to_same_generation
+  ok    test_atomic_save_file.gd :: test_commit_refusal_rolls_back_original_bytes
+  ok    test_atomic_save_file.gd :: test_corrupt_canonical_falls_back_for_slot_listing_loading_and_existence
+  ok    test_atomic_save_file.gd :: test_corrupt_canonical_falls_back_for_world_and_multiplayer_character_readers
+  ok    test_atomic_save_file.gd :: test_corrupt_canonical_without_valid_backup_is_not_listed_as_a_save
+  ok    test_atomic_save_file.gd :: test_create_and_replace_unicode_document
+  ok    test_atomic_save_file.gd :: test_delete_removes_canonical_and_backup_for_every_save_store
+  ok    test_atomic_save_file.gd :: test_failed_commit_over_corrupt_canonical_preserves_valid_previous
+  ok    test_atomic_save_file.gd :: test_flush_failure_preserves_previous
+  ok    test_atomic_save_file.gd :: test_interrupted_replacement_reloads_through_all_save_readers
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+  ok    test_atomic_save_file.gd :: test_pre_rewrite_slot_without_previous_loads_through_production_loader
+  ok    test_atomic_save_file.gd :: test_real_directory_collision_refuses_commit_without_deleting_directory
+  ok    test_atomic_save_file.gd :: test_rollback_refusal_retains_readable_previous_and_next_write_recovers
+  ok    test_atomic_save_file.gd :: test_short_first_write_does_not_publish_partial_save
+  ok    test_atomic_save_file.gd :: test_short_write_preserves_previous_and_reports_failure
+[save] minted character id 'character-5eaf8b0dd66f092e03b5a6c269dce5af' for slot 4 (no existing locator)
+  ok    test_atomic_save_file.gd :: test_successful_split_commit_finishes_all_retained_backups
+WARNING: save slot 1 has split authority that could not be resolved
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] load_slot (res://scripts/save/save_game.gd:667)
+         [1] test_corrupt_or_newer_locator_half_refuses_without_mutating_live_state (res://tests/test_authoritative_split_slot_load.gd:107)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_authoritative_split_slot_load.gd :: test_corrupt_or_newer_locator_half_refuses_without_mutating_live_state
+WARNING: save slot 1 has split authority that could not be resolved
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] load_slot (res://scripts/save/save_game.gd:667)
+         [1] test_corrupt_pre_locator_pair_refuses_without_overwriting_or_mutating_live_state (res://tests/test_authoritative_split_slot_load.gd:129)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_authoritative_split_slot_load.gd :: test_corrupt_pre_locator_pair_refuses_without_overwriting_or_mutating_live_state
+  ok    test_authoritative_split_slot_load.gd :: test_locator_loads_newer_split_journals_not_stale_merged_slot
+  ok    test_authoritative_split_slot_load.gd :: test_locator_prefers_its_pair_when_both_deterministic_pairs_exist
+  ok    test_authoritative_split_slot_load.gd :: test_matching_world_instance_restores_exact_traversal_pose
+WARNING: save slot 1 has split authority that could not be resolved
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] load_slot (res://scripts/save/save_game.gd:667)
+         [1] test_missing_and_traversal_locator_refuse_without_mutating_live_state (res://tests/test_authoritative_split_slot_load.gd:159)
+         [2] _init (res://tests/run_tests.gd:120)
+WARNING: save slot 1 has split authority that could not be resolved
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] load_slot (res://scripts/save/save_game.gd:667)
+         [1] test_missing_and_traversal_locator_refuse_without_mutating_live_state (res://tests/test_authoritative_split_slot_load.gd:164)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_authoritative_split_slot_load.gd :: test_missing_and_traversal_locator_refuse_without_mutating_live_state
+  ok    test_authoritative_split_slot_load.gd :: test_missing_legacy_world_instance_reseats_conservatively
+WARNING: character 'slot-1' is version 999999, this build reads 6 -- not loading
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] read (res://scripts/save/character_save.gd:237)
+         [1] _read_split_pair (res://scripts/save/save_game.gd:905)
+         [2] _authoritative_split (res://scripts/save/save_game.gd:875)
+         [3] load_slot (res://scripts/save/save_game.gd:643)
+         [4] test_newer_locator_half_refuses_without_mutating_live_state (res://tests/test_authoritative_split_slot_load.gd:149)
+         [5] _init (res://tests/run_tests.gd:120)
+WARNING: save slot 1 has split authority that could not be resolved
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] load_slot (res://scripts/save/save_game.gd:667)
+         [1] test_newer_locator_half_refuses_without_mutating_live_state (res://tests/test_authoritative_split_slot_load.gd:149)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_authoritative_split_slot_load.gd :: test_newer_locator_half_refuses_without_mutating_live_state
+  ok    test_authoritative_split_slot_load.gd :: test_portable_character_from_a_friend_world_reseats_safely_on_home_load
+  ok    test_autosave_fallback.gd :: test_admitted_client_keeps_character_only_fallback_after_world_ownership_is_revoked
+  ok    test_autosave_fallback.gd :: test_foreign_world_remains_unsaveable_after_client_teardown_until_new_game
+[save] minted character id 'character-8af5253d01c80f8e074feff7ba6bfc74' for slot 0 (no existing locator)
+  ok    test_autosave_fallback.gd :: test_many_small_ticks_add_up_to_a_fallback_autosave
+[save] minted character id 'character-00e41e9ee88e751d643de9dbfc83e8b3' for slot 0 (no existing locator)
+  ok    test_autosave_fallback.gd :: test_no_camp_ever_built_still_autosaves_once_the_fallback_interval_passes
+  ok    test_autosave_fallback.gd :: test_pending_join_cannot_autosave_a_temporary_world_or_character
+[save] minted character id 'character-cef39ee82b5d4b4180512d01d774d3e2' for slot 0 (no existing locator)
+  ok    test_autosave_fallback.gd :: test_the_fallback_autosave_carries_the_real_game_state
+  ok    test_autosave_fallback.gd :: test_the_fallback_does_not_fire_before_its_interval_elapses
+  ok    test_burrow_warrens_visual_identity.gd :: test_approach_layer_is_exterior_only_and_does_not_reopen_the_interior
+  ok    test_burrow_warrens_visual_identity.gd :: test_approach_rebuild_retires_solid_shoulders_and_preserves_open_wear_lane
+  ok    test_burrow_warrens_visual_identity.gd :: test_approach_ruts_are_one_feathered_embedded_wear_field
+  ok    test_burrow_warrens_visual_identity.gd :: test_capture_serializes_final_pose_and_keeps_threshold_step_judgeable
+  ok    test_burrow_warrens_visual_identity.gd :: test_den_shell_clears_measured_guardian_camera_segments
+  ok    test_burrow_warrens_visual_identity.gd :: test_facade_is_one_continuous_mantle_not_applied_shoulder_plates
+  ok    test_burrow_warrens_visual_identity.gd :: test_first_interior_uses_organic_earth_finish_with_den_and_vault_boundaries
+  ok    test_burrow_warrens_visual_identity.gd :: test_guardian_scale_fits_the_approved_den_after_the_global_creature_pass
+  ok    test_burrow_warrens_visual_identity.gd :: test_threshold_uses_a_restrained_inner_practical_without_route_collision
+  ok    test_character_hair_split.gd :: test_hiding_the_real_ponytail_leaves_no_part_named_hair
+  ok    test_character_hair_split.gd :: test_no_hair_config_leaves_the_base_models_default_look_untouched
+  ok    test_character_hair_split.gd :: test_real_ponytail_recolours_without_losing_its_texture
+  ok    test_character_hair_split.gd :: test_the_real_ponytail_mesh_is_found_and_shown_by_default
+  ok    test_character_lying.gd :: test_set_lying_false_stands_the_body_back_up
+  ok    test_character_lying.gd :: test_set_lying_is_a_no_op_when_already_in_that_state
+  ok    test_character_lying.gd :: test_set_lying_true_tips_the_body_flat
+  ok    test_character_lying.gd :: test_starts_standing
+  ok    test_character_metallic.gd :: test_a_rank_badge_that_asks_for_metal_still_gets_it
+  ok    test_character_metallic.gd :: test_an_untinted_rig_keeps_a_white_albedo_multiplier
+  ok    test_character_metallic.gd :: test_correcting_metal_leaves_the_rank_palette_alone
+  ok    test_character_metallic.gd :: test_every_rig_body_surface_builds_dielectric
+  ok    test_character_save_format.gd :: test_a_character_file_is_one_party_and_nothing_more
+  ok    test_character_save_format.gd :: test_a_character_names_the_world_it_last_played_without_belonging_to_it
+  ok    test_character_save_format.gd :: test_a_client_writes_its_own_character_and_only_that
+  ok    test_character_save_format.gd :: test_a_corrupt_character_file_reads_as_nothing_to_load
+  ok    test_character_save_format.gd :: test_a_missing_character_reads_as_nothing_to_load
+WARNING: character 'slot-1' is version 7, this build reads 6 -- not loading
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] read (res://scripts/save/character_save.gd:237)
+         [1] test_a_newer_than_this_build_character_file_refuses (res://tests/test_character_save_format.gd:382)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_character_save_format.gd :: test_a_newer_than_this_build_character_file_refuses
+  ok    test_character_save_format.gd :: test_a_save_writes_a_character_file_at_the_partitioned_path
+  ok    test_character_save_format.gd :: test_apply_refuses_a_character_that_is_not_there
+  ok    test_character_save_format.gd :: test_apply_restores_a_character_onto_a_player_state
+  ok    test_character_save_format.gd :: test_existing_character_id_survives_saves_to_other_slots_and_reload
+[save] minted character id 'character-afd4f9ada0c50c89afc7297770654c56' for slot 0 (no existing locator)
+[save] minted character id 'character-a8de8412672b05f1295dac199f888464' for slot 0 (no existing locator)
+  ok    test_character_save_format.gd :: test_independent_characters_using_the_same_slot_get_distinct_portable_ids_and_reload
+  ok    test_character_save_format.gd :: test_only_player_scope_flags_land_in_the_character_file
+  ok    test_character_save_format.gd :: test_portable_character_disk_round_trip_preserves_five_uids_selection_and_flags
+  ok    test_character_save_format.gd :: test_rewriting_character_does_not_turn_malformed_provenance_into_identity
+  ok    test_character_save_format.gd :: test_rewriting_character_preserves_world_instance_envelope
+  ok    test_character_save_format.gd :: test_save_character_refuses_an_empty_id_and_a_missing_game
+  ok    test_character_save_format.gd :: test_scratch_save_does_not_mint_or_rename_live_identity
+  ok    test_character_save_format.gd :: test_the_character_file_carries_no_world_key
+  ok    test_character_save_format.gd :: test_the_character_file_carries_the_character_half_and_its_envelope
+  ok    test_character_save_format.gd :: test_the_character_file_values_are_the_ones_the_game_held
+  ok    test_character_save_format.gd :: test_the_fog_a_player_walked_off_is_in_their_character_file
+  ok    test_character_save_format.gd :: test_the_real_saver_writes_characters_under_the_d100_directory
+WARNING: save: refusing unsafe character id
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _character_id_for (res://scripts/save/save_game.gd:1019)
+         [1] _prepare_snapshot (res://scripts/save/save_game.gd:386)
+         [2] save (res://scripts/save/save_game.gd:375)
+         [3] test_unsafe_nonempty_identity_refuses_before_live_or_durable_mutation (res://tests/test_character_save_format.gd:121)
+         [4] _init (res://tests/run_tests.gd:120)
+  ok    test_character_save_format.gd :: test_unsafe_nonempty_identity_refuses_before_live_or_durable_mutation
+  ok    test_character_save_format.gd :: test_version_four_pending_escrow_without_world_instance_is_preserved
+  ok    test_character_save_format.gd :: test_version_three_character_without_world_instance_remains_readable
+  ok    test_character_save_format.gd :: test_version_two_character_remains_readable_with_legacy_escrow
+  ok    test_characterize_flag_keys.gd :: test_band_pickups_flag_id_delegates_to_the_cache_prefix_keyed_on_the_pickup_id
+  ok    test_characterize_flag_keys.gd :: test_cache_flag_id_defaults_realm_to_meadows
+  ok    test_characterize_flag_keys.gd :: test_cache_flag_id_for_a_bare_item_with_no_placement_is_cache_colon_item_id
+  ok    test_characterize_flag_keys.gd :: test_cache_flag_id_for_a_meadows_placement_is_cache_colon_placement_id
+  ok    test_characterize_flag_keys.gd :: test_cache_flag_id_for_a_placement_in_another_realm_is_realm_qualified
+  ok    test_characterize_flag_keys.gd :: test_harvest_node_flag_id_is_harvest_node_colon_node_id
+  ok    test_characterize_flag_keys.gd :: test_key_pickup_flag_id_is_pickup_colon_item_id
+  ok    test_characterize_flag_keys.gd :: test_saddle_fitted_flag_is_saddle_fitted_underscore_species_id
+  ok    test_characterize_flag_keys.gd :: test_tm_pickup_flag_prefix_is_tm_colon
+  ok    test_characterize_flag_keys.gd :: test_wild_once_flag_format_is_literally_wild_once_percent_d_on_the_spawn_order
+  ok    test_characterize_game_process_ticks.gd :: test_apply_buff_refreshes_rather_than_stacks_the_same_id
+  ok    test_characterize_game_process_ticks.gd :: test_apply_buff_refuses_garbage_and_leaves_existing_buffs_untouched
+  ok    test_characterize_game_process_ticks.gd :: test_buff_scale_multiplies_every_live_buff_on_the_same_stat_and_ignores_others
+  ok    test_characterize_game_process_ticks.gd :: test_game_declares_no_process_mode_override_so_it_inherits_pause_behaviour
+  ok    test_characterize_game_process_ticks.gd :: test_no_scene_tree_is_available_in_the_unit_harness_this_is_why_pause_gating_needs_a_smoke
+  ok    test_characterize_game_process_ticks.gd :: test_tick_buffs_ages_down_and_expires_exactly_at_zero
+  ok    test_characterize_game_process_ticks.gd :: test_tick_buffs_on_an_empty_list_is_a_safe_no_op
+  ok    test_characterize_map_state.gd :: test_a_second_pin_at_the_same_order_is_a_no_op
+  ok    test_characterize_map_state.gd :: test_add_dynamic_marker_replaces_rather_than_stacks_on_a_repeated_id
+  ok    test_characterize_map_state.gd :: test_alpha_pin_round_trip_restores_the_pinned_set_and_its_markers
+WARNING: MapState.load_data: saved grid geometry does not match this world; keeping a fresh grid
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] load_data (res://autoload/map_state.gd:910)
+         [1] test_load_data_discards_fog_when_the_saved_grid_descriptor_does_not_match (res://tests/test_characterize_map_state.gd:116)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_characterize_map_state.gd :: test_load_data_discards_fog_when_the_saved_grid_descriptor_does_not_match
+  ok    test_characterize_map_state.gd :: test_load_data_round_trips_fog_landmarks_dynamic_markers_and_regions
+  ok    test_characterize_map_state.gd :: test_load_data_with_no_descriptor_falls_back_to_the_length_only_check
+  ok    test_characterize_map_state.gd :: test_remove_dynamic_marker_is_a_no_op_on_an_unknown_id
+  ok    test_characterize_map_state.gd :: test_remove_dynamic_marker_removes_it_and_bumps_revision
+  ok    test_characterize_map_state.gd :: test_save_data_has_exactly_these_ten_keys
+  ok    test_characterize_map_state.gd :: test_two_instances_can_now_hold_two_different_extents
+  ok    test_characterize_map_state.gd :: test_unpin_alpha_removes_the_pin_and_its_marker
+  ok    test_characterize_party_and_inventory.gd :: test_add_leftover_arithmetic_at_the_stack_cap
+  ok    test_characterize_party_and_inventory.gd :: test_add_of_a_non_stacking_item_opens_one_slot_per_unit
+  ok    test_characterize_party_and_inventory.gd :: test_add_refuses_null_and_a_duplicate_instance
+  ok    test_characterize_party_and_inventory.gd :: test_add_refuses_the_sixth_creature
+  ok    test_characterize_party_and_inventory.gd :: test_all_fainted_is_false_for_an_empty_party
+  ok    test_characterize_party_and_inventory.gd :: test_all_fainted_is_true_only_when_every_member_is_down
+  ok    test_characterize_party_and_inventory.gd :: test_cycle_active_on_a_single_member_party_returns_false
+  ok    test_characterize_party_and_inventory.gd :: test_cycle_active_returns_false_when_everyone_else_is_unusable
+  ok    test_characterize_party_and_inventory.gd :: test_cycle_active_skips_fainted_and_resting_members
+  ok    test_characterize_party_and_inventory.gd :: test_drain_on_an_empty_satchel_returns_an_empty_array_and_does_not_bump_revision
+  ok    test_characterize_party_and_inventory.gd :: test_drain_returns_only_the_occupied_stacks_compacted_not_a_full_width_null_padded_array
+  ok    test_characterize_party_and_inventory.gd :: test_is_full_treats_a_null_slot_as_room
+  ok    test_characterize_party_and_inventory.gd :: test_max_creatures_is_five
+  ok    test_characterize_party_and_inventory.gd :: test_remove_is_all_or_nothing
+  ok    test_characterize_party_and_inventory.gd :: test_set_active_accepts_a_healthy_creature
+  ok    test_characterize_party_and_inventory.gd :: test_set_active_refuses_a_fainted_creature
+  ok    test_characterize_party_and_inventory.gd :: test_set_active_refuses_a_resting_creature
+  ok    test_characterize_party_and_inventory.gd :: test_slot_count_is_24
+  ok    test_characterize_progression_feed.gd :: test_bond_near_is_neither_moment_nor_tick
+  ok    test_characterize_progression_feed.gd :: test_clear_bumps_epoch_so_a_reused_seq_cannot_replay_old_presentation_cursors
+  ok    test_characterize_progression_feed.gd :: test_clear_resets_seq_and_revision_to_zero_and_empties_the_log
+  ok    test_characterize_progression_feed.gd :: test_drain_bumps_revision_but_leaves_epoch_and_seq_untouched
+  ok    test_characterize_progression_feed.gd :: test_drain_empties_the_log_and_returns_what_was_in_it
+  ok    test_characterize_progression_feed.gd :: test_is_moment_is_true_only_for_level_up_bond_milestone_and_reward_summary
+  ok    test_characterize_progression_feed.gd :: test_is_tick_is_true_only_for_xp_gained_and_bond_credit
+  ok    test_characterize_progression_feed.gd :: test_peek_since_hands_back_copies_not_the_stored_dictionary
+  ok    test_characterize_progression_feed.gd :: test_peek_since_returns_only_strictly_newer_events_oldest_first_and_does_not_consume
+  ok    test_characterize_progression_feed.gd :: test_push_increments_latest_seq_and_revision_by_one_per_event
+  ok    test_characterize_progression_feed.gd :: test_push_stamps_kind_seq_creature_id_name_and_species_on_the_stored_event
+  ok    test_characterize_progression_feed.gd :: test_push_with_a_null_creature_still_stores_the_event_using_the_payload_name
+  ok    test_characterize_progression_feed.gd :: test_xp_fraction_is_current_over_needed_clamped_and_one_when_nothing_is_needed
+  ok    test_characterize_progression_feed.gd :: test_xp_helpers_return_zero_false_zero_for_a_null_creature
+  ok    test_characterize_progression_feed.gd :: test_xp_near_uses_one_level_matched_wild_win_against_the_real_curve
+  ok    test_characterize_progression_feed.gd :: test_xp_remaining_is_needed_minus_current_xp_against_the_real_curve
+  ok    test_cloudreach_realm_gate_crag.gd :: test_cloudreach_world_mounts_the_dedicated_gate_presentation
+  ok    test_cloudreach_realm_gate_crag.gd :: test_named_location_catalogue_stands_on_the_approach_not_inside_the_gate
+  ok    test_cloudreach_realm_gate_crag.gd :: test_realm_gate_crag_presentation_has_complete_arrival_hierarchy
+  ok    test_combat_realm_owned_begin.gd :: test_realm_owned_and_default_begin_in_initialized_tree
+  ok    test_death_satchel_ledger.gd :: test_owned_transactions_and_reconnect_receipts
+  ok    test_death_satchel_ledger.gd :: test_wrong_or_missing_world_instance_refuses_before_any_host_mutation
+  ok    test_equipment_portable_save.gd :: test_switching_two_portable_characters_and_reset_never_leaks_gear
+  ok    test_equipment_portable_save.gd :: test_v1_portable_character_without_equipment_loads_as_empty_worn_state
+  ok    test_equipment_portable_save.gd :: test_v2_portable_disk_roundtrip_keeps_worn_item_outside_inventory
+  ok    test_equipment_portable_save.gd :: test_world_partition_merge_keeps_guest_gear_and_host_world_facts
+[save] minted character id 'character-c306e58b8866afcac625fb2bbb8bb3e2' for slot 0 (no existing locator)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:486)
+         [1] finish (res://scripts/save/fallback_save_worker.gd:44)
+         [2] finish_fallback (res://scripts/save/save_game.gd:477)
+         [3] test_async_character_failure_rolls_back_every_written_half (res://tests/test_fallback_save_worker.gd:130)
+         [4] _init (res://tests/run_tests.gd:120)
+  ok    test_fallback_save_worker.gd :: test_async_character_failure_rolls_back_every_written_half
+[save] minted character id 'character-24227e8a78d837a0120821415cacd52c' for slot 0 (no existing locator)
+  ok    test_fallback_save_worker.gd :: test_character_save_joins_before_writing_new_character_state
+  ok    test_fallback_save_worker.gd :: test_client_fallback_writes_only_its_character
+[save] minted character id 'character-e593d3e1e13b74a20165154add980dfa' for slot 0 (no existing locator)
+  ok    test_fallback_save_worker.gd :: test_game_shutdown_joins_all_accepted_fallback_requests
+[save] minted character id 'character-48cd7c54309ee6e337a9814d7de4e193' for slot 0 (no existing locator)
+  ok    test_fallback_save_worker.gd :: test_manual_save_joins_inflight_and_pending_before_its_new_generation
+[save] minted character id 'character-79fb5f392cb65664db30d1a0320f8bc4' for slot 0 (no existing locator)
+  ok    test_fallback_save_worker.gd :: test_poll_is_nonblocking_and_delivers_completion_once
+[save] minted character id 'character-571b5403fb2ab32a881bde7b1347386b' for slot 0 (no existing locator)
+  ok    test_fallback_save_worker.gd :: test_separate_savers_cannot_interleave_split_transactions
+[save] minted character id 'character-8b03504d3e631452f9bc8191baeab463' for slot 0 (no existing locator)
+  ok    test_fallback_save_worker.gd :: test_single_flight_coalesces_to_latest_snapshot_and_reports_on_main_thread
+[save] minted character id 'character-bd684c7d84d04a41145dce5fe5988232' for slot 0 (no existing locator)
+WARNING: save: refusing snapshot containing a live object
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _prepare_snapshot (res://scripts/save/save_game.gd:422)
+         [1] request_fallback (res://scripts/save/save_game.gd:464)
+         [2] test_snapshot_is_deep_read_only_and_rejects_live_objects (res://tests/test_fallback_save_worker.gd:117)
+         [3] _init (res://tests/run_tests.gd:120)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:486)
+         [1] request_fallback (res://scripts/save/save_game.gd:466)
+         [2] test_snapshot_is_deep_read_only_and_rejects_live_objects (res://tests/test_fallback_save_worker.gd:117)
+         [3] _init (res://tests/run_tests.gd:120)
+  ok    test_fallback_save_worker.gd :: test_snapshot_is_deep_read_only_and_rejects_live_objects
+  ok    test_grandpa_yard_visual_identity.gd :: test_grandpa_capture_freezes_the_requested_clock_and_hides_water_overlay
+  ok    test_grandpa_yard_visual_identity.gd :: test_grandpa_domestic_apron_is_bounded_off_progression_space
+  ok    test_grandpa_yard_visual_identity.gd :: test_grandpa_foreground_berry_keeps_content_but_not_oversized_scale
+  ok    test_grandpa_yard_visual_identity.gd :: test_grandpa_work_yard_has_one_coherent_domestic_cluster
+  ok    test_grandpa_yard_visual_identity.gd :: test_grandpa_work_yard_uses_installed_assets
+  ok    test_grandpas_village_visual_identity.gd :: test_capture_harness_has_square_and_street_views_at_both_times
+  ok    test_grandpas_village_visual_identity.gd :: test_production_village_mounts_the_well_presentation
+  ok    test_grandpas_village_visual_identity.gd :: test_square_axis_deadwood_keeps_yield_without_blocking_the_well
+  ok    test_grandpas_village_visual_identity.gd :: test_village_berries_keep_content_without_creature_sized_silhouettes
+  ok    test_grandpas_village_visual_identity.gd :: test_well_light_is_installed_bounded_and_visual_only
+  ok    test_highfield_visual_identity.gd :: test_highfield_has_an_open_stock_gate_and_working_drover_story
+  ok    test_highfield_visual_identity.gd :: test_highfield_has_one_safe_vertical_pasture_identity
+  ok    test_inn_exterior_identity.gd :: test_hospitality_dressing_keeps_the_door_lane_open
+  ok    test_inn_exterior_identity.gd :: test_inn_has_a_public_silhouette_and_two_readable_faces
+  ok    test_inn_exterior_identity.gd :: test_inn_material_masses_differ_from_the_private_farmhouse
+  ok    test_inn_exterior_identity.gd :: test_production_village_attaches_the_inn_identity_only_to_the_inn
+  ok    test_inn_interior_visual_identity.gd :: test_bram_faces_the_customer_lane_instead_of_the_stock_wall
+  ok    test_inn_interior_visual_identity.gd :: test_common_room_has_timber_architectural_depth_without_blocking_the_door
+  ok    test_ironwood_grove_identity.gd :: test_current_grove_has_a_dedicated_production_evidence_harness
+  ok    test_ironwood_grove_identity.gd :: test_named_ironwood_grove_has_a_varied_old_growth_canopy
+  ok    test_ironwood_grove_identity.gd :: test_ordinary_burrowback_cluster_clears_the_grove_route_camera
+  ok    test_ironwood_grove_identity.gd :: test_r12_night_fill_reveals_both_the_work_grove_and_colossal_lower_trunk
+  ok    test_ironwood_grove_identity.gd :: test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_visible_craft_process
+  ok    test_ironwood_grove_identity.gd :: test_r6_presentation_keeps_the_five_harvest_seats_and_makes_age_visible_at_the_roots
+  ok    test_join_driver_admission_reason.gd :: test_host_admission_reason_is_terminal_and_readable
+  ok    test_join_driver_admission_reason.gd :: test_transport_failure_text_does_not_disable_existing_retry_budget
+  ok    test_ledger_admission_guards.gd :: test_actor_identity_does_not_outlive_its_commit
+  ok    test_ledger_admission_guards.gd :: test_host_overwrites_a_claimed_identity_with_the_registry_answer
+  ok    test_ledger_admission_guards.gd :: test_other_intent_kinds_cannot_smuggle_a_forged_receipt
+  ok    test_ledger_admission_guards.gd :: test_prefix_list_covers_all_chapters_and_matches_generically
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_cannot_clear_another_characters_receipt
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_cannot_write_another_characters_legendary_receipt
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_writes_only_its_own_receipt_and_host_stays_trusted
+  ok    test_ledger_admission_guards.gd :: test_second_arch_at_the_footing_edge_cannot_snap_onto_an_occupied_footing
+  ok    test_ledger_admission_guards.gd :: test_snapped_arch_takes_the_footing_facing
+  ok    test_ledger_admission_guards.gd :: test_stormglass_arch_commits_at_the_footing_centre
+[save] minted character id 'character-d083f595dc0686768459c80989386729' for slot 2 (no existing locator)
+  ok    test_legacy_slot_split_never_touches_the_original.gd :: test_a_current_version_slot_is_also_left_alone_by_its_own_load
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_legacy_slot_split_never_touches_the_original.gd :: test_a_second_load_does_not_rewrite_a_world_the_player_has_since_played
+[save] split slot_3 into worlds/legacy-slot-3 and characters/legacy-slot-3 (original untouched)
+  ok    test_legacy_slot_split_never_touches_the_original.gd :: test_both_halves_record_where_they_were_migrated_from
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_legacy_slot_split_never_touches_the_original.gd :: test_continuing_a_migrated_slot_keeps_writing_the_world_it_migrated_to
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_legacy_slot_split_never_touches_the_original.gd :: test_loading_a_legacy_slot_leaves_the_original_file_byte_identical
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_legacy_slot_split_never_touches_the_original.gd :: test_loading_a_legacy_slot_twice_still_leaves_the_original_alone
+[save] minted character id 'character-e896aaf8dfc239c840e16977b611d51b' for slot 1 (no existing locator)
+  ok    test_legacy_slot_split_never_touches_the_original.gd :: test_slot_info_marks_an_older_build_slot_as_legacy_and_a_current_one_not
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_legacy_slot_split_never_touches_the_original.gd :: test_the_split_carries_the_migrated_values_not_the_files_own_v18_shape
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_legacy_slot_split_never_touches_the_original.gd :: test_the_split_puts_each_flag_on_its_own_side_of_the_line
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_legacy_slot_split_never_touches_the_original.gd :: test_the_split_writes_one_world_and_one_character_under_d100_names
+  ok    test_long_water_visual_identity.gd :: test_long_water_bank_palette_is_local_runtime_presentation
+  ok    test_long_water_visual_identity.gd :: test_long_water_bank_wander_changes_landform_without_opening_a_crossing
+  ok    test_long_water_visual_identity.gd :: test_long_water_far_bank_is_a_broad_asymmetric_floodplain
+  ok    test_long_water_visual_identity.gd :: test_long_water_has_an_authored_open_bank_rhythm
+  ok    test_long_water_visual_identity.gd :: test_long_water_ordinary_route_arrival_keeps_water_and_road_visible
+  ok    test_long_water_visual_identity.gd :: test_long_water_overlook_is_open_and_isolated_from_old_mill
+  ok    test_map_realm_view.gd :: test_cloudreachs_own_discovery_alone_unlocks_the_selector_without_any_flag
+  ok    test_map_realm_view.gd :: test_meadows_is_the_only_available_realm_until_cloudreach_is_reachable
+  ok    test_map_realm_view.gd :: test_player_marker_and_objective_only_draw_in_the_players_own_realm
+  ok    test_map_realm_view.gd :: test_realm_link_labels_and_icon_come_from_map_json_and_name_the_destination
+  ok    test_map_realm_view.gd :: test_realm_link_points_are_read_from_the_shared_transition_source
+  ok    test_map_realm_view.gd :: test_selector_uses_all_unlocked_registry_realms_not_a_binary_pair
+  ok    test_map_realm_view.gd :: test_standing_in_cloudreach_unlocks_the_selector_and_defaults_the_view_there
+  ok    test_map_realm_view.gd :: test_switching_the_view_reads_the_other_realms_map_state_without_moving_the_active_map
+  ok    test_meadows_named_location_ledger_0912.gd :: test_final_polish_locations_have_complete_accepted_evidence_rounds
+  ok    test_meadows_named_location_ledger_0912.gd :: test_meadows_review_ledger_is_exactly_twenty_four_unique_places
+[save] minted character id 'character-657f7e7714fca8f21fd96f39e0757ca4' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_already_upgraded_completed_save_is_repaired_without_losing_selection
+[save] minted character id 'character-b049f9406063ffd2d6f1c3543be57e83' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_completed_legacy_save_recovers_only_earned_rewards
+[save] minted character id 'character-631355ee1497c0373cc9e4a3be053827' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_earned_unplaced_heart_and_key_survive_disk_round_trip
+[save] minted character id 'character-66447c4163bd9f2bd1d1502c1cb9b5c0' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_legacy_tournament_winner_recovers_only_the_saddle_pattern
+[save] minted character id 'character-f8bb40c9aa14947490c9ffe0c12a84df' for slot 1 (no existing locator)
+  ok    test_meadows_realm_save_repair.gd :: test_unfinished_meadows_save_does_not_receive_warden_rewards
+  ok    test_mill_pond_identity.gd :: test_pond_mill_builds_a_large_bank_facing_water_wheel
+  ok    test_mill_pond_identity.gd :: test_pond_route_head_has_a_bounded_reveal_clearing
+  ok    test_mill_pond_identity.gd :: test_village_routes_only_the_mill_to_the_pond_identity
+  ok    test_multiplayer_identity_0912.gd :: test_authored_fresh_spawn_is_inside_grandpas_village
+  ok    test_multiplayer_identity_0912.gd :: test_fresh_identity_keeps_the_players_body_and_name_but_not_an_old_save_id
+  ok    test_multiplayer_identity_0912.gd :: test_fresh_name_is_bounded_for_the_remote_badge
+  ok    test_multiplayer_identity_0912.gd :: test_late_joiner_companion_path_is_still_active
+  ok    test_multiplayer_identity_0912.gd :: test_portable_identity_validation_rejects_paths_whitespace_and_unicode
+  ok    test_multiplayer_identity_0912.gd :: test_remote_badge_uses_the_chosen_name_at_compact_fixed_screen_size
+  ok    test_multiplayer_identity_0912.gd :: test_same_realm_remote_player_has_a_named_full_map_record
+  ok    test_multiplayer_identity_0912.gd :: test_session_fallback_mints_the_same_stable_identity_form_once
+  ok    test_multiplayer_identity_0912.gd :: test_strict_two_peer_proof_uses_production_entry_and_live_state
+  ok    test_old_mill_crossing_visual_identity.gd :: test_canonical_name_is_shared_by_crossing_landmark_and_player_destination
+  ok    test_old_mill_crossing_visual_identity.gd :: test_mill_and_sign_sightlines_are_scoped_clearings_not_bald_footprints
+  ok    test_old_mill_crossing_visual_identity.gd :: test_old_mill_builds_one_exposed_hero_wheel_on_the_prefab_drive_line
+  ok    test_old_mill_crossing_visual_identity.gd :: test_old_mill_builds_one_physical_canonical_sign_off_the_route
+  ok    test_old_mill_crossing_visual_identity.gd :: test_old_mill_installs_supported_warm_practicals_on_route_and_mechanism
+  ok    test_old_mill_crossing_visual_identity.gd :: test_old_mill_r14_selects_a_stable_hydraulic_stand_and_keeps_ecology
+  ok    test_old_mill_crossing_visual_identity.gd :: test_old_mill_wheel_turns_and_loading_activity_belongs_to_the_mill
+  ok    test_old_quarry_visual_identity.gd :: test_four_worked_faces_leave_no_unparented_rock_nodes
+  ok    test_old_quarry_visual_identity.gd :: test_old_quarry_capture_refuses_solid_camera_seats_and_requires_readable_terrace
+  ok    test_old_quarry_visual_identity.gd :: test_old_quarry_cut_face_adds_tall_stepped_excavation_without_blocking_the_spine
+  ok    test_old_quarry_visual_identity.gd :: test_old_quarry_has_two_bounded_warm_work_practicals_off_the_routes
+  ok    test_old_quarry_visual_identity.gd :: test_old_quarry_work_wagon_reads_as_extraction_gear_without_blocking_routes
+  ok    test_old_quarry_visual_identity.gd :: test_quarry_deadfall_keeps_identity_but_clears_the_worked_hierarchy
+  ok    test_old_quarry_visual_identity.gd :: test_r19_arrival_candidates_are_bounded_to_the_real_incoming_road
+  ok    test_old_quarry_visual_identity.gd :: test_r19_clears_only_the_stale_arrival_tree_and_finishes_the_foundation_slab
+  ok    test_old_quarry_visual_identity.gd :: test_r27_builds_a_camera_side_concave_cut_with_two_work_handoffs
+  ok    test_old_quarry_visual_identity.gd :: test_the_roadside_burrowback_pair_stays_near_quarry_but_clears_hero_sightlines
+  ok    test_old_quarry_visual_identity.gd :: test_the_worked_floor_and_final_approach_share_a_cleared_sightline
+  ok    test_peer_registry_admission.gd :: test_character_can_reconnect_only_after_old_peer_is_gone
+  ok    test_peer_registry_admission.gd :: test_full_session_refuses_before_mutation
+  ok    test_peer_registry_admission.gd :: test_invalid_identity_is_refused_without_registry_mutation
+  ok    test_peer_registry_admission.gd :: test_live_character_conflict_preserves_host_and_every_other_peer
+  ok    test_peer_registry_appearance.gd :: test_appearance_survives_registry_replication
+  ok    test_peer_registry_appearance.gd :: test_old_registry_payload_defaults_to_original_trainer
+  ok    test_peer_registry_appearance.gd :: test_rows_always_carry_a_normalized_appearance_id
+  ok    test_ranger_camp_approach_identity.gd :: test_collapsed_shelter_announces_abandonment_without_blocking_gameplay
+  ok    test_ranger_camp_approach_identity.gd :: test_ranger_camp_has_one_tight_overlapping_approach_lens
+  ok    test_realm_chapter_progression.gd :: test_act_two_requires_each_authored_event_and_survives_save_load
+  ok    test_realm_chapter_progression.gd :: test_all_authored_side_chains_complete_using_only_their_declared_events
+  ok    test_realm_chapter_progression.gd :: test_completed_reward_repairs_missing_entitlements_without_replaying_completion
+  ok    test_realm_chapter_progression.gd :: test_consumed_chapter_grant_is_not_recreated_after_its_durable_marker
+  ok    test_realm_chapter_progression.gd :: test_finale_keeps_boss_network_aftermath_and_reward_as_separate_beats
+  ok    test_realm_chapter_progression.gd :: test_scene_adapter_accepts_only_its_matching_host_simulation_shell
+  ok    test_realm_chapter_progression.gd :: test_scene_adapter_uses_production_realm_property_and_rejects_meadows
+  ok    test_realm_chapter_progression.gd :: test_side_chain_visibility_order_fly_gate_and_reload
+  ok    test_realm_chapter_progression.gd :: test_unknown_and_premature_events_cannot_skip_chapter_gates
+  ok    test_realm_chapter_progression.gd :: test_upper_anchor_count_is_unique_three_and_recovers_from_partial_save
+  ok    test_realm_crossing_context.gd :: test_epoch_session_and_owner_cancellation_are_independent_of_realm_readiness
+  ok    test_realm_crossing_context.gd :: test_new_game_and_unexpected_realm_change_cancel_captured_context
+  ok    test_realm_crossing_context.gd :: test_solo_context_preserves_no_network_transaction
+  ok    test_realm_entry_readiness.gd :: test_completion_decision_keeps_sliced_arrivals_pending_until_ready
+  ok    test_realm_entry_readiness.gd :: test_failed_compensating_save_restores_durable_destination_and_records_both_sides
+  ok    test_realm_entry_readiness.gd :: test_failed_prior_scene_request_keeps_the_recovery_overlay
+  ok    test_realm_entry_readiness.gd :: test_failed_transition_restores_realm_map_pending_pose_announcement_and_save
+  ok    test_realm_entry_readiness.gd :: test_no_tree_completion_keeps_the_existing_behavior
+  ok    test_realm_entry_readiness.gd :: test_readiness_distinguishes_absent_wrong_sliced_and_null_budget_worlds
+  ok    test_realm_entry_readiness.gd :: test_readiness_wait_is_bounded_but_a_ready_frame_wins_the_deadline
+  ok    test_realm_heart_state.gd :: test_activating_another_heart_replaces_the_first
+  ok    test_realm_heart_state.gd :: test_an_earned_heart_can_be_placed_and_activated
+  ok    test_realm_heart_state.gd :: test_an_unearned_heart_cannot_be_placed_or_activated
+  ok    test_realm_heart_state.gd :: test_load_refuses_a_power_whose_heart_is_not_placed
+  ok    test_realm_heart_state.gd :: test_realm_scene_and_key_are_data_driven
+  ok    test_realm_heart_state.gd :: test_save_round_trip_preserves_the_single_active_selection
+  ok    test_realm_look_overlay.gd :: test_only_the_meadows_scene_carries_the_meadows_look
+  ok    test_realm_look_overlay.gd :: test_the_meadows_haze_lives_in_the_meadows_overlay
+  ok    test_realm_look_overlay.gd :: test_the_overlay_merges_key_by_key_and_leaves_both_inputs_alone
+  ok    test_realm_map_persistence.gd :: test_authoritative_payloads_override_alias_and_reset_new_game_clears_both
+[save] split slot_0 into worlds/legacy-slot-0 and characters/legacy-slot-0 (original untouched)
+  ok    test_realm_map_persistence.gd :: test_explicit_cloudreach_legacy_tag_is_never_loaded_as_meadows_grid
+[save] split slot_0 into worlds/legacy-slot-0 and characters/legacy-slot-0 (original untouched)
+  ok    test_realm_map_persistence.gd :: test_legacy_single_map_migration_preserves_meadows_even_in_cloudreach_save
+  ok    test_realm_map_persistence.gd :: test_save_reload_in_existing_realms_retains_configured_payloads_and_ui_contract
+  ok    test_realm_map_persistence.gd :: test_third_configured_realm_round_trips_its_own_fog_and_legacy_owner
+  ok    test_realm_map_persistence.gd :: test_transition_there_and_back_preserves_exact_meadows_fog_and_instances
+  ok    test_realm_map_persistence.gd :: test_version_one_chain_retains_pre_cloudreach_fields_and_produces_configured_maps
+  ok    test_realm_receiver_history.gd :: test_completed_departure_stays_closed_until_actual_reentry_ready
+  ok    test_realm_receiver_history.gd :: test_disconnect_and_new_session_do_not_inherit_previous_identity
+  ok    test_realm_receiver_history.gd :: test_rollback_ready_reopens_source_without_touching_other_receivers
+  ok    test_realm_receiver_history.gd :: test_stale_readiness_cannot_clear_newer_departure
+  ok    test_realm_replication_scope.gd :: test_host_owned_admission_preserves_existing_realm_filter
+  ok    test_realm_replication_scope.gd :: test_locally_freed_received_body_does_not_manufacture_drained_inventory
+  ok    test_realm_replication_scope.gd :: test_native_automatic_visibility_cadence_is_preserved
+  ok    test_realm_replication_scope.gd :: test_public_visibility_means_every_recipient_without_changing_individual_permissions
+  ok    test_realm_replication_scope.gd :: test_remote_owned_admission_preserves_original_host_fallback
+  ok    test_realm_replication_scope.gd :: test_wire_is_idempotent_and_empty_admission_has_no_gameplay_properties
+  ok    test_realm_shell_transition_guard.gd :: test_legacy_synchronous_world_is_ready_once_it_matches
+  ok    test_realm_shell_transition_guard.gd :: test_shell_stand_up_waits_for_the_hosts_announced_scene
+  ok    test_realm_shell_transition_guard.gd :: test_sliced_cloudreach_keeps_authored_landmark_traversal_crowns
+  ok    test_realm_spawn_origins.gd :: test_failed_later_entry_keeps_deny_and_success_clears_only_captured_generation
+  ok    test_realm_spawn_origins.gd :: test_last_body_cleanup_disconnect_and_session_reset_bound_policy_lifetime
+  ok    test_realm_spawn_origins.gd :: test_origin_denies_absent_staying_receiver_and_preserves_authority_and_initialjoin
+  ok    test_realm_spawn_origins.gd :: test_origin_is_immutable_and_rollback_requires_its_own_realm_readiness
+  ok    test_realm_spawn_origins.gd :: test_pending_receiver_requires_matching_readiness_and_covers_new_cohorts
+  ok    test_realm_spawn_origins.gd :: test_receiver_disconnect_reuse_rejects_old_ready_and_pending_deltas
+  ok    test_realm_transition.gd :: test_actual_drain_retires_mover_body_and_receiver_but_keeps_staying_viewer
+  ok    test_realm_transition.gd :: test_automatic_public_aggregation_respects_departure_owner_and_receiver
+  ok    test_realm_transition.gd :: test_cancel_settlement_matches_epoch_request_token_and_is_terminal
+  ok    test_realm_transition.gd :: test_host_move_closes_only_the_departing_listen_server_receiver
+  ok    test_realm_transition.gd :: test_host_move_pins_source_until_matching_receiver_generation
+  ok    test_realm_transition.gd :: test_joined_receiver_ready_requires_live_permit_phase_and_realm
+[realm_transition] scoped receiver readiness timed out for peer 40; ending its session
+  ok    test_realm_transition.gd :: test_joined_receiver_timeout_ends_existing_session_path_and_cleans_pending_state
+  ok    test_realm_transition.gd :: test_loading_settlement_and_unsettled_timeout_keep_gates
+  ok    test_realm_transition.gd :: test_no_transaction_preserves_unrelated_and_unknown_peer_policy
+  ok    test_realm_transition.gd :: test_old_authoritative_body_is_retained_only_until_destination_readiness
+  ok    test_realm_transition.gd :: test_only_committed_mover_completion_can_finish_during_request_closure
+  ok    test_realm_transition.gd :: test_policy_ack_binds_exact_refreshed_revision_and_unlocks_only_once
+  ok    test_realm_transition.gd :: test_policy_refresh_keeps_receiver_generation_and_original_deadline
+  ok    test_realm_transition.gd :: test_quiescence_closes_departing_sender_without_stopping_other_players
+  ok    test_realm_transition.gd :: test_reset_rejects_old_epoch_without_poisoning_new_session_request
+  ok    test_realm_transition.gd :: test_retarget_retains_abandoned_target_until_matching_readiness
+  ok    test_realm_transition.gd :: test_rollback_preparation_requires_live_unadmitted_source_token
+  ok    test_realm_transition.gd :: test_stale_finish_cannot_replace_current_receiver_history
+  ok    test_realm_transition.gd :: test_stale_retarget_cannot_replace_newer_denial_or_admitted_phase
+  ok    test_realm_world_components.gd :: test_components_build_their_world_contract_without_external_assets
+  ok    test_realm_world_components.gd :: test_gate_never_unlocks_without_the_durable_key_flag
+  ok    test_realm_world_components.gd :: test_gate_passes_realm_and_authored_entry_to_game_router
+  ok    test_realm_world_components.gd :: test_gate_unlock_retains_key_and_persists_its_own_flag
+  ok    test_realm_world_components.gd :: test_home_circle_presentation_uses_the_large_crescent_mesh
+  ok    test_realm_world_components.gd :: test_shrine_exposes_all_four_durable_states
+  ok    test_realm_world_records.gd :: test_cloudreach_records_do_not_block_snap_or_satisfy_meadows_home
+ERROR: unscoped flag: upper_open
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] store_for (res://autoload/merged_progression.gd:71)
+       [1] set_flag (res://autoload/merged_progression.gd:56)
+       [2] test_home_selection_and_cloudreach_authored_camps_cannot_cross_realms_or_unlocks (res://tests/test_realm_world_records.gd:80)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_realm_world_records.gd :: test_home_selection_and_cloudreach_authored_camps_cannot_cross_realms_or_unlocks
+  ok    test_realm_world_records.gd :: test_legacy_migration_defaults_to_meadows_not_current_realm_and_preserves_indices
+  ok    test_realm_world_records.gd :: test_real_save_there_and_back_preserves_multiple_satchels_and_buildings
+  ok    test_rise_visual_identity.gd :: test_cairn_tread_connects_the_safe_road_end_to_the_crown_shelf
+  ok    test_rise_visual_identity.gd :: test_crown_arrival_has_a_real_outward_overlook_payoff
+  ok    test_rise_visual_identity.gd :: test_crown_stones_frame_the_tree_instead_of_hiding_it_from_the_road_end
+  ok    test_rise_visual_identity.gd :: test_every_hero_piece_stays_inside_the_named_region_and_off_both_roads
+  ok    test_rise_visual_identity.gd :: test_grounded_terrace_instantiates_matching_geometry_at_both_ground_endpoints
+  ok    test_rise_visual_identity.gd :: test_grounded_terrace_source_builds_one_matching_visible_and_collision_box
+  ok    test_rise_visual_identity.gd :: test_production_rise_replaces_box_panels_with_one_feathered_trail_ribbon
+  ok    test_rise_visual_identity.gd :: test_r10_lower_joint_uses_actual_matching_transforms_and_floor_grade
+  ok    test_rise_visual_identity.gd :: test_r14_baked_bench_matches_the_player_safe_uphill_tread_route
+  ok    test_rise_visual_identity.gd :: test_r16_capture_proves_the_grounded_switchback_and_outward_overlook_without_injected_light
+  ok    test_rise_visual_identity.gd :: test_r20_all_uphill_joints_bury_perimeter_edges_under_incoming_support
+  ok    test_rise_visual_identity.gd :: test_scatter_clearing_is_scoped_to_the_hero_composition
+  ok    test_rise_visual_identity.gd :: test_the_rise_keeps_one_distinctive_authored_hero
+[save] minted character id 'character-99379629e442ca3239234a3955c64f54' for slot 1 (no existing locator)
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+[save] minted character id 'character-99cc98ee8f790b053312778d9ef2c21c' for slot 1 (no existing locator)
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+[save] minted character id 'character-4dc285f50675d8172ab8b5254f28348a' for slot 1 (no existing locator)
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+[save] minted character id 'character-4a56ce84c2916a3c0278bdb63f26c20d' for slot 1 (no existing locator)
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+[save] minted character id 'character-98da503eed03a0f070cb78cfa6400db8' for slot 1 (no existing locator)
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_a_corrupt_clock_falls_back_to_no_carried_hour
+  ok    test_save_format.gd :: test_a_fresh_slot_has_nothing_to_load
+[save] minted character id 'character-8d2646d89acccffef25b7f96ec451eeb' for slot 0 (no existing locator)
+  ok    test_save_format.gd :: test_a_half_fought_bracket_survives_a_save
+[save] minted character id 'character-2e15dfa05be789d3526d338435220109' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_a_loaded_creature_can_level_up_without_its_stats_collapsing
+[save] minted character id 'character-e7815e0da2b2afa5d2585bb58b91fa3d' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_a_loaded_creature_survives_its_next_level_up
+[save] minted character id 'character-ee97c79eda864383d2e04f021d53747d' for slot 1 (no existing locator)
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_a_pre_clock_save_loads_with_no_carried_hour
+[save] minted character id 'character-ca29e5e42db96d971683f6b47d11027c' for slot 0 (no existing locator)
+[save] split slot_0 into worlds/legacy-slot-0 and characters/legacy-slot-0 (original untouched)
+  ok    test_save_format.gd :: test_a_pre_condition_save_loads_at_the_configured_start
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_a_pre_gamef4_save_migrates_base_stats_from_species_json
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_a_save_predating_rolled_populations_loads_the_authored_world
+[save] minted character id 'character-3c8cd81f465c4e13b2df02154b3888f8' for slot 1 (no existing locator)
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_a_save_with_no_base_stats_reconstructs_them_from_species
+[save] minted character id 'character-1685f304481d370adc9dd1d2c86ac1e7' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_a_species_the_catalogue_forgot_keeps_what_the_save_said
+WARNING: save slot 1 is version 28, this build reads 27 -- not loading
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] load_slot (res://scripts/save/save_game.gd:627)
+         [1] test_a_version_newer_than_this_build_is_refused (res://tests/test_save_format.gd:988)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_save_format.gd :: test_a_version_newer_than_this_build_is_refused
+[save] minted character id 'character-f61eeb2f5f55d5c020e0d72574a1cd74' for slot 0 (no existing locator)
+  ok    test_save_format.gd :: test_a_won_tournament_cannot_be_reloaded_into_a_second_payout
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_completed_cloudreach_legacy_water_rewards_retarget_once_on_flat_load
+[save] minted character id 'character-66d589f0386c677b0805392b83d39128' for slot 0 (no existing locator)
+  ok    test_save_format.gd :: test_condition_survives_a_save
+[save] minted character id 'character-659aa43e8bcb704289a582d21bf84586' for slot 0 (no existing locator)
+  ok    test_save_format.gd :: test_disk_save_load_preserves_five_owned_uids_selection_order_and_round_flags
+  ok    test_save_format.gd :: test_duplicate_saved_uids_are_reminted_and_invalidate_selection
+[save] minted character id 'character-d7c921c9f14326922e3c7cada2945b1d' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-bcd31a167692751616e40b8932309135' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-511edadf81461eb4652c15d9f10060e7' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-3d5087aa015c25ef469bd633afccbd59' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-a390fd022a33afbf5fb1a7fc3182cbf6' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-e812b8f13a44295fd49ea9a60addd89e' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-4730fa861f27b3d44867e17e13f596e0' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-ec8e854ae9123b0d7c3c94c74d787683' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-30adee77cfdd3b7748e0f00ef8de2969' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-b7979465aaa18110f0e6780019c46f8e' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-2ef1ccd97cc1746a4c1d890da42f7a5c' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-0f79f50e5d70e9e169b0f9c0e58dd976' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-8d41b0c5549454da4309cef1f2f34751' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-e09d8fd544a651738adb17c99b2a9717' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-e5793ad91cf89fb9ff18988e7bd5880d' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-43fb711f8f4f7ba672483005ae69e751' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-c31c19e693c1f621f9ea5c46586271a2' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-e879bb58afb3210ed1a2f30ac218570f' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-237fe1536685cbe7e25ebdc24b01cb2b' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-3e6050f62c9161e549b2dfada6494e5e' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-d38ba92fd0ef8ee9eb854e3df7d6b81e' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-5af2966e8a20706ebbe78c4a0cfd3359' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-7e8b73b6ce5c7457251fe7e1dbd74a00' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-4cab352c972b4f1543cdda7642412ae0' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-28aa39a8b5e99d18e73b0d5a51258bb0' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-89b1cb59b8b9178947a21fd8658ba08a' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+[save] minted character id 'character-df6e9a25ae9f723f2636e0d807f9a581' for slot 2 (no existing locator)
+[save] split slot_2 into worlds/legacy-slot-2 and characters/legacy-slot-2 (original untouched)
+  ok    test_save_format.gd :: test_every_readable_save_version_actually_loads
+[save] minted character id 'character-169baaad71d2a5f28bfc2e486c05ff5a' for slot 0 (no existing locator)
+  ok    test_save_format.gd :: test_has_slot_reflects_what_was_actually_written
+  ok    test_save_format.gd :: test_load_on_a_corrupt_file_returns_false_and_leaves_the_game_untouched
+  ok    test_save_format.gd :: test_load_on_a_missing_slot_returns_false_and_leaves_the_game_untouched
+WARNING: save slot 1 is version 28, this build reads 27 -- not loading
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] load_slot (res://scripts/save/save_game.gd:627)
+         [1] test_load_on_a_newer_version_refuses_and_leaves_the_game_untouched (res://tests/test_save_format.gd:772)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_save_format.gd :: test_load_on_a_newer_version_refuses_and_leaves_the_game_untouched
+[save] minted character id 'character-4bbdf2178ff8307b7cfd210e6212cf76' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_load_on_an_older_save_with_no_yaw_deg_does_not_crash_or_lose_the_entry
+[save] minted character id 'character-ec73515c069b38f7e38d4e53ac3e3cca' for slot 1 (no existing locator)
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_malformed_player_pose_falls_back_as_one_unit
+  ok    test_save_format.gd :: test_party_codec_preserves_uid_and_ordered_tournament_selection
+  ok    test_save_format.gd :: test_save_and_load_reject_an_out_of_range_slot
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_save_then_load_repairs_missing_base_stats_from_species_json
+[save] minted character id 'character-6a7d019256a3530d3a55dd85a348c020' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_replaces_whatever_party_the_loading_game_already_had
+[save] minted character id 'character-0b3ecd131197d3f935573f513c9081dd' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_a_non_shiny_creature_too
+[save] minted character id 'character-fae62b4a9aac8bdcfb3c094d83898a87' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_a_placed_buildings_rotation
+[save] minted character id 'character-ac95ce1c5707eea29fa1bf9521dc3100' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_a_placed_buildings_state_payload
+[save] minted character id 'character-848ae973f427afb1baa5b787bdf812e4' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_base_stats_and_survives_a_level_up
+[save] minted character id 'character-141f4a4be18d17e96f29a68633d4cfe3' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_building_yaw
+[save] minted character id 'character-702049b26c78268a195ff9d7b375fff0' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_creature_progression_and_moves
+[save] minted character id 'character-69611f1d761d94d9dbd9d0d44e354798' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_farm_plots
+[save] minted character id 'character-1b2b192378070e60dd59c7d18351eda9' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_felled_vegetation
+[save] minted character id 'character-ddacda601206a2b63bcba7ebe71273a7' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_individuality_and_traits
+[save] minted character id 'character-4a8d313f248ca03df301cfd8a53b7261' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_inventory_slot_positions
+[save] minted character id 'character-cf0be17b9f324f0ee8758df3cda0eb48' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_map_discovery
+[save] minted character id 'character-b542715f2e88e8f9441465aee0bd1bc7' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_permanently_harvested_vegetation
+[save] minted character id 'character-4043943ea27c5c44bf41213302fc7bcb' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_placed_buildings
+[save] minted character id 'character-a4513dbede79b58ff45f721a35614d65' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_player_pose
+[save] minted character id 'character-23214879ccbf0b81419645a3da5b2457' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_progression_flags
+[save] minted character id 'character-7332cb12586fd77c381bf9dd2f789df3' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_realm_and_active_heart
+[save] minted character id 'character-90aeb50ce7b1ab46b441cb10c83bc51e' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_satiety_through_live_vitals
+[save] minted character id 'character-02e0e980a7eacc120efb7484a126e3f2' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_satiety_through_the_fallback_field
+[save] minted character id 'character-85afb12d84b148ca4d4c4ae7c5f76e28' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_shiny
+[save] minted character id 'character-2f4c9d9c19fc5c2318de30ba30e4d9f2' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_the_day_counter
+[save] minted character id 'character-c1208d60b0742373a9744613003529df' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_the_party
+[save] minted character id 'character-7c032715b431085ecc98afc4043dbede' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_the_selected_character_body
+[save] minted character id 'character-43970a495056f4485ae79c79cec60743' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_the_world_seed
+[save] minted character id 'character-97882269675ed9699284a628be20a24c' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_save_then_load_round_trips_tool_durability
+  ok    test_save_format.gd :: test_slot_count_is_between_three_and_five
+[save] minted character id 'character-5970ec539c13a32468c670dec6e0afc3' for slot 2 (no existing locator)
+  ok    test_save_format.gd :: test_slot_info_reports_day_and_party_size_without_touching_the_caller
+[save] minted character id 'character-9f43288cf7ed57c5cabe005430994130' for slot 0 (no existing locator)
+[save] minted character id 'character-afbb5724110eb3a2e41c5cb602dc833f' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_slots_are_independent_of_each_other
+[save] minted character id 'character-147f3b83dad03a63249604b77c72ced3' for slot 0 (no existing locator)
+  ok    test_save_format.gd :: test_the_board_reads_the_same_bracket_after_a_reload
+[save] minted character id 'character-3e97ec7094fbfda21abf81c9408b0f29' for slot 1 (no existing locator)
+  ok    test_save_format.gd :: test_the_hour_survives_a_save_and_reload
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_v10_save_migrates_with_nothing_felled
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_v1_save_migrates_creatures_satiety_map_and_building_yaw_on_load
+  ok    test_save_format.gd :: test_v26_migration_keeps_progression_and_defaults_unregistered
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_v2_save_migrates_with_a_fresh_progression_store
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_v4_save_migrates_with_average_individuality_and_no_traits
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_v5_save_migrates_with_shiny_false
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_v9_save_migrates_with_nothing_harvested
+[save] minted character id 'character-2d3d658785ed3a19880af02ab1f1ef31' for slot 1 (no existing locator)
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_version_11_save_loads_without_inventing_a_player_pose
+[save] split slot_1 into worlds/legacy-slot-1 and characters/legacy-slot-1 (original untouched)
+  ok    test_save_format.gd :: test_version_twenty_five_pending_escrow_migrates_without_inventing_provenance
+  ok    test_session_build_compat.gd :: test_content_hash_is_order_independent_and_sensitive_to_bytes_and_paths
+  ok    test_session_build_compat.gd :: test_current_fingerprint_matches_itself_and_names_every_part
+  ok    test_session_build_compat.gd :: test_each_mismatch_names_what_differs
+  ok    test_session_build_compat.gd :: test_identical_fingerprint_is_admitted
+  ok    test_session_build_compat.gd :: test_missing_or_malformed_fingerprint_is_refused_not_admitted
+  ok    test_session_build_compat.gd :: test_token_is_the_short_display_form
+  ok    test_session_physical_timeout.gd :: test_client_timeout_targets_server_and_skips_relayed_client_ids
+  ok    test_session_physical_timeout.gd :: test_host_still_configures_both_direct_clients_and_skips_itself
+WARNING: Session.join_with_peer: peer is disconnected or identifies as a server
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] join_with_peer (res://scripts/net/session.gd:365)
+         [1] test_a_new_join_closes_a_still_lingering_transport_first (res://tests/test_session_reconnect_reservation.gd:123)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_session_reconnect_reservation.gd :: test_a_new_join_closes_a_still_lingering_transport_first
+  ok    test_session_reconnect_reservation.gd :: test_goodbye_teardown_ends_the_session_and_detaches_only_the_transport
+  ok    test_session_reconnect_reservation.gd :: test_held_seat_lapses_at_the_window
+  ok    test_session_reconnect_reservation.gd :: test_held_seat_refuses_a_different_character_with_a_readable_reason
+  ok    test_session_reconnect_reservation.gd :: test_live_or_empty_characters_are_not_reserved_and_clear_drops_seats
+  ok    test_session_reconnect_reservation.gd :: test_reservation_counts_only_against_others_when_seats_remain
+  ok    test_session_reconnect_reservation.gd :: test_reservation_is_host_bookkeeping_not_replicated_state
+  ok    test_session_reconnect_reservation.gd :: test_returning_character_reclaims_its_held_seat_under_a_new_peer_id
+  ok    test_session_reconnect_reservation.gd :: test_unadmitted_client_leave_tears_down_at_once
+  ok    test_session_save_authority.gd :: test_former_client_cannot_write_a_world_document
+  ok    test_session_save_authority.gd :: test_former_client_realm_restore_does_not_write_the_world
+  ok    test_session_save_authority.gd :: test_new_run_always_carries_an_explicit_identity
+  ok    test_session_save_authority.gd :: test_owning_host_realm_restore_still_writes_the_world
+[save] minted character id 'character-734c7063e1b520a5ea34b50f20eb1ad2' for slot 1 (no existing locator)
+WARNING: save: slot 1 already belongs to character 'character-734c7063e1b520a5ea34b50f20eb1ad2'; refusing to mint a new identity over it
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _character_id_for (res://scripts/save/save_game.gd:1023)
+         [1] _prepare_snapshot (res://scripts/save/save_game.gd:386)
+         [2] save (res://scripts/save/save_game.gd:375)
+         [3] test_unidentified_local_cannot_mint_over_a_slot_that_names_a_character (res://tests/test_session_save_authority.gd:62)
+         [4] _init (res://tests/run_tests.gd:120)
+  ok    test_session_save_authority.gd :: test_unidentified_local_cannot_mint_over_a_slot_that_names_a_character
+[save] minted character id 'character-681f2649e24f68b48bc10ec65058c336' for slot 2 (no existing locator)
+  ok    test_session_save_authority.gd :: test_unidentified_local_on_an_empty_slot_mints_explicitly
+[session] snapshot applied (3 keys, day 7)
+  ok    test_session_snapshot.gd :: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta
+  ok    test_session_snapshot.gd :: test_bootstrap_delta_overflow_fails_without_applying_entries
+  ok    test_session_snapshot.gd :: test_conflicting_early_chunk_fails_and_never_opens_readiness
+WARNING: [session] snapshot for peer 22 failed: The world snapshot transfer timed out before the client acknowledged it.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _abort_host_snapshot (res://scripts/net/session.gd:976)
+         [1] _expire_snapshot_sends (res://scripts/net/session.gd:1471)
+         [2] test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once (res://tests/test_session_snapshot.gd:185)
+         [3] _init (res://tests/run_tests.gd:120)
+  ok    test_session_snapshot.gd :: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once
+  ok    test_session_snapshot.gd :: test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one
+  ok    test_session_transport.gd :: test_client_character_is_not_saveable_until_snapshot_admission
+WARNING: Session.host_with_peer: capacity 5 is outside 1..4
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] host_with_peer (res://scripts/net/session.gd:295)
+         [1] test_disconnected_or_wrong_role_peers_are_refused_before_install (res://tests/test_session_transport.gd:40)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_session_transport.gd :: test_disconnected_or_wrong_role_peers_are_refused_before_install
+  ok    test_session_transport.gd :: test_enet_physical_timeout_routing_remains_transport_specific
+[session] client leave: handshake never applied a snapshot; portable character unchanged
+  ok    test_session_transport.gd :: test_failed_client_leave_does_not_call_the_character_store
+  ok    test_session_transport.gd :: test_transport_closed_fires_after_peer_and_kind_are_cleared
+  ok    test_session_transport.gd :: test_world_first_preparation_closes_authority_snapshot_and_save_gates
+  ok    test_snapshot_transfer.gd :: test_corrupt_complete_payload_never_becomes_ready
+  ok    test_snapshot_transfer.gd :: test_descriptor_limits_and_reset_release_partial_state
+  ok    test_snapshot_transfer.gd :: test_invalid_chunks_are_rejected_without_replacing_accepted_data
+  ok    test_snapshot_transfer.gd :: test_missing_chunk_and_identical_duplicate_never_complete_early
+  ok    test_snapshot_transfer.gd :: test_snapshot_larger_than_steam_packet_limit_round_trips_out_of_order
+  ok    test_snapshot_transfer.gd :: test_valid_variant_bytes_that_are_not_a_dictionary_are_rejected
+  ok    test_split_key_coverage_equals_v22.gd :: test_a_flag_survives_the_split_on_whichever_side_it_belongs
+  ok    test_split_key_coverage_equals_v22.gd :: test_an_empty_dictionary_partitions_and_merges_without_a_crash
+  ok    test_split_key_coverage_equals_v22.gd :: test_every_v22_key_is_owned_by_exactly_one_half
+  ok    test_split_key_coverage_equals_v22.gd :: test_garbage_in_the_progression_payload_does_not_abort_the_partition
+  ok    test_split_key_coverage_equals_v22.gd :: test_partitioning_and_merging_a_v22_dictionary_is_lossless
+  ok    test_split_key_coverage_equals_v22.gd :: test_the_derived_keys_come_back_from_the_realm_maps_and_not_from_thin_air
+  ok    test_split_key_coverage_equals_v22.gd :: test_the_round_trip_holds_for_a_trainer_standing_in_the_other_realm
+  ok    test_split_key_coverage_equals_v22.gd :: test_the_two_halves_share_no_state_key
+  ok    test_split_key_coverage_equals_v22.gd :: test_the_world_half_includes_environment_and_durable_journals
+  ok    test_steam_invite_ui.gd :: test_cold_steam_invite_parser_accepts_both_launch_forms
+  ok    test_steam_invite_ui.gd :: test_deliberate_new_friend_character_clears_stale_identity_and_world
+  ok    test_steam_invite_ui.gd :: test_native_lobby_failure_invalidates_a_ready_join_before_character_selection
+  ok    test_steam_invite_ui.gd :: test_players_invite_button_preserves_specific_coordinator_error
+  ok    test_steam_invite_ui.gd :: test_selected_portable_character_replaces_run_state_without_loading_its_world
+  ok    test_steam_invite_ui.gd :: test_unresolved_native_request_cannot_advertise_actionable_retry
+  ok    test_steam_lobby.gd :: test_app_id_has_no_spacewars_default
+  ok    test_steam_lobby.gd :: test_build_mismatch_leaves_metadata_lobby_before_dial
+  ok    test_steam_lobby.gd :: test_cancelled_join_leaves_late_successful_callback
+  ok    test_steam_lobby.gd :: test_connect_lobby_launch_argument_parsing
+  ok    test_steam_lobby.gd :: test_invite_accepted_while_closed_is_read_from_the_steam_launch_line
+  ok    test_steam_lobby.gd :: test_invite_accepted_while_running_becomes_one_pending_invite
+  ok    test_steam_lobby.gd :: test_invite_overlay_unavailable_is_actionable
+  ok    test_steam_lobby.gd :: test_invite_while_hosting_stays_pending_with_a_reason
+  ok    test_steam_lobby.gd :: test_mismatched_success_callback_is_left_without_stealing_attempt
+  ok    test_steam_lobby.gd :: test_missing_build_metadata_is_refused_as_unknown_version
+  ok    test_steam_lobby.gd :: test_native_identity_must_be_a_member_of_the_claimed_lobby
+  ok    test_steam_lobby.gd :: test_native_unavailable_is_optional_and_actionable
+  ok    test_steam_lobby.gd :: test_original_host_departure_refuses_lobby_before_dial
+  ok    test_steam_lobby.gd :: test_protocol_mismatch_leaves_metadata_lobby
+  ok    test_steam_lobby.gd :: test_protocol_refusal_text_is_the_one_session_maps_to_incompatible_version
+  ok    test_steam_lobby.gd :: test_timed_out_host_request_stays_pending_until_callback_finishes
+  ok    test_steam_lobby.gd :: test_timed_out_join_stays_pending_until_late_callback_then_allows_retry
+  ok    test_stormwood_arch_ledger.gd :: test_first_claimant_relights_once_and_only_winner_pays_three
+  ok    test_stormwood_arch_ledger.gd :: test_half_lit_pair_has_no_twin_and_full_pair_links_both_directions
+  ok    test_stormwood_arch_ledger.gd :: test_rootgate_guards_c_and_d_until_released
+  ok    test_stormwood_arch_ledger.gd :: test_wrong_realm_id_and_insufficient_preflight_stock_refuse_without_cost
+  ok    test_stormwood_capacitor_grove_identity.gd :: test_capacitor_crescent_has_readable_visual_hierarchy_without_collision
+  ok    test_stormwood_capacitor_grove_identity.gd :: test_capacitor_identity_preserves_socket_and_gameplay_placements
+  ok    test_stormwood_environment_save.gd :: test_reset_and_malformed_environment_return_to_empty_state
+  ok    test_stormwood_environment_save.gd :: test_v22_migration_adds_an_empty_environment_without_mutating_legacy_payload
+  ok    test_stormwood_environment_save.gd :: test_world_save_partition_keeps_environment_in_the_world_half
+  ok    test_stormwood_environment_save.gd :: test_world_state_snapshot_preserves_nested_environment_for_a_late_joiner
+  ok    test_stormwood_glass_field_identity.gd :: test_glass_field_builds_a_readable_non_colliding_strike_corridor
+  ok    test_stormwood_glass_field_identity.gd :: test_glass_field_dressing_keeps_the_authored_route_and_encounter_clear
+  ok    test_stormwood_harvest_ledger.gd :: test_break_grants_the_catalogue_yield_not_forged_request_contents
+  ok    test_stormwood_harvest_ledger.gd :: test_calm_refuses_a_charged_site_even_if_request_claims_break
+  ok    test_stormwood_harvest_ledger.gd :: test_generic_harvest_cannot_bypass_a_reserved_stormwood_site_flag
+  ok    test_stormwood_harvest_ledger.gd :: test_hollow_crown_site_refuses_before_its_route_gate_opens
+  ok    test_stormwood_harvest_ledger.gd :: test_two_peers_contending_for_one_site_create_one_grant
+  ok    test_stormwood_realm_transition.gd :: test_active_hosted_roster_retires_before_response_fence
+  ok    test_stormwood_realm_transition.gd :: test_actual_inbound_dispatch_calls_receiver_gate_before_hub_lookup
+  ok    test_stormwood_realm_transition.gd :: test_actual_local_response_emission_stops_after_response_closure
+  ok    test_stormwood_realm_transition.gd :: test_between_round_roster_retires_before_response_fence
+  ok    test_stormwood_realm_transition.gd :: test_inbound_prefence_and_outbound_results_respect_receiver_phase
+  ok    test_stormwood_realm_transition.gd :: test_local_hosted_intents_stop_but_completion_can_settle
+  ok    test_stormwood_rod_ledger.gd :: test_each_disabled_station_flag_applies_its_region_surge_duration_modifier
+  ok    test_stormwood_rod_ledger.gd :: test_every_exact_station_requires_its_real_guard_and_prerequisite_then_disables_once
+  ok    test_stormwood_rod_ledger.gd :: test_saved_world_state_prevents_a_station_from_being_disabled_again
+  ok    test_stormwood_rod_ledger.gd :: test_two_peers_contending_for_one_station_commit_one_disabled_flag
+  ok    test_stormwood_struck_sentinel_identity.gd :: test_landmark_seat_and_ranger_pax_stay_authoritative_while_visual_moves_clear
+  ok    test_stormwood_struck_sentinel_identity.gd :: test_struck_sentinel_is_a_readable_visual_only_landmark_off_the_road_seat
+  ok    test_stronghold_approach_visual_identity.gd :: test_aggressor_pack_is_reachable_without_sitting_on_the_road_or_capture_stand
+  ok    test_stronghold_approach_visual_identity.gd :: test_approach_replaces_arrow_pennants_with_seated_vertical_standards
+  ok    test_stronghold_approach_visual_identity.gd :: test_authored_approach_props_are_installed_and_leave_the_road_open
+  ok    test_stronghold_approach_visual_identity.gd :: test_capture_faces_the_hall_and_fails_closed_on_near_wildlife
+  ok    test_stronghold_approach_visual_identity.gd :: test_hall_gate_beacons_light_the_destination_without_blocking_the_spine
+  ok    test_stronghold_approach_visual_identity.gd :: test_hall_has_one_approach_crown_and_local_night_separation
+  ok    test_stronghold_approach_visual_identity.gd :: test_midground_signal_uses_warm_fire_not_reserved_teal
+  ok    test_stronghold_approach_visual_identity.gd :: test_occupation_clearings_are_local_and_keep_ground_cover
+  ok    test_stronghold_approach_visual_identity.gd :: test_outer_arrival_has_a_bounded_canopy_sightline_to_the_hall
+  ok    test_stronghold_approach_visual_identity.gd :: test_r6_ramp_uses_local_path_stone_and_physical_grade_courses
+  ok    test_stronghold_approach_visual_identity.gd :: test_three_occupation_beats_lead_toward_the_hall
+  ok    test_tether_relay_visual_identity.gd :: test_hero_apparatus_dominates_an_integrated_service_boiler
+  ok    test_tether_relay_visual_identity.gd :: test_relay_platform_has_readable_material_edges_and_practical_lights
+  ok    test_tether_relay_visual_identity.gd :: test_relay_recapture_exposes_the_hero_and_real_console_route
+  ok    test_tether_relay_visual_identity.gd :: test_relay_staffing_is_authored_presence_not_a_capture_crowd
+  ok    test_tether_relay_visual_identity.gd :: test_support_finish_and_gantry_console_sequence_are_authored
+  ok    test_trail_camp_arrival_identity.gd :: test_arrival_lens_is_minimal_road_centred_and_only_shallowly_joins_camp
+  ok    test_trail_camp_arrival_identity.gd :: test_arrival_lens_preserves_ground_cover_layers
+  ok    test_trail_camp_arrival_identity.gd :: test_capture_uses_real_road_and_rejects_buried_eyes
+  ok    test_trail_camp_arrival_identity.gd :: test_roadside_threshold_is_installed_visible_source_art_without_collision
+  ok    test_trail_camp_arrival_identity.gd :: test_threshold_flanks_the_route_and_stays_outside_functional_camp_circles
+  ok    test_water_realm_transition.gd :: test_primary_callback_retires_alpha_and_releases_catch_without_losing_durable_result
+  ok    test_water_realm_transition.gd :: test_primary_settlement_tracks_only_local_pending_results_not_active_fights
+  ok    test_water_realm_transition.gd :: test_veilfall_inherits_closed_request_and_response_gates
+  ok    test_water_realm_transition.gd :: test_water_submit_completion_names_and_receiver_dispatch
+  ok    test_water_traversal_save.gd :: test_corrupt_aquatic_data_rejects_the_entire_pose
+  ok    test_water_traversal_save.gd :: test_exhaustion_survives_json_and_pose_sanitisation_without_session_ids
+  ok    test_water_traversal_save.gd :: test_mount_identity_round_trip_uses_owned_party_slot_not_transport_id
+  ok    test_water_traversal_save.gd :: test_old_pose_is_preserved_and_aquatic_state_cannot_attach_to_another_realm
+  ok    test_water_traversal_save.gd :: test_pause_and_mount_modes_are_data_without_importing_transport_revision
+  ok    test_world_ledger_races.gd :: test_a_client_replaying_the_hosts_deltas_ends_up_with_the_hosts_world
+  ok    test_world_ledger_races.gd :: test_a_dismantle_in_flight_takes_down_its_own_structure_not_the_renumbered_neighbour
+  ok    test_world_ledger_races.gd :: test_a_dismantle_pointed_at_another_realms_record_is_refused
+  ok    test_world_ledger_races.gd :: test_a_joiner_that_never_saw_a_chest_written_is_not_locked_out_of_it_forever
+  ok    test_world_ledger_races.gd :: test_a_placement_and_a_dismantle_go_through_the_ledger_into_the_world
+  ok    test_world_ledger_races.gd :: test_a_placement_verdict_names_the_ticket_it_answers
+  ok    test_world_ledger_races.gd :: test_a_player_flag_granted_to_two_peers_reaches_both_and_only_them
+  ok    test_world_ledger_races.gd :: test_a_replayed_drop_leaves_one_stack_on_the_ground
+  ok    test_world_ledger_races.gd :: test_a_replayed_transfer_moves_the_stack_exactly_once
+  ok    test_world_ledger_races.gd :: test_a_reward_pays_each_participant_once_and_refuses_a_replay
+  ok    test_world_ledger_races.gd :: test_a_storage_write_against_a_revision_two_behind_is_refused
+  ok    test_world_ledger_races.gd :: test_a_storage_write_that_quotes_the_current_revision_lands_in_the_record
+  ok    test_world_ledger_races.gd :: test_a_uid_is_never_reused_after_a_dismantle
+  ok    test_world_ledger_races.gd :: test_an_intent_with_no_realm_is_refused_rather_than_guessed_at
+  ok    test_world_ledger_races.gd :: test_an_unknown_intent_is_refused_with_a_reason
+  ok    test_world_ledger_races.gd :: test_apply_delta_ignores_an_op_it_does_not_understand_rather_than_dying
+  ok    test_world_ledger_races.gd :: test_doss_refuses_missing_materials_or_reward_room_without_any_ops
+  ok    test_world_ledger_races.gd :: test_setting_a_world_flag_that_is_already_set_is_a_noop_not_a_refusal
+  ok    test_world_ledger_races.gd :: test_the_same_flag_in_two_realms_is_two_different_finds
+  ok    test_world_ledger_races.gd :: test_the_winner_is_whoever_committed_first_not_whoever_is_the_host
+  ok    test_world_ledger_races.gd :: test_two_claims_on_one_pickup_leave_exactly_one_winner
+  ok    test_world_ledger_races.gd :: test_two_doss_claimants_charge_and_reward_only_the_first_commit
+  ok    test_world_ledger_races.gd :: test_two_gathers_of_one_harvest_node_yield_one_lot_of_wood
+  ok    test_world_ledger_races.gd :: test_two_identical_chest_writes_are_distinguishable_and_a_replay_is_refused
+  ok    test_world_ledger_races.gd :: test_two_peers_chopping_the_same_bush_duplicate_nothing
+  ok    test_world_ledger_races.gd :: test_two_withdrawals_of_one_stack_cannot_both_commit
+[save] minted character id 'character-8dc37320f6a3a0c7457b2c6ed39111d8' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_a_client_save_writes_no_world_file
+  ok    test_world_save_format.gd :: test_a_corrupt_world_file_reads_as_nothing_to_load
+[save] minted character id 'character-3a7454fccce8ec92f6ce20847034c54b' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_a_host_save_writes_a_world_file_at_the_partitioned_path
+  ok    test_world_save_format.gd :: test_a_missing_world_reads_as_nothing_to_load
+[save] minted character id 'character-93b8ef27d0fd873c8758f83a2fe9d21b' for slot 1 (no existing locator)
+WARNING: world 'slot-1' is version 3, this build reads 2 -- not loading
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] read (res://scripts/save/world_save.gd:211)
+         [1] test_a_newer_than_this_build_world_file_refuses (res://tests/test_world_save_format.gd:226)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_world_save_format.gd :: test_a_newer_than_this_build_world_file_refuses
+  ok    test_world_save_format.gd :: test_a_scratch_save_writes_no_world_no_character_and_renames_nobody
+[save] minted character id 'character-80a25db4c925fc635c0b622cb0487c58' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_only_world_scope_flags_land_in_the_world_file
+[save] minted character id 'character-9d4616ceac96681acd379062a3db6231' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_resaving_a_world_keeps_its_created_at_and_moves_last_played
+  ok    test_world_save_format.gd :: test_save_world_refuses_on_a_client_and_refuses_an_empty_id
+  ok    test_world_save_format.gd :: test_split_world_state_marker_prevents_a_second_water_retarget
+  ok    test_world_save_format.gd :: test_split_world_state_preserves_later_legitimate_water_reward
+  ok    test_world_save_format.gd :: test_split_world_state_repairs_only_legacy_cloudreach_water_entitlements
+  ok    test_world_save_format.gd :: test_the_real_saver_writes_worlds_under_the_d100_directory
+[save] minted character id 'character-63d86c067f9288be28d923989de22c05' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_slot_owns_the_world_id_so_a_new_game_does_not_overwrite_the_old_world
+[save] minted character id 'character-063aed59a298a3e6df78bd56611b1b07' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_state_payload_loads_straight_into_a_world_state
+[save] minted character id 'character-780c8353c9aaba6ab688def3e664eebb' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_world_file_carries_no_character_key
+[save] minted character id 'character-cc54d87015cc82964cf69fdb861c34d3' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_world_file_carries_the_world_half_and_its_envelope
+[save] minted character id 'character-2ca1eb6da430d3d2999a96cfbffb3907' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_the_world_file_values_are_the_ones_the_game_held
+[save] minted character id 'character-8324c2179029ceb3de4e1a8d2e184a6b' for slot 1 (no existing locator)
+  ok    test_world_save_format.gd :: test_version_one_world_reads_with_an_empty_reward_journal
+
+607 tests, 5913 assertions, 0 failed

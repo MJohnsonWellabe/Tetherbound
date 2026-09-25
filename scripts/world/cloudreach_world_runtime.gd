@@ -31,6 +31,11 @@ var payoffs: Node3D
 var fall_recovery: Node3D
 var _registered: Array[CharacterBody3D] = []
 var _field_body: CharacterBody3D
+## True from the frame `_process` hands the ally over until
+## `_release_field_control()`. Tracked apart from `_field_body` because a
+## recalled ally is freed while still piloted: a freed body is a pilot to
+## release, never "nothing piloted".
+var _piloting := false
 var _mounted := false
 var _recovering := false
 var _traveler_revision := -1
@@ -230,10 +235,7 @@ func _process(_delta: float) -> void:
 	var ally: CharacterBody3D = director.call("ally_body")
 	_register_actor(ally)
 	_register_actor(controlled_body())
-	var should_pilot := str(finale.get("phase")) == "break_the_eye" \
-		and not bool(manager.call("is_fighting")) and not bool(director.call("trainer_battle_active")) \
-		and is_instance_valid(ally) and ally.visible \
-		and ally.global_position.distance_to(finale.global_position) < 65.0
+	var should_pilot := _should_pilot(ally)
 	if should_pilot and ally != _field_body:
 		# The exam drives the ally itself; a rider comes off first so the
 		# riding controller and this pilot never both drive one body.
@@ -242,14 +244,29 @@ func _process(_delta: float) -> void:
 			riding.call("dismount")
 		_release_field_control()
 		_field_body = ally
+		_piloting = true
 		_field_body.call("set_following", false)
 		player.call("set_locomotion_enabled", false)
 		world.get_node("CameraRig").call("set_target", ally, {"distance": 5.8, "height": 1.4})
 		world.get_node("InteractionArbiter").call("set_player", ally)
-	elif not should_pilot and is_instance_valid(_field_body):
+	elif not should_pilot and _piloting:
 		_release_field_control()
 	if finale != null:
 		finale.call("witness_restoration", controlled_body())
+
+
+## Whether the break_the_eye exam hands `ally` to the trainer right now. Read
+## every frame by `_process`, and by the `progression_restore` sweep, which
+## releases the pilot once this is false. The sweep runs before the finale's
+## own (this node is added to the world first), so it still reads the phase
+## from before the delta; a delta that ends break_the_eye is released by the
+## next `_process`, one frame later.
+func _should_pilot(ally: CharacterBody3D) -> bool:
+	return finale != null and manager != null and director != null \
+		and str(finale.get("phase")) == "break_the_eye" \
+		and not bool(manager.call("is_fighting")) and not bool(director.call("trainer_battle_active")) \
+		and is_instance_valid(ally) and ally.visible \
+		and ally.global_position.distance_to(finale.global_position) < 65.0
 
 
 func _sync_returning_travelers() -> void:
@@ -285,6 +302,7 @@ func _release_field_control() -> void:
 	if is_instance_valid(_field_body):
 		_field_body.call("set_following", true)
 	_field_body = null
+	_piloting = false
 	if is_instance_valid(world) and is_instance_valid(player):
 		world.get_node("InteractionArbiter").call("set_player", player)
 		world.get_node("CameraRig").call("set_target", player, {})
@@ -458,8 +476,18 @@ func _settle_companion_beside(body: CharacterBody3D) -> void:
 			companion.velocity = Vector3.ZERO
 
 
+## Also a client's per-delta sweep (`ledger_rpc.gd::apply_remote_delta`). It
+## used to release field control unconditionally: in break_the_eye every relay
+## strike or pickup handed locomotion and the camera back to the trainer for
+## one frame before `_process` took the ally again, and outside the exam it
+## re-targeted the camera at the trainer whatever else owned it. A pilot is
+## released here when its body is gone (a recalled ally is freed) or the exam
+## would no longer hand it over; with no pilot taken this touches nothing.
+## `_process` catches any later change on its next frame.
 func restore_progression_from_game(_game: Node) -> void:
-	_release_field_control()
+	if _piloting and not (is_instance_valid(_field_body) and director != null \
+			and _field_body == director.call("ally_body") and _should_pilot(_field_body)):
+		_release_field_control()
 	_traveler_revision = -1
 
 
