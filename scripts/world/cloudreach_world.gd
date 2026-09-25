@@ -53,6 +53,8 @@ const NATURE_ROCKS: Array[PackedScene] = [
 const CLOUDREACH_LEAF_TEXTURE := preload(
 	"res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png")
 const CASTLE_GATE := preload("res://assets/buildings/quaternius_castle/WallEntranceBricks.obj")
+## Iron grille panel (1.95 x 2.87 m) tiled into a closed ground gate's portcullis.
+const GATE_PORTCULLIS_PANEL := preload("res://assets/buildings/quaternius_medieval/Prop_MetalFence_Simple.gltf")
 const CASTLE_TOWER := preload("res://assets/buildings/quaternius_castle/SmallSquareTowerBricks.obj")
 const CASTLE_WALL := preload("res://assets/buildings/quaternius_castle/TallWallBricks.obj")
 const TETHER_PYLON := preload("res://assets/environment/team_tether/tether_pylon.glb")
@@ -2197,8 +2199,8 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 			_mesa(parent, "%sRockShoulder%d" % [label, i], spur_at,
 				Vector3(spur_width, spur_height, spur_width * (0.7 + depth_mix * 0.5)),
 				_materials["cliff_mid"], _materials["cliff_high"], false, seed_value + i * 7, true)
-			if posmod(i + seed_value, 3) == 0:
-				var shelf := centre + right * side * (half_width + 8.0) - Vector3.UP * 8.0
+			var shelf := centre + right * side * (half_width + 8.0) - Vector3.UP * 8.0
+			if posmod(i + seed_value, 3) == 0 and not straddles_closed_ground_gate(shelf - Vector3.UP * 9.0, Vector3(23, 18, 21)):
 				_mesa(parent, "%sRootedShelf%d" % [label, i], shelf - Vector3.UP * 9.0,
 					Vector3(23, 18, 21), _materials["cliff"], _materials["upland"], true, seed_value + i)
 				var tree := NATURE_TREES[posmod(seed_value + i, NATURE_TREES.size())].instantiate() as Node3D
@@ -2844,16 +2846,21 @@ func _build_progression_gates() -> void:
 		gate.position = at
 		gate.rotation.y = _gate_yaw_for(required, at)
 		root.add_child(gate)
-		# F06: a ground gate on a route ridge must span the ridge's whole
-		# walkable top, not just the ribbon, or it is walked around. Optional
-		# per-gate data; the defaults reproduce the former fixed 16 m / 22 m
-		# opening exactly (pier centres 0.58 x 16 = 8 + 1.28 m).
+		# F06: a ground gate on a route ridge must close the ridge's whole
+		# walkable top, or it is walked around. Optional per-gate data; the
+		# defaults reproduce the former fixed 16 m / 22 m opening exactly
+		# (pier centres 0.58 x 16 = 8 + 1.28 m).
 		var opening_width := float(spec.get("opening_width_m", 22.0 if flight else 16.0))
 		var opening_height := 18.0 if flight else 7.5
-		# How far the barrier (and ground piers) reach below the gate point, so
-		# a ridge whose outer edge falls away beside the crest leaves no gap.
+		# How far the barrier, piers and wings reach below the gate point, so a
+		# ridge whose outer edge falls away beside the crest leaves no gap.
 		var below := maxf(0.0, float(spec.get("barrier_depth_below_m", 0.0)))
+		# Masonry wing walls from each pier out across the ridge's falling
+		# shoulders: drawn and colliding alike, permanent (the gate's frame,
+		# not its closure).
+		var wing := maxf(0.0, float(spec.get("wing_width_m", 0.0)))
 		var pier_x := opening_width * 0.5 + 1.28
+		var closure: Node3D = null
 		if not flight:
 			_box(gate, "LeftPier", Vector3(-pier_x, (opening_height - below) * 0.5, 0.0),
 				Vector3(2.0, opening_height + 3.0 + below, 2.2), _materials["masonry"], true)
@@ -2861,6 +2868,12 @@ func _build_progression_gates() -> void:
 				Vector3(2.0, opening_height + 3.0 + below, 2.2), _materials["masonry"], true)
 			_box(gate, "Counterweight", Vector3(0.0, opening_height + 1.1, 0.0),
 				Vector3(opening_width + 4.0, 2.2, 2.2), _materials["masonry_trim"], true)
+			if wing > 0.0:
+				for side: float in [-1.0, 1.0]:
+					_box(gate, "LeftWing" if side < 0.0 else "RightWing",
+						Vector3(side * (pier_x + 1.0 + wing * 0.5), (opening_height - below) * 0.5, 0.0),
+						Vector3(wing, opening_height + below, 2.2), _materials["masonry"], true)
+			closure = _build_gate_closure(gate, opening_width, opening_height)
 		var barrier := StaticBody3D.new()
 		barrier.name = "LockedTraversalBarrier"
 		var shape_node := CollisionShape3D.new()
@@ -2870,6 +2883,11 @@ func _build_progression_gates() -> void:
 		shape_node.position.y = (opening_height - below) * 0.5
 		barrier.add_child(shape_node)
 		gate.add_child(barrier)
+		if closure != null:
+			# A ground gate's closed state is its drawn closure; it goes away
+			# with the barrier when the flag opens the gate.
+			_progression_gates.append({"flag": required, "shape": shape_node, "veil": closure})
+			continue
 		var veil := Node3D.new()
 		veil.name = "LockedWindVeil"
 		veil.position.y = opening_height * 0.5
@@ -2888,6 +2906,41 @@ func _build_progression_gates() -> void:
 			stream.material_override=wind
 			veil.add_child(stream)
 		_progression_gates.append({"flag": required, "shape": shape_node, "veil": veil})
+
+
+## F06: a closed ground gate reads as closed. An iron portcullis of the
+## installed medieval metal-fence panels fills the whole opening, in the plane
+## (and to the height) of the LockedTraversalBarrier that collides there, and
+## two counterweights hang from the lintel on ropes. The node is hidden with
+## the barrier when the gate opens.
+func _build_gate_closure(gate: Node3D, opening_width: float, opening_height: float) -> Node3D:
+	var closure := Node3D.new()
+	closure.name = "LockedGateClosure"
+	gate.add_child(closure)
+	var panel_width := 1.95
+	var panel_height := 2.87
+	var count := maxi(1, int(ceilf(opening_width / panel_width)))
+	var step := opening_width / float(count)
+	for i in count:
+		var panel := GATE_PORTCULLIS_PANEL.instantiate() as Node3D
+		panel.name = "PortcullisPanel%d" % i
+		# From 1 m below the gate point (the route line sits up to ~0.7 m above
+		# the ridge crest) so the grille's foot is seated in the ground.
+		panel.scale = Vector3(step / panel_width, (opening_height + 1.0) / panel_height, 3.0)
+		panel.position = Vector3(-opening_width * 0.5 + step * (float(i) + 0.5), -1.0, 0.0)
+		closure.add_child(panel)
+	# A timber rail along the foot and the top of the grille, so its edges read
+	# at distance as one lowered gate rather than loose fence panels.
+	for y: float in [-0.35, opening_height - 0.25]:
+		_box(closure, "PortcullisRail", Vector3(0.0, y, 0.0), Vector3(opening_width, 0.5, 0.6),
+			_materials["weathered_timber"], false)
+	for side: float in [-1.0, 1.0]:
+		var hang_x := side * (opening_width * 0.5 - 1.6)
+		var top := Vector3(hang_x, opening_height, -1.6)
+		var weight := Vector3(hang_x, opening_height - 3.4, -1.6)
+		_cylinder_between(closure, "CounterweightRope", top, weight + Vector3.UP * 1.2, 0.07, _materials["rope"])
+		_box(closure, "CounterweightStone", weight, Vector3(1.4, 2.4, 1.4), _materials["masonry_trim"], false)
+	return closure
 
 
 func _gate_yaw_for(required_flag: String, at: Vector3) -> float:
@@ -4249,6 +4302,8 @@ func _mesa(
 	# than a row of identical hanging prisms.
 	if label.contains("RockShoulder") and not collision and _overlaps_battle_yard(centre,size):
 		return root # Keep a real clear yard/vista, not a noncolliding rock intruder.
+	if label.contains("RockShoulder") and not collision and straddles_closed_ground_gate(centre, size):
+		return root # F06: no drawn-but-not-solid rock beside a closed gate (see below).
 	var sides := 48 + posmod(seed_value, 6)
 	var eroded_crown := label == "CliffMass"
 	var top_ring: Array[Vector3] = []
@@ -4626,6 +4681,38 @@ func _emit_flat_crown(tool: SurfaceTool, sides: int, crown: Vector3, rings: Arra
 			var next := (i + 1) % sides
 			_add_surface_triangle(tool, a_ring[i] + lift, a_ring[next] + lift, b_ring[i] + lift)
 			_add_surface_triangle(tool, b_ring[i] + lift, a_ring[next] + lift, b_ring[next] + lift)
+
+
+## F06: rock that straddles a closed ground gate. A route ridge's
+## `RockShoulder` spurs are drawn but never collide, and each carries
+## colliding shelves inside its drawn mass; beside a closed gate they read as
+## crest-high ground around the gate's ends that a player steps onto and falls
+## through, and a refused flyer sinks through them onto a shelf inside the
+## rock. Such spurs (and the ridge's `RootedShelf` ledges) are not built where
+## their footprint crosses a closed ground gate's plane within
+## GATE_ROCK_FLANK_M of its ends; the gate's own wing walls and the ridge's
+## cliff walls frame it instead.
+const GATE_ROCK_FLANK_M := 40.0
+
+func straddles_closed_ground_gate(centre: Vector3, size: Vector3) -> bool:
+	var radius := 0.5 * maxf(size.x, size.z) * 1.2 + 4.0
+	for raw: Variant in _config.get("gates", []):
+		if not raw is Dictionary:
+			continue
+		var spec := raw as Dictionary
+		if str(spec.get("required_traversal", "ground")) == "fly" or str(spec.get("requires_unlock", "")).is_empty():
+			continue
+		var at := _vec3(spec.get("position", []))
+		var yaw := _gate_yaw_for(str(spec.get("requires_unlock", "")), at)
+		var along := Vector3(sin(yaw), 0.0, cos(yaw))
+		var right := Vector3(cos(yaw), 0.0, -sin(yaw))
+		var rel := centre - at
+		rel.y = 0.0
+		var half_span := float(spec.get("opening_width_m", 16.0)) * 0.5 + 2.28 \
+			+ maxf(0.0, float(spec.get("wing_width_m", 0.0)))
+		if absf(rel.dot(along)) < radius and absf(rel.dot(right)) < radius + half_span + GATE_ROCK_FLANK_M:
+			return true
+	return false
 
 
 func _overlaps_battle_yard(at: Vector3, size: Vector3) -> bool:

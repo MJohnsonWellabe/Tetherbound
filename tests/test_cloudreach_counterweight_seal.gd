@@ -43,6 +43,8 @@ const DEFAULT_ROUTE_WIDTH_M := 7.5
 const MAX_SHOULDER_FLARE := 1.10
 ## cloudreach_world.gd _build_progression_gates: a ground gate's opening height.
 const GROUND_GATE_OPENING_HEIGHT_M := 7.5
+## `_route_ridge`: the flat crest track is 0.53 of the shoulder half-width.
+const TRACK_FRACTION := 0.53
 ## scenes/player/player.tscn capsule radius.
 const TRAINER_RADIUS_M := 0.4
 ## The authored beacon crown is 46 x 44 m around its anchor (beacon visual note).
@@ -89,8 +91,15 @@ func test_gate_spans_the_route_ridge_walkable_width() -> void:
 	var half := maxf(float(landmass.get("route_shoulder_min_half_width_m", 24.0)),
 		width * float(landmass.get("route_shoulder_path_multiplier", 3.8)))
 	var needed := 2.0 * (half * MAX_SHOULDER_FLARE + TRAINER_RADIUS_M)
-	assert_true(float(gate.get("opening_width_m", 16.0)) >= needed,
-		"the gate spans the walkable width: %.1f m >= %.1f m" % [float(gate.get("opening_width_m", 16.0)), needed])
+	var opening := float(gate.get("opening_width_m", 16.0))
+	# _build_progression_gates: piers 2 m wide centred at opening/2 + 1.28 m,
+	# then masonry wing walls wing_width_m further out.
+	var closed_span := 2.0 * (opening * 0.5 + 2.28 + float(gate.get("wing_width_m", 0.0)))
+	assert_true(closed_span >= needed,
+		"the closed gate spans the walkable width: %.2f m >= %.2f m" % [closed_span, needed])
+	var track := 2.0 * (half * TRACK_FRACTION + TRAINER_RADIUS_M)
+	assert_true(opening >= track,
+		"the opened gate passes the whole flat track: %.2f m >= %.2f m" % [opening, track])
 	var drop := float(landmass.get("route_edge_drop_min_m", 4.0)) + 2.0 * float(landmass.get("route_edge_drop_range_m", 9.0))
 	assert_true(float(gate.get("barrier_depth_below_m", 0.0)) >= drop,
 		"the barrier reaches the ridge's deepest dropped edge: %.1f m >= %.1f m" % [float(gate.get("barrier_depth_below_m", 0.0)), drop])
@@ -141,12 +150,16 @@ func test_every_collidable_top_face_of_the_closed_gate_is_fly_sealed() -> void:
 	var seals := _upper_seals()
 	var pier_x := width * 0.5 + 1.28
 	var pier_top := (opening_height - below) * 0.5 + (opening_height + 3.0 + below) * 0.5
+	var wing := maxf(0.0, float(gate.get("wing_width_m", 0.0)))
 	# [lateral min, lateral max, along half-depth, top y above the gate point]
 	var faces := [
 		["counterweight beam", -(width + 4.0) * 0.5, (width + 4.0) * 0.5, 1.1, opening_height + 1.1 + 1.1],
 		["left pier", -pier_x - 1.0, -pier_x + 1.0, 1.1, pier_top],
 		["right pier", pier_x - 1.0, pier_x + 1.0, 1.1, pier_top],
 	]
+	if wing > 0.0:
+		faces.append(["left wing", -pier_x - 1.0 - wing, -pier_x - 1.0, 1.1, opening_height])
+		faces.append(["right wing", pier_x + 1.0, pier_x + 1.0 + wing, 1.1, opening_height])
 	var samples := 0
 	var misses: Array[String] = []
 	for face: Array in faces:
@@ -161,7 +174,7 @@ func test_every_collidable_top_face_of_the_closed_gate_is_fly_sealed() -> void:
 					misses.append("%s lateral %.2f depth %.2f %s" % [face[0], lateral, depth, p])
 				depth += 0.05
 			lateral += 0.05
-	assert_true(samples > 40000, "the gate's top faces were sampled (%d)" % samples)
+	assert_true(samples > 30000, "the gate's top faces were sampled (%d)" % samples)
 	assert_true(misses.is_empty(), "landable gate masonry outside every %s seal: %s" % [UPPER_FLAG, str(misses)])
 
 

@@ -324,6 +324,9 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 	if state == "climb":
 		_player.velocity.y = minf(_player.velocity.y, vertical)
 	var restriction := _restricted_reason(_player.global_position, _player.global_position + _player.velocity * delta)
+	# What a refused flyer may still do: nothing, unless it is already inside a
+	# sealed volume with no verified anchor to recover to (below).
+	var sealed_escape := Vector3.ZERO
 	if not restriction.is_empty():
 		_deny(restriction)
 		_player.velocity.x = 0.0
@@ -333,6 +336,15 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 			_player.velocity = Vector3.ZERO
 			if recover_to_anchor(restriction):
 				return true
+			# F06: a volume can close around a flyer whose anchor no longer
+			# passes its ground ray (or who has none). Zeroing velocity every
+			# frame would hang that flyer in the air forever. Let the stick take
+			# it OUT of the sealed volume -- horizontally, and only when the step
+			# leaves it less deep inside -- never deeper and never down onto
+			# what the volume seals.
+			sealed_escape = sealed_escape_velocity(_player.global_position,
+				direction * float(config.get("speed_mps", 16.0)), delta)
+			_player.velocity = sealed_escape
 	else:
 		last_denial = ""
 	var spend := float(config.get("climb_stamina_per_second", 1.6)) if state == "climb" else float(config.get("stamina_per_second", 1.0))
@@ -346,7 +358,7 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 	var external_restriction := "" if _player.velocity.is_equal_approx(velocity_before_environment) else _restricted_reason(_player.global_position, _player.global_position + _player.velocity * delta)
 	if not external_restriction.is_empty():
 		_deny(external_restriction)
-		_player.velocity = Vector3.ZERO
+		_player.velocity = sealed_escape
 	_player.move_and_slide()
 	_player.call("finish_environment_velocity_step", not external_restriction.is_empty())
 	if horizontal.length() > 0.2:
@@ -389,6 +401,37 @@ func _restricted_reason(from: Vector3, to: Vector3) -> String:
 		if box.has_point(from) or box.has_point(to) or box.intersects_segment(from, to) != null:
 			return "This wind route is still sealed: %s." % str(restriction["id"])
 	return ""
+
+
+## How far `p` is inside the deepest closed restriction, swept exactly as
+## `_restricted_reason` sweeps it (0.0 when inside none).
+func sealed_depth(p: Vector3) -> float:
+	var margin := float(config.get("body_clearance_m", 0.5))
+	var height := float(config.get("collision_height_m", 4.5))
+	var deepest := 0.0
+	for restriction: Dictionary in restrictions:
+		if _has_flag(str(restriction["requires_flag"])):
+			continue
+		var box: AABB = restriction["bounds"]
+		box.position -= Vector3(margin, height, margin)
+		box.size += Vector3(2.0 * margin, height + margin, 2.0 * margin)
+		if not box.has_point(p):
+			continue
+		var inside := minf(minf(p.x - box.position.x, box.end.x - p.x),
+			minf(minf(p.z - box.position.z, box.end.z - p.z), minf(p.y - box.position.y, box.end.y - p.y)))
+		deepest = maxf(deepest, inside)
+	return deepest
+
+
+## The horizontal part of `wanted` if one step of it takes a flyer standing
+## inside a closed volume out towards its edge, else zero. Never deeper,
+## never vertical: a flyer caught inside can steer out, not sink in.
+func sealed_escape_velocity(from: Vector3, wanted: Vector3, delta: float) -> Vector3:
+	var depth := sealed_depth(from)
+	var flat := Vector3(wanted.x, 0.0, wanted.z)
+	if depth <= 0.0 or flat.length_squared() < 0.0001:
+		return Vector3.ZERO
+	return flat if sealed_depth(from + flat * delta) < depth else Vector3.ZERO
 
 
 ## Take note of the ground under the trainer's feet. Called every physics frame

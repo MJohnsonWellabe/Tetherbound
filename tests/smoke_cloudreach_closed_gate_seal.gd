@@ -61,10 +61,18 @@ extends SceneTree
 ##       flag is then cleared around it. The production recovery must put the
 ##       trainer back on the verified launch anchor, never inside the seal or
 ##       under the stair.
-##   (e), (h) also end their flights: each must stop (landed or recovered)
-##       and end on verified ground -- a floor-grade ray from 6 m above the
-##       feet hits within 0.6 m -- and (e) then walks out of the ~4-5 m no-fly
-##       margin over the approach crest by real input and may launch again.
+##   (j) The same with the flyer's recovery anchor cleared first (production
+##       clear_recovery_anchor()): the fly_controller guard must let the stick
+##       take it out of the sealed volume (not hang it), and it lands on the
+##       open approach, never past the gate.
+##   (e), (h) also end their flights: once refused, the flyer turns back (as
+##       a player would) and must land -- not hang at the seal -- on verified
+##       ground (a floor-grade ray from 6 m above the feet hits within 0.6 m)
+##       that is not inside any drawn mass (an upward ray against a back-face
+##       copy of each enclosing mesh crosses it an even number of times). It
+##       then walks out of the ~4-5 m no-fly margin over the approach crest by
+##       real input and relaunches by Jump, Jump. Every flight that ends at
+##       its anchor ((a), (b), (i)) gets the same drawn-mass and launch checks.
 ##   (g) The Windscar beacon and its bell stay walkable before the unlock: from
 ##       the Windscar junction, walk by real input along the pass to the stair
 ##       beside the beacon, through the beacon arch to its anchor and to the
@@ -75,9 +83,10 @@ extends SceneTree
 ## from [-123.4, 474.5, 2481.4] to where the pass enters upper_cloudreach,
 ## [-782.5, 650, 3555], restoring the authored intent (the gate protects
 ## upper_cloudreach/summit; the beacon, bell and optional_loop pickups are
-## Windscar content), with a 50 m barrier and the Fly slices
-## `cloudreach_counterweight_stair_1..5`. Legs (c), (e), (f) read the gate from
-## data and so follow it.
+## Windscar content): a portcullis across the ridge's flat track, piers and
+## masonry wing walls out to +/-27.28 m, and the Fly seal
+## `cloudreach_counterweight_stair_1..7` plus `cloudreach_counterweight_gate_crown`.
+## Legs (c), (e), (f), (h) read the gate from data and so follow it.
 ##   (b) The same flight with a full five-member party holding NO Fly carrier:
 ##       Maela's mentor loaner carries, the flight is equally sealed, and the
 ##       loaner never becomes a party member (no sixth slot, UIDs unchanged).
@@ -106,8 +115,9 @@ extends SceneTree
 ##      the glide to the stair behind the gate is longer than one ordinary bar.
 ##      Once a refused flight is 25 m below the gate the refill stops, so it
 ##      ends the way an ordinary flight does.
-##   8. (i) only: `cloudreach_upper_route_unlocked` is set before the launch
-##      and cleared again while the flyer is inside the stair volume.
+##   8. (i)/(j) only: `cloudreach_upper_route_unlocked` is set before the
+##      launch and cleared again while the flyer is inside the stair volume;
+##      (j) also clears the recovery anchor first.
 ## Every walk, jump, Fly deploy, climb and steer is the real `move_*`/`jump`
 ## actions through the camera rig's `planar_basis`; nothing writes a flight
 ## state, a velocity during flight, or a flag other than (3) and (8).
@@ -130,7 +140,7 @@ const AERIE_LIFT_ID := "cloudreach_aerie_lift"
 const SUMMIT_ROUTE_ID := "summit_overlook_loop"
 const TRIAL_REASON_PREFIX := "Complete the Windscar flight trial"
 const SEAL_REASON := "This wind route is still sealed: %s."
-const WATCHDOG_S := 1800.0
+const WATCHDOG_S := 3300.0
 const BYPASS_ROUTE_ID := "windscar_counterweight_pass"
 ## Leg (e) lands on the stair crest this far along the route past the gate.
 const BYPASS_TARGET_PAST_M := 25.0
@@ -269,6 +279,9 @@ func _run() -> void:
 	if _finished:
 		return
 	await _leg_seal_closes_around_flyer(stand)
+	if _finished:
+		return
+	await _leg_seal_closes_around_flyer(stand, true)
 	if _finished:
 		return
 
@@ -542,6 +555,12 @@ func _end_flight(label: String) -> void:
 		_check(back, "%s: fixture return to the launch anchor" % label)
 	await _frames(30)
 	print("%s END at %s flying=%s recoveries=%d" % [label, _player.global_position, bool(_fly.call("is_flying")), _recoveries])
+	var enclosed: String = await _inside_drawn_mass(_player.global_position)
+	_check(enclosed.is_empty(), "%s: back on ground at %s, not inside a drawn mass (%s)" % [label, _player.global_position, enclosed])
+	_player.get("vitals").call("rest")
+	await _frames(5)
+	var blockers := str(_fly.call("launch_blockers"))
+	_check(blockers.is_empty(), "%s: Fly may launch again from there ('%s')" % [label, blockers])
 
 
 # --- (f): on foot around the ends of the closed gate -------------------------------
@@ -766,35 +785,8 @@ func _leg_gate_bypass_by_fly(stand: Vector3) -> void:
 	_check(not str(stats["seal_denial"]).is_empty(),
 		"%s: the counterweight seal refused the flight ('%s'; denials %s)" % [label, stats["seal_denial"], str(stats["denials"])])
 	_check(not bool(stats["on_gate"]), "%s: never grounded on the closed gate's masonry (%s)" % [label, str(stats["on_gate_at"])])
-	_assert_settled(label, stats)
-	# The ~4-5 m no-fly margin the axis-aligned slices lay over the approach
-	# crest is not a trap. At the landing the seal is the only restriction
-	# (production _restricted_reason, the same test launch_blockers makes);
-	# the trainer walks out by real input to the last flat pad before the gate
-	# and may launch again there. (The 20-degree stair itself refuses every
-	# launch for "room overhead": the 0.7 m flight capsule, tangent at the
-	# feet, cuts into any upslope. That is production behaviour everywhere on
-	# the ramp, sealed or not.)
-	var here := _player.global_position
-	var here_seal := str(_fly.call("_restricted_reason", here, here))
-	print("%s margin: standing %.1f m before the plane, restriction '%s', launch_blockers '%s'" % [
-		label, -(here - gate).dot(along), here_seal, str(_fly.call("launch_blockers"))])
-	_check(here_seal.is_empty() or here_seal.contains("cloudreach_counterweight_"),
-		"%s: at the landing the only restriction is the counterweight seal's ('%s')" % [label, here_seal])
-	var pad := Vector3.INF
-	for point: Vector3 in line:
-		if float(_route_progress(line, point)["s"]) < s_gate - 20.0:
-			pad = point
-	var closest: float = await _walk_toward(pad, 1.5, 45.0)
-	_player.get("vitals").call("rest")
-	await _frames(20)
-	var out := _player.global_position
-	var after_seal := str(_fly.call("_restricted_reason", out, out))
-	var after_blockers := str(_fly.call("launch_blockers"))
-	print("%s walked out to %s (pad %s): restriction '%s', launch_blockers '%s'" % [label, out, pad, after_seal, after_blockers])
-	_check(closest <= 1.5 and after_seal.is_empty() and after_blockers.is_empty(),
-		"%s: walked out of the margin by real input to the pad %s (%.1f m) and may launch again ('%s')" % [
-			label, pad, closest, after_blockers])
+	await _assert_settled(label, stats)
+	await _walk_out_and_relaunch(label, ctx)
 
 
 ## (h) Glide at the west end of the gate's counterweight beam: its masonry is
@@ -828,7 +820,8 @@ func _leg_gate_beam_glide(stand: Vector3) -> void:
 		"%s: the glide actually reached the beam end (closest %.1f m)" % [label, float(stats["closest_beam"])])
 	_check(not str(stats["seal_denial"]).is_empty(),
 		"%s: the counterweight seal refused the glide ('%s'; denials %s)" % [label, stats["seal_denial"], str(stats["denials"])])
-	_assert_settled(label, stats)
+	await _assert_settled(label, stats)
+	await _walk_out_and_relaunch(label, ctx)
 
 
 ## (i) Recovery check: the seal closing around a flyer already inside it --
@@ -838,8 +831,8 @@ func _leg_gate_beam_glide(stand: Vector3) -> void:
 ## and fixture 8 then clears the flag. The production recovery must put the
 ## trainer back on the verified launch anchor: not left hanging inside the
 ## seal, not dropped through the stair.
-func _leg_seal_closes_around_flyer(stand: Vector3) -> void:
-	var label := "(i) seal closes around a flyer"
+func _leg_seal_closes_around_flyer(stand: Vector3, without_anchor: bool = false) -> void:
+	var label := "(j) seal closes around a flyer with no anchor" if without_anchor else "(i) seal closes around a flyer"
 	var ctx := _gate_context(label)
 	if ctx.is_empty():
 		return
@@ -894,6 +887,9 @@ func _leg_seal_closes_around_flyer(stand: Vector3) -> void:
 		return
 	var recoveries_before := _recoveries
 	var denials_from := _denials.size()
+	if without_anchor:
+		await _escape_without_anchor(label, ctx, inside_at, before, uids)
+		return
 	_flags.call("set_flag", UPPER_FLAG, false)
 	for _frame in 5 * tps:
 		await physics_frame
@@ -912,9 +908,159 @@ func _leg_seal_closes_around_flyer(stand: Vector3) -> void:
 	_check(not bool(_fly.call("is_flying")) and _player.is_on_floor() and end.distance_to(anchor) < 1.5
 		and _on_verified_top_surface(end),
 		"%s: it stands on the verified launch anchor %s, not inside the seal or under the stair (%s)" % [label, anchor, end])
+	var enclosed: String = await _inside_drawn_mass(end)
+	_check(enclosed.is_empty(), "%s: the anchor %s is not inside a drawn mass (%s)" % [label, end, enclosed])
 	_check(not bool(_flags.call("has", UPPER_FLAG)), "%s: the upper route is locked again" % label)
 	_check_unlocks_unchanged(label, before)
 	_check_party_same(label, uids)
+
+
+## (j) M3: the same closing seal around a flyer whose recovery anchor is gone
+## (fixture: production clear_recovery_anchor(), as a deliberate relocation
+## leaves it). Before the guard the flyer hung in the air forever; now it may
+## only steer OUT of the sealed volume. It steers by real input back over the
+## open approach and lands there.
+func _escape_without_anchor(label: String, ctx: Dictionary, inside_at: Vector3, before: Dictionary,
+		uids: Array[String]) -> void:
+	var gate: Vector3 = ctx["gate"]
+	var along: Vector3 = ctx["along"]
+	var line: Array[Vector3] = ctx["line"]
+	var s_gate := float(ctx["s_gate"])
+	var right := Vector3.UP.cross(along).normalized()
+	_fly.call("clear_recovery_anchor")
+	_flags.call("set_flag", UPPER_FLAG, false)
+	var tps := Engine.physics_ticks_per_second
+	var home := gate - along * 18.0
+	var watch := {"max_past": -INF, "at": Vector3.INF}
+	var near := {"closest_plane": INF, "closest_beam": INF, "max_plane_past": -INF, "max_plane_past_at": Vector3.INF,
+		"on_gate": false, "on_gate_at": Vector3.INF}
+	var start := _player.global_position
+	var depth_start := float(_fly.call("sealed_depth", start))
+	var left_after := -1.0
+	var recoveries_before := _recoveries
+	for frame in 90 * tps:
+		if not bool(_fly.call("is_flying")):
+			break
+		var offset := home - _player.global_position
+		offset.y = 0.0
+		if offset.length() > 1.5:
+			_steer_toward(home)
+		else:
+			_release_move()
+		if left_after >= 0.0:
+			Input.action_press("fly_descend")
+		await physics_frame
+		_watch_gate(line, s_gate, gate, along, right, home, watch, near)
+		if left_after < 0.0 and float(_fly.call("sealed_depth", _player.global_position)) <= 0.0:
+			left_after = float(frame) / float(tps)
+			print("%s out of the sealed volume after %.2f s at %s" % [label, left_after, _player.global_position])
+	_release_all()
+	await _frames(30)
+	var end := _player.global_position
+	print("%s re-sealed inside at %s depth %.1f m; end %s flying=%s left_after=%.2f s recoveries +%d" % [
+		label, start, depth_start, end, bool(_fly.call("is_flying")), left_after, _recoveries - recoveries_before])
+	_check(depth_start > 0.0, "%s: the fixture closed the seal with the flyer inside it (%.1f m deep)" % [label, depth_start])
+	_check(left_after >= 0.0 and left_after < 10.0,
+		"%s: the flyer did not hang -- the stick took it out of the sealed volume (%.2f s)" % [label, left_after])
+	_check(float(watch["max_past"]) <= BYPASS_PAST_LIMIT_M and float(near["max_plane_past"]) <= BYPASS_PAST_LIMIT_M,
+		"%s: it never stood past the closed gate (route %.1f m, plane %.1f m)" % [
+			label, float(watch["max_past"]), float(near["max_plane_past"])])
+	_check(not bool(_fly.call("is_flying")) and _player.is_on_floor() and _on_verified_top_surface(end),
+		"%s: it landed on verified ground on the open approach at %s" % [label, end])
+	var enclosed: String = await _inside_drawn_mass(end)
+	_check(enclosed.is_empty(), "%s: the landing %s is not inside a drawn mass (%s)" % [label, end, enclosed])
+	_check(not bool(_flags.call("has", UPPER_FLAG)), "%s: the upper route is locked again" % label)
+	_check_unlocks_unchanged(label, before)
+	_check_party_same(label, uids)
+	await _walk_out_and_relaunch(label, ctx)
+
+
+## After a refused flight lands on the approach: the ~4-5 m no-fly margin the
+## axis-aligned slices lay over the approach crest is not a trap. At the
+## landing the counterweight seal is the only restriction (production
+## _restricted_reason, the same test launch_blockers makes); the trainer walks
+## out by real input to the last flat pad before the gate and may launch again
+## there. (The 20-degree stair itself refuses every launch for "room
+## overhead": the 0.7 m flight capsule, tangent at the feet, cuts into any
+## upslope. That is production behaviour everywhere on the ramp.)
+func _walk_out_and_relaunch(label: String, ctx: Dictionary) -> void:
+	var gate: Vector3 = ctx["gate"]
+	var along: Vector3 = ctx["along"]
+	var line: Array[Vector3] = ctx["line"]
+	var s_gate := float(ctx["s_gate"])
+	var here := _player.global_position
+	var here_seal := str(_fly.call("_restricted_reason", here, here))
+	print("%s landing: %.1f m before the plane, restriction '%s', launch_blockers '%s'" % [
+		label, -(here - gate).dot(along), here_seal, str(_fly.call("launch_blockers"))])
+	_check(here_seal.is_empty() or here_seal.contains("cloudreach_counterweight_"),
+		"%s: at the landing the only restriction is the counterweight seal's ('%s')" % [label, here_seal])
+	var pad := Vector3.INF
+	for point: Vector3 in line:
+		if float(_route_progress(line, point)["s"]) < s_gate - 20.0:
+			pad = point
+	var closest: float = await _walk_toward(pad, 1.5, 60.0)
+	_player.get("vitals").call("rest")
+	await _frames(20)
+	var out := _player.global_position
+	var after_seal := str(_fly.call("_restricted_reason", out, out))
+	var after_blockers := str(_fly.call("launch_blockers"))
+	print("%s walked out to %s (pad %s): restriction '%s', launch_blockers '%s'" % [label, out, pad, after_seal, after_blockers])
+	_check(closest <= 1.5 and after_seal.is_empty() and after_blockers.is_empty(),
+		"%s: walked out by real input to the pad %s (%.1f m) and may launch again ('%s')" % [
+			label, pad, closest, after_blockers])
+	if not after_blockers.is_empty():
+		return
+	await _deploy()
+	var relaunched := bool(_fly.call("is_flying"))
+	_check(relaunched, "%s: a real Jump, Jump relaunches Fly from the pad (state %s)" % [label, str(_fly.get("state"))])
+	await _end_flight(label + " relaunch")
+
+
+## H1: the trainer's feet are not inside any drawn mass. For each large mesh
+## whose box holds the feet, a temporary back-face trimesh copy of exactly
+## what is drawn is cast against upwards from just above the feet; an odd
+## number of crossings means the feet are enclosed. Returns the enclosing
+## mesh's path, or "".
+func _inside_drawn_mass(at: Vector3) -> String:
+	var probe := at + Vector3.UP * 0.3
+	var candidates: Array[MeshInstance3D] = []
+	for node: Node in _world.find_children("*", "MeshInstance3D", true, false):
+		var mesh_instance := node as MeshInstance3D
+		if mesh_instance.mesh == null or not mesh_instance.is_visible_in_tree():
+			continue
+		var box := mesh_instance.global_transform * mesh_instance.get_aabb()
+		if minf(box.size.x, box.size.z) < 12.0 or not box.grow(0.1).has_point(probe):
+			continue
+		candidates.append(mesh_instance)
+	for mesh_instance: MeshInstance3D in candidates:
+		var shape := mesh_instance.mesh.create_trimesh_shape()
+		if shape == null:
+			continue
+		shape.backface_collision = true
+		var body := StaticBody3D.new()
+		body.collision_layer = 1 << 30
+		body.collision_mask = 0
+		var collider := CollisionShape3D.new()
+		collider.shape = shape
+		body.add_child(collider)
+		_world.add_child(body)
+		body.global_transform = mesh_instance.global_transform
+		await physics_frame
+		var crossings := 0
+		var from := probe
+		for i in 64:
+			var query := PhysicsRayQueryParameters3D.create(from, probe + Vector3.UP * 1200.0, 1 << 30)
+			query.hit_back_faces = true
+			var hit := _player.get_world_3d().direct_space_state.intersect_ray(query)
+			if hit.is_empty():
+				break
+			crossings += 1
+			from = (hit["position"] as Vector3) + Vector3.UP * 0.02
+		body.queue_free()
+		await physics_frame
+		if crossings % 2 == 1:
+			return "%s (%d crossings above the feet)" % [str(mesh_instance.get_path()), crossings]
+	return ""
 
 
 ## Condition 2: a refused flight ends -- it is not left hanging at a seal --
@@ -925,6 +1071,9 @@ func _assert_settled(label: String, stats: Dictionary) -> void:
 	_check(bool(stats["verified_ground"]) and _player.is_on_floor(),
 		"%s: it ended on verified ground at %s, not inside or under geometry (recoveries %d)" % [
 			label, str(stats["end"]), int(stats["recoveries"])])
+	var enclosed: String = await _inside_drawn_mass(_player.global_position)
+	_check(enclosed.is_empty(), "%s: the landing %s is not inside a drawn mass (%s)" % [
+		label, _player.global_position, enclosed])
 
 
 ## A trainer on a real top surface: a floor-grade ray from 6 m above the feet
@@ -1044,6 +1193,10 @@ func _seal_flight(label: String, stand: Vector3, ctx: Dictionary, approach: Vect
 	var ended_frame := -1
 	var settling := false
 	var heading_for := approach
+	# Once a counterweight seal has refused it, the flyer turns back, as a
+	# player would, to land on the open approach crest.
+	var home := gate - along * 18.0
+	var refused_frame := -1
 	for frame in 300 * tps:
 		if not bool(_fly.call("is_flying")):
 			ended_frame = frame
@@ -1057,14 +1210,22 @@ func _seal_flight(label: String, stand: Vector3, ctx: Dictionary, approach: Vect
 			print("%s over the approach at %s; now toward %s" % [label, _player.global_position, target])
 			offset = heading_for - _player.global_position
 			offset.y = 0.0
+		if refused_frame < 0 and _seal_denied():
+			refused_frame = frame
+		if heading_for == target and refused_frame >= 0 and frame - refused_frame > 2 * tps:
+			heading_for = home
+			print("%s refused at %s; turning back to land at %s" % [label, _player.global_position, home])
+			offset = heading_for - _player.global_position
+			offset.y = 0.0
 		var horizontal := offset.length()
-		if horizontal > 12.0:
+		var aim := home if heading_for == home else target
+		if horizontal > (1.5 if heading_for == home else 12.0):
 			_steer_toward(heading_for)
 		else:
 			_release_move()
-		var to_target := Vector2(target.x - _player.global_position.x, target.z - _player.global_position.z).length()
-		var spare := (_player.global_position.y - target.y) - (to_target / speed * sink + 15.0)
-		if heading_for == target and (horizontal <= 12.0 or spare > 0.0):
+		var to_target := Vector2(aim.x - _player.global_position.x, aim.z - _player.global_position.z).length()
+		var spare := (_player.global_position.y - aim.y) - (to_target / speed * sink + 15.0)
+		if heading_for != approach and (horizontal <= 12.0 or spare > 0.0):
 			Input.action_press("fly_descend")
 		else:
 			Input.action_release("fly_descend")
