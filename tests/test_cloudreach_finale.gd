@@ -338,8 +338,11 @@ func test_client_pending_network_repair_submits_once_and_settles_once() -> void:
 func _live_fight(flags: RefCounted) -> Array:
 	_unlock(flags)
 	var finale := _controller(flags)
+	if not "fight_director" in finale:
+		assert_true(false, "Finale controller has no fight_director seam")
+		finale.free()
+		return []
 	var director := FightDirector.new()
-	assert_true("fight_director" in finale, "Finale controller has no fight_director seam")
 	finale.set("fight_director", director)
 	assert_true(finale.encounter_started(ENCOUNTER))
 	director.active_id = ENCOUNTER
@@ -363,6 +366,8 @@ func _free_all(nodes: Array) -> void:
 func test_unrelated_delta_sweep_keeps_crosswind_and_overload_phases() -> void:
 	var flags := FLAGS.new()
 	var fixture := _live_fight(flags)
+	if fixture.is_empty():
+		return
 	var finale: Node3D = fixture[0]
 	var game: Node = fixture[2]
 	assert_eq(finale.phase, "crosswind_command")
@@ -391,6 +396,8 @@ func test_unrelated_delta_sweep_keeps_crosswind_and_overload_phases() -> void:
 func test_restore_resets_once_the_fight_is_over() -> void:
 	var flags := FLAGS.new()
 	var fixture := _live_fight(flags)
+	if fixture.is_empty():
+		return
 	var finale: Node3D = fixture[0]
 	var director: Node = fixture[1]
 	finale.opposition_remaining(ENCOUNTER, 1, 3)
@@ -408,6 +415,8 @@ func test_restore_resets_once_the_fight_is_over() -> void:
 func test_restore_resets_when_another_trainer_is_being_fought() -> void:
 	var flags := FLAGS.new()
 	var fixture := _live_fight(flags)
+	if fixture.is_empty():
+		return
 	var finale: Node3D = fixture[0]
 	fixture[1].active_id = "cloudreach_tavi"
 	finale.restore_progression_from_game(fixture[2])
@@ -420,6 +429,8 @@ func test_restore_resets_when_another_trainer_is_being_fought() -> void:
 func test_reloaded_flags_that_no_longer_admit_the_encounter_reset_it() -> void:
 	var flags := FLAGS.new()
 	var fixture := _live_fight(flags)
+	if fixture.is_empty():
+		return
 	var finale: Node3D = fixture[0]
 	flags.load_data({})
 	finale.restore_progression_from_game(fixture[2])
@@ -432,6 +443,8 @@ func test_reloaded_flags_that_no_longer_admit_the_encounter_reset_it() -> void:
 func test_a_different_store_resets_even_mid_fight() -> void:
 	var flags := FLAGS.new()
 	var fixture := _live_fight(flags)
+	if fixture.is_empty():
+		return
 	var finale: Node3D = fixture[0]
 	var other := FLAGS.new()
 	_unlock(other)
@@ -448,6 +461,8 @@ func test_a_different_store_resets_even_mid_fight() -> void:
 func test_without_a_director_a_sweep_resets_the_encounter() -> void:
 	var flags := FLAGS.new()
 	var fixture := _live_fight(flags)
+	if fixture.is_empty():
+		return
 	var finale: Node3D = fixture[0]
 	finale.fight_director = null
 	flags.set_flag("pickup:cloudreach_unrelated_crate")
@@ -487,6 +502,10 @@ func _break_the_eye(flags: RefCounted) -> Array:
 			assert_true(false, "Finale controller has no %s delta seam" % seam)
 			finale.free()
 			return []
+	if not "ledger_transport" in finale:
+		assert_true(false, "Finale controller has no ledger_transport seam")
+		finale.free()
+		return []
 	var transport := SeqTransport.new()
 	finale.ledger_transport = transport
 	finale._listen_for_deltas()

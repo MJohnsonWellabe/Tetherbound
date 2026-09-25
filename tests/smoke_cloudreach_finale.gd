@@ -791,6 +791,9 @@ func _break_the_eye_pilot_leg(game: Node, data: Dictionary) -> void:
 	trainer.locomotion.clear()
 	_land_ops(game, network_ops)
 	_check(finale.phase == "awaiting_restoration", "Pilot: the network landing moves the phase on (%s)" % finale.phase)
+	# Swept before the finale, the runtime still read break_the_eye: the pilot
+	# stays until the next frame rather than flickering off inside the sweep.
+	_check(runtime.get("_field_body") == ally, "Pilot: the network landing's sweep leaves the pilot in place")
 	runtime.call("_process", 1.0 / 60.0)
 	_check(_trainer_has_control(runtime, trainer, camera, arbiter),
 		"Pilot: the next frame after the network landing releases the pilot")
