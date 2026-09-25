@@ -250,7 +250,7 @@
           }
         },
         {
-          "_why": "shell plates on the upper back (anatomy), whatever their grey/warm tone -> moss block",
+          "_why": "shell plates on the upper back (anatomy), whatever their grey/warm tone -> moss block OWNER DECISION 2026-09-25 (X04): Terrapup's plates are grey STONE per sheet 01, so this rule now paints stone, not the former moss block (hue 88) that rendered as the lime dome.",
           "match": {
             "sat_max": 0.32,
             "val_min": 0.15
@@ -259,10 +259,10 @@
             "y_min": 0.5,
             "z_max": 0.62
           },
-          "set_hue": 88,
-          "set_sat": 0.42,
+          "set_hue": 35,
+          "set_sat": 0.12,
           "set_val": 0.3,
-          "val_blend": 0.35
+          "val_blend": 0.55
         },
         {
           "_why": "badger mask: darker fur on the head front stays one deep brown block (identity)",
@@ -294,8 +294,8 @@
             "val_min": 0.45
           },
           "set_hue": 38,
-          "set_sat": 0.2,
-          "set_val": 0.93,
+          "set_sat": 0.28,
+          "set_val": 0.86,
           "val_blend": 0.25,
           "where": {
             "z_min": 0.72,
@@ -313,9 +313,21 @@
             "y_min": 0.55
           },
           "set_hue": 38,
-          "set_sat": 0.2,
-          "set_val": 0.93,
+          "set_sat": 0.28,
+          "set_val": 0.86,
           "val_blend": 0.25
+        },
+        {
+          "_why": "OWNER DECISION 2026-09-25 (X04 creature-art lane): Terrapup's plates are grey STONE, per sheet docs/art/reference/01_Ground_Starter_Terrapup.png. The source albedo already paints them as low-saturation (<=0.26) mid-value warm grey; before this rule the coat rules below caught those warm greys and turned the plates brown. Kept as one stone block (fur is saturated, the cream face is brighter, so neither matches). Placed after the head-front rules so the face keeps its mask and cream; set_val 0.42 because field_emission brightens the coat in the field and a 0.52 grey rendered white.",
+          "match": {
+            "sat_max": 0.26,
+            "val_min": 0.2,
+            "val_max": 0.72
+          },
+          "set_hue": 35,
+          "set_sat": 0.12,
+          "set_val": 0.3,
+          "val_blend": 0.55
         },
         {
           "_why": "cream chest panel: front, central, below the head",
@@ -329,8 +341,8 @@
             "val_min": 0.45
           },
           "set_hue": 38,
-          "set_sat": 0.2,
-          "set_val": 0.93,
+          "set_sat": 0.28,
+          "set_val": 0.86,
           "val_blend": 0.25,
           "where": {
             "z_min": 0.6,
@@ -355,15 +367,15 @@
           "val_blend": 0.3
         },
         {
-          "_why": "shell stone plates -> moss block (owner board: moss and leaves on the back) MEADOWS-VISUAL-PASS round 5: limited to the upper, upward-facing body; unlimited, it painted any pale patch on a leg or paw mint.",
+          "_why": "shell stone plates -> moss block (owner board: moss and leaves on the back) MEADOWS-VISUAL-PASS round 5: limited to the upper, upward-facing body; unlimited, it painted any pale patch on a leg or paw mint. OWNER DECISION 2026-09-25 (X04): Terrapup's plates are grey STONE per sheet 01, so this rule now paints stone, not the former moss block (hue 88) that rendered as the lime dome.",
           "match": {
             "sat_max": 0.13,
             "val_min": 0.18
           },
-          "set_hue": 88,
-          "set_sat": 0.52,
-          "set_val": 0.46,
-          "val_blend": 0.35,
+          "set_hue": 35,
+          "set_sat": 0.12,
+          "set_val": 0.3,
+          "val_blend": 0.55,
           "where": {
             "y_min": 0.45,
             "up_min": 0.1
@@ -379,6 +391,24 @@
           "set_sat": 0.55,
           "set_val": 0.5,
           "val_blend": 0.3
+        },
+        {
+          "_why": "OWNER DECISION 2026-09-25 (X04): greenish texels on the upper, upward-facing shell are stone with moss wash, not a moss block; the 'existing moss' rule below otherwise paints the dome olive, which renders lime. They join the stone as the same grey stone (a greener grey still rendered as a green dome in the world A/B).",
+          "match": {
+            "hue": [
+              55,
+              170
+            ],
+            "val_min": 0.1
+          },
+          "where": {
+            "y_min": 0.45,
+            "up_min": 0.1
+          },
+          "set_hue": 35,
+          "set_sat": 0.12,
+          "set_val": 0.3,
+          "val_blend": 0.55
         },
         {
           "_why": "existing moss",
@@ -411,7 +441,7 @@
       "overlays": [
         {
           "id": "leaf_collar",
-          "_why": "Board: the Ground starter is a PUPPY WEARING FOLIAGE -- leaf collar, shoulder growth and leaves carried well down the back. At coverage 0.45 over a y_min of 0.52 almost none of that survived into the render, which a blind round named ('leaf and bramble growth -- almost none of it survives'). Coverage up and the band reaches further down the flank, because this foliage is half of what separates the starter from burrowback -- which it does NOT share a mesh with, contrary to what round 2 reported and this lane was briefed: the two glbs differ in vertex count (15,616 vs 17,204), bounds and POSITION data, and no two species in the roster share a mesh file. They share an ARCHETYPE, a badger-shaped quadruped at similar mass, which is why they read alike at thumbnail size -- and that is a problem paint can genuinely work on, unlike the mesh-sharing version of the story. z_max still keeps it off the muzzle -- terrapup's head sits at the high-z end of its own box.",
+          "_why": "Board: the Ground starter is a PUPPY WEARING FOLIAGE -- leaf collar, shoulder growth and leaves carried well down the back. At coverage 0.45 over a y_min of 0.52 almost none of that survived into the render, which a blind round named ('leaf and bramble growth -- almost none of it survives'). Coverage up and the band reaches further down the flank, because this foliage is half of what separates the starter from burrowback -- which it does NOT share a mesh with, contrary to what round 2 reported and this lane was briefed: the two glbs differ in vertex count (15,616 vs 17,204), bounds and POSITION data, and no two species in the roster share a mesh file. They share an ARCHETYPE, a badger-shaped quadruped at similar mass, which is why they read alike at thumbnail size -- and that is a problem paint can genuinely work on, unlike the mesh-sharing version of the story. z_max still keeps it off the muzzle -- terrapup's head sits at the high-z end of its own box. OWNER DECISION 2026-09-25: at coverage 0.74 this overlay painted a solid dark-green dome over the stone plates, which field_emission brightened to lime in every render (the judges' 'mottled rear shell'). Sheet 01 has moss only in the plate seams and as tufts, so coverage drops to 0.3: an accent, not the shell colour. Blind judge 2026-09-25 asked for the sheet's moss between the plates: 0.15 brings a light accent back without the old solid dome.",
           "where": {
             "y_min": 0.4,
             "z_max": 0.58,
@@ -420,7 +450,7 @@
           "mode": "grow",
           "color": "#41572f",
           "shade": "#1a2713",
-          "coverage": 0.74,
+          "coverage": 0.15,
           "grain": 5.0,
           "softness": 0.1,
           "relief": 0.6
