@@ -111,6 +111,9 @@ var last_dismount_rule := ""
 ## while a modal holds) counts once, and tells the player once.
 var deferred_dismounts := 0
 var _deferring := false
+## Game seconds when an admission refusal last showed its message.
+var _admission_told_s := -1000.0
+const ADMISSION_REFUSAL_REPEAT_S := 1.0
 ## The spot `dismount()` verified, consumed by `_dismount_spot()`.
 var _planned_spot := Vector3.INF
 
@@ -345,11 +348,28 @@ func dismount() -> bool:
 ## SYSTEMS §8 "Combat admission dismounts safely first. No mounted
 ## catch/combat." Called by the encounter director before a fight (wild or
 ## trainer) begins. True when no rider is on, or the rider is now standing on
-## a verified spot; false (the rider told why) refuses the admission.
+## a verified spot; false refuses the admission, and every refusal shows the
+## refusal ("show refusal"), not just the first of a deferral episode. The
+## director cannot tell a press from an aggressive wild asking every frame,
+## so a repeat within ADMISSION_REFUSAL_REPEAT_S (one toast) is not re-sent.
 func dismount_for_admission() -> bool:
 	if not is_mounted():
 		return true
-	return dismount()
+	var told_already := _deferring
+	if dismount():
+		return true
+	# Game time, not wall time: a paused or slow tree does not age the toast.
+	var now := float(Engine.get_physics_frames()) / float(Engine.physics_ticks_per_second)
+	var repeat := now - _admission_told_s < ADMISSION_REFUSAL_REPEAT_S
+	if not told_already or not repeat:
+		# A new episode was just told by `dismount()`; a later refusal in the
+		# same episode is told here.
+		if told_already:
+			var game := get_node_or_null(^"/root/Game")
+			if game != null and game.has_method("push_world_message"):
+				game.call("push_world_message", NO_ROOM_MESSAGE)
+		_admission_told_s = now
+	return false
 
 
 ## Only reached through `dismount()` above, which always plans the spot first

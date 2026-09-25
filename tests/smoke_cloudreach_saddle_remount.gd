@@ -30,7 +30,10 @@ extends SceneTree
 ##     private `_start_fight`;
 ##   - the finale leg moves the finale controller node to the causeway floor
 ##     and sets (then clears) the captain-victory flag;
-##   - the camera assertions read the rig's private `_target`;
+##   - the camera assertions read the rig's private `_target`; the admission
+##     leg reads and clears the Game's `_pending_world_message`, calls
+##     `begin_trainer_battle` directly for the first challengeable Cloudreach
+##     trainer, and leaves its wild fight with the manager's `try_flee`;
 ##   - Fly's pending-anchor flag is raised by hand for the M3 wiring check,
 ##     and the M3 timeout check runs a bare Fly controller with a fake client
 ##     session and a proxy that never answers.
@@ -1085,17 +1088,48 @@ func _combat_admission_dismounts_first() -> void:
 		await physics_frame
 	var deferred_before := int(_riding.get("deferred_dismounts")) if _riding.get("deferred_dismounts") != null else 0
 	_arm_placement(body)
-	_director.call("_start_fight", wild)
-	for i in 30:
-		await physics_frame
+	# Two engage presses and one challenge, over two seconds, in one boxed-in
+	# episode. Each must show the refusal (read synchronously from the Game's
+	# pending world message, before the HUD takes it).
+	var refusals: Array[String] = []
+	for press in 2:
+		_game.set("_pending_world_message", "")
+		_director.call("_start_fight", wild)
+		refusals.append(str(_game.get("_pending_world_message")))
+		for i in 70:
+			await physics_frame
 	_check(manager != null and not bool(manager.call("is_fighting")),
 		"boxed in, the fight is refused rather than begun with a rider on (fighting %s)" % (manager.call("is_fighting") if manager != null else "-"))
+	_check(refusals.size() == 2 and refusals.all(func(m: String) -> bool: return m.contains("No room to dismount")),
+		"every refused engage press shows the refusal, the second one too (%s)" % [refusals])
+	var trainer_id := ""
+	var specs: Dictionary = _director.get("trainer_specs") if _director.get("trainer_specs") != null else {}
+	for id: String in specs:
+		if id != "captain_veyra_storm_anchor" and bool(_director.call("can_challenge", specs[id])) \
+				and (_director.get("trainer_nodes") as Dictionary).has(id):
+			trainer_id = id
+			break
+	var starts: Array[String] = []
+	var on_start := func(id: String) -> void: starts.append(id)
+	if _director.has_signal("trainer_started"):
+		_director.connect("trainer_started", on_start)
+	if trainer_id.is_empty():
+		_fail("no challengeable Cloudreach trainer for the refused-challenge check")
+	else:
+		_game.set("_pending_world_message", "")
+		var began := bool(_director.call("begin_trainer_battle", specs[trainer_id], (_director.get("trainer_nodes") as Dictionary)[trainer_id]))
+		var said := str(_game.get("_pending_world_message"))
+		for i in 10:
+			await physics_frame
+		_check(not began and starts.is_empty() and not bool(_director.call("trainer_battle_active")),
+			"boxed in, challenging %s is refused: false, no trainer_started, no battle (began %s, starts %s)" % [trainer_id, began, starts])
+		_check(said.contains("No room to dismount"), "the refused challenge shows the refusal ('%s')" % said)
 	_check(bool(_riding.call("is_mounted")) and _player.call("carrier") == body and _placement.is_empty(),
 		"boxed in, the rider stays seated: no mounted combat, no spot guessed")
 	_check(str(_riding.get("last_dismount_rule")) == "deferred",
 		"the refused admission's dismount is 'deferred' (%s)" % str(_riding.get("last_dismount_rule")))
 	_check(_riding.get("deferred_dismounts") != null and int(_riding.get("deferred_dismounts")) == deferred_before + 1,
-		"the refused admission is one deferral event, however many frames (%s)" % str(_riding.get("deferred_dismounts")))
+		"three refused requests over two seconds are one deferral episode (%s, was %d)" % [str(_riding.get("deferred_dismounts")), deferred_before])
 	for wall: Node in walls:
 		wall.queue_free()
 	for i in 4:
@@ -1117,6 +1151,22 @@ func _combat_admission_dismounts_first() -> void:
 		"the trainer stands, solid, on ground in the fight (%s)" % _player.global_position)
 	_check(_rig.get("_target") == body, "a second into the fight the camera is on the ally, not the trainer (M-B)")
 	_check(not _overlaps_mount_at(_player.global_position, body), "the trainer is not inside the ally in the fight")
+	# The refused challenge left nothing behind: once this fight is over, the
+	# same trainer can be challenged. The wild fight is left by the manager's
+	# own disengage (`try_flee`, what the flee button calls).
+	if not trainer_id.is_empty() and manager != null:
+		_check(bool(manager.call("try_flee")), "fixture: the wild fight is fled")
+		for frame in 900:
+			if not bool(manager.call("is_fighting")):
+				break
+			await physics_frame
+		for i in 60:
+			await physics_frame
+		_check(not bool(manager.call("is_fighting")), "fixture: the wild fight is over")
+		var began := bool(_director.call("begin_trainer_battle", specs[trainer_id], (_director.get("trainer_nodes") as Dictionary)[trainer_id]))
+		_check(began and starts == [trainer_id], "a later challenge of %s works (began %s, starts %s)" % [trainer_id, began, starts])
+	if _director.is_connected("trainer_started", on_start):
+		_director.disconnect("trainer_started", on_start)
 	_check_party("combat admission")
 
 
