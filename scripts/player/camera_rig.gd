@@ -20,6 +20,7 @@ const OCCLUSION_ONLY_LAYER := 1 << 31
 ## to and solves the framing; the blend, the arm and the occlusion probe stay
 ## here, because they are this rig's own state.
 const CONVERSATION := preload("res://scripts/player/conversation_camera.gd")
+const LOOK_PREFS := preload("res://scripts/ui/look_prefs.gd")
 
 ## `dialogue_panel.gd` and `tab_map.gd`-style callers find the rig through this
 ## rather than through a NodePath, because the rig is a sibling of the world's
@@ -84,6 +85,10 @@ var _mouse_delta := Vector2.ZERO
 ## conversation shots own their own composition.
 var _tracking_target: Node3D = null
 var _tracking_config: Dictionary = {}
+## MEADOWS-VISUAL-PASS round 5: extra composition the fight asks for while the
+## piloted ally hides the opponent (`combat_manager.gd::_update_ally_occlusion`).
+## Added to `composition_yaw_deg` on the same side; 0 outside that moment.
+var _composition_extra_deg := 0.0
 var _tracking_manual_left := 0.0
 
 ## Defaults from movement.json, kept so a combat profile can be handed back.
@@ -253,6 +258,7 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	_target = target
 	_tracking_target = null
 	_tracking_config = {}
+	_composition_extra_deg = 0.0
 	_tracking_manual_left = 0.0
 
 	_distance = float(profile.get("distance", _base_distance))
@@ -291,6 +297,16 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 ## this immediately after targeting the player's active creature. It is a
 ## separate operation from `set_target()` so throw/catch cameras cannot inherit
 ## combat tracking accidentally.
+## Degrees the neutral combat tracker swings past its configured composition,
+## for as long as the fight asks. Manual look still wins, as for all tracking.
+func set_composition_extra(degrees: float) -> void:
+	_composition_extra_deg = maxf(0.0, degrees)
+
+
+func composition_extra() -> float:
+	return _composition_extra_deg
+
+
 func set_tracking_target(target: Node3D, config: Dictionary = {}) -> void:
 	_tracking_target = target
 	_tracking_config = config.duplicate()
@@ -314,11 +330,14 @@ func nudge_combat_impact(config: Dictionary = {}) -> void:
 	# UX §8 reduced motion: this roll is pure camera impulse and carries no
 	# information the fight needs, so it is the first thing reduced motion
 	# removes. Presentation only -- the strike it follows is untouched.
-	if preload("res://scripts/ui/motion_prefs.gd").reduced_motion():
+	# The player's camera-shake level scales it, and is zero under reduced
+	# motion (`motion_prefs.gd::camera_shake_scale()`).
+	var shake := preload("res://scripts/ui/motion_prefs.gd").camera_shake_scale()
+	if shake <= 0.0:
 		return
 	_impact_nudge_duration = maxf(0.01, float(config.get("seconds", 0.16)))
 	_impact_nudge_left = _impact_nudge_duration
-	_impact_nudge_radians = deg_to_rad(clampf(float(config.get("degrees", 0.65)), 0.0, 2.0))
+	_impact_nudge_radians = deg_to_rad(clampf(float(config.get("degrees", 0.65)), 0.0, 2.0)) * shake
 
 
 func _tick_impact_nudge(delta: float) -> void:
@@ -423,8 +442,11 @@ func _apply_look(delta: float) -> void:
 	pitch_change += -_mouse_delta.y * _mouse_sensitivity
 	_mouse_delta = Vector2.ZERO
 
-	if _invert_y:
-		pitch_change = -pitch_change
+	# The player's sensitivity and per-axis inversion (UX §8), on top of the
+	# tuned numbers above. `_invert_y` stays the config default it always was.
+	var adjusted := LOOK_PREFS.apply(Vector2(yaw_change, pitch_change), _invert_y)
+	yaw_change = adjusted.x
+	pitch_change = adjusted.y
 
 	yaw = wrapf(yaw + deg_to_rad(yaw_change), -PI, PI)
 	pitch = clampf(pitch + deg_to_rad(pitch_change), deg_to_rad(_pitch_min), deg_to_rad(_pitch_max))
@@ -457,7 +479,8 @@ func _apply_tracking(delta: float) -> void:
 	var wanted := atan2(-toward.x, -toward.z)
 	# An oblique combat composition keeps the opponent's stance visible beside
 	# a large piloted body. Manual orbit and its grace period still win above.
-	wanted += deg_to_rad(float(_tracking_config.get("composition_yaw_deg", 0.0)))
+	var composition := float(_tracking_config.get("composition_yaw_deg", 0.0))
+	wanted += deg_to_rad(composition + signf(composition if composition != 0.0 else 1.0) * _composition_extra_deg)
 	var difference := angle_difference(yaw, wanted)
 	var dead_zone := deg_to_rad(float(_tracking_config.get("dead_zone_deg", 10.0)))
 	if absf(difference) <= dead_zone:

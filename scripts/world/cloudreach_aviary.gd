@@ -664,6 +664,13 @@ static func _build_interior(root: Node3D, spec: Dictionary, dome: Dictionary,
 		var at := Vector3(cos(angle) * reach, height, sin(angle) * reach)
 		var placed := _install_prop(interior_root, scene, "AviaryLogPerch", at, length,
 			angle + PI * 0.5, true)
+		# The Kenney survival palette texture renders these logs salmon at the
+		# summit stand's distance. With their thin hangers invisible, a blind
+		# judge read them as "floating pink objects ... a bug" (Cloudreach
+		# production-camera pass). They take the cage's own timber, like
+		# every other wooden member here.
+		for mesh_node: Node in placed.find_children("*", "MeshInstance3D", true, false):
+			(mesh_node as MeshInstance3D).material_override = timber
 		logs.append(placed)
 		# A perch off the ground needs holding up, or it floats. Below the drum
 		# crown it stands on a leg; above it there is no wall left to stand on,

@@ -60,8 +60,20 @@ const BASELINE_RETINT := {
 	"MI_RockTrim": {"color": "#b4b1a6", "metallic": 0.0},
 }
 
+## Wall vines (`Prop_Vine*`) ship with every normal pointing UP (+Y) although
+## each is a flat sheet hanging in the module's XY plane, standing off the wall
+## toward +Z. Lit as a horizontal surface, a vine on a wall facing away from a
+## low moon glowed near-white while the plaster behind it stayed dark (Meadows
+## visual pass round 2, the shop at night), and by day it washed out pale.
+## `wall_foliage_mesh()` gives the sheet the wall's own outward normal, so it is
+## lit like the wall it hangs on. Cached per source mesh.
+## Only the flat sheets; the draped Prop_Vine5/6/9 wrap corners and tops.
+const WALL_FOLIAGE_MODULES: Array[String] = ["Prop_Vine1", "Prop_Vine2", "Prop_Vine4"]
+
 var _recipes: Dictionary = {}
 var _templates: Dictionary = {}
+## source mesh -> its outward-facing wall-foliage copy (`wall_foliage_mesh()`).
+var _wall_foliage_meshes: Dictionary = {}
 ## (material name, colour) -> tinted duplicate, shared across every surface
 ## that asks, so a retint costs one material per colour rather than one per
 ## mesh surface.
@@ -133,6 +145,7 @@ func _notification(what: int) -> void:
 		if is_instance_valid(template) and template is Node:
 			(template as Node).free()
 	_templates.clear()
+	_wall_foliage_meshes.clear()
 
 
 func load_recipes() -> bool:
@@ -272,12 +285,57 @@ func _build_template(prefab_name: String) -> Node3D:
 		)
 		var s := float(spec.get("scale", 1.0))
 		node.scale = Vector3.ONE * s
+		if WALL_FOLIAGE_MODULES.has(module):
+			_face_wall_foliage_outward(node)
 		root.add_child(node)
 	_apply_retint(root, _merge_baseline(recipe.get("retint", {})))
 	if _holder != null:
 		root.visible = false
 		_holder.add_child(root)
 	return root
+
+
+func _face_wall_foliage_outward(node: Node) -> void:
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		var mi := node as MeshInstance3D
+		mi.mesh = wall_foliage_mesh(mi.mesh)
+	for child in node.get_children():
+		_face_wall_foliage_outward(child)
+
+
+## A copy of `source` whose every normal is +Z (out of the wall) with a
+## matching +X tangent. Materials carry over per surface; the double-sided
+## leaf material still flips the normal for back faces, which face the wall.
+func wall_foliage_mesh(source: Mesh) -> Mesh:
+	if source == null:
+		return null
+	if not _wall_foliage_meshes.has(source):
+		_wall_foliage_meshes[source] = outward_wall_foliage(source)
+	return _wall_foliage_meshes[source]
+
+
+## The uncached form. `stronghold.gd`'s ruin ivy batches the same sheets but
+## was left as it was: facing its sunlit gate wall, the corrected sheet lit a
+## paler mint than the up-facing one, which is a look decision, not a defect.
+static func outward_wall_foliage(source: Mesh) -> Mesh:
+	var out := ArrayMesh.new()
+	out.resource_name = source.resource_name
+	for surface in source.get_surface_count():
+		var arrays: Array = source.surface_get_arrays(surface)
+		var count := (arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+		var normals := PackedVector3Array()
+		normals.resize(count)
+		normals.fill(Vector3.BACK)
+		arrays[Mesh.ARRAY_NORMAL] = normals
+		var tangents := PackedFloat32Array()
+		tangents.resize(count * 4)
+		for i in count:
+			tangents[i * 4] = 1.0
+			tangents[i * 4 + 3] = 1.0
+		arrays[Mesh.ARRAY_TANGENT] = tangents
+		out.add_surface_from_arrays(source.surface_get_primitive_type(surface), arrays)
+		out.surface_set_material(surface, source.surface_get_material(surface))
+	return out
 
 
 ## `BASELINE_RETINT` underneath, the recipe's own `retint` block on top --

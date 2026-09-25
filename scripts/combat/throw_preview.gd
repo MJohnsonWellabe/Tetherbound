@@ -95,8 +95,11 @@ const FADE_FAR_ALPHA := 1.0
 ## The casing's extra width is a MULTIPLE of the ribbon's own half-width rather
 ## than a fixed margin, for the same reason the width itself is angular: a fixed
 ## 0.055m outline is invisible at range and a slab up close.
-const CASING_EXTRA_HALF := 0.55
-const CASING_COLOUR := Color(0.03, 0.06, 0.07, 0.85)
+## MEADOWS-VISUAL-PASS round 5: a blind round read the near-black casing,
+## against sky, as "thick black dashes -- a debug gizmo". A thinner, softer
+## casing still separates the ribbon from sunlit and shadowed grass.
+const CASING_EXTRA_HALF := 0.35
+const CASING_COLOUR := Color(0.05, 0.1, 0.12, 0.45)
 
 ## The landing indicator: a small ring plus a centre dot, restyled from the
 ## old flat disc — a disc reads as a coin sitting in the grass, a ring+dot
