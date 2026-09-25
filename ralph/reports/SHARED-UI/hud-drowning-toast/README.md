@@ -9,7 +9,7 @@ PlaygroundHUD at the production camera; 1280x720, opengl3 under xvfb,
   in deep water with stamina at 0, so `swim_state.drowning` is true and health
   falls. Main shows no cue; the branch shows the amber "Drowning / Reach shore"
   plate with a caution triangle beside the health bar.
-- `before_toast` / `after_toast` (+ `before_after_toast.png`): a world message
+- `before_toast` / `after_toast` (+ `before_after_toast.png`, after = hotbar message at the sentence tier, ~21 px): a world message
   shot 1.8 s of game time after posting. `*_log.txt` records game vs wall time.
 - `sequence/frame_NN.jpg` + `sequence_sheet.jpg`: 34 s at 1 fps. Swim out with
   low stamina, run dry (t=11 s), drown with the cue up while health falls
