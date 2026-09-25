@@ -21,6 +21,8 @@ const FIRST_SHORE_GATE_SITE := preload("res://scripts/world/water_first_shore_ga
 const FIRST_SHORE_WELCOME_SITE := preload("res://scripts/world/water_first_shore_welcome_site.gd")
 const FIRST_SHORE_HORIZON_STONES := preload("res://scripts/world/water_first_shore_horizon_stones.gd")
 const REST_SHOAL_MARKERS := preload("res://scripts/world/water_rest_shoals.gd")
+const GATE_SEALS := preload("res://scripts/world/water_gate_seals.gd")
+const GATE_SEAL_VIEW := preload("res://scripts/world/water_gate_seal_view.gd")
 const GULL_REST_SIGNAL_SITE := preload("res://scripts/world/water_gull_rest_signal_site.gd")
 const WATER_VEGETATION := preload("res://scripts/world/water_vegetation.gd")
 const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
@@ -44,13 +46,8 @@ func _ready() -> void:
 	config = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	_visual = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_PATH))
 	field = FIELD.new(config)
-	var current_config := config.duplicate(true)
 	var traversal: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
-	for current: Dictionary in current_config.currents:
-		for dock: Dictionary in config.docks:
-			if str(current.route_id).begins_with(str(dock.outbound_edge) + "_") and not str(dock.unlock_flag).is_empty():
-				current.required_unlock_flag = dock.unlock_flag
-				current.closed_strength_m_s = float(traversal.docks.closed_current_strength_m_s)
+	var current_config: Dictionary = CURRENTS.with_closed_gates(config, traversal)
 	var game := get_node("/root/Game")
 	currents = CURRENTS.new(current_config, game.world.flags)
 	if not ClassDB.class_exists("Terrain3D"):
@@ -105,6 +102,10 @@ func _ready() -> void:
 		rest_shoal_markers.name = "WaterRestShoalMarkers"
 		add_child(rest_shoal_markers)
 		rest_shoal_markers.build(self, config)
+		var tide_races := GATE_SEAL_VIEW.new()
+		tide_races.name = "WaterGateTideRaces"
+		add_child(tide_races)
+		tide_races.build(self, config, current_config.seals, current_config.seal_rules)
 	_build_return_gate()
 	var player := local_rig()
 	if player != null and not simulation_only:
@@ -114,6 +115,8 @@ func _ready() -> void:
 		player.add_child(swimming)
 		swimming.setup(player, self, local_camera_rig())
 		player.set("swim_controller", swimming)
+		# Fly shares the closed-gate volumes; gliding cannot bypass a dock.
+		GATE_SEALS.register_flight(player.get_node_or_null("FlyController"), current_config.seals, current_config.seal_rules)
 		var recovery := DEATH.new()
 		recovery.name = "PlayerDeath"
 		add_child(recovery)
