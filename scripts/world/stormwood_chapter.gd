@@ -10,6 +10,7 @@ const CROWN_GUARDIAN_CLEAR_FLAG := "stormwood:named:crown_guardian:cleared"
 const WEN_REFUSAL_CONVERSATION := "stormwood_archivist_wen_guardian_refusal"
 const WEN_RECORDS_RETURN_CONVERSATION := "stormwood_wen_crown_records_return"
 const ENGINE_TRUTH_FLAG := "stormwood:engine_truth_learned"
+const HESK_DARK_ARCHES_REPORT := "stormwood_hesk_dark_arches_report"
 var world: Node3D
 var events: Node
 var people: Node3D
@@ -110,6 +111,9 @@ func _dialogue_finished(id: String) -> void:
 	if id == WEN_RECORDS_RETURN_CONVERSATION:
 		events.emit_event("side:stormwood_crown_remembers:step_3")
 		return
+	if id == HESK_DARK_ARCHES_REPORT:
+		events.emit_event("side:stormwood_dark_arches:step_3")
+		return
 	for actor: String in DIALOGUE_EVENTS:
 		if id == "stormwood_%s_in_progress" % actor:
 			events.emit_event(str(DIALOGUE_EVENTS[actor]))
@@ -164,6 +168,11 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 		{"if_flag": "stormwood:long_storm_ended", "conversation": prefix + "post_storm"},
 	]
 	var chain_branches: Array = PIMS_PARCELS.branches_for(actor_id)
+	if actor_id == "rodkeeper_hesk":
+		# Hesk's report outranks his ordinary and post-storm lines while owed.
+		branches.push_front({"if_flag": "stormwood:side_dark_arches_2",
+			"unless_flag": "stormwood:side_dark_arches_complete",
+			"conversation": HESK_DARK_ARCHES_REPORT})
 	if actor_id == "archivist_wen":
 		# The records report never pre-empts the main truth conversation: Wen
 		# tells the truth first, then acknowledges the completed reading, even

@@ -242,6 +242,33 @@ func _run() -> void:
 		_expect(not _arrivals.is_empty() and not bool(_arrivals.back().get("ok", false)) and
 			player.global_position.distance_to(pair_a.global_position) < 0.01,
 			"the destination capsule blocks constructed-pair travel without moving the player")
+
+	# Dark Arches side chain: trying a dark C/D arch is the inspection, and the
+	# second step follows only the ledger's paid lit flags on all four ends.
+	for flag: String in ["stormwood:ashfoot_arch_relit", "stormwood:rootgate_released"]:
+		game.progression.set_flag(flag)
+	runtime.restore_progression_from_game(game)
+	var dark_ids: Array[String] = ["d_hall", "d_giant", "c_rodline", "c_lantern"]
+	_expect(not chapter.events.has("side:stormwood_dark_arches:step_2"),
+		"no dark-arch relight means no second-step event")
+	game.inventory.add("stormglass", 12)
+	var glass_before := int(game.inventory.count("stormglass"))
+	for id: String in dark_ids:
+		var before := chapter.events.size()
+		await _activate_at(arbiter, player, (arches[id] as Dictionary).prompt as Node3D)
+		await process_frame
+		await process_frame
+		_expect(chapter.events.slice(before).has("count:stormwood:side_dark_arches_inspected:%s" % id),
+			"trying dark arch %s submits its inspection fact" % id)
+		_expect(game.progression.has("stormwood:arch:%s:lit" % id), "dark arch %s is relit by the paid ledger claim" % id)
+		if id == "d_hall":
+			# The ChapterStub records events without dispatching; stand in for the
+			# host accepting the first inspection.
+			game.progression.set_flag("stormwood:side_dark_arches_1")
+	_expect(glass_before - int(game.inventory.count("stormglass")) == 12, "four dark ends cost three Stormglass each")
+	runtime.restore_progression_from_game(game)
+	_expect(chapter.events.has("side:stormwood_dark_arches:step_2"),
+		"all four paid dark ends submit the chain's second step")
 	world.queue_free()
 	await process_frame
 	_finish()

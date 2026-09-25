@@ -6,6 +6,16 @@ const PIECE := preload("res://scripts/build/stormwood_arch_piece.gd")
 const CAPACITOR_GROVE := preload("res://scripts/world/stormwood_capacitor_grove.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const CLAIM := preload("res://scripts/world/ledger_claim.gd")
+## `stormwood_dark_arches`: ancient pairs C (Rodline–Lantern Hollow, opened by
+## the Rootgate) and D (Old Rodfolk Hall–Fallen Giant). Neither is required by a
+## main-story objective; WORLD §11's "Deepwood/Dynamo pairs" is read as these two
+## because WORLD §5.3 authors no Dynamo-region arch. Trying one of their dark
+## arches is the inspection; the second step follows the ledger's own paid lit
+## flags, so the chain never writes an arch flag itself.
+const DARK_ARCHES: Array[String] = ["c_rodline", "c_lantern", "d_hall", "d_giant"]
+const DARK_INSPECTED_PREFIX := "stormwood:side_dark_arches_inspected:"
+const DARK_STEP_1 := "stormwood:side_dark_arches_1"
+const DARK_STEP_2 := "stormwood:side_dark_arches_2"
 var world: Node3D
 var game: Node
 var session: Node
@@ -178,8 +188,39 @@ func restore_progression_from_game(_game: Node) -> void:
 			chapter.emit_event("arch:pair_b_linked")
 		if not _twin("e_crown").is_empty():
 			chapter.emit_event("arch:crown_constructed")
+		if not flags.has(DARK_STEP_1):
+			for event: String in owed_dark_inspections(flags):
+				chapter.emit_event(event)
+		if flags.has(DARK_STEP_1) and not flags.has(DARK_STEP_2) and dark_arches_relit(flags):
+			chapter.emit_event("side:stormwood_dark_arches:step_2")
+
+static func dark_inspection_event(id: String) -> String:
+	return "count:" + DARK_INSPECTED_PREFIX + id if DARK_ARCHES.has(id) else ""
+
+
+## Inspection facts owed for dark arches already lit (for example on a save
+## from before this chain was wired): a lit arch has no prompt left to try.
+static func owed_dark_inspections(flags: RefCounted) -> Array[String]:
+	var out: Array[String] = []
+	if not flags.has("stormwood:ashfoot_arch_relit"):
+		return out
+	for id: String in DARK_ARCHES:
+		if flags.has(RULES.lit_flag(id)) and not flags.has(DARK_INSPECTED_PREFIX + id):
+			out.append(dark_inspection_event(id))
+	return out
+
+
+static func dark_arches_relit(flags: RefCounted) -> bool:
+	for id: String in DARK_ARCHES:
+		if not flags.has(RULES.lit_flag(id)):
+			return false
+	return true
+
 
 func _relight(id: String) -> void:
+	var inspection := dark_inspection_event(id)
+	if not inspection.is_empty() and not game.get("progression").has(inspection.trim_prefix("count:")):
+		world.get_node("StormwoodChapter").emit_event(inspection)
 	if not _pending_id.is_empty():
 		return
 	var available := int(game.get("inventory").count("stormglass"))

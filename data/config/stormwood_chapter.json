@@ -48,6 +48,10 @@
       "stormwood:side_dark_arches_1",
       "stormwood:side_dark_arches_2",
       "stormwood:side_dark_arches_complete",
+      "stormwood:side_dark_arches_inspected:c_rodline",
+      "stormwood:side_dark_arches_inspected:c_lantern",
+      "stormwood:side_dark_arches_inspected:d_hall",
+      "stormwood:side_dark_arches_inspected:d_giant",
       "stormwood:side_pims_parcels_1",
       "stormwood:side_pims_parcels_2",
       "stormwood:side_pims_parcels_complete",
@@ -475,7 +479,14 @@
           "id": "step_1",
           "flag_id": "stormwood:side_dark_arches_1",
           "scope": "world",
-          "label": "Inspect the remaining ancient arches.",
+          "label": "Inspect a dark ancient arch beyond the Rootgate.",
+          "count_flags": [
+            "stormwood:side_dark_arches_inspected:c_rodline",
+            "stormwood:side_dark_arches_inspected:c_lantern",
+            "stormwood:side_dark_arches_inspected:d_hall",
+            "stormwood:side_dark_arches_inspected:d_giant"
+          ],
+          "required_count": 1,
           "requires_flags": [
             "stormwood:ashfoot_arch_relit"
           ],
@@ -485,7 +496,7 @@
           "id": "step_2",
           "flag_id": "stormwood:side_dark_arches_2",
           "scope": "world",
-          "label": "Relight the Deepwood and Dynamo pairs.",
+          "label": "Relight both ends of the Rodline–Lantern Hollow and Old Hall–Fallen Giant arches.",
           "requires_flags": [
             "stormwood:side_dark_arches_1"
           ],
