@@ -1,0 +1,323 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+3 s into the phase",
+			"file": "surge_break_01.jpg",
+			"hud": false,
+			"id": "surge_break_01",
+			"label": "after_break_r2",
+			"long_storm_ended": false,
+			"phase_offset_s": 3.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 418.510506333333,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+8 s into the phase",
+			"file": "surge_break_02.jpg",
+			"hud": false,
+			"id": "surge_break_02",
+			"label": "after_break_r2",
+			"long_storm_ended": false,
+			"phase_offset_s": 8.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 423.0,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+13 s into the phase",
+			"file": "surge_break_03.jpg",
+			"hud": false,
+			"id": "surge_break_03",
+			"label": "after_break_r2",
+			"long_storm_ended": false,
+			"phase_offset_s": 13.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 428.0,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+18 s into the phase",
+			"file": "surge_break_04.jpg",
+			"hud": false,
+			"id": "surge_break_04",
+			"label": "after_break_r2",
+			"long_storm_ended": false,
+			"phase_offset_s": 18.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 433.013664,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+23 s into the phase",
+			"file": "surge_break_05.jpg",
+			"hud": false,
+			"id": "surge_break_05",
+			"label": "after_break_r2",
+			"long_storm_ended": false,
+			"phase_offset_s": 23.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 438.007614333333,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+28 s into the phase",
+			"file": "surge_break_06.jpg",
+			"hud": false,
+			"id": "surge_break_06",
+			"label": "after_break_r2",
+			"long_storm_ended": false,
+			"phase_offset_s": 28.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 443.010586,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break: lightning ground telegraph ring (1.2 s, 3 m) at the marked clearing",
+			"file": "surge_break_telegraph.jpg",
+			"hud": false,
+			"id": "surge_break_telegraph",
+			"label": "after_break_r2",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 443.033333333333,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break: white-violet lightning flash (distant or strike) in progress",
+			"file": "surge_break_flash.jpg",
+			"hud": false,
+			"id": "surge_break_flash",
+			"label": "after_break_r2",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.615709523809522,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 443.85,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		}
+	],
+	"label": "after_break_r2"
+}

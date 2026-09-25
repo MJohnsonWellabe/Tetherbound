@@ -27,8 +27,10 @@ const HISTORICAL_BASELINE := {
 	},
 	"stormwood": {
 		"ash_road": [261, 225, 670.0],
-		"conductor_road": [249, 242, 920.0],
-		"deepwood_road": [300, 220, 870.0],
+		# F09 (granted update): the Rootgate legs were rerouted off 74° and 58°
+		# flanks, lengthening the sampled roads; failure baselines unchanged.
+		"conductor_road": [259, 242, 920.0],
+		"deepwood_road": [302, 220, 870.0],
 	},
 }
 

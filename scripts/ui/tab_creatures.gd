@@ -924,6 +924,8 @@ func first_focus() -> Control:
 		return _farewell_keep
 	if _release_stage == "done" and _farewell_done != null:
 		return _farewell_done
+	if _release_stage.begins_with("guardian") and _guardian_focus_target() != null:
+		return _guardian_focus_target()
 	return _rows[0] if not _rows.is_empty() else null
 
 
@@ -1678,11 +1680,19 @@ func _poll_release() -> void:
 	# not a polled confirm action. Only backing out is polled, backpack-style.
 	if _release_stage == "confirm" and Input.is_action_just_pressed("menu_cancel"):
 		_back_to_choosing()
+	if _release_stage.begins_with("guardian"):
+		_poll_guardian()
 
 
 func _maybe_begin_release() -> void:
+	_poll_guardian_decline_result()
 	if _evolution_stage != "" or _renaming != null:
 		return
+	# A Guardian offer the player put off ("Decide later") is NOT re-presented
+	# by opening or cycling onto this tab: the player answers it deliberately
+	# through Edda or the Deep Watcher's chamber (water_veilfall.gd
+	# request_guardian_offer -> resume_deferred), which puts it back in
+	# `Game.pending_catch` and Game opens this tab on the question.
 	var pending := _pending_catch()
 	if pending == null:
 		return
@@ -1690,9 +1700,22 @@ func _maybe_begin_release() -> void:
 	var game := state()
 	if party == null or game == null:
 		return
+	# A durable Water claim (the creature carries its claim id) is settled ONLY
+	# by the claim service that presented it: its saved receipt and the host's
+	# settlement ARE the grant. One the service no longer owns is taken off the
+	# screen here -- never added by the fallback below or released through the
+	# choice, which would be a second, receipt-less grant. The host still holds
+	# the claim and the service presents it again.
+	var capture_service := _water_capture_service(pending)
+	if capture_service == null and _drop_stale_claim(pending):
+		return
 	if not bool(party.call("is_full")):
-		var capture_service := _water_capture_service(pending)
 		if capture_service != null:
+			# A freed Guardian volunteers: with a free holder it is still the
+			# player's own Accept/Decline (ACCEPTANCE F14), never automatic.
+			if bool(capture_service.call("is_guardian_offer", pending)):
+				_begin_guardian_confirm(pending)
+				return
 			var result: Dictionary = capture_service.complete_pending_capture(-1)
 			if result.get("ok", false):
 				say("%s joins the belt." % str(pending.call("label")))
@@ -1714,6 +1737,354 @@ func _maybe_begin_release() -> void:
 	_fence_choose_focus(true)
 	if _pending_button != null:
 		_pending_button.grab_focus()
+
+
+## --- Guardian offer confirm (F14) --------------------------------------------
+##
+## With a free holder a freed Guardian's offer is answered here. Two stages:
+##   guardian          the offer. Accept runs the claim service's durable
+##                     handover; Decline only moves to the second step; B
+##                     ("Decide later") puts the offer off -- still pending,
+##                     still this character's -- and returns to the ordinary
+##                     tab. It comes back only when the player asks Edda or
+##                     the Deep Watcher's chamber to answer it.
+##   guardian_decline  "Let the Deep Watcher go? This is final." Back (focused
+##                     first, also B) returns to the offer; Confirm is the
+##                     chamber's own host-confirmed refusal. No held input.
+## A full belt never reaches this: the release choice above IS the answer
+## there. Shown in the farewell panel's slot with its own Buttons, pressed not
+## polled for the `_release_stage` fresh-press reason; the detail column is
+## hidden for its duration so the card has the width the words need.
+var _guardian_accept: Button = null
+var _guardian_decline: Button = null
+var _guardian_back: Button = null
+var _guardian_confirm_decline: Button = null
+var _guardian_subtitle: Label = null
+var _guardian_final: Label = null
+var _guardian_hint_before := ""
+var _guardian_name_shown := ""
+## Claim id of a Decline from this tab still awaiting the host's journal: the
+## status line says "Declining..." only until the host confirms, then the
+## result (see _poll_guardian_decline_result).
+var _guardian_decline_wait := ""
+
+
+func _begin_guardian_confirm(pending: RefCounted) -> void:
+	_ensure_guardian_controls()
+	_guardian_hint_before = _farewell_hint.text
+	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_LABEL)
+	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_SECONDARY)
+	_farewell_keep.visible = false
+	_farewell_release.visible = false
+	_farewell_done.visible = false
+	_farewell_hint.visible = true
+	_guardian_subtitle.visible = true
+	_guardian_final.visible = true
+	_detail_panel.visible = false
+	if _detail_scroll != null:
+		_detail_scroll.visible = false
+	_farewell_panel.visible = true
+	# The viewport shows the volunteer itself while the question is up.
+	_focused = PARTY.MAX_CREATURES
+	menu.call("hold_input", true)
+	menu.call("override_footer", " ")
+	_guardian_name_shown = _guardian_name(pending)
+	_guardian_subtitle.text = "%s · Lv %d" % [str(pending.call("label")), int(pending.get("level"))]
+	_show_guardian_offer()
+
+
+## The offer itself (entered from the tab, or Back from the decline step).
+func _show_guardian_offer() -> void:
+	_release_stage = "guardian"
+	var who := _guardian_name_shown
+	_farewell_title.text = "%s offers to join you" % who
+	_farewell_body.text = "Accept and %s joins your party in the free slot. Decline and %s stays free." % [
+		_mid_sentence(who), _mid_sentence(who)]
+	_guardian_final.text = "This choice is final."
+	_guardian_show_pair(_guardian_accept, _guardian_decline)
+	_guardian_hint("Decide later")
+	_guardian_accept.grab_focus()
+	_refresh_guardian_glyphs()
+
+
+## Decline's second step: the consequence, then a deliberate Confirm.
+func _show_guardian_decline_step() -> void:
+	if _release_stage != "guardian":
+		return
+	_release_stage = "guardian_decline"
+	var who := _guardian_name_shown
+	_farewell_title.text = "Let %s go?" % _mid_sentence(who)
+	_farewell_body.text = "%s stays free and will not offer to join you again." % who
+	_guardian_final.text = "This is final."
+	_guardian_show_pair(_guardian_back, _guardian_confirm_decline)
+	_guardian_hint("Back")
+	_guardian_back.grab_focus()
+	_refresh_guardian_glyphs()
+
+
+func _back_to_guardian_offer() -> void:
+	if _release_stage != "guardian_decline":
+		return
+	_show_guardian_offer()
+
+
+## Polled every frame while either stage is up (the `_poll_release` hook).
+func _poll_guardian() -> void:
+	if Input.is_action_just_pressed("menu_cancel"):
+		if _release_stage == "guardian_decline":
+			_back_to_guardian_offer()
+		else:
+			_put_off_guardian()
+		return
+	_refresh_guardian_glyphs()
+
+
+func _answer_guardian(accept: bool) -> void:
+	if _release_stage != ("guardian" if accept else "guardian_decline"):
+		return
+	var pending := _pending_catch()
+	var service := _water_capture_service(pending)
+	if service == null or not bool(service.call("is_guardian_offer", pending)):
+		# Nothing here to answer any more (the service dropped a stale
+		# presentation). Never leave its creature in pending_catch for the
+		# fallback to add: the host still holds the claim.
+		_drop_stale_claim(pending)
+		_end_guardian_confirm(0)
+		return
+	var who := _guardian_name_shown
+	var result: Dictionary
+	var claim_id := str(service.call("pending_guardian_id"))
+	if accept:
+		result = service.complete_pending_capture(-1)
+	else:
+		var veilfall := _water_veilfall()
+		result = veilfall.call("decline_held_guardian", false) if veilfall != null else service.decline_pending()
+	if not result.get("ok", false):
+		# The offer is still waiting (a failed save keeps it); so is the question.
+		say(str(result.get("reason", "The answer did not go through. The offer is still waiting.")))
+		return
+	if accept:
+		say("%s joins your party." % who)
+		_end_guardian_confirm(int(_party().call("size")) - 1)
+		return
+	# Said once, here: the chamber was told not to announce it as well.
+	var settled := bool(result.get("settled", service.call("decline_settled", claim_id)))
+	_guardian_decline_wait = "" if settled else claim_id
+	say(("%s stays free." % who) if settled else str(result.get("message", "Declining %s..." % _mid_sentence(who))))
+	_end_guardian_confirm(0)
+
+
+## A Decline from this tab that the host journals later: replace the pending
+## wording with the result while this tab is on screen. With the menu closed
+## the chamber announces it instead (once: whoever takes it first).
+func _poll_guardian_decline_result() -> void:
+	if _guardian_decline_wait.is_empty():
+		return
+	var claims := _water_claims()
+	if claims == null:
+		_guardian_decline_wait = ""
+		return
+	if not bool(claims.call("decline_settled", _guardian_decline_wait)):
+		return
+	_guardian_decline_wait = ""
+	var veilfall := _water_veilfall()
+	if veilfall == null or bool(veilfall.call("take_held_decline_result")):
+		say("%s stays free." % (_guardian_name_shown if not _guardian_name_shown.is_empty() else "The Guardian"))
+
+
+func _put_off_guardian() -> void:
+	var pending := _pending_catch()
+	var service := _water_capture_service(pending)
+	if service == null or not bool(service.call("defer_pending").get("ok", false)):
+		_drop_stale_claim(pending)
+		_end_guardian_confirm(0)
+		return
+	var who := _guardian_name_shown
+	var where := "%s waits for your answer. Speak with Edda or return to %s's chamber to answer." % [
+		who, _mid_sentence(who)]
+	# Back to the ordinary Creatures tab (the menu stays open); the world
+	# message repeats where to answer once the player is back in the world.
+	_end_guardian_confirm(0)
+	say(where)
+	state().call("push_world_message", where)
+
+
+## Take a durable Water claim's creature off the screen when the claim
+## service does not own it (true if it did). Ordinary pending catches are
+## left alone.
+func _drop_stale_claim(pending: RefCounted) -> bool:
+	if pending == null or str(pending.get_meta("water_capture_claim", "")).is_empty():
+		return false
+	if _water_capture_service(pending) != null:
+		return false
+	var game := state()
+	if game != null and game.get("pending_catch") == pending:
+		game.set("pending_catch", null)
+	return true
+
+
+## The chamber's own name for it ("The Deep Watcher") when the species has one.
+func _guardian_name(pending: RefCounted) -> String:
+	var epithet := str(SPECIES.definition(str(pending.get("species_id"))).get("epithet", ""))
+	return epithet if not epithet.is_empty() else str(pending.call("label"))
+
+
+## "The Deep Watcher" inside a sentence reads "the Deep Watcher".
+func _mid_sentence(who: String) -> String:
+	return "the" + who.substr(3) if who.begins_with("The ") else who
+
+
+func _guardian_focus_target() -> Control:
+	if _release_stage == "guardian_decline" and is_instance_valid(_guardian_back):
+		return _guardian_back
+	if _release_stage == "guardian" and is_instance_valid(_guardian_accept):
+		return _guardian_accept
+	return null
+
+
+func _ensure_guardian_controls() -> void:
+	var body := _farewell_keep.get_parent()
+	if _guardian_accept != null and is_instance_valid(_guardian_accept) and _guardian_accept.get_parent() == body:
+		return
+	_guardian_subtitle = _guardian_label(UITokens.FONT_BODY, UITokens.TEXT_PRIMARY)
+	body.add_child(_guardian_subtitle)
+	body.move_child(_guardian_subtitle, _farewell_title.get_index() + 1)
+	_guardian_final = _guardian_label(UITokens.FONT_BODY, UITokens.WARNING)
+	body.add_child(_guardian_final)
+	body.move_child(_guardian_final, _farewell_body.get_index() + 1)
+	_guardian_accept = _guardian_button("Accept", _answer_guardian.bind(true))
+	_guardian_decline = _guardian_button("Decline", _show_guardian_decline_step)
+	# Safe answer first and focused first, as "Keep them" is in the farewell.
+	_guardian_back = _guardian_button("Back", _back_to_guardian_offer)
+	_guardian_confirm_decline = _guardian_button("Confirm", _answer_guardian.bind(false))
+	_guardian_confirm_decline.add_theme_color_override("font_color", UITokens.WARNING)
+	_guardian_confirm_decline.add_theme_color_override("font_hover_color", UITokens.WARNING)
+	for button: Button in [_guardian_accept, _guardian_decline, _guardian_back, _guardian_confirm_decline]:
+		body.add_child(button)
+		body.move_child(button, _farewell_keep.get_index())
+
+
+func _guardian_label(font_size: int, colour: Color) -> Label:
+	var label := Label.new()
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", colour)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	UITokens.make_text_legible(label)
+	return label
+
+
+## A farewell-sized answer Button whose focus is a FILLED teal highlight with a
+## bright teal edge (not only the theme's thin outline). The fill is a deep
+## teal rather than TEAL itself so the green A glyph riding on it stays legible.
+func _guardian_button(text: String, action: Callable) -> Button:
+	var button := _farewell_button(text)
+	button.pressed.connect(action)
+	var focus := UITokens.slot_box(true)
+	focus.bg_color = UITokens.TEAL.darkened(0.45)
+	focus.border_color = UITokens.TEAL
+	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+		focus.set_border_width(side, 3)
+	button.add_theme_stylebox_override("focus", focus)
+	button.add_theme_color_override("font_focus_color", UITokens.TEXT_PRIMARY)
+	button.add_theme_constant_override("icon_max_width", 44)
+	button.visible = false
+	return button
+
+
+## Show exactly this pair of answers, fenced to each other for the stick.
+func _guardian_show_pair(first: Button, second: Button) -> void:
+	for button: Button in [_guardian_accept, _guardian_decline, _guardian_back, _guardian_confirm_decline]:
+		button.visible = button == first or button == second
+		button.icon = null
+	for pair: Array in [[first, second], [second, first]]:
+		var it := pair[0] as Button
+		var to_other := it.get_path_to(pair[1] as Button)
+		it.focus_neighbor_top = to_other
+		it.focus_neighbor_bottom = to_other
+		it.focus_neighbor_left = it.get_path_to(it)
+		it.focus_neighbor_right = it.get_path_to(it)
+		it.focus_next = to_other
+		it.focus_previous = to_other
+
+
+## "B  Decide later" / "B  Back" at body size, with the live device's glyph.
+func _guardian_hint(action_text: String) -> void:
+	var text := "%s  %s" % [INPUT_GLYPH.icon("cancel", 40), action_text]
+	if _farewell_hint.text != text:
+		_farewell_hint.text = text
+
+
+## The confirm glyph (A on a pad) rides on the focused answer, so the button
+## A will press is the one wearing it. Re-read every frame: a device switch
+## changes the glyph.
+func _refresh_guardian_glyphs() -> void:
+	var glyph := _glyph_texture("confirm")
+	for button: Button in [_guardian_accept, _guardian_decline, _guardian_back, _guardian_confirm_decline]:
+		if not is_instance_valid(button):
+			continue
+		var want: Texture2D = glyph if button.visible and button.has_focus() else null
+		if button.icon != want:
+			button.icon = want
+	_guardian_hint("Back" if _release_stage == "guardian_decline" else "Decide later")
+
+
+## The same device-aware glyph `input_glyph.gd` draws into rich text, as a
+## texture a Button can carry. Null when that binding has no glyph art.
+func _glyph_texture(id: String) -> Texture2D:
+	var code := INPUT_GLYPH.icon(id, 44)
+	var start := code.find("]")
+	var stop := code.find("[/img]")
+	if not code.begins_with("[img") or start < 0 or stop <= start:
+		return null
+	return load(code.substr(start + 1, stop - start - 1)) as Texture2D
+
+
+func _end_guardian_confirm(land: int) -> void:
+	_release_stage = ""
+	if menu != null:
+		menu.call("hold_input", false)
+		menu.call("override_footer", "")
+	for button: Button in [_guardian_accept, _guardian_decline, _guardian_back, _guardian_confirm_decline]:
+		if button != null and is_instance_valid(button):
+			button.visible = false
+			button.icon = null
+	for label: Label in [_guardian_subtitle, _guardian_final]:
+		if label != null and is_instance_valid(label):
+			label.visible = false
+	if _farewell_panel == null:
+		return
+	_farewell_hint.text = _guardian_hint_before
+	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
+	_farewell_panel.visible = false
+	if _detail_scroll != null:
+		_detail_scroll.visible = true
+	_detail_panel.visible = true
+	if not _rows.is_empty():
+		(_rows[clampi(land, 0, _rows.size() - 1)] as Button).grab_focus()
+	_resettle_detail_scroll()
+
+
+## The detail column was hidden for the question; its move-block scroll
+## (`_keep_move_stats_visible`) must be recomputed once it has its real width
+## again, not from the first, still-collapsed layout pass after showing it.
+func _resettle_detail_scroll() -> void:
+	if not is_inside_tree() or _detail_scroll == null:
+		return
+	for i in 3:
+		await get_tree().process_frame
+	if is_instance_valid(_detail_scroll) and _detail_scroll.visible:
+		_keep_move_stats_visible()
+
+
+func _water_claims() -> Node:
+	return get_node_or_null("/root/Game/Session/LedgerRpc/WaterCaptureClaims")
+
+
+## The chamber owns the decline wording (pending until the host journals it).
+func _water_veilfall() -> Node:
+	return get_node_or_null("/root/WaterArchipelago/WaterVeilfall")
 
 
 ## The farewell question for the creature on extended row `index`. Nothing is

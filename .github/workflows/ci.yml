@@ -1553,6 +1553,12 @@ jobs:
       - name: Verify Tidewake closed-gate tide-race seal
         if: ${{ !cancelled() }}
         run: timeout 300s godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
+      - name: Verify Tidewake dismount leaves no mounted state
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_water_dismount_state.gd
+      - name: Verify regional credits survive a disk reload
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
       - name: Verify relay
         if: ${{ !cancelled() }}
         env: { SMOKE: relay, RETRIES: 1 }
