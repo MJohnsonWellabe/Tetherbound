@@ -246,3 +246,23 @@ func test_health_frame_pulse_respects_reduced_motion() -> void:
 		"reduced motion keeps the cue and frame, only drops the pulse")
 	MOTION_PREFS.set_reduced_motion(was)
 	_free_cue_hud(hud)
+
+
+func test_a_yielding_dock_never_hides_a_drowning_player_health() -> void:
+	# Independent review: a menu does not pause a multi-peer session, so a
+	# client drowning behind the Satchel keeps losing health.
+	assert_true(PLAYGROUND_HUD.health_cluster_visible(false, false, false), "ordinary: shown")
+	assert_false(PLAYGROUND_HUD.health_cluster_visible(false, true, false), "a panel owns input: yields")
+	assert_true(PLAYGROUND_HUD.health_cluster_visible(false, true, true), "drowning behind a panel: stays up")
+	assert_false(PLAYGROUND_HUD.health_cluster_visible(true, false, false), "combat: stands down")
+	assert_false(PLAYGROUND_HUD.health_cluster_visible(true, true, true), "combat pauses drowning; combat wins")
+
+
+func test_a_configured_pulse_is_capped_below_flashing() -> void:
+	var hud: CanvasLayer = PLAYGROUND_HUD.new()
+	hud._apply_hud_config({"drowning_cue": {"pulse_speed": 100.0}})
+	assert_eq(hud._drowning_pulse_speed, PLAYGROUND_HUD.DROWNING_PULSE_SPEED_MAX, "a configured 100 is capped")
+	hud._apply_hud_config({"drowning_cue": {"pulse_speed": 3.0}})
+	assert_eq(hud._drowning_pulse_speed, 3.0, "an ordinary value is kept")
+	hud.free()
+

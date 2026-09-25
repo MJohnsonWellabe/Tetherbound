@@ -189,6 +189,9 @@ const DROWNING_TITLE_FONT := 36
 const DROWNING_ACTION_FONT := 30
 const DROWNING_ICON_PX := 48.0
 const DROWNING_PULSE_SPEED := 4.0
+## Upper bound on a configured pulse (cycles per second scale): anything
+## faster reads as flashing (UX §8 flash safety).
+const DROWNING_PULSE_SPEED_MAX := 8.0
 const DROWNING_PULSE_DEPTH := 0.45
 const DROWNING_FRAME_WIDTH := 4
 
@@ -2531,6 +2534,8 @@ func _load_hud_config() -> void:
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	if parsed is Dictionary:
 		_apply_hud_config(parsed)
+	else:
+		push_warning("hud.json at %s is not a JSON object; HUD toasts keep their fallback holds" % HUD_CONFIG_PATH)
 
 
 func _apply_hud_config(config: Dictionary) -> void:
@@ -2547,7 +2552,8 @@ func _apply_hud_config(config: Dictionary) -> void:
 	# 33 authored -> 22 px critical, 27 authored -> 18 px body.
 	_drowning_title_font = maxi(33, int(hud_config_number(config, "drowning_cue", "title_font_size", DROWNING_TITLE_FONT)))
 	_drowning_action_font = maxi(27, int(hud_config_number(config, "drowning_cue", "action_font_size", DROWNING_ACTION_FONT)))
-	_drowning_pulse_speed = hud_config_number(config, "drowning_cue", "pulse_speed", DROWNING_PULSE_SPEED)
+	# Capped: a fast pulse is a flashing hazard even with reduced motion off.
+	_drowning_pulse_speed = minf(hud_config_number(config, "drowning_cue", "pulse_speed", DROWNING_PULSE_SPEED), DROWNING_PULSE_SPEED_MAX)
 	_drowning_pulse_depth = clampf(hud_config_number(config, "drowning_cue", "pulse_depth", DROWNING_PULSE_DEPTH), 0.0, 0.8)
 
 
@@ -2577,11 +2583,20 @@ static func drowning_cue_active(swim_state: Object) -> bool:
 	return bool(swim_state.get("drowning")) and int(swim_state.get("mode")) == SWIM_STATE.Mode.HUMAN
 
 
+## The health plate (and the drowning cue riding on it) shows outside combat
+## unless the bottom dock yields to a panel -- except while drowning, when
+## health is still falling behind that panel in a session menus cannot pause.
+static func health_cluster_visible(combat: bool, dock_yields: bool, drowning: bool) -> bool:
+	if combat:
+		return false
+	return not dock_yields or drowning
+
+
 func _local_swim_state() -> Object:
 	if _player == null:
 		return null
 	var controller: Variant = _player.get("swim_controller")
-	if not controller is Object or not is_instance_valid(controller):
+	if not is_instance_valid(controller) or not controller is Object:
 		return null
 	var state: Variant = (controller as Object).get("state")
 	return state as Object if state is Object else null
@@ -4369,7 +4384,12 @@ func _yield_left_stack_to_combat_hud() -> void:
 	# earlier and cannot see the combat flag) never fight over the final
 	# value the way a second, independent write would.
 	if _health_bar_cluster != null:
-		_health_bar_cluster.visible = vitals_visible
+		# A menu does not pause a multi-peer session, so a client who opens
+		# the Satchel mid-drown keeps losing health: the cue and the health
+		# plate it explains stay up through a yielding dock (independent
+		# review of X03-WO4). Combat pauses drowning, so `combat` still wins.
+		_health_bar_cluster.visible = health_cluster_visible(
+			combat, _bottom_dock_should_yield(), drowning_cue_active(_local_swim_state()))
 	_yield_creature_block_to_party_strip()
 
 
