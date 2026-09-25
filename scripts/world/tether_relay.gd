@@ -251,6 +251,7 @@ func build(world: Node3D) -> bool:
 	_works.name = "TetherWorks"
 	add_child(_works)
 
+	_clear_the_ground_the_station_stands_on()
 	_build_ground_pad()
 	_build_walls()
 	_build_gate()
@@ -2769,3 +2770,20 @@ func _load_config() -> Dictionary:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## The station clears the scatter standing on its own ground (compound, gate
+## and the first stretch of its approach) at build time, the same way
+## `burrow_warrens.gd::_clear_the_ground_the_cave_stands_on` does, through
+## `vegetation.gd::clear_area()`. Without it a re-seeded bake can stand a tree
+## in the gateway (smoke_relay_station). `site.clear_radius_m`; 0 disables.
+func _clear_the_ground_the_station_stands_on() -> void:
+	var radius := float((_config.get("site", {}) as Dictionary).get("clear_radius_m", 0.0))
+	if radius <= 0.0 or _world == null or not is_instance_valid(_world):
+		return
+	var vegetation: Node = _world.get_node_or_null(^"Vegetation")
+	if vegetation == null or not vegetation.has_method("clear_area"):
+		return
+	var ground := Vector3(_centre.x, 0.0, _centre.y)
+	var removed := int(vegetation.call("clear_area", ground, radius))
+	print("[relay] cleared %d scattered pieces inside the %.0fm station radius" % [removed, radius])

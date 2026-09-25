@@ -626,7 +626,7 @@
     {
       "id": "cloudreach_upper_released_wild",
       "region_ids": ["upper_cloudreach"],
-      "level_range": [26, 31],
+      "level_range": [28, 31],
       "selection_key": "cloudreach.wild.upper_released",
       "replaceable": true,
       "catchable": true,
@@ -655,7 +655,7 @@
     {
       "id": "cloudreach_summit_restored_wild",
       "region_ids": ["summit_final_stronghold"],
-      "level_range": [29, 33],
+      "level_range": [30, 33],
       "selection_key": "cloudreach.wild.summit_restored",
       "replaceable": true,
       "catchable": true,

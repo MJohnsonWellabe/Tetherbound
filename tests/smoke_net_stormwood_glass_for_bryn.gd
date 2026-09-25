@@ -116,4 +116,10 @@ func _world_flag(flag: String) -> void:
 
 func _satchel(peer: int) -> Dictionary:
 	var raw: Variant = await probe(peer, "trainer_reward", {"items": ["stormglass", "conductor_vine"]})
-	return ((raw as Dictionary).get("satchel", {}) as Dictionary) if raw is Dictionary else {}
+	var satchel: Dictionary = ((raw as Dictionary).get("satchel", {}) as Dictionary) if raw is Dictionary else {}
+	# Counts cross the process boundary as JSON numbers (floats); compare them
+	# as the whole counts they are, or {"stormglass": 1.0} never equals 1.
+	var counts := {}
+	for item: Variant in satchel:
+		counts[str(item)] = int(round(float(satchel[item])))
+	return counts

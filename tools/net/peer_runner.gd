@@ -4246,9 +4246,17 @@ func _step_veridian_answer(args: Dictionary) -> Dictionary:
 		if current_scene != null else null
 	if climax == null:
 		return {"verdict": "ERROR", "detail": "no StrongholdClimax in this scene"}
-	var cleared := await _clear_open_dialogue(int(args.get("presses", 20)))
-	for f in maxi(0, int(args.get("settle", 10))):
-		await physics_frame
+	# The choice is READ OUT a beat after the offer opens (F05 WO6: a
+	# conversation naming both answers; no answer is taken while it is open),
+	# so a line can open during the settle after the first clear. Close
+	# whatever opens, the way a player reads it through, until none is open.
+	var cleared: Variant = ""
+	for round in 6:
+		cleared = await _clear_open_dialogue(int(args.get("presses", 20)))
+		for f in maxi(0, int(args.get("settle", 10))):
+			await physics_frame
+		if not bool(climax.call("_panel_busy")):
+			break
 	var stage := str(climax.get("_stage"))
 	if stage != "choice" or bool(climax.call("_panel_busy")):
 		return {"verdict": "FAIL", "detail": "offer not answerable: stage '%s', panel open %s (%s)"
