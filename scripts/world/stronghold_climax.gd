@@ -1115,6 +1115,17 @@ func _offer_to_join() -> void:
 ## waits, and survives a reload, until this character chooses.
 func _open_choice() -> void:
 	_close_choice()
+	# The join beat's approach may still be walking when the offer opens (a
+	# fast reader closes the join lines inside its 2 s). Its target was chosen
+	# from where the player stood THEN; left running, it walked through where
+	# the player stands NOW and shoved them 4.6 m off the spot both prompts are
+	# placed around (MEASURED, smoke_gate_e_finale WO7). The creature stops
+	# where it is, and that is where the choice is made.
+	if _step_tween != null and _step_tween.is_valid():
+		_step_tween.kill()
+		if _legendary != null:
+			_settle_target = _legendary.global_position
+			_landed()
 	var spec: Dictionary = _config.get("choice", {})
 	# Said a beat AFTER the offer opens, not on the same frame: the offer opens
 	# as the join conversation closes, while the world HUD is still hidden by
@@ -1776,8 +1787,15 @@ func _leave_the_room() -> void:
 	if spec.is_empty() or not bool(spec.get("enabled", true)):
 		return
 	var from := _legendary.global_position
-	var toward := _spot({"mark": str(spec.get("toward_mark", "warden_stand")),
-		"fallback": spec.get("fallback", [])}) - from
+	# Straight away from the machine: a walk toward the arena crossed the
+	# machine's own footprint (MEASURED, smoke_gate_e_finale WO7). Only with no
+	# measured machine does it head for the named mark.
+	var toward: Vector3
+	if not _cage_measure.is_empty():
+		toward = from - (_cage_measure["axis"] as Vector3)
+	else:
+		toward = _spot({"mark": str(spec.get("toward_mark", "warden_stand")),
+			"fallback": spec.get("fallback", [])}) - from
 	toward.y = 0.0
 	if toward.length() < 0.5:
 		toward = Vector3.FORWARD
