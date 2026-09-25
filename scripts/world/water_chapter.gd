@@ -84,8 +84,9 @@ func _process(_delta: float) -> void:
 		return
 	for flag: String in fresh:
 		if bool(_game.call("is_host")):
-			_ledger.publish_journaled_delta({"seq": int(_ledger.ledger.seq), "realm": "water",
-				"ops": [NAMED.flag_op(flag)]})
+			var world_ledger: RefCounted = _ledger.get("ledger")
+			_ledger.publish_journaled_delta({"seq": int(world_ledger.get("seq")) if world_ledger != null else 0,
+				"realm": "water", "ops": [NAMED.flag_op(flag)]})
 		else:
 			_ledger.submit({"kind": "set_world_flag", "realm": "water", "id": flag, "value": true})
 
