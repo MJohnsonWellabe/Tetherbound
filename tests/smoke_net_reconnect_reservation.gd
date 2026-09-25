@@ -75,6 +75,18 @@ func _run() -> void:
 
 	var a_left: Dictionary = await step(1, "leave", {"reason": "done_for_now"})
 	check(str(a_left.get("verdict", "")) == "PASS", "guest A left deliberately")
+	# Coordinator finding: the session must end AT ONCE on a client leave, not
+	# after the goodbye linger, or a title that checks is_active() before hosting
+	# starts an unhostable world. The leave step counts frames until inactive.
+	check(str(a_left.get("detail", "")).contains("left cleanly after 0 frames"),
+		"guest A's session ended in the same frame as its leave (%s)" % str(a_left.get("detail", "")))
+	var a_port := int(((_peers[1] as Dictionary).get("hello", {}) as Dictionary).get("enet_port", 0))
+	var a_hosts: Dictionary = await step(1, "host", {"port": a_port})
+	check(str(a_hosts.get("verdict", "")) == "PASS",
+		"guest A can host its own joinable world immediately after leaving (%s)" % str(a_hosts.get("detail", "")))
+	var a_now := _as_dict(await probe(1, "session"))
+	check(bool(a_now.get("is_host", false)) and str(a_now.get("mode", "")) == "host",
+		"guest A's new session is a real host (%s)" % str(a_now))
 	var one_again: Dictionary = await step(0, "expect_peers", {"count": 1}, 900)
 	check(str(one_again.get("verdict", "")) == "PASS", "host noticed A leave")
 	var b_in: Dictionary = await step(2, "join", {"host": "127.0.0.1", "port": port,
