@@ -1,5 +1,20 @@
 # INVITE-COOP evidence report
 
+## Lane restarted on main 47774c350
+
+X05 (invitation co-op and authority) restarted from `origin/main`
+`47774c35069fef965448f1dd898ae08abb0a58c8`, under ROADMAP Phase 5 step 28,
+MULTIPLAYER §1.1/§5/§9 and ACCEPTANCE M1–M2 and §7. The work continues the
+existing GodotSteam lobby, admission and chunked-snapshot foundation. ENet
+authority stays in place and gameplay scope does not grow. Open items at
+restart: a build/content compatibility gate, full/mismatch/cancel refusals,
+invites accepted with the game open and closed, the 120 s reconnect
+reservation, host exit and rehost, the four-peer run, proof that a refusal
+survives a lossy link, and the Windows export runtime. Real two-network relay,
+four Steam accounts, the Ally overlay and a non-development AppID still depend
+on the owner. Earlier sections below are historical and are re-verified on
+current main before any claim is made.
+
 ## Integration regression: friendly-strike fixture
 
 CI35520003064 is terminal failure, with this smoke and an independent Livewire
