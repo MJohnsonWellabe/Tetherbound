@@ -152,7 +152,8 @@ const HOST_ONLY_GRANT_SOURCE_PREFIXES := [
 ## (`water_guardian_reward.gd`), so a remote write can only be a forgery. The
 ## legacy `reward:<source>:<n>` receipts of the journals above are included:
 ## one forged receipt makes every later grant of that source
-## `legacy_unresolved`, emptying the journal.
+## `legacy_unresolved`, emptying the journal. Matched as prefixes, so the two
+## exact settlement ids also cover any future flag named after them.
 const HOST_ONLY_FLAG_PREFIXES := [
 	"water_claim:guardian:",
 	"water_guardian_",
