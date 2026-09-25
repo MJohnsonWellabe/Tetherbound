@@ -12,6 +12,9 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const MAX_TRAINING_FIGHTS := 40
 const APPROACH_FRAMES := 3600
 const SATCHEL_COLUMNS := 6
+## Exceeds the whole 0..10 health-fraction score range: any usable under-level
+## member outranks every qualified one while carried care remains.
+const UNDERLEVEL_PILOT_BONUS := 10.0
 const BOUNDARY_CONFIG := "res://data/config/village_boundary.json"
 
 var _tree: SceneTree
@@ -519,8 +522,15 @@ static func pilot_selection(party: RefCounted, potion_stock: int, training: bool
 		if max_hp <= 0.0 or hp <= 0.0:
 			continue
 		var candidate := hp / max_hp * 10.0
+		# With supplied care the caller heals the chosen pilot to half HP before
+		# engaging, so health cannot outrank the need to train. The former +2
+		# bonus let a healthier, already-qualified lead take every fight: the
+		# 2026-09-25 earned run piloted an L6 lead through ten wins while the
+		# under-level starter sat at 50% HP and ran out of practice wilds at L4.
+		# A player preparing for a level-5 entry gate fields the creatures
+		# that are still short of it.
 		if potion_stock > 0 and training and int(member.get("level")) < required_level:
-			candidate += 2.0
+			candidate += UNDERLEVEL_PILOT_BONUS
 		if candidate > score:
 			score = candidate
 			best = index
