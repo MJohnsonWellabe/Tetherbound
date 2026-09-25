@@ -33,7 +33,7 @@ extends SceneTree
 ##   - the camera assertions read the rig's private `_target`; the admission
 ##     leg reads and clears the Game's `_pending_world_message`, calls
 ##     `begin_trainer_battle` directly for the first challengeable Cloudreach
-##     trainer, and leaves its wild fight with the manager's `try_flee`;
+##     trainer (after setting `cloudreach_chapter_started`), and leaves its wild fight with the manager's `try_flee`;
 ##   - Fly's pending-anchor flag is raised by hand for the M3 wiring check,
 ##     and the M3 timeout check runs a bare Fly controller with a fake client
 ##     session and a proxy that never answers.
@@ -1102,6 +1102,11 @@ func _combat_admission_dismounts_first() -> void:
 		"boxed in, the fight is refused rather than begun with a rider on (fighting %s)" % (manager.call("is_fighting") if manager != null else "-"))
 	_check(refusals.size() == 2 and refusals.all(func(m: String) -> bool: return m.contains("No room to dismount")),
 		"every refused engage press shows the refusal, the second one too (%s)" % [refusals])
+	# Fixture: the chapter-started flag an ordinary arrival sets, which opens
+	# the lower-ring trainer's challenge.
+	(_game.get("progression") as RefCounted).call("set_flag", "cloudreach_chapter_started")
+	for i in 5:
+		await physics_frame
 	var trainer_id := ""
 	var specs: Dictionary = _director.get("trainer_specs") if _director.get("trainer_specs") != null else {}
 	for id: String in specs:
