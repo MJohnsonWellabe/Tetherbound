@@ -37,10 +37,12 @@ class LocalFixture extends RefCounted:
 
 class GameFixture extends RefCounted:
 	var host := true
+	var multi := false
 	var world: RefCounted = WORLD.new()
 	var save_system: RefCounted = Saver.new()
 	var local: RefCounted = LocalFixture.new()
 	func is_host() -> bool: return host
+	func is_multi_peer() -> bool: return multi
 
 static func add_row(world: RefCounted, character: String, status: String = "accepted",
 		source: String = "trainer:water_trainer_nerissa:coins") -> void:
@@ -112,6 +114,25 @@ func test_solo_world_without_rows_offers_only_the_local_character() -> void:
 	assert_false(refused.ok)
 	assert_eq(refused.code, "not_participant")
 	assert_true(REWARD.begin(game, ledger, "host-char", guardian()).ok)
+
+func test_multi_peer_empty_journal_offers_nobody() -> void:
+	# Interim rule until client-run Nerissa wins are journaled by the host: a
+	# guest may have fought her alone on its own client (no delivery rows), so
+	# in a multi-peer session an empty journal identifies NO participant --
+	# never the host who may not have fought.
+	assert_false(REWARD.may_receive("host", [], "host", false, true),
+		"multi-peer, no rows: the host is not presumed a participant")
+	assert_true(REWARD.may_receive("host", [], "host", false, false), "solo is unchanged")
+	assert_true(REWARD.may_receive("A", ["A"], "host", false, true), "journaled participants still qualify in co-op")
+	var game := fixture([])
+	game.multi = true
+	var ledger := LEDGER.new(game.world)
+	var refused := REWARD.begin(game, ledger, "host-char", guardian())
+	assert_false(refused.ok, "the non-fighting host is not offered")
+	assert_eq(refused.code, "not_participant")
+	assert_false(REWARD.begin(game, ledger, "guest", guardian()).ok, "nor is an unidentified guest")
+	assert_false(REWARD.refuse(game, ledger, "host-char").ok, "and no refusal settles the world for a non-participant")
+	assert_false(REWARD.local_may_answer(game), "the host's view offers nothing")
 
 # --- per-character ids and independence ----------------------------------------
 
