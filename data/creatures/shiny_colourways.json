@@ -455,13 +455,14 @@
       "vivid_comment": "COBALT BODY, CREAM UNDERSIDE. Two corrections in one. The board's ripplet is a two-tone animal -- blue over a white belly with pale inner ears -- and the previous pass rendered it as a single flat royal blue that a blind round read as a missing texture, noting its own SHINY proves the mesh supports two-tone blocking. The cause was `set_sat`: forcing one saturation onto 94% of the animal removes every variation the painted source had, which is exactly what makes a surface read as vinyl. `sat_scale` keeps that variation. The belly is selected on VALUE, measured rather than guessed -- 48% of this source sits above val 0.70 and that bright region is the underside.",
       "vivid_rules": [
         {
-          "_why": "eyes, nose, outlines: keep",
+          "_why": "eyes, nose, outlines: keep hue and value; saturation capped at 0.2 so the source's dark red-brown outlines stay out of the red band reserved for Team Tether",
           "match": {
             "val_max": 0.14
-          }
+          },
+          "set_sat": 0.2
         },
         {
-          "_why": "sheet 02 'inner frill': pink ear frills keep their hue",
+          "_why": "sheet 02 'inner frill': soft pink. Hue 340 at saturation 0.3 keeps it pink and out of the red band (hue 345-20, sat >= 0.35) reserved for Team Tether; the source's coral at sat 0.55 rendered red (integration review, 2026-09-25).",
           "match": {
             "hue": [
               330,
@@ -469,7 +470,8 @@
             ],
             "sat_min": 0.3
           },
-          "set_sat": 0.55
+          "set_sat": 0.3,
+          "set_hue": 340
         },
         {
           "_why": "sheet 02 'secondary skin'/'belly': cream",
