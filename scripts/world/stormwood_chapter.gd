@@ -7,6 +7,8 @@ const PEOPLE := preload("res://scripts/world/village_npcs.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const CROWN_GUARDIAN_CLEAR_FLAG := "stormwood:named:crown_guardian:cleared"
 const WEN_REFUSAL_CONVERSATION := "stormwood_archivist_wen_guardian_refusal"
+const WEN_RECORDS_RETURN_CONVERSATION := "stormwood_wen_crown_records_return"
+const ENGINE_TRUTH_FLAG := "stormwood:engine_truth_learned"
 var world: Node3D
 var events: Node
 var people: Node3D
@@ -97,6 +99,9 @@ func _dialogue_finished(id: String) -> void:
 	if id == "stormwood_rook_circuit_return":
 		events.emit_event("side:stormwood_deepwood_circuit:step_3")
 		return
+	if id == WEN_RECORDS_RETURN_CONVERSATION:
+		events.emit_event("side:stormwood_crown_remembers:step_3")
+		return
 	for actor: String in DIALOGUE_EVENTS:
 		if id == "stormwood_%s_in_progress" % actor:
 			events.emit_event(str(DIALOGUE_EVENTS[actor]))
@@ -151,6 +156,12 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 		{"if_flag": "stormwood:long_storm_ended", "conversation": prefix + "post_storm"},
 	]
 	if actor_id == "archivist_wen":
+		# The records report never pre-empts the main truth conversation: Wen
+		# tells the truth first, then acknowledges the completed reading, even
+		# after the Long Storm has ended.
+		branches.push_front({"if_flag": ["stormwood:side_crown_remembers_2", ENGINE_TRUTH_FLAG],
+			"unless_flag": "stormwood:side_crown_remembers_complete",
+			"conversation": WEN_RECORDS_RETURN_CONVERSATION})
 		branches.append({"if_flag": ["stormwood:crown_reached", CROWN_GUARDIAN_CLEAR_FLAG],
 			"conversation": prefix + "in_progress"})
 		branches.append({"if_flag": "stormwood:crown_reached",

@@ -54,6 +54,9 @@
       "stormwood:side_crown_remembers_1",
       "stormwood:side_crown_remembers_2",
       "stormwood:side_crown_remembers_complete",
+      "stormwood:side_crown_remembers_record:rain_ledger",
+      "stormwood:side_crown_remembers_record:root_census",
+      "stormwood:side_crown_remembers_record:reversal_mark",
       "stormwood:side_glass_for_bryn_1",
       "stormwood:side_glass_for_bryn_2",
       "stormwood:side_glass_for_bryn_complete",
@@ -546,6 +549,12 @@
           "flag_id": "stormwood:side_crown_remembers_1",
           "scope": "world",
           "label": "Find the first surviving Crown record.",
+          "count_flags": [
+            "stormwood:side_crown_remembers_record:rain_ledger",
+            "stormwood:side_crown_remembers_record:root_census",
+            "stormwood:side_crown_remembers_record:reversal_mark"
+          ],
+          "required_count": 1,
           "requires_flags": [
             "stormwood:crown_reached"
           ],
@@ -556,6 +565,12 @@
           "flag_id": "stormwood:side_crown_remembers_2",
           "scope": "world",
           "label": "Read all three records around the heartstone grove.",
+          "count_flags": [
+            "stormwood:side_crown_remembers_record:rain_ledger",
+            "stormwood:side_crown_remembers_record:root_census",
+            "stormwood:side_crown_remembers_record:reversal_mark"
+          ],
+          "required_count": 3,
           "requires_flags": [
             "stormwood:side_crown_remembers_1"
           ],

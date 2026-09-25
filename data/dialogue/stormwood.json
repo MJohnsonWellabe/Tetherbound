@@ -781,6 +781,46 @@
         "Rook: Three posts, one continuous road. That is a circuit.",
         "You learned where the forest opens and where it closes. Keep that rhythm when the storm turns."
       ]
+    },
+    "stormwood_crown_record_rain_ledger": {
+      "speaker": "Crown Record",
+      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "state": "side_record",
+      "requires_flags": ["stormwood:crown_reached"],
+      "lines": [
+        "The Rain Ledger — glass tallies scratched by Rodfolk hands, one line for every storm that rolled in from the western coast.",
+        "Beside each storm a small arch is drawn: the crews walked the old roads ahead of the weather and kept the forest folk sheltered."
+      ]
+    },
+    "stormwood_crown_record_root_census": {
+      "speaker": "Crown Record",
+      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "state": "side_record",
+      "requires_flags": ["stormwood:crown_reached"],
+      "lines": [
+        "The Root Census — rings of names pressed into the glass, each giant trunk counted and given to a keeper.",
+        "The last ring ends at the Rootgate. Beneath it one line: 'Sealed so the heartstone may hold the storm back, not bring it in.'"
+      ]
+    },
+    "stormwood_crown_record_reversal_mark": {
+      "speaker": "Crown Record",
+      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "state": "side_record",
+      "requires_flags": ["stormwood:crown_reached"],
+      "lines": [
+        "The newest record is not written. It is burned: a raw fork of fused glass running outward, away from the Crown and toward the split tree.",
+        "Every older mark points in. This one points out. Whatever made it pushed the storm the wrong way."
+      ]
+    },
+    "stormwood_wen_crown_records_return": {
+      "speaker": "Archivist Wen",
+      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "state": "side_complete",
+      "requires_flags": ["stormwood:side_crown_remembers_2"],
+      "lines": [
+        "Archivist Wen: The Rain Ledger, the Root Census and the burned mark. You read all three. Now the account is whole: the Rodfolk kept the storm out, and Team Tether turned their roads to let it in.",
+        "The keepers left a store for whoever finished the reading. It lies north-west of this grove, where Neri keeps watch. Take it; the Crown has kept it long enough."
+      ]
     }
   }
 }
