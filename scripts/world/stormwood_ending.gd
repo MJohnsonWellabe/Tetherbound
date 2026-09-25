@@ -742,10 +742,11 @@ func _record_participants() -> void:
 		for character: Variant in dynamo.get("fighter_characters"):
 			if not str(character).is_empty() and not characters.has(str(character)):
 				characters.append(str(character))
-		for key: String in ["participants", "contributors"]:
-			for peer: Variant in dynamo.get(key):
-				if not peers.has(int(peer)):
-					peers.append(int(peer))
+		# Contributors only: a Break arrival is an observer with no send-out
+		# left to admit them (BOSSES §3), so proximity alone earns no offer.
+		for peer: Variant in dynamo.get("contributors"):
+			if not peers.has(int(peer)):
+				peers.append(int(peer))
 	for peer: int in peers:
 		var character := _character_for_peer(peer)
 		if not character.is_empty() and not characters.has(character):

@@ -83,17 +83,32 @@ func test_only_a_piloted_creature_within_reach_can_strike_each_conduit_once() ->
 	assert_false(rules.strike_conduit(4, Vector2.ZERO, true), "an invalid fifth conduit cannot alter a released core")
 
 
-func test_missing_a_full_four_bank_core_cycle_clears_partial_conduit_progress() -> void:
+func test_the_shared_30s_conduit_window_spans_banks_and_retries_break_only() -> void:
 	var rules := _rules()
 	rules.update_team(0, 5)
+	assert_almost_eq(rules.window_left(), 30.0, 0.001, "Break opens a fresh 30 s conduit window (BOSSES §4.7)")
 	assert_true(rules.strike_conduit(0, rules.bank_position(0), true))
 	assert_true(rules.strike_conduit(1, rules.bank_position(1), true))
-	var one_bank := _period(rules, "break_core")
-	rules.advance(one_bank)
-	assert_eq(rules.conduits, [0, 1], "one bank firing is not a missed full core cycle")
-	rules.advance(one_bank * 3.0)
-	assert_eq(rules.conduits, [], "missing all four bank discharges restarts the conduit run")
-	assert_eq(rules.phase, "break_core", "a missed run resets progress without releasing the captive")
+	var full_cycle := _period(rules, "break_core") * 4.0
+	rules.advance(full_cycle + 1.0)
+	assert_eq(rules.conduits, [0, 1], "a whole four-bank cycle inside the window keeps progress: the window spans bank serials")
+	assert_eq(int(rules.bank_state().struck), 2, "the state reports 2/4 for the readout")
+	rules.advance(30.0 - full_cycle - 1.0 - 0.1)
+	assert_eq(rules.conduits, [0, 1], "just before expiry the partial set stands")
+	rules.advance(0.2)
+	assert_eq(rules.conduits, [], "expiry with fewer than four clears only the partial set")
+	assert_eq(rules.phase, "break_core", "timeout retries Break; the captain win and approach stay")
+	assert_almost_eq(rules.window_left(), 30.0, 0.001, "and a fresh 30 s window begins")
+	for bank in 4:
+		assert_true(rules.strike_conduit(bank, rules.bank_position(bank), true))
+	assert_eq(rules.phase, "released", "four distinct conduits inside one window release the captive")
+	assert_almost_eq(rules.window_left(), 0.0, 0.001)
+
+
+func test_arena_readout_shows_progress_and_whole_seconds_only_during_break() -> void:
+	var readout := preload("res://scripts/world/stormwood_dynamo_arena.gd")
+	assert_eq(readout.readout_text({"struck": 2, "window_left": 17.2}, "break_core", 4), "Conduits 2/4 · 18 s")
+	assert_eq(readout.readout_text({"struck": 0, "window_left": 30.0}, "overload", 4), "")
 
 
 func test_save_load_keeps_a_partial_conduit_window_and_reset_never_keeps_release() -> void:
@@ -107,6 +122,7 @@ func test_save_load_keeps_a_partial_conduit_window_and_reset_never_keeps_release
 	assert_eq(restored.phase, "break_core", "loading a partial core run must not return to captain combat")
 	assert_eq(restored.conduits, [0, 2], "loading must preserve the distinct conduits already struck")
 	assert_almost_eq(restored.elapsed, original.elapsed, 0.0001, "loading must preserve the time left in the window")
+	assert_almost_eq(restored.window_left(), original.window_left(), 0.0001, "loading keeps the conduit window's time left")
 	assert_eq(restored.advance(0.5), original.advance(0.5), "the restored run must continue on the same bank and timing")
 
 	for bank in [1, 3]:

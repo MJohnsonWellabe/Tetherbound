@@ -88,3 +88,27 @@ because the report follows the main truth conversation by design.
 ## Consolidated landing (`ralph/stormwood-landing`)
 
 Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as one branch/PR after #215, with the granted `ci.yml` steps for `smoke_stormwood_crown_records.gd` and `smoke_stormwood_stormheart_participants.gd`. After merging main at `47774c35` (#215): all `test_stormwood_*` suites plus flag-scope/chapter/portrait suites pass; smokes Crown records 22/0, Stormheart participants 16/0, Stormheart choice 13/0, arches PASS, heartstone 12/0.
+
+## WO-F10-05 — Named-fight identities and the Dynamo Break faint (`ralph/stormwood-f10-named-profiles`)
+
+- **Anchor:** F10 / ACCEPTANCE §6.1 F10 (named fights pass C2/C3); BOSSES §7 named payoffs and §4.7 Dynamo ("a full-party faint … resets only the Break attempt").
+- **Player result:**
+  - Each named wild carries its own BOSSES §7 combat block and a personal once-only payoff. Tells and recoveries are floored at 0.8 s and 0.6 s.
+    - Hollows Alpha pays great_candy.
+    - Old Rodfolk Hall Guardian pays rare_candy.
+    - Blackwater Elder pays glowmoss_tonic.
+    - Glass Field Alpha pays stormglass×2.
+  - The Dynamo's conduit Break has a 30 s window, shown in-world as "Conduits n/4 · s".
+  - A full-party faint during Break keeps the captain win. It clears the partial conduits and sends the party to Ember Bivouac once, and Break then waits until a fighter's creature is back inside the 48 m arena.
+  - A reload keeps that wait and does not replay the wipe.
+  - A player who arrives during Break can strike conduits. Under BOSSES §3 they are an observer: no captain-win reward and no Stormheart offer. `dynamo_join` needs a live creature inside the arena.
+- **Witnesses:** `tests/test_stormwood_named_fight_profiles.gd`, `tests/test_stormwood_dynamo.gd`, `tests/smoke_stormwood_dynamo_break_faint.gd` (17/0, with a CI step added under the Stormwood grant). A negative control with the arena re-admit removed fails the rejoin assertions. After merging `ralph/stormwood-landing`: all `test_stormwood_*` suites 227 tests / 25026 assertions / 0 failed; Stormheart participants 16/0, choice 13/0.
+- **Independent review:** payoffs approved. The Break-faint change first got "request changes":
+  - (blocking) a returning fighter could not reach Marrow's prompt;
+  - (should-fix) a reload replayed the wipe;
+  - (should-fix) late arrivals earned rewards and offers.
+  All three are fixed and re-reviewed (approve).
+- **Not proven:**
+  - A rendered fight run.
+  - Capacitor Alpha's 1.1 s route-line cue.
+  - A captain-fight joiner who never passed `_add_participant` and disconnects before the release drops out of the offer set (existing limit).
