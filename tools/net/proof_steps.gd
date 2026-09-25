@@ -39,7 +39,8 @@ const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 
 const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "stormheart_fixture",
-	"stormheart_answer", "stormheart_state"]
+	"stormheart_answer", "stormheart_state",
+	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state"]
 
 
 static func handles(action: String) -> bool:
@@ -62,6 +63,8 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _stormheart_answer(tree, args)
 		"stormheart_state":
 			return _stormheart_state(tree)
+	if WATER_ACTIONS.has(action):
+		return await _water_run(tree, action, args)
 	return {"verdict": "ERROR", "detail": "proof_steps: unknown action '%s'" % action}
 
 
@@ -489,3 +492,546 @@ static func _stormheart_state(tree: SceneTree) -> Dictionary:
 		"accepted_anywhere": ending.accepted_anywhere(game.call("player_flags")),
 	}
 	return {"verdict": "PASS", "detail": str(data), "data": data}
+
+
+# --- F15 (Tidewake / Water lane): the homecoming, the credits, the dock ------------
+#
+##   homecoming_complete {screenshot?}   walk up to THIS peer's Grandpa, press his real
+##                                        prompt, read the conversation the director
+##                                        chose through with `interact`; report the
+##                                        conversation id and whether the credits opened
+##   credits_continue  {screenshot?, second_press?}  wait out the roll's input guard,
+##                                        press `interact` (the roll's Continue), then
+##                                        a second press; count `acknowledged`
+##   ending_state      {disk_reload?}     this peer's F15 ending facts: receipts, pending,
+##                                        Grandpa's next conversation, realm keys, Local
+##                                        Requests, tracked objective. disk_reload: FIRST
+##                                        the production save for this peer, then its
+##                                        character is emptied in memory, then read back
+##                                        from disk (host: `load_slot`; guest: its
+##                                        character file); the process restart stand-in
+##   water_dock_act    {action_id, drop?, force?}  walk up to the dock equipment and
+##                                        press it. drop = "after_send": flush the intent
+##                                        and pull the cable in the same frame, then read
+##                                        the character back from disk (crash); drop =
+##                                        "after_delta": wait for the commit to reach this
+##                                        peer, then pull the cable and read back from
+##                                        disk without a save (crash after the in-memory
+##                                        debit). force: press even when the prompt is
+##                                        dark (a stale client's resend)
+##   water_dock_state  {action_id?, grant?, rejoin?}  dock flags, bag counts in memory
+##                                        and on disk. grant {item: n}: SETUP first, put the
+##                                        materials in this peer's bag and save the character
+##                                        (stands in for gathering them). rejoin: first,
+##                                        after a water_dock_act crash, the title's returning
+##                                        Join (peer_runner `production_join`) back to the
+##                                        host this peer was connected to, as this character
+
+const WATER_ACTIONS := ["homecoming_complete", "credits_continue", "ending_state", "water_dock_act",
+	"water_dock_state"]
+const HOMECOMING_PATH := "res://scripts/story/regional_homecoming.gd"
+const QUEST_LOG_PATH := "res://scripts/world/quest_log.gd"
+const DOCK_RULES_PATH := "res://scripts/world/water_dock_rules.gd"
+const WORLD_LEDGER_PATH := "res://scripts/net/world_ledger.gd"
+const CREDITS_CONFIG := "res://data/config/regional_credits.json"
+
+
+static func _water_run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
+	match action:
+		"homecoming_complete":
+			return await _homecoming_complete(tree, args)
+		"credits_continue":
+			return await _credits_continue(tree, args)
+		"ending_state":
+			if bool(args.get("disk_reload", false)):
+				var reload := await _disk_reload(tree, args)
+				var after := _ending_state(tree)
+				after.data["disk_reload"] = reload.data
+				after.detail = "%s; then %s" % [str(reload.detail), str(after.detail)]
+				after.verdict = reload.verdict
+				return after
+			return _ending_state(tree)
+		"water_dock_act":
+			return await _water_dock_act(tree, args)
+		"water_dock_state":
+			var before := ""
+			if args.has("grant"):
+				var granted := _water_dock_fixture(tree, {"items": args.grant})
+				if str(granted.verdict) != "PASS":
+					return granted
+				before = str(granted.detail) + "; then "
+			if bool(args.get("rejoin", false)):
+				var joined: Dictionary = await _relaunch_join(tree, args)
+				if str(joined.verdict) != "PASS":
+					return joined
+				before = "REJOIN: " + str(joined.detail) + "; then "
+			var state := _water_dock_state(tree, args)
+			state.detail = before + str(state.detail)
+			return state
+	return {"verdict": "ERROR", "detail": "proof_steps: unknown Water action '%s'" % action}
+
+
+static func _game(tree: SceneTree) -> Node:
+	return tree.root.get_node_or_null(^"Game")
+
+
+static func _is_host_owned(game: Node) -> bool:
+	var session: Variant = game.get("session")
+	return session == null or not (session as Node).has_method("is_active") \
+		or not bool((session as Node).call("is_active")) or bool((session as Node).call("is_host"))
+
+
+static func _character_id(game: Node) -> String:
+	var local: Variant = game.get("local")
+	return str((local as RefCounted).get("character_id")) if local != null else ""
+
+
+## Stand where `prompt` offers itself to this player, trying a ring around `centre`.
+static func _walk_up(tree: SceneTree, prompt: Node3D, centre: Vector3, settle: int) -> String:
+	var player := (tree.get("_probe") as Object).call("player") as Node3D
+	if player == null or prompt == null:
+		return ""
+	for offset: Vector3 in [Vector3(1.4, 0.3, 0), Vector3(-1.4, 0.3, 0), Vector3(0, 0.3, 1.4),
+			Vector3(0, 0.3, -1.4), Vector3(2.2, 0.6, 1.0), Vector3(-2.2, 0.6, -1.0), Vector3(1.0, 1.0, 2.2)]:
+		var at := centre + offset
+		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": settle})
+		if not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
+			return str(offset)
+	return ""
+
+
+static func _homecoming_complete(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	var director: Node = tree.call("_sequence_director")
+	if game == null or director == null:
+		return {"verdict": "ERROR", "detail": "no Game or SequenceDirector in this peer's scene"}
+	var homecoming: Variant = load(HOMECOMING_PATH)
+	var prompt := director.get("_grandpa_prompt") as Node3D
+	var grandpa := director.get("_grandpa") as Node3D
+	var panel := director.get("_dialogue") as Node
+	if prompt == null or grandpa == null or panel == null:
+		return {"verdict": "ERROR", "detail": "the director has no Grandpa/prompt/dialogue panel"}
+	var expected := str(homecoming.conversation_id(game))
+	var budget := int(args.get("budget_frames", 1800))
+	var standing := await _walk_up(tree, prompt, grandpa.global_position, int(args.get("walk_settle", 45)))
+	if standing.is_empty():
+		return {"verdict": "FAIL", "detail": "Grandpa's prompt never offered itself to this player (enabled=%s, label '%s', expected conversation '%s')"
+			% [str(prompt.get("enabled")), str(prompt.get("label")), expected]}
+	var waited := 0
+	var presses := 0
+	while waited < budget and not bool(panel.call("is_open")):
+		if presses * 120 <= waited:
+			if not await _tap(tree, "interact"):
+				return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
+			presses += 1
+			waited += 10
+		await tree.physics_frame
+		waited += 1
+	if not bool(panel.call("is_open")):
+		return {"verdict": "FAIL", "detail": "pressing Grandpa's prompt %d time(s) opened no conversation (expected '%s')" % [presses, expected]}
+	var runner: RefCounted = panel.call("runner")
+	var conversation := str(runner.call("conversation_id")) if runner != null else ""
+	var lines: Array[String] = []
+	var shot := {}
+	var guard := 0
+	while bool(panel.call("is_open")) and guard < 80:
+		runner = panel.call("runner")
+		if runner != null and bool(runner.call("is_active")):
+			var text := str((runner.call("line") as Dictionary).get("text", ""))
+			if lines.is_empty() or lines[-1] != text:
+				lines.append(text)
+		if shot.is_empty() and args.has("screenshot") and lines.size() >= 2:
+			shot = await _screenshot(tree, {"name": str(args.screenshot)})
+		if not await _tap(tree, "interact"):
+			return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
+		guard += 1
+	var credits_open := false
+	for f in int(args.get("credits_wait_frames", 120)):
+		var roll: Variant = director.get("_regional_credits")
+		if roll != null and is_instance_valid(roll) and bool((roll as Node).call("is_open")):
+			credits_open = true
+			break
+		await tree.physics_frame
+	var flags: RefCounted = game.get("local").get("flags")
+	var data := {"conversation": conversation, "expected": expected, "lines": lines.size(),
+		"initial": bool(homecoming.is_initial(conversation)), "repeat": conversation == str(homecoming.REPEAT_ID),
+		"homecoming_seen": bool(flags.call("has", homecoming.SEEN_FLAG)),
+		"credits_seen": bool(flags.call("has", homecoming.CREDITS_SEEN_FLAG)),
+		"credits_open": credits_open, "credits_pending": bool(homecoming.credits_pending(game)),
+		"character_id": _character_id(game), "closed": not bool(panel.call("is_open"))}
+	return {"verdict": "PASS" if bool(data.closed) and conversation == expected else "FAIL",
+		"detail": "Grandpa: '%s' (expected '%s'), %d line(s), %d press(es) on the prompt standing %s; homecoming_seen=%s credits_open=%s%s"
+			% [conversation, expected, lines.size(), presses, standing, str(data.homecoming_seen), str(credits_open),
+				"" if shot.is_empty() else "; " + str(shot.get("detail", ""))],
+		"data": data}
+
+
+static func _credits_continue(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	var director: Node = tree.call("_sequence_director")
+	if game == null or director == null:
+		return {"verdict": "ERROR", "detail": "no Game or SequenceDirector"}
+	var roll := director.get("_regional_credits") as Node
+	if roll == null or not is_instance_valid(roll) or not bool(roll.call("is_open")):
+		return {"verdict": "FAIL", "detail": "the credits roll is not open on this peer"}
+	var homecoming: Variant = load(HOMECOMING_PATH)
+	var acks: Array = []
+	var counter := func(id: String) -> void: acks.append(id)
+	roll.connect("acknowledged", counter)
+	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(CREDITS_CONFIG))
+	var guard := float(((config as Dictionary).get("motion", {}) as Dictionary).get("input_guard_seconds", 0.25)) \
+		if config is Dictionary else 0.25
+	var hold := maxf(guard, float(args.get("watch_seconds", guard)))
+	var frames := 0
+	while float(roll.get("_elapsed")) < hold and frames < 3000:
+		await tree.process_frame
+		frames += 1
+	var shot := {}
+	if args.has("screenshot"):
+		shot = await _screenshot(tree, {"name": str(args.screenshot)})
+	var pending_before := bool(homecoming.credits_pending(game))
+	if not await _tap(tree, "interact"):
+		return {"verdict": "ERROR", "detail": "the Continue press did not reach this peer"}
+	for f in 10:
+		await tree.physics_frame
+	var after_first := acks.size()
+	var open_after := bool(roll.call("is_open"))
+	# The second press lands on the world again: standing beside Grandpa it
+	# opens his next conversation (the repeat greeting). Read it through, so it
+	# neither stays open into the next step nor goes unreported, and show that
+	# finishing it does not bring the roll back.
+	var second_conversation := ""
+	var reopened := false
+	if bool(args.get("second_press", true)):
+		await _tap(tree, "interact")
+		for f in 10:
+			await tree.physics_frame
+		var panel := director.get("_dialogue") as Node
+		if panel != null and bool(panel.call("is_open")):
+			var runner: RefCounted = panel.call("runner")
+			second_conversation = str(runner.call("conversation_id")) if runner != null else "?"
+			var guard_presses := 0
+			while bool(panel.call("is_open")) and guard_presses < 40:
+				await _tap(tree, "interact")
+				guard_presses += 1
+			for f in 60:
+				await tree.physics_frame
+		reopened = bool(roll.call("is_open"))
+	if roll.is_connected("acknowledged", counter):
+		roll.disconnect("acknowledged", counter)
+	var flags: RefCounted = game.get("local").get("flags")
+	var saver: Variant = game.get("save_system")
+	var characters: Variant = (saver as RefCounted).call("characters") if saver != null else null
+	var on_disk: Dictionary = (characters as RefCounted).call("state", _character_id(game)) if characters != null else {}
+	var disk_flags := JSON.stringify(on_disk.get("flags", {}))
+	var data := {"acknowledged": acks.size(), "acknowledged_after_first_press": after_first,
+		"open_after_continue": open_after, "pending_before": pending_before,
+		"credits_seen": bool(flags.call("has", homecoming.CREDITS_SEEN_FLAG)),
+		"credits_pending": bool(homecoming.credits_pending(game)),
+		"credits_seen_on_disk": disk_flags.contains(str(homecoming.CREDITS_SEEN_FLAG)),
+		"watched_seconds": snappedf(float(roll.get("_elapsed")), 0.01),
+		"second_press_conversation": second_conversation, "credits_reopened": reopened}
+	var ok: bool = acks.size() == 1 and after_first == 1 and not open_after and not reopened and bool(data.credits_seen) \
+		and not bool(data.credits_pending) and bool(data.credits_seen_on_disk)
+	return {"verdict": "PASS" if ok else "FAIL",
+		"detail": "credits watched %.2fs, Continue pressed; acknowledged %d time(s) (after the first press %d), open after=%s, receipt in memory=%s on disk=%s, pending=%s; second press opened '%s', roll reopened=%s%s"
+			% [data.watched_seconds, acks.size(), after_first, str(open_after), str(data.credits_seen),
+				str(data.credits_seen_on_disk), str(data.credits_pending), second_conversation, str(reopened),
+				"" if shot.is_empty() else "; " + str(shot.get("detail", ""))],
+		"data": data}
+
+
+static func _realm_keys(game: Node) -> Array[String]:
+	var out: Array[String] = []
+	for store: Variant in [game.get("world").get("flags"), game.get("local").get("flags")]:
+		if store == null:
+			continue
+		for id: Variant in ((store as RefCounted).call("save_data") as Dictionary).get("flags", []):
+			if str(id).begins_with("realm_key_") and not out.has(str(id)):
+				out.append(str(id))
+	out.sort()
+	return out
+
+
+static func _ending_state(tree: SceneTree) -> Dictionary:
+	var game := _game(tree)
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game", "data": {}}
+	var homecoming: Variant = load(HOMECOMING_PATH)
+	var flags: RefCounted = game.get("local").get("flags")
+	var reader: RefCounted = load(QUEST_LOG_PATH).new()
+	reader.call("set_realm", "meadows")
+	var progression: RefCounted = game.get("progression")
+	var local_rows: Array = reader.call("local_entries", progression)
+	var shown: Array[String] = [str(reader.call("tracked_text", progression)), str(reader.call("tracked_hint", progression))]
+	for row: Variant in local_rows:
+		shown.append(JSON.stringify(row))
+	var sequel := false
+	for text: String in shown:
+		sequel = sequel or text.to_lower().contains("sequel") or text.to_lower().contains("chapter")
+	var keys := _realm_keys(game)
+	var director: Node = tree.call("_sequence_director")
+	var roll: Variant = director.get("_regional_credits") if director != null else null
+	var data := {"character_id": _character_id(game), "host_owned": _is_host_owned(game),
+		"currents_restored": bool(game.get("world").get("flags").call("has", homecoming.WORLD_FLAG)),
+		"homecoming_seen": bool(flags.call("has", homecoming.SEEN_FLAG)),
+		"credits_seen": bool(flags.call("has", homecoming.CREDITS_SEEN_FLAG)),
+		"credits_pending": bool(homecoming.credits_pending(game)),
+		"credits_open": roll != null and is_instance_valid(roll) and bool((roll as Node).call("is_open")),
+		"grandpa_next": str(homecoming.conversation_id(game)),
+		"realm_keys": keys, "realm_key_count": keys.size(),
+		"local_requests": local_rows.size(), "local_requests_offered": not local_rows.is_empty(), "tracked_id": str(reader.call("tracked_id", progression)),
+		"sequel_or_chapter_prompt": sequel}
+	return {"verdict": "PASS", "detail": str(data), "data": data}
+
+
+static func _disk_reload(tree: SceneTree, _args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	var saver: Variant = game.get("save_system") if game != null else null
+	if saver == null:
+		return {"verdict": "ERROR", "detail": "no Game.save_system"}
+	var host_owned := _is_host_owned(game)
+	var character_id := _character_id(game)
+	var characters: RefCounted = (saver as RefCounted).call("characters")
+	if host_owned:
+		if not bool(game.call("autosave_here")):
+			return {"verdict": "FAIL", "detail": "host autosave_here() refused"}
+	else:
+		game.call("autosave_here")
+	if character_id.is_empty() or not bool(characters.call("has", character_id)):
+		return {"verdict": "FAIL", "detail": "no character file on disk for '%s'" % character_id}
+	var homecoming: Variant = load(HOMECOMING_PATH)
+	var local: RefCounted = game.get("local")
+	local.call("load_data", {})
+	var emptied := not bool(local.get("flags").call("has", homecoming.SEEN_FLAG)) \
+		and _character_id(game) == character_id
+	var ok := false
+	if host_owned:
+		ok = bool((saver as RefCounted).call("load_slot", game, int(game.call("autosave_slot"))))
+	else:
+		ok = bool(characters.call("apply", game, character_id))
+	for f in 30:
+		await tree.physics_frame
+	var back := _character_id(game) == character_id
+	return {"verdict": "PASS" if ok and emptied and back else "FAIL",
+		"detail": "%s: saved, memory emptied (homecoming receipt gone=%s), read back from disk=%s, same character=%s"
+			% ["host slot (world + character)" if host_owned else "guest character file", str(emptied), str(ok), str(back)],
+		"data": {"host_owned": host_owned, "emptied": emptied, "reloaded": ok, "character_id": character_id}}
+
+
+# --- dock ------------------------------------------------------------------------
+
+static func _docks(tree: SceneTree) -> Node:
+	var scene := tree.current_scene
+	return scene.find_child("WaterDocks", true, false) if scene != null else null
+
+
+static func _dock_action(action_id: String) -> Dictionary:
+	for row: Dictionary in (load(DOCK_RULES_PATH).load_data() as Dictionary).actions:
+		if str(row.id) == action_id:
+			return row
+	return {}
+
+
+static func _bag(game: Node, items: Array) -> Dictionary:
+	var out := {}
+	var inventory: RefCounted = game.get("local").get("inventory")
+	for item: Variant in items:
+		out[str(item)] = int(inventory.call("count", str(item)))
+	return out
+
+
+static func _bag_on_disk(game: Node, items: Array) -> Dictionary:
+	var out := {}
+	var saver: Variant = game.get("save_system")
+	var state: Dictionary = ((saver as RefCounted).call("characters") as RefCounted).call("state", _character_id(game)) \
+		if saver != null else {}
+	for item: Variant in items:
+		out[str(item)] = 0
+	for stack: Variant in (state.get("inventory", []) as Array):
+		if stack is Dictionary and out.has(str((stack as Dictionary).get("id", ""))):
+			out[str(stack.id)] = int(out[str(stack.id)]) + int((stack as Dictionary).get("n", 0))
+	return out
+
+
+static func _save_character(game: Node) -> bool:
+	game.call("autosave_here")
+	var saver: Variant = game.get("save_system")
+	var id := _character_id(game)
+	return saver != null and not id.is_empty() \
+		and bool(((saver as RefCounted).call("characters") as RefCounted).call("has", id))
+
+
+static func _water_dock_fixture(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var items: Dictionary = args.get("items", {}) as Dictionary
+	var inventory: RefCounted = game.get("local").get("inventory")
+	for item: Variant in items:
+		var left := int(inventory.call("add", str(item), int(items[item])))
+		if left != 0:
+			return {"verdict": "FAIL", "detail": "bag had no room for %d %s" % [left, str(item)]}
+	var saved := _save_character(game)
+	var bag := _bag(game, items.keys())
+	var disk := _bag_on_disk(game, items.keys())
+	return {"verdict": "PASS" if saved and bag == disk else "FAIL",
+		"detail": "SETUP (stands in for gathering): bag %s, on disk %s, saved=%s" % [str(bag), str(disk), str(saved)],
+		"data": {"bag": bag, "disk": disk}}
+
+
+static func _water_dock_act(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	var docks := _docks(tree)
+	if game == null or docks == null:
+		return {"verdict": "ERROR", "detail": "no Game or WaterDocks (is this peer in Water?)"}
+	var action_id := str(args.get("action_id", ""))
+	var action := _dock_action(action_id)
+	if action.is_empty():
+		return {"verdict": "ERROR", "detail": "no dock action '%s'" % action_id}
+	var flag := str(action.flag)
+	var cost: Array = (action.cost as Dictionary).keys()
+	var prompt := (docks.get("_prompts") as Dictionary).get(flag) as Node3D
+	if prompt == null:
+		return {"verdict": "ERROR", "detail": "the dock has no prompt for '%s'" % flag}
+	var drop := str(args.get("drop", "none"))
+	var host_owned := _is_host_owned(game)
+	var local_peer := tree.root.multiplayer.get_unique_id()
+	var takes: Array = []
+	var refusals: Array = []
+	var ledger: Node = game.get("ledger")
+	var world_ledger: Variant = load(WORLD_LEDGER_PATH)
+	var on_delta := func(delta: Dictionary) -> void:
+		for op: Variant in world_ledger.player_ops_for(delta, local_peer):
+			if str((op as Dictionary).get("op", "")) == "item_take":
+				takes.append("%s x%d" % [str(op.item), int(op.count)])
+	var on_refused := func(kind: String, code: String, _reason: String, _d: Dictionary) -> void:
+		if kind == "water_dock_action":
+			refusals.append(code)
+	ledger.connect("delta_applied", on_delta)
+	ledger.connect("intent_refused", on_refused)
+	var bag_before := _bag(game, cost)
+	var disk_before := _bag_on_disk(game, cost)
+	var flag_before := bool(game.get("world").get("flags").call("has", flag))
+	var standing := await _walk_up(tree, prompt, prompt.global_position - Vector3(0, 1.0, 0), int(args.get("walk_settle", 60)))
+	var offered := not standing.is_empty()
+	var shot := {}
+	if args.has("screenshot"):
+		shot = await _screenshot(tree, {"name": str(args.screenshot)})
+	var pressed := ""
+	if offered and drop == "none":
+		if not await _tap(tree, "interact"):
+			return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
+		pressed = "interact on the offered prompt"
+	elif offered or bool(args.get("force", false)):
+		# Same signal the arbiter fires on an interact press, emitted in THIS
+		# frame so the cable can be pulled right behind the intent.
+		prompt.emit_signal("activated")
+		pressed = "prompt activated (%s)" % ("offered" if offered else "FORCED: prompt dark, stale-client resend")
+	else:
+		ledger.disconnect("delta_applied", on_delta)
+		ledger.disconnect("intent_refused", on_refused)
+		return {"verdict": "FAIL", "detail": "the '%s' prompt is not offering itself (enabled=%s, flag already set=%s)"
+			% [str(action.label), str(prompt.get("enabled")), str(flag_before)],
+			"data": {"offered": false, "prompt_enabled": bool(prompt.get("enabled")), "flag_before": flag_before,
+				"bag_before": bag_before, "bag_after": bag_before, "item_takes": [], "refusals": []}}
+	var crash := ""
+	var session: Node = game.get("session")
+	var link: Variant = tree.root.multiplayer.multiplayer_peer
+	if not host_owned and link is ENetMultiplayerPeer:
+		var server: ENetPacketPeer = (link as ENetMultiplayerPeer).get_peer(1)
+		if server != null:
+			tree.set_meta(&"f15_host_address", [server.get_remote_address(), server.get_remote_port()])
+	if drop == "after_send" and not host_owned:
+		var peer: Variant = tree.root.multiplayer.multiplayer_peer
+		if peer is ENetMultiplayerPeer and (peer as ENetMultiplayerPeer).host != null:
+			(peer as ENetMultiplayerPeer).host.flush()
+		(peer as MultiplayerPeer).close()
+		crash = _crash_reload(game)
+	var budget := int(args.get("budget_frames", 600))
+	var waited := 0
+	while waited < budget:
+		# A fresh action settles on its flag; a press of a finished one waits for
+		# its refusal (or the whole budget), so a late second debit is still seen.
+		if crash.is_empty() and ((not flag_before and bool(game.get("world").get("flags").call("has", flag)))
+				or not refusals.is_empty() or (flag_before and waited >= int(args.get("settle_frames", 240)))):
+			break
+		if not crash.is_empty() and waited >= 120:
+			break
+		await tree.physics_frame
+		waited += 1
+	if drop == "after_delta" and not host_owned and crash.is_empty():
+		(tree.root.multiplayer.multiplayer_peer as MultiplayerPeer).close()
+		crash = _crash_reload(game)
+		for f in 120:
+			await tree.physics_frame
+	if ledger.is_connected("delta_applied", on_delta):
+		ledger.disconnect("delta_applied", on_delta)
+	if ledger.is_connected("intent_refused", on_refused):
+		ledger.disconnect("intent_refused", on_refused)
+	var bag_after := _bag(game, cost)
+	var disk_after := _bag_on_disk(game, cost)
+	var taken := {}
+	for item: String in bag_before:
+		taken[item] = int(bag_before[item]) - int(bag_after[item])
+	var data := {"action_id": action_id, "offered": offered, "pressed": pressed, "drop": drop,
+		"flag_before": flag_before, "flag_after": bool(game.get("world").get("flags").call("has", flag)),
+		"bag_before": bag_before, "bag_after": bag_after, "taken": taken,
+		"disk_before": disk_before, "disk_after": disk_after,
+		"item_takes": takes, "refusals": refusals, "crash": crash,
+		"session_active": session != null and bool(session.call("is_active"))}
+	return {"verdict": "PASS",
+		"detail": "%s standing %s; flag %s -> %s; bag %s -> %s (disk %s -> %s); item_take ops seen %s; refusals %s%s%s"
+			% [pressed, standing if offered else "(not offered)", str(flag_before), str(data.flag_after),
+				str(bag_before), str(bag_after), str(disk_before), str(disk_after), str(takes), str(refusals),
+				"" if crash.is_empty() else "; CRASH stand-in: " + crash,
+				"" if shot.is_empty() else "; " + str(shot.get("detail", ""))],
+		"data": data}
+
+
+## The process-restart stand-in for a crash: in the frame the cable is pulled,
+## drop what this process holds and read its character back from disk. No save
+## runs first (a crash makes none).
+static func _crash_reload(game: Node) -> String:
+	var id := _character_id(game)
+	var characters: RefCounted = (game.get("save_system") as RefCounted).call("characters")
+	var ok := bool(characters.call("apply", game, id))
+	return "transport closed; character '%s' read back from disk=%s (no save)" % [id, str(ok)]
+
+
+static func _water_dock_state(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game", "data": {}}
+	var rules: Dictionary = load(DOCK_RULES_PATH).load_data()
+	var done := {}
+	var items: Array = []
+	for row: Dictionary in rules.actions:
+		done[str(row.id)] = bool(game.get("world").get("flags").call("has", str(row.flag)))
+		for item: Variant in (row.cost as Dictionary):
+			if not items.has(item):
+				items.append(item)
+	var docks := _docks(tree)
+	var action_id := str(args.get("action_id", ""))
+	var prompt_enabled: Variant = null
+	if docks != null and not action_id.is_empty():
+		var p: Variant = (docks.get("_prompts") as Dictionary).get(str(_dock_action(action_id).get("flag", "")))
+		prompt_enabled = bool((p as Node).get("enabled")) if p != null else null
+	var session: Node = game.get("session")
+	var data := {"character_id": _character_id(game), "done": done, "bag": _bag(game, items),
+		"disk": _bag_on_disk(game, items), "prompt_enabled": prompt_enabled,
+		"session_active": session != null and bool(session.call("is_active")),
+		"realm": str(game.get("current_realm"))}
+	return {"verdict": "PASS", "detail": str(data), "data": data}
+
+
+static func _relaunch_join(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	if game == null or not tree.has_meta(&"f15_host_address"):
+		return {"verdict": "ERROR", "detail": "no remembered host address (relaunch_join follows a water_dock_act crash)"}
+	var address: Array = tree.get_meta(&"f15_host_address")
+	var result: Dictionary = await tree.call("_step_production_join", {"host": str(address[0]),
+		"port": int(address[1]), "character": {"character_id": _character_id(game)},
+		"budget_frames": int(args.get("budget_frames", 3000))})
+	result["data"] = {"character_id": _character_id(game), "realm": str(game.get("current_realm"))}
+	return result

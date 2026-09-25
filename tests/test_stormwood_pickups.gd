@@ -109,8 +109,10 @@ func _route_distance(point: Vector2) -> float:
 ## route_09 and route_06 must stay clear. The other stations that
 ## still overlap are recorded here so the list can only shrink; they are an
 ## open finding, not an accepted layout.
-const KNOWN_NPC_OVERLAPS := ["stormwood_pickup_route_05", "stormwood_pickup_route_07", "stormwood_pickup_route_16", "stormwood_pickup_route_18",
-	"stormwood_pickup_route_19", "stormwood_pickup_pocket_203"]
+## route_19 lies on the terrain 150 m below Marrow's core platform and
+## pocket_203 sits in Neri's pocket off the critical route; neither shares a
+## reachable interaction volume, so both stay listed.
+const KNOWN_NPC_OVERLAPS := ["stormwood_pickup_route_19", "stormwood_pickup_pocket_203"]
 const PICKUP_PROMPT_RADIUS_M := 2.4
 
 

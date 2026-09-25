@@ -17,6 +17,7 @@ extends Node3D
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const CONFIG_PATH := "res://data/config/objective_beacon.json"
 const MAP_OWNER_META := &"regional_objective_beacon_owner"
+const PRESENTATION_HOLD := preload("res://scripts/ui/presentation_hold.gd")
 
 var _log: RefCounted = null
 var _config: Dictionary = {}
@@ -38,6 +39,9 @@ var realm_id := "meadows"
 var _claimed_map: RefCounted = null
 var _marker_owner: RefCounted = RefCounted.new()
 var _last_realm := ""
+## Whether a target is resolved; the beam draws only when this is true and no
+## story payoff holds the screen (`presentation_hold.gd`).
+var _has_target := false
 
 
 func _ready() -> void:
@@ -73,6 +77,7 @@ func _process(delta: float) -> void:
 	if revision != _last_progression_revision or current_realm != _last_realm \
 			or current_map != _claimed_map:
 		refresh_now()
+	_apply_visibility()
 	_animate_ping()
 	_update_distance_beam()
 
@@ -172,8 +177,20 @@ func _remove_owned_marker() -> void:
 
 
 func _set_active(active: bool) -> void:
+	_has_target = active
+	_apply_visibility()
+
+
+## The beam stands down while a story payoff plays (F05 heal: it read as a
+## stray cyan column over the land healing). The target and map marker are
+## untouched; the beam returns the frame the hold ends.
+func _apply_visibility() -> void:
 	if _visual != null:
-		_visual.visible = active
+		_visual.visible = _has_target and not (is_inside_tree() and PRESENTATION_HOLD.active(get_tree()))
+
+
+func beam_visible() -> bool:
+	return _visual != null and _visual.visible
 
 
 func _ground_height(at: Vector2) -> float:

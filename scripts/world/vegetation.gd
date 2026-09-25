@@ -38,6 +38,7 @@ extends Node3D
 ## streaming with the corridor is explicit unfinished work, not solved here.
 
 const RULES := preload("res://scripts/world/scatter_rules.gd")
+const SCATTER_PROXIMITY_INDEX := preload("res://scripts/world/scatter_proximity_index.gd")
 const PERF_TRACE := preload("res://scripts/world/perf_trace.gd")
 const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
@@ -2446,6 +2447,23 @@ func has_solid_scatter_near(centre: Vector3, extra: float) -> bool:
 		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() <= reach * reach:
 			return true
 	return false
+
+
+## `has_solid_scatter_near()` for many questions at once: a grid snapshot of
+## the same footprints (collidable batches at their batch radius, soft
+## occluders at their own), so a caller asking hundreds of times scans the
+## world once. See `scatter_proximity_index.gd`.
+func solid_scatter_index(cell: float = 8.0) -> RefCounted:
+	var index: RefCounted = SCATTER_PROXIMITY_INDEX.new(cell)
+	for batch: Dictionary in _collision_batches:
+		var radius := float(batch["radius"])
+		for placement: Dictionary in (batch["placements"] as Array):
+			var spot: Vector3 = placement["position"]
+			index.call("add", spot.x, spot.z, radius)
+	for i in _soft_occluder_positions.size():
+		var spot: Vector3 = _soft_occluder_positions[i]
+		index.call("add", spot.x, spot.z, _soft_occluder_radii[i])
+	return index
 
 
 ## Remove every COLLIDABLE scatter instance whose position falls inside a

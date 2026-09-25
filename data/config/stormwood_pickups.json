@@ -72,10 +72,11 @@
       "item_id": "good_candy",
       "count": 1,
       "region_id": "glowmoss_hollows",
+      "_why_moved_f11": "WO-F11-04: it stood exactly on Courier Pim, sharing its interaction circle. Moved 8 m back along the critical route; height is stormwood_heightfield.height_at + the original 0.35 m.",
       "position": [
-        -380,
-        32.58,
-        1400
+        -384.2,
+        32.34,
+        1393.2
       ],
       "placement": "critical_route_verge",
       "persistent": true,
@@ -105,10 +106,11 @@
       "item_id": "good_candy",
       "count": 1,
       "region_id": "conductor_run",
+      "_why_moved_f11": "WO-F11-04: it stood exactly on Warden-Elect Bryn (earned witness run 10 lost a press to Bryn), sharing its interaction circle. Moved 8 m back along the critical route; height is stormwood_heightfield.height_at + the original 0.35 m.",
       "position": [
-        -700,
-        44.38,
-        2300
+        -702.9,
+        43.69,
+        2292.5
       ],
       "placement": "critical_route_verge",
       "persistent": true,
@@ -250,10 +252,11 @@
       "item_id": "potion_small",
       "count": 1,
       "region_id": "deepwood",
+      "_why_moved_f11": "WO-F11-04: it stood exactly on Ace Trainer Rook, sharing its interaction circle. Moved 8 m back along the critical route; height is stormwood_heightfield.height_at + the original 0.35 m.",
       "position": [
-        -150,
-        61.34,
-        4460
+        -158.0,
+        61.15,
+        4460.3
       ],
       "placement": "critical_route_verge",
       "persistent": true,
@@ -282,10 +285,11 @@
       "item_id": "potion_small",
       "count": 1,
       "region_id": "dynamo",
+      "_why_moved_f11": "WO-F11-04: it stood exactly on Officer Kestrel, sharing its interaction circle. Moved 8 m back along the critical route; height is stormwood_heightfield.height_at + the original 0.35 m.",
       "position": [
-        -100,
-        107.92,
-        5350
+        -104.6,
+        107.91,
+        5343.4
       ],
       "placement": "critical_route_verge",
       "persistent": true,
