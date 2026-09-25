@@ -1,0 +1,242 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-629.39990234375,
+				22.4598331451416,
+				804.025939941406
+			],
+			"description": "Verge Rod Station pylon (rod line), 30 m, Calm",
+			"file": "view_rod_line_calm.jpg",
+			"hud": false,
+			"id": "view_rod_line_calm",
+			"label": "after_views",
+			"long_storm_ended": false,
+			"player": [
+				-631.358154296875,
+				21.0410594940186,
+				806.495056152344
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 4.50057866666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-629.39990234375,
+				22.4598331451416,
+				804.025939941406
+			],
+			"description": "Verge Rod Station pylon (rod line), 30 m, Break",
+			"file": "view_rod_line_break.jpg",
+			"hud": false,
+			"id": "view_rod_line_break",
+			"label": "after_views",
+			"long_storm_ended": false,
+			"player": [
+				-631.358154296875,
+				21.0410594940186,
+				806.495056152344
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 418.493553333333,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-472.208740234375,
+				52.2939491271973,
+				3900.30639648438
+			],
+			"description": "Deepwood forest near Lantern Hollow, Calm",
+			"file": "view_forest_calm.jpg",
+			"hud": false,
+			"id": "view_forest_calm",
+			"label": "after_views",
+			"long_storm_ended": false,
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "deepwood",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 4.49153733333334,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-472.208740234375,
+				52.2939491271973,
+				3900.30639648438
+			],
+			"description": "Deepwood forest near Lantern Hollow, Break",
+			"file": "view_forest_break.jpg",
+			"hud": false,
+			"id": "view_forest_break",
+			"label": "after_views",
+			"long_storm_ended": false,
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "deepwood",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 334.495407,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-629.39990234375,
+				22.4598331451416,
+				804.025939941406
+			],
+			"description": "Verge Rod Station pylon (rod line), 30 m, aftermath Calm",
+			"file": "view_rod_line_aftermath_calm.jpg",
+			"hud": false,
+			"id": "view_rod_line_aftermath_calm",
+			"label": "after_views",
+			"long_storm_ended": true,
+			"player": [
+				-631.358154296875,
+				21.0410594940186,
+				806.495056152344
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "aftermath:calm",
+				"rain_amount_ratio": 0.0,
+				"rain_emitting": false,
+				"rain_visible": false
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"flag stormwood:long_storm_ended set (aftermath)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 4.509344,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-472.208740234375,
+				52.2939491271973,
+				3900.30639648438
+			],
+			"description": "Deepwood forest near Lantern Hollow, aftermath Calm",
+			"file": "view_forest_aftermath_calm.jpg",
+			"hud": false,
+			"id": "view_forest_aftermath_calm",
+			"label": "after_views",
+			"long_storm_ended": true,
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "aftermath:calm",
+				"rain_amount_ratio": 0.0,
+				"rain_emitting": false,
+				"rain_visible": false
+			},
+			"region": "deepwood",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"flag stormwood:long_storm_ended set (aftermath)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 4.49733333333334,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		}
+	],
+	"label": "after_views"
+}
