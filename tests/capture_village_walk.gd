@@ -105,7 +105,8 @@ var _failed := ""
 
 
 func _init() -> void:
-	_run()
+	# Deferred: autoloads (Game) are not under root yet while _init runs.
+	call_deferred("_run")
 
 
 func _parse_args() -> bool:
@@ -153,6 +154,7 @@ func _run() -> void:
 		quit(0)
 		return
 
+	await process_frame
 	_game = root.get_node_or_null(^"Game")
 	if _game == null:
 		print("[village-walk] FAIL no Game autoload")
