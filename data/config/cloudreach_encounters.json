@@ -963,7 +963,7 @@
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_01",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_upper_wild",
       "position": [
         -262.505,
         500.146,
@@ -976,7 +976,7 @@
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_02",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_upper_wild",
       "position": [
         -311.755,
         511.45,
@@ -989,7 +989,7 @@
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_03",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_upper_wild",
       "position": [
         -476.115,
         539.055,
@@ -1002,7 +1002,7 @@
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_04",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_upper_wild",
       "position": [
         -537.333,
         551.137,
@@ -1015,7 +1015,7 @@
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_05",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_upper_wild",
       "position": [
         -616.271,
         563.219,
@@ -1028,7 +1028,7 @@
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_06",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_upper_wild",
       "position": [
         -682.867,
         580.424,
@@ -1041,7 +1041,7 @@
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_07",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_upper_wild",
       "position": [
         -771.47,
         604.178,
@@ -1054,7 +1054,7 @@
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_08",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_upper_wild",
       "position": [
         -785.021,
         643.604,

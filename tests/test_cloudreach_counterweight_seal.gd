@@ -18,6 +18,20 @@ const VISUAL_PATH := "res://data/config/cloudreach_visual.json"
 const BEACON_PATH := "res://data/config/cloudreach_windscar_beacon_visual.json"
 const CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 const FLY_PATH := "res://data/config/fly_traversal.json"
+## Every Cloudreach data file that places something in the world.
+const PLACEMENT_PATHS := [
+	"res://data/config/cloudreach_chapter.json",
+	"res://data/config/cloudreach_encounters.json",
+	"res://data/config/cloudreach_physical_runtime.json",
+	"res://data/config/cloudreach_resources.json",
+	"res://data/config/cloudreach_npc_runtime.json",
+	"res://data/config/cloudreach_act_one_runtime.json",
+	"res://data/config/cloudreach_world.json",
+]
+## The former gate: everything between it and the moved gate became walkable
+## before the upper unlock with F06.
+const FORMER_GATE := Vector3(-123.4, 474.5, 2481.4)
+const FLY_FLAG := "fly_traversal_unlocked"
 const GATE_ID := "upper_counterweight_gate"
 const ROUTE_ID := "windscar_counterweight_pass"
 const UPPER_FLAG := "cloudreach_upper_route_unlocked"
@@ -149,6 +163,121 @@ func test_every_collidable_top_face_of_the_closed_gate_is_fly_sealed() -> void:
 			lateral += 0.05
 	assert_true(samples > 40000, "the gate's top faces were sampled (%d)" % samples)
 	assert_true(misses.is_empty(), "landable gate masonry outside every %s seal: %s" % [UPPER_FLAG, str(misses)])
+
+
+## F06 condition: the ~1,354 m of pass that became walkable before the upper
+## unlock must not hand out anything Fly-gated. Every placement in any
+## Cloudreach data file whose nearest ground route is the pass, between the
+## former and the moved gate, must either need nothing that follows Fly (it is
+## Windscar content) or stay hidden until cloudreach_upper_route_unlocked.
+## Nothing in that span was reachable on foot on main (it was behind the
+## former gate), so there is no third case.
+func test_nothing_fly_gated_is_walkable_before_the_upper_unlock() -> void:
+	var line := _line()
+	var s_former := float(_progress(line, FORMER_GATE)["s"])
+	var s_gate := float(_progress(line, _vec(_gate().get("position", [])))["s"])
+	var others: Array = []
+	for route: Dictionary in _world.get("routes", []):
+		if str(route.get("id", "")) != ROUTE_ID and str(route.get("traversal_mode", "ground")) == "ground":
+			others.append(_polyline(route))
+	var post_upper := _closure([UPPER_FLAG, "cloudreach_act_ii_complete", "cloudreach_upper_anchors_disabled"])
+	var post_fly := _closure([FLY_FLAG, "sky_shrine_reached"])
+	for flag: Variant in post_upper.keys():
+		post_fly[flag] = true
+	var tables: Dictionary = {}
+	for table: Dictionary in _chapter.get("encounter_tables", []):
+		tables[str(table.get("id", ""))] = table
+	var overrides: Dictionary = _physical.get("encounter_requirements", {})
+	var found: Array[String] = []
+	var bad: Array[String] = []
+	var wild := 0
+	for path: String in PLACEMENT_PATHS:
+		var placements: Array[Dictionary] = []
+		_collect_placements(_read(path), path.get_file(), placements)
+		for placement: Dictionary in placements:
+			var at: Vector3 = placement["at"]
+			var progress := _progress(line, at)
+			var s := float(progress["s"])
+			var h := float(progress["h"])
+			if s <= s_former + 0.5 or s >= s_gate or h > 45.0 or absf(at.y - _point_at(line, s).y) > 40.0:
+				continue
+			var nearest_other := INF
+			for other: Variant in others:
+				nearest_other = minf(nearest_other, float(_progress(other, at)["h"]))
+			if nearest_other <= h:
+				continue
+			var spec: Dictionary = placement["spec"]
+			var id := "%s %s" % [placement["where"], str(spec.get("id", "?"))]
+			var needs: Array[String] = []
+			for key: String in ["requires_unlock", "requires_flag"]:
+				if not str(spec.get(key, "")).is_empty():
+					needs.append(str(spec.get(key, "")))
+			for key: String in ["requires_flags", "reveal_any"]:
+				for flag: Variant in spec.get(key, []):
+					needs.append(str(flag))
+			if spec.has("table_id"):
+				wild += 1
+				var gate_flag := str((tables.get(str(spec["table_id"]), {}) as Dictionary).get("requires_unlock", ""))
+				if not gate_flag.is_empty():
+					needs.append(gate_flag)
+			if overrides.has(str(spec.get("id", ""))):
+				for flag: Variant in overrides[str(spec.get("id", ""))]:
+					needs.append(str(flag))
+			found.append("%s %s" % [id, str(needs)])
+			var hidden_until_upper := false
+			var fly_gated := false
+			for flag: String in needs:
+				hidden_until_upper = hidden_until_upper or post_upper.has(flag)
+				fly_gated = fly_gated or post_fly.has(flag)
+			if fly_gated and not hidden_until_upper:
+				bad.append("%s needs %s (%.0f m past the former gate)" % [id, str(needs), s - s_former])
+	# At least: the beacon, its bell, six optional_loop pickups on its crown
+	# and the eight pass road-visibility wild sites.
+	var listing := str(found)
+	assert_true(found.size() >= 16, "the newly walkable span was enumerated: %s" % listing)
+	for expected: String in ["windscar_beacon", "side_windscar_bell", "cr_candy_windscar_detour_good_02"]:
+		assert_true(listing.contains(expected), "%s is in the newly walkable span" % expected)
+	assert_true(wild >= 8, "the pass wild sites were enumerated (%d)" % wild)
+	assert_true(bad.is_empty(), "Fly-gated content walkable before %s: %s" % [UPPER_FLAG, str(bad)])
+
+
+## Flags that can only exist after `seeds`: every physical interaction,
+## landing objective and ground trigger whose prerequisites include one.
+func _closure(seeds: Array) -> Dictionary:
+	var out: Dictionary = {}
+	for flag: Variant in seeds:
+		out[str(flag)] = true
+	var grew := true
+	while grew:
+		grew = false
+		for field: String in ["interactions", "landing_objectives", "ground_triggers"]:
+			for spec: Dictionary in _physical.get(field, []):
+				var completion := str(spec.get("completion_flag", ""))
+				if completion.is_empty() or out.has(completion):
+					continue
+				for flag: Variant in spec.get("requires_flags", []):
+					if out.has(str(flag)):
+						out[completion] = true
+						grew = true
+						break
+	return out
+
+
+## Every dictionary carrying a 3D `position`, anywhere in a data file, except
+## the seal and gate definitions themselves.
+func _collect_placements(value: Variant, where: String, out: Array[Dictionary]) -> void:
+	if value is Dictionary:
+		var spec := value as Dictionary
+		var raw: Variant = spec.get("position", null)
+		if raw is Array and (raw as Array).size() == 3 and (raw as Array)[0] is float:
+			out.append({"at": _vec(raw), "spec": spec, "where": where})
+		for key: Variant in spec.keys():
+			if str(key) in ["restrictions", "gates", "regions"]:
+				continue
+			_collect_placements(spec[key], "%s.%s" % [where.get_file(), str(key)], out)
+	elif value is Array:
+		for item: Variant in value:
+			_collect_placements(item, where, out)
 
 
 func test_legal_pre_unlock_content_is_outside_every_upper_seal() -> void:
