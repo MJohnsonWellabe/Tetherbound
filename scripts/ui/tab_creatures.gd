@@ -115,6 +115,12 @@ const GUARDIAN_GLYPH_PX := 52
 ## Occupied belt rows recede to this while the offer is up, so the free slot
 ## the volunteer would take (highlighted) and the card are what reads.
 const GUARDIAN_ROSTER_DIM := 0.45
+## Logical width of the creature preview while the offer is up. The volunteer
+## is a 16 m-long body; in the ordinary 420-wide portrait preview it fills the
+## width with its head a few pixels high (blind judge: "no readable face"). The
+## detail column is hidden for the question, so the preview takes a landscape
+## share of the row instead and the card beside it narrows.
+const GUARDIAN_PREVIEW_WIDTH := 640.0
 
 ## Appraisal pips (blind-judge pass: "[***--]" read as ASCII debug styling,
 ## not a rating a player was meant to see). Drawn the same filled/open-circle
@@ -1824,7 +1830,8 @@ func _begin_guardian_confirm(pending: RefCounted) -> void:
 	if _detail_scroll != null:
 		_detail_scroll.visible = false
 	_farewell_panel.visible = true
-	# The viewport shows the volunteer itself while the question is up.
+	# The viewport shows the volunteer itself while the question is up, wide.
+	_viewport.custom_minimum_size.x = GUARDIAN_PREVIEW_WIDTH
 	_focused = PARTY.MAX_CREATURES
 	menu.call("hold_input", true)
 	menu.call("override_footer", " ")
@@ -2124,6 +2131,8 @@ func _glyph_texture(id: String) -> Texture2D:
 
 func _end_guardian_confirm(land: int) -> void:
 	_release_stage = ""
+	if _viewport != null:
+		_viewport.custom_minimum_size.x = float(CREATURE_VIEWPORT.VIEWPORT_SIZE.x)
 	if menu != null:
 		menu.call("hold_input", false)
 		menu.call("override_footer", "")
