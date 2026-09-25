@@ -345,3 +345,17 @@ Other defects it named:
 - The ranger NPC in a different style.
 - Pale untextured slope beside the causeway (T-05).
 - A soft shadow smear in S-01.
+
+**Round 5 status at hand-off (b134abf8):**
+- **What changed after R7:** the R7 findings were addressed and rendered in R8.
+- **R8 frames showed:**
+  - real mountain ranges and a peak behind the survey, pond and village views;
+  - ally and foe composed side by side in most fight frames;
+  - the aim view clear of lens grass, with the capture readout visible;
+  - the orb frame showing its target.
+- **Adjusted after R8, not yet re-rendered:**
+  - the hero peak made smaller;
+  - the impact burst made brighter;
+  - the Terrapup and Bramblebun texture changes.
+- **Not done:** the R9 capture and blind re-judge were stopped at the owner's request.
+- **Next step:** run `tools/survey.sh`, the quick tour with `--locations-only` and `tools/survey_combat.sh`, then the visual-judge skill.
