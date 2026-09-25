@@ -140,6 +140,7 @@ func _ready() -> void:
 	look_path = NodePath("../WorldLook")
 	add_to_group(GROUP)
 	if _local:
+		_pin_world_look()
 		_rain = _build_rain()
 		_style_rain()
 		add_child(_rain)
@@ -249,9 +250,10 @@ func presentation_for(for_phase: String, aftermath: bool = false) -> Dictionary:
 	var block := _pres_cfg()
 	var row: Dictionary = (block.get("phases", {}).get(for_phase, {}) as Dictionary).duplicate(true)
 	if aftermath:
-		var over: Dictionary = block.get("aftermath", {}).get(for_phase, {})
-		for key: String in over:
-			row[key] = over[key]
+		# `all` applies to every aftermath phase, then the phase's own row.
+		for over: Dictionary in [block.get("aftermath", {}).get("all", {}), block.get("aftermath", {}).get(for_phase, {})]:
+			for key: String in over:
+				row[key] = over[key]
 	row["shadow_opacity"] = float(block.get("shadow_opacity", {}).get(for_phase, 1.0))
 	return row
 
@@ -391,6 +393,54 @@ func _current(base: Dictionary) -> Dictionary:
 		_final_cache_base = base
 	var target := _final_cache
 	return target if _blend >= 1.0 else _mix(_from, target, _blend, base)
+
+## OWNER DIRECTION (WO-F10-08): Stormwood has no day and night look. Its
+## presentation is one purple storm at every hour, including the Long Storm
+## aftermath. The shared world clock keeps running (day counter, is_dark(),
+## night rest and encounter timing are untouched); only THIS realm's WorldLook
+## instance is handed a config in which every time-of-day preset is the same
+## storm reference (presentation.storm_base: reference_time plus overrides),
+## so sky, fog, ambient, exposure and the key light's angle, energy and
+## colour cannot swing with the clock. The next realm builds its own
+## WorldLook from art.json, so nothing leaks. storm_base.pin_time_of_day
+## false restores the clock-blended look (a config change, per the owner's
+## open-question handling).
+const LOOK_SECTIONS := ["sun", "sky", "environment"]
+
+func storm_base_config() -> Dictionary:
+	return _pres_cfg().get("storm_base", {})
+
+## `config` (art.json as WorldLook loaded it) with every `times` preset
+## replaced by the one storm look. Never mutates `config`.
+func pinned_look_config(config: Dictionary) -> Dictionary:
+	var base := storm_base_config()
+	if not bool(base.get("pin_time_of_day", false)):
+		return config
+	var pinned := config.duplicate(true)
+	var reference := WORLD_LOOK._preset_over(config, str(base.get("reference_time", "day")))
+	var overrides: Dictionary = base.get("overrides", {})
+	var times: Dictionary = pinned.get("times", {})
+	for name: String in times.keys():
+		var entry: Variant = times[name]
+		if not entry is Dictionary:
+			continue
+		var fresh := {"hour": (entry as Dictionary).get("hour", reference.get("hour", 8.0))}
+		for section: String in LOOK_SECTIONS:
+			var merged := WORLD_LOOK._merged_from(config, section, reference)
+			var over: Dictionary = overrides.get(section, {})
+			for key: String in over:
+				merged[key] = over[key]
+			fresh[section] = merged
+		times[name] = fresh
+	return pinned
+
+func _pin_world_look() -> void:
+	var look := world.get_node_or_null("WorldLook") if world != null else null
+	if look == null:
+		return
+	var config: Variant = look.get("_config")
+	if config is Dictionary and not (config as Dictionary).is_empty():
+		look.set("_config", pinned_look_config(config))
 
 ## The current time-of-day sky/ambient from WorldLook (read-only), used as
 ## the fade-through colour and to derive `night_scale`.

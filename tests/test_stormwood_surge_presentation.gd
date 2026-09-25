@@ -67,12 +67,11 @@ func _world_with_look() -> Dictionary:
 	return {"world": world, "sun": sun, "look": look, "player": player}
 
 
-## `_base_look()` exactly as production builds it, from the real art.json and
-## day_cycle.gd at a given hour.
+## `_base_look()` exactly as production builds it: the real art.json handed
+## through the surge's storm pin, and day_cycle.gd at a given hour.
 func _real_base(surge: Node, hour: float) -> Dictionary:
-	var art := _art()
+	var art: Dictionary = surge.pinned_look_config(_art())
 	return surge.base_look_at(art, DAY_CYCLE.new(art), hour)
-
 
 func test_every_storm_phase_has_a_complete_presentation_row() -> void:
 	var block: Dictionary = _config().presentation
@@ -130,15 +129,11 @@ func test_phases_are_mutually_distinct_and_break_has_the_darkest_ground() -> voi
 		assert_false(seen.has(signature), "%s shares its sky/light signature with %s" % [phase, str(seen.get(signature, ""))])
 		seen[signature] = phase
 	var brk: Dictionary = surge.light_delta_for_phase("break")
-	var brk_hue := Color(str(brk.sky.top_colour)).h * 360.0
-	assert_true(brk_hue >= 220.0 and brk_hue <= 280.0, "Break's sky is violet (hue %.0f)" % brk_hue)
 	for phase: String in ["calm", "building", "fading"]:
 		var other: Dictionary = surge.light_delta_for_phase(phase)
-		# Round 4: day Break's sky is deliberately lifted (a storm afternoon,
-		# not night); Break is identified by its violet hue and by the
-		# darkest ground (lowest sun and fill), not the darkest sky.
-		var hue := Color(str(other.sky.top_colour)).h * 360.0
-		assert_false(hue >= 220.0 and hue <= 280.0, "only Break's sky is violet (%s hue %.0f)" % [phase, hue])
+		# WO-F10-08: every phase shares the purple sky family, so Break is
+		# identified by the darkest ground (lowest key and fill), its rain
+		# and its flashes, not by sky hue.
 		assert_true(float(other.sun.energy_mult) > float(brk.sun.energy_mult), "Break's sun is the lowest (J2)")
 		assert_true(float(other.environment.ambient_energy_mult) >= float(brk.environment.ambient_energy_mult))
 	surge.free()
@@ -146,80 +141,58 @@ func test_phases_are_mutually_distinct_and_break_has_the_darkest_ground() -> voi
 
 # ---------------------------------------------------------------- night (S1/S2)
 
-func test_night_base_from_real_art_config_dims_storm_sky() -> void:
+## WO-F10-08 (rewritten from the old night-dimming test): the storm base is
+## the same at every hour, so nothing night-scales the storm.
+func test_storm_base_is_identical_at_every_hour() -> void:
 	var surge := SURGE.new()
-	var day := _real_base(surge, 8.0)
-	var night := _real_base(surge, 23.0)
-	assert_almost_eq(float(day.night_scale), 1.0, 0.001, "day preset is the reference")
-	assert_true(float(night.night_scale) < 0.5, "the real night sky is much darker than day")
-	var day_top := Color(str(surge.light_delta_for_phase("calm", false, day).sky.top_colour))
-	var night_top := Color(str(surge.light_delta_for_phase("calm", false, night).sky.top_colour))
-	assert_true(night_top.get_luminance() < day_top.get_luminance() * 0.5,
-		"a daylight storm sky must not light up the night")
+	var noon := _real_base(surge, 12.0)
+	for hour: float in [0.0, 5.0, 6.0, 18.0, 23.0]:
+		var base := _real_base(surge, hour)
+		assert_almost_eq(float(base.night_scale), 1.0, 0.0001, "hour %.0f night_scale" % hour)
+		for key: String in ["sky_top", "sky_horizon", "ambient_colour"]:
+			assert_eq((base[key] as Color).to_html(false), (noon[key] as Color).to_html(false), "hour %.0f %s" % [hour, key])
 	surge.free()
 
-
-## S1: a cross-fade that passes through the native sky (aftermath Calm has no
-## sky override) must start exactly on the native sky, end exactly on the
-## scaled storm sky, and never dip below both (the old code night-scaled the
-## already-dark base a second time, so the fade dipped and snapped back).
-func test_cross_fade_through_native_sky_has_no_dip_at_night_dusk_or_dawn() -> void:
+## S1, rewritten for WO-F10-08: a phase cross-fade never dips below both
+## endpoints and lands without a snap, at any hour.
+func test_cross_fade_between_phases_has_no_dip_at_any_hour() -> void:
 	var surge := SURGE.new()
-	for hour: float in [23.0, 18.5, 5.5]:
+	for hour: float in [23.0, 18.5, 5.5, 12.0]:
 		var base := _real_base(surge, hour)
-		var native: Color = base.sky_top
-		surge._to = surge._resolved(surge.presentation_for("calm", true))
-		surge._blend = 1.0
-		var from: Dictionary = surge._current(base)
-		assert_false(from.has("sky_top"), "aftermath Calm leaves the sky native")
-		surge._from = from
 		surge._to = surge._resolved(surge.presentation_for("calm"))
+		surge._blend = 1.0
+		surge._from = surge._current(base)
+		surge._to = surge._resolved(surge.presentation_for("break"))
+		var start: Color = surge._from.sky_top
 		var end: Color = surge._final(surge._to, base).sky_top
-		var lo := minf(native.get_luminance(), end.get_luminance()) - 0.002
-		var hi := maxf(native.get_luminance(), end.get_luminance()) + 0.002
+		var lo := minf(start.get_luminance(), end.get_luminance()) - 0.002
+		var hi := maxf(start.get_luminance(), end.get_luminance()) + 0.002
 		for step in 11:
 			surge._blend = step / 10.0
 			var top: Color = surge._current(base).sky_top
-			assert_true(top.get_luminance() >= lo and top.get_luminance() <= hi,
-				"hour %.1f t=%.1f sky lum %.3f outside [%.3f, %.3f]" % [hour, step / 10.0, top.get_luminance(), lo, hi])
-		surge._blend = 0.0
-		assert_eq(surge._current(base).sky_top.to_html(false), native.to_html(false),
-			"hour %.1f: fade starts on the native sky, not a re-scaled one" % hour)
+			assert_true(top.get_luminance() >= lo and top.get_luminance() <= hi, "hour %.1f t=%.1f dips" % [hour, step / 10.0])
 		surge._blend = 0.999
 		var near_end: Color = surge._current(base).sky_top
 		surge._blend = 1.0
-		var at_end: Color = surge._current(base).sky_top
-		assert_true(absf(near_end.get_luminance() - at_end.get_luminance()) < 0.005,
-			"hour %.1f: no snap when the fade completes" % hour)
+		assert_true(absf(near_end.get_luminance() - (surge._current(base).sky_top as Color).get_luminance()) < 0.005, "no snap")
 	surge.free()
 
-
-## S2: the storm ambient keeps its authored hue but never lifts the ground
-## above art.json's own ambient for the hour, at night or by day.
-func test_storm_ambient_never_brightens_the_night() -> void:
+## S2, rewritten for WO-F10-08: the storm ambient keeps its hue and never
+## exceeds the storm base's ambient value, at any hour.
+func test_storm_ambient_never_exceeds_the_storm_base() -> void:
 	var surge := SURGE.new()
-	var night := _real_base(surge, 23.0)
-	var native: Color = night.ambient_colour
 	var rows: Dictionary = _config().presentation.phases
-	for phase: String in PHASES:
-		var delta: Dictionary = surge.light_delta_for_phase(phase, false, night)
-		var ambient := Color(str(delta.environment.ambient_colour))
-		assert_true(ambient.get_luminance() <= native.get_luminance() + 0.01,
-			"%s night ambient %.3f above native night %.3f" % [phase, ambient.get_luminance(), native.get_luminance()])
-		assert_true(float(delta.environment.ambient_energy_mult) <= 1.0, "%s: no ambient energy boost" % phase)
-		assert_true(float(delta.environment.ambient_energy_mult) >= 0.9,
-			"%s: at night the storm does not sink art.json's night readability either" % phase)
-		assert_true(float(delta.sun.energy_mult) >= 0.9, "%s: moonlight keeps the night read" % phase)
-		var day_base := _real_base(surge, 8.0)
-		var day := Color(str(surge.light_delta_for_phase(phase, false, day_base).environment.ambient_colour))
-		var authored := Color(str(rows[phase].ambient_colour))
-		assert_true(day.get_luminance() <= (day_base.ambient_colour as Color).get_luminance() + 0.01,
-			"%s: by day too, the storm adds no fill light over clear weather" % phase)
-		assert_almost_eq(day.h, authored.h, 0.02, "%s: the authored storm hue is kept" % phase)
+	for hour: float in [0.0, 12.0]:
+		var base := _real_base(surge, hour)
+		for phase: String in PHASES:
+			var delta: Dictionary = surge.light_delta_for_phase(phase, false, base)
+			var ambient := Color(str(delta.environment.ambient_colour))
+			assert_true(ambient.get_luminance() <= (base.ambient_colour as Color).get_luminance() + 0.01, "%s ambient above base" % phase)
+			assert_true(float(delta.environment.ambient_energy_mult) <= 1.0, "%s: no ambient energy boost" % phase)
+			var authored := Color(str(rows[phase].ambient_colour))
+			if authored.s > 0.05:
+				assert_almost_eq(ambient.h, authored.h, 0.02, "%s: authored hue kept" % phase)
 	surge.free()
-
-
-# ---------------------------------------------------------------- production path
 
 func test_rain_is_visible_and_scaled_per_phase() -> void:
 	var parts := _world_with_look()
@@ -267,26 +240,24 @@ func test_rain_streaks_vary_and_have_a_far_layer() -> void:
 	surge.free()
 
 
-func test_ceiling_builds_and_opens_in_the_aftermath() -> void:
+## WO-F10-08 owner ruling (rewritten; the ceiling used to open to a blue
+## restored sky): the ceiling stays over Stormwood in the aftermath too.
+func test_ceiling_builds_and_stays_in_the_aftermath() -> void:
 	var parts := _world_with_look()
 	var surge := SURGE.new()
 	surge.world = parts.world
 	surge.call("_build_ceiling")
 	assert_eq(surge._ceiling.name, "StormCeiling")
 	assert_almost_eq((surge._ceiling.mesh as SphereMesh).radius, float(_config().presentation.ceiling.radius_m))
-	for phase: String in PHASES:
-		surge.phase = phase
-		surge.call("_apply_phase_light")
-		assert_true(surge._ceiling.visible, "%s: storm ceiling drawn" % phase)
-		assert_almost_eq(float(surge._ceiling_material.get_shader_parameter("opacity")),
-			float(_config().presentation.phases[phase].ceiling_opacity), 0.0001)
-	surge.phase = "calm"
-	surge.set("_aftermath", true)
-	surge.call("_apply_phase_light")
-	assert_false(surge._ceiling.visible, "aftermath Calm: the ceiling is open")
+	for aftermath: bool in [false, true]:
+		surge.set("_aftermath", aftermath)
+		for phase: String in PHASES:
+			surge.phase = phase
+			surge.call("_apply_phase_light")
+			assert_true(surge._ceiling.visible, "%s aftermath=%s: storm ceiling drawn" % [phase, aftermath])
+			assert_almost_eq(float(surge._ceiling_material.get_shader_parameter("opacity")), 1.0, 0.0001)
 	surge.free()
 	parts.world.free()
-
 
 func test_advance_presentation_cross_fades_over_real_deltas() -> void:
 	var parts := _world_with_look()
@@ -450,23 +421,29 @@ func test_simulation_only_world_builds_no_presentation() -> void:
 	world.free()
 
 
-func test_aftermath_calm_restores_sky_and_is_distinct() -> void:
+## WO-F10-08 owner ruling (rewritten; this used to require a restored blue
+## sky): the aftermath stays purple and reads only as the calmest, stillest
+## storm: lighter rain than Calm, no flashes, the slowest and least
+## contrasted ceiling, a steadier higher key light.
+func test_aftermath_is_the_calmest_purple() -> void:
 	var surge := SURGE.new()
-	var after: Dictionary = surge.light_delta_for_phase("calm", true)
-	assert_false(after.has("sky"), "aftermath Calm leaves art.json's own sky (the restored sky)")
-	assert_false(after.environment.has("ambient_colour"), "aftermath Calm returns ordinary ambient colour")
-	assert_false(after.environment.has("fog_colour"))
+	var calm: Dictionary = surge._resolved(surge.presentation_for("calm"))
 	for phase: String in PHASES:
-		assert_true(float(after.sun.energy_mult) > float(surge.light_delta_for_phase(phase).sun.energy_mult),
-			"aftermath sun is brighter than storm %s" % phase)
-	var row: Dictionary = surge.presentation_for("calm", true)
-	assert_almost_eq(float(row.ceiling_opacity), 0.0, 0.0001, "the ceiling opens after the Long Storm")
-	assert_false(bool(row.rain_visible), "no rain under the restored sky")
-	assert_true(surge.light_delta_for_phase("break", true).has("sky"), "the short aftermath storm still reads as a storm")
+		var row: Dictionary = surge._resolved(surge.presentation_for(phase, true))
+		assert_true(row.has("sky_top"), "%s aftermath keeps the storm sky (no blue restored sky)" % phase)
+		var hue := (row.sky_top as Color).h * 360.0
+		assert_true(hue >= 235.0 and hue <= 290.0, "%s aftermath sky is purple (hue %.0f)" % [phase, hue])
+		assert_true(bool(row.rain_visible) and float(row.rain_amount) > 0.0, "it still rains in the aftermath")
+		assert_true(float(row.rain_amount) < float(calm.rain_amount), "aftermath rain is lighter than Calm")
+		assert_false(bool(row.flashes), "no flashes in the aftermath")
+		assert_true(float(row.ceiling_speed) < float(calm.ceiling_speed), "stiller ceiling than Calm")
+		assert_true(float(row.ceiling_contrast) < float(calm.ceiling_contrast), "less ceiling flicker than Calm")
+		assert_true(float(row.sun_energy_mult) >= float(calm.sun_energy_mult), "steadier, not darker, key light")
 	surge.free()
 
-
-func test_aftermath_flag_hides_rain_in_production_path() -> void:
+## WO-F10-08 (rewritten; the aftermath used to stop the rain): with the
+## flag set, the production path keeps a light rain falling.
+func test_aftermath_flag_lightens_rain_in_production_path() -> void:
 	var parts := _world_with_look()
 	var surge := SURGE.new()
 	surge.world = parts.world
@@ -474,14 +451,14 @@ func test_aftermath_flag_hides_rain_in_production_path() -> void:
 	surge.add_child(surge._rain)
 	surge.phase = "calm"
 	surge.call("_apply_phase_light")
-	assert_true(surge._rain.visible)
+	var storm_rain := surge._rain.amount_ratio
 	surge.set("_aftermath", true)
 	surge.call("_apply_phase_light")
-	assert_false(surge._rain.visible, "aftermath Calm stops the rain")
+	assert_true(surge._rain.visible, "aftermath rain still draws")
+	assert_true(surge._rain.amount_ratio > 0.0 and surge._rain.amount_ratio < storm_rain, "lighter than Calm")
 	assert_eq(surge.presentation_key(), "aftermath:calm")
 	surge.free()
 	parts.world.free()
-
 
 func test_production_phase_application_reaches_world_look_and_live_sun() -> void:
 	var parts := _world_with_look()
@@ -520,30 +497,26 @@ func test_storm_horizon_and_fog_have_a_floor() -> void:
 	surge.free()
 
 
-## Round-2 judge (a): night Break keeps its own violet/indigo identity and is
-## not just a darker night Building.
-func test_night_break_has_its_own_hue() -> void:
+## Rewritten for WO-F10-08 (was night-only): Break keeps its violet
+## identity at every hour.
+func test_break_keeps_its_violet_identity_at_every_hour() -> void:
 	var surge := SURGE.new()
-	var night := _real_base(surge, 23.0)
-	var brk: Dictionary = surge._final(surge._resolved(surge.presentation_for("break")), night)
-	var bld: Dictionary = surge._final(surge._resolved(surge.presentation_for("building")), night)
-	for key: String in ["sky_horizon", "ceiling_colour"]:
-		var hb: float = (brk[key] as Color).h * 360.0
-		var hd: float = (bld[key] as Color).h * 360.0
-		assert_true(hb >= 220.0 and hb <= 280.0, "night Break %s is violet/indigo (hue %.0f)" % [key, hb])
-		var gap := absf(hb - hd)
-		assert_true(minf(gap, 360.0 - gap) >= 60.0, "night Break and Building %s hues differ (%.0f vs %.0f)" % [key, hb, hd])
+	for hour: float in [0.0, 12.0]:
+		var brk: Dictionary = surge._final(surge._resolved(surge.presentation_for("break")), _real_base(surge, hour))
+		for key: String in ["sky_horizon", "ceiling_colour"]:
+			var hb: float = (brk[key] as Color).h * 360.0
+			assert_true(hb >= 220.0 and hb <= 280.0, "Break %s violet at hour %.0f (hue %.0f)" % [key, hour, hb])
 	surge.free()
 
-
-## Round-2 judge (e): no ceiling gaps at night (they opened onto lit flecks).
-func test_ceiling_breakup_closes_at_night() -> void:
+## Rewritten for WO-F10-08 (was night-gated): Fading's breakup is the same
+## at every hour; there is no night to close it.
+func test_fading_breakup_is_the_same_at_every_hour() -> void:
 	var surge := SURGE.new()
 	var fading := surge._resolved(surge.presentation_for("fading"))
-	assert_true(float(surge._final(fading, _real_base(surge, 8.0)).ceiling_breakup) > 0.3, "Fading clears by day")
-	assert_almost_eq(float(surge._final(fading, _real_base(surge, 23.0)).ceiling_breakup), 0.0, 0.0001, "closed at night")
+	var noon := float(surge._final(fading, _real_base(surge, 12.0)).ceiling_breakup)
+	assert_true(noon > 0.2, "Fading clears")
+	assert_almost_eq(float(surge._final(fading, _real_base(surge, 23.0)).ceiling_breakup), noon, 0.0001)
 	surge.free()
-
 
 ## Nit: day Break stays readable (replaces the old raw sun-energy guard):
 ## effective ground fill keeps a floor.
@@ -558,9 +531,9 @@ func test_day_break_ground_fill_keeps_a_floor() -> void:
 	surge.free()
 
 
-## Round-2 judge (d): rain slants with the wind, the far layer is shorter and
-## fainter, and at night rain is dimmer than the native night horizon.
-func test_rain_slants_fades_with_depth_and_dims_at_night() -> void:
+## Judge (d), rewritten for WO-F10-08: rain slants with the wind, the far
+## layer is shorter and fainter, and the rain tint is the same at any hour.
+func test_rain_slants_and_fades_with_depth() -> void:
 	var surge := SURGE.new()
 	surge._rain = surge._build_rain()
 	surge._style_rain()
@@ -570,16 +543,12 @@ func test_rain_slants_fades_with_depth_and_dims_at_night() -> void:
 	assert_true(Vector2(near.direction.x, near.direction.z).length() > 0.1, "constant wind slant")
 	assert_true(float(cfg.far_layer.streak_length_m) < float(cfg.streak_length_m), "far streaks shorter")
 	assert_true(float(cfg.far_layer.alpha) < float(cfg.alpha), "far streaks fainter")
-	var night := _real_base(surge, 23.0)
-	var shown: Dictionary = surge._final(surge._resolved(surge.presentation_for("building")), night)
-	surge.call("_update_rain", shown)
-	var drop := near.color
-	var night_horizon := Color(str(surge.light_delta_for_phase("building", false, night).sky.horizon_colour))
-	assert_true(drop.get_luminance() * drop.a < night_horizon.get_luminance(),
-		"night rain (%.3f x %.2f) must not outshine the night horizon (%.3f)" % [drop.get_luminance(), drop.a, night_horizon.get_luminance()])
+	surge.call("_update_rain", surge._final(surge._resolved(surge.presentation_for("building")), _real_base(surge, 12.0)))
+	var noon := near.color
+	surge.call("_update_rain", surge._final(surge._resolved(surge.presentation_for("building")), _real_base(surge, 0.0)))
+	assert_eq(near.color.to_html(true), noon.to_html(true), "rain looks the same at midnight and noon")
 	surge._rain.free()
 	surge.free()
-
 
 ## Horizontal (x, z) positions a drop of `emitter` can occupy over its life,
 ## relative to the emitter centre: spawn points round the inner ring edge
@@ -667,57 +636,41 @@ func test_rain_reaches_the_trainer() -> void:
 	surge.free()
 
 
-## Round 4 item 6: a storm afternoon is clearly lighter than a storm night.
-func test_day_break_sky_is_clearly_lighter_than_night_break() -> void:
+## Item 6, rewritten for WO-F10-08: Break's sky is a storm afternoon at
+## every hour, never night-black, and identical at 14:00 and 23:00.
+func test_break_sky_is_a_storm_afternoon_at_every_hour() -> void:
 	var surge := SURGE.new()
 	var row := surge._resolved(surge.presentation_for("break"))
 	var day: Dictionary = surge._final(row, _real_base(surge, 14.0))
 	var night: Dictionary = surge._final(row, _real_base(surge, 23.0))
 	for key: String in ["sky_top", "ceiling_colour"]:
-		var d := (day[key] as Color).get_luminance()
-		var n := (night[key] as Color).get_luminance()
-		assert_true(d >= 2.0 * n, "Break %s: day %.3f must be >= 2x night %.3f" % [key, d, n])
-		assert_true(d >= 0.3, "Break %s by day reads as a storm afternoon (lum %.3f)" % [key, d])
+		assert_true((day[key] as Color).get_luminance() >= 0.3, "Break %s reads as a storm afternoon" % key)
+		assert_eq((night[key] as Color).to_html(false), (day[key] as Color).to_html(false), "Break %s same at 23:00" % key)
 	surge.free()
 
-
-static func _lab(c: Color) -> Vector3:
-	var lin := func(v: float) -> float: return v / 12.92 if v <= 0.04045 else pow((v + 0.055) / 1.055, 2.4)
-	var r: float = lin.call(c.r)
-	var g: float = lin.call(c.g)
-	var b: float = lin.call(c.b)
-	var x := (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047
-	var y := 0.2126 * r + 0.7152 * g + 0.0722 * b
-	var z := (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883
-	var f := func(t: float) -> float: return pow(t, 1.0 / 3.0) if t > 0.008856 else 7.787 * t + 16.0 / 116.0
-	var fx: float = f.call(x)
-	var fy: float = f.call(y)
-	var fz: float = f.call(z)
-	return Vector3(116.0 * fy - 16.0, 500.0 * (fx - fy), 200.0 * (fy - fz))
-
-
-## Round 4 item 7: at 23:00 each adjacent phase pair differs clearly in its
-## dominant sky element (the ceiling), by hue and/or value (CIELAB dE >= 10),
-## and each keeps its identity: Calm neutral, Building olive, Break violet,
-## Fading warm.
-func test_night_phases_separate_by_hue_and_value() -> void:
+## Item 7, rewritten for WO-F10-08: all phases live in the purple family
+## (no blue/white/olive/warm sky), and adjacent phases separate by their
+## non-sky cues: rain density, ceiling value/motion and key level.
+func test_phases_separate_within_the_purple_family() -> void:
 	var surge := SURGE.new()
-	var night := _real_base(surge, 23.0)
-	var ceiling := {}
+	var base := _real_base(surge, 12.0)
+	var rows := {}
 	for phase: String in PHASES:
-		ceiling[phase] = surge._final(surge._resolved(surge.presentation_for(phase)), night).ceiling_colour
+		rows[phase] = surge._final(surge._resolved(surge.presentation_for(phase)), base)
+		for key: String in ["sky_top", "sky_horizon", "ceiling_colour"]:
+			var hue: float = (rows[phase][key] as Color).h * 360.0
+			assert_true(hue >= 235.0 and hue <= 300.0, "%s %s is in the purple family (hue %.0f)" % [phase, key, hue])
 	for pair: Array in [["calm", "building"], ["building", "break"], ["break", "fading"], ["fading", "calm"]]:
-		var de := _lab(ceiling[pair[0]]).distance_to(_lab(ceiling[pair[1]]))
-		assert_true(de >= 10.0, "night %s vs %s ceilings differ by only dE %.1f" % [pair[0], pair[1], de])
-	assert_true((ceiling.calm as Color).s < 0.1, "night Calm is a neutral grey")
-	var h := func(c: Color) -> float: return c.h * 360.0
-	assert_true(h.call(ceiling.building) >= 50.0 and h.call(ceiling.building) <= 90.0 and (ceiling.building as Color).s >= 0.2, "night Building is olive")
-	assert_true(h.call(ceiling["break"]) >= 220.0 and h.call(ceiling["break"]) <= 280.0, "night Break is violet")
-	assert_true(h.call(ceiling.fading) >= 20.0 and h.call(ceiling.fading) <= 45.0 and (ceiling.fading as Color).s >= 0.2, "night Fading stays warm")
-	var brk_h := surge._final(surge._resolved(surge.presentation_for("break")), night).sky_horizon as Color
-	assert_true(brk_h.get_luminance() > (ceiling["break"] as Color).get_luminance(), "night Break has a lit horizon under its ceiling")
+		var a: Dictionary = rows[pair[0]]
+		var b: Dictionary = rows[pair[1]]
+		var cues := 0
+		if absf(float(a.rain_amount) - float(b.rain_amount)) >= 0.15: cues += 1
+		if absf(float(a.sun_energy_mult) - float(b.sun_energy_mult)) >= 0.1: cues += 1
+		if absf(float(a.ceiling_speed) - float(b.ceiling_speed)) >= 0.005: cues += 1
+		if absf((a.ceiling_colour as Color).get_luminance() - (b.ceiling_colour as Color).get_luminance()) >= 0.04: cues += 1
+		if bool(a.flashes) != bool(b.flashes): cues += 1
+		assert_true(cues >= 2, "%s vs %s differ by only %d non-sky cues" % [pair[0], pair[1], cues])
 	surge.free()
-
 
 ## Runs a settled Break for `seconds` and returns each flash onset's time and
 ## peak level.
@@ -915,3 +868,80 @@ func test_near_rain_fills_the_foreground() -> void:
 	assert_true(expected_bottom >= 35.0, "only %.1f near drops in the bottom 45%% of the view in Break (needs >= 35)" % expected_bottom)
 	rain.free()
 	surge.free()
+
+
+## WO-F10-08 owner direction: for every phase (storm and aftermath) the look
+## at hours 0, 6, 12 and 18 is identical: sky top and horizon, fog colour and
+## density, ambient colour and energy, exposure, and the key light's energy,
+## angle and colour, as WorldLook would layer them on the pinned config.
+func test_look_is_identical_at_every_hour() -> void:
+	var surge := SURGE.new()
+	var art: Dictionary = surge.pinned_look_config(_art())
+	var cycle := DAY_CYCLE.new(art)
+	for aftermath: bool in [false, true]:
+		for phase: String in PHASES:
+			var reference := ""
+			for hour: float in [0.0, 6.0, 12.0, 18.0]:
+				var look := _layered_look(surge, art, cycle, hour, phase, aftermath)
+				if reference.is_empty():
+					reference = look
+				assert_eq(look, reference, "%s aftermath=%s differs at hour %.0f" % [phase, aftermath, hour])
+	surge.free()
+
+
+## What WorldLook would put on screen for `phase` at `hour`: its blended
+## config for the hour with the surge's weather delta layered on, as a string.
+func _layered_look(surge: Node, art: Dictionary, cycle: RefCounted, hour: float, phase: String, aftermath: bool) -> String:
+	var blended: Dictionary = WORLD_LOOK.blended_config_at(art, cycle, hour)
+	var base: Dictionary = surge.base_look_at(art, cycle, hour)
+	var delta: Dictionary = surge.light_delta_for_phase(phase, aftermath, base)
+	var sun: Dictionary = blended.sun
+	var sky: Dictionary = blended.sky
+	var env: Dictionary = blended.environment
+	var parts := [
+		str(delta.get("sky", {}).get("top_colour", sky.get("top_colour"))),
+		str(delta.get("sky", {}).get("horizon_colour", sky.get("horizon_colour"))),
+		str(delta.environment.get("fog_colour", env.get("fog_colour"))),
+		"%.6f" % (float(env.get("fog_density", 0.0)) + float(delta.environment.get("fog_density_add", 0.0))),
+		str(delta.environment.get("ambient_colour", env.get("ambient_colour"))),
+		"%.6f" % (float(env.get("ambient_energy", 1.0)) * float(delta.environment.get("ambient_energy_mult", 1.0))),
+		"%.6f" % float(env.get("exposure", 1.0)),
+		"%.6f" % (float(sun.get("energy", 1.0)) * float(delta.sun.get("energy_mult", 1.0))),
+		"%.4f/%.4f" % [float(sun.get("pitch_deg", 0.0)), float(sun.get("yaw_deg", 0.0))],
+		str(sun.get("colour")),
+	]
+	return "|".join(parts)
+
+
+## WO-F10-08: leaving Stormwood restores the world clock look. The pin is
+## per WorldLook instance and never touches art.json or the shared config:
+## the next realm's WorldLook loads art.json with its day/night presets, and
+## the clock itself (day length, dark window) is identical inside Stormwood.
+func test_leaving_stormwood_restores_the_clock_look() -> void:
+	var surge := SURGE.new()
+	var art := _art()
+	var before := JSON.stringify(art)
+	var pinned: Dictionary = surge.pinned_look_config(art)
+	assert_eq(JSON.stringify(art), before, "pinning never mutates the loaded art config")
+	assert_eq(float(pinned.day_length_seconds), float(art.day_length_seconds), "world clock length unchanged")
+	var stormwood_cycle := DAY_CYCLE.new(pinned)
+	var world_cycle := DAY_CYCLE.new(art)
+	for hour: float in [0.0, 12.0, 23.0]:
+		assert_eq(stormwood_cycle.is_dark(hour), world_cycle.is_dark(hour), "is_dark() gameplay window unchanged at %.0f" % hour)
+	# The next realm: a fresh WorldLook loads art.json (no realm pin).
+	var next_look: Node = WORLD_LOOK.new()
+	var next_config: Dictionary = next_look.call("_load")
+	var noon: Dictionary = WORLD_LOOK.blended_config_at(next_config, DAY_CYCLE.new(next_config), 12.0)
+	var midnight: Dictionary = WORLD_LOOK.blended_config_at(next_config, DAY_CYCLE.new(next_config), 0.0)
+	assert_ne(str(noon.sun.get("pitch_deg")), str(midnight.sun.get("pitch_deg")), "outside Stormwood the sun moves with the clock")
+	assert_ne(str(noon.sky.get("top_colour")), str(midnight.sky.get("top_colour")), "outside Stormwood night is dark again")
+	# A WorldLook that Stormwood pinned keeps its own config; a new one does not inherit it.
+	var parts := _world_with_look()
+	var look: Node = parts.look
+	look.set("_config", art.duplicate(true))
+	surge.world = parts.world
+	surge.call("_pin_world_look")
+	assert_ne(JSON.stringify(look.get("_config").times), JSON.stringify(next_config.times), "only the Stormwood WorldLook is pinned")
+	next_look.free()
+	surge.free()
+	parts.world.free()
