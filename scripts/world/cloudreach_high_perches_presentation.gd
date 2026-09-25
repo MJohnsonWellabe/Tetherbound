@@ -33,7 +33,7 @@ func build(materials: Dictionary) -> void:
 	_add_arrival_arch(cfg, stone_light)
 	_add_compass(cfg, stone_light, bronze, blue)
 	_add_roosts(cfg, stone, timber, bronze)
-	_add_banners(cfg, blue, gold)
+	_add_banners(cfg, blue, gold, timber)
 	_add_signals(cfg)
 	_add_supplies(cfg)
 
@@ -97,20 +97,47 @@ func _add_roosts(cfg: Dictionary, stone: Material, timber: Material, bronze: Mat
 				Vector3(0.18, 0.5, 0.72), bronze, "roost_binding")
 
 
-func _add_banners(cfg: Dictionary, blue: Material, gold: Material) -> void:
+func _add_banners(cfg: Dictionary, blue: Material, gold: Material, timber: Material) -> void:
 	var positions := cfg.get("banner_positions", []) as Array
+	var masted := cfg.get("banner_masts", []) as Array
+	var height := float(cfg.get("banner_height_m", 3.8))
 	for index in positions.size():
 		var banner := BANNER.instantiate() as Node3D
 		banner.name = "HighPerchesWindBanner%02d" % (index + 1)
 		var bounds := RENDER_BOUNDS.measure(banner)
-		var factor := 3.8 / maxf(bounds.size.y, 0.01)
+		var factor := height / maxf(bounds.size.y, 0.01)
 		banner.scale = Vector3.ONE * factor
 		var at := _v3(positions[index])
 		banner.position = at - Vector3(bounds.get_center().x, bounds.get_center().y, bounds.get_center().z) * factor
-		banner.rotation.y = 0.0 if index < 2 else (PI * 0.5 if index == 2 else -PI * 0.5)
+		var yaw := 0.0 if index < 2 else (PI * 0.5 if index == 2 else -PI * 0.5)
+		banner.rotation.y = yaw
 		banner.set_meta("high_perches_role", "wind_banner")
 		add_child(banner)
 		_override_material(banner, blue if index % 2 == 0 else gold)
+		# The two south banners hang on the arrival arch's face. The two side
+		# banners stand on open lawn, so without a mast each was a cloth
+		# floating in the sky (M1, frame 20). A timber mast behind the cloth
+		# and a crossbar along its top edge carry it.
+		if index < masted.size() and bool(masted[index]):
+			_add_banner_mast(index, at, yaw, height * 0.5,
+				bounds.size.x * factor, bounds.size.z * factor, timber)
+
+
+func _add_banner_mast(index: int, at: Vector3, yaw: float, half_height: float,
+		cloth_width: float, cloth_depth: float, timber: Material) -> void:
+	var radius := 0.12
+	var top := at.y + half_height + 0.35
+	var outward := Vector3(-sin(yaw), 0.0, -cos(yaw))
+	var mast_at := Vector3(at.x, 0.0, at.z) + outward * (cloth_depth * 0.5 + radius)
+	var mast := _add_cylinder("HighPerchesBannerMast%02d" % (index + 1),
+		mast_at + Vector3.UP * (top * 0.5), radius, top, timber, "banner_mast")
+	mast.set_meta("banner_top_y", at.y + half_height)
+	var along := Vector3(cos(yaw), 0.0, -sin(yaw))
+	var bar_y := at.y + half_height + 0.06
+	_add_cylinder_between(self, "HighPerchesBannerCrossbar%02d" % (index + 1),
+		Vector3(at.x, bar_y, at.z) - along * (cloth_width * 0.5 + 0.18),
+		Vector3(at.x, bar_y, at.z) + along * (cloth_width * 0.5 + 0.18), 0.07, timber,
+		"banner_mast")
 
 
 func _add_signals(cfg: Dictionary) -> void:

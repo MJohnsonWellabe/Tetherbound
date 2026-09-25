@@ -23,6 +23,13 @@ const DOOR_FRAME := preload("res://assets/buildings/quaternius_medieval/DoorFram
 const DOOR := preload("res://assets/buildings/quaternius_medieval/Door_8_Flat.gltf")
 const WINDOW := preload("res://assets/buildings/quaternius_medieval/Window_Thin_Flat1.gltf")
 
+const PLINTH_TOP_Y := 0.40
+const SIGHTING_TUBE_Y := 2.45
+const SIGHTING_TUBE_RADIUS := 0.16
+## Station-local z of the two mounts; the tube spans z -1.25..0.95 and the
+## ledger stand sits at z 0, so both clear the stand and stay on the plinth.
+const SIGHTING_MOUNT_Z: Array[float] = [-0.95, 0.75]
+
 var _built := false
 ## The Cloudreach world, when this is built inside it. Its `_apply_tree_palette`
 ## and `apply_stone_palette` are the region's one foliage/stone policy: the
@@ -186,9 +193,18 @@ func _build_instruments(cfg: Dictionary, stone: Material, timber: Material) -> v
 		_add_imported(station, "WindLedger", BOOK_STAND, Vector3(0.0, 0.38, 0.0), 1.65)
 		_add_imported(station, "KeeperBench", BENCH, Vector3(2.0, 0.0, 0.3), 1.15)
 		# A simple sighting tube makes each station face the central wind gauge.
-		var tube := _add_cylinder_to(station, "SightingTube", Vector3(0.0, 2.45, -0.15),
-			0.16, 2.2, timber, "instrument_station")
+		var tube := _add_cylinder_to(station, "SightingTube",
+			Vector3(0.0, SIGHTING_TUBE_Y, -0.15), SIGHTING_TUBE_RADIUS, 2.2, timber,
+			"instrument_station")
 		tube.rotation.x = PI * 0.5
+		# It rests on two timber mounts standing on the plinth. Without them it
+		# was a horizontal log floating 0.26 m over the ledger stand (M1,
+		# frame 24): nothing under a 2.2 m tube reads as a placement bug.
+		var mount_height := SIGHTING_TUBE_Y - SIGHTING_TUBE_RADIUS - PLINTH_TOP_Y
+		for mount_index in SIGHTING_MOUNT_Z.size():
+			_add_cylinder_to(station, "SightingMount%d" % mount_index,
+				Vector3(0.0, PLINTH_TOP_Y + mount_height * 0.5, SIGHTING_MOUNT_Z[mount_index]), 0.075,
+				mount_height, timber, "instrument_station")
 
 
 func _build_night_wayfinding(cfg: Dictionary) -> void:

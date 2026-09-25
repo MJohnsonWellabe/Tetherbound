@@ -450,6 +450,7 @@ func _paving_material() -> ShaderMaterial:
 	material.set_shader_parameter("soil_tex",preload("res://assets/environment/terrain/stylised/dirt_path_Color.png"))
 	material.set_shader_parameter("tint",Color("#8f8a70"))
 	material.set_shader_parameter("origin",position)
+	material.set_shader_parameter("joint_outer_radius",float(config.arena_radius_m)+0.5)
 	return material
 
 
