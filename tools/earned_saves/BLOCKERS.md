@@ -152,3 +152,17 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   to anyone under 40% HP while stock lasts. Each dose goes through the team helper's real Satchel
   seam (`care_existing`), then `_prepare()`. Disclosed as `between_fight_care` with per-dose
   receipts.
+- Attempt 3 (alternative 2, 20:39 UTC) got further. Bench care dosed bramblebun (22→72) and
+  mudsnout (36→86), then two ordinary wild fights were won (15 and 10 hits). The next bench dose
+  (bramblebun 18→68) was followed by the helper's `_prepare()`. Its real `party_cycle` input then
+  stopped moving the active slot, three presses in a row (`before 3, after 3, wanted 0`):
+  `EARNED HALL FAIL — Earned Satchel preparation failed: ["Party-cycle input did not select the available training creature"]`.
+  Player (-152.26, -4.95, 4233.56). Wall time 181 s. Potions 0, revives 12, no flags gained.
+  Log: `/tmp/claude-0/earned_chain/seed4/hall/log.txt`.
+- Status: **blocking after the 3-attempt cap.** Last good save:
+  `/tmp/claude-0/earned_chain/seed4/relay/save/`. The Hall helper leaves the active creature
+  drained between fights, and small potions run out after about 3 doses. A production
+  `party_cycle` refusal outside combat (cause not identified; possibly a nearby wild's
+  engagement or ally state) then blocks the helper's own pilot selection. Suggested next honest
+  step, not taken because of the cap: drop the `_prepare()` call after bench care and rely on the
+  helper's own pre-captain `_prepare()`. Or rest at an earned camp before the Sigil loop.
