@@ -70,8 +70,10 @@ func test_every_storm_phase_has_a_complete_presentation_row() -> void:
 				"ceiling_speed", "rain_visible", "rain_amount", "flashes"]:
 			assert_true(row.has(key), "presentation.phases.%s.%s missing" % [phase, key])
 		assert_true(bool(row.rain_visible), "%s: Stormwood rains in every storm phase" % phase)
-		assert_true(float(row.sun_energy_mult) >= 0.25,
+		assert_true(float(row.sun_energy_mult) >= 0.2,
 			"%s: sun multiplier %.2f would make the phase unplayably dark" % [phase, float(row.sun_energy_mult)])
+		assert_almost_eq(float(row.ceiling_opacity), 1.0, 0.0001,
+			"%s: the ceiling is opaque, so no sun/moon ghost disc shows through" % phase)
 		for key: String in ["sky_top", "sky_horizon", "sky_ground_horizon", "ceiling_colour", "ambient_colour"]:
 			_assert_not_red(Color(str(row[key])), "%s.%s" % [phase, key])
 	for key: String in ["rim_colour", "edge_colour", "fill_colour"]:
@@ -345,7 +347,15 @@ func test_strike_sky_flash_is_gated_by_phase_and_distance() -> void:
 	parts.world.free()
 
 
-## J1: the telegraph keeps the 1.2 s / 3 m contract exactly.
+class GroundWorld extends Node3D:
+	var calls := 0
+	func ground_height_near(at: Vector3) -> float:
+		calls += 1
+		return at.x * 0.1
+
+
+## J1 / judge (c): the telegraph keeps the 1.2 s / 3 m contract exactly and
+## reads as a warning (amber rim, darkened interior), never red.
 func test_telegraph_ring_keeps_the_strike_contract() -> void:
 	var lightning := LightningFixture.new()
 	var strike: Dictionary = _config().strike
@@ -355,15 +365,43 @@ func test_telegraph_ring_keeps_the_strike_contract() -> void:
 	assert_almost_eq(float(ring.get_meta("telegraph_seconds")), 1.2, 0.0001, "WORLD 5.2: 1.2 s")
 	var material := ring.material_override as ShaderMaterial
 	assert_almost_eq(float(material.get_shader_parameter("telegraph_seconds")), float(strike.telegraph_seconds), 0.0001)
-	var falloff := float(_config().presentation.telegraph.edge_falloff_m)
-	var outer := float(strike.radius_m) + falloff
+	var cfg: Dictionary = _config().presentation.telegraph
+	var outer := float(strike.radius_m) + float(cfg.edge_falloff_m)
 	assert_almost_eq(float(material.get_shader_parameter("rim_fraction")) * outer, float(strike.radius_m), 0.001,
 		"the bright rim is drawn at the damage radius")
-	var aabb := ring.mesh.get_aabb()
-	assert_almost_eq(aabb.size.x * 0.5, outer, 0.05, "mesh reaches only the soft falloff past the rim")
-	assert_true(aabb.size.y < 0.2, "flat: hugs the ground rather than standing as a tube")
+	assert_almost_eq(float(material.get_shader_parameter("rim_radius")), float(strike.radius_m), 0.0001)
+	var rim := Color(str(cfg.rim_colour))
+	assert_true(rim.h * 360.0 >= 30.0 and rim.h * 360.0 <= 45.0, "warning amber rim (hue %.0f)" % (rim.h * 360.0))
+	_assert_not_red(rim, "telegraph rim")
+	_assert_not_red(Color(str(cfg.edge_colour)), "telegraph edge")
+	assert_true(Color(str(cfg.fill_colour)).get_luminance() < 0.15, "interior darkens the ground")
+	assert_true(float(cfg.depth_pull_m) > 0.3, "rim drawn in front of grass")
 	ring.free()
 	lightning.free()
+
+
+## Review R2-1: a warning must be cheap on its own frame. One shared indexed
+## mesh, and at most 25 terrain height samples per strike.
+func test_telegraph_build_stays_cheap() -> void:
+	var world := GroundWorld.new()
+	var lightning := LightningFixture.new()
+	lightning.world = world
+	var first: MeshInstance3D = lightning._build_telegraph(Vector3(10, 2, 5))
+	assert_true(world.calls <= 25, "height calls %d > 25 budget" % world.calls)
+	assert_eq(lightning.last_telegraph_height_calls, world.calls)
+	var second: MeshInstance3D = lightning._build_telegraph(Vector3(-40, 1, 90))
+	assert_true(is_same(first.mesh, second.mesh), "every warning shares one cached mesh")
+	var arrays := first.mesh.surface_get_arrays(0)
+	assert_true(arrays[Mesh.ARRAY_INDEX] != null and (arrays[Mesh.ARRAY_INDEX] as PackedInt32Array).size() > 0, "indexed mesh")
+	assert_true((arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size() <= 400, "small unit mesh")
+	var heights: PackedFloat32Array = (first.material_override as ShaderMaterial).get_shader_parameter("rim_heights")
+	assert_eq(heights.size(), 16)
+	# Rim sample 0 sits at +x of (10, 2, 5): ground 0.1 * 13 = 1.3, relative to y 2.
+	assert_almost_eq(heights[0], 1.3 - 2.0, 0.0001, "heights are relative to the strike point")
+	first.free()
+	second.free()
+	lightning.free()
+	world.free()
 
 
 func test_simulation_only_world_builds_no_presentation() -> void:
@@ -429,3 +467,82 @@ func test_production_phase_application_reaches_world_look_and_live_sun() -> void
 	assert_almost_eq(sun.light_energy, 1.4 * float(rows["break"].sun_energy_mult), 0.0001)
 	surge.free()
 	parts.world.free()
+
+
+## Review R2-2: storm horizon (and fog) keep at least 65% of the native
+## horizon luminance for the hour, day and night.
+func test_storm_horizon_and_fog_have_a_floor() -> void:
+	var surge := SURGE.new()
+	var fraction := float(_config().presentation.floors.horizon_fraction)
+	assert_true(fraction >= 0.6, "floor stays near the reviewed 65%")
+	for hour: float in [8.0, 18.5, 23.0, 5.5]:
+		var base := _real_base(surge, hour)
+		var native := (base.sky_horizon as Color).get_luminance()
+		for phase: String in PHASES:
+			var delta: Dictionary = surge.light_delta_for_phase(phase, false, base)
+			var horizon := Color(str(delta.sky.horizon_colour))
+			assert_true(horizon.get_luminance() >= native * fraction - 0.01,
+				"hour %.1f %s horizon %.3f < %.0f%% of native %.3f" % [hour, phase, horizon.get_luminance(), fraction * 100.0, native])
+			assert_eq(str(delta.environment.fog_colour), str(delta.sky.horizon_colour), "fog follows the floored horizon")
+	surge.free()
+
+
+## Round-2 judge (a): night Break keeps its own violet/indigo identity and is
+## not just a darker night Building.
+func test_night_break_has_its_own_hue() -> void:
+	var surge := SURGE.new()
+	var night := _real_base(surge, 23.0)
+	var brk: Dictionary = surge._final(surge._resolved(surge.presentation_for("break")), night)
+	var bld: Dictionary = surge._final(surge._resolved(surge.presentation_for("building")), night)
+	for key: String in ["sky_horizon", "ceiling_colour"]:
+		var hb: float = (brk[key] as Color).h * 360.0
+		var hd: float = (bld[key] as Color).h * 360.0
+		assert_true(hb >= 220.0 and hb <= 280.0, "night Break %s is violet/indigo (hue %.0f)" % [key, hb])
+		var gap := absf(hb - hd)
+		assert_true(minf(gap, 360.0 - gap) >= 60.0, "night Break and Building %s hues differ (%.0f vs %.0f)" % [key, hb, hd])
+	surge.free()
+
+
+## Round-2 judge (e): no ceiling gaps at night (they opened onto lit flecks).
+func test_ceiling_breakup_closes_at_night() -> void:
+	var surge := SURGE.new()
+	var fading := surge._resolved(surge.presentation_for("fading"))
+	assert_true(float(surge._final(fading, _real_base(surge, 8.0)).ceiling_breakup) > 0.3, "Fading clears by day")
+	assert_almost_eq(float(surge._final(fading, _real_base(surge, 23.0)).ceiling_breakup), 0.0, 0.0001, "closed at night")
+	surge.free()
+
+
+## Nit: day Break stays readable (replaces the old raw sun-energy guard):
+## effective ground fill keeps a floor.
+func test_day_break_ground_fill_keeps_a_floor() -> void:
+	var surge := SURGE.new()
+	var day := _real_base(surge, 8.0)
+	var native := (day.ambient_colour as Color).get_luminance()
+	for phase: String in PHASES:
+		var delta: Dictionary = surge.light_delta_for_phase(phase, false, day)
+		var fill := Color(str(delta.environment.ambient_colour)).get_luminance() * float(delta.environment.ambient_energy_mult)
+		assert_true(fill >= native * 0.3, "%s ground fill %.3f below 30%% of clear day %.3f" % [phase, fill, native])
+	surge.free()
+
+
+## Round-2 judge (d): rain slants with the wind, the far layer is shorter and
+## fainter, and at night rain is dimmer than the native night horizon.
+func test_rain_slants_fades_with_depth_and_dims_at_night() -> void:
+	var surge := SURGE.new()
+	surge._rain = surge._build_rain()
+	surge._style_rain()
+	var cfg: Dictionary = _config().presentation.rain
+	var near := surge._rain.process_material as ParticleProcessMaterial
+	assert_true(near.particle_flag_align_y, "streaks align to their velocity")
+	assert_true(Vector2(near.direction.x, near.direction.z).length() > 0.1, "constant wind slant")
+	assert_true(float(cfg.far_layer.streak_length_m) < float(cfg.streak_length_m), "far streaks shorter")
+	assert_true(float(cfg.far_layer.alpha) < float(cfg.alpha), "far streaks fainter")
+	var night := _real_base(surge, 23.0)
+	var shown: Dictionary = surge._final(surge._resolved(surge.presentation_for("building")), night)
+	surge.call("_update_rain", shown)
+	var drop := near.color
+	var night_horizon := Color(str(surge.light_delta_for_phase("building", false, night).sky.horizon_colour))
+	assert_true(drop.get_luminance() * drop.a < night_horizon.get_luminance(),
+		"night rain (%.3f x %.2f) must not outshine the night horizon (%.3f)" % [drop.get_luminance(), drop.a, night_horizon.get_luminance()])
+	surge._rain.free()
+	surge.free()

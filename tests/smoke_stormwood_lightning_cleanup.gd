@@ -86,7 +86,13 @@ func _run() -> void:
 		and far_calm_flash == 0.0 and bolt_local and near_calm_flash > 0.8 and is_equal_approx(far_break_flash, 1.0)
 	print("LIGHTNING CLEANUP impact_freed=%s expiry_freed=%s registry_empty=%s strike_freed=%s bolt=%d light=%d" % [
 		impact_freed, expiry_freed, clean, strike_freed, bolts_after_impact, lights_after_impact])
-	print("LIGHTNING TELEGRAPH rim_m=%.2f seconds=%.2f" % [rim, seconds])
+	# Informational CPU cost of one warning build (headless: no GPU work).
+	var t0 := Time.get_ticks_usec()
+	for _i in 50:
+		lightning._build_telegraph(Vector3(1, 0, 1)).free()
+	var build_us := (Time.get_ticks_usec() - t0) / 50.0
+	print("LIGHTNING TELEGRAPH rim_m=%.2f seconds=%.2f build_us=%.0f height_calls=%d" % [
+		rim, seconds, build_us, lightning.last_telegraph_height_calls])
 	print("LIGHTNING SKY GATE break=%.2f far_calm=%.2f near_calm=%.2f far_break=%.2f bolt_local=%s" % [
 		break_flash, far_calm_flash, near_calm_flash, far_break_flash, bolt_local])
 	print("LIGHTNING CLEANUP RESULT %s" % ("PASS" if ok else "FAIL"))

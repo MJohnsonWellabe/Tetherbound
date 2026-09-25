@@ -23,6 +23,7 @@ const CEILING_SHADER := """
 shader_type spatial;
 render_mode unshaded, cull_front, depth_draw_never, fog_disabled, shadows_disabled;
 uniform vec3 ceiling_colour : source_color = vec3(0.4);
+uniform vec3 horizon_colour : source_color = vec3(0.5);
 uniform float opacity = 0.0;
 uniform float cloud_time = 0.0;
 uniform float contrast = 0.3;
@@ -61,7 +62,12 @@ void fragment() {
 	// must not show under a storm ceiling.
 	// `breakup` opens gaps where the cloud body is thin (Fading's clearing).
 	float gaps = breakup > 0.0 ? smoothstep(breakup - 0.12, breakup + 0.12, body) : 1.0;
-	ALPHA = opacity * smoothstep(0.0, 0.07, dir.y) * mix(0.88, 1.0, body) * gaps;
+	// Opaque right down to the horizon, where the ceiling itself becomes
+	// the storm horizon/fog colour: a translucent bottom band let art.json's
+	// own horizon haze and sun/moon glow show through as a pale "shelf" and
+	// a ghost disc (round-2 judge (e)).
+	colour = mix(horizon_colour, colour, smoothstep(0.0, 0.12, dir.y));
+	ALPHA = opacity * gaps;
 }
 """
 
@@ -90,6 +96,11 @@ var _last_night_scale := -1.0
 var _last_base: Dictionary = {"night_scale": 1.0}
 var _dirty := true
 var _cloud_time := 0.0
+## _final() of the target, cached while the same `_to` and base dictionaries
+## are in use (base changes only on a WorldLook re-apply, every 0.2-2 s).
+var _final_cache: Dictionary = {}
+var _final_cache_to: Dictionary = {}
+var _final_cache_base: Dictionary = {}
 var _rain_far: GPUParticles3D
 var _flash := 0.0
 var _flash_next := 0.0
@@ -270,12 +281,36 @@ func _final(p: Dictionary, base: Dictionary) -> Dictionary:
 	# carries the trainer/route read; the storm's daytime sun cut releases.
 	out["sun_energy_mult"] = lerpf(1.0, float(out.get("sun_energy_mult", 1.0)), day_t * day_t)
 	out["night_scale"] = k
+	out["day_t"] = day_t
+	# Review R2-2 / judge (a),(b): a floor under the storm's horizon (and so
+	# fog) and ceiling, relative to the native horizon for this hour, in the
+	# authored hue. Without it night Break sank to ~37% of the native night
+	# horizon and the treeline vanished, and by day the sky read as night.
+	var floors: Dictionary = _pres_cfg().get("floors", {})
+	if base.has("sky_horizon"):
+		var native_lum := (base.sky_horizon as Color).get_luminance()
+		for pair: Array in [["sky_horizon", "horizon_fraction"], ["sky_ground_horizon", "horizon_fraction"], ["ceiling_colour", "ceiling_fraction"]]:
+			if out.has(pair[0]):
+				out[pair[0]] = _lift_to(out[pair[0]], native_lum * float(floors.get(pair[1], 0.0)))
+	# No ceiling gaps at night: they opened onto the night sky's own lit
+	# cloud flecks (judge (e)).
+	out["ceiling_breakup"] = float(out.get("ceiling_breakup", 0.0)) * smoothstep(0.45, 0.9, day_t)
 	if out.has("ambient_colour") and base.has("ambient_colour"):
 		var storm: Color = out.ambient_colour
 		var native: Color = base.ambient_colour
 		var dim := minf(1.0, native.get_luminance() / maxf(0.001, storm.get_luminance()))
 		out["ambient_colour"] = Color(storm.r * dim, storm.g * dim, storm.b * dim)
 	return out
+
+## `c` scaled up (hue kept) until its luminance is at least `min_lum`.
+static func _lift_to(c: Color, min_lum: float) -> Color:
+	var lum := c.get_luminance()
+	if lum >= min_lum:
+		return c
+	if lum <= 0.0001:
+		return Color(min_lum, min_lum, min_lum)
+	var f := min_lum / lum
+	return Color(minf(1.0, c.r * f), minf(1.0, c.g * f), minf(1.0, c.b * f))
 
 ## WorldLook delta from on-screen values. No scaling happens here.
 func _delta_from(p: Dictionary) -> Dictionary:
@@ -322,7 +357,11 @@ func _mix(a: Dictionary, b: Dictionary, t: float, base: Dictionary) -> Dictionar
 
 ## What is on screen now for `base`.
 func _current(base: Dictionary) -> Dictionary:
-	var target := _final(_to, base)
+	if not (is_same(_to, _final_cache_to) and is_same(base, _final_cache_base)):
+		_final_cache = _final(_to, base)
+		_final_cache_to = _to
+		_final_cache_base = base
+	var target := _final_cache
 	return target if _blend >= 1.0 else _mix(_from, target, _blend, base)
 
 ## The current time-of-day sky/ambient from WorldLook (read-only), used as
@@ -393,7 +432,10 @@ func _advance_presentation(delta: float) -> void:
 		_blend = minf(1.0, _blend + delta / maxf(0.01, seconds))
 		_dirty = true
 	var shown := _current(_last_base)
-	_cloud_time += delta * float(shown.get("ceiling_speed", 0.0))
+	# Wrapped at a large period so the float never loses precision; at the
+	# fastest authored speed the wrap comes after days of continuous Break.
+	_cloud_time = fposmod(_cloud_time + delta * float(shown.get("ceiling_speed", 0.0)),
+		float(_pres_cfg().get("ceiling", {}).get("time_wrap", 10000.0)))
 	_reapply_left -= delta
 	if _reapply_left > 0.0:
 		_update_ceiling(shown)
@@ -435,23 +477,29 @@ func _update_rain(p: Dictionary) -> void:
 	if _rain_far != null:
 		_rain_far.emitting = _rain.visible
 		_rain_far.amount_ratio = _rain.amount_ratio
-	# The streaks are unshaded, so they would glow on a dark night: their
-	# tint follows the night factor down to presentation.rain.night_floor.
+	# The streaks are unshaded, so they would glow on a dark night (judge
+	# (d): in night Building the rain was the brightest thing on screen):
+	# their tint follows the night factor down to rain.night_floor and their
+	# alpha drops to rain.night_alpha_fraction of the day value.
 	var cfg: Dictionary = _pres_cfg().get("rain", {})
-	var shade := maxf(float(cfg.get("night_floor", 0.3)), float(p.get("night_scale", 1.0)))
-	_tint_emitter(_rain, cfg, shade)
+	var shade := maxf(float(cfg.get("night_floor", 0.12)), float(p.get("night_scale", 1.0)))
+	var alpha_scale := lerpf(float(cfg.get("night_alpha_fraction", 0.5)), 1.0, float(p.get("day_t", 1.0)))
+	_tint_emitter(_rain, cfg, shade, alpha_scale)
 	if _rain_far != null:
-		var far_cfg := cfg.duplicate()
-		for key: String in cfg.get("far_layer", {}):
-			far_cfg[key] = cfg.far_layer[key]
-		_tint_emitter(_rain_far, far_cfg, shade)
+		_tint_emitter(_rain_far, _far_rain_cfg(cfg), shade, alpha_scale)
 
-func _tint_emitter(emitter: GPUParticles3D, cfg: Dictionary, shade: float) -> void:
+func _far_rain_cfg(cfg: Dictionary) -> Dictionary:
+	var far_cfg := cfg.duplicate()
+	for key: String in cfg.get("far_layer", {}):
+		far_cfg[key] = cfg.far_layer[key]
+	return far_cfg
+
+func _tint_emitter(emitter: GPUParticles3D, cfg: Dictionary, shade: float, alpha_scale: float = 1.0) -> void:
 	var process := emitter.process_material as ParticleProcessMaterial
 	if process == null or cfg.is_empty():
 		return
 	var colour := Color(str(cfg.get("colour", "#c0ccd6")))
-	process.color = Color(colour.r * shade, colour.g * shade, colour.b * shade, float(cfg.get("alpha", 0.4)))
+	process.color = Color(colour.r * shade, colour.g * shade, colour.b * shade, float(cfg.get("alpha", 0.4)) * alpha_scale)
 
 ## Stormwood's rain is heavier than the Meadows preset it shares a builder
 ## with. Streak size, tint and per-drop variation (J3: size and alpha
@@ -467,10 +515,7 @@ func _style_rain() -> void:
 	if not far.is_empty():
 		_rain_far = _build_rain()
 		_rain_far.name = "RainFar"
-		var merged := cfg.duplicate()
-		for key: String in far:
-			merged[key] = far[key]
-		_style_emitter(_rain_far, merged)
+		_style_emitter(_rain_far, _far_rain_cfg(cfg))
 		var ring := _rain_far.process_material as ParticleProcessMaterial
 		if ring != null:
 			ring.emission_ring_inner_radius = float(far.get("inner_radius_m", 13.0))
@@ -504,6 +549,11 @@ func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 		var ramp := GradientTexture1D.new()
 		ramp.gradient = gradient
 		process.color_initial_ramp = ramp
+		# Judge (d): a constant wind slant, with each streak aligned to its
+		# own velocity so it leans rather than falling as a vertical overlay.
+		var slant: Array = cfg.get("wind_slant", [0.0, 0.0])
+		process.direction = Vector3(float(slant[0]), -1.0, float(slant[1])).normalized()
+		process.particle_flag_align_y = true
 	emitter.amount = int(cfg.get("max_drops", emitter.amount))
 
 func _update_ceiling(p: Dictionary) -> void:
@@ -511,6 +561,8 @@ func _update_ceiling(p: Dictionary) -> void:
 		return
 	var colour: Color = p.get("ceiling_colour", _last_base.get("ceiling_colour", Color.GRAY))
 	_ceiling_material.set_shader_parameter("ceiling_colour", colour)
+	_ceiling_material.set_shader_parameter("horizon_colour",
+		p.get("sky_horizon", _last_base.get("sky_horizon", colour)))
 	_ceiling_material.set_shader_parameter("opacity", float(p.get("ceiling_opacity", 0.0)))
 	_ceiling_material.set_shader_parameter("cloud_time", _cloud_time)
 	_ceiling_material.set_shader_parameter("contrast", float(p.get("ceiling_contrast", 0.3)))

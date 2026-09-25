@@ -21,6 +21,8 @@ func _ready() -> void:
 	session.stormwood_strike_received.connect(_receive)
 	_rng.randomize()
 	_next = _rng.randf_range(4, 8)
+	if not bool(world.get("simulation_only")):
+		_prewarm_telegraph()
 
 func _process(delta: float) -> void:
 	if not session.is_host():
@@ -235,20 +237,29 @@ func _strike_flash(at: Vector3) -> void:
 			surge.call("flash", strength)
 
 
-## J1: the 1.2 s warning. A flat ring laid on the ground (every vertex sampled
-## from the terrain, lifted a few cm, so it hugs slopes instead of sitting on
-## them as a tube), drawn unshaded with a bright white-violet rim, a cyan
-## outer edge that softly falls off past the rim, a faint fill that grows as
-## the strike nears, and a pulse that quickens toward impact. The rim sits at
-## exactly strike.radius_m (the 3 m damage contract); the glow beyond it is
-## `edge_falloff_m`. No red: oxblood is Team Tether's.
+## The 1.2 s warning (F10 judges J1/(c)): a hazard, not a selection circle.
+## A flat ring on the ground with a warning-amber rim (hue ~35 degrees, never
+## red/oxblood, which is Team Tether's) exactly at strike.radius_m (the 3 m
+## damage contract), a soft amber glow past it (`edge_falloff_m`), an
+## interior that DARKENS the ground as the strike nears, a pulse that
+## quickens toward impact and a white-hot core flash on impact.
+##
+## Cost (review R2-1): one cached, indexed unit mesh is shared by every
+## warning. Per strike only the centre plus `height_samples` rim points are
+## read from the terrain (<= 25 ground_height_near calls), passed to the
+## shader as a height array, and the vertex shader interpolates each vertex's
+## height from them (angularly between rim samples, radially from the
+## centre). The whole ring is pulled toward the camera along the view ray by
+## `depth_pull_m`, so grass in front of it cannot cover the rim while its
+## screen position is unchanged.
+const TELEGRAPH_SAMPLES := 16
 const TELEGRAPH_SHADER := """
 shader_type spatial;
 render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
-uniform vec3 rim_colour : source_color = vec3(0.96, 0.93, 1.0);
-uniform vec3 edge_colour : source_color = vec3(0.6, 0.85, 1.0);
-uniform vec3 fill_colour : source_color = vec3(0.72, 0.66, 1.0);
-uniform float rim_fraction = 0.92;
+uniform vec3 rim_colour : source_color = vec3(1.0, 0.69, 0.25);
+uniform vec3 edge_colour : source_color = vec3(1.0, 0.67, 0.2);
+uniform vec3 fill_colour : source_color = vec3(0.06, 0.05, 0.05);
+uniform float rim_fraction = 0.87;
 uniform float rim_width = 0.05;
 uniform float intensity = 2.2;
 uniform float pulse_hz_start = 2.0;
@@ -257,89 +268,157 @@ uniform float telegraph_seconds = 1.2;
 uniform float progress = 0.0;
 uniform float strike = 0.0;
 uniform float fade = 1.0;
+uniform float outer_radius = 3.45;
+uniform float rim_radius = 3.0;
+uniform float centre_height = 0.0;
+uniform float rim_heights[16];
+uniform float lift = 0.07;
+uniform float depth_pull = 0.7;
+varying float r;
+void vertex() {
+	r = length(VERTEX.xz) / outer_radius;
+	float angle = atan(VERTEX.z, VERTEX.x);
+	float s = fract(angle / 6.2831853) * 16.0;
+	int i0 = int(floor(s)) % 16;
+	int i1 = (i0 + 1) % 16;
+	float rim_h = mix(rim_heights[i0], rim_heights[i1], fract(s));
+	float radial = clamp(length(VERTEX.xz) / rim_radius, 0.0, 1.0);
+	VERTEX.y = mix(centre_height, rim_h, radial) + lift;
+	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
+	float dist = length(view.xyz);
+	view.xyz *= max(0.2, 1.0 - depth_pull / max(dist, 0.001));
+	POSITION = PROJECTION_MATRIX * view;
+}
 void fragment() {
-	float r = UV.x;
-	// Chirp: the pulse rate climbs linearly from start to end over the
-	// telegraph, integrated so the phase never jumps.
+	// Chirp: the pulse rate climbs linearly over the telegraph, integrated
+	// so the phase never jumps.
 	float t = progress * telegraph_seconds;
 	float phase = pulse_hz_start * t + (pulse_hz_end - pulse_hz_start) * t * t / (2.0 * telegraph_seconds);
 	float pulse = 0.65 + 0.35 * cos(phase * 6.2832);
 	float rim = 1.0 - smoothstep(0.0, rim_width, abs(r - rim_fraction));
 	float outer = r > rim_fraction ? 1.0 - smoothstep(rim_fraction, 1.0, r) : 0.0;
-	float fill = r < rim_fraction ? smoothstep(0.0, rim_fraction, r) * (0.12 + 0.28 * progress) : 0.0;
+	float fill = r < rim_fraction ? smoothstep(0.0, rim_fraction, r) * (0.3 + 0.35 * progress) : 0.0;
 	float a_rim = rim * mix(pulse, 1.0, strike);
-	float a_edge = outer * 0.55 * pulse;
-	float alpha = clamp(a_rim + a_edge + fill, 0.0, 1.0);
-	// Weighted colour (not premultiplied): each layer contributes its own
-	// colour in proportion to its coverage, so the faint fill tints the
-	// ground lavender instead of darkening it.
-	vec3 colour = (rim_colour * intensity * mix(1.0, 1.6, strike) * a_rim + edge_colour * a_edge
+	float a_edge = outer * 0.6 * pulse;
+	vec3 hot = mix(rim_colour, vec3(1.0), strike);
+	vec3 colour = (hot * intensity * mix(1.0, 2.2, strike) * a_rim + edge_colour * a_edge
 		+ fill_colour * fill) / max(a_rim + a_edge + fill, 0.001);
 	ALBEDO = colour;
-	ALPHA = alpha * fade;
+	ALPHA = clamp(a_rim + a_edge + fill, 0.0, 1.0) * fade;
 }
 """
+static var _telegraph_mesh: ArrayMesh
+## Test/probe hook: ground_height_near calls made by the last warning build.
+var last_telegraph_height_calls := 0
 
 func _telegraph_config() -> Dictionary:
 	return rules.config.get("presentation", {}).get("telegraph", {})
 
-## Rim radius and fill/falloff geometry for a warning at `at`.
 func telegraph_rim_radius() -> float:
 	return float(rules.config.strike.radius_m)
 
-func _build_telegraph(at: Vector3) -> MeshInstance3D:
-	var cfg := _telegraph_config()
+func _telegraph_outer_radius() -> float:
+	return telegraph_rim_radius() + float(_telegraph_config().get("edge_falloff_m", 0.45))
+
+## One indexed ring mesh in metres, built once and shared.
+func _telegraph_unit_mesh() -> ArrayMesh:
+	if _telegraph_mesh != null:
+		return _telegraph_mesh
 	var rim_r := telegraph_rim_radius()
-	var outer_r := rim_r + float(cfg.get("edge_falloff_m", 0.35))
-	var lift := float(cfg.get("ground_lift_m", 0.07))
-	var segments := int(cfg.get("segments", 48))
+	var outer_r := _telegraph_outer_radius()
+	var segments := int(_telegraph_config().get("segments", 48))
 	var radii: Array[float] = [0.0, rim_r * 0.45, rim_r * 0.8, rim_r - 0.12, rim_r, rim_r + 0.12, outer_r]
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var base_y := at.y
-	var sample := world != null and world.has_method("ground_height_near")
-	var points: Array = []
-	for ring_index in radii.size():
-		var row: Array[Vector3] = []
+	var vertices := PackedVector3Array()
+	var indices := PackedInt32Array()
+	for radius: float in radii:
 		for k in segments:
 			var angle := TAU * float(k) / float(segments)
-			var offset := Vector3(cos(angle), 0.0, sin(angle)) * radii[ring_index]
-			var y := base_y
-			if sample:
-				y = float(world.call("ground_height_near", at + offset))
-			row.append(Vector3(offset.x, y - base_y + lift, offset.z))
-		points.append(row)
+			vertices.append(Vector3(cos(angle) * radius, 0.0, sin(angle) * radius))
 	for ring_index in radii.size() - 1:
 		for k in segments:
-			var k2 := (k + 1) % segments
-			var quad: Array[Vector3] = [points[ring_index][k], points[ring_index][k2], points[ring_index + 1][k2], points[ring_index + 1][k]]
-			var rs: Array[float] = [radii[ring_index], radii[ring_index], radii[ring_index + 1], radii[ring_index + 1]]
-			for idx: int in [0, 1, 2, 0, 2, 3]:
-				st.set_uv(Vector2(rs[idx] / outer_r, 0.0))
-				st.set_normal(Vector3.UP)
-				st.add_vertex(quad[idx])
-	var ring := MeshInstance3D.new()
-	ring.name = "StrikeTelegraph"
-	ring.mesh = st.commit()
-	ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			var a := ring_index * segments + k
+			var b := ring_index * segments + (k + 1) % segments
+			var c := (ring_index + 1) * segments + (k + 1) % segments
+			var d := (ring_index + 1) * segments + k
+			indices.append_array(PackedInt32Array([a, b, c, a, c, d]))
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_INDEX] = indices
+	_telegraph_mesh = ArrayMesh.new()
+	_telegraph_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	# Heights are applied in the shader; give culling room for slopes.
+	_telegraph_mesh.custom_aabb = AABB(Vector3(-outer_r, -6.0, -outer_r), Vector3(outer_r * 2.0, 12.0, outer_r * 2.0))
+	return _telegraph_mesh
+
+func _telegraph_material() -> ShaderMaterial:
+	var cfg := _telegraph_config()
 	if _telegraph_shader == null:
 		_telegraph_shader = Shader.new()
 		_telegraph_shader.code = TELEGRAPH_SHADER
+	var rim_r := telegraph_rim_radius()
+	var outer_r := _telegraph_outer_radius()
 	var material := ShaderMaterial.new()
 	material.shader = _telegraph_shader
-	material.set_shader_parameter("rim_colour", Color(str(cfg.get("rim_colour", "#f4eeff"))))
-	material.set_shader_parameter("edge_colour", Color(str(cfg.get("edge_colour", "#9ad8ff"))))
-	material.set_shader_parameter("fill_colour", Color(str(cfg.get("fill_colour", "#b8aaff"))))
+	material.set_shader_parameter("rim_colour", Color(str(cfg.get("rim_colour", "#ffb040"))))
+	material.set_shader_parameter("edge_colour", Color(str(cfg.get("edge_colour", "#ffaa33"))))
+	material.set_shader_parameter("fill_colour", Color(str(cfg.get("fill_colour", "#100c10"))))
 	material.set_shader_parameter("rim_fraction", rim_r / outer_r)
-	material.set_shader_parameter("rim_width", float(cfg.get("rim_width_m", 0.14)) / outer_r)
-	material.set_shader_parameter("intensity", float(cfg.get("rim_intensity", 2.2)))
+	material.set_shader_parameter("rim_width", float(cfg.get("rim_width_m", 0.16)) / outer_r)
+	material.set_shader_parameter("intensity", float(cfg.get("rim_intensity", 2.4)))
 	material.set_shader_parameter("pulse_hz_start", float(cfg.get("pulse_hz_start", 2.0)))
 	material.set_shader_parameter("pulse_hz_end", float(cfg.get("pulse_hz_end", 7.0)))
 	material.set_shader_parameter("telegraph_seconds", float(rules.config.strike.telegraph_seconds))
+	material.set_shader_parameter("outer_radius", outer_r)
+	material.set_shader_parameter("rim_radius", rim_r)
+	material.set_shader_parameter("lift", float(cfg.get("ground_lift_m", 0.07)))
+	material.set_shader_parameter("depth_pull", float(cfg.get("depth_pull_m", 0.7)))
+	return material
+
+func _build_telegraph(at: Vector3) -> MeshInstance3D:
+	var rim_r := telegraph_rim_radius()
+	var material := _telegraph_material()
+	var sample := world != null and world.has_method("ground_height_near")
+	var calls := 0
+	var centre := 0.0
+	var heights := PackedFloat32Array()
+	heights.resize(TELEGRAPH_SAMPLES)
+	if sample:
+		centre = float(world.call("ground_height_near", at)) - at.y
+		calls += 1
+	for k in TELEGRAPH_SAMPLES:
+		var angle := TAU * float(k) / float(TELEGRAPH_SAMPLES)
+		if sample:
+			var offset := Vector3(cos(angle), 0.0, sin(angle)) * rim_r
+			heights[k] = float(world.call("ground_height_near", at + offset)) - at.y
+			calls += 1
+	last_telegraph_height_calls = calls
+	material.set_shader_parameter("centre_height", centre)
+	material.set_shader_parameter("rim_heights", heights)
+	var ring := MeshInstance3D.new()
+	ring.name = "StrikeTelegraph"
+	ring.mesh = _telegraph_unit_mesh()
+	ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	ring.material_override = material
 	ring.set_meta("rim_radius_m", rim_r)
 	ring.set_meta("telegraph_seconds", float(rules.config.strike.telegraph_seconds))
 	return ring
+
+## Compile the telegraph shader at realm load rather than on the first
+## warning's frame: one fully faded ring far below the world for a moment.
+func _prewarm_telegraph() -> void:
+	var ring := MeshInstance3D.new()
+	ring.name = "TelegraphPrewarm"
+	ring.mesh = _telegraph_unit_mesh()
+	var material := _telegraph_material()
+	material.set_shader_parameter("fade", 0.0)
+	material.set_shader_parameter("rim_heights", PackedFloat32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+	ring.material_override = material
+	ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(ring)
+	ring.position = Vector3(0.0, -2000.0, 0.0)
+	var timer := get_tree().create_timer(1.0)
+	timer.timeout.connect(ring.queue_free)
 
 
 func _expire_warning(id: int) -> void:
