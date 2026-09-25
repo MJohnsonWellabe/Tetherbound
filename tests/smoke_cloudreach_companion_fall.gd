@@ -11,39 +11,56 @@ extends SceneTree
 ## after a long trainer teleport. The trainer already had a grounded-fall rule
 ## (`cloudreach_physical_runtime.gd`); its companion had none.
 ##
-## Disclosed fixtures, on the production scene: the party is seeded before the
-## scene loads, the companion is called with the real recall binding, and the
-## trainer is stood at chosen road points by position. Nothing writes a
-## recovered state; only the runtime moves the companion back.
+## On the production scene. Nothing writes a recovered state; only the runtime
+## moves the companion back. Disclosed fixtures, every one:
+##   - the party (and, for leg D, the Meadowhart saddle fitting and a saddle
+##     in the bag) is seeded before the scene loads; the companion is called
+##     with the real recall binding;
+##   - the trainer is TELEPORTED to each road point by position (leg A picks
+##     the point by probing where the follower's station lies over open air);
+##   - leg A also sets the companion on the road beside the trainer by
+##     position once, then leaves it to its own follow logic;
+##   - legs B and D drop the companion by position over open air;
+##   - leg C adds a temporary 12 m collision slab 30 m below the road;
+##   - leg D calls `set_following(false)` directly, standing in for the fight
+##     and the finale pilot, before its real mount via the ride prompt;
+##   - leg F adds a temporary 30-degree collision slab beside the road and
+##     teleports the trainer onto it;
+##   - leg E builds a SYNTHETIC CharacterBody3D answering
+##     `is_local_deployment()`; it is not a real `remote_creature.gd` copy.
 ##
 ## Pins, in order:
-##   A. Stood still at the arrival road's edge (on the reported section, near
-##      (7, 105, -246)), the trainer's companion
-##      walks its camera-safe station off the road (root cause, pinned as a
-##      precondition), and is back on verified ground beside the trainer
-##      within a bounded time instead of falling forever.
-##   B. A companion dropped over open air beside the road is recovered to
-##      verified walkable ground next to the trainer, clear of the trainer.
-##   C. A companion stranded on a lower ledge well below the trainer (the
-##      steep-shoulder slide; a disclosed temporary slab) is recovered too.
-##   D. A companion that is not following (combat, riding and the finale pilot
-##      all switch following off) is left to its owner system.
-##   E. Only this process's own deployed body is ever recovered: a remote copy
-##      of another peer's creature is refused.
-##   F. The party is the same five throughout.
+##   A. Stood still at the arrival road's edge (the reported section, near
+##      (7, 105, -246)), the follower walks its camera-safe station off the
+##      road on its own (the root cause), is caught before it is 100 m down
+##      and is back on verified ground beside the trainer in bounded time.
+##   B. A companion dropped over open air is recovered to verified walkable
+##      ground next to the trainer, clear of the trainer's capsule where it
+##      was placed.
+##   C. A companion stranded on a ledge 30 m below the trainer (the
+##      steep-shoulder slide) is recovered too.
+##   D. A companion that is not following is left alone; a ridden mount is
+##      left to the real riding controller's own drop recovery.
+##   F. On a 30-degree slope, a large companion still finds a spot.
+##   E. Only a body that answers as this process's own deployment is ever
+##      recoverable: one that answers as another peer's is refused.
+##   G. The party is the same five throughout.
 
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PARTY := preload("res://autoload/party.gd")
 const HELPER_PATH := "res://scripts/world/cloudreach_companion_fall.gd"
+const RIDING := preload("res://scripts/world/riding_controller.gd")
 
 const TEAM := ["meadowhart", "bramblebun", "mudsnout", "terrapup", "brooktail"]
 const ROAD_CENTRE := Vector3(-3.0, 106.0, -246.0)
 ## Seconds a fall may take to be caught. The rule acts 100 m down, which a
 ## free fall reaches in about 4.5 s; the rest is margin for walking off.
 const RECOVERY_BUDGET_S := 12.0
-## A fall that is caught never gets anywhere near this far below the trainer.
-const LOST_BELOW_M := 220.0
+## The rule acts at `fall_drop_m` (100) below the trainer; one physics frame
+## of free fall at that depth is under a metre, so this allows three.
+const CAUGHT_BY_M := 103.0
+const SLOPE_DEG := 30.0
 
 var _failures: Array[String] = []
 var _checks := 0
@@ -52,6 +69,9 @@ var _player: CharacterBody3D
 var _game: Node
 var _director: Node
 var _runtime: Node
+var _riding: Node
+var _arbiter: Node
+var _rig: Node
 var _party_uids: Array[String] = []
 
 
@@ -66,11 +86,13 @@ func _run() -> void:
 	_game.set("pending_realm_entry", "")
 	_game.set("saved_player_pose", {})
 	(_game.get("progression") as RefCounted).call("set_flag", "realm_key_cloudreach")
+	(_game.get("progression") as RefCounted).call("set_flag", RIDING.saddle_fitted_flag("meadowhart"))
 	var party: RefCounted = PARTY.new()
 	for species: String in TEAM:
 		party.call("add", SPECIES.spawn(species))
 	party.call("set_active", 0)
 	_game.set("party", party)
+	(_game.get("inventory") as RefCounted).call("add", "saddle", 1)
 	for i in int(party.call("size")):
 		_party_uids.append(str((party.call("at", i) as RefCounted).get("uid")))
 
@@ -78,17 +100,20 @@ func _run() -> void:
 	root.add_child(_world)
 	current_scene = _world
 	_player = _world.get_node(^"Player") as CharacterBody3D
+	_rig = _world.get_node(^"CameraRig")
+	_arbiter = _world.get_node(^"InteractionArbiter")
 	if not await _wait_for_companion():
 		_report()
 		return
-	var chapter := _world.find_child("CloudreachChapter", true, false)
 	_runtime = _world.find_child("PhysicalRuntime", true, false)
-	print("runtime=%s chapter=%s" % [_runtime, chapter])
+	_riding = _world.get_node_or_null(^"RidingController")
 
 	await _walk_off_the_road_edge()
 	await _dropped_over_open_air()
 	await _stranded_on_a_lower_ledge()
 	await _not_following_is_left_alone()
+	await _ridden_mount_is_the_riding_controllers()
+	await _large_companion_on_a_slope()
 	_remote_copy_is_refused()
 	_check_party("end of run")
 	_report()
@@ -131,6 +156,7 @@ func _walk_off_the_road_edge() -> void:
 	# of the reported section until the follower, left to itself, walks off.
 	var ally := _ally()
 	var tried := 0
+	var walked_off := false
 	for row in range(-12, 28, 4):
 		var from := centre + Vector3(0.0, 0.0, float(row))
 		from.y = _floor_y(from, 6.0)
@@ -163,15 +189,23 @@ func _walk_off_the_road_edge() -> void:
 		print("A: trainer %s station %s over open air; follower %s" % [_player.global_position, station, "walked off" if fell else "held by the edge at %s" % ally.global_position])
 		if not fell:
 			continue
-		_check(true, "A: the follower walks its camera-safe station off the road edge on its own (stretch %d tried)" % tried)
+		walked_off = true
+		var before: Variant = _recoveries()
 		var result := await _watch_for_fall_and_recovery(20.0, true)
-		_check(result.lowest > _player.global_position.y - LOST_BELOW_M,
-			"A: the companion is never lost to the drop (lowest %.1f m, trainer at %.1f m)" % [result.lowest, _player.global_position.y])
+		var during := int(_recoveries()) - int(before)
+		_check(result.lowest > _player.global_position.y - CAUGHT_BY_M,
+			"A: the companion is caught before it is 100 m down (lowest %.1f m, trainer at %.1f m)" % [result.lowest, _player.global_position.y])
 		_check(bool(result.recovered),
 			"A: the companion is back on verified ground beside the trainer within %.0f s of falling (%s)" % [RECOVERY_BUDGET_S, result.detail])
-		print("A: recoveries after the 20 s watch: %s" % str(_recoveries()))
-		return
-	_fail("A: on %d road stretches with the station over open air, the follower never walked off" % tried)
+		_check(int(before) >= 0 and during >= 1, "A: the runtime's recovery caught it during the 20 s watch (%d recoveries)" % during)
+		# pending follower_creature.gd grant: until the shared follower stops
+		# walking its station off an edge, a trainer standing still here gets a
+		# recovery every few seconds. Once that grant lands this should become
+		# `during <= 1`; it is printed, not asserted, so this smoke does not
+		# claim a behaviour the lane cannot yet deliver.
+		print("A: recoveries during the 20 s watch: %d (expected <= 1 once the follower_creature.gd edge fix lands)" % during)
+		break
+	_check(walked_off, "A: the follower walks its camera-safe station off the road edge on its own (%d stretch(es) with the station over open air tried)" % tried)
 
 
 ## Leg B. Disclosed fixture: the companion is put over open air beside the road.
@@ -189,9 +223,12 @@ func _dropped_over_open_air() -> void:
 	_check(bool(result.fell), "B: the companion falls from open air (lowest %.1f m)" % result.lowest)
 	_check(bool(result.recovered), "B: recovered to verified ground beside the trainer within %.0f s (%s)" % [RECOVERY_BUDGET_S, result.detail])
 	_check(int(_recoveries()) > int(before), "B: the runtime's companion fall recovery did it (%s -> %s)" % [before, _recoveries()])
-	var gap := Vector2(ally.global_position.x - _player.global_position.x, ally.global_position.z - _player.global_position.z).length()
-	_check(gap >= float(ally.call("body_radius")) + 0.4,
-		"B: the recovered companion is clear of the trainer's capsule (%.2f m centre gap)" % gap)
+	# Measured where the recovery PUT it, not where the follower later walked.
+	var spot: Vector3 = _runtime.call("companion_fall_last_spot") if _runtime.has_method("companion_fall_last_spot") else Vector3.INF
+	var gap := Vector2(spot.x - _player.global_position.x, spot.z - _player.global_position.z).length() if spot.is_finite() else -1.0
+	var needed := float(ally.call("body_radius")) + 0.4
+	_check(gap >= needed,
+		"B: the recovery spot %s clears the trainer's capsule (%.2f m centre gap, capsules need %.2f m)" % [spot, gap, needed])
 
 
 ## Leg C. The steep-shoulder slide stopped some 30 m down, on ground. The
@@ -236,7 +273,8 @@ func _stranded_on_a_lower_ledge() -> void:
 	_check(int(_recoveries()) > int(before), "C: by the runtime's recovery, not by walking (%s -> %s)" % [before, _recoveries()])
 
 
-## Leg D. Following off: combat, riding and the finale pilot own the body then.
+## Leg D, first half. Following off: the fight and the finale pilot own the
+## body then. Fixture: `set_following(false)` is called directly here.
 func _not_following_is_left_alone() -> void:
 	var stand := ROAD_CENTRE
 	stand.y = _floor_y(stand, 6.0)
@@ -249,7 +287,7 @@ func _not_following_is_left_alone() -> void:
 	for i in 480:
 		await physics_frame
 	_check(_recoveries() == before and ally.global_position.y < stand.y - 100.0,
-		"D: a companion that is not following is left to its owning system (recoveries %s -> %s, y %.1f)" % [before, _recoveries(), ally.global_position.y])
+		"D: a companion with following switched off is left alone (recoveries %s -> %s, y %.1f)" % [before, _recoveries(), ally.global_position.y])
 	ally.call("set_following", true)
 	var recovered := false
 	var detail := ""
@@ -262,8 +300,116 @@ func _not_following_is_left_alone() -> void:
 	_check(recovered, "D: following again, it is recovered at once (%s)" % detail)
 
 
-## Leg E. The multiplayer rule: another peer's creature, drawn here by
-## `remote_creature.gd`, answers false to `is_local_deployment()`.
+## Leg D, second half. A real ride through the real prompt: the riding
+## controller owns a mount that drops, and catches it itself.
+func _ridden_mount_is_the_riding_controllers() -> void:
+	if _riding == null:
+		_fail("D: Cloudreach has no RidingController")
+		return
+	var stand := ROAD_CENTRE
+	stand.y = _floor_y(stand, 6.0)
+	await _stand_trainer(stand + Vector3.UP * 0.1)
+	await _walk_to_mount()
+	await _press("interact")
+	for i in 20:
+		await physics_frame
+	var body: CharacterBody3D = _riding.call("mount_body")
+	_check(bool(_riding.call("is_mounted")) and body == _ally(), "D: the ordinary interact press mounts the companion")
+	if body == null:
+		return
+	for i in 90:
+		await physics_frame
+	var before: Variant = _recoveries()
+	var ride_before := int(_riding.get("mounted_fall_recoveries"))
+	var over_air := Vector3(stand.x - 24.0, body.global_position.y + 3.0, stand.z)
+	body.global_position = over_air
+	body.velocity = Vector3.ZERO
+	for i in 240:
+		await physics_frame
+	_check(int(_riding.get("mounted_fall_recoveries")) > ride_before and int(_recoveries()) == int(before),
+		"D: a ridden mount that drops is caught by the riding controller, not by this rule (ride %d -> %d, companion rule %s -> %s)" % [ride_before, int(_riding.get("mounted_fall_recoveries")), before, _recoveries()])
+	await _press("interact")
+	for i in 60:
+		await physics_frame
+	_check(not bool(_riding.call("is_mounted")), "D: interact dismounts again")
+	for i in 60:
+		await physics_frame
+
+
+## Leg F. MEDIUM-3: the capsule test on a slope. Fixture: a 30 m, 30-degree
+## collision slab in the open air beside the road, the trainer teleported onto
+## it, and the companion dropped over open air. Meadowhart's 1.25 m radius
+## would cut into a 30-degree slope if only the centre ray's floor were used.
+func _large_companion_on_a_slope() -> void:
+	var centre := Vector3(ROAD_CENTRE.x - 46.0, ROAD_CENTRE.y, ROAD_CENTRE.z)
+	var clear := true
+	for dx in [-14.0, -7.0, 0.0, 7.0, 14.0]:
+		for dz in [-14.0, 0.0, 14.0]:
+			clear = clear and _void_below(centre + Vector3(dx, 12.0, dz))
+	_check(clear, "F precondition: open air where the slope slab goes")
+	var slab := StaticBody3D.new()
+	slab.name = "CompanionFallFixtureSlope"
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(30.0, 1.0, 30.0)
+	shape.shape = box
+	slab.add_child(shape)
+	_world.add_child(slab)
+	slab.global_transform = Transform3D(Basis(Vector3.FORWARD, deg_to_rad(SLOPE_DEG)), centre)
+	for i in 2:
+		await physics_frame
+	var normal := slab.global_basis.y.normalized()
+	await _stand_trainer(centre + normal * 0.5 + Vector3.UP * 0.3)
+	var ally := _ally()
+	var before: Variant = _recoveries()
+	ally.global_position = Vector3(ROAD_CENTRE.x - 24.0, _player.global_position.y + 3.0, ROAD_CENTRE.z)
+	ally.velocity = Vector3.ZERO
+	var result := await _watch_for_fall_and_recovery(RECOVERY_BUDGET_S + 2.0)
+	var spot: Vector3 = _runtime.call("companion_fall_last_spot") if _runtime.has_method("companion_fall_last_spot") else Vector3.INF
+	_check(int(_recoveries()) > int(before) and bool(result.recovered),
+		"F: a %.2f m-radius companion is recovered onto a %.0f-degree slope beside the trainer (%s; spot %s)" % [float(ally.call("body_radius")), SLOPE_DEG, result.detail, spot])
+	slab.queue_free()
+	for i in 2:
+		await physics_frame
+
+
+func _walk_to_mount() -> void:
+	for frame in 900:
+		_arbiter.call("_recompute")
+		if _arbiter.call("winning_provider") == _riding:
+			break
+		var body: Node3D = _ally()
+		if body == null:
+			break
+		_steer_toward(body.global_position)
+		await physics_frame
+	_release_move()
+	for i in 6:
+		await physics_frame
+
+
+func _steer_toward(target: Vector3) -> void:
+	var offset := target - _player.global_position
+	offset.y = 0.0
+	if offset.length() < 0.05:
+		_release_move()
+		return
+	var local: Vector3 = (_rig.call("planar_basis") as Basis).inverse() * offset.normalized()
+	Input.action_press("move_right", maxf(local.x, 0.0))
+	Input.action_press("move_left", maxf(-local.x, 0.0))
+	Input.action_press("move_back", maxf(local.z, 0.0))
+	Input.action_press("move_forward", maxf(-local.z, 0.0))
+
+
+func _release_move() -> void:
+	for action: String in ["move_left", "move_right", "move_forward", "move_back"]:
+		Input.action_release(action)
+
+
+## Leg E. The multiplayer rule. A real session is not staged here: this is a
+## SYNTHETIC CharacterBody3D that answers `is_local_deployment()` the way a
+## `remote_creature.gd` copy of another peer's creature does (false), then the
+## way this process's own follower does (true).
 func _remote_copy_is_refused() -> void:
 	if not ResourceLoader.exists(HELPER_PATH):
 		_fail("E: the companion fall helper %s does not exist" % HELPER_PATH)
@@ -274,9 +420,9 @@ func _remote_copy_is_refused() -> void:
 	fake.reload()
 	var remote: CharacterBody3D = fake.new()
 	_world.add_child(remote)
-	_check(not bool(helper.call("recoverable", remote)), "E: a remote copy of another peer's creature is never recovered locally")
+	_check(not bool(helper.call("recoverable", remote)), "E: a body answering as another peer's creature (synthetic) is never recovered locally")
 	remote.set("local", true)
-	_check(bool(helper.call("recoverable", remote)), "E: the same body owned here would be")
+	_check(bool(helper.call("recoverable", remote)), "E: the same synthetic body answering as this process's own would be")
 	_check(bool(helper.call("recoverable", _ally())), "E: this process's own deployed follower is recoverable")
 	remote.queue_free()
 
@@ -339,7 +485,7 @@ func _stand_trainer(at: Vector3) -> void:
 	_player.velocity = Vector3.ZERO
 	for i in 45:
 		await physics_frame
-	_check(_player.is_on_floor(), "the trainer stands on the road at %s" % _player.global_position)
+	_check(_player.is_on_floor(), "the trainer stands on ground at %s" % _player.global_position)
 
 
 ## First point walking from the road centre toward the station side that is

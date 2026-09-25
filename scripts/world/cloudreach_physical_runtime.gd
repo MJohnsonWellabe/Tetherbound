@@ -172,13 +172,19 @@ func _physics_process(delta: float) -> void:
 	# F06: the same rule for the trainer's own following companion, which the
 	# shared follower walks off road edges and never re-leashes while it falls
 	# (see `cloudreach_companion_fall.gd`). Only this process's own body.
-	if bool(_companion_fall.call("tick", delta, _player, flying, _player.get_parent())):
+	_companion_fall.call("tick", delta, _player, flying, _player.get_parent())
+	if bool(_companion_fall.call("take_announcement")):
 		_message(COMPANION_FALL.MESSAGE)
 
 
 ## F06 evidence: how many times this realm has caught the companion.
 func companion_fall_recoveries() -> int:
 	return int(_companion_fall.get("recoveries"))
+
+
+## F06 evidence: where the last recovery placed it (INF before any).
+func companion_fall_last_spot() -> Vector3:
+	return _companion_fall.get("last_spot")
 
 
 func _register_flight() -> void:
