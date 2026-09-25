@@ -58,6 +58,8 @@ var _player: CharacterBody3D = null
 var _manager: Node = null
 var _director: Node = null
 var _panel: Node = null
+## Diagnostic: every conversation that finished, with its physics frame.
+var _conversation_log: Array[String] = []
 var _log := QUEST_LOG.new()
 
 var _quick_hits := 0
@@ -177,6 +179,9 @@ func _collect_nodes() -> bool:
 	_manager = _world.get_node_or_null(^"CombatManager")
 	_director = _world.get_node_or_null(^"EncounterDirector")
 	_panel = _world.get_node_or_null(^"DialoguePanel")
+	if _panel != null and _panel.has_signal("finished"):
+		_panel.connect("finished", func(id: String) -> void:
+			_conversation_log.append("%s@%d" % [id, Engine.get_physics_frames()]))
 	if _game == null or _player == null or _manager == null or _director == null or _panel == null:
 		_fail("the scene is missing the Game autoload, the player, the manager, the director or the panel")
 		return false
@@ -693,10 +698,15 @@ func _activate_trainer_prompt(body: Node3D, label: String) -> bool:
 	var owner := INPUT_OWNER.current(self)
 	if label.begins_with("river_nest"):
 		await _capture_activity("doss-prompt-failed")
-	_fail("%s: exact prompt never became actionable at player=%s winner=%s input_owner=%s" % [
+	var runner: RefCounted = _panel.call("runner") as RefCounted if _panel != null else null
+	_fail("%s: exact prompt never became actionable at player=%s winner=%s input_owner=%s open=%s conversation=%s line=%s started=%s" % [
 		label, str(_player.global_position),
 		str((winner as Node).get_path()) if winner is Node else str(winner),
-		str(owner.get_path()) if owner != null else "none"])
+		str(owner.get_path()) if owner != null else "none",
+		str(_panel.call("is_open")) if _panel != null else "?",
+		str(runner.call("conversation_id")) if runner != null else "?",
+		str(runner.call("line")) if runner != null else "?",
+		str(_conversation_log)])
 	return false
 
 
