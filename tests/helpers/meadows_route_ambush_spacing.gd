@@ -70,6 +70,14 @@ static func route() -> Array[Vector2]:
 	return out
 
 
+static func default_wander_radius() -> float:
+	return float(MATH.config().get("wild", {}).get("wander_radius", 7.0))
+
+
+static func notice_range() -> float:
+	return float(CATCH.config().get("aggression", {}).get("notice_range", 14.0))
+
+
 static func path_half_width() -> float:
 	var paths: Dictionary = _json(TERRAIN_PATH).get("paths", {})
 	return float(paths.get("width", 1.4)) * 0.5 + float(paths.get("shoulder", 1.1))
@@ -97,8 +105,12 @@ static func envelope_m(spawn: Dictionary, default_wander: float, notice: float, 
 	return float(spawn.get("radius", 0.0)) + wander + notice + half_width
 
 
-## First chainage at which `road` comes within `reach` of `c`, or -1.
-static func entry_chainage(road: Array[Vector2], c: Vector2, reach: float) -> float:
+## Every chainage at which `road` ENTERS the disc of `reach` around `c`: the
+## start of each separate stretch of road inside the envelope. A spine that
+## leaves an envelope and later comes back into it (a switchback) can be
+## ambushed again, so each re-entry counts as its own ambush point.
+static func entry_chainages(road: Array[Vector2], c: Vector2, reach: float) -> Array[float]:
+	var intervals: Array[Vector2] = []
 	var walked := 0.0
 	for i in road.size() - 1:
 		var a := road[i]
@@ -115,9 +127,21 @@ static func entry_chainage(road: Array[Vector2], c: Vector2, reach: float) -> fl
 			var s0 := maxf(0.0, along - h)
 			var s1 := minf(length, along + h)
 			if s0 <= s1:
-				return walked + s0
+				intervals.append(Vector2(walked + s0, walked + s1))
 		walked += length
-	return -1.0
+	var out: Array[float] = []
+	var open_until := -INF
+	for iv: Vector2 in intervals:
+		if iv.x > open_until + 0.001:
+			out.append(iv.x)
+		open_until = maxf(open_until, iv.y)
+	return out
+
+
+## First chainage at which `road` comes within `reach` of `c`, or -1.
+static func entry_chainage(road: Array[Vector2], c: Vector2, reach: float) -> float:
+	var all := entry_chainages(road, c, reach)
+	return all[0] if not all.is_empty() else -1.0
 
 
 ## Shortest distance from `c` to the route centreline.
@@ -148,8 +172,8 @@ static func measure(world_seed: int, entries: Array = [], cfg: Dictionary = {},
 	var plan: Dictionary = SPAWN_TABLES.plan_for(entries, world_seed, cfg, curve, exceptional)
 	var road := route()
 	var half := path_half_width()
-	var notice := float(CATCH.config().get("aggression", {}).get("notice_range", 14.0))
-	var default_wander := float(MATH.config().get("wild", {}).get("wander_radius", 7.0))
+	var notice := notice_range()
+	var default_wander := default_wander_radius()
 	var ambushes: Array[Dictionary] = []
 	for raw: Variant in entries:
 		var spawn: Dictionary = raw
@@ -163,10 +187,8 @@ static func measure(world_seed: int, entries: Array = [], cfg: Dictionary = {},
 		if centre.size() != 3:
 			continue
 		var c := Vector2(float(centre[0]), float(centre[2]))
-		var at := entry_chainage(road, c, envelope_m(spawn, default_wander, notice, half))
-		if at < 0.0:
-			continue
-		ambushes.append({"order": order, "species": species, "at_m": at})
+		for at: float in entry_chainages(road, c, envelope_m(spawn, default_wander, notice, half)):
+			ambushes.append({"order": order, "species": species, "at_m": at})
 	ambushes.sort_custom(func(x: Dictionary, y: Dictionary) -> bool:
 		return float(x.at_m) < float(y.at_m) or (float(x.at_m) == float(y.at_m) and int(x.order) < int(y.order)))
 	var gaps: Array[float] = []

@@ -142,7 +142,7 @@
       ]
     },
     "meadows_rock_trailside": {
-      "_comment": "F02.4 route spacing. `meadows_rock` minus its aggressive species (galecrest, frostclaw), for the clusters whose notice envelope reaches the earned Band 4/5 road (tests/helpers/meadows_route_ambush_spacing.gd) but that are NOT one of the road's spaced authored ambushes. WORLD \u00a73.1 puts a meaningful beat every 150-250m; a rolled aggressor on one of these on-road clusters lands a forced fight inside that interval, which is how a real S08 walk met four Galecrest in 118s. Same entries, tiers, gates and alpha_chance otherwise, so these clusters keep the ecology their authored species names and still roll; Galecrest still rolls from `meadows_rock` everywhere else and stands in every authored ambush.",
+      "_comment": "F02.4 route spacing. `meadows_rock` minus its aggressive species (galecrest, frostclaw), for the clusters whose notice envelope reaches the earned Band 4/5 road (tests/helpers/meadows_route_ambush_spacing.gd) but that are NOT one of the road's spaced authored ambushes. WORLD \u00a73.1 puts a meaningful beat every 150-250m; a rolled aggressor on one of these on-road clusters lands a forced fight inside that interval, which is how a real S08 walk met four Galecrest in 118s. Same entries, gates and alpha_chance otherwise. _draw rolls against the eligible total, so removing an entry raises every remaining share (see each cluster's `_why_f02_route_spacing`). Galecrest still rolls from `meadows_rock` everywhere else and stands in every authored ambush.",
       "alpha_chance": 0.06,
       "entries": [
         {
@@ -245,7 +245,7 @@
       ]
     },
     "meadows_air_trailside": {
-      "_comment": "F02.4 route spacing. `meadows_air` minus its aggressive species (galecrest), for the clusters whose notice envelope reaches the earned Band 4/5 road (tests/helpers/meadows_route_ambush_spacing.gd) but that are NOT one of the road's spaced authored ambushes. WORLD \u00a73.1 puts a meaningful beat every 150-250m; a rolled aggressor on one of these on-road clusters lands a forced fight inside that interval, which is how a real S08 walk met four Galecrest in 118s. Same entries, tiers, gates and alpha_chance otherwise, so these clusters keep the ecology their authored species names and still roll; Galecrest still rolls from `meadows_air` everywhere else and stands in every authored ambush.",
+      "_comment": "F02.4 route spacing. `meadows_air` minus its aggressive species (galecrest), for the clusters whose notice envelope reaches the earned Band 4/5 road (tests/helpers/meadows_route_ambush_spacing.gd) but that are NOT one of the road's spaced authored ambushes. WORLD \u00a73.1 puts a meaningful beat every 150-250m; a rolled aggressor on one of these on-road clusters lands a forced fight inside that interval, which is how a real S08 walk met four Galecrest in 118s. Same entries, gates and alpha_chance otherwise. _draw rolls against the eligible total, so removing an entry raises every remaining share (see each cluster's `_why_f02_route_spacing`). Galecrest still rolls from `meadows_air` everywhere else and stands in every authored ambush.",
       "alpha_chance": 0.04,
       "entries": [
         {
@@ -255,14 +255,15 @@
         },
         {
           "species": "duskhush",
-          "tier": "common",
+          "tier": "uncommon",
           "regions": [
             "band2_stone_and_root",
             "band3_the_river_lock",
             "band4_upper_meadows_ironwood",
             "band5_stronghold_approach"
           ],
-          "_why": "the nocturnal role's species. Its NIGHT-GATED clusters are anchored, so the role always resolves; this entry is its ordinary daytime presence. Held out of Band 1, which is where the chapter itself put it: OW5D moved Duskhush 'deeper into Band 2's forest' for its closed canopy, and the authored table has no Band 1 Duskhush at all. Ungated it also swelled from 85 individuals to 130-159 across five seeds and became the second most common creature in the chapter (tools/_probe_rolled_population.gd), because the air table is only three species deep and two of them are region-gated."
+          "_why": "the nocturnal role's species. Its NIGHT-GATED clusters are anchored, so the role always resolves; this entry is its ordinary daytime presence. Held out of Band 1, which is where the chapter itself put it: OW5D moved Duskhush 'deeper into Band 2's forest' for its closed canopy, and the authored table has no Band 1 Duskhush at all. Ungated it also swelled from 85 individuals to 130-159 across five seeds and became the second most common creature in the chapter (tools/_probe_rolled_population.gd), because the air table is only three species deep and two of them are region-gated.",
+          "_why_trailside": "F02.4 review: with Galecrest gone, a `common` duskhush would take 1/2 of these Band 4/5 rolls, the swell meadows_air's own `_why` measured and warned against. At `uncommon` it takes 25/125 = 1/5, below the 1/3 it had in meadows_air, and pipwing takes the rest."
         }
       ]
     }

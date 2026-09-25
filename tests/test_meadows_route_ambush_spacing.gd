@@ -12,9 +12,11 @@ extends "res://tests/test_case.gd"
 ## in ~320 m.
 ##
 ## Danger floor, so the fix cannot be "delete the aggressors": the authored
-## world keeps a road-reaching ambush at least every 600 m (A7's 120 s at the
-## 5 m/s walk) and at least one per earned band, and the Hall alpha pack (5001)
-## stays where it was witnessed optional.
+## world AND every rolled world (roll_new_worlds ships true) keep a
+## road-reaching ambush at least every 600 m (A7's 120 s at the 5 m/s walk),
+## at least one in Band 4 and two in Band 5, and the Hall alpha pack (5001)
+## stays where it was witnessed optional. Side loops (wind_ridge_traverse,
+## high_pasture_loop, watchtower_spur) are optional detours and out of scope.
 
 const MODEL := preload("res://tests/helpers/meadows_route_ambush_spacing.gd")
 
@@ -66,18 +68,17 @@ func test_rolled_worlds_respect_route_ambush_spacing() -> void:
 			int(summary.violating_seeds), int(summary.seeds), int(summary.worst_per_300m), int(summary.worst_seed)])
 
 
-func test_authored_danger_is_kept() -> void:
-	var r := MODEL.measure(0)
-	assert_true(int(r.count) >= 8, "seed 0 keeps only %d road ambushes; the danger was removed, not spaced" % int(r.count))
-	var ambushes: Array = r.ambushes
-	var road_m := float(r.route_m)
+## The danger floor for one measured world. Returns "" when it holds.
+func _floor_failure(r: Dictionary) -> String:
+	if int(r.count) < 8:
+		return "only %d road ambushes; the danger was removed, not spaced" % int(r.count)
 	var previous := 0.0
 	var band4 := 0
 	var band5 := 0
 	var hall_alpha := false
-	for a: Dictionary in ambushes:
-		assert_true(float(a.at_m) - previous <= A7_WALK_WINDOW_M,
-			"%.0fm of road before order %d has no aggressive ambush" % [float(a.at_m) - previous, int(a.order)])
+	for a: Dictionary in r.ambushes:
+		if float(a.at_m) - previous > A7_WALK_WINDOW_M:
+			return "%.0fm of road before order %d has no aggressive ambush" % [float(a.at_m) - previous, int(a.order)]
 		previous = float(a.at_m)
 		if float(a.at_m) < BAND5_ENTRY_M:
 			band4 += 1
@@ -85,10 +86,33 @@ func test_authored_danger_is_kept() -> void:
 			band5 += 1
 		if int(a.order) == 5001:
 			hall_alpha = true
-	assert_true(road_m - previous <= A7_WALK_WINDOW_M, "the last %.0fm before the Hall gate is ambush-free" % (road_m - previous))
-	assert_true(band4 >= 1 and band5 >= 2,
-		"each earned band keeps its danger (band4=%d band5=%d); the Hall approach stays harder than the crossing" % [band4, band5])
-	assert_true(hall_alpha, "the Hall alpha pack (5001) still reaches the road it was witnessed optional from")
+	if float(r.route_m) - previous > A7_WALK_WINDOW_M:
+		return "the last %.0fm before the Hall gate is ambush-free" % (float(r.route_m) - previous)
+	if band4 < 1 or band5 < 2:
+		return "band4=%d band5=%d ambushes; the Hall approach must stay harder than the crossing" % [band4, band5]
+	if not hall_alpha:
+		return "the Hall alpha pack (5001) no longer reaches the road"
+	return ""
+
+
+func test_authored_danger_is_kept() -> void:
+	var failure := _floor_failure(MODEL.measure(0))
+	assert_eq(failure, "", "seed 0: " + failure)
+
+
+func test_rolled_worlds_keep_the_danger_floor() -> void:
+	var failing := 0
+	var first := ""
+	var longest := 0.0
+	for r: Dictionary in MODEL.sweep(_rolled_seeds()):
+		longest = maxf(longest, float(r.max_gap_m))
+		var failure := _floor_failure(r)
+		if failure != "":
+			failing += 1
+			if first == "":
+				first = "seed %d: %s" % [int(r.seed), failure]
+	print("[route-ambush] rolled danger floor: longest gap %.0fm, failing seeds %d" % [longest, failing])
+	assert_eq(failing, 0, "%d rolled worlds lose the road's danger floor; first %s" % [failing, first])
 	var pack: Dictionary = {}
 	for raw: Variant in MODEL.merged_spawns():
 		if int((raw as Dictionary).get("order", -1)) == 5001:
@@ -106,6 +130,14 @@ func test_envelope_matches_the_director_inputs() -> void:
 	assert_almost_eq(reach, 32.8, 0.001)
 	assert_almost_eq(MODEL.entry_chainage(road, Vector2(0, 50), reach), 17.2, 0.001)
 	assert_eq(MODEL.entry_chainage(road, Vector2(reach + 1.0, 50), reach), -1.0)
+	# A switchback that leaves the envelope and comes back is two ambushes.
+	var zigzag: Array[Vector2] = [Vector2(0, 0), Vector2(100, 0), Vector2(100, 10), Vector2(0, 10)]
+	assert_eq(MODEL.entry_chainages(zigzag, Vector2(95, 5), 10.0).size(), 1,
+		"one continuous stretch inside the envelope is one ambush")
+	assert_eq(MODEL.entry_chainages(zigzag, Vector2(50, -20), 25.0).size(), 1)
+	var hairpin: Array[Vector2] = [Vector2(0, 0), Vector2(0, 100), Vector2(60, 100), Vector2(60, 0)]
+	assert_eq(MODEL.entry_chainages(hairpin, Vector2(30, 10), 31.0).size(), 2,
+		"a spine that re-enters the same envelope is ambushed twice")
 	assert_almost_eq(MODEL.envelope_m({"radius": 10.0, "wander_radius": 2.0}, 7.0, 14.0, 1.8), 27.8, 0.001)
 
 
@@ -115,7 +147,8 @@ func test_envelope_matches_the_director_inputs() -> void:
 func test_s08_walk_clusters_are_spaced_or_stepped_back() -> void:
 	var road := MODEL.route()
 	var half := MODEL.path_half_width()
-	var notice := float(MODEL.CATCH.config().get("aggression", {}).get("notice_range", 14.0))
+	var notice := MODEL.notice_range()
+	var wander := MODEL.default_wander_radius()
 	var by_order := {}
 	for raw: Variant in MODEL.merged_spawns():
 		by_order[int((raw as Dictionary).get("order", -1))] = raw
@@ -125,7 +158,7 @@ func test_s08_walk_clusters_are_spaced_or_stepped_back() -> void:
 		if spawn.is_empty():
 			continue
 		var c := Vector2(float(spawn.centre[0]), float(spawn.centre[2]))
-		var reach := MODEL.envelope_m(spawn, 7.0, notice, half)
+		var reach := MODEL.envelope_m(spawn, wander, notice, half)
 		print("[route-ambush] S08 cluster %d %s centre=(%.1f,%.1f) road_distance=%.1fm envelope=%.1fm reaches_road=%s table=%s" % [
 			order, str(spawn.species), c.x, c.y, MODEL.distance_to_route(road, c), reach,
 			str(MODEL.entry_chainage(road, c, reach) >= 0.0), str(spawn.get("table", "-"))])
