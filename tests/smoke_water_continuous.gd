@@ -291,6 +291,11 @@ func _run() -> void:
 	if not await _activate_prompt(cave.get("_guardian_prompt"), "freed Abyssal Guardian"):
 		_finish()
 		return
+	# With a free holder the Guardian's offer is the player's own answer: Game
+	# opens the real Creatures tab on its Accept/Decline confirm (F14).
+	if not await _accept_guardian_offer():
+		_finish()
+		return
 	if not await _wait_flag("water_currents_restored", 600):
 		_fail("Guardian settlement did not publish water_currents_restored")
 		_finish()
@@ -589,6 +594,33 @@ func _activate_prompt(prompt: Node3D, label: String) -> bool:
 			await _frames(5)
 			return true
 	return _fail("%s never offered interaction from a physically reached stance" % label)
+
+
+## Answer the free-holder Guardian confirm the way a player does: wait for the
+## Creatures tab to show it, then press ui_accept on the focused Accept button.
+func _accept_guardian_offer() -> bool:
+	var menu: Node = game.menu()
+	var tab: Node = null
+	for index in menu.get("_tabs").size():
+		if str(menu.get("_tabs")[index].id) == "creatures":
+			tab = menu.get("_bodies")[index]
+	if not _check(tab != null, "Game menu has the real Creatures tab"):
+		return false
+	for frame in 600:
+		if menu.is_open() and str(tab.get("_release_stage")) == "guardian":
+			break
+		await physics_frame
+	await _frames(2)
+	if not _check(menu.is_open() and str(tab.get("_release_stage")) == "guardian" and game.pending_catch != null
+			and str(game.pending_catch.species_id) == "water_abyssal_guardian",
+			"With a free holder the Guardian offer opens the Creatures tab Accept/Decline confirm"):
+		return false
+	if not _check(root.gui_get_focus_owner() == tab.get("_guardian_accept"),
+			"Controller focus lands on the Guardian confirm's Accept"):
+		return false
+	await _tap("ui_accept")
+	return _check(str(tab.get("_release_stage")) != "guardian" and game.pending_catch == null,
+		"Pressing Accept answers the Guardian confirm")
 
 
 func _drain_dialogue() -> void:

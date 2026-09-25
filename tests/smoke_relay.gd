@@ -59,6 +59,32 @@ var _opponents_felled := 0
 var _rescue_only := false
 var _activated_id := 0
 
+## F04 evidence, opt-in: `--tell-capture-dir=<absolute dir>` saves each
+## opponent tell at tell start, mid-tell, strike and 0.5 s into recovery, plus a
+## 0.5 s frame sequence (640x360 jpg) of the first 60 s of the fight. While a
+## tell is on screen the pilot stops forcing the camera yaw, so those frames
+## show the ordinary neutral fight camera. Without the flag nothing changes.
+var _tell_capture_dir := ""
+## `--tell-capture-member=<n>` (1-based) captures only from that team member
+## on. Earlier members are fought at Engine.time_scale 4 so a software
+## renderer reaches the member under test inside the timeout. That is NOT the
+## same simulation: Godot scales each physics step's delta, so those members
+## are fought with coarser steps and a slower-reacting pilot. Only the captured
+## member, fought on a fresh body at time_scale 1, is evidence.
+var _tell_capture_member := 1
+var _tells_seen := 0
+var _tell_shots: Array[Dictionary] = []
+var _tell_camera_free_until := -1
+var _tell_hooked: Dictionary = {}
+## Body instance id -> label of its tell still waiting for a strike.
+var _open_tell_label: Dictionary = {}
+var _sequence_started := -1
+var _next_sequence_at := -1
+var _sequence_index := 0
+const TELL_CAPTURE_LIMIT := 12
+const SEQUENCE_EVERY_FRAMES := 30
+const SEQUENCE_FRAMES := 3600
+
 
 func _init() -> void:
 	call_deferred("_run")
@@ -66,6 +92,15 @@ func _init() -> void:
 
 func _run() -> void:
 	_rescue_only = OS.get_cmdline_user_args().has("--rescue-only")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--tell-capture-member="):
+			_tell_capture_member = maxi(1, int(arg.trim_prefix("--tell-capture-member=")))
+		if arg.begins_with("--tell-capture-dir="):
+			_tell_capture_dir = arg.trim_prefix("--tell-capture-dir=")
+			if not _tell_capture_dir.is_absolute_path() or DirAccess.make_dir_recursive_absolute(_tell_capture_dir) != OK:
+				_fail("--tell-capture-dir must be an absolute, creatable directory")
+				_report()
+				return
 	_spec = TRAINERS.trainer(CAPTAIN_ID)
 	if _spec.is_empty():
 		_fail("trainers.json has no trainer '%s'" % CAPTAIN_ID)
@@ -264,6 +299,70 @@ func _stand_in_front_of(who: Node3D, facing_deg: float) -> void:
 	_aim_camera_along(to)
 
 
+## Connects one opponent body's tell signals once, and schedules its shots.
+func _hook_tell_capture(opponent: Node3D) -> void:
+	if _sequence_started < 0:
+		_sequence_started = Engine.get_physics_frames()
+		_next_sequence_at = _sequence_started
+	var key := opponent.get_instance_id()
+	if _tell_hooked.has(key):
+		return
+	_tell_hooked[key] = true
+	var physics_hz := float(ProjectSettings.get_setting("physics/common/physics_ticks_per_second", 60.0))
+	opponent.connect("telegraph_started", func(seconds: float) -> void:
+		if _tells_seen >= TELL_CAPTURE_LIMIT:
+			return
+		_tells_seen += 1
+		var cfg: Dictionary = opponent.call("combat_config") if opponent.has_method("combat_config") else {}
+		var label := "%02d_%s_%s_tell%.2fs" % [_tells_seen, str(opponent.name).replace("TrainerCreature_", ""),
+			str(cfg.get("move_id", "quick")), seconds]
+		var now := Engine.get_physics_frames()
+		var tell_frames := int(ceil(seconds * physics_hz))
+		_tell_camera_free_until = now + tell_frames + int(physics_hz)
+		_tell_shots.append({"at": now + 1, "name": "%s_a_start" % label})
+		_tell_shots.append({"at": now + tell_frames / 2, "name": "%s_b_mid" % label})
+		print("tell capture: %s (telegraph %.2fs, lunge %.1f)" % [label, seconds, float(cfg.get("lunge", 0.0))])
+		_open_tell_label[key] = label
+	)
+	# One strike handler per body, reading the tell it belongs to: a stagger
+	# can cancel a wind-up without a strike, so a per-tell one-shot handler
+	# could fire later under a stale label.
+	opponent.connect("strike_ready", func() -> void:
+		var label := str(_open_tell_label.get(key, ""))
+		if label.is_empty():
+			return
+		_open_tell_label.erase(key)
+		var at := Engine.get_physics_frames()
+		_tell_shots.append({"at": at + 1, "name": "%s_c_strike" % label})
+		_tell_shots.append({"at": at + int(physics_hz * 0.5), "name": "%s_d_recovery" % label})
+	)
+
+
+## Saves every tell shot whose frame has arrived, and the sequence frame.
+func _save_due_tell_shots() -> void:
+	var now := Engine.get_physics_frames()
+	var due: Array[Dictionary] = []
+	for shot: Dictionary in _tell_shots:
+		if int(shot.at) <= now:
+			due.append(shot)
+	var sequence_due := _next_sequence_at >= 0 and now >= _next_sequence_at \
+		and now - _sequence_started <= SEQUENCE_FRAMES
+	if due.is_empty() and not sequence_due:
+		return
+	await RenderingServer.frame_post_draw
+	var image := root.get_viewport().get_texture().get_image()
+	for shot: Dictionary in due:
+		_tell_shots.erase(shot)
+		if image.save_png(_tell_capture_dir.path_join("%s.png" % shot.name)) != OK:
+			_fail("tell capture: could not save %s" % shot.name)
+	if sequence_due:
+		var small := image.duplicate() as Image
+		small.resize(640, 360, Image.INTERPOLATE_BILINEAR)
+		small.save_jpg(_tell_capture_dir.path_join("seq_%04d.jpg" % _sequence_index), 0.8)
+		_sequence_index += 1
+		_next_sequence_at += SEQUENCE_EVERY_FRAMES
+
+
 func _aim_camera_along(direction: Vector3) -> void:
 	_rig.set("yaw", atan2(-direction.x, -direction.z))
 
@@ -390,12 +489,26 @@ func _fight_the_whole_team() -> void:
 		if opponent == null or ally == null:
 			await physics_frame
 			continue
+		if not _tell_capture_dir.is_empty():
+			var capturing := _opponents_felled + 1 >= _tell_capture_member
+			Engine.time_scale = 1.0 if capturing else 4.0
+			if capturing:
+				_hook_tell_capture(opponent)
+				await _save_due_tell_shots()
 		var to := opponent.global_position - ally.global_position
 		to.y = 0.0
-		_aim_camera_along(to)
+		if Engine.get_physics_frames() > _tell_camera_free_until:
+			_aim_camera_along(to)
 		var reach := maxf(float(_manager.call("combat_move_reach", "quick")),
 			float(_manager.call("combat_move_reach", "charged")))
-		if to.length() > reach:
+		# F04-c, capture mode only: while an enemy tell is on screen the pilot
+		# sidesteps instead of pressing into contact, as BOSSES asks of a player
+		# facing a CHARGER, so the enemy's own spacing and lunge can show.
+		if not _tell_capture_dir.is_empty() and Engine.get_physics_frames() <= _tell_camera_free_until:
+			Input.action_press("move_left")
+			await physics_frame
+			Input.action_release("move_left")
+		elif to.length() > reach:
 			Input.action_press("move_forward")
 			await physics_frame
 			Input.action_release("move_forward")
@@ -406,6 +519,7 @@ func _fight_the_whole_team() -> void:
 		else:
 			await physics_frame
 
+	Engine.time_scale = 1.0
 	if frames >= BATTLE_FRAME_LIMIT:
 		_fail("the captain's battle never resolved after %d action frames" % BATTLE_FRAME_LIMIT)
 		return
