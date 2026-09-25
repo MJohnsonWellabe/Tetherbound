@@ -115,20 +115,13 @@ func _receive(event: Dictionary) -> void:
 	if str(event.get("kind", "")) == "warning":
 		if _visuals.has(id) or _received_impacts.has(id):
 			return
-		var ring := MeshInstance3D.new()
-		var mesh := TorusMesh.new()
-		mesh.inner_radius = 2.7
-		mesh.outer_radius = 3.0
-		ring.mesh = mesh
-		var material := StandardMaterial3D.new()
-		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		material.albedo_color = Color("d4b8ff")
-		material.emission_enabled = true
-		material.emission = Color("b49bff")
-		material.emission_energy_multiplier = 4
-		ring.material_override = material
+		var ring := _build_telegraph(event.at)
 		add_child(ring)
 		ring.global_position = event.at
+		var ring_material := ring.material_override as ShaderMaterial
+		var clock := ring.create_tween()
+		clock.tween_method(func(v: float) -> void: ring_material.set_shader_parameter("progress", v),
+			0.0, 1.0, float(rules.config.strike.telegraph_seconds))
 		_visuals[id] = ring
 		# An impact normally frees the ring before this fallback timeout. Bind
 		# only its ID: capturing the Node emits a freed-capture error before a
@@ -143,10 +136,16 @@ func _receive(event: Dictionary) -> void:
 	if _received_impacts.size() > 256:
 		_received_impacts.pop_front()
 	if _visuals.has(id):
-		var ring: Node3D = _visuals[id]
+		var ring: MeshInstance3D = _visuals[id]
 		_visuals.erase(id)
+		# The rim flares white and fades as the bolt lands, then frees.
+		var ring_material := ring.material_override as ShaderMaterial
 		var tween := ring.create_tween()
-		tween.tween_property(ring, "scale", Vector3(1.15, 8, 1.15), 0.12)
+		if ring_material != null:
+			ring_material.set_shader_parameter("strike", 1.0)
+			tween.tween_method(func(v: float) -> void: ring_material.set_shader_parameter("fade", v), 1.0, 0.0, 0.25)
+		else:
+			tween.tween_interval(0.12)
 		tween.tween_callback(ring.queue_free)
 	_strike_flash(event.at)
 	var hits: Dictionary = event.get("hits", {})
@@ -179,33 +178,45 @@ func _receive(event: Dictionary) -> void:
 
 
 ## The visible strike: a brief white-violet bolt and local light where the
-## telegraph stood, plus a full-strength sky flash (ART_DIRECTION §3.3 flash
-## rhythm, §4 white-violet lightning). Values: stormwood_surge.json
-## presentation.flash.strike_*.
+## telegraph stood (ART_DIRECTION §3.3 flash rhythm, §4 white-violet
+## lightning). Both stay at the impact. The whole-sky flash is a separate,
+## gated request: the host broadcasts every impact to every Stormwood peer,
+## including glass-sink strikes that happen in any phase, so the surge node
+## decides how much sky flash a strike this far from the local player earns
+## (full in Break, distance-limited otherwise; see
+## stormwood_surge.gd::sky_flash_for_strike). Values:
+## stormwood_surge.json presentation.flash.strike_*.
+static var _bolt_mesh: CylinderMesh
+static var _bolt_material: StandardMaterial3D
+static var _telegraph_shader: Shader
+
 func _strike_flash(at: Vector3) -> void:
 	var cfg: Dictionary = rules.config.get("presentation", {}).get("flash", {})
 	var colour := Color(str(cfg.get("colour", "#e6dcff")))
 	var seconds := float(cfg.get("strike_bolt_seconds", 0.18))
 	var height := float(cfg.get("strike_bolt_height_m", 45.0))
+	if _bolt_mesh == null:
+		_bolt_mesh = CylinderMesh.new()
+		_bolt_mesh.top_radius = float(cfg.get("strike_bolt_top_radius_m", 0.06))
+		_bolt_mesh.bottom_radius = float(cfg.get("strike_bolt_bottom_radius_m", 0.16))
+		_bolt_mesh.height = height
+		_bolt_mesh.radial_segments = 6
+		_bolt_mesh.rings = 1
+		_bolt_material = StandardMaterial3D.new()
+		_bolt_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_bolt_material.albedo_color = colour
+		_bolt_material.emission_enabled = true
+		_bolt_material.emission = colour
+		_bolt_material.emission_energy_multiplier = float(cfg.get("strike_bolt_emission", 6.0))
 	var bolt := MeshInstance3D.new()
-	var mesh := CylinderMesh.new()
-	mesh.top_radius = 0.06
-	mesh.bottom_radius = 0.16
-	mesh.height = height
-	mesh.radial_segments = 6
-	mesh.rings = 1
-	bolt.mesh = mesh
-	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = colour
-	material.emission_enabled = true
-	material.emission = colour
-	material.emission_energy_multiplier = 6
-	bolt.material_override = material
+	bolt.name = "StrikeBolt"
+	bolt.mesh = _bolt_mesh
+	bolt.material_override = _bolt_material
 	bolt.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(bolt)
 	bolt.global_position = at + Vector3.UP * height * 0.5
 	var light := OmniLight3D.new()
+	light.name = "StrikeLight"
 	light.light_color = colour
 	light.light_energy = float(cfg.get("strike_light_energy", 8.0))
 	light.omni_range = float(cfg.get("strike_light_range_m", 18.0))
@@ -218,8 +229,111 @@ func _strike_flash(at: Vector3) -> void:
 	var fade := bolt.create_tween()
 	fade.tween_interval(seconds)
 	fade.tween_callback(bolt.queue_free)
-	if surge != null and surge.has_method("flash"):
-		surge.call("flash", 1.0)
+	if surge != null and surge.has_method("sky_flash_for_strike"):
+		var strength := float(surge.call("sky_flash_for_strike", at))
+		if strength > 0.0:
+			surge.call("flash", strength)
+
+
+## J1: the 1.2 s warning. A flat ring laid on the ground (every vertex sampled
+## from the terrain, lifted a few cm, so it hugs slopes instead of sitting on
+## them as a tube), drawn unshaded with a bright white-violet rim, a cyan
+## outer edge that softly falls off past the rim, a faint fill that grows as
+## the strike nears, and a pulse that quickens toward impact. The rim sits at
+## exactly strike.radius_m (the 3 m damage contract); the glow beyond it is
+## `edge_falloff_m`. No red: oxblood is Team Tether's.
+const TELEGRAPH_SHADER := """
+shader_type spatial;
+render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
+uniform vec3 rim_colour : source_color = vec3(0.96, 0.93, 1.0);
+uniform vec3 edge_colour : source_color = vec3(0.6, 0.85, 1.0);
+uniform vec3 fill_colour : source_color = vec3(0.72, 0.66, 1.0);
+uniform float rim_fraction = 0.92;
+uniform float rim_width = 0.05;
+uniform float intensity = 2.2;
+uniform float pulse_hz_start = 2.0;
+uniform float pulse_hz_end = 7.0;
+uniform float telegraph_seconds = 1.2;
+uniform float progress = 0.0;
+uniform float strike = 0.0;
+uniform float fade = 1.0;
+void fragment() {
+	float r = UV.x;
+	// Chirp: the pulse rate climbs linearly from start to end over the
+	// telegraph, integrated so the phase never jumps.
+	float t = progress * telegraph_seconds;
+	float phase = pulse_hz_start * t + (pulse_hz_end - pulse_hz_start) * t * t / (2.0 * telegraph_seconds);
+	float pulse = 0.65 + 0.35 * cos(phase * 6.2832);
+	float rim = 1.0 - smoothstep(0.0, rim_width, abs(r - rim_fraction));
+	float outer = r > rim_fraction ? 1.0 - smoothstep(rim_fraction, 1.0, r) : 0.0;
+	float fill = r < rim_fraction ? smoothstep(0.0, rim_fraction, r) * (0.12 + 0.28 * progress) : 0.0;
+	vec3 colour = rim_colour * rim * intensity * mix(pulse, 1.6, strike)
+		+ edge_colour * outer * 0.9 + fill_colour * fill;
+	ALBEDO = colour;
+	ALPHA = clamp(rim * mix(pulse, 1.0, strike) + outer * 0.55 * pulse + fill, 0.0, 1.0) * fade;
+}
+"""
+
+func _telegraph_config() -> Dictionary:
+	return rules.config.get("presentation", {}).get("telegraph", {})
+
+## Rim radius and fill/falloff geometry for a warning at `at`.
+func telegraph_rim_radius() -> float:
+	return float(rules.config.strike.radius_m)
+
+func _build_telegraph(at: Vector3) -> MeshInstance3D:
+	var cfg := _telegraph_config()
+	var rim_r := telegraph_rim_radius()
+	var outer_r := rim_r + float(cfg.get("edge_falloff_m", 0.35))
+	var lift := float(cfg.get("ground_lift_m", 0.07))
+	var segments := int(cfg.get("segments", 48))
+	var radii: Array[float] = [0.0, rim_r * 0.45, rim_r * 0.8, rim_r - 0.12, rim_r, rim_r + 0.12, outer_r]
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var base_y := at.y
+	var sample := world != null and world.has_method("ground_height_near")
+	var points: Array = []
+	for ring_index in radii.size():
+		var row: Array[Vector3] = []
+		for k in segments:
+			var angle := TAU * float(k) / float(segments)
+			var offset := Vector3(cos(angle), 0.0, sin(angle)) * radii[ring_index]
+			var y := base_y
+			if sample:
+				y = float(world.call("ground_height_near", at + offset))
+			row.append(Vector3(offset.x, y - base_y + lift, offset.z))
+		points.append(row)
+	for ring_index in radii.size() - 1:
+		for k in segments:
+			var k2 := (k + 1) % segments
+			var quad: Array[Vector3] = [points[ring_index][k], points[ring_index][k2], points[ring_index + 1][k2], points[ring_index + 1][k]]
+			var rs: Array[float] = [radii[ring_index], radii[ring_index], radii[ring_index + 1], radii[ring_index + 1]]
+			for idx: int in [0, 1, 2, 0, 2, 3]:
+				st.set_uv(Vector2(rs[idx] / outer_r, 0.0))
+				st.set_normal(Vector3.UP)
+				st.add_vertex(quad[idx])
+	var ring := MeshInstance3D.new()
+	ring.name = "StrikeTelegraph"
+	ring.mesh = st.commit()
+	ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	if _telegraph_shader == null:
+		_telegraph_shader = Shader.new()
+		_telegraph_shader.code = TELEGRAPH_SHADER
+	var material := ShaderMaterial.new()
+	material.shader = _telegraph_shader
+	material.set_shader_parameter("rim_colour", Color(str(cfg.get("rim_colour", "#f4eeff"))))
+	material.set_shader_parameter("edge_colour", Color(str(cfg.get("edge_colour", "#9ad8ff"))))
+	material.set_shader_parameter("fill_colour", Color(str(cfg.get("fill_colour", "#b8aaff"))))
+	material.set_shader_parameter("rim_fraction", rim_r / outer_r)
+	material.set_shader_parameter("rim_width", float(cfg.get("rim_width_m", 0.14)) / outer_r)
+	material.set_shader_parameter("intensity", float(cfg.get("rim_intensity", 2.2)))
+	material.set_shader_parameter("pulse_hz_start", float(cfg.get("pulse_hz_start", 2.0)))
+	material.set_shader_parameter("pulse_hz_end", float(cfg.get("pulse_hz_end", 7.0)))
+	material.set_shader_parameter("telegraph_seconds", float(rules.config.strike.telegraph_seconds))
+	ring.material_override = material
+	ring.set_meta("rim_radius_m", rim_r)
+	ring.set_meta("telegraph_seconds", float(rules.config.strike.telegraph_seconds))
+	return ring
 
 
 func _expire_warning(id: int) -> void:

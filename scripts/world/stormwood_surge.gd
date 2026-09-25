@@ -24,7 +24,7 @@ shader_type spatial;
 render_mode unshaded, cull_front, depth_draw_never, fog_disabled, shadows_disabled;
 uniform vec3 ceiling_colour : source_color = vec3(0.4);
 uniform float opacity = 0.0;
-uniform float speed = 0.01;
+uniform float cloud_time = 0.0;
 uniform float contrast = 0.3;
 uniform float breakup = 0.0;
 uniform float flash = 0.0;
@@ -48,7 +48,9 @@ void vertex() { dir = normalize(VERTEX); }
 void fragment() {
 	float up = clamp(dir.y, 0.0, 1.0);
 	vec2 uv = dir.xz / (up + 0.18) * 1.4;
-	float t = mod(TIME, 2000.0) * speed;
+	// cloud_time is accumulated by the script (speed x delta), so speed
+	// changes cross-fade smoothly and there is no periodic wrap jump.
+	float t = cloud_time;
 	float n = fbm(uv + vec2(t, t * 0.35));
 	float m = fbm(uv * 2.2 - vec2(t * 1.6, t * 0.2));
 	float body = clamp(n * 0.75 + m * 0.35, 0.0, 1.0);
@@ -62,7 +64,6 @@ void fragment() {
 	ALPHA = opacity * smoothstep(0.0, 0.07, dir.y) * mix(0.88, 1.0, body) * gaps;
 }
 """
-const CEILING_RADIUS := 2400.0
 
 var rules := RULES.new()
 var world: Node3D
@@ -77,14 +78,19 @@ var _aftermath := false
 var _ceiling: MeshInstance3D
 var _ceiling_material: ShaderMaterial
 var _flash_light: DirectionalLight3D
-## Cross-fade between presentations: `_from` is what was on screen when the
-## target changed, `_blend` runs 0..1 over `transition_seconds`.
+## Cross-fade between presentations. `_to` is the target row as authored
+## (daylight colours); `_from` is the FINAL on-screen values (already night
+## scaled) captured when the target changed; `_blend` runs 0..1 over
+## `transition_seconds`. See _current().
 var _from: Dictionary = {}
 var _to: Dictionary = {}
 var _blend := 1.0
 var _reapply_left := 0.0
 var _last_night_scale := -1.0
+var _last_base: Dictionary = {"night_scale": 1.0}
 var _dirty := true
+var _cloud_time := 0.0
+var _rain_far: GPUParticles3D
 var _flash := 0.0
 var _flash_next := 0.0
 var _flash_echo := -1.0
@@ -194,11 +200,14 @@ func charged_nodes_open_at(at: Vector3) -> bool:
 func presentation_key() -> String:
 	return ("aftermath:" if _aftermath else "") + phase
 
+func _pres_cfg() -> Dictionary:
+	return rules.config.get("presentation", {})
+
 ## One phase's presentation row: `presentation.phases[phase]`, with
 ## `presentation.aftermath[phase]` merged over it once the Long Storm has
 ## ended. `shadow_opacity` stays in its own authored block.
 func presentation_for(for_phase: String, aftermath: bool = false) -> Dictionary:
-	var block: Dictionary = rules.config.get("presentation", {})
+	var block := _pres_cfg()
 	var row: Dictionary = (block.get("phases", {}).get(for_phase, {}) as Dictionary).duplicate(true)
 	if aftermath:
 		var over: Dictionary = block.get("aftermath", {}).get(for_phase, {})
@@ -207,34 +216,57 @@ func presentation_for(for_phase: String, aftermath: bool = false) -> Dictionary:
 	row["shadow_opacity"] = float(block.get("shadow_opacity", {}).get(for_phase, 1.0))
 	return row
 
-## The WorldLook weather delta for a phase. Sky and fog colours are the
-## authored daylight values scaled by `night_scale` (1.0 by day), so a storm
-## sky never glows brighter than the night it replaces. A row with no
+## The WorldLook weather delta for a phase against a time-of-day `base` (as
+## _base_look() returns it; the default is plain daylight). A row with no
 ## `sky_top` (the aftermath's Calm) leaves the art.json sky untouched.
-func light_delta_for_phase(for_phase: String, aftermath: bool = false, night_scale: float = 1.0) -> Dictionary:
-	return _delta_from(_resolved(presentation_for(for_phase, aftermath)), night_scale)
+func light_delta_for_phase(for_phase: String, aftermath: bool = false, base: Dictionary = {}) -> Dictionary:
+	var b := base if not base.is_empty() else {"night_scale": 1.0}
+	return _delta_from(_final(_resolved(presentation_for(for_phase, aftermath)), b))
 
+const _COLOUR_KEYS := ["ambient_colour", "sky_top", "sky_horizon", "sky_ground_horizon", "ceiling_colour"]
+const _NUMBER_KEYS := ["sun_energy_mult", "shadow_opacity", "ambient_energy_mult", "fog_density_add",
+	"ceiling_opacity", "ceiling_speed", "ceiling_contrast", "ceiling_breakup", "rain_amount"]
+
+## Authored row → typed values, still in authored (daylight) colours.
 func _resolved(row: Dictionary) -> Dictionary:
-	var out := {
-		"sun_energy_mult": float(row.get("sun_energy_mult", 1.0)),
-		"shadow_opacity": float(row.get("shadow_opacity", 1.0)),
-		"ambient_energy_mult": float(row.get("ambient_energy_mult", 1.0)),
-		"fog_density_add": float(row.get("fog_density_add", 0.0)),
-		"ceiling_opacity": float(row.get("ceiling_opacity", 0.0)),
-		"ceiling_speed": float(row.get("ceiling_speed", 0.0)),
-		"ceiling_contrast": float(row.get("ceiling_contrast", 0.3)),
-		"ceiling_breakup": float(row.get("ceiling_breakup", 0.0)),
-		"rain_visible": bool(row.get("rain_visible", false)),
-		"rain_amount": float(row.get("rain_amount", 0.0)),
-		"flashes": bool(row.get("flashes", false)),
-		"storm_sky": row.get("sky_top") != null,
-	}
-	for key: String in ["ambient_colour", "sky_top", "sky_horizon", "sky_ground_horizon", "ceiling_colour"]:
+	var defaults := {"sun_energy_mult": 1.0, "shadow_opacity": 1.0, "ambient_energy_mult": 1.0,
+		"ceiling_contrast": 0.3}
+	var out := {}
+	for key: String in _NUMBER_KEYS:
+		out[key] = float(row.get(key, defaults.get(key, 0.0)))
+	out["rain_visible"] = bool(row.get("rain_visible", false))
+	out["flashes"] = bool(row.get("flashes", false))
+	for key: String in _COLOUR_KEYS:
 		if row.has(key) and row[key] != null:
 			out[key] = Color(str(row[key]))
 	return out
 
-func _delta_from(p: Dictionary, night_scale: float) -> Dictionary:
+## Authored colours → on-screen colours for this time of day. Applied ONCE,
+## to authored storm colours only, before any cross-fade, so a fade that
+## passes through the native (base) sky never scales that base a second time.
+##
+## - sky_* and ceiling: × night_scale (the live sky top's luminance over the
+##   day preset's), so a daylight storm sky never glows over the night.
+## - ambient: the storm hue at no more than the native ambient's value for
+##   this hour. A storm never adds fill light over clear weather, so night
+##   ground ambient never rises above art.json's own (SYSTEMS §9: no blanket
+##   night brightening; art.json: the sky sits above the land in value).
+func _final(p: Dictionary, base: Dictionary) -> Dictionary:
+	var out := p.duplicate()
+	var k := clampf(float(base.get("night_scale", 1.0)), 0.0, 1.0)
+	for key: String in ["sky_top", "sky_horizon", "sky_ground_horizon", "ceiling_colour"]:
+		if out.has(key):
+			var c: Color = out[key]
+			out[key] = Color(c.r * k, c.g * k, c.b * k)
+	if out.has("ambient_colour") and base.has("ambient_colour"):
+		var storm: Color = out.ambient_colour
+		var native: Color = base.ambient_colour
+		var dim := minf(1.0, native.get_luminance() / maxf(0.001, storm.get_luminance()))
+		out["ambient_colour"] = Color(storm.r * dim, storm.g * dim, storm.b * dim)
+	return out
+
+## WorldLook delta from on-screen values. No scaling happens here.
+func _delta_from(p: Dictionary) -> Dictionary:
 	var delta := {
 		"sun": {"energy_mult": p.sun_energy_mult, "shadow_opacity": p.shadow_opacity},
 		"environment": {
@@ -245,11 +277,10 @@ func _delta_from(p: Dictionary, night_scale: float) -> Dictionary:
 	if p.has("ambient_colour"):
 		delta.environment["ambient_colour"] = "#" + (p.ambient_colour as Color).to_html(false)
 	if p.has("sky_top"):
-		var k := clampf(night_scale, 0.0, 1.0)
 		var sky := {}
 		for pair: Array in [["sky_top", "top_colour"], ["sky_horizon", "horizon_colour"], ["sky_ground_horizon", "ground_horizon_colour"]]:
 			if p.has(pair[0]):
-				sky[pair[1]] = "#" + ((p[pair[0]] as Color) * k).to_html(false)
+				sky[pair[1]] = "#" + (p[pair[0]] as Color).to_html(false)
 		delta["sky"] = sky
 		# art.json's CRITICAL rule: with fog_sky_affect 0, fog must equal the
 		# horizon colour or distant terrain seams against the sky.
@@ -257,31 +288,32 @@ func _delta_from(p: Dictionary, night_scale: float) -> Dictionary:
 			delta.environment["fog_colour"] = sky.horizon_colour
 	return delta
 
-## Blend two resolved rows. A colour present on only one side (the storm sky
-## against the aftermath's untouched sky) cross-fades through `base`.
+## Blend two on-screen rows. A colour present on only one side (the storm sky
+## against the aftermath's untouched sky) cross-fades through the native
+## `base` colour, which is already on-screen and is not scaled again.
 func _mix(a: Dictionary, b: Dictionary, t: float, base: Dictionary) -> Dictionary:
 	if t >= 1.0:
 		return b
 	var out := {}
-	for key: String in ["sun_energy_mult", "shadow_opacity", "ambient_energy_mult", "fog_density_add", "ceiling_opacity", "ceiling_speed", "ceiling_contrast", "ceiling_breakup", "rain_amount"]:
+	for key: String in _NUMBER_KEYS:
 		out[key] = lerpf(float(a.get(key, 0.0)), float(b.get(key, 0.0)), t)
-	out["rain_visible"] = bool(a.rain_visible) or bool(b.rain_visible)
-	out["flashes"] = bool(b.flashes)
-	out["storm_sky"] = bool(a.storm_sky) or bool(b.storm_sky)
-	for key: String in ["ambient_colour", "sky_top", "sky_horizon", "sky_ground_horizon", "ceiling_colour"]:
+	out["rain_visible"] = bool(a.get("rain_visible", false)) or bool(b.get("rain_visible", false))
+	out["flashes"] = bool(b.get("flashes", false))
+	for key: String in _COLOUR_KEYS:
 		if not a.has(key) and not b.has(key):
 			continue
 		var ca: Color = a.get(key, base.get(key, b.get(key, Color.GRAY)))
 		var cb: Color = b.get(key, base.get(key, a.get(key, Color.GRAY)))
 		out[key] = ca.lerp(cb, t)
-	if not out.has("ceiling_colour"):
-		out["ceiling_colour"] = Color.GRAY
 	return out
 
-## The current time-of-day sky/ambient from WorldLook, used both as the
-## fade-through colour and to derive `night_scale`: the live sky top's
-## luminance over the day preset's, so storm colours authored for daylight
-## dim with dusk and night instead of lighting the dark.
+## What is on screen now for `base`.
+func _current(base: Dictionary) -> Dictionary:
+	var target := _final(_to, base)
+	return target if _blend >= 1.0 else _mix(_from, target, _blend, base)
+
+## The current time-of-day sky/ambient from WorldLook (read-only), used as
+## the fade-through colour and to derive `night_scale`.
 func _base_look() -> Dictionary:
 	var look := world.get_node_or_null("WorldLook") if world != null else null
 	if look == null:
@@ -290,13 +322,18 @@ func _base_look() -> Dictionary:
 	var cycle: Variant = look.get("_cycle")
 	if not config is Dictionary or (config as Dictionary).is_empty() or cycle == null:
 		return {"night_scale": 1.0}
-	var now: Dictionary = WORLD_LOOK.blended_config_at(config, cycle, float(look.call("hour")))
+	return base_look_at(config, cycle, float(look.call("hour")))
+
+## `_base_look()` for an explicit art config, day cycle and hour (tests use
+## the real art.json and day_cycle.gd at night/dusk/dawn hours).
+func base_look_at(config: Dictionary, cycle: RefCounted, hour: float) -> Dictionary:
+	var now: Dictionary = WORLD_LOOK.blended_config_at(config, cycle, hour)
 	var day_sky: Dictionary = WORLD_LOOK._merged_from(config, "sky", WORLD_LOOK._preset_over(config, "day"))
 	var sky_now: Dictionary = now.get("sky", {})
 	var env_now: Dictionary = now.get("environment", {})
 	var top_now := _colour(sky_now.get("top_colour"), "#3b6f93")
 	var top_day := _colour(day_sky.get("top_colour"), "#3b6f93")
-	var floor_scale := float(rules.config.get("presentation", {}).get("night_scale_floor", 0.12))
+	var floor_scale := float(_pres_cfg().get("night_scale_floor", 0.12))
 	return {
 		"night_scale": clampf(top_now.get_luminance() / maxf(0.001, top_day.get_luminance()), floor_scale, 1.0),
 		"sky_top": top_now,
@@ -315,12 +352,12 @@ static func _colour(value: Variant, fallback: String) -> Color:
 func _begin_transition() -> void:
 	var target := _resolved(presentation_for(phase, _aftermath))
 	if _to.is_empty():
-		_from = target
+		_to = target
 		_blend = 1.0
 	else:
-		_from = _mix(_from, _to, _blend, _base_look())
+		_from = _current(_last_base)
+		_to = target
 		_blend = 0.0
-	_to = target
 	_reapply_left = 0.0
 	_dirty = true
 
@@ -328,46 +365,48 @@ func _begin_transition() -> void:
 ## tests; also what a first frame after a scene load does anyway).
 func settle_presentation() -> void:
 	_to = _resolved(presentation_for(phase, _aftermath))
-	_from = _to
 	_blend = 1.0
 	_last_phase = presentation_key()
+	_last_night_scale = -1.0
 	_apply_current(true)
 
 func _advance_presentation(delta: float) -> void:
 	if _to.is_empty():
 		return
-	var seconds := float(rules.config.get("presentation", {}).get("transition_seconds", 6.0))
+	var cfg := _pres_cfg()
+	var seconds := float(cfg.get("transition_seconds", 6.0))
 	var blending := _blend < 1.0
 	if blending:
 		_blend = minf(1.0, _blend + delta / maxf(0.01, seconds))
 		_dirty = true
+	var shown := _current(_last_base)
+	_cloud_time += delta * float(shown.get("ceiling_speed", 0.0))
 	_reapply_left -= delta
 	if _reapply_left > 0.0:
-		_update_ceiling(_mix(_from, _to, _blend, {}))
+		_update_ceiling(shown)
 		return
-	# The WorldLook layer re-merges its whole look per call, so it is paced:
-	# every 0.2 s while fading, every 2 s otherwise (to follow the day clock).
-	_reapply_left = 0.2 if blending else 2.0
+	# The WorldLook layer re-merges its whole look per call, so it is paced.
+	_reapply_left = float(cfg.get("reapply_fading_seconds", 0.2)) if blending else float(cfg.get("reapply_steady_seconds", 2.0))
 	_apply_current(_dirty)
 
 func _apply_current(force: bool) -> void:
 	var base := _base_look()
+	_last_base = base
 	var scale := float(base.night_scale)
-	var current := _mix(_from, _to, _blend, base)
-	_update_ceiling(current, scale)
+	var current := _current(base)
+	_update_ceiling(current)
 	if not force and absf(scale - _last_night_scale) < 0.01:
 		return
 	_last_night_scale = scale
 	_dirty = false
 	var look := world.get_node_or_null("WorldLook") if world != null else null
 	if look != null:
-		look.call("set_weather", _delta_from(current, scale))
+		look.call("set_weather", _delta_from(current))
 	_update_rain(current)
 
 ## Apply the current phase immediately (kept for existing callers/tests).
 func _apply_phase_light() -> void:
 	_to = _resolved(presentation_for(phase, _aftermath))
-	_from = _to
 	_blend = 1.0
 	_last_night_scale = -1.0
 	_apply_current(true)
@@ -380,43 +419,76 @@ func _update_rain(p: Dictionary) -> void:
 	_rain.visible = bool(p.rain_visible) and float(p.rain_amount) > 0.0
 	_rain.emitting = _rain.visible
 	_rain.amount_ratio = clampf(float(p.rain_amount), 0.0, 1.0)
+	if _rain_far != null:
+		_rain_far.emitting = _rain.visible
+		_rain_far.amount_ratio = _rain.amount_ratio
 
 ## Stormwood's rain is heavier than the Meadows preset it shares a builder
-## with: the streak size and tint of this realm's own emitter come from
-## presentation.rain (world_weather.gd's constants stay the Meadows look).
+## with. Streak size, tint and per-drop variation (J3: size and alpha
+## randomness) of this realm's own emitter come from presentation.rain, plus
+## a cheap second, farther and fainter layer so streaks are not one uniform
+## length and depth. world_weather.gd's constants stay the Meadows look.
 func _style_rain() -> void:
-	var cfg: Dictionary = rules.config.get("presentation", {}).get("rain", {})
+	var cfg: Dictionary = _pres_cfg().get("rain", {})
 	if _rain == null or cfg.is_empty():
 		return
+	_style_emitter(_rain, cfg)
+	var far: Dictionary = cfg.get("far_layer", {})
+	if not far.is_empty():
+		_rain_far = _build_rain()
+		_rain_far.name = "RainFar"
+		var merged := cfg.duplicate()
+		for key: String in far:
+			merged[key] = far[key]
+		_style_emitter(_rain_far, merged)
+		var ring := _rain_far.process_material as ParticleProcessMaterial
+		if ring != null:
+			ring.emission_ring_inner_radius = float(far.get("inner_radius_m", 13.0))
+			ring.emission_ring_radius = float(far.get("outer_radius_m", 26.0))
+			var reach := ring.emission_ring_radius + 1.0
+			_rain_far.visibility_aabb = AABB(Vector3(-reach, -RAIN_RING_HEIGHT * 0.5 - 1.0, -reach),
+				Vector3(reach, RAIN_RING_HEIGHT + 2.0, reach) * 2.0)
+		_rain_far.visible = true
+		_rain.add_child(_rain_far)
+
+func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 	var colour := Color(str(cfg.get("colour", "#c0ccd6")))
 	colour.a = float(cfg.get("alpha", 0.4))
-	var streak := _rain.draw_pass_1 as BoxMesh
+	var streak := emitter.draw_pass_1 as BoxMesh
 	if streak != null:
 		var width := float(cfg.get("streak_width_m", 0.015))
 		streak.size = Vector3(width, float(cfg.get("streak_length_m", 0.4)), width)
 		var material := streak.material as StandardMaterial3D
 		if material != null:
-			material.albedo_color = colour
-	var process := _rain.process_material as ParticleProcessMaterial
+			# Tint and alpha come from the particle colour alone, so the
+			# per-drop alpha ramp below is not multiplied twice.
+			material.albedo_color = Color.WHITE
+	var process := emitter.process_material as ParticleProcessMaterial
 	if process != null:
 		process.color = colour
-	_rain.amount = int(cfg.get("max_drops", _rain.amount))
+		process.scale_min = float(cfg.get("scale_min", 0.85))
+		process.scale_max = float(cfg.get("scale_max", 1.0))
+		var gradient := Gradient.new()
+		gradient.set_color(0, Color(1, 1, 1, float(cfg.get("alpha_min_fraction", 1.0))))
+		gradient.set_color(1, Color.WHITE)
+		var ramp := GradientTexture1D.new()
+		ramp.gradient = gradient
+		process.color_initial_ramp = ramp
+	emitter.amount = int(cfg.get("max_drops", emitter.amount))
 
-func _update_ceiling(p: Dictionary, night_scale: float = -1.0) -> void:
+func _update_ceiling(p: Dictionary) -> void:
 	if _ceiling_material == null:
 		return
-	var scale := night_scale if night_scale >= 0.0 else maxf(0.0, _last_night_scale)
-	if night_scale < 0.0 and _last_night_scale < 0.0:
-		scale = 1.0
-	var colour: Color = p.get("ceiling_colour", Color.GRAY)
-	_ceiling_material.set_shader_parameter("ceiling_colour", colour * scale)
+	var colour: Color = p.get("ceiling_colour", _last_base.get("ceiling_colour", Color.GRAY))
+	_ceiling_material.set_shader_parameter("ceiling_colour", colour)
 	_ceiling_material.set_shader_parameter("opacity", float(p.get("ceiling_opacity", 0.0)))
-	_ceiling_material.set_shader_parameter("speed", float(p.get("ceiling_speed", 0.0)))
+	_ceiling_material.set_shader_parameter("cloud_time", _cloud_time)
 	_ceiling_material.set_shader_parameter("contrast", float(p.get("ceiling_contrast", 0.3)))
 	_ceiling_material.set_shader_parameter("breakup", float(p.get("ceiling_breakup", 0.0)))
 	_ceiling.visible = float(p.get("ceiling_opacity", 0.0)) > 0.001
 
 func _build_ceiling() -> void:
+	var cfg: Dictionary = _pres_cfg().get("ceiling", {})
 	var shader := Shader.new()
 	shader.code = CEILING_SHADER
 	_ceiling_material = ShaderMaterial.new()
@@ -424,11 +496,12 @@ func _build_ceiling() -> void:
 	# Drawn before every other transparent (rain, telegraph rings), so it
 	# can never be blended over something nearer.
 	_ceiling_material.render_priority = Material.RENDER_PRIORITY_MIN
-	var flash: Dictionary = rules.config.get("presentation", {}).get("flash", {})
+	var flash: Dictionary = _pres_cfg().get("flash", {})
 	_ceiling_material.set_shader_parameter("flash_colour", Color(str(flash.get("colour", "#e6dcff"))))
+	var radius := float(cfg.get("radius_m", 2400.0))
 	var dome := SphereMesh.new()
-	dome.radius = CEILING_RADIUS
-	dome.height = CEILING_RADIUS
+	dome.radius = radius
+	dome.height = radius
 	dome.is_hemisphere = true
 	dome.radial_segments = 32
 	dome.rings = 12
@@ -442,13 +515,14 @@ func _build_ceiling() -> void:
 	add_child(_ceiling)
 
 func _build_flash_light() -> void:
-	var flash: Dictionary = rules.config.get("presentation", {}).get("flash", {})
+	var flash: Dictionary = _pres_cfg().get("flash", {})
+	var angle: Array = flash.get("light_rotation_deg", [-72.0, 30.0])
 	_flash_light = DirectionalLight3D.new()
 	_flash_light.name = "StormFlash"
 	_flash_light.light_color = Color(str(flash.get("colour", "#e6dcff")))
 	_flash_light.light_energy = 0.0
 	_flash_light.shadow_enabled = false
-	_flash_light.rotation_degrees = Vector3(-72.0, 30.0, 0.0)
+	_flash_light.rotation_degrees = Vector3(float(angle[0]), float(angle[1]), 0.0)
 	_flash_light.visible = false
 	add_child(_flash_light)
 
@@ -467,13 +541,29 @@ func _follow_player() -> void:
 func flash_level() -> float:
 	return _flash
 
-## A white-violet sky flash. Break schedules its own distant ones; a real
-## strike impact (stormwood_lightning.gd) calls this at full strength.
+## A white-violet sky flash of `strength` 0..1.
 func flash(strength: float = 1.0) -> void:
 	_flash = maxf(_flash, clampf(strength, 0.0, 1.0))
 
+## B1: how much whole-sky flash a strike impact at `at` earns for THIS peer.
+## The host broadcasts every impact to every Stormwood peer, and glass-sink
+## strikes happen in any phase, so an impact alone must not flash the sky:
+## - the local presentation is Break (it `flashes`): full strength;
+## - otherwise: fades linearly with distance from the local player to zero
+##   at `presentation.flash.strike_sky_range_m`, so only a strike you are
+##   standing near lights your sky.
+func sky_flash_for_strike(at: Vector3) -> float:
+	if not _to.is_empty() and bool(_to.get("flashes", false)):
+		return 1.0
+	var range_m := float(_pres_cfg().get("flash", {}).get("strike_sky_range_m", 40.0))
+	var player := world.get_node_or_null("Player") as Node3D if world != null else null
+	if player == null or range_m <= 0.0:
+		return 0.0
+	var from := player.global_position if player.is_inside_tree() else player.position
+	return clampf(1.0 - from.distance_to(at) / range_m, 0.0, 1.0)
+
 func _advance_flash(delta: float) -> void:
-	var cfg: Dictionary = rules.config.get("presentation", {}).get("flash", {})
+	var cfg: Dictionary = _pres_cfg().get("flash", {})
 	var active := not _to.is_empty() and bool(_to.get("flashes", false)) and _blend >= 1.0
 	if active:
 		_flash_next -= delta
@@ -487,7 +577,7 @@ func _advance_flash(delta: float) -> void:
 	if _flash_echo >= 0.0:
 		_flash_echo -= delta
 		if _flash_echo < 0.0:
-			flash(0.8)
+			flash(float(cfg.get("double_strength", 0.8)))
 	if _flash > 0.0:
 		_flash = maxf(0.0, _flash - delta / maxf(0.01, float(cfg.get("decay_seconds", 0.35))))
 	if _flash_light != null:

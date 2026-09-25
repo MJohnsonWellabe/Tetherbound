@@ -9,12 +9,13 @@ extends "res://tools/catalogue_survey.gd"
 ##     --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_stormwood_surge_phases.gd -- \
 ##     --out=res://ralph/reports/STORMWOOD-PROGRESS/visual/surge/after \
-##     [--label=after] [--only=strips,motion,aftermath | --only=views | --only=quick] \
+##     [--label=after] [--only=strips,night,motion,aftermath | --only=views | --only=quick] \
 ##     [--motion-out=/abs/scratch/dir] [--motion-phases=calm,break] \
 ##     [--strip-phases=break,fading] [--coarse-steps=30]
 ##
 ## Groups: strips (6 frames 5 s apart per phase, 640x360, plus a full-size
-## Break telegraph and flash), motion (62 frames 0.5 s apart per phase to a
+## Break telegraph and flash), night (one frame per phase at the night
+## preset), motion (62 frames 0.5 s apart per phase to a
 ## scratch dir for a contact sheet; delete afterwards), aftermath (the
 ## Long Storm aftermath at the strip, rod-line and Deepwood stands). Explicit
 ## only: views (rod-line pylon and Deepwood matrix stands in Calm, Break and
@@ -119,6 +120,8 @@ func _run() -> void:
 		await _strips()
 	if _want("motion"):
 		await _motion()
+	if _want("night"):
+		await _night()
 	if _only.has("views"):
 		await _views(false)
 	# Last: the aftermath flag cannot be unset within one run.
@@ -152,12 +155,16 @@ func _done() -> void:
 # ---------------------------------------------------------------- staging
 
 func _pin_day() -> void:
+	_pin_clock("day")
+
+
+func _pin_clock(time_name: String) -> void:
 	if _look.has_method("set_clock_frozen"):
 		_look.call("set_clock_frozen", false)
-	_look.call("apply_time", "day")
+	_look.call("apply_time", time_name)
 	if _look.has_method("set_clock_frozen"):
 		_look.call("set_clock_frozen", true)
-	_note("day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)")
+	_note("%s clock pinned (WorldLook.apply_time('%s') + set_clock_frozen)" % [time_name, time_name])
 
 
 func _coarse() -> void:
@@ -408,6 +415,19 @@ func _break_events(start: float) -> void:
 	else:
 		_frames.append({"id": "surge_break_flash", "missing": "this build has no flash hook (before)"})
 	_coarse()
+
+
+## One frame per phase at the strip stand with the clock pinned to art.json's
+## `night` preset (hour 23), then back to day.
+func _night() -> void:
+	_pin_clock("night")
+	for phase: String in PHASES:
+		await _enter_phase(phase, false)
+		for _frame in 20:
+			await physics_frame
+		_heal()
+		await _capture("night_%s" % phase, "%s at night (art.json night preset, hour 23)" % phase.capitalize(), false)
+	_pin_day()
 
 
 ## Tuning pass only (--only=quick): one settled frame per phase.
