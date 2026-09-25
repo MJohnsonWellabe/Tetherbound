@@ -78,7 +78,7 @@
       ]
     },
     "grunt": {
-      "coins": 65,
+      "coins": 80,
       "items": [
         {
           "id": "potion_large",
@@ -87,7 +87,7 @@
       ]
     },
     "mentor": {
-      "coins": 60,
+      "coins": 75,
       "items": [
         {
           "id": "revive",
@@ -109,7 +109,7 @@
       ]
     },
     "elite": {
-      "coins": 110,
+      "coins": 120,
       "items": [
         {
           "id": "revive",
