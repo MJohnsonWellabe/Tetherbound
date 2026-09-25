@@ -1,0 +1,114 @@
+extends SceneTree
+
+## F05 WO8: one approach-trunk pylon's fall, seen SIDE-ON (perpendicular to
+## its baked fall azimuth in data/config/meadow_healing.json pylons.falls),
+## through the production camera rig with the HUD on, the clock held at 13:00.
+## Disclosed staging: the main chain up to the Warden is set directly, then
+## `legendary_freed` is set directly with the player standing at the vantage.
+
+const SCENE := "res://scenes/world/meadows_playground.tscn"
+const KEY := "ApproachConduits/Pylon_13"
+const HOLD_CLOCK_S := 325.0
+
+var _out := "user://f05_pylon_side"
+var _world: Node3D
+var _game: Node
+var _player: CharacterBody3D
+var _rig: Node3D
+var _look: Node = null
+
+
+func _process(_delta: float) -> bool:
+	if _look != null and is_instance_valid(_look):
+		_look.set("_elapsed_seconds", HOLD_CLOCK_S)
+	return false
+
+
+func _init() -> void:
+	_run.call_deferred()
+
+
+func _run() -> void:
+	var args := OS.get_cmdline_user_args()
+	if args.size() > 0:
+		_out = args[0]
+	DirAccess.make_dir_recursive_absolute(_out)
+	await process_frame
+	RenderingServer.render_loop_enabled = false
+	_game = root.get_node(^"Game")
+	var party: RefCounted = _game.get("party")
+	party.call("clear")
+	for species: String in ["terrapup", "mudsnout", "bramblebun", "brooktail"]:
+		party.call("add", _game.call("make_creature", species, species.capitalize()))
+	var chain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/progression/objectives.json"))
+	for entry: Dictionary in chain.get("main", []):
+		var id := str(entry.get("flag_id", ""))
+		if id == "legendary_freed":
+			break
+		_game.get("progression").call("set_flag", id)
+	_world = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(_world)
+	current_scene = _world
+	for i in 120:
+		await process_frame
+	_player = _world.get_node(^"Player") as CharacterBody3D
+	_rig = get_first_node_in_group("camera_rig") as Node3D
+	for node: Node in _world.find_children("*", "", true, false):
+		if node.has_method("elapsed_seconds") and "_elapsed_seconds" in node:
+			_look = node
+			break
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/meadow_healing.json"))
+	var azimuth := float((config["pylons"]["falls"] as Dictionary)[KEY])
+	var pylon := _world.get_node(NodePath(KEY)) as MeshInstance3D
+	var base := pylon.global_position
+	var height := pylon.mesh.get_aabb().size.y if pylon.mesh != null else 10.0
+	var fall := Vector2(sin(deg_to_rad(azimuth)), cos(deg_to_rad(azimuth)))
+	var side := float(OS.get_environment("F05_SIDE") if OS.get_environment("F05_SIDE") != "" else "1")
+	var perp := Vector2(fall.y, -fall.x) * side
+	var mid := Vector2(base.x, base.z) + fall * height * 0.45
+	var dist := float(OS.get_environment("F05_DIST") if OS.get_environment("F05_DIST") != "" else "20")
+	var stand := mid + perp * dist
+	var look := Vector3(mid.x, base.y + height * 0.35, mid.y)
+	print("pylon %s base %s height %.1f azimuth %.1f; stand %s" % [KEY, str(base), height, azimuth, str(stand)])
+	await _place(stand, look)
+	await _grab("p00-before")
+	_game.get("progression").call("set_flag", "legendary_freed")
+	for i in 360:
+		await process_frame
+	for k in 24:
+		for i in 9:
+			await process_frame
+		await _grab("p%02d-f%03d" % [k + 1, 360 + (k + 1) * 9])
+	for s in 4:
+		for i in 60:
+			await process_frame
+		await _grab("p%02d-t%02ds" % [25 + s, 11 + s])
+	print("done")
+	quit(0)
+
+
+func _place(flat: Vector2, target: Vector3) -> void:
+	var y := float(_world.call("ground_height_at", flat.x, flat.y))
+	var at := Vector3(flat.x, y, flat.y)
+	_player.global_position = at + Vector3(0.0, 0.3, 0.0)
+	_player.velocity = Vector3.ZERO
+	var dir := target - at
+	dir.y = 0.0
+	_player.rotation.y = atan2(dir.x, dir.z)
+	if _rig != null:
+		_rig.set("yaw", wrapf(atan2(-dir.x, -dir.z), -PI, PI))
+		_rig.set("pitch", deg_to_rad(-6.0))
+	for i in 24:
+		await process_frame
+
+
+func _grab(name: String) -> void:
+	RenderingServer.force_draw(false)
+	root.get_texture().get_image().save_png("%s/%s.png" % [_out, name])
+	var dust := _world.find_children("PylonDust", "CPUParticles3D", true, false)
+	var near := ""
+	for d: Node in dust:
+		var at := (d as Node3D).global_position
+		if Vector2(at.x, at.z).distance_to(Vector2(-10.3, 7469.6)) < 15.0:
+			near = " near: %s emitting=%s" % [str(at), str((d as CPUParticles3D).emitting)]
+	print("shot -> %s  [dust bursts alive: %d%s]" % [name, dust.size(), near])

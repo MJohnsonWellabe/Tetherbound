@@ -1,0 +1,169 @@
+extends SceneTree
+
+## F05 WO8 visual evidence: "the land heals", through the PRODUCTION player
+## camera rig with the HUD on. Nothing hidden, nothing touched up.
+##
+##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
+##     --resolution 1280x720 --script <this file> -- <out_dir>
+##
+## Disclosed staging: the earned main chain up to the Warden is set directly
+## (as in capture_finale.gd); then `legendary_freed` is set directly while the
+## player stands on the Hall approach, instead of pulling the lever in the
+## chamber -- so the heal is seen happening where it happens. The player is
+## placed at each vantage and the rig's yaw set behind them.
+
+const SCENE := "res://scenes/world/meadows_playground.tscn"
+const SETTLE := 120
+const SHOT_FRAMES := 24
+
+# Close over the strongest baked scars (terrain_playground.json drains):
+# quarry_conduit_head (0.85), approach_run_6 (0.9), stronghold_works (1.0).
+const QUARRY_AT := Vector2(392.0, 1822.0)
+const QUARRY_LOOK := Vector3(404.0, 0.0, 1804.0)
+const APPROACH_AT := Vector2(-24.0, 7478.0)
+const APPROACH_LOOK := Vector3(-8.0, 0.0, 7505.0)
+const WORKS_AT := Vector2(-14.0, 7518.0)
+const WORKS_LOOK := Vector3(0.0, 0.0, 7560.0)
+## Every frame is taken at this one hour: the day clock is pinned, so a
+## before and an after differ only by the event (blind verdict: the fast
+## clock put every before at 08:20 and every after at 14:15).
+## 325 s of the 600 s day = 13:00 (DayNightCycle.hour_at).
+const HOLD_CLOCK_S := 325.0
+const HIGHFIELD_AT := Vector2(400.0, 5832.0)
+const HIGHFIELD_LOOK := Vector3(383.0, 0.0, 5857.0)
+
+var _out := "user://f05_heal_shots"
+var _world: Node3D
+var _game: Node
+var _player: CharacterBody3D
+var _rig: Node3D
+var _look: Node = null
+
+
+func _process(_delta: float) -> bool:
+	if _look != null and is_instance_valid(_look):
+		_look.set("_elapsed_seconds", HOLD_CLOCK_S)
+	return false
+
+
+func _init() -> void:
+	_run.call_deferred()
+
+
+func _run() -> void:
+	var args := OS.get_cmdline_user_args()
+	if args.size() > 0:
+		_out = args[0]
+	DirAccess.make_dir_recursive_absolute(_out)
+	await process_frame
+	RenderingServer.render_loop_enabled = false
+	_game = root.get_node(^"Game")
+	var party: RefCounted = _game.get("party")
+	party.call("clear")
+	for species: String in ["terrapup", "mudsnout", "bramblebun", "brooktail"]:
+		party.call("add", _game.call("make_creature", species, species.capitalize()))
+	var chain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/progression/objectives.json"))
+	for entry: Dictionary in chain.get("main", []):
+		var id := str(entry.get("flag_id", ""))
+		if id == "legendary_freed":
+			break
+		_game.get("progression").call("set_flag", id)
+	_world = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(_world)
+	current_scene = _world
+	for i in SETTLE:
+		await process_frame
+	_player = _world.get_node(^"Player") as CharacterBody3D
+	_rig = get_first_node_in_group("camera_rig") as Node3D
+	for node: Node in _world.find_children("*", "", true, false):
+		if node.has_method("elapsed_seconds") and "_elapsed_seconds" in node:
+			_look = node
+			break
+	print("day clock held by: %s" % (str(_look.get_path()) if _look != null else "NOTHING"))
+
+	# BEFORE, the three places the heal is seen.
+	await _shot("h01-quarry-before", QUARRY_AT, QUARRY_LOOK)
+	await _shot("h02-highfield-before", HIGHFIELD_AT, HIGHFIELD_LOOK)
+	await _shot("h03-approach-before", APPROACH_AT, APPROACH_LOOK)
+	await _shot("h08-works-before", WORKS_AT, WORKS_LOOK)
+
+	# The freeing lands while the player stands ~14 m from the approach trunk
+	# pylon nearest the Hall approach vantage, facing it: frames through the
+	# 2 s fall (every 20 frames for 4 s), then one per second to 30 s.
+	var pylon := _nearest_pylon(Vector3(APPROACH_AT.x, 0.0, APPROACH_AT.y))
+	var p_at := Vector2(APPROACH_AT.x, APPROACH_AT.y)
+	var p_look := APPROACH_LOOK
+	if pylon != null:
+		var base := pylon.global_position
+		var away := Vector2(APPROACH_AT.x - base.x, APPROACH_AT.y - base.z)
+		away = away.normalized() if away.length() > 0.1 else Vector2(0.0, -1.0)
+		# Turned off the straight line from the approach vantage: a trunk
+		# stood in front of it there (round 3).
+		p_at = Vector2(base.x, base.z) + away.rotated(deg_to_rad(float(OS.get_environment("F05_PYLON_TURN") if OS.get_environment("F05_PYLON_TURN") != "" else "55"))) * 18.0
+		p_look = Vector3(base.x, base.y + 3.0, base.z)
+		print("pylon vantage: %s at %s" % [str(pylon.get_path()), str(base)])
+	await _shot("h10-pylon-before", p_at, p_look)
+	_game.get("progression").call("set_flag", "legendary_freed")
+	print("freed at the pylon vantage")
+	for k in 20:
+		for i in 30:
+			await process_frame
+		await _grab("h1%02d-pylon-f%03d" % [k + 1, (k + 1) * 30])
+	for second in range(10, 30):
+		for i in 60:
+			await process_frame
+		await _grab("h1%02d-pylon-t%02ds" % [second + 11, second + 1])
+	var healing := _world.get_node_or_null(^"MeadowHealing")
+	if healing != null and healing.has_method("report"):
+		print("heal report: %s" % str(healing.call("report")))
+
+	# AFTER.
+	await _shot("h04-approach-after", APPROACH_AT, APPROACH_LOOK)
+	await _shot("h09-works-after", WORKS_AT, WORKS_LOOK)
+	await _shot("h05-quarry-after", QUARRY_AT, QUARRY_LOOK)
+	await _shot("h06-highfield-after", HIGHFIELD_AT, HIGHFIELD_LOOK)
+	await _shot("h07-highfield-herd-close", Vector2(372.0, 5838.0), Vector3(380.0, 0.0, 5858.0))
+	print("done: %s" % ProjectSettings.globalize_path(_out))
+	quit(0)
+
+
+func _shot(name: String, flat: Vector2, target: Vector3) -> void:
+	var y := float(_world.call("ground_height_at", flat.x, flat.y))
+	var t := target
+	if t.y == 0.0:
+		t.y = float(_world.call("ground_height_at", t.x, t.z))
+	var at := Vector3(flat.x, y, flat.y)
+	_player.global_position = at + Vector3(0.0, 0.3, 0.0)
+	_player.velocity = Vector3.ZERO
+	var dir := t - at
+	dir.y = 0.0
+	if dir.length() > 0.01:
+		_player.rotation.y = atan2(dir.x, dir.z)
+		if _rig != null:
+			_rig.set("yaw", wrapf(atan2(-dir.x, -dir.z), -PI, PI))
+			_rig.set("pitch", deg_to_rad(-8.0))
+	for i in SHOT_FRAMES:
+		await process_frame
+	await _grab(name)
+
+
+func _grab(name: String) -> void:
+	var path := "%s/%s.png" % [_out, name]
+	RenderingServer.force_draw(false)
+	root.get_texture().get_image().save_png(path)
+	print("shot -> %s" % path)
+
+
+func _nearest_pylon(near: Vector3) -> Node3D:
+	var best: Node3D = null
+	var best_d := INF
+	for node: Node in _world.find_children("Pylon_*", "MeshInstance3D", true, false):
+		var n := node as Node3D
+		var holder := str(n.get_parent().name)
+		if not (holder.begins_with("ApproachConduits") or holder.begins_with("Conduits_") or holder == "TetherConduits"):
+			continue
+		var d := Vector2(n.global_position.x - near.x, n.global_position.z - near.z).length()
+		if d < best_d:
+			best_d = d
+			best = n
+	return best
