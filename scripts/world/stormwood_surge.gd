@@ -258,6 +258,14 @@ func _final(p: Dictionary, base: Dictionary) -> Dictionary:
 		if out.has(key):
 			var c: Color = out[key]
 			out[key] = Color(c.r * k, c.g * k, c.b * k)
+	# Night readability (ART_DIRECTION: night keeps the trainer and route
+	# readable) is art.json's night tuning; a storm neither lifts nor sinks
+	# it, so the phase's ambient-energy cut releases toward 1.0 as night
+	# falls (squared, so it holds through dusk).
+	var floor_k := float(_pres_cfg().get("night_scale_floor", 0.12))
+	var day_t := clampf((k - floor_k) / maxf(0.001, 1.0 - floor_k), 0.0, 1.0)
+	out["ambient_energy_mult"] = lerpf(1.0, float(out.get("ambient_energy_mult", 1.0)), day_t * day_t)
+	out["night_scale"] = k
 	if out.has("ambient_colour") and base.has("ambient_colour"):
 		var storm: Color = out.ambient_colour
 		var native: Color = base.ambient_colour
@@ -299,6 +307,7 @@ func _mix(a: Dictionary, b: Dictionary, t: float, base: Dictionary) -> Dictionar
 		out[key] = lerpf(float(a.get(key, 0.0)), float(b.get(key, 0.0)), t)
 	out["rain_visible"] = bool(a.get("rain_visible", false)) or bool(b.get("rain_visible", false))
 	out["flashes"] = bool(b.get("flashes", false))
+	out["night_scale"] = float(b.get("night_scale", a.get("night_scale", 1.0)))
 	for key: String in _COLOUR_KEYS:
 		if not a.has(key) and not b.has(key):
 			continue
@@ -422,6 +431,23 @@ func _update_rain(p: Dictionary) -> void:
 	if _rain_far != null:
 		_rain_far.emitting = _rain.visible
 		_rain_far.amount_ratio = _rain.amount_ratio
+	# The streaks are unshaded, so they would glow on a dark night: their
+	# tint follows the night factor down to presentation.rain.night_floor.
+	var cfg: Dictionary = _pres_cfg().get("rain", {})
+	var shade := maxf(float(cfg.get("night_floor", 0.3)), float(p.get("night_scale", 1.0)))
+	_tint_emitter(_rain, cfg, shade)
+	if _rain_far != null:
+		var far_cfg := cfg.duplicate()
+		for key: String in cfg.get("far_layer", {}):
+			far_cfg[key] = cfg.far_layer[key]
+		_tint_emitter(_rain_far, far_cfg, shade)
+
+func _tint_emitter(emitter: GPUParticles3D, cfg: Dictionary, shade: float) -> void:
+	var process := emitter.process_material as ParticleProcessMaterial
+	if process == null or cfg.is_empty():
+		return
+	var colour := Color(str(cfg.get("colour", "#c0ccd6")))
+	process.color = Color(colour.r * shade, colour.g * shade, colour.b * shade, float(cfg.get("alpha", 0.4)))
 
 ## Stormwood's rain is heavier than the Meadows preset it shares a builder
 ## with. Streak size, tint and per-drop variation (J3: size and alpha

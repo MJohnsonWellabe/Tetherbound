@@ -188,6 +188,8 @@ func test_storm_ambient_never_brightens_the_night() -> void:
 		assert_true(ambient.get_luminance() <= native.get_luminance() + 0.01,
 			"%s night ambient %.3f above native night %.3f" % [phase, ambient.get_luminance(), native.get_luminance()])
 		assert_true(float(delta.environment.ambient_energy_mult) <= 1.0, "%s: no ambient energy boost" % phase)
+		assert_true(float(delta.environment.ambient_energy_mult) >= 0.9,
+			"%s: at night the storm does not sink art.json's night readability either" % phase)
 		var day_base := _real_base(surge, 8.0)
 		var day := Color(str(surge.light_delta_for_phase(phase, false, day_base).environment.ambient_colour))
 		var authored := Color(str(rows[phase].ambient_colour))
@@ -228,6 +230,11 @@ func test_rain_streaks_vary_and_have_a_far_layer() -> void:
 	var process := surge._rain.process_material as ParticleProcessMaterial
 	assert_true(process.scale_max - process.scale_min >= 0.5, "drop size must vary")
 	assert_true(process.color_initial_ramp != null, "per-drop alpha ramp")
+	# Unshaded streaks dim with the night instead of glowing on it.
+	var day_colour := process.color
+	surge.call("_update_rain", {"rain_visible": true, "rain_amount": 1.0, "night_scale": 0.12})
+	assert_true(process.color.get_luminance() < day_colour.get_luminance() * 0.5, "rain tint dims at night")
+	assert_almost_eq(process.color.a, day_colour.a, 0.001, "alpha is unchanged; only the tint dims")
 	var ramp := (process.color_initial_ramp as GradientTexture1D).gradient
 	assert_almost_eq(ramp.get_color(0).a, float(cfg.alpha_min_fraction), 0.001)
 	var far: GPUParticles3D = surge._rain_far
