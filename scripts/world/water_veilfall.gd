@@ -21,6 +21,16 @@ var _last_flags_revision := -1
 var _guardian: Node3D
 var _crystal: Node3D
 var _guardian_prompt: Node3D
+## Explicit refusal (WORLD §2.3 "Refusal completes the chapter"). Two presses:
+## the first shows the consequence and arms, the second within the window
+## commits. UX rule: the consequence is shown before a personal commitment.
+var _decline_prompt: Node3D
+var _decline_armed_until_msec := 0
+const DECLINE_LABEL := "Decline the Deep Watcher"
+const DECLINE_CONFIRM_LABEL := "Confirm: decline the Deep Watcher"
+const DECLINE_CONFIRM_WINDOW_MSEC := 8000
+const DECLINE_CONSEQUENCE := "Declining is final for this character in this world: the Deep Watcher will not join your team and will not be offered to you here again. Tidewake's currents are restored either way. Press again to decline, or walk away to keep deciding."
+const DECLINE_DONE := "You declined the Deep Watcher. It remains free, and Tidewake's currents are restored."
 var exterior_presentation: Node3D
 
 func build(realm: Node3D) -> void:
@@ -198,20 +208,69 @@ func _build_guardian() -> void:
 	_guardian.collision_mask = 0
 	_guardian.set_physics_process(false)
 	_guardian_prompt = _prompt(interior, "Invite the Deep Watcher", _v(rules.guardian_freed_position) + Vector3(0, 1.4, -2.5), request_guardian_offer)
+	_decline_prompt = _prompt(interior, DECLINE_LABEL, _v(rules.guardian_freed_position) + Vector3(2.5, 1.4, -2.5), request_guardian_decline)
+
+## Chamber refusal. First press: consequence only, nothing is sent. Second
+## press inside the window: refuse this character's own offer through the
+## durable claim service when the claim is here, else through the host intent.
+func request_guardian_decline() -> void:
+	var now := Time.get_ticks_msec()
+	if now > _decline_armed_until_msec:
+		_decline_armed_until_msec = now + DECLINE_CONFIRM_WINDOW_MSEC
+		_decline_prompt.label = DECLINE_CONFIRM_LABEL
+		_game.push_world_message(DECLINE_CONSEQUENCE)
+		return
+	_disarm_decline()
+	var reward := preload("res://scripts/world/water_guardian_reward.gd")
+	var claims: Node = _game.ledger.get_node_or_null("WaterCaptureClaims")
+	var result: Dictionary
+	if claims != null and not str(claims.call("pending_guardian_id")).is_empty():
+		result = claims.call("decline_pending")
+	else:
+		if claims != null:
+			# A claim still in flight to this peer must be refused, not shown.
+			claims.call("mark_declined", reward.claim_id(reward.world_instance(_game.world), str(_game.local.character_id)))
+		result = _transport.submit({"kind": "guardian_decline"})
+	if result.get("ok", false):
+		_game.push_world_message(DECLINE_DONE)
+	elif not result.get("pending", false):
+		_game.push_world_message(str(result.get("reason", "The Guardian is not ready.")))
+
+func decline_armed() -> bool:
+	return Time.get_ticks_msec() <= _decline_armed_until_msec
+
+func _disarm_decline() -> void:
+	_decline_armed_until_msec = 0
+	if _decline_prompt != null:
+		_decline_prompt.label = DECLINE_LABEL
+
+func _host_guardian_decline(actor: Dictionary) -> Dictionary:
+	if not _near_ceremony(actor):
+		return {"ok": false, "reason": "Stand beside the freed Guardian to give your answer."}
+	var result: Dictionary = preload("res://scripts/world/water_guardian_reward.gd").refuse(_game, _game.ledger.ledger, str(actor.get("character_id", "")))
+	if result.get("ok", false) and result.has("delta") and not (result.delta.ops as Array).is_empty():
+		_game.ledger.publish_journaled_delta(result.delta)
+	return result
+
+func _near_ceremony(actor: Dictionary) -> bool:
+	var position: Vector3 = actor.get("position", Vector3.INF)
+	var radius := float(rules.interact_radius_m)
+	var nearby := position.distance_to(_guardian_prompt.global_position) <= radius \
+		or (_decline_prompt != null and position.distance_to(_decline_prompt.global_position) <= radius)
+	var chapter := world.get_node_or_null("WaterChapter")
+	if chapter != null:
+		var edda: Node3D = chapter.npc_bodies.get("water_edda")
+		nearby = nearby or (edda != null and position.distance_to(edda.global_position) <= 5.0)
+	return str(actor.get("realm", "")) == "water" and nearby
 
 func request_guardian_offer() -> void:
+	_disarm_decline()
 	var result: Dictionary = _transport.submit({"kind": "guardian_offer"})
 	if not result.get("ok", false) and not result.get("pending", false):
 		_game.push_world_message(str(result.get("reason", "The Guardian is not ready.")))
 
 func _host_guardian_offer(actor: Dictionary) -> Dictionary:
-	var position: Vector3 = actor.get("position", Vector3.INF)
-	var nearby := position.distance_to(_guardian_prompt.global_position) <= float(rules.interact_radius_m)
-	var chapter := world.get_node_or_null("WaterChapter")
-	if chapter != null:
-		var edda: Node3D = chapter.npc_bodies.get("water_edda")
-		nearby = nearby or (edda != null and position.distance_to(edda.global_position) <= 5.0)
-	if str(actor.get("realm", "")) != "water" or not nearby:
+	if not _near_ceremony(actor):
 		return {"ok": false, "reason": "Stand beside the freed Guardian or speak with Edda."}
 	var creature: RefCounted = preload("res://scripts/world/trainer_npc.gd").creature_for({"species": str(rules.guardian_species_id), "level": int(rules.guardian_level)})
 	var result: Dictionary = preload("res://scripts/world/water_guardian_reward.gd").begin(_game, _game.ledger.ledger, str(actor.get("character_id", "")), creature)
@@ -266,6 +325,8 @@ func _activate(id: String) -> void:
 func host_commit(intent: Dictionary, _peer: int, actor: Dictionary) -> Dictionary:
 	if _game.is_host() and str(intent.get("kind", "")) == "guardian_offer":
 		return _host_guardian_offer(actor)
+	if _game.is_host() and str(intent.get("kind", "")) == "guardian_decline":
+		return _host_guardian_decline(actor)
 	if not _game.is_host() or str(intent.get("kind", "")) != "veilfall_control":
 		return {"ok": false, "reason": "The realm authority cannot perform that action."}
 	var id := str(intent.get("control_id", ""))
@@ -328,9 +389,16 @@ func _refresh() -> void:
 	_entry_prompt.enabled = not world.simulation_only and not inside
 	_exit_prompt.enabled = inside
 	if _guardian_prompt != null:
-		# Per-participant offers: the prompt stays open for this character until
-		# it has its own offer. The host still refuses non-participants.
-		_guardian_prompt.enabled = inside and _game.world.flags.has("water_guardian_freed") and not _local_offered()
+		# Per-participant offers: the prompt is shown only to a character that
+		# can still answer (a participant without its own offer yet), never as
+		# an always-failing prompt to a non-participant. The host still decides.
+		var freed_here: bool = inside and _game.world.flags.has("water_guardian_freed")
+		_guardian_prompt.enabled = freed_here and _local_may_answer()
+		if _decline_prompt != null:
+			var can_decline: bool = freed_here and (_local_may_answer() or _local_pending_guardian())
+			_decline_prompt.enabled = can_decline
+			if not can_decline or (_decline_armed_until_msec > 0 and not decline_armed()):
+				_disarm_decline()
 	for control: Dictionary in rules.controls:
 		_controls[str(control.id)].enabled = inside and not _game.world.flags.has(str(control.flag))
 	if _last_flags_revision == int(_game.world.flags.revision):
@@ -340,20 +408,22 @@ func _refresh() -> void:
 		var freed: bool = _game.world.flags.has("water_guardian_freed")
 		_guardian.position = _v(rules.guardian_freed_position if freed else rules.guardian_position)
 		_crystal.visible = not freed
-		# Hidden once the world settled AND this character answered its own
-		# offer, so an owned Guardian is never duplicated in the chamber while a
-		# friend who has not answered yet still sees the volunteer.
-		_guardian.visible = not (_game.world.flags.has("water_guardian_settled") and _local_offered())
+		# Hidden once the world settled AND this character has nothing left to
+		# answer, so an owned Guardian is never duplicated in the chamber while a
+		# participant who has not answered yet still sees the volunteer.
+		_guardian.visible = not (_game.world.flags.has("water_guardian_settled") and not _local_may_answer())
 	for flag: String in _gates:
 		var gate: StaticBody3D = _gates[flag]
 		var opened: bool = _game.world.flags.has(flag)
 		gate.visible = not opened
 		gate.collision_layer = 0 if opened else 1
 
-func _local_offered() -> bool:
-	var local: Variant = _game.get("local")
-	var character := str(local.character_id) if local != null else ""
-	return preload("res://scripts/world/water_guardian_reward.gd").has_been_offered(_game.world, character)
+func _local_may_answer() -> bool:
+	return preload("res://scripts/world/water_guardian_reward.gd").local_may_answer(_game)
+
+func _local_pending_guardian() -> bool:
+	var claims: Node = _game.ledger.get_node_or_null("WaterCaptureClaims") if _game.get("ledger") != null else null
+	return claims != null and not str(claims.call("pending_guardian_id")).is_empty()
 
 func _box(parent: Node3D, at: Vector3, size: Vector3, colour: Color, collision: bool) -> void:
 	var mesh := MeshInstance3D.new()

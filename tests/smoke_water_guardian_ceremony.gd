@@ -51,7 +51,18 @@ func _run() -> void:
 	if not check(not prompt.interaction_offer(player.global_position).is_empty(), "Nearby freed Guardian offers actual companionship interaction"):
 		_finish()
 		return
+	# Explicit refusal route: the first press shows the consequence and commits
+	# nothing; inviting afterwards disarms it.
+	var decline: Node3D = cave.get("_decline_prompt")
+	check(decline != null and decline.enabled, "Chamber offers an explicit Decline the Deep Watcher interaction")
+	game.take_pending_world_message()
+	cave.request_guardian_decline()
+	check(game.take_pending_world_message() == cave.DECLINE_CONSEQUENCE, "Decline shows its consequence before any commitment")
+	check(cave.decline_armed() and str(decline.label).begins_with("Confirm"), "First decline press arms a confirmation")
+	check(not game.world.flags.has(preload("res://scripts/world/water_guardian_reward.gd").offered_flag(game.local.character_id))
+		and not game.world.flags.has("water_guardian_settled"), "Consequence step commits nothing")
 	prompt.interaction_activate()
+	check(not cave.decline_armed(), "Inviting disarms a pending decline confirmation")
 	deadline = Time.get_ticks_msec() + 10000
 	while game.pending_catch == null and Time.get_ticks_msec() < deadline:
 		await process_frame
@@ -62,7 +73,8 @@ func _run() -> void:
 	var claim_id := str(pending.get_meta("water_capture_claim", ""))
 	check(not claim_id.is_empty() and game.world.water_capture_claims.has(claim_id), "Guardian claim waits on host before roster choice")
 	var reward := preload("res://scripts/world/water_guardian_reward.gd")
-	check(claim_id == reward.claim_id(game.world.world_id, game.local.character_id), "Solo offer is bound to this character's own per-participant claim id")
+	check(claim_id == reward.claim_id(reward.world_instance(game.world), game.local.character_id), "Solo offer is bound to this character's own per-participant claim id")
+	check(str(game.world.water_capture_claims[claim_id].get("world_instance", "")) == reward.world_instance(game.world), "Claim names its world instance, not only the slot locator")
 	check(game.world.flags.has(reward.offered_flag(game.local.character_id)), "Host journals this character's once-only offer marker")
 	await _frames(2)
 	check(not prompt.enabled, "Guardian prompt closes for a character that already holds its offer")
@@ -102,6 +114,23 @@ func _run() -> void:
 	check(game.realm_hearts.is_earned("water", game.progression) and
 		not game.realm_hearts.is_placed("water", game.progression),
 		"Earned Tideglass Compass waits for the Meadows home circle")
+	# Second host character (solo world: the host's local character is the one
+	# participant) answers through the real chamber refusal route.
+	game.local.character_id = "guardian-ceremony-decliner"
+	player.global_position = prompt.global_position + Vector3(0, -1.3, -1.8)
+	await _frames(4)
+	for i in 4: await process_frame
+	var decline_prompt: Node3D = cave.get("_decline_prompt")
+	check(decline_prompt.enabled and prompt.enabled, "A character that has not answered sees invite and decline")
+	var party_before: int = game.local.party.size()
+	cave.request_guardian_decline()
+	cave.request_guardian_decline()
+	var decliner_flag: String = reward.offered_flag(game.local.character_id)
+	check(game.world.flags.has(decliner_flag), "Confirmed decline journals this character's answer through the host")
+	check(game.local.party.size() == party_before and game.pending_catch == null, "Decline grants no creature")
+	check(game.save_system.get("_worlds").read(game.world.world_id).get("flags", {}).get("flags", []).has(decliner_flag), "Decline answer is in the world journal")
+	for i in 4: await process_frame
+	check(not decline_prompt.enabled and not prompt.enabled, "Answered character no longer sees the ceremony prompts")
 	_finish()
 
 func _offer_at(world: Node3D, player: Node3D, prompt: Node3D) -> bool:

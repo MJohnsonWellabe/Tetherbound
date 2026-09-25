@@ -853,7 +853,7 @@
       "lines": [
         "The Deep Watcher is free. If you invite it into your team, the five-creature limit still applies.",
         {
-          "text": "Consider the companions already beside you. The ceremony lets you decide; declining does not undo the freedom you won.",
+          "text": "Consider the companions already beside you. The ceremony lets you decide. If you would rather not, decline beside the Guardian: that answer is final for you in this world, and it does not undo the freedom you won.",
           "effect": "water:water_guardian_offer_requested"
         }
       ]

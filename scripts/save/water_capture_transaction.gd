@@ -9,13 +9,16 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 	if game == null or game.local == null or game.world == null:
 		return {"ok": false, "reason": "Capture owner is unavailable."}
 	var id: Variant = claim.get("id", "")
-	if not id is String or id.is_empty() or str(claim.get("character_id", "")) != str(game.local.character_id) or str(claim.get("world_id", "")) != str(game.world.world_id):
+	# A Guardian claim also names its world INSTANCE: two hosts' "slot-0"
+	# worlds are different worlds (water_guardian_reward.gd header).
+	if not id is String or id.is_empty() or str(claim.get("character_id", "")) != str(game.local.character_id) \
+			or not preload("res://scripts/world/water_guardian_reward.gd").claim_matches_world(claim, game.world):
 		return {"ok": false, "reason": "Capture claim belongs to another character or world."}
 	var receipt: String = "water_capture_receipt:" + id
 	var flags: RefCounted = game.local.flags
 	var party: RefCounted = game.local.party
-	# Includes a legacy single-recipient Guardian receipt in this same world:
-	# that character already owns its Guardian and must never get a second.
+	# Includes a legacy single-recipient Guardian receipt, honoured only for a
+	# claim whose host stamped it from the legacy world instance itself.
 	if flags.has(receipt) or preload("res://scripts/world/water_guardian_reward.gd").already_received(flags, claim):
 		return {"ok": true, "already": true}
 	if pending == null or not is_instance_of(pending, INSTANCE) or party.members().has(pending):

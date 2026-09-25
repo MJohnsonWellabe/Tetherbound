@@ -33,11 +33,10 @@
     },
     {
       "conversation": "water_edda_guardian_offer",
-      "unless_world_flags": ["water_guardian_settled"],
       "requires_world_flags": [
         "water_guardian_freed"
       ],
-      "purpose": "Opens the existing five-slot ceremony. Does not accept, release, replace or grant a creature by itself.",
+      "purpose": "Opens the existing five-slot ceremony. Does not accept, release, replace or grant a creature by itself. Not gated on world settlement: each participant answers independently and the host refuses anyone already answered or not a participant.",
       "effect": "water:water_guardian_offer_requested"
     }
   ],

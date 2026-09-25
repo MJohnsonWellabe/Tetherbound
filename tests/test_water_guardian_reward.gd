@@ -36,6 +36,7 @@ static func add_participant(world: RefCounted, character: String, status: String
 func fixture() -> RefCounted:
 	var game := GameFixture.new()
 	game.world.world_id = "guardian-reward-world"
+	game.world.reward_delivery_namespace = "guardian-reward-instance"
 	game.world.flags.set_flag("water_guardian_freed")
 	add_participant(game.world, "character-A")
 	add_participant(game.world, "character-B")
@@ -82,10 +83,13 @@ func test_exact_guardian_per_participant_offers_survive_real_world_file() -> voi
 	assert_false(game.world.flags.has("water_guardian_settled"), "Reserving the ceremony is not accepting/releasing the Guardian")
 	assert_false(game.world.flags.has("realm_relic_water_earned"))
 	assert_eq(game.world.water_capture_claims.size(), 1)
-	var id: String = (game.world.world_id + ":guardian:character-A").sha256_text()
-	assert_eq(REWARD.claim_id(game.world.world_id, "character-A"), id)
+	# Keyed by the world INSTANCE (reward_delivery_namespace), not the slot.
+	var id: String = ("guardian-reward-instance:guardian:character-A").sha256_text()
+	assert_eq(REWARD.world_instance(game.world), "guardian-reward-instance")
+	assert_eq(REWARD.claim_id(REWARD.world_instance(game.world), "character-A"), id)
 	var claim: Dictionary = game.world.water_capture_claims[id]
-	assert_eq(claim, {"id": id, "source": "guardian", "world_id": game.world.world_id, "character_id": "character-A", "creature": expected})
+	assert_eq(claim, {"id": id, "source": "guardian", "world_id": game.world.world_id,
+		"world_instance": "guardian-reward-instance", "character_id": "character-A", "creature": expected})
 	var restored := WORLD.new()
 	restored.load_data(game.save_system.store.read(game.world.world_id))
 	assert_eq(restored.water_capture_claims, JSON.parse_string(JSON.stringify(game.world.water_capture_claims)))
@@ -94,7 +98,7 @@ func test_exact_guardian_per_participant_offers_survive_real_world_file() -> voi
 	# Participant B receives their OWN offer; A's reservation is untouched.
 	var second := REWARD.begin(game, ledger, "character-B", guardian)
 	assert_true(second.ok, "The second participant is not refused because the first already has one")
-	var id_b: String = (game.world.world_id + ":guardian:character-B").sha256_text()
+	var id_b: String = ("guardian-reward-instance:guardian:character-B").sha256_text()
 	assert_eq(game.world.water_capture_claims.size(), 2)
 	assert_eq(game.world.water_capture_claims[id_b].character_id, "character-B")
 	assert_eq(game.world.water_capture_claims[id], claim)
