@@ -295,7 +295,17 @@ func _routes() -> Dictionary:
 	var routes: Variant = (paths as Dictionary).get("routes", [])
 	if not routes is Array:
 		return out
-	for raw: Variant in routes as Array:
+	# F01-a: every road section road_bands() paints counts, not only the
+	# junction-fingerpost `routes` -- South Street, Stoneyard Lane and the
+	# Lower Meadows spine are roads a player walks through the fence on too.
+	var every: Array = (routes as Array).duplicate()
+	var approaches: Variant = (paths as Dictionary).get("approaches", [])
+	if approaches is Array:
+		every.append_array(approaches as Array)
+	var trail: Variant = (parsed as Dictionary).get("trail", {})
+	if trail is Dictionary and (trail as Dictionary).get("bands", []) is Array:
+		every.append_array((trail as Dictionary).get("bands", []) as Array)
+	for raw: Variant in every:
 		if not raw is Dictionary:
 			continue
 		var entry := raw as Dictionary

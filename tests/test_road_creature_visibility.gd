@@ -11,7 +11,11 @@ const CLOUDREACH_DIRECTOR := preload("res://scripts/combat/cloudreach_encounter_
 
 const HISTORICAL_BASELINE := {
 	"meadows": {
-		"band1_lower_meadows": [242, 124, 130.0],
+		# F01-a: 242 -> 240 samples. The spine no longer starts at the retired
+		# village gate (27.5,-16) and cuts diagonally through the village; it
+		# continues South Street from (11.5,2), ~20m shorter. Failure ceilings
+		# unchanged (measured after the change: 0 failing samples).
+		"band1_lower_meadows": [240, 124, 130.0],
 		"band2_stone_and_root": [267, 184, 320.0],
 		"band3_the_river_lock": [239, 144, 160.0],
 		"band4_upper_meadows_ironwood": [345, 182, 200.0],

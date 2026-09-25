@@ -361,7 +361,8 @@
           3.05,
           3.05
         ],
-        "yaw_deg": -110.0,
+        "yaw_deg": 40.0,
+        "_why_f01": "F01-a: follows village.json cottage_b to yaw 40 (door onto the Rise lane). REQUIRES the terrain re-bake.",
         "_why": "OWNER-0912: cottage_b at the west-street bend"
       },
       {
@@ -427,6 +428,7 @@
     "routes": [
       {
         "_why": "The west street from its shared south-street bend to Grandpa's door. OWNER-0912 visual acceptance repair moves the civic bend from the well's physical origin to [7,-7]: the first replan ran both street centre-lines through the canopy, bucket chains and sign board, so a real third-person view toward TrailGate was occluded even outside the evidence harness. The retained endpoint (-16.5,-16) remains 0.5m clear of Grandpa's east wall and aligned to the real door; the middle point keeps the street outside the repaired inn frontage.",
+        "_why_f01": "F01-a (WORLD 3.2 road settlement). Unchanged points: this is now the WEST HALF OF THE THROUGH-ROAD -- Grandpa's door -> the inn crossroads -> the civic bend at [7,-7], where it continues without a junction as South Street to TrailGate and on down the Lower Meadows spine to the South Bridge. The well sits in the inside corner of that bend as the square's feature, not as a hub.",
         "label": "Grandpa's House",
         "points": [
           [
@@ -445,6 +447,7 @@
       },
       {
         "_why": "The shared street bend to the village inn's north-facing public threshold. OWNER-0912 visual acceptance repair makes this a short forecourt branch rather than a second path entering the inn's wall: it begins at the same [7,-7] bend and ends on the moved doorstep at [-1.5,-8.1].",
+        "_why_f01": "F01-a. Was [7,-7]->[2,-8.5]->[-1.5,-8.1]: a second road running 1m beside the west street into the square. Now follows the through-road to the inn crossroads [-1.5,-11.64] (the inn door's own projection onto the west street) and turns 3.5m up to the north-facing threshold, so the inn fronts the through-road and the square has one road, not two parallel ones. The fingerpost arm (first leg) still points west down the through-road.",
         "label": "The Inn",
         "points": [
           [
@@ -452,8 +455,8 @@
             -7.0
           ],
           [
-            2.0,
-            -8.5
+            -1.5,
+            -11.64
           ],
           [
             -1.5,
@@ -463,15 +466,36 @@
       },
       {
         "_why": "the square to the practice meadow (the opening's bramblebun)",
+        "_why_f01": "F01-a. Was [10,-10]->[18,-24]->[30,-40]: a spoke radiating from the well. Now follows the through-road west to the inn crossroads, turns north up Stoneyard Lane (paths.approaches village_stoneyard_lane) through The Stoneyard, and continues past its far edge to the practice meadow centre (30,-40), unchanged, so objectives.json's beacon and the bramblebun cluster are where they were. Fingerpost arm points west, which is the way a player actually walks.",
         "label": "Practice Meadow",
         "points": [
           [
-            10.0,
-            -10.0
+            7.0,
+            -7.0
           ],
           [
-            18.0,
-            -24.0
+            -1.5,
+            -11.64
+          ],
+          [
+            0.0,
+            -19.0
+          ],
+          [
+            4.0,
+            -26.0
+          ],
+          [
+            10.0,
+            -29.5
+          ],
+          [
+            15.5,
+            -31.0
+          ],
+          [
+            21.0,
+            -37.5
           ],
           [
             30.0,
@@ -481,11 +505,24 @@
       },
       {
         "_why": "the square to the pond valley (the water creatures)",
+        "_why_f01": "F01-a. Was [10,-10]->[-14,14]: a spoke from the well that ran through the inn's south-east corner and Tam's rear yard. Now follows the through-road west to the pond junction [-8,-13.96] and turns south between Grandpa's garden and the inn's west wall (3.5m+ clear), rejoining the old line at [-14,14], so the fence crossing at PondGate [-21,21] is point-for-point the old one and everything past it is untouched.",
         "label": "The Pond",
         "points": [
           [
-            10.0,
-            -10.0
+            7.0,
+            -7.0
+          ],
+          [
+            -4.0,
+            -13.0
+          ],
+          [
+            -8.0,
+            -13.96
+          ],
+          [
+            -11.0,
+            -2.0
           ],
           [
             -14.0,
@@ -507,12 +544,29 @@
       },
       {
         "_why": "the square toward the rocky rise (galecrest, and one day the stronghold sightline)",
+        "_why_f01": "F01-a. Was [10,-10]->[45,-22]: a spoke from the well, 1m off cottage_b's corner. Now leaves the through-road's South Street at [10.05,-0.9] (9.1m from the well), runs east 4m clear of the square fingerpost and 3m clear of Mira's shop, bends around the square oak and the cottage's south-east corner, and rejoins the old line at [28,-16.17], so the RoadGate crossing and everything from [45,-22] outward (trailhead, Stronghold approach, Rise hero composition) are unchanged.",
         "label": "The Rise",
         "_comment_of10a": "OF10a (walkability half of OF10). The old last two points (85,-48) and (118,-72) drove this road in a straight line up and OVER `rises.peaks[0]`'s own rim -- fine for the first ~38m of that line (slope <=6 deg the whole way, `tools/`-style probe with slope_degrees_at at 0.5m steps) and then a genuine cliff: 4.8deg at (76.9,-42.7) to 46.4deg just 1.2m later at (78.1,-43.5), and 40-52deg for most of the rest of the climb toward both old points -- well past the player's own 45deg floor_max_angle (player.tscn), so the character simply cannot walk it, in any direction, not just straight ahead (confirmed with a headless playthrough: holding forward pins the player exactly at the base of this same jump, is_on_floor never leaves true, velocity pins at zero). This is the rise's own DESIGNED collar (terrain_playground.json's own `rises` comment: 'these are the only places the 45-degree slope limit should actually bite'; EV4-hillside-seam-remainder-4's `relief_amplitude`/`relief_frequency`, gated to this exact flank band and owned by the separate look-quality item, add further sub-2m irregularity on top of it) -- not a collision defect like OF6's undersized boundary box, and not something this item's own scope may touch (rises.peaks / relief are geometry the look pass already tuned against). A grid pathfind at up to 2m resolution could not thread a >=44deg-safe line through that collar anywhere near this bearing; the two are genuinely entangled, per this item's own escape valve. The walkable fix is where the road ITSELF stops: truncated to end at (74,-41), the last point on the ORIGINAL bearing/line before the cliff (worst slope on the new leg is 13.3deg, with the cliff still 4-6m further on) -- 82.2m from the rise's own centre, i.e. just past the dome's 78m-radius footprint, so the road now reads as reaching the genuine foot of the rise and stopping there, not dead-ending mid-slope. Nothing in `rises`, `colour.relief_*`, or any texture/material entry was touched.",
         "points": [
           [
-            10.0,
-            -10.0
+            7.0,
+            -7.0
+          ],
+          [
+            10.05,
+            -0.9
+          ],
+          [
+            21.0,
+            -5.5
+          ],
+          [
+            22.5,
+            -11.5
+          ],
+          [
+            28.0,
+            -16.17
           ],
           [
             45.0,
@@ -543,6 +597,33 @@
           [
             14.0,
             20.0
+          ]
+        ]
+      },
+      {
+        "id": "village_stoneyard_lane",
+        "label": "Stoneyard Lane",
+        "_why_f01": "F01-a (WORLD 3.2: 'at least one visible side lane that leads to the berry field, grove or stone-working area'). The village's side lane: it leaves the through-road at the inn crossroads [-1.5,-11.64] and runs north to The Stoneyard (paths.village_topology.subareas), the stone-working ground around band-1 stone nodes 4 [22,-34] and 1037 [11,-32] with deadwood 0/1020 beside it. An approach, not a route, for the reason South Street is: the fingerpost's Practice Meadow arm already points down it. Ends inside the subarea; 2m+ clear of every harvest node it passes. REQUIRES the terrain + scatter re-bake.",
+        "points": [
+          [
+            -1.5,
+            -11.64
+          ],
+          [
+            0.0,
+            -19.0
+          ],
+          [
+            4.0,
+            -26.0
+          ],
+          [
+            10.0,
+            -29.5
+          ],
+          [
+            15.5,
+            -31.0
           ]
         ]
       },
@@ -986,8 +1067,67 @@
             4161.1
           ]
         ]
+      },
+      {
+        "_why_f01": "F01-a. One-arm fingerpost at the Stoneyard Lane mouth so the side lane and its subarea are named in the world, not only on the map. `at` stands 2.5m off the through-road's centreline and 3.6m off the lane's, on the inn side of the crossroads; the arm points up the lane, so a player walking the through-road sees the plank broadside.",
+        "at": [
+          -4.2,
+          -15.6
+        ],
+        "label": "The Stoneyard",
+        "points": [
+          [
+            -1.5,
+            -11.64
+          ],
+          [
+            0.0,
+            -19.0
+          ]
+        ]
       }
     ],
+    "village_topology": {
+      "_comment": "F01-a, WORLD 3.2 / ACCEPTANCE F01. The village is a road settlement, not the old compact radial plan in which Practice Meadow, The Pond and The Rise all radiated from the well. This block is DECLARATIVE ONLY -- nothing in the game reads it; tests/test_village_road_topology.gd checks every claim here against the actual road polylines road_bands() unions (routes, approaches, trail.bands), and ralph/reports/MEADOWS-PAYOFFS/village-road/make_plan.py draws the OLD/NEW overhead plan from the same data. Coordinates are world (x,z) metres; +z runs toward the South Bridge.",
+      "home_door": [
+        -16.5,
+        -16.0
+      ],
+      "bridge_exit_gate": "TrailGate",
+      "through_road": {
+        "roads": [
+          "Grandpa's House",
+          "village_south_street",
+          "band1_lower_meadows"
+        ],
+        "_why": "Grandpa's door -> inn crossroads -> civic bend [7,-7] -> South Street -> TrailGate [13.79,22.4] -> Lower Meadows spine -> South Bridge (0,1330). One continuous line with no junction at the well."
+      },
+      "well": [
+        10.0,
+        -10.0
+      ],
+      "well_hub_radius_m": 8.0,
+      "_comment_well": "The old plan's failure mode, as a number: within this radius of the well at most two road arms may meet (the through-road passing the square) and no road node may be a junction. OLD measured five arms and a degree-5 node at [7,-7].",
+      "side_lanes": [
+        {
+          "road": "village_stoneyard_lane",
+          "subarea": "the_stoneyard"
+        }
+      ],
+      "subareas": [
+        {
+          "id": "the_stoneyard",
+          "name": "The Stoneyard",
+          "kind": "stone_work",
+          "centre": [
+            16.5,
+            -33.0
+          ],
+          "radius": 7.0,
+          "_why": "Chosen from what already stands there rather than invented: band-1 stone nodes 4 [22,-34] and 1037 [11,-32] (the village's stone lesson) sit 11m apart on level ground north of the square, with deadwood 0 [16,-28] and fiber 7 at the rim. Dressing it as a working yard (the work_area anvil/whetstone/pickaxe cluster, a clearing) is proposed in the F01-a report for the shared props/vegetation owners."
+        }
+      ]
+    },
     "_comment_ow5c_trailheads": "OW5C: 18 new trailheads appended, one per regional-loop leave point, shortcut origin, and spoke leave point (section 11's wayfinding answer: signpost.gd's junction post only fits four arms, so the 12km trail's forks are marked by one-arm trailhead fingerposts instead of a fifth+ arm on the post)."
   },
   "_comment_crossings": "SC14. Roads that stay INSIDE the Meadows and cross something, as opposed to `spokes` (roads that leave it and are severed) and `paths.routes` (the village's own four dirt tracks, one signpost arm each). A crossing owns three things at once and they have to agree, which is why they are one entry rather than three: the `road` polyline (unioned into playground_heightfield.road_polylines(), so the bake paints the same trodden soil along it and the scatter keeps grass and trees off it, exactly as a spoke road gets), the `carve` that interrupts it (the same straight-trench profile `_carve_depth` evaluates for every spoke gorge and the pond outlet -- one falloff evaluator on this map), and the `bridge` that is the only way over. Spec 3's Gate 1: the deeper Meadows is visible across an old bridge, and the bridge is a mechanism, not a message -- nothing here or in scripts/world/south_bridge.gd ever explains itself with UI text.",
@@ -2903,8 +3043,8 @@
         "label": "Lower Meadows",
         "points": [
           [
-            27.5,
-            -16
+            11.5,
+            2.0
           ],
           [
             14,
@@ -2987,6 +3127,7 @@
             1360
           ]
         ],
+        "_why_f01": "F01-a. The first point was [27.5,-16] -- the retired pre-boundary GATE_AT (playground_world.gd) -- so the spine's first leg ran a second, diagonal road from the old gate site through Mira's shop footprint (1.9m from its centre) and across the tournament field to [14,20]. It now starts at South Street's own vertex [11.5,2.0], so the spine continues the through-road through TrailGate instead of crossing the village on its own. Index 1 is still [14,20], the TrailGate approach meadows_earned_bridge_segment.gd walks from.",
         "_comment_ow5c_bridge_fix": "Inserted (0,1330) before the Band 2 handoff: the spine crosses South Bridge (crossings[0], carve centre (0,1330)) AT the bridge, not to the side of it -- the straight line from (-40,1310) to (0,1360) alone passed through the carve trench near x=-24 at z=1330, cutting an unbridged second gap in the gully."
       },
       {
