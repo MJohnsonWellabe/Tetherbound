@@ -94,6 +94,11 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	# The guest's production rejoin rebuilds the Meadows (one blocking scene
+	# build, ~85 s cold in spike S2) after hello; on a throttled machine that
+	# went heartbeat-silent past 15 s. The peer is working, not hung: the same
+	# allowance the other scene-changing smokes use (join_by_address, 240 s).
+	heartbeat_silence_tolerance_s = 240.0
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
