@@ -703,3 +703,19 @@ dependencies in PR #233.
   (`x05-godotsteam-linux-template-probe.log`).
 - Windows was not run here. The preset, release workflow and packaging
   changes belong to X07 and need a coordinator grant.
+
+**Refusal capture.** `x05-refusal-mismatch-title-1280x720.png` was
+produced by `tools/net/capture_join_refusal.gd`:
+- A headless `--mp-host 27150` host and a rendered 1280×720 opengl3 client,
+  launched with `--mp-join` and a mismatched content override. Nothing is
+  staged.
+- The client builds the world, dials, receives the host's
+  `incompatible_version` verdict (host log line in
+  `x05-refusal-capture-host.log`) and returns to Join a Game.
+- The reason is shown in the status line, with controller focus on Enter an
+  Address.
+- This is evidence that the text reaches the player. It is not a visual or
+  UX verdict. The reason uses the existing small amber status style, and
+  720p readability belongs to X03.
+- Not captured: the held-seat reason and the Steam lobby mismatch reason.
+  The Steam reason needs a native Steam client.
