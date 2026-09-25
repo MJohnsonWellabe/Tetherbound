@@ -10,7 +10,7 @@
       "position": "boot",
       "simulated_seconds": 0.0,
       "stage": "persistence_tail_exact",
-      "wall_seconds": 0.173071
+      "wall_seconds": 0.646639
     },
     {
       "kind": "assertion",
@@ -18,7 +18,7 @@
       "position": "boot",
       "simulated_seconds": 0.0,
       "stage": "persistence_tail_exact",
-      "wall_seconds": 0.173332
+      "wall_seconds": 0.647212
     },
     {
       "after": [
@@ -460,7 +460,7 @@
       "position": "boot",
       "simulated_seconds": 0.0,
       "stage": "persistence_tail_exact",
-      "wall_seconds": 0.173501
+      "wall_seconds": 0.647872
     },
     {
       "kind": "assertion",
@@ -468,7 +468,7 @@
       "position": "boot",
       "simulated_seconds": 0.0,
       "stage": "persistence_tail_exact",
-      "wall_seconds": 0.17483
+      "wall_seconds": 0.649679
     },
     {
       "kind": "assertion",
@@ -476,7 +476,182 @@
       "position": "boot",
       "simulated_seconds": 0.0,
       "stage": "persistence_tail_exact",
-      "wall_seconds": 0.175492
+      "wall_seconds": 0.650805
+    },
+    {
+      "kind": "assertion",
+      "label": "The production save wrote user://cloudreach_persistence_tail_regression/worlds/slot-0/world.json",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.651849
+    },
+    {
+      "kind": "assertion",
+      "label": "user://cloudreach_persistence_tail_regression/worlds/slot-0/world.json parses as a JSON object",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.652869
+    },
+    {
+      "kind": "assertion",
+      "label": "The production save wrote user://cloudreach_persistence_tail_regression/characters/character-8b3907a4bded7476ab96932a367530fb/character.json",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.65377
+    },
+    {
+      "kind": "assertion",
+      "label": "user://cloudreach_persistence_tail_regression/characters/character-8b3907a4bded7476ab96932a367530fb/character.json parses as a JSON object",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.694926
+    },
+    {
+      "files": [
+        "user://cloudreach_persistence_tail_regression/worlds/slot-0/world.json",
+        "user://cloudreach_persistence_tail_regression/characters/character-8b3907a4bded7476ab96932a367530fb/character.json"
+      ],
+      "kind": "persistence_f08_disk",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.696868
+    },
+    {
+      "disk_count": 1,
+      "flag": "cloudreach_winds_restored",
+      "kind": "persistence_f08_flag",
+      "position": "boot",
+      "restored": true,
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "unsaved_control": false,
+      "wall_seconds": 0.698025
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored cloudreach_winds_restored from disk",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.699104
+    },
+    {
+      "kind": "assertion",
+      "label": "The save wrote cloudreach_winds_restored in exactly one place (count 1)",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.700099
+    },
+    {
+      "disk_count": 1,
+      "flag": "realm_heart_cloudreach_earned",
+      "kind": "persistence_f08_flag",
+      "position": "boot",
+      "restored": true,
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "unsaved_control": false,
+      "wall_seconds": 0.701038
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored realm_heart_cloudreach_earned from disk",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.701979
+    },
+    {
+      "kind": "assertion",
+      "label": "The save wrote realm_heart_cloudreach_earned in exactly one place (count 1)",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.703111
+    },
+    {
+      "disk_count": 1,
+      "flag": "sky_shrine_reached",
+      "kind": "persistence_f08_flag",
+      "position": "boot",
+      "restored": true,
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "unsaved_control": false,
+      "wall_seconds": 0.704184
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored sky_shrine_reached from disk",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.705194
+    },
+    {
+      "kind": "assertion",
+      "label": "The save wrote sky_shrine_reached in exactly one place (count 1)",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.706211
+    },
+    {
+      "disk_count": 1,
+      "flag": "realm_key_stormwood",
+      "kind": "persistence_f08_flag",
+      "position": "boot",
+      "restored": true,
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "unsaved_control": false,
+      "wall_seconds": 0.707233
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored realm_key_stormwood from disk",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.708893
+    },
+    {
+      "kind": "assertion",
+      "label": "The save wrote realm_key_stormwood in exactly one place (count 1)",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 0.710482
+    },
+    {
+      "kind": "assertion",
+      "label": "A second save/load after the reload kept the same flag set (nothing re-granted)",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 1.191348
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored the Wings of Cloudreach as earned",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 1.193315
+    },
+    {
+      "kind": "assertion",
+      "label": "Reload restored the Stormwood key: the realm opens",
+      "position": "boot",
+      "simulated_seconds": 0.0,
+      "stage": "persistence_tail_exact",
+      "wall_seconds": 1.194818
     }
   ],
   "evidence_scope": "mechanics_only_test_lethal",

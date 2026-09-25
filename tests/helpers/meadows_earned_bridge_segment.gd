@@ -157,8 +157,13 @@ func _travel_and_cross(route: Array[Vector2], crossing: Dictionary) -> bool:
 	if not bool(_bridge.call("is_open")):
 		if _count(KEY) != reward_key_count(spec):
 			return _fail("The defeated guardian did not deliver the authored bridge key")
-		if not await _walk(_bridge.call("near_point", gate_offset + 2.5), 0.6) \
-				or not await _press_gate(prompt):
+		if not await _walk(_bridge.call("near_point", gate_offset + 2.5), 0.6):
+			return false
+		# Walking back into `south_bridge.gd::AUTO_OPEN_RANGE` with the key is
+		# itself ordinary play that opens the gate (and disables its prompt).
+		# An open gate is the goal state, not a missing prompt (blocker B1).
+		if not already_open(bool(_bridge.call("is_open")), _has("south_bridge_open")) \
+				and not await _press_gate(prompt, true):
 			return false
 	for _frame in 120:
 		if bool(_bridge.call("is_open")) and _has("south_bridge_open"):
@@ -257,13 +262,18 @@ func _prepare_ally() -> bool:
 	return _fail("Real deployment/party preparation did not make the guardian challenge available")
 
 
-func _press_gate(prompt: Node3D) -> bool:
+func _press_gate(prompt: Node3D, accept_open: bool = false) -> bool:
 	# `_walk()` finishes on a physics frame, while InteractionArbiter publishes
 	# its spatial winner from `_process()`. Let that real publisher observe the
 	# arrived body, then wait only for this exact actionable gate offer. The
 	# assertion and physical button press below remain unchanged in meaning.
+	# `accept_open` (post-victory only): the production auto-open may swing the
+	# gate during this wait, which removes its prompt because it succeeded.
 	for _frame in 30:
 		await _tree.process_frame
+		if accept_open and already_open(bool(_bridge.call("is_open")), _has("south_bridge_open")):
+			_receipt("gate_opened_by_ordinary_play", {"key_remaining": _count(KEY)})
+			return true
 		if bool(_arbiter.call("enabled")) and _arbiter.call("winning_provider") == prompt \
 				and bool(_arbiter.call("winner").get("actionable", false)):
 			break
@@ -349,6 +359,11 @@ static func reward_key_count(spec: Dictionary) -> int:
 		if str(item.get("id", "")) == KEY:
 			amount += int(item.get("count", 1))
 	return amount
+
+
+## The gate is open for good: the live leaf and the durable world flag agree.
+static func already_open(is_open: bool, flag: bool) -> bool:
+	return is_open and flag
 
 
 static func unlock_receipt(flag: bool, open: bool, before: int, reward: int, after: int) -> bool:

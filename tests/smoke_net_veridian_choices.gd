@@ -8,9 +8,15 @@ extends "res://tests/helpers/net_harness.gd"
 ##   tools/net/run_net_smoke.sh veridian_choices
 ##   (or: ~/godot-bin/godot --headless --path . --script tests/smoke_net_veridian_choices.gd)
 ##
-## OPT-IN LOCAL WITNESS. It is not wired into CI: it fights the Warden, walks
-## the chamber and rebuilds the Meadows on a production rejoin, which is far
-## longer than the CI net lane's per-smoke budget.
+## IN CI. Its `# peers: 2` header puts it in `.github/workflows/ci.yml`'s
+## `discover-net-smokes` list, and `verify-multiplayer-shard` runs it in
+## **shard 3 of 7** (the plan on the current tree: "plan shard 3/7: ...
+## tests/smoke_net_veridian_choices.gd ..."). That shard is assigned by the
+## job's longest-first cost plan, not pinned, and this file has no measured
+## cost there yet (it reserves the 168 s fallback), so a new net smoke can
+## move it to another shard. It fights the Warden, walks the chamber and
+## rebuilds the Meadows on a production rejoin, so it is one of the longer
+## smokes in its shard.
 ##
 ## ## What it proves
 ##

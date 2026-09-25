@@ -1,0 +1,375 @@
+{
+ "name": "F11 Waterward gate: charted by the host, opened once by the guest, kept by both peers through a save/reload",
+ "claim": "ACCEPTANCE F11 'the once-opened physical Tidewake gate persists' (two peers + reload). After both answer their own Stormheart (host Yes, guest No), the HOST walks onto the high platform and presses 'Look beyond the broken storm' (stormwood_ending.gd _on_waterward_view -> host _reveal_for -> chapter aftermath:waterward_view, which grants the one-time realm_key_water). The GUEST walks to the Waterward gate and presses its prompt once (stormwood_water_gate.gd try_unlock -> UNLOCK_INTENT -> host host_commit: key consumed and realm_gate_water_unlocked in one journaled transaction). Both peers then save_reload_here and the gate stays open on both, the key stays consumed. Setup, disclosed: the Dynamo fight fixture, and `teleport` to stand beside each prompt (the walk up the platform is not played); the presses are ordinary `interact` presses. The gate is NOT pressed a second time, because an open gate's press enters Tidewake.",
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 1800,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+   },
+   "expect_data": {
+    "realm": "meadows",
+    "form": "captured directory (split path)",
+    "character_id": "character-f41f4a49223483d6bfdf56715944bb7b"
+   },
+   "label": "named save: Meadows, Stormwood route open, loaded like Continue"
+  },
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 10000,
+   "label": "guest: a fresh trainer in the Meadows"
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "realm_gate_stormwood_unlocked"
+   },
+   "label": "the route comes from the host's save"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": "all",
+   "probe": "downed",
+   "label": "trainer vitals on arrival"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "before"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_fixture",
+   "args": {
+    "contributors": [
+     "$peer0",
+     "$peer1"
+    ]
+   },
+   "label": "both fought the Dynamo (setup)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:legendary_freed",
+    "budget_frames": 1800
+   }
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_answer",
+   "args": {
+    "answer": "accept"
+   },
+   "expect_data": {
+    "has_stormheart": true
+   },
+   "label": "host says Yes"
+  },
+  {
+   "peer": 1,
+   "action": "stormheart_answer",
+   "args": {
+    "answer": "refuse"
+   },
+   "expect_data": {
+    "has_stormheart": false
+   },
+   "label": "guest says No"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:legendary_offer_made",
+    "budget_frames": 1800
+   },
+   "label": "the world's offer fact (the view's prerequisite)"
+  },
+  {
+   "peer": 0,
+   "action": "teleport",
+   "args": {
+    "at": [
+     -98.0,
+     263.0,
+     5487.0
+    ],
+    "settle": 120
+   },
+   "label": "SETUP: the host stands on the high platform beside the view"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "01_host_at_view"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "the host presses 'Look beyond the broken storm'"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:waterward_revealed",
+    "budget_frames": 1800
+   },
+   "label": "the cleared sky is charted for both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "realm_key_water",
+    "budget_frames": 1800
+   },
+   "label": "the one-time Water key exists (before the gate)"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "02_host_waterward_view"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "teleport",
+   "args": {
+    "at": [
+     -100.0,
+     263.0,
+     5498.0
+    ],
+    "settle": 120
+   },
+   "label": "SETUP: the guest stands at the Waterward gate"
+  },
+  {
+   "peer": 1,
+   "action": "screenshot",
+   "args": {
+    "name": "03_guest_at_sealed_gate"
+   }
+  },
+  {
+   "peer": 1,
+   "probe": "input_context",
+   "label": "the Stormheart's 3-line aftermath conversation (stormwood_waterward_aftermath) holds the guest's screen"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 3,
+    "gap_frames": 40
+   },
+   "label": "the guest reads the 3 aftermath lines with interact (the first attempt's gate press only advanced this dialogue)"
+  },
+  {
+   "peer": 1,
+   "action": "wait_context",
+   "args": {
+    "equals": "world",
+    "budget_frames": 240
+   },
+   "label": "the conversation is closed: the guest is back in the world context"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "realm_gate_water_unlocked",
+    "budget_frames": 30
+   },
+   "expect": "FAIL",
+   "label": "the gate is still sealed before the guest's gate press (non-vacuous)"
+  },
+  {
+   "peer": 1,
+   "action": "screenshot",
+   "args": {
+    "name": "03b_guest_gate_prompt"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "the guest presses 'Unlock the way to Tidewake' once"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "realm_gate_water_unlocked",
+    "budget_frames": 1800
+   },
+   "label": "the gate is open for both peers"
+  },
+  {
+   "peer": 1,
+   "action": "screenshot",
+   "args": {
+    "name": "04_guest_gate_open"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "opened"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "save_reload_here",
+   "continue_on_fail": true,
+   "label": "RELOAD: host autosave + load_slot in place"
+  },
+  {
+   "peer": 1,
+   "action": "save_reload_here",
+   "continue_on_fail": true,
+   "label": "RELOAD: guest character save + apply from disk"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "realm_gate_water_unlocked",
+    "budget_frames": 600
+   },
+   "label": "after the reload the gate is still open on both peers"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:waterward_revealed",
+    "budget_frames": 600
+   },
+   "label": "after the reload the charted sky persists on both"
+  },
+  {
+   "peer": "all",
+   "probe": "downed",
+   "label": "trainer vitals at the end"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "05_after_reload"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "realm_gate_stormwood_unlocked"
+    ],
+    "lacks": [
+     "realm_gate_water_unlocked",
+     "realm_key_water",
+     "stormwood:waterward_revealed"
+    ]
+   },
+   "label": "baseline: the host's pre-offer world has no Water key, no open gate"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "opened",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "realm_gate_water_unlocked",
+     "stormwood:waterward_revealed"
+    ]
+   },
+   "label": "the host's saved world holds the open gate"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "realm_gate_water_unlocked",
+     "stormwood:waterward_revealed"
+    ],
+    "lacks": [
+     "\"realm_key_water\""
+    ]
+   },
+   "label": "after the reload the host's saved world: gate open, the one-time key consumed (no quoted realm_key_water flag)"
+  }
+ ]
+}

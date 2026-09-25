@@ -791,8 +791,22 @@ func _maybe_start_battle() -> void:
 	if spec.is_empty():
 		push_error("battle: named '%s', which trainers.json does not define" % trainer_id)
 		return
+	if battle_already_answered(_encounter, trainer_id):
+		return
 	if not bool(_encounter.call("begin_trainer_battle", spec, null)):
 		print("[village] '%s' offered a battle that could not start" % trainer_id)
+
+
+## F02 / earned-save blocker B1. A standalone trainer's challenge line (the
+## South Bridge guardian's, the Old Champion's...) carries `battle:<id>` AND is
+## started on finish by `trainer_npc.gd::_on_conversation_finished`, which
+## hears the panel's `finished` signal a frame before this poll. That fight is
+## the answer to this effect, not a refusal of it: logging "could not start"
+## for it sent the earned-save lane hunting a stale offer that never existed.
+static func battle_already_answered(encounter: Object, trainer_id: String) -> bool:
+	return encounter != null and not trainer_id.is_empty() \
+		and bool(encounter.call("trainer_battle_active")) \
+		and str(encounter.call("trainer_battle_id")) == trainer_id
 
 
 ## `flag:tam_tools_given` — OF30. Write one progression flag, on the line that

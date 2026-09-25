@@ -1486,6 +1486,11 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # F08: Cloudreach's completed tail (wind roads, Wings/shrine, Stormwood
+      # key) is written once and survives a disk reload with nothing re-granted.
+      - name: Verify Cloudreach persistence tail
+        if: ${{ !cancelled() }}
+        run: timeout 180s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
       - name: Verify Stormwood constructed arch journey
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_arches.gd
@@ -1608,6 +1613,9 @@ jobs:
       - name: Verify Tidewake mounted reload mid-water
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_mounted_reconnect_save.gd
+      - name: Verify Tidewake combat pause while swimming
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_water_combat_pause.gd
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
