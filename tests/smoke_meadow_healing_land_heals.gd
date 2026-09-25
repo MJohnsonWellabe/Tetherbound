@@ -185,8 +185,15 @@ func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 		_fail("(%s) regreen alpha %.2f, not fully in" % [tag, float(healing.call("regreen_alpha_now"))])
 	# (C)
 	var pylons: Array = healing.call("toppled_pylons")
-	if pylons.size() < 10:
-		_fail("(%s) only %d pylons fell" % [tag, pylons.size()])
+	# The owner decision is "the dark pylons are down": every pylon in the
+	# baked fall table falls, live and after reload. A stale table entry (a
+	# moved pylon, re-baked terrain) that leaves one standing fails HERE rather
+	# than only warning at runtime (re-review of f2e0761a, blocking 1).
+	var table: Dictionary = ((_healing_config().get("pylons", {}) as Dictionary).get("falls", {}) as Dictionary)
+	if pylons.size() != table.size():
+		_fail("(%s) %d pylons fell; the fall table has %d" % [tag, pylons.size(), table.size()])
+	if int(report.get("pylons_left_standing", -1)) != 0:
+		_fail("(%s) %d pylon(s) left standing" % [tag, int(report.get("pylons_left_standing", -1))])
 	var worst_tip := 0.0
 	var worst_up := -1.0
 	for raw: Variant in pylons:
@@ -497,3 +504,8 @@ func _finish() -> void:
 	for line in _failures:
 		print("  FAIL: %s" % line)
 	quit(1)
+
+
+func _healing_config() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/meadow_healing.json"))
+	return parsed if parsed is Dictionary else {}
