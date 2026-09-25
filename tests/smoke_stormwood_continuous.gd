@@ -505,6 +505,16 @@ class Segment extends RefCounted:
 			_fail("Stormwood lacks the production hosted-encounter result signal")
 			return _result()
 		session.connect("stormwood_encounter_message", _on_stormwood_encounter_message)
+		# F11 witness runs 8 and 11 ended the prefix with all three tools gone
+		# from the inventory (still bound on the hotbar), which only the
+		# trainer's death satchel does. Record every finalized death with the
+		# active phase so the next run proves or clears that.
+		var death := tree.get_first_node_in_group(&"player_death")
+		if death != null and death.has_signal("finalized_death"):
+			death.connect("finalized_death", func() -> void:
+				print("F11 WITNESS TRAINER DEATH during '%s' at %s (inventory used slots %d)" % [
+					_active_phase, str(player.global_position),
+					int(game.get("inventory").call("used_slots"))]))
 		manager.connect("exited", _on_combat_exited)
 		navigator = NAVIGATOR.new(tree, player, camera, _send_stick)
 		if game.get("progression").call("has", "stormwood:chapter_started"):
