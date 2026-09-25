@@ -781,6 +781,16 @@
         "Rook: Three posts, one continuous road. That is a circuit.",
         "You learned where the forest opens and where it closes. Keep that rhythm when the storm turns."
       ]
+    },
+    "stormwood_hesk_dark_arches_report": {
+      "speaker": "Rodkeeper Hesk",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "side_complete",
+      "requires_flags": ["stormwood:side_dark_arches_2"],
+      "lines": [
+        "Rodkeeper Hesk: The Rodline arch answers Lantern Hollow again, and the old Hall arch answers the Fallen Giant. I felt both cores wake from here.",
+        "That is how the Rodfolk moved: crews stepping from the Hall to the deep trunks without ever crossing open ground in a Break. Those roads are yours now; use them both ways."
+      ]
     }
   }
 }
