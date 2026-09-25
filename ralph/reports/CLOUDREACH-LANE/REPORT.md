@@ -123,7 +123,7 @@ This work order does not cover:
 
 **Disclosed fixture:** flags are seeded per row (Act I/II, pre-finale, post-finale), the clock is pinned for day and night, and the trainer is teleported to each stand. The fight itself is not played.
 
-**Output:** `captures/frame_matrix/`, 36 frames (JPEG), `manifest.txt` and five group sheets. Rendered on main 835744b3 plus the tool; one stand fell back to its second candidate.
+**Output:** `captures/frame_matrix/`, 36 frames (JPEG), `manifest.txt`, five group sheets, and the 30 s motion sheet `_sheet_frame_matrix_motion.jpg` (60 frames). Rendered on main 835744b3 plus the tool; one stand fell back to its second candidate.
 
 **Blind judge.** A sub-agent that saw only the frames, the two Cloudreach boards, the Meadows key art and the Palworld references.
 - **A: does it belong to the key-art / Cloudreach-board world? No.**
@@ -163,6 +163,7 @@ This work order does not cover:
 | M8 | Visible homecoming: after the finale, banners go up, NPCs gather and Tether camp props go away | 35, 36 | lane |
 | M9 | Settlements: dress with installed props (cart, bells, banners, lanterns, rope lines, fences) and more NPCs; put Cliffhold on a cliff edge | 05, 25 | lane |
 | M10 | Capture tool: the empty "beacon" detail (14) and camera-in-geometry stands (16, 18, 10, 20); check whether the trainer's idle animation runs in held stands (A-pose in every frame) | 10, 14, 16, 18, 20 | lane (tool) |
+| M12 | **The camera goes inside scenery.** The 30 s walk (`_sheet_frame_matrix_motion.jpg`, 60 frames at 0.5 s, stick input) goes through the lower-cliffs gate arch. The camera then passes through the gate's timber beam (m37–m41), a wild creature fills the frame (m42–m44), and for about 15 frames the camera sits inside a dark rock mass beside the road (m45–m56). These visual rock masses have no collider, so the spring arm doesn't stop. The gate-seal review found the same kind of non-colliding rock spurs. Fix: give the visual rock masses along walkable routes a camera-blocking collider on a layer that doesn't block the trainer, or keep them out of the arm's reach. Either needs the spring arm's mask to include that layer, which is shared camera code. | m37–m56 | lane (collider layer) + **shared** (rig mask) |
 | M11 | Camera pull-in / occluder fade and companion separation, so creatures don't overlap and the griffin doesn't clip through bridge rails | 03, 06, 09, 21, 32, 33 | **shared** (camera, follower): needs a grant |
 
 **Needs art not in the build (owner/art-lane evidence):**
