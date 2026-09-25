@@ -19,7 +19,8 @@ extends SceneTree
 ##     the trainer and mount to the Broken Causeways ledge road and the
 ##     arrival terrace road for the ride-off and mid-drop legs;
 ##   - test-only StaticBody walls around the mount (refusal and combat legs),
-##     pillars on the ring's 16 points and one slab (the rule ladder);
+##     pillars on the ring's 16 points and one slab (the rule ladder), and a
+##     slab across the route behind the mount (the closed-wall leg);
 ##   - the rule ladder writes the controller's private per-ride memory
 ##     (`_clear_spot`, `_ground_history`, `_mounted_from`) and calls
 ##     `dismount()` directly, as a fight or modal does;
@@ -135,6 +136,7 @@ func _run() -> void:
 	await _ride_off_edges_by_input()
 	await _no_room_refusal_and_modal_deferral()
 	await _dismount_rule_ladder()
+	await _forced_dismount_never_crosses_a_closed_wall()
 	await _forced_dismount_mid_drop()
 	await _mounted_save_reload_after_descent()
 	await _combat_start_forced_dismount()
@@ -673,6 +675,55 @@ func _ladder_case(label: String, stage: Dictionary, expect: String) -> void:
 		await physics_frame
 
 
+## Coordinator review of 358148b1 (gate-bypass risk): a forced dismount must
+## never put the trainer beyond something that closed behind the ride. Fixture:
+## on the causeway floor the mount is ridden 1.5 s by the stick, so the ride's
+## own ground samples lie behind it; then a test-only slab (standing in for a
+## gate or arena seal) is raised across the route just behind the mount,
+## pillars block the ring, and the forced `dismount()` a fight or modal makes
+## is called. Whatever rule answers, the trainer is never on the far side.
+func _forced_dismount_never_crosses_a_closed_wall() -> void:
+	await _mount_on_causeway_floor("the closed-wall leg")
+	var body: CharacterBody3D = _riding.call("mount_body")
+	if body == null:
+		return
+	var start := body.global_position
+	Input.action_press("move_forward", 1.0)
+	for i in 90:
+		await physics_frame
+	_release_move()
+	for i in 10:
+		await physics_frame
+	var heading := body.global_position - start
+	heading.y = 0.0
+	_check(heading.length() > 8.0, "fixture: the ride covered ground before the wall went up (%.1f m)" % heading.length())
+	heading = heading.normalized()
+	var samples: Array = _riding.get("_ground_history")
+	var wall_at := body.global_position - heading * 1.75
+	var behind := samples.filter(func(v: Vector3) -> bool: return (v - wall_at).dot(heading) < 0.0)
+	_check(behind.size() >= 3, "fixture: %d of the ride's %d ground samples lie beyond the wall" % [behind.size(), samples.size()])
+	var slab := _static_box(wall_at + Vector3.UP * 2.0, Vector3(14.0, 6.0, 0.3), Basis(Vector3.UP, atan2(heading.x, heading.z)), "TestClosedGate")
+	var pillars := _pillar_ring(body)
+	for i in 3:
+		await physics_frame
+	_arm_placement(body)
+	var ok := bool(_riding.call("dismount"))
+	var rule := str(_riding.get("last_dismount_rule"))
+	var at := _player.global_position
+	var side := (at - wall_at).dot(heading)
+	print("CLOSED WALL rule=%s ok=%s trainer=%s side=%.2f" % [rule, ok, at, side])
+	_check(side > 0.0, "a forced dismount never puts the trainer beyond the wall that closed behind the ride (rule %s, %.2f m on the mount's side)" % [rule, side])
+	if ok:
+		_check_placement("closed wall", ["remembered", "history", "mounted_from", "clear"])
+	else:
+		_check(rule == "deferred" and bool(_riding.call("is_mounted")), "closed wall: nothing verified on the near side, so the rider stays seated (%s)" % rule)
+	for node: Node in pillars + [slab]:
+		node.queue_free()
+	for i in 10:
+		await physics_frame
+	_check_party("closed wall")
+
+
 ## H1's own scenario, ridden: off the causeway road by the stick, and a forced
 ## dismount (the call a fight or modal makes) while the mount is 4 m into the
 ## 11 m drop. Pinned for this geometry: "airborne" -- the trainer comes off
@@ -972,9 +1023,9 @@ func _combat_start_forced_dismount() -> void:
 ## stands on the causeway road (~401 m) until Fly's anchor is there, mounts,
 ## and the mounted pair is then placed on the arrival road (~105 m), as the
 ## long-descent leg does, and ridden a moment. Save WHILE MOUNTED, reload.
-## Fix witness: on the branch the ride carries Fly's anchor down with it, so
-## the reload's anchor is at the saved spot; origin/main's controller leaves it
-## at the road ~300 m up.
+## Fix witness against the controller before 6db201b3c (no carried anchor):
+## there the reload's anchor stays on the causeway road ~300 m up. Against the
+## current main, which already carries the anchor, it is a regression guard.
 func _mounted_save_reload_after_descent() -> void:
 	if bool(_riding.call("is_mounted")):
 		await _dismount_by_interact("dismount before the save leg")

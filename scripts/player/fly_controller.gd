@@ -422,6 +422,9 @@ func observe_ground() -> void:
 ## the anchor stayed wherever the trainer last stood on foot: after a long
 ## mounted descent, a dismount or reload mid-air read as a 100 m fall and was
 ## "recovered" back up to where the ride began. Same authority path as a walk.
+## Like `observe_ground`, a proposal consumes `_touched_down`: a Fly landing
+## that ends on a mount (never today; Fly refuses while carried) would be
+## proposed as this ordinary carried observation, not as a landing.
 func observe_carried_ground(at: Vector3) -> void:
 	if is_flying() or not bool(_player.call("is_carried")) or not at.is_finite():
 		return

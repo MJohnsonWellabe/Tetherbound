@@ -44,9 +44,11 @@ extends "res://scripts/world/riding_controller.gd"
 ## 3. A mounted fall. A carried trainer has no collision layers, so the
 ##    realm's kill plane and grounded-fall anchor cannot see them. A mount that
 ##    falls as far as a walker would need to be recovered (100 m) is returned,
-##    rider and all, to verified ground it stood on a moment before. Its floor
-##    contact also keeps Fly's safe anchor current during the ride, so ending
-##    the ride or reloading never reads a long descent as a fall.
+##    rider and all, to the newest verified ground it stood on (line-clear from
+##    where it took off), and so is one crossing the cloud-sea kill plane,
+##    as a walker would be. Its floor samples also keep Fly's safe anchor
+##    current during the ride (the clear spot beside the mount), so ending the
+##    ride or reloading never reads a long descent as a fall.
 ## 4. SYSTEMS §8 limits: mounted jump apex no higher than the trainer's
 ##    1.35 m, and no climbing beyond the ordinary 45 degrees unless the species
 ##    authors its own climb (the legendary's 60).
@@ -182,15 +184,19 @@ func _watch_mounted_ground(delta: float) -> void:
 			_ground_history.append(body.global_position)
 			if _ground_history.size() > GROUND_HISTORY:
 				_ground_history.pop_front()
-			# Only ground the trainer could stand on becomes Fly's anchor: the
-			# legendary climbs 60 degrees, and `recover_to_anchor` refuses
-			# anything steeper than the trainer's own 45.
-			var stood := _supported_floor(body.global_position, body.global_position.y, body)
-			if not is_nan(stood) and fly != null and fly.has_method("observe_carried_ground"):
-				fly.call("observe_carried_ground", Vector3(body.global_position.x, stood, body.global_position.z))
 			var spot := _find_clear_spot(body)
 			if spot != Vector3.INF:
 				_clear_spot = spot
+				# Fly's anchor is the clear spot BESIDE the mount, not the
+				# mount's own feet: it is ground the trainer could stand on
+				# (walkable to the trainer's 45 degrees, capsule fits), and a
+				# guest's proposal there cannot be confused with the mount by
+				# the host's probe (`remote_trainer.gd::_anchor_params` rays
+				# down from 2 m above the claim and would meet the mount's
+				# capsule, 3.45 m tall, if it were solid on the host), while
+				# staying within the host's 6 m drift of the carried trainer.
+				if fly != null and fly.has_method("observe_carried_ground"):
+					fly.call("observe_carried_ground", spot)
 		return
 	_airborne_s += delta
 	if _airborne_s < MOUNTED_FALL_AIRBORNE_S:
@@ -203,10 +209,17 @@ func _watch_mounted_ground(delta: float) -> void:
 		dismount()
 		return
 	var last_ground: Vector3 = _ground_history[_ground_history.size() - 1]
-	if body.global_position.y > last_ground.y - MOUNTED_FALL_DROP_M:
+	# Walker parity: a walking trainer is recovered 100 m below its anchor OR
+	# on crossing the cloud-sea kill plane (`fall_recovery.gd`, 50 m under the
+	# CloudSea), whichever comes first. The kill volume only reports the
+	# trainer's own body, which has no collision layer while carried, so the
+	# plane is checked here for the mount.
+	if body.global_position.y > last_ground.y - MOUNTED_FALL_DROP_M \
+			and body.global_position.y > _kill_plane_y():
 		return
-	# Oldest still-supported sample: a moment back from the edge, re-probed so
-	# a spot that no longer holds ground is never the answer.
+	# The newest still-supported sample, re-probed so a spot that no longer
+	# holds ground is never the answer, with a clear line from the take-off
+	# sample so a gate or seal that closed behind the mount is never crossed.
 	var back_from_edge := _supported_history(body)
 	if back_from_edge == Vector3.INF:
 		# Nothing verified to return to: end the ride so the trainer, solid
@@ -225,14 +238,35 @@ func _watch_mounted_ground(delta: float) -> void:
 		game.call("push_world_message", "Your mount scrambled back from the drop.")
 
 
-## The OLDEST still-supported ground sample: the mounted-fall recovery's
-## "a moment back from the edge". Never a dismount spot (see `_verified_spot`).
+## The mounted-fall recovery's return point: the NEWEST ground sample that
+## still holds walkable floor and has a clear line from the take-off sample
+## (the last ground the mount stood on). Newest, because every older sample
+## is further back along the route, and anything that closed across that
+## route (a gate, an arena seal) would otherwise be crossed. Never a dismount
+## spot (see `_verified_spot`).
 func _supported_history(body: Node3D) -> Vector3:
-	for sample: Vector3 in _ground_history:
+	if _ground_history.is_empty():
+		return Vector3.INF
+	var takeoff: Vector3 = _ground_history[_ground_history.size() - 1]
+	for i in range(_ground_history.size() - 1, -1, -1):
+		var sample: Vector3 = _ground_history[i]
 		var floor_y := _supported_floor(sample, sample.y, body)
-		if not is_nan(floor_y):
-			return Vector3(sample.x, floor_y, sample.z)
+		if is_nan(floor_y):
+			continue
+		var at := Vector3(sample.x, floor_y, sample.z)
+		if i < _ground_history.size() - 1 and not _line_clear(takeoff, at, body):
+			continue
+		return at
 	return Vector3.INF
+
+
+## The realm's cloud-sea kill plane (`cloudreach_world_runtime.gd` builds
+## `FallRecovery` with it), or -INF where there is none.
+func _kill_plane_y() -> float:
+	var world := get_parent()
+	var recovery := world.get_node_or_null(^"FallRecovery") if world != null else null
+	var y: Variant = recovery.get("_kill_plane_y") if recovery != null else null
+	return float(y) if y != null else -INF
 
 
 func _apply_climb_limit(body: Node3D, species_id: String) -> void:
