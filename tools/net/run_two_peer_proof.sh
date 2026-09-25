@@ -33,13 +33,21 @@ for arg in "$@"; do
 		--out=*) out="${arg#--out=}" ;;
 		-h|--help) usage ;;
 		-*) echo "unknown option: $arg" >&2; usage ;;
-		*) scenario="$arg" ;;
+		*)
+			if [ -n "$scenario" ]; then
+				echo "one scenario per run (got '$scenario' and '$arg')" >&2
+				exit 2
+			fi
+			scenario="$arg" ;;
 	esac
 done
 [ -n "$scenario" ] || usage
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-[ -f "$scenario" ] || scenario="$repo_root/$scenario"
+case "$scenario" in
+	/*) ;;
+	*) [ -f "$scenario" ] || scenario="$repo_root/$scenario" ;;
+esac
 if [ ! -f "$scenario" ]; then
 	echo "no such scenario: $scenario" >&2
 	exit 2
@@ -53,12 +61,11 @@ out="$(cd "$out" && pwd)"
 
 export TB_PROOF_SCENARIO="$scenario"
 export TB_PROOF_OUT="$out"
-peers="$(python3 -c 'import json,sys; print(int(json.load(open(sys.argv[1])).get("peers", 2)))' "$scenario" 2>/dev/null || echo 2)"
-
-cmd=("$repo_root/tools/net/run_net_smoke.sh" proof_two_peer "--peers=$peers" "--out=$out/net")
+# The runner reads the peer count from the scenario itself.
+cmd=("$repo_root/tools/net/run_net_smoke.sh" proof_two_peer "--out=$out/net")
 if [ "$render" = 1 ]; then
 	command -v xvfb-run >/dev/null || { echo "--render needs xvfb-run" >&2; exit 2; }
-	export TB_NET_RENDER=1
+	export TB_NET_PROOF_RENDER=1
 	cmd=(xvfb-run -a -s "-screen 0 1920x1080x24" "${cmd[@]}")
 fi
 

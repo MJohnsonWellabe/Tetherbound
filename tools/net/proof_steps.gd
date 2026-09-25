@@ -6,14 +6,17 @@ extends RefCounted
 ## `tools/net/peer_runner.gd` hands any action it does not know to `run()`
 ## here, so a proof scenario can use every existing peer step plus these:
 ##
-##   load_save       {from, slot?}        a NAMED save (slot json, or .json.gz) -> slot, then the game's own
+##   load_save       {from, slot?}        a NAMED save (a captured save directory, or a
+##                                         slot json) into this home, then the game's own
 ##                                         `load_game()` and a boot of the realm it names
 ##   screenshot      {name}               this peer's rendered frame -> PNG
 ##   capture_saves   {label}              the production autosave, then a copy of this
 ##                                         peer's saves/, worlds/ and characters/
-##   check_saved     {label, dir, contains, lacks}  what a captured save says: every
-##                                         `contains` string is in some file under
-##                                         <label>/<dir>/, no `lacks` string is in any
+##   check_saved     {label, dir, path_contains?, contains, lacks}  what a captured
+##                                         save says: every `contains` string is in some
+##                                         file under <label>/<dir>/ (optionally only
+##                                         paths containing `path_contains`), no `lacks`
+##                                         string is in any
 ##   stormheart_fixture {contributors}    HOST: who fought the Dynamo, then Marrow's
 ##                                         defeat through the ledger (F11 setup only)
 ##   stormheart_answer  {answer}          answer THIS peer's Stormheart offer through
@@ -71,53 +74,87 @@ static func out_dir(tree: SceneTree) -> String:
 
 # --- named saves -----------------------------------------------------------------
 
-## The title screen's Continue, minus the menu: copy the named save into a
-## slot, `Game.load_game()` it, then boot the realm scene the save names so the
-## world is built from the loaded state exactly as `_enter_world()` does.
+## The title screen's Continue, minus the menu: put a NAMED save in this
+## peer's fresh home, `Game.load_game()` it, then boot the realm scene the save
+## names, as `_enter_world()` does. Two forms:
+##
+##  * a DIRECTORY as `capture_saves` writes it (`saves/slot_N.json`, `worlds/`,
+##    `characters/`; any file may be `.gz`): copied as-is, locator kept, so it
+##    loads through the current split path exactly like a player's Continue.
+##    This is the faithful form.
+##  * a single slot json (or `.json.gz`): its `split_locator` names files this
+##    home does not have, so it is dropped and the save loads through the
+##    LEGACY-migration path, split into this home's own pair (the character id
+##    becomes `legacy-slot-N`). Use it only where that difference is harmless.
 static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var from := str(args.get("from", ""))
 	if from.is_empty():
-		return {"verdict": "ERROR", "detail": "load_save needs args.from (a slot json)"}
+		return {"verdict": "ERROR", "detail": "load_save needs args.from (a captured save directory or a slot json)"}
 	if not from.begins_with("res://") and not from.begins_with("/"):
 		from = ProjectSettings.globalize_path("res://").path_join(from)
 	from = ProjectSettings.globalize_path(from)
-	if not FileAccess.file_exists(from):
-		return {"verdict": "FAIL", "detail": "named save %s does not exist" % from}
 	var game := tree.root.get_node_or_null(^"Game")
 	var saver: Variant = game.get("save_system") if game != null else null
 	if saver == null:
 		return {"verdict": "ERROR", "detail": "no Game.save_system"}
-	var slot := int(args.get("slot", 4))
-	var dst := str((saver as RefCounted).call("slot_path", slot))
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dst.get_base_dir()))
-	var out := FileAccess.open(dst, FileAccess.WRITE)
-	if out == null:
-		return {"verdict": "ERROR", "detail": "could not write %s" % dst}
-	# A named save is self-contained: a captured `slot_N.json` names the split
-	# world/character pair it was written beside, which does not exist in this
-	# peer's fresh home, and `load_slot()` rightly refuses a locator whose
-	# halves are missing. Without the locator the same file loads through the
-	# ordinary legacy path and is split into this home's own pair.
-	var bytes := FileAccess.get_file_as_bytes(from)
-	if from.ends_with(".gz"):
-		bytes = bytes.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
-	var named: Variant = JSON.parse_string(bytes.get_string_from_utf8())
-	if not (named is Dictionary):
+	var slot := int(args.get("slot", 0))
+	var form := ""
+	if DirAccess.dir_exists_absolute(from):
+		form = "captured directory (split path)"
+		var found := -1
+		var saves := DirAccess.open(from.path_join("saves"))
+		if saves != null:
+			for entry: String in saves.get_files():
+				var m := RegEx.create_from_string("^slot_(\\d+)\\.json(\\.gz)?$").search(entry)
+				if m != null:
+					found = int(m.get_string(1)) if found < 0 else -2
+		if found < 0:
+			return {"verdict": "FAIL", "detail": "%s needs exactly one saves/slot_N.json" % from}
+		slot = found
+		var user := OS.get_user_data_dir()
+		var copied := 0
+		for sub: String in SAVE_DIRS:
+			copied += _copy_tree(from.path_join(sub), user.path_join(sub), true)
+		if copied == 0:
+			return {"verdict": "FAIL", "detail": "nothing to copy from %s" % from}
+	elif FileAccess.file_exists(from):
+		form = "single slot json (legacy-migration path)"
+		var dst := str((saver as RefCounted).call("slot_path", slot))
+		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dst.get_base_dir()))
+		var named: Variant = JSON.parse_string(_read_text(from))
+		if not (named is Dictionary):
+			return {"verdict": "FAIL", "detail": "named save %s is not a JSON object" % from}
+		(named as Dictionary).erase("split_locator")
+		var out := FileAccess.open(dst, FileAccess.WRITE)
+		if out == null:
+			return {"verdict": "ERROR", "detail": "could not write %s" % dst}
+		out.store_string(JSON.stringify(named))
 		out.close()
-		return {"verdict": "FAIL", "detail": "named save %s is not a JSON object" % from}
-	(named as Dictionary).erase("split_locator")
-	out.store_string(JSON.stringify(named))
-	out.close()
+	else:
+		return {"verdict": "FAIL", "detail": "named save %s does not exist" % from}
 	if not bool(game.call("load_game", slot)):
 		return {"verdict": "FAIL", "detail": "Game.load_game(%d) refused %s" % [slot, from]}
 	var realm := str(game.get("current_realm"))
-	var scene := str(WORLD_SCENES.get(realm, "world"))
+	if not WORLD_SCENES.has(realm):
+		return {"verdict": "FAIL", "detail": "the save names realm '%s', which the peer runner cannot boot" % realm}
+	var scene := str(WORLD_SCENES[realm])
 	await tree.call("_boot_scene", scene, int(args.get("settle_frames", 120)))
 	var party: RefCounted = game.get("party")
-	return {"verdict": "PASS", "detail": "loaded %s into slot %d; realm '%s' booted as '%s'"
-		% [from.get_file(), slot, realm, scene],
-		"data": {"realm": realm, "party_size": int(party.call("size")) if party != null else -1,
+	var local: Variant = game.get("local")
+	return {"verdict": "PASS", "detail": "loaded %s (%s) as slot %d; realm '%s' booted as '%s'; character '%s'"
+		% [from.get_file(), form, slot, realm, scene,
+			str((local as RefCounted).get("character_id")) if local != null else ""],
+		"data": {"realm": realm, "slot": slot, "form": form,
+			"party_size": int(party.call("size")) if party != null else -1,
+			"character_id": str((local as RefCounted).get("character_id")) if local != null else "",
 			"world_id": str(game.get("world").get("world_id")) if game.get("world") != null else ""}}
+
+
+static func _read_text(path: String) -> String:
+	var bytes := FileAccess.get_file_as_bytes(path)
+	if path.ends_with(".gz"):
+		bytes = bytes.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
+	return bytes.get_string_from_utf8()
 
 
 # --- captures --------------------------------------------------------------------
@@ -181,10 +218,15 @@ static func _capture_saves(tree: SceneTree, args: Dictionary) -> Dictionary:
 static func _check_saved(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var root_dir := out_dir(tree).path_join(str(args.get("label", "saves"))).path_join(str(args.get("dir", "")))
 	var texts: Array[String] = []
+	var names: Array[String] = []
+	var only := str(args.get("path_contains", ""))
 	for file: String in _json_files(root_dir):
-		texts.append(FileAccess.get_file_as_string(file))
+		if only.is_empty() or file.contains(only):
+			texts.append(FileAccess.get_file_as_string(file))
+			names.append(file.trim_prefix(root_dir + "/"))
 	if texts.is_empty():
-		return {"verdict": "FAIL", "detail": "no captured save files under %s" % root_dir}
+		return {"verdict": "FAIL", "detail": "no captured save files under %s%s"
+			% [root_dir, "" if only.is_empty() else " matching '%s'" % only]}
 	var missing: Array[String] = []
 	for want: Variant in (args.get("contains", []) as Array):
 		if not texts.any(func(t: String) -> bool: return t.contains(str(want))):
@@ -195,9 +237,9 @@ static func _check_saved(tree: SceneTree, args: Dictionary) -> Dictionary:
 			present.append(str(bad))
 	var ok := missing.is_empty() and present.is_empty()
 	return {"verdict": "PASS" if ok else "FAIL",
-		"detail": "%d file(s) under %s; missing %s; unexpectedly present %s"
-			% [texts.size(), root_dir.trim_prefix(out_dir(tree) + "/"), str(missing), str(present)],
-		"data": {"files": texts.size(), "missing": missing, "present": present}}
+		"detail": "missing %s; unexpectedly present %s; read %s under %s"
+			% [str(missing), str(present), str(names), root_dir.trim_prefix(out_dir(tree) + "/")],
+		"data": {"files": names, "missing": missing, "present": present}}
 
 
 static func _json_files(dir: String) -> Array[String]:
@@ -218,7 +260,8 @@ static func _json_files(dir: String) -> Array[String]:
 	return found
 
 
-static func _copy_tree(src: String, dst: String) -> int:
+## `gunzip`: a `.gz` file lands under its name without the suffix, decompressed.
+static func _copy_tree(src: String, dst: String, gunzip := false) -> int:
 	var dir := DirAccess.open(src)
 	if dir == null:
 		return 0
@@ -229,7 +272,13 @@ static func _copy_tree(src: String, dst: String) -> int:
 	while entry != "":
 		if not entry.begins_with("."):
 			if dir.current_is_dir():
-				copied += _copy_tree(src.path_join(entry), dst.path_join(entry))
+				copied += _copy_tree(src.path_join(entry), dst.path_join(entry), gunzip)
+			elif gunzip and entry.ends_with(".gz"):
+				var out := FileAccess.open(dst.path_join(entry.trim_suffix(".gz")), FileAccess.WRITE)
+				if out != null:
+					out.store_string(_read_text(src.path_join(entry)))
+					out.close()
+					copied += 1
 			elif DirAccess.copy_absolute(src.path_join(entry), dst.path_join(entry)) == OK:
 				copied += 1
 		entry = dir.get_next()
@@ -310,47 +359,68 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if ending == null or panel == null:
 		return {"verdict": "ERROR", "detail": "no StormwoodEnding/DialoguePanel in this peer's scene"}
 	var budget := int(args.get("budget_frames", 1800))
-	# The walk-up: stand beside the offer prompt, where the host's proximity
-	# check (OFFER_RADIUS_M) reads this player's replicated body.
+	# The walk-up: stand beside the offer prompt where it really offers itself
+	# to this player (enabled, in radius, line of sight) -- the host's own
+	# proximity check (OFFER_RADIUS_M) then reads this player's body there.
 	var prompt := ending.get("_offer_prompt") as Node3D
-	if prompt != null:
-		var at := prompt.global_position + Vector3(2.0, 0.5, 0.0)
+	if prompt == null:
+		return {"verdict": "ERROR", "detail": "the Stormheart has no offer prompt in this peer's scene"}
+	var player := (tree.get("_probe") as Object).call("player") as Node3D
+	if player == null:
+		return {"verdict": "ERROR", "detail": "no live player to walk up"}
+	var standing := ""
+	for offset: Vector3 in [Vector3(2, 0.5, 0), Vector3(-2, 0.5, 0), Vector3(0, 0.5, 2), Vector3(0, 0.5, -2),
+			Vector3(3, 1, 3), Vector3(-3, 1, -3)]:
+		var at := prompt.global_position + offset
 		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": int(args.get("walk_settle", 90))})
+		if not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
+			standing = str(offset)
+			break
 	var waited := 0
 	var skipped := 0
-	var asked := 0
+	var presses_on_prompt := 0
 	var next_ask := 0
+	var seen_label := ""
 	while waited < budget and not _offer_open(ending, panel):
-		# The player's walk-up: the offer prompt's `activated` handler asks the
-		# host for this character's claim (`_on_offer`, the prompt's only
-		# action), as `veridian_answer` calls its prompts' handlers. Asked again
-		# only if no claim arrived, the way a player would press it again.
-		if (ending.get("_local_claim") as Dictionary).is_empty() and waited >= next_ask:
-			ending.call("_on_offer")
-			asked += 1
-			next_ask = waited + 300
 		# The release conversation plays first and the offer waits for the
 		# panel; read any other open conversation through, as a player would.
-		if bool(panel.call("is_open")) and not _offer_open(ending, panel):
-			await _tap(tree, "interact")
+		if bool(panel.call("is_open")):
+			if not await _tap(tree, "interact"):
+				return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
 			waited += 10
 			skipped += 1
 			continue
+		# The player's own press on the prompt, through the interaction arbiter.
+		# It must be enabled and offering itself to this player right now: after
+		# the host has answered, only a participant still owed their Stormheart
+		# keeps it (the rule under proof), so a dark prompt fails here.
+		if (ending.get("_local_claim") as Dictionary).is_empty() and waited >= next_ask:
+			var offer: Dictionary = prompt.call("interaction_offer", player.global_position)
+			if not bool(prompt.get("enabled")) or offer.is_empty():
+				return {"verdict": "FAIL", "detail": "the offer prompt is not offering itself to this player (enabled=%s, standing %s, label '%s')"
+					% [str(prompt.get("enabled")), standing if not standing.is_empty() else "nowhere in reach", str(prompt.get("label"))]}
+			seen_label = str(prompt.get("label"))
+			if not await _tap(tree, "interact"):
+				return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
+			presses_on_prompt += 1
+			next_ask = waited + 300
 		await tree.physics_frame
 		waited += 1
 	if not _offer_open(ending, panel):
-		return {"verdict": "FAIL", "detail": "no Stormheart offer reached this peer in %d frames (asked %d times)"
-			% [budget, asked]}
+		return {"verdict": "FAIL", "detail": "no Stormheart offer reached this peer in %d frames (pressed the prompt %d times)"
+			% [budget, presses_on_prompt]}
 	var presses := 0
 	while presses < 40 and bool(panel.call("is_open")) and not _on_confirmation(panel):
-		await _tap(tree, "interact")
+		if not await _tap(tree, "interact"):
+			return {"verdict": "ERROR", "detail": "the interact press did not reach this peer"}
 		presses += 1
 	if not _on_confirmation(panel):
 		return {"verdict": "FAIL", "detail": "the offer closed before its Yes/No line (%d presses)" % presses}
 	var shot := {}
 	if args.has("screenshot"):
 		shot = await _screenshot(tree, {"name": str(args.screenshot)})
-	await _tap(tree, "interact" if answer == "accept" else "menu_cancel")
+	if not await _tap(tree, "interact" if answer == "accept" else "menu_cancel"):
+		return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
 	var settle := 0
 	while settle < budget and not (ending.get("_local_claim") as Dictionary).is_empty():
 		await tree.physics_frame
@@ -358,15 +428,18 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var state := _stormheart_state(tree)
 	var settled := (ending.get("_local_claim") as Dictionary).is_empty()
 	return {"verdict": "PASS" if settled else "FAIL",
-		"detail": "answered %s after reading %d earlier line(s) and %d offer line(s)%s; claim settled=%s; party holds the Stormheart=%s"
-			% [answer, skipped, presses, "" if shot.is_empty() else "; " + str(shot.get("detail", "")),
-				str(settled), str((state.data as Dictionary).get("has_stormheart"))],
+		"detail": "party holds the Stormheart=%s; claim settled=%s; answered %s by pressing the enabled prompt '%s' %d time(s) (standing %s), after %d earlier line(s) and %d offer line(s)%s"
+			% [str((state.data as Dictionary).get("has_stormheart")), str(settled), answer, seen_label,
+				presses_on_prompt, standing, skipped, presses,
+				"" if shot.is_empty() else "; " + str(shot.get("detail", ""))],
 		"data": state.data}
 
 
 static func _offer_open(ending: Node, panel: Node) -> bool:
-	return not (ending.get("_local_claim") as Dictionary).is_empty() and bool(panel.call("is_open")) \
-		and str((panel.call("runner") as RefCounted).call("conversation_id")) == load(ENDING_PATH).OFFER_CONVERSATION
+	var runner: RefCounted = panel.call("runner")
+	return runner != null and not (ending.get("_local_claim") as Dictionary).is_empty() \
+		and bool(panel.call("is_open")) \
+		and str(runner.call("conversation_id")) == load(ENDING_PATH).OFFER_CONVERSATION
 
 
 static func _on_confirmation(panel: Node) -> bool:
@@ -375,13 +448,20 @@ static func _on_confirmation(panel: Node) -> bool:
 		and bool((runner.call("line") as Dictionary).get("confirmation", false))
 
 
-static func _tap(tree: SceneTree, action: String) -> void:
-	await tree.call("_press_edge", action, true)
+## One press and release of `action` through peer_runner's own input edge
+## (the physical event plus the polled state). False if either edge failed.
+static func _tap(tree: SceneTree, action: String) -> bool:
+	var down: Variant = await tree.call("_press_edge", action, true)
 	for f in 2:
 		await tree.physics_frame
-	await tree.call("_press_edge", action, false)
+	var up: Variant = await tree.call("_press_edge", action, false)
 	for f in 8:
 		await tree.physics_frame
+	return _edge_ok(down) and _edge_ok(up)
+
+
+static func _edge_ok(result: Variant) -> bool:
+	return not (result is Dictionary) or bool((result as Dictionary).get("ok", true))
 
 
 static func _stormheart_state(tree: SceneTree) -> Dictionary:

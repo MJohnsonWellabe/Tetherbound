@@ -6,7 +6,7 @@
   "_comment_scene": "Both peers boot the light title scene; the host's named save boots its world, and the guest's world comes from boot_world (its default Meadows character).",
   "budget_s": 1500,
   "steps": [
-    {"peer": 0, "action": "load_save", "args": {"from": "tools/net/proof_saves/host_meadows_stormwood_route_open.json.gz"}, "label": "named save: Meadows, Stormwood route open"},
+    {"peer": 0, "action": "load_save", "args": {"from": "tools/net/proof_saves/host_meadows_stormwood_route_open"}, "expect_data": {"realm": "meadows", "form": "captured directory (split path)", "character_id": "character-f41f4a49223483d6bfdf56715944bb7b"}, "label": "named save: Meadows, Stormwood route open, loaded like Continue"},
     {"peer": 1, "action": "boot", "args": {"scene": "world"}, "budget_frames": 10000, "label": "guest: a fresh trainer in the Meadows"},
     {"peer": 0, "action": "host"},
     {"peer": 1, "action": "join"},
@@ -26,7 +26,8 @@
     {"peer": 1, "action": "stormheart_state", "expect_data": {"has_stormheart": false, "world_accepted": false, "world_refused": true, "accepted_anywhere": false}, "label": "guest refused, nothing granted"},
     {"peer": "all", "action": "screenshot", "args": {"name": "03_after_answers"}},
     {"peer": "all", "action": "capture_saves", "args": {"label": "after"}},
-    {"peer": 0, "action": "check_saved", "args": {"label": "after", "dir": "worlds", "contains": ["stormwood:legendary_freed", "stormwood:legendary_resolution:accepted:$character0", "stormwood:legendary_resolution:refused:$character1"]}, "label": "host's saved world holds both answers"},
+    {"peer": 0, "action": "check_saved", "args": {"label": "before", "dir": "worlds", "path_contains": "slot-0/", "contains": ["realm_gate_stormwood_unlocked"], "lacks": ["stormwood:legendary_freed", "stormwood:legendary_resolution:"]}, "label": "host's pre-offer saved world held no answers (non-vacuous baseline)"},
+    {"peer": 0, "action": "check_saved", "args": {"label": "after", "dir": "worlds", "path_contains": "slot-0/", "contains": ["stormwood:legendary_freed", "stormwood:legendary_resolution:accepted:$character0", "stormwood:legendary_resolution:refused:$character1"]}, "label": "host's saved world holds both answers"},
     {"peer": 0, "action": "check_saved", "args": {"label": "after", "dir": "characters", "contains": ["fulgocobra", "stormwood:legendary_answer:"]}, "label": "host's saved character keeps its Stormheart"},
     {"peer": 1, "action": "check_saved", "args": {"label": "after", "dir": "characters", "contains": [":refused"], "lacks": ["fulgocobra"]}, "label": "guest's saved character refused and holds none"},
     {"peer": 1, "action": "check_saved", "args": {"label": "before", "dir": "characters", "lacks": ["fulgocobra", "stormwood:legendary_answer:"]}, "label": "guest's pre-offer save held no answer (non-vacuous baseline)"}
