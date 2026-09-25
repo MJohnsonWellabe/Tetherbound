@@ -215,13 +215,19 @@ func _run() -> void:
 	# stands -- the way it reaches a player who watched the lever pulled.
 	var host_in := false
 	var host_stage := ""
+	var host_view: Dictionary = {}
 	for _poll in 60:
-		host_stage = str((await _choice(0)).get("stage", ""))
+		host_view = await _choice(0)
+		host_stage = str(host_view.get("stage", ""))
 		if host_stage != "":
 			host_in = true
 			break
 		await step(0, "wait", {"frames": 10})
-	check(host_in, "the host, standing in the chamber, had its own offer begin (stage '%s')" % host_stage)
+	check(host_in, "the host, standing in the chamber, had its own offer begin (stage '%s'; %s)"
+		% [host_stage, JSON.stringify({"freed": host_view.get("freed"), "near": host_view.get("near"),
+			"may_receive": host_view.get("may_receive"), "panel_open": host_view.get("panel_open"),
+			"participants": host_view.get("participants"), "live_id": host_view.get("live_id"),
+			"receipts": host_view.get("receipts")})])
 	await _diagnose_participants("after the freeing")
 
 	# 6. Each peer's own choice opens.

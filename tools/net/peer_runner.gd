@@ -5967,6 +5967,14 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"healing_found": vhealing != null,
 				"herd_display": vhealing != null and vhealing.has_method("herd_display")
 					and vhealing.call("herd_display") != null,
+				# Why an offer has or has not begun: each of the idle stage's
+				# own conditions, read through the climax (read-only calls).
+				"freed": vclimax != null and bool(vclimax.call("legendary_is_freed")),
+				"near": vclimax != null and bool(vclimax.call("_player_near_legendary")),
+				"may_receive": vclimax != null and bool(vclimax.call("_may_receive_now")),
+				"panel_open": vclimax != null and bool(vclimax.call("_panel_busy")),
+				"participants": [] if vclimax == null else vclimax.call("_warden_participant_characters"),
+				"live_id": str((vgame.get("local") as RefCounted).get("character_id")) if vgame.get("local") != null else "",
 			}
 		"realm":
 			# Wave 6 lane 6.A. Where this peer is standing, and where it
