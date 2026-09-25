@@ -1040,9 +1040,6 @@ func slot_locator_character(slot: int) -> String:
 	return str((locator as Dictionary).get("character_id", ""))
 
 
-## "May this process write the world?" -- `game_state.gd::is_host()`, which is
-## true solo, true for a host, and true for a process with no session at all
-## (a headless test, a capture tool, the `FakeGame` in `test_save_format.gd`).
 ## May this process write a world document? The host test plus world-save
 ## ownership: a former client reads is_host() true after teardown while it
 ## still holds the host's retained world, whose id would otherwise be written
@@ -1056,6 +1053,9 @@ func _owns_world(game: Object) -> bool:
 	return true
 
 
+## "May this process write the world?" -- `game_state.gd::is_host()`, which is
+## true solo, true for a host, and true for a process with no session at all
+## (a headless test, a capture tool, the `FakeGame` in `test_save_format.gd`).
 func _is_host(game: Object) -> bool:
 	if game == null:
 		return false
