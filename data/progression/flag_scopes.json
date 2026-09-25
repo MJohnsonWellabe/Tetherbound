@@ -158,7 +158,8 @@
       "farm:",
       "wild_once_",
       "warrens_once_",
-      "stormwood:"
+      "stormwood:",
+      "legendary_resolution:"
     ]
   },
   "player": {
@@ -185,6 +186,7 @@
       "home_materials_gathered",
       "creature_bed_built",
       "legendary_joined",
+      "legendary_refused",
       "alpha_pin_intro_seen",
       "band1_meadowhart_herd_found",
       "south_bridge_team_prompt_heard",
