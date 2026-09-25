@@ -42,7 +42,15 @@ func _process(delta: float) -> void:
 		return
 	var peer: int = actors.keys()[_rng.randi_range(0, actors.size() - 1)]
 	var body: Node3D = actors[peer]
-	var at := body.global_position
+	var in_fight := _trainer_in_fight(peer)
+	var creature_body := _creature_body_for(peer) if in_fight else null
+	var aim: Variant = strike_aim(body.global_position, in_fight,
+		creature_body.global_position if is_instance_valid(creature_body) else null, _spare_trainer_in_fight())
+	if aim == null:
+		return
+	if in_fight and _spare_trainer_in_fight():
+		body = creature_body
+	var at: Vector3 = aim
 	if not rules.strike_window(at, surge.phase_at_position(at)) or not exposed(at, body):
 		return
 	at.y = world.ground_height_near(at) + 0.08
@@ -103,6 +111,8 @@ func _resolve(event: Dictionary) -> void:
 	var actors := _actors()
 	for peer: int in event.peers:
 		if not actors.has(peer):
+			continue
+		if not trainer_can_be_hit(_trainer_in_fight(peer), _spare_trainer_in_fight()):
 			continue
 		var body: Node3D = actors[peer]
 		if body.global_position.distance_to(at) <= float(rules.config.strike.radius_m) and exposed(body.global_position, body):
@@ -465,3 +475,74 @@ func _expire_warning(id: int) -> void:
 	_visuals.erase(id)
 	if is_instance_valid(ring):
 		ring.queue_free()
+
+
+## Coordinator interim ruling (stormwood_surge.json strike
+## `_why_spare_trainer_in_fight`): a trainer committed to a creature fight is
+## neither aimed at nor hit; the strike may aim at the piloted creature instead.
+func _spare_trainer_in_fight() -> bool:
+	return bool(rules.config.strike.get("spare_trainer_in_fight", false))
+
+
+## Host view of whether `peer`'s trainer is in a creature fight: the local
+## combat manager or hosted trainer battle for the host's own trainer, and for
+## any peer an open host encounter record (shared wild, hosted trainer) that
+## lists it, or a registered Stormwood hosted fight that does. A guest's
+## unshared local wild fight is not visible to the host (MULTIPLAYER §4).
+func _trainer_in_fight(peer: int) -> bool:
+	if world == null or session == null or not _spare_trainer_in_fight():
+		return false
+	var local := peer == int(session.local_peer_id()) and not bool(world.get("simulation_only"))
+	var manager := world.get_node_or_null(^"CombatManager")
+	var director := world.get_node_or_null(^"EncounterDirector")
+	var local_fighting := local and ((manager != null and bool(manager.call("is_fighting"))) \
+		or (director != null and bool(director.call("trainer_battle_active"))))
+	var hub := world.get_node_or_null(^"StormwoodEncounterHub")
+	var records: Dictionary = {}
+	var fight_participants: Array = []
+	if hub != null:
+		var authority: Variant = hub.get("authority")
+		if authority is Object:
+			records = (authority as Object).get("encounters")
+		for fight: Variant in (hub.get("fights") as Dictionary).values():
+			if is_instance_valid(fight) and not bool((fight as Object).get("finished")):
+				fight_participants.append_array((fight as Object).get("participants"))
+	return peer_in_fight(peer, local_fighting, records, fight_participants)
+
+
+func _creature_body_for(peer: int) -> Node3D:
+	var director := world.get_node_or_null(^"EncounterDirector") if world != null else null
+	if director == null:
+		return null
+	var body: Variant = director.call("deployed_body_for", peer)
+	return body as Node3D if is_instance_valid(body) else null
+
+
+## Pure: is `peer` in a creature fight, from the host's records.
+static func peer_in_fight(peer: int, local_fighting: bool, records: Dictionary,
+		fight_participants: Array) -> bool:
+	if local_fighting or fight_participants.has(peer):
+		return true
+	for record: Variant in records.values():
+		if not record is Dictionary or str((record as Dictionary).get("phase", "")) == "done":
+			continue
+		var participants: Variant = (record as Dictionary).get("participants", {})
+		if participants is Dictionary and (participants as Dictionary).has(peer):
+			return true
+		if participants is Array and (participants as Array).has(peer):
+			return true
+	return false
+
+
+## Pure: where a strike chosen for this trainer aims, or null for none. A
+## fighting trainer is spared; the strike aims at the piloted creature, or
+## is skipped when no creature body is out.
+static func strike_aim(trainer_at: Vector3, in_fight: bool, creature_at: Variant, spare: bool) -> Variant:
+	if not (spare and in_fight):
+		return trainer_at
+	return creature_at if creature_at is Vector3 else null
+
+
+## Pure: may an impact damage this trainer.
+static func trainer_can_be_hit(in_fight: bool, spare: bool) -> bool:
+	return not (spare and in_fight)

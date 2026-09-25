@@ -21,6 +21,18 @@ const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const PICKUPS := preload("res://scripts/world/stormwood_pickup_runtime.gd")
 const CROWN_SEGMENT := preload("res://tests/helpers/stormwood_crown_build_segment.gd")
+const SAFETY := preload("res://tests/helpers/stormwood_field_safety.gd")
+const ROOTGATE_SEGMENT := preload("res://tests/helpers/stormwood_earned_rootgate_segment.gd")
+const DYNAMO_SEGMENT := preload("res://tests/helpers/stormwood_earned_dynamo_segment.gd")
+const MARROW_SEGMENT := preload("res://tests/helpers/stormwood_earned_marrow_segment.gd")
+const AFTERMATH_SEGMENT := preload("res://tests/helpers/stormwood_earned_aftermath_segment.gd")
+const ENDING := preload("res://scripts/world/stormwood_ending.gd")
+const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
+## F11 witness (WO-F11-04): `--witness-dir=user://<dir>` pins the split-save
+## tree so a later process can load it; `--through-aftermath` composes the
+## earned segments after the Crown; `--verify-reload` is that later process.
+const WITNESS_EXPECT := "f11_witness_expect.json"
+const AFTERMATH_WATCHDOG_MS := 90 * 60 * 1000
 
 const TEST_SAVE_DIR_PREFIX := "user://stormwood_continuous_chapter_entry"
 const SCENE_WAIT_FRAMES := 7200
@@ -32,7 +44,10 @@ const SCENE_WAIT_FRAMES := 7200
 # Twenty minutes covers the observed eight-minute prefix + that walk + the
 # unchanged trainer bound + interaction/dialogue margin. Per-step limits remain
 # authoritative, so this outer guard is capacity rather than a weaker assertion.
-const PREFIX_WATCHDOG_MS := 20 * 60 * 1000
+# F11 witness: route fights now run at 1x wall clock (see
+# `_fight_current_encounter`), which lengthens their wall time; thirty minutes
+# keeps the same margin.
+const PREFIX_WATCHDOG_MS := 30 * 60 * 1000
 const COMPLETED_CLOUDREACH_FLAGS: Array[String] = [
 	"cloudreach_chapter_started",
 	"cloudreach_act_i_complete",
@@ -53,10 +68,25 @@ var _finished := false
 var _segment: Variant = null
 var _prefix_complete := false
 var _crown_complete := false
+var _aftermath_complete := false
+var _witness_dir := ""
+var _step_started_ms := 0
+var _step_results: Array = []
 
 
 static func through_crown(arguments: PackedStringArray) -> bool:
-	return arguments.has("--through-crown")
+	return arguments.has("--through-crown") or through_aftermath(arguments)
+
+
+static func through_aftermath(arguments: PackedStringArray) -> bool:
+	return arguments.has("--through-aftermath")
+
+
+static func witness_dir(arguments: PackedStringArray) -> String:
+	for raw: String in arguments:
+		if raw.begins_with("--witness-dir="):
+			return raw.substr("--witness-dir=".length())
+	return ""
 
 
 func _init() -> void:
@@ -75,7 +105,13 @@ func _run() -> void:
 	# under the default user://saves|worlds|characters roots belongs to a smoke.
 	var test_save_dir := "%s_%d_%d" % [
 		TEST_SAVE_DIR_PREFIX, OS.get_process_id(), Time.get_ticks_usec()]
+	_witness_dir = witness_dir(OS.get_cmdline_user_args())
+	if not _witness_dir.is_empty():
+		test_save_dir = _witness_dir
 	game.set("save_system", SAVE_GAME.new(test_save_dir))
+	if OS.get_cmdline_user_args().has("--verify-reload"):
+		await _verify_reload(game)
+		return
 	await process_frame
 	game.call("reset_for_new_game")
 	game.get("local").set("character_id", "stormwood-continuous-solo")
@@ -138,6 +174,14 @@ func _run() -> void:
 		_finish()
 		return
 
+	if not _witness_dir.is_empty():
+		# The earliest honest disk save: the authored Stormwood arrival right
+		# after the disclosed in-memory Cloudreach seam, before any Stormwood
+		# action. The same live run continues from here.
+		_expect(bool(game.call("save_game", int(game.call("autosave_slot")))),
+			"wrote the chapter-entry save to disk at the Stormwood arrival")
+		_print_save_files("ENTRY SAVE", test_save_dir)
+	_step_begin()
 	_segment = Segment.new()
 	var result: Dictionary = await _segment.run(self, world, game)
 	for line: Variant in result.get("transcript", []):
@@ -145,17 +189,200 @@ func _run() -> void:
 	for line: Variant in result.get("failures", []):
 		_failures.append(str(line))
 	_prefix_complete = _failures.is_empty() and bool(result.get("passed", false))
+	_step_end("prefix: arrival through Ondra's arch recipe", _prefix_complete)
+	if _segment.get("safety") != null:
+		print("F11 WITNESS STRIKES prefix %s" % JSON.stringify(_segment.safety.counts))
+		_segment.safety.detach()
+	print("F11 WITNESS TOOLS after prefix: knife x%d axe x%d pickaxe x%d hotbar=%s" % [
+		int(game.get("inventory").call("count", "knife")), int(game.get("inventory").call("count", "axe")),
+		int(game.get("inventory").call("count", "pickaxe")), str(game.get("local").get("hotbar"))])
 	if _prefix_complete and through_crown(OS.get_cmdline_user_args()):
 		# The helper inherits this exact live world and earned recipe. It is
 		# never reached after a failed prefix, and creates no new entry fixture.
 		_crown_watchdog.call_deferred()
+		_step_begin()
 		var crown := CROWN_SEGMENT.new()
 		var built: Dictionary = await crown.run(self, world, game)
+		_print_transcript(built)
 		for line: Variant in built.get("failures", []):
 			_failures.append(str(line))
 		_crown_complete = bool(built.get("passed", false))
+		_step_end("Capacitor Alpha, Crown gathering, two frames, paid Crown arch", _crown_complete)
+		print("F11 WITNESS STRIKES crown %s" % JSON.stringify(crown.strike_counts()))
 		_expect(_crown_complete, "same live chapter path reached the paid Crown arch")
+	if _crown_complete and through_aftermath(OS.get_cmdline_user_args()):
+		_aftermath_watchdog.call_deferred()
+		for entry: Array in [[ROOTGATE_SEGMENT, "Crown arrival, guardian, Wen, Rootgate"],
+				[DYNAMO_SEGMENT, "Deepwood, rods, Kestrel, core ascent"],
+				[MARROW_SEGMENT, "Marrow five rounds and the real four-conduit Break"],
+				[AFTERMATH_SEGMENT, "Stormheart offer kept at five, Waterward aftermath"]]:
+			_step_begin()
+			var later_segment: RefCounted = (entry[0] as GDScript).new()
+			var later: Dictionary = await later_segment.run(self, current_scene as Node3D, game)
+			if later_segment.has_method("strike_counts"):
+				print("F11 WITNESS STRIKES %s %s" % [str(entry[1]), JSON.stringify(later_segment.strike_counts())])
+			_print_transcript(later)
+			for line: Variant in later.get("failures", []):
+				_failures.append(str(line))
+			var passed := bool(later.get("passed", false)) and _failures.is_empty()
+			_step_end(str(entry[1]), passed)
+			if not passed:
+				_finish()
+				return
+		_aftermath_complete = true
+		if not _witness_dir.is_empty():
+			_write_witness_save(game, test_save_dir)
 	_finish()
+
+
+func _step_begin() -> void:
+	_step_started_ms = Time.get_ticks_msec()
+
+
+func _step_end(label: String, passed: bool) -> void:
+	var seconds := float(Time.get_ticks_msec() - _step_started_ms) / 1000.0
+	_step_results.append({"step": label, "passed": passed, "wall_s": seconds})
+	print("F11 WITNESS STEP %s %s wall=%.1fs" % ["PASS" if passed else "FAIL", label, seconds])
+
+
+func _print_transcript(result: Dictionary) -> void:
+	for line: Variant in result.get("transcript", []):
+		print("STORMWOOD CONTINUOUS — %s" % str(line))
+
+
+func _print_save_files(label: String, dir: String) -> void:
+	var base := ProjectSettings.globalize_path(dir)
+	for sub: String in ["", "worlds", "characters"]:
+		var path := base.path_join(sub)
+		if not DirAccess.dir_exists_absolute(path):
+			continue
+		for name: String in DirAccess.get_files_at(path):
+			var file := path.path_join(name)
+			print("%s %s sha256=%s" % [label, file, FileAccess.get_sha256(file)])
+		for child: String in DirAccess.get_directories_at(path):
+			for name: String in DirAccess.get_files_at(path.path_join(child)):
+				var nested := path.path_join(child).path_join(name)
+				print("%s %s sha256=%s" % [label, nested, FileAccess.get_sha256(nested)])
+
+
+## The final disk save of the earned run, plus the facts a restarted process
+## must find in it.
+func _write_witness_save(game: Node, dir: String) -> void:
+	_expect(bool(game.call("save_game", int(game.call("autosave_slot")))),
+		"wrote the post-aftermath save to disk")
+	var party: Array = []
+	for creature: RefCounted in game.get("party").call("members"):
+		party.append({"uid": str(creature.get("uid")), "species": str(creature.get("species_id"))})
+	var answers: Array = []
+	for flag: Variant in game.call("player_flags").call("all_set"):
+		if str(flag).begins_with(ENDING.ANSWER_PREFIX):
+			answers.append(str(flag))
+	var expect := {"party": party, "answers": answers,
+		"character_id": str(game.get("local").get("character_id")),
+		"world_flags": _witness_world_flags(game), "realm": str(game.get("current_realm"))}
+	var file := FileAccess.open(dir.path_join(WITNESS_EXPECT), FileAccess.WRITE)
+	file.store_string(JSON.stringify(expect, "\t"))
+	file.close()
+	print("F11 WITNESS EXPECT %s" % JSON.stringify(expect))
+	_print_save_files("FINAL SAVE", dir)
+
+
+static func _witness_world_flags(game: Node) -> Dictionary:
+	var out := {}
+	var progression: RefCounted = game.get("progression")
+	for flag: String in ["stormwood:marrow_defeated", "stormwood:legendary_freed",
+			"stormwood:legendary_offer_made", "stormwood:long_storm_ended",
+			"realm_heart_stormwood_earned", "stormwood:waterward_revealed", "realm_key_water",
+			"waterward_route_revealed", "stormwood:chapter_complete", "realm_gate_water_unlocked",
+			"realm_heart_stormwood_placed"]:
+		out[flag] = bool(progression.call("has", flag))
+	for flag: Variant in game.call("world_flags").call("all_set"):
+		if str(flag).begins_with(ENDING.RESOLUTION_PREFIX):
+			out[str(flag)] = true
+	return out
+
+
+## A fresh process: the real title screen's Load of the autosave slot from the
+## witness directory, then the saved-realm scene, then the persisted facts.
+func _verify_reload(game: Node) -> void:
+	await process_frame
+	var expect_text := FileAccess.get_file_as_string(_witness_dir.path_join(WITNESS_EXPECT))
+	var expect: Variant = JSON.parse_string(expect_text)
+	_expect(expect is Dictionary, "the witness expectation file is on disk")
+	if not expect is Dictionary:
+		_finish()
+		return
+	_print_save_files("RELOAD SAVE", _witness_dir)
+	var title := (load(TITLE_SCENE) as PackedScene).instantiate()
+	root.add_child(title)
+	current_scene = title
+	for _i in 30:
+		await process_frame
+	title.set("_host_port", 0)
+	title.call("_load_slot", int(game.call("autosave_slot")))
+	var world: Node3D = null
+	for _frame in SCENE_WAIT_FRAMES:
+		var scene := current_scene as Node3D
+		if scene != null and scene.name == "Stormwood" and bool(scene.call("shell_build_complete")):
+			world = scene
+			break
+		await physics_frame
+	_expect(world != null, "title Load reopened the saved Stormwood from disk")
+	if world == null:
+		_finish()
+		return
+	var offers: Array = []
+	var session: Node = game.get("session") as Node
+	session.connect("stormwood_encounter_message", func(event: Dictionary) -> void:
+		if str(event.get("kind", "")) == "ending_offer":
+			offers.append(event))
+	for _i in 600:
+		await physics_frame
+	var e := expect as Dictionary
+	_expect(str(game.get("local").get("character_id")) == str(e.character_id),
+		"the same stable character returns (%s)" % str(e.character_id))
+	var party: Array = []
+	for creature: RefCounted in game.get("party").call("members"):
+		party.append({"uid": str(creature.get("uid")), "species": str(creature.get("species_id"))})
+	_expect(JSON.stringify(party) == JSON.stringify(e.party),
+		"the kept Stormheart and the other four return exactly (%s)" % JSON.stringify(party))
+	var answers: Array = []
+	for flag: Variant in game.call("player_flags").call("all_set"):
+		if str(flag).begins_with(ENDING.ANSWER_PREFIX):
+			answers.append(str(flag))
+	_expect(answers == e.answers and answers.size() == 1 and str(answers[0]).ends_with(":accepted"),
+		"the Stormheart receipt persists: %s" % str(answers))
+	var flags := _witness_world_flags(game)
+	_expect(JSON.stringify(flags) == JSON.stringify(e.world_flags),
+		"the aftermath, Spark and resolution world facts persist: %s" % JSON.stringify(flags))
+	for flag: String in ["stormwood:long_storm_ended", "realm_heart_stormwood_earned",
+			"stormwood:waterward_revealed", "stormwood:chapter_complete", "stormwood:legendary_offer_made"]:
+		_expect(bool(flags.get(flag, false)), "persisted " + flag)
+	var hearts: RefCounted = game.get("realm_hearts")
+	_expect(bool(hearts.call("is_earned", "stormwood", game.get("progression"))),
+		"the Spark of the Stormwood is earned after reload")
+	var ending := world.get_node("StormwoodEnding")
+	var panel := world.get_node_or_null("DialoguePanel")
+	_expect(offers.is_empty() and (ending.get("_local_claim") as Dictionary).is_empty()
+		and not bool(ending.get_node("StormheartOffer").get("enabled"))
+		and not (panel != null and bool(panel.call("is_open"))),
+		"no re-offer after reload (offers=%d)" % offers.size())
+	_expect(not (ending.get("_cage") as Node3D).visible and (ending.get("_waterward_sea") as Node3D).visible,
+		"the Long Storm aftermath presentation is restored: containment gone, Waterward sea shown")
+	var dynamo := world.get_node("StormwoodDynamo")
+	_expect(str(dynamo.get("phase")) == "released", "the Dynamo reloads resolved (phase released)")
+	print("F11 WITNESS RELOAD %s" % JSON.stringify({"flags": flags, "party": party, "answers": answers,
+		"offers": offers.size(), "dynamo_phase": str(dynamo.get("phase"))}))
+	_crown_complete = true
+	_aftermath_complete = true
+	_finish()
+
+
+func _aftermath_watchdog() -> void:
+	await create_timer(float(AFTERMATH_WATCHDOG_MS) / 1000.0, true, false, true).timeout
+	if not _finished:
+		_failures.append("aftermath watchdog expired after the paid Crown arch")
+		_finish()
 
 
 func _wait_for_stormwood() -> Node3D:
@@ -182,7 +409,7 @@ func _crown_watchdog() -> void:
 	# A separate segment receives the same bounded capacity; the original
 	# prefix deadline and every helper action/locomotion limit stay unchanged.
 	await create_timer(float(PREFIX_WATCHDOG_MS) / 1000.0, true, false, true).timeout
-	if not _finished:
+	if not _finished and not _crown_complete:
 		_failures.append("Crown construction watchdog expired after the earned Ondra recipe")
 		_finish()
 
@@ -204,6 +431,9 @@ func _finish() -> void:
 	Engine.max_physics_steps_per_frame = 8
 	if _failures.is_empty():
 		var endpoint := "paid Crown arch" if _crown_complete else "Act-II arch recipe"
+		if _aftermath_complete:
+			endpoint = "Stormheart kept and Waterward aftermath" if not OS.get_cmdline_user_args().has("--verify-reload") \
+				else "reloaded witness save"
 		print("stormwood continuous: OK — chapter-entry through the %s passed without Stormwood flag or position fixtures" % endpoint)
 		quit(0)
 		return
@@ -256,6 +486,7 @@ class Segment extends RefCounted:
 	var _active_target_valid := false
 	var _active_walk_budget := 0
 	var _active_walked := 0
+	var safety: RefCounted
 
 
 	static func route_pickup_reward(id: String) -> Dictionary:
@@ -283,6 +514,10 @@ class Segment extends RefCounted:
 			_fail("Stormwood lacks the production hosted-encounter result signal")
 			return _result()
 		session.connect("stormwood_encounter_message", _on_stormwood_encounter_message)
+		# F11 witness: react to lightning warnings, log hits/deaths, and take
+		# back the satchel after a death (tests/helpers/stormwood_field_safety.gd).
+		safety = SAFETY.new()
+		safety.attach(tree, world, game, player, camera, _send_stick)
 		manager.connect("exited", _on_combat_exited)
 		navigator = NAVIGATOR.new(tree, player, camera, _send_stick)
 		if game.get("progression").call("has", "stormwood:chapter_started"):
@@ -520,6 +755,8 @@ class Segment extends RefCounted:
 			return false
 		if not await _ensure_usable_ally(id):
 			return false
+		if not await _lead_with_fittest(id):
+			return false
 		var spec: Dictionary = trainers.get("authored_specs").get(id, {})
 		if not bool(director.call("can_challenge", spec)):
 			_fail(("%s remains unavailable after usable-ally recovery "
@@ -564,6 +801,44 @@ class Segment extends RefCounted:
 		if not await _wait_flag(defeat_flag, 300):
 			_fail("%s combat ended without durable defeat flag %s" % [id, defeat_flag])
 			return false
+		return true
+
+
+	## A trainer sequence is fought by the one deployed creature (a faint is the
+	## loss), so before a named challenge the player sends out the party member
+	## with the most hit points left, with ordinary LB presses; the director's
+	## own party sync recalls and redeploys. Wild fights on the road leave the
+	## lead worn, and no rest is taken on this route. F11 witness run 3.
+	func _lead_with_fittest(label: String) -> bool:
+		var party: RefCounted = game.get("party") as RefCounted
+		var members: Array = party.call("members")
+		var best: RefCounted = null
+		var rows: Array[String] = []
+		for member: RefCounted in members:
+			rows.append("%s %d/%d%s" % [str(member.get("species_id")), int(member.get("hp")),
+				int(member.get("max_hp")), " fainted" if bool(member.get("fainted")) else ""])
+			if bool(member.get("fainted")) or bool(member.get("resting")):
+				continue
+			if best == null or float(member.get("hp")) > float(best.get("hp")):
+				best = member
+		_note("PARTY before %s: %s (active %s)" % [label, ", ".join(rows),
+			str((party.call("active") as RefCounted).get("species_id")) if party.call("active") != null else "none"])
+		if best == null:
+			_fail("no conscious party member left before " + label)
+			return false
+		for _press in members.size():
+			if party.call("active") == best:
+				break
+			await _tap(&"party_cycle")
+		for _frame in 240:
+			if director.call("ally_instance") == best and director.call("ally_body") != null:
+				break
+			await tree.physics_frame
+		if director.call("ally_instance") != best:
+			_fail("ordinary LB did not send out the fittest member before " + label)
+			return false
+		_note("LEAD for %s: %s at %d/%d" % [label, str(best.get("species_id")), int(best.get("hp")),
+			int(best.get("max_hp"))])
 		return true
 
 
@@ -890,8 +1165,29 @@ class Segment extends RefCounted:
 		return false
 
 
+	## The Conductor Road is walked at the real 1x clock (coordinator order
+	## for run 12): lightning telegraphs there are answered in real time.
 	func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
 			record_failure: bool = true) -> bool:
+		if not label.to_lower().contains("conductor") or is_equal_approx(Engine.time_scale, 1.0):
+			return await _walk_xz_clocked(point, label, tolerance, record_failure)
+		var previous_scale := Engine.time_scale
+		var previous_hz := Engine.physics_ticks_per_second
+		await tree.process_frame
+		Engine.time_scale = 1.0
+		Engine.physics_ticks_per_second = 60
+		await tree.process_frame
+		var arrived := await _walk_xz_clocked(point, label, tolerance, record_failure)
+		await tree.process_frame
+		Engine.time_scale = previous_scale
+		Engine.physics_ticks_per_second = previous_hz
+		return arrived
+
+
+	func _walk_xz_clocked(point: Vector2, label: String, tolerance: float = 1.3,
+			record_failure: bool = true) -> bool:
+		if safety != null:
+			safety.set("phase", "walk to " + label)
 		var target := Vector3(point.x, world.call("ground_height_at", point.x, point.y), point.y)
 		var distance := Vector2(player.global_position.x, player.global_position.z).distance_to(point)
 		var budget := maxi(1800, int(distance * 80.0))
@@ -909,6 +1205,17 @@ class Segment extends RefCounted:
 			if remaining <= tolerance:
 				arrived = true
 				break
+			if safety != null and bool(safety.call("needs_recovery")):
+				if not bool(await safety.call("recover", Callable(self, "_walk_xz"), Callable(self, "_activate_node"))):
+					_fail("could not take back the trainer's death satchel during " + label)
+					return false
+				_begin_phase("walk to %s" % label, point)
+				navigator.call("reset")
+				continue
+			if safety != null and bool(await safety.call("dodge_step", target)):
+				walked += 1
+				navigator.call("reset")
+				continue
 			if bool(navigator.call("can_walk")):
 				walked += 1
 				held = 0
@@ -979,11 +1286,24 @@ class Segment extends RefCounted:
 	## for exploration to restore itself. Every strike below is an Input action;
 	## no HP, manager state, reward, or encounter flag is written by the harness.
 	func _fight_current_encounter(route_label: String) -> bool:
+		if safety != null:
+			safety.set("phase", "fight during " + route_label)
 		var started := Time.get_ticks_msec()
 		var tick := 0
 		_last_combat_outcome = ""
 		var next_quick_ms := 0
 		var quick_release_tick := -1
+		# The press cadence below is wall-clock (as the host's strike cooldown
+		# is), so production combat must run on that same clock. Left at the
+		# wrapper's 8x weather/locomotion scale, the enemy acted eight times
+		# per press and Varga's third round was lost (F11 witness run 2); the
+		# Crown helper's `_fight_current()` already keeps combat at 1x.
+		var previous_scale := Engine.time_scale
+		var previous_hz := Engine.physics_ticks_per_second
+		await tree.process_frame
+		Engine.time_scale = 1.0
+		Engine.physics_ticks_per_second = 60
+		await tree.process_frame
 		while bool(manager.call("is_fighting")) and Time.get_ticks_msec() - started < 180000:
 			var enemy := manager.call("enemy_body") as Node3D
 			var ally := director.call("ally_body") as Node3D
@@ -1010,6 +1330,9 @@ class Segment extends RefCounted:
 			await tree.physics_frame
 		_set_action(&"combat_quick", false)
 		_send_stick.call(0.0, 0.0)
+		await tree.process_frame
+		Engine.time_scale = previous_scale
+		Engine.physics_ticks_per_second = previous_hz
 		if bool(manager.call("is_fighting")):
 			_fail("production encounter during %s did not resolve through controller combat within 180 seconds" % route_label)
 			return false

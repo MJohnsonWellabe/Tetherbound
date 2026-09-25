@@ -1594,6 +1594,20 @@ jobs:
       - name: Verify Tidewake dismount leaves no mounted state
         if: ${{ !cancelled() }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_dismount_state.gd
+      # F12 (ACCEPTANCE 6.1): drowning and the safe shore, the fully drowned
+      # recovery, and a disk reload mid-water (human and mounted) agree.
+      - name: Verify Tidewake drowning and safe shore
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_water_swimming.gd
+      - name: Verify Tidewake drowned recovery
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_player_death.gd
+      - name: Verify Tidewake reload mid-water
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_reconnect_save.gd
+      - name: Verify Tidewake mounted reload mid-water
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_mounted_reconnect_save.gd
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
@@ -2860,11 +2874,69 @@ jobs:
   # One stable required status for branch protection. A skipped known-red job
   # is an explicit exclusion; an active failure/cancellation or a missing
   # export on a code change cannot become a green merge gate.
+  verify-veridian-offer:
+    # F05 solo Veridian offer (walked, six world boots, ~31 min) and the rift
+    # gate-opens-once smoke (~4 min), on their own runner so the long smoke
+    # runs in parallel with the other jobs instead of lengthening one of them.
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Fetch commits and trees but no blobs, then materialise only the
+          # paths a verification job actually reads. `changes` already proved
+          # blob:none works here. The four excluded trees are 1.20 GB of the
+          # 2.08 GB tracked tip and no job reads any of them: this file's own
+          # no-build filter below already classes ralph/ and docs/ as paths
+          # that do not trigger a build, shots/ and ralph/reports are capture
+          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
+          # should never have been committed. Measured: 2.1 GB -> 895 MB of
+          # working tree, importing clean and passing smoke + unit shard.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      # F05 (ACCEPTANCE 6.1, card M4): the Veridian offer answered by a solo
+      # player, with room on the belt and at five, accepted and refused, each
+      # answer given by WALKING to its prompt, then a real save/reload that
+      # must not offer it again; full refusal must leave the saved herd
+      # display. Six world boots, measured 31 min locally (headless).
+      - name: Verify veridian_offer_choice
+        if: ${{ !cancelled() }}
+        timeout-minutes: 45
+        env: { SMOKE: veridian_offer_choice, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
+      - name: Verify rift gate opens once
+        if: ${{ !cancelled() }}
+        run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
+
   ci-gate:
     runs-on: ubuntu-latest
     if: always()
     needs:
       - changes
+      - verify-veridian-offer
       - verify-scatter-bake-freshness
       - verify-terrain-bake-freshness
       - verify-unit-tests

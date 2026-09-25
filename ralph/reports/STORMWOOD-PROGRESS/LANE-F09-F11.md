@@ -465,3 +465,179 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   | Pause disabled | 6 fails |
   | A live partner ignored | 1 fail (the co-op check) |
   | Re-show removed | 1 fail |
+
+## WO-F11-04: earned Dynamo → aftermath witness (`ralph/stormwood-f11-proof`)
+
+**Status: STOPPED at the named Capacitor Alpha (first step after Ondra's recipe), after three real attempts.** The Dynamo, the Stormheart offer, the aftermath, the reload and the captures were not reached. No F11 clause is met by this witness.
+
+- **Platform:** Linux container, Godot 4.7-stable, headless `--script` runs (no render for the witness itself).
+- **Input:** ordinary controller actions injected as `InputEventAction` (stick, interact, combat_quick, party_cycle, creature_recall, ui_*, menu_cancel) through the existing segment helpers. Each helper lists its own exceptions.
+- **Starting save origin:** `tests/smoke_stormwood_continuous.gd` with its disclosed in-memory seam. That seam supplies nine completed-Cloudreach world flags, a party of five at level 44 (sparkit, mudsnout, bramblebun, terrapup, brooktail) and knife/axe/pickaxe on the hotbar. It sets no `stormwood:*` flag. With `--witness-dir=user://f11_witness`, the first real disk save (autosave slot 0 plus the world/character split) is written at the authored Stormwood arrival, before any Stormwood action. The same live run then continues.
+- **Route:** the normal route by ordinary input, with the instrumented timing the segments already declare: 8x weather/locomotion clock, and combat at 1x.
+- **Command:** `godot --headless --path . --script tests/smoke_stormwood_continuous.gd -- --through-aftermath --witness-dir=user://f11_witness`, then the same command with `--verify-reload` in a new process.
+
+### Fixes the runs showed (all Stormwood-owned, each committed before the next run)
+
+| Run | First failure | Diagnosis | Fix |
+|---|---|---|---|
+| 2 (`--through-crown`) | Varga's 3rd round lost | Prefix route fights ran at the 8x clock, but the press cadence is wall-clock | `_fight_current_encounter` runs combat at 1x, as the Crown helper already did |
+| 3 | Varga lost again (worn lead) | A trainer sequence is fought by one creature; the lead was worn by road fights | Before a named trainer, send out the fittest member with ordinary LB presses |
+| 4 | Route-09 reward press taken by Keeper Ondra | The pickup stood exactly on Ondra | Pickup moved 7 m along the road. Regression: `test_stormwood_pickups` overlap check (fails on the old data) |
+| 5 | Capacitor Alpha lost with a 113/436 lead | Same worn-lead cause, in the Crown chain | `_ensure_usable_ally` in the Crown helper also leads with the fittest member |
+| 6 | Hollows rod switch press taken by route-06 | The pickup stood exactly on the rod station and Dace | Pickup moved 9 m along the road; the overlap test pins it |
+| 6 | Alpha: no fight in four approaches | Engage offers the nearest body, always a Tanglevolt escort; the helper refused to press it | Answer an escort that holds Engage, then approach again (up to 8 approaches) |
+
+| 7 | Alpha: whole party wiped | See below | None. Stopped: third Alpha attempt |
+
+### Per-step timing (headless wall clock, commit 9407429a0 for run 7)
+
+| Run | Prefix: arrival → Ondra's recipe | Capacitor Alpha → paid Crown | Total |
+|---|---|---|---|
+| 4 (a91d59ec5) | PASS 1062.3 s | FAIL 100.1 s (lost with a 113/436 lead) | 19m36s |
+| 6 (5ca1a839e) | PASS 1058.6 s | FAIL 69.4 s (no fight: Engage always offered an escort) | 19m00s |
+| 7 (9407429a0) | PASS 1094.8 s | FAIL 223.1 s (party wiped) | 22m11s |
+
+SCRIPT ERROR count is 0 in every run log. Across the last three runs the prefix passed from the disk-saved arrival. It includes Hesk, Tamsin, the sheltered Break, pair A, Maren, Dace, pair B, Act I, Varga, and route 09 and Ondra's recipe.
+
+### The Capacitor Alpha stop (run 7, exact log lines)
+
+- `PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 0/363 fainted, bramblebun 185/345, terrapup 94/436, brooktail 0/334 fainted`
+  - This is how the party reaches the Alpha, with no rest since Ashfoot. The conductor-road wilds on the way there fainted two members.
+- `ENGAGING the Alpha's escort Wild_tanglevolt_881250888_1` → `FIGHT end Capacitor Alpha escort outcome=won` (sparkit 117/320 left).
+- The second escort: `outcome=lost` (bramblebun fainted, escort at 54/318). Sparkit then finished that escort (`live approach 3 outcome=won`).
+- `FIGHT start Capacitor Alpha ally=sparkit 100/320 enemy=voltarach L40 511/511` → `lost`, with the Alpha at 314.9/511.
+- `FIGHT start ... live approach 4 ally=terrapup 94/436` → `lost`, with the Alpha at 121.3/511.
+- `F11 WITNESS STEP FAIL Capacitor Alpha, Crown gathering, two frames, paid Crown arch wall=223.1s`, then `ordinary party-cycle/recall left no usable ally before Capacitor Alpha re-engagement (healthy=0)`.
+
+**Diagnosis.** This is not a softlock and not a production defect in the Alpha's code path. The fight admits, runs host-validated strikes and publishes outcomes. The harness mashes quick attacks with no dodge. It arrives with two of five fainted and two worn, because the route never rests. It must then beat two L35 escorts and an L40 Alpha of 511 HP in sequence.
+
+**The next step, not taken because of the attempt limit:** rest at Rodline Refuge (its camp bed and rest prompt are 0.7 km back along the same road) before the Conductor Road. Then answer the escorts and the Alpha with a full party. That is ordinary player preparation, not a fixture.
+
+**Open question for owner or design:** is a named alpha with two escorts, fought one at a time from the road, intended to require a rest stop before it? C2/C3 tuning belongs to COMBAT, not this lane.
+
+### Run 8 onward: rest before the Alpha (coordinator order after 0a653a7c2)
+
+- **Rest step** (c46170432 and 62dcc3009): at the start of the Crown segment the player rests at **Still Grove Shelter**. That is the camp beside Ondra, where the segment begins, and the nearest camp on the route; Rodline Refuge is 630 m back. It takes one night per worn creature. Each night uses ordinary input: Interact with the creature bed, pad Down/A to that creature's row, B to close, then Interact with the camp's "Rest at" prompt. If the road fights leave a creature fainted before the grove, the segment walks back and rests again. The rest runs at the 1x clock: at 8x, run 9 pressed the bed five times and nothing activated.
+- **Pickup seats** (f7266aaaf): route pickups 05, 07, 16 and 18 moved 8 m along the route, off Pim, Bryn, Rook and Kestrel. Run 10 lost a press to Bryn on route 07, which had passed in earlier runs. The scatter is re-baked (manifest fingerprint only). test_stormwood_scatter_bake, pickups, pickup_runtime and continuous_route_pickups: 13 tests, 0 failed.
+
+| Run | Commit | Prefix | Crown step |
+|---|---|---|---|
+| 8 | c46170432 | PASS 1121.3 s | FAIL 0.0 s: precondition "knife on the controller hotbar" |
+| 9 | e1166322b | PASS 1114.3 s. Tools `knife x1 axe x1 pickaxe x1` | FAIL 13.1 s: `still_grove_shelter creature bed never won the InteractionArbiter` (winner was that bed; the 8x tap was lost) |
+| 10 | 62dcc3009 | FAIL 829.9 s: `stormwood_pickup_route_07 route reward press activated competing provider .../Warden-Elect Bryn/Interactable` | not reached |
+| 11 | f7266aaaf | PASS 1115.3 s. `F11 WITNESS TOOLS after prefix: knife x0 axe x0 pickaxe x0 hotbar=["knife", "axe", "pickaxe", "", ""]` | FAIL 0.0 s: `Crown segment requires the campaign-earned knife on the controller hotbar (inventory knife x0, axe x0, pickaxe x0, hotbar [...], equipped 'pickaxe')` |
+
+SCRIPT ERROR count is 0 in runs 8 to 11.
+
+**Moved pickup seats, for the reviewer** (`data/config/stormwood_pickups.json`, [x, y, z]). Each moved seat carries a `_why_moved_f11` note. The new y is `stormwood_heightfield.height_at` + the original 0.35 m, and every new spot is still on the critical route. The scatter is re-baked for each move: 0a653a7c2 for 06/09, f7266aaaf for the rest.
+
+| Pickup | NPC or station it sat on | Before | After | Commit |
+|---|---|---|---|---|
+| route_09 | Keeper Ondra | [-160, 34.89, 2700] | [-166.1, 35.34, 2696.6] | 0aeaf2f7c |
+| route_06 | Hollows rod station / Dace | [-900, 32.3, 1780] | [-896.8, 31.08, 1788.4] | 5ca1a839e |
+| route_05 | Courier Pim | [-380, 32.58, 1400] | [-384.2, 32.34, 1393.2] | f7266aaaf |
+| route_07 | Warden-Elect Bryn | [-700, 44.38, 2300] | [-702.9, 43.69, 2292.5] | f7266aaaf |
+| route_16 | Ace Trainer Rook | [-150, 61.34, 4460] | [-158.0, 61.15, 4460.3] | f7266aaaf |
+| route_18 | Officer Kestrel | [-100, 107.92, 5350] | [-104.6, 107.91, 5343.4] | f7266aaaf |
+
+`test_stormwood_pickups::test_no_new_pickup_shares_an_npc_interaction_circle` pins these clear. It still lists route_19 (on the ground 150 m below Marrow's platform) and pocket_203 (Neri's pocket, off route).
+
+**Stopped (stop rule: second failure of the same new step, runs 8 and 11).**
+
+- **What the evidence shows.** The whole inventory is empty while the hotbar still binds the tools. Only `player_death.gd::_die_now()` does that: it moves the inventory into a death satchel and respawns the trainer at the nearest safe camp. Still Grove Shelter, the respawn camp, is 30 m from Ondra, so the harness walk would hide the teleport.
+- **Most likely killer.** Stormwood lightning on the 116-second Conductor Road walk, run at the wrapper's 8x weather clock with no dodge or shelter.
+- **Not confirmed.** Neither run logged the death. 083e0348f now prints each finalized death with the active walk; it has not been run.
+- **Proposed next step** (a harness change, not a game change): after a logged death, walk back to the satchel and take it with its ordinary prompt, as a player would. Or run the Conductor Road walk at the 1x weather clock so telegraphs can be avoided.
+- **Alpha.** Not reached with a rested party, so there are no fight numbers for the tuning question.
+
+### Runs 12 and 13: lightning handling, satchel recovery, the camp rest (commits 544f87648, 2e7e43c9c)
+
+- **Harness** (`tests/helpers/stormwood_field_safety.gd`, used by both walkers):
+  - The walker reads the production strike warnings. While a live warning's radius (3 m + 1.5 m) holds the trainer, it steers the stick out of it.
+  - It logs every warning, hit and death with the walk or fight in progress.
+  - After a death it walks back to the satchel and takes every stack out through the satchel's prompt and storage panel.
+  - Conductor Road walks in the prefix, and every walk the Crown segment makes, run at the real 1x clock.
+
+**Death diagnosis confirmed (run 13).** The trainer was killed by lightning while standing still during a creature fight on the conductor road. The walker cannot dodge there, because in a fight the stick drives the creature, not the trainer. Exact lines:
+
+```
+F11 STRIKE HIT during 'fight during conductor road to Keeper Ondra' at (-484.1492, 58.75578, 2521.029) damage=18.0 health_left=82.0/100.0
+... four more identical hits at the same point, health 64 -> 46 -> 28 -> 10 ...
+F11 TRAINER DEATH during 'fight during conductor road to Keeper Ondra' at (-484.1492, 58.75578, 2521.029); strikes so far {"damage":90.0,"deaths":1,"dodge_frames":0,"hits":5,"threats":0,"warnings":6}
+F11 SATCHEL walking back to (-484.1492, 58.75578, 2521.029) from (-660.1802, 46.38821, 2320.671)
+F11 SATCHEL recovered 4 stack(s); knife x1 axe x1 pickaxe x1
+```
+
+The respawn was at Rodline Refuge, and the satchel was then recovered by ordinary input. In run 12 the prefix saw 5 warnings, 275 dodge frames, 0 hits and 0 deaths. So walking plus dodging avoids strikes; standing still in a fight does not.
+
+**Tuning question** (reported, not changed):
+- **What happens:** a Stormwood strike targets a trainer's current position every 4–8 s, and the trainer stands still for a whole creature fight.
+- **Result:** in one ordinary road fight, one strike point landed 6 of 6 warnings, at 18 damage each (cap 25% of 100). The trainer went 100 → 0 and died.
+- **Why it matters:** "Human never fights" means the trainer has no way to react during a fight except to lose it.
+- **Question:** should `stormwood_lightning.gd` skip a trainer whose creature is in combat, or should fights avoid exposed ground in Break? This is for COMBAT/SYSTEMS. The death also drops the tool satchel mid-route.
+
+**Camp rest works.** Both runs rested at Still Grove Shelter over three ordinary nights and ended with every creature at full HP:
+`RESTED the whole party at still_grove_shelter over 3 night(s) with ordinary bed and rest prompts`.
+
+**Stopped (second failure of the same new step):** the call-out right after the rest.
+- **Run 12:** `ordinary LB did not send out the fittest member before after resting at still_grove_shelter`.
+- **Run 13:** the same line. That run pressed the recall button when no creature was out, and it made no difference.
+- **Cause:** not known. Bedding a creature puts the follower away, and the director state after the last night is not in either log.
+- **Next:** 80067c1ec makes this failure print the best, active and out creature, the ally body, the arbiter, the input owner, the pause, the fight and the clock. It has not been run. The next run should name the cause in one line.
+- **Not reached:** the Alpha itself, so there are still no rested-party fight numbers.
+
+| Run | Commit | Prefix | Strikes in prefix | Crown step | Wall |
+|---|---|---|---|---|---|
+| 12 | 544f87648 | PASS 1214.5 s, tools kept | 5 warnings, 0 hits, 0 deaths | rest OK; FAIL 23.4 s at the call-out | 20m57s |
+| 13 | 2e7e43c9c | PASS 1252.8 s, tools recovered from satchel | 6 warnings, 6 hits, 1 death (in a fight) | rest OK; FAIL 23.9 s at the call-out | 21m34s |
+
+SCRIPT ERROR count is 0 in both runs.
+
+### Run 14 and the lightning ruling (commits 42f7b8dc7, 49d9ab27f)
+
+- **Run 14** (ccbd1d4ba, 80067c1ec diagnostics).
+  - **Prefix:** PASS in 1257.9 s. The same lightning death happened in a conductor-road fight (6 hits, 108 damage); the satchel was recovered and the tools kept.
+  - **Rest:** Still Grove rest OK over 3 nights.
+  - **Call-out failure, now with its cause:** `ordinary LB did not send out the fittest member before after resting at still_grove_shelter (best=terrapup active=bramblebun ally=bramblebun ally_body=true no_usable_ally=false arbiter_enabled=true input_owner=<none> paused=false fighting=false time_scale=1.0)`.
+  - **Reading:** a creature was out and nothing blocked input, but the Crown helper's joypad-event LB taps changed nothing. The prefix Segment's action-event taps do send out its fittest member.
+  - **Classification:** harness-side, but not proven to be harness-only. Whether a physical LB on a real pad works after a camp rest is not measured here.
+  - **Fix** (49d9ab27f): the same action-event taps as the prefix, each LB press logged, recall if nobody is out, and one retry of the whole send-out.
+- **Coordinator interim ruling** (pending the owner's decision): "While the local trainer is committed to a creature fight, storm strikes do not target the trainer's position. They may still land in the arena as telegraphed hazards the piloted creature can avoid. Strikes resume on the trainer when the fight ends."
+  - **Change** (42f7b8dc7): `stormwood_surge.json` strike `spare_trainer_in_fight: true`, with a `_why` note.
+  - **Aim:** host-side per peer in `stormwood_lightning.gd`. A strike chosen for a fighting trainer aims at that peer's piloted creature with the normal 1.2 s / 3 m telegraph, or is skipped if no creature is out. Impacts never damage a fighting trainer.
+  - **Who counts as fighting:** the host's own combat manager or hosted trainer battle; any open encounter record listing the peer; or a registered Stormwood hosted fight.
+  - **Limitation:** a guest's unshared local wild fight is not visible to the host.
+  - **Tests:**
+    - `test_stormwood_lightning_spare`, 5 tests and 16 assertions: a fighting trainer is never aimed at or hit and the creature is; targeting resumes when the record is done; only the fighting peer is exempt; the flag-false negative control aims at and hits the trainer.
+    - `smoke_stormwood_lightning` 24/0 and `smoke_stormwood_lightning_cleanup` PASS.
+  - **Not changed:** strikes still cannot damage a creature (none are wired to). The ruling's "hazards the creature can avoid" are presentation only.
+
+### Not produced
+
+- The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.
+- The disk save, restart and load were not reached either. `--verify-reload` exists but has not run.
+- The captures were not taken. `tools/capture_stormwood_f11_proof.gd` is committed and unrun. No render was started.
+
+### Verdict (ACCEPTANCE §6.1 F11)
+
+- "Dynamo and Stormheart resolve from the earned route": **NOT MET.** The earned route stops at the Capacitor Alpha, three segments before the Dynamo.
+- "Long Storm aftermath, Spark/shrine … persist": **NOT MET by earned evidence.** The existing focused tests remain staged-only.
+- "Eligible peers accept/refuse independently at space and capacity through disconnect/reload, without duplicated grants": **NOT MET.** The two-peer WIP is parked (see the sub-note below).
+
+Seven other pickup/NPC overlaps remain (route_05, 07, 16, 18, 19 and pocket_203). The test lists them so the list can only shrink. They are an open finding.
+
+### Batch-5 nit: Break faint prompt pause (commit 091f54cab)
+
+- **Bug.** Recalling the fainted creature with nothing sent out ("none") left the host's Break paused forever.
+- **Fix.** A participant now holds the pause only while its fainted creature is still the deployed one. A reload (`restore_progression_from_game`) ends every open prompt and publishes the resumed Break.
+- **Tests.** `smoke_stormwood_dynamo_break_faint` now has 90/0 assertions, with one test per exit: creature, none, cancel by reload, cancel by wipe, disconnect, and timeout. `test_stormwood_dynamo` is 12/0.
+- **Negative control.** The unfixed controller fails 3 of 90 (none, reload, disconnect).
+- **Timeout.** COMBAT says "no timer in solo", so a lapsed faint toast is not a choice, and the test pins that the solo pause holds. The coordinator's list named timeout as an exit that must clear the pause. That conflicts with COMBAT and is left for an owner/coordinator decision rather than adding a timer.
+
+### Sub-note: parked two-peer WIP (superseded by coordinator order)
+
+`tests/smoke_net_stormwood_stormheart_offers.gd` and `tests/helpers/stormheart_peer_runner.gd` (commit 2ac6f9b23) are parked until the X05 two-peer proof command lands. The smoke is held out of CI discovery.
+
+- **Last result:** two real ENet processes; the staged Dynamo frees the Stormheart; both characters are recorded as participants; the host's own offer, Yes and receipt pass.
+- **Where it stops:** the guest's offer is refused because the host's proxy for the guest never leaves the Stormwood arrival point. Not yet diagnosed.
+- **Consequence:** F11-B (two-peer, disconnect, capacity, no duplicate grants over the network) has no live proof from this lane.

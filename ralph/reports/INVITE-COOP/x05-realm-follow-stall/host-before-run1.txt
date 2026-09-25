@@ -1,0 +1,12 @@
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[DBG-STALL] physics frame gap 4349 ms ending at 129499 ms
+[realms] shell up for 'meadows' at /root/MeadowsPlayground: attached in 165 ms, +9140 KB static; still building across frames
+[DBG-STALL] physics frame gap 4764 ms ending at 156922 ms
+[DBG-STALL] physics frame gap 1835 ms ending at 162277 ms
+[DBG-STALL] physics frame gap 3715 ms ending at 174915 ms
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[DBG-STALL] physics frame gap 13937 ms ending at 195588 ms
+[DBG-STALL] fold save for 'meadows' took 164 ms
+[realms] shell for 'meadows' folded back into the world (save written)
+[DBG-STALL] fold queue_free of 'meadows' (1544 direct children) at 195774 ms
+[DBG-STALL] physics frame gap 2262 ms ending at 197868 ms

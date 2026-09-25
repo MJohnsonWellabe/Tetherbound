@@ -12,6 +12,7 @@ extends RefCounted
 
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const SAFETY := preload("res://tests/helpers/stormwood_field_safety.gd")
 
 const RECIPE_FLAG := "stormwood:arch_recipe_known"
 const BUILT_FLAG := "stormwood:crown_arch_built"
@@ -55,6 +56,11 @@ var _navigator: RefCounted
 var _activated_provider_id := 0
 var _activated_provider_path := ""
 var _last_combat_outcome := ""
+var _safety: RefCounted
+## Only the Crown segment itself walks at the real 1x clock (the Conductor
+## Road and west loop, coordinator order for run 12); later segments keep
+## their own declared clocks.
+var _walk_real_clock := false
 
 
 static func resource_contract() -> Dictionary:
@@ -85,9 +91,16 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	if not _preconditions_hold():
 		return result()
 	_navigator = NAVIGATOR.new(_tree, _player, _camera, _drive_stick)
+	_walk_real_clock = true
 	if not _manager.exited.is_connected(_on_combat_exited):
 		_manager.exited.connect(_on_combat_exited)
 
+	# A player who has fought the whole road to Ondra rests before setting out
+	# for a named alpha: Still Grove Shelter is the camp beside Ondra, on the
+	# route, and its creature bed plus a night's rest heal the party. F11
+	# witness run 7 wiped at the Alpha with no rest since Ashfoot.
+	if not await _rest_party_at_camp("still_grove_shelter"):
+		return result()
 	var before := _inventory_snapshot()
 	# Follow the production conductor road to the west-loop resources. This
 	# passes the Capacitor Alpha's authored road point; any proximity fight is
@@ -98,6 +111,17 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	]:
 		if not await _walk_xz(step.at, str(step.label), 2.0):
 			return result()
+	# The road to the grove has its own wild fights. If they left a creature
+	# fainted, walk back to the same camp and rest again, as a player would.
+	if _party_worn(0.75):
+		for back: Vector2 in [Vector2(-630.0, 2930.0), Vector2(-160.0, 2700.0)]:
+			if not await _walk_xz(back, "conductor road back to Still Grove Shelter", 2.0):
+				return result()
+		if not await _rest_party_at_camp("still_grove_shelter"):
+			return result()
+		for step: Vector2 in [Vector2(-630.0, 2930.0), Vector2(-1080.0, 3020.0)]:
+			if not await _walk_xz(step, "conductor road to the Capacitor Grove again", 2.0):
+				return result()
 	if not await _clear_capacitor_alpha():
 		return result()
 	for index in 2:
@@ -165,7 +189,11 @@ func _preconditions_hold() -> bool:
 	for item: String in ["knife", "axe", "pickaxe"]:
 		if int(_game.get("inventory").call("count", item)) <= 0 \
 				or int(_game.call("hotbar_slot_of", item)) < 0:
-			return _fail("Crown segment requires the campaign-earned %s on the controller hotbar" % item)
+			var stacks: Array = []
+			for id: String in ["knife", "axe", "pickaxe"]:
+				stacks.append("%s x%d" % [id, int(_game.get("inventory").call("count", id))])
+			return _fail("Crown segment requires the campaign-earned %s on the controller hotbar (inventory %s, hotbar %s, equipped '%s')" % [
+				item, ", ".join(stacks), str(_game.get("local").get("hotbar")), str(_game.get("equipped_tool"))])
 	for site: Dictionary in SITE_PLAN:
 		var id := str(site.id)
 		if bool(progression.call("has", "harvest_node:order:" + id)):
@@ -402,11 +430,42 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 				held = 0
 			await _tree.physics_frame
 	var winner := _arbiter.call("winning_provider") as Node
-	return _fail("%s never won the InteractionArbiter (winner=%s offer=%s)" % [label,
-		str(winner.get_path()) if winner != null else "<none>", str(_arbiter.call("winner"))])
+	var own_offer: Variant = prompt.call("interaction_offer", _player.global_position) \
+		if prompt.has_method("interaction_offer") else "n/a"
+	return _fail("%s never won the InteractionArbiter (winner=%s offer=%s; target enabled=%s visible=%s in_tree=%s own_offer=%s player=%s prompt_at=%s distance=%.2f equipped=%s)" % [label,
+		str(winner.get_path()) if winner != null else "<none>", str(_arbiter.call("winner")),
+		str(prompt.get("enabled")), str(body.is_visible_in_tree()), str(body.is_inside_tree()), str(own_offer),
+		str(_player.global_position), str(prompt.global_position),
+		_player.global_position.distance_to(prompt.global_position), str(_game.get("equipped_tool"))])
 
 
 func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
+		record_failure: bool = true) -> bool:
+	if _safety == null:
+		_safety = SAFETY.new()
+		_safety.attach(_tree, _world, _game, _player, _camera, _drive_stick)
+	_safety.set("phase", "walk to " + label)
+	if not _walk_real_clock or is_equal_approx(Engine.time_scale, 1.0):
+		return await _walk_xz_clocked(point, label, tolerance, record_failure)
+	var previous_scale := Engine.time_scale
+	var previous_hz := Engine.physics_ticks_per_second
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
+	var arrived := await _walk_xz_clocked(point, label, tolerance, record_failure)
+	await _tree.process_frame
+	Engine.time_scale = previous_scale
+	Engine.physics_ticks_per_second = previous_hz
+	return arrived
+
+
+## Lightning log and satchel state for this segment (null before any walk).
+func strike_counts() -> Dictionary:
+	return (_safety.get("counts") as Dictionary).duplicate() if _safety != null else {}
+
+
+func _walk_xz_clocked(point: Vector2, label: String, tolerance: float = 1.3,
 		record_failure: bool = true) -> bool:
 	var target := _grounded(point)
 	var distance := Vector2(_player.global_position.x, _player.global_position.z).distance_to(point)
@@ -419,6 +478,15 @@ func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
 			_drive_stick.call(0.0, 0.0)
 			await _settle(4)
 			return true
+		if bool(_safety.call("needs_recovery")):
+			if not bool(await _safety.call("recover", Callable(self, "_walk_xz"), Callable(self, "_activate_exact"))):
+				return _fail("could not take back the trainer's death satchel during " + label)
+			_navigator.call("reset")
+			continue
+		if bool(await _safety.call("dodge_step", target)):
+			walked += 1
+			_navigator.call("reset")
+			continue
 		if bool(_navigator.call("can_walk")):
 			walked += 1
 			held = 0
@@ -442,6 +510,8 @@ func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
 
 
 func _fight_current(label: String) -> bool:
+	if _safety != null:
+		_safety.set("phase", "fight during " + label)
 	_last_combat_outcome = ""
 	var started := Time.get_ticks_msec()
 	var previous_scale := Engine.time_scale
@@ -531,7 +601,12 @@ func _clear_capacitor_alpha() -> bool:
 	# Proximity may already have announced while no usable ally was deployed.
 	# Use the ordinary explicit Engage offer too; never assume an aggressive
 	# body's one-shot request will be repeated after party recovery.
-	for attempt in 4:
+	# The Alpha roams with Tanglevolt escorts, and Engage always offers the
+	# nearest body. A player standing by it answers the escort first. F11
+	# witness run 6 spent all four approaches refusing to press an escort's
+	# Engage and never started a fight; up to eight approaches now allow the
+	# escorts to be fought in turn.
+	for attempt in 8:
 		if not await _ensure_usable_ally("Capacitor Alpha re-engagement"):
 			return false
 		body = _named_wild("capacitor_alpha")
@@ -550,6 +625,20 @@ func _clear_capacitor_alpha() -> bool:
 			if bool(_manager.call("is_fighting")):
 				break
 			if bool(_game.get("progression").call("has", CLEAR_FLAG)):
+				break
+			var escort := _director.call("_engageable") as Node3D
+			if is_instance_valid(escort) and escort != body and _named_engage_ready(escort):
+				_note("ENGAGING the Alpha's escort %s first (Engage offers the nearest body)" % str(escort.get_path()))
+				if await _tap_named_engage(escort):
+					for _settle in 60:
+						if bool(_manager.call("is_fighting")):
+							break
+						await _tree.physics_frame
+					if bool(_manager.call("is_fighting")):
+						if _manager.call("enemy_body") == body:
+							_note("ALPHA admitted while answering an escort")
+						elif not await _fight_current("Capacitor Alpha escort"):
+							return false
 				break
 			if _named_engage_ready(body):
 				_activated_provider_id = 0
@@ -576,10 +665,134 @@ func _clear_capacitor_alpha() -> bool:
 		if await _wait_flag(CLEAR_FLAG, 180):
 			_note("CLEARED the named Capacitor Alpha through its production once-only fight")
 			return true
-	return _fail("four ordinary approaches did not clear the named Capacitor Alpha (body=%s distance=%.2f outcome=%s)" % [
+	return _fail("eight ordinary approaches did not clear the named Capacitor Alpha (body=%s distance=%.2f outcome=%s)" % [
 		str(body.get_path()) if is_instance_valid(body) else "<none>",
 		_player.global_position.distance_to(body.global_position) if is_instance_valid(body) else INF,
 		_last_combat_outcome])
+
+
+## True when a party member is fainted or the party holds less than `share`
+## of its total hit points.
+func _party_worn(share: float) -> bool:
+	var hp := 0.0
+	var most := 0.0
+	for member: RefCounted in (_game.get("party").call("members") as Array):
+		if bool(member.get("fainted")):
+			return true
+		hp += float(member.get("hp"))
+		most += float(member.get("max_hp"))
+	return most > 0.0 and hp < most * share
+
+
+## Ordinary camp recovery: for each worn creature, one night. Interact with the
+## camp's creature bed, choose that creature's row with the pad (Down, A),
+## close the panel (B), then Interact with the camp's own "Rest at" prompt.
+## The night completes the bedded creature's rest (full heal, revives a KO).
+func _rest_party_at_camp(camp_id: String) -> bool:
+	# Physical button edges must land between physics batches; at the
+	# wrapper's 8x/480 Hz clock a press and release can share one batch and
+	# the arbiter sees neither (run 9 pressed the bed five times for nothing).
+	# `_tap_named_engage` makes the same switch for the same reason.
+	var previous_scale := Engine.time_scale
+	var previous_hz := Engine.physics_ticks_per_second
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
+	var rested := await _rest_nights(camp_id)
+	await _tree.process_frame
+	Engine.time_scale = previous_scale
+	Engine.physics_ticks_per_second = previous_hz
+	return rested
+
+
+func _rest_nights(camp_id: String) -> bool:
+	var camp := _world.get_node_or_null(NodePath("StormwoodCamps/" + camp_id)) as Node3D
+	var bed := camp.get_node_or_null(^"CampCreatureBed") as Node3D if camp != null else null
+	var bed_prompt := bed.get_node_or_null(^"Interactable") as Node3D if bed != null else null
+	var rest_prompt := camp.get_node_or_null(^"Interactable") as Node3D if camp != null else null
+	if bed_prompt == null or rest_prompt == null:
+		return _fail("camp %s lacks its creature bed or rest prompt" % camp_id)
+	var party: RefCounted = _game.get("party") as RefCounted
+	var nights := 0
+	for _night in 6:
+		var index := -1
+		var rows: Array[String] = []
+		for i in int(party.call("size")):
+			var member: RefCounted = party.call("at", i)
+			rows.append("%s %d/%d%s" % [str(member.get("species_id")), int(member.get("hp")),
+				int(member.get("max_hp")), " KO" if bool(member.get("fainted")) else ""])
+			if index < 0 and (bool(member.get("fainted")) or float(member.get("hp")) < float(member.get("max_hp")) - 0.5):
+				index = i
+		if index < 0:
+			break
+		_note("CAMP %s night %d: %s; bedding row %d" % [camp_id, nights + 1, ", ".join(rows), index])
+		if not await _activate_exact(bed, bed_prompt, Vector2(bed_prompt.global_position.x,
+				bed_prompt.global_position.z - 1.1), camp_id + " creature bed"):
+			return false
+		var panel: Node = null
+		for _frame in 60:
+			panel = bed.get("_panel") as Node
+			if panel != null and bool(panel.call("is_open")):
+				break
+			await _tree.process_frame
+		if panel == null or not bool(panel.call("is_open")):
+			return _fail("the creature bed did not open its rest panel")
+		await _ui_tap(&"ui_up")
+		await _ui_tap(&"ui_down")
+		var buttons: Array = panel.get("_rows")
+		for _press in 6:
+			var focus := _tree.root.gui_get_focus_owner()
+			if buttons.find(focus) == index:
+				break
+			await _ui_tap(&"ui_down" if buttons.find(focus) < index else &"ui_up")
+			buttons = panel.get("_rows")
+		if buttons.find(_tree.root.gui_get_focus_owner()) != index:
+			return _fail("pad focus never reached bed row %d" % index)
+		await _ui_tap(&"ui_accept")
+		var creature: RefCounted = party.call("at", index)
+		if not bool(creature.get("resting")):
+			return _fail("choosing bed row %d did not bed %s" % [index, str(creature.get("species_id"))])
+		await _ui_tap(&"menu_cancel")
+		for _frame in 30:
+			if not bool(panel.call("is_open")) and not _tree.paused:
+				break
+			await _tree.process_frame
+		if not await _activate_exact(camp, rest_prompt, Vector2(rest_prompt.global_position.x,
+				rest_prompt.global_position.z - 1.1), camp_id + " rest"):
+			return false
+		for _frame in 600:
+			if not bool(creature.get("resting")):
+				break
+			await _tree.physics_frame
+		if bool(creature.get("resting")) or bool(creature.get("fainted")) \
+				or float(creature.get("hp")) < float(creature.get("max_hp")) - 0.5:
+			return _fail("a night at %s did not complete %s's rest" % [camp_id, str(creature.get("species_id"))])
+		nights += 1
+	if _party_worn(0.999):
+		return _fail("six nights at %s left the party worn" % camp_id)
+	_note("RESTED the whole party at %s over %d night(s) with ordinary bed and rest prompts" % [camp_id, nights])
+	return await _ensure_usable_ally("after resting at " + camp_id)
+
+
+## One ordinary press as an action event, held across four physics ticks so
+## the director's `_physics_process` read sees its just-pressed edge.
+func _action_tap(action: StringName) -> void:
+	_set_action(action, true)
+	for _frame in 4:
+		await _tree.physics_frame
+	_set_action(action, false)
+	for _frame in 8:
+		await _tree.physics_frame
+
+
+func _ui_tap(action: StringName) -> void:
+	_set_action(action, true)
+	for _frame in 3:
+		await _tree.process_frame
+	_set_action(action, false)
+	for _frame in 5:
+		await _tree.process_frame
 
 
 func _named_engage_ready(body: Node3D) -> bool:
@@ -669,6 +882,64 @@ func _ensure_usable_ally(label: String) -> bool:
 				alive += 1
 		return _fail("ordinary party-cycle/recall left no usable ally before %s (healthy=%d)" % [
 			label, alive])
+	return await _lead_with_fittest(label)
+
+
+## Before a deliberate fight (a named wild, a trainer, the captain) the player
+## sends out the conscious party member with the most hit points left, with
+## ordinary LB presses; the director's own party sync redeploys it. Road fights
+## leave the lead worn and this route takes no rest. F11 witness run 4 lost the
+## Capacitor Alpha with a 113/436 lead while two members stood at full health.
+func _lead_with_fittest(label: String) -> bool:
+	var party: RefCounted = _game.get("party") as RefCounted
+	var members: Array = party.call("members")
+	var best: RefCounted = null
+	var rows: Array[String] = []
+	for member: RefCounted in members:
+		rows.append("%s %d/%d%s" % [str(member.get("species_id")), int(member.get("hp")),
+			int(member.get("max_hp")), " fainted" if bool(member.get("fainted")) else ""])
+		if bool(member.get("fainted")) or bool(member.get("resting")):
+			continue
+		if best == null or float(member.get("hp")) > float(best.get("hp")):
+			best = member
+	_note("PARTY before %s: %s" % [label, ", ".join(rows)])
+	if best == null:
+		return _fail("no conscious party member left before " + label)
+	# Run 14's one-line cause: active=bramblebun, best=terrapup, nobody
+	# fighting, no input owner, arbiter enabled, and the joypad-event LB taps
+	# changed nothing. The prefix Segment's action-event taps (which do send
+	# out the fittest member there) are used instead: each press waits for the
+	# director's own physics read, and the whole send-out is retried once.
+	for attempt in 2:
+		for _press in members.size():
+			if party.call("active") == best:
+				break
+			var before: RefCounted = party.call("active")
+			await _action_tap(&"party_cycle")
+			var after: RefCounted = party.call("active")
+			_note("LB press %d: active %s -> %s" % [attempt + 1, str(before.get("species_id")) if before != null else "none",
+				str(after.get("species_id")) if after != null else "none"])
+		# LB only changes which creature is active; with nobody out (a creature
+		# just rested in the camp bed is put away) the player calls it out.
+		if _director.call("ally_body") == null:
+			await _action_tap(&"creature_recall")
+		for _frame in 240:
+			if _director.call("ally_instance") == best and _director.call("ally_body") != null:
+				break
+			await _tree.physics_frame
+		if _director.call("ally_instance") == best:
+			break
+	if _director.call("ally_instance") != best:
+		var ally: RefCounted = _director.call("ally_instance")
+		var active: RefCounted = party.call("active")
+		var owner := INPUT_OWNER.current(_tree)
+		return _fail(("ordinary LB did not send out the fittest member before %s (best=%s active=%s ally=%s "
+			+ "ally_body=%s no_usable_ally=%s arbiter_enabled=%s input_owner=%s paused=%s fighting=%s time_scale=%.1f)") % [
+			label, str(best.get("species_id")), str(active.get("species_id")) if active != null else "none",
+			str(ally.get("species_id")) if ally != null else "none", str(_director.call("ally_body") != null),
+			str(_director.call("no_usable_ally")), str(_arbiter.call("enabled")),
+			str(owner.get_path()) if owner != null else "<none>", str(_tree.paused),
+			str(_manager.call("is_fighting")), Engine.time_scale])
 	return true
 
 

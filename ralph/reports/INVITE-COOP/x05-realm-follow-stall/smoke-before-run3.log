@@ -1,0 +1,53 @@
+run id:  net-20260925T181749Z-27939
+run dir: /tmp/net-session_host_first_realm-20260925T181749Z
+smoke:   tests/smoke_net_session_host_first_realm.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=27965 control_port=36127 home=/tmp/net-session_host_first_realm-20260925T181749Z/home-0 log=/tmp/net-session_host_first_realm-20260925T181749Z/peer-0.log
+coordinator: launched peer 1 (client) pid=27966 control_port=46529 home=/tmp/net-session_host_first_realm-20260925T181749Z/home-1 log=/tmp/net-session_host_first_realm-20260925T181749Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":28961.0,"godot_version":"4.7-stable (official)","main_sha":"10b635d38e81","peer":0.0,"pid":27965.0,"role":"host","type":"hello","user_data_dir":"/tmp/net-session_host_first_realm-20260925T181749Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":28962.0,"godot_version":"4.7-stable (official)","main_sha":"10b635d38e81","peer":1.0,"pid":27966.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-session_host_first_realm-20260925T181749Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join
+PASS: peer 0 hosted a world (hosting udp/28961 as peer 1)
+PASS: peer 1 joined peer 0's world on port 28961 (joined 127.0.0.1:28961 as peer 260013822 after 14 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: the Cloudreach route is open (realm_key_cloudreach: ok=true pending=false code='' reason='')
+PASS: peer 0 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: peer 1 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: the host crossed into Cloudreach first (crossed 'meadows' -> 'cloudreach' after 512 observed physics frames / 39336 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: the host is standing in Cloudreach
+PASS: the guest is still standing in the Meadows
+PASS: the guest in the Meadows holds no body for the host in Cloudreach (holds 0)
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+coordinator: ERROR: peer silent (peer 0, no heartbeat for >15 s)
+FAIL: the guest followed the host into Cloudreach (ERROR: peer silent (peer 0, no heartbeat for >15 s))
+PASS: host-first crossing leaves no misaddressed spawn or cache errors
+FAIL: ERROR: peer silent (peer 0, no heartbeat for >15 s)
+
+=== /tmp/net-session_host_first_realm-20260925T181749Z/SUMMARY.md ===
+# Net smoke run net-20260925T181749Z-27939
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=27965 exited=true unexpected_exit=false
+- peer 1 (client) pid=27966 exited=false unexpected_exit=false
+
+FATAL: ERROR: peer silent (peer 0, no heartbeat for >15 s)
+exit 2

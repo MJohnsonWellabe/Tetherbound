@@ -130,3 +130,19 @@ func test_remote_replica_releases_reciprocal_exception_when_its_side_is_already_
 
 	remote.free()
 	rig.free()
+
+
+func test_replicas_ignore_each_other() -> void:
+	var a := REMOTE_TRAINER.new()
+	var b := REMOTE_TRAINER.new()
+	REMOTE_TRAINER.exempt_replica_pair(a, b)
+	assert_true(a.get_collision_exceptions().has(b),
+		"two stacked replicas must not pin each other while following their owners")
+	assert_true(b.get_collision_exceptions().has(a), "the exemption is symmetric")
+	# The other side may already have been cleared by PhysicsServer teardown.
+	b.remove_collision_exception_with(a)
+	REMOTE_TRAINER.release_replica_pair(a, b)
+	assert_false(a.get_collision_exceptions().has(b))
+	assert_false(b.get_collision_exceptions().has(a))
+	a.free()
+	b.free()

@@ -38,6 +38,7 @@ extends Node3D
 ## streaming with the corridor is explicit unfinished work, not solved here.
 
 const RULES := preload("res://scripts/world/scatter_rules.gd")
+const SCATTER_PROXIMITY_INDEX := preload("res://scripts/world/scatter_proximity_index.gd")
 const PERF_TRACE := preload("res://scripts/world/perf_trace.gd")
 const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
@@ -2448,6 +2449,23 @@ func has_solid_scatter_near(centre: Vector3, extra: float) -> bool:
 	return false
 
 
+## `has_solid_scatter_near()` for many questions at once: a grid snapshot of
+## the same footprints (collidable batches at their batch radius, soft
+## occluders at their own), so a caller asking hundreds of times scans the
+## world once. See `scatter_proximity_index.gd`.
+func solid_scatter_index(cell: float = 8.0) -> RefCounted:
+	var index: RefCounted = SCATTER_PROXIMITY_INDEX.new(cell)
+	for batch: Dictionary in _collision_batches:
+		var radius := float(batch["radius"])
+		for placement: Dictionary in (batch["placements"] as Array):
+			var spot: Vector3 = placement["position"]
+			index.call("add", spot.x, spot.z, radius)
+	for i in _soft_occluder_positions.size():
+		var spot: Vector3 = _soft_occluder_positions[i]
+		index.call("add", spot.x, spot.z, _soft_occluder_radii[i])
+	return index
+
+
 ## Remove every COLLIDABLE scatter instance whose position falls inside a
 ## circle, render and collider both. Returns how many went.
 ##
@@ -2523,11 +2541,29 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			if _harvest_nodes.has(key):
 				(_harvest_nodes[key] as Node).queue_free()
 				_harvest_nodes.erase(key)
+				_harvest_points = maxi(0, _harvest_points - 1)
 			_harvest_collision_lookup.erase(key)
 			_solid = maxi(0, _solid - 1)
 			dropped += 1
 		if dropped > 0:
 			_reindex_batch_cells(batch)
+
+	# Then every OTHER layer's gather point. Harvestable non-collidable layers
+	# (fibre's "Gather") have no collision batch, so the pass above never
+	# reaches them, and their render instance is already gone -- an invisible
+	# prompt standing in cleared ground. In the Burrow Warrens vault one won the
+	# interaction arbiter at 0.6 m and the Heartstone could not be picked up.
+	for key_value: Variant in _harvest_lookup.keys():
+		var key := str(key_value)
+		var spot: Vector3 = (_harvest_lookup[key] as Dictionary).get("position", Vector3.INF)
+		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
+			continue
+		_harvest_lookup.erase(key)
+		_harvest_collision_lookup.erase(key)
+		if _harvest_nodes.has(key):
+			(_harvest_nodes[key] as Node).queue_free()
+			_harvest_nodes.erase(key)
+			_harvest_points = maxi(0, _harvest_points - 1)
 	_placed = maxi(0, _placed - removed)
 	return removed
 

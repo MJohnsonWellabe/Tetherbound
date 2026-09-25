@@ -1,0 +1,60 @@
+ACCEPTANCE M4 / F05 -- "the [Meadows->Cloudreach] gate opens exactly once"
+commit: 5096f1a46e98956cbfaa14bf876b3e363710b563 (branch ralph/f05-gate-once)
+command: ~/godot-bin/godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
+engine: Godot v4.7.stable.official.5b4e0cb0f, headless, Linux
+exit code: 0; wall time: 216s (~0.7s of assertions; the rest is the production Cloudreach scene load inside change_scene_to_file, which blocks one frame)
+clock: the crossing's _process is stepped by hand at 1/60 s after build(), so every timing assertion is frame-rate independent
+
+== pass run (filtered: [t] timings, crossing log, PASS/FAIL lines) ==
+  [t] live phase (a-c) done at 55 ms
+  [t] loaded phase (e) done at 436 ms
+[rift_crossing] the player crossed the rebuilt storm road span into Cloudreach
+  [t] frame 0 realm -> cloudreach at 606 ms
+  [t] trigger entries done at 213019 ms (the Cloudreach scene load blocks here)
+  PASS: setup: 'legendary_freed' starts unset
+  PASS: setup: 'realm_key_cloudreach' starts unset
+  PASS: setup: 'realm_gate_cloudreach_unlocked' starts unset
+  PASS: (a) before legendary_freed: no deck, no trigger (decks=0 triggers=0 openings=0)
+  PASS: (a) 36.4s of other flag changes without legendary_freed: still no span, no collapse wait
+  PASS: (b) flag lands live: crossing enters the collapse wait with nothing built yet
+  PASS: (b) just short of hold+dissipate (10.20s): still no deck/trigger
+  PASS: (b) collapse finished: span built once and animating in (openings=1 decks=1 triggers=1)
+  PASS: (b) deck grows from the near abutment (scale.x=0.020)
+  PASS: (b) after appear_seconds: span_ready(), exactly one deck (collider live) and one trigger
+  PASS: (c) setup: the revision really moved (7 -> 12)
+  PASS: (c) five further flag/revision changes: no reopen, no rebuild, same deck and trigger instances (openings=1)
+  PASS: (c) opening the span does not itself mark the realm gate crossed
+  PASS: (e) setup: Game.save_game() with legendary_freed set
+  PASS: (e) setup: flags blanked before the load
+  PASS: (e) setup: Game.load_game()
+  PASS: (e) setup: legendary_freed and realm_key_cloudreach came back from disk
+  PASS: (e) later load with legendary_freed: open at build, one deck, one trigger, full scale, no collapse wait/appear
+  PASS: (e) stepping the loaded crossing past collapse+appear: nothing replayed or rebuilt
+  PASS: (d) setup: realm gate not yet crossed
+  PASS: (d) setup: starting realm is meadows (meadows)
+  PASS: (d) first entry writes realm_gate_cloudreach_unlocked
+  PASS: (d) two entries in the same frame: enter_realm called once (crossings_fired=1)
+  PASS: (d) the same-frame duplicate entry writes nothing (revision 19 -> 19)
+  PASS: (d) at least one further entry on a later frame before the swap (2)
+  PASS: (d) after 2 later-frame entries: enter_realm still called once (crossings_fired=1)
+  PASS: (d) the one crossing reached the Cloudreach scene
+  PASS: (d) realm changed exactly once, meadows -> cloudreach, and stayed (changes=1 now=cloudreach)
+  PASS: (d) realm_gate_cloudreach_unlocked still set in Cloudreach
+rift gate opens once: 29 pass, 0 fail, 213522 ms
+RIFT GATE OPENS ONCE OK
+
+== falsification (local only, never committed) ==
+mutation applied to scripts/world/rift_crossing.gd at the same commit:
+  1. removed '_entered = true' in _on_trigger_entered (the re-entry latch)
+  2. removed 'if _spawned: return' in _spawn_span AND the 'return' in _process's _spawned branch
+     (span no longer idempotent; polling continues after opening)
+result: exit 1, RIFT GATE OPENS ONCE FAILED, 25 pass / 4 fail:
+  FAIL: (c) five further flag/revision changes: no reopen, no rebuild, same deck and trigger instances (openings=6)
+  FAIL: (e) stepping the loaded crossing past collapse+appear: nothing replayed or rebuilt
+  FAIL: (d) two entries in the same frame: enter_realm called once (crossings_fired=2)
+  FAIL: (d) after 2 later-frame entries: enter_realm still called once (crossings_fired=6)
+rift gate opens once: 25 pass, 4 fail, 208676 ms
+note: under the mutation the realm-change count still reads 1 because Game.enter_realm refuses a
+second crossing while one is in flight; the crossings_fired() counter is what catches the lost latch.
+By inspection (not run separately): the _spawn_span guard alone is redundant with _process's early return, so the mutation removes both.
+file restored byte-for-byte from a pre-mutation copy; git diff against the commit empty before the pass run.

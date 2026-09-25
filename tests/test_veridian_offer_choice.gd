@@ -264,3 +264,47 @@ func test_the_creature_leaves_only_when_every_participant_has_answered() -> void
 	one.append(CLIMAX.resolution_flag(true, FRIEND))
 	assert_true(CLIMAX.all_answered([ME, FRIEND], one), "both answered")
 	assert_true(CLIMAX.all_answered([], []), "a solo world's one answer is its settle")
+
+
+## Coordinator, batch-5 defect 1: per-character state follows the character.
+## `_answered_here` from the character who answered must not mark this world
+## as answered for the character swapped in after them.
+func test_a_character_swap_resets_what_this_world_knows_about_the_answer() -> void:
+	var climax: Node = CLIMAX.new()
+	climax.call("_follow_the_character_to", ME)
+	climax.set("_answered_here", true)
+	climax.set("_answer_tagged", true)
+	climax.set("_offer_began", true)
+	climax.set("_offer_began_for", ME)
+	climax.call("_follow_the_character_to", ME)
+	assert_true(bool(climax.get("_answered_here")), "the same character keeps its own answer")
+	climax.call("_follow_the_character_to", FRIEND)
+	assert_false(bool(climax.get("_answered_here")), "the swapped-in character has not answered here")
+	assert_false(bool(climax.get("_answer_tagged")), "nor tagged an answer")
+	assert_false(bool(climax.get("_offer_began")), "nor had an offer begin for it")
+	assert_eq(str(climax.get("_offer_began_for")), "", "the begun offer belonged to the previous character")
+	climax.free()
+
+
+## Coordinator, batch-5 defect 2, in this exact order: a host frees the
+## legendary SOLO (no fight journal), then a guest joins BEFORE the host has
+## answered. The guest -- who never fought -- is offered nothing, and the
+## host's offer is held (nothing settles, nothing is lost) until it can be
+## told who fought; alone again, the host is offered.
+func test_solo_freeing_then_a_guest_joins_before_the_host_answers() -> void:
+	# 1. Freed alone: the host is the solo player and is offered.
+	assert_eq(CLIMAX.freed_stage_action(false, CLIMAX.may_receive(ME, [], false, false, false)), "offer",
+		"alone, the host who freed it is offered")
+	# 2. A guest joins before the host answers. The guest (a client, empty
+	#    journal) is offered nothing ...
+	assert_false(CLIMAX.may_receive(FRIEND, [], false, true, true), "the guest who never fought gets nothing")
+	# ... and the host, now in company with no journal, HOLDS: not offered,
+	#    and crucially not settled (a settle would end its offer for good).
+	assert_false(CLIMAX.may_receive(ME, [], false, false, true), "in company the host is not offered yet")
+	assert_eq(CLIMAX.freed_stage_action(true, false), "hold", "the host's offer is held, not settled")
+	assert_ne(CLIMAX.freed_stage_action(true, true), "settle", "a hold never settles, whatever may_receive says")
+	# 3. The guest leaves: the host is alone again and is offered.
+	assert_eq(CLIMAX.freed_stage_action(false, CLIMAX.may_receive(ME, [], false, false, false)), "offer",
+		"alone again, the host's held offer resumes")
+	# And a character with nothing owed settles as before.
+	assert_eq(CLIMAX.freed_stage_action(false, false), "settle")
