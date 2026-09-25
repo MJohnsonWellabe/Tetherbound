@@ -1,0 +1,50 @@
+run id:  net-20260925T033543Z-2585
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/hjl/net-host_join_leave-20260925T033543Z
+smoke:   tests/smoke_net_host_join_leave.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=2641 control_port=33437 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/hjl/net-host_join_leave-20260925T033543Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/hjl/net-host_join_leave-20260925T033543Z/peer-0.log
+coordinator: launched peer 1 (client) pid=2642 control_port=41359 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/hjl/net-host_join_leave-20260925T033543Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/hjl/net-host_join_leave-20260925T033543Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":28201.0,"godot_version":"4.7-stable (official)","main_sha":"47774c35069f","peer":0.0,"pid":2641.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/hjl/net-host_join_leave-20260925T033543Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":28202.0,"godot_version":"4.7-stable (official)","main_sha":"47774c35069f","peer":1.0,"pid":2642.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/hjl/net-host_join_leave-20260925T033543Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: host reported its ENet port in hello (28201)
+PASS: peer 0 hosted a listen server (hosting udp/28201 as peer 1)
+PASS: peer 0 reports is_host
+PASS: the listen server's own peer id is 1 (got 1.0)
+PASS: peer 1 joined and applied the world snapshot (joined 127.0.0.1:28201 as peer 497687000 after 15 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 1 reports is_host false
+PASS: peer 1's snapshot_applied gate is open
+PASS: peer 1's ENet id is a real assigned id, not the server's 1 (got 497687000)
+PASS: peer 0's registry reports 2 peers (registry reports 2 peer(s) after 0 frames)
+PASS: peer 1's registry reports 2 peers (registry reports 2 peer(s) after 0 frames)
+PASS: both registries hold 2 rows (host 2, client 2)
+PASS: registry rows agree across peers: host ["character-6f62b295b23b74339728b17d75e2da4a@1", "smoke-joiner@497687000"] vs client ["character-6f62b295b23b74339728b17d75e2da4a@1", "smoke-joiner@497687000"]
+PASS: the joiner's character id landed in the host's registry under its real peer id
+PASS: peer 1 left cleanly (client left cleanly after 0 frames)
+PASS: the host's registry is back to 1 peer (registry reports 1 peer(s) after 0 frames)
+PASS: the client had written no autosave before the host exited (false)
+PASS: the host exited its session (host left cleanly after 0 frames)
+PASS: the host wrote its world autosave on exit (true)
+PASS: the client wrote NO world save, on join or on leave (false)
+PASS: the host wrote a world file to user://worlds/ (["slot-0"])
+PASS: the client's user://worlds/ is empty ([])
+PASS: the client wrote exactly one character file, its own (["smoke-joiner"])
+PASS: and it is addressed by a character id ({ "id": "smoke-joiner", "keys": ["character_id", "chosen_character", "created_at", "display_name", "equipment", "flags", "hotbar", "inventory", "last_played", "last_world_id", "last_world_instance_id", "migrated_from", "party", "pending_realm_entry", "player_pose", "realm", "realm_hearts", "realm_maps", "satchel_escrow", "satiety", "skills", "tournament_selection", "version"], "party": 0.0 })
+PASS: the client's character file carries its team, its maps and its own flags (["character_id", "chosen_character", "created_at", "display_name", "equipment", "flags", "hotbar", "inventory", "last_played", "last_world_id", "last_world_instance_id", "migrated_from", "party", "pending_realm_entry", "player_pose", "realm", "realm_hearts", "realm_maps", "satchel_escrow", "satiety", "skills", "tournament_selection", "version"])
+PASS: and no world key -- a trainer is not a world (["character_id", "chosen_character", "created_at", "display_name", "equipment", "flags", "hotbar", "inventory", "last_played", "last_world_id", "last_world_instance_id", "migrated_from", "party", "pending_realm_entry", "player_pose", "realm", "realm_hearts", "realm_maps", "satchel_escrow", "satiety", "skills", "tournament_selection", "version"])
+PASS: the host wrote its own character file too (["character-6f62b295b23b74339728b17d75e2da4a"])
+ALL CHECKS PASSED
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/hjl/net-host_join_leave-20260925T033543Z/SUMMARY.md ===
+# Net smoke run net-20260925T033543Z-2585
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=2641 exited=true unexpected_exit=false
+- peer 1 (client) pid=2642 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
