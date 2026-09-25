@@ -502,9 +502,11 @@
       "finish": {
         "feature_percentile": 2.5,
         "feature_max_val": 0.389,
-        "feature_set_val": 0.1
+        "feature_set_val": 0.1,
+        "output_size": 2048
       },
-      "_comment_vivid_sheet02": "X04 creature-art lane, owner-approved 2026-09-25: recolour toward the owner's sheet docs/art/reference/02_Water_Starter_Ripplet.png. The previous vivid rules forced every chromatic texel to hue 224 (royal blue), turning the sheet's minor 'accent blue' into the primary and whitening the face into blue blotches. The source albedo already carries the sheet's teal skin, cream belly and pink inner frills, so these rules keep those hues and only consolidate them into clean blocks."
+      "_comment_vivid_sheet02": "X04 creature-art lane, owner-approved 2026-09-25: recolour toward the owner's sheet docs/art/reference/02_Water_Starter_Ripplet.png. The previous vivid rules forced every chromatic texel to hue 224 (royal blue), turning the sheet's minor 'accent blue' into the primary and whitening the face into blue blotches. The source albedo already carries the sheet's teal skin, cream belly and pink inner frills, so these rules keep those hues and only consolidate them into clean blocks.",
+      "_comment_output_size": "Integration review 2026-09-25: the default 2048->1024 Lanczos downsample rings at black outlines and leaves a few near-black texels (value <= 0.09) whose hue computes as red, inside the band reserved for Team Tether. Emitting at the source's own 2048 removes them (0 texels at hue 0-15, sat > 0.4)."
     },
     "galewisp": {
       "_comment": "Base: pale silver air starter. Vivid: the board's white + gold (see vivid_comment). Shiny: storm violet, now genuinely distinct because the ordinary bird stopped being blue -- and carrying white lightning tips so the rare reads by pattern as well as hue.",
@@ -548,10 +550,11 @@
       "vivid_comment": "WHITE BODY, GOLD TIPS -- and the gold moves from a colourway RULE to an anatomical OVERLAY, which is the actual correction. The board paints a white/silver starter with gold ear and wing tips; a rule matching on saturation cannot say 'tips', so it gilded every saturated texel and produced a bird soaked in yellow all over. A blind round read the result as the ordinary and the rare having swapped places, since the shiny still wore the board's white. Same lesson `_comment_overlays` already records for galecrest's round-1 patches: placement is anatomy, never a colour band.",
       "vivid_rules": [
         {
-          "_why": "eyes, beak, claws, outlines: keep",
+          "_why": "eyes, beak, claws, outlines: keep hue and value; saturation capped at 0.2 so dark source outlines stay out of the red band reserved for Team Tether",
           "match": {
             "val_max": 0.14
-          }
+          },
+          "set_sat": 0.2
         },
         {
           "_why": "sheet 03 'primary/secondary feathers': one blue block",
@@ -590,9 +593,11 @@
       "finish": {
         "feature_percentile": 2.5,
         "feature_max_val": 0.319,
-        "feature_set_val": 0.094
+        "feature_set_val": 0.094,
+        "output_size": 2048
       },
-      "_comment_vivid_sheet03": "X04 creature-art lane, owner-approved 2026-09-25: recolour toward the owner's sheet docs/art/reference/03_Air_Starter_Galewisp.png (cream down, blue primary feathers, tan accent around the eyes and on feather tips). The previous vivid rules desaturated every texel to sat 0.03-0.05, erasing the blue, and the gold_tips/gold_crest overlays tinted the wing spread yellow-green. The source albedo already carries the sheet's blue and tan, so these rules keep them; the gold overlays are removed."
+      "_comment_vivid_sheet03": "X04 creature-art lane, owner-approved 2026-09-25: recolour toward the owner's sheet docs/art/reference/03_Air_Starter_Galewisp.png (cream down, blue primary feathers, tan accent around the eyes and on feather tips). The previous vivid rules desaturated every texel to sat 0.03-0.05, erasing the blue, and the gold_tips/gold_crest overlays tinted the wing spread yellow-green. The source albedo already carries the sheet's blue and tan, so these rules keep them; the gold overlays are removed.",
+      "_comment_output_size": "Integration review 2026-09-25: the default 2048->1024 Lanczos downsample rings at black outlines and leaves a few near-black texels (value <= 0.09) whose hue computes as red, inside the band reserved for Team Tether. Emitting at the source's own 2048 removes them (0 texels at hue 0-15, sat > 0.4)."
     },
     "meadowhart": {
       "_comment": "Base: golden-tan deer. Vivid (board: 'Natural browns + Antlers'): tawny natural brown, restrained -- the burnished-gold pass read as a trophy, not an animal. Shiny: pale silver spirit-hart, unchanged.",
