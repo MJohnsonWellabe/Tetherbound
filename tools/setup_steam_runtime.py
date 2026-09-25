@@ -155,27 +155,31 @@ def install_templates(platform, destination):
     print("Ship the Steam API library beside the exported executable. No AppID configured.")
 
 
-TEMPLATE_FILES = {
-    "win64": ("godotsteam.47.debug.template.win64.exe", "godotsteam.47.template.win64.exe"),
-    "linux64": ("godotsteam.47.debug.template.x86_64", "godotsteam.47.template.x86_64"),
-}
+def template_files(platform):
+    """(debug, release) template file names, from the pinned member list."""
+    names = [Path(member).name for member in TEMPLATE_PLATFORMS[platform]]
+    debug = next(name for name in names if ".debug.template." in name)
+    release = next(name for name in names if ".template." in name and ".debug." not in name)
+    return debug, release
 
 
 def configure_preset(presets_path, preset_name, debug_template, release_template):
     """Set custom_template/debug and /release in the named preset's options
     section of export_presets.cfg. Other presets and keys are untouched."""
     lines = Path(presets_path).read_text(encoding="utf-8").splitlines(keepends=True)
-    index = None
+    matches = []
     for i, line in enumerate(lines):
         if line.strip() == f'name="{preset_name}"':
             for j in range(i, -1, -1):
                 header = lines[j].strip()
                 if header.startswith("[preset.") and header.endswith("]") and ".options" not in header:
-                    index = header[len("[preset."):-1]
+                    matches.append(header[len("[preset."):-1])
                     break
-            break
-    if index is None:
+    if not matches:
         raise SystemExit(f"No export preset named {preset_name!r} in {presets_path}")
+    if len(matches) > 1:
+        raise SystemExit(f"More than one export preset is named {preset_name!r} in {presets_path}")
+    index = matches[0]
     section = f"[preset.{index}.options]"
     wanted = {"custom_template/debug": debug_template.as_posix(),
               "custom_template/release": release_template.as_posix()}
@@ -214,7 +218,7 @@ def main():
         destination = (args.destination or default).resolve()
         install_templates(args.platform, destination)
         if args.configure_preset:
-            debug_name, release_name = TEMPLATE_FILES[args.platform]
+            debug_name, release_name = template_files(args.platform)
             configure_preset(args.presets_file, args.configure_preset,
                              destination / debug_name, destination / release_name)
     else:

@@ -57,8 +57,11 @@ env:
   # together, and OFF by default: redistributing the Steamworks library is the
   # owner's decision. Turn on per run with the `ship_steam_runtime` dispatch
   # input, or for every main build with the repository variable
-  # TETHERBOUND_SHIP_STEAM_RUNTIME=true. Off, the export is exactly the stock
-  # path below. Evidence: ralph/reports/INVITE-COOP.
+  # TETHERBOUND_SHIP_STEAM_RUNTIME=true. The variable wins: while it is true,
+  # every build ships the runtime even if a dispatch leaves the input off.
+  # Off, the export is exactly the stock path below. No automated check
+  # launches the Steam exe on Windows; that belongs to the owner's sign-off.
+  # Evidence: ralph/reports/INVITE-COOP.
   SHIP_STEAM_RUNTIME: ${{ (github.event_name == 'workflow_dispatch' && inputs.ship_steam_runtime) || vars.TETHERBOUND_SHIP_STEAM_RUNTIME == 'true' }}
 
 concurrency:
@@ -207,7 +210,8 @@ jobs:
             Automatic build of `main`, commit ${{ github.sha }}.
 
             **Windows / ROG Ally.** Unzip and run `Tetherbound.exe` — keep the
-            `.pck` and the `.dll` next to it.
+            `.pck` and every `.dll` (including `steam_api64.dll` when present)
+            next to it.
 
             **Evidence run.** Double-click `KICKOFF.cmd` from the same folder
             and walk away; it fetches the repo, plays the chapter with video,
