@@ -17,12 +17,21 @@
         }
       ]
     },
+    "lost_creature_rue_returned": {
+      "speaker": "Juno",
+      "portrait": "res://assets/ui/portraits/juno.png",
+      "_comment": "F03: the acknowledgement when the player leads the freed Meadowhart home (scripts/world/lost_companion_reunion.gd). Pays nothing: the patrol's battle reward was the payout.",
+      "lines": [
+        "There you are, girl. Easy. You're home.",
+        "You walked her all the way back yourself. She'd never have followed a Tether hand. Thank you."
+      ]
+    },
     "lost_creature_rue_defeated": {
       "speaker": "Tether Patrol",
       "portrait": "res://assets/ui/portraits/grunt.png",
       "lines": [
         "All right, all right. Keep the paperwork if you want it that badly.",
-        "She's gone back to Juno in the high pasture. Tell her Company regrets nothing, if she asks."
+        "She won't budge for us. If she's Juno's, you walk her home. Tell Juno Company regrets nothing, if she asks."
       ]
     }
   }

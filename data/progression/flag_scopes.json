@@ -2,6 +2,7 @@
   "_comment": "D99 / docs/specs/MP_STATE_SEAM.md §3. Every story flag id is world or player. A flag matching nothing here is a test failure (tests/test_flag_scopes.gd), never a default: defaulting an unknown id to world makes a friend's tutorial already done, and defaulting it to player leaves a gate closed for the friend who did not open it. Resolution is exact id first, then the LONGEST matching prefix, then nothing (autoload/progression_state.gd::scope_of).",
   "_comment_prefixes": "A prefix ends with ':' or '_' so it can never swallow an unrelated id. Longest-prefix wins, so 'opening:beat:' resolves ahead of 'opening:' even though both are player.",
   "_comment_rule": "world = something happened to THE WORLD once (a boss fell, a gate opened, a pickup was taken, a relay went dark, a shop opened, an NPC was met). player = a tutorial beat, a personal readiness check, or a personal payoff (items handed over, a saddle fitted on YOUR creature, YOUR camp, YOUR legendary). Home and creature-bed flags are player flags GRANTED TO EVERY CONNECTED PEER when the world gains the pieces (D99); until Wave 3's grant_player_flag exists, solo writes them to the local store exactly as today.",
+  "_why_lost_creature_rue_returned": "F03: world scope. The player leads Juno's freed Meadowhart home; once she stands beside Juno that is true for every peer, and band4_lost_creature completes on it (data/config/lost_companion_reunion.json).",
   "world": {
     "ids": [
       "defeated_warden",
@@ -81,6 +82,7 @@
       "broken_cart_met",
       "band1_meadowhart_herd_met",
       "lost_creature_rue_met",
+      "lost_creature_rue_returned",
       "night_watch_farro_met",
       "old_champion_met",
       "mira_shop_open",

@@ -359,7 +359,7 @@
         "coins": 50,
         "revive": 1
       },
-      "enables": "A Revive before the stronghold approach, from the reunion the chapter's own lost-companion content is built around. Read off `lost_creature_rue`.",
+      "enables": "A Revive before the stronghold approach, from the reunion the chapter's own lost-companion content is built around. Read off `lost_creature_rue`: paid once by the patrol win that frees her; the activity completes when the player leads her home (lost_creature_rue_returned), which pays nothing further.",
       "understood_when_received": true
     },
     {

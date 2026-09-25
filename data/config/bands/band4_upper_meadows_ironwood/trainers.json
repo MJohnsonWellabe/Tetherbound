@@ -209,7 +209,7 @@
       "challenge": "pasture_drover_juno_challenge",
       "defeated": "pasture_drover_juno_defeated",
       "dialogue_after": {
-        "flag": "defeated_lost_creature_rue",
+        "flag": "lost_creature_rue_returned",
         "challenge": "pasture_drover_juno_reunited_challenge",
         "defeated": "pasture_drover_juno_reunited_defeated"
       },

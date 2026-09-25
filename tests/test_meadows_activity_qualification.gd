@@ -175,10 +175,14 @@ const QUALIFIED := [
 		"flag": "river_nest_doss_cleared", "reveal": "river_nest_doss_met",
 		"reveal_conversation": "river_nest_doss_challenge",
 		"ack": "river_nest_doss_defeated", "local_row": true},
-	{"id": "band4_lost_creature", "region": "upper_meadows", "kind": "trainer",
-		"trainer": "lost_creature_rue", "flag": "defeated_lost_creature_rue",
+	# F03 distinct action: beating the patrol frees the Meadowhart (and pays the
+	# patrol's once-only battle reward); leading her home to Juno is the counted
+	# completion, acknowledged on arrival.
+	{"id": "band4_lost_creature", "region": "upper_meadows", "kind": "escort",
+		"trainer": "lost_creature_rue", "defeat_flag": "defeated_lost_creature_rue",
+		"flag": "lost_creature_rue_returned",
 		"reveal": "lost_creature_rue_met", "reveal_conversation": "pasture_drover_juno_challenge",
-		"ack": "lost_creature_rue_defeated", "local_row": true},
+		"ack": "lost_creature_rue_returned", "local_row": true},
 	{"id": "band5_hall_alpha_galecrest", "region": "hall_approach", "kind": "alpha",
 		"order": 5001, "flag": "wild_once_5001", "reveal": "hall_approach_open", "local_row": true},
 ]
@@ -357,12 +361,21 @@ func test_every_qualified_activity_pays_a_real_once_only_reward() -> void:
 		var id := str(row["id"])
 		var flag := str(row["flag"])
 		match str(row["kind"]):
-			"trainer":
+			"trainer", "escort":
 				var spec := TRAINERS.trainer(str(row["trainer"]))
 				assert_false(spec.is_empty(), "%s: trainer '%s' is not placed" % [id, row["trainer"]])
 				if spec.is_empty():
 					continue
-				assert_eq(str(spec.get("defeat_flag", "")), flag, "%s: the fight does not set the counted flag" % id)
+				# An escort's payout is the freeing fight's own once-only reward; its
+				# counted completion is the separate return flag the reunion writes.
+				assert_eq(str(spec.get("defeat_flag", "")), str(row.get("defeat_flag", flag)),
+					"%s: the fight does not set the counted flag" % id)
+				if str(row["kind"]) == "escort":
+					var reunion := _json_dict(REUNION_CONFIG)
+					assert_eq(str(reunion.get("defeat_flag", "")), str(row["defeat_flag"]),
+						"%s: the escort is not unlocked by the paying fight" % id)
+					assert_eq(str(reunion.get("return_flag", "")), flag,
+						"%s: the escort writes a different completion flag" % id)
 				assert_false(bool(spec.get("rechallenge", false)), "%s: a rechallengeable trainer is not once-only" % id)
 				assert_true(TRAINERS.reward_coins(spec) > 0 or not TRAINERS.reward_items(spec).is_empty(),
 					"%s: the trainer pays nothing" % id)
@@ -416,6 +429,9 @@ func test_every_qualified_activity_acknowledges_the_player() -> void:
 				var spec := TRAINERS.trainer(str(row["trainer"]))
 				assert_eq(str(spec.get("defeated", "")), str(row["ack"]),
 					"%s: the trainer's post-win conversation is not the recorded acknowledgement" % id)
+			"escort":
+				assert_eq(str(_json_dict(REUNION_CONFIG).get("acknowledgement", "")), str(row["ack"]),
+					"%s: the return plays a different acknowledgement" % id)
 			"herd":
 				var visit: Dictionary = HERD_VISIT.definition().get("visit", {}) as Dictionary
 				assert_eq(str(visit.get("acknowledgement", "")), str(row["ack"]),
@@ -444,8 +460,9 @@ func test_every_qualified_activity_acknowledges_the_player() -> void:
 func test_the_lost_companion_is_acknowledged_by_juno_on_the_counted_fact() -> void:
 	# The rescue's acknowledgement is the world consequence, not only the
 	# patrol's defeated line: Juno and the reunited display both key off the
-	# same flag the record counts, so nothing pays or presents twice.
-	var flag := "defeated_lost_creature_rue"
+	# same flag the record counts -- the RETURN, which the player performs by
+	# leading the freed Meadowhart home -- so nothing pays or presents twice.
+	var flag := "lost_creature_rue_returned"
 	var juno := TRAINERS.trainer("pasture_drover_juno")
 	var after: Dictionary = juno.get("dialogue_after", {}) as Dictionary
 	assert_eq(str(after.get("flag", "")), flag, "Juno's reunited dialogue keys off another fact")
@@ -453,7 +470,9 @@ func test_the_lost_companion_is_acknowledged_by_juno_on_the_counted_fact() -> vo
 		assert_false(_conversation_lines(str(after.get(state, ""))).is_empty(),
 			"Juno's reunited '%s' conversation is missing" % state)
 	var reunion := _json_dict(REUNION_CONFIG)
-	assert_eq(str(reunion.get("defeat_flag", "")), flag, "the reunion display keys off another fact")
+	assert_eq(str(reunion.get("return_flag", "")), flag, "the reunion display keys off another fact")
+	assert_eq(str(reunion.get("defeat_flag", "")), "defeated_lost_creature_rue",
+		"the escort is not unlocked by beating the patrol")
 	assert_eq(str(reunion.get("patrol_trainer_id", "")), "lost_creature_rue")
 	assert_eq(str(reunion.get("owner_trainer_id", "")), "pasture_drover_juno")
 
@@ -473,7 +492,7 @@ func test_every_qualified_activity_has_its_lure_in_world_data() -> void:
 				assert_true(_conversation_sets_flag(reveal_id, str(row["reveal"])),
 					"%s: '%s' never reveals '%s'" % [id, reveal_id, row["reveal"]])
 		match str(row["kind"]):
-			"trainer":
+			"trainer", "escort":
 				var spec := TRAINERS.trainer(str(row["trainer"]))
 				var at: Variant = spec.get("position", [])
 				assert_true(at is Array and (at as Array).size() == 2,
