@@ -1179,7 +1179,7 @@
           ],
           "radius": 7.0,
           "road": "village_stoneyard_lane",
-          "_why": "Chosen from what already stands there rather than invented: band-1 stone nodes 4 [22,-34] and 1037 [11,-32] (the village's stone lesson) sit 11m apart on level ground north of the square, with deadwood 0 [16,-28] at the rim. Its own scatter clearing is band1 vegetation.json clearings order 1929."
+          "_why": "Chosen from what already stands there rather than invented: band-1 stone nodes 4 [22,-34] and 1037 [11,-32] (the village's stone lesson) sit 11m apart on level ground north of the square, with deadwood 0 [16,-28] at the rim. Dressed as a working yard by the band1 props.json work_area cluster (anvil, workbench, whetstone, crate, pickaxe; moved here in F01-b from inside the inn's apron) and kept free of random trees and rocks by its own scatter clearing, band1 vegetation.json clearings order 1929."
         },
         {
           "id": "berry_field",
@@ -1191,7 +1191,7 @@
           ],
           "radius": 6.0,
           "road": "village_berry_lane",
-          "_why": "F01-b. North of the through-road between Grandpa's house and the inn crossroads, around the existing berry node 1036 [-9,-19]: an L of village.json fence rails (north and west) and a planted row of flowering berry bushes (band1 vegetation.json layer_anchors.bushes, Bush_Common_Flowers -- the same model every berry harvest node uses). Berry Lane ends inside it."
+          "_why": "F01-b/F01-c. North of the through-road between Grandpa's house and the inn crossroads, around the existing berry node 1036 [-9,-19]: an L of village.json fence rails (north and west) and planted rows of low flowerless Bush_Common shrubs (band1 vegetation.json layer_anchors.bushes) -- deliberately not the harvest nodes' flowering model, so the one pickable bush is the one that looks like it. Berry Lane ends inside it."
         },
         {
           "id": "the_grove",
@@ -1203,7 +1203,7 @@
           ],
           "radius": 8.0,
           "road": "The Pond",
-          "_why": "F01-b. West of the Pond lane between Grandpa's kitchen garden and the fence: six authored oaks (village.json square_oak_a/b, trunk-only colliders) round stone node 6 [-18,6], with a bush understorey (band1 vegetation.json layer_anchors.bushes). The Pond lane runs along its east edge (7.4m from the centre), so the road passes through the grove's margin rather than ending in it."
+          "_why": "F01-b/F01-c. West of the Pond lane between Grandpa's kitchen garden and the fence: six authored oaks (village.json square_oak_a/b, trunk-only colliders) round stone node 6 [-18,6], with a bush understorey (band1 vegetation.json layer_anchors.bushes) and its own scatter clearing (band1 clearings order 1930) so baked random trees and rocks cannot land on the oaks. The Pond lane runs along its east edge (7.4m from the centre), so the road passes through the grove's margin rather than ending in it."
         }
       ]
     },

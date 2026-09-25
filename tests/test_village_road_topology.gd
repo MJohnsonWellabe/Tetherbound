@@ -46,7 +46,7 @@ const PROMPT_CLEAR_M := 3.2
 const DOOR_PROMPT_RADIUS_M := 3.0
 const PREFABS_PATH := "res://data/config/building_prefabs.json"
 const BAND1_VEGETATION_PATH := "res://data/config/bands/band1_lower_meadows/vegetation.json"
-const BERRY_MODEL := "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf"
+const BAND1_PROPS_PATH := "res://data/config/bands/band1_lower_meadows/props.json"
 const REQUIRED_SUBAREA_KINDS := ["berry_field", "grove", "stone_work"]
 
 var _terrain: Dictionary = {}
@@ -392,6 +392,29 @@ func _harvest(item: String) -> Array[Vector2]:
 	return out
 
 
+func _clearings() -> Array:
+	return _json(BAND1_VEGETATION_PATH).get("clearings", []) as Array
+
+
+func _clearing_covering(centre: Vector2, radius: float) -> Dictionary:
+	for raw: Variant in _clearings():
+		var c := raw as Dictionary
+		var at := Vector2(float(c.get("x", INF)), float(c.get("z", INF)))
+		if at.distance_to(centre) + radius <= float(c.get("radius", 0.0)):
+			return c
+	return {}
+
+
+func _cluster_props(name: String) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	for raw: Variant in (_json(BAND1_PROPS_PATH).get("clusters", []) as Array):
+		if str((raw as Dictionary).get("name", "")) != name:
+			continue
+		for prop: Variant in ((raw as Dictionary).get("props", []) as Array):
+			out.append(_v((prop as Dictionary).get("at", [])))
+	return out
+
+
 func _bush_anchors() -> Array:
 	var anchors := (_json(BAND1_VEGETATION_PATH).get("layer_anchors", {}) as Dictionary).get("bushes", []) as Array
 	return anchors
@@ -470,17 +493,39 @@ func test_each_subarea_is_backed_by_what_stands_there() -> void:
 			"stone_work":
 				var stones := _harvest("stone").filter(func(p: Vector2) -> bool: return p.distance_to(centre) <= radius)
 				assert_true(stones.size() >= 2, "%s holds %d authored stone nodes" % [name, stones.size()])
+				# F01-c: the NEW content that makes it a working yard, not just the
+				# two stone nodes that were already there.
+				var yard := _cluster_props("work_area")
+				assert_true(yard.size() >= 4, "the work_area cluster is authored (%d props)" % yard.size())
+				for at: Vector2 in yard:
+					assert_true(at.distance_to(centre) <= radius,
+						"work_area prop at %s stands inside %s (%.1fm from its centre)" % [at, name, at.distance_to(centre)])
+				assert_false(_clearing_covering(centre, radius).is_empty(),
+					"%s has its own scatter clearing covering its whole disk, so baked trees and rocks stay off the yard" % name)
 			"berry_field":
 				var berries := _harvest("berries").filter(func(p: Vector2) -> bool: return p.distance_to(centre) <= radius)
 				assert_true(berries.size() >= 1, "%s holds %d authored berry harvest nodes" % [name, berries.size()])
+				# F01-c: the planted rows must NOT look like the pickable bush --
+				# no decoration may use any berry harvest node's model.
+				var harvest_models := {}
+				for node_raw: Variant in (_json(HARVEST_PATH).get("nodes", []) as Array):
+					if str((node_raw as Dictionary).get("item", "")) == "berries":
+						harvest_models[str((node_raw as Dictionary).get("model", ""))] = true
+				assert_false(harvest_models.is_empty(), "berry harvest nodes declare their model")
 				var rows := 0
 				for raw: Variant in _bush_anchors():
 					var anchor := raw as Dictionary
-					if _v(anchor.get("at", [])).distance_to(centre) <= radius \
-							and (anchor.get("models", []) as Array) == [BERRY_MODEL] \
-							and int(anchor.get("count", 0)) >= 5:
+					if _v(anchor.get("at", [])).distance_to(centre) > radius:
+						continue
+					var models := anchor.get("models", []) as Array
+					assert_false(models.is_empty(), "%s's planted rows name their own model" % name)
+					for model: Variant in models:
+						assert_false(harvest_models.has(str(model)),
+							"%s's decorative bushes use %s, the berry harvest model: players see pickable bushes that are not" % [name, str(model)])
+						assert_true(ResourceLoader.exists(str(model)), "%s is an installed model" % str(model))
+					if int(anchor.get("count", 0)) >= 5:
 						rows += 1
-				assert_true(rows >= 1, "%s has a planted row of berry bushes (Bush_Common_Flowers anchor)" % name)
+				assert_true(rows >= 1, "%s has planted rows (a bushes anchor of 5+)" % name)
 				var rails := _structures("fence_run").filter(func(p: Vector2) -> bool: return p.distance_to(centre) <= radius)
 				assert_true(rails.size() >= 2, "%s is a fenced field (%d rails)" % [name, rails.size()])
 			"grove":
@@ -491,6 +536,11 @@ func test_each_subarea_is_backed_by_what_stands_there() -> void:
 					for road: String in _roads:
 						clearance = minf(clearance, _distance_to_line(oak, _roads[road] as PackedVector2Array))
 					assert_true(clearance >= 3.0, "%s's tree at %s keeps its trunk off the road (%.1fm)" % [name, oak, clearance])
+				# F01-c: a scatter clearing keeps baked random trees and rocks off
+				# every authored oak (1m+ inside its edge).
+				for oak: Vector2 in oaks:
+					assert_false(_clearing_covering(oak, 1.0).is_empty(),
+						"%s's tree at %s is not inside a scatter clearing; a baked tree or rock can land on it" % [name, oak])
 				var under := false
 				for raw: Variant in _bush_anchors():
 					if _v((raw as Dictionary).get("at", [])).distance_to(centre) <= radius:
