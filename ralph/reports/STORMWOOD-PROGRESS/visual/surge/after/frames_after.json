@@ -1,0 +1,1926 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Calm, t+3 s into the phase",
+			"file": "surge_calm_01.jpg",
+			"hud": false,
+			"id": "surge_calm_01",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 3.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 4.5,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Calm, t+8 s into the phase",
+			"file": "surge_calm_02.jpg",
+			"hud": false,
+			"id": "surge_calm_02",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 8.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 9.01227766666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Calm, t+13 s into the phase",
+			"file": "surge_calm_03.jpg",
+			"hud": false,
+			"id": "surge_calm_03",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 13.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 14.0,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Calm, t+18 s into the phase",
+			"file": "surge_calm_04.jpg",
+			"hud": false,
+			"id": "surge_calm_04",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 18.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 19.0,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Calm, t+23 s into the phase",
+			"file": "surge_calm_05.jpg",
+			"hud": false,
+			"id": "surge_calm_05",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 23.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 24.0166666666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Calm, t+28 s into the phase",
+			"file": "surge_calm_06.jpg",
+			"hud": false,
+			"id": "surge_calm_06",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 28.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 29.0166666666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Building, t+3 s into the phase",
+			"file": "surge_building_01.jpg",
+			"hud": false,
+			"id": "surge_building_01",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 3.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 328.490341666667,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Building, t+8 s into the phase",
+			"file": "surge_building_02.jpg",
+			"hud": false,
+			"id": "surge_building_02",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 8.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 333.5,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Building, t+13 s into the phase",
+			"file": "surge_building_03.jpg",
+			"hud": false,
+			"id": "surge_building_03",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 13.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 338.492884666667,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Building, t+18 s into the phase",
+			"file": "surge_building_04.jpg",
+			"hud": false,
+			"id": "surge_building_04",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 18.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 343.5,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Building, t+23 s into the phase",
+			"file": "surge_building_05.jpg",
+			"hud": false,
+			"id": "surge_building_05",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 23.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 348.5,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Building, t+28 s into the phase",
+			"file": "surge_building_06.jpg",
+			"hud": false,
+			"id": "surge_building_06",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 28.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 353.5,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+3 s into the phase",
+			"file": "surge_break_01.jpg",
+			"hud": false,
+			"id": "surge_break_01",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 3.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 418.486725,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+8 s into the phase",
+			"file": "surge_break_02.jpg",
+			"hud": false,
+			"id": "surge_break_02",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 8.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 423.483333333333,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+13 s into the phase",
+			"file": "surge_break_03.jpg",
+			"hud": false,
+			"id": "surge_break_03",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 13.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 428.483333333333,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+18 s into the phase",
+			"file": "surge_break_04.jpg",
+			"hud": false,
+			"id": "surge_break_04",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 18.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 433.483333333333,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+23 s into the phase",
+			"file": "surge_break_05.jpg",
+			"hud": false,
+			"id": "surge_break_05",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 23.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 438.495791,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, t+28 s into the phase",
+			"file": "surge_break_06.jpg",
+			"hud": false,
+			"id": "surge_break_06",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 28.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 443.487223,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break: lightning ground telegraph ring (1.2 s, 3 m) at the marked clearing",
+			"file": "surge_break_telegraph.jpg",
+			"hud": false,
+			"id": "surge_break_telegraph",
+			"label": "after",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 443.516666666667,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break: white-violet lightning flash (distant or strike) in progress",
+			"file": "surge_break_flash.jpg",
+			"hud": false,
+			"id": "surge_break_flash",
+			"label": "after",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.548153333333333,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 443.948467,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Fading, t+3 s into the phase",
+			"file": "surge_fading_01.jpg",
+			"hud": false,
+			"id": "surge_fading_01",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 3.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 538.484866333333,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Fading, t+8 s into the phase",
+			"file": "surge_fading_02.jpg",
+			"hud": false,
+			"id": "surge_fading_02",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 8.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 543.501533,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Fading, t+13 s into the phase",
+			"file": "surge_fading_03.jpg",
+			"hud": false,
+			"id": "surge_fading_03",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 13.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 547.984866333333,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Fading, t+18 s into the phase",
+			"file": "surge_fading_04.jpg",
+			"hud": false,
+			"id": "surge_fading_04",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 18.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 552.984866333333,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Fading, t+23 s into the phase",
+			"file": "surge_fading_05.jpg",
+			"hud": false,
+			"id": "surge_fading_05",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 23.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 557.984866333333,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Fading, t+28 s into the phase",
+			"file": "surge_fading_06.jpg",
+			"hud": false,
+			"id": "surge_fading_06",
+			"label": "after",
+			"long_storm_ended": false,
+			"phase_offset_s": 28.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 563.001533,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"frames": 62,
+			"id": "motion_calm",
+			"phase": "calm",
+			"phase_offset_s": [
+				4.0,
+				4.5,
+				5.0,
+				5.48,
+				6.0,
+				6.48,
+				7.0,
+				7.5,
+				7.98,
+				8.49,
+				8.98,
+				9.49,
+				9.99,
+				10.5,
+				10.99,
+				11.48,
+				11.99,
+				12.48,
+				12.99,
+				13.49,
+				14.0,
+				14.48,
+				14.99,
+				15.5,
+				15.99,
+				16.48,
+				16.98,
+				17.49,
+				18.0,
+				18.49,
+				18.99,
+				19.5,
+				19.99,
+				20.49,
+				20.99,
+				21.49,
+				22.0,
+				22.48,
+				22.98,
+				23.49,
+				24.0,
+				24.49,
+				24.98,
+				25.49,
+				26.0,
+				26.5,
+				26.98,
+				27.5,
+				27.99,
+				28.49,
+				28.99,
+				29.5,
+				29.99,
+				30.49,
+				31.0,
+				31.48,
+				31.98,
+				32.5,
+				32.99,
+				33.5,
+				33.99,
+				34.5
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			]
+		},
+		{
+			"frames": 62,
+			"id": "motion_building",
+			"phase": "building",
+			"phase_offset_s": [
+				3.99,
+				4.5,
+				5.0,
+				5.48,
+				6.0,
+				6.5,
+				7.0,
+				7.5,
+				7.99,
+				8.48,
+				8.98,
+				9.49,
+				9.99,
+				10.49,
+				11.0,
+				11.48,
+				11.99,
+				12.5,
+				13.0,
+				13.49,
+				13.99,
+				14.48,
+				14.99,
+				15.49,
+				16.0,
+				16.49,
+				17.0,
+				17.49,
+				17.99,
+				18.48,
+				19.0,
+				19.49,
+				19.99,
+				20.48,
+				20.98,
+				21.49,
+				21.98,
+				22.48,
+				22.99,
+				23.48,
+				23.98,
+				24.5,
+				24.98,
+				25.5,
+				26.0,
+				26.48,
+				26.99,
+				27.5,
+				27.99,
+				28.49,
+				29.0,
+				29.5,
+				29.99,
+				30.49,
+				31.0,
+				31.49,
+				32.0,
+				32.48,
+				33.0,
+				33.49,
+				33.99,
+				34.48
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			]
+		},
+		{
+			"frames": 62,
+			"id": "motion_break",
+			"phase": "break",
+			"phase_offset_s": [
+				4.01,
+				4.52,
+				5.02,
+				5.51,
+				6.01,
+				6.51,
+				7.0,
+				7.52,
+				8.0,
+				8.52,
+				9.02,
+				9.51,
+				10.01,
+				10.52,
+				11.0,
+				11.5,
+				12.0,
+				12.5,
+				13.02,
+				13.51,
+				14.0,
+				14.5,
+				15.02,
+				15.5,
+				16.01,
+				16.52,
+				17.0,
+				17.51,
+				18.01,
+				18.51,
+				19.02,
+				19.51,
+				20.0,
+				20.5,
+				21.0,
+				21.51,
+				22.02,
+				22.51,
+				23.0,
+				23.5,
+				24.0,
+				24.5,
+				25.02,
+				25.5,
+				26.01,
+				26.5,
+				27.01,
+				27.5,
+				28.02,
+				28.51,
+				29.02,
+				29.5,
+				30.0,
+				30.52,
+				31.01,
+				31.51,
+				32.0,
+				32.52,
+				33.0,
+				33.52,
+				34.01,
+				34.5
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			]
+		},
+		{
+			"frames": 62,
+			"id": "motion_fading",
+			"phase": "fading",
+			"phase_offset_s": [
+				4.0,
+				4.52,
+				5.01,
+				5.5,
+				6.0,
+				6.5,
+				7.01,
+				7.5,
+				8.01,
+				8.5,
+				9.01,
+				9.51,
+				10.02,
+				10.5,
+				11.0,
+				11.5,
+				12.0,
+				12.52,
+				13.01,
+				13.52,
+				14.0,
+				14.51,
+				15.0,
+				15.52,
+				16.02,
+				16.51,
+				17.0,
+				17.5,
+				18.02,
+				18.52,
+				19.02,
+				19.5,
+				20.0,
+				20.51,
+				21.02,
+				21.5,
+				22.0,
+				22.51,
+				23.0,
+				23.5,
+				24.0,
+				24.52,
+				25.02,
+				25.51,
+				26.02,
+				26.5,
+				27.01,
+				27.52,
+				28.01,
+				28.5,
+				29.0,
+				29.52,
+				30.0,
+				30.5,
+				31.0,
+				31.51,
+				32.01,
+				32.5,
+				33.0,
+				33.51,
+				34.02,
+				34.5
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames"
+			]
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Calm at night (art.json night preset, hour 23)",
+			"file": "night_calm.jpg",
+			"hud": false,
+			"id": "night_calm",
+			"label": "after",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 5.00219933333335,
+			"surge_phase": "calm",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Building at night (art.json night preset, hour 23)",
+			"file": "night_building.jpg",
+			"hud": false,
+			"id": "night_building",
+			"label": "after",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 328.998562666667,
+			"surge_phase": "building",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break at night (art.json night preset, hour 23)",
+			"file": "night_break.jpg",
+			"hud": false,
+			"id": "night_break",
+			"label": "after",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 418.999238,
+			"surge_phase": "break",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Fading at night (art.json night preset, hour 23)",
+			"file": "night_fading.jpg",
+			"hud": false,
+			"id": "night_fading",
+			"label": "after",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 539.012800666667,
+			"surge_phase": "fading",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-629.39990234375,
+				22.4598331451416,
+				804.025939941406
+			],
+			"description": "Verge Rod Station pylon (rod line), 30 m, Calm",
+			"file": "view_rod_line_calm.jpg",
+			"hud": false,
+			"id": "view_rod_line_calm",
+			"label": "after",
+			"long_storm_ended": false,
+			"player": [
+				-631.358154296875,
+				21.0410594940186,
+				806.495056152344
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 4.50158466666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-629.39990234375,
+				22.4598331451416,
+				804.025939941406
+			],
+			"description": "Verge Rod Station pylon (rod line), 30 m, Break",
+			"file": "view_rod_line_break.jpg",
+			"hud": false,
+			"id": "view_rod_line_break",
+			"label": "after",
+			"long_storm_ended": false,
+			"player": [
+				-631.358154296875,
+				21.0410594940186,
+				806.495056152344
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 418.489163,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-472.208740234375,
+				52.2939491271973,
+				3900.30639648438
+			],
+			"description": "Deepwood forest near Lantern Hollow, Calm",
+			"file": "view_forest_calm.jpg",
+			"hud": false,
+			"id": "view_forest_calm",
+			"label": "after",
+			"long_storm_ended": false,
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "deepwood",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 4.49619233333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-472.208740234375,
+				52.2939491271973,
+				3900.30639648438
+			],
+			"description": "Deepwood forest near Lantern Hollow, Break",
+			"file": "view_forest_break.jpg",
+			"hud": false,
+			"id": "view_forest_break",
+			"label": "after",
+			"long_storm_ended": false,
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "deepwood",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 334.487153,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Aftermath Calm at the strip stand (same framing as the Calm strip)",
+			"file": "aftermath_calm_strip_stand.jpg",
+			"hud": false,
+			"id": "aftermath_calm_strip_stand",
+			"label": "after",
+			"long_storm_ended": true,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "aftermath:calm",
+				"rain_amount_ratio": 0.0,
+				"rain_emitting": false,
+				"rain_visible": false
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"flag stormwood:long_storm_ended set (aftermath)"
+			],
+			"surge_elapsed": 4.49891133333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.83935546875,
+				25.5317325592041,
+				768.014831542969
+			],
+			"description": "Aftermath Calm, rod-line stand, camera raised to the sky",
+			"file": "aftermath_calm_rod_line_sky.jpg",
+			"hud": false,
+			"id": "aftermath_calm_rod_line_sky",
+			"label": "after",
+			"long_storm_ended": true,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "aftermath:calm",
+				"rain_amount_ratio": 0.0,
+				"rain_emitting": false,
+				"rain_visible": false
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"flag stormwood:long_storm_ended set (aftermath)"
+			],
+			"surge_elapsed": 6.51185033333332,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-472.165740966797,
+				51.5755653381348,
+				3900.39770507812
+			],
+			"description": "Aftermath Calm, Deepwood forest stand, camera raised",
+			"file": "aftermath_calm_forest_sky.jpg",
+			"hud": false,
+			"id": "aftermath_calm_forest_sky",
+			"label": "after",
+			"long_storm_ended": true,
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "aftermath:calm",
+				"rain_amount_ratio": 0.0,
+				"rain_emitting": false,
+				"rain_visible": false
+			},
+			"region": "deepwood",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"flag stormwood:long_storm_ended set (aftermath)"
+			],
+			"surge_elapsed": 4.49608133333335,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313869476318,
+				767.928344726562
+			],
+			"description": "Aftermath Break (rare, 45 s) at the strip stand",
+			"file": "aftermath_break_strip_stand.jpg",
+			"hud": false,
+			"id": "aftermath_break_strip_stand",
+			"label": "after",
+			"long_storm_ended": true,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "aftermath:break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"flag stormwood:long_storm_ended set (aftermath)"
+			],
+			"surge_elapsed": 2449.51219366667,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-629.39990234375,
+				22.4598331451416,
+				804.025939941406
+			],
+			"description": "Verge Rod Station pylon (rod line), 30 m, aftermath Calm",
+			"file": "view_rod_line_aftermath_calm.jpg",
+			"hud": false,
+			"id": "view_rod_line_aftermath_calm",
+			"label": "after",
+			"long_storm_ended": true,
+			"player": [
+				-631.358154296875,
+				21.0410594940186,
+				806.495056152344
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "aftermath:calm",
+				"rain_amount_ratio": 0.0,
+				"rain_emitting": false,
+				"rain_visible": false
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"flag stormwood:long_storm_ended set (aftermath)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 4.50174733333332,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-472.208740234375,
+				52.2939491271973,
+				3900.30639648438
+			],
+			"description": "Deepwood forest near Lantern Hollow, aftermath Calm",
+			"file": "view_forest_aftermath_calm.jpg",
+			"hud": false,
+			"id": "view_forest_aftermath_calm",
+			"label": "after",
+			"long_storm_ended": true,
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "aftermath:calm",
+				"rain_amount_ratio": 0.0,
+				"rain_emitting": false,
+				"rain_visible": false
+			},
+			"region": "deepwood",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"player health restored between Break frames",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"flag stormwood:long_storm_ended set (aftermath)"
+			],
+			"station_node_found": true,
+			"surge_elapsed": 4.48333333333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		}
+	],
+	"label": "after"
+}

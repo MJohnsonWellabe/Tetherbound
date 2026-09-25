@@ -1,0 +1,19 @@
+{
+  "_comment": "WORLD §5.1 dead-end pockets (coordinator ruling: a walled dead-end clearing of installed static walls or deadwood with an existing reward moved inside counts; a pickup grid point does not). Each pocket is a 16 x 16 m clearing walled on every side by a dead-trunk palisade with one 5 m mouth facing its nearest road. mouth_yaw_deg is the horizontal direction from the centre out through the mouth (0 = +Z, 90 = +X). The reward is an existing optional_reward_pocket pickup from the same region, moved inside.",
+  "schema_version": 1,
+  "interior_half_m": 8.0,
+  "mouth_width_m": 5.0,
+  "wall_height_m": 5.0,
+  "wall_thickness_m": 1.5,
+  "wall_segment_m": 4.0,
+  "palisade_spacing_m": 2.2,
+  "approach_clear": {"_comment": "The mouth reads from its road: the forest bake keeps every tree and colliding rock out of a cone that starts mouth_half_width_m either side of the mouth and widens by half_angle_deg out to length_m, and keeps ground cover out of its first ground_cover_length_m.", "length_m": 45.0, "mouth_half_width_m": 6.0, "half_angle_deg": 20.0, "ground_cover_length_m": 18.0},
+  "mouth_lure": {"_comment": "Two wayfinding lamps flank each mouth: the installed wall lantern with an amber flame and a short warm light, the vocabulary of the Stormheart ascent lamps (stormheart_tree.gd). Each hangs from a wooden post (Stormheart bark finish, with its own static collider) standing against the wall's outer face just beyond the mouth edge, and faces out along the approach. lantern_mount_height_m is the bracket's base above the ground.", "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf", "lantern_scale": 1.4, "post_height_m": 3.9, "post_width_m": 0.34, "post_colour": "#927448", "lantern_mount_height_m": 2.0, "edge_offset_m": 0.2, "flame_radius_m": 0.24, "flame_albedo": "#ffbd62", "flame_emission": "#ff9a3d", "flame_emission_energy": 4.0, "light_colour": "#ffb15c", "light_energy": 1.6, "light_range_m": 12.0},
+  "pockets": [
+    {"id": "verge_ash_hollow", "region_id": "cinder_verge", "at": [-60, 420], "mouth_yaw_deg": -100, "reward_pickup_id": "stormwood_pickup_pocket_008"},
+    {"id": "hollows_moss_nook", "region_id": "glowmoss_hollows", "at": [-40, 1800], "mouth_yaw_deg": 105, "reward_pickup_id": "stormwood_pickup_pocket_068"},
+    {"id": "conductor_ridge_cleft", "region_id": "conductor_run", "at": [-300, 3380], "mouth_yaw_deg": -87, "reward_pickup_id": "stormwood_pickup_pocket_077"},
+    {"id": "deepwood_ridge_shelter", "region_id": "deepwood", "at": [-1000, 3720], "mouth_yaw_deg": -8, "reward_pickup_id": "stormwood_pickup_pocket_138"},
+    {"id": "dynamo_scorch_pen", "region_id": "dynamo", "at": [-450, 5250], "mouth_yaw_deg": 160, "reward_pickup_id": "stormwood_pickup_pocket_188"}
+  ]
+}

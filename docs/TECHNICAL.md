@@ -96,7 +96,7 @@ Every new mutation declares authority, validation, idempotency key, commit order
 
 ## 6. Terrain, scatter and physical truth
 
-Meadows bake entrypoints remain `scripts/world/build_playground_terrain.gd` and `scripts/world/bake_playground_scatter.gd`; output `data/terrain/playground/` and `data/scatter/playground/`. Scatter rule/global/per-band vegetation edits require affected bake output in the same coherent change. CI freshness failures are real; stale output has caused multi-minute boot recomputation.
+Meadows bake entrypoints remain `scripts/world/build_playground_terrain.gd` and `scripts/world/bake_playground_scatter.gd`; output `data/terrain/playground/` and `data/scatter/playground/`. Scatter rule/global/per-band vegetation edits require affected bake output in the same coherent change. CI freshness failures are real; stale output has caused multi-minute boot recomputation. Stormwood scatter clearances are baked around trainer, NPC, harvest and pickup seats: moving any of those seats stales `data/scatter/stormwood/`, and Stormwood vegetation then fails closed until `bake_stormwood_scatter.gd` is re-run in the same change.
 
 After asset/bake change re-import before capture; a script may otherwise render the cached previous asset. Change flats/path/apron height only with the terrain bake; a moved NPC or prop alone does not justify rebaking the world. Preserve output identity and avoid unrelated bulk bake churn.
 
