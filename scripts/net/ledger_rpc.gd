@@ -486,6 +486,15 @@ func _rpc_intent(intent: Dictionary) -> void:
 	if ledger == null:
 		return
 	var sender := multiplayer.get_remote_sender_id()
+	# Only admitted session members may ask. A transport peer that is still in
+	# its handshake, or lingering after a refusal or kick so its reason can be
+	# delivered, is not a player in this world.
+	var session: Variant = game.get("session") if game != null else null
+	if session is Object and (session as Object).has_method("registry") \
+			and bool((session as Object).call("is_active")):
+		var roster: Variant = (session as Object).call("registry")
+		if roster is Object and not bool((roster as Object).call("has", sender)):
+			return
 	var verdict := _commit_here(intent, sender)
 	if not bool(verdict.get("ok", false)):
 		# The whole verdict crosses, not three strings pulled out of it. A
