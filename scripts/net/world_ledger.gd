@@ -500,7 +500,27 @@ func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Diction
 	var arch_at := Vector3(float(request_position[0]), float(request_position[1]), float(request_position[2]))
 	if realm == "stormwood" and id != "stormglass_arch" and not STORMWOOD_ARCH_BUILD.footing_at(arch_at).is_empty():
 		return _refuse("place_building", peer_id, "arch_footing", "This old footing accepts only a Stormglass Arch.")
+	var committed_position: Variant = intent.get("position")
+	var committed_yaw := float(intent.get("yaw_deg", 0.0))
 	if id == "stormglass_arch":
+		# Snap first, then judge: the footing centre and facing the client
+		# preview snaps to (build_placer.gd) are what gets committed, so the
+		# placement rules, occupancy and cost are evaluated there too, not at
+		# wherever inside the 5 m footing radius the request landed. Height
+		# stays the request's ground-clamped y.
+		var socket := STORMWOOD_ARCH_BUILD.footing_at(arch_at)
+		if not socket.is_empty():
+			var centre := Vector3(float(socket.at[0]), arch_at.y, float(socket.at[1]))
+			for row: Dictionary in STORMWOOD_ARCH_BUILD.records(world.get("placed_buildings")):
+				var raw: Array = row.get("position", [])
+				var here := Vector2(float(raw[0]), float(raw[2])) if raw.size() == 3 else Vector2.INF
+				if str(row.get("arch_footing", "")) == str(socket.get("id", "")) \
+						or here.distance_to(Vector2(centre.x, centre.z)) < 5.0:
+					return _refuse("place_building", peer_id, "arch_occupied",
+						"Another arch already occupies this footing.")
+			arch_at = centre
+			committed_position = centre
+			committed_yaw = float(socket.get("yaw_deg", committed_yaw))
 		arch_plan = STORMWOOD_ARCH_BUILD.placement(arch_at, realm, world.get("flags"), world.get("placed_buildings"))
 		if not bool(arch_plan.ok):
 			return _refuse("place_building", peer_id, "arch_locked", str(arch_plan.reason))
@@ -509,27 +529,6 @@ func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Diction
 			for need: Dictionary in STORMWOOD_ARCH_BUILD.cost(arch_at):
 				if int(available.get(str(need.id), 0)) < int(need.n):
 					return _refuse("place_building", peer_id, "arch_materials", "This footing needs the correct Stormglass grade and arch materials.")
-	var committed_position: Variant = intent.get("position")
-	var committed_yaw := float(intent.get("yaw_deg", 0.0))
-	if not arch_plan.is_empty():
-		# Commit at the footing centre and facing the client preview snaps to
-		# (build_placer.gd), not wherever inside the 5 m footing radius the
-		# request landed. Height stays the request's ground-clamped y.
-		var socket := STORMWOOD_ARCH_BUILD.footing_at(arch_at)
-		if not socket.is_empty():
-			var centre := Vector3(float(socket.at[0]), arch_at.y, float(socket.at[1]))
-			# `placement()` measured occupancy from the request position; a
-			# request at the edge of the footing could pass it and then snap
-			# onto an arch already standing at the centre.
-			for row: Dictionary in STORMWOOD_ARCH_BUILD.records(world.get("placed_buildings")):
-				var raw: Array = row.get("position", [])
-				var here := Vector2(float(raw[0]), float(raw[2])) if raw.size() == 3 else Vector2.INF
-				if str(row.get("arch_footing", "")) == str(socket.get("id", "")) \
-						or here.distance_to(Vector2(centre.x, centre.z)) < 5.0:
-					return _refuse("place_building", peer_id, "arch_occupied",
-						"Another arch already occupies this footing.")
-			committed_position = centre
-			committed_yaw = float(socket.get("yaw_deg", committed_yaw))
 	var op := {
 		"op": "building_add",
 		"scope": "world",

@@ -109,3 +109,18 @@ func test_unadmitted_client_leave_tears_down_at_once() -> void:
 	assert_eq(session.mode(), "", "no goodbye wait for a client that was never admitted")
 	assert_eq(int(session.get("_closing_frames")), 0)
 	session.free()
+
+
+func test_a_new_join_closes_a_still_lingering_transport_first() -> void:
+	const SESSION := preload("res://scripts/net/session.gd")
+	var session := SESSION.new()
+	var old := ENetMultiplayerPeer.new()
+	assert_eq(old.create_client("127.0.0.1", 9), OK)
+	session.set("_peer", old)
+	session.set("_mode", "client")
+	session.call("_teardown", true)
+	assert_true(session.get("_lingering_peer") == old)
+	assert_false(session.join_with_peer(null, {}, "test"), "a null peer is still refused")
+	assert_true(session.get("_lingering_peer") == null, "the old transport was closed before dialling")
+	assert_eq(old.get_connection_status(), MultiplayerPeer.CONNECTION_DISCONNECTED)
+	session.free()

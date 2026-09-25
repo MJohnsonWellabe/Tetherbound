@@ -12,6 +12,7 @@ const DROPS := preload("res://scripts/world/dropped_item_spawner.gd")
 const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
 const STRUCK_SENTINEL := preload("res://scripts/world/stormwood_struck_sentinel.gd")
+const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 const GLASS_FIELD := preload("res://scripts/world/stormwood_glass_field.gd")
 const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
 const SETTLEMENTS := preload("res://scripts/world/village.gd")
@@ -107,6 +108,7 @@ func _ready() -> void:
 	_build_glass_field_identity()
 	_build_return_gate()
 	_build_rootgate()
+	_build_pockets()
 	var settlements := SETTLEMENTS.new()
 	settlements.name = "RodfolkSettlements"
 	settlements.config_path = "res://data/config/stormwood_settlements.json"
@@ -264,6 +266,13 @@ func _build_rootgate() -> void:
 	_rootgate.add_child(collision)
 	for i in 6:
 		_model(_rootgate,"res://assets/environment/stylized_nature/DeadTree_3.gltf",Vector3(-40+i*16,-15,0),3.8,PI*0.1*i)
+
+## WORLD §5.1: five walled dead-end pockets, each with an existing reward.
+func _build_pockets() -> void:
+	var pockets := POCKETS.new()
+	pockets.name = "StormwoodPockets"
+	add_child(pockets)
+	pockets.build(self)
 
 func _stand_up_ground_cover() -> void:
 	if simulation_only or not GROUND_COVER.is_enabled():

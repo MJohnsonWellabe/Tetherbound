@@ -1,0 +1,162 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Calm at night (art.json night preset, hour 23)",
+			"file": "night_calm.jpg",
+			"hud": false,
+			"id": "night_calm",
+			"label": "after_night_r2",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 5.011635,
+			"surge_phase": "calm",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Building at night (art.json night preset, hour 23)",
+			"file": "night_building.jpg",
+			"hud": false,
+			"id": "night_building",
+			"label": "after_night_r2",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 328.984690666667,
+			"surge_phase": "building",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break at night (art.json night preset, hour 23)",
+			"file": "night_break.jpg",
+			"hud": false,
+			"id": "night_break",
+			"label": "after_night_r2",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 419.007735,
+			"surge_phase": "break",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Fading at night (art.json night preset, hour 23)",
+			"file": "night_fading.jpg",
+			"hud": false,
+			"id": "night_fading",
+			"label": "after_night_r2",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 539.007574333333,
+			"surge_phase": "fading",
+			"time_of_day": "night"
+		}
+	],
+	"label": "after_night_r2"
+}
