@@ -977,6 +977,56 @@
         "Your landing notes and the Gull Rest readings have made a practical route guide. People choose the sheltered line before they enter the water.",
         "The strongest current has shifted since the pumps stopped. The charted Gull Rest route still holds; the foam tells the new truth."
       ]
+    },
+    "water_otto_nest_lead": {
+      "speaker": "Tracker Otto",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "Your five can stay together all the way to the Veilfall. Follow the sheltered crossings and rest on the dry stone-and-torch shoals.",
+        "If you ever want a swimmer to carry you, start with the shell nest on this island's upper slope. It stays dry at every tide, and the rock there is good Reef Stone.",
+        "Mine it with a pickaxe, then come and find me. Bring a swimmer of your own, or come once Aquaryn's trial is settled, whichever way it goes. I will show you where the gentle ones live."
+      ]
+    },
+    "water_otto_nest_reminder": {
+      "speaker": "Tracker Otto",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "The shell nest is up the slope from here, above the tideline. Look for the exposed Reef Stone.",
+        "You do not need Aquaryn for any of this. Mine the stone, and we will talk about swimmers."
+      ]
+    },
+    "water_otto_nest_wait": {
+      "speaker": "Tracker Otto",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "Good stone from the nest. Keep it; a saddle frame needs every piece.",
+        "A saddle still needs a swimmer under it. Come back with one of your own, or once Aquaryn's trial is settled either way, and I will tell you where to look."
+      ]
+    },
+    "water_otto_nest_return": {
+      "speaker": "Tracker Otto",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "You found the nest and kept the stone. Here, berries from the cradle garden, for whoever carries you across.",
+        "If you want another swimmer: Mosshell graze the shallows on this island, Riverdrake hunt the channel around Shellwatch, and Sirenseal bask off Salt Crown and the Drowned Garden.",
+        "Iona teaches the saddle pattern. Any of them will carry you once it is fitted; none of them needs to be Aquaryn."
+      ]
+    },
+    "water_otto_nest_thanks": {
+      "speaker": "Tracker Otto",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "Mosshell on Tidal Cradle's shallows, Riverdrake by Shellwatch, Sirenseal off Salt Crown. The nest's stone is for your saddle.",
+        "Set your own pace, and keep enough strength to reach the next dry landing."
+      ]
+    },
+    "water_otto_post_nest": {
+      "speaker": "Tracker Otto",
+      "portrait": "res://assets/ui/portraits/wandering_trainer.png",
+      "lines": [
+        "I watched a traveler leave on a Mosshell today. Slow, steady, and enough strength left to enjoy the landing.",
+        "The shell nest is quiet now the currents have calmed. Swimmers still gather where I showed you."
+      ]
     }
   }
 }

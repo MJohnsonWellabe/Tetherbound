@@ -1831,19 +1831,18 @@
       "island_id": "tidal_cradle",
       "category": "food",
       "item_id": "berries",
-      "quantity": 3,
+      "quantity": 1,
       "position": [
-        813.703,
-        55.1823,
-        1647.945
+        592.0,
+        30.7692,
+        1668.0
       ],
       "off_main_route": true,
-      "main_route_distance_m": 25.489,
-      "sampled_slope_deg": 31.102,
-      "placement_reason": "Moved into authored reward pocket cradle_shell_nest (water_world.json reward_pockets) for side_water_cradle_care (docs/design/WORLD.md, Tidewake local chains): the chain's '+3 berries, once' as one ordinary world-once find (quantity 1 -> 3). Analytic dry footing within the 35° walkable slope limit (measured 31.1°). Census item counts remain row counts. Walked and claimed in tests/smoke_water_pocket_walk_claim.gd.",
+      "main_route_distance_m": 49.403,
+      "sampled_slope_deg": 34.786,
+      "placement_reason": "Landing-connected inland detour rewards leaving the exploration spine. Restored here from cradle_shell_nest: side_water_cradle_care pays its 3 berries on the return to Otto (data/config/water_local_chains.json cradle_care_report), not at the nest.",
       "claim_policy": "existing_world_pickup_policy",
-      "registration": "installed",
-      "reward_pocket_id": "cradle_shell_nest"
+      "registration": "installed"
     },
     {
       "id": "water:tidal_cradle:pickup:010",

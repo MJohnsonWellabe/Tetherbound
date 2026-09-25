@@ -8,6 +8,7 @@ extends Node3D
 const RULES := preload("res://scripts/world/water_local_chain_rules.gd")
 const CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const INTERACT := preload("res://scripts/world/interactable.gd")
+const NPCS := preload("res://scripts/world/water_scene_npcs.gd")
 const INTENT := "water_dock_action"
 var _world: Node3D
 var _game: Node
@@ -98,8 +99,16 @@ func request_step(step_id: String) -> Dictionary:
 	if _world == null or _world.simulation_only or _pending.has(step_id) or not RULES.has_step(step_id):
 		return {}
 	var row := RULES.step(step_id)
+	# A grant lands in this peer's satchel; check room first, as pickups do.
+	var grant: Variant = row.get("grant", {})
+	if grant is Dictionary and _game != null:
+		for item: String in grant:
+			if not bool(_game.inventory.has_room_for(item, int(grant[item]))):
+				_game.push_world_message("Satchel is full.")
+				return {}
 	_pending[step_id] = str(row.get("flag", ""))
-	var verdict := CLAIM.submit(self, {"kind": INTENT, "realm": "water", "action_id": step_id, "inventory": {}})
+	var verdict := CLAIM.submit(self, {"kind": INTENT, "realm": "water", "action_id": step_id, "inventory": {},
+		"party_species": NPCS.party_species(_game)})
 	if not CLAIM.in_flight(verdict):
 		_pending.erase(step_id)
 	return verdict

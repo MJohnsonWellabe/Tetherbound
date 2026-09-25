@@ -11,6 +11,7 @@ const RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const GREETINGS := preload("res://scripts/world/village_npcs.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const LEDGER := preload("res://scripts/story/story_ledger.gd")
+const CHAIN_RULES := preload("res://scripts/world/water_local_chain_rules.gd")
 const CAST_PATH := "res://data/config/water_characters.json"
 const DIALOGUE_PATH := "res://data/dialogue/water.json"
 var _world: Node3D
@@ -118,7 +119,7 @@ func start_conversation(id: String, requested: String = "") -> bool:
 	if conversation.is_empty():
 		var personal: RefCounted = game.get("local")
 		conversation = choose_conversation(spec, _guards, _conversations, game.get("progression"),
-			personal.flags if personal != null else null, LEDGER.world_flags(self))
+			personal.flags if personal != null else null, LEDGER.world_flags(self), party_species(game))
 	if not _speaker_matches(conversation, spec):
 		return false
 	for guard: Dictionary in _guards:
@@ -146,14 +147,26 @@ static func speaker_matches(conversations: Dictionary, conversation: String, spe
 ## speech only; the chapter validates any request it makes. Static and pure so
 ## the gating is testable without a scene.
 static func choose_conversation(spec: Dictionary, guards: Array, conversations: Dictionary,
-		progression: Variant, personal_flags: Variant, world_flags: Variant) -> String:
+		progression: Variant, personal_flags: Variant, world_flags: Variant, party: Array = []) -> String:
 	for guard: Variant in guards:
 		if not guard is Dictionary:
 			continue
 		var candidate := str(guard.get("conversation", ""))
-		if speaker_matches(conversations, candidate, spec) and guard_holds(guard, personal_flags, world_flags, progression):
+		if speaker_matches(conversations, candidate, spec) \
+				and guard_holds(guard, personal_flags, world_flags, progression, party):
 			return candidate
 	return GREETINGS.greeting_for(spec, progression)
+
+## Species ids of this peer's own party: the proof a swimmer-gated guard reads.
+static func party_species(game: Object) -> Array:
+	var out: Array = []
+	var party: Variant = game.get("party") if game != null else null
+	if party == null or not (party as Object).has_method("members"):
+		return out
+	for creature: Variant in party.call("members"):
+		if creature != null:
+			out.append(str((creature as Object).get("species_id")))
+	return out
 
 func _guard_holds(guard: Dictionary) -> bool:
 	var game := get_node_or_null("/root/Game")
@@ -163,12 +176,18 @@ func _guard_holds(guard: Dictionary) -> bool:
 	# Read world truth only for a guard that names world flags, as before.
 	var reads_world: bool = not guard.get("requires_world_flags", []).is_empty() \
 		or not guard.get("unless_world_flags", []).is_empty()
+	reads_world = reads_world or guard.has("requires_swimmer_or_world_flags")
 	return guard_holds(guard, personal.flags if personal != null else null,
-		LEDGER.world_flags(self) if reads_world else null, game.get("progression"))
+		LEDGER.world_flags(self) if reads_world else null, game.get("progression"), party_species(game))
 
 ## Missing personal or world state fails a requirement and passes an exclusion,
 ## exactly as the per-node check always did.
-static func guard_holds(guard: Dictionary, personal_flags: Variant, world_flags: Variant, progression: Variant) -> bool:
+static func guard_holds(guard: Dictionary, personal_flags: Variant, world_flags: Variant, progression: Variant,
+		party: Array = []) -> bool:
+	# The same swimmer-or-flag condition the host rule checks from party proof.
+	if guard.has("requires_swimmer_or_world_flags") and not CHAIN_RULES.swimmer_condition_met(
+			{"requires_swimmer_or_flags": guard.get("requires_swimmer_or_world_flags", [])}, world_flags, party):
+		return false
 	for flag: String in guard.get("requires_personal_flags", []):
 		if personal_flags == null or not personal_flags.has(flag):
 			return false

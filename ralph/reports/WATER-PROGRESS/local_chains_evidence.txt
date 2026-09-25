@@ -34,3 +34,26 @@ AFTER
   smoke_water_gull_research: 27 checks, 0 failures.
   run_tests --only=water 339/0, --only=quest 46/0, --only=dialogue 114/0, --only=flag_scopes 11/0.
   smoke_water_scene_npcs 67/0, smoke_water_lantern_return 25/0.
+
+== 3. side_water_cradle_care
+Berries fix: the 3 berries now pay on the return to Otto (WORLD), not at the nest. The Tidal
+Cradle berries row water:tidal_cradle:pickup:009 is restored to its original inland spot and
+quantity (592, 1668; 1 berry; as on origin/main before the pocket move); the nest keeps only its
+4 Reef Stone seam. Census row counts unchanged.
+FAILING FIRST (new/updated tests against the chain-2 commit)
+  run_tests --only=cradle_care: 8 tests, 8 failed (no Otto steps/conversations, no swimmer
+    rule, no grant, no request row).
+  run_tests --only=reward_pockets (updated nest expectation): 6 tests, 1 failed
+    (test_cradle_nest_pays_the_care_chain_once: berries still paid at the nest).
+  smoke_water_cradle_care (chain-3 files restored from the chain-2 commit): 30 checks,
+    16 failures (Otto only water_otto_pre; host unknown_action; no berries on return).
+AFTER
+  run_tests --only=cradle_care 8/0 (79 assertions), --only=reward_pockets 6/0.
+  smoke_water_cradle_care: 30 checks, 0 failures.
+  smoke_water_pocket_walk_claim -- --only=cradle_shell_nest: 10 checks, 0 failures
+    (walked 500 m from the Tidal Cradle arrival; nest paid reef_stone=+4 berries=+0).
+  run_tests --only=water 347/0, --only=quest 46/0, --only=dialogue 114/0, --only=flag_scopes 11/0.
+  smoke_water_scene_npcs 67/0, smoke_water_scene_pickups 26/0, smoke_water_lantern_return 25/0,
+    smoke_water_gull_research 27/0, smoke_water_deep_watch_chart 28/0.
+  Found while building: swim-mount species are registered as water_<species> (the Meadows
+    `mosshell` is not a swim mount); the rule reads the live catalogue, not roster keys.

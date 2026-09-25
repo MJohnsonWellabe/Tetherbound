@@ -63,6 +63,31 @@
       "requires_flags": ["water_claim:local:gull_research:satchel"],
       "refusal": "Recover the survey satchel at Gull Rest first.",
       "message": "Adair charts the safe Gull Rest crossing from the recovered observations."
+    },
+    {
+      "id": "cradle_care_lead",
+      "chain": "side_water_cradle_care",
+      "kind": "speech",
+      "npc": "water_otto",
+      "flag": "water_claim:local:cradle_care:lead",
+      "requires_flags": [],
+      "message": "Otto's lead: the dry shell nest on Tidal Cradle's upper slope, with exposed Reef Stone."
+    },
+    {
+      "id": "cradle_care_report",
+      "chain": "side_water_cradle_care",
+      "kind": "speech",
+      "npc": "water_otto",
+      "flag": "water_claim:local:cradle_care:complete",
+      "requires_flags": ["harvest_node:order:water:tidal_cradle:harvest:007"],
+      "_why_requires": "The nest's own world-once Reef Stone seam (water_pickups.json water:tidal_cradle:harvest:007, pickaxe, yield 4). The stone stays with whoever mined it; the return does not pay it again.",
+      "also_records": ["water_claim:local:cradle_care:lead"],
+      "requires_swimmer_or_flags": ["water_aquaryn_resolved"],
+      "_why_swimmer": "WORLD: return with a legal owned swimmer (a swim-mount compatible species in the requester's party) or after declining Aquaryn (the shared trial settled, whoever caught or defeated it). Never a requirement to catch Aquaryn.",
+      "refusal": "Mine the Reef Stone in the shell nest on Tidal Cradle's upper slope first.",
+      "swimmer_refusal": "Otto would rather meet the swimmer you travel with. Bring one of your own, or come back once Aquaryn's trial is settled either way.",
+      "grant": {"berries": 3},
+      "message": "Otto shares 3 berries and marks where Mosshell, Riverdrake and Sirenseal swim."
     }
   ]
 }

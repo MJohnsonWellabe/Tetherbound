@@ -87,6 +87,29 @@
       ],
       "purpose": "side_water_gull_research step 1: Adair names Gull Rest and the stranded survey satchel, keeping her current-reading lesson. Requests the host-recorded lead.",
       "effect": "water:local_step:gull_research_lead"
+    },
+    {
+      "conversation": "water_otto_nest_return",
+      "requires_world_flags": [
+        "harvest_node:order:water:tidal_cradle:harvest:007"
+      ],
+      "unless_world_flags": [
+        "water_claim:local:cradle_care:complete"
+      ],
+      "requires_swimmer_or_world_flags": [
+        "water_aquaryn_resolved"
+      ],
+      "purpose": "side_water_cradle_care step 3: the nest's Reef Stone is mined and this character travels with a swim-mount compatible companion, or Aquaryn's shared trial is settled (declined or otherwise). Requests the host step, which re-checks party proof and pays 3 berries once. Never asks anyone to catch Aquaryn.",
+      "effect": "water:local_step:cradle_care_report"
+    },
+    {
+      "conversation": "water_otto_nest_lead",
+      "unless_world_flags": [
+        "water_claim:local:cradle_care:lead",
+        "water_claim:local:cradle_care:complete"
+      ],
+      "purpose": "side_water_cradle_care step 1: Otto points to cradle_shell_nest and its Reef Stone, keeping his five-companion crossing advice. Requests the host-recorded lead.",
+      "effect": "water:local_step:cradle_care_lead"
     }
   ],
   "npcs": [
@@ -367,7 +390,27 @@
         12.0
       ],
       "greeting": "water_otto_pre",
+      "_why_greeting_when": "side_water_cradle_care: acknowledgement once the return is recorded (before or after restoration); a wait line when the nest is mined but this character has no swimmer and Aquaryn's trial is unsettled; a reminder while the lead is open. The guarded lead/return conversations take priority.",
       "greeting_when": [
+        {
+          "if_flag": [
+            "water_currents_restored",
+            "water_claim:local:cradle_care:complete"
+          ],
+          "conversation": "water_otto_post_nest"
+        },
+        {
+          "if_flag": "water_claim:local:cradle_care:complete",
+          "conversation": "water_otto_nest_thanks"
+        },
+        {
+          "if_flag": "harvest_node:order:water:tidal_cradle:harvest:007",
+          "conversation": "water_otto_nest_wait"
+        },
+        {
+          "if_flag": "water_claim:local:cradle_care:lead",
+          "conversation": "water_otto_nest_reminder"
+        },
         {
           "if_flag": "water_currents_restored",
           "conversation": "water_otto_post"

@@ -15,6 +15,7 @@ extends RefCounted
 ## require of THE REPORTING character through `requires_character_claims`.
 const DATA := "res://data/config/water_local_chains.json"
 const CAST := "res://data/config/water_characters.json"
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FIELD := preload("res://scripts/world/water_heightfield.gd")
 
 
@@ -79,6 +80,41 @@ static func reach_m(row: Dictionary) -> float:
 	return float(data.get("site_radius_m", 4.8))
 
 
+## Species the live catalogue marks swim-mount compatible (the same
+## `swim_mount.compatible` MountedSwimming reads; Water's roster registers them
+## as `water_<species>`). A step's `requires_swimmer_or_flags` accepts one of
+## these in the requester's party proof, or any of the named world flags.
+static func swimmer_species() -> Array:
+	var out: Array = []
+	for id: Variant in SPECIES.table():
+		if bool(SPECIES.definition(str(id)).get("swim_mount", {}).get("compatible", false)):
+			out.append(str(id))
+	return out
+
+
+## Party proof is a client claim under the portable-character trust model (the
+## same as dock inventory counts): an Array of species id Strings. Anything
+## else proves nothing.
+static func has_swimmer(party_species: Variant) -> bool:
+	if not party_species is Array:
+		return false
+	var swimmers := swimmer_species()
+	for species: Variant in party_species:
+		if species is String and swimmers.has(species):
+			return true
+	return false
+
+
+static func swimmer_condition_met(row: Dictionary, flags: Variant, party_species: Variant) -> bool:
+	var alternatives: Variant = row.get("requires_swimmer_or_flags", null)
+	if not alternatives is Array:
+		return true
+	for flag: Variant in alternatives:
+		if flags != null and flags.has(str(flag)):
+			return true
+	return has_swimmer(party_species)
+
+
 static func receipt(character: String, row_id: String) -> String:
 	return "water_claim:" + character + ":" + row_id
 
@@ -122,11 +158,20 @@ static func evaluate(intent: Dictionary, context: Dictionary, flags: Variant) ->
 	for claim: Variant in row.get("requires_character_claims", []):
 		if not flags.has(receipt(character, str(claim))):
 			return _refuse("claim", str(row.get("claim_refusal", "Collect what you were sent for first.")))
+	if not swimmer_condition_met(row, flags, intent.get("party_species", [])):
+		return _refuse("swimmer", str(row.get("swimmer_refusal", "Bring a swimmer of your own first.")))
 	var ops: Array = []
 	for extra: Variant in row.get("also_records", []):
 		if not flags.has(str(extra)):
 			ops.append(_flag_op(str(extra)))
 	ops.append(_flag_op(flag))
+	# A grant is paid once: the step's own world record is its receipt and its
+	# txn id, committed in the same delta.
+	var grant: Variant = row.get("grant", {})
+	if grant is Dictionary:
+		for item: String in grant:
+			ops.append({"op": "item_grant", "scope": "player", "peers": [actor], "item": item,
+				"count": int(grant[item]), "txn_id": flag})
 	return {"ok": true, "code": "", "reason": "", "ops": ops}
 
 
