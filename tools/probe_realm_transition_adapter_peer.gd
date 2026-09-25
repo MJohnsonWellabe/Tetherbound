@@ -92,6 +92,9 @@ var policy_seen_before_snapshot := false
 var latejoin_reported := false
 var pending_origin := ""
 var departed_motion_before := 0.0
+## Shutdown order (see `_finish`): clients report done, the host closes last.
+var _clients_done: Dictionary = {}
+const SHUTDOWN_WAIT_MS := 10_000
 
 func _process(_delta: float) -> void:
 	if stopping or transition == null or not moving:
@@ -281,6 +284,11 @@ func _spawn_pair(realm: String, owner: int) -> void:
 	for kind: String in ["Trainer", "Creature"]:
 		var origin := str(transition.call("stamp_spawn", owner, realm))
 		(world.get_node(kind + "Spawner") as MultiplayerSpawner).spawn({"owner": owner, "origin": origin})
+
+@rpc("any_peer", "call_remote", "reliable", 0)
+func _client_finished() -> void:
+	if role == "host":
+		_clients_done[multiplayer.get_remote_sender_id()] = true
 
 @rpc("any_peer", "call_remote", "reliable", 0)
 func _hello(label: String) -> void:
@@ -599,6 +607,16 @@ func _finish_local() -> void:
 				multiplayer.disconnect(signal_name, callback)
 	if not failed:
 		await get_tree().create_timer(0.3).timeout
+	# Ordered shutdown. If two clients close their own transports in the same
+	# host receive pass, the second is an ENet zombie (channelCount 0) when
+	# Godot's server relay announces the first one's departure to it, and the
+	# engine logs "Unable to send packet on channel 0, max channels: 0" (seen
+	# on the latejoin host; ralph/reports/INVITE-COOP). So clients report done
+	# and wait for the host to close; the host closes only after every
+	# connected client is done. ENetMultiplayerPeer.close() disconnects its
+	# peers directly, with no relay broadcast. Both waits are bounded and no
+	# check depends on them.
+	await _ordered_shutdown()
 	# Explicitly release the fixture's own transport after terminal notification
 	# flush. No admission/fence check relies on this shutdown-only timer.
 	var owned_peer: MultiplayerPeer = multiplayer.multiplayer_peer
@@ -607,6 +625,26 @@ func _finish_local() -> void:
 		owned_peer.close()
 	session.set("_peer", null)
 	get_tree().quit(1 if failed else 0)
+
+func _ordered_shutdown() -> void:
+	var transport := multiplayer.multiplayer_peer
+	if transport == null or transport.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+		return
+	var deadline := Time.get_ticks_msec() + SHUTDOWN_WAIT_MS
+	if role == "host":
+		while Time.get_ticks_msec() < deadline:
+			var waiting := false
+			for peer_id: int in multiplayer.get_peers():
+				if not _clients_done.has(peer_id):
+					waiting = true
+			if not waiting:
+				return
+			await get_tree().process_frame
+		return
+	_client_finished.rpc_id(1)
+	while Time.get_ticks_msec() < deadline and multiplayer.multiplayer_peer == transport \
+			and transport.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
+		await get_tree().process_frame
 
 func _check(ok: bool, description: String) -> bool:
 	checks += 1
