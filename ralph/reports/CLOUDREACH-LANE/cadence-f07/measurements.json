@@ -1,0 +1,35 @@
+{
+  "work_order": "F07-cadence: measure and remove the 885-second no-action stretch on the required Cloudreach route",
+  "base": "main fe07d0d2",
+  "a7_limit_seconds": 120,
+  "action_definition": "First actionable offer of each source (wild Engage with the companion deployed, pickup, resource node, physical prompt, NPC, camp) plus the interaction/battle/flight ending each leg; a source already offered earlier does not reset the clock (smoke_cloudreach_continuous.gd::_record_frame/_log).",
+  "full_continuous_harness_on_main": {
+    "command": "smoke_cloudreach_continuous.gd -- --accelerated --live-combat",
+    "wall_seconds": 196,
+    "result": "FAIL at stage lower_west_anchor, 232.28 simulated s, 1073 m: 'Walking stalled toward (-120, 205, 700)' at (-190.69, 194.09, 620.38) on LowerCliffRoadCliffShoulders/Ridge000, beside the Ila battle-yard entry and Galefoot camp bed. It never reaches the return flight, so the 885.87 s stretch cannot be re-measured end to end on main.",
+    "note": "The harness never logs a wild Engage offer: it walks without a deployed companion, and encounter_director._engageable() needs one. The 2026-09-05 885.87 s figure therefore counted no roadside wildlife at all."
+  },
+  "data_model_test": {
+    "test": "tests/test_cloudreach_route_cadence.gd",
+    "walk_speed_m_s": 5.0,
+    "before_over_limit_m": {
+      "aerie return flight -> counterweight pass (Windscar floor loop re-walk)": 1609.4,
+      "finale -> Waterward overlook (summit loop re-walk)": 781.3,
+      "east upper anchor -> summit road (observatory re-walk)": 750.4,
+      "west upper anchor -> plateau detour pickups": 716.5,
+      "summit bivouac -> stronghold threshold (spur re-walk)": 627.1
+    },
+    "before_longest": {"m": 1609.4, "s_at_walk": 321.9},
+    "after_over_limit_m": {"summit bivouac -> stronghold threshold (spur re-walk)": 627.1},
+    "after_longest_excluding_known_open": {"m": 490.9, "s_at_walk": 98.2, "between": "road_visibility_windscar_floor_loop_return_01 -> _return_02"}
+  },
+  "runtime_upper_route_probe": {
+    "tool": "probe_f07_cadence.gd (harness copy; fixture: post-shrine flags, one relocation to the counterweight stair top, companion deployed with creature_recall; then the harness's own _navigate/_walk)",
+    "wall_seconds_each": "about 300",
+    "before_worst_s": {"east anchor -> first summit-road Engage": 155.48, "west anchor -> Take Great Candy": 148.55},
+    "after_worst_s": {"plateau pickup -> pickup (existing)": 95.5},
+    "after_note": "New pairs produced Engage offers at plateau_02, plateau_03 and plateau_04. The run then stuck at a pre-existing summit-road entombment point (500.2, 987.0, 4892.0); the before run hit the same spot once and recovered."
+  },
+  "runtime_floor_loop_probe_on_main": "Walking inbound from the Windscar junction to the aerie stalls at (-397.5, 446.9, 2931.5) against WindscarCounterweightPassCliffShoulders/Ridge001: the counterweight-pass shoulder collision overhangs the floor loop between the chain bridge and the bend. Existing pairs road_visibility_windscar_floor_loop_05/06 also fail production admission there.",
+  "admission": "All 11 new pairs admit both bodies on supported floor in the production scene (admission_*.log)."
+}

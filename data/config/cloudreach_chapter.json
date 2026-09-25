@@ -624,6 +624,21 @@
       ]
     },
     {
+      "id": "cloudreach_upper_released_wild",
+      "region_ids": ["upper_cloudreach"],
+      "level_range": [26, 31],
+      "selection_key": "cloudreach.wild.upper_released",
+      "replaceable": true,
+      "catchable": true,
+      "requires_unlock": "storm_anchor_upper_east_disabled",
+      "_why_cadence_f07": "Visible consequence of disabling the east upper Storm Anchor (WORLD 2.1): the plateau's own wildlife returns to the observatory road the player must walk back along to reach the summit road. Same species, weights and level band as cloudreach_upper_wild; only the gate differs, so these pairs are absent on the way in and are a new encounter on the required return.",
+      "entries": [
+        {"role": "plateau_hunter", "placeholder_species": "cloudfang", "weight": 3},
+        {"role": "storm_charger", "placeholder_species": "stormcapra", "weight": 3},
+        {"role": "night_ledge_stalker", "placeholder_species": "cliffspike", "weight": 2}
+      ]
+    },
+    {
       "id": "cloudreach_summit_wild",
       "region_ids": ["summit_final_stronghold"],
       "level_range": [29, 33],
@@ -631,6 +646,21 @@
       "replaceable": true,
       "catchable": true,
       "requires_unlock": "cloudreach_upper_route_unlocked",
+      "entries": [
+        {"role": "summit_sentinel", "placeholder_species": "solmane", "weight": 2, "roster_identity": "legendary"},
+        {"role": "engine_scavenger", "placeholder_species": "breezetail", "weight": 2},
+        {"role": "cold_front_hunter", "placeholder_species": "cloudfang", "weight": 2}
+      ]
+    },
+    {
+      "id": "cloudreach_summit_restored_wild",
+      "region_ids": ["summit_final_stronghold"],
+      "level_range": [29, 33],
+      "selection_key": "cloudreach.wild.summit_restored",
+      "replaceable": true,
+      "catchable": true,
+      "requires_unlock": "cloudreach_winds_restored",
+      "_why_cadence_f07": "Aftermath consequence (WORLD 4.3, restored wind reconnects the routes): once the winds return, summit wildlife comes back to the stronghold loop the player walks from the finale deck to the Waterward overlook. Same species, weights and level band as cloudreach_summit_wild; only the gate differs, so these pairs never appear before Veyra falls.",
       "entries": [
         {"role": "summit_sentinel", "placeholder_species": "solmane", "weight": 2, "roster_identity": "legendary"},
         {"role": "engine_scavenger", "placeholder_species": "breezetail", "weight": 2},
