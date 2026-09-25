@@ -4,6 +4,7 @@ extends Node3D
 ## only a host verdict addressed to its local trainer; it never chooses a hit.
 const RULES := preload("res://scripts/world/stormwood_surge_rules.gd")
 const SHELTER := preload("res://scripts/world/stormwood_shelter.gd")
+const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 var rules := RULES.new()
 var world: Node3D
 var surge: Node
@@ -237,27 +238,29 @@ func _strike_flash(at: Vector3) -> void:
 			surge.call("flash", strength)
 
 
-## The 1.2 s warning (F10 judges J1/(c)): a hazard, not a selection circle.
-## A flat ring on the ground with a warning-amber rim (hue ~35 degrees, never
-## red/oxblood, which is Team Tether's) exactly at strike.radius_m (the 3 m
-## damage contract), a soft amber glow past it (`edge_falloff_m`), an
-## interior that DARKENS the ground as the strike nears, a pulse that
-## quickens toward impact and a white-hot core flash on impact.
+## The 1.2 s warning: a hazard, not a selection circle or a reward. A flat
+## ring on the ground whose rim and glow are the game's one hazard colour,
+## combat.json telegraph.colour (magenta; white-violet read as a heal circle
+## and amber as reward gold, the same findings combat.json records), exactly
+## at strike.radius_m (the 3 m damage contract), a glow past it
+## (`edge_falloff_m`), an interior that DARKENS the ground as the strike
+## nears, a pulse that quickens toward impact and a white-hot core on impact.
 ##
 ## Cost (review R2-1): one cached, indexed unit mesh is shared by every
 ## warning. Per strike only the centre plus `height_samples` rim points are
 ## read from the terrain (<= 25 ground_height_near calls), passed to the
 ## shader as a height array, and the vertex shader interpolates each vertex's
 ## height from them (angularly between rim samples, radially from the
-## centre). The whole ring is pulled toward the camera along the view ray by
-## `depth_pull_m`, so grass in front of it cannot cover the rim while its
-## screen position is unchanged.
+## centre, extrapolating past the rim). The rim and glow only (not the dark
+## fill) are pulled toward the camera along the view ray by `depth_pull_m`,
+## about grass height, so grass cannot cover the rim while its screen
+## position is unchanged.
 const TELEGRAPH_SAMPLES := 16
 const TELEGRAPH_SHADER := """
 shader_type spatial;
 render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
-uniform vec3 rim_colour : source_color = vec3(1.0, 0.69, 0.25);
-uniform vec3 edge_colour : source_color = vec3(1.0, 0.67, 0.2);
+uniform vec3 rim_colour : source_color = vec3(1.0, 0.25, 0.9);
+uniform vec3 edge_colour : source_color = vec3(1.0, 0.25, 0.9);
 uniform vec3 fill_colour : source_color = vec3(0.06, 0.05, 0.05);
 uniform float rim_fraction = 0.87;
 uniform float rim_width = 0.05;
@@ -273,20 +276,29 @@ uniform float rim_radius = 3.0;
 uniform float centre_height = 0.0;
 uniform float rim_heights[16];
 uniform float lift = 0.07;
-uniform float depth_pull = 0.7;
+uniform float depth_pull = 0.28;
+uniform float pull_start_radius = 2.88;
 varying float r;
 void vertex() {
-	r = length(VERTEX.xz) / outer_radius;
-	float angle = atan(VERTEX.z, VERTEX.x);
+	float len = length(VERTEX.xz);
+	r = len / outer_radius;
+	// The centre vertices have no direction; atan(0, 0) is undefined.
+	float angle = len < 0.0001 ? 0.0 : atan(VERTEX.z, VERTEX.x);
 	float s = fract(angle / 6.2831853) * 16.0;
 	int i0 = int(floor(s)) % 16;
 	int i1 = (i0 + 1) % 16;
 	float rim_h = mix(rim_heights[i0], rim_heights[i1], fract(s));
-	float radial = clamp(length(VERTEX.xz) / rim_radius, 0.0, 1.0);
-	VERTEX.y = mix(centre_height, rim_h, radial) + lift;
+	// Unclamped: past the rim the glow band keeps the centre-to-rim slope
+	// instead of floating (or cutting in) at rim height on steep ground.
+	float radial = len / rim_radius;
+	VERTEX.y = centre_height + (rim_h - centre_height) * radial + lift;
 	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
 	float dist = length(view.xyz);
-	view.xyz *= max(0.2, 1.0 - depth_pull / max(dist, 0.001));
+	// Only the rim and glow are pulled toward the camera (about grass
+	// height), never the dark fill, so the fill cannot draw over a trainer
+	// standing at the near rim.
+	float pull = len >= pull_start_radius ? depth_pull : 0.0;
+	view.xyz *= max(0.2, 1.0 - pull / max(dist, 0.001));
 	POSITION = PROJECTION_MATRIX * view;
 }
 void fragment() {
@@ -311,6 +323,12 @@ static var _telegraph_mesh: ArrayMesh
 ## Test/probe hook: ground_height_near calls made by the last warning build.
 var last_telegraph_height_calls := 0
 
+## The game's one hazard colour: combat.json telegraph.colour (magenta,
+## settled by its `_why_colour_0905` note after amber read as reward gold,
+## the same finding this ring's round-3 judge made). Read, never copied.
+static func telegraph_colour() -> Color:
+	return Color(str(COMBAT_MATH.config().get("telegraph", {}).get("colour", "#ff40e6")))
+
 func _telegraph_config() -> Dictionary:
 	return rules.config.get("presentation", {}).get("telegraph", {})
 
@@ -327,7 +345,9 @@ func _telegraph_unit_mesh() -> ArrayMesh:
 	var rim_r := telegraph_rim_radius()
 	var outer_r := _telegraph_outer_radius()
 	var segments := int(_telegraph_config().get("segments", 48))
-	var radii: Array[float] = [0.0, rim_r * 0.45, rim_r * 0.8, rim_r - 0.12, rim_r, rim_r + 0.12, outer_r]
+	# rim - 0.2 is the last unpulled (fill) row; rim - 0.12 and beyond are
+	# the pulled rim/glow rows (see `pull_start_radius`).
+	var radii: Array[float] = [0.0, rim_r * 0.45, rim_r * 0.8, rim_r - 0.2, rim_r - 0.12, rim_r, rim_r + 0.12, outer_r]
 	var vertices := PackedVector3Array()
 	var indices := PackedInt32Array()
 	for radius: float in radii:
@@ -360,8 +380,9 @@ func _telegraph_material() -> ShaderMaterial:
 	var outer_r := _telegraph_outer_radius()
 	var material := ShaderMaterial.new()
 	material.shader = _telegraph_shader
-	material.set_shader_parameter("rim_colour", Color(str(cfg.get("rim_colour", "#ffb040"))))
-	material.set_shader_parameter("edge_colour", Color(str(cfg.get("edge_colour", "#ffaa33"))))
+	var hazard := telegraph_colour()
+	material.set_shader_parameter("rim_colour", hazard)
+	material.set_shader_parameter("edge_colour", hazard)
 	material.set_shader_parameter("fill_colour", Color(str(cfg.get("fill_colour", "#100c10"))))
 	material.set_shader_parameter("rim_fraction", rim_r / outer_r)
 	material.set_shader_parameter("rim_width", float(cfg.get("rim_width_m", 0.16)) / outer_r)
@@ -372,7 +393,8 @@ func _telegraph_material() -> ShaderMaterial:
 	material.set_shader_parameter("outer_radius", outer_r)
 	material.set_shader_parameter("rim_radius", rim_r)
 	material.set_shader_parameter("lift", float(cfg.get("ground_lift_m", 0.07)))
-	material.set_shader_parameter("depth_pull", float(cfg.get("depth_pull_m", 0.7)))
+	material.set_shader_parameter("depth_pull", float(cfg.get("depth_pull_m", 0.28)))
+	material.set_shader_parameter("pull_start_radius", rim_r - 0.15)
 	return material
 
 func _build_telegraph(at: Vector3) -> MeshInstance3D:
@@ -405,8 +427,20 @@ func _build_telegraph(at: Vector3) -> MeshInstance3D:
 	return ring
 
 ## Compile the telegraph shader at realm load rather than on the first
-## warning's frame: one fully faded ring far below the world for a moment.
+## warning's frame. The ring must actually DRAW for its variant to compile,
+## so it waits for the active camera, sits briefly 4 m in front of it fully
+## faded (alpha 0), and is freed a few frames later.
 func _prewarm_telegraph() -> void:
+	var camera: Camera3D = null
+	for _frame in 240:
+		if not is_inside_tree():
+			return
+		camera = get_viewport().get_camera_3d()
+		if camera != null:
+			break
+		await get_tree().process_frame
+	if camera == null or not is_inside_tree():
+		return
 	var ring := MeshInstance3D.new()
 	ring.name = "TelegraphPrewarm"
 	ring.mesh = _telegraph_unit_mesh()
@@ -416,9 +450,11 @@ func _prewarm_telegraph() -> void:
 	ring.material_override = material
 	ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(ring)
-	ring.position = Vector3(0.0, -2000.0, 0.0)
-	var timer := get_tree().create_timer(1.0)
-	timer.timeout.connect(ring.queue_free)
+	ring.global_position = camera.global_position - camera.global_basis.z * 4.0
+	for _frame in 4:
+		await get_tree().process_frame
+	if is_instance_valid(ring):
+		ring.queue_free()
 
 
 func _expire_warning(id: int) -> void:

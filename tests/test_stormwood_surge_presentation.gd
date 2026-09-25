@@ -76,8 +76,6 @@ func test_every_storm_phase_has_a_complete_presentation_row() -> void:
 			"%s: the ceiling is opaque, so no sun/moon ghost disc shows through" % phase)
 		for key: String in ["sky_top", "sky_horizon", "sky_ground_horizon", "ceiling_colour", "ambient_colour"]:
 			_assert_not_red(Color(str(row[key])), "%s.%s" % [phase, key])
-	for key: String in ["rim_colour", "edge_colour", "fill_colour"]:
-		_assert_not_red(Color(str(block.telegraph[key])), "telegraph.%s" % key)
 	_assert_not_red(Color(str(block.flash.colour)), "flash.colour")
 
 
@@ -109,7 +107,7 @@ func test_every_phase_delta_overrides_sky_fog_and_light_from_config() -> void:
 	surge.free()
 
 
-func test_phases_are_mutually_distinct_and_break_is_darkest() -> void:
+func test_phases_are_mutually_distinct_and_break_has_the_darkest_ground() -> void:
 	var surge := SURGE.new()
 	var seen := {}
 	for phase: String in PHASES:
@@ -118,10 +116,15 @@ func test_phases_are_mutually_distinct_and_break_is_darkest() -> void:
 		assert_false(seen.has(signature), "%s shares its sky/light signature with %s" % [phase, str(seen.get(signature, ""))])
 		seen[signature] = phase
 	var brk: Dictionary = surge.light_delta_for_phase("break")
+	var brk_hue := Color(str(brk.sky.top_colour)).h * 360.0
+	assert_true(brk_hue >= 220.0 and brk_hue <= 280.0, "Break's sky is violet (hue %.0f)" % brk_hue)
 	for phase: String in ["calm", "building", "fading"]:
 		var other: Dictionary = surge.light_delta_for_phase(phase)
-		assert_true(Color(str(other.sky.top_colour)).get_luminance() > Color(str(brk.sky.top_colour)).get_luminance(),
-			"Break's sky must be darker than %s" % phase)
+		# Round 4: day Break's sky is deliberately lifted (a storm afternoon,
+		# not night); Break is identified by its violet hue and by the
+		# darkest ground (lowest sun and fill), not the darkest sky.
+		var hue := Color(str(other.sky.top_colour)).h * 360.0
+		assert_false(hue >= 220.0 and hue <= 280.0, "only Break's sky is violet (%s hue %.0f)" % [phase, hue])
 		assert_true(float(other.sun.energy_mult) > float(brk.sun.energy_mult), "Break's sun is the lowest (J2)")
 		assert_true(float(other.environment.ambient_energy_mult) >= float(brk.environment.ambient_energy_mult))
 	surge.free()
@@ -370,12 +373,28 @@ func test_telegraph_ring_keeps_the_strike_contract() -> void:
 	assert_almost_eq(float(material.get_shader_parameter("rim_fraction")) * outer, float(strike.radius_m), 0.001,
 		"the bright rim is drawn at the damage radius")
 	assert_almost_eq(float(material.get_shader_parameter("rim_radius")), float(strike.radius_m), 0.0001)
-	var rim := Color(str(cfg.rim_colour))
-	assert_true(rim.h * 360.0 >= 30.0 and rim.h * 360.0 <= 45.0, "warning amber rim (hue %.0f)" % (rim.h * 360.0))
-	_assert_not_red(rim, "telegraph rim")
-	_assert_not_red(Color(str(cfg.edge_colour)), "telegraph edge")
+	# Round 4: the rim and glow ARE the game's hazard colour, read from
+	# combat.json at runtime (one source), and stay >= 25 degrees of hue from
+	# every reserved Team Tether oxblood (tests/test_telegraph_glow.gd's rule).
+	var combat: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/combat.json"))
+	var hazard := Color(str(combat.telegraph.colour))
+	var rim: Color = material.get_shader_parameter("rim_colour")
+	assert_eq(rim.to_html(false), hazard.to_html(false), "rim = combat.json telegraph.colour")
+	assert_eq((material.get_shader_parameter("edge_colour") as Color).to_html(false), hazard.to_html(false), "glow = hazard colour")
+	assert_false(cfg.has("rim_colour") or cfg.has("edge_colour"), "no copied colour in stormwood_surge.json")
+	var reserved: Array = ["#6b2a20", "#7a2430"]
+	var palette: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/palette.json"))
+	if palette.get("accent", {}).has("tether_oxblood"):
+		reserved.append(str(palette.accent.tether_oxblood))
+	for hex: Variant in reserved:
+		var d := absf(rim.h - Color(str(hex)).h) * 360.0
+		assert_true(minf(d, 360.0 - d) >= 25.0, "rim %.0f degrees from reserved %s" % [minf(d, 360.0 - d), str(hex)])
 	assert_true(Color(str(cfg.fill_colour)).get_luminance() < 0.15, "interior darkens the ground")
-	assert_true(float(cfg.depth_pull_m) > 0.3, "rim drawn in front of grass")
+	# Round 4: pull about grass height, rim and glow only (not the fill).
+	assert_true(float(cfg.depth_pull_m) >= 0.2 and float(cfg.depth_pull_m) <= 0.3, "depth pull ~ grass height")
+	var pull_from := float(material.get_shader_parameter("pull_start_radius"))
+	assert_true(pull_from > float(strike.radius_m) - 0.2 and pull_from < float(strike.radius_m) - 0.12,
+		"only the rows from rim - 0.12 m outward (rim and glow) are pulled; the fill rows are not")
 	ring.free()
 	lightning.free()
 
@@ -545,4 +564,88 @@ func test_rain_slants_fades_with_depth_and_dims_at_night() -> void:
 	assert_true(drop.get_luminance() * drop.a < night_horizon.get_luminance(),
 		"night rain (%.3f x %.2f) must not outshine the night horizon (%.3f)" % [drop.get_luminance(), drop.a, night_horizon.get_luminance()])
 	surge._rain.free()
+	surge.free()
+
+
+## Round 4 item 5: a slanted drop must never pass within 1.5 m of the camera
+## (the R5.2 near-lens streak defect), at the longest camera arm (riding), any
+## yaw and pitch. Horizontal distance is a lower bound on the 3D distance;
+## the worst case puts the camera horizontally at full arm length toward the
+## drop, and the streak's own horizontal half-extent is subtracted.
+func test_slanted_rain_never_crosses_the_lens() -> void:
+	var surge := SURGE.new()
+	surge._rain = surge._build_rain()
+	surge._style_rain()
+	var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
+	var arm := maxf(float(movement.camera.distance), float(movement.riding.camera.distance)) \
+		+ float(movement.camera.get("collision_margin", 0.6))
+	for emitter: GPUParticles3D in [surge._rain, surge._rain_far]:
+		var process := emitter.process_material as ParticleProcessMaterial
+		var drift: Vector3 = SURGE.rain_drift(process, emitter.lifetime)
+		var streak := emitter.draw_pass_1 as BoxMesh
+		var slant_h := Vector2(process.direction.x, process.direction.z).length()
+		var streak_h := streak.size.y * process.scale_max * 0.5 * slant_h
+		var offset := process.emission_shape_offset
+		var closest := INF
+		for step in 72:
+			var angle := TAU * step / 72.0
+			var spawn := Vector3(cos(angle), 0.0, sin(angle)) * process.emission_ring_inner_radius + offset
+			for k in 21:
+				var at := spawn + drift * (k / 20.0)
+				closest = minf(closest, Vector2(at.x, at.z).length() - arm - streak_h)
+		assert_true(closest >= 1.5, "%s: a drop passes %.2f m from the camera (needs >= 1.5)" % [emitter.name, closest])
+		assert_true(drift.length() > 1.0, "the wind slant is real (drift %.1f m)" % drift.length())
+	surge._rain.free()
+	surge.free()
+
+
+## Round 4 item 6: a storm afternoon is clearly lighter than a storm night.
+func test_day_break_sky_is_clearly_lighter_than_night_break() -> void:
+	var surge := SURGE.new()
+	var row := surge._resolved(surge.presentation_for("break"))
+	var day: Dictionary = surge._final(row, _real_base(surge, 14.0))
+	var night: Dictionary = surge._final(row, _real_base(surge, 23.0))
+	for key: String in ["sky_top", "ceiling_colour"]:
+		var d := (day[key] as Color).get_luminance()
+		var n := (night[key] as Color).get_luminance()
+		assert_true(d >= 2.0 * n, "Break %s: day %.3f must be >= 2x night %.3f" % [key, d, n])
+		assert_true(d >= 0.3, "Break %s by day reads as a storm afternoon (lum %.3f)" % [key, d])
+	surge.free()
+
+
+static func _lab(c: Color) -> Vector3:
+	var lin := func(v: float) -> float: return v / 12.92 if v <= 0.04045 else pow((v + 0.055) / 1.055, 2.4)
+	var r: float = lin.call(c.r)
+	var g: float = lin.call(c.g)
+	var b: float = lin.call(c.b)
+	var x := (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047
+	var y := 0.2126 * r + 0.7152 * g + 0.0722 * b
+	var z := (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883
+	var f := func(t: float) -> float: return pow(t, 1.0 / 3.0) if t > 0.008856 else 7.787 * t + 16.0 / 116.0
+	var fx: float = f.call(x)
+	var fy: float = f.call(y)
+	var fz: float = f.call(z)
+	return Vector3(116.0 * fy - 16.0, 500.0 * (fx - fy), 200.0 * (fy - fz))
+
+
+## Round 4 item 7: at 23:00 each adjacent phase pair differs clearly in its
+## dominant sky element (the ceiling), by hue and/or value (CIELAB dE >= 10),
+## and each keeps its identity: Calm neutral, Building olive, Break violet,
+## Fading warm.
+func test_night_phases_separate_by_hue_and_value() -> void:
+	var surge := SURGE.new()
+	var night := _real_base(surge, 23.0)
+	var ceiling := {}
+	for phase: String in PHASES:
+		ceiling[phase] = surge._final(surge._resolved(surge.presentation_for(phase)), night).ceiling_colour
+	for pair: Array in [["calm", "building"], ["building", "break"], ["break", "fading"], ["fading", "calm"]]:
+		var de := _lab(ceiling[pair[0]]).distance_to(_lab(ceiling[pair[1]]))
+		assert_true(de >= 10.0, "night %s vs %s ceilings differ by only dE %.1f" % [pair[0], pair[1], de])
+	assert_true((ceiling.calm as Color).s < 0.1, "night Calm is a neutral grey")
+	var h := func(c: Color) -> float: return c.h * 360.0
+	assert_true(h.call(ceiling.building) >= 50.0 and h.call(ceiling.building) <= 90.0 and (ceiling.building as Color).s >= 0.2, "night Building is olive")
+	assert_true(h.call(ceiling["break"]) >= 220.0 and h.call(ceiling["break"]) <= 280.0, "night Break is violet")
+	assert_true(h.call(ceiling.fading) >= 20.0 and h.call(ceiling.fading) <= 45.0 and (ceiling.fading as Color).s >= 0.2, "night Fading stays warm")
+	var brk_h := surge._final(surge._resolved(surge.presentation_for("break")), night).sky_horizon as Color
+	assert_true(brk_h.get_luminance() > (ceiling["break"] as Color).get_luminance(), "night Break has a lit horizon under its ceiling")
 	surge.free()

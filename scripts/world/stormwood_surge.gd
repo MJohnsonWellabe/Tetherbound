@@ -516,13 +516,6 @@ func _style_rain() -> void:
 		_rain_far = _build_rain()
 		_rain_far.name = "RainFar"
 		_style_emitter(_rain_far, _far_rain_cfg(cfg))
-		var ring := _rain_far.process_material as ParticleProcessMaterial
-		if ring != null:
-			ring.emission_ring_inner_radius = float(far.get("inner_radius_m", 13.0))
-			ring.emission_ring_radius = float(far.get("outer_radius_m", 26.0))
-			var reach := ring.emission_ring_radius + 1.0
-			_rain_far.visibility_aabb = AABB(Vector3(-reach, -RAIN_RING_HEIGHT * 0.5 - 1.0, -reach),
-				Vector3(reach, RAIN_RING_HEIGHT + 2.0, reach) * 2.0)
 		_rain_far.visible = true
 		_rain.add_child(_rain_far)
 
@@ -554,7 +547,22 @@ func _style_emitter(emitter: GPUParticles3D, cfg: Dictionary) -> void:
 		var slant: Array = cfg.get("wind_slant", [0.0, 0.0])
 		process.direction = Vector3(float(slant[0]), -1.0, float(slant[1])).normalized()
 		process.particle_flag_align_y = true
+		# Review round 4: a slanted drop drifts downwind over its life, which
+		# would carry drops spawned outside the ring back through the camera
+		# (the R5.2 near-lens streak defect). Shift the ring upwind by part of
+		# that drift and keep its inner radius clear of the longest camera arm.
+		process.emission_ring_inner_radius = float(cfg.get("inner_radius_m", process.emission_ring_inner_radius))
+		process.emission_ring_radius = float(cfg.get("outer_radius_m", process.emission_ring_radius))
+		process.emission_shape_offset = -rain_drift(process, emitter.lifetime) * float(cfg.get("upwind_offset_fraction", 0.0))
+		var reach := process.emission_ring_radius + process.emission_shape_offset.length() + 1.0
+		emitter.visibility_aabb = AABB(Vector3(-reach, -RAIN_RING_HEIGHT * 0.5 - 1.0 - 20.0, -reach),
+			Vector3(reach * 2.0, RAIN_RING_HEIGHT + 22.0, reach * 2.0))
 	emitter.amount = int(cfg.get("max_drops", emitter.amount))
+
+## Horizontal drift of the fastest drop over its whole life (vector, m).
+static func rain_drift(process: ParticleProcessMaterial, lifetime: float) -> Vector3:
+	var direction := process.direction.normalized()
+	return Vector3(direction.x, 0.0, direction.z) * process.initial_velocity_max * lifetime
 
 func _update_ceiling(p: Dictionary) -> void:
 	if _ceiling_material == null:
