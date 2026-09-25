@@ -95,6 +95,16 @@ const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 ## admits they exist reads as the prompt being broken.
 const PROMPT_RADIUS := 4.2
 
+## F02 / earned-save blocker B1. A beaten trainer who cannot be fought again
+## still says their post-battle line, but that greeting is flavour, not an
+## offer: it must never take Interact from anything else in reach. The South
+## Bridge guardian is why -- he walks up to the player AT the gate
+## (`south_bridge.gd::_challenge_the_guardian`, 2.2 m) and is still standing
+## there when he loses, nearer than the gate's own prompt, so a priority-0
+## "Greet" beat the gate the player had just earned the key for. Below the
+## default 0 rather than hidden: walked up to on their own they still answer.
+const BEATEN_PROMPT_PRIORITY := -1
+
 var _player: Node3D = null
 var _placed: int = 0
 ## Which trainer opened the conversation that is currently on screen, and
@@ -190,6 +200,7 @@ func _spawn(spec: Dictionary, positions: Dictionary = {}, facings: Dictionary = 
 	# changes while the player is standing in front of them. Resolving it once
 	# at build time would freeze a beaten trainer on their challenge line.
 	var prompt: Node3D = npc.call("add_prompt", _prompt_for(spec), PROMPT_RADIUS)
+	prompt.set("priority", prompt_priority_for(spec, _progression()))
 	prompt.connect("activated", _on_challenged.bind(spec))
 	_placed += 1
 
@@ -407,6 +418,7 @@ func _refresh_prompts(progression: RefCounted) -> void:
 		if spec.is_empty():
 			continue
 		prompt.set("label", prompt_for(spec, progression))
+		prompt.set("priority", prompt_priority_for(spec, progression))
 
 
 ## --- the table ----------------------------------------------------------------
@@ -558,6 +570,16 @@ static func prompt_for(spec: Dictionary, progression: RefCounted) -> String:
 			"defeated" if beaten else "challenge"])
 		template = fallback
 	return template % str(spec.get("name", "Trainer"))
+
+
+## F02. The arbiter priority this trainer's prompt carries right now: the
+## ordinary 0 while a fight is on offer (including a `rechallenge: true`
+## trainer after a win -- `already_beaten()` is false for them), and
+## `BEATEN_PROMPT_PRIORITY` once the only thing left is their beaten line.
+## Driven by the same `defeat_flag` world flag as the label, so a trainer the
+## OTHER player beat yields the same way through `_process()`'s relabel pass.
+static func prompt_priority_for(spec: Dictionary, progression: RefCounted) -> int:
+	return BEATEN_PROMPT_PRIORITY if already_beaten(spec, progression) else 0
 
 
 ## CL-W4. The level this trainer refuses to fight below, or 0 for the ordinary

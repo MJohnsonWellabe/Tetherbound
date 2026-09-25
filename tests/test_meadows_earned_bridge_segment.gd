@@ -104,3 +104,19 @@ func test_source_contains_no_fixture_or_gameplay_callback_shortcuts() -> void:
 		"time_scale =", "_on_challenged\"", "begin_trainer_battle\"", "try_open\"",
 		"_on_tried\"", "_try_auto_open\"", "_unlock\"", "_panel.call(\"start\""]:
 		assert_false(source.contains(forbidden), "bridge must earn state through input: " + forbidden)
+
+
+## Blocker B1: walking back to the gate with the key is ordinary play that
+## auto-opens it (south_bridge.gd::AUTO_OPEN_RANGE) and disables its prompt.
+## The post-victory press must take that open gate as success; the first,
+## locked-gate press still demands the gate's own actionable offer.
+func test_post_victory_press_accepts_a_gate_already_opened_by_ordinary_play() -> void:
+	assert_true(BRIDGE.already_open(true, true))
+	assert_false(BRIDGE.already_open(true, false), "a leaf without the durable flag is not earned")
+	assert_false(BRIDGE.already_open(false, true))
+	var source := FileAccess.get_file_as_string("res://tests/helpers/meadows_earned_bridge_segment.gd")
+	var post_win := source.get_slice("if not bool(_bridge.call(\"is_open\")):", 1).get_slice("var carve", 0)
+	assert_true(post_win.contains("not already_open(") and post_win.contains("_press_gate(prompt, true)"),
+		"after the win an already-open gate is the goal state, not a missing prompt")
+	assert_true(source.contains("not await _press_gate(prompt):"),
+		"the locked-gate challenge press still requires the gate's own offer")
