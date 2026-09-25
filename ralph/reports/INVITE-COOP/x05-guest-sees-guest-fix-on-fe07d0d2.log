@@ -1,0 +1,54 @@
+run id:  net-20260925T125907Z-28390
+run dir: /tmp/net-session_guest_sees_guest-20260925T125907Z
+smoke:   tests/smoke_net_session_guest_sees_guest.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=28415 control_port=44807 home=/tmp/net-session_guest_sees_guest-20260925T125907Z/home-0 log=/tmp/net-session_guest_sees_guest-20260925T125907Z/peer-0.log
+coordinator: launched peer 1 (client) pid=28416 control_port=37543 home=/tmp/net-session_guest_sees_guest-20260925T125907Z/home-1 log=/tmp/net-session_guest_sees_guest-20260925T125907Z/peer-1.log
+coordinator: launched peer 2 (client) pid=28417 control_port=44549 home=/tmp/net-session_guest_sees_guest-20260925T125907Z/home-2 log=/tmp/net-session_guest_sees_guest-20260925T125907Z/peer-2.log
+coordinator: peer 1 hello: {"enet_port":29962.0,"godot_version":"4.7-stable (official)","main_sha":"7e5451c7148d","peer":1.0,"pid":28416.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-session_guest_sees_guest-20260925T125907Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 2 hello: {"enet_port":29963.0,"godot_version":"4.7-stable (official)","main_sha":"7e5451c7148d","peer":2.0,"pid":28417.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-session_guest_sees_guest-20260925T125907Z/home-2/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":29961.0,"godot_version":"4.7-stable (official)","main_sha":"7e5451c7148d","peer":0.0,"pid":28415.0,"role":"host","type":"hello","user_data_dir":"/tmp/net-session_guest_sees_guest-20260925T125907Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 3 peer(s) said hello
+PASS: coordinator tracked 3 peers
+PASS: a Session exists to host/join
+PASS: peer 0 hosted a world (hosting udp/29961 as peer 1)
+PASS: peer 1 joined on port 29961 (joined 127.0.0.1:29961 as peer 260345354 after 12 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 2 joined on port 29961 (joined 127.0.0.1:29961 as peer 340593661 after 12 frames; snapshot applied; 3 peer(s) in registry)
+PASS: peer 0's registry holds all three players (registry reports 3 peer(s) after 0 frames)
+PASS: peer 1's registry holds all three players (registry reports 3 peer(s) after 0 frames)
+PASS: peer 2's registry holds all three players (registry reports 3 peer(s) after 0 frames)
+PASS: both guests have distinct non-host peer ids ([1, 260345354, 340593661])
+PASS: peer 0 draws both other players (drew 2)
+PASS: peer 1 draws both other players (drew 2)
+PASS: peer 2 draws both other players (drew 2)
+PASS: peer 2 holds a body for guest 1 before it walks
+PASS: peer 0 holds a body for guest 1 before it walks
+PASS: guest 1 held the stick forward (left stick (0.00, -1.00) for 300 frames)
+PASS: guest 1 walked at least 2 m (walked 2.71 m)
+PASS: peer 2 saw guest 1 arrive within 1.5 m of where it stopped (0.00 m)
+PASS: peer 2's copy of guest 1 moved at least 2 m (moved 2.71 m)
+PASS: peer 0 saw guest 1 arrive within 1.5 m of where it stopped (0.00 m)
+PASS: peer 0's copy of guest 1 moved at least 2 m (moved 2.71 m)
+PASS: peer 1 holds a body for guest 2 before it walks
+PASS: peer 0 holds a body for guest 2 before it walks
+PASS: guest 2 held the stick forward (left stick (0.00, -1.00) for 300 frames)
+PASS: guest 2 walked at least 2 m (walked 2.71 m)
+PASS: peer 1 saw guest 2 arrive within 1.5 m of where it stopped (0.00 m)
+PASS: peer 1's copy of guest 2 moved at least 2 m (moved 2.71 m)
+PASS: peer 0 saw guest 2 arrive within 1.5 m of where it stopped (0.00 m)
+PASS: peer 0's copy of guest 2 moved at least 2 m (moved 2.71 m)
+ALL CHECKS PASSED
+
+=== /tmp/net-session_guest_sees_guest-20260925T125907Z/SUMMARY.md ===
+# Net smoke run net-20260925T125907Z-28390
+
+Scene: world
+Peers: 3
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=28415 exited=true unexpected_exit=false
+- peer 1 (client) pid=28416 exited=true unexpected_exit=false
+- peer 2 (client) pid=28417 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
