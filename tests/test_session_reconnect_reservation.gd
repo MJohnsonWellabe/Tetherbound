@@ -78,3 +78,28 @@ func test_live_or_empty_characters_are_not_reserved_and_clear_drops_seats() -> v
 	assert_true(reg.reserve("gone", T0 + WINDOW))
 	reg.clear()
 	assert_eq(reg.reservation_count(T0), 0, "ending the session releases every held seat")
+
+
+func test_pending_client_goodbye_finishes_before_a_new_join() -> void:
+	const SESSION := preload("res://scripts/net/session.gd")
+	var session := SESSION.new()
+	session.set("_mode", "client")
+	session.set("_closing_frames", 3)
+	session.set("_closing_reason", "left")
+	var ended: Array = []
+	session.session_ended.connect(func(reason: String) -> void: ended.append(reason))
+	assert_false(session.join_with_peer(null, {}, "test"), "a null peer is still refused")
+	assert_eq(session.mode(), "", "the old client close finished instead of blocking the new join")
+	assert_eq(ended, ["left"], "and it ended with the leave's own reason")
+	session.free()
+
+
+func test_unadmitted_client_leave_tears_down_at_once() -> void:
+	const SESSION := preload("res://scripts/net/session.gd")
+	var session := SESSION.new()
+	session.set("_mode", "client")
+	session.set("_box", {"connected": true, "handshake_snapshot_applied": false})
+	session.leave("join_failed")
+	assert_eq(session.mode(), "", "no goodbye wait for a client that was never admitted")
+	assert_eq(int(session.get("_closing_frames")), 0)
+	session.free()

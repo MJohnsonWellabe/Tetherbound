@@ -247,6 +247,7 @@ func max_peers() -> int:
 ## down box) leaves the session inactive, which is a solo game that cannot be
 ## joined -- not a game that refuses to start. `title_screen.gd` relies on that.
 func host(port: int = -1, peers: int = -1) -> bool:
+	_finish_pending_client_close()
 	if is_active():
 		return is_host()
 	var use_port := port if port > 0 else default_port()
@@ -273,6 +274,7 @@ func host(port: int = -1, peers: int = -1) -> bool:
 ## still pass through this Session rather than growing a parallel handshake.
 func host_with_peer(peer: MultiplayerPeer, cap: int = -1,
 		transport_kind: String = "steam") -> bool:
+	_finish_pending_client_close()
 	if is_active():
 		return is_host() and _peer == peer
 	if not transport_peer_valid(peer, true):
@@ -321,6 +323,7 @@ func host_with_peer(peer: MultiplayerPeer, cap: int = -1,
 ## finish" so a polling caller does not have to run its budget out to learn the
 ## connection was refused.
 func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> bool:
+	_finish_pending_client_close()
 	if is_active():
 		leave()
 		if is_active():
@@ -343,6 +346,7 @@ func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> boo
 ## `_on_connected_to_server()` drives the same hello path used by ENet.
 func join_with_peer(peer: MultiplayerPeer, character_summary: Dictionary = {},
 		transport_kind: String = "steam") -> bool:
+	_finish_pending_client_close()
 	if is_active():
 		leave()
 		if is_active():
@@ -1213,8 +1217,12 @@ func _rpc_goodbye() -> void:
 ## close the link (or GOODBYE_LINGER_S) before tearing down. A goodbye that is
 ## lost anyway only means the seat is held for the reconnect window.
 func _say_goodbye() -> bool:
+	# Only an admitted client holds a seat worth freeing. A failed or
+	# unfinished join tears down at once, so the title can host or join again
+	# without waiting on a goodbye nobody will answer.
 	if _peer == null or not is_inside_tree() or multiplayer.multiplayer_peer != _peer \
-			or not bool(_box.get("connected", false)):
+			or not bool(_box.get("connected", false)) \
+			or not bool(_box.get("handshake_snapshot_applied", false)):
 		return false
 	rpc_id(HOST_PEER_ID, "_rpc_goodbye")
 	return true
@@ -1335,7 +1343,7 @@ func _process(delta: float) -> void:
 		if _closing_frames > 1:
 			_closing_frames -= 1
 			return
-		if not _host_close_flushed():
+		if not _close_flushed():
 			return
 		_finish_closing()
 		return
@@ -1375,6 +1383,13 @@ func _linger_then_disconnect(peer_id: int) -> void:
 	}
 
 
+## A deliberate client leave may still be waiting on the host. Starting a new
+## host or join ends that wait now rather than inheriting a closing session.
+func _finish_pending_client_close() -> void:
+	if _mode == "client" and _closing_frames > 0:
+		_finish_closing()
+
+
 func _finish_closing() -> void:
 	var reason := _closing_reason
 	_closing_frames = 0
@@ -1384,10 +1399,11 @@ func _finish_closing() -> void:
 	session_ended.emit(reason)
 
 
-## The final frame of a host or goodbye close waits here until every remote peer has
-## closed its side, or the bound passes. A dead or silent client cannot hold
-## the host open.
-func _host_close_flushed() -> bool:
+## The final frame of a close waits here. A host waits until every remote peer
+## has closed its side; a leaving client's host link ends it through
+## `_on_server_disconnected`. Either way the deadline bounds it, so a dead or
+## silent peer cannot hold the close open.
+func _close_flushed() -> bool:
 	if _peer == null or not is_inside_tree() or multiplayer.multiplayer_peer != _peer:
 		return true
 	if multiplayer.get_peers().is_empty():
