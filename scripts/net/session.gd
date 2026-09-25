@@ -43,6 +43,7 @@ const REALM_SHELLS := preload("res://scripts/net/realm_shells.gd")
 const REALM_TRANSITION := preload("res://scripts/net/realm_transition.gd")
 const SNAPSHOT_TRANSFER := preload("res://scripts/net/snapshot_transfer.gd")
 const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
+const BUILD_FINGERPRINT := preload("res://scripts/net/build_fingerprint.gd")
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 
@@ -353,6 +354,8 @@ func join_with_peer(peer: MultiplayerPeer, character_summary: Dictionary = {},
 		summary["realm"] = _local_realm()
 	if not summary.has("appearance_id"):
 		summary["appearance_id"] = _local_appearance_id()
+	# Always this process's own fingerprint: a caller cannot claim another build.
+	summary["build"] = BUILD_FINGERPRINT.current()
 	_pending_hello = summary
 	print("[session] dialling via %s as '%s' (%s)"
 		% [_transport_kind, str(summary["display_name"]), str(summary["character_id"])])
@@ -666,6 +669,15 @@ func _rpc_hello(summary: Dictionary) -> void:
 		if not reason.is_empty():
 			_reject_hello(sender, "steam_lobby_refused", reason)
 			return
+	# Build/content compatibility precedes identity and capacity, so a
+	# mismatched joiner hears the specific reason even when the session is
+	# full, and nothing about this world is prepared for it.
+	var compat: Dictionary = BUILD_FINGERPRINT.compare(
+		BUILD_FINGERPRINT.current(), summary.get("build", null))
+	if not bool(compat.get("ok", false)):
+		_reject_hello(sender, str(compat.get("code", "incompatible_version")),
+			str(compat.get("reason", "")))
+		return
 	var raw_character_id: Variant = summary.get("character_id", null)
 	var verdict: Dictionary = _registry.call(
 		"admission_verdict", sender, raw_character_id, _capacity if _capacity > 0 else max_peers())

@@ -21,6 +21,7 @@ class MockSteam:
 	var metadata: Dictionary = {
 		"product": "tetherbound",
 		"protocol": STEAM_LOBBY.PROTOCOL,
+		"build": STEAM_LOBBY.BUILD_FINGERPRINT.token(STEAM_LOBBY.BUILD_FINGERPRINT.current()),
 		"host_steam_id": "500",
 		"ready": "1",
 	}
@@ -158,6 +159,36 @@ func test_protocol_mismatch_leaves_metadata_lobby() -> void:
 	steam.lobby_joined.emit(222, 0, false, 1)
 	assert_eq(lobby.last_error(), "That friend is using an incompatible Tetherbound protocol.")
 	assert_eq(steam.left, [222])
+	lobby.free()
+	steam.free()
+
+
+func test_build_mismatch_leaves_metadata_lobby_before_dial() -> void:
+	var steam := MockSteam.new()
+	steam.metadata["build"] = "%s|0.0.0.other|deadbeef" % STEAM_LOBBY.PROTOCOL
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	assert_true(lobby.request_join(444))
+	steam.lobby_joined.emit(444, 0, false, 1)
+	assert_true(lobby.last_error().begins_with(
+		"Your friend is running a different version of Tetherbound (theirs %s|0.0.0.other|deadbeef, yours "
+			% STEAM_LOBBY.PROTOCOL), lobby.last_error())
+	assert_eq(steam.left, [444], "a mismatched build is refused before any peer connection")
+	lobby.free()
+	steam.free()
+
+
+func test_missing_build_metadata_is_refused_as_unknown_version() -> void:
+	var steam := MockSteam.new()
+	steam.metadata.erase("build")
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	assert_true(lobby.request_join(445))
+	steam.lobby_joined.emit(445, 0, false, 1)
+	assert_true(lobby.last_error().contains("(theirs unknown, yours "), lobby.last_error())
+	assert_eq(steam.left, [445])
 	lobby.free()
 	steam.free()
 
