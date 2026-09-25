@@ -89,7 +89,12 @@ func is_race_visible(seal_id: String) -> bool:
 func _refresh() -> void:
 	_last_revision = int(_game.world.flags.revision)
 	for seal: Dictionary in _seals:
-		_rings[str(seal.id)].visible = SEALS.is_sealed(seal, _game.world.flags)
+		var ring: Node3D = _rings[str(seal.id)]
+		ring.visible = SEALS.is_sealed(seal, _game.world.flags)
+		# An opened race must not keep simulating spray it never draws.
+		var spray := ring.get_node_or_null("Spray") as GPUParticles3D
+		if spray != null:
+			spray.emitting = ring.visible
 	var player: Node = _world.local_rig()
 	var fly: Node = player.get_node_or_null("FlyController") if player != null else null
 	flight_restrictions = SEALS.sync_flight(fly, _seals, _rules, _game.world.flags, _dock_names)
