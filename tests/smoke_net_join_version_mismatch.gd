@@ -37,7 +37,7 @@ func _run() -> void:
 	var hosted: Dictionary = await step(0, "host", {"port": port, "max_peers": 4})
 	check(str(hosted.get("verdict", "")) == "PASS", "host opened a four-peer session (%s)"
 		% str(hosted.get("detail", "")))
-	var before_session: Dictionary = await probe(0, "session") as Dictionary
+	var before_session := _as_dict(await probe(0, "session"))
 	var before_rows: Array = before_session.get("rows", []) as Array
 	check(before_rows.size() == 1, "host registry starts with one real row (%s)" % str(before_rows))
 	var before_world: Variant = await probe(0, "state_hash")
@@ -60,7 +60,7 @@ func _run() -> void:
 	check(elapsed_ms < REFUSAL_WALL_MS,
 		"refusal arrived in %d ms, not after the generic timeout" % elapsed_ms)
 
-	var client: Dictionary = await probe(1, "session") as Dictionary
+	var client := _as_dict(await probe(1, "session"))
 	check(bool(client.get("handshake_rejected_by_host", false)),
 		"mismatch arrived as a host admission verdict, not a transport failure")
 	check(not bool(client.get("handshake_snapshot_applied", true)),
@@ -68,10 +68,17 @@ func _run() -> void:
 	check(not bool(client.get("active", true)),
 		"mismatched client's transport closed after the reason arrived")
 
-	var after_session: Dictionary = await probe(0, "session") as Dictionary
+	var after_session := _as_dict(await probe(0, "session"))
 	check(after_session.get("rows", []) == before_rows,
 		"mismatch refusal left the host registry unchanged")
 	check((await probe(0, "state_hash")) == before_world,
 		"mismatch refusal left the host world state unchanged")
 
 	quit(await finish())
+
+
+## A probe that failed returns its error text, not a Dictionary. Treat that as
+## an empty answer so the checks fail and the run finishes, instead of a cast
+## error stranding the coroutine until the runner's timeout.
+func _as_dict(value: Variant) -> Dictionary:
+	return value if value is Dictionary else {}
