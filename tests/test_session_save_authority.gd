@@ -74,3 +74,39 @@ func test_unidentified_local_on_an_empty_slot_mints_explicitly() -> void:
 	assert_false(str(game.local.character_id).is_empty(), "a new game still gets its identity")
 	assert_eq(saver.slot_locator_character(2), str(game.local.character_id))
 	fmt.call("after_each")
+
+
+class OwnershipGame:
+	extends RefCounted
+	var owned := true
+
+	func is_host() -> bool:
+		return true
+
+	func world_save_owned() -> bool:
+		return owned
+
+
+func test_former_client_cannot_write_a_world_document() -> void:
+	var saver := SAVE_GAME.new("user://test_saves_authority/")
+	var former := OwnershipGame.new()
+	former.owned = false
+	assert_false(saver.call("_owns_world", former), "gave up world ownership: no world document")
+	assert_false(bool(saver.save_world(former, "host-world-id")),
+		"save_world refuses before touching the host's world id")
+	former.owned = true
+	assert_true(saver.call("_owns_world", former), "an owning host may write its world")
+	preload("res://tests/helpers/split_save_fixture.gd").wipe("user://test_saves_authority/")
+
+
+func test_new_run_always_carries_an_explicit_identity() -> void:
+	var game: Node = GAME_STATE.new()
+	game.get("local").set("character_id", "")
+	game.call("reset_for_new_game")
+	assert_false(str(game.get("local").get("character_id")).is_empty(),
+		"a new run without a chosen id gets one at reset, not at its first save")
+	game.get("local").set("character_id", "chosen-by-title")
+	game.call("reset_for_new_game")
+	assert_eq(str(game.get("local").get("character_id")), "chosen-by-title",
+		"the title's explicitly chosen identity is kept")
+	game.free()

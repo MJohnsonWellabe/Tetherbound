@@ -780,6 +780,12 @@ func reset_for_new_game() -> void:
 	# different hosts legitimately reuse this locator.
 	world.set("world_id", "slot-%d" % autosave_slot())
 	local.call("reset")
+	# A new run is a new character. The title's New Game sets the chosen id
+	# before this call and PlayerState keeps it; any path that did not (the
+	# `--mp-host` flag, tests) gets an explicit identity here rather than one
+	# minted silently at its first save over whatever the slot names.
+	if str(local.get("character_id")).is_empty():
+		local.set("character_id", preload("res://scripts/save/character_identity.gd").mint())
 	players.clear()
 	bind_realm_map()
 	objective_text = quest_log.call("tracked_text", progression)

@@ -855,7 +855,7 @@ func save_character(game: Object, character_id: String) -> bool:
 ## ownership rule wrong by calling the wrong function.
 func save_world(game: Object, world_id: String) -> bool:
 	finish_fallback()
-	if game == null or world_id.is_empty() or not _is_host(game):
+	if game == null or world_id.is_empty() or not _owns_world(game):
 		return false
 	ATOMIC_SAVE_FILE.begin_transaction()
 	var success := bool(_worlds.call("write", world_id, WORLD_SAVE.partition(snapshot(game)),
@@ -1043,6 +1043,19 @@ func slot_locator_character(slot: int) -> String:
 ## "May this process write the world?" -- `game_state.gd::is_host()`, which is
 ## true solo, true for a host, and true for a process with no session at all
 ## (a headless test, a capture tool, the `FakeGame` in `test_save_format.gd`).
+## May this process write a world document? The host test plus world-save
+## ownership: a former client reads is_host() true after teardown while it
+## still holds the host's retained world, whose id would otherwise be written
+## to this machine by any direct save_world caller (reward, ledger, water and
+## Stormwood transaction paths).
+func _owns_world(game: Object) -> bool:
+	if not _is_host(game):
+		return false
+	if game.has_method("world_save_owned") and not bool(game.call("world_save_owned")):
+		return false
+	return true
+
+
 func _is_host(game: Object) -> bool:
 	if game == null:
 		return false
