@@ -180,8 +180,7 @@ const QUALIFIED := [
 		"reveal": "lost_creature_rue_met", "reveal_conversation": "pasture_drover_juno_challenge",
 		"ack": "lost_creature_rue_defeated", "local_row": true},
 	{"id": "band5_hall_alpha_galecrest", "region": "hall_approach", "kind": "alpha",
-		"order": 5001, "flag": "wild_once_5001", "reveal": "hall_approach_open", "local_row": true,
-		"conditional": "optionality unproven: 18m from the spine in the chapter's largest aggressive cluster"},
+		"order": 5001, "flag": "wild_once_5001", "reveal": "hall_approach_open", "local_row": true},
 ]
 
 ## Recorded rejections (reasons in the report). Two are WORLD §11 candidates;
@@ -303,7 +302,7 @@ func test_the_f03_record_is_internally_consistent() -> void:
 	for row: Dictionary in conditional:
 		assert_false(str(row["conditional"]).strip_edges().is_empty(),
 			"conditional activity '%s' records no reason" % row["id"])
-	assert_eq(outright.size(), 5, "the record counts Bram, herd, vault Elder, Doss and Juno as qualified outright")
+	assert_eq(outright.size(), 6, "all six qualify outright: Bram, herd, vault Elder, Doss, Juno and the Hall alpha")
 	assert_true(outright.size() + conditional.size() >= MIN_QUALIFIED,
 		"F03 needs at least %d candidates; the record has %d outright and %d conditional"
 			% [MIN_QUALIFIED, outright.size(), conditional.size()])
