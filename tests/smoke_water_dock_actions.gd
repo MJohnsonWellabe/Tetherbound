@@ -8,6 +8,7 @@ const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const REED := "water_dock_reedhaven_repaired"
 const SHELL := "water_dock_shellwatch_residents_freed_and_pump_disabled"
 const DEEP := "water_dock_deep_watch_current_charted"
+const TIDECOIL := "water_named_deep_watch_tidecoil_resolved"
 
 class RefusingWorldSave extends "res://scripts/save/save_game.gd":
 	var refuse_world := false
@@ -185,6 +186,17 @@ func run() -> void:
 	check(deep_current_spot.is_finite(), "Deep Watch return current has an unambiguous sample")
 	var deep_before: float = world.current_at(deep_current_spot).length()
 	check(deep_before > 0.1, "Uncharted Deep Watch route starts stronger than its earned reduction (%.3fm/s)" % deep_before)
+	# side_water_deep_watch_chart: the chart control is a separate step after
+	# Tidecoil. Before the resolution the real prompt refuses and the current
+	# is unchanged; the resolution itself never sets the chart flag.
+	await activate("deep_watch_chart")
+	check(not game.world.flags.has(DEEP) and is_equal_approx(world.current_at(deep_current_spot).length(), deep_before),
+		"Deep Watch chart refuses before Tidecoil is resolved")
+	# Disclosed fixture: the world flag the shared director records on a
+	# Tidecoil catch/defeat. No fight is played here.
+	game.world.flags.set_flag(TIDECOIL)
+	await frames()
+	check(not game.world.flags.has(DEEP), "Tidecoil resolution alone does not chart the current")
 	await activate("deep_watch_chart")
 	check(game.world.flags.has(DEEP), "Real Deep Watch chart prompt commits its authored world flag")
 	check(is_equal_approx(world.current_at(deep_current_spot).length(), 0.1),

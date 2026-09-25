@@ -188,7 +188,10 @@ func _spawn(row: Dictionary) -> void:
 	_nodes[id] = node
 
 func node_for(id: String) -> Node3D:
-	return _nodes.get(id) as Node3D
+	# A claimed body is freed before the next refresh prunes it; a late or
+	# repeated claim intent must read "no body", not cast a freed object.
+	var node: Variant = _nodes.get(id)
+	return node as Node3D if is_instance_valid(node) else null
 
 func census() -> Dictionary:
 	var pickups := 0
