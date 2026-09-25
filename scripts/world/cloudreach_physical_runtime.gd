@@ -182,6 +182,11 @@ func companion_fall_recoveries() -> int:
 	return int(_companion_fall.get("recoveries"))
 
 
+## F06 evidence: the tunables the helper actually runs with.
+func companion_fall_settings() -> Dictionary:
+	return _companion_fall.call("settings")
+
+
 ## F06 evidence: where the last recovery placed it (INF before any).
 func companion_fall_last_spot() -> Vector3:
 	return _companion_fall.get("last_spot")

@@ -60,8 +60,13 @@ const DEFAULT_STRANDED_S := 3.0
 ## Clear metres between the trainer's capsule and the companion's.
 const DEFAULT_CLEARANCE_M := 0.6
 ## After a search finds no clear spot, wait this long before the next one:
-## the search is 24 ray + shape queries and must not run every frame.
+## the search tries up to 24 candidates, each a ray, a capsule and a line
+## query, and must not run every frame.
 const DEFAULT_RETRY_S := 0.25
+## A hop or a step down leaves the floor for a moment. The stranded clock
+## pauses through that; only a longer stretch off the ground restarts it, so
+## a hopping trainer cannot put a stranded companion off indefinitely.
+const DEFAULT_AIRBORNE_GRACE_S := 0.5
 ## Until the shared follower stops walking off edges, one road edge can mean a
 ## recovery every few seconds. Every one is counted; the line is spaced out.
 const DEFAULT_MESSAGE_COOLDOWN_S := 30.0
@@ -83,7 +88,9 @@ var message_cooldown_s := DEFAULT_MESSAGE_COOLDOWN_S
 var recoveries := 0
 var last_spot := Vector3.INF
 var _stranded_for := 0.0
+var airborne_grace_s := DEFAULT_AIRBORNE_GRACE_S
 var _retry_left := 0.0
+var _airborne_for := 0.0
 var _message_left := 0.0
 var _announce := false
 
@@ -94,7 +101,14 @@ func configure(cfg: Dictionary) -> void:
 	stranded_s = float(cfg.get("stranded_s", stranded_s))
 	clearance_m = float(cfg.get("clearance_m", clearance_m))
 	retry_s = float(cfg.get("retry_s", retry_s))
+	airborne_grace_s = float(cfg.get("airborne_grace_s", airborne_grace_s))
 	message_cooldown_s = float(cfg.get("message_cooldown_s", message_cooldown_s))
+
+
+func settings() -> Dictionary:
+	return {"fall_drop_m": fall_drop_m, "stranded_drop_m": stranded_drop_m,
+		"stranded_s": stranded_s, "clearance_m": clearance_m, "retry_s": retry_s,
+		"message_cooldown_s": message_cooldown_s, "airborne_grace_s": airborne_grace_s}
 
 
 ## True once for a recovery the player should be told about: never more than
@@ -130,12 +144,19 @@ func tick(delta: float, trainer: CharacterBody3D, flying: bool, world: Node) -> 
 		return false
 	var companion := body as CharacterBody3D
 	# Only a trainer standing on ground has somewhere beside them to stand.
-	# A stranding is measured against ground the trainer stands on, so an
-	# airborne stretch starts it over.
+	# Flying or carried restarts the stranded clock; a brief hop only pauses
+	# it, and a longer time off the ground restarts it too.
 	var carried := trainer.has_method("is_carried") and bool(trainer.call("is_carried"))
-	if flying or carried or not trainer.is_on_floor():
+	if flying or carried:
 		_stranded_for = 0.0
+		_airborne_for = 0.0
 		return false
+	if not trainer.is_on_floor():
+		_airborne_for += delta
+		if _airborne_for > airborne_grace_s:
+			_stranded_for = 0.0
+		return false
+	_airborne_for = 0.0
 	var below := trainer.global_position.y - companion.global_position.y
 	if below > fall_drop_m:
 		return recover(companion, trainer)
@@ -227,7 +248,7 @@ func _walkable_floor(space: PhysicsDirectSpaceState3D, at: Vector3, level: float
 	if hit.is_empty():
 		return NAN
 	var up := (hit["normal"] as Vector3).y
-	if up < cos(companion.floor_max_angle) or up <= 0.0:
+	if up < cos(companion.floor_max_angle):
 		return NAN
 	return (hit["position"] as Vector3).y + radius * (1.0 / up - 1.0)
 

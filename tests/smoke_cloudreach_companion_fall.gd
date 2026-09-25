@@ -21,7 +21,7 @@ extends SceneTree
 ##   - leg A also sets the companion on the road beside the trainer by
 ##     position once, then leaves it to its own follow logic;
 ##   - legs B and D drop the companion by position over open air;
-##   - leg C adds a temporary 12 m collision slab 30 m below the road;
+##   - leg C adds a temporary 12 m collision slab stranded_drop_m + 10 m below the road (30 m as shipped);
 ##   - leg D calls `set_following(false)` directly, standing in for the fight
 ##     and the finale pilot, before its real mount via the ride prompt;
 ##   - leg F adds a temporary 30-degree collision slab beside the road and
@@ -32,12 +32,12 @@ extends SceneTree
 ## Pins, in order:
 ##   A. Stood still at the arrival road's edge (the reported section, near
 ##      (7, 105, -246)), the follower walks its camera-safe station off the
-##      road on its own (the root cause), is caught before it is 100 m down
+##      road on its own (the root cause), is caught at the configured fall_drop_m (100 m as shipped)
 ##      and is back on verified ground beside the trainer in bounded time.
 ##   B. A companion dropped over open air is recovered to verified walkable
 ##      ground next to the trainer, clear of the trainer's capsule where it
 ##      was placed.
-##   C. A companion stranded on a ledge 30 m below the trainer (the
+##   C. A companion stranded on a ledge (30 m as shipped) below the trainer (the
 ##      steep-shoulder slide) is recovered too.
 ##   D. A companion that is not following is left alone; a ridden mount is
 ##      left to the real riding controller's own drop recovery.
@@ -54,14 +54,20 @@ const RIDING := preload("res://scripts/world/riding_controller.gd")
 
 const TEAM := ["meadowhart", "bramblebun", "mudsnout", "terrapup", "brooktail"]
 const ROAD_CENTRE := Vector3(-3.0, 106.0, -246.0)
-## Seconds a fall may take to be caught. The rule acts 100 m down, which a
-## free fall reaches in about 4.5 s; the rest is margin for walking off.
+const CONFIG_PATH := "res://data/config/cloudreach_physical_runtime.json"
+## Seconds a fall may take to be caught. The rule acts `fall_drop_m` down
+## (100 m is about 4.5 s of free fall); the rest is margin for walking off.
 const RECOVERY_BUDGET_S := 12.0
-## The rule acts at `fall_drop_m` (100) below the trainer; one physics frame
-## of free fall at that depth is under a metre, so this allows three.
-const CAUGHT_BY_M := 103.0
 const SLOPE_DEG := 30.0
 
+## `companion_fall_recovery` from the runtime's JSON: the smoke measures
+## against the configured depths, never its own copies of them.
+var _cfg: Dictionary = {}
+var _fall_drop_m := NAN
+var _stranded_drop_m := NAN
+## `fall_drop_m` plus three physics frames of free fall at that depth: the
+## rule can only act on the frame after the companion crosses it.
+var _caught_by_m := NAN
 var _failures: Array[String] = []
 var _checks := 0
 var _world: Node3D
@@ -80,6 +86,12 @@ func _init() -> void:
 
 
 func _run() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	_cfg = ((parsed as Dictionary).get("companion_fall_recovery", {}) as Dictionary) if parsed is Dictionary else {}
+	_fall_drop_m = float(_cfg.get("fall_drop_m", NAN))
+	_stranded_drop_m = float(_cfg.get("stranded_drop_m", NAN))
+	var gravity := float(ProjectSettings.get_setting("physics/3d/default_gravity", 9.8))
+	_caught_by_m = _fall_drop_m + 3.0 * sqrt(2.0 * gravity * _fall_drop_m) / 60.0
 	_game = root.get_node(^"Game")
 	_game.call("reset_for_new_game")
 	_game.set("current_realm", "cloudreach")
@@ -107,6 +119,7 @@ func _run() -> void:
 		return
 	_runtime = _world.find_child("PhysicalRuntime", true, false)
 	_riding = _world.get_node_or_null(^"RidingController")
+	_runtime_loaded_the_config()
 
 	await _walk_off_the_road_edge()
 	await _dropped_over_open_air()
@@ -139,6 +152,22 @@ func _wait_for_companion() -> bool:
 
 func _ally() -> CharacterBody3D:
 	return _director.call("ally_body") as CharacterBody3D
+
+
+## LOW-3: the runtime runs with the JSON's values, not only its code defaults.
+func _runtime_loaded_the_config() -> void:
+	if _runtime == null or not _runtime.has_method("companion_fall_settings"):
+		_fail("the runtime exposes no companion fall settings")
+		return
+	var live: Dictionary = _runtime.call("companion_fall_settings")
+	var mismatched: Array[String] = []
+	for key: String in _cfg.keys():
+		if key.begins_with("_"):
+			continue
+		if not live.has(key) or not is_equal_approx(float(live[key]), float(_cfg[key])):
+			mismatched.append("%s json=%s live=%s" % [key, _cfg[key], live.get(key)])
+	_check(not _cfg.is_empty() and mismatched.is_empty() and live.size() == _cfg.size() - 1,
+		"the runtime loaded companion_fall_recovery from the JSON (%d values%s)" % [live.size(), "" if mismatched.is_empty() else ": " + ", ".join(mismatched)])
 
 
 ## Leg A. Walk from the road centre toward the follower's station side to the first
@@ -193,8 +222,8 @@ func _walk_off_the_road_edge() -> void:
 		var before: Variant = _recoveries()
 		var result := await _watch_for_fall_and_recovery(20.0, true)
 		var during := int(_recoveries()) - int(before)
-		_check(result.lowest > _player.global_position.y - CAUGHT_BY_M,
-			"A: the companion is caught before it is 100 m down (lowest %.1f m, trainer at %.1f m)" % [result.lowest, _player.global_position.y])
+		_check(result.lowest > _player.global_position.y - _caught_by_m,
+			"A: the companion is caught before it is %.0f m down, within %.1f m (lowest %.1f m, trainer at %.1f m)" % [_fall_drop_m, _caught_by_m, result.lowest, _player.global_position.y])
 		_check(bool(result.recovered),
 			"A: the companion is back on verified ground beside the trainer within %.0f s of falling (%s)" % [RECOVERY_BUDGET_S, result.detail])
 		_check(int(before) >= 0 and during >= 1, "A: the runtime's recovery caught it during the 20 s watch (%d recoveries)" % during)
@@ -234,13 +263,16 @@ func _dropped_over_open_air() -> void:
 ## Leg C. The steep-shoulder slide stopped some 30 m down, on ground. The
 ## arrival road has no such ledge within reach of a headless probe, so this is
 ## a DISCLOSED fixture: a temporary 12 m slab over the open air beside the
-## road, 30 m below the trainer, removed afterwards.
+## road, stranded_drop_m + 10 m below the trainer, removed afterwards.
 func _stranded_on_a_lower_ledge() -> void:
 	var stand := ROAD_CENTRE
 	stand.y = _floor_y(stand, 6.0)
 	await _stand_trainer(stand + Vector3.UP * 0.1)
-	var ledge_top := Vector3(stand.x - 26.0, stand.y - 30.0, stand.z)
-	_check(_void_below(ledge_top + Vector3.UP * 30.0), "C precondition: open air beside the road above the fixture slab")
+	# Deeper than the stranded depth, well short of the fall depth.
+	var depth := minf(_stranded_drop_m + 10.0, (_stranded_drop_m + _fall_drop_m) * 0.5)
+	var ledge_top := Vector3(stand.x - 26.0, stand.y - depth, stand.z)
+	_check(depth > _stranded_drop_m and depth < _fall_drop_m and _void_below(ledge_top + Vector3.UP * depth),
+		"C precondition: open air beside the road above a fixture slab %.0f m down (stranded at %.0f m, fall at %.0f m)" % [depth, _stranded_drop_m, _fall_drop_m])
 	var slab := StaticBody3D.new()
 	slab.name = "CompanionFallFixtureLedge"
 	var shape := CollisionShape3D.new()
@@ -268,7 +300,7 @@ func _stranded_on_a_lower_ledge() -> void:
 			recovered = true
 			break
 	slab.queue_free()
-	_check(stood_on_ledge, "C: the companion stood on the ledge 30 m below the trainer (a fall the 100 m rule never sees)")
+	_check(stood_on_ledge, "C: the companion stood on the ledge %.0f m below the trainer (a drop the %.0f m fall rule never sees)" % [depth, _fall_drop_m])
 	_check(recovered, "C: a companion stranded on a ledge below the trainer is brought back beside them (%s)" % detail)
 	_check(int(_recoveries()) > int(before), "C: by the runtime's recovery, not by walking (%s -> %s)" % [before, _recoveries()])
 
@@ -286,7 +318,7 @@ func _not_following_is_left_alone() -> void:
 	ally.velocity = Vector3.ZERO
 	for i in 480:
 		await physics_frame
-	_check(_recoveries() == before and ally.global_position.y < stand.y - 100.0,
+	_check(_recoveries() == before and ally.global_position.y < stand.y - _fall_drop_m,
 		"D: a companion with following switched off is left alone (recoveries %s -> %s, y %.1f)" % [before, _recoveries(), ally.global_position.y])
 	ally.call("set_following", true)
 	var recovered := false
@@ -347,6 +379,8 @@ func _large_companion_on_a_slope() -> void:
 		for dz in [-14.0, 0.0, 14.0]:
 			clear = clear and _void_below(centre + Vector3(dx, 12.0, dz))
 	_check(clear, "F precondition: open air where the slope slab goes")
+	if not clear:
+		return
 	var slab := StaticBody3D.new()
 	slab.name = "CompanionFallFixtureSlope"
 	var shape := CollisionShape3D.new()
