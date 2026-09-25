@@ -345,3 +345,30 @@ func test_a_second_unfiltered_heal_is_a_no_op() -> void:
 	assert_eq(int(veg.call("restore_drained")), 0)
 	assert_eq(int(veg.call("regrown_count")), 2)
 	veg.free()
+
+
+## X05 (main-red host stall): `band_pickups.gd` now asks the grid snapshot
+## `solid_scatter_index()` instead of `has_solid_scatter_near()` once per spot.
+## Wired from the same two sources, the two must agree on every point.
+func test_solid_scatter_index_agrees_with_the_linear_query() -> void:
+	var veg := _veg()
+	_record(veg, "deadfall", 0.805, Vector3(3.0, 0.0, -2.0))
+	_record(veg, "bushes", 0.405, Vector3(-9.0, 0.0, 7.0))
+	var batches: Array[Dictionary] = [
+		{"radius": 1.2, "placements": [{"position": Vector3(12.0, 0.0, 12.0)}, {"position": Vector3(-20.0, 0.0, 4.0)}]},
+		{"radius": 0.6, "placements": [{"position": Vector3(0.0, 0.0, 18.0)}]},
+	]
+	(veg.get("_collision_batches") as Array).assign(batches)
+	var index: RefCounted = veg.call("solid_scatter_index")
+	var disagreements := 0
+	for x in range(-30, 31):
+		for z in range(-30, 31):
+			var at := Vector3(float(x) * 0.97, 0.0, float(z) * 0.97)
+			for extra: float in [0.0, 1.6]:
+				if bool(index.call("has_near", at, extra)) != bool(veg.call("has_solid_scatter_near", at, extra)):
+					disagreements += 1
+	assert_eq(disagreements, 0, "the index must answer every spot exactly as has_solid_scatter_near does")
+	assert_true(bool(index.call("has_near", Vector3(12.0, 0.0, 12.0), 0.0)), "collision batches are indexed")
+	assert_true(bool(index.call("has_near", Vector3(3.0, 0.0, -2.0), 0.0)), "soft occluders are indexed")
+	veg.free()
+

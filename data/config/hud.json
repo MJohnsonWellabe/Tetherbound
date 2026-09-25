@@ -1,0 +1,17 @@
+{
+  "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
+  "toasts": {
+    "_comment": "Hold durations in GAME seconds: the HUD advances its own clock by its process delta, so a slow frame (software GL at a fixed capture fps, a hitch) never eats the hold. Fallbacks: HOTBAR_MESSAGE_SECONDS 2.2, REGION_BANNER_SECONDS 3.2.",
+    "hotbar_message_seconds": 2.2,
+    "region_banner_seconds": 3.2
+  },
+  "drowning_cue": {
+    "_comment": "UX 8 / F12: shown only while the local human swimmer's swim_state.drowning is true. State word plus recovery action plus a caution shape, amber (UITokens.WARNING), never red. Font sizes are authored at the 1920x1080 canvas; x0.667 at 1280x720 gives 24 px (critical) and 20 px (body). pulse_* drive the amber frame around the health bar and are ignored under reduced motion.",
+    "title": "Drowning",
+    "action": "Reach shore",
+    "title_font_size": 36,
+    "action_font_size": 30,
+    "pulse_speed": 4.0,
+    "pulse_depth": 0.45
+  }
+}

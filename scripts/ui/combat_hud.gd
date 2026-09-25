@@ -27,6 +27,7 @@ extends CanvasLayer
 ## with a one-shot pulse on the frame a cell becomes usable rather than the
 ## old plain colour swap.
 
+const PRESENTATION_HOLD := preload("res://scripts/ui/presentation_hold.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -569,7 +570,16 @@ func _draw_prompt() -> void:
 	if not fighting and not bool(_director.call("owns_active_prompt")):
 		_prompt.text = ""
 		return
-	_prompt.text = str(_director.call("prompt"))
+	var line := str(_director.call("prompt"))
+	# F05 heal (X03): outside a fight, the director's recall teaching line
+	# ("Call out ..." / "... away") stands down while a story payoff holds the
+	# screen (`presentation_hold.gd`). "Engage X" and a fight's own lines are
+	# never held. Same recall test as `playground_hud.gd`.
+	if not fighting and PRESENTATION_HOLD.active(get_tree()) \
+			and (line.contains("Call out") or line.contains(" away")):
+		_prompt.text = ""
+		return
+	_prompt.text = line
 
 
 ## T3-MATCHUPS: was a three-branch `match` whose default arm returned

@@ -1,0 +1,377 @@
+{
+ "name": "F15: credits occur once for host and guest, and a disk reload resumes the completed world",
+ "claim": "ACCEPTANCE F15 (T3): 'Credits occur once' and 'reload resumes a safe completed world with local requests, without a fifth key or invented sequel prompt', for HOST and GUEST with a disk reload. Setup stands in for PLAYING Tidewake to the end only: the host's named Meadows save plus the end-of-Tidewake world facts (Nerissa beaten, currents restored, the Water key and gate) committed through the ledger, plus Old Bram met so one Local Request is visible, as tests/smoke_regional_credits_reload.gd's fixture does. The realm keys held before the ending are exactly realm_key_stormwood + realm_key_water, and every later state must hold exactly those (no fifth key). Each peer then walks up to its own Grandpa, presses his real prompt, reads the homecoming the director chose for its own character through with interact, watches the production credits roll and presses Continue (then a second press). Saves are captured, each peer's character is emptied in memory and read back from disk (host: its slot; guest: its character file), and each peer talks to Grandpa again.",
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 1500,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+   },
+   "expect_data": {
+    "realm": "meadows"
+   },
+   "label": "named save: the host's Meadows world"
+  },
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 10000,
+   "label": "guest: its own trainer in the Meadows"
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "water_captain_nerissa_defeated",
+    "scope": "world"
+   },
+   "label": "SETUP: end of Tidewake (stands in for playing it)"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_gate_water_unlocked",
+    "scope": "world"
+   },
+   "label": "SETUP"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_key_water",
+    "scope": "world"
+   },
+   "label": "SETUP: the Water key Stormwood granted"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "water_currents_restored",
+    "scope": "world"
+   },
+   "label": "SETUP: currents restored"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "old_champion_met",
+    "scope": "world"
+   },
+   "label": "SETUP: one Local Request revealed (Old Bram), as the single-player proof's fixture does"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_currents_restored",
+    "scope": "world"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "currents_restored": true,
+    "homecoming_seen": false,
+    "credits_seen": false,
+    "credits_pending": false,
+    "realm_keys": [
+     "realm_key_stormwood",
+     "realm_key_water"
+    ],
+    "local_requests_offered": true,
+    "tracked_id": "regional_return_home"
+   },
+   "label": "before: no receipts (non-vacuous baseline)"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "before"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "00_meadows_before"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "homecoming_complete",
+   "args": {},
+   "expect_data": {
+    "initial": true,
+    "homecoming_seen": true,
+    "credits_open": true
+   },
+   "label": "host greets Grandpa: its own homecoming"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "01_host_credits_roll"
+   },
+   "label": "the production credits roll, open on this peer"
+  },
+  {
+   "peer": 1,
+   "action": "ending_state",
+   "expect_data": {
+    "homecoming_seen": false,
+    "credits_open": false,
+    "realm_keys": [
+     "realm_key_stormwood",
+     "realm_key_water"
+    ],
+    "local_requests_offered": true
+   },
+   "label": "the host's homecoming is not the guest's"
+  },
+  {
+   "peer": 0,
+   "action": "credits_continue",
+   "args": {
+    "watch_seconds": 3.0
+   },
+   "expect_data": {
+    "acknowledged": 1,
+    "open_after_continue": false,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_seen_on_disk": true,
+    "credits_reopened": false
+   },
+   "label": "host watches the roll, Continue once"
+  },
+  {
+   "peer": 1,
+   "action": "homecoming_complete",
+   "args": {},
+   "expect_data": {
+    "initial": true,
+    "homecoming_seen": true,
+    "credits_open": true
+   },
+   "label": "guest greets its own Grandpa"
+  },
+  {
+   "peer": 1,
+   "action": "screenshot",
+   "args": {
+    "name": "01_guest_credits_roll"
+   },
+   "label": "the production credits roll, open on this peer"
+  },
+  {
+   "peer": 1,
+   "action": "credits_continue",
+   "args": {
+    "watch_seconds": 3.0
+   },
+   "expect_data": {
+    "acknowledged": 1,
+    "open_after_continue": false,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_seen_on_disk": true,
+    "credits_reopened": false
+   },
+   "label": "guest watches the roll, Continue once"
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "homecoming_seen": true,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_open": false,
+    "grandpa_next": "regional_homecoming_repeat",
+    "realm_keys": [
+     "realm_key_stormwood",
+     "realm_key_water"
+    ],
+    "local_requests_offered": true
+   },
+   "label": "after the credits, before reload"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after_credits"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after_credits",
+    "dir": "characters",
+    "contains": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ]
+   },
+   "label": "host's saved character holds both receipts"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "after_credits",
+    "dir": "characters",
+    "contains": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ]
+   },
+   "label": "guest's saved character holds both receipts"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "characters",
+    "lacks": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ]
+   },
+   "label": "host's pre-ending save held neither (baseline)"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "characters",
+    "lacks": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ]
+   },
+   "label": "guest's pre-ending save held neither (baseline)"
+  },
+  {
+   "peer": 0,
+   "action": "ending_state",
+   "expect_data": {
+    "disk_reload": {
+     "emptied": true,
+     "reloaded": true
+    }
+   },
+   "label": "host: save, empty memory, reload its slot from disk",
+   "args": {
+    "disk_reload": true
+   }
+  },
+  {
+   "peer": 1,
+   "action": "ending_state",
+   "expect_data": {
+    "disk_reload": {
+     "emptied": true,
+     "reloaded": true
+    }
+   },
+   "label": "guest: save, empty memory, reload its character from disk",
+   "args": {
+    "disk_reload": true
+   }
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "currents_restored": true,
+    "homecoming_seen": true,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_open": false,
+    "grandpa_next": "regional_homecoming_repeat",
+    "tracked_id": "",
+    "local_requests_offered": true,
+    "sequel_or_chapter_prompt": false,
+    "realm_keys": [
+     "realm_key_stormwood",
+     "realm_key_water"
+    ]
+   },
+   "label": "after the disk reload: a safe completed world"
+  },
+  {
+   "peer": "all",
+   "action": "homecoming_complete",
+   "expect_data": {
+    "repeat": true,
+    "credits_open": false,
+    "credits_pending": false
+   },
+   "label": "after the reload, Grandpa again (pressed now): the repeat greeting, no second roll"
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_open": false,
+    "tracked_id": "",
+    "local_requests_offered": true,
+    "sequel_or_chapter_prompt": false,
+    "realm_keys": [
+     "realm_key_stormwood",
+     "realm_key_water"
+    ]
+   },
+   "label": "final"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "03_after_reload"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after_reload"
+   }
+  }
+ ]
+}

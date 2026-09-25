@@ -410,6 +410,103 @@ SCRIPT ERROR count is 0 in every run log. Across the last three runs the prefix 
 
 **Open question for owner or design:** is a named alpha with two escorts, fought one at a time from the road, intended to require a rest stop before it? C2/C3 tuning belongs to COMBAT, not this lane.
 
+### Run 8 onward: rest before the Alpha (coordinator order after 0a653a7c2)
+
+- **Rest step** (c46170432 and 62dcc3009): at the start of the Crown segment the player rests at **Still Grove Shelter**. That is the camp beside Ondra, where the segment begins, and the nearest camp on the route; Rodline Refuge is 630 m back. It takes one night per worn creature. Each night uses ordinary input: Interact with the creature bed, pad Down/A to that creature's row, B to close, then Interact with the camp's "Rest at" prompt. If the road fights leave a creature fainted before the grove, the segment walks back and rests again. The rest runs at the 1x clock: at 8x, run 9 pressed the bed five times and nothing activated.
+- **Pickup seats** (f7266aaaf): route pickups 05, 07, 16 and 18 moved 8 m along the route, off Pim, Bryn, Rook and Kestrel. Run 10 lost a press to Bryn on route 07, which had passed in earlier runs. The scatter is re-baked (manifest fingerprint only). test_stormwood_scatter_bake, pickups, pickup_runtime and continuous_route_pickups: 13 tests, 0 failed.
+
+| Run | Commit | Prefix | Crown step |
+|---|---|---|---|
+| 8 | c46170432 | PASS 1121.3 s | FAIL 0.0 s: precondition "knife on the controller hotbar" |
+| 9 | e1166322b | PASS 1114.3 s. Tools `knife x1 axe x1 pickaxe x1` | FAIL 13.1 s: `still_grove_shelter creature bed never won the InteractionArbiter` (winner was that bed; the 8x tap was lost) |
+| 10 | 62dcc3009 | FAIL 829.9 s: `stormwood_pickup_route_07 route reward press activated competing provider .../Warden-Elect Bryn/Interactable` | not reached |
+| 11 | f7266aaaf | PASS 1115.3 s. `F11 WITNESS TOOLS after prefix: knife x0 axe x0 pickaxe x0 hotbar=["knife", "axe", "pickaxe", "", ""]` | FAIL 0.0 s: `Crown segment requires the campaign-earned knife on the controller hotbar (inventory knife x0, axe x0, pickaxe x0, hotbar [...], equipped 'pickaxe')` |
+
+SCRIPT ERROR count is 0 in runs 8 to 11.
+
+**Moved pickup seats, for the reviewer** (`data/config/stormwood_pickups.json`, [x, y, z]). Each moved seat carries a `_why_moved_f11` note. The new y is `stormwood_heightfield.height_at` + the original 0.35 m, and every new spot is still on the critical route. The scatter is re-baked for each move: 0a653a7c2 for 06/09, f7266aaaf for the rest.
+
+| Pickup | NPC or station it sat on | Before | After | Commit |
+|---|---|---|---|---|
+| route_09 | Keeper Ondra | [-160, 34.89, 2700] | [-166.1, 35.34, 2696.6] | 0aeaf2f7c |
+| route_06 | Hollows rod station / Dace | [-900, 32.3, 1780] | [-896.8, 31.08, 1788.4] | 5ca1a839e |
+| route_05 | Courier Pim | [-380, 32.58, 1400] | [-384.2, 32.34, 1393.2] | f7266aaaf |
+| route_07 | Warden-Elect Bryn | [-700, 44.38, 2300] | [-702.9, 43.69, 2292.5] | f7266aaaf |
+| route_16 | Ace Trainer Rook | [-150, 61.34, 4460] | [-158.0, 61.15, 4460.3] | f7266aaaf |
+| route_18 | Officer Kestrel | [-100, 107.92, 5350] | [-104.6, 107.91, 5343.4] | f7266aaaf |
+
+`test_stormwood_pickups::test_no_new_pickup_shares_an_npc_interaction_circle` pins these clear. It still lists route_19 (on the ground 150 m below Marrow's platform) and pocket_203 (Neri's pocket, off route).
+
+**Stopped (stop rule: second failure of the same new step, runs 8 and 11).**
+
+- **What the evidence shows.** The whole inventory is empty while the hotbar still binds the tools. Only `player_death.gd::_die_now()` does that: it moves the inventory into a death satchel and respawns the trainer at the nearest safe camp. Still Grove Shelter, the respawn camp, is 30 m from Ondra, so the harness walk would hide the teleport.
+- **Most likely killer.** Stormwood lightning on the 116-second Conductor Road walk, run at the wrapper's 8x weather clock with no dodge or shelter.
+- **Not confirmed.** Neither run logged the death. 083e0348f now prints each finalized death with the active walk; it has not been run.
+- **Proposed next step** (a harness change, not a game change): after a logged death, walk back to the satchel and take it with its ordinary prompt, as a player would. Or run the Conductor Road walk at the 1x weather clock so telegraphs can be avoided.
+- **Alpha.** Not reached with a rested party, so there are no fight numbers for the tuning question.
+
+### Runs 12 and 13: lightning handling, satchel recovery, the camp rest (commits 544f87648, 2e7e43c9c)
+
+- **Harness** (`tests/helpers/stormwood_field_safety.gd`, used by both walkers):
+  - The walker reads the production strike warnings. While a live warning's radius (3 m + 1.5 m) holds the trainer, it steers the stick out of it.
+  - It logs every warning, hit and death with the walk or fight in progress.
+  - After a death it walks back to the satchel and takes every stack out through the satchel's prompt and storage panel.
+  - Conductor Road walks in the prefix, and every walk the Crown segment makes, run at the real 1x clock.
+
+**Death diagnosis confirmed (run 13).** The trainer was killed by lightning while standing still during a creature fight on the conductor road. The walker cannot dodge there, because in a fight the stick drives the creature, not the trainer. Exact lines:
+
+```
+F11 STRIKE HIT during 'fight during conductor road to Keeper Ondra' at (-484.1492, 58.75578, 2521.029) damage=18.0 health_left=82.0/100.0
+... four more identical hits at the same point, health 64 -> 46 -> 28 -> 10 ...
+F11 TRAINER DEATH during 'fight during conductor road to Keeper Ondra' at (-484.1492, 58.75578, 2521.029); strikes so far {"damage":90.0,"deaths":1,"dodge_frames":0,"hits":5,"threats":0,"warnings":6}
+F11 SATCHEL walking back to (-484.1492, 58.75578, 2521.029) from (-660.1802, 46.38821, 2320.671)
+F11 SATCHEL recovered 4 stack(s); knife x1 axe x1 pickaxe x1
+```
+
+The respawn was at Rodline Refuge, and the satchel was then recovered by ordinary input. In run 12 the prefix saw 5 warnings, 275 dodge frames, 0 hits and 0 deaths. So walking plus dodging avoids strikes; standing still in a fight does not.
+
+**Tuning question** (reported, not changed):
+- **What happens:** a Stormwood strike targets a trainer's current position every 4–8 s, and the trainer stands still for a whole creature fight.
+- **Result:** in one ordinary road fight, one strike point landed 6 of 6 warnings, at 18 damage each (cap 25% of 100). The trainer went 100 → 0 and died.
+- **Why it matters:** "Human never fights" means the trainer has no way to react during a fight except to lose it.
+- **Question:** should `stormwood_lightning.gd` skip a trainer whose creature is in combat, or should fights avoid exposed ground in Break? This is for COMBAT/SYSTEMS. The death also drops the tool satchel mid-route.
+
+**Camp rest works.** Both runs rested at Still Grove Shelter over three ordinary nights and ended with every creature at full HP:
+`RESTED the whole party at still_grove_shelter over 3 night(s) with ordinary bed and rest prompts`.
+
+**Stopped (second failure of the same new step):** the call-out right after the rest.
+- **Run 12:** `ordinary LB did not send out the fittest member before after resting at still_grove_shelter`.
+- **Run 13:** the same line. That run pressed the recall button when no creature was out, and it made no difference.
+- **Cause:** not known. Bedding a creature puts the follower away, and the director state after the last night is not in either log.
+- **Next:** 80067c1ec makes this failure print the best, active and out creature, the ally body, the arbiter, the input owner, the pause, the fight and the clock. It has not been run. The next run should name the cause in one line.
+- **Not reached:** the Alpha itself, so there are still no rested-party fight numbers.
+
+| Run | Commit | Prefix | Strikes in prefix | Crown step | Wall |
+|---|---|---|---|---|---|
+| 12 | 544f87648 | PASS 1214.5 s, tools kept | 5 warnings, 0 hits, 0 deaths | rest OK; FAIL 23.4 s at the call-out | 20m57s |
+| 13 | 2e7e43c9c | PASS 1252.8 s, tools recovered from satchel | 6 warnings, 6 hits, 1 death (in a fight) | rest OK; FAIL 23.9 s at the call-out | 21m34s |
+
+SCRIPT ERROR count is 0 in both runs.
+
+### Run 14 and the lightning ruling (commits 42f7b8dc7, 49d9ab27f)
+
+- **Run 14** (ccbd1d4ba, 80067c1ec diagnostics).
+  - **Prefix:** PASS in 1257.9 s. The same lightning death happened in a conductor-road fight (6 hits, 108 damage); the satchel was recovered and the tools kept.
+  - **Rest:** Still Grove rest OK over 3 nights.
+  - **Call-out failure, now with its cause:** `ordinary LB did not send out the fittest member before after resting at still_grove_shelter (best=terrapup active=bramblebun ally=bramblebun ally_body=true no_usable_ally=false arbiter_enabled=true input_owner=<none> paused=false fighting=false time_scale=1.0)`.
+  - **Reading:** a creature was out and nothing blocked input, but the Crown helper's joypad-event LB taps changed nothing. The prefix Segment's action-event taps do send out its fittest member.
+  - **Classification:** harness-side, but not proven to be harness-only. Whether a physical LB on a real pad works after a camp rest is not measured here.
+  - **Fix** (49d9ab27f): the same action-event taps as the prefix, each LB press logged, recall if nobody is out, and one retry of the whole send-out.
+- **Coordinator interim ruling** (pending the owner's decision): "While the local trainer is committed to a creature fight, storm strikes do not target the trainer's position. They may still land in the arena as telegraphed hazards the piloted creature can avoid. Strikes resume on the trainer when the fight ends."
+  - **Change** (42f7b8dc7): `stormwood_surge.json` strike `spare_trainer_in_fight: true`, with a `_why` note.
+  - **Aim:** host-side per peer in `stormwood_lightning.gd`. A strike chosen for a fighting trainer aims at that peer's piloted creature with the normal 1.2 s / 3 m telegraph, or is skipped if no creature is out. Impacts never damage a fighting trainer.
+  - **Who counts as fighting:** the host's own combat manager or hosted trainer battle; any open encounter record listing the peer; or a registered Stormwood hosted fight.
+  - **Limitation:** a guest's unshared local wild fight is not visible to the host.
+  - **Tests:**
+    - `test_stormwood_lightning_spare`, 5 tests and 16 assertions: a fighting trainer is never aimed at or hit and the creature is; targeting resumes when the record is done; only the fighting peer is exempt; the flag-false negative control aims at and hits the trainer.
+    - `smoke_stormwood_lightning` 24/0 and `smoke_stormwood_lightning_cleanup` PASS.
+  - **Not changed:** strikes still cannot damage a creature (none are wired to). The ruling's "hazards the creature can avoid" are presentation only.
+
 ### Not produced
 
 - The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.

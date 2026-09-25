@@ -25,7 +25,11 @@
       "team": [
         {
           "species": "duskhush",
-          "level": 13
+          "level": 13,
+          "combat": {
+            "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "telegraph": 0.9
+          }
         },
         {
           "species": "tuskroot",
@@ -105,11 +109,19 @@
       "team": [
         {
           "species": "trailpup",
-          "level": 14
+          "level": 14,
+          "combat": {
+            "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "telegraph": 0.9
+          }
         },
         {
           "species": "duskhush",
-          "level": 15
+          "level": 15,
+          "combat": {
+            "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "telegraph": 0.9
+          }
         },
         {
           "species": "galecrest",

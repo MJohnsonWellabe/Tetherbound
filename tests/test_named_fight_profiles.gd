@@ -226,8 +226,7 @@ func test_the_profile_sequence_lands_on_the_creatures_bosses_names() -> void:
 		checked += 1
 		for index: int in range(sequence.size()):
 			var member: Dictionary = members[index] as Dictionary
-			var overridden := member.has("combat") or member.has("combat_override") \
-				or member.has("profile")
+			var overridden := _authors_a_profile(member)
 			if sequence[index] == "baseline":
 				assert_false(overridden,
 					"BOSSES makes '%s' step %d a baseline, the contrast its named steps are read against, but the data overrides it"
@@ -239,6 +238,24 @@ func test_the_profile_sequence_lands_on_the_creatures_bosses_names() -> void:
 	assert_true(checked >= 3,
 		"only %d sequenced Meadows rows were checked; the row format changed and this test has gone quiet"
 		% checked)
+
+
+## Keys BOSSES §2.1 step 3's chapter clamp may author on a BASELINE member: it
+## raises tell/recovery to the post-South-Bridge floor (.9/.75 s) and changes
+## nothing else, so a block made only of these (and `_` notes) is still a
+## baseline, not a profile.
+const CLAMP_ONLY_KEYS := ["telegraph", "recovery"]
+
+
+func _authors_a_profile(member: Dictionary) -> bool:
+	if member.has("combat_override") or member.has("profile"):
+		return true
+	var combat: Dictionary = member.get("combat", {}) as Dictionary
+	for key: Variant in combat.keys():
+		var name := str(key)
+		if not name.begins_with("_") and not CLAMP_ONLY_KEYS.has(name):
+			return true
+	return false
 
 
 ## Keys a profile's shape is NOT made of. `power` scales with the fight's level
