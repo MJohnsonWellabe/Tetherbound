@@ -1,0 +1,23 @@
+# X05 opt-in Windows Steam export dry run (release.yml steps, run locally)
+# Linux container, stock Godot 4.7.stable.official.5b4e0cb0f editor, branch ralph/x05-steam-release
+# on main bcf46366c + templates branch. export_presets.cfg change was per-run only and reverted.
+$ python3 tools/setup_steam_runtime.py --templates --platform win64 --destination $R/godotsteam-win64 --configure-preset "Windows Desktop"
+  -> installed godotsteam.47.debug.template.win64.exe, godotsteam.47.template.win64.exe, steam_api64.dll (pins verified)
+  -> export_presets.cfg: only preset.0 custom_template/debug and /release changed (2 lines)
+$ godot --headless --path . --export-release "Windows Desktop" $R/windows/Tetherbound.exe   (exit 0; no error lines)
+$ file Tetherbound.exe | grep "PE32+ executable"   -> ok
+$ size > 10000000                                   -> ok
+$ cp steam_api64.dll beside the exe; sha256 eb17909a76668cf9ae0b92a618a34a50f6c73d3a6787cb4dd8ce36a8b10bfb75
+exported files (bytes name):
+4096 ..
+110701056 Tetherbound.exe
+1021241072 Tetherbound.pck
+3549184 libterrain.windows.release.x86_64.dll
+317080 steam_api64.dll
+exported exe strings: SteamMultiplayerPeer x3, Steam:: x1 (stock template has no GodotSteam)
+exported exe PE import table includes: DLL Name: steam_api64.dll
+  -> the exe cannot start on Windows without steam_api64.dll beside it; template switch and DLL
+     shipping must stay behind the same opt-in switch (release.yml SHIP_STEAM_RUNTIME).
+actionlint 1.x: .github/workflows/release.yml clean (baseline also clean)
+Not run: launching the exe on Windows, a stock-template Windows export (stock templates not
+installed here; the default path's steps are unchanged), the CI release job itself.
