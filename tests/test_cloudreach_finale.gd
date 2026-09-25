@@ -266,79 +266,56 @@ func test_refused_pending_intent_releases_its_guard() -> void:
 	host.free()
 
 
-func test_client_pending_relays_network_and_witness_submit_once_each() -> void:
+
+## Tree-free: the repair lives in `sync_progression()`. The relay strike and the
+## overlook witness need a scene tree (`is_inside_tree`, `global_position`), and
+## `run_tests.gd` runs before a root exists, so their pending-client leg is in
+## `tests/smoke_cloudreach_finale.gd`.
+func test_client_pending_network_repair_submits_once_and_settles_once() -> void:
+	var config := FINALE.read_config()
+	var network := str(config["network_flag"])
+	var network_event := str(config["network_event"])
 	var flags := FLAGS.new()
 	_unlock(flags)
-	var config := FINALE.read_config()
 	flags.set_flag(str(config["captain_victory_flag"]))
 	var host := PendingHost.new()
 	host.flags = flags
 	host.chapter = _chapter()
-	var data := config.duplicate(true)
-	data["arena_origin"] = [0.0, 0.0, 0.0]
-	data["aftermath_witness"]["position"] = [0.0, 0.0, -10.0]
-	var holder := Node3D.new()
-	var body := CharacterBody3D.new()
 	var finale := FINALE.new()
-	finale.setup(flags, Callable(host, "emit_event"), func() -> CharacterBody3D: return body,
-		func() -> bool: return true, Callable(), data)
+	finale.setup(flags, Callable(host, "emit_event"), Callable(), Callable())
 	finale.ledger_transport = host
-	holder.add_child(finale)
-	holder.add_child(body)
-	(Engine.get_main_loop() as SceneTree).root.add_child(holder)
-	assert_eq(finale.phase, "break_the_eye")
-	var relays: Array = []
 	var networks: Array = []
-	var witnessed: Array = []
-	finale.relay_disabled.connect(func(id: String) -> void: relays.append(id))
+	var relays: Array = []
 	finale.network_disabled.connect(func() -> void: networks.append("network"))
-	finale.aftermath_restored.connect(func() -> void: witnessed.append("witness"))
-	for relay: Dictionary in data["relays"]:
-		var id := str(relay["id"])
-		var flag := str(relay["flag_id"])
-		body.position = FINALE.vec(relay["offset"]) + Vector3(0, 0.1, -1.0)
-		var prompt: Node3D = finale.get_node("Relay_" + id)
-		assert_false(prompt.interaction_offer(body.global_position).is_empty(), "Relay offers before a strike: " + id)
-		assert_false(finale.strike_relay(id, body), "A client strike is pending, not done: " + id)
-		assert_false(finale.strike_relay(id, body), "An in-flight strike is not submitted again: " + id)
-		finale._activate_relay(id)
-		assert_true(prompt.interaction_offer(body.global_position).is_empty(), "An in-flight relay stops offering: " + id)
-		assert_eq(host.submits_of(flag), 1, "One relay intent: " + id)
-		assert_false(flags.has(flag))
-		assert_eq(relays.count(id), 0)
-		host.land()
-		finale._process(0.016)
-		assert_eq(relays.count(id), 1, "relay_disabled emitted once the delta lands: " + id)
-		assert_false(finale.strike_relay(id, body))
-		finale._process(0.016)
-		assert_eq(host.submits_of(flag), 1)
-		assert_eq(relays.count(id), 1)
-	var network_event := str(config["network_event"])
-	assert_eq(host.events.count(network_event), 1, "Third landed relay submits the network repair")
-	finale.sync_progression()
+	finale.relay_disabled.connect(func(id: String) -> void: relays.append(id))
+	assert_eq(finale.phase, "break_the_eye")
+	assert_eq(host.events.count(network_event), 0)
+	# Three relays another peer struck arrive in committed deltas.
+	for relay: Dictionary in config["relays"]:
+		flags.set_flag(str(relay["flag_id"]))
 	finale._process(0.016)
+	assert_eq(host.events.count(network_event), 1, "Third relay submits the network repair")
+	assert_eq(host.written.count(network), 1)
+	assert_false(flags.has(network))
+	finale._process(0.016)
+	finale.sync_progression()
+	finale.sync_progression()
 	assert_eq(host.events.count(network_event), 1, "A pending network repair is not submitted again")
+	assert_eq(host.written.count(network), 1)
 	assert_eq(networks, [])
+	assert_eq(finale.phase, "break_the_eye")
 	host.land()
 	finale._process(0.016)
-	assert_eq(networks, ["network"])
+	assert_eq(networks, ["network"], "network_disabled emitted once the delta lands")
 	assert_eq(finale.phase, "awaiting_restoration")
-	var aftermath_event := str(config["aftermath_event"])
-	body.position = Vector3(0, 0.1, -10)
-	for frame in range(5):
-		assert_false(finale.witness_restoration(body), "A pending witness is not done yet")
-	assert_eq(host.events.count(aftermath_event), 1, "A per-frame witness poll submits once")
-	assert_eq(witnessed, [])
-	host.land()
-	finale._process(0.016)
-	assert_eq(witnessed, ["witness"])
-	assert_eq(finale.phase, "restored")
-	assert_false(finale.witness_restoration(body))
+	var game := FakeGame.new()
+	game.progression = flags
+	finale.restore_progression_from_game(game)
 	finale.sync_progression()
-	assert_eq(witnessed, ["witness"], "aftermath_restored emitted exactly once")
-	assert_eq(host.events.count(aftermath_event), 1)
-	assert_eq(networks, ["network"])
-	assert_eq(relays.size(), 3)
-	assert_false(flags.has("realm_key_stormwood"), "Witness still grants no reward")
-	holder.free()
+	assert_eq(networks, ["network"], "network_disabled emitted exactly once")
+	assert_eq(host.events.count(network_event), 1)
+	assert_eq(relays, [], "Relays this peer never struck announce nothing here")
+	assert_false(flags.has(str(config["aftermath_flag"])), "Network does not auto-witness restoration")
+	finale.free()
+	game.free()
 	host.free()

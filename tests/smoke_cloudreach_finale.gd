@@ -14,11 +14,73 @@ extends SceneTree
 ## events go through the pure `realm_chapter_progression.gd` against that same
 ## store rather than a `realm_chapter_events.gd` node, the captain win is the
 ## injected callback, and the "creature" is a driven capsule.
+##
+## A second, PENDING-CLIENT leg (`_pending_client_leg`) needs this real root
+## (`run_tests.gd` has none): the same controller on `Game.progression`, but its
+## ledger and chapter adapter answer `pending` as a joined client's do, and each
+## commit arrives through `Game.ledger.apply_remote_delta` -- the production
+## client entry behind `_rpc_delta`, which applies the world delta and runs the
+## `progression_restore` sweep. It proves one submit and one signal per win,
+## relay, network repair and witness. Disclosed: the "host" is a stand-in that
+## commits whatever was asked, and the entry flags are set directly as setup.
 const FINALE := preload("res://scripts/world/cloudreach_finale_controller.gd")
 const CHAPTER := preload("res://scripts/world/realm_chapter_progression.gd")
 const ARBITER := preload("res://scripts/world/interaction_arbiter.gd")
 const RUNTIME := preload("res://scripts/world/cloudreach_world_runtime.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+
+## A joined client's view of the host: every chapter flag and relay flag
+## answers `pending` and is queued; `land()` is the host committing the queue.
+class PendingClientHost extends Node:
+	signal intent_refused(kind: String, code: String, reason: String, detail: Dictionary)
+	const LOGIC := preload("res://scripts/world/realm_chapter_progression.gd")
+	const SCOPES := preload("res://autoload/progression_state.gd")
+	var game: Node
+	var chapter: Dictionary = {}
+	var events: Array[String] = []
+	var submitted: Array[Dictionary] = []
+	var queued: Array[String] = []
+
+	## The same call `realm_chapter_events.gd::emit_event` makes, with a writer.
+	func emit_event(event: String) -> Dictionary:
+		events.append(event)
+		return LOGIC.dispatch(game.get("progression"), chapter, event, Callable(self, "_write"))
+
+	func _write(flag: String) -> Dictionary:
+		return _pending(flag)
+
+	func submit(intent: Dictionary) -> Dictionary:
+		submitted.append(intent.duplicate(true))
+		return _pending(str(intent.get("id", "")))
+
+	func _pending(flag: String) -> Dictionary:
+		if not queued.has(flag):
+			queued.append(flag)
+		return {"ok": false, "kind": "set_world_flag", "peer": 2, "code": "pending",
+			"reason": "", "pending": true, "delta": {"seq": 0, "realm": "", "ops": []}}
+
+	func land() -> void:
+		var ops: Array = []
+		for flag: String in queued:
+			if SCOPES.scope_of(flag) == SCOPES.SCOPE_PLAYER:
+				ops.append({"op": "flag", "scope": "player", "realm": "cloudreach", "id": flag,
+					"value": true, "peers": [1]})
+			else:
+				ops.append({"op": "flag", "scope": "world", "realm": "cloudreach", "id": flag,
+					"value": true})
+		queued.clear()
+		var transport: Node = game.get("ledger")
+		var world_ledger: RefCounted = transport.get("ledger")
+		transport.call("apply_remote_delta",
+			{"seq": int(world_ledger.get("seq")) + 1, "realm": "cloudreach", "ops": ops})
+
+	func submits_of(flag: String) -> int:
+		var count := 0
+		for intent: Dictionary in submitted:
+			if str(intent.get("id", "")) == flag:
+				count += 1
+		return count
+
 
 class DrivenBody extends CharacterBody3D:
 	var finale: Node3D
@@ -235,5 +297,100 @@ func _run() -> void:
 	scene.queue_free()
 	await process_frame
 	runtime.free()
-	print("CLOUDREACH FINALE FIXTURE %s: body/input/collision, three relays, saved phase, aftermath, recovery" % ("PASS" if failures.is_empty() else "FAIL"))
+	await _pending_client_leg(game, data)
+	print("CLOUDREACH FINALE FIXTURE %s: body/input/collision, three relays, saved phase, aftermath, recovery, pending client" % ("PASS" if failures.is_empty() else "FAIL"))
 	quit(0 if failures.is_empty() else 1)
+
+
+## See the header. `set_process(false)` keeps the revision poll out of it, so
+## every settlement below is the client delta sweep's alone.
+func _pending_client_leg(game: Node, data: Dictionary) -> void:
+	game.call("reset_for_new_game")
+	var progression: RefCounted = game.get("progression")
+	var world_flags: RefCounted = game.call("world_flags")
+	for flag: String in data["requires_flags"]:
+		progression.call("set_flag", flag)
+	var encounter := str(data["encounter_id"])
+	var victory_event := str(data["captain_victory_event"])
+	var network_event := str(data["network_event"])
+	var aftermath_event := str(data["aftermath_event"])
+	var host := PendingClientHost.new()
+	host.game = game
+	host.chapter = chapter
+	var scene := Node3D.new()
+	scene.name = "PendingClientFixture"
+	root.add_child(scene)
+	var body := CharacterBody3D.new()
+	body.name = "PendingClientCreature"
+	scene.add_child(body)
+	var finale: Node3D = FINALE.new()
+	finale.setup(progression, Callable(host, "emit_event"), func() -> CharacterBody3D: return body,
+		func() -> bool: return true, Callable(), data)
+	finale.set("ledger_transport", host)
+	scene.add_child(finale)
+	finale.set_process(false)
+	var seen: Array = []
+	finale.connect("captain_defeated", func() -> void: seen.append("win"))
+	finale.connect("relay_disabled", func(id: String) -> void: seen.append("relay:" + id))
+	finale.connect("network_disabled", func() -> void: seen.append("network"))
+	finale.connect("aftermath_restored", func() -> void: seen.append("witness"))
+	var expected: Array = ["win"]
+
+	_check(finale.encounter_started(encounter), "Pending client: encounter starts")
+	_check(not finale.encounter_won(encounter), "Pending client: win waits for the host")
+	_check(not finale.encounter_won(encounter), "Pending client: in-flight win is not re-submitted")
+	_check(host.events.count(victory_event) == 1, "Pending client: one victory event submitted")
+	_check(seen.is_empty(), "Pending client: nothing announced before the delta")
+	host.land()
+	_check(seen == expected, "Pending client: captain_defeated once when the delta lands %s" % [seen])
+	_check(finale.phase == "break_the_eye", "Pending client: landed win opens the relays")
+	_check(not finale.encounter_won(encounter) and host.events.count(victory_event) == 1,
+		"Pending client: landed win is not submitted again")
+
+	for relay: Dictionary in data["relays"]:
+		var id := str(relay["id"])
+		var flag := str(relay["flag_id"])
+		body.position = FINALE.vec(relay["offset"]) + Vector3(0, 0.1, -1.0)
+		var prompt: Node3D = finale.get_node("Relay_" + id)
+		_check(not prompt.interaction_offer(body.global_position).is_empty(), "Pending client: relay offers " + id)
+		_check(not finale.strike_relay(id, body), "Pending client: strike waits for the host " + id)
+		_check(not finale.strike_relay(id, body), "Pending client: in-flight strike is not re-submitted " + id)
+		finale.call("_activate_relay", id)
+		_check(prompt.interaction_offer(body.global_position).is_empty(), "Pending client: in-flight relay stops offering " + id)
+		_check(host.submits_of(flag) == 1, "Pending client: one relay intent " + id)
+		_check(not progression.has(flag), "Pending client: nothing goes dark before the delta " + id)
+		_check(seen.count("relay:" + id) == 0, "Pending client: no relay signal before the delta " + id)
+		host.land()
+		expected.append("relay:" + id)
+		_check(bool(world_flags.call("has", flag)), "Pending client: relay lands in Game world flags " + id)
+		_check(seen.count("relay:" + id) == 1, "Pending client: relay_disabled once when the delta lands " + id)
+		_check(not finale.strike_relay(id, body) and host.submits_of(flag) == 1,
+			"Pending client: landed relay is not struck again " + id)
+
+	_check(host.events.count(network_event) == 1, "Pending client: third landed relay submits the network repair")
+	finale.sync_progression()
+	finale.sync_progression()
+	_check(host.events.count(network_event) == 1, "Pending client: pending network repair is not re-submitted")
+	_check(not seen.has("network"), "Pending client: no network signal before the delta")
+	host.land()
+	expected.append("network")
+	_check(seen.count("network") == 1, "Pending client: network_disabled once when the delta lands")
+	_check(finale.phase == "awaiting_restoration", "Pending client: landed network awaits restoration")
+
+	body.position = Vector3(0, 0.1, -10)
+	for frame in range(5):
+		_check(not finale.witness_restoration(body), "Pending client: witness waits for the host")
+		await process_frame
+	_check(host.events.count(aftermath_event) == 1, "Pending client: per-frame witness poll submits once")
+	_check(not seen.has("witness"), "Pending client: no witness signal before the delta")
+	host.land()
+	expected.append("witness")
+	_check(finale.phase == "restored", "Pending client: landed witness restores the winds")
+	_check(not finale.witness_restoration(body), "Pending client: landed witness is not submitted again")
+	finale.sync_progression()
+	_check(host.events.count(aftermath_event) == 1, "Pending client: one witness event in total")
+	_check(seen == expected, "Pending client: each signal exactly once, in order %s" % [seen])
+	_check(not progression.has("realm_key_stormwood"), "Pending client: witness still grants no reward")
+	scene.queue_free()
+	await process_frame
+	host.free()
