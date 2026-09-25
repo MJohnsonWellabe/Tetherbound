@@ -116,3 +116,79 @@ This work order does not cover:
 - mount state across realm crossing and save/reload
 - combat dismount inside Cloudreach
 - Peblik's paint rejection, which is visual and has no shared-art grant
+
+## WO-2 · F07 / C2: activity payoffs for couriers and aeries
+
+**Baseline:** origin/main `bcf46366c`, after integration batch 1.
+
+**Input:** a read-only audit of WORLD §11's six Cloudreach activities against ACCEPTANCE §5. None fully qualifies:
+
+| Activity | Gaps found |
+|---|---|
+| `three_bells_against_silence` | Reward partial: no landing points revealed. |
+| `packs_on_the_wrong_side` | Potion reward missing. The acknowledgement needs a backtrack to Galefoot. |
+| `aeries_of_cloudreach` | The reward was a full night-rest bed (health, satiety, a day advance and an autosave), not WORLD's stamina-only landing rest. No map knowledge. |
+| `the_cliff_circuit` | TM choice missing. The "Windscar pair" are story fights. The rematch tier exists although WORLD defers it. |
+| `side_waycamp_shelter_complete`, `side_observatory_latch_complete` | Unbuilt. The latch needs traversable geometry in `cloudreach_world.gd`. |
+
+### Changes
+
+- **Couriers.** A new `activity_rewards` entry in `cloudreach_physical_runtime.json` offers "Take the couriers' thanks" at Galefoot once `side_stranded_couriers_complete` holds.
+  - It sits at (-288, 180, 516), beside the Galefoot fire, 8 m or more from every Galefoot person, so no talk prompt competes. It is in plain sight from the fire's approach, and uses the courier `Bag.gltf` with the pickup glow so it reads at camera distance. Earlier spots were rejected: one was inside a house, and one lost the prompt to Iven.
+  - The new lane-owned `cloudreach_personal_reward.gd` claims through the ledger's `reward_grant`: two `potion_small` per CHARACTER, once, recorded as the player-scoped `cloudreach_payout:couriers_thanks` flag. This is the same host-authoritative delivery the Meadows herd visit uses.
+  - A first-come world cache would have let one co-op peer take the only copy. The first version of this work order did exactly that; the independent review failed it, and it was replaced.
+  - The reward is kept out of `chapter.pickups`, so the route census of 178 pickups (100 candy, 75 recovery, three TMs) stays unchanged, as in WORLD §4.4.
+  - The pack and the delivery grant nothing, so no equivalent award is paid elsewhere.
+  - Neri says where the thanks is before the report line that completes the chain.
+- **Aeries.** The `SurveyRest` night-rest beds are removed. A Fly landing within 12 m and 3 m of height of a surveyed aerie refills the trainer's traversal stamina, every time, and nothing else: no healing, no satiety, no day advance.
+  - The aerie's landing sign (`LandingLabel`) was a flat Label3D. It read mirrored from half the directions a flyer lands from, which showed up in this work order's own capture. It now billboards around the vertical.
+
+### Result (local, Godot 4.7-stable headless)
+
+**`smoke_cloudreach_activity_rewards.gd`: 19 checks, 0 failures.**
+- The fixture saves once first, which gives the fresh test character the stable identity that a personal reward is delivered to.
+- Nothing is offered before the report. Neri's report goes through the real dialogue guard.
+- The offer sits 8 m or more from every Galefoot person. From the plaza stand (-282, 181.6, 516), no collider blocks the sight line, and it clears the hearth, which has no collider, by more than 2.3 m. The prompt reads "Take the couriers' thanks".
+- The interact press gives exactly two potions and sets this character's player-scoped receipt. No world cache flag is written.
+- The offer is withdrawn, and pressing again pays nothing.
+- After save and reload, the receipt holds, nothing is offered again, and there are still exactly two potions.
+- No second character or peer is exercised. The per-character property rests on the shared `reward_grant` delivery, which has its own tests (`test_reward_delivery*.gd`, `test_world_ledger_races.gd`).
+- **Independent review:** the first version failed (it was world-scoped). The re-review passed with low findings:
+  - A claim the host never answers would leave a dead prompt. It is now re-enabled after 8 s.
+  - A reload while a delivery waits on a full satchel makes a re-press say "already claimed". The potions still settle once there is room. This is disclosed.
+  - A client-trusted `reward_grant` carries over the existing herd-visit trust model.
+
+**`smoke_cloudreach_world_payoffs.gd`: 66 checks, 0 failures.**
+- For each of the three aeries: no rest before it is surveyed; once surveyed, no bed, a landing restores stamina and health stays at 50%; a landing 30 m away gives no rest.
+- The landing signal is emitted with the trainer on the aerie floor. This is a fixture, not a flown landing.
+
+**`run_tests.gd --only=cloudreach_cast_dialogue,cloudreach_physical_runtime,cloudreach_world_payoffs`:** 16 tests, 1536 assertions, 0 failed. This was run after merging integration batch 2. The earlier `--only=cloudreach` run gave 162 tests, 0 failed.
+
+### Captures (production camera, `tools/capture_cloudreach_activity_payoffs.gd`)
+
+`captures/activity_payoffs/_sheet_activity_payoffs.png` has seven frames showing before and after within one run. The frames are also saved as JPEG next to it.
+1. Galefoot before Neri's report: no bag.
+2. After the report: the bag beside the fire.
+3. The prompt.
+4. After the press: the bag is gone and there are ×2 potions in the hotbar.
+5. The surveyed High Perches aerie. Its sign now billboards, and it is raised above the 3.2 m poles so no pole cuts through it.
+6. Landing with low stamina: the stamina arc is shown.
+7. After the landing: the arc is gone because stamina is full.
+
+**Before sheet:** `_sheet_activity_payoffs_before_placement_fix.png` is the first version. The thanks was an unreadable small potion model, partly hidden behind the trainer, and the aerie's landing sign read mirrored. Inspecting those frames led to the placement and model change.
+
+Disclosed fixture:
+- A five-creature party is seeded, and `fly_traversal_unlocked` is set.
+- The trainer's stamina is set to 12 before the landing.
+- The frames are converted to JPEG outside the tool.
+- The chain's step flags and the survey are seeded, the trainer is stood at each viewpoint, and the landing is the Fly `landed` signal emitted on the ring. The claim is the real interact press. The tool renders only the saved frames, at `--fixed-fps 60`.
+
+### Open under F07
+
+- **Bells map reveal.** The three known landing points are held for an interpretation. The third landing point, the Waterward roost, maps to the `waterward_overlook` landmark. That landmark is deliberately withheld until the finale (`stormward_route_revealed`: "future realm direction appear after the finale").
+- **Aeries map knowledge.** Not added.
+- **Couriers' acknowledgement.** Still needs a backtrack to Galefoot.
+- **Circuit.** TM choice and rematch.
+- **Unbuilt activities.** Waycamp shelter and Observatory latch.
+- **Cadence.** The 885-second no-action stretch and the A7 intervals.
+- **Ledger.** The route resource/XP ledger.
