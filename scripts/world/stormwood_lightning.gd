@@ -267,10 +267,16 @@ void fragment() {
 	float rim = 1.0 - smoothstep(0.0, rim_width, abs(r - rim_fraction));
 	float outer = r > rim_fraction ? 1.0 - smoothstep(rim_fraction, 1.0, r) : 0.0;
 	float fill = r < rim_fraction ? smoothstep(0.0, rim_fraction, r) * (0.12 + 0.28 * progress) : 0.0;
-	vec3 colour = rim_colour * rim * intensity * mix(pulse, 1.6, strike)
-		+ edge_colour * outer * 0.9 + fill_colour * fill;
+	float a_rim = rim * mix(pulse, 1.0, strike);
+	float a_edge = outer * 0.55 * pulse;
+	float alpha = clamp(a_rim + a_edge + fill, 0.0, 1.0);
+	// Weighted colour (not premultiplied): each layer contributes its own
+	// colour in proportion to its coverage, so the faint fill tints the
+	// ground lavender instead of darkening it.
+	vec3 colour = (rim_colour * intensity * mix(1.0, 1.6, strike) * a_rim + edge_colour * a_edge
+		+ fill_colour * fill) / max(a_rim + a_edge + fill, 0.001);
 	ALBEDO = colour;
-	ALPHA = clamp(rim * mix(pulse, 1.0, strike) + outer * 0.55 * pulse + fill, 0.0, 1.0) * fade;
+	ALPHA = alpha * fade;
 }
 """
 
