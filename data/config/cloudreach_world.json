@@ -471,7 +471,10 @@
         "id": "upper_counterweight_gate",
       "kind": "story_unlock",
       "region_id": "windscar_ravine",
-        "position": [-123.4, 474.5, 2481.4],
+      "_placement": "F06 (restores authored intent): the gate protects upper_cloudreach/summit_final_stronghold, so it stands where windscar_counterweight_pass first enters the upper_cloudreach region bounds (y reaches 650 on the [-820,620,3480]->[-720,700,3680] segment, t=0.375, arc length 1353.9 m). The former [-123.4,474.5,2481.4] sat 48 m past the Windscar junction and put Windscar content (the Windscar beacon crown, its bell and optional_loop pickups, ~210-270 m further up) behind the lock. opening_width_m spans the route ridge's full walkable top (1.10 x 21.75 m flared shoulder + 0.4 m capsule per side); barrier_depth_below_m reaches the ridge's deepest dropped outer edge (14 + 2 x 20 m). The Fly side of the same seal is cloudreach_physical_runtime.json restrictions cloudreach_counterweight_stair_1..5.",
+        "position": [-782.5, 650.0, 3555.0],
+      "opening_width_m": 50.0,
+      "barrier_depth_below_m": 56.0,
       "required_traversal": "ground",
       "requires_unlock": "cloudreach_upper_route_unlocked",
       "protects_region_ids": ["upper_cloudreach", "summit_final_stronghold"]

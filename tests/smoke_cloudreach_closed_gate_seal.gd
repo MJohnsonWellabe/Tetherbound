@@ -28,26 +28,38 @@ extends SceneTree
 ##       only reachable through the upper one, so it is also witnessed on its
 ##       own by fault injection: a trainer placed on summit ground inside the
 ##       sealed volume cannot launch, and the refusal names `cloudreach_summit`.
-##   (e) Fly bypass of the closed ground gate (reproduction, expected to FAIL on
-##       main at bcf46366c): the owned Galecrest launches from the same aerie
-##       stand, climbs by holding Jump, steers by real input to the
-##       `windscar_counterweight_pass` polyline point [-650, 570, 3300] (behind
-##       the closed `upper_counterweight_gate`, outside every no-fly volume),
-##       descends with `fly_descend` and lands. SYSTEMS §8: the trainer must
-##       never stand on ground past the gate plane while
-##       `cloudreach_upper_route_unlocked` is unset. Checked every frame after
-##       launch and for 1 s after the flight ends: grounded on that route's
-##       corridor more than 1 m past the gate (arc length along the route
-##       polyline, i.e. the walking leg's signed distance along the route
-##       direction carried along the route) fails.
-##   (f) On-foot walk-around (reproduction): with the upper route locked, walk
-##       by real input from 9 m before the gate, at 11 m and 18 m lateral
-##       offset on both sides where a physics ray finds ground, toward a point
-##       40 m past the gate at the same offset. The trainer must never stand
-##       more than 1 m past the gate plane on the stair (nearest ground route
-##       is windscar_counterweight_pass). Expected to FAIL on bcf46366c, where
-##       the barrier and piers span +/-10.28 m but the walkable track is
+##   (e) Fly bypass of the closed ground gate: the owned Galecrest launches
+##       from the same aerie stand, climbs the aerie current by holding Jump,
+##       carries on into the overlapping middle current and climbs it, then
+##       steers by real input to the stair crest 25 m along the route past the
+##       closed `upper_counterweight_gate`, descends with `fly_descend` and
+##       lands. SYSTEMS §8: the trainer must never stand on ground past the
+##       gate while `cloudreach_upper_route_unlocked` is unset. Checked every
+##       frame after launch and for 1 s after the flight ends: grounded on that
+##       route's corridor more than 1 m past the gate (arc length along the
+##       route polyline) fails. At bcf46366c (gate at [-123.4, 474.5, 2481.4])
+##       this leg landed 974 m past the gate on [-650, 570, 3300].
+##   (f) On-foot walk-around: with the upper route locked, walk by real input
+##       from 9 m before the gate, at 11 m and 18 m lateral offset on both sides
+##       where a physics ray finds ground, toward a point 40 m past the gate at
+##       the same offset. The trainer must never stand more than 1 m past the
+##       gate plane on the stair (nearest ground route is
+##       windscar_counterweight_pass). Written against bcf46366c, where the
+##       barrier and piers spanned +/-10.28 m but the walkable ridge track is
 ##       +/-11.5 m and the route shoulders +/-21.75 m.
+##   (g) The Windscar beacon and its bell stay walkable before the unlock: from
+##       the Windscar junction, walk by real input along the pass to the stair
+##       beside the beacon, through the beacon arch to its anchor and to the
+##       `side_windscar_bell` interaction (inside its interaction radius),
+##       never past the gate.
+##
+## The gate position is data (`cloudreach_world.json` gates). F06 moved it
+## from [-123.4, 474.5, 2481.4] to where the pass enters upper_cloudreach,
+## [-782.5, 650, 3555], restoring the authored intent (the gate protects
+## upper_cloudreach/summit; the beacon, bell and optional_loop pickups are
+## Windscar content), with a 50 m barrier and the Fly slices
+## `cloudreach_counterweight_stair_1..5`. Legs (c), (e), (f) read the gate from
+## data and so follow it.
 ##   (b) The same flight with a full five-member party holding NO Fly carrier:
 ##       Maela's mentor loaner carries, the flight is equally sealed, and the
 ##       loaner never becomes a party member (no sixth slot, UIDs unchanged).
@@ -58,7 +70,8 @@ extends SceneTree
 ##   2. Position writes, each followed by the production
 ##      `fly_controller.clear_recovery_anchor()` (a deliberate relocation is
 ##      not a fall): the counterweight-gate approach stand (9 m back along the
-##      route from the gate), the aerie launch stand (the first candidate near
+##      route from the gate, and at +/-11/18 m lateral for (f)), the Windscar
+##      junction for (g), the aerie launch stand (the first candidate near
 ##      the `windscar_flight_aerie` landmark, inside `cloudreach_aerie_lift`,
 ##      where production `launch_blockers()` returns ""), and summit ground
 ##      (points of the `summit_overlook_loop` polyline) for the summit
@@ -70,6 +83,9 @@ extends SceneTree
 ##   5. Between flights the production `fly_controller.recover_to_anchor()`
 ##      returns the flyer to its launch anchor instead of a long glide home.
 ##   6. Before (b) the party is replaced by a non-carrier full five.
+##   7. During (e) only, stamina is refilled whenever it falls below half,
+##      standing in for Skyborne's free flight (`fly_stamina_multiplier` 0.0):
+##      the glide to the stair behind the gate is longer than one ordinary bar.
 ## Every walk, jump, Fly deploy, climb and steer is the real `move_*`/`jump`
 ## actions through the camera rig's `planar_basis`; nothing writes a flight
 ## state, a velocity during flight, or a flag other than (3).
@@ -92,11 +108,12 @@ const AERIE_LIFT_ID := "cloudreach_aerie_lift"
 const SUMMIT_ROUTE_ID := "summit_overlook_loop"
 const TRIAL_REASON_PREFIX := "Complete the Windscar flight trial"
 const SEAL_REASON := "This wind route is still sealed: %s."
-const WATCHDOG_S := 1200.0
+const WATCHDOG_S := 1800.0
 const BYPASS_ROUTE_ID := "windscar_counterweight_pass"
-## The coordinator's suggested landing; the leg uses the route polyline point
-## with z in [2600, 3500] nearest to it (the authored [-650, 570, 3300] pad).
-const BYPASS_HINT := Vector3(-650.0, 570.0, 3300.0)
+## Leg (e) lands on the stair crest this far along the route past the gate.
+const BYPASS_TARGET_PAST_M := 25.0
+const MIDDLE_LIFT_ID := "cloudreach_middle_lift"
+const BEACON_VISUAL := "res://data/config/cloudreach_windscar_beacon_visual.json"
 const BYPASS_CORRIDOR_M := 15.0
 const BYPASS_CORRIDOR_DY_M := 8.0
 const BYPASS_PAST_LIMIT_M := 1.0
@@ -187,6 +204,9 @@ func _run() -> void:
 	if _finished:
 		return
 	await _leg_gate_walk_around()
+	if _finished:
+		return
+	await _leg_beacon_reachable_before_unlock()
 	if _finished:
 		return
 
@@ -596,6 +616,70 @@ func _seat_exact(at: Vector3, label: String) -> bool:
 	return standing
 
 
+# --- (g): the Windscar beacon and bell stay walkable before the unlock -------------
+
+func _leg_beacon_reachable_before_unlock() -> void:
+	var label := "(g) beacon on foot"
+	var line: Array[Vector3] = []
+	for raw: Variant in _route_polyline(BYPASS_ROUTE_ID):
+		line.append(_vec3(raw))
+	var spec := _gate_spec(GATE_ID)
+	if not _require(line.size() >= 2 and not spec.is_empty(), "%s: the pass and its gate are authored" % label):
+		return
+	var gate := _vec3(spec["position"])
+	var along := _route_direction_at(str(spec.get("requires_unlock", "")), gate)
+	var beacon := _read_json(BEACON_VISUAL)
+	var anchor_xz: Array = beacon.get("anchor_xz", [])
+	var heading_raw: Array = beacon.get("stand_heading_xz", [])
+	var bell := _vec3(_spec_in(_physical_data.get("interactions", []), "side_windscar_bell").get("position", [0, 0, 0]))
+	if not _require(anchor_xz.size() == 2 and heading_raw.size() == 2 and bell != Vector3.ZERO,
+			"%s: beacon anchor, arch heading and side_windscar_bell are authored" % label):
+		return
+	var anchor := Vector3(float(anchor_xz[0]), bell.y, float(anchor_xz[1]))
+	var heading := Vector2(float(heading_raw[0]), float(heading_raw[1])).normalized() * float(beacon.get("forward_offset_m", 15.0))
+	var arch := anchor + Vector3(heading.x, 0.0, heading.y)
+	var on_route := _line_point_at(line, float(_route_progress(line, arch)["s"]))
+	_check(not bool(_flags.call("has", UPPER_FLAG)), "%s: the upper route is locked" % label)
+	var seated: bool = await _seat(line[0] + Vector3.UP * 2.0, label + " junction")
+	if not _require(seated, "%s: the trainer stands on the Windscar junction %s" % [label, line[0]]):
+		return
+	var furthest_past := -INF
+	var results: Dictionary = {}
+	for step: Array in [["stair beside the beacon", on_route, 2.0], ["beacon arch", arch, 1.5],
+			["beacon anchor", anchor, 2.0], ["side_windscar_bell", bell, 3.0]]:
+		var closest: float = await _walk_toward(Vector3(step[1]), float(step[2]), 90.0)
+		results[str(step[0])] = closest
+		var past := (_player.global_position - gate).dot(along)
+		furthest_past = maxf(furthest_past, past)
+		print("%s reached %s: closest %.2f m, now %s on_floor=%s" % [label, step[0], closest, _player.global_position, _player.is_on_floor()])
+	_check(float(results.get("beacon anchor", INF)) <= 2.0 and _player.global_position.distance_to(bell) < 30.0,
+		"%s: the Windscar beacon crown is walkable before %s (closest %.2f m)" % [label, UPPER_FLAG, float(results.get("beacon anchor", INF))])
+	var radius := float(_physical_data.get("interaction_radius_m", 3.8))
+	_check(float(results.get("side_windscar_bell", INF)) <= radius - 0.5 and _player.is_on_floor(),
+		"%s: the trainer stands within the bell's %.1f m interaction radius (closest %.2f m)" % [label, radius, float(results.get("side_windscar_bell", INF))])
+	_check(furthest_past < 0.0, "%s: the whole walk stays on the open side of the gate (furthest %.1f m)" % [label, furthest_past])
+	_check(not bool(_flags.call("has", UPPER_FLAG)), "%s: the upper route is still locked" % label)
+
+
+## Real-input walk toward `target` until within `tolerance` or `seconds`.
+## Returns the closest horizontal approach; never fails by itself.
+func _walk_toward(target: Vector3, tolerance: float, seconds: float) -> float:
+	var closest := INF
+	for _frame in int(seconds * Engine.physics_ticks_per_second):
+		var offset := target - _player.global_position
+		offset.y = 0.0
+		closest = minf(closest, offset.length())
+		if offset.length() <= tolerance:
+			break
+		_steer_toward(target)
+		await physics_frame
+		if float(_player.get("vitals").get("health")) <= 0.0:
+			break
+	_release_all()
+	await _frames(10)
+	return closest
+
+
 # --- (e): Fly over the closed ground gate onto the counterweight stair ---------------
 
 func _leg_gate_bypass_by_fly(stand: Vector3) -> void:
@@ -613,15 +697,9 @@ func _leg_gate_bypass_by_fly(stand: Vector3) -> void:
 	var at_gate := _route_progress(line, gate)
 	var s_gate := float(at_gate["s"])
 	_check(float(at_gate["h"]) < 2.0, "%s: the gate lies on the %s polyline (%.2f m off)" % [label, BYPASS_ROUTE_ID, float(at_gate["h"])])
-	# The landing: the stair's authored polyline point with z in [2600, 3500]
-	# nearest the hint, confirmed as walkable ground behind the gate.
-	var target := Vector3.INF
-	for point: Vector3 in line:
-		if point.z >= 2600.0 and point.z <= 3500.0 \
-				and (not target.is_finite() or point.distance_to(BYPASS_HINT) < target.distance_to(BYPASS_HINT)):
-			target = point
-	if not _require(target.is_finite(), "%s: %s has a polyline point with z in [2600, 3500]" % [label, BYPASS_ROUTE_ID]):
-		return
+	# The landing: the stair crest BYPASS_TARGET_PAST_M along the route past
+	# the closed gate, confirmed as walkable ground behind it.
+	var target := _line_point_at(line, s_gate + BYPASS_TARGET_PAST_M)
 	var target_past := float(_route_progress(line, target)["s"]) - s_gate
 	var target_ground := float(_world.call("ground_height_near", target))
 	var ray := PhysicsRayQueryParameters3D.create(target + Vector3.UP * 6.0, target + Vector3.DOWN * 12.0,
@@ -630,7 +708,7 @@ func _leg_gate_bypass_by_fly(stand: Vector3) -> void:
 	print("%s TARGET %s past_gate_along_route=%.1f m plane_distance=%.1f m ground_near=%.2f collider=%s" % [
 		label, target, target_past, (target - gate).dot(along), target_ground,
 		str(hit.get("position", "none")) if not hit.is_empty() else "none"])
-	if not _require(target_past > 50.0 and not is_nan(target_ground) and absf(target_ground - target.y) < 3.0
+	if not _require(target_past > 10.0 and not is_nan(target_ground) and absf(target_ground - target.y) < 3.0
 			and not hit.is_empty() and (hit["normal"] as Vector3).y > 0.7,
 			"%s: %s is walkable ground on the stair behind the closed gate" % [label, target]):
 		return
@@ -666,8 +744,29 @@ func _leg_gate_bypass_by_fly(stand: Vector3) -> void:
 		_watch_bypass(line, s_gate, watch)
 		if not bool(_fly.call("is_flying")) or _player.global_position.y >= _lift_ceiling - 6.0:
 			break
-	Input.action_release("jump")
 	print("%s CLIMB from %.1f to %s" % [label, climb_from, _player.global_position])
+	# The stair behind the gate sits above what a glide from the aerie current
+	# alone can reach, so carry on (Jump still held) into the authored middle
+	# current where it overlaps the aerie one, and climb to its ceiling.
+	var middle := _spec_in(_physical_data.get("updrafts", []), MIDDLE_LIFT_ID)
+	var middle_box := _box_of(middle)
+	var middle_ceiling := minf(float(middle.get("ceiling_y", 0.0)), middle_box.end.y) - 2.0
+	var overlap := middle_box.intersection(_lift_box)
+	var into_middle := overlap.get_center() if overlap.has_volume() else middle_box.get_center()
+	for _frame in 40 * tps:
+		var offset := into_middle - _player.global_position
+		offset.y = 0.0
+		if offset.length() > 6.0:
+			_steer_toward(into_middle)
+		else:
+			_release_move()
+		await physics_frame
+		_watch_bypass(line, s_gate, watch)
+		_bypass_stamina_fixture()
+		if not bool(_fly.call("is_flying")) or _player.global_position.y >= middle_ceiling - 6.0:
+			break
+	_release_all()
+	print("%s MIDDLE CURRENT at %s (ceiling %.1f)" % [label, _player.global_position, middle_ceiling])
 
 	# Glide by the stick toward the stair; hold fly_descend once there is more
 	# height than the remaining glide needs, and over the landing.
@@ -678,6 +777,7 @@ func _leg_gate_bypass_by_fly(stand: Vector3) -> void:
 		if not bool(_fly.call("is_flying")):
 			ended_frame = frame
 			break
+		_bypass_stamina_fixture()
 		var offset := target - _player.global_position
 		offset.y = 0.0
 		var horizontal := offset.length()
@@ -719,6 +819,16 @@ func _leg_gate_bypass_by_fly(stand: Vector3) -> void:
 	_check_party_same(label, uids)
 
 
+## Fixture 7: keep the flyer's stamina full, standing in for Skyborne's free
+## flight (`fly_stamina_multiplier` 0.0). The gliding distance from the
+## aerie to the stair behind the gate exceeds one bar of ordinary stamina, and
+## a seal that only holds while stamina runs out is not a seal.
+func _bypass_stamina_fixture() -> void:
+	var vitals: RefCounted = _player.get("vitals")
+	if float(vitals.get("stamina")) < float(vitals.get("max_stamina")) * 0.5:
+		vitals.call("rest")
+
+
 ## Records the furthest a GROUNDED trainer stood past the gate along the locked
 ## route, counting only ground on that route's corridor (so the aerie, which
 ## is on the far side of the infinite gate plane but nowhere near the stair,
@@ -734,6 +844,17 @@ func _watch_bypass(line: Array[Vector3], s_gate: float, watch: Dictionary) -> vo
 	if past > float(watch["max_past"]):
 		watch["max_past"] = past
 		watch["at"] = at
+
+
+## The polyline point at plan arc length `s` (height interpolated).
+func _line_point_at(line: Array[Vector3], s: float) -> Vector3:
+	var run := 0.0
+	for i in line.size() - 1:
+		var length := Vector2(line[i + 1].x - line[i].x, line[i + 1].z - line[i].z).length()
+		if run + length >= s and length > 0.0:
+			return line[i].lerp(line[i + 1], clampf((s - run) / length, 0.0, 1.0))
+		run += length
+	return line[line.size() - 1]
 
 
 ## Closest point on the polyline in plan: arc length `s` to it, horizontal

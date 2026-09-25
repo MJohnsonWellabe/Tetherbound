@@ -2844,22 +2844,30 @@ func _build_progression_gates() -> void:
 		gate.position = at
 		gate.rotation.y = _gate_yaw_for(required, at)
 		root.add_child(gate)
-		var opening_width := 22.0 if flight else 16.0
+		# F06: a ground gate on a route ridge must span the ridge's whole
+		# walkable top, not just the ribbon, or it is walked around. Optional
+		# per-gate data; the defaults reproduce the former fixed 16 m / 22 m
+		# opening exactly (pier centres 0.58 x 16 = 8 + 1.28 m).
+		var opening_width := float(spec.get("opening_width_m", 22.0 if flight else 16.0))
 		var opening_height := 18.0 if flight else 7.5
+		# How far the barrier (and ground piers) reach below the gate point, so
+		# a ridge whose outer edge falls away beside the crest leaves no gap.
+		var below := maxf(0.0, float(spec.get("barrier_depth_below_m", 0.0)))
+		var pier_x := opening_width * 0.5 + 1.28
 		if not flight:
-			_box(gate, "LeftPier", Vector3(-opening_width * 0.58, opening_height * 0.5, 0.0),
-				Vector3(2.0, opening_height + 3.0, 2.2), _materials["masonry"], true)
-			_box(gate, "RightPier", Vector3(opening_width * 0.58, opening_height * 0.5, 0.0),
-				Vector3(2.0, opening_height + 3.0, 2.2), _materials["masonry"], true)
+			_box(gate, "LeftPier", Vector3(-pier_x, (opening_height - below) * 0.5, 0.0),
+				Vector3(2.0, opening_height + 3.0 + below, 2.2), _materials["masonry"], true)
+			_box(gate, "RightPier", Vector3(pier_x, (opening_height - below) * 0.5, 0.0),
+				Vector3(2.0, opening_height + 3.0 + below, 2.2), _materials["masonry"], true)
 			_box(gate, "Counterweight", Vector3(0.0, opening_height + 1.1, 0.0),
 				Vector3(opening_width + 4.0, 2.2, 2.2), _materials["masonry_trim"], true)
 		var barrier := StaticBody3D.new()
 		barrier.name = "LockedTraversalBarrier"
 		var shape_node := CollisionShape3D.new()
 		var shape := BoxShape3D.new()
-		shape.size = Vector3(opening_width, opening_height, 1.2)
+		shape.size = Vector3(opening_width, opening_height + below, 1.2)
 		shape_node.shape = shape
-		shape_node.position.y = opening_height * 0.5
+		shape_node.position.y = (opening_height - below) * 0.5
 		barrier.add_child(shape_node)
 		gate.add_child(barrier)
 		var veil := Node3D.new()

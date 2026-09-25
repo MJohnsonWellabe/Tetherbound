@@ -39,7 +39,12 @@
   "restrictions": [
     {"id": "cloudreach_high_roost", "position": [700,760,2350], "size": [850,1000,1150], "requires_flag": "fly_traversal_unlocked"},
     {"id": "cloudreach_upper", "position": [-1800,620,3600], "size": [3600,1500,1350], "requires_flag": "cloudreach_upper_route_unlocked"},
-    {"id": "cloudreach_summit", "position": [-1800,800,4950], "size": [3600,1500,1250], "requires_flag": "cloudreach_upper_route_unlocked"}
+    {"id": "cloudreach_summit", "position": [-1800,800,4950], "size": [3600,1500,1250], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_stair_1", "position": [-804.9,590.0,3561.7], "size": [28.7,1530.0,39.3], "requires_flag": "cloudreach_upper_route_unlocked", "_comment": "F06: the Fly side of the moved upper_counterweight_gate. Five slices, each 10 m of the stair ridge's +/-25 m walkable width, from the gate plane (gate [-782.5,650,3555], route direction (100,0,200)) to z=3601 where cloudreach_upper takes over; y 590 is below the ridge's deepest dropped edge (650-54), the 2120 top matches cloudreach_upper. Axis-aligned slices of a diagonal plane reach at most 4.0 m (4.75 m with the 0.75 m swept margin) back over the approach side of the closed gate. Generated from the route polyline; tests/test_cloudreach_counterweight_seal.gd checks coverage and clearances."},
+    {"id": "cloudreach_counterweight_stair_2", "position": [-796.0,590.0,3557.2], "size": [31.0,1530.0,43.8], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_stair_3", "position": [-787.0,590.0,3552.7], "size": [33.1,1530.0,48.3], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_stair_4", "position": [-778.1,590.0,3548.2], "size": [35.4,1530.0,52.8], "requires_flag": "cloudreach_upper_route_unlocked"},
+    {"id": "cloudreach_counterweight_stair_5", "position": [-769.1,590.0,3543.8], "size": [37.6,1530.0,57.2], "requires_flag": "cloudreach_upper_route_unlocked"}
   ],
   "landing_objectives": [
     {"id": "sky_shrine", "position": [1110,1050,2940], "radius_m": 22, "height_tolerance_m": 3, "requires_flags": ["fly_traversal_unlocked"], "completion_flag": "sky_shrine_reached", "event": "landmark:sky_shrine_heartstone_reached"},
