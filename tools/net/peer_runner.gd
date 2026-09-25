@@ -5913,6 +5913,61 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"party": 0 if story_party == null else int((story_party as RefCounted).call("size")),
 				"gates": _story_gate_rows(),
 			}
+		"veridian_choice":
+			# F05 / card M4. Read-only view of THIS peer's Veridian offer: the
+			# climax's own stage and prompts, this character's personal
+			# answer, the world's resolution receipts (the world store, never
+			# the merged view), the belt, and whether the herd display stands.
+			# Writes nothing.
+			var vgame := root.get_node_or_null(^"Game")
+			if vgame == null or current_scene == null:
+				return null
+			var vclimax := current_scene.find_child("StrongholdClimax", true, false)
+			var vhealing := current_scene.find_child("MeadowHealing", true, false)
+			var vanchor := func(prompt_name: String) -> Array:
+				if vclimax == null:
+					return []
+				var vprompt := vclimax.find_child(prompt_name, true, false)
+				if vprompt == null or not (vprompt.get_parent() is Node3D):
+					return []
+				var vat: Vector3 = (vprompt.get_parent() as Node3D).global_position
+				return [vat.x, vat.y, vat.z]
+			var vplayer_store: Variant = vgame.call("player_flags") \
+				if vgame.has_method("player_flags") else null
+			var vworld_store: Variant = STORY_LEDGER.world_flags(vgame)
+			var vreceipts: Array = []
+			if vworld_store != null:
+				for vraw: Variant in ((vworld_store as RefCounted).call("all_set") as Array):
+					if str(vraw).begins_with("legendary_resolution:"):
+						vreceipts.append(str(vraw))
+			vreceipts.sort()
+			var vparty: Variant = vgame.get("party")
+			var vcount := 0
+			var vsize := 0
+			if vparty != null:
+				vsize = int((vparty as RefCounted).call("size"))
+				for vi in vsize:
+					var vmember: Variant = (vparty as RefCounted).call("at", vi)
+					if vmember != null and str((vmember as RefCounted).get("species_id")) == "veridian":
+						vcount += 1
+			return {
+				"climax_found": vclimax != null,
+				"stage": "" if vclimax == null else str(vclimax.get("_stage")),
+				"choice_open": vclimax != null and bool(vclimax.call("choice_open")),
+				"accept_at": vanchor.call("VeridianAcceptPrompt"),
+				"refuse_at": vanchor.call("VeridianRefusePrompt"),
+				"joined": vplayer_store != null
+					and bool((vplayer_store as RefCounted).call("has", "legendary_joined")),
+				"refused": vplayer_store != null
+					and bool((vplayer_store as RefCounted).call("has", "legendary_refused")),
+				"receipts": vreceipts,
+				"veridian_count": vcount,
+				"party_size": vsize,
+				"pending_catch": vgame.get("pending_catch") != null,
+				"healing_found": vhealing != null,
+				"herd_display": vhealing != null and vhealing.has_method("herd_display")
+					and vhealing.call("herd_display") != null,
+			}
 		"realm":
 			# Wave 6 lane 6.A. Where this peer is standing, and where it
 			# believes everybody else is. The per-peer realms come off the
