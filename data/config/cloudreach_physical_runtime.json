@@ -3,6 +3,7 @@
   "realm_id": "cloudreach",
   "_contract": "Positions are world metres. Runtime takes a nearest-elevation ground resolver; missing surfaces are reported, never fabricated. Existing opening NPC/pickup/rest construction must be disabled when this full runtime is installed. Creature encounters call encounter_won only after actual success; no interaction awards their defeat flags.",
   "interaction_radius_m": 3.8,
+  "companion_fall_recovery": {"_comment": "F06: scripts/world/cloudreach_companion_fall.gd. The trainer's own following companion is placed back beside a grounded trainer when it is fall_drop_m below them, or stranded_drop_m below for stranded_s. clearance_m is the gap between the two capsules; retry_s waits after a search that found no clear spot; message_cooldown_s spaces the on-screen line (every recovery is still counted); airborne_grace_s is how long a trainer may be off the ground (a hop) before the stranded clock restarts. Code defaults match.", "fall_drop_m": 100, "stranded_drop_m": 20, "stranded_s": 3, "clearance_m": 0.6, "retry_s": 0.25, "message_cooldown_s": 30, "airborne_grace_s": 0.5},
   "aerie_fiber_cost": 3,
   "interactions": [
     {"id": "causeway_signal", "kind": "bell", "position": [-66,453,2251], "label": "Ring the captured picket's safe-route signal", "requires_flags": ["cloudreach_lower_anchors_investigated", "defeated_cloudreach_senn"], "completion_flag": "causeway_survivors_reconnected", "event": "three_bells_safe_route_signaled"},
