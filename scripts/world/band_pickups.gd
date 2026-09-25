@@ -418,6 +418,10 @@ static func label_for(item_id: String) -> String:
 static func place_all(world: Node3D, vegetation: Node3D) -> Dictionary:
 	var stats := {"placed": 0, "taken": 0, "nudged": 0, "no_ground": 0, "unclear": 0}
 	var game := world.get_node_or_null(^"/root/Game")
+	# One snapshot of the solid scatter for the whole pass: every pickup and
+	# every nudge attempt asks it instead of scanning the world again.
+	var index: RefCounted = vegetation.call("solid_scatter_index") \
+		if vegetation != null and vegetation.has_method("solid_scatter_index") else null
 	for entry: Variant in load_all():
 		var pickup: Dictionary = entry
 		var id: String = pickup["id"]
@@ -426,7 +430,7 @@ static func place_all(world: Node3D, vegetation: Node3D) -> Dictionary:
 			continue
 		if world.get_node_or_null(NodePath("BandPickup_%s" % id)) != null:
 			continue
-		var outcome := place_one(world, vegetation, pickup)
+		var outcome := place_one(world, vegetation, pickup, index)
 		for key: String in outcome.keys():
 			if stats.has(key):
 				stats[key] += int(outcome[key])
@@ -440,12 +444,13 @@ static func place_all(world: Node3D, vegetation: Node3D) -> Dictionary:
 ## item, pos, y; band is not needed). Returns the census deltas for it:
 ## placed, nudged, unclear, no_ground (each 0 or 1); `node` is the pickup
 ## when one was placed.
-static func place_one(world: Node3D, vegetation: Node3D, pickup: Dictionary) -> Dictionary:
+static func place_one(world: Node3D, vegetation: Node3D, pickup: Dictionary,
+		index: RefCounted = null) -> Dictionary:
 	var out := {"placed": 0, "nudged": 0, "unclear": 0, "no_ground": 0, "node": null}
 	var game := world.get_node_or_null(^"/root/Game")
 	var id: String = str(pickup["id"])
 	var at: Vector2 = pickup["pos"]
-	var spot := _clear_spot(world, vegetation, at)
+	var spot := _clear_spot(world, vegetation, at, index)
 	if spot.is_empty():
 		push_error("no ground under band pickup '%s' at %.0f, %.0f" % [id, at.x, at.y])
 		out["no_ground"] = 1
@@ -487,14 +492,20 @@ static func place_one(world: Node3D, vegetation: Node3D, pickup: Dictionary) -> 
 
 ## The authored spot on the ground, or the nearest clear alternative when a
 ## trunk or boulder stands on it. {} when there is no terrain here at all.
-static func _clear_spot(world: Node3D, vegetation: Node3D, at: Vector2) -> Dictionary:
+## `index` (vegetation's `solid_scatter_index()`) answers the same question as
+## `has_solid_scatter_near()` without a world scan per call.
+static func _clear_spot(world: Node3D, vegetation: Node3D, at: Vector2,
+		index: RefCounted = null) -> Dictionary:
 	var ground := float(world.call("ground_height_at", at.x, at.y))
 	if is_nan(ground):
 		return {}
 	var here := Vector3(at.x, ground, at.y)
-	if vegetation == null or not vegetation.has_method("has_solid_scatter_near"):
+	if index == null and (vegetation == null or not vegetation.has_method("has_solid_scatter_near")):
 		return {"at": here, "nudged": false, "clear": true, "moved_m": 0.0}
-	if not bool(vegetation.call("has_solid_scatter_near", here, SCATTER_CLEARANCE_M)):
+	var solid := func(p: Vector3) -> bool:
+		return bool(index.call("has_near", p, SCATTER_CLEARANCE_M)) if index != null \
+			else bool(vegetation.call("has_solid_scatter_near", p, SCATTER_CLEARANCE_M))
+	if not solid.call(here):
 		return {"at": here, "nudged": false, "clear": true, "moved_m": 0.0}
 	# Smallest ring first, and return on the first clear bearing: a site that
 	# resolves at 2 m must keep resolving at 2 m however many larger rings are
@@ -507,7 +518,7 @@ static func _clear_spot(world: Node3D, vegetation: Node3D, at: Vector2) -> Dicti
 			if is_nan(candidate_ground):
 				continue
 			var there := Vector3(candidate.x, candidate_ground, candidate.y)
-			if not bool(vegetation.call("has_solid_scatter_near", there, SCATTER_CLEARANCE_M)):
+			if not solid.call(there):
 				return {"at": there, "nudged": true, "clear": true, "moved_m": radius}
 	return {"at": here, "nudged": false, "clear": false, "moved_m": 0.0}
 
