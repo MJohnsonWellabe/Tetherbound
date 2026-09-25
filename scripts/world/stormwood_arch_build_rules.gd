@@ -44,14 +44,19 @@ static func placement(at: Vector3, realm: String, flags: RefCounted, buildings: 
 	if not ARCHES.is_available(socket, flags):
 		return {"ok": false, "reason": "This footing's road has not opened yet."}
 	var fixed := str(socket.get("fixed_twin", ""))
+	var footing := str(socket.get("id", ""))
 	var active := records(buildings)
+	# One arch per footing. The seat is 5 m wide, so an arch-to-arch distance
+	# cannot decide occupancy: two arches 8 m apart can both sit on one seat.
+	# A record names its footing; one saved without it is judged by where it
+	# stands against this footing's centre.
+	for row: Dictionary in active:
+		if occupies(row, socket) or _stands_within(row, at, 5.0):
+			return {"ok": false, "reason": "Another arch already occupies this footing."}
 	var ordinary_count := 0
 	var crown_count := 0
 	var unpaired := ""
 	for row: Dictionary in active:
-		var raw: Array = row.get("position", [])
-		if raw.size() == 3 and at.distance_to(Vector3(float(raw[0]), float(raw[1]), float(raw[2]))) < 5.0:
-			return {"ok": false, "reason": "Another arch already occupies this footing."}
 		var twin := str(row.get("arch_twin", ""))
 		if twin == "e_crown":
 			crown_count += 1
@@ -59,14 +64,35 @@ static func placement(at: Vector3, realm: String, flags: RefCounted, buildings: 
 				return {"ok": false, "reason": "The Crown already has its twin."}
 			continue
 		ordinary_count += 1
-		if twin.is_empty() and unpaired.is_empty():
+		# A legacy arch saved off every footing never becomes a new arch's
+		# twin: that road would have an illegal end. The legal arch waits.
+		if twin.is_empty() and unpaired.is_empty() and not str(row.get("arch_footing", "")).is_empty():
 			unpaired = str(row.get("uid", ""))
 	var limit := int(ARCHES.config().player_pair_limit)
 	var full := ordinary_count >= (limit - crown_count) * 2 if fixed.is_empty() else ceili(float(ordinary_count) / 2.0) + crown_count >= limit
 	if full:
 		return {"ok": false, "reason": "Three player roads are already standing. Dismantle an arch first."}
+	# `at` is the footing's canonical seat (request height kept), so a host
+	# that commits there stands every arch on the authored centre.
 	return {"ok": true, "reason": "", "twin": fixed if not fixed.is_empty() else unpaired,
-		"footing": str(socket.get("id", "")), "crown": fixed == "e_crown"}
+		"footing": footing, "crown": fixed == "e_crown",
+		"at": Vector3(float(socket.at[0]), at.y, float(socket.at[1]))}
+
+## True when `row` stands on `socket`: by its saved footing id, or, for a record
+## saved without one, by its position inside that footing's seat.
+static func occupies(row: Dictionary, socket: Dictionary) -> bool:
+	var saved := str(row.get("arch_footing", ""))
+	if not saved.is_empty():
+		return saved == str(socket.get("id", ""))
+	var raw: Array = row.get("position", [])
+	if raw.size() != 3:
+		return false
+	var centre := Vector2(float(socket.at[0]), float(socket.at[1]))
+	return Vector2(float(raw[0]), float(raw[2])).distance_to(centre) <= 5.0
+
+static func _stands_within(row: Dictionary, at: Vector3, radius: float) -> bool:
+	var raw: Array = row.get("position", [])
+	return raw.size() == 3 and at.distance_to(Vector3(float(raw[0]), float(raw[1]), float(raw[2]))) < radius
 
 static func definition(uid: String, buildings: Array) -> Dictionary:
 	for row: Dictionary in records(buildings):
