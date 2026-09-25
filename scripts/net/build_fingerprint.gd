@@ -32,6 +32,9 @@ const CONTENT_EXTENSION := "json"
 ## Hex digits of the content hash shown to players. Long enough to tell builds
 ## apart at a glance, and short enough to read aloud to a friend.
 const SHORT_HASH_CHARS := 8
+## Longest claimed value echoed into a refusal reason or the host log. The
+## claim is untrusted wire data; a real marker or engine string is far shorter.
+const MAX_ECHO_CHARS := 48
 ## Development-only overrides so a multi-process smoke can stand up a
 ## deliberately mismatched peer from the same checkout: an environment
 ## variable, or a user argument after `--` for one harness peer. Release
@@ -120,10 +123,10 @@ static func compare(local: Dictionary, remote: Variant) -> Dictionary:
 			return _refuse("Your game did not report its version. Update Tetherbound so both of you run the same version.")
 	if theirs["wire_protocol"] != local.get("wire_protocol"):
 		return _refuse("You and the host run different network versions of Tetherbound (host %s, yours %s). Both players need the same version."
-			% [str(local.get("wire_protocol")), str(theirs["wire_protocol"])])
+			% [str(local.get("wire_protocol")), str(theirs["wire_protocol"]).left(MAX_ECHO_CHARS)])
 	if theirs["engine"] != local.get("engine"):
 		return _refuse("You and the host run different builds of Tetherbound (host engine %s, yours %s). Both players need the same version."
-			% [str(local.get("engine")), str(theirs["engine"])])
+			% [str(local.get("engine")), str(theirs["engine"]).left(MAX_ECHO_CHARS)])
 	if theirs["content"] != local.get("content"):
 		return _refuse("You and the host have different game content (host %s, yours %s). Both players need the same version."
 			% [str(local.get("content")).left(SHORT_HASH_CHARS),
