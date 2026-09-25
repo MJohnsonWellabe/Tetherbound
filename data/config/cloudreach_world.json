@@ -149,6 +149,15 @@
         "blocks_ground_route": false,
         "visible_from_region_ids": ["windscar_ravine", "upper_cloudreach"]
       },
+      "crown_cut": {
+        "_comment": "F06 / C1 (CLOUDREACH-PLAYER-CAMERA 'the summit crown has no floor'). The upper_summit_road and the summit_overlook_loop's western leg climb up INSIDE this region's drawn crown (up to 33 m under it). cloudreach_world.gd carves the crown down to each such road -- a flat floor floor_drop_m under the road out to floor_half_width_m, then banks rising bank_slope metres per metre back to the crown -- and draws AND collides that one carved surface, so the whole crown can be stood on without roofing or walling the roads. A vertex is carved only when that lowers it by more than min_lowering_m; cell_m is the tessellation of the carved wedges and must stay under floor_half_width_m - 3.9 (ribbon half-width + trainer radius) divided by 1.42, so no triangle can reach from the bank over the ribbon. Banks steeper than bank_normal_y draw in the cliff material.",
+        "floor_half_width_m": 10.0,
+        "floor_drop_m": 0.25,
+        "bank_slope": 2.5,
+        "bank_normal_y": 0.64,
+        "min_lowering_m": 0.3,
+        "cell_m": 3.5
+      },
       "purpose": "The authored final approach, elite stronghold, chapter climax and distant Water-biome setup."
     }
   ],

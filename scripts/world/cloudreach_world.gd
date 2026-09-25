@@ -488,7 +488,11 @@ func ground_height_at(x: float, z: float, preferred_y: float = NAN) -> float:
 			if half.x > 0.01 and half.y > 0.01 \
 					and local.x * local.x / (half.x * half.x) \
 					+ local.y * local.y / (half.y * half.y) <= 1.0:
-				best = _preferred_surface(best, float(surface.get("height", -INF)), preferred_y)
+				var height := float(surface.get("height", -INF))
+				var crown_cut: Dictionary = surface.get("crown_cut", {})
+				if not crown_cut.is_empty():
+					height = _carved_crown_y(height, x, z, crown_cut)
+				best = _preferred_surface(best, height, preferred_y)
 		elif kind == "segment":
 			var a: Vector3 = surface.get("a", Vector3.ZERO)
 			var b: Vector3 = surface.get("b", Vector3.ZERO)
@@ -1078,19 +1082,30 @@ func _build_regions() -> void:
 		node.name = _safe_name(str(spec.get("id", "Region")))
 		root.add_child(node)
 		var summit_region := str(spec.get("id", "")) == "summit_final_stronghold"
+		# F06 / C1 (CLOUDREACH-PLAYER-CAMERA, "the summit crown has no floor").
+		# The final road and the overlook loop's western leg climb up INSIDE
+		# the summit's drawn crown (the road is 19 m under it at (148, 5290)),
+		# so the plain crown collider every other region gets would roof them
+		# over, and its eroded ring once walled the road at t=.465. With no
+		# collider at all, though, the drawn ~179 x 94 m flat core -- the
+		# summit-approach stand, SummitSupplyPosition -- dropped a trainer
+		# straight through. `crown_cut` carves the crown down to every road
+		# under it, and `_mesa` draws AND collides that one carved surface.
+		var crown_cut := _region_crown_cut(spec, centre, size, top)
 		_shell_build.call("mark", "regions:%s:mesa:begin" % str(spec.get("id", "Region")))
+		# The summit only collides once its crown is carved clear of those
+		# roads; uncarved (no cut configured) it keeps the old silhouette-only
+		# mass rather than a collider over the ascent.
 		var region_mass := _mesa(node, "CliffMass", centre, size, _materials["cliff"],
 			_materials["upland_dry"] if int(spec.get("order", 0)) >= 5 else _materials["upland"],
-			not summit_region, int(spec.get("order", 0)))
+			not summit_region or not crown_cut.is_empty(), int(spec.get("order", 0)),
+			false, 0.0, -1.0, crown_cut)
+		if not crown_cut.is_empty():
+			_exclude_crown_cut_cover(crown_cut)
 		if summit_region:
-			# The eroded outer ring falls as much as 48 m below the y=1160 crown.
-			# Its former whole-mass trimesh therefore crossed the authored final
-			# road at a 48-degree face around t=.465 and stopped an ordinary held
-			# stick. Keep that tall geology as the summit silhouette, while the
-			# authored road, loop, landing caps and arena retain the real edge/fall
-			# contract. This thin inset support closes only the intended join from
-			# the road's y=1160 landing to the arena approach; it creates no route
-			# around the ascent and has no tall geological side to intercept it.
+			# The road's y=1160 landing -> arena approach join. The carved crown
+			# (above) is now the floor all around it; this hidden strip sits 3 cm
+			# under that crown top and stays as the authored join's own support.
 			var crown := _segment_box(node, "SummitWalkableCrown",
 				Vector3(100.0, 1160.0, 5350.0), Vector3(100.0, 1160.0, 5376.0),
 				12.0, 0.42, _materials["upland_dry"], true)
@@ -1107,7 +1122,7 @@ func _build_regions() -> void:
 		_shell_build.call("mark", "regions:%s:vegetation:begin" % str(spec.get("id", "Region")))
 		_add_wind_vegetation(node,
 			Rect2(centre.x - size.x * 0.5, centre.z - size.z * 0.5, size.x, size.z),
-			top, int(spec.get("order", 0)))
+			top, int(spec.get("order", 0)), crown_cut)
 		_cover_patches.append({
 			"kind": "ellipse", "centre": Vector3(centre.x, top, centre.z),
 			# Conservative inside the rotated irregular crown; no grass can hang
@@ -1119,10 +1134,132 @@ func _build_regions() -> void:
 		# Match the real rotated irregular crown conservatively. The old enclosing
 		# rectangle reported invisible corner air as ground, which could place a
 		# loaded player or an evidence camera beside a floating island.
-		_surfaces.append({"kind": "ellipse", "centre": Vector2(centre.x, centre.z),
+		var crown_surface := {"kind": "ellipse", "centre": Vector2(centre.x, centre.z),
 			"half": Vector2(size.x, size.z) * 0.30,
-			"rotation": region_mass.rotation.y, "height": top})
+			"rotation": region_mass.rotation.y, "height": top}
+		if not crown_cut.is_empty():
+			# The index reports the carved floor/bank, not y=1160 over a road.
+			crown_surface["crown_cut"] = crown_cut
+		_surfaces.append(crown_surface)
 		_region_count += 1
+
+
+## F06 / C1. The carve a region's `crown_cut` config asks for: the road/deck
+## lines that run UNDER this region's crown (only those can lower it), plus
+## the carve's shape. Empty when the region has no `crown_cut` or no road
+## runs under it. Regions build before routes, so the shared ground-truth
+## line set is gathered here first; `_build_routes` re-gathers the same set.
+func _region_crown_cut(spec: Dictionary, centre: Vector3, size: Vector3, top: float) -> Dictionary:
+	var raw: Variant = spec.get("crown_cut", {})
+	if not raw is Dictionary or (raw as Dictionary).is_empty():
+		return {}
+	var config := raw as Dictionary
+	if _all_route_lines.is_empty():
+		_collect_all_route_lines()
+	var cut := {
+		"crown_y": top + 0.03, # `_mesa`'s crown vertex: size.y * 0.5 + 0.03
+		"floor_half_width_m": float(config.get("floor_half_width_m", 10.0)),
+		"floor_drop_m": float(config.get("floor_drop_m", 0.25)),
+		"bank_slope": maxf(0.1, float(config.get("bank_slope", 2.5))),
+		"bank_normal_y": float(config.get("bank_normal_y", 0.64)),
+		"min_lowering_m": float(config.get("min_lowering_m", 0.3)),
+		"cell_m": maxf(1.0, float(config.get("cell_m", 3.5))),
+	}
+	# `_mesa`'s widest top-ring vertex is 0.47 * 1.025 of the size; half the
+	# larger size covers it at any yaw.
+	var reach := maxf(size.x, size.z) * 0.5
+	var lines: Array[Dictionary] = []
+	for line: Dictionary in _lines_near(centre.x - reach, centre.x + reach,
+			centre.z - reach, centre.z + reach):
+		if str(line["route_id"]).begins_with("crown:"):
+			continue # A landmark's own crown reference, not a road.
+		var a: Vector3 = line["a"]
+		var b: Vector3 = line["b"]
+		var low := minf(a.y, b.y)
+		# A line whose floor cannot sit min_lowering_m under the crown never
+		# carves anything (the level pad stubs, the loop's rising east leg).
+		if low - float(cut["floor_drop_m"]) >= float(cut["crown_y"]) - float(cut["min_lowering_m"]):
+			continue
+		# Past this distance the bank has climbed back over the crown.
+		var line_reach := float(cut["floor_half_width_m"]) \
+			+ (float(cut["crown_y"]) - low + float(cut["floor_drop_m"])) / float(cut["bank_slope"])
+		lines.append({"a": a, "b": b, "reach": line_reach,
+			"min_x": minf(a.x, b.x) - line_reach, "max_x": maxf(a.x, b.x) + line_reach,
+			"min_z": minf(a.z, b.z) - line_reach, "max_z": maxf(a.z, b.z) + line_reach})
+	if lines.is_empty():
+		return {}
+	cut["lines"] = lines
+	# The same lines packed flat for `_crown_cut_height_at`, which runs once
+	# per carved-crown vertex (tens of thousands) during the region build.
+	var ends := PackedVector3Array()
+	var bounds := PackedFloat32Array()
+	for line: Dictionary in lines:
+		ends.append(line["a"])
+		ends.append(line["b"])
+		bounds.append_array(PackedFloat32Array([line["min_x"], line["max_x"],
+			line["min_z"], line["max_z"]]))
+	cut["ends"] = ends
+	cut["bounds"] = bounds
+	return cut
+
+
+## The highest the carved crown may stand at world XZ: the minimum, over the
+## roads under it, of a floor `floor_drop_m` under the road out to
+## `floor_half_width_m` from its centreline, then a bank rising `bank_slope`
+## metres per metre. INF where no road reaches.
+func _crown_cut_height_at(x: float, z: float, cut: Dictionary) -> float:
+	var best := INF
+	var floor_half := float(cut["floor_half_width_m"])
+	var drop := float(cut["floor_drop_m"])
+	var slope := float(cut["bank_slope"])
+	var ends: PackedVector3Array = cut["ends"]
+	var bounds: PackedFloat32Array = cut["bounds"]
+	for line in bounds.size() / 4:
+		if x < bounds[line * 4] or x > bounds[line * 4 + 1] \
+				or z < bounds[line * 4 + 2] or z > bounds[line * 4 + 3]:
+			continue
+		var a := ends[line * 2]
+		var b := ends[line * 2 + 1]
+		var flat := Vector2(b.x - a.x, b.z - a.z)
+		var len2 := flat.length_squared()
+		var t := 0.0
+		if len2 > 0.0001:
+			t = clampf(((x - a.x) * flat.x + (z - a.z) * flat.y) / len2, 0.0, 1.0)
+		var d := Vector2(x - a.x - flat.x * t, z - a.z - flat.y * t).length()
+		best = minf(best, lerpf(a.y, b.y, t) - drop + slope * maxf(0.0, d - floor_half))
+	return best
+
+
+## A crown vertex's carved height. Carved only when that lowers it by more than
+## `min_lowering_m`, so a road meeting the crown at its own level (the summit
+## pad) leaves the crown whole instead of nicking it by a few centimetres.
+func _carved_crown_y(natural_y: float, x: float, z: float, cut: Dictionary) -> float:
+	var limit := _crown_cut_height_at(x, z, cut)
+	return limit if natural_y - limit > float(cut["min_lowering_m"]) else natural_y
+
+
+## Keep crown-level grass and the look pass's trees/stones out of the carve:
+## they are planted at the crown's flat height and would hang over the road.
+## Segment exclusions at crown height (+2 m, inside the 3 m band both
+## consumers test) leave the road's own shoulder cover below untouched.
+func _exclude_crown_cut_cover(cut: Dictionary) -> void:
+	var crown_y := float(cut["crown_y"])
+	var floor_half := float(cut["floor_half_width_m"])
+	var drop := float(cut["floor_drop_m"])
+	var slope := float(cut["bank_slope"])
+	for line: Dictionary in cut["lines"]:
+		var a: Vector3 = line["a"]
+		var b: Vector3 = line["b"]
+		var pieces := maxi(1, ceili(Vector2(b.x - a.x, b.z - a.z).length() / 8.0))
+		for piece in pieces:
+			var p0 := a.lerp(b, float(piece) / float(pieces))
+			var p1 := a.lerp(b, float(piece + 1) / float(pieces))
+			var depth := crown_y - minf(p0.y, p1.y) + drop
+			if depth <= float(cut["min_lowering_m"]):
+				continue
+			_cover_exclusions.append({"kind": "segment",
+				"a": Vector3(p0.x, crown_y + 2.0, p0.z), "b": Vector3(p1.x, crown_y + 2.0, p1.z),
+				"half_width": floor_half + depth / slope + 1.0})
 
 
 func _build_transition_ledges() -> void:
@@ -1177,7 +1314,8 @@ func _add_satellite_crags(parent: Node3D, centre: Vector3, size: Vector3, top: f
 			Vector3(size.x*(0.23+i*0.04),crag_height,size.z*(0.25+i*0.04)),order*7+i)
 
 
-func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -> void:
+func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int,
+		crown_cut: Dictionary = {}) -> void:
 	var nature: Dictionary = _visual_config.get("nature", {})
 	var centre := rect.get_center()
 	var half := rect.size * 0.5
@@ -1194,6 +1332,8 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -
 			centre.y + sin(angle) * half.y * radius)
 		if _inside_settlement_clearance(at) or _inside_nature_tree_exclusion(at):
 			continue
+		if not crown_cut.is_empty() and _carved_crown_y(top, at.x, at.z, crown_cut) < top:
+			continue # F06: planted at crown height, it would hang over the carve.
 		var tree_scene := WIND_TREES[order % WIND_TREES.size()] if i == 0 \
 			else NATURE_TREES[(i + order) % NATURE_TREES.size()]
 		var tree := tree_scene.instantiate() as Node3D
@@ -1220,6 +1360,8 @@ func _add_wind_vegetation(parent: Node3D, rect: Rect2, top: float, order: int) -
 		var radius := 0.24 + 0.38 * sqrt(fmod(float(i) * 0.4142 + 0.13 * order, 1.0))
 		var at := Vector3(centre.x + cos(angle) * half.x * radius, top - 0.18,
 			centre.y + sin(angle) * half.y * radius)
+		if not crown_cut.is_empty() and _carved_crown_y(top, at.x, at.z, crown_cut) < top:
+			continue
 		var rock := NATURE_ROCKS[(i * 2 + order) % NATURE_ROCKS.size()].instantiate() as Node3D
 		apply_stone_palette(rock)
 		rock.name = "BeddedRock%d" % i
@@ -4227,7 +4369,8 @@ func _mesa(
 		seed_value: int,
 		rugged_crown: bool = false,
 		flat_top_radius_m: float = 0.0,
-		cap_radius_m: float = -1.0
+		cap_radius_m: float = -1.0,
+		crown_cut: Dictionary = {}
 	) -> Node3D:
 	var root := Node3D.new()
 	root.name = label
@@ -4353,18 +4496,29 @@ func _mesa(
 			-size.y * 0.5, top_point.z * (1.55 + 0.20 * cos(angle * 5.0 - seed_value))))
 
 	var mesh := ArrayMesh.new()
-	var top_tool := SurfaceTool.new()
-	top_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
-	top_tool.set_material(top_material)
 	var crown := Vector3(0.0, size.y * 0.5 + 0.03, 0.0)
 	if rugged_crown:
 		crown.y -= minf(size.y*0.09,9.0)
-	if flat_rings.is_empty():
-		_emit_mesa_top(top_tool, sides, eroded_crown, crown, core_ring, top_ring)
-	else:
-		_emit_flat_crown(top_tool, sides, crown, flat_rings, top_ring)
-	top_tool.generate_normals()
-	top_tool.commit(mesh)
+	# F06: a region crown with roads climbing up inside it is carved down to
+	# them (`_carve_mesa_top`) and drawn/collided from that carve as its own
+	# `CarvedCrown` below. Only the eroded region profile is supported.
+	var carved: Dictionary = {}
+	if not crown_cut.is_empty():
+		if eroded_crown and flat_rings.is_empty() and not rugged_crown:
+			carved = _carve_mesa_top(sides, crown, core_ring, top_ring,
+				root.global_position, yaw_basis, crown_cut)
+		else:
+			push_warning("crown_cut ignored on %s: only an eroded region crown is carved" % label)
+	if carved.is_empty():
+		var top_tool := SurfaceTool.new()
+		top_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+		top_tool.set_material(top_material)
+		if flat_rings.is_empty():
+			_emit_mesa_top(top_tool, sides, eroded_crown, crown, core_ring, top_ring)
+		else:
+			_emit_flat_crown(top_tool, sides, crown, flat_rings, top_ring)
+		top_tool.generate_normals()
+		top_tool.commit(mesh)
 
 	var upper_tool := SurfaceTool.new()
 	upper_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -4418,8 +4572,10 @@ func _mesa(
 		_build_island_mist(root, widest, -size.y * 0.5, seed_value)
 	if label == "CliffMass" or label == "LandmarkLedge" or label.contains("RockShoulder"):
 		_build_embedded_rock_shelves(root, size, seed_value, label)
+	if not carved.is_empty():
+		_build_carved_crown(root, carved, top_material, collision)
 
-	if collision:
+	if collision and carved.is_empty():
 		# Collide with the mesa's own rendered top surface, not a convex hull
 		# spanning the full crown-to-base height. A hull built from top_ring
 		# and bottom_ring floats above concave dips and sinks below bumps in
@@ -4618,6 +4774,194 @@ func _emit_flat_crown(tool: SurfaceTool, sides: int, crown: Vector3, rings: Arra
 			var next := (i + 1) % sides
 			_add_surface_triangle(tool, a_ring[i] + lift, a_ring[next] + lift, b_ring[i] + lift)
 			_add_surface_triangle(tool, b_ring[i] + lift, a_ring[next] + lift, b_ring[next] + lift)
+
+
+## F06 / C1. The eroded region crown `_emit_mesa_top` draws, carved down to the
+## roads under it (`_carved_crown_y`). Returns root-local triangles in
+## `_add_surface_triangle` order: "turf" (crown and carve floor), "bank"
+## (steep carved banks) and "rim" (outer edge segments, as pairs, for the
+## collision skirt); empty if nothing needed carving.
+##
+## A wedge (one fan triangle plus its eroded-band quad) that the carve does
+## not reach keeps `_emit_mesa_top`'s exact three triangles. A wedge it does
+## reach is re-emitted as a `cell_m` grid -- the fan's one 179 m sliver cannot
+## hold a road-shaped carve -- whose vertices take the carved height. Grid rows
+## are shared by every wedge and a neighbour's shared radial edge is built
+## from the same two endpoints, so a carved vertex on it is carved in both.
+## Keeping cells under (`floor_half_width_m` - 3.9) / 1.42 -- a cell diagonal
+## under the floor's margin past the ribbon's 3.5 m + the trainer's 0.4 m --
+## means every triangle over that band has all three vertices on the floor, so
+## no interpolated bank can rise over the road.
+func _carve_mesa_top(sides: int, crown: Vector3, core_ring: Array[Vector3],
+		top_ring: Array[Vector3], anchor: Vector3, yaw_basis: Basis, cut: Dictionary) -> Dictionary:
+	var lift := Vector3.UP * 0.03
+	var cell := float(cut["cell_m"])
+	var bank_normal_y := float(cut["bank_normal_y"])
+	var core_steps := 1
+	var band_steps := 1
+	for i in sides:
+		core_steps = maxi(core_steps, ceili(Vector2(core_ring[i].x, core_ring[i].z).length() / cell))
+		band_steps = maxi(band_steps, ceili(Vector2(top_ring[i].x - core_ring[i].x,
+			top_ring[i].z - core_ring[i].z).length() / cell))
+	var rows := core_steps + band_steps
+	var turf := PackedVector3Array()
+	var bank := PackedVector3Array()
+	var rim := PackedVector3Array()
+	var any_carved := false
+	for i in sides:
+		var next := (i + 1) % sides
+		var core_a: Vector3 = core_ring[i] + lift
+		var core_b: Vector3 = core_ring[next] + lift
+		var top_a: Vector3 = top_ring[i] + lift
+		var top_b: Vector3 = top_ring[next] + lift
+		var cols := maxi(1, ceili(maxf(Vector2(core_b.x - core_a.x, core_b.z - core_a.z).length(),
+			Vector2(top_b.x - top_a.x, top_b.z - top_a.z).length()) / cell))
+		var grid: Array[PackedVector3Array] = []
+		var carved_flags: Array[PackedByteArray] = []
+		var wedge_carved := false
+		for col in cols + 1:
+			# The wedge's own corners at its two edges, never a lerp to 1.0,
+			# so both wedges sharing an edge build bit-identical vertices.
+			var edge_core: Vector3 = core_a
+			var edge_top: Vector3 = top_a
+			if col == cols:
+				edge_core = core_b
+				edge_top = top_b
+			elif col > 0:
+				edge_core = core_a.lerp(core_b, float(col) / float(cols))
+				edge_top = top_a.lerp(top_b, float(col) / float(cols))
+			var column := PackedVector3Array()
+			var flags := PackedByteArray()
+			for row in rows + 1:
+				var local: Vector3
+				if row == 0:
+					local = crown
+				elif row <= core_steps:
+					var f := float(row) / float(core_steps)
+					local = Vector3(edge_core.x * f, crown.y, edge_core.z * f)
+				elif row == rows:
+					local = edge_top
+				else:
+					local = edge_core.lerp(edge_top, float(row - core_steps) / float(band_steps))
+				var world := anchor + yaw_basis * local
+				var carved_y := _carved_crown_y(world.y, world.x, world.z, cut)
+				flags.append(1 if carved_y < world.y else 0)
+				if carved_y < world.y:
+					wedge_carved = true
+					local.y = carved_y - anchor.y
+				column.append(local)
+			grid.append(column)
+			carved_flags.append(flags)
+		if not wedge_carved:
+			# Exactly `_emit_mesa_top`'s eroded wedge (same corners, same order).
+			turf.append_array(PackedVector3Array([crown, core_b, core_a,
+				core_a, core_b, top_a, top_a, core_b, top_b]))
+			rim.append_array(PackedVector3Array([top_a, top_b]))
+			continue
+		any_carved = true
+		for col in cols:
+			rim.append_array(PackedVector3Array([grid[col][rows], grid[col + 1][rows]]))
+			for row in rows:
+				var p00: Vector3 = grid[col][row]
+				var p10: Vector3 = grid[col + 1][row]
+				var p01: Vector3 = grid[col][row + 1]
+				var p11: Vector3 = grid[col + 1][row + 1]
+				var c00 := carved_flags[col][row] == 1
+				var c10 := carved_flags[col + 1][row] == 1
+				var c01 := carved_flags[col][row + 1] == 1
+				var c11 := carved_flags[col + 1][row + 1] == 1
+				# The apex row is one triangle: there p00 == p10 == crown.
+				# Untyped on purpose: a ternary of two literals is a plain Array.
+				var triangles: Array = [p00, p11, p01] if row == 0 \
+					else [p00, p10, p01, p01, p10, p11]
+				var touched: Array = [c00 or c11 or c01] if row == 0 \
+					else [c00 or c10 or c01, c01 or c10 or c11]
+				for t in touched.size():
+					var a: Vector3 = triangles[t * 3]
+					var b: Vector3 = triangles[t * 3 + 1]
+					var c: Vector3 = triangles[t * 3 + 2]
+					if _is_carved_bank(a, b, c, bool(touched[t]), bank_normal_y):
+						bank.append_array(PackedVector3Array([a, b, c]))
+					else:
+						turf.append_array(PackedVector3Array([a, b, c]))
+	if not any_carved:
+		return {}
+	return {"turf": turf, "bank": bank, "rim": rim}
+
+
+## A carved triangle steeper than `bank_normal_y` draws as rock, the rest as
+## turf. Only triangles the carve touched can become rock, so the eroded band
+## keeps the one look every uncarved wedge has.
+func _is_carved_bank(a: Vector3, b: Vector3, c: Vector3, touched: bool, bank_normal_y: float) -> bool:
+	if not touched:
+		return false
+	var normal := (b - a).cross(c - a)
+	return normal.length_squared() > 0.000001 and absf(normal.normalized().y) < bank_normal_y
+
+
+## The carved crown's own drawn surfaces and, when the mass collides, its
+## collider: the SAME triangles (R1), plus `_mesa`'s 0.3 m rim skirt along the
+## carved outer edge. The body sits under this mesh so ground-truth and the
+## look pass read it as drawn turf, like every other crown's. Built from
+## packed arrays rather than per-vertex SurfaceTool calls: ~20k triangles.
+func _build_carved_crown(root: Node3D, carved: Dictionary, top_material: Material,
+		collision: bool) -> void:
+	var crown_mesh := ArrayMesh.new()
+	var faces := PackedVector3Array()
+	for key: String in ["turf", "bank"]:
+		var triangles: PackedVector3Array = carved[key]
+		if triangles.is_empty():
+			continue
+		# `_add_surface_triangle`'s submission order (a, c, b) and planar UVs.
+		var verts := PackedVector3Array()
+		verts.resize(triangles.size())
+		var uvs := PackedVector2Array()
+		uvs.resize(triangles.size())
+		for index in range(0, triangles.size() - 2, 3):
+			verts[index] = triangles[index]
+			verts[index + 1] = triangles[index + 2]
+			verts[index + 2] = triangles[index + 1]
+		for index in verts.size():
+			uvs[index] = Vector2(verts[index].x, verts[index].z) * 0.04
+		var arrays := []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = verts
+		arrays[Mesh.ARRAY_TEX_UV] = uvs
+		var tool := SurfaceTool.new()
+		tool.create_from_arrays(arrays, Mesh.PRIMITIVE_TRIANGLES)
+		var material: Material = top_material
+		if key == "bank":
+			material = _materials["cliff_high"]
+		tool.set_material(material)
+		tool.generate_normals()
+		tool.commit(crown_mesh)
+		faces.append_array(verts)
+	var instance := MeshInstance3D.new()
+	instance.name = "CarvedCrown"
+	instance.mesh = crown_mesh
+	instance.visibility_range_end = 2600.0
+	instance.visibility_range_end_margin = 220.0
+	root.add_child(instance)
+	if not collision:
+		return
+	var rim: PackedVector3Array = carved["rim"]
+	for index in range(0, rim.size() - 1, 2):
+		# `_emit_mesa_skirt`'s 0.3 m of rim thickness, on the carved edge, in
+		# the order `_add_surface_triangle` submits it.
+		var top_a := rim[index]
+		var top_b := rim[index + 1]
+		var bottom_a := top_a - Vector3.UP * 0.3
+		var bottom_b := top_b - Vector3.UP * 0.3
+		faces.append_array(PackedVector3Array([top_a, top_b, bottom_a,
+			top_b, bottom_b, bottom_a]))
+	var shape := ConcavePolygonShape3D.new()
+	shape.set_faces(faces)
+	var body := StaticBody3D.new()
+	body.name = "Collision"
+	var shape_node := CollisionShape3D.new()
+	shape_node.shape = shape
+	body.add_child(shape_node)
+	instance.add_child(body)
 
 
 func _overlaps_battle_yard(at: Vector3, size: Vector3) -> bool:
