@@ -178,9 +178,26 @@ func _run() -> void:
 	# and `stick_navigator.walk_to` waits without spending its frame budget, so
 	# the step never answers. A player who is in the room when the tether goes
 	# is the ordinary case anyway.
-	var host_walk: Dictionary = await step(0, "move_to",
-		{"x": control_at.x, "z": control_at.z, "close_enough": 7.0, "budget_frames": 2400})
-	check(str(host_walk.get("verdict", "")) == "PASS",
+	#
+	# The same trap sprang in main CI (a3ff511e, shard 3): the Warden's
+	# `victory_conversation` (stronghold_warden_realm_reward) is opened by the
+	# HOST's encounter director, deferred until the fight's payout lands, and
+	# on a slow runner that was after the dismissals above -- the host walked
+	# into an open panel ("no verdict"), then its offer held at stage '' behind
+	# the same panel (panel_open:true). So: wait until the host's panel has
+	# stayed shut for a while before it walks, and retry the walk the way the
+	# guest's already is.
+	await _settle_dialogue(0)
+	var host_walked := false
+	var host_walk: Dictionary = {}
+	for _attempt in 3:
+		host_walk = await step(0, "move_to",
+			{"x": control_at.x, "z": control_at.z, "close_enough": 7.0, "budget_frames": 2400})
+		if str(host_walk.get("verdict", "")) == "PASS":
+			host_walked = true
+			break
+		await _settle_dialogue(0)
+	check(host_walked,
 		"the host walked into the chamber before the lever (%s)" % str(host_walk.get("detail", "")))
 
 	# 4. The guest frees the legendary at the machine control.
@@ -222,6 +239,11 @@ func _run() -> void:
 		if host_stage != "":
 			host_in = true
 			break
+		if bool(host_view.get("panel_open", false)):
+			# An unrelated conversation still open: the offer waits behind it
+			# by design (it never talks over a panel), so close it, as a player
+			# would, and keep watching.
+			await step(0, "dismiss_dialogue", {"presses": 16, "settle": 30})
 		await step(0, "wait", {"frames": 10})
 	check(host_in, "the host, standing in the chamber, had its own offer begin (stage '%s'; %s)"
 		% [host_stage, JSON.stringify({"freed": host_view.get("freed"), "near": host_view.get("near"),
@@ -361,6 +383,26 @@ func _assert_outcome(when: String) -> void:
 
 
 ## Probe + dismiss until this peer's choice is open with both prompts placed.
+## Close whatever conversation this peer has open and wait until its panel has
+## stayed shut for QUIET_POLLS polls in a row (a deferred one -- the Warden's
+## victory line on the host -- can open late on a slow machine).
+const QUIET_POLLS := 4
+const SETTLE_POLLS := 40
+
+func _settle_dialogue(peer: int) -> void:
+	var quiet := 0
+	for _poll in SETTLE_POLLS:
+		var view: Dictionary = await _choice(peer)
+		if bool(view.get("panel_open", false)):
+			quiet = 0
+			await step(peer, "dismiss_dialogue", {"presses": 16, "settle": 30})
+		else:
+			quiet += 1
+			if quiet >= QUIET_POLLS:
+				return
+		await step(peer, "wait", {"frames": 30})
+
+
 func _drive_to_choice(peer: int) -> Dictionary:
 	var last: Dictionary = {}
 	for _poll in CHOICE_POLLS:
