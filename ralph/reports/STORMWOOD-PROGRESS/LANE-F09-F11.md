@@ -424,6 +424,19 @@ SCRIPT ERROR count is 0 in every run log. Across the last three runs the prefix 
 
 SCRIPT ERROR count is 0 in runs 8 to 11.
 
+**Moved pickup seats, for the reviewer** (`data/config/stormwood_pickups.json`, [x, y, z]). Each moved seat carries a `_why_moved_f11` note. The new y is `stormwood_heightfield.height_at` + the original 0.35 m, and every new spot is still on the critical route. The scatter is re-baked for each move: 0a653a7c2 for 06/09, f7266aaaf for the rest.
+
+| Pickup | NPC or station it sat on | Before | After | Commit |
+|---|---|---|---|---|
+| route_09 | Keeper Ondra | [-160, 34.89, 2700] | [-166.1, 35.34, 2696.6] | 0aeaf2f7c |
+| route_06 | Hollows rod station / Dace | [-900, 32.3, 1780] | [-896.8, 31.08, 1788.4] | 5ca1a839e |
+| route_05 | Courier Pim | [-380, 32.58, 1400] | [-384.2, 32.34, 1393.2] | f7266aaaf |
+| route_07 | Warden-Elect Bryn | [-700, 44.38, 2300] | [-702.9, 43.69, 2292.5] | f7266aaaf |
+| route_16 | Ace Trainer Rook | [-150, 61.34, 4460] | [-158.0, 61.15, 4460.3] | f7266aaaf |
+| route_18 | Officer Kestrel | [-100, 107.92, 5350] | [-104.6, 107.91, 5343.4] | f7266aaaf |
+
+`test_stormwood_pickups::test_no_new_pickup_shares_an_npc_interaction_circle` pins these clear. It still lists route_19 (on the ground 150 m below Marrow's platform) and pocket_203 (Neri's pocket, off route).
+
 **Stopped (stop rule: second failure of the same new step, runs 8 and 11).**
 
 - **What the evidence shows.** The whole inventory is empty while the hotbar still binds the tools. Only `player_death.gd::_die_now()` does that: it moves the inventory into a death satchel and respawns the trainer at the nearest safe camp. Still Grove Shelter, the respawn camp, is 30 m from Ondra, so the harness walk would hide the teleport.
