@@ -112,6 +112,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 			return result()
 		var wild := _choose_wild()
 		if wild == null:
+			_receipt("training_pool_exhausted", {"wins": wins, "pool": _pool_snapshot()})
 			_fail("No living low-level practice-meadow wild is available for earned training")
 			return result()
 		var before := _party_snapshot()
@@ -176,6 +177,26 @@ func _choose_wild() -> Node3D:
 	return candidates[selected] if selected >= 0 else null
 
 
+## Diagnostic only: every wild near the practice meadow and why it is or is
+## not an eligible training candidate. Never used for selection.
+func _pool_snapshot() -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	for body: Node3D in _director.call("wild_creatures"):
+		if not is_instance_valid(body):
+			continue
+		var flat := Vector2(body.global_position.x, body.global_position.z)
+		if flat.distance_to(Vector2(30, -40)) > 220.0:
+			continue
+		var creature: RefCounted = body.get("instance")
+		rows.append({"name": str(body.name),
+			"species": str(creature.get("species_id")) if creature != null else "",
+			"level": int(creature.get("level")) if creature != null else -1,
+			"alive": bool(body.call("is_alive")), "visible": body.is_visible_in_tree(),
+			"engaged": bool(body.get("engaged")),
+			"meadow_distance": snappedf(flat.distance_to(Vector2(30, -40)), 0.1)})
+	return rows
+
+
 static func preferred_candidate_index(distances: Array[float], offered_index: int) -> int:
 	if offered_index >= 0 and offered_index < distances.size():
 		return offered_index
@@ -219,6 +240,15 @@ func _engage(target: Node3D) -> bool:
 				if _fighting():
 					return _verify_engagement(target)
 				await _tree.physics_frame
+			var active: RefCounted = _party().call("active")
+			_receipt("wild_interact_refused", {"snapshot": _approach_snapshot(target),
+				"engageable": str(_director.call("_engageable")),
+				"ally_body": str(_director.call("ally_body")),
+				"active_fainted": active != null and bool(active.get("fainted")),
+				"active_resting": active != null and bool(active.get("resting")),
+				"active_hp": float(active.get("hp")) if active != null else -1.0,
+				"arbiter_enabled": bool(_arbiter.call("enabled")),
+				"target_alive": is_instance_valid(target) and bool(target.call("is_alive"))})
 			return _fail("The offered wild did not enter combat after Interact")
 		if waypoint < points.size():
 			if not _open_boundary_gate(str(boundary.gate)):
