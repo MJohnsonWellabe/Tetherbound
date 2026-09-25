@@ -1,0 +1,55 @@
+run id:  net-20260925T033827Z-3138
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossbase1/net-join_version_mismatch-20260925T033827Z
+smoke:   tests/smoke_net_join_version_mismatch.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: net_conditions active -- delay 150 ms, jitter 30 ms, loss 30.0% (contract §9)
+coordinator: launched peer 0 (host) pid=3201 control_port=41031 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossbase1/net-join_version_mismatch-20260925T033827Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossbase1/net-join_version_mismatch-20260925T033827Z/peer-0.log
+coordinator: launched peer 1 (client) pid=3202 control_port=46753 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossbase1/net-join_version_mismatch-20260925T033827Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossbase1/net-join_version_mismatch-20260925T033827Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":34601.0,"godot_version":"4.7-stable (official)","main_sha":"53d5ff69aa2a","peer":0.0,"pid":3201.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossbase1/net-join_version_mismatch-20260925T033827Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":34602.0,"godot_version":"4.7-stable (official)","main_sha":"53d5ff69aa2a","peer":1.0,"pid":3202.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossbase1/net-join_version_mismatch-20260925T033827Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: host reported an ENet port (34601)
+PASS: host opened a four-peer session (hosting udp/34601 as peer 1)
+PASS: host registry starts with one real row ([{ "appearance_id": "trainer", "character_id": "character-3fd16e325ccae24db9e7d538ba451f71", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }])
+coordinator: udp_proxy pid=3925 relaying 127.0.0.1:34611 -> 127.0.0.1:34601 (log /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossbase1/net-join_version_mismatch-20260925T033827Z/udp-proxy-34611.log)
+coordinator: udp_proxy bound udp/34611
+PASS: mismatched content was refused (Session.join(127.0.0.1, 34611) never applied a snapshot within 1800 frames)
+FAIL: client received the readable content-mismatch reason (Session.join(127.0.0.1, 34611) never applied a snapshot within 1800 frames)
+FAIL: the reason names the joiner's own content hash prefix (Session.join(127.0.0.1, 34611) never applied a snapshot within 1800 frames)
+FAIL: refusal arrived in 36584 ms, not after the generic timeout
+FAIL: mismatch arrived as a host admission verdict, not a transport failure
+PASS: mismatched client never applied a host snapshot
+PASS: mismatched client's transport closed after the reason arrived
+PASS: mismatch refusal left the host registry unchanged
+PASS: mismatch refusal left the host world state unchanged
+FAIL: client received the readable content-mismatch reason (Session.join(127.0.0.1, 34611) never applied a snapshot within 1800 frames)
+FAIL: the reason names the joiner's own content hash prefix (Session.join(127.0.0.1, 34611) never applied a snapshot within 1800 frames)
+FAIL: refusal arrived in 36584 ms, not after the generic timeout
+FAIL: mismatch arrived as a host admission verdict, not a transport failure
+Net conditions: delay 150 ms / jitter 30 ms / loss 30.0%
+
+- peer 0 (host) pid=3201 exited=true unexpected_exit=false
+- peer 1 (client) pid=3202 exited=true unexpected_exit=false
+
+FAILURES:
+- client received the readable content-mismatch reason (Session.join(127.0.0.1, 34611) never applied a snapshot within 1800 frames)
+- the reason names the joiner's own content hash prefix (Session.join(127.0.0.1, 34611) never applied a snapshot within 1800 frames)
+- refusal arrived in 36584 ms, not after the generic timeout
+- mismatch arrived as a host admission verdict, not a transport failure
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/lossbase1/net-join_version_mismatch-20260925T033827Z/SUMMARY.md ===
+# Net smoke run net-20260925T033827Z-3138
+
+Scene: world
+Peers: 2
+Net conditions: delay 150 ms / jitter 30 ms / loss 30.0%
+
+- peer 0 (host) pid=3201 exited=true unexpected_exit=false
+- peer 1 (client) pid=3202 exited=true unexpected_exit=false
+
+FAILURES:
+- client received the readable content-mismatch reason (Session.join(127.0.0.1, 34611) never applied a snapshot within 1800 frames)
+- the reason names the joiner's own content hash prefix (Session.join(127.0.0.1, 34611) never applied a snapshot within 1800 frames)
+- refusal arrived in 36584 ms, not after the generic timeout
+- mismatch arrived as a host admission verdict, not a transport failure
