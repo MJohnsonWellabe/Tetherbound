@@ -124,9 +124,13 @@ func _watch_mounted_ground(delta: float) -> void:
 			_ground_history.append(body.global_position)
 			if _ground_history.size() > GROUND_HISTORY:
 				_ground_history.pop_front()
+			# Only ground the trainer could stand on becomes Fly's anchor: the
+			# legendary climbs 60 degrees, and `recover_to_anchor` refuses
+			# anything steeper than the trainer's own 45.
+			var stood := _supported_floor(body.global_position, body.global_position.y, body)
 			var fly: Node = _player.get("fly_controller") if _player != null else null
-			if fly != null and fly.has_method("observe_carried_ground"):
-				fly.call("observe_carried_ground", body.global_position)
+			if not is_nan(stood) and fly != null and fly.has_method("observe_carried_ground"):
+				fly.call("observe_carried_ground", Vector3(body.global_position.x, stood, body.global_position.z))
 			var spot := _find_clear_spot(body)
 			if spot != Vector3.INF:
 				_clear_spot = spot
@@ -141,6 +145,10 @@ func _watch_mounted_ground(delta: float) -> void:
 	# a spot that no longer holds ground is never the answer.
 	var back_from_edge := _supported_history(body)
 	if back_from_edge == Vector3.INF:
+		# Nothing verified to return to: end the ride so the trainer, solid
+		# again, falls into the realm's ordinary walker recovery rather than
+		# riding an unseen fall forever.
+		dismount()
 		return
 	body.global_position = back_from_edge + Vector3.UP * SETTLE_LIFT_M
 	body.velocity = Vector3.ZERO

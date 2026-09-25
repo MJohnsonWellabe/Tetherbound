@@ -47,7 +47,9 @@ The first dismount on the arrival road left the trainer frozen:
   - **Forced dismounts** (a fight, a modal, a freed mount) use the last clear spot seen during the ride if it is within 25 m. Otherwise they use the mount's own footing.
   - **Mounted-fall recovery.** A carried trainer has no collision layers, so the kill plane cannot see them. A mount airborne for more than 0.6 s and 100 m below its last verified ground is returned, with the rider, to the oldest still-supported ground sample from about 2 s earlier. The 100 m is the same distance a walking trainer falls before recovery; SYSTEMS §8 says "Same physical keys/barriers whether mounted or walking".
   - **Fly's safe anchor follows the ride.** The mount's floor samples go through the new `fly_controller.gd::observe_carried_ground()`, which uses the same host authority path as a walk. After a long mounted descent, getting off or reloading no longer "recovers" the trainer back up to where the ride began (second review, F1).
-  - **Forced dismounts are re-checked.** The remembered clear spot is re-checked for capsule fit before use. Otherwise the trainer goes to the last verified ground sample, never to a point in mid-air.
+  - **Forced dismounts are re-checked.** The remembered clear spot is re-checked for capsule fit before use; its floor and line of sight are not re-checked. The next fallback is the last re-probed ground sample. Only if neither fits does the trainer go to the mount's own position, which can be in the air, for example when combat starts mid-fall. A trainer set down in the air is solid again, so the ordinary walker recovery catches them.
+  - **No endless mounted fall.** If a fall passes 100 m and there is no verified ground to return to, the ride ends and the walker recovery takes over.
+  - **Only standable ground becomes the anchor.** A sample steeper than the trainer's own 45° is not reported as a Fly anchor.
   - **SYSTEMS §8 limits.**
     - The mounted hop is capped at the trainer's own `movement.json` jump height.
     - Mounts climb 45° at most, unless the species authors its own climb (the legendary keeps 60°).
@@ -67,8 +69,8 @@ The first dismount on the arrival road left the trainer frozen:
 - A mounted pair 368 m below the gate where the ride began raises no fall recovery.
 - Fly's anchor follows the mount's ground (105.3 m).
 - Getting off leaves the trainer at 105.1 m.
-- Saving and reloading leaves the trainer and the anchor at 105.4 m.
-- **Negative control:** with the anchor reporting disabled, the anchor check fails, with the anchor still at 473.8 m.
+- **Negative control (run locally, not committed as a switch):** with the anchor reporting disabled, the in-ride anchor check fails, with the anchor still at 473.8 m. The in-ride and dismount checks are the real F1 witnesses.
+- A save/reload after the drop leg keeps the trainer at 105.4 m. That save happens on foot, and Fly's `safe_anchor` is not written to the save, so this leg does not test F1.
 - A mount carried out over open air falls 100.8 m (no earlier than a walker would), is caught by the mounted-fall recovery, and stands on the road with its rider seated.
 - The same five party UIDs hold at every step.
 
@@ -84,7 +86,7 @@ The first dismount on the arrival road left the trainer frozen:
 - a combat-admission dismount in Cloudreach
 - the finale pilot handoff while mounted
 - a freed mount
-- save/reload
+- saving while mounted
 - two peers
 
 ### Neighbouring checks
