@@ -903,7 +903,16 @@ func _lead_with_fittest(label: String) -> bool:
 			break
 		await _tree.physics_frame
 	if _director.call("ally_instance") != best:
-		return _fail("ordinary LB did not send out the fittest member before " + label)
+		var ally: RefCounted = _director.call("ally_instance")
+		var active: RefCounted = party.call("active")
+		var owner := INPUT_OWNER.current(_tree)
+		return _fail(("ordinary LB did not send out the fittest member before %s (best=%s active=%s ally=%s "
+			+ "ally_body=%s no_usable_ally=%s arbiter_enabled=%s input_owner=%s paused=%s fighting=%s time_scale=%.1f)") % [
+			label, str(best.get("species_id")), str(active.get("species_id")) if active != null else "none",
+			str(ally.get("species_id")) if ally != null else "none", str(_director.call("ally_body") != null),
+			str(_director.call("no_usable_ally")), str(_arbiter.call("enabled")),
+			str(owner.get_path()) if owner != null else "<none>", str(_tree.paused),
+			str(_manager.call("is_fighting")), Engine.time_scale])
 	return true
 
 
