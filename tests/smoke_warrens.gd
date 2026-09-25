@@ -417,13 +417,30 @@ func _run_vault_activity() -> void:
 		if prompt == null:
 			_fail("vault activity: Heartstone has no production Interactable")
 		else:
-			Input.action_press("interact")
-			await physics_frame
-			await physics_frame
-			Input.action_release("interact")
-			for _frame in 30:
-				await process_frame
-			if warrens.get_node_or_null(^"Heartstone") != null \
+			# Press only once the Heartstone's own prompt wins the arbiter, as a
+			# player waits for it: straight after the Elder fight the ally, a
+			# catch prompt or the input owner can still hold `interact`. A prompt
+			# that never wins is reported as exactly that, not as a pickup fault.
+			var arbiter: Node = get_first_node_in_group("interaction_arbiter")
+			var pressed := false
+			for _frame in 600:
+				if warrens.get_node_or_null(^"Heartstone") == null:
+					break
+				if arbiter != null and arbiter.call("winning_provider") == prompt \
+						and bool(arbiter.call("winner").get("actionable", false)):
+					Input.action_press("interact")
+					await physics_frame
+					await physics_frame
+					Input.action_release("interact")
+					pressed = true
+					for _settle in 30:
+						await process_frame
+					break
+				await physics_frame
+			if not pressed:
+				_fail("vault activity: the Heartstone prompt never won the interaction arbiter; winner=%s owner=%s" % [
+					arbiter.call("winner") if arbiter != null else {}, get_first_node_in_group("input_owner")])
+			elif warrens.get_node_or_null(^"Heartstone") != null \
 					or int((game.get("inventory") as RefCounted).call("count", "heartstone")) < 1 \
 					or not bool(progression.call("has", "warrens_heartstone_taken")):
 				_fail("vault activity: production Heartstone interaction did not settle its item and flag")
