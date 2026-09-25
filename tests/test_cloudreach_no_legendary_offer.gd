@@ -45,6 +45,12 @@ extends "res://tests/test_case.gd"
 const PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD := true
 const PENDING_TABLE_ID := "cloudreach_summit_wild"
 const PENDING_SPECIES := "solmane"
+## F07 cadence added `cloudreach_summit_restored_wild`: the same summit entries
+## behind the post-finale gate (its own `_why_cadence_f07`: "same species,
+## weights and level band ... only the gate differs"). It carries the SAME
+## pending entry, so it rides the same owner ruling and is held to the same
+## exact shape; any other legendary anywhere still fails.
+const PENDING_ALSO_TABLE_IDS := ["cloudreach_summit_restored_wild"]
 const PENDING_ENTRY_KEYS := ["placeholder_species", "role", "roster_identity", "weight"]
 const PENDING_EXEMPT_LEAVES := [".placeholder_species", ".roster_identity"]
 
@@ -357,10 +363,40 @@ func _pending_entry_path(chapter: Dictionary) -> String:
 ## The two exact leaves of the pending entry the corpus/species scans skip.
 func _pending_exempt(chapter: Dictionary) -> Dictionary:
 	var out := {}
-	var entry := _pending_entry_path(chapter)
-	if entry != "":
+	for entry: String in _pending_entry_paths(chapter):
 		for leaf: String in PENDING_EXEMPT_LEAVES:
 			out[entry + leaf] = true
+	return out
+
+
+## Every pending entry: the ruled table's and its gated aftermath copy's.
+func _pending_entry_paths(chapter: Dictionary) -> Array[String]:
+	var out: Array[String] = []
+	if not PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD:
+		return out
+	var tables: Variant = chapter.get("encounter_tables", [])
+	if not tables is Array:
+		return out
+	for t in (tables as Array).size():
+		var id := str(_at(tables, [t, "id"]))
+		if id != PENDING_TABLE_ID and not PENDING_ALSO_TABLE_IDS.has(id):
+			continue
+		var entries: Variant = _at(tables, [t, "entries"])
+		if not entries is Array:
+			continue
+		for e in (entries as Array).size():
+			if str(_at(entries, [e, "placeholder_species"])) == PENDING_SPECIES:
+				out.append("cloudreach_chapter.json:.encounter_tables[%d].entries[%d]" % [t, e])
+	return out
+
+
+## The pending wild-legendary set the scans must find exactly.
+func _pending_expected() -> Dictionary:
+	if not PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD:
+		return {}
+	var out := {PENDING_TABLE_ID: [PENDING_SPECIES]}
+	for id: String in PENDING_ALSO_TABLE_IDS:
+		out[id] = [PENDING_SPECIES]
 	return out
 
 
@@ -599,9 +635,10 @@ func _pending_entry_shape_violations(chapter: Dictionary) -> Array[String]:
 		bad.append("the pending %s entry in %s is gone; flip PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD" % [PENDING_SPECIES, PENDING_TABLE_ID])
 		return bad
 	for table: Dictionary in _dicts_with_key(chapter, "entries"):
-		if str(table.get("id", "")) != PENDING_TABLE_ID:
+		var table_id := str(table.get("id", ""))
+		if table_id != PENDING_TABLE_ID and not PENDING_ALSO_TABLE_IDS.has(table_id):
 			continue
-		for entry: Variant in _as_array(table["entries"], "%s entries" % PENDING_TABLE_ID, bad):
+		for entry: Variant in _as_array(table["entries"], "%s entries" % table_id, bad):
 			if str(_at(entry, ["placeholder_species"])) != PENDING_SPECIES:
 				continue
 			var keys: Array = (entry as Dictionary).keys()
@@ -1107,7 +1144,7 @@ func test_pending_solmane_is_the_only_wild_legendary_in_cloudreach() -> void:
 	var chapter := _dict(CHAPTER_PATH)
 	var result := _wild_table_legendaries(chapter, _legendary_species())
 	_report("wild table shape", result["bad"])
-	var expected := {PENDING_TABLE_ID: [PENDING_SPECIES]} if PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD else {}
+	var expected := _pending_expected()
 	if PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD:
 		_report("pending entry", _pending_entry_shape_violations(chapter))
 		print("    INFO PENDING OWNER DECISION: cloudreach_chapter.json '%s' lists '%s' (roster_identity legendary) as a catchable wild. " % [PENDING_TABLE_ID, PENDING_SPECIES]
@@ -1345,7 +1382,7 @@ func test_negative_control_second_wild_legendary() -> void:
 		return
 	(entries as Array).append({"role": "fake", "placeholder_species": "fulgocobra", "weight": 1})
 	var found: Dictionary = _wild_table_legendaries(chapter, _legendary_species())["found"]
-	var expected := {PENDING_TABLE_ID: [PENDING_SPECIES]} if PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD else {}
+	var expected := _pending_expected()
 	assert_ne(found, expected, "negative control 'second wild legendary' must differ from the allowed set")
 	print("    NEGATIVE-CONTROL second wild legendary fired: found %s, allowed %s" % [found, expected])
 
