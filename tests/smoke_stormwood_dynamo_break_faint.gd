@@ -110,6 +110,24 @@ func _run() -> void:
 	_check(controller.participants == [2], "the returning fighter's creature at the arena edge rejoins Break")
 	_check(controller.rules.window_left() < 30.0, "the window runs again once someone is there")
 	_check(hub.recoveries() == 1, "no further recovery after rejoining")
+
+	# A bystander who never fought the captain team: a join from far away is
+	# refused; once their creature is in the arena they strike conduits but do
+	# not enter the captain win's reward ledger.
+	session.present[3] = true
+	var bystander := Node3D.new()
+	root.add_child(bystander)
+	hub.bodies[3] = bystander
+	bystander.global_position = controller.global_position + Vector3(0, 0, CONTROLLER.BREAK_JOIN_RADIUS_M + 30.0)
+	controller.dispatch(3, {"kind": "dynamo_join"})
+	await process_frame
+	_check(not controller.participants.has(3), "a dynamo_join from outside the arena is refused")
+	bystander.global_position = controller.global_position + Vector3(10, 0, 0)
+	controller.dispatch(3, {"kind": "dynamo_join"})
+	for _i in 2:
+		await process_frame
+	_check(controller.participants.has(3) and not controller.contributors.has(3),
+		"a Break arrival strikes conduits but earns no captain-win reward")
 	for bank in 4:
 		controller.rules.strike_conduit(bank, controller.rules.bank_position(bank), true)
 	_check(controller.rules.phase == "released", "the restarted Break can still release the Stormheart")
@@ -130,6 +148,7 @@ func _run() -> void:
 	stale.load_payload({"rules": mid.save_data(), "participants": [9], "contributors": [9]})
 	stale.phase = "break_core"
 	hub.bodies.erase(2)
+	hub.bodies.erase(3)
 	var before := hub.recoveries()
 	root.add_child(stale)
 	for _i in 5:

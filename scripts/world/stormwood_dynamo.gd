@@ -81,7 +81,9 @@ func begin_for_peer(peer: int) -> void:
 	if not session.is_host():
 		return
 	if phase == "break_core":
-		_add_participant(peer)
+		# Break has no further send-out: a new arrival strikes conduits but
+		# does not enter the captain win's reward ledger (BOSSES §3).
+		_add_participant(peer, false)
 		_publish_state()
 		return
 	if not arena_ready():
@@ -152,8 +154,8 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		return
 	var kind := str(intent.get("kind", ""))
 	if kind == "dynamo_join":
-		if phase == "break_core":
-			_add_participant(peer)
+		if phase == "break_core" and _in_break_reach(peer):
+			_add_participant(peer, false)
 			_publish_state()
 		return
 	if kind != "dynamo_conduit_strike":
@@ -366,12 +368,10 @@ func _reset_after_loss() -> void:
 func _admit_break_arrivals() -> void:
 	var joined := false
 	for peer: int in session.peers_in_realm("stormwood") + ([] if session.is_active() else [session.local_peer_id()]):
-		if participants.has(peer) or session.realm_of(peer) != "stormwood":
+		if participants.has(peer) or not _in_break_reach(peer):
 			continue
-		var body: Node3D = hub.call("body_for", peer)
-		if is_instance_valid(body) and body.global_position.distance_to(global_position) <= BREAK_JOIN_RADIUS_M:
-			_add_participant(peer)
-			joined = true
+		_add_participant(peer, false)
+		joined = true
 	if joined:
 		_persist_state()
 		_publish_state()
@@ -385,11 +385,18 @@ func _apply_local_recovery() -> void:
 	get_node("/root/Game").push_world_message("The Dynamo throws you back to Ember Bivouac. Recover, then climb again.")
 
 
-func _add_participant(peer: int) -> void:
+func _in_break_reach(peer: int) -> bool:
+	if session.realm_of(peer) != "stormwood":
+		return false
+	var body: Node3D = hub.call("body_for", peer)
+	return is_instance_valid(body) and body.global_position.distance_to(global_position) <= BREAK_JOIN_RADIUS_M
+
+
+func _add_participant(peer: int, contributes := true) -> void:
 	_awaiting_break_party = false
 	if not participants.has(peer):
 		participants.append(peer)
-	if not contributors.has(peer):
+	if contributes and not contributors.has(peer):
 		contributors.append(peer)
 
 
