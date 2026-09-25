@@ -393,7 +393,7 @@ func request_guardian_offer() -> void:
 	var claims := _claims()
 	if claims != null and bool(claims.call("has_deferred")):
 		if not bool(claims.call("resume_deferred")):
-			_game.push_world_message("The Deep Watcher's offer will come back when you are clear to answer.")
+			_game.push_world_message("You can't answer the Deep Watcher right now. Ask again once you are clear.")
 		return
 	# Inviting again supersedes an unanswered decline: never let its hold keep
 	# this offer from being presented.
