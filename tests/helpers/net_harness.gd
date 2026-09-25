@@ -67,6 +67,17 @@ const HEARTBEAT_SILENT_TIMEOUT_S := 15.0
 ## Meadows (S2 measured ~85 s). Only that named in-flight action gets this
 ## allowance; its ordinary command deadline remains the harder outer bound.
 const PRODUCTION_JOIN_BUILD_ALLOWANCE_S := 90.0
+## A realm crossing is the same kind of work: the peer rebuilds a whole world
+## scene (crossing back into the Meadows included) in blocking frames, and on
+## a slow runner that exceeds the 15 s detector although the peer is working.
+## Measured: smoke_net_split_realms went "peer silent" on the return crossing
+## on a 4-core container, identically on main and on a lane branch. Only these
+## named in-flight actions defer the detector; each step's own deadline stays
+## the outer bound.
+const WORLD_BUILD_ALLOWANCE_S := {
+	"production_join": PRODUCTION_JOIN_BUILD_ALLOWANCE_S,
+	"enter_realm": PRODUCTION_JOIN_BUILD_ALLOWANCE_S,
+}
 ## Contract §6's own budgets are frame-denominated per PEER; the coordinator
 ## itself only ever waits in wall-clock (it does not tick the peer's physics),
 ## so every frame budget below is converted at this nominal rate plus a fixed
@@ -686,9 +697,9 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 	var id := "s%d" % _next_step_id
 	_next_step_id += 1
 	p["last_verdict"] = null
-	if action == "production_join":
-		p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 \
-			+ PRODUCTION_JOIN_BUILD_ALLOWANCE_S
+	var build_allowance_s := world_build_allowance_s(action)
+	if build_allowance_s > 0.0:
+		p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 + build_allowance_s
 	_send_to(p, {"type": "step", "id": id, "action": action, "args": args, "budget_frames": budget})
 	var deadline := Time.get_ticks_msec() + float(budget) * NOMINAL_MS_PER_PHYSICS_FRAME + WALL_SLACK_MS
 	while true:
@@ -712,6 +723,11 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 	return {} # unreachable; satisfies static return-path analysis on `while true`
 
 
+## Seconds a named world-building step may run without heartbeats, or 0.
+static func world_build_allowance_s(action: String) -> float:
+	return float(WORLD_BUILD_ALLOWANCE_S.get(action, 0.0))
+
+
 ## End the named world-build allowance when its real step verdict arrives.
 ## A successful production join is itself fresh proof that the peer's control
 ## loop returned from the build, so the ordinary 15-second watchdog starts at
@@ -720,7 +736,7 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 ## credit; all completion paths still remove any in-flight allowance.
 static func _complete_step_heartbeat_allowance(p: Dictionary, action: String,
 		verdict: Dictionary, completed_at_s: float) -> void:
-	if action == "production_join" and str(verdict.get("verdict", "")) == "PASS":
+	if world_build_allowance_s(action) > 0.0 and str(verdict.get("verdict", "")) == "PASS":
 		p["last_heartbeat_t"] = completed_at_s
 	p["heartbeat_deferred_until_s"] = 0.0
 
