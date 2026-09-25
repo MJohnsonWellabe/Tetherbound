@@ -22,7 +22,14 @@ const UNREACHABLE_STOP := Vector2(393.0, 1802.0)
 const UNREACHABLE_ORDER := 16
 const EAST_DETOUR: Array[Vector2] = [Vector2(408.5, 1803.5), Vector2(406.5, 1809.5)]
 
+## B3: the helper's undertrail leg (-420,2470)->(-380,2540) runs over the
+## Warrens mound (peaks[5], centre (-380,2488), r 30) and stalls against it at
+## about (-406,2488). Walk the ordinary ground west of the mound first.
+const UNDERTRAIL_KNEE := Vector2(-380.0, 2540.0)
+const MOUND_WEST_DETOUR: Array[Vector2] = [Vector2(-432.0, 2492.0), Vector2(-418.0, 2528.0)]
+
 var _detoured := false
+var _mound_detoured := false
 
 
 func reachable_stops(stops: Array[Dictionary]) -> Array[Dictionary]:
@@ -45,6 +52,13 @@ func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
 		_receipt("quarry_east_detour", {"from": _player.global_position, "waypoints": str(EAST_DETOUR),
 			"reason": "helper's direct leg (406,1800)->(401,1809) stalls west of the foundation; ordinary walk around the pylon's east side"})
 		for point: Vector2 in EAST_DETOUR:
+			if not await super._walk_ground(point, 1.5):
+				return false
+	if not _mound_detoured and at.distance_to(UNDERTRAIL_KNEE) < 0.1:
+		_mound_detoured = true
+		_receipt("undertrail_mound_detour", {"from": _player.global_position, "waypoints": str(MOUND_WEST_DETOUR),
+			"reason": "helper's undertrail leg stalls against the Warrens mound at about (-406,2488); ordinary walk west of it"})
+		for point: Vector2 in MOUND_WEST_DETOUR:
 			if not await super._walk_ground(point, 1.5):
 				return false
 	return await super._walk_ground(at, radius)

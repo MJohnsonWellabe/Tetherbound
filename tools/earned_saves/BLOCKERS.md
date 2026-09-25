@@ -97,3 +97,15 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   (no replacement nodes needed) and keeps the east detour for the fourth stone. The south
   approach was dropped. **B2 remains an open Meadows defect:** order 16 cannot be reached by
   walking.
+
+## B3: undertrail approach stalls against the Warrens mound
+
+- Segment `warrens`, attempt 6 (20:03 UTC, seed 4, from `/tmp/claude-0/earned_chain/seed4/bridge/save/`).
+  The quarry was completed with order 16 skipped (rootstone 12). On the helper's
+  `warren_undertrail` leg (-420,2470) → (-380,2540), the player stalled at about (-406,2488),
+  which is on the flank of `rises.peaks[5]` (centre -380,2488, r 30, the Warrens mound).
+  Log: `EARNED WARRENS FAIL — Ordinary quarry/Warrens movement did not reach (-380.0, -3.984001, 2540.0); player=(-406.0465, -6.410811, 2488.072)`
+  (one `walk_confined_recovery` first). Attempt log: `/tmp/claude-0/earned_chain/seed4_warrens_attempt6/`.
+- Alternative 1 (own file, `warrens_route.gd`): walk ordinary ground west of the mound,
+  (-432,2492) → (-418,2528), before the helper's leg. Disclosed as receipt `undertrail_mound_detour`.
+- Alternative 1 **worked** (attempt 7, 20:14 UTC): Warrens entered, guardian won (20 hits), exited at (-353.1, 4.56, 2606.1). B3 remains an open Meadows route defect: the authored undertrail leg crosses the mound.
