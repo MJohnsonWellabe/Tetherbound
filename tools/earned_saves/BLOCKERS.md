@@ -128,3 +128,4 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   with a delay. Alternative 2 (attempt 3) waits up to 240 frames after an unsignalled press for
   the real dialogue panel. `_talk()` still requires the exact challenge conversation.
   Disclosed as `prompt_press_delayed_dialogue`.
+- Alternative 2 **worked** (attempt 3): captain beaten (3 rounds, 45 hits), Sela freed, relay disabled (18 conduits to 0), Mill crossed. B4 remains an open Meadows/arbiter defect: the captain's prompt press does not emit the arbiter's `activated` signal.
