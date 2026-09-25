@@ -384,7 +384,8 @@ static func chance_tier_color(chance: float) -> Color:
 ## otherwise carry "this cannot be undone" (UX §8: danger/valid/invalid never
 ## depend on colour alone). Drawn here rather than typed as U+26A0 because
 ## the UI font (Kenney Future) has no such glyph and a fallback font is not
-## guaranteed on the Ally. An amber triangle, dark-outlined, with a dark "!".
+## guaranteed on the Ally. An amber triangle, dark-outlined, with a dark "!"
+## whose bar starts clear of the apex outline, so the two never fuse at 28 px.
 ## Pure image work, safe headless. Not cached: a `static var` on this
 ## constants module changed unrelated world behaviour in
 ## `smoke_water_guardian_ceremony` (reproduced 3/3), and callers build their
@@ -416,7 +417,7 @@ static func warning_icon(px: int = 24) -> Texture2D:
 						if Geometry2D.point_is_inside_triangle(p, i_top, i_left, i_right):
 							c = WARNING
 							var bar_w := n * 0.11
-							var in_bar := absf(p.x - n * 0.5) <= bar_w * 0.5 and p.y >= n * 0.34 and p.y <= n * 0.66
+							var in_bar := absf(p.x - n * 0.5) <= bar_w * 0.5 and p.y >= n * 0.40 and p.y <= n * 0.66
 							var in_dot := p.distance_to(Vector2(n * 0.5, n * 0.77)) <= bar_w * 0.62
 							if in_bar or in_dot:
 								c = ink
