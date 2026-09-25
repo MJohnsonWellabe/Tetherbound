@@ -89,7 +89,9 @@ const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const REWARD_DELIVERY := preload("res://scripts/net/reward_delivery.gd")
 
 const DOSS_FLAG := "river_nest_doss_cleared"
-const DOSS_AT := Vector3(72.0, 0.0, 4187.4)
+## Must equal playground_world.gd::RIVER_NEST_AT (F03 moved both; pinned by
+## tests/test_world_ledger_races.gd).
+const DOSS_AT := Vector3(-19.0, 0.0, 4180.0)
 const DOSS_INTERACTION_RADIUS_M := 6.0
 const DOSS_COST := {"wood": 1, "fiber": 1}
 const DOSS_REWARDS := {"coin": 45, "potion_large": 1}
