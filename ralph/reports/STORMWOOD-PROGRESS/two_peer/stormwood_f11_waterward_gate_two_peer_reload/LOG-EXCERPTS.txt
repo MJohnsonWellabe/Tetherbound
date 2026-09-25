@@ -1,0 +1,15 @@
+== net/net-proof_two_peer-20260925T201217Z/peer-0.log
+== net/net-proof_two_peer-20260925T201217Z/peer-1.log
+3349:SCRIPT ERROR: Trying to cast a freed object.
+3350-          at: current_speaker (res://scripts/player/conversation_camera.gd:175)
+3351-          GDScript backtrace (most recent call first):
+3352-              [0] current_speaker (res://scripts/player/conversation_camera.gd:175)
+3353-              [1] begin (res://scripts/player/conversation_camera.gd:134)
+3354-              [2] _push_the_camera_in (res://scripts/ui/dialogue_panel.gd:367)
+3355-              [3] start (res://scripts/ui/dialogue_panel.gd:197)
+3356-              [4] _start_dialogue_when_free (res://scripts/world/stormwood_ending.gd:732)
+3357-              [5] receive (res://scripts/world/stormwood_ending.gd:152)
+3358-              [6] _receive (res://scripts/world/stormwood_encounter_hub.gd:262)
+3359-              [7] _rpc_stormwood_encounter_message (res://scripts/net/session.gd:1185)
+3360-[session] client leave: wrote character 'character-f0702b8193b38edd91f2ad762f9560dd' (no world file -- D100)
+3361-[session] client leave: wrote character 'character-f0702b8193b38edd91f2ad762f9560dd' (no world file -- D100)
