@@ -33,7 +33,7 @@ class TraceBridge:
 			" crossing=", centre, " distance=", here.distance_to(centre), " depth=", _depth())
 		return await super._travel_and_cross([], crossing)
 
-	func _press_gate(prompt: Node3D) -> bool:
+	func _press_gate(prompt: Node3D, accept_open: bool = false) -> bool:
 		_gate_press_count += 1
 		var provider: Object = _arbiter.call("winning_provider")
 		var direct_offer: Dictionary = prompt.call("interaction_offer", _player.global_position)
@@ -57,7 +57,7 @@ class TraceBridge:
 		print("BRIDGE GATE OFFER BEFORE ", JSON.stringify(row))
 		if provider != prompt or not bool((_arbiter.call("winner") as Dictionary).get("actionable", false)):
 			_print_nearby_providers()
-		return await super._press_gate(prompt)
+		return await super._press_gate(prompt, accept_open)
 
 	func _print_nearby_providers() -> void:
 		var providers: Dictionary = _arbiter.get("_provider_set") as Dictionary
