@@ -1,0 +1,35 @@
+t= 0.0s mode=LAND drowning=false stamina=7.8 health=100.0 cue=hidden -> sequence/frame_00.jpg
+t= 1.0s mode=LAND drowning=false stamina=25.8 health=100.0 cue=hidden -> sequence/frame_01.jpg
+t= 2.0s mode=LAND drowning=false stamina=43.8 health=100.0 cue=hidden -> sequence/frame_02.jpg
+t= 3.0s mode=LAND drowning=false stamina=61.8 health=100.0 cue=hidden -> sequence/frame_03.jpg
+t= 4.0s mode=LAND drowning=false stamina=79.8 health=100.0 cue=hidden -> sequence/frame_04.jpg
+t= 5.0s mode=LAND drowning=false stamina=97.8 health=100.0 cue=hidden -> sequence/frame_05.jpg
+t= 6.0s mode=LAND drowning=false stamina=100.0 health=100.0 cue=hidden -> sequence/frame_06.jpg
+t= 6.5s STAGED: entered water, stamina set to 12.0
+t= 7.0s mode=HUMAN drowning=false stamina=10.4 health=100.0 cue=hidden -> sequence/frame_07.jpg
+t= 8.0s mode=HUMAN drowning=false stamina=7.6 health=100.0 cue=hidden -> sequence/frame_08.jpg
+t= 9.0s mode=HUMAN drowning=false stamina=4.8 health=100.0 cue=hidden -> sequence/frame_09.jpg
+t=10.0s mode=HUMAN drowning=false stamina=2.0 health=100.0 cue=hidden -> sequence/frame_10.jpg
+t=11.0s mode=HUMAN drowning=true stamina=0.0 health=98.9 cue=visible -> sequence/frame_11.jpg
+t=12.0s mode=HUMAN drowning=true stamina=0.0 health=94.9 cue=visible -> sequence/frame_12.jpg
+t=13.0s mode=HUMAN drowning=true stamina=0.0 health=90.9 cue=visible -> sequence/frame_13.jpg
+t=14.0s mode=HUMAN drowning=true stamina=0.0 health=86.9 cue=visible -> sequence/frame_14.jpg
+t=15.0s mode=HUMAN drowning=true stamina=0.0 health=82.9 cue=visible -> sequence/frame_15.jpg
+t=16.0s mode=HUMAN drowning=true stamina=0.0 health=78.9 cue=visible -> sequence/frame_16.jpg
+t=17.0s mode=HUMAN drowning=true stamina=0.0 health=74.7 cue=visible -> sequence/frame_17.jpg
+t=18.0s mode=HUMAN drowning=true stamina=0.0 health=70.7 cue=visible -> sequence/frame_18.jpg
+t=19.0s mode=HUMAN drowning=true stamina=0.0 health=66.7 cue=visible -> sequence/frame_19.jpg
+t=20.0s mode=HUMAN drowning=true stamina=0.0 health=62.7 cue=visible -> sequence/frame_20.jpg
+t=21.0s mode=HUMAN drowning=true stamina=0.0 health=58.7 cue=visible -> sequence/frame_21.jpg
+t=22.0s mode=HUMAN drowning=true stamina=0.0 health=54.7 cue=visible -> sequence/frame_22.jpg
+t=23.0s mode=HUMAN drowning=true stamina=0.0 health=50.7 cue=visible -> sequence/frame_23.jpg
+t=24.0s mode=HUMAN drowning=true stamina=0.0 health=46.7 cue=visible -> sequence/frame_24.jpg
+t=25.0s mode=LAND drowning=false stamina=0.0 health=44.9 cue=hidden -> sequence/frame_25.jpg
+t=26.0s mode=LAND drowning=false stamina=7.8 health=44.9 cue=hidden -> sequence/frame_26.jpg
+t=27.0s mode=LAND drowning=false stamina=25.8 health=44.9 cue=hidden -> sequence/frame_27.jpg
+t=28.0s mode=LAND drowning=false stamina=43.8 health=44.9 cue=hidden -> sequence/frame_28.jpg
+t=29.0s mode=LAND drowning=false stamina=61.8 health=44.9 cue=hidden -> sequence/frame_29.jpg
+t=30.0s mode=LAND drowning=false stamina=79.8 health=44.9 cue=hidden -> sequence/frame_30.jpg
+t=31.0s mode=LAND drowning=false stamina=97.8 health=44.9 cue=hidden -> sequence/frame_31.jpg
+t=32.0s mode=LAND drowning=false stamina=100.0 health=44.9 cue=hidden -> sequence/frame_32.jpg
+t=33.0s mode=LAND drowning=false stamina=100.0 health=44.9 cue=hidden -> sequence/frame_33.jpg
