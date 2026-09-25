@@ -346,7 +346,13 @@ func _place_fixture(id: String) -> Node3D:
 		var target := Vector3(at.x, _player.global_position.y, at.y)
 		if not await _stow_piece():
 			return null
-		if not await _walk_to(target - _forward() * PLACE_AHEAD, "%s stance at %s" % [id, at]):
+		# One candidate among several: an unreachable stance (run 6, seed
+		# 1901707716: something occupied (25.15, -37.0) for three whole walks)
+		# is answered by the next spot, exactly like a red ghost below. Only
+		# running out of spots is a failure, and the final _fail says so.
+		if not await _walk_to(target - _forward() * PLACE_AHEAD, "%s stance at %s" % [id, at],
+				MOVE_EPSILON, true, false):
+			transcript.append("%s stance at %s unreachable; trying the next spot" % [id, at])
 			continue
 		if not await _select_piece(id):
 			return null
@@ -1177,7 +1183,7 @@ func _forward() -> Vector3:
 ## step-clear fan-out below only cares whether the interact line freed up, and
 ## a short step that did that is a success, not a failure to record.
 func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSILON,
-		report_failure: bool = true) -> bool:
+		report_failure: bool = true, fail_on_miss: bool = true) -> bool:
 	if _nav == null:
 		_nav = NAVIGATOR.new(_tree, _player, _rig, Callable(self, "_move"))
 	# From the leg's own length, not a flat number. `data/config/movement.json`
@@ -1222,13 +1228,34 @@ func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSIL
 		"arbiter_provider": str((provider as Node).get_path()) if provider is Node else str(provider),
 		"arbiter_winner": _arbiter.call("winner") if _arbiter != null and _arbiter.has_method("winner") else {},
 		"slide_contacts": contacts,
+		"bodies_near_target": _bodies_near(target, 6.0),
 	}))
+	if not fail_on_miss:
+		return false
 	_fail("controller movement could not reach %s (stopped %.1fm short at %s)" % [
 		purpose,
 		Vector2(target.x - _player.global_position.x,
 			target.z - _player.global_position.z).length(),
 		str(_player.global_position.round())])
 	return false
+
+
+## Diagnostic only: every physics body whose origin lies within `radius` of
+## `target` (planar), with its path, position and visibility.
+func _bodies_near(target: Vector3, radius: float) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	var flat := Vector2(target.x, target.z)
+	for node: Node in _world.find_children("*", "PhysicsBody3D", true, false):
+		var body := node as Node3D
+		if body == null or body == _player:
+			continue
+		var at := body.global_position
+		if Vector2(at.x, at.z).distance_to(flat) > radius:
+			continue
+		rows.append({"path": str(body.get_path()), "position": str(at.snapped(Vector3.ONE * 0.01)),
+			"visible": body.is_visible_in_tree(),
+			"layer": (body as CollisionObject3D).collision_layer if body is CollisionObject3D else -1})
+	return rows
 
 
 func _tap(action: StringName) -> void:

@@ -56,8 +56,12 @@ func test_live_update_preserves_manual_look_throw_target_and_room_constraint() -
 	rig._target = ally
 	manager.room = 2.0
 	manager.call("_update_combat_camera_framing", 1.0)
-	assert_almost_eq(rig._shoulder, 0.0)
-	assert_true(rig._distance <= 2.0)
+	# F04: a nearby wall is not a camera-distance ceiling or a shoulder reset.
+	# SpringArm3D and the rig's swept pivot handle real geometry; the request
+	# keeps the full framing distance and the solved shoulder.
+	var base := float((load("res://scripts/combat/combat_math.gd").config().get("camera", {}) as Dictionary).get("distance", 6.0))
+	assert_almost_eq(rig._distance, base, 0.0001, "the nearest wall no longer truncates the distance request")
+	assert_true(rig._shoulder > 1.0, "the nearest wall no longer zeroes the shoulder")
 	manager.free()
 	rig.free()
 	ally.free()

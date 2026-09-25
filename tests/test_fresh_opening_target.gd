@@ -129,3 +129,13 @@ func test_transient_readiness_uses_current_verdict_and_clear_preview_without_fai
 	assert_false(opening._aim_readiness_ready())
 	combat.free()
 	throw.free()
+
+
+func test_aim_recovery_walks_round_a_blocked_line_at_throwing_range() -> void:
+	assert_eq(OPENING.aim_recovery(7.3, "line_of_sight_blocked"), "reposition",
+		"a blocked line at a comfortable range is answered by moving, not re-aiming in place")
+	assert_eq(OPENING.aim_recovery(7.3, "reticle_outside_body"), "retry")
+	assert_eq(OPENING.aim_recovery(OPENING.AIM_THROWABLE_METRES + 1.0, "line_of_sight_blocked"), "close",
+		"past the orb's reach closing in comes first")
+	assert_eq(OPENING.aim_recovery(OPENING.AIM_TOO_CLOSE_METRES - 1.0, "line_of_sight_blocked"), "back_off",
+		"too steep to centre still backs off")

@@ -239,10 +239,12 @@ func _a_save_mid_ceremony_does_not_lose_or_duplicate_the_offer() -> void:
 	# conversation is open, the same technique smoke_gate_e_finale.gd's
 	# `_pull_the_lever()` uses.
 	var reached_ceremony := false
+	_stand_in_the_chamber(world)
 	for i in 600:
 		await physics_frame
 		if bool(panel.call("is_open")):
 			await _press("interact")
+		_accept_if_offered(world)
 		if _game.get("pending_catch") != null:
 			reached_ceremony = true
 			break
@@ -271,11 +273,13 @@ func _a_save_mid_ceremony_does_not_lose_or_duplicate_the_offer() -> void:
 	# re-derive the offer through its own stage machine, which means
 	# re-showing (and this time re-dismissing) the same join conversation.
 	var pending: Variant = null
+	_stand_in_the_chamber(world)
 	for i in 600:
 		await physics_frame
 		var panel2 := world.get_node_or_null(^"DialoguePanel")
 		if panel2 != null and bool(panel2.call("is_open")):
 			await _press("interact")
+		_accept_if_offered(world)
 		pending = _game.get("pending_catch")
 		if pending != null:
 			break
@@ -301,6 +305,26 @@ func _a_save_mid_ceremony_does_not_lose_or_duplicate_the_offer() -> void:
 
 
 ## --- harness ----------------------------------------------------------------
+
+## F05 (granted accept step): the freed legendary offers each character an
+## explicit choice instead of joining silently, and a resumed offer waits for
+## the player to be in the chamber with it. Stand the player on the machine
+## control, and answer ACCEPT through the accept prompt's own
+## `interaction_activate()` -- the call the arbiter makes on the player's press.
+func _stand_in_the_chamber(world: Node) -> void:
+	var player := world.get_node_or_null(^"Player") as Node3D
+	var control := world.find_child("MachineControl", true, false) as Node3D
+	if player != null and control != null:
+		player.global_position = control.global_position + Vector3(0.0, 0.3, 0.0)
+
+
+func _accept_if_offered(world: Node) -> void:
+	var climax := world.get_node_or_null(^"StrongholdClimax")
+	if climax == null or not bool(climax.call("choice_open")):
+		return
+	var accept := world.find_child("VeridianAcceptPrompt", true, false)
+	if accept != null:
+		accept.call("interaction_activate")
 
 func _fill_party_of_five(party: RefCounted, include_veridian: bool) -> void:
 	party.call("clear")
