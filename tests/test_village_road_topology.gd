@@ -28,10 +28,26 @@ const ARM_MERGE_M := 2.5
 ## Distinct junctions along a street must be at least this far apart, or
 ## several "T-junctions" are one hub drawn in pieces.
 const MIN_JUNCTION_SPACING_M := 6.0
-## Building footprints are shrunk by this before the centreline test: the
-## aprons carry +0.2m margin and door canopies, and a road legitimately ends
-## on a threshold.
+## Two building checks, one strict and one documented:
+##  * Every road NOT on the through-road -- every F01 lane and branch -- must
+##    keep its whole painted band (paths.width/2 + paths.shoulder = 1.8m, read
+##    from config) off every full building footprint, except the one segment
+##    that ends ON a door threshold.
+##  * The through-road itself is OWNER-0912's pinned street (Grandpa's door,
+##    the west street past the inn, South Street past Mira's shop), which this
+##    work order may not move. Its centreline may not enter a footprint shrunk
+##    by FOOTPRINT_INSET_M. Why 1m and not 1.8m: the footprints are
+##    building_aprons boxes, which are the prefab's combined AABB + 0.2m
+##    margin and, for the inn, the door canopy's 0.68m overhang (see the
+##    apron's own _comment_t1village); the pinned street runs 0.44m from the
+##    inn's canopy box and 1.73m from Mira's, ending on Grandpa's threshold.
 const FOOTPRINT_INSET_M := 1.0
+const PROMPT_CLEAR_M := 3.2
+const DOOR_PROMPT_RADIUS_M := 3.0
+const PREFABS_PATH := "res://data/config/building_prefabs.json"
+const BAND1_VEGETATION_PATH := "res://data/config/bands/band1_lower_meadows/vegetation.json"
+const BERRY_MODEL := "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf"
+const REQUIRED_SUBAREA_KINDS := ["berry_field", "grove", "stone_work"]
 
 var _terrain: Dictionary = {}
 var _topology: Dictionary = {}
@@ -353,69 +369,187 @@ func test_every_junction_is_a_branch_off_the_through_road() -> void:
 
 ## --- the side lane and its subarea -----------------------------------------
 
-func test_a_side_lane_leads_off_the_through_road_to_a_named_subarea() -> void:
-	var lanes := _topology.get("side_lanes", []) as Array
-	assert_false(lanes.is_empty(), "no side lane is declared")
-	var subareas := {}
+func _subareas() -> Dictionary:
+	var out := {}
 	for raw: Variant in (_topology.get("subareas", []) as Array):
-		subareas[str((raw as Dictionary).get("id", ""))] = raw
+		out[str((raw as Dictionary).get("id", ""))] = raw
+	return out
+
+
+func _structures(prefix: String) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	for raw: Variant in (_json(VILLAGE_PATH).get("structures", []) as Array):
+		if str((raw as Dictionary).get("prefab", "")).begins_with(prefix):
+			out.append(_v((raw as Dictionary).get("at", [])))
+	return out
+
+
+func _harvest(item: String) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	for raw: Variant in (_json(HARVEST_PATH).get("nodes", []) as Array):
+		if str((raw as Dictionary).get("item", "")) == item:
+			out.append(_v((raw as Dictionary).get("at", [])))
+	return out
+
+
+func _bush_anchors() -> Array:
+	var anchors := (_json(BAND1_VEGETATION_PATH).get("layer_anchors", {}) as Dictionary).get("bushes", []) as Array
+	return anchors
+
+
+func test_the_three_named_subareas_exist_and_are_served_by_roads() -> void:
+	var subareas := _subareas()
+	var kinds: Array = []
+	for id: String in subareas:
+		kinds.append(str((subareas[id] as Dictionary).get("kind", "")))
+	for kind: String in REQUIRED_SUBAREA_KINDS:
+		assert_true(kind in kinds, "WORLD 3.2 names a %s subarea and the village declares none" % kind)
+	var home := _nearest_node(_v(_topology.get("home_door", [])))
+	for id: String in subareas:
+		var sub := subareas[id] as Dictionary
+		var name := str(sub.get("name", ""))
+		assert_false(name.is_empty(), "subarea %s has a player-facing name" % id)
+		var centre := _v(sub.get("centre", []))
+		var radius := float(sub.get("radius", 0.0))
+		assert_true(radius >= 5.0, "%s is a place, not a spot (radius %.1fm)" % [name, radius])
+		assert_true(BOUNDARY.contains(_outline, centre), "%s lies inside the village fence" % name)
+		var road_id := str(sub.get("road", ""))
+		assert_true(_roads.has(road_id), "%s is served by a real road (%s)" % [name, road_id])
+		if not _roads.has(road_id):
+			continue
+		var line: PackedVector2Array = _roads[road_id]
+		assert_true(_distance_to_line(centre, line) <= radius,
+			"the %s road passes inside %s (%.1fm from its centre, radius %.1fm)" % [
+				road_id, name, _distance_to_line(centre, line), radius])
+		# The road that serves it is on Grandpa's door's own road network: some
+		# graph node lying on that road is reachable from home.
+		var reachable := false
+		for i: int in _adj:
+			if _distance_to_line(_nodes[i], line) <= SNAP_M and _shortest(home, i) < INF:
+				reachable = true
+				break
+		assert_true(reachable, "%s's road is reachable along village roads from Grandpa's door" % name)
+
+
+func test_every_side_lane_leaves_the_through_road_and_ends_in_its_subarea() -> void:
+	var lanes := _topology.get("side_lanes", []) as Array
+	assert_true(lanes.size() >= 1, "no side lane is declared")
+	var subareas := _subareas()
 	for raw: Variant in lanes:
 		var lane_spec := raw as Dictionary
 		var road_id := str(lane_spec.get("road", ""))
-		assert_true(_roads.has(road_id), "side lane %s is a real road polyline" % road_id)
 		var sub := subareas.get(str(lane_spec.get("subarea", "")), {}) as Dictionary
+		assert_true(_roads.has(road_id), "side lane %s is a real road polyline" % road_id)
 		assert_false(sub.is_empty(), "side lane %s names a declared subarea" % road_id)
 		if not _roads.has(road_id) or sub.is_empty():
 			continue
-		assert_false(str(sub.get("name", "")).is_empty(), "the subarea has a player-facing name")
 		var line: PackedVector2Array = _roads[road_id]
-		var centre := _v(sub.get("centre", []))
-		var radius := float(sub.get("radius", 0.0))
 		assert_true(_on_through_road(line[0]), "side lane %s leaves from the through-road" % road_id)
-		assert_true(line[line.size() - 1].distance_to(centre) <= radius,
+		assert_true(line[line.size() - 1].distance_to(_v(sub.get("centre", []))) <= float(sub.get("radius", 0.0)),
 			"side lane %s ends inside %s" % [road_id, str(sub.get("name", ""))])
 		var length := 0.0
 		for i in line.size() - 1:
 			length += line[i].distance_to(line[i + 1])
-		assert_true(length >= 15.0, "side lane %s is a visible lane (%.1fm), not a doorstep" % [road_id, length])
-		for p: Vector2 in line:
-			assert_true(BOUNDARY.contains(_outline, p), "side lane %s stays inside the village fence" % road_id)
-		# Graph-connected from Grandpa's door, not just geometrically nearby.
-		var home := _nearest_node(_v(_topology.get("home_door", [])))
-		var lane_end := _nearest_node(line[line.size() - 1])
-		assert_true(_shortest(home, lane_end) < INF, "side lane %s is reachable along roads from home" % road_id)
-		# The name is backed by what stands there.
-		if str(sub.get("kind", "")) == "stone_work":
-			var stones := 0
-			for node_raw: Variant in (_json(HARVEST_PATH).get("nodes", []) as Array):
-				var node := node_raw as Dictionary
-				if str(node.get("item", "")) == "stone" and _v(node.get("at", [])).distance_to(centre) <= radius:
-					stones += 1
-			assert_true(stones >= 2, "%s is a stone-working area with %d authored stone nodes in it" % [
-				str(sub.get("name", "")), stones])
-
-
-func test_the_stoneyard_lane_mouth_carries_a_named_fingerpost() -> void:
-	var lanes := _topology.get("side_lanes", []) as Array
-	var subareas := {}
-	for raw: Variant in (_topology.get("subareas", []) as Array):
-		subareas[str((raw as Dictionary).get("id", ""))] = raw
+		assert_true(length >= 6.0, "side lane %s is a visible lane (%.1fm), not a doorstep" % [road_id, length])
+	var stone_lane_found := false
 	for raw: Variant in lanes:
-		var lane_spec := raw as Dictionary
-		var line: PackedVector2Array = _roads.get(str(lane_spec.get("road", "")), PackedVector2Array())
-		var name := str((subareas.get(str(lane_spec.get("subarea", "")), {}) as Dictionary).get("name", ""))
+		var sub := subareas.get(str((raw as Dictionary).get("subarea", "")), {}) as Dictionary
+		if str(sub.get("kind", "")) == "stone_work":
+			stone_lane_found = true
+	assert_true(stone_lane_found, "the stone-working area has its own side lane")
+
+
+func test_each_subarea_is_backed_by_what_stands_there() -> void:
+	var subareas := _subareas()
+	for id: String in subareas:
+		var sub := subareas[id] as Dictionary
+		var name := str(sub.get("name", ""))
+		var centre := _v(sub.get("centre", []))
+		var radius := float(sub.get("radius", 0.0))
+		match str(sub.get("kind", "")):
+			"stone_work":
+				var stones := _harvest("stone").filter(func(p: Vector2) -> bool: return p.distance_to(centre) <= radius)
+				assert_true(stones.size() >= 2, "%s holds %d authored stone nodes" % [name, stones.size()])
+			"berry_field":
+				var berries := _harvest("berries").filter(func(p: Vector2) -> bool: return p.distance_to(centre) <= radius)
+				assert_true(berries.size() >= 1, "%s holds %d authored berry harvest nodes" % [name, berries.size()])
+				var rows := 0
+				for raw: Variant in _bush_anchors():
+					var anchor := raw as Dictionary
+					if _v(anchor.get("at", [])).distance_to(centre) <= radius \
+							and (anchor.get("models", []) as Array) == [BERRY_MODEL] \
+							and int(anchor.get("count", 0)) >= 5:
+						rows += 1
+				assert_true(rows >= 1, "%s has a planted row of berry bushes (Bush_Common_Flowers anchor)" % name)
+				var rails := _structures("fence_run").filter(func(p: Vector2) -> bool: return p.distance_to(centre) <= radius)
+				assert_true(rails.size() >= 2, "%s is a fenced field (%d rails)" % [name, rails.size()])
+			"grove":
+				var oaks := _structures("square_oak").filter(func(p: Vector2) -> bool: return p.distance_to(centre) <= radius)
+				assert_true(oaks.size() >= 5, "%s stands %d authored trees" % [name, oaks.size()])
+				for oak: Vector2 in oaks:
+					var clearance := INF
+					for road: String in _roads:
+						clearance = minf(clearance, _distance_to_line(oak, _roads[road] as PackedVector2Array))
+					assert_true(clearance >= 3.0, "%s's tree at %s keeps its trunk off the road (%.1fm)" % [name, oak, clearance])
+				var under := false
+				for raw: Variant in _bush_anchors():
+					if _v((raw as Dictionary).get("at", [])).distance_to(centre) <= radius:
+						under = true
+				assert_true(under, "%s has an understorey anchor" % name)
+			_:
+				_fail("subarea %s has an unknown kind" % name)
+
+
+func test_every_subarea_is_named_by_a_fingerpost_on_its_road() -> void:
+	var subareas := _subareas()
+	var trailheads := (_terrain.get("paths", {}) as Dictionary).get("trailheads", []) as Array
+	for id: String in subareas:
+		var sub := subareas[id] as Dictionary
+		var name := str(sub.get("name", ""))
+		var line: PackedVector2Array = _roads.get(str(sub.get("road", "")), PackedVector2Array())
 		var found := false
-		for th_raw: Variant in ((_terrain.get("paths", {}) as Dictionary).get("trailheads", []) as Array):
+		for th_raw: Variant in trailheads:
 			var th := th_raw as Dictionary
 			if str(th.get("label", "")) != name or line.is_empty():
 				continue
 			var at := _v(th.get("at", []))
-			found = at.distance_to(line[0]) <= 6.0
+			found = _distance_to_line(at, line) <= 6.0
 			var clearance := INF
-			for id: String in _roads:
-				clearance = minf(clearance, _distance_to_line(at, _roads[id] as PackedVector2Array))
-			assert_true(clearance >= 1.8, "the %s fingerpost stands off every road's painted band (%.2fm)" % [name, clearance])
-		assert_true(found, "a one-arm fingerpost names %s at its lane mouth" % name)
+			for road: String in _roads:
+				clearance = minf(clearance, _distance_to_line(at, _roads[road] as PackedVector2Array))
+			assert_true(clearance >= _painted_half_width(),
+				"the %s fingerpost stands off every road's painted band (%.2fm)" % [name, clearance])
+		assert_true(found, "a one-arm fingerpost names %s beside the road that serves it" % name)
+
+
+func test_no_harvest_prompt_sits_inside_a_village_door_prompt() -> void:
+	var prefabs := _json(PREFABS_PATH).get("prefabs", {}) as Dictionary
+	var nodes: Array[Vector2] = []
+	for raw: Variant in (_json(HARVEST_PATH).get("nodes", []) as Array):
+		nodes.append(_v((raw as Dictionary).get("at", [])))
+	var doors := 0
+	for raw: Variant in (_json(VILLAGE_PATH).get("structures", []) as Array):
+		var s := raw as Dictionary
+		var door := (prefabs.get(str(s.get("prefab", "")), {}) as Dictionary).get("door", {}) as Dictionary
+		var local := door.get("at", []) as Array
+		if local.size() < 3:
+			continue
+		doors += 1
+		var yaw := deg_to_rad(float(s.get("yaw_deg", 0.0)))
+		var lx := float(local[0])
+		var lz := float(local[2])
+		var at := _v(s.get("at", [])) + Vector2(lx * cos(yaw) + lz * sin(yaw), -lx * sin(yaw) + lz * cos(yaw))
+		for node: Vector2 in nodes:
+			assert_true(node.distance_to(at) >= PROMPT_CLEAR_M,
+				"the %s door at (%.2f,%.2f) is %.2fm from the harvest node at %s, inside its %.1fm prompt" % [
+					str(s.get("prefab", "")), at.x, at.y, node.distance_to(at), node, DOOR_PROMPT_RADIUS_M])
+	assert_true(doors >= 3, "the village's enterable buildings have doors to check (%d)" % doors)
+
+
+func test_village_door_prompt_radius_is_the_one_this_test_guards() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/world/village_door.gd")
+	assert_true(source.contains('"configure", "Open %s" % label_noun, ' + String.num(DOOR_PROMPT_RADIUS_M, 1) + ")"),
+		"village_door.gd's prompt radius changed; update DOOR_PROMPT_RADIUS_M / PROMPT_CLEAR_M")
 
 
 ## --- fence, gates, buildings ------------------------------------------------
@@ -432,24 +566,93 @@ func test_every_village_road_leaves_the_fence_through_a_gate() -> void:
 		assert_true(used.has(gid), "gate %s no longer has a road through it" % gid)
 
 
+func _painted_half_width() -> float:
+	var paths := _terrain.get("paths", {}) as Dictionary
+	return float(paths.get("width", 0.0)) * 0.5 + float(paths.get("shoulder", 0.0))
+
+
+func _footprint(fp: Dictionary, inset: float) -> PackedVector2Array:
+	var centre := _v(fp.get("centre", []))
+	var half := _v(fp.get("half_extents", [])) - Vector2(inset, inset)
+	var yaw := deg_to_rad(float(fp.get("yaw_deg", 0.0)))
+	var poly := PackedVector2Array()
+	for corner: Vector2 in [Vector2(-half.x, -half.y), Vector2(half.x, -half.y), Vector2(half.x, half.y), Vector2(-half.x, half.y)]:
+		poly.append(centre + Vector2(corner.x * cos(yaw) + corner.y * sin(yaw), -corner.x * sin(yaw) + corner.y * cos(yaw)))
+	return poly
+
+
+func _village_footprints() -> Array:
+	var out: Array = []
+	for raw: Variant in ((_terrain.get("building_aprons", {}) as Dictionary).get("footprints", []) as Array):
+		if _v((raw as Dictionary).get("centre", [])).distance_to(_well()) <= 90.0:
+			out.append(raw)
+	return out
+
+
+func _thresholds() -> Array[Vector2]:
+	var out: Array[Vector2] = [_v(_topology.get("home_door", []))]
+	for raw: Variant in (_json(VILLAGE_PATH).get("structures", []) as Array):
+		if str((raw as Dictionary).get("prefab", "")) == "doorstep":
+			out.append(_v((raw as Dictionary).get("at", [])))
+	return out
+
+
 func test_no_road_centreline_runs_through_a_building() -> void:
-	var footprints := (_terrain.get("building_aprons", {}) as Dictionary).get("footprints", []) as Array
+	var footprints := _village_footprints()
+	assert_true(footprints.size() >= 5, "the village's building footprints are authored (%d found); this check is vacuous" % footprints.size())
 	for raw: Variant in footprints:
 		var fp := raw as Dictionary
 		var centre := _v(fp.get("centre", []))
-		if centre.distance_to(_well()) > 90.0:
-			continue
-		var half := _v(fp.get("half_extents", [])) - Vector2(FOOTPRINT_INSET_M, FOOTPRINT_INSET_M)
-		var yaw := deg_to_rad(float(fp.get("yaw_deg", 0.0)))
-		var poly := PackedVector2Array()
-		for corner: Vector2 in [Vector2(-half.x, -half.y), Vector2(half.x, -half.y), Vector2(half.x, half.y), Vector2(-half.x, half.y)]:
-			poly.append(centre + Vector2(corner.x * cos(yaw) + corner.y * sin(yaw), -corner.x * sin(yaw) + corner.y * cos(yaw)))
+		var poly := _footprint(fp, FOOTPRINT_INSET_M)
 		for id: String in _roads:
 			var line: PackedVector2Array = _roads[id]
 			for i in line.size() - 1:
 				var clipped := Geometry2D.intersect_polyline_with_polygon(PackedVector2Array([line[i], line[i + 1]]), poly)
 				assert_true(clipped.is_empty(),
 					"road %s runs through the building footprint at (%.1f,%.1f)" % [id, centre.x, centre.y])
+
+
+func test_every_lane_keeps_its_painted_band_off_every_building() -> void:
+	var half_width := _painted_half_width()
+	assert_almost_eq(half_width, 1.8, 0.001, "the painted band is paths.width/2 + paths.shoulder")
+	var footprints := _village_footprints()
+	assert_true(footprints.size() >= 5, "the village's building footprints are authored (%d found)" % footprints.size())
+	var thresholds := _thresholds()
+	var checked := 0
+	for id: String in _roads:
+		var line: PackedVector2Array = _roads[id]
+		for i in line.size() - 1:
+			var a := line[i]
+			var b := line[i + 1]
+			if _on_through_road(a) and _on_through_road(b) and _on_through_road((a + b) * 0.5):
+				continue
+			if BOUNDARY.contains(_outline, a) == false and BOUNDARY.contains(_outline, b) == false:
+				continue
+			var ends_on_threshold := false
+			if i == line.size() - 2:
+				for t: Vector2 in thresholds:
+					if b.distance_to(t) <= SNAP_M:
+						ends_on_threshold = true
+			if ends_on_threshold:
+				continue
+			checked += 1
+			for raw: Variant in footprints:
+				var fp := raw as Dictionary
+				var poly := _footprint(fp, 0.0)
+				var nearest := INF
+				for k in poly.size():
+					var c := poly[k]
+					var d := poly[(k + 1) % poly.size()]
+					nearest = minf(nearest, c.distance_to(Geometry2D.get_closest_point_to_segment(c, a, b)))
+					nearest = minf(nearest, a.distance_to(Geometry2D.get_closest_point_to_segment(a, c, d)))
+					nearest = minf(nearest, b.distance_to(Geometry2D.get_closest_point_to_segment(b, c, d)))
+				if not Geometry2D.intersect_polyline_with_polygon(PackedVector2Array([a, b]), poly).is_empty():
+					nearest = 0.0
+				var centre := _v(fp.get("centre", []))
+				assert_true(nearest >= half_width,
+					"road %s segment (%.1f,%.1f)->(%.1f,%.1f) paints within %.2fm of the building at (%.1f,%.1f)" % [
+						id, a.x, a.y, b.x, b.y, nearest, centre.x, centre.y])
+	assert_true(checked >= 6, "the lane check covered %d village lane segments; it is vacuous" % checked)
 
 
 func test_every_house_door_fronts_a_road() -> void:

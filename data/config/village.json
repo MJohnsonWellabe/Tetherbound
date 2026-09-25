@@ -45,10 +45,9 @@
         19.0,
         -18.0
       ],
-      "yaw_deg": 40.0,
+      "yaw_deg": -110.0,
       "interior": "cottage",
-      "_why": "OWNER-0912 / C3 V-1. The stone cottage moves four metres onto the south side of the west street leg and turns its real doorway north-west toward that road. The move remains on its existing 0.9m cottage/square pads.",
-      "_why_f01": "F01-a road settlement. Yaw -110 -> 40, same centre and pads. At -110 the door faced the retired Practice Meadow spoke from the well; that road is gone, and nothing but the square's lawn lay in front of it. At 40 the real doorway faces south-east onto the Rise lane (terrain_playground.json paths.routes 'The Rise', [21,-5.5]->[22.5,-11.5]->[28,-16.17]), whose centreline passes 4.1m in front of the new threshold; the footprint's nearest corner stays 2.9m off that centreline."
+      "_why": "OWNER-0912 / C3 V-1. The stone cottage moves four metres onto the south side of the west street leg and turns its real doorway north-west toward that road. The move remains on its existing 0.9m cottage/square pads."
     },
     {
       "prefab": "fence_run",
@@ -152,12 +151,11 @@
     {
       "prefab": "doorstep",
       "at": [
-        21.78,
-        -16.25
+        15.72,
+        -18.13
       ],
-      "yaw_deg": 40.0,
-      "_why": "OWNER-0912. cottage_b's existing local threshold [1,3.13] transformed through the new [-110deg] building pose, so the path cue moves with the actual door.",
-      "_why_f01": "F01-a. Moved with cottage_b's 40-degree pose: local [1,3.13] -> [19+2.778, -18+1.755]. Was [15.72,-18.13] at yaw -110."
+      "yaw_deg": -110.0,
+      "_why": "OWNER-0912. cottage_b's existing local threshold [1,3.13] transformed through the new [-110deg] building pose, so the path cue moves with the actual door."
     },
     {
       "prefab": "doorstep",
@@ -233,6 +231,78 @@
       "yaw_deg": 300.0,
       "scale": 1.2,
       "_why": "VP5: village-edge canopy on the south, closing the open grass the approach frame (eye [27,-31]) sees behind the square. 7.6m from the fiber node at (2,-30), 11m from Garrick and the deadwood at (6,-34), 35m from the practice cluster's spawn disk."
+    },
+    {
+      "prefab": "square_oak_a",
+      "at": [
+        -17.5,
+        -0.5
+      ],
+      "yaw_deg": 20.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "square_oak_b",
+      "at": [
+        -23.0,
+        2.5
+      ],
+      "yaw_deg": 135.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "square_oak_a",
+      "at": [
+        -19.0,
+        9.5
+      ],
+      "yaw_deg": 250.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "square_oak_b",
+      "at": [
+        -24.5,
+        8.5
+      ],
+      "yaw_deg": 310.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "square_oak_a",
+      "at": [
+        -21.5,
+        13.5
+      ],
+      "yaw_deg": 80.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "square_oak_b",
+      "at": [
+        -16.0,
+        4.5
+      ],
+      "yaw_deg": 190.0,
+      "_why_f01": "F01-b The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): one of six authored oaks west of the Pond lane, placed by hand against the Pond lane (3.7m+ from its centreline), stone node 6 [-18,6] (2.5m+), Grandpa's garden rails (4m+) and the fence line (4.9m+). Trunk-only collider (building_prefabs.json), so the grove is walkable under its canopy."
+    },
+    {
+      "prefab": "fence_run",
+      "at": [
+        -9.0,
+        -28.5
+      ],
+      "yaw_deg": 0.0,
+      "_why_f01": "F01-b Berry Field (subareas berry_field, centre [-8.5,-23] r6): the field's north rail, meeting the west rail at [-12,-28.5] as an L so the planted rows read as a tended field, not loose bushes. The south and east sides stay open to Berry Lane and the through-road."
+    },
+    {
+      "prefab": "fence_run",
+      "at": [
+        -12.0,
+        -25.5
+      ],
+      "yaw_deg": 90.0,
+      "_why_f01": "F01-b Berry Field's west rail (z -28.5..-22.5), 4.4m clear of Grandpa's south-east work-yard props and 3m clear of the twins' yard crate."
     }
   ],
   "_comment_vp5": "VP5 (visual-parity village lane), 2026-09-02: the entries after `inn` are daylight dressing -- three door thresholds, two garden rails plus a yard rail, two carts and three edge oaks -- placed against the BUILT scene's collider extents (a scratch layout probe printing every structure's world AABB, door node, marker and NPC), not against the recipe comments. The owner's standing constraint applies: not one more object than the yard needs, no new villagers."

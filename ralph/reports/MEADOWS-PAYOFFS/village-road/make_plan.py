@@ -235,6 +235,12 @@ def draw_panel(main, ox, oy, title, terrain, topo_kind, shared, proposed):
         P.line([(x - dx, z - dz), (x + dx, z + dz)], (20, 20, 20), 7)
         P.text(x, z + (3.2 if g["id"] != "RoadGate" else -3.2), g["id"], font(13, True),
                fill=(10, 10, 10))
+    # named-subarea fingerposts (paths.trailheads inside the window)
+    for th in terrain.get("paths", {}).get("trailheads", []):
+        x, z = th["at"]
+        if X0 < x < X1 and Z0 < z < Z1:
+            P.dot(x, z, 4, (230, 230, 230), outline=(60, 40, 20))
+            P.text(x, z - 2.0, "post: " + th["label"], font(10), fill=(60, 40, 20))
     # proposed moves (NEW panel only)
     for mv in proposed:
         fx, fz = mv["from"]
@@ -286,7 +292,7 @@ def main():
     draw_panel(img, GAP, PAD_TOP, "OLD (%s): radial spokes from the well" % OLD_REV, old, "old",
                shared_old, [])
     draw_panel(img, GAP * 2 + PANEL_W, PAD_TOP,
-               "NEW (F01-a): through-road + side lane to The Stoneyard", new, "new", shared,
+               "NEW (F01-a/b): through-road, lanes, Berry Field / Grove / Stoneyard", new, "new", shared,
                proposed)
     d = ImageDraw.Draw(img)
     y = PAD_TOP + PANEL_H + 14

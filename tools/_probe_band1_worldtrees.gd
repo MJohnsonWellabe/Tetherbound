@@ -10,7 +10,9 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 ## The authored trail spine (band1_lower_meadows points), used to keep every
 ## candidate a known lateral distance from the road.
 const TRAIL: Array = [
-	Vector2(27.5, -16), Vector2(14, 20), Vector2(8, 90), Vector2(-40, 180),
+	# F01-a: the spine starts on South Street at (11.5, 2), not the retired
+	# village-gate stub (27.5, -16) -- copied from trail.bands[0].
+	Vector2(11.5, 2), Vector2(14, 20), Vector2(8, 90), Vector2(-40, 180),
 	Vector2(-120, 270), Vector2(-230, 330), Vector2(-360, 400), Vector2(-430, 510),
 	Vector2(-330, 590), Vector2(-190, 650), Vector2(-50, 700), Vector2(90, 760),
 	Vector2(230, 830), Vector2(360, 910), Vector2(430, 1020), Vector2(330, 1130),

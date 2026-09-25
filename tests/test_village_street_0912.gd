@@ -151,8 +151,7 @@ func test_both_street_legs_place_buildings_and_thresholds_at_their_authored_role
 	assert_eq(inn.get("at", []), [-1.5, -2.0], "the inn stands beside rather than across the west street")
 	assert_eq(float(inn.get("yaw_deg", 0.0)), 180.0, "the inn's broad public facade faces north across the street")
 	assert_eq(cottage.get("at", []), [19.0, -18.0], "the stone cottage frames the bend")
-	assert_eq(float(cottage.get("yaw_deg", 0.0)), 40.0,
-		"F01-a: the cottage door faces the Rise lane that now runs past it, not the retired well spoke")
+	assert_eq(float(cottage.get("yaw_deg", 0.0)), -110.0, "the cottage door turns back toward the street")
 	assert_eq(workshop.get("at", []), [2.0, 12.0], "Tam's workshop stands west of the south leg")
 	assert_eq(float(workshop.get("yaw_deg", 0.0)), 90.0, "the workshop bay faces east onto the street")
 	assert_eq(shop.get("at", []), [18.0, 4.0], "Mira's shop stands east of the south leg")
@@ -163,7 +162,7 @@ func test_both_street_legs_place_buildings_and_thresholds_at_their_authored_role
 			var at: Array = (raw as Dictionary).get("at", []) as Array
 			doorstep_positions.append(Vector2(float(at[0]), float(at[1])))
 	assert_true(Vector2(-1.5, -8.1) in doorstep_positions, "the inn threshold moved with its north-facing door")
-	assert_true(Vector2(21.78, -16.25) in doorstep_positions, "the cottage threshold moved with its door")
+	assert_true(Vector2(15.72, -18.13) in doorstep_positions, "the cottage threshold moved with its door")
 	assert_true(Vector2(13.87, 5.0) in doorstep_positions, "Mira's threshold moved with the shop door")
 
 
@@ -186,26 +185,11 @@ func test_south_street_has_one_continuous_hidden_road_to_trailgate() -> void:
 	assert_false(grandpa_route.is_empty(), "the west street to Grandpa remains authored")
 	assert_eq(grandpa_route.get("points", []), [[7.0, -7.0], [-4.0, -13.0], [-16.5, -16.0]],
 		"the west street runs continuously from the shared bend to Grandpa's real door")
-	# F01-a replaced the old [7,-7]->[2,-8.5]->[-1.5,-8.1] pin (a second road
-	# running 1m beside the west street) with the topology it was protecting:
-	# the inn is reached by a short forecourt branch that leaves the west street
-	# itself and ends on the inn's real threshold. The full road-graph contract
-	# lives in tests/test_village_road_topology.gd.
-	var inn_points: Array = inn_route.get("points", []) as Array
-	assert_true(inn_points.size() >= 2, "the inn route is authored")
-	if inn_points.size() >= 2:
-		var threshold := Vector2(float(inn_points[-1][0]), float(inn_points[-1][1]))
-		var branch := Vector2(float(inn_points[-2][0]), float(inn_points[-2][1]))
-		assert_eq(threshold, Vector2(-1.5, -8.1), "the inn route ends on the inn's north-facing threshold")
-		var west: Array = grandpa_route.get("points", []) as Array
-		var on_west := INF
-		for i in west.size() - 1:
-			var a := Vector2(float(west[i][0]), float(west[i][1]))
-			var b := Vector2(float(west[i + 1][0]), float(west[i + 1][1]))
-			on_west = minf(on_west, branch.distance_to(Geometry2D.get_closest_point_to_segment(branch, a, b)))
-		assert_true(on_west <= 0.1, "the inn forecourt branches from the west street itself, not a parallel road")
-		assert_true(branch.distance_to(threshold) <= 4.0,
-			"the inn has a short forecourt branch instead of occupying the west street")
+	# F01-a: the forecourt now leaves the west street itself at the inn
+	# crossroads (-1.5,-11.64), the threshold's own projection onto that street,
+	# instead of running a second road 1m beside it into the square.
+	assert_eq(inn_route.get("points", []), [[7.0, -7.0], [-1.5, -11.64], [-1.5, -8.1]],
+		"the inn has a short forecourt branch off the west street instead of a parallel road")
 	assert_true(Vector2(7.0, -7.0).distance_to(Vector2(10.0, -10.0)) >= 4.0,
 		"the shared bend clears the well canopy and bucket instead of crossing their origin")
 
@@ -223,7 +207,7 @@ func test_south_street_buildings_share_level_ground_and_matching_aprons() -> voi
 	for expected: Dictionary in [
 		{"centre": Vector2(2.0, 12.0), "yaw": 90.0},
 		{"centre": Vector2(18.0, 4.0), "yaw": -90.0},
-		{"centre": Vector2(19.0, -18.0), "yaw": 40.0},
+		{"centre": Vector2(19.0, -18.0), "yaw": -110.0},
 		{"centre": Vector2(-1.5, -2.0), "yaw": 180.0},
 	]:
 		var apron := _apron(expected.centre)

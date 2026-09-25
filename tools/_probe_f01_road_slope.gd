@@ -74,4 +74,25 @@ func _init() -> void:
 			continue
 		print("F01 road %-24s samples %4d  max grade %5.2f deg at (%.1f,%.1f)  max terrain slope %5.2f deg at (%.1f,%.1f)" % [
 			road[0], sampled, max_grade, max_grade_at.x, max_grade_at.y, max_slope, max_slope_at.x, max_slope_at.y])
+	# F01-b: terrain slope across each named subarea's disk.
+	for raw: Variant in ((paths.get("village_topology", {}) as Dictionary).get("subareas", []) as Array):
+		var sub := raw as Dictionary
+		var c := Vector2(float(sub.centre[0]), float(sub.centre[1]))
+		var r := float(sub.get("radius", 0.0))
+		var worst := 0.0
+		var lo := INF
+		var hi := -INF
+		var x := -r
+		while x <= r:
+			var z := -r
+			while z <= r:
+				if Vector2(x, z).length() <= r:
+					var n: Vector3 = field.normal_at(c.x + x, c.y + z)
+					worst = maxf(worst, rad_to_deg(acos(clampf(n.y, -1.0, 1.0))))
+					var h: float = field.height_at(c.x + x, c.y + z)
+					lo = minf(lo, h)
+					hi = maxf(hi, h)
+				z += 1.0
+			x += 1.0
+		print("F01 subarea %-14s max slope %5.2f deg  relief %.2fm" % [str(sub.get("name", "")), worst, hi - lo])
 	quit(0)

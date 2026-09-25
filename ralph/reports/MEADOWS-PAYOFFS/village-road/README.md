@@ -1,48 +1,62 @@
-# F01-a: village road topology as data
+# F01 village road topology (work orders F01-a and F01-b)
 
 Evidence for WORLD §3.2 and ACCEPTANCE F01/M1, part a: the overhead plan comparing the old and new traversable road topology. The in-engine day/night walk and the bakes still belong to the lead.
 
-- `plan_old_new.png` is the labelled overhead plan. OLD is `data/config/terrain_playground.json` at 47774c350; NEW is this branch. `make_plan.py` regenerates it from the JSON, and `topology.py` holds the road-graph rules, which `tests/test_village_road_topology.gd` also implements.
-- `proposed_moves.json` lists shared-file moves that have not been applied. The NEW panel draws them as dashed lines.
-- `tools/_probe_f01_road_slope.gd` measures the grade of each road using the heightfield the bake uses.
+- `plan_old_new.png` is the labelled overhead plan. OLD is 47774c350; NEW is this branch. `make_plan.py` regenerates it from the JSON, and each panel reads the village, boundary and NPC data at its own revision.
+- `topology.py` holds the road-graph rules. `tests/test_village_road_topology.gd` implements the same rules.
+- `proposed_moves.json` lists the moves held in the two `PENDING GRANT` commits. The NEW panel draws them as dashed lines.
+- `tools/_probe_f01_road_slope.gd` measures road grades and the slope across each subarea, using the heightfield the bake uses.
 
-## Topology (computed, not drawn by hand)
+## Topology (computed from the data)
 
 | | OLD | NEW |
 |---|---|---|
 | Road arms within 8 m of the well | 5 | 2 (the through-road passes it) |
-| Junctions (degree ≥ 3) | (7,-7) d5, (10,-10) d3, (14,20) d3, (27.5,-16) d3 | (-8,-13.96) d3 Pond, (-1.5,-11.64) d4 inn crossroads, (10.05,-0.9) d3 Rise |
-| Junctions on the through-road | 1 of 4 | 3 of 3 |
+| Junctions (degree ≥ 3) | (7,-7) d5, (10,-10) d3, (14,20) d3, (27.5,-16) d3 | (-8,-13.96) d4 Pond/Berry crossroads, (-1.5,-11.64) d4 inn/Stoneyard crossroads, (10.05,-0.9) d3 Rise; all three are on the through-road |
 | Home door → TrailGate | 56.0 m | 56.0 m, unchanged |
-| Fence crossings | Pond, Road and TrailGate | the same three points |
-| Road centreline inside a building | the band1 stub runs through Mira's shop, and three spokes start inside the well apron | none |
+| Fence crossings | Pond, Road and TrailGate | the same three points; `village_boundary.json` is unchanged |
 
-## Slopes (2 m baseline, within 75 m of the well)
+## The three named subareas
 
-New segments are at most 9.3° (Stoneyard Lane 0.4°, inn stub 0°, the new Rise leg in the square 0°). The steepest points are on unchanged pieces: The Rise reaches 22.2° at (36.5,-19.1) beside RoadGate, as it did before; the Pond reaches 11.6° past (-14,14); band1 reaches 16.2° outside TrailGate.
+Each subarea is named by a one-arm fingerpost on the road that serves it.
 
-## Bakes the lead must run (Godot writers, serialized)
+- **The Stoneyard** (stone-working area): centre (16.5,-33), radius 7.
+  - Holds stone nodes 4 [22,-34] and 1037 [11,-32], with deadwood 0 at its rim.
+  - Its own scatter clearing is band1 `clearings` order 1929.
+  - It is the end of **Stoneyard Lane**: (-1.5,-11.64) → (4,-18) → (13.6,-20) → (14.2,-26) → (14.6,-31). The lane passes 2.8 m in front of the stone cottage's threshold, so cottage_b keeps its 0912 pose.
+  - The fingerpost stands at (-4.2,-15.6).
+- **Berry Field**: centre (-8.5,-23), radius 6.
+  - Holds berry node 1036 [-9,-19].
+  - A planted row of 7 Bush_Common_Flowers bushes (a band1 `layer_anchors.bushes` entry), sized like a harvest node.
+  - An L of fence rails from `village.json`: north rail at [-9,-28.5], west rail at [-12,-25.5].
+  - It is the end of **Berry Lane**: (-8,-13.96) → (-7.2,-20.5).
+  - The fingerpost stands at (-11,-17.2).
+- **The Grove**: centre (-20,6), radius 8.
+  - Six `village.json` oaks with trunk-only colliders, standing 3.7 m or more from the road.
+  - A 6-bush understorey anchor, round stone node 6.
+  - The Pond lane runs through its east margin.
+  - The fingerpost stands at (-15,1.5).
+
+## Slopes (2 m baseline)
+
+- New lanes are at most 0.6°.
+- Subarea terrain: The Stoneyard up to 7.5° (0.8 m relief), Berry Field up to 6.2° (0.3 m), The Grove up to 20.2° (2.9 m). The grove's value is below the 45° walk limit.
+- The steepest point on any village road is still the unchanged Rise segment beside RoadGate, at 22.2°.
+
+## Bakes the lead must run
+
+Run these as Godot writers, serialized, under the lane's Godot writer lock (for example `flock <lane lock file> <command>`). Run them after deciding on the two `PENDING GRANT` commits, so that the bake sees the final data.
 
 ```
-L=/tmp/claude-0/-home-user/c5e09b24-64e9-5f4d-827d-b9212dd8b5d5/scratchpad/godot-writer.lock
-flock $L ~/godot-bin/godot --headless --path . --script scripts/world/build_playground_terrain.gd
-flock $L ~/godot-bin/godot --headless --path . --script scripts/world/bake_playground_scatter.gd
-~/godot-bin/godot --headless --path . --script tests/run_tests.gd -- --only=test_terrain_bake_freshness.gd,test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh
+~/godot-bin/godot --headless --path . --script scripts/world/build_playground_terrain.gd
+~/godot-bin/godot --headless --path . --script scripts/world/bake_playground_scatter.gd
+~/godot-bin/godot --headless --path . --script tests/run_tests.gd -- --only=test_terrain_bake_freshness.gd,test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh,test_ridgeline_groundmat_composition.gd
 ```
 
-Commit `data/terrain/playground/` (the regions and `manifest.json`) and `data/scatter/playground/`. If the shared-file proposals below are granted, apply them first and bake once.
+Then commit `data/terrain/playground/` (the regions and `manifest.json`) and `data/scatter/playground/`.
 
-## Shared-file changes
+## Pending-grant commits (drop or keep)
 
-Applied under the F01 grant:
-
-- `village.json`: `cottage_b` turns from yaw -110 to yaw 40, so that its real door fronts the Rise lane 4.1 m away. The doorstep moves from [15.72,-18.13] to [21.78,-16.25]. The `building_aprons` entry for [19,-18] follows the new yaw.
-- `village_boundary.json`: **no change needed.** Every road crosses the fence at exactly the old point: PondGate, RoadGate and TrailGate. `test_village_boundary.gd` now checks the approaches and the Lower Meadows spine as well as `routes`.
-- `village_npcs.json`: no change. There are still five street villagers: Mira, Oskar, Tam, Bram and Halda.
-- The vegetation footprint exclusion for cottage_b is a circle (r 5.3), so the re-yaw leaves it unchanged.
-
-Still proposed, because these files are outside the grant:
-
-- `bands/band1_lower_meadows/props.json`: move `work_area` (anvil, workbench, whetstone, crate, pickaxe) by (+17.5,-32.5), from about (-5,-3) to about (12.5,-35.5), into The Stoneyard. Today the cluster sits inside the inn apron.
-- `bands/band1_lower_meadows/vegetation.json` `clearings`: add x 16.5, z -33.0, radius 8.0 so that random trees and rocks stay out of The Stoneyard.
-- `bands/band1_lower_meadows/harvest.json`: berry node 10 [20,-16] and the `cottage_b_backyard` props [19,-18.6] lie inside cottage_b's footprint, about 1 m behind the front wall. The 0912 move left them there; this change did not cause it. Proposal: move the node to [26.0,-19.5], which is 3.5 m off the Rise lane and inside the fence, so that its prompt does not compete with the cottage door.
+- **work_area → The Stoneyard.** In band1 `props.json`, the anvil, workbench, whetstone, crate and pickaxe move by (+17.5,-32.5), from about (-5,-3), inside the inn apron, to about (12.5,-35.5). The commit also corrects the tournament cluster's `_why_vp5`, which still describes the removed spine leg.
+- **Berry nodes → Berry Field.** In band1 `harvest.json`, node 10 moves from [20,-16] to [-5.8,-24] and node 1033 from [-32,-1] to [-10.8,-25.8]. Node 10 has sat inside cottage_b's walls since the 0912 move. The village node count stays 28.
+  - Risk: gate-F segments S03, S03C, S03p3, S03Cp3 and diag_night_preconditions_0919 script a walk to node 10 at [20,-16]. They need re-pointing if this commit is kept.

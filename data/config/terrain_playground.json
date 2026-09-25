@@ -361,8 +361,7 @@
           3.05,
           3.05
         ],
-        "yaw_deg": 40.0,
-        "_why_f01": "F01-a: follows village.json cottage_b to yaw 40 (door onto the Rise lane). REQUIRES the terrain re-bake.",
+        "yaw_deg": -110.0,
         "_why": "OWNER-0912: cottage_b at the west-street bend"
       },
       {
@@ -466,7 +465,7 @@
       },
       {
         "_why": "the square to the practice meadow (the opening's bramblebun)",
-        "_why_f01": "F01-a. Was [10,-10]->[18,-24]->[30,-40]: a spoke radiating from the well. Now follows the through-road west to the inn crossroads, turns north up Stoneyard Lane (paths.approaches village_stoneyard_lane) through The Stoneyard, and continues past its far edge to the practice meadow centre (30,-40), unchanged, so objectives.json's beacon and the bramblebun cluster are where they were. Fingerpost arm points west, which is the way a player actually walks.",
+        "_why_f01": "F01-a/F01-b. Was [10,-10]->[18,-24]->[30,-40]: a spoke radiating from the well. Now follows the through-road west to the inn crossroads, turns north up Stoneyard Lane (paths.approaches village_stoneyard_lane) past the stone cottage's door and through The Stoneyard, and continues past its far edge to the practice meadow centre (30,-40), unchanged, so objectives.json's beacon and the bramblebun cluster are where they were. Fingerpost arm points west, which is the way a player actually walks.",
         "label": "Practice Meadow",
         "points": [
           [
@@ -478,19 +477,19 @@
             -11.64
           ],
           [
-            0.0,
-            -19.0
+            4.0,
+            -18.0
           ],
           [
-            4.0,
+            13.6,
+            -20.0
+          ],
+          [
+            14.2,
             -26.0
           ],
           [
-            10.0,
-            -29.5
-          ],
-          [
-            15.5,
+            14.6,
             -31.0
           ],
           [
@@ -603,27 +602,42 @@
       {
         "id": "village_stoneyard_lane",
         "label": "Stoneyard Lane",
-        "_why_f01": "F01-a (WORLD 3.2: 'at least one visible side lane that leads to the berry field, grove or stone-working area'). The village's side lane: it leaves the through-road at the inn crossroads [-1.5,-11.64] and runs north to The Stoneyard (paths.village_topology.subareas), the stone-working ground around band-1 stone nodes 4 [22,-34] and 1037 [11,-32] with deadwood 0/1020 beside it. An approach, not a route, for the reason South Street is: the fingerpost's Practice Meadow arm already points down it. Ends inside the subarea; 2m+ clear of every harvest node it passes. REQUIRES the terrain + scatter re-bake.",
+        "_why_f01": "F01-a/F01-b (WORLD 3.2: a visible side lane to the berry field, grove or stone-working area). Leaves the through-road at the inn crossroads [-1.5,-11.64], runs 9m+ clear of the well, passes 2.8m in front of the stone cottage's real threshold [15.72,-18.13] (so cottage_b keeps its 0912 pose and its door fronts a road), then turns north into The Stoneyard (paths.village_topology.subareas), the stone-working ground around band-1 stone nodes 4 [22,-34] and 1037 [11,-32]. An approach, not a route: the fingerpost's Practice Meadow arm already points down it. Harvest nodes it passes (fiber 7, deadwood 0) stay 1.6m+ off the centreline. REQUIRES the terrain + scatter re-bake.",
         "points": [
           [
             -1.5,
             -11.64
           ],
           [
-            0.0,
-            -19.0
+            4.0,
+            -18.0
           ],
           [
-            4.0,
+            13.6,
+            -20.0
+          ],
+          [
+            14.2,
             -26.0
           ],
           [
-            10.0,
-            -29.5
+            14.6,
+            -31.0
+          ]
+        ]
+      },
+      {
+        "id": "village_berry_lane",
+        "label": "Berry Lane",
+        "_why_f01": "F01-b (WORLD 3.2 / ART_DIRECTION: berry field, grove and stone-working area). The Berry Field's own lane: it leaves the through-road at the Pond crossroads [-8,-13.96] (the Pond lane goes south, this goes north) and ends inside the Berry Field (paths.village_topology.subareas), 1.6m clear of berry node 1036 [-9,-19]. An approach, not a route, so the junction fingerpost keeps its arms. REQUIRES the terrain + scatter re-bake.",
+        "points": [
+          [
+            -8.0,
+            -13.96
           ],
           [
-            15.5,
-            -31.0
+            -7.2,
+            -20.5
           ]
         ]
       },
@@ -1081,8 +1095,44 @@
             -11.64
           ],
           [
-            0.0,
-            -19.0
+            4.0,
+            -18.0
+          ]
+        ]
+      },
+      {
+        "_why_f01": "F01-b. One-arm fingerpost naming the Berry Field at its lane mouth (the Pond crossroads), so the subarea is named in the world, not only on the map. Stands 2.4m off the through-road and 3.4m off Berry Lane, on the far side from the Stoneyard post so the two planks do not stack; the arm points up the lane.",
+        "at": [
+          -11.0,
+          -17.2
+        ],
+        "label": "Berry Field",
+        "points": [
+          [
+            -8.0,
+            -13.96
+          ],
+          [
+            -7.2,
+            -20.5
+          ]
+        ]
+      },
+      {
+        "_why_f01": "F01-b. One-arm fingerpost naming The Grove where the Pond lane enters it. Stands 3.3m off the lane's centreline, clear of the grove's authored oaks (3.1m+), arm pointing into the trees.",
+        "at": [
+          -15.0,
+          1.5
+        ],
+        "label": "The Grove",
+        "points": [
+          [
+            -12.0,
+            2.0
+          ],
+          [
+            -20.0,
+            6.0
           ]
         ]
       }
@@ -1112,6 +1162,10 @@
         {
           "road": "village_stoneyard_lane",
           "subarea": "the_stoneyard"
+        },
+        {
+          "road": "village_berry_lane",
+          "subarea": "berry_field"
         }
       ],
       "subareas": [
@@ -1124,7 +1178,32 @@
             -33.0
           ],
           "radius": 7.0,
-          "_why": "Chosen from what already stands there rather than invented: band-1 stone nodes 4 [22,-34] and 1037 [11,-32] (the village's stone lesson) sit 11m apart on level ground north of the square, with deadwood 0 [16,-28] and fiber 7 at the rim. Dressing it as a working yard (the work_area anvil/whetstone/pickaxe cluster, a clearing) is proposed in the F01-a report for the shared props/vegetation owners."
+          "road": "village_stoneyard_lane",
+          "_why": "Chosen from what already stands there rather than invented: band-1 stone nodes 4 [22,-34] and 1037 [11,-32] (the village's stone lesson) sit 11m apart on level ground north of the square, with deadwood 0 [16,-28] at the rim. Its own scatter clearing is band1 vegetation.json clearings order 1929."
+        },
+        {
+          "id": "berry_field",
+          "name": "Berry Field",
+          "kind": "berry_field",
+          "centre": [
+            -8.5,
+            -23.0
+          ],
+          "radius": 6.0,
+          "road": "village_berry_lane",
+          "_why": "F01-b. North of the through-road between Grandpa's house and the inn crossroads, around the existing berry node 1036 [-9,-19]: an L of village.json fence rails (north and west) and a planted row of flowering berry bushes (band1 vegetation.json layer_anchors.bushes, Bush_Common_Flowers -- the same model every berry harvest node uses). Berry Lane ends inside it."
+        },
+        {
+          "id": "the_grove",
+          "name": "The Grove",
+          "kind": "grove",
+          "centre": [
+            -20.0,
+            6.0
+          ],
+          "radius": 8.0,
+          "road": "The Pond",
+          "_why": "F01-b. West of the Pond lane between Grandpa's kitchen garden and the fence: six authored oaks (village.json square_oak_a/b, trunk-only colliders) round stone node 6 [-18,6], with a bush understorey (band1 vegetation.json layer_anchors.bushes). The Pond lane runs along its east edge (7.4m from the centre), so the road passes through the grove's margin rather than ending in it."
         }
       ]
     },

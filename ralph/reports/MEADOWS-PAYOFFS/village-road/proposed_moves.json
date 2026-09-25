@@ -1,6 +1,8 @@
 {
-  "_comment": "F01-a shared-file moves still PROPOSED (outside the granted files), drawn dashed on the NEW panel only. cottage_b's re-yaw was applied under the F01 grant and is drawn as real data.",
+  "_comment": "F01-b moves held in the two 'PENDING GRANT' commits (band1 props.json / harvest.json), drawn dashed on the NEW panel only.",
   "moves": [
-    {"label": "work_area anvil/whetstone -> Stoneyard (props.json)", "from": [-5.0, -3.0], "to": [12.5, -35.5]}
+    {"label": "work_area anvil/whetstone -> Stoneyard", "from": [-5.0, -3.0], "to": [12.5, -35.5]},
+    {"label": "berry node 10 (inside cottage_b) -> Berry Field", "from": [20.0, -16.0], "to": [-5.8, -24.0]},
+    {"label": "berry node 1033 -> Berry Field", "from": [-32.0, -1.0], "to": [-10.8, -25.8]}
   ]
 }
