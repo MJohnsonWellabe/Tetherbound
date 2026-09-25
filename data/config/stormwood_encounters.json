@@ -5918,6 +5918,7 @@
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.hollows_alpha_placeholder",
       "catchable": true,
+      "combat": {"telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
       "once_only": true
     },
     {
@@ -5933,6 +5934,7 @@
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.capacitor_alpha_placeholder",
       "catchable": true,
+      "combat": {"telegraph": 0.8, "lunge": 5.5, "recovery": 0.6, "attack_cooldown": 0.9, "reposition_distance": 7.0, "reposition_time": 1.6, "power": 7.2},
       "once_only": true
     },
     {
@@ -5948,6 +5950,7 @@
       "placeholder_species": "staticub",
       "replacement_point": "named_encounters.crown_guardian_placeholder",
       "catchable": true,
+      "combat": {"telegraph": 0.85, "recovery": 1.1, "attack_cooldown": 1.6, "chase_speed": 3.4, "reposition_distance": 2.5, "power": 12.0},
       "once_only": true
     },
     {
@@ -5963,6 +5966,7 @@
       "placeholder_species": "tanglevolt",
       "replacement_point": "named_encounters.old_rodfolk_hall_guardian_placeholder",
       "catchable": true,
+      "combat": {"telegraph": 1.1, "recovery": 1.2, "lunge": 6.0, "attack_cooldown": 1.8, "first_attack_delay": 2.5, "power": 14.4},
       "once_only": true
     },
     {
@@ -5978,6 +5982,7 @@
       "placeholder_species": "mosshock",
       "replacement_point": "named_encounters.blackwater_elder_placeholder",
       "catchable": true,
+      "combat": {"telegraph": 0.8, "recovery": 0.6, "attack_cooldown": 0.7, "reposition_time": 0.5, "reposition_distance": 2.0, "power": 6.4},
       "once_only": true
     },
     {
@@ -5993,6 +5998,7 @@
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.glass_field_alpha_placeholder",
       "catchable": true,
+      "combat": {"telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
       "once_only": true
     }
   ],
