@@ -170,7 +170,27 @@ const HOTBAR_ICON_PX := 44
 ## button left and a tool in hand is how every other verb is chosen now.
 const BUILD_TOOL := "hammer"
 
+## X03-WO6: FALLBACK only. The live hold is `_hotbar_message_seconds`, read
+## from `data/config/hud.json` (`toasts.hotbar_message_seconds`) and measured
+## in GAME seconds on `_hud_clock`, which this HUD advances by its own process
+## delta. It used to be a `Time.get_ticks_msec()` deadline: a software-GL
+## capture running at a fixed fps spends far more wall time per frame than
+## game time, so the message had expired before the next rendered frame.
 const HOTBAR_MESSAGE_SECONDS := 2.2
+const HUD_CONFIG_PATH := "res://data/config/hud.json"
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
+const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
+
+## X03-WO4 (F12, UX §8) drowning cue fallbacks; live values come from
+## `hud.json`'s `drowning_cue` block. See `_build_drowning_cue()`.
+const DROWNING_TITLE := "Drowning"
+const DROWNING_ACTION := "Reach shore"
+const DROWNING_TITLE_FONT := 36
+const DROWNING_ACTION_FONT := 30
+const DROWNING_ICON_PX := 48.0
+const DROWNING_PULSE_SPEED := 4.0
+const DROWNING_PULSE_DEPTH := 0.45
+const DROWNING_FRAME_WIDTH := 4
 
 ## Pixels of clear screen between the hotbar panel's real bottom edge and the
 ## top of the context prompt, and the prompt row's own resting height.
@@ -774,7 +794,31 @@ var _prompt_measure: RichTextLabel = null
 @onready var _hotbar_message: Label = $Root/BottomDock/HotbarPanel/Margin/Layout/Message
 
 var _hotbar_last_text: Array[String] = ["", "", "", "", ""]
+## Deadline on `_hud_clock` (game seconds), 0.0 when no message is up.
 var _hotbar_message_until := 0.0
+## X03-WO6: the HUD's own game-time clock -- the sum of every process `delta`
+## `_run_frame()` has seen. Timed toasts measure their hold against this
+## instead of the wall clock. See `HOTBAR_MESSAGE_SECONDS`.
+var _hud_clock := 0.0
+var _hotbar_message_seconds := HOTBAR_MESSAGE_SECONDS
+var _region_banner_seconds := REGION_BANNER_SECONDS
+
+## --- drowning cue (X03-WO4) ----------------------------------------------------
+
+var _drowning_cue: PanelContainer = null
+var _drowning_title_label: Label = null
+var _drowning_action_label: Label = null
+var _drowning_icon: Control = null
+## Amber frame around the health plate while drowning: the "this bar is what
+## is falling" emphasis. Pulses unless reduced motion is on.
+var _drowning_hp_frame: Panel = null
+var _drowning_pulse_time := 0.0
+var _drowning_title_text := DROWNING_TITLE
+var _drowning_action_text := DROWNING_ACTION
+var _drowning_title_font := DROWNING_TITLE_FONT
+var _drowning_action_font := DROWNING_ACTION_FONT
+var _drowning_pulse_speed := DROWNING_PULSE_SPEED
+var _drowning_pulse_depth := DROWNING_PULSE_DEPTH
 
 ## --- active-creature block --------------------------------------------------------
 
@@ -993,10 +1037,12 @@ func _ready() -> void:
 		_arbiter.connect("prompt_changed", _on_prompt_changed)
 
 	_load_buff_config()
+	_load_hud_config()
 	_build_creature_block()
 	_mount_party_strip()
 	_build_vitals_cluster()
 	_build_player_health_bar()
+	_build_drowning_cue()
 	_mount_stamina_arc()
 	_mount_minimap()
 	_build_objective_block()
@@ -2473,6 +2519,186 @@ func _update_stamina_arc(vitals: RefCounted, delta: float) -> void:
 		_stamina_icon.modulate.a = _stamina_arc.modulate.a
 
 
+# --- config (X03-WO6 / X03-WO4) --------------------------------------------------
+
+
+## Reads `data/config/hud.json`. A missing file keeps every fallback constant.
+func _load_hud_config() -> void:
+	var file := FileAccess.open(HUD_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("hud.json missing at %s; HUD toasts keep their fallback holds" % HUD_CONFIG_PATH)
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if parsed is Dictionary:
+		_apply_hud_config(parsed)
+
+
+func _apply_hud_config(config: Dictionary) -> void:
+	_hotbar_message_seconds = hud_config_number(config, "toasts", "hotbar_message_seconds", HOTBAR_MESSAGE_SECONDS)
+	_region_banner_seconds = hud_config_number(config, "toasts", "region_banner_seconds", REGION_BANNER_SECONDS)
+	var cue: Variant = config.get("drowning_cue", {})
+	if not cue is Dictionary:
+		return
+	var title := str((cue as Dictionary).get("title", DROWNING_TITLE)).strip_edges()
+	var action := str((cue as Dictionary).get("action", DROWNING_ACTION)).strip_edges()
+	_drowning_title_text = title if not title.is_empty() else DROWNING_TITLE
+	_drowning_action_text = action if not action.is_empty() else DROWNING_ACTION
+	# Never below the UX §8 floors at the 1280x720 stress raster (x0.667):
+	# 33 authored -> 22 px critical, 27 authored -> 18 px body.
+	_drowning_title_font = maxi(33, int(hud_config_number(config, "drowning_cue", "title_font_size", DROWNING_TITLE_FONT)))
+	_drowning_action_font = maxi(27, int(hud_config_number(config, "drowning_cue", "action_font_size", DROWNING_ACTION_FONT)))
+	_drowning_pulse_speed = hud_config_number(config, "drowning_cue", "pulse_speed", DROWNING_PULSE_SPEED)
+	_drowning_pulse_depth = clampf(hud_config_number(config, "drowning_cue", "pulse_depth", DROWNING_PULSE_DEPTH), 0.0, 0.8)
+
+
+## A positive, finite number at `config[section][key]`, else `fallback`.
+static func hud_config_number(config: Dictionary, section: String, key: String, fallback: float) -> float:
+	var block: Variant = config.get(section, {})
+	if not block is Dictionary:
+		return fallback
+	var raw: Variant = (block as Dictionary).get(key, null)
+	if not (raw is float or raw is int):
+		return fallback
+	var value := float(raw)
+	return value if is_finite(value) and value > 0.0 else fallback
+
+
+# --- drowning cue (X03-WO4, F12 readability, UX §8) -------------------------------
+
+
+## True only while the LOCAL human swimmer is out of stamina in deep water:
+## `swim_state.gd` sets `drowning` in `advance()` and clears it on
+## `leave_water()`, `reach_land()`, `pause_for_combat()` and as soon as stamina
+## is above zero again. Mounted drowning is the mount's stamina and health, not
+## the trainer's, so it does not raise this cue on the trainer's health bar.
+static func drowning_cue_active(swim_state: Object) -> bool:
+	if swim_state == null:
+		return false
+	return bool(swim_state.get("drowning")) and int(swim_state.get("mode")) == SWIM_STATE.Mode.HUMAN
+
+
+func _local_swim_state() -> Object:
+	if _player == null:
+		return null
+	var controller: Variant = _player.get("swim_controller")
+	if not controller is Object or not is_instance_valid(controller):
+		return null
+	var state: Variant = (controller as Object).get("state")
+	return state as Object if state is Object else null
+
+
+## State word + recovery action + a caution shape, on a plate with an amber
+## accent border, to the right of the health plate it explains. Amber
+## (`UITokens.WARNING`) only: red is reserved for Team Tether, and the word and
+## shape carry the meaning without the colour.
+func _build_drowning_cue() -> void:
+	if _health_bar_cluster == null:
+		return
+	# Emphasis frame around the health plate (same rect as `health_plate` in
+	# `_build_player_health_bar()`), hidden until drowning.
+	_drowning_hp_frame = Panel.new()
+	_drowning_hp_frame.name = "DrowningHealthFrame"
+	_drowning_hp_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_drowning_hp_frame.position = Vector2(-40.0 - DROWNING_FRAME_WIDTH, -VITALS_PLATE_OVERHANG - DROWNING_FRAME_WIDTH)
+	_drowning_hp_frame.size = Vector2(VITALS_WIDTH + 48.0 + DROWNING_FRAME_WIDTH * 2.0,
+		HEALTH_BAR_CONTENT_HEIGHT + VITALS_PLATE_OVERHANG * 2.0 + DROWNING_FRAME_WIDTH * 2.0)
+	var frame := StyleBoxFlat.new()
+	frame.bg_color = Color(0, 0, 0, 0)
+	frame.draw_center = false
+	frame.border_color = UITokens.WARNING
+	frame.set_border_width_all(DROWNING_FRAME_WIDTH)
+	frame.set_corner_radius_all(UITokens.RADIUS_SLOT + DROWNING_FRAME_WIDTH)
+	_drowning_hp_frame.add_theme_stylebox_override("panel", frame)
+	_drowning_hp_frame.visible = false
+	_health_bar_cluster.add_child(_drowning_hp_frame)
+
+	_drowning_cue = PanelContainer.new()
+	_drowning_cue.name = "DrowningCue"
+	_drowning_cue.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_drowning_cue.add_theme_stylebox_override("panel", UITokens.panel_box_accent(UITokens.WARNING, UITokens.BG_DEEP))
+	_drowning_cue.visible = false
+	_health_bar_cluster.add_child(_drowning_cue)
+
+	var row := HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_theme_constant_override("separation", 12)
+	_drowning_cue.add_child(row)
+
+	_drowning_icon = Control.new()
+	_drowning_icon.name = "CautionShape"
+	_drowning_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_drowning_icon.custom_minimum_size = Vector2(DROWNING_ICON_PX, DROWNING_ICON_PX)
+	_drowning_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_drowning_icon.draw.connect(_draw_drowning_icon)
+	row.add_child(_drowning_icon)
+
+	var text := VBoxContainer.new()
+	text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	text.add_theme_constant_override("separation", 0)
+	text.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_child(text)
+
+	_drowning_title_label = Label.new()
+	_drowning_title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_drowning_title_label.text = _drowning_title_text
+	_drowning_title_label.add_theme_font_size_override("font_size", _drowning_title_font)
+	_drowning_title_label.add_theme_color_override("font_color", UITokens.WARNING)
+	text.add_child(_drowning_title_label)
+
+	_drowning_action_label = Label.new()
+	_drowning_action_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_drowning_action_label.text = _drowning_action_text
+	_drowning_action_label.add_theme_font_size_override("font_size", _drowning_action_font)
+	_drowning_action_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	text.add_child(_drowning_action_label)
+
+
+## Caution triangle with an exclamation bar and dot, drawn rather than typed:
+## the HUD font (Kenney Future) has no U+26A0. A dark outline keeps the amber
+## shape legible over bright water.
+func _draw_drowning_icon() -> void:
+	if _drowning_icon == null:
+		return
+	var s := _drowning_icon.size
+	var top := Vector2(s.x * 0.5, s.y * 0.06)
+	var left := Vector2(s.x * 0.04, s.y * 0.94)
+	var right := Vector2(s.x * 0.96, s.y * 0.94)
+	var tri := PackedVector2Array([top, right, left])
+	_drowning_icon.draw_colored_polygon(tri, UITokens.WARNING)
+	_drowning_icon.draw_polyline(PackedVector2Array([top, right, left, top]), UITokens.OUTLINE, 3.0, true)
+	var bang := Color(UITokens.OUTLINE, 1.0)
+	var w := s.x * 0.11
+	_drowning_icon.draw_rect(Rect2(s.x * 0.5 - w * 0.5, s.y * 0.36, w, s.y * 0.30), bang)
+	_drowning_icon.draw_rect(Rect2(s.x * 0.5 - w * 0.5, s.y * 0.72, w, w), bang)
+
+
+## Shows/hides the cue from the local swim state, the same frame it changes.
+## The health-plate frame pulses its alpha unless reduced motion is on, in
+## which case it is drawn steady -- the frame, word and shape still say it.
+func _update_drowning_cue(swim_state: Object, delta: float) -> void:
+	var active := drowning_cue_active(swim_state)
+	if _drowning_cue != null:
+		if active and not _drowning_cue.visible:
+			_drowning_cue.reset_size()
+		_drowning_cue.visible = active
+		if active:
+			var size := _drowning_cue.get_combined_minimum_size()
+			# Bottom-aligned with the health plate, just right of it.
+			_drowning_cue.position = Vector2(VITALS_WIDTH + 24.0,
+				HEALTH_BAR_CONTENT_HEIGHT + VITALS_PLATE_OVERHANG - size.y)
+	if _drowning_hp_frame != null:
+		_drowning_hp_frame.visible = active
+		if active and not MOTION_PREFS.reduced_motion():
+			_drowning_pulse_time += maxf(0.0, delta)
+			_drowning_hp_frame.modulate.a = 1.0 - _drowning_pulse_depth * absf(sin(_drowning_pulse_time * _drowning_pulse_speed))
+		else:
+			_drowning_pulse_time = 0.0
+			_drowning_hp_frame.modulate.a = 1.0
+	if active and _health_bar_cluster != null:
+		# Safety information never sits at the idle-fade alpha.
+		_health_bar_cluster.modulate.a = 1.0
+
+
 # --- minimap (mounted defensively; owned by a concurrent pass) ---------------------
 
 
@@ -2966,8 +3192,8 @@ func _update_region_banner() -> void:
 	if not text.is_empty():
 		_region_banner.text = text
 		_region_banner.visible = true
-		_region_banner_until = Time.get_ticks_msec() / 1000.0 + REGION_BANNER_SECONDS
-	elif _region_banner_until > 0.0 and Time.get_ticks_msec() / 1000.0 >= _region_banner_until:
+		_region_banner_until = _hud_clock + _region_banner_seconds
+	elif _region_banner_until > 0.0 and _hud_clock >= _region_banner_until:
 		_region_banner_until = 0.0
 		_region_banner.visible = false
 
@@ -3454,13 +3680,14 @@ func _presentation_allow(widget: CanvasItem, allowed: bool) -> void:
 		if widget == _objective_hint_card:
 			widget.visible = widget.visible and Time.get_ticks_msec()/1000.0 < _objective_hint_until
 		elif widget == _region_banner:
-			widget.visible = widget.visible and Time.get_ticks_msec()/1000.0 < _region_banner_until
+			widget.visible = widget.visible and _hud_clock < _region_banner_until
 		_presentation_suppressed.erase(id)
 
 
 ## The HUD's actual per-frame work, split out of `_process` so the readout can
 ## time it without timing itself.
 func _run_frame(delta: float) -> void:
+	_advance_hud_clock(delta)
 	if _debug_level != DEBUG_OFF:
 		_sample_frame(delta)
 		_since_readout += delta
@@ -3498,12 +3725,16 @@ func _run_frame(delta: float) -> void:
 	_update_aim_fade(delta)
 
 	if _player == null:
+		_update_drowning_cue(null, delta)
 		return
 	var vitals: RefCounted = _player.get("vitals")
 	if vitals == null:
+		_update_drowning_cue(null, delta)
 		return
 	_update_vitals_cluster(vitals, delta)
 	_update_stamina_arc(vitals, delta)
+	# After the vitals fade: a drowning player's health plate is forced opaque.
+	_update_drowning_cue(_local_swim_state(), delta)
 
 
 func _sample_frame(delta: float) -> void:
@@ -3856,9 +4087,22 @@ func _update_hotbar_and_message() -> void:
 	if inventory == null:
 		return
 	_update_hotbar(inventory)
-	if _hotbar_message_until > 0.0 and Time.get_ticks_msec() / 1000.0 >= _hotbar_message_until:
+	_expire_hotbar_message()
+
+
+## X03-WO6: hides the message strip once `_hud_clock` (game seconds) reaches
+## the deadline `_show_hotbar_message()` set.
+func _expire_hotbar_message() -> void:
+	if _hotbar_message_until > 0.0 and _hud_clock >= _hotbar_message_until:
 		_hotbar_message_until = 0.0
 		_hotbar_message.visible = false
+
+
+## X03-WO6: advances the HUD's game-time clock by one process delta. A
+## non-finite or negative delta is ignored rather than rewinding a deadline.
+func _advance_hud_clock(delta: float) -> void:
+	if is_finite(delta) and delta > 0.0:
+		_hud_clock += delta
 
 
 ## The hotbar draws `Game.hotbar` — five item ids the player assigned, NOT
@@ -4674,7 +4918,7 @@ func _update_world_message() -> void:
 func _show_hotbar_message(text: String) -> void:
 	_hotbar_message.text = text
 	_hotbar_message.visible = true
-	_hotbar_message_until = Time.get_ticks_msec() / 1000.0 + HOTBAR_MESSAGE_SECONDS
+	_hotbar_message_until = _hud_clock + _hotbar_message_seconds
 
 
 func _fade_toward(control: Control, target: float, delta: float) -> void:
