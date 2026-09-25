@@ -117,7 +117,11 @@ func test_the_choice_announces_both_answers_as_final_and_neither_prompt_starts_l
 		"a prompt %.2f m up with a %.2f m radius leaves no ground to press it from" % [height, radius])
 	# Neither prompt may be live where the player stands when the offer lands,
 	# or a press meant for the dialogue answers an irreversible question.
-	for key: String in ["accept_offset", "refuse_offset"]:
+	# Standing at one prompt must never make the other live as well.
+	var reach := sqrt(radius * radius - height * height)
+	assert_true(float(choice.get("min_separation", 0.0)) > 2.0 * reach,
+		"the two prompts can both be live from one spot; a press there answers whichever wins")
+	for key: String in ["accept_offset", "refuse_offset", "near_offset"]:
 		var offset := float(choice.get(key, 0.0))
 		assert_true(sqrt(offset * offset + height * height) > radius,
 			"'%s' puts its prompt in reach of where the player already stands" % key)

@@ -109,7 +109,10 @@
     "accept_offset": 2.0,
     "refuse_offset": 2.0,
     "radius": 1.6,
-    "height": 0.9
+    "height": 0.9,
+    "near_offset": 1.5,
+    "min_separation": 2.8,
+    "offer_radius": 30.0
   },
 
   "_comment_flags": "Every flag this item introduces, in the order the climax sets them. `legendary_freed` is the one SG44 reads -- the world event is a SEPARATE item and this file must never try to run it; it only records, once, that the thing which causes it has happened.",

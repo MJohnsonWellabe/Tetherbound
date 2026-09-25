@@ -53,6 +53,11 @@ const PLINTH_BINS := 16
 const RESOLUTION_PREFIX := "legendary_resolution:"
 ## The receipt key for a save that predates stable character ids.
 const SOLO_CHARACTER := "solo"
+## World marker written the first time anybody answers LIVE under F05 (never by
+## a backfill or a migration). A settled world without it predates F05, and on
+## such a world nobody is offered again: an unanswered participant cannot be
+## told apart from one who let the newcomer go at five, which left no receipt.
+const LIVE_MARKER := "legendary_resolution:live"
 
 var _config: Dictionary = {}
 var _world: Node = null
@@ -1017,14 +1022,68 @@ func _open_choice() -> void:
 	toward = toward.normalized() if toward.length() > 0.01 else Vector3.FORWARD
 	var radius := float(spec.get("radius", 1.6))
 	var side := toward.cross(Vector3.UP).normalized()
-	_accept_prompt = _choice_prompt("VeridianAcceptPrompt",
-		here + side * float(spec.get("accept_offset", 2.0)),
+	# Each prompt takes the first CLEAR spot from its own list of bearings.
+	# The player answers standing at the lever, beside the machine, so a fixed
+	# bearing can land inside the machine's base or a wall -- measured: a
+	# refuse prompt "behind" the player was unreachable in one of six runs.
+	var accept_at := _clear_spot(here, [side, -side, (side + toward).normalized(),
+		(-side + toward).normalized()], float(spec.get("accept_offset", 2.0)), [])
+	var refuse_at := _clear_spot(here, [-toward, (-toward + side).normalized(),
+		(-toward - side).normalized(), -side, side], float(spec.get("refuse_offset", 2.0)), [accept_at])
+	_accept_prompt = _choice_prompt("VeridianAcceptPrompt", accept_at,
 		str(spec.get("accept_label", "Walk out with the Veridian Stag")), radius)
 	_accept_prompt.connect("activated", accept_offer)
-	_refuse_prompt = _choice_prompt("VeridianRefusePrompt",
-		here - toward * float(spec.get("refuse_offset", 2.0)),
+	_refuse_prompt = _choice_prompt("VeridianRefusePrompt", refuse_at,
 		str(spec.get("refuse_label", "Leave the Veridian Stag free")), radius)
 	_refuse_prompt.connect("activated", refuse_offer)
+
+
+## The first spot `distance` out along one of `bearings` that a player can
+## walk to and stand on: nothing solid on the way at chest height, room for
+## the player's body just past it, floor under it within a step of the
+## player's own, and far enough from every spot in `avoid` that standing at
+## one prompt never makes the other live too. Falls back to the first bearing
+## (the pre-probe behaviour) when nothing qualifies or there is no physics
+## space to ask, e.g. a bare test scene.
+func _clear_spot(here: Vector3, bearings: Array, distance: float, avoid: Array) -> Vector3:
+	var fallback: Vector3 = here + (bearings[0] as Vector3) * distance
+	var space := get_world_3d().direct_space_state if is_inside_tree() and get_world_3d() != null else null
+	if space == null:
+		return fallback
+	var spec: Dictionary = _config.get("choice", {})
+	var separation := float(spec.get("min_separation", 2.8))
+	var exclude: Array[RID] = []
+	if _player is CollisionObject3D:
+		exclude.append((_player as CollisionObject3D).get_rid())
+	var tries: Array = []
+	for raw: Variant in bearings:
+		tries.append([raw, distance])
+	# Then the same bearings closer in: still out of reach from where the
+	# player stands (the unit test pins that 1.5 m is), for a player backed
+	# into a corner.
+	for raw: Variant in bearings:
+		tries.append([raw, minf(distance, float(spec.get("near_offset", 1.5)))])
+	for pair: Variant in tries:
+		var dir: Vector3 = (pair as Array)[0]
+		var spot := here + dir * float((pair as Array)[1])
+		var too_close := false
+		for other: Variant in avoid:
+			if Vector2(spot.x - (other as Vector3).x, spot.z - (other as Vector3).z).length() < separation:
+				too_close = true
+		if too_close:
+			continue
+		var chest := Vector3.UP * 0.9
+		var path := PhysicsRayQueryParameters3D.create(here + chest, spot + chest + dir * 0.5)
+		path.exclude = exclude
+		if not space.intersect_ray(path).is_empty():
+			continue
+		var down := PhysicsRayQueryParameters3D.create(spot + Vector3.UP * 1.0, spot + Vector3.DOWN * 1.5)
+		down.exclude = exclude
+		var floor_hit := space.intersect_ray(down)
+		if floor_hit.is_empty() or absf(float((floor_hit["position"] as Vector3).y) - here.y) > 0.6:
+			continue
+		return Vector3(spot.x, float((floor_hit["position"] as Vector3).y), spot.z)
+	return fallback
 
 
 func _choice_prompt(node_name: String, at: Vector3, label: String, radius: float) -> Node3D:
@@ -1153,6 +1212,7 @@ func _ceremony_pending() -> bool:
 ##     disconnect right after answering cannot lose the answer or the creature.
 func _record_resolution(accepted: bool) -> void:
 	_set_player_flag(_flag("legendary_joined") if accepted else _flag("legendary_refused"))
+	_write_world_flag(LIVE_MARKER)
 	_settle()
 	_reconcile_world_receipt()
 	var game := _game()
@@ -1189,11 +1249,19 @@ func _reconcile_world_receipt() -> void:
 	_receipts_submitted[receipt] = true
 	if not _eligible_here():
 		return
-	var verdict: Dictionary = STORY_LEDGER.set_world_flag(self, receipt)
+	_write_world_flag(receipt)
+
+
+## One world fact through the ledger (host-committed, mirrored to every
+## peer); straight into the world store only when there is no ledger at all.
+func _write_world_flag(id: String) -> void:
+	if _has_flag(id):
+		return
+	var verdict: Dictionary = STORY_LEDGER.set_world_flag(self, id)
 	if str(verdict.get("code", "")) == "offline":
 		# A bare scene with no ledger (solo tests, or before the world is up):
 		# write the world store directly, as the rest of this file does.
-		_set_flag(receipt)
+		_set_flag(id)
 
 
 ## The world receipt id for one character's answer. Static so the herd display
@@ -1249,9 +1317,19 @@ func _player_near_legendary() -> bool:
 func _eligible_here() -> bool:
 	var participants := _warden_participant_characters()
 	if participants.is_empty():
-		return true
+		# No fight journal: solo. With other peers present there is no way to
+		# know this character fought HERE, so its answer (possibly carried in
+		# from another world) is not recorded as this world's.
+		return not _multi_peer()
 	var character := _local_character_id()
 	return not character.is_empty() and participants.has(character)
+
+
+func _multi_peer() -> bool:
+	var game := _game()
+	var session: Variant = game.get("session") if game != null else null
+	return session != null and (session as Node).has_method("is_multi_peer") \
+		and bool((session as Node).call("is_multi_peer"))
 
 
 func _receipt_character_id() -> String:
@@ -1271,42 +1349,39 @@ func _receipt_character_id() -> String:
 ## that a participant who never answered there keeps the pre-F05 outcome.
 func _offer_outstanding_after_settle() -> bool:
 	var participants := _warden_participant_characters()
-	if participants.is_empty() or not _world_has_resolution_receipts():
+	if participants.is_empty():
 		return false
-	return may_receive(_local_character_id(), participants, _character_resolved())
+	return _may_receive_now()
 
 
-func _world_has_resolution_receipts() -> bool:
-	var progression := _progression()
-	if progression == null:
-		return false
-	for raw: Variant in (progression.call("all_set") as Array):
-		if str(raw).begins_with(RESOLUTION_PREFIX):
-			return true
-	return false
-
-
-## MIGRATION (pre-F05 solo saves). Before F05 a solo refusal at five settled
-## the world and left no personal receipt; `legendary_joined` was the only
-## record. On a solo world (no participant journal) that has settled, the
-## answer is therefore known exactly: the Veridian on the belt or
-## `legendary_joined` means accepted, anything else means refused. Record it
-## once, so the herd display and the once-only rule read the same receipts a
-## post-F05 save has. Co-op worlds are not migrated (see above).
+## MIGRATION (pre-F05 solo saves), WORLD scope only. Before F05 a solo
+## refusal at five settled the world and left no receipt. On a settled solo
+## world (no fight journal, no F05 answer yet) the answer is read off what is
+## loaded -- the Veridian on the belt or `legendary_joined` means accepted,
+## anything else refused -- and recorded once as this world's receipt, so the
+## herd display reads the same receipts a post-F05 save has. Nothing is
+## written to the CHARACTER: its personal flags travel with it, and a
+## different character loading this world must not be stamped as having
+## answered. The once-only rule on such a world is `_pre_f05_settled_world()`.
 func _migrate_legacy_solo_answer() -> void:
-	if not _has_flag(_flag("legendary_settled")) or _character_resolved():
+	if not _has_flag(_flag("legendary_settled")) or _has_flag(LIVE_MARKER):
 		return
-	if not _warden_participant_characters().is_empty():
+	if _multi_peer() or not _warden_participant_characters().is_empty():
 		return
+	var progression := _progression()
+	if progression != null:
+		for raw: Variant in (progression.call("all_set") as Array):
+			if str(raw).begins_with(RESOLUTION_PREFIX):
+				return
 	var game := _game()
 	var party: Variant = game.get("party") if game != null else null
-	var holds := false
+	var holds := _has_player_flag(_flag("legendary_joined"))
 	if party != null:
 		for member: Variant in ((party as RefCounted).call("members") as Array):
 			if str((member as RefCounted).get("species_id")) == str((_config.get("legendary", {}) as Dictionary).get("species", "veridian")):
 				holds = true
-	_set_player_flag(_flag("legendary_joined") if holds else _flag("legendary_refused"))
-	print("[climax] migrated a pre-F05 solo answer: %s" % ("accepted" if holds else "refused"))
+	_write_world_flag(resolution_flag(holds, _receipt_character_id()))
+	print("[climax] migrated a pre-F05 solo answer into this world: %s" % ("accepted" if holds else "refused"))
 
 
 ## GATE-E: the roster decision is OVER, whichever way the player answered it.
@@ -1416,8 +1491,16 @@ func _set_flag(flag: String) -> void:
 ## joined is the owner of `Game.party`, i.e. the local player.
 ## Whether this peer, right now, is a participant owed an unresolved offer.
 func _may_receive_now() -> bool:
+	if _pre_f05_settled_world():
+		return false
 	return may_receive(_local_character_id(), _warden_participant_characters(),
 		_character_resolved())
+
+
+## A world that settled its freeing before F05 existed: no offer is made on it
+## again, on any path (build, a guest's late snapshot, a resume).
+func _pre_f05_settled_world() -> bool:
+	return _has_flag(_flag("legendary_settled")) and not _has_flag(LIVE_MARKER)
 
 
 ## --- owner decision: every participant keeps their own ----------------------
