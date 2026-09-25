@@ -35,20 +35,21 @@ For the current four-chapter pass, ROADMAP §3 registers exactly **15 feature
 requests F01–F15** and seven supporting X01–X07 workstreams. Each F row,
 its owning design sections and ACCEPTANCE §6.1 are that feature's PRD; do
 not invent a parallel PRD file or use the 13 chapter cards/31 roadmap steps
-as feature-request IDs. Claude starts with F01 and the Meadows M1–M4 cards,
-then F06–F08/C1–C3, F09–F11/S1–S3 and F12–F15/T1–T3. Split each active F
+as feature-request IDs. Start concurrent sessions using ROADMAP §3's lane
+ownership; integrate chapter acceptance in earned route order. Split each active F
 into 30–90 minute work orders after checking current code and evidence. Each
 work order names its F/X ID, one criterion, baseline, exact owned paths,
 expected player result, proof, dependencies and exclusions. Put the ID and
 criterion in its draft PR's Anchor, update STATE with actual progress and
 revise estimates when evidence changes. A failed card names the next repair,
 not a request for routine owner review.
-ROADMAP §3 also fixes the session ownership sequence: session 1 owns F01–F04,
-then separate sessions own F05, F06 and so on through F15. A run ending before
-its assigned F rows pass creates a continuation of the same batch from STATE
-and current main; it does not hand the next feature to a new session as if the
-unfinished one were accepted. The next batch starts only after merged evidence
-closes the previous F rows and, at chapter boundaries, its integrated cards.
+ROADMAP §3 fixes concurrent lane ownership: Meadows core F01–F04, Meadows
+finale F05, Cloudreach F06–F08, Stormwood F09–F11 and Tidewake F12–F15 may
+work at the same time. The coordinating integrator assigns exact paths and
+serializes shared-file edits and local Godot writers. A session continues an
+unfinished F from STATE and current main; it does not declare that F accepted.
+Full chapter acceptance waits for the preceding chapter's earned saved handoff,
+even when regional implementation and focused proof finish earlier.
 An agent's own completion report is never its review: another agent (or an
 independent review pass with no implementation context) checks the actual diff,
 runtime evidence and criterion before landing. If an automated or agent check

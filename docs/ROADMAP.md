@@ -75,26 +75,21 @@ Seven shared technical workstreams support those features without counting the s
 
 That adds an estimated **35–70 shared tasks**, or **153–250 tasks overall**. This is a sizing range for work order generation, not a promise to create all tasks upfront or a reason to pad work. A repair in X01–X07 must be cited by every affected F card but implemented and tested once.
 
-### Session ownership and handoff sequence
+### Concurrent feature sessions and integration
 
-Use the owner's requested session split. A session is an ownership batch, not a claim that all its tasks fit in one uninterrupted run. Continue the same batch across turns or a successor session if time/usage ends; **do not advance to the next numbered batch while an assigned F acceptance row is red or unproven**. Shared X work is pulled into the owning session when needed and does not become a separate human review gate.
+Run independent implementation sessions at the same time. A session owns a feature scope, not an exclusive turn in a numbered queue. Start from current `origin/main`, read STATE and the assigned F rows, then make bounded work orders and PRs. A session can continue across runs without blocking another lane. The practical starting layout is five regional lanes; split a lane into separate feature sessions only when their exact paths and runtime evidence can be kept independent.
 
-| Session | Assigned feature requests | Exit before the next session starts |
+| Concurrent lane | Assigned feature requests | Working boundary |
 |---|---|---|
-| 1 | F01–F04 | Village/opening, earned Meadows spine, qualifying detours and named fights each pass their §6.1 rows. |
-| 2 | F05 | Veridian, healing and the Cloudreach handoff pass; Meadows M1–M4 are accepted together. |
-| 3 | F06 | Cloudreach flight route passes. |
-| 4 | F07 | Cloudreach activities and cadence pass. |
-| 5 | F08 | Veyra/handoff pass; C1–C3 are accepted together. |
-| 6 | F09 | Stormwood Surge/rod/Arch route passes. |
-| 7 | F10 | Stormwood chains and fights pass. |
-| 8 | F11 | Stormheart/handoff pass; S1–S3 are accepted together. |
-| 9 | F12 | Retained-five Tidewake swim and mount state pass. |
-| 10 | F13 | Island circuit and activities pass. |
-| 11 | F14 | Veilfall/Guardian and restoration pass. |
-| 12 | F15 | Homecoming/continuation pass; T1–T3 are accepted together. |
+| Meadows core | F01–F04 | Village/opening, earned route, activities and named fights. |
+| Meadows finale | F05 | Veridian, healing and physical Cloudreach handoff; use focused fixtures until the F01–F04 route is integrated. |
+| Cloudreach | F06–F08 | Flight, activities, Veyra and Stormwood handoff in Cloudreach-owned paths. |
+| Stormwood | F09–F11 | Surge/rods/Arches, chains, Stormheart and Tidewake handoff in Stormwood-owned paths. |
+| Tidewake | F12–F15 | Swimming, island circuit, Veilfall and homecoming in Tidewake-owned paths. |
 
-At each boundary, merge the reviewed work, record the exact main SHA, F-row verdicts, evidence links and remaining failures in STATE, and start the next session from current `origin/main`. The new session reads AGENTS/CLAUDE, STATE, its F row, owning design sections and the chapter cards; it verifies the previous acceptance receipts before taking new scope. If a previously accepted feature is reopened by a regression or owner report, repair the affected F under its original ID while independent work continues. No standalone handoff document or recurring owner signoff is required. The final X01–X07 product gates and ACCEPTANCE §7 remain required after F15; a feature-session sequence does not certify the release candidate by itself.
+The coordinating integration role assigns each work order exact owned paths and one F/X acceptance criterion before editing. Two sessions must not edit the same shared file concurrently. Route changes to shared combat, save, input, reward, UI, common assets or chapter gates through one named owner at a time; dependent sessions can prepare read-only evidence or regional changes while they wait. Serialize local Godot import, render and export writers. Every PR gets independent diff/runtime review and the normal automated merge gates; refresh a stale branch from current main before merging. Record merged main SHA, F-row verdicts, evidence links and remaining failures in STATE.
+
+Implementation may proceed ahead of a preceding chapter. **Integrated chapter acceptance remains ordered by the earned player route:** Meadows M1–M4 before Cloudreach C1–C3, then Stormwood S1–S3, then Tidewake T1–T3. A later lane can prove a focused regional behavior early, but its full chapter pass requires the preceding chapter's real saved handoff. Keep a failed F row open under its original ID while independent work continues. Pull X01–X07 repairs into the appropriate lane and implement shared repairs once. The final X01–X07 product gates and ACCEPTANCE §7 remain required after F15.
 
 ### Phase 0 — integrate the current Meadows stack
 
