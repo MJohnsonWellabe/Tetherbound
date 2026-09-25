@@ -1,6 +1,6 @@
 {
   "name": "F14: each freeing-fight participant's own Guardian offer, at capacity and with room, across a drop at the claim",
-  "claim": "ACCEPTANCE F14 clause 'Each actual freeing-fight participant's capacity/space accept/refuse decision grants at most their own once-only creature, never an owned sixth; disconnect/reload cannot duplicate or erase it.' Two participants: the guest at a full belt and the host with room. The guest frees the Guardian at the chamber's real control; each asks at the chamber's real prompt and answers on the Creatures tab the game opens, with controller presses only. The guest's link dies while its at-capacity offer is on screen, unanswered; it returns as the same character by the production returning route, finds nothing granted, and then lets Rill go for the Guardian. The host accepts into its free holder. Each ends with exactly one Guardian, never a sixth, a saved receipt, and no second invitation. Setup only: the Veilfall prerequisites and Nerissa's defeat are committed through the ledger, the participants being recorded by the encounter director's own session path (standing in for playing the Veilfall and the fight), companions are granted by name. Not covered here: an explicit refusal, and a drop between the saved receipt and the host's acknowledgement.",
+  "claim": "ACCEPTANCE F14 clause 'Each actual freeing-fight participant's capacity/space accept/refuse decision grants at most their own once-only creature, never an owned sixth; disconnect/reload cannot duplicate or erase it.' Two participants: the guest at a full belt and the host with room. The guest frees the Guardian at the chamber's real control; each asks at the chamber's real prompt and answers on the Creatures tab the game opens, with controller presses only. The guest's link dies while its at-capacity offer is on screen, unanswered; it returns as the same character by the production returning route, finds nothing granted, and then lets Rill go for the Guardian. The host accepts into its free holder. Each ends with exactly one Guardian, never a sixth, a saved receipt, and no second invitation. Setup only: the Veilfall prerequisites and Nerissa's defeat are committed through the ledger, the participants being recorded by the encounter director's own session path (standing in for playing the Veilfall and the fight), companions are granted by name (the water scene boots with an empty belt). Not covered here: an explicit refusal, and a drop between the saved receipt and the host's acknowledgement.",
   "peers": 2,
   "scene": "water",
   "budget_s": 2400,
@@ -22,12 +22,12 @@
     },
     {
       "peer": 0,
-      "action": "rename_member",
+      "action": "party_grant",
       "args": {
-        "from": "Terrapup",
-        "to": "Acorn"
+        "species": "terrapup",
+        "nickname": "Acorn"
       },
-      "label": "setup: distinct names"
+      "label": "setup: companions by name"
     },
     {
       "peer": 0,
@@ -40,12 +40,12 @@
     },
     {
       "peer": 1,
-      "action": "rename_member",
+      "action": "party_grant",
       "args": {
-        "from": "Terrapup",
-        "to": "Kestrel"
+        "species": "ripplet",
+        "nickname": "Kestrel"
       },
-      "label": "setup: distinct names"
+      "label": "setup: companions by name"
     },
     {
       "peer": 1,
