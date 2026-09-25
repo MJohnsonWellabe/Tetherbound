@@ -222,8 +222,16 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   - smokes: arches, pickup runtime, hosted rewards
   - In total, 456+ headless tests pass in the reviewer's broad run. A second bake is byte-identical.
 - **Independent review:** request changes (2 blocking, 3 should-fix), then approve. The follow-up fixed the palisade spacing and moved `cinder_verge_cluster_19` off the Verge pocket.
+- **Captures:** 36 player-camera frames under `visual/f09/`, with HUD on, day and Calm pinned, and state staged (`stormwood:rootgate_released`). See `sheet_pockets_after.jpg` and `sheet_roads_forest_before_after.jpg`; the before frames are main's data and bake.
+  - At walking height each pocket reads as an enclosure of giant dead trunks with touching bases.
+  - The rewards and their prompts are inside, and nothing is floating or buried.
+  - The rerouted Rootgate valley and the new Dynamo road read as tree-lined routes. The Ember Bivouac arrival is no longer blocked by two trunks.
 - **Open:**
-  - No in-engine capture of the pockets or of the re-planted forest yet (render slot).
+  - **Visual (from the captures):**
+    - Crowns show sky through the palisade at 2–5 m, above head height; the bases are closed.
+    - From 30 m out, three of the five pocket mouths are hard to read (hidden by a nearby tree, the slope or a boulder). No lure yet.
+    - The new scatter hides the rod-station tower from the middle of `dynamo_west_approach`.
+    - Roads have no visible surface; this is pre-existing, since roads are corridors, not carved paths.
   - The scatter still does not clear trainer, NPC, harvest or pickup seats. There are 7 near-contacts, the same count as the old bake.
   - `blackwater_elder` stands on a deepwood_road vertex.
   - The arch commit at the footing centre is routed to the co-op lane.
