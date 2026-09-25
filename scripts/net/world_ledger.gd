@@ -177,11 +177,18 @@ static func owned_flag_allowed(id: String, peer_id: int, actor_character_id: Str
 ## Validate `intent` and, if it survives, commit it. `peer_id` is who asked --
 ## the requesting peer on the host, the local peer solo.
 func commit(intent: Dictionary, peer_id: int = 1) -> Dictionary:
+	# Filled in by the host from the session registry (ledger_rpc.gd), never
+	# taken from the request; `_commit` checks owned receipts against it. It
+	# lives only for this call, so no later `_commit` caller inherits it.
+	_actor_character = str(intent.get("_actor_character_id", ""))
+	var verdict := _commit_intent(intent, peer_id)
+	_actor_character = ""
+	return verdict
+
+
+func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 	var kind := str(intent.get("kind", ""))
 	var realm := str(intent.get("realm", ""))
-	# Filled in by the host from the session registry (ledger_rpc.gd), never
-	# taken from the request; `_commit` checks owned receipts against it.
-	_actor_character = str(intent.get("_actor_character_id", ""))
 	if world == null:
 		return _refuse(kind, peer_id, "malformed", "The world is not ready yet.")
 	if realm.is_empty():
@@ -519,7 +526,7 @@ func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Diction
 				var here := Vector2(float(raw[0]), float(raw[2])) if raw.size() == 3 else Vector2.INF
 				if str(row.get("arch_footing", "")) == str(socket.get("id", "")) \
 						or here.distance_to(Vector2(centre.x, centre.z)) < 5.0:
-					return _refuse("place_building", peer_id, "arch_locked",
+					return _refuse("place_building", peer_id, "arch_occupied",
 						"Another arch already occupies this footing.")
 			committed_position = centre
 			committed_yaw = float(socket.get("yaw_deg", committed_yaw))

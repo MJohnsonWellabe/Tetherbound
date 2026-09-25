@@ -111,6 +111,7 @@ func test_second_arch_at_the_footing_edge_cannot_snap_onto_an_occupied_footing()
 		var verdict: Dictionary = ledger.commit({"kind": "place_building", "realm": "stormwood",
 			"id": "stormglass_arch", "position": edge, "available_materials": materials}, GUEST)
 		assert_false(bool(verdict.get("ok")), "edge request %s refused" % str(edge))
+		assert_eq(str(verdict.get("code", "")), "arch_occupied")
 	assert_eq(ARCH_BUILD.records(world.placed_buildings).size(), 1, "still one arch on the footing")
 
 
@@ -140,3 +141,8 @@ func test_host_overwrites_a_claimed_identity_with_the_registry_answer() -> void:
 	assert_eq(LEDGER_RPC.registered_character(424242, HOST, "host-char", roster), "",
 		"a transport peer outside the registry has no character")
 	assert_eq(LEDGER_RPC.registered_character(GUEST, HOST, "host-char", null), "")
+
+
+func test_actor_identity_does_not_outlive_its_commit() -> void:
+	ledger.commit(_flag("stormwood:rootgate_released", "guest-char"), GUEST)
+	assert_eq(str(ledger.get("_actor_character")), "", "no later _commit caller inherits it")
