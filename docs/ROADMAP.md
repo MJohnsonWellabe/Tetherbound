@@ -75,6 +75,27 @@ Seven shared technical workstreams support those features without counting the s
 
 That adds an estimated **35–70 shared tasks**, or **153–250 tasks overall**. This is a sizing range for work order generation, not a promise to create all tasks upfront or a reason to pad work. A repair in X01–X07 must be cited by every affected F card but implemented and tested once.
 
+### Session ownership and handoff sequence
+
+Use the owner's requested session split. A session is an ownership batch, not a claim that all its tasks fit in one uninterrupted run. Continue the same batch across turns or a successor session if time/usage ends; **do not advance to the next numbered batch while an assigned F acceptance row is red or unproven**. Shared X work is pulled into the owning session when needed and does not become a separate human review gate.
+
+| Session | Assigned feature requests | Exit before the next session starts |
+|---|---|---|
+| 1 | F01–F04 | Village/opening, earned Meadows spine, qualifying detours and named fights each pass their §6.1 rows. |
+| 2 | F05 | Veridian, healing and the Cloudreach handoff pass; Meadows M1–M4 are accepted together. |
+| 3 | F06 | Cloudreach flight route passes. |
+| 4 | F07 | Cloudreach activities and cadence pass. |
+| 5 | F08 | Veyra/handoff pass; C1–C3 are accepted together. |
+| 6 | F09 | Stormwood Surge/rod/Arch route passes. |
+| 7 | F10 | Stormwood chains and fights pass. |
+| 8 | F11 | Stormheart/handoff pass; S1–S3 are accepted together. |
+| 9 | F12 | Retained-five Tidewake swim and mount state pass. |
+| 10 | F13 | Island circuit and activities pass. |
+| 11 | F14 | Veilfall/Guardian and restoration pass. |
+| 12 | F15 | Homecoming/continuation pass; T1–T3 are accepted together. |
+
+At each boundary, merge the reviewed work, record the exact main SHA, F-row verdicts, evidence links and remaining failures in STATE, and start the next session from current `origin/main`. The new session reads AGENTS/CLAUDE, STATE, its F row, owning design sections and the chapter cards; it verifies the previous acceptance receipts before taking new scope. If a previously accepted feature is reopened by a regression or owner report, repair the affected F under its original ID while independent work continues. No standalone handoff document or recurring owner signoff is required. The final X01–X07 product gates and ACCEPTANCE §7 remain required after F15; a feature-session sequence does not certify the release candidate by itself.
+
 ### Phase 0 — integrate the current Meadows stack
 
 1. **Main integration completed; finish current CI and package inspection.** STATE owns the current main SHA, open PRs, active CI and release receipt. Resolve actual new regressions before adding gameplay scope. Do not remerge old stacked branches; inspect recovered work selectively against current main.

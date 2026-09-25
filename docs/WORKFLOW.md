@@ -43,6 +43,12 @@ expected player result, proof, dependencies and exclusions. Put the ID and
 criterion in its draft PR's Anchor, update STATE with actual progress and
 revise estimates when evidence changes. A failed card names the next repair,
 not a request for routine owner review.
+ROADMAP §3 also fixes the session ownership sequence: session 1 owns F01–F04,
+then separate sessions own F05, F06 and so on through F15. A run ending before
+its assigned F rows pass creates a continuation of the same batch from STATE
+and current main; it does not hand the next feature to a new session as if the
+unfinished one were accepted. The next batch starts only after merged evidence
+closes the previous F rows and, at chapter boundaries, its integrated cards.
 An agent's own completion report is never its review: another agent (or an
 independent review pass with no implementation context) checks the actual diff,
 runtime evidence and criterion before landing. If an automated or agent check
