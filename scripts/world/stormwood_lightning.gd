@@ -452,6 +452,9 @@ func _prewarm_telegraph() -> void:
 	add_child(ring)
 	ring.global_position = camera.global_position - camera.global_basis.z * 4.0
 	for _frame in 4:
+		# The realm can be freed mid-warmup on a quick transition; stop cleanly.
+		if not is_inside_tree():
+			return
 		await get_tree().process_frame
 	if is_instance_valid(ring):
 		ring.queue_free()
