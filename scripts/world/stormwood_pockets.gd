@@ -157,6 +157,8 @@ func _mouth_lure(world: Node3D, body: StaticBody3D, pocket: Dictionary, cfg: Dic
 		shape.size = Vector3(width, height + FOOTING_DEPTH_M, width)
 		collision.shape = shape
 		collision.position = Vector3(at.x, ground + (height - FOOTING_DEPTH_M) * 0.5, at.y)
+		# Same yaw as the lamp holder below, so the collider matches the post.
+		collision.rotation.y = atan2(forward.x, forward.y)
 		body.add_child(collision)
 		if not show_models:
 			continue
