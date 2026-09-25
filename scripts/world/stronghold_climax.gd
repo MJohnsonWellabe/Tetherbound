@@ -101,6 +101,11 @@ var _settled_before_offer: bool = false
 ## True once THIS peer pulled the lever this session. The puller is at the
 ## machine by definition, so its offer never waits on proximity.
 var _pulled_here: bool = false
+## True once this peer answered, or settled, THIS world's freeing this
+## session -- as opposed to carrying a personal receipt in from elsewhere.
+var _answered_live: bool = false
+## World ids whose submission the host refused outright: not retried.
+var _receipts_refused: Dictionary = {}
 ## `_warden_participant_characters()`'s one-second cache.
 var _participants_cache: Array = []
 var _participants_read_at: int = -1
@@ -1049,12 +1054,23 @@ func _open_choice() -> void:
 ## (the pre-probe behaviour) when nothing qualifies or there is no physics
 ## space to ask, e.g. a bare test scene.
 func _clear_spot(here: Vector3, bearings: Array, distance: float, avoid: Array) -> Vector3:
+	var spec: Dictionary = _config.get("choice", {})
+	var separation := float(spec.get("min_separation", 2.8))
+	# The fallback is the unprobed bearing FARTHEST from every avoided spot, so
+	# even a fallback never puts both prompts in reach of one place.
 	var fallback: Vector3 = here + (bearings[0] as Vector3) * distance
+	var best_gap := -1.0
+	for raw: Variant in bearings:
+		var candidate: Vector3 = here + (raw as Vector3) * distance
+		var gap := INF
+		for other: Variant in avoid:
+			gap = minf(gap, Vector2(candidate.x - (other as Vector3).x, candidate.z - (other as Vector3).z).length())
+		if gap > best_gap:
+			best_gap = gap
+			fallback = candidate
 	var space := get_world_3d().direct_space_state if is_inside_tree() and get_world_3d() != null else null
 	if space == null:
 		return fallback
-	var spec: Dictionary = _config.get("choice", {})
-	var separation := float(spec.get("min_separation", 2.8))
 	var exclude: Array[RID] = []
 	if _player is CollisionObject3D:
 		exclude.append((_player as CollisionObject3D).get_rid())
@@ -1086,6 +1102,7 @@ func _clear_spot(here: Vector3, bearings: Array, distance: float, avoid: Array) 
 		if floor_hit.is_empty() or absf(float((floor_hit["position"] as Vector3).y) - here.y) > 0.6:
 			continue
 		return Vector3(spot.x, float((floor_hit["position"] as Vector3).y), spot.z)
+	push_warning("[climax] no clear floor for a choice prompt around %s; placing it unprobed at %s" % [str(here), str(fallback)])
 	return fallback
 
 
@@ -1215,6 +1232,7 @@ func _ceremony_pending() -> bool:
 ##     disconnect right after answering cannot lose the answer or the creature.
 func _record_resolution(accepted: bool) -> void:
 	_set_player_flag(_flag("legendary_joined") if accepted else _flag("legendary_refused"))
+	_answered_live = true
 	_write_world_flag(LIVE_MARKER)
 	_settle()
 	_reconcile_world_receipt()
@@ -1245,7 +1263,9 @@ func _reconcile_world_receipt() -> void:
 	if not accepted and not _has_player_flag(_flag("legendary_refused")):
 		return
 	var receipt := resolution_flag(accepted, _receipt_character_id())
-	if _has_flag(receipt):
+	if _answered_live and not _has_flag(LIVE_MARKER):
+		_retry_world_flag(LIVE_MARKER)
+	if _has_flag(receipt) or _receipts_refused.has(receipt):
 		return
 	# Throttled, not once-only: a host refusal, a drop or a lost verdict leaves
 	# the world without the receipt, and it is asked again after
@@ -1260,16 +1280,38 @@ func _reconcile_world_receipt() -> void:
 	_write_world_flag(receipt)
 
 
+## The live marker, resubmitted on the receipt's throttle while it is missing.
+func _retry_world_flag(id: String) -> void:
+	if _receipts_refused.has(id):
+		return
+	var now := Time.get_ticks_msec()
+	if _receipts_submitted.has(id) and now - int(_receipts_submitted[id]) < RECEIPT_RETRY_MS:
+		return
+	_receipts_submitted[id] = now
+	_write_world_flag(id)
+
+
 ## One world fact through the ledger (host-committed, mirrored to every
 ## peer); straight into the world store only when there is no ledger at all.
 func _write_world_flag(id: String) -> void:
 	if _has_flag(id):
 		return
+	if _receipts_refused.has(id):
+		return
 	var verdict: Dictionary = STORY_LEDGER.set_world_flag(self, id)
-	if str(verdict.get("code", "")) == "offline":
+	var code := str(verdict.get("code", ""))
+	if code == "offline":
+		if _is_client():
+			# A client that is not (yet) connected: wait for the retry once
+			# it is, rather than writing into a world it does not own.
+			return
 		# A bare scene with no ledger (solo tests, or before the world is up):
 		# write the world store directly, as the rest of this file does.
 		_set_flag(id)
+	elif not bool(verdict.get("ok", false)) and not bool(verdict.get("pending", false)):
+		# A hard refusal will not change on its own; asking every 5 s would
+		# only repeat the refusal message. Stop for this session.
+		_receipts_refused[id] = code
 
 
 ## The world receipt id for one character's answer. Static so the herd display
@@ -1340,16 +1382,18 @@ func _eligible_here() -> bool:
 		# No fight journal: solo. With other peers present there is no way to
 		# know this character fought HERE, so its answer (possibly carried in
 		# from another world) is not recorded as this world's.
-		return not _multi_peer() and not _is_client()
+		return not _is_client() and (_answered_live or not _multi_peer())
 	var character := _local_character_id()
 	return not character.is_empty() and participants.has(character)
 
 
+## Not the world's owner: a connected client, or one still preparing its
+## join (`Session.is_host()` is false for both; `is_active()` is not yet true
+## while JoinDriver builds the destination world).
 func _is_client() -> bool:
 	var game := _game()
 	var session: Variant = game.get("session") if game != null else null
-	return session != null and bool((session as Node).call("is_active")) \
-		and not bool((session as Node).call("is_host"))
+	return session != null and not bool((session as Node).call("is_host"))
 
 
 func _multi_peer() -> bool:
@@ -1428,6 +1472,12 @@ func _migrate_legacy_solo_answer() -> void:
 ## is idempotent and `_advance()` leaves STAGE_CEREMONY the frame after this,
 ## so a reload cannot re-run the beat.
 func _settle() -> void:
+	# F05: settling only ever happens on a live F05 world (a pre-F05 settled
+	# world goes straight to DONE and never reaches here), so the settle
+	# carries the live marker -- otherwise a world settled by a no-offer lever
+	# pull would read as pre-F05 and never offer an unanswered participant.
+	_answered_live = true
+	_write_world_flag(LIVE_MARKER)
 	if _has_flag(_flag("legendary_settled")):
 		return
 	_set_flag(_flag("legendary_settled"))
