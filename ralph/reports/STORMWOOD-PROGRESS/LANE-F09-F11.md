@@ -300,3 +300,35 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   - The spur has no surface, like the roads. Much of the forest here is open grass with sparse trees, so the cleared corridor alone draws no visible line.
   - WORLD.md says "nine top-level route records"; the data now has 15 (10 roads + 5 spurs). The coordinator owns that edit.
   - There is still no night capture of the lamps.
+
+## WO-F10-06 — Surge phases readable without HUD (`ralph/stormwood-f10-surge-readability`)
+
+- **Anchor:** F10 / ACCEPTANCE §6.1 F10: lightning with a 1.2 s / 3 m telegraph, and Calm/Building/Break/Fading readable without HUD text. The restored-sky view has to be distinct. ART_DIRECTION and SYSTEMS define the Stormwood look for each phase.
+- **Found:** before this work, the four phases differed only by a ground and dead-tree tint. There were three causes:
+  - Stormwood's rain emitter was never made visible.
+  - No phase set its own sky.
+  - The aftermath (`stormwood:long_storm_ended`) had no presentation.
+- **Player result.** Everything is driven by config and built per peer from replicated state, in `scripts/world/stormwood_surge.gd` and `stormwood_lightning.gd`.
+  - **Phase skies** under a realm-owned storm ceiling, day and night:
+    - Calm: neutral-grey overcast with drizzle.
+    - Building: olive, with dimmed, copper-dulled ground.
+    - Break: violet, with the darkest ground and heavy slanted rain.
+    - Fading: warm and breaking up.
+  - **Aftermath:** Calm opens to blue sky with no rain.
+  - **Floors:** the storm horizon/fog never drops below 65% of native luminance and the ceiling never below 30%. The storm never raises night fill light.
+  - **Break flashes:** only in the local Break, or from a strike within 40 m. A strike in another phase stays a local bolt.
+  - **Telegraph:** a ground-hugging ring that reads the game's combat hazard colour from `combat.json` (#ff40e6; see JUDGE.md round 3). It has a dark interior, pulses at 2→7 Hz and flashes white-hot at impact, with the exact 3 m / 1.2 s contract. The build costs 0.40 ms (17 height samples, one cached mesh), and its shader is prewarmed.
+- **Witnesses:**
+  - `tests/test_stormwood_surge_presentation.gd` and `tests/smoke_stormwood_lightning_cleanup.gd`; together with the Stormwood suites, 270 tests / 25,360 assertions pass.
+  - Negative controls, in the round reports: flash gate, fade dip, ambient cap, telegraph radius, rain hidden, height-call budget, floors, telegraph colour, lens distance, day Break luminance.
+  - Captures are in `visual/surge/`: before/after strips and night sheets, and `sheet_round4.jpg`.
+- **Independent review:** 4 rounds of code review; the final verdict is approve. 4 blind visual judges with shuffled neutral frames: 12/13, 10/11, partial, then **9/9** time-of-day and weather grouping, with each day frame paired to its night frame (`visual/surge/JUDGE.md`).
+- **Open:**
+  - **Rain, dry disc:** the lens-safe slanted rain leaves a rain-free disc of about 9 m around the player. The fix is to centre the near emitter on the camera, which also closes the reviewer's 2° spread note on the lens test.
+  - **Night at 30% size:** Calm, Building and Fading merge.
+  - **Telegraph read:** the ring reads as a zone rather than an unambiguous "move out". Any change belongs to the shared combat colour.
+  - **Not verified here:**
+    - no Ally GPU profile;
+    - the flash has only been seen in stills;
+    - no audio.
+  - **Region-wide, outside this branch:** no sun shadows, an empty horizon, grass that stays bright under dark skies, and no rain wetness.

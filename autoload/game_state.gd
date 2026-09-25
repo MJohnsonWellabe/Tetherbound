@@ -780,6 +780,12 @@ func reset_for_new_game() -> void:
 	# different hosts legitimately reuse this locator.
 	world.set("world_id", "slot-%d" % autosave_slot())
 	local.call("reset")
+	# A new run is a new character. The title's New Game sets the chosen id
+	# before this call and PlayerState keeps it; any path that did not (the
+	# `--mp-host` flag, tests) gets an explicit identity here rather than one
+	# minted silently at its first save over whatever the slot names.
+	if str(local.get("character_id")).is_empty():
+		local.set("character_id", preload("res://scripts/save/character_identity.gd").mint())
 	players.clear()
 	bind_realm_map()
 	objective_text = quest_log.call("tracked_text", progression)
@@ -1642,8 +1648,10 @@ func _enter_realm_owned(realm_id: String, entry_id: String, bypass_gate: bool,
 	# has to take this peer out of the world it is leaving while that world is
 	# still standing on every peer that can see it.
 	announce_realm(leaving, realm_id)
-	# D100: the transition autosave is a WORLD write, so only the host makes it.
-	if save_system != null and is_host():
+	# D100: the transition autosave is a WORLD write, so only the host makes it,
+	# and only while this process owns the world save: a former client reads
+	# is_host() true after teardown but still holds the host's retained world.
+	if save_system != null and is_host() and world_save_owned():
 		if not bool(save_system.call("save", self, autosave_slot())):
 			var failed_snapshot := _realm_transition_snapshot(realm_id)
 			_apply_realm_transition_snapshot(transition_snapshot)
@@ -1813,7 +1821,7 @@ func _restore_realm_transition_state(snapshot: Dictionary) -> bool:
 	var restored_realm := current_realm
 	if failed_realm != restored_realm:
 		announce_realm(failed_realm, restored_realm)
-	if save_system != null and is_host():
+	if save_system != null and is_host() and world_save_owned():
 		return bool(save_system.call("save", self, autosave_slot()))
 	return true
 

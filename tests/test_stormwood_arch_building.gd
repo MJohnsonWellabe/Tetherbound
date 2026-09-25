@@ -51,7 +51,10 @@ func _record(uid: String) -> Dictionary:
 
 func _assert_refused(verdict: Dictionary, reason: String, note: String) -> void:
 	assert_false(bool(verdict.get("ok")), note)
-	assert_eq(str(verdict.get("code", "")), "arch_locked", note)
+	# The ledger refuses an occupied footing before placement() runs, with its
+	# own code; every other placement refusal keeps arch_locked.
+	var code := "arch_occupied" if reason == OCCUPIED else "arch_locked"
+	assert_eq(str(verdict.get("code", "")), code, note)
 	assert_eq(str(verdict.get("reason", "")), reason, note)
 
 
@@ -152,7 +155,9 @@ func test_three_road_limit_includes_the_player_built_crown_pair() -> void:
 	for at: Vector3 in [VERGE, Vector3(-700.0, 0.0, 1600.0)]:
 		var blocked := _place(at)
 		assert_false(bool(blocked.get("ok")), "no fourth road once every footing carries an arch")
-		assert_eq(str(blocked.get("code", "")), "arch_locked")
+		# A carried footing is refused by the ledger's occupancy check; open
+		# ground by placement().
+		assert_eq(str(blocked.get("code", "")), "arch_occupied" if at == VERGE else "arch_locked")
 	# Each refusal says why: the carried footing is occupied, the open ground
 	# is no footing. Neither is the cap -- see the legacy-save cap tests.
 	_assert_refused(_place(VERGE), OCCUPIED, "a carried footing refuses a second arch")
