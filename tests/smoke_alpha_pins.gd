@@ -449,6 +449,8 @@ func _run_hall_activity() -> void:
 ## along the authored `band5_stronghold_approach` trail polyline past the
 ## aggressive pack. Fails if any fight starts, the pack follows the trainer to
 ## the far waypoint, or the road is not walked.
+const HALL_PACK_CENTRE := Vector2(-58.0, 7255.0)
+const HALL_PACK_TERRITORY_M := 25.0
 const HALL_DECLINE_WAYPOINTS := [Vector2(-20.0, 7250.0), Vector2(30.0, 7310.0), Vector2(80.0, 7370.0)]
 
 
@@ -463,6 +465,12 @@ func _hall_decline(pilot: RefCounted, player: CharacterBody3D, manager: Node,
 	if not pack.has(alpha):
 		pack.append(alpha)
 	var other_fights: Array[String] = []
+	# Vacuity guard: this only proves optionality if the pack would engage a
+	# trainer it noticed.
+	if not bool(alpha.get("aggressive")):
+		_fail("hall decline: the alpha is not aggressive, so passing it proves nothing")
+		quit(1)
+		return
 	var closest_alpha := INF
 	var closest_pack := INF
 	for raw: Variant in HALL_DECLINE_WAYPOINTS:
@@ -482,7 +490,13 @@ func _hall_decline(pilot: RefCounted, player: CharacterBody3D, manager: Node,
 						closest_alpha = minf(closest_alpha, d.length())
 			if bool(manager.call("is_fighting")):
 				var foe := manager.call("enemy_body") as Node3D
-				if foe != null and pack.has(foe):
+				# Classified when the fight starts, not only by the list taken
+				# before the walk: a pack body by name, the alpha itself, or any
+				# foe standing inside the pack's own territory counts.
+				var in_territory := foe != null and Vector2(foe.global_position.x - HALL_PACK_CENTRE.x,
+					foe.global_position.z - HALL_PACK_CENTRE.y).length() <= HALL_PACK_TERRITORY_M
+				if foe != null and (pack.has(foe) or foe == alpha or in_territory
+						or str(foe.name).begins_with("Wild_galecrest_5001_")):
 					_fail("hall decline: walking the road started a fight with the alpha's pack (%s; closest alpha %.1f m, pack %.1f m)" % [
 						str(foe.name), closest_alpha, closest_pack])
 					break

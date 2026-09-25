@@ -2523,6 +2523,7 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			if _harvest_nodes.has(key):
 				(_harvest_nodes[key] as Node).queue_free()
 				_harvest_nodes.erase(key)
+				_harvest_points = maxi(0, _harvest_points - 1)
 			_harvest_collision_lookup.erase(key)
 			_solid = maxi(0, _solid - 1)
 			dropped += 1

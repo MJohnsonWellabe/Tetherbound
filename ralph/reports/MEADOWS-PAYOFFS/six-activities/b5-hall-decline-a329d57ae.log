@@ -1,3 +1,5 @@
+# command: godot --headless --path . --script tests/smoke_alpha_pins.gd -- --hall-decline
+# tree: ralph/f03-activity-rows a329d57ae (main c8935da00 + F03 rows + clear_area fix)
          [3] _ready (res://scripts/world/playground_world.gd:831)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
