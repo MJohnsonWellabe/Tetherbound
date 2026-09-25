@@ -24,6 +24,19 @@ class SimulationWorld extends Node3D:
 	var simulation_only := true
 
 
+var _saved_reduced_motion := false
+
+
+## The reduced-motion pref is static: save it before and restore it after
+## EVERY test, so a failing assert can never leak it into later tests.
+func before_each() -> void:
+	_saved_reduced_motion = MOTION_PREFS.reduced_motion()
+
+
+func after_each() -> void:
+	MOTION_PREFS.set_reduced_motion(_saved_reduced_motion)
+
+
 func _config() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_surge.json"))
 
@@ -773,3 +786,58 @@ func test_reduced_motion_scales_sky_flashes_down() -> void:
 	surge.flash(1.0)
 	assert_almost_eq(surge.flash_level(), 1.0, 0.0001, "full flashes return with reduced motion off")
 	surge.free()
+
+
+## Review should-fix: under a physics roof the near rain layer fades out (not
+## a snap) and fades back outside; the far layer is untouched. The physics
+## ray itself is exercised with a real StaticBody roof in
+## tests/smoke_stormwood_lightning_cleanup.gd.
+func test_roof_fades_the_near_rain_out_and_back() -> void:
+	var surge := SURGE.new()
+	surge._rain = surge._build_rain()
+	surge._style_rain()
+	surge.call("_update_rain", {"rain_visible": true, "rain_amount": 1.0, "night_scale": 1.0, "day_t": 1.0})
+	assert_almost_eq(surge._rain.amount_ratio, 1.0, 0.0001)
+	surge._roofed = true
+	surge.call("_advance_roof", 0.1)
+	assert_true(surge._rain.amount_ratio < 1.0 and surge._rain.amount_ratio > 0.5, "fades, does not snap (%.2f)" % surge._rain.amount_ratio)
+	for _i in 20:
+		surge.call("_advance_roof", 0.05)
+	assert_almost_eq(surge._rain.amount_ratio, 0.0, 0.0001, "no near rain under a roof")
+	assert_almost_eq(surge._rain_far.amount_ratio, 1.0, 0.0001, "distant rain outside still falls")
+	surge.call("_update_rain", {"rain_visible": true, "rain_amount": 1.0, "night_scale": 1.0, "day_t": 1.0})
+	assert_almost_eq(surge._rain.amount_ratio, 0.0, 0.0001, "a phase re-apply keeps the roof suppression")
+	surge._roofed = false
+	for _i in 20:
+		surge.call("_advance_roof", 0.05)
+	assert_almost_eq(surge._rain.amount_ratio, 1.0, 0.0001, "rain returns outside")
+	surge._rain.free()
+	surge.free()
+
+
+## Review nit 5: the rain volume never floats far above the ground.
+func test_rain_volume_is_clamped_near_the_ground() -> void:
+	var surge := SURGE.new()
+	var high: Vector3 = surge.rain_centre(Vector3(0, 120, 0), Vector3.ZERO, 10.0)
+	assert_almost_eq(high.y, 10.0 + float(_config().presentation.rain.max_height_above_ground_m), 0.0001)
+	var normal: Vector3 = surge.rain_centre(Vector3(0, 14, 0), Vector3.ZERO, 10.0)
+	assert_almost_eq(normal.y, 14.0 + float(_config().presentation.rain.camera_height_offset_m), 0.0001)
+	surge.free()
+
+
+## Review nit 2: under reduced motion the telegraph rim is steady (the fill
+## still grows with progress to carry the timing); normally it pulses.
+func test_reduced_motion_steadies_the_telegraph_rim() -> void:
+	var lightning := LightningFixture.new()
+	MOTION_PREFS.set_reduced_motion(false)
+	var pulsing: MeshInstance3D = lightning._build_telegraph(Vector3.ZERO)
+	assert_almost_eq(float((pulsing.material_override as ShaderMaterial).get_shader_parameter("pulse_enabled")), 1.0, 0.0001)
+	MOTION_PREFS.set_reduced_motion(true)
+	var steady: MeshInstance3D = lightning._build_telegraph(Vector3.ZERO)
+	var material := steady.material_override as ShaderMaterial
+	assert_almost_eq(float(material.get_shader_parameter("pulse_enabled")), 0.0, 0.0001, "steady rim")
+	assert_almost_eq(float(material.get_shader_parameter("telegraph_seconds")), 1.2, 0.0001, "timing contract unchanged")
+	assert_true(LIGHTNING.TELEGRAPH_SHADER.contains("progress") and LIGHTNING.TELEGRAPH_SHADER.contains("fill"), "fill carries the timing")
+	pulsing.free()
+	steady.free()
+	lightning.free()

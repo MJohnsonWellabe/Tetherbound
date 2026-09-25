@@ -103,6 +103,13 @@ var _final_cache: Dictionary = {}
 var _final_cache_to: Dictionary = {}
 var _final_cache_base: Dictionary = {}
 var _rain_far: GPUParticles3D
+## Roof suppression of the near rain layer: `_roofed` from a physics ray at
+## the shelter-check cadence, `_roof_fade` eases 0..1 toward it, and
+## `_rain_amount` is the phase's own amount before suppression.
+var _roofed := false
+var _roof_fade := 0.0
+var _rain_amount := 0.0
+var _camera_ground := NAN
 var _flash := 0.0
 var _flash_next := 0.0
 var _flash_echo := -1.0
@@ -161,12 +168,14 @@ func _process(delta: float) -> void:
 	if _shelter_check_left <= 0.0:
 		_shelter_check_left = 0.25
 		sheltered = lightning.sheltered(player.global_position, player) if lightning != null else rules.sheltered(player.global_position, region, false)
+		_refresh_roof(player)
 	_glyph.text = "⚡ %s%s" % [phase.capitalize(), " · Sheltered" if sheltered else ""]
 	var key := presentation_key()
 	if key != _last_phase:
 		_last_phase = key
 		_begin_transition()
 	_advance_presentation(delta)
+	_advance_roof(delta)
 	_advance_flash(delta)
 	if phase == "break" and sheltered and region == "cinder_verge":
 		var chapter := world.get_node_or_null("StormwoodChapter")
@@ -474,10 +483,11 @@ func _update_rain(p: Dictionary) -> void:
 	# instance and must show it whenever the phase rains.
 	_rain.visible = bool(p.rain_visible) and float(p.rain_amount) > 0.0
 	_rain.emitting = _rain.visible
-	_rain.amount_ratio = clampf(float(p.rain_amount), 0.0, 1.0)
+	_rain_amount = clampf(float(p.rain_amount), 0.0, 1.0)
+	_rain.amount_ratio = _rain_amount * (1.0 - _roof_fade)
 	if _rain_far != null:
 		_rain_far.emitting = _rain.visible
-		_rain_far.amount_ratio = _rain.amount_ratio
+		_rain_far.amount_ratio = _rain_amount
 	# The streaks are unshaded, so they would glow on a dark night (judge
 	# (d): in night Building the rain was the brightest thing on screen):
 	# their tint follows the night factor down to rain.night_floor and their
@@ -587,10 +597,55 @@ static func rain_spread_drift(process: ParticleProcessMaterial, lifetime: float)
 ## so rain falls around and over whatever the camera frames (the trainer on
 ## foot or riding, or a piloted creature when the rig retargets), on every
 ## peer; the player otherwise (world_weather.gd's original placement).
-func rain_centre(camera_position: Variant, player_position: Vector3) -> Vector3:
+##
+## Review nit: a camera high above the ground would carry a floating rain
+## volume, so the height is clamped to `camera_ground_y` (terrain under the
+## camera, when known) + rain.max_height_above_ground_m.
+func rain_centre(camera_position: Variant, player_position: Vector3, camera_ground_y: float = NAN) -> Vector3:
+	var cfg: Dictionary = _pres_cfg().get("rain", {})
 	if camera_position is Vector3:
-		return (camera_position as Vector3) + Vector3(0.0, float(_pres_cfg().get("rain", {}).get("camera_height_offset_m", 3.0)), 0.0)
+		var centre := (camera_position as Vector3) + Vector3(0.0, float(cfg.get("camera_height_offset_m", 3.0)), 0.0)
+		if not is_nan(camera_ground_y):
+			centre.y = minf(centre.y, camera_ground_y + float(cfg.get("max_height_above_ground_m", 16.0)))
+		return centre
 	return player_position + Vector3(0.0, RAIN_HEIGHT_OFFSET, 0.0)
+
+## ART_DIRECTION: Stormwood's safe places are "visibly calm and grounded".
+## The camera-centred near rain would otherwise fall straight through roofs
+## (drops spawn above the camera, 1-3 m from the trainer). A PHYSICS roof
+## over the trainer or over the camera suppresses the near layer. Canopy and
+## rod radius, which `sheltered` also counts, are deliberately ignored:
+## rain under trees is correct. Checked at the 0.25 s shelter cadence.
+func roof_over(at: Vector3, exclude: Array[RID] = [], start_lift: float = 0.3) -> bool:
+	if not is_inside_tree():
+		return false
+	var reach := float(_pres_cfg().get("rain", {}).get("roof_probe_m", 40.0))
+	var query := PhysicsRayQueryParameters3D.create(at + Vector3.UP * start_lift, at + Vector3.UP * reach, 1)
+	query.exclude = exclude
+	var space_world: World3D = world.get_world_3d() if world != null else get_viewport().find_world_3d()
+	if space_world == null:
+		return false
+	return not space_world.direct_space_state.intersect_ray(query).is_empty()
+
+func _refresh_roof(player: Node3D) -> void:
+	var exclude: Array[RID] = []
+	if player is CollisionObject3D:
+		exclude.append((player as CollisionObject3D).get_rid())
+	# The trainer probe starts above head height, as the lightning shelter
+	# probe does, so the trainer's own body and hat never count as a roof.
+	_roofed = roof_over(player.global_position, exclude, 2.2)
+	var camera := get_viewport().get_camera_3d()
+	if not _roofed and camera != null:
+		_roofed = roof_over(camera.global_position, exclude, 0.2)
+	if camera != null and world != null and world.has_method("ground_height_at"):
+		_camera_ground = float(world.call("ground_height_at", camera.global_position.x, camera.global_position.z))
+
+## Ease the near layer out under a roof and back in outside (no snap).
+func _advance_roof(delta: float) -> void:
+	var seconds := maxf(0.01, float(_pres_cfg().get("rain", {}).get("roof_fade_seconds", 0.6)))
+	_roof_fade = move_toward(_roof_fade, 1.0 if _roofed else 0.0, delta / seconds)
+	if _rain != null:
+		_rain.amount_ratio = _rain_amount * (1.0 - _roof_fade)
 
 func _update_ceiling(p: Dictionary) -> void:
 	if _ceiling_material == null:
@@ -654,7 +709,7 @@ func _follow_player() -> void:
 		if camera != null:
 			camera_position = camera.global_position
 		_rain.global_position = rain_centre(camera_position,
-			player.global_position if player != null else Vector3.ZERO)
+			player.global_position if player != null else Vector3.ZERO, _camera_ground)
 	if _ceiling != null and camera != null:
 		_ceiling.global_position = camera.global_position
 
