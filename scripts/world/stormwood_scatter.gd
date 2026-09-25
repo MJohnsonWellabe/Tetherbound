@@ -4,7 +4,9 @@ const BAKE := preload("res://scripts/world/scatter_bake.gd")
 const PATH := "res://data/config/stormwood_vegetation.json"
 const SETTLEMENTS := "res://data/config/stormwood_settlements.json"
 const POCKETS_PATH := "res://data/config/stormwood_pockets.json"
-const SOURCES: Array[String] = [PATH, SETTLEMENTS, "res://data/config/terrain_stormwood.json", "res://data/config/stormwood_world.json", "res://scripts/world/stormwood_heightfield.gd", "res://scripts/world/stormwood_scatter.gd", POCKETS_PATH]
+const POCKET_FRAME_PATH := "res://scripts/world/stormwood_pocket_frame.gd"
+const POCKET_FRAME := preload(POCKET_FRAME_PATH)
+const SOURCES: Array[String] = [PATH, SETTLEMENTS, "res://data/config/terrain_stormwood.json", "res://data/config/stormwood_world.json", "res://scripts/world/stormwood_heightfield.gd", "res://scripts/world/stormwood_scatter.gd", POCKETS_PATH, POCKET_FRAME_PATH]
 ## Authored seats the scatter keeps clear (vegetation.json `seat_clearings`).
 ## These files are NOT whole-file bake sources: only each seat's kind, id and
 ## XZ position enter the fingerprint (`seat_fingerprint_text`), so a dialogue,
@@ -36,7 +38,9 @@ static func seats() -> Array[Dictionary]:
 		var source: Array = SEAT_SOURCES[kind]
 		var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(source[0])))
 		for row: Dictionary in data.get(str(source[1]), []):
-			var p: Array = row.position
+			var p: Array = row.get("position", [])
+			if p.size() < 2:
+				continue
 			var z := float(p[1]) if p.size() == 2 else float(p[2])
 			out.append({"kind": kind, "id": str(row.id), "at": Vector2(float(p[0]), z)})
 	return out
@@ -57,16 +61,13 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 	# largest baked collider reach.
 	var pockets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(POCKETS_PATH))
 	cfg["pocket_clearings"] = pockets.pockets
-	cfg["pocket_clear_radius_m"] = (float(pockets.interior_half_m) + float(pockets.wall_thickness_m)) * sqrt(2.0) + 2.61
+	cfg["pocket_clear_radius_m"] = (float(pockets.interior_half_m) + float(pockets.wall_thickness_m)) * sqrt(2.0) + max_collider_reach(cfg)
 	cfg["route_half_width"] = float((JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_stormwood.json")) as Dictionary).route_half_width)
 	# Each pocket's mouth reads from its road: no tree or colliding rock in a
 	# widening cone out of the mouth, and no ground cover near it.
 	var frames: Array[Dictionary] = []
 	for pocket: Dictionary in pockets.pockets:
-		var yaw := deg_to_rad(float(pocket.mouth_yaw_deg))
-		var forward := Vector2(sin(yaw), cos(yaw))
-		var mouth := Vector2(float(pocket.at[0]), float(pocket.at[1])) + forward * (float(pockets.interior_half_m) + float(pockets.wall_thickness_m))
-		frames.append({"mouth": mouth, "forward": forward})
+		frames.append({"mouth": POCKET_FRAME.mouth(pocket, pockets), "forward": POCKET_FRAME.frame(pocket).forward})
 	cfg["pocket_mouths"] = frames
 	cfg["pocket_approach"] = pockets.get("approach_clear", {})
 	cfg["seat_grid"] = _seat_grid(cfg.get("seat_clearings", {}))
@@ -78,6 +79,12 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 	# The roadside composition is deliberately asymmetric. A broadleaf stand
 	# leans over one shoulder, ferns and broken timber open the opposite view.
 	for route: Dictionary in world.routes:
+		# A pocket's spur is its lane, not a road: the corridor check below
+		# clears it, but it gets no roadside stand. Planting one would line
+		# a 100-340 m dead-end lane like a through road and claim tree cells
+		# the background forest now fills, re-planting far more than the lane.
+		if str(route.get("kind", "")) == "spur":
+			continue
 		# Each road and each background cell draws from its own seed, so an
 		# edit to one road never changes another road's or cell's random
 		# draws. It can still change their planting: `occupied` is shared, so
@@ -123,6 +130,16 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 			if rng.randf()<0.45:
 				_add(out,cfg,field,world,rng,occupied,"storm_rock",at+Vector2(12,7))
 	return out
+
+## The largest collider surface any baked layer can reach from its centre:
+## collision_radius x scale_max over the colliding layers.
+static func max_collider_reach(cfg: Dictionary) -> float:
+	var reach := 0.0
+	for layer: String in cfg.layers:
+		var spec: Dictionary = cfg.layers[layer]
+		if bool(spec.get("collides", false)):
+			reach = maxf(reach, float(spec.get("collision_radius", 0.0)) * float(spec.scale_max))
+	return reach
 
 ## Seats bucketed by SEAT_CELL_M for the per-candidate check: each entry is
 ## [at, collider_surface_m, ground_cover_m]. Every clearance plus the largest

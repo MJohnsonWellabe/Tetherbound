@@ -63,10 +63,16 @@ static func placement(at: Vector3, realm: String, flags: RefCounted, buildings: 
 			if fixed == twin:
 				return {"ok": false, "reason": "The Crown already has its twin."}
 			continue
-		ordinary_count += 1
-		# A legacy arch saved off every footing never becomes a new arch's
+		var footed := not str(row.get("arch_footing", "")).is_empty()
+		# A legacy arch saved without a footing never becomes a new arch's
 		# twin: that road would have an illegal end. The legal arch waits.
-		if twin.is_empty() and unpaired.is_empty() and not str(row.get("arch_footing", "")).is_empty():
+		# Unpaired, such an arch can never be half of a road, so it does not
+		# count against the cap either. A legacy arch that is already half of
+		# a standing pair still counts: that road still travels.
+		if twin.is_empty() and not footed:
+			continue
+		ordinary_count += 1
+		if twin.is_empty() and unpaired.is_empty():
 			unpaired = str(row.get("uid", ""))
 	var limit := int(ARCHES.config().player_pair_limit)
 	var full := ordinary_count >= (limit - crown_count) * 2 if fixed.is_empty() else ceili(float(ordinary_count) / 2.0) + crown_count >= limit
