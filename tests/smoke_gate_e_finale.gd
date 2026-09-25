@@ -188,7 +188,6 @@ func _run() -> void:
 	await _read_the_reveal_before_he_speaks()
 	await _fight_the_warden()
 	await _pull_the_lever()
-	await _accept_the_offer()
 	await _the_full_belt_takes_the_decision()
 	_the_decision_is_recorded()
 	await _the_region_answers()
@@ -519,38 +518,6 @@ func _pull_the_lever() -> void:
 	if legendary != null and legendary.get_node_or_null(^"ContainmentVFX") != null:
 		_fail("the containment cage is still standing around a freed legendary")
 	print("the legendary is freed and '%s' is set once" % FREED_FLAG)
-
-
-## F05: the freed legendary offers THIS character a choice rather than
-## joining silently. Read through the join beat until the choice is open, WALK
-## to the accept prompt on the chamber floor, and -- in this file's own rule --
-## ask it for a real offer from where the player is actually standing before
-## activating it, the same `interaction_activate()` the arbiter calls.
-func _accept_the_offer() -> void:
-	for i in SEQUENCE_FRAMES:
-		if bool(_climax.call("choice_open")):
-			break
-		await physics_frame
-		if bool(_panel.call("is_open")):
-			await _press("interact")
-	if not bool(_climax.call("choice_open")):
-		_fail("the freed legendary never offered this character its accept/refuse choice")
-		return
-	var accept := _world.find_child("VeridianAcceptPrompt", true, false) as Node3D
-	if accept == null:
-		_fail("the choice opened without an accept prompt")
-		return
-	await _walk_toward(accept.get_parent().global_position, 0.4)
-	for i in 20:
-		await physics_frame
-	var offer: Dictionary = accept.call("interaction_offer", _player.global_position)
-	if offer.is_empty():
-		_fail(("standing %.1f m from the accept prompt on the chamber floor, the player is offered "
-			+ "nothing; the Veridian choice cannot be answered") % _player.global_position.distance_to(accept.global_position))
-		return
-	print("  accept prompt offered at %.1f m: '%s'" % [
-		_player.global_position.distance_to(accept.global_position), str(offer.get("label", ""))])
-	accept.call("interaction_activate")
 
 
 ## OP-0904-8 (owner: "The legendary should be in the machine not in a ring

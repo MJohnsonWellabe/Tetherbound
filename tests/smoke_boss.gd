@@ -114,7 +114,6 @@ func _run() -> void:
 
 	await _the_horizon_before_the_warden()
 	await _free_the_legendary()
-	await _accept_the_offer()
 	_the_legendary_joined_the_party()
 	await _the_rift_collapses_and_the_barrier_holds()
 	_the_meadows_answers()
@@ -472,31 +471,6 @@ func _free_the_legendary() -> void:
 	print("the legendary is freed and '%s' is set once" % FREED_FLAG)
 
 
-## F05: the freed legendary no longer joins silently; each character accepts
-## or refuses it. Read through the join beat until this character's choice is
-## open, then activate the ACCEPT prompt -- the same `interaction_activate()`
-## the interaction arbiter calls when the player presses there.
-func _accept_the_offer() -> void:
-	for i in SEQUENCE_FRAMES:
-		if bool(_climax.call("choice_open")):
-			break
-		await physics_frame
-		if bool(_panel.call("is_open")):
-			await _press("interact")
-	if not bool(_climax.call("choice_open")):
-		_fail("the freed legendary never offered this character its choice")
-		return
-	var accept := _world.find_child("VeridianAcceptPrompt", true, false)
-	if accept == null:
-		_fail("the choice opened without an accept prompt")
-		return
-	accept.call("interaction_activate")
-	for i in 60:
-		await physics_frame
-		if bool(_panel.call("is_open")):
-			await _press("interact")
-
-
 ## §28 step 3: it VOLUNTARILY joins. On a belt with room, that means it is
 ## simply on the belt — no orb was thrown and nothing was caught.
 func _the_legendary_joined_the_party() -> void:
@@ -544,7 +518,6 @@ func _a_full_belt_opens_the_ceremony_instead() -> void:
 	var flags: RefCounted = _game.call("player_flags") if _game.has_method("player_flags") else null
 	if flags != null:
 		flags.call("set_flag", "legendary_joined", false)
-		flags.call("set_flag", "legendary_refused", false)
 
 	# Re-run the ending's hand-over with a full belt. The stage machine has
 	# already finished, so this drives the same private step it drives.
