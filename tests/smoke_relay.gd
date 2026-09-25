@@ -490,7 +490,14 @@ func _fight_the_whole_team() -> void:
 			_aim_camera_along(to)
 		var reach := maxf(float(_manager.call("combat_move_reach", "quick")),
 			float(_manager.call("combat_move_reach", "charged")))
-		if to.length() > reach:
+		# F04-c, capture mode only: while an enemy tell is on screen the pilot
+		# sidesteps instead of pressing into contact, as BOSSES asks of a player
+		# facing a CHARGER, so the enemy's own spacing and lunge can show.
+		if not _tell_capture_dir.is_empty() and Engine.get_physics_frames() <= _tell_camera_free_until:
+			Input.action_press("move_left")
+			await physics_frame
+			Input.action_release("move_left")
+		elif to.length() > reach:
 			Input.action_press("move_forward")
 			await physics_frame
 			Input.action_release("move_forward")
