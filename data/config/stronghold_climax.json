@@ -110,6 +110,8 @@
     "refuse_offset": 2.0,
     "radius": 1.6,
     "height": 0.9,
+    "announce_delay": 1.0,
+    "message_hold": 2.4,
     "near_offset": 1.5,
     "min_separation": 2.8,
     "offer_radius": 30.0
