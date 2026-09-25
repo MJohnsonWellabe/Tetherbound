@@ -1,0 +1,59 @@
+run id:  net-20260925T182339Z-28702
+run dir: /tmp/net-session_host_first_realm-20260925T182339Z
+smoke:   tests/smoke_net_session_host_first_realm.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=28726 control_port=37583 home=/tmp/net-session_host_first_realm-20260925T182339Z/home-0 log=/tmp/net-session_host_first_realm-20260925T182339Z/peer-0.log
+coordinator: launched peer 1 (client) pid=28727 control_port=35583 home=/tmp/net-session_host_first_realm-20260925T182339Z/home-1 log=/tmp/net-session_host_first_realm-20260925T182339Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":35701.0,"godot_version":"4.7-stable (official)","main_sha":"10b635d38e81","peer":0.0,"pid":28726.0,"role":"host","type":"hello","user_data_dir":"/tmp/net-session_host_first_realm-20260925T182339Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":35702.0,"godot_version":"4.7-stable (official)","main_sha":"10b635d38e81","peer":1.0,"pid":28727.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-session_host_first_realm-20260925T182339Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join
+PASS: peer 0 hosted a world (hosting udp/35701 as peer 1)
+PASS: peer 1 joined peer 0's world on port 35701 (joined 127.0.0.1:35701 as peer 1558347327 after 14 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: the Cloudreach route is open (realm_key_cloudreach: ok=true pending=false code='' reason='')
+PASS: peer 0 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: peer 1 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: the host crossed into Cloudreach first (crossed 'meadows' -> 'cloudreach' after 516 observed physics frames / 39385 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: the host is standing in Cloudreach
+PASS: the guest is still standing in the Meadows
+PASS: the guest in the Meadows holds no body for the host in Cloudreach (holds 0)
+PASS: the guest followed the host into Cloudreach (crossed 'meadows' -> 'cloudreach' after 632 observed physics frames / 31317 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: peer 0 is still in a 2-peer session after both crossings (2.0)
+PASS: peer 0's current scene is Cloudreach
+PASS: peer 1 is still in a 2-peer session after both crossings (2.0)
+PASS: peer 1's current scene is Cloudreach
+PASS: peer 0 draws exactly one other trainer in Cloudreach (drew 1)
+PASS: peer 0's view of the other trainer is visible
+PASS: peer 1 draws exactly one other trainer in Cloudreach (drew 1)
+PASS: peer 1's view of the other trainer is visible
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: host-first crossing leaves no misaddressed spawn or cache errors
+ALL CHECKS PASSED
+
+=== /tmp/net-session_host_first_realm-20260925T182339Z/SUMMARY.md ===
+# Net smoke run net-20260925T182339Z-28702
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=28726 exited=true unexpected_exit=false
+- peer 1 (client) pid=28727 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED

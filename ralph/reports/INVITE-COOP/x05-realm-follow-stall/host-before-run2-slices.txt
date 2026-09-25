@@ -1,0 +1,13 @@
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[DBG-STALL] physics frame gap 4179 ms ending at 127377 ms
+[realms] shell up for 'meadows' at /root/MeadowsPlayground: attached in 230 ms, +9140 KB static; still building across frames
+[DBG-STALL] physics frame gap 5341 ms ending at 155467 ms
+[DBG-STALL] physics frame gap 1150 ms ending at 156617 ms
+[DBG-STALL] MeadowsPlayground slice 7076 ms before step terrain_data
+[DBG-STALL] MeadowsPlayground slice 2087 ms before breathe at ["shell_build_budget.gd:190 breathe", "vegetation.gd:1259 _breathe", "vegetation.gd:598 build"]
+[DBG-STALL] physics frame gap 2105 ms ending at 161613 ms
+[DBG-STALL] MeadowsPlayground slice 3741 ms before breathe at ["shell_build_budget.gd:190 breathe", "playground_world.gd:1495 _build_settlement", "shell_build_budget.gd:200 breathe"]
+[DBG-STALL] physics frame gap 3848 ms ending at 175035 ms
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[DBG-STALL] MeadowsPlayground slice 15383 ms before breathe at ["shell_build_budget.gd:190 breathe", "burrow_warrens.gd:387 _build_breathe", "burrow_warrens.gd:299 build"]
+[DBG-STALL] physics frame gap 15388 ms ending at 197501 ms

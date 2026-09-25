@@ -1,0 +1,32 @@
+[DBG-STALL] harvest_nodes 76 ms
+[DBG-STALL] farm_plots 2 ms
+[DBG-STALL] tms 12 ms
+[DBG-STALL] caches 11 ms
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[DBG-STALL] band_pickups 330 ms
+[DBG-STALL] sunstone 1 ms
+[DBG-STALL] warrens chambers 2 ms
+[DBG-STALL] physics frame gap 4111 ms ending at 111759 ms
+[realms] shell up for 'meadows' at /root/MeadowsPlayground: attached in 171 ms, +9140 KB static; still building across frames
+[DBG-STALL] physics frame gap 5138 ms ending at 139538 ms
+[DBG-STALL] MeadowsPlayground slice 6658 ms before step terrain_data
+[DBG-STALL] MeadowsPlayground slice 1878 ms before breathe at ["shell_build_budget.gd:190 breathe", "vegetation.gd:1260 _breathe", "vegetation.gd:599 build"]
+[DBG-STALL] physics frame gap 1891 ms ending at 145141 ms
+[DBG-STALL] MeadowsPlayground slice 3758 ms before breathe at ["shell_build_budget.gd:190 breathe", "playground_world.gd:1495 _build_settlement", "shell_build_budget.gd:200 breathe"]
+[DBG-STALL] physics frame gap 3851 ms ending at 158174 ms
+[DBG-STALL] harvest_nodes 64 ms
+[DBG-STALL] farm_plots 2 ms
+[DBG-STALL] tms 11 ms
+[DBG-STALL] caches 4 ms
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[DBG-STALL] band_pickups 345 ms
+[DBG-STALL] sunstone 2 ms
+[DBG-STALL] warrens chambers 4 ms
+[DBG-STALL] MeadowsPlayground slice 1641 ms before breathe at ["shell_build_budget.gd:190 breathe", "burrow_warrens.gd:389 _build_breathe", "burrow_warrens.gd:324 build"]
+[DBG-STALL] physics frame gap 1651 ms ending at 168234 ms
+[DBG-STALL] MeadowsPlayground slice 4127 ms before breathe at ["shell_build_budget.gd:190 breathe", "burrow_warrens.gd:389 _build_breathe", "burrow_warrens.gd:326 build"]
+[DBG-STALL] physics frame gap 4146 ms ending at 173315 ms
+[DBG-STALL] fold save for 'meadows' took 229 ms
+[realms] shell for 'meadows' folded back into the world (save written)
+[DBG-STALL] fold queue_free of 'meadows' (1549 direct children) at 176423 ms
+[DBG-STALL] physics frame gap 2433 ms ending at 178614 ms

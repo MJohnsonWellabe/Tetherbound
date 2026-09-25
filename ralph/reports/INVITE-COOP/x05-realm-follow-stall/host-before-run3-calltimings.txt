@@ -1,0 +1,25 @@
+[DBG-STALL] harvest_nodes 80 ms
+[DBG-STALL] farm_plots 3 ms
+[DBG-STALL] tms 13 ms
+[DBG-STALL] caches 12 ms
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[DBG-STALL] band_pickups 12427 ms
+[DBG-STALL] sunstone 1 ms
+[DBG-STALL] warrens chambers 3 ms
+[DBG-STALL] physics frame gap 4289 ms ending at 129337 ms
+[realms] shell up for 'meadows' at /root/MeadowsPlayground: attached in 191 ms, +9140 KB static; still building across frames
+[DBG-STALL] physics frame gap 5438 ms ending at 156651 ms
+[DBG-STALL] MeadowsPlayground slice 6920 ms before step terrain_data
+[DBG-STALL] MeadowsPlayground slice 2046 ms before breathe at ["shell_build_budget.gd:190 breathe", "vegetation.gd:1259 _breathe", "vegetation.gd:598 build"]
+[DBG-STALL] physics frame gap 2060 ms ending at 162498 ms
+[DBG-STALL] MeadowsPlayground slice 3658 ms before breathe at ["shell_build_budget.gd:190 breathe", "playground_world.gd:1495 _build_settlement", "shell_build_budget.gd:200 breathe"]
+[DBG-STALL] physics frame gap 3752 ms ending at 175399 ms
+[DBG-STALL] harvest_nodes 63 ms
+[DBG-STALL] farm_plots 2 ms
+[DBG-STALL] tms 10 ms
+[DBG-STALL] caches 2 ms
+[playground] placed 129 band pickups (0 already taken, 38 nudged off scatter, 0 unclear, 0 without ground)
+[DBG-STALL] band_pickups 14791 ms
+[DBG-STALL] sunstone 2 ms
+[DBG-STALL] warrens chambers 5 ms
+[DBG-STALL] MeadowsPlayground slice 14879 ms before breathe at ["shell_build_budget.gd:190 breathe", "burrow_warrens.gd:389 _build_breathe", "burrow_warrens.gd:301 build"]
