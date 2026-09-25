@@ -1,10 +1,12 @@
 extends RefCounted
 ## Portable, client-reserve-first debit for paid Water dock actions (F15).
 ##
-## Problem this closes: a paid dock action (reedhaven_repair) saves the WORLD
-## first and only then takes items from the in-memory inventory. A crash or
-## disconnect before the next character save yields a free repair, a guest
-## whose delta is lost is never debited, and a retry is refused already_done.
+## Problem this addresses (only once the wiring below lands; this module is
+## deliberately UNWIRED, so the F15 paid-debit gap is still open in the game):
+## a paid dock action (reedhaven_repair) saves the WORLD first and only then
+## takes items from the in-memory inventory. A crash or disconnect before the
+## next character save yields a free repair, a guest whose delta is lost is
+## never debited, and a retry is refused already_done.
 ##
 ## Model (same shape as satchel_escrow.gd's client reserve): the character
 ## moves the cost OUT of its inventory into a durable escrow row and SAVES the
@@ -14,13 +16,15 @@ extends RefCounted
 ## (REFUND_CODES), or on a durable receipt proving another txn paid for the
 ## action. Absence of a receipt is never a refund reason: the txn may be in
 ## flight, so the answer to absence is to RESUBMIT the same txn (the host
-## dedupes by txn id). Every transition happens once.
+## dedupes by txn id). Every transition happens once. Only "pending" rows are
+## ever resubmitted; once a refusal made a row refund_due/refunded its txn is
+## dead and must never be sent again.
 ##
 ## Pure data: no nodes, RPCs or saves. The caller persists the character after
 ## any call whose result has `changed == true`.
 ##
 ## --- Data shapes ------------------------------------------------------------
-## character_state: Dictionary
+## character_state: Dictionary, built FRESH for every call (see P6)
 ##   {"character_id": String,
 ##    "escrow": Dictionary,   # txn_id -> row; wiring passes PlayerState.satchel_escrow
 ##                            # by reference (already persisted by character saves)
@@ -35,10 +39,19 @@ extends RefCounted
 ##   "cost" so duplicates are no-ops and the next attempt number is derivable.
 ##   "refund_due" means the refund is authoritative but the bag lacked room; the
 ##   items are owed in EVERY world, so reconcile() retries them wherever it runs.
+##   A refund_due txn is NEVER resubmitted (begin() answers refund_outstanding).
+##   A "pending" row for a world that never comes back (deleted, never hosted
+##   again) stays escrowed indefinitely: absence is never a refund reason and
+##   there is no refund-on-exit, by design (the txn may have committed there).
+## intent (what begin() returns for the wire):
+##   {"txn_id", "world_instance_id", "action_id", "attempt":int}
+##   txn_id == txn_id(world_instance_id, action_id, <host-resolved character>,
+##   attempt); the character is never taken from the packet (P3).
 ## world receipt (the host's durable fact for one action in one world):
 ##   {"action_id", "world_instance_id", "txn_id", "payer_character_id"}
 ##   The host writes it in the same durable world save as the action flag and
 ##   takes payer_character_id from its own actor resolution, never the packet.
+##   legacy_receipt() builds the P4 placeholder in exactly this shape.
 ## world_facts: Dictionary action_id -> receipt, from the host's authoritative
 ##   durable world for world_instance_id (host world, or a guest's installed
 ##   handshake snapshot). Absence is never treated as a refusal (see above).
@@ -52,13 +65,18 @@ extends RefCounted
 ##
 ## --- Wiring plan (later work order; needs a coordinator grant) -------------
 ## 1. scripts/world/water_dock_actions.gd:96-106 `_activate`: for an action with
-##    a non-empty cost, call begin() with PlayerState (satchel_escrow as escrow,
-##    inventory as adapter), SATCHEL_ESCROW.world_instance(world) and the
-##    world's receipts map as world_facts; persist the character (as
-##    ledger_rpc.gd:101 `_persist_satchel_character`) BEFORE submitting; add
-##    `txn_id` and `world_instance_id` to the intent at :103. The inventory
-##    proof sent at :100-102 must read the escrowed cost. An already_pending
-##    result resubmits the open row's stored txn instead of reserving again.
+##    a non-empty cost, build the state fresh (P6) and call begin() with
+##    PlayerState (satchel_escrow as escrow, inventory as adapter),
+##    SATCHEL_ESCROW.world_instance(world) and the world's receipts map as
+##    world_facts; persist the character (as ledger_rpc.gd:101
+##    `_persist_satchel_character`) BEFORE submitting (P5); merge the returned
+##    intent's `txn_id`, `world_instance_id` and `attempt` into the intent at
+##    :103. The inventory proof sent at :100-102 must read the escrowed cost.
+##    Result codes: `already_pending` resubmits the pending row's stored txn
+##    (subject to P1) instead of reserving again; `refund_outstanding` means a
+##    refused txn still owes items: NEVER resubmit it, keep the prompt
+##    disabled and let reconcile() finish the refund; `txn_collision` is a
+##    corrupt row: do nothing.
 ##    :112-115 `_on_refused` (clears `_pending` for water_dock_action): route the
 ##    refusal detail (txn_id/world_instance_id/code/receipt) to refund() before
 ##    clearing, and keep the prompt disabled while the row is still pending.
@@ -67,10 +85,10 @@ extends RefCounted
 ##    too_far) looks up the stored receipt for intent.txn_id and, if present,
 ##    refuses already_done carrying that receipt, so a resubmitted committed
 ##    txn always gets its proof. Then require txn_id + world_instance_id
-##    matching the host world (mismatch -> wrong_world), stop emitting player
-##    `item_take` ops (:47-50), and emit a world receipt op carrying
-##    context.character_id as payer_character_id; the flag-set already_done
-##    path also includes the stored receipt for the action.
+##    matching the host world (mismatch -> wrong_world) and the P3 txn check,
+##    stop emitting player `item_take` ops (:47-50), and emit a world receipt
+##    op carrying context.character_id as payer_character_id; the flag-set
+##    already_done path also includes the stored receipt for the action.
 ## 3. scripts/net/world_ledger.gd:144-148 (`water_dock_action` commit) and
 ##    :903 `_commit`: apply/replicate the receipt op; autoload/world_state.gd:257
 ##    save_data / :279 load_data persist a `water_dock_receipts` map.
@@ -80,44 +98,66 @@ extends RefCounted
 ##    returns code journal_failed stamped with world_instance_id and txn_id for
 ##    water_dock_action; that verdict is a REFUND_CODES refund (the world was
 ##    rolled back as one unit, so nothing was committed). :498 `_rpc_verdict`
-##    and the host-local refusal path call refund(). :485 `apply_remote_delta`
-##    and :129 `_settle_satchel_receipts` call settle()/reconcile() with the
-##    world's receipts (safe anywhere now: reconcile never refunds on absence).
+##    and the host-local refusal path call refund(). :562 `item_take` stays
+##    for other kinds only.
+##    Periodic paths: :485 `apply_remote_delta` and :129
+##    `_settle_satchel_receipts` call settle()/reconcile() with the world's
+##    receipts, passing EVERY txn id currently submitted on this connection
+##    as in_flight_txn_ids, and IGNORE `needs_submit` (they never submit).
 ##    Reconnect: on scripts/net/session.gd:945 `snapshot_applied` (i.e. once
 ##    `snapshot_ready()` is true; the host after its world load), call
-##    reconcile() with in_flight_txn_ids = []; every txn in its `needs_submit`
-##    is resubmitted unchanged (same txn id and intent, after a character
-##    persist). Resubmission is the ONLY absence handler. There is no
-##    timer-driven refund anywhere.
+##    reconcile() with in_flight_txn_ids = [] (nothing is outstanding on a
+##    new connection); every txn in its `needs_submit` is resubmitted
+##    unchanged (same txn id and intent, after a character persist). This is
+##    the ONLY place `needs_submit`/resubmittable_txns() drive a submission.
+##    Resubmission is the ONLY absence handler. There is no timer-driven
+##    refund anywhere.
+## 5. No character schema change: rows ride in satchel_escrow
+##    (scripts/save/character_save.gd:45). satchel_escrow.gd reconcile skips
+##    rows whose kind is not a death-satchel kind, so the kinds do not collide.
 ##
 ## --- Wiring preconditions (MANDATORY; the module is only safe under them) --
 ## Refusal codes are final for ONE submission, not for a txn. The wiring must
 ## therefore guarantee:
-##  P1 (client) At most one outstanding submission per txn per connection.
-##     A lost verdict is NOT retried on a timer; the txn is resubmitted only
-##     after a verdict for the previous copy or after a reconnect's
-##     snapshot_applied. Otherwise copy A can be refused (prerequisite /
-##     journal_failed) and refunded while copy B later commits: a free repair.
+##  P1 (client) Only `pending` rows are ever resubmitted (already_pending,
+##     reconcile's needs_submit, resubmittable_txns()); a refund_due or
+##     refunded txn is never sent again, and open_txns() is a UI listing, not
+##     a resubmit source. At most one outstanding submission per txn per
+##     connection. A lost verdict is NOT retried on a timer; the txn is
+##     resubmitted only after a verdict for the previous copy or after a
+##     reconnect's snapshot_applied. Otherwise copy A can be refused
+##     (prerequisite / journal_failed) and refunded while copy B later
+##     commits: a free repair.
 ##  P2 (host) Refused paid-dock txn ids are remembered for the connection
 ##     outside the journal_failed rollback (which clears _seen_txns), and any
 ##     later copy of a refused txn gets the same refusal.
-##  P3 (host) The receipt lookup for intent.txn_id runs first; a receipt's
-##     txn_id must equal txn_id(instance, action, resolved character,
-##     attempt) or the intent is refused as malformed.
-##  P4 (host) Loading a world whose dock flag predates receipts writes a
-##     placeholder receipt {txn_id:"legacy", payer_character_id:"legacy"} so
-##     open rows refund instead of resubmitting forever.
-## A wiring change that cannot meet P1-P4 must not call refund() on
+##  P3 (host) The receipt lookup for intent.txn_id runs first. Then
+##     intent.txn_id must equal txn_id(intent.world_instance_id,
+##     intent.action_id, resolved character, intent.attempt) with an integer
+##     attempt >= 1, or the intent is refused as malformed.
+##  P4 (host) Loading a world whose dock flag predates receipts writes, for
+##     each such action, legacy_receipt(host world_instance_id, action_id):
+##     {action_id, world_instance_id, txn_id:"legacy",
+##     payer_character_id:"legacy"}. All four fields are required; that shape
+##     is what makes open rows for the action refund (paid_by_other) instead
+##     of resubmitting forever.
+##  P5 (client) Persist before submit: the character save that holds the new
+##     pending row must SUCCEED before the first submission. If it fails, do
+##     not submit; call rollback_unsent() to return the reserved items (the
+##     world never saw the txn) and persist again when possible.
+##  P6 (client) Build the character_state Dictionary fresh on every call from
+##     the current PlayerState. Never cache PlayerState.satchel_escrow or the
+##     state Dictionary: character load and reward rollback replace that map,
+##     and a cached reference would mutate a detached copy.
+## A wiring change that cannot meet P1-P6 must not call refund() on
 ## prerequisite/journal_failed.
-##    :562 `item_take` stays for other kinds only.
-## 5. No character schema change: rows ride in satchel_escrow
-##    (scripts/save/character_save.gd:45). satchel_escrow.gd reconcile skips
-##    rows whose kind is not a death-satchel kind, so the kinds do not collide.
 
 const KIND := "water_dock_debit"
 const VERSION := 1
 const TXN_NAMESPACE := "water-dock-debit-v1"
 const OPEN := ["pending", "refund_due"]
+## P4 placeholder txn/payer; never a sha256 txn id, so it never pays a row.
+const LEGACY := "legacy"
 ## Host refusal codes that prove THIS txn never committed, so its items return.
 ## Host order (water_dock_rules.gd:24-46, plus the wiring's txn-receipt lookup
 ## placed first) means each is only reachable when no receipt exists for it:
@@ -144,9 +184,20 @@ static func txn_id(world_instance_id: String, action_id: String, character_id: S
 
 
 ## Reserve `cost` into a new escrow row. Returns
-## {"ok", "code", "changed", "txn_id", "intent": {txn_id, world_instance_id}}.
+## {"ok", "code", "changed", "txn_id",
+##  "intent": {txn_id, world_instance_id, action_id, attempt}} (intent on success).
 ## Refuses with no change when inputs are invalid, items are insufficient, an
 ## open row for the same action/world/character exists, or it was already paid.
+## Refusal codes and what the caller may do:
+##   already_pending    -- a pending row exists; `txn_id` is that row's txn and
+##                         is the ONLY txn begin() ever hands back for
+##                         resubmission (subject to P1).
+##   refund_outstanding -- a refused txn still owes items (refund_due). It is
+##                         dead: `txn_id` is "" and it must never be resubmitted;
+##                         reconcile()/refund() finish returning the items.
+##   already_paid       -- a settled tombstone blocks (see world_facts below).
+##   txn_collision      -- a corrupt row occupies the next txn key: no action.
+##   materials / no_cost / malformed -- nothing reserved.
 ##
 ## `world_facts` (optional, same shape as reconcile's) is the authoritative
 ## durable receipts map for world_instance_id. A "settled" tombstone normally
@@ -170,14 +221,18 @@ static func begin(state: Dictionary, action_id: String, cost: Dictionary, world_
 		if not _same_action(raw, world_instance_id, action_id, character):
 			continue
 		var status := str((raw as Dictionary).get("status", ""))
-		if status in OPEN:
+		if status == "refund_due":
+			return _result(false, "refund_outstanding", false)
+		if status == "pending":
 			return _result(false, "already_pending", false, str(raw.get("txn_id", "")))
 		if status == "settled" and not restored:
 			return _result(false, "already_paid", false, str(raw.get("txn_id", "")))
 		attempt = maxi(attempt, int(raw.get("attempt", 0)) + 1)
 	var txn := txn_id(world_instance_id, action_id, character, attempt)
 	if (escrow as Dictionary).has(txn):
-		return _result(false, "already_pending", false, txn)
+		# Not a row of this action (the loop above would have matched it), so
+		# it is corrupt: never hand it out as a resubmittable pending txn.
+		return _result(false, "txn_collision", false)
 	for item: String in clean:
 		if _count(state, item) < int(clean[item]):
 			return _result(false, "materials", false)
@@ -193,8 +248,29 @@ static func begin(state: Dictionary, action_id: String, cost: Dictionary, world_
 		"character_id": character, "attempt": attempt, "cost": clean,
 		"status": "pending", "reason": ""}
 	var out := _result(true, "", true, txn)
-	out["intent"] = {"txn_id": txn, "world_instance_id": world_instance_id}
+	out["intent"] = {"txn_id": txn, "world_instance_id": world_instance_id,
+		"action_id": action_id, "attempt": attempt}
 	return out
+
+
+## P5: the character save holding a fresh reservation FAILED, so the txn was
+## never submitted. Return its items and close the row (refunded, reason
+## "unsent"). Only valid between begin() and the first submission; calling it
+## for a submitted txn could return items for a committed action.
+static func rollback_unsent(state: Dictionary, txn: String) -> Dictionary:
+	var row := _row(state, txn)
+	if row.is_empty():
+		return _result(false, "unknown_txn", false)
+	if str(row.status) != "pending":
+		return _result(false, "not_pending", false, str(row.txn_id))
+	return _return_items(state, row, "unsent")
+
+
+## P4 placeholder receipt for a world whose dock flag predates receipts. Full
+## receipt shape, so an open row for the action resolves as paid_by_other.
+static func legacy_receipt(world_instance_id: String, action_id: String) -> Dictionary:
+	return {"action_id": action_id, "world_instance_id": world_instance_id,
+		"txn_id": LEGACY, "payer_character_id": LEGACY}
 
 
 ## The world's receipt names this txn and this character: consume the row.
@@ -223,7 +299,9 @@ static func settle(state: Dictionary, receipt: Dictionary) -> Dictionary:
 ##   needs_receipt    -- already_done without a receipt deciding who paid.
 ##   retry_later      -- code not in REFUND_CODES (ambiguous): no change; the
 ##                       row stays pending and the caller resubmits later.
-##   ""/no_room       -- items returned (fully / partly, rest refund_due).
+##   ""/no_room       -- items returned (fully / partly, rest refund_due). A
+##                       refund_due row only ever finishes its refund here,
+##                       whatever the reason carries.
 static func refund(state: Dictionary, reason: Dictionary) -> Dictionary:
 	var row := _row(state, str(reason.get("txn_id", "")))
 	if row.is_empty():
@@ -237,14 +315,15 @@ static func refund(state: Dictionary, reason: Dictionary) -> Dictionary:
 		return _result(true, "already_refunded", false, txn)
 	if str(row.status) == "settled":
 		return _result(false, "already_settled", false, txn)
+	if str(row.status) == "refund_due":
+		# Already authoritative (a late receipt cannot flip it, as in
+		# reconcile); only finish returning what is still owed.
+		return _return_items(state, row, str(row.get("reason", "")))
 	var receipt: Variant = reason.get("receipt")
 	if receipt is Dictionary and _receipt_pays(receipt, row):
 		var paid := settle(state, receipt)
 		paid["code"] = "paid_by_this_txn"
 		return paid
-	if str(row.status) == "refund_due":
-		# Already authoritative; only finish returning what is still owed.
-		return _return_items(state, row, str(row.get("reason", "")))
 	if code == "already_done":
 		if receipt is Dictionary and _receipt_for(receipt, row):
 			return _return_items(state, row, "paid_by_other")
@@ -268,6 +347,10 @@ static func refund(state: Dictionary, reason: Dictionary) -> Dictionary:
 ##     `in_flight_txn_ids` (already sent; await the verdict);
 ##   - pending rows with a malformed/foreign receipt stay in `waiting`;
 ##   - pending rows of other worlds are untouched and not reported.
+## `needs_submit` only ever holds pending rows. Periodic callers MUST pass every
+## txn submitted on this connection as `in_flight_txn_ids` and must not submit
+## from their result; only the reconnect path (snapshot_applied, in_flight = [])
+## resubmits `needs_submit` (P1).
 static func reconcile(state: Dictionary, world_facts: Dictionary, world_instance_id: String,
 		in_flight_txn_ids: Array = []) -> Dictionary:
 	var out := {"changed": false, "settled": [], "refunded": [], "waiting": [], "needs_submit": []}
@@ -308,7 +391,9 @@ static func reconcile(state: Dictionary, world_facts: Dictionary, world_instance
 	return out
 
 
-## Open (unresolved) txn ids for this character, for UI and submission retry.
+## Open (unresolved: pending or refund_due) txn ids for this character, for UI
+## listing ONLY. Never a resubmit source: refund_due txns are dead (P1). Use
+## resubmittable_txns() for submission retry.
 static func open_txns(state: Dictionary, world_instance_id: String = "") -> Array:
 	var out: Array = []
 	var escrow: Variant = state.get("escrow")
@@ -318,6 +403,22 @@ static func open_txns(state: Dictionary, world_instance_id: String = "") -> Arra
 		var row := _row(state, str(key))
 		if not row.is_empty() and str(row.status) in OPEN \
 				and (world_instance_id.is_empty() or str(row.world_instance_id) == world_instance_id):
+			out.append(str(key))
+	out.sort()
+	return out
+
+
+## Txn ids that may be resubmitted to `world_instance_id` (P1): its "pending"
+## rows only, sorted. Empty for an empty world id. Never refund_due rows.
+static func resubmittable_txns(state: Dictionary, world_instance_id: String) -> Array:
+	var out: Array = []
+	var escrow: Variant = state.get("escrow")
+	if world_instance_id.is_empty() or not escrow is Dictionary:
+		return out
+	for key: Variant in (escrow as Dictionary).keys():
+		var row := _row(state, str(key))
+		if not row.is_empty() and str(row.status) == "pending" \
+				and str(row.world_instance_id) == world_instance_id:
 			out.append(str(key))
 	out.sort()
 	return out

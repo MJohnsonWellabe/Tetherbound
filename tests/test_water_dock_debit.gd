@@ -36,6 +36,16 @@ class FakeBag extends RefCounted:
 		return true
 
 
+## Reports enough stock but refuses to remove one item: models an adapter whose
+## remove fails midway, so begin() must put back what it already took.
+class FailingBag extends FakeBag:
+	var fail_on := ""
+	func remove(id: String, n: int) -> bool:
+		if id == fail_on:
+			return false
+		return super.remove(id, n)
+
+
 func _state(character: String, reed: int, wood: int) -> Dictionary:
 	var bag := FakeBag.new()
 	bag.items = {"reed_fiber": reed, "driftwood": wood}
@@ -72,7 +82,7 @@ func test_begin_reserves_exact_cost_and_refuses_second_begin() -> void:
 	var row: Dictionary = s.escrow[r.txn_id]
 	assert_eq(row.cost, {"reed_fiber": 6, "driftwood": 4})
 	assert_eq(row.status, "pending")
-	assert_eq(r.intent, {"txn_id": r.txn_id, "world_instance_id": WORLD})
+	assert_eq(r.intent, {"txn_id": r.txn_id, "world_instance_id": WORLD, "action_id": ACTION, "attempt": 1})
 	var again := DEBIT.begin(s, ACTION, COST, WORLD)
 	assert_false(again.ok, "second begin refused")
 	assert_eq(again.code, "already_pending")
@@ -392,3 +402,176 @@ func test_same_txn_receipt_with_foreign_payer_never_refunds() -> void:
 	var refused: Dictionary = DEBIT.refund(state, {"txn_id": txn, "world_instance_id": WORLD, "code": "already_done", "receipt": odd})
 	assert_false(bool(refused.changed), "same-txn foreign-payer receipt never refunds")
 	assert_eq(bag.get("items"), before, "inventory untouched")
+
+
+func test_refund_due_txn_is_never_offered_for_resubmission() -> void:
+	# B1: a refused (allow-listed) txn whose refund only partly fit is dead.
+	# Resubmitting it after a reconnect could commit an already-refunded txn.
+	var s := _state("cid-1", 6, 4)
+	var txn: String = DEBIT.begin(s, ACTION, COST, WORLD).txn_id
+	assert_eq(DEBIT.resubmittable_txns(s, WORLD), [txn], "pending row is resubmittable")
+	s.inventory.items = {"stone": 5}
+	s.inventory.capacity = 8
+	assert_eq(DEBIT.refund(s, {"txn_id": txn, "world_instance_id": WORLD, "code": "materials"}).code, "no_room")
+	assert_eq(s.escrow[txn].status, "refund_due")
+	var again := DEBIT.begin(s, ACTION, COST, WORLD)
+	assert_false(again.ok)
+	assert_false(again.changed)
+	assert_eq(again.code, "refund_outstanding")
+	assert_ne(again.code, "already_pending", "refund_due is never reported as resubmittable")
+	assert_ne(again.txn_id, txn, "begin never hands back the refused txn")
+	assert_false(again.has("intent"))
+	assert_eq(DEBIT.resubmittable_txns(s, WORLD), [], "resubmit list excludes refund_due")
+	assert_eq(DEBIT.open_txns(s), [txn], "UI listing still shows the owed refund")
+	# After a reconnect (JSON load), still never resubmittable.
+	var loaded := _persisted(s)
+	var r := DEBIT.reconcile(loaded, {}, WORLD)
+	assert_false(r.needs_submit.has(txn), "reconnect never resubmits refund_due")
+	assert_eq(r.waiting, [txn])
+	assert_eq(DEBIT.resubmittable_txns(loaded, WORLD), [])
+	var after := DEBIT.begin(loaded, ACTION, COST, WORLD)
+	assert_eq(after.code, "refund_outstanding")
+	assert_ne(after.txn_id, txn)
+
+
+func test_refund_due_row_refund_never_reports_paid_by_this_txn() -> void:
+	var s := _state("cid-1", 6, 4)
+	var txn: String = DEBIT.begin(s, ACTION, COST, WORLD).txn_id
+	s.inventory.items = {"stone": 5}
+	s.inventory.capacity = 8
+	DEBIT.refund(s, {"txn_id": txn, "world_instance_id": WORLD, "code": "prerequisite"})
+	assert_eq(s.escrow[txn].status, "refund_due")
+	var stuck := DEBIT.refund(s, {"txn_id": txn, "world_instance_id": WORLD, "code": "already_done",
+		"receipt": _receipt(txn, "cid-1")})
+	assert_ne(stuck.code, "paid_by_this_txn", "a refund_due row was never paid by this txn")
+	assert_eq(stuck.code, "no_room")
+	assert_eq(s.escrow[txn].status, "refund_due")
+	s.inventory.capacity = 1000
+	var done := DEBIT.refund(s, {"txn_id": txn, "world_instance_id": WORLD, "code": "already_done",
+		"receipt": _receipt(txn, "cid-1")})
+	assert_true(done.ok and done.changed)
+	assert_eq(done.code, "")
+	assert_eq(s.escrow[txn].status, "refunded")
+	assert_eq(s.inventory.count("reed_fiber"), 6)
+	assert_eq(s.inventory.count("driftwood"), 4)
+
+
+func test_p4_legacy_placeholder_resolves_open_row() -> void:
+	# M1: the host's P4 placeholder must carry the full receipt shape.
+	var placeholder := DEBIT.legacy_receipt(WORLD, ACTION)
+	assert_eq(placeholder, {"action_id": ACTION, "world_instance_id": WORLD,
+		"txn_id": "legacy", "payer_character_id": "legacy"})
+	var s := _state("cid-1", 6, 4)
+	var txn: String = DEBIT.begin(s, ACTION, COST, WORLD).txn_id
+	# The old two-field placeholder never resolved the row (waits forever).
+	var short := DEBIT.reconcile(s, {ACTION: {"txn_id": "legacy", "payer_character_id": "legacy"}}, WORLD)
+	assert_false(short.changed)
+	assert_eq(short.waiting, [txn])
+	var loaded := _persisted(s)
+	var r := DEBIT.reconcile(loaded, {ACTION: placeholder}, WORLD)
+	assert_true(r.changed)
+	assert_eq(r.refunded, [txn], "legacy-paid action refunds the open row")
+	assert_eq(r.needs_submit, [])
+	assert_eq(loaded.escrow[txn].reason, "paid_by_other")
+	assert_eq(loaded.inventory.count("reed_fiber"), 6)
+	assert_eq(loaded.inventory.count("driftwood"), 4)
+	assert_false(DEBIT.reconcile(loaded, {ACTION: placeholder}, WORLD).changed, "once only")
+	# The same placeholder carried on an already_done refusal also resolves.
+	var t := _state("cid-2", 6, 4)
+	var t_txn: String = DEBIT.begin(t, ACTION, COST, WORLD).txn_id
+	var refused := DEBIT.refund(t, {"txn_id": t_txn, "world_instance_id": WORLD, "code": "already_done",
+		"receipt": placeholder})
+	assert_true(refused.changed)
+	assert_eq(t.escrow[t_txn].reason, "paid_by_other")
+	# A placeholder for another world or action decides nothing.
+	var u := _state("cid-3", 6, 4)
+	var u_txn: String = DEBIT.begin(u, ACTION, COST, WORLD).txn_id
+	assert_eq(DEBIT.reconcile(u, {ACTION: DEBIT.legacy_receipt(OTHER_WORLD, ACTION)}, WORLD).waiting, [u_txn])
+	assert_eq(DEBIT.reconcile(u, {ACTION: DEBIT.legacy_receipt(WORLD, "other_paid")}, WORLD).waiting, [u_txn])
+	assert_eq(u.escrow[u_txn].status, "pending")
+
+
+func test_intent_fields_recompute_txn_id() -> void:
+	# M2: the host verifies txn == txn_id(instance, action, resolved character,
+	# attempt), so the intent must carry the attempt it was built from.
+	var s := _state("cid-1", 12, 8)
+	var first := DEBIT.begin(s, ACTION, COST, WORLD)
+	var intent: Dictionary = first.intent
+	assert_true(intent.has("attempt"))
+	assert_eq(DEBIT.txn_id(str(intent.world_instance_id), str(intent.action_id), "cid-1",
+		int(intent.attempt)), str(intent.txn_id))
+	assert_eq(intent.txn_id, first.txn_id)
+	assert_ne(DEBIT.txn_id(str(intent.world_instance_id), str(intent.action_id), "cid-2",
+		int(intent.attempt)), str(intent.txn_id), "another resolved character does not match")
+	DEBIT.refund(s, {"txn_id": first.txn_id, "world_instance_id": WORLD, "code": "journal_failed"})
+	var retry := DEBIT.begin(s, ACTION, COST, WORLD)
+	var again: Dictionary = retry.intent
+	assert_eq(int(again.attempt), 2)
+	assert_eq(DEBIT.txn_id(str(again.world_instance_id), str(again.action_id), "cid-1",
+		int(again.attempt)), str(again.txn_id))
+	# Survives the wire (JSON turns the int into a float).
+	var wire: Dictionary = JSON.parse_string(JSON.stringify(again))
+	assert_eq(DEBIT.txn_id(str(wire.world_instance_id), str(wire.action_id), "cid-1",
+		int(wire.attempt)), str(wire.txn_id))
+
+
+func test_already_done_with_other_txn_receipt_refunds_paid_by_other() -> void:
+	var s := _state("cid-1", 6, 4)
+	var mine: String = DEBIT.begin(s, ACTION, COST, WORLD).txn_id
+	var theirs := DEBIT.txn_id(WORLD, ACTION, "cid-2")
+	var r := DEBIT.refund(s, {"txn_id": mine, "world_instance_id": WORLD, "code": "already_done",
+		"receipt": _receipt(theirs, "cid-2")})
+	assert_true(r.ok and r.changed)
+	assert_eq(s.escrow[mine].status, "refunded")
+	assert_eq(s.escrow[mine].reason, "paid_by_other")
+	assert_eq(s.inventory.count("reed_fiber"), 6)
+	assert_eq(s.inventory.count("driftwood"), 4)
+	var again := DEBIT.refund(s, {"txn_id": mine, "world_instance_id": WORLD, "code": "already_done",
+		"receipt": _receipt(theirs, "cid-2")})
+	assert_false(again.changed)
+	assert_eq(again.code, "already_refunded")
+	assert_eq(s.inventory.count("reed_fiber"), 6, "once only")
+
+
+func test_begin_partial_remove_rolls_back() -> void:
+	# count() says enough, but remove() fails. begin removes in COST order
+	# (reed_fiber, then driftwood), so failing on driftwood exercises the
+	# put-back of the reed_fiber already taken; failing first takes nothing.
+	for failing: String in ["reed_fiber", "driftwood"]:
+		var bag := FailingBag.new()
+		bag.items = {"reed_fiber": 6, "driftwood": 4}
+		bag.fail_on = failing
+		var s := {"character_id": "cid-1", "escrow": {}, "inventory": bag}
+		var r := DEBIT.begin(s, ACTION, COST, WORLD)
+		assert_false(r.ok, "begin fails when remove fails: " + failing)
+		assert_false(r.changed)
+		assert_eq(r.code, "materials")
+		assert_eq(bag.count("reed_fiber"), 6, "reed_fiber restored: " + failing)
+		assert_eq(bag.count("driftwood"), 4, "driftwood restored: " + failing)
+		assert_true((s.escrow as Dictionary).is_empty(), "no row: " + failing)
+
+
+func test_rollback_unsent_returns_reservation_when_persist_fails() -> void:
+	# P5: the save holding the new row failed, so the txn was never submitted.
+	var s := _state("cid-1", 6, 4)
+	var txn: String = DEBIT.begin(s, ACTION, COST, WORLD).txn_id
+	assert_eq(s.inventory.count("reed_fiber"), 0)
+	var r := DEBIT.rollback_unsent(s, txn)
+	assert_true(r.ok and r.changed)
+	assert_eq(s.escrow[txn].status, "refunded")
+	assert_eq(s.escrow[txn].reason, "unsent")
+	assert_eq(s.inventory.count("reed_fiber"), 6)
+	assert_eq(s.inventory.count("driftwood"), 4)
+	assert_eq(DEBIT.resubmittable_txns(s, WORLD), [])
+	var again := DEBIT.rollback_unsent(s, txn)
+	assert_false(again.changed)
+	assert_eq(s.inventory.count("reed_fiber"), 6, "once only")
+	# Only pending rows roll back; a settled one never returns items.
+	var t := _state("cid-1", 6, 4)
+	var paid: String = DEBIT.begin(t, ACTION, COST, WORLD).txn_id
+	DEBIT.settle(t, _receipt(paid, "cid-1"))
+	assert_eq(DEBIT.rollback_unsent(t, paid).code, "not_pending")
+	assert_eq(t.inventory.count("reed_fiber"), 0)
+	var retry := DEBIT.begin(s, ACTION, COST, WORLD)
+	assert_true(retry.ok, "a fresh attempt follows an unsent rollback")
+	assert_eq(int(retry.intent.attempt), 2)
