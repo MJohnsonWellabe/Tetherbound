@@ -31,6 +31,10 @@ const ENEMY_HP_CEILING := 12.0
 const HUMAN := 1
 const PAUSED := 3
 const MEASURE_FRAMES := 120
+## Horizontal drift allowed between the settled pause and the fight end.
+const PAUSED_DRIFT_LIMIT_M := 0.1
+## Resumed drain/drowning must be within this fraction of the configured rate.
+const RATE_TOLERANCE := 0.1
 
 var world: Node3D
 var player: CharacterBody3D
@@ -274,7 +278,7 @@ func _measure_resume(pause: Dictionary, drowning: bool, label: String) -> bool:
 	if not _expect(int(swimming.state.mode) == HUMAN, "%s resumed HUMAN (mode=%d)" % [label, swimming.state.mode]):
 		return false
 	var paused_drift := Vector2(fight_end.x - pause.position.x, fight_end.z - pause.position.z).length()
-	if not _expect(jump < 0.5 and paused_drift < 0.5, "%s no teleport: resume step %.3f m, drift during fight %.3f m" % [label, jump, paused_drift]):
+	if not _expect(jump < 0.5 and paused_drift < PAUSED_DRIFT_LIMIT_M, "%s no teleport: resume step %.3f m, drift during fight %.3f m" % [label, jump, paused_drift]):
 		return false
 	if not _expect(absf(player.global_position.y - surface_target) < 0.3, "%s swimmer at the surface y=%.3f target=%.3f" % [label, player.global_position.y, surface_target]):
 		return false
@@ -286,11 +290,22 @@ func _measure_resume(pause: Dictionary, drowning: bool, label: String) -> bool:
 	var health_delta := resume_health - float(vitals.health)
 	_note("%s resume over %d frames: stamina -%.3f health -%.3f drowning=%s y=%.3f step=%.3f" % [label, MEASURE_FRAMES,
 		stamina_delta, health_delta, swimming.state.drowning, player.global_position.y, jump])
+	# The resumed rate must match the configured human rate, not merely be nonzero.
+	var seconds := float(MEASURE_FRAMES) / float(Engine.physics_ticks_per_second)
 	if drowning:
-		return _expect(bool(swimming.state.drowning) and health_delta > 5.0 and is_zero_approx(float(vitals.stamina)),
-			"%s drowning damage resumed after the fight (%.3f HP in 2 s)" % [label, health_delta])
-	return _expect(stamina_delta > 3.0 and is_zero_approx(health_delta) and not bool(swimming.state.drowning),
-		"%s stamina drain resumed after the fight (%.3f in 2 s)" % [label, stamina_delta])
+		var expected_hp := float(_human_config().drowning_damage_per_s) * seconds
+		return _expect(bool(swimming.state.drowning) and absf(health_delta - expected_hp) <= expected_hp * RATE_TOLERANCE
+			and is_zero_approx(float(vitals.stamina)),
+			"%s drowning damage resumed at the configured rate (%.3f HP in %.1f s, expected %.3f)" % [label, health_delta, seconds, expected_hp])
+	var expected_stamina := float(_human_config().stamina_drain_per_s) * seconds
+	return _expect(absf(stamina_delta - expected_stamina) <= expected_stamina * RATE_TOLERANCE and is_zero_approx(health_delta)
+		and not bool(swimming.state.drowning),
+		"%s stamina drain resumed at the configured rate (%.3f in %.1f s, expected %.3f)" % [label, stamina_delta, seconds, expected_stamina])
+
+
+func _human_config() -> Dictionary:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
+	return config.human
 
 
 func _site_members() -> Array:
