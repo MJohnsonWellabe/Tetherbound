@@ -65,6 +65,9 @@ var _waiting_for_offer_dialogue := false
 var _offer_reached_choice := false
 var _offer_accepted := false
 var _offer_declined := false
+## Yes was answered while another catch ceremony held the belt; the Stormheart's
+## own ceremony starts as soon as that one ends.
+var _ceremony_waiting := false
 var _save_retry_left := 0.0
 var _resend_left := 0.0
 var _released_announced := false
@@ -345,14 +348,18 @@ func _receive_claim(claim: Dictionary) -> void:
 
 
 func _process_local_claim(delta: float) -> void:
-	if _waiting_for_offer_dialogue:
+	var game := get_node("/root/Game")
+	var catch_open := game.get("pending_catch") != null
+	if _waiting_for_offer_dialogue and not catch_open:
 		var panel := world.get_node_or_null("DialoguePanel")
 		if panel == null or not bool(panel.call("is_open")):
 			_start_dialogue_when_free("stormwood_stormheart_offer")
+	if _ceremony_waiting and not catch_open:
+		_ceremony_waiting = false
+		_begin_local_ceremony()
 	if _local_claim.is_empty() or _local_creature == null:
 		return
-	var game := get_node("/root/Game")
-	if game.get("pending_catch") != null:
+	if catch_open:
 		return
 	_save_retry_left -= delta
 	if _save_retry_left > 0.0:
@@ -422,10 +429,14 @@ func _begin_local_ceremony() -> void:
 		return
 	var game := get_node("/root/Game")
 	if game.get("pending_catch") != null:
+		_ceremony_waiting = true
 		return
 	_local_creature = CAPTURE_CODEC.decode(_local_claim.get("creature", {}))
 	if _local_creature == null:
+		# Nothing was answered or saved: drop the unreadable copy so the host's
+		# next resend of this claim offers it afresh instead of being ignored.
 		game.push_world_message("The Stormheart's offer could not be restored yet.")
+		_local_claim.clear()
 		return
 	_local_creature.set("caught_on_day", maxi(1, int(game.get("day"))))
 	var party: RefCounted = game.get("party")

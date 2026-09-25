@@ -131,6 +131,28 @@ func _run() -> void:
 	_check(_receipt(game) and not _holds_stormheart(game),
 		"an explicit No after an interruption records this character's refusal")
 	_check(panel.drain_effects().is_empty(), "a No queues no accept effect")
+
+	# Yes while another catch ceremony still holds the belt: the Stormheart
+	# waits for it instead of stalling, then joins once it is resolved.
+	_reset_character(game)
+	await _offer(ending, panel, game)
+	await _to_question(panel)
+	var other_catch: RefCounted = ending.call("_make_legendary")
+	other_catch.set("species_id", "stand_in_wild_catch")
+	game.pending_catch = other_catch
+	panel.runner().advance()
+	await _frames(3)
+	_check(not _holds_stormheart(game) and bool(ending.get("_ceremony_waiting")),
+		"a Yes during another catch ceremony waits for that ceremony")
+	# The other ceremony ends (its own release/keep choice) and its menu closes.
+	game.pending_catch = null
+	var menu: Node = game.get("_menu")
+	if menu != null and bool(menu.call("is_open")):
+		menu.call("close")
+	paused = false
+	await _frames(3)
+	_check(_holds_stormheart(game) and _receipt(game),
+		"the Stormheart joins as soon as the other ceremony ends")
 	panel.close()
 	world.queue_free()
 	await _frames(2)
