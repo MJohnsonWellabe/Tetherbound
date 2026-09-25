@@ -16,7 +16,8 @@ extends SceneTree
 ##     while, swim back and land.
 ##
 ## Disclosed staging (see the evidence README): stamina is written directly
-## (0 for the still, a low value for the sequence), health is restored to max
+## (0 for the still; for the sequence, cut to SEQUENCE_STAMINA on the first
+## physics step in the water), health is restored to max
 ## before the sequence, the time of day is frozen at "day", and movement is
 ## driven by synthetic `move_forward` action events steered by camera yaw.
 ##
@@ -33,7 +34,7 @@ const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const MODES := ["LAND", "HUMAN", "MOUNTED", "PAUSED"]
 const TOAST_TEXT := "Toast hold check: posted 1.8 s ago"
 const TOAST_SHOT_AT_S := 1.8
-const SEQUENCE_STAMINA := 18.0
+const SEQUENCE_STAMINA := 12.0
 
 var world: Node3D
 var player: CharacterBody3D
@@ -48,6 +49,10 @@ var seq_frames := 0
 var next_seq_shot := 0.0
 var seq_recording := false
 var seq_started_at := 0.0
+## Set once the sequence starts; cleared the first physics step the swimmer is
+## in the water, when stamina is (STAGED) cut to SEQUENCE_STAMINA. Cutting it on
+## land does nothing: dry-land regeneration refills it before the shoreline.
+var stage_stamina_on_entry := false
 
 
 func _init() -> void:
@@ -129,22 +134,23 @@ func _run() -> void:
 
 
 func _sequence(shore: Vector3, deep: Vector3) -> void:
-	# Back to dry land, whole again, then a low (STAGED) stamina reserve so the
-	# swim runs dry within a few seconds instead of ~36 s from full.
+	# Back to dry land, whole again. On entering the water stamina is cut to
+	# a low (STAGED) reserve so the swim runs dry within a few seconds instead
+	# of ~36 s from full.
 	player.global_position = shore
 	player.velocity = Vector3.ZERO
 	await _wait(1.5)
 	var vitals: RefCounted = player.get("vitals")
 	vitals.set("health", float(vitals.get("max_health")))
-	vitals.set("stamina", SEQUENCE_STAMINA)
+	stage_stamina_on_entry = true
 	DirAccess.make_dir_recursive_absolute("%s/sequence" % out_dir)
 	seq_recording = true
 	seq_started_at = game_time
 	next_seq_shot = game_time
 	_log("sequence start: %s" % _state_line())
-	await _hold(3.0)                  # on land, full health, low stamina
-	await _steer(deep, 13.0)          # swim out; stamina runs dry partway
-	await _hold(6.0)                  # tread water in deep water, drowning
+	await _hold(2.0)                  # on land, full health
+	await _steer(deep, 12.0)          # swim out; staged low stamina runs dry
+	await _hold(8.0)                  # tread water in deep water, drowning
 	await _steer(shore, 14.0)         # swim back and land
 	await _hold(3.0)                  # dry land; cue must be gone
 	seq_recording = false
@@ -219,6 +225,12 @@ func _steer(target: Vector3, seconds: float) -> void:
 
 
 func _maybe_sequence_frame() -> void:
+	if stage_stamina_on_entry:
+		var swim: Node = player.get("swim_controller")
+		if swim != null and int(swim.get("state").get("mode")) != 0:
+			stage_stamina_on_entry = false
+			player.get("vitals").set("stamina", SEQUENCE_STAMINA)  # STAGED
+			_log("t=%4.1fs STAGED: entered water, stamina set to %.1f" % [game_time - seq_started_at, SEQUENCE_STAMINA])
 	if not seq_recording or game_time < next_seq_shot:
 		return
 	next_seq_shot += 1.0
