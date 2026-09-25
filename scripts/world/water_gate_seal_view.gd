@@ -17,8 +17,9 @@ var _game: Node
 var _seals: Array[Dictionary] = []
 var _rules: Dictionary = {}
 var _rings: Dictionary = {}
-var _material: StandardMaterial3D
-var _crest_material: StandardMaterial3D
+const RACE_SHADER := preload("res://shaders/water_tide_race.gdshader")
+var _material: ShaderMaterial
+var _crest_material: ShaderMaterial
 var _trough_material: StandardMaterial3D
 var _spray_texture: Texture2D
 var _dock_names: Dictionary = {}
@@ -42,8 +43,8 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 		island_names[str(island.id)] = str(island.get("name", island.id))
 	for dock: Dictionary in config.get("docks", []):
 		_dock_names[str(dock.id)] = str(island_names.get(str(dock.island_id), dock.island_id))
-	_material = _foam_material()
-	_crest_material = _wave_material()
+	_material = _race_material(0.0)
+	_crest_material = _race_material(1.0)
 	_trough_material = _trough()
 	_spray_texture = _spray_sprite()
 	var sea := float(config.get("terrain", {}).get("sea_level_m", 0.0))
@@ -136,8 +137,6 @@ func _process(delta: float) -> void:
 	if _spray_check <= 0.0:
 		_spray_check = 0.25
 		_gate_spray()
-	# Offset decreasing moves the pattern toward larger radius: outward flow.
-	_material.uv1_offset.y = wrapf(_material.uv1_offset.y - float(_rules.get("foam_flow_m_s", 3.0)) * delta / TILE_M, 0.0, 1.0)
 	_message_cooldown = maxf(0.0, _message_cooldown - delta)
 	if _message_cooldown > 0.0:
 		return
@@ -308,10 +307,13 @@ func _wave(radius: float, height: float, seed: int) -> ArrayMesh:
 		var local_height := height * clampf(0.55 + 0.9 * (height_noise.get_noise_2d(sample.x, sample.y) * 0.5 + 0.5), 0.35, 1.45)
 		var local_radius := radius + wobble * radius_noise.get_noise_2d(sample.x, sample.y)
 		var row: Array = []
-		for point: Array in profile:
+		var along := TAU * float(index % segments) / float(segments) * radius / TILE_M
+		for k in profile.size():
+			var point: Array = profile[k]
 			var r := local_radius + float(point[0])
 			row.append([Vector3(direction.x * r, -SURFACE_LIFT_M + local_height * float(point[1]), direction.y * r),
-				Color(point[2].r, point[2].g, point[2].b, float(point[3]))])
+				Color(point[2].r, point[2].g, point[2].b, float(point[3])),
+				Vector2(along, float(k) / float(profile.size() - 1))])
 		rows.append(row)
 	for index in segments:
 		var a: Array = rows[index]
@@ -320,54 +322,43 @@ func _wave(radius: float, height: float, seed: int) -> ArrayMesh:
 			for corner: Array in [[a, k], [b, k], [b, k + 1], [a, k], [b, k + 1], [a, k + 1]]:
 				var vertex: Array = corner[0][corner[1]]
 				tool.set_color(vertex[1])
+				tool.set_uv(vertex[2])
 				tool.add_vertex(vertex[0])
 	tool.index()
 	tool.generate_normals()
 	return tool.commit()
 
 
-func _wave_material() -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.vertex_color_use_as_albedo = true
-	material.roughness = 0.45
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material.emission_enabled = true
-	material.emission = Color(0.6, 0.64, 0.66)
-	material.emission_energy_multiplier = float(_rules.get("foam_emission_energy", 0.2))
-	# Overlapping translucent breakers sort per mesh, not per triangle; writing
-	# depth keeps the nearer wave from showing jagged slivers of the farther.
-	material.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_ALWAYS
-	material.render_priority = 2
+func _race_material(breaker: float) -> ShaderMaterial:
+	# Animated white water from the Tidewake-only tide-race shader: foam cells
+	# stream outward at the race's direction, crest pulses travel round the
+	# ring, and churned sea-teal shows between the cells. Lit, never self-lit.
+	var params: Dictionary = _rules.get("shader", {})
+	var material := ShaderMaterial.new()
+	material.shader = RACE_SHADER
+	material.set_shader_parameter("foam_noise", _noise_texture(31, 0.045))
+	material.set_shader_parameter("detail_noise", _noise_texture(57, 0.11))
+	material.set_shader_parameter("breaker", breaker)
+	for key: String in params:
+		if key.begins_with("_"):
+			continue
+		var value: Variant = params[key]
+		material.set_shader_parameter(key, Color(str(value)) if value is String else value)
+	# Above the translucent sea; breakers over the flat race.
+	material.render_priority = 2 if breaker > 0.0 else 1
 	return material
 
 
-func _foam_material(low: float = 0.28, high: float = 0.62) -> StandardMaterial3D:
-	# White water whose coverage, not brightness, varies: the noise drives
-	# alpha so broken foam reads over the water instead of a grey band.
+func _noise_texture(seed_value: int, frequency: float) -> NoiseTexture2D:
 	var noise := FastNoiseLite.new()
-	noise.seed = 31
+	noise.seed = seed_value
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
-	noise.frequency = 0.045
+	noise.frequency = frequency
 	noise.fractal_octaves = 3
-	var grey := noise.get_seamless_image(256, 256)
-	var foam := Image.create(256, 256, false, Image.FORMAT_RGBA8)
-	for y in 256:
-		for x in 256:
-			var value := smoothstep(low, high, grey.get_pixel(x, y).r)
-			foam.set_pixel(x, y, Color(1, 1, 1, value))
-	var material := StandardMaterial3D.new()
-	# Lit like the sea it churns, with a little self-light so daylight white
-	# holds against the bright horizon without glowing at night.
-	material.emission_enabled = true
-	material.emission = Color(0.6, 0.64, 0.66)
-	material.emission_energy_multiplier = float(_rules.get("foam_emission_energy", 0.35))
-	material.roughness = 0.5
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.vertex_color_use_as_albedo = true
-	material.albedo_color = Color(0.94, 0.98, 1.0, float(_rules.get("foam_alpha", 0.62)))
-	material.albedo_texture = ImageTexture.create_from_image(foam)
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	# Draw after the translucent sea surface it lies on.
-	material.render_priority = 2
-	return material
+	var texture := NoiseTexture2D.new()
+	texture.noise = noise
+	texture.seamless = true
+	texture.width = 256
+	texture.height = 256
+	texture.generate_mipmaps = true
+	return texture
