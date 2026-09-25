@@ -457,6 +457,37 @@ closed strips and ordinary currents on main have no visuals at all) belong to
 F13's "currents … read pass T2's visual matrix" and are **not** claimed. The
 gate is visible but not yet explained by readable surf.
 
+### Production-camera motion capture (before and after)
+
+`tools/capture_water_gate_seal_motion.gd` drives the production player,
+swim controller, CameraRig and HUD with real input. It walks round the
+closed barrier, swims the open-water flank and steers at the first shoal,
+taking 16 frames over 40 s.
+
+Disclosed fixtures: the four earlier Water facts are set directly, and the
+trainer starts on the Cradle departure anchor.
+
+- **`_sheet_gate_seal_motion_before.png`** (main 49ef712f, via worktree
+  commit ec35fec2c, which adds tests only): the swimmer reaches the shoal
+  centre (0.13 m) at 12.5 s and stands on it with the gate closed. This is
+  the flank defect, shown on screen.
+- **`_sheet_gate_seal_motion_after.png`** (this branch): the same input is
+  held at 34.5 m from the shoal centre for the whole 40 s, in front of
+  breaking-wave geometry with a wandering outline and height.
+
+Blind judge round 3, on renamed sheets:
+- **"Clearly not an invisible wall: yes."**
+- Surf read: **weakly or no.** It reads as an ice shelf or snowbank. It is
+  flat-topped and matte, with hard slab edges, sorting slivers under the
+  front band, the islet ghosting through, a straight lower edge, no motion
+  over 32 s, and health dropping (drowning after stamina runs out) with no
+  on-screen cue.
+- Bars A and B: no.
+
+The remaining levers need an animated foam shader. That was requested on
+PR226 as a shared-file request. **Readability stays failed and open.** #226
+stays draft until a blind judge passes it.
+
 ### Verification
 
 Stock Godot 4.7-stable in a Linux container, from a source checkout. There is
