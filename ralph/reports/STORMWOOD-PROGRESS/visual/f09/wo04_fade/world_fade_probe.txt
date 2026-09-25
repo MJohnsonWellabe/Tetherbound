@@ -1,0 +1,16 @@
+LIGHT FADE lamp=(-324.5298, 367.58) fade_enabled=true begin=45.0 length=15.0 lights_m=60.0 renderer=gl_compatibility
+LIGHT FADE stand_m=20 camera_to_light_m=17.5 on_vs_hidden changed_px=54026 mean=10.491 | noise floor changed_px=11986 mean=3.279
+LIGHT FADE stand_m=35 camera_to_light_m=32.5 on_vs_hidden changed_px=13953 mean=2.897 | noise floor changed_px=11633 mean=2.261
+LIGHT FADE stand_m=40 camera_to_light_m=37.5 on_vs_hidden changed_px=36850 mean=8.552 | noise floor changed_px=36479 mean=8.535
+LIGHT FADE stand_m=50 camera_to_light_m=47.5 on_vs_hidden changed_px=22840 mean=4.891 | noise floor changed_px=18969 mean=3.758
+LIGHT FADE stand_m=58 camera_to_light_m=55.5 on_vs_hidden changed_px=15014 mean=3.635 | noise floor changed_px=12243 mean=2.555
+LIGHT FADE stand_m=65 camera_to_light_m=62.5 on_vs_hidden changed_px=29007 mean=6.649 | noise floor changed_px=31417 mean=7.403
+LIGHT FADE stand_m=70 camera_to_light_m=67.5 on_vs_hidden changed_px=42007 mean=10.814 | noise floor changed_px=39202 mean=9.610
+LIGHT FADE stand_m=80 camera_to_light_m=77.5 on_vs_hidden changed_px=30579 mean=6.103 | noise floor changed_px=18268 mean=3.303
+PALISADE FADE pocket=verge_ash_hollow trunks=38 models_m=250 models_fade_m=30
+PALISADE FADE stand_m=200 camera_to_centre_m=205.2 shown_vs_hidden changed_px=61920 mean=18.630 | noise floor changed_px=51428 mean=13.760
+PALISADE FADE stand_m=230 camera_to_centre_m=235.2 shown_vs_hidden changed_px=24447 mean=5.420 | noise floor changed_px=21980 mean=4.606
+PALISADE FADE stand_m=245 camera_to_centre_m=250.2 shown_vs_hidden changed_px=66059 mean=19.088 | noise floor changed_px=56564 mean=15.289
+PALISADE FADE stand_m=255 camera_to_centre_m=260.2 shown_vs_hidden changed_px=22748 mean=6.929 | noise floor changed_px=19393 mean=5.689
+PALISADE FADE stand_m=270 camera_to_centre_m=275.2 shown_vs_hidden changed_px=39770 mean=10.362 | noise floor changed_px=42150 mean=9.762
+PALISADE FADE stand_m=290 camera_to_centre_m=295.2 shown_vs_hidden changed_px=58190 mean=16.489 | noise floor changed_px=39449 mean=9.031

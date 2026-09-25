@@ -55,6 +55,17 @@ static func spur_post(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -
 	return {"at": junction + up * float(marker.along_m) + right * float(marker.side_m), "facing": -up}
 
 
+## The junction lamp's style: `mouth_lure` with config `spur_marker.lamp`
+## laid over it. WO-F09-04 made the junction lamp larger, paler and brighter
+## than the mouth lamps so it reads from the road at 30 m by day; it is the same
+## installed lantern, bark post and amber flame.
+static func spur_lamp_style(cfg: Dictionary) -> Dictionary:
+	var style: Dictionary = (cfg.get("mouth_lure", {}) as Dictionary).duplicate(true)
+	var marker: Dictionary = cfg.get("spur_marker", {})
+	style.merge(marker.get("lamp", {}), true)
+	return style
+
+
 ## Wall segments as {centre: Vector2, along: Vector2 (unit), length: float}.
 ## The four sides sit just outside the interior square; the mouth side leaves
 ## a centred gap of `mouth_width_m`.
@@ -182,7 +193,9 @@ func _mouth_lure(world: Node3D, body: StaticBody3D, pocket: Dictionary, cfg: Dic
 			lure, materials, draw)
 	var junction := spur_post(pocket, cfg, routes)
 	if not junction.is_empty():
-		_lamp_post(world, body, junction.at, junction.facing, "SpurPost", "SpurLamp", lure, materials, draw)
+		var style := spur_lamp_style(cfg)
+		_lamp_post(world, body, junction.at, junction.facing, "SpurPost", "SpurLamp", style,
+			_lamp_materials(style) if show_models else {}, draw)
 
 
 static func _lamp_materials(lure: Dictionary) -> Dictionary:
@@ -197,7 +210,35 @@ static func _lamp_materials(lure: Dictionary) -> Dictionary:
 	flame.emission = Color(str(lure.flame_emission))
 	flame.emission_energy_multiplier = float(lure.flame_emission_energy)
 	flame.roughness = 0.45
-	return {"wood": wood, "flame": flame}
+	# Unshaded, the flame keeps its own colour in full sun and in shade alike:
+	# lit, a daylight amber sphere shades to brown on its far side.
+	if bool(lure.get("flame_unshaded", false)):
+		flame.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		flame.albedo_color = Color(str(lure.flame_emission))
+	var out := {"wood": wood, "flame": flame}
+	# A camera-facing additive glow around the flame, drawn from a generated
+	# radial gradient (no texture asset). The Compatibility renderer has no
+	# bloom, so this is what makes the lamp read as lit by day.
+	if float(lure.get("halo_radius_m", 0.0)) > 0.0:
+		var gradient := Gradient.new()
+		gradient.set_color(0, Color(str(lure.flame_emission), float(lure.get("halo_alpha", 0.5))))
+		gradient.set_color(1, Color(str(lure.flame_emission), 0.0))
+		var ramp := GradientTexture2D.new()
+		ramp.gradient = gradient
+		ramp.fill = GradientTexture2D.FILL_RADIAL
+		ramp.fill_from = Vector2(0.5, 0.5)
+		ramp.fill_to = Vector2(1.0, 0.5)
+		ramp.width = 64
+		ramp.height = 64
+		var halo := StandardMaterial3D.new()
+		halo.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		halo.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		halo.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+		halo.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+		halo.albedo_texture = ramp
+		halo.no_depth_test = false
+		out["halo"] = halo
+	return out
 
 
 ## One lamp post at `at`: a static collider on every peer, and (with
@@ -251,6 +292,16 @@ func _lamp_post(world: Node3D, body: StaticBody3D, at: Vector2, facing: Vector2,
 	bulb.material_override = materials.flame
 	bulb.position = cage
 	holder.add_child(bulb)
+	if materials.has("halo"):
+		var halo := MeshInstance3D.new()
+		halo.name = "DaylightHalo"
+		var quad := QuadMesh.new()
+		quad.size = Vector2.ONE * float(lure.halo_radius_m) * 2.0
+		halo.mesh = quad
+		halo.material_override = materials.halo
+		halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		halo.position = cage
+		holder.add_child(halo)
 	_draw_range(holder, draw)
 	var light := OmniLight3D.new()
 	light.name = "WarmMouthLight"

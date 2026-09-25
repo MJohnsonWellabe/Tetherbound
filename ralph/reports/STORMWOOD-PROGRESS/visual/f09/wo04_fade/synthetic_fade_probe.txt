@@ -1,0 +1,19 @@
+SYNTH renderer=gl_compatibility driver=opengl3
+SYNTH light fade begin=45.0 length=15.0 (gone by 60.0 m)
+SYNTH LIGHT camera_to_light_m=20.0 lit_mean=42.945 unlit_mean=0.000
+SYNTH LIGHT camera_to_light_m=40.0 lit_mean=8.695 unlit_mean=0.000
+SYNTH LIGHT camera_to_light_m=44.0 lit_mean=6.944 unlit_mean=0.000
+SYNTH LIGHT camera_to_light_m=50.0 lit_mean=4.356 unlit_mean=0.000
+SYNTH LIGHT camera_to_light_m=55.0 lit_mean=1.897 unlit_mean=0.000
+SYNTH LIGHT camera_to_light_m=59.0 lit_mean=0.075 unlit_mean=0.000
+SYNTH LIGHT camera_to_light_m=62.0 lit_mean=0.000 unlit_mean=0.000
+SYNTH LIGHT camera_to_light_m=70.0 lit_mean=0.000 unlit_mean=0.000
+SYNTH mesh visibility_range_end=250.0 margin=30.0 fade=self
+SYNTH MESH camera_to_box_m=200.0 box_mean=255.000
+SYNTH MESH camera_to_box_m=230.0 box_mean=255.000
+SYNTH MESH camera_to_box_m=249.0 box_mean=255.000
+SYNTH MESH camera_to_box_m=255.0 box_mean=255.000
+SYNTH MESH camera_to_box_m=265.0 box_mean=255.000
+SYNTH MESH camera_to_box_m=279.0 box_mean=255.000
+SYNTH MESH camera_to_box_m=285.0 box_mean=0.000
+SYNTH MESH camera_to_box_m=300.0 box_mean=0.000
