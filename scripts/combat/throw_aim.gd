@@ -979,10 +979,7 @@ static func arc_reaches(
 		if Geometry3D.get_closest_point_to_segment(point, previous, position) \
 				.distance_to(point) <= radius:
 			return true
-		var query := PhysicsRayQueryParameters3D.create(previous, position)
-		query.collide_with_areas = false
-		query.exclude = exclude
-		if not space.intersect_ray(query).is_empty():
+		if _terrain_blocks(space, exclude, previous, position):
 			return false
 		# Every arc here heads straight at the point, so once it is further out
 		# than the point plus the radius it can only move away.
@@ -990,6 +987,27 @@ static func arc_reaches(
 				and Vector2(position.x - hand.x, position.z - hand.z).length() > beyond:
 			return false
 		previous = position
+	return false
+
+
+## Whether static world geometry lies on the segment. The clearance lift is a
+## TERRAIN rule: a creature or trainer body (CharacterBody3D) in the way is
+## not something to arc over -- the orb meets it and the occlusion preview
+## reports it as the blocker (smoke_throw_preview_occlusion) -- so such hits
+## are stepped past and only the world behind them counts.
+static func _terrain_blocks(space: PhysicsDirectSpaceState3D, exclude: Array[RID],
+		from: Vector3, to: Vector3) -> bool:
+	var skip: Array[RID] = exclude.duplicate()
+	for _attempt in 8:
+		var query := PhysicsRayQueryParameters3D.create(from, to)
+		query.collide_with_areas = false
+		query.exclude = skip
+		var hit := space.intersect_ray(query)
+		if hit.is_empty():
+			return false
+		if not (hit.get("collider") is CharacterBody3D):
+			return true
+		skip.append(hit["rid"])
 	return false
 
 

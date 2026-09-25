@@ -188,7 +188,10 @@ func is_open() -> bool:
 ## because it hinged on which node's `_physics_process` ran first (the Doss
 ## repeat-greeting flake in smoke_local_requests).
 func owns_input() -> bool:
-	return _runner.is_active() or _closing_interact
+	# Read the key live: while the panel owns input the tree may be paused, and
+	# a paused panel never reaches the `_physics_process` that clears the flag,
+	# so a flag-only check held ownership (and the pause) forever.
+	return _runner.is_active() or (_closing_interact and Input.is_action_pressed("interact"))
 
 
 

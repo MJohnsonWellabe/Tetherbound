@@ -43,9 +43,12 @@ func _case(label: String, obstructed: bool, excluded_ally: bool) -> void:
 	target.add_child(target_shape)
 	world.add_child(target)
 	target.position = Vector3(0,1,8)
-	var blocker: StaticBody3D
+	# A creature stand-in is a CharacterBody3D, as every real creature body is
+	# (creature_body.gd): the assisted arc lifts over static terrain but never
+	# over a creature, so a StaticBody3D here would read as ground to clear.
+	var blocker: CharacterBody3D
 	if obstructed:
-		blocker = StaticBody3D.new()
+		blocker = CharacterBody3D.new()
 		blocker.name = "OwnAlly" if excluded_ally else "NeighborCreature"
 		var box := BoxShape3D.new()
 		box.size = Vector3(1.2,2,1.2)
