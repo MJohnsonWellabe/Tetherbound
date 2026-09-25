@@ -44,3 +44,12 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   the Meadows owner to fix one of two things: the leftover guardian offer, or the helper's
   post-victory gate press, which should accept an already-opened gate. No work-around with
   injection was attempted.
+- **Resolution (coordinator ruling, attempt 3, 18:47 UTC):** `tools/earned_saves/bridge_crossing.gd`
+  reuses the helper read-only and replaces only the post-victory gate press. After the win,
+  ordinary play had already opened the bridge (`south_bridge_open`, key 0; the arbiter winner at
+  that moment was `<null>`). So the Meadows helper's "gate must own the interact prompt"
+  assertion was **bypassed** and disclosed in the receipt (`gate_prompt_assertion_bypassed`).
+  The helper then walked the opened bridge to the far bank with stick input
+  (`south_bridge_crossed`, depth -11.57 → 9.43, 2 wins, 40 hits). **The stale
+  `'south_bridge_grunt' offered a battle that could not start` offer remains an open Meadows
+  defect.**
