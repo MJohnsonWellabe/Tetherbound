@@ -138,6 +138,9 @@ var _offer_began: bool = false
 ## Whether the hold's one-line explanation has been said this session.
 var _hold_told: bool = false
 var _answer_tagged: bool = false
+## The freed creature walking out (`_leave_the_room`), and gone.
+var _departing: bool = false
+var _departed: bool = false
 ## World ids the host refused: id -> [refused_at_ms, refusals]. Backed off,
 ## doubling from RECEIPT_REFUSED_RETRY_MS up to RECEIPT_REFUSED_MAX_MS.
 var _receipts_refused: Dictionary = {}
@@ -723,7 +726,7 @@ func _build_cage(bound: Dictionary) -> void:
 
 
 func legendary_body() -> Node3D:
-	return _legendary
+	return _legendary if _legendary != null and is_instance_valid(_legendary) else null
 
 
 func legendary_is_freed() -> bool:
@@ -882,6 +885,12 @@ func _advance() -> void:
 				# when the first answer landed. Do not replay it.
 				if not _settled_before_offer:
 					_start(str((_config.get("machine", {}) as Dictionary).get("failure_conversation", "")))
+				# F05 WO7 (blind verdict, round 2: "the stag still stands in
+				# the doorway, glowing, after being left free"). Once nobody
+				# is still answering, it goes: out the way the player came in,
+				# during the machinery's last lines.
+				if _every_participant_answered():
+					_leave_the_room()
 		STAGE_FAILURE:
 			if not _panel_busy():
 				_settle_position()
@@ -942,7 +951,27 @@ func _release_visual(immediate: bool = false) -> void:
 		_light.light_color = Color(str(freed.get("colour", "#e8d79a")))
 		_light.light_energy = float(freed.get("energy", 5.5))
 		_light.omni_range = float(freed.get("range", 22.0))
+	_light_the_creature(freed)
 	_step_out(freed, immediate)
+
+
+## F05 WO7 (blind verdict, round 2: "the Veridian Stag is an almost pure black
+## mass"). The cage light stays at the machine while the creature steps 10 m
+## out, so it answered its offer in the dark. A warm key light travels WITH it
+## (`legendary.freed.key_light`), above and in front of its head.
+func _light_the_creature(freed: Dictionary) -> void:
+	var spec: Dictionary = freed.get("key_light", {})
+	if _legendary == null or spec.is_empty() or _legendary.has_node(^"KeyLight"):
+		return
+	var key := OmniLight3D.new()
+	key.name = "KeyLight"
+	key.light_color = Color(str(spec.get("colour", "#fff1cf")))
+	key.light_energy = float(spec.get("energy", 2.5))
+	key.omni_range = float(spec.get("range", 9.0))
+	key.shadow_enabled = false
+	var offset: Array = spec.get("offset", [0.0, 3.2, 2.2])
+	key.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
+	_legendary.add_child(key)
 
 
 func _step_out(freed: Dictionary, immediate: bool) -> void:
@@ -982,7 +1011,7 @@ func _step_out(freed: Dictionary, immediate: bool) -> void:
 ## the end of the chapter. The animation may be interrupted; the ending may
 ## not. Called once, when the last conversation closes.
 func _settle_position() -> void:
-	if _legendary == null or _cage_measure.is_empty():
+	if _legendary == null or _cage_measure.is_empty() or _departing:
 		return
 	if _step_tween != null and _step_tween.is_valid():
 		_step_tween.kill()
@@ -1193,7 +1222,48 @@ func _choice_prompt(node_name: String, at: Vector3, label: String, radius: float
 	prompt.position = Vector3(0.0, float((_config.get("choice", {}) as Dictionary).get("height", 0.9)), 0.0)
 	anchor.add_child(prompt)
 	prompt.call("configure", label, radius, true)
+	_mark_the_answer(anchor, node_name)
 	return prompt
+
+
+## F05 WO7 (blind visual verdict, round 2: "nothing in the world marks where
+## its shoulder or back is"). Each answer's spot is marked on the floor and
+## named in the air for as long as the choice is open -- both answers visible
+## at once, from where the player stands -- in colours that are neither the
+## tether's teal nor Team Tether's oxblood. All config (`choice.marker`).
+func _mark_the_answer(anchor: Node3D, node_name: String) -> void:
+	var spec: Dictionary = (_config.get("choice", {}) as Dictionary).get("marker", {})
+	if spec.is_empty() or not bool(spec.get("enabled", true)):
+		return
+	var accept := node_name.begins_with("VeridianAccept")
+	var colour := Color(str(spec.get("accept_colour" if accept else "refuse_colour", "#e8d79a")))
+	var ring := MeshInstance3D.new()
+	ring.name = "AnswerMark"
+	var disc := CylinderMesh.new()
+	disc.top_radius = float(spec.get("radius", 0.7))
+	disc.bottom_radius = disc.top_radius
+	disc.height = 0.02
+	ring.mesh = disc
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.albedo_color = Color(colour, float(spec.get("alpha", 0.55)))
+	ring.material_override = material
+	ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	ring.position = Vector3(0.0, 0.03, 0.0)
+	anchor.add_child(ring)
+	var caption := Label3D.new()
+	caption.name = "AnswerCaption"
+	caption.text = str(spec.get("accept_caption" if accept else "refuse_caption", ""))
+	caption.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	caption.fixed_size = true
+	caption.pixel_size = float(spec.get("caption_pixel_size", 0.0012))
+	caption.font_size = int(spec.get("caption_font_size", 40))
+	caption.outline_size = 10
+	caption.modulate = colour
+	caption.no_depth_test = true
+	caption.position = Vector3(0.0, float(spec.get("caption_height", 1.9)), 0.0)
+	anchor.add_child(caption)
 
 
 func _close_choice() -> void:
@@ -1694,6 +1764,46 @@ func _reconcile_bound_creature() -> void:
 		print("[climax] the freeing was already settled here; the caged creature is gone")
 	elif not _freed_visual:
 		_release_visual(true)
+
+
+## The creature walks out toward the Warden arena (the way in) and is gone.
+## Nobody is mid-offer with it when this runs (`_every_participant_answered`).
+func _leave_the_room() -> void:
+	if _legendary == null or not is_instance_valid(_legendary):
+		return
+	var spec: Dictionary = ((_config.get("legendary", {}) as Dictionary).get("freed", {}) as Dictionary) \
+		.get("leave", {})
+	if spec.is_empty() or not bool(spec.get("enabled", true)):
+		return
+	var from := _legendary.global_position
+	var toward := _spot({"mark": str(spec.get("toward_mark", "warden_stand")),
+		"fallback": spec.get("fallback", [])}) - from
+	toward.y = 0.0
+	if toward.length() < 0.5:
+		toward = Vector3.FORWARD
+	toward = toward.normalized()
+	var to := from + toward * float(spec.get("distance", 9.0))
+	_set_body_physics(false)
+	_legendary.rotation.y = atan2(toward.x, toward.z)
+	_departing = true
+	var walk := create_tween()
+	walk.tween_property(_legendary, "global_position", to, float(spec.get("seconds", 4.0))) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	walk.tween_callback(_gone)
+	print("[climax] every participant has answered; the creature leaves the chamber")
+
+
+func _gone() -> void:
+	if _legendary != null and is_instance_valid(_legendary):
+		_legendary.queue_free()
+	_legendary = null
+	_departed = true
+
+
+## Whether the freed creature has walked out of the chamber (every recorded
+## participant answered). Read by the witnesses in place of its body.
+func legendary_departed() -> bool:
+	return _departed or _departing
 
 
 ## An offer that BEGAN for this character (the join beat) runs to its answer:

@@ -84,7 +84,9 @@
       "rise_seconds": 1.8,
       "step_out_seconds": 2.4,
       "approach_distance": 2.6,
-      "approach_seconds": 2.0
+      "approach_seconds": 2.0,
+      "key_light": {"colour": "#fff1cf", "energy": 2.5, "range": 9.0, "offset": [0.0, 3.2, 2.2]},
+      "leave": {"enabled": true, "toward_mark": "warden_stand", "fallback": [232.0, -214.0], "distance": 9.0, "seconds": 4.0}
     }
   },
 
@@ -116,7 +118,19 @@
     "message_hold": 2.4,
     "near_offset": 1.9,
     "min_separation": 2.8,
-    "offer_radius": 30.0
+    "offer_radius": 30.0,
+    "marker": {
+      "enabled": true,
+      "radius": 0.7,
+      "alpha": 0.55,
+      "accept_colour": "#f2d58a",
+      "refuse_colour": "#d9e2ec",
+      "accept_caption": "Walk out together",
+      "refuse_caption": "Leave it free",
+      "caption_height": 1.9,
+      "caption_font_size": 40,
+      "caption_pixel_size": 0.0012
+    }
   },
 
   "_comment_flags": "Every flag this item introduces, in the order the climax sets them. `legendary_freed` is the one SG44 reads -- the world event is a SEPARATE item and this file must never try to run it; it only records, once, that the thing which causes it has happened.",

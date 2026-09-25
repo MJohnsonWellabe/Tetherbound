@@ -614,6 +614,10 @@ func _the_legendary_stepped_out_and_the_garrison_withdrew() -> void:
 		_fail("the climax never finished its sequence; it is stuck at stage '%s'" % str(_climax.get("_stage")))
 	var legendary: Node3D = _climax.call("legendary_body") as Node3D
 	var measure: Dictionary = _climax.call("cage_measure")
+	# F05 WO7: once every participant has answered, the creature walks out of
+	# the chamber. Its body may be gone by now, but only by walking out.
+	if legendary == null and not bool(_climax.call("legendary_departed")):
+		_fail("the freed legendary vanished from the chamber without walking out")
 	if legendary != null and not measure.is_empty():
 		var axis: Vector3 = measure["axis"]
 		var off := Vector2(legendary.global_position.x - axis.x, legendary.global_position.z - axis.z).length()
