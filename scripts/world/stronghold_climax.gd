@@ -134,6 +134,10 @@ var _answered_here: bool = false
 ## The character an offer BEGAN for (the join beat). Once begun it runs to its
 ## answer even if another peer joins meanwhile; see `_offer_continues()`.
 var _offer_began_for: String = ""
+## The character the per-character state below belongs to. When the local
+## character changes (a character swap, a load into this world), that state
+## is reset rather than carried over (coordinator, batch-5 defect 1).
+var _state_character: String = ""
 var _offer_began: bool = false
 ## Whether the hold's one-line explanation has been said this session.
 var _hold_told: bool = false
@@ -733,6 +737,7 @@ func legendary_is_freed() -> bool:
 ## --- the state machine --------------------------------------------------------
 
 func _process(delta: float) -> void:
+	_follow_the_character_to(_local_character_id())
 	_pulse_cage(delta)
 	_sync_gate()
 	_advance()
@@ -811,7 +816,8 @@ func _advance() -> void:
 				_free_the_legendary()
 		STAGE_FREED:
 			if not _panel_busy():
-				if _participants_unknown_in_company():
+				var action := freed_stage_action(_participants_unknown_in_company(), _may_receive_now())
+				if action == "hold":
 					# Coordinator review item 1, and its re-review: in company
 					# with no participant journal nobody is OFFERED -- but the
 					# world is not settled either, which would take the offer
@@ -821,7 +827,7 @@ func _advance() -> void:
 					if not _hold_told and _player_near_legendary():
 						_hold_told = true
 						_say(str((_config.get("choice", {}) as Dictionary).get("hold_message", "")))
-				elif _may_receive_now():
+				elif action == "offer":
 					if _pulled_here or _player_near_legendary():
 						_settled_before_offer = _has_flag(_flag("legendary_settled"))
 						_offer_began_for = _local_character_id()
@@ -1075,6 +1081,30 @@ func _offer_to_join() -> void:
 ## waits, and survives a reload, until this character chooses.
 func _open_choice() -> void:
 	_close_choice()
+	# The join beat's approach may still be walking when the offer opens (a
+	# fast reader closes the join lines inside its 2 s). Its target was chosen
+	# from where the player stood THEN; left running, it walked through where
+	# the player stands NOW and shoved them 4.6 m off the spot both prompts are
+	# placed around (MEASURED, smoke_gate_e_finale position trace). The
+	# creature stops where it is, and that is where the choice is made.
+	if _step_tween != null and _step_tween.is_valid():
+		_step_tween.kill()
+		if _legendary != null:
+			var stop_at := _legendary.global_position
+			# Stopped mid STEP-OUT (the same tween carries both moves) it may
+			# still be over the machine's plinth: then it takes its freed stand,
+			# which is measured clear of the machine (MEASURED: gate E caught
+			# it 5.4 m off axis inside an 8 m footprint).
+			if not _cage_measure.is_empty():
+				var axis: Vector3 = _cage_measure["axis"]
+				var off := Vector2(stop_at.x - axis.x, stop_at.z - axis.z)
+				var want := _clear_distance(off,
+					(_config.get("legendary", {}) as Dictionary).get("stage", {}) as Dictionary)
+				if off.length() < want:
+					stop_at = _freed_spot
+			_legendary.global_position = stop_at
+			_settle_target = stop_at
+			_landed()
 	var spec: Dictionary = _config.get("choice", {})
 	# Said a beat AFTER the offer opens, not on the same frame: the offer opens
 	# as the join conversation closes, while the world HUD is still hidden by
@@ -1675,6 +1705,35 @@ func _reconcile_bound_creature() -> void:
 		print("[climax] the freeing was already settled here; the caged creature is gone")
 	elif not _freed_visual:
 		_release_visual(true)
+
+
+## What the FREED stage does next, as a pure rule so the order of events can be
+## tested: hold (nobody can be offered and nothing may settle), offer (this
+## character is owed one), or settle (it is not, and the world moves on).
+static func freed_stage_action(participants_unknown_in_company: bool, may_receive_now: bool) -> String:
+	if participants_unknown_in_company:
+		return "hold"
+	return "offer" if may_receive_now else "settle"
+
+
+## Per-character state follows the local character. On a change it is reset,
+## never carried: `_answered_here` from the previous character would otherwise
+## mark this world as answered for the new one and suppress its own receipt,
+## and a begun offer or a throttle belongs to whoever it began for.
+func _follow_the_character_to(character: String) -> void:
+	if character == _state_character:
+		return
+	var first := _state_character.is_empty() and not _answered_here and not _offer_began
+	_state_character = character
+	if first:
+		return
+	_answered_here = false
+	_answer_tagged = false
+	_offer_began = false
+	_offer_began_for = ""
+	_hold_told = false
+	_receipts_submitted.clear()
+	_receipts_refused.clear()
 
 
 ## An offer that BEGAN for this character (the join beat) runs to its answer:
