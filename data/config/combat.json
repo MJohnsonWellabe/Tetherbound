@@ -250,7 +250,9 @@
     "lane_edge_alpha": 0.9,
     "lane_edge_width": 0.14,
     "lane_end_depth": 0.35,
-    "lane_fade": 0.35
+    "lane_fade": 0.35,
+    "_why_lane_depth_pull": "F04 charger-lunge capture, round 1: the depth-tested lane lifted 9 cm off the sampled ground drew as scattered fragments on the relay approach because the rendered terrain between samples sits above them. The lane's vertices are pulled this many metres toward the camera in view space (stormwood_lightning.gd's technique), which beats the ground without painting through a creature standing in front of it. TUNABLE; presentation only.",
+    "lane_depth_pull": 0.45
   },
   "stagger_feedback": {
     "enabled": true,
