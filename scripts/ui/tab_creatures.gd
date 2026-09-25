@@ -127,6 +127,8 @@ const GUARDIAN_PREVIEW_WIDTH := 520.0
 ## 640 px and the full title size the card wrapped and pushed the menu frame
 ## off the bottom of the screen (capture).
 const GUARDIAN_TITLE_FONT := 36
+const DECLINE_SETTLED_BODY := "They will not offer to join you again."
+const DECLINE_PENDING_BODY := "Your answer is on its way to the host."
 
 ## Appraisal pips (blind-judge pass: "[***--]" read as ASCII debug styling,
 ## not a rating a player was meant to see). Drawn the same filled/open-circle
@@ -331,6 +333,8 @@ func build() -> void:
 	# `Game.pending_catch` is still set, so nothing is lost — and stale stage
 	# state pointing at freed nodes would crash the first poll after a rebuild.
 	_release_stage = ""
+	_guardian_result_shown = false
+	_guardian_result_focus = -1
 	_release_target = -1
 	# Same "rebuild drops the ceremony cleanly" reasoning as the two resets
 	# above -- `get_children()` above already queued the panel node itself for
@@ -1938,7 +1942,9 @@ func _answer_guardian(accept: bool) -> void:
 	# A title drops a sentence's full stop, but never eats an ellipsis's dot
 	# ("Declining the Deep Watcher..." read ".." in the capture).
 	var title := line if line.ends_with("...") or line.ends_with("…") else line.trim_suffix(".")
-	_show_guardian_result(title, "They will not offer to join you again.", 0)
+	# Only a host-settled decline is stated as final; until then the card says
+	# the answer is on its way (the settled body arrives with the result).
+	_show_guardian_result(title, DECLINE_SETTLED_BODY if settled else DECLINE_PENDING_BODY, 0)
 
 
 ## A Decline from this tab that the host journals later: replace the pending
@@ -1960,6 +1966,7 @@ func _poll_guardian_decline_result() -> void:
 		say("%s stays free." % who)
 	if _guardian_result_shown:
 		_farewell_title.text = "%s stays free" % who
+		_farewell_body.text = DECLINE_SETTLED_BODY
 
 
 func _put_off_guardian() -> void:
@@ -2222,7 +2229,10 @@ func _poll_guardian_result() -> void:
 	if _release_stage != "":
 		_guardian_result_shown = false
 		return
-	if _focused != _guardian_result_focus:
+	# Moving along the belt, or starting an evolution or a rename on the row
+	# it landed on, gives the column back (independent review: the result card
+	# and the evolution panel could show side by side).
+	if _focused != _guardian_result_focus or _evolution_stage != "" or _renaming != null:
 		_hide_guardian_result()
 
 
@@ -2236,13 +2246,19 @@ func _apply_guardian_roster(size: int) -> void:
 		var wrap := _row_wraps[i] as Control
 		var dim := offering and i != destination
 		wrap.modulate = Color(1, 1, 1, GUARDIAN_ROSTER_DIM) if dim else Color.WHITE
+		if i != destination and (_rows[i] as Button).has_theme_stylebox_override("hover"):
+			# Rows carry no hover/focus overrides of their own; drop the
+			# destination outline's copies once the offer is over.
+			(_rows[i] as Button).remove_theme_stylebox_override("hover")
+			(_rows[i] as Button).remove_theme_stylebox_override("focus")
 		if i == destination:
 			var button := _rows[i] as Button
 			var box := UITokens.slot_box(true)
 			box.border_color = UITokens.TEAL
 			for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
 				box.set_border_width(side, 3)
-			button.add_theme_stylebox_override("normal", box)
+			for state in ["normal", "hover", "focus"]:
+				button.add_theme_stylebox_override(state, box)
 			button.text = "  %d.  %s joins here" % [i + 1,
 				"The Guardian" if _guardian_name_shown.is_empty() else _guardian_name_shown]
 			button.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
