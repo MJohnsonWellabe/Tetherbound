@@ -1,0 +1,107 @@
+run id:  net-20260925T081619Z-17386
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/sa/reconnect/net-reconnect_keeps_character-20260925T081619Z
+smoke:   tests/smoke_net_reconnect_keeps_character.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PASS: an ordinary peer with no allowance still trips the 15-second silence guard
+PASS: production world-build allowance suppresses silence only while it is active
+PASS: a genuinely stalled production join trips the normal silence guard after the allowance
+coordinator: launched peer 0 (host) pid=17410 control_port=44249 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/sa/reconnect/net-reconnect_keeps_character-20260925T081619Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/sa/reconnect/net-reconnect_keeps_character-20260925T081619Z/peer-0.log
+coordinator: launched peer 1 (client) pid=17411 control_port=32869 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/sa/reconnect/net-reconnect_keeps_character-20260925T081619Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/sa/reconnect/net-reconnect_keeps_character-20260925T081619Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":28121.0,"godot_version":"4.7-stable (official)","main_sha":"78500e7aad6a","peer":0.0,"pid":17410.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/sa/reconnect/net-reconnect_keeps_character-20260925T081619Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":28122.0,"godot_version":"4.7-stable (official)","main_sha":"78500e7aad6a","peer":1.0,"pid":17411.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/sa/reconnect/net-reconnect_keeps_character-20260925T081619Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: host reported its ENet port in hello (28121)
+PASS: host's saved character carries its distinct armor (granted 1 insulated_helm (0 did not fit))
+PASS: host equips its saved armor through the production transaction (equipped carried 'insulated_helm' in helmet (bag 1 -> 0))
+PASS: client's saved character carries party, items, armor and flag (flag player_slept_at_home (player) set after 0 frames)
+PASS: host autosaved its ordinary slot-0 character (character 'character-80342d590cca8b485fd2bb1bcba4bee5' is on disk (wrote_world=true))
+PASS: client autosaved its ordinary slot-0 character (character 'character-dbfcc9a64d43b7930bf34c46c87a913f' is on disk (wrote_world=true))
+PASS: both independent homes minted nonempty character ids (host 'character-80342d590cca8b485fd2bb1bcba4bee5', client 'character-dbfcc9a64d43b7930bf34c46c87a913f')
+PASS: independent slot-0 homes have distinct character ids (host 'character-80342d590cca8b485fd2bb1bcba4bee5', client 'character-dbfcc9a64d43b7930bf34c46c87a913f')
+PASS: both ordinary autosaves have character files before networking
+PASS: peer 0 hosted a listen server (hosting udp/28121 as peer 1)
+PASS: peer 1 joined (joined 127.0.0.1:28121 as peer 877025294 after 17 frames; snapshot applied; 2 peer(s) in registry)
+PASS: the joiner holds a real assigned ENet id (877025294)
+PASS: the first join found the pre-existing character file for 'character-dbfcc9a64d43b7930bf34c46c87a913f' ({ "display_name": "", "equipment": { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "insulated_vest" }, "party": ["bramblebun@3"], "party_size": 1.0, "player_flags": { "player_slept_at_home": true }, "satchel": { "orb_basic": 2.0, "potion_small": 3.0 }, "satiety": 99.942444444445 })
+PASS: and the peer is playing that id (got 'character-dbfcc9a64d43b7930bf34c46c87a913f')
+PASS: its party is real, and named: ["bramblebun@3"]
+PASS: its satchel is not empty: { "orb_basic": 2.0, "potion_small": 3.0 }
+PASS: its worn upper body is the equipped vest: { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "insulated_vest" }
+PASS: the worn vest is absent from its bag: { "orb_basic": 2.0, "potion_small": 3.0 }
+PASS: the client's equipment never received the host's helm: { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "insulated_vest" }
+PASS: the host wears its distinct helm: { "backpack": "", "boots": "", "helmet": "insulated_helm", "lower_body": "", "upper_body": "" }
+PASS: the host never received the client's vest
+PASS: and it holds 'player_slept_at_home' in its own PLAYER flag store
+PASS: peer 1 wrote its character file through the production autosave door (character 'character-dbfcc9a64d43b7930bf34c46c87a913f' is on disk (wrote_world=false))
+PASS: user://characters/character-dbfcc9a64d43b7930bf34c46c87a913f/character.json exists now
+PASS: and the FILE holds that party (file ["bramblebun@3"] / memory ["bramblebun@3"])
+PASS: and that satchel (file { "orb_basic": 2.0, "potion_small": 3.0 } / memory { "orb_basic": 2.0, "potion_small": 3.0 })
+PASS: and its worn equipment identity (file { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "insulated_vest" } / memory { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "insulated_vest" })
+PASS: the character file does not duplicate the worn vest into the bag
+PASS: and that player flag (file flags: { "player_slept_at_home": true })
+PASS: the connected client autosave keeps live/file canonical id 'character-dbfcc9a64d43b7930bf34c46c87a913f'
+PASS: the connected host autosaved its own character (character 'character-80342d590cca8b485fd2bb1bcba4bee5' is on disk (wrote_world=true))
+PASS: the host autosave keeps its own canonical id 'character-80342d590cca8b485fd2bb1bcba4bee5' and file
+PASS: connected autosaves leave both canonical ids mapped to their original registry peers ([{ "appearance_id": "trainer", "character_id": "character-80342d590cca8b485fd2bb1bcba4bee5", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }, { "appearance_id": "trainer", "character_id": "character-dbfcc9a64d43b7930bf34c46c87a913f", "display_name": "Reconnector", "downed": false, "peer_id": 877025294.0, "realm": "meadows", "sleeping": false }])
+PASS: the joiner's transport died under it (transport closed without a Session.leave())
+PASS: the host noticed the disconnect and is back to 1 peer (registry reports 1 peer(s) after 0 frames)
+PASS: the dropped character is out of the host's registry (["character-80342d590cca8b485fd2bb1bcba4bee5"])
+PASS: the dropped client ran its own teardown, the way _on_server_disconnected() does (no active session to leave)
+PASS: peer 1's in-memory character was blanked (in-memory character blanked (party 1 -> 0), id 'character-dbfcc9a64d43b7930bf34c46c87a913f' kept, file untouched)
+PASS: the process now holds NO party ([])
+PASS: and NO satchel ({  })
+PASS: and NO worn equipment ({ "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "" })
+PASS: and has forgotten 'player_slept_at_home'
+PASS: while the FILE still holds the party (["bramblebun@3"])
+PASS: and the satchel ({ "orb_basic": 2.0, "potion_small": 3.0 })
+PASS: and the worn vest ({ "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "insulated_vest" })
+PASS: and the player flag. THE FILE IS NOW THE ONLY COPY ON THIS MACHINE
+PASS: the host changed the world while the peer was away (smoke_reconnect_changed_while_away: ok=true pending=false code='' reason='')
+PASS: that change committed on the host (flag smoke_reconnect_changed_while_away (world) set after 0 frames)
+PASS: the disconnected peer did NOT receive that change while it was gone (flag smoke_reconnect_changed_while_away NOT set)
+PASS: peer 1 rejoined by character id (title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28121 as peer 150189020 after 87 frames)
+PASS: the host's registry is back to 2 peers (registry reports 2 peer(s) after 0 frames)
+PASS: 'character-dbfcc9a64d43b7930bf34c46c87a913f' appears exactly ONCE in the host's registry, not twice (["character-80342d590cca8b485fd2bb1bcba4bee5", "character-dbfcc9a64d43b7930bf34c46c87a913f"])
+PASS: the rejoiner came back under a NEW ENet peer id (877025294 -> 150189020)
+PASS: the host maps 'character-dbfcc9a64d43b7930bf34c46c87a913f' to the rejoiner's new peer id 150189020 (registry: [{ "appearance_id": "trainer", "character_id": "character-80342d590cca8b485fd2bb1bcba4bee5", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }, { "appearance_id": "trainer", "character_id": "character-dbfcc9a64d43b7930bf34c46c87a913f", "display_name": "Trainer", "downed": false, "peer_id": 150189020.0, "realm": "meadows", "sleeping": false }])
+PASS: the rejoiner's PARTY came back off user://characters/character-dbfcc9a64d43b7930bf34c46c87a913f/character.json -- ["bramblebun@3"], and the process held [] a step ago
+PASS: and its SATCHEL: { "orb_basic": 2.0, "potion_small": 3.0 } (was {  })
+PASS: and its WORN equipment identity came back from disk: { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "insulated_vest" } (was blank { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "" })
+PASS: the restored worn vest remains absent from the bag
+PASS: the restored client still has none of the host's gear
+PASS: the host still wears only its own distinct gear after the client reconnects: { "backpack": "", "boots": "", "helmet": "insulated_helm", "lower_body": "", "upper_body": "" }
+PASS: and its PLAYER-scoped 'player_slept_at_home', which no world snapshot carries
+PASS: production reconnect: peer 0 has both replicated trainer nodes (2)
+PASS: production reconnect: peer 0 draws exactly one other trainer in its current world
+PASS: production reconnect: peer 1 has both replicated trainer nodes (2)
+PASS: production reconnect: peer 1 draws exactly one other trainer in its current world
+PASS: the restored client can use normal world movement input (left stick (0.00, -1.00) for 300 frames)
+PASS: the restored player moved at least 2 m after reconnect (2.71 m)
+PASS: the host receives the restored client's post-reconnect movement (gap 0.00 m)
+PASS: and what it is playing matches what the file says, satiety included (live { "display_name": "", "equipment": { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "insulated_vest" }, "party": ["bramblebun@3"], "party_size": 1.0, "player_flags": { "player_slept_at_home": true }, "satchel": { "orb_basic": 2.0, "potion_small": 3.0 }, "satiety": 99.9151111111119 } / file { "display_name": "", "equipment": { "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "insulated_vest" }, "party": ["bramblebun@3"], "party_size": 1.0, "player_flags": { "player_slept_at_home": true }, "satchel": { "orb_basic": 2.0, "potion_small": 3.0 }, "satiety": 99.9151111111119 })
+PASS: the rejoiner's fresh snapshot carried the change made while it was away (flag smoke_reconnect_changed_while_away set)
+PASS: both peers answered a world_snapshot probe after the reconnect (host 14 keys / rejoiner 14)
+PASS: and their WORLDS are identical key for key after it (differing keys: [])
+PASS: control: the link died again (transport closed without a Session.leave())
+PASS: control: blanked again (in-memory character blanked (party 1 -> 0), id 'character-dbfcc9a64d43b7930bf34c46c87a913f' kept, file untouched)
+PASS: control: rejoined as 'reconnect-smoke-never-saved', a character that was never saved (joined 127.0.0.1:28121 as peer 582935484 after 6 frames; snapshot applied; 2 peer(s) in registry)
+PASS: control: there is no file for 'reconnect-smoke-never-saved' to restore from ({ "display_name": "", "equipment": {  }, "party": [], "party_size": 0.0, "player_flags": { "player_slept_at_home": false }, "satchel": {  }, "satiety": -1.0 })
+PASS: control: so the peer came back with NO party ([]) -- the restore above was the FILE, not something a rejoin does on its own
+PASS: control: and no satchel ({  })
+PASS: control: and empty worn equipment ({ "backpack": "", "boots": "", "helmet": "", "lower_body": "", "upper_body": "" })
+PASS: control: and no 'player_slept_at_home'
+ALL CHECKS PASSED
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/sa/reconnect/net-reconnect_keeps_character-20260925T081619Z/SUMMARY.md ===
+# Net smoke run net-20260925T081619Z-17386
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=17410 exited=true unexpected_exit=false
+- peer 1 (client) pid=17411 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED

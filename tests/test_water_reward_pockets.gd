@@ -2,9 +2,13 @@ extends "res://tests/test_case.gd"
 ## F13: Tidewake's eight authored reward pockets (water_world.json
 ## `reward_pockets`). The six single-item pockets are filled by EXISTING
 ## personal Skill Candy rows moved inside the pocket radius; no item, tier,
-## amount or claim policy changes. The two composite pockets have no matching
-## item and stay explicitly unresolved pending an owner decision.
-## Analytic heightfield evidence only; not a Terrain3D bake or walked route.
+## amount or claim policy changes. `cradle_shell_nest` pays the
+## `side_water_cradle_care` amounts (WORLD.md Tidewake local chains: 4 Reef
+## Stone plus 3 berries, once) through two existing Tidal Cradle rows moved
+## into it. `reed_root_hollow` has no matching item and stays explicitly
+## unresolved pending an owner decision.
+## Analytic heightfield checks here; the baked-ground walk from each island's
+## landing and the real Interact claim are tests/smoke_water_pocket_walk_claim.gd.
 const FIELD := preload("res://scripts/world/water_heightfield.gd")
 const RULE := preload("res://scripts/world/water_personal_pickup.gd")
 const PICKUPS := "res://data/config/water_pickups.json"
@@ -30,11 +34,17 @@ const FILLED := {
 	"garden_exposed_vault": "water:drowned_garden:pickup:002",
 	"brine_upper_shelf": "water:brine_steps:pickup:001",
 }
-## Composite roles with no existing item identity. Owner decision required;
-## this test proves they are still reserved, not that they pay out.
+## Composite role with no existing item identity. Owner decision required;
+## this test proves it is still reserved, not that it pays out.
 const UNRESOLVED := {
 	"reed_root_hollow": "recipe_and_reed_fiber",
-	"cradle_shell_nest": "reefstone_and_mount_care",
+}
+## side_water_cradle_care payout: existing Tidal Cradle rows moved into the
+## nest, with the chain's authored amounts. Former positions prove the move.
+const CRADLE := "cradle_shell_nest"
+const CRADLE_ROWS := {
+	"water:tidal_cradle:harvest:007": {"item": "reef_stone", "amount": 4, "was": Vector2(568.0, 1698.0)},
+	"water:tidal_cradle:pickup:009": {"item": "berries", "amount": 3, "was": Vector2(592.0, 1668.0)},
 }
 
 var _field
@@ -82,7 +92,8 @@ func _dry_footing(p: Vector2) -> bool:
 			return false
 	return true
 
-## 2 m grid flood fill over dry, gentle cells within the island's bounds.
+## 2 m grid flood fill over cells that are dry and within the MAX_SLOPE_DEG
+## walk-slope limit, inside the island's bounds.
 func _connected(a: Vector2, b: Vector2, island_id: String) -> bool:
 	var island: Dictionary = {}
 	for spec: Dictionary in _world.islands:
@@ -120,11 +131,43 @@ func _pocket(id: String) -> Dictionary:
 			return pocket
 	return {}
 
-func test_eight_pockets_are_six_filled_plus_two_unresolved() -> void:
+func test_eight_pockets_are_six_filled_cradle_paid_and_one_unresolved() -> void:
 	assert_eq(_world.reward_pockets.size(), 8, "WORLD §6.1 authors eight reward pockets")
 	for pocket: Dictionary in _world.reward_pockets:
-		assert_true(FILLED.has(pocket.id) or UNRESOLVED.has(pocket.id), "Every pocket is either filled or explicitly unresolved: " + str(pocket.id))
-	assert_eq(FILLED.size() + UNRESOLVED.size(), 8)
+		assert_true(FILLED.has(pocket.id) or UNRESOLVED.has(pocket.id) or pocket.id == CRADLE,
+			"Every pocket is filled, the Cradle chain payout, or explicitly unresolved: " + str(pocket.id))
+	assert_eq(FILLED.size() + UNRESOLVED.size() + 1, 8)
+
+## The shared placement contract every pocket row meets: on the pocket's
+## island, analytic y, footing dry and within the MAX_SLOPE_DEG walk-slope
+## limit (not "gentle": pockets sit on 8-31 degree ground), connected to a
+## landing, spaced from every other placement and clear of people, camps, dock
+## equipment and landings.
+func _assert_pocket_placement(row: Dictionary, pocket: Dictionary) -> void:
+	var at := _xz(row.position)
+	assert_eq(row.island_id, pocket.island_id, "Row stays on the pocket's island")
+	assert_true(_xz(pocket.position).distance_to(at) <= float(pocket.radius_m), "Row inside pocket radius: " + str(row.id))
+	assert_true(_dry_footing(at), "Dry footing within the walk-slope limit at " + str(row.id))
+	assert_almost_eq(float(row.position[1]), _field.height_at(at.x, at.y), 0.01, "Authored y is the analytic ground: " + str(row.id))
+	assert_eq(_field.island_id_at(at.x, at.y), pocket.island_id, "Ground belongs to the pocket island")
+	var landing_connected := false
+	for anchor: Dictionary in _world.anchors:
+		if anchor.island_id == pocket.island_id and anchor.kind != "rest_shoal":
+			assert_true(_xz(anchor.safe_position).distance_to(at) >= 12.0, "Landing stays clear")
+			landing_connected = landing_connected or _connected(_xz(anchor.safe_position), at, str(pocket.island_id))
+	assert_true(landing_connected, "Dry ground within the walk-slope limit connects a landing to " + str(row.id))
+	for other: Dictionary in _data.pickups + _data.harvest:
+		if other.id != row.id:
+			assert_true(at.distance_to(_xz(other.position)) >= 5.99, "Placement spacing kept: " + str(row.id))
+	var clearance := float(_data.validation.npc_and_trainer_clearance_m)
+	for person: Vector2 in _people(str(pocket.island_id)):
+		assert_true(person.distance_to(at) >= clearance, "NPC/trainer clearance at " + str(row.id))
+	for camp: Dictionary in _camps:
+		assert_true(Vector2(float(camp.at[0]), float(camp.at[1])).distance_to(at) >= clearance, "Camp clearance at " + str(row.id))
+	for action: Dictionary in _dock.actions:
+		var equipment := DOCK_RULES.action_position(action, _world, _field.height_at)
+		if equipment.is_finite():
+			assert_true(Vector2(equipment.x, equipment.z).distance_to(at) >= clearance, "Dock equipment clearance at " + str(row.id))
 
 func test_single_item_pockets_hold_exactly_one_matching_existing_row() -> void:
 	for pocket_id: String in FILLED:
@@ -143,23 +186,11 @@ func test_single_item_pockets_hold_exactly_one_matching_existing_row() -> void:
 		var row: Dictionary = inside[0]
 		assert_eq(row.id, FILLED[pocket_id], "Pocket holds the documented existing row")
 		assert_eq(row.get("reward_pocket_id", ""), pocket_id, "Row names its pocket")
-		assert_eq(row.island_id, pocket.island_id, "Row stays on the pocket's island")
 		assert_eq(row.category, "skill_candy")
 		assert_eq(row.claim_policy, "character_once", "Personal claim semantics unchanged")
 		assert_eq(int(row.quantity), 1, "Amount unchanged")
+		_assert_pocket_placement(row, pocket)
 		var at := _xz(row.position)
-		assert_true(_dry_footing(at), "Dry, gentle footing at " + str(row.id))
-		assert_almost_eq(float(row.position[1]), _field.height_at(at.x, at.y), 0.01, "Authored y is the analytic ground: " + str(row.id))
-		assert_eq(_field.island_id_at(at.x, at.y), pocket.island_id, "Ground belongs to the pocket island")
-		var landing_connected := false
-		for anchor: Dictionary in _world.anchors:
-			if anchor.island_id == pocket.island_id and anchor.kind != "rest_shoal":
-				assert_true(_xz(anchor.safe_position).distance_to(at) >= 12.0, "Landing stays clear")
-				landing_connected = landing_connected or _connected(_xz(anchor.safe_position), at, str(pocket.island_id))
-		assert_true(landing_connected, "Dry, gentle ground connects a landing to " + str(row.id))
-		for other: Dictionary in _data.pickups + _data.harvest:
-			if other.id != row.id:
-				assert_true(at.distance_to(_xz(other.position)) >= 5.99, "Placement spacing kept: " + str(row.id))
 		# The host claim rule accepts a character standing at the new spot.
 		var context := {"peer": 7, "character_id": "pocket-check", "realm": "water",
 			"position": Vector3(at.x, _field.height_at(at.x, at.y), at.y)}
@@ -194,16 +225,61 @@ func test_single_item_pockets_hold_exactly_one_matching_existing_row() -> void:
 		context.position = Vector3(old_at.x, _field.height_at(old_at.x, old_at.y), old_at.y)
 		assert_eq(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, unlocked).code,
 			"too_far", "Former position no longer claims: " + str(row.id))
-		# The file's own clearances: people, camps and dock equipment.
-		var clearance := float(_data.validation.npc_and_trainer_clearance_m)
-		for person: Vector2 in _people(str(pocket.island_id)):
-			assert_true(person.distance_to(at) >= clearance, "NPC/trainer clearance at " + str(row.id))
-		for camp: Dictionary in _camps:
-			assert_true(Vector2(float(camp.at[0]), float(camp.at[1])).distance_to(at) >= clearance, "Camp clearance at " + str(row.id))
-		for action: Dictionary in _dock.actions:
-			var equipment := DOCK_RULES.action_position(action, _world, _field.height_at)
-			if equipment.is_finite():
-				assert_true(Vector2(equipment.x, equipment.z).distance_to(at) >= clearance, "Dock equipment clearance at " + str(row.id))
+
+func test_cradle_nest_pays_the_care_chain_once() -> void:
+	var pocket := _pocket(CRADLE)
+	assert_false(pocket.is_empty(), "Cradle nest pocket authored")
+	if pocket.is_empty():
+		return
+	assert_eq(pocket.reward_role, "reefstone_and_mount_care", "Pocket role unchanged")
+	var inside := {}
+	for kind: String in ["pickups", "harvest"]:
+		for row: Dictionary in _data[kind]:
+			if _xz(row.position).distance_to(_xz(pocket.position)) <= float(pocket.radius_m):
+				inside[row.id] = row
+			if row.get("reward_pocket_id", "") == CRADLE:
+				assert_true(CRADLE_ROWS.has(row.id), "Only the documented rows name the nest: " + str(row.id))
+	assert_eq(inside.keys().size(), CRADLE_ROWS.size(), "The nest holds exactly the chain's two rows")
+	var paid := {}
+	for id: String in CRADLE_ROWS:
+		var spec: Dictionary = CRADLE_ROWS[id]
+		assert_true(inside.has(id), "Nest holds " + id)
+		if not inside.has(id):
+			continue
+		var row: Dictionary = inside[id]
+		assert_eq(row.get("reward_pocket_id", ""), CRADLE, "Row names the nest")
+		assert_eq(row.item_id, spec.item, "Existing item identity: " + id)
+		assert_true(_xz(row.position).distance_to(spec.was) > 100.0, "Row actually moved from its former spot: " + id)
+		_assert_pocket_placement(row, pocket)
+		if row.has("yield"):
+			# A harvest seam: one durable world-once gather, tool-gated.
+			assert_eq(row.gather_action, "pickaxe", "Reef Stone is mined")
+			paid[row.item_id] = int(row["yield"])
+		else:
+			# An ordinary world-once find: one claim for the world, never renewable.
+			assert_eq(row.claim_policy, "existing_world_pickup_policy", "Berries use the ordinary once-per-world find")
+			assert_eq(row.category, "food")
+			paid[row.item_id] = int(row.quantity)
+	assert_eq(paid, {"reef_stone": 4, "berries": 3}, "WORLD side_water_cradle_care: 4 Reef Stone plus 3 berries, once")
+	# Moves stay on the island: per-island and per-item row counts unchanged.
+	var cradle := {"pickups": 0, "harvest": 0}
+	var rows := {"berries": 0, "reef_stone": 0}
+	for row: Dictionary in _data.pickups:
+		cradle.pickups += 1 if row.island_id == "tidal_cradle" else 0
+		rows.berries += 1 if row.item_id == "berries" else 0
+	for row: Dictionary in _data.harvest:
+		cradle.harvest += 1 if row.island_id == "tidal_cradle" else 0
+		rows.reef_stone += 1 if row.item_id == "reef_stone" else 0
+	assert_eq(cradle.pickups, int(_data.census.by_island.tidal_cradle.pickups))
+	assert_eq(cradle.harvest, int(_data.census.by_island.tidal_cradle.harvest))
+	assert_eq(rows.berries, int(_data.census.pickup_item_counts.berries), "Census item counts are row counts")
+	assert_eq(rows.reef_stone, int(_data.census.harvest_item_counts.reef_stone))
+	# The saddle's four Reef Stone near the Cradle landing are untouched.
+	var near_landing := 0
+	for row: Dictionary in _data.harvest:
+		if row.item_id == "reef_stone" and row.island_id == "tidal_cradle" and _xz(row.position).distance_to(Vector2(535.497, 1352.51)) < 60.0:
+			near_landing += int(row["yield"])
+	assert_eq(near_landing, 4, "Saddle Reef Stone by the Cradle arrival unchanged")
 
 func test_composite_pockets_remain_explicitly_unresolved() -> void:
 	var registered := {}

@@ -38,12 +38,14 @@
   ],
   "landmark_sightlines": [
     {"id": "glass_field_to_stormheart", "from": [-310,5050], "to": [-100,5470], "clear_radius_m": 22, "purpose": "The split crown and machinery remain visible along the final approach; low understory remains."},
-    {"id": "ember_to_stormheart", "from": [-120,5270], "to": [-100,5470], "clear_radius_m": 24, "purpose": "Ember Bivouac faces the ascent and its landmark."}
+    {"id": "ember_to_stormheart", "from": [-120,5270], "to": [-100,5470], "clear_radius_m": 24, "purpose": "Ember Bivouac faces the ascent and its landmark."},
+    {"id": "dynamo_west_to_stormheart", "from": [-700,4820], "to": [-100,5470], "clear_radius_m": 22, "purpose": "The Dynamo tower stays in view from the middle of dynamo_west_approach (its bend at (-700,4820)); low understory remains."}
   ],
   "routes": [
     {"id": "ash_road", "kind": "critical", "points": [[-300,180],[-350,450],[-650,830],[-590,1060],[-380,1400],[-900,1780],[-700,2300]]},
-    {"id": "conductor_road", "kind": "critical", "points": [[-700,2300],[-560,2480],[-160,2700],[-630,2930],[-1080,3020],[-1120,3290],[-650,3550]]},
-    {"id": "deepwood_road", "kind": "critical", "requires_unlock": "stormwood:rootgate_released", "points": [[-650,3550],[-450,3960],[-890,4490],[-150,4460],[-310,5050],[-100,5350],[-100,5470]]},
+    {"id": "conductor_road", "kind": "critical", "points": [[-700,2300],[-560,2480],[-160,2700],[-630,2930],[-1080,3020],[-1120,3290],[-650,3400],[-650,3550]]},
+    {"id": "deepwood_road", "kind": "critical", "requires_unlock": "stormwood:rootgate_released", "points": [[-650,3550],[-650,3700],[-450,3960],[-890,4490],[-150,4460],[-310,5050],[-100,5350],[-100,5470]]},
+    {"id": "dynamo_west_approach", "kind": "alternate", "requires_unlock": "stormwood:rootgate_released", "points": [[-890,4490],[-700,4820],[-480,5120],[-140,5242]]},
     {"id": "pools_west_loop", "kind": "loop", "points": [[-590,1060],[-1230,1210],[-1480,1500],[-900,1780],[-380,1400],[-590,1060]]},
     {"id": "crown_sightline_loop", "kind": "loop", "points": [[-380,1400],[50,1570],[160,1980],[-200,2160],[-700,2300],[-900,1780],[-380,1400]]},
     {"id": "conductor_west_loop", "kind": "loop", "points": [[-700,2300],[-1550,2460],[-1720,3040],[-1120,3290],[-1080,3020],[-700,2300]]},

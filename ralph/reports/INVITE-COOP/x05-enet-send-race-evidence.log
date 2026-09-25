@@ -1,0 +1,12 @@
+# X05 hotfix: realm-transition probe ENet relay race (main 835744b3 CI red)
+local loop, tools/ci/verify-realm-transition.py, stock Godot 4.7, 4-core container
+main 835744b3 (before fix): fails=4 runsWithSendError=4 of 30
+pre-batch-3 a0fde6d7: fails=0 runsWithSendError=0 of 30
+BISECT 01d4b53eb runsWithSendError=0 of 25
+BISECT 74abd3c0d runsWithSendError=3 of 25
+diagnosed failure (temporary instrumentation, not committed):
+  host peer_disconnected <departing> remaining=[[<latejoin>, 9]]  (9 = ENet ZOMBIE) and the send error on the same pass
+  no Session reject/linger/goodbye/abort/flush path ran in any instrumented run
+fix first commit: 40/40 runs clean (no send error, exit 0)
+fix final commit: 20/20 runs clean, 80/80 receipts, no shutdown-wait timeouts
+net smokes on the hotfix branch: host_join_leave 27/0, reconnect_reservation 21/0
