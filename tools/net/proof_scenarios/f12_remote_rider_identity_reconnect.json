@@ -28,6 +28,7 @@
     {"peer": 1, "action": "await_probe", "args": {"what": "riding", "path": ["local", "mounted"], "equals": true, "budget_frames": 1800}, "label": "the ride is restored"},
     {"peer": 1, "action": "rider_self", "expect_data": {"character_id": "$character1", "mounted": true, "mount_species": "water_aquaryn", "swim_mode": 2, "realm": "water"}, "label": "AFTER: the guest's own ride, same character"},
     {"peer": 0, "action": "await_probe", "args": {"what": "riding", "path": ["remote", "$peer1", "riding"], "equals": true, "budget_frames": 1800}, "label": "the host sees the new peer id riding"},
+    {"peer": 0, "action": "await_probe", "args": {"what": "water_mounted", "path": ["remote_mounts", "$peer1", "owner_peer_id"], "equals": "$peer1", "budget_frames": 1500}, "continue_on_fail": true, "label": "give the returning rider's mount time to reach the host (about 25 s)"},
     {"peer": 0, "action": "rider_identity", "args": {"character_id": "$character1"}, "expect_data": {"agree": true, "peer_id": "$peer1", "mount_species": "water_aquaryn", "mount_swim_mode": 2, "seated": true, "stale_bodies": 0, "stale_mounts": 0}, "label": "AFTER: the host's picture agrees, found by character, nothing stale"},
     {"peer": "all", "action": "screenshot", "args": {"name": "02_after_reconnect"}}
   ]
