@@ -123,3 +123,20 @@ under this lane, not by this file.
 **Next work orders**
 - **F04-c (lane):** hold the pilot through tells so the CHARGER's 4.5 m spacing and 7 m lunge can show. If they still don't, check the CHARGER profile's use of `preferred_range` in the AI.
 - **Shared, by request:** a readable ground telegraph (ring or lane) per profile, in the COMBAT/X01 visuals under `scripts/combat/**`; recovery text shown only after the strike resolves; clearing stale hit feedback when a tell starts (`combat_hud.gd`).
+
+### Charger re-capture with the pilot sidestepping through tells (F04-c)
+
+The first capture's pilot walked into contact. With the pilot now sidestepping during each tell, as BOSSES asks of a player facing a CHARGER, Tuskroot winds up from 4–6 m. One lunge whiffs ("it missed you"), then "it's open — hit it"; another lands. Sheet: `relay-tells/sheet_charger_sidestep.jpg`.
+
+**Blind verdict:** tell readable at the normal camera **partly**; distinct tactical question for the charger **partly**, up from "no".
+
+**Ranked remaining defects**
+1. **No visible lunge.** The boar covers no ground: hit or miss is decided at range (T02c, T04c), so the 7 m charge is never seen. BOSSES §4.1 already notes that "the existing instantaneous hit/lunge remains".
+2. **No path or direction marker.** The ring only circles the enemy, and in T02 it is hidden, so the sidestep has no visual target.
+3. **Tell and recovery are mostly text.**
+   - The wind-up and recovery poses are weak.
+   - A grey wash in T04a reads as a spawn effect.
+   - The nameplate panel sits over the enemy.
+   - "it's open" shows at the strike frame, even when the player has just been hit.
+
+All three are in shared combat and HUD code, and are requested from the coordinator (lunge travel, a path telegraph, recovery-text timing).
