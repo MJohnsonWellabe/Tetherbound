@@ -1,0 +1,25 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[rift_crossing] the player crossed the rebuilt storm road span into Cloudreach
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:798)
+         [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:533)
+         [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:499)
+         [3] configure (res://scripts/world/cloudreach_physical_runtime.gd:110)
+         [4] _ready (res://scripts/world/cloudreach_chapter.gd:82)
+         [5] _ready (res://scripts/world/cloudreach_world.gd:381)
+[village_npcs] placed 11 of 11
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:798)
+         [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:533)
+         [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:499)
+         [3] restore_progression_from_game (res://scripts/world/cloudreach_physical_runtime.gd:522)
+         [4] load_game (res://autoload/game_state.gd:2168)
+         [5] _run (res://tests/smoke_rift_crossing_same_five.gd:158)
+         [6] _wait_for_scene (res://tests/smoke_rift_crossing_same_five.gd:202)
+[village_npcs] placed 11 of 11
+RIFT CROSSING SAME FIVE OK: ["creature-4dc5d07a9f49d2b1622548c5697a151d|terrapup|Terrapup|1", "creature-15ab0177388b84458219bb45b85466b7|mudsnout|Mudsnout|1", "creature-221556807d7376992659dc2fcf4c4cb5|bramblebun|Bramblebun|1", "creature-10c79cb69bb8ee1efba52fc3a712fb79|brooktail|Brooktail|1", "creature-efcb483804e919a4299cb941ca4616f4|veridian|Veridian|1"] crossed, realm changed once, reloaded unchanged
