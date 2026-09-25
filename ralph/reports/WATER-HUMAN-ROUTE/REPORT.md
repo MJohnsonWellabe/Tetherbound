@@ -369,8 +369,8 @@ While active, the shared current field (`water_current_field.gd::with_closed_gat
 also used by `water_world.gd`) adds a radial outward race from the shoreline to
 16 m offshore: 12 m/s, with a 4 m smooth outer blend. The race outranks route
 currents, and where two races overlap the nearest shore owns the water.
-`water_gate_seal_view.gd` draws the same ring as streaming white water and,
-every 12 s, tells a turned-back swimmer which dock to clear. The same discs,
+`water_gate_seal_view.gd` draws the same ring as streaming white water. At most every 12 s it tells a
+swimmer inside a race, heading in or out, which dock to clear. The same discs,
 as disc-fitted z-strips, go through Fly's existing `register_restriction`
 API. The tunables are in `water_swimming.json::docks.seal_race`. There is no
 new flag, save field, RPC, mount rule or invisible wall. The dock barrier and
@@ -401,6 +401,24 @@ Fly re-sync and the dock-smoke fixture as sound. It failed the PR because
 the race was not readable from the departure beach in daylight, and because
 this report had called the visibility major fixed. That wording is
 withdrawn here.
+
+**Third independent review: pass.** It found the change strictly better than
+main, where the unvisualised 6 m/s strip is closer to an invisible wall and
+can be bypassed on foot, by mount and by Fly. It breaks no hard rule or
+settled spec while swimmer-height readability stays open under F13.
+
+Its condition for merge (M1) is to write the mechanism back into WORLD §6.3
+and §6.6 and into STATE row 91. Those are shared files: this was requested
+from the coordinator on PR226 and is not done in this branch. Minor fixes
+applied:
+- trough and spray drawn at render priority 1, above the translucent sea;
+- `visibility_range_end` of 700 m beyond each race on the ring, trough,
+  crests and spray;
+- spray, crest and emission tunables moved to `seal_race`;
+- spray emission stops once a race opens.
+
+No frame-time measurement exists. Measure on the Ally before any
+performance claim.
 
 ### Visual result: failed at swimmer height, open under F13
 

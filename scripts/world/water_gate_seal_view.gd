@@ -77,6 +77,11 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 			crest.material_override = _crest_material
 			crest.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			ring.add_child(crest)
+		# Far races are sub-pixel; cull the ring and everything on it.
+		var cull_m := float(_rules.get("visibility_range_m", 700.0))
+		for part: Node in [ring] + ring.get_children():
+			if part is GeometryInstance3D:
+				(part as GeometryInstance3D).visibility_range_end = SEALS.outer_radius(seal, _rules) + cull_m
 		_rings[str(seal.id)] = ring
 	_refresh()
 
@@ -108,7 +113,8 @@ func _process(delta: float) -> void:
 	# Offset decreasing moves the pattern toward larger radius: outward flow.
 	_material.uv1_offset.y = wrapf(_material.uv1_offset.y - float(_rules.get("foam_flow_m_s", 3.0)) * delta / TILE_M, 0.0, 1.0)
 	# Breakers churn along the ring rather than drift, like surf on a reef.
-	_crest_material.uv1_offset.x = wrapf(_crest_material.uv1_offset.x + 0.6 * delta / TILE_M, 0.0, 1.0)
+	_crest_material.uv1_offset.x = wrapf(_crest_material.uv1_offset.x
+			+ float(_rules.get("crest_churn_m_s", 0.6)) * delta / TILE_M, 0.0, 1.0)
 	_message_cooldown = maxf(0.0, _message_cooldown - delta)
 	if _message_cooldown > 0.0:
 		return
@@ -170,8 +176,8 @@ func _spray(inner: float, outer: float) -> GPUParticles3D:
 	particles.name = "Spray"
 	var circumference := TAU * (inner + outer) * 0.5
 	particles.amount = clampi(int(circumference / float(_rules.get("spray_spacing_m", 2.5))), 24, 1600)
-	particles.lifetime = 1.4
-	particles.preprocess = 1.4
+	particles.lifetime = float(_rules.get("spray_lifetime_s", 1.4))
+	particles.preprocess = particles.lifetime
 	particles.visibility_aabb = AABB(Vector3(-outer - 4.0, -1.0, -outer - 4.0), Vector3(outer * 2.0 + 8.0, 8.0, outer * 2.0 + 8.0))
 	var process := ParticleProcessMaterial.new()
 	process.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
@@ -181,9 +187,9 @@ func _spray(inner: float, outer: float) -> GPUParticles3D:
 	process.emission_ring_height = 0.2
 	process.direction = Vector3.UP
 	process.spread = 25.0
-	process.initial_velocity_min = 2.0
-	process.initial_velocity_max = 4.0
-	process.gravity = Vector3(0, -5.0, 0)
+	process.initial_velocity_min = float(_rules.get("spray_speed_min_m_s", 2.0))
+	process.initial_velocity_max = float(_rules.get("spray_speed_max_m_s", 4.0))
+	process.gravity = Vector3(0, -float(_rules.get("spray_gravity_m_s2", 5.0)), 0)
 	process.scale_min = 0.8
 	process.scale_max = 1.8
 	var fade := Gradient.new()
@@ -203,7 +209,8 @@ func _spray(inner: float, outer: float) -> GPUParticles3D:
 	material.albedo_texture = _spray_texture
 	material.emission_enabled = true
 	material.emission = Color(0.55, 0.6, 0.62)
-	material.emission_energy_multiplier = 0.35
+	material.emission_energy_multiplier = float(_rules.get("spray_emission_energy", 0.35))
+	material.render_priority = 1
 	quad.material = material
 	particles.draw_pass_1 = quad
 	particles.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
@@ -226,7 +233,8 @@ func _trough() -> StandardMaterial3D:
 	material.albedo_color = Color(str(_rules.get("trough_colour", "#27514f"))) * Color(1, 1, 1, float(_rules.get("trough_alpha", 0.55)))
 	material.roughness = 0.6
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	material.render_priority = 0
+	# Above the translucent sea, beneath the foam and breakers.
+	material.render_priority = 1
 	return material
 
 
@@ -270,7 +278,7 @@ func _foam_material(low: float = 0.28, high: float = 0.62) -> StandardMaterial3D
 	# holds against the bright horizon without glowing at night.
 	material.emission_enabled = true
 	material.emission = Color(0.6, 0.64, 0.66)
-	material.emission_energy_multiplier = 0.35
+	material.emission_energy_multiplier = float(_rules.get("foam_emission_energy", 0.35))
 	material.roughness = 0.5
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.vertex_color_use_as_albedo = true
