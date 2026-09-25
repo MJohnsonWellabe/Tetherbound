@@ -43,6 +43,12 @@ var _receipts: Array[Dictionary] = []
 var _initial_ids: Array[int] = []
 var _caught_ids: Array[int] = []
 var _completed := false
+## Diagnostic only (never used for selection or pass/fail): every wild body
+## this segment fought, by its stable spawn-slot name. A respawned body keeps
+## its slot name, so a second entry is a repeated wild encounter, which
+## PROGRESSION 7 excludes from the earned route.
+var _fought: Array[String] = []
+var _respawn_waits := 0
 
 
 ## Reusable camp care seam: one carried remedy or food, one retained party
@@ -127,6 +133,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 			return result()
 		var wild := _choose_wild()
 		if wild == null:
+			_respawn_waits += 1
 			if not await _wait_for_training_respawn(wins):
 				return result()
 			continue
@@ -158,7 +165,11 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 		return result()
 	_completed = true
 	_receipt("team_ready", {"required_size": TOURNAMENT.required_party_size(),
-		"required_level": TOURNAMENT.required_level(), "party": _party_snapshot()})
+		"required_level": TOURNAMENT.required_level(), "party": _party_snapshot(),
+		"world_seed": int(_director.call("world_seed")), "training_wins": wins,
+		"respawn_waits": _respawn_waits, "fought": _fought.duplicate(),
+		"repeated_wilds": repeated_names(_fought),
+		"unused_eligible": _unused_eligible_names()})
 	return result()
 
 
@@ -249,6 +260,7 @@ func _wait_for_training_respawn(wins: int) -> bool:
 	_stick(0, 0)
 	for _frame in budget:
 		if _fighting():
+			_note_fought(_combat.call("enemy_body") as Node3D)
 			if not await _win_live_fight():
 				return false
 		if _frame % 30 == 0 and _choose_wild() != null:
@@ -543,7 +555,38 @@ func _verify_engagement(target: Node3D) -> bool:
 		return _fail("Wild engagement admitted %s instead of selected %s" % [
 			str(admitted.name) if is_instance_valid(admitted) else "<none>",
 			str(target.name) if is_instance_valid(target) else "<missing>"])
+	_note_fought(admitted)
 	return true
+
+
+func _note_fought(body: Node3D) -> void:
+	if is_instance_valid(body):
+		_fought.append(str(body.name))
+
+
+## Names that appear more than once, in first-repeat order.
+static func repeated_names(names: Array[String]) -> Array[String]:
+	var seen := {}
+	var repeated: Array[String] = []
+	for name in names:
+		if seen.has(name) and not repeated.has(name):
+			repeated.append(name)
+		seen[name] = true
+	return repeated
+
+
+## Diagnostic only: living, visible, training-eligible practice wilds this
+## segment has not fought -- the spare supply left when the team is ready.
+func _unused_eligible_names() -> Array[String]:
+	var names: Array[String] = []
+	var owned := _party_ids()
+	for body: Node3D in _director.call("wild_creatures"):
+		if not is_instance_valid(body) or not body.is_visible_in_tree() \
+				or not bool(body.call("is_alive")) or _fought.has(str(body.name)):
+			continue
+		if _training_eligible(body, owned):
+			names.append(str(body.name))
+	return names
 
 
 func _win_live_fight() -> bool:
