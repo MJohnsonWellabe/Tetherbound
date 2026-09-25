@@ -841,3 +841,16 @@ func test_reduced_motion_steadies_the_telegraph_rim() -> void:
 	pulsing.free()
 	steady.free()
 	lightning.free()
+
+
+## Review N1: on walkables far above the terrain (Stormheart ascent, Dynamo
+## platforms, bridges) the rain volume stays with the trainer: the clamp
+## uses the higher of the terrain and the trainer, not the terrain alone.
+func test_rain_volume_follows_a_raised_trainer() -> void:
+	var surge := SURGE.new()
+	var player := Vector3(0, 60, 0)
+	var camera := player + Vector3(0, 2.5, 6.0)
+	var centre: Vector3 = surge.rain_centre(camera, player, 0.0)
+	assert_true(centre.y >= player.y, "rain centre %.1f m sits below a trainer at %.1f m" % [centre.y, player.y])
+	assert_almost_eq(centre.y, camera.y + float(_config().presentation.rain.camera_height_offset_m), 0.0001)
+	surge.free()

@@ -19,6 +19,9 @@ class LightningFixture extends LIGHTNING:
 	func _ready() -> void: pass
 	func _process(_delta: float) -> void: pass
 
+class RigFixture extends Node3D:
+	var _target: Node3D = null
+
 class SurgeFixture extends SURGE:
 	func _ready() -> void: pass
 	func _process(_delta: float) -> void: pass
@@ -31,8 +34,12 @@ func _run() -> void:
 	root.add_child(world)
 	var session := SessionFixture.new()
 	world.add_child(session)
-	var player := Node3D.new()
+	# A real body, so the own-RID exclusion path runs.
+	var player := CharacterBody3D.new()
 	player.name = "Player"
+	var capsule := CollisionShape3D.new()
+	capsule.shape = CapsuleShape3D.new()
+	player.add_child(capsule)
 	world.add_child(player)
 	var surge := SurgeFixture.new()
 	surge.name = "StormwoodSurge"
@@ -133,11 +140,47 @@ func _run() -> void:
 	var in_open := surge._rain.amount_ratio
 	var roof_ok := roofed and under_roof < 0.001 and in_open > 0.99
 
+	# Review N2: the roof probe follows the camera's FRAMED SUBJECT. With the
+	# rig on a piloted creature in the open, a trainer under a roof must not
+	# dry the creature's rain; framing the trainer again, it does; and a
+	# camera under a roof still counts on its own.
+	var rig := RigFixture.new()
+	rig.name = "CameraRig"
+	world.add_child(rig)
+	var creature := CharacterBody3D.new()
+	var creature_shape := CollisionShape3D.new()
+	creature_shape.shape = CapsuleShape3D.new()
+	creature.add_child(creature_shape)
+	world.add_child(creature)
+	creature.global_position = Vector3(20, 0, 0)
+	var roof2 := StaticBody3D.new()
+	var shape2 := CollisionShape3D.new()
+	var box2 := BoxShape3D.new()
+	box2.size = Vector3(10, 0.3, 10)
+	shape2.shape = box2
+	roof2.add_child(shape2)
+	world.add_child(roof2)
+	roof2.global_position = Vector3(0, 4, 0)
+	camera.global_position = Vector3(20, 2, 30)
+	for _frame in 3:
+		await physics_frame
+	rig._target = creature
+	surge._refresh_roof(player)
+	var piloting_roofed := surge._roofed
+	rig._target = player
+	surge._refresh_roof(player)
+	var trainer_roofed := surge._roofed
+	rig._target = creature
+	camera.global_position = Vector3(0, 2, 1)
+	surge._refresh_roof(player)
+	var camera_roofed := surge._roofed
+	var subject_ok := not piloting_roofed and trainer_roofed and camera_roofed
+
 	var ok := impact_freed and expiry_freed and clean and strike_freed \
 		and bolts_after_impact == 1 and lights_after_impact == 1 and is_equal_approx(break_flash, 1.0) \
 		and is_equal_approx(rim, 3.0) and is_equal_approx(seconds, 1.2) \
 		and far_calm_flash == 0.0 and bolt_local and near_calm_flash > 0.8 and is_equal_approx(far_break_flash, 1.0) \
-		and reduced_ok and roof_ok
+		and reduced_ok and roof_ok and subject_ok
 	print("LIGHTNING CLEANUP impact_freed=%s expiry_freed=%s registry_empty=%s strike_freed=%s bolt=%d light=%d" % [
 		impact_freed, expiry_freed, clean, strike_freed, bolts_after_impact, lights_after_impact])
 	# Informational CPU cost of one warning build (headless: no GPU work).
@@ -151,6 +194,7 @@ func _run() -> void:
 		break_flash, far_calm_flash, near_calm_flash, far_break_flash, bolt_local])
 	print("LIGHTNING REDUCED MOTION ring=%s bolt=%s sky_flash=%.2f strike_light=%.2f" % [reduced_ring, reduced_bolt, reduced_flash, reduced_light_energy])
 	print("RAIN ROOF roofed=%s near_under_roof=%.2f near_in_open=%.2f" % [roofed, under_roof, in_open])
+	print("RAIN ROOF SUBJECT piloting_open=%s framing_trainer=%s camera_under_roof=%s" % [piloting_roofed, trainer_roofed, camera_roofed])
 	print("LIGHTNING CLEANUP RESULT %s" % ("PASS" if ok else "FAIL"))
 	world.free()
 	quit(0 if ok else 1)

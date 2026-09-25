@@ -598,15 +598,18 @@ static func rain_spread_drift(process: ParticleProcessMaterial, lifetime: float)
 ## foot or riding, or a piloted creature when the rig retargets), on every
 ## peer; the player otherwise (world_weather.gd's original placement).
 ##
-## Review nit: a camera high above the ground would carry a floating rain
-## volume, so the height is clamped to `camera_ground_y` (terrain under the
-## camera, when known) + rain.max_height_above_ground_m.
+## A camera high above the ground would carry a floating rain volume, so
+## the height is clamped to rain.max_height_above_ground_m above the higher
+## of the terrain under the camera and the trainer: on the Stormheart ascent,
+## the Dynamo platforms or a bridge far above the terrain, the rain stays
+## with the trainer instead of sinking below them.
 func rain_centre(camera_position: Variant, player_position: Vector3, camera_ground_y: float = NAN) -> Vector3:
 	var cfg: Dictionary = _pres_cfg().get("rain", {})
 	if camera_position is Vector3:
 		var centre := (camera_position as Vector3) + Vector3(0.0, float(cfg.get("camera_height_offset_m", 3.0)), 0.0)
 		if not is_nan(camera_ground_y):
-			centre.y = minf(centre.y, camera_ground_y + float(cfg.get("max_height_above_ground_m", 16.0)))
+			var floor_y := maxf(camera_ground_y, player_position.y)
+			centre.y = minf(centre.y, floor_y + float(cfg.get("max_height_above_ground_m", 16.0)))
 		return centre
 	return player_position + Vector3(0.0, RAIN_HEIGHT_OFFSET, 0.0)
 
@@ -627,13 +630,23 @@ func roof_over(at: Vector3, exclude: Array[RID] = [], start_lift: float = 0.3) -
 		return false
 	return not space_world.direct_space_state.intersect_ray(query).is_empty()
 
+## What the camera frames: the rig's follow target (the piloted creature
+## during field control), else the trainer. A trainer sheltering under a
+## roof must not dry the rain around a creature fighting in the open.
+func framed_subject(player: Node3D) -> Node3D:
+	var rig := world.get_node_or_null("CameraRig") if world != null else null
+	var target: Variant = rig.get("_target") if rig != null else null
+	return target as Node3D if target is Node3D and is_instance_valid(target) else player
+
 func _refresh_roof(player: Node3D) -> void:
+	var subject := framed_subject(player)
 	var exclude: Array[RID] = []
-	if player is CollisionObject3D:
-		exclude.append((player as CollisionObject3D).get_rid())
-	# The trainer probe starts above head height, as the lightning shelter
-	# probe does, so the trainer's own body and hat never count as a roof.
-	_roofed = roof_over(player.global_position, exclude, 2.2)
+	for body: Node3D in [player, subject]:
+		if body is CollisionObject3D:
+			exclude.append((body as CollisionObject3D).get_rid())
+	# The subject probe starts above head height, as the lightning shelter
+	# probe does, so the subject's own body never counts as a roof.
+	_roofed = roof_over(subject.global_position, exclude, 2.2)
 	var camera := get_viewport().get_camera_3d()
 	if not _roofed and camera != null:
 		_roofed = roof_over(camera.global_position, exclude, 0.2)
@@ -645,7 +658,9 @@ func _advance_roof(delta: float) -> void:
 	var seconds := maxf(0.01, float(_pres_cfg().get("rain", {}).get("roof_fade_seconds", 0.6)))
 	_roof_fade = move_toward(_roof_fade, 1.0 if _roofed else 0.0, delta / seconds)
 	if _rain != null:
-		_rain.amount_ratio = _rain_amount * (1.0 - _roof_fade)
+		var ratio := _rain_amount * (1.0 - _roof_fade)
+		if not is_equal_approx(_rain.amount_ratio, ratio):
+			_rain.amount_ratio = ratio
 
 func _update_ceiling(p: Dictionary) -> void:
 	if _ceiling_material == null:
