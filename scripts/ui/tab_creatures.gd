@@ -924,6 +924,8 @@ func first_focus() -> Control:
 		return _farewell_keep
 	if _release_stage == "done" and _farewell_done != null:
 		return _farewell_done
+	if _release_stage == "guardian" and _guardian_accept != null:
+		return _guardian_accept
 	return _rows[0] if not _rows.is_empty() else null
 
 
@@ -1678,6 +1680,8 @@ func _poll_release() -> void:
 	# not a polled confirm action. Only backing out is polled, backpack-style.
 	if _release_stage == "confirm" and Input.is_action_just_pressed("menu_cancel"):
 		_back_to_choosing()
+	if _release_stage == "guardian" and Input.is_action_just_pressed("menu_cancel"):
+		_put_off_guardian()
 
 
 func _maybe_begin_release() -> void:
@@ -1685,7 +1689,14 @@ func _maybe_begin_release() -> void:
 		return
 	var pending := _pending_catch()
 	if pending == null:
-		return
+		# A Guardian offer the player put off (B on its confirm) comes back
+		# the moment they return to this tab.
+		var claims := _water_claims()
+		if claims == null or not bool(claims.call("resume_deferred")):
+			return
+		pending = _pending_catch()
+		if pending == null:
+			return
 	var party: RefCounted = _party()
 	var game := state()
 	if party == null or game == null:
@@ -1693,6 +1704,11 @@ func _maybe_begin_release() -> void:
 	if not bool(party.call("is_full")):
 		var capture_service := _water_capture_service(pending)
 		if capture_service != null:
+			# A freed Guardian volunteers: with a free holder it is still the
+			# player's own Accept/Decline (ACCEPTANCE F14), never automatic.
+			if bool(capture_service.call("is_guardian_offer", pending)):
+				_begin_guardian_confirm(pending)
+				return
 			var result: Dictionary = capture_service.complete_pending_capture(-1)
 			if result.get("ok", false):
 				say("%s joins the belt." % str(pending.call("label")))
@@ -1714,6 +1730,126 @@ func _maybe_begin_release() -> void:
 	_fence_choose_focus(true)
 	if _pending_button != null:
 		_pending_button.grab_focus()
+
+
+## --- Guardian offer confirm (F14) --------------------------------------------
+##
+## With a free holder a freed Guardian's offer is answered here: Accept runs
+## the claim service's durable handover, Decline is the chamber's own
+## host-confirmed refusal (pending wording until the host journals it), and B
+## puts the offer off -- still pending, still this character's -- until they
+## come back to this tab. A full belt never reaches this: the release choice
+## above IS the answer there. Shown in the farewell panel's slot with its own
+## two Buttons, pressed not polled for the `_release_stage` fresh-press reason.
+var _guardian_accept: Button = null
+var _guardian_decline: Button = null
+var _guardian_hint_before := ""
+
+
+func _begin_guardian_confirm(pending: RefCounted) -> void:
+	var body := _farewell_keep.get_parent()
+	if _guardian_accept == null or not is_instance_valid(_guardian_accept) or _guardian_accept.get_parent() != body:
+		_guardian_accept = _farewell_button("Accept")
+		_guardian_accept.pressed.connect(_answer_guardian.bind(true))
+		_guardian_decline = _farewell_button("Decline")
+		_guardian_decline.pressed.connect(_answer_guardian.bind(false))
+		for button: Button in [_guardian_accept, _guardian_decline]:
+			body.add_child(button)
+			body.move_child(button, _farewell_keep.get_index())
+		for pair: Array in [[_guardian_accept, _guardian_decline], [_guardian_decline, _guardian_accept]]:
+			var it := pair[0] as Button
+			var to_other := it.get_path_to(pair[1] as Button)
+			it.focus_neighbor_top = to_other
+			it.focus_neighbor_bottom = to_other
+			it.focus_neighbor_left = it.get_path_to(it)
+			it.focus_neighbor_right = it.get_path_to(it)
+			it.focus_next = to_other
+			it.focus_previous = to_other
+	_release_stage = "guardian"
+	var label := str(pending.call("label"))
+	_farewell_title.text = "%s offers to travel with you." % _guardian_name(pending)
+	_farewell_body.text = ("%s, Lv %d. Accept and they take a free holder on your belt. Decline and they " +
+		"stay free. Either answer is final for this character in this world.") % [label, int(pending.get("level"))]
+	_farewell_keep.visible = false
+	_farewell_release.visible = false
+	_farewell_done.visible = false
+	_guardian_accept.visible = true
+	_guardian_decline.visible = true
+	_guardian_hint_before = _farewell_hint.text
+	_farewell_hint.text = "%s  decide later" % INPUT_GLYPH.icon("cancel", 24)
+	_farewell_hint.visible = true
+	_detail_panel.visible = false
+	_farewell_panel.visible = true
+	# The viewport shows the volunteer itself while the question is up.
+	_focused = PARTY.MAX_CREATURES
+	menu.call("hold_input", true)
+	menu.call("override_footer", " ")
+	_guardian_accept.grab_focus()
+
+
+func _answer_guardian(accept: bool) -> void:
+	if _release_stage != "guardian":
+		return
+	var pending := _pending_catch()
+	var service := _water_capture_service(pending)
+	if service == null or not bool(service.call("is_guardian_offer", pending)):
+		_end_guardian_confirm(0)
+		return
+	var label := str(pending.call("label"))
+	var result: Dictionary
+	if accept:
+		result = service.complete_pending_capture(-1)
+	else:
+		var veilfall := _water_veilfall()
+		result = veilfall.call("decline_held_guardian") if veilfall != null else service.decline_pending()
+	if not result.get("ok", false):
+		# The offer is still waiting (a failed save keeps it); so is the question.
+		say(str(result.get("reason", "The answer did not go through. The offer is still waiting.")))
+		return
+	if accept:
+		say("%s joins the belt." % label)
+		_end_guardian_confirm(int(_party().call("size")) - 1)
+	else:
+		say(str(result.get("message", "Declining %s..." % label)))
+		_end_guardian_confirm(0)
+
+
+func _put_off_guardian() -> void:
+	var pending := _pending_catch()
+	var service := _water_capture_service(pending)
+	if service == null or not bool(service.call("defer_pending").get("ok", false)):
+		return
+	_end_guardian_confirm(0)
+	state().call("push_world_message",
+		"%s waits for your answer. Open the Creatures tab to accept or decline." % _guardian_name(pending))
+	menu.call("close")
+
+
+## The chamber's own name for it ("The Deep Watcher") when the species has one.
+func _guardian_name(pending: RefCounted) -> String:
+	var epithet := str(SPECIES.definition(str(pending.get("species_id"))).get("epithet", ""))
+	return epithet if not epithet.is_empty() else str(pending.call("label"))
+
+
+func _end_guardian_confirm(land: int) -> void:
+	_release_stage = ""
+	menu.call("hold_input", false)
+	menu.call("override_footer", "")
+	_guardian_accept.visible = false
+	_guardian_decline.visible = false
+	_farewell_hint.text = _guardian_hint_before
+	_farewell_panel.visible = false
+	_detail_panel.visible = true
+	(_rows[clampi(land, 0, _rows.size() - 1)] as Button).grab_focus()
+
+
+func _water_claims() -> Node:
+	return get_node_or_null("/root/Game/Session/LedgerRpc/WaterCaptureClaims")
+
+
+## The chamber owns the decline wording (pending until the host journals it).
+func _water_veilfall() -> Node:
+	return get_node_or_null("/root/WaterArchipelago/WaterVeilfall")
 
 
 ## The farewell question for the creature on extended row `index`. Nothing is

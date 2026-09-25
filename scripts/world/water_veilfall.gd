@@ -249,14 +249,8 @@ func request_guardian_decline() -> void:
 	var result: Dictionary
 	var held_id := str(claims.call("pending_guardian_id")) if claims != null else ""
 	if not held_id.is_empty():
-		result = claims.call("decline_pending")
+		result = decline_held_guardian()
 		if result.get("ok", false):
-			# Sent, not yet journaled: the host keeps resending the claim until
-			# it records the refusal, and confirms it (host-local: at once).
-			_decline_claim_id = held_id
-			_decline_done_shown = false
-			if not _check_held_decline():
-				_game.push_world_message(DECLINE_PENDING)
 			return
 	else:
 		var character := str(_game.local.character_id)
@@ -276,6 +270,29 @@ func request_guardian_decline() -> void:
 			_decline_refused()
 	if not result.get("ok", false) and not result.get("pending", false):
 		_game.push_world_message(str(result.get("reason", "The Guardian is not ready.")))
+
+## Refuse the offer this character HOLDS (pending or on screen) through the
+## durable claim service, with the chamber's host-confirmed wording: pending
+## until the host journals it, done only on its confirmation. Shared by the
+## chamber's second decline press and the Creatures tab's Decline button.
+## `message` is the wording shown now.
+func decline_held_guardian() -> Dictionary:
+	var claims: Node = _claims()
+	var held_id := str(claims.call("pending_guardian_id")) if claims != null else ""
+	if held_id.is_empty():
+		return {"ok": false, "reason": "No Guardian offer is waiting."}
+	var result: Dictionary = claims.call("decline_pending")
+	if not result.get("ok", false):
+		return result
+	# Sent, not yet journaled: the host keeps resending the claim until it
+	# records the refusal, and confirms it (host-local: at once).
+	_disarm_decline()
+	_decline_claim_id = held_id
+	_decline_done_shown = false
+	if not _check_held_decline():
+		_game.push_world_message(DECLINE_PENDING)
+	result["message"] = DECLINE_DONE if _decline_done_shown else DECLINE_PENDING
+	return result
 
 func _claims() -> Node:
 	return _game.ledger.get_node_or_null("WaterCaptureClaims") if _game.get("ledger") != null else null

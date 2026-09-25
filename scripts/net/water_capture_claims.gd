@@ -23,6 +23,10 @@ var _decline_holds: Dictionary = {}
 ## Claim ids whose decline (decline_pending) the HOST has journaled and told
 ## this peer about. Until then the chamber shows a pending wording only.
 var _decline_settled: Dictionary = {}
+## A presented Guardian offer the player put off (backed out of the Creatures
+## tab's Accept/Decline confirm): still pending and still theirs, just not
+## re-presented until the Creatures tab asks for it again (resume_deferred).
+var _deferred_id := ""
 var _poll := 0.0
 
 ## Seams (overridden by unit fixtures): the Game autoload, the host ledger
@@ -103,7 +107,8 @@ func receive_claim(claim: Dictionary) -> void:
 	_pending = claim.duplicate(true)
 
 func _offer_pending() -> void:
-	if _pending.is_empty() or not _active.is_empty() or _decline_holds.has(str(_pending.get("id", ""))):
+	if _pending.is_empty() or not _active.is_empty() or _decline_holds.has(str(_pending.get("id", ""))) \
+			or str(_pending.get("id", "")) == _deferred_id:
 		return
 	var game := _game()
 	if GUARDIAN.already_received(game.local.flags, _pending):
@@ -114,7 +119,7 @@ func _offer_pending() -> void:
 	if game.current_realm != "water" or game.pending_catch != null \
 			or not GUARDIAN.claim_matches_world(_pending, game.world) or str(_pending.character_id) != game.local.character_id:
 		return
-	var realm := get_node_or_null("/root/WaterArchipelago")
+	var realm := _realm()
 	if realm == null or realm.simulation_only or not realm.shell_build_complete():
 		return
 	if realm.get_node("CombatManager").is_fighting():
@@ -128,9 +133,48 @@ func _offer_pending() -> void:
 	_pending = {}
 	game.pending_catch = creature
 	# The ordinary menu opens the existing choice if the belt is full. With
-	# room, the same durable transaction can complete immediately.
-	if not game.local.party.is_full():
+	# room, an ordinary capture completes through the same durable transaction
+	# immediately. A Guardian is a volunteer, never an automatic grant: with
+	# room the Creatures tab (opened by Game for any pending_catch) asks the
+	# player to Accept or Decline (ACCEPTANCE F14 accept/refuse decision).
+	if not game.local.party.is_full() and str(_active.get("source", "")) != "guardian":
 		complete_pending_capture(-1)
+
+## The Water realm the offer is presented in (seam: unit fixtures override).
+func _realm() -> Node:
+	return get_node_or_null("/root/WaterArchipelago")
+
+## The presented claim is this character's Guardian offer (not an ordinary
+## capture): the Creatures tab asks Accept/Decline instead of completing it.
+func is_guardian_offer(creature: RefCounted) -> bool:
+	return owns_pending(creature) and str(_active.get("source", "")) == "guardian"
+
+## Back out of a presented Guardian offer WITHOUT answering it: the claim stays
+## pending (host journal and local queue untouched, nothing granted, nothing
+## refused) and is simply not re-presented until resume_deferred().
+func defer_pending() -> Dictionary:
+	var game := _game()
+	if game == null or not is_guardian_offer(game.pending_catch):
+		return {"ok": false, "reason": "No Guardian offer is on screen."}
+	_deferred_id = str(_active.id)
+	_pending = _active
+	_active = {}
+	game.pending_catch = null
+	return {"ok": true}
+
+## True while this character holds a Guardian offer it put off.
+func has_deferred() -> bool:
+	return not _deferred_id.is_empty() and str(_pending.get("id", "")) == _deferred_id and _is_local_claim(_pending)
+
+## The Creatures tab asks for the put-off offer again: present it now if the
+## usual presentation rules allow. Returns whether it is on screen.
+func resume_deferred() -> bool:
+	if not has_deferred():
+		return false
+	_deferred_id = ""
+	_offer_pending()
+	var game := _game()
+	return game != null and owns_pending(game.pending_catch)
 
 func owns_pending(creature: RefCounted) -> bool:
 	return creature != null and not _active.is_empty() \
@@ -147,6 +191,8 @@ func complete_pending_capture(release_index: int) -> Dictionary:
 	var id := str(_active.id)
 	_active = {}
 	game.pending_catch = null
+	if _deferred_id == id:
+		_deferred_id = ""
 	_acknowledge(id)
 	return result
 
@@ -161,6 +207,8 @@ func decline_pending() -> Dictionary:
 	var id := str(claim.id)
 	_decline_holds.erase(id)
 	_declined[id] = true
+	if _deferred_id == id:
+		_deferred_id = ""
 	if not _active.is_empty() and str(_active.id) == id:
 		_active = {}
 		if game.pending_catch != null and str(game.pending_catch.get_meta("water_capture_claim", "")) == id:

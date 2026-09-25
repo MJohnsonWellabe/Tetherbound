@@ -212,7 +212,131 @@ func _run() -> void:
 	check(not game.world.water_capture_claims.has(held_id), "The claim resend retries the refusal until the host journals it")
 	check(cave.get("_decline_done_shown") and str(cave.get("_decline_claim_id")).is_empty(), "Done message follows the host's confirmation")
 	check(game.local.party.size() == party_before and game.pending_catch == null, "Journaled decline still grants nothing")
+	# --- A free holder: the Guardian still ASKS (ACCEPTANCE F14) -------------
+	# Fixture (disclosed): one ordinary companion is set aside so the next
+	# characters have a free holder. The offer must be answered through the
+	# real Creatures tab's Accept/Decline, never auto-accepted.
+	var hud: Node = world.get_node("PlaygroundHUD")
+	game.local.character_id = "guardian-ceremony-room-accept"
+	game.local.party.remove_at(4)
+	if not await _invite_with_room(game, menu, tab, prompt, player):
+		_finish()
+		return
+	var room_id: String = reward.claim_id(reward.world_instance(game.world), game.local.character_id)
+	var room_pending: RefCounted = game.pending_catch
+	check(room_pending != null and room_pending.species_id == "water_abyssal_guardian" and game.local.party.size() == 4
+		and game.world.water_capture_claims.has(room_id) and not game.local.flags.has("water_capture_receipt:" + room_id),
+		"A free holder does not auto-accept: nothing granted or receipted before the answer")
+	check(root.gui_get_focus_owner() == tab.get("_guardian_accept"), "Controller focus lands on Accept")
+	check(bool(menu.get("_deaf")) and tab.get("_farewell_panel").visible, "The confirm holds the shell's input in the farewell panel")
+	check(str(tab.get("_farewell_title").text) == "The Deep Watcher offers to travel with you.", "The confirm names the volunteer's offer as the chamber does")
+	await _frames(20)
+	check(game.local.party.size() == 4 and game.pending_catch == room_pending, "Waiting never answers the offer")
+	# B puts it off: out of the confirm and the menu, the offer still pending.
+	game.take_pending_world_message()
+	await _press("menu_cancel")
+	check(not menu.is_open() and str(tab.get("_release_stage")) == "" and game.pending_catch == null,
+		"menu_cancel backs out of the confirm and closes the menu")
+	check(claim_service.pending_guardian_id() == room_id and not claim_service.is_declined(room_id)
+		and game.world.water_capture_claims.has(room_id) and game.local.party.size() == 4,
+		"Backing out leaves the offer pending: neither granted nor declined")
+	var told: String = game.take_pending_world_message()
+	if told.is_empty(): told = str((hud.get("_hotbar_message") as Label).text)
+	check(told.contains("Creatures tab"), "A world message tells the player where to answer")
+	await create_timer(1.5).timeout
+	check(not menu.is_open() and game.pending_catch == null, "A put-off offer does not force the menu back open")
+	check(menu.open("creatures"), "Player reopens the menu on Creatures")
+	await _frames(2)
+	if not check(str(tab.get("_release_stage")) == "guardian" and root.gui_get_focus_owner() == tab.get("_guardian_accept"),
+			"Returning to the Creatures tab asks again, focus on Accept"):
+		_finish()
+		return
+	await _press("ui_accept")
+	check(game.local.party.size() == 5
+		and str(game.local.party.at(4).species_id) == "water_abyssal_guardian" and game.pending_catch == null,
+		"Pressing the real Accept button adds the Guardian to the free holder")
+	character = game.save_system.get("_characters").read(game.local.character_id)
+	check(character.get("flags", {}).get("flags", []).has("water_capture_receipt:" + room_id), "Accept saves the receipt to the character file")
+	check(not game.world.water_capture_claims.has(room_id), "Host settles this character's own claim after Accept")
+	check(str(tab.get("_release_stage")) == "" and not bool(menu.get("_deaf")), "Accept ends the confirm and frees the shell")
+	await _press("ui_accept")
+	check(game.local.party.size() == 5 and claim_service.pending_guardian_id().is_empty(), "A second press grants nothing more")
+	menu.close()
+	await _frames(4)
+	# Decline through the real tab (controller: down to Decline, then A).
+	game.local.character_id = "guardian-ceremony-room-decline"
+	game.local.party.remove_at(4)
+	party_before = game.local.party.size()
+	if not await _invite_with_room(game, menu, tab, prompt, player):
+		_finish()
+		return
+	var decline_id: String = reward.claim_id(reward.world_instance(game.world), game.local.character_id)
+	await _press("ui_down")
+	check(root.gui_get_focus_owner() == tab.get("_guardian_decline"), "Down moves focus from Accept to Decline")
+	await _press("ui_up")
+	check(root.gui_get_focus_owner() == tab.get("_guardian_accept"), "Focus is fenced to the two answers")
+	await _press("ui_down")
+	await _press("ui_accept")
+	check(game.local.party.size() == party_before and game.pending_catch == null, "Pressing the real Decline button grants nothing")
+	check(not game.world.water_capture_claims.has(decline_id) and claim_service.is_declined(decline_id)
+		and game.world.flags.has(reward.offered_flag(game.local.character_id)), "Decline is the host-journaled refusal")
+	check(str(menu.get("_status").text) == cave.DECLINE_DONE, "The tab says the host-confirmed decline")
+	check(str(tab.get("_release_stage")) == "" and not bool(menu.get("_deaf")), "Decline ends the confirm")
+	menu.close()
+	await _frames(4)
+	# Decline whose first host journal write fails: pending wording, then done.
+	game.local.character_id = "guardian-ceremony-room-decline-pending"
+	if not await _invite_with_room(game, menu, tab, prompt, player):
+		_finish()
+		return
+	var pending_id: String = reward.claim_id(reward.world_instance(game.world), game.local.character_id)
+	game.save_system = RefusingSaver.new()
+	(tab.get("_guardian_decline") as Button).pressed.emit()
+	game.save_system = real_saver
+	check(str(menu.get("_status").text) == cave.DECLINE_PENDING, "Decline shows the pending wording until the host journals it")
+	check(game.world.water_capture_claims.has(pending_id) and game.pending_catch == null
+		and game.local.party.size() == party_before, "Unjournaled decline grants nothing and presents nothing")
+	menu.close()
+	deadline = Time.get_ticks_msec() + 6000
+	while (game.world.water_capture_claims.has(pending_id) or not cave.get("_decline_done_shown")) and Time.get_ticks_msec() < deadline:
+		await process_frame
+	check(not game.world.water_capture_claims.has(pending_id) and cave.get("_decline_done_shown"),
+		"The resend journals the tab's refusal and the done message follows")
+	check(game.local.party.size() == party_before and game.pending_catch == null, "Journaled tab decline still grants nothing")
 	_finish()
+
+## Invite as the current character (belt has room) and wait for the real
+## Creatures tab to put the Accept/Decline confirm on screen.
+func _invite_with_room(game: Node, menu: Node, tab: Node, prompt: Node3D, player: Node3D) -> bool:
+	player.global_position = prompt.global_position + Vector3(0, -1.3, -1.8)
+	player.velocity = Vector3.ZERO
+	await _frames(4)
+	for i in 4: await process_frame
+	if not check(prompt.enabled and not game.local.party.is_full(), "%s has a free holder and sees the invite" % game.local.character_id):
+		return false
+	prompt.interaction_activate()
+	var deadline := Time.get_ticks_msec() + 10000
+	while (not menu.is_open() or str(tab.get("_release_stage")) != "guardian") and Time.get_ticks_msec() < deadline:
+		await process_frame
+	await _frames(2)
+	return check(menu.is_open() and str(tab.get("_release_stage")) == "guardian" and game.pending_catch != null,
+		"With a free holder Game opens the real Creatures tab on the Accept/Decline confirm")
+
+func _press(action: String) -> void:
+	Input.action_press(action)
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = true
+	Input.parse_input_event(event)
+	await process_frame
+	await process_frame
+	Input.action_release(action)
+	var up := InputEventAction.new()
+	up.action = action
+	up.pressed = false
+	Input.parse_input_event(up)
+	for i in 4:
+		await process_frame
 
 func reward_offered(game: Node) -> String:
 	return preload("res://scripts/world/water_guardian_reward.gd").offered_flag(game.local.character_id)
