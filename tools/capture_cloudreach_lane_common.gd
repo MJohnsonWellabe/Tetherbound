@@ -46,7 +46,7 @@ static func contact_sheet(frames: Array, path: String, columns: int = 3, cell_w:
 		img.convert(Image.FORMAT_RGB8)
 		img.resize(cell_w, cell_h, Image.INTERPOLATE_BILINEAR)
 		var x := gap + (i % columns) * (cell_w + gap)
-		var y := gap + (i / columns) * (cell_h + gap)
+		var y := gap + int(float(i) / float(columns)) * (cell_h + gap)
 		sheet.blit_rect(img, Rect2i(0, 0, cell_w, cell_h), Vector2i(x, y))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(path.get_base_dir()))
 	sheet.save_png(path)
