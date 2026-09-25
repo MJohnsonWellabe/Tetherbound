@@ -405,6 +405,8 @@ Final smoke passes: camera 6.4m with clear line of sight; 4.3m input movement; a
 
 Evidence is in `six-activities/`. This slice repairs existing content; it does not claim chapter progression, co-op or the region presentation gate.
 
+The per-column F03 record, the source IDs, the rejected candidates and the proposed shared objective rows are in **F03 activity qualification record** at the end of this report.
+
 | Region / activity | Lure and action | Useful retained-team payoff and acknowledgement |
 |---|---|---|
 | Lower Meadows / herd | Visible grazing group and Rae's lead; walk off the trail with the active companion and visit together | Three Basic Orbs, personal landmark and bond credit for the owned team; visited-together message |
@@ -564,3 +566,85 @@ PR178 merged as e74a0783d after CI35599877792 passed all26 active jobs on91b66ac
 Code checkpoint e74a0783decc59293aaf9da83b909ed708f6bc38 is green on main: [full CI35602172224](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/35602172224) passed all27 active jobs, including four unit shards, all seven multiplayer shards and export. The two existing known-red campaign jobs remain skipped, not accepted. Export job106347861776 records EXPORT-CHECK terrain=yes ground_at_spawn=1.20 player_y=5.00 props=383315 and export: OK. [Separate Release verification35602172291](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/35602172291) also passed; publishing was skipped. These are actual main code runs, not the documentation PR's path-filtered checks.
 
 The integration closeout is complete, not the game. Tournament, river/Sela/Mill, earned Hall, shared catches/cold reconnect and full Meadows co-op remain unaccepted; no new regional presentation acceptance was added. All authored unfinished work is remote on ralph/meadows-recovery-pr175; recover selectively from current main and retain main's approved ROADMAP/design. Its peer_runner difference for signed revive seating has subsequently landed on main. Latest account reading is4% weekly remaining; stop after this requested integration, never consume a reset or automatically restart the broader goal.
+
+
+## F03 activity qualification record
+
+Work order F03-a, branch `ralph/f03-activity-qualification` (cut from main 47774c350). This records every WORLD §11 Meadows candidate against ACCEPTANCE F03: lure, distinct optional action, useful once-only reward, acknowledgement, saved completion, one per principal region, no story gate. Line numbers are at 47774c350. **Staged** means the witness teleports or seats the player, seeds the party or opponents, or pre-sets a prerequisite flag. It proves the wiring, the payout and reload. It does not prove ordinary discovery or the ordinary route. Usefulness to an unchanged five and "distinct" remain judgement calls. No check here decides them.
+
+### Candidates
+
+| # | Region | Activity and exact source IDs | Lure | Action | Reward (once-only authority) | Acknowledgement | Save flag | Qualifies? | Evidence |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | Lower Meadows | Old Bram. `bands/band1_lower_meadows/trainers.json:406` `old_champion_bram`; objective `band1_old_champion` (`objectives.json:296`) | Lone figure in the eastern field at (195,905), 82m off every route, with no map pin. Meeting him sets `old_champion_met` (`dialogue/bands/band1_lower_meadows.json:218`) | Optional two-creature trainer fight | 60 coins, 5 `orb_greater`, 3 `potion_small`. Paid once through `trainer:old_champion_bram:*` receipts; `rechallenge:false` | `old_champion_beaten` (`band1_lower_meadows.json:236`), which also points to the Pond alpha | `defeated_old_bram` (world, `flag_scopes.json:52`) | **Yes** | Unit: `test_meadows_activity_qualification.gd` (all file columns). Runtime (**staged**: fixture seat, five seeded, 6HP opponents): `smoke_local_requests.gd --only=bram`, `six-activities/meadows-local-qualified.log`. Bram has no pass line of his own; his pass is inferred from the absence of Bram failures in a run that exited 1 on Juno. See the rerun below |
+| 2 | Lower Meadows | Meadowhart herd. `scripts/world/meadowhart_herd_visit.gd:17-18`; objective `band1_meadowhart_herd` (`objectives.json:304`, `visit` block); spawn order 1005 (`bands/band1_lower_meadows/spawns.json:176`); landmark `meadowhart_grazing_ground` (`map_landmarks.json:130`) | Rae's `meadowhart_herd_sighting` (`band1_lower_meadows.json:248`) sets `band1_meadowhart_herd_met`. A visible pair at the road bend | "Watch" with the active companion within 12m. No fight or catch | 3 `orb_basic` via source `meadowhart_herd_visit`, plus a personal landmark and whole-party bond credit | `meadowhart_herd_found` (`band1_lower_meadows.json:261`) | `band1_meadowhart_herd_found` (player, `flag_scopes.json:187`) | **Yes** | Unit: same file. Runtime (**staged**: player and ally placed at the herd): `--only=herd`, `meadows-local-qualified.log`. The pass is inferred the same way as Bram's |
+| 3 | Lower Meadows | Coll's broken cart. `scripts/world/cart_repair.gd:28-43`; objective `band1_broken_cart` (`objectives.json:322`); placed `playground_world.gd:462` | Leaning wagon on the South Bridge road shoulder; `broken_cart_met` | Hand over 1 wood, 1 stone and 1 fiber (`item_gate`) | 25 coins (`REWARD_SOURCE broken_cart_coll:repair`, `cart_repair.gd:40-41`) | `broken_cart_repaired` (`band1_lower_meadows.json:319`) plus the repaired pose | `band1_broken_cart_repaired` (world, `flag_scopes.json:79`) | **No, rejected** | WORLD §11 specifies "No new currency/item payout" for this row. The code pays 25 coins, and `chapter_rewards.json` records that as an owner delegation. Which one governs is an open owner question, so this is not counted. The row is not needed for Lower Meadows coverage |
+| 4 | Stone & Root | Night Watch / Farro. `bands/band2_stone_and_root/trainers.json:137` `night_watch_farro`; objective `band2_night_watch` (`objectives.json:330`) | Grunt at (95,2900) beside the night-only Duskhush cluster (spawn order 2006). `night_watch_farro_met` (`band2_stone_and_root.json:53`) | Optional trainer fight | 40 coins, 2 `potion_small`; `rechallenge:false` | `night_watch_farro_defeated` (`band2_stone_and_root.json:69`) | `defeated_night_watch_farro` (world, `flag_scopes.json:51`) | **No, rejected** | The file columns are present. The only runtime is `smoke_local_requests.gd` in default mode, via `_night_watch()`. That run checks the fight, the flag and the quest log, but not the reward amount, the acknowledgement or a disk reload. WORLD's "meet him at night" lure is not implemented: the trainer row has no time gate, and only the Duskhush cluster is night-gated. It becomes a candidate again with a reward/acknowledgement/reload witness |
+| 5 | Stone & Root | Warrens vault Elder Trailpup. `burrow_warrens.json:1105` (spawn `nickname`, `completion_reward` at `:1106-1112`); once flag from `burrow_warrens.gd:8066`; paid by `encounter_director.gd:4876`; Heartstone `prize` at `burrow_warrens.json:1440` | Glowing named Elder (`alpha.aura_light`) and the Heartstone light in the side vault. The vault sits behind the gated den-to-vault door (`burrow_warrens.json:797`), which opens on `warrens_cleared` | Step into the vault and choose the manual Engage (`aggressive:false`). The fight is optional; the required guardian is not counted | 2 `potion_large` via receipt `trainer:warrens_once_elder_trailpup:item:potion_large`, independent of species. The Heartstone keeps its own `warrens_heartstone_taken` claim | Receipt line "The Elder Trailpup yields two large potions for the road ahead." (`burrow_warrens.json:1108`) | `warrens_once_elder_trailpup` (world prefix `warrens_once_`, `flag_scopes.json:160`) | **Yes** | Unit: same file. Runtime (**staged**: `warrens_cleared` pre-set, five seeded, non-Elder aggression disabled): `smoke_warrens.gd --vault-activity`, `six-activities/meadows-vault-prompt.log` "warrens vault activity passed". It walks from the entrance, admits the Elder manually, wins by input, pays exactly 2 and survives a disk reload without repayment. **No `local` objective row**: proposed shared change below |
+| 6 | River Lock | Doss's bank perch. `scripts/world/river_nest_clear.gd:17-25`; objective `band3_river_nest` (`objectives.json:338`); placed at `playground_world.gd:468` (72,4187.4) | Ranger beside visibly buckled boards on the river loop. Greeting sets `river_nest_doss_met` | Hand over 1 wood and 1 fiber | 45 coins and 1 `potion_large`. Inventory preflight covers the whole reward; paid once by the world flag | `river_nest_doss_defeated` (`band3_the_river_lock.json:13`) names the exact 45 coin, plus the repaired perch | `river_nest_doss_cleared` (world, `flag_scopes.json:77`) | **Yes** | Unit: same file (also asserts that the thanks names `REWARD_COINS`). Runtime (**staged** seat): `--only=doss` and `doss-coop-repair/runtime-pass02.log`, which shows the parsed interaction, the reward paid, save/load and no repayment. Solo only |
+| 7 | Upper Meadows | Juno's lost companion. `bands/band4_upper_meadows_ironwood/trainers.json:242` `lost_creature_rue` and `:197` `pasture_drover_juno` (`dialogue_after`); `scripts/world/lost_companion_reunion.gd`; `lost_companion_reunion.json:3`; objective `band4_lost_creature` (`objectives.json:354`) | Juno's challenge (`dialogue/trainers.json:245`) names the stolen Meadowhart and sets `lost_creature_rue_met` | Defeat the off-spine Tether patrol at (-300,5870) | 50 coins and 1 `revive`; `rechallenge:false`. No creature joins the party | `lost_creature_rue_defeated`, the display creature moves to Juno, and `pasture_drover_juno_reunited_challenge`/`_defeated` (`trainers.json:269,281`). The friendly bout can be declined | `defeated_lost_creature_rue` (world, `flag_scopes.json:49`) | **Yes** | Unit: same file, including `test_the_lost_companion_is_acknowledged_by_juno_on_the_counted_fact`. Runtime (**staged** seat, 6HP opponents): `--only=juno`, `six-activities/meadows-juno-qualified.log` "selected local activities smoke test passed: juno". It covers the reunion, the parsed decline and a disk round trip |
+| 8 | Hall approach | Alpha Galecrest. Spawn order 5001 (`bands/band5_stronghold_approach/spawns.json:23`, `completion_reward` `:36-43`); map pin `alpha_pins.gd:187`; once flag `alpha_pins.gd:224`; paid by `encounter_director.gd:4876` | 3.15m alpha leading a pack of three on the west shoulder at (-58,7255), before the Sigil gate (7400). The map pin appears within 300m | Engage and defeat or catch it | 2 `potion_large` and 1 `revive` via receipts `trainer:wild_once_5001:*` | "The west shoulder has gone quiet." (`spawns.json:42`); the pin clears | `wild_once_5001` (world prefix `wild_once_`, `flag_scopes.json:159`) | **Yes, with caveat** | Unit: same file. Runtime (**staged**: teleport to the road): `smoke_alpha_pins.gd --hall-activity`, `six-activities/meadows-hall-retained-final.log` "road input defeated Alpha Galecrest, paid ... once, and preserved it across reload". Caveat: this is the chapter's largest *aggressive* cluster, 18m from the spine. No witness shows that the ordinary road lets a player decline it. **No `local` row**: proposed below |
+| x | Lower Meadows (extra) | Pond alpha Mosshell, spawn order 1900 (`band1_lower_meadows/spawns.json:833`) | Dara's `map_reveal:pond_alpha` (`band1_lower_meadows.json:340`), Bram's line and Nan | Fight or catch | None beyond the ordinary fight/catch. The `alpha` block has no `completion_reward` | None | `wild_once_1900` | **No, rejected** | No useful once-only reward or acknowledgement. WORLD says it counts only if fully qualified |
+| x | Upper Meadows (extra) | First Ironwood story. Objective `band4_first_ironwood` (`objectives.json:346`) | Juno's lines and Halder's challenge | Beat Captain Halder, a **required** Sigil captain | The captain's reward (Field Sigil and others) | `captain_field_defeated` (`trainers.json:184`) | `defeated_captain_field`, which is also a `count_flags`/beacon step of main objective `defeat_the_captains` | **No, rejected** | It completes on main-route credit, which WORLD forbids counting. `test_a_local_row_credited_by_the_main_route_is_recorded_as_rejected` pins this rejection |
+
+**Count: 6 qualify** (Bram, herd, vault Elder, Doss, Juno, Hall alpha). That covers all five principal regions: Lower Meadows 2, Stone & Root 1, River Lock 1, Upper Meadows 1, Hall approach 1. None ends in a generic chest. `test_no_qualified_activity_gates_or_is_credited_by_the_main_route` checks that no main objective reads any counted completion flag, and a grep finds no other gate on those flags. The flags' only other readers are Rae's `unless_flag` branch (`village_npcs.json:496`) and the world ledger's Doss handler.
+
+**What "qualify" rests on.** Every file-checkable column above is asserted from shipping data, and every runtime column has a **staged** single-player witness. None of the six has an unstaged ordinary-approach witness, a two-peer reward witness or a code-blind presentation pass. Sol's earlier batch verdict was "limited activity evidence", with follower crowding and a cropped Doss platform. F03 is therefore **not closed**. The record meets the six-count on file plus staged runtime evidence. Ordinary discoverability and Hall-alpha optionality remain open.
+
+### Unit evidence
+
+`godot --headless --path . --script tests/run_tests.gd -- --only=meadows_activity_qualification`: **14 tests, 208 assertions, 0 failed**. The six original tests are unchanged, and eight new ones cover the record. A mutation check was run on a scratch copy and reverted: wrong once flags, a wrong acknowledgement id and a moved region produced 4 failing tests.
+
+### Proposed shared change (needs SHARED-FILE GRANT)
+
+`data/progression/objectives.json` is shared and was not edited. The proposal adds `local` rows for the two counted activities that have none, and marks the Ironwood row as story-only so no `local`-row count treats it as an activity. Both new flags already exist and are declared (`warrens_once_`/`wild_once_` world prefixes). No new boolean is added.
+
+```diff
+--- a/data/progression/objectives.json
++++ b/data/progression/objectives.json
+@@ "local": [ ... band2_night_watch row ... ]
++    {
++      "id": "band2_warrens_vault_elder",
++      "flag_id": "warrens_once_elder_trailpup",
++      "scope": "world",
++      "revealed_by": "warrens_cleared",
++      "label": "Face the Elder Trailpup in the Warrens' side vault.",
++      "_comment": "F03-a. WORLD sec11 Stone & Root activity. The branch door opens on the required guardian's `warrens_cleared`, so the row appears exactly when the vault becomes reachable; completion is burrow_warrens.gd's own once flag for the named Elder (win or catch), whose completion_reward (two Large Potions) is paid by encounter_director.gd's once-only receipt. The guardian's clear is never this row's credit."
++    },
+@@ after band4_lost_creature row
+     {
+       "id": "band4_first_ironwood",
+       "flag_id": "defeated_captain_field",
+       "scope": "world",
+       "revealed_by": "defeated_pasture_drover_juno",
++      "counts_as_activity": false,
++      "_comment_f03": "F03-a. Story log line only: it completes on a REQUIRED Sigil captain's defeat, which WORLD sec11 forbids counting as an optional activity. Not one of the six. Qualifying it would need a distinct optional completion fact (for example a flag on Halder's post-win explanation), which would be a new flag_scopes.json entry and is not proposed here.",
+       "label": "Ask Captain Halder why Team Tether guards the First Ironwood.",
+@@ end of "local"
++    {
++      "id": "band5_hall_alpha_galecrest",
++      "flag_id": "wild_once_5001",
++      "scope": "world",
++      "revealed_by": "hall_approach_open",
++      "label": "Quiet the Alpha Galecrest beside the Hall approach.",
++      "_comment": "F03-a. WORLD sec11 Hall-approach activity. Completion is the alpha's existing once flag (encounter_director.gd mints wild_once_<order>; alpha_pins.gd clears the pin on it) and its completion_reward (two Large Potions, one Revive) is the once-only receipt. revealed_by is interim: the alpha stands about 145m before the Sigil gate, so opening the gate points back at it; a personal pin-discovery flag would reveal it earlier but needs a new flag_scopes.json entry."
++    }
+```
+
+Companion shared edits that the proposal requires:
+
+- `data/config/chapter_rewards.json` (shared). `tests/test_chapter_rewards.gd::test_every_optional_activity_is_in_the_reward_map` requires an audited row for every `local` id. Add:
+
+  ```diff
+  +    {"activity": "Warrens vault Elder Trailpup", "objective_id": "band2_warrens_vault_elder", "required": false, "reward": {"potion_large": 2}, "enables": "Two Large Potions for any retained team, independent of species; read off burrow_warrens.json's Elder completion_reward. The Heartstone keeps its own pickup claim and the guardian's clear payout is not counted here.", "understood_when_received": true},
+  +    {"activity": "Alpha Galecrest (Hall approach)", "objective_id": "band5_hall_alpha_galecrest", "required": false, "reward": {"potion_large": 2, "revive": 1}, "enables": "Recovery for the Hall gauntlet; read off band5 spawns.json order 5001's completion_reward.", "understood_when_received": true},
+  ```
+
+- After the grant, rerun `test_quest_log`, `test_chapter_rewards`, `test_flag_scopes`, `test_ironwood_story_0912` and this file. `smoke_local_requests.gd` reads `local` rows through the quest log, so run it once under the writer lock. `tests/test_meadows_activity_qualification.gd` already requires that any landed vault or Hall row use the counted flag, scope and reveal.
+- Consider but do not assume: WORLD §11's cart wording versus `chapter_rewards.json`'s owner-delegation note, which is an owner decision; a Farro night gate or a reward/acknowledgement/reload witness (`tests/smoke_local_requests.gd` is outside this lane's files).
+
+### Open
+
+- Ordinary (unstaged) approach and discoverability for all six; the Hall alpha's optionality beside the road; two-peer payout for vault and Hall receipts; a code-blind presentation verdict.
+- The two proposed shared edits above.
+- The cart owner question; Farro's night lure and missing witness columns.
