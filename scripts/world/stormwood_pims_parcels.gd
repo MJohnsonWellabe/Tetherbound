@@ -9,9 +9,10 @@ extends Node3D
 ## Each finished recipient conversation submits its fact through the chapter's
 ## realm-ledger writer. The payoff is two small potions per character, once,
 ## through the ledger's existing `reward_grant`: its delivery id is keyed by
-## source and stable character, so a second claim by the same character is
-## refused by the host. The player-scoped receipt flag rides that same delivery
-## and hides Pim's thanks branch once the local character is paid.
+## (world namespace, source, stable character) — MULTIPLAYER's personal-once
+## receipt — so a second claim by the same character in this world is refused
+## by the host. The replicated delivery journal is also how this peer knows it
+## has been paid; no extra flag is written.
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const CRATE := "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf"
 const CHAIN := "stormwood_pims_parcels"
@@ -23,14 +24,11 @@ const DELIVERED_PREFIX := "stormwood:side_pims_parcels_delivered:"
 const REWARD_SOURCE := "stormwood_pims_parcels"
 const REWARD_ITEM := "potion_small"
 const REWARD_COUNT := 2
-const REWARD_FLAG := "stormwood:pims_parcels_reward_received"
+const REWARD_DELIVERY := preload("res://scripts/net/reward_delivery.gd")
 const PIM := "courier_pim"
 const OFFER := "stormwood_pim_parcels_offer"
 const PROGRESS := "stormwood_pim_parcels_progress"
 const RETURN := "stormwood_pim_parcels_return"
-## The same character already holds Pim's receipt (from an earlier world): Pim
-## thanks them without promising a second payment.
-const RETURN_PAID := "stormwood_pim_parcels_return_paid"
 const THANKS := "stormwood_pim_parcels_thanks"
 ## Recipients, in the order the quest text names them. Each is an existing
 ## resident at an arch-road settlement (pairs A, B and C).
@@ -41,6 +39,7 @@ var game: Node
 var _crates := {}
 var _revision := -1
 var _claiming := false
+var _world_revision := -1
 var _announce_payment := false
 
 
@@ -56,8 +55,7 @@ static func delivery_conversation(recipient: String) -> String:
 static func branches_for(actor_id: String) -> Array:
 	if actor_id == PIM:
 		return [
-			{"if_flag": COMPLETE, "unless_flag": REWARD_FLAG, "conversation": THANKS},
-			{"if_flag": [STEP_2, REWARD_FLAG], "unless_flag": COMPLETE, "conversation": RETURN_PAID},
+			{"if_flag": COMPLETE, "conversation": THANKS},
 			{"if_flag": STEP_2, "unless_flag": COMPLETE, "conversation": RETURN},
 			{"if_flag": STEP_1, "unless_flag": STEP_2, "conversation": PROGRESS},
 			{"if_flag": REVEALED, "unless_flag": STEP_1, "conversation": OFFER},
@@ -76,8 +74,6 @@ static func outcome_for(conversation_id: String) -> Dictionary:
 			return {"events": ["side:%s:step_1" % CHAIN], "claim": false}
 		RETURN:
 			return {"events": ["side:%s:step_3" % CHAIN], "claim": true}
-		RETURN_PAID:
-			return {"events": ["side:%s:step_3" % CHAIN], "claim": false}
 		THANKS:
 			return {"events": [], "claim": true}
 	for recipient: String in RECIPIENTS:
@@ -88,7 +84,21 @@ static func outcome_for(conversation_id: String) -> Dictionary:
 
 static func reward_intent() -> Dictionary:
 	return {"kind": "reward_grant", "realm": "stormwood", "source": REWARD_SOURCE,
-		"item": REWARD_ITEM, "count": REWARD_COUNT, "flag": REWARD_FLAG}
+		"item": REWARD_ITEM, "count": REWARD_COUNT}
+
+
+## Whether this world's delivery journal already holds `character`'s courier
+## rate. The journal replicates to every peer with world state.
+static func paid_in_world(world_state: Object, character: String) -> bool:
+	if world_state == null:
+		return false
+	var id := REWARD_DELIVERY.delivery_id(str(world_state.get("reward_delivery_namespace")),
+		REWARD_SOURCE, character)
+	return not id.is_empty() and (world_state.get("reward_deliveries") as Dictionary).has(id)
+
+
+func _paid() -> bool:
+	return paid_in_world(game.get("world"), str(game.get("local").get("character_id")))
 
 
 func mount(owner_world: Node3D) -> void:
@@ -124,7 +134,11 @@ func mount(owner_world: Node3D) -> void:
 
 
 func _process(_delta: float) -> void:
-	if game != null and int(game.get("progression").get("revision")) != _revision:
+	if game == null:
+		return
+	var world_revision := int(game.get("world").get("revision"))
+	if int(game.get("progression").get("revision")) != _revision or world_revision != _world_revision:
+		_world_revision = world_revision
 		restore_progression_from_game(game)
 
 
@@ -133,9 +147,9 @@ func restore_progression_from_game(_game: Node) -> void:
 		return
 	var flags: RefCounted = game.get("progression")
 	_revision = int(flags.get("revision"))
-	# The receipt arriving in this character's flags is the payment's
+	# The delivery landing in this world's journal is the payment's
 	# acknowledgement for host, solo and client alike.
-	if bool(flags.has(REWARD_FLAG)):
+	if _paid():
 		_claiming = false
 		if _announce_payment:
 			_announce_payment = false
@@ -163,7 +177,7 @@ func claim_reward() -> void:
 	var flags: RefCounted = game.get("progression")
 	if not bool(flags.has(COMPLETE)) and not bool(flags.has(STEP_2)):
 		return
-	if bool(flags.has(REWARD_FLAG)):
+	if _paid():
 		return
 	var inventory: RefCounted = game.get("inventory")
 	if inventory != null and not bool(inventory.call("has_room_for", REWARD_ITEM, REWARD_COUNT)):

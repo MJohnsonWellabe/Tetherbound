@@ -87,19 +87,19 @@ func test_recipients_are_existing_arch_road_residents_with_authored_lines() -> v
 		if str(chain.id) == CHAIN:
 			assert_eq(chain.steps[1].count_flags, counted)
 			assert_eq(int(chain.steps[1].required_count), 3)
-	for id: String in [PARCELS.OFFER, PARCELS.PROGRESS, PARCELS.RETURN, PARCELS.RETURN_PAID, PARCELS.THANKS]:
+	for id: String in [PARCELS.OFFER, PARCELS.PROGRESS, PARCELS.RETURN, PARCELS.THANKS]:
 		assert_true(dialogue.has(id), "%s is authored" % id)
 	assert_true(ResourceLoader.exists(PARCELS.CRATE))
 
 
-func test_reward_is_per_character_potions_with_a_player_receipt() -> void:
+func test_reward_is_per_character_potions_through_the_world_delivery_receipt() -> void:
 	var intent := PARCELS.reward_intent()
 	assert_eq(intent.kind, "reward_grant")
 	assert_eq(intent.realm, "stormwood")
 	assert_eq(intent.item, "potion_small")
 	assert_eq(int(intent.count), 2)
-	assert_eq(PROGRESSION.scope_of(str(intent.flag)), PROGRESSION.SCOPE_PLAYER,
-		"The receipt is per character, so each companion's trainer is paid once")
+	assert_false(intent.has("flag"),
+		"No new flag: MULTIPLAYER's (world namespace, source, character) delivery receipt is the once-guard")
 	assert_true(bool(PARCELS.outcome_for(PARCELS.RETURN).claim))
 	assert_true(bool(PARCELS.outcome_for(PARCELS.THANKS).claim))
 	assert_false(bool(PARCELS.outcome_for(PARCELS.OFFER).claim))
@@ -126,9 +126,8 @@ func test_pim_and_recipient_greetings_follow_the_chain() -> void:
 	flags.set_flag("stormwood:long_storm_ended")
 	assert_eq(PEOPLE.greeting_for(pim, flags), PARCELS.RETURN, "The return survives the Long Storm's end")
 	flags.set_flag(PARCELS.COMPLETE)
-	assert_eq(PEOPLE.greeting_for(pim, flags), PARCELS.THANKS, "An unpaid character is owed the courier's rate")
-	flags.set_flag(PARCELS.REWARD_FLAG)
-	assert_eq(PEOPLE.greeting_for(pim, flags), "stormwood_courier_pim_post_storm")
+	assert_eq(PEOPLE.greeting_for(pim, flags), PARCELS.THANKS,
+		"After the chain Pim offers the courier's rate to any character not yet paid in this world")
 
 
 func test_ledger_pays_each_character_once_for_the_courier_rate() -> void:
@@ -149,15 +148,9 @@ func test_ledger_pays_each_character_once_for_the_courier_rate() -> void:
 	assert_eq(world.reward_deliveries.size(), 2)
 	for delivery: Dictionary in world.reward_deliveries.values():
 		assert_eq(delivery.get("stacks", []), [{"id": "potion_small", "n": 2}])
-		assert_eq(str(delivery.get("completion_flag", "")), PARCELS.REWARD_FLAG)
-
-
-func test_a_character_paid_in_another_world_is_thanked_without_a_second_promise() -> void:
-	var pim := CHAPTER_RUNTIME.npc_spec(_npcs().courier_pim)
-	var flags := PROGRESSION.new()
-	for flag: String in ["stormwood:chapter_started", "stormwood:lantern_pools_linked",
-			PARCELS.STEP_1, PARCELS.STEP_2, PARCELS.REWARD_FLAG]:
-		flags.set_flag(flag)
-	assert_eq(PEOPLE.greeting_for(pim, flags), PARCELS.RETURN_PAID)
-	assert_eq(PARCELS.outcome_for(PARCELS.RETURN_PAID).events, ["side:%s:step_3" % CHAIN])
-	assert_false(bool(PARCELS.outcome_for(PARCELS.RETURN_PAID).claim))
+	assert_true(PARCELS.paid_in_world(world, "character-courier"), "The courier's receipt is visible in this world")
+	assert_true(PARCELS.paid_in_world(world, "character-companion"))
+	assert_false(PARCELS.paid_in_world(world, "character-latecomer"), "An unpaid character is still owed")
+	var other_world: RefCounted = WORLD_STATE.new()
+	assert_false(PARCELS.paid_in_world(other_world, "character-courier"),
+		"Once per character per world: another world keeps its own receipt")
