@@ -158,7 +158,7 @@ func _run() -> void:
 		player.global_position = rest_prompt.global_position + Vector3(0, -0.6, 1.0)
 		await physics_frame
 		arbiter.call("_recompute")
-		_check(str((arbiter.get("_winner") as Dictionary).get("label", "")) == "Rest at the Rodline Rod Shelter",
+		_check(str((arbiter.get("_winner") as Dictionary).get("label", "")) == "Rest at the rod crews' shelter",
 			"the arbiter offers rest at the shelter")
 
 	panel.complete(GLASS.THANKS)

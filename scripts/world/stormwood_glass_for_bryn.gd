@@ -1,9 +1,10 @@
 extends Node3D
 
 ## `stormwood_glass_for_bryn`: Warden-Elect Bryn asks for ordinary Stormglass
-## and Conductor Vine to re-insulate the rod crew's shelter beside the Rodline
-## workshop; the player hands them over once, inspects the repaired supplies at
-## the shelter, and the shelter becomes a safe care point with one creature bed.
+## and Conductor Vine to re-insulate the rod crews' shelter, the open work bay
+## of the existing Rodline workshop; the player hands them over once, inspects
+## the repaired supplies at the bay, and the bay becomes a safe care point with
+## one creature bed under its roof.
 ##
 ## Every fact is WORLD-scoped (the chapter's own step scopes): the shelter is a
 ## shared place, so one delivery repairs it for everyone in this world and a
@@ -47,7 +48,6 @@ const REFUSED_KIND := "bryn_glass_refused"
 ## host refuses once the step is set.
 const REQUEST_TIMEOUT_S := 10.0
 const MODEL_PATHS := {
-	"tent": "res://assets/props/generated_camp/camp_tent.glb",
 	"lightning_rod": "res://assets/environment/team_tether/tether_pylon.glb",
 	"crate": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
 }
@@ -105,7 +105,7 @@ static func conversations() -> Dictionary:
 	return {
 		OFFER: {"speaker": speaker, "portrait": PORTRAIT, "state": "side_offer",
 			"requires_flags": [REVEALED], "lines": [
-				"Warden-Elect Bryn: The rod crews sleep in a shelter behind the workshop, and every strike on the post has cracked its insulators.",
+				"Warden-Elect Bryn: The rod crews shelter in the workshop's open bay, and every strike on the post has cracked the insulators around it.",
 				"Three pieces of ordinary Stormglass and two lengths of Conductor Vine would re-wrap it. Bring them to me here and my crew will do the rest.",
 			]},
 		REQUEST: {"speaker": speaker, "portrait": PORTRAIT, "state": "side_progress",
@@ -115,12 +115,12 @@ static func conversations() -> Dictionary:
 			]},
 		INSPECT_HINT: {"speaker": speaker, "portrait": PORTRAIT, "state": "side_progress",
 			"requires_flags": [STEP_2], "lines": [
-				"Warden-Elect Bryn: The crew is wrapping the glass now. Go and look at the supplies by the rod shelter behind the workshop.",
+				"Warden-Elect Bryn: The crew is wrapping the glass now. Go and look at the supplies stacked by the workshop bay.",
 				"If the seams hold, the shelter is yours to use as much as ours.",
 			]},
 		THANKS: {"speaker": speaker, "portrait": PORTRAIT, "state": "side_return",
 			"requires_flags": [COMPLETE], "lines": [
-				"Warden-Elect Bryn: The shelter held through the last Break without a spark inside. The crew has laid a creature bed under its roof.",
+				"Warden-Elect Bryn: The bay held through the last Break without a spark inside. The crew has laid a creature bed under its roof.",
 				"Rest there whenever the post is on your road. The rod line is still yours to break; we only keep the roof dry.",
 			]},
 	}
@@ -422,8 +422,7 @@ func _prop(parent: Node3D, prop: Dictionary, at: Vector2) -> void:
 	if model == "lightning_rod":
 		# The same drained, unpowered finish the camp rods wear.
 		PYLON_MATERIALS.apply(instance, false)
-		instance.scale = Vector3.ONE * 0.55
-	elif prop.has("scale"):
+	if prop.has("scale"):
 		instance.scale = Vector3.ONE * float(prop.scale)
 
 

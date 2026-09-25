@@ -2,25 +2,57 @@
   "schema_version": 1,
   "realm_id": "stormwood",
   "chain_id": "stormwood_glass_for_bryn",
-  "_comment": "WORLD Stormwood table, row stormwood_glass_for_bryn. One world-scoped delivery of ordinary Stormglass and Conductor Vine to Warden-Elect Bryn repairs the rod crew's shelter beside the Rodline workshop. Inspecting the repaired supplies there completes the chain, and the shelter becomes a safe care point with one creature bed. The shelter adds no rod safe radius, no Surge rod flag and no Calm multiplier: Rodline Post is already a Surge safe zone and Conductor Run has no rod flag.",
-  "cost": {"stormglass": 3, "conductor_vine": 2},
-  "bryn": {"npc_id": "warden_elect_bryn", "at": [-700, 2300], "delivery_radius_m": 6.0},
+  "_comment": "WORLD Stormwood table, row stormwood_glass_for_bryn. The rod crews' shelter is the existing Rodline workshop (rodline_workshop, open work bay). One world-scoped delivery of ordinary Stormglass and Conductor Vine to Warden-Elect Bryn repairs it; inspecting the repaired supplies at its bay completes the chain, and the bay becomes a safe care point with one creature bed under its roof. Offsets are world-axis metres from `at`, the care point in front of the arch. The drained rod is dressing only: no rod safe radius, no Surge rod flag and no Calm multiplier (Rodline Post is already a Surge safe zone and Conductor Run has no rod flag).",
+  "cost": {
+    "stormglass": 3,
+    "conductor_vine": 2
+  },
+  "bryn": {
+    "npc_id": "warden_elect_bryn",
+    "at": [-700, 2300],
+    "delivery_radius_m": 6.0
+  },
   "shelter": {
     "id": "rodline_rod_shelter",
-    "display_name": "Rodline Rod Shelter",
+    "display_name": "Rodline Workshop Rod Shelter",
     "safe_zone_id": "rodline_post",
-    "at": [-712, 2290],
-    "yaw_deg": 200,
+    "at": [-713.9, 2307.8],
     "props": [
-      {"model": "tent", "offset": [-2.2, 2.0], "yaw_deg": 200},
-      {"model": "lightning_rod", "offset": [2.8, 2.6], "yaw_deg": 0}
+      {
+        "model": "lightning_rod",
+        "offset": [-2.5, -3.1],
+        "yaw_deg": 0,
+        "scale": 1.6
+      }
     ],
     "supplies": [
-      {"model": "crate", "offset": [1.6, -1.4], "yaw_deg": 15, "scale": 0.7},
-      {"model": "crate", "offset": [2.5, -0.9], "yaw_deg": -20, "scale": 0.6}
+      {
+        "model": "crate",
+        "offset": [-0.1, 2.4],
+        "yaw_deg": 20,
+        "scale": 0.7
+      },
+      {
+        "model": "crate",
+        "offset": [-0.5, 3.2],
+        "yaw_deg": -15,
+        "scale": 0.6
+      }
     ],
-    "inspect": {"offset": [2.0, -1.2], "radius_m": 2.6, "label": "Inspect the repaired supplies"},
-    "care": {"radius_m": 3.2, "label": "Rest at the Rodline Rod Shelter"},
-    "creature_bed": {"offset": [-3.6, -3.4], "yaw_deg": 200, "bed_index": -37}
+    "inspect": {
+      "offset": [0.7, 2.2],
+      "radius_m": 2.6,
+      "label": "Inspect the repaired supplies"
+    },
+    "care": {
+      "radius_m": 3.2,
+      "label": "Rest at the rod crews' shelter"
+    },
+    "creature_bed": {
+      "offset": [-5.6, 2.0],
+      "yaw_deg": 110,
+      "bed_index": -37
+    },
+    "structure_id": "rodline_workshop"
   }
 }

@@ -53,10 +53,17 @@ var _finished := false
 var _segment: Variant = null
 var _prefix_complete := false
 var _crown_complete := false
+var _bryn_complete := false
 
 
 static func through_crown(arguments: PackedStringArray) -> bool:
 	return arguments.has("--through-crown")
+
+
+## WO-F10-09 witness: after the earned prefix, walk `stormwood_glass_for_bryn`
+## from the same live world (Bryn met, Act II open) through to its payoff.
+static func through_bryn(arguments: PackedStringArray) -> bool:
+	return arguments.has("--through-bryn")
 
 
 func _init() -> void:
@@ -155,6 +162,17 @@ func _run() -> void:
 			_failures.append(str(line))
 		_crown_complete = bool(built.get("passed", false))
 		_expect(_crown_complete, "same live chapter path reached the paid Crown arch")
+	elif _prefix_complete and through_bryn(OS.get_cmdline_user_args()):
+		# Same live world and earned facts; no flag, item or position fixture.
+		_bryn_watchdog.call_deferred()
+		var glass: Dictionary = await _segment.run_glass_for_bryn()
+		for line: Variant in glass.get("transcript", []):
+			print("STORMWOOD CONTINUOUS — %s" % str(line))
+		for line: Variant in glass.get("failures", []):
+			if not _failures.has(str(line)):
+				_failures.append(str(line))
+		_bryn_complete = _failures.is_empty() and bool(glass.get("passed", false))
+		_expect(_bryn_complete, "same live chapter path completed Glass for Bryn to its care point")
 	_finish()
 
 
@@ -187,6 +205,16 @@ func _crown_watchdog() -> void:
 		_finish()
 
 
+func _bryn_watchdog() -> void:
+	await create_timer(float(PREFIX_WATCHDOG_MS) / 1000.0, true, false, true).timeout
+	if not _finished:
+		var detail := ""
+		if _segment != null and _segment.has_method("diagnostic_snapshot"):
+			detail = " (%s)" % str(_segment.call("diagnostic_snapshot"))
+		_failures.append("Glass for Bryn watchdog expired after the earned prefix%s" % detail)
+		_finish()
+
+
 func _expect(condition: bool, label: String) -> void:
 	if condition:
 		print("  PASS: ", label)
@@ -203,7 +231,8 @@ func _finish() -> void:
 	Engine.physics_ticks_per_second = 60
 	Engine.max_physics_steps_per_frame = 8
 	if _failures.is_empty():
-		var endpoint := "paid Crown arch" if _crown_complete else "Act-II arch recipe"
+		var endpoint := "paid Crown arch" if _crown_complete else (
+			"Glass for Bryn care point" if _bryn_complete else "Act-II arch recipe")
 		print("stormwood continuous: OK — chapter-entry through the %s passed without Stormwood flag or position fixtures" % endpoint)
 		quit(0)
 		return
@@ -216,6 +245,7 @@ class Segment extends RefCounted:
 	const FIRST_HARVEST_ID := "stormwood_harvest_cinder_verge_018"
 	const SECOND_HARVEST_ID := "stormwood_harvest_cinder_verge_023"
 	const VERGE_ROUTE_PICKUP_ID := "stormwood_pickup_route_03"
+	const HOLLOWS_ROUTE_PICKUP_ID := "stormwood_pickup_route_06"
 	const RODLINE_ROUTE_PICKUP_ID := "stormwood_pickup_route_07"
 	const ONDRA_ROUTE_PICKUP_ID := "stormwood_pickup_route_09"
 	const POOLS_HARVEST_IDS: Array[String] = [
@@ -405,6 +435,11 @@ class Segment extends RefCounted:
 				Vector2(-900.0, 1780.0)]:
 			if not await _walk_xz(point, "Ash road to the Hollows station", 2.0):
 				return _result()
+		# Route-06's reward stands on the Hollows switch, as route-03 does at the
+		# Verge: take it through its own prompt first, or it can win the switch's
+		# button edge.
+		if not await _collect_route_pickup(HOLLOWS_ROUTE_PICKUP_ID):
+			return _result()
 		if not await _defeat_trainer("lieutenant_dace_hollows_rod"):
 			return _result()
 		if not await _disable_rod("hollows_rod_station"):
@@ -688,6 +723,151 @@ class Segment extends RefCounted:
 		if str(next.get("phase", "")) == "fading":
 			return remaining + maxf(0.0, float(next.get("remaining", 0.0)))
 		return remaining
+
+
+	## WO-F10-09. Continues from the earned prefix's own stance at the Still
+	## Grove: back to Bryn, brief, gather only what the satchel lacks from live
+	## uncharged west-loop nodes, deliver, inspect, bed a companion, hear the
+	## acknowledgement. Every step is an ordinary walk, prompt or dialogue press.
+	func run_glass_for_bryn() -> Dictionary:
+		const GLASS := preload("res://scripts/world/stormwood_glass_for_bryn.gd")
+		const GLASS_SITE := "stormwood_harvest_conductor_run_078"
+		const VINE_SITE := "stormwood_harvest_conductor_run_077"
+		const BRYN_STANCE := Vector2(-700.0, 2297.0)
+		var progression: RefCounted = game.get("progression")
+		var inventory: RefCounted = game.get("inventory")
+		var glass := world.get_node_or_null(^"GlassForBryn") as Node3D
+		if glass == null:
+			_fail("the production Stormwood world did not mount GlassForBryn")
+			return _result()
+		if not bool(progression.call("has", GLASS.REVEALED)) or bool(progression.call("has", GLASS.STEP_1)):
+			_fail("Glass for Bryn must start from the earned bryn_met fact with the chain unstarted")
+			return _result()
+		_note("START Glass for Bryn from the earned prefix: stormglass=%d conductor_vine=%d" % [
+			int(inventory.call("count", "stormglass")), int(inventory.call("count", "conductor_vine"))])
+		for point: Vector2 in [Vector2(-560.0, 2480.0), Vector2(-700.0, 2300.0)]:
+			if not await _walk_xz(point, "conductor road back to Rodline Post", 2.0):
+				return _result()
+		if not await _talk_to("Warden-Elect Bryn", BRYN_STANCE, GLASS.STEP_1, "Bryn's rod-crew brief"):
+			return _result()
+		_note("HEARD Bryn's brief; step 1 came from the completed conversation")
+		if int(inventory.call("count", "stormglass")) < 3 or int(inventory.call("count", "conductor_vine")) < 2:
+			if not await _walk_xz(Vector2(-1100.0, 2385.0), "west-loop road from Rodline", 2.0):
+				return _result()
+		if int(inventory.call("count", "stormglass")) < 3:
+			if not await _hold_tool("pickaxe") \
+					or not await _harvest_site(GLASS_SITE, "stormglass", Vector2(-1450.0, 2505.0)):
+				return _result()
+		if int(inventory.call("count", "conductor_vine")) < 2:
+			if not await _hold_tool("knife") \
+					or not await _harvest_site(VINE_SITE, "conductor_vine", Vector2(-1600.0, 2505.0)):
+				return _result()
+		for point: Vector2 in [Vector2(-1100.0, 2385.0), Vector2(-700.0, 2300.0)]:
+			if not await _walk_xz(point, "west-loop road back to Bryn", 2.0):
+				return _result()
+		var glass_before := int(inventory.call("count", "stormglass"))
+		var vine_before := int(inventory.call("count", "conductor_vine"))
+		if not await _talk_to("Warden-Elect Bryn", BRYN_STANCE, GLASS.STEP_2, "Bryn's delivery request"):
+			return _result()
+		for _frame in 120:
+			if int(inventory.call("count", "conductor_vine")) == vine_before - 2:
+				break
+			await tree.physics_frame
+		if int(inventory.call("count", "stormglass")) != glass_before - 3 \
+				or int(inventory.call("count", "conductor_vine")) != vine_before - 2:
+			_fail("the host delivery did not take exactly 3 Stormglass and 2 Conductor Vine (%d->%d, %d->%d)" % [
+				glass_before, int(inventory.call("count", "stormglass")),
+				vine_before, int(inventory.call("count", "conductor_vine"))])
+			return _result()
+		_note("DELIVERED 3 Stormglass and 2 Conductor Vine through the host transaction")
+		var inspect := glass.get("inspect_prompt") as Node3D
+		if inspect == null or not await _activate_node(glass, inspect,
+				Vector2(inspect.global_position.x, inspect.global_position.z) + Vector2(1.2, -0.6),
+				"repaired supplies at the rod shelter"):
+			return _result()
+		if not await _wait_flag(GLASS.COMPLETE, 300):
+			_fail("inspecting the repaired supplies did not complete the chain")
+			return _result()
+		_note("INSPECTED the repaired supplies; the chain is complete")
+		var care := glass.get("care_point") as Node3D
+		var bed := care.get_node_or_null(^"CampCreatureBed") as Node3D if care != null else null
+		var bed_prompt := bed.get_node_or_null(^"Interactable") as Node3D if bed != null else null
+		if bed_prompt == null:
+			_fail("the completed shelter has no creature bed prompt")
+			return _result()
+		var away := (Vector2(bed.global_position.x, bed.global_position.z) - GLASS.shelter_at()).normalized()
+		if not await _activate_node(bed, bed_prompt,
+				Vector2(bed.global_position.x, bed.global_position.z) + away * 1.3, "shelter creature bed"):
+			return _result()
+		var panel: Node = null
+		for _frame in 120:
+			for node: Node in tree.root.get_children():
+				if node.has_method("owns_input") and node.has_method("open") and bool(node.call("is_open")):
+					panel = node
+			if panel != null:
+				break
+			await tree.physics_frame
+		if panel == null:
+			_fail("the shelter bed prompt did not open the production creature-bed panel")
+			return _result()
+		await _tap(&"ui_accept")
+		var bedded := -1
+		for _frame in 120:
+			var party: RefCounted = game.get("party")
+			for index in int(party.call("size")):
+				var member: RefCounted = party.call("at", index)
+				if bool(member.get("resting")) and int(member.get("rest_bed_index")) == GLASS.bed_index():
+					bedded = index
+			if bedded >= 0:
+				break
+			await tree.physics_frame
+		if bool(panel.call("is_open")):
+			await _tap(&"ui_cancel")
+		if bedded < 0:
+			_fail("controller input on the bed panel did not rest a companion in the shelter bed")
+			return _result()
+		_note("RESTED party member %d in the shelter's creature bed through its live panel" % bedded)
+		# Out through the bay's arch before crossing the post to Bryn.
+		if not await _walk_xz(GLASS.shelter_at(), "out through the workshop arch", 1.2) \
+				or not await _walk_xz(Vector2(-700.0, 2300.0), "Rodline Post back to Bryn", 2.0):
+			return _result()
+		if not await _talk_to("Warden-Elect Bryn", BRYN_STANCE, GLASS.THANKED, "Bryn's acknowledgement"):
+			return _result()
+		_note("HEARD Bryn's acknowledgement; he returns to his ordinary lines")
+		for flag: String in ["stormwood:rod_deepwood_disabled", "stormwood:rod_dynamo_disabled",
+				"stormwood:all_rods_disabled"]:
+			if bool(progression.call("has", flag)):
+				_fail("Glass for Bryn wrote rod fact %s" % flag)
+		return _result()
+
+
+	## A hotbar press toggles: a tool still in hand from the prefix stays there.
+	func _hold_tool(item_id: String) -> bool:
+		if str(game.get("equipped_tool")) == item_id:
+			return true
+		return await _equip_fixture_tool(item_id)
+
+
+	func _harvest_site(id: String, item: String, stance: Vector2) -> bool:
+		var node := world.get_node_or_null(NodePath("StormwoodHarvests/" + id)) as Node3D
+		if node == null:
+			_fail("authored harvest node %s is absent" % id)
+			return false
+		var inventory: RefCounted = game.get("inventory")
+		var before := int(inventory.call("count", item))
+		if not await _activate_node(node, node.get_node_or_null(^"Interactable") as Node3D, stance, id):
+			return false
+		var receipt := "harvest_node:order:" + id
+		for _frame in 600:
+			if bool(game.get("progression").call("has", receipt)) and int(inventory.call("count", item)) > before:
+				break
+			await tree.physics_frame
+		var gained := int(inventory.call("count", item)) - before
+		if gained <= 0 or not bool(game.get("progression").call("has", receipt)):
+			_fail("%s did not settle its receipt and %s yield (gained=%d)" % [id, item, gained])
+			return false
+		_note("GATHERED %s +%d %s through its live prompt" % [id, gained, item])
+		return true
 
 
 	func _harvest_charged_node(node: Node3D, id: String) -> bool:
