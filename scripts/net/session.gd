@@ -333,6 +333,7 @@ func host_with_peer(peer: MultiplayerPeer, cap: int = -1,
 ## finish" so a polling caller does not have to run its budget out to learn the
 ## connection was refused.
 func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> bool:
+	_close_lingering_peer()
 	if is_active():
 		leave()
 		if is_active():
@@ -355,6 +356,7 @@ func join(ip: String, port: int = -1, character_summary: Dictionary = {}) -> boo
 ## `_on_connected_to_server()` drives the same hello path used by ENet.
 func join_with_peer(peer: MultiplayerPeer, character_summary: Dictionary = {},
 		transport_kind: String = "steam") -> bool:
+	_close_lingering_peer()
 	if is_active():
 		leave()
 		if is_active():
@@ -1398,6 +1400,14 @@ func _linger_then_disconnect(peer_id: int) -> void:
 ## Service a leaving client's detached transport until the host has closed it
 ## (so the goodbye was read) or the bound passes, then close it.
 func _exit_tree() -> void:
+	_close_lingering_peer()
+
+
+## A new join closes a leaving transport that is still waiting on the host, so
+## its disconnect reaches the host ahead of the new hello: a fast rejoin cannot
+## collide with its own old registry row (`character_in_use`). If that loses
+## the goodbye, the host holds the seat and the same character reclaims it.
+func _close_lingering_peer() -> void:
 	if _lingering_peer != null:
 		_lingering_peer.close()
 		_lingering_peer = null
