@@ -15,6 +15,7 @@ const COMBAT_HUD := preload("res://scenes/combat/combat_hud.tscn")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const LOOK := preload("res://scripts/world/cloudreach_look.gd")
+const RIDING := preload("res://scripts/world/cloudreach_riding_controller.gd")
 var world: Node3D
 var player: CharacterBody3D
 var chapter: Node
@@ -107,6 +108,7 @@ func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted,
 	director.connect("trainer_opposition_changed", Callable(finale, "opposition_remaining"))
 	director.connect("trainer_victory", _trainer_won)
 	director.connect("trainer_lost", _trainer_lost)
+	_mount_ground_riding()
 	var combat_hud := COMBAT_HUD.instantiate()
 	combat_hud.name = "CombatHUD"
 	combat_hud.set("manager_path", NodePath("../CombatManager"))
@@ -132,6 +134,27 @@ func mount(owner_world: Node3D, chapter_node: Node, realm_map: RefCounted,
 	add_to_group("progression_restore")
 	_publish_finale_presentation_mode()
 	_mount_fall_recovery()
+
+
+## Owner playtest 2026-09-11: "I couldn't get back on the creatures with the
+## saddle after going into cloudreach." Meadows authors its RidingController
+## in the scene and Water builds one at run time; Cloudreach never had one, so
+## a saddled companion that carried the trainer to the gate could not be
+## mounted again on this side of it. SYSTEMS §8's ground riding is the same
+## production controller and rules here: same arbiter offer, same tack check,
+## same fight/modal dismount, and the fall-recovery backstop above already
+## looks this node up by name. Skipped in a simulation-only host shell, as
+## Water skips it, because nobody in that process stands in this realm.
+func _mount_ground_riding() -> void:
+	if bool(world.get("simulation_only")) or world.get_node_or_null(^"RidingController") != null:
+		return
+	var riding := RIDING.new()
+	riding.name = "RidingController"
+	riding.set("player_path", NodePath("../Player"))
+	riding.set("camera_rig_path", NodePath("../CameraRig"))
+	riding.set("encounter_path", NodePath("../EncounterDirector"))
+	riding.set("manager_path", NodePath("../CombatManager"))
+	world.add_child(riding)
 
 
 func _install_creature_relay_prompts() -> void:
