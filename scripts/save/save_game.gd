@@ -383,7 +383,7 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 	var world_id := ""
 	var character_id := character_only
 	if write_split:
-		character_id = _character_id_for(game)
+		character_id = _character_id_for(game, slot)
 		# Validate portable identity before `_world_id_for` stamps the live world.
 		# A malformed nonempty id refuses without any live or durable mutation.
 		if character_id.is_empty():
@@ -1005,7 +1005,10 @@ func _world_id_for(game: Object, slot: int) -> String:
 	return id
 
 
-func _character_id_for(game: Object) -> String:
+## The live character's id. A local with no id gets a new one only when the
+## slot does not already point at a character: minting over an existing
+## locator would silently re-point the slot and orphan that character.
+func _character_id_for(game: Object, slot: int = -1) -> String:
 	var local: Variant = game.get("local") if game != null else null
 	if local == null:
 		return ""
@@ -1015,9 +1018,26 @@ func _character_id_for(game: Object) -> String:
 			return live
 		push_warning("save: refusing unsafe character id")
 		return ""
+	var owner := slot_locator_character(slot)
+	if not owner.is_empty():
+		push_warning("save: slot %d already belongs to character '%s'; refusing to mint a new identity over it"
+			% [slot, owner])
+		return ""
 	var id: String = CHARACTER_IDENTITY.mint()
 	(local as RefCounted).set("character_id", id)
+	print("[save] minted character id '%s' for slot %d (no existing locator)" % [id, slot])
 	return id
+
+
+## The character id a slot's split locator names, or "".
+func slot_locator_character(slot: int) -> String:
+	if slot < 0 or slot >= SLOT_COUNT:
+		return ""
+	var flat := _read_json_file(slot_path(slot))
+	var locator: Variant = flat.get(SPLIT_LOCATOR_KEY)
+	if not locator is Dictionary:
+		return ""
+	return str((locator as Dictionary).get("character_id", ""))
 
 
 ## "May this process write the world?" -- `game_state.gd::is_host()`, which is
