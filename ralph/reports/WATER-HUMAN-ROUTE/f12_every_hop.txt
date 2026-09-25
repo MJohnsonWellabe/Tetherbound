@@ -1,0 +1,114 @@
+F12 human-swim clause: every mandatory Tidewake hop at level 0
+===============================================================
+Clause (ACCEPTANCE F12): "With the original five and no owned swimmer, level-0 human
+swimming finishes EVERY mandatory Tidewake hop with at least 20% stamina after 15%
+steering deviation."
+
+Code under test: commit fcd5abd87 (branch ralph/water-f12-swim-proof, parent bfbcbd943
+origin/main). The runs used a working tree byte-identical to fcd5abd87's
+tests/smoke_water_swimming.gd and data/config/water_world.json.
+Engine: Godot v4.7.stable.official.5b4e0cb0f, headless, Linux container.
+
+Command lines (one per route, run from the repo root):
+  /root/godot-bin/godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=first_shore_to_reedhaven_sheltered --every-hop
+  /root/godot-bin/godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=reedhaven_to_brine_steps_sheltered --every-hop
+  /root/godot-bin/godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=brine_steps_to_shellwatch_sheltered --every-hop
+  /root/godot-bin/godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=shellwatch_to_tidal_cradle_sheltered --every-hop
+  /root/godot-bin/godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=tidal_cradle_to_salt_crown_sheltered --every-hop
+  /root/godot-bin/godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=salt_crown_to_sluice_isle_sheltered --every-hop
+  /root/godot-bin/godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=sluice_isle_to_veilfall_sheltered --every-hop
+  /root/godot-bin/godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=first_shore_to_lantern_cove_sheltered --every-hop
+  /root/godot-bin/godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=reedhaven_to_gull_rest_sheltered --every-hop
+Original single-final-hop mode (unchanged CI form):
+  /root/godot-bin/godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=sluice_isle_to_veilfall_sheltered
+
+Method and fixtures
+- Hops: the route's from_anchor, each rest_anchor_id in order, then to_anchor. A route with
+  no rest anchors has one hop.
+- Hop path: the authored route polyline between those stops, including any non-rest bend
+  vertices and the shore-exit points. It is not a straight chord.
+- Steering: seven alternating lateral offsets at equal arc-length stations, then the hop end.
+  The amplitude is solved so the commanded length is 1.155x the authored hop path. The run
+  asserts that ratio is between 1.14 and 1.17. Where the path bends, the ratio against the
+  straight chord is higher (up to 1.228). Movement uses real move_forward input and camera
+  yaw; there is no position scripting.
+- Position writes: one per hop, onto the hop's dry start anchor on baked terrain. For hops
+  after the first, the actual arrival was already within 0.35-0.43m of that anchor
+  (start_snap_m). The run fails if that distance exceeds 1.0m.
+- Stamina: before each hop the player stands dry until stamina equals max (bounded at 900
+  frames). In every hop the refill had already happened while walking up the shoal and
+  settling, so regen_frames=0. max_stamina is asserted to be 100 at every hop start. No
+  Heart multiplier applies.
+- Level 0: swimming skill XP is cleared after every movement frame, so drain stays at level-0
+  efficiency. This is conservative because earned levels only reduce drain. The minimum
+  efficiency is asserted to be 1.0000. The fixture also asserts the player is not mounted.
+- Departure current: the route's required_departure_flag is set as a fixture, the same as
+  the single-hop mode. This does not prove the story objective was earned.
+- Assertions per hop: at least 20% minimum stamina while swimming; the hop entered swimming;
+  it ends dry (on floor, not swimming); health unchanged; the hop end's authored safe
+  landing earned. After the final hop, dry-land regen is continuous and bounded, and the
+  per-frame stamina gain stays within the configured regen.
+
+PARTY FINDING (honest): the fixture party is EMPTY (party_size=0). Game.reset_for_new_game()
+creates PARTY.new() with no members, and the smoke adds none. It is not the original five
+starters/companions. Human swimming (swim_controller.gd physics_step / swim_state.advance)
+reads the party only to save an active swim mount, so an empty party and the original
+five with no swimmer drain identically. Still, this run does not literally instantiate
+the original five.
+
+Results: mandatory main-route crossings (all PASS)
+route | hop | from -> to | path_m | chord_m | cmd/path | cmd/chord | actual_swim_m | min_stamina_% | result
+first_shore_to_reedhaven_sheltered | 1 | departure -> arrival | 118.272 | 116.000 | 1.155 | 1.178 | 90.000 | 31.35 | PASS
+reedhaven_to_brine_steps_sheltered | 1 | departure -> rest_01 | 71.544 | 71.171 | 1.155 | 1.161 | 31.428 | 75.83 | PASS
+reedhaven_to_brine_steps_sheltered | 2 | rest_01 -> arrival | 71.544 | 71.171 | 1.155 | 1.161 | 31.742 | 75.59 | PASS
+brine_steps_to_shellwatch_sheltered | 1 | departure -> rest_01 | 64.661 | 64.301 | 1.155 | 1.161 | 23.150 | 82.03 | PASS
+brine_steps_to_shellwatch_sheltered | 2 | rest_01 -> arrival | 64.661 | 64.301 | 1.155 | 1.161 | 23.380 | 81.89 | PASS
+shellwatch_to_tidal_cradle_sheltered | 1 | departure -> rest_01 | 74.056 | 73.679 | 1.155 | 1.161 | 34.785 | 73.31 | PASS
+shellwatch_to_tidal_cradle_sheltered | 2 | rest_01 -> arrival | 74.057 | 73.679 | 1.155 | 1.161 | 35.156 | 73.03 | PASS
+tidal_cradle_to_salt_crown_sheltered | 1 | departure -> rest_01 | 110.341 | 109.447 | 1.155 | 1.164 | 78.456 | 38.54 | PASS
+tidal_cradle_to_salt_crown_sheltered | 2 | rest_01 -> rest_02 | 92.340 | 92.340 | 1.155 | 1.155 | 54.471 | 57.25 | PASS
+tidal_cradle_to_salt_crown_sheltered | 3 | rest_02 -> rest_03 | 92.341 | 86.882 | 1.155 | 1.228 | 53.668 | 57.95 | PASS
+tidal_cradle_to_salt_crown_sheltered | 4 | rest_03 -> rest_04 | 92.340 | 92.340 | 1.155 | 1.155 | 54.468 | 57.25 | PASS
+tidal_cradle_to_salt_crown_sheltered | 5 | rest_04 -> arrival | 110.342 | 109.448 | 1.155 | 1.164 | 78.380 | 38.59 | PASS
+salt_crown_to_sluice_isle_sheltered | 1 | departure -> rest_01 | 104.142 | 103.258 | 1.155 | 1.165 | 71.224 | 44.09 | PASS
+salt_crown_to_sluice_isle_sheltered | 2 | rest_01 -> rest_02 | 86.141 | 86.141 | 1.155 | 1.155 | 47.171 | 63.09 | PASS
+salt_crown_to_sluice_isle_sheltered | 3 | rest_02 -> rest_03 | 86.142 | 81.050 | 1.155 | 1.228 | 46.238 | 63.88 | PASS
+salt_crown_to_sluice_isle_sheltered | 4 | rest_03 -> rest_04 | 86.142 | 86.142 | 1.155 | 1.155 | 47.182 | 63.09 | PASS
+salt_crown_to_sluice_isle_sheltered | 5 | rest_04 -> arrival | 104.142 | 103.258 | 1.155 | 1.165 | 71.143 | 44.14 | PASS
+sluice_isle_to_veilfall_sheltered | 1 | departure -> rest_01 | 117.782 | 116.877 | 1.155 | 1.164 | 87.444 | 30.14 | PASS
+sluice_isle_to_veilfall_sheltered | 2 | rest_01 -> rest_02 | 99.782 | 99.782 | 1.155 | 1.155 | 63.082 | 49.32 | PASS
+sluice_isle_to_veilfall_sheltered | 3 | rest_02 -> rest_03 | 99.781 | 99.781 | 1.155 | 1.155 | 63.083 | 49.32 | PASS
+sluice_isle_to_veilfall_sheltered | 4 | rest_03 -> rest_04 | 99.782 | 93.884 | 1.155 | 1.228 | 62.258 | 50.02 | PASS
+sluice_isle_to_veilfall_sheltered | 5 | rest_04 -> rest_05 | 99.781 | 99.781 | 1.155 | 1.155 | 63.094 | 48.81 | PASS
+sluice_isle_to_veilfall_sheltered | 6 | rest_05 -> rest_06 | 99.782 | 99.782 | 1.155 | 1.155 | 63.098 | 49.27 | PASS
+sluice_isle_to_veilfall_sheltered | 7 | rest_06 -> arrival | 117.780 | 116.876 | 1.155 | 1.164 | 87.110 | 30.37 | PASS
+
+Route summaries (exit 0 for all seven):
+  WATER EVERY HOP OK id=brine_steps_to_shellwatch_sheltered hops=2 assertions=38 worst_min_stamina_pct=81.89 party_size=0 elapsed_s=37.696 final_health=100.000
+  WATER EVERY HOP OK id=first_shore_to_reedhaven_sheltered hops=1 assertions=24 worst_min_stamina_pct=31.35 party_size=0 elapsed_s=36.152 final_health=100.000
+  WATER EVERY HOP OK id=reedhaven_to_brine_steps_sheltered hops=2 assertions=38 worst_min_stamina_pct=75.59 party_size=0 elapsed_s=41.467 final_health=100.000
+  WATER EVERY HOP OK id=salt_crown_to_sluice_isle_sheltered hops=5 assertions=84 worst_min_stamina_pct=44.09 party_size=0 elapsed_s=143.842 final_health=100.000
+  WATER EVERY HOP OK id=shellwatch_to_tidal_cradle_sheltered hops=2 assertions=38 worst_min_stamina_pct=73.03 party_size=0 elapsed_s=47.154 final_health=100.000
+  WATER EVERY HOP OK id=sluice_isle_to_veilfall_sheltered hops=7 assertions=114 worst_min_stamina_pct=30.14 party_size=0 elapsed_s=240.723 final_health=100.000
+  WATER EVERY HOP OK id=tidal_cradle_to_salt_crown_sheltered hops=5 assertions=84 worst_min_stamina_pct=38.54 party_size=0 elapsed_s=156.181 final_health=100.000
+Worst mandatory hop: sluice_isle_to_veilfall hop 1 (departure -> rest_01), 30.14% minimum
+stamina. Next lowest: first_shore_to_reedhaven single hop at 31.35%.
+
+Optional human routes (information only; not part of the mandatory clause): both FAIL
+- first_shore_to_lantern_cove_sheltered (optional, human_level_0, no rest shoals, one hop):
+    EVERY HOP id=first_shore_to_lantern_cove_sheltered hop=1 from=first_shore_to_lantern_cove_departure to=first_shore_to_lantern_cove_arrival path_m=137.916 straight_m=135.102 commanded_ratio_vs_path=1.155 commanded_ratio_vs_straight=1.179 actual_swim_m=112.975 min_stamina_pct=14.13 pinned_min_efficiency=1.0000 regen_frames=0 start_snap_m=0.000 elapsed_s=40.023 result=FAIL
+    ERROR: WATER SWIMMING: first_shore_to_lantern_cove_sheltered hop 1 first_shore_to_lantern_cove_departure -> first_shore_to_lantern_cove_arrival: consumed below the 20 percent stamina reserve: 14.133
+    It reached dry land (the dry-arrival assertion runs first and passed), but the
+    minimum stamina was 14.13%, below the 20% reserve. The run stopped at that assertion,
+    so the health check did not run.
+- reedhaven_to_gull_rest_sheltered (optional, intended_traversal prepared_human_or_swim_mount,
+  no rest shoals, one 193.6m authored path):
+    ERROR: WATER SWIMMING: movement timed out target=(-62.31654, 0.0, 765.0712) actual=(-61.49286, -0.7, 755.8174) velocity=(-0.054847, 0.000001, -0.005421) aquatic={ "version": 1, "owner_peer_id": 1, "revision": 3119, "mode": 1, "resume_mode": 0, "surface_y": 0.0, "stamina_fraction": 0.0, "drowning": true, "has_safe_landing": true, "safe_landing": [-26.0289993286133, 1.92858600616455, 599.89501953125] }
+    Stamina reached 0 and drowning began. Horizontal velocity fell to about 0.05 m/s about
+    34m short of the arrival anchor (-56.8, 789.1), and the leg timed out. An unprepared
+    level-0 human does not finish this crossing. The label says "prepared"; this run did
+    not test what preparation means.
+No tuning or geometry was changed for these results.
+
+Original single-final-hop mode, unchanged (exit 0):
+  WATER REST ROUTE OK id=sluice_isle_to_veilfall_sheltered assertions=18 actual_swim_m=84.147 elapsed_s=37.364 minimum_stamina_before_regen=33.750 max_stamina_gain_per_frame=0.3000 final_health=100.000 commanded_steering_ratio=1.153
