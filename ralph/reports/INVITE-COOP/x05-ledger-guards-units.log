@@ -1,0 +1,148 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only ledger,arch,stormwood_ending,legendary,raise_a_road,crown,session,build_catalogue: 23 of 503 test files
+  ok    test_build_catalogue.gd :: test_every_category_is_a_menu_tab
+  ok    test_build_catalogue.gd :: test_every_cost_amount_is_positive
+  ok    test_build_catalogue.gd :: test_every_cost_references_a_real_item
+  ok    test_build_catalogue.gd :: test_every_entry_has_a_thumbnail
+  ok    test_build_catalogue.gd :: test_every_entry_has_the_required_fields
+  ok    test_build_catalogue.gd :: test_every_id_is_unique
+  ok    test_build_catalogue.gd :: test_every_non_camp_entry_has_a_mesh_that_exists
+  ok    test_build_catalogue.gd :: test_tent_does_not_swallow_a_campfire_one_grid_cell_away
+  ok    test_build_catalogue.gd :: test_tent_floor_fits_the_bedroll_with_the_trainer_still_inside
+  ok    test_build_catalogue.gd :: test_tent_peak_clears_the_trainer_with_real_headroom
+  ok    test_build_catalogue.gd :: test_the_table_exists_and_is_not_empty
+  ok    test_cloudreach_broken_skyroad_arch.gd :: test_broken_arch_catalogue_no_longer_stands_between_the_old_slabs
+  ok    test_cloudreach_broken_skyroad_arch.gd :: test_broken_arch_uses_installed_gateway_asymmetry_and_no_collision
+  ok    test_cloudreach_broken_skyroad_arch.gd :: test_cloudreach_world_mounts_dedicated_broken_arch_presentation
+  ok    test_death_satchel_ledger.gd :: test_owned_transactions_and_reconnect_receipts
+  ok    test_death_satchel_ledger.gd :: test_wrong_or_missing_world_instance_refuses_before_any_host_mutation
+  ok    test_ledger_admission_guards.gd :: test_prefix_list_covers_all_chapters_and_matches_generically
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_cannot_write_another_characters_legendary_receipt
+  ok    test_ledger_admission_guards.gd :: test_remote_peer_writes_only_its_own_receipt_and_host_stays_trusted
+  ok    test_ledger_admission_guards.gd :: test_stormglass_arch_commits_at_the_footing_centre
+  ok    test_legendary_per_participant.gd :: test_a_non_participant_receives_nothing
+  ok    test_legendary_per_participant.gd :: test_a_participant_receives_their_own_offer
+  ok    test_legendary_per_participant.gd :: test_a_solo_freeing_is_still_only_offered_once
+  ok    test_legendary_per_participant.gd :: test_a_solo_freeing_still_grants
+  ok    test_legendary_per_participant.gd :: test_an_unknown_character_is_refused_when_others_did_fight
+  ok    test_legendary_per_participant.gd :: test_every_participant_receives_one_not_just_the_first
+  ok    test_legendary_per_participant.gd :: test_no_character_is_offered_the_same_freeing_twice
+  ok    test_meadows_named_location_ledger_0912.gd :: test_final_polish_locations_have_complete_accepted_evidence_rounds
+  ok    test_meadows_named_location_ledger_0912.gd :: test_meadows_review_ledger_is_exactly_twenty_four_unique_places
+  ok    test_session_physical_timeout.gd :: test_client_timeout_targets_server_and_skips_relayed_client_ids
+  ok    test_session_physical_timeout.gd :: test_host_still_configures_both_direct_clients_and_skips_itself
+[session] snapshot applied (3 keys, day 7)
+  ok    test_session_snapshot.gd :: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta
+  ok    test_session_snapshot.gd :: test_bootstrap_delta_overflow_fails_without_applying_entries
+  ok    test_session_snapshot.gd :: test_conflicting_early_chunk_fails_and_never_opens_readiness
+WARNING: [session] snapshot for peer 22 failed: The world snapshot transfer timed out before the client acknowledged it.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _abort_host_snapshot (res://scripts/net/session.gd:902)
+         [1] _expire_snapshot_sends (res://scripts/net/session.gd:1291)
+         [2] test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once (res://tests/test_session_snapshot.gd:185)
+         [3] _init (res://tests/run_tests.gd:120)
+  ok    test_session_snapshot.gd :: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once
+  ok    test_session_snapshot.gd :: test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one
+  ok    test_session_transport.gd :: test_client_character_is_not_saveable_until_snapshot_admission
+WARNING: Session.host_with_peer: capacity 5 is outside 1..4
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] host_with_peer (res://scripts/net/session.gd:253)
+         [1] test_disconnected_or_wrong_role_peers_are_refused_before_install (res://tests/test_session_transport.gd:40)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_session_transport.gd :: test_disconnected_or_wrong_role_peers_are_refused_before_install
+  ok    test_session_transport.gd :: test_enet_physical_timeout_routing_remains_transport_specific
+[session] client leave: handshake never applied a snapshot; portable character unchanged
+  ok    test_session_transport.gd :: test_failed_client_leave_does_not_call_the_character_store
+  ok    test_session_transport.gd :: test_transport_closed_fires_after_peer_and_kind_are_cleared
+  ok    test_session_transport.gd :: test_world_first_preparation_closes_authority_snapshot_and_save_gates
+  ok    test_stormwood_arch_building.gd :: test_crown_footing_refuses_the_ordinary_stormglass_grade
+  ok    test_stormwood_arch_building.gd :: test_dismantling_one_arch_clears_its_survivor_and_replacement_uses_it
+  ok    test_stormwood_arch_building.gd :: test_first_and_second_arches_commit_one_stable_mutual_pair
+  ok    test_stormwood_arch_building.gd :: test_save_load_preserves_constructed_pair_metadata
+  ok    test_stormwood_arch_building.gd :: test_still_grove_can_only_raise_the_crowns_one_fixed_twin
+  ok    test_stormwood_arch_building.gd :: test_three_road_limit_includes_the_player_built_crown_pair
+  ok    test_stormwood_arch_building.gd :: test_two_peers_placing_on_one_footing_are_serialised_to_one_winner
+  ok    test_stormwood_arch_building.gd :: test_unrelated_removal_never_relinks_a_completed_arch_pair
+  ok    test_stormwood_arch_building.gd :: test_wrong_realm_missing_recipe_locked_deepwood_and_island_are_refused
+  ok    test_stormwood_arch_ledger.gd :: test_first_claimant_relights_once_and_only_winner_pays_three
+  ok    test_stormwood_arch_ledger.gd :: test_half_lit_pair_has_no_twin_and_full_pair_links_both_directions
+  ok    test_stormwood_arch_ledger.gd :: test_rootgate_guards_c_and_d_until_released
+  ok    test_stormwood_arch_ledger.gd :: test_wrong_realm_id_and_insufficient_preflight_stock_refuse_without_cost
+  ok    test_stormwood_arch_piece.gd :: test_authored_display_reuses_finish_without_constructed_collision
+  ok    test_stormwood_arch_piece.gd :: test_ghost_has_no_collision_and_supports_existing_placer_tint_api
+  ok    test_stormwood_arch_piece.gd :: test_lit_hook_changes_only_the_arch_presentation_state
+  ok    test_stormwood_arch_piece.gd :: test_real_arch_is_normalized_to_four_metres_and_leaves_a_real_aperture
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_frame_and_crown_costs_balance_the_authored_route
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_segment_parses_and_declares_the_paid_terminal_contract
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_segment_uses_live_controller_surfaces_and_contains_no_state_bypass
+  ok    test_stormwood_crown_build_segment_contract.gd :: test_six_selected_sources_match_the_live_catalogue_and_indivisible_yields
+  ok    test_stormwood_crown_named_engage.gd :: test_explicit_engage_requires_exact_body_and_actionable_director_offer
+  ok    test_stormwood_crown_named_engage.gd :: test_missing_named_body_is_not_dereferenced_by_admission_diagnostics
+  ok    test_stormwood_crown_remembers.gd :: test_chapter_counts_exactly_the_runtime_records_and_declares_them_persistent
+[scatter bake] load phases (ms): read[108 regions, 33773 placements, 0 skipped]=133 reorder[7 layers]=29
+  ok    test_stormwood_crown_remembers.gd :: test_record_seats_are_clear_readable_island_ground
+  ok    test_stormwood_crown_remembers.gd :: test_three_distinct_records_then_wen_complete_the_chain
+  ok    test_stormwood_crown_remembers.gd :: test_wen_reports_records_only_after_truth_and_until_complete
+  ok    test_stormwood_dark_arches.gd :: test_arches_lit_before_the_chain_was_wired_still_count_as_inspected
+  ok    test_stormwood_dark_arches.gd :: test_dark_arches_are_pairs_c_and_d_outside_every_main_objective
+  ok    test_stormwood_dark_arches.gd :: test_hesk_report_outranks_ordinary_lines_only_while_owed
+  ok    test_stormwood_dark_arches.gd :: test_inspection_facts_are_declared_world_state
+  ok    test_stormwood_dark_arches.gd :: test_inspection_paid_relights_and_hesk_complete_the_chain
+  ok    test_stormwood_ending.gd :: test_ceremony_receipt_is_player_owned_despite_the_stormwood_world_prefix
+  ok    test_stormwood_ending.gd :: test_chapter_data_orders_release_offer_and_waterward_before_home_placement
+  ok    test_stormwood_ending.gd :: test_claims_are_kept_per_character_and_legacy_saves_migrate
+  ok    test_stormwood_ending.gd :: test_every_participant_gets_their_own_once_only_offer
+  ok    test_stormwood_ending.gd :: test_livewire_is_the_single_active_cooldown_power
+  ok    test_stormwood_ending.gd :: test_offer_asks_an_explicit_yes_or_no_and_receipts_each_answer
+  ok    test_stormwood_ending.gd :: test_production_wires_the_existing_five_slot_and_story_transports
+  ok    test_stormwood_ending.gd :: test_waterward_waits_for_the_roster_decision_and_is_once_only
+  ok    test_stormwood_harvest_ledger.gd :: test_break_grants_the_catalogue_yield_not_forged_request_contents
+  ok    test_stormwood_harvest_ledger.gd :: test_calm_refuses_a_charged_site_even_if_request_claims_break
+  ok    test_stormwood_harvest_ledger.gd :: test_generic_harvest_cannot_bypass_a_reserved_stormwood_site_flag
+  ok    test_stormwood_harvest_ledger.gd :: test_hollow_crown_site_refuses_before_its_route_gate_opens
+  ok    test_stormwood_harvest_ledger.gd :: test_two_peers_contending_for_one_site_create_one_grant
+  ok    test_stormwood_named_crown.gd :: test_crown_prerequisite_metadata_names_the_same_guardian_flag_as_the_encounter
+  ok    test_stormwood_named_crown.gd :: test_guardian_then_wen_truth_then_rootgate_is_the_only_accepted_sequence
+  ok    test_stormwood_named_crown.gd :: test_wen_refuses_the_truth_until_the_crown_guardian_is_durably_clear
+  ok    test_stormwood_raise_a_road.gd :: test_chain_facts_are_declared_world_state
+  ok    test_stormwood_raise_a_road.gd :: test_choose_build_travel_and_report_complete_the_chain
+  ok    test_stormwood_raise_a_road.gd :: test_no_third_footing_is_offered_once_two_are_chosen
+  ok    test_stormwood_raise_a_road.gd :: test_ondra_report_outranks_ordinary_lines_only_while_owed
+  ok    test_stormwood_raise_a_road.gd :: test_road_footings_are_the_optional_sockets_and_never_the_crown
+  ok    test_stormwood_rod_ledger.gd :: test_each_disabled_station_flag_applies_its_region_surge_duration_modifier
+  ok    test_stormwood_rod_ledger.gd :: test_every_exact_station_requires_its_real_guard_and_prerequisite_then_disables_once
+  ok    test_stormwood_rod_ledger.gd :: test_saved_world_state_prevents_a_station_from_being_disabled_again
+  ok    test_stormwood_rod_ledger.gd :: test_two_peers_contending_for_one_station_commit_one_disabled_flag
+  ok    test_tether_relay_scale_hierarchy_0912.gd :: test_hero_is_primary_mass_without_stealing_console_clearance
+  ok    test_tether_relay_scale_hierarchy_0912.gd :: test_pad_supports_the_hero_with_an_industrial_scale_ladder
+  ok    test_world_ledger_races.gd :: test_a_client_replaying_the_hosts_deltas_ends_up_with_the_hosts_world
+  ok    test_world_ledger_races.gd :: test_a_dismantle_in_flight_takes_down_its_own_structure_not_the_renumbered_neighbour
+  ok    test_world_ledger_races.gd :: test_a_dismantle_pointed_at_another_realms_record_is_refused
+  ok    test_world_ledger_races.gd :: test_a_joiner_that_never_saw_a_chest_written_is_not_locked_out_of_it_forever
+  ok    test_world_ledger_races.gd :: test_a_placement_and_a_dismantle_go_through_the_ledger_into_the_world
+  ok    test_world_ledger_races.gd :: test_a_placement_verdict_names_the_ticket_it_answers
+  ok    test_world_ledger_races.gd :: test_a_player_flag_granted_to_two_peers_reaches_both_and_only_them
+  ok    test_world_ledger_races.gd :: test_a_replayed_drop_leaves_one_stack_on_the_ground
+  ok    test_world_ledger_races.gd :: test_a_replayed_transfer_moves_the_stack_exactly_once
+  ok    test_world_ledger_races.gd :: test_a_reward_pays_each_participant_once_and_refuses_a_replay
+  ok    test_world_ledger_races.gd :: test_a_storage_write_against_a_revision_two_behind_is_refused
+  ok    test_world_ledger_races.gd :: test_a_storage_write_that_quotes_the_current_revision_lands_in_the_record
+  ok    test_world_ledger_races.gd :: test_a_uid_is_never_reused_after_a_dismantle
+  ok    test_world_ledger_races.gd :: test_an_intent_with_no_realm_is_refused_rather_than_guessed_at
+  ok    test_world_ledger_races.gd :: test_an_unknown_intent_is_refused_with_a_reason
+  ok    test_world_ledger_races.gd :: test_apply_delta_ignores_an_op_it_does_not_understand_rather_than_dying
+  ok    test_world_ledger_races.gd :: test_doss_refuses_missing_materials_or_reward_room_without_any_ops
+  ok    test_world_ledger_races.gd :: test_setting_a_world_flag_that_is_already_set_is_a_noop_not_a_refusal
+  ok    test_world_ledger_races.gd :: test_the_same_flag_in_two_realms_is_two_different_finds
+  ok    test_world_ledger_races.gd :: test_the_winner_is_whoever_committed_first_not_whoever_is_the_host
+  ok    test_world_ledger_races.gd :: test_two_claims_on_one_pickup_leave_exactly_one_winner
+  ok    test_world_ledger_races.gd :: test_two_doss_claimants_charge_and_reward_only_the_first_commit
+  ok    test_world_ledger_races.gd :: test_two_gathers_of_one_harvest_node_yield_one_lot_of_wood
+  ok    test_world_ledger_races.gd :: test_two_identical_chest_writes_are_distinguishable_and_a_replay_is_refused
+  ok    test_world_ledger_races.gd :: test_two_peers_chopping_the_same_bush_duplicate_nothing
+  ok    test_world_ledger_races.gd :: test_two_withdrawals_of_one_stack_cannot_both_commit
+
+127 tests, 1810 assertions, 0 failed

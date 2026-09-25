@@ -444,13 +444,21 @@ func _place_building(intent: Dictionary, peer_id: int, realm: String) -> Diction
 			for need: Dictionary in STORMWOOD_ARCH_BUILD.cost(arch_at):
 				if int(available.get(str(need.id), 0)) < int(need.n):
 					return _refuse("place_building", peer_id, "arch_materials", "This footing needs the correct Stormglass grade and arch materials.")
+	var committed_position: Variant = intent.get("position")
+	if not arch_plan.is_empty():
+		# Commit at the footing centre the client preview snaps to
+		# (build_placer.gd), not wherever inside the 5 m footing radius the
+		# request landed. Height stays the request's ground-clamped y.
+		var socket := STORMWOOD_ARCH_BUILD.footing_at(arch_at)
+		if not socket.is_empty():
+			committed_position = Vector3(float(socket.at[0]), arch_at.y, float(socket.at[1]))
 	var op := {
 		"op": "building_add",
 		"scope": "world",
 		"realm": realm,
 		"uid": uid,
 		"id": id,
-		"position": _position(intent.get("position")),
+		"position": _position(committed_position),
 		"yaw_deg": float(intent.get("yaw_deg", 0.0)),
 		"paid": bool(intent.get("paid", true)),
 	}
@@ -570,6 +578,9 @@ func _set_world_flag(intent: Dictionary, peer_id: int, realm: String) -> Diction
 	var id := str(intent.get("id", ""))
 	if id.is_empty():
 		return _refuse("set_world_flag", peer_id, "malformed", "That world change has no identity to record.")
+	if not owned_flag_allowed(id, peer_id, str(intent.get("_actor_character_id", ""))):
+		return _refuse("set_world_flag", peer_id, "not_your_character",
+			"Only that character can record their own choice.")
 	var value := bool(intent.get("value", true))
 	if _flag_set(id) == value:
 		# Not a refusal: the world already says what the caller asked it to say,
@@ -585,6 +596,56 @@ func _set_world_flag(intent: Dictionary, peer_id: int, realm: String) -> Diction
 ## for a personal beat, everyone in the session for a home flag. The host cannot
 ## read a client's flag store, so this never refuses as "already granted"; the
 ## op is idempotent where it lands (`progression_state.set_flag`).
+## World flags whose id ends in a character id, so a receipt can only be
+## written by that character. `legendary_resolution` receipts record each
+## participant's own accept/refuse under the per-participant legendary rule.
+## Override or extend with `ledger.owned_flag_prefixes` in multiplayer.json.
+const OWNED_FLAG_PREFIXES := [
+	"legendary_resolution:accepted:",
+	"legendary_resolution:refused:",
+	"stormwood:legendary_resolution:accepted:",
+	"stormwood:legendary_resolution:refused:",
+	"tidewake:legendary_resolution:accepted:",
+	"tidewake:legendary_resolution:refused:",
+]
+const MULTIPLAYER_CONFIG := "res://data/config/multiplayer.json"
+const HOST_PEER := 1
+
+static var _owned_prefixes: Array = []
+
+
+static func owned_flag_prefixes() -> Array:
+	if _owned_prefixes.is_empty():
+		_owned_prefixes = OWNED_FLAG_PREFIXES.duplicate()
+		var file := FileAccess.open(MULTIPLAYER_CONFIG, FileAccess.READ)
+		if file != null:
+			var parsed: Variant = JSON.parse_string(file.get_as_text())
+			if parsed is Dictionary:
+				var configured: Variant = ((parsed as Dictionary).get("ledger", {}) as Dictionary) \
+					.get("owned_flag_prefixes", []) if (parsed as Dictionary).get("ledger") is Dictionary else []
+				if configured is Array:
+					for prefix: Variant in configured:
+						if prefix is String and not (prefix as String).is_empty() \
+								and not _owned_prefixes.has(prefix):
+							_owned_prefixes.append(prefix)
+	return _owned_prefixes
+
+
+## A remote peer may write an owned receipt only for its own registered
+## character. The host's own writes stay trusted: host code records receipts
+## for participants it has already validated. `actor_character_id` is filled
+## in by the host from the session registry (`ledger_rpc.gd`), never taken
+## from the request.
+static func owned_flag_allowed(id: String, peer_id: int, actor_character_id: String) -> bool:
+	for prefix: String in owned_flag_prefixes():
+		if id.begins_with(prefix):
+			if peer_id == HOST_PEER:
+				return true
+			var owner := id.trim_prefix(prefix)
+			return not owner.is_empty() and owner == actor_character_id
+	return true
+
+
 func _grant_player_flag(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var id := str(intent.get("id", ""))
 	if id.is_empty():

@@ -304,6 +304,10 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	if kind == "river_nest_clear":
 		intent = intent.duplicate(true)
 		intent["_doss_actor"] = _water_actor_context(peer_id, intent)
+	if kind == "set_world_flag":
+		intent = intent.duplicate(true)
+		# Never trust a claimed identity: overwrite with the registry's answer.
+		intent["_actor_character_id"] = _registered_character(peer_id)
 	var verdict: Dictionary = ledger.call("commit", intent, peer_id)
 	if satchel_transaction:
 		var host_instance: Variant = ledger.world.get("reward_delivery_namespace")
@@ -390,6 +394,23 @@ func _reward_recipients(intent: Dictionary, requesting_peer: int) -> Array:
 		if not character_id.is_empty():
 			out.append({"peer": target, "character_id": character_id})
 	return out
+
+
+## The stable character id the session admitted for `peer_id`, or "".
+func _registered_character(peer_id: int) -> String:
+	var game := _game()
+	if game == null:
+		return ""
+	if peer_id == _local_peer_id():
+		var local: Variant = game.get("local")
+		return str(local.get("character_id")) if local is Object else ""
+	var session: Variant = game.get("session")
+	if not session is Object or not (session as Object).has_method("registry"):
+		return ""
+	var roster: Variant = (session as Object).call("registry")
+	if not roster is Object:
+		return ""
+	return str(((roster as Object).call("row", peer_id) as Dictionary).get("character_id", ""))
 
 
 func _water_actor_context(peer_id: int, intent: Dictionary) -> Dictionary:
