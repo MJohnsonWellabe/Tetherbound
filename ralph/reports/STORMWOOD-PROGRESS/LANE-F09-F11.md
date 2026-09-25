@@ -360,3 +360,33 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   - The spur has no surface, like the roads. Much of the forest here is open grass with sparse trees, so the cleared corridor alone draws no visible line.
   - WORLD.md says "nine top-level route records"; the data now has 15 (10 roads + 5 spurs). The coordinator owns that edit.
   - There is still no night capture of the lamps.
+
+## WO-F11-04: earned Dynamo → aftermath witness (`ralph/stormwood-f11-proof`)
+
+**Status: IN PROGRESS.** This section is updated as each run finishes.
+
+- **Platform:** Linux container, Godot 4.7-stable, headless `--script` runs (no render for the witness itself).
+- **Input:** ordinary controller actions injected as `InputEventAction` (stick, interact, combat_quick, party_cycle, creature_recall, ui_*, menu_cancel) through the existing segment helpers. Each helper lists its own exceptions.
+- **Starting save origin:** `tests/smoke_stormwood_continuous.gd` with its disclosed in-memory seam. That seam supplies nine completed-Cloudreach world flags, a party of five at level 44 (sparkit, mudsnout, bramblebun, terrapup, brooktail) and knife/axe/pickaxe on the hotbar. It sets no `stormwood:*` flag. With `--witness-dir=user://f11_witness`, the first real disk save (autosave slot 0 plus the world/character split) is written at the authored Stormwood arrival, before any Stormwood action. The same live run then continues.
+- **Route:** the normal route by ordinary input, with the instrumented timing the segments already declare: 8x weather/locomotion clock, and combat at 1x.
+- **Command:** `godot --headless --path . --script tests/smoke_stormwood_continuous.gd -- --through-aftermath --witness-dir=user://f11_witness`, then the same command with `--verify-reload` in a new process.
+
+### Fixes the runs showed (all Stormwood-owned, each committed before the next run)
+
+| Run | First failure | Diagnosis | Fix |
+|---|---|---|---|
+| 2 (`--through-crown`) | Varga's 3rd round lost | Prefix route fights ran at the 8x clock, but the press cadence is wall-clock | `_fight_current_encounter` runs combat at 1x, as the Crown helper already did |
+| 3 | Varga lost again (worn lead) | A trainer sequence is fought by one creature; the lead was worn by road fights | Before a named trainer, send out the fittest member with ordinary LB presses |
+| 4 | Route-09 reward press taken by Keeper Ondra | The pickup stood exactly on Ondra | Pickup moved 7 m along the road. Regression: `test_stormwood_pickups` overlap check (fails on the old data) |
+| 5 | Capacitor Alpha lost with a 113/436 lead | Same worn-lead cause, in the Crown chain | `_ensure_usable_ally` in the Crown helper also leads with the fittest member |
+| 6 | Hollows rod switch press taken by route-06 | The pickup stood exactly on the rod station and Dace | Pickup moved 9 m along the road; the overlap test pins it |
+
+Seven other pickup/NPC overlaps remain (route_05, 07, 16, 18, 19 and pocket_203). The test lists them so the list can only shrink. They are an open finding.
+
+### Sub-note: parked two-peer WIP (superseded by coordinator order)
+
+`tests/smoke_net_stormwood_stormheart_offers.gd` and `tests/helpers/stormheart_peer_runner.gd` (commit 2ac6f9b23) are parked until the X05 two-peer proof command lands. The smoke is held out of CI discovery.
+
+- **Last result:** two real ENet processes; the staged Dynamo frees the Stormheart; both characters are recorded as participants; the host's own offer, Yes and receipt pass.
+- **Where it stops:** the guest's offer is refused because the host's proxy for the guest never leaves the Stormwood arrival point. Not yet diagnosed.
+- **Consequence:** F11-B (two-peer, disconnect, capacity, no duplicate grants over the network) has no live proof from this lane.
