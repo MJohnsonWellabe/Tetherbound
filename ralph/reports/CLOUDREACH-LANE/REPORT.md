@@ -116,3 +116,34 @@ This work order does not cover:
 - mount state across realm crossing and save/reload
 - combat dismount inside Cloudreach
 - Peblik's paint rejection, which is visual and has no shared-art grant
+
+## WO-N · F07: Cloudreach resource nodes on the walking route
+
+**Defect on main.** Four F07 gatherables were authored away from any registered surface, so `cloudreach_world.gd::_resource_position` snapped them 110–230 m. The ravine Cliffglass landed on the chain-bridge deck, in the walking line.
+
+**Fix** (`data/config/cloudreach_chapter.json`):
+- Each node is re-authored onto its named road's collision ribbon, 2.1–3.5 m off the centreline, where the runtime keeps it:
+  - ravine Cliffglass: `windscar_floor_loop`, ungated, so the chapter-start axe and pickaxe bracing stay craftable;
+  - Cliffhold cloudberry: the counterweight pass upper leg;
+  - Observatory Cliffglass: `upper_summit_road`;
+  - summit Cliffglass: `summit_overlook_loop`.
+- Two existing nodes (`heartwood_west`, `heartwood_upper`) were re-authored to where the runtime already put them. They don't move in game.
+
+**Test.** `tests/test_cloudreach_resource_node_reach.gd` rebuilds the runtime's surface list and snap rule, and asserts:
+- every gatherable is kept, not snapped;
+- each authored Y is within 1 m of its surface;
+- the four nodes sit on their named road at the verge;
+- region bounds are respected;
+- every chapter-start ingredient has an ungated source.
+
+It fails on main's data (five snapped nodes, and no ungated Cliffglass).
+
+**Result** (local, Godot 4.7-stable headless): `--only=cloudreach_resource,cloudreach_physical` gives 18 tests, 877 assertions, 0 failed. The code-blind re-review passed.
+
+**Captures** (`captures/resource_nodes/`, `tools/capture_cloudreach_resource_nodes.gd`, production camera):
+- The same four node ids are shown **before** (main 835744b3, merged into the rewards tree) and **after** (this branch).
+- In both, the trainer stands about 2.5 m from wherever the running game placed the node, on standable floor where the rig's camera can see it.
+- **Before:** the ravine ore is a boulder on the chain-bridge planks, and the other three sit at main's snapped spots.
+- **After:** each node sits beside its road at the authored place.
+
+Disclosed fixture: the upper-route unlock and Fly flags are seeded, so every node exists, and the trainer is teleported to each stand. The gather prompt does not win at these stands ("Call out Galecrest" shows), so the frames show placement, not the gather interaction; gathering is covered by `test_cloudreach_resources.gd`.
