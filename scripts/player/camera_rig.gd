@@ -85,6 +85,10 @@ var _mouse_delta := Vector2.ZERO
 ## conversation shots own their own composition.
 var _tracking_target: Node3D = null
 var _tracking_config: Dictionary = {}
+## MEADOWS-VISUAL-PASS round 5: extra composition the fight asks for while the
+## piloted ally hides the opponent (`combat_manager.gd::_update_ally_occlusion`).
+## Added to `composition_yaw_deg` on the same side; 0 outside that moment.
+var _composition_extra_deg := 0.0
 var _tracking_manual_left := 0.0
 
 ## Defaults from movement.json, kept so a combat profile can be handed back.
@@ -254,6 +258,7 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	_target = target
 	_tracking_target = null
 	_tracking_config = {}
+	_composition_extra_deg = 0.0
 	_tracking_manual_left = 0.0
 
 	_distance = float(profile.get("distance", _base_distance))
@@ -292,6 +297,16 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 ## this immediately after targeting the player's active creature. It is a
 ## separate operation from `set_target()` so throw/catch cameras cannot inherit
 ## combat tracking accidentally.
+## Degrees the neutral combat tracker swings past its configured composition,
+## for as long as the fight asks. Manual look still wins, as for all tracking.
+func set_composition_extra(degrees: float) -> void:
+	_composition_extra_deg = maxf(0.0, degrees)
+
+
+func composition_extra() -> float:
+	return _composition_extra_deg
+
+
 func set_tracking_target(target: Node3D, config: Dictionary = {}) -> void:
 	_tracking_target = target
 	_tracking_config = config.duplicate()
@@ -464,7 +479,8 @@ func _apply_tracking(delta: float) -> void:
 	var wanted := atan2(-toward.x, -toward.z)
 	# An oblique combat composition keeps the opponent's stance visible beside
 	# a large piloted body. Manual orbit and its grace period still win above.
-	wanted += deg_to_rad(float(_tracking_config.get("composition_yaw_deg", 0.0)))
+	var composition := float(_tracking_config.get("composition_yaw_deg", 0.0))
+	wanted += deg_to_rad(composition + signf(composition if composition != 0.0 else 1.0) * _composition_extra_deg)
 	var difference := angle_difference(yaw, wanted)
 	var dead_zone := deg_to_rad(float(_tracking_config.get("dead_zone_deg", 10.0)))
 	if absf(difference) <= dead_zone:

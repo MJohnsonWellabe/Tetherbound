@@ -280,6 +280,16 @@ func _apply_material_fixups(root: Node, model_path: String) -> void:
 			var source: Material = mesh.surface_get_material(surface)
 			var material_name := "" if source == null else source.resource_name
 			if material_name == ROCK_CEILING_MATERIAL:
+				# MEADOWS-VISUAL-PASS round 5: one stone family. When the
+				# presentation overlay gives the scatter rocks a texture, a
+				# deposit wears the same texture and tint as the boulders beside
+				# it (a blind round counted three rock families: photo, pack and
+				# white). Rock030 stays the fallback.
+				var shared := _presentation_rock_look(model_path)
+				if not shared.is_empty():
+					mesh_instance.set_surface_override_material(surface, _fixed_up_material(
+						source, material_name, str(shared["tint"]), str(shared["texture"])))
+					continue
 				var rock_tint := _harvest_rock_retint(model_path)
 				mesh_instance.set_surface_override_material(surface, _rock_ceiling_material(
 					rock_tint if rock_tint != "" else str(retint.get(material_name, ""))))
@@ -295,18 +305,32 @@ func _apply_material_fixups(root: Node, model_path: String) -> void:
 ## because vegetation.json's rock tints were tuned against the pack texture it
 ## replaces (see `harvest_rock_retint` in vegetation_presentation.json). Empty
 ## when the overlay does not name this model.
-static var _harvest_rock_tints: Variant = null
+static var _presentation: Variant = null
+
+
+static func _presentation_overlay() -> Dictionary:
+	if _presentation == null:
+		_presentation = {}
+		var parsed: Variant = JSON.parse_string(
+			FileAccess.get_file_as_string("res://data/config/vegetation_presentation.json"))
+		if parsed is Dictionary:
+			_presentation = parsed
+	return _presentation
 
 
 static func _harvest_rock_retint(model_path: String) -> String:
-	if _harvest_rock_tints == null:
-		_harvest_rock_tints = {}
-		var file := FileAccess.open("res://data/config/vegetation_presentation.json", FileAccess.READ)
-		if file != null:
-			var parsed: Variant = JSON.parse_string(file.get_as_text())
-			if parsed is Dictionary:
-				_harvest_rock_tints = (parsed as Dictionary).get("harvest_rock_retint", {})
-	return str((_harvest_rock_tints as Dictionary).get(model_path, ""))
+	return str((_presentation_overlay().get("harvest_rock_retint", {}) as Dictionary).get(model_path, ""))
+
+
+## {"texture", "tint"} the scatter gives this rock model through the overlay,
+## or {} when the overlay swaps no rock texture.
+static func _presentation_rock_look(model_path: String) -> Dictionary:
+	var overlay := _presentation_overlay()
+	var texture := str((overlay.get("retexture", {}) as Dictionary).get(ROCK_CEILING_MATERIAL, ""))
+	if texture == "":
+		return {}
+	var per_model: Dictionary = (overlay.get("variant_retint", {}) as Dictionary).get(model_path, {})
+	return {"texture": texture, "tint": str(per_model.get(ROCK_CEILING_MATERIAL, ""))}
 
 
 ## The first vegetation layer that claims `model_path` in its own `models`

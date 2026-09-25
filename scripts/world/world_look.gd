@@ -37,7 +37,7 @@ const GROUP := "day_cycle"
 @export var environment_path: NodePath
 ## MEADOWS-VISUAL-PASS round 5: a realm's own look, deep-merged over art.json
 ## when this node loads it. Every realm shares art.json's time-of-day presets,
-## so a value only one chapter wants (the Meadows horizon mountains, its haze)
+## so a value only one chapter wants (the Meadows distance haze)
 ## belongs in that chapter's overlay rather than in the shared file. Empty
 ## (the default) is art.json unchanged.
 @export_file("*.json") var realm_look_path := ""
@@ -1039,19 +1039,6 @@ func _apply_cloud_sky(sky: Sky, cfg: Dictionary) -> void:
 	if cfg.has("cloud_wind"):
 		var w: Array = cfg["cloud_wind"]
 		mat.set_shader_parameter("wind", Vector2(float(w[0]), float(w[1])))
-	_apply_horizon_mountains(mat)
-
-
-func _apply_horizon_mountains(mat: ShaderMaterial) -> void:
-	var cfg: Dictionary = _config.get("horizon_mountains", {}) as Dictionary
-	if cfg.is_empty():
-		mat.set_shader_parameter("mountains", 0.0)
-		return
-	mat.set_shader_parameter("mountains", float(cfg.get("strength", 1.0)))
-	for key: String in ["far_height", "near_height", "snow_line", "haze",
-			"hero_bearing_deg", "hero_width_deg", "hero_lift", "seed"]:
-		if cfg.has(key):
-			mat.set_shader_parameter("mountain_" + key, float(cfg[key]))
 
 
 func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:

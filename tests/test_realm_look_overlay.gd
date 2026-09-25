@@ -27,9 +27,10 @@ func test_only_the_meadows_scene_carries_the_meadows_look() -> void:
 			"%s must keep its own horizon" % other)
 
 
-func test_the_shared_presets_do_not_draw_mountains() -> void:
-	var art: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/art.json"))
-	assert_false((art as Dictionary).has("horizon_mountains"),
-		"art.json is every realm's base; the ridge line belongs to the Meadows overlay")
+func test_the_meadows_haze_lives_in_the_meadows_overlay() -> void:
 	var meadows: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/meadows_look.json"))
-	assert_true(float(((meadows as Dictionary).get("horizon_mountains", {}) as Dictionary).get("strength", 0.0)) > 0.0)
+	var env: Dictionary = (meadows as Dictionary).get("environment", {})
+	assert_true(env.has("fog_colour"), "the Meadows distance haze is the overlay's to set")
+	var art: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/art.json"))
+	assert_ne(str(((art as Dictionary).get("environment", {}) as Dictionary).get("fog_colour", "")),
+		str(env.get("fog_colour", "")), "art.json keeps the shared haze for the other realms")

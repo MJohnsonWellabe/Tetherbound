@@ -166,8 +166,11 @@
       "manual_grace_seconds": 0.4
     },
     "occlusion_fade": {
-      "_comment": "MEADOWS-VISUAL-PASS: a large ally between the lens and a small foe hid the foe in every blind round. While the ally's inscribed ellipsoid covers at least `hidden_points` of the foe's three sample heights from the live camera, the ally's meshes fade to `transparency` at `speed` per second, and return when the foe is clear. Presentation only and local to each peer: controls, the orbit and collision are unchanged (scripts/combat/ally_occlusion_fade.gd).",
+      "_comment": "MEADOWS-VISUAL-PASS: a large ally between the lens and a small foe hid the foe in every blind round. While the ally's inscribed ellipsoid covers at least `hidden_points` of the foe's three sample heights from the live camera, the neutral combat tracker first swings `composition_extra_deg` past its composition (eased at `composition_ease_deg_per_s`; manual look still wins). Only if the foe stays hidden for `dither_after_s` do the ally's surfaces dither to `transparency` at `speed` per second, returning when the foe is clear. A blind judge read an always-on dither as the companion turning into a ghost. Presentation only and local to each peer: controls and collision are unchanged (scripts/combat/ally_occlusion_fade.gd).",
       "enabled": true,
+      "composition_extra_deg": 40.0,
+      "composition_ease_deg_per_s": 90.0,
+      "dither_after_s": 1.0,
       "transparency": 0.6,
       "hidden_points": 2,
       "speed": 4.0
@@ -202,18 +205,19 @@
     "_comment": "The visual event of a blow landing. ALL tunable presentation; nothing here touches damage, reach or timing.",
     "_comment_measured": "The blind critic counted bright warm pixels at the instant of contact: 10 in `combat/05-quick-attack-lands`, 295 in `combat/06`, and 24,623 in `palworld-01` \u2014 roughly ten thousand times the visual energy for the same beat. Its reading was that the only difference between the frame before a hit and the frame of the hit was that the health bar got shorter. Turn `enabled` off to get that back.",
     "enabled": true,
+    "_comment_round5": "MEADOWS-VISUAL-PASS round 5: at 0.85m/strength 1.0 the burst rendered (isolated probe) as a pale ring about 60 pixels across at fight distance, and two blind rounds found no impact effect on either hit. `strength` scales the radius, so the burst grows a little (about 1.2m quick, 1.8m charged, well short of the 5m ground-decal read) and impact_flash.gd now holds its opacity through the beat instead of halving it in the first quarter.",
     "quick": {
-      "colour": "#ffd27a",
-      "radius": 0.85,
-      "duration": 0.26,
-      "strength": 1.0
+      "colour": "#ffe19a",
+      "radius": 0.9,
+      "duration": 0.3,
+      "strength": 1.3
     },
     "_comment_charged": "Bigger and warmer than a quick hit. If the expensive move looks like the free one, building energy was never worth doing.",
     "charged": {
-      "colour": "#ffb257",
-      "radius": 1.15,
-      "duration": 0.34,
-      "strength": 1.3
+      "colour": "#ffc063",
+      "radius": 1.2,
+      "duration": 0.4,
+      "strength": 1.5
     },
     "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion."
   },

@@ -62,6 +62,14 @@ uniform float _vertex_density = 0.5;
 // Where the ring is centred this frame, snapped, in world space. The blades
 // live in the node's local space; this is what they are offset from.
 uniform vec3 field_centre = vec3(0.0);
+// MEADOWS-VISUAL-PASS round 5: blades within `lens_clear_m` of a LOW eye
+// (the over-the-shoulder aim camera) shrink away, so a card half a metre from
+// the lens does not fill most of the frame. Ramps out between an eye 1.5m and
+// 3m above the ground; 0 turns it off.
+uniform float lens_clear_m = 0.0;
+uniform float lens_clear_band = 1.2;
+// The eye's real height; `field_centre` carries y = 0.
+uniform float eye_height = 100000.0;
 // Blades stop at `field_radius` and start thinning at `fade_start`. The fade
 // is wide on purpose: a hard cutoff on the densest layer in the world is the
 // bald ring three blind rounds named, and reintroducing it here would be the
@@ -513,6 +521,11 @@ void vertex() {
 		// And shorter while its lattice layer is still arriving, which is the
 		// only reason a blade's height changes as the player walks now.
 		h *= item_presence;
+		if (lens_clear_m > 0.0) {
+			float low_eye = 1.0 - smoothstep(1.5, 3.0, eye_height - ground_h);
+			float lens_keep = smoothstep(lens_clear_m, lens_clear_m + lens_clear_band, dist);
+			h *= mix(1.0, lens_keep, low_eye);
+		}
 		// VP2: a blade the far LOD mesh lacks grows in as the player closes on
 		// `lod_far_m`, dithered per blade so the ring does not swap in a band.
 		if (UV2.x >= lod_far_blade_frac - 0.001) {

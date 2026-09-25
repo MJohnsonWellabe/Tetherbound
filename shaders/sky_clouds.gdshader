@@ -204,32 +204,6 @@ uniform float disc_edge : hint_range(0.0, 0.99) = 0.35;
 uniform float sun_glow_falloff : hint_range(4.0, 600.0) = 24.0;
 uniform vec3 sun_colour : source_color = vec3(1.0, 0.96, 0.86);
 
-// HORIZON MOUNTAINS. MEADOWS-VISUAL-PASS: three blind rounds found "no
-// landmarks, mountains or water in any frame", and the key-art board puts a
-// blue ridge line with a snow-capped peak behind every Meadows panel. The
-// playable corridor ends at +-1024m, so real geometry there would be kilometres
-// of terrain nobody walks. Two ridge layers are drawn in the sky instead, where
-// they cost one ridged-noise evaluation per sky pixel and can never be walked
-// into: a far range (tall, hazed, snow above `mountain_snow_line`) and a nearer
-// forested range (lower, darker, greener). Colours are derived from the time of
-// day's own horizon/top colours so night, dawn and golden hour need no presets.
-// `mountains` 0 (the default) leaves every other realm's sky exactly as it was;
-// only the Meadows WorldLook turns it on (`world_look.gd::horizon_mountains`).
-uniform float mountains : hint_range(0.0, 1.0) = 0.0;
-// Tallest far peak, and the near range, in `up` units (sine of elevation).
-uniform float mountain_far_height : hint_range(0.0, 0.3) = 0.10;
-uniform float mountain_near_height : hint_range(0.0, 0.2) = 0.04;
-// Fraction of `mountain_far_height` above which the far range is snow.
-uniform float mountain_snow_line : hint_range(0.0, 1.0) = 0.62;
-// How much the far range dissolves into the horizon haze (aerial perspective).
-uniform float mountain_haze : hint_range(0.0, 1.0) = 0.45;
-// One hero peak, as on the key art: its bearing (degrees, measured like
-// atan(x, z) of the view direction), its angular half-width and its extra lift.
-uniform float mountain_hero_bearing_deg = 0.0;
-uniform float mountain_hero_width_deg : hint_range(1.0, 60.0) = 9.0;
-uniform float mountain_hero_lift : hint_range(0.0, 0.2) = 0.0;
-uniform float mountain_seed = 0.0;
-
 float hash12(vec2 p) {
 	vec3 p3 = fract(vec3(p.xyx) * 0.1031);
 	p3 += dot(p3, p3.yzx + 33.33);
@@ -290,92 +264,6 @@ float fbm_cirrus(vec2 p) {
 	p = ROT * p * 2.3;
 	v += 0.5 * value_noise(p);
 	return v;
-}
-
-// Ridged fbm sampled on a circle, so the range closes seamlessly all the way
-// round. `freq` is the circle's radius in noise cells: about one crest per
-// 2*PI*freq/5 cells of bearing.
-float ridge_line(float bearing, float freq, float seed) {
-	vec2 c = vec2(cos(bearing), sin(bearing)) * freq + vec2(seed, seed * 1.7);
-	float v = 0.0;
-	float a = 0.5;
-	float norm = 0.0;
-	for (int i = 0; i < 5; i++) {
-		float n = 1.0 - abs(2.0 * value_noise(c) - 1.0);
-		v += a * n * n;
-		norm += a;
-		c = ROT * c * 2.03;
-		a *= 0.5;
-	}
-	return v / norm;
-}
-
-float far_range(float bearing) {
-	float massif = smoothstep(0.25, 0.8, value_noise(vec2(cos(bearing), sin(bearing)) * 1.3 + mountain_seed + 7.0));
-	float r = ridge_line(bearing, 3.2, mountain_seed);
-	// Always some ridge relief, so a low stretch is foothills, not a flat wall.
-	float h = mountain_far_height * (0.1 + 0.3 * r + 0.6 * massif * pow(r, 1.6));
-	float off = abs(mod(degrees(bearing) - mountain_hero_bearing_deg + 180.0, 360.0) - 180.0);
-	float hero = exp(-pow(off / max(mountain_hero_width_deg, 1.0), 2.0));
-	return h + mountain_hero_lift * hero * (0.75 + 0.25 * r);
-}
-
-// Rounded, not ridged: the near range is forested hills, not rock.
-float near_range(float bearing) {
-	vec2 c = vec2(cos(bearing), sin(bearing)) * 2.4 + vec2(mountain_seed + 31.0);
-	float v = 0.0;
-	float a = 0.5;
-	for (int i = 0; i < 4; i++) {
-		v += a * value_noise(c);
-		c = ROT * c * 2.1;
-		a *= 0.5;
-	}
-	v /= 0.9375;
-	return mountain_near_height * (0.1 + 0.9 * clamp((v - 0.2) / 0.65, 0.0, 1.0));
-}
-
-vec3 horizon_mountains(vec3 colour, vec3 dir, vec3 sun_dir, float up) {
-	float bearing = atan(dir.x, dir.z);
-	float step_b = 0.004;
-	float sun_bearing = atan(sun_dir.x, sun_dir.z);
-	float sun_side = sign(sin(sun_bearing - bearing));
-	// Far range.
-	float hf = far_range(bearing);
-	if (up < hf) {
-		// Flank shading from the ridge's slope, broken up down the face so it
-		// reads as rock faces rather than one tone per column of bearing.
-		float slope = (far_range(bearing + step_b) - far_range(bearing - step_b)) / (2.0 * step_b);
-		float faces = value_noise(vec2(bearing * 38.0, up / max(mountain_far_height, 0.01) * 6.0));
-		float lit = clamp(0.5 - slope * sun_side * 3.0 + (faces - 0.5) * 0.5, 0.0, 1.0);
-		vec3 rock = mix(horizon_colour, top_colour, 0.55) * 0.82;
-		vec3 far = mix(rock * 0.74, rock * 1.08 + sun_colour * 0.05, lit);
-		// Soft rock mottling; isotropic, so it never reads as fence posts.
-		float mottle = value_noise(vec2(bearing * 55.0, up * 55.0 / max(mountain_far_height, 0.01) * 0.2));
-		far *= 0.95 + 0.07 * mottle;
-		float snow_at = mountain_far_height * mountain_snow_line
-				+ 0.006 * (value_noise(vec2(bearing * 70.0, 3.0)) - 0.5);
-		float snow = smoothstep(snow_at, snow_at + 0.004, up);
-		vec3 snow_col = min(vec3(1.0), horizon_colour * 1.18 + sun_colour * 0.12 * lit);
-		far = mix(far, mix(snow_col * 0.8, snow_col, lit), snow);
-		float depth = 1.0 - clamp(up / max(hf, 1e-3), 0.0, 1.0);
-		far = mix(far, haze_colour, mountain_haze * (0.55 + 0.45 * depth));
-		colour = mix(colour, far, mountains);
-	}
-	// Near, forested range.
-	float hn = near_range(bearing);
-	if (up < hn) {
-		// Canopy clumps, not slope columns: forested hills read by their
-		// crest line and a lighter top, not by flank shading.
-		float clumps = value_noise(vec2(bearing * 70.0, up / max(mountain_near_height, 0.01) * 5.0));
-		vec3 forest = mix(horizon_colour, vec3(0.22, 0.34, 0.27), 0.55) * mix(0.84, 1.0, clumps);
-		float trees = value_noise(vec2(bearing * 260.0, up * 260.0));
-		forest *= 0.93 + 0.1 * trees;
-		// Lighter toward the hill crests, where the canopy catches the sky.
-		forest *= mix(0.9, 1.06, clamp(up / max(hn, 1e-3), 0.0, 1.0));
-		forest = mix(forest, haze_colour, mountain_haze * 0.45);
-		colour = mix(colour, forest, mountains);
-	}
-	return colour;
 }
 
 void sky() {
@@ -446,10 +334,6 @@ void sky() {
 		cloud += sun_colour * rim * sun_gain * (1.0 - density) * density * 2.0;
 
 		colour = mix(colour, cloud, clamp(density, 0.0, 1.0));
-	}
-
-	if (mountains > 0.0 && up > -0.03) {
-		colour = horizon_mountains(colour, dir, sun_dir, up);
 	}
 
 	// Horizon haze band: `haze_colour` defaults to `horizon_colour`'s own

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=21 format=3]
 
 ; D101: the node named `Player` at this root IS the local rig -- one per
 ; process, in the `local_player` group, and the only body in this scene that
@@ -21,6 +21,7 @@
 [ext_resource type="Script" path="res://scripts/world/riding_controller.gd" id="16_riding"]
 [ext_resource type="Script" path="res://scripts/audio/world_audio.gd" id="17_audio"]
 [ext_resource type="Script" path="res://scripts/net/trainer_spawn.gd" id="18_trainer_spawn"]
+[ext_resource type="Script" path="res://scripts/world/horizon_ranges.gd" id="19_horizon"]
 
 [sub_resource type="ProceduralSkyMaterial" id="Sky_1"]
 sky_top_color = Color(0.231, 0.435, 0.576, 1)
@@ -111,6 +112,10 @@ script = ExtResource("6_encounter")
 player_path = NodePath("../Player")
 manager_path = NodePath("../CombatManager")
 camera_rig_path = NodePath("../CameraRig")
+
+; MEADOWS-VISUAL-PASS round 5: camera-centred distant ranges, see horizon_ranges.gd.
+[node name="HorizonRanges" type="Node3D" parent="."]
+script = ExtResource("19_horizon")
 
 ; Sun, sky, tonemap and fog all come from data/config/art.json at run time.
 ; They used to live only in this scene, so every lighting value written into the

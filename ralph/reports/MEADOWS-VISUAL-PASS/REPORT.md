@@ -299,3 +299,49 @@ Two of round 2's "still open and fixable in the scene" items.
     big allies.
   - Whichever is chosen, the survey needs a neutral-look frame (no forced
     yaw) to judge it.
+
+## Round 5 (owner: "get all visuals to pass"; branch claude/peaceful-brahmagupta-u0a94r)
+
+Changes judged in R7 (all presentation-only, local to each peer):
+- Fight framing, owner-delegated choice: the piloted ally dithers (OBJECT_DITHER, 40% coverage) while it hides the foe from the live camera. Alpha was tried first and drew the creature's far side through its back. `GeometryInstance3D.transparency` is ignored by the Compatibility renderer (measured).
+- Horizon: two ridge layers drawn in the sky shader (`meadows_look.json`, realm overlay).
+- Ground: macro variation taken most of the way to white and slightly cooler (`terrain_presentation.json`), softer grass tints and clumping. Ground band moved from S 0.86-0.95 / V 0.34-0.45 to about S 0.62-0.70 / V 0.60.
+- Stone: harvest deposits use their own light tints over Rock030. Scatter rocks swap to a lifted, desaturated copy of the pack texture (`Rocks_Diffuse_meadows.png`).
+  - A runtime `retexture_adjust` rendered white. So did the first import of the copy (2D lossless, no mipmaps). Importing it with the pack's own VRAM and mipmap settings fixed it.
+- Water: a mill-pond stand added to the quick tour.
+- Combat survey: the charged press waits for the opponent's recovery window. Frame 06 now lands.
+
+**R7 blind verdict** (19 frames: 5 survey, 6 tour, 8 combat)
+- **(A) key-art world: no.** The village day and night and the forest camp carry it. The survey meadows, the overlook, the yellow-olive palette and the stronghold's generic kit castle sink it.
+- **(B) same kind of game as Palworld: yes.** Genre reads at once. Creature quality, missing impact effects and the empty world mark it as a lower tier.
+
+Ranked gaps:
+1. The fight is not an event.
+   - The dithered ally reads as a ghost.
+   - No impact effect is visible on either hit.
+   - The capture throw does not show its target.
+   - Terrapup's clay-like body and white-splotch texture look generated.
+2. The world is empty and evenly scattered.
+   - Single-blade grass at even spacing.
+   - An empty plain from the overlook.
+   - Three buildings in an open field.
+3. Horizon and landmarks.
+   - The sky-drawn ranges read as a striped cardboard cutout.
+   - A hard green line in S-04.
+
+Other defects it named:
+- The hill crown's hard-edged grass islands (S-03).
+- Scatter rocks white (S-03, S-04, fixed after that render).
+- Three rock families.
+- Mixed tree families: leaf cards versus lollipops.
+- The same hero plant at bottom centre.
+- The aim camera inside grass cards (C-07).
+- "NOT ON TARGET" clipped at the bottom edge.
+- Black-dash aim arc.
+- Red stagger text on the player's own creature.
+- Magenta wind-up ring.
+- Squashed moon.
+- Trainer in a stiff pose in tour frames.
+- The ranger NPC in a different style.
+- Pale untextured slope beside the causeway (T-05).
+- A soft shadow smear in S-01.
