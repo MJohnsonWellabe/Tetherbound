@@ -326,7 +326,7 @@
           },
           "set_hue": 35,
           "set_sat": 0.06,
-          "set_val": 0.3,
+          "set_val": 0.34,
           "val_blend": 0.55
         },
         {
@@ -391,6 +391,24 @@
           "set_sat": 0.55,
           "set_val": 0.5,
           "val_blend": 0.3
+        },
+        {
+          "_why": "OWNER DECISION 2026-09-25 (X04): greenish texels on the upper, upward-facing shell are stone with moss wash, not a moss block; the 'existing moss' rule below otherwise paints the dome olive, which renders lime. They join the stone at a slightly greener grey so a hint of moss survives in the seams.",
+          "match": {
+            "hue": [
+              55,
+              170
+            ],
+            "val_min": 0.1
+          },
+          "where": {
+            "y_min": 0.45,
+            "up_min": 0.1
+          },
+          "set_hue": 70,
+          "set_sat": 0.12,
+          "set_val": 0.32,
+          "val_blend": 0.55
         },
         {
           "_why": "existing moss",
