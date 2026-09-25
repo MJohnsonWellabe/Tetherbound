@@ -10,28 +10,55 @@ extends SceneTree
 ## fix `scenes/world/cloudreach_cliffs.tscn` had no RidingController at all, so
 ## the first check below failed on unmodified main.
 ##
-## Disclosed fixture, not earned-route proof: the party, the saddle in the bag
-## and the Meadows-earned `saddle_fitted_meadowhart` flag are seeded before the
-## scene loads, as a Meadows arrival would carry them, and the closed-gate leg
-## places the trainer and the mount in front of the upper counterweight gate.
-## Every mount, ride, dismount and remount below is the real `interact`, move
-## and jump bindings through the real arbiter; nothing writes a mounted state.
+## Disclosed fixtures, not earned-route proof (each leg's comment repeats its
+## own):
+##   - the party, the saddle in the bag and the Meadows-earned
+##     `saddle_fitted_meadowhart` flag are seeded before the scene loads;
+##   - teleports: the trainer and mount to the upper counterweight gate, the
+##     mounted pair to the arrival road for the long descent and the save leg,
+##     the trainer and mount to the Broken Causeways ledge road and the
+##     arrival terrace road for the ride-off and mid-drop legs;
+##   - test-only StaticBody walls around the mount (refusal and combat legs),
+##     pillars on the ring's 16 points and one slab (the rule ladder);
+##   - the rule ladder writes the controller's private per-ride memory
+##     (`_clear_spot`, `_ground_history`, `_mounted_from`) and calls
+##     `dismount()` directly, as a fight or modal does;
+##   - the modal is the arbiter's lockout set directly; forced mid-drop
+##     dismount is a direct `dismount()` call;
+##   - the combat leg spawns a wild with `spawn_wild` and calls the director's
+##     private `_start_fight`;
+##   - Fly's pending-anchor flag is raised by hand for the M3 wiring check,
+##     and the M3 timeout check runs a bare Fly controller with a fake client
+##     session and a proxy that never answers.
+## Every other mount, ride, dismount and remount below is the real `interact`,
+## move and jump bindings through the real arbiter.
 ##
 ## Pins, in order:
 ##   1. Cloudreach has a ground-riding controller.
 ##   2. The ride offer wins the prompt beside the saddled Meadowhart, and the
 ##      ordinary interact press mounts it.
-##   3. Riding moves the mount under the stick.
+##   3. Riding moves the mount under the stick, and ticks Fly's carried
+##      anchor clock; an unanswered carried proposal times out and retries.
 ##   4. Interact dismounts onto ground; interact again REMOUNTS (the report).
 ##   5. Fly refuses to launch while riding, even with Fly unlocked.
 ##   6. A mounted run at the closed upper counterweight gate cannot cross it.
-##   7. The party is the same five, same order, no sixth, throughout.
+##   7. A long mounted descent is not a fall; ride-offs match a walker's.
+##   8. Dismount placement, measured on the `dismounted` signal: rule, reach,
+##      floor, no overlap with the mount's capsule (geometry, any layer), not
+##      inside world collision, clear line from the saddle -- for the refusal
+##      and modal deferral, every fallback rung, a forced dismount mid-drop and
+##      a fight starting boxed in.
+##   9. Saving while mounted after a descent reloads on the ground, at the
+##      saved spot, with Fly's anchor there too.
+##  10. The party is the same five, same order, no sixth, throughout.
 
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PARTY := preload("res://autoload/party.gd")
 const RIDING := preload("res://scripts/world/riding_controller.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+
+const FLY := preload("res://scripts/player/fly_controller.gd")
 
 const MOUNT_SPECIES := "meadowhart"
 const TEAM := ["meadowhart", "bramblebun", "mudsnout", "terrapup", "brooktail"]
@@ -48,6 +75,9 @@ var _arbiter: Node
 var _rig: Node
 var _party_uids: Array[String] = []
 var _mounted_hop_m := INF
+## The last placement recorded on the `dismounted` signal (`_on_dismounted`).
+var _placement: Dictionary = {}
+var _placement_mount: Node3D
 
 
 func _init() -> void:
@@ -55,6 +85,7 @@ func _init() -> void:
 
 
 func _run() -> void:
+	_carried_anchor_proposal_times_out()
 	_game = root.get_node(^"Game")
 	_game.call("reset_for_new_game")
 	_game.set("current_realm", "cloudreach")
@@ -87,6 +118,7 @@ func _run() -> void:
 	if _riding == null:
 		_report()
 		return
+	_riding.connect("dismounted", _on_dismounted)
 
 	await _walk_to_mount()
 	await _mount_by_interact("first mount")
@@ -101,11 +133,81 @@ func _run() -> void:
 	await _closed_gate_holds_a_mounted_run()
 	await _long_mounted_descent_is_not_a_fall()
 	await _ride_off_edges_by_input()
-	await _no_room_refusal_and_forced_fallbacks()
+	await _no_room_refusal_and_modal_deferral()
+	await _dismount_rule_ladder()
+	await _forced_dismount_mid_drop()
 	await _mounted_save_reload_after_descent()
 	await _combat_start_forced_dismount()
 	_check_party("end of run")
 	_report()
+
+
+## M3, solo-runnable: a guest's carried anchor proposal that the host never
+## answers (a lost packet, or `remote_trainer.gd` dropping it without a reply)
+## must time out and be re-proposed, as on foot. Fixture: a bare Fly controller
+## with a fake carried trainer, a fake session that says "client", and a fake
+## own proxy that swallows every proposal.
+class FakeCarriedTrainer extends CharacterBody3D:
+	func is_carried() -> bool:
+		return true
+
+
+class FakeClientSession extends Node:
+	func is_active() -> bool:
+		return true
+
+	func is_multi_peer() -> bool:
+		return true
+
+	func is_host() -> bool:
+		return false
+
+
+class FakeGame extends Node:
+	var current_realm := "cloudreach"
+
+
+class SilentProxy extends Node:
+	var asked := 0
+
+	func request_landing_anchor(_at: Vector3, _realm: String, _id: int) -> void:
+		asked += 1
+
+
+func _carried_anchor_proposal_times_out() -> void:
+	var fly: Node = FLY.new()
+	var game := FakeGame.new()
+	var session := FakeClientSession.new()
+	session.name = "Session"
+	game.add_child(session)
+	var trainer := FakeCarriedTrainer.new()
+	var proxy := SilentProxy.new()
+	proxy.add_to_group(&"remote_trainer")
+	root.add_child(proxy)
+	fly.set("_game", game)
+	fly.set("_player", trainer)
+	fly.set("config", JSON.parse_string(FileAccess.get_file_as_string(FLY.CONFIG_PATH)))
+	var timeout := float(((fly.get("config") as Dictionary).get("landing_anchor", {}) as Dictionary).get("pending_timeout_s", 5.0))
+	if not fly.has_method("observe_carried_ground") or not fly.has_method("tick_carried_anchor"):
+		_fail("Fly has no carried-anchor path (observe_carried_ground / tick_carried_anchor)")
+	else:
+		var a := Vector3(0.0, 105.0, -250.0)
+		var b := a + Vector3(30.0, 0.0, 0.0)
+		fly.call("observe_carried_ground", a)
+		_check(proxy.asked == 1 and bool(fly.get("_anchor_pending")), "a carried guest proposes its anchor to the host (asked %d)" % proxy.asked)
+		for i in int(floor((timeout - 0.2) / 0.1)):
+			fly.call("tick_carried_anchor", 0.1)
+		fly.call("observe_carried_ground", b)
+		_check(proxy.asked == 1, "while the proposal is pending (under %.1f s) it is not re-sent (asked %d)" % [timeout, proxy.asked])
+		for i in 4:
+			fly.call("tick_carried_anchor", 0.1)
+		fly.call("observe_carried_ground", b)
+		_check(proxy.asked == 2 and bool(fly.get("_anchor_pending")),
+			"an unanswered carried proposal times out after %.1f s and is re-proposed (asked %d)" % [timeout, proxy.asked])
+	proxy.queue_free()
+	fly.free()
+	trainer.free()
+	game.free()
 
 
 ## The realm does not bring the companion out by itself; the player calls it
@@ -170,11 +272,23 @@ func _ride_forward() -> void:
 		await physics_frame
 	var moved := Vector2(body.global_position.x - start.x, body.global_position.z - start.z).length()
 	_check(moved > 2.0, "the stick moves the mount (%.2f m in 1.5 s)" % moved)
+	# M3 wiring: the ride itself ticks Fly's pending-proposal clock. Fixture:
+	# the pending flag is raised by hand (solo has no host to ask).
+	var fly: Node = _player.get("fly_controller")
+	fly.set("_anchor_pending", true)
+	fly.set("_anchor_pending_for", 0.0)
+	for i in 30:
+		await physics_frame
+	var ticked := float(fly.get("_anchor_pending_for"))
+	fly.set("_anchor_pending", false)
+	fly.set("_anchor_pending_for", 0.0)
+	_check(ticked > 0.4, "while carried, the ride ticks Fly's anchor-proposal clock (%.2f s over 30 frames)" % ticked)
 
 
 func _dismount_by_interact(context: String) -> void:
 	var ridden: Node3D = _riding.call("mount_body")
 	var level := ridden.global_position.y if ridden != null else NAN
+	_arm_placement(ridden)
 	await _press("interact")
 	for i in 60:
 		await physics_frame
@@ -189,6 +303,7 @@ func _dismount_by_interact(context: String) -> void:
 	print("DISMOUNT %s trainer_y=%.2f collider_top=%s surface_index=%.2f mount_level=%.2f" % [context, at.y, str((hit.get("position", Vector3.INF) as Vector3).y) if not hit.is_empty() else "miss", index, level])
 	_check(not hit.is_empty() and absf(at.y - (hit["position"] as Vector3).y) < 0.3,
 		"%s: the trainer's feet are on the collider top, not inside it" % context)
+	_check_placement(context, ["clear"])
 	_check_party(context)
 
 
@@ -425,10 +540,15 @@ func _ride_off_edge(road: Vector3, toward: Vector3, mount_offset: Vector3, label
 
 
 ## SYSTEMS §8 "dismount at supported nearby clearance, otherwise show
-## refusal", and the forced-dismount fallbacks. Fixture: test-only walls are
-## raised around the ridden mount on open ground so no dismount spot is clear;
-## the refusal is the ordinary interact press.
-func _no_room_refusal_and_forced_fallbacks() -> void:
+## refusal", then a modal forcing the ride to end in the same box. Fixture:
+## four test-only walls are raised around the ridden mount on open ground, so
+## no ring spot has a clear line from the saddle and the remembered spot, the
+## history and the mount point all lie outside a wall; the modal is the
+## arbiter's lockout set directly, which is what `sequence_director.gd`'s
+## `_refresh_lockout` does for a panel. Pinned outcome for this geometry:
+## the refusal, then "deferred" (the rider stays seated INSIDE the walls),
+## then "clear" on the first frame after the walls come down.
+func _no_room_refusal_and_modal_deferral() -> void:
 	if not bool(_riding.call("is_mounted")):
 		await _walk_to_mount()
 		await _mount_by_interact("mount for the refusal leg")
@@ -440,9 +560,13 @@ func _no_room_refusal_and_forced_fallbacks() -> void:
 		await physics_frame
 	var remembered: Vector3 = _riding.get("_clear_spot")
 	_check(remembered != Vector3.INF, "riding on open ground records a clear dismount spot (%s)" % remembered)
+	var centre := body.global_position
 	var walls := _enclose(body)
+	var wall_half := _enclosure_inner(body)
 	for i in 4:
 		await physics_frame
+	_check(remembered == Vector3.INF or _outside_box(remembered, centre, wall_half),
+		"fixture: the remembered spot lies beyond a wall from the saddle (%s)" % remembered)
 	var hud := _world.get_node_or_null(^"PlaygroundHUD")
 	await _press("interact")
 	var said := ""
@@ -453,64 +577,310 @@ func _no_room_refusal_and_forced_fallbacks() -> void:
 			said = (label as Label).text
 	_check(bool(_riding.call("is_mounted")), "boxed in, the interact press does not dismount")
 	_check(said.contains("No room to dismount"), "the refusal says why ('%s')" % said)
-	# A forced ending (what a fight or modal does) must still end the ride:
-	# at the remembered clear spot, never inside the mount.
-	_riding.call("dismount")
-	for i in 30:
+
+	_arm_placement(body)
+	_arbiter.call("set_enabled", false)
+	for i in 20:
 		await physics_frame
-	_check(not bool(_riding.call("is_mounted")), "a forced dismount ends the ride even boxed in")
-	_check(str(_riding.get("last_dismount_rule")) in ["remembered", "history", "mounted_from"],
-		"the forced dismount used a verified fallback (%s)" % str(_riding.get("last_dismount_rule")))
-	_check(_player.global_position.distance_to(body.global_position) <= 8.5,
-		"the fallback is nearby, not back along the route (%.1f m)" % _player.global_position.distance_to(body.global_position))
-	_check(not _trainer_overlaps(body), "the trainer is not set down inside the mount")
-	_check(_player.is_on_floor(), "the trainer stands on ground after the forced dismount (%s)" % _player.global_position)
+	_check(not bool(_arbiter.call("enabled")), "fixture: the modal lockout holds for the leg")
+	_check(bool(_riding.call("is_mounted")) and _player.call("carrier") == body and _placement.is_empty(),
+		"a modal cannot put the trainer down with nothing verified: the rider stays seated (mounted %s)" % _riding.call("is_mounted"))
+	_check(str(_riding.get("last_dismount_rule")) == "deferred",
+		"the forced dismount in the box is 'deferred' (%s)" % str(_riding.get("last_dismount_rule")))
+	_check(not _outside_box(_player.global_position, centre, wall_half - 0.2),
+		"the trainer never crossed a wall to the remembered spot (%s, box half-width %.2f)" % [_player.global_position, wall_half])
 	for wall: Node in walls:
 		wall.queue_free()
+	for i in 20:
+		await physics_frame
+	_arbiter.call("set_enabled", true)
+	_check(not bool(_riding.call("is_mounted")), "once the walls are gone the held modal ends the ride on its next retry")
+	_check_placement("modal retry after the walls fell", ["clear"])
+	for i in 30:
+		await physics_frame
+	_check_party("refusal and modal deferral")
+
+
+## Every fallback rung, one at a time. Fixture, disclosed: test-only pillars
+## stand on each of the ring's 16 candidate points so "clear" cannot answer,
+## and the controller's private per-ride memory (`_clear_spot`,
+## `_ground_history`, `_mounted_from`) is written to stage each rung; the
+## dismount is the forced call a fight or modal makes. The candidate spot P is
+## on open ground 2.2 m out between two ring directions.
+func _dismount_rule_ladder() -> void:
+	# remembered: used when verified.
+	await _ladder_case("remembered is used", {"clear": "P"}, "remembered")
+	# M2: a wall between the saddle and the remembered spot rejects it; nothing
+	# else is staged, so the modal-style forced dismount defers.
+	await _ladder_case("remembered behind a wall", {"clear": "P", "wall": true}, "deferred")
+	# H1: the NEWEST in-reach sample wins over an older one 20 m back.
+	await _ladder_case("newest in-reach history", {"history": ["FAR", "P"]}, "history")
+	# H1: a sample beyond REMEMBERED_SPOT_REACH_M is never used.
+	await _ladder_case("history out of reach", {"history": ["FAR"]}, "deferred")
+	await _ladder_case("mounted_from", {"history": ["FAR"], "mounted_from": "P"}, "mounted_from")
+	_check_party("dismount rule ladder")
+
+
+func _ladder_case(label: String, stage: Dictionary, expect: String) -> void:
+	if not bool(_riding.call("is_mounted")):
+		await _walk_to_mount()
+		await _mount_by_interact("mount for the ladder: %s" % label)
+	var body: CharacterBody3D = _riding.call("mount_body")
+	if body == null:
+		_fail("%s: not mounted" % label)
+		return
+	for i in 20:
+		await physics_frame
+	var base := body.global_position
+	var basis := body.global_transform.basis
+	var side := Vector3(basis.x.x, 0.0, basis.x.z).normalized()
+	var p_dir := side.rotated(Vector3.UP, deg_to_rad(22.5))
+	var p := base + p_dir * 2.2
+	p.y = _floor_y(p, base.y)
+	var far := base - p_dir * 20.0
+	far.y = _floor_y(far, base.y)
+	var pillars := _pillar_ring(body)
+	var blockers: Array = []
+	if bool(stage.get("wall", false)):
+		blockers.append(_wall_across(base, p))
+	for i in 3:
+		await physics_frame
+	var named := {"P": p, "FAR": far}
+	_riding.set("_clear_spot", named.get(str(stage.get("clear", "")), Vector3.INF))
+	var history: Array[Vector3] = []
+	for key: String in stage.get("history", []):
+		history.append(named[key])
+	# The ride's own newest sample (the mount's current footing) stays newest:
+	# the mount stands on it, so its capsule overlap must reject it.
+	history.append(body.global_position)
+	_riding.set("_ground_history", history)
+	_riding.set("_mounted_from", named.get(str(stage.get("mounted_from", "")), Vector3.INF))
+	_arm_placement(body)
+	var ok := bool(_riding.call("dismount"))
+	var rule := str(_riding.get("last_dismount_rule"))
+	_check(rule == expect, "ladder %s: rule '%s' (expected '%s')" % [label, rule, expect])
+	if expect == "deferred":
+		_check(not ok and bool(_riding.call("is_mounted")) and _player.call("carrier") == body,
+			"ladder %s: nothing verified, so the rider stays seated" % label)
+		_check(_player.global_position.distance_to(p) > 1.0 and _player.global_position.distance_to(far) > 5.0,
+			"ladder %s: the trainer was not moved to the rejected spot (%s)" % [label, _player.global_position])
+	else:
+		_check(ok and not bool(_riding.call("is_mounted")), "ladder %s: the ride ended" % label)
+		_check(not _placement.is_empty() and Vector2(_placement.at.x - p.x, _placement.at.z - p.z).length() < 0.05,
+			"ladder %s: the trainer is set down at P, not the older sample 20 m back (%s vs P %s)" % [label, _placement.get("at"), p])
+		_check_placement("ladder %s" % label, [expect])
+	for node: Node in pillars + blockers:
+		node.queue_free()
 	for i in 10:
 		await physics_frame
-	_check_party("refusal and fallbacks")
 
 
+## H1's own scenario, ridden: off the causeway road by the stick, and a forced
+## dismount (the call a fight or modal makes) while the mount is 4 m into the
+## 11 m drop. Pinned for this geometry: "airborne" -- the trainer comes off
+## beside the mount into the same air and lands on the floor below, never back
+## on the upper road. Fixture: trainer and mount stood on the road, as in the
+## ride-off leg.
+func _forced_dismount_mid_drop() -> void:
+	if bool(_riding.call("is_mounted")):
+		await _dismount_by_interact("dismount before the mid-drop leg")
+	_player.global_position = LEDGE_ROAD
+	_player.velocity = Vector3.ZERO
+	var ally: Node3D = _director.call("ally_body")
+	for i in 60:
+		await physics_frame
+	if ally != null:
+		ally.call("place_on_ground", LEDGE_ROAD + Vector3(2.0, 0.0, 1.0))
+	for i in 10:
+		await physics_frame
+	await _walk_to_mount()
+	await _mount_by_interact("mount above the ledge for the mid-drop leg")
+	var body: CharacterBody3D = _riding.call("mount_body")
+	if body == null:
+		return
+	for i in 30:
+		await physics_frame
+	var takeoff := body.global_position.y
+	var heading := LEDGE_TOWARD - body.global_position
+	heading.y = 0.0
+	heading = heading.normalized()
+	var fired := false
+	for frame in 600:
+		_steer_toward(body.global_position + heading * 50.0)
+		await physics_frame
+		if not body.is_on_floor() and takeoff - body.global_position.y >= 4.0:
+			_release_move()
+			_arm_placement(body)
+			_riding.call("dismount")
+			fired = true
+			break
+	_release_move()
+	_check(fired, "the ride reached 4 m into the causeway drop (takeoff %.1f, mount %s)" % [takeoff, body.global_position])
+	if not fired:
+		return
+	var rule := str(_placement.get("rule", _riding.get("last_dismount_rule")))
+	_check(rule == "airborne", "a forced dismount mid-drop uses the 'airborne' rule (%s)" % rule)
+	_check(not _placement.is_empty() and float(_placement.distance) <= 8.0,
+		"mid-drop the trainer comes off beside the mount (%.1f m), not back along the route" % float(_placement.get("distance", INF)))
+	_check(not _placement.is_empty() and not bool(_placement.overlap) and bool(_placement.line_clear),
+		"mid-drop placement: clear of the mount and a clear line from the saddle (%s)" % _placement)
+	_check(not _placement.is_empty() and float((_placement.at as Vector3).y) < takeoff - 3.0,
+		"mid-drop placement is below the road, not on it (y %.1f, road %.1f)" % [float((_placement.get("at", Vector3.INF) as Vector3).y), takeoff])
+	for i in 180:
+		await physics_frame
+	_check(_player.is_on_floor() and _player.global_position.y < takeoff - 8.0,
+		"the trainer lands on the causeway floor below the ledge (y %.1f, road %.1f)" % [_player.global_position.y, takeoff])
+	_check_party("mid-drop forced dismount")
+
+
+## The walls of the refusal and combat legs: four slabs around `body`, each
+## `_enclosure_inner(body)` from its centre, higher than the mount.
 func _enclose(body: Node3D) -> Array:
 	var walls: Array = []
-	var radius := float(body.call("body_radius")) if body.has_method("body_radius") else 1.2
-	var inner := radius + 0.25
+	var inner := _enclosure_inner(body)
 	for side: Vector3 in [Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK]:
-		var wall := StaticBody3D.new()
-		wall.name = "TestEnclosure"
-		var shape := CollisionShape3D.new()
-		var box := BoxShape3D.new()
 		var along := Vector3(absf(side.z), 0.0, absf(side.x))
-		box.size = along * (inner * 2.0 + 1.0) + Vector3.UP * 6.0 + side.abs() * 0.4
-		shape.shape = box
-		wall.add_child(shape)
-		_world.add_child(wall)
-		wall.global_position = body.global_position + side * (inner + 0.2) + Vector3.UP * 2.0
-		walls.append(wall)
+		walls.append(_static_box(body.global_position + side * (inner + 0.2) + Vector3.UP * 2.0,
+			along * (inner * 2.0 + 1.0) + Vector3.UP * 6.0 + side.abs() * 0.4, Basis.IDENTITY, "TestEnclosure"))
 	return walls
 
 
-func _trainer_overlaps(body: Node3D) -> bool:
-	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
-	if collision == null or not body is CollisionObject3D:
-		return false
-	var query := PhysicsShapeQueryParameters3D.new()
-	query.shape = collision.shape
-	query.transform = Transform3D(Basis.IDENTITY, _player.global_position + collision.position)
-	query.collision_mask = 0xFFFFFFFF
+func _enclosure_inner(body: Node3D) -> float:
+	var radius := float(body.call("body_radius")) if body.has_method("body_radius") else 1.2
+	return radius + 0.25
+
+
+func _outside_box(at: Vector3, centre: Vector3, half: float) -> bool:
+	return absf(at.x - centre.x) > half or absf(at.z - centre.z) > half
+
+
+## A 0.3 m pillar on each of the controller's 16 ring points (2 radii by 8
+## directions, from the species' dismount distance and the mount's facing).
+func _pillar_ring(body: Node3D) -> Array:
+	var pillars: Array = []
+	var distance := float(SPECIES.rideable(MOUNT_SPECIES).get("dismount_distance", 1.6))
+	var basis := body.global_transform.basis
+	var side := Vector3(basis.x.x, 0.0, basis.x.z).normalized()
+	for reach: float in [distance, distance + 1.2]:
+		for step in 8:
+			var at := body.global_position + side.rotated(Vector3.UP, TAU * float(step) / 8.0) * reach
+			pillars.append(_static_box(at + Vector3.UP * 1.5, Vector3(0.3, 4.0, 0.3), Basis.IDENTITY, "TestPillar"))
+	return pillars
+
+
+## A thin slab across the line from the mount to `spot`, clear of the mount's
+## capsule, taller than the saddle.
+func _wall_across(base: Vector3, spot: Vector3) -> Node3D:
+	var dir := Vector3(spot.x - base.x, 0.0, spot.z - base.z).normalized()
+	var mid := base + dir * (float(_director.call("ally_body").call("body_radius")) + 0.2)
+	return _static_box(mid + Vector3.UP * 2.0, Vector3(1.2, 6.0, 0.15), Basis(Vector3.UP, atan2(dir.x, dir.z)), "TestWall")
+
+
+func _static_box(at: Vector3, size: Vector3, basis: Basis, label: String) -> StaticBody3D:
+	var wall := StaticBody3D.new()
+	wall.name = label
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = size
+	shape.shape = box
+	wall.add_child(shape)
+	_world.add_child(wall)
+	wall.global_transform = Transform3D(basis, at)
+	return wall
+
+
+func _floor_y(at: Vector3, level: float) -> float:
+	var ray := PhysicsRayQueryParameters3D.create(Vector3(at.x, level + 3.0, at.z), Vector3(at.x, level - 6.0, at.z), _player.collision_mask, [_player.get_rid()])
+	var hit := _player.get_world_3d().direct_space_state.intersect_ray(ray)
+	return (hit["position"] as Vector3).y if not hit.is_empty() else level
+
+
+## H3: the placement is recorded on the `dismounted` signal, the moment the
+## trainer is set down, with the mount's geometry measured directly.
+func _arm_placement(body: Node3D) -> void:
+	_placement = {}
+	_placement_mount = body
+
+
+func _on_dismounted() -> void:
+	var body := _placement_mount
+	if body == null or not is_instance_valid(body):
+		return
+	var at := _player.global_position
+	var record := {"at": at, "rule": str(_riding.get("last_dismount_rule")), "mount_at": body.global_position,
+		"distance": at.distance_to(body.global_position), "overlap": _overlaps_mount_at(at, body)}
+	var space := _player.get_world_3d().direct_space_state
+	var down := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 0.5, at + Vector3.DOWN * 1.0, 0xFFFFFFFF, [_player.get_rid()])
+	var hit := space.intersect_ray(down)
+	record["floor_ok"] = not hit.is_empty() and (hit["normal"] as Vector3).y >= cos(deg_to_rad(45.0)) \
+		and absf(at.y - (hit["position"] as Vector3).y) < 0.3
+	record["floor_is_mount"] = not hit.is_empty() and hit["collider"] == body
 	var skip: Array[RID] = [_player.get_rid()]
-	query.exclude = skip
-	for hit: Dictionary in _player.get_world_3d().direct_space_state.intersect_shape(query, 16):
-		if hit["collider"] == body:
+	if body is CollisionObject3D:
+		skip.append((body as CollisionObject3D).get_rid())
+	var line := PhysicsRayQueryParameters3D.create(body.global_position + Vector3.UP * 1.0, at + Vector3.UP * 1.0, 0xFFFFFFFF, skip)
+	record["line_clear"] = space.intersect_ray(line).is_empty()
+	# The trainer's capsule against world collision at the spot, mount excluded.
+	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
+	var shape_query := PhysicsShapeQueryParameters3D.new()
+	shape_query.shape = collision.shape
+	shape_query.transform = Transform3D(Basis.IDENTITY, at + collision.position + Vector3.UP * 0.02)
+	shape_query.collision_mask = _player.collision_mask
+	shape_query.exclude = skip
+	record["in_geometry"] = not space.intersect_shape(shape_query, 1).is_empty()
+	_placement = record
+	print("PLACEMENT %s" % record)
+
+
+func _check_placement(context: String, rules: Array) -> void:
+	if _placement.is_empty():
+		_fail("%s: no placement was recorded on the dismounted signal" % context)
+		return
+	_check(str(_placement.rule) in rules, "%s: rule '%s' (expected %s)" % [context, _placement.rule, rules])
+	_check(float(_placement.distance) <= 8.0, "%s: set down %.2f m from the mount (reach 8 m)" % [context, float(_placement.distance)])
+	_check(bool(_placement.floor_ok), "%s: walkable floor under the trainer's feet at placement (on the mount: %s)" % [context, _placement.floor_is_mount])
+	_check(not bool(_placement.overlap), "%s: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)" % context)
+	_check(not bool(_placement.in_geometry), "%s: the trainer's capsule is not inside world collision" % context)
+	_check(bool(_placement.line_clear), "%s: a clear line from the saddle to the spot" % context)
+
+
+## Geometric capsule-capsule overlap between the trainer standing at `at` and
+## every capsule collider of `body`, from shapes and transforms only: a
+## following mount has collision layer 0, which a physics query never reports.
+func _overlaps_mount_at(at: Vector3, body: Node3D) -> bool:
+	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
+	if collision == null or not collision.shape is CapsuleShape3D:
+		_fail("the trainer's collider is not a capsule; the overlap check cannot measure it")
+		return true
+	var mine := collision.shape as CapsuleShape3D
+	var a := _segment(mine, Transform3D(Basis.IDENTITY, at + collision.position))
+	var found := false
+	for child: Node in body.get_children():
+		var other := child as CollisionShape3D
+		if other == null or other.disabled or not other.shape is CapsuleShape3D:
+			continue
+		found = true
+		var theirs := other.shape as CapsuleShape3D
+		var b := _segment(theirs, other.global_transform)
+		var closest := Geometry3D.get_closest_points_between_segments(a[0], a[1], b[0], b[1])
+		if closest[0].distance_to(closest[1]) < mine.radius + theirs.radius:
 			return true
+	if not found:
+		_fail("the mount has no capsule collider to measure against")
 	return false
 
 
-## Coordinator review of #229: a forced dismount at combat start must not put
-## the trainer inside the mount, which keeps its collision while the fight
-## drives it. Fixture: a wild is spawned beside the ridden mount and the
-## director's own fight start is called, as an engage does.
+func _segment(shape: CapsuleShape3D, at: Transform3D) -> Array[Vector3]:
+	var half := maxf(shape.height * 0.5 - shape.radius, 0.0)
+	var up := at.basis.y.normalized()
+	return [at.origin - up * half, at.origin + up * half]
+
+
+## Coordinator review of #229, H3: a fight starting while the rider is boxed
+## in. Fixture: the refusal leg's walls around the ridden mount, a wild spawned
+## outside them (`spawn_wild`), and the director's private `_start_fight`
+## called as an engage does. The mount stays solid (combat does not hand it
+## back to following), so the pinned rule is "mount_top": on its back.
 func _combat_start_forced_dismount() -> void:
 	await _press("creature_recall")
 	for i in 30:
@@ -524,40 +894,80 @@ func _combat_start_forced_dismount() -> void:
 	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
 		return
-	var wild: Node3D = _director.call("spawn_wild", "bramblebun", body.global_position + Vector3(6.0, 0.5, 0.0), {"name": "TestFightWild"})
+	for i in 30:
+		await physics_frame
+	var walls := _enclose(body)
+	for i in 4:
+		await physics_frame
+	var wild: Node3D = _director.call("spawn_wild", "bramblebun", body.global_position + Vector3(7.0, 0.5, 0.0), {"name": "TestFightWild"})
 	if wild == null:
 		_fail("could not spawn a wild for the combat-start leg")
 		return
 	for i in 10:
 		await physics_frame
+	_arm_placement(body)
 	_director.call("_start_fight", wild)
-	for i in 90:
+	for i in 10:
 		await physics_frame
 	var manager := _world.get_node_or_null(^"CombatManager")
 	_check(manager != null and bool(manager.call("is_fighting")), "the fight started")
 	_check(not bool(_riding.call("is_mounted")), "combat admission ends the ride")
-	_check(not _trainer_overlaps(body), "combat admission does not leave the trainer inside the mount (rule %s)" % str(_riding.get("last_dismount_rule")))
+	_check(body.collision_layer != 0, "the mount is still solid in the fight (layer %d)" % body.collision_layer)
+	_check_placement("combat start, boxed in", ["mount_top"])
+	_check(not _placement.is_empty() and bool(_placement.floor_is_mount),
+		"combat start, boxed in: the trainer stands on the mount's back, the only verified spot inside the walls")
+	for i in 60:
+		await physics_frame
+	_check(not _overlaps_mount_at(_player.global_position, body),
+		"a second later the trainer is still not inside the mount (%s)" % _player.global_position)
 	_check(_player.collision_layer != 0, "the trainer is solid again in the fight")
+	for wall: Node in walls:
+		wall.queue_free()
 	_check_party("combat start")
 
 
-## Review finding F1: the anchor frozen at the top of a ride made a reload
-## after a long descent "recover" the trainer back up to where it began. The
-## in-ride anchor check above is the direct witness; this leg is the reload
-## half. The ride began at the gate (~474 m) and the anchor has followed the
-## mounted descent to the arrival road; save, reload, stay low.
+## Review finding F1, reload half, and M4. Fixture, disclosed: the trainer
+## stands on the causeway road (~401 m) until Fly's anchor is there, mounts,
+## and the mounted pair is then placed on the arrival road (~105 m), as the
+## long-descent leg does, and ridden a moment. Save WHILE MOUNTED, reload.
+## Fix witness: on the branch the ride carries Fly's anchor down with it, so
+## the reload's anchor is at the saved spot; origin/main's controller leaves it
+## at the road ~300 m up.
 func _mounted_save_reload_after_descent() -> void:
-	if not bool(_riding.call("is_mounted")):
-		await _walk_to_mount()
-		await _mount_by_interact("mount before saving")
-	var body: Node3D = _riding.call("mount_body")
+	if bool(_riding.call("is_mounted")):
+		await _dismount_by_interact("dismount before the save leg")
+	var fly: Node = _player.get("fly_controller")
+	_player.global_position = LEDGE_ROAD
+	_player.velocity = Vector3.ZERO
+	for i in 60:
+		await physics_frame
+	var ally: Node3D = _director.call("ally_body")
+	if ally != null:
+		ally.call("place_on_ground", LEDGE_ROAD + Vector3(2.0, 0.0, 1.0))
+	for i in 10:
+		await physics_frame
+	var high: Vector3 = fly.get("safe_anchor")
+	_check(high != Vector3.INF and high.y > 390.0, "fixture: on foot on the causeway road, Fly's anchor is up there (%s)" % high)
+	await _walk_to_mount()
+	await _mount_by_interact("mount on the causeway road before saving")
+	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
 		return
+	var low := Vector3(0.0, 0.0, -250.0)
+	low.y = float(_world.call("ground_height_near", Vector3(0.0, 110.0, -250.0))) + 0.3
+	body.global_position = low
+	body.velocity = Vector3.ZERO
+	Input.action_press("move_forward", 1.0)
 	for i in 30:
 		await physics_frame
+	_release_move()
+	for i in 30:
+		await physics_frame
+	var saved_at := _player.global_position
 	var level := body.global_position.y
+	_check(bool(_riding.call("is_mounted")), "still mounted at the save")
 	_game.set("save_system", SAVE.new("user://cloudreach_saddle_remount_smoke/"))
-	_check(bool(_game.call("save_game", 0)), "save WHILE MOUNTED on the arrival road after the descent")
+	_check(bool(_game.call("save_game", 0)), "save WHILE MOUNTED on the arrival road, ~300 m below where the trainer last stood")
 	_world.queue_free()
 	await physics_frame
 	_check(bool(_game.call("load_game", 0)), "load that save")
@@ -571,11 +981,15 @@ func _mounted_save_reload_after_descent() -> void:
 		await physics_frame
 	_director = _world.get_node_or_null(^"EncounterDirector")
 	_riding = _world.get_node_or_null(^"RidingController")
+	_riding.connect("dismounted", _on_dismounted)
 	var anchor: Vector3 = (_player.get("fly_controller") as Node).get("safe_anchor")
 	_check(not bool(_player.call("is_carried")) and _player.is_on_floor(),
 		"a mounted save reloads with the trainer standing on ground, not carried (%s)" % _player.global_position)
-	_check(absf(_player.global_position.y - level) < 4.0 and (anchor == Vector3.INF or anchor.y < 400.0),
-		"...where the ride was saved, not the top of the ride (trainer y %.1f, saved at %.1f, anchor %s)" % [_player.global_position.y, level, anchor])
+	var flat := Vector2(_player.global_position.x - saved_at.x, _player.global_position.z - saved_at.z).length()
+	_check(absf(_player.global_position.y - level) < 4.0 and flat < 6.0,
+		"...at the saved spot (trainer %s, saved %s)" % [_player.global_position, saved_at])
+	_check(anchor != Vector3.INF and absf(anchor.y - level) < 5.0,
+		"...and Fly's anchor came down with the ride, not left on the road ~300 m up (anchor %s, saved level %.1f)" % [anchor, level])
 	_check_party("mounted save/reload")
 	await _press("creature_recall")
 	for i in 90:
@@ -583,18 +997,6 @@ func _mounted_save_reload_after_descent() -> void:
 	await _walk_to_mount()
 	await _mount_by_interact("remount after reloading a mounted save")
 	await _dismount_by_interact("dismount after the reload")
-
-
-func _open_air_near(from: Vector3) -> Vector3:
-	var space := _player.get_world_3d().direct_space_state
-	for radius: float in [40.0, 70.0, 100.0, 140.0, 200.0]:
-		for step in 16:
-			var angle := TAU * float(step) / 16.0
-			var at := from + Vector3(cos(angle), 0.0, sin(angle)) * radius
-			var ray := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 3.0, at + Vector3.DOWN * 400.0)
-			if space.intersect_ray(ray).is_empty():
-				return at + Vector3.UP * 3.0
-	return Vector3.INF
 
 
 func _gate_spec(id: String) -> Dictionary:
