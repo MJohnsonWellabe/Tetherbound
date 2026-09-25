@@ -116,6 +116,8 @@ func _run() -> void:
 	_hud_visible(false)
 	if _only.has("quick"):
 		await _quick()
+	if _only.has("round4"):
+		await _round4()
 	if _want("strips"):
 		await _strips()
 	if _want("motion"):
@@ -428,6 +430,50 @@ func _night() -> void:
 		_heal()
 		await _capture("night_%s" % phase, "%s at night (art.json night preset, hour 23)" % phase.capitalize(), false)
 	_pin_day()
+
+
+## Round 4 compact set (explicit --only=round4), all 640x360: one settled
+## day and one night frame per phase at the strip stand, a day Break frame
+## with a strike telegraph, and a day Break frame with the camera UPWIND of
+## the trainer (looking downwind) for the slanted-rain lens check.
+func _round4() -> void:
+	for phase: String in PHASES:
+		await _enter_phase(phase, false)
+		await _capture("r4_day_%s" % phase, "%s, day, settled" % phase.capitalize(), false)
+	_pin_clock("night")
+	for phase: String in PHASES:
+		await _enter_phase(phase, false)
+		for _frame in 20:
+			await physics_frame
+		await _capture("r4_night_%s" % phase, "%s at night (hour 23)" % phase.capitalize(), false)
+	_pin_clock("day")
+	var start: float = await _enter_phase("break", false)
+	var limit := start + 100.0
+	_fine(8)
+	while not _ring_visible() and _surge_elapsed() < limit:
+		await physics_frame
+	_fine(1)
+	# Let the ring's pulse run a little before the frame.
+	for _frame in 24:
+		await physics_frame
+	_heal()
+	if _ring_visible():
+		await _capture("r4_telegraph", "Day Break: strike telegraph in the combat hazard colour", false)
+	else:
+		_frames.append({"id": "r4_telegraph", "missing": "no strike telegraph within 100 s of Break"})
+	_coarse()
+	var rain := _surge.get("_rain") as GPUParticles3D
+	var slant := Vector3.ZERO
+	if rain != null:
+		var d := (rain.process_material as ParticleProcessMaterial).direction
+		slant = Vector3(d.x, 0.0, d.z).normalized()
+	# Camera upwind: the trainer faces downwind, so the rig sits upwind.
+	var at := _player.global_position
+	await _stand(Vector2(at.x, at.z), at + slant * 20.0, 2.0)
+	await _enter_phase("break", false)
+	_heal()
+	await _capture("r4_break_upwind", "Day Break, camera upwind of the trainer (looking downwind): slanted-rain lens check", false,
+		{"wind_dir_xz": [slant.x, slant.z]})
 
 
 ## Tuning pass only (--only=quick): one settled frame per phase.

@@ -1,0 +1,397 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Calm, day, settled",
+			"file": "r4_day_calm.jpg",
+			"hud": false,
+			"id": "r4_day_calm",
+			"label": "after_r4",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 4.500255,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Building, day, settled",
+			"file": "r4_day_building.jpg",
+			"hud": false,
+			"id": "r4_day_building",
+			"label": "after_r4",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 328.510129,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break, day, settled",
+			"file": "r4_day_break.jpg",
+			"hud": false,
+			"id": "r4_day_break",
+			"label": "after_r4",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 418.506282666667,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Fading, day, settled",
+			"file": "r4_day_fading.jpg",
+			"hud": false,
+			"id": "r4_day_fading",
+			"label": "after_r4",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 538.495682333333,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Calm at night (hour 23)",
+			"file": "r4_night_calm.jpg",
+			"hud": false,
+			"id": "r4_night_calm",
+			"label": "after_r4",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 4.99451733333333,
+			"surge_phase": "calm",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Building at night (hour 23)",
+			"file": "r4_night_building.jpg",
+			"hud": false,
+			"id": "r4_night_building",
+			"label": "after_r4",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.600000023841858,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 329.009800333333,
+			"surge_phase": "building",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break at night (hour 23)",
+			"file": "r4_night_break.jpg",
+			"hud": false,
+			"id": "r4_night_break",
+			"label": "after_r4",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 418.998557666667,
+			"surge_phase": "break",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Fading at night (hour 23)",
+			"file": "r4_night_fading.jpg",
+			"hud": false,
+			"id": "r4_night_fading",
+			"label": "after_r4",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.150000005960464,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 538.992504666667,
+			"surge_phase": "fading",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Day Break: strike telegraph in the combat hazard colour",
+			"file": "r4_telegraph.jpg",
+			"hud": false,
+			"id": "r4_telegraph",
+			"label": "after_r4",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)"
+			],
+			"surge_elapsed": 422.439440666667,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-608.879211425781,
+				26.4313869476318,
+				770.2109375
+			],
+			"description": "Day Break, camera upwind of the trainer (looking downwind): slanted-rain lens check",
+			"file": "r4_break_upwind.jpg",
+			"hud": false,
+			"id": "r4_break_upwind",
+			"label": "after_r4",
+			"long_storm_ended": false,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"flash_level": 0.0,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"night clock pinned (WorldLook.apply_time('night') + set_clock_frozen)",
+				"player health restored between Break frames"
+			],
+			"surge_elapsed": 418.502460333333,
+			"surge_phase": "break",
+			"time_of_day": "day",
+			"wind_dir_xz": [
+				0.938876271247864,
+				0.344254612922668
+			]
+		}
+	],
+	"label": "after_r4"
+}

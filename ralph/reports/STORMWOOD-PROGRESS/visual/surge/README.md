@@ -25,6 +25,43 @@ Work order: ACCEPTANCE §6.1 F10 / S2. Calm, Building, Break and Fading must be 
   - The Break strip, telegraph and flash were re-rendered after the telegraph fill-colour fix; their records are in `after/frames_after_break_r2.json`, and the Break records in `frames_after.json` are superseded.
   - Night frames were re-rendered after the night sun-cut fix; their records are in `after/frames_after_night_r2.json`.
 
+## Round 4 (final): `sheet_round4.jpg`
+
+Ten 640×360 frames. The records are in `after/frames_after_r4.json`, and every frame was looked at. Camera and staging are as described above, and the telegraph and upwind frames are both day Break.
+
+| Frame | What it shows |
+|---|---|
+| `after/r4_day_calm.jpg` | Flat neutral-grey overcast with drizzle. |
+| `after/r4_day_building.jpg` | Dark olive ceiling over dimmed, copper-dulled ground. |
+| `after/r4_day_break.jpg` | Violet storm sky, lighter than before, so it reads as a storm afternoon. The ground is darker and the rain slanted and heavy. |
+| `after/r4_day_fading.jpg` | Warm tan ceiling breaking up onto blue sky. |
+| `after/r4_night_calm.jpg` | Neutral grey ceiling. |
+| `after/r4_night_building.jpg` | Near-black olive ceiling. |
+| `after/r4_night_break.jpg` | Violet ceiling over a lit lavender horizon. |
+| `after/r4_night_fading.jpg` | Warm brown ceiling. The four night frames separate by hue and value at thumbnail size, and the trainer reads in each. |
+| `after/r4_telegraph.jpg` | Strike telegraph in the game hazard magenta (combat.json `telegraph.colour`). The rim glows above the grass and the interior darkens the ground. |
+| `after/r4_break_upwind.jpg` | Camera upwind of the trainer, looking downwind, in day Break. Rain streaks fall at mid-distance and none crosses near the lens. |
+
+**Round-4 changes**
+1. **Telegraph colour:** the rim and glow read combat.json `telegraph.colour` at runtime, with no copied value. Amber had read as reward gold, the same finding as combat.json's `_why_colour_0905`. The dark interior and the white-hot impact are kept.
+2. **Depth pull:** 0.28 m, down from 0.7, and applied to the rim/glow rows only (radius ≥ rim − 0.15 m). The dark fill is never pulled.
+   - Planar burial check with 16 rim samples: between samples the rim chord falls short of the terrain by up to A·(1 − cos(π/16)), where A = 3·tan(slope). That is 8.9 cm at 57° and 11.8 cm at 64°. Less the 7 cm lift, the burial is 1.9 cm and 4.8 cm.
+   - A 0.28 m pull along the view ray clears a 9 cm burial whenever the ray meets the surface at ≥ 19°.
+3. **Glow band:** past the rim the glow now extrapolates the centre-to-rim slope. It previously sat at rim height, 0.45 m out, which is 0.45 m off on a 45° slope. `atan` is guarded at the centre.
+4. **Prewarm:** the prewarm waits for the active camera and draws a fully faded ring 4 m in front of it for 4 frames, then frees it.
+5. **Rain slant:**
+   - Slant is now 0.15/0.055, a drift of about 2.9 m over a drop's life.
+   - Both emission rings are shifted upwind by half that drift.
+   - The near ring now spans 10.6–17 m and the far ring 17–28 m.
+   - A unit test keeps every drop ≥ 1.5 m from the camera at the riding arm (6.8 m + 0.6 m margin) and any yaw.
+6. **Day Break sky:** sky top #5c5884 and ceiling #6c6898. At 14:00 both are ≥ 2× their night value at 23:00, and ≥ 0.3 luminance.
+7. **Night separation:** the ceilings are now Calm #9ca0a0 (neutral), Building #585e3c (olive), Break #6c6898 (violet) and Fading #a88c6c (warm). Every adjacent pair differs by CIELAB ΔE ≥ 10 at 23:00, and a test pins each phase's hue identity.
+
+**Negative controls** (each broken on purpose; the named test fails):
+- **Item 1:** rim hard-coded to amber → the contract test fails ("expected ff40e6, got ffb040").
+- **Item 5:** round-3 ring settings, no upwind shift → the lens test fails (a drop passes −4.15 m, i.e. it crosses the camera circle).
+- **Item 6:** round-3 day Break values → the day/night test fails (lum 0.210 < 0.3).
+
 ## Sheets (all no HUD, production camera; each frame was looked at)
 
 Round 3 re-rendered the day strips, the Break telegraph and flash, and the night frame per phase (`after/frames_after_r3.json`). The aftermath, matrix views and motion blocks are still round-2 renders (`after/frames_after.json`), made before the round-3 colour, telegraph and rain changes. They are stale for Break's hue, the telegraph and the rain slant, but still valid for the storm-vs-restored-sky contrast.
@@ -102,11 +139,10 @@ All storm ceilings are at opacity 1.0.
 
 ## Still open
 
-- **Storm nights are still darker than a clear night.** The ground loses the blue night fill. The round-3 night frames have not been judged blind.
-- **Day Break has a flat lavender horizon band.** It is the floored horizon/fog colour where far terrain meets the ceiling. It is intentional and much lighter than before, but could still read as a band.
-- **The Break grass is still fairly green in the foreground.** Sun, ambient and fog were the only levers available.
+- **Round 4 has not been judged blind.** The frames are 640×360 only.
+- **Earlier evidence is stale.** The strips, night, aftermath, matrix-view and motion sheets predate the round-4 colours, telegraph and rain.
+- **Night storm ground is darker than a clear night.** The ground loses the blue night fill.
+- **Day Break foreground grass is still fairly green.** Sun, ambient and fog were the only levers available.
 - **The flash has been seen in stills only.**
-- **No Ally frame-time profile could be taken** (software GL in a container). The GPU cost of the dome, two rain layers and the ring shader is unmeasured on device.
-- **The aftermath, matrix-view and motion evidence predates round 3.**
+- **No Ally frame-time profile could be taken** (software GL in a container). The review's CPU figure is 0.40 ms per warning; GPU cost on the device is unmeasured.
 - **Outside these files:** copper flicker, wind response, steam/afterglow, audio, and the rod-line stand framing.
-- **No blind re-judge of round 3 yet.**
