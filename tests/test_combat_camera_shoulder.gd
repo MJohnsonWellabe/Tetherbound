@@ -66,3 +66,12 @@ func test_live_update_preserves_manual_look_throw_target_and_room_constraint() -
 	rig.free()
 	ally.free()
 	other_target.free()
+
+
+func test_the_room_distance_cap_is_one_shipped_config_value_and_it_is_off() -> void:
+	# F04: the cap moved in and out across batches. It is now a single config
+	# value; flipping it needs a new in-engine capture (combat.json `_why`).
+	var framing: Dictionary = ((load("res://scripts/combat/combat_math.gd").config()
+		.get("camera", {}) as Dictionary).get("framing", {}) as Dictionary)
+	assert_true(framing.has("room_distance_cap"), "the room cap is declared in config")
+	assert_false(bool(framing.get("room_distance_cap", true)), "the shipped room cap is off")

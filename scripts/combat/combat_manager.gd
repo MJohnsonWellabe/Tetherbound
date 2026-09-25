@@ -1121,15 +1121,20 @@ func _update_combat_camera_framing(delta: float) -> void:
 	var weight := 1.0 - exp(-lag * delta)
 	_camera_framing_extra = lerpf(_camera_framing_extra, target_extra, weight)
 	var desired := base_distance + _camera_framing_extra
-	# No nearest-wall distance cap (F04). 9b8c3d8a7 removed it for the Warrens
-	# guardian and merge 59e088560 restored it: the nearest wall to ANY fighter
-	# is not a camera-distance ceiling. Clamped to it, the den fight put the lens
-	# 2 m behind a 3.9 m ally, inside its body, with the guardian off-frame.
-	# SpringArm3D contracts depth against real geometry in the camera's actual
-	# direction, and CameraRig sweeps the shoulder pivot against walls, so a
-	# tight room still keeps the lens out of the rock.
+	# The nearest-wall distance cap is one config value, `room_distance_cap`,
+	# and it ships off (see its `_why` in combat.json). The nearest wall to ANY
+	# fighter is not a camera-distance ceiling: clamped to it, the den fight put
+	# the lens 2 m behind a 3.9 m ally, inside its body. SpringArm3D contracts
+	# depth against real geometry in the camera's actual direction, and
+	# CameraRig sweeps the shoulder pivot against walls, so a tight room still
+	# keeps the lens out of the rock.
+	var clearance := _room_clearance() if bool(framing.get("room_distance_cap", false)) else -1.0
+	if clearance >= 0.0:
+		desired = minf(desired, maxf(1.5, clearance))
 	_camera_rig.set("_distance", desired)
-	if float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
+	if clearance >= 0.0:
+		_camera_rig.set("_shoulder", 0.0)
+	elif float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
 		# Use the live pitch/distance, and never retarget/reset manual orbit.
 		var shoulder := _combat_shoulder_offset(desired, rad_to_deg(float(_camera_rig.get("pitch"))))
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))

@@ -743,15 +743,58 @@ func _build_interior_area() -> void:
 
 
 func _on_body_entered(body: Node3D) -> void:
-	if body != _player or not _camera_is_on_the_player():
+	if body != _player:
+		return
+	if not _camera_is_on_the_player():
+		_settle_profile_after_fight()
 		return
 	_camera_rig.call("set_target", _player, INTERIOR_PROFILE)
 
 
 func _on_body_exited(body: Node3D) -> void:
-	if body != _player or not _camera_is_on_the_player():
+	if body != _player:
+		return
+	if not _camera_is_on_the_player():
+		_settle_profile_after_fight()
 		return
 	_camera_rig.call("set_target", _player, {})
+
+
+## A crossing skipped mid-fight is settled when the fight ends. The fight hands
+## the camera back on the default profile (`combat_manager.gd::_release_camera`),
+## which is already right for a trainer standing outside, but a fight that ended
+## with the trainer indoors would otherwise leave the exploration profile inside
+## a 5.4 m room. Deferred so it runs after the hand-back in the same frame.
+func _settle_profile_after_fight() -> void:
+	var manager := _combat_manager()
+	if manager == null or not manager.has_signal("exited"):
+		return
+	if not manager.is_connected("exited", _on_fight_exited_after_crossing):
+		manager.connect("exited", _on_fight_exited_after_crossing, CONNECT_ONE_SHOT)
+
+
+func _on_fight_exited_after_crossing(_outcome: String) -> void:
+	_apply_profile_for_where_the_player_is.call_deferred()
+
+
+func _apply_profile_for_where_the_player_is() -> void:
+	if _player == null or not is_instance_valid(_player) or not _camera_is_on_the_player():
+		return
+	if _player_is_inside():
+		_camera_rig.call("set_target", _player, INTERIOR_PROFILE)
+
+
+## The Interior area's own box, measured directly rather than through
+## `overlaps_body()`, whose answer lags a physics step behind a teleport.
+func _player_is_inside() -> bool:
+	var local := to_local(_player.global_position)
+	return absf(local.x) <= INNER_W * 0.5 and absf(local.z) <= INNER_D * 0.5 \
+		and local.y >= 0.0 and local.y <= FLOOR_H + LOFT_H
+
+
+func _combat_manager() -> Node:
+	var parent := get_parent()
+	return parent.get_node_or_null(^"CombatManager") if parent != null else null
 
 
 ## Only take the camera if it is on the PLAYER: a fight (the piloted ally), the
@@ -767,8 +810,7 @@ func _on_body_exited(body: Node3D) -> void:
 func _camera_is_on_the_player() -> bool:
 	if _camera_rig == null or not is_instance_valid(_camera_rig):
 		return false
-	var parent := get_parent()
-	var manager: Node = parent.get_node_or_null(^"CombatManager") if parent != null else null
+	var manager := _combat_manager()
 	if manager != null and manager.has_method("is_fighting") and bool(manager.call("is_fighting")):
 		return false
 	var current: Variant = _camera_rig.get("_target")

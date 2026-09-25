@@ -188,6 +188,8 @@
       "_comment_fit": "The camera orbits the ally. Framing projects both live render bounds into its basis and solves horizontal and vertical perspective planes, including depth. `horizontal_fill` reserves margin on both axes for orbit/parallax and HUD. The open-field Guardian/Solmane probe proved the former +4m cap still put two actual mesh corners behind the camera and cropped both bodies at 10m. Actual directional SpringArm collision limits depth in tight rooms.",
       "horizontal_fill": 0.82,
       "max_extra_distance": 30.0,
+      "_why_room_distance_cap": "F04. ONE value, and it is off. When true, combat_manager.gd clamps the camera distance to the nearest room wall around the fight (_room_clearance, floor 1.5 m) and drops the shoulder. 9b8c3d8a7 removed that clamp, merge 59e088560 restored it, and the F04 guardian fix removed it again. Clamped, the Warrens den put the lens 2 m behind a 3.9 m ally, inside its body, with the guardian off-frame, and the Stronghold OP23-02 gauntlet lost its shoulder composition (ralph/reports/MEADOWS-PAYOFFS/guardian-camera/). The SpringArm contracts depth against real geometry along the camera's own direction, and CameraRig sweeps the shoulder pivot, so tight rooms are handled without it (interior capture: ralph/reports/MEADOWS-PAYOFFS/camera-room/). Flip only with a new in-engine capture.",
+      "room_distance_cap": false,
       "_comment_lag": "Exponential smoothing on the extra distance only, same shape as retarget_lag above but separate -- retarget_lag is spent once, easing the rig onto a brand-new target, while this runs continuously so the frame breathes with the fight instead of snapping every time the gap changes.",
       "lag": 4.0
     }
