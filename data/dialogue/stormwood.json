@@ -821,6 +821,86 @@
         "Archivist Wen: The Rain Ledger, the Root Census and the burned mark. You read all three. Now the account is whole: the Rodfolk built their roads to carry storms past the forest, and the burned mark shows the Dynamo using those same lines to feed one.",
         "The keepers also kept a store on this island, north-west of the grove where Neri keeps watch. If it is still there, it is yours to take; if a traveller already carried it off, it is already doing its work."
       ]
+    },
+    "stormwood_pim_parcels_offer": {
+      "speaker": "Pim",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "state": "side_offer",
+      "requires_flags": ["stormwood:lantern_pools_linked"],
+      "lines": [
+        "Pim: The arches are lit again, and my sealed parcels have sat on this ledge since the storm closed the roads.",
+        "Three households are waiting: Marl's kitchen at Ashfoot, Oswin's stall at Rodline Post, and Lio's creature beds at Lantern Hollow. Carry them for me? Keep the seals whole until each one is in their hands."
+      ]
+    },
+    "stormwood_pim_parcels_progress": {
+      "speaker": "Pim",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "state": "side_progress",
+      "requires_flags": ["stormwood:side_pims_parcels_1"],
+      "lines": [
+        "Pim: Marl at Ashfoot, Oswin at Rodline Post, Lio at Lantern Hollow. The arches carry you faster than any courier ever walked.",
+        "Lantern Hollow opens only once the Rootgate does. The parcel keeps; the seal is good."
+      ]
+    },
+    "stormwood_pim_parcels_return": {
+      "speaker": "Pim",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "state": "side_complete",
+      "requires_flags": ["stormwood:side_pims_parcels_2"],
+      "lines": [
+        "Pim: All three delivered, seals whole. Marl already sent word that the kitchen is cooking again.",
+        "Take your courier's rate: two small potions. Anyone travelling with you can collect their own share from me."
+      ]
+    },
+    "stormwood_pim_parcels_thanks": {
+      "speaker": "Pim",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "state": "side_complete",
+      "requires_flags": ["stormwood:side_pims_parcels_complete"],
+      "lines": [
+        "Pim: The parcels reached all three households, seals whole. The courier's rate is owed to you.",
+        "Two small potions. Keep them dry."
+      ]
+    },
+    "stormwood_pim_parcel_cook_marl": {
+      "speaker": "Marl",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "state": "side_delivery",
+      "requires_flags": ["stormwood:side_pims_parcels_1"],
+      "lines": [
+        "Marl: Pim's seal! Salt, dried voltcaps and lamp wicks. The kitchen has been cooking on scraps since the roads went dark.",
+        "Tell Pim the Ashfoot pot is full again."
+      ]
+    },
+    "stormwood_pim_parcel_trader_oswin": {
+      "speaker": "Oswin",
+      "portrait": "res://assets/ui/portraits/villager_male.png",
+      "state": "side_delivery",
+      "requires_flags": ["stormwood:side_pims_parcels_1"],
+      "lines": [
+        "Oswin: Insulated twine and a sealed ledger. My stall can open properly again.",
+        "Stack it by the counter; the rod crews will be glad to see it."
+      ]
+    },
+    "stormwood_pim_parcel_caretaker_lio": {
+      "speaker": "Lio",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "state": "side_delivery",
+      "requires_flags": ["stormwood:side_pims_parcels_1"],
+      "lines": [
+        "Lio: Moss bedding and a jar of calming salve, all the way from Lantern Pools.",
+        "The creatures here will sleep through the next Break. Thank Pim for me."
+      ]
+    },
+    "stormwood_pim_parcels_return_paid": {
+      "speaker": "Pim",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "state": "side_complete",
+      "requires_flags": ["stormwood:side_pims_parcels_2"],
+      "lines": [
+        "Pim: All three delivered, seals whole. Marl already sent word that the kitchen is cooking again.",
+        "You have carried for me before and took your rate then; I remember a courier's face. Anyone travelling with you can collect their own share from me."
+      ]
     }
   }
 }
