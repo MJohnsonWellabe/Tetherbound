@@ -531,7 +531,12 @@ func _clear_capacitor_alpha() -> bool:
 	# Proximity may already have announced while no usable ally was deployed.
 	# Use the ordinary explicit Engage offer too; never assume an aggressive
 	# body's one-shot request will be repeated after party recovery.
-	for attempt in 4:
+	# The Alpha roams with Tanglevolt escorts, and Engage always offers the
+	# nearest body. A player standing by it answers the escort first. F11
+	# witness run 6 spent all four approaches refusing to press an escort's
+	# Engage and never started a fight; up to eight approaches now allow the
+	# escorts to be fought in turn.
+	for attempt in 8:
 		if not await _ensure_usable_ally("Capacitor Alpha re-engagement"):
 			return false
 		body = _named_wild("capacitor_alpha")
@@ -550,6 +555,20 @@ func _clear_capacitor_alpha() -> bool:
 			if bool(_manager.call("is_fighting")):
 				break
 			if bool(_game.get("progression").call("has", CLEAR_FLAG)):
+				break
+			var escort := _director.call("_engageable") as Node3D
+			if is_instance_valid(escort) and escort != body and _named_engage_ready(escort):
+				_note("ENGAGING the Alpha's escort %s first (Engage offers the nearest body)" % str(escort.get_path()))
+				if await _tap_named_engage(escort):
+					for _settle in 60:
+						if bool(_manager.call("is_fighting")):
+							break
+						await _tree.physics_frame
+					if bool(_manager.call("is_fighting")):
+						if _manager.call("enemy_body") == body:
+							_note("ALPHA admitted while answering an escort")
+						elif not await _fight_current("Capacitor Alpha escort"):
+							return false
 				break
 			if _named_engage_ready(body):
 				_activated_provider_id = 0
@@ -576,7 +595,7 @@ func _clear_capacitor_alpha() -> bool:
 		if await _wait_flag(CLEAR_FLAG, 180):
 			_note("CLEARED the named Capacitor Alpha through its production once-only fight")
 			return true
-	return _fail("four ordinary approaches did not clear the named Capacitor Alpha (body=%s distance=%.2f outcome=%s)" % [
+	return _fail("eight ordinary approaches did not clear the named Capacitor Alpha (body=%s distance=%.2f outcome=%s)" % [
 		str(body.get_path()) if is_instance_valid(body) else "<none>",
 		_player.global_position.distance_to(body.global_position) if is_instance_valid(body) else INF,
 		_last_combat_outcome])
