@@ -148,6 +148,7 @@ func _receive(event: Dictionary) -> void:
 		var tween := ring.create_tween()
 		tween.tween_property(ring, "scale", Vector3(1.15, 8, 1.15), 0.12)
 		tween.tween_callback(ring.queue_free)
+	_strike_flash(event.at)
 	var hits: Dictionary = event.get("hits", {})
 	if not hits.has(session.local_peer_id()):
 		return
@@ -175,6 +176,50 @@ func _receive(event: Dictionary) -> void:
 	player.velocity *= 0.25
 	if vitals.is_dead():
 		player.died.emit()
+
+
+## The visible strike: a brief white-violet bolt and local light where the
+## telegraph stood, plus a full-strength sky flash (ART_DIRECTION §3.3 flash
+## rhythm, §4 white-violet lightning). Values: stormwood_surge.json
+## presentation.flash.strike_*.
+func _strike_flash(at: Vector3) -> void:
+	var cfg: Dictionary = rules.config.get("presentation", {}).get("flash", {})
+	var colour := Color(str(cfg.get("colour", "#e6dcff")))
+	var seconds := float(cfg.get("strike_bolt_seconds", 0.18))
+	var height := float(cfg.get("strike_bolt_height_m", 45.0))
+	var bolt := MeshInstance3D.new()
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = 0.06
+	mesh.bottom_radius = 0.16
+	mesh.height = height
+	mesh.radial_segments = 6
+	mesh.rings = 1
+	bolt.mesh = mesh
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = colour
+	material.emission_enabled = true
+	material.emission = colour
+	material.emission_energy_multiplier = 6
+	bolt.material_override = material
+	bolt.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(bolt)
+	bolt.global_position = at + Vector3.UP * height * 0.5
+	var light := OmniLight3D.new()
+	light.light_color = colour
+	light.light_energy = float(cfg.get("strike_light_energy", 8.0))
+	light.omni_range = float(cfg.get("strike_light_range_m", 18.0))
+	light.shadow_enabled = false
+	add_child(light)
+	light.global_position = at + Vector3.UP * 2.0
+	var tween := light.create_tween()
+	tween.tween_property(light, "light_energy", 0.0, seconds * 2.0)
+	tween.tween_callback(light.queue_free)
+	var fade := bolt.create_tween()
+	fade.tween_interval(seconds)
+	fade.tween_callback(bolt.queue_free)
+	if surge != null and surge.has_method("flash"):
+		surge.call("flash", 1.0)
 
 
 func _expire_warning(id: int) -> void:
