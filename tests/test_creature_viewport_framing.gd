@@ -430,5 +430,49 @@ func test_showcase_is_warm_never_red_and_switches_off() -> void:
 	widget.call("set_showcase", false)
 	assert_false(bool(widget.call("showcase")), "showcase off restores the ordinary preview")
 	assert_eq((widget.get("_rim") as DirectionalLight3D).light_color, VIEWPORT.RIM_COLOUR)
+
+## Independent review: the per-frame fit walked thousands of hull points on
+## the Guardian. The silhouette is now bounded whatever the mesh density.
+func test_the_per_frame_silhouette_is_bounded() -> void:
+	var widget: SubViewportContainer = VIEWPORT.new()
+	widget.call("_build_world")
+	var turntable := widget.get("_turntable") as Node3D
+	var body := _build_body_like_the_viewport(turntable, "abyssal_guardian")
+	widget.call("frame_body", body, 7.2, 3.0)
+	var hull: PackedVector3Array = widget.get("_hull")
+	var bound: int = VIEWPORT.HULL_BANDS * VIEWPORT.HULL_DIRECTIONS * 2
+	assert_true(hull.size() > 0 and hull.size() <= bound, "Guardian silhouette has %d points (bound %d)" % [hull.size(), bound])
+	var started := Time.get_ticks_usec()
+	for i in 20:
+		VIEWPORT.fit_points(hull, TAU * i / 20.0, VIEWPORT.CAMERA_FOV_DEG, 420.0 / 602.0, VIEWPORT.FRAME_MARGIN, VIEWPORT.CAMERA_PITCH_DEG)
+	print("  fit_points on the Guardian silhouette: %.2f ms per frame (headless)" % ((Time.get_ticks_usec() - started) / 20000.0))
+	widget.free()
+
+
+## The eased zoom-in (play's path, not the snapped one) never crops: step the
+## turntable as play does for 12 s and check every frame.
+func test_the_eased_fit_never_crops_while_turning() -> void:
+	var widget: SubViewportContainer = VIEWPORT.new()
+	widget.call("_build_world")
+	var turntable := widget.get("_turntable") as Node3D
+	var body := _build_body_like_the_viewport(turntable, "abyssal_guardian")
+	widget.call("frame_body", body, 7.2, 3.0)
+	var points := _silhouette(_rendered_points(turntable))
+	var viewport := widget.get("_viewport") as SubViewport
+	var camera := widget.get("_camera") as Camera3D
+	var aspect := float(viewport.size.x) / float(viewport.size.y)
+	var limit: float = 1.0 - 2.0 * VIEWPORT.FRAME_MARGIN + EPSILON
+	var worst := 0.0
+	var dt := 1.0 / 30.0
+	for frame in 360:
+		widget.call("advance", VIEWPORT.IDLE_SPIN_SPEED * dt, dt)
+		var proj := Projection.create_perspective(camera.fov, aspect, camera.near, camera.far)
+		var view := camera.transform.affine_inverse()
+		var spin := Basis(Vector3.UP, turntable.rotation.y)
+		for point: Vector3 in points:
+			var clip: Vector4 = proj * _v4(view * (spin * point))
+			var ndc := Vector2(clip.x, clip.y) / clip.w
+			worst = maxf(worst, maxf(absf(ndc.x), absf(ndc.y)))
+	assert_true(worst <= limit, "while turning, the Guardian reached ndc %.3f > %.3f" % [worst, limit])
 	widget.free()
 
