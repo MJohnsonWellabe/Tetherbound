@@ -36,6 +36,7 @@ const WORLD_BUILD_BUDGET_FRAMES := 10000
 const WORLD_BUILD_ACTIONS := ["load_save", "boot", "enter_realm", "screenshot"]
 ## Steps after which a peer's session id or character id may have changed.
 const IDENTITY_ACTIONS := ["host", "join", "production_join", "load_save", "boot", "leave"]
+const SCENARIO_KEYS := ["name", "claim", "peers", "scene", "host_peer", "budget_s", "steps"]
 const STEP_KEYS := ["peer", "action", "probe", "args", "budget_frames", "expect", "expect_data",
 	"label", "continue_on_fail", "_comment"]
 
@@ -60,6 +61,12 @@ func _run() -> void:
 		await _end({}, path)
 		return
 	var s: Dictionary = scenario
+	var unknown_top: Array = s.keys().filter(func(k: Variant) -> bool:
+		return not SCENARIO_KEYS.has(str(k)) and not str(k).begins_with("_comment"))
+	if not unknown_top.is_empty():
+		check(false, "the scenario has only known top-level keys (unknown: %s)" % str(unknown_top))
+		await _end(s, path)
+		return
 	var peers := int(s.get("peers", 2))
 	_host_peer = int(s.get("host_peer", 0))
 	if not await launch(peers, str(s.get("scene", "world"))):
