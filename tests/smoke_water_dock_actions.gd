@@ -51,12 +51,12 @@ func run() -> void:
 	game.reset_for_new_game()
 	game.current_realm = "water"
 	game.local.character_id = "water-dock-fixture"
-	# Disclosed fixture: the islands whose dock equipment this smoke drives
-	# (Shellwatch, Deep Watch) are reached in an earned world only after these
-	# upstream dock facts, which lift their closed-gate tide races. The facts
-	# under test (lesson, Reedhaven repair, Shellwatch, Deep Watch) stay unset.
-	for upstream: String in ["water_dock_brine_steps_trial_won", "water_aquaryn_resolved",
-			"water_dock_salt_crown_landing_charted"]:
+	# Disclosed fixture: this smoke drives dock equipment on islands an earned
+	# world reaches only after later dock facts, which lift the closed-gate
+	# tide races on every landform before them. The facts under test (lesson,
+	# Reedhaven repair, Brine Steps, Shellwatch, Deep Watch) stay unset, so
+	# each closed departure strip is still asserted.
+	for upstream: String in ["water_aquaryn_resolved", "water_dock_salt_crown_landing_charted"]:
 		game.world.flags.set_flag(upstream)
 	game.save_system = RefusingWorldSave.new("user://water_dock_actions_%d/" % Time.get_ticks_usec())
 	world = WORLD.instantiate()
@@ -75,6 +75,12 @@ func run() -> void:
 	player.set_physics_process(false)
 	docks = world.get_node("WaterDocks")
 	await frames()
+	var current_spot := current_probe("reedhaven_to_brine_steps")
+	if not check(current_spot.is_finite(), "Reedhaven outbound current has an unambiguous sample"):
+		finish()
+		return
+	var closed_speed: float = world.current_at(current_spot).length()
+	check(is_equal_approx(closed_speed, 6.0), "Closed dock current pushes at configured 6m/s")
 	var barrier: StaticBody3D = docks.get("_barriers").get(REED)
 	if not check(barrier != null, "Reedhaven has a physical departure barrier"):
 		finish()
@@ -89,15 +95,6 @@ func run() -> void:
 	check(game.inventory.count("reed_fiber") == 9 and game.inventory.count("driftwood") == 7,
 		"Prerequisite refusal spends no materials")
 	game.world.flags.set_flag("water_swim_lesson_complete")
-	# Sampled where the closed Reedhaven strip, not a tide race, owns the water.
-	# The fixture's upstream facts already open Reedhaven and its crossing
-	# shoal; the probe still requires full influence on this exact current.
-	var current_spot := current_probe("reedhaven_to_brine_steps")
-	if not check(current_spot.is_finite(), "Reedhaven outbound current has an unambiguous sample"):
-		finish()
-		return
-	var closed_speed: float = world.current_at(current_spot).length()
-	check(is_equal_approx(closed_speed, 6.0), "Closed dock current pushes at configured 6m/s")
 	# Keep a separate closed-world fixture: the active slot-0 world file will
 	# now be updated by the repair itself, before a later manual slot save.
 	check(game.save_game(2), "Independent closed dock fixture saved for restoration")
@@ -196,11 +193,8 @@ func run() -> void:
 	await frames()
 	check(not game.world.flags.has(SHELL) and not game.world.flags.has(DEEP),
 		"Pre-reward save restores both authoritative flags as incomplete")
-	# Brine Steps' own dock is open in this fixture, so the pre-reward value is
-	# the authored, unreduced return current rather than a closed-dock push.
-	check(is_equal_approx(world.current_at(shell_current_spot).length(), authored_strength("brine_steps_to_shellwatch_direct"))
-		and not is_equal_approx(world.current_at(shell_current_spot).length(), 0.08),
-		"Pre-reward reload restores the unreduced Shellwatch current")
+	check(is_equal_approx(world.current_at(shell_current_spot).length(), 6.0),
+		"Pre-reward reload restores the still-gated Shellwatch current")
 	check(is_equal_approx(world.current_at(deep_current_spot).length(), deep_before),
 		"Pre-reward reload restores the original Deep Watch current")
 	check(game.load_game(2), "Completed return-current reward save reloads")
@@ -236,12 +230,6 @@ func current_probe(route: String, exact: bool = false) -> Vector3:
 				if str(sampled.id) == str(current.id) and is_equal_approx(float(sampled.influence), 1.0):
 					return at
 	return Vector3.INF
-
-func authored_strength(route: String) -> float:
-	for current: Dictionary in world.config.currents:
-		if str(current.route_id) == route:
-			return float(current.strength_m_s)
-	return NAN
 
 func vector(raw: Array) -> Vector3:
 	return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))

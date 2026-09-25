@@ -1,0 +1,65 @@
+run id:  net-20260925T082718Z-18836
+run dir: /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmcmp/main/net-split_realms-20260925T082718Z
+smoke:   tests/smoke_net_split_realms.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=18858 control_port=33983 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmcmp/main/net-split_realms-20260925T082718Z/home-0 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmcmp/main/net-split_realms-20260925T082718Z/peer-0.log
+coordinator: launched peer 1 (client) pid=18859 control_port=45787 home=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmcmp/main/net-split_realms-20260925T082718Z/home-1 log=/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmcmp/main/net-split_realms-20260925T082718Z/peer-1.log
+coordinator: peer 1 hello: {"enet_port":34562.0,"godot_version":"4.7-stable (official)","main_sha":"835744b35db1","peer":1.0,"pid":18859.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmcmp/main/net-split_realms-20260925T082718Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":34561.0,"godot_version":"4.7-stable (official)","main_sha":"835744b35db1","peer":0.0,"pid":18858.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmcmp/main/net-split_realms-20260925T082718Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join (lane 2.A); without it there are no remote bodies to see
+PASS: peer 0 hosted a world (hosting udp/34561 as peer 1)
+PASS: peer 1 joined peer 0's world on port 34561 (joined 127.0.0.1:34561 as peer 1090922324 after 10 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames)
+PASS: peer 0 starts in the Meadows (got 'meadows')
+PASS: peer 1 starts in the Meadows (got 'meadows')
+PASS: the host holds no realm shell while everybody is in one realm (holds [])
+PASS: the Cloudreach route is open before anyone tries to walk it (realm_key_cloudreach: ok=true pending=false code='' reason='')
+PASS: peer 0 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: peer 1 sees the Cloudreach route open (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: peer 1 crossed into Cloudreach without leaving the session (crossed 'meadows' -> 'cloudreach' after 530 observed physics frames / 28854 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: peer 0's session is still active after the crossing
+PASS: peer 0 still counts 2 peers after the crossing (got 2)
+PASS: peer 1's session is still active after the crossing
+PASS: peer 1 still counts 2 peers after the crossing (got 2)
+PASS: peer 0's registry carries a realm for both players
+PASS: peer 0 sees one player in each realm (got ["cloudreach", "meadows"])
+PASS: peer 1's registry carries a realm for both players
+PASS: peer 1 sees one player in each realm (got ["cloudreach", "meadows"])
+PASS: the host is still standing in the Meadows
+PASS: the client is standing in Cloudreach
+PASS: the client's CURRENT SCENE is Cloudreach, not merely its realm id (got 'CloudreachCliffs')
+PASS: the host stands a headless Cloudreach shell up for the peer who went there (holds ["cloudreach"])
+PASS: the Cloudreach shell holds the body of the peer who crossed (holds 1)
+6A-SHELL-COST peer=0 realm=cloudreach attach_ms=56 build_ms=2677 ready=true static_delta_kb=3970 process_static_kb=1781350 vm_hwm_kb=2282732 bodies=1
+PASS: the client hosts nothing: shells are the HOST's, not every peer's (holds [])
+PASS: the client's real visible sliced Cloudreach scene built grass, flowers and bushes ({ "bushes": 778.0, "flowers": 13342.0, "grass": 1048134.0, "present": true, "world": "CloudreachCliffs" })
+PASS: the host's simulation-only Cloudreach shell omits decorative cover ({ "bushes": 0.0, "flowers": 0.0, "grass": 0.0, "present": false, "world": "CloudreachCliffs" })
+PASS: peer 0 draws no trainer body, in the world on its own screen, for a player in another realm (drew 0)
+PASS: peer 1 draws no trainer body, in the world on its own screen, for a player in another realm (drew 0)
+PASS: the host committed a Meadows world record while the client was elsewhere (chest record at index 0)
+PASS: the client committed a CLOUDREACH world record from Cloudreach (chest record at index 1)
+PASS: the host put a creature out in the Meadows (deployed AllyCreature)
+PASS: the host fought a wild in the Meadows while a Cloudreach shell was standing (engaged mudsnout as encounter 1:1 (bound after 0 frame(s)))
+PASS: the Cloudreach shell survived the host's own fight (holds ["cloudreach"])
+coordinator: ERROR: peer silent (peer 1, no heartbeat for >15 s)
+FAIL: peer 1 crossed back into the Meadows (ERROR: peer silent (peer 1, no heartbeat for >15 s))
+FAIL: the HOST crossed into Cloudreach, the other way round (ERROR: peer silent (peer 1, no heartbeat for >15 s))
+FAIL: the host realm probe returned no verdict after the swap
+PASS: departure leaves no stale trainer synchronizer/cache errors
+FAIL: ERROR: peer silent (peer 1, no heartbeat for >15 s)
+
+=== /tmp/claude-0/-home-user/c9782fb5-aa60-52fe-8dc3-e14e47bf496f/scratchpad/realmcmp/main/net-split_realms-20260925T082718Z/SUMMARY.md ===
+# Net smoke run net-20260925T082718Z-18836
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=18858 exited=false unexpected_exit=false
+- peer 1 (client) pid=18859 exited=false unexpected_exit=false
+
+FATAL: ERROR: peer silent (peer 1, no heartbeat for >15 s)

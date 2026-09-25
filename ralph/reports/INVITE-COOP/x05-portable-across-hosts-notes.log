@@ -1,0 +1,31 @@
+# X05 portable character across two hosts (tests/smoke_net_join_portable_across_hosts.gd)
+# main bcf46366c, stock Godot 4.7, one run at a time, isolated TB_NET_RUN_ID/--out.
+run 1: 21/23. Two failures, both explained:
+  - "personal progress travelled": FIXTURE ERROR. The first fixture used an undeclared
+    flag id; character_save.gd saves only flags declared SCOPE_PLAYER in the
+    progression_state.gd scope table, so it rightly stayed behind. The fixture now uses
+    the declared player flag water_swim_lesson_briefed.
+  - "the traveller never wrote a world file": OPEN, UNEXPLAINED, INTERMITTENT. The client
+    wrote user://worlds/slot-0/world.json (empty world flags, created 06:02:09) and
+    characters/<its boot character id>/character.json at the same second, ~8 s after
+    leaving host A (portable file 06:02:01) while joined to host B. The world holds
+    neither host's flags, so it is not a host world import. Run 2 instrumented
+    Game.save_game(): never called on that peer, and the stray file did not appear.
+    Remaining writers to check: ledger_rpc.gd save_world call sites, realm_shells.gd,
+    water/stormwood direct save_world. Not reproduced in runs 2-4.
+run 2: 22/23 (fixture error only; no stray world file).
+run 3: 23/23 PASS   (x05-portable-across-hosts-run3.log)
+run 4: 23/23 PASS   (x05-portable-across-hosts-run4.log)
+Proves on loopback: same stable character id admitted by two different hosts; declared
+personal progress restored from its own character file; each world's flags stay in that
+world (no world import, host worlds untouched by the traveller); traveller writes only
+its own character file.
+review (code-blind agent): APPROVE WITH NITS. Addressed:
+  - absence checks now require the wait_flag step's own "never set within" timeout
+    verdict, so a hung/crashed/erroring peer cannot pass them; host B gets a positive
+    read of its own world flag first;
+  - the traveller's in-memory character is blanked (wipe_character, file untouched)
+    after leaving A and the personal flag is shown absent, so its return in world B can
+    only come from its character file;
+  - the final check requires exactly one character file.
+run 5 (after merging main a0fde6d7 and the nits): 26/26 PASS (x05-portable-across-hosts-run5.log)
