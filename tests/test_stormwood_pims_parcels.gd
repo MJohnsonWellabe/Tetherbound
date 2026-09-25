@@ -7,6 +7,7 @@ const PARCELS := preload("res://scripts/world/stormwood_pims_parcels.gd")
 const PEOPLE := preload("res://scripts/world/village_npcs.gd")
 const WORLD_STATE := preload("res://autoload/world_state.gd")
 const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
+const REWARD_DELIVERY := preload("res://scripts/net/reward_delivery.gd")
 const CHAIN := "stormwood_pims_parcels"
 
 
@@ -154,3 +155,81 @@ func test_ledger_pays_each_character_once_for_the_courier_rate() -> void:
 	var other_world: RefCounted = WORLD_STATE.new()
 	assert_false(PARCELS.paid_in_world(other_world, "character-courier"),
 		"Once per character per world: another world keeps its own receipt")
+
+
+class GameStub extends Node:
+	var progression: RefCounted
+	var local: Variant = null
+	var world: RefCounted
+	var messages: Array[String] = []
+
+	func player_flags() -> RefCounted:
+		return progression
+
+	func push_world_message(text: String) -> void:
+		messages.append(text)
+
+
+class LocalStub extends RefCounted:
+	var character_id := "character-courier"
+
+
+class ChapterStub extends Node:
+	func emit_event(_event: String) -> Dictionary:
+		return {"accepted": true}
+
+
+func _paid_world(character: String) -> RefCounted:
+	var world: RefCounted = WORLD_STATE.new()
+	world.set("reward_delivery_namespace", "stormwood-pims-thanks")
+	var id := REWARD_DELIVERY.delivery_id("stormwood-pims-thanks", PARCELS.REWARD_SOURCE, character)
+	(world.get("reward_deliveries") as Dictionary)[id] = {"stacks": [{"id": PARCELS.REWARD_ITEM, "n": 2}]}
+	return world
+
+
+func test_pim_returns_to_her_post_storm_greeting_once_her_thanks_is_heard_while_paid() -> void:
+	var pim := CHAPTER_RUNTIME.npc_spec(_npcs().courier_pim)
+	var flags := PROGRESSION.new()
+	for flag: String in ["stormwood:chapter_started", "stormwood:long_storm_ended", PARCELS.COMPLETE]:
+		flags.set_flag(flag)
+	assert_eq(PEOPLE.greeting_for(pim, flags), PARCELS.THANKS, "a finished chain opens Pim's thanks first")
+	assert_eq(PROGRESSION.scope_of(PARCELS.RECEIVED_FLAG), PROGRESSION.SCOPE_PLAYER,
+		"the thanks receipt is this character's own, not the world's")
+	var game := GameStub.new()
+	game.progression = flags
+	game.local = LocalStub.new()
+	game.world = _paid_world("character-courier")
+	var parcels: Node3D = PARCELS.new()
+	parcels.set("game", game)
+	assert_true(parcels.call("_paid"), "the fixture character's rate is in this world's delivery journal")
+	var chapter := ChapterStub.new()
+	assert_true(bool(parcels.call("dialogue_finished", PARCELS.THANKS, chapter)))
+	chapter.free()
+	assert_true(flags.has(PARCELS.RECEIVED_FLAG), "hearing the thanks while paid records the receipt")
+	assert_eq(PEOPLE.greeting_for(pim, flags), "stormwood_courier_pim_post_storm",
+		"after the thanks has been heard once Pim falls back to her post-storm greeting")
+	flags.set_flag("stormwood:long_storm_ended", false)
+	assert_eq(PEOPLE.greeting_for(pim, flags), "stormwood_courier_pim_in_progress",
+		"before the storm ends she falls back to her ordinary lines")
+
+	# The same character in a world that still owes it the rate: the receipt
+	# from elsewhere is dropped so her thanks, which pays, is reachable again.
+	game.world = WORLD_STATE.new()
+	(game.world as RefCounted).set("reward_delivery_namespace", "stormwood-pims-other")
+	parcels.call("restore_progression_from_game", game)
+	assert_false(flags.has(PARCELS.RECEIVED_FLAG), "an unpaid world drops the receipt")
+	assert_eq(PEOPLE.greeting_for(pim, flags), PARCELS.THANKS, "an unpaid character is still thanked and paid")
+	parcels.free()
+	game.free()
+
+
+func test_paid_is_false_without_a_game_or_local_record() -> void:
+	var parcels: Node3D = PARCELS.new()
+	assert_false(parcels.call("_paid"), "no Game yet reads as unpaid instead of crashing")
+	var game := GameStub.new()
+	game.progression = PROGRESSION.new()
+	game.world = _paid_world("character-courier")
+	parcels.set("game", game)
+	assert_false(parcels.call("_paid"), "a Game whose local record is not set yet reads as unpaid")
+	parcels.free()
+	game.free()

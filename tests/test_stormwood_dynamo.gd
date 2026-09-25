@@ -173,3 +173,23 @@ func test_hosted_story_trainers_emit_the_chapter_events_the_objectives_listen_fo
 	assert_eq(HUB.chapter_event_for_trainer("officer_kestrel_outer_works"),
 		"trainer:kestrel_defeated")
 	assert_eq(HUB.chapter_event_for_trainer("optional_rodfolk"), "")
+
+
+func test_a_party_is_down_only_when_no_creature_can_take_the_field() -> void:
+	var party: RefCounted = preload("res://autoload/party.gd").new()
+	assert_false(CONTROLLER.party_unavailable(party), "an empty party is not a fainted one")
+	var members: Array = []
+	for i in 5:
+		var creature: RefCounted = preload("res://scripts/world/trainer_npc.gd").creature_for(
+			{"species": "fulgocobra", "level": 20})
+		party.call("add", creature)
+		members.append(creature)
+	assert_false(CONTROLLER.party_unavailable(party))
+	(members[0] as RefCounted).set("fainted", true)
+	for i in range(1, 5):
+		party.call("set_resting", i, true, -31 - i)
+	assert_true(CONTROLLER.party_unavailable(party),
+		"one fainted and four resting creatures cannot take the field: the party is down")
+	party.call("set_resting", 3, false)
+	assert_false(CONTROLLER.party_unavailable(party), "one creature able to take the field keeps the party in")
+	assert_false(CONTROLLER.party_unavailable(null))
