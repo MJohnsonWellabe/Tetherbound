@@ -20,3 +20,12 @@ Proves on loopback: same stable character id admitted by two different hosts; de
 personal progress restored from its own character file; each world's flags stay in that
 world (no world import, host worlds untouched by the traveller); traveller writes only
 its own character file.
+review (code-blind agent): APPROVE WITH NITS. Addressed:
+  - absence checks now require the wait_flag step's own "never set within" timeout
+    verdict, so a hung/crashed/erroring peer cannot pass them; host B gets a positive
+    read of its own world flag first;
+  - the traveller's in-memory character is blanked (wipe_character, file untouched)
+    after leaving A and the personal flag is shown absent, so its return in world B can
+    only come from its character file;
+  - the final check requires exactly one character file.
+run 5 (after merging main a0fde6d7 and the nits): 26/26 PASS (x05-portable-across-hosts-run5.log)

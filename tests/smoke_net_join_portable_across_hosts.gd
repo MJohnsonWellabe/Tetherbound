@@ -45,6 +45,8 @@ func _run() -> void:
 		"host A recorded its world flag")
 	check(_passed(await step(1, "story_flag", {"flag": WORLD_B_FLAG, "scope": "world"})),
 		"host B recorded its world flag")
+	check(_passed(await step(1, "wait_flag", {"flag": WORLD_B_FLAG, "scope": "world"})),
+		"host B's own world flag reads back, so its later absence checks are live")
 
 	# --- the traveller in world A ---------------------------------------------
 	check(_passed(await step(2, "join", {"host": "127.0.0.1", "port": port_a,
@@ -55,7 +57,7 @@ func _run() -> void:
 	check(_passed(await step(2, "wait_flag", {"flag": WORLD_A_FLAG, "scope": "world"})),
 		"in world A the traveller sees A's world flag")
 	check(_passed(await step(2, "story_flag", {"flag": PERSONAL_FLAG, "scope": "player",
-		"peers": [peer_in_a]})), "host A granted the traveller a personal flag")
+		"peers": [peer_in_a]})), "host A's ledger approved the traveller's personal flag")
 	check(_passed(await step(2, "wait_flag", {"flag": PERSONAL_FLAG, "scope": "player"})),
 		"the personal flag landed on the traveller")
 	check(_passed(await step(2, "save_character_here", {})), "the traveller saved its character")
@@ -63,16 +65,21 @@ func _run() -> void:
 	check(str(file_a.get("id", "")) == TRAVELLER, "the saved file is the traveller's (%s)" % str(file_a))
 	check(_passed(await step(2, "leave", {"reason": "travelling"})), "the traveller left world A")
 	check(_passed(await step(0, "expect_peers", {"count": 1}, 900)), "host A is alone again")
+	# Blank the traveller's in-memory character (id kept, file untouched), so
+	# anything it carries into world B can only have come from its file.
+	check(_passed(await step(2, "wipe_character", {})), "the traveller's memory was blanked")
+	check(_absent(await step(2, "wait_flag", {"flag": PERSONAL_FLAG, "scope": "player",
+		"budget_frames": ABSENT_FRAMES})), "after the wipe the personal flag is gone from memory")
 
 	# --- the same character in world B ----------------------------------------
 	check(_passed(await step(2, "join", {"host": "127.0.0.1", "port": port_b,
 		"character": {"character_id": TRAVELLER, "display_name": "Traveller"}})),
 		"the same character joined host B")
 	check(_passed(await step(2, "wait_flag", {"flag": PERSONAL_FLAG, "scope": "player"})),
-		"its personal progress travelled with it")
+		"its personal progress came back from its own character file")
 	check(_passed(await step(2, "wait_flag", {"flag": WORLD_B_FLAG, "scope": "world"})),
 		"in world B it sees B's world flag")
-	check(not _passed(await step(2, "wait_flag", {"flag": WORLD_A_FLAG, "scope": "world",
+	check(_absent(await step(2, "wait_flag", {"flag": WORLD_A_FLAG, "scope": "world",
 		"budget_frames": ABSENT_FRAMES})), "world A's flag did not come along (no world import)")
 	var b_rows: Array = _as_dict(await probe(1, "session")).get("rows", []) as Array
 	var b_ids: Array = []
@@ -80,20 +87,28 @@ func _run() -> void:
 		b_ids.append(str(_as_dict(row).get("character_id", "")))
 	check(b_ids.has(TRAVELLER) and b_ids.size() == 2, "host B admitted the same stable id (%s)" % str(b_ids))
 
-	check(not _passed(await step(1, "wait_flag", {"flag": WORLD_A_FLAG, "scope": "world",
+	check(_absent(await step(1, "wait_flag", {"flag": WORLD_A_FLAG, "scope": "world",
 		"budget_frames": ABSENT_FRAMES})), "host B's world never received world A's flag")
 	check(_passed(await step(0, "wait_flag", {"flag": WORLD_A_FLAG, "scope": "world"})),
 		"host A still holds its own world flag")
-	check(not _passed(await step(0, "wait_flag", {"flag": PERSONAL_FLAG, "scope": "player",
+	check(_absent(await step(0, "wait_flag", {"flag": PERSONAL_FLAG, "scope": "player",
 		"budget_frames": ABSENT_FRAMES})), "host A's own trainer never gained the traveller's flag")
 	var traveller_worlds: Variant = await probe(2, "worlds_dir_entries")
 	check(traveller_worlds is Array and (traveller_worlds as Array).is_empty(),
 		"the traveller never wrote a world file (%s)" % str(traveller_worlds))
 	var characters: Variant = await probe(2, "characters_dir_entries")
-	check(characters is Array and (characters as Array).has(TRAVELLER),
+	check(characters is Array and (characters as Array).has(TRAVELLER) \
+			and (characters as Array).size() == 1,
 		"the traveller keeps exactly its own portable character (%s)" % str(characters))
 
 	quit(await finish())
+
+
+## An absence check must be the wait_flag step genuinely timing out, not a
+## hung, crashed or erroring peer that merely failed to say PASS.
+func _absent(result: Variant) -> bool:
+	return result is Dictionary and str((result as Dictionary).get("verdict", "")) == "FAIL" \
+		and str((result as Dictionary).get("detail", "")).contains("never set within")
 
 
 func _passed(result: Variant) -> bool:
