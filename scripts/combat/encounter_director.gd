@@ -1429,8 +1429,9 @@ func _spawn_ally_body(creature: RefCounted) -> bool:
 # --- Stage B lane 4.B: replicating the deployed creature ----------------------
 
 ## Tell the session this process has a creature out, so the host can stand up a
-## proxy of it for everybody else. A no-op in solo and in a one-peer session,
-## which is the whole of why nothing below changes single-player behaviour.
+## proxy of it for everybody else. In solo, in a one-peer session and before a
+## returning guest has dialled, it only holds the announcement for
+## `_resend_waiting_deployment()`; nothing below changes single-player behaviour.
 func _announce_deployment(creature: RefCounted) -> void:
 	# Snapshot the personal relic revision carried by this card. Without this,
 	# the next idle frame mistakes the initial deployment for a shrine change
@@ -1457,6 +1458,8 @@ func _announce_deployment(creature: RefCounted) -> void:
 		"card": _creature_card(creature),
 	}
 	if _is_host():
+		# The host is its own receiver: recorded now, never held or resent.
+		_deployment_waiting_for_receiver = false
 		_host_set_deployed(_local_peer_id(), row)
 		return
 	_deployment_waiting_for_receiver = not _send_realm_rpc(1, "_rpc_creature_deployed", [row])

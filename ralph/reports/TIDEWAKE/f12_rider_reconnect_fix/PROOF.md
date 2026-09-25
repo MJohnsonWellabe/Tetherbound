@@ -1,5 +1,5 @@
 > **Provenance.** X05's scenario `tools/net/proof_scenarios/f12_remote_rider_identity_reconnect.json`, with its runner and proof steps, all from `ralph/x05-proofs-tidewake` 5afb4a6f9 (X05's evidence: `ralph/reports/INVITE-COOP/x05-proof-f12-rider-identity/PROOF.md`).
-> Run headless against this branch's `encounter_director.gd` fix. On main the run fails at step #24: the host has no mount for the returning rider. With the fix, #24 and #25 pass, with the mount present on the first poll. Those files were only checked out for the run; none of them is committed here.
+> Run headless against this branch's `encounter_director.gd` fix. X05 reports that on main the run fails at step #24, with the host having no mount for the returning rider (their PROOF.md above). I did not rerun the failing case. With the fix, #24 and #25 pass, with the mount present on the first poll. Those files were only checked out for the run; none of them is committed here.
 > Step #17 (`leave`, expect: any) reports FAIL by design, because a dropped link leaves no session to leave.
 
 # Two-peer proof: F12: remote rider identity agrees mid-water, before and after a reconnect
