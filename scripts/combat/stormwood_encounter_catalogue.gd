@@ -157,8 +157,11 @@ static func named_combat(authored: Dictionary) -> Dictionary:
 	if own is Dictionary:
 		for key: String in own:
 			combat[key] = own[key]
-	# Only authored keys are clamped: an unauthored key keeps combat.json's
-	# `enemy` default (tell .8, recovery .75), which already meets the floor.
+	# Keys present after the profile merge are clamped; a key neither the
+	# profile nor the encounter authors keeps combat.json's `enemy` default
+	# (tell .8, recovery .75), which already meets the floor. Note: the live
+	# body floors reposition_distance at preferred_range + 2.4
+	# (wild_creature.gd), so WALL/CURRENT's short §7 hops play wider.
 	if combat.has("telegraph"):
 		combat["telegraph"] = maxf(STORMWOOD_TELL_FLOOR_S, float(combat.telegraph))
 	if combat.has("recovery"):

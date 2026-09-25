@@ -66,3 +66,10 @@ func test_the_spawned_named_bodies_use_those_numbers() -> void:
 		assert_almost_eq(float(combat.get("telegraph", -1.0)), float(BOSSES_7[id][1].telegraph), 0.001,
 			"%s spawns with its own tell" % id)
 	assert_eq(seen, 6, "All six named bodies spawn from the production catalogue")
+
+
+func test_every_authored_key_is_one_the_live_body_honours() -> void:
+	var honoured: Array = preload("res://scripts/creatures/wild_creature.gd")._COMBAT_OVERRIDE_KEYS
+	for row: Dictionary in _named().values():
+		for key: String in (row.get("combat", {}) as Dictionary):
+			assert_true(honoured.has(key), "%s authors %s, which wild_creature.gd honours" % [row.id, key])
