@@ -89,11 +89,25 @@ func test_three_road_limit_includes_the_player_built_crown_pair() -> void:
 	assert_true(bool(crown.get("ok")))
 	assert_eq(str(_record(str(crown.get("uid", ""))).get("arch_twin", "")), "e_crown")
 
-	for at: Vector3 in [VERGE, HOLLOWS, CAPACITOR, Vector3(-800.0, 0.0, 1000.0)]:
+	# The four optional footings (Deepwood after the Rootgate) carry exactly
+	# the two ordinary pairs the three-road cap leaves beside the Crown road.
+	world.flags.set_flag("stormwood:rootgate_released")
+	for at: Vector3 in [VERGE, HOLLOWS, CAPACITOR, DEEPWOOD]:
 		assert_true(bool(_place(at).get("ok")), "two ordinary roads may stand beside the Crown road")
-	var blocked := _place(Vector3(-700.0, 0.0, 1600.0))
-	assert_false(bool(blocked.get("ok")))
-	assert_eq(str(blocked.get("code", "")), "arch_locked")
+	for at: Vector3 in [VERGE, Vector3(-700.0, 0.0, 1600.0)]:
+		var blocked := _place(at)
+		assert_false(bool(blocked.get("ok")), "no fourth road once every footing carries an arch")
+		assert_eq(str(blocked.get("code", "")), "arch_locked")
+
+
+func test_an_arch_stands_only_on_a_legal_footing() -> void:
+	# WORLD §5.3: free-build waives material cost only, never the legal footing.
+	for at: Vector3 in [Vector3(-800.0, 0.0, 1000.0), VERGE + Vector3(6.0, 0.0, 0.0)]:
+		var off := _place(at)
+		assert_false(bool(off.get("ok")), "an arch off the Rodfolk footings is refused at %s" % at)
+		assert_eq(str(off.get("code", "")), "arch_locked")
+	assert_true(world.placed_buildings.is_empty(), "a refused footing commits nothing")
+	assert_true(bool(_place(VERGE + Vector3(4.0, 0.0, 0.0)).get("ok")), "the footing accepts an arch within its 5 m seat")
 
 
 func test_still_grove_can_only_raise_the_crowns_one_fixed_twin() -> void:

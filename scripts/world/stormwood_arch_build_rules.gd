@@ -37,8 +37,11 @@ static func placement(at: Vector3, realm: String, flags: RefCounted, buildings: 
 	# The island and surrounding live glass cannot become a second access path.
 	if at.x > 350 and at.z >= 2150 and at.z <= 3550:
 		return {"ok": false, "reason": "Raise the Crown's twin on the Still Grove footing."}
+	# WORLD §5.3: five sockets; free-build waives cost, never the legal footing.
 	var socket := footing_at(at)
-	if not socket.is_empty() and not ARCHES.is_available(socket, flags):
+	if socket.is_empty():
+		return {"ok": false, "reason": "A Stormglass arch stands only on a Rodfolk footing."}
+	if not ARCHES.is_available(socket, flags):
 		return {"ok": false, "reason": "This footing's road has not opened yet."}
 	var fixed := str(socket.get("fixed_twin", ""))
 	var active := records(buildings)
