@@ -668,6 +668,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_catch_fixture_rng(args)
 		"dismiss_dialogue":
 			out = await _step_dismiss_dialogue(args)
+		"veridian_fixture":
+			out = _step_veridian_fixture(args)
+		"veridian_answer":
+			out = await _step_veridian_answer(args)
 		"ride_setup":
 			out = await _step_ride_setup(args)
 		"ride_mount":
@@ -4196,6 +4200,64 @@ func _step_dismiss_dialogue(args: Dictionary) -> Dictionary:
 			% [detail, str(player.call("locomotion_enabled")) if player != null else "?"]}
 
 
+# --- F05 CI smoke: the Veridian mixed-choices fixture ---------------------------
+#
+# Two arms for `tests/smoke_net_veridian_mixed.gd`, which skips the Warden fight
+# so CI can prove the mixed accept/refuse rule in minutes.
+
+## F05 CI smoke. HOST ONLY. Journal every connected peer as a participant of
+## the Warden fight through the SAME ledger intent the encounter director pays a
+## shared trainer fight with (`encounter_rewards.gd::_grant` -> `reward_grant`,
+## source `trainer:warden_aldis:coins`, 1 coin). The ledger resolves each peer's
+## stable character id from the session registry and journals one delivery per
+## character in `WorldState.reward_deliveries`, which replicates to the client
+## as a delta -- exactly what `stronghold_climax.gd::participants_from` reads.
+## Writes no flag and no resolution receipt.
+func _step_veridian_fixture(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var sess := _session()
+	if game == null or game.get("ledger") == null:
+		return {"verdict": "ERROR", "detail": "no Game.ledger to submit through"}
+	if sess == null or not bool(sess.call("is_active")) or not bool(sess.call("is_host")):
+		return {"verdict": "ERROR", "detail": "veridian_fixture runs on the session host only"}
+	var peers := _session_peer_ids()
+	var verdict: Dictionary = (game.get("ledger") as Node).call("submit", {
+		"kind": "reward_grant", "realm": str(args.get("realm", "meadows")),
+		"source": "trainer:%s:coins" % str(args.get("trainer", "warden_aldis")),
+		"peers": peers, "item": "coin", "count": 1,
+	})
+	return {"verdict": "PASS" if bool(verdict.get("ok", false)) else "FAIL",
+		"detail": "reward_grant to peers %s: ok=%s code='%s' reason='%s' paid=%s" % [
+			str(peers), str(verdict.get("ok", false)), str(verdict.get("code", "")),
+			str(verdict.get("reason", "")), str(verdict.get("paid", []))],
+		"data": {"peers": peers, "paid": verdict.get("paid", [])}}
+
+
+## F05 CI smoke. Answer THIS peer's own Veridian offer through the climax's
+## public `accept_offer()` / `refuse_offer()` -- the methods the two in-world
+## prompts' `activated` signals call -- once its stage is "choice". Any open
+## dialogue is dismissed first (the offer's announce/join lines), the way a
+## player closes it before stepping to a prompt. `args.answer`: accept|refuse.
+func _step_veridian_answer(args: Dictionary) -> Dictionary:
+	var answer := str(args.get("answer", ""))
+	if not answer in ["accept", "refuse"]:
+		return {"verdict": "ERROR", "detail": "veridian_answer needs args.answer = accept|refuse"}
+	var climax: Node = current_scene.find_child("StrongholdClimax", true, false) \
+		if current_scene != null else null
+	if climax == null:
+		return {"verdict": "ERROR", "detail": "no StrongholdClimax in this scene"}
+	var cleared := await _clear_open_dialogue(int(args.get("presses", 20)))
+	for f in maxi(0, int(args.get("settle", 10))):
+		await physics_frame
+	var stage := str(climax.get("_stage"))
+	if stage != "choice" or bool(climax.call("_panel_busy")):
+		return {"verdict": "FAIL", "detail": "offer not answerable: stage '%s', panel open %s (%s)"
+			% [stage, str(climax.call("_panel_busy")), cleared]}
+	var ok := bool(climax.call("accept_offer" if answer == "accept" else "refuse_offer"))
+	return {"verdict": "PASS" if ok else "FAIL",
+		"detail": "%s_offer() -> %s; stage now '%s'" % [answer, str(ok), str(climax.get("_stage"))]}
+
+
 ## Press `interact` until the opening's dialogue box is gone, and say what
 ## happened. Called from `_step_dismiss_dialogue` and from the two Fly steps
 ## that CANNOT work while it is open -- the box opens partway through the
@@ -4813,6 +4875,66 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			return str(_probe.call("input_context"))
 		"meadows_opening":
 			return _meadows_opening_state()
+		"veridian_choice":
+			# F05 CI smoke (copied from ralph/f05-coop-veridian). Read-only view
+			# of THIS peer's Veridian offer: the climax's own stage and prompts,
+			# this character's personal answer, the world's resolution receipts
+			# (the world store, never the merged view), the belt, and whether
+			# the herd display stands. Writes nothing.
+			var vgame := root.get_node_or_null(^"Game")
+			if vgame == null or current_scene == null:
+				return null
+			var vclimax := current_scene.find_child("StrongholdClimax", true, false)
+			var vhealing := current_scene.find_child("MeadowHealing", true, false)
+			var vplayer_store: Variant = vgame.call("player_flags") \
+				if vgame.has_method("player_flags") else null
+			var vworld_store: Variant = STORY_LEDGER.world_flags(vgame)
+			var vreceipts: Array = []
+			if vworld_store != null:
+				for vraw: Variant in ((vworld_store as RefCounted).call("all_set") as Array):
+					if str(vraw).begins_with("legendary_resolution:"):
+						vreceipts.append(str(vraw))
+			vreceipts.sort()
+			var vparty: Variant = vgame.get("party")
+			var vcount := 0
+			var vsize := 0
+			if vparty != null:
+				vsize = int((vparty as RefCounted).call("size"))
+				for vi in vsize:
+					var vmember: Variant = (vparty as RefCounted).call("at", vi)
+					if vmember != null and str((vmember as RefCounted).get("species_id")) == "veridian":
+						vcount += 1
+			var vparticipants: Array = [] if vclimax == null \
+				else vclimax.call("_warden_participant_characters")
+			return {
+				"climax_found": vclimax != null,
+				"stage": "" if vclimax == null else str(vclimax.get("_stage")),
+				"choice_open": vclimax != null and bool(vclimax.call("choice_open")),
+				"joined": vplayer_store != null
+					and bool((vplayer_store as RefCounted).call("has", "legendary_joined")),
+				"refused": vplayer_store != null
+					and bool((vplayer_store as RefCounted).call("has", "legendary_refused")),
+				"receipts": vreceipts,
+				"veridian_count": vcount,
+				"party_size": vsize,
+				"pending_catch": vgame.get("pending_catch") != null,
+				"healing_found": vhealing != null,
+				"herd_display": vhealing != null and vhealing.has_method("herd_display")
+					and vhealing.call("herd_display") != null,
+				"freed": vclimax != null and bool(vclimax.call("legendary_is_freed")),
+				"near": vclimax != null and bool(vclimax.call("_player_near_legendary")),
+				"may_receive": vclimax != null and bool(vclimax.call("_may_receive_now")),
+				"panel_open": vclimax != null and bool(vclimax.call("_panel_busy")),
+				"participants": vparticipants,
+				# The owner rule's other half, asked of the climax's own pure
+				# predicate with THIS peer's session context: a character
+				# absent from the fight journal is offered nothing.
+				"stranger_may_receive": vclimax != null and bool(vclimax.call("may_receive",
+					"f05-ci-non-participant", vparticipants, false,
+					bool(vclimax.call("_is_client")), bool(vclimax.call("_multi_peer")))),
+				"live_id": str((vgame.get("local") as RefCounted).get("character_id")) \
+					if vgame.get("local") != null else "",
+			}
 		"stronghold":
 			return _stronghold_state()
 		"relay_crossing":

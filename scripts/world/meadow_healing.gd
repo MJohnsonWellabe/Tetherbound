@@ -54,6 +54,7 @@ var _applied: bool = false
 var _flag := "legendary_freed"
 ## Last `progression.revision` this node compared the flag against.
 var _revision: int = -1
+var _journal_check_in: float = 1.0
 var _report: Dictionary = {}
 ## F05 / WORLD §3.2: the unengageable Stag among the healed Highfield herd,
 ## standing only while every eligible participant has refused. Null otherwise.
@@ -98,6 +99,12 @@ func _process(_delta: float) -> void:
 		return
 	var revision := int(_progression.get("revision"))
 	if revision == _revision:
+		# The Warden journal is not a flag, so a journal row landing alone does
+		# not move the revision: re-check the display about once a second.
+		_journal_check_in -= _delta
+		if _journal_check_in <= 0.0 and _applied:
+			_journal_check_in = 1.0
+			sync_herd_display()
 		return
 	_revision = revision
 	if not _applied and bool(_progression.call("has", _flag)):
@@ -144,7 +151,15 @@ func _resolution_signature() -> String:
 		if str(raw).begins_with("legendary_resolution:"):
 			receipts.append(str(raw))
 	receipts.sort()
-	return ",".join(receipts)
+	# The Warden journal decides who is eligible, so a journal row arriving
+	# (a late snapshot, a pending delivery acknowledged) re-decides the
+	# display as surely as a new receipt does.
+	var participants: Array = []
+	var climax := _find(str((_config.get("herd_display", {}) as Dictionary).get("climax_node", "StrongholdClimax")))
+	if climax != null and climax.has_method("warden_participants"):
+		participants = (climax.call("warden_participants") as Array).duplicate()
+	participants.sort()
+	return ",".join(receipts) + "|" + ",".join(participants)
 
 
 func herd_display() -> Node3D:
