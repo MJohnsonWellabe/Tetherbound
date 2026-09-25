@@ -4906,7 +4906,18 @@ func _execute_probe(msg: Dictionary) -> Variant:
 						vcount += 1
 			var vparticipants: Array = [] if vclimax == null \
 				else vclimax.call("_warden_participant_characters")
+			# Where each prompt stands, for a witness that walks to it.
+			var vanchor := func(prompt_name: String) -> Array:
+				if vclimax == null:
+					return []
+				var vprompt := vclimax.find_child(prompt_name, true, false)
+				if vprompt == null or not (vprompt.get_parent() is Node3D):
+					return []
+				var vat: Vector3 = (vprompt.get_parent() as Node3D).global_position
+				return [vat.x, vat.y, vat.z]
 			return {
+				"accept_at": vanchor.call("VeridianAcceptPrompt"),
+				"refuse_at": vanchor.call("VeridianRefusePrompt"),
 				"climax_found": vclimax != null,
 				"stage": "" if vclimax == null else str(vclimax.get("_stage")),
 				"choice_open": vclimax != null and bool(vclimax.call("choice_open")),
