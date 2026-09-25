@@ -902,6 +902,11 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # F02/X-shared: a caught ordinary wild's body respawns as a new
+      # individual, never as the party's own creature (no free heal, no duplicate).
+      - name: Verify catch respawn refills a fresh individual
+        if: ${{ !cancelled() }}
+        run: timeout 300s godot --headless --path . --script tests/smoke_catch_respawn_fresh_individual.gd
       # T1-AUDIO. Boots the real world and asserts on what reached the
       # mixer: an ambience bed playing, footsteps firing from real movement
       # with real variant spread, a fought fight producing combat audio, and

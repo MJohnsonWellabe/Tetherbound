@@ -22,6 +22,7 @@ extends SceneTree
 ##   godot --headless --path . --script tests/smoke_catch_respawn_fresh_individual.gd
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 const TARGET_NAME := &"Wild_bramblebun_1018_1"
 const SPAWN_WAIT_FRAMES := 900
@@ -364,11 +365,22 @@ var _clear_wait: Dictionary = {}
 func _record_approach_winner() -> void:
 	var winner := _arbiter.call("winning_provider") as Node
 	var winner_name := str(winner.name) if winner != null else "<none>"
-	if winner is Node3D and winner != _director and _approach_geometry.is_empty():
+	if winner != _director and _approach_geometry.is_empty():
 		var offer := _arbiter.call("winner") as Dictionary
+		var owner := INPUT_OWNER.current(self) as Node
 		_approach_geometry = {
+			# Why the director published no engage offer, if it did not.
+			"director_offer": _director.call("interaction_offer", _player.global_position),
+			"ally_instance": _director.call("ally_instance") != null,
+			"ally_body": _director.call("ally_body") != null,
+			"wild_alive": bool(_wild.call("is_alive")), "wild_visible": _wild.visible,
+			"wild_engaged": _wild.get("engaged"), "engaged_with": str(_director.get("_engaged_with")),
+			"fighting": bool(_manager.call("is_fighting")),
+			"arbiter_enabled": bool(_arbiter.call("enabled")),
+			"input_owner": str(owner.name) if owner != null else "",
 			"player": _player.global_position, "wild": _wild.global_position,
-			"wild_home": _wild.get("home"), "winner_at": (winner as Node3D).global_position,
+			"wild_home": _wild.get("home"),
+			"winner_at": (winner as Node3D).global_position if winner is Node3D else "<none>",
 			"winner_distance": offer.get("distance"),
 			"wild_distance": _player.global_position.distance_to(_wild.global_position),
 			"engageable": str(_director.call("_engageable")),
