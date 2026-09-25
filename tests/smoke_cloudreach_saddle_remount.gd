@@ -322,43 +322,80 @@ func _long_mounted_descent_is_not_a_fall() -> void:
 
 
 ## Coordinator review of #229: the fall legs must RIDE off an edge, not
-## teleport the mount over air. Fixture: the trainer and companion are stood
-## on the arrival road where it drops to a lower terrace (the follower was
-## seen walking off it at (9.5, 102.7, -240)); everything after the mount is
-## the stick. The ride heads off that edge, crosses the terrace and keeps going
-## toward open air. SYSTEMS §8 parity: a drop a walker survives is survived
-## mounted with no snap-back; a fall past 100 m (a walker's recovery depth) is
-## caught and returned to verified ground with the rider seated.
+## teleport the mount over air. SYSTEMS §8 parity with walking: a drop a walker
+## survives is survived mounted with no snap-back; a fall past 100 m (a
+## walker's recovery depth) is caught and returned to verified ground with the
+## rider seated. Fixture, per edge: the trainer and companion are stood on the
+## upper surface (disclosed); everything after the mount is the stick.
+##
+## LEDGE: the raised Broken Causeways road crosses the 390 m causeway floor;
+## its side is a sheer ~11 m drop onto open, flat floor (a physics survey of the
+## solo world found it; the floor runs well past any ride's reach).
+## TERRACE: the arrival road's shoulder above the cloud sea; below it is only
+## steep rock and then air, so a ride off it falls past 100 m.
+const LEDGE_ROAD := Vector3(-104.0, 401.6, 1664.0)
+const LEDGE_TOWARD := Vector3(-94.0, 390.0, 1647.0)
 const TERRACE_ROAD := Vector3(7.6, 105.41, -245.03)
 const TERRACE_TOWARD := Vector3(10.6, 83.9, -239.4)
 
 func _ride_off_edges_by_input() -> void:
-	_player.global_position = TERRACE_ROAD
+	var ledge := await _ride_off_edge(LEDGE_ROAD, LEDGE_TOWARD, Vector3(2.0, 0.0, 1.0), "ledge", 600)
+	var landed: Array = ledge.drops.filter(func(d: Dictionary) -> bool: return not bool(d.recovered) and float(d.fell) > 3.0)
+	_check(not landed.is_empty(), "riding off the causeway ledge by input drops to the floor below and lands (%s)" % [ledge.drops])
+	for d: Dictionary in landed:
+		_check(float(d.fell) < 100.0, "a %.1f m ride-off a walker would survive is not snapped back" % float(d.fell))
+	_check(not ledge.recovered, "the survivable ride-off triggers no mounted-fall recovery")
+	var body: CharacterBody3D = _riding.call("mount_body")
+	if body != null:
+		_check(body.is_on_floor() and body.global_position.y < LEDGE_ROAD.y - 3.0 and bool(_riding.call("is_mounted")),
+			"after the ride-off the mount stands on the lower floor with the rider seated (%s)" % body.global_position)
+		await _dismount_by_interact("dismount on the floor below the ledge")
+	_check_party("ledge ride")
+
+	var terrace := await _ride_off_edge(TERRACE_ROAD, TERRACE_TOWARD, Vector3(-1.0, 0.0, -2.5), "terrace", 3600)
+	_check(terrace.recovered, "riding on off the terrace into open air is eventually caught by the mounted-fall recovery")
+	body = _riding.call("mount_body")
+	if terrace.recovered and body != null:
+		var last: Dictionary = terrace.drops[terrace.drops.size() - 1]
+		_check(float(last.fell) > 95.0, "the mount fell as far as a walker would before recovery (%.1f m)" % float(last.fell))
+		_check(body.is_on_floor() and bool(_riding.call("is_mounted")) and _player.call("carrier") == body,
+			"after the recovery the mount stands on ground with the rider seated (%s)" % body.global_position)
+	_check_party("edge ride")
+
+
+## Stand at `road`, mount by interact, then hold the stick toward `toward`
+## until `frames` pass, the ride ends, or a mounted-fall recovery fires.
+## Returns {drops, recovered}; each drop is {from, to, fell, recovered}.
+func _ride_off_edge(road: Vector3, toward: Vector3, mount_offset: Vector3, label: String, frames: int) -> Dictionary:
+	if bool(_riding.call("is_mounted")):
+		await _dismount_by_interact("dismount before the %s ride" % label)
+	_player.global_position = road
 	_player.velocity = Vector3.ZERO
 	var ally: Node3D = _director.call("ally_body")
 	if ally != null:
-		# On the road ribbon itself, not its steep shoulder.
-		ally.call("place_on_ground", TERRACE_ROAD + Vector3(-1.0, 0.0, -2.5))
+		# On the road itself, not its steep shoulder.
+		ally.call("place_on_ground", road + mount_offset)
 	for i in 60:
 		await physics_frame
 	await _walk_to_mount()
-	await _mount_by_interact("mount above the terrace")
+	await _mount_by_interact("mount above the %s" % label)
 	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
-		return
+		return {"drops": [], "recovered": false}
 	for i in 30:
 		await physics_frame
-	_check(body.is_on_floor(), "the mount stands on the road before the ride-off (%s)" % body.global_position)
-	var heading := TERRACE_TOWARD - body.global_position
+	_check(body.is_on_floor() and absf(body.global_position.y - road.y) < 2.0,
+		"the mount stands on the %s road before the ride-off (%s)" % [label, body.global_position])
+	var heading := toward - body.global_position
 	heading.y = 0.0
 	heading = heading.normalized()
 	var drops: Array = []
 	var recovered_before: int = int(_riding.get("mounted_fall_recoveries"))
-	var takeoff := NAN
+	var takeoff := body.global_position.y
 	var lowest := INF
 	var was_airborne := false
 	var airborne_frames := 0
-	for frame in 3600:
+	for frame in frames:
 		if int(_riding.get("mounted_fall_recoveries")) > recovered_before:
 			break
 		_steer_toward(body.global_position + heading * 50.0)
@@ -383,18 +420,8 @@ func _ride_off_edges_by_input() -> void:
 		drops.append({"from": takeoff, "to": lowest, "fell": takeoff - lowest, "recovered": true})
 	for i in 60:
 		await physics_frame
-	print("EDGE RIDE drops=%s end=%s mounted=%s" % [drops, body.global_position, _riding.call("is_mounted")])
-	var survived := drops.filter(func(d: Dictionary) -> bool: return not bool(d.recovered) and float(d.fell) > 3.0)
-	_check(not survived.is_empty(), "riding off the road by input drops to a lower level and lands (%s)" % [survived])
-	for d: Dictionary in survived:
-		_check(float(d.fell) < 100.0, "a %.1f m ride-off a walker would survive is not snapped back" % float(d.fell))
-	_check(recovered, "riding on off the terrace into open air is eventually caught by the mounted-fall recovery")
-	if recovered:
-		var last: Dictionary = drops[drops.size() - 1]
-		_check(float(last.fell) > 95.0, "the mount fell as far as a walker would before recovery (%.1f m)" % float(last.fell))
-		_check(body.is_on_floor() and bool(_riding.call("is_mounted")) and _player.call("carrier") == body,
-			"after the recovery the mount stands on ground with the rider seated (%s)" % body.global_position)
-	_check_party("edge ride")
+	print("EDGE RIDE %s drops=%s end=%s mounted=%s" % [label, drops, body.global_position, _riding.call("is_mounted")])
+	return {"drops": drops, "recovered": recovered}
 
 
 ## SYSTEMS §8 "dismount at supported nearby clearance, otherwise show
@@ -497,9 +524,7 @@ func _combat_start_forced_dismount() -> void:
 	var body: CharacterBody3D = _riding.call("mount_body")
 	if body == null:
 		return
-	var wild: Node3D = _director.call("spawn_wild", "cloudling", body.global_position + Vector3(6.0, 0.5, 0.0), {"name": "TestFightWild"})
-	if wild == null:
-		wild = _director.call("spawn_wild", "bramblebun", body.global_position + Vector3(6.0, 0.5, 0.0), {"name": "TestFightWild"})
+	var wild: Node3D = _director.call("spawn_wild", "bramblebun", body.global_position + Vector3(6.0, 0.5, 0.0), {"name": "TestFightWild"})
 	if wild == null:
 		_fail("could not spawn a wild for the combat-start leg")
 		return
