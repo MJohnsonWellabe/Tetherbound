@@ -667,11 +667,15 @@ both branches above).
   refused as `character_in_use`. That behaviour is unchanged from main and
   is not fixed here.
 
-**Regressions on the stacked branch:**
+**Final runs on the stacked branch** (`x05-final-*.log`, after both review
+rounds):
+- `reconnect_reservation` 18/0
+- `join_version_mismatch` 12/0 clean and 12/0 at 30% loss
 - `identity_admission` 23/0
 - `host_join_leave` 27/0
 - `four_peer_session` 31/0 (host + 3 on loopback)
 - `reconnect_keeps_character` 84/0
+- `join_by_address` 17/0
 - focused units 108/0
 
 **Invites accepted with the game open, closed or hosting.** Coordinator
