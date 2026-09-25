@@ -339,7 +339,8 @@ func _live_fight(flags: RefCounted) -> Array:
 	_unlock(flags)
 	var finale := _controller(flags)
 	var director := FightDirector.new()
-	finale.fight_director = director
+	assert_true("fight_director" in finale, "Finale controller has no fight_director seam")
+	finale.set("fight_director", director)
 	assert_true(finale.encounter_started(ENCOUNTER))
 	director.active_id = ENCOUNTER
 	finale.elapsed = 3.25
@@ -479,6 +480,13 @@ func _break_the_eye(flags: RefCounted) -> Array:
 	_unlock(flags)
 	flags.call("set_flag", str(FINALE.read_config()["captain_victory_flag"]))
 	var finale := _controller(flags)
+	# `run_tests.gd` reports a test that aborts on a script error as ok, so a
+	# controller without the delta seam has to FAIL here, not crash.
+	for seam: String in ["_listen_for_deltas", "_settle_seq_baseline"]:
+		if not finale.has_method(seam):
+			assert_true(false, "Finale controller has no %s delta seam" % seam)
+			finale.free()
+			return []
 	var transport := SeqTransport.new()
 	finale.ledger_transport = transport
 	finale._listen_for_deltas()
@@ -493,6 +501,8 @@ func _break_the_eye(flags: RefCounted) -> Array:
 func test_break_the_eye_delta_sweep_keeps_the_wind_clock_and_drift() -> void:
 	var flags := FLAGS.new()
 	var fixture := _break_the_eye(flags)
+	if fixture.is_empty():
+		return
 	var finale: Node3D = fixture[0]
 	var transport: SeqTransport = fixture[1]
 	var config := FINALE.read_config()
@@ -524,6 +534,8 @@ func test_break_the_eye_delta_sweep_keeps_the_wind_clock_and_drift() -> void:
 func test_break_the_eye_reload_without_a_delta_still_resets() -> void:
 	var flags := FLAGS.new()
 	var fixture := _break_the_eye(flags)
+	if fixture.is_empty():
+		return
 	var finale: Node3D = fixture[0]
 	var transport: SeqTransport = fixture[1]
 	transport.commit(flags, "pickup:cloudreach_unrelated_crate")
@@ -540,6 +552,8 @@ func test_break_the_eye_reload_without_a_delta_still_resets() -> void:
 func test_break_the_eye_without_a_ledger_resets_conservatively() -> void:
 	var flags := FLAGS.new()
 	var fixture := _break_the_eye(flags)
+	if fixture.is_empty():
+		return
 	var finale: Node3D = fixture[0]
 	finale.ledger_transport = null
 	flags.set_flag("pickup:cloudreach_unrelated_crate")

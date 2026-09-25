@@ -206,6 +206,14 @@ func _committed_seq() -> int:
 ## a second sweep for the same delta in the same frame still reads as one. A
 ## load or snapshot leaves `seq` where the last settled delta put it. No
 ## ledger: not a delta, so the conservative reset.
+##
+## Known limitation: this reads the ledger's counter rather than being told.
+## Where a client's `seq` already stands above the host's (the same process
+## committed solo and then joined, or the host restarted), `apply_remote_delta`
+## leaves `seq` unmoved (`world_ledger.gd` keeps the max) and every delta reads
+## as a load: the conservative reset, i.e. the pre-fix behaviour outside a live
+## fight. The proper fix is an explicit "sweeping for a delta" marker set by
+## `ledger_rpc.gd::apply_remote_delta` around its sweep (another lane's file).
 func _delta_sweep() -> bool:
 	var seq := _committed_seq()
 	return seq >= 0 and _seq_baseline >= 0 and seq > _seq_baseline
@@ -229,15 +237,17 @@ func _settle_seq_baseline() -> void:
 	_seq_baseline = _committed_seq()
 
 
-## A kept sweep keeps a recovery handoff only for a body still below handoff
-## depth, so the same fall is not handed off twice; any other entry would be
-## erased by `_apply_recovery_current` anyway.
+## A kept sweep keeps each recovery handoff exactly as long as
+## `_apply_recovery_current` would: while its body is still in the world and
+## below the current's depth (`current_below_deck_m`). A body that has risen
+## above it, or is gone, is erased, as that function would erase it on the
+## next frame. So one fall is never handed off twice.
 func _keep_deep_recoveries() -> void:
-	var handoff := float(config.get("recovery", {}).get("handoff_below_deck_m", 0.0))
+	var current := float(config.get("recovery", {}).get("current_below_deck_m", 0.0))
 	for id: int in _pending_recoveries.keys():
 		var body: Node3D = instance_from_id(id) as Node3D if is_instance_id_valid(id) else null
 		if body == null or not body.is_inside_tree() \
-				or body.global_position.y - _origin().y >= -handoff:
+				or body.global_position.y - _origin().y > -current:
 			_pending_recoveries.erase(id)
 
 
