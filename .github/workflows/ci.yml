@@ -1594,6 +1594,20 @@ jobs:
       - name: Verify Tidewake dismount leaves no mounted state
         if: ${{ !cancelled() }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_dismount_state.gd
+      # F12 (ACCEPTANCE 6.1): drowning and the safe shore, the fully drowned
+      # recovery, and a disk reload mid-water (human and mounted) agree.
+      - name: Verify Tidewake drowning and safe shore
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_water_swimming.gd
+      - name: Verify Tidewake drowned recovery
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_player_death.gd
+      - name: Verify Tidewake reload mid-water
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_reconnect_save.gd
+      - name: Verify Tidewake mounted reload mid-water
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_mounted_reconnect_save.gd
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
