@@ -211,7 +211,11 @@ func _spin_species(id: String, dir: String) -> void:
 		if _label == "after":
 			_save(image, dir.path_join("%s_%02d.jpg" % [id, i]))
 		frames.append(image)
-		if turntable != null:
+		# The widget's own step when it has one, so the camera follows the
+		# turn exactly as in play (per-angle fit); older widgets just rotate.
+		if preview.has_method("advance"):
+			preview.call("advance", IDLE_SPIN_SPEED * SPIN_STEP_SECONDS, SPIN_STEP_SECONDS)
+		elif turntable != null:
 			turntable.rotate_y(IDLE_SPIN_SPEED * SPIN_STEP_SECONDS)
 		await _settle(2)
 	# Sheet crops each frame to the widget's area so the rotation is legible.

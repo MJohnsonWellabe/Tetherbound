@@ -38,6 +38,14 @@ const ASPECTS := [Vector2(420, 602), Vector2(420, 460), Vector2(640, 360)]
 const YAW_STEPS := 48
 ## Slack on the margin check for floating-point / rim-sampling error only.
 const EPSILON := 0.004
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
+## Per-angle fit must also FILL the frame: at every angle the silhouette
+## reaches the margin on at least one axis, to within this much NDC. This is
+## the blind judge's "long creatures are thumbnails" defect, pinned. 0.05
+## NDC (the silhouette fills >= ~94% of the usable half-frame on its larger
+## axis): the widget fits a conservative prism stack and this test measures a
+## sampled silhouette, and each gives up a little -- measured worst 0.042.
+const FILL_TOLERANCE := 0.05
 
 
 # --- pure math ------------------------------------------------------------
@@ -129,6 +137,7 @@ func test_the_widget_frames_a_body_that_rendered_nothing_through_the_fallback() 
 	for i in 8:
 		corners.append(box.get_endpoint(i))
 	var failures := _frame_failures(widget, corners, "fallback")
+	failures.append_array(_with_reduced_motion(widget, corners, "fallback reduced-motion"))
 	assert_true(failures.is_empty(), "\n".join(failures))
 	widget.free()
 
@@ -170,7 +179,9 @@ func test_every_species_stays_in_frame_at_every_turntable_angle() -> void:
 			var c := (lo + hi) * 0.5
 			if Vector2(c.x, c.z).length() > 0.01:
 				failures.append("%s: not centred on the spin axis (%s)" % [id, c])
-		failures.append_array(_frame_failures(widget, _profile(points), id + ("" if modelled else " [no model headless: fallback]")))
+		var tag := id + ("" if modelled else " [no model headless: fallback]")
+		failures.append_array(_frame_failures(widget, _silhouette(points), tag))
+		failures.append_array(_with_reduced_motion(widget, _profile(points), tag + " reduced-motion"))
 		widget.free()
 	assert_true(no_model.is_empty(), "every species should load its model headless; framed via fallback instead: %s" % ", ".join(no_model))
 	assert_true(failures.is_empty(), "%d framing failures:\n%s" % [failures.size(), "\n".join(failures)])
@@ -262,33 +273,92 @@ func _profile(points: PackedVector3Array) -> PackedVector3Array:
 
 
 ## Every point (turntable space), at YAW_STEPS turntable angles and every
-## ASPECT, projected through the widget's placed camera with the engine's own
-## perspective projection must lie inside the viewport with FRAME_MARGIN clear
-## on each side.
+## ASPECT, projected with the engine's own perspective projection through the
+## camera the widget itself places, must lie inside the viewport with
+## FRAME_MARGIN clear on each side.
+##
+## Per-angle fit (the default): the turntable is turned to each angle, the
+## widget refits (snapped), and the points turned by the same angle must fit
+## AND fill -- reach the margin on at least one axis within FILL_TOLERANCE.
+## Whole-turn fit (reduced motion): one camera, the points spun through every
+## angle under it; `points` may be a radial profile then.
 func _frame_failures(widget: SubViewportContainer, points: PackedVector3Array, label: String) -> Array[String]:
 	var out: Array[String] = []
 	var viewport := widget.get("_viewport") as SubViewport
 	var camera := widget.get("_camera") as Camera3D
+	var turntable := widget.get("_turntable") as Node3D
+	var per_angle := bool(widget.call("per_angle_fit"))
 	var limit: float = 1.0 - 2.0 * VIEWPORT.FRAME_MARGIN + EPSILON
 	for size: Vector2 in ASPECTS:
 		viewport.size = Vector2i(size)
 		widget.call("_refit")
 		var aspect := size.x / size.y
-		var proj := Projection.create_perspective(camera.fov, aspect, camera.near, camera.far)
-		var view := camera.transform.affine_inverse()
 		var worst := 0.0
+		var thinnest := INF
 		for step in YAW_STEPS:
-			var spin := Basis(Vector3.UP, TAU * step / YAW_STEPS)
+			var yaw := TAU * step / YAW_STEPS
+			if per_angle:
+				turntable.rotation.y = yaw
+				widget.call("_refit")
+			var spin := Basis(Vector3.UP, yaw)
+			var proj := Projection.create_perspective(camera.fov, aspect, camera.near, camera.far)
+			var view := camera.transform.affine_inverse()
+			var reach := 0.0
 			for point: Vector3 in points:
 				var clip: Vector4 = proj * _v4(view * (spin * point))
 				if clip.w <= 0.0:
 					out.append("%s @%s: a point is behind the camera" % [label, size])
 					continue
 				var ndc := Vector2(clip.x, clip.y) / clip.w
-				worst = maxf(worst, maxf(absf(ndc.x), absf(ndc.y)))
+				reach = maxf(reach, maxf(absf(ndc.x), absf(ndc.y)))
+			worst = maxf(worst, reach)
+			thinnest = minf(thinnest, reach)
 		if worst > limit:
 			out.append("%s @%dx%d: reaches ndc %.3f > %.3f (margin %.0f%%)" % [
 				label, size.x, size.y, worst, limit, VIEWPORT.FRAME_MARGIN * 100.0])
+		if per_angle and thinnest < limit - EPSILON - FILL_TOLERANCE:
+			out.append("%s @%dx%d: at some angle the creature reaches only ndc %.3f of %.3f -- it does not fill the frame" % [
+				label, size.x, size.y, thinnest, limit - EPSILON])
+	turntable.rotation.y = 0.0
+	return out
+
+
+## The same checks with reduced motion on: the calm whole-turn fit.
+func _with_reduced_motion(widget: SubViewportContainer, points: PackedVector3Array, label: String) -> Array[String]:
+	var was: bool = MOTION_PREFS.reduced_motion()
+	MOTION_PREFS.set_reduced_motion(true)
+	var out := _frame_failures(widget, points, label)
+	MOTION_PREFS.set_reduced_motion(was)
+	widget.call("_refit")
+	return out
+
+
+## The test's own reduction of every drawn vertex to its silhouette at any
+## angle (independent of the widget's `silhouette_sample`, and finer): per
+## height band and angle sector round the axis, the farthest-reaching vertex,
+## plus each band's highest and lowest.
+func _silhouette(points: PackedVector3Array) -> PackedVector3Array:
+	const BANDS := 32
+	const SECTORS := 96
+	var y_lo := INF
+	var y_hi := -INF
+	for p: Vector3 in points:
+		y_lo = minf(y_lo, p.y)
+		y_hi = maxf(y_hi, p.y)
+	var span := maxf(y_hi - y_lo, 0.0001)
+	var keep: Dictionary = {}
+	for p: Vector3 in points:
+		var band := clampi(int((p.y - y_lo) / span * BANDS), 0, BANDS - 1)
+		var sector := int(floor((atan2(p.z, p.x) + PI) / TAU * SECTORS)) % SECTORS
+		var key := band * SECTORS + sector
+		if not keep.has(key) or Vector2(p.x, p.z).length() > Vector2((keep[key] as Vector3).x, (keep[key] as Vector3).z).length():
+			keep[key] = p
+		for extreme: int in [-1 - band, -1000 - band]:
+			if not keep.has(extreme) or (p.y > (keep[extreme] as Vector3).y if extreme > -1000 else p.y < (keep[extreme] as Vector3).y):
+				keep[extreme] = p
+	var out := PackedVector3Array()
+	for p: Vector3 in keep.values():
+		out.append(p)
 	return out
 
 
