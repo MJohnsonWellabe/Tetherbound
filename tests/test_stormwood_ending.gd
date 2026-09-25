@@ -1,22 +1,47 @@
 extends "res://tests/test_case.gd"
 
 ## The world scene and network smoke own the physical ceremony. These focused
-## contracts make the chapter order, unique recipient and authored seams fail
-## loudly in the fast suite before a long Stormwood run is attempted.
+## contracts make the chapter order, per-participant offers and authored seams fail
+## loudly in the fast suite before a long Stormwood run is attempted. The
+## Stormheart follows the owner's per-participant legendary rule.
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
+const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 
 
-func test_legendary_claim_requires_release_and_stays_with_one_character() -> void:
-	assert_false(ENDING.claim_allowed([], "", "trainer-a"),
+func test_every_participant_gets_their_own_once_only_offer() -> void:
+	var fought := ["trainer-a", "trainer-b"]
+	assert_false(ENDING.claim_allowed([], fought, "trainer-a", false),
 		"Marrow's captive cannot be claimed before the Dynamo releases it")
-	assert_true(ENDING.claim_allowed([ENDING.FREED_FLAG], "", "trainer-a"),
-		"the first character may accept the freed Stormheart's offer")
-	assert_true(ENDING.claim_allowed([ENDING.FREED_FLAG], "trainer-a", "trainer-a"),
-		"the reserved character may resume an interrupted ceremony")
-	assert_false(ENDING.claim_allowed([ENDING.FREED_FLAG], "trainer-a", "trainer-b"),
-		"a second character cannot duplicate the one legendary")
-	assert_false(ENDING.claim_allowed([ENDING.FREED_FLAG, ENDING.OFFER_FLAG], "trainer-a", "trainer-a"),
-		"a settled ceremony cannot reopen")
+	assert_true(ENDING.claim_allowed([ENDING.FREED_FLAG], fought, "trainer-a", false),
+		"a participant may answer the freed Stormheart")
+	assert_true(ENDING.claim_allowed([ENDING.FREED_FLAG, ENDING.OFFER_FLAG], fought, "trainer-b", false),
+		"a second participant keeps their own offer after the first has settled")
+	assert_false(ENDING.claim_allowed([ENDING.FREED_FLAG], fought, "trainer-c", false),
+		"a character who did not fight for the release receives nothing")
+	assert_false(ENDING.claim_allowed([ENDING.FREED_FLAG], fought, "trainer-a", true),
+		"a character who already answered cannot be offered again")
+	assert_true(ENDING.claim_allowed([ENDING.FREED_FLAG], [], "solo", false),
+		"a solo freeing records no other participant; the only player may answer")
+	assert_false(ENDING.claim_allowed([ENDING.FREED_FLAG], fought, "", false))
+
+
+func test_claims_are_kept_per_character_and_legacy_saves_migrate() -> void:
+	var state := {"participants": ["trainer-a", "trainer-b"], "claims": {
+		"trainer-a": {"creature": {"species_id": "fulgocobra"}, "settled": true, "kept": true},
+		"trainer-b": {"creature": {"species_id": "fulgocobra"}, "settled": false, "kept": false}}}
+	assert_true(ENDING.claim_for_character(state, "trainer-a").is_empty(), "A settled claim is not resent")
+	assert_false(ENDING.claim_for_character(state, "trainer-b").is_empty(), "Each character's own claim waits")
+	assert_true(ENDING.claim_for_character(state, "trainer-c").is_empty())
+	var legacy := {"recipient_character_id": "trainer-a", "creature": {"species_id": "fulgocobra"},
+		"settled": false, "kept": false}
+	var migrated := ENDING.migrate_state(legacy)
+	assert_false(migrated.has("recipient_character_id"))
+	assert_eq(migrated.participants, ["trainer-a"],
+		"Only the legacy recipient is known to have fought; no one else may claim a fresh Stormheart")
+	assert_eq((migrated.claims as Dictionary).keys(), ["trainer-a"])
+	assert_false(ENDING.claim_for_character(migrated, "trainer-a").is_empty(),
+		"An interrupted single-recipient ceremony resumes for its character")
+	assert_eq(ENDING.migrate_state(migrated), migrated, "Migration is idempotent")
 
 
 func test_waterward_waits_for_the_roster_decision_and_is_once_only() -> void:
@@ -95,3 +120,16 @@ func test_ceremony_receipt_is_player_owned_despite_the_stormwood_world_prefix() 
 		"res://data/progression/flag_scopes.json"))
 	assert_true((parsed.player.ids as Array).has(ENDING.PERSONAL_RECEIPT_FLAG),
 		"the party owner's decision must persist in that character, not the shared world")
+
+
+func test_offer_asks_an_explicit_yes_or_no_and_receipts_each_answer() -> void:
+	var dialogue: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/dialogue/stormwood.json")) as Dictionary).conversations
+	var lines: Array = dialogue[ENDING.OFFER_CONVERSATION].lines
+	var last: Variant = lines.back()
+	assert_true(last is Dictionary and str((last as Dictionary).get("confirm_effect", "")) != "",
+		"the offer ends on a Yes/No consent line, so accepting with room is a choice, not a silent grant")
+	assert_eq(ENDING.resolution_flag(true, "trainer-a"), "stormwood:legendary_resolution:accepted:trainer-a")
+	assert_eq(ENDING.resolution_flag(false, "trainer-a"), "stormwood:legendary_resolution:refused:trainer-a")
+	assert_eq(PROGRESSION_STATE.scope_of(ENDING.resolution_flag(false, "trainer-a")), "world",
+		"the per-character answer receipt is a world fact every peer sees")
