@@ -12,6 +12,12 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 ## 0. Resume here (lane wind-down, 2026-09-26)
 
+**Current owner-directed visual goal (Codex):** inspect and improve every visual
+domain against ART_DIRECTION and ACCEPTANCE §4, on isolated branches from current
+main; Claude continues gameplay work and owns PR merges. PR288 is the first bounded
+X04 slice (Tidewake lantern materials); evidence and remaining defects are in
+`ralph/reports/VISUAL/DOCK-MATERIALS.md`. Whole-game Bars A/B remain open.
+
 All nine lane sessions were wound down and archived on owner direction: Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03 and VIS.
 - Every lane posted `## HANDOFF (final)` on its PR. Each showed clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
 - **All lane work is on main** through batches 25 (#283) and 26. Every `ralph/*`, `claude/integration-*` and `fix/*` tip is an ancestor of main, so any branch other than main can be deleted.
@@ -28,17 +34,25 @@ All nine lane sessions were wound down and archived on owner direction: Meadows 
 | Cloudreach (#253) | F06 earned-handoff WIP, F07#2 cadence route with XP restored by wild pairs, which was ruling (a) (`test_cloudreach_route_ledger` passes, L33 before Captain Veyra), F06#6 mid-ride CI proof, chain-bridge stall fix | Unrelated to this batch's changes, the game drops wild sites `road_visibility_windscar_floor_loop_05/06` for unsupported placements. F06#0 is stuck at B13, where `_excluded()` in `cloudreach_look.gd:289` scans 554K times (130 s). |
 | Stormwood (#250) | F11#0/#3 earned (seats plus the moved pickup 11, scatter and terrain manifest re-baked), F09#3 pocket lures | F09#3 round 6: add a light shaft over each pocket's reward, then re-judge. |
 | Tidewake (#226) | Brine sampler product fix (`water_world.gd::ground_height_at`), F14/F15 two-peer reruns, title-continue probe, Veilfall r1 verdict | Per the handoff. |
-| Art X04 (#248) | Bramblebun Meshy candidate (raw glb), Tidewake matrix capture | Finish the Bramblebun candidate; its task IDs are in the handoff. |
+| Art X04 (#248) | Bramblebun Meshy candidate (raw glb), Tidewake matrix capture | Bramblebun moves to Codex (owner, 2026-09-26); its task IDs are in the handoff. Next for the Claude X04 lane: Tidewake docks, then the VIS creature findings. |
 | X05 (#282) | F06#5 host-restart evidence, F14 participants proof WIP | F06#5 is blocked by the Cloudreach `_excluded()` slowness above. |
 | X03 (#262) / VIS (#279) | Glyph highlights; shared-look WIP | The ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
 
-**Open owner decisions:**
-- F11#2 legacy receipt.
-- F10#6 needs an ROG Ally run.
-- Cloudreach co-op shoulders and cliff palette.
-- Steamworks redistribution sign-off for `steam_api64.dll`.
+**Owner rulings (2026-09-26, coordinator Q&A):**
+- **All art/visual changes are ceded to the Codex lane.** Claude lanes record visual defects in the Codex queue at the top of `ralph/reports/VISUAL/AUDIT.md` and do not edit art, materials, shaders, lighting or meshes.
+- The tournament creature grant must be a non-starter species (starters stay player-exclusive). Meadows core owns the change.
+- F11#2: an old-build Stormheart receipt with no accept/decline answer is **undecided**; that character is re-offered once and can never be granted twice.
+- The Cloudreach cliff palette is picked by a code-blind judge against ART_DIRECTION. Co-op keeps road shoulders (co-op matches single player).
+- Team Tether palette stays as built. This is an explicit owner exception to the oxblood hard-rule wording; audit findings H2/H3 and the red parts of M7 are closed as "owner: leave as is".
+- "Guardian C2/C3" in Tidewake BOSSES means the Nerissa fight.
+- Meshy/Bramblebun work is handled by Codex, not the Claude lanes.
+- Branch prefix is `tb/` (CLAUDE/AGENTS/WORKFLOW §8 updated).
+- `steam_api64.dll` redistribution is approved. Deferred owner resources: Steam AppID and partner access, four Steam accounts, a ROG Ally run (F10#6).
 
 **Coordinator rulings made this session, to keep:**
+- The Tidewake top-trainer foe damage tunable also covers Venn and Nerissa.
+- X05 may use the Player `teleport_to` helper in test harnesses only.
+- `.github/workflows/ci.yml` is edited only by the coordinator; lanes propose patches in their PRs.
 - Co-op matches single player, and rejoin returns to the exact spot (same host world only).
 - Village and spine roads are widened for the roughly 2 m/texel control map.
 - F14 named wilds are judged by the named-wild rule, and a top-trainer damage tunable is authorized.

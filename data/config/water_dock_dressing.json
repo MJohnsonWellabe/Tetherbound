@@ -22,8 +22,13 @@
     "light_colour": "#ffc98a",
     "light_energy": 2.2,
     "light_range_m": 9.0,
-    "glow_energy": 2.4,
-    "_why_glow": "The lantern model is trim-sheet textured with no emissive surface; a blind pass read it as an unlit white box. It takes a warm emissive material and a stronger omni light."
+    "glow_energy": 0.7,
+    "housing_colour": "#655440",
+    "glass_colour": "#ffbc66",
+    "glow_colour": "#ff9e36",
+    "glass_center": [0.0, 0.32, 0.807],
+    "glass_size": [0.18, 0.24, 0.18],
+    "_why_glow": "Only the amber insert emits. The installed Lantern_Wall bracket, chain and cage retain an opaque warm metal housing; whole-fixture emission clipped them white. Insert coordinates are in the installed model's local space."
   },
   "cargo": {
     "side_offset_m": 3.6,

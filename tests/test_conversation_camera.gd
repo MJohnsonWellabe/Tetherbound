@@ -389,6 +389,23 @@ func test_gate_dialogue_after_previous_provider_is_freed_keeps_exploration_camer
 	arbiter.free()
 
 
+func test_a_live_winner_freed_by_a_residency_rebuild_falls_back_without_a_script_error() -> void:
+	# F11 drop-at-ack proof: a rebuild frees the provider the arbiter still
+	# names. `winner is Node3D` on that freed Object is a SCRIPT ERROR, so
+	# the watcher must test validity before the type and fall back to the
+	# remembered provider.
+	var watcher: Node = _rig.get_node_or_null(^"ConversationCamera")
+	var arbiter := Arbiter.new()
+	var freed := Villager.new()
+	watcher.set("_arbiter", arbiter)
+	watcher.call("note_activation_for_tests", _speaker)
+	arbiter.current = freed
+	freed.free()
+	assert_eq(watcher.call("current_speaker"), _speaker,
+		"a freed live winner yields to the remembered provider")
+	arbiter.free()
+
+
 ## --- the walled fixture -----------------------------------------------------
 
 func test_a_cramped_room_falls_back_to_a_closer_over_the_shoulder() -> void:
