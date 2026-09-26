@@ -36,9 +36,9 @@ const VIEWS := [
 	{"name": "current-sluice-veilfall", "stand": Vector2(722.0, 3192.0), "target": Vector3(393.0, 2.0, 3789.6),
 		"what": "Sluice Isle to Veilfall current (strongest) along its line"},
 	{"name": "veilfall-far-first-shore", "stand": Vector2(0.0, 162.0), "target": Vector3(200.0, 620.0, 4140.0),
-		"what": "Veilfall from First Shore, ~4 km (design sightline)", "pitch": -3.0, "yaw_offset": 24.0},
+		"what": "Veilfall from First Shore, ~4 km (design sightline)", "pitch": -0.05, "yaw_offset": 24.0},
 	{"name": "veilfall-mid-salt-crown", "stand": Vector2(419.6, 2640.0), "target": Vector3(200.0, 620.0, 4140.0),
-		"what": "Veilfall from the Salt Crown rest, ~1.5 km", "pitch": -3.0, "yaw_offset": 24.0},
+		"what": "Veilfall from the Salt Crown rest, ~1.5 km", "pitch": -0.05, "yaw_offset": 24.0},
 	{"name": "veilfall-near-arrival", "stand": Vector2(384.3, 3805.4), "target": Vector3(335.2, 139.4, 3885.7),
 		"what": "Veilfall Cascade from the arrival point, ~95 m"},
 ]
@@ -115,10 +115,11 @@ func _capture(view: Dictionary, time_name: String) -> Dictionary:
 		_player.global_position = at
 		_player.velocity = Vector3.ZERO
 		_rig.set("yaw", atan2(-to.x, -to.z) + deg_to_rad(float(view.get("yaw_offset", YAW_OFFSET_DEG))))
-		# The rig's positive pitch tilts the view UP: a distant high target
-		# is framed with a small explicit down-tilt so the horizon stays in.
+		# The rig's pitch is in RADIANS (clamped to about -60..32 degrees);
+		# positive tilts the view up. A distant high target gets a small
+		# explicit down-tilt so the horizon stays in frame.
 		_rig.set("pitch", float(view.get("pitch",
-			clampf(rad_to_deg(atan2(to.y, Vector2(to.x, to.z).length())) * 0.5, -10.0, 12.0))))
+			clampf(atan2(to.y, Vector2(to.x, to.z).length()) * 0.5, deg_to_rad(-10.0), deg_to_rad(12.0)))))
 		await physics_frame
 	for i in 6:
 		await process_frame
