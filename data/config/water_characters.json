@@ -1362,7 +1362,7 @@
       "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
-      "id": "water_trainer_venn", "foe_power_multiplier": 1.8,
+      "id": "water_trainer_venn", "foe_power_multiplier": 1.9,
       "display_name": "Officer Venn",
       "npc_entity_id": "water_venn",
       "island_id": "veilfall",
