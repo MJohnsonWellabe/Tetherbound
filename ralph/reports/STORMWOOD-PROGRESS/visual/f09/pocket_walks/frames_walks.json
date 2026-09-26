@@ -9,14 +9,15 @@
 				31.3833198547363,
 				339.609985351562
 			],
-			"camera_to_flame_m": 27.8450546264648,
-			"description": "verge_ash_hollow: on ash_road 25 m of road before the spur junction, normal exploration camera looking along the road",
+			"camera_to_flame_m": 24.3443336486816,
+			"description": "verge_ash_hollow: on ash_road 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
 			"file": "verge_ash_hollow_1_road_lure.jpg",
 			"flame_in_frustum": true,
 			"flame_screen": [
-				0.372017574310303,
-				0.342879514341001
+				0.380647246042887,
+				0.336956419768157
 			],
+			"frozen_wild": 0,
 			"hud": "off",
 			"id": "verge_ash_hollow_1_road_lure",
 			"in_fight": false,
@@ -26,7 +27,7 @@
 				369.2
 			],
 			"label": "walks",
-			"lamp_pixels_changed": 109328,
+			"lamp_pixels_changed": 104112,
 			"player": [
 				-330.483581542969,
 				28.5521755218506,
@@ -38,9 +39,47 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 12,
-				"frame_draw_calls": 6422
+				"frame_draw_calls": 6406
 			},
 			"side": "along",
+			"spur_pixels": {
+				"contrast": 2.47652936049872,
+				"current_changed": 982,
+				"current_changed_all": [
+					982,
+					1034,
+					876
+				],
+				"current_changed_first": 982,
+				"current_chunks": 6,
+				"flank_px": 816,
+				"flank_rgb": [
+					67,
+					46,
+					34
+				],
+				"gold_px": 26,
+				"lamp_changed": 1294,
+				"lamp_on_screen": true,
+				"lamp_screen": [
+					0.570970869064331,
+					0.505434629652235
+				],
+				"lane_px": 1158,
+				"lane_rgb": [
+					67,
+					46,
+					32
+				],
+				"reads": false,
+				"reads_current": false,
+				"reads_paint": false,
+				"thresholds": {
+					"contrast": 20.0,
+					"current_changed_px": 1000,
+					"min_lane_px": 400
+				}
+			},
 			"staged": {
 				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
 				"flags": [
@@ -52,7 +91,7 @@
 				-330.483581542969,
 				344.611328125
 			],
-			"surge_elapsed": 61.8110136666667,
+			"surge_elapsed": 65.011444,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -110,7 +149,7 @@
 				-70.0942764282227,
 				418.220092773438
 			],
-			"surge_elapsed": 61.0,
+			"surge_elapsed": 61.0161496666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -154,7 +193,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 4,
-				"frame_draw_calls": 365
+				"frame_draw_calls": 366
 			},
 			"side": "along",
 			"staged": {
@@ -168,7 +207,7 @@
 				-58.4287338256836,
 				420.276885986328
 			],
-			"surge_elapsed": 60.9898856666667,
+			"surge_elapsed": 60.9948573333334,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -235,14 +274,15 @@
 				24.7143783569336,
 				1732.93811035156
 			],
-			"camera_to_flame_m": 34.6511077880859,
-			"description": "hollows_moss_nook: on crown_sightline_loop 25 m of road before the spur junction, normal exploration camera looking along the road",
+			"camera_to_flame_m": 37.4723205566406,
+			"description": "hollows_moss_nook: on crown_sightline_loop 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
 			"file": "hollows_moss_nook_1_road_lure.jpg",
 			"flame_in_frustum": true,
 			"flame_screen": [
-				0.602235921223958,
-				0.299978468153212
+				0.576294326782227,
+				0.302759749801071
 			],
+			"frozen_wild": 0,
 			"hud": "off",
 			"id": "hollows_moss_nook_1_road_lure",
 			"in_fight": false,
@@ -252,7 +292,7 @@
 				1762.0
 			],
 			"label": "walks",
-			"lamp_pixels_changed": 97732,
+			"lamp_pixels_changed": 92860,
 			"player": [
 				95.0331573486328,
 				21.8832225799561,
@@ -264,9 +304,47 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 10,
-				"frame_draw_calls": 3897
+				"frame_draw_calls": 3913
 			},
 			"side": "along",
+			"spur_pixels": {
+				"contrast": 16.7050168788022,
+				"current_changed": 980,
+				"current_changed_all": [
+					1003,
+					235,
+					980
+				],
+				"current_changed_first": 1003,
+				"current_chunks": 3,
+				"flank_px": 782,
+				"flank_rgb": [
+					18,
+					18,
+					11
+				],
+				"gold_px": 4,
+				"lamp_changed": 2188,
+				"lamp_on_screen": true,
+				"lamp_screen": [
+					0.86444149017334,
+					0.454139624701606
+				],
+				"lane_px": 1100,
+				"lane_rgb": [
+					29,
+					28,
+					19
+				],
+				"reads": false,
+				"reads_current": false,
+				"reads_paint": false,
+				"thresholds": {
+					"contrast": 20.0,
+					"current_changed_px": 1000,
+					"min_lane_px": 400
+				}
+			},
 			"staged": {
 				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
 				"flags": [
@@ -278,7 +356,7 @@
 				95.0331573486328,
 				1737.85083007812
 			],
-			"surge_elapsed": 61.8154326666667,
+			"surge_elapsed": 64.996737,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -322,7 +400,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 8,
-				"frame_draw_calls": 1759
+				"frame_draw_calls": 1761
 			},
 			"side": "along",
 			"staged": {
@@ -336,7 +414,7 @@
 				-30.0992603302002,
 				1797.34704589844
 			],
-			"surge_elapsed": 60.9922886666667,
+			"surge_elapsed": 60.9991616666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -380,7 +458,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 7,
-				"frame_draw_calls": 4795
+				"frame_draw_calls": 4800
 			},
 			"side": "along",
 			"staged": {
@@ -394,7 +472,7 @@
 				-41.5477867126465,
 				1800.41735839844
 			],
-			"surge_elapsed": 60.987622,
+			"surge_elapsed": 60.995609,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -435,7 +513,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 7,
-				"frame_draw_calls": 4793
+				"frame_draw_calls": 4795
 			},
 			"side": "along",
 			"staged": {
@@ -449,26 +527,27 @@
 				-41.5477867126465,
 				1800.41735839844
 			],
-			"surge_elapsed": 61.9203906666666,
+			"surge_elapsed": 61.9292433333333,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82120323181152,
+			"camera_player_m": 5.82125997543335,
 			"camera_pos": [
-				-679.294616699219,
-				58.8146476745605,
-				3393.1435546875
+				-679.294738769531,
+				58.8146514892578,
+				3393.14379882812
 			],
-			"camera_to_flame_m": 37.4476165771484,
+			"camera_to_flame_m": 35.6501617431641,
 			"description": "conductor_ridge_cleft: on conductor_road 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
 			"file": "conductor_ridge_cleft_1_road_lure.jpg",
 			"flame_in_frustum": true,
 			"flame_screen": [
-				0.43726847966512,
-				0.371356116400825
+				0.401722526550293,
+				0.368182429560909
 			],
+			"frozen_wild": 2,
 			"hud": "off",
 			"id": "conductor_ridge_cleft_1_road_lure",
 			"in_fight": false,
@@ -478,7 +557,7 @@
 				3400.0
 			],
 			"label": "walks",
-			"lamp_pixels_changed": 76180,
+			"lamp_pixels_changed": 64708,
 			"player": [
 				-674.342163085938,
 				55.9835090637207,
@@ -490,9 +569,47 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 14,
-				"frame_draw_calls": 681
+				"frame_draw_calls": 689
 			},
 			"side": "along",
+			"spur_pixels": {
+				"contrast": 10.5506509897864,
+				"current_changed": 137,
+				"current_changed_all": [
+					196,
+					63,
+					137
+				],
+				"current_changed_first": 196,
+				"current_chunks": 8,
+				"flank_px": 848,
+				"flank_rgb": [
+					35,
+					33,
+					15
+				],
+				"gold_px": 0,
+				"lamp_changed": 693,
+				"lamp_on_screen": true,
+				"lamp_screen": [
+					0.602583789825439,
+					0.552273644341363
+				],
+				"lane_px": 1200,
+				"lane_rgb": [
+					27,
+					26,
+					13
+				],
+				"reads": false,
+				"reads_current": false,
+				"reads_paint": false,
+				"thresholds": {
+					"contrast": 20.0,
+					"current_changed_px": 1000,
+					"min_lane_px": 400
+				}
+			},
 			"staged": {
 				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
 				"flags": [
@@ -504,7 +621,7 @@
 				-674.342163085938,
 				3394.30297851562
 			],
-			"surge_elapsed": 61.8166666666667,
+			"surge_elapsed": 65.0125,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -548,7 +665,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 4,
-				"frame_draw_calls": 644
+				"frame_draw_calls": 645
 			},
 			"side": "along",
 			"staged": {
@@ -562,16 +679,16 @@
 				-310.235961914062,
 				3380.53637695312
 			],
-			"surge_elapsed": 61.0099803333333,
+			"surge_elapsed": 61.002449,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82113742828369,
+			"camera_player_m": 5.82126045227051,
 			"camera_pos": [
-				-302.929656982422,
-				37.5067405700684,
+				-302.929779052734,
+				37.5067977905273,
 				3382.22338867188
 			],
 			"description": "conductor_ridge_cleft: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy' offered (HUD hidden), before interact",
@@ -620,20 +737,20 @@
 				-298.398071289062,
 				3379.91357421875
 			],
-			"surge_elapsed": 60.9863743333333,
+			"surge_elapsed": 60.9985115555556,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82113742828369,
+			"camera_player_m": 5.82126045227051,
 			"camera_pos": [
-				-302.929656982422,
-				37.5067405700684,
+				-302.929779052734,
+				37.5067977905273,
 				3382.22338867188
 			],
-			"count_after": 1,
-			"count_before": 0,
+			"count_after": 2,
+			"count_before": 1,
 			"description": "conductor_ridge_cleft: same pose, after pressing interact on the reward prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy'",
 			"file": "conductor_ridge_cleft_3b_reward_claimed.jpg",
 			"hud": "off",
@@ -661,7 +778,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 4,
-				"frame_draw_calls": 687
+				"frame_draw_calls": 686
 			},
 			"side": "along",
 			"staged": {
@@ -675,7 +792,7 @@
 				-298.398071289062,
 				3379.91357421875
 			],
-			"surge_elapsed": 61.9197076666667,
+			"surge_elapsed": 61.9238172222222,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -687,14 +804,15 @@
 				42.8294906616211,
 				3887.17041015625
 			],
-			"camera_to_flame_m": 34.5728073120117,
-			"description": "deepwood_ridge_shelter: on hall_loop 25 m of road before the spur junction, normal exploration camera looking along the road",
+			"camera_to_flame_m": 37.3967323303223,
+			"description": "deepwood_ridge_shelter: on hall_loop 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
 			"file": "deepwood_ridge_shelter_1_road_lure.jpg",
 			"flame_in_frustum": true,
 			"flame_screen": [
-				0.600495211283366,
-				0.341186551694517
+				0.574791781107585,
+				0.34956292046441
 			],
+			"frozen_wild": 0,
 			"hud": "off",
 			"id": "deepwood_ridge_shelter_1_road_lure",
 			"in_fight": false,
@@ -704,7 +822,7 @@
 				3883.2
 			],
 			"label": "walks",
-			"lamp_pixels_changed": 116132,
+			"lamp_pixels_changed": 100320,
 			"player": [
 				-997.217834472656,
 				39.9983673095703,
@@ -716,9 +834,47 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 13,
-				"frame_draw_calls": 372
+				"frame_draw_calls": 380
 			},
 			"side": "along",
+			"spur_pixels": {
+				"contrast": 7.12181120613901,
+				"current_changed": 223,
+				"current_changed_all": [
+					223,
+					903,
+					210
+				],
+				"current_changed_first": 223,
+				"current_chunks": 4,
+				"flank_px": 778,
+				"flank_rgb": [
+					11,
+					12,
+					6
+				],
+				"gold_px": 0,
+				"lamp_changed": 3587,
+				"lamp_on_screen": true,
+				"lamp_screen": [
+					0.862187671661377,
+					0.524344380696615
+				],
+				"lane_px": 1064,
+				"lane_rgb": [
+					15,
+					17,
+					8
+				],
+				"reads": false,
+				"reads_current": false,
+				"reads_paint": false,
+				"thresholds": {
+					"contrast": 20.0,
+					"current_changed_px": 1000,
+					"min_lane_px": 400
+				}
+			},
 			"staged": {
 				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
 				"flags": [
@@ -730,7 +886,7 @@
 				-997.217834472656,
 				3886.4931640625
 			],
-			"surge_elapsed": 61.814957,
+			"surge_elapsed": 65.009396,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -774,7 +930,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 8,
-				"frame_draw_calls": 3460
+				"frame_draw_calls": 3439
 			},
 			"side": "along",
 			"staged": {
@@ -788,7 +944,7 @@
 				-1001.42651367188,
 				3730.15014648438
 			],
-			"surge_elapsed": 60.9954333333333,
+			"surge_elapsed": 60.9888888888889,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -832,7 +988,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 8,
-				"frame_draw_calls": 2813
+				"frame_draw_calls": 2792
 			},
 			"side": "along",
 			"staged": {
@@ -846,7 +1002,7 @@
 				-999.775146484375,
 				3718.41625976562
 			],
-			"surge_elapsed": 60.9920046666667,
+			"surge_elapsed": 61.0040165238096,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -887,7 +1043,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 8,
-				"frame_draw_calls": 2811
+				"frame_draw_calls": 2789
 			},
 			"side": "along",
 			"staged": {
@@ -901,7 +1057,7 @@
 				-999.775146484375,
 				3718.41625976562
 			],
-			"surge_elapsed": 61.925338,
+			"surge_elapsed": 61.9238095238095,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -913,14 +1069,15 @@
 				69.3637847900391,
 				5134.20751953125
 			],
-			"camera_to_flame_m": 35.3324203491211,
-			"description": "dynamo_scorch_pen: on dynamo_west_approach 25 m of road before the spur junction, normal exploration camera looking along the road",
+			"camera_to_flame_m": 38.1997222900391,
+			"description": "dynamo_scorch_pen: on dynamo_west_approach 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
 			"file": "dynamo_scorch_pen_1_road_lure.jpg",
 			"flame_in_frustum": true,
 			"flame_screen": [
-				0.605944951375326,
-				0.180381534717701
+				0.579091199239095,
+				0.18418943617079
 			],
+			"frozen_wild": 0,
 			"hud": "off",
 			"id": "dynamo_scorch_pen_1_road_lure",
 			"in_fight": false,
@@ -930,7 +1087,7 @@
 				5144.4
 			],
 			"label": "walks",
-			"lamp_pixels_changed": 114928,
+			"lamp_pixels_changed": 114084,
 			"player": [
 				-435.61962890625,
 				66.5326843261719,
@@ -942,9 +1099,47 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 14,
-				"frame_draw_calls": 1062
+				"frame_draw_calls": 1073
 			},
 			"side": "along",
+			"spur_pixels": {
+				"contrast": 8.69245701854466,
+				"current_changed": 625,
+				"current_changed_all": [
+					625,
+					135,
+					657
+				],
+				"current_changed_first": 625,
+				"current_chunks": 3,
+				"flank_px": 802,
+				"flank_rgb": [
+					15,
+					17,
+					7
+				],
+				"gold_px": 0,
+				"lamp_changed": 2972,
+				"lamp_on_screen": true,
+				"lamp_screen": [
+					0.868636798858643,
+					0.276284154256185
+				],
+				"lane_px": 1158,
+				"lane_rgb": [
+					22,
+					21,
+					11
+				],
+				"reads": false,
+				"reads_current": false,
+				"reads_paint": false,
+				"thresholds": {
+					"contrast": 20.0,
+					"current_changed_px": 1000,
+					"min_lane_px": 400
+				}
+			},
 			"staged": {
 				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
 				"flags": [
@@ -956,7 +1151,7 @@
 				-435.61962890625,
 				5135.9248046875
 			],
-			"surge_elapsed": 61.797504,
+			"surge_elapsed": 64.9953726666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -1000,7 +1195,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 9,
-				"frame_draw_calls": 549
+				"frame_draw_calls": 550
 			},
 			"side": "along",
 			"staged": {
@@ -1014,7 +1209,7 @@
 				-446.494293212891,
 				5240.3681640625
 			],
-			"surge_elapsed": 60.9833333333333,
+			"surge_elapsed": 60.9966077777777,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -1058,7 +1253,7 @@
 			"road_current": {
 				"chunks": 574,
 				"chunks_in_draw_range": 9,
-				"frame_draw_calls": 792
+				"frame_draw_calls": 793
 			},
 			"side": "along",
 			"staged": {
@@ -1072,7 +1267,7 @@
 				-450.550842285156,
 				5251.50439453125
 			],
-			"surge_elapsed": 61.003138,
+			"surge_elapsed": 61.0022743333333,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
@@ -1127,12 +1322,11 @@
 				-450.550842285156,
 				5251.50439453125
 			],
-			"surge_elapsed": 61.9286673333333,
+			"surge_elapsed": 61.9313686666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		}
 	],
 	"label": "walks",
-	"scatter_bake_fresh": true,
-	"note": "conductor_ridge_cleft frames re-rendered at commit 5 of WO-F09-05 (a wild creature walked into the first full-res road stand); every other frame from the first full-res run"
+	"scatter_bake_fresh": true
 }

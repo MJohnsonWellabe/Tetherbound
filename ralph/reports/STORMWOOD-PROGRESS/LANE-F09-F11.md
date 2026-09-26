@@ -499,6 +499,89 @@ SNOWBALL F09#3. This is a proof task: build only what the proof run shows is bro
   - Not run on an Ally, and not run two-peer.
   - The code-blind visual judge is with the lead.
 
+### WO-F09-05 round 2: blind judge NO on the road views, fixed against a pixel measure (`e0d6885f6`)
+
+- **The judge's verdict on `04d505a9e` (coordinator):**
+  - The Deepwood, Dynamo and Hollows road views are "a lamp standing in grass beside the road ... just a streetlight". Conductor is ambiguous. Only Verge reads.
+  - The gates are identical, and "nothing is visible from the gate worth the detour".
+  - Floating bracket fungi appear in the grass, and a near rain streak draws as a thick white pole.
+  - **The round-1 ray metric (8–10 of 10 spur samples visible) was wrong for what a player sees.** A camera 2.3 m up at 25–40 m looks at a grazing angle, so the roadside grass hides a flat lane leaving at an angle. The road itself reads only because the camera looks down its length.
+- **The pixel measure** (`tools/capture_stormwood_pocket_walks.gd --measure [--repeats=N]`, `SPURPIX` lines, both sides of each junction at 25 m, production camera, HUD off):
+  - **Primary:** hide the spur's own current chunks, with the rain hidden, and count the pixels that change within 6 px of the spur's centre line beyond the road's lane. A spur reads at **≥ 1000 px**.
+  - **Secondary:** mean-colour contrast between the spur's painted lane and a 3 m ground band either side. It reads at **≥ 20** (weighted RGB, 0–255) with at least 400 lane pixels.
+  - **Calibration on the frames the judge saw** (the "along" stands):
+    - Verge (reads): **1559**.
+    - Hollows **436**, Deepwood **551**, Dynamo **179**, Conductor (ambiguous) **89**.
+    - The 1000 threshold sits between them. Paint contrast was 2.4–13.9 for all five (Verge 7.4), so it separated nothing; 20 sits above every round-1 value.
+  - **Wild bodies:** within 25 m of a road stand they are process-frozen from spawn. ROAD CP-2's authored roadside pairs `road_visibility_conductor_road_30`/`_31` sit about 15 m from both Conductor stands and walked into the lens in 3 of 5 round-1 renders. Each frame records `frozen_wild`: 2 at Conductor, 0 elsewhere.
+  - **Noise, disclosed:** the pulses and crackle flicker move between the two grabs. Attempt 2's three repeats at one stand spread from 88 to 1559 (Verge along). The baseline is a single pair.
+- **Fixes (Stormwood-owned only):**
+  1. **Scatter rule** (`stormwood_scatter.gd`, config `stormwood_pockets.json` `spur_junction_clear`):
+     - no ground cover on a spur's first 30 m within 6.5 m of its centre line, nor within 11 m of the junction;
+     - no tree or colliding rock within 18 m of the junction, so the lamps stand against open ground.
+  2. **Floating fungi:** they were our data. `storm_mushroom` planted the trunk-shelf `Mushroom_Laetiporus` loose in grass; it is now the installed ground dome `Mushroom_Common`. There is one model either way, so no random draws moved.
+  3. **Scatter re-bake:** 34691 → 34656 placements. All 108 bins changed, because the model path is stored per placement.
+  4. **Wider spur mouth** (`stormwood_road_surface.json`): spur half-width 2.0 → 2.6 m, junction flare 2.4 → 4.5 m over 14 → 24 m.
+     - The terrain re-bake painted 29,580 → 30,010 texels.
+     - 8 regions and the manifest changed. Heights are untouched (a paint-only bake).
+     - Grass refuses path texels, so the flare clears a fan of the road's shoulder.
+  5. **Junction lamps are now a pair framing the spur like a gateway** (`stormwood_pockets.gd` `spur_posts`):
+     - One post stands either side of the painted lane, 0.9 m outside its edge.
+     - The pair sits at the first distance from 8 to 14.5 m up the spur where both clear every through road's corridor by 0.9 m.
+     - `test_stormwood_pockets` checks both posts: clear of the roads, on the spur, within 15 m of the junction, facing the road, and on opposite sides of the spur.
+  6. **Per-pocket lamp tint** (`pockets[].lamp_tint`): amber (Verge), moss green-gold (Hollows), pale storm cyan (Conductor), warm white (Deepwood), gold (Dynamo). Never red or magenta.
+  7. **Spur current** (`stormwood_road_current.json` `spur`, the same shared material via UV2 = (is spur, metres from junction)):
+     - spur veins 1.3× brighter;
+     - 2.4× brighter over the first 45 m;
+     - a soft central band;
+     - attempt 2 adds a ribbon that fans with the painted flare (2× wide at the junction, easing over 24 m). `test_stormwood_road_current` checks that it stays inside the painted lane plus flare, with a 3× control that fails.
+  8. **Reward beacon** (`stormwood_pickup_runtime.gd`, config `reward_beacon`):
+     - the pocket reward is drawn 2.2× larger;
+     - it carries a warm light pool (OmniLight, 8 m range, no shadow) and an additive glow in its pocket's tint.
+     - Both are children of the pickup, so they leave with it on claim. The shared `ItemCachePickup` is not edited.
+  9. **Near rain** (`stormwood_surge.gd` streak shader, config `rain.near_fade_m` [2.2, 4.5]): a streak fades by view depth, and none draws within 2.2 m of the lens.
+- **Pixel numbers per pocket.** Each cell is current px, then paint contrast; "along" is the judged stand.
+
+| Pocket / stand | Before (`04d505a9e`, 1 pair) | Attempt 1 (`980763394`, 1 pair) | Attempt 2 (`e0d6885f6`, median of 3 [all]) | Final full-res frame (Actions, `e0d6885f6`) |
+|---|---|---|---|---|
+| Verge along | **1559** / 7.4 | 997 / 2.3 | **1304** [1304, 1559, 88] / 6.1 | 982 / 2.5 |
+| Verge against | 388 / 3.2 | 399 / 11.4 | 362 [337, 562, 362] / 12.8 | — |
+| Hollows along | 436 / 13.9 | 427 / 15.3 | 387 [387, 510, 178] / 15.7 | 980 / 16.7 |
+| Hollows against | 1025 / 4.3 | 639 / 7.3 | 728 [728, 440, 831] / 8.0 | — |
+| Conductor along | 89 / 8.8 | 92 / 13.5 | 45 [85, 45, 12] / 17.4 | 137 / 10.6 |
+| Conductor against | 627 / 11.4 | 649 / 12.3 | 576 [304, 650, 576] / 13.3 | — |
+| Deepwood along | 551 / 2.4 | 551 / 6.9 | 226 [226, 321, 168] / 8.6 | 223 / 7.1 |
+| Deepwood against | 592 / 5.6 | 418 / 7.5 | 502 [137, 858, 502] / 5.6 | — |
+| Dynamo along | 179 / 5.2 | 177 / 8.8 | 115 [115, 484, 73] / 7.7 | 625 / 8.7 |
+| Dynamo against | 501 / 3.4 | 649 / 1.1 | **1159** [1202, 337, 1159] / 2.4 | — |
+
+- **The measure's verdict: NOT MET.** After both attempts only Verge along and Dynamo against clear 1000 px. The judged Hollows, Deepwood, Dynamo and Conductor stands stay below it, and no stand clears the paint threshold.
+  - **Stop rule reached:** two attempts with the pixel measure, so no third change was made.
+  - The metric's repeat spread (88–1559 at one stand) is wider than the before/after differences. It is a weak gate as built: the current's pulses and flicker are not pinned between grabs. A deterministic version would pin the shader's `clock_override`, and it would need a re-measured baseline.
+- **What the frames show by eye** (the 20 full-resolution frames, looked at one by one):
+  - **Road:**
+    - In all five a pair of tinted, lit posts stands either side of the spur where it leaves the road, and in Verge, Hollows, Deepwood and Dynamo a gold trace runs off the road between or under them. Deepwood's is thin.
+    - Conductor's cyan pair is clear, but a roadside bush hides most of its trace.
+    - Round 1's lone post read as a streetlight; this reads as a gateway to a path.
+  - **Gates:** the reward now glows in its pocket's colour, visible through the mouth from the gate: green in Verge, Hollows and Conductor, pink-white in Deepwood, and a small light in Dynamo. The two gate lanterns still render near-white, so the tint shows on the junction lamps and the reward glow, not on the gate flames.
+  - **Reward frames:** the enlarged reward with its glow, then gone after Interact. The counts are 0→1, 0→1, 1→2, 0→1 and 0→1.
+  - **Fungi:** Dynamo's are grounded white domes. No near-lens rain pole in any frame.
+- **Tests and smokes on `e0d6885f6`:**
+  - The pocket-walks smoke passed twice (local 399 s, and the Actions headless run `36241307444`): 117 checks, 0 failures, 30/30 LURE, 0 `SCRIPT ERROR`. Every walk and every negative control passes with the paired posts in place.
+  - `smoke_stormwood_arches`: PASS.
+  - The freshness and world tests pass:
+    - the first 38 of 39 (`test_stormwood_road_surface`, `scatter_bake`, `scatter_clearances`, `terrain_bake`, `pockets`, `pickup*`) passed; the one failure was the lamp-light count 15 → 20, an expected change, and that assertion was updated;
+    - after the fix, `test_stormwood_road_current` + `test_stormwood_pockets` ran 17/17;
+    - `test_stormwood_surge*` ran 53/53.
+- **Captures:** `visual/f09/pocket_walks/`: the 20 frames, `frames_walks.json` (with `spur_pixels` per road frame) and `contact_sheet.jpg`, rendered full resolution on the Actions render job, run `36241306493` at `e0d6885f6`. They replace round 1's frames. The round-1 frames remain in git at `04d505a9e`.
+- **Open:**
+  - the pixel measure does not pass;
+  - Conductor's roadside bush sits outside the 11 m ground-cover disc;
+  - the gate lantern tint does not read;
+  - the gates are still the same palisade and lantern build (tint and reward glow only differ);
+  - no night pass;
+  - not run on an Ally.
+
 ## WO-F10-06 — Surge phases readable without HUD (`ralph/stormwood-f10-surge-readability`)
 
 - **Anchor:** F10 / ACCEPTANCE §6.1 F10: lightning with a 1.2 s / 3 m telegraph, and Calm/Building/Break/Fading readable without HUD text. The restored-sky view has to be distinct. ART_DIRECTION and SYSTEMS define the Stormwood look for each phase.
