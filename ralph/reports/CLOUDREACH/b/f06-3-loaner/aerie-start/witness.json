@@ -10,20 +10,20 @@
     "terrapup",
     "brooktail"
   ],
-  "flight_frames": 13068,
+  "flight_frames": 12525,
   "initial_party_keys": [
-    "creature-484a35426ba0e14cb864801c65f3aac1",
-    "creature-cff079eeddb18f09eef9b19f828fe892",
-    "creature-d6b5d438c45d5a9c63d87577bb67859e",
-    "creature-1d0770005fed4924f85c31decea64c52",
-    "creature-8bc1b05daffa661572714d8c15bef296"
+    "creature-d2297c3d61ff69bc95adf46f9e6992e8",
+    "creature-d4f6d35308cfe67d3e611ef14e0f2aea",
+    "creature-a4d4afd906f493713246b186e48e3e9b",
+    "creature-362dd08630c284fbe43d5c92270475c6",
+    "creature-5db7761dddbbb728f480a5daa9043670"
   ],
   "launches": [
     {
       "fly_unlocked": false,
       "loaner": true,
       "party_size": 5,
-      "position": "(400.0683, 611.3935, 3248.448)",
+      "position": "(400.0224, 611.3935, 3248.483)",
       "stage": "flight_trial_start",
       "trial_active": true
     },
@@ -31,7 +31,7 @@
       "fly_unlocked": true,
       "loaner": true,
       "party_size": 5,
-      "position": "(398.6193, 611.3935, 3247.361)",
+      "position": "(400.0117, 611.3936, 3250.049)",
       "stage": "witness_sealed_upper_attempt",
       "trial_active": false
     },
@@ -39,7 +39,7 @@
       "fly_unlocked": true,
       "loaner": true,
       "party_size": 5,
-      "position": "(398.6506, 611.3935, 3250.629)",
+      "position": "(398.8228, 611.3935, 3250.435)",
       "stage": "mandatory_high_roost_flight",
       "trial_active": false
     },
@@ -47,7 +47,7 @@
       "fly_unlocked": true,
       "loaner": true,
       "party_size": 5,
-      "position": "(1110.242, 1051.393, 2950.533)",
+      "position": "(1110.241, 1051.393, 2950.534)",
       "stage": "return_glide_to_grounded_counterweight",
       "trial_active": false
     }
@@ -61,7 +61,7 @@
     "party_size_after": 5,
     "save_ok": true
   },
-  "loaner_frames": 13068,
+  "loaner_frames": 12525,
   "loaner_species": "galecrest",
   "owned_carrier_frames": 0,
   "passed": true,
@@ -69,20 +69,21 @@
     "eligible_carrier": false,
     "fly_unlocked": false,
     "flying_after_double_jump": false,
-    "position": "(387.9128, 610.4971, 3257.683)",
+    "position": "(387.9039, 610.4971, 3257.651)",
     "trial_active": false
   },
   "sealed_attempt": {
-    "closest_gap_to_box_m": 0.751708984375,
+    "climb_end_y": 770.281372070312,
+    "closest_gap_to_box_m": 0.750244140625,
     "denials": [
+      "This wind route is still sealed: cloudreach_upper.",
       "This wind route is still sealed: cloudreach_upper.",
       "This wind route is still sealed: cloudreach_upper."
     ],
-    "end": "(439.2844, 724.0734, 3599.248)",
+    "end": "(439.4937, 724.4401, 3599.25)",
     "frames_inside_sealed_box": 0,
     "on_floor": false,
-    "peak_y_after_lift": 770.281311035156,
-    "refused_after_frames": 1419,
+    "refused_after_frames": 1411,
     "still_flying": true,
     "target": "(450.0, 700.0, 3750.0)"
   },

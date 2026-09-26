@@ -1,7 +1,7 @@
 # Cloudreach-B witness evidence
 
 Lane: Cloudreach-B. PR: #294. Branch: `tb/cloudreach-b-f06-1-foot-regions`.
-All runs used local Godot 4.7-stable, headless, `--accelerated` (physics stays at 1/60 per step). Each run had its own `XDG_DATA_HOME`.
+The committed F06#2/F06#3 witness and events files come from runs on 7e45bd2d37c9f1d735b543c662d2584dd038f938, which has the same witness code as the PR head. All runs used local Godot 4.7-stable, headless, `--accelerated` (physics stays at 1/60 per step). Each run had its own `XDG_DATA_HOME`.
 
 ## F06#2 — Fly training, landing and invalid landing: PASS (flight leg, declared fixture)
 
@@ -23,7 +23,7 @@ All runs used local Godot 4.7-stable, headless, `--accelerated` (physics stays a
   - **No loaner before the trial.** A double-jump before the trial deploys no Fly and offers no loaner.
   - **Every launch is the loaner.** There were 4 launches, all with the loaner and a party of 5, and 0 owned-carrier frames.
   - **The loaner hits the same sealed wall.** It is refused at `cloudreach_upper` 0.75 m from the box, with 0 frames inside.
-  - **0 violations over 13,068 loaner frames:**
+  - **0 violations over 12,525 loaner frames** (the previous passing run on 269cc025 logged 13,068):
     - the loaner is never a party member;
     - the five creature uids never change;
     - it is never inside a sealed box before that box's flag is set;

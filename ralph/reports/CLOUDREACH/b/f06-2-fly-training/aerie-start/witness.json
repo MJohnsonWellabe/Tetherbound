@@ -6,8 +6,8 @@
       "directions_tried": [
         "(0.0, 0.0, -1.0)"
       ],
-      "end": "(419.2139, 637.5161, 3215.763)",
-      "from": "(422.3839, 627.7822, 3250.185)",
+      "end": "(425.7923, 641.2091, 3215.947)",
+      "from": "(417.4457, 627.3438, 3249.802)",
       "inside_trial": true,
       "refused": true,
       "still_flying": true,
@@ -18,27 +18,27 @@
   "criterion": "F06#2",
   "denials": [
     {
-      "position": "(419.2139, 637.5494, 3215.763)",
+      "position": "(425.7923, 641.2424, 3215.947)",
       "reason": "Stay inside the marked flight trial.",
       "stage": "flight_trial_start"
     },
     {
-      "position": "(419.2139, 637.4494, 3215.753)",
-      "reason": "Stay inside the marked flight trial.",
-      "stage": "flight_trial_start"
-    },
-    {
-      "position": "(439.4823, 740.9586, 3599.089)",
+      "position": "(439.4596, 740.6586, 3599.022)",
       "reason": "This wind route is still sealed: cloudreach_upper.",
       "stage": "witness_sealed_upper_attempt"
     },
     {
-      "position": "(439.4927, 740.6254, 3599.239)",
+      "position": "(439.4749, 740.2587, 3599.241)",
       "reason": "This wind route is still sealed: cloudreach_upper.",
       "stage": "witness_sealed_upper_attempt"
     },
     {
-      "position": "(439.4934, 740.5254, 3599.249)",
+      "position": "(439.4752, 740.1921, 3599.245)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "position": "(439.4754, 740.1254, 3599.248)",
       "reason": "This wind route is still sealed: cloudreach_upper.",
       "stage": "witness_sealed_upper_attempt"
     }
@@ -49,28 +49,28 @@
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(399.7569, 610.1307, 3248.977)",
+      "position": "(399.7191, 610.1305, 3248.884)",
       "stage": "flight_trial_start"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(398.6935, 610.1303, 3250.564)",
+      "position": "(398.6365, 610.1301, 3250.633)",
       "stage": "witness_sealed_upper_attempt"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(1098.699, 1051.301, 2941.971)",
+      "position": "(1098.699, 1051.301, 2941.471)",
       "stage": "mandatory_high_roost_flight"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(400.899, 610.1301, 3250.248)",
+      "position": "(400.7386, 610.1302, 3250.15)",
       "stage": "return_glide_to_grounded_counterweight"
     }
   ],
@@ -86,17 +86,18 @@
   "passed": true,
   "recoveries": [],
   "sealed_attempt": {
-    "closest_gap_to_box_m": 0.7509765625,
+    "climb_end_y": 770.281311035156,
+    "closest_gap_to_box_m": 0.751708984375,
     "denials": [
+      "This wind route is still sealed: cloudreach_upper.",
       "This wind route is still sealed: cloudreach_upper.",
       "This wind route is still sealed: cloudreach_upper.",
       "This wind route is still sealed: cloudreach_upper."
     ],
-    "end": "(439.4934, 724.4399, 3599.249)",
+    "end": "(439.4754, 724.0399, 3599.248)",
     "frames_inside_sealed_box": 0,
     "on_floor": false,
-    "peak_y_after_lift": 770.281311035156,
-    "refused_after_frames": 1415,
+    "refused_after_frames": 1414,
     "still_flying": true,
     "target": "(450.0, 700.0, 3750.0)"
   },
