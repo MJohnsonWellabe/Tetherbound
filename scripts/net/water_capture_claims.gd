@@ -345,6 +345,15 @@ func _ack(id: String) -> void:
 	if _game().is_host():
 		_accept_ack(_sender(), id)
 
+## Host side of a claim acknowledgement. INVARIANT (F14, "never an owned
+## sixth"): an ack is the peer's statement that it has finished with the claim,
+## NOT evidence that anything was granted. Ownership is decided only by the
+## peer's own settle (`complete_pending_capture` -> the capture transaction,
+## which enforces the five-creature cap locally); the host never adds to a
+## guest's party and cannot see it. A bare ack from a modified client can
+## therefore mark its own Guardian claim resolved ("accepted") without a grant:
+## that closes only that character's once-only offer and can never create a
+## creature, so it is accepted rather than refused. Do not add grants here.
 func _accept_ack(peer: int, id: String) -> void:
 	var game := _game()
 	var claim: Dictionary = game.world.water_capture_claims.get(id, {})

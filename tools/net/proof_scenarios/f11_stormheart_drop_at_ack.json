@@ -1,0 +1,376 @@
+{
+  "name": "F11: a guest's link dies at the Stormheart claim acknowledgement; no duplicated grant",
+  "claim": "ACCEPTANCE F11 'through disconnect ... without duplicated grants', the claim-acknowledgement window. Both players fought the Dynamo. The host says Yes. The guest walks up, opens its own offer and says Yes through the real dialogue. The guest's transport is closed from the dialogue's own `completed` signal, in the physics step that accepted the Yes. The ending then records the receipt and saves the character locally (stormwood_ending.gd _finish_local_claim), and its `ending_settled` acknowledgement fails with 'Trying to call an RPC via a multiplayer peer which is not connected' (peer-1 log). The host holds no world receipt of the guest's answer and its one claim for the guest is unsettled. The guest rejoins from the title as the same character. The host settles that one claim from the resent claim and the guest's saved receipt (settled, kept), and the guest holds exactly one Stormheart. A repeat of the claim the prompt sends is refused by the host, before and after both peers reload. Setup: the host's captured save with the Stormwood route open, and the Dynamo fixture, which also commits stormwood:act_ii_complete and stormwood:marrow_defeated through the ledger. Disclosed: the local close() sends an ENet disconnect, so the host sees the leave at once (a silent partition is not this proof); the guest's leave-time character write runs before the deferred commit, as a real link death would not order it; after the rejoin the guest arrives downed (it lands from height near the Stormheart), which touches no grant. Not covered here: the host dropping; a refusal at the acknowledgement; a drop before the receipt is saved; a silent partition timed out by the host; a rejoin after the 120 s seat hold.",
+  "peers": 2,
+  "scene": "world",
+  "budget_s": 2100,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "load_save",
+      "args": {
+        "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+      },
+      "expect_data": {
+        "realm": "meadows",
+        "form": "captured directory (split path)",
+        "character_id": "character-f41f4a49223483d6bfdf56715944bb7b"
+      },
+      "label": "named save: Meadows, Stormwood route open, loaded like Continue"
+    },
+    {
+      "peer": 1,
+      "action": "boot",
+      "args": {
+        "scene": "world"
+      },
+      "budget_frames": 10000,
+      "label": "guest: a fresh trainer in the Meadows"
+    },
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_gate_stormwood_unlocked"
+      },
+      "label": "the route comes from the host's save"
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000
+    },
+    {
+      "peer": "all",
+      "probe": "downed",
+      "label": "trainer vitals on arrival (health recorded, see the HUD note)"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "01_both_in_stormwood"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "before"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "stormheart_fixture",
+      "args": {
+        "contributors": [
+          "$peer0",
+          "$peer1"
+        ]
+      },
+      "label": "both fought the Dynamo (setup)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:legendary_freed",
+        "budget_frames": 1800
+      }
+    },
+    {
+      "peer": 0,
+      "action": "stormheart_answer",
+      "args": {
+        "answer": "accept",
+        "screenshot": "02_host_offer_yes_no"
+      },
+      "expect_data": {
+        "has_stormheart": true
+      },
+      "label": "host says Yes"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_answer",
+      "args": {
+        "answer": "accept",
+        "drop_at_ack": true,
+        "screenshot": "02_guest_offer_yes_no"
+      },
+      "expect_data": {
+        "cut_at_ack": true,
+        "receipt_on_disk": true,
+        "has_stormheart": true,
+        "accepted_anywhere": true
+      },
+      "label": "the guest says Yes through the real dialogue, and its link is closed from the dialogue's completed signal in the physics step that accepted the Yes: the Yes receipt is saved on its character, the ending_settled acknowledgement fails (not connected)"
+    },
+    {
+      "peer": 1,
+      "action": "capture_saves",
+      "args": {
+        "label": "at_cut"
+      },
+      "label": "the dropped guest's files right after the cut"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "at_cut",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "fulgocobra",
+          "stormwood:legendary_answer:",
+          ":accepted"
+        ],
+        "lacks": [
+          ":refused"
+        ]
+      },
+      "label": "the Yes receipt and the Stormheart are in the guest's character file at the cut"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1,
+        "budget_frames": 3600
+      },
+      "label": "the host sees the guest gone"
+    },
+    {
+      "peer": 0,
+      "action": "stormheart_state",
+      "args": {
+        "character": "$character1"
+      },
+      "expect_data": {
+        "other_accepted": false,
+        "other_refused": false,
+        "other_claims": 1,
+        "other_claim_settled": false
+      },
+      "label": "the acknowledgement never reached the host: no world receipt of the guest's answer, and its one claim for the guest is still unsettled"
+    },
+    {
+      "peer": 1,
+      "probe": "input_context",
+      "label": "the dropped guest is back at the title"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "budget_frames": 6000,
+        "character": {
+          "character_id": "$character1"
+        }
+      },
+      "label": "the guest rejoins from the title as the same character"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2,
+        "budget_frames": 1200
+      }
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000,
+      "expect": "any",
+      "label": "back into Stormwood (ANY: a rejoin may already stand there)"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:legendary_freed",
+        "budget_frames": 1800
+      }
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:legendary_resolution:accepted:$character1",
+        "budget_frames": 3600
+      },
+      "label": "after the rejoin the host settles the guest's answer from its saved receipt"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_state",
+      "expect_data": {
+        "party": [
+          "fulgocobra"
+        ],
+        "has_stormheart": true,
+        "world_accepted": true,
+        "accepted_anywhere": true
+      },
+      "label": "exactly one Stormheart: the resent claim granted nothing twice"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_answer",
+      "args": {
+        "answer": "accept",
+        "budget_frames": 600
+      },
+      "expect": "FAIL",
+      "label": "replay, client side: the offer prompt is dark"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_claim_again",
+      "label": "replay, host judged: the prompt's ending_claim, sent WITHOUT the acceptance hint, is refused by the host from its own record ('You have already answered the Stormheart.')",
+      "expect_data": {
+        "refusal": "You have already answered the Stormheart."
+      }
+    },
+    {
+      "peer": 0,
+      "action": "save_reload_here",
+      "continue_on_fail": true,
+      "label": "RELOAD: the host saves its slot and loads it back in place"
+    },
+    {
+      "peer": 1,
+      "action": "save_reload_here",
+      "continue_on_fail": true,
+      "label": "RELOAD: the guest saves its character and applies it back from disk"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_answer",
+      "args": {
+        "answer": "accept",
+        "budget_frames": 600
+      },
+      "expect": "FAIL",
+      "label": "after the reload, client side: the guest's offer prompt is still dark"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_claim_again",
+      "label": "after the reload, host judged: the prompt's ending_claim, sent WITHOUT the acceptance hint, is refused by the host from its own record ('You have already answered the Stormheart.')",
+      "expect_data": {
+        "refusal": "You have already answered the Stormheart."
+      }
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_state",
+      "expect_data": {
+        "party": [
+          "fulgocobra"
+        ],
+        "has_stormheart": true
+      },
+      "label": "still exactly one Stormheart"
+    },
+    {
+      "peer": 0,
+      "action": "stormheart_state",
+      "args": {
+        "character": "$character1"
+      },
+      "expect_data": {
+        "party": [
+          "fulgocobra"
+        ],
+        "has_stormheart": true,
+        "world_accepted": true,
+        "other_accepted": true,
+        "other_refused": false,
+        "other_claims": 1,
+        "other_claim_settled": true,
+        "other_claim_kept": true
+      },
+      "label": "host: its own one; its single claim entry for the guest is now settled and kept, and the world holds the guest's accepted receipt (not refused)"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "03_after_rejoin"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "fulgocobra",
+          ":accepted"
+        ],
+        "lacks": [
+          ":refused"
+        ]
+      },
+      "label": "guest's saved character: one Stormheart, answered Yes"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "worlds",
+        "path_contains": "slot-0/",
+        "contains": [
+          "stormwood:legendary_resolution:accepted:$character0",
+          "stormwood:legendary_resolution:accepted:$character1"
+        ],
+        "lacks": [
+          "stormwood:legendary_resolution:refused:"
+        ]
+      },
+      "label": "host world: each character's answer recorded once"
+    }
+  ]
+}

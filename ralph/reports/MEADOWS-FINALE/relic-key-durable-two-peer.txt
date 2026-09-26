@@ -1,0 +1,49 @@
+# tests/smoke_net_veridian_relic_key.gd, two real peers (tools/net/run_net_smoke.sh veridian_relic_key), Godot 4.7 headless, loopback, on origin/main 08fcc205 + ralph/f05-herd
+# 3 consecutive passes: run 1 normal (3m54s), run 2 throttled (taskset -c 0,1, nice 15; 4m03s), run 3 normal (3m56s); 41 PASS / 0 FAIL each.
+# Run 1 verdict lines, unedited:
+
+PASS: host reported its ENet port (32261)
+PASS: FIXTURE: peer 0 received terrapup
+PASS: FIXTURE: peer 0 received bramblebun
+PASS: FIXTURE: peer 0 received trailpup
+PASS: FIXTURE: peer 0 received mudsnout
+PASS: FIXTURE: peer 1 received terrapup
+PASS: FIXTURE: peer 1 received bramblebun
+PASS: FIXTURE: peer 1 received trailpup
+PASS: FIXTURE: peer 1 received mudsnout
+PASS: two distinct stable characters (host 'character-e8a947d1fe107d00e9e23f018d073f91', guest 'character-2f93fc394141d730657817e47848b1ea')
+PASS: host hosted and guest joined (hosting udp/32261 as peer 1 / joined 127.0.0.1:32261 as peer 1701562222 after 17 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0: no key and no earned Heart before the Warden ({ "active": "", "earned": false, "earned_flag": "realm_heart_meadows_earned", "earned_in_world": false, "heart": "meadows", "placed": false, "placed_flag": "realm_heart_meadows_placed", "placed_in_world": false, "shrine_state": "", "stamina_multiplier": 1.0 }, key false)
+PASS: peer 1: no key and no earned Heart before the Warden ({ "active": "", "earned": false, "earned_flag": "realm_heart_meadows_earned", "earned_in_world": false, "heart": "meadows", "placed": false, "placed_flag": "realm_heart_meadows_placed", "placed_in_world": false, "shrine_state": "", "stamina_multiplier": 1.0 }, key false)
+PASS: the Hall names its Warden arena ([8.0, 6.17194271087646, 7650.2001953125])
+PASS: host challenged the Warden (challenged warden_aldis; bound to encounter '1:1' (4 creatures to come))
+PASS: guest joined the Warden's own fight
+PASS: both peers felled the Warden (battle won in 1059 frames / 7 swings against 5 of their creatures)
+PASS: peer 0's WORLD holds the Cloudreach key and the earned Heart after the Warden ({ "active": "", "earned": true, "earned_flag": "realm_heart_meadows_earned", "earned_in_world": true, "heart": "meadows", "placed": false, "placed_flag": "realm_heart_meadows_placed", "placed_in_world": false, "shrine_state": "", "stamina_multiplier": 1.0 }, key true)
+PASS: peer 1's WORLD holds the Cloudreach key and the earned Heart after the Warden ({ "active": "", "earned": true, "earned_flag": "realm_heart_meadows_earned", "earned_in_world": true, "heart": "meadows", "placed": false, "placed_flag": "realm_heart_meadows_placed", "placed_in_world": false, "shrine_state": "", "stamina_multiplier": 1.0 }, key true)
+PASS: each peer stood a real Meadows shrine
+PASS: the guest set the Heart into the shrine (submitted; the host has still to answer)
+PASS: peer 0's WORLD holds the Heart placed
+PASS: peer 1's WORLD holds the Heart placed
+PASS: the host activated its Heart power (wearing 'meadows')
+PASS: before reload and rejoin: peer 0's WORLD holds the Cloudreach key
+PASS: before reload and rejoin: peer 0's WORLD holds the Heart earned and placed ({ "active": "meadows", "earned": true, "earned_flag": "realm_heart_meadows_earned", "earned_in_world": true, "heart": "meadows", "placed": true, "placed_flag": "realm_heart_meadows_placed", "placed_in_world": true, "shrine_state": "active", "stamina_multiplier": 2.0 })
+PASS: before reload and rejoin: peer 0's personal Heart power is 'meadows' (got 'meadows')
+PASS: before reload and rejoin: peer 1's WORLD holds the Cloudreach key
+PASS: before reload and rejoin: peer 1's WORLD holds the Heart earned and placed ({ "active": "", "earned": true, "earned_flag": "realm_heart_meadows_earned", "earned_in_world": true, "heart": "meadows", "placed": true, "placed_flag": "realm_heart_meadows_placed", "placed_in_world": true, "shrine_state": "placed_inactive", "stamina_multiplier": 1.0 })
+PASS: before reload and rejoin: peer 1's personal Heart power is '' (got '')
+PASS: the host completed a production save/reload (host slot reload preserved party=true selection=true hosted_world=true)
+PASS: the guest saved its character before leaving
+PASS: the host saw the guest leave
+PASS: the guest rejoined as 'character-2f93fc394141d730657817e47848b1ea' (title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:32261 as peer 732969397 after 102 frames)
+PASS: the host is back to two peers
+PASS: after the host's reload and the guest's rejoin: peer 0's WORLD holds the Cloudreach key
+PASS: after the host's reload and the guest's rejoin: peer 0's WORLD holds the Heart earned and placed ({ "active": "meadows", "earned": true, "earned_flag": "realm_heart_meadows_earned", "earned_in_world": true, "heart": "meadows", "placed": true, "placed_flag": "realm_heart_meadows_placed", "placed_in_world": true, "shrine_state": "active", "stamina_multiplier": 2.0 })
+PASS: after the host's reload and the guest's rejoin: peer 0's personal Heart power is 'meadows' (got 'meadows')
+PASS: after the host's reload and the guest's rejoin: peer 1's WORLD holds the Cloudreach key
+PASS: after the host's reload and the guest's rejoin: peer 1's WORLD holds the Heart earned and placed ({ "active": "", "earned": true, "earned_flag": "realm_heart_meadows_earned", "earned_in_world": true, "heart": "meadows", "placed": true, "placed_flag": "realm_heart_meadows_placed", "placed_in_world": true, "shrine_state": "placed_inactive", "stamina_multiplier": 1.0 })
+PASS: after the host's reload and the guest's rejoin: peer 1's personal Heart power is '' (got '')
+real	3m54.357s
+
+relic2_throttled: 41 PASS, 0 FAIL, real	4m2.563s
+relic3: 41 PASS, 0 FAIL, real	3m55.576s

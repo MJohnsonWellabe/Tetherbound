@@ -1,0 +1,447 @@
+{
+  "name": "F14: never an owned sixth -- a forged accept at a full five",
+  "claim": "ACCEPTANCE F14 clause 'never an owned sixth', the forged-accept path (the let-the-Guardian-go path is f14_guardian_never_sixth.json). The guest is at a full five, the host has room as the control. With the Guardian's offer on screen, the guest acts as a MODIFIED client bypassing the Creatures tab: it calls the settle the tab's Accept calls with no release (-1) and with an out-of-range release (6), adds the pending Guardian straight to its party, and then sends the host the raw accept intent (the `_ack` RPC a settled capture sends) without settling or releasing anyone. Each local attempt must be refused, the host settles the forged accept, and the guest still owns the same five with no Guardian (live and saved) and no receipt. The Guardian stays on screen as the unanswered newcomer (not owned); the guest then answers it on the tab the only way a full belt allows -- letting Rill go -- and still owns five. The host accepts into its free holder as the control. Repeat requests are refused already_resolved. Setup as in f14_guardian_offer_capacity_space.json.",
+  "peers": 2,
+  "scene": "water",
+  "budget_s": 1800,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "nickname": "Acorn"
+      },
+      "label": "setup: companions by name"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "mosshell",
+        "nickname": "Shelby"
+      },
+      "label": "setup: the host has room (two of five)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "ripplet",
+        "nickname": "Kestrel"
+      },
+      "label": "setup: companions by name"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "nickname": "Bramble"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "nickname": "Rill"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "sparkit",
+        "nickname": "Tuff"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "meadowhart",
+        "nickname": "Fern"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 5,
+        "guardians_owned": 0
+      },
+      "label": "setup: the guest's belt is full (five)"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_fixture",
+      "args": {
+        "participants": [
+          "$peer0",
+          "$peer1"
+        ]
+      },
+      "label": "setup: both fought Nerissa (the director's own session path journals one reward row each)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_captain_nerissa_defeated",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "guardian_tether"
+      },
+      "label": "the GUEST frees the Guardian at the chamber's real control"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_guardian_freed",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "00_guardian_freed"
+      },
+      "label": "first rendered frame (shader warm-up under its own allowance)"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "participants": [
+          "$character0",
+          "$character1"
+        ],
+        "guardian_freed": true,
+        "host_open_claims": []
+      },
+      "label": "the host journals both characters as freeing-fight participants; no claim open yet"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 2,
+        "guardians_owned": 0,
+        "party": [
+          "Acorn",
+          "Shelby"
+        ]
+      },
+      "label": "baseline: the host (control) has room, two of five, no Guardian"
+    },
+    {
+      "peer": 1,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "label": "the guest asks for its own offer at the chamber"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_answer",
+      "args": {
+        "until": "presented",
+        "screenshot": "01_guest_offer_at_capacity"
+      },
+      "expect_data": {
+        "stage": "choose",
+        "pending_species": "water_abyssal_guardian",
+        "party_before": [
+          "Kestrel",
+          "Bramble",
+          "Rill",
+          "Tuff",
+          "Fern"
+        ]
+      },
+      "label": "baseline: AT CAPACITY the ceremony is on screen, unanswered: the guest's five plus the Guardian as the newcomer row"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 5,
+        "guardians_owned": 0,
+        "saved_guardians": 0,
+        "receipt_saved": false
+      },
+      "label": "baseline before the guest's answer: five owned, no Guardian live or saved, no receipt"
+    },
+    {
+      "peer": 1,
+      "action": "water_guardian_forge_accept",
+      "expect_data": {
+        "local_refused": true,
+        "offer_still_on_screen": true,
+        "host_settled_seen": true,
+        "same_five": true,
+        "party_size": 5,
+        "guardians_owned": 0,
+        "saved_party_size": 5,
+        "saved_guardians": 0,
+        "receipt_saved": false,
+        "attempts": {
+          "settle_no_release": {
+            "ok": false,
+            "party_size": 5
+          },
+          "settle_release_6": {
+            "ok": false,
+            "party_size": 5
+          },
+          "party_add": {
+            "ok": false,
+            "party_size": 5
+          }
+        }
+      },
+      "label": "LEG 2, FORGED ACCEPT AT CAPACITY: settle(-1), settle(6) and party.add refused locally; the raw accept ack reaches the host, which settles it; still the same five, no Guardian, no receipt"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "host_open_claims": [],
+        "host_settled": true,
+        "party_size": 2,
+        "guardians_owned": 0
+      },
+      "label": "the host judged the forged accept: the guest's claim is closed (nothing re-sent), control untouched before its own answer"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 5,
+        "guardians_owned": 0,
+        "saved_guardians": 0,
+        "saved_party_size": 5,
+        "receipt_saved": false,
+        "party": [
+          "Kestrel",
+          "Bramble",
+          "Rill",
+          "Tuff",
+          "Fern"
+        ]
+      },
+      "label": "baseline after the forge: the guest's same five, live and saved"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_answer",
+      "args": {
+        "release": "Rill",
+        "screenshot": "02_guest_after_forge"
+      },
+      "expect_data": {
+        "stage": "choose",
+        "after": {
+          "party_size": 5,
+          "guardians_owned": 1
+        }
+      },
+      "label": "the offer still on screen is answered on the tab: at a full belt the Guardian can only take a holder someone leaves (Rill); five, never six"
+    },
+    {
+      "peer": 0,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "label": "control: the host asks for its own offer"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_answer",
+      "args": {
+        "screenshot": "03_host_offer_with_room"
+      },
+      "expect_data": {
+        "stage": "guardian",
+        "after": {
+          "party_size": 3,
+          "guardians_owned": 1
+        }
+      },
+      "label": "control WITH ROOM: the host's own Accept/Decline; Accept takes the free holder (3 of 5)"
+    },
+    {
+      "peer": 1,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "expect": "FAIL",
+      "expect_data": {
+        "enabled": false
+      },
+      "label": "repeat after resolution: the chamber no longer offers the guest its invite prompt"
+    },
+    {
+      "peer": 0,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "expect": "FAIL",
+      "expect_data": {
+        "enabled": false
+      },
+      "label": "repeat after resolution: nor the host"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_offer_again",
+      "expect_data": {
+        "refused": true,
+        "pending_guardian_id": ""
+      },
+      "label": "repeat after resolution: the guest's raw offer intent is refused (the refusal comes back without a code, and pending stays set); nothing new is presented and the Guardian count is unchanged"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_offer_again",
+      "expect_data": {
+        "refused": true,
+        "code": "already_resolved",
+        "pending_guardian_id": ""
+      },
+      "label": "repeat after resolution, judged by the host: the host's own repeat is refused already_resolved"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 5,
+        "guardians_owned": 1,
+        "saved_guardians": 1,
+        "saved_party_size": 5,
+        "receipt_saved": true,
+        "pending_guardian_id": "",
+        "party": [
+          "Kestrel",
+          "Bramble",
+          "Abyssal Guardian",
+          "Tuff",
+          "Fern"
+        ]
+      },
+      "label": "guest after everything: still exactly five, live and saved, exactly the expected members"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 3,
+        "guardians_owned": 1,
+        "saved_guardians": 1,
+        "saved_party_size": 3,
+        "receipt_saved": true,
+        "pending_guardian_id": "",
+        "host_open_claims": [],
+        "host_settled": true,
+        "party": [
+          "Acorn",
+          "Shelby",
+          "Abyssal Guardian"
+        ]
+      },
+      "label": "host (control): exactly one Guardian, receipt saved, no claim left open for anyone"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "04_after"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "Kestrel",
+          "Bramble",
+          "Tuff",
+          "Fern",
+          "water_abyssal_guardian"
+        ],
+        "lacks": [
+          "Rill"
+        ]
+      },
+      "label": "guest's saved character on disk: the expected five, with the Guardian in Rill's former slot (after the honest swap at #25) and no Rill"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character0",
+        "contains": [
+          "water_abyssal_guardian",
+          "Acorn",
+          "Shelby"
+        ]
+      },
+      "label": "host's saved character on disk"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "worlds",
+        "contains": [
+          "water_capture_claims",
+          "$character1"
+        ],
+        "lacks": [
+          "water_abyssal_guardian"
+        ]
+      },
+      "label": "host's saved world on disk: no Guardian held anywhere in the journal (no open claim, no hidden holder) for either character"
+    }
+  ]
+}

@@ -22,6 +22,18 @@ const WILD_FOOT_MARGIN := 0.25
 const WILD_PATH_STEP := 0.5
 const WILD_STRATUM_TOLERANCE := 4.0
 const AIR_PATROL_AUTHORITY_ID := 1
+# F06 #4: a summoned companion stands on the trainer's own level. Its floor is
+# within RECALL_LEVEL_M of the trainer's, and so is the floor every
+# RECALL_PATH_STEP_M on the straight line between them.
+const RECALL_LEVEL_M := 1.2
+const RECALL_PATH_STEP_M := 0.4
+const RECALL_MIN_NORMAL_Y := 0.7
+## The companion put on the trainer's own footprint (the last rung) ignores the
+## trainer's capsule until they are this far apart, then collides as before.
+const RECALL_SHARED_CLEAR_M := 0.6
+
+
+var _recall_shared_footprint: WeakRef
 
 
 class CliffWild:
@@ -303,6 +315,7 @@ func can_challenge(spec: Dictionary) -> bool:
 
 func _process(delta: float) -> void:
 	super._process(delta)
+	_release_shared_footprint()
 	_spawn_available_sites()
 	for id: String in trainer_prompts:
 		var prompt: Node = trainer_prompts[id]
@@ -591,8 +604,164 @@ func _wild_destination_supported(candidate: Vector3, wild: Node3D) -> bool:
 
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
+	if body == _ally_body and is_instance_valid(_player):
+		return await _stand_ally_on_trainer_level(body, spot)
 	_surface_for(body, spot)
 	return await super._stand_on_ground(body, spot)
+
+
+## F06 #4 (CLOUDREACH-LANE open finding): the base puts a summoned companion
+## 2.4 m behind and 1.2 m right of the trainer and seats it on the analytic
+## surface under that XZ. Beside a narrow Cloudreach road the surface index
+## still reports road height a little past the collider's lip, so the body was
+## set down in the air and fell to the valley floor (y 83.9 below the arrival
+## terrace road at y 105), and the trainer walked off the edge after it.
+## Here the spot is chosen on real collision on the trainer's own level: the
+## requested spot first, then the other seven directions around the trainer,
+## then closer rings, and last the trainer's own footprint (a following body is
+## on no physics layer, so sharing it walls nobody in). Never below a drop.
+func _stand_ally_on_trainer_level(body: Node3D, requested: Vector3) -> bool:
+	var level := _recall_floor(_player.global_position, _player.global_position.y + 0.5, body)
+	if is_nan(level):
+		# No floor straight under the trainer's centre (e.g. standing on a
+		# sloped road lip): match the trainer's own height. Every candidate
+		# still needs verified floor, so no spot is chosen in the air.
+		level = _player.global_position.y
+	var spot := _recall_spot(body, requested, level)
+	_surface_for(body, spot)
+	if not await super._stand_on_ground(body, spot):
+		return false
+	# The analytic seat can sit under or over the collider top it was verified
+	# on (the arrival road: collider 106.08 m, surface index 105.00 m). The
+	# verified collision floor is the one the body will stand on.
+	body.global_position = spot
+	if body is CharacterBody3D:
+		(body as CharacterBody3D).velocity = Vector3.ZERO
+	return true
+
+
+## A verified spot for `body` on the trainer's level `level`, or the trainer's
+## own footprint when no ring spot verifies.
+func _recall_spot(body: Node3D, requested: Vector3, level: float) -> Vector3:
+	var origin := _player.global_position
+	var offset := Vector3(requested.x - origin.x, 0.0, requested.z - origin.z)
+	var reach := offset.length()
+	var radius := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
+	var first := offset.normalized() if reach > 0.01 else Vector3.BACK
+	var directions: Array[Vector3] = []
+	for i in 8:
+		directions.append(first.rotated(Vector3.UP, i * TAU / 8.0))
+	# Nearest-to-requested first: the requested direction, its neighbours, then
+	# round to the opposite side.
+	var order := [0, 1, 7, 2, 6, 3, 5, 4]
+	var near := maxf(radius + 0.6, 1.2)
+	var rings: Array[float] = [reach]
+	if reach > near + 0.1:
+		rings.append_array([(reach + near) * 0.5, near])
+	for ring: float in rings:
+		for index: int in order:
+			var candidate := origin + directions[index] * ring
+			var floor_y := _recall_footprint_floor(candidate, level, radius, body)
+			if is_nan(floor_y):
+				continue
+			var spot := Vector3(candidate.x, floor_y, candidate.z)
+			if _recall_path_on_level(origin, spot, level, body) and _recall_body_fits(spot, body):
+				return spot
+	# Last rung: the trainer's own footprint. The follower's mask still meets
+	# the trainer's capsule and would climb onto the trainer's head, so the two
+	# ignore each other until the trainer walks clear.
+	if body is PhysicsBody3D:
+		(body as PhysicsBody3D).add_collision_exception_with(_player)
+		_recall_shared_footprint = weakref(body)
+	return Vector3(origin.x, level, origin.z)
+
+
+## The last rung's exception ends once the trainer has walked clear of the
+## companion (or the companion is gone).
+func _release_shared_footprint() -> void:
+	if _recall_shared_footprint == null:
+		return
+	var body := _recall_shared_footprint.get_ref() as PhysicsBody3D
+	if body == null or not is_instance_valid(_player):
+		_recall_shared_footprint = null
+		return
+	var apart := Vector2(body.global_position.x - _player.global_position.x,
+		body.global_position.z - _player.global_position.z).length()
+	var radius := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
+	if apart >= radius + RECALL_SHARED_CLEAR_M:
+		body.remove_collision_exception_with(_player)
+		_recall_shared_footprint = null
+
+
+## Walkable collision under the body's centre and around its footprint, all
+## within RECALL_LEVEL_M of `level`: the highest of them, or NAN.
+func _recall_footprint_floor(at: Vector3, level: float, radius: float, body: Node3D) -> float:
+	var centre := _recall_floor(at, level, body)
+	if is_nan(centre):
+		return NAN
+	var highest := centre
+	for i in 8:
+		var angle := i * TAU / 8.0
+		var sample := at + Vector3(cos(angle), 0.0, sin(angle)) * radius * 0.9
+		var y := _recall_floor(sample, level, body)
+		if is_nan(y):
+			return NAN
+		highest = maxf(highest, y)
+	return highest
+
+
+## Top of walkable collision under `at`, within RECALL_LEVEL_M of `level`.
+func _recall_floor(at: Vector3, level: float, body: Node3D) -> float:
+	var query := PhysicsRayQueryParameters3D.create(
+		Vector3(at.x, level + RECALL_LEVEL_M + 0.8, at.z), Vector3(at.x, level - RECALL_LEVEL_M, at.z),
+		_player.collision_mask, _recall_exclusions(body))
+	var hit: Dictionary = _player.get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty() or not hit.collider is StaticBody3D or (hit.normal as Vector3).y < RECALL_MIN_NORMAL_Y:
+		return NAN
+	var y := (hit.position as Vector3).y
+	return y if absf(y - level) <= RECALL_LEVEL_M else NAN
+
+
+## Floor on the level every step from the trainer to the spot, and nothing
+## solid across the line at knee and chest height: no drop, no wall between.
+func _recall_path_on_level(from: Vector3, to: Vector3, level: float, body: Node3D) -> bool:
+	var flat := Vector3(to.x - from.x, 0.0, to.z - from.z)
+	var steps := maxi(1, ceili(flat.length() / RECALL_PATH_STEP_M))
+	for i in range(1, steps + 1):
+		var p := from + flat * (float(i) / steps)
+		if is_nan(_recall_floor(p, level, body)):
+			return false
+	var space := _player.get_world_3d().direct_space_state
+	for lift: float in [0.6, 1.2]:
+		var query := PhysicsRayQueryParameters3D.create(Vector3(from.x, level + lift, from.z),
+			Vector3(to.x, to.y + lift, to.z), _player.collision_mask, _recall_exclusions(body))
+		if not space.intersect_ray(query).is_empty():
+			return false
+	return true
+
+
+## The body's own collision shape at `spot` touches no world geometry.
+func _recall_body_fits(spot: Vector3, body: Node3D) -> bool:
+	var collision := body.get_node_or_null(^"Collision") as CollisionShape3D
+	if collision == null or collision.shape == null:
+		return true
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = collision.shape
+	query.collision_mask = _player.collision_mask
+	query.transform = Transform3D(collision.global_basis,
+		spot + Vector3.UP * 0.05 + (collision.global_position - body.global_position))
+	query.exclude = _recall_exclusions(body)
+	for hit: Dictionary in _player.get_world_3d().direct_space_state.intersect_shape(query, 8):
+		if hit.collider is StaticBody3D:
+			return false
+	return true
+
+
+func _recall_exclusions(body: Node3D) -> Array[RID]:
+	var exclude: Array[RID] = [_player.get_rid()]
+	if body is CollisionObject3D:
+		exclude.append((body as CollisionObject3D).get_rid())
+	return exclude
 
 
 func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
@@ -664,6 +833,17 @@ func _record_trainer_defeat(spec: Dictionary) -> void:
 	var progression := _progression()
 	if progression == null or bool(progression.call("has", str(spec.get("defeat_flag", "")))):
 		return
+	if _client_victory_in_flight(spec):
+		return # already asked the host; its delta (or refusal) settles it
+	if _client_routes_to_host(spec):
+		# F08 #2 / D103 / MULTIPLAYER §2 "Presentation cannot ... write a world
+		# flag". A CLIENT's win: announce it once (the finale submits its own
+		# `pending` event intent) and send the host-journaled `trainer_victory`.
+		# Nothing is written here: the defeat flag lands only with the host's
+		# committed world delta, and the reward only as the host's delivery.
+		trainer_victory.emit(str(spec["id"]))
+		_send_client_trainer_victory(spec)
+		return
 	# Emitted only from inherited final-round victory. A finale subscriber can
 	# dispatch its canonical chapter event before the defeat marker is written.
 	trainer_victory.emit(str(spec["id"]))
@@ -685,6 +865,41 @@ func _record_trainer_defeat(spec: Dictionary) -> void:
 			return
 		_pay_trainer_reward(spec)
 	else:
-		# Flag not yet local (a client's pending intent, or no adapter write):
-		# the base already routes this through the same session path first.
+		# Flag not yet local (solo/host with no adapter write, or a client
+		# trainer the base does not route to the host): the base's own path,
+		# which runs the session path first.
 		super._record_trainer_defeat(spec)
+
+
+## A client whose win the base routes to the host (`_routes_trainer_victory_to_host`).
+func _client_routes_to_host(spec: Dictionary) -> bool:
+	return _is_multi_peer() and not _is_host() \
+		and _routes_trainer_victory_to_host(spec, _encounter_realm())
+
+
+## This client already sent `spec`'s `trainer_victory` and the host has not
+## refused it (a refusal erases the entry in the base's verdict handler).
+func _client_victory_in_flight(spec: Dictionary) -> bool:
+	return _is_multi_peer() and not _is_host() \
+		and _trainer_victories_sent.has(ENCOUNTER_REWARDS.trainer_key(spec))
+
+
+## The base's client `trainer_victory` send (`encounter_director.gd::
+## _record_trainer_defeat_for_the_session`), WITHOUT its local defeat "note".
+## That note was a `set_flag` of the world-scope defeat flag into this client's
+## `Game.progression` -- i.e. into its copy of `WorldState.flags` -- before the
+## host had committed or refused anything. Cloudreach does not need it: the
+## repeat guard is `_client_victory_in_flight()` above, and the finale guards
+## its own event by `_in_flight`. The base's dedupe set, verdict handler and
+## bounded retry are reused unchanged; with no note there is nothing to undo.
+func _send_client_trainer_victory(spec: Dictionary) -> void:
+	var trainer_key := ENCOUNTER_REWARDS.trainer_key(spec)
+	var sent := submit_encounter_intent({"kind": "trainer_victory", "trainer_id": trainer_key})
+	if not bool(sent.get("pending", false)) and not bool(sent.get("ok", false)):
+		# Could not leave (offline / realm closing): a transient refusal, so the
+		# base's bounded retry still asks the host.
+		_receive_trainer_victory_verdict({"ok": false, "kind": "trainer_victory",
+			"trainer_id": trainer_key, "code": str(sent.get("code", "offline")),
+			"reason": str(sent.get("reason", ""))})
+		return
+	_trainer_victories_sent[trainer_key] = true

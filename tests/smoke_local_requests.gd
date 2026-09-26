@@ -278,13 +278,10 @@ func _lost_creature() -> void:
 		await process_frame
 	if int(reunion.call("escort_peer")) != 0:
 		_fail("lost_creature: outrunning the 40 m leash did not end the escort")
-	# "Back to wait by the patrol": lost_companion_reunion.gd anchors her waiting
-	# pose to the patrol's LIVE body (it turns and settles after its fight), so
-	# compare with the patrol -- the same 10 m this section's opening check uses
-	# -- not with the frozen spot she stood on right after the battle.
-	if rescued.global_position.distance_to(patrol.global_position) > 10.0 or not bool(prompt.get("enabled")):
-		_fail("lost_creature: a broken leash did not send her back to wait with the prompt (%.2f m from the patrol, prompt enabled=%s)" % [
-			rescued.global_position.distance_to(patrol.global_position), str(prompt.get("enabled"))])
+	if rescued.global_position.distance_to(waiting_at) > 0.5 or not bool(prompt.get("enabled")):
+		_fail("lost_creature: a broken leash did not send her back to wait with the prompt (at %s, waited at %s, gap %.2f m, prompt %s, phase %s)" % [
+			rescued.global_position, waiting_at, rescued.global_position.distance_to(waiting_at),
+			prompt.get("enabled"), reunion.call("phase")])
 	if bool(_progression().call("has", RETURN_FLAG)):
 		_fail("lost_creature: a broken leash completed the return")
 
@@ -348,9 +345,9 @@ func _lost_creature() -> void:
 	reunion.call("restore_progression_from_game", _game)
 	if rescued.global_position.distance_to(patrol.global_position) > 10.0 or not bool(prompt.get("enabled")) \
 			or bool(reunion.call("is_reunited")):
-		_fail("lost_creature: a legacy beaten-but-not-returned state does not wait by the patrol (%.2f m from the patrol, prompt enabled=%s, reunited=%s)" % [
-			rescued.global_position.distance_to(patrol.global_position),
-			str(prompt.get("enabled")), str(reunion.call("is_reunited"))])
+		_fail("lost_creature: a legacy beaten-but-not-returned state does not wait by the patrol (at %s, waited at %s, gap %.2f m, prompt %s, reunited %s)" % [
+			rescued.global_position, waiting_at, rescued.global_position.distance_to(waiting_at),
+			prompt.get("enabled"), reunion.call("is_reunited")])
 	_progression().call("set_flag", RETURN_FLAG, true)
 	reunion.call("restore_progression_from_game", _game)
 	if TRAINERS.conversation_for(TRAINERS.trainer("pasture_drover_juno"), _progression()) != "pasture_drover_juno_reunited_challenge":

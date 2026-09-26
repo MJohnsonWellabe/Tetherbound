@@ -9,6 +9,8 @@ const REED := "water_dock_reedhaven_repaired"
 const SHELL := "water_dock_shellwatch_residents_freed_and_pump_disabled"
 const DEEP := "water_dock_deep_watch_current_charted"
 const TIDECOIL := "water_named_deep_watch_tidecoil_resolved"
+const DEBIT := preload("res://scripts/net/water_dock_debit.gd")
+const RULES := preload("res://scripts/world/water_dock_rules.gd")
 
 class RefusingWorldSave extends "res://scripts/save/save_game.gd":
 	var refuse_world := false
@@ -108,13 +110,27 @@ func run() -> void:
 	game.save_system.refuse_world = true
 	await activate("reedhaven_repair")
 	check(not game.world.flags.has(REED), "World-save refusal leaves repair incomplete")
-	check(game.inventory.count("reed_fiber") == 9 and game.inventory.count("driftwood") == 7,
-		"World-save refusal preserves every repair material")
+	# Deliberate F15 correction: journal_failed never refunds (the wiring cannot
+	# meet P1/P2). The cost stays escrowed on a pending row and the next press
+	# resends the SAME txn, which commits once: charged exactly once, never free.
+	var failed_txns: Array = DEBIT.resubmittable_txns({"character_id": game.local.character_id,
+		"escrow": game.local.satchel_escrow}, str(game.world.reward_delivery_namespace))
+	check(failed_txns.size() == 1, "World-save refusal leaves exactly one pending escrow row")
+	var failed_row: Dictionary = game.local.satchel_escrow.get(failed_txns[0] if not failed_txns.is_empty() else "", {})
+	check(game.inventory.count("reed_fiber") == 3 and game.inventory.count("driftwood") == 3
+		and failed_row.get("cost", {}) == {"reed_fiber": 6, "driftwood": 4},
+		"World-save refusal keeps every repair material: 6/4 escrowed, the rest in the bag")
 	check(docks.get("_barriers").has(REED) and ray_hits(ray_from, ray_to) != null,
 		"World-save refusal leaves the real barrier closed")
 	game.save_system.refuse_world = false
 	await activate("reedhaven_repair")
 	check(game.world.flags.has(REED), "Real repair prompt commits its world flag")
+	check(not failed_txns.is_empty() and game.world.flags.has(
+		RULES.receipt_flag("reedhaven_repair", str(game.local.character_id), str(failed_txns[0]))),
+		"The resend commits the SAME txn that journal_failed left pending")
+	check(game.local.satchel_escrow.size() == 1 and not failed_txns.is_empty()
+		and str((game.local.satchel_escrow.get(failed_txns[0], {}) as Dictionary).get("status", "")) == "settled",
+		"The pending row settles; no second txn was ever minted")
 	var durable_dock: Dictionary = game.save_system.get("_worlds").read(game.world.world_id)
 	check((durable_dock.get("flags", {}) as Dictionary).get("flags", []).has(REED),
 		"Repair flag is on disk before a later manual save or autosave")

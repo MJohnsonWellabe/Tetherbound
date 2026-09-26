@@ -24,7 +24,8 @@ var camera: Node3D
 var drive_stick: Callable
 var radius_m := 3.0
 var phase := ""
-var counts := {"warnings": 0, "threats": 0, "dodge_frames": 0, "hits": 0, "damage": 0.0, "deaths": 0}
+var counts := {"warnings": 0, "threats": 0, "dodge_frames": 0, "hits": 0, "damage": 0.0, "deaths": 0,
+	"satchel_recoveries": 0, "satchel_stacks": 0}
 var _warnings: Dictionary = {}
 var _pending_satchel := false
 var _recovering := false
@@ -156,29 +157,75 @@ func _recover(walk: Callable, activate: Callable) -> bool:
 		return false
 	if not bool(await activate.call(satchel, prompt, at + Vector2(0.0, -1.2), "own death satchel")):
 		return false
+	# The satchel can be freed under us: the ledger removes an emptied
+	# satchel, and a reload or realm change rebuilds the world. Never touch
+	# a freed instance; the panel is the satchel script's shared screen.
 	var panel: Node = null
 	for _frame in 60:
+		if not is_instance_valid(satchel):
+			print("F11 SATCHEL was freed before its panel opened")
+			return false
 		panel = satchel.get("_panel") as Node
 		if panel != null and bool(panel.call("is_open")):
 			break
 		await tree.process_frame
-	if panel == null or not bool(panel.call("is_open")):
+	if panel == null or not is_instance_valid(panel) or not bool(panel.call("is_open")):
 		print("F11 SATCHEL panel did not open")
 		return false
+	# Ordinary pad input on the open panel: focus the satchel's column (the
+	# right-hand one; the trainer's own satchel is on the left), then A takes
+	# the focused stack. The panel refocuses the same column after each move.
 	var taken := 0
 	for _press in 32:
+		if not is_instance_valid(panel) or not bool(panel.call("is_open")):
+			break
 		var rows: Array = panel.get("_withdraw_rows")
 		if rows.is_empty():
 			break
-		(rows[0] as Button).pressed.emit()
-		taken += 1
-		for _frame in 6:
+		if not rows.has(tree.root.gui_get_focus_owner()):
+			await _ui_tap(&"ui_right")
+		if not rows.has(tree.root.gui_get_focus_owner()):
+			print("F11 SATCHEL pad right did not focus the satchel column (focus=%s)" % str(tree.root.gui_get_focus_owner()))
+			return false
+		var before := rows.size()
+		await _ui_tap(&"ui_accept")
+		var moved := false
+		for _frame in 60:
+			if not is_instance_valid(panel) or not bool(panel.call("is_open")) \
+					or (panel.get("_withdraw_rows") as Array).size() < before:
+				moved = true
+				break
 			await tree.process_frame
-	panel.call("close")
-	for _frame in 10:
+		if not moved:
+			print("F11 SATCHEL pad A on a satchel row took nothing")
+			return false
+		taken += 1
+	if is_instance_valid(panel) and bool(panel.call("is_open")):
+		await _ui_tap(&"menu_cancel")
+	for _frame in 30:
+		if not is_instance_valid(panel) or not bool(panel.call("is_open")):
+			break
 		await tree.process_frame
+	if is_instance_valid(panel) and bool(panel.call("is_open")):
+		print("F11 SATCHEL pad B did not close the satchel panel")
+		return false
 	_pending_satchel = false
+	counts.satchel_recoveries += 1
+	counts.satchel_stacks += taken
 	print("F11 SATCHEL recovered %d stack(s); knife x%d axe x%d pickaxe x%d" % [taken,
 		int(game.get("inventory").call("count", "knife")), int(game.get("inventory").call("count", "axe")),
 		int(game.get("inventory").call("count", "pickaxe"))])
 	return true
+
+
+## One ordinary pad press on a panel, as an action event held across three
+## process frames so the focused Button sees both halves.
+func _ui_tap(action: StringName) -> void:
+	for pressed: bool in [true, false]:
+		var event := InputEventAction.new()
+		event.action = action
+		event.pressed = pressed
+		event.strength = 1.0 if pressed else 0.0
+		Input.parse_input_event(event)
+		for _frame in 4:
+			await tree.process_frame
