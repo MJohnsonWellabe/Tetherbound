@@ -28,7 +28,7 @@ const WALK_START_BACK_M := 32.0
 const PIXEL_DIFF_THRESHOLD := 24
 ## A normal exploration arm is 5.2 m; shorter means a body is in the way.
 const ARM_MIN_M := 4.0
-const ARM_RETRIES := 3
+const ARM_RETRIES := 6
 
 var _back_m := ROAD_BACK_DEFAULT_M
 var _fast := false
@@ -115,13 +115,16 @@ func _walk_frames() -> void:
 		var occupied := {}
 		for attempt in ARM_RETRIES:
 			await _stand(stand, Vector3(ahead.x, _ground(ahead.x, ahead.y) + 1.5, ahead.y), _pitch_start)
-			if _camera.global_position.distance_to(_player.global_position) >= ARM_MIN_M:
+			var arm := _camera.global_position.distance_to(_player.global_position)
+			var blocker := _flame_blocker(id)
+			if arm >= ARM_MIN_M and blocker.is_empty():
 				break
-			# The spring arm pulled in: something stands between the camera and
-			# the trainer. Record what, and let a roaming creature move on.
-			occupied = {"attempt": attempt + 1, "arm_m": _camera.global_position.distance_to(_player.global_position),
+			# The spring arm pulled in, or a body stands between the camera and
+			# the lamp flame (a roaming wild creature). Record what, and let it
+			# move on.
+			occupied = {"attempt": attempt + 1, "arm_m": arm, "flame_ray_blocked_by": blocker,
 				"bodies_near": _bodies_near(_camera.global_position, 4.0)}
-			_log("%s road stand arm pulled in: %s" % [id, str(occupied)])
+			_log("%s road stand obstructed: %s" % [id, str(occupied)])
 			for _frame in 300:
 				await physics_frame
 		if not occupied.is_empty():
@@ -171,6 +174,23 @@ func _walk_frames() -> void:
 		await _capture("%s_3b_reward_claimed" % id, "%s: same pose, after pressing interact on the reward prompt '%s'" % [id, prompt_before],
 			_with(info, {"stand": [close.x, close.y], "prompt_before": prompt_before, "item": item,
 				"count_before": before, "count_after": after, "reward_node": _reward_state(reward_id)}))
+
+
+## Name of whatever a physics ray from the camera to this pocket's junction
+## flame hits first (stopping 0.4 m short of it), or "" when clear.
+func _flame_blocker(id: String) -> String:
+	var flame := _world.get_node_or_null(NodePath("StormwoodPockets/Pocket_%s/SpurLamp/AmberFlame" % id)) as Node3D
+	if flame == null:
+		return ""
+	var from := _camera.global_position
+	var to := flame.global_position - (flame.global_position - from).normalized() * 0.4
+	var query := PhysicsRayQueryParameters3D.create(from, to)
+	query.exclude = [_player.get_rid()]
+	var hit := _player.get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return ""
+	var collider: Variant = hit.get("collider")
+	return str((collider as Node).get_path()) if collider is Node else str(collider)
 
 
 func _bodies_near(at: Vector3, radius: float) -> Array[String]:
