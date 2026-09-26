@@ -356,7 +356,8 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   known-red probes, about 25–35 minutes) runs every 8 hours on `main`, on
   manual dispatch, and on a PR labelled `full-ci`. Label `full-ci` when a
   change touches net/authority, save/migration or a harness that fast CI does
-  not run. A criterion counts as MET only on a SHA a green FULL run covered. A
+  not run (adding the label starts a run; the two known-red jobs show red there
+  by design and do not fail the gate). A criterion counts as MET only on a SHA a green FULL run covered. A
   red scheduled full run is the coordinator's first job: bisect the batches
   merged since the last green full run and hand the fix to the owning lane.
 - **A CI run under five minutes is not a verification.** CI skips every code

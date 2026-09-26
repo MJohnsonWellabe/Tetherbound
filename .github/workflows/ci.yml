@@ -90,6 +90,9 @@ on:
     # double-run comes back for any lane branch that also opens a PR.
     branches: [main]
   pull_request:
+    # `labeled` so adding `full-ci` to an open PR starts the full tier at once
+    # (the default types would wait for the next push).
+    types: [opened, synchronize, reopened, labeled]
   workflow_dispatch:
   # TWO TIERS, 2026-09-26 (owner: "pare it down and run a full run every 8
   # hours instead of every hour"). Every pull request and main push runs the
