@@ -173,9 +173,10 @@ func current_speaker() -> Node3D:
 		_bind_arbiter()
 	if _arbiter != null and is_instance_valid(_arbiter) and _arbiter.has_method("winning_provider"):
 		# The arbiter can still name a provider a residency rebuild just freed;
-		# a freed Object cannot be cast to Node3D (SCRIPT ERROR), so validate first.
+		# `is` on a freed Object is itself a SCRIPT ERROR ("Left operand of 'is'
+		# is a previously freed instance"), so validity must be checked first.
 		var winner: Variant = _arbiter.call("winning_provider")
-		if winner is Node3D and is_instance_valid(winner):
+		if is_instance_valid(winner) and winner is Node3D:
 			var live := resolve_speaker(winner as Node3D)
 			if live != null:
 				return live
