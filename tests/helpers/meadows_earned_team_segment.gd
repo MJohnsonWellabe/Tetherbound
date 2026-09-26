@@ -138,7 +138,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 				return result()
 			continue
 		var before := _party_snapshot()
-		if not await _engage(wild) or not await _win_live_fight():
+		if not await _engage(wild, true) or not await _win_live_fight():
 			return result()
 		wins += 1
 		var after := _party_snapshot()
@@ -297,7 +297,7 @@ static func preferred_candidate_index(distances: Array[float], offered_index: in
 const ENGAGE_REFUSALS := 3
 
 
-func _engage(target: Node3D) -> bool:
+func _engage(target: Node3D, allow_neighbour := false) -> bool:
 	_nav.reset()
 	var closest := INF
 	var boundary := _boundary_approach(target)
@@ -315,7 +315,7 @@ func _engage(target: Node3D) -> bool:
 			_stick(0, 0)
 			if waypoint < points.size():
 				return _fail("Combat interrupted the required physical village gate crossing")
-			return _verify_engagement(target)
+			return _verify_engagement(target, allow_neighbour)
 		if not is_instance_valid(target) or not bool(target.call("is_alive")):
 			return _fail("The selected living wild disappeared before engagement")
 		closest = minf(closest, _player.global_position.distance_to(target.global_position))
@@ -328,7 +328,7 @@ func _engage(target: Node3D) -> bool:
 			await _tap("interact")
 			for _settle in 120:
 				if _fighting():
-					return _verify_engagement(target)
+					return _verify_engagement(target, allow_neighbour)
 				await _tree.physics_frame
 			var active: RefCounted = _party().call("active")
 			_receipt("wild_interact_refused", {"snapshot": _approach_snapshot(target),
@@ -563,8 +563,18 @@ func _approach_snapshot(target: Node3D) -> Dictionary:
 		"nav_detour_left": _nav.get("_detour_left")}
 
 
-func _verify_engagement(target: Node3D) -> bool:
+func _verify_engagement(target: Node3D, allow_neighbour := false) -> bool:
 	var admitted: Node3D = _combat.call("enemy_body") as Node3D
+	# A pack neighbour of the selected wild can take the engagement first
+	# (seed 15: _1921_3 for _1921_4). For a training win that is still a real,
+	# ordinary wild fight; accept it only if it has never been fought (no
+	# repeated wilds). A catch keeps the exact selected body.
+	if allow_neighbour and _fighting() and is_instance_valid(target) and is_instance_valid(admitted) \
+			and admitted != target and not _fought.has(str(admitted.name)):
+		print("[meadows_earned_team] ", JSON.stringify({"beat": "pack_neighbour_engaged",
+			"selected": str(target.name), "admitted": str(admitted.name)}))
+		_note_fought(admitted)
+		return true
 	if not _fighting() or not is_instance_valid(target) or admitted != target:
 		return _fail("Wild engagement admitted %s instead of selected %s" % [
 			str(admitted.name) if is_instance_valid(admitted) else "<none>",
