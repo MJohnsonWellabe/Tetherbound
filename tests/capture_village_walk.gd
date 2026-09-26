@@ -35,12 +35,14 @@ extends SceneTree
 ## Starts as a fresh post-opening player: opening flags through `walk_out`
 ## (Grandpa's door is open because the opening says so, not because this
 ## script opens it) and one starter. The player is stood 2.5m INSIDE the
-## farmhouse and walks out through the real door. For the four road routes
-## `road_gate_open` is set before the world loads, standing in for the village
-## key hunt -- those walks measure the road, not that puzzle; the leaf still
-## has to be physically open for the walk to pass through it. The `visits`
-## route sets NO gate flag: it walks to the old key, takes it with interact,
-## and opens the first gate it meets with interact, as a player does.
+## farmhouse and walks out through the real door. No gate flag is ever set:
+## routes that cross the boundary (`through`, `visits`) walk to the old key,
+## take it with interact, and open the gate they meet with interact, as a
+## player does. `through` continues down the Lower Meadows spine to the South
+## Bridge; its middle stretch (DARK_MARGIN_M past the gate to DARK_MARGIN_M
+## before the bridge) is walked with the 3D view switched off to keep the
+## software-rendered run to hours, not most of a day -- same process, same
+## input, position receipts every capture interval, no frames saved there.
 ##
 ## Saves a PNG every CAPTURE_EVERY_S of travel, plus one at every junction,
 ## signpost, gate and subarea arrival, and prints one receipt line per capture.
@@ -68,6 +70,19 @@ const OFF_ROAD_LIMIT_M := 2.5
 const LOOKAHEAD_M := 2.5
 const PAST_GATE_M := 10.0
 const WALK_BUDGET_S := 300.0
+## Long legs get more: two seconds per walk-speed metre plus a margin for
+## fights fled on the way.
+const WALK_SPEED_MPS := 5.0
+## The through-road's end: data/config/terrain_playground.json crossings
+## `south_bridge` road starts at (13,1240); this stands on the approach, in
+## sight of the span and short of its locked gate (the grunt's fight).
+const BRIDGE_APPROACH := Vector2(11.0, 1270.0)
+const SPINE_CAPTURE_EVERY_S := 20.0
+const DARK_MARGIN_M := 60.0
+## Bram keeps the bar in the inn (village.json inn at (-1.5,-2), yaw 180;
+## inn_interior.gd door lane local x 0 in the north-facing front wall, doorstep
+## (-1.5,-8.1); counter local z -3.69 with Bram at bar_position() local z -4.39
+## = world (-1.5,2.39)). The customer spot is local (0,-2.6) = world (-1.5,0.6).
 ## Steering: look-stick strength reaches full deflection at this error.
 const STEER_FULL_DEG := 25.0
 const STEER_DEADBAND_DEG := 2.0
@@ -104,6 +119,7 @@ const VILLAGERS_PATH := "res://data/config/village_npcs.json"
 ## doorway to z ~5.3, leaving the lane's southern ~0.9m clear for the body.
 const INDOOR_APPROACH := {
 	"Mira": [Vector2(13.87, 4.8), Vector2(16.5, 4.8), Vector2(17.5, 4.0)],
+	"Bram": [Vector2(-1.5, -8.1), Vector2(-1.5, -5.0), Vector2(-1.5, 0.6)],
 }
 ## A closed door on the way is opened the way a player opens it: when the walk
 ## stalls and the arbiter's actionable winner is an "Open ..." prompt (or a
@@ -153,6 +169,9 @@ var _captures := 0
 var _max_off_road := 0.0
 var _failed := ""
 var _visited: Array[String] = []
+var _capture_every := CAPTURE_EVERY_S
+var _dark_from := INF
+var _dark_until := -INF
 
 
 func _init() -> void:
@@ -214,8 +233,6 @@ func _run() -> void:
 	var progression: RefCounted = _game.get("progression")
 	for flag: String in OPENING_FLAGS:
 		progression.call("set_flag", flag)
-	if _route_name != "visits":
-		progression.call("set_flag", "road_gate_open")
 	var party: RefCounted = _game.get("party")
 	if party != null and (party.call("members") as Array).is_empty():
 		var starter: RefCounted = _game.call("make_creature", "terrapup")
@@ -263,6 +280,8 @@ func _run() -> void:
 	await _capture("start-inside-house")
 	if _route_name == "visits":
 		await _visit_all()
+	elif _route_name == "through":
+		await _through_to_bridge()
 	else:
 		await _walk()
 	_release_all()
@@ -563,7 +582,8 @@ func _walk() -> void:
 	var door_presses := 0
 	var dialogue_presses := 0
 	var dt := 1.0 / float(Engine.physics_ticks_per_second)
-	while clock < WALK_BUDGET_S:
+	var budget := maxf(WALK_BUDGET_S, total / WALK_SPEED_MPS * 2.0 + 120.0)
+	while clock < budget:
 		await physics_frame
 		clock += dt
 		var here := _xz()
@@ -649,10 +669,15 @@ func _walk() -> void:
 			travel_since_capture += dt
 		else:
 			Input.action_release("move_forward")
-		if travel_since_capture >= CAPTURE_EVERY_S:
+		var dark := progress > _dark_from and progress < _dark_until
+		if root.get_viewport().disable_3d != dark:
+			root.get_viewport().disable_3d = dark
+			print("[village-walk] NOTE 3D view %s at arc %.1f (%.1f,%.1f)" % [
+				"off" if dark else "on", progress, here.x, here.y])
+		if travel_since_capture >= _capture_every:
 			travel_since_capture = 0.0
 			await _capture("travel")
-	_failed = "walk budget %.0fs spent at arc %.1f/%.1f" % [WALK_BUDGET_S, progress, total]
+	_failed = "walk budget %.0fs spent at arc %.1f/%.1f" % [budget, progress, total]
 
 
 func _press(action: String) -> void:
@@ -692,7 +717,9 @@ func _capture(label: String) -> void:
 	var slug := label.to_lower().replace(" ", "-").replace("(", "").replace(")", "").replace(",", "_").replace("'", "")
 	var file := "%s_%s_%03d_%s.png" % [_route_name, _time, _captures, slug]
 	var saved := "headless"
-	if not _headless:
+	if not _headless and root.get_viewport().disable_3d:
+		saved = "3d-off"
+	elif not _headless:
 		await RenderingServer.frame_post_draw
 		var image := root.get_viewport().get_texture().get_image()
 		if image == null or image.is_empty():
@@ -981,3 +1008,69 @@ func _door_prompt_wins() -> bool:
 func _has_key() -> bool:
 	var inventory: RefCounted = _game.get("inventory")
 	return inventory != null and int(inventory.call("count", "castle_gate_key")) > 0
+
+
+## --- through: home -> key -> TrailGate -> Lower Meadows spine -> South Bridge --
+
+func _through_to_bridge() -> void:
+	var graph := _road_graph()
+	# Out through the real door.
+	_set_leg(PackedVector2Array([_xz(), DOORWAY]), -1, -1)
+	await _walk()
+	if not _failed.is_empty():
+		return
+	# The old key first: nothing crosses the boundary without it.
+	var key := _world.get_node_or_null(^"GateKey") as Node3D
+	if key == null:
+		_failed = "the old gate key is not lying in the world"
+		return
+	var key_at := Vector2(key.global_position.x, key.global_position.z)
+	await _visit({"kind": "key", "label": "the old key", "node": key, "at": key_at},
+		_graph_path(graph, _xz(), key_at))
+	if not _failed.is_empty():
+		return
+	# Back through the village to TrailGate; the locked leaf is opened by the
+	# walk's own interact press when it stalls against it.
+	var gate := Vector2.INF
+	for raw: Variant in ((_json(BOUNDARY_PATH).get("gates", {}) as Dictionary).get("entries", []) as Array):
+		if str((raw as Dictionary).get("id", "")) == str(_topology().get("bridge_exit_gate", "TrailGate")):
+			gate = _v((raw as Dictionary).get("at", []))
+	var spine: PackedVector2Array = _roads.get("band1_lower_meadows", PackedVector2Array())
+	if gate == Vector2.INF or spine.size() < 2:
+		_failed = "no exit gate or Lower Meadows spine in the data"
+		return
+	# One leg from here: the village roads to the gate, then the spine itself
+	# from the gate to the bridge approach.
+	var leg := PackedVector2Array([_xz()])
+	_append(leg, _graph_path(graph, _xz(), gate))
+	var on_spine := Vector2.INF
+	for i in spine.size() - 1:
+		var c := Geometry2D.get_closest_point_to_segment(gate, spine[i], spine[i + 1])
+		if on_spine == Vector2.INF or c.distance_to(gate) < on_spine.distance_to(gate):
+			on_spine = c
+	var gate_index := leg.size()
+	_append(leg, _suffix(spine, on_spine))
+	_set_leg(leg, 1, leg.size() - 1)
+	var gate_arc := _arcs[gate_index]
+	# Stop on the bridge approach: the spine arc nearest BRIDGE_APPROACH.
+	var stop := _project(BRIDGE_APPROACH)
+	_truncate(stop.x)
+	_road_until_arc = _arcs[_arcs.size() - 1]
+	_events = [
+		{"arc": gate_arc, "label": "gate TrailGate"},
+		{"arc": gate_arc + 12.0, "label": "past TrailGate"},
+		{"arc": _arcs[_arcs.size() - 1] - 25.0, "label": "approach South Bridge"},
+		{"arc": _arcs[_arcs.size() - 1] - 0.5, "label": "arrive South Bridge"},
+	]
+	_capture_every = SPINE_CAPTURE_EVERY_S
+	_dark_from = gate_arc + DARK_MARGIN_M
+	_dark_until = _arcs[_arcs.size() - 1] - DARK_MARGIN_M
+	await _walk()
+	root.get_viewport().disable_3d = false
+	if not _failed.is_empty():
+		return
+	if not bool((_game.get("progression") as RefCounted).call("has", "road_gate_open")):
+		_failed = "reached the bridge but road_gate_open was never earned"
+		return
+	print("[village-walk] VISIT South Bridge approach dist_m=%.2f walked_m=%.0f" % [
+		_xz().distance_to(BRIDGE_APPROACH), _arcs[_arcs.size() - 1]])
