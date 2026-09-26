@@ -1274,7 +1274,7 @@ static func friend_invite_text(inviter_name: String) -> String:
 
 func _steam_inviter_name() -> String:
 	if _steam_lobby != null and _steam_lobby.has_method("pending_inviter_name"):
-		return str(_steam_lobby.call("pending_inviter_name"))
+		return str(_steam_lobby.call("pending_inviter_name", _pending_invite_id))
 	return ""
 
 

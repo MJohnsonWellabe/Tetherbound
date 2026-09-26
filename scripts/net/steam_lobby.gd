@@ -146,12 +146,16 @@ func pending_invite_id() -> int:
 
 ## The Steam name of the friend who sent the pending invite, for the Join
 ## Friend screen (MULTIPLAYER: show who the invitation is from before joining).
-## Empty when no invite is pending, its sender is unknown, or Steam gives none.
-func pending_inviter_name() -> String:
+## Empty when no invite is pending (or `lobby_id` names another one), its
+## sender is unknown, or Steam has no name for them yet.
+func pending_inviter_name(lobby_id: int = 0) -> String:
 	if _pending_invite <= 0 or _pending_inviter <= 0 or _steam == null \
 			or not _steam.has_method("getFriendPersonaName"):
 		return ""
-	return str(_steam.call("getFriendPersonaName", _pending_inviter)).strip_edges()
+	if lobby_id > 0 and lobby_id != _pending_invite:
+		return ""
+	var name := str(_steam.call("getFriendPersonaName", _pending_inviter)).strip_edges()
+	return "" if name == "[unknown]" else name
 
 
 ## Native lobby requests have no request token.  After a timeout the old
@@ -641,6 +645,10 @@ func _leave_lobby(lobby_id: int) -> void:
 func _set_pending_invite(lobby_id: int, inviter: int = 0) -> void:
 	if lobby_id <= 0:
 		return
+	if lobby_id != _pending_invite:
+		# A new invitation is not an earlier attempt's failure; the Join
+		# Friend screen shows `last_error` in place of the invitation.
+		_last_error = ""
 	if lobby_id != _pending_invite or inviter > 0:
 		_pending_inviter = maxi(inviter, 0)
 	_pending_invite = lobby_id

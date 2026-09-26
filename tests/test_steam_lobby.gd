@@ -64,7 +64,7 @@ class MockSteam:
 	func activateGameOverlayInviteDialog(lobby_id: int) -> void:
 		overlay_opened = lobby_id
 
-	var personas := {700: "Rin"}
+	var personas := {700: "Rin", 701: "[unknown]"}
 
 	func getFriendPersonaName(steam_id: int) -> String:
 		return str(personas.get(steam_id, ""))
@@ -305,6 +305,8 @@ func test_a_warm_invite_names_its_sender_until_it_is_taken_or_dismissed() -> voi
 	steam.join_requested.emit(9004, 700)
 	assert_eq(lobby.pending_invite_id(), 9004)
 	assert_eq(lobby.pending_inviter_name(), "Rin", "Steam's name for the friend who sent it")
+	assert_eq(lobby.pending_inviter_name(9004), "Rin")
+	assert_eq(lobby.pending_inviter_name(9999), "", "not the sender of another lobby's invite")
 	lobby._hosting = true
 	assert_false(lobby.request_join(9004))
 	assert_eq(lobby.pending_inviter_name(), "Rin", "kept while the invite waits for the player to leave")
@@ -314,6 +316,19 @@ func test_a_warm_invite_names_its_sender_until_it_is_taken_or_dismissed() -> voi
 	steam.join_requested.emit(9005, 700)
 	assert_true(lobby.request_join(9005))
 	assert_eq(lobby.pending_inviter_name(), "", "an accepted invite is no longer pending")
+	lobby.free()
+	steam.free()
+
+
+func test_an_uncached_sender_and_an_old_failure_do_not_replace_the_invitation() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	lobby._set_error("That friend’s lobby no longer exists.")
+	steam.join_requested.emit(9008, 701)
+	assert_eq(lobby.pending_inviter_name(), "", "Steam's placeholder is not a name")
+	assert_eq(lobby.last_error(), "", "the earlier attempt's failure does not stand in for a new invitation")
 	lobby.free()
 	steam.free()
 
