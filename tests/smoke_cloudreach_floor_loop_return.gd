@@ -24,6 +24,8 @@ const POST_SHRINE_FLAGS: Array[String] = ["warden_defeated", "realm_key_cloudrea
 	"fly_traversal_unlocked", "windscar_aerie_prepared", "sky_shrine_reached",
 	"cloudreach_upper_route_unlocked"]
 
+var _wild_prefixes: Array[String] = []
+
 
 func _run() -> void:
 	start_usec = Time.get_ticks_usec()
@@ -55,6 +57,12 @@ func _run() -> void:
 	physics_frame.connect(_record_frame)
 	await _frames(20)
 	_remove_wild_bodies("boot")
+	# Wild sites also spawn by proximity DURING the walk (the aerie roost, the
+	# ravine sites beside the bridge); park each as it enters the tree, after
+	# its own `_ready` has set its collision layers, so none can stand on the
+	# road between the sweeps above and below.
+	world.child_entered_tree.connect(func(child: Node) -> void:
+		_park_if_wild.call_deferred(child, "spawned_mid_walk"))
 	await _frames(2)
 	player.global_position = JUNCTION + Vector3.UP * 1.2
 	player.velocity = Vector3.ZERO
@@ -101,22 +109,32 @@ func _run() -> void:
 ## the encounter director keeps typed references to its wilds (freeing a
 ## gated one raises "previously freed instance" in `_sync_spawn_gates`).
 func _remove_wild_bodies(when: String) -> void:
-	var wild_ids: Array[String] = []
-	for site: Dictionary in _json_dict("res://data/config/cloudreach_encounters.json").get("wild_sites", []):
-		wild_ids.append(str(site.id) + "_")
 	var parked := 0
 	for child: Node in world.get_children():
-		for prefix: String in wild_ids:
-			if str(child.name).begins_with(prefix):
-				child.process_mode = Node.PROCESS_MODE_DISABLED
-				if child is CollisionObject3D:
-					(child as CollisionObject3D).collision_layer = 0
-					(child as CollisionObject3D).collision_mask = 0
-				if child is Node3D:
-					(child as Node3D).visible = false
-				parked += 1
-				break
+		if _park(child):
+			parked += 1
 	_log("fixture_wild_bodies_parked", {"count": parked, "when": when})
+
+
+func _park_if_wild(child: Node, when: String) -> void:
+	if is_instance_valid(child) and _park(child):
+		_log("fixture_wild_body_parked", {"name": str(child.name), "when": when})
+
+
+func _park(child: Node) -> bool:
+	if _wild_prefixes.is_empty():
+		for site: Dictionary in _json_dict("res://data/config/cloudreach_encounters.json").get("wild_sites", []):
+			_wild_prefixes.append(str(site.id) + "_")
+	for prefix: String in _wild_prefixes:
+		if str(child.name).begins_with(prefix):
+			child.process_mode = Node.PROCESS_MODE_DISABLED
+			if child is CollisionObject3D:
+				(child as CollisionObject3D).collision_layer = 0
+				(child as CollisionObject3D).collision_mask = 0
+			if child is Node3D:
+				(child as Node3D).visible = false
+			return true
+	return false
 
 
 func _json_dict(path: String) -> Dictionary:
