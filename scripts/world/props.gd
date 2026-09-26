@@ -274,6 +274,7 @@ func place(into: Node3D, spec: Dictionary) -> void:
 	# redundant rather than additive (see campfire_glow.gd's own comment on
 	# `include_halo`).
 	var glow := str(spec.get("glow", ""))
+	var signal_overlay: Node3D = null
 	if glow == "campfire":
 		var lit := CAMPFIRE_GLOW.ignite(root)
 		if lit == 0:
@@ -294,6 +295,7 @@ func place(into: Node3D, spec: Dictionary) -> void:
 				float(spec.get("smoke_alpha", CAMPFIRE_GLOW.SMOKE_COLOUR.a)),
 				float(spec.get("smoke_top_size_m", -1.0)),
 				Color(str(spec.get("smoke_colour", "#00000000"))))
+			signal_overlay = overlay
 		if not is_zero_approx(scale_factor):
 			overlay.scale = Vector3.ONE / scale_factor
 		root.add_child(overlay)
@@ -306,6 +308,11 @@ func place(into: Node3D, spec: Dictionary) -> void:
 
 	var meshes: Array[MeshInstance3D] = []
 	_collect(root, meshes)
+	# A signal fire's tall smoke is not solid: left in, its quads would make
+	# the collider a ~27 m invisible pillar. (Ordinary campfires keep their
+	# existing collider exactly.)
+	if signal_overlay != null:
+		meshes = meshes.filter(func(m: MeshInstance3D) -> bool: return not signal_overlay.is_ancestor_of(m))
 	if meshes.is_empty():
 		push_warning("prop '%s' has no mesh; placed with no collider" % model)
 		_placed += 1
