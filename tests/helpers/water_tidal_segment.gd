@@ -121,20 +121,12 @@ func _fight_alpha() -> bool:
 	if not _manager.is_fighting() or _manager.encounter_id() != alpha.authority.encounter_id:
 		return _fail("Real Aquaryn interaction did not enter its authoritative fight")
 	var deadline := Time.get_ticks_msec() + 180000
-	var tick := 0
 	while _manager.is_fighting() and Time.get_ticks_msec() < deadline:
 		var enemy: Node3D = _manager.enemy_body()
 		var ally: Node3D = _director.ally_body()
 		_stop_combat_input()
 		if is_instance_valid(enemy) and is_instance_valid(ally):
-			var offset := enemy.global_position - ally.global_position
-			offset.y = 0.0
-			if offset.length() > _manager.combat_move_reach("quick") * 0.8:
-				var local: Vector3 = _camera.planar_basis().inverse() * offset.normalized()
-				_stick(local.x, local.z)
-			if tick % 20 == 0:
-				Input.action_press("combat_quick")
-		tick += 1
+			_pilot.drive(_manager, ally, enemy)
 		await _tree.physics_frame
 	_stop_combat_input()
 	if _manager.is_fighting():
