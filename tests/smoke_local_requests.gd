@@ -372,6 +372,17 @@ func _lost_creature() -> void:
 
 
 const RETURN_FLAG := "lost_creature_rue_returned"
+const STICK_NAV := preload("res://tests/helpers/stick_navigator.gd")
+
+
+## One left-stick sample through the live InputMap, the navigator's drive.
+func _stick(x: float, z: float) -> void:
+	for pair: Array in [[JOY_AXIS_LEFT_X, x], [JOY_AXIS_LEFT_Y, z]]:
+		var event := InputEventJoypadMotion.new()
+		event.device = 0
+		event.axis = int(pair[0])
+		event.axis_value = float(pair[1])
+		Input.parse_input_event(event)
 
 
 ## Stand beside the waiting Meadowhart and press the real interact action on
@@ -400,8 +411,10 @@ func _start_escort(reunion: Node, prompt: Node, rescued: Node3D) -> bool:
 	return false
 
 
-## Walk to Juno with ordinary forward input, steering the camera toward her.
-## No completion may land before the Meadowhart is within the arrival radius.
+## Walk to Juno with ordinary left-stick input through the shared
+## stick_navigator (it steps round walls and banks as the earned routes do; a
+## straight line from the patrol stalled ~400 m out against the terrain). No
+## completion may land before the Meadowhart is within the arrival radius.
 func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
 	var rig := _world.get_node_or_null(^"CameraRig") as Node3D
 	var config: Dictionary = reunion.get("_config")
@@ -409,17 +422,15 @@ func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
 	var moving := true
 	var arrived := false
 	var started := Engine.get_physics_frames()
-	Input.action_press("move_forward")
-	_send("move_forward", true)
+	var nav: RefCounted = STICK_NAV.new(self, _player, rig, _stick)
 	for frame in 12000:
 		var to := owner_body.global_position - _player.global_position
 		to.y = 0.0
-		if rig != null and to.length_squared() > 0.01:
-			rig.set("yaw", atan2(-to.x, -to.z))
 		if moving and to.length() <= 2.5:
-			Input.action_release("move_forward")
-			_send("move_forward", false)
+			_stick(0.0, 0.0)
 			moving = false
+		elif moving:
+			nav.call("step", owner_body.global_position)
 		await physics_frame
 		await process_frame
 		var gap := Vector2(rescued.global_position.x - owner_body.global_position.x,
@@ -439,8 +450,7 @@ func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
 		if frame % 600 == 0:
 			print("lost_creature walk: frame %d player=%s creature gap to Juno %.1f m" % [
 				frame, str(_player.global_position), gap])
-	Input.action_release("move_forward")
-	_send("move_forward", false)
+	_stick(0.0, 0.0)
 	print("lost_creature walk: %s after %d physics frames" % [
 		"arrived" if arrived else "did not arrive", Engine.get_physics_frames() - started])
 	if not arrived:
