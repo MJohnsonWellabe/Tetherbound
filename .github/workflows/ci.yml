@@ -90,7 +90,22 @@ on:
     # double-run comes back for any lane branch that also opens a PR.
     branches: [main]
   pull_request:
+    # `labeled` so adding `full-ci` to an open PR starts the full tier at once
+    # (the default types would wait for the next push).
+    types: [opened, synchronize, reopened, labeled]
   workflow_dispatch:
+  # TWO TIERS, 2026-09-26 (owner: "pare it down and run a full run every 8
+  # hours instead of every hour"). Every pull request and main push runs the
+  # FAST tier only: parse/import, bake freshness, the unit-test shards and the
+  # Windows export (~10 min, 6 jobs, ~30 runner-minutes). The FULL tier --
+  # every smoke shard, the net smokes, the gate evidence and the known-red
+  # probes (~325 runner-minutes, ~25 min wall) -- runs on this schedule against
+  # main, on any manual dispatch, and on a pull request labelled `full-ci`
+  # (use it for net/harness/save/authority changes that need it before merge).
+  # A red scheduled run is the coordinator's first job: bisect the batches
+  # merged since the last green full run and hand the fix to the owning lane.
+  schedule:
+    - cron: "23 */8 * * *"
 
 # A newer push to the same branch supersedes the run in flight — except on
 # main, where every run is kept: Release publishes from main and a cancelled
@@ -134,6 +149,9 @@ jobs:
     timeout-minutes: 15
     outputs:
       code: ${{ steps.filter.outputs.code }}
+      # The FULL tier (see `on:`): scheduled runs, manual dispatches and PRs
+      # labelled `full-ci`. Everything else runs the fast tier.
+      full: ${{ steps.tier.outputs.full }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -166,7 +184,7 @@ jobs:
 
           # An explicit manual run requests real code verification even when
           # the branch only carries reference art or documentation.
-          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] || [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
             echo "Explicit full verification requested."
             echo "code=true" >> "$GITHUB_OUTPUT"
             exit 0
@@ -241,6 +259,22 @@ jobs:
           else
             echo "Documentation only; skipping the build."
             echo "code=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Decide the tier (fast on every PR/push, full every 8 hours)
+        id: tier
+        env:
+          FULL_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'full-ci') }}
+        run: |
+          if [ "${{ steps.filter.outputs.code }}" != "true" ]; then
+            echo "full=false" >> "$GITHUB_OUTPUT"
+          elif [ "$GITHUB_EVENT_NAME" = "schedule" ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] \
+               || [ "$FULL_LABEL" = "true" ]; then
+            echo "Full tier."
+            echo "full=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Fast tier; the full suite runs every 8 hours on main (or label the PR full-ci)."
+            echo "full=false" >> "$GITHUB_OUTPUT"
           fi
 
   # A dedicated, fast, unmissable check for exactly one regression class:
@@ -542,7 +576,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
 
     steps:
       - uses: actions/checkout@v4
@@ -596,7 +630,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
 
     steps:
       - uses: actions/checkout@v4
@@ -646,7 +680,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
 
     steps:
       - uses: actions/checkout@v4
@@ -693,7 +727,7 @@ jobs:
     # fits comfortably in that margin.
     timeout-minutes: 35
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -839,7 +873,7 @@ jobs:
     # fits comfortably in that margin.
     timeout-minutes: 35
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -915,7 +949,7 @@ jobs:
     # (21 min). 30 min leaves margin for checkout/setup plus retries.
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1143,7 +1177,7 @@ jobs:
     # plus a day where several of the five need a second attempt.
     timeout-minutes: 35
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1310,7 +1344,7 @@ jobs:
     # (17.2 min). 25 min covers checkout/setup with margin.
     timeout-minutes: 35
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1663,7 +1697,7 @@ jobs:
     # (17.2 min). 25 min covers checkout/setup with margin.
     timeout-minutes: 35
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1746,7 +1780,7 @@ jobs:
     # run time is short relative to the margin already held here.
     timeout-minutes: 28
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1933,7 +1967,7 @@ jobs:
     # step alone.
     timeout-minutes: 40
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -2156,7 +2190,7 @@ jobs:
     # step alone.
     timeout-minutes: 40
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -2246,7 +2280,7 @@ jobs:
     # inviting the full chain back in by accident.
     timeout-minutes: 20
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -2308,7 +2342,7 @@ jobs:
     # on every push made normal CI slower while producing no actionable pass/
     # fail signal. Keep the exact command available to a deliberate manual
     # dispatch, where a developer can inspect its known-red result.
-    if: github.event_name == 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -2370,7 +2404,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
-    if: github.event_name == 'workflow_dispatch' && needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -2421,7 +2455,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     outputs:
       files: ${{ steps.discover.outputs.files }}
     steps:
@@ -2583,7 +2617,7 @@ jobs:
     needs:
       - changes
       - discover-net-smokes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -2776,7 +2810,7 @@ jobs:
       - verify-owner-regressions-shard
       - verify-gate-evidence-shard
       - verify-gate-b-core
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - name: Confirm the solo regression fence held
         run: |
@@ -2889,7 +2923,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 50
     needs: changes
-    if: needs.changes.outputs.code == 'true'
+    if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
         with:

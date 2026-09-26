@@ -149,6 +149,23 @@ static func shore_gap(seal: Dictionary, position: Vector3) -> float:
 	return Vector2(position.x, position.z).distance_to(centre) - float(seal.get("shore_radius_m", 0.0))
 
 
+## The currently closed seal whose race disc (the landform plus its race band)
+## contains `position`, or {} when the point is open water or open land. Every
+## placement that does not travel there -- death recovery, a restored pose, a
+## restored mount -- refuses a point this returns a seal for, so a portable
+## character anchor from another world cannot cross this world's closed dock.
+static func closed_seal_at(seals: Array, rules: Dictionary, position: Vector3, flags: Object) -> Dictionary:
+	if not position.is_finite():
+		return {}
+	for seal: Dictionary in seals:
+		var centre: Vector2 = seal.get("centre", Vector2.INF)
+		if not centre.is_finite() or Vector2(position.x, position.z).distance_to(centre) >= outer_radius(seal, rules):
+			continue
+		if is_sealed(seal, flags):
+			return seal
+	return {}
+
+
 ## Radial outward race velocity at `position`, or ZERO outside/open. The core
 ## band keeps full strength; only the outer edge blends into open water.
 static func velocity_at(seal: Dictionary, rules: Dictionary, position: Vector3, flags: Object) -> Vector3:

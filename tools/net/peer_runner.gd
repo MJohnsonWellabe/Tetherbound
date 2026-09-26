@@ -4841,6 +4841,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			if iplayer != null:
 				ipos = [iplayer.global_position.x, iplayer.global_position.y, iplayer.global_position.z]
 			var iparty: Array = []
+			var inames: Array = []
+			var iuids: Array = []
 			var party: Variant = igame.get("party") if igame != null else null
 			if party != null:
 				for i in int((party as RefCounted).call("size")):
@@ -4848,6 +4850,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					if member != null:
 						iparty.append("%s@%d" % [str((member as RefCounted).get("species_id")),
 							int((member as RefCounted).get("level"))])
+						inames.append(str((member as RefCounted).get("nickname")))
+						iuids.append(str((member as RefCounted).get("uid")))
 			var inside_village := false
 			if iplayer != null and igame != null and str(igame.get("current_realm")) == "meadows":
 				var boundary_config: Dictionary = VILLAGE_BOUNDARY.load_config()
@@ -4860,6 +4864,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"appearance_id": "" if ilocal == null else str((ilocal as RefCounted).get("chosen_character")),
 				"realm": "" if igame == null else str(igame.get("current_realm")),
 				"party": iparty,
+				"party_names": inames,
+				"party_uids": iuids,
 				"party_size": iparty.size(),
 				"inside_grandpas_village": inside_village,
 				"body": {

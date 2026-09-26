@@ -1,0 +1,9 @@
+# Lead's verification run of the committed smoke (e4365e445): tools/net/run_net_smoke.sh cloudreach_veyra_reconnect
+- peer 0 (host) pid=5680 exited=true unexpected_exit=false
+- peer 1 (client) pid=5681 exited=true unexpected_exit=false
+ALL CHECKS PASSED
+PASS: #14 peer 0 assert (CONTROL: host world has Veyra unbeaten before the win) -> FAIL -- flag captain_veyra_defeated NOT set
+PASS: #15 peer 1 assert (CONTROL: guest reads Veyra unbeaten before the win) -> FAIL -- flag captain_veyra_defeated NOT set
+# unit: --only=cloudreach_director_client
+3 tests, 37 assertions, 0 failed
+SCRIPT ERROR (unit): 0
