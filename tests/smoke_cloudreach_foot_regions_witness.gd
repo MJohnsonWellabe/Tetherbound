@@ -31,15 +31,27 @@ var region_sequence: Array[Dictionary] = []
 var last_region := ""
 var sealed_violations: Array[Dictionary] = []
 var witness_frames := 0
+var region_unlock: Dictionary = {}
+var locked_entries: Array[Dictionary] = []
 
 
-func _init() -> void:
+func _run() -> void:
 	world_config = JSON.parse_string(FileAccess.get_file_as_string(WORLD_CONFIG))
 	var physical_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PHYSICAL_CONFIG))
 	for spec: Dictionary in physical_config.get("restrictions", []):
 		sealed_boxes.append({"id": str(spec.id), "flag": str(spec.requires_flag),
 			"box": AABB(_vec(spec.position), _vec(spec.size))})
-	super._init()
+	for entry: Dictionary in world_config.get("regions", []):
+		region_unlock[str(entry.id)] = str(entry.get("access", {}).get("requires_unlock", ""))
+	await super._run()
+
+
+## This witness's event log lives beside its verdict, not in the shared
+## continuous-route directory another run could overwrite.
+func _write_report() -> void:
+	output_dir = WITNESS_DIR
+	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
+	super._write_report()
 
 
 func _mode() -> String:
@@ -64,6 +76,11 @@ func _record_frame() -> void:
 			region_first_entry[region] = {"mode": mode, "stage": stage, "position": str(at),
 				"simulated_seconds": snappedf(simulated_seconds, 0.01)}
 			_log("witness_region_entered", {"region": region, "mode": mode})
+		# `region_at` picks the nearest centre; a gated region entered before its
+		# unlock flag would be a gate bypass (or a boundary artefact to inspect).
+		var unlock := str(region_unlock.get(region, ""))
+		if not unlock.is_empty() and not _has(unlock) and locked_entries.size() < 50:
+			locked_entries.append({"region": region, "flag": unlock, "mode": mode, "stage": stage, "position": str(at)})
 	if region != last_region:
 		region_sequence.append({"region": region, "mode": mode, "stage": stage,
 			"simulated_seconds": snappedf(simulated_seconds, 0.01)})
@@ -94,7 +111,8 @@ func _finish() -> void:
 			_require(ok, "F06#1 region %s traversed (%s): %s" % [id, mode_required, str(counts)])
 	if completed_route and not failed:
 		_require(sealed_violations.is_empty(), "F06#1 no frame inside a sealed restriction before its unlock")
-		_require(game.party.members().size() == 5, "F06#1 party is still the same five")
+		_require(locked_entries.is_empty(), "F06#1 no gated region entered before its unlock flag (%d)" % locked_entries.size())
+		_require(game.party.members().size() == expected_party_size, "F06#1 party size unchanged")
 	_write_witness(summary)
 	super._finish()
 
@@ -108,7 +126,7 @@ func _write_witness(summary: Array[Dictionary]) -> void:
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal",
 		"accelerated": accelerated, "stage": stage, "distance_m": distance_m,
 		"witness_frames": witness_frames, "regions": summary,
-		"region_sequence": region_sequence, "sealed_violations": sealed_violations,
+		"region_sequence": region_sequence, "sealed_violations": sealed_violations, "locked_region_entries": locked_entries,
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}, "  "))
 	print("F06#1 WITNESS %s regions=%s" % ["PASS" if completed_route and not failed else "FAIL",
 		JSON.stringify(summary.map(func(s: Dictionary) -> String: return "%s:%s" % [s.region, "ok" if s.passed else "MISSING"]))])
