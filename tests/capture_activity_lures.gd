@@ -41,7 +41,9 @@ const DENSIFY_M := 8.0
 const LOOKAHEAD_M := 4.0
 ## Metres of cross-country leg are charged this much against road metres when
 ## choosing where to leave the road for the activity.
-const OFF_ROAD_COST := 3.0
+## `--off-road-cost=` overrides (a player keeps to the road until the
+## activity is close; at 3.0 the herd walk left the road 295 m early).
+var OFF_ROAD_COST := 3.0
 const LURE_RANGE_M := 160.0
 const STUCK_S := 4.0
 ## Unstick attempts allowed at one blocked spot, and the route progress (m)
@@ -92,6 +94,8 @@ func _run() -> void:
 			_activity = a.trim_prefix("--activity=")
 		elif a.begins_with("--save="):
 			_save_path = a.trim_prefix("--save=")
+		elif a.begins_with("--off-road-cost="):
+			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
 		elif a.begins_with("--capture-dir="):
 			_capture_dir = a.trim_prefix("--capture-dir=")
 	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall"] \
