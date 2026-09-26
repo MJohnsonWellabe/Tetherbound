@@ -6,7 +6,9 @@ extends MeshInstance3D
 ## ribbon on the sea along every authored current polyline, with streaks
 ## drifting along that current's single physics flow vector
 ## (water_current_field.gd uses the same vector). Brighter and faster for
-## stronger currents; calmer once `water_currents_restored` is set. One mesh,
+## stronger currents; calmer once `water_currents_restored` is set. Given the
+## live field, strengths are the ones physics uses (closed-gate and earned
+## shortcut rows), and the mesh is rebuilt when a flag changes one. One mesh,
 ## one draw call, no particles. Tunables: water_veilfall.json::current_flow.
 const SHADER := preload("res://shaders/water_current_flow.gdshader")
 const RESTORED_FLAG := "water_currents_restored"
@@ -17,28 +19,22 @@ var _flags: RefCounted
 var _calm_scale := 0.5
 var _poll := 0.0
 var _restored := false
+var _field: RefCounted
+var _world_config: Dictionary = {}
+var _config: Dictionary = {}
+var _strengths: PackedFloat32Array = PackedFloat32Array()
 
 
-func build(world_config: Dictionary, config: Dictionary, flags: RefCounted) -> void:
+## `field` is the world's live water_current_field.gd. Without one (tests,
+## tools) the authored `strength_m_s` of every world current is drawn.
+func build(world_config: Dictionary, config: Dictionary, flags: RefCounted, field: RefCounted = null) -> void:
 	_flags = flags
+	_field = field
+	_world_config = world_config
+	_config = config
 	_calm_scale = float(config.get("restored_calm_scale", 0.5))
-	var sea := float(world_config.get("terrain", {}).get("sea_level_m", 0.0)) + float(config.get("lift_m", 0.05))
-	var width_scale := float(config.get("width_scale", 0.7))
-	var full_strength := maxf(0.01, float(config.get("full_strength_m_s", 1.8)))
-	var surface := SurfaceTool.new()
-	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for current: Dictionary in world_config.get("currents", []):
-		var points: Array = current.get("polyline", [])
-		var direction: Array = current.get("flow_direction_xz", [0.0, 0.0])
-		var flow := Vector2(float(direction[0]), float(direction[1])).normalized()
-		if points.size() < 2 or flow == Vector2.ZERO:
-			continue
-		var strength := clampf(float(current.get("strength_m_s", 0.0)) / full_strength, 0.0, 1.0)
-		var colour := Color(flow.x * 0.5 + 0.5, flow.y * 0.5 + 0.5, strength, 1.0)
-		_ribbon(surface, _densify(points, float(config.get("segment_m", 12.0))),
-			float(current.get("width_m", 18.0)) * width_scale * 0.5, sea, colour)
-		ribbon_count += 1
-	mesh = surface.commit()
+	_strengths = _current_strengths()
+	_build_mesh()
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var material := ShaderMaterial.new()
 	material.shader = SHADER
@@ -53,11 +49,51 @@ func build(world_config: Dictionary, config: Dictionary, flags: RefCounted) -> v
 	_refresh(true)
 
 
+func _currents() -> Array:
+	return _field.call("live_currents") if _field != null else _world_config.get("currents", [])
+
+
+func _current_strengths() -> PackedFloat32Array:
+	var out := PackedFloat32Array()
+	for current: Dictionary in _currents():
+		out.append(float(_field.call("effective_strength", current)) if _field != null
+			else float(current.get("strength_m_s", 0.0)))
+	return out
+
+
+func _build_mesh() -> void:
+	var sea := float(_world_config.get("terrain", {}).get("sea_level_m", 0.0)) + float(_config.get("lift_m", 0.05))
+	var width_scale := float(_config.get("width_scale", 0.7))
+	var full_strength := maxf(0.01, float(_config.get("full_strength_m_s", 1.8)))
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	ribbon_count = 0
+	var currents := _currents()
+	for index in currents.size():
+		var current: Dictionary = currents[index]
+		var points: Array = current.get("polyline", [])
+		var direction: Array = current.get("flow_direction_xz", [0.0, 0.0])
+		var flow := Vector2(float(direction[0]), float(direction[1])).normalized()
+		if points.size() < 2 or flow == Vector2.ZERO:
+			continue
+		var strength := clampf(_strengths[index] / full_strength, 0.0, 1.0)
+		var colour := Color(flow.x * 0.5 + 0.5, flow.y * 0.5 + 0.5, strength, 1.0)
+		_ribbon(surface, _densify(points, float(_config.get("segment_m", 12.0))),
+			float(current.get("width_m", 18.0)) * width_scale * 0.5, sea, colour)
+		ribbon_count += 1
+	mesh = surface.commit()
+
+
 func _process(delta: float) -> void:
 	_poll -= delta
 	if _poll <= 0.0:
 		_poll = POLL_SECONDS
 		_refresh(false)
+		if _field != null:
+			var strengths := _current_strengths()
+			if strengths != _strengths:
+				_strengths = strengths
+				_build_mesh()
 
 
 func _refresh(force: bool) -> void:

@@ -234,7 +234,7 @@ func _build_distance_presentation() -> void:
 		var flow := CURRENT_FLOW.new()
 		flow.name = "WaterCurrentFlow"
 		add_child(flow)
-		flow.build(world.config, flow_config, _game.world.flags)
+		flow.build(world.config, flow_config, _game.world.flags, world.get("currents") as RefCounted)
 
 func _build_heart_chamber() -> void:
 	var crystal := MeshInstance3D.new()

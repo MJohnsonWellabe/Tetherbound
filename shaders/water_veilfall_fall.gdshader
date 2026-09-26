@@ -6,9 +6,10 @@ render_mode blend_mix, cull_disabled, depth_draw_never, diffuse_burley, specular
 // more geometry: the ribbon widens to a minimum angular width, and its
 // view-space position is pulled a small fraction toward the camera, which
 // leaves the projected shape unchanged but keeps distant terrain LOD from
-// swallowing it. COLOR.rgb carries the horizontal lateral direction and
-// COLOR.g half the column opacity, COLOR.a the authored width / 100 m. UV.x is across (0..1); UV.y is metres
-// from the lip.
+// swallowing it. COLOR.r and COLOR.b carry the horizontal lateral direction
+// (x, z), COLOR.g half the column opacity and COLOR.a the authored width /
+// 100 m. The lateral is horizontal by construction, so COLOR.g never feeds it.
+// UV.x is across (0..1); UV.y is metres from the lip.
 uniform vec4 foam_colour : source_color = vec4(0.96, 0.99, 1.0, 1.0);
 uniform vec4 shade_colour : source_color = vec4(0.70, 0.84, 0.88, 1.0);
 uniform float flow_speed = 7.0;
@@ -46,7 +47,7 @@ void vertex() {
 	float distance_m = length(world - camera);
 	float width_m = COLOR.a * 100.0;
 	float wanted = max(width_m, distance_m * min_angular_width);
-	vec3 lateral = COLOR.rgb * 2.0 - 1.0;
+	vec3 lateral = vec3(COLOR.r * 2.0 - 1.0, 0.0, COLOR.b * 2.0 - 1.0);
 	world += lateral * (UV.x - 0.5) * (wanted - width_m);
 	v_distance = distance_m;
 	vec3 view = (VIEW_MATRIX * vec4(world, 1.0)).xyz;

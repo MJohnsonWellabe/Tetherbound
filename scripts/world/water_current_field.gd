@@ -60,6 +60,25 @@ static func bind_return_shortcuts(config: Dictionary) -> Dictionary:
 	return bound
 
 
+## The bound route currents this field samples, closed-gate and shortcut rows
+## included. The visible foam reads these, never the raw world config.
+func live_currents() -> Array:
+	return _currents
+
+
+## One route current's strength under the live flags: its closed-gate strength
+## while its dock is uncleared, its shortcut reduction once earned. The post-
+## liberation multiplier is applied by `sample()`, not here.
+func effective_strength(current: Dictionary) -> float:
+	var required := str(current.get("required_unlock_flag", ""))
+	var closed: bool = _flags != null and not required.is_empty() and not bool(_flags.has(required))
+	var strength := float(current.get("closed_strength_m_s", current.get("strength_m_s", 0.0))) if closed else float(current.get("strength_m_s", 0.0))
+	var reduction_flag := str(current.get("reduction_unlock_flag", ""))
+	if _flags != null and not reduction_flag.is_empty() and bool(_flags.has(reduction_flag)):
+		strength = float(current.get("strength_after_unlock_m_s", strength))
+	return maxf(0.0, strength)
+
+
 func sample(position: Vector3, liberated: bool = false) -> Dictionary:
 	var result := {"id": "", "velocity": Vector3.ZERO, "influence": 0.0}
 	if not position.is_finite():
@@ -102,13 +121,7 @@ func sample(position: Vector3, liberated: bool = false) -> Dictionary:
 		var influence := 1.0 if blend <= 0.0 else 1.0 - smoothstep(radius - blend, radius, distance)
 		var direction: Array = current.get("flow_direction_xz", [0.0, 0.0])
 		var velocity := Vector3(float(direction[0]), 0.0, float(direction[1])).normalized()
-		var required := str(current.get("required_unlock_flag", ""))
-		var closed: bool = _flags != null and not required.is_empty() and not bool(_flags.has(required))
-		var strength := float(current.get("closed_strength_m_s", current.get("strength_m_s", 0.0))) if closed else float(current.get("strength_m_s", 0.0))
-		var reduction_flag := str(current.get("reduction_unlock_flag", ""))
-		if _flags != null and not reduction_flag.is_empty() and bool(_flags.has(reduction_flag)):
-			strength = float(current.get("strength_after_unlock_m_s", strength))
-		velocity *= maxf(0.0, strength) * influence
+		velocity *= effective_strength(current) * influence
 		if liberated:
 			velocity *= clampf(float(current.get("post_liberation_strength_multiplier", 1.0)), 0.0, 1.0)
 		best_priority = priority

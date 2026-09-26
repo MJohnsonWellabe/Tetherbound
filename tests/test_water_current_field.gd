@@ -146,3 +146,46 @@ func _midpoint(current: Dictionary) -> Vector3:
 	return Vector3((float(a[0]) + float(b[0])) * 0.5,
 		(float(a[1]) + float(b[1])) * 0.5,
 		(float(a[2]) + float(b[2])) * 0.5)
+
+
+func test_effective_strength_is_the_strength_sample_applies() -> void:
+	var flags := Flags.new()
+	var current := _current("gate", 0.5, 30)
+	current.required_unlock_flag = "dock_open"
+	current.closed_strength_m_s = 6.0
+	current.reduction_unlock_flag = "cut_open"
+	current.strength_after_unlock_m_s = 0.1
+	var field := FIELD.new({"currents": [current]}, flags)
+	var live: Dictionary = field.live_currents()[0]
+	assert_eq(field.effective_strength(live), 6.0, "closed dock: race strength")
+	flags.set_flag("dock_open")
+	assert_eq(field.effective_strength(live), 0.5, "open dock: authored strength")
+	flags.set_flag("cut_open")
+	assert_eq(field.effective_strength(live), 0.1, "earned shortcut: reduced strength")
+	assert_true(is_equal_approx(field.sample(Vector3(0, 0, 50)).velocity.length(), 0.1))
+
+
+## The visible foam is built from the same bound currents and live strengths
+## as the physics, and is rebuilt when an unlock changes one.
+func test_flow_view_follows_live_field_strengths() -> void:
+	const VIEW := preload("res://scripts/world/water_current_flow_view.gd")
+	var flags := Flags.new()
+	var current := _current("gate", 0.5, 30)
+	current.required_unlock_flag = "dock_open"
+	current.closed_strength_m_s = 1.8
+	var field := FIELD.new({"currents": [current]}, flags)
+	var view: MeshInstance3D = VIEW.new()
+	view.build({"terrain": {"sea_level_m": 0.0}, "currents": [_current("raw", 0.5, 30)]},
+		{"full_strength_m_s": 1.8}, flags, field)
+	assert_eq(view.ribbon_count, 1)
+	assert_true(absf(_first_strength(view) - 1.0) < 0.01, "closed race drawn at full strength")
+	flags.set_flag("dock_open")
+	view._process(VIEW.POLL_SECONDS)
+	# Vertex colours are stored at 8 bits per channel.
+	assert_true(absf(_first_strength(view) - 0.5 / 1.8) < 0.01, "opened dock redrawn at authored strength")
+	view.free()
+
+
+func _first_strength(view: MeshInstance3D) -> float:
+	var arrays: Array = view.mesh.surface_get_arrays(0)
+	return (arrays[Mesh.ARRAY_COLOR] as PackedColorArray)[0].b

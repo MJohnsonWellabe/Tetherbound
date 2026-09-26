@@ -11,11 +11,15 @@ extends RefCounted
 ##
 ## The generated code is read back at runtime rather than committed as a copy
 ## so it always matches this Terrain3D build and the Water material settings.
-## If either anchor is missing, the pass is skipped with a warning and the
-## terrain keeps its stock shader.
+## If either anchor or any generated symbol the tail reads is missing, the pass
+## is skipped with a warning and the terrain keeps its stock shader, rather
+## than installing code that would fail to compile.
 const MARKER := "// VEILFALL-MATERIAL"
 const UNIFORM_ANCHOR := "void fragment() {"
 const TAIL_ANCHOR := "SPECULAR = 1. - mat.normal_rough.a;"
+## Identifiers of the generated Terrain3D shader that TAIL reads, besides the
+## two insertion anchors. A vendored-shader rename must skip the pass.
+const REQUIRED_SYMBOLS: Array[String] = ["v_vertex", "w_normal", "_camera_pos"]
 
 const UNIFORMS := """
 // VEILFALL-MATERIAL: scripts/world/water_veilfall_rock.gd (masked to Veilfall).
@@ -90,6 +94,20 @@ const TAIL := """
 """
 
 
+## Every insertion anchor and generated symbol TAIL depends on that `code`
+## lacks. Symbols match as whole identifiers, so `v_vertex_2` is not `v_vertex`.
+static func missing_anchors(code: String) -> Array[String]:
+	var missing: Array[String] = []
+	for anchor: String in [UNIFORM_ANCHOR, TAIL_ANCHOR]:
+		if not code.contains(anchor):
+			missing.append(anchor)
+	for symbol: String in REQUIRED_SYMBOLS:
+		var pattern := RegEx.create_from_string("\\b" + symbol + "\\b")
+		if pattern.search(code) == null:
+			missing.append(symbol)
+	return missing
+
+
 ## Returns a receipt; "installed" is false when the pass was skipped.
 static func install(terrain: Object, config: Dictionary) -> Dictionary:
 	var receipt := {"installed": false, "reason": ""}
@@ -111,8 +129,9 @@ static func install(terrain: Object, config: Dictionary) -> Dictionary:
 		current = material.call("get_shader_override")
 		code = current.code if current != null else ""
 	if not code.contains(MARKER):
-		if not code.contains(UNIFORM_ANCHOR) or not code.contains(TAIL_ANCHOR):
-			receipt.reason = "generated terrain shader anchors not found"
+		var missing := missing_anchors(code)
+		if not missing.is_empty():
+			receipt.reason = "generated terrain shader anchors not found: " + ", ".join(missing)
 			push_warning("Veilfall rock pass skipped: " + str(receipt.reason))
 			return receipt
 		code = code.replace(UNIFORM_ANCHOR, UNIFORMS + UNIFORM_ANCHOR)
