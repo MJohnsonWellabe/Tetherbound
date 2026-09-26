@@ -40,9 +40,13 @@ Each command was run from the repository root with `XDG_DATA_HOME=$(mktemp -d) $
 | `--from=3 --to=4` | `sheltered_3_4.log` | OK, 7 hops, worst 38.59%, 1 position write, 713.3 m walked, exit 0 |
 | `--from=5 --to=6` | `sheltered_5_6.log` | OK, 12 hops, worst 30.19%, 1 position write, 810.1 m walked, exit 0 |
 | `--variant=direct --from=0 --to=3` | `direct_0_3.log` | OK, 4 hops, worst 33.41%, 1 position write, 1355.3 m walked, exit 0 |
-| `--from=0 --to=6` (full chain, one position write in total) | `sheltered_0_6_full_chain.log` | see "Full chain" below |
+| `--from=0 --to=6` (full chain, one position write in total) | `sheltered_0_6_full_chain.log` | INCOMPLETE at the deadline, see below |
 
 **Chunk seams.** The three sheltered chunks run in separate processes, so each chunk starts with its own departure write. That gives two extra writes, at the reedhaven… → shellwatch_to_tidal_cradle departure and at the salt_crown departure. The full-chain run removes both.
+
+## Full chain (0..6, one position write in total)
+
+This run was **still running at the 21:05 UTC deadline and is not a pass claim.** `sheltered_0_6_full_chain.partial.log` is a snapshot taken at 21:00 UTC. At that point it had crossed routes 0–4 and part of route 5 with one position write in total: 17 of 24 hops, every one PASS, `rest_frames=0`. It had also done 4 island walks, each ending at 100% stamina. Its per-hop minimum stamina matches the chunk runs to within about 0.3 pp. The removal of the two chunk-seam writes stays open until a full run exits 0.
 
 ## Per-hop results (min stamina % while swimming)
 
