@@ -21,7 +21,7 @@
      "text": "Overhead road graph is no longer the old compact circle; one continuous home-to-bridge through-road",
      "status": "in_progress",
      "evidence": "test_village_road_topology.gd, plan_old_new.png, terrain/scatter re-bake on branch ralph/f01-village-road-plan",
-     "gap": "On main via #333 (batch 32); flips on the next green full CI covering it."
+     "gap": "On main (#333). Not yet engine-verified by a green full CI; flips on the next one. (strict re-score 23:40)"
     },
     {
      "text": "Usable side lane serves road-facing houses, berry field, grove and stone work",
@@ -381,14 +381,14 @@
      "text": "Fly training, landing and invalid-landing recovery",
      "status": "partial",
      "evidence": "smoke_fly_traversal 30/0, smoke_cloudreach_fall_recovery pass; Fly anchor follows ride (batch 3)",
-     "gap": "Normal-input training witness from earned route",
+     "gap": "Aerie fixture start (--start=aerie, 21 steps skipped), not the earned route; anchor recovery not reached by input; exhausted-fall branch untested. (strict re-score 23:40)",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
      "text": "Loaner path does not bypass gates or lose creatures",
      "status": "partial",
      "evidence": "Finale exam-pilot release/restore fixes + test_cloudreach_finale one-frame-later release (main fe07d0d2)",
-     "gap": "Normal-input loaner traversal witness",
+     "gap": "Aerie fixture start; grounded remainder not run; one run stalled on the shrine dais (root cause open); route blockers B1–B3. (strict re-score 23:40)",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
@@ -736,9 +736,9 @@
    "pct": 17,
    "counts": {
     "met": 1,
-    "partial": 3,
+    "partial": 4,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 1
    },
@@ -760,21 +760,21 @@
      "text": "Eight reward pockets reachable and paid",
      "status": "partial",
      "evidence": "Six candy pockets walked and claimed in engine (smoke_water_pocket_walk_claim, disclosed arrival fixture) + Cradle nest payout (main fe07d0d2)",
-     "gap": "reed_root_hollow empty; Deep Watch gate unimplemented; long-range lure",
+     "gap": "Reed hollow recipe half unpaid; no long-range lure; Deep Watch opened by flag fixture; islands reached by position writes; no co-op per-character claim. (strict re-score 23:40)",
      "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
      "text": "Six local chains, one per group, satisfy §5",
      "status": "partial",
      "evidence": "Six chain smokes with production save/reload in CI (batch 22)",
-     "gap": "Normal-play route (lane: PARTIAL)",
+     "gap": "Inter-island swims replaced by position writes; Tidecoil resolved by fixture; Lastlight supplies/bed fixtured; no visible lure; solo only. (strict re-score 23:40)",
      "note": "Blocked on moving Otto and Halen to reachable ground (Tidewake lane). Tidewake-B (#310)."
     },
     {
      "text": "Four-character supplies solvent without new catch or repeated wild",
-     "status": "not_started",
+     "status": "partial",
      "evidence": "Cradle payout world-once (first gatherer only); Garden/Deep Watch need swim saddle",
-     "gap": "Rest shoals proposal; per-character payouts"
+     "gap": "Data-only four-character ledger; no route depletion run; Garden/Deep Watch chains need an owned swimmer; Cradle pays first gatherer only. (strict re-score 23:40)"
     },
     {
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
@@ -792,9 +792,9 @@
    "pct": 50,
    "counts": {
     "met": 3,
-    "partial": 2,
+    "partial": 3,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -808,15 +808,15 @@
     },
     {
      "text": "Veilfall and Guardian pass C2/C3",
-     "status": "not_started",
+     "status": "partial",
      "evidence": "Veilfall interior 31-check functional smoke only",
-     "gap": "C2/C3 verdict"
+     "gap": "Nerissa C2/C3 simulated by harness, not played on the ordinary route; no C3 framing captures; Veilfall interior has no verdict. (strict re-score 23:40)"
     },
     {
      "text": "Water/current network visibly changes and persists",
      "status": "partial",
      "evidence": "Relic shrine placement/activation 35-check (scorecard)",
-     "gap": "Visible current restoration unproven",
+     "gap": "Visible current change not shown in frames; no code-blind judge verdict (W1). (strict re-score 23:40)",
      "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
@@ -847,9 +847,9 @@
    "pct": 67,
    "counts": {
     "met": 4,
-    "partial": 1,
+    "partial": 2,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -868,15 +868,15 @@
     },
     {
      "text": "Measured physical return without A7 empty interval",
-     "status": "not_started",
+     "status": "partial",
      "evidence": "~19 km return; pacing open (STATE)",
-     "gap": "Measure return route"
+     "gap": "Four A7 gaps remain (two Cloudreach, two Meadows haul road); measurement is data-level, not a walk. (strict re-score 23:40)"
     },
     {
      "text": "Grandpa acknowledges each current team incl. releases",
      "status": "partial",
      "evidence": "Fixture disk witness; test_homecoming_ending_invariants never names released companion (main)",
-     "gap": "Guest acknowledgement; earned party",
+     "gap": "Two-peer PASS, but parties granted by fixture and the Veilfall/Nerissa step is ledger-set; guest has no release. (strict re-score 23:40)",
      "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {

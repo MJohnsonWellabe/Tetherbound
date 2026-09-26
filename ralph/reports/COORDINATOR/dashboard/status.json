@@ -2,7 +2,7 @@
  "updated": "2026-09-26 23:30 UTC",
  "headline": [
   "Criteria met: 53 of 101. Full CI 36276939256 on main is green except the known-red continuous-core job, whose fix is on main and passed 3 of 3 confirmation runs.",
-  "Next to flip on a green full CI: F01#0 (batch 32 on main). Batches 32 and 33 are merged; batch 34 (#336, VIS audit carry-over) is on auto-merge.",
+  "Next to flip: F01#0 only (on main, awaiting a green full CI) → 54. A strict re-score of everything landed in batches 30–34 found no other criterion met: F06#2/#3, F13#2/#3/#4, F14#1/#2, F15#2/#3 are partial (fixture starts, position writes, missing judges); gaps are on each row and sent to the lanes.",
   "Rules in force: one open PR per lane; all art goes to Codex (queue V1–V34 at the top of ralph/reports/VISUAL/AUDIT.md); READY posts must say \"closes\" or \"partial\"; nothing is counted until an independent re-score and a green full CI."
  ],
  "batches": [
