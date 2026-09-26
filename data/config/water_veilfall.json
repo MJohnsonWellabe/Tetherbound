@@ -28,9 +28,9 @@
     "shader": {"rock_colour": "#4d4c46", "streak_colour": "#262826", "grass_colour": "#51683f", "slope_lo": 0.55, "slope_hi": 0.86, "streak_width_m": 7.0, "streak_length_m": 60.0, "roughness_value": 0.75, "fog_keep_near": 1.0, "fog_keep_far": 0.5, "fog_keep_start_m": 1100.0, "fog_keep_end_m": 3200.0, "tone_darken": 0.76, "tone_amount": 0.8, "tone_lit_keep": 0.75, "depth_pull_fraction": 0.012, "depth_pull_max_m": 60.0}
   },
   "current_flow": {
-    "_comment": "F13#5 visible currents (scripts/world/water_current_flow_view.gd): one foam ribbon per water_world.json current, streaks drifting along its physics flow vector; opacity and speed rise with strength (full at full_strength_m_s). Calmer after water_currents_restored. One draw call.",
-    "enabled": true, "lift_m": 0.05, "width_scale": 0.7, "segment_m": 12.0, "full_strength_m_s": 1.8, "restored_calm_scale": 0.5,
-    "shader": {"foam_colour": "#eef9f9", "opacity": 0.85, "streak_width_m": 2.6, "streak_length_m": 7.0, "min_speed_m_s": 0.35, "speed_scale": 1.4, "fade_start_m": 180.0, "fade_end_m": 520.0, "depth_pull_fraction": 0.003}
+    "_comment": "F13#5 visible route currents: bind the same dock closures and return reductions as WaterCurrentField, then encode effective velocity including each route's liberation multiplier. Closed departure strips show their full adverse 6 m/s flow; shared unlock facts restore authored calm flow. The adapter sets shader speed_scale from the encoding scale and keeps min_speed at zero. restored_calm_scale softens foam opacity; its motion factor is compensated so liberation applies once. Tide-race rings remain a separate view. One draw call.",
+    "enabled": true, "lift_m": 0.05, "width_scale": 0.7, "segment_m": 12.0, "full_strength_m_s": 6.0, "restored_calm_scale": 0.5, "poll_seconds": 0.2,
+    "shader": {"foam_colour": "#eef9f9", "opacity": 0.95, "lane_opacity": 0.2, "streak_width_m": 2.6, "streak_length_m": 3.6, "fade_start_m": 180.0, "fade_end_m": 520.0, "depth_pull_fraction": 0.003}
   },
   "exterior_composition": {
     "_comment": "Faceted static crags frame the existing physical Terrain3D gate approach. Each vegetation cluster sits on a named, colliding flat geological cap. Analytic route-edge clearances below are from the actual configured hike polyline; the central entrance corridor and interaction point remain unobstructed.",

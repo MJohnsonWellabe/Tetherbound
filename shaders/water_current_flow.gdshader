@@ -53,20 +53,22 @@ void fragment() {
 	float along = dot(v_world.xz, flow);
 	float across_m = dot(v_world.xz, vec2(-flow.y, flow.x));
 	float speed = max(min_speed_m_s, strength * speed_scale) * calm_scale;
-	// Thin wandering foam lanes, broken into dashes that drift with the flow.
-	float lane = across_m / streak_width_m + noise(vec2(along / 30.0, across_m / 20.0)) * 1.5;
-	float girth = noise(vec2(floor(lane) * 1.7, along / 18.0));
-	float line = smoothstep(0.78 - girth * 0.22, 0.97, 1.0 - abs(fract(lane) * 2.0 - 1.0));
-	float dash = smoothstep(0.4, 0.8, noise(vec2(floor(lane) * 3.1, (along - TIME * speed) / streak_length_m)));
-	float fleck = smoothstep(0.8, 0.95, noise(vec2(across_m * 0.9, (along - TIME * speed) * 0.35)));
-	float streak = max(line * dash, fleck * 0.5);
+	// Broken transverse crests advect toward the same direction as physics.
+	// Long parallel dashes looked like painted lane markings on calm water.
+	float moving = along - TIME * speed;
+	float eddy = noise(vec2(across_m * 0.24, moving * 0.19));
+	float phase = moving / streak_length_m + sin(across_m * 0.62) * 0.16 + eddy * 0.35;
+	float crest = 1.0 - smoothstep(0.035, 0.13, abs(fract(phase) - 0.5));
+	float breakup = smoothstep(0.24, 0.64, noise(vec2(across_m / streak_width_m, moving * 0.32)));
+	float fleck = smoothstep(0.76, 0.94, noise(vec2(across_m * 1.4, moving * 0.85)));
+	float streak = max(crest * breakup, fleck * 0.35);
 	float across = abs(UV.x - 0.5) * 2.0;
 	float edge = 1.0 - smoothstep(0.55, 1.0, across);
 	float ends = smoothstep(0.0, 0.12, UV2.x) * (1.0 - smoothstep(0.88, 1.0, UV2.x));
 	float fade = 1.0 - smoothstep(fade_start_m, fade_end_m, v_distance);
 	float mask = edge * ends * fade * mix(0.55, 1.0, calm_scale);
-	float foam = clamp(opacity * streak * mix(0.45, 1.0, strength), 0.0, 1.0);
-	float band = lane_opacity * mix(0.5, 1.0, strength)
+	float foam = clamp(opacity * streak * mix(0.12, 1.0, strength), 0.0, 1.0);
+	float band = lane_opacity * mix(0.08, 1.0, strength)
 		* (0.6 + 0.4 * noise(vec2(across_m / 6.0, (along - TIME * speed * 0.5) / 25.0)));
 	float alpha = foam + band * (1.0 - foam);
 	ALBEDO = (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) / max(alpha, 0.001);
