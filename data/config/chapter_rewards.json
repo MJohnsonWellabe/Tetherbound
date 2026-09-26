@@ -290,7 +290,7 @@
         "orb_basic": 3,
         "bond": "landmark-visit credit for the whole team, per bond_milestones.gd::credit_landmark_visit"
       },
-      "enables": "The one optional activity that pays the five directly rather than the satchel. Defaults read off meadowhart_herd_visit.gd (`reward_item` orb_basic, `reward_count` 3).",
+      "enables": "The one optional activity that pays the five directly rather than the satchel. Paid per objectives.json `band1_meadowhart_herd.visit.rewards` (2 potion_small, 1 revive; F03#2).",
       "understood_when_received": true
     },
     {
