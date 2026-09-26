@@ -17,7 +17,7 @@ The earlier proof is `ralph/reports/TIDEWAKE/f12_every_hop_original_five/`. It w
 - **One position write per run.** It is the first route's departure anchor.
 - **Within a route, no position write.** Each hop starts where the real arrival left the trainer. The largest distance to the authored hop start was 0.428 m, and the limit is 1.0 m.
 - **Between routes, no position write.** The trainer walks from the arrival island's landing to the next route's departure anchor. Movement is real left-stick input (`tests/helpers/stick_navigator.gd`). The route comes from the harness-only baked-ground A* plan (`tests/smoke_water_pocket_walk_claim.gd::plan_route`, called statically). Every island walk had `confined_resets=0`.
-- **No stamina write.** The idle-rest step exists, but it stands still with no input and no write. It never ran: `rest_frames=0` on all 31 hops, and `arrive_pct=100.00` at every hop start.
+- **No stamina write.** The idle-rest step exists, but it stands still with no input and no write. It never ran: `rest_frames=0` on all 28 committed hops (24 sheltered + 4 direct), and `arrive_pct=100.00` at every hop start.
   - Stamina was already full at every hop start. The last metres of each hop are wading in shallows and the dry landing. Normal dry-land regen (18/s) refills the meter there.
   - The island walks also end at 100%.
   - So no forced rest-to-full happened anywhere. A `--no-rest` run would take the same path. It was not run separately.
@@ -107,3 +107,10 @@ This run was **still running at the 21:05 UTC deadline and is not a pass claim.*
 - The optional routes (lantern_cove, gull_rest) and the mounted `main_path: false` routes.
 - Combat pause, reload and co-op across hops. Those belong to other F12 criteria.
 - Wild encounters. The navigator pauses a walk if one starts, and the swim path fails loudly if locomotion is blocked. None interrupted these runs.
+
+## Review follow-ups
+
+- Hop count corrected: the committed logs hold 28 hops (24 sheltered + 4 direct), not 31.
+- `rest_frames=0` is logged on every hop, but the test does not assert it. The idle-rest step defaults to on (`tests/smoke_water_hop_walked.gd:87`, `:207-211`), so a future regression that needs a rest would still pass. A follow-up should assert `rest_frames == 0` or make `--no-rest` the default. The evidence here shows that no rest ran.
+- The steering ratio is measured on the commanded path, not the path actually swum. This is the same method as the prior proof.
+- `sheltered_0_6_full_chain.log` (a single 0–6 chain with one position write) had not finished when this commit was made, so it is not claimed.
