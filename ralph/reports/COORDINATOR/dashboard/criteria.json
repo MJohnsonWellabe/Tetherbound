@@ -7,11 +7,11 @@
    "id": "F01",
    "title": "Village road topology and opening",
    "chapter": "Meadows",
-   "pct": 36,
+   "pct": 57,
    "counts": {
-    "met": 1,
-    "partial": 2,
-    "in_progress": 4,
+    "met": 4,
+    "partial": 0,
+    "in_progress": 3,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -21,13 +21,13 @@
      "text": "Overhead road graph is no longer the old compact circle; one continuous home-to-bridge through-road",
      "status": "in_progress",
      "evidence": "test_village_road_topology.gd, plan_old_new.png, terrain/scatter re-bake on branch ralph/f01-village-road-plan",
-     "gap": "Independent review; stale shared refs (map_landmarks, gate-A waypoint). Now on main 08fcc205."
+     "gap": "On main via #333 (batch 32); flips on the next green full CI covering it."
     },
     {
      "text": "Usable side lane serves road-facing houses, berry field, grove and stone work",
-     "status": "in_progress",
-     "evidence": "Stoneyard/Berry/Grove lanes and fingerposts on ralph/f01-village-road-plan; berry-node move reverted (Gate-F segments pin node 10)",
-     "gap": "Berry nodes still in cottage_b; verify in engine. Now on main.",
+     "status": "met",
+     "evidence": "berry/grove/stoneyard lane walks, max_off_road 0.00 (render 36269363797/36271511058/36271508851); green full CI 36276939256",
+     "gap": "",
      "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress."
     },
     {
@@ -44,16 +44,16 @@
     },
     {
      "text": "All three starters separately complete naming, practice fight/catch, three-bed readiness, three played tournament rounds",
-     "status": "partial",
-     "evidence": "smoke_four_biome_continuous --through-bridge passed once (run 4) with one starter; earned-bridge/RESULT.md on main",
-     "gap": "Separate witnesses for the other two starters",
+     "status": "met",
+     "evidence": "#291 8c6657a5e: gate-B full chain passes separately for terrapup/ripplet/galewisp (36269170273/36269360016/36269361827); green full CI 36276939256",
+     "gap": "",
      "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress. Fixture fixed to grant non-starters in batch #316."
     },
     {
      "text": "Opening/tournament state survives save/reload",
-     "status": "partial",
-     "evidence": "Two-peer --tournament leg 57/0 incl. production reload (proxy-ground-plane report, main); fixture party",
-     "gap": "Reload on the earned solo opening path for each starter",
+     "status": "met",
+     "evidence": "same gate-B chain runs (reload inside chain) + MEADOWS-PAYOFFS/earned-bridge/RESULT.md; green full CI 36276939256",
+     "gap": "",
      "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress."
     },
     {
@@ -69,10 +69,10 @@
    "id": "F02",
    "title": "Earned Meadows spine and ledgers",
    "chapter": "Meadows",
-   "pct": 41,
+   "pct": 50,
    "counts": {
-    "met": 2,
-    "partial": 5,
+    "met": 4,
+    "partial": 3,
     "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
@@ -87,16 +87,16 @@
     },
     {
      "text": "Continues through Quarry/Warrens on the same fresh save",
-     "status": "partial",
-     "evidence": "test_meadows_earned_warrens_segment.gd; two-peer Warrens earned approach/exit 42/0 (fixture entrance seat)",
-     "gap": "No continuous fresh-save --through-warrens pass recorded",
+     "status": "met",
+     "evidence": "MEADOWS-PAYOFFS/earned-bridge/warrens-cleared/reload-seed15.txt; green full CI 36276939256",
+     "gap": "",
      "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress."
     },
     {
      "text": "Continues through Sela/relay crossing",
-     "status": "partial",
-     "evidence": "test_meadows_earned_relay_segment.gd; two-peer --relay-crossing leg 46/0 with proxy fix (fixture fight seat)",
-     "gap": "Continuous fresh-save pass",
+     "status": "met",
+     "evidence": "MEADOWS-PAYOFFS/earned-bridge/relay-seed15.txt (EXIT 0, relay_disabled_and_mill_crossed); green full CI 36276939256",
+     "gap": "",
      "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress."
     },
     {
@@ -277,7 +277,7 @@
    "id": "F05",
    "title": "Veridian finale and handoff",
    "chapter": "Meadows",
-   "pct": 81,
+   "pct": 89,
    "counts": {
     "met": 8,
     "partial": 1,
@@ -417,7 +417,7 @@
    "id": "F07",
    "title": "Cloudreach activities and cadence",
    "chapter": "Cloudreach",
-   "pct": 15,
+   "pct": 40,
    "counts": {
     "met": 2,
     "partial": 0,
@@ -465,7 +465,7 @@
    "id": "F08",
    "title": "Veyra finale, persistence and Cloudreach look",
    "chapter": "Cloudreach",
-   "pct": 42,
+   "pct": 50,
    "counts": {
     "met": 3,
     "partial": 2,
@@ -518,10 +518,10 @@
    "id": "F09",
    "title": "Stormwood earned traversal",
    "chapter": "Stormwood",
-   "pct": 50,
+   "pct": 60,
    "counts": {
-    "met": 2,
-    "partial": 3,
+    "met": 3,
+    "partial": 2,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -536,9 +536,9 @@
     },
     {
      "text": "Lawful Surge phases, grounded paths, rod safe radii",
-     "status": "partial",
-     "evidence": "Existing Surge clock/lightning/rod safety (baseline check); Stormwood suites pass",
-     "gap": "Traversal witness under each phase",
+     "status": "met",
+     "evidence": "ralph/reports/STORMWOOD/b/f09_1/PROOF.md @ 3913f0e2d (#299 via #316); earned traversal tracked by F09#0; green full CI 36276939256",
+     "gap": "",
      "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
@@ -624,10 +624,10 @@
    "id": "F11",
    "title": "Dynamo, Stormheart and Tidewake gate",
    "chapter": "Stormwood",
-   "pct": 50,
+   "pct": 60,
    "counts": {
-    "met": 2,
-    "partial": 3,
+    "met": 3,
+    "partial": 2,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -649,9 +649,9 @@
     },
     {
      "text": "Through disconnect/reload without duplicated grants",
-     "status": "partial",
-     "evidence": "Batch 15 (merged 09:18): f11_stormheart_drop_at_ack two-peer proof, host refuses a repeat claim from its own record",
-     "gap": "Disconnect-at-ack half landed; the legacy-receipt owner ruling is still pending",
+     "status": "met",
+     "evidence": "INVITE-COOP x05-proof-f11-drop-at-ack + refuse-at-ack PROOF.md; legacy-receipt tests in tests/test_stormwood_ending.gd @ 9d97dc547 (#305 via #327); green full CI 36276939256",
+     "gap": "",
      "note": "Owner ruling: a legacy receipt is UNDECIDED and is re-offered once. Migration in progress, Stormwood lane (#305)."
     },
     {
@@ -673,10 +673,10 @@
    "id": "F12",
    "title": "Retained-five human swimming",
    "chapter": "Tidewake",
-   "pct": 57,
+   "pct": 100,
    "counts": {
-    "met": 6,
-    "partial": 1,
+    "met": 7,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -685,9 +685,9 @@
    "criteria": [
     {
      "text": "Level-0 human swimming, original five, finishes every mandatory hop ≥20% stamina at 15% deviation",
-     "status": "partial",
-     "evidence": "Final hop 33.75% at 15.3% (smoke_water_swimming --rest-route); analytic bounds all seven routes (test_water_heightfield)",
-     "gap": "Walked witness for every mandatory hop",
+     "status": "met",
+     "evidence": "ralph/reports/TIDEWAKE/b/f12_0_walked_hops/PROOF.md @ d6c7025b3 (#306 via #316); green full CI 36276939256",
+     "gap": "",
      "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
@@ -735,8 +735,8 @@
    "chapter": "Tidewake",
    "pct": 17,
    "counts": {
-    "met": 0,
-    "partial": 4,
+    "met": 1,
+    "partial": 3,
     "in_progress": 0,
     "not_started": 1,
     "blocked": 0,
@@ -751,9 +751,9 @@
     },
     {
      "text": "Four land loops and three shortcuts",
-     "status": "partial",
-     "evidence": "4 land loops walked; Shellwatch and Deep Watch shortcuts pass (RUN5, CI green in batch 22)",
-     "gap": "Reedhaven ramp is no real shortcut: the pre-repair walk is 217-221 m vs 212.6 m; the lane is relocating it with a walked baseline",
+     "status": "met",
+     "evidence": "TIDEWAKE/f13_loops_shortcuts/RUN8_shortcuts.txt + RUN8_reed_root_circuit.txt (74/0); green full CI 36276939256",
+     "gap": "",
      "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress."
     },
     {
@@ -789,7 +789,7 @@
    "id": "F14",
    "title": "Tidewake fights, network and Guardian",
    "chapter": "Tidewake",
-   "pct": 33,
+   "pct": 50,
    "counts": {
     "met": 3,
     "partial": 2,
@@ -844,7 +844,7 @@
    "id": "F15",
    "title": "Dock exchange, homecoming and credits",
    "chapter": "Tidewake",
-   "pct": 50,
+   "pct": 67,
    "counts": {
     "met": 4,
     "partial": 1,
