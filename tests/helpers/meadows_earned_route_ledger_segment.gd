@@ -221,7 +221,7 @@ func _receipt(stage: String) -> void:
 				if stack.is_empty():
 					continue
 				var id := str(stack.get("id", ""))
-				items[id] = int(items.get(id, 0)) + int(stack.get("count", 0))
+				items[id] = int(items.get(id, 0)) + int(stack.get("n", 0))
 		var members: RefCounted = game.get("party")
 		if members != null:
 			for i in int(members.call("size")):
