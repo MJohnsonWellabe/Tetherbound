@@ -148,3 +148,15 @@ func test_a_swing_that_loses_the_opponent_from_frame_is_refused() -> void:
 	assert_eq(float(_rig.clear_orbit_offset_deg(ARM, [25.0, 100.0], 0.75, 0.0, 1.0, 0.75)), 25.0,
 		"a swing that keeps both fighters in frame is still taken")
 	foe.free()
+
+
+func test_a_held_swing_that_now_loses_the_opponent_is_not_kept() -> void:
+	# The rig already swung 100 degrees; the opponent has since moved so that
+	# swing loses it. The current-side preference must not hand it back.
+	var foe := Node3D.new()
+	foe.position = Vector3(0.0, 0.0, -12.0)
+	_rig.set_tracking_target(foe, {"composition_yaw_deg": 0.0})
+	_rig.set_clearance_extra(100.0)
+	_room_at = {100: 5.0}
+	assert_ne(float(_rig.clear_orbit_offset_deg(ARM, [25.0, 100.0], 0.75, 0.0, 1.0, 0.75)), 100.0)
+	foe.free()
