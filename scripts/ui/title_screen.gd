@@ -925,7 +925,10 @@ func _show_friend_invite() -> void:
 
 	var join: Button = null
 	if _pending_invite_id > 0:
-		explanation.text = _steam_status("A friend invited you to their world. Choose Join, then pick the portable character you want to bring.")
+		# The invitation itself, with who sent it. `_steam_status` would show the
+		# lobby's idle "Steam friends are ready." here instead; only a real
+		# error (e.g. leave the current world first) replaces it.
+		explanation.text = _steam_error(friend_invite_text(_steam_inviter_name()))
 		join = _button("Join Friend")
 		join.pressed.connect(_accept_friend_invite)
 		_join_box.add_child(join)
@@ -1261,6 +1264,18 @@ func _on_steam_changed() -> void:
 ## pending friend join.
 static func pending_steam_join_has_failure(joining_lobby_id: int, error: String) -> bool:
 	return joining_lobby_id > 0 and not error.strip_edges().is_empty()
+
+
+static func friend_invite_text(inviter_name: String) -> String:
+	var who := inviter_name.strip_edges()
+	return "%s invited you to their world. Choose Join, then pick the portable character you want to bring." \
+		% (who if not who.is_empty() else "A friend")
+
+
+func _steam_inviter_name() -> String:
+	if _steam_lobby != null and _steam_lobby.has_method("pending_inviter_name"):
+		return str(_steam_lobby.call("pending_inviter_name"))
+	return ""
 
 
 static func steam_retry_is_actionable(pending_reason: String) -> bool:

@@ -64,6 +64,11 @@ class MockSteam:
 	func activateGameOverlayInviteDialog(lobby_id: int) -> void:
 		overlay_opened = lobby_id
 
+	var personas := {700: "Rin"}
+
+	func getFriendPersonaName(steam_id: int) -> String:
+		return str(personas.get(steam_id, ""))
+
 
 func test_native_unavailable_is_optional_and_actionable() -> void:
 	var lobby := STEAM_LOBBY.new()
@@ -286,6 +291,42 @@ func test_invite_while_hosting_stays_pending_with_a_reason() -> void:
 	assert_eq(lobby.last_error(), "Leave the current world before joining this invitation.")
 	assert_eq(lobby.pending_invite_id(), 9003, "the invite is kept for after the player leaves")
 	assert_eq(steam.joined, [])
+	lobby.free()
+	steam.free()
+
+
+## MULTIPLAYER Join: the Join Friend screen shows who the invitation is from.
+func test_a_warm_invite_names_its_sender_until_it_is_taken_or_dismissed() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	assert_eq(lobby.pending_inviter_name(), "", "no invite, no name")
+	steam.join_requested.emit(9004, 700)
+	assert_eq(lobby.pending_invite_id(), 9004)
+	assert_eq(lobby.pending_inviter_name(), "Rin", "Steam's name for the friend who sent it")
+	lobby._hosting = true
+	assert_false(lobby.request_join(9004))
+	assert_eq(lobby.pending_inviter_name(), "Rin", "kept while the invite waits for the player to leave")
+	lobby._hosting = false
+	lobby.clear_pending_invite()
+	assert_eq(lobby.pending_inviter_name(), "", "a dismissed invite names nobody")
+	steam.join_requested.emit(9005, 700)
+	assert_true(lobby.request_join(9005))
+	assert_eq(lobby.pending_inviter_name(), "", "an accepted invite is no longer pending")
+	lobby.free()
+	steam.free()
+
+
+func test_a_cold_launch_invite_has_no_sender_to_name() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	steam.join_requested.emit(9006, 700)
+	lobby._set_pending_invite(9007)
+	assert_eq(lobby.pending_invite_id(), 9007)
+	assert_eq(lobby.pending_inviter_name(), "", "another lobby's sender is not carried over")
 	lobby.free()
 	steam.free()
 
