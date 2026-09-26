@@ -42,6 +42,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+const HERD_VISIT := preload("res://scripts/world/meadowhart_herd_visit.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
@@ -636,7 +637,7 @@ func _meadowhart_herd() -> void:
 	if before_local.get("present", false):
 		_fail("meadowhart_herd: visible in the log before Rae was ever met")
 
-	var orbs_before := int(inventory.call("count", "orb_basic"))
+	var orbs_before := _herd_reward_total(inventory)
 	var landmark_id := "meadowhart_grazing_ground"
 	if map == null or bool(map.call("is_landmark_discovered", landmark_id)):
 		_fail("meadowhart_herd: personal grazing-ground landmark began discovered")
@@ -672,7 +673,7 @@ func _meadowhart_herd() -> void:
 	for i in counters_before.size():
 		if int((party.call("members") as Array)[i].get("landmarks_visited_together")) != counters_before[i]:
 			_fail("meadowhart_herd: Rae's directions granted bond progress")
-	if int(inventory.call("count", "orb_basic")) != orbs_before:
+	if _herd_reward_total(inventory) != orbs_before:
 		_fail("meadowhart_herd: Rae's greeting still pays the herd reward")
 
 	# A full satchel cannot suppress the personal landmark or whole-party bond
@@ -681,7 +682,7 @@ func _meadowhart_herd() -> void:
 	for index in int(inventory.call("slot_count")):
 		saved_slots.append(inventory.call("stack_at", index))
 		inventory.call("set_slot", index, {"id": "wood", "n": 50})
-	var fullbag_orbs := int(inventory.call("count", "orb_basic"))
+	var fullbag_orbs := _herd_reward_total(inventory)
 	ally.global_position = visit.global_position + Vector3(3.0, 1.0, 0.0)
 	visit.call("_on_activated")
 	if not bool(map.call("is_landmark_discovered", landmark_id)):
@@ -690,7 +691,7 @@ func _meadowhart_herd() -> void:
 		if int((party.call("members") as Array)[i].get("landmarks_visited_together")) != counters_before[i] + 1:
 			_fail("meadowhart_herd: full-satchel discovery did not credit party member %d" % i)
 	if bool(progression.call("has", "band1_meadowhart_herd_found")) \
-			or int(inventory.call("count", "orb_basic")) != fullbag_orbs:
+			or _herd_reward_total(inventory) != fullbag_orbs:
 		_fail("meadowhart_herd: a full satchel consumed completion or reward")
 	visit.call("_on_activated")
 	for i in counters_before.size():
@@ -723,7 +724,7 @@ func _meadowhart_herd() -> void:
 	for i in counters_before.size():
 		if int((party.call("members") as Array)[i].get("landmarks_visited_together")) != counters_before[i] + 1:
 			_fail("meadowhart_herd: legacy revisit did not credit party member %d once" % i)
-	if int(inventory.call("count", "orb_basic")) != orbs_before:
+	if _herd_reward_total(inventory) != orbs_before:
 		_fail("meadowhart_herd: legacy-completed revisit repaid the Orb claim")
 
 	# Clear only the staged old completion fact. The earned discovery and bond
@@ -743,10 +744,12 @@ func _meadowhart_herd() -> void:
 	for _frame in 12:
 		await physics_frame
 	if not bool(progression.call("has", "band1_meadowhart_herd_found")):
-		_fail("meadowhart_herd: visiting the real herd with a companion did not complete")
-	var orbs_after := int(inventory.call("count", "orb_basic"))
+		_fail("meadowhart_herd: visiting the real herd with a companion did not complete (rewards fit the satchel: %s, empty slots: %d)" % [
+			str(HERD_VISIT.rewards_fit(inventory, HERD_VISIT.reward_parts(HERD_VISIT.definition().get("visit", {}) as Dictionary))),
+			_empty_slots(inventory)])
+	var orbs_after := _herd_reward_total(inventory)
 	if orbs_after != orbs_before + 3:
-		_fail("meadowhart_herd: expected +3 orb_basic, got %d -> %d" % [orbs_before, orbs_after])
+		_fail("meadowhart_herd: expected +3 herd reward items (2 potion_small, 1 revive), got %d -> %d" % [orbs_before, orbs_after])
 	var after_local := _local_entry("band1_meadowhart_herd", progression)
 	if not after_local.get("present", false) or not bool(after_local.get("done", false)):
 		_fail("meadowhart_herd: the physical visit never reads done in quest_log")
@@ -755,7 +758,7 @@ func _meadowhart_herd() -> void:
 	# state must not repay.
 	visit.call("_on_activated")
 	visit.call("restore_progression_from_game", _game)
-	if int(inventory.call("count", "orb_basic")) != orbs_after:
+	if _herd_reward_total(inventory) != orbs_after:
 		_fail("meadowhart_herd: completed restoration or duplicate activation repaid the reward")
 	for i in counters_before.size():
 		if int((party.call("members") as Array)[i].get("landmarks_visited_together")) != counters_before[i] + 1:
@@ -1438,3 +1441,20 @@ func _wait_for_ground_under(at: Vector3, max_frames: int) -> bool:
 		await physics_frame
 	push_warning("seat at %s never had ground collision under it after %d frames" % [str(at), max_frames])
 	return false
+
+
+## Items the herd visit pays (objectives.json `band1_meadowhart_herd.visit`),
+## summed: F03#2 made it two Small Potions and a Revive, three items as before.
+func _herd_reward_total(inventory: RefCounted) -> int:
+	var total := 0
+	for part: Dictionary in HERD_VISIT.reward_parts(HERD_VISIT.definition().get("visit", {}) as Dictionary):
+		total += int(inventory.call("count", str(part.item)))
+	return total
+
+
+func _empty_slots(inventory: RefCounted) -> int:
+	var empty := 0
+	for index in int(inventory.call("slot_count")):
+		if (inventory.call("stack_at", index) as Dictionary).is_empty():
+			empty += 1
+	return empty

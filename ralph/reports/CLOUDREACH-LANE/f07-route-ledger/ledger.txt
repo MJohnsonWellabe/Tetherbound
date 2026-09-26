@@ -1,208 +1,208 @@
 ### baseline
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  {  }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80
-  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75
-  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  31 29 29 29 28     120
-  Captain Veyra       1717     3/6    1530     +4   34     32/29  32 30 30 30 30    1642  33 31 31 31 30     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  33 31 31 31 30       0  33 31 31 31 30       0
-  exit 33 31 31 31 30  (lead target 33, others >= 30)
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  32 30 30 30 29     120    1600
+  Captain Veyra       1717     3/6    1530     +4   34     32/29  33 31 31 31 30    1642  34 32 32 32 31     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  34 32 32 32 31       0  34 32 32 32 31       0       0
+  exit 34 32 32 32 31  (lead target 33, others >= 30; finale and exit need +1 margin)
   gate-closed site passes excluded: 12; shortfalls: []
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### pre-fix gate-blind model (comparison)
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "ignore_gates": true }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80
-  Keeper Maela        2003   11/23    4362     +8   25     23/20  27 25 25 25 25     828  27 25 25 25 25      75
-  Officer Voss        7919   13/27    5702     +7   31     29/26  30 29 29 29 28    1530  31 29 29 29 28     120
-  Captain Veyra       1717     4/8    2040     +4   34     32/29  32 31 31 31 30    1642  33 31 31 31 30     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  33 31 31 31 30       0  33 31 31 31 30       0
-  exit 33 31 31 31 30  (lead target 33, others >= 30)
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003   11/23    4362     +8   25     23/20  27 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919   13/27    5702     +7   31     29/26  30 29 29 29 28    1530  32 30 30 30 29     120    1600
+  Captain Veyra       1717     4/8    2040     +4   34     32/29  33 31 31 31 31    1642  34 32 32 32 31     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  34 32 32 32 31       0  34 32 32 32 31       0       0
+  exit 34 32 32 32 31  (lead target 33, others >= 30; finale and exit need +1 margin)
   gate-closed site passes excluded: 0; shortfalls: []
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### control: no wild XP in Voss phase
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "drop_wild_phase": 2 }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80
-  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75
-  Officer Voss        7919    0/31       0     +7   31     29/26  27 27 27 27 26    1530  28 27 27 27 26     120
-  Captain Veyra       1717     3/6    1530     +4   34     32/29  28 29 29 29 28    1642  29 29 29 29 28     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  29 29 29 29 28       0  29 29 29 29 28       0
-  exit 29 29 29 29 28  (lead target 33, others >= 30)
-  gate-closed site passes excluded: 12; shortfalls: ["Officer Voss: lead L27 < band L29 (ace L31), short 2", "Captain Veyra: lead L28 < band L32 (ace L34), short 4", "Captain Veyra: weakest retained L28 < band L29, short 1", "exit: lead L29 < target L33", "exit: weakest L28 < L30"]
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919    0/31       0     +7   31     29/26  27 27 27 27 26    1530  29 28 28 28 27     120    1600
+  Captain Veyra       1717     3/6    1530     +4   34     32/29  29 30 30 30 29    1642  30 30 30 30 29     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  30 30 30 30 29       0  30 30 30 30 29       0       0
+  exit 30 30 30 30 29  (lead target 33, others >= 30; finale and exit need +1 margin)
+  gate-closed site passes excluded: 12; shortfalls: ["Officer Voss: lead L27 < band L29 (ace L31), short 2", "Captain Veyra: lead L29 < band L33 (+1 margin) (ace L34), short 4", "Captain Veyra: weakest retained L29 < band L30 (+1 margin), short 1", "exit: lead L30 < target L33 + 1 margin", "exit: weakest L29 < L30 + 1 margin"]
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### control: no Voss trainer XP + no Veyra-phase wild XP
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "drop_trainer_xp": "officer_voss_summit_approach", "drop_wild_phase": 3 }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80
-  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75
-  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28       0  30 29 29 29 28     120
-  Captain Veyra       1717     0/6       0     +4   34     32/29  30 30 30 30 29    1642  31 30 30 30 29     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  31 30 30 30 29       0  31 30 30 30 29       0
-  exit 31 30 30 30 29  (lead target 33, others >= 30)
-  gate-closed site passes excluded: 12; shortfalls: ["Captain Veyra: lead L30 < band L32 (ace L34), short 2", "exit: lead L31 < target L33", "exit: weakest L29 < L30"]
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28       0  30 29 29 29 28     120       0
+  Captain Veyra       1717     0/6       0     +4   34     32/29  30 30 30 30 29    1642  31 30 30 30 30     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  31 30 30 30 30       0  31 30 30 30 30       0       0
+  exit 31 30 30 30 30  (lead target 33, others >= 30; finale and exit need +1 margin)
+  gate-closed site passes excluded: 12; shortfalls: ["Captain Veyra: lead L30 < band L33 (+1 margin) (ace L34), short 3", "Captain Veyra: weakest retained L29 < band L30 (+1 margin), short 1", "exit: lead L31 < target L33 + 1 margin", "exit: weakest L30 < L30 + 1 margin"]
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### control: no verge candy
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "drop_candy": true }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/28    4452     +0   24     22/19  24 19 19 19 19     796  24 20 20 20 20      80
-  Keeper Maela        2003    9/19    3534     +0   25     23/20  26 21 21 21 21     828  27 21 21 21 21      75
-  Officer Voss        7919   15/31    6658     +0   31     29/26  30 24 24 24 24    1530  31 24 24 24 24     120
-  Captain Veyra       1717     3/6    1530     +0   34     32/29  32 25 25 25 25    1642  33 25 25 25 25     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  33 25 25 25 25       0  33 25 25 25 25       0
-  exit 33 25 25 25 25  (lead target 33, others >= 30)
-  gate-closed site passes excluded: 12; shortfalls: ["Officer Voss: weakest retained L24 < band L26, short 2", "Captain Veyra: weakest retained L25 < band L29, short 4", "exit: weakest L25 < L30"]
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +0   24     22/19  24 19 19 19 19     796  24 20 20 20 20      80       0
+  Keeper Maela        2003    9/19    3534     +0   25     23/20  26 21 21 21 21     828  27 21 21 21 21      75       0
+  Officer Voss        7919   15/31    6658     +0   31     29/26  30 24 24 24 24    1530  32 25 25 25 25     120    1600
+  Captain Veyra       1717     3/6    1530     +0   34     32/29  33 26 26 26 26    1642  34 27 27 27 27     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  34 27 27 27 27       0  34 27 27 27 27       0       0
+  exit 34 27 27 27 27  (lead target 33, others >= 30; finale and exit need +1 margin)
+  gate-closed site passes excluded: 12; shortfalls: ["Officer Voss: weakest retained L24 < band L26, short 2", "Captain Veyra: weakest retained L26 < band L30 (+1 margin), short 4", "exit: weakest L27 < L30 + 1 margin"]
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### control: wild fraction 0.25
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.25  no catches, no repeats  { "wild_fraction": 0.25 }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261    7/28    2226     +8   24     22/19  22 20 20 20 20     796  23 21 21 21 21      80
-  Keeper Maela        2003    4/19    1464     +8   25     23/20  24 23 23 23 23     828  24 23 23 23 23      75
-  Officer Voss        7919    7/31    2898     +7   31     29/26  27 26 26 25 25    1530  28 27 27 26 26     120
-  Captain Veyra       1717     1/6     510     +4   34     32/29  28 28 28 27 27    1642  29 28 28 27 27     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  29 28 28 27 27       0  29 28 28 27 27       0
-  exit 29 28 28 27 27  (lead target 33, others >= 30)
-  gate-closed site passes excluded: 12; shortfalls: ["Officer Voss: lead L27 < band L29 (ace L31), short 2", "Officer Voss: weakest retained L25 < band L26, short 1", "Captain Veyra: lead L28 < band L32 (ace L34), short 4", "Captain Veyra: weakest retained L27 < band L29, short 2", "exit: lead L29 < target L33", "exit: weakest L27 < L30"]
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261    7/28    2226     +8   24     22/19  22 20 20 20 20     796  23 21 21 21 21      80       0
+  Keeper Maela        2003    4/19    1464     +8   25     23/20  24 23 23 23 23     828  24 23 23 23 23      75       0
+  Officer Voss        7919    7/31    2898     +7   31     29/26  27 26 26 25 25    1530  29 28 28 27 27     120    1600
+  Captain Veyra       1717     1/6     510     +4   34     32/29  29 29 29 28 28    1642  30 29 29 29 29     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  30 29 29 29 29       0  30 29 29 29 29       0       0
+  exit 30 29 29 29 29  (lead target 33, others >= 30; finale and exit need +1 margin)
+  gate-closed site passes excluded: 12; shortfalls: ["Officer Voss: lead L27 < band L29 (ace L31), short 2", "Officer Voss: weakest retained L25 < band L26, short 1", "Captain Veyra: lead L29 < band L33 (+1 margin) (ace L34), short 4", "Captain Veyra: weakest retained L28 < band L30 (+1 margin), short 2", "exit: lead L30 < target L33 + 1 margin", "exit: weakest L29 < L30 + 1 margin"]
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### sensitivity: engagement 0.30
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.30  no catches, no repeats  { "wild_fraction": 0.3 }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261    8/28    2544     +8   24     22/19  22 21 21 21 21     796  23 21 21 21 21      80
-  Keeper Maela        2003    5/19    1878     +8   25     23/20  24 23 23 23 23     828  25 24 24 24 24      75
-  Officer Voss        7919    9/31    3790     +7   31     29/26  28 27 27 26 26    1530  29 27 27 26 26     120
-  Captain Veyra       1717     1/6     510     +4   34     32/29  29 28 28 27 27    1642  30 29 29 28 28     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  30 29 29 28 28       0  30 29 29 28 28       0
-  exit 30 29 29 28 28  (lead target 33, others >= 30)
-  gate-closed site passes excluded: 12; shortfalls: ["Officer Voss: lead L28 < band L29 (ace L31), short 1", "Captain Veyra: lead L29 < band L32 (ace L34), short 3", "Captain Veyra: weakest retained L27 < band L29, short 2", "exit: lead L30 < target L33", "exit: weakest L28 < L30"]
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261    8/28    2544     +8   24     22/19  22 21 21 21 21     796  23 21 21 21 21      80       0
+  Keeper Maela        2003    5/19    1878     +8   25     23/20  24 23 23 23 23     828  25 24 24 24 24      75       0
+  Officer Voss        7919    9/31    3790     +7   31     29/26  28 27 27 26 26    1530  29 28 28 27 27     120    1600
+  Captain Veyra       1717     1/6     510     +4   34     32/29  30 29 29 28 28    1642  31 30 30 29 29     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  31 30 30 29 29       0  31 30 30 29 29       0       0
+  exit 31 30 30 29 29  (lead target 33, others >= 30; finale and exit need +1 margin)
+  gate-closed site passes excluded: 12; shortfalls: ["Officer Voss: lead L28 < band L29 (ace L31), short 1", "Captain Veyra: lead L30 < band L33 (+1 margin) (ace L34), short 3", "Captain Veyra: weakest retained L28 < band L30 (+1 margin), short 2", "exit: lead L31 < target L33 + 1 margin", "exit: weakest L29 < L30 + 1 margin"]
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### sensitivity: engagement 0.40
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.40  no catches, no repeats  { "wild_fraction": 0.4 }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   11/28    3498     +8   24     22/19  23 21 21 21 21     796  24 21 21 21 21      80
-  Keeper Maela        2003    7/19    2706     +8   25     23/20  25 24 24 24 24     828  26 24 24 24 24      75
-  Officer Voss        7919   12/31    5224     +7   31     29/26  29 28 28 28 27    1530  29 28 28 28 27     120
-  Captain Veyra       1717     2/6    1020     +4   34     32/29  30 29 29 29 28    1642  31 30 30 30 29     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  31 30 30 30 29       0  31 30 30 30 29       0
-  exit 31 30 30 30 29  (lead target 33, others >= 30)
-  gate-closed site passes excluded: 12; shortfalls: ["Captain Veyra: lead L30 < band L32 (ace L34), short 2", "Captain Veyra: weakest retained L28 < band L29, short 1", "exit: lead L31 < target L33", "exit: weakest L29 < L30"]
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   11/28    3498     +8   24     22/19  23 21 21 21 21     796  24 21 21 21 21      80       0
+  Keeper Maela        2003    7/19    2706     +8   25     23/20  25 24 24 24 24     828  26 24 24 24 24      75       0
+  Officer Voss        7919   12/31    5224     +7   31     29/26  29 28 28 28 27    1530  30 29 29 29 28     120    1600
+  Captain Veyra       1717     2/6    1020     +4   34     32/29  31 30 30 30 29    1642  32 31 31 31 30     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  32 31 31 31 30       0  32 31 31 31 30       0       0
+  exit 32 31 31 31 30  (lead target 33, others >= 30; finale and exit need +1 margin)
+  gate-closed site passes excluded: 12; shortfalls: ["Captain Veyra: lead L31 < band L33 (+1 margin) (ace L34), short 2", "Captain Veyra: weakest retained L29 < band L30 (+1 margin), short 1", "exit: lead L32 < target L33 + 1 margin", "exit: weakest L30 < L30 + 1 margin"]
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### sensitivity: engagement 0.50 (baseline)
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "wild_fraction": 0.5 }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80
-  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75
-  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  31 29 29 29 28     120
-  Captain Veyra       1717     3/6    1530     +4   34     32/29  32 30 30 30 30    1642  33 31 31 31 30     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  33 31 31 31 30       0  33 31 31 31 30       0
-  exit 33 31 31 31 30  (lead target 33, others >= 30)
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  32 30 30 30 29     120    1600
+  Captain Veyra       1717     3/6    1530     +4   34     32/29  33 31 31 31 30    1642  34 32 32 32 31     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  34 32 32 32 31       0  34 32 32 32 31       0       0
+  exit 34 32 32 32 31  (lead target 33, others >= 30; finale and exit need +1 margin)
   gate-closed site passes excluded: 12; shortfalls: []
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### sensitivity: engagement 0.60
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.60  no catches, no repeats  { "wild_fraction": 0.6 }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   16/28    5120     +8   24     22/19  24 21 21 21 21     796  25 22 22 22 22      80
-  Keeper Maela        2003   11/19    4362     +8   25     23/20  27 25 25 25 25     828  28 25 25 25 25      75
-  Officer Voss        7919   18/31    8092     +7   31     29/26  32 29 29 29 29    1530  32 30 30 30 29     120
-  Captain Veyra       1717     3/6    1530     +4   34     32/29  33 31 31 31 30    1642  34 32 32 32 31     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  34 32 32 32 31       0  34 32 32 32 31       0
-  exit 34 32 32 32 31  (lead target 33, others >= 30)
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   16/28    5120     +8   24     22/19  24 21 21 21 21     796  25 22 22 22 22      80       0
+  Keeper Maela        2003   11/19    4362     +8   25     23/20  27 25 25 25 25     828  28 25 25 25 25      75       0
+  Officer Voss        7919   18/31    8092     +7   31     29/26  32 29 29 29 29    1530  33 31 31 31 30     120    1600
+  Captain Veyra       1717     3/6    1530     +4   34     32/29  34 32 32 32 31    1642  35 33 33 33 32     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  35 33 33 33 32       0  35 33 33 33 32       0       0
+  exit 35 33 33 33 32  (lead target 33, others >= 30; finale and exit need +1 margin)
   gate-closed site passes excluded: 12; shortfalls: []
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### sensitivity: bench member lands 1 Veyra-phase kill
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "bench_kills": { 3: 1 } }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80
-  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75
-  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  31 29 29 29 28     120
-  Captain Veyra       1717     3/6    1020     +4   34     32/29  32 30 30 30 30    1642  32 31 31 31 30     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  32 31 31 31 30       0  32 31 31 31 30       0
-  exit 32 31 31 31 30  (lead target 33, others >= 30)
-  gate-closed site passes excluded: 12; shortfalls: ["exit: lead L32 < target L33"]
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  32 30 30 30 29     120    1600
+  Captain Veyra       1717     3/6    1020     +4   34     32/29  32 31 31 31 31    1642  33 32 32 32 31     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  33 32 32 32 31       0  33 32 32 32 31       0       0
+  exit 33 32 32 32 31  (lead target 33, others >= 30; finale and exit need +1 margin)
+  gate-closed site passes excluded: 12; shortfalls: ["Captain Veyra: lead L32 < band L33 (+1 margin) (ace L34), short 1", "exit: lead L33 < target L33 + 1 margin"]
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### sensitivity: bench member lands 2 Veyra-phase kills
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "bench_kills": { 3: 2 } }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80
-  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75
-  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  31 29 29 29 28     120
-  Captain Veyra       1717     3/6     510     +4   34     32/29  32 30 30 30 30    1642  32 31 31 31 30     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  32 31 31 31 30       0  32 31 31 31 30       0
-  exit 32 31 31 31 30  (lead target 33, others >= 30)
-  gate-closed site passes excluded: 12; shortfalls: ["exit: lead L32 < target L33"]
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  32 30 30 30 29     120    1600
+  Captain Veyra       1717     3/6     510     +4   34     32/29  32 31 31 31 31    1642  33 32 32 32 31     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  33 32 32 32 31       0  33 32 32 32 31       0       0
+  exit 33 32 32 32 31  (lead target 33, others >= 30; finale and exit need +1 margin)
+  gate-closed site passes excluded: 12; shortfalls: ["Captain Veyra: lead L32 < band L33 (+1 margin) (ace L34), short 1", "exit: lead L33 < target L33 + 1 margin"]
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### sensitivity: ON_ROUTE_M 8
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "on_route_m": 8.0 }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   13/27    4134     +8   24     22/19  23 21 21 21 21     796  24 21 21 21 21      80
-  Keeper Maela        2003    8/17    3120     +7   25     23/20  26 24 24 24 23     828  26 25 25 25 24      75
-  Officer Voss        7919   15/31    6658     +7   31     29/26  31 28 28 28 28    1530  32 29 28 28 28     120
-  Captain Veyra       1717     2/5    1020     +4   34     32/29  32 30 29 29 29    1642  33 30 30 30 30     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  33 30 30 30 30       0  33 30 30 30 30       0
-  exit 33 30 30 30 30  (lead target 33, others >= 30)
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   13/27    4134     +8   24     22/19  23 21 21 21 21     796  24 21 21 21 21      80       0
+  Keeper Maela        2003    8/17    3120     +7   25     23/20  26 24 24 24 23     828  26 25 25 25 24      75       0
+  Officer Voss        7919   15/31    6658     +7   31     29/26  31 28 28 28 28    1530  32 30 29 29 29     120    1600
+  Captain Veyra       1717     2/5    1020     +4   34     32/29  33 31 30 30 30    1642  34 32 31 31 31     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  34 32 31 31 31       0  34 32 31 31 31       0       0
+  exit 34 32 31 31 31  (lead target 33, others >= 30; finale and exit need +1 margin)
   gate-closed site passes excluded: 12; shortfalls: []
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### sensitivity: ON_ROUTE_M 12 (baseline)
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "on_route_m": 12.0 }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80
-  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75
-  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  31 29 29 29 28     120
-  Captain Veyra       1717     3/6    1530     +4   34     32/29  32 30 30 30 30    1642  33 31 31 31 30     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  33 31 31 31 30       0  33 31 31 31 30       0
-  exit 33 31 31 31 30  (lead target 33, others >= 30)
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  32 30 30 30 29     120    1600
+  Captain Veyra       1717     3/6    1530     +4   34     32/29  33 31 31 31 30    1642  34 32 32 32 31     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  34 32 32 32 31       0  34 32 32 32 31       0       0
+  exit 34 32 32 32 31  (lead target 33, others >= 30; finale and exit need +1 margin)
   gate-closed site passes excluded: 12; shortfalls: []
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### sensitivity: ON_ROUTE_M 20
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "on_route_m": 20.0 }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/29    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80
-  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75
-  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  31 29 29 29 28     120
-  Captain Veyra       1717     3/6    1530     +4   34     32/29  32 30 30 30 30    1642  33 31 31 31 30     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  33 31 31 31 30       0  33 31 31 31 30       0
-  exit 33 31 31 31 30  (lead target 33, others >= 30)
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/29    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  32 30 30 30 29     120    1600
+  Captain Veyra       1717     3/6    1530     +4   34     32/29  33 31 31 31 30    1642  34 32 32 32 31     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  34 32 32 32 31       0  34 32 32 32 31       0       0
+  exit 34 32 32 32 31  (lead target 33, others >= 30; finale and exit need +1 margin)
   gate-closed site passes excluded: 12; shortfalls: []
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
 ### sensitivity: Veyra rare_candy fed before overlook (exit only)
 
   CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  { "feed_finale_reward": true }
-  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins
-  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80
-  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75
-  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  31 29 29 29 28     120
-  Captain Veyra       1717     3/6    1530     +4   34     32/29  32 30 30 30 30    1642  33 31 31 31 30     150
-  Exit (overlook)     1122     0/0       0     +0    -       -/-  33 32 32 31 31       0  33 32 32 31 31       0
-  exit 33 32 32 31 31  (lead target 33, others >= 30)
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  32 30 30 30 29     120    1600
+  Captain Veyra       1717     3/6    1530     +4   34     32/29  33 31 31 31 30    1642  34 32 32 32 31     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  34 33 33 32 32       0  34 33 33 32 32       0       0
+  exit 34 33 33 32 32  (lead target 33, others >= 30; finale and exit need +1 margin)
   gate-closed site passes excluded: 12; shortfalls: []
   supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
 
