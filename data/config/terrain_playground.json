@@ -642,6 +642,22 @@
         ]
       },
       {
+        "id": "village_pond_leg",
+        "label": "The Pond",
+        "width": 3.0,
+        "shoulder": 1.2,
+        "_why": "F01 (#270, coordinator ruling 13:17): the in-village leg of The Pond, painted at the village width. An approach, not a route, so signpost.gd draws no extra fingerpost arm; the route itself (and its leg outside the fence) keeps the owner-directed 1.4/1.1. Ends exactly at the gate the route crosses, on the route's own line.",
+        "points": [[7.0, -7.0], [-4.0, -13.0], [-8.0, -13.96], [-11.0, -2.0], [-14.0, 14.0], [-21.0, 21.0]]
+      },
+      {
+        "id": "village_rise_leg",
+        "label": "The Rise",
+        "width": 3.0,
+        "shoulder": 1.2,
+        "_why": "F01 (#270, coordinator ruling 13:17): the in-village leg of The Rise, painted at the village width. An approach, not a route, so signpost.gd draws no extra fingerpost arm; the route itself (and its leg outside the fence) keeps the owner-directed 1.4/1.1. Ends exactly at the gate the route crosses, on the route's own line.",
+        "points": [[7.0, -7.0], [10.05, -0.9], [21.0, -5.5], [22.5, -11.5], [28.0, -16.17], [38.72, -19.85]]
+      },
+      {
         "id": "village_berry_lane",
         "width": 3.0,
         "shoulder": 1.2,
