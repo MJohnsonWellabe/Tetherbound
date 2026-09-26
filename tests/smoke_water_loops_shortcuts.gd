@@ -25,8 +25,11 @@ extends SceneTree
 ##   authored `path` (Woven Hall -> ramp top -> ramp foot -> departure; the
 ##   deck bridges a terrace scarp) must NOT be walkable, the scene must hold
 ##   a runtime node for the ramp, and that node must hold no walk-surface
-##   collision (the gate itself). Unlock through the production Reedhaven
-##   repair prompt; the deck collision must appear on that live flag change.
+##   (deck) collision. The gate itself is a barricade body with collision
+##   across the ramp top: the real-stick walk must stop AT it (stalled, never
+##   past its centre line, no health lost). Unlock through the production
+##   Reedhaven repair prompt; on that live flag change the deck collision must
+##   appear and the barricade collision must be gone.
 ##   Open: walk the same path end to end. Shorter: walked length
 ##   must beat the "repeat the marsh loop" return (hall -> nearest
 ##   reed_root_circuit vertex -> shorter arc -> vertex nearest the departure ->
@@ -68,6 +71,12 @@ extends SceneTree
 ##      smoke_water_continuous.gd.
 ## Unlock flags are never set directly: each is published by its production
 ## dock prompt (interaction_activate after the body physically reaches it).
+##
+## CASE FILTER: `-- --case=<id>[,<id>...]` (ids are the land_loops and
+## return_shortcuts ids in water_world.json) runs only those cases, each with
+## its own fixtures and every one of its checks; the shared world build and the
+## row-count checks always run. An unknown or empty id is a failure. Without
+## `--case` every case runs, loops first, in data order.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -131,12 +140,69 @@ func _run() -> void:
 	_check(world.config.land_loops.size() == 4, "water_world.json authors four land loops")
 	_check(world.config.return_shortcuts.size() == 3, "water_world.json authors three return shortcuts")
 
+	var known: Array[String] = []
 	for loop: Dictionary in world.config.land_loops:
-		await _walk_loop(loop)
-	await _reedhaven_ramp(_shortcut("reedhaven_maintenance_ramp"))
-	await _shellwatch_channel(_shortcut("shellwatch_pump_return_channel"))
-	await _deep_watch_cut(_shortcut("deep_watch_current_cut"))
+		known.append(str(loop.id))
+	for shortcut: Dictionary in world.config.return_shortcuts:
+		known.append(str(shortcut.id))
+	var cases := _requested_cases()
+	var unknown: Array[String] = []
+	for id: String in cases:
+		if not known.has(id):
+			unknown.append(id)
+	if not unknown.is_empty() or (cases.is_empty() and _case_arg_given()):
+		_fail("--case names unknown ids %s (known: %s)" % [str(unknown), ", ".join(known)])
+		_finish()
+		return
+	print("LOOPS/SHORTCUTS CASES: ", "all" if cases.is_empty() else ", ".join(cases))
+
+	for loop: Dictionary in world.config.land_loops:
+		if _wanted(cases, str(loop.id)):
+			await _timed_case(str(loop.id), _walk_loop.bind(loop))
+	if _wanted(cases, "reedhaven_maintenance_ramp"):
+		await _timed_case("reedhaven_maintenance_ramp",
+			_reedhaven_ramp.bind(_shortcut("reedhaven_maintenance_ramp")))
+	if _wanted(cases, "shellwatch_pump_return_channel"):
+		await _timed_case("shellwatch_pump_return_channel",
+			_shellwatch_channel.bind(_shortcut("shellwatch_pump_return_channel")))
+	if _wanted(cases, "deep_watch_current_cut"):
+		await _timed_case("deep_watch_current_cut", _deep_watch_cut.bind(_shortcut("deep_watch_current_cut")))
 	_finish()
+
+
+## `--case=<id>[,<id>...]` (or `--case <ids>`) after `--`; empty = run all.
+func _requested_cases() -> Array[String]:
+	var cases: Array[String] = []
+	var args := OS.get_cmdline_user_args()
+	for index in args.size():
+		var raw := ""
+		if args[index].begins_with("--case="):
+			raw = args[index].trim_prefix("--case=")
+		elif args[index] == "--case" and index + 1 < args.size():
+			raw = args[index + 1]
+		else:
+			continue
+		for part: String in raw.split(","):
+			if not part.strip_edges().is_empty() and not cases.has(part.strip_edges()):
+				cases.append(part.strip_edges())
+	return cases
+
+
+func _case_arg_given() -> bool:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--case" or arg.begins_with("--case="):
+			return true
+	return false
+
+
+func _wanted(cases: Array[String], id: String) -> bool:
+	return cases.is_empty() or cases.has(id)
+
+
+func _timed_case(id: String, body: Callable) -> void:
+	var from := Time.get_ticks_msec()
+	await body.call()
+	print("LOOPS/SHORTCUTS CASE %s | %.1f s wall" % [id, (Time.get_ticks_msec() - from) / 1000.0])
 
 
 # ---------------------------------------------------------------- land loops
@@ -229,15 +295,35 @@ func _reedhaven_ramp(shortcut: Dictionary) -> void:
 	# Closed.
 	_check(not game.world.flags.has(flag), "Reedhaven ramp starts with %s unset" % flag)
 	await _place(hall, "F2 Woven Hall (closed attempt)")
+	var barricade := _ramp_barricade(ramp_nodes)
+	var barricade_shapes := _ramp_collision_shapes(ramp_nodes, true)
+	_check(barricade != null and barricade_shapes > 0,
+		"Reedhaven ramp barricade collision is present before %s (%d collision shapes)" % [flag, barricade_shapes])
 	var closed_stats := _new_stats()
+	var closed_health := float(player.get("vitals").health)
+	var watch := {"barricade": barricade, "max_past": -INF}
+	var sampler := _sample_barricade.bind(watch)
+	physics_frame.connect(sampler)
 	var closed: Dictionary = await _walk_path(_ramp_path(shortcut, departure), closed_stats, "Reedhaven ramp closed attempt")
+	physics_frame.disconnect(sampler)
 	_stop_stick()
+	var closed_lost: float = maxf(float(closed_stats.health_lost), closed_health - float(player.get("vitals").health))
 	# The gate itself, not just a failed walk: before the flag the ramp node
 	# holds no walk-surface collision (no deck) at all.
 	var closed_shapes := _ramp_collision_shapes(ramp_nodes)
 	_check(not ramp_nodes.is_empty() and closed_shapes == 0,
 		"Reedhaven ramp node has no deck collision before %s (%d collision shapes)" % [flag, closed_shapes])
-	var closed_ok := not bool(closed.ok) and not ramp_nodes.is_empty() and closed_shapes == 0
+	# The walk stops AT the barricade: stalled, no progress past its centre
+	# line (body origin), within reach of its face, and no health lost.
+	var gap := INF
+	if barricade != null:
+		gap = -(barricade.to_local(player.global_position).z)
+	var stopped := barricade != null and str(closed.get("reason", "")).begins_with("stalled") \
+		and float(watch.max_past) < 0.0 and gap > -1.5 and closed_lost <= 0.0
+	_check(stopped, "Reedhaven ramp real-stick walk stops at the barricade before %s (%s; max progress past its line %.2f m, final %.2f m, health lost %.1f)" % [
+		flag, str(closed.get("reason", "arrived")), float(watch.max_past), gap, closed_lost])
+	var closed_ok := not bool(closed.ok) and not ramp_nodes.is_empty() and closed_shapes == 0 \
+		and barricade_shapes > 0 and stopped
 	_check(not bool(closed.ok), "Reedhaven ramp line is not walkable before %s (%s)" % [
 		flag, "blocked: " + str(closed.reason) if closed_ok else "walked %.1f m in %.1f s with nothing in the way" % [
 			closed_stats.distance, closed_stats.frames / PHYSICS_HZ]])
@@ -257,13 +343,16 @@ func _reedhaven_ramp(shortcut: Dictionary) -> void:
 	var open_shapes := _ramp_collision_shapes(ramp_nodes)
 	_check(open_shapes > 0, "Reedhaven ramp deck collision appears on the live %s change, no reload (%d collision shapes)" % [
 		flag, open_shapes])
+	var open_barricade := _ramp_collision_shapes(ramp_nodes, true)
+	_check(open_barricade == 0 and _ramp_barricade(ramp_nodes) == null,
+		"Reedhaven ramp barricade collision is gone on the live %s change (%d collision shapes)" % [flag, open_barricade])
 
 	# Open.
 	await _place(hall, "F2 Woven Hall (open walk)")
 	var open_stats := _new_stats()
 	var open: Dictionary = await _walk_path(_ramp_path(shortcut, departure), open_stats, "Reedhaven ramp open walk")
 	_stop_stick()
-	var open_ok := unlocked and open_shapes > 0 and bool(open.ok)
+	var open_ok := unlocked and open_shapes > 0 and open_barricade == 0 and bool(open.ok)
 	_check(open_ok, "Reedhaven ramp walked end to end after %s (%s)" % [flag, str(open.get("reason", "arrived"))])
 	if not bool(open.ok):
 		_defect("reedhaven_maintenance_ramp: after unlock the hall -> departure line is still blocked -- %s" % str(open.reason))
@@ -470,14 +559,40 @@ func _remount(label: String) -> bool:
 	return _check(riding.is_mounted(), label + ": production Ride offer remounts the Aquaryn")
 
 
-## Walk-surface collision under the ramp node(s): the physical gate.
-func _ramp_collision_shapes(paths: Array[String]) -> int:
+## Collision under the ramp node(s): walk-surface (deck) shapes, or with
+## `barricade` the closure's shapes (under a body named *Barricade*).
+func _ramp_collision_shapes(paths: Array[String], barricade: bool = false) -> int:
 	var count := 0
 	for path: String in paths:
 		var node := root.get_node_or_null(NodePath(path))
-		if node != null:
-			count += node.find_children("*", "CollisionShape3D", true, false).size()
+		if node == null:
+			continue
+		for shape: Node in node.find_children("*", "CollisionShape3D", true, false):
+			if shape.is_queued_for_deletion() or shape.get_parent().is_queued_for_deletion():
+				continue
+			if str(shape.get_parent().name).contains("Barricade") == barricade:
+				count += 1
 	return count
+
+
+func _ramp_barricade(paths: Array[String]) -> Node3D:
+	for path: String in paths:
+		var node := root.get_node_or_null(NodePath(path))
+		if node == null:
+			continue
+		var found := node.find_child("BarricadeBody", true, false) as Node3D
+		if found != null and not found.is_queued_for_deletion():
+			return found
+	return null
+
+
+## Per physics frame during the closed attempt: how far the player's origin
+## got past the barricade's centre line (its local -Z is the ramp direction).
+func _sample_barricade(watch: Dictionary) -> void:
+	var barricade: Node3D = watch.barricade
+	if barricade == null or not is_instance_valid(barricade):
+		return
+	watch.max_past = maxf(float(watch.max_past), -barricade.to_local(player.global_position).z)
 
 
 ## The ramp row's authored walk, after its first vertex (the hall, where the

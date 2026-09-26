@@ -3148,6 +3148,10 @@
     {
       "_comment": "Durable server-owned world change; shortcut exists only after physical runtime result is visible. Never a new hidden teleport.",
       "_comment_path": "Walk path hall -> ramp top -> ramp foot -> departure (Y = baked ground, informational; the builder resamples). deck_span names the two path vertices the plank deck bridges: it crosses the 3-4 m terrace scarp east of the hall at 16.6 deg, where bare ground drops the walker. Built by scripts/world/water_return_ramps.gd.",
+      "_comment_barricade": "Before unlock_flag a boarded barricade with collision closes the ramp top: barricade_offset_m down the deck line from its top vertex, barricade_width_m across, barricade_height_m over the local ground. Removed when the flag is set (live or restored).",
+      "barricade_height_m": 1.65,
+      "barricade_offset_m": 0.3,
+      "barricade_width_m": 6.0,
       "deck_span": [1, 2],
       "deck_width_m": 2.0,
       "from_landmark": "reedhaven_woven_hall",
