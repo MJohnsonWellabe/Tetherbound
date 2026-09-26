@@ -12,6 +12,12 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 ## 0. Resume here (lane wind-down, 2026-09-26)
 
+**Current owner-directed visual goal (Codex):** inspect and improve every visual
+domain against ART_DIRECTION and ACCEPTANCE §4, on isolated branches from current
+main; Claude continues gameplay work and owns PR merges. PR288 is the first bounded
+X04 slice (Tidewake lantern materials); evidence and remaining defects are in
+`ralph/reports/VISUAL/DOCK-MATERIALS.md`. Whole-game Bars A/B remain open.
+
 All nine lane sessions were wound down and archived on owner direction: Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03 and VIS.
 - Every lane posted `## HANDOFF (final)` on its PR. Each showed clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
 - **All lane work is on main** through batches 25 (#283) and 26. Every `ralph/*`, `claude/integration-*` and `fix/*` tip is an ancestor of main, so any branch other than main can be deleted.
@@ -33,6 +39,7 @@ All nine lane sessions were wound down and archived on owner direction: Meadows 
 | X03 (#262) / VIS (#279) | Glyph highlights; shared-look WIP | The ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
 
 **Owner rulings (2026-09-26, coordinator Q&A):**
+- **All art/visual changes are ceded to the Codex lane.** Claude lanes record visual defects in the Codex queue at the top of `ralph/reports/VISUAL/AUDIT.md` and do not edit art, materials, shaders, lighting or meshes.
 - The tournament creature grant must be a non-starter species (starters stay player-exclusive). Meadows core owns the change.
 - F11#2: an old-build Stormheart receipt with no accept/decline answer is **undecided**; that character is re-offered once and can never be granted twice.
 - The Cloudreach cliff palette is picked by a code-blind judge against ART_DIRECTION. Co-op keeps road shoulders (co-op matches single player).
