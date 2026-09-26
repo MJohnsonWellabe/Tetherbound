@@ -1,0 +1,1 @@
+Walk: local render of tests/capture_activity_lures.gd --activity=juno (S07-exit-band4) at the tb/meadows-activities head data (42 m opaque signal column, camp 7 m north, road standards at 1.55). Gameplay camera only; no staged cue views.
