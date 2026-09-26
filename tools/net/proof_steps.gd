@@ -21,6 +21,8 @@ extends RefCounted
 ##                                         defeat through the ledger (F11 setup only)
 ##   stormheart_answer  {answer, drop_at_ack?}  answer THIS peer's Stormheart offer through
 ##                                         the real dialogue: interact = Yes, menu_cancel = No
+##   stormheart_claim_again {}            send the claim the offer prompt sends, past a dark
+##                                         prompt; the HOST must refuse it (already answered)
 ##   stormheart_state {character?}        this peer's view of the F11 outcome (character:
 ##                                         also the world's receipt of that character's answer)
 ##   release_for_catch {release, species, nickname}  SETUP: at a full party, let
@@ -67,7 +69,7 @@ const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 
 const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "stormheart_fixture",
-	"stormheart_answer", "stormheart_state", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
+	"stormheart_answer", "stormheart_state", "stormheart_claim_again", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
 	"rider_identity", "rider_self", "guardian_fixture", "veilfall_press", "guardian_answer", "guardian_state", "guardian_offer_again",
 	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state",
 	"water_dock_resend", "water_dock_cut"]
@@ -93,6 +95,8 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _stormheart_answer(tree, args)
 		"stormheart_state":
 			return _stormheart_state(tree, args)
+		"stormheart_claim_again":
+			return await _stormheart_claim_again(tree)
 		"release_for_catch":
 			return _release_for_catch(tree, args)
 		"rename_member":
@@ -482,6 +486,7 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 		# poll: whatever the ending then commits (receipt, character save) is
 		# local, and the `ending_settled` acknowledgement it sends finds no
 		# connected peer. The host-side step that follows proves it never arrived.
+		var claim_uid := str(load(ENDING_PATH).call("claim_id", ending.get("_local_claim")))
 		var cut := {"done": false, "claim_left": true}
 		var on_yes := func(_conversation: String) -> void:
 			if is_instance_valid(ending):
@@ -507,15 +512,18 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 		var saved: Dictionary = (game.get("save_system") as Object).get("_characters").call("read", character) \
 			if game != null and not character.is_empty() else {}
 		var saved_flags: Array = ((saved.get("flags", {}) as Dictionary).get("flags", []) as Array) if saved.get("flags") is Dictionary else []
-		var receipt_on_disk := saved_flags.any(func(f: Variant) -> bool: return str(f).contains(":accepted"))
+		var receipt_flag := str(load(ENDING_PATH).call("answer_flag", claim_uid, true))
+		var receipt_on_disk := not claim_uid.is_empty() and saved_flags.has(receipt_flag)
 		cut_at_ack = bool(cut.done) and receipt_on_disk
 		var cut_state := _stormheart_state(tree)
 		(cut_state.data as Dictionary)["cut_at_ack"] = cut_at_ack
 		(cut_state.data as Dictionary)["committed_before_cut"] = not bool(cut.claim_left)
 		(cut_state.data as Dictionary)["receipt_on_disk"] = receipt_on_disk
+		(cut_state.data as Dictionary)["receipt_flag"] = receipt_flag
+		(cut_state.data as Dictionary)["claim_uid"] = claim_uid
 		return {"verdict": "PASS" if cut_at_ack else "FAIL",
-			"detail": "answered Yes; link closed in the answer's own physics step=%s (claim already committed then=%s); the Yes receipt is on the saved character=%s; %s"
-				% [str(cut.done), str(not bool(cut.claim_left)), str(receipt_on_disk), str(cut_state.data)],
+			"detail": "answered Yes to claim %s; link closed in the answer's own physics step=%s (claim already committed then=%s); '%s' is on the saved character=%s; %s"
+				% [claim_uid, str(cut.done), str(not bool(cut.claim_left)), receipt_flag, str(receipt_on_disk), str(cut_state.data)],
 			"data": cut_state.data}
 	if not await _tap(tree, "interact" if answer == "accept" else "menu_cancel"):
 		return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
@@ -568,9 +576,11 @@ static func _stormheart_state(tree: SceneTree, args: Dictionary = {}) -> Diction
 		return {"verdict": "ERROR", "detail": "no /root/Game", "data": {}}
 	var party: RefCounted = game.get("party")
 	var species: Array = []
+	var uids: Array = []
 	if party != null:
 		for member: Variant in (party.call("members") as Array):
 			species.append(str((member as RefCounted).get("species_id")))
+			uids.append(str((member as RefCounted).get("uid")))
 	var local: RefCounted = game.get("local")
 	var character := str(local.get("character_id")) if local != null else ""
 	var ending: Variant = load(ENDING_PATH)
@@ -585,12 +595,22 @@ static func _stormheart_state(tree: SceneTree, args: Dictionary = {}) -> Diction
 		"world_accepted": has_flag.call(ending.resolution_flag(true, character)),
 		"world_refused": has_flag.call(ending.resolution_flag(false, character)),
 		"accepted_anywhere": ending.accepted_anywhere(game.call("player_flags")),
+		"party_uids": uids,
 	}
 	# The world's receipt of ANOTHER character's answer (the host reading a guest's).
 	var other := str(args.get("character", ""))
 	if not other.is_empty():
 		data["other_accepted"] = has_flag.call(ending.resolution_flag(true, other))
 		data["other_refused"] = has_flag.call(ending.resolution_flag(false, other))
+		# The host's own claim entry for that character: one per character.
+		var node := _ending(tree)
+		if node != null and node.has_method("_saved_state"):
+			var claims: Dictionary = (node.call("_saved_state") as Dictionary).get("claims", {})
+			var entry: Dictionary = claims.get(other, {})
+			data["other_claims"] = claims.keys().filter(func(k: Variant) -> bool: return str(k) == other).size()
+			data["other_claim_settled"] = bool(entry.get("settled", false))
+			data["other_claim_kept"] = bool(entry.get("kept", false))
+			data["other_claim_uid"] = str(ending.claim_id(entry)) if not entry.is_empty() else ""
 	return {"verdict": "PASS", "detail": str(data), "data": data}
 
 
@@ -1881,3 +1901,54 @@ static func _water_dock_cut(tree: SceneTree, args: Dictionary) -> Dictionary:
 	tree.set_meta(&"f15_dock_cut", {"handler": handler, "state": state, "flag": flag})
 	return {"verdict": "PASS", "detail": "armed: the next remote commit of '%s' disconnects its requester before the delta is sent" % flag,
 		"data": {"armed": true}}
+
+
+## Once only, judged by the host: stand beside the Stormheart and send the very
+## `ending_claim` the offer prompt sends (`stormwood_ending.gd::_on_offer`),
+## past a prompt that is already dark. The host must refuse it -- no claim comes
+## back, the party is unchanged, and its reason reaches this player's HUD.
+static func _stormheart_claim_again(tree: SceneTree) -> Dictionary:
+	var ending := _ending(tree)
+	var game := tree.root.get_node_or_null(^"Game")
+	if ending == null or game == null:
+		return {"verdict": "ERROR", "detail": "no StormwoodEnding/Game on this peer"}
+	var prompt := ending.get("_offer_prompt") as Node3D
+	if prompt != null:
+		var at := prompt.global_position + Vector3(2, 0.5, 0)
+		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 120})
+	var before := _stormheart_state(tree).data as Dictionary
+	ending.call("_on_offer")
+	var reason := ""
+	var offered := false
+	for f in 600:
+		await tree.physics_frame
+		if not (ending.get("_local_claim") as Dictionary).is_empty():
+			offered = true
+			break
+		# The host's two refusals for a character that has answered here: plain,
+		# or (when the claim carries this character's acceptance hint) this one.
+		for needle: String in ["already answered", "already walks with you"]:
+			reason = _hud_line_containing(tree.root, needle)
+			if not reason.is_empty():
+				break
+		if not reason.is_empty():
+			break
+	var after := _stormheart_state(tree).data as Dictionary
+	var data := {"offered": offered, "refusal": reason, "party_before": before.get("party_uids", []),
+		"party_after": after.get("party_uids", [])}
+	var ok: bool = not offered and not reason.is_empty() and data.party_before == data.party_after
+	return {"verdict": "PASS" if ok else "FAIL",
+		"detail": "sent the prompt's own claim again: a claim came back=%s; host refusal '%s'; party %s -> %s"
+			% [str(offered), reason, str(data.party_before), str(data.party_after)], "data": data}
+
+
+static func _hud_line_containing(node: Node, needle: String) -> String:
+	if node is Label and (node as Label).text.contains(needle):
+		return (node as Label).text
+	if node is RichTextLabel and (node as RichTextLabel).text.contains(needle):
+		return (node as RichTextLabel).text
+	for child: Node in node.get_children():
+		var found := _hud_line_containing(child, needle)
+		if not found.is_empty():
+			return found
+	return ""

@@ -1,6 +1,6 @@
 {
   "name": "F11: a guest's link dies at the Stormheart claim acknowledgement; no duplicated grant",
-  "claim": "ACCEPTANCE F11 'through disconnect ... without duplicated grants', the claim-acknowledgement window. Both players fought the Dynamo. The host says Yes. The guest walks up, opens its own offer and says Yes through the real dialogue. The guest's transport is closed from the dialogue's own `completed` signal, in the physics step that accepted the Yes and before that frame's network poll. The ending then records the receipt and saves the character locally (stormwood_ending.gd _finish_local_claim), and its `ending_settled` acknowledgement finds no connected peer. The host is shown to hold no receipt of the guest's answer. The guest rejoins from the title as the same character. The host settles the guest's answer from the resent claim and the guest's saved receipt, and the guest holds exactly one Stormheart: no second grant, nothing offered on a further press, nothing after both peers reload. Setup: the host's captured save with the Stormwood route open, and the Dynamo fight fixture only.",
+  "claim": "ACCEPTANCE F11 'through disconnect ... without duplicated grants', the claim-acknowledgement window. Both players fought the Dynamo. The host says Yes. The guest walks up, opens its own offer and says Yes through the real dialogue. The guest's transport is closed from the dialogue's own `completed` signal, in the physics step that accepted the Yes. The ending then records the receipt and saves the character locally (stormwood_ending.gd _finish_local_claim), and its `ending_settled` acknowledgement fails with 'Trying to call an RPC via a multiplayer peer which is not connected' (peer-1 log). The host holds no world receipt of the guest's answer and its one claim for the guest is unsettled. The guest rejoins from the title as the same character. The host settles that one claim from the resent claim and the guest's saved receipt (settled, kept), and the guest holds exactly one Stormheart. A repeat of the claim the prompt sends is refused by the host, before and after both peers reload. Setup: the host's captured save with the Stormwood route open, and the Dynamo fixture, which also commits stormwood:act_ii_complete and stormwood:marrow_defeated through the ledger. Disclosed: the local close() sends an ENet disconnect, so the host sees the leave at once (a silent partition is not this proof); the guest's leave-time character write runs before the deferred commit, as a real link death would not order it; after the rejoin the guest arrives downed (it lands from height near the Stormheart), which touches no grant. Not covered here: the host dropping; a refusal at the acknowledgement; a drop before the receipt is saved; a silent partition timed out by the host; a rejoin after the 120 s seat hold.",
   "peers": 2,
   "scene": "world",
   "budget_s": 2100,
@@ -133,6 +133,32 @@
       "label": "the guest says Yes through the real dialogue, and its link is closed in the answer's own physics step, before any network poll: the Yes receipt is saved on its character, the ending_settled acknowledgement is never sent"
     },
     {
+      "peer": 1,
+      "action": "capture_saves",
+      "args": {
+        "label": "at_cut"
+      },
+      "label": "the dropped guest's files right after the cut"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "at_cut",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "fulgocobra",
+          "stormwood:legendary_answer:",
+          ":accepted"
+        ],
+        "lacks": [
+          ":refused"
+        ]
+      },
+      "label": "the Yes receipt and the Stormheart are in the guest's character file at the cut"
+    },
+    {
       "peer": 0,
       "action": "expect_peers",
       "args": {
@@ -149,9 +175,11 @@
       },
       "expect_data": {
         "other_accepted": false,
-        "other_refused": false
+        "other_refused": false,
+        "other_claims": 1,
+        "other_claim_settled": false
       },
-      "label": "the acknowledgement never reached the host: no world receipt of the guest's answer"
+      "label": "the acknowledgement never reached the host: no world receipt of the guest's answer, and its one claim for the guest is still unsettled"
     },
     {
       "peer": 1,
@@ -225,7 +253,15 @@
         "budget_frames": 600
       },
       "expect": "FAIL",
-      "label": "replay: pressing the prompt again offers nothing"
+      "label": "replay, client side: the offer prompt is dark"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_claim_again",
+      "label": "replay, host judged: the claim the prompt sends is refused by the host ('already answered' / 'A Stormheart already walks with you'); nothing comes back",
+      "expect_data": {
+        "offered": false
+      }
     },
     {
       "peer": 0,
@@ -247,7 +283,15 @@
         "budget_frames": 600
       },
       "expect": "FAIL",
-      "label": "after the reload the guest's prompt still offers nothing"
+      "label": "after the reload, client side: the guest's offer prompt is still dark"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_claim_again",
+      "label": "after the reload, host judged: the claim is refused again",
+      "expect_data": {
+        "offered": false
+      }
     },
     {
       "peer": 1,
@@ -273,9 +317,12 @@
         "has_stormheart": true,
         "world_accepted": true,
         "other_accepted": true,
-        "other_refused": false
+        "other_refused": false,
+        "other_claims": 1,
+        "other_claim_settled": true,
+        "other_claim_kept": true
       },
-      "label": "host: its own one, and the guest's answer recorded once as accepted"
+      "label": "host: its own one; its single claim entry for the guest is now settled and kept, and the world holds the guest's accepted receipt (not refused)"
     },
     {
       "peer": "all",
