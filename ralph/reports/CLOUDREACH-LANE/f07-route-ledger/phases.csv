@@ -1,0 +1,6 @@
+phase,trainer,path_m,wild_sites_available,wild_defeats_credited,wild_xp_to_lead,candy_levels,ace,need_lead,need_all,levels_before,lead_margin,weakest_margin,trainer_xp_to_lead,levels_after,coins,reward_items,verge_recovery_items,supply_checks
+0,tether_lieutenant_senn,3261,28,14,4452,8,24,22,19,"[24, 21, 21, 21, 21]",2,2,796,"[24, 22, 22, 22, 22]",80,"{ 'potion_large': 2 }","{ 'potion_small': 7, 'revive': 3, 'potion_large': 1 }",""
+1,keeper_maela_trial,2003,19,9,3534,8,25,23,20,"[26, 25, 25, 25, 25]",3,5,828,"[27, 25, 25, 25, 25]",75,"{ 'revive': 1, 'skyplume': 2 }","{ 'potion_small': 3, 'potion_large': 1, 'revive': 2 }",""
+2,officer_voss_summit_approach,7919,31,15,6658,7,31,29,26,"[30, 29, 29, 29, 28]",1,2,1530,"[31, 29, 29, 29, 28]",120,"{ 'revive': 2 }","{ 'potion_small': 2, 'potion_large': 1, 'revive': 2 }","aerie_repair needs 3 gale_fiber / reached 7"
+3,captain_veyra_storm_anchor,1717,6,3,1530,4,34,32,29,"[32, 30, 30, 30, 30]",0,1,1642,"[33, 31, 31, 31, 30]",150,"{ 'rare_candy': 1 }","{  }",""
+4,,1122,0,0,0,0,,,,"[33, 31, 31, 31, 30]",,,0,"[33, 31, 31, 31, 30]",0,"{  }","{  }",""
