@@ -28,6 +28,14 @@ height = 1.8
 ; because they are what the body is interpolated toward; every discrete one is
 ; sent on change (replication_mode 2) because they are flags, not curves.
 ;
+; `net_aquatic` is on change too. It is a revisioned state machine carrying the
+; MOUNTED/HUMAN/LAND mode, not a curve, and mode 1 is ENet's UNRELIABLE path,
+; which ENet's RTT throttle drops (31 of 32 sends at throttle 0). A slow-frame
+; window then starved it for hundreds of ticks. The host received the reliable
+; `net_riding = false` but kept the last MOUNTED packet (F12 host MOUNTED,
+; tests/test_water_mount_dismount_replication.gd). The owner publishes it once
+; per physics tick, so on-change is at most one reliable delta per tick.
+;
 ; `spawn = true` on all of them so a peer that joins mid-session sees a trainer
 ; who is already sprinting as sprinting, a trainer already on a mount as
 ; seated, and a trainer already in the air as flying -- rather than as an idle
@@ -70,7 +78,7 @@ properties/10/spawn = true
 properties/10/replication_mode = 2
 properties/11/path = NodePath(".:net_aquatic")
 properties/11/spawn = true
-properties/11/replication_mode = 1
+properties/11/replication_mode = 2
 properties/12/path = NodePath(".:net_catching_level")
 properties/12/spawn = true
 properties/12/replication_mode = 2
