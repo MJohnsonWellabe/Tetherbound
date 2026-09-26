@@ -95,6 +95,32 @@ func test_trainer_levels_rewards_and_unique_defeat_flags_preserve_content() -> v
 			assert_eq(spec.team[index].species, CATALOG.runtime_id(source))
 	assert_eq(result.encounter_config.active_wild_cap_per_peer, 16)
 	assert_eq(result.encounter_config.activation_distance_m, 100)
+## F14: a trainer's `foe_power_multiplier` scales each member's strike power
+## (the `enemy_trainer` baseline) into its `combat` block; a trainer without
+## one keeps its members untouched.
+func test_foe_power_multiplier_scales_member_combat_power() -> void:
+	const MATH := preload("res://scripts/combat/combat_math.gd")
+	var base := float(MATH.config().enemy_trainer.power)
+	var tuned := 0
+	for authored: Dictionary in characters.trainers:
+		var spec: Dictionary = result.trainer_specs[authored.id]
+		for member: Dictionary in spec.team:
+			if authored.has("foe_power_multiplier"):
+				assert_true(is_equal_approx(float(member.combat.power), base * float(authored.foe_power_multiplier)),
+					"%s power" % authored.id)
+			else:
+				assert_false(member.has("combat"), "%s must stay untouched" % authored.id)
+		if authored.has("foe_power_multiplier"):
+			tuned += 1
+	assert_eq(tuned, 4, "Calder, Tess, Venn and Nerissa")
+	var errors: Array[String] = []
+	var explicit := ADAPTER.team_member({"id": "t", "foe_power_multiplier": 2.0},
+		{"species": "water_riptusk", "level": 1, "combat": {"power": 5.0, "telegraph": 1.0}}, errors)
+	assert_eq(explicit.combat, {"power": 10.0, "telegraph": 1.0})
+	ADAPTER.team_member({"id": "bad", "foe_power_multiplier": -1.0}, {"species": "water_riptusk"}, errors)
+	assert_true(errors.any(func(e: String) -> bool: return e.contains("foe_power_multiplier")))
+
+
 func test_positions_are_regrounded_and_existing_npc_bodies_are_reused() -> void:
 	var centres: Dictionary = {}
 	for island: Dictionary in world.islands:

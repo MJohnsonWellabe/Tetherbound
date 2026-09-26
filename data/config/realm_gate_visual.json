@@ -1,6 +1,7 @@
 {
-  "stone_tint": "b4bfc0",
-  "edge_tint": "d1d4c8",
-  "stone_tile": 0.28,
-  "roughness": 0.86
+  "frame_model": "res://assets/props/realm_gate_meshy/models/realm_gate_frame.glb",
+  "aperture_profile": "res://assets/props/realm_gate_meshy/models/aperture.json",
+  "locked": {"intensity": 0.18, "centre_opacity": 0.40, "edge_opacity": 0.45, "seal_presence": 1.0, "seal_ready": 0.0},
+  "unlockable": {"intensity": 0.8, "centre_opacity": 0.32, "edge_opacity": 0.60, "seal_presence": 1.0, "seal_ready": 1.0},
+  "open": {"intensity": 0.38, "centre_opacity": 0.07, "edge_opacity": 0.26, "seal_presence": 0.0, "seal_ready": 0.0}
 }
