@@ -43,7 +43,7 @@ class Manager extends "res://scripts/combat/combat_manager.gd":
 		return -1.0
 	func _take_camera() -> void:
 		pass
-	func _release_camera() -> void:
+	func _release_camera(_fought_at: Variant = null) -> void:
 		pass
 	func _stand_the_trainer_aside(_forward: Vector3) -> void:
 		pass
