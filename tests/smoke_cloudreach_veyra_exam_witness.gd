@@ -32,6 +32,13 @@ func _log(kind: String, details: Dictionary = {}) -> void:
 	super._log(kind, details)
 
 
+## This witness's event log lives beside its verdict.
+func _write_report() -> void:
+	output_dir = WITNESS_DIR
+	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
+	super._write_report()
+
+
 func _finish() -> void:
 	var veyra_battle: Dictionary = {}
 	for row: Dictionary in rows:
