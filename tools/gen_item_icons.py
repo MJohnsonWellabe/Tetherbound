@@ -383,6 +383,55 @@ def icon_potion_small() -> Image.Image:
     return img
 
 
+def icon_stat_draught(stat: str, permanent: bool) -> Image.Image:
+    """Sealed, straight-sided elixir or broad conical tonic, with a large
+    cutout stat mark. Bottle shape carries duration; the mark carries effect,
+    so neither distinction depends on the authored tint surviving at 32px.
+    """
+    img = new_canvas()
+    d = ImageDraw.Draw(img)
+    if permanent:
+        # Tall faceted bottle and a wide sealed cap, distinct from both the
+        # round recovery potion and the triangular temporary flask.
+        d.polygon([(96, 34), (160, 34), (160, 78), (194, 98),
+                   (194, 218), (180, 234), (76, 234), (62, 218),
+                   (62, 98), (96, 78)], fill=FG)
+        d.rectangle((84, 20, 172, 42), fill=FG)
+        cutout_line(d, [(94, 56), (162, 56)])
+        cutout_line(d, [(76, 216), (180, 216)])
+    else:
+        # Laboratory flask with sloping shoulders and a short stopper.
+        d.polygon([(107, 52), (149, 52), (149, 90), (214, 214),
+                   (204, 234), (52, 234), (42, 214), (107, 90)], fill=FG)
+        d.rectangle((96, 30, 160, 54), fill=FG)
+        cutout_line(d, [(102, 68), (154, 68)])
+
+    if stat == "attack":
+        # Upright blade with a broad guard; the hilt survives reduction.
+        d.polygon([(128, 103), (145, 123), (140, 165), (158, 165),
+                   (158, 178), (137, 178), (137, 199), (119, 199),
+                   (119, 178), (98, 178), (98, 165), (116, 165),
+                   (111, 123)], fill=CLEAR)
+    elif stat == "defence":
+        # Armour plate, broad across the shoulders and pointed below.
+        d.polygon([(94, 119), (128, 106), (162, 119), (157, 168),
+                   (128, 197), (99, 168)], fill=CLEAR)
+        d.polygon([(128, 127), (145, 134), (142, 161),
+                   (128, 177), (114, 161), (111, 134)], fill=FG)
+    elif stat == "health":
+        # Heart, unlike the recovery potion's unmarked liquid line or the
+        # revive's cross. Permanent maximum health is the bottle's meaning.
+        d.ellipse((92, 112, 133, 155), fill=CLEAR)
+        d.ellipse((123, 112, 164, 155), fill=CLEAR)
+        d.polygon([(92, 138), (164, 138), (128, 193)], fill=CLEAR)
+    elif stat == "speed":
+        d.polygon([(136, 104), (99, 158), (122, 158), (110, 201),
+                   (159, 143), (135, 143), (151, 104)], fill=CLEAR)
+    else:
+        raise ValueError("unknown draught stat: %s" % stat)
+    return img
+
+
 def icon_revive() -> Image.Image:
     """OF32/D40. Same flask silhouette as `icon_potion_small` -- deliberately
     the same object language, since a Revive reads on the belt as 'a
@@ -1082,6 +1131,12 @@ def icon_wild_mushroom() -> Image.Image:
 
 
 ITEM_ICONS = {
+    "elixir_might.png": lambda: icon_stat_draught("attack", permanent=True),
+    "elixir_guard.png": lambda: icon_stat_draught("defence", permanent=True),
+    "elixir_vigour.png": lambda: icon_stat_draught("health", permanent=True),
+    "swift_tonic.png": lambda: icon_stat_draught("speed", permanent=False),
+    "attack_tonic.png": lambda: icon_stat_draught("attack", permanent=False),
+    "stoneguard_brew.png": lambda: icon_stat_draught("defence", permanent=False),
     "coin.png": icon_coin,
     "wood.png": icon_wood,
     "stone.png": icon_stone,
