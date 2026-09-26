@@ -164,6 +164,11 @@ var _arena: Node3D = null
 ## has something to ease FROM; reset to 0.0 whenever the camera is fully
 ## released so a later fight does not inherit a wide frame from this one's end.
 var _camera_framing_extra: float = 0.0
+## F04#7: the eased pivot height (`camera.framing.height_follow`) and the eased
+## clear-orbit swing (`camera.framing.clear_orbit`). 0 means "not yet started";
+## both reset with `_camera_framing_extra` when the camera is released.
+var _camera_framing_height: float = 0.0
+var _camera_clear_orbit_deg: float = 0.0
 var _framing_bounds_cache: Dictionary = {}
 ## MEADOWS-VISUAL-PASS: how far the ally is faded because it hides the foe
 ## (`ally_occlusion_fade.gd`), and the model it was written to, so the fade is
@@ -1141,6 +1146,8 @@ func _update_combat_camera_framing(delta: float) -> void:
 	if clearance >= 0.0:
 		desired = minf(desired, maxf(1.5, clearance))
 	_camera_rig.set("_distance", desired)
+	_update_combat_camera_height(framing, weight)
+	_update_combat_clear_orbit(framing, desired, delta)
 	if clearance >= 0.0:
 		_camera_rig.set("_shoulder", 0.0)
 	elif float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
@@ -1253,8 +1260,90 @@ func _combat_camera_framing_target(framing: Dictionary) -> float:
 					var horizontal: float = absf(relative.dot(basis.x)) / horizontal_tan
 					var vertical: float = absf(relative.dot(basis.y)) / vertical_tan
 					required_distance = maxf(required_distance, depth + maxf(horizontal, vertical))
+	# F04#7: never closer than the piloted body's own depth plus a clearance,
+	# measured along the arm's horizontal setback -- a push-in for a small foe
+	# must not put the lens in the ally's fur (Oreth 03/12/20).
+	var pitch_cos := maxf(cos(float(_camera_rig.get("pitch"))), 0.2)
+	var ally_floor := (_body_horizontal_extent(_ally_body)
+		+ float(framing.get("min_ally_clearance_m", 1.5))) / pitch_cos
+	required_distance = maxf(required_distance, ally_floor)
 	var base_distance := float(cfg.get("distance", 6.0))
-	return clampf(required_distance - base_distance, 0.0, max_extra)
+	# F04#7: a negative floor lets a small pair be pushed in (Halder's owl read
+	# at ~5% of screen height from the fixed 9.5m arm); 0.0 keeps the old
+	# widen-only behaviour.
+	return clampf(required_distance - base_distance,
+		minf(0.0, float(framing.get("min_extra_distance", 0.0))), max_extra)
+
+
+## Widest horizontal half-extent of `body`'s live render bounds about its own
+## origin. The same measurement `_body_lateral_extent()` makes along one axis,
+## taken over both horizontal axes so the answer does not depend on yaw.
+func _body_horizontal_extent(body: Node3D) -> float:
+	var bounds := _body_render_bounds(body)
+	if bounds.size.is_zero_approx() or not body.has_method("model_pivot"):
+		return 0.0
+	var model: Node3D = body.call("model_pivot") as Node3D
+	if model == null:
+		return 0.0
+	var extent := 0.0
+	for x in [0.0, 1.0]:
+		for y in [0.0, 1.0]:
+			for z in [0.0, 1.0]:
+				var corner: Vector3 = model.global_transform * (bounds.position + bounds.size * Vector3(x, y, z))
+				var offset := corner - body.global_position
+				extent = maxf(extent, Vector2(offset.x, offset.z).length())
+	return extent
+
+
+## Highest rendered point of either fighter above the ally's feet, in metres.
+func _combined_top_above_ally() -> float:
+	var top := 0.0
+	for body_variant in [_ally_body, _wild]:
+		var body := body_variant as Node3D
+		if body == null or not is_instance_valid(body) or not body.has_method("model_pivot"):
+			continue
+		var bounds := _body_render_bounds(body)
+		var model: Node3D = body.call("model_pivot") as Node3D
+		if model == null or bounds.size.is_zero_approx():
+			continue
+		var world: AABB = model.global_transform * bounds
+		top = maxf(top, world.end.y - _ally_body.global_position.y)
+	return top
+
+
+## F04#7 defect 4: a large or flying foe rose into the boss HUD panel because
+## the pivot sat at a fixed 2.3m over the ally whatever stood opposite it.
+## `height_follow` lifts the pivot toward a fraction of the tallest fighter's
+## top, so the pair's vertical centre stays near the frame's centre; never
+## below the configured base height, never above `max_height`.
+func _update_combat_camera_height(framing: Dictionary, weight: float) -> void:
+	var follow: Dictionary = framing.get("height_follow", {}) as Dictionary
+	var base_height := float((MATH.config().get("camera", {}) as Dictionary).get("height", 2.3))
+	if not bool(follow.get("enabled", false)):
+		return
+	var target := clampf(_combined_top_above_ally() * float(follow.get("fraction_of_top", 0.55)),
+		base_height, maxf(base_height, float(follow.get("max_height", 6.0))))
+	if _camera_framing_height <= 0.0:
+		_camera_framing_height = float(_camera_rig.get("_height"))
+	_camera_framing_height = lerpf(_camera_framing_height, target, weight)
+	_camera_rig.set("_height", _camera_framing_height)
+
+
+## F04#7 defects 1-3: a wall or trunk behind the ally collapsed the arm, and
+## the frame became the inside of a wall or of the ally itself. SpringArm3D can
+## only shorten; it never looks for somewhere better to stand. `clear_orbit`
+## asks the rig which nearby orbit angle has room for the arm and eases the
+## neutral tracker there; manual look still wins (the rig ignores tracking
+## while the player steers), and it swings back when the view is clear.
+func _update_combat_clear_orbit(framing: Dictionary, desired: float, delta: float) -> void:
+	var orbit: Dictionary = framing.get("clear_orbit", {}) as Dictionary
+	if not bool(orbit.get("enabled", false)) or not _camera_rig.has_method("clear_orbit_offset_deg"):
+		return
+	var target := float(_camera_rig.call("clear_orbit_offset_deg", desired,
+		orbit.get("samples_deg", [30.0, 60.0, 90.0]), float(orbit.get("min_fraction", 0.75))))
+	var rate := maxf(float(orbit.get("ease_deg_per_s", 90.0)), 1.0)
+	_camera_clear_orbit_deg = move_toward(_camera_clear_orbit_deg, target, rate * delta)
+	_camera_rig.call("set_clearance_extra", _camera_clear_orbit_deg)
 
 
 func _body_render_bounds(body: Node3D) -> AABB:
@@ -1310,6 +1399,10 @@ func _size_framing_extra(body: Node3D, framing: Dictionary) -> float:
 
 func _release_camera() -> void:
 	_camera_framing_extra = 0.0
+	_camera_framing_height = 0.0
+	_camera_clear_orbit_deg = 0.0
+	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_clearance_extra"):
+		_camera_rig.call("set_clearance_extra", 0.0)
 	_clear_ally_fade()
 	_framing_bounds_cache.clear()
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):

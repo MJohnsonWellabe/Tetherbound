@@ -89,6 +89,9 @@ var _tracking_config: Dictionary = {}
 ## piloted ally hides the opponent (`combat_manager.gd::_update_ally_occlusion`).
 ## Added to `composition_yaw_deg` on the same side; 0 outside that moment.
 var _composition_extra_deg := 0.0
+## F04#7: signed degrees the neutral tracker swings to find room for the arm
+## (`combat_manager.gd::_update_combat_clear_orbit`). 0 outside that moment.
+var _clearance_extra_deg := 0.0
 var _tracking_manual_left := 0.0
 
 ## Defaults from movement.json, kept so a combat profile can be handed back.
@@ -259,6 +262,7 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	_tracking_target = null
 	_tracking_config = {}
 	_composition_extra_deg = 0.0
+	_clearance_extra_deg = 0.0
 	_tracking_manual_left = 0.0
 
 	_distance = float(profile.get("distance", _base_distance))
@@ -305,6 +309,47 @@ func set_composition_extra(degrees: float) -> void:
 
 func composition_extra() -> float:
 	return _composition_extra_deg
+
+
+func set_clearance_extra(degrees: float) -> void:
+	_clearance_extra_deg = degrees
+
+
+func clearance_extra() -> float:
+	return _clearance_extra_deg
+
+
+## F04#7: the smallest orbit swing, in signed degrees from the tracker's
+## NEUTRAL angle, that leaves the arm at least `min_fraction` of `length`.
+##
+## Measured from neutral rather than from the current yaw so the answer is
+## stable: once the rig has swung to a clear angle it keeps being asked about
+## the same blocked neutral, and keeps getting the same swing back, instead of
+## seeing a clear view, releasing, and swinging into the wall again. Ties go to
+## the side already in use. With nothing clear it returns the roomiest sample,
+## which is still better than the wall.
+func clear_orbit_offset_deg(length: float, samples: Array, min_fraction: float) -> float:
+	if _target == null or not is_instance_valid(_target) or length <= 0.01:
+		return 0.0
+	var neutral := yaw - deg_to_rad(_clearance_extra_deg)
+	var needed := length * clampf(min_fraction, 0.1, 1.0)
+	var candidates: Array[float] = [0.0]
+	var side := -1.0 if _clearance_extra_deg < 0.0 else 1.0
+	for raw: Variant in samples:
+		var magnitude := absf(float(raw))
+		candidates.append(magnitude * side)
+		candidates.append(-magnitude * side)
+	var best := 0.0
+	var best_room := -1.0
+	for offset in candidates:
+		var dir := Basis.from_euler(Vector3(pitch, neutral + deg_to_rad(offset), 0.0)).z
+		var room := _free_distance_behind(global_position, dir, length)
+		if room >= needed:
+			return offset
+		if room > best_room + 0.01:
+			best_room = room
+			best = offset
+	return best
 
 
 func set_tracking_target(target: Node3D, config: Dictionary = {}) -> void:
@@ -480,7 +525,8 @@ func _apply_tracking(delta: float) -> void:
 	# An oblique combat composition keeps the opponent's stance visible beside
 	# a large piloted body. Manual orbit and its grace period still win above.
 	var composition := float(_tracking_config.get("composition_yaw_deg", 0.0))
-	wanted += deg_to_rad(composition + signf(composition if composition != 0.0 else 1.0) * _composition_extra_deg)
+	wanted += deg_to_rad(composition + signf(composition if composition != 0.0 else 1.0) * _composition_extra_deg
+		+ _clearance_extra_deg)
 	var difference := angle_difference(yaw, wanted)
 	var dead_zone := deg_to_rad(float(_tracking_config.get("dead_zone_deg", 10.0)))
 	if absf(difference) <= dead_zone:

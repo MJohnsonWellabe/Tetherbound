@@ -193,7 +193,12 @@
       "_why_room_distance_cap": "F04. ONE value, and it is off. When true, combat_manager.gd clamps the camera distance to the nearest room wall around the fight (_room_clearance, floor 1.5 m) and drops the shoulder. 9b8c3d8a7 removed that clamp, merge 59e088560 restored it, and the F04 guardian fix removed it again. Clamped, the Warrens den put the lens 2 m behind a 3.9 m ally, inside its body, with the guardian off-frame, and the Stronghold OP23-02 gauntlet lost its shoulder composition (ralph/reports/MEADOWS-PAYOFFS/guardian-camera/). The SpringArm contracts depth against real geometry along the camera's own direction, and CameraRig sweeps the shoulder pivot, so tight rooms are handled without it (interior capture: ralph/reports/MEADOWS-PAYOFFS/camera-room/). Flip only with a new in-engine capture.",
       "room_distance_cap": false,
       "_comment_lag": "Exponential smoothing on the extra distance only, same shape as retarget_lag above but separate -- retarget_lag is spent once, easing the rig onto a brand-new target, while this runs continuously so the frame breathes with the fight instead of snapping every time the gap changes.",
-      "lag": 4.0
+      "lag": 4.0,
+      "_comment_f04_7": "F04#7 (X04 blind judge on #257, 8 of 18 named-fight frames lost a creature at one fixed over-the-shoulder distance). min_extra_distance lets a small pair push IN below the base distance (Halder's owl read at ~5% of screen height); min_ally_clearance_m keeps the lens at least the ally's own horizontal render extent plus this much behind it, so the push-in and a collapsed arm cannot put the camera in the ally's fur (Oreth). height_follow lifts the pivot toward fraction_of_top of the tallest fighter so a large or flying foe is not pushed up under the boss HUD (Vance, Hald). clear_orbit swings the neutral tracker to the nearest orbit angle whose arm has room (camera_rig.gd::clear_orbit_offset_deg) instead of sitting inside a wall (Hald 20) or behind a trunk (Oreth 12); manual look still wins. Creatures are never scaled to fit. TUNABLE.",
+      "min_extra_distance": -3.0,
+      "min_ally_clearance_m": 1.5,
+      "height_follow": {"enabled": true, "fraction_of_top": 0.55, "max_height": 6.0},
+      "clear_orbit": {"enabled": true, "samples_deg": [25.0, 50.0, 75.0, 100.0], "min_fraction": 0.75, "ease_deg_per_s": 120.0}
     }
   },
   "wild": {
