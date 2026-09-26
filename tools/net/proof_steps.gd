@@ -21,8 +21,8 @@ extends RefCounted
 ##                                         defeat through the ledger (F11 setup only)
 ##   stormheart_answer  {answer, drop_at_ack?}  answer THIS peer's Stormheart offer through
 ##                                         the real dialogue: interact = Yes, menu_cancel = No
-##   stormheart_claim_again {}            send the claim the offer prompt sends, past a dark
-##                                         prompt; the HOST must refuse it (already answered)
+##   stormheart_claim_again {}            send the prompt's ending_claim WITHOUT the acceptance
+##                                         hint; the HOST must refuse from its own record
 ##   stormheart_state {character?}        this peer's view of the F11 outcome (character:
 ##                                         also the world's receipt of that character's answer)
 ##   release_for_catch {release, species, nickname}  SETUP: at a full party, let
@@ -1903,52 +1903,37 @@ static func _water_dock_cut(tree: SceneTree, args: Dictionary) -> Dictionary:
 		"data": {"armed": true}}
 
 
-## Once only, judged by the host: stand beside the Stormheart and send the very
-## `ending_claim` the offer prompt sends (`stormwood_ending.gd::_on_offer`),
-## past a prompt that is already dark. The host must refuse it -- no claim comes
-## back, the party is unchanged, and its reason reaches this player's HUD.
+## Once only, judged by the HOST's own record: stand beside the Stormheart and
+## send the same `ending_claim` intent the offer prompt sends, but WITHOUT this
+## character's portable acceptance hint (`already_accepted: false`), so the
+## host can only refuse from its own claims and resolution flags. It must answer
+## exactly "You have already answered the Stormheart." -- the reason it gives
+## only when it owes this character nothing -- read the moment it arrives
+## (after the frame's network poll, before the HUD takes it), never a stale line.
 static func _stormheart_claim_again(tree: SceneTree) -> Dictionary:
 	var ending := _ending(tree)
 	var game := tree.root.get_node_or_null(^"Game")
-	if ending == null or game == null:
-		return {"verdict": "ERROR", "detail": "no StormwoodEnding/Game on this peer"}
+	var session: Node = game.get("session") if game != null else null
+	if ending == null or game == null or session == null:
+		return {"verdict": "ERROR", "detail": "no StormwoodEnding/Game/Session on this peer"}
 	var prompt := ending.get("_offer_prompt") as Node3D
 	if prompt != null:
 		var at := prompt.global_position + Vector3(2, 0.5, 0)
 		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 120})
 	var before := _stormheart_state(tree).data as Dictionary
-	ending.call("_on_offer")
+	game.set("_pending_world_message", "")
+	session.call("request_stormwood_encounter", {"kind": "ending_claim", "already_accepted": false})
 	var reason := ""
-	var offered := false
 	for f in 600:
-		await tree.physics_frame
-		if not (ending.get("_local_claim") as Dictionary).is_empty():
-			offered = true
-			break
-		# The host's two refusals for a character that has answered here: plain,
-		# or (when the claim carries this character's acceptance hint) this one.
-		for needle: String in ["already answered", "already walks with you"]:
-			reason = _hud_line_containing(tree.root, needle)
-			if not reason.is_empty():
-				break
-		if not reason.is_empty():
+		await tree.process_frame
+		var waiting := str(game.get("_pending_world_message"))
+		if not waiting.is_empty():
+			reason = waiting
 			break
 	var after := _stormheart_state(tree).data as Dictionary
-	var data := {"offered": offered, "refusal": reason, "party_before": before.get("party_uids", []),
+	var data := {"refusal": reason, "party_before": before.get("party_uids", []),
 		"party_after": after.get("party_uids", [])}
-	var ok: bool = not offered and not reason.is_empty() and data.party_before == data.party_after
+	var ok: bool = reason == "You have already answered the Stormheart." and data.party_before == data.party_after
 	return {"verdict": "PASS" if ok else "FAIL",
-		"detail": "sent the prompt's own claim again: a claim came back=%s; host refusal '%s'; party %s -> %s"
-			% [str(offered), reason, str(data.party_before), str(data.party_after)], "data": data}
-
-
-static func _hud_line_containing(node: Node, needle: String) -> String:
-	if node is Label and (node as Label).text.contains(needle):
-		return (node as Label).text
-	if node is RichTextLabel and (node as RichTextLabel).text.contains(needle):
-		return (node as RichTextLabel).text
-	for child: Node in node.get_children():
-		var found := _hud_line_containing(child, needle)
-		if not found.is_empty():
-			return found
-	return ""
+		"detail": "sent ending_claim without the acceptance hint: host answered '%s'; party %s -> %s"
+			% [reason, str(data.party_before), str(data.party_after)], "data": data}

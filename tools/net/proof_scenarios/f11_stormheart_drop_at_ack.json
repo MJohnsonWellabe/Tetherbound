@@ -130,7 +130,7 @@
         "has_stormheart": true,
         "accepted_anywhere": true
       },
-      "label": "the guest says Yes through the real dialogue, and its link is closed in the answer's own physics step, before any network poll: the Yes receipt is saved on its character, the ending_settled acknowledgement is never sent"
+      "label": "the guest says Yes through the real dialogue, and its link is closed from the dialogue's completed signal in the physics step that accepted the Yes: the Yes receipt is saved on its character, the ending_settled acknowledgement fails (not connected)"
     },
     {
       "peer": 1,
@@ -258,9 +258,9 @@
     {
       "peer": 1,
       "action": "stormheart_claim_again",
-      "label": "replay, host judged: the claim the prompt sends is refused by the host ('already answered' / 'A Stormheart already walks with you'); nothing comes back",
+      "label": "replay, host judged: the prompt's ending_claim, sent WITHOUT the acceptance hint, is refused by the host from its own record ('You have already answered the Stormheart.')",
       "expect_data": {
-        "offered": false
+        "refusal": "You have already answered the Stormheart."
       }
     },
     {
@@ -288,9 +288,9 @@
     {
       "peer": 1,
       "action": "stormheart_claim_again",
-      "label": "after the reload, host judged: the claim is refused again",
+      "label": "after the reload, host judged: the prompt's ending_claim, sent WITHOUT the acceptance hint, is refused by the host from its own record ('You have already answered the Stormheart.')",
       "expect_data": {
-        "offered": false
+        "refusal": "You have already answered the Stormheart."
       }
     },
     {
