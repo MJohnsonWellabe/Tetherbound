@@ -62,7 +62,9 @@ func test_capacitor_identity_preserves_socket_and_gameplay_placements() -> void:
 	assert_eq(_entry(encounters.get("named_encounters", []), "capacitor_alpha").get("position", []),
 		[-1080.0, 86.0, 3020.0], "named alpha moved during visual recovery")
 	var pickups: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PICKUP_CONFIG))
-	assert_true(_has_pickup_at(pickups.get("pickups", []), Vector2(-1080.0, 3020.0)),
+	# The grove pickup (route_11) moved 11 m off the alpha's x/z so the two
+	# prompts no longer share a spot (interaction-spacing audit, WO-F11-04).
+	assert_true(_has_pickup_at(pickups.get("pickups", []), Vector2(-1090.0, 3025.0)),
 		"authored Capacitor Grove pickup moved during visual recovery")
 	var source := FileAccess.get_file_as_string("res://scripts/world/stormwood_arch_runtime.gd")
 	assert_true(source.contains('str(socket.id) == "capacitor_grove"') and

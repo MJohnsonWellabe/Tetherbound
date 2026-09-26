@@ -5760,11 +5760,10 @@
       "id": "capacitor_alpha",
       "region_id": "conductor_run",
       "position": [
-        -1092,
-        85.68,
-        3010
+        -1080,
+        86,
+        3020
       ],
-      "_why_moved_f11": "The Alpha's seat was exactly route pickup 11's, so near the Alpha 'Take' could win the Interact press over the engage offer. Moved 15.6 m off the conductor road (15 m from it), still at the Capacitor Grove road point it guards (79 m from the grove footing); same height above the ground. Earned F11 runner run 30 ran with the old seat.",
       "level": 40,
       "behavior_profile": "DIVER",
       "placeholder_species": "voltarach",

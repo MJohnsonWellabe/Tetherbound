@@ -174,10 +174,11 @@
       "item_id": "great_candy",
       "count": 1,
       "region_id": "conductor_run",
+      "_why_moved_f11": "It sat exactly under the Capacitor Grove alpha (same x/z), so a press meant for the named fight could take this reward instead. The alpha seat is fixed by the grove identity, so the pickup moved 11 m west-south-west within the grove, 9 m off the conductor road; height is stormwood_heightfield.height_at + the original 0.35 m.",
       "position": [
-        -1080,
-        74.16,
-        3020
+        -1090,
+        73.74,
+        3025
       ],
       "placement": "critical_route_verge",
       "persistent": true,
