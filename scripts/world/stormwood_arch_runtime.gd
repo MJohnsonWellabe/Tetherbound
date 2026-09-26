@@ -348,7 +348,12 @@ func standing_floor(terrain_y: float, at: Vector3, body: Node3D = null) -> float
 	if body is CollisionObject3D:
 		query.exclude = [body.get_rid()]
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
-	return maxf(terrain_y, (hit.position as Vector3).y) if not hit.is_empty() else terrain_y
+	# Only an arch FOOTING lifts the landing. Anything else standing there (a
+	# player, a crate, a blocker) must still fail the clearance check below,
+	# never become a floor to land on top of.
+	if hit.is_empty() or not (hit.collider is Node and str((hit.collider as Node).name).begins_with("Footing")):
+		return terrain_y
+	return maxf(terrain_y, (hit.position as Vector3).y)
 
 
 func _arrive(event: Dictionary) -> void:
