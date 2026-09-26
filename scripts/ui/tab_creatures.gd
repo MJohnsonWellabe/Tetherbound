@@ -136,13 +136,20 @@ const DECLINE_PENDING_BODY := "Your answer is on its way to the host."
 ## typed asterisk row -- one drawing idiom for "N of five" on this screen,
 ## not a bar widget for bond and a typed string for appraisal.
 const APPRAISAL_TOTAL := 5
-const APPRAISAL_PIP_RADIUS := 5.0
-const APPRAISAL_PIP_GAP := 16.0
+const APPRAISAL_PIP_RADIUS := 8.0
+const APPRAISAL_PIP_GAP := 24.0
 
 ## Two FONT_READ lines plus 6 px insets. Sized so the release ceremony's five
 ## belt rows, caption and newcomer row still fit the content height at 720p.
 const ROW_HEIGHT := 86.0
 const ROW_WIDTH := 600.0
+## Evolution / farewell / Guardian confirm text column. At FONT_READ a 360 px
+## column wrapped the release body to six lines and the title to two, which
+## made the panel taller than the content row and pushed the menu frame off
+## the bottom of a 720p screen.
+const MODAL_BODY_WIDTH := 440.0
+## Height of the detail column's "more below" fade.
+const SCROLL_FADE_PX := 56.0
 const CHIP_SIZE := Vector2(74.0, 74.0)
 ## The second line of the charged move sat only ~3 logical pixels above the
 ## detail viewport edge at the shipped 16:9 content height. That is inside the
@@ -413,7 +420,21 @@ func build() -> void:
 	detail_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	detail_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	row.add_child(detail_scroll)
+	# X03 text floor: at FONT_READ the bond milestones sit below the fold, and
+	# a line cut by the scroll edge read as clipping. A fade over the bottom
+	# edge, shown only while more content lies below, reads as "scrolls".
+	var detail_wrap := MarginContainer.new()
+	detail_wrap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	detail_wrap.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	row.add_child(detail_wrap)
+	detail_wrap.add_child(detail_scroll)
+	var fade := Control.new()
+	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fade.draw.connect(func() -> void: _draw_scroll_fade(fade, detail_scroll))
+	detail_wrap.add_child(fade)
+	detail_scroll.get_v_scroll_bar().changed.connect(fade.queue_redraw)
+	detail_scroll.get_v_scroll_bar().value_changed.connect(func(_v: float) -> void: fade.queue_redraw())
+	detail_wrap.visibility_changed.connect(fade.queue_redraw)
 	_detail_scroll = detail_scroll
 	_detail_panel = _build_detail()
 	detail_scroll.add_child(_detail_panel)
@@ -520,7 +541,7 @@ func _build_slot_row(index: int) -> Control:
 
 	var bond_icon := TextureRect.new()
 	bond_icon.texture = BOND_ICON
-	bond_icon.custom_minimum_size = Vector2(26, 26)
+	bond_icon.custom_minimum_size = Vector2(36, 36)
 	bond_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	bond_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	bond_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -575,6 +596,26 @@ func _build_slot_row(index: int) -> Control:
 ## asking a pad player to mouse-wheel an unfocused pane. The upper bound keeps
 ## the quick-move heading visible at the same time as the charged move's final
 ## stat line.
+## Bottom-edge fade for the detail column (see `build()`): the panel colour
+## ramps from clear to opaque over SCROLL_FADE_PX while content remains below.
+func _draw_scroll_fade(fade: Control, scroll: ScrollContainer) -> void:
+	if not is_instance_valid(scroll):
+		return
+	var bar := scroll.get_v_scroll_bar()
+	if bar.max_value - bar.page - bar.value <= 1.0:
+		return
+	var h := minf(SCROLL_FADE_PX, fade.size.y)
+	var top := fade.size.y - h
+	var w := fade.size.x - bar.size.x
+	var clear := UITokens.BG_PANEL
+	clear.a = 0.0
+	var solid := UITokens.BG_PANEL
+	solid.a = 0.95
+	fade.draw_polygon(
+		PackedVector2Array([Vector2(0, top), Vector2(w, top), Vector2(w, fade.size.y), Vector2(0, fade.size.y)]),
+		PackedColorArray([clear, clear, solid, solid]))
+
+
 func _queue_move_stats_visibility() -> void:
 	call_deferred("_keep_move_stats_visible")
 
@@ -801,14 +842,14 @@ func _build_detail() -> Control:
 ## has to drive by hand.
 func _build_evolution_panel() -> Control:
 	var body := VBoxContainer.new()
-	body.custom_minimum_size = Vector2(360, 0)
+	body.custom_minimum_size = Vector2(MODAL_BODY_WIDTH, 0)
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.alignment = BoxContainer.ALIGNMENT_CENTER
 	body.add_theme_constant_override("separation", 14)
 
 	_evolution_title = Label.new()
-	_evolution_title.add_theme_font_size_override("font_size", UITokens.FONT_TITLE)
+	_evolution_title.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	_evolution_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_evolution_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(_evolution_title)
@@ -836,14 +877,14 @@ func _build_evolution_panel() -> Control:
 ## goodbye they watch the belt settle into its final five behind the words.
 func _build_farewell_panel() -> Control:
 	var body := VBoxContainer.new()
-	body.custom_minimum_size = Vector2(360, 0)
+	body.custom_minimum_size = Vector2(MODAL_BODY_WIDTH, 0)
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.alignment = BoxContainer.ALIGNMENT_CENTER
 	body.add_theme_constant_override("separation", 14)
 
 	_farewell_title = Label.new()
-	_farewell_title.add_theme_font_size_override("font_size", UITokens.FONT_TITLE)
+	_farewell_title.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	_farewell_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_farewell_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(_farewell_title)
@@ -894,7 +935,7 @@ func _build_farewell_panel() -> Control:
 	_farewell_hint.scroll_active = false
 	_farewell_hint.shortcut_keys_enabled = false
 	_farewell_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_farewell_hint.text = "%s  keep looking" % INPUT_GLYPH.icon("cancel", 24)
+	_farewell_hint.text = "%s  keep looking" % INPUT_GLYPH.icon("cancel", 36)
 	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
 	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 	_farewell_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -2179,7 +2220,7 @@ func _end_guardian_confirm(land: int) -> void:
 		_viewport.custom_minimum_size.x = float(CREATURE_VIEWPORT.VIEWPORT_SIZE.x)
 		_viewport.call("set_showcase", false)
 	if _farewell_title != null:
-		_farewell_title.add_theme_font_size_override("font_size", UITokens.FONT_TITLE)
+		_farewell_title.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	if menu != null:
 		menu.call("hold_input", false)
 		menu.call("override_footer", "")
