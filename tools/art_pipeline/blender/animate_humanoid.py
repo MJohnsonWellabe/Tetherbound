@@ -86,6 +86,7 @@ CLIPS = {
     "jump": 28,
     "throw": 24,
     "chop": 15,
+    "defeated": 36,
 }
 
 ## Meshy's humanoid bone names. Kept in one table so a rig that names things
@@ -561,6 +562,56 @@ def author_chop(rig, frames: int) -> None:
         key(rig, f"foot.{side}", recover, euler=(0, 0, 0))
 
 
+def author_defeated(rig, frames: int) -> None:
+    """A beaten trainer's reaction, played once and held (F04 aftermath).
+
+    The weight drops: head goes down, shoulders round, chest folds over a
+    slightly bent stance, the hands fall loose in front. It must read as
+    "lost" at the fight camera's distance, so the head and chest carry most
+    of it; nothing crosses the body or leaves the spot (animation in place).
+    Signs follow the verified AXES table. Head/spine/chest X was checked by
+    render on warden_lod0 (X04 red-audit/defeat pass): positive X folds the
+    upper body forward and bows the head.
+    """
+    stand, drop, settle, hold = 0, int(frames * 0.30), int(frames * 0.6), frames
+    key(rig, "hips", stand, euler=(0, 0, 0))
+    key(rig, "spine", stand, euler=(0, 0, 0))
+    key(rig, "chest", stand, euler=(0, 0, 0))
+    key(rig, "head", stand, euler=(0, 0, 0))
+    for side, sign in (("l", -1.0), ("r", 1.0)):
+        key(rig, f"arm.{side}", stand, euler=(0, 0, sign * 2.0))
+        key(rig, f"forearm.{side}", stand, euler=(-6, 0, 0))
+        key(rig, f"upleg.{side}", stand, euler=(0, 0, 0))
+        key(rig, f"leg.{side}", stand, euler=(0, 0, 0))
+    # Drop: a sag through the knees and a fold forward, overshooting.
+    key(rig, "hips", drop, euler=(DEFEAT_FOLD * 0.25, 0, 0))
+    key(rig, "spine", drop, euler=(DEFEAT_FOLD * 0.55, 0, 0))
+    key(rig, "chest", drop, euler=(DEFEAT_FOLD * 0.65, 0, 0))
+    key(rig, "head", drop, euler=(DEFEAT_FOLD * 1.25, 0, 0))
+    for side, sign in (("l", -1.0), ("r", 1.0)):
+        key(rig, f"arm.{side}", drop, euler=(-10, 0, sign * 4.0))
+        key(rig, f"forearm.{side}", drop, euler=(-14, 0, 0))
+        key(rig, f"upleg.{side}", drop, euler=(-10, 0, 0))
+        key(rig, f"leg.{side}", drop, euler=(18, 0, 0))
+    # Settle and hold: a little back from the overshoot, still clearly down.
+    for frame in (settle, hold):
+        key(rig, "hips", frame, euler=(DEFEAT_FOLD * 0.2, 0, 0))
+        key(rig, "spine", frame, euler=(DEFEAT_FOLD * 0.45, 0, 0))
+        key(rig, "chest", frame, euler=(DEFEAT_FOLD * 0.55, 0, 0))
+        key(rig, "head", frame, euler=(DEFEAT_FOLD * 1.1, 0, 0))
+        for side, sign in (("l", -1.0), ("r", 1.0)):
+            key(rig, f"arm.{side}", frame, euler=(-8, 0, sign * 3.0))
+            key(rig, f"forearm.{side}", frame, euler=(-12, 0, 0))
+            key(rig, f"upleg.{side}", frame, euler=(-8, 0, 0))
+            key(rig, f"leg.{side}", frame, euler=(14, 0, 0))
+
+
+## Degrees of forward fold for the defeated reaction's spine/chest/head,
+## render-verified: positive X folds forward on this rig. 16 read as a nod
+## at the fight camera; 26 reads as a beaten slump.
+DEFEAT_FOLD = 26.0
+
+
 def author(rig, name: str, frames: int) -> None:
     clear_pose(rig)
     action = bpy.data.actions.new(name)
@@ -580,6 +631,8 @@ def author(rig, name: str, frames: int) -> None:
         author_throw(rig, frames)
     elif name == "chop":
         author_chop(rig, frames)
+    elif name == "defeated":
+        author_defeated(rig, frames)
 
     action.use_fake_user = True
     # Stashed as an NLA strip so the glTF exporter writes every action as its
@@ -599,6 +652,12 @@ def main() -> None:
 
     rig = load(model)
     bpy.context.scene.render.fps = FPS
+    # `--only defeated[,...]` ADDS the named clips to an already-shipped rig
+    # and keeps every clip it arrived with untouched, so adding a reaction
+    # never re-authors the idle/gaits a player already knows.
+    only = [n for n in str(option(args, "--only", "")).split(",") if n]
+    if only:
+        return add_only(rig, only, out)
 
     # Drop any animation already on the rig. The normal input is a bare Meshy
     # rig with no clips, so this is a no-op there -- but `assets_raw/` is
@@ -649,6 +708,41 @@ def main() -> None:
         export_animations=True, export_animation_mode="NLA_TRACKS",
         export_skins=True, export_yup=True)
     print(f"\n{len(CLIPS)} clips -> {out}")
+
+
+def add_only(rig, names: list[str], out: pathlib.Path) -> None:
+    """Author only `names` onto `rig`, keeping its imported animations.
+
+    The glTF importer brings each shipped clip in as an action; each is
+    stashed as its own NLA track (if the importer did not already) so the
+    NLA_TRACKS export writes them back out under their own names beside the
+    new clip. No unit normalisation here: a shipped *_lod0.glb is already in
+    metres (main()'s transform_apply is for raw Meshy input).
+    """
+    rig.animation_data_create()
+    tracked = {strip.action.name for track in rig.animation_data.nla_tracks
+               for strip in track.strips if strip.action}
+    for action in list(bpy.data.actions):
+        if action.name in tracked or action.name in names:
+            continue
+        clip = action.name.split("|")[-1]
+        track = rig.animation_data.nla_tracks.new()
+        track.name = clip
+        track.strips.new(clip, int(action.frame_range[0]), action)
+        action.use_fake_user = True
+    rig.animation_data.action = None
+    for name in names:
+        if name not in CLIPS:
+            raise SystemExit(f"unknown clip {name!r}; known: {sorted(CLIPS)}")
+        author(rig, name, CLIPS[name])
+        print(f"  added {name}: {CLIPS[name]} frames")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    bpy.ops.object.select_all(action="SELECT")
+    bpy.ops.export_scene.gltf(
+        filepath=str(out), export_format="GLB",
+        export_animations=True, export_animation_mode="NLA_TRACKS",
+        export_skins=True, export_yup=True)
+    print(f"\nadded {names} -> {out}")
 
 
 if __name__ == "__main__":
