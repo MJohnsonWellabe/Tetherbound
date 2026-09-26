@@ -185,6 +185,21 @@ func _choose_wild() -> Node3D:
 			continue
 		candidates.append(body)
 		distances.append(_player.global_position.distance_to(body.global_position))
+	# A player training a hurt, under-level lead picks on wilds it can beat.
+	# Seed 15 (Terrapup starter, 2026-09-26 local run) lost the whole route to
+	# an L3 lead at 58% HP sent at the nearest eligible wild, which may be L5.
+	# Keep only wilds at or below the lead's level when any exist; otherwise
+	# the full eligible pool stands, so supply is never reduced to nothing.
+	var levels: Array[int] = []
+	for body: Node3D in candidates:
+		levels.append(int((body.get("instance") as RefCounted).get("level")))
+	var active: RefCounted = _party().call("active")
+	var keep := level_matched(levels, int(active.get("level")) if active != null else 0)
+	if keep.size() < candidates.size():
+		for index in range(candidates.size() - 1, -1, -1):
+			if not keep.has(index):
+				candidates.remove_at(index)
+				distances.remove_at(index)
 	# Production offers the nearest living wild. A level-weighted selection
 	# could instead insist on a distant level-2 body while a nearby, equally
 	# eligible level-4 body owned Engage. Select before approaching/pressing;
@@ -279,6 +294,19 @@ static func _potion_dose() -> float:
 		if potion is Dictionary and (potion as Dictionary).has("heal"):
 			return float((potion as Dictionary)["heal"])
 	return 50.0
+
+
+## Indices of candidates at or below the pilot's level, or every index when
+## none is. Pure seam for the level-aware training choice in `_choose_wild`.
+static func level_matched(levels: Array[int], pilot_level: int) -> Array[int]:
+	var out: Array[int] = []
+	for index in levels.size():
+		if levels[index] <= pilot_level:
+			out.append(index)
+	if out.is_empty():
+		for index in levels.size():
+			out.append(index)
+	return out
 
 
 static func preferred_candidate_index(distances: Array[float], offered_index: int) -> int:
