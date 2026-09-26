@@ -93,8 +93,9 @@ var _resend_left := 0.0
 var _released_announced := false
 var _aftermath_announced := false
 var _progression_revision := -1
-## Host, once per mount: settled claims without a world resolution receipt
-## (an older build's single-recipient answer) have been given one.
+## Host: settled claims without a world resolution receipt (an older build's
+## single-recipient answer) have been given one. Retried while the ledger is
+## not ready to take them.
 var _legacy_receipts_checked := false
 ## Character ids the host judges claims against, as last published: the
 ## recorded fighters, or for a save from before the list existed the host's
@@ -198,8 +199,7 @@ func _process(delta: float) -> void:
 		_record_participants()
 		_chapter.call("emit_event", "dynamo:release")
 	if _has(FREED_FLAG) and not _legacy_receipts_checked:
-		_legacy_receipts_checked = true
-		_receipt_settled_claims()
+		_legacy_receipts_checked = _receipt_settled_claims()
 	if _has(FREED_FLAG) and not _released_announced:
 		_released_announced = true
 		_broadcast(_state_event())
@@ -599,6 +599,31 @@ static func record_answer(player_flags: RefCounted, id: String, kept: bool, part
 		player_flags.call("set_flag", ACCEPTED_FLAG)
 
 
+## An undecided legacy receipt settles as accepted once a world holds this
+## character's accepted resolution: that world recorded the older build's Yes
+## (`kept`), so no other world may grant a second Stormheart even after the
+## first was let go. A world's recorded refusal settles nothing: it may have
+## been the older build's automatic settle, so the one re-offer stands.
+static func settle_legacy_from_world(player_flags: RefCounted, world_accepted: bool) -> bool:
+	if not world_accepted or not legacy_undecided(player_flags):
+		return false
+	player_flags.call("set_flag", ACCEPTED_FLAG)
+	return true
+
+
+func _settle_legacy_receipt_from_world(game: Node) -> void:
+	if game == null:
+		return
+	var character := _local_character_id(game)
+	if character.is_empty() or not _has(resolution_flag(true, character)):
+		return
+	if not settle_legacy_from_world(game.call("player_flags"), true):
+		return
+	var saver: RefCounted = game.get("save_system")
+	if saver != null:
+		saver.call("save_character", game, character)
+
+
 static func _has_scoped_answer(player_flags: RefCounted) -> bool:
 	if not player_flags.has_method("all_set"):
 		return false
@@ -616,6 +641,7 @@ func _refresh_presentation() -> void:
 	var game := get_node_or_null("/root/Game")
 	var progression: RefCounted = game.get("progression") if game != null else null
 	_progression_revision = int(progression.get("revision")) if progression != null else -1
+	_settle_legacy_receipt_from_world(game)
 	var freed := _has(FREED_FLAG) or _released_announced
 	# Each participant sees their own Stormheart until they have answered it;
 	# a non-participant sees it leave once the world's first offer is settled.
@@ -913,13 +939,19 @@ func _submit_resolution(accepted: bool, character: String) -> void:
 ## world receipt. The world's own record (`kept`) is that character's answer
 ## there, so it is committed once; the character is never re-offered in the
 ## world that already holds its answer, and every peer's prompt reads it.
-func _receipt_settled_claims() -> void:
+func _receipt_settled_claims() -> bool:
 	var state := _saved_state()
 	var present: Array = []
 	for character: String in (state.get("claims", {}) as Dictionary).keys():
 		present.append_array(_world_flags_for(character))
+	var submitted := true
 	for row: Array in unreceipted_settled_claims(state, present):
-		_submit_resolution(bool(row[1]), str(row[0]))
+		var verdict := LEDGER_CLAIM.submit(self, {"kind": "set_world_flag", "realm": "stormwood",
+			"id": resolution_flag(bool(row[1]), str(row[0])), "value": true})
+		# Only a missing ledger is retried; a hard refusal was already shown
+		# once and would repeat every frame.
+		submitted = submitted and str(verdict.get("code", "")) != "offline"
+	return submitted
 
 
 ## `[character, kept]` for each settled claim whose world receipt is missing

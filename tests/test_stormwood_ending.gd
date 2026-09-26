@@ -294,6 +294,15 @@ func test_the_legacy_world_keeps_its_own_recorded_answer() -> void:
 	assert_eq(ENDING.unreceipted_settled_claims(migrated,
 			[ENDING.FREED_FLAG, ENDING.resolution_flag(false, "trainer-old")]), [],
 		"a world already holding the receipt commits nothing more")
+	var legacy := _legacy_flags()
+	assert_false(ENDING.settle_legacy_from_world(legacy, false),
+		"a world's recorded refusal (maybe the older build's automatic settle) keeps the re-offer")
+	assert_true(ENDING.legacy_undecided(legacy))
+	assert_true(ENDING.settle_legacy_from_world(legacy, true),
+		"a world that recorded the older build's Yes settles the receipt as accepted")
+	assert_true(ENDING.accepted_anywhere(legacy, _party_with(["sparkit"])),
+		"even with that Stormheart since let go, no other world grants a second one")
+	assert_false(ENDING.settle_legacy_from_world(legacy, true), "settled once")
 	var open_claim := {"claims": {"trainer-b": {"creature": {}, "settled": false, "kept": false}}}
 	assert_eq(ENDING.unreceipted_settled_claims(open_claim, []), [], "an unanswered claim is not receipted")
 
