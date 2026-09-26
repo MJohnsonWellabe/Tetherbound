@@ -349,7 +349,11 @@ func _ready_a_tournament_team() -> bool:
 	var cfg := _tournament_entry()
 	var want := int(cfg.get("min_party_size", 3))
 	var level := int(cfg.get("min_level", 6))
-	var species := ["terrapup", "ripplet", "galewisp", "mudsnout", "bramblebun"]
+	# Starters are player-exclusive (CLAUDE.md hard rule; owner ruling
+	# 2026-09-26): the chosen starter is already slot 0, and the team is filled
+	# with non-starter species of similar power -- trailpup for terrapup,
+	# riftfrill for ripplet, galecrest for galewisp -- never a second starter.
+	var species := ["trailpup", "riftfrill", "galecrest", "mudsnout", "bramblebun"]
 	var guard := 0
 	while int(party.call("size")) < want and guard < 8:
 		var made: RefCounted = _game.call("make_creature", species[guard % species.size()])
