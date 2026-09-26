@@ -54,12 +54,15 @@ var _speed := 0.0
 ## was leading -- never on the first pose or on a load that is already home.
 var _was_reunited := false
 var _primed := false
+## Trainer id -> spawn pose, see `_trainer_anchor`.
+var _anchors := {}
 var _state_requested := false
 
 
 func build(world: Node3D, trainers: Node3D) -> void:
 	_world = world
 	_trainers = trainers
+	_anchors.clear()
 	add_to_group("progression_restore")
 	if bool(world.get("simulation_only")):
 		return
@@ -91,6 +94,9 @@ func build(world: Node3D, trainers: Node3D) -> void:
 	# way (see `set_fight_hidden`) and resumes following after the fight.
 	add_to_group(HARVEST_NODE.FIGHT_RING_OCCLUDER_GROUP)
 	_connect_session()
+	# Record both spawn poses now, before either trainer walks anywhere.
+	_trainer_anchor(str(_config.get("patrol_trainer_id", "")))
+	_trainer_anchor(str(_config.get("owner_trainer_id", "")))
 	refresh_position(true)
 
 
@@ -475,17 +481,31 @@ func _session() -> Node:
 	return game.get("session") as Node if game != null else null
 
 
+## The trainer's SPAWN pose, recorded once per id. Trainers step into fight
+## rings and wander, so reading the live body each time moved her waiting
+## spot (5.5 m after the patrol fight) and the arrival point, and could put
+## them in different places on different peers. The spawn pose comes from the
+## same deterministic layout on every peer and every reload.
 func _trainer_anchor(id: String) -> Dictionary:
+	if _anchors.has(id):
+		return _anchors[id]
+	var anchor := {}
 	if _trainers != null and _trainers.has_method("body_for"):
 		var body := _trainers.call("body_for", id) as Node3D
-		if body != null:
-			return {"position": Vector2(body.global_position.x, body.global_position.z), "yaw": body.global_rotation.y}
-	var spec := TRAINERS.trainer(id)
-	var position: Array = spec.get("position", [])
-	return {
-		"position": Vector2(float(position[0]), float(position[1])) if position.size() >= 2 else Vector2.ZERO,
-		"yaw": deg_to_rad(float(spec.get("facing_deg", 0.0)))
-	}
+		if body != null and body.is_inside_tree():
+			anchor = {"position": Vector2(body.global_position.x, body.global_position.z), "yaw": body.global_rotation.y}
+	if anchor.is_empty():
+		var spec := TRAINERS.trainer(id)
+		var position: Array = spec.get("position", [])
+		anchor = {
+			"position": Vector2(float(position[0]), float(position[1])) if position.size() >= 2 else Vector2.ZERO,
+			"yaw": deg_to_rad(float(spec.get("facing_deg", 0.0)))
+		}
+	else:
+		# Only a real spawned body is cached; the spec fallback is retried
+		# in case the trainer spawns later.
+		_anchors[id] = anchor
+	return anchor
 
 
 func _offset(key: String) -> Vector2:
