@@ -50,6 +50,16 @@ static func ribbon_half_width(kind: String, cfg: Dictionary, surface: Dictionary
 	return float(surface.lane_half_width_m.get(kind, 0.0)) * float(cfg.width_fraction)
 
 
+## WO-F09-05 round 2: a spur's ribbon fans out where its painted lane flares
+## at the road junction: `base` x (1 + spur.fan x (1 - smoothstep(0,
+## spur.fan_length_m, metres_from_junction))). Roads return `base`.
+static func fanned_half_width(base: float, kind: String, from_junction_m: float, cfg: Dictionary) -> float:
+	var spur: Dictionary = cfg.get("spur", {})
+	if kind != "spur" or spur.is_empty():
+		return base
+	return base * (1.0 + float(spur.get("fan", 0.0)) * (1.0 - smoothstep(0.0, float(spur.get("fan_length_m", 1.0)), from_junction_m)))
+
+
 ## storm_intensity for a Surge phase id (unknown phases read as calm).
 static func phase_intensity(phase: String, cfg: Dictionary) -> float:
 	var table: Dictionary = cfg.storm_intensity
@@ -185,9 +195,11 @@ func _build_route(route: Dictionary, points: Array[Vector2], half: float, height
 			var origin_y := float(height_at.call(origin.x, origin.y))
 			for r in rows + 1:
 				var s := lerpf(s0, s1, float(r) / rows)
+				var from_junction := ((run + s) if from_junction_forward else total - (run + s)) if is_spur else 0.0
+				var row_half := fanned_half_width(half, str(route.get("kind", "")), from_junction, _config)
 				for c in columns:
 					var across := lerpf(-1.0, 1.0, float(c) / (columns - 1))
-					var at := a + dir * s + side * across * half
+					var at := a + dir * s + side * across * row_half
 					var y := float(height_at.call(at.x, at.y)) + lift
 					verts.append(Vector3(at.x - origin.x, y - origin_y, at.y - origin.y))
 					uvs.append(Vector2(run + s, across))

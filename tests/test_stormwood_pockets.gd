@@ -293,7 +293,7 @@ func test_palisade_and_lamps_have_a_config_draw_distance() -> void:
 	assert_true(meshes > 190, "the palisade trunks and lamp art are built (%d meshes)" % meshes)
 	assert_eq(unbounded, 0, "every palisade and lamp mesh stops drawing at %.0f m" % float(draw.models_m))
 	var lights := pockets.find_children("*", "OmniLight3D", true, false)
-	assert_eq(lights.size(), cfg.pockets.size() * 3, "two mouth lamps and one junction lamp per pocket")
+	assert_eq(lights.size(), cfg.pockets.size() * 4, "two mouth lamps and the two junction lamps per pocket")
 	for node: Node in lights:
 		var light := node as OmniLight3D
 		var where := "%s/%s" % [light.get_parent().get_parent().name, light.get_parent().name]

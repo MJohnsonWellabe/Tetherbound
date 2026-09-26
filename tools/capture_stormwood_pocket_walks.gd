@@ -34,6 +34,7 @@ var _back_m := ROAD_BACK_DEFAULT_M
 var _fast := false
 var _pitch_start := -12.0
 var _measure := false
+var _repeats := 1
 ## Road stands only: wild bodies within FREEZE_WILD_M of the trainer are
 ## process-disabled from the tick they appear until the stand is done, so a
 ## roadside pair (ROAD CP-2 authored clusters sit ~15 m from the Conductor
@@ -69,6 +70,8 @@ func _run() -> void:
 			_fast = true
 		elif arg == "--measure":
 			_measure = true
+		elif arg.begins_with("--repeats="):
+			_repeats = int(arg.trim_prefix("--repeats="))
 	var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
 	_pitch_start = float((movement.get("camera", {}) as Dictionary).get("pitch_start_deg", -12.0))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
@@ -357,9 +360,9 @@ func _measure_frames() -> void:
 
 
 func _pix_line(m: Dictionary) -> String:
-	return "reads=%s (current=%s paint=%s) lane_px=%d contrast=%.1f gold_px=%d lane_rgb=%s flank_rgb=%s current_changed=%d lamp_changed=%d lamp_on_screen=%s frozen_wild=%d" % [
+	return "reads=%s (current=%s paint=%s) lane_px=%d contrast=%.1f gold_px=%d lane_rgb=%s flank_rgb=%s current_changed=%d first=%d lamp_changed=%d lamp_on_screen=%s frozen_wild=%d" % [
 		str(m.get("reads", false)), str(m.get("reads_current", false)), str(m.get("reads_paint", false)), int(m.get("lane_px", 0)), float(m.get("contrast", 0.0)), int(m.get("gold_px", 0)),
-		str(m.get("lane_rgb", [])), str(m.get("flank_rgb", [])), int(m.get("current_changed", -1)),
+		str(m.get("lane_rgb", [])), str(m.get("flank_rgb", [])), int(m.get("current_changed", -1)), int(m.get("current_changed_first", -1)),
 		int(m.get("lamp_changed", -1)), str(m.get("lamp_on_screen", false)), int(m.get("frozen_wild", 0))]
 
 
@@ -425,14 +428,26 @@ func _spur_pixels(id: String, spur: Dictionary, road_points: Array[Vector2], fla
 		for child: Node in current.get_children():
 			if child is GeometryInstance3D and str(child.get_meta("route", "")) == str(spur.id):
 				chunks.append(child as GeometryInstance3D)
-	var with_all := await _grab()
-	for chunk in chunks:
-		chunk.visible = false
-	var without_current := await _grab()
-	for chunk in chunks:
-		chunk.visible = true
+	var with_all: Image = null
+	var changes: Array[int] = []
+	for repeat in maxi(1, _repeats):
+		var with_current := await _grab()
+		if with_all == null:
+			with_all = with_current
+		for chunk in chunks:
+			chunk.visible = false
+		var without_current := await _grab()
+		for chunk in chunks:
+			chunk.visible = true
+		changes.append(_changed_near(with_current, without_current, centres, SPUR_PIX_BAND_PX))
 	out["current_chunks"] = chunks.size()
-	out["current_changed"] = _changed_near(with_all, without_current, centres, SPUR_PIX_BAND_PX)
+	# The first pair is the round-1 baseline protocol; with --repeats=N the
+	# median of N pairs is recorded too (the pulses move between grabs).
+	out["current_changed_first"] = changes[0]
+	out["current_changed_all"] = changes
+	var ordered := changes.duplicate()
+	ordered.sort()
+	out["current_changed"] = ordered[ordered.size() / 2]
 	if flame != null:
 		var lamp := flame.get_parent() as Node3D
 		var fp := _camera.unproject_position(flame.global_position)

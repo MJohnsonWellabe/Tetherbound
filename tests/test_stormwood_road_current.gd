@@ -164,6 +164,18 @@ func test_ribbon_stays_inside_the_painted_lane_and_flows_toward_the_dynamo() -> 
 	var wide := cfg.duplicate(true)
 	wide.width_fraction = 1.3
 	assert_true(CURRENT.ribbon_half_width("spur", wide, surface) > float(surface.lane_half_width_m.spur), "control: a 1.3 fraction would leave the lane")
+	# The spur fan (WO-F09-05) stays inside the painted lane plus junction flare.
+	var spur_half := CURRENT.ribbon_half_width("spur", cfg, surface)
+	for metres: float in [0.0, 4.0, 8.0, 12.0, 18.0, 24.0, 40.0]:
+		var painted := float(surface.lane_half_width_m.spur) + float(surface.junction.flare_m) \
+			* (1.0 - smoothstep(0.0, float(surface.junction.flare_length_m), metres))
+		assert_true(CURRENT.fanned_half_width(spur_half, "spur", metres, cfg) <= painted,
+			"spur fan at %.0f m (%.2f m) lies within the painted lane plus flare (%.2f m)" % [metres, CURRENT.fanned_half_width(spur_half, "spur", metres, cfg), painted])
+	assert_almost_eq(CURRENT.fanned_half_width(2.0, "critical", 0.0, cfg), 2.0, 0.0001, "roads do not fan")
+	var fat := cfg.duplicate(true)
+	fat.spur.fan = 3.0
+	assert_true(CURRENT.fanned_half_width(spur_half, "spur", 0.0, fat) > float(surface.lane_half_width_m.spur) + float(surface.junction.flare_m),
+		"control: a 3x fan would leave the painted junction")
 	var dynamo := Vector2(float(cfg.dynamo_xz[0]), float(cfg.dynamo_xz[1]))
 	for route: Dictionary in _json(WORLD_PATH).routes:
 		var points := CURRENT.flow_points(route, cfg)
