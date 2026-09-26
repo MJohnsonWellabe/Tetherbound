@@ -654,8 +654,7 @@ func _perform_action() -> void:
 	# Frame the perch itself before and after, not only Doss's lines.
 	var perch := _world.get_node_or_null(^"RiverNestClear/BankPerch") as Node3D if _activity == "doss" else null
 	if perch != null:
-		await _face_point(perch.global_position)
-		await _capture("act-00-perch-before")
+		await _capture_perch(perch, "act-00-perch-before")
 		await _face_lure()
 	# An activity can take more than one press: Doss first explains the
 	# buckled perch, then offers "Help Doss repair the bank perch" as a second
@@ -677,8 +676,7 @@ func _perform_action() -> void:
 	if perch != null:
 		for i in 30:
 			await physics_frame
-		await _face_point(perch.global_position)
-		await _capture("act-98-perch-after")
+		await _capture_perch(perch, "act-98-perch-after")
 		actions.append({"perch_repaired": bool(perch.get_meta("repaired", false))})
 	for i in 60:
 		await physics_frame
@@ -978,6 +976,22 @@ func _unstick(attempt: int) -> void:
 		await physics_frame
 	Input.action_release(side)
 	Input.action_release("move_forward")
+
+
+## The companion stands at the player's shoulder and, beside the perch, sits
+## right in front of the boards. Put it away with the ordinary key for the
+## shot, as a player looking at the bank could, then call it back out.
+func _capture_perch(perch: Node3D, label: String) -> void:
+	var stowed := false
+	if _director != null and _director.call("ally_body") != null:
+		await _press("creature_recall")
+		for i in 60:
+			await physics_frame
+		stowed = _director.call("ally_body") == null
+	await _face_point(perch.global_position)
+	await _capture(label)
+	if stowed:
+		await _ensure_companion_out("%s; " % label)
 
 
 func _face_point(at: Vector3) -> void:
