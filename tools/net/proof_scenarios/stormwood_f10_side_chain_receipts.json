@@ -351,6 +351,21 @@
   },
   {
    "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "stormglass"
+    ],
+    "equals": null,
+    "budget_frames": 600
+   },
+   "label": "the four relights took all 12 of the host's Stormglass (3 each, host-committed)"
+  },
+  {
+   "peer": 0,
    "action": "explore_at",
    "args": {
     "at": [
@@ -1283,6 +1298,36 @@
   },
   {
    "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "stormglass"
+    ],
+    "equals": null,
+    "budget_frames": 600
+   },
+   "label": "the host-owned delivery took the guest's 3 Stormglass"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "conductor_vine"
+    ],
+    "equals": null,
+    "budget_frames": 600
+   },
+   "label": "and its 2 Conductor Vine, once"
+  },
+  {
+   "peer": 1,
    "action": "explore_at",
    "args": {
     "at": [
@@ -2031,6 +2076,154 @@
     "budget_frames": 600
    },
    "label": "nothing was granted by the repeat press"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -700,
+     2298
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Warden-Elect Bryn"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Warden-Elect Bryn"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_bryn_glass_thanks",
+    "budget_frames": 240
+   },
+   "label": "Warden-Elect Bryn opens 'stormwood_bryn_glass_thanks'"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_bryn_glass_thanks' (second visit: Bryn's thanks, no second request)"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_bryn_glass_thanks' closed"
+  },
+  {
+   "peer": 1,
+   "action": "storage_grant",
+   "args": {
+    "item": "stormglass",
+    "n": 3
+   },
+   "label": "SETUP: 3 more Stormglass, so a second delivery would have something to take"
+  },
+  {
+   "peer": 1,
+   "action": "storage_grant",
+   "args": {
+    "item": "conductor_vine",
+    "n": 2
+   },
+   "label": "SETUP: 2 more Conductor Vine"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -700,
+     2298
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): beside Bryn a third time"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "SECOND ATTEMPT: guest speaks to Bryn again carrying the materials"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_bryn_glass_request",
+    "budget_frames": 120
+   },
+   "expect": "FAIL",
+   "label": "SECOND ATTEMPT: Bryn does not ask for the materials again"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read the ordinary lines"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "stormglass"
+    ],
+    "equals": 3,
+    "budget_frames": 600
+   },
+   "label": "SECOND ATTEMPT: nothing more was taken (3 Stormglass kept)"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "conductor_vine"
+    ],
+    "equals": 2,
+    "budget_frames": 600
+   },
+   "label": "SECOND ATTEMPT: 2 Conductor Vine kept"
   },
   {
    "peer": 0,
