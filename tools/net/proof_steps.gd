@@ -477,15 +477,15 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var cut_at_ack := false
 	if answer == "accept" and bool(args.get("drop_at_ack", false)):
 		# F11 "disconnect at claim acknowledgement". The panel answers Yes in its
-		# `_physics_process` and emits `completed`; the ending's own handler
-		# (connected first) records the receipt, saves the character and queues
-		# `ending_settled` in that same call. This one-shot handler runs right
-		# after it, still inside that physics step and before the frame's
-		# network poll, and closes the transport: a closed ENet peer drops its
-		# unsent queue, so the acknowledgement never leaves.
+		# `_physics_process` and emits `completed`. This one-shot handler closes
+		# the transport in that same physics step, before the frame's network
+		# poll: whatever the ending then commits (receipt, character save) is
+		# local, and the `ending_settled` acknowledgement it sends finds no
+		# connected peer. The host-side step that follows proves it never arrived.
 		var cut := {"done": false, "claim_left": true}
 		var on_yes := func(_conversation: String) -> void:
-			cut.claim_left = not (ending.get("_local_claim") as Dictionary).is_empty()
+			if is_instance_valid(ending):
+				cut.claim_left = not (ending.get("_local_claim") as Dictionary).is_empty()
 			(tree.root.multiplayer.multiplayer_peer as MultiplayerPeer).close()
 			cut.done = true
 		panel.connect("completed", on_yes, CONNECT_ONE_SHOT)
@@ -495,17 +495,27 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 			await tree.physics_frame
 			if bool(cut.done):
 				break
-		if panel.is_connected("completed", on_yes):
+		if is_instance_valid(panel) and panel.is_connected("completed", on_yes):
 			panel.disconnect("completed", on_yes)
-		# The cut only counts if the answer was already committed when it fired.
-		cut_at_ack = bool(cut.done) and not bool(cut.claim_left)
 		await tree.call("_press_edge", "interact", false)
 		for f in 60:
 			await tree.physics_frame
+		# The dropped guest returns to the title; its answer must already be on
+		# its saved character (the receipt the rejoin will present).
+		var game := tree.root.get_node_or_null(^"Game")
+		var character := str((game.get("local") as RefCounted).get("character_id")) if game != null else ""
+		var saved: Dictionary = (game.get("save_system") as Object).get("_characters").call("read", character) \
+			if game != null and not character.is_empty() else {}
+		var saved_flags: Array = ((saved.get("flags", {}) as Dictionary).get("flags", []) as Array) if saved.get("flags") is Dictionary else []
+		var receipt_on_disk := saved_flags.any(func(f: Variant) -> bool: return str(f).contains(":accepted"))
+		cut_at_ack = bool(cut.done) and receipt_on_disk
 		var cut_state := _stormheart_state(tree)
 		(cut_state.data as Dictionary)["cut_at_ack"] = cut_at_ack
+		(cut_state.data as Dictionary)["committed_before_cut"] = not bool(cut.claim_left)
+		(cut_state.data as Dictionary)["receipt_on_disk"] = receipt_on_disk
 		return {"verdict": "PASS" if cut_at_ack else "FAIL",
-			"detail": "answered Yes and closed the link in the frame the answer was committed=%s; %s" % [str(cut_at_ack), str(cut_state.data)],
+			"detail": "answered Yes; link closed in the answer's own physics step=%s (claim already committed then=%s); the Yes receipt is on the saved character=%s; %s"
+				% [str(cut.done), str(not bool(cut.claim_left)), str(receipt_on_disk), str(cut_state.data)],
 			"data": cut_state.data}
 	if not await _tap(tree, "interact" if answer == "accept" else "menu_cancel"):
 		return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}

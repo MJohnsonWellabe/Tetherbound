@@ -1,6 +1,6 @@
 {
   "name": "F11: a guest's link dies at the Stormheart claim acknowledgement; no duplicated grant",
-  "claim": "ACCEPTANCE F11 'through disconnect ... without duplicated grants', the claim-acknowledgement window. Both players fought the Dynamo. The host says Yes. The guest walks up, opens its own offer and says Yes through the real dialogue. In the very frame its answer is committed (stormwood_ending.gd _finish_local_claim: receipt recorded, character saved, ending_settled queued), the guest's transport is closed, so the acknowledgement never leaves; the host is shown to hold no receipt of the guest's answer. The guest rejoins from the title as the same character. The host settles the guest's answer from the resent claim and the guest's saved receipt, and the guest holds exactly one Stormheart: no second grant, nothing offered on a further press, nothing after both peers reload. Setup: the host's captured save with the Stormwood route open, and the Dynamo fight fixture only.",
+  "claim": "ACCEPTANCE F11 'through disconnect ... without duplicated grants', the claim-acknowledgement window. Both players fought the Dynamo. The host says Yes. The guest walks up, opens its own offer and says Yes through the real dialogue. The guest's transport is closed from the dialogue's own `completed` signal, in the physics step that accepted the Yes and before that frame's network poll. The ending then records the receipt and saves the character locally (stormwood_ending.gd _finish_local_claim), and its `ending_settled` acknowledgement finds no connected peer. The host is shown to hold no receipt of the guest's answer. The guest rejoins from the title as the same character. The host settles the guest's answer from the resent claim and the guest's saved receipt, and the guest holds exactly one Stormheart: no second grant, nothing offered on a further press, nothing after both peers reload. Setup: the host's captured save with the Stormwood route open, and the Dynamo fight fixture only.",
   "peers": 2,
   "scene": "world",
   "budget_s": 2100,
@@ -126,10 +126,11 @@
       },
       "expect_data": {
         "cut_at_ack": true,
+        "receipt_on_disk": true,
         "has_stormheart": true,
         "accepted_anywhere": true
       },
-      "label": "the guest says Yes, and its link is closed in the very frame the answer is committed (receipt saved, ending_settled queued, never sent)"
+      "label": "the guest says Yes through the real dialogue, and its link is closed in the answer's own physics step, before any network poll: the Yes receipt is saved on its character, the ending_settled acknowledgement is never sent"
     },
     {
       "peer": 0,
