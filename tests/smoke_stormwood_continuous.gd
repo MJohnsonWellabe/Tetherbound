@@ -48,6 +48,12 @@ const SCENE_WAIT_FRAMES := 7200
 # `_fight_current_encounter`), which lengthens their wall time; thirty minutes
 # keeps the same margin.
 const PREFIX_WATCHDOG_MS := 30 * 60 * 1000
+## The Crown segment now rests the party (one 1x night per worn creature, again
+## after a road-fight KO), clears the escorts and the Alpha, waits for a live
+## Break window (up to nine minutes) and gathers, crafts and builds. Run 19 was
+## still gathering Crown glass, with nothing stuck, when a thirty-minute cap
+## expired. A wall-clock capacity only; every helper step keeps its own limit.
+const CROWN_WATCHDOG_MS := 60 * 60 * 1000
 const COMPLETED_CLOUDREACH_FLAGS: Array[String] = [
 	"cloudreach_chapter_started",
 	"cloudreach_act_i_complete",
@@ -75,6 +81,9 @@ var _step_results: Array = []
 var _bryn_complete := false
 ## Every witness report lists trainer deaths and satchel recoveries: the sum of
 ## each step's field-safety counts, printed once at the end.
+## The segment running now, so a watchdog finish still reports its lightning
+## deaths and satchel recoveries (run 19 lost the Crown step's counts).
+var _live_segment: RefCounted = null
 var _safety_totals := {"warnings": 0, "hits": 0, "damage": 0.0, "deaths": 0,
 	"satchel_recoveries": 0, "satchel_stacks": 0}
 
@@ -214,6 +223,7 @@ func _run() -> void:
 		_crown_watchdog.call_deferred()
 		_step_begin()
 		var crown := CROWN_SEGMENT.new()
+		_live_segment = crown
 		var built: Dictionary = await crown.run(self, world, game)
 		_print_transcript(built)
 		for line: Variant in built.get("failures", []):
@@ -222,6 +232,7 @@ func _run() -> void:
 		_step_end("Capacitor Alpha, Crown gathering, two frames, paid Crown arch", _crown_complete)
 		print("F11 WITNESS STRIKES crown %s" % JSON.stringify(crown.strike_counts()))
 		_add_safety(crown.strike_counts())
+		_live_segment = null
 		_expect(_crown_complete, "same live chapter path reached the paid Crown arch")
 	if _crown_complete and through_aftermath(OS.get_cmdline_user_args()):
 		_aftermath_watchdog.call_deferred()
@@ -231,10 +242,12 @@ func _run() -> void:
 				[AFTERMATH_SEGMENT, "Stormheart offer kept at five, Waterward aftermath"]]:
 			_step_begin()
 			var later_segment: RefCounted = (entry[0] as GDScript).new()
+			_live_segment = later_segment
 			var later: Dictionary = await later_segment.run(self, current_scene as Node3D, game)
 			if later_segment.has_method("strike_counts"):
 				print("F11 WITNESS STRIKES %s %s" % [str(entry[1]), JSON.stringify(later_segment.strike_counts())])
 				_add_safety(later_segment.strike_counts())
+			_live_segment = null
 			_print_transcript(later)
 			for line: Variant in later.get("failures", []):
 				_failures.append(str(line))
@@ -440,7 +453,7 @@ func _watchdog() -> void:
 func _crown_watchdog() -> void:
 	# A separate segment receives the same bounded capacity; the original
 	# prefix deadline and every helper action/locomotion limit stay unchanged.
-	await create_timer(float(PREFIX_WATCHDOG_MS) / 1000.0, true, false, true).timeout
+	await create_timer(float(CROWN_WATCHDOG_MS) / 1000.0, true, false, true).timeout
 	if not _finished and not _crown_complete:
 		_failures.append("Crown construction watchdog expired after the earned Ondra recipe")
 		_finish()
@@ -471,6 +484,10 @@ func _finish() -> void:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	Engine.max_physics_steps_per_frame = 8
+	if _live_segment != null and _live_segment.has_method("strike_counts"):
+		print("F11 WITNESS STRIKES unfinished step %s" % JSON.stringify(_live_segment.call("strike_counts")))
+		_add_safety(_live_segment.call("strike_counts"))
+		_live_segment = null
 	if not OS.get_cmdline_user_args().has("--verify-reload"):
 		print("F11 WITNESS SAFETY TOTAL trainer_deaths=%d satchel_recoveries=%d satchel_stacks=%d strike_hits=%d warnings=%d damage=%.1f" % [
 			int(_safety_totals.deaths), int(_safety_totals.satchel_recoveries), int(_safety_totals.satchel_stacks),

@@ -966,7 +966,9 @@ func _run() -> void:
 	# every time a manager binds a fight, and `_process` skips
 	# `_read_player_input()` entirely while that guard is up. `_flee_pressed()`
 	# reads `Input.is_action_just_pressed`, an EDGE -- so a single injected
-	# press that lands inside a guard window is not deferred, it is GONE.
+	# press that landed inside a guard window used to be GONE. The manager now
+	# buffers a Run seen while input is unread (guard, hitstop) for
+	# `flow.flee_buffer`; the retry below stays as a player's natural re-press.
 	#
 	# Measured: this leg failed roughly one run in two, locally and in CI, and
 	# the instrumented failure showed the guest bound to the right encounter

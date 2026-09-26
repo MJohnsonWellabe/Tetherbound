@@ -300,6 +300,14 @@ func _complete_fresh_opening(peer: int) -> bool:
 	# Type the selected first letter, then navigate using the live cursor rather
 	# than assuming every command crossed the modal's input edge on the same frame.
 	await step(peer, "wait", {"frames": 12})
+	# The guest types a different letter from the host, so neither peer's name
+	# check can pass on the other's input.
+	if peer == 1:
+		var moved: Dictionary = await step(peer, "press", {"action": "ui_right", "tap_frames": 3})
+		if str(moved.get("verdict", "")) != "PASS":
+			_check(false, "peer 1 could not move to its own first letter")
+			return false
+		await step(peer, "wait", {"frames": 12})
 	if not await _press_opening(peer, "menu_confirm", "typed one creature-name letter"):
 		return false
 	for attempt in 20:
@@ -322,6 +330,9 @@ func _complete_fresh_opening(peer: int) -> bool:
 			or str(entry.get("cell", "")) != "\n" or str(entry.get("text", "")).is_empty():
 		return false
 	_typed_names[peer] = str(entry.get("text", ""))
+	if not str(_typed_names[1 - peer]).is_empty():
+		_check(_typed_names[0] != _typed_names[1],
+			"the two peers typed different names ('%s', '%s')" % [_typed_names[0], _typed_names[1]])
 	if not await _press_opening(peer, "menu_confirm", "finished naming the starter"):
 		return false
 	opening = await _opening(peer)

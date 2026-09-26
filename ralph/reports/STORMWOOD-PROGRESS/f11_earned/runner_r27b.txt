@@ -1,0 +1,60 @@
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 88/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 0/363 fainted, bramblebun 340/340, terrapup 90/436, brooktail 329/329 (active bramblebun)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+STORMWOOD CONTINUOUS — PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 88/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 0/363 fainted, bramblebun 340/340, terrapup 90/436, brooktail 329/329 (active bramblebun)
+STORMWOOD CONTINUOUS — LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+F11 WITNESS STEP PASS prefix: arrival through Ondra's arch recipe wall=1209.6s
+F11 WITNESS STRIKES prefix {"damage":0.0,"deaths":0,"dodge_frames":275,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":9}
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 436/436, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 32 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 32 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 55 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 38 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 54 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 9 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 231/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active terrapup -> brooktail
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 73 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 15 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 213/363, bramblebun 351/351, terrapup 231/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 213/363, bramblebun 136/351, terrapup 231/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 71 physics frames): active terrapup -> brooktail
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 213/363, bramblebun 136/351, terrapup 231/443, brooktail 0/334 fainted
+STORMWOOD CONTINUOUS — CAMERA TURN: wild Wild_sparkit_881250856_2 1.1 m away after the road fight (rig tracking=<none> (orbit target /root/Stormwood/Player)); walking out of engage range
+STORMWOOD CONTINUOUS — CAMERA TURN: walked out of engage range (wild now 24.3 m away)
+STORMWOOD CONTINUOUS — CAMERA TURN: no wild within 20 m; rig tracking=<none> (orbit target /root/Stormwood/Player)
+F11 WITNESS STEP PASS Capacitor Alpha, Crown gathering, two frames, paid Crown arch wall=2091.6s
+F11 WITNESS STRIKES crown {"damage":18.0,"deaths":0,"dodge_frames":1380,"hits":1,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":29}
+F11 WITNESS STRIKES Crown arrival, guardian, Wen, Rootgate {"damage":0.0,"deaths":0,"dodge_frames":0,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":0}
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 0/325 fainted, mudsnout 217/370, bramblebun 136/351, terrapup 231/443, brooktail 0/334 fainted
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 44 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 73 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 0/325 fainted, mudsnout 217/370, bramblebun 136/351, terrapup 0/443 fainted, brooktail 0/334 fainted
+STORMWOOD CONTINUOUS — EARNED guardian clearance, Wen truth and physically open Rootgate / Act II
+F11 WITNESS STEP PASS Crown arrival, guardian, Wen, Rootgate wall=114.3s
+F11 WITNESS STRIKES Deepwood, rods, Kestrel, core ascent {"damage":0.0,"deaths":0,"dodge_frames":395,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":7}
+STORMWOOD CONTINUOUS — EARNED stormwood:lantern_hollow_reached
+STORMWOOD CONTINUOUS — EARNED stormwood:captive_truth_learned
+STORMWOOD CONTINUOUS — REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 36 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 43 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 42 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 37 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 44 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 43 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 43 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before officer_nysa_deepwood_rod: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+F11 WITNESS STEP FAIL Deepwood, rods, Kestrel, core ascent wall=487.2s
+F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 satchel_stacks=0 strike_hits=1 warnings=45 damage=18.0
+stormwood continuous FAIL: officer_nysa_deepwood_rod dialogue did not start actual hosted combat

@@ -155,6 +155,9 @@ func _clear_guardian() -> bool:
 					return _fail("Crown guardian input admitted a different wild body")
 				break
 			await _tree.physics_frame
+		if not _manager.is_fighting():
+			# Runner run 27: four approaches, no fight and no failure detail.
+			_note("GUARDIAN approach %d did not engage: %s" % [_attempt + 1, str(_alpha_admission_snapshot(body))])
 		if _manager.is_fighting() and not await _fight_current("Crown guardian"):
 			return false
 		if await _wait_flag(GUARDIAN_CLEAR, 180):

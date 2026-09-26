@@ -48,7 +48,8 @@
       "flag_id": "road_gate_open",
       "scope": "world",
       "label": "Open the village gate and follow the road in.",
-      "beacon": {"position": [27.5, -16.0], "display_name": "Village gate"},
+      "beacon": {"position": [38.72, -19.85], "display_name": "Village gate"},
+      "_why_f01_beacon": "F01: was GATE_AT [27.5,-16], a dead constant 11.9m from any gate since village_boundary.gd owns the leaves; this is village_boundary.json RoadGate, the leaf the old key lies beside.",
       "how": "The old key lies in the grass a few steps off the road. {interact} to take it, then {interact} at the gate.",
       "_comment": "OP23-04. Was \"Find a way through the village gate.\" -- a riddle, and the owner's own words for why this lane exists: it \"makes no sense\" as the thing the game asks of you first. There is no puzzle here; `playground_world.gd::_spawn_gate_key()` drops `castle_gate_key` a few metres to the side of the gate on purpose (SA7: \"near-field and low-stakes, so the player understands early that gated things have keys\"). The label now says what to do and the `how` line says where the key is, which is what the beat was always FOR."
     },

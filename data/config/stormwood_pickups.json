@@ -41,10 +41,11 @@
       "count": 1,
       "region_id": "cinder_verge",
       "position": [
-        -650,
-        21.18,
-        830
+        -655.0,
+        21.04,
+        836.3
       ],
+      "_why_moved_f11": "Sat on the Verge rod station, 3 m from its switch prompt and under Officer Maren. Moved 8 m on along the ash road, 10 m from the switch and 15 m from Maren's new stance (static interaction-spacing audit after F11 run 22).",
       "placement": "critical_route_verge",
       "persistent": true,
       "one_time": true,
@@ -124,10 +125,11 @@
       "count": 1,
       "region_id": "conductor_run",
       "position": [
-        -560,
-        62.88,
-        2480
+        -564.9,
+        63.57,
+        2473.7
       ],
+      "_why_moved_f11": "Sat exactly on trainer Scout Kael, inside Kael's 4.2 m challenge circle. Moved 8 m back along the conductor road (static interaction-spacing audit after F11 run 22); y is the heightfield + 0.35 m.",
       "placement": "critical_route_verge",
       "persistent": true,
       "one_time": true,
@@ -189,10 +191,11 @@
       "count": 1,
       "region_id": "conductor_run",
       "position": [
-        -1120,
-        62.44,
-        3290
+        -1118.8,
+        62.3,
+        3282.1
       ],
+      "_why_moved_f11": "Sat exactly on trainer Duelist Ren. Moved 8 m back along the conductor road (static interaction-spacing audit after F11 run 22).",
       "placement": "critical_route_verge",
       "persistent": true,
       "one_time": true,
@@ -237,10 +240,11 @@
       "count": 1,
       "region_id": "deepwood",
       "position": [
-        -890,
-        51.77,
-        4490
+        -895.1,
+        52.65,
+        4496.2
       ],
+      "_why_moved_f11": "Sat on the Deepwood rod station, 3 m from its switch prompt and under Officer Nysa and circuit Tavi. Moved 8 m on along the Deepwood road, 10 m from the switch (static interaction-spacing audit after F11 run 22).",
       "placement": "critical_route_verge",
       "persistent": true,
       "one_time": true,
@@ -2294,10 +2298,11 @@
       "count": 1,
       "region_id": "hollow_crown",
       "position": [
-        819,
+        814.1,
         74.35,
-        2801
+        2807.3
       ],
+      "_why_moved_f11": "Sat 1.4 m from trainer Wayfarer Nell. Moved 8 m along the Crown ring, 9.4 m from Nell (static interaction-spacing audit after F11 run 22).",
       "placement": "optional_reward_pocket",
       "persistent": true,
       "one_time": true,

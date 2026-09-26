@@ -1,0 +1,464 @@
+{
+ "name": "F15: credits occur once for host and guest, the game's own homecoming save survives a quit and a title-screen reload",
+ "claim": "ACCEPTANCE F15 (T3) \u00a76.1 #3, with a REAL save witness: 'Credits occur once' and 'reload resumes a safe completed world with local requests, without a fifth key or invented sequel prompt', for HOST and GUEST. Setup stands in for PLAYING Tidewake to the end only (as f15_homecoming_credits_reload.json): the host's named Meadows save plus the end-of-Tidewake world facts committed through the ledger and Old Bram met. The harness's last save (capture_saves 'before') runs BEFORE the ending; after it, no harness step writes a save. save_witness reads each peer's character file through the game's own CharacterSave reader (never saving) and must see it REWRITTEN by the production homecoming transaction (homecoming_seen only) and again by the credits Continue (both receipts): without the game's own save_character calls these checks fail. Each peer then quits through session.leave (the game's quit save), and reloads through the production path: the host from the title screen (reset as a fresh process, Load Game, the autosave slot, Game.load_game, Meadows rebuilt and re-hosted), the guest through the title's returning route (its character file, JoinDriver). Per peer after the reload: both receipts, credits not pending, the repeat greeting, exactly two realm keys, no sequel prompt, local requests offered.",
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 2400,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+   },
+   "expect_data": {
+    "realm": "meadows"
+   },
+   "label": "named save: the host's Meadows world"
+  },
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 10000,
+   "label": "guest: its own trainer in the Meadows"
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "water_captain_nerissa_defeated",
+    "scope": "world"
+   },
+   "label": "SETUP: end of Tidewake (stands in for playing it)"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_gate_water_unlocked",
+    "scope": "world"
+   },
+   "label": "SETUP"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_key_water",
+    "scope": "world"
+   },
+   "label": "SETUP: the Water key Stormwood granted"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "water_currents_restored",
+    "scope": "world"
+   },
+   "label": "SETUP: currents restored"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "old_champion_met",
+    "scope": "world"
+   },
+   "label": "SETUP: one Local Request revealed (Old Bram), as the single-player proof's fixture does"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_currents_restored",
+    "scope": "world"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "currents_restored": true,
+    "homecoming_seen": false,
+    "credits_seen": false,
+    "credits_pending": false,
+    "realm_keys": [
+     "realm_key_stormwood",
+     "realm_key_water"
+    ],
+    "local_requests_offered": true,
+    "tracked_id": "regional_return_home"
+   },
+   "label": "before: no receipts (non-vacuous baseline)"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "before"
+   },
+   "label": "the LAST harness save of the run, before the ending: from here on only the game writes a save"
+  },
+  {
+   "peer": 0,
+   "action": "save_witness",
+   "args": {
+    "mark": "pre",
+    "lacks": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ],
+    "label": "witness_0_pre"
+   },
+   "expect_data": {
+    "character_id": "$character0"
+   },
+   "label": "mark this peer's character file on disk before the ending: neither receipt"
+  },
+  {
+   "peer": 1,
+   "action": "save_witness",
+   "args": {
+    "mark": "pre",
+    "lacks": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ],
+    "label": "witness_0_pre"
+   },
+   "expect_data": {
+    "character_id": "$character1"
+   },
+   "label": "mark this peer's character file on disk before the ending: neither receipt"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "00_meadows_before"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "homecoming_complete",
+   "args": {},
+   "expect_data": {
+    "initial": true,
+    "homecoming_seen": true,
+    "credits_open": true
+   },
+   "label": "host greets Grandpa: its own homecoming"
+  },
+  {
+   "peer": 0,
+   "action": "save_witness",
+   "args": {
+    "since": "pre",
+    "mark": "homecoming",
+    "contains": [
+     "homecoming_seen"
+    ],
+    "lacks": [
+     "regional_credits_seen"
+    ],
+    "label": "witness_1_homecoming"
+   },
+   "label": "PRODUCTION SAVE 1: the homecoming transaction (regional_homecoming.gd::complete -> save_character) rewrote the file with homecoming_seen, before any credits receipt; no harness save ran since the mark"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "01_host_credits_roll"
+   },
+   "label": "the production credits roll, open on this peer"
+  },
+  {
+   "peer": 1,
+   "action": "ending_state",
+   "expect_data": {
+    "homecoming_seen": false,
+    "credits_open": false,
+    "realm_keys": [
+     "realm_key_stormwood",
+     "realm_key_water"
+    ],
+    "local_requests_offered": true
+   },
+   "label": "the host's homecoming is not the guest's"
+  },
+  {
+   "peer": 0,
+   "action": "credits_continue",
+   "args": {
+    "watch_seconds": 3.0
+   },
+   "expect_data": {
+    "acknowledged": 1,
+    "open_after_continue": false,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_seen_on_disk": true,
+    "credits_reopened": false
+   },
+   "label": "host watches the roll, Continue once"
+  },
+  {
+   "peer": 0,
+   "action": "save_witness",
+   "args": {
+    "since": "homecoming",
+    "mark": "credits",
+    "contains": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ],
+    "label": "witness_2_credits"
+   },
+   "label": "PRODUCTION SAVE 2: the credits Continue (regional_credits acknowledged -> complete_credits -> save_character) rewrote the file again, now with both receipts"
+  },
+  {
+   "peer": 1,
+   "action": "homecoming_complete",
+   "args": {},
+   "expect_data": {
+    "initial": true,
+    "homecoming_seen": true,
+    "credits_open": true
+   },
+   "label": "guest greets Grandpa: its own homecoming"
+  },
+  {
+   "peer": 1,
+   "action": "save_witness",
+   "args": {
+    "since": "pre",
+    "mark": "homecoming",
+    "contains": [
+     "homecoming_seen"
+    ],
+    "lacks": [
+     "regional_credits_seen"
+    ],
+    "label": "witness_1_homecoming"
+   },
+   "label": "PRODUCTION SAVE 1: the homecoming transaction (regional_homecoming.gd::complete -> save_character) rewrote the file with homecoming_seen, before any credits receipt; no harness save ran since the mark"
+  },
+  {
+   "peer": 1,
+   "action": "screenshot",
+   "args": {
+    "name": "01_guest_credits_roll"
+   },
+   "label": "the production credits roll, open on this peer"
+  },
+  {
+   "peer": 1,
+   "action": "credits_continue",
+   "args": {
+    "watch_seconds": 3.0
+   },
+   "expect_data": {
+    "acknowledged": 1,
+    "open_after_continue": false,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_seen_on_disk": true,
+    "credits_reopened": false
+   },
+   "label": "guest watches the roll, Continue once"
+  },
+  {
+   "peer": 1,
+   "action": "save_witness",
+   "args": {
+    "since": "homecoming",
+    "mark": "credits",
+    "contains": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ],
+    "label": "witness_2_credits"
+   },
+   "label": "PRODUCTION SAVE 2: the credits Continue (regional_credits acknowledged -> complete_credits -> save_character) rewrote the file again, now with both receipts"
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "homecoming_seen": true,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_open": false,
+    "grandpa_next": "regional_homecoming_repeat",
+    "realm_keys": [
+     "realm_key_stormwood",
+     "realm_key_water"
+    ],
+    "local_requests_offered": true
+   },
+   "label": "after the credits, before quitting"
+  },
+  {
+   "peer": 1,
+   "action": "leave",
+   "args": {
+    "reason": "quit"
+   },
+   "label": "guest quits (session.leave: the client's own quit save of its character)"
+  },
+  {
+   "peer": 0,
+   "action": "leave",
+   "args": {
+    "reason": "quit"
+   },
+   "label": "host quits (session.leave: the host's own quit save of its slot)"
+  },
+  {
+   "peer": 0,
+   "action": "title_continue",
+   "args": {
+    "budget_frames": 11000
+   },
+   "budget_frames": 12000,
+   "expect_data": {
+    "emptied": true,
+    "reloaded": true,
+    "same_character": true,
+    "realm": "meadows",
+    "hosting": true
+   },
+   "label": "HOST RELOAD, production path: title screen, fresh-process reset, Load Game -> the autosave slot -> Game.load_game -> Meadows rebuilt and hosted"
+  },
+  {
+   "peer": 1,
+   "action": "wipe_character",
+   "label": "guest: the live character blanked (a fresh process), id kept so the title can find its file"
+  },
+  {
+   "peer": 1,
+   "action": "production_join",
+   "args": {
+    "returning_route": true,
+    "budget_frames": 6000,
+    "character": {
+     "character_id": "$character1"
+    }
+   },
+   "budget_frames": 6500,
+   "label": "GUEST RELOAD, production path: title returning route (_join_via -> _restore_portable_returning_character reads its character file) -> JoinDriver -> the host's world"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2,
+    "budget_frames": 1200
+   }
+  },
+  {
+   "peer": 0,
+   "action": "save_witness",
+   "args": {
+    "contains": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ]
+   },
+   "expect_data": {
+    "character_id": "$character0"
+   },
+   "label": "host: the same character came back, its file holds both receipts"
+  },
+  {
+   "peer": 1,
+   "action": "save_witness",
+   "args": {
+    "contains": [
+     "homecoming_seen",
+     "regional_credits_seen"
+    ]
+   },
+   "expect_data": {
+    "character_id": "$character1"
+   },
+   "label": "guest: the same character came back, its file holds both receipts"
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "currents_restored": true,
+    "homecoming_seen": true,
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_open": false,
+    "grandpa_next": "regional_homecoming_repeat",
+    "tracked_id": "",
+    "local_requests_offered": true,
+    "sequel_or_chapter_prompt": false,
+    "realm_keys": [
+     "realm_key_stormwood",
+     "realm_key_water"
+    ],
+    "realm_key_count": 2
+   },
+   "label": "after the production reload: a safe completed world, both receipts, credits not pending, local requests, no fifth key, no sequel prompt"
+  },
+  {
+   "peer": "all",
+   "action": "homecoming_complete",
+   "expect_data": {
+    "repeat": true,
+    "credits_open": false,
+    "credits_pending": false
+   },
+   "label": "after the reload, Grandpa again (pressed now): the repeat greeting, no second roll"
+  },
+  {
+   "peer": "all",
+   "action": "ending_state",
+   "expect_data": {
+    "credits_seen": true,
+    "credits_pending": false,
+    "credits_open": false,
+    "tracked_id": "",
+    "local_requests_offered": true,
+    "sequel_or_chapter_prompt": false,
+    "realm_keys": [
+     "realm_key_stormwood",
+     "realm_key_water"
+    ],
+    "realm_key_count": 2
+   },
+   "label": "final"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "03_after_reload"
+   }
+  }
+ ]
+}
