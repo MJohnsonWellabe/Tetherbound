@@ -650,6 +650,13 @@ func _perform_action() -> void:
 	var actions: Array = []
 	var lines := 0
 	var fought := false
+	# Doss's action changes the world: the buckled bank perch straightens.
+	# Frame the perch itself before and after, not only Doss's lines.
+	var perch := _world.get_node_or_null(^"RiverNestClear/BankPerch") as Node3D if _activity == "doss" else null
+	if perch != null:
+		await _face_point(perch.global_position)
+		await _capture("act-00-perch-before")
+		await _face_lure()
 	# An activity can take more than one press: Doss first explains the
 	# buckled perch, then offers "Help Doss repair the bank perch" as a second
 	# prompt. Press again while the activity's own prompt is still offered.
@@ -667,6 +674,12 @@ func _perform_action() -> void:
 		fought = fought or bool(actions.back().get("fought", false)) if not actions.is_empty() else fought
 	if _activity == "juno" and fought:
 		actions.append(await _act_escort_home(panel))
+	if perch != null:
+		for i in 30:
+			await physics_frame
+		await _face_point(perch.global_position)
+		await _capture("act-98-perch-after")
+		actions.append({"perch_repaired": bool(perch.get_meta("repaired", false))})
 	for i in 60:
 		await physics_frame
 	await _capture("act-99-after")
@@ -965,6 +978,14 @@ func _unstick(attempt: int) -> void:
 		await physics_frame
 	Input.action_release(side)
 	Input.action_release("move_forward")
+
+
+func _face_point(at: Vector3) -> void:
+	var to := _xz3(at) - _xz()
+	if to.length() > 0.01:
+		_rig.set("yaw", atan2(-to.x, -to.y))
+	for i in 30:
+		await physics_frame
 
 
 func _face_lure() -> void:
