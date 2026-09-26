@@ -68,6 +68,12 @@ func _continue_deepwood() -> void:
 	if not await _activate_exact(sable, prompt, approach, "Sable captive truth") \
 			or not await _dialogue("Sable") or not await _receipt("stormwood:captive_truth_learned"):
 		return
+	# Run 24 reached Officer Nysa with three of five fainted (the Crown
+	# guardian, the Rootgate road and a Deepwood-station wild), and the
+	# challenge was refused. A player rests first: Lantern Hollow Waycamp is
+	# the camp the Rootgate opens, beside Sable, on this road.
+	if not await _rest_before("officer_nysa_deepwood_rod"):
+		return
 	if not await _walk_xz(Vector2(-890, 4490), "Deepwood station") \
 			or not await _trainer(TRAINERS[0]) or not await _rod("deepwood_rod_station") \
 			or not await _receipt("stormwood:deepwood_station_disabled"):
@@ -81,6 +87,10 @@ func _continue_deepwood() -> void:
 	if not await _walk_xz(Vector2(-120, 5270), "Ember Bivouac arrival") \
 			or not await _receipt("stormwood:ember_bivouac_reached") \
 			or not await _trainer(TRAINERS[2]) or not await _receipt("stormwood:kestrel_defeated"):
+		return
+	# Marrow is fought on the core, reached only by the ascent: rest at Ember
+	# Bivouac (open once every rod is down) before climbing.
+	if not await _rest_before("marrow_core_ascent"):
 		return
 	if not await _climb_core() or not await _receipt(CORE):
 		return
@@ -127,6 +137,8 @@ func _dialogue(label: String) -> bool:
 		await _tree.physics_frame
 	if not panel.is_open():
 		return _fail(label + " exact interaction did not open dialogue")
+	var runner: Variant = panel.call("runner") if panel.has_method("runner") else null
+	_note("DIALOGUE %s opened '%s'" % [label, str((runner as Object).call("conversation_id")) if runner is Object else "?"])
 	for _line in 64:
 		if not panel.is_open():
 			return true
@@ -140,19 +152,58 @@ func _trainer(id: String) -> bool:
 	var prompt := body.call("prompt_node") as Node3D if body != null else null
 	if spec.is_empty() or body == null or prompt == null:
 		return _fail(id + " actual trainer is absent")
+	if not await _rest_before(id):
+		return false
 	if not await _ensure_usable_ally(id):
 		return false
+	# The send-out that `_ensure_usable_ally` pressed deploys asynchronously;
+	# wait for the director to agree before judging the challenge.
+	for _frame in 300:
+		if bool(_director.call("can_challenge", spec)):
+			break
+		await _tree.physics_frame
 	if not _director.call("can_challenge", spec):
-		return _fail(id + " requires an unmet earned prerequisite or usable ally")
+		var ally: RefCounted = _director.call("ally_instance")
+		var missing: Array[String] = []
+		for flag: String in spec.get("requires_flags", []):
+			if not _has(flag):
+				missing.append(flag)
+		return _fail(("%s requires an unmet earned prerequisite or usable ally (ally=%s fainted=%s ally_body=%s "
+			+ "fighting=%s battle=%s too_low=%s beaten=%s missing_flags=%s)") % [id,
+			str(ally.get("species_id")) if ally != null else "none",
+			str(ally.get("fainted")) if ally != null else "?", str(_director.call("ally_body") != null),
+			str(_manager.call("is_fighting")), str(_director.call("trainer_battle_active")),
+			str(_director.call("too_low_to_challenge", spec)), str(_has(str(spec.get("defeat_flag", "")))),
+			str(missing)])
+	# A player sees their companion out before challenging: wait for the body
+	# the send-out summons (it deploys asynchronously).
+	for _frame in 300:
+		if _director.call("ally_body") != null:
+			break
+		await _tree.physics_frame
 	if not await _activate_exact(body, prompt,
 			Vector2(body.global_position.x, body.global_position.z - 2), id) or not await _dialogue(id):
 		return false
-	for _frame in 600:
+	var refusals_before := _trainer_events.filter(func(e: String) -> bool: return e.begins_with("start_refused")).size()
+	for _frame in 900:
 		if _director.trainer_battle_active():
+			break
+		# A wild that engaged while the challenge was answered is fought out,
+		# as a player would; the host then admits (or refuses, with a reason).
+		if bool(_manager.call("is_fighting")):
+			_note("WILD engaged during %s's challenge; fighting it out" % id)
+			if not await _fight_current(id + " challenge"):
+				return false
+			continue
+		if _trainer_events.filter(func(e: String) -> bool: return e.begins_with("start_refused")).size() > refusals_before:
 			break
 		await _tree.physics_frame
 	if not _director.trainer_battle_active():
-		return _fail(id + " dialogue did not start actual hosted combat")
+		var ally: RefCounted = _director.call("ally_instance")
+		return _fail("%s dialogue did not start actual hosted combat (hub events=%s; ally=%s ally_body=%s can_challenge=%s fighting=%s player=%s trainer=%s)" % [
+			id, str(_trainer_events.slice(-6)), str(ally.get("species_id")) if ally != null else "none",
+			str(_director.call("ally_body") != null), str(_director.call("can_challenge", spec)),
+			str(_manager.call("is_fighting")), str(_player.global_position), str(body.global_position)])
 	# One wall-clock bounded driver spans all actual roster rounds; no nested
 	# fight wait can outlive this five-minute sequence cap.
 	var scale_before := Engine.time_scale
@@ -170,8 +221,12 @@ func _trainer(id: String) -> bool:
 		if release_tick >= 0 and tick >= release_tick:
 			_set_action(&"combat_quick", false)
 			release_tick = -1
-		var enemy := _manager.call("enemy_body") as Node3D
-		var ally := _director.call("ally_body") as Node3D
+		# Between rounds the fainted creature's body is freed; never cast a
+		# freed instance (focused Nysa smoke: "Trying to cast a freed object").
+		var enemy_raw: Variant = _manager.call("enemy_body")
+		var ally_raw: Variant = _director.call("ally_body")
+		var enemy := enemy_raw as Node3D if is_instance_valid(enemy_raw) else null
+		var ally := ally_raw as Node3D if is_instance_valid(ally_raw) else null
 		if _manager.is_fighting() and enemy != null and ally != null:
 			var offset := enemy.global_position - ally.global_position
 			offset.y = 0
@@ -194,7 +249,36 @@ func _trainer(id: String) -> bool:
 		return _fail(id + " did not publish its actual hosted victory within five minutes")
 	return await _receipt(str(spec.get("defeat_flag", "")))
 
+## The camp a player uses before each named fight: the nearest camp open at
+## that point on the route. Lantern Hollow Waycamp (opened by the Rootgate) is
+## the last open camp before Nysa and Sera; Ember Bivouac opens only once all
+## rods are down, so it serves Kestrel and Marrow.
+const REST_BEFORE := {
+	"officer_nysa_deepwood_rod": "lantern_hollow_waycamp",
+	"outerworks_lieutenant_sera": "lantern_hollow_waycamp",
+	"officer_kestrel_outer_works": "ember_bivouac",
+	"marrow_core_ascent": "ember_bivouac",
+}
+
+
+func _rest_before(fight_id: String) -> bool:
+	if not _party_worn(0.999):
+		_note("REST before %s: not needed (party whole)" % fight_id)
+		return true
+	var camp := str(REST_BEFORE.get(fight_id, ""))
+	if camp.is_empty():
+		return true
+	_note("REST before %s at %s (nearest open camp on the route)" % [fight_id, camp])
+	return await _rest_party_at_camp(camp)
+
+
+var _trainer_events: Array[String] = []
+
+
 func _observe_trainer(event: Dictionary) -> void:
+	var kind := str(event.get("kind", ""))
+	if kind in ["start_refused", "started", "verdict", "finished"] or kind.contains("refus"):
+		_trainer_events.append("%s %s %s" % [kind, str(event.get("trainer_id", "")), str(event.get("reason", ""))])
 	if str(event.get("kind", "")) == "finished":
 		_outcomes[str(event.get("trainer_id", ""))] = bool(event.get("won", false))
 

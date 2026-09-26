@@ -76,10 +76,11 @@
       "body_profile": "grunt_c",
       "portrait": "res://assets/ui/portraits/grunt_c.png",
       "position": [
-        -900,
-        32.10,
-        1780
-      ]
+        -904,
+        31.44,
+        1787
+      ],
+      "_why_moved_f11": "Stood exactly under trainer Ivo's Moss Detour and 3 m from the Hollows rod switch. Moved 8 m north-west, still at the Hollows station (9.9 m from the switch), clear of route pickup 06 (7.3 m). Static interaction-spacing audit after F11 run 22."
     },
     {
       "id": "warden_elect_bryn",
@@ -220,9 +221,10 @@
       "portrait": "res://assets/ui/portraits/officer_b.png",
       "position": [
         -100,
-        107.72,
-        5350
-      ]
+        108.14,
+        5358
+      ],
+      "_why_moved_f11": "Stood exactly under trainer Lieutenant Sera and 3 m from the Dynamo approach rod switch. Moved 8 m north, still at the approach station (8.5 m from the switch). Static interaction-spacing audit after F11 run 22."
     },
     {
       "id": "captain_marrow",

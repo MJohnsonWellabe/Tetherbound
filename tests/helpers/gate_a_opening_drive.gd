@@ -81,8 +81,23 @@ const AIM_TOO_CLOSE_METRES := 5.0
 const AIM_THROWABLE_METRES := 12.0
 const CONTINUOUS_CORE_FLAG := "--gate-a-continuous-core"
 
+## F01 (all three starters): which starter to take, as a species id from the
+## picker's own live list. Empty keeps the drive's historical choice so
+## existing callers are unchanged. Set by the caller before `run()`.
+var starter_species: String = ""
+## Historical EFFECTIVE press count when `starter_species` is empty. The old
+## drive tapped `ui_right` on the frame the picker opened, inside its
+## OPEN_GUARD_FRAMES (2): starter_picker.gd returns early while the guard counts
+## down and `is_action_just_pressed` is true for one frame only, so that press
+## was always dropped and every historical run took index 0 (terrapup). This
+## drive now waits for the guard, so the historical choice is 0 presses.
+const DEFAULT_STARTER_PRESSES := 0
+
 var _failures: Array[String] = []
 var _transcript: Array[String] = []
+## What the picker actually handed the party, reported in `_result()`.
+var _chosen_species: String = ""
+var _chosen_uid: String = ""
 var _tree: SceneTree = null
 var _started_ms := 0
 var _world: Node = null
@@ -241,7 +256,8 @@ func run(tree: SceneTree) -> Dictionary:
 	if not bool(_starter_picker.call("is_open")):
 		_fail("starter picker did not open after the real briefing")
 		return _result()
-	await _tap_action("ui_right")
+	if not await _move_picker_to_starter():
+		return _result()
 	await _tap_action("menu_confirm")
 	for _i in 60:
 		if bool(_name_prompt.call("is_open")):
@@ -260,7 +276,13 @@ func run(tree: SceneTree) -> Dictionary:
 	if _game.party.size() != 1 or str(_game.party.at(0).nickname) != CHOSEN_NAME:
 		_fail("named starter did not reach the real one-creature party")
 		return _result()
-	_checkpoint("starter selected and named")
+	var reached := str(_game.party.at(0).species_id)
+	if reached != _chosen_species:
+		_fail("the picker was confirmed on '%s' and the party received '%s'"
+			% [_chosen_species, reached])
+		return _result()
+	_chosen_uid = str(_game.party.at(0).uid)
+	_checkpoint("starter selected and named (%s, uid %s)" % [reached, _chosen_uid])
 
 	if not await _walk_toward(house.call("marker", "grandpa"), 500):
 		_fail("could not cross the ground floor after naming")
@@ -1482,4 +1504,47 @@ func _result() -> Dictionary:
 		"game": _game,
 		"player": _player,
 		"rig": _rig,
+		"starter_species": _chosen_species,
+		"starter_uid": _chosen_uid,
 	}
+
+
+## Walk the live picker to the requested starter with real `ui_right` presses.
+##
+## The order is read off the picker itself (`starter_picker.gd::_species`, filled
+## by `open()` from `opening.json`), not assumed, and the landing index is read
+## back from the picker before confirming -- a press lost to the picker's open
+## guard would otherwise confirm the wrong orb and only surface later as a
+## species mismatch.
+func _move_picker_to_starter() -> bool:
+	var order: Array = _starter_picker.get("_species") as Array
+	if order == null or order.is_empty():
+		_fail("the open starter picker exposes no species order")
+		return false
+	for _i in 60:
+		if int(_starter_picker.get("_guard")) <= 0:
+			break
+		await _tree.physics_frame
+	var start := int(_starter_picker.get("_index"))
+	var target := start + DEFAULT_STARTER_PRESSES
+	if starter_species != "":
+		target = order.find(starter_species)
+		if target < 0:
+			_fail("starter '%s' is not offered by the picker (order %s)"
+				% [starter_species, str(order)])
+			return false
+	if target < start or target >= order.size():
+		_fail("starter index %d is not reachable with ui_right from %d (order %s)"
+			% [target, start, str(order)])
+		return false
+	for _press in target - start:
+		await _tap_action("ui_right")
+	var landed := int(_starter_picker.get("_index"))
+	if landed != target:
+		_fail("%d ui_right press(es) left the picker on index %d, wanted %d (order %s)"
+			% [target - start, landed, target, str(order)])
+		return false
+	_chosen_species = str(order[target])
+	_checkpoint("starter picker order %s; %d ui_right press(es) to '%s'"
+		% [str(order), target - start, _chosen_species])
+	return true

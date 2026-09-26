@@ -16,9 +16,13 @@ extends SceneTree
 ## `water_guardian_freed` and this character's own offer marker (it already
 ## answered), to prove the chain outranks Edda's post-freeing neutral line.
 ## Solo host.
+## Saved completion: the finished chain is written through Game.save_game,
+## the world destroyed, Game reset and reloaded through Game.load_game into a
+## rebuilt production Water world (tests/helpers/water_chain_reload.gd).
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const REWARD := preload("res://scripts/world/water_guardian_reward.gd")
+const RELOAD := preload("res://tests/helpers/water_chain_reload.gd")
 const CANDY := "water:drowned_garden:pickup:002"
 const LEAD := "water_claim:local:garden_records:lead"
 const ACCOUNT := "water_claim:local:garden_records:account"
@@ -89,6 +93,17 @@ func garden_entry(reader: RefCounted) -> Dictionary:
 			return entry
 	return {}
 
+## The authored landmark the lead names: listed in the production world config,
+## standing on dry terrain above the waterline (a data/terrain check only; the
+## rendered read from the normal camera is T2's visual matrix).
+func landmark_stands(landmark_id: String) -> bool:
+	for raw: Dictionary in world.config.get("landmarks", []):
+		if str(raw.get("id", "")) != landmark_id:
+			continue
+		var at := Vector3(float(raw.position[0]), 0.0, float(raw.position[2]))
+		return float(world.ground_height_at(at.x, at.z)) > 1.0 and is_zero_approx(world.water_depth_at(at))
+	return false
+
 func candy_row() -> Dictionary:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_pickups.json"))
 	for row: Dictionary in data.pickups:
@@ -105,6 +120,7 @@ func run() -> void:
 	game.reset_for_new_game()
 	game.current_realm = "water"
 	game.local.character_id = "water-garden-records"
+	RELOAD.isolate(game, "water_garden_records")
 	for upstream: String in ["water_dock_brine_steps_trial_won", "water_aquaryn_resolved"]:
 		game.world.flags.set_flag(upstream)
 	world = WORLD.instantiate()
@@ -129,6 +145,7 @@ func run() -> void:
 		return
 	var prompt: Node = wall.get_node("Prompt")
 	check(wall.visible and not bool(prompt.get("enabled")), "Vault wall visible as the lure, unoffered before Edda's lead")
+	check(landmark_stands("drowned_garden_terraces"), "The Drowned Garden is an authored landmark standing above the water")
 	check(garden_entry(reader).is_empty(), "Garden request not pre-labelled")
 
 	# Step 1: Edda points to the vault (greeted through her real prompt).
@@ -183,6 +200,42 @@ func run() -> void:
 	check(not entry.is_empty() and bool(entry.done), "Report completes the request")
 	heard = await hear("water_edda")
 	check(heard[0] == "water_edda_guardian_neutral", "Afterwards the Guardian gate speaks again (%s)" % heard[0])
+
+	# Saved completion: production save -> fresh state -> production load ->
+	# a rebuilt Water world. World half: lead/account/complete records and the
+	# Candy II receipt; character half: the Candy II.
+	var reloaded: Dictionary = await RELOAD.save_and_reload(self, game, world, DONE, "skill_candy_ii")
+	for pair: Array in reloaded.checks:
+		check(pair[0], pair[1])
+	if reloaded.world == null:
+		finish()
+		return
+	world = reloaded.world
+	player = world.get_node("Player")
+	player.set_physics_process(false)
+	pickups = world.get_node("WaterPickups")
+	chains = world.get_node("WaterLocalChains")
+	for flag: String in [LEAD, ACCOUNT, DONE]:
+		check(game.world.flags.has(flag), "Reload keeps " + flag)
+	check(int(game.inventory.count("skill_candy_ii")) == before + 1, "Reload keeps exactly the one Candy II")
+	entry = garden_entry(reader)
+	check(not entry.is_empty() and bool(entry.done), "Reloaded quest log shows the request done")
+	wall = chains.call("site_root", "garden_records_wall")
+	check(wall != null and wall.visible and not bool(wall.get_node("Prompt").get("enabled")),
+		"The vault wall still stands after reload; its copy prompt stays closed")
+	var candy_at := Vector3(float(row.position[0]), 0.0, float(row.position[2]))
+	pose(candy_at + Vector3(-1.0, 0.0, 0.0))
+	await frames(2)
+	await create_timer(0.7).timeout
+	pickups.call("refresh")
+	check(RELOAD.neighbour_resident(pickups, candy_at, CANDY), "Drowned Garden finds stream in around the vault after reload")
+	check(pickups.call("node_for", CANDY) == null, "Claimed vault Candy II does not respawn after reload")
+	heard = await hear("water_edda")
+	check(heard[0] == "water_edda_guardian_neutral", "Reloaded Edda neither re-offers nor re-reports (%s)" % heard[0])
+	var again: Dictionary = game.ledger.submit({"kind": "water_dock_action", "realm": "water",
+		"action_id": "garden_records_report", "inventory": {}})
+	check(str(again.get("code", "")) == "already_done", "Reloaded host refuses a second report (%s)" % str(again.get("code", "")))
+	check(int(game.inventory.count("skill_candy_ii")) == before + 1, "No second Candy II after reload")
 	finish()
 
 func finish() -> void:

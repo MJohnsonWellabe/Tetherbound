@@ -213,9 +213,10 @@
       "region_id": "cinder_verge",
       "position": [
         -650,
-        20.98,
-        830
+        20.61,
+        822
       ],
+      "_why_moved_f11": "Stood on the Verge rod station, 3 m from its 'Open rod-line switch' prompt (3.2 m) inside Maren's 4.2 m challenge circle. Moved 8 m south along the route, still guarding the switch (8.5 m away). Static interaction-spacing audit after F11 run 22.",
       "route_class": "critical",
       "critical_order": 3,
       "humanoid_key": "officer_b",
@@ -367,9 +368,10 @@
       "region_id": "deepwood",
       "position": [
         -890,
-        51.57,
-        4490
+        52.25,
+        4482
       ],
+      "_why_moved_f11": "Stood on the Deepwood rod station, 3 m from its switch prompt, and (until c1b554646) under circuit Tavi. Moved 8 m south along the route, 8.5 m from the switch and 9.3 m from Tavi. Static interaction-spacing audit after F11 run 22.",
       "route_class": "critical",
       "critical_order": 10,
       "humanoid_key": "officer_a",
@@ -446,10 +448,11 @@
       "display_name": "Lieutenant Sera",
       "region_id": "dynamo",
       "position": [
-        -100,
-        107.72,
-        5350
+        -94,
+        107.41,
+        5342
       ],
+      "_why_moved_f11": "Stood exactly on NPC Officer Kestrel and 3 m from the Dynamo approach rod switch, so a press for Sera could greet Kestrel or open the switch. Moved to 8 m south and 6 m east of the station along the Deepwood road: 8.5 m from the switch, 17 m from Kestrel and 10.7 m from route pickup 18 (which already moved off Kestrel). Static interaction-spacing audit after F11 run 22.",
       "route_class": "critical",
       "critical_order": 12,
       "humanoid_key": "officer_b",
@@ -700,9 +703,10 @@
       "region_id": "glowmoss_hollows",
       "position": [
         -900,
-        32.10,
-        1780
+        32.91,
+        1772
       ],
+      "_why_moved_f11": "Stood exactly on NPC Lieutenant Dace and 3 m from the Hollows rod switch. Moved 8 m south along the moss detour, 8.5 m from the switch. Static interaction-spacing audit after F11 run 22.",
       "route_class": "optional",
       "critical_order": 0,
       "humanoid_key": "wandering_trainer",
@@ -1002,10 +1006,11 @@
       "display_name": "Tavi",
       "region_id": "deepwood",
       "position": [
-        -890,
-        51.57,
-        4490
+        -881.1,
+        52.38,
+        4479.2
       ],
+      "_why_moved_f11": "Tavi stood exactly on Officer Nysa ([-890, 51.57, 4490], the Deepwood rod station's critical picket leader), so Tavi's 'Challenge Tavi' prompt won the arbiter from Nysa's stance and the earned F11 witness (run 22) could not challenge Nysa. Moved 14 m back along the Lantern Hollow road; y is the heightfield + 0.15 m, as every grounded trainer.",
       "route_class": "optional",
       "critical_order": 0,
       "humanoid_key": "young_trainer",

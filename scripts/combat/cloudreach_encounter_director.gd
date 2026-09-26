@@ -605,6 +605,11 @@ func _wild_destination_supported(candidate: Vector3, wild: Node3D) -> bool:
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 	if body == _ally_body and is_instance_valid(_player):
+		# The same verified-floor rule then keeps the FOLLOWING companion on the
+		# trainer's level: its leash snap and its walk to its flank station
+		# (`follower_creature.gd::station_validator`). Set before every summon,
+		# so a re-created body carries it too.
+		body.set("station_validator", verified_follow_spot)
 		return await _stand_ally_on_trainer_level(body, spot)
 	_surface_for(body, spot)
 	return await super._stand_on_ground(body, spot)
@@ -621,13 +626,7 @@ func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 ## then closer rings, and last the trainer's own footprint (a following body is
 ## on no physics layer, so sharing it walls nobody in). Never below a drop.
 func _stand_ally_on_trainer_level(body: Node3D, requested: Vector3) -> bool:
-	var level := _recall_floor(_player.global_position, _player.global_position.y + 0.5, body)
-	if is_nan(level):
-		# No floor straight under the trainer's centre (e.g. standing on a
-		# sloped road lip): match the trainer's own height. Every candidate
-		# still needs verified floor, so no spot is chosen in the air.
-		level = _player.global_position.y
-	var spot := _recall_spot(body, requested, level)
+	var spot := verified_spot_near(_player, body, requested, true)
 	_surface_for(body, spot)
 	if not await super._stand_on_ground(body, spot):
 		return false
@@ -640,10 +639,45 @@ func _stand_ally_on_trainer_level(body: Node3D, requested: Vector3) -> bool:
 	return true
 
 
-## A verified spot for `body` on the trainer's level `level`, or the trainer's
-## own footprint when no ring spot verifies.
-func _recall_spot(body: Node3D, requested: Vector3, level: float) -> Vector3:
-	var origin := _player.global_position
+## `follower_creature.gd::station_validator` for this realm (reviewer findings
+## on the shared follower: its leash snap seated the companion on the surface
+## estimate below a narrow road, and its walk to a fixed flank station stepped
+## off the road edge). A snap may take the trainer's own footprint as the last
+## rung, like a recall; a walking station never does -- INF tells the follower
+## to close on the trainer instead. Each call is at most 24 candidates of ray,
+## line and capsule queries, so the follower calls it on change at a low rate.
+## Only the local follower calls it, with its own trainer: no authority change.
+func verified_follow_spot(body: Node3D, trainer: Node3D, requested: Vector3, snap: bool) -> Vector3:
+	if not is_instance_valid(body) or not trainer is PhysicsBody3D or not trainer.is_inside_tree():
+		return Vector3.INF
+	# An airborne trainer's position is not a floor level: the footprint rung
+	# would be a point in the air. The follower only snaps through here while
+	# its trainer is grounded; this refuses the rest outright.
+	if snap and trainer is CharacterBody3D and not (trainer as CharacterBody3D).is_on_floor():
+		return Vector3.INF
+	return verified_spot_near(trainer as PhysicsBody3D, body, requested, snap)
+
+
+## The reusable verified-floor placement: a spot for `body` on real collision
+## within RECALL_LEVEL_M of `trainer`'s floor, with floor all along the line
+## from the trainer and room for the body's capsule. `allow_footprint` adds the
+## trainer's own footprint as the last rung; without it, INF when nothing fits.
+func verified_spot_near(trainer: PhysicsBody3D, body: Node3D, requested: Vector3,
+		allow_footprint: bool) -> Vector3:
+	var level := _recall_floor(trainer, trainer.global_position, trainer.global_position.y + 0.5, body)
+	if is_nan(level):
+		# No floor straight under the trainer's centre (e.g. standing on a
+		# sloped road lip): match the trainer's own height. Every candidate
+		# still needs verified floor, so no spot is chosen in the air.
+		level = trainer.global_position.y
+	return _recall_spot(trainer, body, requested, level, allow_footprint)
+
+
+## A verified spot for `body` on the trainer's level `level`, or (with
+## `allow_footprint`) the trainer's own footprint when no ring spot verifies.
+func _recall_spot(trainer: PhysicsBody3D, body: Node3D, requested: Vector3, level: float,
+		allow_footprint: bool) -> Vector3:
+	var origin := trainer.global_position
 	var offset := Vector3(requested.x - origin.x, 0.0, requested.z - origin.z)
 	var reach := offset.length()
 	var radius := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
@@ -661,17 +695,20 @@ func _recall_spot(body: Node3D, requested: Vector3, level: float) -> Vector3:
 	for ring: float in rings:
 		for index: int in order:
 			var candidate := origin + directions[index] * ring
-			var floor_y := _recall_footprint_floor(candidate, level, radius, body)
+			var floor_y := _recall_footprint_floor(trainer, candidate, level, radius, body)
 			if is_nan(floor_y):
 				continue
 			var spot := Vector3(candidate.x, floor_y, candidate.z)
-			if _recall_path_on_level(origin, spot, level, body) and _recall_body_fits(spot, body):
+			if _recall_path_on_level(trainer, origin, spot, level, body) \
+					and _recall_body_fits(trainer, spot, body):
 				return spot
+	if not allow_footprint:
+		return Vector3.INF
 	# Last rung: the trainer's own footprint. The follower's mask still meets
 	# the trainer's capsule and would climb onto the trainer's head, so the two
 	# ignore each other until the trainer walks clear.
-	if body is PhysicsBody3D:
-		(body as PhysicsBody3D).add_collision_exception_with(_player)
+	if body is PhysicsBody3D and trainer == _player:
+		(body as PhysicsBody3D).add_collision_exception_with(trainer)
 		_recall_shared_footprint = weakref(body)
 	return Vector3(origin.x, level, origin.z)
 
@@ -695,15 +732,16 @@ func _release_shared_footprint() -> void:
 
 ## Walkable collision under the body's centre and around its footprint, all
 ## within RECALL_LEVEL_M of `level`: the highest of them, or NAN.
-func _recall_footprint_floor(at: Vector3, level: float, radius: float, body: Node3D) -> float:
-	var centre := _recall_floor(at, level, body)
+func _recall_footprint_floor(trainer: PhysicsBody3D, at: Vector3, level: float, radius: float,
+		body: Node3D) -> float:
+	var centre := _recall_floor(trainer, at, level, body)
 	if is_nan(centre):
 		return NAN
 	var highest := centre
 	for i in 8:
 		var angle := i * TAU / 8.0
 		var sample := at + Vector3(cos(angle), 0.0, sin(angle)) * radius * 0.9
-		var y := _recall_floor(sample, level, body)
+		var y := _recall_floor(trainer, sample, level, body)
 		if is_nan(y):
 			return NAN
 		highest = maxf(highest, y)
@@ -711,11 +749,11 @@ func _recall_footprint_floor(at: Vector3, level: float, radius: float, body: Nod
 
 
 ## Top of walkable collision under `at`, within RECALL_LEVEL_M of `level`.
-func _recall_floor(at: Vector3, level: float, body: Node3D) -> float:
+func _recall_floor(trainer: PhysicsBody3D, at: Vector3, level: float, body: Node3D) -> float:
 	var query := PhysicsRayQueryParameters3D.create(
 		Vector3(at.x, level + RECALL_LEVEL_M + 0.8, at.z), Vector3(at.x, level - RECALL_LEVEL_M, at.z),
-		_player.collision_mask, _recall_exclusions(body))
-	var hit: Dictionary = _player.get_world_3d().direct_space_state.intersect_ray(query)
+		trainer.collision_mask, _recall_exclusions(trainer, body))
+	var hit: Dictionary = trainer.get_world_3d().direct_space_state.intersect_ray(query)
 	if hit.is_empty() or not hit.collider is StaticBody3D or (hit.normal as Vector3).y < RECALL_MIN_NORMAL_Y:
 		return NAN
 	var y := (hit.position as Vector3).y
@@ -724,41 +762,42 @@ func _recall_floor(at: Vector3, level: float, body: Node3D) -> float:
 
 ## Floor on the level every step from the trainer to the spot, and nothing
 ## solid across the line at knee and chest height: no drop, no wall between.
-func _recall_path_on_level(from: Vector3, to: Vector3, level: float, body: Node3D) -> bool:
+func _recall_path_on_level(trainer: PhysicsBody3D, from: Vector3, to: Vector3, level: float,
+		body: Node3D) -> bool:
 	var flat := Vector3(to.x - from.x, 0.0, to.z - from.z)
 	var steps := maxi(1, ceili(flat.length() / RECALL_PATH_STEP_M))
 	for i in range(1, steps + 1):
 		var p := from + flat * (float(i) / steps)
-		if is_nan(_recall_floor(p, level, body)):
+		if is_nan(_recall_floor(trainer, p, level, body)):
 			return false
-	var space := _player.get_world_3d().direct_space_state
+	var space := trainer.get_world_3d().direct_space_state
 	for lift: float in [0.6, 1.2]:
 		var query := PhysicsRayQueryParameters3D.create(Vector3(from.x, level + lift, from.z),
-			Vector3(to.x, to.y + lift, to.z), _player.collision_mask, _recall_exclusions(body))
+			Vector3(to.x, to.y + lift, to.z), trainer.collision_mask, _recall_exclusions(trainer, body))
 		if not space.intersect_ray(query).is_empty():
 			return false
 	return true
 
 
 ## The body's own collision shape at `spot` touches no world geometry.
-func _recall_body_fits(spot: Vector3, body: Node3D) -> bool:
+func _recall_body_fits(trainer: PhysicsBody3D, spot: Vector3, body: Node3D) -> bool:
 	var collision := body.get_node_or_null(^"Collision") as CollisionShape3D
 	if collision == null or collision.shape == null:
 		return true
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = collision.shape
-	query.collision_mask = _player.collision_mask
+	query.collision_mask = trainer.collision_mask
 	query.transform = Transform3D(collision.global_basis,
 		spot + Vector3.UP * 0.05 + (collision.global_position - body.global_position))
-	query.exclude = _recall_exclusions(body)
-	for hit: Dictionary in _player.get_world_3d().direct_space_state.intersect_shape(query, 8):
+	query.exclude = _recall_exclusions(trainer, body)
+	for hit: Dictionary in trainer.get_world_3d().direct_space_state.intersect_shape(query, 8):
 		if hit.collider is StaticBody3D:
 			return false
 	return true
 
 
-func _recall_exclusions(body: Node3D) -> Array[RID]:
-	var exclude: Array[RID] = [_player.get_rid()]
+func _recall_exclusions(trainer: PhysicsBody3D, body: Node3D) -> Array[RID]:
+	var exclude: Array[RID] = [trainer.get_rid()]
 	if body is CollisionObject3D:
 		exclude.append((body as CollisionObject3D).get_rid())
 	return exclude

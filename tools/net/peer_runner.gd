@@ -54,6 +54,7 @@ extends SceneTree
 ##      hands this a real `MultiplayerSpawner` -- 2.C owns the rigs; noted here
 ##      so it is not forgotten when it does.
 
+const REMOTE_CREATURE_TP := preload("res://scripts/creatures/remote_creature.gd")
 const GATE_F_HARNESS := preload("res://tools/gate_f/operator_harness.gd")
 const PROBE := preload("res://scripts/debug/gate_f_probe.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
@@ -2343,7 +2344,11 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 	var at: Array = args.get("at", []) as Array
 	if at.size() != 3:
 		return {"verdict": "ERROR", "detail": "teleport needs args.at = [x, y, z]"}
-	player.global_position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+	# A teleport, not a motion (`remote_creature.teleport_body`): set as a plain
+	# position, GodotPhysics sweeps the body across the whole jump and the next
+	# move_and_slide against Terrain3D collision took ~4.4 s for a 4 km jump
+	# (F14#3), stalling the peer the proof is measuring.
+	REMOTE_CREATURE_TP.teleport_body(player as PhysicsBody3D, Vector3(float(at[0]), float(at[1]), float(at[2])))
 	player.velocity = Vector3.ZERO
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
@@ -4885,6 +4890,28 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			var rtext := JSON.stringify(rrows)
 			return {"available": true, "bands": rrows.size(), "points": rpoints,
 				"signature": rtext.sha256_text(), "realm": str(root.get_node(^"Game").get("current_realm"))}
+		"rejoin_pose":
+			# Owner ruling "rejoin returns to exact spot": what `rejoin_pose.gd`
+			# decided, the world instance this peer now holds, and the instance
+			# and pose its own character file carries.
+			var rgame := root.get_node_or_null(^"Game")
+			if rgame == null:
+				return null
+			var helper := rgame.get_node_or_null(^"RejoinPose")
+			var rworld: Variant = rgame.get("world")
+			var rlocal: Variant = rgame.get("local")
+			var saved: Dictionary = {}
+			var rsave: Variant = rgame.get("save_system")
+			if rsave != null and rlocal != null:
+				saved = ((rsave as RefCounted).call("characters") as RefCounted).call("read",
+					str((rlocal as RefCounted).get("character_id")))
+			return {
+				"outcome": str(helper.call("outcome")) if helper != null else "",
+				"placed_at": helper.call("placed_at") if helper != null else [],
+				"world_instance": str((rworld as RefCounted).get("reward_delivery_namespace")) if rworld != null else "",
+				"file_instance": str(saved.get("last_world_instance_id", "")),
+				"file_pose": saved.get("player_pose", {}),
+			}
 		"player_identity":
 			# Owner T4#2-#5. Read the local identity from PlayerState, the art
 			# from the live production rig, the location from that body's real
