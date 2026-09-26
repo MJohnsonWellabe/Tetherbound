@@ -68,3 +68,31 @@ func test_material_override_covers_root_mesh_and_children_without_mutating_sourc
 	root_mesh.free()
 	untouched.free()
 	dressing.free()
+
+
+func test_installed_lantern_emits_only_from_glass_and_light_follows_insert() -> void:
+	var dressing := DRESSING.new()
+	var site := Node3D.new()
+	var cfg := _cfg().lanterns as Dictionary
+	dressing.call("_lantern", site, cfg, Vector3(4, 2, 8), PI * 0.5)
+	var lantern := site.get_node_or_null(^"PierLantern") as Node3D
+	var light := site.get_node_or_null(^"PierLanternLight") as OmniLight3D
+	assert_true(lantern != null and light != null, "installed fixture and its light are constructed")
+	if lantern != null and light != null:
+		var glass := lantern.get_node_or_null(^"LanternGlass") as MeshInstance3D
+		assert_true(glass != null, "installed cage contains the luminous insert")
+		if glass != null:
+			var material := glass.material_override as StandardMaterial3D
+			assert_true(material != null and material.emission_enabled, "glass is the light source")
+			assert_true(light.position.is_equal_approx(lantern.transform * glass.position),
+				"illumination follows the fitted and rotated glass position")
+		for node: Node in lantern.find_children("*", "MeshInstance3D", true, false):
+			if node == glass:
+				continue
+			var mesh := node as MeshInstance3D
+			for surface in mesh.mesh.get_surface_count():
+				var housing := mesh.get_surface_override_material(surface) as StandardMaterial3D
+				assert_true(housing != null and not housing.emission_enabled,
+					"bracket, chain and cage retain opaque housing material")
+	site.free()
+	dressing.free()
