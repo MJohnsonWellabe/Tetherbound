@@ -117,10 +117,10 @@ func test_solo_world_without_rows_offers_only_the_local_character() -> void:
 	assert_true(REWARD.begin(game, ledger, "host-char", guardian()).ok)
 
 func test_multi_peer_empty_journal_offers_nobody() -> void:
-	# Interim rule until client-run Nerissa wins are journaled by the host: a
-	# guest may have fought her alone on its own client (no delivery rows), so
-	# in a multi-peer session an empty journal identifies NO participant --
-	# never the host who may not have fought.
+	# Client-run and solo Nerissa wins now journal rows, so an empty journal
+	# means a journal-less (pre-row) world, which cannot say who fought: in a
+	# multi-peer session it identifies NO participant -- never the host who may
+	# not have fought.
 	assert_false(REWARD.may_receive("host", [], "host", false, true),
 		"multi-peer, no rows: the host is not presumed a participant")
 	assert_true(REWARD.may_receive("host", [], "host", false, false), "solo is unchanged")

@@ -316,7 +316,7 @@ func travel_for_peer(peer: int, id: String) -> Dictionary:
 		return refused
 	var target: Node3D = _arches[str(twin.id)].node
 	var at := target.to_global(Vector3(0, 0, 3.5))
-	at.y = world.ground_height_near(at) + 0.6
+	at.y = standing_floor(world.ground_height_near(at), at, body) + 0.6
 	if not at.is_finite() or absf(at.y - target.global_position.y) > 6:
 		return {"ok": false, "reason": "The far footing is obstructed."}
 	var capsule := CapsuleShape3D.new()
@@ -335,6 +335,26 @@ func travel_for_peer(peer: int, id: String) -> Dictionary:
 	if body is CharacterBody3D:
 		body.velocity = Vector3.ZERO
 	return {"ok": true, "source": id, "target": twin.id, "at": at}
+
+## The floor a traveller lands on at `at`: the terrain, or a solid standing on
+## it. An arch's own 9 m footing slab is level while the terrain under a road
+## footing slopes, so 3.5 m in front of the arch the slab can rise above the
+## terrain; arriving at terrain height put the capsule inside the slab and the
+## clearance check refused every trip TO the Verge Road footing ("Clear the far
+## footing before travelling"; F10 two-peer proof, run 1).
+func standing_floor(terrain_y: float, at: Vector3, body: Node3D = null) -> float:
+	var from := Vector3(at.x, terrain_y + 2.0, at.z)
+	var query := PhysicsRayQueryParameters3D.create(from, Vector3(at.x, terrain_y - 1.0, at.z), 1)
+	if body is CollisionObject3D:
+		query.exclude = [body.get_rid()]
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	# Only an arch FOOTING lifts the landing. Anything else standing there (a
+	# player, a crate, a blocker) must still fail the clearance check below,
+	# never become a floor to land on top of.
+	if hit.is_empty() or not (hit.collider is Node and str((hit.collider as Node).name).begins_with("Footing")):
+		return terrain_y
+	return maxf(terrain_y, (hit.position as Vector3).y)
+
 
 func _arrive(event: Dictionary) -> void:
 	if bool(world.get("simulation_only")):

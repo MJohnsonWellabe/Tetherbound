@@ -1,6 +1,6 @@
 extends "res://tests/helpers/net_harness.gd"
 
-# peers: 2 -- DRAFT (Cloudreach rescue, riding-net-wip): 38 checks fail on 2026-09-25; kept out of CI discovery until it passes on its own
+# peers: 2
 
 ## F06: Cloudreach GROUND RIDING, two real peers, both standing in Cloudreach.
 ##
@@ -29,7 +29,7 @@ extends "res://tests/helpers/net_harness.gd"
 ##   satchel with `storage_grant`. The `saddle_fitted_meadowhart` flag is NOT
 ##   seeded: `mount()` fits the saddle itself on the first ride, so the
 ##   saddle a remote peer sees is the one the mount fitted.
-## * The host crosses into Cloudreach first, then the guest, both through the
+## * The guest crosses into Cloudreach first, then the host, both through the
 ##   production `Game.enter_realm("cloudreach")`. Nobody is placed in
 ##   Cloudreach: both stand where the realm's own arrival puts them.
 ## * The companion is called out with the ordinary `creature_recall` binding,
@@ -38,8 +38,13 @@ extends "res://tests/helpers/net_harness.gd"
 ##   (`move_to`, real move axes). Mount, dismount and remount are the real
 ##   `interact` press. Riding is the real left stick: the long ride is the
 ##   same `move_to` navigator steering the mount up the arrival road through
-##   four disclosed waypoints (`ROAD_WAYPOINTS`); the remount ride is a raw
-##   `stick` push.
+##   four disclosed waypoints (`ROAD_WAYPOINTS`, on the road's own centreline:
+##   a live crossing stands only the 7 m collision ribbon there, not the solo
+##   build's shoulders); the remount ride is a raw `stick` push.
+## * Before each walk to its mount the guest waits (bounded) until its
+##   companion stands at the trainer's level (`_companion_settled`): after a
+##   dismount on the ribbon the follower can step off the edge on its way to
+##   its station and be recovered by the realm's companion-fall rule.
 ## * The host's concurrent play is its own stick, plus a ledger drop and pickup
 ##   of wood it was granted (`storage_grant`), as in `smoke_net_riding.gd`.
 ## * Arrival order: the guest crosses first, then the host. The opposite order
@@ -55,6 +60,9 @@ extends "res://tests/helpers/net_harness.gd"
 ##
 ## ## What is not observed directly, and what stands in for it
 ##
+## * Where the rider is set down is judged against the mount's position two
+##   frames after the dismount press, not two seconds later: once off, the
+##   mount is a follower again and walks away to its station.
 ## * "Collision restored" after a dismount is observed as `on_floor` (a
 ##   `CharacterBody3D` with a zero mask is never on a floor) plus a y that
 ##   holds still for a second. `player_controller.set_carrier(null)` restores
@@ -64,7 +72,10 @@ extends "res://tests/helpers/net_harness.gd"
 ##   claim is therefore proved from both ends instead: the guest's counters and
 ##   `host_validated`, the host's own log of each claim and verdict, and the
 ##   final anchor's height being the HOST's ground plus the arbiter's epsilon
-##   rather than the guest's claimed height.
+##   rather than the guest's claimed height (a carried claim is the rider's
+##   clear spot, lifted `SETTLE_LIFT_M` off the floor).
+## * Wall-clock only: the hello window is 360 s (`_init_budgets`), because two
+##   cold Meadows boots side by side outlast the shared 180 s.
 
 const MOUNT_SPECIES := "meadowhart"
 const TEAM := ["meadowhart", "bramblebun", "mudsnout", "terrapup", "brooktail"]
@@ -72,6 +83,7 @@ const CLOUDREACH := "cloudreach"
 const CLOUDREACH_KEY_FLAG := "realm_key_cloudreach"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
+const RIDING := preload("res://scripts/world/cloudreach_riding_controller.gd")
 ## Two realm crossings plus the Meadows boots; `smoke_net_split_realms.gd`
 ## extends its own deadline for the same cost.
 const REALM_STEP_BUDGET_S := 1500.0
@@ -83,14 +95,23 @@ const NO_ARBITER := "<no arbiter readable>"
 ## The guest's long ride: the arrival road north from the spawn, one waypoint
 ## per concurrent round. Steered with the harness's `move_to` stick navigator
 ## (real move axes, camera-relative), because a fixed stick direction depends
-## on where the guest's camera happened to face and on this run's first
-## attempt drove the mount off the terrace edge into the mounted-fall
-## recovery. Points measured by a solo stick ride up this road.
-## The first point is the road's own line beside the spawn, so the ride
-## starts on the road rather than cutting across its western shoulder.
+## on where the guest's camera happened to face.
+## Every point lies ON the road's own centreline, `cloudreach_world.json`
+## `arrival_gate_road` from (0, 105, -260) toward (-80, 130, 40), because a
+## LIVE crossing does not build the solo geological shoulders
+## (`cloudreach_world.gd`: `routes:*:geological_shoulders:deferred` while the
+## shell build is slicing) and stands only the 7 m collision ribbon
+## (`path_collision_width_m`) along that line. The draft's points were measured
+## by a SOLO ride on the shoulders, 7-8 m east of the line: in the two-peer run
+## the mount rode off the ribbon at (1.3, -236) and dropped into the
+## mounted-fall recovery (reproduced solo with the shoulders removed; the same
+## ride along these points stayed on floor every frame).
+## The first point is the line where it leaves the arrival landing, so the ride
+## joins the ribbon at the landing's own ramp (`_landing_join`) rather than
+## climbing the ribbon's side from the mesa crown west of it.
 const ROAD_WAYPOINTS: Array[Vector3] = [
-	Vector3(4.5, 0.0, -251.0), Vector3(1.0, 0.0, -234.0),
-	Vector3(-5.4, 0.0, -210.0), Vector3(-12.9, 0.0, -182.0),
+	Vector3(-1.6, 0.0, -254.0), Vector3(-5.33, 0.0, -240.0),
+	Vector3(-10.67, 0.0, -220.0), Vector3(-16.0, 0.0, -200.0),
 ]
 const RIDE_MIN_M := 30.0
 ## `fly_traversal.json` landing_anchor: resubmit_m 8 + max_drift_m 6. An anchor
@@ -100,6 +121,16 @@ const ANCHOR_FOLLOW_M := 14.0
 var _asserted := 0
 var _ids: Array[int] = []
 var _party_baseline: Array = [[], []]
+
+
+## Wall-clock only, as `smoke_net_veridian_choices.gd` and
+## `smoke_net_shared_boss.gd` do: two cold Meadows boots side by side on one
+## runner outlast the shared 180 s hello window (the first 2026-09-26 run died
+## there with both peers still building the world, neither exited). No gameplay
+## bound -- frame budget, reach, tolerance -- moves with it.
+func _init_budgets() -> void:
+	super._init_budgets()
+	_budgets["hello_budget_s"] = maxf(float(_budgets.get("hello_budget_s", DEFAULT_HELLO_BUDGET_S)), 360.0)
 
 
 func _initialize() -> void:
@@ -282,10 +313,19 @@ func _run() -> void:
 	_check(final_anchor != Vector3.INF and last_grant != Vector3.INF
 			and Vector2(final_anchor.x - last_grant.x, final_anchor.z - last_grant.z).length() < 0.05,
 		"the guest's anchor is the LAST claim the host granted (anchor %s, last grant %s)" % [str(final_anchor), str(last_grant)])
+	# A CARRIED claim is not the guest's floor: `observe_carried_ground` is fed
+	# the rider's clear spot, which `cloudreach_riding_controller.gd` lifts
+	# SETTLE_LIFT_M (0.05) off its ray hit. The floor under the claim is
+	# therefore claim.y - SETTLE_LIFT_M, and the arbiter's answer is the HOST's
+	# ray to that same static floor plus GROUND_EPSILON_M (0.08): 0.03 m above
+	# the claim, never the claim itself. The draft compared against claim.y as
+	# if it were floor (a walking claim), which no carried claim can meet.
+	var claim_floor_y := last_grant.y - RIDING.SETTLE_LIFT_M if last_grant != Vector3.INF else INF
 	_check(final_anchor != Vector3.INF and last_grant != Vector3.INF
-			and absf(final_anchor.y - last_grant.y - ANCHOR_ARBITER.GROUND_EPSILON_M) < 0.05,
-		"its height is the HOST's ground plus the arbiter's %.2f m, not the guest's claimed height (anchor y %.3f, claim y %.3f)"
-			% [ANCHOR_ARBITER.GROUND_EPSILON_M, final_anchor.y, last_grant.y])
+			and absf(final_anchor.y - claim_floor_y - ANCHOR_ARBITER.GROUND_EPSILON_M) < 0.02
+			and absf(final_anchor.y - last_grant.y) > 0.01,
+		"its height is the HOST's ground plus the arbiter's %.2f m, not the guest's claimed height (anchor y %.3f, claim y %.3f, floor under the claim %.3f)"
+			% [ANCHOR_ARBITER.GROUND_EPSILON_M, final_anchor.y, last_grant.y, claim_floor_y])
 	_check(final_anchor != Vector3.INF and _flat(_pos(anchor_mounted.get("anchor", [])), final_anchor) > 1.0,
 		"the anchor followed the ride (moved %.2f m from where it was at mount)" % _flat(_pos(anchor_mounted.get("anchor", [])), final_anchor))
 	# The long-ride freeze: one proposal left unanswered while carried must not
@@ -358,6 +398,7 @@ func _mount_by_interact(context: String) -> void:
 	# `downed` probe; it is a diagnostic, never a substitute for the press.
 	var prompt := ""
 	for attempt in 4:
+		await _companion_settled(1, context)
 		var mount := await _own_mount(1)
 		var at := _pos(mount.get("pos", []))
 		if at == Vector3.INF:
@@ -388,15 +429,48 @@ func _dismount_by_interact(context: String) -> void:
 		% [context, str((await _own_mount(1)).get("pos", [])), await _prompt(1)])
 	var pressed: Dictionary = await step(1, "press", {"action": "interact"})
 	_ok(pressed, "%s: the guest pressed interact" % context)
+	# Where the rider was set down is judged against where the mount stood AT
+	# the dismount. Once off, the mount is an ordinary follower again and walks
+	# to its station beside the trainer; on a live crossing's 7 m road ribbon
+	# that station can be open air, and the realm's companion-fall rule
+	# (`cloudreach_companion_fall.gd`) recovers it seconds later. The draft read
+	# the mount two seconds after the press and measured that walk (mount y
+	# 27-66 m while the trainer stood at 105-106), not the dismount spot.
+	await step(1, "wait", {"frames": 2})
+	var mount_at_dismount := _pos((await _own_mount(1)).get("pos", []))
+	var trainer_at_dismount := _pos(await probe(1, "position"))
 	await step(1, "wait", {"frames": 60})
 	var ride := await _local_ride(1)
 	_check(bool(before.get("mounted", false)) and not bool(ride.get("mounted", true)),
 		"%s: the interact press dismounted the guest" % context)
-	await _check_standing_clear(context)
+	await _check_standing_clear(context, mount_at_dismount, trainer_at_dismount)
+
+
+## Choreography, not an assertion: a player waits for their companion to be
+## standing before walking over to ride it. After a dismount on a live
+## crossing's road ribbon the follower can step off the edge on its way to its
+## station (a shared `follower_creature.gd` behaviour, recovered by this
+## realm's `cloudreach_companion_fall.gd`), and walking the trainer after a
+## falling body leads it to the same edge. Standing = within 1.5 m of the
+## trainer's height and still at that height a quarter-second later. Bounded;
+## whatever state the companion is in afterwards, the Ride checks that follow
+## decide.
+func _companion_settled(peer: int, context: String) -> void:
+	for poll in 40:
+		var a := _pos((await _own_mount(peer)).get("pos", []))
+		var me := _pos(await probe(peer, "position"))
+		await step(peer, "wait", {"frames": 15})
+		var b := _pos((await _own_mount(peer)).get("pos", []))
+		if a != Vector3.INF and b != Vector3.INF and me != Vector3.INF \
+				and absf(b.y - me.y) < 1.5 and absf(b.y - a.y) < 0.2:
+			if poll > 0:
+				print("%s: companion standing again after %d poll(s) at %s" % [context, poll, str(b)])
+			return
+	print("%s: companion still not standing beside the trainer after the wait" % context)
 
 
 ## On ground, solid, beside the mount rather than inside it.
-func _check_standing_clear(context: String) -> void:
+func _check_standing_clear(context: String, m: Vector3, set_down: Vector3) -> void:
 	var fly: Dictionary = await _fly_local(1)
 	var p0 := _pos(await probe(1, "position"))
 	await step(1, "wait", {"frames": 60})
@@ -407,13 +481,13 @@ func _check_standing_clear(context: String) -> void:
 			% [context, str(fly.get("carried", "?")), str(fly.get("on_floor", "?")), str(fly_later.get("on_floor", "?"))])
 	_check(p0 != Vector3.INF and absf(p1.y - p0.y) < 0.3 and _flat(p0, p1) < 0.5,
 		"%s: the guest stays put on that ground for a second (moved %.2f m, dy %.2f)" % [context, _flat(p0, p1), p1.y - p0.y])
-	var mount := await _own_mount(1)
-	var m := _pos(mount.get("pos", []))
 	var radius := _mount_radius()
-	_check(m != Vector3.INF and _flat(p1, m) >= radius * 0.9,
-		"%s: the guest is set down BESIDE the mount, not inside it (%.2f m from its centre, body radius %.2f)" % [context, _flat(p1, m), radius])
-	_check(m != Vector3.INF and absf(p1.y - m.y) < 1.5,
-		"%s: on the mount's ground level, not on its back or under it (trainer y %.2f, mount y %.2f)" % [context, p1.y, m.y])
+	_check(m != Vector3.INF and set_down != Vector3.INF and _flat(set_down, m) >= radius * 0.9,
+		"%s: the guest is set down BESIDE the mount, not inside it (%.2f m from its centre at the dismount, body radius %.2f)" % [context, _flat(set_down, m), radius])
+	_check(m != Vector3.INF and set_down != Vector3.INF and absf(set_down.y - m.y) < 1.5,
+		"%s: on the mount's ground level, not on its back or under it (trainer y %.2f, mount y %.2f at the dismount)" % [context, set_down.y, m.y])
+	_check(set_down != Vector3.INF and p0 != Vector3.INF and _flat(set_down, p0) < 0.5 and absf(set_down.y - p0.y) < 0.3,
+		"%s: the spot the guest was set down on is the spot it then stands on (%.2f m, dy %.2f)" % [context, _flat(set_down, p0), p0.y - set_down.y])
 
 
 ## The host starts a wild fight in Cloudreach; the MOUNTED guest joins that
@@ -469,8 +543,8 @@ func _check_host_tracks_guest(context: String) -> void:
 
 ## Host already standing in Cloudreach; the guest leaves for the Meadows and
 ## walks back in. This is the arrival order a real friend joining a host
-## mid-chapter has. Asserted, not routed around: on this branch the guest's
-## own trainer spawn never lands on the guest when it arrives second.
+## mid-chapter has. Asserted, not routed around: the host's copy of the
+## guest must land on the guest when the guest arrives second.
 func _guest_rejoins_the_hosts_realm(crossing_budget: int) -> void:
 	if not _ok(await step(1, "enter_realm", {"realm": "meadows"}, crossing_budget), "re-entry: the guest crossed back to the Meadows"):
 		return
