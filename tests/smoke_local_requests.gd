@@ -343,7 +343,7 @@ func _lost_creature() -> void:
 	# patrol with the prompt; nothing is completed retroactively.
 	_progression().call("set_flag", RETURN_FLAG, false)
 	reunion.call("restore_progression_from_game", _game)
-	if rescued.global_position.distance_to(patrol.global_position) > 10.0 or not bool(prompt.get("enabled")) \
+	if rescued.global_position.distance_to(waiting_at) > 0.5 or not bool(prompt.get("enabled")) \
 			or bool(reunion.call("is_reunited")):
 		_fail("lost_creature: a legacy beaten-but-not-returned state does not wait by the patrol (at %s, waited at %s, gap %.2f m, prompt %s, reunited %s)" % [
 			rescued.global_position, waiting_at, rescued.global_position.distance_to(waiting_at),
@@ -353,13 +353,6 @@ func _lost_creature() -> void:
 	if TRAINERS.conversation_for(TRAINERS.trainer("pasture_drover_juno"), _progression()) != "pasture_drover_juno_reunited_challenge":
 		_fail("lost_creature: Juno did not acknowledge rescue before her own optional battle")
 		return
-	# Juno is a trainer: with every companion fainted (the full run fights the
-	# Night Watch and the patrol before this) her greeting answers with
-	# `trainer_no_usable_creature` instead of the reunion line. A player rests
-	# before talking to a trainer; this fixture heals between beats the way it
-	# seats between them, outside the activity under test.
-	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
-		member.call("heal_fully")
 	if not await _activate_trainer_prompt(owner_body, "lost_creature"):
 		return
 	# The prompt's opening press may be buffered by DialoguePanel and advance its
@@ -371,11 +364,7 @@ func _lost_creature() -> void:
 		await _press("interact")
 		acknowledgement_guard += 1
 	if not bool(_panel.call("is_open")) or not _panel_awaiting_confirmation():
-		var ack_runner: RefCounted = _panel.call("runner") as RefCounted
-		_fail("lost_creature: Juno's acknowledgement never reached its friendly-bout choice (open=%s conversation=%s presses=%d log_tail=%s)" % [
-			str(_panel.call("is_open")),
-			str(ack_runner.call("conversation_id")) if ack_runner != null else "?",
-			acknowledgement_guard, str(_conversation_log.slice(-3))])
+		_fail("lost_creature: Juno's acknowledgement never reached its friendly-bout choice")
 		return
 	await _capture_activity("juno")
 	await _press("menu_cancel")
@@ -387,17 +376,6 @@ func _lost_creature() -> void:
 
 
 const RETURN_FLAG := "lost_creature_rue_returned"
-const STICK_NAV := preload("res://tests/helpers/stick_navigator.gd")
-
-
-## One left-stick sample through the live InputMap, the navigator's drive.
-func _stick(x: float, z: float) -> void:
-	for pair: Array in [[JOY_AXIS_LEFT_X, x], [JOY_AXIS_LEFT_Y, z]]:
-		var event := InputEventJoypadMotion.new()
-		event.device = 0
-		event.axis = int(pair[0])
-		event.axis_value = float(pair[1])
-		Input.parse_input_event(event)
 
 
 ## Stand beside the waiting Meadowhart and press the real interact action on
@@ -426,10 +404,8 @@ func _start_escort(reunion: Node, prompt: Node, rescued: Node3D) -> bool:
 	return false
 
 
-## Walk to Juno with ordinary left-stick input through the shared
-## stick_navigator (it steps round walls and banks as the earned routes do; a
-## straight line from the patrol stalled ~400 m out against the terrain). No
-## completion may land before the Meadowhart is within the arrival radius.
+## Walk to Juno with ordinary forward input, steering the camera toward her.
+## No completion may land before the Meadowhart is within the arrival radius.
 func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
 	var rig := _world.get_node_or_null(^"CameraRig") as Node3D
 	var config: Dictionary = reunion.get("_config")
@@ -437,15 +413,17 @@ func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
 	var moving := true
 	var arrived := false
 	var started := Engine.get_physics_frames()
-	var nav: RefCounted = STICK_NAV.new(self, _player, rig, _stick)
+	Input.action_press("move_forward")
+	_send("move_forward", true)
 	for frame in 12000:
 		var to := owner_body.global_position - _player.global_position
 		to.y = 0.0
+		if rig != null and to.length_squared() > 0.01:
+			rig.set("yaw", atan2(-to.x, -to.z))
 		if moving and to.length() <= 2.5:
-			_stick(0.0, 0.0)
+			Input.action_release("move_forward")
+			_send("move_forward", false)
 			moving = false
-		elif moving:
-			nav.call("step", owner_body.global_position)
 		await physics_frame
 		await process_frame
 		var gap := Vector2(rescued.global_position.x - owner_body.global_position.x,
@@ -465,7 +443,8 @@ func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
 		if frame % 600 == 0:
 			print("lost_creature walk: frame %d player=%s creature gap to Juno %.1f m" % [
 				frame, str(_player.global_position), gap])
-	_stick(0.0, 0.0)
+	Input.action_release("move_forward")
+	_send("move_forward", false)
 	print("lost_creature walk: %s after %d physics frames" % [
 		"arrived" if arrived else "did not arrive", Engine.get_physics_frames() - started])
 	if not arrived:
@@ -810,18 +789,14 @@ func _stand_at_herd_prompt(visit: Node3D, ally: Node3D) -> bool:
 	var moving := true
 	Input.action_press("move_forward")
 	_send("move_forward", true)
-	# 900, not 360: the companion follows at its own pace and, seated beside
-	# the player after a long preceding leg, was still 12.7 m out at 360.
-	for _frame in 900:
+	for _frame in 360:
 		var to := visit.global_position - _player.global_position
 		to.y = 0.0
 		if rig != null and to.length_squared() > 0.01:
 			rig.set("yaw", atan2(-to.x, -to.z))
 		await physics_frame
 		await process_frame
-		# Keep walking in to 6 m even once the prompt wins (~11 m out): the
-		# companion trails the player by ~1.5 m and must also be within 12 m.
-		if moving and to.length() <= 6.0:
+		if moving and (arbiter.call("winning_provider") == prompt or to.length() <= 4.0):
 			Input.action_release("move_forward")
 			_send("move_forward", false)
 			moving = false
@@ -1457,15 +1432,8 @@ func _wait_for_ground_under(at: Vector3, max_frames: int) -> bool:
 	var space := _player.get_world_3d().direct_space_state
 	var query := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 30.0, at + Vector3.DOWN * 60.0)
 	query.exclude = [_player.get_rid()]
-	# Any hit is not enough: Terrain3D builds collision only around the camera,
-	# and after a long leg (the Juno return ends ~4 km away) a scatter or prop
-	# collider can answer the ray while the terrain surface itself is not there
-	# yet -- the herd seat then dropped straight through it. Require a hit at
-	# the heightmap's own ground height.
-	var ground := float(_world.call("ground_height_at", at.x, at.z))
 	for _frame in max_frames:
-		var hit := space.intersect_ray(query)
-		if not hit.is_empty() and (is_nan(ground) or absf((hit.position as Vector3).y - ground) <= 1.0):
+		if not space.intersect_ray(query).is_empty():
 			return true
 		await physics_frame
 	push_warning("seat at %s never had ground collision under it after %d frames" % [str(at), max_frames])
