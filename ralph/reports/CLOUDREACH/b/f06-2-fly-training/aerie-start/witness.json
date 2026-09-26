@@ -6,8 +6,8 @@
       "directions_tried": [
         "(0.0, 0.0, -1.0)"
       ],
-      "end": "(426.764, 640.8497, 3216.013)",
-      "from": "(417.7933, 627.9473, 3249.835)",
+      "end": "(419.2139, 637.5161, 3215.763)",
+      "from": "(422.3839, 627.7822, 3250.185)",
       "inside_trial": true,
       "refused": true,
       "still_flying": true,
@@ -18,9 +18,29 @@
   "criterion": "F06#2",
   "denials": [
     {
-      "position": "(426.764, 640.883, 3216.013)",
+      "position": "(419.2139, 637.5494, 3215.763)",
       "reason": "Stay inside the marked flight trial.",
       "stage": "flight_trial_start"
+    },
+    {
+      "position": "(419.2139, 637.4494, 3215.753)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(439.4823, 740.9586, 3599.089)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "position": "(439.4927, 740.6254, 3599.239)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "position": "(439.4934, 740.5254, 3599.249)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
     }
   ],
   "failure": [],
@@ -29,21 +49,28 @@
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(399.7016, 610.1301, 3248.946)",
+      "position": "(399.7569, 610.1307, 3248.977)",
       "stage": "flight_trial_start"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(1098.699, 1051.301, 2941.594)",
+      "position": "(398.6935, 610.1303, 3250.564)",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "carrier": "galecrest",
+      "fly_unlocked": true,
+      "on_floor": true,
+      "position": "(1098.699, 1051.301, 2941.971)",
       "stage": "mandatory_high_roost_flight"
     },
     {
       "carrier": "galecrest",
       "fly_unlocked": true,
       "on_floor": true,
-      "position": "(401.0013, 610.1306, 3250.344)",
+      "position": "(400.899, 610.1301, 3250.248)",
       "stage": "return_glide_to_grounded_counterweight"
     }
   ],
@@ -58,6 +85,21 @@
   },
   "passed": true,
   "recoveries": [],
+  "sealed_attempt": {
+    "closest_gap_to_box_m": 0.7509765625,
+    "denials": [
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper."
+    ],
+    "end": "(439.4934, 724.4399, 3599.249)",
+    "frames_inside_sealed_box": 0,
+    "on_floor": false,
+    "peak_y_after_lift": 770.281311035156,
+    "refused_after_frames": 1415,
+    "still_flying": true,
+    "target": "(450.0, 700.0, 3750.0)"
+  },
   "skipped_steps": 21,
   "stage": "return_glide_to_grounded_counterweight",
   "start_state": "DECLARED aerie fixture (--start=aerie): committed completed-Meadows fixture party, Act I flags seeded before scene build, single placement beside the aerie repair; ordinary input from the aerie camp rest onward",
