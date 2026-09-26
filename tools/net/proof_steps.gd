@@ -68,7 +68,8 @@ const LEGENDARY_SPECIES := "fulgocobra"
 const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "stormheart_fixture",
 	"stormheart_answer", "stormheart_state", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
 	"rider_identity", "rider_self", "guardian_fixture", "veilfall_press", "guardian_answer", "guardian_state", "guardian_offer_again",
-	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state"]
+	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state",
+	"water_dock_resend", "water_dock_cut"]
 
 
 static func handles(action: String) -> bool:
@@ -576,9 +577,22 @@ static func _stormheart_state(tree: SceneTree) -> Dictionary:
 ##                                        after a water_dock_act crash, the title's returning
 ##                                        Join (peer_runner `production_join`) back to the
 ##                                        host this peer was connected to, as this character
+##   water_dock_resend {action_id, budget_frames?}  a stale duplicate copy: re-send this
+##                                        character's latest paid escrow txn for the action
+##                                        (same txn id, world instance and attempt) straight to
+##                                        the ledger, as a client that never saw its verdict
+##                                        would; reports the host's answer, the row's status
+##                                        and any bag change
+##   water_dock_cut    {action_id, report?}  HOST: arm a one-shot cable pull. When the
+##                                        ledger commits a REMOTE peer's delta setting the
+##                                        action's flag (after its durable world save), that
+##                                        requester is disconnected inside delta_applied,
+##                                        before `_rpc_delta` is queued: the host committed,
+##                                        the delta never reaches the guest. report: what
+##                                        the armed cut did (and disarm it)
 
 const WATER_ACTIONS := ["homecoming_complete", "credits_continue", "ending_state", "water_dock_act",
-	"water_dock_state"]
+	"water_dock_state", "water_dock_resend", "water_dock_cut"]
 const HOMECOMING_PATH := "res://scripts/story/regional_homecoming.gd"
 const QUEST_LOG_PATH := "res://scripts/world/quest_log.gd"
 const DOCK_RULES_PATH := "res://scripts/world/water_dock_rules.gd"
@@ -603,6 +617,10 @@ static func _water_run(tree: SceneTree, action: String, args: Dictionary) -> Dic
 			return _ending_state(tree)
 		"water_dock_act":
 			return await _water_dock_act(tree, args)
+		"water_dock_resend":
+			return await _water_dock_resend(tree, args)
+		"water_dock_cut":
+			return _water_dock_cut(tree, args)
 		"water_dock_state":
 			var before := ""
 			if args.has("grant"):
@@ -1694,3 +1712,113 @@ static func _label_containing(node: Node, needle: String) -> String:
 		if not found.is_empty():
 			return found
 	return ""
+
+
+# --- F15: paid dock debit, duplicate txn copy (appended) ---------------------------
+
+static func _water_dock_resend(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game"}
+	var action_id := str(args.get("action_id", ""))
+	var action := _dock_action(action_id)
+	if action.is_empty():
+		return {"verdict": "ERROR", "detail": "no dock action '%s'" % action_id}
+	var escrow: Dictionary = game.get("local").get("satchel_escrow")
+	var row: Dictionary = {}
+	for raw: Variant in escrow.values():
+		if raw is Dictionary and str(raw.get("kind", "")) == "water_dock_debit" \
+				and str(raw.get("action_id", "")) == action_id \
+				and (row.is_empty() or int(raw.get("attempt", 0)) > int(row.get("attempt", 0))):
+			row = raw
+	if row.is_empty():
+		return {"verdict": "FAIL", "detail": "this character has no escrow row for '%s'" % action_id,
+			"data": {"found": false}}
+	var cost: Array = (action.cost as Dictionary).keys()
+	var counts := {}
+	for item: String in cost:
+		counts[item] = int(action.cost[item])
+	var txn := str(row.txn_id)
+	var status_before := str(row.status)
+	var ledger: Node = game.get("ledger")
+	var refusals: Array = []
+	var on_refused := func(kind: String, code: String, _reason: String, _d: Dictionary) -> void:
+		if kind == "water_dock_action":
+			refusals.append(code)
+	ledger.connect("intent_refused", on_refused)
+	var seq_before := int((ledger.get("ledger") as RefCounted).get("seq"))
+	var bag_before := _bag(game, cost)
+	var disk_before := _bag_on_disk(game, cost)
+	var verdict: Dictionary = ledger.call("submit", {"kind": "water_dock_action", "realm": "water",
+		"action_id": action_id, "inventory": counts, "txn_id": txn,
+		"world_instance_id": str(row.get("world_instance_id", "")), "attempt": int(row.get("attempt", 1))})
+	if not bool(verdict.get("pending", false)) and not bool(verdict.get("ok", false)):
+		refusals.append(str(verdict.get("code", "")))
+	var waited := 0
+	while refusals.is_empty() and waited < int(args.get("budget_frames", 600)):
+		await tree.physics_frame
+		waited += 1
+	for f in 30:
+		await tree.physics_frame
+	ledger.disconnect("intent_refused", on_refused)
+	var bag_after := _bag(game, cost)
+	var taken := {}
+	for item: String in bag_before:
+		taken[item] = int(bag_before[item]) - int(bag_after[item])
+	var current: Variant = escrow.get(txn)
+	var data := {"found": true, "txn": txn, "attempt": int(row.get("attempt", 1)),
+		"status_before": status_before,
+		"status_after": str((current as Dictionary).get("status", "")) if current is Dictionary else "",
+		"refusals": refusals, "committed": bool(verdict.get("ok", false)),
+		"seq_before": seq_before, "seq_after": int((ledger.get("ledger") as RefCounted).get("seq")),
+		"taken": taken, "bag_before": bag_before, "bag_after": bag_after,
+		"disk_before": disk_before, "disk_after": _bag_on_disk(game, cost)}
+	return {"verdict": "PASS",
+		"detail": "re-sent txn %s (attempt %d, row %s -> %s); host answer %s after %d frames; bag %s -> %s (disk %s -> %s)"
+			% [txn.left(12), int(data.attempt), status_before, str(data.status_after), str(refusals), waited,
+				str(bag_before), str(bag_after), str(disk_before), str(data.disk_after)],
+		"data": data}
+
+
+static func _water_dock_cut(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	if game == null or not bool(game.call("is_host")):
+		return {"verdict": "ERROR", "detail": "water_dock_cut runs on the host"}
+	var ledger: Node = game.get("ledger")
+	if bool(args.get("report", false)):
+		if not tree.has_meta(&"f15_dock_cut"):
+			return {"verdict": "ERROR", "detail": "no armed water_dock_cut"}
+		var armed: Dictionary = tree.get_meta(&"f15_dock_cut")
+		if ledger.is_connected("delta_applied", armed.handler):
+			ledger.disconnect("delta_applied", armed.handler)
+		tree.remove_meta(&"f15_dock_cut")
+		var data := {"cut": bool(armed.state.cut), "peer": int(armed.state.peer),
+			"seq": int(armed.state.seq), "flag_on_host": bool(game.get("world").get("flags").call("has", str(armed.flag)))}
+		return {"verdict": "PASS", "detail": "armed cut %s: peer %d disconnected at commit seq %d; host flag %s"
+			% ["FIRED" if data.cut else "never fired", data.peer, data.seq, str(data.flag_on_host)], "data": data}
+	var action := _dock_action(str(args.get("action_id", "")))
+	if action.is_empty():
+		return {"verdict": "ERROR", "detail": "no dock action '%s'" % str(args.get("action_id", ""))}
+	var flag := str(action.flag)
+	var state := {"cut": false, "peer": 0, "seq": 0}
+	var mp := tree.root.multiplayer
+	var handler := func(delta: Dictionary) -> void:
+		if bool(state.cut):
+			return
+		var sender := mp.get_remote_sender_id()
+		if sender <= 1:
+			return
+		for op: Variant in delta.get("ops", []):
+			if op is Dictionary and str(op.get("op", "")) == "flag" and str(op.get("id", "")) == flag \
+					and bool(op.get("value", false)):
+				# Graceful ENet disconnect resets the peer's unsent queue; the
+				# `_rpc_delta` that follows this signal is refused for it.
+				(mp.multiplayer_peer as MultiplayerPeer).disconnect_peer(sender)
+				state.cut = true
+				state.peer = sender
+				state.seq = int(delta.get("seq", 0))
+				return
+	ledger.connect("delta_applied", handler)
+	tree.set_meta(&"f15_dock_cut", {"handler": handler, "state": state, "flag": flag})
+	return {"verdict": "PASS", "detail": "armed: the next remote commit of '%s' disconnects its requester before the delta is sent" % flag,
+		"data": {"armed": true}}
