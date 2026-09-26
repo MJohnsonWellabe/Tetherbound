@@ -280,7 +280,7 @@
         "refused": true,
         "pending_guardian_id": ""
       },
-      "label": "repeat after resolution, judged by the host: the guest's raw offer intent is refused already_resolved; nothing new pending"
+      "label": "repeat after resolution: the guest's raw offer intent is refused (the refusal comes back without a code, and pending stays set); nothing new is presented and the Guardian count is unchanged"
     },
     {
       "peer": 0,

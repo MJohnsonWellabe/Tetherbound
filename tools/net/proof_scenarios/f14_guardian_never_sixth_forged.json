@@ -201,6 +201,7 @@
       "action": "water_guardian_forge_accept",
       "expect_data": {
         "local_refused": true,
+        "offer_still_on_screen": true,
         "host_settled_seen": true,
         "same_five": true,
         "party_size": 5,
@@ -325,7 +326,7 @@
         "refused": true,
         "pending_guardian_id": ""
       },
-      "label": "repeat after resolution, judged by the host: the guest's raw offer intent is refused already_resolved; nothing new pending"
+      "label": "repeat after resolution: the guest's raw offer intent is refused (the refusal comes back without a code, and pending stays set); nothing new is presented and the Guardian count is unchanged"
     },
     {
       "peer": 0,
@@ -409,7 +410,7 @@
           "Rill"
         ]
       },
-      "label": "guest's saved character on disk: the expected five and nothing else of the Guardian's"
+      "label": "guest's saved character on disk: the expected five, with the Guardian in Rill's former slot (after the honest swap at #25) and no Rill"
     },
     {
       "peer": 0,
