@@ -290,7 +290,20 @@ const PRESS_ATTEMPTS := 3
 
 
 func _press_prompt(prompt: Node3D) -> bool:
+	# A player talks to whoever stands at that spot now. Keep the prompt's
+	# world-relative path and re-find it before each press: seed 15 twice
+	# activated `RelayNPCs/Sela/Interactable` as a different instance from the
+	# one approached, right after the captain fell.
+	var relative := _world.get_path_to(prompt) if is_instance_valid(prompt) and prompt.is_inside_tree() else NodePath()
 	for attempt in PRESS_ATTEMPTS:
+		if not relative.is_empty():
+			var live := _world.get_node_or_null(relative) as Node3D
+			if live != null and live != prompt:
+				_receipt("press_prompt_refound", {"path": str(relative),
+					"old_id": prompt.get_instance_id() if is_instance_valid(prompt) else 0,
+					"old_in_tree": is_instance_valid(prompt) and prompt.is_inside_tree(),
+					"new_id": live.get_instance_id()})
+				prompt = live
 		if not await _approach_prompt(prompt):
 			return false
 		var expected := prompt.get_instance_id()
@@ -300,7 +313,8 @@ func _press_prompt(prompt: Node3D) -> bool:
 		await _input._tap("interact")
 		if _activated_id == expected:
 			return true
-		if _activated_name == expected_path:
+		var live_now := _world.get_node_or_null(relative) if not relative.is_empty() else null
+		if _activated_name == expected_path or (live_now != null and _activated_id == live_now.get_instance_id()):
 			# The same prompt at the same place in the tree, as a new instance
 			# (seed 15: Sela's, right after the captain fell).
 			_receipt("press_same_prompt_new_instance", {"path": expected_path,
@@ -318,8 +332,12 @@ func _press_prompt(prompt: Node3D) -> bool:
 			"activated": _activated_name, "wild_fight": wild_took_it})
 		if wild_took_it and not await _fight():
 			return false
-	return _fail("Physical Interact activated a different provider than the exact offered target (wanted %s, got '%s')" % [
-		str(prompt.name) if is_instance_valid(prompt) else "<freed>", _activated_name])
+	return _fail("Physical Interact activated a different provider than the exact offered target (wanted %s id=%d in_tree=%s path='%s', got '%s' id=%d)" % [
+		str(prompt.name) if is_instance_valid(prompt) else "<freed>",
+		prompt.get_instance_id() if is_instance_valid(prompt) else 0,
+		str(is_instance_valid(prompt) and prompt.is_inside_tree()),
+		str(prompt.get_path()) if is_instance_valid(prompt) and prompt.is_inside_tree() else "",
+		_activated_name, _activated_id])
 
 
 func _talk(prompt: Node3D, expected: String) -> bool:
