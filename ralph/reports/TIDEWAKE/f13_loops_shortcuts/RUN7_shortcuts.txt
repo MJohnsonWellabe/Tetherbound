@@ -1,0 +1,114 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:60)
+         [1] _run (res://tests/smoke_water_loops_shortcuts.gd:151)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+PASS: Production Tidewake world finishes building
+PASS: water_world.json authors four land loops
+PASS: water_world.json authors three return shortcuts
+LOOPS/SHORTCUTS CASES: reedhaven_maintenance_ramp, shellwatch_pump_return_channel, deep_watch_current_cut
+PASS: Reedhaven ramp path starts on reed_root_circuit vertex 0 (108.2, 17.1, 469.2) (path[0] (108.2, 17.1, 469.2))
+PASS: reedhaven_maintenance_ramp has a runtime node in the production scene (found ["/root/WaterArchipelago/WaterReturnRamps/reedhaven_maintenance_ramp"])
+PASS: Reedhaven ramp starts with water_dock_reedhaven_repaired unset
+FIXTURE placement: F2 loop terrace start (closed attempt) at (108.2, 17.2, 469.2) (health/stamina refilled)
+PASS: F2 loop terrace start (closed attempt) placement holds (no pending recovery moved the player)
+PASS: Reedhaven ramp barricade collision is present before water_dock_reedhaven_repaired (6 collision shapes)
+PASS: Reedhaven ramp node has no deck collision before water_dock_reedhaven_repaired (0 collision shapes)
+PASS: Reedhaven ramp real-stick walk stops at the barricade before water_dock_reedhaven_repaired (stalled (<0.5 m progress in 1.5 s) at (110.3, 16.7, 474.3); ground 16.59 -> 15.48 1.5 m ahead (37 deg), on_floor=true, swimming=false, water_depth=0.00; max progress past its line -0.55 m, final -0.55 m, health lost 0.0)
+PASS: Reedhaven ramp line is not walkable before water_dock_reedhaven_repaired (blocked: stalled (<0.5 m progress in 1.5 s) at (110.3, 16.7, 474.3); ground 16.59 -> 15.48 1.5 m ahead (37 deg), on_floor=true, swimming=false, water_depth=0.00)
+FIXTURE placement: F2 loop terrace start (walked closed-state baseline) at (108.2, 17.2, 469.2) (health/stamina refilled)
+PASS: F2 loop terrace start (walked closed-state baseline) placement holds (no pending recovery moved the player)
+PASS: Before water_dock_reedhaven_repaired the departure is reached on foot from the loop terrace the long way round (168.4 m walked, 34.2 s; arrived)
+FIXTURE placement: F2 Reedhaven bypass round the barricade's +X end start at (109.8, 17.0, 472.4) (health/stamina refilled)
+PASS: F2 Reedhaven bypass round the barricade's +X end start placement holds (no pending recovery moved the player)
+Reedhaven bypass round the barricade's +X end: end health lost 30.9 at (105.8, 9.0, 478.4) (waypoint 3/3), closest 52.8 m to the departure, walked 8.0 m, max drop 0.00 m, health lost 30.9
+PASS: Before water_dock_reedhaven_repaired, bypass attempt 'round the barricade's +X end' does not reach the departure dry and unhurt (health lost 30.9 at (105.8, 9.0, 478.4), closest 52.8 m, walked 8.0 m, max drop 0.00 m, health lost 30.9)
+FIXTURE placement: F2 Reedhaven bypass round the barricade's -X end start at (109.8, 17.0, 472.4) (health/stamina refilled)
+PASS: F2 Reedhaven bypass round the barricade's -X end start placement holds (no pending recovery moved the player)
+Reedhaven bypass round the barricade's -X end: end health lost 47.5 at (118.9, 6.1, 483.5) (waypoint 3/3), closest 40.3 m to the departure, walked 16.8 m, max drop 0.00 m, health lost 47.5
+PASS: Before water_dock_reedhaven_repaired, bypass attempt 'round the barricade's -X end' does not reach the departure dry and unhurt (health lost 47.5 at (118.9, 6.1, 483.5), closest 40.3 m, walked 16.8 m, max drop 0.00 m, health lost 47.5)
+FIXTURE placement: F2 Reedhaven bypass straight start -> departure start at (108.2, 17.2, 469.2) (health/stamina refilled)
+PASS: F2 Reedhaven bypass straight start -> departure start placement holds (no pending recovery moved the player)
+Reedhaven bypass straight start -> departure: end health lost 51.2 at (117.9, 6.2, 483.2) (waypoint 1/1), closest 41.1 m to the departure, walked 18.8 m, max drop 0.00 m, health lost 51.2
+PASS: Before water_dock_reedhaven_repaired, bypass attempt 'straight start -> departure' does not reach the departure dry and unhurt (health lost 51.2 at (117.9, 6.2, 483.2), closest 41.1 m, walked 18.8 m, max drop 0.00 m, health lost 51.2)
+FIXTURE placement: F2 Reedhaven bypass drop-in at the wall's x 54 step start at (108.2, 17.2, 469.2) (health/stamina refilled)
+PASS: F2 Reedhaven bypass drop-in at the wall's x 54 step start placement holds (no pending recovery moved the player)
+Reedhaven bypass drop-in at the wall's x 54 step: end drop 1.91 m at (55.4, 19.4, 459.9) (waypoint 3/3), closest 57.9 m to the departure, walked 57.6 m, max drop 1.91 m, health lost 0.0
+PASS: Before water_dock_reedhaven_repaired, bypass attempt 'drop-in at the wall's x 54 step' does not reach the departure dry and unhurt (drop 1.91 m at (55.4, 19.4, 459.9), closest 57.9 m, walked 57.6 m, max drop 1.91 m, health lost 0.0)
+FIXTURE placement: F2 Reedhaven bypass drop-in at the wall's x 60 step start at (108.2, 17.2, 469.2) (health/stamina refilled)
+PASS: F2 Reedhaven bypass drop-in at the wall's x 60 step start placement holds (no pending recovery moved the player)
+Reedhaven bypass drop-in at the wall's x 60 step: end drop 2.63 m at (61.4, 18.1, 462.4) (waypoint 2/3), closest 57.9 m to the departure, walked 52.0 m, max drop 2.63 m, health lost 1.1
+PASS: Before water_dock_reedhaven_repaired, bypass attempt 'drop-in at the wall's x 60 step' does not reach the departure dry and unhurt (drop 2.63 m at (61.4, 18.1, 462.4), closest 57.9 m, walked 52.0 m, max drop 2.63 m, health lost 1.1)
+FIXTURE placement: F2 Reedhaven bypass drop-in beside the ramp top start at (108.2, 17.2, 469.2) (health/stamina refilled)
+PASS: F2 Reedhaven bypass drop-in beside the ramp top start placement holds (no pending recovery moved the player)
+Reedhaven bypass drop-in beside the ramp top: end health lost 25.3 at (99.6, 10.2, 476.3) (waypoint 2/3), closest 57.9 m to the departure, walked 13.5 m, max drop 0.00 m, health lost 25.3
+PASS: Before water_dock_reedhaven_repaired, bypass attempt 'drop-in beside the ramp top' does not reach the departure dry and unhurt (health lost 25.3 at (99.6, 10.2, 476.3), closest 57.9 m, walked 13.5 m, max drop 0.00 m, health lost 25.3)
+FIXTURE placement: F2 Reedhaven bypass east along the terrace toward the sea cliff start at (108.2, 17.2, 469.2) (health/stamina refilled)
+PASS: F2 Reedhaven bypass east along the terrace toward the sea cliff start placement holds (no pending recovery moved the player)
+Reedhaven bypass east along the terrace toward the sea cliff: end health lost 51.2 at (147.0, 2.8, 493.3) (waypoint 2/2), closest 22.4 m to the departure, walked 53.6 m, max drop 0.00 m, health lost 51.2
+PASS: Before water_dock_reedhaven_repaired, bypass attempt 'east along the terrace toward the sea cliff' does not reach the departure dry and unhurt (health lost 51.2 at (147.0, 2.8, 493.3), closest 22.4 m, walked 53.6 m, max drop 0.00 m, health lost 51.2)
+PASS: Production Reedhaven repair equipment exists
+FIXTURE placement: F2 beside Reedhaven repair prompt at (141.5, 2.4, 512.2) (health/stamina refilled)
+PASS: F2 beside Reedhaven repair prompt placement holds (no pending recovery moved the player)
+PASS: Production Reedhaven repair publishes water_dock_reedhaven_repaired
+PASS: Reedhaven ramp deck collision appears on the live water_dock_reedhaven_repaired change, no reload (31 collision shapes)
+PASS: Reedhaven ramp barricade collision is gone on the live water_dock_reedhaven_repaired change (0 collision shapes)
+FIXTURE placement: F2 loop terrace start (open walk) at (108.2, 17.2, 469.2) (health/stamina refilled)
+PASS: F2 loop terrace start (open walk) placement holds (no pending recovery moved the player)
+PASS: Reedhaven ramp walked end to end after water_dock_reedhaven_repaired (arrived)
+PASS: Reedhaven ramp walk (60.8 m) is shorter than the walked closed-state return (168.4 m): ratio 0.36
+LOOPS/SHORTCUTS +104.1s | shortcut reedhaven_maintenance_ramp | closed YES | bypass attempts 7/7 held | open/walked YES | 60.8 m | 12.6 s | shorter YES (normal 168.4 m / 34.2 s walked before the flag; ratio 0.36)
+LOOPS/SHORTCUTS CASE reedhaven_maintenance_ramp | 97.9 s wall
+PASS: Shellwatch channel starts with water_dock_shellwatch_residents_freed_and_pump_disabled unset
+PASS: Before water_dock_shellwatch_residents_freed_and_pump_disabled the direct channel flows at its exposed 0.35 m/s (live 0.350)
+FIXTURE placement: F3 Brine Steps departure at (383.5, 2.1, 828.1) (health/stamina refilled)
+PASS: F3 Brine Steps departure placement holds (no pending recovery moved the player)
+Shellwatch sheltered crossing: uncounted approach to shore vertex 16.8 m
+PASS: Shellwatch sheltered crossing actually crossed water
+PASS: Sheltered Brine -> Shellwatch crossing swum end to end (111.2 m, 25.2 s)
+FIXTURE placement: F3 beside Shellwatch pump prompt at (431.9, 2.8, 1242.2) (health/stamina refilled)
+PASS: F3 beside Shellwatch pump prompt placement holds (no pending recovery moved the player)
+PASS: Production Shellwatch release + pump prompts publish water_dock_shellwatch_residents_freed_and_pump_disabled
+PASS: After water_dock_shellwatch_residents_freed_and_pump_disabled the direct channel flows at 0.08 m/s (live 0.080)
+FIXTURE placement: F3 Shellwatch arrival (open return) at (356.5, 2.1, 951.9) (health/stamina refilled)
+PASS: F3 Shellwatch arrival (open return) placement holds (no pending recovery moved the player)
+Shellwatch direct return: uncounted approach to shore vertex 16.8 m
+PASS: Shellwatch direct return actually crossed water
+PASS: Direct Shellwatch -> Brine return swum end to end (108.8 m, 24.4 s)
+PASS: Direct return (108.8 m) is shorter than the sheltered crossing (111.2 m swum)
+LOOPS/SHORTCUTS +164.7s | shortcut shellwatch_pump_return_channel | closed YES (0.35 m/s exposed) | open/swum YES (0.08 m/s) | 108.8 m | 24.4 s | shorter YES (normal sheltered 111.2 m / 25.2 s)
+LOOPS/SHORTCUTS CASE shellwatch_pump_return_channel | 60.6 s wall
+PASS: Water species catalogue accepts the Aquaryn fixture
+PASS: F4 level-60 Aquaryn fixture joins the party
+PASS: Deep Watch cut starts with water_dock_deep_watch_current_charted unset
+PASS: Before water_dock_deep_watch_current_charted the direct channel flows at its exposed 2.20 m/s (live 2.200)
+FIXTURE placement: F4 Sluice Isle departure at (1034.8, 2.1, 3159.6) (health/stamina refilled)
+PASS: F4 Sluice Isle departure placement holds (no pending recovery moved the player)
+PASS: F4 production summon + mount of the Aquaryn at Sluice Isle
+Deep Watch sheltered crossing: uncounted approach to shore vertex 16.6 m
+PASS: Deep Watch sheltered crossing actually crossed water
+PASS: Sheltered Sluice -> Deep Watch crossing swum mounted end to end (332.4 m, 35.3 s)
+PASS: Production Deep Watch chart prompt publishes water_dock_deep_watch_current_charted
+PASS: After water_dock_deep_watch_current_charted the direct channel flows at 0.10 m/s (live 0.100)
+PASS: Deep Watch: production Ride offer remounts the Aquaryn
+Deep Watch direct return: uncounted approach to shore vertex 44.9 m
+PASS: Deep Watch direct return actually crossed water
+PASS: Direct Deep Watch -> Sluice return swum mounted end to end (314.0 m, 32.4 s)
+PASS: Direct return (314.0 m) is shorter than the sheltered crossing (332.4 m swum)
+LOOPS/SHORTCUTS +249.4s | shortcut deep_watch_current_cut | closed YES (2.20 m/s exposed) | open/swum YES (0.10 m/s) | 314.0 m | 32.4 s | shorter YES (normal sheltered 332.4 m / 35.3 s)
+LOOPS/SHORTCUTS CASE deep_watch_current_cut | 84.7 s wall
+---- WATER LOOPS/SHORTCUTS SUMMARY (249.4 s wall) ----
+  shortcut reedhaven_maintenance_ramp | closed YES | bypass attempts 7/7 held | open/walked YES | 60.8 m | 12.6 s | shorter YES (normal 168.4 m / 34.2 s walked before the flag; ratio 0.36)
+  shortcut shellwatch_pump_return_channel | closed YES (0.35 m/s exposed) | open/swum YES (0.08 m/s) | 108.8 m | 24.4 s | shorter YES (normal sheltered 111.2 m / 25.2 s)
+  shortcut deep_watch_current_cut | closed YES (2.20 m/s exposed) | open/swum YES (0.10 m/s) | 314.0 m | 32.4 s | shorter YES (normal sheltered 332.4 m / 35.3 s)
+WATER LOOPS/SHORTCUTS: 61 checks, 0 failures, 0 defects
+EXIT 0
+PROCESS WALL 256.367469819 s (godot --headless ... --case=reedhaven_maintenance_ramp,shellwatch_pump_return_channel,deep_watch_current_cut; local container; another agent's headless Godot job was running on the same machine)

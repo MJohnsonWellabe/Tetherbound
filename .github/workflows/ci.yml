@@ -1730,8 +1730,8 @@ jobs:
     # Split from verify-regions-shard (CI wall-clock): identical steps, own runner.
     runs-on: ubuntu-latest
     # Measured 2026-09-26 (run 36244390545): 8.4 min job wall before the
-    # Tidewake loops steps. Those three are bounded at 1370 s (22.8 min) in
-    # total, so the worst case is ~31 min plus runner variance; 45 min keeps
+    # Tidewake loops steps. Those three are bounded at 1430 s (23.8 min) in
+    # total, so the worst case is ~32 min plus runner variance; 45 min keeps
     # margin.
     timeout-minutes: 45
     needs: changes
@@ -1813,8 +1813,12 @@ jobs:
       # shortcuts walked/swum with real stick input in the production scene,
       # split by --case so no step runs past ~8 min. Measured on a GitHub
       # runner (render.yml run 36249272344): ~28 s world build, then reed
-      # 138 s, brine 138 s, salt 151 s, sluice 179 s, ramp 70 s, shellwatch
-      # 61 s, deep watch 84 s. Each timeout is 1.5x its group's measured wall.
+      # 138 s, brine 138 s, salt 151 s, sluice 179 s, shellwatch 61 s, deep
+      # watch 84 s; ramp 112 s since the uphill rework (local container,
+      # ralph/reports/TIDEWAKE/f13_loops_shortcuts/RUN8_shortcuts.txt: 270 s
+      # process wall for the shortcut group; ~285 s estimated on a runner,
+      # so its timeout is 430 s).
+      # Each timeout is 1.5x its group's measured wall.
       - name: Verify Tidewake land loops walked (reed root, brine terrace)
         if: ${{ !cancelled() }}
         run: timeout 460s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reed_root_circuit,brine_terrace_circuit
@@ -1823,7 +1827,7 @@ jobs:
         run: timeout 540s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=salt_shrine_circuit,sluice_patrol_circuit
       - name: Verify Tidewake return shortcuts closed then open and shorter
         if: ${{ !cancelled() }}
-        run: timeout 370s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reedhaven_maintenance_ramp,shellwatch_pump_return_channel,deep_watch_current_cut
+        run: timeout 430s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reedhaven_maintenance_ramp,shellwatch_pump_return_channel,deep_watch_current_cut
 
   verify-owner-regressions-shard:
     runs-on: ubuntu-latest
