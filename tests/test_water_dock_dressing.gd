@@ -5,6 +5,7 @@ extends "res://tests/test_case.gd"
 
 const CONFIG := "res://data/config/water_dock_dressing.json"
 const SCRIPT := "res://scripts/world/water_dock_dressing.gd"
+const DRESSING := preload("res://scripts/world/water_dock_dressing.gd")
 
 
 func _cfg() -> Dictionary:
@@ -39,3 +40,59 @@ func test_lantern_light_and_piling_tint_are_not_team_tether_red() -> void:
 		"pier pilings are darkened to wet wood, not the log texture's salmon pink")
 	assert_true(float((_cfg().lanterns as Dictionary).get("glow_energy", 0.0)) > 0.0,
 		"dock lanterns glow so they read lit at night")
+
+
+func test_material_override_covers_root_mesh_and_children_without_mutating_source() -> void:
+	var dressing := DRESSING.new()
+	var root_mesh := MeshInstance3D.new()
+	var shared_mesh := BoxMesh.new()
+	var source_material := StandardMaterial3D.new()
+	source_material.albedo_color = Color.WHITE
+	shared_mesh.material = source_material
+	root_mesh.mesh = shared_mesh
+	var child_mesh := MeshInstance3D.new()
+	child_mesh.mesh = shared_mesh
+	root_mesh.add_child(child_mesh)
+	var untouched := MeshInstance3D.new()
+	untouched.mesh = shared_mesh
+	var wet_wood := Color("#605348")
+	dressing.call("_tint", root_mesh, wet_wood)
+	for mesh: MeshInstance3D in [root_mesh, child_mesh]:
+		var material := mesh.get_surface_override_material(0) as StandardMaterial3D
+		assert_true(material != null, "root and nested imported meshes receive the dock treatment")
+		if material != null:
+			assert_eq(material.albedo_color, wet_wood, "the visible surface uses the dock palette")
+	assert_eq(source_material.albedo_color, Color.WHITE, "the shared source material is unchanged")
+	assert_true(untouched.get_surface_override_material(0) == null,
+		"other instances of the installed family keep their own materials")
+	root_mesh.free()
+	untouched.free()
+	dressing.free()
+
+
+func test_installed_lantern_emits_only_from_glass_and_light_follows_insert() -> void:
+	var dressing := DRESSING.new()
+	var site := Node3D.new()
+	var cfg := _cfg().lanterns as Dictionary
+	dressing.call("_lantern", site, cfg, Vector3(4, 2, 8), PI * 0.5)
+	var lantern := site.get_node_or_null(^"PierLantern") as Node3D
+	var light := site.get_node_or_null(^"PierLanternLight") as OmniLight3D
+	assert_true(lantern != null and light != null, "installed fixture and its light are constructed")
+	if lantern != null and light != null:
+		var glass := lantern.get_node_or_null(^"LanternGlass") as MeshInstance3D
+		assert_true(glass != null, "installed cage contains the luminous insert")
+		if glass != null:
+			var material := glass.material_override as StandardMaterial3D
+			assert_true(material != null and material.emission_enabled, "glass is the light source")
+			assert_true(light.position.is_equal_approx(lantern.transform * glass.position),
+				"illumination follows the fitted and rotated glass position")
+		for node: Node in lantern.find_children("*", "MeshInstance3D", true, false):
+			if node == glass:
+				continue
+			var mesh := node as MeshInstance3D
+			for surface in mesh.mesh.get_surface_count():
+				var housing := mesh.get_surface_override_material(surface) as StandardMaterial3D
+				assert_true(housing != null and not housing.emission_enabled,
+					"bracket, chain and cage retain opaque housing material")
+	site.free()
+	dressing.free()

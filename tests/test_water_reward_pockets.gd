@@ -5,8 +5,10 @@ extends "res://tests/test_case.gd"
 ## amount or claim policy changes. `cradle_shell_nest` pays the
 ## `side_water_cradle_care` gather (WORLD.md Tidewake local chains: the dry
 ## nest's 4 Reef Stone, once) through one existing Tidal Cradle seam moved
-## into it. `reed_root_hollow` has no matching item and stays explicitly
-## unresolved pending an owner decision. The chain's 3 berries are Otto's
+## into it. `reed_root_hollow` (role recipe_and_reed_fiber) pays its reed-fiber
+## half through one existing Reedhaven reed patch moved into it (3 Reed Fiber,
+## knife, once per world); its recipe half has no data-only grant path and stays
+## explicitly open. The chain's 3 berries are Otto's
 ## return payout (side_water_cradle_care, tests/test_water_cradle_care.gd), so
 ## the Tidal Cradle berries row stands at its original inland spot again.
 ## Analytic heightfield checks here; the baked-ground walk from each island's
@@ -36,10 +38,13 @@ const FILLED := {
 	"garden_exposed_vault": "water:drowned_garden:pickup:002",
 	"brine_upper_shelf": "water:brine_steps:pickup:001",
 }
-## Composite role with no existing item identity. Owner decision required;
-## this test proves it is still reserved, not that it pays out.
-const UNRESOLVED := {
-	"reed_root_hollow": "recipe_and_reed_fiber",
+## Composite role: the reed-fiber half is paid by one existing Reedhaven reed
+## patch moved into the hollow (former spot proves the move); the recipe half
+## has no existing grant consumer and is proven still unpaid, not invented.
+const REED := "reed_root_hollow"
+const REED_ROLE := "recipe_and_reed_fiber"
+const REED_ROWS := {
+	"water:reedhaven:harvest:012": {"item": "reed_fiber", "amount": 3, "was": Vector2(-174.0, 422.0)},
 }
 ## side_water_cradle_care gather: the existing Tidal Cradle seam moved into the
 ## nest, with the chain's authored amount. Former position proves the move.
@@ -136,12 +141,18 @@ func _pocket(id: String) -> Dictionary:
 			return pocket
 	return {}
 
-func test_eight_pockets_are_six_filled_cradle_paid_and_one_unresolved() -> void:
+func test_eight_pockets_are_six_filled_cradle_paid_and_reed_hollow_paid() -> void:
 	assert_eq(_world.reward_pockets.size(), 8, "WORLD §6.1 authors eight reward pockets")
+	var named := {}
+	for kind: String in ["pickups", "harvest"]:
+		for row: Dictionary in _data[kind]:
+			if row.has("reward_pocket_id"):
+				named[row.reward_pocket_id] = true
 	for pocket: Dictionary in _world.reward_pockets:
-		assert_true(FILLED.has(pocket.id) or UNRESOLVED.has(pocket.id) or pocket.id == CRADLE,
-			"Every pocket is filled, the Cradle chain payout, or explicitly unresolved: " + str(pocket.id))
-	assert_eq(FILLED.size() + UNRESOLVED.size() + 1, 8)
+		assert_true(FILLED.has(pocket.id) or pocket.id == REED or pocket.id == CRADLE,
+			"Every pocket is filled, the Cradle chain payout, or the reed hollow: " + str(pocket.id))
+		assert_true(named.has(pocket.id), "Some authored row names pocket " + str(pocket.id))
+	assert_eq(FILLED.size() + 2, 8)
 
 ## The shared placement contract every pocket row meets: on the pocket's
 ## island, analytic y, footing dry and within the MAX_SLOPE_DEG walk-slope
@@ -294,17 +305,51 @@ func test_cradle_nest_pays_the_care_chain_once() -> void:
 			near_landing += int(row["yield"])
 	assert_eq(near_landing, 4, "Saddle Reef Stone by the Cradle arrival unchanged")
 
-func test_composite_pockets_remain_explicitly_unresolved() -> void:
+func test_reed_hollow_pays_one_reed_seam_and_invents_no_recipe() -> void:
+	var pocket := _pocket(REED)
+	assert_false(pocket.is_empty(), "Reed hollow still authored")
+	if pocket.is_empty():
+		return
+	assert_eq(pocket.get("reward_role", ""), REED_ROLE, "Composite role unchanged")
 	var registered := {}
 	for entry: Dictionary in _data.planned_item_registrations:
 		registered[entry.id] = true
-	for pocket_id: String in UNRESOLVED:
-		var pocket := _pocket(pocket_id)
-		assert_false(pocket.is_empty(), "Composite pocket still authored: " + pocket_id)
-		assert_eq(pocket.get("reward_role", ""), UNRESOLVED[pocket_id], "Composite role unchanged")
-		assert_false(registered.has(UNRESOLVED[pocket_id]), "No invented item for composite role " + pocket_id)
-		for row: Dictionary in _data.pickups:
-			assert_ne(row.get("reward_pocket_id", ""), pocket_id, "No row claims unresolved pocket " + pocket_id)
+	assert_false(registered.has(REED_ROLE), "No invented item for the composite role")
+	var inside := {}
+	for kind: String in ["pickups", "harvest"]:
+		for row: Dictionary in _data[kind]:
+			if _xz(row.position).distance_to(_xz(pocket.position)) <= float(pocket.radius_m):
+				inside[row.id] = row
+			if row.get("reward_pocket_id", "") == REED:
+				assert_true(REED_ROWS.has(row.id), "Only the documented seam names the hollow: " + str(row.id))
+	assert_eq(inside.keys().size(), REED_ROWS.size(), "The hollow holds exactly the one reed patch")
+	for id: String in REED_ROWS:
+		var spec: Dictionary = REED_ROWS[id]
+		assert_true(inside.has(id), "Hollow holds " + id)
+		if not inside.has(id):
+			continue
+		var row: Dictionary = inside[id]
+		assert_eq(row.get("reward_pocket_id", ""), REED, "Row names the hollow")
+		assert_eq(row.item_id, spec.item, "Existing Reed Fiber identity")
+		assert_eq(int(row["yield"]), int(spec.amount), "Yield unchanged by the move")
+		var crafting: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_crafting.json"))
+		assert_eq(row.gather_action, str(crafting.item_registration_proposals[spec.item].gathered_with), "Row's tool matches the registered gathered_with")
+		assert_true(_xz(row.position).distance_to(spec.was) > 50.0, "Row actually moved from its former spot")
+		_assert_pocket_placement(row, pocket)
+	# Moves stay on the island: per-island and per-item row counts unchanged.
+	var reed := {"pickups": 0, "harvest": 0}
+	var fibre := 0
+	for row: Dictionary in _data.pickups:
+		reed.pickups += 1 if row.island_id == "reedhaven" else 0
+	for row: Dictionary in _data.harvest:
+		reed.harvest += 1 if row.island_id == "reedhaven" else 0
+		fibre += 1 if row.item_id == "reed_fiber" else 0
+	assert_eq(reed.pickups, int(_data.census.by_island.reedhaven.pickups))
+	assert_eq(reed.harvest, int(_data.census.by_island.reedhaven.harvest))
+	assert_eq(fibre, int(_data.census.harvest_item_counts.reed_fiber))
+	# Recipe half stays open: no Candy/cache row and no recipe grant names it.
+	for row: Dictionary in _data.pickups:
+		assert_ne(row.get("reward_pocket_id", ""), REED, "No pickup row claims the recipe half")
 
 func test_candy_tiers_and_identities_unchanged() -> void:
 	var tiers := {}

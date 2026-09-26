@@ -1,0 +1,38 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_water_reward_pockets,test_water_harvest_density,test_water_reedhaven_segment,test_water_earned_swimmer_preparation_segment,test_water_lastlight_shelter,test_water_cradle_care,test_water_pickup,test_water_personal: 7 of 572 test files
+  ok    test_water_cradle_care.gd :: test_lead_is_heard_beside_otto
+  ok    test_water_cradle_care.gd :: test_local_request_follows_the_chain
+  ok    test_water_cradle_care.gd :: test_otto_leads_waits_and_pays_without_pushing_aquaryn
+  ok    test_water_cradle_care.gd :: test_return_needs_an_owned_swimmer_or_a_settled_aquaryn_trial
+  ok    test_water_cradle_care.gd :: test_return_needs_the_gathered_nest
+  ok    test_water_cradle_care.gd :: test_return_pays_three_berries_once_to_the_returning_character
+  ok    test_water_cradle_care.gd :: test_steps_are_world_records_and_the_nest_is_the_existing_seam
+  ok    test_water_cradle_care.gd :: test_swimmer_species_come_from_the_live_catalogue
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_authored_clearance_leaves_workbench_and_bed_even_at_walk_tolerance
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_farewell_policy_preserves_unique_species_and_picks_lowest_duplicate
+WATER SWIMMER PREPARATION FAILED: Preparation requires the actual post-Iona ready Water world and settled belt
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_missing_live_entry_fails_without_synthetic_fallback
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_real_refcounted_identities_are_not_rejected_by_sign
+  ok    test_water_earned_swimmer_preparation_segment.gd :: test_supply_selection_respects_surplus_and_actual_tidal_recipe_rows
+  ok    test_water_harvest_density.gd :: test_island_harvest_minima_and_new_dry_approaches
+  ok    test_water_lastlight_shelter.gd :: test_delivery_and_rest_are_at_the_existing_veilfall_camp_exterior
+  ok    test_water_lastlight_shelter.gd :: test_delivery_debits_the_deliverer_once
+  ok    test_water_lastlight_shelter.gd :: test_halen_leads_reminds_and_acknowledges
+  ok    test_water_lastlight_shelter.gd :: test_lead_is_heard_beside_halen
+  ok    test_water_lastlight_shelter.gd :: test_local_request_follows_the_chain
+  ok    test_water_lastlight_shelter.gd :: test_optional_cost_leaves_every_character_a_saddle
+  ok    test_water_lastlight_shelter.gd :: test_rest_is_watched_only_while_open
+  ok    test_water_lastlight_shelter.gd :: test_rest_needs_the_shelter_and_the_camp_bed
+  ok    test_water_lastlight_shelter.gd :: test_three_steps_are_declared_world_records
+  ok    test_water_personal_pickup.gd :: test_authored_ownership_and_host_proximity
+  ok    test_water_reedhaven_segment.gd :: test_each_named_stop_uses_the_live_item_database_tool_contract
+  ok    test_water_reedhaven_segment.gd :: test_result_never_reports_success_before_explicit_segment_completion
+  ok    test_water_reward_pockets.gd :: test_candy_tiers_and_identities_unchanged
+  ok    test_water_reward_pockets.gd :: test_cradle_nest_pays_the_care_chain_once
+  ok    test_water_reward_pockets.gd :: test_eight_pockets_are_six_filled_cradle_paid_and_reed_hollow_paid
+  ok    test_water_reward_pockets.gd :: test_every_pickup_keeps_dry_spawn_ground
+  ok    test_water_reward_pockets.gd :: test_reed_hollow_pays_one_reed_seam_and_invents_no_recipe
+  ok    test_water_reward_pockets.gd :: test_single_item_pockets_hold_exactly_one_matching_existing_row
+
+32 tests, 14831 assertions, 0 failed
