@@ -5,6 +5,8 @@
   "arrival_arch_position": [0.0, 0.0, -15.0],
   "arrival_arch_size_m": [11.0, 10.5, 2.5],
   "arrival_arch_yaw_deg": 0.0,
+  "arrival_arch_camera_stops": {"opening_half_width_m": 2.75, "opening_top_m": 6.7},
+  "_arrival_arch_camera_stops_note": "Measured from WallEntranceBricks.obj scaled to arrival_arch_size_m: the aperture spans the middle half of the width and tops out at 64% of the height. Piers and lintel get occlusion-only camera stops (camera_rig OCCLUSION_ONLY_LAYER); traversal collision is unchanged.",
   "compass_outer_radii_m": [6.15, 6.65],
   "compass_inner_radii_m": [2.0, 2.35],
   "banner_blue": "#315f9a",
