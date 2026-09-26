@@ -23,7 +23,7 @@ All nine lane sessions (Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art 
 3. Merge or cherry-pick the parked branch below.
 4. Continue from the listed next step.
 
-**Parked branches (on origin, not merged):**
+**Parked branches (not merged):** every tip below is preserved permanently in the archive branch `claude/parked-work` (5cbef326d), whose tree equals main and whose merge parents are these tips. The individual branches can therefore be deleted. To resume one, run `git checkout -b <name> <sha>`. The commit message of `claude/parked-work` lists all 18 branch-to-SHA pairs, including diagnostics and probes not shown here.
 
 | Lane (handoff) | Branch @ SHA | Why parked / next step |
 |---|---|---|
