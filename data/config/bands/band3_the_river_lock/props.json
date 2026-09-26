@@ -1180,6 +1180,8 @@
           "smoke_top_m": 28.0,
           "smoke_alpha": 0.9,
           "smoke_top_size_m": 12.0,
+          "smoke_fade": 0.35,
+          "smoke_base_size_m": 2.0,
           "smoke_colour": "#4f4a45",
           "glow": "campfire",
           "name": "DossCampFire",
