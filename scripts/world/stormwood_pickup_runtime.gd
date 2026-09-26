@@ -138,7 +138,7 @@ func _mount_pickup(spec: Dictionary) -> void:
 	pickup.setup(item_id, "Take " + str(definition.get("name", item_id)),
 		str(presentation.get("model", "")), scale,
 		id, REALM_ID, int(spec.get("count", 1)))
-	if not beacon.is_empty() and not bool(world.get("simulation_only")):
+	if not beacon.is_empty() and world.get("simulation_only") != true:
 		_reward_beacon(pickup, beacon, pocket)
 	_placements[id] = pickup
 
