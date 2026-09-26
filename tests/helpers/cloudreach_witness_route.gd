@@ -278,6 +278,19 @@ func _exhausted_fall_attempt() -> bool:
 	var fly_config: Dictionary = fly.config
 	var drop_m := float(fly_config.get("recovery_drop_m", 100.0))
 	var flags_before := _flag_snapshot()
+	# The production launch check refuses where the companion's flight shape
+	# would overlap something overhead. Record what overlaps here, then walk
+	# by ordinary input to the nearest point on the same floor where the same
+	# query is clear -- as a player would step out from under an overhang.
+	var launch_probe := _launch_clearance(player.global_position)
+	exhausted_fall["launch_blocker_at_landing"] = launch_probe
+	if not bool(launch_probe.clear):
+		var spot := _nearest_clear_launch(player.global_position)
+		exhausted_fall["launch_spot"] = str(spot)
+		if spot == Vector3.INF: return _fail("No clear launch point on the shrine floor within 14 m")
+		if not await _walk(spot, 0.6): return false
+		await _frames(10)
+		anchor = player.global_position
 	if not await _deploy(): return false
 	exhausted_window = true
 	var reasons: Array[String] = []
@@ -317,13 +330,13 @@ func _exhausted_fall_attempt() -> bool:
 	var floor_query := PhysicsRayQueryParameters3D.create(player.global_position + Vector3.UP, player.global_position - Vector3.UP * 3, 1)
 	floor_query.exclude = [player.get_rid()]
 	var floor_hit := player.get_world_3d().direct_space_state.intersect_ray(floor_query)
-	exhausted_fall = {"anchor": str(anchor), "hover_frames": hover_frames, "exhausted_after_frames": exhausted_frame,
+	exhausted_fall.merge({"anchor": str(anchor), "hover_frames": hover_frames, "exhausted_after_frames": exhausted_frame,
 		"exhausted_at": str(exhausted_at), "stamina_at_exhaustion_logged": true, "lowest_y_before_recovery": lowest_y,
 		"drop_below_anchor_m": anchor.y - lowest_y, "recovery_drop_m": drop_m, "recovered_after_frames": recovered_frame,
 		"recovery_reasons": reasons, "landed_elsewhere": landed_elsewhere, "end": str(player.global_position),
 		"end_distance_to_anchor_m": player.global_position.distance_to(anchor), "on_floor": player.is_on_floor(),
 		"floor_path": str(floor_hit.collider.get_path()) if not floor_hit.is_empty() else "none",
-		"flying_after": fly.is_flying(), "party_size": game.party.members().size()}
+		"flying_after": fly.is_flying(), "party_size": game.party.members().size()}, true)
 	_log("witness_exhausted_fall", exhausted_fall)
 	if not _require(exhausted_frame >= 0, "Holding Jump in the shrine lift ran the flight to exhaustion"): return false
 	if not _require(not landed_elsewhere and recovered_frame >= 0, "The exhausted flyer was recovered by production recover_to_anchor, not landed elsewhere"): return false
@@ -336,6 +349,36 @@ func _exhausted_fall_attempt() -> bool:
 		await _frames(1)
 	stage = previous_stage
 	return true
+
+
+## The production launch overhead query (fly_controller.launch_blockers), read
+## only: which colliders the companion's flight shape would overlap at `at`.
+func _launch_clearance(at: Vector3) -> Dictionary:
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = fly._flight_shape()
+	query.transform = Transform3D(player.global_transform.basis, at + Vector3.UP * float(fly.config.get("collision_height_m", 4.5)) * 0.5)
+	query.collision_mask = player.collision_mask
+	query.exclude = [player.get_rid()]
+	var hits: Array[String] = []
+	for hit: Dictionary in player.get_world_3d().direct_space_state.intersect_shape(query, 8):
+		var collider: Object = hit.get("collider")
+		hits.append(str(collider.get_path()) if collider is Node else str(collider))
+	return {"at": str(at), "clear": hits.is_empty(), "overlapping": hits}
+
+
+func _nearest_clear_launch(origin: Vector3) -> Vector3:
+	var space := player.get_world_3d().direct_space_state
+	for radius: float in [3.0, 5.0, 7.0, 9.0, 11.0, 14.0]:
+		for step in 12:
+			var angle := TAU * float(step) / 12.0
+			var probe := origin + Vector3(cos(angle), 0, sin(angle)) * radius
+			var ray := PhysicsRayQueryParameters3D.create(probe + Vector3.UP * 3.0, probe - Vector3.UP * 3.0, 1)
+			ray.exclude = [player.get_rid()]
+			var hit := space.intersect_ray(ray)
+			if hit.is_empty() or (hit.normal as Vector3).y < 0.8 or absf((hit.position as Vector3).y - origin.y) > 1.5: continue
+			var ground: Vector3 = hit.position
+			if bool(_launch_clearance(ground).clear): return ground
+	return Vector3.INF
 
 
 ## `_finish` can be reached twice when a declared leg ends inside a route step
