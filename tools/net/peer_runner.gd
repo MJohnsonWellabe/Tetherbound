@@ -4944,6 +4944,10 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"near": vclimax != null and bool(vclimax.call("_player_near_legendary")),
 				"may_receive": vclimax != null and bool(vclimax.call("_may_receive_now")),
 				"panel_open": vclimax != null and bool(vclimax.call("_panel_busy")),
+				# The choice is READ OUT a beat after it opens (`_announce_in`);
+				# until that conversation has opened, a walk to a prompt can be
+				# caught by it mid-stride (locomotion off, the walk never ends).
+				"announce_pending": vclimax != null and float(vclimax.get("_announce_in")) >= 0.0,
 				"participants": vparticipants,
 				# The owner rule's other half, asked of the climax's own pure
 				# predicate with THIS peer's session context: a character
