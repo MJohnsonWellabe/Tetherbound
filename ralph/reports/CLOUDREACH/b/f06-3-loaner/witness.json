@@ -1,0 +1,39 @@
+{
+  "accelerated": true,
+  "combat_mode": "mechanics_only_test_lethal",
+  "criterion": "F06#3",
+  "failure": [
+    {
+      "kind": "FAIL",
+      "message": "Walking exceeded measured-distance time limit toward (-260.0, 235.0, 790.0)",
+      "position": "(-129.1461, 205.5934, 704.3986)",
+      "simulated_seconds": 379.32,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 427.522968
+    }
+  ],
+  "final_party": [
+    "sparkit",
+    "mudsnout",
+    "bramblebun",
+    "terrapup",
+    "brooktail"
+  ],
+  "flight_frames": 0,
+  "initial_party_keys": [
+    "creature-0b89ff6e86158c5f24ae9e2907f76af5",
+    "creature-dad08b19565721f346e02cadd4170480",
+    "creature-0d4ac31df9f01a7e7573e510ca5b4416",
+    "creature-72caddc2e2f4cb4ed73817c55cbbac92",
+    "creature-a7559c91718b02d8ab3f3a30880fb931"
+  ],
+  "launches": [],
+  "loaner_frames": 0,
+  "loaner_species": "galecrest",
+  "owned_carrier_frames": 0,
+  "passed": false,
+  "pre_trial_probe": {},
+  "stage": "lower_west_anchor",
+  "start_state": "committed completed-Meadows fixture (smoke_cloudreach_continuous default; five non-Fly creatures; earned c1_arrival save not yet available)",
+  "violations": []
+}

@@ -1,0 +1,13 @@
+only test_fly_traversal.gd: 1 of 573 test files
+  ok    test_fly_traversal.gd :: test_airborne_save_load_uses_ground_anchor_and_preserves_stamina_and_active_slot
+  ok    test_fly_traversal.gd :: test_deliberate_relocation_forgets_old_anchor_without_granting_a_new_one
+  ok    test_fly_traversal.gd :: test_flight_stamina_multiplier_reads_only_this_players_active_relic
+  ok    test_fly_traversal.gd :: test_flyer_trapped_in_closed_volumes_is_carried_out_not_hung
+  ok    test_fly_traversal.gd :: test_full_non_fly_party_gets_transient_maela_carrier_for_trial_and_unlock
+  ok    test_fly_traversal.gd :: test_invalid_airborne_anchor_rejects_pose_and_v17_migration_preserves_rewards
+  ok    test_fly_traversal.gd :: test_owned_active_healthy_carrier_is_preferred_without_sixth_slot
+  ok    test_fly_traversal.gd :: test_restrictions_are_swept_and_three_dimensional
+  ok    test_fly_traversal.gd :: test_skyborne_cost_helper_covers_launch_glide_and_climb_without_exceeding_base_costs
+  ok    test_fly_traversal.gd :: test_trial_authorization_does_not_unlock_fly_or_allow_leaving_trial
+10 tests, 83 assertions, 0 failed
+EXIT 0
