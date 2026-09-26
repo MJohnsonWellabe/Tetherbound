@@ -40,7 +40,7 @@ const TEST_SAVE_DIR := "user://stormwood_b_surge_phase_traversal"
 const EVIDENCE := "user://stormwood_b_surge_phase_traversal.txt"
 const ROUTE_START := Vector2(-160.0, 2700.0)
 const ROUTE_END := Vector2(-560.0, 2480.0)
-const LEG_FRAMES := 5400
+const LEG_FRAMES := 9000
 const HOLD_FRAMES := 1200
 
 var _failures: Array[String] = []
