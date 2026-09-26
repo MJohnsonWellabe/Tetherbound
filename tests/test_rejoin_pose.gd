@@ -47,6 +47,74 @@ func test_a_pose_from_another_realm_or_malformed_is_not_seated() -> void:
 	assert_true(REJOIN_POSE.decide(_candidate(HOST_A, {}), HOST_A, "meadows").is_empty(), "no pose")
 
 
+class SessionFake extends Node:
+	var applied := false
+	func snapshot_ready() -> bool: return true # what a torn-down attempt reports
+	func handshake_snapshot_applied() -> bool: return applied
+	func is_active() -> bool: return applied
+
+
+class DriverFake extends Node:
+	var running := true
+	func is_running() -> bool: return running
+
+
+class WorldFake extends RefCounted:
+	var reward_delivery_namespace := ""
+
+
+class GameFake extends Node:
+	var session := SessionFake.new()
+	var world := WorldFake.new()
+	var current_realm := "meadows"
+	var saved_player_pose: Dictionary = {}
+	var applied_pose: Dictionary = {}
+	func _find_player() -> Node3D: return null
+	func apply_loaded_player_pose() -> bool:
+		applied_pose = saved_player_pose.duplicate(true)
+		return true
+
+
+## Review finding: `snapshot_ready()` reads true again after a failed or
+## cancelled attempt, while this peer still holds its own pre-snapshot world.
+## The helper must wait for the host's handshake snapshot, not decide then.
+func test_the_decision_waits_for_the_hosts_handshake_snapshot() -> void:
+	var game := GameFake.new()
+	var driver := DriverFake.new()
+	driver.name = "JoinDriver"
+	game.add_child(driver)
+	game.world.reward_delivery_namespace = HOST_A # the LOCAL slot's own world
+	var helper: Node = REJOIN_POSE.new()
+	helper.call("configure", _candidate(HOST_A))
+	game.add_child(helper)
+	helper.call("_process", 0.0)
+	assert_eq(str(helper.call("outcome")), "", "a retrying attempt with no host snapshot decides nothing")
+	assert_true(game.applied_pose.is_empty(), "and seats nothing from the local world")
+	game.world.reward_delivery_namespace = "instance-host-b"
+	game.session.applied = true
+	helper.call("_process", 0.0)
+	assert_eq(str(helper.call("outcome")), "regional", "the real host snapshot decides")
+	assert_true(game.applied_pose.is_empty(), "another host keeps the regional spawn")
+	game.free()
+
+
+func test_a_join_that_ends_without_a_snapshot_seats_nothing() -> void:
+	var game := GameFake.new()
+	var driver := DriverFake.new()
+	driver.name = "JoinDriver"
+	driver.running = false
+	game.add_child(driver)
+	game.world.reward_delivery_namespace = HOST_A
+	var helper: Node = REJOIN_POSE.new()
+	helper.call("configure", _candidate(HOST_A))
+	game.add_child(helper)
+	helper.call("_process", 0.0)
+	assert_eq(str(helper.call("outcome")), "", "no decision")
+	assert_true(game.applied_pose.is_empty(), "no pose")
+	assert_true(helper.is_queued_for_deletion(), "the helper removes itself")
+	game.free()
+
+
 func test_the_candidate_is_read_from_the_character_file() -> void:
 	_wipe()
 	var game: Node = GAME_STATE.new()

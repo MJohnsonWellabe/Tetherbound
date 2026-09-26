@@ -1539,6 +1539,10 @@ func _begin_join(address: String, port: int, retry_for_s: float) -> void:
 	# `rejoin_pose.gd` decide against the snapshot's instance.
 	_mount_rejoin_pose(game, rejoin_pose_candidate(game))
 	game.set("saved_player_pose", {})
+	# A loaded home slot also queues its fly/traversal state (safe anchor,
+	# stamina) for the next world; that belongs to the slot's world too.
+	if game.has_meta("pending_fly_load"):
+		game.remove_meta("pending_fly_load")
 
 	var driver := _mount_join_driver(game)
 	driver.call("begin", address, port if port > 0 else _configured_port(), retry_for_s)

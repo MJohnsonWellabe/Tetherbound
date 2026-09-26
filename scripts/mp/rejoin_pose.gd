@@ -69,12 +69,14 @@ func _process(_delta: float) -> void:
 	if session == null:
 		queue_free()
 		return
-	if not bool(session.call("snapshot_ready")):
-		# A join that failed returns to the title; nothing to seat.
+	# `handshake_snapshot_applied()`, not `snapshot_ready()`: a torn-down or
+	# cancelled attempt resets the latter to true while this peer still holds
+	# its own pre-snapshot world, and a retrying JoinDriver dials again.
+	if not bool(session.call("handshake_snapshot_applied")):
 		if driver == null or not bool(driver.call("is_running")):
-			if not bool(session.call("is_active")):
-				_decided = true
-				queue_free()
+			# The join ended without a host snapshot: nothing to seat.
+			_decided = true
+			queue_free()
 		return
 	_decided = true
 	set_process(false)
