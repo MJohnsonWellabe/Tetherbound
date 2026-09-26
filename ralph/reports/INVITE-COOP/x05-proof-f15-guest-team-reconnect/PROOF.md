@@ -74,3 +74,10 @@ ACCEPTANCE F15 clause 'receive Grandpa's acknowledgement of each current team, i
 - `peer-1/after/characters/character-2d50a6eb443d8310518c86c8867a078f/character.json`
 - `peer-1/after_rejoin/characters/character-2d50a6eb443d8310518c86c8867a078f/character.json`
 - `peer-1/before/characters/character-2d50a6eb443d8310518c86c8867a078f/character.json`
+
+## Review notes (code-blind review: APPROVE)
+
+- **Harness-only steps**: `save_character_here` (a forced character save; the homecoming had already saved it), `drop_link` (closes the transport without `Session.leave`), and `wipe_character` (blanks the in-memory party and player flags, keeps the id; the file is untouched). After the wipe, the post-release five and `homecoming_seen` can only come from the guest's own character file (`_restore_portable_returning_character` → `characters.apply`).
+- **Eligibility**: the wipe leaves the guest's world flags, so the `wait_flag` at step 35 passes at once and does not by itself show where the flag came from. The rejoin's snapshot replaces world flags wholesale (`WorldState.load_data` → `progression_state` clears then loads), so eligibility after the rejoin is the host's.
+- **Host repeat heard twice**: the host's repeat visit (row 38, after `credits_continue`) recorded 4 lines, the two-line repeat conversation twice. One press closed it and a buffered press reopened it while the prompt was in reach. This is harmless to the claim, because the repeat names nobody. It is recorded here because it may be an input double-trigger right after the credits close.
+- **Runner change**: `production_join` in `WORLD_BUILD_ACTIONS` raises its default coordinator step budget, from 3000 frames to `WORLD_BUILD_BUDGET_FRAMES`. Its heartbeat allowance is the harness's own named figure. This comment was corrected after the run; the corrected commit changes no behaviour.
