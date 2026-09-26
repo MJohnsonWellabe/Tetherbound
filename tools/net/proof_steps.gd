@@ -476,18 +476,29 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 		shot = await _screenshot(tree, {"name": str(args.screenshot)})
 	var cut_at_ack := false
 	if answer == "accept" and bool(args.get("drop_at_ack", false)):
-		# F11 "disconnect at claim acknowledgement": press Yes and, in the very
-		# frame the answer is committed (receipt recorded, character saved,
-		# `ending_settled` queued), close the transport. A closed ENet peer
-		# drops its unsent queue, so the acknowledgement never leaves.
+		# F11 "disconnect at claim acknowledgement". The panel answers Yes in its
+		# `_physics_process` and emits `completed`; the ending's own handler
+		# (connected first) records the receipt, saves the character and queues
+		# `ending_settled` in that same call. This one-shot handler runs right
+		# after it, still inside that physics step and before the frame's
+		# network poll, and closes the transport: a closed ENet peer drops its
+		# unsent queue, so the acknowledgement never leaves.
+		var cut := {"done": false, "claim_left": true}
+		var on_yes := func(_conversation: String) -> void:
+			cut.claim_left = not (ending.get("_local_claim") as Dictionary).is_empty()
+			(tree.root.multiplayer.multiplayer_peer as MultiplayerPeer).close()
+			cut.done = true
+		panel.connect("completed", on_yes, CONNECT_ONE_SHOT)
 		if not _edge_ok(await tree.call("_press_edge", "interact", true)):
 			return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
 		for f in 240:
-			await tree.process_frame
-			if (ending.get("_local_claim") as Dictionary).is_empty():
-				(tree.root.multiplayer.multiplayer_peer as MultiplayerPeer).close()
-				cut_at_ack = true
+			await tree.physics_frame
+			if bool(cut.done):
 				break
+		if panel.is_connected("completed", on_yes):
+			panel.disconnect("completed", on_yes)
+		# The cut only counts if the answer was already committed when it fired.
+		cut_at_ack = bool(cut.done) and not bool(cut.claim_left)
 		await tree.call("_press_edge", "interact", false)
 		for f in 60:
 			await tree.physics_frame
