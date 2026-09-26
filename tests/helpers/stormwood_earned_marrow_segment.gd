@@ -98,8 +98,12 @@ func _attempt_marrow(dynamo: Node) -> void:
 	var spec: Dictionary = cast.get("authored_specs").get(CAPTAIN, {})
 	var body := cast.call("body_for", CAPTAIN) as Node3D
 	var prompt := body.call("prompt_node") as Node3D if body != null else null
-	if spec.is_empty() or (spec.get("party", []) as Array).size() != 5 or body == null or prompt == null:
-		_fail("actual Marrow five-creature roster/prompt absent")
+	# The live cast's spec carries the roster as "team" (stormwood_encounter_
+	# catalogue.gd); "party" is the data file's key. Run 29b reached the core
+	# for the first time and failed here with the whole roster present.
+	if spec.is_empty() or (spec.get("team", []) as Array).size() != 5 or body == null or prompt == null:
+		_fail("actual Marrow five-creature roster/prompt absent (spec=%s team=%d body=%s prompt=%s)" % [
+			str(not spec.is_empty()), (spec.get("team", []) as Array).size(), str(body != null), str(prompt != null)])
 		return
 	if not await _ensure_usable_ally(CAPTAIN):
 		return
