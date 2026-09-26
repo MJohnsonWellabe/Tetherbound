@@ -24,7 +24,11 @@ extends SceneTree
 ##       every one of SNAP_FRAMES frames after the snap;
 ##   (b) standing on each narrow road while the camera swings through 8 yaws
 ##       (~10 s of following), the companion is never more than
-##       LEVEL_TOLERANCE_M below the trainer's floor (worst drop reported).
+##       LEVEL_TOLERANCE_M below the trainer's floor (worst drop reported);
+##   (c) an AIRBORNE leader 12 m above the arrival road, > 45 m away (disclosed:
+##       a floorless CharacterBody3D stand-in, as the realm runtime grounds a
+##       hovering headless trainer): the companion snaps and is seated on
+##       ground, never put in the air at the leader.
 
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -104,6 +108,8 @@ func _run() -> void:
 	# (b) following on the road for ~10 s per spot.
 	for label: String in SPOTS:
 		await _walk_on(label, SPOTS[label])
+	# (c) an airborne trainer (flying/gliding) past LEASH, 12 m above ground.
+	await _airborne_snap()
 	print("worst snap drop below the trainer: %.2f m" % _worst_snap)
 	print("worst following drop below the trainer: %.2f m" % _worst_walk)
 	_report()
@@ -139,6 +145,51 @@ func _snap_to(label: String, at: Vector3, yaw: float) -> void:
 	_check(worst <= LEVEL_TOLERANCE_M and body != null and absf(body.global_position.y - floor_y) <= LEVEL_TOLERANCE_M,
 		"%s: companion on the trainer's floor %.2f for %d frames (worst drop %.2f at y %.2f; now %.2f m away)"
 			% [context, floor_y, SNAP_FRAMES, worst, worst_y, flat])
+
+
+func _airborne_snap() -> void:
+	# Disclosed fixture: the headless trainer cannot be held aloft (the realm's
+	# runtime puts a hovering trainer back on its ground), so the companion is
+	# given a stand-in leader: a CharacterBody3D that never touches a floor
+	# (never move_and_slide -> is_on_floor() false), 12 m above the arrival
+	# road and > 45 m from the companion, as a flying/gliding trainer is.
+	var lift := 12.0
+	await _teleport(SPOTS["Broken Causeways ledge road"] as Vector3)
+	for i in 30:
+		await physics_frame
+	var body := _body()
+	if body == null:
+		_fail("airborne: no companion")
+		return
+	var over := SPOTS["arrival road"] as Vector3
+	var aloft := Vector3(over.x, _floor_y(over, over.y) + lift, over.z)
+	var stand_in := CharacterBody3D.new()
+	stand_in.name = "AirborneTrainerStandIn"
+	stand_in.collision_layer = 0
+	stand_in.collision_mask = 0
+	_world.add_child(stand_in)
+	stand_in.global_position = aloft
+	_rig.set("yaw", 0.4)
+	body.set("leader", stand_in)
+	var in_air_frames := 0
+	for i in 60:
+		await physics_frame
+		if body.global_position.y > aloft.y - 6.0 and Vector2(body.global_position.x - aloft.x, body.global_position.z - aloft.z).length() < 12.0:
+			in_air_frames += 1
+	var floor_gap := INF
+	var ray := PhysicsRayQueryParameters3D.create(body.global_position + Vector3.UP * 0.5,
+		body.global_position + Vector3.DOWN * 3.0, _player.collision_mask,
+		[_player.get_rid(), (body as CollisionObject3D).get_rid()])
+	var hit := _player.get_world_3d().direct_space_state.intersect_ray(ray)
+	if not hit.is_empty():
+		floor_gap = body.global_position.y - (hit["position"] as Vector3).y
+	var flat := Vector2(body.global_position.x - aloft.x, body.global_position.z - aloft.z).length()
+	_check(not stand_in.is_on_floor() and in_air_frames == 0 and floor_gap < 1.0 and flat < 12.0,
+		"airborne trainer %.0f m up at %s: companion snapped and seated on ground at %s (%.2f m above floor, %.1f m below the trainer, %.1f m away; %d frames in the air near it)"
+			% [lift, aloft, body.global_position, floor_gap, aloft.y - body.global_position.y, flat, in_air_frames])
+	body.set("leader", _player)
+	stand_in.queue_free()
+	await _teleport(over)
 
 
 func _walk_on(label: String, at: Vector3) -> void:

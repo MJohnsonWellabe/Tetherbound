@@ -18,14 +18,19 @@ const VALLEY_Y := -20.0
 
 var _root: Node3D = null
 var _body: CharacterBody3D = null
-var _leader: CharacterBody3D = null
+var _leader: Node3D = null
 var _calls: Array = []
 var _answer: Vector3 = Vector3.INF
 
 
 func before_each() -> void:
 	_root = Node3D.new()
-	_leader = CharacterBody3D.new()
+	# Stand-in trainer answering `is_on_floor` (a CharacterBody3D's is only set
+	# by move_and_slide in a physics world, which the unit runner has not).
+	var trainer := GDScript.new()
+	trainer.source_code = "extends Node3D\nvar grounded := true\nfunc is_on_floor() -> bool:\n\treturn grounded\n"
+	trainer.reload()
+	_leader = trainer.new()
 	_root.add_child(_leader)
 	_leader.position = LEADER_AT
 	_body = CREATURE_SCENE.instantiate()
@@ -111,3 +116,28 @@ func test_without_a_validator_the_station_is_unchanged() -> void:
 	want.y = 0.0
 	assert_true(requested.normalized().dot(want.normalized()) > 0.999,
 		"other realms keep the plain flank station (%s vs %s)" % [requested, want])
+
+
+func test_airborne_trainer_snap_skips_the_floor_rules() -> void:
+	# A trainer flying 20 m up is not standing on ground: its position is not a
+	# floor level, so neither the validator's footprint rung nor the 6 m rule
+	# may be measured from it (the companion would be set in mid-air).
+	_body.set("station_validator", _validator)
+	_leader.set("grounded", false)
+	_leader.position = LEADER_AT + Vector3(0.0, 20.0, 0.0)
+	_answer = _leader.position
+	_body.call("_tick_follow")
+	assert_eq(_calls.size(), 0, "an airborne trainer's snap does not ask the floor validator")
+	assert_false(_body.position.is_equal_approx(_leader.position),
+		"the companion is not put at the airborne trainer's position")
+
+
+func test_stopping_following_releases_the_footprint_exception() -> void:
+	var trainer := CharacterBody3D.new()
+	_root.add_child(trainer)
+	_body.add_collision_exception_with(trainer)
+	_body.set("_footprint_exception", trainer)
+	_body.call("set_following", false)
+	assert_eq(_body.get("_footprint_exception"), null, "combat takes the body with no footprint exception left")
+	assert_false(_body.get_collision_exceptions().has(trainer),
+		"the companion collides with its trainer again")

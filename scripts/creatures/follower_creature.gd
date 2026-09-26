@@ -156,6 +156,12 @@ func set_following(value: bool) -> void:
 	_following = value
 	_closing = false
 	_station_requested = Vector3.INF
+	# The shared-footprint exception belongs to following only: combat restores
+	# layer 1 below and must not find the companion passing through its trainer.
+	if not value and _footprint_exception != null:
+		if is_instance_valid(_footprint_exception):
+			remove_collision_exception_with(_footprint_exception)
+		_footprint_exception = null
 	if value and _presence != null:
 		_presence.call("on_event", "deploy")
 	# Off every physics layer while following, so it can never wall the trainer
@@ -285,14 +291,19 @@ func _tick_follow() -> void:
 ## The leash teleport. With a realm validator: its verified spot (the trainer's
 ## footprint as the last rung). Without: `place_on_ground` as before -- never a
 ## per-frame raycast, docs/decisions/D09 -- but a seat far below the trainer's
-## feet is refused for the trainer's own footprint.
+## feet is refused for the trainer's own footprint. Both rules measure against
+## the trainer's FEET, so they apply only while the trainer stands on a floor:
+## a flying, gliding, falling or swimming trainer's position is not ground, and
+## the companion then takes plain `place_on_ground` as it always did.
 func _snap_near_leader(target: Vector3, leader_position: Vector3) -> void:
 	_station_requested = Vector3.INF
+	if not leader_grounded():
+		place_on_ground(target)
+		return
 	if station_validator.is_valid():
 		var spot: Variant = station_validator.call(self, leader, target, true)
 		if spot is Vector3 and (spot as Vector3).is_finite():
-			_set_world_position(spot)
-			velocity = Vector3.ZERO
+			_seat_at(spot)
 			return
 	if not place_on_ground(target) \
 			or snap_seat_acceptable(global_position.y, leader_position.y):
@@ -300,11 +311,25 @@ func _snap_near_leader(target: Vector3, leader_position: Vector3) -> void:
 	# Seated on a floor far below the trainer: take the trainer's footprint.
 	if not place_on_ground(leader_position) \
 			or not snap_seat_acceptable(global_position.y, leader_position.y):
-		_set_world_position(leader_position)
-		velocity = Vector3.ZERO
+		_seat_at(leader_position)
 	if leader is PhysicsBody3D and _footprint_exception != leader:
 		add_collision_exception_with(leader)
 		_footprint_exception = leader
+
+
+## True while the trainer stands on a floor, so its position is its feet on
+## ground. The trainer is a CharacterBody3D; anything answering `is_on_floor`
+## is asked the same way (the detached unit fixture's stand-in).
+func leader_grounded() -> bool:
+	if leader == null or not is_instance_valid(leader) or not leader.has_method("is_on_floor"):
+		return false
+	return bool(leader.call("is_on_floor"))
+
+
+func _seat_at(at: Vector3) -> void:
+	_set_world_position(at)
+	velocity = Vector3.ZERO
+	_impulse = Vector3.ZERO
 
 
 static func snap_seat_acceptable(seat_y: float, leader_y: float) -> bool:

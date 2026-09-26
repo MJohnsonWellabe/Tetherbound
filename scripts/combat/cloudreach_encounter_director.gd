@@ -650,6 +650,11 @@ func _stand_ally_on_trainer_level(body: Node3D, requested: Vector3) -> bool:
 func verified_follow_spot(body: Node3D, trainer: Node3D, requested: Vector3, snap: bool) -> Vector3:
 	if not is_instance_valid(body) or not trainer is PhysicsBody3D or not trainer.is_inside_tree():
 		return Vector3.INF
+	# An airborne trainer's position is not a floor level: the footprint rung
+	# would be a point in the air. The follower only snaps through here while
+	# its trainer is grounded; this refuses the rest outright.
+	if snap and trainer is CharacterBody3D and not (trainer as CharacterBody3D).is_on_floor():
+		return Vector3.INF
 	return verified_spot_near(trainer as PhysicsBody3D, body, requested, snap)
 
 
