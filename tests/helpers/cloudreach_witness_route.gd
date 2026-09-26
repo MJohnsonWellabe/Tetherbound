@@ -1,7 +1,16 @@
 extends "res://tests/smoke_cloudreach_continuous.gd"
 
 ## Shared base for the Cloudreach-B witnesses: the unchanged continuous
-## normal-input route, plus an OPT-IN declared mid-chapter start.
+## normal-input route, plus an OPT-IN declared mid-chapter start and an OPT-IN
+## declared end.
+##
+## `--leg=flight` (DECLARED END): the run stops after the route's last flight,
+## the controlled return glide that lands back on the aerie deck -- every Fly
+## launch, ring, landing and loaner use of the chapter has happened by then.
+## Before stopping it performs the same disk save/reload the full route does at
+## its end (world paused around the observation) and requires every persisted
+## field of every party member, the exact flag set and the Fly unlock to
+## survive it. The grounded counterweight/Voss/Veyra remainder is NOT run.
 ##
 ## `--start=aerie` (DISCLOSED FIXTURE, not earned play): Act I is treated as
 ## already done. The Act I completion flags below are set on the progression
@@ -30,6 +39,8 @@ var start_point := ""
 var skipping_to_aerie := false
 var skipped_steps: Array[String] = []
 var start_record: Dictionary = {}
+var finish_done := false
+var leg_persistence: Dictionary = {}
 
 
 func _run() -> void:
@@ -124,6 +135,40 @@ func _rest(id: String) -> bool:
 	elif skipping_to_aerie:
 		return _skip("rest", id)
 	return await super._rest(id)
+
+
+## The flight leg ends after the return-glide landing on the aerie deck.
+func _return_to_aerie() -> bool:
+	var ok: bool = await super._return_to_aerie()
+	if not ok or leg != "flight": return ok
+	await _frames(30)
+	paused = true
+	var before := _party_persistence_snapshot()
+	var flags_before := _flag_snapshot()
+	var save_ok: bool = game.save_game(0)
+	var load_ok: bool = save_ok and game.load_game(0)
+	var after := _party_persistence_snapshot()
+	var differences := _party_persistence_differences(before, after)
+	paused = false
+	leg_persistence = {"save_ok": save_ok, "load_ok": load_ok, "differences": differences,
+		"party_size_after": game.party.members().size(), "flags_equal": _flag_snapshot() == flags_before,
+		"fly_unlocked_after": _has("fly_traversal_unlocked")}
+	_log("witness_leg_persistence", leg_persistence)
+	if not _require(save_ok and load_ok, "Flight leg: disk save and reload completed"): return false
+	if not _require(differences.is_empty(), "Flight leg: every persisted field of every member survived reload"): return false
+	if not _require(_flag_snapshot() == flags_before and _has("fly_traversal_unlocked"), "Flight leg: exact flag set and Fly unlock survived reload"): return false
+	_log("leg_complete", {"leg": leg, "team": _team_snapshot(), "inventory": _inventory_snapshot(), "flags": _flag_snapshot().size()})
+	completed_route = true
+	_finish()
+	return false
+
+
+## `_finish` can be reached twice when a declared leg ends inside a route step
+## (the step returns and the base route calls `_finish` again). Report once.
+func _finish_already_done() -> bool:
+	if finish_done: return true
+	finish_done = true
+	return false
 
 
 func _start_state_label() -> String:

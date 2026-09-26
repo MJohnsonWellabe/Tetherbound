@@ -125,6 +125,7 @@ func _write_report() -> void:
 
 
 func _finish() -> void:
+	if _finish_already_done(): return
 	if completed_route and not failed:
 		_require(trial_escape_violations == 0, "F06#2 no trial frame outside the marked volume (%d)" % trial_escape_violations)
 		_require(upper_violations == 0, "F06#2 no frame inside sealed Upper Cloudreach before unlock (%d)" % upper_violations)
@@ -133,7 +134,7 @@ func _finish() -> void:
 	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
 	var file := FileAccess.open(_witness_dir(WITNESS_DIR) + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F06#2", "passed": completed_route and not failed,
-		"start_state": _start_state_label(), "skipped_steps": skipped_steps.size(),
+		"start_state": _start_state_label(), "leg": leg, "leg_persistence": leg_persistence, "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
 		"stage": stage, "attempts": attempts, "landings": landings, "recoveries": recoveries,
 		"denials": denials.slice(0, 40), "trial_escape_violations": trial_escape_violations,

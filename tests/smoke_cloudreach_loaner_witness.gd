@@ -82,7 +82,7 @@ func _record_frame() -> void:
 			_violation("loaner_in_party", {"species": loaner_species})
 	# Live instance IDs are only stable until the route's own disk reload, which
 	# rebuilds every member; after that the stable identity key is compared.
-	if not initial_party_ids.is_empty() and ids != initial_party_ids and not _has("cloudreach_chapter_complete"):
+	if not initial_party_ids.is_empty() and ids != initial_party_ids and leg_persistence.is_empty() and not _has("cloudreach_chapter_complete"):
 		_violation("party_identity_changed", {"ids": ids})
 	if initial_party_keys.is_empty() and ids.size() == expected_party_size: initial_party_keys = _party_keys()
 	elif not initial_party_keys.is_empty() and not paused and _party_keys() != initial_party_keys:
@@ -129,6 +129,7 @@ func _wait_on_floor() -> void:
 
 
 func _finish() -> void:
+	if _finish_already_done(): return
 	if completed_route and not failed:
 		_require(violations.is_empty(), "F06#3 no loaner/gate/identity violation (%d)" % violations.size())
 		_require(not launches.is_empty() and launches.all(func(l: Dictionary) -> bool: return bool(l.loaner) and int(l.party_size) == expected_party_size),
@@ -139,7 +140,7 @@ func _finish() -> void:
 	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
 	var file := FileAccess.open(_witness_dir(WITNESS_DIR) + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F06#3", "passed": completed_route and not failed,
-		"start_state": _start_state_label(), "skipped_steps": skipped_steps.size(),
+		"start_state": _start_state_label(), "leg": leg, "leg_persistence": leg_persistence, "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
 		"stage": stage, "loaner_species": loaner_species, "pre_trial_probe": pre_trial_probe, "launches": launches,
 		"flight_frames": flight_frames, "loaner_frames": loaner_frames, "owned_carrier_frames": owned_carrier_frames,

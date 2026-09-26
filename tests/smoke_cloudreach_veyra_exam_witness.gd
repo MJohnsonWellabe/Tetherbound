@@ -42,6 +42,7 @@ func _write_report() -> void:
 
 
 func _finish() -> void:
+	if _finish_already_done(): return
 	var veyra_battle: Dictionary = {}
 	for row: Dictionary in rows:
 		if row.kind == "battle_resolved" and str(row.get("id", "")) == VEYRA: veyra_battle = row
@@ -63,7 +64,7 @@ func _finish() -> void:
 	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
 	var file := FileAccess.open(_witness_dir(WITNESS_DIR) + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F08#0", "passed": completed_route and not failed and live_combat,
-		"start_state": _start_state_label(), "skipped_steps": skipped_steps.size(),
+		"start_state": _start_state_label(), "leg": leg, "leg_persistence": leg_persistence, "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal (NOT acceptance)", "accelerated_route_clock": accelerated,
 		"stage": stage, "battle_wins": battle_wins, "battle_losses": battle_losses,
 		"veyra_battle": veyra_battle, "veyra_opposition": veyra_opposition,
