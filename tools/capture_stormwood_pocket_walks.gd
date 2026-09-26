@@ -24,6 +24,7 @@ extends "res://tools/capture_stormwood_f09_pockets_roads.gd"
 ## are stills of its three stages. --fast halves settle waits for iteration.
 
 const ROAD_BACK_DEFAULT_M := 25.0
+const MOUTH_OUT_M := 5.0
 const WALK_START_BACK_M := 32.0
 const PIXEL_DIFF_THRESHOLD := 24
 ## A normal exploration arm is 5.2 m; shorter means a body is in the way.
@@ -35,6 +36,7 @@ var _fast := false
 var _pitch_start := -12.0
 var _measure := false
 var _repeats := 1
+var _picks: Array[Vector2] = []
 ## Road stands only: wild bodies within FREEZE_WILD_M of the trainer are
 ## process-disabled from the tick they appear until the stand is done, so a
 ## roadside pair (ROAD CP-2 authored clusters sit ~15 m from the Conductor
@@ -70,6 +72,11 @@ func _run() -> void:
 			_fast = true
 		elif arg == "--measure":
 			_measure = true
+		elif arg.begins_with("--pick="):
+			for part: String in arg.trim_prefix("--pick=").split(",", false):
+				var xy := part.split(":")
+				if xy.size() == 2:
+					_picks.append(Vector2(float(xy[0]), float(xy[1])))
 		elif arg.begins_with("--repeats="):
 			_repeats = int(arg.trim_prefix("--repeats="))
 	var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
@@ -180,10 +187,13 @@ func _walk_frames() -> void:
 		lure["spur_pixels"]["frozen_wild"] = _end_freeze()
 		_frames[_frames.size() - 1]["frozen_wild"] = lure["spur_pixels"]["frozen_wild"]
 		_log("SPURPIX %s side=%s %s" % [id, str(info["side"]), _pix_line(lure["spur_pixels"])])
+		_log_view(id)
 		# (2) In the mouth, looking in at the reward.
 		var f := POCKET_FRAME.frame(pocket)
 		var centre: Vector2 = f.centre
-		var mouth: Vector2 = centre + (f.forward as Vector2) * (wall_mid + 1.5)
+		# Round 3 (judge: the Dynamo gate's lantern bracket was cut by the top
+		# edge): the gate is framed from MOUTH_OUT_M outside its opening.
+		var mouth: Vector2 = centre + (f.forward as Vector2) * (wall_mid + MOUTH_OUT_M)
 		var reward_id := str(pocket.reward_pickup_id)
 		var reward := _reward_node(reward_id)
 		var reward_at := reward.global_position if reward != null else Vector3(centre.x, _ground(centre.x, centre.y), centre.y)
@@ -356,6 +366,7 @@ func _measure_frames() -> void:
 			image.save_jpg(ProjectSettings.globalize_path("%s/%s_road_%s.jpg" % [_output_dir, id, name]), 0.85)
 			metrics["frozen_wild"] = _end_freeze()
 			_log("SPURPIX %s side=%s arm=%.1f %s" % [id, name, _camera.global_position.distance_to(_player.global_position), _pix_line(metrics)])
+			_log_view("%s_%s" % [id, name])
 			_frames.append({"id": "%s_road_%s" % [id, name], "stand": [stand.x, stand.y], "spur_pixels": metrics})
 
 
@@ -613,3 +624,31 @@ func _end_freeze() -> int:
 			node.process_mode = Node.PROCESS_MODE_INHERIT
 	_frozen.clear()
 	return count
+
+
+## Round 3 identification aid: which meshes lie under each --pick pixel
+## (nearest three whose world AABB the view ray crosses), and which wild
+## bodies are on screen and where.
+func _log_view(tag: String) -> void:
+	var size := _camera.get_viewport().get_visible_rect().size
+	for pixel: Vector2 in _picks:
+		var from := _camera.project_ray_origin(pixel)
+		var dir := _camera.project_ray_normal(pixel)
+		var hits: Array = []
+		for node: Node in _world.find_children("*", "VisualInstance3D", true, false):
+			var visual := node as VisualInstance3D
+			if not visual.is_visible_in_tree():
+				continue
+			var box := visual.global_transform * visual.get_aabb()
+			var hit: Variant = box.intersects_ray(from, dir)
+			if hit != null:
+				hits.append([from.distance_to(hit as Vector3), str(visual.get_path()).trim_prefix(str(_world.get_path())), box.size])
+		hits.sort_custom(func(a: Array, b: Array) -> bool: return float(a[0]) < float(b[0]))
+		_log("PICK %s px=%s -> %s" % [tag, str(pixel), str(hits.slice(0, 4))])
+	if _director != null:
+		for wild: Node3D in _director.call("wild_creatures"):
+			if is_instance_valid(wild) and _camera.is_position_in_frustum(wild.global_position + Vector3.UP):
+				var p := _camera.unproject_position(wild.global_position + Vector3.UP)
+				if p.x > -200 and p.x < size.x + 200:
+					_log("WILD %s %s species=%s at=%s screen=(%.0f,%.0f) frozen=%s" % [tag, wild.name, str(wild.get("species_id")),
+						str(wild.global_position), p.x, p.y, str(wild.process_mode == Node.PROCESS_MODE_DISABLED)])

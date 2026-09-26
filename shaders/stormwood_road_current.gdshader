@@ -24,16 +24,6 @@ uniform float depth_pull = 0.004;
 // Evidence captures only: a non-negative value replaces TIME so a motion strip
 // can be shot at exact 0.25 s steps under a slow software renderer.
 uniform float clock_override = -1.0;
-// WO-F09-05 round 2 (blind judge: the spur did not read as leaving its road).
-// UV2.x is 1 on a pocket spur and 0 on a road; UV2.y is metres from the
-// spur's road junction. Near the junction a spur's veins burn brighter and a
-// soft continuous band runs down its middle, so the current visibly turns off
-// the road into the spur even at a grazing view.
-uniform float spur_base_boost = 1.0;
-uniform float spur_junction_boost = 1.0;
-uniform float spur_junction_m = 40.0;
-uniform float spur_band = 0.0;
-uniform float spur_band_width = 0.35;
 // Fades out to nothing at the chunks' visibility_range_end.
 uniform float fade_end = 150.0;
 uniform float fade_length = 25.0;
@@ -119,12 +109,7 @@ void fragment() {
 	float crackle = 1.0 - flicker * step(0.72, hash21(vec2(floor(u * 0.5), floor((clock_override >= 0.0 ? clock_override : TIME) * 14.0))));
 	charge *= crackle;
 	float core = smoothstep(0.75, 1.5, charge);
-	float near_junction = UV2.x * (1.0 - smoothstep(spur_junction_m * 0.5, spur_junction_m, UV2.y));
-	float boost = mix(1.0, spur_base_boost, UV2.x) * mix(1.0, spur_junction_boost, near_junction);
-	float band = spur_band * near_junction * exp(-v * v / (spur_band_width * spur_band_width))
-		* (0.75 + 0.5 * pulse_at(u, 5.0));
-	vec3 light = (colour_edge.rgb * edge_energy * charge + colour_core.rgb * core_energy * core) * boost
-		+ colour_edge.rgb * band;
+	vec3 light = colour_edge.rgb * edge_energy * charge + colour_core.rgb * core_energy * core;
 	float distance_fade = 1.0 - smoothstep(fade_end - fade_length, fade_end, length(VERTEX));
 	ALBEDO = light * feather * storm_intensity * distance_fade;
 }

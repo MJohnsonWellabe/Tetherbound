@@ -3,7 +3,8 @@ extends Node3D
 ## Owner direction on WO-F09-04: "Can you make the path and roads electrified
 ## with yellow electricity flowing through them somehow in the ground."
 ##
-## Every Stormwood route and spur gets terrain-conforming ribbon chunks lying
+## Every Stormwood road (not the pocket spurs; see carries_current) gets
+## terrain-conforming ribbon chunks lying
 ## in its painted dirt lane (stormwood_road_surface.json), drawn by
 ## shaders/stormwood_road_current.gdshader: broken yellow-gold veins with
 ## charge pulses flowing toward the Dynamo. Presentation only: nothing is built
@@ -50,14 +51,11 @@ static func ribbon_half_width(kind: String, cfg: Dictionary, surface: Dictionary
 	return float(surface.lane_half_width_m.get(kind, 0.0)) * float(cfg.width_fraction)
 
 
-## WO-F09-05 round 2: a spur's ribbon fans out where its painted lane flares
-## at the road junction: `base` x (1 + spur.fan x (1 - smoothstep(0,
-## spur.fan_length_m, metres_from_junction))). Roads return `base`.
-static func fanned_half_width(base: float, kind: String, from_junction_m: float, cfg: Dictionary) -> float:
-	var spur: Dictionary = cfg.get("spur", {})
-	if kind != "spur" or spur.is_empty():
-		return base
-	return base * (1.0 + float(spur.get("fan", 0.0)) * (1.0 - smoothstep(0.0, float(spur.get("fan_length_m", 1.0)), from_junction_m)))
+## WO-F09-05 round 3: the current is road language. A route whose kind is in
+## config `excluded_kinds` (the pocket spurs) carries none; it stays a plain
+## painted dirt trail.
+static func carries_current(route: Dictionary, cfg: Dictionary) -> bool:
+	return not (cfg.get("excluded_kinds", []) as Array).has(str(route.get("kind", "")))
 
 
 ## storm_intensity for a Surge phase id (unknown phases read as calm).
@@ -90,18 +88,14 @@ func build(world: Node3D, height_at: Callable = Callable()) -> void:
 	material.set_shader_parameter("colour_edge", Color(str(_config.colour_edge)))
 	for key: String in ["core_energy", "edge_energy", "vein_scale", "vein_width", "vein_breakup", "pulse_sharpness", "depth_pull"]:
 		material.set_shader_parameter(key, float(_config[key]))
-	var spur: Dictionary = _config.get("spur", {})
-	material.set_shader_parameter("spur_base_boost", float(spur.get("base_boost", 1.0)))
-	material.set_shader_parameter("spur_junction_boost", float(spur.get("junction_boost", 1.0)))
-	material.set_shader_parameter("spur_junction_m", float(spur.get("junction_m", 40.0)))
-	material.set_shader_parameter("spur_band", float(spur.get("band", 0.0)))
-	material.set_shader_parameter("spur_band_width", float(spur.get("band_width", 0.35)))
 	material.set_shader_parameter("pulse_spacing", float(_config.pulse_spacing_m))
 	material.set_shader_parameter("fade_end", float(_config.draw_distance_m))
 	material.set_shader_parameter("fade_length", float(_config.draw_fade_m))
 	_apply_motion(MOTION_PREFS.reduced_motion())
 	set_storm_intensity(phase_intensity("calm", _config))
 	for route: Dictionary in routes:
+		if not carries_current(route, _config):
+			continue
 		var half := ribbon_half_width(str(route.kind), _config, surface)
 		if half <= 0.0:
 			continue
@@ -165,15 +159,6 @@ func _build_route(route: Dictionary, points: Array[Vector2], half: float, height
 	var lift := float(_config.lift_m)
 	var run := 0.0
 	var index := 0
-	# UV2: (1 on a spur, metres from the spur's road junction). The flow
-	# order may run mouth -> junction, so measure from the authored first
-	# point, which is the junction.
-	var is_spur := str(route.get("kind", "")) == "spur"
-	var total := 0.0
-	for i in range(1, points.size()):
-		total += points[i - 1].distance_to(points[i])
-	var raw: Array = route.get("points", [])
-	var from_junction_forward := raw.size() > 0 and points[0].distance_to(Vector2(float(raw[0][0]), float(raw[0][1]))) < 0.01
 	for i in range(1, points.size()):
 		var a := points[i - 1]
 		var b := points[i]
@@ -189,22 +174,17 @@ func _build_route(route: Dictionary, points: Array[Vector2], half: float, height
 			var rows := maxi(1, ceili((s1 - s0) / row_m))
 			var verts := PackedVector3Array()
 			var uvs := PackedVector2Array()
-			var uv2s := PackedVector2Array()
 			var indices := PackedInt32Array()
 			var origin := a + dir * (s0 + s1) * 0.5
 			var origin_y := float(height_at.call(origin.x, origin.y))
 			for r in rows + 1:
 				var s := lerpf(s0, s1, float(r) / rows)
-				var from_junction := ((run + s) if from_junction_forward else total - (run + s)) if is_spur else 0.0
-				var row_half := fanned_half_width(half, str(route.get("kind", "")), from_junction, _config)
 				for c in columns:
 					var across := lerpf(-1.0, 1.0, float(c) / (columns - 1))
-					var at := a + dir * s + side * across * row_half
+					var at := a + dir * s + side * across * half
 					var y := float(height_at.call(at.x, at.y)) + lift
 					verts.append(Vector3(at.x - origin.x, y - origin_y, at.y - origin.y))
 					uvs.append(Vector2(run + s, across))
-					var along := run + s
-					uv2s.append(Vector2(1.0 if is_spur else 0.0, (along if from_junction_forward else total - along) if is_spur else 0.0))
 			for r in rows:
 				for c in columns - 1:
 					var i0 := r * columns + c
@@ -214,7 +194,6 @@ func _build_route(route: Dictionary, points: Array[Vector2], half: float, height
 			arrays.resize(Mesh.ARRAY_MAX)
 			arrays[Mesh.ARRAY_VERTEX] = verts
 			arrays[Mesh.ARRAY_TEX_UV] = uvs
-			arrays[Mesh.ARRAY_TEX_UV2] = uv2s
 			arrays[Mesh.ARRAY_INDEX] = indices
 			var mesh := ArrayMesh.new()
 			mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)

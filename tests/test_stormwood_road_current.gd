@@ -59,26 +59,34 @@ func _is_yellow_gold(colour: Color) -> bool:
 	return hue >= 35.0 and hue <= 65.0 and colour.s >= 0.25
 
 
-func test_every_route_and_spur_is_covered_by_current_chunks() -> void:
+func test_every_road_is_covered_and_no_spur_carries_current() -> void:
+	# WO-F09-05 round 3: the electrified current is road language; a pocket's
+	# spur is a plain dirt-and-stone trail and carries none.
 	var routes: Array = _json(WORLD_PATH).routes
 	var built := _built(false)
 	var current: Node = built[1]
 	var coverage := _coverage(current, routes)
 	var spurs := 0
 	for route: Dictionary in routes:
-		assert_true(float(coverage[str(route.id)]) >= MIN_COVERAGE,
-			"%s (%s): current covers %.1f%% of its length" % [route.id, route.kind, float(coverage[str(route.id)]) * 100.0])
 		if str(route.kind) == "spur":
 			spurs += 1
+			assert_eq(float(coverage[str(route.id)]), 0.0, "%s: a spur carries no current" % route.id)
+			continue
+		assert_true(float(coverage[str(route.id)]) >= MIN_COVERAGE,
+			"%s (%s): current covers %.1f%% of its length" % [route.id, route.kind, float(coverage[str(route.id)]) * 100.0])
 	assert_eq(spurs, 5, "all five spurs are measured")
-	# Negative control: drop every spur chunk and the same measurement fails.
+	# Negative controls: dropping a road's chunks fails coverage, and the
+	# builder with spurs allowed again does cover a spur.
 	for chunk: Node in current.get_children():
-		if str(chunk.get_meta("route", "")).begins_with("spur_"):
+		if str(chunk.get_meta("route", "")) == "ash_road":
 			current.remove_child(chunk)
 			chunk.free()
-	var stripped := _coverage(current, routes)
-	assert_true(float(stripped["spur_verge_ash_hollow"]) < MIN_COVERAGE, "control: a route without chunks is caught")
+	assert_true(float(_coverage(current, routes)["ash_road"]) < MIN_COVERAGE, "control: a road without chunks is caught")
 	(built[0] as Node).free()
+	assert_true(CURRENT.carries_current({"kind": "critical"}, CURRENT.config()), "control: a road kind carries current")
+	var allow := CURRENT.config()
+	allow.excluded_kinds = []
+	assert_true(CURRENT.carries_current({"kind": "spur"}, allow), "control: with no exclusion a spur would carry current")
 
 
 func test_chunks_are_range_limited_shadowless_and_have_no_collision() -> void:
@@ -164,18 +172,6 @@ func test_ribbon_stays_inside_the_painted_lane_and_flows_toward_the_dynamo() -> 
 	var wide := cfg.duplicate(true)
 	wide.width_fraction = 1.3
 	assert_true(CURRENT.ribbon_half_width("spur", wide, surface) > float(surface.lane_half_width_m.spur), "control: a 1.3 fraction would leave the lane")
-	# The spur fan (WO-F09-05) stays inside the painted lane plus junction flare.
-	var spur_half := CURRENT.ribbon_half_width("spur", cfg, surface)
-	for metres: float in [0.0, 4.0, 8.0, 12.0, 18.0, 24.0, 40.0]:
-		var painted := float(surface.lane_half_width_m.spur) + float(surface.junction.flare_m) \
-			* (1.0 - smoothstep(0.0, float(surface.junction.flare_length_m), metres))
-		assert_true(CURRENT.fanned_half_width(spur_half, "spur", metres, cfg) <= painted,
-			"spur fan at %.0f m (%.2f m) lies within the painted lane plus flare (%.2f m)" % [metres, CURRENT.fanned_half_width(spur_half, "spur", metres, cfg), painted])
-	assert_almost_eq(CURRENT.fanned_half_width(2.0, "critical", 0.0, cfg), 2.0, 0.0001, "roads do not fan")
-	var fat := cfg.duplicate(true)
-	fat.spur.fan = 3.0
-	assert_true(CURRENT.fanned_half_width(spur_half, "spur", 0.0, fat) > float(surface.lane_half_width_m.spur) + float(surface.junction.flare_m),
-		"control: a 3x fan would leave the painted junction")
 	var dynamo := Vector2(float(cfg.dynamo_xz[0]), float(cfg.dynamo_xz[1]))
 	for route: Dictionary in _json(WORLD_PATH).routes:
 		var points := CURRENT.flow_points(route, cfg)

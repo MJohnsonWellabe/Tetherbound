@@ -13,6 +13,7 @@ const MAX_WALK_DEG := 45.0  # scenes/player/player.tscn floor_max_angle 0.7854
 const CAPSULE_RADIUS := 0.4  # scenes/player/player.tscn
 const WINDOW_HALF := 30
 const BAKE_DIR := "res://data/scatter/stormwood"
+const SURFACE_PATH := "res://data/config/stormwood_road_surface.json"
 const WORLD_PATH := "res://data/config/stormwood_world.json"
 const TERRAIN_PATH := "res://data/config/terrain_stormwood.json"
 ## Collider buckets for the road-reach search; every grown reach (at most
@@ -252,8 +253,15 @@ func test_runtime_builds_every_wall_as_static_collision() -> void:
 		assert_eq(posts.size(), 2, "%s: a lure post either side of the mouth" % pocket.id)
 		var junction_posts := POCKETS.spur_posts(pocket, cfg)
 		assert_eq(junction_posts.size(), 2, "%s: a pair of lamps frames its spur's road junction" % pocket.id)
-		assert_eq(body.get_child_count(), walls.size() + posts.size() + junction_posts.size(),
-			"%s: one collider per wall segment, the two lure posts and the two junction posts (no models headless)" % pocket.id)
+		var trunks := POCKETS.gateway_trunks(pocket, cfg)
+		assert_eq(trunks.size(), 2, "%s: a gateway trunk behind each junction lamp" % pocket.id)
+		assert_eq(body.get_child_count(), walls.size() + posts.size() + junction_posts.size() + trunks.size(),
+			"%s: one collider per wall segment, the two lure posts, the two junction posts and the two gateway trunks (no models headless)" % pocket.id)
+		for index in trunks.size():
+			var trunk_name := "SpurTrunk" + ("" if index == 0 else str(index + 1))
+			var trunk := body.get_node_or_null(trunk_name) as CollisionShape3D
+			assert_true(trunk != null and Vector2(trunk.position.x, trunk.position.z).is_equal_approx(trunks[index]),
+				"%s: %s collides where gateway_trunks() puts it" % [pocket.id, trunk_name])
 		for index in posts.size():
 			assert_true(body.get_node_or_null("LurePost%d" % index) is CollisionShape3D, "%s: lure post %d collides" % [pocket.id, index])
 		for index in junction_posts.size():
@@ -358,9 +366,10 @@ func test_each_pocket_mouth_is_walkable_from_a_road_around_every_collider() -> v
 		walls.append_array(POCKETS.wall_boxes(pocket, cfg))
 		for post: Vector2 in POCKETS.lure_posts(pocket, cfg):
 			_bucket(colliders, post, lamp_reach)
-		var junction := POCKETS.spur_post(pocket, cfg)
-		if not junction.is_empty():
+		for junction: Dictionary in POCKETS.spur_posts(pocket, cfg):
 			_bucket(colliders, junction.at, float(POCKETS.spur_lamp_style(cfg).post_width_m) * sqrt(2.0) * 0.5)
+		for trunk: Vector2 in POCKETS.gateway_trunks(pocket, cfg):
+			_bucket(colliders, trunk, float(cfg.spur_marker.gateway.collider_width_m) * sqrt(2.0) * 0.5)
 	assert_true(colliders.size() > 100, "the committed bake's colliders are loaded")
 	for pocket: Dictionary in cfg.pockets:
 		var reached := _mouth_reaches_road(field, pocket, cfg, walls, colliders, roads, half_width)
@@ -427,6 +436,13 @@ func test_each_pocket_has_one_spur_from_its_road_to_its_mouth() -> void:
 			sides.append((at - junction).cross(up))
 		if sides.size() == 2:
 			assert_true(sides[0] * sides[1] < 0.0, "%s's junction lamps stand either side of the spur (a gateway)" % pocket.id)
+		var trunk_reach := float(cfg.spur_marker.gateway.collider_width_m) * sqrt(2.0) * 0.5
+		for trunk: Vector2 in POCKETS.gateway_trunks(pocket, cfg):
+			for other: Dictionary in roads.values():
+				assert_true(_distance_to_route(trunk, other) > half_width + trunk_reach,
+					"%s's gateway trunk stands clear of %s's corridor" % [pocket.id, other.id])
+			assert_true(_distance_to_route(trunk, spur) > float(_json(SURFACE_PATH).lane_half_width_m.spur) + trunk_reach,
+				"%s's gateway trunk stands off its spur's painted lane" % pocket.id)
 
 
 ## The spur corridors are the cleared lanes: no committed baked trunk or rock

@@ -78,7 +78,12 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 		if str(route.get("kind", "")) == "spur" and (route.points as Array).size() >= 2:
 			var j := Vector2(float(route.points[0][0]), float(route.points[0][1]))
 			var next := Vector2(float(route.points[1][0]), float(route.points[1][1]))
-			junctions.append({"at": j, "up": (next - j).normalized()})
+			var joined: Array[Vector2] = []
+			for other: Dictionary in world.routes:
+				if str(other.id) == str(route.get("joins", "")):
+					for raw: Array in other.points:
+						joined.append(Vector2(float(raw[0]), float(raw[1])))
+			junctions.append({"at": j, "up": (next - j).normalized(), "road": joined})
 	cfg["spur_junctions"] = junctions
 	cfg["spur_junction_clear"] = spur_clear
 	cfg["seat_grid"] = _seat_grid(cfg.get("seat_clearings", {}))
@@ -251,6 +256,14 @@ static func _add(out: Dictionary,cfg: Dictionary,field: RefCounted,world: Dictio
 				if ahead >= 0.0 and ahead <= float(junction_clear.length_m) \
 						and absf(local.cross(junction.up as Vector2)) < float(junction_clear.half_width_m):
 					return
+				# The camera lane: the joined road's own shoulders either side
+				# of the junction, where a bush fills the approach view.
+				if local.length() < float(junction_clear.get("road_reach_m", 0.0)):
+					var road: Array = junction.road
+					for i in range(1, road.size()):
+						if Geometry2D.get_closest_point_to_segment(at, road[i - 1], road[i]).distance_to(at) \
+								< float(junction_clear.road_lane_half_m):
+							return
 	if collides:
 		for pocket: Dictionary in cfg.get("pocket_clearings", []):
 			if at.distance_to(Vector2(float(pocket.at[0]), float(pocket.at[1]))) < float(cfg.pocket_clear_radius_m):
