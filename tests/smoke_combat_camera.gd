@@ -17,9 +17,10 @@ const RIGHT_Y := JOY_AXIS_RIGHT_Y
 const LEFT_Y := JOY_AXIS_LEFT_Y
 ## Consecutive frames the relocated opponent must stay framed (neutral check).
 const HOLD_IN_FRAME := 10
-## Frames that must be observed inside the live manual-look grace for the
-## "not recentred while held" check to prove anything.
-const MIN_GRACE_FRAMES_OBSERVED := 5
+## Wall-clock seconds that must be observed inside the live manual-look grace
+## for the "not recentred while held" check to prove anything (the grace
+## itself is combat.json camera.tracking.manual_grace_seconds, 0.4).
+const MIN_GRACE_SECONDS_OBSERVED := 0.15
 
 var _failures: Array[String] = []
 var _world: Node3D = null
@@ -564,17 +565,16 @@ func _assert_raw_orbit_changes(context: String) -> void:
 	# it expires the neutral tracker is SUPPOSED to recentre. The old
 	# 10 + 15 frames (0.417 s) ran past the 0.4 s grace, so "continuously
 	# recentred" failed whenever tracking resumed inside the window.
-	# The rig reads look input and counts down its grace in _process on the
-	# idle delta, so everything below is synced to process frames and read
-	# LIVE, not predicted from physics frames. Under load several physics
-	# ticks pass per idle frame, and a fixed physics wait measured residual
-	# stick motion from before the release registered (drift 0.31 rad).
-	for i in 120:
-		await process_frame
-		if Input.get_vector("look_left", "look_right", "look_up", "look_down").is_zero_approx():
+	# Sync on the RIG, not on a frame count: the grace starts counting down
+	# only once the rig's own _process has seen the stick at rest, so wait for
+	# `_tracking_manual_left` to drop below its full value. Fixed physics or
+	# process waits either measured residual stick motion (0.31 rad under
+	# load) or ran long enough to pitch the view off the opponent.
+	var grace_s := _manual_grace_seconds()
+	for i in 240:
+		await physics_frame
+		if float(_rig.get("_tracking_manual_left")) < grace_s - 0.0001:
 			break
-	for i in 2:
-		await process_frame
 	var yaw_after := float(_rig.get("yaw"))
 	var pitch_after := float(_rig.get("pitch"))
 	# Synthetic joy-motion state may be cleared by the engine after the camera's
@@ -587,25 +587,34 @@ func _assert_raw_orbit_changes(context: String) -> void:
 	var held_yaw := yaw_after
 	var inside := 0
 	var drifted := 0.0
-	for i in 120:
+	var started_ms := Time.get_ticks_msec()
+	var observed_s := 0.0
+	for i in 240:
 		if float(_rig.get("_tracking_manual_left")) <= 0.0:
 			break
-		await process_frame
+		await physics_frame
 		if float(_rig.get("_tracking_manual_left")) <= 0.0:
 			break
 		inside += 1
+		observed_s = float(Time.get_ticks_msec() - started_ms) / 1000.0
 		drifted = maxf(drifted, absf(angle_difference(float(_rig.get("yaw")), held_yaw)))
-	if inside < MIN_GRACE_FRAMES_OBSERVED:
-		_fail("%s: only %d frames observed inside the manual-look grace (need %d); cannot prove the hold" % [
-			context, inside, MIN_GRACE_FRAMES_OBSERVED])
+	if observed_s < MIN_GRACE_SECONDS_OBSERVED:
+		_fail("%s: only %.2fs (%d frames) observed inside the manual-look grace (need %.2fs); cannot prove the hold" % [
+			context, observed_s, inside, MIN_GRACE_SECONDS_OBSERVED])
 	elif drifted > 0.01:
-		_fail("%s: camera yaw was continuously recentered after the stick returned to neutral (drift %.3f rad over %d grace frames)" % [
-			context, drifted, inside])
+		_fail("%s: camera yaw was continuously recentered after the stick returned to neutral (drift %.3f rad over %.2fs of grace)" % [
+			context, drifted, observed_s])
 
 
 ## Worst case for the neutral tracker to bring a relocated opponent back into
 ## frame: a half-turn at max_speed_deg, plus the clear-orbit swing easing back
 ## over its widest sample, plus one solver interval and a half-second margin.
+func _manual_grace_seconds() -> float:
+	var tracking: Dictionary = (MATH.config().get("camera", {}) as Dictionary) \
+		.get("tracking", {}) as Dictionary
+	return float(tracking.get("manual_grace_seconds", 0.4))
+
+
 func _neutral_convergence_frames() -> int:
 	var camera: Dictionary = MATH.config().get("camera", {}) as Dictionary
 	var tracking: Dictionary = camera.get("tracking", {}) as Dictionary
