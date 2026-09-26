@@ -1,0 +1,6 @@
+# Lead's verification after the review nit (guard), branch head before this commit 392c735b8 + nit
+CLOUDREACH RECALL LEVEL OK checks=133 failures=0
+SCRIPT ERROR: 0
+CLOUDREACH SADDLE REMOUNT OK checks=331 failures=0
+SCRIPT ERROR: 0
+# Rejected nit: using the base seat when the trainer's centre has no floor made 9/133 checks fail (the trainer stands on the road's sloped lip), so the trainer-height level is kept; every candidate still needs verified floor.
