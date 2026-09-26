@@ -35,6 +35,15 @@ const VIEWS := [
 		"what": "Tidal Cradle to Salt Crown current along its line"},
 	{"name": "current-sluice-veilfall", "stand": Vector2(722.0, 3192.0), "target": Vector3(393.0, 2.0, 3789.6),
 		"what": "Sluice Isle to Veilfall current (strongest) along its line"},
+	# Dock stands (X04 F13#5 re-judge): the First Shore departure pier sits
+	# 4 m west of the safe->shore line (0,162)->(0,180) and runs ~14 m north
+	# (water_dock_dressing.json). Near/mid/far frame the pier itself.
+	{"name": "dock-first-shore-pier-near", "stand": Vector2(5.0, 174.0), "target": Vector3(-4.0, 1.0, 184.0),
+		"what": "First Shore departure pier from the beach, ~12 m", "yaw_offset": 0.0, "pitch": -0.08},
+	{"name": "dock-first-shore-pier-mid", "stand": Vector2(22.0, 168.0), "target": Vector3(-4.0, 1.0, 185.0),
+		"what": "First Shore departure pier along the shore, ~30 m", "yaw_offset": 0.0, "pitch": -0.06},
+	{"name": "dock-first-shore-pier-far", "stand": Vector2(45.0, 150.0), "target": Vector3(-4.0, 1.0, 185.0),
+		"what": "First Shore departure pier from up the beach, ~60 m", "yaw_offset": 0.0, "pitch": -0.05},
 	{"name": "veilfall-far-first-shore", "stand": Vector2(0.0, 162.0), "target": Vector3(200.0, 620.0, 4140.0),
 		"what": "Veilfall from First Shore, ~4 km (design sightline)", "pitch": -0.05, "yaw_offset": 24.0},
 	{"name": "veilfall-mid-salt-crown", "stand": Vector2(419.6, 2640.0), "target": Vector3(200.0, 620.0, 4140.0),
