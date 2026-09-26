@@ -109,6 +109,30 @@ func test_a_restarted_guest_still_sees_its_saved_portable_characters() -> void:
 		"the saved character is offered even though the live id names no file")
 
 
+## Owner ruling "rejoin returns to exact spot": a Steam invite restores the
+## portable character, pose included; that pose must not place the guest in
+## whatever world the friend hosts. The join clears it (and a loaded slot's
+## queued fly state) so only `rejoin_pose.gd`'s host-instance check can seat it.
+func test_a_steam_join_does_not_place_a_saved_pose_before_the_host_is_known() -> void:
+	game.local.character_id = "portable-rin"
+	game.local.display_name = "Rin"
+	game.local.pose = {"realm": "meadows", "position": [40.0, 3.0, -60.0], "model_yaw": 0.0,
+		"camera_yaw": 0.0, "camera_pitch": 0.0}
+	assert_true(saver.characters().write("portable-rin", game.local.save_data(),
+		{"last_world_instance_id": "instance-host-a"}), "fixture portable character must save")
+	game.reset_for_new_game()
+	assert_true(TITLE.prepare_steam_character(game, {"kind": "existing", "character_id": "portable-rin"}))
+	assert_false((game.get("saved_player_pose") as Dictionary).is_empty(),
+		"the portable restore brings the saved pose back (the gap this closes)")
+	var candidate: Dictionary = TITLE.rejoin_pose_candidate(game)
+	assert_eq(str(candidate.get("world_instance_id")), "instance-host-a")
+	game.set_meta("pending_fly_load", {"safe_anchor": [1.0, 2.0, 3.0]})
+	TITLE.clear_pose_for_join(game)
+	assert_true((game.get("saved_player_pose") as Dictionary).is_empty(),
+		"no world can place the pose before the host snapshot decides")
+	assert_false(game.has_meta("pending_fly_load"), "nor a queued fly state")
+
+
 func test_players_invite_button_preserves_specific_coordinator_error() -> void:
 	var lobby := LobbyErrorStub.new()
 	lobby.message = "Steam is offline. Sign in before using friend invitations."

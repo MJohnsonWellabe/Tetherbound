@@ -1077,6 +1077,9 @@ func _start_pending_steam_join() -> void:
 		var fresh_id: String = CHARACTER_IDENTITY.mint()
 		(local as Object).set("character_id", fresh_id)
 		summary["character_id"] = fresh_id
+	# The Steam invite restores the portable character's saved pose too; it is
+	# only this character's to resume in the same host world.
+	_defer_rejoin_pose(game)
 	var driver := _mount_join_driver(game)
 	driver.call("begin_steam", summary)
 	_remember_steam_retry()
@@ -1575,16 +1578,28 @@ func _begin_join(address: String, port: int, retry_for_s: float) -> void:
 	# snapshot arrives. Take it off the live character before the world builds
 	# (so no world ever places a pose from somewhere else) and let
 	# `rejoin_pose.gd` decide against the snapshot's instance.
-	_mount_rejoin_pose(game, rejoin_pose_candidate(game))
-	game.set("saved_player_pose", {})
-	# A loaded home slot also queues its fly/traversal state (safe anchor,
-	# stamina) for the next world; that belongs to the slot's world too.
-	if game.has_meta("pending_fly_load"):
-		game.remove_meta("pending_fly_load")
+	_defer_rejoin_pose(game)
 
 	var driver := _mount_join_driver(game)
 	driver.call("begin", address, port if port > 0 else _configured_port(), retry_for_s)
 	_go_to_world("Joining %s…" % address)
+
+
+## Both join routes (direct address `_begin_join`, Steam invite
+## `_start_pending_steam_join`) end here before the world builds: the saved pose
+## is taken off the live character, with any queued fly/traversal state from a
+## loaded home slot, and `rejoin_pose.gd` decides against the host snapshot's
+## instance (owner ruling 2026-09-26).
+func _defer_rejoin_pose(game: Node) -> void:
+	_mount_rejoin_pose(game, rejoin_pose_candidate(game))
+	clear_pose_for_join(game)
+
+
+## The pose-clearing half of `_defer_rejoin_pose`, pure enough to unit test.
+static func clear_pose_for_join(game: Node) -> void:
+	game.set("saved_player_pose", {})
+	if game.has_meta("pending_fly_load"):
+		game.remove_meta("pending_fly_load")
 
 
 ## The pose this character last saved and the world instance it saved it in,
