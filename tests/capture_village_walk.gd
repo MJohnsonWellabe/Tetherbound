@@ -110,6 +110,9 @@ const INDOOR_APPROACH := {
 ## locked boundary leaf's "Try the gate", with the key in the satchel), one
 ## interact press. Bounded so a door that never opens still fails the walk.
 const DOOR_PRESSES_MAX := 3
+## Pages of dialogue the walk will read through per leg before an open panel
+## counts as a stall.
+const DIALOGUE_PRESSES_MAX := 12
 
 ## Grandpa's farmhouse: HOUSE_AT (-22,-16) in playground_world.gd, door on the
 ## east wall at x = -17 (grandpa_house.gd EXT_HALF_W 5.0). The start is 2.5m
@@ -558,6 +561,7 @@ func _walk() -> void:
 	var owned_s := 0.0
 	var next_event := 0
 	var door_presses := 0
+	var dialogue_presses := 0
 	var dt := 1.0 / float(Engine.physics_ticks_per_second)
 	while clock < WALK_BUDGET_S:
 		await physics_frame
@@ -573,6 +577,15 @@ func _walk() -> void:
 			print("[village-walk] NOTE a wild fight started at (%.1f,%.1f); fleeing with combat_run" % [here.x, here.y])
 			await _press("combat_run")
 			best_at_s = clock
+			continue
+		# A line said by something the walk pressed (a gate's unlock line) is
+		# read and closed the way a player closes it: interact per page.
+		if _owner_name() == "DialoguePanel" and dialogue_presses < DIALOGUE_PRESSES_MAX:
+			_release_all()
+			dialogue_presses += 1
+			await _press("interact")
+			best_at_s = clock
+			owned_s = 0.0
 			continue
 		if _input_owned():
 			owned_s += dt
@@ -735,6 +748,10 @@ func _visit_all() -> void:
 		await _visit(next, _graph_path(graph, here, next.at))
 		if not _failed.is_empty():
 			return
+	# Every gate was reached; the boundary must also have been OPENED by the
+	# player's own key press, not by a flag this script set.
+	if not bool((_game.get("progression") as RefCounted).call("has", "road_gate_open")):
+		_failed = "every gate was reached but road_gate_open was never earned"
 
 
 func _visit_targets() -> Array:
