@@ -171,6 +171,7 @@ var _full_chain := false
 var _starter_request := ""
 var _starter_species := ""
 var _starter_uid := ""
+var _starter_before_bracket: Dictionary = {}
 
 
 func _init() -> void:
@@ -568,6 +569,20 @@ func _save_and_reload(when: String, flags: Array, after_tournament: bool) -> boo
 		_fail("the reload %s lost the chosen starter %s '%s'"
 			% [when, _starter_species, OPENING_DRIVE.CHOSEN_NAME])
 		return false
+	# The claim is per starter: the chosen starter must be one of the three
+	# entered in the bracket, and after the rounds it must have gained from them.
+	var entered: Array = after.get("tournament_selection", [])
+	if not entered.has(_starter_uid):
+		_fail("the chosen starter %s (%s) is not among the tournament entrants %s %s"
+			% [_starter_species, _starter_uid, str(entered), when])
+		return false
+	if not after_tournament:
+		_starter_before_bracket = {"level": int(starter.get("level")), "xp": int(starter.get("xp"))}
+	elif int(starter.get("level")) <= int(_starter_before_bracket.get("level", 0)) \
+			and int(starter.get("xp")) <= int(_starter_before_bracket.get("xp", 0)):
+		_fail("the chosen starter gained nothing across the three rounds (%s before, %s after)"
+			% [str(_starter_before_bracket), str(starter)])
+		return false
 	var set_flags: Array = after.get("flags", [])
 	for id: String in flags:
 		if not set_flags.has(id):
@@ -761,12 +776,37 @@ func _walk_back_to_the_square() -> bool:
 		for p: Vector2 in outline:
 			centre += p
 		centre /= float(outline.size())
+		# Round the OUTSIDE of the fence to the gate that is nearest along the
+		# fence, not in a straight line: from (29,-59) the straight-line nearest
+		# gate (RoadGate) is across the village, and aiming at it pins the
+		# player against the same fence. Each outline vertex on the way is
+		# pushed 3 m outward so the walk slides along the outside of the line.
+		var from_edge := _nearest_edge(outline, here2)
+		var best_route: Array = []
+		var best_length := INF
 		var gate := Vector2.INF
 		for raw: Variant in ((boundary.get("gates", {}) as Dictionary).get("entries", []) as Array):
 			var at_raw: Array = (raw as Dictionary).get("at", [])
 			var at := Vector2(float(at_raw[0]), float(at_raw[1]))
-			if gate == Vector2.INF or here2.distance_to(at) < here2.distance_to(gate):
-				gate = at
+			var to_edge := _nearest_edge(outline, at)
+			for step: int in [1, -1]:
+				var route: Array = []
+				var length := 0.0
+				var prev := here2
+				var i := from_edge
+				while i != to_edge:
+					var vertex := outline[(i + 1) % outline.size()] if step == 1 else outline[i]
+					route.append(vertex + (vertex - centre).normalized() * 3.0)
+					length += prev.distance_to(vertex)
+					prev = vertex
+					i = posmod(i + step, outline.size())
+				length += prev.distance_to(at)
+				if length < best_length:
+					best_length = length
+					best_route = route
+					gate = at
+		for waypoint: Vector2 in best_route:
+			legs.append([Vector3(waypoint.x, y, waypoint.y), 2.5, "along the outside of the village fence"])
 		var inward := (centre - gate).normalized()
 		legs.append([Vector3(gate.x - inward.x * 5.0, y, gate.y - inward.y * 5.0), 2.5, "outside the nearest village gate"])
 		legs.append([Vector3(gate.x + inward.x * 5.0, y, gate.y + inward.y * 5.0), 2.5, "inside the nearest village gate"])
@@ -811,6 +851,20 @@ func _walk_back_to_the_square() -> bool:
 			return false
 	_checkpoint("walked back to the Village Square for the build")
 	return true
+
+
+## Index i of the outline edge outline[i] -> outline[i+1] nearest to `p`.
+func _nearest_edge(outline: PackedVector2Array, p: Vector2) -> int:
+	var best := 0
+	var best_d := INF
+	for i in outline.size():
+		var a := outline[i]
+		var b := outline[(i + 1) % outline.size()]
+		var d := p.distance_to(Geometry2D.get_closest_point_to_segment(p, a, b))
+		if d < best_d:
+			best_d = d
+			best = i
+	return best
 
 
 func _send_stick(x: float, y: float) -> void:
