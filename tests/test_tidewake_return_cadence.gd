@@ -32,6 +32,8 @@ const A7_LIMIT_S := 120.0
 const MOVEMENT_PATH := "res://data/config/movement.json"
 const COMBAT_PATH := "res://data/config/combat.json"
 const CAMP_RADIUS_M := 3.2
+## npc_body.gd's greet prompt radius (the default every realm's NPC uses).
+const NPC_PROMPT_RADIUS_M := 3.8
 const GATE_RADIUS_M := 4.0
 
 var _cache: Dictionary = {}
@@ -131,9 +133,20 @@ func _water_segments() -> Array:
 		var swim: Array = swims[pair[1]].polyline.duplicate()
 		swim.reverse()
 		segments.append({"mode": "swim", "points": _xz_all(swim), "id": pair[1]})
-	var landing: Array = swims["first_shore_to_reedhaven_sheltered"].polyline[0]
+	var landing: Array = world.entry_anchors.from_stormwood.position
 	segments.append({"mode": "walk", "points": [_xz(landing), _xz(gate)], "id": "first_shore_gate_walk"})
-	return segments
+	# Spines run between anchor safe positions and swims between shore
+	# positions: walk the short dock leg between each pair so no metre of the
+	# return is skipped.
+	var joined: Array = []
+	for segment: Dictionary in segments:
+		if not joined.is_empty():
+			var last: Array = joined[joined.size() - 1].points
+			var first: Vector2 = (segment.points as Array)[0]
+			if (last[last.size() - 1] as Vector2).distance_to(first) > 0.01:
+				joined.append({"mode": "walk", "points": [last[last.size() - 1], first], "id": "dock_leg"})
+		joined.append(segment)
+	return joined
 
 
 func _water_sources(with_wilds: bool) -> Array:
@@ -156,8 +169,7 @@ func _water_sources(with_wilds: bool) -> Array:
 		var offset: Array = npc.island_local_offset
 		var at: Vector2 = centres[str(npc.island_id)] + Vector2(float(offset[0]), float(offset[2]))
 		out.append({"id": "water:npc:" + str(npc.id), "kind": "aftermath_npc", "at": at,
-			"radius": float(_json("res://data/config/water_combat.json").get("trainer_prompt_radius_m", 4.2)),
-			"modes": ["walk"]})
+			"radius": NPC_PROMPT_RADIUS_M, "modes": ["walk"]})
 	for camp: Dictionary in _json("res://data/config/water_camps.json").camps:
 		out.append({"id": "water:camp:" + str(camp.id), "kind": "camp",
 			"at": Vector2(float(camp.at[0]), float(camp.at[1])), "radius": CAMP_RADIUS_M, "modes": ["walk"]})
@@ -261,7 +273,7 @@ func _stormwood_sources(with_wilds: bool) -> Array:
 		if not dialogue.has("stormwood_%s_post_storm" % npc.id):
 			continue
 		out.append({"id": "stormwood:npc:" + str(npc.id), "kind": "aftermath_npc", "at": _xz(npc.position),
-			"radius": 4.2})
+			"radius": NPC_PROMPT_RADIUS_M})
 	for camp: Dictionary in _json("res://data/config/stormwood_camps.json").camps:
 		out.append({"id": "stormwood:camp:" + str(camp.id), "kind": "camp",
 			"at": Vector2(float(camp.at[0]), float(camp.at[1])), "radius": CAMP_RADIUS_M})
@@ -297,6 +309,13 @@ func _cloudreach_sources(with_wilds: bool) -> Array:
 			out.append({"id": "cloudreach:wild:" + str(site.id), "kind": "encounter", "at": _xz(site.position),
 				"radius": engage + float(site.get("radius_m", 0.0))})
 	var overrides: Dictionary = physical.get("npc_position_overrides", {})
+	# cloudreach_npc_runtime.json position_when relocates a body once its flag
+	# holds; after the ending every aftermath flag does (Aila moves to the summit).
+	var relocated: Dictionary = {}
+	for runtime_npc: Dictionary in _json("res://data/config/cloudreach_npc_runtime.json").get("npcs", []):
+		for branch: Dictionary in runtime_npc.get("position_when", []):
+			if str(branch.get("if_flag", "")) == "cloudreach_winds_restored":
+				relocated[str(runtime_npc.id)] = branch.position
 	for npc: Dictionary in chapter.npcs:
 		# Only the NPCs with an after-restoration line say something new: the
 		# player left Cloudreach from the summit straight after Veyra.
@@ -304,7 +323,8 @@ func _cloudreach_sources(with_wilds: bool) -> Array:
 		if not dialogue.has("cloudreach_%s_after_restoration" % short):
 			continue
 		out.append({"id": "cloudreach:npc:" + str(npc.id), "kind": "aftermath_npc",
-			"at": _xz(overrides.get(str(npc.id), npc.position)), "radius": 4.2})
+			"at": _xz(relocated.get(str(npc.id), overrides.get(str(npc.id), npc.position))),
+			"radius": NPC_PROMPT_RADIUS_M})
 	for camp: Dictionary in chapter.camping_contract.camps:
 		out.append({"id": "cloudreach:camp:" + str(camp.id), "kind": "camp", "at": _xz(camp.position),
 			"radius": CAMP_RADIUS_M})
@@ -354,7 +374,9 @@ func _meadows_sources(with_wilds: bool) -> Array:
 		if with_wilds and FileAccess.file_exists(dir + "spawns.json"):
 			for spawn: Dictionary in _json(dir + "spawns.json").spawns:
 				# Alphas are once-only named fights; ordinary spawns repopulate.
-				if spawn.has("alpha"):
+				# Alphas are once-only; night- or rain-only spawns are not live on
+				# every return, so they never close a gap here.
+				if spawn.has("alpha") or spawn.has("time") or spawn.has("weather"):
 					continue
 				out.append({"id": "meadows:wild:%s:%d" % [band.id, int(spawn.order)], "kind": "encounter",
 					"at": _xz(spawn.centre), "radius": engage + float(spawn.get("radius", 0.0))})
@@ -411,35 +433,58 @@ func _whole_return(with_wilds: bool, use_arches: bool, use_haul_road: bool = tru
 
 
 ## A7 intervals still open on the return, in realms other lanes own. Each has
-## a SHARED-FILE REQUEST on the Tidewake PR. A fix there simply removes the gap
-## (the check reports the stale row); a NEW gap anywhere fails this test.
-const KNOWN_OPEN := {
-	"cloudreach:wild:road_visibility_upper_summit_road_01 -> cloudreach:wild:road_visibility_upper_plateau_circuit_02":
-		"Cloudreach upper summit road -> plateau circuit, midpoint (-451, 4644)",
-	"cloudreach:wild:road_visibility_upper_plateau_circuit_01 -> cloudreach:wild:road_visibility_windscar_counterweight_pass_13":
-		"Cloudreach plateau circuit -> counterweight pass, midpoint (-760, 4035)",
-	"meadows:wild:band2_stone_and_root:2073 -> meadows:wild:band1_lower_meadows:1039":
-		"Meadows quarry haul road, upper half, midpoint (316, 1535); the band trail has no gap",
-	"meadows:wild:band1_lower_meadows:1003 -> meadows:wild:band1_lower_meadows:1051":
-		"Meadows quarry haul road, village half, midpoint (69, 490); the band trail has no gap",
-}
+## a SHARED-FILE REQUEST on the Tidewake PR. A gap is matched by realm and by
+## its midpoint lying within KNOWN_MATCH_M of the listed one, not by the ids at
+## its ends, so another lane's partial edit that shifts an end offer does not
+## turn this test red. A fix that closes a gap prints the stale row; a gap
+## anywhere else fails the test.
+const KNOWN_MATCH_M := 200.0
+const KNOWN_OPEN: Array[Dictionary] = [
+	{"realm": "cloudreach", "midpoint": Vector2(-451, 4644),
+		"note": "upper summit road -> plateau circuit (156 s at walk)"},
+	{"realm": "cloudreach", "midpoint": Vector2(-760, 4035),
+		"note": "plateau circuit -> counterweight pass (151 s at walk)"},
+	{"realm": "meadows", "midpoint": Vector2(316, 1535),
+		"note": "quarry haul road, upper half (133 s at walk); the band trail has no gap"},
+	{"realm": "meadows", "midpoint": Vector2(65, 469),
+		"note": "quarry haul road, village half (138 s at walk, daytime); the band trail has no gap"},
+]
+
+
+func _known(gap: Dictionary) -> int:
+	for index in KNOWN_OPEN.size():
+		var row: Dictionary = KNOWN_OPEN[index]
+		if str(gap.get("realm", "")) == str(row.realm) \
+				and (gap.midpoint as Vector2).distance_to(row.midpoint) <= KNOWN_MATCH_M:
+			return index
+	return -1
 
 
 func test_whole_return_has_only_known_open_intervals() -> void:
 	var result := _whole_return(true, false)
-	var open: Array[String] = []
+	var matched: Dictionary = {}
 	for gap: Dictionary in result.over:
-		var key := "%s -> %s" % [gap.from, gap.to]
-		open.append(key)
-		assert_true(KNOWN_OPEN.has(key), "new A7 empty interval on the return: %.0f s %s (%s midpoint %.0f,%.0f)"
-			% [gap.gap_s, key, gap.get("realm", "?"), (gap.midpoint as Vector2).x, (gap.midpoint as Vector2).y])
-	for key: String in KNOWN_OPEN:
-		if not open.has(key):
-			print("TIDEWAKE RETURN: known-open interval resolved, delete its KNOWN_OPEN row: " + key)
+		var index := _known(gap)
+		matched[index] = true
+		assert_true(index >= 0, "new A7 empty interval on the return: %.0f s %s -> %s (%s midpoint %.0f,%.0f)"
+			% [gap.gap_s, gap.from, gap.to, gap.get("realm", "?"), (gap.midpoint as Vector2).x,
+				(gap.midpoint as Vector2).y])
+	for index in KNOWN_OPEN.size():
+		if not matched.has(index):
+			print("TIDEWAKE RETURN: known-open interval resolved, delete its KNOWN_OPEN row: %s %s"
+				% [KNOWN_OPEN[index].realm, KNOWN_OPEN[index].note])
 	var per_realm: Dictionary = result.per_realm
 	assert_true(float(per_realm.stormwood.walk_m) > 5000.0, "the Stormwood return walks the road network")
 	assert_true(float(per_realm.cloudreach.walk_m) > 8000.0, "the Cloudreach return walks the ground graph")
 	assert_true(float(per_realm.meadows.walk_m) > 9000.0, "the Meadows return walks the trail to Grandpa")
+
+
+## The midpoint match is what keeps other lanes' partial edits from turning
+## this red, so it must still reject a gap somewhere unlisted.
+func test_known_open_match_rejects_an_unlisted_gap() -> void:
+	assert_true(_known({"realm": "meadows", "midpoint": Vector2(316, 1600)}) >= 0, "a nearby midpoint matches")
+	assert_eq(_known({"realm": "meadows", "midpoint": Vector2(0, 5000)}), -1, "a distant midpoint is new")
+	assert_eq(_known({"realm": "stormwood", "midpoint": Vector2(-451, 4644)}), -1, "another realm is new")
 
 
 ## Reports only: the strict no-respawn definition, lit arches, the Meadows band
