@@ -210,7 +210,10 @@ func _resolve_lure() -> void:
 	match _activity:
 		"bram", "juno":
 			var trainers := _world.get_node_or_null(^"Trainers")
-			var id := "old_champion_bram" if _activity == "bram" else "pasture_drover_juno"
+			# Juno's activity is lured by the Tether patrol holding the stolen
+			# Meadowhart (WORLD §11: "follow missing-Meadowhart lead; defeat the
+			# named Tether patrol"), not by Juno herself, who only gives the lead.
+			var id := "old_champion_bram" if _activity == "bram" else "lost_creature_rue"
 			if trainers != null:
 				_lure = trainers.call("body_for", id) as Node3D
 		"herd":
