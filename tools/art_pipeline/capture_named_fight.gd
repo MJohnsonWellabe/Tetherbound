@@ -90,9 +90,14 @@ func _capture_one() -> bool:
 	if ally != null:
 		ally.call("heal_fully")
 	_stand_in_front_of_the_trainer()
+	if not await _settle_on_ground():
+		return false
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out))
 	for i in 30:
 		await physics_frame
+	if _player.global_position.y < _trainer.global_position.y - 3.0:
+		print("PLAYER FELL at %s vs %s" % [str(_player.global_position), _tid])
+		return false
 	await _save("00-before")
 	await _challenge()
 	if not bool(_manager.call("is_fighting")):
@@ -220,3 +225,28 @@ func _diagnose_and_activate() -> void:
 		# that follows are the production ones.
 		_container.call("_on_challenged", _spec)
 		print("challenge: trainer _on_challenged -> panel open=%s" % str(_panel.call("is_open")))
+
+
+## A far trainer's terrain collision streams in after the teleport; a player
+## dropped there first falls through and `world_perimeter_corridor` returns
+## them to spawn -- the fight then runs somewhere the camera is not. Wait for
+## a downward ray at the stand spot to hit, and stand on what it hit.
+func _settle_on_ground() -> bool:
+	var spot := _player.global_position
+	var space := _player.get_world_3d().direct_space_state
+	for i in 1800:
+		_player.global_position = spot + Vector3.UP * 0.5
+		_player.velocity = Vector3.ZERO
+		var query := PhysicsRayQueryParameters3D.create(spot + Vector3.UP * 40.0,
+			spot + Vector3.DOWN * 40.0)
+		query.exclude = [_player.get_rid()]
+		var hit := space.intersect_ray(query)
+		if not hit.is_empty():
+			_player.global_position = (hit.position as Vector3) + Vector3.UP * 0.2
+			_player.velocity = Vector3.ZERO
+			print("ground under %s after %d frames at y=%.2f (trainer y=%.2f)" % [
+				_tid, i, (hit.position as Vector3).y, _trainer.global_position.y])
+			return true
+		await physics_frame
+	print("NO GROUND under the stand spot for %s" % _tid)
+	return false
