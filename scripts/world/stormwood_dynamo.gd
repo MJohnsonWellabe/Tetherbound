@@ -28,6 +28,21 @@ const FAINT_HIDE_S := 1.0
 ## The faint prompt is a transient toast (`playground_hud.gd` shows one for
 ## 2.2 s). Still choosing this long after it, the player sees it once more.
 const FAINT_PROMPT_RESHOW_S := 4.0
+const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
+## The DynamoCore deck's outer radius (`stormheart_tree.gd` `_ring("DynamoCore", 9, 44, ...)`).
+const DECK_OUTER_RADIUS_M := 44.0
+const DECK_INNER_RADIUS_M := 9.0
+## `_ring("DynamoCore")` leaves segments 43-47 of 64 open for the ascent's
+## final turn. The ascent needs headroom only over its own band (radius
+## RAMP_RADIUS +- RAMP_WIDTH/2, rails included); the rest of that wedge is
+## infilled so the conduit route from bank 3 to bank 2 does not drop a
+## creature 36 m to the turn below (focused Marrow smoke, Break window 1).
+const DECK_GAP_SEGMENTS := Vector2i(43, 48)
+const DECK_GAP_CLEARANCE_M := 0.3
+## A rail around the 9 m core hole, the ascent rails' size: a Break discharge
+## once threw the piloted ally over the edge and it fell 150 m (focused smoke).
+const CORE_RAIL_SEGMENTS := 32
+const CORE_RAIL_SIZE := Vector3(0.22, 1.4, 0.0)
 
 var world: Node3D
 var hub: Node
@@ -87,6 +102,7 @@ func mount(owner_world: Node3D) -> void:
 	arena.name = "DynamoArena"
 	add_child(arena)
 	arena.build(rules, bool(world.get("simulation_only")))
+	_build_deck_infill(bool(world.get("simulation_only")))
 	if not bool(world.get("simulation_only")):
 		var control := FIELD_CONTROL.new()
 		control.name = "FieldControl"
@@ -106,6 +122,107 @@ func arena_ready() -> bool:
 	# The same prompt admits a second peer to the live captain fight and lets a
 	# reconnecting peer rejoin a persisted conduit phase. Neither is a new win.
 	return flags.has(CORE_FLAG) and flags.has(KESTREL_FLAG) and not flags.has(MARROW_FLAG)
+
+
+## `built_floor.gd` claim: while the core fight is live, a fight placement
+## over the deck (the ally, Marrow's creatures, the player) stands on the
+## Dynamo deck, not on the Terrain3D floor 150 m below it, which is where
+## every placement resolved before (focused smoke
+## `tests/smoke_stormwood_marrow_press.gd`: the ally struck conduits from the
+## terrain under the tree). Outside the fight nothing is claimed, so a body on
+## the ascent ramp inside the same footprint keeps its own ground.
+func built_floor_height_at(x: float, z: float) -> float:
+	if not core_fight_live():
+		return NAN
+	if Vector2(x - global_position.x, z - global_position.z).length() > DECK_OUTER_RADIUS_M:
+		return NAN
+	return deck_height()
+
+
+## Marrow's hosted rounds, the Overload and the conduit Break.
+func core_fight_live() -> bool:
+	if phase == "overload" or phase == "break_core":
+		return true
+	if is_instance_valid(fight) and not bool(fight.get("finished")):
+		return true
+	# A client's own hosted round (the host's `fight` lives only on the host).
+	var director := _director()
+	return director != null and str(director.get("_hosted_trainer")) == TRAINER_ID
+
+
+## Static deck over the parts of the ring gap the ascent does not rise through.
+func _build_deck_infill(simulation_only: bool) -> void:
+	var y := deck_height() - global_position.y
+	var ramp_inner := STORMHEART.RAMP_RADIUS - STORMHEART.RAMP_WIDTH * 0.5 - DECK_GAP_CLEARANCE_M
+	var ramp_outer := STORMHEART.RAMP_RADIUS + STORMHEART.RAMP_WIDTH * 0.5 + DECK_GAP_CLEARANCE_M
+	var vertices := PackedVector3Array()
+	for band: Vector2 in [Vector2(DECK_INNER_RADIUS_M, ramp_inner), Vector2(ramp_outer, DECK_OUTER_RADIUS_M)]:
+		var from := float(DECK_GAP_SEGMENTS.x) * TAU / 64.0
+		var to := float(DECK_GAP_SEGMENTS.y) * TAU / 64.0
+		var steps := 12
+		for i in steps:
+			var a := lerpf(from, to, float(i) / steps)
+			var b := lerpf(from, to, float(i + 1) / steps)
+			var p0 := Vector3(cos(a) * band.x, y, sin(a) * band.x)
+			var p1 := Vector3(cos(a) * band.y, y, sin(a) * band.y)
+			var p2 := Vector3(cos(b) * band.y, y, sin(b) * band.y)
+			var p3 := Vector3(cos(b) * band.x, y, sin(b) * band.x)
+			vertices.append_array([p0, p1, p2, p0, p2, p3])
+	var mesh := ArrayMesh.new()
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var body := StaticBody3D.new()
+	body.name = "DeckInfill"
+	add_child(body)
+	var collider := CollisionShape3D.new()
+	var shape := mesh.create_trimesh_shape()
+	shape.backface_collision = true
+	collider.shape = shape
+	body.add_child(collider)
+	var rail := StaticBody3D.new()
+	rail.name = "CoreRail"
+	add_child(rail)
+	var radius := DECK_INNER_RADIUS_M + CORE_RAIL_SIZE.x
+	var segment_length := TAU * radius / CORE_RAIL_SEGMENTS + 0.1
+	var poses: Array[Transform3D] = []
+	for i in CORE_RAIL_SEGMENTS:
+		var a := (float(i) + 0.5) * TAU / CORE_RAIL_SEGMENTS
+		var at := Vector3(cos(a) * radius, y + CORE_RAIL_SIZE.y * 0.5, sin(a) * radius)
+		var tangent := Vector3(-sin(a), 0.0, cos(a))
+		var pose := Transform3D(Basis.looking_at(tangent), at)
+		var box := BoxShape3D.new()
+		box.size = Vector3(CORE_RAIL_SIZE.x, CORE_RAIL_SIZE.y, segment_length)
+		var piece := CollisionShape3D.new()
+		piece.shape = box
+		piece.transform = pose
+		rail.add_child(piece)
+		poses.append(pose)
+	if simulation_only:
+		return
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color("3d4752")
+	material.metallic = 0.65
+	material.roughness = 0.55
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var visual := MeshInstance3D.new()
+	visual.mesh = mesh
+	visual.material_override = material
+	body.add_child(visual)
+	var bar := BoxMesh.new()
+	bar.size = Vector3(CORE_RAIL_SIZE.x, 0.18, segment_length)
+	for pose: Transform3D in poses:
+		var piece := MeshInstance3D.new()
+		piece.mesh = bar
+		piece.material_override = material
+		piece.transform = Transform3D(pose.basis, pose.origin + Vector3.UP * (CORE_RAIL_SIZE.y * 0.5 - 0.09))
+		rail.add_child(piece)
+
+
+func deck_height() -> float:
+	var tree := world.get_node_or_null("StormheartTree") as Node3D if world != null else null
+	return tree.global_position.y + STORMHEART.CORE_HEIGHT if tree != null else CORE_POSITION.y
 
 
 func begin_for_peer(peer: int) -> void:

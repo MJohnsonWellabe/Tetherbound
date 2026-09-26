@@ -15,6 +15,25 @@ func test_bank_selection_uses_actual_positions_and_excludes_accepted_conduits() 
 	assert_true(SEGMENT.next_bank(rules, rules.bank_position(2)) != 2)
 	rules.conduits = [0, 1, 2, 3]
 	assert_eq(SEGMENT.next_bank(rules, Vector2.ZERO), -1)
+	# The live bank is skipped while another remains, and taken when it is last.
+	rules.conduits = [2]
+	assert_true(SEGMENT.next_bank(rules, rules.bank_position(0), 0) != 0)
+	rules.conduits = [1, 2, 3]
+	assert_eq(SEGMENT.next_bank(rules, rules.bank_position(1), 0), 0)
+
+func test_deck_route_avoids_the_core_hole_and_the_ascent_band() -> void:
+	var rules := RULES.new()
+	var b0: Vector2 = rules.bank_position(0)
+	var b2: Vector2 = rules.bank_position(2)
+	var b3: Vector2 = rules.bank_position(3)
+	assert_false(SEGMENT.deck_leg_clear(b3, b2), "the 3 -> 2 chord crosses the ascent band in the ring gap")
+	assert_false(SEGMENT.deck_leg_clear(b0, b2), "the 0 -> 2 chord crosses the core hole")
+	for pair: Array in [[b3, b2], [b2, b3], [b0, b2]]:
+		var w: Vector2 = SEGMENT.deck_waypoint(pair[0], pair[1])
+		assert_true(w != pair[1] and SEGMENT.deck_leg_clear(pair[0], w) and SEGMENT.deck_leg_clear(w, pair[1]),
+			"a clear one-waypoint detour exists")
+	assert_eq(SEGMENT.deck_waypoint(b3, b0), b0, "a clear leg is walked directly")
+
 
 func test_conservative_travel_bound_accounts_for_actual_start_speed_and_remaining_banks() -> void:
 	var rules := RULES.new()
@@ -56,12 +75,14 @@ func test_controller_preserves_one_window_and_production_authority() -> void:
 	for bypass in ["request_conduit_strike", "request_move", "global_position =", "face_towards",
 		"emit_event(", "begin_for_peer(", "strike_conduit(", "pending_catch", "ending_claim"]:
 		assert_false(source.contains(bypass), bypass)
-	for condition in ["int(state.cycle) != conduit_cycle", "_rounds.size() != 5",
+	for condition in ["break_windows > MAX_BREAK_WINDOWS", "_rounds.size() != 5",
 		"Time.get_ticks_msec() - started < ATTEMPT_MS", "control.get(\"_body\") == ally",
 		"DYNAMO.facing_conduit", "rules.config.conduit_reach_m", "Engine.time_scale = scale_before",
 		"Engine.physics_ticks_per_second = hz_before"]:
 		assert_true(source.contains(condition), condition)
-	assert_eq(SEGMENT.ATTEMPT_MS, 300000)
+	# 900 s: five captain rounds at the 1x clock outlast 300 s (focused Marrow smoke).
+	assert_eq(SEGMENT.ATTEMPT_MS, 900000)
+	assert_eq(SEGMENT.MAX_BREAK_WINDOWS, 3)
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_dynamo.json"))
 	var phase: Dictionary = config.phases.break_core
 	assert_almost_eq(float(config.bank_count) * (float(phase.charge_seconds) + float(phase.fire_seconds)

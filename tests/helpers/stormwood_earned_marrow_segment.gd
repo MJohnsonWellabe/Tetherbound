@@ -4,7 +4,14 @@ extends "res://tests/helpers/stormwood_earned_dynamo_segment.gd"
 ## No legendary offer or ceremony is started by this helper.
 const DYNAMO := preload("res://scripts/world/stormwood_dynamo.gd")
 const CAPTAIN := "captain_marrow_dynamo_core"
-const ATTEMPT_MS := 300000
+## One attempt's wall-clock cap at the 1x clock. Five was too short: the
+## focused smoke (tests/smoke_stormwood_marrow_press.gd) was still in round 5's
+## overload phase at 300 s (round 1 alone ~65 s), before any conduit window.
+const ATTEMPT_MS := 900000
+## Break windows one attempt may use. BOSSES §3: a timed-out Break clears the
+## partial conduits and restarts with a fresh 30 s window; a player retries.
+const MAX_BREAK_WINDOWS := 3
+var _attempt_started_ms := 0
 const END_FLAGS := ["stormwood:marrow_defeated", "stormwood:legendary_freed",
 	"realm_heart_stormwood_earned", "stormwood:long_storm_ended"]
 var _rounds: Dictionary = {}
@@ -12,17 +19,59 @@ var _conduit_refusal := ""
 var _waiting_bank := -1
 var _fired_banks: Array[int] = []
 
-static func next_bank(rules: RefCounted, local: Vector2) -> int:
+## The nearest unstruck conduit, skipping `avoid` (the bank charging or firing
+## now, whose discharge lane throws a creature back) unless it is the last.
+static func next_bank(rules: RefCounted, local: Vector2, avoid := -1) -> int:
 	var closest := -1
 	var distance := INF
+	var remaining := 0
 	for index in int(rules.config.bank_count):
-		if (rules.conduits as Array).has(index):
+		if not (rules.conduits as Array).has(index):
+			remaining += 1
+	for index in int(rules.config.bank_count):
+		if (rules.conduits as Array).has(index) or (index == avoid and remaining > 1):
 			continue
 		var candidate := local.distance_squared_to(rules.bank_position(index))
 		if candidate < distance:
 			distance = candidate
 			closest = index
 	return closest
+
+## Whether a straight deck leg from `a` to `b` (Dynamo-local x/z) stays on
+## solid deck: out of the 9 m core hole and out of the ascent's own band in
+## the ring gap (`stormwood_dynamo.gd` DeckInfill leaves that band open).
+static func deck_leg_clear(a: Vector2, b: Vector2) -> bool:
+	var gap_from := float(DYNAMO.DECK_GAP_SEGMENTS.x) * 360.0 / 64.0
+	var gap_to := float(DYNAMO.DECK_GAP_SEGMENTS.y) * 360.0 / 64.0
+	var band_in := 26.0 - 4.0 - DYNAMO.DECK_GAP_CLEARANCE_M - 0.8
+	var band_out := 26.0 + 4.0 + DYNAMO.DECK_GAP_CLEARANCE_M + 0.8
+	for i in 41:
+		var p := a.lerp(b, float(i) / 40.0)
+		var r := p.length()
+		var deg := fposmod(rad_to_deg(p.angle()), 360.0)
+		if r < DYNAMO.DECK_INNER_RADIUS_M + 1.0:
+			return false
+		if deg >= gap_from - 2.0 and deg <= gap_to + 2.0 and r > band_in and r < band_out:
+			return false
+	return true
+
+
+## `to` when the straight leg is clear, else the shortest one-waypoint detour
+## on radius 38 whose two legs are both clear (`to` if none is).
+static func deck_waypoint(from: Vector2, to: Vector2) -> Vector2:
+	if deck_leg_clear(from, to):
+		return to
+	var best := to
+	var best_length := INF
+	for step in 72:
+		var w := Vector2.RIGHT.rotated(deg_to_rad(step * 5.0)) * 38.0
+		if deck_leg_clear(from, w) and deck_leg_clear(w, to):
+			var length := from.distance_to(w) + w.distance_to(to)
+			if length < best_length:
+				best_length = length
+				best = w
+	return best
+
 
 static func travel_lower_bound_seconds(rules: RefCounted, local: Vector2, speed: float) -> float:
 	if speed <= 0.0:
@@ -114,10 +163,17 @@ func _attempt_marrow(dynamo: Node) -> void:
 			body.global_position.z - 2), "Captain Marrow") or not await _dialogue(CAPTAIN):
 		return
 	var started := Time.get_ticks_msec()
+	_attempt_started_ms = started
 	var next_quick := 0
 	var tick := 0
 	var release_tick := -1
 	var conduit_cycle := -1
+	var break_windows := 0
+	var accepted_before := 0
+	var window_left_before := INF
+	var break_target := -1
+	var break_active := -1
+	var break_leg := Vector2.ZERO
 	var rules: RefCounted = dynamo.rules
 	var control := dynamo.get_node_or_null("FieldControl")
 	if control == null:
@@ -158,8 +214,9 @@ func _attempt_marrow(dynamo: Node) -> void:
 			if conduit_cycle < 0:
 				conduit_cycle = int(state.cycle)
 				_note("ENTERED first actual conduit cycle %d" % conduit_cycle)
-				var phase_ally := _director.call("ally_body") as Node3D
-				if is_instance_valid(phase_ally):
+				var phase_raw: Variant = _director.call("ally_body")
+				var phase_ally := phase_raw as Node3D if is_instance_valid(phase_raw) else null
+				if phase_ally != null:
 					var at: Vector3 = dynamo.to_local(phase_ally.global_position)
 					var speed := float(phase_ally.call("base_speed"))
 					var timing: Dictionary = rules.config.phases.break_core
@@ -170,31 +227,76 @@ func _attempt_marrow(dynamo: Node) -> void:
 						phase_ally.global_position, at, speed, remaining,
 						travel_lower_bound_seconds(rules, Vector2(at.x, at.z), speed),
 						_fighter_snapshot(_director.call("ally_instance"))])
-			if int(state.cycle) != conduit_cycle:
-				_fail("first actual four-conduit window expired; no additional cycle")
-				return
+			if break_windows == 0:
+				break_windows = 1
+			# The rules cleared a partial set: that 30 s window timed out and a
+			# fresh one began (the Break retries; the captain win stands).
+			var window_now := float(rules.window_left())
+			if window_now > window_left_before + 1.0:
+				break_windows += 1
+				_note("BREAK window %d timed out with %d/4; retrying in window %d" % [
+					break_windows - 1, accepted_before, break_windows])
+				_fired_banks.clear()
+				_waiting_bank = -1
+				if break_windows > MAX_BREAK_WINDOWS:
+					_fail("four conduits not struck within %d Break windows" % MAX_BREAK_WINDOWS)
+					return
+			accepted_before = (rules.conduits as Array).size()
+			window_left_before = window_now
 			# The follower body carries no creature; the director owns it.
-			var ally := _director.call("ally_body") as Node3D
+			var body_raw: Variant = _director.call("ally_body")
+			var ally := body_raw as Node3D if is_instance_valid(body_raw) else null
 			var ally_creature: RefCounted = _director.call("ally_instance")
 			if not is_instance_valid(ally) or ally_creature == null or bool(ally_creature.get("fainted")):
 				_fail("no surviving deployed ally for the real conduit window")
 				return
+			if absf(dynamo.to_local(ally.global_position).y) > 4.0:
+				_fail("the piloted ally left the Dynamo deck at %s" % str(dynamo.to_local(ally.global_position)))
+				return
+			if tick % 120 == 0:
+				var at_local: Vector3 = dynamo.to_local(ally.global_position) if ally != null else Vector3.ZERO
+				_note("BREAK t=%.1fs ally_local=%s piloted=%s waiting=%d fired=%s struck=%s window_left=%.1f fighting=%s target=%d active=%d bank_state=%s leg=%s next_quick_in=%d release_tick=%d" % [
+					(Time.get_ticks_msec() - started) / 1000.0, at_local, str(control.get("_body") == ally),
+					_waiting_bank, str(_fired_banks), str(rules.conduits), float(rules.window_left()),
+					str(_manager.is_fighting()), break_target, break_active, str(state.get("state", "")), break_leg,
+					next_quick - Time.get_ticks_msec(), release_tick])
+				var body_ally := ally as CharacterBody3D
+				if body_ally != null:
+					var hits: Array[String] = []
+					for c in body_ally.get_slide_collision_count():
+						var collider: Object = body_ally.get_slide_collision(c).get_collider()
+						hits.append(str((collider as Node).get_path()) if collider is Node else str(collider))
+					_note("BREAK body velocity=%s on_floor=%s on_wall=%s hits=%s arbiter_enabled=%s input_owner=%s" % [
+						body_ally.velocity, body_ally.is_on_floor(), body_ally.is_on_wall(), str(hits),
+						str(_world.get_node("InteractionArbiter").call("enabled")),
+						str(preload("res://scripts/ui/input_owner.gd").current(_tree))])
 			if control.get("_body") == ally:
 				var local: Vector3 = dynamo.to_local(ally.global_position)
-				var index := next_bank(rules, Vector2(local.x, local.z))
+				var active := int(state.bank) if str(state.state) != "recovery" else -1
+				var index := next_bank(rules, Vector2(local.x, local.z), active)
+				break_target = index
+				break_active = active
 				if _waiting_bank >= 0 and (rules.conduits as Array).has(_waiting_bank):
 					_note("ACCEPTED ordinary conduit %d" % _waiting_bank)
 					_waiting_bank = -1
 				if index >= 0 and _waiting_bank < 0:
 					var bank: Vector2 = rules.bank_position(index)
 					var toward := Vector3(bank.x - local.x, 0, bank.y - local.z)
+					# Walk the deck around the core hole and the ascent's band.
+					var leg := deck_waypoint(Vector2(local.x, local.z), bank)
+					var toward_leg := Vector3(leg.x - local.x, 0, leg.y - local.z)
+					break_leg = leg
 					var reach := float(rules.config.conduit_reach_m)
-					if toward.length() > reach * 0.8 \
+					if index == active and toward.length() < 12.0:
+						pass # the last conduit is the live bank: hold off its lane until it fires
+					elif leg != bank:
+						_drive_toward(toward_leg)
+					elif toward.length() > reach * 0.8 \
 							or not DYNAMO.facing_conduit(ally.call("facing"), toward):
 						_drive_toward(toward)
 					elif Time.get_ticks_msec() >= next_quick and release_tick < 0:
 						if _fired_banks.has(index):
-							_fail("conduit progress reset inside the first window")
+							_fail("conduit progress reset inside one Break window")
 							return
 						_fired_banks.append(index)
 						_waiting_bank = index
@@ -211,8 +313,12 @@ func _attempt_marrow(dynamo: Node) -> void:
 			if conduit_cycle >= 0:
 				_fail("Dynamo reset after entering the first conduit window")
 				return
-			var ally := _director.call("ally_body") as Node3D
-			var enemy := _manager.call("enemy_body") as Node3D
+			# Between rounds the fainted creature's body is freed; never cast a
+			# freed instance (the Nysa loop's same guard).
+			var ally_raw: Variant = _director.call("ally_body")
+			var enemy_raw: Variant = _manager.call("enemy_body")
+			var ally := ally_raw as Node3D if is_instance_valid(ally_raw) else null
+			var enemy := enemy_raw as Node3D if is_instance_valid(enemy_raw) else null
 			if _manager.is_fighting() and ally != null and enemy != null:
 				var toward := enemy.global_position - ally.global_position
 				toward.y = 0
@@ -224,7 +330,11 @@ func _attempt_marrow(dynamo: Node) -> void:
 					next_quick = Time.get_ticks_msec() + 900
 		tick += 1
 		await _tree.physics_frame
-	_fail("one actual Marrow roster/conduit attempt exceeded five minutes")
+	var ally_card: RefCounted = _director.call("ally_instance")
+	_fail("one actual Marrow roster/conduit attempt exceeded %d s (phase=%s outcome=%s fighting=%s battle=%s rounds=%d conduits=%s ally=%s)" % [
+		ATTEMPT_MS / 1000, str(dynamo.phase), str(_outcomes.get(CAPTAIN, "none")), str(_manager.is_fighting()),
+		str(_director.trainer_battle_active()), _rounds.size(), str(_fired_banks),
+		str(_fighter_snapshot(ally_card)) if ally_card != null else "none"])
 
 func _drive_toward(toward: Vector3) -> void:
 	var local := (_camera.call("planar_basis") as Basis).inverse() * toward.normalized()
@@ -241,7 +351,8 @@ func _observe_marrow(event: Dictionary) -> void:
 		var index := int(event.get("round", -1))
 		if index >= 0 and index < 5 and not _rounds.has(index):
 			_rounds[index] = (event.get("team_entry", {}) as Dictionary).duplicate(true)
-			_note("OBSERVED Marrow round %d: %s" % [index + 1, _rounds[index]])
+			_note("OBSERVED Marrow round %d at %.1f s: %s" % [index + 1,
+				(Time.get_ticks_msec() - _attempt_started_ms) / 1000.0, _rounds[index]])
 	elif str(event.get("kind", "")) == "finished":
 		_outcomes[CAPTAIN] = bool(event.get("won", false))
 
