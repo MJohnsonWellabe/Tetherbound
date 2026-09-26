@@ -700,6 +700,11 @@ func _act_escort_home(panel: Node) -> Dictionary:
 			_rig.set("yaw", atan2(-to.x, -to.y))
 		await physics_frame
 		_tick()
+		if panel != null and bool(panel.call("is_open")):
+			_release()
+			out["post_fight_lines"] = int(out["post_fight_lines"]) + await _drain_dialogue(panel, "act-60-post-fight-late")
+			Input.action_press("move_forward")
+			continue
 		if prompt != null and _arbiter.call("winning_provider") == prompt:
 			break
 		if await _escort_unstick(stuck, to.length()):
@@ -731,6 +736,16 @@ func _act_escort_home(panel: Node) -> Dictionary:
 		if bool(reunion.call("is_reunited")):
 			out["escort"] = "reunited"
 			break
+		# The patrol's post-defeat lines open once its reward banner clears,
+		# which can be after the escort has started; a player reads them and
+		# walks on.
+		if panel != null and bool(panel.call("is_open")):
+			_release()
+			out["post_fight_lines"] = int(out["post_fight_lines"]) + await _drain_dialogue(panel, "act-62-escort-dialogue")
+			stuck["best"] = INF
+			stuck["at"] = _clock
+			Input.action_press("move_forward")
+			continue
 		if to.length() > 2.5 and await _escort_unstick(stuck, to.length()):
 			if int(reunion.call("escort_peer")) == 0:
 				out["escort"] = "cancelled while unsticking (leash)"
