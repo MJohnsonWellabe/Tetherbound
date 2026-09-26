@@ -664,6 +664,17 @@ func _record_trainer_defeat(spec: Dictionary) -> void:
 	var progression := _progression()
 	if progression == null or bool(progression.call("has", str(spec.get("defeat_flag", "")))):
 		return
+	if _client_victory_in_flight(spec):
+		return # already asked the host; its delta (or refusal) settles it
+	if _client_routes_to_host(spec):
+		# F08 #2 / D103 / MULTIPLAYER §2 "Presentation cannot ... write a world
+		# flag". A CLIENT's win: announce it once (the finale submits its own
+		# `pending` event intent) and send the host-journaled `trainer_victory`.
+		# Nothing is written here: the defeat flag lands only with the host's
+		# committed world delta, and the reward only as the host's delivery.
+		trainer_victory.emit(str(spec["id"]))
+		_send_client_trainer_victory(spec)
+		return
 	# Emitted only from inherited final-round victory. A finale subscriber can
 	# dispatch its canonical chapter event before the defeat marker is written.
 	trainer_victory.emit(str(spec["id"]))
@@ -685,6 +696,41 @@ func _record_trainer_defeat(spec: Dictionary) -> void:
 			return
 		_pay_trainer_reward(spec)
 	else:
-		# Flag not yet local (a client's pending intent, or no adapter write):
-		# the base already routes this through the same session path first.
+		# Flag not yet local (solo/host with no adapter write, or a client
+		# trainer the base does not route to the host): the base's own path,
+		# which runs the session path first.
 		super._record_trainer_defeat(spec)
+
+
+## A client whose win the base routes to the host (`_routes_trainer_victory_to_host`).
+func _client_routes_to_host(spec: Dictionary) -> bool:
+	return _is_multi_peer() and not _is_host() \
+		and _routes_trainer_victory_to_host(spec, _encounter_realm())
+
+
+## This client already sent `spec`'s `trainer_victory` and the host has not
+## refused it (a refusal erases the entry in the base's verdict handler).
+func _client_victory_in_flight(spec: Dictionary) -> bool:
+	return _is_multi_peer() and not _is_host() \
+		and _trainer_victories_sent.has(ENCOUNTER_REWARDS.trainer_key(spec))
+
+
+## The base's client `trainer_victory` send (`encounter_director.gd::
+## _record_trainer_defeat_for_the_session`), WITHOUT its local defeat "note".
+## That note was a `set_flag` of the world-scope defeat flag into this client's
+## `Game.progression` -- i.e. into its copy of `WorldState.flags` -- before the
+## host had committed or refused anything. Cloudreach does not need it: the
+## repeat guard is `_client_victory_in_flight()` above, and the finale guards
+## its own event by `_in_flight`. The base's dedupe set, verdict handler and
+## bounded retry are reused unchanged; with no note there is nothing to undo.
+func _send_client_trainer_victory(spec: Dictionary) -> void:
+	var trainer_key := ENCOUNTER_REWARDS.trainer_key(spec)
+	var sent := submit_encounter_intent({"kind": "trainer_victory", "trainer_id": trainer_key})
+	if not bool(sent.get("pending", false)) and not bool(sent.get("ok", false)):
+		# Could not leave (offline / realm closing): a transient refusal, so the
+		# base's bounded retry still asks the host.
+		_receive_trainer_victory_verdict({"ok": false, "kind": "trainer_victory",
+			"trainer_id": trainer_key, "code": str(sent.get("code", "offline")),
+			"reason": str(sent.get("reason", ""))})
+		return
+	_trainer_victories_sent[trainer_key] = true
