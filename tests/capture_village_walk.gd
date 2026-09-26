@@ -748,6 +748,9 @@ func _capture(label: String) -> void:
 		# every walked frame took hours per route); the view is switched on
 		# for this capture only and given PHOTO_SETTLE_FRAMES to draw.
 		root.get_viewport().disable_3d = false
+		# Stand still for the photograph: forward held through the settle
+		# frames with the camera not steering overshot a junction turn.
+		_release_all()
 		for _f in PHOTO_SETTLE_FRAMES:
 			await process_frame
 		await RenderingServer.frame_post_draw
