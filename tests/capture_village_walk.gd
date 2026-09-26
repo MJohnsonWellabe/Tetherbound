@@ -18,6 +18,16 @@ extends SceneTree
 ##                           the through-road to that subarea's junction, then
 ##                           the lane (or, for the grove, the Pond lane) to the
 ##                           subarea from paths.village_topology.subareas
+##                 visits    ACCEPTANCE F01 "reach every opening NPC, camp and
+##                           gate": Grandpa indoors, then, nearest first, every
+##                           village villager (village_npcs.json within
+##                           VILLAGE_RADIUS_M of the well), the Practice Meadow
+##                           camp (objectives.json's beacon) and every boundary
+##                           gate. Each leg is the shortest path over the same
+##                           road polylines plus a short spur to the target; a
+##                           villager counts only when the player stands within
+##                           NPC_REACH_M and that villager's own prompt is the
+##                           arbiter's winner.
 ## `--capture-dir` absolute directory for the PNGs (created if missing)
 ## `--hide-hud`    optional: hide CanvasLayers in the saved frames
 ## `--plan-only`   print the route and data-derived events, load no world
@@ -63,6 +73,21 @@ const STEER_DEADBAND_DEG := 2.0
 ## a sharp junction turn is made on the spot rather than cut across the grass.
 const TURN_IN_PLACE_DEG := 35.0
 const EVENT_NEAR_M := 6.0
+## `visits` route. Villagers this close to the well are the village's cast; the
+## rest of village_npcs.json stands out on the bands.
+const VILLAGE_RADIUS_M := 70.0
+const WELL := Vector2(10.0, -10.0)
+const CAMP_AT := Vector2(30.0, -40.0)
+const CAMP_ARRIVAL_M := 4.0
+const GATE_ARRIVAL_M := 3.0
+## Where a spur to a person stops: inside every prompt radius in use (Greet
+## prompts are 2.4m+, Grandpa's 3.8m) without walking into the body.
+const NPC_STOP_M := 1.6
+const NPC_REACH_M := 2.6
+const GRAPH_STEP_M := 1.0
+const GRAPH_LINK_M := 1.1
+const GRAPH_CLIP_M := 220.0
+const VILLAGERS_PATH := "res://data/config/village_npcs.json"
 
 ## Grandpa's farmhouse: HOUSE_AT (-22,-16) in playground_world.gd, door on the
 ## east wall at x = -17 (grandpa_house.gd EXT_HALF_W 5.0). The start is 2.5m
@@ -102,6 +127,7 @@ var _painted_half := 1.8
 var _captures := 0
 var _max_off_road := 0.0
 var _failed := ""
+var _visited: Array[String] = []
 
 
 func _init() -> void:
@@ -124,8 +150,8 @@ func _parse_args() -> bool:
 	if not _time in ["day", "night"]:
 		print("[village-walk] FAIL bad --time=%s (day|night)" % _time)
 		return false
-	if not _route_name in ["through", "stoneyard", "berry", "grove"]:
-		print("[village-walk] FAIL bad --route=%s (through|stoneyard|berry|grove)" % _route_name)
+	if not _route_name in ["through", "stoneyard", "berry", "grove", "visits"]:
+		print("[village-walk] FAIL bad --route=%s (through|stoneyard|berry|grove|visits)" % _route_name)
 		return false
 	if _capture_dir.is_empty() or not _capture_dir.is_absolute_path():
 		print("[village-walk] FAIL --capture-dir must be an absolute path")
@@ -209,11 +235,15 @@ func _run() -> void:
 		_route_name, _time, _capture_dir, str(_headless), _arcs[_arcs.size() - 1],
 		_road_from_arc, minf(_road_until_arc, _arcs[_arcs.size() - 1]), _events.size()])
 	await _capture("start-inside-house")
-	await _walk()
+	if _route_name == "visits":
+		await _visit_all()
+	else:
+		await _walk()
 	_release_all()
 	if _failed.is_empty():
-		print("[village-walk] PASS route=%s time=%s captures=%d max_off_road_m=%.2f" % [
-			_route_name, _time, _captures, _max_off_road])
+		print("[village-walk] PASS route=%s time=%s captures=%d max_off_road_m=%.2f%s" % [
+			_route_name, _time, _captures, _max_off_road,
+			(" visited=%d" % _visited.size()) if _route_name == "visits" else ""])
 		quit(0)
 	else:
 		await _capture("failure")
@@ -311,6 +341,11 @@ func _build_route() -> bool:
 	west.reverse()  # Grandpa's door -> the civic bend
 	var road := PackedVector2Array()
 	match _route_name:
+		"visits":
+			# Legs are planned live, one target at a time (_visit_all); this
+			# placeholder only feeds the START line.
+			_set_leg(PackedVector2Array([INSIDE_START, DOORWAY]), -1, -1)
+			return true
 		"through":
 			_append(road, west)
 			_append(road, _suffix(south, west[west.size() - 1]))
@@ -624,3 +659,227 @@ func _capture(label: String) -> void:
 			saved = file if err == OK else "save-error-%d" % err
 	print("[village-walk] CAPTURE %03d label=\"%s\" pos=(%.2f,%.2f,%.2f) heading_deg=%.1f image=%s" % [
 		_captures, label, here.x, here.y, here.z, heading, saved])
+
+
+## --- visits (ACCEPTANCE F01: every opening NPC, camp and gate) ----------------
+
+func _visit_all() -> void:
+	var targets := _visit_targets()
+	if targets.is_empty():
+		_failed = "no visit targets found"
+		return
+	print("[village-walk] VISITS %s" % ", ".join(targets.map(func(t: Dictionary) -> String: return str(t.label))))
+	var graph := _road_graph()
+	# Grandpa first, from the start pose inside the house: no road indoors.
+	for t: Dictionary in targets:
+		if str(t.kind) == "grandpa":
+			await _visit(t, PackedVector2Array())
+			targets.erase(t)
+			break
+		if not _failed.is_empty():
+			return
+	if not _failed.is_empty():
+		return
+	# Out through the real door before the first road leg.
+	_set_leg(PackedVector2Array([_xz(), DOORWAY]), -1, -1)
+	await _walk()
+	if not _failed.is_empty():
+		return
+	while not targets.is_empty():
+		var here := _xz()
+		var next: Dictionary = targets[0]
+		for t: Dictionary in targets:
+			if here.distance_to(t.at) < here.distance_to(next.at):
+				next = t
+		targets.erase(next)
+		await _visit(next, _graph_path(graph, here, next.at))
+		if not _failed.is_empty():
+			return
+
+
+func _visit_targets() -> Array:
+	var out: Array = []
+	var grandpa := _world.find_child("Grandpa", true, false) as Node3D
+	if grandpa != null:
+		out.append({"kind": "grandpa", "label": "Grandpa", "node": grandpa,
+			"at": Vector2(grandpa.global_position.x, grandpa.global_position.z)})
+	for raw: Variant in (_json(VILLAGERS_PATH).get("villagers", []) as Array):
+		var spec := raw as Dictionary
+		var at := _v(spec.get("position", [0, 0]))
+		if at.distance_to(WELL) > VILLAGE_RADIUS_M:
+			continue
+		var npc_name := str(spec.get("name", ""))
+		var node := _world.find_child(npc_name, true, false) as Node3D
+		if node == null:
+			print("[village-walk] FAIL villager %s is authored but not in the world" % npc_name)
+			_failed = "villager %s missing" % npc_name
+			return []
+		out.append({"kind": "villager", "label": npc_name, "node": node,
+			"at": Vector2(node.global_position.x, node.global_position.z)})
+	out.append({"kind": "camp", "label": "Practice Meadow camp", "at": CAMP_AT})
+	for raw: Variant in ((_json(BOUNDARY_PATH).get("gates", {}) as Dictionary).get("entries", []) as Array):
+		var gate := raw as Dictionary
+		out.append({"kind": "gate", "label": "gate %s" % str(gate.get("id", "")), "at": _v(gate.get("at", []))})
+	return out
+
+
+## One leg: (optional) road path, then a spur to the target's stopping point.
+func _visit(t: Dictionary, road: PackedVector2Array) -> void:
+	var at: Vector2 = t.at
+	var kind := str(t.kind)
+	var here := _xz()
+	var leg := PackedVector2Array([here])
+	_append(leg, road)
+	var from_road := 1 if road.size() > 0 else -1
+	var until_road := leg.size() - 1 if road.size() > 0 else -1
+	var stop := at
+	if kind in ["grandpa", "villager"]:
+		var back := leg[leg.size() - 1] - at
+		stop = at + (back.normalized() * NPC_STOP_M if back.length() > NPC_STOP_M else back)
+	if leg[leg.size() - 1].distance_to(stop) > 0.05:
+		leg.append(stop)
+	_set_leg(leg, from_road, until_road)
+	await _walk()
+	if not _failed.is_empty():
+		_failed = "visiting %s: %s" % [t.label, _failed]
+		return
+	var d := _xz().distance_to(at)
+	var reach := {"grandpa": NPC_REACH_M, "villager": NPC_REACH_M,
+		"camp": CAMP_ARRIVAL_M, "gate": GATE_ARRIVAL_M}[kind] as float
+	if d > reach:
+		_failed = "ended %.2fm from %s (needs %.1fm)" % [d, t.label, reach]
+		return
+	var prompt := "-"
+	if kind in ["grandpa", "villager"]:
+		prompt = await _prompt_winner(t.node as Node)
+		if kind == "villager" and prompt == "":
+			_failed = "stood %.2fm from %s but its prompt never won the arbiter" % [d, t.label]
+			return
+	_visited.append(str(t.label))
+	await _capture("reached %s" % t.label)
+	print("[village-walk] VISIT %s kind=%s dist_m=%.2f prompt=\"%s\"" % [t.label, kind, d, prompt])
+
+
+## The arbiter's winning label when the winner belongs to `owner`, else "".
+func _prompt_winner(owner: Node) -> String:
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	if arbiter == null or owner == null:
+		return ""
+	for _i in 30:
+		await physics_frame
+		var provider := arbiter.call("winning_provider") as Node
+		if provider != null and (provider == owner or owner.is_ancestor_of(provider)):
+			return str((arbiter.call("winner") as Dictionary).get("label", "?"))
+	return ""
+
+
+func _set_leg(leg: PackedVector2Array, from_road: int, until_road: int) -> void:
+	_path = leg
+	_arcs = PackedFloat32Array([0.0])
+	for i in range(1, _path.size()):
+		_arcs.append(_arcs[i - 1] + _path[i - 1].distance_to(_path[i]))
+	_road_from_arc = _arcs[from_road] if from_road >= 0 else INF
+	_road_until_arc = _arcs[until_road] if until_road >= 0 else -INF
+	_events = []
+	_subarea = {}
+
+
+## Every village road (routes, approaches, the band-1 spine) sampled every
+## GRAPH_STEP_M within GRAPH_CLIP_M of the well; consecutive samples link, and
+## samples of different roads within GRAPH_LINK_M link (junctions/crossings).
+func _road_graph() -> Dictionary:
+	var pts := PackedVector2Array()
+	var edges: Array = []  # per node: Array of [other, cost]
+	var owner := PackedInt32Array()
+	var road_index := 0
+	for key: Variant in _roads.keys():
+		var line: PackedVector2Array = _roads[key]
+		var prev := -1
+		for i in line.size() - 1:
+			var a := line[i]
+			var b := line[i + 1]
+			var n := maxi(1, int(ceil(a.distance_to(b) / GRAPH_STEP_M)))
+			for k in n + (1 if i == line.size() - 2 else 0):
+				var p := a.lerp(b, float(k) / float(n))
+				if p.distance_to(WELL) > GRAPH_CLIP_M:
+					prev = -1
+					continue
+				pts.append(p)
+				owner.append(road_index)
+				edges.append([])
+				var idx := pts.size() - 1
+				if prev >= 0:
+					var c := pts[prev].distance_to(p)
+					(edges[prev] as Array).append([idx, c])
+					(edges[idx] as Array).append([prev, c])
+				prev = idx
+		road_index += 1
+	var cell := {}
+	for i in pts.size():
+		var key := Vector2i(floori(pts[i].x / GRAPH_LINK_M), floori(pts[i].y / GRAPH_LINK_M))
+		for dx in range(-1, 2):
+			for dy in range(-1, 2):
+				for j: int in (cell.get(key + Vector2i(dx, dy), []) as Array):
+					if owner[j] != owner[i] and pts[i].distance_to(pts[j]) <= GRAPH_LINK_M:
+						var c := pts[i].distance_to(pts[j])
+						(edges[i] as Array).append([j, c])
+						(edges[j] as Array).append([i, c])
+		if not cell.has(key):
+			cell[key] = []
+		(cell[key] as Array).append(i)
+	return {"pts": pts, "edges": edges}
+
+
+func _nearest_node(graph: Dictionary, p: Vector2) -> int:
+	var pts: PackedVector2Array = graph.pts
+	var best := -1
+	for i in pts.size():
+		if best < 0 or pts[i].distance_squared_to(p) < pts[best].distance_squared_to(p):
+			best = i
+	return best
+
+
+## Dijkstra (linear scan; a few thousand nodes) from the road point nearest
+## `from` to the road point nearest `to`.
+func _graph_path(graph: Dictionary, from: Vector2, to: Vector2) -> PackedVector2Array:
+	var pts: PackedVector2Array = graph.pts
+	var edges: Array = graph.edges
+	var s := _nearest_node(graph, from)
+	var g := _nearest_node(graph, to)
+	var dist := PackedFloat32Array()
+	dist.resize(pts.size())
+	dist.fill(INF)
+	var prev := PackedInt32Array()
+	prev.resize(pts.size())
+	prev.fill(-1)
+	var done := PackedByteArray()
+	done.resize(pts.size())
+	var frontier := {s: true}
+	dist[s] = 0.0
+	while not frontier.is_empty():
+		var u := -1
+		for k: int in frontier.keys():
+			if u < 0 or dist[k] < dist[u]:
+				u = k
+		frontier.erase(u)
+		if u == g:
+			break
+		done[u] = 1
+		for e: Array in (edges[u] as Array):
+			var v: int = e[0]
+			if done[v] == 1:
+				continue
+			var nd := dist[u] + float(e[1])
+			if nd < dist[v]:
+				dist[v] = nd
+				prev[v] = u
+				frontier[v] = true
+	var out := PackedVector2Array()
+	if dist[g] == INF:
+		return out
+	var at := g
+	while at >= 0:
+		out.append(pts[at])
+		at = prev[at]
+	out.reverse()
+	return out
