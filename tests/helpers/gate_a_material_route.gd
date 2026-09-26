@@ -982,7 +982,9 @@ func _press_and_confirm(prompt: Node3D) -> bool:
 ## letting it wander can.
 func _wild_holds_the_line() -> bool:
 	var winner: Variant = _arbiter.call("winning_provider")
-	if not winner is Node or not is_instance_valid(winner as Object) \
+	# Validity first: a press that landed may have freed the provider, and a
+	# freed instance cannot even be asked `is Node`.
+	if not is_instance_valid(winner) or not winner is Node \
 			or str((winner as Node).name) != "EncounterDirector":
 		return false
 	var offer := _arbiter.call("winner") as Dictionary
