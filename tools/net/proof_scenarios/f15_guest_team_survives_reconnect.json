@@ -1,0 +1,488 @@
+{
+  "name": "F15#3 guest half: a guest's acknowledged current team, including a release, survives the guest's reconnect",
+  "claim": "ACCEPTANCE F15 clause 'receive Grandpa's acknowledgement of each current team, including releases', the GUEST half. Everything in f15_grandpa_acknowledges_each_team (the same setup and first visits, unchanged), then the guest's link dies after it saved; its in-memory character is blanked so everything after comes from its own character file and the host's snapshot; it rejoins through the title's returning route. Eligibility comes from the host's world (water_currents_restored arrives in the host snapshot). On a second visit Grandpa gives the guest the REPEAT conversation (its homecoming_seen came back from its own file, so it is not acknowledged twice), and the guest's current team is still its post-release five: Rill (released) absent, Newt (the newcomer) present. The host, who never dropped, closes the regional credits its own homecoming opened and then also gets the repeat. Nothing personal reaches the shared world. Setup is disclosed as in the base scenario. Harness-only steps, disclosed: save_character_here (a forced character save; the homecoming had already saved it), drop_link (closes the transport without Session.leave), wipe_character (blanks the in-memory character; the file is untouched). Observed and harmless to the claim: the host's repeat visit (after credits_continue) heard the two-line repeat conversation twice, one press closing it and a buffered press reopening it while the prompt is in reach; the repeat names nobody.",
+  "peers": 2,
+  "scene": "world",
+  "budget_s": 2100,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "defeated_warden",
+        "scope": "world"
+      },
+      "label": "setup: world past the opening"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_currents_restored",
+        "scope": "world"
+      },
+      "label": "setup: the Tidewake currents are restored (host-only world flag)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_currents_restored",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "rename_member",
+      "args": {
+        "from": "Terrapup",
+        "to": "Acorn"
+      },
+      "label": "setup: the host's starter gets a distinct name"
+    },
+    {
+      "peer": 1,
+      "action": "rename_member",
+      "args": {
+        "from": "Terrapup",
+        "to": "Kestrel"
+      },
+      "label": "setup: the guest's starter gets a distinct name"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "nickname": "Pip"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "mosshell",
+        "nickname": "Shelby"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "sparkit",
+        "nickname": "Volt"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "nickname": "Bramble"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "nickname": "Rill"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "nickname": "Tuff"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "meadowhart",
+        "nickname": "Fern"
+      },
+      "label": "the guest's party is now full (five)"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "before"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "00_home_before_the_visit"
+      },
+      "label": "first rendered frame (shader warm-up under its own allowance)"
+    },
+    {
+      "peer": 1,
+      "action": "release_for_catch",
+      "args": {
+        "release": "Rill",
+        "species": "paddlenewt",
+        "nickname": "Newt"
+      },
+      "expect_data": {
+        "party": [
+          "Kestrel",
+          "Bramble",
+          "Tuff",
+          "Fern",
+          "Newt"
+        ]
+      },
+      "label": "setup: at a full party the guest lets Rill go for a new catch, Newt"
+    },
+    {
+      "peer": 0,
+      "action": "grandpa_homecoming",
+      "args": {
+        "screenshot": "01_host_grandpa",
+        "must_name": [
+          "Acorn",
+          "Pip",
+          "Shelby",
+          "Volt"
+        ],
+        "must_not_name": [
+          "Kestrel",
+          "Bramble",
+          "Rill",
+          "Tuff",
+          "Fern",
+          "Newt",
+          "Terrapup"
+        ]
+      },
+      "expect_data": {
+        "homecoming_seen": true,
+        "party": [
+          "Acorn",
+          "Pip",
+          "Shelby",
+          "Volt"
+        ]
+      },
+      "label": "host: its own team, nobody else's"
+    },
+    {
+      "peer": 1,
+      "action": "grandpa_homecoming",
+      "args": {
+        "screenshot": "01_guest_grandpa",
+        "must_name": [
+          "Kestrel",
+          "Bramble",
+          "Tuff",
+          "Fern",
+          "Newt"
+        ],
+        "must_not_name": [
+          "Rill",
+          "Acorn",
+          "Pip",
+          "Shelby",
+          "Volt",
+          "Terrapup"
+        ]
+      },
+      "expect_data": {
+        "homecoming_seen": true,
+        "party": [
+          "Kestrel",
+          "Bramble",
+          "Tuff",
+          "Fern",
+          "Newt"
+        ]
+      },
+      "label": "guest: its current five; the released Rill is not named, the newcomer Newt is"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "02_after_homecoming"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character0",
+        "contains": [
+          "homecoming_seen",
+          "Acorn",
+          "Pip",
+          "Shelby",
+          "Volt"
+        ]
+      },
+      "label": "host's saved character: homecoming seen, team kept"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "homecoming_seen",
+          "Kestrel",
+          "Bramble",
+          "Tuff",
+          "Fern",
+          "Newt"
+        ],
+        "lacks": [
+          "Rill"
+        ]
+      },
+      "label": "guest's saved character: homecoming seen, Rill gone, Newt kept"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "before",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "Rill"
+        ],
+        "lacks": [
+          "homecoming_seen",
+          "Newt"
+        ]
+      },
+      "label": "guest's pre-visit save held Rill and no homecoming (non-vacuous baseline)"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "before",
+        "dir": "characters",
+        "path_contains": "$character0",
+        "lacks": [
+          "homecoming_seen"
+        ]
+      },
+      "label": "host's pre-visit save held no homecoming (non-vacuous baseline)"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "worlds",
+        "contains": [
+          "water_currents_restored"
+        ],
+        "lacks": [
+          "homecoming_seen"
+        ]
+      },
+      "label": "the homecoming is personal: nothing written to the shared world"
+    },
+    {
+      "peer": 1,
+      "action": "save_character_here",
+      "args": {},
+      "label": "the guest's character is on disk before its link dies"
+    },
+    {
+      "peer": 1,
+      "action": "drop_link",
+      "args": {
+        "settle_frames": 60
+      },
+      "label": "the guest's link dies"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1
+      },
+      "label": "the host sees the guest gone"
+    },
+    {
+      "peer": 1,
+      "action": "leave",
+      "args": {
+        "reason": "link_died"
+      },
+      "expect": "any",
+      "label": "the guest's side of the dead session is torn down"
+    },
+    {
+      "peer": 1,
+      "action": "wipe_character",
+      "args": {},
+      "label": "blank the guest's in-memory character (id kept, file untouched): what follows comes from its file and the host"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "returning_route": true,
+        "budget_frames": 6000,
+        "character": {
+          "character_id": "$character1",
+          "display_name": "Trainer"
+        }
+      },
+      "label": "the guest rejoins through the title's returning route"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_currents_restored",
+        "scope": "world"
+      },
+      "label": "eligibility comes from the host's world: the flag arrives in the host snapshot"
+    },
+    {
+      "peer": 1,
+      "action": "grandpa_homecoming",
+      "args": {
+        "screenshot": "03_guest_grandpa_after_rejoin",
+        "must_not_name": [
+          "Rill",
+          "Acorn",
+          "Pip",
+          "Shelby",
+          "Volt"
+        ],
+        "visit": "repeat"
+      },
+      "expect_data": {
+        "conversation_id": "regional_homecoming_repeat",
+        "party": [
+          "Kestrel",
+          "Bramble",
+          "Tuff",
+          "Fern",
+          "Newt"
+        ]
+      },
+      "label": "guest after reconnect: the repeat conversation, and its current five (Rill released, Newt kept)"
+    },
+    {
+      "peer": 0,
+      "action": "credits_continue",
+      "args": {},
+      "label": "the host closes the regional credits its first homecoming opened, as a player would, before visiting Grandpa again"
+    },
+    {
+      "peer": 0,
+      "action": "grandpa_homecoming",
+      "args": {
+        "screenshot": "03_host_grandpa_after_guest_rejoin",
+        "must_not_name": [
+          "Kestrel",
+          "Bramble",
+          "Rill",
+          "Tuff",
+          "Fern",
+          "Newt"
+        ],
+        "visit": "repeat"
+      },
+      "expect_data": {
+        "conversation_id": "regional_homecoming_repeat",
+        "party": [
+          "Acorn",
+          "Pip",
+          "Shelby",
+          "Volt"
+        ]
+      },
+      "label": "host: its own repeat, its own team, untouched by the guest's reconnect"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after_rejoin"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after_rejoin",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "homecoming_seen",
+          "Kestrel",
+          "Bramble",
+          "Tuff",
+          "Fern",
+          "Newt"
+        ],
+        "lacks": [
+          "Rill"
+        ]
+      },
+      "label": "guest's saved character after the reconnect: homecoming seen, Rill gone, Newt kept"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after_rejoin",
+        "dir": "worlds",
+        "contains": [
+          "water_currents_restored"
+        ],
+        "lacks": [
+          "homecoming_seen"
+        ]
+      },
+      "label": "still nothing personal in the shared world"
+    }
+  ]
+}
