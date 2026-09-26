@@ -1,6 +1,6 @@
 {
   "name": "F14: only an actual freeing-fight participant receives a Guardian offer",
-  "claim": "ACCEPTANCE F14 clause 'Each actual freeing-fight participant's ... decision grants at most their own once-only creature' and the hard rule 'A non-participant receives nothing'. The guest alone challenges and defeats Captain Nerissa in the Veilfall through the production trainer battle; the host, in the same world, never joins the fight. The host records only the guest as a freeing-fight participant (trainer-participants-host). The guest, at a full belt, asks at the chamber and lets Rill go for the Guardian with controller presses. The host is not offered the invite prompt, and its request sent past the prompt is refused by the host (not_participant); it ends with no Guardian and no claim. Setup only: the Veilfall prerequisites before Nerissa are committed through the ledger; companions are granted by name; win_trainer_battle keeps the fighting creature topped up between swings.",
+  "claim": "ACCEPTANCE F14 clause 'Each actual freeing-fight participant's ... decision grants at most their own once-only creature' and the hard rule 'A non-participant receives nothing'. The guest alone challenges and defeats Captain Nerissa in the Veilfall through the production trainer battle; the host, in the same world, never joins the fight. The host records only the guest as a freeing-fight participant (trainer-participants-host). The guest, at a full belt, asks at the chamber and lets Rill go for the Guardian with controller presses. The host is not offered the invite prompt, and its request sent past the prompt is refused by the host (not_participant); it ends with no Guardian and no claim. Setup only: the Veilfall prerequisites before Nerissa are committed through the ledger; companions are granted by name; win_trainer_battle keeps the fighting creature topped up between swings and caps each opponent's HP at 20 (enemy_hp_ceiling, the boss smokes' own allowance: wiring, not balance), so every creature of Nerissa's team is still met and struck down in order.",
   "peers": 2,
   "scene": "water",
   "budget_s": 2400,
@@ -117,7 +117,10 @@
     {
       "peer": 1,
       "action": "win_trainer_battle",
-      "args": {},
+      "args": {
+        "budget_frames": 9000,
+        "enemy_hp_ceiling": 20
+      },
       "budget_frames": 9000,
       "label": "the guest fights Nerissa's team down through host-arbitrated strikes"
     },

@@ -1772,8 +1772,11 @@ static func _nerissa_challenge(tree: SceneTree) -> Dictionary:
 	var manager := scene.find_child("CombatManager", true, false)
 	var id := str(manager.call("encounter_id")) if manager != null else ""
 	var fighting := manager != null and bool(manager.call("is_fighting"))
-	return {"verdict": "PASS" if fighting and not id.is_empty() else "FAIL",
-		"detail": "challenged Nerissa; encounter '%s'" % id, "data": {"encounter_id": id}}
+	# A guest's trainer battle is its own local fight (no host encounter id);
+	# the host's copy of who fought comes from the trainer_victory it sends.
+	return {"verdict": "PASS" if fighting else "FAIL",
+		"detail": "challenged Nerissa; fighting=%s, encounter '%s'" % [str(fighting), id],
+		"data": {"encounter_id": id, "fighting": fighting}}
 
 
 ## Join a fight somebody else started: the first announced joinable encounter
