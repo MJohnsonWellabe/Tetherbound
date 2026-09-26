@@ -4311,15 +4311,16 @@
       "item_id": "reed_fiber",
       "yield": 3,
       "position": [
-        -174.0,
-        12.0083,
-        422.0
+        -99.0,
+        18.2175,
+        459.5
       ],
-      "sampled_slope_deg": 0.698,
-      "main_route_distance_m": 86.094,
+      "sampled_slope_deg": 5.685,
+      "main_route_distance_m": 47.594,
       "registration": "planned",
-      "gather_action": "hand",
-      "placement_reason": "Reachable reed patch on dry coastal ground."
+      "gather_action": "knife",
+      "placement_reason": "Moved (from -174, 422; same island, same 3-fiber yield) into authored reward pocket reed_root_hollow (water_world.json reward_pockets), 2.6 m from its centre: the hollow off the Root Walk pays the reed-fiber half of its recipe_and_reed_fiber role toward Reedhaven's pier repair (6 Reed Fiber, water_dock_actions.json). gather_action corrected hand -> knife to match Reed Fiber's ItemDB gathered_with. Analytic heightfield dry (18.2 m) with 5-point footing within the 35° walkable slope limit (measured 5.7°), flood-fill connected to a Reedhaven landing, >= 5.99 m from every other placement (tests/test_water_reward_pockets.gd); walked from the arrival landing and gathered in tests/smoke_water_pocket_walk_claim.gd. The recipe half has no data-only grant path (every Water recipe but the saddle unlocks at water_chapter_started) and stays open.",
+      "reward_pocket_id": "reed_root_hollow"
     },
     {
       "id": "water:reedhaven:harvest:013",
