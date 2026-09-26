@@ -1,29 +1,51 @@
 # Two-peer proof: F01 road agreement and a cold guest reconnect
 
-**Verdict: FAIL.** The failure is a product gap, reported. The road-layout agreement passes. The guest's cold reconnect cannot restore its character over a direct-address join.
+**Verdict: PASS.** 156 assertions, 0 failures, exit 0. There were no SCRIPT ERROR lines on either peer.
 
-Base: `ralph/x05-f01-cold` `90bc2e940`. Headless. One run:
+Base: `ralph/x05-f01-cold` `383fff429`. Headless. One run on the committed code:
 
 ```
 godot --headless --path . --script tests/smoke_net_meadows_identity_fresh_join.gd -- \
   --opening-together --cold --host-starter=2 --guest-starter=1
 ```
 
+The earlier FAIL on `90bc2e940` found a product gap. A guest process that restarts mints a new live character id at boot. On a direct-address join, `title_screen.gd` `_join_via` then treated it as a brand-new player, so its saved character stayed on disk and couldn't be reached.
+
+## The fix
+
+- **`scripts/ui/title_screen.gd` `_join_via`:** when the live id has no portable file but this machine holds saved portable characters, a direct join now shows the same saved-character picker the Steam join uses, plus "Create a New Character".
+  - Picking a saved character points the live id at its file.
+  - `_begin_join`'s returning-guest branch then restores it.
+  - A machine with no saved characters keeps the existing new-character flow.
+- **`tools/net/peer_runner.gd` `production_join` `pick_saved`:** the harness presses the real picker button for the saved character id, because it can't click. A missing picker, or a picker that doesn't offer that id, is a FAIL.
+- **`expect_peers` `budget_s`:** the step can now wait on wall time instead of frames.
+  - The "host drops the dead guest" wait uses 240 s.
+  - ENet's peer timeout maximum is 180 s, but ENet tests it only when it next retransmits, on a backed-off interval.
+  - Measured drops: 148.9 s (this run), 183.4 s, and one run past 190 s.
+
 ## What passes
 
-- Everything in `x05-proof-f01-opening-join`: the opening in a live two-peer session, the in-place reload, and the guest's drop and returning-route rejoin.
-- **Road agreement.** A `road_signature` probe fingerprints each peer's road bands, built from the terrain config that peer loaded, plus its live baked ground height at every road vertex. Host and guest agree exactly: 34 bands, 248 vertices, the same sha256.
-- **The host times the dead guest out.** The guest's process was killed with -9, after `save_character_here` put its character on disk. The host's registry dropped to one player after 8,925 frames, inside ENet's configured 135–180 s peer timeout.
+All the checks from `x05-proof-f01-opening-join`: the opening in a live two-peer session, the in-place reload, and the guest's drop and returning-route rejoin.
 
-## What fails, and why
+**Road agreement.** Host and guest hold identical road layouts: 34 bands, 248 vertices, the same fingerprint (`b7c6b5ed2fea`). This holds after the rejoin and after the cold reconnect.
 
-- A fresh guest process boots the title on the same user-data home. Its live character id is newly minted, `character-f0c0…` rather than the saved `character-8172…`, because `game_state.gd` `reset_for_new_game` mints one on every boot.
-- `title_screen.gd` `_join_via` / `_begin_join` treats a guest as returning only if it has a world autosave (clients never write one), or if that live id already has a portable file.
-- The saved-character picker (`_show_portable_character_select`) exists only on the Steam join path.
-- **So on a direct-address rejoin after a crash, the real game would send this guest to new-character creation. Its saved character, with its starter, receipt and orbs, stays unreachable on disk.**
-- Every later FAIL line in the log (peers, starter, receipt, orbs, road layout after the reconnect) follows from that one failure.
+**Cold reconnect:**
+- The guest's character is on disk before its process is killed with -9.
+- The host's registry drops to one player after 148.9 s.
+- A fresh guest process on the same user-data home starts at the title. It joins by address, picks its saved character from the picker, and joins as peer 1865597819.
+- Both peers see two players again.
+- It holds the same character and the **same** starter UID. Its starter is the ripplet named "A".
+- Its starter receipt came back from disk.
+- It has exactly the 50 orbs it had before its process died.
+- The host's starter is unchanged: the galewisp named "A".
+
+## Unit coverage
+
+`tests/test_steam_invite_ui.gd` `test_a_restarted_guest_still_sees_its_saved_portable_characters`. The title, Steam-invite and identity tests pass: 20 tests, 0 failed.
 
 ## Not covered
 
 - The same reconnect over the Steam join path. Steam can't be exercised here, and it is never faked.
 - A host-side cold restart.
+
+Logs: `coordinator.log.gz`, `peer-0.log.gz`, `peer-1.log.gz`, `SUMMARY.md` (net run `local-3986926`).
