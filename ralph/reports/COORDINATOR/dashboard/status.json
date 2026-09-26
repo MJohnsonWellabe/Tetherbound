@@ -1,0 +1,260 @@
+{
+ "updated": "2026-09-26 18:25 UTC",
+ "headline": [
+  "Criteria met: 44 of 107 (no change this hour). WIND-DOWN in progress on the owner's direction.",
+  "Batch 25 (#283) is the single combined batch: every lane's READY work plus the brine-detector fix. Local checks: 1555 tests, 0 failed. Review PASS. All other CI runs were cancelled; full CI is running with auto-merge.",
+  "Lanes archived (7 of 9): Meadows core, Art, X03, Stormwood, X05, Cloudreach, VIS. All handoff SHAs were verified on origin. F05 and Tidewake are posting final handoffs; the F08#3 judge session is posting its verdict to #253.",
+  "Parked as WIP (on origin, recorded): Stormwood f11-earned 6a4089e2a (road bake stale); Meadows village-roads 49b2915c8 (breaks herd approach); plus each lane's WIP list in its HANDOFF (final).",
+  "Next: when #283 merges, one docs PR adds STATE 'Resume here' and ralph/reports/COORDINATOR (tooling snapshot on ralph/coordinator-tooling a78dd0b7)."
+ ],
+ "batches": [
+  {
+   "name": "Batch 1 (PR #230)",
+   "sha": "bcf46366",
+   "state": "Merged, released",
+   "contents": "Stormwood side chains and per-player Stormheart; Tidewake gate seals; Cloudreach saddle remount"
+  },
+  {
+   "name": "Batch 2 (PR #236)",
+   "sha": "a0fde6d7",
+   "state": "Merged, released",
+   "contents": "Meadows named-fight tells; Stormwood Dynamo Break; design write-backs"
+  },
+  {
+   "name": "Batch 3 (PR #237)",
+   "sha": "835744b3",
+   "state": "Merged, released",
+   "contents": "Tidewake dismount, pockets, ending tests; co-op version gate, reconnect seat, receipt guard; Veyra pays everyone; riding falls; South Bridge segment"
+  },
+  {
+   "name": "Batch 4 (PR #238)",
+   "sha": "fe07d0d2",
+   "state": "Merged",
+   "contents": "Guardian per fighter with confirm; docks; Stormwood F09/F10; save authority; ENet test race; Cloudreach finale restore; F04 captures"
+  },
+  {
+   "name": "Batch 5 (PR #241)",
+   "sha": "c8935da0",
+   "state": "Merged",
+   "contents": "F05 Veridian choice and co-op, host-recorded trainer wins, F04 camera, Stormwood F09/F11, co-op follow-ups"
+  },
+  {
+   "name": "CI speedup (PR #240)",
+   "sha": "bfbcbd94",
+   "state": "Merged",
+   "contents": "Longest job 21.6\u219216.2 min; runner-min 269\u2192249"
+  },
+  {
+   "name": "Batch 6 (PR #242)",
+   "sha": "3a01cdeb",
+   "state": "Merged",
+   "contents": "F03 rows and vault gather fix, F05 gate-once, host-only ledger ids, catch-respawn fix"
+  },
+  {
+   "name": "Batch 7 (PR #243)",
+   "sha": "10b635d3",
+   "state": "Merged",
+   "contents": "F05 solo Veridian walked, engage-over-Chop fix, two-peer proof command, Stormwood F11 proof harness, Ripplet/Galewisp recolour"
+  },
+  {
+   "name": "Batch 8 (PR #244)",
+   "sha": "a3ff511e",
+   "state": "Merged; main CI red (Veridian chamber stall), not published",
+   "contents": "F02 route spacing, red-free UI, drowning cue, deterministic catch smoke (not in CI)"
+  },
+  {
+   "name": "Batch 9 (PR #245)",
+   "sha": "5132387d",
+   "state": "Merged; main CI green; released",
+   "contents": "Meadows load stall fix, F15 and F11 two-peer proofs, F09 arch bypass, F04 tell pins, F12 water smokes in CI, Guardian offer UI, heal hold, Terrapup"
+  },
+  {
+   "name": "Batch 10 (PR #246)",
+   "sha": "5c8948ea",
+   "state": "Merged; main CI green",
+   "contents": "F05 same five into Cloudreach, F12 rider reconnect fix, F09/F11 two-peer gates and rejoin, F08 persistence tail, bridge prompt fix (B1)"
+  },
+  {
+   "name": "Consolidation (PR #247)",
+   "sha": "08fcc205",
+   "state": "Merged; main CI green; publishing",
+   "contents": "Every remaining lane branch, applied to main's files (about 50 branches, including WIP: Juno escort, CHARGER lunge, F06 placement)"
+  },
+  {
+   "name": "CI two-tier (PR #252)",
+   "sha": "bb0b85e0",
+   "state": "Merged (bb0b85e0)",
+   "contents": "Fast tier on PRs/main pushes; full suite every 8 hours, on dispatch, or with the full-ci label"
+  },
+  {
+   "name": "Batch 11 (PR #255)",
+   "sha": "cbee09dd",
+   "state": "Merged 04:57 (14674ed5)",
+   "contents": "F05 full-refusal and relic-key two-peer proofs; F15 dock action charged once (plus host world-instance fix)"
+  },
+  {
+   "name": "Batch 12 (PR #258)",
+   "sha": "6e15c492",
+   "state": "Merged 05:34",
+   "contents": "F12#1 two-peer swim combat pause; F14#4 never an owned sixth (incl. forged accept)"
+  },
+  {
+   "name": "Batch 13 (PR #259)",
+   "sha": "0ca7bb7b",
+   "state": "Merged 07:06 (0ca7bb7b)",
+   "contents": "F05#3 herd, F02#6/#0, F08#5, F07#1, F07#4 measured, riding net smoke, F10#1, F01 join (partial), F03#2, F14#5"
+  },
+  {
+   "name": "Batch 14 (PR #260)",
+   "sha": "c3b47430",
+   "state": "Merged 08:09",
+   "contents": "F08#2 Veyra flag host-only, U2 Creatures-tab text, F12#3 host mount, Guardian ack invariant, F12#6 dismount seal"
+  },
+  {
+   "name": "Batch 15 (PR #263)",
+   "sha": "2f1a721d",
+   "state": "Merged 09:18",
+   "contents": "F11#2 disconnect at the Stormheart claim acknowledgement (two-peer proof)"
+  },
+  {
+   "name": "Batch 16 (PR #265)",
+   "sha": "9efc491b",
+   "state": "Merged 3d147695",
+   "contents": "F06#4 recall/dismount, F06 rejoin gate, Deep Watch smoke fail-fast, F10#3 reduced-motion capture tool"
+  },
+  {
+   "name": "Owner rulings (PR #266)",
+   "sha": "docs",
+   "state": "Merged bbe380fd",
+   "contents": "Co-op parity with single player; same-host rejoin exact pose"
+  },
+  {
+   "name": "Batch 17 (PR #269)",
+   "sha": "05b6d86b",
+   "state": "Merged 11:39",
+   "contents": "F07#4 ledger margin, F03#2 herd reward, Nerissa stall fix, X05 reward authority, herd/authority integration fix"
+  },
+  {
+   "name": "Batch 18 (PR #271)",
+   "sha": "afdda7a2",
+   "state": "Merged 12:45",
+   "contents": "F08 persistence CI job, F14/F15 proof reruns, Bramblebun provenance"
+  },
+  {
+   "name": "Render job (PR #268)",
+   "sha": "1aa84d1e",
+   "state": "Merged 1aa84d1e; first test dispatch 11:36",
+   "contents": "On-demand render/smoke offload workflow and cloud setup script"
+  },
+  {
+   "name": "Batch 19 (PR #273)",
+   "sha": "b3b54dbe",
+   "state": "Merged 13:42",
+   "contents": "F01#6 cold rejoin picker, F14#3 drop-leg focus, named-fight/Tidewake capture tools, persistence smoke output fix, render artifact trim"
+  },
+  {
+   "name": "Batch 20 (PR #275)",
+   "sha": "1b4b229e",
+   "state": "Closed: superseded by batch 22 (#278)",
+   "contents": "Batch 19 + exact-spot rejoin (owner ruling) + lost-flee fix + follower floor + F01#4/#5 starters + render log cap"
+  },
+  {
+   "name": "Batch 21 (PR #277)",
+   "sha": "f279f26a",
+   "state": "Closed: superseded by batch 22 (#278)",
+   "contents": "F15#3 real homecoming save, F06#6 mid-ride rejoin, rejoin/harness teleport_body"
+  },
+  {
+   "name": "Batch 22 (PR #278)",
+   "sha": "79fe8904",
+   "state": "Merged 15:34 on green full CI",
+   "contents": "Batches 20+21, gate-B tail parse fix, F13 chain steps, Stormwood surge audio/admission/Nysa smokes, F03 lure cues, F08 art camera, Stormwood F11 earned"
+  },
+  {
+   "name": "Batch 23 (PR #280)",
+   "sha": "6e087b55",
+   "state": "Full CI running; review PASS",
+   "contents": "Gate-B gather flake fix (F01#4/#5), Warrens vault marker, F14#0 C2/C3 harness, herd-approach fixture fix"
+  },
+  {
+   "name": "Batch 24 (PR #282)",
+   "sha": "0c8dfc84",
+   "state": "Closed: superseded by batch 25 (#283)",
+   "contents": "Batch 23 + F15#3 guest team proof, F11#3 scenario and witness retry, F13#1 loops CI split and barricade"
+  },
+  {
+   "name": "Batch 25 (PR #283)",
+   "sha": "d4735c50",
+   "state": "Full CI running; review PASS",
+   "contents": "Batch 24 + all lanes' READY work (Art defeat reaction and docks, Cloudreach chain-bridge, X03 Juno, Stormwood net fixes, X05 Steam slices, Tidewake Veilfall, VIS audit) + brine detector fix"
+  }
+ ],
+ "lanes": [
+  {
+   "lane": "Meadows core (F01\u2013F04)",
+   "now": "Archived after handoff",
+   "next": "Post walk results on ralph/f01-walks"
+  },
+  {
+   "lane": "Meadows finale (F05)",
+   "now": "Posting final handoff",
+   "next": "\u2014"
+  },
+  {
+   "lane": "Cloudreach (F06\u2013F08)",
+   "now": "Archived after handoff",
+   "next": "F08#3 art defects; co-op road shoulders (owner ruling)"
+  },
+  {
+   "lane": "Stormwood (F09\u2013F11)",
+   "now": "Archived after handoff",
+   "next": "\u2014"
+  },
+  {
+   "lane": "Tidewake (F12\u2013F15)",
+   "now": "Posting final handoff",
+   "next": "F12#0, F13#0"
+  },
+  {
+   "lane": "Creature art (X04)",
+   "now": "Archived after handoff",
+   "next": "F10#4, F13#5"
+  },
+  {
+   "lane": "Invite co-op (X05)",
+   "now": "Archived after handoff",
+   "next": "F01#6 portable picker; F14#3 Veilfall; same-host rejoin exact pose (owner ruling)"
+  },
+  {
+   "lane": "Shared UI (X03)",
+   "now": "Archived after handoff",
+   "next": "F10#3 reduced-motion witness"
+  },
+  {
+   "lane": "Visual audit & polish (VIS)",
+   "now": "Archived after handoff",
+   "next": "Phase 2: fix shared look (lighting, fog, terrain/water materials), route creature fixes to Art"
+  }
+ ],
+ "decisions": [
+  "Healed Meadows: runtime regreen, herd returns, pylons fall; no re-bake.",
+  "Old Stormwood saves: ambiguous receipt reads as accepted.",
+  "Bramblebun: sheet 06 approved for one Meshy redo with rust/ochre thorns.",
+  "Steam: DLL redistribution approved; release builds need a Steam launch; packaging stays off until an AppID exists.",
+  "Meadows pacing: more practice wilds so level 5 is reachable with margin.",
+  "Legacy Tidewake worlds: every journal-named fighter gets an offer.",
+  "Client-run trainer wins pay every participant through the host.",
+  "Shared UI is owned by the X03 lane; region lanes send UI requests through the coordinator.",
+  "Stormwood strikes spare a trainer during a creature fight (interim; owner to confirm).",
+  "Terrapup kept at field_emission 0.6 (owner: pick what looks better).",
+  "F03 lure cue option (a); Juno escort kept; X03 beacon kept under the presentation hold; Xbox B glyph neutral."
+ ],
+ "owner_needs": [
+  "F11#2: should a legacy old-build Stormheart receipt count as acceptance?",
+  "F10#6 device profile needs a ROG Ally run.",
+  "Village roads widened to 3.0 m inside the fence (coordinator ruling); say if you want the footpath width kept there.",
+  "7-day usage limit warning on all sessions.",
+  "An old disabled 'Ralph' routine prompt contains a different Meshy key: delete it or rotate that key.",
+  "Branch cleanup: deletions are blocked for the coordinator by the auto-mode safety check. Either allow Bash(git push origin --delete:*) or enable GitHub's 'Automatically delete head branches'. 3 deletable now; 9 more after batch 24."
+ ]
+}
