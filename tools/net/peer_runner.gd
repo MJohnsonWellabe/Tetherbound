@@ -4828,6 +4828,27 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				return null
 			var p: Vector3 = player.global_position
 			return [p.x, p.y, p.z]
+		"rejoin_pose":
+			# Owner ruling "rejoin returns to exact spot": what `rejoin_pose.gd`
+			# decided, the world instance this peer now holds, and the instance
+			# and pose its own character file carries.
+			var rgame := root.get_node_or_null(^"Game")
+			if rgame == null:
+				return null
+			var helper := rgame.get_node_or_null(^"RejoinPose")
+			var rworld: Variant = rgame.get("world")
+			var rlocal: Variant = rgame.get("local")
+			var saved: Dictionary = {}
+			var rsave: Variant = rgame.get("save_system")
+			if rsave != null and rlocal != null:
+				saved = ((rsave as RefCounted).call("characters") as RefCounted).call("read",
+					str((rlocal as RefCounted).get("character_id")))
+			return {
+				"outcome": str(helper.call("outcome")) if helper != null else "",
+				"world_instance": str((rworld as RefCounted).get("reward_delivery_namespace")) if rworld != null else "",
+				"file_instance": str(saved.get("last_world_instance_id", "")),
+				"file_pose": saved.get("player_pose", {}),
+			}
 		"player_identity":
 			# Owner T4#2-#5. Read the local identity from PlayerState, the art
 			# from the live production rig, the location from that body's real
