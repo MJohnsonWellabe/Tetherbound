@@ -4,6 +4,7 @@ extends Control
 ## vegetation or world scripts behind it: launch becomes interactive before the
 ## expensive Meadows exists, then New/Load transitions into the real world.
 
+const STEAM_LINK_LOST_TEXT := "The connection to your friend’s world was lost. You can rejoin with the same character."
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const THEME_PATH := "res://assets/ui/theme/tetherbound_theme.tres"
 const EXPORT_VERIFY_FLAG := "--verify-export"
@@ -1263,6 +1264,30 @@ static func pending_steam_join_has_failure(joining_lobby_id: int, error: String)
 	return joining_lobby_id > 0 and not error.strip_edges().is_empty()
 
 
+## A friend join that succeeded and later lost its host link comes back here
+## with no driver error, and used to land on the plain title with its saved
+## lobby and character discarded. When the link dropped without the host's own
+## reason (`host_gone`: a lost connection, or a host that crashed), offer that
+## lobby again with the same character; a deliberate close, a kick or the
+## player's own leave keep no retry. Empty when there is nothing to offer.
+static func dropped_friend_join_message(game: Node) -> String:
+	if game == null:
+		return ""
+	var driver := game.get_node_or_null(^"JoinDriver")
+	if driver == null or not str(driver.call("last_error")).is_empty():
+		return ""
+	if not driver.has_method("target") or str(driver.call("target")) != "friend’s world":
+		return ""
+	var retry: Variant = game.get_meta(&"steam_join_retry", {})
+	if not retry is Dictionary or int((retry as Dictionary).get("lobby_id", 0)) <= 0:
+		return ""
+	var session: Variant = game.get("session")
+	if not session is Object or not (session as Object).has_method("end_reason") \
+			or str((session as Object).call("end_reason")) != "host_gone":
+		return ""
+	return STEAM_LINK_LOST_TEXT
+
+
 static func steam_retry_is_actionable(pending_reason: String) -> bool:
 	return pending_reason.strip_edges().is_empty()
 
@@ -1684,6 +1709,8 @@ func _report_failed_join() -> bool:
 		return false
 	var message := str(driver.call("last_error"))
 	var was_steam := driver.has_method("target") and str(driver.call("target")) == "friend’s world"
+	if message.is_empty():
+		message = dropped_friend_join_message(game)
 	driver.free()
 	if message.is_empty():
 		if game.has_meta(&"steam_join_retry"):

@@ -5,11 +5,72 @@ const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const TITLE := preload("res://scripts/ui/title_screen.gd")
 const PLAYERS_TAB := preload("res://scripts/ui/tab_players.gd")
 const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
+const JOIN_DRIVER := preload("res://scripts/mp/join_driver.gd")
+const SESSION := preload("res://scripts/net/session.gd")
 
 const TEST_DIR := "user://test_steam_invite_ui/"
 
 var game: Node
 var saver: RefCounted
+
+
+class EndedSessionStub extends Node:
+	var reason := ""
+
+	func end_reason() -> String:
+		return reason
+
+
+class DroppedGameStub extends Node:
+	var session: Node
+
+
+## A friend join that succeeded, then ended with `reason`: the driver the
+## title finds on return, the session's end reason and the saved retry.
+func _dropped_friend_join(reason: String, steam_route: bool = true,
+		retry: Dictionary = {"lobby_id": 777, "selection": {"kind": "existing", "character_id": "portable-rin"}}) -> Node:
+	var stub := DroppedGameStub.new()
+	var ended := EndedSessionStub.new()
+	ended.reason = reason
+	stub.session = ended
+	stub.add_child(ended)
+	var driver := JOIN_DRIVER.new()
+	driver.name = "JoinDriver"
+	stub.add_child(driver)
+	if steam_route:
+		driver.begin_steam({"character_id": "portable-rin"})
+	if not retry.is_empty():
+		stub.set_meta(&"steam_join_retry", retry)
+	return stub
+
+
+func test_a_friend_join_whose_link_dropped_offers_the_same_lobby_again() -> void:
+	var stub := _dropped_friend_join("host_gone")
+	assert_eq(TITLE.dropped_friend_join_message(stub), TITLE.STEAM_LINK_LOST_TEXT,
+		"a lost link (no host reason) comes back with a rejoin offer, not a blank title")
+	stub.free()
+
+
+func test_a_deliberate_end_or_a_direct_join_offers_no_friend_rejoin() -> void:
+	for reason: String in ["left", "kicked", "session_full", ""]:
+		var ended := _dropped_friend_join(reason)
+		assert_eq(TITLE.dropped_friend_join_message(ended), "",
+			"the host's own reason '%s' keeps no retry" % reason)
+		ended.free()
+	var direct := _dropped_friend_join("host_gone", false)
+	assert_eq(TITLE.dropped_friend_join_message(direct), "", "a direct-address join is not a friend join")
+	direct.free()
+	var unsaved := _dropped_friend_join("host_gone", true, {})
+	assert_eq(TITLE.dropped_friend_join_message(unsaved), "", "no saved lobby, nothing to rejoin")
+	unsaved.free()
+
+
+func test_the_session_reports_why_it_ended_and_a_fresh_one_reports_nothing() -> void:
+	var session := SESSION.new()
+	assert_eq(session.end_reason(), "", "no session has ended yet")
+	session._box["ended"] = "host_gone"
+	assert_eq(session.end_reason(), "host_gone")
+	session.free()
 
 
 class LobbyErrorStub extends RefCounted:
