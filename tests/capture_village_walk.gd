@@ -35,10 +35,12 @@ extends SceneTree
 ## Starts as a fresh post-opening player: opening flags through `walk_out`
 ## (Grandpa's door is open because the opening says so, not because this
 ## script opens it) and one starter. The player is stood 2.5m INSIDE the
-## farmhouse and walks out through the real door. `road_gate_open` is set
-## before the world loads, standing in for the village key hunt -- this walk
-## measures the road, not that puzzle; the leaf still has to be physically
-## open for the walk to pass through it.
+## farmhouse and walks out through the real door. For the four road routes
+## `road_gate_open` is set before the world loads, standing in for the village
+## key hunt -- those walks measure the road, not that puzzle; the leaf still
+## has to be physically open for the walk to pass through it. The `visits`
+## route sets NO gate flag: it walks to the old key, takes it with interact,
+## and opens the first gate it meets with interact, as a player does.
 ##
 ## Saves a PNG every CAPTURE_EVERY_S of travel, plus one at every junction,
 ## signpost, gate and subarea arrival, and prints one receipt line per capture.
@@ -104,7 +106,8 @@ const INDOOR_APPROACH := {
 	"Mira": [Vector2(13.87, 4.8), Vector2(16.5, 4.8), Vector2(17.5, 4.0)],
 }
 ## A closed door on the way is opened the way a player opens it: when the walk
-## stalls and the arbiter's actionable winner is an "Open ..." prompt, one
+## stalls and the arbiter's actionable winner is an "Open ..." prompt (or a
+## locked boundary leaf's "Try the gate", with the key in the satchel), one
 ## interact press. Bounded so a door that never opens still fails the walk.
 const DOOR_PRESSES_MAX := 3
 
@@ -208,7 +211,8 @@ func _run() -> void:
 	var progression: RefCounted = _game.get("progression")
 	for flag: String in OPENING_FLAGS:
 		progression.call("set_flag", flag)
-	progression.call("set_flag", "road_gate_open")
+	if _route_name != "visits":
+		progression.call("set_flag", "road_gate_open")
 	var party: RefCounted = _game.get("party")
 	if party != null and (party.call("members") as Array).is_empty():
 		var starter: RefCounted = _game.call("make_creature", "terrapup")
@@ -715,10 +719,18 @@ func _visit_all() -> void:
 		return
 	while not targets.is_empty():
 		var here := _xz()
-		var next: Dictionary = targets[0]
+		# Nearest first, but nothing past the boundary before the key is in the
+		# satchel: until then only villagers and the key itself are eligible.
+		var have_key := _has_key()
+		var next: Dictionary = {}
 		for t: Dictionary in targets:
-			if here.distance_to(t.at) < here.distance_to(next.at):
+			if not have_key and not str(t.kind) in ["villager", "key"]:
+				continue
+			if next.is_empty() or here.distance_to(t.at) < here.distance_to(next.at):
 				next = t
+		if next.is_empty():
+			_failed = "no reachable target left before the key: %s" % str(targets.map(func(t: Dictionary) -> String: return str(t.label)))
+			return
 		targets.erase(next)
 		await _visit(next, _graph_path(graph, here, next.at))
 		if not _failed.is_empty():
@@ -744,6 +756,12 @@ func _visit_targets() -> Array:
 			return []
 		out.append({"kind": "villager", "label": npc_name, "node": node,
 			"at": Vector2(node.global_position.x, node.global_position.z)})
+	var key := _world.get_node_or_null(^"GateKey") as Node3D
+	if key == null:
+		_failed = "the old gate key is not lying in the world"
+		return []
+	out.append({"kind": "key", "label": "the old key", "node": key,
+		"at": Vector2(key.global_position.x, key.global_position.z)})
 	out.append({"kind": "camp", "label": "Practice Meadow camp", "at": CAMP_AT})
 	for raw: Variant in ((_json(BOUNDARY_PATH).get("gates", {}) as Dictionary).get("entries", []) as Array):
 		var gate := raw as Dictionary
@@ -766,7 +784,7 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 		for i in through.size() - 1:
 			leg.append(through[i] as Vector2)
 		stop = through[through.size() - 1] as Vector2
-	elif kind in ["grandpa", "villager"]:
+	elif kind in ["grandpa", "villager", "key"]:
 		var back := leg[leg.size() - 1] - at
 		stop = at + (back.normalized() * NPC_STOP_M if back.length() > NPC_STOP_M else back)
 	if leg[leg.size() - 1].distance_to(stop) > 0.05:
@@ -777,13 +795,22 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 		_failed = "visiting %s: %s" % [t.label, _failed]
 		return
 	var d := _xz().distance_to(at)
-	var reach := {"grandpa": NPC_REACH_M, "villager": NPC_REACH_M,
+	var reach := {"grandpa": NPC_REACH_M, "villager": NPC_REACH_M, "key": NPC_REACH_M,
 		"camp": CAMP_ARRIVAL_M, "gate": GATE_ARRIVAL_M}[kind] as float
 	if d > reach:
 		_failed = "ended %.2fm from %s (needs %.1fm)" % [d, t.label, reach]
 		return
 	var prompt := "-"
-	if kind in ["grandpa", "villager"]:
+	if kind == "key":
+		prompt = await _prompt_winner(t.node as Node)
+		if prompt == "":
+			_failed = "stood %.2fm from the old key but its prompt never won" % d
+			return
+		await _press("interact")
+		if not _has_key():
+			_failed = "pressed interact on \"%s\" but the key is not in the satchel" % prompt
+			return
+	elif kind in ["grandpa", "villager"]:
 		prompt = await _prompt_winner(t.node as Node)
 		if kind == "villager" and prompt == "":
 			_failed = "stood %.2fm from %s but its prompt never won the arbiter" % [d, t.label]
@@ -930,4 +957,10 @@ func _door_prompt_wins() -> bool:
 	if arbiter == null:
 		return false
 	var winner := arbiter.call("winner") as Dictionary
-	return bool(winner.get("actionable", false)) and str(winner.get("label", "")).begins_with("Open ")
+	var label := str(winner.get("label", ""))
+	return bool(winner.get("actionable", false)) and (label.begins_with("Open ") or label == "Try the gate")
+
+
+func _has_key() -> bool:
+	var inventory: RefCounted = _game.get("inventory")
+	return inventory != null and int(inventory.call("count", "castle_gate_key")) > 0
