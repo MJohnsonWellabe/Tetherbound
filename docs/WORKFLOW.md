@@ -350,10 +350,18 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   code review. GitHub branch protection requires `ci-gate` and `traceability`.
   Verify the landing with `git merge-base --is-ancestor <sha> origin/main`,
   never with a badge or a summary line.
-- **A CI run under five minutes is not a verification.** A full run is 35–45
-  minutes. CI skips every code job when the diff against the base is
-  documentation-only — check the run duration **and** that code jobs actually
-  ran.
+- **Two CI tiers (owner, 2026-09-26).** Every PR and `main` push runs the FAST
+  tier: import, bake freshness, unit-test shards and the Windows export, about
+  10 minutes. The FULL tier (every smoke shard, net smokes, gate evidence,
+  known-red probes, about 25–35 minutes) runs every 8 hours on `main`, on
+  manual dispatch, and on a PR labelled `full-ci`. Label `full-ci` when a
+  change touches net/authority, save/migration or a harness that fast CI does
+  not run. A criterion counts as MET only on a SHA a green FULL run covered. A
+  red scheduled full run is the coordinator's first job: bisect the batches
+  merged since the last green full run and hand the fix to the owning lane.
+- **A CI run under five minutes is not a verification.** CI skips every code
+  job when the diff against the base is documentation-only — check the run
+  duration **and** that code jobs actually ran.
 - **`RETRIES: 3` in the smoke jobs hides a consistent first-attempt failure.** A
   ~21-minute step is three ~7-minute attempts. **A test that goes 0-for-1 and
   then passes is a finding, not a pass.**
