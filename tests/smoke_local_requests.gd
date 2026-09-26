@@ -113,6 +113,8 @@ func _run() -> void:
 			for _frame in 2:
 				await physics_frame
 				await process_frame
+			if not await _leave_stray_fight(activity):
+				continue
 			match activity:
 				"herd": await _meadowhart_herd()
 				"bram": await _old_bram()
@@ -121,10 +123,14 @@ func _run() -> void:
 				_: _fail("unknown scoped activity '%s'" % activity)
 	else:
 		await _night_watch()
-		await _river_nest()
-		await _lost_creature()
-		await _meadowhart_herd()
-		await _broken_cart()
+		if await _leave_stray_fight("river_nest"):
+			await _river_nest()
+		if await _leave_stray_fight("lost_creature"):
+			await _lost_creature()
+		if await _leave_stray_fight("meadowhart_herd"):
+			await _meadowhart_herd()
+		if await _leave_stray_fight("broken_cart"):
+			await _broken_cart()
 
 	_report()
 
@@ -906,6 +912,39 @@ func _activate_trainer_prompt(body: Node3D, label: String) -> bool:
 		str(runner.call("conversation_id")) if runner != null else "?",
 		str(runner.call("line")) if runner != null else "?",
 		str(_conversation_log)])
+	return false
+
+
+## Every activity stages the player by teleport, which only stands in for a
+## player who is exploring. Juno's reunion ends about 12 m from an aggressive
+## roadside Galecrest pair (band4 spawn order 4912), and when that pair notices
+## the trainer before the next activity begins, a real wild fight is running
+## at Juno. The combat camera then follows the piloted companion there, and
+## Terrain3D's dynamic collision follows that camera. So the next activity's
+## seat 4 km away loses its ground right after the seat's own ground check
+## passes. Measured on the herd's trail seat: "fell below the world at -40,
+## -133, 1310", the companion still fighting 4105 m away at Juno. A player
+## cannot walk away from a fight by teleport; they flee. Do that with the real
+## flee button, and refuse to stage the next activity while a fight still runs.
+func _leave_stray_fight(label: String) -> bool:
+	for attempt in 4:
+		if not bool(_manager.call("is_fighting")):
+			return true
+		if bool(_director.call("trainer_battle_active")):
+			break
+		print("%s: a wild fight left running by the previous activity; fleeing (attempt %d)" % [
+			label, attempt + 1])
+		# Pad flee: `combat_manager.gd::_flee_pressed()` reads creature_recall.
+		await _press("creature_recall")
+		for _frame in 120:
+			if not bool(_manager.call("is_fighting")):
+				break
+			await physics_frame
+			await process_frame
+	if not bool(_manager.call("is_fighting")):
+		return true
+	_fail("%s: a fight left running by the previous activity could not be fled before staging (trainer battle: %s)" % [
+		label, str(_director.call("trainer_battle_active"))])
 	return false
 
 

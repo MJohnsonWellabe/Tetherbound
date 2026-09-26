@@ -1349,15 +1349,16 @@
       "species": "galecrest",
       "count": 2,
       "centre": [
-        -208.5,
+        -248.4,
         0.0,
-        5397.7
+        5349.2
       ],
       "radius": 3.0,
       "habitat": "roadside_sightline",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair for band4_upper_meadows_ironwood; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology.",
       "wander_radius": 4.0,
-      "_why_f02_route_spacing": "F02.4 route spacing + S08 walk evidence (a won Galecrest pair's bodies stood on the trail and pinned the walker 5-6m from the centreline at (-132,6676)). This pair stays one of the road's spaced authored ambushes (>=150m from its neighbours, WORLD \u00a73.1), but its centre steps from 5.5m to 10m off the centreline and `wander_radius` 4.0 opts it into encounter_director's road veto (`_wander_target_clear_of_road`), so the idle bodies settle beside the path rather than on it. The envelope (3 + 4 + notice 14 + path 1.8 = 22.8m) still reaches the road and the 3.5m bodies stay forward-visible for ROAD CP-2. This pair still overlaps cluster 4028's authored disc by 6.4m. The overlap already existed on main (10.8m) and this change shrinks it; it does not remove it."
+      "_why_f02_route_spacing": "F02.4 route spacing + S08 walk evidence (a won Galecrest pair's bodies stood on the trail and pinned the walker 5-6m from the centreline at (-132,6676)). This pair stays one of the road's spaced authored ambushes (>=150m from its neighbours, WORLD \u00a73.1), but its centre steps from 5.5m to 10m off the centreline and `wander_radius` 4.0 opts it into encounter_director's road veto (`_wander_target_clear_of_road`), so the idle bodies settle beside the path rather than on it. The envelope (3 + 4 + notice 14 + path 1.8 = 22.8m) still reaches the road and the 3.5m bodies stay forward-visible for ROAD CP-2. This pair still overlaps cluster 4028's authored disc by 6.4m. The overlap already existed on main (10.8m) and this change shrinks it; it does not remove it.",
+      "_why_f03_juno_clearance": "Moved from (-208.5,5397.7) to (-248.4,5349.2): 60m back along the road, before Juno rather than beside her, and across to the right side, still 10m off the centreline. The old centre was 16.7m from Juno's post (-225,5400), so this aggressive pair's envelope (3 + 4 + notice 14 = 21m) covered the lost-creature reunion. It ambushed the trainer during and just after Juno's acknowledgement, as soon as a usable companion stood there. tests/smoke_local_requests.gd --only=juno,herd, watched per frame, showed the fight opening 37 frames after the companion came out beside her. A fight left running there kept the combat camera, and so Terrain3D's dynamic collision, at Juno, and the next activity's teleport seat fell through the world (the herd trail seat: 'fell below the world at -40, -133, 1310'). The new centre clears the whole reunion footprint: 56m from Juno, 56m from the patrol-to-Juno escort line, 141m from the patrol, and 87m from the leash check's seat 70m south of the waiting Meadowhart. A first try forward at (-176.3,5394.3) sat on that seat and ambushed the escort instead. It overlaps no other authored disc (the 4028 overlap is gone) and stays 165m/379m from pairs 4911/4913, past the >=150m spacing. It is 44m from the (-289.7,5335.2) sample it was authored to cover: tools/gate_f/road_visibility_audit.py reports 0 failing samples before and after, and every band4 sample it changes keeps at least 5 visible bodies."
     },
     {
       "order": 4913,
