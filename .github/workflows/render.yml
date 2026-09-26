@@ -148,7 +148,9 @@ jobs:
               -type f -newer "$RUNNER_TEMP/start_marker" -print0 \
               | xargs -0 -r cp --parents -t "$out/tree/"
           fi
-          cp -r "$RUNNER_TEMP/userdata/." "$out/user/" 2>/dev/null || true
+          # user:// minus Godot's shader cache (tens of MB nobody reads).
+          (cd "$RUNNER_TEMP/userdata" 2>/dev/null && find . -path '*/shader_cache' -prune -o -type f -print0 \
+            | xargs -0 -r cp --parents -t "$out/user/") || true
           find "$out" -type f | sed "s|$out/||" | sort > "$out/MANIFEST.txt"
           echo "files=$(wc -l < "$out/MANIFEST.txt")"
 
