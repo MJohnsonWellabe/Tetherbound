@@ -597,7 +597,12 @@ func _snapshot(flags: Array) -> Dictionary:
 	for i in int(inventory.call("slot_count")):
 		var stack: Dictionary = inventory.call("stack_at", i)
 		if not stack.is_empty():
-			stacks.append("%s x%s" % [str(stack.get("id", "?")), str(stack.get("count", "?"))])
+			# `inventory.gd` stacks are {id, n}; tools also carry durability.
+			var line := "%s x%d" % [str(stack.get("id", "?")), int(stack.get("n", 0))]
+			var worn := int(inventory.call("durability_at", i))
+			if worn > 0:
+				line += " d%d" % worn
+			stacks.append(line)
 	var set_flags: Array[String] = []
 	for id: String in flags:
 		if _flag(id):
