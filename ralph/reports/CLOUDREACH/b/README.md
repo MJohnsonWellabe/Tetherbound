@@ -29,11 +29,11 @@ All runs used local Godot 4.7-stable, headless, `--accelerated` (physics stays a
     - it is never inside a sealed box before that box's flag is set;
     - it never leaves the trial box before Fly unlocks.
   - **Reload.** The disk save/reload keeps the five uids and every persisted field, with no loaner species in the party.
-- **Disclosed failed run.** The first run on this code failed after its witness checks had passed. It stalled walking on the shrine dais toward `shrine_vane_east`, and the only contact was the flat dais floor (normal pointing up). That is a walk-harness stall under acceleration, not blocking geometry. The confirming rerun passed. See `shrine-stall-run-witness.json` and `shrine-stall-run-fail.log`.
+- **Disclosed failed run.** The first run on this code failed after its witness checks had passed. It stalled walking on the shrine dais toward `shrine_vane_east`, and the only contact was the flat dais floor (normal pointing up). That is a walk-harness stall under acceleration, not blocking geometry. The confirming rerun passed. See `shrine-stall-run-witness.json` and `shrine-stall-run-fail.txt`.
 
 ## Complementary: closed gate seal
 
-- `closed-gate-seal/run.log` is from `godot --headless --path . --script tests/smoke_cloudreach_closed_gate_seal.gd` on the same code: `CLOUDREACH CLOSED GATE SEAL OK checks=195 failures=0`.
+- `closed-gate-seal/run.txt` is from `godot --headless --path . --script tests/smoke_cloudreach_closed_gate_seal.gd` on the same code: `CLOUDREACH CLOSED GATE SEAL OK checks=195 failures=0`.
 - It includes leg (b), where the loaner flight is sealed and no sixth slot appears, and legs (i) and (j), the Fly anchor recovery cases.
 
 ## Declared fixture: `--start=aerie` and `--leg=flight` (see `tests/helpers/cloudreach_witness_route.gd`)
