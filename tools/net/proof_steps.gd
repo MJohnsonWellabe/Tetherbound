@@ -19,9 +19,10 @@ extends RefCounted
 ##                                         string is in any
 ##   stormheart_fixture {contributors}    HOST: who fought the Dynamo, then Marrow's
 ##                                         defeat through the ledger (F11 setup only)
-##   stormheart_answer  {answer}          answer THIS peer's Stormheart offer through
+##   stormheart_answer  {answer, drop_at_ack?}  answer THIS peer's Stormheart offer through
 ##                                         the real dialogue: interact = Yes, menu_cancel = No
-##   stormheart_state {}                  this peer's view of the F11 outcome
+##   stormheart_state {character?}        this peer's view of the F11 outcome (character:
+##                                         also the world's receipt of that character's answer)
 ##   release_for_catch {release, species, nickname}  SETUP: at a full party, let
 ##                                         one companion go for a new catch, exactly as
 ##                                         the release ceremony does (remove_at, then add)
@@ -91,7 +92,7 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 		"stormheart_answer":
 			return await _stormheart_answer(tree, args)
 		"stormheart_state":
-			return _stormheart_state(tree)
+			return _stormheart_state(tree, args)
 		"release_for_catch":
 			return _release_for_catch(tree, args)
 		"rename_member":
@@ -473,6 +474,28 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var shot := {}
 	if args.has("screenshot"):
 		shot = await _screenshot(tree, {"name": str(args.screenshot)})
+	var cut_at_ack := false
+	if answer == "accept" and bool(args.get("drop_at_ack", false)):
+		# F11 "disconnect at claim acknowledgement": press Yes and, in the very
+		# frame the answer is committed (receipt recorded, character saved,
+		# `ending_settled` queued), close the transport. A closed ENet peer
+		# drops its unsent queue, so the acknowledgement never leaves.
+		if not _edge_ok(await tree.call("_press_edge", "interact", true)):
+			return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
+		for f in 240:
+			await tree.process_frame
+			if (ending.get("_local_claim") as Dictionary).is_empty():
+				(tree.root.multiplayer.multiplayer_peer as MultiplayerPeer).close()
+				cut_at_ack = true
+				break
+		await tree.call("_press_edge", "interact", false)
+		for f in 60:
+			await tree.physics_frame
+		var cut_state := _stormheart_state(tree)
+		(cut_state.data as Dictionary)["cut_at_ack"] = cut_at_ack
+		return {"verdict": "PASS" if cut_at_ack else "FAIL",
+			"detail": "answered Yes and closed the link in the frame the answer was committed=%s; %s" % [str(cut_at_ack), str(cut_state.data)],
+			"data": cut_state.data}
 	if not await _tap(tree, "interact" if answer == "accept" else "menu_cancel"):
 		return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
 	var settle := 0
@@ -518,7 +541,7 @@ static func _edge_ok(result: Variant) -> bool:
 	return not (result is Dictionary) or bool((result as Dictionary).get("ok", true))
 
 
-static func _stormheart_state(tree: SceneTree) -> Dictionary:
+static func _stormheart_state(tree: SceneTree, args: Dictionary = {}) -> Dictionary:
 	var game := tree.root.get_node_or_null(^"Game")
 	if game == null:
 		return {"verdict": "ERROR", "detail": "no /root/Game", "data": {}}
@@ -542,6 +565,11 @@ static func _stormheart_state(tree: SceneTree) -> Dictionary:
 		"world_refused": has_flag.call(ending.resolution_flag(false, character)),
 		"accepted_anywhere": ending.accepted_anywhere(game.call("player_flags")),
 	}
+	# The world's receipt of ANOTHER character's answer (the host reading a guest's).
+	var other := str(args.get("character", ""))
+	if not other.is_empty():
+		data["other_accepted"] = has_flag.call(ending.resolution_flag(true, other))
+		data["other_refused"] = has_flag.call(ending.resolution_flag(false, other))
 	return {"verdict": "PASS", "detail": str(data), "data": data}
 
 
