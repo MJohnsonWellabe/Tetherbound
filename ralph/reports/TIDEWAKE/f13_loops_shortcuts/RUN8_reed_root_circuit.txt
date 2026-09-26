@@ -1,0 +1,44 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:60)
+         [1] _run (res://tests/smoke_water_loops_shortcuts.gd:162)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+PASS: Production Tidewake world finishes building
+PASS: water_world.json authors four land loops
+PASS: water_world.json authors three return shortcuts
+LOOPS/SHORTCUTS CASES: reed_root_circuit
+PASS: reed_root_circuit is authored as a closed polyline
+FIXTURE placement: F1 reed_root_circuit start at (108.2, 17.2, 469.2) (health/stamina refilled)
+PASS: F1 reed_root_circuit start placement holds (no pending recovery moved the player)
+PASS: reed_root_circuit start placement settles on floor
+PASS: reed_root_circuit waypoint 1 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 2 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 3 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 4 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 5 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 6 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 7 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 8 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 9 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 10 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 11 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 12 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 13 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 14 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 15 reached on foot, on floor, not swimming
+PASS: reed_root_circuit closes back at its start
+PASS: reed_root_circuit walk had no drop/teleport/health loss
+LOOPS/SHORTCUTS +146.7s | loop reed_root_circuit | walked YES | 688.0 m | 138.7 s | authored 698.2 m | max drop 0.00 m
+LOOPS/SHORTCUTS CASE reed_root_circuit | 140.3 s wall
+---- WATER LOOPS/SHORTCUTS SUMMARY (146.7 s wall) ----
+  loop reed_root_circuit | walked YES | 688.0 m | 138.7 s | authored 698.2 m | max drop 0.00 m
+WATER LOOPS/SHORTCUTS: 23 checks, 0 failures, 0 defects
+EXIT 0

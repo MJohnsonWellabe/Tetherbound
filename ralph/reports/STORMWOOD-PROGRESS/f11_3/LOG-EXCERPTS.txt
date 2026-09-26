@@ -1,0 +1,23 @@
+SCRIPT ERROR grep (run3, the committed PROOF.md run):
+peer-0.log: 0
+peer-1.log: 0
+
+Restart / rejoin lines (peer-0.log is appended across both host processes):
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-0.log:143:[session] hosting on udp/32981 (cap 4, channels 2); local peer id 1
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-0.log:145:[session] peer 1673050819 joined as 'Trainer' (character-acee1a3a1a9f7c7949e3b8d3
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-0.log:638:[session] hosting on udp/32981 (cap 4, channels 2); local peer id 1
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-0.log:686:[session] peer 1629642760 joined as 'Trainer' (character-acee1a3a1a9f7c7949e3b8d3
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-0.log:701:[session] peer 589337161 joined as 'Trainer' (character-acee1a3a1a9f7c7949e3b8d3c
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-1.log:146:[session] snapshot applied (14 keys, day 1)
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-1.log:197:[session] client leave: wrote character 'character-acee1a3a1a9f7c7949e3b8d3c99f02
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-1.log:405:[session] client leave: wrote character 'character-acee1a3a1a9f7c7949e3b8d3c99f02
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-1.log:406:[session] client leave: wrote character 'character-acee1a3a1a9f7c7949e3b8d3c99f02
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-1.log:453:[session] snapshot applied (14 keys, day 1)
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-1.log:472:[session] client leave: wrote character 'character-acee1a3a1a9f7c7949e3b8d3c99f02
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-1.log:519:[session] snapshot applied (14 keys, day 1)
+<scratch>/run3/net/net-proof_two_peer-20260926T152259Z/peer-1.log:680:[session] client leave: wrote character 'character-acee1a3a1a9f7c7949e3b8d3c99f02
+
+Coordinator restart line:
+coordinator: restarted peer 0 (host) pid 2652 -> 4107, scene title, graceful quit=true
+
+Earlier run1 (same scenario, before budget fix) peer-1.log had 1 SCRIPT ERROR (conversation_camera.gd:175 'Trying to cast a freed object', from stormwood_ending.gd:732 _start_dialogue_when_free on ending_release); run2 had 1 of the same; run3 had 0 (intermittent, pre-existing, also in the committed waterward proof's LOG-EXCERPTS).

@@ -5,6 +5,10 @@ extends Node3D
 ## transport; only the querying player's entrance/exit moves their own rig.
 const INTERACT := preload("res://scripts/world/interactable.gd")
 const EXTERIOR_PRESENTATION := preload("res://scripts/world/water_veilfall_exterior.gd")
+const ROCK_MATERIAL := preload("res://scripts/world/water_veilfall_rock.gd")
+const FALLS := preload("res://scripts/world/water_veilfall_falls.gd")
+const CURRENT_FLOW := preload("res://scripts/world/water_current_flow_view.gd")
+const SILHOUETTE := preload("res://scripts/world/water_veilfall_silhouette.gd")
 var world: Node3D
 var rules: Dictionary
 var interior: Node3D
@@ -59,6 +63,7 @@ var _decline_claim_id := ""
 var _may_answer_cached := false
 var _may_answer_cache_key: Array = []
 var exterior_presentation: Node3D
+var material_receipt: Dictionary = {}
 
 func build(realm: Node3D) -> void:
 	world = realm
@@ -76,6 +81,7 @@ func build(realm: Node3D) -> void:
 	exterior_presentation.name = "VeilfallExteriorComposition"
 	exterior.add_child(exterior_presentation)
 	exterior_presentation.call("build", world, rules.get("exterior_composition", {}))
+	_build_distance_presentation()
 	_entry_prompt = _prompt(exterior, "Enter behind the waterfall", Vector3(0, 1.4, 0), _enter)
 	interior = Node3D.new()
 	interior.name = "VeilfallInterior"
@@ -203,6 +209,32 @@ func _build_waterfall() -> void:
 	mesh.rotation.x = PI * 0.5
 	mesh.position = Vector3(0, float(fall.height_m) * 0.5 - 2, -2)
 	exterior.add_child(mesh)
+
+## F13#5 material pass: wet rock and distance tone on the mountain, white
+## fall columns with spray, and visible current foam. Presentation only, so
+## host simulation shells (no camera, no renderer) skip it.
+func _build_distance_presentation() -> void:
+	if bool(world.get("simulation_only")):
+		return
+	material_receipt = ROCK_MATERIAL.install(world.get("terrain"), rules.get("rock_material", {}))
+	var falls := FALLS.new()
+	falls.name = "VeilfallWhiteFalls"
+	add_child(falls)
+	var centre: Array = rules.get("rock_material", {}).get("centre_xz", [200.0, 4140.0])
+	var centre_xz := Vector2(float(centre[0]), float(centre[1]))
+	falls.build(world, rules.get("falls", {}), centre_xz)
+	var silhouette := SILHOUETTE.new()
+	silhouette.name = "VeilfallFarSilhouette"
+	add_child(silhouette)
+	silhouette.build(world, rules.get("silhouette", {}), centre_xz)
+	for material: ShaderMaterial in falls.materials:
+		silhouette.register_fogged(material)
+	var flow_config: Dictionary = rules.get("current_flow", {})
+	if bool(flow_config.get("enabled", true)):
+		var flow := CURRENT_FLOW.new()
+		flow.name = "WaterCurrentFlow"
+		add_child(flow)
+		flow.build(world.config, flow_config, _game.world.flags)
 
 func _build_heart_chamber() -> void:
 	var crystal := MeshInstance3D.new()

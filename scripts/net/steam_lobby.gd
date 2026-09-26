@@ -47,6 +47,9 @@ var _last_error := ""
 var _status := "Steam friends are not initialized."
 var _revision := 0
 var _pending_invite := 0
+## The friend whose Steam invite `_pending_invite` came from (join_requested);
+## 0 when unknown (a cold-launch lobby id carries no inviter).
+var _pending_inviter := 0
 
 var _state := "idle"
 var _deadline_ms := 0
@@ -141,6 +144,20 @@ func pending_invite_id() -> int:
 	return _pending_invite
 
 
+## The Steam name of the friend who sent the pending invite, for the Join
+## Friend screen (MULTIPLAYER: show who the invitation is from before joining).
+## Empty when no invite is pending (or `lobby_id` names another one), its
+## sender is unknown, or Steam has no name for them yet.
+func pending_inviter_name(lobby_id: int = 0) -> String:
+	if _pending_invite <= 0 or _pending_inviter <= 0 or _steam == null \
+			or not _steam.has_method("getFriendPersonaName"):
+		return ""
+	if lobby_id > 0 and lobby_id != _pending_invite:
+		return ""
+	var name := str(_steam.call("getFriendPersonaName", _pending_inviter)).strip_edges()
+	return "" if name == "[unknown]" else name
+
+
 ## Native lobby requests have no request token.  After a timeout the old
 ## callback must finish before another request can be attributed safely.
 func retry_pending_reason(lobby_id: int = 0) -> String:
@@ -155,6 +172,7 @@ func clear_pending_invite() -> void:
 	if _pending_invite == 0:
 		return
 	_pending_invite = 0
+	_pending_inviter = 0
 	_touch()
 
 
@@ -209,6 +227,7 @@ func request_join(lobby_id: int) -> bool:
 	_joining_lobby = lobby_id
 	if _pending_invite == lobby_id:
 		_pending_invite = 0
+		_pending_inviter = 0
 	_state = "joining_lobby"
 	_deadline_ms = Time.get_ticks_msec() + JOIN_TIMEOUT_MS
 	_status = "Joining your friend’s Steam lobby…"
@@ -406,7 +425,9 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 		return
 	_hosting = true
 	_state = "host_ready"
-	_status = "Friends lobby ready — 1/4 players."
+	# No player count here: this line is shown under the Players tab's live
+	# count and was never refreshed as friends joined or left.
+	_status = "Friends lobby ready."
 	_last_error = ""
 	# Ready is published only after Session owns a connected host peer.
 	if not bool(_steam.call("setLobbyData", lobby_id, "ready", "1")):
@@ -455,8 +476,8 @@ func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, response:
 	_touch()
 
 
-func _on_join_requested(lobby_id: int, _friend_id: int) -> void:
-	_set_pending_invite(lobby_id)
+func _on_join_requested(lobby_id: int, friend_id: int) -> void:
+	_set_pending_invite(lobby_id, friend_id)
 
 
 func _on_lobby_kicked(lobby_id: int, _admin_id: int, _due_to_disconnect: int) -> void:
@@ -623,9 +644,15 @@ func _leave_lobby(lobby_id: int) -> void:
 		_steam.call("leaveLobby", lobby_id)
 
 
-func _set_pending_invite(lobby_id: int) -> void:
+func _set_pending_invite(lobby_id: int, inviter: int = 0) -> void:
 	if lobby_id <= 0:
 		return
+	if lobby_id != _pending_invite:
+		# A new invitation is not an earlier attempt's failure; the Join
+		# Friend screen shows `last_error` in place of the invitation.
+		_last_error = ""
+	if lobby_id != _pending_invite or inviter > 0:
+		_pending_inviter = maxi(inviter, 0)
 	_pending_invite = lobby_id
 	invite_received.emit(lobby_id)
 	_touch()

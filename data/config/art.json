@@ -1,4 +1,8 @@
 {
+  "cast_reactions": {
+    "defeat_hold_seconds": 7.0,
+    "_why": "X04 / F04#6 aftermath: a named trainer whose defeat flag lands while they stand in the world plays their rig's one-shot `defeated` clip (head down, upper-body slump; animate_humanoid.py) and holds it this long before returning to idle. Rigs without the clip keep idling; trainers already beaten when the world loads do not replay it (trainer_npc.gd)."
+  },
   "_comment": "Presentation. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'too dark', 'the grass is the wrong green', 'the creatures don't move enough' \u2014 every one of those has to be answerable by editing this file rather than by editing a scene.",
   "_comment_scale": "Nothing here sets a collider or a hit range. Art is fitted to the gameplay size the species and the controller already declare; if a value in this file could change how far an attack reaches, it is in the wrong file.",
   "trainer": {
@@ -357,14 +361,15 @@
         "sun_angular_radius_deg": 2.0,
         "sun_disc_edge": 0.93,
         "cloud_sun_gain": 0.15,
-        "cloud_lit": "#5a6890",
-        "cloud_shade": "#232c47",
+        "_comment_night_clouds_vis": "VIS audit M4, 2026-09-26. Night clouds were darker than the sky behind them (shade #232c47, base #1a2238 against a #263f6c lower sky) with 0.05 edge softness, and a code-blind judge read them as soot smears / bat swarms across E003, E006, P002, P023. Moonlit cloud sits a step ABOVE the night sky in value with pale lit edges: lit #5a6890->#8b9bc6, shade #232c47->#35456f, base #1a2238->#2c3a62, softness 0.05->0.14. Coverage and scale unchanged.",
+        "cloud_lit": "#8b9bc6",
+        "cloud_shade": "#35456f",
         "_comment_panorama": "Explicitly empty. The base `sky` block above names day.hdr; _merged() layers this dict on top of that one, so without this the night preset would silently inherit the DAY panorama instead of falling back to the procedural gradient.",
         "panorama": "",
         "cloud_coverage": 0.3,
-        "cloud_edge_softness": 0.05,
+        "cloud_edge_softness": 0.14,
         "cloud_scale": 1.7,
-        "cloud_base": "#1a2238",
+        "cloud_base": "#2c3a62",
         "cloud_high_coverage": 0.15,
         "_comment_high_opacity_vp1": "VP1 sky retune round 1. 0.2 -> 0.18, a small trim to land inside the judge's 0.15-0.20 target for the cirrus layer (it was already close and not itself named as a night defect).",
         "cloud_high_opacity": 0.18,
@@ -629,7 +634,8 @@
       "walk": "walk",
       "sprint": "sprint",
       "jump": "jump",
-      "throw": "throw"
+      "throw": "throw",
+      "defeated": "defeated"
     },
     "_comment_gait_speeds": "MQ1A. Same values as the trainer's: all humanoid rigs share the clips animate_humanoid.py bakes, authored against movement.json's speeds. Nothing moves this character at gait speed yet, but any future mover gets honest cadence through character_model.match_gait_rate() for free.",
     "gait_reference_speeds": {
@@ -659,7 +665,8 @@
       "walk": "walk",
       "sprint": "sprint",
       "jump": "jump",
-      "throw": "throw"
+      "throw": "throw",
+      "defeated": "defeated"
     },
     "gait_reference_speeds": {
       "walk": 5.0,
@@ -767,7 +774,8 @@
       "walk": "walk",
       "sprint": "sprint",
       "jump": "jump",
-      "throw": "throw"
+      "throw": "throw",
+      "defeated": "defeated"
     },
     "gait_reference_speeds": {
       "walk": 5.0,
@@ -785,7 +793,8 @@
       "walk": "walk",
       "sprint": "sprint",
       "jump": "jump",
-      "throw": "throw"
+      "throw": "throw",
+      "defeated": "defeated"
     },
     "gait_reference_speeds": {
       "walk": 5.0,

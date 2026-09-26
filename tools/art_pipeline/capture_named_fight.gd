@@ -25,6 +25,7 @@ var _interval := 0.5
 var _container: Node = null
 var _resolve_won := false
 var _after_frames := 16
+var _face_trainer := false
 
 func _run() -> void:
 	var ids: PackedStringArray = []
@@ -39,6 +40,8 @@ func _run() -> void:
 			_interval = maxf(0.1, float(arg.trim_prefix("--interval=")))
 		elif arg == "--resolve=won":
 			_resolve_won = true
+		elif arg == "--face-trainer":
+			_face_trainer = true
 		elif arg.begins_with("--after-frames="):
 			_after_frames = maxi(1, int(arg.trim_prefix("--after-frames=")))
 	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
@@ -132,6 +135,8 @@ func _capture_one() -> bool:
 			str(TRAINERS.already_beaten(_spec, progression)), str(_manager.call("is_fighting"))])
 		for i in _after_frames:
 			await _wait_interval()
+			if _face_trainer:
+				_look_at_trainer()
 			await _save("a%02d" % (i + 1))
 			if bool(_panel.call("is_open")) and i % 3 == 2:
 				await _press("interact")
@@ -250,3 +255,17 @@ func _settle_on_ground() -> bool:
 		await physics_frame
 	print("NO GROUND under the stand spot for %s" % _tid)
 	return false
+
+
+## `--face-trainer`: turn the production rig toward the beaten trainer for the
+## aftermath frames, the way a player looks at who they just beat. The
+## ordinary post-fight camera settles behind the player facing wherever the
+## arena put them, which can leave the trainer out of frame.
+func _look_at_trainer() -> void:
+	if _trainer == null or not is_instance_valid(_trainer):
+		return
+	var to := _trainer.global_position - _player.global_position
+	to.y = 0.0
+	if to.length() < 0.2:
+		return
+	_rig.set("yaw", atan2(-to.x, -to.z))

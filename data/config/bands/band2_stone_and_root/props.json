@@ -487,6 +487,30 @@
           "_why": "what lashed the load down for hauling, come loose with it -- the detail that says CARRIED rather than simply left, matching the loop's own words"
         }
       ]
+        },
+    {
+      "order": 2015,
+      "name": "warrens_vault_signal",
+      "_why": "F03#0 lure (coordinator grant, 2026-09-26: one marker above the Warrens vault entrance, visible from 50 m or more, existing prop family, no red). The round-5 code-blind judge could not find the Warrens from the road: 'the site only appears once the player is already beside it'. A waylight post at the mouth, the Rise trail's own Torch_Metal waylight at post height, carrying the same signal-smoke column Bram's and Doss's fires use (campfire_glow.configure_smoke via props.gd), so the dig reads from the road by day (smoke) and by night (flame). Placed at the warren's local (+5.5, -3): in front of the mouth, beside the 8 m apron on the road side, rotated by the site's own 315 degree yaw about burrow_warrens.json site.at (-357, 2610). No staging logic touched.",
+      "props": [
+        {
+          "name": "WarrensVaultSignalPost",
+          "model": "Torch_Metal",
+          "at": [-351.0, 2611.8],
+          "yaw_deg": 45.0,
+          "scale": 1.6,
+          "sink_m": 0.04,
+          "glow": "campfire",
+          "glow_scale": 0.9,
+          "smoke_top_m": 26.0,
+          "smoke_alpha": 0.9,
+          "smoke_top_size_m": 11.0,
+          "smoke_fade": 0.35,
+          "smoke_base_size_m": 1.4,
+          "smoke_colour": "#4f4a45",
+          "_why": "Waylight post and signal column; see the cluster note."
+        }
+      ]
     }
   ]
 }

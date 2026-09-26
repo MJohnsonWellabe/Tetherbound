@@ -8,7 +8,7 @@ extends SceneTree
 ##
 ##   flock <render-lock> xvfb-run -a -s "-screen 0 1280x720x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x720 \
-##     --script tests/capture_lure_cue_views.gd -- --cue=bram|doss --out=DIR
+##     --script tests/capture_lure_cue_views.gd -- --cue=bram|doss|juno|vault --out=DIR [--distances=m,m]
 ##
 ## Camera: a third-person rig's height (EYE_M over the terrain), 60 degree
 ## vertical FOV. The clock is frozen in the morning. Writes PNGs to --out.
@@ -21,9 +21,12 @@ const DENSIFY_M := 8.0
 const EYE_M := 2.6
 const FOV_DEG := 60.0
 const DISTANCES_M := [220.0, 160.0, 110.0, 70.0]
+## `--distances=480,420` overrides (Juno's patrol camp is ~470 m off any road).
 const CUES := {
 	"bram": Vector2(184.0, 901.0),
 	"doss": Vector2(-11.0, 4184.5),
+	"juno": Vector2(-175.0, 5470.0),
+	"vault": Vector2(-351.0, 2611.8),
 }
 
 var _world: Node3D
@@ -38,11 +41,16 @@ func _init() -> void:
 func _run() -> void:
 	var cue_id := "bram"
 	var out := "user://lure_cue_views"
+	var distances: Array = DISTANCES_M.duplicate()
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--cue="):
 			cue_id = a.trim_prefix("--cue=")
 		elif a.begins_with("--out="):
 			out = a.trim_prefix("--out=")
+		elif a.begins_with("--distances="):
+			distances = []
+			for part: String in a.trim_prefix("--distances=").split(","):
+				distances.append(float(part))
 	DirAccess.make_dir_recursive_absolute(out)
 	var cue: Vector2 = CUES[cue_id]
 	_load_roads()
@@ -69,7 +77,7 @@ func _run() -> void:
 	for layer in _world.find_children("*", "CanvasLayer", true, false):
 		(layer as CanvasLayer).visible = false
 	var cue_top := Vector3(cue.x, _height(cue.x, cue.y) + 12.0, cue.y)
-	for d: float in DISTANCES_M:
+	for d: float in distances:
 		var s := _sample_at(cue, d)
 		if s.is_empty():
 			print("[cue-view] %s no road sample near %.0f m" % [cue_id, d])

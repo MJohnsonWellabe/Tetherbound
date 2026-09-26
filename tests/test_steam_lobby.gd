@@ -64,6 +64,62 @@ class MockSteam:
 	func activateGameOverlayInviteDialog(lobby_id: int) -> void:
 		overlay_opened = lobby_id
 
+	var personas := {700: "Rin", 701: "[unknown]"}
+
+	func getFriendPersonaName(steam_id: int) -> String:
+		return str(personas.get(steam_id, ""))
+
+	func getSteamID() -> int:
+		return 500
+
+	func setLobbyData(_lobby_id: int, key: String, value: String) -> bool:
+		metadata[key] = value
+		return true
+
+
+class FakeRelayPeer extends OfflineMultiplayerPeer:
+	var server_relay := false
+
+	func create_host(_port: int) -> int:
+		return OK
+
+
+class HostSessionStub extends Node:
+	var hosted := 0
+
+	func host_with_peer(_peer: MultiplayerPeer, _capacity: int, _kind: String) -> bool:
+		hosted += 1
+		return true
+
+	func is_active() -> bool:
+		return hosted > 0
+
+
+class GameStub extends Node:
+	var session: Node
+
+
+## The host's status line sits under the Players tab's live "n/4 players" count;
+## a count frozen at "1/4" when the lobby opened contradicted it as soon as a
+## friend joined.
+func test_a_ready_friends_host_status_carries_no_frozen_player_count() -> void:
+	var steam := MockSteam.new()
+	var game := GameStub.new()
+	game.session = HostSessionStub.new()
+	game.add_child(game.session)
+	var lobby := STEAM_LOBBY.new()
+	game.add_child(lobby)
+	lobby._inject_native_for_test(steam, 123, func() -> MultiplayerPeer: return FakeRelayPeer.new())
+	assert_true(lobby.initialize())
+	lobby._state = "host_creating"
+	steam.lobby_created.emit(STEAM_LOBBY.CALLBACK_OK, 777)
+	assert_true(lobby.is_hosting(), "the mocked relay host is ready")
+	assert_eq(steam.metadata.get("ready"), "1", "ready is published once the session hosts")
+	assert_eq(lobby.status_text(), "Friends lobby ready.")
+	assert_false(lobby.status_text().contains("/"), "no player count to go stale")
+	game.free()
+	steam.free()
+
 
 func test_native_unavailable_is_optional_and_actionable() -> void:
 	var lobby := STEAM_LOBBY.new()
@@ -286,6 +342,57 @@ func test_invite_while_hosting_stays_pending_with_a_reason() -> void:
 	assert_eq(lobby.last_error(), "Leave the current world before joining this invitation.")
 	assert_eq(lobby.pending_invite_id(), 9003, "the invite is kept for after the player leaves")
 	assert_eq(steam.joined, [])
+	lobby.free()
+	steam.free()
+
+
+## MULTIPLAYER Join: the Join Friend screen shows who the invitation is from.
+func test_a_warm_invite_names_its_sender_until_it_is_taken_or_dismissed() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	assert_eq(lobby.pending_inviter_name(), "", "no invite, no name")
+	steam.join_requested.emit(9004, 700)
+	assert_eq(lobby.pending_invite_id(), 9004)
+	assert_eq(lobby.pending_inviter_name(), "Rin", "Steam's name for the friend who sent it")
+	assert_eq(lobby.pending_inviter_name(9004), "Rin")
+	assert_eq(lobby.pending_inviter_name(9999), "", "not the sender of another lobby's invite")
+	lobby._hosting = true
+	assert_false(lobby.request_join(9004))
+	assert_eq(lobby.pending_inviter_name(), "Rin", "kept while the invite waits for the player to leave")
+	lobby._hosting = false
+	lobby.clear_pending_invite()
+	assert_eq(lobby.pending_inviter_name(), "", "a dismissed invite names nobody")
+	steam.join_requested.emit(9005, 700)
+	assert_true(lobby.request_join(9005))
+	assert_eq(lobby.pending_inviter_name(), "", "an accepted invite is no longer pending")
+	lobby.free()
+	steam.free()
+
+
+func test_an_uncached_sender_and_an_old_failure_do_not_replace_the_invitation() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	lobby._set_error("That friend’s lobby no longer exists.")
+	steam.join_requested.emit(9008, 701)
+	assert_eq(lobby.pending_inviter_name(), "", "Steam's placeholder is not a name")
+	assert_eq(lobby.last_error(), "", "the earlier attempt's failure does not stand in for a new invitation")
+	lobby.free()
+	steam.free()
+
+
+func test_a_cold_launch_invite_has_no_sender_to_name() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	steam.join_requested.emit(9006, 700)
+	lobby._set_pending_invite(9007)
+	assert_eq(lobby.pending_invite_id(), 9007)
+	assert_eq(lobby.pending_inviter_name(), "", "another lobby's sender is not carried over")
 	lobby.free()
 	steam.free()
 

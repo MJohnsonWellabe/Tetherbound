@@ -1,0 +1,60 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+only cloudreach_world,cloudreach_route,cloudreach_counterweight: 7 of 562 test files
+  ok    test_cloudreach_counterweight_seal.gd :: test_every_collidable_top_face_of_the_closed_gate_is_fly_sealed
+  ok    test_cloudreach_counterweight_seal.gd :: test_every_stair_point_past_the_gate_is_fly_sealed
+  ok    test_cloudreach_counterweight_seal.gd :: test_gate_spans_the_route_ridge_walkable_width
+  ok    test_cloudreach_counterweight_seal.gd :: test_gate_stands_where_the_pass_enters_upper_cloudreach_past_the_beacon
+  ok    test_cloudreach_counterweight_seal.gd :: test_legal_pre_unlock_content_is_outside_every_upper_seal
+  ok    test_cloudreach_counterweight_seal.gd :: test_nothing_fly_gated_is_walkable_before_the_upper_unlock
+  ok    test_cloudreach_route_cadence.gd :: test_cadence_sites_are_gated_native_route_pairs
+CLOUDREACH ROUTE CADENCE PRE-FIX {"from":"pickup:cr_candy_windscar_flight_great_01","leg":"counterweight_pass","longest_gap_m":1609.4,"over_limit":{"arrive:summit_bivouac -> arrive:summit_threshold":627.136352539062,"arrive:upper_anchor_east -> wild:road_visibility_upper_summit_road_01":750.400134203765,"arrive:upper_anchor_west -> pickup:cr_candy_upper_detour_great_03":716.45311808816,"flight:finale -> pickup:cr_candy_summit_detour_great_02":781.324890270367,"pickup:cr_candy_windscar_flight_great_01 -> pickup:cr_candy_windscar_detour_good_02":1609.35745910616},"to":"pickup:cr_candy_windscar_detour_good_02"}
+  ok    test_cloudreach_route_cadence.gd :: test_check_rejects_the_pre_fix_route_data
+CLOUDREACH ROUTE CADENCE {"at":"(-270.5999, 464.2, 3119.6) -> (-507.4001, 431.2, 2711.6)","from":"wild:road_visibility_windscar_floor_loop_return_01","leg":"counterweight_pass","longest_gap_m":490.9,"longest_gap_s_at_walk":98.2,"over_limit":{"arrive:summit_bivouac -> arrive:summit_threshold":627.136352539062},"route_m":15704.1,"to":"wild:road_visibility_windscar_floor_loop_return_02"}
+  ok    test_cloudreach_route_cadence.gd :: test_required_route_has_no_a7_empty_interval
+  CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry [21, 18, 18, 18, 18]  wild fraction 0.50  no catches, no repeats  {  }
+  phase             path_m   wilds  wildXP  candy  ace need L/all  levels before    trnXP  levels after     coins bonusXP
+  Lieutenant Senn     3261   14/28    4452     +8   24     22/19  24 21 21 21 21     796  24 22 22 22 22      80       0
+  Keeper Maela        2003    9/19    3534     +8   25     23/20  26 25 25 25 25     828  27 25 25 25 25      75       0
+  Officer Voss        7919   15/31    6658     +7   31     29/26  30 29 29 29 28    1530  32 30 30 30 29     120    1600
+  Captain Veyra       1717     3/6    1530     +4   34     32/29  33 31 31 31 30    1642  34 32 32 32 31     150     600
+  Exit (overlook)     1122     0/0       0     +0    -       -/-  34 32 32 32 31       0  34 32 32 32 31       0       0
+  exit 34 32 32 32 31  (lead target 33, others >= 30; finale and exit need +1 margin)
+  gate-closed site passes excluded: 12; shortfalls: []
+  supply: aerie_repair needs 3 gale_fiber; reached first-pass supply 7
+  ok    test_cloudreach_route_ledger.gd :: test_every_retained_member_meets_each_required_fights_band
+  ok    test_cloudreach_route_ledger.gd :: test_gates_are_respected_leg_by_leg
+  ok    test_cloudreach_route_ledger.gd :: test_negative_controls_fail_the_same_assertion
+  ok    test_cloudreach_route_ledger.gd :: test_no_required_step_requires_a_catch
+  ok    test_cloudreach_route_ledger.gd :: test_required_coin_income_before_the_finale_covers_two_losses
+  ok    test_cloudreach_route_ledger.gd :: test_required_interaction_costs_have_a_150_percent_route_supply
+  ok    test_cloudreach_route_ledger.gd :: test_the_replayed_route_follows_the_harness_and_the_data_gates
+  ok    test_cloudreach_route_ledger.gd :: test_the_retained_five_leave_cloudreach_inside_the_envelope
+  ok    test_cloudreach_route_verges.gd :: test_route_ecology_owns_no_collision_or_gameplay_state
+  ok    test_cloudreach_route_verges.gd :: test_route_ecology_plan_is_bounded_clear_and_deterministic
+  ok    test_cloudreach_route_verges.gd :: test_route_ecology_reaches_every_grounded_route_and_skips_flight
+  ok    test_cloudreach_world_data.gd :: test_authored_extent_is_large_and_vertical_enough_for_a_real_chapter
+  ok    test_cloudreach_world_data.gd :: test_authored_unlock_connects_upper_and_summit_without_using_high_roost_as_a_road
+  ok    test_cloudreach_world_data.gd :: test_bridges_are_authored_on_real_routes_with_measured_spans
+  ok    test_cloudreach_world_data.gd :: test_config_is_readable_and_identifies_cloudreach
+  ok    test_cloudreach_world_data.gd :: test_exact_six_directive_regions_are_authored_in_order
+  ok    test_cloudreach_world_data.gd :: test_fly_route_and_gate_protect_high_roost
+  ok    test_cloudreach_world_data.gd :: test_ground_graph_stops_at_windscar_before_the_authored_unlock
+  ok    test_cloudreach_world_data.gd :: test_high_roost_is_visible_early_but_fly_only
+  ok    test_cloudreach_world_data.gd :: test_landmark_ids_are_unique_and_every_region_has_a_valid_landmark
+  ok    test_cloudreach_world_data.gd :: test_meadows_entry_and_return_points_are_explicit_and_safe
+  ok    test_cloudreach_world_data.gd :: test_region_positions_and_bounds_are_valid_and_inside_the_realm
+  ok    test_cloudreach_world_data.gd :: test_routes_reference_regions_and_keep_every_authored_point_in_bounds
+  ok    test_cloudreach_world_data.gd :: test_sky_shrine_authors_the_upper_route_unlock
+  ok    test_cloudreach_world_payoffs.gd :: test_side_payoffs_restore_each_independent_canonical_fact
+  ok    test_cloudreach_world_payoffs.gd :: test_tavi_rematch_is_a_distinct_once_only_tier_using_the_existing_team_and_reward
+  ok    test_cloudreach_world_presets.gd :: test_a_comment_string_in_any_position_does_not_abort_the_merge
+  ok    test_cloudreach_world_presets.gd :: test_a_missing_or_non_dictionary_times_block_merges_nothing
+  ok    test_cloudreach_world_presets.gd :: test_atmosphere_colours_become_the_base_and_only_the_fog_delta_stays_weather
+  ok    test_cloudreach_world_presets.gd :: test_merging_the_real_art_json_touches_every_preset_and_no_comment
+  ok    test_cloudreach_world_presets.gd :: test_the_cloudreach_night_override_lifts_shadow_fill_but_stays_night
+  ok    test_cloudreach_world_presets.gd :: test_the_shipped_art_json_times_block_still_carries_comment_strings
+  ok    test_cloudreach_world_presets.gd :: test_the_shipped_cloudreach_night_is_darker_than_its_day
+  ok    test_cloudreach_world_presets.gd :: test_time_overrides_win_skip_comments_and_ignore_unknown_presets
+43 tests, 1388 assertions, 0 failed
+rc=0
+SCRIPT_ERROR_COUNT=0

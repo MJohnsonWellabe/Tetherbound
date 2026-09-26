@@ -1,0 +1,8 @@
+[cue-view] vault d=159m at=(-215.6,2695.6) cue_off_road_heading=-7deg res://shots/cue_vault/vault_160m_road.png
+[cue-view] vault d=159m at=(-215.6,2695.6) cue_off_road_heading=-7deg res://shots/cue_vault/vault_160m_glance.png
+[cue-view] vault d=110m at=(-254.4,2664.4) cue_off_road_heading=-10deg res://shots/cue_vault/vault_110m_road.png
+[cue-view] vault d=110m at=(-254.4,2664.4) cue_off_road_heading=-10deg res://shots/cue_vault/vault_110m_glance.png
+[cue-view] vault d=70m at=(-375.0,2545.8) cue_off_road_heading=21deg res://shots/cue_vault/vault_070m_road.png
+[cue-view] vault d=70m at=(-375.0,2545.8) cue_off_road_heading=21deg res://shots/cue_vault/vault_070m_glance.png
+[cue-view] vault d=49m at=(-360.0,2563.3) cue_off_road_heading=30deg res://shots/cue_vault/vault_050m_road.png
+[cue-view] vault d=49m at=(-360.0,2563.3) cue_off_road_heading=30deg res://shots/cue_vault/vault_050m_glance.png
