@@ -3901,8 +3901,14 @@ func _build_high_perches(root: Node3D) -> void:
 		var outward := Vector3(cos(angle), 0.0, sin(angle))
 		perch_points.append(foot)
 		perch_radii.append(radius)
-		_cylinder(root, "RoostNeedle%d" % i,
-			foot + Vector3.UP * height * 0.5, radius, height, _materials["stone"])
+		# F08#3: the needles are natural rock spires, so they carry the realm's
+		# pale stratified cliff geology rather than the brown masonry tint that
+		# read as brick chimneys/silos beside the grey-green crags.
+		var needle := _cylinder(root, "RoostNeedle%d" % i,
+			foot + Vector3.UP * height * 0.5, radius, height, _materials["cliff"])
+		# Few, uneven facets read as a weathered basalt stack, not a turned flue.
+		(needle.mesh as CylinderMesh).radial_segments = 7 + i % 3
+		needle.rotation.y = angle * 1.7
 		_box(root, "PerchCap%d" % i,
 			foot + Vector3.UP * height,
 			Vector3(8.0, 0.8, 4.0), _materials["wood"], false,
