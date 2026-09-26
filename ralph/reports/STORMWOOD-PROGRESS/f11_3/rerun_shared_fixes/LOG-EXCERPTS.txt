@@ -1,0 +1,20 @@
+Shared branch: ralph/stormwood-shared-net-fixes d69b46bf58686324b1c16e3db757183c2f919fbd (parent origin/main 79fe89048)
+Runs on the F11 working tree with that branch's files applied.
+
+== f11_3: **Verdict: PASS** (exit 0)  unexpected rows: 0
+   peer-0.log SCRIPT ERROR: 0
+   peer-1.log SCRIPT ERROR: 0
+== repro: **Verdict: PASS** (exit 0)  unexpected rows: 0
+   peer-0.log SCRIPT ERROR: 0
+   peer-1.log SCRIPT ERROR: 0
+== waterward: **Verdict: PASS** (exit 0)  unexpected rows: 0
+   peer-0.log SCRIPT ERROR: 0
+   peer-1.log SCRIPT ERROR: 0
+== f11_3_fail1: **Verdict: FAIL** (exit 1)  unexpected rows: 1
+   peer-0.log SCRIPT ERROR: 0
+   peer-1.log SCRIPT ERROR: 0
+
+f11_3 restart line:
+coordinator: restarted peer 0 (host) pid 15060 -> 16891, scene title, graceful quit=true
+
+f11_3_fail1: step 37, the host's interact press at the Spark socket did not activate it (placed_inactive -> placed_inactive). Not diagnosed further; most likely the press went to another provider (the guest had just stood on the same spot). spark_socket now stands where the arbiter's winning provider IS the socket prompt; re-run PASS.
