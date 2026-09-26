@@ -1,6 +1,7 @@
 extends "res://tests/test_case.gd"
 
 const STEAM_LOBBY := preload("res://scripts/net/steam_lobby.gd")
+const PLAYERS_TAB := preload("res://scripts/ui/tab_players.gd")
 
 
 class MockSteam:
@@ -76,6 +77,12 @@ class MockSteam:
 		metadata[key] = value
 		return true
 
+	var joinable_calls: Array = []
+
+	func setLobbyJoinable(lobby_id: int, joinable: bool) -> bool:
+		joinable_calls.append([lobby_id, joinable])
+		return true
+
 
 class FakeRelayPeer extends OfflineMultiplayerPeer:
 	var server_relay := false
@@ -85,7 +92,11 @@ class FakeRelayPeer extends OfflineMultiplayerPeer:
 
 
 class HostSessionStub extends Node:
+	signal peer_joined(peer_id: int, character_id: String)
+	signal peer_left(peer_id: int)
+
 	var hosted := 0
+	var count := 1
 
 	func host_with_peer(_peer: MultiplayerPeer, _capacity: int, _kind: String) -> bool:
 		hosted += 1
@@ -94,9 +105,43 @@ class HostSessionStub extends Node:
 	func is_active() -> bool:
 		return hosted > 0
 
+	func peer_count() -> int:
+		return count
+
+	func max_peers() -> int:
+		return 4
+
+	func is_host() -> bool:
+		return true
+
+	func transport_kind() -> String:
+		return "steam"
+
+	func local_peer_id() -> int:
+		return 1
+
+	func peers() -> Array:
+		var rows: Array = []
+		for index in count:
+			rows.append({"peer_id": index + 1, "display_name": "Trainer %d" % (index + 1)})
+		return rows
+
+
+class WorldStub extends RefCounted:
+	var world_id := "world-5f3a"
+
 
 class GameStub extends Node:
 	var session: Node
+	var world: RefCounted = WorldStub.new()
+
+
+class MenuStub extends Node:
+	var game: Node
+	var said: Array[String] = []
+
+	func say(message: String) -> void:
+		said.append(message)
 
 
 ## The host's status line sits under the Players tab's live "n/4 players" count;
@@ -401,3 +446,135 @@ func test_connect_lobby_launch_argument_parsing() -> void:
 	assert_eq(STEAM_LOBBY.connect_lobby_from_args(["+connect_lobby", "7654"]), 7654)
 	assert_eq(STEAM_LOBBY.connect_lobby_from_args(["+connect_lobby=8765"]), 8765)
 	assert_eq(STEAM_LOBBY.connect_lobby_from_args(["+connect_lobby", "nope"]), 0)
+
+
+func _ready_host() -> Dictionary:
+	var steam := MockSteam.new()
+	var game := GameStub.new()
+	game.session = HostSessionStub.new()
+	game.add_child(game.session)
+	var lobby := STEAM_LOBBY.new()
+	game.add_child(lobby)
+	lobby._inject_native_for_test(steam, 123, func() -> MultiplayerPeer: return FakeRelayPeer.new())
+	assert_true(lobby.initialize())
+	lobby._bind_session()
+	lobby._state = "host_creating"
+	steam.lobby_created.emit(STEAM_LOBBY.CALLBACK_OK, 777)
+	assert_true(lobby.is_hosting(), "the mocked relay host is ready")
+	return {"steam": steam, "game": game, "lobby": lobby, "session": game.session}
+
+
+## MULTIPLAYER Host/Invite: a lobby capped at four total. At 4/4 the lobby is
+## published unjoinable and Invite refuses with a reason; a departure reopens it.
+func test_a_full_world_is_unjoinable_and_refuses_invites_until_a_seat_opens() -> void:
+	var h := _ready_host()
+	var steam: MockSteam = h.steam
+	var lobby: Node = h.lobby
+	var session: HostSessionStub = h.session
+	steam.overlay_enabled = true
+	assert_eq(steam.joinable_calls, [[777, true]], "host ready publishes the lobby joinable")
+	session.count = 3
+	session.peer_joined.emit(3, "character-c")
+	assert_eq(steam.joinable_calls.size(), 1, "an unchanged joinable flag is not re-sent")
+	session.count = 4
+	session.peer_joined.emit(4, "character-d")
+	assert_true(lobby.is_full())
+	assert_eq(steam.joinable_calls.back(), [777, false], "4/4 is unjoinable")
+	assert_false(lobby.invite_friends(), "no invite overlay into a full world")
+	assert_eq(steam.overlay_opened, 0)
+	assert_eq(lobby.last_error(), "This world is full (4/4). A friend can be invited when a seat opens.")
+	session.count = 3
+	session.peer_left.emit(4)
+	assert_false(lobby.is_full())
+	assert_eq(steam.joinable_calls.back(), [777, true], "a free seat reopens the lobby")
+	assert_true(lobby.invite_friends())
+	assert_eq(steam.overlay_opened, 777)
+	h.game.free()
+	steam.free()
+
+
+func test_the_players_tab_disables_invite_at_four_of_four() -> void:
+	var h := _ready_host()
+	var session: HostSessionStub = h.session
+	var menu := MenuStub.new()
+	menu.game = h.game
+	var tab: Node = PLAYERS_TAB.new()
+	tab.menu = menu
+	tab.build()
+	var invite: Button = tab.first_focus()
+	assert_ne(invite, null, "a Steam host gets the Invite button")
+	assert_false(invite.disabled)
+	assert_eq(invite.text, "Invite Friends")
+	session.count = 4
+	tab.poll()
+	assert_true(invite.disabled, "4/4 disables Invite")
+	assert_eq(invite.text, "World Full (4/4)")
+	session.count = 2
+	tab.poll()
+	assert_false(invite.disabled, "a free seat enables it again")
+	assert_eq(invite.text, "Invite Friends")
+	tab.free()
+	menu.free()
+	h.game.free()
+	(h.steam as Node).free()
+
+
+func test_closing_the_window_leaves_the_hosted_lobby() -> void:
+	var h := _ready_host()
+	var steam: MockSteam = h.steam
+	var lobby: Node = h.lobby
+	lobby.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	assert_eq(steam.left, [777], "WM_CLOSE_REQUEST leaves the Steam lobby")
+	lobby.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	assert_eq(steam.left, [777], "and leaves it only once")
+	h.game.free()
+	steam.free()
+
+
+func test_closing_the_window_mid_join_leaves_the_joining_lobby() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	assert_true(lobby.request_join(4242))
+	lobby.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	assert_eq(steam.left, [4242])
+	lobby.free()
+	steam.free()
+
+
+func test_lobby_metadata_carries_the_host_world_id() -> void:
+	var h := _ready_host()
+	var steam: MockSteam = h.steam
+	assert_eq(steam.metadata.get("world_id"), "world-5f3a", "the host world's stable id is published")
+	assert_eq(h.lobby.lobby_world_id(777), "world-5f3a")
+	h.game.free()
+	steam.free()
+
+
+## An invitation accepted while this player is in a world is kept for the
+## title flow AND said on screen, instead of silently waiting.
+func test_an_invite_accepted_in_a_world_raises_a_notice_and_stays_pending() -> void:
+	var h := _ready_host()
+	var steam: MockSteam = h.steam
+	var lobby: Node = h.lobby
+	assert_eq(lobby.world_notice_text(), "")
+	steam.join_requested.emit(9100, 700)
+	assert_eq(lobby.pending_invite_id(), 9100, "the invite waits for the title screen")
+	assert_eq(lobby.world_notice_text(),
+		"Rin invited you to their world. Save and return to the title screen to join.")
+	assert_eq(steam.joined, [], "nothing joins from inside a world")
+	h.game.free()
+	steam.free()
+
+
+func test_an_invite_at_the_title_raises_no_world_notice() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	steam.join_requested.emit(9101, 700)
+	assert_eq(lobby.pending_invite_id(), 9101)
+	assert_eq(lobby.world_notice_text(), "", "the title screen answers the invite itself")
+	lobby.free()
+	steam.free()
