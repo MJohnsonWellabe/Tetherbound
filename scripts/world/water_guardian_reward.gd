@@ -21,14 +21,20 @@ extends RefCounted
 ## sources), the participant and once-only guarantees hold only against honest
 ## clients.
 ##
-## PARTICIPANT RECORDING -- OPEN F14 BLOCKER (needs encounter_director.gd, a
-## shared file). Participant rows below exist ONLY for host-run Nerissa fights:
-## `_record_trainer_defeat_for_the_session` journals a per-participant
-## `reward_grant` only on the host. A guest-run Nerissa fight pays the guest
-## through the solo path and currently yields NO participant rows, so the
-## host-local fallback below applies to it: the host's own character is
-## treated as the one participant and the guest who actually fought is not.
-## That is a known open defect, not fixed here.
+## PARTICIPANT RECORDING -- CLOSED. Every live Nerissa win journals a
+## per-participant `reward_grant` row through the ledger (encounter_director.gd):
+##   * a host-run session fight: `_record_trainer_defeat_for_the_session` ->
+##     `_pay_every_participant`, one row per participant;
+##   * a guest-run fight: the guest sends `trainer_victory` and the host
+##     journals the guest's rows (`_host_trainer_victory`);
+##   * a SOLO fight (no session, or a one-peer session):
+##     `_journal_solo_trainer_win` journals the local character's rows through
+##     the same `_grant_to` path (the ledger delivery IS the payout; the local
+##     `_pay_trainer_reward` runs only when nothing could be journaled, e.g. no
+##     durable world file, so nothing is paid twice).
+## An empty journal therefore means a world whose Nerissa payout predates
+## delivery rows (or whose solo journal write failed): the host-local fallback
+## below exists for those worlds only.
 ##
 ## Freed-legendary offer for the Abyssal Guardian (CLAUDE.md, WORLD §2.3,
 ## BOSSES §4.12, MULTIPLAYER §95). The host owns ONE shared freeing and records
@@ -48,24 +54,19 @@ extends RefCounted
 ##     host's own local character the one participant (never in a legacy
 ##     world: see Legacy). Unlike the Meadows
 ##     reader, an empty set is NOT "anyone": in co-op an unidentified guest
-##     must not qualify. INTERIM (same rule as F05): in a MULTI-PEER session
-##     an empty journal offers NOBODY -- a guest may have fought Nerissa alone
-##     on its own client (no rows), and the host who did not fight must not be
-##     presumed the participant. The real fix journals client-run wins on the
-##     host (branch ralph/trainer-participants-host). Known gaps of this
-##     interim rule, both until that branch lands (each pinned by a test in
-##     tests/test_water_guardian_legacy.gd, to be updated when it lands):
-##       - a host left solo after such a guest disconnects is treated as solo
-##         (and offered) although it may not have fought. Once that branch
-##         lands the guest's fight journals its rows, the journal is no longer
-##         empty and names only the guest, so this host is refused;
-##       - a SOLO Nerissa win journals no rows either (the director pays solo
-##         with one peer), so a host who beat her alone and then invites a guest
-##         BEFORE answering cannot answer while the guest is connected (prompt
-##         hidden, begin/refuse `not_participant`); the offer returns when the
-##         session is solo again. The rule is re-read on every call (the
-##         Veilfall view cache keys on the peer count), so it follows peers
-##         joining and leaving at runtime.
+##     must not qualify. In a MULTI-PEER session an empty journal offers
+##     NOBODY: a journal-less world cannot say who fought, and a connected
+##     guest must not be outranked by a host presumed to have fought. Since
+##     every live win now journals its rows (PARTICIPANT RECORDING), this only
+##     affects journal-less (pre-row) worlds: such a host who invites a guest
+##     before answering cannot answer while the guest is connected, and the
+##     offer returns when the session is solo again (pinned in
+##     tests/test_water_guardian_legacy.gd). The rule is deliberately NOT
+##     narrowed further ("solo host of an empty journal" still qualifies):
+##     that is exactly how an old solo save looks. A host whose guest fought
+##     alone and left is refused by the guest's journaled row, not by this
+##     rule. The rule is re-read on every call (the Veilfall view cache keys
+##     on the peer count), so it follows peers joining and leaving at runtime.
 ##   Every refusal (tethered, already resolved, legacy_world, not_participant,
 ##   not_ready) returns before anything is written -- world identity included.
 ##
@@ -217,9 +218,16 @@ static func participants(world: RefCounted) -> Array:
 			out.append(character)
 	return out
 
+## Whether a SOLO win over `trainer_id` must be journaled per participant
+## (encounter_director.gd `_journal_solo_trainer_win`), so this file's
+## participant set names the solo winner explicitly (header: Participants).
+static func journals_solo_win(trainer_id: String) -> bool:
+	return trainer_id == TRAINER_ID
+
 ## Pure rule, testable without a world. `participant_characters` empty means
-## "no Nerissa row exists at all": solo, only the host's local character
-## qualifies; in a multi-peer session nobody does (header: Participants).
+## "no Nerissa row exists at all" (a journal-less world; every live win
+## journals rows): solo, only the host's local character qualifies; in a
+## multi-peer session nobody does (header: Participants).
 static func may_receive(character_id: String, participant_characters: Array,
 		host_local_character: String, already_resolved: bool, multi_peer: bool = false) -> bool:
 	if already_resolved or character_id.is_empty():
