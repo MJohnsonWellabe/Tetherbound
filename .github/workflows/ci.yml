@@ -142,18 +142,17 @@ jobs:
   # `skipped`, not `success`, and would be refused. Keep this job unconditional.
   changes:
     runs-on: ubuntu-latest
-    # LIGHTER CI (owner, 2026-09-26: "lighten CI and batch things together").
-    # Draft PRs run no CI: a dozen lane sessions push draft PRs constantly and
-    # every push queued a fast-tier run that starved render.yml evidence runs
-    # and the batch PRs. Lanes verify locally or with render.yml; the
-    # non-draft `tb/integration-N` batch PR runs CI before anything lands.
-    # Label a draft `full-ci`, or mark it ready, to run CI on it anyway.
+    # NO PRE-MERGE CI (owner, 2026-09-26: "stop doing CI before merging
+    # anything to main"). Pull requests run no build/test jobs: lanes verify
+    # locally or with render.yml, the coordinator's independent review gates
+    # each `tb/integration-N` batch, and the fast tier runs once on the push
+    # to main after merge (plus the 8-hourly full tier); red on main is fixed
+    # forward in the next batch. Label a PR `full-ci` to run CI on it anyway.
     # With `changes` skipped every verify job skips, but ci-gate still runs
-    # (`if: always()`), so the run executes a job and concludes `success`
-    # (the "keep unconditional" concern above is met; ralph-merge.yml is an
-    # unused legacy helper). A draft cannot merge, so that green is never a
-    # landing signal.
-    if: github.event_name != 'pull_request' || !github.event.pull_request.draft || contains(github.event.pull_request.labels.*.name, 'full-ci')
+    # (`if: always()`), so the required check concludes `success` (the "keep
+    # unconditional" concern above is met; ralph-merge.yml is an unused
+    # legacy helper).
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'full-ci')
     # Was 5, which this job's own checkout outgrew. A `timeout-minutes` kill
     # reports as CANCELLED, not failed, and every downstream job then skips --
     # so the run looks like a tidy no-op rather than a job that died. Raised as
