@@ -31,6 +31,11 @@ func test_layer_is_presentation_only_and_clear_of_the_lane() -> void:
 		"the pier stands beside the safe->shore swim lane, not across it")
 
 
-func test_lantern_light_is_warm_not_team_tether_red() -> void:
+func test_lantern_light_and_piling_tint_are_not_team_tether_red() -> void:
 	var c := Color(str((_cfg().lanterns as Dictionary).light_colour))
 	assert_true(not (c.r > c.g * 1.6 and c.r > c.b * 1.6), "lantern light is warm, not red")
+	var tint := Color(str((_cfg().pier as Dictionary).get("post_tint", "#ffffff")))
+	assert_true(tint.get_luminance() < 0.35 and not (tint.r > tint.g * 1.6 and tint.r > tint.b * 1.6),
+		"pier pilings are darkened to wet wood, not the log texture's salmon pink")
+	assert_true(float((_cfg().lanterns as Dictionary).get("glow_energy", 0.0)) > 0.0,
+		"dock lanterns glow so they read lit at night")

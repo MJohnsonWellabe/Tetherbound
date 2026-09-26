@@ -6,30 +6,104 @@
     "post_model": "res://assets/props/kenney_survival/tree-log-small.glb",
     "lateral_offset_m": 4.0,
     "start_back_from_shore_m": 1.5,
-    "length_m": 9.0,
+    "length_m": 14.0,
     "width_m": 2.4,
     "tile_length_m": 1.8,
     "deck_height_m": 0.55,
     "post_spacing_m": 3.0,
     "post_height_m": 1.9,
-    "post_radius_m": 0.16
+    "post_radius_m": 0.16,
+    "post_tint": "#4a3b2e",
+    "_why_post_tint": "The installed log's texture rendered salmon-pink under the Tidewake light, close to Team Tether's reserved red; posts take a dark wet-wood multiply (ART_DIRECTION Tidewake: wet dark rock and timber)."
   },
   "lanterns": {
     "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
     "height_m": 0.62,
     "light_colour": "#ffc98a",
-    "light_energy": 0.9,
-    "light_range_m": 7.0
+    "light_energy": 2.2,
+    "light_range_m": 9.0,
+    "glow_energy": 1.6,
+    "_why_glow": "The lantern model has no emissive surface, so at night a blind pass read every dock lantern as unlit. The lantern body now glows warm (emission from its own albedo) and the omni light is stronger."
   },
   "cargo": {
     "side_offset_m": 3.6,
     "back_from_safe_m": 1.0,
     "items": [
-      {"model": "res://assets/props/quaternius_fantasy/Barrel.gltf", "height_m": 1.0, "at": [0.0, 0.0], "yaw_deg": 0.0},
-      {"model": "res://assets/props/quaternius_fantasy/Barrel.gltf", "height_m": 1.0, "at": [0.9, 0.35], "yaw_deg": 40.0},
-      {"model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", "height_m": 0.8, "at": [-0.6, 1.0], "yaw_deg": 15.0},
-      {"model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", "height_m": 0.8, "at": [0.3, 1.3], "yaw_deg": -20.0},
-      {"model": "res://assets/props/quaternius_fantasy/Rope_1.gltf", "height_m": 0.35, "at": [1.2, 1.4], "yaw_deg": 0.0}
-    ]
+      {
+        "model": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+        "height_m": 1.0,
+        "at": [
+          0.0,
+          0.0
+        ],
+        "yaw_deg": 0.0
+      },
+      {
+        "model": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+        "height_m": 1.0,
+        "at": [
+          0.9,
+          0.35
+        ],
+        "yaw_deg": 40.0
+      },
+      {
+        "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+        "height_m": 0.8,
+        "at": [
+          -0.6,
+          1.0
+        ],
+        "yaw_deg": 15.0
+      },
+      {
+        "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+        "height_m": 0.8,
+        "at": [
+          0.3,
+          1.3
+        ],
+        "yaw_deg": -20.0
+      },
+      {
+        "model": "res://assets/props/quaternius_fantasy/Rope_1.gltf",
+        "height_m": 0.35,
+        "at": [
+          1.2,
+          1.4
+        ],
+        "yaw_deg": 0.0
+      }
+    ],
+    "variants": [
+      [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      [
+        0,
+        2,
+        4
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        0,
+        1,
+        3,
+        4
+      ],
+      [
+        2,
+        3,
+        4
+      ]
+    ],
+    "_why_variants": "Each dock takes one of these item subsets (by dock index) with a per-dock yaw so the docks stop reading as one repeated template."
   }
 }
