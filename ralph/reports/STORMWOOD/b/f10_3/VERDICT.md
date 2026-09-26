@@ -111,7 +111,12 @@ Copied unedited into `JUDGE_ANSWERS.txt` in this folder (identical to
   could advance up to about 10 ticks (0.17 s) against a 0.18 s bolt. The miss
   is most likely capture drift, not a proven defect. The earlier exact-tick
   witness `ralph/reports/SHARED-UI/f10-reduced-motion/reduced/staged_flash.jpg`
-  (87124330) shows the bolt kept under reduced motion. __R3__
+  (87124330) shows the bolt kept under reduced motion. **Confirmed after the
+  judge:** a re-run at exact ticks (`--motion=reduced --hours=0 --tick-cap=1`)
+  gives `frames/reduced_h00_impact_exact_ticks.jpg`. At hour 0 under reduced
+  motion it shows the bolt and the white-hot 3 m rim with no sky wash
+  (flash_level 0.005). The UX 8 reduced-motion contract (flash lowered, ring
+  and bolt kept) is observed. The judge did not see this frame.
 - The normal-motion night set and the reduced-motion day set were not rendered
   (time), so the day/night comparison crosses motion modes, which differ only
   in flashes.
