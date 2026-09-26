@@ -66,6 +66,10 @@ const MARKER_SEPARATION := 22.0
 ## and the two things that draw it would silently turn every alpha pin back into
 ## a camp dot with no error anywhere.
 const ALPHA_MARKER_PREFIX := MAP_STATE.ALPHA_MARKER_PREFIX
+## F10#0 Dark Arches payoff: a relit optional arch pair writes one dynamic
+## `gate` marker per end (stormwood_arch_runtime.gd). Drawn as a small arch, not
+## the cream camp dot, so a reopened road reads as a road.
+const ARCH_ROAD_MARKER_PREFIX := "stormwood_arch_road_"
 
 ## OW3: was 0.95 — 5% show-through, which stacked with this widget's already
 ## tight ~90m span meant unexplored ground at the rim read as dim terrain
@@ -472,7 +476,11 @@ func _draw_landmarks(centre: Vector2, scale_px_per_m: float, objective_position:
 		var is_dynamic: bool = bool(entry.get("dynamic", false))
 
 		if is_dynamic:
-			if str(entry.get("id", "")).begins_with(ALPHA_MARKER_PREFIX):
+			var glyph := dynamic_marker_glyph(str(entry.get("id", "")))
+			if glyph == "arch_gate":
+				_draw_arch_gate(local)
+				continue
+			if glyph == "alpha":
 				# CL-W1. An alpha pin is not a camp and must not read as one:
 				# the whole point of D-0904B-1 is that the player looks at the
 				# map and sees a THREAT worth going to. Drawn as a red chevron
@@ -502,6 +510,32 @@ func _draw_landmarks(centre: Vector2, scale_px_per_m: float, objective_position:
 ## proportions are the icon's, scaled down: at minimap size the chevron alone is
 ## the readable part, and the pip is what stops a lone chevron reading as the
 ## objective diamond's top half.
+## Which glyph a dynamic marker draws with: "alpha", "arch_gate" or "camp".
+static func dynamic_marker_glyph(id: String) -> String:
+	if id.begins_with(ALPHA_MARKER_PREFIX):
+		return "alpha"
+	if id.begins_with(ARCH_ROAD_MARKER_PREFIX):
+		return "arch_gate"
+	return "camp"
+
+
+## An open arch: two posts under a rounded head, as one polyline.
+static func arch_gate_points(local: Vector2, r: float) -> PackedVector2Array:
+	var points := PackedVector2Array([local + Vector2(-r * 0.7, r)])
+	for i in 9:
+		var angle := PI + PI * float(i) / 8.0
+		points.append(local + Vector2(cos(angle) * r * 0.7, -r * 0.1 + sin(angle) * r * 0.7))
+	points.append(local + Vector2(r * 0.7, r))
+	return points
+
+
+func _draw_arch_gate(local: Vector2) -> void:
+	var points := arch_gate_points(local, 7.0)
+	_draw_marker_knockback(local, 7.0)
+	draw_polyline(points, UITokens.OUTLINE, 4.5, true)
+	draw_polyline(points, UITokens.TEXT_PRIMARY, 2.2, true)
+
+
 func _draw_alpha_pin(local: Vector2) -> void:
 	var r := 8.0
 	var arm := r * 0.42
