@@ -461,6 +461,22 @@
   },
   {
    "peer": 1,
+   "probe": "downed",
+   "expect_data": {
+    "locomotion": true
+   },
+   "continue_on_fail": true,
+   "label": "DIAG: the guest can still move after the control teleport (before any launch attempt)"
+  },
+  {
+   "peer": 1,
+   "probe": "flying",
+   "expect": "any",
+   "continue_on_fail": true,
+   "label": "DIAG: flight and landing-anchor state just before the control launch"
+  },
+  {
+   "peer": 1,
    "action": "fly_launch",
    "args": {
     "height": 10.0
