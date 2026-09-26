@@ -21,6 +21,12 @@ var _serial := 0
 var _local: Dictionary = {}
 var _host_move: Array[String] = []
 var _host_move_generation := 0
+## Client: the HOST's epoch carried by the host move it installed. Epochs are
+## per-process counters (`reset()` bumps them on every session teardown), so a
+## guest that dropped and rejoined, or a restarted host, never shares the
+## other side's number; host-move RPCs are matched against the host's own
+## epoch they carry, never against this process's.
+var _host_move_epoch := -1
 var _host_move_acks: Dictionary = {}
 var _pending: Array[Dictionary] = []
 var _awaiting_install: Dictionary = {}
@@ -64,6 +70,10 @@ func reset() -> void:
 	_policy_revision += 1
 	_host_move.clear()
 	_host_move_acks.clear()
+	# A new session starts its host-move generations from zero on both sides:
+	# a restarted host's first move is generation 1 again.
+	_host_move_generation = 0
+	_host_move_epoch = -1
 	# Old awaiters capture epoch and fail without keeping a refusal that would
 	# poison the next session's first request.
 	_local.clear()
@@ -165,11 +175,8 @@ func _host_move_installed_everywhere() -> bool:
 @rpc("authority", "call_remote", "reliable", 0)
 func _install_host_move(installed_epoch: int, generation: int,
 		from: String, to: String) -> void:
-	if host() or not active() or installed_epoch != epoch or generation < _host_move_generation:
+	if not accept_host_move(installed_epoch, generation, from, to):
 		return
-	_host_move_generation = generation
-	_host_move.assign([from, to])
-	_refresh_scope_visibility(from, 1)
 	# Let the visibility update enter the multiplayer queue before its reliable
 	# acknowledgement. Game still has sync/save and its loading-overlay frame
 	# ahead of source teardown, providing the transport drain interval.
@@ -188,11 +195,32 @@ func _host_move_installed(installed_epoch: int, generation: int) -> void:
 
 @rpc("authority", "call_remote", "reliable", 0)
 func _clear_host_move(installed_epoch: int, generation: int) -> void:
-	if host() or installed_epoch != epoch or generation != _host_move_generation:
+	if not host_move_clear_matches(installed_epoch, generation):
 		return
 	var from := _host_move[0] if not _host_move.is_empty() else ""
 	_host_move.clear()
 	_refresh_scope_visibility(from, 1)
+
+
+## Client half of `_install_host_move`, synchronous so it can be tested. The
+## host's `installed_epoch` is NOT compared with this process's `epoch` (they are
+## independent counters; comparing them left every host crossing after a guest
+## reconnect waiting out TIMEOUT_MS). It is remembered and echoed back, and the
+## host validates the echo in `_host_move_installed`. Staleness within this
+## session is the generation's job; `reset()` zeroes it for the next session.
+func accept_host_move(installed_epoch: int, generation: int, from: String, to: String) -> bool:
+	if host() or not active() or generation < _host_move_generation:
+		return false
+	_host_move_generation = generation
+	_host_move_epoch = installed_epoch
+	_host_move.assign([from, to])
+	_refresh_scope_visibility(from, 1)
+	return true
+
+
+## Client: whether a host's clear names the move this client installed.
+func host_move_clear_matches(installed_epoch: int, generation: int) -> bool:
+	return not host() and installed_epoch == _host_move_epoch and generation == _host_move_generation
 
 
 func _refresh_scope_visibility(realm: String, observer: int) -> void:

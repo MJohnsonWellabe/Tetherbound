@@ -172,9 +172,13 @@ func current_speaker() -> Node3D:
 		# player has taken a step.
 		_bind_arbiter()
 	if _arbiter != null and is_instance_valid(_arbiter) and _arbiter.has_method("winning_provider"):
-		var live := resolve_speaker(_arbiter.call("winning_provider") as Node3D)
-		if live != null:
-			return live
+		# The arbiter can still name a provider a residency rebuild just freed;
+		# a freed Object cannot be cast to Node3D (SCRIPT ERROR), so validate first.
+		var winner: Variant = _arbiter.call("winning_provider")
+		if winner is Node3D and is_instance_valid(winner):
+			var live := resolve_speaker(winner as Node3D)
+			if live != null:
+				return live
 	# A residency rebuild can free the last activated NPC before a gate or
 	# story beat opens dialogue. Validate before the typed call: a freed Object
 	# cannot enter resolve_speaker(Node3D), even though its body checks validity.

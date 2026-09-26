@@ -1,0 +1,133 @@
+{
+ "name": "Host realm crossing after a guest drop and rejoin (realm_transition epoch regression)",
+ "claim": "Regression proof for the realm_transition.gd host-move epoch fix. Host and guest join (both epoch 1). The guest's link dies and it rejoins from the title (its own epoch becomes 2, the host's stays 1). The HOST then crosses Meadows -> Stormwood and back: before the fix the guest dropped the host's _install_host_move because the host's epoch differed from its own, never acknowledged, and begin_host() refused after TIMEOUT_MS (7192 frames / 120018 ms in the recorded failure). Setup: a named route-open save for the host; the guest's first step learns its character id.",
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 1500,
+ "steps": [
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": "all",
+   "action": "aftermath_state",
+   "label": "epochs before any drop"
+  },
+  {
+   "peer": 1,
+   "action": "stormheart_state",
+   "expect": "any",
+   "expect_data": {
+    "character_id": "$character1"
+   },
+   "label": "learn the guest's character id"
+  },
+  {
+   "peer": 1,
+   "action": "drop_link",
+   "args": {
+    "settle_frames": 60
+   }
+  },
+  {
+   "peer": 0,
+   "action": "expect_peers",
+   "args": {
+    "count": 1,
+    "budget_frames": 3600
+   }
+  },
+  {
+   "peer": 1,
+   "action": "production_join",
+   "budget_frames": 10000,
+   "args": {
+    "budget_frames": 6000,
+    "character": {
+     "character_id": "$character1"
+    }
+   }
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2,
+    "budget_frames": 1200
+   }
+  },
+  {
+   "peer": "all",
+   "action": "aftermath_state",
+   "label": "epochs after the guest's drop + rejoin"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000,
+   "label": "the HOST crosses to Stormwood after the guest's drop + rejoin (failed at 120 s before the realm_transition.gd epoch fix)"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2,
+    "budget_frames": 1200
+   },
+   "label": "both still connected"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "meadows"
+   },
+   "budget_frames": 10000,
+   "label": "a second host crossing (generation 2) back to the Meadows"
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000,
+   "label": "the rejoined guest can still cross too"
+  },
+  {
+   "peer": "all",
+   "action": "aftermath_state",
+   "label": "epochs at the end (host and guest differ; the crossings did not care)"
+  }
+ ]
+}

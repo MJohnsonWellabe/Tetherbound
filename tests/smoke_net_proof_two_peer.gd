@@ -44,10 +44,23 @@ const PROOF_BUILD_ALLOWANCE_S := 150.0
 const RENDER_HELLO_BUDGET_S := 900.0
 ## The harness's world-build figure, for a rendered step's in-step forced draw.
 const RENDERED_DRAW_ALLOWANCE_S := 150.0
-const WORLD_BUILD_ACTIONS := ["load_save", "boot", "enter_realm", "screenshot", "title_continue"]
+const WORLD_BUILD_ACTIONS := ["load_save", "boot", "enter_realm", "screenshot", "title_continue", "title_load"]
 ## Steps after which a peer's session id may have changed (character ids persist unless the
 ## peer loads a save or reboots; see _run_entry).
-const IDENTITY_ACTIONS := ["host", "join", "production_join", "load_save", "boot", "leave"]
+const IDENTITY_ACTIONS := ["host", "join", "production_join", "load_save", "boot", "leave", "title_load"]
+## Steps the COORDINATOR runs itself rather than sending to a peer:
+##   restart_peer {scene?}   end that peer's Godot process (a graceful quit, then
+##                           a kill if it lingers) and start a fresh one on the
+##                           same user-data home, ENet port and (appended) log,
+##                           booted to `scene` (default "title"). Memory is gone;
+##                           only what that peer saved to disk survives.
+##   hashes_agree {budget_frames?, remember?, equals?}  wait until every peer's
+##                           recent heartbeat world-state hashes (contract §7:
+##                           `peer_runner.gd` HASHED_KEYS of `Game.world_snapshot()`)
+##                           share a value; `remember` stores it under a name,
+##                           `equals` FAILS unless it is the one stored under that
+##                           name. `peer` is ignored (use 0).
+const COORDINATOR_ACTIONS := ["restart_peer", "hashes_agree"]
 const SCENARIO_KEYS := ["name", "claim", "peers", "scene", "host_peer", "budget_s", "steps"]
 const STEP_KEYS := ["peer", "action", "probe", "args", "budget_frames", "expect", "expect_data",
 	"label", "continue_on_fail", "_comment"]
@@ -57,6 +70,7 @@ var _rows: Array = []
 var _ids: Dictionary = {}
 var _characters: Dictionary = {}
 var _host_peer := 0
+var _remembered_hashes: Dictionary = {}
 
 
 func _initialize() -> void:
@@ -163,7 +177,9 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 	var parts: Array[String] = [_shq(exe)]
 	for a in args:
 		parts.append(_shq(str(a)))
-	return OS.create_process("/bin/sh", ["-c", "exec %s >%s 2>&1" % [" ".join(parts), _shq(log_path)]])
+	# `>>`: a peer restarted mid-run (`restart_peer`) appends to the same log, so
+	# the SCRIPT ERROR grep still sees the first process's output.
+	return OS.create_process("/bin/sh", ["-c", "exec %s >>%s 2>&1" % [" ".join(parts), _shq(log_path)]])
 
 
 func _targets(raw: Variant, peers: int) -> Array[int]:
@@ -195,6 +211,9 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 		var value: Variant = await probe(peer, str(entry.probe), args)
 		result = {"verdict": "PASS" if value != null else "ERROR",
 			"detail": JSON.stringify(value), "data": value}
+	elif str(entry.get("action", "")) in COORDINATOR_ACTIONS:
+		what = str(entry.get("action", ""))
+		result = await _coordinator_action(peer, what, args)
 	else:
 		var action := str(entry.get("action", ""))
 		what = action
@@ -238,6 +257,124 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 		"ok": ok and data_ok, "expect": want, "expect_data": expected,
 		"detail": str(result.get("detail", ""))})
 	return ok and data_ok
+
+
+func _coordinator_action(peer: int, action: String, args: Dictionary) -> Dictionary:
+	match action:
+		"restart_peer":
+			return await _restart_peer(peer, str(args.get("scene", "title")))
+		"hashes_agree":
+			return await _hashes_agree_step(args)
+	return {"verdict": "ERROR", "detail": "unknown coordinator action '%s'" % action}
+
+
+## A full process restart of one peer (see COORDINATOR_ACTIONS).
+func _restart_peer(i: int, scene: String) -> Dictionary:
+	if i < 0 or i >= _peers.size():
+		return {"verdict": "ERROR", "detail": "no peer %d" % i}
+	var old: Dictionary = _peers[i]
+	var old_pid := int(old.get("pid", -1))
+	old["quit_sent"] = true
+	_send_to(old, {"type": "quit", "code": 0})
+	var deadline := Time.get_ticks_msec() + 30000
+	while Time.get_ticks_msec() < deadline and OS.is_process_running(old_pid):
+		await process_frame
+		_pump_once()
+	var graceful := not OS.is_process_running(old_pid)
+	if not graceful:
+		OS.execute("kill", ["-9", str(old_pid)])
+		for _f in 600:
+			await process_frame
+			if not OS.is_process_running(old_pid):
+				break
+	old["exited"] = true
+	var controls := CONTROL_PORTS.reserve(1, 0)
+	if not bool(controls.ok):
+		return {"verdict": "ERROR", "detail": "could not reserve a control port: %s" % str(controls.reason)}
+	var server: TCPServer = controls.servers[0]
+	_control_servers.append(server)
+	var enet_port := int((old.get("hello", {}) as Dictionary).get("enet_port", enet_port_for(i))) \
+		if old.get("hello") is Dictionary else enet_port_for(i)
+	var pid := _spawn_peer(i, str(old.role), int(controls.ports[0]), enet_port, scene,
+		str(old.home), str(old.log_path), [])
+	_isolate_coordinator()
+	if pid <= 0:
+		return {"verdict": "ERROR", "detail": "OS.create_process failed relaunching peer %d" % i}
+	print("coordinator: restarted peer %d (%s) pid %d -> %d, scene %s, graceful quit=%s"
+		% [i, str(old.role), old_pid, pid, scene, str(graceful)])
+	var now_s := Time.get_ticks_msec() / 1000.0
+	_peers[i] = {
+		"index": i, "role": old.role, "server": server, "sock": null, "rx_buf": "",
+		"pid": pid, "home": old.home, "log_path": old.log_path, "control_port": int(controls.ports[0]),
+		"hashes": [], "hello": null, "exited": false, "unexpected_exit": false,
+		"quit_sent": false, "last_heartbeat_t": 0.0, "last_heartbeat": null,
+		"heartbeat_deferred_until_s": now_s + PROOF_BUILD_ALLOWANCE_S,
+		"last_verdict": null, "last_value": null,
+	}
+	_ids.clear()
+	var hello_deadline := Time.get_ticks_msec() + float(_budgets.get("hello_budget_s", DEFAULT_HELLO_BUDGET_S)) * 1000.0
+	while Time.get_ticks_msec() < hello_deadline:
+		await process_frame
+		_pump_once()
+		if not _fatal_reason.is_empty():
+			return {"verdict": "ERROR", "detail": "restart aborted: %s" % _fatal_reason}
+		if (_peers[i] as Dictionary).get("hello") != null:
+			return {"verdict": "PASS",
+				"detail": "peer %d process %d ended (graceful quit=%s); fresh process %d on the same home booted '%s' and said hello"
+					% [i, old_pid, str(graceful), pid, scene],
+				"data": {"old_pid": old_pid, "new_pid": pid, "graceful": graceful, "scene": scene}}
+	return {"verdict": "FAIL", "detail": "restarted peer %d (pid %d) never said hello" % [i, pid]}
+
+
+## The world-state hash every peer's recent heartbeats share, or null.
+func _common_hash() -> Variant:
+	if _peers.is_empty():
+		return null
+	var first: Array = (_peers[0] as Dictionary).get("hashes", [])
+	for h: Variant in first:
+		var common := true
+		for p: Dictionary in _peers:
+			if not (p.get("hashes", []) as Array).has(h):
+				common = false
+				break
+		if common:
+			return h
+	return null
+
+
+func _hashes_agree_step(args: Dictionary) -> Dictionary:
+	var budget := int(args.get("budget_frames", 600))
+	var deadline := Time.get_ticks_msec() + float(budget) * NOMINAL_MS_PER_PHYSICS_FRAME + WALL_SLACK_MS
+	var common: Variant = null
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		_pump_once()
+		if not _fatal_reason.is_empty():
+			return {"verdict": "ERROR", "detail": "hash check aborted: %s" % _fatal_reason}
+		common = _common_hash()
+		if common != null:
+			break
+	var windows: Array = []
+	for p: Dictionary in _peers:
+		windows.append(p.get("hashes", []))
+	if common == null:
+		return {"verdict": "FAIL", "detail": "no common world-state hash within %d frames; windows %s" % [budget, str(windows)],
+			"data": {"agree": false, "windows": windows}}
+	var detail := "every peer's heartbeat carries world-state hash %d" % int(common)
+	var data := {"agree": true, "hash": int(common)}
+	if args.has("remember"):
+		_remembered_hashes[str(args.remember)] = int(common)
+		detail += "; remembered as '%s'" % str(args.remember)
+	if args.has("equals"):
+		var name := str(args.equals)
+		if not _remembered_hashes.has(name):
+			return {"verdict": "ERROR", "detail": "no hash remembered as '%s'" % name}
+		var want := int(_remembered_hashes[name])
+		data["equals"] = want == int(common)
+		detail += "; '%s' was %d -> %s" % [name, want, "EQUAL" if want == int(common) else "DIFFERENT"]
+		if want != int(common):
+			return {"verdict": "FAIL", "detail": detail, "data": data}
+	return {"verdict": "PASS", "detail": detail, "data": data}
 
 
 ## The host's ENet port from its own hello (net_harness.gd::launch).
