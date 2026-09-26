@@ -146,12 +146,12 @@
     "_comment": "F05 / WORLD 3.2. When EVERY eligible participant refused the freed Veridian, it stands unengageable among the healed Highfield herd: not catchable, no prompt, no fight, no reward, never a second offer. Any acceptance means it is absent. Decided from the per-character world receipts `legendary_resolution:*` (stronghold_climax.gd::all_refused), so every peer and every reload agree. `at` is world [x, z] on the Highfield (map_landmarks `the_highfield`, centre [400, 5900], radius 65), among the ordinary Highfield herd (grazing around [377.5, 5855.3], the herd point tools/capture_highfield_hero_identity.gd measures) and inside that tool's authored hero framing from the stand at [400, 5832]. Two earlier sites were rejected on in-engine finale frames: [408, 5862] read as a stag beside the stock-camp cart, apart from the herd, and [432, 5851], by the bull, was lost in the tree line from every vantage. A third, [390, 5860], was judged blind as 'distinct but not part of a herd' (VISUAL-EVIDENCE.md, frames 08-10), so it now stands 6 m from the measured herd point, inside the grazing group rather than at its edge. TUNABLE.",
     "species": "veridian",
     "at": [
-      406.0,
-      5877.0
+      398.0,
+      5869.0
     ],
-    "facing_deg": 187.6,
+    "facing_deg": 176.9,
     "climax_node": "StrongholdClimax",
-    "_comment_site": "F05#3: (406, 5877) is the Highfield's open meadow on the authored hero framing (the hero stand at (400, 5832) looks toward (408, 5870)): the nearest scatter tree or solid bush is 23.8 m away and the ground is within 1.2 m over 8 m (measured from the baked scatter's collision batches and soft occluders). The former site (383, 5857) had a trunk 1.2 m from the stag and hid it from every vantage. Facing the hero stand."
+    "_comment_site": "F05#3: (398, 5869) is the Highfield's open meadow on the hero framing: 15.1 m clear of scatter trees and solid bushes, 17.1 m from the nearest authored prop (the drove camp's wagon, fence and fire stand north-east), ground within 0.8 m over 8 m -- measured from the baked scatter and the scene's static bodies. Two earlier sites failed a blind check: (383, 5857) had a trunk 1.2 m from the stag; (406, 5877) stood inside the drove camp. Facing the hero stand."
   },
   "herd_return": {
     "enabled": true,
@@ -159,51 +159,51 @@
     "species": "meadowhart",
     "members": [
       [
-        409.4,
-        5886.4,
-        215.0,
+        399.6,
+        5877.9,
+        200.0,
         1.0
       ],
       [
-        413.8,
-        5881.5,
-        250.0,
+        404.0,
+        5875.0,
+        240.0,
         1.06
       ],
       [
-        415.9,
-        5873.4,
-        330.0,
+        407.4,
+        5870.6,
+        275.0,
         1.0
       ],
       [
-        397.1,
-        5873.8,
-        60.0,
+        407.1,
+        5864.8,
+        320.0,
         1.1
       ],
       [
-        395.7,
-        5880.8,
+        389.1,
+        5872.2,
         95.0,
         1.04
       ],
       [
-        401.5,
-        5884.8,
-        170.0,
+        392.5,
+        5875.5,
+        150.0,
         1.0
       ],
       [
-        403.7,
-        5889.8,
-        185.0,
+        395.3,
+        5879.1,
+        170.0,
         1.08
       ]
     ],
     "keep_clear_of_display_m": 8.0,
     "idle_phase_step": 0.37,
-    "_comment_members": "[x, z, facing_deg, scale>=1]. F05#3 (coordinator queue): the herd GROUPS AROUND the stag at herd_display.at -- a loose ring 9-13 m out (never nearer than keep_clear_of_display_m to its centre), covering its north, east and west and leaving the south side (toward the Highfield hero stand) open so the stag is seen among them; most face roughly toward it, with variety; slight up-only size variety. Built on any answer; the stag itself stands only on a full refusal."
+    "_comment_members": "[x, z, facing_deg, scale>=1]. F05#3: the herd GROUPS AROUND the stag at herd_display.at -- a loose ring 8.5-10.5 m out on its north, east and west, most facing roughly toward it, slight up-only size variety. The arc from 140 to 275 degrees (south to west-south-west, toward the Highfield approach and the hero stand) is left open so no animal stands between a player coming up the meadow and the stag (blind check round 1: a deer in front of it from the west)."
   },
   "patrols": {
     "enabled": true,
