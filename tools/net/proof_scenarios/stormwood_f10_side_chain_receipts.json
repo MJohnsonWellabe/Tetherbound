@@ -1991,7 +1991,7 @@
    "args": {
     "at": [
      -380,
-     1396
+     1398
     ],
     "settle": 90
    },
@@ -2003,7 +2003,7 @@
    "args": {
     "action": "interact"
    },
-   "label": "host speaks to Pim again"
+   "label": "SECOND ATTEMPT: host speaks to Pim again"
   },
   {
    "peer": 0,
@@ -2020,12 +2020,27 @@
   },
   {
    "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_pim_parcels_thanks",
+    "budget_frames": 120
+   },
+   "expect": "FAIL",
+   "label": "SECOND ATTEMPT: having heard her thanks while paid, the host gets Pim's ordinary lines"
+  },
+  {
+   "peer": 0,
    "action": "press",
    "args": {
     "action": "interact",
     "times": 2,
     "gap_frames": 30
-   }
+   },
+   "label": "read the ordinary lines"
   },
   {
    "peer": 0,
@@ -2177,6 +2192,19 @@
    "args": {
     "what": "relay_crossing",
     "path": [
+     "dialogue_open"
+    ],
+    "equals": true,
+    "budget_frames": 240
+   },
+   "label": "Bryn answers (the press reached him)"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
      "conversation_id"
     ],
     "equals": "stormwood_bryn_glass_request",
@@ -2251,6 +2279,19 @@
    "args": {
     "what": "relay_crossing",
     "path": [
+     "dialogue_open"
+    ],
+    "equals": true,
+    "budget_frames": 240
+   },
+   "label": "Rodkeeper Hesk answers (the press reached them)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
      "conversation_id"
     ],
     "equals": "stormwood_hesk_dark_arches_report",
@@ -2288,6 +2329,19 @@
     "action": "interact"
    },
    "label": "SECOND ATTEMPT: host speaks to Archivist Wen again"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": true,
+    "budget_frames": 240
+   },
+   "label": "Archivist Wen answers (the press reached them)"
   },
   {
    "peer": 0,
@@ -2339,6 +2393,19 @@
    "args": {
     "what": "relay_crossing",
     "path": [
+     "dialogue_open"
+    ],
+    "equals": true,
+    "budget_frames": 240
+   },
+   "label": "Keeper Ondra answers (the press reached them)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
      "conversation_id"
     ],
     "equals": "stormwood_ondra_raise_a_road_report",
@@ -2376,6 +2443,19 @@
     "action": "interact"
    },
    "label": "SECOND ATTEMPT: host speaks to Rook again"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": true,
+    "budget_frames": 240
+   },
+   "label": "Rook answers (the press reached them)"
   },
   {
    "peer": 0,
