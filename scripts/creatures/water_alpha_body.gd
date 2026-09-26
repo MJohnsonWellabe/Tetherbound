@@ -35,6 +35,7 @@ func _tick_combat(delta: float) -> void:
 			"range": float(phase.reach_m),
 			"preferred_range": float(phase.reach_m) * float(authority_node.rules.movement.preferred_reach_fraction),
 			"cone_degrees": float(phase.cone_degrees),
+			"face_lock_fraction": float(phase.get("face_lock_fraction", 0.0)),
 			"power": float(MATH.config().get("enemy", {}).get("power", 8.0)) * float(phase.power_multiplier)
 		}
 		refresh_combat_profile()

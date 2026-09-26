@@ -734,6 +734,14 @@ func _notification(what: int) -> void:
 		leave_lobbies_for_quit()
 
 
+## For `get_tree().quit()` call sites, which never send WM_CLOSE_REQUEST.
+## A no-op when this game has no SteamLobby (stock build, solo, ENet).
+static func leave_for_quit(game: Node) -> void:
+	var lobby := game.get_node_or_null(^"SteamLobby") if game != null else null
+	if lobby != null and lobby.has_method("leave_lobbies_for_quit"):
+		lobby.call("leave_lobbies_for_quit")
+
+
 func leave_lobbies_for_quit() -> void:
 	if _joining_lobby != 0:
 		_cancelled_joins[_joining_lobby] = "cancelled"
@@ -857,7 +865,9 @@ static func connect_lobby_from_args(args: Array) -> int:
 static func _join_response_text(response: int) -> String:
 	match response:
 		2:
-			return "That Steam lobby no longer exists."
+			# The usual cause is the host quitting or re-hosting: a new lobby
+			# gets a new id, so every earlier invitation points at nothing.
+			return "That invitation has expired: your friend closed or reopened their world. Ask them to invite you again."
 		3:
 			return "Steam did not allow this account into the lobby."
 		4:

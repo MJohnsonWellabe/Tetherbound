@@ -1,0 +1,350 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "calm at world hour 0 (motion=reduced)",
+			"file": "reduced_h00_calm.jpg",
+			"hud": false,
+			"id": "reduced_h00_calm",
+			"label": "reduced",
+			"long_storm_ended": false,
+			"motion_mode": "reduced",
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"bolt_level": 0.0,
+				"cloud_flash_level": 0.0,
+				"flash_level": 0.0,
+				"phase_progress": 0.015,
+				"presentation_key": "calm",
+				"rain_amount_ratio": 0.300000011920929,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 4.98662433333333,
+			"surge_phase": "calm",
+			"time_of_day": "day",
+			"world_hour": 0.0
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "building at world hour 0 (motion=reduced)",
+			"file": "reduced_h00_building.jpg",
+			"hud": false,
+			"id": "reduced_h00_building",
+			"label": "reduced",
+			"long_storm_ended": false,
+			"motion_mode": "reduced",
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"bolt_level": 0.0,
+				"cloud_flash_level": 0.0,
+				"flash_level": 0.0,
+				"phase_progress": 0.056,
+				"presentation_key": "building",
+				"rain_amount_ratio": 0.649999976158142,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 328.999688,
+			"surge_phase": "building",
+			"time_of_day": "day",
+			"world_hour": 0.0
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "break at world hour 0 (motion=reduced)",
+			"file": "reduced_h00_break.jpg",
+			"hud": false,
+			"id": "reduced_h00_break",
+			"label": "reduced",
+			"long_storm_ended": false,
+			"motion_mode": "reduced",
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"bolt_level": 0.0,
+				"cloud_flash_level": 0.102,
+				"flash_level": 0.0,
+				"phase_progress": 0.042,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 419.0,
+			"surge_phase": "break",
+			"time_of_day": "day",
+			"world_hour": 0.0
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "fading at world hour 0 (motion=reduced)",
+			"file": "reduced_h00_fading.jpg",
+			"hud": false,
+			"id": "reduced_h00_fading",
+			"label": "reduced",
+			"long_storm_ended": false,
+			"motion_mode": "reduced",
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"bolt_level": 0.0,
+				"cloud_flash_level": 0.0,
+				"flash_level": 0.0,
+				"phase_progress": 0.083,
+				"presentation_key": "fading",
+				"rain_amount_ratio": 0.562432467937469,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.824
+			},
+			"region": "cinder_verge",
+			"size": [
+				640,
+				360
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)"
+			],
+			"surge_elapsed": 539.009007333333,
+			"surge_phase": "fading",
+			"time_of_day": "day",
+			"world_hour": 0.0
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break staged strike warning at 18/72 ticks of 1.2 s (motion=reduced)",
+			"file": "reduced_h00_telegraph_t030.jpg",
+			"hud": false,
+			"id": "reduced_h00_telegraph_t030",
+			"label": "reduced",
+			"long_storm_ended": false,
+			"motion_mode": "reduced",
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"bolt_level": 0.455,
+				"cloud_flash_level": 0.0,
+				"flash_level": 0.0,
+				"phase_progress": 0.036,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"staged strike via StormwoodLightning._receive, 7 m ahead of camera"
+			],
+			"strike_at": [
+				-605.120483398438,
+				24.7841281890869,
+				773.412780761719
+			],
+			"surge_elapsed": 418.263446,
+			"surge_phase": "break",
+			"surge_s_into_warning_at_grab": 0.64,
+			"ticks_into_warning": 18,
+			"time_of_day": "day",
+			"world_hour": 0.0
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break staged strike warning at 48/72 ticks of 1.2 s (motion=reduced)",
+			"file": "reduced_h00_telegraph_t080.jpg",
+			"hud": false,
+			"id": "reduced_h00_telegraph_t080",
+			"label": "reduced",
+			"long_storm_ended": false,
+			"motion_mode": "reduced",
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"bolt_level": 0.2,
+				"cloud_flash_level": 0.0,
+				"flash_level": 0.0,
+				"phase_progress": 0.037,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"staged strike via StormwoodLightning._receive, 7 m ahead of camera"
+			],
+			"strike_at": [
+				-605.120483398438,
+				24.7841281890869,
+				773.412780761719
+			],
+			"surge_elapsed": 418.390992666667,
+			"surge_phase": "break",
+			"surge_s_into_warning_at_grab": 0.77,
+			"ticks_into_warning": 48,
+			"time_of_day": "day",
+			"world_hour": 0.0
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"description": "Break staged strike, two frames after impact (motion=reduced)",
+			"file": "reduced_h00_impact.jpg",
+			"hud": false,
+			"id": "reduced_h00_impact",
+			"label": "reduced",
+			"long_storm_ended": false,
+			"motion_mode": "reduced",
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"presentation": {
+				"bolt_level": 0.0,
+				"cloud_flash_level": 0.0,
+				"flash_level": 0.0,
+				"phase_progress": 0.041,
+				"presentation_key": "break",
+				"rain_amount_ratio": 1.0,
+				"rain_emitting": true,
+				"rain_visible": true,
+				"roofed": false,
+				"steam_level": 0.0
+			},
+			"region": "cinder_verge",
+			"size": [
+				1280,
+				720
+			],
+			"staged": [
+				"day clock pinned (WorldLook.apply_time('day') + set_clock_frozen)",
+				"world clock set to an exact hour (WorldLook _elapsed_seconds) and frozen",
+				"settle_presentation() after each surge-clock pin (skips the cross-fade the pin would start)",
+				"staged strike via StormwoodLightning._receive, 7 m ahead of camera"
+			],
+			"strike_at": [
+				-605.120483398438,
+				24.7841281890869,
+				773.412780761719
+			],
+			"surge_elapsed": 418.940992666667,
+			"surge_phase": "break",
+			"time_of_day": "day",
+			"world_hour": 0.0
+		}
+	],
+	"label": "reduced"
+}
