@@ -8,6 +8,7 @@ extends Node3D
 ## one.
 
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
+const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 
 const REALM_ID := "stormwood"
 const DATA_PATH := "res://data/config/stormwood_pickups.json"
@@ -30,6 +31,7 @@ var world: Node3D
 var _game: Node
 var _flags: RefCounted
 var _placements: Dictionary = {}
+var _pocket_by_reward: Dictionary = {}
 var _revision := -1
 
 func _process(_delta: float) -> void:
@@ -130,7 +132,61 @@ func _mount_pickup(spec: Dictionary) -> void:
 	add_child(pickup)
 	pickup.global_position = Vector3(float(position[0]), float(position[1]), float(position[2]))
 	var presentation := presentation_for(item_id, definition)
+	var pocket := _pocket_rewards().get(id, {}) as Dictionary
+	var beacon: Dictionary = POCKETS.config().get("reward_beacon", {}) if not pocket.is_empty() else {}
+	var scale := float(presentation.get("scale", 1.0)) * float(beacon.get("model_scale_mul", 1.0))
 	pickup.setup(item_id, "Take " + str(definition.get("name", item_id)),
-		str(presentation.get("model", "")), float(presentation.get("scale", 1.0)),
+		str(presentation.get("model", "")), scale,
 		id, REALM_ID, int(spec.get("count", 1)))
+	if not beacon.is_empty() and not bool(world.get("simulation_only")):
+		_reward_beacon(pickup, beacon, pocket)
 	_placements[id] = pickup
+
+
+## pickup id -> its pocket (stormwood_pockets.json), for the pocket rewards.
+func _pocket_rewards() -> Dictionary:
+	if _pocket_by_reward.is_empty():
+		for pocket: Dictionary in POCKETS.config().get("pockets", []):
+			_pocket_by_reward[str(pocket.get("reward_pickup_id", ""))] = pocket
+	return _pocket_by_reward
+
+
+## WO-F09-05 round 2: a pocket reward reads from its gate: a warm light pool
+## and an additive glow billboard in the pocket's lamp tint, both children of
+## the pickup so they leave with it when it is claimed.
+func _reward_beacon(pickup: Node3D, beacon: Dictionary, pocket: Dictionary) -> void:
+	var style := POCKETS.tinted(POCKETS.config().get("mouth_lure", {}), pocket)
+	var colour := Color(str(style.get("flame_emission", "#ffb347")))
+	var light := OmniLight3D.new()
+	light.name = "RewardLightPool"
+	light.position = Vector3(0.0, float(beacon.light_height_m), 0.0)
+	light.light_color = Color(str(style.get("light_colour", "#ffb15c")))
+	light.light_energy = float(beacon.light_energy)
+	light.omni_range = float(beacon.light_range_m)
+	light.shadow_enabled = false
+	pickup.add_child(light)
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(colour, float(beacon.halo_alpha)))
+	gradient.set_color(1, Color(colour, 0.0))
+	var ramp := GradientTexture2D.new()
+	ramp.gradient = gradient
+	ramp.fill = GradientTexture2D.FILL_RADIAL
+	ramp.fill_from = Vector2(0.5, 0.5)
+	ramp.fill_to = Vector2(1.0, 0.5)
+	ramp.width = 64
+	ramp.height = 64
+	var halo_material := StandardMaterial3D.new()
+	halo_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	halo_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	halo_material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	halo_material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	halo_material.albedo_texture = ramp
+	var quad := QuadMesh.new()
+	quad.size = Vector2.ONE * float(beacon.halo_radius_m) * 2.0
+	var halo := MeshInstance3D.new()
+	halo.name = "RewardGlow"
+	halo.mesh = quad
+	halo.material_override = halo_material
+	halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	halo.position = Vector3(0.0, float(beacon.halo_height_m), 0.0)
+	pickup.add_child(halo)

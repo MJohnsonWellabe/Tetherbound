@@ -9,6 +9,8 @@ extends Node3D
 ## lamp post at the spur's road junction marks the turn.
 const CONFIG_PATH := "res://data/config/stormwood_pockets.json"
 const WORLD_PATH := "res://data/config/stormwood_world.json"
+const SURFACE_PATH := "res://data/config/stormwood_road_surface.json"
+const TERRAIN_PATH := "res://data/config/terrain_stormwood.json"
 const FRAME := preload("res://scripts/world/stormwood_pocket_frame.gd")
 const TRUNKS: Array[String] = [
 	"res://assets/environment/stylized_nature/DeadTree_1.gltf",
@@ -40,19 +42,77 @@ static func spur(pocket: Dictionary, routes: Array = []) -> Dictionary:
 	return {}
 
 
-## The junction lamp (config `spur_marker`) as {at: Vector2, facing: Vector2}:
-## `along_m` up the spur from its road junction, `side_m` to the spur's right,
-## its lantern turned back toward the road. {} without a spur or marker.
+## The right-hand junction lamp of spur_posts() as {at, facing}, its lantern
+## turned back toward the road. {} without a spur or marker.
 static func spur_post(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> Dictionary:
+	var posts := spur_posts(pocket, cfg, routes)
+	return posts[0] if not posts.is_empty() else {}
+
+
+## WO-F09-05 round 2: the junction lamps are a PAIR framing the spur where it
+## leaves the road, one either side of its painted lane, like a gateway
+## (blind judge: a single lamp beside the road read as a streetlight). Each
+## stands `side_clear_m` outside the painted lane (stormwood_road_surface.json
+## spur width plus junction flare at that distance), at the first
+## `along_m`..`along_max_m` distance up the spur where both posts clear every
+## through road's corridor (terrain route_half_width + `road_clear_m`), capped
+## to stay on the spur's own corridor. [right, left] as {at, facing}; [] without
+## a spur or marker.
+static func spur_posts(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> Array[Dictionary]:
 	var marker: Dictionary = cfg.get("spur_marker", {})
+	if routes.is_empty():
+		routes = (JSON.parse_string(FileAccess.get_file_as_string(WORLD_PATH)) as Dictionary).routes
 	var lane := spur(pocket, routes)
 	if marker.is_empty() or lane.is_empty():
-		return {}
+		return []
 	var points: Array = lane.points
 	var junction := Vector2(float(points[0][0]), float(points[0][1]))
 	var up := (Vector2(float(points[1][0]), float(points[1][1])) - junction).normalized()
 	var right := Vector2(up.y, -up.x)
-	return {"at": junction + up * float(marker.along_m) + right * float(marker.side_m), "facing": -up}
+	var surface: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SURFACE_PATH))
+	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_PATH))
+	var corridor := float(terrain.route_half_width) + float(marker.get("road_clear_m", 0.9))
+	var own_max := float(terrain.route_half_width) - float(marker.get("own_corridor_margin_m", 0.6))
+	var along := float(marker.along_m)
+	var chosen := {}
+	while along <= float(marker.get("along_max_m", along)) + 0.01:
+		var flare := float(surface.junction.flare_m) * (1.0 - smoothstep(0.0, float(surface.junction.flare_length_m), along))
+		var side := minf(float(surface.lane_half_width_m.spur) + flare + float(marker.get("side_clear_m", 0.9)), own_max)
+		var pair: Array[Vector2] = [junction + up * along + right * side, junction + up * along - right * side]
+		var clear := true
+		for route: Dictionary in routes:
+			if str(route.get("kind", "")) == "spur":
+				continue
+			for at: Vector2 in pair:
+				if _distance_to_route(at, route) <= corridor:
+					clear = false
+		chosen = {"pair": pair}
+		if clear:
+			break
+		along += 0.5
+	var out: Array[Dictionary] = []
+	for at: Vector2 in chosen.pair:
+		out.append({"at": at, "facing": -up})
+	return out
+
+
+static func _distance_to_route(at: Vector2, route: Dictionary) -> float:
+	var best := INF
+	var points: Array = route.points
+	for i in range(1, points.size()):
+		var a := Vector2(float(points[i - 1][0]), float(points[i - 1][1]))
+		var b := Vector2(float(points[i][0]), float(points[i][1]))
+		best = minf(best, Geometry2D.get_closest_point_to_segment(at, a, b).distance_to(at))
+	return best
+
+
+## A pocket's own lamp colours: config `pockets[].lamp_tint` laid over a lamp
+## style (flame, halo and light colour), so each pocket's lamps and reward
+## glow share one hue that differs slightly from its neighbours'.
+static func tinted(style: Dictionary, pocket: Dictionary) -> Dictionary:
+	var out := style.duplicate(true)
+	out.merge(pocket.get("lamp_tint", {}), true)
+	return out
 
 
 ## The junction lamp's style: `mouth_lure` with config `spur_marker.lamp`
@@ -181,7 +241,7 @@ static func _draw_range(node: Node, draw: Dictionary) -> void:
 ## one more at the spur's road junction (config `spur_marker`). The posts
 ## collide on every peer; the lamps are art only.
 func _mouth_lure(world: Node3D, body: StaticBody3D, pocket: Dictionary, cfg: Dictionary, show_models: bool, routes: Array) -> void:
-	var lure: Dictionary = cfg.get("mouth_lure", {})
+	var lure: Dictionary = tinted(cfg.get("mouth_lure", {}), pocket)
 	if lure.is_empty():
 		return
 	var materials := _lamp_materials(lure) if show_models else {}
@@ -191,11 +251,14 @@ func _mouth_lure(world: Node3D, body: StaticBody3D, pocket: Dictionary, cfg: Dic
 	for index in posts.size():
 		_lamp_post(world, body, posts[index], forward, "LurePost%d" % index, "MouthLamp%d" % index,
 			lure, materials, draw)
-	var junction := spur_post(pocket, cfg, routes)
-	if not junction.is_empty():
-		var style := spur_lamp_style(cfg)
-		_lamp_post(world, body, junction.at, junction.facing, "SpurPost", "SpurLamp", style,
-			_lamp_materials(style) if show_models else {}, draw)
+	var junctions := spur_posts(pocket, cfg, routes)
+	if not junctions.is_empty():
+		var style := tinted(spur_lamp_style(cfg), pocket)
+		var junction_materials := _lamp_materials(style) if show_models else {}
+		for index in junctions.size():
+			var suffix := "" if index == 0 else str(index + 1)
+			_lamp_post(world, body, junctions[index].at, junctions[index].facing, "SpurPost" + suffix,
+				"SpurLamp" + suffix, style, junction_materials, draw)
 
 
 static func _lamp_materials(lure: Dictionary) -> Dictionary:

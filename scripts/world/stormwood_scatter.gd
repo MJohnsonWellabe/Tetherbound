@@ -70,6 +70,17 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 		frames.append({"mouth": POCKET_FRAME.mouth(pocket, pockets), "forward": POCKET_FRAME.frame(pocket).forward})
 	cfg["pocket_mouths"] = frames
 	cfg["pocket_approach"] = pockets.get("approach_clear", {})
+	# Each spur's junction reads from its road: no ground cover on the spur's
+	# first stretch or round the junction, no tree close behind the lamps.
+	var spur_clear: Dictionary = pockets.get("spur_junction_clear", {})
+	var junctions: Array[Dictionary] = []
+	for route: Dictionary in world.routes:
+		if str(route.get("kind", "")) == "spur" and (route.points as Array).size() >= 2:
+			var j := Vector2(float(route.points[0][0]), float(route.points[0][1]))
+			var next := Vector2(float(route.points[1][0]), float(route.points[1][1]))
+			junctions.append({"at": j, "up": (next - j).normalized()})
+	cfg["spur_junctions"] = junctions
+	cfg["spur_junction_clear"] = spur_clear
 	cfg["seat_grid"] = _seat_grid(cfg.get("seat_clearings", {}))
 	var rng := RandomNumberGenerator.new()
 	var out: Dictionary = {}
@@ -226,6 +237,20 @@ static func _add(out: Dictionary,cfg: Dictionary,field: RefCounted,world: Dictio
 			var lateral := absf(local.cross(mouth.forward as Vector2))
 			if lateral < float(approach.mouth_half_width_m) + maxf(ahead, 0.0) * slope:
 				return
+	var junction_clear: Dictionary = cfg.get("spur_junction_clear", {})
+	if not junction_clear.is_empty():
+		for junction: Dictionary in cfg.get("spur_junctions", []):
+			var local: Vector2 = at - (junction.at as Vector2)
+			if is_tree or collides:
+				if local.length() < float(junction_clear.tree_radius_m):
+					return
+			else:
+				if local.length() < float(junction_clear.ground_cover_radius_m):
+					return
+				var ahead := local.dot(junction.up as Vector2)
+				if ahead >= 0.0 and ahead <= float(junction_clear.length_m) \
+						and absf(local.cross(junction.up as Vector2)) < float(junction_clear.half_width_m):
+					return
 	if collides:
 		for pocket: Dictionary in cfg.get("pocket_clearings", []):
 			if at.distance_to(Vector2(float(pocket.at[0]), float(pocket.at[1]))) < float(cfg.pocket_clear_radius_m):

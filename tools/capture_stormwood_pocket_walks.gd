@@ -357,8 +357,8 @@ func _measure_frames() -> void:
 
 
 func _pix_line(m: Dictionary) -> String:
-	return "reads=%s lane_px=%d contrast=%.1f gold_px=%d lane_rgb=%s flank_rgb=%s current_changed=%d lamp_changed=%d lamp_on_screen=%s frozen_wild=%d" % [
-		str(m.get("reads", false)), int(m.get("lane_px", 0)), float(m.get("contrast", 0.0)), int(m.get("gold_px", 0)),
+	return "reads=%s (current=%s paint=%s) lane_px=%d contrast=%.1f gold_px=%d lane_rgb=%s flank_rgb=%s current_changed=%d lamp_changed=%d lamp_on_screen=%s frozen_wild=%d" % [
+		str(m.get("reads", false)), str(m.get("reads_current", false)), str(m.get("reads_paint", false)), int(m.get("lane_px", 0)), float(m.get("contrast", 0.0)), int(m.get("gold_px", 0)),
 		str(m.get("lane_rgb", [])), str(m.get("flank_rgb", [])), int(m.get("current_changed", -1)),
 		int(m.get("lamp_changed", -1)), str(m.get("lamp_on_screen", false)), int(m.get("frozen_wild", 0))]
 
@@ -414,10 +414,9 @@ func _spur_pixels(id: String, spur: Dictionary, road_points: Array[Vector2], fla
 		if _is_gold(image.get_pixelv(key)):
 			gold += 1
 	var contrast := _delta(lane_mean, flank_mean) if not lane_px.is_empty() and not flank_px.is_empty() else 0.0
-	var reads := lane_px.size() >= SPUR_PIX_MIN_PX and (contrast >= SPUR_PIX_CONTRAST or gold >= SPUR_PIX_GOLD_PX)
 	var out := {"lane_px": lane_px.size(), "flank_px": flank_px.size(), "contrast": contrast, "gold_px": gold,
 		"lane_rgb": [lane_mean.r8, lane_mean.g8, lane_mean.b8], "flank_rgb": [flank_mean.r8, flank_mean.g8, flank_mean.b8],
-		"reads": reads, "thresholds": {"min_px": SPUR_PIX_MIN_PX, "contrast": SPUR_PIX_CONTRAST, "gold_px": SPUR_PIX_GOLD_PX}}
+		"thresholds": {"current_changed_px": SPUR_CURRENT_PX, "contrast": SPUR_PIX_CONTRAST, "min_lane_px": SPUR_PIX_MIN_PX}}
 	# Toggles, rain hidden so falling streaks do not count as change.
 	var rain_layers := _hide_rain()
 	var current := _world.get_node_or_null(^"StormwoodRoadCurrent")
@@ -440,12 +439,24 @@ func _spur_pixels(id: String, spur: Dictionary, road_points: Array[Vector2], fla
 		var in_view := _camera.is_position_in_frustum(flame.global_position) and fp.x >= 0 and fp.y >= 0 and fp.x < size.x and fp.y < size.y
 		out["lamp_on_screen"] = in_view
 		out["lamp_screen"] = [fp.x / size.x, fp.y / size.y]
-		lamp.visible = false
+		var lamps: Array[Node3D] = [lamp]
+		var second := lamp.get_parent().get_node_or_null(^"SpurLamp2") as Node3D
+		if second != null:
+			lamps.append(second)
+		for each in lamps:
+			each.visible = false
 		var without_lamp := await _grab()
-		lamp.visible = true
+		for each in lamps:
+			each.visible = true
 		var flame_at: Array[Vector2] = [fp]
 		out["lamp_changed"] = _changed_near(with_all, without_lamp, flame_at, LAMP_PIX_BOX_PX) if in_view else 0
 	_restore_rain(rain_layers)
+	# Primary: the spur's own current, toggled, changes enough pixels in the
+	# band round its off-road centre line. Secondary: its painted lane stands
+	# off the flanking ground by colour.
+	out["reads_current"] = int(out.get("current_changed", 0)) >= SPUR_CURRENT_PX
+	out["reads_paint"] = int(out.lane_px) >= SPUR_PIX_MIN_PX and float(out.contrast) >= SPUR_PIX_CONTRAST
+	out["reads"] = bool(out.reads_current) or bool(out.reads_paint)
 	return out
 
 
@@ -457,15 +468,18 @@ const SPUR_PIX_START_M := 0.0
 const SPUR_PIX_END_M := 24.0
 const SPUR_PIX_GRID_M := 0.4
 const SPUR_PIX_FLANK_M := 3.0
-## A spur reads when at least SPUR_PIX_MIN_PX of its lane is on screen and
-## either its mean colour stands SPUR_PIX_CONTRAST (weighted RGB, 0-255)
-## off the flanking ground or SPUR_PIX_GOLD_PX of its pixels carry the
-## current. Set between the round-1 Verge frame (the judge's one reading
-## spur) and the Deepwood, Dynamo and Hollows frames; the lane report lists
-## the values either side.
+## A spur reads when hiding its own current chunks (rain hidden) changes at
+## least SPUR_CURRENT_PX pixels within SPUR_PIX_BAND_PX of its off-road centre
+## line, or, as paint alone, when at least SPUR_PIX_MIN_PX of its lane is on
+## screen with a mean colour SPUR_PIX_CONTRAST (weighted RGB, 0-255) off the
+## flanking ground. Calibrated on the round-1 frames the blind judge saw (the
+## "along" stands, 25 m): Verge, the one reading spur, 1559 px; the failing
+## Hollows 436, Deepwood 551, Dynamo 179, ambiguous Conductor 89. Paint
+## contrast there was 2.4-13.9 for all five, Verge 7.4, so it separated
+## nothing; 20 sits above every round-1 value.
+const SPUR_CURRENT_PX := 1000
 const SPUR_PIX_MIN_PX := 400
-const SPUR_PIX_CONTRAST := 30.0
-const SPUR_PIX_GOLD_PX := 60
+const SPUR_PIX_CONTRAST := 20.0
 const SPUR_PIX_BAND_PX := 6
 const LAMP_PIX_BOX_PX := 40
 
