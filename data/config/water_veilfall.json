@@ -1,10 +1,42 @@
 {
   "_comment": "Veilfall kitbash implementation. Exterior follows the authored hike to the waterfall. The compact cave interior uses a concealed same-realm staging area so terrain collision remains available for players outside while peers independently enter and reconnect inside. Coordinates and all distances are starting tuning, not visual acceptance.",
   "entrance_xz": [335.208, 3885.711],
-  "waterfall": {"_comment": "A broad lit, flowing curtain hides the gate; the island mountain remains the distant silhouette. Feathered edges and broken opacity preserve nearby silhouettes without an unshaded night overlay.", "width_m": 20.0, "height_m": 82.0, "depth_m": 1.2, "colour": "#b8e2df", "opacity_min": 0.28, "opacity_max": 0.70, "flow_speed": 0.32, "edge_feather": 0.08, "ground_feather_m": 2.0, "albedo_min": 0.40, "albedo_max": 0.68},
+  "waterfall": {"_comment": "A broad lit, flowing curtain hides the gate; the island mountain remains the distant silhouette. Feathered edges and broken opacity preserve nearby silhouettes without an unshaded night overlay. F13#5: whiter and denser so it reads as falling white water against the dark wet rock.", "width_m": 26.0, "height_m": 82.0, "depth_m": 1.2, "colour": "#eef8f8", "opacity_min": 0.55, "opacity_max": 0.92, "flow_speed": 0.45, "edge_feather": 0.10, "ground_feather_m": 2.0, "albedo_min": 0.72, "albedo_max": 0.98},
+  "rock_material": {
+    "_comment": "F13#5 Veilfall-only terrain pass (scripts/world/water_veilfall_rock.gd): steep faces inside the island radius become dark wet rock with vertical runnels; the whole island tones toward an aerial blue with camera distance. Other islands keep the stock terrain. Slope values are world-normal Y: below slope_lo is full rock, above slope_hi keeps the terrace grass.",
+    "centre_xz": [200.0, 4140.0], "radius_m": 430.0, "feather_m": 40.0, "min_height_m": 6.0,
+    "slope_lo": 0.55, "slope_hi": 0.86,
+    "rock_colour": "#3a4346", "streak_colour": "#121618", "detail": 0.45, "strata_m": 9.0, "strata_lift": 0.45,
+    "streak_width_m": 2.4, "streak_length_m": 30.0,
+    "wet_roughness": 0.42, "dry_roughness": 0.78, "wet_specular": 0.3,
+    "tone_colour": "#7189a0", "tone_start_m": 600.0, "tone_end_m": 3600.0, "tone_strength": 0.55
+  },
+  "falls": {
+    "_comment": "F13#5 white falls (scripts/world/water_veilfall_falls.gd): foam ribbons draped on the real mountain face along a bearing from the island centre (degrees, atan2(z,x); the gate is -62, First Shore is about -93), from the lip height down to the foot height, plus spray puffs at each foot ([across, up, outward] offsets). The shader keeps a minimum angular width so the columns read at the 4 km First Shore sightline. Two draw calls in total.",
+    "sample_step_m": 5.0, "standoff_m": 2.5,
+    "columns": [
+      {"id": "veilfall_white_cascade", "bearing_deg": -62.0, "top_y_m": 500.0, "foot_y_m": 200.0, "width_m": 46.0, "taper": 0.6, "opacity": 1.0, "spray": [{"offset": [0, -56, 8], "radius_m": 20.0}, {"offset": [-10, -48, 14], "radius_m": 14.0}]},
+      {"id": "west_face_fall", "bearing_deg": -92.0, "top_y_m": 440.0, "foot_y_m": 1.0, "width_m": 26.0, "taper": 0.45, "opacity": 0.8, "spray": [{"offset": [0, 6, 6], "radius_m": 24.0}, {"offset": [9, 3, 14], "radius_m": 16.0}, {"at_fraction": 0.45, "offset": [0, 2, 6], "radius_m": 14.0}]},
+      {"id": "far_west_fall", "bearing_deg": -114.0, "top_y_m": 340.0, "foot_y_m": 1.0, "width_m": 18.0, "taper": 0.45, "opacity": 0.6, "spray": [{"offset": [0, 5, 6], "radius_m": 18.0}, {"at_fraction": 0.5, "offset": [0, 2, 6], "radius_m": 11.0}]},
+      {"id": "east_face_fall", "bearing_deg": -38.0, "top_y_m": 380.0, "foot_y_m": 1.0, "width_m": 18.0, "taper": 0.45, "opacity": 0.65, "spray": [{"offset": [0, 5, 6], "radius_m": 18.0}, {"at_fraction": 0.5, "offset": [0, 2, 6], "radius_m": 11.0}]}
+    ],
+    "column_shader": {"foam_colour": "#f6fcfd", "shade_colour": "#b4d2da", "flow_speed": 7.0, "opacity": 0.95, "edge_feather": 0.45, "min_angular_width": 0.013, "depth_pull_fraction": 0.016, "depth_pull_max_m": 70.0, "fog_keep": 0.35, "detail_fade_start_m": 500.0, "detail_fade_end_m": 1600.0, "night_lift": 0.06},
+    "spray_shader": {"mist_colour": "#f2f8fa", "opacity": 0.6, "drift_speed": 0.05, "min_angular_size": 0.014, "depth_pull_fraction": 0.018, "depth_pull_max_m": 80.0, "fog_keep": 0.35, "night_lift": 0.06}
+  },
+  "silhouette": {
+    "_comment": "F13#5 far silhouette (scripts/world/water_veilfall_silhouette.gd): a coarse polar copy of the baked mountain shown only beyond visible_from_m, pulled toward the camera over the distant terrain LOD, with its own reduced fog (environment colour and density, amount scaled from fog_keep_near to fog_keep_far) so the mountain keeps a toned dark value at 1.5-4 km. One draw call.",
+    "radius_m": 405.0, "rings": 36, "segments": 96, "skirt_y_m": -3.0, "visible_from_m": 1100.0,
+    "shader": {"rock_colour": "#3e484b", "streak_colour": "#1f2629", "grass_colour": "#4d6140", "slope_lo": 0.55, "slope_hi": 0.86, "streak_width_m": 7.0, "streak_length_m": 60.0, "roughness_value": 0.75, "fog_keep_near": 1.0, "fog_keep_far": 0.5, "fog_keep_start_m": 1100.0, "fog_keep_end_m": 3200.0, "tone_darken": 0.66, "tone_amount": 0.8, "tone_lit_keep": 0.5, "depth_pull_fraction": 0.012, "depth_pull_max_m": 60.0}
+  },
+  "current_flow": {
+    "_comment": "F13#5 visible currents (scripts/world/water_current_flow_view.gd): one foam ribbon per water_world.json current, streaks drifting along its physics flow vector; opacity and speed rise with strength (full at full_strength_m_s). Calmer after water_currents_restored. One draw call.",
+    "enabled": true, "lift_m": 0.05, "width_scale": 0.7, "segment_m": 12.0, "full_strength_m_s": 1.8, "restored_calm_scale": 0.5,
+    "shader": {"foam_colour": "#eef9f9", "opacity": 0.85, "streak_width_m": 2.6, "streak_length_m": 7.0, "min_speed_m_s": 0.35, "speed_scale": 1.4, "fade_start_m": 180.0, "fade_end_m": 520.0, "depth_pull_fraction": 0.003}
+  },
   "exterior_composition": {
     "_comment": "Faceted static crags frame the existing physical Terrain3D gate approach. Each vegetation cluster sits on a named, colliding flat geological cap. Analytic route-edge clearances below are from the actual configured hike polyline; the central entrance corridor and interaction point remain unobstructed.",
-    "rock_tint": "#748078",
+    "rock_tint": "#5a6468",
+    "rock_roughness": 0.5,
     "cap_tint": "#82956d",
     "formations": [
       {"id":"gate_left_shoulder", "at_xz":[-18.0,-38.0], "base_radius_xz":[12.0,10.0], "top_radius_xz":[7.5,6.0], "top_lean_xz":[-2.0,-1.0], "height_m":34.0, "sink_m":2.0, "route_edge_clearance_m":29.89, "seed":4101},

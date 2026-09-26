@@ -1,0 +1,177 @@
+{
+	"camera": "production CameraRig/Camera3D, HUD on",
+	"frames": [
+		{
+			"distance_m": 100.005813598633,
+			"frame": "current-first-shore-reedhaven-day",
+			"ground_y": 1.92857146263123,
+			"player": [
+				0.0,
+				2.07857155799866,
+				162.0
+			],
+			"swimming_stand": false,
+			"target": [
+				0.0,
+				1.0,
+				262.0
+			],
+			"what": "First Shore to Reedhaven current, from the dock looking along it"
+		},
+		{
+			"distance_m": 100.005813598633,
+			"frame": "current-first-shore-reedhaven-night",
+			"ground_y": 1.92857146263123,
+			"player": [
+				0.0,
+				2.07857155799866,
+				162.0
+			],
+			"swimming_stand": false,
+			"target": [
+				0.0,
+				1.0,
+				262.0
+			],
+			"what": "First Shore to Reedhaven current, from the dock looking along it"
+		},
+		{
+			"distance_m": 682.178771972656,
+			"frame": "current-sluice-veilfall-day",
+			"ground_y": 2.83129644393921,
+			"player": [
+				722.0,
+				2.98129653930664,
+				3192.0
+			],
+			"swimming_stand": false,
+			"target": [
+				393.0,
+				2.0,
+				3789.60009765625
+			],
+			"what": "Sluice Isle to Veilfall current (strongest) along its line"
+		},
+		{
+			"distance_m": 682.178771972656,
+			"frame": "current-sluice-veilfall-night",
+			"ground_y": 2.83129644393921,
+			"player": [
+				722.0,
+				2.98129653930664,
+				3192.0
+			],
+			"swimming_stand": false,
+			"target": [
+				393.0,
+				2.0,
+				3789.60009765625
+			],
+			"what": "Sluice Isle to Veilfall current (strongest) along its line"
+		},
+		{
+			"distance_m": 4030.67138671875,
+			"frame": "veilfall-far-first-shore-day",
+			"ground_y": 1.92857146263123,
+			"player": [
+				0.0,
+				2.07857155799866,
+				162.0
+			],
+			"swimming_stand": false,
+			"target": [
+				200.0,
+				620.0,
+				4140.0
+			],
+			"what": "Veilfall from First Shore, ~4 km (design sightline)"
+		},
+		{
+			"distance_m": 4030.67138671875,
+			"frame": "veilfall-far-first-shore-night",
+			"ground_y": 1.92857146263123,
+			"player": [
+				0.0,
+				2.07857155799866,
+				162.0
+			],
+			"swimming_stand": false,
+			"target": [
+				200.0,
+				620.0,
+				4140.0
+			],
+			"what": "Veilfall from First Shore, ~4 km (design sightline)"
+		},
+		{
+			"distance_m": 1637.24792480469,
+			"frame": "veilfall-mid-salt-crown-day",
+			"ground_y": 1.5,
+			"player": [
+				419.600006103516,
+				1.64999997615814,
+				2640.0
+			],
+			"swimming_stand": false,
+			"target": [
+				200.0,
+				620.0,
+				4140.0
+			],
+			"what": "Veilfall from the Salt Crown rest, ~1.5 km"
+		},
+		{
+			"distance_m": 1637.24792480469,
+			"frame": "veilfall-mid-salt-crown-night",
+			"ground_y": 1.5,
+			"player": [
+				419.600006103516,
+				1.64999997615814,
+				2640.0
+			],
+			"swimming_stand": false,
+			"target": [
+				200.0,
+				620.0,
+				4140.0
+			],
+			"what": "Veilfall from the Salt Crown rest, ~1.5 km"
+		},
+		{
+			"distance_m": 166.481460571289,
+			"frame": "veilfall-near-arrival-day",
+			"ground_y": 1.92858147621155,
+			"player": [
+				384.299987792969,
+				2.07858157157898,
+				3805.39990234375
+			],
+			"swimming_stand": false,
+			"target": [
+				335.200012207031,
+				139.399993896484,
+				3885.69995117188
+			],
+			"what": "Veilfall Cascade from the arrival point, ~95 m"
+		},
+		{
+			"distance_m": 166.481460571289,
+			"frame": "veilfall-near-arrival-night",
+			"ground_y": 1.92858147621155,
+			"player": [
+				384.299987792969,
+				2.07858157157898,
+				3805.39990234375
+			],
+			"swimming_stand": false,
+			"target": [
+				335.200012207031,
+				139.399993896484,
+				3885.69995117188
+			],
+			"what": "Veilfall Cascade from the arrival point, ~95 m"
+		}
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"staged": "teleported stands, frozen clock"
+}

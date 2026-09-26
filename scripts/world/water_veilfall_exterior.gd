@@ -37,7 +37,8 @@ var _cap_material: StandardMaterial3D
 func build(world: Node3D, config: Dictionary) -> void:
 	_world = world
 	_rules = config
-	_rock_material = _material(Color(str(config.get("rock_tint", "66706b"))), 0.96, true)
+	_rock_material = _material(Color(str(config.get("rock_tint", "66706b"))),
+		float(config.get("rock_roughness", 0.96)), true)
 	_cap_material = _material(Color(str(config.get("cap_tint", "587354"))), 0.94, false)
 	for formation: Dictionary in config.get("formations", []):
 		_build_formation(formation)
