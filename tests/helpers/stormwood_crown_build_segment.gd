@@ -1092,25 +1092,46 @@ func _turn_camera_toward(world_direction: Vector3) -> bool:
 		if not _tree.paused:
 			break
 		await _tree.physics_frame
+	# The rig reads the look stick in `_process` (render frames). Run 25 turned
+	# at the wrapper's 8x/480 Hz clock and the camera drifted the wrong way
+	# (forward (0.77, -0.64) -> (0.84, -0.54), wanted (0, -1)). Turn at the real
+	# 1x/60 Hz clock, holding the stick across render frames, as a player does.
+	var previous_scale := Engine.time_scale
+	var previous_hz := Engine.physics_ticks_per_second
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
 	var wanted := Vector2(world_direction.x, world_direction.z).normalized()
 	var start_forward := -(_camera.call("planar_basis") as Basis).z
-	for _frame in 480:
+	var turned := false
+	var held := &""
+	for _frame in 600:
 		var forward := -(_camera.call("planar_basis") as Basis).z
 		if Vector2(forward.x, forward.z).normalized().dot(wanted) >= 0.995:
-			_release_look()
-			return true
+			turned = true
+			break
 		var right := -Vector3(forward.x, 0.0, forward.z).cross(world_direction).y > 0.0
-		_release_look()
-		Input.action_press(&"look_right" if right else &"look_left", 1.0)
-		await _tree.physics_frame
+		var want: StringName = &"look_right" if right else &"look_left"
+		if want != held:
+			_release_look()
+			Input.action_press(want, 1.0)
+			held = want
+		await _tree.process_frame
 	_release_look()
+	await _tree.process_frame
+	Engine.time_scale = previous_scale
+	Engine.physics_ticks_per_second = previous_hz
+	if turned:
+		return true
 	var end_forward := -(_camera.call("planar_basis") as Basis).z
 	var owner := INPUT_OWNER.current(_tree)
 	return _fail(("controller right stick could not face the Still Grove footing (forward %s -> %s, wanted %s; "
-		+ "fighting=%s trainer_battle=%s input_owner=%s paused=%s arbiter_enabled=%s time_scale=%.1f camera=%s)") % [
+		+ "fighting=%s trainer_battle=%s input_owner=%s paused=%s arbiter_enabled=%s time_scale=%.1f tracking=%s)") % [
 		str(start_forward), str(end_forward), str(wanted), str(_manager.call("is_fighting")),
 		str(_director.call("trainer_battle_active")), str(owner.get_path()) if owner != null else "<none>",
-		str(_tree.paused), str(_arbiter.call("enabled")), Engine.time_scale, str(_camera.get_script().resource_path) if _camera.get_script() != null else "?"])
+		str(_tree.paused), str(_arbiter.call("enabled")), Engine.time_scale,
+		str(_camera.get("_tracking_target").get_path()) if _camera.get("_tracking_target") != null and is_instance_valid(_camera.get("_tracking_target")) else "<no tracking target>"])
 
 
 func _open_build_menu() -> Node:
