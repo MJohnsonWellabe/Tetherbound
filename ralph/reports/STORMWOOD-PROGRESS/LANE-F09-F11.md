@@ -685,6 +685,12 @@ SCRIPT ERROR count is 0 in both runs.
   - **Regression:** `test_no_two_trainers_share_a_challenge_circle` (8 m) fails on the old data.
   - **Predicted next overlap** (not fixed, because the rule is to fix only what the run shows): trainer `outerworks_lieutenant_sera` stands exactly on NPC Officer Kestrel at [-100, 107.72, 5350]. The same-person trainer/NPC pairs (Rook, Pim, Marrow) are likely intended; Ivo/Dace [-900, 1780] passes in the prefix.
   - **Merged origin/main** (#259/#260) at this safe point, keeping main's Footing-only `standing_floor()`.
+- **Static interaction-spacing audit** (f41279a04, on the coordinator's order after run 22):
+  - Every trainer, NPC, rod switch, camp prompt and pickup now keeps its circle clear of the others. The rows moved are listed in the commit message. `test_stormwood_interaction_spacing` fails on the old data with 13 overlaps.
+  - **Open finding:** three people are authored twice, as a talking NPC and a same-named trainer body on one spot: Captain Marrow, Pim and Rook.
+    - For Pim and Rook, the NPC conversation wins the press (F10 two-peer run: every press at Rook opened the NPC). That is fine for their quest-giver role. Whether a separate challenge body is needed is for the coordinator.
+    - Marrow is on the critical path. The earned Marrow segment presses the trainer body's own challenge prompt, so run 24 will show whether the NPC's Greet steals it.
+- **Run 23:** stopped by me in the prefix to apply the static fix first.
 - **Next** (queue items 2–3): rerun the same command. The first things to read are the LB press lines after the Still Grove rest and any `HARVEST NODE … left the tree` line.
 
 ### Not produced
