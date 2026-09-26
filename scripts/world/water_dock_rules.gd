@@ -115,7 +115,7 @@ static func receipt_for_txn(flags: RefCounted, txn: String) -> Dictionary:
 ## written by some other path) answers the P4 legacy receipt, so an open row
 ## for it refunds as paid_by_other instead of waiting forever. Absent actions
 ## are simply absent: never a refund reason.
-static func world_facts(flags: RefCounted, world_instance_id: String) -> Dictionary:
+static func world_facts(flags: RefCounted, world_instance_id: String, actions: Array = []) -> Dictionary:
 	var facts: Dictionary = {}
 	if flags == null:
 		return facts
@@ -123,7 +123,7 @@ static func world_facts(flags: RefCounted, world_instance_id: String) -> Diction
 		var receipt := parse_receipt(str(id), world_instance_id)
 		if not receipt.is_empty() and not facts.has(receipt.action_id):
 			facts[str(receipt.action_id)] = receipt
-	for action: Dictionary in load_data().actions:
+	for action: Dictionary in (actions if not actions.is_empty() else load_data().actions):
 		if not facts.has(str(action.id)) and bool(flags.call("has", str(action.flag))):
 			facts[str(action.id)] = DEBIT.legacy_receipt(world_instance_id, str(action.id))
 	return facts

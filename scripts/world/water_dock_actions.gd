@@ -35,6 +35,7 @@ var _barriers: Dictionary = {}
 var _pending: Dictionary = {}
 var _last_revision := -1
 var _reconcile_countdown := 0
+var _last_instance := ""
 
 func build(world: Node3D) -> void:
 	add_to_group("progression_restore")
@@ -142,7 +143,7 @@ func _activate_paid(action: Dictionary) -> void:
 	var fresh := false
 	if pending_txn.is_empty():
 		var begun := DEBIT.begin(_debit_state(), id, action.cost as Dictionary, instance,
-			RULES.world_facts(flags, instance))
+			RULES.world_facts(flags, instance, _data.actions))
 		if bool(begun.ok):
 			pending_txn = str(begun.txn_id)
 			fresh = true
@@ -238,7 +239,7 @@ func _reconcile() -> void:
 	for id: Variant in _pending.keys():
 		if _in_flight(str(id)) and _pending[id] is Dictionary:
 			in_flight.append(str((_pending[id] as Dictionary).txn))
-	var result := DEBIT.reconcile(_debit_state(), RULES.world_facts(_game.world.flags, instance),
+	var result := DEBIT.reconcile(_debit_state(), RULES.world_facts(_game.world.flags, instance, _data.actions),
 		instance, in_flight)
 	for id: Variant in _pending.keys():
 		var entry: Variant = _pending.get(id)
@@ -305,8 +306,12 @@ func _process(_delta: float) -> void:
 		var instance := _world_instance()
 		if not instance.is_empty() and not DEBIT.open_txns(_debit_state(), instance).is_empty():
 			_reconcile()
-	if int(_game.world.flags.revision) != _last_revision:
+	var instance_now := _world_instance()
+	if int(_game.world.flags.revision) != _last_revision or instance_now != _last_instance:
+		# A delta, a load or a rejoin snapshot: settle from the new facts now.
+		_last_instance = instance_now
 		_refresh()
+		_reconcile()
 	if not _game.is_host():
 		return
 	for completion: Dictionary in _data.completions:
