@@ -957,8 +957,14 @@ func _walk_to_prompt(prompt: Node3D, what: String) -> bool:
 			return true
 		if _arbiter.has_method("winning_provider") and _arbiter.call("winning_provider") == prompt:
 			return true
-	_fail("standing 1.4m from the %s never won the interaction prompt; its offer reads '%s'"
-		% [what, str(_arbiter.call("prompt")) if _arbiter.has_method("prompt") else "?"])
+	var winner: Variant = _arbiter.call("winning_provider") if _arbiter.has_method("winning_provider") else null
+	var winner_note := "none"
+	if winner is Node3D and is_instance_valid(winner):
+		winner_note = "%s at %.2f m" % [str((winner as Node3D).get_path()),
+			(winner as Node3D).global_position.distance_to(_player.global_position)]
+	_fail("standing 1.4m from the %s (%s, %.2f m) never won the interaction prompt; its offer reads '%s'; the winner is %s"
+		% [what, str(prompt.get_path()), prompt.global_position.distance_to(_player.global_position),
+			str(_arbiter.call("prompt")) if _arbiter.has_method("prompt") else "?", winner_note])
 	return false
 
 
