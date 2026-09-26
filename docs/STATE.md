@@ -12,43 +12,31 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 ## 0. Resume here (lane wind-down, 2026-09-26)
 
-All nine lane sessions (Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03, VIS) were wound down and archived on owner direction.
-- **Nothing was lost.** Every lane posted `## HANDOFF (final)` on its PR, showing clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
-- **Integration:** all READY work landed through batch 25 (#283) and batch 26. Main: `MAINSHA`. ACCEPTANCE §6.1: **MET_COUNT of 107** met.
-- **Acceptance Board:** rebuilt from `ralph/reports/COORDINATOR/`. Its README gives the scoring rule, the rebuild steps and the artifact URL.
+All nine lane sessions were wound down and archived on owner direction: Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03 and VIS.
+- Every lane posted `## HANDOFF (final)` on its PR. Each showed clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
+- **All lane work is on main** through batches 25 (#283) and 26. Every `ralph/*`, `claude/integration-*` and `fix/*` tip is an ancestor of main, so any branch other than main can be deleted.
+  - One exception: `claude/lane-restart-planning-615w4s` is the owner's own planning session, and it was left alone.
+- **ACCEPTANCE §6.1:** 44 of 107 were met at batch 24. Batches 25 and 26 claim F01#4/#5, F15#3, F11#0/#2/#3, F13#1 and F07#2/#4. Re-score them on the board before counting them.
+- **Acceptance Board:** rebuild it from `ralph/reports/COORDINATOR/`. Its README gives the scoring rule, the rebuild steps and the artifact URL.
+- **To resume a lane:** open its handoff comment, branch from current main, and continue from the next step below.
+- **Fast-path landing:** batch 26 landed on fast-tier CI. Run the full `ci.yml` on main, and treat any red there as the first fix-forward task.
 
-**To resume a lane:**
-1. Open its handoff comment.
-2. Branch from current main.
-3. Merge or cherry-pick the parked branch below.
-4. Continue from the listed next step.
-
-**Parked branches (not merged):** every tip below is preserved permanently in the archive branch `claude/parked-work` (5cbef326d), whose tree equals main and whose merge parents are these tips. The individual branches can therefore be deleted. To resume one, run `git checkout -b <name> <sha>`. The commit message of `claude/parked-work` lists all 18 branch-to-SHA pairs, including diagnostics and probes not shown here.
-
-| Lane (handoff) | Branch @ SHA | Why parked / next step |
+| Lane (handoff) | Landed work | Next step |
 |---|---|---|
-| Meadows core (#270) | `ralph/f04-fight-framing` @ a199d8d47 | F04#7 size-adaptive fight camera: tunables in `combat.json camera.framing`. Needs the 18-frame capture and a code-blind re-judge. |
-| Meadows core (#270) | `ralph/f01-village-roads` @ 49b2915c8 | F01#0 spine at 2.4 m / 1.2 m (coordinator ruling b''). Its band1 spawn edit breaks `smoke_local_requests --only=herd` (player 1312 m from the prompt). Fix the herd approach, then re-bake. |
-| Meadows core (#270) | `ralph/f01-topology` @ c8d1ca963 | WIP topology follow-ups. |
-| Cloudreach (#253) | `ralph/f06-earned-handoff` @ 2950ac0e9 | F06#0: stuck at B13 before Cloudreach arrival. X05 found `_excluded()` in `cloudreach_look.gd:289` scanning 554K times (130 s). |
-| Cloudreach (#253) | `ralph/cloudreach-f07-cadence-route` @ 55f465afd | F07#2 route shortening. Coordinator ruling (a): restore XP with wild pairs on the new legs. |
-| Cloudreach (#253) | `ralph/cloudreach-ci-midride-proof` @ 8559b1dcd | F06#6 proof CI step, not yet proven at this SHA. |
-| Cloudreach (#253) | `ralph/cloudreach-chainbridge-stall` @ 7488f93f9, `ralph/cloudreach-wip-matrix-tool-drafts` @ 739ede52f | WIP and reference only. |
-| Stormwood (#250) | `ralph/stormwood-f11-earned` @ 6a4089e2a | F11#0/#3. Its seat and pickup moves need a fresh road-surface bake (`test_stormwood_road_surface` freshness fails). |
-| Stormwood (#250) | `ralph/stormwood-f09-pocket-lures` @ 01c2e34df | F09#3 round 6: a light shaft over each pocket's reward, then a re-judge. |
-| Tidewake (#226) | `ralph/tidewake-wip-brine-sampler` @ 1a6672513 | Product root cause of the brine fall-throughs: the Terrain3D 1.0.2 height sample is wrong at 4 call sites. Finish the fix; the smoke's 2 m / on-floor guard (batch 25) is the stopgap. |
-| Art X04 (#248) | `ralph/x04-wip-bramblebun-meshy` @ be21ff5bf | Meshy candidate in progress; task IDs are in the handoff. |
-| X05 (#282) | `ralph/x05-f06-host-restart-mounted` @ e2134d5c2 | F06#5 co-op half. Blocked by the Cloudreach `_excluded()` slowness above. |
-| X05 (#282) | `ralph/x05-f14-participants` @ 54fb404fe | Old F14 proof WIP; the handoff states its status. |
-| X03 (#262) | `ralph/rescue-x03` @ 8f88b453e | Old; the handoff states its status. |
-| VIS (#279) | `ralph/visual-wip-slope-rock` @ 26b7216df | Shared-look WIP. The audit's ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
+| Meadows core (#270) | F04#7 fight framing, F01#0 village/spine roads, F01 topology follow-ups | The village-roads band1 spawn broke `smoke_local_requests --only=herd` (the player is 1312 m from the prompt). A fix was in progress on `fix/meadows-herd` at wind-down; land it or redo it. F04#7 needs the 18-frame capture and a code-blind re-judge. |
+| F05 | F02 practice supply | Per its handoff. |
+| Cloudreach (#253) | F06 earned-handoff WIP, F07#2 cadence route with XP restored by wild pairs, which was ruling (a) (`test_cloudreach_route_ledger` passes, L33 before Captain Veyra), F06#6 mid-ride CI proof, chain-bridge stall fix | Unrelated to this batch's changes, the game drops wild sites `road_visibility_windscar_floor_loop_05/06` for unsupported placements. F06#0 is stuck at B13, where `_excluded()` in `cloudreach_look.gd:289` scans 554K times (130 s). |
+| Stormwood (#250) | F11#0/#3 earned (seats plus the moved pickup 11, scatter and terrain manifest re-baked), F09#3 pocket lures | F09#3 round 6: add a light shaft over each pocket's reward, then re-judge. |
+| Tidewake (#226) | Brine sampler product fix (`water_world.gd::ground_height_at`), F14/F15 two-peer reruns, title-continue probe, Veilfall r1 verdict | Per the handoff. |
+| Art X04 (#248) | Bramblebun Meshy candidate (raw glb), Tidewake matrix capture | Finish the Bramblebun candidate; its task IDs are in the handoff. |
+| X05 (#282) | F06#5 host-restart evidence, F14 participants proof WIP | F06#5 is blocked by the Cloudreach `_excluded()` slowness above. |
+| X03 (#262) / VIS (#279) | Glyph highlights; shared-look WIP | The ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
 
 **Open owner decisions:**
-- F11#2 legacy receipt;
-- F10#6 needs an ROG Ally run;
-- Cloudreach co-op shoulders and cliff palette;
-- Steamworks redistribution sign-off for shipping `steam_api64.dll`;
-- permission for agents to delete merged branches (the auto-mode classifier blocks `git push --delete`).
+- F11#2 legacy receipt.
+- F10#6 needs an ROG Ally run.
+- Cloudreach co-op shoulders and cliff palette.
+- Steamworks redistribution sign-off for `steam_api64.dll`.
 
 **Coordinator rulings made this session, to keep:**
 - Co-op matches single player, and rejoin returns to the exact spot (same host world only).
