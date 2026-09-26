@@ -82,12 +82,16 @@ const AIM_THROWABLE_METRES := 12.0
 const CONTINUOUS_CORE_FLAG := "--gate-a-continuous-core"
 
 ## F01 (all three starters): which starter to take, as a species id from the
-## picker's own live list. Empty keeps the drive's historical choice -- exactly
-## one `ui_right` from the picker's opening index -- so existing callers are
-## unchanged. Set by the caller before `run()`.
+## picker's own live list. Empty keeps the drive's historical choice so
+## existing callers are unchanged. Set by the caller before `run()`.
 var starter_species: String = ""
-## Historical press count when `starter_species` is empty.
-const DEFAULT_STARTER_PRESSES := 1
+## Historical EFFECTIVE press count when `starter_species` is empty. The old
+## drive tapped `ui_right` on the frame the picker opened, inside its
+## OPEN_GUARD_FRAMES (2): starter_picker.gd returns early while the guard counts
+## down and `is_action_just_pressed` is true for one frame only, so that press
+## was always dropped and every historical run took index 0 (terrapup). This
+## drive now waits for the guard, so the historical choice is 0 presses.
+const DEFAULT_STARTER_PRESSES := 0
 
 var _failures: Array[String] = []
 var _transcript: Array[String] = []
