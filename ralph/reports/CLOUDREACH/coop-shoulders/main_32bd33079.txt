@@ -1,0 +1,9 @@
+[cloudreach] shell build 22.9 s wall, 270 yields at 100 ms/frame, 1 indivisible slices given a heartbeat window each, worst held slice 356 ms (in the step following 'materials'); steps (ms wall, yields included): materials=2 regions=1465 ledges=35 routes=687 gates=1 bridges=21 landmarks=1 return_gate=64 route_details=5 resource_patches=15 environment=66 mount=20456
+COOP SHOULDERS solo {"collisions":218,"complete":true,"frames":0,"live":false,"ms":56,"ridges":720,"sliced":false}
+COOP SHOULDERS live {"collisions":0,"complete":true,"frames":270,"live":true,"ms":22944,"ridges":0,"sliced":true}
+COOP SHOULDERS routes {}
+ERROR: COOP SHOULDERS: live built 0 shoulder ridges, solo 720
+ERROR: COOP SHOULDERS: live has 0 walkable shoulder collisions, solo 218
+ERROR: COOP SHOULDERS: shoulder sets differ by route: live {  } solo { "ArrivalGateRoadCliffShoulders": 25, "LowerCliffRoadCliffShoulders": 26, "LowerOverlookLoopCliffShoulders": 73, "BrokenCausewayMainCliffShoulders": 55, "CausewayWestLoopCliffShoulders": 100, "WindscarFloorLoopCliffShoulders": 57, "WindscarCounterweightPassCliffShoulders": 72, "UpperPlateauCircuitCliffShoulders": 112, "UpperSummitRoadCliffShoulders": 72, "SummitOverlookLoopCliffShoulders": 102, "WindscarCounterweightReturnCliffShoulders": 25, "ObservatorySummitLinkCliffShoulders": 1 }
+COOP SHOULDERS FAIL
+exit 1

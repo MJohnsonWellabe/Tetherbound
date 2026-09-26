@@ -1,0 +1,6 @@
+[cloudreach] shell build 95.8 s wall, 2760 yields at 100 ms/frame, 37 indivisible slices given a heartbeat window each, worst held slice 1461 ms (in the step following 'ledges'); steps (ms wall, yields included): materials=3 regions=1536 ledges=29 routes=56144 gates=0 bridges=28 landmarks=1 return_gate=49 route_details=8 resource_patches=11 environment=135 mount=37680
+COOP SHOULDERS solo {"collisions":218,"complete":true,"frames":0,"live":false,"ms":57,"ridges":720,"sliced":false}
+COOP SHOULDERS live {"collisions":218,"complete":true,"frames":2760,"live":true,"ms":95766,"ridges":720,"sliced":true}
+COOP SHOULDERS routes {"ArrivalGateRoadCliffShoulders":25,"BrokenCausewayMainCliffShoulders":55,"CausewayWestLoopCliffShoulders":100,"LowerCliffRoadCliffShoulders":26,"LowerOverlookLoopCliffShoulders":73,"ObservatorySummitLinkCliffShoulders":1,"SummitOverlookLoopCliffShoulders":102,"UpperPlateauCircuitCliffShoulders":112,"UpperSummitRoadCliffShoulders":72,"WindscarCounterweightPassCliffShoulders":72,"WindscarCounterweightReturnCliffShoulders":25,"WindscarFloorLoopCliffShoulders":57}
+COOP SHOULDERS PASS
+exit 0
