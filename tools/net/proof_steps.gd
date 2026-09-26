@@ -70,7 +70,8 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"rider_identity", "rider_self", "guardian_fixture", "veilfall_press", "guardian_answer", "guardian_state", "guardian_offer_again",
 	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state",
 	"water_dock_resend", "water_dock_cut",
-	"water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic", "water_remote_aquatic", "water_win_wild"]
+	"water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
+	"water_guardian_let_go", "water_guardian_forge_accept"]
 
 
 static func handles(action: String) -> bool:
@@ -595,7 +596,8 @@ static func _stormheart_state(tree: SceneTree) -> Dictionary:
 
 const WATER_ACTIONS := ["homecoming_complete", "credits_continue", "ending_state", "water_dock_act",
 	"water_dock_state", "water_dock_resend", "water_dock_cut", "water_anchor_fixture", "water_swim_to_wild",
-	"water_local_aquatic", "water_remote_aquatic", "water_win_wild"]
+	"water_local_aquatic", "water_remote_aquatic", "water_win_wild", "water_guardian_let_go",
+	"water_guardian_forge_accept"]
 const HOMECOMING_PATH := "res://scripts/story/regional_homecoming.gd"
 const QUEST_LOG_PATH := "res://scripts/world/quest_log.gd"
 const DOCK_RULES_PATH := "res://scripts/world/water_dock_rules.gd"
@@ -649,6 +651,10 @@ static func _water_run(tree: SceneTree, action: String, args: Dictionary) -> Dic
 			return await _water_remote_aquatic(tree, args)
 		"water_win_wild":
 			return await _water_win_wild(tree, args)
+		"water_guardian_let_go":
+			return await _water_guardian_let_go(tree, args)
+		"water_guardian_forge_accept":
+			return await _water_guardian_forge_accept(tree, args)
 	return {"verdict": "ERROR", "detail": "proof_steps: unknown Water action '%s'" % action}
 
 
@@ -1712,6 +1718,132 @@ static func _guardian_offer_again(tree: SceneTree) -> Dictionary:
 		"detail": "asked the host again: ok=%s pending=%s code='%s' message '%s'; Guardians owned %d -> %d"
 			% [str(data.ok), str(data.pending), str(data.code), message,
 				int(claims_before.get("guardians_owned", 0)), int(after.get("guardians_owned", 0))],
+		"data": data}
+
+
+## F14 "never an owned sixth", leg 1: at a full belt, answer THIS peer's own
+## Guardian offer on the Creatures tab the game opens by letting the GUARDIAN
+## itself go (the newcomer row, index 5), with controller presses only. The
+## belt must keep exactly the same five, no Guardian, the offer resolved.
+static func _water_guardian_let_go(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var tab := _creatures_tab(game)
+	var claims := _claims(tree)
+	if tab == null or claims == null:
+		return {"verdict": "ERROR", "detail": "no Creatures tab or WaterCaptureClaims on this peer"}
+	var budget := int(args.get("budget_frames", 1800))
+	while budget > 0 and not (str(tab.get("_release_stage")) == "choose" and game.get("pending_catch") != null):
+		await tree.physics_frame
+		budget -= 1
+	for f in 10:
+		await tree.physics_frame
+	var pending: RefCounted = game.get("pending_catch")
+	var before := _guardian_view(tree)
+	var presented := {"stage": str(tab.get("_release_stage")),
+		"pending_species": str(pending.get("species_id")) if pending != null else "",
+		"claim_id": str(claims.call("pending_guardian_id")), "before": before}
+	if presented.stage != "choose" or presented.pending_species != GUARDIAN_SPECIES \
+			or str(presented.claim_id).is_empty() or int(before.party_size) != 5 or int(before.guardians_owned) != 0:
+		return {"verdict": "FAIL", "detail": "no at-capacity Guardian offer on screen (stage '%s', pending '%s', claim '%s', party %s)"
+			% [presented.stage, presented.pending_species, presented.claim_id, str(before.party)], "data": presented}
+	if args.has("screenshot"):
+		await _screenshot(tree, {"name": str(args.screenshot)})
+	var newcomer: Button = tab.get("_pending_button")
+	if not await _focus_on(tree, newcomer, ["ui_down", "ui_up"]):
+		return {"verdict": "FAIL", "detail": "could not bring focus to the Guardian's own (sixth) row", "data": presented}
+	await _tap(tree, "ui_accept")
+	var target := int(tab.get("_release_target"))
+	if str(tab.get("_release_stage")) != "confirm" or target != 5:
+		return {"verdict": "FAIL", "detail": "choosing the Guardian's row did not ask to confirm letting it go (stage '%s', target %d)"
+			% [str(tab.get("_release_stage")), target], "data": presented}
+	if not await _focus_on(tree, tab.get("_farewell_release"), ["ui_down", "ui_right", "ui_up", "ui_left"]):
+		return {"verdict": "FAIL", "detail": "could not bring focus to 'Let them go'", "data": presented}
+	await _tap(tree, "ui_accept")
+	if args.has("screenshot"):
+		await _screenshot(tree, {"name": str(args.screenshot) + "_done"})
+	if str(tab.get("_release_stage")) == "done":
+		await _focus_on(tree, tab.get("_farewell_done"), ["ui_down", "ui_right"])
+		await _tap(tree, "ui_accept")
+	budget = int(args.get("budget_frames", 1800))
+	while budget > 0 and not str(claims.call("pending_guardian_id")).is_empty():
+		await tree.physics_frame
+		budget -= 1
+	var after := _guardian_view(tree)
+	var data: Dictionary = presented.merged({"release_target": target, "after": after,
+		"party_size": int(after.party_size), "guardians_owned": int(after.guardians_owned),
+		"saved_party_size": int(after.saved_party_size), "saved_guardians": int(after.saved_guardians),
+		"receipt_saved": bool(after.receipt_saved), "pending_guardian_id": str(after.pending_guardian_id),
+		"pending_catch": game.get("pending_catch") != null, "same_five": after.party == before.party})
+	var ok: bool = data.same_five and data.party_size == 5 and data.guardians_owned == 0 \
+		and data.saved_party_size == 5 and data.saved_guardians == 0 and data.receipt_saved \
+		and str(data.pending_guardian_id).is_empty() and not data.pending_catch
+	return {"verdict": "PASS" if ok else "FAIL",
+		"detail": "let the Guardian (row %d) go: party %s -> %s; Guardians owned %d (saved %d, saved party %d); receipt saved=%s; offer still held '%s'; pending_catch=%s"
+			% [target, str(before.party), str(after.party), data.guardians_owned, data.saved_guardians,
+				data.saved_party_size, str(data.receipt_saved), data.pending_guardian_id, str(data.pending_catch)],
+		"data": data}
+
+
+## F14 "never an owned sixth", leg 2: a MODIFIED client at a full belt, the
+## Guardian's offer on screen, bypassing the Creatures tab. In order: (a) the
+## settle the tab's Accept calls, with no release (-1); (b) the same with an
+## out-of-range release (6); (c) a direct `party.add` of the pending Guardian;
+## then (d) the raw accept intent the host acts on -- `_acknowledge(id)`, the
+## `_ack` RPC a settled capture sends -- WITHOUT settling or releasing anyone.
+## Waits for the host's settlement to reach this peer. PASS only if every local
+## attempt refused, the belt stayed the same five (live and saved), no
+## Guardian is owned or saved, and the host settled the forged accept.
+static func _water_guardian_forge_accept(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var claims := _claims(tree)
+	if game == null or claims == null:
+		return {"verdict": "ERROR", "detail": "no Game or WaterCaptureClaims on this peer"}
+	var budget := int(args.get("budget_frames", 1800))
+	while budget > 0 and not (game.get("pending_catch") != null and not str(claims.call("pending_guardian_id")).is_empty()):
+		await tree.physics_frame
+		budget -= 1
+	var pending: RefCounted = game.get("pending_catch")
+	var id := str(claims.call("pending_guardian_id"))
+	var before := _guardian_view(tree)
+	var data := {"claim_id": id, "pending_species": str(pending.get("species_id")) if pending != null else "",
+		"before": before, "settled_before": game.world.flags.has("water_guardian_settled")}
+	if pending == null or data.pending_species != GUARDIAN_SPECIES or id.is_empty() \
+			or int(before.party_size) != 5 or int(before.guardians_owned) != 0 or bool(data.settled_before):
+		return {"verdict": "FAIL", "detail": "no unsettled at-capacity Guardian offer to forge against (pending '%s', claim '%s', party %s, settled %s)"
+			% [data.pending_species, id, str(before.party), str(data.settled_before)], "data": data}
+	var attempts := {}
+	var r: Dictionary = claims.call("complete_pending_capture", -1)
+	attempts["settle_no_release"] = {"ok": bool(r.get("ok", false)), "reason": str(r.get("reason", "")),
+		"party_size": _party_names(game).size()}
+	r = claims.call("complete_pending_capture", 6)
+	attempts["settle_release_6"] = {"ok": bool(r.get("ok", false)), "reason": str(r.get("reason", "")),
+		"party_size": _party_names(game).size()}
+	var added := bool((game.get("party") as RefCounted).call("add", pending))
+	attempts["party_add"] = {"ok": added, "party_size": _party_names(game).size()}
+	var local_refused: bool = not attempts.settle_no_release.ok and not attempts.settle_release_6.ok and not added
+	claims.call("_acknowledge", id)
+	budget = int(args.get("budget_frames", 1800))
+	while budget > 0 and not game.world.flags.has("water_guardian_settled"):
+		await tree.physics_frame
+		budget -= 1
+	for f in 60:
+		await tree.physics_frame
+	var after := _guardian_view(tree)
+	data.merge({"attempts": attempts, "local_refused": local_refused, "raw_ack_sent": id,
+		"host_settled_seen": game.world.flags.has("water_guardian_settled"), "after": after,
+		"party_size": int(after.party_size), "guardians_owned": int(after.guardians_owned),
+		"saved_party_size": int(after.saved_party_size), "saved_guardians": int(after.saved_guardians),
+		"receipt_saved": bool(after.receipt_saved), "same_five": after.party == before.party,
+		"offer_still_on_screen": game.get("pending_catch") != null and str(claims.call("pending_guardian_id")) == id})
+	var ok: bool = local_refused and data.host_settled_seen and data.same_five and data.party_size == 5 \
+		and data.guardians_owned == 0 and data.saved_party_size == 5 and data.saved_guardians == 0 \
+		and not data.receipt_saved
+	return {"verdict": "PASS" if ok else "FAIL",
+		"detail": "forged at a full belt: settle(-1) ok=%s ('%s'); settle(6) ok=%s ('%s'); party.add ok=%s; raw accept ack for '%s' -> host settled seen=%s; party %s -> %s; Guardians owned %d (saved %d, saved party %d); receipt saved=%s; offer still on screen=%s"
+			% [str(attempts.settle_no_release.ok), attempts.settle_no_release.reason, str(attempts.settle_release_6.ok),
+				attempts.settle_release_6.reason, str(added), id, str(data.host_settled_seen), str(before.party),
+				str(after.party), data.guardians_owned, data.saved_guardians, data.saved_party_size,
+				str(data.receipt_saved), str(data.offer_still_on_screen)],
 		"data": data}
 
 
