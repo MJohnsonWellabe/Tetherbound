@@ -1,6 +1,6 @@
 {
   "name": "F15#3 guest half: a guest's acknowledged current team, including a release, survives the guest's reconnect",
-  "claim": "ACCEPTANCE F15 clause 'receive Grandpa's acknowledgement of each current team, including releases', the GUEST half. Everything in f15_grandpa_acknowledges_each_team (the same setup and first visits, unchanged), then the guest's link dies after it saved; its in-memory character is blanked so everything after comes from its own character file and the host's snapshot; it rejoins through the title's returning route. Eligibility comes from the host's world (water_currents_restored arrives in the host snapshot). On a second visit Grandpa gives the guest the REPEAT conversation (its homecoming_seen came back from its own file, so it is not acknowledged twice), and the guest's current team is still its post-release five: Rill (released) absent, Newt (the newcomer) present. The host, who never dropped, also gets the repeat. Nothing personal reaches the shared world. Setup is disclosed as in the base scenario.",
+  "claim": "ACCEPTANCE F15 clause 'receive Grandpa's acknowledgement of each current team, including releases', the GUEST half. Everything in f15_grandpa_acknowledges_each_team (the same setup and first visits, unchanged), then the guest's link dies after it saved; its in-memory character is blanked so everything after comes from its own character file and the host's snapshot; it rejoins through the title's returning route. Eligibility comes from the host's world (water_currents_restored arrives in the host snapshot). On a second visit Grandpa gives the guest the REPEAT conversation (its homecoming_seen came back from its own file, so it is not acknowledged twice), and the guest's current team is still its post-release five: Rill (released) absent, Newt (the newcomer) present. The host, who never dropped, closes the regional credits its own homecoming opened and then also gets the repeat. Nothing personal reaches the shared world. Setup is disclosed as in the base scenario.",
   "peers": 2,
   "scene": "world",
   "budget_s": 2100,
@@ -408,6 +408,12 @@
         ]
       },
       "label": "guest after reconnect: the repeat conversation, and its current five (Rill released, Newt kept)"
+    },
+    {
+      "peer": 0,
+      "action": "credits_continue",
+      "args": {},
+      "label": "the host closes the regional credits its first homecoming opened, as a player would, before visiting Grandpa again"
     },
     {
       "peer": 0,
