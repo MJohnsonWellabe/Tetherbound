@@ -39,10 +39,9 @@ extends SceneTree
 ## routes that cross the boundary (`through`, `visits`) walk to the old key,
 ## take it with interact, and open the gate they meet with interact, as a
 ## player does. `through` continues down the Lower Meadows spine to the South
-## Bridge; its middle stretch (DARK_MARGIN_M past the gate to DARK_MARGIN_M
-## before the bridge) is walked with the 3D view switched off to keep the
-## software-rendered run to hours, not most of a day -- same process, same
-## input, position receipts every capture interval, no frames saved there.
+## Bridge. Rendered runs use photo mode: the 3D view is off while walking and
+## switched on for PHOTO_SETTLE_FRAMES at each capture -- same process, same
+## input and physics; only frames nobody saves go undrawn.
 ##
 ## Saves a PNG every CAPTURE_EVERY_S of travel, plus one at every junction,
 ## signpost, gate and subarea arrival, and prints one receipt line per capture.
@@ -78,7 +77,9 @@ const WALK_SPEED_MPS := 5.0
 ## sight of the span and short of its locked gate (the grunt's fight).
 const BRIDGE_APPROACH := Vector2(11.0, 1270.0)
 const SPINE_CAPTURE_EVERY_S := 20.0
-const DARK_MARGIN_M := 60.0
+## Photo mode: frames the 3D view draws before a capture is read back, so
+## shadows, LOD and scatter streaming settle.
+const PHOTO_SETTLE_FRAMES := 6
 ## Bram keeps the bar in the inn (village.json inn at (-1.5,-2), yaw 180;
 ## inn_interior.gd door lane local x 0 in the north-facing front wall, doorstep
 ## (-1.5,-8.1); counter local z -3.69 with Bram at bar_position() local z -4.39
@@ -175,8 +176,6 @@ var _max_off_road := 0.0
 var _failed := ""
 var _visited: Array[String] = []
 var _capture_every := CAPTURE_EVERY_S
-var _dark_from := INF
-var _dark_until := -INF
 
 
 func _init() -> void:
@@ -247,6 +246,8 @@ func _run() -> void:
 	_world = (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(_world)
 	current_scene = _world
+	if not _headless:
+		root.get_viewport().disable_3d = true  # photo mode, see _capture
 	for i in SETTLE_FRAMES:
 		await physics_frame
 	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
@@ -699,11 +700,6 @@ func _walk() -> void:
 			travel_since_capture += dt
 		else:
 			Input.action_release("move_forward")
-		var dark := progress > _dark_from and progress < _dark_until
-		if root.get_viewport().disable_3d != dark:
-			root.get_viewport().disable_3d = dark
-			print("[village-walk] NOTE 3D view %s at arc %.1f (%.1f,%.1f)" % [
-				"off" if dark else "on", progress, here.x, here.y])
 		if travel_since_capture >= _capture_every:
 			travel_since_capture = 0.0
 			await _capture("travel")
@@ -747,9 +743,13 @@ func _capture(label: String) -> void:
 	var slug := label.to_lower().replace(" ", "-").replace("(", "").replace(")", "").replace(",", "_").replace("'", "")
 	var file := "%s_%s_%03d_%s.png" % [_route_name, _time, _captures, slug]
 	var saved := "headless"
-	if not _headless and root.get_viewport().disable_3d:
-		saved = "3d-off"
-	elif not _headless:
+	if not _headless:
+		# Photo mode: the walk runs with the 3D view off (software rendering
+		# every walked frame took hours per route); the view is switched on
+		# for this capture only and given PHOTO_SETTLE_FRAMES to draw.
+		root.get_viewport().disable_3d = false
+		for _f in PHOTO_SETTLE_FRAMES:
+			await process_frame
 		await RenderingServer.frame_post_draw
 		var image := root.get_viewport().get_texture().get_image()
 		if image == null or image.is_empty():
@@ -759,6 +759,8 @@ func _capture(label: String) -> void:
 				image.resize(WIDTH, HEIGHT, Image.INTERPOLATE_LANCZOS)
 			var err := image.save_png(_capture_dir.path_join(file))
 			saved = file if err == OK else "save-error-%d" % err
+	if not _headless:
+		root.get_viewport().disable_3d = true
 	print("[village-walk] CAPTURE %03d label=\"%s\" pos=(%.2f,%.2f,%.2f) heading_deg=%.1f image=%s" % [
 		_captures, label, here.x, here.y, here.z, heading, saved])
 
@@ -1093,10 +1095,7 @@ func _through_to_bridge() -> void:
 		{"arc": _arcs[_arcs.size() - 1] - 0.5, "label": "arrive South Bridge"},
 	]
 	_capture_every = SPINE_CAPTURE_EVERY_S
-	_dark_from = gate_arc + DARK_MARGIN_M
-	_dark_until = _arcs[_arcs.size() - 1] - DARK_MARGIN_M
 	await _walk()
-	root.get_viewport().disable_3d = false
 	if not _failed.is_empty():
 		return
 	if not bool((_game.get("progression") as RefCounted).call("has", "road_gate_open")):
