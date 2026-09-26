@@ -865,7 +865,9 @@ static func connect_lobby_from_args(args: Array) -> int:
 static func _join_response_text(response: int) -> String:
 	match response:
 		2:
-			return "That Steam lobby no longer exists."
+			# The usual cause is the host quitting or re-hosting: a new lobby
+			# gets a new id, so every earlier invitation points at nothing.
+			return "That invitation has expired: your friend closed or reopened their world. Ask them to invite you again."
 		3:
 			return "Steam did not allow this account into the lobby."
 		4:

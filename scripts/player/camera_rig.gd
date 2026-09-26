@@ -330,8 +330,14 @@ func clearance_extra() -> float:
 ## swing is held rather than re-solved around the player's view. Ties -- and
 ## the no-clear fallback, unless another angle is `switch_margin` roomier --
 ## keep the side already in use, so small movements do not flip it.
+##
+## `frame_fraction` > 0 drops every swing that would put the tracked opponent
+## outside that fraction of the lens's horizontal half-angle: a 100-degree
+## swing past a wall found room for the arm and lost the fight from the frame
+## (square 1920x1920 runner viewport, `smoke_combat_camera.gd`). A shortened
+## arm that still shows both fighters beats a clear one that shows one.
 func clear_orbit_offset_deg(length: float, samples: Array, min_fraction: float,
-		min_room: float = 0.0, switch_margin: float = 1.0) -> float:
+		min_room: float = 0.0, switch_margin: float = 1.0, frame_fraction: float = 0.0) -> float:
 	if _target == null or not is_instance_valid(_target) or length <= 0.01:
 		return 0.0
 	if _tracking_manual_left > 0.0:
@@ -351,6 +357,8 @@ func clear_orbit_offset_deg(length: float, samples: Array, min_fraction: float,
 	var current_room := -1.0
 	for offset in candidates:
 		var dir := Basis.from_euler(Vector3(pitch, neutral + deg_to_rad(offset), 0.0)).z
+		if not is_zero_approx(offset) and not _opponent_in_frame(dir, length, frame_fraction):
+			continue
 		var room := _free_distance_behind(global_position, dir, length)
 		if room >= needed:
 			return offset
@@ -362,6 +370,28 @@ func clear_orbit_offset_deg(length: float, samples: Array, min_fraction: float,
 	if current_room >= 0.0 and best_room < current_room + switch_margin:
 		return _clearance_extra_deg
 	return best
+
+
+## Whether the tracked opponent stays within `fraction` of the lens's
+## horizontal half-angle with the arm along `dir` at `length`. True when there
+## is nothing to keep in frame (no tracker, no lens, `fraction` <= 0).
+func _opponent_in_frame(dir: Vector3, length: float, fraction: float) -> bool:
+	if fraction <= 0.0 or _camera == null or _tracking_target == null \
+			or not is_instance_valid(_tracking_target):
+		return true
+	var point := _world_point(_tracking_target)
+	if _tracking_target.has_method("centre") and _tracking_target.is_inside_tree():
+		point = _tracking_target.call("centre")
+	var lens := global_position + dir * length
+	var look := Vector2(-dir.x, -dir.z)
+	var to := Vector2(point.x - lens.x, point.z - lens.z)
+	if look.length_squared() < 0.0001 or to.length_squared() < 0.0001:
+		return true
+	var size := _camera.get_viewport().get_visible_rect().size if _camera.is_inside_tree() \
+		else Vector2(16.0, 9.0)
+	var aspect := size.x / maxf(size.y, 1.0)
+	var half := atan(tan(deg_to_rad(_camera.fov) * 0.5) * aspect)
+	return absf(look.angle_to(to)) <= half * clampf(fraction, 0.0, 1.0)
 
 
 func set_tracking_target(target: Node3D, config: Dictionary = {}) -> void:

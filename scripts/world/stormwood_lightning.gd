@@ -132,6 +132,9 @@ func _receive(event: Dictionary) -> void:
 	if str(event.get("kind", "")) == "warning":
 		if _visuals.has(id) or _received_impacts.has(id):
 			return
+		# Hold decorative sky bolts while this warning is drawn (F10#3).
+		if surge != null and surge.has_method("hold_sky_bolts"):
+			surge.hold_sky_bolts(float(rules.config.strike.telegraph_seconds) + 0.3)
 		var ring := _build_telegraph(event.at)
 		add_child(ring)
 		ring.global_position = event.at

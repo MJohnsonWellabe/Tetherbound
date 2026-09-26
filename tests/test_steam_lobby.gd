@@ -635,3 +635,19 @@ func test_quitting_without_a_steam_lobby_is_a_no_op() -> void:
 	STEAM_LOBBY.leave_for_quit(null)
 	assert_eq(game.get_node_or_null(^"SteamLobby"), null, "no lobby is created just to quit")
 	game.free()
+
+
+## Re-hosting creates a new lobby id, so an old invitation's join is answered
+## "doesn't exist" (response 2); say why and what to do, not a bare error.
+func test_an_invitation_to_a_closed_or_rehosted_lobby_explains_itself() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	assert_true(lobby.request_join(5150))
+	steam.lobby_joined.emit(5150, 0, false, 2)
+	assert_eq(lobby.last_error(),
+		"That invitation has expired: your friend closed or reopened their world. Ask them to invite you again.")
+	assert_eq(lobby.retry_pending_reason(5150), "", "nothing is left pending after the refusal")
+	lobby.free()
+	steam.free()
