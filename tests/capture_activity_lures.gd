@@ -163,18 +163,7 @@ func _run() -> void:
 	# the result rather than assuming it: one press toggles.
 	# If the active member is fainted in the save, the recall key cannot bring it
 	# out; a player cycles to a standing member (Change Creature) first.
-	for attempt in 4:
-		if _director == null or _director.call("ally_body") != null:
-			break
-		var active: RefCounted = (_game.get("party") as RefCounted).call("active")
-		if attempt >= 1 and active != null and float(active.get("hp")) <= 0.0:
-			await _press("party_cycle")
-			_notes.append("active member %s is fainted in the save; pressed party_cycle" % str(active.get("nickname")))
-		await _press("creature_recall")
-		for i in 60:
-			await physics_frame
-		_notes.append("pressed creature_recall (attempt %d); companion out afterwards: %s" % [
-			attempt + 1, str(_director.call("ally_body") != null)])
+	await _ensure_companion_out()
 	_receipt["companion_out_at_start"] = _director != null and _director.call("ally_body") != null
 
 	# --- the lure and the route ------------------------------------------------
@@ -474,6 +463,7 @@ func _walk() -> void:
 	var best_remaining := INF
 	var best_at := 0.0
 	var unstick := 0
+	var near_checked := false
 	## Route distance left when the last unstick fired; the count resets only
 	## after real progress past it (best_remaining is reset to INF after an
 	## unstick, so it cannot be the reference).
@@ -551,11 +541,13 @@ func _walk() -> void:
 				await _face_lure()
 				continue
 		var lure_d := here.distance_to(_xz3(_lure.global_position))
-		if _companion_stowed and lure_d <= APPROACH_FRAME_M:
+		if not near_checked and lure_d <= APPROACH_FRAME_M:
+			# Whatever happened on the road (stowed to get unstuck, a toggle that
+			# did not take), the Engage prompt needs the companion out.
+			near_checked = true
 			_release()
-			await _press("creature_recall")
 			_companion_stowed = false
-			_notes.append("t=%.1fs near the activity; called the companion back out" % _clock)
+			await _ensure_companion_out("t=%.1fs near the activity; " % _clock)
 		if not approach_saved and seen and lure_d <= APPROACH_FRAME_M:
 			approach_saved = true
 			_release()
@@ -582,9 +574,8 @@ func _walk() -> void:
 				unstick_anchor = INF
 				if _companion_stowed:
 					_release()
-					await _press("creature_recall")
 					_companion_stowed = false
-					_notes.append("t=%.1fs moving again; called the companion back out" % _clock)
+					await _ensure_companion_out("t=%.1fs moving again; " % _clock)
 			best_remaining = remaining
 			best_at = _clock
 		elif _clock - best_at > STUCK_S:
@@ -661,6 +652,25 @@ func _handle_fight(foe_name: String) -> void:
 		await physics_frame
 	# Post-fight catch/reward prompts own input briefly; let them settle.
 	_fights.append(entry)
+
+
+## Calls the active companion out with the ordinary key and checks the result
+## rather than assuming it: one press toggles, so a press when it is already
+## out would put it away. If the active member is fainted, the recall key
+## cannot bring it out; a player cycles to a standing member first.
+func _ensure_companion_out(prefix: String = "") -> void:
+	for attempt in 4:
+		if _director == null or _director.call("ally_body") != null:
+			return
+		var active: RefCounted = (_game.get("party") as RefCounted).call("active")
+		if attempt >= 1 and active != null and float(active.get("hp")) <= 0.0:
+			await _press("party_cycle")
+			_notes.append("%sactive member %s is fainted; pressed party_cycle" % [prefix, str(active.get("nickname"))])
+		await _press("creature_recall")
+		for i in 60:
+			await physics_frame
+		_notes.append("%spressed creature_recall (attempt %d); companion out afterwards: %s" % [
+			prefix, attempt + 1, str(_director.call("ally_body") != null)])
 
 
 func _unstick(attempt: int) -> void:

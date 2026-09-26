@@ -221,6 +221,9 @@ static func dress_alpha_body(body: Node3D, nickname: String, aura: Dictionary, p
 		# Faces the camera around the vertical, like the other world signs;
 		# depth-tested so terrain and trees still hide it.
 		label.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+		# `fixed_size`: the same on-screen size at any distance, like the
+		# combat plate, rather than a world sign that fills the view up close.
+		label.fixed_size = bool(plate.get("fixed_size", false))
 		label.visibility_range_end = float(plate.get("visible_to_m", 140.0))
 		body.add_child(label)
 	body.set_meta("alpha_dressed", true)
