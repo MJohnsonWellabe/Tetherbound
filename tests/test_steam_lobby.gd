@@ -78,10 +78,11 @@ class MockSteam:
 		return true
 
 	var joinable_calls: Array = []
+	var joinable_accepts := true
 
 	func setLobbyJoinable(lobby_id: int, joinable: bool) -> bool:
 		joinable_calls.append([lobby_id, joinable])
-		return true
+		return joinable_accepts
 
 
 class FakeRelayPeer extends OfflineMultiplayerPeer:
@@ -577,4 +578,38 @@ func test_an_invite_at_the_title_raises_no_world_notice() -> void:
 	assert_eq(lobby.pending_invite_id(), 9101)
 	assert_eq(lobby.world_notice_text(), "", "the title screen answers the invite itself")
 	lobby.free()
+	steam.free()
+
+
+func test_a_refused_joinable_write_is_retried_on_the_next_peer_change() -> void:
+	var h := _ready_host()
+	var steam: MockSteam = h.steam
+	var session: HostSessionStub = h.session
+	steam.joinable_accepts = false
+	session.count = 4
+	session.peer_joined.emit(4, "character-d")
+	assert_eq(steam.joinable_calls.back(), [777, false])
+	var calls := steam.joinable_calls.size()
+	steam.joinable_accepts = true
+	session.peer_joined.emit(4, "character-d")
+	assert_eq(steam.joinable_calls.size(), calls + 1, "the refused write is sent again")
+	h.game.free()
+	steam.free()
+
+
+func test_an_empty_world_id_neither_fails_hosting_nor_is_published() -> void:
+	var steam := MockSteam.new()
+	var game := GameStub.new()
+	(game.world as WorldStub).world_id = ""
+	game.session = HostSessionStub.new()
+	game.add_child(game.session)
+	var lobby := STEAM_LOBBY.new()
+	game.add_child(lobby)
+	lobby._inject_native_for_test(steam, 123, func() -> MultiplayerPeer: return FakeRelayPeer.new())
+	assert_true(lobby.initialize())
+	lobby._state = "host_creating"
+	steam.lobby_created.emit(STEAM_LOBBY.CALLBACK_OK, 778)
+	assert_true(lobby.is_hosting(), "an unknown world id is informational, never a host failure")
+	assert_false(steam.metadata.has("world_id"))
+	game.free()
 	steam.free()

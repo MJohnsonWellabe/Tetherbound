@@ -310,8 +310,10 @@ func _refresh_joinable() -> void:
 	var joinable := not is_full()
 	if _published_joinable != null and bool(_published_joinable) == joinable:
 		return
-	_steam.call("setLobbyJoinable", _current_lobby, joinable)
-	_published_joinable = joinable
+	# Cached only when Steam accepted it, so a refused write is retried on the
+	# next peer change instead of being mistaken for the published value.
+	if bool(_steam.call("setLobbyJoinable", _current_lobby, joinable)):
+		_published_joinable = joinable
 	_touch()
 
 
@@ -383,8 +385,9 @@ func cancel_join() -> void:
 func _process(_delta: float) -> void:
 	if _initialized and _steam != null:
 		_steam.call("run_callbacks")
+	# Back at the title the Join Friend screen answers the invite itself.
 	if _notice_layer != null and _notice_layer.visible \
-			and Time.get_ticks_msec() >= _notice_until_ms:
+			and (Time.get_ticks_msec() >= _notice_until_ms or not _in_world_scene()):
 		_notice_layer.visible = false
 	match _state:
 		"host_waiting_for_world":
@@ -594,8 +597,11 @@ func _publish_metadata(lobby_id: int) -> bool:
 	# The host world's stable id, so a joiner (and a rejoin) can name which
 	# world the invitation is for. Informational: admission still rests on
 	# lobby membership and the full fingerprint in Session's hello.
-	var world_ok := bool(_steam.call("setLobbyData", lobby_id, "world_id", _host_world_id()))
-	return product_ok and protocol_ok and build_ok and host_ok and ready_ok and world_ok
+	# Never a reason to fail hosting, and an empty id is not written at all.
+	var world_id := _host_world_id()
+	if not world_id.is_empty():
+		_steam.call("setLobbyData", lobby_id, "world_id", world_id)
+	return product_ok and protocol_ok and build_ok and host_ok and ready_ok
 
 
 func _host_world_id() -> String:

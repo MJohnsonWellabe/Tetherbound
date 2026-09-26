@@ -193,7 +193,10 @@ func poll() -> void:
 	var cap := int(session.call("max_peers"))
 	if _transport_kind() == "steam":
 		_summary.text = "%d/%d players in this friends-only world." % [count, cap]
-		var full := count >= cap
+		# The lobby's own answer, so the button and invite_friends() agree.
+		var lobby := _steam_lobby()
+		var full: bool = bool(lobby.call("is_full")) if lobby != null and lobby.has_method("is_full") \
+			else count >= cap
 		# The Retry button exists only without a live session, which returned above.
 		if _invite_button != null and is_instance_valid(_invite_button):
 			# Disabled, not removed: the button keeps controller focus and says
