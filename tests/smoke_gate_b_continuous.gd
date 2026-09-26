@@ -78,6 +78,10 @@ extends SceneTree
 ## Gate A. When the gather route and tail are reliable, drop the flag split
 ## and let CI gate on the whole file again by default.
 const FULL_CHAIN_FLAG := "--gate-b-full-chain"
+## F01 (all three starters): `--starter=<species_id>` takes that starter in the
+## real picker (`gate_a_opening_drive.gd::starter_species`, resolved against the
+## picker's own live order). Absent, the drive's historical single `ui_right`.
+const STARTER_ARG := "--starter="
 
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
@@ -91,10 +95,21 @@ const BUILD_ROUTE_ENTRY := preload("res://tests/helpers/gate_a_build_segment.gd"
 const TAIL := preload("res://tests/helpers/gate_b_tail_segment.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
+const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 
 ## Never touch a player's real save directory from a regression: the tail's
 ## real camp.gd rest autosaves through night_rest.gd.
 const TEST_DIR := "user://test_saves_gate_b_continuous/"
+## The slot the in-run reload checks write. Not the autosave slot the real rest
+## path writes (`save_game.gd::AUTOSAVE_SLOT`), so the two cannot mask each other.
+const RELOAD_SLOT := 2
+## Flags that must be set, and stay set, across each reload.
+const READINESS_FLAGS := ["opening:beat:road", "road_gate_open", "tam_tools_given",
+	"tournament_team_ready", "tournament_training_ready", "home_materials_gathered",
+	"home_built", "creature_bed_built_3", "player_slept_at_home"]
+const RESULT_FLAGS := ["tournament_entered", "tournament_quarter_won", "tournament_semi_won",
+	"tournament_won", "recipe_saddle"]
 
 ## The ladder, in the order `data/progression/objectives.json` lists it. Each
 ## entry is the flag the beat writes and a fragment the tracked line must show
@@ -152,10 +167,16 @@ var _rig: Node3D = null
 var _progression: RefCounted = null
 var _reached: Array[String] = []
 var _full_chain := false
+var _starter_request := ""
+var _starter_species := ""
+var _starter_uid := ""
 
 
 func _init() -> void:
 	_full_chain = OS.get_cmdline_user_args().has(FULL_CHAIN_FLAG)
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with(STARTER_ARG):
+			_starter_request = arg.substr(STARTER_ARG.length())
 	_run()
 
 
@@ -186,6 +207,10 @@ func _run() -> void:
 	if not await _play_the_tail():
 		_finish()
 		return
+	if not await _save_and_reload("after the third tournament round",
+			READINESS_FLAGS + RESULT_FLAGS, true):
+		_finish()
+		return
 	_assert_the_whole_ladder_was_walked()
 	_finish()
 
@@ -213,7 +238,9 @@ func _play_the_opening() -> bool:
 	# runs, extracted so both play it rather than two files each knowing how.
 	# The player ends where the game actually leaves them, which is the one
 	# position no computed coordinate reproduces.
-	var opening: Dictionary = await OPENING_DRIVE.new().run(self)
+	var drive := OPENING_DRIVE.new()
+	drive.starter_species = _starter_request
+	var opening: Dictionary = await drive.run(self)
 	for line: Variant in (opening.get("transcript", []) as Array):
 		_checkpoint("opening | %s" % str(line))
 	if not bool(opening.get("passed", false)):
@@ -227,6 +254,23 @@ func _play_the_opening() -> bool:
 	if _world == null or _game == null or _player == null:
 		_fail("the opening passed and handed back no world/game/player")
 		return false
+	_starter_species = str(opening.get("starter_species", ""))
+	_starter_uid = str(opening.get("starter_uid", ""))
+	if _starter_species == "" or _starter_uid == "":
+		_fail("the opening passed without reporting which starter reached the party")
+		return false
+	if _starter_request != "" and _starter_species != _starter_request:
+		_fail("asked for starter '%s' and the party received '%s'"
+			% [_starter_request, _starter_species])
+		return false
+	var starter := _starter()
+	if starter == null or str(starter.get("species_id")) != _starter_species \
+			or str(starter.get("nickname")) != str(OPENING_DRIVE.CHOSEN_NAME):
+		_fail("the chosen starter %s (uid %s) is not in the party named '%s' after the opening"
+			% [_starter_species, _starter_uid, OPENING_DRIVE.CHOSEN_NAME])
+		return false
+	_checkpoint("starter %s reached the party as '%s' (uid %s)"
+		% [_starter_species, OPENING_DRIVE.CHOSEN_NAME, _starter_uid])
 	# Never touch a player's real save directory from a regression: the tail
 	# played later in this run autosaves through the real rest path.
 	_game.set("save_system", SAVE_GAME.new(TEST_DIR))
@@ -379,7 +423,8 @@ func _gather_and_walk_home() -> bool:
 ## draw by the marshal's own ladder reading that condition, and fights all
 ## three rounds.
 func _play_the_tail() -> bool:
-	var tail: Dictionary = await TAIL.new().run(self, _world as Node3D, _game, _player, _rig)
+	var tail: Dictionary = await TAIL.new().run(self, _world as Node3D, _game, _player, _rig,
+		true, false, _reload_at_three_bed_readiness)
 	for line: Variant in (tail.get("transcript", []) as Array):
 		_checkpoint("tail | %s" % str(line))
 	if not bool(tail.get("passed", false)):
@@ -478,6 +523,129 @@ func _note(flag_id: String, check_objective: bool = true) -> void:
 	if not tracked.contains(fragment):
 		_fail("'%s' is set and the tracked objective reads '%s'; it should have moved on to "
 			% [flag_id, tracked] + "the beat that says '%s'" % fragment)
+
+
+## --- the reloads ---------------------------------------------------------------
+##
+## F01: "without losing state on reload". Both checks go through the game's own
+## `Game.save_game()` / `Game.load_game()` -- the same mid-session path
+## `smoke_party_count_after_catches.gd` and `smoke_clock_survives_a_reload.gd`
+## use -- into this file's private save directory, inside the same continuous
+## run. Nothing is seeded: what is compared is whatever the run itself built,
+## and the rest of the run then plays on the reloaded state.
+
+## Called by the tail segment once three beds are placed, slept in and the team
+## fed, before the sign-up.
+func _reload_at_three_bed_readiness() -> bool:
+	return await _save_and_reload("at three-bed readiness, before the tournament",
+		READINESS_FLAGS, false)
+
+
+func _save_and_reload(when: String, flags: Array, after_tournament: bool) -> bool:
+	var before := _snapshot(flags)
+	if not bool(_game.call("save_game", RELOAD_SLOT)):
+		_fail("save_game(%d) refused %s" % [RELOAD_SLOT, when])
+		return false
+	if not bool(_game.call("load_game", RELOAD_SLOT)):
+		_fail("load_game(%d) refused the slot it had just written %s" % [RELOAD_SLOT, when])
+		return false
+	# Let the rebuilt buildings, the restored clock and the tournament's own
+	# party watch settle before reading anything back.
+	for _i in 30:
+		await physics_frame
+	var after := _snapshot(flags)
+	var lost: Array[String] = []
+	for key: String in before.keys():
+		if str(before[key]) != str(after.get(key)):
+			lost.append("%s: %s -> %s" % [key, str(before[key]), str(after.get(key))])
+	if not lost.is_empty():
+		_fail("state changed across the save/reload %s:\n    %s" % [when, "\n    ".join(lost)])
+		return false
+	var starter: Dictionary = after.get("starter", {})
+	if starter.is_empty() or str(starter.get("species")) != _starter_species \
+			or str(starter.get("nickname")) != str(OPENING_DRIVE.CHOSEN_NAME):
+		_fail("the reload %s lost the chosen starter %s '%s'"
+			% [when, _starter_species, OPENING_DRIVE.CHOSEN_NAME])
+		return false
+	var set_flags: Array = after.get("flags", [])
+	for id: String in flags:
+		if not set_flags.has(id):
+			_fail("'%s' should be set %s and is not after the reload" % [id, when])
+			return false
+	if int(after.get("creature_beds_saved", 0)) < 3 or int(after.get("creature_beds_live", 0)) < 3:
+		_fail("the reload %s left %d saved / %d standing creature beds, wanted 3"
+			% [when, int(after.get("creature_beds_saved", 0)), int(after.get("creature_beds_live", 0))])
+		return false
+	if after_tournament and not bool(_game.call("recipe_known", "saddle")):
+		_fail("the reload %s forgot the saddle recipe the tournament awarded" % when)
+		return false
+	_checkpoint("save/reload %s kept starter %s; party %s; %d/%d flags; %d creature beds; day %d; inventory [%s]"
+		% [when, str(starter), str(after.get("party")), set_flags.size(), flags.size(),
+			int(after.get("creature_beds_live", 0)), int(after.get("day", 0)),
+			str(after.get("inventory"))])
+	return true
+
+
+func _snapshot(flags: Array) -> Dictionary:
+	var party: RefCounted = _game.get("party")
+	var members: Array[String] = []
+	for member: Variant in (party.call("members") as Array):
+		members.append(_creature_line(member as RefCounted))
+	var starter := _starter()
+	var inventory: RefCounted = _game.get("inventory")
+	var stacks: Array[String] = []
+	for i in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", i)
+		if not stack.is_empty():
+			stacks.append("%s x%s" % [str(stack.get("id", "?")), str(stack.get("count", "?"))])
+	var set_flags: Array[String] = []
+	for id: String in flags:
+		if _flag(id):
+			set_flags.append(id)
+	var saved_beds := 0
+	for record: Variant in (_game.get("placed_buildings") as Array):
+		if record is Dictionary and str((record as Dictionary).get("id", "")) == "creature_bed" \
+				and not bool((record as Dictionary).get("removed", false)):
+			saved_beds += 1
+	var live_beds := 0
+	for node: Node in get_nodes_in_group(BUILD_PLACER.PLACED_GROUP):
+		if node.is_queued_for_deletion():
+			continue
+		if str(node.get_meta(BUILD_PLACER.BUILDING_ID_META, "")) == "creature_bed":
+			live_beds += 1
+	return {
+		"starter": {} if starter == null else {
+			"species": str(starter.get("species_id")),
+			"nickname": str(starter.get("nickname")),
+			"level": int(starter.get("level")),
+			"xp": int(starter.get("xp")),
+		},
+		"party": members,
+		"tournament_selection": party.call("tournament_selection_ids"),
+		"condition_ready": bool(TOURNAMENT.condition_ready(party)),
+		"inventory": ", ".join(stacks),
+		"flags": set_flags,
+		"creature_beds_saved": saved_beds,
+		"creature_beds_live": live_beds,
+		"day": int(_game.get("day")),
+	}
+
+
+func _creature_line(creature: RefCounted) -> String:
+	if creature == null:
+		return "<empty>"
+	return "%s/%s/%s L%d xp%d" % [str(creature.get("uid")), str(creature.get("species_id")),
+		str(creature.get("nickname")), int(creature.get("level")), int(creature.get("xp"))]
+
+
+func _starter() -> RefCounted:
+	var party: RefCounted = _game.get("party") if _game != null else null
+	if party == null:
+		return null
+	for member: Variant in (party.call("members") as Array):
+		if member != null and str((member as RefCounted).get("uid")) == _starter_uid:
+			return member as RefCounted
+	return null
 
 
 ## --- plumbing -----------------------------------------------------------------
