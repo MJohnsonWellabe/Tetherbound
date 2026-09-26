@@ -606,10 +606,12 @@ func _places() -> Array:
 
 
 ## The road point that approaches `pos` from about 90 m (45..180 m window),
-## preferring a point at a similar height where the data is 3-D.
-func _approach(pos: Vector3, roads: Array) -> Variant:
-	var best: Variant = null
-	var best_score := INF
+## preferring a similar height where the data is 3-D, and REQUIRING a clear
+## sightline over the drawn terrain from eye height to 3 m above the landmark
+## (the first pass stood players in gullies facing a hillside). Returns
+## [stand, note].
+func _approach(pos: Vector3, roads: Array) -> Array:
+	var scored: Array = []
 	for line: Array in roads:
 		for q: Vector3 in line:
 			var d := Vector2(q.x - pos.x, q.z - pos.z).length()
@@ -618,10 +620,30 @@ func _approach(pos: Vector3, roads: Array) -> Variant:
 			var score := absf(d - 90.0)
 			if is_finite(q.y) and is_finite(pos.y):
 				score += absf(q.y - pos.y) * 1.5
-			if score < best_score:
-				best_score = score
-				best = q
-	return best
+			scored.append([score, q])
+	if scored.is_empty():
+		return [null, "no road point 45-180 m from the landmark"]
+	scored.sort_custom(func(a, b): return float(a[0]) < float(b[0]))
+	var target := pos
+	var tg := _ground_guess(pos.x, pos.z, pos.y)
+	target.y = (maxf(pos.y, tg) if is_finite(pos.y) else tg) + 3.0
+	var tried := 0
+	for entry: Array in scored:
+		var q: Vector3 = entry[1]
+		tried += 1
+		if tried > 60:
+			break
+		var eye := Vector3(q.x, _ground_guess(q.x, q.z, q.y) + 2.6, q.z)
+		var clear := true
+		for k in range(1, 16):
+			var t := float(k) / 16.0
+			var at := eye.lerp(target, t)
+			if _ground_guess(at.x, at.z, at.y) > at.y + 1.0:
+				clear = false
+				break
+		if clear:
+			return [q, "road approach %.0f m, clear sightline (candidate %d)" % [Vector2(q.x - pos.x, q.z - pos.z).length(), tried]]
+	return [scored[0][1], "road approach, NO clear sightline among %d candidates (terrain occludes the landmark from its road)" % tried]
 
 
 func _build_rows(spec: Dictionary) -> Array:
@@ -661,8 +683,9 @@ func _build_rows(spec: Dictionary) -> Array:
 		var roads := _roads()
 		for p: Dictionary in _places():
 			var pos: Vector3 = p["pos"]
-			var stand: Variant = _approach(pos, roads)
-			var why := "road approach ~90 m from landmark (densified route polyline)"
+			var pick: Array = _approach(pos, roads)
+			var stand: Variant = pick[0]
+			var why := str(pick[1])
 			if stand == null:
 				stand = pos + Vector3(0, 0, -70)
 				why = "NO road point 45-180 m from the landmark; stood 70 m south of it"
@@ -795,7 +818,10 @@ func _ally() -> Node3D:
 
 
 func _ground_guess(x: float, z: float, hint_y: float) -> float:
-	for method: String in ["ground_height_near", "ground_height_at"]:
+	var order: Array = ["ground_height_near", "ground_height_at"] if is_finite(hint_y) else ["ground_height_at", "ground_height_near"]
+	if not is_finite(hint_y):
+		hint_y = 0.0
+	for method: String in order:
 		if not _world.has_method(method):
 			continue
 		var y: float = NAN
@@ -884,28 +910,55 @@ func _capture_region_row(spec: Dictionary, row: Dictionary, t: String) -> void:
 	_rig.spring_length = float(_rig.get("_distance"))
 	var ally := _ally()
 	var companion := "none"
+	if ally != null and not id.begins_with("env_"):
+		# Place rows judge the landmark; park the companion out of shot.
+		ally.global_position = feet + Basis(Vector3.UP, yaw) * Vector3(0.0, 0.0, 30.0)
+		companion = "parked behind camera"
+		ally = null
 	if ally != null:
 		var basis := Basis(Vector3.UP, yaw)
-		var spot := feet + basis * Vector3(1.9, 0.0, -1.6)
+		var spot := feet + basis * Vector3(3.2, 0.0, -0.8)
 		var fy := _floor_hit(spot, 6.0)
 		ally.global_position = Vector3(spot.x, (fy if is_finite(fy) else feet.y) + 0.05, spot.z)
 		if ally is CharacterBody3D:
 			(ally as CharacterBody3D).velocity = Vector3.ZERO
 		companion = str(ally.get("species_id")) if ally.get("species_id") != null else ally.name
+	var interrupted: Array = []
 	for i in POSE_FRAMES - RENDERED_FRAMES:
 		await process_frame
+		interrupted += _clear_interruptions()
 	RenderingServer.render_loop_enabled = true
 	for i in RENDERED_FRAMES:
 		await process_frame
+		interrupted += _clear_interruptions()
 	_rig.set("yaw", yaw)
 	_rig.set("pitch", pitch)
+	var arm := float(_rig.get("_distance"))
+	var cam_gap := _rcam.global_position.distance_to(feet + Vector3.UP * float(_rig.get("_height")))
+	if cam_gap > arm + 4.0:
+		_skip(name, "camera %.1f m from the trainer pivot (rig detached); interruptions %s" % [cam_gap, interrupted])
+		return
 	for node in root.find_children("*", "CanvasLayer", true, false):
 		(node as CanvasLayer).visible = false
 	var dist := Vector2(d.x, d.z).length()
 	await _shoot(name, {"subject": id, "label": row.get("label", id), "region": _region, "time": t,
 		"feet": _v(feet), "target": _v(target), "target_dist_m": snappedf(dist, 0.1),
 		"yaw_deg": snappedf(rad_to_deg(yaw), 0.1), "pitch_deg": snappedf(rad_to_deg(pitch), 0.1),
-		"camera": _v(_rcam.global_position), "companion": companion, "why": row.get("why", "")})
+		"camera": _v(_rcam.global_position), "companion": companion, "closed_dialogue": interrupted, "why": row.get("why", "")})
+
+
+## An NPC greeting opened by walking onto a stand suspends the production rig
+## (sequence_director: `_camera_rig.set_process(not panel)`), which leaves the
+## camera at the previous stand. Close any open conversation and resume the rig.
+func _clear_interruptions() -> Array:
+	var closed: Array = []
+	for node in root.find_children("*", "", true, false):
+		if node.has_method("is_open") and node.has_method("close") and node.has_method("start") and bool(node.call("is_open")):
+			node.call("close")
+			closed.append(str(node.name))
+	_rig.set_process(true)
+	_rig.set_physics_process(true)
+	return closed
 
 
 func _v(p: Vector3) -> Array:
