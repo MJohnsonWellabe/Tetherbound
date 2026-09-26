@@ -648,10 +648,31 @@ func _lookahead(here: Vector2, cursor: int) -> Vector2:
 func _perform_action() -> void:
 	var panel := _world.get_node_or_null(^"DialoguePanel")
 	var actions: Array = []
-	await _press("interact")
-	for i in 30:
+	var lines := 0
+	var fought := false
+	# An activity can take more than one press: Doss first explains the
+	# buckled perch, then offers "Help Doss repair the bank perch" as a second
+	# prompt. Press again while the activity's own prompt is still offered.
+	for round in 3:
+		if round > 0:
+			if not _prompt_offered():
+				break
+			await _face_lure()
+		await _press("interact")
+		for i in 30:
+			await physics_frame
+		await _capture("act-%d1-pressed" % round)
+		await _act_round(panel, actions, round)
+		lines += int(actions.back().get("dialogue_lines", 0)) if not actions.is_empty() else 0
+		fought = fought or bool(actions.back().get("fought", false)) if not actions.is_empty() else fought
+	for i in 60:
 		await physics_frame
-	await _capture("act-01-pressed")
+	await _capture("act-99-after")
+	actions.append({"total_dialogue_lines": lines, "fought": fought})
+	_receipt["act"] = actions
+
+
+func _act_round(panel: Node, actions: Array, round: int) -> void:
 	var lines := 0
 	var fought := false
 	var idle := 0
@@ -661,23 +682,23 @@ func _perform_action() -> void:
 			fought = true
 			for i in 60:
 				await physics_frame
-			await _capture("act-02-fight-start")
+			await _capture("act-%d2-fight-start" % round)
 			for i in 240:
 				await physics_frame
-			await _capture("act-03-fight-mid")
+			await _capture("act-%d3-fight-mid" % round)
 			var pilot := COMBAT_PILOT.new(self, _manager, _director, _rig)
 			pilot.listen()
 			var result: Dictionary = await pilot.fight_to_the_end()
 			actions.append({"t_s": snappedf(_clock, 0.1), "fight": str(result.get("outcome", ""))})
 			for i in 45:
 				await physics_frame
-			await _capture("act-04-fight-end")
+			await _capture("act-%d4-fight-end" % round)
 			idle = 0
 			continue
 		if panel != null and bool(panel.call("is_open")):
 			lines += 1
 			if lines <= 4:
-				await _capture("act-dialogue-%02d" % lines)
+				await _capture("act-%d5-dialogue-%02d" % [round, lines])
 			await _press("interact")
 			for i in 20:
 				await physics_frame
@@ -688,11 +709,7 @@ func _perform_action() -> void:
 			break
 		for i in 15:
 			await physics_frame
-	for i in 60:
-		await physics_frame
-	await _capture("act-05-after")
-	actions.append({"dialogue_lines": lines, "fought": fought})
-	_receipt["act"] = actions
+	actions.append({"round": round, "dialogue_lines": lines, "fought": fought})
 
 
 func _handle_fight(foe_name: String) -> void:
