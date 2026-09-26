@@ -91,6 +91,32 @@ var _fight_enemy: RefCounted
 var _fight_hits := 0
 
 
+## A wild fight is lost the moment the lead faints (combat_manager.gd
+## `_handle_active_faint`: the automatic switch is for trainer fights only), so
+## a player swaps a nearly-down lead for a healthy one. The campaign pilot only
+## switches on a bad matchup; this adds that player's low-HP swap, through the
+## same `party_cycle` input. Seed 15 lost a wild at 3 HP left with four healthy
+## creatures on the bench (2026-09-26).
+class WildPilot extends LIVE.CampaignPilot:
+	const SWAP_BELOW := 0.3
+	const HEALTHY := 0.5
+
+	func _should_switch() -> bool:
+		if super._should_switch():
+			return true
+		if not bool(manager.call("can_switch")):
+			return false
+		var active: RefCounted = manager.call("active_creature")
+		if active == null or float(active.get("hp")) > SWAP_BELOW * float(active.get("max_hp")):
+			return false
+		var party: Array = manager.get("_party")
+		for index: int in manager.call("switchable_indices"):
+			var member: RefCounted = party[index]
+			if float(member.get("hp")) >= HEALTHY * float(member.get("max_hp")):
+				return true
+		return false
+
+
 func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	_tree = tree
 	_world = world
@@ -377,7 +403,7 @@ func _fight() -> bool:
 	var guardian_fight := _fight_enemy == _guardian_creature
 	if guardian_fight and not _allow_guardian:
 		return _fail("The guardian encounter began before the actual cave approach/preparation")
-	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
+	var pilot := WildPilot.new(_tree, _combat, _director, _rig)
 	pilot.use_switching = false
 	pilot.switch_input = true
 	while _fighting() and within_battle_deadline(Engine.get_physics_frames() - _fight_started):
@@ -403,7 +429,7 @@ func _fight() -> bool:
 			str(_combat.call("outcome")), _fighting(), _fight_hits, Engine.get_physics_frames() - _fight_started,
 			"%s L%d %.0f" % [foe.get("species"), int(foe.get("level")), float(foe.get("hp"))] if foe != null else "none",
 			party_hp])
-	_receipt("wild_victory", {"guardian": guardian_fight, "hits": _fight_hits,
+	_receipt("wild_victory", {"guardian": guardian_fight, "hits": _fight_hits, "switches": pilot.voluntary_switches,
 		"enemy_id": _fight_enemy.get_instance_id(), "frames": Engine.get_physics_frames() - _fight_started})
 	# Close the reward window before resuming walking: another actual wild on
 	# the way to the den centre must not be counted as this guardian's XP.
