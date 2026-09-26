@@ -1,18 +1,19 @@
 extends Node3D
 
 ## F13 `return_shortcuts` rows of kind `physical_ramp`: a durable, server-owned
-## world change made visible. Each row authors a walk `path` (settlement ->
-## ramp top -> ramp foot -> departure) and a `deck_span` naming the two path
-## vertices the plank deck bridges. The deck carries the walker over a terrace
-## scarp the bare ground cannot be walked down.
+## world change made visible. Each row authors a walk `path` (start -> ramp
+## top -> ramp foot -> departure) and a `deck_span` naming the two path
+## vertices the plank deck bridges. The deck carries the walker down a baked
+## terrain cliff the bare ground cannot be walked down (Reedhaven: the
+## departure valley's north wall below the reed root circuit's east terrace).
 ##
 ## Gating is the replicated world flag and nothing else: the host commits
 ## `unlock_flag` through the ordinary ledger (the Reedhaven dock repair), every
 ## peer receives it in its world flags, and every peer builds the same state
 ## from the same flag here. Before the flag the driven pilings and a few loose
 ## planks stand (visibly unbuilt, no deck) and a boarded-off barricade with
-## real collision closes the ramp top, so the scarp cannot be walked or stepped
-## down; after it the barricade is gone and the deck, stringers and railings
+## real collision closes the ramp top (round its ends the cliff drops the
+## walker); after it the barricade is gone and the deck, stringers and railings
 ## appear with their collision. A live flag change, a rejoin snapshot and a
 ## loaded save all take the same path. Collision is built in simulation_only
 ## too; only the meshes are presentation.
@@ -186,7 +187,7 @@ func _build_deck(ramp: Dictionary) -> void:
 
 
 ## Before the repair: pilings already driven, planks stacked at the top and
-## lying at the scarp foot, no deck -- and the ramp top boarded off.
+## lying at the cliff foot, no deck -- and the ramp top boarded off.
 func _build_unbuilt(ramp: Dictionary) -> void:
 	_build_barricade(ramp)
 	if bool(_world.simulation_only):
@@ -220,7 +221,7 @@ func _build_unbuilt(ramp: Dictionary) -> void:
 ## across the ramp top, `barricade_offset_m` down the deck line from its top
 ## end, `barricade_width_m` wide. Its collision is a row of ground-following
 ## boxes `barricade_height_m` tall (well over STEP_HEIGHT), so a walker stops
-## at it instead of stepping down the scarp. The body's local -Z is the deck
+## at it instead of walking onto the ramp head. The body's local -Z is the deck
 ## direction (its origin is the barricade centre line).
 func _build_barricade(ramp: Dictionary) -> void:
 	var root: Node3D = ramp.root

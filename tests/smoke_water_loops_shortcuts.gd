@@ -21,19 +21,27 @@ extends SceneTree
 ##
 ## SHORTCUTS (`water_world.json::return_shortcuts`, 3 rows).
 ## * `reedhaven_maintenance_ramp` (kind physical_ramp, unlock
-##   `water_dock_reedhaven_repaired`). Closed: before the repair the ramp's
-##   authored `path` (Woven Hall -> ramp top -> ramp foot -> departure; the
-##   deck bridges a terrace scarp) must NOT be walkable, the scene must hold
-##   a runtime node for the ramp, and that node must hold no walk-surface
-##   (deck) collision. The gate itself is a barricade body with collision
-##   across the ramp top: the real-stick walk must stop AT it (stalled, never
-##   past its centre line, no health lost). Unlock through the production
-##   Reedhaven repair prompt; on that live flag change the deck collision must
-##   appear and the barricade collision must be gone.
-##   Open: walk the same path end to end. Shorter: walked length
-##   must beat the "repeat the marsh loop" return (hall -> nearest
-##   reed_root_circuit vertex -> shorter arc -> vertex nearest the departure ->
-##   departure, measured on the authored polyline).
+##   `water_dock_reedhaven_repaired`). Start: the row's `from_land_loop`
+##   vertex (reed_root_circuit vertex 0, on the loop's east terrace); end: the
+##   Brine departure. Between them runs the departure valley's north wall, a
+##   baked-terrain cliff (2-10 m, surface grade over 45 deg) from the valley
+##   apex to the sea cliff; the deck bridges it. Closed: before the repair the
+##   ramp's authored `path` (start -> ramp top -> ramp foot -> departure) must
+##   NOT be walkable, the scene must hold a runtime node for the ramp, and that
+##   node must hold no walk-surface (deck) collision. The gate itself is a
+##   barricade body with collision across the ramp top: the real-stick walk
+##   must stop AT it (stalled, never past its centre line, no health lost).
+##   Normal: the row's `closed_return_xz` (terrace -> round the valley apex ->
+##   down the valley -> departure) walked with real sticks before the flag,
+##   same start, same end, under the land rules; it must arrive. Bypass
+##   attempts before the flag (`_bypass_routes`: round each barricade end, the
+##   straight line, and each RAMP_DETOURS drop-in off the wall) must each fail
+##   to arrive within BYPASS_REACH_M of the departure with under
+##   BYPASS_HEALTH_FRACTION health lost and no drop over MAX_DROP_M. Unlock
+##   through the production Reedhaven repair prompt; on that live flag change
+##   the deck collision must appear and the barricade collision must be gone.
+##   Open: walk the same path end to end. Shorter: the walked ramp route must
+##   be shorter than the walked closed-state return (ratio printed).
 ## * `shellwatch_pump_return_channel` and `deep_watch_current_cut` (kind
 ##   current_reduction). WORLD/data define these as a channel that is always
 ##   physically swimmable whose unlock swaps an exposed flow for a gentle one
@@ -53,8 +61,9 @@ extends SceneTree
 ##  F1  One placement at polyline[0] of each land loop (4 placements).
 ##  F2  Reedhaven: world flag `water_swim_lesson_complete` (the repair's
 ##      prerequisite) and 6 reed_fiber + 4 driftwood in the bag (its cost);
-##      placement at the Woven Hall (twice: closed attempt, open walk) and one
-##      placement beside the repair prompt.
+##      placement at the loop-vertex start (three times: closed attempt,
+##      walked baseline, open walk), one at the start of each bypass attempt
+##      (`_bypass_attempt`), and one beside the repair prompt.
 ##  F3  Shellwatch: world flag `water_dock_brine_steps_trial_won` (story
 ##      prerequisite; lifts Brine/Shellwatch tide-race seals), and trainer
 ##      flags `defeated_water_trainer_solm` / `defeated_water_trainer_irva`
@@ -92,6 +101,22 @@ const TELEPORT_M := 2.5
 const BELOW_TERRAIN_M := 0.6
 const MAX_DROP_M := 1.5
 const WATCHDOG_S := 40 * 60
+const BYPASS_REACH_M := 3.0
+const BYPASS_HEALTH_FRACTION := 0.05
+## Drop-ins off the reed_root_circuit east terrace that are shorter than the
+## walked baseline, found by a baked-terrain grid search (surface grade <= 45
+## deg, drops <= 1.5 m) and probe walks: the wall where it first grows past a
+## 1.5 m step east of the baseline's x 50 fold (x 54, x 60), beside the ramp
+## top, and east toward the sea cliff. A real player would try them; before
+## the ramp flag each must fail on the cliff. The best walkable detour is the
+## row's closed_return_xz, walked as the baseline instead.
+const RAMP_DETOURS := [
+	{"name": "drop-in at the wall's x 54 step", "xz": [[54.5, 456.5], [55.5, 460.5]]},
+	{"name": "drop-in at the wall's x 60 step", "xz": [[60.5, 458.5], [61.5, 463.5]]},
+	{"name": "drop-in beside the ramp top", "xz": [[100.5, 470.0], [99.0, 478.0]]},
+	{"name": "east along the terrace toward the sea cliff", "xz": [[150.0, 484.0]]},
+]
+
 
 var game: Node
 var world: Node3D
@@ -279,8 +304,12 @@ func _report_remaining_chords(id: String, points: Array[Vector3], from_index: in
 
 func _reedhaven_ramp(shortcut: Dictionary) -> void:
 	var flag := str(shortcut.unlock_flag)
-	var hall := _landmark(str(shortcut.from_landmark))
+	var start := _ramp_start(shortcut)
 	var departure := _anchor(str(shortcut.to_anchor))
+	var path_start: Vector3 = _v(shortcut.path[0]) if not (shortcut.get("path", []) as Array).is_empty() else Vector3.INF
+	_check(start.is_finite() and _flat(start).distance_to(_flat(path_start)) < 0.5,
+		"Reedhaven ramp path starts on %s vertex %d %s (path[0] %s)" % [str(shortcut.get("from_land_loop", "")),
+			int(shortcut.get("from_loop_vertex", -1)), _fmt(start), _fmt(path_start)])
 	var ramp_nodes := _nodes_named(world, "maintenance_ramp")
 	_check(not ramp_nodes.is_empty(),
 		"reedhaven_maintenance_ramp has a runtime node in the production scene (found %s)" % str(ramp_nodes))
@@ -294,7 +323,7 @@ func _reedhaven_ramp(shortcut: Dictionary) -> void:
 
 	# Closed.
 	_check(not game.world.flags.has(flag), "Reedhaven ramp starts with %s unset" % flag)
-	await _place(hall, "F2 Woven Hall (closed attempt)")
+	await _place(start, "F2 loop terrace start (closed attempt)")
 	var barricade := _ramp_barricade(ramp_nodes)
 	var barricade_shapes := _ramp_collision_shapes(ramp_nodes, true)
 	_check(barricade != null and barricade_shapes > 0,
@@ -328,8 +357,24 @@ func _reedhaven_ramp(shortcut: Dictionary) -> void:
 		flag, "blocked: " + str(closed.reason) if closed_ok else "walked %.1f m in %.1f s with nothing in the way" % [
 			closed_stats.distance, closed_stats.frames / PHYSICS_HZ]])
 	if bool(closed.ok):
-		_defect("reedhaven_maintenance_ramp: hall %s -> departure %s is already walkable before the repair (no gate/seal)" % [
-			_fmt(hall), _fmt(departure)])
+		_defect("reedhaven_maintenance_ramp: start %s -> departure %s is already walkable before the repair (no gate/seal)" % [
+			_fmt(start), _fmt(departure)])
+
+	# Normal: the best walked return before the flag, same start, same end
+	# (the row's closed_return_xz: along the terrace round the valley apex,
+	# where the cliff fades out, then down the valley).
+	await _place(start, "F2 loop terrace start (walked closed-state baseline)")
+	var normal_stats := _new_stats()
+	var normal: Dictionary = await _walk_path(_closed_return(shortcut, departure), normal_stats,
+		"Reedhaven closed-state return")
+	_stop_stick()
+	var normal_ok: bool = bool(normal.ok) and not game.world.flags.has(flag)
+	_check(normal_ok, "Before %s the departure is reached on foot from the loop terrace the long way round (%.1f m walked, %.1f s; %s)" % [
+		flag, normal_stats.distance, normal_stats.frames / PHYSICS_HZ, str(normal.get("reason", "arrived"))])
+
+	# Deliberate bypass attempts before the flag: each must fail to reach the
+	# departure dry and unhurt, or be the walked baseline itself.
+	var bypasses := await _bypass_checks(shortcut, barricade, start, departure, flag)
 
 	# Unlock through the production repair prompt.
 	var equipment := world.get_node("WaterDocks").get_node_or_null("reedhaven_repair") as Node3D
@@ -348,22 +393,23 @@ func _reedhaven_ramp(shortcut: Dictionary) -> void:
 		"Reedhaven ramp barricade collision is gone on the live %s change (%d collision shapes)" % [flag, open_barricade])
 
 	# Open.
-	await _place(hall, "F2 Woven Hall (open walk)")
+	await _place(start, "F2 loop terrace start (open walk)")
 	var open_stats := _new_stats()
 	var open: Dictionary = await _walk_path(_ramp_path(shortcut, departure), open_stats, "Reedhaven ramp open walk")
 	_stop_stick()
 	var open_ok := unlocked and open_shapes > 0 and open_barricade == 0 and bool(open.ok)
 	_check(open_ok, "Reedhaven ramp walked end to end after %s (%s)" % [flag, str(open.get("reason", "arrived"))])
 	if not bool(open.ok):
-		_defect("reedhaven_maintenance_ramp: after unlock the hall -> departure line is still blocked -- %s" % str(open.reason))
+		_defect("reedhaven_maintenance_ramp: after unlock the start -> departure line is still blocked -- %s" % str(open.reason))
 
-	# Shorter than repeating the marsh loop.
-	var normal := _marsh_loop_return(hall, departure)
-	var shorter: bool = open_ok and open_stats.distance < normal
-	_check(shorter, "Reedhaven ramp walk (%.1f m) is shorter than the marsh-loop return (%.1f m authored)" % [
-		open_stats.distance, normal])
-	_row("shortcut reedhaven_maintenance_ramp | closed %s | open/walked %s | %.1f m | %.1f s | shorter %s (normal %.1f m authored loop return)" % [
-		_yn(closed_ok), _yn(open_ok), open_stats.distance, open_stats.frames / PHYSICS_HZ, _yn(shorter), normal])
+	# Shorter than the walked closed-state return.
+	var shorter: bool = open_ok and normal_ok and open_stats.distance < normal_stats.distance
+	var ratio: float = open_stats.distance / normal_stats.distance if normal_stats.distance > 0.0 else INF
+	_check(shorter, "Reedhaven ramp walk (%.1f m) is shorter than the walked closed-state return (%.1f m): ratio %.2f" % [
+		open_stats.distance, normal_stats.distance, ratio])
+	_row("shortcut reedhaven_maintenance_ramp | closed %s | bypass attempts %s | open/walked %s | %.1f m | %.1f s | shorter %s (normal %.1f m / %.1f s walked before the flag; ratio %.2f)" % [
+		_yn(closed_ok), bypasses, _yn(open_ok), open_stats.distance, open_stats.frames / PHYSICS_HZ, _yn(shorter),
+		normal_stats.distance, normal_stats.frames / PHYSICS_HZ, ratio])
 
 
 func _shellwatch_channel(shortcut: Dictionary) -> void:
@@ -595,13 +641,165 @@ func _sample_barricade(watch: Dictionary) -> void:
 	watch.max_past = maxf(float(watch.max_past), -barricade.to_local(player.global_position).z)
 
 
-## The ramp row's authored walk, after its first vertex (the hall, where the
-## walker is placed); the final vertex is the grounded departure anchor itself.
+## The routes a player would try to get past the closed ramp on purpose:
+## round each end of the barricade (terrace side 1.5 m out past the end, then
+## the far side) and head for the departure; the straight line start ->
+## departure; and each RAMP_DETOURS drop-in (the shortest ways off the terrace
+## the baked-terrain grid search found short of the valley apex). +side is the
+## barricade's local +X.
+func _bypass_routes(shortcut: Dictionary, barricade: Node3D, start: Vector3, departure: Vector3) -> Array[Dictionary]:
+	var routes: Array[Dictionary] = []
+	if barricade != null:
+		var centre := barricade.global_position
+		var side := barricade.global_basis.x.normalized()
+		var flat := -barricade.global_basis.z.normalized()
+		var out := float(shortcut.get("barricade_width_m", 6.0)) * 0.5 + 1.5
+		for end: float in [1.0, -1.0]:
+			routes.append({"name": "round the barricade's %s end" % ("+X" if end > 0.0 else "-X"),
+				"start": centre - flat * 2.5,
+				"points": [centre - flat * 1.5 + side * out * end, centre + flat * 1.5 + side * out * end, departure]})
+	routes.append({"name": "straight start -> departure", "start": start, "points": [departure]})
+	for detour: Dictionary in RAMP_DETOURS:
+		var points: Array = []
+		for xz: Array in detour.xz:
+			points.append(Vector3(float(xz[0]), 0.0, float(xz[1])))
+		points.append(departure)
+		routes.append({"name": str(detour.name), "start": start, "points": points})
+	return routes
+
+
+## Every bypass attempt, before the flag. Returns a one-line tally for the row.
+func _bypass_checks(shortcut: Dictionary, barricade: Node3D, start: Vector3, departure: Vector3, flag: String) -> String:
+	var held := 0
+	var routes := _bypass_routes(shortcut, barricade, start, departure)
+	for route: Dictionary in routes:
+		var points: Array[Vector3] = []
+		points.assign(route.points)
+		var result: Dictionary = await _bypass_attempt(route.start, points, departure, "Reedhaven bypass " + str(route.name))
+		var failed: bool = not bool(result.bypass) and not game.world.flags.has(flag)
+		if failed:
+			held += 1
+		_check(failed, "Before %s, bypass attempt '%s' does not reach the departure dry and unhurt (%s at %s, closest %.1f m, walked %.1f m, max drop %.2f m, health lost %.1f)" % [
+			flag, str(route.name), str(result.end), _fmt(result.at), float(result.min_gap), float(result.distance),
+			float(result.max_drop), float(result.health_lost)])
+	return "%d/%d held" % [held, routes.size()]
+
+
+## A deliberate bypass attempt before the flag: placed at `start`, real sticks
+## through `points` (the last is the departure), exactly as `_travel_leg`
+## steers. Unlike a measured leg it does not stop at the first scrape: it
+## records the walk and ends only on arrival within BYPASS_REACH_M of the
+## departure, entering water, a drop over MAX_DROP_M, health loss of
+## BYPASS_HEALTH_FRACTION or more, a teleport correction, or a stall. A bypass
+## is arrival on foot with none of those faults.
+func _bypass_attempt(start: Vector3, points: Array[Vector3], departure: Vector3, label: String) -> Dictionary:
+	await _place(start, "F2 %s start" % label)
+	var vitals: RefCounted = player.get("vitals")
+	var max_health := float(vitals.max_health)
+	var health := float(vitals.health)
+	var result := {"bypass": false, "end": "budget", "min_gap": INF, "max_drop": 0.0, "health_lost": 0.0,
+		"distance": 0.0, "at": player.global_position, "waypoint": 0}
+	var previous := player.global_position
+	var airborne_from := NAN
+	for index in points.size():
+		var target := points[index]
+		var final := index == points.size() - 1
+		var reach := BYPASS_REACH_M if final else WAYPOINT_TOLERANCE_M
+		result.waypoint = index
+		var budget := int((_flat(previous).distance_to(_flat(target)) / 4.2 * 2.5 + 20.0) * PHYSICS_HZ)
+		var history: Array[float] = []
+		var held := 0
+		var arrived := false
+		for frame in budget:
+			if _flat(player.global_position).distance_to(_flat(target)) <= reach:
+				arrived = true
+				break
+			if not player.locomotion_enabled():
+				_stop_stick()
+				held += 1
+				if held > 60 * 120:
+					result.end = "locomotion held"
+					break
+				history.clear()
+				await physics_frame
+				previous = player.global_position
+				continue
+			var offset := target - player.global_position
+			offset.y = 0.0
+			_steer(offset)
+			await physics_frame
+			var now := player.global_position
+			var step := _flat(now).distance_to(_flat(previous))
+			result.at = now
+			if step > TELEPORT_M:
+				result.end = "teleport correction %.1f m" % step
+				break
+			result.distance = float(result.distance) + step
+			previous = now
+			result.health_lost = maxf(0.0, health - float(vitals.health))
+			if float(result.health_lost) >= max_health * BYPASS_HEALTH_FRACTION:
+				result.end = "health lost %.1f" % float(result.health_lost)
+				break
+			if _swimming():
+				result.end = "entered water (depth %.2f)" % world.water_depth_at(now)
+				break
+			if player.is_on_floor():
+				if is_finite(airborne_from):
+					result.max_drop = maxf(float(result.max_drop), airborne_from - now.y)
+					if airborne_from - now.y > MAX_DROP_M:
+						result.end = "drop %.2f m" % (airborne_from - now.y)
+						break
+				airborne_from = NAN
+			elif not is_finite(airborne_from):
+				airborne_from = now.y
+			result.min_gap = minf(float(result.min_gap), _flat(now).distance_to(_flat(departure)))
+			history.append(_flat(now).distance_to(_flat(target)))
+			if history.size() > STALL_WINDOW_FRAMES:
+				history.pop_front()
+				if history[0] - history[-1] < STALL_PROGRESS_M:
+					result.end = "stalled"
+					break
+		if not arrived:
+			break
+		if final:
+			result.end = "arrived"
+			result.bypass = not _swimming() and float(result.max_drop) <= MAX_DROP_M \
+				and float(result.health_lost) < max_health * BYPASS_HEALTH_FRACTION
+	_stop_stick()
+	await _frames(3)
+	print("%s: end %s at %s (waypoint %d/%d), closest %.1f m to the departure, walked %.1f m, max drop %.2f m, health lost %.1f" % [
+		label, str(result.end), _fmt(result.at), int(result.waypoint) + 1, points.size(), float(result.min_gap),
+		float(result.distance), float(result.max_drop), float(result.health_lost)])
+	return result
+
+
+## The shortcut's start: its `from_land_loop` row's `from_loop_vertex`.
+func _ramp_start(shortcut: Dictionary) -> Vector3:
+	for row: Dictionary in world.config.land_loops:
+		if str(row.id) == str(shortcut.get("from_land_loop", "")):
+			var polyline: Array = row.polyline
+			var index := int(shortcut.get("from_loop_vertex", -1))
+			if index >= 0 and index < polyline.size():
+				return _v(polyline[index])
+	return Vector3.INF
+
+
+## The ramp row's authored walk, after its first vertex (the loop vertex, where
+## the walker is placed); the final vertex is the grounded departure anchor.
 func _ramp_path(shortcut: Dictionary, departure: Vector3) -> Array[Vector3]:
 	var points: Array[Vector3] = []
 	var raw_path: Array = shortcut.get("path", [])
 	for index in range(1, raw_path.size() - 1):
 		points.append(_v(raw_path[index]))
+	points.append(departure)
+	return points
+
+
+## The row's `closed_return_xz` waypoints, then the departure anchor.
+func _closed_return(shortcut: Dictionary, departure: Vector3) -> Array[Vector3]:
+	var points: Array[Vector3] = []
+	for xz: Array in shortcut.get("closed_return_xz", []):
+		points.append(Vector3(float(xz[0]), 0.0, float(xz[1])))
 	points.append(departure)
 	return points
 
@@ -613,35 +811,6 @@ func _walk_path(points: Array[Vector3], stats: Dictionary, label: String) -> Dic
 		if not bool(leg.ok):
 			return leg
 	return {"ok": true}
-
-
-func _marsh_loop_return(hall: Vector3, departure: Vector3) -> float:
-	var loop: Array[Vector3] = []
-	for row: Dictionary in world.config.land_loops:
-		if str(row.id) == "reed_root_circuit":
-			for raw: Array in row.polyline:
-				loop.append(_v(raw))
-	loop.pop_back()  # closing duplicate
-	var from := _nearest(loop, hall)
-	var to := _nearest(loop, departure)
-	var forward := 0.0
-	var index := from
-	while index != to:
-		forward += _flat(loop[index]).distance_to(_flat(loop[(index + 1) % loop.size()]))
-		index = (index + 1) % loop.size()
-	var perimeter := 0.0
-	for i in loop.size():
-		perimeter += _flat(loop[i]).distance_to(_flat(loop[(i + 1) % loop.size()]))
-	var arc := minf(forward, perimeter - forward)
-	return _flat(hall).distance_to(_flat(loop[from])) + arc + _flat(loop[to]).distance_to(_flat(departure))
-
-
-func _nearest(points: Array[Vector3], to: Vector3) -> int:
-	var best := 0
-	for index in points.size():
-		if _flat(points[index]).distance_to(_flat(to)) < _flat(points[best]).distance_to(_flat(to)):
-			best = index
-	return best
 
 
 # ---------------------------------------------------------------- walking
