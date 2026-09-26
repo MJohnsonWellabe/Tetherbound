@@ -55,6 +55,17 @@ func _init() -> void:
 
 func _run() -> void:
 	started_ms = Time.get_ticks_msec()
+	# `--world-seed=N` pins the rolled world for this process, the same override
+	# `TB_WORLD_SEED` gives, for runners that cannot set the environment.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--world-seed="):
+			var raw := arg.trim_prefix("--world-seed=")
+			if not raw.is_valid_int():
+				failures.append("--world-seed must be an integer: %s" % raw)
+				_finish(false)
+				return
+			OS.set_environment("TB_WORLD_SEED", raw)
+			print("FRESH CAMPAIGN world_seed override=", raw)
 	var game := root.get_node("Game")
 	scratch = "user://four_biome_fresh_%d_%d" % [OS.get_process_id(), started_ms]
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(scratch)):
