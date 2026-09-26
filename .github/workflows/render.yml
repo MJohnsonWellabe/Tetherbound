@@ -69,6 +69,7 @@ jobs:
           fail() { echo "::error::$1"; exit 1; }
           [[ "$CHECKOUT_REF" =~ ^[A-Za-z0-9._/-]{1,200}$ ]] || fail "checkout_ref has disallowed characters"
           [[ "$CHECKOUT_REF" != *..* ]] || fail "checkout_ref may not contain .."
+          [[ "$CHECKOUT_REF" != -* ]] || fail "checkout_ref may not start with -"
           [[ "$SCRIPT" =~ ^(tests|tools)/[A-Za-z0-9_/.-]+\.gd$ ]] || fail "script must be tests/*.gd or tools/*.gd"
           [[ "$SCRIPT" != *..* ]] || fail "script may not contain .."
           [[ "$ARGS" =~ ^[A-Za-z0-9_=,./:@+\ -]*$ ]] || fail "args has disallowed characters"
@@ -118,6 +119,7 @@ jobs:
           read -r -a user_args <<< "$ARGS"
           extra=()
           [ ${#user_args[@]} -gt 0 ] && extra=(-- "${user_args[@]}")
+          touch "$RUNNER_TEMP/start_marker"
           t0=$SECONDS
           if [ "$MODE" = render ]; then
             timeout "$((TMIN * 60))" xvfb-run -a -s "-screen 0 ${RES}x24" \
@@ -138,13 +140,14 @@ jobs:
           set -uo pipefail
           out="$RUNNER_TEMP/out"
           mkdir -p "$out/tree" "$out/user"
-          # Every file the run created or modified in the working tree.
-          git status --porcelain --untracked-files=all | sed -E 's/^.{3}//' | grep -v '^\.godot/' \
-            | while IFS= read -r f; do
-                [ -f "$f" ] || continue
-                mkdir -p "$out/tree/$(dirname "$f")"
-                cp "$f" "$out/tree/$f"
-              done
+          # Every file the run created or modified in the working tree,
+          # ignored paths (shots/ etc.) included, by mtime against a marker
+          # touched just before the run. NUL-separated, so any path is safe.
+          if [ -f "$RUNNER_TEMP/start_marker" ]; then
+            find . \( -path ./.git -o -path ./.godot \) -prune -o \
+              -type f -newer "$RUNNER_TEMP/start_marker" -print0 \
+              | xargs -0 -r cp --parents -t "$out/tree/"
+          fi
           cp -r "$RUNNER_TEMP/userdata/." "$out/user/" 2>/dev/null || true
           find "$out" -type f | sed "s|$out/||" | sort > "$out/MANIFEST.txt"
           echo "files=$(wc -l < "$out/MANIFEST.txt")"
