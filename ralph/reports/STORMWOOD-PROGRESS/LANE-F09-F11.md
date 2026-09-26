@@ -630,6 +630,30 @@ SCRIPT ERROR count is 0 in both runs.
   - Fix, e47fa1758: a prompt freed by our own press returns to the caller, which checks the receipt and the yield. A prompt freed during the approach fails with its own message.
 - **Run 15's lone strike hit.** It was logged during the "fight during Capacitor Grove road point" phase, right after that fight was lost. The phase label lags, so this was after the fight ended, not a breach of the spare rule.
 
+### WO-F11-EARNED (branch `ralph/stormwood-f11-earned`, from main 08fcc2055): review fixes, then parked
+
+- **Platform:** Linux container, Godot 4.7-stable, headless `--script`.
+- **Input:** as above. The send-out now uses ordinary joypad LB/RB events at 1x/60 Hz, and satchel recovery uses pad right/A/B.
+- **Starting save origin:** unchanged (the disclosed Cloudreach seam, then the disk save at the Stormwood arrival).
+- **Route and command:** unchanged. `--through-aftermath --witness-dir=user://f11_witness`, then `--verify-reload`.
+
+**Review findings fixed (each committed):**
+
+| Finding | Commit | Result |
+|---|---|---|
+| Closed-Arch smoke: the flank Rootgate lines aimed short of the crossing line; the final z was judged instead of the max z; there was no reach check and no real negative control | 5f64f3b0f | 15 passed, 0 failed, 0 SCRIPT ERROR (`f11_earned/closed_arch_bypass.txt`). The run 1 reach check caught pair E approaches 1 and 7 stopping short of the kill-plane edge. The edge is now the point where the ground falls away past the player's 45° `floor_max_angle`. The controls (collider disabled, temporary bridge) both register a crossing. |
+| LB send-out retry | 04b04368d | **Cause:** `_tap` held a button for two physics frames. Input is flushed once per process frame, and a slow headless Stormwood frame runs several physics steps (always at 8x/480 Hz, and even at 1x/60 Hz, which is where run 14 failed). So the press and release arrived in one flush. **Fix:** `_tap` also holds for two process frames. The send-out runs at 1x with joypad LB, logs each press, and reports a dead press instead of retrying. No LB binding bug is shown so far; this is **not yet exercised by a run**. |
+| Harvest node freed during the approach | 04b04368d | The node's `tree_exiting` is now logged with its receipt, the tool, whether a swing is running, the distance, and the last swings and Interact presses. Cause not yet observed (no run reached the gathers). |
+| `stormwood_field_safety.gd` freed satchel; `Button.pressed.emit()` / `panel.close()` | 04b04368d | A freed satchel or panel is never touched. Stacks are taken with pad right/A and the panel is closed with B. Satchel recoveries are counted. |
+| Strike ruling wiring | 0cc759c34 | Four cases through the real `_process`/`_resolve` in `smoke_stormwood_lightning` (40 assertions, 0 failures). Removing the `_resolve` spare check fails 2; removing the aim spare fails 1. A comment now states that fight state is read at impact. |
+
+- **Witness reporting:** the continuous smoke now ends with `F11 WITNESS SAFETY TOTAL trainer_deaths=… satchel_recoveries=…`, summed over every step.
+- **Earned run (run 18, 04b04368d + 5f64f3b0f):**
+  - **Stopped by me after ~12 min** on the coordinator's SNOWBALL re-order (F10#1 first), still inside the prefix. The last line was `DIAGNOSTIC: START Lantern Pools charged-window wait`, after Dace and `lower_rods_disabled`.
+  - At that point: 0 SCRIPT ERROR, and no step result, death or satchel line. So trainer deaths and satchel recoveries are both 0 up to the stop; no final totals line printed.
+  - Witness dir removed. No F11 clause was reached.
+- **Next** (queue items 2–3): rerun the same command. The first things to read are the LB press lines after the Still Grove rest and any `HARVEST NODE … left the tree` line.
+
 ### Not produced
 
 - The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.
@@ -738,6 +762,66 @@ Seven other pickup/NPC overlaps remain (route_05, 07, 16, 18, 19 and pocket_203)
 - This is loopback ENet only.
 - The Rootgate release (opening pair C) is not shown.
 - The first host-full run's SCRIPT ERROR text was not retained.
+## WO-F10-09: two-peer proof of each side chain's persistent receipts (`ralph/stormwood-f11-earned`)
+
+**Status: PASS.** Rendered two-process run 7 (scenario at 5bcf224ca, game fixes 769effdff and b10a21419): 250 steps, verdict PASS, exit 0, 0 SCRIPT ERROR in either peer log.
+
+- **Command:** `tools/net/run_two_peer_proof.sh tools/net/proof_scenarios/stormwood_f10_side_chain_receipts.json --render`
+- **Evidence:** `two_peer/stormwood_f10_side_chain_receipts/`: PROOF.md, frames per peer, the gzipped world/character saves at `before` / `complete` / `after`, LOG-EXCERPTS.txt, NET-SUMMARY.md and NET_RUN.json.
+- **Platform:** Linux container, Godot 4.7-stable, two real ENet processes on loopback, opengl3 under xvfb. This is local evidence, not internet or Steam acceptance.
+- **Starting save origin:**
+  - Host: `tools/net/proof_saves/host_meadows_stormwood_route_open`.
+  - Guest: a fresh trainer.
+  - Both entered Stormwood with `enter_realm`.
+- **Input:** ordinary Interact presses on the production prompts and NPC conversations, plus `explore_at` debug travel to each spot.
+
+**How each chain was proved.** For every chain, the final step and each earlier step that has its own runtime were played through the production path. Every completion flag reached both peers. Both peers then ran `save_reload_here`, and every completion held on both peers and in the saved files.
+
+| Chain | Who | Played through production | Fixtured (disclosed) | Repeat attempt |
+|---|---|---|---|---|
+| Dark Arches | host | "Relight" on c_rodline, c_lantern, d_hall and d_giant (the inspection count and 12 Stormglass taken). The arch runtime emits step 2. Hesk's report completes the chain. | ashfoot_arch_relit and rootgate_released (main-route facts); 12 Stormglass granted | Hesk answers with his ordinary lines, not the report |
+| Pim's Parcels | guest (client path); host | Guest: Pim's offer, the Marl, Oswin and Lio deliveries, then Pim's return, which completes the chain and pays the guest 2 Small Potions through `reward_grant`. Host: Pim's thanks pays the host once. | lantern_pools_linked | Guest: thanks with the potions still at 2. Host: ordinary lines with the potions still at 2. |
+| What the Crown Remembers | host | Three record prompts, then Wen's records conversation | crown_reached, crown guardian cleared, engine_truth_learned; standing on the Crown by debug travel | Wen answers with her ordinary lines |
+| Glass for Bryn | guest | Bryn's offer, then Bryn's request, then the host-owned delivery (takes the guest's 3 Stormglass and 2 Conductor Vine), then the inspect prompt | bryn_met; the materials granted | Bryn's thanks. Carrying 3 Stormglass and 2 Vine again, Bryn does not ask again and nothing is taken. |
+| Raise a Road | host | Footing prompts for Verge Road and Hollows Road, then two Stormglass Arches built (`build_place`). The runtime emits step 2. The road is walked both ways, which sets both departed flags and step 3. Ondra's report completes the chain. | arch_recipe_known; the arches built with Free Build (materials not charged) | Ondra answers with an ordinary line |
+| Deepwood Circuit | host | Rook's offer; the chapter runtime credits three circuit wins; Rook's return | lantern_hollow_reached; three circuit trainers' defeat facts (lena_giant, orin_blackwater, tavi_rodline) stand in for three hosted fights | Rook answers with his ordinary lines |
+
+- **Glass for Bryn runtime:** it is on main and complete. All three steps ran through it here.
+- **Saved-file checks** (`check_saved`):
+  - **Baseline** (non-vacuous): the host's pre-run world holds all five prerequisite facts and no side-chain flag or rate. The guest's pre-run character holds no rate.
+  - **After the reload:**
+    - The host world holds all six completion flags, the `stormwood_pims_parcels` journal and both character ids.
+    - Both characters hold `potion_small` and `stormwood:pims_parcels_reward_received`.
+
+**Game bugs the run found (Stormwood-owned, fixed, each with a regression):**
+
+1. **Arch travel TO the Verge Road footing was always refused** ("Clear the far footing before travelling"; runs 1 and 4).
+   - **Cause:** the arrival point sat at terrain height, inside the footing's level slab on sloping ground.
+   - **Fix** (769effdff): `stormwood_arch_runtime.gd` lands the traveller on the floor under the point.
+   - **Regression:** `tests/smoke_stormwood_road_arrival.gd` is 9/0; against the old code it fails that leg. Its negative control shows the old capsule overlapping `Footing_verge_road`.
+2. **Deepwood Circuit wins were never credited** (run 4).
+   - **Symptom:** `SCRIPT ERROR: Trying to assign value of type 'Nil' to a variable of type 'Dictionary'` at `stormwood_chapter.gd` `_credit_existing_circuit_wins`, on both peers.
+   - **Cause:** the chapter read `authored_specs` from the EncounterDirector, which has none; the cast lives on StormwoodTrainers.
+   - **Fix:** b10a21419.
+   - **Regression:** the wiring smoke's stub no longer hides the bug. It fails 5 checks against the old code and passes with the fix. `test_stormwood_deepwood_circuit` is 19/0.
+
+**Harness and infrastructure notes:**
+
+- **Slow replication after a screenshot:** in rendered runs 2 and 3, the guest's first replicated fact after the first rendered screenshot arrived later than 1200 physics frames. A diagnostic run measured it at 783 frames. The scenario now waits 3600.
+- **Repeat press at the Bryn inspect spot:** after completion the inspect prompt is disabled, and the press there reaches the new care point's "Rest at the rod crews' shelter" offer instead.
+
+**Findings for owners (not fixed here):**
+
+- **Shared file:** `scripts/world/night_rest.gd` mounts `/root/Game/Session/SleepVote` lazily, only in a process that rests.
+  - The guest's rest press (above) sent its vote to a host that had never rested. The host logged `ERROR: Node not found: "Game/Session/SleepVote"` and `Invalid packet received` (LOG-EXCERPTS, peer-0 lines 296–359).
+  - A guest's rest vote can never reach a host that has not rested first.
+- **Harness gap:** there is no proof step that presses until a dialogue closes. Conversations are read with an exact press count taken from `data/dialogue/stormwood.json`.
+- **Presentation** (Stormwood data, not fixed):
+  - Rook stands inside the d_giant arch opening, and a large wild creature perches on top of it (`06_host_rook_return`, `07_after_reload_and_repeats`).
+  - Hesk's dialogue portrait is a young villager, and Wen's is an old man (`01_host_hesk_report`, `03_host_wen_records`).
+- **Side effect of repeat visits:** finishing an NPC's ordinary conversation emits that NPC's ordinary main-story line event (`stormwood_chapter.gd` `DIALOGUE_EVENTS`).
+- **Trainer deaths and satchel recoveries:** none. Both trainers ended at 100/100 with no satchel (`downed` probe, step 244).
+
 ## WO-F10-07 — Rain around the camera, and gentler Break flashes (`ralph/stormwood-f10-rain-camera`)
 
 - **Anchor:** F10 visual acceptance. This closes the WO-F10-06 "rain, dry disc" item and the final review's reduced-motion finding (UX §8/§275: reduced motion lowers non-essential flashes).

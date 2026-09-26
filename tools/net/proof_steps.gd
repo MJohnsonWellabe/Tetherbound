@@ -43,6 +43,12 @@ extends RefCounted
 ##   guardian_state  {}                   this peer's own Guardian outcome (+ host journal)
 ##   guardian_offer_again {}              ask the HOST for this character's offer once more,
 ##                                         past the hidden prompt: the intent the prompt sends
+##   guardian_offer_refused {contains?}   the same intent from a NON-participant: PASS when the
+##                                         host's refusal line (default: not_participant's) arrives
+##                                         and no claim, marker or Guardian reaches this character
+##   nerissa_challenge {}                 F14: Veilfall prerequisites via the ledger, then take up
+##                                         Nerissa's challenge at her Veilfall spot (then
+##                                         win_trainer_battle); data.multi_peer at the time
 ##   grandpa_homecoming {screenshot?, must_name?, must_not_name?}  F15: walk up to
 ##                                         Grandpa, press his real prompt, read the whole
 ##                                         conversation, report every line and check names
@@ -71,7 +77,8 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state",
 	"water_dock_resend", "water_dock_cut",
 	"water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
-	"water_guardian_let_go", "water_guardian_forge_accept"]
+	"water_guardian_let_go", "water_guardian_forge_accept",
+	"nerissa_challenge", "guardian_offer_refused"]
 
 
 static func handles(action: String) -> bool:
@@ -597,7 +604,8 @@ static func _stormheart_state(tree: SceneTree) -> Dictionary:
 const WATER_ACTIONS := ["homecoming_complete", "credits_continue", "ending_state", "water_dock_act",
 	"water_dock_state", "water_dock_resend", "water_dock_cut", "water_anchor_fixture", "water_swim_to_wild",
 	"water_local_aquatic", "water_remote_aquatic", "water_win_wild", "water_guardian_let_go",
-	"water_guardian_forge_accept"]
+	"water_guardian_forge_accept",
+	"nerissa_challenge", "guardian_offer_refused"]
 const HOMECOMING_PATH := "res://scripts/story/regional_homecoming.gd"
 const QUEST_LOG_PATH := "res://scripts/world/quest_log.gd"
 const DOCK_RULES_PATH := "res://scripts/world/water_dock_rules.gd"
@@ -655,6 +663,10 @@ static func _water_run(tree: SceneTree, action: String, args: Dictionary) -> Dic
 			return await _water_guardian_let_go(tree, args)
 		"water_guardian_forge_accept":
 			return await _water_guardian_forge_accept(tree, args)
+		"nerissa_challenge":
+			return await _nerissa_challenge(tree, args)
+		"guardian_offer_refused":
+			return await _guardian_offer_refused(tree, args)
 	return {"verdict": "ERROR", "detail": "proof_steps: unknown Water action '%s'" % action}
 
 
@@ -2310,3 +2322,95 @@ static func _water_win_wild(tree: SceneTree, args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS" if ok else "FAIL", "data": data,
 		"detail": "wild %s: %s" % ["won" if ok else "NOT won", JSON.stringify(data)]}
 
+
+## F14, peer that fights: take up Captain Nerissa's challenge at her real
+## Veilfall spot through `begin_trainer_battle()` (what her prompt calls), with
+## the Water director's own spec (Veilfall's defeat flag and requirements). The
+## Veilfall chain up to her (VEILFALL_PREREQUISITES) is committed through the
+## ledger first, as a stand-in for playing it. Win it with `win_trainer_battle`.
+## `data.multi_peer` says whether anybody else was in the session at the time.
+static func _nerissa_challenge(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var scene := tree.current_scene
+	var director := scene.find_child("EncounterDirector", true, false) if scene != null else null
+	var game := _game(tree)
+	if director == null or game == null or not (director.get("trainer_specs") as Dictionary).has(NERISSA_ID):
+		return {"verdict": "ERROR", "detail": "no EncounterDirector holding Nerissa's encounter in this scene"}
+	var written: Array[String] = []
+	for flag: String in VEILFALL_PREREQUISITES:
+		if game.world.flags.has(flag):
+			continue
+		var verdict: Dictionary = STORY_LEDGER.set_world_flag(game, flag)
+		if not (bool(verdict.get("ok", false)) or bool(verdict.get("pending", false))):
+			return {"verdict": "FAIL", "detail": "%s refused: code='%s' reason='%s'"
+				% [flag, str(verdict.get("code", "")), str(verdict.get("reason", ""))]}
+		written.append(flag)
+	for f in 30:
+		await tree.physics_frame
+	var spec: Dictionary = (director.get("trainer_specs") as Dictionary)[NERISSA_ID]
+	var chapter := scene.find_child("WaterChapter", true, false)
+	var veilfall := _veilfall(tree)
+	var body: Node3D = null
+	if chapter != null and veilfall != null:
+		body = (chapter.get("npc_bodies") as Dictionary).get(
+			str((veilfall.get("rules") as Dictionary).get("captain_npc_id", ""))) as Node3D
+	if body == null:
+		return {"verdict": "ERROR", "detail": "Nerissa's body is not placed in the Veilfall"}
+	var at := body.global_position + Vector3(2.0, 0.0, 2.0)
+	await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": int(args.get("settle", 120))})
+	var multi := bool(game.call("is_multi_peer"))
+	if not bool(director.call("can_challenge", spec)):
+		return {"verdict": "FAIL", "detail": "Nerissa will not take the challenge (no usable ally: %s, too low: %s)"
+			% [str(director.call("no_usable_ally")), str(director.call("too_low_to_challenge", spec))],
+			"data": {"multi_peer": multi}}
+	if not bool(director.call("begin_trainer_battle", spec, body)):
+		return {"verdict": "FAIL", "detail": "begin_trainer_battle('%s') refused" % NERISSA_ID}
+	for f in 45:
+		await tree.physics_frame
+	return {"verdict": "PASS", "detail": "prerequisites committed %s; challenged Nerissa (defeat flag '%s') with multi_peer=%s; %d creatures to come"
+		% [str(written), str(spec.get("defeat_flag", "")), str(multi), int(director.call("trainer_creatures_left"))],
+		"data": {"multi_peer": multi, "defeat_flag": str(spec.get("defeat_flag", ""))}}
+
+
+## F14: stand beside the freed Guardian and send the very intent its invite
+## prompt sends (past a hidden prompt), then wait for the HOST's refusal line.
+## PASS only when the line contains `contains` (default: `begin()`'s
+## `not_participant` reason) and this character got no claim, no offered
+## marker and no Guardian.
+static func _guardian_offer_refused(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var veilfall := _veilfall(tree)
+	var game := _game(tree)
+	if veilfall == null or game == null:
+		return {"verdict": "ERROR", "detail": "no WaterVeilfall/Game on this peer"}
+	var needle := str(args.get("contains", "Only those who fought Captain Nerissa"))
+	var prompt := veilfall.get("_guardian_prompt") as Node3D
+	var at := prompt.global_position + Vector3(0, -1.2, -1.6)
+	await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 240})
+	if game.has_method("take_pending_world_message"):
+		game.call("take_pending_world_message")
+	var result: Dictionary = (veilfall.get("_transport") as Object).call("submit", {"kind": "guardian_offer"})
+	var message := str(result.get("reason", "")) if not bool(result.get("pending", false)) else ""
+	for f in int(args.get("budget_frames", 600)):
+		if message.contains(needle):
+			break
+		await tree.physics_frame
+		var queued := str(game.get("_pending_world_message"))
+		if queued.contains(needle):
+			message = queued
+		else:
+			var shown := _label_containing(tree.root, needle)
+			if not shown.is_empty():
+				message = shown
+	for f in 60:
+		await tree.physics_frame
+	var after := _guardian_view(tree)
+	var data := {"ok": bool(result.get("ok", false)), "pending": bool(result.get("pending", false)),
+		"code": str(result.get("code", "")), "message": message, "refused": message.contains(needle),
+		"offered": bool(after.get("offered", false)),
+		"pending_guardian_id": str(after.get("pending_guardian_id", "")),
+		"guardians_owned": int(after.get("guardians_owned", 0))}
+	var clean := not bool(data.offered) and str(data.pending_guardian_id).is_empty() and int(data.guardians_owned) == 0
+	return {"verdict": "PASS" if bool(data.refused) and not bool(data.ok) and clean else "FAIL",
+		"detail": "asked the host for an offer: ok=%s pending=%s code='%s' message '%s'; offered=%s claim='%s' Guardians %d"
+			% [str(data.ok), str(data.pending), str(data.code), message, str(data.offered),
+				str(data.pending_guardian_id), int(data.guardians_owned)],
+		"data": data}
