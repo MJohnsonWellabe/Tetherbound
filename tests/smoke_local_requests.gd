@@ -43,6 +43,8 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const HERD_VISIT := preload("res://scripts/world/meadowhart_herd_visit.gd")
+## Where the fixture's walk-in stops, well inside the herd's 12 m prompt/companion gate.
+const HERD_APPROACH_STOP_M := 6.0
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
@@ -776,6 +778,10 @@ func _meadowhart_herd() -> void:
 	await _capture_activity("herd")
 
 
+func _flat(a: Vector3, b: Vector3) -> float:
+	return Vector2(a.x - b.x, a.z - b.z).length()
+
+
 func _stand_at_herd_prompt(visit: Node3D, ally: Node3D) -> bool:
 	var arbiter := _world.get_node_or_null(^"InteractionArbiter")
 	var prompt := visit.get_node_or_null(^"Interactable")
@@ -799,14 +805,18 @@ func _stand_at_herd_prompt(visit: Node3D, ally: Node3D) -> bool:
 			rig.set("yaw", atan2(-to.x, -to.z))
 		await physics_frame
 		await process_frame
-		if moving and (arbiter.call("winning_provider") == prompt or to.length() <= 4.0):
+		# Walk in to the herd, not to the prompt's 12 m edge: stopping where
+		# the prompt first wins leaves the trailing companion just outside the
+		# same 12 m gate (one run in four: ally at 12.7 m).
+		if moving and to.length() <= HERD_APPROACH_STOP_M:
 			Input.action_release("move_forward")
 			_send("move_forward", false)
 			moving = false
 		var live_ally := _director.call("ally_body") as Node3D
+		# Flat distance, the same measure the visit's own gate uses.
 		if live_ally != null and is_instance_valid(live_ally) \
-				and _player.global_position.distance_to(visit.global_position) <= 12.0 \
-				and live_ally.global_position.distance_to(visit.global_position) <= 12.0 \
+				and _flat(_player.global_position, visit.global_position) <= 12.0 \
+				and _flat(live_ally.global_position, visit.global_position) <= 12.0 \
 				and arbiter.call("winning_provider") == prompt:
 			reached = true
 			ally = live_ally
