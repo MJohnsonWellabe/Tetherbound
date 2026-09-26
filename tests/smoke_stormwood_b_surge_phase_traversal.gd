@@ -9,15 +9,20 @@ extends SceneTree
 ## camp/settlement safe zone or inside a rod's 12 m radius; 1.2 s telegraph.
 ##
 ## 1. Lawful cycle: the surge node's own phase_info_at() walks Calm, Building,
-##    Break, Fading in order with the authored durations at the route's region,
-##    and the Break/Calm lengths follow the gentle and disabled-rod multipliers.
+##    Break, Fading in order with the authored durations at the route's region;
+##    with the Deepwood rod flag set in progression the live node gives the
+##    disabled-rod Calm/Break; the host clock advances by game time. Gentle and
+##    aftermath lengths are checked through the same rules helper.
 ## 2. Under each phase the player walks the Conductor Run road out of the Still
 ##    Grove safe zone by stick input while the host strike runtime runs at its
-##    own cadence. Calm, Building and Fading issue no warning; Break issues
-##    warnings, every one at least a telegraph ahead of its impact, on exposed
-##    ground, never inside a safe zone or rod radius.
-## 3. Grounded safe ground in Break: standing in the Still Grove safe zone and
-##    beside the Rodline Refuge rod draws no warning over forced strike attempts.
+##    own cadence (its real re-arms are counted, including while the player is
+##    exposed). Calm, Building and Fading issue no warning; Break issues
+##    warnings 4-8 s apart on exposed ground, never inside a safe zone or rod
+##    radius, and every one resolves at least its 1.2 s telegraph later.
+## 3. Grounded safe ground in Break: standing in the Still Grove and Rodline
+##    Post camp safe zones (the zone rule alone shelters them) draws no warning
+##    over counted strike attempts. Settlements and the Hollow Crown are not
+##    exercised here; camp-rod shelter proper is covered by 4.
 ## 4. Rod safe radius in Break on open road: a player-built lightning rod
 ##    record beside an exposed road point shelters it (0 warnings); the same
 ##    point without the rod draws warnings (negative control). The rule edge is
@@ -56,6 +61,9 @@ var _field: RefCounted
 var _warnings: Array[Dictionary] = []
 var _impacts: Array[Dictionary] = []
 var _hits := 0
+var _prev_next := 0.0
+var _attempts := 0
+var _exposed_attempts := 0
 var _log: PackedStringArray = []
 
 
@@ -105,6 +113,7 @@ func _run() -> void:
 	Engine.max_physics_steps_per_frame = 16
 
 	_check_lawful_cycle()
+	await _check_clock_advances()
 	for phase: String in ["calm", "building", "break", "fading"]:
 		await _phase_leg(phase)
 	await _grounded_safe_ground()
@@ -136,9 +145,31 @@ func _check_lawful_cycle() -> void:
 	_expect(is_equal_approx(float(rules.call("phase_at", 1.0, "deepwood", true).duration), 360.0)
 		and str(rod_off.phase) == "break" and is_equal_approx(float(rod_off.duration), 72.0),
 		"disabled Deepwood rod: Calm 360 s, Break 72 s")
+	var deep := _ground(Vector2(-350.0, 4330.0))
+	_expect(str(_surge.call("region_at", deep)) == "deepwood", "probe point lies in the Deepwood")
+	var progression: RefCounted = _game.get("progression")
+	progression.call("set_flag", "stormwood:rod_deepwood_disabled", true)
+	_set_elapsed(1.0)
+	var live_calm: Dictionary = _surge.call("phase_info_at", deep)
+	_set_elapsed(240.0 * 1.5 + 90.0 + 1.0)
+	var live_break: Dictionary = _surge.call("phase_info_at", deep)
+	_expect(str(live_calm.phase) == "calm" and is_equal_approx(float(live_calm.duration), 360.0)
+		and str(live_break.phase) == "break" and is_equal_approx(float(live_break.duration), 72.0),
+		"live node, Deepwood rod flag set: Calm %.0f s, Break %.0f s (want 360, 72)" % [float(live_calm.duration), float(live_break.get("duration", 0))])
+	progression.call("set_flag", "stormwood:rod_deepwood_disabled", false)
 	var after: Dictionary = rules.call("phase_at", 2400.0 + 45.0 + 1.0, "deepwood", false, true)
 	_expect(str(after.phase) == "break" and is_equal_approx(float(after.duration), 45.0),
 		"aftermath Break is 45 s after a 2400 s Calm")
+
+
+func _check_clock_advances() -> void:
+	_set_elapsed(100.0)
+	var start := _game_s()
+	for _i in 240:
+		await physics_frame
+	var grown := float(_game.get("realm_environment").stormwood.elapsed) - 100.0
+	var passed := _game_s() - start
+	_expect(absf(grown - passed) <= 0.5 and passed > 2.0, "host storm clock advances with game time (%.2f s over %.2f s)" % [grown, passed])
 
 
 ## 2. One stick-driven leg along the Conductor Run road per phase.
@@ -149,6 +180,7 @@ func _phase_leg(phase: String) -> void:
 	_lightning.set("_next", 1.0)
 	_warnings.clear()
 	_impacts.clear()
+	_reset_attempts(1.0)
 	var goal := Vector3(ROUTE_END.x, _field.height_at(ROUTE_END.x, ROUTE_END.y), ROUTE_END.y)
 	var arrived := false
 	var phases_seen := {}
@@ -160,6 +192,7 @@ func _phase_leg(phase: String) -> void:
 		if float(info.get("remaining", 99.0)) < 4.0:
 			_set_elapsed(start_t + 0.5)
 		phases_seen[str(_surge.call("phase_at_position", _player.global_position))] = true
+		_tick_attempts()
 		if frame % 60 == 0 and bool(_lightning.call("exposed", _player.global_position, _player)):
 			exposed_samples += 1
 		travelled += _player.global_position.distance_to(last)
@@ -173,14 +206,18 @@ func _phase_leg(phase: String) -> void:
 			_drive(0, 0)
 			await physics_frame
 	_drive(0, 0)
+	var leg_end := _game_s()
 	for _i in 120:
 		await physics_frame
-	var line := "%s leg: arrived=%s travelled=%.0f m, phases=%s, exposed samples=%d, warnings=%d, impacts=%d" % [
-		phase, arrived, travelled, phases_seen.keys(), exposed_samples, _warnings.size(), _impacts.size()]
+	var line := "%s leg: arrived=%s travelled=%.0f m, phases=%s, exposed samples=%d, attempts=%d (exposed %d), warnings=%d, impacts=%d" % [
+		phase, arrived, travelled, phases_seen.keys(), exposed_samples, _attempts, _exposed_attempts, _warnings.size(), _impacts.size()]
 	_log.append(line)
 	print("  ", line)
 	_expect(arrived and travelled > 300.0, "%s: the player walks the Conductor Run road by stick (%.0f m)" % [phase, travelled])
 	_expect(phases_seen.keys() == [phase], "%s: the live phase stayed %s for the whole leg (saw %s)" % [phase, phase, phases_seen.keys()])
+	# About a quarter of the road is exposed, so a ~90 s leg gives ~15 attempts
+	# and a few exposed ones; the Break leg on the same road is the strong control.
+	_expect(_attempts >= 8 and _exposed_attempts >= 1, "%s: the strike runtime made %d attempts, %d with the player exposed (want >= 8, >= 1)" % [phase, _attempts, _exposed_attempts])
 	if phase == "break":
 		_expect(exposed_samples > 0, "break: the road has exposed ground (non-vacuous)")
 		_expect(_warnings.size() >= 2, "break: the host issued strike warnings on the road (%d)" % _warnings.size())
@@ -189,6 +226,15 @@ func _phase_leg(phase: String) -> void:
 			_expect(not _in_safe_zone(at) and _nearest_rod(at) > 12.0,
 				"break: warning at (%.0f, %.0f) is outside every safe zone and rod radius" % [at.x, at.z])
 			_expect(is_equal_approx(float(warning.remaining), 1.2), "break: warning carries the 1.2 s telegraph")
+			_expect(bool(warning.exposed), "break: warning ground (%.0f, %.0f) was exposed when issued" % [at.x, at.z])
+		var interval_min := float(_lightning.get("rules").config.strike.interval_min)
+		for i in range(1, _warnings.size()):
+			var gap := float(_warnings[i].game_s) - float(_warnings[i - 1].game_s)
+			_expect(gap >= interval_min - 0.02, "break: warnings %d and %d are %.2f game s apart (>= %.0f)" % [i - 1, i, gap, interval_min])
+		_expect(not _impacts.is_empty(), "break: at least one warning resolved to an impact (%d)" % _impacts.size())
+		for warning: Dictionary in _warnings:
+			if float(warning.game_s) < leg_end - 1.3:
+				_expect(_warning_has_impact(int(warning.id)), "break: warning %d resolved to an impact" % int(warning.id))
 		for impact: Dictionary in _impacts:
 			var lead := float(impact.game_s) - _warning_game_s(int(impact.id))
 			# One physics tick of slack (4/240 s) around the 1.2 s telegraph.
@@ -199,10 +245,14 @@ func _phase_leg(phase: String) -> void:
 
 ## 3. Break, standing still in grounded safe ground, strike attempts forced.
 func _grounded_safe_ground() -> void:
-	for spot: Array in [["Still Grove safe zone", Vector2(-160.0, 2700.0)], ["Rodline Refuge rod", Vector2(-664.0, 2314.0)]]:
+	var rules: RefCounted = _lightning.get("rules")
+	for spot: Array in [["Still Grove safe zone", Vector2(-160.0, 2700.0)], ["Rodline Post camp safe zone", Vector2(-664.0, 2314.0)]]:
+		var at := _ground(spot[1])
+		_expect(bool(rules.call("sheltered", at, str(_surge.call("region_at", at)), false, [])),
+			"%s: the safe-zone rule alone shelters it (no canopy, no rods)" % spot[0])
 		await _place(spot[1])
 		var attempts := await _hold_in_break(spot[1])
-		_log.append("%s in Break: %d forced attempts, %d warnings" % [spot[0], attempts, _warnings.size()])
+		_log.append("%s in Break: %d counted attempts, %d warnings" % [spot[0], attempts, _warnings.size()])
 		_expect(attempts >= 20 and _warnings.is_empty(),
 			"break: %s draws no warning over %d strike attempts (%d)" % [spot[0], attempts, _warnings.size()])
 
@@ -238,15 +288,16 @@ func _rod_safe_radius() -> void:
 
 func _hold_in_break(at: Vector2) -> int:
 	_warnings.clear()
-	var attempts := 0
+	_reset_attempts(0.0)
 	for frame in HOLD_FRAMES:
 		_set_elapsed(_phase_start("break") + 10.0)
 		if frame % 40 == 0:
 			_lightning.set("_next", 0.0)
-			attempts += 1
+			_prev_next = 0.0
 		await physics_frame
+		_tick_attempts()
 	_drive(0, 0)
-	return attempts
+	return _attempts
 
 
 func _exposed_road_point() -> Vector2:
@@ -262,8 +313,9 @@ func _exposed_road_point() -> Vector2:
 func _on_strike(event: Dictionary) -> void:
 	var row := event.duplicate(true)
 	# Game seconds from physics ticks: wall-clock ms at time_scale 4 is noisy.
-	row["game_s"] = float(Engine.get_physics_frames()) * Engine.time_scale / float(Engine.physics_ticks_per_second)
+	row["game_s"] = _game_s()
 	if str(event.get("kind")) == "warning":
+		row["exposed"] = bool(_lightning.call("exposed", event.at, null))
 		_warnings.append(row)
 	elif str(event.get("kind")) == "impact":
 		_impacts.append(row)
@@ -278,6 +330,34 @@ func _refill() -> void:
 	var vitals: RefCounted = _player.get("vitals")
 	if vitals != null and not vitals.is_dead():
 		vitals.health = float(vitals.max_health)
+
+
+## A real attempt is the runtime re-arming its interval (4-8 s) after it ran
+## out; forcing `_next` to 0 only skips the wait, the re-arm is the runtime's.
+func _reset_attempts(next: float) -> void:
+	_prev_next = next
+	_attempts = 0
+	_exposed_attempts = 0
+
+
+func _tick_attempts() -> void:
+	var current := float(_lightning.get("_next"))
+	if current > _prev_next + 2.0:
+		_attempts += 1
+		if bool(_lightning.call("exposed", _player.global_position, _player)):
+			_exposed_attempts += 1
+	_prev_next = current
+
+
+func _game_s() -> float:
+	return float(Engine.get_physics_frames()) * Engine.time_scale / float(Engine.physics_ticks_per_second)
+
+
+func _warning_has_impact(id: int) -> bool:
+	for impact: Dictionary in _impacts:
+		if int(impact.id) == id:
+			return true
+	return false
 
 
 func _warning_game_s(id: int) -> float:
@@ -319,10 +399,7 @@ func _nearest_rod(at: Vector3) -> float:
 
 
 func _find_lightning() -> Node:
-	for node: Node in _world.find_children("*", "Node3D", true, false):
-		if node.get_script() != null and str(node.get_script().resource_path).ends_with("stormwood_lightning.gd"):
-			return node
-	return null
+	return _world.get_node_or_null(^"StormwoodLightning")
 
 
 func _ground(p: Vector2) -> Vector3:
