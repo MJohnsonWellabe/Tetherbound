@@ -190,6 +190,7 @@ func _run() -> void:
 			var rows: Array = (host_identity if peer == 0 else client_identity).get("party", []) as Array
 			_check(rows.size() == 1 and str(rows[0]).begins_with(chosen + "@"),
 				"peer %d holds the starter it picked in the real picker, %s (%s)" % [peer, chosen, str(rows)])
+			await _assert_named_starter(peer, "after the opening")
 	var first_party: Array = client_identity.get("party", []) as Array
 	_check(int(client_identity.get("party_size", -1)) == 1 and first_party.size() == 1,
 		("the completed opening left the fresh client exactly one starter (%s)" if _opening_together \
@@ -509,14 +510,17 @@ func _assert_named_starter(peer: int, when: String) -> void:
 ## title's returning route. What it holds then came from its saved character
 ## and the join, not from memory.
 func _rejoin_with_starter(port: int) -> void:
-	var character_id := str((await _identity(1)).get("character_id", ""))
+	var before := await _identity(1)
+	var character_id := str(before.get("character_id", ""))
+	var starter_uids: Array = before.get("party_uids", []) as Array
+	_check(starter_uids.size() == 1 and not str(starter_uids[0]).is_empty(),
+		"the guest's starter has a UID before the drop (%s)" % str(starter_uids))
 	var saved: Dictionary = await step(1, "save_character_here", {})
 	_check(str(saved.get("verdict", "")) == "PASS", "the guest's character is written (%s)" % str(saved.get("detail", "")))
 	var dropped: Dictionary = await step(1, "drop_link", {"settle_frames": 60})
 	_check(str(dropped.get("verdict", "")) == "PASS", "the guest's link dies (%s)" % str(dropped.get("detail", "")))
 	var alone: Dictionary = await step(0, "expect_peers", {"count": 1}, 900)
 	_check(str(alone.get("verdict", "")) == "PASS", "the host sees the guest gone (%s)" % str(alone.get("detail", "")))
-	await step(1, "leave", {"reason": "link_died"})
 	var wiped: Dictionary = await step(1, "wipe_character", {})
 	_check(str(wiped.get("verdict", "")) == "PASS", "the guest's live character is blanked (%s)" % str(wiped.get("detail", "")))
 	var back: Dictionary = await step(1, "production_join", {
@@ -529,8 +533,21 @@ func _rejoin_with_starter(port: int) -> void:
 		var both: Dictionary = await step(peer, "expect_peers", {"count": 2})
 		_check(str(both.get("verdict", "")) == "PASS", "peer %d sees both players again (%s)" % [peer, str(both.get("detail", ""))])
 	var rejoined := await _identity(1)
-	_check(str(rejoined.get("character_id", "")) == character_id,
-		"the rejoined guest is the same character (%s)" % str(rejoined.get("character_id", "")))
+	_check(rejoined.get("party_uids", []) == starter_uids,
+		"the rejoined guest holds the SAME starter creature, not a new one (UID %s -> %s)"
+			% [str(starter_uids), str(rejoined.get("party_uids", []))])
+	# The rejoin mints a new peer id: both registries must name the returning
+	# character and the host, and nobody else.
+	for viewer in 2:
+		var sess := await _session(viewer)
+		var chars: Array = []
+		for raw: Variant in (sess.get("rows", []) as Array):
+			if raw is Dictionary:
+				chars.append(str((raw as Dictionary).get("character_id", "")))
+		chars.sort()
+		var want := [character_id, str((await _identity(0)).get("character_id", ""))]
+		want.sort()
+		_check(chars == want, "peer %d's registry after the rejoin holds exactly the host and the returning character (%s)" % [viewer, str(chars)])
 	await _assert_named_starter(1, "after rejoining")
 	var story := await _story(1, [STARTER_FLAG])
 	_check(_player_flag(story, STARTER_FLAG) == true, "the rejoined guest kept its starter receipt")
