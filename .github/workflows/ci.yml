@@ -1650,6 +1650,9 @@ jobs:
       - name: Verify Tidewake combat pause while swimming
         if: ${{ !cancelled() }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_combat_pause.gd
+      - name: Verify Tidewake Guardian offer keeps controller focus across a drop
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_water_guardian_drop_refocus.gd
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
