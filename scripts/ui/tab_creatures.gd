@@ -314,6 +314,13 @@ var _release_target: int = -1
 ## Which row the cursor lands on when the ceremony ends — the newcomer's new
 ## holder when they joined, slot 0 when they were the one released.
 var _release_land: int = 0
+## The `Game.pending_catch` the release choice was staged for. A drop and the
+## returning route wipe the live character (emptying pending_catch) while the
+## menu -- owned by the Game autoload -- stays open on 'choose'; the host then
+## re-presents the same claim as a NEW pending creature. Comparing against this
+## lets `_poll_release()` end the stale stage so the re-presented creature is
+## staged afresh, focus on its row, instead of leaving the pad on nothing.
+var _release_for: RefCounted = null
 
 ## The newcomer's row. Deliberately NOT in `_rows`: that array is the five-slot
 ## contract `smoke_menu.gd` asserts on, and a sixth entry there would be the
@@ -1820,6 +1827,17 @@ func _poll_release() -> void:
 	if _release_stage == "":
 		_maybe_begin_release()
 		return
+	if _release_stage in ["choose", "confirm"] and _pending_catch() != _release_for:
+		_end_release()
+		return
+	# Something else took focus mid-ceremony and was freed (a drop to the title
+	# screen and back, another modal): the menu stays open and deaf, so a pad
+	# would be left on nothing with no way to answer. Hand focus back to the
+	# beat's own target.
+	if get_viewport().gui_get_focus_owner() == null:
+		var target: Control = first_focus()
+		if target != null and target.is_visible_in_tree():
+			target.grab_focus()
 	# choose advances through the row Buttons, confirm/done through the
 	# farewell Buttons — see `_release_stage`'s own comment for why presses,
 	# not a polled confirm action. Only backing out is polled, backpack-style.
@@ -1874,6 +1892,7 @@ func _maybe_begin_release() -> void:
 		return
 
 	_release_stage = "choose"
+	_release_for = pending
 	_release_target = -1
 	_held = -1
 	menu.call("hold_input", true)
@@ -2542,6 +2561,7 @@ func _do_release() -> void:
 
 func _end_release() -> void:
 	_release_stage = ""
+	_release_for = null
 	_release_target = -1
 	menu.call("hold_input", false)
 	menu.call("override_footer", "")
