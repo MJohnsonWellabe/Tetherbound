@@ -230,3 +230,42 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   camp code but switches it off, and `BENCH_CARE_PREPARES := false` means bench care
   (Satchel revive/potion) no longer calls the helper's `_prepare()` / party-cycle. The helper's
   own pre-captain `_prepare()` is unchanged. Attempt 7.
+- Attempt 7 **passed** `hall` (2142 s wall time, 12:52 to 13:28 UTC). It beat all three Sigil captains,
+  opened the Hall approach (3 Sigils spent), and cleared patrol, courtyard and elite, with repeated
+  `between_fight_care` receipts. 9 flags gained. Party at the Warden boundary: ripplet L16 0 HP,
+  bramblebun L18 8, mudsnout L16 87, mudsnout L17 0, bramblebun L15 37. Potions 7, revives 10.
+  0 SCRIPT ERROR.
+
+## B7: Warden lost with a drained belt (helper pacing gap, not a game defect)
+
+- `warden` attempt 1 (13:28 UTC, seed 4, from `/tmp/claude-0/earned_chain/seed4/hall/save/`, 226 s):
+  the reveal was delivered (`learned_legendary_is_the_source`). The helper's `_prepare()` revived
+  two members and cycled the pilot. Then
+  `EARNED WARDEN_ACCEPT FAIL — The actual captain encounter ended without victory: lost`, and the
+  whole belt was at 0 HP (L16–18). 7 small potions and 8 revives were left unused.
+  Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt1/`.
+- Alternative 1 (own file, `warden_accept.gd`): before the helper's `_prepare()`, revive every
+  fainted member, then give up to two small potions to anyone under 60% HP, through the same real
+  Satchel seam (`care_existing`). Disclosed as `pre_warden_bench_care`. Attempt 2.
+- Attempt 2 (alternative 1) **won the Warden**: 9 `pre_warden_bench_care` doses, then 5 rounds and
+  91 hits, with `defeated_warden`, `realm_key_cloudreach` and `realm_heart_meadows_earned` gained.
+  It then failed on B8. Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt2/`.
+
+## B8: the Warden victory's dialogue outlasts the helper's 120-frame input-return wait
+
+- Attempts 2 and 3: `EARNED WARDEN_ACCEPT FAIL — The actual trainer victory did not return ordinary world input: warden_aldis`.
+  An input-owner trace (attempt 3, `warden_accept.gd` diagnostic; the attempt-3 log dir was overwritten by attempt 4) shows
+  `<none> -> /root/MeadowsPlayground/DialoguePanel (dialogue_panel.gd) frame=7373` right after the
+  victory, still open when the helper's wait
+  (`meadows_earned_hall_segment.gd::_fight_named`, 120 frames of no input) runs out. The
+  helper expects an ordinary player to be able to act. Nothing presses Interact to read the
+  production dialogue.
+- Alternative 1 (own file): on the helper's own `trainer_defeated` receipt for the Warden, press
+  the real Interact action while that panel stays open (at most 12 taps). This is the same way
+  `_drive_machine_to_ceremony` reads the machine dialogues. It logs `post_victory_dialogue_read`
+  with the conversation ids. Attempt 4.
+- Attempt 4 read `stronghold_warden_realm_reward` (2 taps). `defeated_warden` and the realm
+  key/heart flags were set. It then stopped at the machine:
+  `An unexpected live dialogue interrupted the machine sequence` (a DialoguePanel was open at
+  frames 7942–8007, before or at the machine press). Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt4/`.
+  Attempt 5 adds conversation ids to the input-owner trace and a `dialogue_finished` trace.

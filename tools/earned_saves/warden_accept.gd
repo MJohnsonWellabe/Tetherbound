@@ -18,6 +18,7 @@ extends "res://tests/helpers/meadows_earned_warden_segment.gd"
 var _accepting := false
 var _outgoing_index := -1
 var _accept_receipt: Dictionary = {}
+var _last_owner_label := "<none>"
 
 
 static func outgoing_choice(levels: Array[int]) -> int:
@@ -99,6 +100,14 @@ func _ending_ready() -> bool:
 
 
 func _observe_retained_party() -> void:
+	# Diagnostic for B8: name every change of the live input owner.
+	var owner := INPUT_OWNER.current(_tree)
+	var label := "<none>" if owner == null else "%s (%s)" % [owner.get_path(), owner.get_script().resource_path.get_file() if owner.get_script() else owner.get_class()]
+	if owner != null and owner == _panel:
+		label += " conversation=" + _current_conversation()
+	if label != _last_owner_label:
+		print("EARNED WARDEN input_owner %s -> %s frame=%d" % [_last_owner_label, label, Engine.get_physics_frames()])
+		_last_owner_label = label
 	if _accepting:
 		return
 	super._observe_retained_party()
@@ -152,3 +161,77 @@ func _press_prompt(prompt: Node3D) -> bool:
 		for _frame in 20:
 			await _tree.physics_frame
 	return _fail("Physical Interact never activated the exact offered target in %d ordinary presses" % PRESS_TRIES)
+
+
+## Warden attempt 1 (BLOCKERS.md B7) lost the Warden with the whole belt at 0 HP.
+## The helper's own `_prepare()` revived only the pilot it chose, and left
+## 7 small potions and 8 revives unused. Before each preparation, give the
+## whole belt the same Satchel care `hall_route.gd` uses between fights
+## (`care_existing`, the team helper's real Satchel seam): revive every
+## fainted member, then a small potion to anyone under WARDEN_CARE_BELOW
+## while stock lasts. Disclosed per dose as `pre_warden_bench_care`.
+const WARDEN_CARE_BELOW := 0.6
+
+
+func _prepare() -> bool:
+	var party: RefCounted = _game.get("party")
+	for pass_item: String in ["revive", "potion_small", "potion_small"]:
+		for index in int(party.call("size")):
+			var member: RefCounted = party.call("at", index)
+			var fainted := bool(member.get("fainted"))
+			if _count(pass_item) <= 0:
+				break
+			if pass_item == "revive" and not fainted:
+				continue
+			if pass_item == "potion_small" and (fainted \
+					or float(member.get("hp")) >= float(member.get("max_hp")) * WARDEN_CARE_BELOW):
+				continue
+			var before := {"index": index, "species": str(member.get("species_id")), "hp": float(member.get("hp")),
+				"max_hp": float(member.get("max_hp")), "fainted": fainted, "item": pass_item}
+			var observed: Dictionary = await CARE.new().care_existing(_tree, _world, _game, pass_item, index)
+			if not bool(observed.get("passed", false)):
+				return _fail("Real Satchel care failed before the Warden: " + str(observed.get("failures", [])))
+			before["hp_after"] = float(member.get("hp"))
+			_receipt("pre_warden_bench_care", before)
+	return await super._prepare()
+
+
+## B8 (attempts 2-3): after the Warden victory, the production DialoguePanel
+## opens and the helper's 120-frame "ordinary world input returned" wait
+## expires while it is still open. A player reads it: on the helper's own
+## `trainer_defeated` receipt for the Warden, press the real Interact action
+## while that panel stays open (as `_drive_machine_to_ceremony` does), and
+## record each conversation read as `post_victory_dialogue_read`.
+const POST_VICTORY_TAPS := 12
+
+
+func _receipt(beat: String, detail: Dictionary) -> void:
+	super._receipt(beat, detail)
+	if beat == "trainer_defeated" and str(detail.get("id", "")) == _warden_id():
+		_read_post_victory_dialogue()
+
+
+func _warden_id() -> String:
+	return str((_ending_config.get("warden", {}) as Dictionary).get("trainer", ""))
+
+
+func _read_post_victory_dialogue() -> void:
+	var read: Array[String] = []
+	for _frame in 30:
+		if bool(_panel.call("is_open")):
+			break
+		await _tree.physics_frame
+	var taps := 0
+	while bool(_panel.call("is_open")) and taps < POST_VICTORY_TAPS and not _fighting():
+		var conversation := _current_conversation()
+		if read.is_empty() or read[-1] != conversation:
+			read.append(conversation)
+		await _input._tap("interact")
+		taps += 1
+	print("EARNED WARDEN — ", {"beat": "post_victory_dialogue_read", "conversations": read, "taps": taps,
+		"panel_open_after": bool(_panel.call("is_open"))})
+
+
+func _on_dialogue_finished(id: String) -> void:
+	super._on_dialogue_finished(id)
+	print("EARNED WARDEN dialogue_finished %s frame=%d" % [id, Engine.get_physics_frames()])
