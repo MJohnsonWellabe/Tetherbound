@@ -129,6 +129,9 @@ func _return_paid_arch() -> bool:
 	_drive_stick(0, 0)
 	return _fail("ordinary Crown passage did not return to the actual paid twin")
 
+var _last_dialogue := ""
+
+
 func _dialogue(label: String) -> bool:
 	var panel := _world.get_node("DialoguePanel")
 	for _frame in 180:
@@ -138,7 +141,8 @@ func _dialogue(label: String) -> bool:
 	if not panel.is_open():
 		return _fail(label + " exact interaction did not open dialogue")
 	var runner: Variant = panel.call("runner") if panel.has_method("runner") else null
-	_note("DIALOGUE %s opened '%s'" % [label, str((runner as Object).call("conversation_id")) if runner is Object else "?"])
+	_last_dialogue = str((runner as Object).call("conversation_id")) if runner is Object else "?"
+	_note("DIALOGUE %s opened '%s'" % [label, _last_dialogue])
 	for _line in 64:
 		if not panel.is_open():
 			return true
@@ -154,36 +158,47 @@ func _trainer(id: String) -> bool:
 		return _fail(id + " actual trainer is absent")
 	if not await _rest_before(id):
 		return false
-	if not await _ensure_usable_ally(id):
-		return false
-	# The send-out that `_ensure_usable_ally` pressed deploys asynchronously;
-	# wait for the director to agree before judging the challenge.
-	for _frame in 300:
-		if bool(_director.call("can_challenge", spec)):
+	# Run 28: two wild fights at Sera's stance knocked out the lead after the
+	# send-out, and the press was answered "no usable creature". A player sends
+	# out another healthy member and challenges again.
+	var challenged := false
+	for _challenge_attempt in 3:
+		if not await _ensure_usable_ally(id):
+			return false
+		# The send-out that `_ensure_usable_ally` pressed deploys asynchronously;
+		# wait for the director to agree before judging the challenge.
+		for _frame in 300:
+			if bool(_director.call("can_challenge", spec)):
+				break
+			await _tree.physics_frame
+		if not _director.call("can_challenge", spec):
+			var ally: RefCounted = _director.call("ally_instance")
+			var missing: Array[String] = []
+			for flag: String in spec.get("requires_flags", []):
+				if not _has(flag):
+					missing.append(flag)
+			return _fail(("%s requires an unmet earned prerequisite or usable ally (ally=%s fainted=%s ally_body=%s "
+				+ "fighting=%s battle=%s too_low=%s beaten=%s missing_flags=%s)") % [id,
+				str(ally.get("species_id")) if ally != null else "none",
+				str(ally.get("fainted")) if ally != null else "?", str(_director.call("ally_body") != null),
+				str(_manager.call("is_fighting")), str(_director.call("trainer_battle_active")),
+				str(_director.call("too_low_to_challenge", spec)), str(_has(str(spec.get("defeat_flag", "")))),
+				str(missing)])
+		# A player sees their companion out before challenging: wait for the body
+		# the send-out summons (it deploys asynchronously).
+		for _frame in 300:
+			if _director.call("ally_body") != null:
+				break
+			await _tree.physics_frame
+		if not await _activate_exact(body, prompt,
+				Vector2(body.global_position.x, body.global_position.z - 2), id) or not await _dialogue(id):
+			return false
+		if _last_dialogue == str(spec.get("challenge", "")):
+			challenged = true
 			break
-		await _tree.physics_frame
-	if not _director.call("can_challenge", spec):
-		var ally: RefCounted = _director.call("ally_instance")
-		var missing: Array[String] = []
-		for flag: String in spec.get("requires_flags", []):
-			if not _has(flag):
-				missing.append(flag)
-		return _fail(("%s requires an unmet earned prerequisite or usable ally (ally=%s fainted=%s ally_body=%s "
-			+ "fighting=%s battle=%s too_low=%s beaten=%s missing_flags=%s)") % [id,
-			str(ally.get("species_id")) if ally != null else "none",
-			str(ally.get("fainted")) if ally != null else "?", str(_director.call("ally_body") != null),
-			str(_manager.call("is_fighting")), str(_director.call("trainer_battle_active")),
-			str(_director.call("too_low_to_challenge", spec)), str(_has(str(spec.get("defeat_flag", "")))),
-			str(missing)])
-	# A player sees their companion out before challenging: wait for the body
-	# the send-out summons (it deploys asynchronously).
-	for _frame in 300:
-		if _director.call("ally_body") != null:
-			break
-		await _tree.physics_frame
-	if not await _activate_exact(body, prompt,
-			Vector2(body.global_position.x, body.global_position.z - 2), id) or not await _dialogue(id):
-		return false
+		_note("%s answered with '%s' (the lead was worn at the stance); sending out a healthy member and challenging again" % [id, _last_dialogue])
+	if not challenged:
+		return _fail("%s never answered with the challenge (last '%s')" % [id, _last_dialogue])
 	var refusals_before := _trainer_events.filter(func(e: String) -> bool: return e.begins_with("start_refused")).size()
 	for _frame in 900:
 		if _director.trainer_battle_active():
