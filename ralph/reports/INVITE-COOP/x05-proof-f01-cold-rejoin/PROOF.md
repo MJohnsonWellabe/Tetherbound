@@ -39,6 +39,21 @@ All the checks from `x05-proof-f01-opening-join`: the opening in a live two-peer
 - It has exactly the 50 orbs it had before its process died.
 - The host's starter is unchanged: the galewisp named "A".
 
+## Every starter crosses a cold reconnect
+
+Two more runs, one per remaining starter pair, on `ralph/x05-f01-cold` `ca52d9f15`. That commit also has the guest type a different name letter, and a check that the two names differ:
+
+| Run | Host picks | Guest picks | Host drops the dead guest | Result | Logs |
+|---|---|---|---|---|---|
+| (above) | galewisp (2) | ripplet (1) | 148.9 s | PASS | top level |
+| h0g2 | terrapup (0) | galewisp (2) | 215.6 s | ALL CHECKS PASSED | `h0g2/` |
+| h1g0 | ripplet (1) | terrapup (0) | 155.1 s | ALL CHECKS PASSED | `h1g0/` |
+
+- In both new runs, the guest's starter keeps its species and its own typed name "B" after the opening, the reload, the rejoin and the cold reconnect. The host's starter keeps "A". The check "the two peers typed different names ('A', 'B')" passes.
+- No SCRIPT ERROR appears in any of the host, killed-guest or relaunched-guest logs.
+- The 215.6 s drop is still within the 240 s window. It was later than the earlier measurements, which fits ENet testing its 180 s maximum only when it next resends.
+- So every starter has now crossed a cold reconnect as a guest's starter, and every starter has been chosen by a host.
+
 ## Unit coverage
 
 - `tests/test_steam_invite_ui.gd` `test_a_restarted_guest_still_sees_its_saved_portable_characters`. The title, Steam-invite and identity tests pass: 20 tests, 0 failed.
