@@ -29,8 +29,8 @@
   },
   "current_flow": {
     "_comment": "F13#5 visible route currents: bind the same dock closures and return reductions as WaterCurrentField, then encode effective velocity including each route's liberation multiplier. Closed departure strips show their full adverse 6 m/s flow; shared unlock facts restore authored calm flow. The adapter sets shader speed_scale from the encoding scale and keeps min_speed at zero. restored_calm_scale softens foam opacity; its motion factor is compensated so liberation applies once. Tide-race rings remain a separate view. One draw call.",
-    "enabled": true, "lift_m": 0.05, "width_scale": 0.7, "segment_m": 12.0, "full_strength_m_s": 6.0, "restored_calm_scale": 0.5, "poll_seconds": 0.2,
-    "shader": {"foam_colour": "#eef9f9", "opacity": 0.95, "lane_opacity": 0.2, "streak_width_m": 2.6, "streak_length_m": 3.6, "fade_start_m": 180.0, "fade_end_m": 520.0, "depth_pull_fraction": 0.003}
+    "enabled": true, "lift_m": 0.05, "width_scale": 0.7, "segment_m": 1.0, "across_segments": 8, "full_strength_m_s": 6.0, "restored_calm_scale": 0.5, "poll_seconds": 0.2,
+    "shader": {"foam_colour": "#eef9f9", "opacity": 0.95, "lane_colour": "#286574", "lane_opacity": 0.88, "wave_height_m": 0.65, "streak_width_m": 2.6, "streak_length_m": 7.0, "fade_start_m": 180.0, "fade_end_m": 520.0, "depth_pull_fraction": 0.003}
   },
   "exterior_composition": {
     "_comment": "Faceted static crags frame the existing physical Terrain3D gate approach. Each vegetation cluster sits on a named, colliding flat geological cap. Analytic route-edge clearances below are from the actual configured hike polyline; the central entrance corridor and interaction point remain unobstructed.",

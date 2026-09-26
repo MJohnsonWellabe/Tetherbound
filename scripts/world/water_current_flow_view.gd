@@ -2,8 +2,8 @@ extends MeshInstance3D
 
 ## Visible Tidewake currents (F13#5). The config promised
 ## "white_foam_and_driftwood_same_vector_as_physics" but nothing drew the
-## currents, so a swimmer met an invisible push. This lays one thin foam
-## ribbon on the sea along every authored current polyline, with streaks
+## currents, so a swimmer met an invisible push. This lays raised wave patches
+## on the sea along every authored current polyline, with crests
 ## drifting along that current's effective physics flow vector. Dock closures,
 ## exact-route return reductions and liberation use the same state as the
 ## field; tide-race rings remain owned by water_gate_seal_view.gd. One mesh,
@@ -43,6 +43,7 @@ func build(world_config: Dictionary, config: Dictionary, flags: RefCounted) -> v
 	_calm_scale = clampf(float(config.get("restored_calm_scale", 0.5)), 0.01, 1.0)
 	_poll_seconds = maxf(0.05, float(config.get("poll_seconds", 0.2)))
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	extra_cull_margin = 1.0
 	var material := ShaderMaterial.new()
 	material.shader = SHADER
 	# The sea is also transparent; draw the foam after it.
@@ -139,6 +140,8 @@ func _rebuild_ribbons() -> void:
 	var width_scale := float(_config.get("width_scale", 0.7))
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var vertex_offset := 0
+	var across_segments := maxi(1, int(_config.get("across_segments", 8)))
 	ribbon_count = 0
 	for index in _currents.size():
 		var current: Dictionary = _currents[index]
@@ -149,47 +152,78 @@ func _rebuild_ribbons() -> void:
 		var flow := Vector2(velocity.x, velocity.z).normalized()
 		var strength := clampf(velocity.length() / _full_strength, 0.0, 1.0)
 		var colour := Color(flow.x * 0.5 + 0.5, flow.y * 0.5 + 0.5, strength, 1.0)
-		_ribbon(surface, _densify(points, float(_config.get("segment_m", 12.0))),
-			float(current.get("width_m", 18.0)) * width_scale * 0.5, sea, colour)
-		ribbon_count += 1
+		var half := float(current.get("width_m", 18.0)) * width_scale * 0.5
+		var rows := _joined_rows(points, half, float(_config.get("segment_m", 12.0)))
+		var added := _ribbon(surface, rows, sea, colour, across_segments, vertex_offset)
+		vertex_offset += added
+		if added > 0:
+			ribbon_count += 1
 	mesh = surface.commit() if ribbon_count > 0 else null
 
 
-func _densify(points: Array, segment: float) -> PackedVector2Array:
-	var out := PackedVector2Array()
-	for index in points.size():
-		var b := Vector2(float(points[index][0]), float(points[index][2]))
-		if index > 0:
-			var a := out[out.size() - 1]
-			var pieces := maxi(1, ceili(a.distance_to(b) / maxf(1.0, segment)))
-			for piece in range(1, pieces):
-				out.append(a.lerp(b, float(piece) / float(pieces)))
-		out.append(b)
-	return out
-
-
-func _ribbon(surface: SurfaceTool, line: PackedVector2Array, half: float, y: float, colour: Color) -> void:
-	var total := 0.0
-	for index in range(1, line.size()):
-		total += line[index].distance_to(line[index - 1])
+func _joined_rows(points: Array, half: float, segment: float) -> Array[Dictionary]:
+	var corners := PackedVector2Array()
+	for raw: Array in points:
+		var point := Vector2(float(raw[0]), float(raw[2]))
+		if corners.is_empty() or not point.is_equal_approx(corners[corners.size() - 1]):
+			corners.append(point)
+	var rows: Array[Dictionary] = []
+	if corners.size() < 2:
+		return rows
+	# Intersect the two authored offset edges at each corner before subdivision.
+	# Recomputing tangents from dense one-metre neighbours turns a wide inside
+	# edge back on itself. An authored miter keeps each straight edge at exactly
+	# `half` from its route segment, independent of tessellation density.
+	var sides := PackedVector2Array()
+	for index in corners.size():
+		var incoming := (corners[index] - corners[index - 1]).normalized() if index > 0 \
+			else (corners[1] - corners[0]).normalized()
+		var outgoing := (corners[index + 1] - corners[index]).normalized() if index + 1 < corners.size() \
+			else incoming
+		var incoming_side := Vector2(-incoming.y, incoming.x)
+		var outgoing_side := Vector2(-outgoing.y, outgoing.x)
+		var bisector := (incoming_side + outgoing_side).normalized()
+		sides.append(bisector * half / maxf(0.001, bisector.dot(outgoing_side)))
+	rows.append({"at": corners[0], "side": sides[0], "travelled": 0.0})
 	var travelled := 0.0
-	var rows: Array = []
-	for index in line.size():
-		if index > 0:
-			travelled += line[index].distance_to(line[index - 1])
-		var tangent := (line[mini(index + 1, line.size() - 1)] - line[maxi(index - 1, 0)]).normalized()
-		var side := Vector2(-tangent.y, tangent.x) * half
+	for index in range(1, corners.size()):
+		var length := corners[index - 1].distance_to(corners[index])
+		var pieces := maxi(1, ceili(length / maxf(1.0, segment)))
+		for piece in range(1, pieces + 1):
+			var fraction := float(piece) / float(pieces)
+			rows.append({"at": corners[index - 1].lerp(corners[index], fraction),
+				"side": sides[index - 1].lerp(sides[index], fraction),
+				"travelled": travelled + length * fraction})
+		travelled += length
+	return rows
+
+
+func _ribbon(surface: SurfaceTool, rows: Array[Dictionary], y: float,
+		colour: Color, across_segments: int, first_vertex: int) -> int:
+	if rows.size() < 2:
+		return 0
+	var total := float(rows[rows.size() - 1].travelled)
+	var row_width := across_segments + 1
+	for row: Dictionary in rows:
+		var centre: Vector2 = row.at
+		var side: Vector2 = row.side
+		var travelled := float(row.travelled)
 		var along := travelled / maxf(total, 0.001)
-		rows.append([
-			{"at": Vector3(line[index].x - side.x, y, line[index].y - side.y), "uv": Vector2(0.0, travelled), "uv2": Vector2(along, 0.0)},
-			{"at": Vector3(line[index].x + side.x, y, line[index].y + side.y), "uv": Vector2(1.0, travelled), "uv2": Vector2(along, 0.0)},
-		])
-	for index in range(1, rows.size()):
-		var a: Array = rows[index - 1]
-		var b: Array = rows[index]
-		for corner: Dictionary in [a[0], a[1], b[1], a[0], b[1], b[0]]:
+		# Interior vertices provide wave displacement across the strip while
+		# retaining the joined boundary edges and authored centre trajectory.
+		for column in row_width:
+			var across := float(column) / float(across_segments)
+			var point := centre + side * (across * 2.0 - 1.0)
 			surface.set_color(colour)
 			surface.set_normal(Vector3.UP)
-			surface.set_uv(corner.uv)
-			surface.set_uv2(corner.uv2)
-			surface.add_vertex(corner.at)
+			surface.set_uv(Vector2(across, travelled))
+			surface.set_uv2(Vector2(along, 0.0))
+			surface.add_vertex(Vector3(point.x, y, point.y))
+	for row in range(1, rows.size()):
+		var a := first_vertex + (row - 1) * row_width
+		var b := first_vertex + row * row_width
+		for column in across_segments:
+			for vertex: int in [a + column, a + column + 1, b + column + 1,
+					a + column, b + column + 1, b + column]:
+				surface.add_index(vertex)
+	return rows.size() * row_width
