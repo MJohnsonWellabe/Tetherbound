@@ -198,7 +198,7 @@
       "min_extra_distance": -3.0,
       "min_ally_clearance_m": 1.5,
       "height_follow": {"enabled": true, "fraction_of_top": 0.55, "max_height": 6.0},
-      "clear_orbit": {"enabled": true, "samples_deg": [25.0, 50.0, 75.0, 100.0], "min_fraction": 0.75, "ease_deg_per_s": 120.0}
+      "clear_orbit": {"enabled": true, "samples_deg": [25.0, 50.0, 75.0, 100.0], "min_fraction": 0.75, "probe_length_m": 8.0, "switch_margin_m": 1.0, "interval_s": 0.2, "ease_deg_per_s": 120.0}
     }
   },
   "wild": {

@@ -92,3 +92,41 @@ func test_set_target_clears_the_swing() -> void:
 	_rig.set_clearance_extra(50.0)
 	_rig.set_target(_player)
 	assert_eq(float(_rig.clearance_extra()), 0.0)
+
+
+func test_the_swing_is_held_while_the_player_steers() -> void:
+	_clear = [75]
+	_rig.set_clearance_extra(25.0)
+	_rig.set("_tracking_manual_left", 0.3)
+	assert_eq(_solve(), 25.0, "manual look owns the view; nothing is re-solved around it")
+
+
+func test_room_that_would_put_the_lens_in_the_ally_is_not_clear() -> void:
+	# 0 degrees has 7m of a 9m arm -- past min_fraction -- but the caller says
+	# the ally needs 8m; only 50 degrees gives it.
+	_room_at = {0: 7.0}
+	_clear = [50]
+	assert_eq(float(_rig.clear_orbit_offset_deg(ARM, [25.0, 50.0], 0.75, 8.0)), 50.0)
+
+
+func test_neutral_is_the_trackers_own_bearing_not_the_current_yaw() -> void:
+	# In the tree so `global_position` is real (the bearing is read from it).
+	var root := (Engine.get_main_loop() as SceneTree).root
+	root.add_child(_player)
+	var foe := Node3D.new()
+	root.add_child(foe)
+	foe.global_position = Vector3(0.0, 0.0, -10.0)  # straight ahead: tracker neutral is yaw 0
+	_rig.set_tracking_target(foe, {"composition_yaw_deg": 0.0})
+	# The rig has drifted 8 degrees inside the dead zone; the answer must not.
+	_rig.set("yaw", deg_to_rad(8.0))
+	_clear = [25]
+	assert_eq(_solve(), 25.0)
+	foe.free()
+
+
+func test_the_fallback_does_not_flip_for_a_marginally_roomier_angle() -> void:
+	_blocked_room = 1.0
+	_rig.set_clearance_extra(-50.0)
+	_rig.set("yaw", deg_to_rad(-50.0))
+	_room_at = {-50: 3.0, 75: 3.5}
+	assert_eq(_solve(), -50.0, "0.5m more room is not worth swinging across the fight")

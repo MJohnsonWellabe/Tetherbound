@@ -169,6 +169,8 @@ var _camera_framing_extra: float = 0.0
 ## both reset with `_camera_framing_extra` when the camera is released.
 var _camera_framing_height: float = 0.0
 var _camera_clear_orbit_deg: float = 0.0
+var _camera_clear_orbit_target: float = 0.0
+var _camera_clear_orbit_wait: float = 0.0
 var _framing_bounds_cache: Dictionary = {}
 ## MEADOWS-VISUAL-PASS: how far the ally is faded because it hides the foe
 ## (`ally_occlusion_fade.gd`), and the model it was written to, so the fade is
@@ -928,6 +930,12 @@ func _ground_height(x: float, z: float) -> float:
 func _take_camera() -> void:
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
+	# `set_target()` below resets the rig's height and clear-orbit swing to the
+	# profile; the eased copies here must start again from the same place.
+	_camera_framing_height = 0.0
+	_camera_clear_orbit_deg = 0.0
+	_camera_clear_orbit_target = 0.0
+	_camera_clear_orbit_wait = 0.0
 	_camera_rig.call("set_target", _ally_body, _combat_camera_profile())
 	# The camera still orbits the player's creature. A separate, soft opponent
 	# tracker only corrects a neutral camera after manual-look grace, so the
@@ -1339,8 +1347,25 @@ func _update_combat_clear_orbit(framing: Dictionary, desired: float, delta: floa
 	var orbit: Dictionary = framing.get("clear_orbit", {}) as Dictionary
 	if not bool(orbit.get("enabled", false)) or not _camera_rig.has_method("clear_orbit_offset_deg"):
 		return
-	var target := float(_camera_rig.call("clear_orbit_offset_deg", desired,
-		orbit.get("samples_deg", [30.0, 60.0, 90.0]), float(orbit.get("min_fraction", 0.75))))
+	# Throttled: the solver sweeps up to 1 + 2 x samples shape casts, and the
+	# answer only needs to move as fast as the fight does.
+	_camera_clear_orbit_wait -= delta
+	if _camera_clear_orbit_wait > 0.0:
+		var hold_rate := maxf(float(orbit.get("ease_deg_per_s", 90.0)), 1.0)
+		_camera_clear_orbit_deg = move_toward(_camera_clear_orbit_deg, _camera_clear_orbit_target, hold_rate * delta)
+		_camera_rig.call("set_clearance_extra", _camera_clear_orbit_deg)
+		return
+	_camera_clear_orbit_wait = maxf(float(orbit.get("interval_s", 0.2)), 0.0)
+	# Probe the arm the frame needs, not the widest request: `desired` can be
+	# 30m past the base distance, and indoors nothing would ever count as clear.
+	var length := minf(desired, maxf(float(orbit.get("probe_length_m", 8.0)), 1.0))
+	var pitch_cos := maxf(cos(float(_camera_rig.get("pitch"))), 0.2)
+	var ally_room := (_body_horizontal_extent(_ally_body)
+		+ float(framing.get("min_ally_clearance_m", 1.5))) / pitch_cos
+	_camera_clear_orbit_target = float(_camera_rig.call("clear_orbit_offset_deg", length,
+		orbit.get("samples_deg", [30.0, 60.0, 90.0]), float(orbit.get("min_fraction", 0.75)),
+		ally_room, float(orbit.get("switch_margin_m", 1.0))))
+	var target := _camera_clear_orbit_target
 	var rate := maxf(float(orbit.get("ease_deg_per_s", 90.0)), 1.0)
 	_camera_clear_orbit_deg = move_toward(_camera_clear_orbit_deg, target, rate * delta)
 	_camera_rig.call("set_clearance_extra", _camera_clear_orbit_deg)
@@ -1401,6 +1426,8 @@ func _release_camera() -> void:
 	_camera_framing_extra = 0.0
 	_camera_framing_height = 0.0
 	_camera_clear_orbit_deg = 0.0
+	_camera_clear_orbit_target = 0.0
+	_camera_clear_orbit_wait = 0.0
 	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_clearance_extra"):
 		_camera_rig.call("set_clearance_extra", 0.0)
 	_clear_ally_fade()
