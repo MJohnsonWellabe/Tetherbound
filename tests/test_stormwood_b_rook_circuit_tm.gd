@@ -180,3 +180,34 @@ func test_a_world_that_still_owes_the_tm_restores_rooks_thanks() -> void:
 		"A receipt from another world cannot hide the TM this world still owes")
 	node.free()
 	game.free()
+
+
+func test_a_guest_collects_their_own_tm_once_after_the_host_world_earns_it() -> void:
+	var world: RefCounted = WORLD_STATE.new()
+	world.set("world_id", "stormwood-rook-tm-guest")
+	var ledger: RefCounted = WORLD_LEDGER.new(world)
+	var guest := ROOK.reward_intent()
+	guest["_reward_recipients"] = [{"peer": 2, "character_id": "character-guest"}]
+	var early: Dictionary = ledger.call("commit", guest, 2)
+	assert_eq(str(early.get("code", "")), "not_earned", "A guest's TM waits until the host's world has the circuit")
+	world.flags.set_flag(ROOK.STEP_2)
+	assert_true(bool((ledger.call("commit", guest, 2) as Dictionary).get("ok")), "The guest collects their own TM")
+	assert_eq(str((ledger.call("commit", guest, 2) as Dictionary).get("code", "")), "already_taken",
+		"The guest cannot collect twice")
+	var forged := ROOK.reward_intent()
+	forged["count"] = 3
+	forged["_reward_recipients"] = [{"peer": 3, "character_id": "character-forger"}]
+	assert_eq(str((ledger.call("commit", forged, 3) as Dictionary).get("code", "")), "not_authored",
+		"A guest cannot mint more than the authored single TM")
+	var other := ROOK.reward_intent()
+	other["item"] = "tm_stormfall"
+	other["_reward_recipients"] = [{"peer": 3, "character_id": "character-forger"}]
+	assert_eq(str((ledger.call("commit", other, 3) as Dictionary).get("code", "")), "not_authored",
+		"A guest cannot swap in another TM")
+	assert_true(ROOK.paid_in_world(world, "character-guest"))
+	assert_false(ROOK.paid_in_world(world, "character-forger"))
+
+
+func test_the_thanks_heard_preference_is_player_scoped() -> void:
+	assert_eq(PROGRESSION.scope_of(ROOK.RECEIVED_FLAG), "player",
+		"Each character's greeting preference is their own, never the world's")
