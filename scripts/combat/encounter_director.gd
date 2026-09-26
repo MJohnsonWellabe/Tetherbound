@@ -83,9 +83,6 @@ const CATCH_ARBITER_SCRIPT := preload("res://scripts/net/catch_arbiter.gd")
 ## arithmetic (and above all the division that does NOT happen) is asserted
 ## against no world at all in `tests/test_encounter_rewards.gd`.
 const ENCOUNTER_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
-## Which trainers' SOLO wins are journaled per participant (the Guardian's
-## participant reader; `_journal_solo_trainer_win()`).
-const WATER_GUARDIAN_REWARD := preload("res://scripts/world/water_guardian_reward.gd")
 ## For `host_move_profile()` only -- the ONE copy of what a move reaches, so the
 ## host rebuilding a peer's named move cannot disagree with what that peer's own
 ## manager built for itself.
@@ -5674,7 +5671,7 @@ func _record_trainer_defeat(spec: Dictionary) -> void:
 ## world it holds. Once any component was journaled, already taken or sent, the
 ## local payout never also runs, so nothing is paid twice.
 func _journal_solo_trainer_win(spec: Dictionary) -> bool:
-	if not WATER_GUARDIAN_REWARD.journals_solo_win(ENCOUNTER_REWARDS.trainer_key(spec)):
+	if not ENCOUNTER_REWARDS.journals_solo_win(ENCOUNTER_REWARDS.trainer_key(spec)):
 		return false
 	if _session != null and _session.has_method("is_active") and bool(_session.call("is_active")) \
 			and not _is_host():

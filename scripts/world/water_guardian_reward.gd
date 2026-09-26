@@ -222,7 +222,8 @@ static func participants(world: RefCounted) -> Array:
 ## (encounter_director.gd `_journal_solo_trainer_win`), so this file's
 ## participant set names the solo winner explicitly (header: Participants).
 static func journals_solo_win(trainer_id: String) -> bool:
-	return trainer_id == TRAINER_ID
+	return trainer_id == TRAINER_ID \
+		and preload("res://scripts/net/encounter_rewards.gd").journals_solo_win(trainer_id)
 
 ## Pure rule, testable without a world. `participant_characters` empty means
 ## "no Nerissa row exists at all" (a journal-less world; every live win
