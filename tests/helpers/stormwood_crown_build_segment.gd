@@ -54,6 +54,9 @@ var _manager: Node
 var _director: Node
 var _navigator: RefCounted
 var _activated_provider_id := 0
+## Recent tool swings and Interact presses, to name what gathered (and so
+## freed) a harvest node during its approach (run 17's vine node).
+var _gather_events: Array[String] = []
 var _activated_provider_path := ""
 var _last_combat_outcome := ""
 var _safety: RefCounted
@@ -213,7 +216,34 @@ func _gather_site(site: Dictionary) -> bool:
 		return false
 	var before := _count(str(site.item))
 	var prompt := node.get_node_or_null(^"Interactable") as Node3D
-	if not await _activate_exact(node, prompt, site.at, id):
+	var receipt_id := "harvest_node:order:" + id
+	_gather_events.clear()
+	var hold: Node = _player.get("tool_hold") as Node
+	var on_swing := func() -> void:
+		_gather_events.append("%d swing_started aimed=%s equipped=%s" % [Time.get_ticks_msec(),
+			str(hold.call("swing_target")), str(_game.get("equipped_tool"))])
+	var on_connected := func(hit: Node) -> void:
+		_gather_events.append("%d swing_connected %s" % [Time.get_ticks_msec(),
+			str(hit.name) if is_instance_valid(hit) else "<freed>"])
+	var on_exit := func() -> void:
+		var player_xz := Vector2(_player.global_position.x, _player.global_position.z)
+		_note("HARVEST NODE %s left the tree during '%s': receipt=%s equipped=%s swinging=%s distance=%.2f recent=[%s]" % [
+			id, str(_safety.get("phase")) if _safety != null else "?",
+			str(_game.get("progression").call("has", receipt_id)), str(_game.get("equipped_tool")),
+			str(hold.call("is_swinging")) if hold != null else "?",
+			player_xz.distance_to(Vector2(node.global_position.x, node.global_position.z)),
+			"; ".join(_gather_events.slice(-6))])
+	if hold != null:
+		hold.connect("swing_started", on_swing)
+		hold.connect("swing_connected", on_connected)
+	node.tree_exiting.connect(on_exit)
+	var activated := await _activate_exact(node, prompt, site.at, id)
+	if hold != null:
+		hold.disconnect("swing_started", on_swing)
+		hold.disconnect("swing_connected", on_connected)
+	if is_instance_valid(node) and node.tree_exiting.is_connected(on_exit):
+		node.tree_exiting.disconnect(on_exit)
+	if not activated:
 		return false
 	var receipt := "harvest_node:order:" + id
 	for _frame in 600:
@@ -796,17 +826,6 @@ func _rest_nights(camp_id: String) -> bool:
 	return await _ensure_usable_ally("after resting at " + camp_id)
 
 
-## One ordinary press as an action event, held across four physics ticks so
-## the director's `_physics_process` read sees its just-pressed edge.
-func _action_tap(action: StringName) -> void:
-	_set_action(action, true)
-	for _frame in 4:
-		await _tree.physics_frame
-	_set_action(action, false)
-	for _frame in 8:
-		await _tree.physics_frame
-
-
 func _ui_tap(action: StringName) -> void:
 	_set_action(action, true)
 	for _frame in 3:
@@ -839,7 +858,7 @@ func _tap_named_engage(body: Node3D) -> bool:
 	var pressed := _named_engage_ready(body) and bool(_arbiter.call("enabled")) \
 		and INPUT_OWNER.current(_tree) == null and not _tree.paused
 	if pressed:
-		await _tap(&"interact") # unchanged single press: two held + four settle frames
+		await _tap(&"interact") # one press: held two physics and two process frames
 	await _tree.process_frame
 	Engine.time_scale = previous_scale
 	Engine.physics_ticks_per_second = previous_hz
@@ -926,30 +945,57 @@ func _lead_with_fittest(label: String) -> bool:
 	_note("PARTY before %s: %s" % [label, ", ".join(rows)])
 	if best == null:
 		return _fail("no conscious party member left before " + label)
-	# Run 14's one-line cause: active=bramblebun, best=terrapup, nobody
-	# fighting, no input owner, arbiter enabled, and the joypad-event LB taps
-	# changed nothing. The prefix Segment's action-event taps (which do send
-	# out the fittest member there) are used instead: each press waits for the
-	# director's own physics read, and the whole send-out is retried once.
-	for attempt in 2:
-		for _press in members.size():
-			if party.call("active") == best:
-				break
-			var before: RefCounted = party.call("active")
-			await _action_tap(&"party_cycle")
-			var after: RefCounted = party.call("active")
-			_note("LB press %d: active %s -> %s" % [attempt + 1, str(before.get("species_id")) if before != null else "none",
-				str(after.get("species_id")) if after != null else "none"])
-		# LB only changes which creature is active; with nobody out (a creature
-		# just rested in the camp bed is put away) the player calls it out.
-		if _director.call("ally_body") == null:
-			await _action_tap(&"creature_recall")
+	# Send-out at the real 1x/60 Hz clock with ordinary joypad LB/RB events,
+	# one press at a time, waiting for each press to take effect.
+	#
+	# The cause of runs 12-16 (a press that changed nothing, and later "every
+	# other press" dead): `_tap` held the button for two PHYSICS frames.
+	# Input events are flushed once per process frame, and one process frame
+	# runs several physics steps whenever it takes longer than a tick: always
+	# at the wrapper's 8x/480 Hz clock, and in this heavy scene headless even
+	# at 1x/60 Hz (run 14 failed there). The press and its release then
+	# reached `Input` in the same flush and no physics step saw LB down; the
+	# four-tick action taps lost the same race about half the time. `_tap` now
+	# holds across two process frames too, and this send-out runs at 1x.
+	var previous_scale := Engine.time_scale
+	var previous_hz := Engine.physics_ticks_per_second
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
+	var stuck := ""
+	for press in members.size():
+		if party.call("active") == best:
+			break
+		# A player waits to see the last switch land before pressing again.
 		for _frame in 240:
-			if _director.call("ally_instance") == best and _director.call("ally_body") != null:
+			if _director.call("ally_body") == null or _director.call("ally_instance") == party.call("active"):
 				break
 			await _tree.physics_frame
-		if _director.call("ally_instance") == best:
+		var before: RefCounted = party.call("active")
+		var frame_before := Engine.get_physics_frames()
+		await _tap(&"party_cycle")
+		var after: RefCounted = party.call("active")
+		_note("LB press %d (joypad button, %d physics frames): active %s -> %s" % [press + 1,
+			Engine.get_physics_frames() - frame_before,
+			str(before.get("species_id")) if before != null else "none",
+			str(after.get("species_id")) if after != null else "none"])
+		if after == before:
+			stuck = "LB press %d changed nothing" % (press + 1)
 			break
+	# LB only changes which creature is active; with nobody out (a creature
+	# just rested in the camp bed is put away) the player calls it out on RB.
+	if stuck.is_empty() and _director.call("ally_body") == null:
+		await _tap(&"creature_recall")
+	for _frame in 240:
+		if _director.call("ally_instance") == best and _director.call("ally_body") != null:
+			break
+		await _tree.physics_frame
+	await _tree.process_frame
+	Engine.time_scale = previous_scale
+	Engine.physics_ticks_per_second = previous_hz
+	if not stuck.is_empty():
+		_note("LB BINDING: %s at the 1x clock; reported, not retried" % stuck)
 	if _director.call("ally_instance") != best:
 		var ally: RefCounted = _director.call("ally_instance")
 		var active: RefCounted = party.call("active")
@@ -1035,6 +1081,10 @@ func _wait_flag(id: String, frames: int) -> bool:
 
 
 func _tap(action: StringName) -> void:
+	if action == &"interact":
+		var winner := _arbiter.call("winning_provider") as Node if _arbiter != null else null
+		_gather_events.append("%d interact press winner=%s" % [Time.get_ticks_msec(),
+			str(winner.get_path()) if winner != null and is_instance_valid(winner) else "<none>"])
 	var binding: InputEvent = null
 	for event: InputEvent in InputMap.action_get_events(action):
 		if event is InputEventJoypadButton or event is InputEventJoypadMotion:
@@ -1048,7 +1098,7 @@ func _tap(action: StringName) -> void:
 		press.button_index = (binding as InputEventJoypadButton).button_index
 		press.pressed = true
 		Input.parse_input_event(press)
-		await _settle(2)
+		await _hold_edge(2)
 		var release := press.duplicate() as InputEventJoypadButton
 		release.pressed = false
 		Input.parse_input_event(release)
@@ -1057,11 +1107,24 @@ func _tap(action: StringName) -> void:
 		motion.axis = (binding as InputEventJoypadMotion).axis
 		motion.axis_value = (binding as InputEventJoypadMotion).axis_value
 		Input.parse_input_event(motion)
-		await _settle(2)
+		await _hold_edge(2)
 		var neutral := motion.duplicate() as InputEventJoypadMotion
 		neutral.axis_value = 0.0
 		Input.parse_input_event(neutral)
-	await _settle(4)
+	await _hold_edge(4)
+
+
+## Hold an input state for at least `physics` physics frames AND two process
+## frames. Input events reach `Input` once per process frame; at a clock that
+## runs several physics steps per process frame, waiting on physics frames
+## alone let a press and its release land in the same flush, so no physics
+## step saw the button down (the dead LB presses of runs 12-16).
+func _hold_edge(physics: int) -> void:
+	var physics_start := Engine.get_physics_frames()
+	var process_start := Engine.get_process_frames()
+	while Engine.get_physics_frames() - physics_start < physics \
+			or Engine.get_process_frames() - process_start < 2:
+		await _tree.physics_frame
 
 
 func _set_action(action: StringName, pressed: bool) -> void:
