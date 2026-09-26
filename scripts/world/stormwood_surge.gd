@@ -1255,12 +1255,19 @@ func _sky_cfg() -> Dictionary:
 ## strike's ground warning read as "already striking elsewhere". While a
 ## warning is drawn, stormwood_lightning.gd holds decorative bolts for its
 ## telegraph; events in the hold become in-cloud flashes (Break's flash rhythm
-## and the photosensitivity budget are unchanged). Timing only, no look value.
+## and the photosensitivity budget are unchanged), and a bolt already on screen
+## goes out. Any drawn warning holds them, including another co-op player's
+## far away (conservative). Timing only, no look value.
 var _bolt_hold := 0.0
 
 func hold_sky_bolts(seconds: float) -> void:
-	if bool(_sky_cfg().get("hold_bolts_during_warning", true)):
-		_bolt_hold = maxf(_bolt_hold, seconds)
+	if not bool(_sky_cfg().get("hold_bolts_during_warning", true)):
+		return
+	_bolt_hold = maxf(_bolt_hold, seconds)
+	# A bolt already on screen goes out now (a drop in light, not a new flash
+	# onset); the next _advance_sky_lightning hides its mesh.
+	for index in _bolt_levels.size():
+		_bolt_levels[index] = 0.0
 
 func sky_bolts_held() -> bool:
 	return _bolt_hold > 0.0

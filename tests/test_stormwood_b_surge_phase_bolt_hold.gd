@@ -70,3 +70,22 @@ func test_hold_is_configured_and_lightning_arms_it_for_the_telegraph() -> void:
 	var source := FileAccess.get_file_as_string("res://scripts/world/stormwood_lightning.gd")
 	assert_true(source.contains("surge.hold_sky_bolts(float(rules.config.strike.telegraph_seconds) + 0.3)"),
 		"the warning receiver arms the hold for the telegraph")
+
+
+func test_a_bolt_already_on_screen_goes_out_when_a_warning_starts() -> void:
+	for reduced: bool in [false, true]:
+		MOTION_PREFS.set_reduced_motion(reduced)
+		var surge := SURGE.new()
+		surge.phase = "break"
+		surge.settle_presentation()
+		var cfg: Dictionary = surge.call("_sky_cfg")
+		surge.call("_fire_sky_pulse", {"kind": "bolt", "at": 0.0, "first": true, "dir": Vector3.UP,
+			"seed": 1, "strength": 0.6}, cfg)
+		surge.call("_advance_flash", 1.0 / 60.0)
+		assert_true(surge.bolt_level() > 0.5, "precondition: a bolt is on screen (reduced=%s)" % reduced)
+		surge.hold_sky_bolts(1.5)
+		assert_almost_eq(surge.bolt_level(), 0.0, 0.0001, "the warning puts the bolt out at once (reduced=%s)" % reduced)
+		surge.call("_advance_flash", 1.0 / 60.0)
+		assert_almost_eq(surge.bolt_level(), 0.0, 0.0001, "and it stays out (reduced=%s)" % reduced)
+		surge.free()
+	MOTION_PREFS.set_reduced_motion(false)
