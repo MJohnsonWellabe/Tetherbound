@@ -33,6 +33,7 @@ const ARM_RETRIES := 6
 var _back_m := ROAD_BACK_DEFAULT_M
 var _fast := false
 var _pitch_start := -12.0
+var _measure := false
 
 
 func _run() -> void:
@@ -57,6 +58,8 @@ func _run() -> void:
 			_back_m = float(arg.trim_prefix("--back="))
 		elif arg == "--fast":
 			_fast = true
+		elif arg == "--measure":
+			_measure = true
 	var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
 	_pitch_start = float((movement.get("camera", {}) as Dictionary).get("pitch_start_deg", -12.0))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
@@ -80,7 +83,10 @@ func _run() -> void:
 	var sync := _world.get_node_or_null(^"StormwoodPickups")
 	if sync != null:
 		sync.call("sync_progression")
-	await _walk_frames()
+	if _measure:
+		await _measure_frames()
+	else:
+		await _walk_frames()
 	_done()
 
 
@@ -150,6 +156,8 @@ func _walk_frames() -> void:
 				await physics_frame
 		if not obstructions.is_empty():
 			info["road_stand_obstructions"] = obstructions
+		lure["spur_pixels"] = await _spur_pixels(id, spur, points, flame)
+		_log("SPURPIX %s side=%s %s" % [id, str(info["side"]), _pix_line(lure["spur_pixels"])])
 		await _capture("%s_1_road_lure" % id, "%s: on %s %d m of road before the spur junction (%s side), normal exploration camera looking along the road" % [
 			id, str(spur.joins), int(_back_m), str(info["side"])], _with(info, _with(lure, {"stand": [stand.x, stand.y]})))
 		# (2) In the mouth, looking in at the reward.
@@ -289,3 +297,231 @@ func _along(points: Array[Vector2], s: float) -> Dictionary:
 			return {"at": points[i - 1].lerp(points[i], t), "dir": (points[i] - points[i - 1]).normalized()}
 		walked += seg
 	return {"at": points[0], "dir": Vector2(0, 1)}
+
+
+# ---------------------------------------------------------------- pixel measure
+
+## WO-F09-05 round 2 (blind judge: the spur does not read from the road). The
+## spur and lure measured in rendered pixels at the production camera, from
+## both sides of each junction at `_back_m` of road. Frames go to --out as
+## <pocket>_road_<side>.jpg; one SPURPIX line per stand.
+func _measure_frames() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(POCKETS_PATH))
+	var routes: Array = (JSON.parse_string(FileAccess.get_file_as_string(WORLD_PATH)) as Dictionary).routes
+	for pocket: Dictionary in cfg.pockets:
+		var id := str(pocket.id)
+		if not _pocket_filter.is_empty() and not _pocket_filter.has(id):
+			continue
+		var spur := {}
+		for route: Dictionary in routes:
+			if str(route.get("kind", "")) == "spur" and str(route.get("pocket_id", "")) == id:
+				spur = route
+		var road := _road_of(spur, routes)
+		var points: Array[Vector2] = road.points
+		var js := float(road.junction_s)
+		var flame := _world.get_node_or_null(NodePath("StormwoodPockets/Pocket_%s/SpurLamp/AmberFlame" % id)) as Node3D
+		for side: int in [1, -1]:
+			var s := js - _back_m * side
+			if s < 0.0 or s > float(road.length):
+				continue
+			var here := _along(points, s)
+			var heading: Vector2 = (here.dir as Vector2) * side
+			var stand: Vector2 = here.at
+			var ahead := stand + heading * 20.0
+			await _stand(stand, Vector3(ahead.x, _ground(ahead.x, ahead.y) + 1.5, ahead.y), _pitch_start)
+			var metrics := await _spur_pixels(id, spur, points, flame)
+			var name := "along" if side == 1 else "against"
+			var image := await _grab()
+			image.save_jpg(ProjectSettings.globalize_path("%s/%s_road_%s.jpg" % [_output_dir, id, name]), 0.85)
+			_log("SPURPIX %s side=%s arm=%.1f %s" % [id, name, _camera.global_position.distance_to(_player.global_position), _pix_line(metrics)])
+			_frames.append({"id": "%s_road_%s" % [id, name], "stand": [stand.x, stand.y], "spur_pixels": metrics})
+
+
+func _pix_line(m: Dictionary) -> String:
+	return "spur_read=%d/%d contrast_median=%.1f contrast_mean=%.1f on_screen=%d current_changed=%d lamp_changed=%d lamp_on_screen=%s" % [
+		int(m.get("readable", 0)), int(m.get("samples", 0)), float(m.get("contrast_median", 0.0)),
+		float(m.get("contrast_mean", 0.0)), int(m.get("on_screen", 0)), int(m.get("current_changed", -1)),
+		int(m.get("lamp_changed", -1)), str(m.get("lamp_on_screen", false))]
+
+
+## Colour contrast between the spur's own pixels and the ground either side
+## of it, sampled on the frame the player sees, plus two toggles with the
+## rain hidden: the spur's current chunks, and the junction lamp.
+func _spur_pixels(id: String, spur: Dictionary, road_points: Array[Vector2], flame: Node3D) -> Dictionary:
+	var surface: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_road_surface.json"))
+	var lane := float(surface.lane_half_width_m.spur)
+	var flare := float(surface.junction.flare_m)
+	var flare_len := float(surface.junction.flare_length_m)
+	var road_half := float(surface.lane_half_width_m.get("critical", 2.8))
+	var j := Vector2(float(spur.points[0][0]), float(spur.points[0][1]))
+	var up := (Vector2(float(spur.points[1][0]), float(spur.points[1][1])) - j).normalized()
+	var right := Vector2(up.y, -up.x)
+	var image := await _grab()
+	var size := image.get_size()
+	var contrasts: Array[float] = []
+	var on_screen := 0
+	var centres: Array[Vector2] = []
+	var samples := 0
+	var d := SPUR_PIX_START_M
+	while d <= SPUR_PIX_END_M + 0.01:
+		samples += 1
+		var c := j + up * d
+		var half := lane + flare * (1.0 - smoothstep(0.0, flare_len, d))
+		var p := _screen(c, 0.05)
+		if p.x < 0.0:
+			d += SPUR_PIX_STEP_M
+			continue
+		on_screen += 1
+		centres.append(p)
+		var spur_colour := _patch(image, p)
+		var sides: Array[Color] = []
+		for sign: float in [1.0, -1.0]:
+			var q := c + right * sign * (half + SPUR_PIX_SIDE_M)
+			if _distance_to_polyline(q, road_points) < road_half + 1.5:
+				continue
+			var qp := _screen(q, 0.05)
+			if qp.x < 0.0:
+				continue
+			sides.append(_patch(image, qp))
+		if sides.is_empty():
+			d += SPUR_PIX_STEP_M
+			continue
+		var ground := Color(0, 0, 0)
+		for colour: Color in sides:
+			ground += colour
+		ground /= float(sides.size())
+		contrasts.append(_delta(spur_colour, ground))
+		d += SPUR_PIX_STEP_M
+	var readable := 0
+	for value: float in contrasts:
+		if value >= SPUR_PIX_THRESHOLD:
+			readable += 1
+	var sorted := contrasts.duplicate()
+	sorted.sort()
+	var mean := 0.0
+	for value: float in contrasts:
+		mean += value
+	mean = mean / maxf(1.0, contrasts.size())
+	var out := {"samples": samples, "on_screen": on_screen, "compared": contrasts.size(), "readable": readable,
+		"threshold": SPUR_PIX_THRESHOLD, "contrasts": contrasts,
+		"contrast_median": sorted[sorted.size() / 2] if not sorted.is_empty() else 0.0, "contrast_mean": mean}
+	# Toggles, rain hidden so falling streaks do not count as change.
+	var rain_layers := _hide_rain()
+	var current := _world.get_node_or_null(^"StormwoodRoadCurrent")
+	var chunks: Array[GeometryInstance3D] = []
+	if current != null:
+		for child: Node in current.get_children():
+			if child is GeometryInstance3D and str(child.get_meta("route", "")) == str(spur.id):
+				chunks.append(child as GeometryInstance3D)
+	var with_all := await _grab()
+	for chunk in chunks:
+		chunk.visible = false
+	var without_current := await _grab()
+	for chunk in chunks:
+		chunk.visible = true
+	out["current_chunks"] = chunks.size()
+	out["current_changed"] = _changed_near(with_all, without_current, centres, SPUR_PIX_BAND_PX)
+	if flame != null:
+		var lamp := flame.get_parent() as Node3D
+		var fp := _camera.unproject_position(flame.global_position)
+		var in_view := _camera.is_position_in_frustum(flame.global_position) and fp.x >= 0 and fp.y >= 0 and fp.x < size.x and fp.y < size.y
+		out["lamp_on_screen"] = in_view
+		out["lamp_screen"] = [fp.x / size.x, fp.y / size.y]
+		lamp.visible = false
+		var without_lamp := await _grab()
+		lamp.visible = true
+		var flame_at: Array[Vector2] = [fp]
+		out["lamp_changed"] = _changed_near(with_all, without_lamp, flame_at, LAMP_PIX_BOX_PX) if in_view else 0
+	_restore_rain(rain_layers)
+	return out
+
+
+const SPUR_PIX_START_M := 3.0
+const SPUR_PIX_END_M := 21.0
+const SPUR_PIX_STEP_M := 2.0
+## Ground sample this far beyond the painted lane edge, each side.
+const SPUR_PIX_SIDE_M := 2.5
+## Weighted RGB distance (0-255 scale) at which a spur sample reads against
+## the ground either side of it. Set from the round-1 frames: see the lane
+## report for the values either side of it.
+const SPUR_PIX_THRESHOLD := 40.0
+const SPUR_PIX_BAND_PX := 6
+const LAMP_PIX_BOX_PX := 40
+
+
+## Viewport position of ground point `xz` lifted `lift` m, or (-1,-1) when
+## it is behind the camera or off screen.
+func _screen(xz: Vector2, lift: float) -> Vector2:
+	var at := Vector3(xz.x, _ground(xz.x, xz.y) + lift, xz.y)
+	if not _camera.is_position_in_frustum(at):
+		return Vector2(-1, -1)
+	var p := _camera.unproject_position(at)
+	var size := _camera.get_viewport().get_visible_rect().size
+	if p.x < 3 or p.y < 3 or p.x > size.x - 4 or p.y > size.y - 4:
+		return Vector2(-1, -1)
+	return p
+
+
+func _patch(image: Image, p: Vector2) -> Color:
+	var sum := Color(0, 0, 0)
+	var n := 0
+	for dy in range(-2, 3):
+		for dx in range(-2, 3):
+			var x := clampi(int(p.x) + dx, 0, image.get_width() - 1)
+			var y := clampi(int(p.y) + dy, 0, image.get_height() - 1)
+			sum += image.get_pixel(x, y)
+			n += 1
+	return sum / float(n)
+
+
+## Weighted RGB distance on a 0-255 scale (weights 2,4,3, normalised).
+func _delta(a: Color, b: Color) -> float:
+	var dr := (a.r - b.r) * 255.0
+	var dg := (a.g - b.g) * 255.0
+	var db := (a.b - b.b) * 255.0
+	return sqrt((2.0 * dr * dr + 4.0 * dg * dg + 3.0 * db * db) / 3.0)
+
+
+func _changed_near(a: Image, b: Image, centres: Array[Vector2], radius: int) -> int:
+	if a == null or b == null or a.get_size() != b.get_size():
+		return -1
+	var seen := {}
+	var changed := 0
+	for c: Vector2 in centres:
+		for y in range(int(c.y) - radius, int(c.y) + radius + 1):
+			for x in range(int(c.x) - radius, int(c.x) + radius + 1):
+				if x < 0 or y < 0 or x >= a.get_width() or y >= a.get_height():
+					continue
+				var key := y * 10000 + x
+				if seen.has(key):
+					continue
+				seen[key] = true
+				var p := a.get_pixel(x, y)
+				var q := b.get_pixel(x, y)
+				if (absf(p.r - q.r) + absf(p.g - q.g) + absf(p.b - q.b)) * 255.0 > PIXEL_DIFF_THRESHOLD:
+					changed += 1
+	return changed
+
+
+func _distance_to_polyline(q: Vector2, points: Array[Vector2]) -> float:
+	var best := INF
+	for i in range(1, points.size()):
+		best = minf(best, Geometry2D.get_closest_point_to_segment(q, points[i - 1], points[i]).distance_to(q))
+	return best
+
+
+func _hide_rain() -> Dictionary:
+	var saved := {}
+	if _surge == null:
+		return saved
+	for node: Node in _surge.find_children("*", "GPUParticles3D", true, false):
+		saved[node] = (node as GPUParticles3D).layers
+		(node as GPUParticles3D).layers = 1 << 19
+	_camera.set_cull_mask_value(20, false)
+	return saved
+
+
+func _restore_rain(saved: Dictionary) -> void:
+	for node: Variant in saved:
+		if is_instance_valid(node):
+			(node as GPUParticles3D).layers = int(saved[node])
