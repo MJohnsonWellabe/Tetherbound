@@ -4,25 +4,27 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## do not bypass a closed gate or lose an owned creature").
 ##
 ## Runs the unchanged continuous normal-input route and, inside Maela's flight
-## trial, adds two deliberate wrong-way attempts with ordinary stick/jump input:
-##   1. mid-trial, before Fly is earned: steer out of the marked trial volume.
-##      The flyer must be refused ("Stay inside the marked flight trial.") and
-##      stay inside the trial box; the trial then completes normally.
-##   2. after the trial lands and unlocks Fly, before the shrine windlass opens
-##      the upper route: fly north at the sealed Upper Cloudreach wind wall and
-##      try to set down there. The flyer must be refused/recovered, never enter
-##      the sealed box, then land back on the aerie deck by ordinary descent.
-## Every landing the route makes is recorded (position, floor, carrier). The
-## base harness treats any Fly recovery as a failure; inside attempt 2 a
-## recovery to the verified anchor is the expected invalid-landing outcome and
-## is recorded instead.
+## trial before Fly is earned, steers out of the marked trial volume with
+## ordinary stick/jump input (each horizontal side in turn until refused). The
+## flyer must be refused ("Stay inside the marked flight trial."), stay inside
+## the trial box, and the trial must then complete: rings in order and a
+## verified collision landing unlock Fly. Every later landing (High Roost
+## shrine, return to the aerie) is recorded and must be a verified floor. The
+## whole route asserts zero trial frames outside the marked volume and zero
+## frames inside sealed Upper Cloudreach before its unlock.
+## DISCLOSED LIMIT: the invalid attempt is a refused one. Refusal zeroes the
+## outward velocity, so ordinary input never reaches `recover_to_anchor`; the
+## anchor-recovery half of "invalid-landing recovery" is covered separately by
+## smoke_cloudreach_fall_recovery and the fly_controller tests, not here.
+## A sealed-Upper landing attempt from the aerie was dropped: outside authored
+## updrafts Fly only sinks (2 m/s), so from the deck the flyer passes under
+## the wind wall rather than testing it.
 ##
 ## START STATE (disclosed): committed completed-Meadows fixture of
 ## smoke_cloudreach_continuous (the earned c1_arrival save is F06#0 and does not
 ## exist yet). `--from-save=<dir>` runs it from an earned save.
 const WITNESS_DIR := "res://ralph/reports/CLOUDREACH/b/f06-2-fly-training"
 const TRIAL_ESCAPE_FRAMES := 240
-const SEALED_PUSH_FRAMES := 600
 
 var trial_box := AABB()
 var upper_box := AABB()
@@ -30,7 +32,6 @@ var denials: Array[Dictionary] = []
 var recoveries: Array[Dictionary] = []
 var landings: Array[Dictionary] = []
 var attempts: Array[Dictionary] = []
-var invalid_window := false
 var trial_escape_violations := 0
 var upper_violations := 0
 
@@ -59,24 +60,16 @@ func _record_frame() -> void:
 
 func _on_denied(reason: String) -> void:
 	if denials.size() < 200:
-		denials.append({"reason": reason, "stage": stage, "position": str(player.global_position), "window": invalid_window})
+		denials.append({"reason": reason, "stage": stage, "position": str(player.global_position)})
 
 
 func _on_recovered(reason: String) -> void:
-	recoveries.append({"reason": reason, "stage": stage, "position": str(player.global_position), "window": invalid_window})
+	recoveries.append({"reason": reason, "stage": stage, "position": str(player.global_position)})
 
 
 func _on_landed(at: Vector3, carrier: String) -> void:
 	landings.append({"position": str(at), "carrier": carrier, "stage": stage, "on_floor": player.is_on_floor(),
-		"fly_unlocked": _has("fly_traversal_unlocked"), "window": invalid_window})
-
-
-## Inside the declared invalid-landing window a recovery is the expected answer.
-func _fail(message: String) -> bool:
-	if invalid_window and message.begins_with("Unexpected recovery interrupts"):
-		_log("witness_expected_recovery", {"message": message})
-		return false
-	return super._fail(message)
+		"fly_unlocked": _has("fly_traversal_unlocked")})
 
 
 func _trial() -> bool:
@@ -90,24 +83,30 @@ func _trial() -> bool:
 		if index == 0 and not await _attempt_trial_escape(): return false
 	await _capture("trial-airborne")
 	if not await _land(_vec(physical.config.trial.landing_position)): return false
-	if not _require(_has("fly_traversal_unlocked"), "Ordered airborne rings and landing unlocked Fly"): return false
-	return await _attempt_sealed_landing()
+	return _require(_has("fly_traversal_unlocked"), "Ordered airborne rings and landing unlocked Fly")
 
 
-## Attempt 1: ordinary stick input straight out of the trial volume.
+## Attempt 1: ordinary stick input out of the trial volume. Try each open
+## horizontal side in turn until the controller refuses (cliff collision on one
+## side must not make the witness vacuous or spuriously fail).
 func _attempt_trial_escape() -> bool:
 	var denials_before := denials.size()
 	var start := player.global_position
-	var away := Vector3(trial_box.get_center().x - start.x, 0, trial_box.get_center().z - start.z)
-	away = (-away.normalized() if away.length() > 0.1 else Vector3.BACK) * 200.0
-	for frame in TRIAL_ESCAPE_FRAMES:
-		if not fly.is_flying(): break
-		_steer(away, 1.0)
-		_input("jump", 1)
-		await _frames(1)
+	var refused := false
+	var tried: Array[String] = []
+	for away: Vector3 in [Vector3.FORWARD, Vector3.BACK, Vector3.LEFT, Vector3.RIGHT]:
+		tried.append(str(away))
+		for frame in TRIAL_ESCAPE_FRAMES:
+			if not fly.is_flying(): break
+			_steer(away * 200.0, 1.0)
+			_input("jump", 1)
+			await _frames(1)
+			if denials.slice(denials_before).any(func(d: Dictionary) -> bool: return str(d.reason).contains("marked flight trial")):
+				refused = true
+				break
+		if refused or not fly.is_flying(): break
 	_release()
-	var refused := denials.slice(denials_before).any(func(d: Dictionary) -> bool: return str(d.reason).contains("marked flight trial"))
-	attempts.append({"attempt": "trial_escape", "from": str(start), "end": str(player.global_position),
+	attempts.append({"attempt": "trial_escape", "from": str(start), "end": str(player.global_position), "directions_tried": tried,
 		"refused": refused, "still_flying": fly.is_flying(), "inside_trial": trial_box.grow(1.0).has_point(player.global_position),
 		"trial_active": physical.trial_active})
 	_log("witness_attempt", attempts[-1])
@@ -116,50 +115,19 @@ func _attempt_trial_escape() -> bool:
 	return _require(fly.is_flying() and physical.trial_active, "F06#2 trial continues after the refusal")
 
 
-## Attempt 2: after Fly unlock, try to fly into and set down in sealed Upper
-## Cloudreach before the shrine windlass. Then descend back onto the aerie deck.
-func _attempt_sealed_landing() -> bool:
-	stage = "witness_sealed_upper_landing"
-	var landing := _vec(physical.config.trial.landing_position)
-	if not _require(not _has("cloudreach_upper_route_unlocked"), "Upper route is still sealed for the attempt"): return false
-	if not await _deploy(): return false
-	invalid_window = true
-	var denials_before := denials.size()
-	var recoveries_before := recoveries.size()
-	var target := Vector3(landing.x, landing.y + 30.0, upper_box.position.z + 150.0)
-	var closest := INF
-	for frame in SEALED_PUSH_FRAMES:
-		if not fly.is_flying(): break
-		var offset := target - player.global_position
-		_steer(offset, 1.0)
-		_input("jump", 1 if offset.y > 2 else 0)
-		_input("fly_descend", 1 if offset.y < -8 or frame > SEALED_PUSH_FRAMES / 2 else 0)
-		closest = minf(closest, upper_box.position.z - player.global_position.z)
-		await _frames(1)
-	_release()
-	var refused := denials.slice(denials_before).any(func(d: Dictionary) -> bool: return str(d.reason).contains("cloudreach_upper"))
-	var recovered := recoveries.size() > recoveries_before
-	attempts.append({"attempt": "sealed_upper_landing", "target": str(target), "end": str(player.global_position),
-		"closest_gap_to_wall_m": closest, "refused": refused, "recovered": recovered,
-		"still_flying": fly.is_flying(), "on_floor": player.is_on_floor(), "inside_sealed": upper_box.has_point(player.global_position)})
-	_log("witness_attempt", attempts[-1])
-	if not _require(refused or recovered, "F06#2 sealed Upper Cloudreach refuses the flyer"): return false
-	if not _require(not upper_box.has_point(player.global_position), "F06#2 flyer never sets down inside the sealed region"): return false
-	invalid_window = false
-	if not fly.is_flying() and player.global_position.distance_to(landing) > 14.0:
-		# Refused and grounded elsewhere on the aerie shelf: walk back normally.
-		if not await _navigate(landing): return false
-		return true
-	if not await _land(landing): return false
-	return _require(_has("fly_traversal_unlocked"), "Fly remains unlocked after the refused landing")
+## This witness's event log lives beside its verdict.
+func _write_report() -> void:
+	output_dir = WITNESS_DIR
+	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
+	super._write_report()
 
 
 func _finish() -> void:
 	if completed_route and not failed:
 		_require(trial_escape_violations == 0, "F06#2 no trial frame outside the marked volume (%d)" % trial_escape_violations)
 		_require(upper_violations == 0, "F06#2 no frame inside sealed Upper Cloudreach before unlock (%d)" % upper_violations)
-		_require(landings.size() >= 3, "F06#2 trial, refused-attempt and shrine landings recorded (%d)" % landings.size())
-		_require(game.party.members().size() == 5, "F06#2 same five after training")
+		_require(landings.size() >= 3 and landings.all(func(l: Dictionary) -> bool: return bool(l.on_floor)), "F06#2 trial, shrine and aerie-return landings all on verified floor (%d)" % landings.size())
+		_require(game.party.members().size() == expected_party_size, "F06#2 party size unchanged after training")
 	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
 	var file := FileAccess.open(WITNESS_DIR + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F06#2", "passed": completed_route and not failed,
