@@ -25,8 +25,13 @@ class QuarryInput extends "res://tests/helpers/gate_a_material_route.gd":
 		# the same real pickaxe/hotbar/visible-held-prop input path as stone.
 		return await super._equip("stone" if item_id == "rootstone" else item_id)
 
+	# The gather helper's own walks are best effort: `_stand_where_it_wins`
+	# tries up to ten stand points round a node and moves on from any it
+	# cannot reach. Seed 15 (run 36268640030) failed the whole route because
+	# its first point, behind a choppable tree 1 m from the rootstone, timed
+	# out through the segment's fatal `_walk`. A player tries another side.
 	func _walk_to(target: Vector3, close_enough: float, budget: int) -> bool:
-		return await walk.call(target, close_enough, budget)
+		return await walk.call(target, close_enough, budget, true)
 
 
 class WalkSession extends RefCounted:
@@ -375,7 +380,7 @@ func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
 	return await _walk(Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y), radius)
 
 
-func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
+func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort := false) -> bool:
 	if budget < 0:
 		budget = maxi(1800, int(_player.global_position.distance_to(target) / 2.5 * 60.0) + 600)
 	_nav.reset()
@@ -425,8 +430,8 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 			last_recovery = at
 		await _tree.physics_frame
 	_stick(0.0, 0.0)
-	if _sidestepping:
-		return false  # A sidestep is best effort; the leg it serves resumes.
+	if _sidestepping or best_effort:
+		return false  # Best effort; the leg or stand search it serves resumes.
 	return _fail("Ordinary quarry/Warrens movement did not reach %s; player=%s" % [target, _player.global_position])
 
 
