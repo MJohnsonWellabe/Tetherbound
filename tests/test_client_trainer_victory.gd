@@ -272,8 +272,9 @@ func _assert_client_routes_to_host(spec: Dictionary, trainer_id: String) -> void
 	assert_eq(_director.ledger_submissions.size(), 0,
 		"the client submits no world facts or grants of its own")
 	assert_eq(_director.local_pays, 0, "the client does not pay itself")
-	assert_true(bool(_director.progression_store.call("has", str(spec.get("defeat_flag", "")))),
-		"the defeat is noted in LOCAL progression only (no ledger write) so it is never sent twice")
+	assert_false(bool(_director.progression_store.call("has", str(spec.get("defeat_flag", "")))),
+		"the client writes no defeat flag of its own, not even locally: the host's delta owns it")
+	assert_true(_victories_sent().has(trainer_id), "the send dedupe is the repeat guard")
 	_director.call("_record_trainer_defeat", spec)
 	assert_eq(_director.sent.size(), 1, "a repeated defeat sends nothing new")
 	assert_eq(_director.ledger_submissions.size(), 0, "and still writes nothing to the ledger")
@@ -513,8 +514,8 @@ func _client_sent_warden() -> void:
 	_as_client()
 	_director.call("_record_trainer_defeat", _warden())
 	assert_eq(_director.sent.size(), 1, "the first win is sent once")
-	assert_true(bool(_director.progression_store.call("has", WARDEN_FLAG)),
-		"and noted locally while pending")
+	assert_false(bool(_director.progression_store.call("has", WARDEN_FLAG)),
+		"and writes no defeat flag while pending")
 
 
 func _victories_sent() -> Dictionary:
@@ -526,11 +527,11 @@ func _retry_armed(trainer_id: String) -> bool:
 	return entry is Dictionary and bool((entry as Dictionary).get("armed", false))
 
 
-func test_a_transient_refusal_undoes_our_note_and_retries_the_same_intent_bounded() -> void:
+func test_a_transient_refusal_retries_the_same_intent_bounded() -> void:
 	_client_sent_warden()
 	_director.call("_deliver_encounter_verdict", _refusal("journal_failed"))
 	assert_false(bool(_director.progression_store.call("has", WARDEN_FLAG)),
-		"the local note this path wrote is undone: the host did not record the defeat")
+		"the client never wrote the defeat: the host did not record it")
 	assert_false(_victories_sent().has(WARDEN), "the send dedupe is cleared")
 	assert_true(_retry_armed(WARDEN), "a retry is scheduled")
 	var limit := int(_director.get("TRAINER_VICTORY_RETRY_LIMIT"))
@@ -587,10 +588,10 @@ func test_an_ok_verdict_clears_the_retry() -> void:
 	assert_eq(_director.sent.size(), 2, "nothing further is sent")
 
 
-func test_a_permanent_refusal_undoes_the_note_and_does_not_retry() -> void:
+func test_a_permanent_refusal_does_not_retry() -> void:
 	_client_sent_warden()
 	_director.call("_deliver_encounter_verdict", _refusal("unknown_trainer"))
-	assert_false(bool(_director.progression_store.call("has", WARDEN_FLAG)), "the note is undone")
+	assert_false(bool(_director.progression_store.call("has", WARDEN_FLAG)), "no defeat was written")
 	assert_false(_victories_sent().has(WARDEN), "the dedupe is cleared")
 	assert_false(_retry_armed(WARDEN), "a permanent refusal is not retried")
 	_director.call("_retry_trainer_victory", WARDEN)
@@ -601,27 +602,27 @@ func test_a_permanent_refusal_undoes_the_note_and_does_not_retry() -> void:
 			"that the reward was not paid: %s" % str(_director.messages[0]))
 
 
-func test_a_flag_set_before_the_note_is_never_removed() -> void:
+func test_a_flag_the_world_already_holds_is_never_removed() -> void:
 	_as_client()
 	_director.progression_store.call("set_flag", WARDEN_FLAG)
 	_director.call("_record_trainer_defeat", _warden())
 	assert_eq(_director.sent.size(), 1, "the victory is still sent")
 	_director.call("_deliver_encounter_verdict", _refusal("journal_failed"))
 	assert_true(bool(_director.progression_store.call("has", WARDEN_FLAG)),
-		"a flag this path did not write is left alone")
+		"a refusal never clears the world's own defeat")
 	_director.call("_deliver_encounter_verdict", _refusal("unknown_trainer"))
 	assert_true(bool(_director.progression_store.call("has", WARDEN_FLAG)),
 		"even by a permanent refusal")
 
 
-func test_a_defeat_the_host_already_holds_keeps_the_note() -> void:
+func test_a_defeat_the_host_already_holds_still_retries_the_payout() -> void:
 	# Cloudreach: the chapter runtime committed the defeat fact before the
 	# routed send, so the world says beaten even though the payout failed.
 	_client_sent_warden()
 	_director.call("_deliver_encounter_verdict", _refusal("journal_failed",
 		{"defeat_recorded": true}))
-	assert_true(bool(_director.progression_store.call("has", WARDEN_FLAG)),
-		"the local mirror keeps agreeing with the host's world")
+	assert_false(bool(_director.progression_store.call("has", WARDEN_FLAG)),
+		"the client writes nothing; the flag arrives with the host's world delta")
 	assert_true(_retry_armed(WARDEN), "and the payout is still retried")
 
 

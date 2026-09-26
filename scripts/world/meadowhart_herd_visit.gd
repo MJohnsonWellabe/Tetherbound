@@ -10,6 +10,7 @@ const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const BOND := preload("res://scripts/creatures/bond_milestones.gd")
+const INVENTORY := preload("res://autoload/inventory.gd")
 
 const OBJECTIVES_PATH := "res://data/progression/objectives.json"
 const SPAWNS_PATH := "res://data/config/spawns.json"
@@ -24,7 +25,8 @@ var _definition: Dictionary = {}
 var _claiming := false
 var _visit_submitted := false
 var _acknowledgement_pending := false
-var _reward_count_before := 0
+## Item id -> count held when the claim was submitted, per reward part.
+var _reward_counts_before := {}
 var _landmark_credited_for_claim := false
 
 
@@ -160,29 +162,45 @@ func _on_activated() -> void:
 		return
 
 	var inventory: RefCounted = game.get("inventory")
-	var reward_item := str(visit.get("reward_item", "orb_basic"))
-	var reward_count := int(visit.get("reward_count", 3))
-	if inventory == null or not bool(inventory.call("has_room_for", reward_item, reward_count)):
+	var parts := reward_parts(visit)
+	var reward_text := str(visit.get("reward_text", "the herd-visit reward"))
+	if inventory == null or not rewards_fit(inventory, parts):
 		game.call("push_world_message",
 			("Meadowhart Grazing Ground discovered — your whole team gains bond progress. "
-			+ "Make room for the three Basic Orbs.") if discovered_now \
+			+ "Make room for %s." % reward_text) if discovered_now \
 			else "Make room in your satchel for the herd-visit reward.")
 		return
 
-	_reward_count_before = int(inventory.call("count", reward_item))
+	_reward_counts_before.clear()
+	for part: Dictionary in parts:
+		_reward_counts_before[part.item] = int(inventory.call("count", part.item))
 	_claiming = true
 	_visit_submitted = true
 	_landmark_credited_for_claim = discovered_now
-	var verdict := LEDGER_CLAIM.submit(self, {
-		"kind": "reward_grant",
-		"realm": "meadows",
-		"source": str(visit.get("reward_source", "meadowhart_herd_visit")),
-		"item": reward_item,
-		"count": reward_count,
-		"flag": COMPLETE_FLAG,
-	})
-	if not LEDGER_CLAIM.in_flight(verdict):
-		_claiming = false
+	# One reward_grant per part, each with its own once-only source, the way
+	# encounter_rewards.gd pays a multi-item trainer purse. The completion flag
+	# rides the LAST part, so the visit completes only once everything is paid;
+	# a save that already holds the flag never reaches this code.
+	var source := str(visit.get("reward_source", "meadowhart_herd_visit"))
+	for index in parts.size():
+		var part: Dictionary = parts[index]
+		var intent := {
+			"kind": "reward_grant",
+			"realm": "meadows",
+			"source": source if parts.size() == 1 else "%s:%s" % [source, part.item],
+			"item": part.item,
+			"count": part.count,
+		}
+		if index == parts.size() - 1:
+			intent["flag"] = COMPLETE_FLAG
+		var verdict := LEDGER_CLAIM.submit(self, intent)
+		# A part an earlier, interrupted attempt already paid answers
+		# `already_taken`: keep going, or the flag-carrying last part is never
+		# reached and the visit is stranded (encounter_director `_grant_to`
+		# attempts every component the same way). Any other refusal stops here.
+		if not LEDGER_CLAIM.in_flight(verdict) and str(verdict.get("code", "")) != "already_taken":
+			_claiming = false
+			return
 
 
 func _on_delta_applied(_delta: Dictionary) -> void:
@@ -199,12 +217,17 @@ func _on_delta_applied(_delta: Dictionary) -> void:
 	restore_progression_from_game(game)
 	var visit: Dictionary = _definition.get("visit", {}) as Dictionary
 	var inventory: RefCounted = game.get("inventory")
-	if inventory != null and int(inventory.call("count", str(visit.get("reward_item", "orb_basic")))) \
-			>= _reward_count_before + int(visit.get("reward_count", 3)):
+	var reward_text := str(visit.get("reward_text", "the herd-visit reward"))
+	var paid := inventory != null and not _reward_counts_before.is_empty()
+	for part: Dictionary in reward_parts(visit):
+		if not paid:
+			break
+		paid = int(inventory.call("count", part.item)) >= int(_reward_counts_before.get(part.item, 0)) + int(part.count)
+	if paid:
 		game.call("push_world_message",
 			("Meadowhart Grazing Ground discovered — your whole team gains bond progress, "
-			+ "and the visit awards 3 Basic Orbs.") if _landmark_credited_for_claim \
-			else "Herd visited together — 3 Basic Orbs.")
+			+ "and the visit awards %s." % reward_text) if _landmark_credited_for_claim \
+			else "Herd visited together — %s." % reward_text)
 	_landmark_credited_for_claim = false
 	_acknowledgement_pending = true
 	set_process(true)
@@ -221,6 +244,40 @@ func _on_intent_refused(kind: String, _code: String, reason: String, _detail: Di
 					"Meadowhart Grazing Ground discovered — your whole team gains bond progress. %s"
 					% reason)
 		_landmark_credited_for_claim = false
+
+
+## The visit's payout as [{item, count}, ...]: the `rewards` list when the
+## objective defines one (F03#2: two Small Potions and a Revive), otherwise the
+## legacy single `reward_item` x `reward_count` pair.
+static func reward_parts(visit: Dictionary) -> Array[Dictionary]:
+	var parts: Array[Dictionary] = []
+	var listed: Variant = visit.get("rewards", [])
+	if listed is Array and not (listed as Array).is_empty():
+		for raw: Variant in listed:
+			if raw is Dictionary and int((raw as Dictionary).get("count", 0)) > 0:
+				parts.append({"item": str((raw as Dictionary).get("item", "")), "count": int((raw as Dictionary).get("count", 0))})
+		return parts
+	parts.append({"item": str(visit.get("reward_item", "orb_basic")), "count": int(visit.get("reward_count", 3))})
+	return parts
+
+
+## Whether every part fits the satchel TOGETHER (a per-item has_room_for could
+## pass each part alone and still overflow), on a scratch copy of the slots.
+static func rewards_fit(inventory: RefCounted, parts: Array[Dictionary]) -> bool:
+	if inventory == null:
+		return false
+	var trial := INVENTORY.new(inventory.get("_db"))
+	for index in int(inventory.call("slot_count")):
+		# stack_at() answers {} for an empty slot, and set_slot() stores any
+		# dictionary as-is, so copying it verbatim made every empty slot of the
+		# scratch copy read as occupied: no room for anything that is not
+		# already stacked.
+		var stack: Dictionary = inventory.call("stack_at", index)
+		trial.set_slot(index, null if stack.is_empty() else stack)
+	for part: Dictionary in parts:
+		if trial.add(str(part.item), int(part.count)) != 0:
+			return false
+	return true
 
 
 func _listen_for_refusals() -> void:

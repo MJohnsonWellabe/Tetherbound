@@ -40,8 +40,10 @@ func test_visit_keeps_the_authored_personal_reward_and_tunable_radius() -> void:
 	assert_eq(str(activity.get("scope", "")), "player")
 	assert_eq(str(activity.get("flag_id", "")), "band1_meadowhart_herd_found")
 	assert_eq(float(visit.get("radius_m", 0.0)), 12.0)
-	assert_eq(str(visit.get("reward_item", "")), "orb_basic")
-	assert_eq(int(visit.get("reward_count", 0)), 3)
+	# F03#2 (coordinator option a): two Small Potions and a Revive for the
+	# retained five, replacing the catch-only three Basic Orbs.
+	assert_eq(VISIT.reward_parts(visit), [{"item": "potion_small", "count": 2}, {"item": "revive", "count": 1}])
+	assert_false(visit.has("reward_item"), "the legacy single-item field must not shadow the rewards list")
 	assert_eq(str(visit.get("reward_source", "")), "meadowhart_herd_visit")
 	assert_eq(str(visit.get("landmark_id", "")), "meadowhart_grazing_ground")
 
@@ -88,3 +90,26 @@ func test_raes_greeting_reveals_but_cannot_complete_or_pay() -> void:
 	assert_true(effects.has("flag:band1_meadowhart_herd_met"))
 	assert_false(effects.has("flag:band1_meadowhart_herd_found"))
 	assert_false(effects.has("give:orb_basic:3"))
+
+
+func test_reward_parts_falls_back_to_the_legacy_single_item_pair() -> void:
+	assert_eq(VISIT.reward_parts({"reward_item": "orb_basic", "reward_count": 3}),
+		[{"item": "orb_basic", "count": 3}])
+	assert_eq(VISIT.reward_parts({"rewards": [{"item": "revive", "count": 0}, {"item": "potion_small", "count": 2}]}),
+		[{"item": "potion_small", "count": 2}], "a zero-count part is skipped")
+
+
+## Regression (F03#2 smoke): the room check copied empty slots as {} and read
+## the whole satchel as full, so a fresh satchel refused the herd reward.
+func test_rewards_fit_an_empty_satchel_and_refuse_a_full_one() -> void:
+	var inventory: RefCounted = preload("res://autoload/inventory.gd").new(preload("res://autoload/item_db.gd").new())
+	var parts := VISIT.reward_parts(VISIT.definition().get("visit", {}) as Dictionary)
+	assert_true(VISIT.rewards_fit(inventory, parts), "an empty satchel holds two Small Potions and a Revive")
+	for index in int(inventory.call("slot_count")):
+		inventory.call("set_slot", index, {"id": "wood", "n": 50})
+	assert_false(VISIT.rewards_fit(inventory, parts), "a satchel full of wood holds nothing more")
+	inventory.call("set_slot", 0, null)
+	assert_false(VISIT.rewards_fit(inventory, parts), "one free slot is not room for two different items")
+	inventory.call("set_slot", 1, null)
+	assert_true(VISIT.rewards_fit(inventory, parts), "two free slots hold both parts")
+

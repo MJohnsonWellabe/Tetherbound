@@ -1,6 +1,6 @@
 {
   "name": "F06: two-peer join, rejoin and mounted rejoin do not bypass Cloudreach's closed counterweight gate",
-  "claim": "ACCEPTANCE F06: 'two-peer rejoin does not bypass a closed gate or lose an owned creature'. The guest's own world has Cloudreach's upper route open and its portable character is saved past upper_counterweight_gate (in Upper Cloudreach). The host's world has that gate CLOSED (no cloudreach_upper_route_unlocked). (1) JOIN: the guest continues its own save through the title's production join; it must not stand inside sealed Upper Cloudreach, must keep its five, and the host's world flags must not change. (2) REJOIN: at the gate's legal side it leaves and rejoins: same checks, same party ids. (3) MOUNTED REJOIN: it launches on its galecrest, its link drops mid-flight, it rejoins, then lands: sane rider state, same five ids, legal side, no flag change. (4) CONTROL: the host opens the gate, the guest stands past it, leaves and rejoins and DOES stand past it, so the 'not past the gate' check can fail. Setup stand-ins (disclosed): world flags through the ledger (story_flag) stand in for playing to Cloudreach, the Windscar flight trial and (guest's own world only) the Sky Shrine windlass; party_grant and fly_setup fill the guest's five; teleport places the guest past the gate in its own open world and at the gate's legal side. Saves, loads, join, leave, drop, rejoin, flight and snapshots are the game's own code. Loopback ENet: local evidence, not internet/Steam acceptance.",
+  "claim": "ACCEPTANCE F06: 'two-peer rejoin does not bypass a closed gate or lose an owned creature'. The guest's own world has Cloudreach's upper route open and its portable character is saved past upper_counterweight_gate (in Upper Cloudreach). The host's world has that gate CLOSED (no cloudreach_upper_route_unlocked). (1) JOIN: the guest continues its own save through the title's production join; it must not stand inside sealed Upper Cloudreach, must keep its five, and the host's world flags must not change. (2) REJOIN: at the gate's legal side it leaves and rejoins: same checks, same party ids. (3) MOUNTED REJOIN: it launches on its galecrest, its link drops mid-flight, it rejoins from the title, then lands: sane rider state, same five ids, not inside sealed Upper Cloudreach, no flag change; because the title returning route first loads the guest's own slot-0 (a different world instance from the host's), it stands at the home slot's authored regional spawn (the Cloudreach arrival), not its mid-flight pose, per MULTIPLAYER 'Return-home placement'. (4) CONTROL: the host opens the gate, the guest stands past it, leaves and rejoins and DOES stand past it, so the 'not past the gate' check can fail. Setup stand-ins (disclosed): world flags through the ledger (story_flag) stand in for playing to Cloudreach, the Windscar flight trial and (guest's own world only) the Sky Shrine windlass; party_grant and fly_setup fill the guest's five; teleport places the guest past the gate in its own open world and at the gate's legal side. Saves, loads, join, leave, drop, rejoin, flight and snapshots are the game's own code. Loopback ENet: local evidence, not internet/Steam acceptance.",
   "peers": 2,
   "scene": "title",
   "_comment_scene": "Both peers boot the light title scene (launching straight into the Meadows misses the harness's 180 s hello when both build at once), then boot their own fresh Meadows world and cross into Cloudreach through Game.enter_realm.",
@@ -213,7 +213,8 @@
       "probe": "player_identity",
       "expect_data": {
         "realm": "cloudreach",
-        "party_size": 5
+        "party_size": 5,
+        "character_id": "$character1"
       },
       "label": "JOIN: guest in Cloudreach, five owned"
     },
@@ -317,7 +318,8 @@
       "probe": "player_identity",
       "expect_data": {
         "realm": "cloudreach",
-        "party_size": 5
+        "party_size": 5,
+        "character_id": "$character1"
       },
       "label": "REJOIN: guest in Cloudreach, five owned"
     },
@@ -403,9 +405,21 @@
     },
     {
       "peer": 1,
-      "action": "join",
-      "args": {},
-      "label": "MOUNTED: guest rejoins (reclaims its held seat)"
+      "probe": "input_context",
+      "label": "MOUNTED: the dropped guest is back at the title (Session._on_server_disconnected -> _return_to_title)"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "returning_route": true,
+        "budget_frames": 20000,
+        "character": {
+          "character_id": "$character1"
+        }
+      },
+      "budget_frames": 20000,
+      "label": "MOUNTED: guest rejoins from the title as the same character (title _join_via -> JoinDriver; reclaims its held seat)"
     },
     {
       "peer": "all",
@@ -441,7 +455,8 @@
       "probe": "player_identity",
       "expect_data": {
         "realm": "cloudreach",
-        "party_size": 5
+        "party_size": 5,
+        "character_id": "$character1"
       },
       "label": "MOUNTED: identity after landing"
     },
@@ -476,13 +491,13 @@
       "args": {
         "check": "near",
         "at": [
-          -104.0,
-          2436.0
+          0.0,
+          -260.0
         ],
-        "within": 30.0
+        "within": 5.0
       },
       "continue_on_fail": true,
-      "label": "MOUNTED: guest landed at the gate's legal side"
+      "label": "MOUNTED: guest stands on legal ground at the authored Cloudreach arrival (cloudreach_world.json cloudreach_arrival_from_meadows, (0, 105, -260)): the title returning route loads the guest's own slot-0, whose world instance differs from the host's that the character last stood in, so save_game.gd drops the saved pose for the home slot's authored regional spawn (MULTIPLAYER 'Return-home placement')"
     },
     {
       "peer": 0,
@@ -583,7 +598,8 @@
       "probe": "player_identity",
       "expect_data": {
         "realm": "cloudreach",
-        "party_size": 5
+        "party_size": 5,
+        "character_id": "$character1"
       },
       "label": "CONTROL: guest in Cloudreach, five owned"
     },
@@ -605,5 +621,6 @@
       },
       "label": "CONTROL: with the gate open the rejoined guest DOES stand past it (the 'not sealed' check can fail)"
     }
-  ]
+  ],
+  "_comment_mounted_rejoin": "A dropped link returns the guest to the title (session.gd::_on_server_disconnected), so the mounted rejoin goes through the title's returning route like a player would; a bare Session.join from the title never rebuilds the world and leaves no player to land."
 }

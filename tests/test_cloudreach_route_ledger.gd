@@ -76,6 +76,12 @@ const LEAD_INDEX := 0
 const LEAD_ACE_TOLERANCE := 2
 ## WORLD.md §2.4: "Cloudreach | 18–21 overlap | 33 target; Veyra ace 34".
 const CLOUDREACH_EXIT_TARGET := 33
+## F07#4 (coordinator-authorised tune): the finale band (Captain Veyra) and the
+## exit must hold a POSITIVE margin, >= +1 level for the lead and the weakest,
+## not merely meet the band. The earlier bands (Senn, Maela, Voss) keep >= 0.
+## Ledger choice, like the bands above; the zero-slack pass it replaces failed
+## at 40% engagement and on a single bench kill.
+const LATE_MARGIN := 1
 
 ## --- what the required route is allowed to pay ------------------------------
 ## Conservative engagement fraction (no spec figure exists): Cloudreach wilds
@@ -688,10 +694,16 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 			var before := _levels(party)
 			var before_xp := _xps(party)
 			var trainer_xp := 0
+			var reward := _reward(trainer_id)
+			var bonus_xp := 0
 			if str(options.get("drop_trainer_xp", "")) != trainer_id:
 				for raw: Variant in _slots(trainer_id):
 					trainer_xp += _defeat(party, int((raw as Dictionary).get("level", 0)))
-			var reward := _reward(trainer_id)
+				# encounter_director.gd::_pay_trainer_reward: the tier's flat
+				# `xp_bonus` goes, whole, to every living party member.
+				bonus_xp = maxi(0, int(reward.get("xp_bonus", 0)))
+				for member: Variant in party:
+					_gain(member as Dictionary, bonus_xp)
 			var trainer: Dictionary = _ladder().get(trainer_id, {}) as Dictionary
 			for raw: Variant in (reward.get("items", []) as Array):
 				var grant := raw as Dictionary
@@ -704,10 +716,11 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 				"available": sites.size(), "fought": fought, "wild_xp": wild_xp,
 				"ace": ace, "need_lead": ace - LEAD_ACE_TOLERANCE,
 				"need_all": ace - LEAD_ACE_TOLERANCE - RETAINED_SPREAD,
-				"before": before, "before_xp": before_xp, "trainer_xp": trainer_xp, "after": _levels(party),
-				"coins": int(reward.get("coins", 0))}, true)
+				"before": before, "before_xp": before_xp, "trainer_xp": trainer_xp, "bonus_xp": bonus_xp,
+				"after": _levels(party), "coins": int(reward.get("coins", 0))}, true)
 			phase["lead_margin"] = int(before[LEAD_INDEX]) - int(phase["need_lead"])
 			phase["all_margin"] = _min_level(before) - int(phase["need_all"])
+			phase["min_margin"] = LATE_MARGIN if bool(phase["finale"]) else 0
 			flags[str(trainer.get("defeat_flag", ""))] = true
 			for flag: Variant in (step.get("after", []) as Array):
 				flags[str(flag)] = true
@@ -730,7 +743,7 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 				_feed_candy(_lowest(party), 1)
 	phase.merge({"trainer": "", "name": "Exit (overlook)", "available": tail_sites.size(),
 		"fought": tail_fought, "wild_xp": tail_xp, "before": _levels(party), "before_xp": _xps(party), "after": _levels(party),
-		"trainer_xp": 0, "coins": 0}, true)
+		"trainer_xp": 0, "bonus_xp": 0, "coins": 0}, true)
 	var result := {"entry": entry, "phases": phases, "tail": phase, "steps": steps,
 		"exit": _levels(party), "exit_xp": _xps(party), "fought_ids": fought_ids, "problems": problems, "options": options}
 	_cache[key] = result
@@ -760,20 +773,28 @@ func shortfalls(result: Dictionary) -> Array:
 	for raw: Variant in (result["phases"] as Array):
 		var row := raw as Dictionary
 		var before: Array = row["before"] as Array
-		if int(before[LEAD_INDEX]) < int(row["need_lead"]):
-			out.append("%s: lead L%d < band L%d (ace L%d), short %d"
-				% [str(row["name"]), int(before[LEAD_INDEX]), int(row["need_lead"]), int(row["ace"]),
-				int(row["need_lead"]) - int(before[LEAD_INDEX])])
-		if _min_level(before) < int(row["need_all"]):
-			out.append("%s: weakest retained L%d < band L%d, short %d"
-				% [str(row["name"]), _min_level(before), int(row["need_all"]),
-				int(row["need_all"]) - _min_level(before)])
+		var need_lead := int(row["need_lead"]) + int(row["min_margin"])
+		var need_all := int(row["need_all"]) + int(row["min_margin"])
+		if int(before[LEAD_INDEX]) < need_lead:
+			out.append("%s: lead L%d < band L%d%s (ace L%d), short %d"
+				% [str(row["name"]), int(before[LEAD_INDEX]), need_lead, _plus(int(row["min_margin"])),
+				int(row["ace"]), need_lead - int(before[LEAD_INDEX])])
+		if _min_level(before) < need_all:
+			out.append("%s: weakest retained L%d < band L%d%s, short %d"
+				% [str(row["name"]), _min_level(before), need_all, _plus(int(row["min_margin"])),
+				need_all - _min_level(before)])
 	var exit_levels: Array = result["exit"] as Array
-	if int(exit_levels[LEAD_INDEX]) < CLOUDREACH_EXIT_TARGET:
-		out.append("exit: lead L%d < target L%d" % [int(exit_levels[LEAD_INDEX]), CLOUDREACH_EXIT_TARGET])
-	if _min_level(exit_levels) < CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD:
-		out.append("exit: weakest L%d < L%d" % [_min_level(exit_levels), CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD])
+	if int(exit_levels[LEAD_INDEX]) < CLOUDREACH_EXIT_TARGET + LATE_MARGIN:
+		out.append("exit: lead L%d < target L%d + %d margin" % [int(exit_levels[LEAD_INDEX]),
+			CLOUDREACH_EXIT_TARGET, LATE_MARGIN])
+	if _min_level(exit_levels) < CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD + LATE_MARGIN:
+		out.append("exit: weakest L%d < L%d + %d margin" % [_min_level(exit_levels),
+			CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD, LATE_MARGIN])
 	return out
+
+
+func _plus(margin: int) -> String:
+	return " (+%d margin)" % margin if margin > 0 else ""
 
 
 func _print_ledger() -> void:
@@ -790,20 +811,20 @@ func report_lines(result: Dictionary) -> Array:
 	out.append("  CLOUDREACH ROUTE LEDGER (ordered, gate-aware)  entry %s  wild fraction %.2f  no catches, no repeats  %s"
 		% [str(result["entry"]), float((result["options"] as Dictionary).get("wild_fraction", WILD_FRACTION)),
 		str(result["options"])])
-	out.append("  %-16s %7s %7s %7s %6s %4s %9s  %-15s %6s  %-15s %6s" % ["phase", "path_m", "wilds",
-		"wildXP", "candy", "ace", "need L/all", "levels before", "trnXP", "levels after", "coins"])
+	out.append("  %-16s %7s %7s %7s %6s %4s %9s  %-15s %6s  %-15s %6s %7s" % ["phase", "path_m", "wilds",
+		"wildXP", "candy", "ace", "need L/all", "levels before", "trnXP", "levels after", "coins", "bonusXP"])
 	var all_rows: Array = (result["phases"] as Array).duplicate()
 	all_rows.append(result["tail"])
 	for raw: Variant in all_rows:
 		var row := raw as Dictionary
-		out.append("  %-16s %7.0f %7s %7d %6s %4s %9s  %-15s %6d  %-15s %6d" % [str(row["name"]),
+		out.append("  %-16s %7.0f %7s %7d %6s %4s %9s  %-15s %6d  %-15s %6d %7d" % [str(row["name"]),
 			float(row["path_m"]), "%d/%d" % [int(row["fought"]), int(row["available"])], int(row["wild_xp"]),
 			"+%d" % int(row["candy"]), str(row.get("ace", "-")),
 			"%s/%s" % [str(row.get("need_lead", "-")), str(row.get("need_all", "-"))],
 			_join(row["before"] as Array), int(row["trainer_xp"]), _join(row["after"] as Array),
-			int(row["coins"])])
-	out.append("  exit %s  (lead target %d, others >= %d)" % [_join(result["exit"] as Array),
-		CLOUDREACH_EXIT_TARGET, CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD])
+			int(row["coins"]), int(row.get("bonus_xp", 0))])
+	out.append("  exit %s  (lead target %d, others >= %d; finale and exit need +%d margin)" % [_join(result["exit"] as Array),
+		CLOUDREACH_EXIT_TARGET, CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD, LATE_MARGIN])
 	var closed := 0
 	for raw: Variant in (result["steps"] as Array):
 		closed += ((raw as Dictionary)["sites_closed"] as Array).size()
@@ -952,25 +973,27 @@ func test_every_retained_member_meets_each_required_fights_band() -> void:
 		var row := raw as Dictionary
 		assert_false(bool(row["optional"]), "an optional trainer was counted as required income")
 		var before: Array = row["before"] as Array
-		assert_true(int(before[LEAD_INDEX]) >= int(row["need_lead"]),
-			("%s: the lead reaches L%d but the ace is L%d and the band asks for L%d "
+		# Senn/Maela/Voss: meet the band. Veyra (the finale): beat it by LATE_MARGIN.
+		assert_eq(int(row["min_margin"]), LATE_MARGIN if bool(row["finale"]) else 0)
+		assert_true(int(row["lead_margin"]) >= int(row["min_margin"]),
+			("%s: the lead reaches L%d but the ace is L%d and the band asks for L%d + %d margin "
 			+ "(%d/%d wild defeats, +%d candy levels, no catch)") % [str(row["name"]),
-			int(before[LEAD_INDEX]), int(row["ace"]), int(row["need_lead"]), int(row["fought"]),
-			int(row["available"]), int(row["candy"])])
-		assert_true(_min_level(before) >= int(row["need_all"]),
-			"%s: the weakest retained member is L%d against a band of L%d (party %s)"
-			% [str(row["name"]), _min_level(before), int(row["need_all"]), str(before)])
+			int(before[LEAD_INDEX]), int(row["ace"]), int(row["need_lead"]), int(row["min_margin"]),
+			int(row["fought"]), int(row["available"]), int(row["candy"])])
+		assert_true(int(row["all_margin"]) >= int(row["min_margin"]),
+			"%s: the weakest retained member is L%d against a band of L%d + %d margin (party %s)"
+			% [str(row["name"]), _min_level(before), int(row["need_all"]), int(row["min_margin"]), str(before)])
 
 
 func test_the_retained_five_leave_cloudreach_inside_the_envelope() -> void:
 	_print_ledger()
 	var exit_levels: Array = ledger()["exit"] as Array
-	assert_true(int(exit_levels[LEAD_INDEX]) >= CLOUDREACH_EXIT_TARGET,
-		"the lead leaves Cloudreach at L%d against WORLD §2.4's exit target L%d"
-		% [int(exit_levels[LEAD_INDEX]), CLOUDREACH_EXIT_TARGET])
-	assert_true(_min_level(exit_levels) >= CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD,
-		"the weakest retained member leaves at L%d, more than %d under the L%d exit target"
-		% [_min_level(exit_levels), RETAINED_SPREAD, CLOUDREACH_EXIT_TARGET])
+	assert_true(int(exit_levels[LEAD_INDEX]) >= CLOUDREACH_EXIT_TARGET + LATE_MARGIN,
+		"the lead leaves Cloudreach at L%d against WORLD §2.4's exit target L%d + %d margin"
+		% [int(exit_levels[LEAD_INDEX]), CLOUDREACH_EXIT_TARGET, LATE_MARGIN])
+	assert_true(_min_level(exit_levels) >= CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD + LATE_MARGIN,
+		"the weakest retained member leaves at L%d against L%d + %d margin"
+		% [_min_level(exit_levels), CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD, LATE_MARGIN])
 
 
 func test_negative_controls_fail_the_same_assertion() -> void:
