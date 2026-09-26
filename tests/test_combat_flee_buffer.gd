@@ -117,13 +117,28 @@ func _case_a_run_pressed_during_the_opening_guard_survives_it() -> void:
 		manager._tick_active(TICK)
 	assert_true(_fled(), "the Run pressed inside the guard is honoured when it drops")
 
+func _case_a_run_survives_the_guard_plus_hits_inside_it() -> void:
+	# Review finding: hitstop freezes `_input_guard`, so a press at the opening
+	# plus two hits inside the guard must not outlast the buffer.
+	_press_during(func() -> void: manager._tick_active(TICK))
+	for _hit in 2:
+		manager._hitstop_left = 0.12
+		for _i in 8:
+			manager._tick_active(TICK)
+	for _i in 30:
+		if _fled():
+			break
+		manager._tick_active(TICK)
+	assert_true(_fled(), "a Run at the opening survives the guard and the hits inside it")
+
 func _case_a_stale_run_expires() -> void:
+	# A burst awaiting the host keeps input unread without freezing time.
 	manager._input_guard = 0.0
-	manager._hitstop_left = 5.0
+	manager._burst_awaiting_host = true
 	_press_during(func() -> void: manager._tick_active(TICK))
 	for _i in 60:
 		manager._tick_active(TICK)
-	manager._hitstop_left = 0.0
+	manager._burst_awaiting_host = false
 	manager._tick_active(TICK)
 	assert_false(_fled(), "a Run older than flow.flee_buffer is not acted on seconds later")
 
@@ -137,7 +152,8 @@ func _case_a_run_while_aiming_is_the_aims_not_the_fights() -> void:
 	assert_false(_fled(), "Run cancels an aim; it is not also buffered into a withdrawal")
 
 const CASES := ["_case_a_run_pressed_during_hitstop_is_honoured_after_it",
-	"_case_a_run_pressed_during_the_opening_guard_survives_it", "_case_a_stale_run_expires",
+	"_case_a_run_pressed_during_the_opening_guard_survives_it",
+	"_case_a_run_survives_the_guard_plus_hits_inside_it", "_case_a_stale_run_expires",
 	"_case_a_run_while_aiming_is_the_aims_not_the_fights"]
 
 func test_flee_buffer_in_an_initialized_tree() -> void:

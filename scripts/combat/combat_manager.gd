@@ -2438,7 +2438,10 @@ func _throw_pressed() -> bool:
 ## (`throw_aim.gd` owns it), and buffering it too would make one press do two
 ## things. A catch in progress is left alone too; the orb decides that fight.
 func _buffer_flee_while_input_unread(delta: float) -> void:
-	_flee_buffer_left = maxf(0.0, _flee_buffer_left - delta)
+	# Hitstop also freezes `_input_guard`, so the buffer holds too: a guard plus
+	# a hit or two landing in it could otherwise outlast `flow.flee_buffer`.
+	if _hitstop_left <= 0.0:
+		_flee_buffer_left = maxf(0.0, _flee_buffer_left - delta)
 	var unread := _hitstop_left > 0.0 or _input_guard > 0.0 or _burst_awaiting_host
 	if not unread or _catch_phase != CatchPhase.NONE or bool(_throw.call("is_busy")):
 		return
