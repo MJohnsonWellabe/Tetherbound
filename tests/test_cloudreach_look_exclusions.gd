@@ -19,6 +19,10 @@ func _shapes(rng: RandomNumberGenerator) -> Array:
 		{"centre": Vector3(200, 5, 200), "half": Vector2.ONE * 1.4, "rotation": 0.0},
 		{"kind": "ellipse", "centre": Vector3(300, 5, -300), "half": Vector2(0, 12), "rotation": 0.0},
 		{"centre": Vector3(0, 0, 0), "half": Vector2(INF, 3), "rotation": 0.0},
+		{"kind": "ellipse", "centre": Vector3(0, 0, 0), "half": Vector2(1.0e30, 2), "rotation": PI / 2.0},
+		{"kind": "segment", "a": Vector3(-300, 0, 300), "b": Vector3(300, 0, 300), "half_width": 1.0e300},
+		{"centre": Vector3(96, 0, -96), "half": Vector2(-6, 9), "rotation": -PI / 2.0},
+		{"kind": "ellipse", "centre": Vector3(-160, 0, -160), "half": Vector2(-12, 20), "rotation": PI},
 		"not a dictionary",
 	]
 	for _i in 60:

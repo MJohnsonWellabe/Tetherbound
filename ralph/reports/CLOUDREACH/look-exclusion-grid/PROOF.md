@@ -24,3 +24,10 @@ shapes (segments incl. degenerate, rotated ellipses/boxes, a zero-axis ellipse, 
 non-Dictionary entry) = 0 mismatches; and an exclusion appended after the first query is seen.
 
 Raw lines: `hash_before_main.txt`, `hash_after_grid.txt`.
+
+## After independent review (APPROVE WITH NITS)
+Applied: shapes whose box exceeds 1e7 m in any coordinate or covers more than 4096 cells (checked
+in float, before `floori`) go to the always-checked list, so a huge finite half/half_width cannot
+saturate the cell index; shared empty bucket; append-only assumption documented. The test gained a
+1e30-half ellipse, a 1e300 half_width segment, and negative halves at ±π/2 and π: still 0
+mismatches. Placement hash re-run: identical (`hash_after_grid_review_fixes.txt`, dress 20,665 ms).

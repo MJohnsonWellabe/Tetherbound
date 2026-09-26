@@ -296,6 +296,7 @@ func _is_turf_top(hit: Dictionary) -> bool:
 const _EXCLUSION_CELL := 32.0
 const _EXCLUSION_MARGIN := 1.0
 const _EXCLUSION_MAX_CELLS := 4096
+const _EXCLUSION_MAX_COORD := 1.0e7
 const _EX_SEGMENT := 0
 const _EX_ELLIPSE := 1
 const _EX_BOX := 2
@@ -312,6 +313,7 @@ var _ex_half: Array[Vector2] = []
 var _ex_rotation := PackedFloat64Array()
 var _ex_grid: Dictionary = {} # Vector2i cell -> PackedInt32Array of shape indices
 var _ex_everywhere := PackedInt32Array() # shapes too large or non-finite to bucket
+var _ex_no_shapes := PackedInt32Array() # shared empty bucket for cells with no shapes
 
 
 func _compile_exclusions() -> void:
@@ -364,7 +366,10 @@ func _compile_exclusions() -> void:
 		_ex_centre.append(centre)
 		_ex_half.append(half)
 		_ex_rotation.append(rotation)
-		if not (is_finite(lo.x) and is_finite(lo.y) and is_finite(hi.x) and is_finite(hi.y)):
+		# Non-finite, or so large that `floori` could saturate: never bucket.
+		if not (is_finite(lo.x) and is_finite(lo.y) and is_finite(hi.x) and is_finite(hi.y)) \
+				or maxf(maxf(absf(lo.x), absf(lo.y)), maxf(absf(hi.x), absf(hi.y))) > _EXCLUSION_MAX_COORD \
+				or (hi.x - lo.x) * (hi.y - lo.y) > _EXCLUSION_MAX_CELLS * _EXCLUSION_CELL * _EXCLUSION_CELL:
 			_ex_everywhere.append(index)
 			continue
 		var cell_lo := Vector2i(floori(lo.x / _EXCLUSION_CELL), floori(lo.y / _EXCLUSION_CELL))
@@ -381,12 +386,14 @@ func _compile_exclusions() -> void:
 
 
 func _excluded(at: Vector3) -> bool:
-	# The world array is shared by reference; recompile if anything was added
-	# after the last query so a late exclusion is never missed.
+	# The world array is shared by reference and only ever appended to
+	# (world build, battle yards, summit presentation); recompile when it grows
+	# so a late exclusion is never missed. Replacing or editing an entry in
+	# place would not be seen -- nothing does that.
 	if _ex_compiled_size != _exclusions.size():
 		_compile_exclusions()
 	var key := Vector2i(floori(at.x / _EXCLUSION_CELL), floori(at.z / _EXCLUSION_CELL))
-	var bucket: PackedInt32Array = _ex_grid.get(key, PackedInt32Array())
+	var bucket: PackedInt32Array = _ex_grid.get(key, _ex_no_shapes)
 	for index in bucket:
 		if _excluded_by(index, at):
 			return true
