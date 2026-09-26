@@ -24,6 +24,11 @@ uniform float vein_wander = 0.12;
 uniform float spur_energy = 0.55;
 uniform float spur_start_m = 3.0;
 uniform float spur_fade_m = 1.5;
+// Round 4 attempt 2: brighter and wider over its first spur_near_m, where it
+// must read crossing the road's grass shoulder from a grazing road view.
+uniform float spur_near_energy = 0.55;
+uniform float spur_near_m = 35.0;
+uniform float spur_near_width = 1.0;
 uniform float flow_speed = 7.0;
 uniform float pulse_spacing = 11.0;
 uniform float pulse_sharpness = 6.0;
@@ -112,12 +117,13 @@ void fragment() {
 		float spur_s = u * 0.11 * vein_scale;
 		float spur_centre = (noise1(spur_s + 3.0) * 2.0 - 1.0) * 0.25;
 		float spur_d = abs(v - spur_centre - (noise1(u * 1.9 * vein_scale) * 2.0 - 1.0) * 0.06);
-		float spur_w = vein_width * 1.6;
+		float near = 1.0 - smoothstep(spur_near_m * 0.5, spur_near_m, UV2.y);
+		float spur_w = vein_width * 1.6 * mix(1.0, spur_near_width, near);
 		float spur_line = 1.0 - smoothstep(spur_w * 0.3, spur_w, spur_d);
 		float spur_glow = exp(-spur_d * spur_d / (spur_w * spur_w * 10.0)) * 0.3;
 		float spur_charge = (spur_line + spur_glow) * (0.5 + 1.2 * pulse_at(u - spur_d * 6.0, 1.0));
 		float spur_in = smoothstep(spur_start_m, spur_start_m + spur_fade_m, UV2.y);
-		ALBEDO = COLOR.rgb * spur_energy * spur_charge * feather * storm_intensity * distance_fade_all * spur_in;
+		ALBEDO = COLOR.rgb * mix(spur_energy, spur_near_energy, near) * spur_charge * feather * storm_intensity * distance_fade_all * spur_in;
 	} else {
 	// Three cracks plus a fine ridged web of hairline cracks between them.
 	float charge = 0.0;

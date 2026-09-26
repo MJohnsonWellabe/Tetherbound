@@ -361,7 +361,8 @@ static func trail_stones(pocket: Dictionary, cfg: Dictionary, routes: Array = []
 		var dir := _direction_at(points, d)
 		var side := Vector2(dir.y, -dir.x)
 		out.append({"at": at + side * rng.randf_range(-float(trail.jitter_m), float(trail.jitter_m)),
-			"yaw": rng.randf_range(0.0, TAU), "scale": rng.randf_range(float(trail.scale_min), float(trail.scale_max)),
+			"yaw": rng.randf_range(0.0, TAU), "scale": rng.randf_range(float(trail.scale_min), float(trail.scale_max))
+				* (float(trail.get("near_scale_mul", 1.0)) if d <= float(trail.get("near_m", 0.0)) else 1.0),
 			"model": STONES[rng.randi_range(0, STONES.size() - 1)]})
 		d += float(trail.spacing_m)
 	return out
