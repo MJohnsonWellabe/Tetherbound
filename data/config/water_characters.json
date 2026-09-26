@@ -414,10 +414,11 @@
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
       "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "portrait_mode": "installed_body_render",
+      "_why_offset": "Tidewake #310: moved from the 79-degree face above the basin (700, 1542), unreachable on foot, to gentle dry ground (about 6 degrees, 5.7 m) 20 m inland of shellwatch_to_tidal_cradle_arrival, where a landing player meets him.",
       "island_local_offset": [
+        -145.0,
         0.0,
-        0.0,
-        12.0
+        -168.0
       ],
       "greeting": "water_otto_pre",
       "_why_greeting_when": "side_water_cradle_care: acknowledgement once the return is recorded (before or after restoration); a wait line when the nest is mined but this character has no swimmer and Aquaryn's trial is unsettled; a reminder while the lead is open. The guarded lead/return conversations take priority.",
@@ -582,10 +583,11 @@
       "model": "res://assets/characters/innkeeper/innkeeper_lod0.glb",
       "portrait": "res://assets/ui/portraits/wilhelm.png",
       "portrait_mode": "installed_body_render",
+      "_why_offset": "Tidewake #310: moved from the Veilfall massif (191, 616 m up) to the Lastlight camp, 3 m west of the lamp he belongs to (world 375.2, 3817.9; about 10 degrees, dry).",
       "island_local_offset": [
-        -9.0,
+        175.2,
         0.0,
-        23.0
+        -322.1
       ],
       "greeting": "water_halen_pre",
       "_why_greeting_when": "side_water_lastlight_shelter: a reminder while the delivery is open, a rest request once the shelter stands, and the acknowledgement after a companion rested there (before or after restoration). The guarded lead takes priority.",
