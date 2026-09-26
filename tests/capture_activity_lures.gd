@@ -57,6 +57,8 @@ var _lure_body: Node3D = null
 ## Minimum on-screen height for a lure to count as readable, not just present.
 const READABLE_PX := 24.0
 var _capture_dir := ""
+## True while the walker has put the companion away to get unstuck.
+var _companion_stowed := false
 
 var _world: Node3D = null
 var _player: CharacterBody3D = null
@@ -507,6 +509,11 @@ func _walk() -> void:
 				await _face_lure()
 				continue
 		var lure_d := here.distance_to(_xz3(_lure.global_position))
+		if _companion_stowed and lure_d <= APPROACH_FRAME_M:
+			_release()
+			await _press("creature_recall")
+			_companion_stowed = false
+			_notes.append("t=%.1fs near the activity; called the companion back out" % _clock)
 		if not approach_saved and seen and lure_d <= APPROACH_FRAME_M:
 			approach_saved = true
 			_release()
@@ -531,6 +538,11 @@ func _walk() -> void:
 			if unstick > 0 and unstick_anchor - remaining > UNSTICK_RESET_M:
 				unstick = 0
 				unstick_anchor = INF
+				if _companion_stowed:
+					_release()
+					await _press("creature_recall")
+					_companion_stowed = false
+					_notes.append("t=%.1fs moving again; called the companion back out" % _clock)
 			best_remaining = remaining
 			best_at = _clock
 		elif _clock - best_at > STUCK_S:
@@ -611,6 +623,14 @@ func _handle_fight(foe_name: String) -> void:
 
 func _unstick(attempt: int) -> void:
 	_release()
+	# A companion walking at the player's shoulder can wedge them on a narrow
+	# road shoulder (herd r3: pinned between a boulder and the Terrapup). From
+	# the third attempt, put it away with the ordinary key; the walk calls it
+	# back out once it is moving again.
+	if attempt == 3 and _director != null and _director.call("ally_body") != null:
+		await _press("creature_recall")
+		_companion_stowed = true
+		_notes.append("t=%.1fs put the companion away to get unstuck" % _clock)
 	var side := "move_left" if attempt % 2 == 1 else "move_right"
 	# Back off first so the strafe is not pressed flat against the obstacle.
 	Input.action_press("move_back")
