@@ -89,6 +89,9 @@ var _guardian_verified := false
 var _fight_started := 0
 var _fight_enemy: RefCounted
 var _fight_hits := 0
+var _sidestepping := false
+const SIDESTEP_M := 6.0
+const SIDESTEP_FRAMES := 600
 
 
 ## A wild fight is lost the moment the lead faints (combat_manager.gd
@@ -352,6 +355,8 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 		budget = maxi(1800, int(_player.global_position.distance_to(target) / 2.5 * 60.0) + 600)
 	_nav.reset()
 	var session := WalkSession.new(_player.global_position)
+	var last_recovery := Vector3.INF
+	var sidestep_sign := 1.0
 	for _frame in budget:
 		if not _failures.is_empty():
 			return false
@@ -367,10 +372,32 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 		if _player.global_position.distance_to(target) <= radius:
 			_stick(0.0, 0.0)
 			return true
-		if session.step(_nav, _player.global_position, target):
-			_receipt("walk_confined_recovery", {"player": _player.global_position, "target": target})
+		var at := _player.global_position
+		if session.step(_nav, at, target):
+			_receipt("walk_confined_recovery", {"player": at, "target": target})
+			# A back-off that leaves the body where it was (seed 15: twice at
+			# the same point on a rope collider between two rocks) will not
+			# free it. Step aside across the heading, alternating sides, as a
+			# player would, then resume this leg.
+			if not _sidestepping and last_recovery != Vector3.INF and at.distance_to(last_recovery) < 1.0:
+				var heading := target - at
+				heading.y = 0.0
+				var side := Vector3(-heading.z, 0.0, heading.x).normalized() * SIDESTEP_M * sidestep_sign
+				sidestep_sign = -sidestep_sign
+				var aside := Vector2(at.x + side.x, at.z + side.z)
+				_receipt("walk_sidestep", {"player": at, "target": target, "aside": aside})
+				_sidestepping = true
+				await _walk(Vector3(aside.x, float(_world.call("ground_height_at", aside.x, aside.y)), aside.y), 1.5, SIDESTEP_FRAMES)
+				_sidestepping = false
+				if not _failures.is_empty():
+					return false
+				_nav.reset()
+				session.reset(_player.global_position)
+			last_recovery = at
 		await _tree.physics_frame
 	_stick(0.0, 0.0)
+	if _sidestepping:
+		return false  # A sidestep is best effort; the leg it serves resumes.
 	return _fail("Ordinary quarry/Warrens movement did not reach %s; player=%s" % [target, _player.global_position])
 
 

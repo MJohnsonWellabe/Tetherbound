@@ -81,6 +81,15 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	return result()
 
 
+## The Lockwater Overlook's props (rocks, a rope, a log, a bag; x -132..-124,
+## z 3446-3455) sit on the road leg (-160,3420) -> (-60,3520). Seed 15 froze
+## there, standing on the rope's collider between two rocks. Rows z 3444 and
+## below are open; go round the south-east side.
+const OVERLOOK_KNOT := Vector2(-129.0, 3451.0)
+const OVERLOOK_CLEAR_M := 6.0
+const OVERLOOK_BYPASS: Array[Vector2] = [Vector2(-122.0, 3443.0)]
+
+
 func _travel() -> bool:
 	var terrain := _read(TERRAIN)
 	var gate := gate_path(_config)
@@ -91,7 +100,8 @@ func _travel() -> bool:
 	if approach.is_empty() or not await _prepare():
 		return _fail("The current Warrens-to-Relay trail or actual care is unavailable")
 	for point: Vector2 in approach:
-		if not await _walk_ground(point):
+		if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M, OVERLOOK_BYPASS, _v2p(), point) \
+				or not await _walk_ground(point):
 			return false
 	for point: Vector2 in gate:
 		if not await _walk_ground(_relay.call("world_of", point), 0.6):
