@@ -195,3 +195,38 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   Receipts: `pre_sigil_camp_route`, `pre_sigil_camp_night`, `pre_sigil_camp_done`. Bench care
   from alternative 2 is unchanged for this attempt; step 2 (`BENCH_CARE_PREPARES := false`) is
   held for a recurrence.
+
+### B5 ruling, attempts 4 to 6 (2026-09-26, seed 4, from `/tmp/claude-0/earned_chain/seed4/relay/save/`)
+
+- Attempt 4 never ran. main's `meadows_earned_bridge_segment.gd` now has
+  `_press_gate(prompt, accept_open = false)`, so the `bridge_crossing.gd` override failed to parse
+  (`SCRIPT ERROR: Parse Error: The function signature doesn't match the parent`) and the runner
+  would not compile. Fixed by matching the signature and passing `accept_open` through. The bridge
+  segment has already passed, so it was not re-run.
+- Attempt 5 (312 s) failed on the pre-Sigil walk back to riverwatch:
+  `Ordinary quarry/Warrens movement did not reach (230.0, -4.124298, 3670.0); player=(334.0885, 6.815587, 3756.698)`.
+  band3's own trail points (350,3760)→(230,3670) run through the Relay apparatus. The relay
+  helper goes around it on `relay_approach_loop`. This was an error in my route, not a game
+  defect. Log: `/tmp/claude-0/earned_chain/seed4_hall_attempt5/`.
+- Attempt 6: the walk back is now the relay helper's own forward road (`mill_path`) reversed:
+  band3 from the Mill road to (130,3980), then relay_approach_loop to (230,3670) beside the camp.
+- Attempt 6 got back to the camp (231,3670) by the new road, but the camp driver's walk to the
+  bed was aimed at `the creature bed 2 target=(422.7656, -8.533861, 7401.596)`: twice the camp's
+  (211,3700), roughly 3.7 km north. The straight-line walker then looped on
+  `[severed_spokes] player went over the edge at 227, -8, 4201 -- back to the road` 263 times,
+  and I killed it (PID I started) after about 20 min. Log: `/tmp/claude-0/earned_chain/seed4_hall_attempt6/`.
+
+## B6: Meadows defect: authored camp creature beds are placed at twice their authored coordinates
+
+- `scripts/world/rest_point.gd` sets `position = Vector3(x, ground, z)` on the rest point itself
+  (line ~88). `_build_creature_bed()` then adds `CampCreatureBed` as a CHILD with
+  `_bed.position = Vector3(x, ground, z)` (line ~152), which is the world `at` used as a local
+  offset. So the bed's global position is about 2×(x, ground, z). For riverwatch_rest (211,3700)
+  that gives (422.77, -8.53, 7401.60). The same pattern applies to every authored camp bed.
+  `night_rest.gd` heals only bedded creatures, so an authored camp cannot heal the party by
+  ordinary play. Not fixed here (Meadows file).
+- Alternatives considered: another authored camp (same defect); building a bed with the hammer
+  (only 1 wood carried); B5 ruling step 2. Taken: step 2. `PRE_SIGIL_CAMP := false` keeps the
+  camp code but switches it off, and `BENCH_CARE_PREPARES := false` means bench care
+  (Satchel revive/potion) no longer calls the helper's `_prepare()` / party-cycle. The helper's
+  own pre-captain `_prepare()` is unchanged. Attempt 7.
