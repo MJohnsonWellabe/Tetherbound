@@ -33,6 +33,9 @@ const JOIN_TIMEOUT_MS := 20_000
 const WORLD_SETTLE_FRAMES := 30
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const APP_ID_SETTING := "steam/initialization/app_data/app_id"
+## How long the in-world "invitation received" notice stays on screen.
+const INVITE_NOTICE_S := 8.0
+const INVITE_NOTICE_LAYER := 90
 
 signal invite_received(lobby_id: int)
 signal lobby_ready()
@@ -61,6 +64,12 @@ var _expected_host := 0
 var _hosting := false
 var _cancelled_joins: Dictionary = {}
 var _terminal_transport_error := ""
+## Last joinable value sent to Steam for the hosted lobby; null until the
+## first publish, so the first host-ready refresh always writes it.
+var _published_joinable: Variant = null
+var _notice_layer: CanvasLayer = null
+var _notice_label: Label = null
+var _notice_until_ms := 0
 
 ## Focused tests inject a signal-compatible fake without making the product
 ## depend on a mock framework. Production never calls this hook.
@@ -281,6 +290,37 @@ func is_hosting() -> bool:
 	return _hosting
 
 
+## True while this machine hosts a friends lobby whose game session already
+## seats LOBBY_CAPACITY players. The Players tab disables Invite on it, and the
+## lobby is published unjoinable so a Steam "Join Game" cannot even try.
+func is_full() -> bool:
+	if not _hosting:
+		return false
+	var session := _session()
+	return session != null and bool(session.call("is_active")) \
+		and int(session.call("peer_count")) >= LOBBY_CAPACITY
+
+
+## Mirrors the session's free seats onto Steam's joinable flag. Called on host
+## ready and on every admitted/departed peer.
+func _refresh_joinable() -> void:
+	if not _hosting or _current_lobby <= 0 or _steam == null \
+			or not _steam.has_method("setLobbyJoinable"):
+		return
+	var joinable := not is_full()
+	if _published_joinable != null and bool(_published_joinable) == joinable:
+		return
+	# Cached only when Steam accepted it, so a refused write is retried on the
+	# next peer change instead of being mistaken for the published value.
+	if bool(_steam.call("setLobbyJoinable", _current_lobby, joinable)):
+		_published_joinable = joinable
+	_touch()
+
+
+func _on_session_peers_changed(_peer_id: int, _character_id: String = "") -> void:
+	_refresh_joinable()
+
+
 ## A Steam socket is not lobby admission. Bind the native transport identity
 ## to current membership before Session prepares realms or sends its snapshot.
 func admission_error(peer_id: int, summary: Dictionary) -> String:
@@ -312,6 +352,10 @@ func invite_friends() -> bool:
 	if not _initialized or not _hosting or _state != "host_ready" or _current_lobby <= 0:
 		_set_error("Finish opening the friends lobby before inviting anyone.")
 		return false
+	if is_full():
+		_set_error("This world is full (%d/%d). A friend can be invited when a seat opens." \
+			% [LOBBY_CAPACITY, LOBBY_CAPACITY])
+		return false
 	if not _steam.has_method("isOverlayEnabled") or not bool(_steam.call("isOverlayEnabled")):
 		_set_error("The Steam invite overlay is unavailable. Check that the Steam overlay is enabled.")
 		return false
@@ -341,6 +385,10 @@ func cancel_join() -> void:
 func _process(_delta: float) -> void:
 	if _initialized and _steam != null:
 		_steam.call("run_callbacks")
+	# Back at the title the Join Friend screen answers the invite itself.
+	if _notice_layer != null and _notice_layer.visible \
+			and (Time.get_ticks_msec() >= _notice_until_ms or not _in_world_scene()):
+		_notice_layer.visible = false
 	match _state:
 		"host_waiting_for_world":
 			_tick_host_world()
@@ -436,6 +484,8 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 		_state = "idle"
 		_set_error("Steam could not publish that the friends lobby was ready.")
 		return
+	_published_joinable = null
+	_refresh_joinable()
 	lobby_ready.emit()
 	_touch()
 
@@ -478,6 +528,13 @@ func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, response:
 
 func _on_join_requested(lobby_id: int, friend_id: int) -> void:
 	_set_pending_invite(lobby_id, friend_id)
+	# The title screen answers an invitation itself. In a world nothing else
+	# would say one arrived, so the invite would only surface after the player
+	# happened to leave; say it here and keep it pending for the title.
+	if _hosting or _session_is_live() or _in_world_scene():
+		var who := pending_inviter_name(lobby_id)
+		_show_world_notice("%s invited you to their world. Save and return to the title screen to join." \
+			% (who if not who.is_empty() else "A Steam friend"))
 
 
 func _on_lobby_kicked(lobby_id: int, _admin_id: int, _due_to_disconnect: int) -> void:
@@ -517,6 +574,7 @@ func _on_transport_closed() -> void:
 	_expected_host = 0
 	_joining_lobby = 0
 	_hosting = false
+	_published_joinable = null
 	_state = "idle"
 	if _terminal_transport_error.is_empty():
 		_status = "Steam friends are ready."
@@ -536,7 +594,30 @@ func _publish_metadata(lobby_id: int) -> bool:
 	var build_ok := bool(_steam.call("setLobbyData", lobby_id, "build",
 		BUILD_FINGERPRINT.token(BUILD_FINGERPRINT.current())))
 	var ready_ok := bool(_steam.call("setLobbyData", lobby_id, "ready", "0"))
+	# The host world's stable id, so a joiner (and a rejoin) can name which
+	# world the invitation is for. Informational: admission still rests on
+	# lobby membership and the full fingerprint in Session's hello.
+	# Never a reason to fail hosting, and an empty id is not written at all.
+	var world_id := _host_world_id()
+	if not world_id.is_empty():
+		_steam.call("setLobbyData", lobby_id, "world_id", world_id)
 	return product_ok and protocol_ok and build_ok and host_ok and ready_ok
+
+
+func _host_world_id() -> String:
+	var game := get_parent()
+	var world: Variant = game.get("world") if game != null else null
+	if world is Object and is_instance_valid(world):
+		return str((world as Object).get("world_id"))
+	return ""
+
+
+## The world id a lobby's host published; empty when unknown.
+func lobby_world_id(lobby_id: int = 0) -> String:
+	var id := lobby_id if lobby_id > 0 else _current_lobby
+	if _steam == null or id <= 0:
+		return ""
+	return str(_steam.call("getLobbyData", id, "world_id")).strip_edges()
 
 
 func _compatibility_error(lobby_id: int) -> String:
@@ -595,6 +676,12 @@ func _bind_session() -> void:
 	if session != null and session.has_signal("snapshot_applied") \
 			and not session.is_connected("snapshot_applied", _on_snapshot_applied):
 		session.connect("snapshot_applied", _on_snapshot_applied)
+	if session != null and session.has_signal("peer_joined") \
+			and not session.is_connected("peer_joined", _on_session_peers_changed):
+		session.connect("peer_joined", _on_session_peers_changed)
+	if session != null and session.has_signal("peer_left") \
+			and not session.is_connected("peer_left", _on_session_peers_changed):
+		session.connect("peer_left", _on_session_peers_changed)
 
 
 func _session() -> Node:
@@ -637,6 +724,73 @@ func _fail_join(message: String, leave: bool) -> void:
 	_joining_lobby = 0
 	_state = "idle"
 	_set_error(message)
+
+
+## Closing the window must not leave this account sitting in a Steam lobby:
+## friends would keep seeing a joinable host that no longer exists until
+## Steam times the member out.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		leave_lobbies_for_quit()
+
+
+## For `get_tree().quit()` call sites, which never send WM_CLOSE_REQUEST.
+## A no-op when this game has no SteamLobby (stock build, solo, ENet).
+static func leave_for_quit(game: Node) -> void:
+	var lobby := game.get_node_or_null(^"SteamLobby") if game != null else null
+	if lobby != null and lobby.has_method("leave_lobbies_for_quit"):
+		lobby.call("leave_lobbies_for_quit")
+
+
+func leave_lobbies_for_quit() -> void:
+	if _joining_lobby != 0:
+		_cancelled_joins[_joining_lobby] = "cancelled"
+		_leave_lobby(_joining_lobby)
+		_joining_lobby = 0
+	if _current_lobby != 0:
+		_leave_lobby(_current_lobby)
+		_current_lobby = 0
+
+
+func world_notice_text() -> String:
+	if _notice_layer == null or not _notice_layer.visible or _notice_label == null:
+		return ""
+	return _notice_label.text
+
+
+func _in_world_scene() -> bool:
+	var tree := get_tree() if is_inside_tree() else null
+	if tree == null or tree.current_scene == null:
+		return false
+	return not tree.current_scene.is_in_group(&"title_screen") \
+		and tree.current_scene.scene_file_path != TITLE_SCENE
+
+
+## A passive top-of-screen line. It takes no input, so it never enters
+## input_owner and cannot steal a controller from whatever is open.
+func _show_world_notice(text: String) -> void:
+	if _notice_layer == null:
+		_notice_layer = CanvasLayer.new()
+		_notice_layer.name = "InviteNotice"
+		_notice_layer.layer = INVITE_NOTICE_LAYER
+		var panel := PanelContainer.new()
+		panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		panel.anchor_left = 0.5
+		panel.anchor_right = 0.5
+		panel.offset_left = -360.0
+		panel.offset_right = 360.0
+		panel.offset_top = 24.0
+		_notice_label = Label.new()
+		_notice_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_notice_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_notice_label.add_theme_font_size_override("font_size", 22)
+		_notice_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		panel.add_child(_notice_label)
+		_notice_layer.add_child(panel)
+		add_child(_notice_layer)
+	_notice_label.text = text
+	_notice_layer.visible = true
+	_notice_until_ms = Time.get_ticks_msec() + int(INVITE_NOTICE_S * 1000.0)
 
 
 func _leave_lobby(lobby_id: int) -> void:
