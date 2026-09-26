@@ -1,4 +1,4 @@
-extends "res://tests/smoke_cloudreach_continuous.gd"
+extends "res://tests/helpers/cloudreach_witness_route.gd"
 
 ## F06#2 witness (ACCEPTANCE §6.1 F06: "training, landing, invalid landing ...
 ## do not bypass a closed gate or lose an owned creature").
@@ -20,6 +20,8 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## updrafts Fly only sinks (2 m/s), so from the deck the flyer passes under
 ## the wind wall rather than testing it.
 ##
+## `--start=aerie` runs from the declared aerie fixture instead (see
+## tests/helpers/cloudreach_witness_route.gd); its evidence goes to `aerie-start/`.
 ## START STATE (disclosed): committed completed-Meadows fixture of
 ## smoke_cloudreach_continuous (the earned c1_arrival save is F06#0 and does not
 ## exist yet). `--from-save=<dir>` runs it from an earned save.
@@ -117,8 +119,8 @@ func _attempt_trial_escape() -> bool:
 
 ## This witness's event log lives beside its verdict.
 func _write_report() -> void:
-	output_dir = WITNESS_DIR
-	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
+	output_dir = _witness_dir(WITNESS_DIR)
+	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
 	super._write_report()
 
 
@@ -128,10 +130,10 @@ func _finish() -> void:
 		_require(upper_violations == 0, "F06#2 no frame inside sealed Upper Cloudreach before unlock (%d)" % upper_violations)
 		_require(landings.size() >= 3 and landings.all(func(l: Dictionary) -> bool: return bool(l.on_floor)), "F06#2 trial, shrine and aerie-return landings all on verified floor (%d)" % landings.size())
 		_require(game.party.members().size() == expected_party_size, "F06#2 party size unchanged after training")
-	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
-	var file := FileAccess.open(WITNESS_DIR + "/witness.json", FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
+	var file := FileAccess.open(_witness_dir(WITNESS_DIR) + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F06#2", "passed": completed_route and not failed,
-		"start_state": ("earned save " + from_save) if not from_save.is_empty() else "committed completed-Meadows fixture (smoke_cloudreach_continuous default; earned c1_arrival save not yet available)",
+		"start_state": _start_state_label(), "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
 		"stage": stage, "attempts": attempts, "landings": landings, "recoveries": recoveries,
 		"denials": denials.slice(0, 40), "trial_escape_violations": trial_escape_violations,

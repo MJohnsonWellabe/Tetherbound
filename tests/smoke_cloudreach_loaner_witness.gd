@@ -1,4 +1,4 @@
-extends "res://tests/smoke_cloudreach_continuous.gd"
+extends "res://tests/helpers/cloudreach_witness_route.gd"
 
 ## F06#3 witness (ACCEPTANCE §6.1 F06: "loaner paths ... do not bypass a closed
 ## gate or lose an owned creature"; CLAUDE.md: the loaner cannot create a sixth
@@ -16,6 +16,8 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ##     while the trial is the only authorization;
 ##   * after the route's save/reload, no loaner species is in the saved party.
 ##
+## `--start=aerie` runs from the declared aerie fixture instead (see
+## tests/helpers/cloudreach_witness_route.gd); its evidence goes to `aerie-start/`.
 ## START STATE (disclosed): committed completed-Meadows fixture of
 ## smoke_cloudreach_continuous (the earned c1_arrival save is F06#0 and does not
 ## exist yet). `--from-save=<dir>` runs it from an earned save.
@@ -46,8 +48,8 @@ func _party_keys() -> Array[String]:
 
 ## This witness's event log lives beside its verdict.
 func _write_report() -> void:
-	output_dir = WITNESS_DIR
-	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
+	output_dir = _witness_dir(WITNESS_DIR)
+	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
 	super._write_report()
 
 
@@ -134,10 +136,10 @@ func _finish() -> void:
 		_require(owned_carrier_frames == 0, "F06#3 no owned creature was used as the carrier")
 		var species: Array = game.party.members().map(func(m: RefCounted) -> String: return str(m.species_id))
 		_require(species.size() == expected_party_size and not species.has(loaner_species) and _party_keys() == initial_party_keys, "F06#3 reloaded party is the same members, no loaner: " + str(species))
-	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
-	var file := FileAccess.open(WITNESS_DIR + "/witness.json", FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
+	var file := FileAccess.open(_witness_dir(WITNESS_DIR) + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F06#3", "passed": completed_route and not failed,
-		"start_state": ("earned save " + from_save) if not from_save.is_empty() else "committed completed-Meadows fixture (smoke_cloudreach_continuous default; five non-Fly creatures; earned c1_arrival save not yet available)",
+		"start_state": _start_state_label(), "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
 		"stage": stage, "loaner_species": loaner_species, "pre_trial_probe": pre_trial_probe, "launches": launches,
 		"flight_frames": flight_frames, "loaner_frames": loaner_frames, "owned_carrier_frames": owned_carrier_frames,

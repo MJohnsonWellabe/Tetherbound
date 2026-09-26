@@ -1,4 +1,4 @@
-extends "res://tests/smoke_cloudreach_continuous.gd"
+extends "res://tests/helpers/cloudreach_witness_route.gd"
 
 ## F08#0 witness (ACCEPTANCE §6.1 F08: "Veyra's team and flight-relay exam are
 ## completed by ordinary input").
@@ -13,6 +13,8 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## reaches zero), the victory and relay flags commit once, and the network is
 ## disabled -- then the base route's save/reload/no-double-grant assertions run.
 ##
+## `--start=aerie` runs from the declared aerie fixture instead (see
+## tests/helpers/cloudreach_witness_route.gd); its evidence goes to `aerie-start/`.
 ## START STATE (disclosed): committed completed-Meadows fixture of
 ## smoke_cloudreach_continuous (five level-25 installed creatures). The earned
 ## c1_arrival save is F06#0 and does not exist yet; `--from-save=<dir>` runs it
@@ -34,8 +36,8 @@ func _log(kind: String, details: Dictionary = {}) -> void:
 
 ## This witness's event log lives beside its verdict.
 func _write_report() -> void:
-	output_dir = WITNESS_DIR
-	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
+	output_dir = _witness_dir(WITNESS_DIR)
+	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
 	super._write_report()
 
 
@@ -58,10 +60,10 @@ func _finish() -> void:
 		_require(battle_wins.count(VEYRA) == 1 and battle_losses.count(VEYRA) == 0, "F08#0 one Veyra victory, no loss")
 		_require(relay_state.values().all(func(v: bool) -> bool: return v) and relay_state.size() == 3, "F08#0 three relays struck: " + str(relay_state))
 		_require(_has("storm_anchor_network_disabled") and _has("captain_veyra_defeated"), "F08#0 exam outcome flags committed")
-	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
-	var file := FileAccess.open(WITNESS_DIR + "/witness.json", FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
+	var file := FileAccess.open(_witness_dir(WITNESS_DIR) + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F08#0", "passed": completed_route and not failed and live_combat,
-		"start_state": ("earned save " + from_save) if not from_save.is_empty() else "committed completed-Meadows fixture (smoke_cloudreach_continuous default; earned c1_arrival save not yet available)",
+		"start_state": _start_state_label(), "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal (NOT acceptance)", "accelerated_route_clock": accelerated,
 		"stage": stage, "battle_wins": battle_wins, "battle_losses": battle_losses,
 		"veyra_battle": veyra_battle, "veyra_opposition": veyra_opposition,
