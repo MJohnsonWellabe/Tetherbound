@@ -732,6 +732,22 @@ SCRIPT ERROR count is 0 in both runs.
   - Also fixed: a cast of a freed enemy body between trainer rounds.
 - **Runs 27 and 27b:** the earned witness at 597b435b6 was dispatched twice in parallel on the GitHub render runner (headless, 150 min). Workflow runs 36240544034 and 36240553015 use `--through-aftermath --witness-dir=user://f11_witness`. The reload runs locally in a new process from the runner's saved `user://f11_witness`.
 
+- **Runner run 27** (597b435b6, workflow run 36240544034):
+  - **Prefix:** PASS in 1194.6 s.
+  - **Crown step:** PASS in 2074.3 s. The camera turn first walked clear of a sparkit, from 7.3 m to 29.1 m.
+  - **Guardian step:** FAIL at 50.9 s: `ordinary Crown guardian approaches did not earn its clear receipt`. Four approaches, and no fight started. The party was worn: bramblebun fainted, terrapup at 48/443.
+  - **Safety:** trainer deaths 0, satchel recoveries 0, 3 strike hits.
+  - **Fix:** 5f5eebee5 logs the engage snapshot for every approach that does not engage.
+- **Runner run 27b** (same SHA, workflow run 36240553015):
+  - **Prefix:** PASS in 1209.6 s.
+  - **Crown step:** PASS in 2091.6 s.
+  - **Guardian / Wen / Rootgate:** PASS in 114.3 s.
+  - **Nysa:** the party rested at Lantern Hollow and reached Nysa at full health. The press no longer went to Tavi.
+  - **Dynamo step:** FAIL at 487.2 s: `officer_nysa_deepwood_rod dialogue did not start actual hosted combat`. No reason was logged.
+  - **Safety:** trainer deaths 0, satchel recoveries 0, 1 strike hit.
+  - **Fix:** f8da62b2a logs the opened conversation and every hub start, refusal and verdict event. The focused 8x Nysa smoke opens `stormwood_trainer_officer_nysa_deepwood_rod_challenge` and wins.
+- **Runner runs 28 and 28b** (f8da62b2a; includes the audio worker's ab693a7b8): dispatched in parallel as workflow runs 36245509089 and 36245510388.
+
 ### Open presentation items (reported to the coordinator, not fixed here)
 
 - Hesk's dialogue portrait is a young villager, and Wen's is an old man; neither matches the model (F10 two-peer frames `01_host_hesk_report`, `03_host_wen_records`).
