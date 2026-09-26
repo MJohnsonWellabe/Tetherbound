@@ -118,6 +118,8 @@ func _challenge() -> void:
 			await _press("interact")
 			presses += 1
 			print("challenge: press %d at %d ms, panel open=%s" % [presses, Time.get_ticks_msec() - t0, str(_panel.call("is_open"))])
+			if presses == 1 and not bool(_panel.call("is_open")):
+				_diagnose_and_activate()
 			for n in 8:
 				await physics_frame
 			continue
@@ -125,3 +127,20 @@ func _challenge() -> void:
 		if i % 120 == 0:
 			print("challenge: frame %d at %d ms, fighting=%s" % [i, Time.get_ticks_msec() - t0, str(_manager.call("is_fighting"))])
 	print("challenge: %d presses, fighting=%s" % [presses, str(_manager.call("is_fighting"))])
+
+
+## The press did not open the conversation. Say why (arbiter disabled, an
+## input owner holding the screen, a different winning offer), then fire the
+## arbiter's own activate() -- the same provider path a press takes -- so a
+## slow software-rendered frame cannot cost a 19-minute capture.
+func _diagnose_and_activate() -> void:
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	if arbiter == null:
+		print("challenge: no interaction arbiter")
+		return
+	var owner: Variant = load("res://scripts/ui/input_owner.gd").call("current", self)
+	var provider: Variant = arbiter.call("winning_provider")
+	print("challenge: arbiter enabled=%s input_owner=%s winner=%s" % [
+		str(arbiter.get("_enabled")), str(owner), str(provider)])
+	print("challenge: activate() -> %s, panel open=%s" % [
+		str(arbiter.call("activate")), str(_panel.call("is_open"))])
