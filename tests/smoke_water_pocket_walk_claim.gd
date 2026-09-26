@@ -23,8 +23,12 @@ extends SceneTree
 ## seam with a hotbar pickaxe (DISCLOSED FIXTURE: carried tool granted before
 ## the world loads) by the same real Interact press. The chain's 3 berries are
 ## Otto's return payout (tests/smoke_water_cradle_care.gd), not a nest find.
+## The Reedhaven leg (on unless `--no-reed`) walks from the Reedhaven arrival
+## to `reed_root_hollow` and gathers its reed patch with a hotbar knife
+## (DISCLOSED FIXTURE: carried knife granted with the pickaxe) by the same real
+## Interact press: the pocket's reed-fiber half. Its recipe half is not paid.
 ##   godot --headless --path . --script tests/smoke_water_pocket_walk_claim.gd
-##     [-- --only=<pocket_id>] [--no-cradle]
+##     [-- --only=<pocket_id>] [--no-cradle] [--no-reed]
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
@@ -37,6 +41,7 @@ const DRY_M := 0.8
 const MARGIN_M := 80.0
 const WAYPOINT_EVERY := 3
 const CRADLE_POCKET := "cradle_shell_nest"
+const REED_POCKET := "reed_root_hollow"
 
 var game: Node
 var world: Node3D
@@ -66,8 +71,9 @@ func _run() -> void:
 	game.reset_for_new_game()
 	game.current_realm = "water"
 	# Disclosed carried tool for the Cradle leg: Reef Stone needs a held pickaxe.
-	if game.inventory.add("pickaxe", 1) != 0 or not game.assign_hotbar(0, "pickaxe"):
-		_fail("could not create the disclosed carried pickaxe fixture")
+	if game.inventory.add("pickaxe", 1) != 0 or not game.assign_hotbar(0, "pickaxe") \
+			or game.inventory.add("knife", 1) != 0 or not game.assign_hotbar(1, "knife"):
+		_fail("could not create the disclosed carried pickaxe/knife fixture")
 		_finish()
 		return
 	world = WORLD.instantiate()
@@ -103,6 +109,8 @@ func _run() -> void:
 			and (only.is_empty() or only == CRADLE_POCKET)
 	if with_cradle:
 		results.append(await _cradle_leg(data))
+	if not OS.get_cmdline_user_args().has("--no-reed") and (only.is_empty() or only == REED_POCKET):
+		results.append(await _seam_leg(data, REED_POCKET, "reedhaven", {"reed_fiber": 3}))
 	for line: String in results:
 		print(line)
 	_finish()
@@ -119,6 +127,21 @@ func _walk_and_claim(row: Dictionary) -> String:
 	if walked == null:
 		return "POCKET %s FAIL walk (see FAIL above)" % pocket
 	var service: Node = world.get_node("WaterPickups")
+	# A gated pocket (Deep Watch's Tidecoil cache) must stay absent until its
+	# named resolution. DISCLOSED FIXTURE: after proving it absent, the gate's
+	# world flag is written directly, standing in for the Tidecoil fight that
+	# tests/smoke_water_deep_watch_chart.gd resolves for real.
+	var gates: Array = row.get("requires_world_flags", [])
+	var gate_note := "ungated"
+	if not gates.is_empty():
+		service.call("refresh")
+		await _frames(2)
+		_check(service.call("node_for", id) == null, "%s resident before its gate %s" % [id, gates])
+		for flag: Variant in gates:
+			game.world.flags.set_flag(str(flag))
+		service.call("refresh")
+		await _frames(2)
+		gate_note = "locked_before_fixture_flag(%s)" % ",".join(gates)
 	var candy: Node3D = service.call("node_for", id)
 	if not _check(candy != null, "%s candy not resident on arrival" % id):
 		return "POCKET %s FAIL not resident" % pocket
@@ -148,9 +171,9 @@ func _walk_and_claim(row: Dictionary) -> String:
 	var accepted := after == before + int(row.quantity) and receipt and gone
 	_check(accepted, "%s claim NOT accepted: refusal='%s' inventory %d->%d receipt=%s gone=%s dist_node=%.2f dist_analytic=%.2f" % [
 		id, _refusal, before, after, receipt, gone, to_node, to_analytic])
-	return "POCKET %s row=%s landing=%s walked=%.0fm legs=%d off_trail=%.0fm steepest_off_trail=%.1fdeg baked_y=%.3f analytic_y=%.3f gap=%+.3f claim_dist_node_3d=%.2f claim_dist_analytic_3d=%.2f result=%s" % [
+	return "POCKET %s row=%s landing=%s walked=%.0fm legs=%d off_trail=%.0fm steepest_off_trail=%.1fdeg baked_y=%.3f analytic_y=%.3f gap=%+.3f claim_dist_node_3d=%.2f claim_dist_analytic_3d=%.2f gate=%s result=%s" % [
 		pocket, id, _landing_id(str(row.island_id)), float(walked.metres), int(walked.legs), float(walked.spur_m), float(walked.spur_max_slope), baked, analytic,
-		baked - analytic, to_node, to_analytic, "ACCEPTED" if accepted else "REFUSED(%s)" % _refusal]
+		baked - analytic, to_node, to_analytic, gate_note, "ACCEPTED" if accepted else "REFUSED(%s)" % _refusal]
 
 
 ## Tidal Cradle (`side_water_cradle_care` gather): walk to the nest and mine
@@ -209,6 +232,67 @@ func _cradle_leg(data: Dictionary) -> String:
 	return "CRADLE %s walked=%.0fm legs=%d off_trail=%.0fm steepest_off_trail=%.1fdeg reef_stone=+%d berries=+%d [%s]" % [
 		CRADLE_POCKET, float(walked.metres), int(walked.legs), float(walked.spur_m), float(walked.spur_max_slope),
 		int(gains.reef_stone), int(gains.berries), ", ".join(notes)]
+
+
+## Generic one-seam pocket: walk from the island's arrival landing to the
+## pocket centre, equip the row's tool from the hotbar, and gather by one real
+## Interact press. Asserts exactly `expected` gained and the seam retired.
+func _seam_leg(data: Dictionary, pocket_id: String, island_id: String, expected: Dictionary) -> String:
+	var rows: Array = []
+	for row: Dictionary in data.pickups + data.harvest:
+		if str(row.get("reward_pocket_id", "")) == pocket_id:
+			rows.append(row)
+	if not _check(rows.size() == 1, "%s expects exactly one seam, found %d" % [pocket_id, rows.size()]):
+		return "SEAM %s FAIL rows=%d" % [pocket_id, rows.size()]
+	var pocket: Dictionary = {}
+	for spec: Dictionary in config.reward_pockets:
+		if str(spec.id) == pocket_id:
+			pocket = spec
+	var row: Dictionary = rows[0]
+	var id := str(row.id)
+	var centre := Vector3(float(row.position[0]), 0.0, float(row.position[2]))
+	var walked: Variant = await _walk_from(_landing(island_id), centre, 2.0, pocket_id)
+	if walked == null:
+		return "SEAM %s FAIL walk" % pocket_id
+	var service: Node = world.get_node("WaterPickups")
+	var body: Node3D = service.call("node_for", id)
+	if not _check(body != null, "%s seam not resident: %s" % [pocket_id, id]):
+		return "SEAM %s FAIL not resident" % pocket_id
+	var tool := str(row.get("gather_action", ""))
+	if not tool.is_empty() and tool != "hand" and str(game.equipped_tool) != tool:
+		await _tap(StringName("hotbar_%d" % (game.hotbar.find(tool) + 1)))
+		await _frames(20)
+		_check(str(game.equipped_tool) == tool, "hotbar did not equip the disclosed %s" % tool)
+	var prompt := body.get_node_or_null("Interactable")
+	var offered := await _approach_prompt(prompt, body.global_position)
+	if not _check(offered, "%s prompt never offered for %s; player=%s body=%s winner=%s" % [
+			pocket_id, id, player.global_position, body.global_position, arbiter.call("prompt")]):
+		return "SEAM %s FAIL prompt not offered" % pocket_id
+	var before := {}
+	for item: String in expected:
+		before[item] = game.inventory.count(item)
+	var main_item := str(row.item_id)
+	await _press_interact()
+	for _frame in 240:
+		await physics_frame
+		if game.inventory.count(main_item) > int(before.get(main_item, 0)):
+			break
+	await _frames(10)
+	var gains := {}
+	var paid := true
+	for item: String in expected:
+		gains[item] = game.inventory.count(item) - int(before[item])
+		paid = paid and int(gains[item]) == int(expected[item])
+	_check(paid, "%s paid %s, expected %s" % [pocket_id, gains, expected])
+	service.call("refresh")
+	await _frames(2)
+	var gone: bool = service.call("node_for", id) == null
+	_check(gone, "%s seam still resident after its one gather: %s" % [pocket_id, id])
+	var baked: float = world.call("ground_height_at", centre.x, centre.z)
+	var in_pocket := Vector2(centre.x, centre.z).distance_to(Vector2(float(pocket.position[0]), float(pocket.position[2])))
+	return "SEAM %s row=%s landing=%s walked=%.0fm legs=%d off_trail=%.0fm steepest_off_trail=%.1fdeg tool=%s baked_y=%.3f analytic_y=%.3f from_pocket_centre=%.2fm gains=%s result=%s" % [
+		pocket_id, id, _landing_id(island_id), float(walked.metres), int(walked.legs), float(walked.spur_m), float(walked.spur_max_slope),
+		tool, baked, field.height_at(centre.x, centre.z), in_pocket, gains, "PAID" if paid and gone else "FAIL"]
 
 
 ## Places the trainer on `landing` (the one disclosed position write) and walks
