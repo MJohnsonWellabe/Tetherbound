@@ -9,6 +9,10 @@ extends SceneTree
 ##       scenario=tools/net/proof_scenarios/<name>.json out=ralph/reports/<LANE>/<dir> [render=1]
 ##
 ## `out` should sit in the working tree so render.yml's artifact collects it.
+## `render=1` needs render.yml's `render` mode (it installs xvfb-run); in
+## `headless` mode it exits 2. The proof's own output is printed only when it
+## exits, so a render.yml timeout leaves run.log without it -- read PROOF.md and
+## the peer logs under `out` instead.
 ## A loopback run is local evidence, never internet or Steam acceptance.
 
 func _init() -> void:
