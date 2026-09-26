@@ -32,6 +32,9 @@ var _out := ""
 var _interval := 1.0
 var _max_frames := 40
 var _level := 53
+## Tell pairs (start + late) saved per opponent, so the frame budget spans the
+## whole roster instead of the first opponent's opening seconds.
+var _tells_per_opponent := 2
 var _log: Array = []
 ## Members, not locals: a GDScript lambda captures locals by value, so the
 ## telegraph signal writes these for the capture loop to read.
@@ -51,6 +54,7 @@ func _run() -> void:
 		elif arg.begins_with("--interval="): _interval = maxf(0.2, float(arg.trim_prefix("--interval=")))
 		elif arg.begins_with("--max-frames="): _max_frames = maxi(4, int(arg.trim_prefix("--max-frames=")))
 		elif arg.begins_with("--level="): _level = int(arg.trim_prefix("--level="))
+		elif arg.begins_with("--tells-per-opponent="): _tells_per_opponent = maxi(0, int(arg.trim_prefix("--tells-per-opponent=")))
 	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --trainer=, --out= and a rendering display")
 		quit(1)
@@ -146,8 +150,12 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 		var enemy: Node3D = manager.enemy_body()
 		var ally: Node3D = director.ally_body()
 		if is_instance_valid(enemy) and not watched.has(enemy.get_instance_id()):
-			watched[enemy.get_instance_id()] = true
+			watched[enemy.get_instance_id()] = 0
+			var uid := enemy.get_instance_id()
 			enemy.telegraph_started.connect(func(seconds: float) -> void:
+				if int(watched.get(uid, 0)) >= _tells_per_opponent:
+					return
+				watched[uid] = int(watched.get(uid, 0)) + 1
 				_tell = {"start": _fight_t, "seconds": seconds, "late_saved": false, "start_saved": false})
 		# Tell frames: the first frame of the tell and the frame before it lands.
 		if not _tell.is_empty():
