@@ -54,6 +54,7 @@ extends SceneTree
 ##      hands this a real `MultiplayerSpawner` -- 2.C owns the rigs; noted here
 ##      so it is not forgotten when it does.
 
+const REMOTE_CREATURE_TP := preload("res://scripts/creatures/remote_creature.gd")
 const GATE_F_HARNESS := preload("res://tools/gate_f/operator_harness.gd")
 const PROBE := preload("res://scripts/debug/gate_f_probe.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
@@ -2308,7 +2309,11 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 	var at: Array = args.get("at", []) as Array
 	if at.size() != 3:
 		return {"verdict": "ERROR", "detail": "teleport needs args.at = [x, y, z]"}
-	player.global_position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+	# A teleport, not a motion (`remote_creature.teleport_body`): set as a plain
+	# position, GodotPhysics sweeps the body across the whole jump and the next
+	# move_and_slide against Terrain3D collision took ~4.4 s for a 4 km jump
+	# (F14#3), stalling the peer the proof is measuring.
+	REMOTE_CREATURE_TP.teleport_body(player as PhysicsBody3D, Vector3(float(at[0]), float(at[1]), float(at[2])))
 	player.velocity = Vector3.ZERO
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
