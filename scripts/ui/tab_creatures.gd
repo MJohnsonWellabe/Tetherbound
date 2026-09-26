@@ -139,7 +139,9 @@ const APPRAISAL_TOTAL := 5
 const APPRAISAL_PIP_RADIUS := 5.0
 const APPRAISAL_PIP_GAP := 16.0
 
-const ROW_HEIGHT := 100.0
+## Two FONT_READ lines plus 6 px insets. Sized so the release ceremony's five
+## belt rows, caption and newcomer row still fit the content height at 720p.
+const ROW_HEIGHT := 86.0
 const ROW_WIDTH := 600.0
 const CHIP_SIZE := Vector2(74.0, 74.0)
 ## The second line of the charged move sat only ~3 logical pixels above the
@@ -357,7 +359,7 @@ func build() -> void:
 	add_child(row)
 
 	var list := VBoxContainer.new()
-	list.add_theme_constant_override("separation", 8)
+	list.add_theme_constant_override("separation", 6)
 	list.custom_minimum_size = Vector2(ROW_WIDTH + SELECTED_POKE, 0)
 	row.add_child(list)
 	_list = list
@@ -466,8 +468,8 @@ func _build_slot_row(index: int) -> Control:
 	content.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	content.offset_left = 14
 	content.offset_right = -14
-	content.offset_top = 10
-	content.offset_bottom = -10
+	content.offset_top = 6
+	content.offset_bottom = -6
 	content.add_theme_constant_override("separation", 14)
 	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	button.add_child(content)
@@ -496,7 +498,7 @@ func _build_slot_row(index: int) -> Control:
 	var text_col := VBoxContainer.new()
 	text_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text_col.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	text_col.add_theme_constant_override("separation", 4)
+	text_col.add_theme_constant_override("separation", 0)
 	text_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_child(text_col)
 
