@@ -118,7 +118,9 @@ func _trial() -> bool:
 	await _wait_on_floor()
 	if not _require(not pre_trial_probe.flying_after_double_jump, "F06#3 no loaner flight before the trial starts"): return false
 	if not _require(not pre_trial_probe.eligible_carrier, "F06#3 no loaner offered before the trial starts"): return false
-	return await super._trial()
+	if not await super._trial(): return false
+	# The loaner itself must be refused by a closed gate, not just never tested.
+	return await _sealed_upper_attempt()
 
 
 func _wait_on_floor() -> void:
@@ -135,6 +137,7 @@ func _finish() -> void:
 		_require(not launches.is_empty() and launches.all(func(l: Dictionary) -> bool: return bool(l.loaner) and int(l.party_size) == expected_party_size),
 			"F06#3 every flight was the loaner carrying the unchanged five (%d launches)" % launches.size())
 		_require(owned_carrier_frames == 0, "F06#3 no owned creature was used as the carrier")
+		_require(not sealed_attempt.is_empty() and int(sealed_attempt.refused_after_frames) >= 0, "F06#3 the loaner flight was refused by the sealed Upper wind wall")
 		var species: Array = game.party.members().map(func(m: RefCounted) -> String: return str(m.species_id))
 		_require(species.size() == expected_party_size and not species.has(loaner_species) and _party_keys() == initial_party_keys, "F06#3 reloaded party is the same members, no loaner: " + str(species))
 	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
@@ -142,7 +145,7 @@ func _finish() -> void:
 	file.store_string(JSON.stringify({"criterion": "F06#3", "passed": completed_route and not failed,
 		"start_state": _start_state_label(), "leg": leg, "leg_persistence": leg_persistence, "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
-		"stage": stage, "loaner_species": loaner_species, "pre_trial_probe": pre_trial_probe, "launches": launches,
+		"stage": stage, "sealed_attempt": sealed_attempt, "loaner_species": loaner_species, "pre_trial_probe": pre_trial_probe, "launches": launches,
 		"flight_frames": flight_frames, "loaner_frames": loaner_frames, "owned_carrier_frames": owned_carrier_frames,
 		"initial_party_keys": initial_party_keys, "violations": violations, "final_party": game.party.members().map(func(m: RefCounted) -> String: return str(m.species_id)),
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}, "  "))

@@ -12,13 +12,20 @@ extends "res://tests/helpers/cloudreach_witness_route.gd"
 ## shrine, return to the aerie) is recorded and must be a verified floor. The
 ## whole route asserts zero trial frames outside the marked volume and zero
 ## frames inside sealed Upper Cloudreach before its unlock.
-## DISCLOSED LIMIT: the invalid attempt is a refused one. Refusal zeroes the
-## outward velocity, so ordinary input never reaches `recover_to_anchor`; the
-## anchor-recovery half of "invalid-landing recovery" is covered separately by
-## smoke_cloudreach_fall_recovery and the fly_controller tests, not here.
-## A sealed-Upper landing attempt from the aerie was dropped: outside authored
-## updrafts Fly only sinks (2 m/s), so from the deck the flyer passes under
-## the wind wall rather than testing it.
+## Then, after Fly unlocks and before the shrine windlass opens the upper
+## route, `_sealed_upper_attempt` (tests/helpers/cloudreach_witness_route.gd)
+## climbs the authored aerie lift by holding Jump, glides at the sealed
+## `cloudreach_upper` wind wall, keeps pressing and tries to descend onto the
+## sealed shelf: the wall must refuse it, it is never inside the sealed box,
+## and it glides back to a verified landing on the aerie deck.
+## DISCLOSED LIMIT: the invalid attempt here is a REFUSED landing. Refusal
+## zeroes the inward velocity, so ordinary input never reaches the production
+## `recover_to_anchor` path. Fly anchor recovery is covered separately by
+## tests/smoke_cloudreach_closed_gate_seal.gd legs (i) (recovery to the
+## verified launch anchor) and (j) (carried out of sealed volumes with the
+## anchor cleared) and tests/test_fly_traversal.gd (trapped-flyer carry-out,
+## airborne save/load anchor, invalid airborne anchor). The exhausted-fall
+## recovery branch (fly_controller.gd, `state == "exhausted"`) has no test.
 ##
 ## `--start=aerie` runs from the declared aerie fixture instead (see
 ## tests/helpers/cloudreach_witness_route.gd); its evidence goes to `aerie-start/`.
@@ -85,7 +92,8 @@ func _trial() -> bool:
 		if index == 0 and not await _attempt_trial_escape(): return false
 	await _capture("trial-airborne")
 	if not await _land(_vec(physical.config.trial.landing_position)): return false
-	return _require(_has("fly_traversal_unlocked"), "Ordered airborne rings and landing unlocked Fly")
+	if not _require(_has("fly_traversal_unlocked"), "Ordered airborne rings and landing unlocked Fly"): return false
+	return await _sealed_upper_attempt()
 
 
 ## Attempt 1: ordinary stick input out of the trial volume. Try each open
@@ -129,14 +137,14 @@ func _finish() -> void:
 	if completed_route and not failed:
 		_require(trial_escape_violations == 0, "F06#2 no trial frame outside the marked volume (%d)" % trial_escape_violations)
 		_require(upper_violations == 0, "F06#2 no frame inside sealed Upper Cloudreach before unlock (%d)" % upper_violations)
-		_require(landings.size() >= 3 and landings.all(func(l: Dictionary) -> bool: return bool(l.on_floor)), "F06#2 trial, shrine and aerie-return landings all on verified floor (%d)" % landings.size())
+		_require(landings.size() >= 4 and landings.all(func(l: Dictionary) -> bool: return bool(l.on_floor)), "F06#2 trial, refused-attempt return, shrine and aerie-return landings all on verified floor (%d)" % landings.size())
 		_require(game.party.members().size() == expected_party_size, "F06#2 party size unchanged after training")
 	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
 	var file := FileAccess.open(_witness_dir(WITNESS_DIR) + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F06#2", "passed": completed_route and not failed,
 		"start_state": _start_state_label(), "leg": leg, "leg_persistence": leg_persistence, "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
-		"stage": stage, "attempts": attempts, "landings": landings, "recoveries": recoveries,
+		"stage": stage, "attempts": attempts, "sealed_attempt": sealed_attempt, "landings": landings, "recoveries": recoveries,
 		"denials": denials.slice(0, 40), "trial_escape_violations": trial_escape_violations,
 		"upper_violations": upper_violations,
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}, "  "))

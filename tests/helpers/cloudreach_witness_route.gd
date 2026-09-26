@@ -41,6 +41,8 @@ var skipped_steps: Array[String] = []
 var start_record: Dictionary = {}
 var finish_done := false
 var leg_persistence: Dictionary = {}
+var sealed_attempt: Dictionary = {}
+var sealed_upper_box := AABB()
 
 
 func _run() -> void:
@@ -73,6 +75,24 @@ func _purpose(purpose: String, choice: String) -> void:
 			"team": _team_snapshot(), "note": "Declared fixture: Act I flags seeded before scene build; single placement beside the aerie repair; route from the aerie camp rest onward is ordinary input"}
 		_log("witness_start_state", start_record)
 	super._purpose(purpose, choice)
+
+
+## In an aerie start the base route's fiber lines would read as gathered; say
+## what actually happened.
+func _log(kind: String, details: Dictionary = {}) -> void:
+	if start_point == "aerie" and (kind == "preparation_ready" or (kind == "assertion" and str(details.get("label", "")) == "Gathered 3 Gale Fiber")):
+		details = details.duplicate()
+		details["fixture_note"] = "Declared --start=aerie grant; not gathered by input in this run"
+		if kind == "preparation_ready": details["source"] = "Declared --start=aerie fixture grant"
+	super._log(kind, details)
+
+
+## A failure after the verdict was written must not vanish silently.
+func _fail(message: String) -> bool:
+	if finish_done:
+		push_error("LATE FAIL after witness verdict: " + message)
+		print("CLOUDREACH WITNESS LATE FAIL " + message)
+	return super._fail(message)
 
 
 func _skip(kind: String, id: String) -> bool:
@@ -141,7 +161,10 @@ func _rest(id: String) -> bool:
 func _return_to_aerie() -> bool:
 	var ok: bool = await super._return_to_aerie()
 	if not ok or leg != "flight": return ok
+	if not _require(not skipping_to_aerie, "Declared start skip mode ended at the aerie camp rest"): return false
 	await _frames(30)
+	# A witness-owned save directory, so concurrent witnesses never share a slot.
+	game.save_system = SAVE.new("user://cloudreach_witness_" + str(get_script().resource_path.get_file().get_basename()))
 	paused = true
 	var before := _party_persistence_snapshot()
 	var flags_before := _flag_snapshot()
@@ -161,6 +184,65 @@ func _return_to_aerie() -> bool:
 	completed_route = true
 	_finish()
 	return false
+
+
+## A genuine sealed-airspace landing attempt after Fly unlock and before the
+## shrine windlass opens Upper Cloudreach, by ordinary input only: from the
+## aerie deck, deploy, climb the authored `cloudreach_aerie_lift` by holding
+## Jump, glide north at the sealed `cloudreach_upper` wind wall (the lift's
+## ceiling keeps the glide above the wall's floor), keep pressing and then try
+## to descend onto the sealed shelf. The wall must refuse the flyer and it must
+## never be inside the sealed box; it then glides back and lands on the deck.
+func _sealed_upper_attempt() -> bool:
+	var physical_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_physical_runtime.json"))
+	for spec: Dictionary in physical_config.restrictions:
+		if str(spec.id) == "cloudreach_upper": sealed_upper_box = AABB(_vec(spec.position), _vec(spec.size))
+	var landing := _vec(physical.config.trial.landing_position)
+	var previous_stage := stage
+	stage = "witness_sealed_upper_attempt"
+	if not _require(_has("fly_traversal_unlocked") and not _has("cloudreach_upper_route_unlocked"), "Sealed attempt runs after Fly unlock and before the windlass"): return false
+	if not await _deploy(): return false
+	var denial_reasons: Array[String] = []
+	var on_denied := func(reason: String) -> void: denial_reasons.append(reason)
+	fly.denied.connect(on_denied)
+	var peak_y := -INF
+	for frame in 1500:
+		if not fly.is_flying() or player.global_position.y >= 770.0: break
+		_steer(Vector3(450, 0, 3200) - Vector3(player.global_position.x, 0, player.global_position.z), 0.3)
+		_input("jump", 1)
+		await _frames(1)
+		if failed: break
+	peak_y = player.global_position.y
+	var target := Vector3(450, 700, sealed_upper_box.position.z + 150.0)
+	var refused_frame := -1
+	var inside_frames := 0
+	var closest_gap := INF
+	for frame in 3600:
+		if not fly.is_flying() or failed: break
+		_steer(target - player.global_position, 1.0)
+		_input("jump", 0)
+		# After the first refusal keep pressing for 1 s, then try to set down there.
+		_input("fly_descend", 1 if refused_frame >= 0 and frame > refused_frame + 60 else 0)
+		await _frames(1)
+		closest_gap = minf(closest_gap, sealed_upper_box.position.z - player.global_position.z)
+		if sealed_upper_box.has_point(player.global_position): inside_frames += 1
+		if refused_frame < 0 and denial_reasons.any(func(r: String) -> bool: return r.contains("cloudreach_upper")): refused_frame = frame
+		if refused_frame >= 0 and frame > refused_frame + 180: break
+	_release()
+	fly.denied.disconnect(on_denied)
+	sealed_attempt = {"peak_y_after_lift": peak_y, "target": str(target), "refused_after_frames": refused_frame,
+		"denials": denial_reasons.slice(0, 5), "closest_gap_to_box_m": closest_gap, "frames_inside_sealed_box": inside_frames,
+		"end": str(player.global_position), "still_flying": fly.is_flying(), "on_floor": player.is_on_floor()}
+	_log("witness_sealed_attempt", sealed_attempt)
+	if not _require(refused_frame >= 0, "Sealed Upper Cloudreach wind wall refuses the flyer"): return false
+	if not _require(inside_frames == 0 and not sealed_upper_box.has_point(player.global_position), "Flyer is never inside sealed Upper Cloudreach"): return false
+	# Glide home by ordinary input and land on the aerie deck.
+	if not fly.is_flying():
+		if not await _deploy(): return false
+	if not await _fly_to(Vector3(landing.x + 30, maxf(landing.y + 25.0, minf(player.global_position.y, 760.0)), landing.z), 8.0): return false
+	if not await _land(landing): return false
+	stage = previous_stage
+	return _require(not _has("cloudreach_upper_route_unlocked"), "Refused attempt changed no unlock flag")
 
 
 ## `_finish` can be reached twice when a declared leg ends inside a route step
