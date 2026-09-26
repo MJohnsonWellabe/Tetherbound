@@ -146,11 +146,12 @@
     "_comment": "F05 / WORLD 3.2. When EVERY eligible participant refused the freed Veridian, it stands unengageable among the healed Highfield herd: not catchable, no prompt, no fight, no reward, never a second offer. Any acceptance means it is absent. Decided from the per-character world receipts `legendary_resolution:*` (stronghold_climax.gd::all_refused), so every peer and every reload agree. `at` is world [x, z] on the Highfield (map_landmarks `the_highfield`, centre [400, 5900], radius 65), among the ordinary Highfield herd (grazing around [377.5, 5855.3], the herd point tools/capture_highfield_hero_identity.gd measures) and inside that tool's authored hero framing from the stand at [400, 5832]. Two earlier sites were rejected on in-engine finale frames: [408, 5862] read as a stag beside the stock-camp cart, apart from the herd, and [432, 5851], by the bull, was lost in the tree line from every vantage. A third, [390, 5860], was judged blind as 'distinct but not part of a herd' (VISUAL-EVIDENCE.md, frames 08-10), so it now stands 6 m from the measured herd point, inside the grazing group rather than at its edge. TUNABLE.",
     "species": "veridian",
     "at": [
-      383.0,
-      5857.0
+      406.0,
+      5877.0
     ],
-    "facing_deg": 200.0,
-    "climax_node": "StrongholdClimax"
+    "facing_deg": 187.6,
+    "climax_node": "StrongholdClimax",
+    "_comment_site": "F05#3: (406, 5877) is the Highfield's open meadow on the authored hero framing (the hero stand at (400, 5832) looks toward (408, 5870)): the nearest scatter tree or solid bush is 23.8 m away and the ground is within 1.2 m over 8 m (measured from the baked scatter's collision batches and soft occluders). The former site (383, 5857) had a trunk 1.2 m from the stag and hid it from every vantage. Facing the hero stand."
   },
   "herd_return": {
     "enabled": true,
@@ -158,44 +159,44 @@
     "species": "meadowhart",
     "members": [
       [
-        386.4,
-        5866.4,
+        409.4,
+        5886.4,
         215.0,
         1.0
       ],
       [
-        390.8,
-        5861.5,
+        413.8,
+        5881.5,
         250.0,
         1.06
       ],
       [
-        392.9,
-        5853.4,
+        415.9,
+        5873.4,
         330.0,
         1.0
       ],
       [
-        374.1,
-        5853.8,
+        397.1,
+        5873.8,
         60.0,
         1.1
       ],
       [
-        372.7,
-        5860.8,
+        395.7,
+        5880.8,
         95.0,
         1.04
       ],
       [
-        378.5,
-        5864.8,
+        401.5,
+        5884.8,
         170.0,
         1.0
       ],
       [
-        380.7,
-        5869.8,
+        403.7,
+        5889.8,
         185.0,
         1.08
       ]
