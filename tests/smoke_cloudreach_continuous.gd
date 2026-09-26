@@ -9,7 +9,17 @@ extends SceneTree
 ## combat uses the balance lane's controller-input pilot at normal 1x from
 ## challenge input through the real victory/loss/timeout callback. No
 ## Cloudreach objective is seeded.
+##
+## F06/C1 earned handoff: `-- --from-save=res://tests/fixtures/earned_saves/c1_arrival`
+## skips the fixture party/flags entirely and loads that directory's `save/`
+## (slot 1, copied to a scratch user:// dir) through the production title's
+## Load list. The earned belt then is the permanent party for every identity
+## check. `--leg=opening` stops with a LEG PASS after the arrival leg
+## (arrival road, Aila, the lower-west anchor of the first region). Without
+## `--from-save` the default fixture behaviour is unchanged.
 const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
+const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
+const EARNED_SLOT := 1
 const SAVE := preload("res://scripts/save/save_game.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -66,6 +76,10 @@ var battle_starts: Array[String] = []
 var battle_wins: Array[String] = []
 var battle_losses: Array[String] = []
 var recovery_choices: Array[Dictionary] = []
+var from_save := ""
+var leg := ""
+var earned_scratch := ""
+var expected_party_size := 5
 
 
 func _init() -> void:
@@ -78,41 +92,55 @@ func _run() -> void:
 	root.content_scale_size = Vector2i(1920,1200)
 	accelerated = "--accelerated" in OS.get_cmdline_user_args()
 	live_combat = "--live-combat" in OS.get_cmdline_user_args()
-	output_dir = OUTPUT_ROOT + ("/live" if live_combat else "/mechanics-only")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--from-save="): from_save = arg.trim_prefix("--from-save=").trim_suffix("/")
+		elif arg.begins_with("--leg="): leg = arg.trim_prefix("--leg=")
+	output_dir = OUTPUT_ROOT + ("/live" if live_combat else "/mechanics-only") + ("" if from_save.is_empty() else "-from-earned-save")
 	if accelerated:
 		Engine.time_scale = 8.0
 		Engine.physics_ticks_per_second = 480
 		Engine.max_physics_steps_per_frame = 32
 	DirAccess.make_dir_recursive_absolute(output_dir)
 	game = root.get_node("Game")
-	game.reset_for_new_game()
-	var fixture_dir := "user://cloudreach_continuous_acceptance_live" if live_combat else "user://cloudreach_continuous_acceptance_mechanics"
-	game.save_system = SAVE.new(fixture_dir)
-	# This exact test-owned slot may have been autosaved by a previous camp
-	# night. Remove it before building the declared fresh Meadows-complete
-	# fixture; no player save directory is touched.
-	var stale_slot := str(game.save_system.call("slot_path", 0))
-	if FileAccess.file_exists(stale_slot):
-		DirAccess.remove_absolute(ProjectSettings.globalize_path(stale_slot))
-	# Explicit initial save-fixture only: no Cloudreach chapter progress.
-	for flag: String in ["warden_defeated", "realm_key_cloudreach", "realm_heart_meadows_earned", "realm_heart_meadows_placed", "realm_gate_cloudreach_unlocked"]:
-		game.progression.set_flag(flag)
-	game.realm_hearts.activate("meadows", game.progression)
-	# Deliberately no owned Fly carrier: a valid full Meadows team must not
-	# deadlock the chapter or require a hidden sixth slot.
-	for species: String in ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"]:
-		var member: RefCounted = SPECIES.spawn(species)
-		member.set_level(25, PROGRESSION.config())
-		game.party.add(member)
-		initial_party_ids.append(member.get_instance_id())
-	for item: String in ["knife", "axe", "pickaxe"]:
-		if not game.items.definition(item).is_empty():
-			game.inventory.add(item, 1)
-	game.assign_hotbar(0, "knife")
-	game.current_realm = "cloudreach"
-	world = SCENE.instantiate()
-	root.add_child(world)
-	current_scene = world
+	if not from_save.is_empty():
+		# F06/C1: start from the EARNED Meadows handoff save instead of the
+		# fixture party/flags. The save is copied to a scratch user:// dir (the
+		# committed files are never written) and loaded through the production
+		# title's Load list, exactly as a player resumes.
+		if not await _load_earned_handoff():
+			failed = true
+			print("CLOUDREACH CONTINUOUS FAIL stage=boot from_save=%s" % from_save)
+			quit(1)
+			return
+	else:
+		game.reset_for_new_game()
+		var fixture_dir := "user://cloudreach_continuous_acceptance_live" if live_combat else "user://cloudreach_continuous_acceptance_mechanics"
+		game.save_system = SAVE.new(fixture_dir)
+		# This exact test-owned slot may have been autosaved by a previous camp
+		# night. Remove it before building the declared fresh Meadows-complete
+		# fixture; no player save directory is touched.
+		var stale_slot := str(game.save_system.call("slot_path", 0))
+		if FileAccess.file_exists(stale_slot):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(stale_slot))
+		# Explicit initial save-fixture only: no Cloudreach chapter progress.
+		for flag: String in ["warden_defeated", "realm_key_cloudreach", "realm_heart_meadows_earned", "realm_heart_meadows_placed", "realm_gate_cloudreach_unlocked"]:
+			game.progression.set_flag(flag)
+		game.realm_hearts.activate("meadows", game.progression)
+		# Deliberately no owned Fly carrier: a valid full Meadows team must not
+		# deadlock the chapter or require a hidden sixth slot.
+		for species: String in ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"]:
+			var member: RefCounted = SPECIES.spawn(species)
+			member.set_level(25, PROGRESSION.config())
+			game.party.add(member)
+			initial_party_ids.append(member.get_instance_id())
+		for item: String in ["knife", "axe", "pickaxe"]:
+			if not game.items.definition(item).is_empty():
+				game.inventory.add(item, 1)
+		game.assign_hotbar(0, "knife")
+		game.current_realm = "cloudreach"
+		world = SCENE.instantiate()
+		root.add_child(world)
+		current_scene = world
 	player = world.get_node("Player")
 	chapter = world.get_node("CloudreachChapter")
 	physical = chapter.physical_runtime()
@@ -151,7 +179,7 @@ func _run() -> void:
 			last_reported_denial = reason
 			_log("flight_denied", {"reason":reason,"state":fly.state,"velocity":str(player.velocity)}))
 	await _frames(20)
-	_log("precondition", {"description": "Fresh completed-Meadows fixture; five level-25 installed creatures; active Meadows Heart; separate proven handoff reused", "accelerated": accelerated,"combat_mode":"live_input" if live_combat else "mechanics_only_test_lethal", "team":_team_snapshot(),"inventory":_inventory_snapshot()})
+	_log("precondition", {"description": ("EARNED Meadows handoff save loaded through the title Load list: " + from_save) if not from_save.is_empty() else "Fresh completed-Meadows fixture; five level-25 installed creatures; active Meadows Heart; separate proven handoff reused","from_save":from_save,"leg":leg,"flags":_flag_snapshot().size(), "accelerated": accelerated,"combat_mode":"live_input" if live_combat else "mechanics_only_test_lethal", "team":_team_snapshot(),"inventory":_inventory_snapshot()})
 	_purpose("Orient in Cloudreach and learn why the routes are broken", "Take the authored arrival road, inspect its landmark, and gather useful preparation instead of beelining")
 	await _capture("arrival")
 	stage = "arrival_to_aila"
@@ -172,6 +200,10 @@ func _run() -> void:
 	_purpose("Map the lower storm anchors and reconnect the stranded causeway", "Use the grounded bridge network and accept required encounters; optional trainers remain optional")
 	if not await _navigate(chapter.get_node("lower_west").global_position): return _finish()
 	if not await _interact(chapter.get_node("lower_west/Interactable"), "storm_anchor_lower_west_mapped"): return _finish()
+	if leg == "opening":
+		_log("leg_complete", {"leg":leg,"team":_team_snapshot(),"inventory":_inventory_snapshot(),"flags":_flag_snapshot().size()})
+		completed_route = true
+		return _finish()
 	stage = "lower_east_anchor"
 	var causeway_fiber: Node3D = world.get_node("CloudreachResources/cr_node_gale_fiber_causeway")
 	if not await _navigate(causeway_fiber.global_position): return _finish()
@@ -332,7 +364,7 @@ func _frames(count: int) -> void:
 func _record_frame() -> void:
 	# Count every production physics tick, including ticks while input waits for
 	# an idle frame. Coroutine-only counting understated those waits.
-	if game != null and game.party.members().size() != 5:
+	if game != null and game.party.members().size() != expected_party_size:
 		_fail("Permanent party must remain exactly the original five; loaner is never owned")
 	simulated_seconds += 1.0 / 60.0
 	if is_instance_valid(player):
@@ -1096,7 +1128,7 @@ func _write_report() -> void:
 	file.store_string(JSON.stringify({"passed":route_complete and live_combat,
 		"mechanics_route_completed":route_complete,"evidence_scope":"live_combat_acceptance" if live_combat else "mechanics_only_test_lethal",
 		"combat_mode":"live_input_spacer_switch" if live_combat else "test_only_lethal",
-		"stage":stage,"distance_m":distance_m,"longest_dead_travel_seconds":longest_dead_travel,
+		"stage":stage,"from_save":from_save,"leg":leg,"leg_completed":not failed and stage==("leg_complete_" + leg),"distance_m":distance_m,"longest_dead_travel_seconds":longest_dead_travel,
 		"accelerated":accelerated,"activity_intervals":activity_intervals,"recovery_choices":recovery_choices,"events":rows},"  "))
 
 
@@ -1112,8 +1144,85 @@ func _finish() -> void:
 	_release()
 	if not completed_route and not failed:
 		_fail("Harness returned before reaching the final persistence/non-entry assertions")
-	if completed_route and not failed:stage="complete"
+	if completed_route and not failed:stage="complete" if leg.is_empty() else "leg_complete_" + leg
 	_write_report()
 	var verdict := "FAIL" if failed else ("PASS" if live_combat else "MECHANICS-ONLY PASS")
+	if not leg.is_empty() and not failed: verdict = "LEG PASS leg=%s %s" % [leg, "live" if live_combat else "mechanics-only"]
+	if not from_save.is_empty(): verdict += " from_save=" + from_save
+	if not earned_scratch.is_empty(): _remove_tree(ProjectSettings.globalize_path(earned_scratch))
 	print("CLOUDREACH CONTINUOUS %s stage=%s distance_m=%.1f dead_travel_max_s=%.1f"%[verdict,stage,distance_m,longest_dead_travel])
 	quit(1 if failed else 0)
+
+
+## Copy `<from_save>/save/` to a scratch user:// dir and load slot EARNED_SLOT
+## through the production title's Load list (the fixture test's path). No flag,
+## party, inventory or position is written here.
+func _load_earned_handoff() -> bool:
+	var source := ProjectSettings.globalize_path(from_save + "/save/")
+	if not DirAccess.dir_exists_absolute(source):
+		print("CLOUDREACH CONTINUOUS earned save dir is missing: " + source)
+		return false
+	earned_scratch = "user://cloudreach_continuous_from_earned_%d/" % OS.get_process_id()
+	_copy_tree(source, ProjectSettings.globalize_path(earned_scratch))
+	game.save_system = SAVE.new(earned_scratch)
+	var info: Dictionary = game.save_slot_info(EARNED_SLOT)
+	if str(info.get("realm", "")) != "cloudreach":
+		print("CLOUDREACH CONTINUOUS earned slot is not a Cloudreach save: " + str(info))
+		return false
+	var title := (load(TITLE_SCENE) as PackedScene).instantiate()
+	root.add_child(title)
+	current_scene = title
+	for _i in 10:
+		await process_frame
+	(title.get("_load_button") as Button).pressed.emit()
+	await process_frame
+	var chosen: Button = null
+	for node: Node in (title.get("_load_box") as Node).get_children():
+		if node is Button and (node as Button).text.begins_with("Save %d" % EARNED_SLOT) and not (node as Button).disabled:
+			chosen = node
+	if chosen == null:
+		print("CLOUDREACH CONTINUOUS the title's Load list does not offer Save %d" % EARNED_SLOT)
+		return false
+	chosen.pressed.emit()
+	for _frame in 3600:
+		await process_frame
+		var scene := current_scene
+		if scene != null and scene != title and is_instance_valid(scene) and scene.get_node_or_null("Player") != null \
+				and str(game.pending_realm_entry).is_empty() and bool(game.call("_realm_scene_ready", scene, "cloudreach")):
+			world = scene as Node3D
+			break
+	if world == null or game.current_realm != "cloudreach" or world.get_node_or_null("CloudreachChapter") == null:
+		print("CLOUDREACH CONTINUOUS the earned save never booted a ready Cloudreach scene")
+		return false
+	for _i in 180:
+		await physics_frame
+	for _i in 600:
+		if INPUT_OWNER.current(self) == null: break
+		await process_frame
+	for member: RefCounted in game.party.members():
+		initial_party_ids.append(member.get_instance_id())
+	expected_party_size = initial_party_ids.size()
+	if expected_party_size < 1 or expected_party_size > 5:
+		print("CLOUDREACH CONTINUOUS earned belt size %d is outside 1..5" % expected_party_size)
+		return false
+	return true
+
+
+func _copy_tree(from: String, to: String) -> void:
+	DirAccess.make_dir_recursive_absolute(to)
+	var dir := DirAccess.open(from)
+	if dir == null: return
+	for file: String in dir.get_files():
+		DirAccess.copy_absolute(from + file, to + file)
+	for sub: String in dir.get_directories():
+		_copy_tree(from + sub + "/", to + sub + "/")
+
+
+func _remove_tree(path: String) -> void:
+	var dir := DirAccess.open(path)
+	if dir == null: return
+	for file: String in dir.get_files():
+		DirAccess.remove_absolute(path + file)
+	for sub: String in dir.get_directories():
+		_remove_tree(path + sub + "/")
+	DirAccess.remove_absolute(path)

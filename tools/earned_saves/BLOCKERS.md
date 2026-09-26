@@ -195,3 +195,204 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   Receipts: `pre_sigil_camp_route`, `pre_sigil_camp_night`, `pre_sigil_camp_done`. Bench care
   from alternative 2 is unchanged for this attempt; step 2 (`BENCH_CARE_PREPARES := false`) is
   held for a recurrence.
+
+### B5 ruling, attempts 4 to 6 (2026-09-26, seed 4, from `/tmp/claude-0/earned_chain/seed4/relay/save/`)
+
+- Attempt 4 never ran. main's `meadows_earned_bridge_segment.gd` now has
+  `_press_gate(prompt, accept_open = false)`, so the `bridge_crossing.gd` override failed to parse
+  (`SCRIPT ERROR: Parse Error: The function signature doesn't match the parent`) and the runner
+  would not compile. Fixed by matching the signature and passing `accept_open` through. The bridge
+  segment has already passed, so it was not re-run.
+- Attempt 5 (312 s) failed on the pre-Sigil walk back to riverwatch:
+  `Ordinary quarry/Warrens movement did not reach (230.0, -4.124298, 3670.0); player=(334.0885, 6.815587, 3756.698)`.
+  band3's own trail points (350,3760)→(230,3670) run through the Relay apparatus. The relay
+  helper goes around it on `relay_approach_loop`. This was an error in my route, not a game
+  defect. Log: `/tmp/claude-0/earned_chain/seed4_hall_attempt5/`.
+- Attempt 6: the walk back is now the relay helper's own forward road (`mill_path`) reversed:
+  band3 from the Mill road to (130,3980), then relay_approach_loop to (230,3670) beside the camp.
+- Attempt 6 got back to the camp (231,3670) by the new road, but the camp driver's walk to the
+  bed was aimed at `the creature bed 2 target=(422.7656, -8.533861, 7401.596)`: twice the camp's
+  (211,3700), roughly 3.7 km north. The straight-line walker then looped on
+  `[severed_spokes] player went over the edge at 227, -8, 4201 -- back to the road` 263 times,
+  and I killed it (PID I started) after about 20 min. Log: `/tmp/claude-0/earned_chain/seed4_hall_attempt6/`.
+
+## B6: Meadows defect: authored camp creature beds are placed at twice their authored coordinates
+
+- `scripts/world/rest_point.gd` sets `position = Vector3(x, ground, z)` on the rest point itself
+  (line ~88). `_build_creature_bed()` then adds `CampCreatureBed` as a CHILD with
+  `_bed.position = Vector3(x, ground, z)` (line ~152), which is the world `at` used as a local
+  offset. So the bed's global position is about 2×(x, ground, z). For riverwatch_rest (211,3700)
+  that gives (422.77, -8.53, 7401.60). The same pattern applies to every authored camp bed.
+  `night_rest.gd` heals only bedded creatures, so an authored camp cannot heal the party by
+  ordinary play. Not fixed here (Meadows file).
+- Alternatives considered: another authored camp (same defect); building a bed with the hammer
+  (only 1 wood carried); B5 ruling step 2. Taken: step 2. `PRE_SIGIL_CAMP := false` keeps the
+  camp code but switches it off, and `BENCH_CARE_PREPARES := false` means bench care
+  (Satchel revive/potion) no longer calls the helper's `_prepare()` / party-cycle. The helper's
+  own pre-captain `_prepare()` is unchanged. Attempt 7.
+- Attempt 7 **passed** `hall` (2142 s wall time, 12:52 to 13:28 UTC). It beat all three Sigil captains,
+  opened the Hall approach (3 Sigils spent), and cleared patrol, courtyard and elite, with repeated
+  `between_fight_care` receipts. 9 flags gained. Party at the Warden boundary: ripplet L16 0 HP,
+  bramblebun L18 8, mudsnout L16 87, mudsnout L17 0, bramblebun L15 37. Potions 7, revives 10.
+  0 SCRIPT ERROR.
+
+## B7: Warden lost with a drained belt (helper pacing gap, not a game defect)
+
+- `warden` attempt 1 (13:28 UTC, seed 4, from `/tmp/claude-0/earned_chain/seed4/hall/save/`, 226 s):
+  the reveal was delivered (`learned_legendary_is_the_source`). The helper's `_prepare()` revived
+  two members and cycled the pilot. Then
+  `EARNED WARDEN_ACCEPT FAIL — The actual captain encounter ended without victory: lost`, and the
+  whole belt was at 0 HP (L16–18). 7 small potions and 8 revives were left unused.
+  Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt1/`.
+- Alternative 1 (own file, `warden_accept.gd`): before the helper's `_prepare()`, revive every
+  fainted member, then give up to two small potions to anyone under 60% HP, through the same real
+  Satchel seam (`care_existing`). Disclosed as `pre_warden_bench_care`. Attempt 2.
+- Attempt 2 (alternative 1) **won the Warden**: 9 `pre_warden_bench_care` doses, then 5 rounds and
+  91 hits, with `defeated_warden`, `realm_key_cloudreach` and `realm_heart_meadows_earned` gained.
+  It then failed on B8. Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt2/`.
+
+## B8: the Warden victory's dialogue outlasts the helper's 120-frame input-return wait
+
+- Attempts 2 and 3: `EARNED WARDEN_ACCEPT FAIL — The actual trainer victory did not return ordinary world input: warden_aldis`.
+  An input-owner trace (attempt 3, `warden_accept.gd` diagnostic; the attempt-3 log dir was overwritten by attempt 4) shows
+  `<none> -> /root/MeadowsPlayground/DialoguePanel (dialogue_panel.gd) frame=7373` right after the
+  victory, still open when the helper's wait
+  (`meadows_earned_hall_segment.gd::_fight_named`, 120 frames of no input) runs out. The
+  helper expects an ordinary player to be able to act. Nothing presses Interact to read the
+  production dialogue.
+- Alternative 1 (own file): on the helper's own `trainer_defeated` receipt for the Warden, press
+  the real Interact action while that panel stays open (at most 12 taps). This is the same way
+  `_drive_machine_to_ceremony` reads the machine dialogues. It logs `post_victory_dialogue_read`
+  with the conversation ids. Attempt 4.
+- Attempt 4 read `stronghold_warden_realm_reward` (2 taps). `defeated_warden` and the realm
+  key/heart flags were set. It then stopped at the machine:
+  `An unexpected live dialogue interrupted the machine sequence` (a DialoguePanel was open at
+  frames 7942–8007, before or at the machine press). Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt4/`.
+  Attempt 5 adds conversation ids to the input-owner trace and a `dialogue_finished` trace.
+
+## B9: machine-sequence helper reads the DialoguePanel's hand-over frame as an interruption
+
+- Attempt 5 trace: `stronghold_chamber` finished at frame 8088, `stronghold_free_legendary` at 8111,
+  `stronghold_legendary_joins` at 8127, all in the authored order. Between conversations the
+  production panel stays open with an empty conversation id (frames 8089–8096, 8128–8132). The
+  helper `_drive_machine_to_ceremony` fails on any open panel whose id is not the next expected
+  one, so it reported `An unexpected live dialogue interrupted the machine sequence`. This is a race
+  in the Meadows helper, not in the game. Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt5/`.
+- Alternative 1 (own file, `warden_accept.gd`): a copy of that function that waits one frame on
+  an open panel with an empty id. Everything else is unchanged, including the exact order check
+  and the failure message, which now names the conversation. Attempt 6.
+- Attempt 6 got past the hand-over frames. It then stopped on
+  `An unexpected live dialogue interrupted the machine sequence: veridian_choice`.
+
+## B10: the Warden helper predates the F05 spatial accept/refuse choice
+
+- Production (`stronghold_climax.gd::_open_choice`, `stronghold_climax.json` `choice`) now follows
+  `stronghold_legendary_joins` with the `veridian_choice` read-out and two spatial prompts,
+  `VeridianAcceptPrompt` and `VeridianRefusePrompt`. The pending catch only appears after one of
+  them is pressed. The read-only Warden helper expects the pending catch straight after the join.
+  Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt6/`.
+- Alternative 1 (own file): the `_drive_machine_to_ceremony` copy (B9) reads `veridian_choice`,
+  then answers ACCEPT as `tests/smoke_gate_e_finale.gd` does: it steps to `VeridianAcceptPrompt`
+  and presses the real Interact through the exact-provider `_press_prompt`. Receipt:
+  `veridian_accept_prompt`. The five-slot farewell (lowest-level member released) is unchanged.
+  Attempt 7.
+- Attempt 7 (13:56 UTC, 1536 s) **passed the whole ending with ACCEPT**. Receipts: 9 care doses, Warden beaten,
+  `stronghold_warden_realm_reward` read, chamber, free, join and `veridian_choice` in order,
+  `veridian_accept_prompt` (2.56 m), and `veridian_accepted`. The five-slot farewell released the
+  lowest-level earned member (bramblebun L1x, uid creature-3fd01011…) and seated Veridian L23.
+  Then came `meadows_ending_settled` and the start of the acknowledgement backtrack
+  (`road_metres_one_way` 11416). Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt7/`.
+
+## B11: the acknowledgement road wears the belt down (helper pacing gap, like B5)
+
+- Attempt 7 then failed on the 11.4 km walk back to the village:
+  `Real wild combat did not win with landed strikes inside its unchanged physics budget` at
+  (164.1,-0.2,4564.9), after 5+ wild wins. At that point ripplet and bramblebun L23 were at 0 HP,
+  both mudsnouts were up, and Veridian was at 974 HP.
+- Alternative 1 (own file): the B5 `between_fight_care` remedy (revive the fainted, small potions
+  under 40%, then the helper's own `_prepare()` pilot selection), before each walk leg, only after
+  `meadows_ending_settled`. Attempt 8, from the hall save, so the Warden is replayed.
+- Attempt 8 had road care working: `between_fight_care` revived ripplet, then 22 wild wins, later
+  ones in 5 hits. I stopped it (PID I started) at about 33 min. The acknowledgement road is 11.4 km
+  to Kell, and then the route returns to the storm road, all at 1x walking. At the rate measured
+  in attempt 7 (about 3 km per 12 min) the segment would pass run_chain.sh's fixed 5400 s
+  `timeout` before the Rift. Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt8/`.
+  `run_chain.sh` now takes `CHAIN_TIMEOUT` (default unchanged at 5400). Attempt 9 runs with
+  `CHAIN_TIMEOUT=12600`. No acceleration.
+
+## B12: the trainer dies on the acknowledgement road and respawns at home (open, blocking)
+
+- Warden attempt 9 (14:26 UTC, `CHAIN_TIMEOUT=12600`, 2107 s): the ACCEPT ending passed again,
+  with Veridian L25 on the belt. Road care worked: 2 `between_fight_care`, 20 wild wins. Then:
+  `Ordinary quarry/Warrens movement did not reach (-420.0, -4.161824, 2470.0); player=(-30.45036, -2.109686, 67.91363)`.
+  The inventory at the stop is `{}` (the hall save carried 7 potions, 10 revives, tools and
+  725 coin). The player stands at the home spawn. So the trainer died on the leg towards
+  (-420,2470), everything carried went into a death satchel (`player_death.gd`), and the player
+  respawned at home, which is not a helper action. Per `player_death.gd` the only lethal paths are
+  a fall (`player_controller.gd::_resolve_landing`) and drowning (`water.gd`). The log has no death
+  line, so which one it was is not identified. The helper's `aftermath_road` walks the band1–5
+  spines in straight lines. The forward chain never walked band2/band3 that way (it took the
+  quarry/Warrens undertrail and the relay loop), so a cliff or water crossing on that spine is
+  likely. The only earlier warning is `[player] entombed at 107.61, -0.47, 4513.34 -- recovering`.
+  Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt9/`.
+- Status: blocking; not retried. Each warden attempt replays the Warden (about 35 min before the
+  road). Suggested next step: (1) trace the player's y and HP per walk leg on the return road to
+  find the lethal leg. (2) In `warden_accept.gd`, walk the return by the same roads the forward
+  segments used (the reverse of warrens/relay/hall routes) instead of the spine. That is a route
+  choice, not a teleport. (3) Split `warden` so the settled ending is saved before the walk, which
+  needs the aftermath mode's `_climax._stage == "done"` to survive a load.
+
+### B12 ruling (coordinator): return along the forward roads, reversed; care first; death watch
+
+- `warden_accept.gd` overrides `_acknowledge_and_cross`. The return road is the helper's
+  `aftermath_road` with its band2 leg (-420,2470)→(-330,2630)→(-180,2730), which crosses the
+  Warrens mound, replaced by the roads the warrens and relay segments walked: `warren_undertrail`
+  plus the B3 west-of-mound detour (-432,2492),(-418,2528). Band5/4/3 plus the relay loop were
+  already the forward hall/relay road. Whole-belt care (`_prepare()`) runs before the walk.
+- The death watch logs `EARNED DEATHWATCH` lines: every health drop, with position, cause
+  (fall = damaging `landed` in the same frame; combat; otherwise hazard (water/other)), floor state
+  and the leg being walked. On `died` it logs cause, position, last floor y and last landing, and
+  fails the segment with that cause. B12 attempt 1 = warden attempt 10.
+- **B12 attempt 1 (warden attempt 10, 15:15 UTC, 3056 s): the return walk passed.** The ACCEPT
+  ending passed again, and the 11.4 km forward-road return reached the village with no death.
+  Death watch root-cause evidence: the only trainer damage was 10 ticks of
+  `cause=hazard(water/other)` at y≈-20 (pond water level -17) on the band1 leg
+  (-330,590)→(-430,510), from (-385,-20.2,546) to (-420,-19.5,518), health 100→40, with no fall
+  and no fight. So band1's spine runs through the relocated pond (the `water` block notes OW5D
+  moved the basin). Attempt 9's death is therefore most likely drowning. The attempt-9 run had no
+  watch, and it probably drowned on band2's straight leg, which this route replaces; the band1 pond
+  was survivable this time. The run then failed at Kell:
+  `The exact live prompt never became actionable within its unchanged approach budget`. The
+  helper's 1800-frame prompt approach started at the band1 road start (8,90), about 180 m from
+  Kell (184,0.1,52.6), and ended at (143,-7.1,62.3). Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt10/`.
+- B12 attempt 2: walk to within 3 m of Kell with the ordinary walker (receipt
+  `acknowledgement_approach_walk`), then run the unchanged `_talk`.
+- **B12 attempt 2 (warden attempt 11, 16:42 UTC): the return walk passed again.** The same band1
+  pond water damage appeared (health 100→38, no death). It failed on the new approach to Kell:
+  `Ordinary quarry/Warrens movement did not reach (184.2, 0.109838, 52.6); player=(72.52981, -5.808105, 71.52964)`
+  after 3 `walk_confined_recovery`. Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt11/`.
+
+## B13: Kell stands at a stale storm-road end, about 180 m off every road (Meadows data drift, open)
+
+- `village_npcs.json` places Kell at (184.2,52.6). Its comment says this is "at the storm road's
+  own end (spokes.routes[1] finishes at [185.5,49.7])". The current `terrain_playground.json`
+  `storm_road` spoke runs (0,7000)→(-34,7513), beside the Hall. So Kell is now in open ground about
+  180 m east of the band1 road start (8,90), and no authored path reaches that spot. A straight
+  walk from (8,90) stalls in a hollow at about (72,-5.8,71). Both approaches failed: attempt 10
+  (the helper's 1800-frame prompt approach) and attempt 11 (the ordinary walker).
+- Not fixed (Meadows data). `tools/earned_saves/kell_probe.gd` (read-only terrain/obstacle map
+  from (8,90) to Kell) was written but not run to completion; it was stopped at wrap-up.
+
+## Where the chain stands (wrap-up 2026-09-26 ~17:50 UTC)
+
+- Passed with saves: opening_team, camp_tournament, bridge, warrens, relay, **hall**. Last good
+  save: `/tmp/claude-0/earned_chain/seed4/hall/save/`.
+- `warden` passes the Warden, the Veridian ACCEPT (farewell releases the lowest-level member) and
+  the settled ending. It also passes the full 11.4 km return to the village on the forward roads
+  (B12 fixed). It stops at Kell (B13). Two of the coordinator's three B12 attempts are used.
+- Next step: run `kell_probe.gd` and route the Kell approach around the hollow on walkable cells
+  (for example via The Rise road (74,-41)), or get Kell's position fixed to the current storm-road
+  end. Then: storm road → Rift → Cloudreach arrival → `assemble_fixture.py` → fixture test →
+  `smoke_cloudreach_continuous.gd -- --from-save=res://tests/fixtures/earned_saves/c1_arrival --leg=opening`.
+  Resume with `CHAIN_TIMEOUT=12600 tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4 warden`
+  (about 55 min to Kell).
