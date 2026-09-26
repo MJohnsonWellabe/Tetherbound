@@ -1,0 +1,40 @@
+CLOUDREACH GROUND TRUTH: colliders=2118 trimesh_colliders=1790 trimesh_triangles=396582
+CLOUDREACH GROUND TRUTH: 41161 sample points checked, 0 holes, 33 height mismatches (>0.15m), 959 buried under visible geometry
+CLOUDREACH GROUND TRUTH: mismatch rate 0.08% (holes + mismatches over samples)
+CLOUDREACH GROUND TRUTH: worst offenders (largest gap first):
+MISMATCH: Shoulder/Ridge000@(-275.2,522.5): rendered y=180.010, collider hit y=180.274, gap=0.264m at (-275.2307, 180.01, 522.4736) hit=@Node3D@4952
+MISMATCH: Shoulder/Ridge000@(-267.7,530.9): rendered y=180.648, collider hit y=180.869, gap=0.221m at (-267.7307, 180.6479, 530.9111) hit=LowerCliffRoad_0Ground0
+MISMATCH: Shoulder/Ridge000@(-276.5,543.7): rendered y=179.286, collider hit y=180.000, gap=0.714m at (-276.487, 179.2861, 543.7292) hit=SettlementWalkableTerrace
+MISMATCH: Shoulder/Ridge000@(-265.2,533.7): rendered y=180.936, collider hit y=181.289, gap=0.353m at (-265.2307, 180.936, 533.7236) hit=LowerCliffRoad_0Ground0
+MISMATCH: Shoulder/Ridge000@(-262.7,536.5): rendered y=181.217, collider hit y=181.710, gap=0.493m at (-262.7307, 181.2166, 536.5361) hit=LowerCliffRoad_0Ground0
+MISMATCH: Shoulder/Ridge000@(-260.2,539.3): rendered y=181.497, collider hit y=182.130, gap=0.633m at (-260.2307, 181.4969, 539.3486) hit=LowerCliffRoad_0Ground0
+MISMATCH: Shoulder/Ridge000@(-257.7,542.2): rendered y=181.777, collider hit y=182.551, gap=0.774m at (-257.7307, 181.7771, 542.1611) hit=LowerCliffRoad_0Ground0
+MISMATCH: Shoulder/Ridge000@(-255.2,545.0): rendered y=182.057, collider hit y=182.971, gap=0.914m at (-255.2307, 182.0574, 544.9736) hit=LowerCliffRoad_0Ground0
+MISMATCH: Shoulder/Ridge000@(-252.7,547.8): rendered y=182.338, collider hit y=183.391, gap=1.054m at (-252.7307, 182.3377, 547.7861) hit=LowerCliffRoad_0Ground0
+MISMATCH: Shoulder/Ridge003@(411.4,4489.6): rendered y=919.487, collider hit y=920.000, gap=0.513m at (411.4355, 919.4865, 4489.555) hit=ObservatoryWalkableCrown
+MISMATCH: Shoulder/Ridge003@(-312.7,3991.1): rendered y=831.755, collider hit y=832.620, gap=0.865m at (-312.6922, 831.7549, 3991.129) hit=UpperPlateauCircuit_4Ground0
+MISMATCH: Shoulder/Ridge003@(-316.0,3988.9): rendered y=831.474, collider hit y=832.230, gap=0.757m at (-315.9688, 831.4736, 3988.873) hit=UpperPlateauCircuit_4Ground0
+MISMATCH: Shoulder/Ridge003@(-319.2,3986.6): rendered y=831.214, collider hit y=831.841, gap=0.627m at (-319.2454, 831.2141, 3986.618) hit=UpperPlateauCircuit_4Ground0
+MISMATCH: Shoulder/Ridge003@(-322.5,3984.4): rendered y=830.954, collider hit y=831.451, gap=0.497m at (-322.5219, 830.9544, 3984.363) hit=UpperPlateauCircuit_4Ground0
+MISMATCH: Shoulder/Ridge003@(-325.8,3982.1): rendered y=830.691, collider hit y=831.062, gap=0.371m at (-325.7985, 830.6912, 3982.107) hit=UpperPlateauCircuit_4Ground0
+MISMATCH: Shoulder/Ridge000@(-159.2,4716.1): rendered y=900.176, collider hit y=900.447, gap=0.271m at (-159.1821, 900.1756, 4716.087) hit=UpperPlateauCircuit_3Ground0
+MISMATCH: Shoulder/Ridge002@(-382.4,5657.8): rendered y=1113.690, collider hit y=1113.895, gap=0.205m at (-382.4117, 1113.69, 5657.777) hit=SummitOverlookLoop_2Ground0
+MISMATCH: Shoulder/Ridge003@(-427.6,5630.2): rendered y=1108.604, collider hit y=1108.758, gap=0.154m at (-427.6444, 1108.604, 5630.238) hit=SummitOverlookLoop_3Ground0
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-277.7,522.0): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-277.7143, 180.03, 522.0247) hit=@Node3D@4952
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-278.0,522.3): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-277.9804, 180.03, 522.2903) hit=@Node3D@4952
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-278.3,522.5): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-278.2772, 180.03, 522.5211) hit=@Node3D@4952
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-278.6,522.7): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-278.6, 180.03, 522.7137) hit=@Node3D@4952
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-275.7,521.6): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-275.6544, 180.03, 521.6246) hit=@Node3D@4952
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-275.9,522.1): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-275.8869, 180.03, 522.1463) hit=@Node3D@4952
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-276.2,522.6): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-276.1819, 180.03, 522.6355) hit=@Node3D@4952
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-276.5,523.1): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-276.5347, 180.03, 523.0847) hit=@Node3D@4952
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-276.9,523.5): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-276.94, 180.03, 523.4872) hit=@Node3D@4952
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-277.4,523.8): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-277.3917, 180.03, 523.8368) hit=@Node3D@4952
+MISMATCH: Pad/ArrivalGateRoad_Ledge4@(-274.9,523.5): rendered y=180.030, collider hit y=180.274, gap=0.244m at (-274.8809, 180.03, 523.5425) hit=@Node3D@4952
+MISMATCH: Pad/UpperPlateauCircuit_Ledge5@(-345.9,3975.1): rendered y=830.030, collider hit y=831.739, gap=1.709m at (-345.9439, 830.03, 3975.068) hit=Kelm
+MISMATCH: Landmark/WaterwardOverlook@(-425.9,5648.7): rendered y=1109.789, collider hit y=1109.980, gap=0.191m at (-425.9438, 1109.789, 5648.653) hit=SummitOverlookLoop_LedgeCap3
+MISMATCH: Landmark/WaterwardOverlook@(-411.6,5638.2): rendered y=1110.267, collider hit y=1110.775, gap=0.507m at (-411.6077, 1110.267, 5638.191) hit=OverlookWalkableCrownEast
+MISMATCH: Gate/UpperCounterweightGate: rendered y=650.000, collider hit y=649.353, gap=0.647m at (-782.5, 650.0, 3555.0) hit=Ridge003
+CLOUDREACH GROUND TRUTH: PASS
+rc=0
+SCRIPT_ERROR_COUNT=0

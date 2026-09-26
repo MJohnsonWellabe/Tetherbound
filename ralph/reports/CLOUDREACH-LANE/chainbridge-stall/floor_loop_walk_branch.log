@@ -1,0 +1,5 @@
+CLOUDREACH CONTINUOUS {"count":2,"kind":"fixture_wild_bodies_parked","position":"(0.0, 105.0302, -260.0)","simulated_seconds":0.33,"stage":"boot","wall_seconds":293.895255,"when":"boot"}
+CLOUDREACH CONTINUOUS {"count":42,"kind":"fixture_wild_bodies_parked","position":"(399.7157, 610.1309, 3250.132)","simulated_seconds":360.93,"stage":"return_to_junction","wall_seconds":399.239932,"when":"return_to_junction"}
+CLOUDREACH FLOOR LOOP RETURN {"outbound_ok":true,"outbound_walked_m":1794.2,"player":"(-100.2576, 470.0309, 2440.17)","return_ok":true,"return_walked_m":1785.4,"verdict":"PASS"}
+rc=0
+SCRIPT_ERROR_COUNT=0

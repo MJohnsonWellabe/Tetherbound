@@ -1,0 +1,6 @@
+CLOUDREACH CONTINUOUS {"count":2,"kind":"fixture_wild_bodies_parked","position":"(0.0, 105.0302, -260.0)","simulated_seconds":0.33,"stage":"boot","wall_seconds":315.33735,"when":"boot"}
+CLOUDREACH CONTINUOUS {"auto_run":false,"body_path":"/root/CloudreachCliffs/Player","body_position":"(-397.5116, 446.897, 2931.467)","camera_basis":"[X: (-0.965926, 0.0, -0.258819), Y: (0.0, 1.0, 0.0), Z: (0.258819, 0.0, -0.965926)]","can_process":true,"carried":false,"collisions":[{"body":"/root/CloudreachCliffs/AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001/Collision","normal":"(-0.203685, 0.963273, 0.174977)"},{"body":"/root/CloudreachCliffs/AuthoredRoutes/WindscarCounterweightPassCliffShoulders/Ridge001/Collision","normal":"(0.567946, 0.179784, -0.80319)"}],"deflect_dir":"(0.0, 0.0, 0.0)","deflect_left":0.0,"dialogue_open":false,"finale_phase":"dormant","floor_normal":"(
+CLOUDREACH CONTINUOUS {"kind":"FAIL","message":"Walking stalled toward (-300.0, 460.0, 3100.0)","position":"(-397.5116, 446.897, 2931.467)","simulated_seconds":158.85,"stage":"outbound_floor_loop","wall_seconds":350.919536}
+CLOUDREACH FLOOR LOOP RETURN {"outbound_ok":false,"outbound_walked_m":757.1,"player":"(-397.5116, 446.897, 2931.467)","return_ok":false,"return_walked_m":0.0,"verdict":"FAIL"}
+rc=1
+SCRIPT_ERROR_COUNT=0
