@@ -393,6 +393,8 @@ func test_junction_marker_size_and_emission_come_from_config() -> void:
 	for pocket: Dictionary in cfg.pockets:
 		var holder := pockets.get_node_or_null("Pocket_%s/SpurLamp" % str(pocket.id)) as Node3D
 		assert_true(holder != null, "%s has a junction lamp" % pocket.id)
+		# Round 6: a pocket may override its junction lamp (pockets[].junction_lamp).
+		style = POCKETS.junction_style(cfg, pocket)
 		if holder == null:
 			continue
 		var measured := _lamp_measure(holder)

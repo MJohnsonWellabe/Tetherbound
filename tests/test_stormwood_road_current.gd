@@ -81,10 +81,10 @@ func test_every_route_and_spur_is_covered_by_current_chunks() -> void:
 	(built[0] as Node).free()
 
 
-## WO-F09-05 round 4: a spur's current is its own language: its chunks carry
-## the pocket's lamp tint as vertex colour and UV2.x = 1 (the shader's thin
-## tinted crack that starts at the road edge); a road's carry UV2.x = 0.
-func test_spur_current_carries_its_pocket_tint_and_roads_do_not() -> void:
+## WO-F09-05: a spur's current is its own language: its chunks carry UV2.x = 1
+## (the shader's one thin, dimmer crack that starts at the road edge) and a
+## vertex colour in the road's yellow family (round 6); a road's carry 0.
+func test_spur_current_is_a_thin_yellow_crack_and_roads_are_not_flagged() -> void:
 	var built := _built(false)
 	var current: Node = built[1]
 	var tints := CURRENT.spur_tints()
@@ -101,8 +101,7 @@ func test_spur_current_carries_its_pocket_tint_and_roads_do_not() -> void:
 		if tints.has(route):
 			spur_chunks += 1
 			assert_true(uv2[0].x > 0.5 and colours[0].is_equal_approx(tints[route]), "%s: a spur chunk is flagged and tinted" % route)
-			var hue := (tints[route] as Color).h * 360.0
-			assert_false(hue < 20.0 or hue > 290.0, "%s: its tint is neither red nor magenta" % route)
+			assert_true(_is_yellow_gold(tints[route]), "%s: its crack is the road's yellow family (round 6)" % route)
 		else:
 			road_chunks += 1
 			assert_true(uv2[0].x < 0.5, "%s: a road chunk is not flagged as a spur" % route)

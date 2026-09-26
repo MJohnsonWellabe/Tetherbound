@@ -197,7 +197,8 @@ func _reward_beacon(pickup: Node3D, beacon: Dictionary, pocket: Dictionary) -> v
 	# road heading from the approach stands). Both are children of the pickup,
 	# the gateway one top_level at the gate, so both exist only while the
 	# reward is unclaimed and leave with it. Static: no animation.
-	var shaft: Dictionary = beacon.get("shaft", {})
+	var shaft: Dictionary = (beacon.get("shaft", {}) as Dictionary).duplicate(true)
+	shaft.merge(pocket.get("shaft", {}), true)
 	if shaft.is_empty():
 		return
 	var material := shaft_material(colour, float(shaft.alpha))

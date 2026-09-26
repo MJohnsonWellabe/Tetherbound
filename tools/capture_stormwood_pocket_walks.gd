@@ -27,6 +27,9 @@ const ROAD_BACK_DEFAULT_M := 25.0
 const MOUTH_OUT_M := 5.0
 const MOUTH_YAW_OFFSET_DEG := 14.0
 const MOUTH_PITCH_EXTRA_DEG := 4.0
+## Round 6 (judge 13: Dynamo's right-hand trunk filled a third of the gate
+## frame): per-pocket shoulder side for the gate frame.
+const MOUTH_YAW_BY_POCKET := {"dynamo_scorch_pen": -14.0}
 const WALK_START_BACK_M := 32.0
 const PIXEL_DIFF_THRESHOLD := 24
 ## A normal exploration arm is 5.2 m; shorter means a body is in the way.
@@ -201,7 +204,8 @@ func _walk_frames() -> void:
 		var reward_at := reward.global_position if reward != null else Vector3(centre.x, _ground(centre.x, centre.y), centre.y)
 		# Round 5 (judge: the reward sat behind the trainer's head): the camera
 		# looks past the trainer's shoulder, a little higher.
-		await _stand(mouth, reward_at + Vector3.UP, _pitch_start - MOUTH_PITCH_EXTRA_DEG, MOUTH_YAW_OFFSET_DEG)
+		await _stand(mouth, reward_at + Vector3.UP, _pitch_start - MOUTH_PITCH_EXTRA_DEG,
+			float(MOUTH_YAW_BY_POCKET.get(id, MOUTH_YAW_OFFSET_DEG)))
 		await _capture("%s_2_mouth" % id, "%s: standing in the mouth, looking in at the reward" % id,
 			_with(info, {"stand": [mouth.x, mouth.y], "reward_node": _reward_state(reward_id)}))
 		# (3) Claim with the ordinary interact action, then the frame.

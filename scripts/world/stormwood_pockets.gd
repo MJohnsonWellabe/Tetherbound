@@ -79,7 +79,9 @@ static func spur_posts(pocket: Dictionary, cfg: Dictionary, routes: Array = []) 
 ## {} without a spur or marker.
 static func gateway(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> Dictionary:
 	var marker: Dictionary = cfg.get("spur_marker", {})
-	var spec: Dictionary = marker.get("gateway", {})
+	# Round 6: a pocket may override its own gateway (pockets[].gateway).
+	var spec: Dictionary = (marker.get("gateway", {}) as Dictionary).duplicate(true)
+	spec.merge(pocket.get("gateway", {}), true)
 	if routes.is_empty():
 		routes = (JSON.parse_string(FileAccess.get_file_as_string(WORLD_PATH)) as Dictionary).routes
 	var lane := spur(pocket, routes)
@@ -92,7 +94,7 @@ static func gateway(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> 
 	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_PATH))
 	var corridor := float(terrain.route_half_width) + float(spec.road_clear_m)
 	var trunk_reach := float(spec.collider_width_m) * sqrt(2.0) * 0.5
-	var post_reach := float(spur_lamp_style(cfg).post_width_m) * sqrt(2.0) * 0.5
+	var post_reach := float(junction_style(cfg, pocket).post_width_m) * sqrt(2.0) * 0.5
 	var inner := float(spec.opening_m) * 0.5 + float(spec.collider_width_m) * 0.5
 	var post_side := float(spec.opening_m) * 0.5 - float(spec.lamp_edge_m)
 	var approach := approach_point(lane, routes, float(spec.get("face_approach_back_m", 25.0)))
@@ -176,6 +178,14 @@ static func tinted(style: Dictionary, pocket: Dictionary) -> Dictionary:
 	var out := style.duplicate(true)
 	out.merge(pocket.get("lamp_tint", {}), true)
 	return out
+
+
+## A pocket's junction lamp style: spur_lamp_style() with the pocket's own
+## `junction_lamp` overrides (round 6) and its lamp tint laid over it.
+static func junction_style(cfg: Dictionary, pocket: Dictionary) -> Dictionary:
+	var style := spur_lamp_style(cfg)
+	style.merge(pocket.get("junction_lamp", {}), true)
+	return tinted(style, pocket)
 
 
 ## The junction lamp's style: `mouth_lure` with config `spur_marker.lamp`
@@ -318,14 +328,15 @@ func _mouth_lure(world: Node3D, body: StaticBody3D, pocket: Dictionary, cfg: Dic
 			lure, materials, draw)
 	var junctions := spur_posts(pocket, cfg, routes)
 	if not junctions.is_empty():
-		var style := tinted(spur_lamp_style(cfg), pocket)
+		var style := junction_style(cfg, pocket)
 		var junction_materials := _lamp_materials(style) if show_models else {}
 		for index in junctions.size():
 			var suffix := "" if index == 0 else str(index + 1)
 			_lamp_post(world, body, junctions[index].at, junctions[index].facing, "SpurPost" + suffix,
 				"SpurLamp" + suffix, style, junction_materials, draw)
 		var trunks := gateway_trunks(pocket, cfg, routes)
-		var gateway: Dictionary = (cfg.get("spur_marker", {}) as Dictionary).get("gateway", {})
+		var gateway: Dictionary = ((cfg.get("spur_marker", {}) as Dictionary).get("gateway", {}) as Dictionary).duplicate(true)
+		gateway.merge(pocket.get("gateway", {}), true)
 		for index in trunks.size():
 			_gateway_trunk(world, body, trunks[index], gateway, "SpurTrunk" + ("" if index == 0 else str(index + 1)),
 				index, show_models, draw)
@@ -361,7 +372,7 @@ static func trail_stones(pocket: Dictionary, cfg: Dictionary, routes: Array = []
 		var dir := _direction_at(points, d)
 		var side := Vector2(dir.y, -dir.x)
 		out.append({"at": at + side * (float(trail.get("offset_m", 0.0)) + rng.randf_range(-float(trail.jitter_m), float(trail.jitter_m))),
-			"yaw": rng.randf_range(0.0, TAU), "scale": rng.randf_range(float(trail.scale_min), float(trail.scale_max))
+			"yaw": rng.randf_range(0.0, TAU), "scale": rng.randf_range(float(trail.scale_min), float(trail.scale_max)) * float(pocket.get("trail_scale_mul", 1.0))
 				* (float(trail.get("near_scale_mul", 1.0)) if d <= float(trail.get("near_m", 0.0)) else 1.0),
 			"model": STONES[rng.randi_range(0, STONES.size() - 1)]})
 		d += float(trail.spacing_m)

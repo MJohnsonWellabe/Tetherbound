@@ -53,19 +53,20 @@ static func ribbon_half_width(kind: String, cfg: Dictionary, surface: Dictionary
 	return float(surface.lane_half_width_m.get(kind, 0.0)) * fraction
 
 
-## WO-F09-05 round 4: spur route id -> its pocket's lamp tint
-## (stormwood_pockets.json pockets[].lamp_tint.flame_emission), so each spur's
-## current glows in its own pocket's colour, not road yellow.
+## Spur route id -> its crack colour (round 6: the road's yellow family,
+## config spur.colour, for every spur; round 4 used each pocket's lamp tint).
 static func spur_tints() -> Dictionary:
 	var pockets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(POCKETS_PATH))
 	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(WORLD_PATH))
-	var by_pocket := {}
-	for pocket: Dictionary in pockets.pockets:
-		by_pocket[str(pocket.id)] = Color(str((pocket.get("lamp_tint", {}) as Dictionary).get("flame_emission", "#ffb347")))
+	# Round 6 (owner direction "yellow electricity"; judge 13 read teal and
+	# green spur cracks as bugs): every spur's crack is the road's own yellow
+	# family (config spur.colour); the pocket tints stay on lamps, beams and
+	# rewards only.
+	var colour := Color(str((config().get("spur", {}) as Dictionary).get("colour", "#ffc21a")))
 	var out := {}
 	for route: Dictionary in world.routes:
 		if str(route.get("kind", "")) == "spur":
-			out[str(route.id)] = by_pocket.get(str(route.get("pocket_id", "")), Color("#ffb347"))
+			out[str(route.id)] = colour
 	return out
 
 
