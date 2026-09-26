@@ -44,6 +44,10 @@ const LOOKAHEAD_M := 4.0
 const OFF_ROAD_COST := 3.0
 const LURE_RANGE_M := 160.0
 const STUCK_S := 4.0
+## Unstick attempts allowed at one blocked spot, and the route progress (m)
+## that counts as having left it.
+const UNSTICK_ATTEMPTS := 6
+const UNSTICK_RESET_M := 8.0
 const APPROACH_FRAME_M := 30.0
 
 var _activity := ""
@@ -518,18 +522,27 @@ func _walk() -> void:
 		for i in range(cursor + 1, _path.size()):
 			remaining += _xz3(_path[i - 1]).distance_to(_xz3(_path[i]))
 		if remaining < best_remaining - 0.3:
+			# Real progress since the last unstick clears the count: five snags
+			# spread over a kilometre are not one blocked spot.
+			if unstick > 0 and best_remaining - remaining > UNSTICK_RESET_M:
+				unstick = 0
 			best_remaining = remaining
 			best_at = _clock
 		elif _clock - best_at > STUCK_S:
 			unstick += 1
 			_notes.append("t=%.1fs no progress at (%.1f,%.1f); unstick attempt %d (jump + strafe)" % [
 				_clock, here.x, here.y, unstick])
-			if unstick > 4:
+			if unstick > UNSTICK_ATTEMPTS:
 				_release()
 				await _capture("stuck")
 				_finish("GAP", "stuck at (%.1f,%.1f), %.1fm of route left" % [here.x, here.y, remaining])
 				return
 			await _unstick(unstick)
+			# From the second attempt, aim past the blocked waypoint: a boulder
+			# or trunk on the road centreline is walked around, not into.
+			if unstick >= 2:
+				cursor = mini(cursor + 2, _path.size() - 1)
+			best_remaining = INF
 			best_at = _clock
 			continue
 
@@ -593,13 +606,18 @@ func _handle_fight(foe_name: String) -> void:
 func _unstick(attempt: int) -> void:
 	_release()
 	var side := "move_left" if attempt % 2 == 1 else "move_right"
+	# Back off first so the strafe is not pressed flat against the obstacle.
+	Input.action_press("move_back")
+	for i in 24:
+		await physics_frame
+	Input.action_release("move_back")
 	Input.action_press("jump")
 	Input.action_press(side)
 	Input.action_press("move_forward")
 	for i in 30:
 		await physics_frame
 	Input.action_release("jump")
-	for i in 30:
+	for i in 30 + 15 * attempt:
 		await physics_frame
 	Input.action_release(side)
 	Input.action_release("move_forward")
@@ -632,7 +650,7 @@ func _press(action: String) -> void:
 
 
 func _release() -> void:
-	for a: String in ["move_forward", "sprint", "move_left", "move_right", "jump"]:
+	for a: String in ["move_forward", "sprint", "move_left", "move_right", "move_back", "jump"]:
 		Input.action_release(a)
 
 
