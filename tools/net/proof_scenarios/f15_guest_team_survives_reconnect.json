@@ -174,7 +174,8 @@
           "Fern",
           "Newt",
           "Terrapup"
-        ]
+        ],
+        "visit": "repeat"
       },
       "expect_data": {
         "homecoming_seen": true,
@@ -206,7 +207,8 @@
           "Shelby",
           "Volt",
           "Terrapup"
-        ]
+        ],
+        "visit": "repeat"
       },
       "expect_data": {
         "homecoming_seen": true,
@@ -394,7 +396,8 @@
           "Pip",
           "Shelby",
           "Volt"
-        ]
+        ],
+        "visit": "repeat"
       },
       "expect_data": {
         "conversation_id": "regional_homecoming_repeat",
@@ -420,7 +423,8 @@
           "Tuff",
           "Fern",
           "Newt"
-        ]
+        ],
+        "visit": "repeat"
       },
       "expect_data": {
         "conversation_id": "regional_homecoming_repeat",

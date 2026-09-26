@@ -52,7 +52,8 @@ extends RefCounted
 ##   nerissa_challenge {}                 F14: Veilfall prerequisites via the ledger, then take up
 ##                                         Nerissa's challenge at her Veilfall spot (then
 ##                                         win_trainer_battle); data.multi_peer at the time
-##   grandpa_homecoming {screenshot?, must_name?, must_not_name?}  F15: walk up to
+##   grandpa_homecoming {screenshot?, must_name?, must_not_name?, visit?}  F15: walk up to
+##                                         (visit: "repeat" expects the repeat conversation, no names)
 ##                                         Grandpa, press his real prompt, read the whole
 ##                                         conversation, report every line and check names
 ##
@@ -1330,7 +1331,11 @@ static func _grandpa_homecoming(tree: SceneTree, args: Dictionary) -> Dictionary
 	# The acknowledgement itself: one "<name> came home with you." per current
 	# companion, in party order, and no other such line.
 	var named_lines: Array = lines.filter(func(l: String) -> bool: return l.ends_with(" came home with you."))
-	var expected_lines: Array = party_before.map(func(n: String) -> String:
+	# `visit: "repeat"`: a character who already saved its homecoming (e.g.
+	# after a reconnect) hears the repeat conversation, which names nobody:
+	# the team is not acknowledged twice.
+	var repeat := str(args.get("visit", "initial")) == "repeat"
+	var expected_lines: Array = [] if repeat else party_before.map(func(n: String) -> String:
 		return "Grandpa Elias: %s came home with you." % n)
 	data["named_lines"] = named_lines
 	var text := "\n".join(lines)
@@ -1346,7 +1351,8 @@ static func _grandpa_homecoming(tree: SceneTree, args: Dictionary) -> Dictionary
 	data["wrongly_named"] = wrongly_named
 	# The game's rule (regional_homecoming.gd): the first visit's conversation
 	# is chosen by the live party size, so it must match this player's team.
-	var expected := "regional_homecoming_%d" % mini(party_before.size(), 5)
+	var expected := str(load(HOMECOMING_PATH).REPEAT_ID) if repeat \
+		else "regional_homecoming_%d" % mini(party_before.size(), 5)
 	data["expected_conversation"] = expected
 	var ok := conversation == expected and not bool(panel.call("is_open")) and seen \
 		and named_lines == expected_lines \
