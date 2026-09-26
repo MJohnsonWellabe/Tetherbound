@@ -14,11 +14,13 @@ extends SceneTree
 ##
 ## FOES are built exactly as production builds them today:
 ## - the five data-named wilds (water_encounters.json::named_encounters) spawn
-##   through WaterEncounterDirector.named_spawn_plan with NO combat override,
-##   trainer_owned=false: species defaults at the authored level;
+##   through WaterEncounterDirector.named_spawn_plan, trainer_owned=false, at the
+##   authored level with the entry's own `combat` block (none authored today);
 ## - Water trainers (water_characters.json::trainers) are translated by
-##   water_encounter_runtime_data.gd: species + level, trainer_owned=true, no
-##   per-creature override (the `combat_profile` label is not consumed);
+##   water_encounter_runtime_data.gd::team_member (the production translator):
+##   species + level + `combat` block incl. the trainer's
+##   `foe_power_multiplier`, trainer_owned=true (the `combat_profile` label is not
+##   consumed);
 ## - Aquaryn (water_alpha.json) gets its three phase overrides applied by HP
 ##   threshold exactly as water_alpha_body.gd builds them. Its surface-channel
 ##   runs are NOT reproduced on the flat fixture (a stated limitation).
@@ -95,6 +97,7 @@ class AlphaPilot:
 					"range": float(phase.reach_m),
 					"preferred_range": float(phase.reach_m) * preferred_fraction,
 					"cone_degrees": float(phase.cone_degrees),
+					"face_lock_fraction": float(phase.get("face_lock_fraction", 0.0)),
 					"power": float(MATH.config().get("enemy", {}).get("power", 8.0)) * float(phase.power_multiplier),
 				}
 				_wild.refresh_combat_profile()
@@ -107,6 +110,9 @@ var _selection := ""
 var _starter_only := ""
 var _party_level := 43
 var _json := ""
+## Tuning sweeps only: replaces every selected trainer's authored
+## `foe_power_multiplier`. Recorded in the JSON; evidence runs omit it.
+var _multiplier_override := 0.0
 
 
 func _init() -> void:
@@ -116,6 +122,7 @@ func _init() -> void:
 		elif arg.begins_with("--starter="): _starter_only = arg.trim_prefix("--starter=")
 		elif arg.begins_with("--party-level="): _party_level = int(arg.trim_prefix("--party-level="))
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
+		elif arg.begins_with("--multiplier-override="): _multiplier_override = float(arg.trim_prefix("--multiplier-override="))
 	_run.call_deferred()
 
 
@@ -130,7 +137,7 @@ func _cases(errors: Array[String]) -> Array[Dictionary]:
 	for named: Dictionary in encounters.get("named_encounters", []):
 		cases.append({"id": str(named.id), "kind": "named_wild", "owned": false,
 			"foes": [{"species": WATER_DATA._species(str(named.species_id), errors),
-				"level": int(named.level)}]})
+				"level": int(named.level), "combat": named.get("combat", {})}]})
 	var alpha := _read("res://data/config/water_alpha.json")
 	cases.append({"id": "water_aquaryn_alpha", "kind": "alpha", "owned": false,
 		"phases": alpha.get("phases", []),
@@ -141,10 +148,11 @@ func _cases(errors: Array[String]) -> Array[Dictionary]:
 		var id := str(trainer.id)
 		if not TRAINER_CASES.has(id): continue
 		var foes: Array = []
+		if _multiplier_override > 0.0:
+			trainer = trainer.duplicate(true)
+			trainer["foe_power_multiplier"] = _multiplier_override
 		for member: Dictionary in trainer.get("team", []):
-			var entry := member.duplicate(true)
-			entry["species"] = WATER_DATA._species(str(member.get("species", "")), errors)
-			foes.append(entry)
+			foes.append(WATER_DATA.team_member(trainer, member, errors))
 		cases.append({"id": id, "kind": TRAINER_CASES[id], "owned": true, "foes": foes})
 	return cases
 
@@ -250,7 +258,7 @@ func _run() -> void:
 		if file == null:
 			errors.append("cannot write %s" % _json)
 		else:
-			file.store_string(JSON.stringify({"seeds": _seeds, "selection": _selection,
+			file.store_string(JSON.stringify({"seeds": _seeds, "selection": _selection, "multiplier_override": _multiplier_override,
 				"party": {"lead": STARTERS, "retained": RETAINED, "level": _party_level},
 				"fixture": "production CombatManager + WildCreature bodies on a flat collider (combat_depth_pilot.gd)",
 				"rows": rows, "runs": runs, "errors": errors, "accepted": false}, "  "))

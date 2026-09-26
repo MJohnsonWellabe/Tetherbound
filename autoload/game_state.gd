@@ -1,6 +1,7 @@
 extends Node
 
 const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
+const STEAM_LOBBY := preload("res://scripts/net/steam_lobby.gd")
 
 ## The single place run-time state lives: the party, the satchel, the day.
 ##
@@ -1867,7 +1868,10 @@ func _show_realm_recovery(overlay: CanvasLayer, message: String) -> void:
 	button.offset_top = 70
 	button.offset_bottom = 118
 	button.focus_mode = Control.FOCUS_ALL
-	button.pressed.connect(func(): get_tree().quit())
+	button.pressed.connect(func():
+		# get_tree().quit() sends no WM_CLOSE_REQUEST; leave the Steam lobby here.
+		STEAM_LOBBY.leave_for_quit(self)
+		get_tree().quit())
 	overlay.add_child(button)
 	button.grab_focus()
 

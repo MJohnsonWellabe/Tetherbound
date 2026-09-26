@@ -1,0 +1,56 @@
+diff -ru a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+--- a/.github/workflows/ci.yml	2026-09-26 20:51:20.756012415 +0000
++++ b/.github/workflows/ci.yml	2026-09-26 20:51:20.923640185 +0000
+@@ -3030,6 +3030,44 @@
+         if: ${{ !cancelled() }}
+         run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
+ 
++  verify-tidewake-rest-routes:
++    # F12#0 (ACCEPTANCE 6.1): with the original five and no owned swimmer,
++    # level-0 human swimming finishes EVERY hop of all seven mandatory Tidewake
++    # routes with >= 20% stamina after 15% steering deviation. Local evidence:
++    # ralph/reports/TIDEWAKE/f12_every_hop_original_five/PROOF.md (24 hops,
++    # worst 30.14%). Measured locally at 35-250 s per route; each step is
++    # capped at 450 s (1.8x the slowest). Full tier only.
++    runs-on: ubuntu-latest
++    timeout-minutes: 30
++    needs: changes
++    if: needs.changes.outputs.full == 'true'
++    strategy:
++      fail-fast: false
++      matrix:
++        route:
++          - first_shore_to_reedhaven_sheltered
++          - reedhaven_to_brine_steps_sheltered
++          - brine_steps_to_shellwatch_sheltered
++          - shellwatch_to_tidal_cradle_sheltered
++          - tidal_cradle_to_salt_crown_sheltered
++          - salt_crown_to_sluice_isle_sheltered
++          - sluice_isle_to_veilfall_sheltered
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          filter: blob:none
++          sparse-checkout-cone-mode: false
++          sparse-checkout: |
++            /*
++            !/ralph/
++            !/docs/
++            !/shots/
++            !/assets_raw/
++            !/archive/
++      - uses: ./.github/actions/setup-godot
++      - name: Verify every hop of ${{ matrix.route }} with the original five
++        run: timeout 450s godot --headless --path . --script tests/smoke_water_swimming.gd -- --rest-route=${{ matrix.route }} --every-hop --original-five
++
+   verify-cloudreach-persistence:
+     # F08 (ACCEPTANCE 6.1): restored wind roads, Wings/shrine and the Stormwood
+     # key survive a real solo disk reload, each written once across the split
+@@ -3111,6 +3149,7 @@
+       - verify-veridian-offer
+       - verify-cloudreach-midride-rejoin
+       - verify-cloudreach-persistence
++      - verify-tidewake-rest-routes
+       - verify-scatter-bake-freshness
+       - verify-terrain-bake-freshness
+       - verify-unit-tests
