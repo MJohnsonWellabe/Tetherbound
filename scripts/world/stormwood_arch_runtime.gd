@@ -19,7 +19,9 @@ const DARK_STEP_2 := "stormwood:side_dark_arches_2"
 ## WORLD's dark-arches payoff: a relit road is "visible on known map". Each end
 ## of a pair whose two ends both answer becomes a map marker on this player's
 ## Stormwood map, derived from the world's paid lit flags on every sync (so a
-## world whose arches are still dark shows none); no new durable fact.
+## world whose arches are still dark shows none). No new flag or save field:
+## the markers ride the map's existing dynamic_markers as a derived cache and
+## every sync reconciles them to the current world.
 const DARK_MAP_PREFIX := "stormwood_arch_road_"
 const DARK_MAP_ICON := "gate"
 var world: Node3D

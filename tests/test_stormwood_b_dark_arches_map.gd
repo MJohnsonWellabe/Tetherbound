@@ -3,7 +3,8 @@ extends "res://tests/test_case.gd"
 ## F10#0 / WORLD Stormwood `stormwood_dark_arches` target payoff: "Those
 ## physical routes become reusable and visible on known map." A relit dark
 ## pair (both ends lit) is drawn on this player's Stormwood map as one marker
-## per end, derived from the world's paid lit flags; nothing new is durable.
+## per end, derived from the world's paid lit flags. The map saves them with
+## its existing dynamic markers only as a derived cache; each sync re-derives.
 
 const PROGRESSION := preload("res://autoload/progression_state.gd")
 const REALM_MAP := preload("res://scripts/world/realm_map_state.gd")
@@ -81,7 +82,18 @@ func test_markers_are_derived_not_a_new_durable_fact() -> void:
 	flags.set_flag(RULES.lit_flag("d_hall"))
 	flags.set_flag(RULES.lit_flag("d_giant"))
 	ARCH_RUNTIME.sync_dark_arch_map(map, flags)
+	# The saved cache alone does not decide: a save carrying the markers,
+	# loaded into a world whose arches are dark, shows none after a sync.
+	var cached := _map(PROGRESSION.new())
+	cached.load_data(map.save_data())
+	assert_eq(_arch_markers(cached).size(), 2, "precondition: the save carried the cached markers")
+	ARCH_RUNTIME.sync_dark_arch_map(cached, PROGRESSION.new())
+	assert_true(_arch_markers(cached).is_empty(), "a dark world clears a stale saved cache")
+	# And a save WITHOUT the cache re-derives both ends from the lit flags.
+	var payload: Dictionary = map.save_data()
+	payload.erase("dynamic_markers")
 	var restored := _map(PROGRESSION.new())
-	restored.load_data(map.save_data())
+	restored.load_data(payload)
+	assert_true(_arch_markers(restored).is_empty(), "precondition: no cached markers loaded")
 	ARCH_RUNTIME.sync_dark_arch_map(restored, flags)
-	assert_eq(_arch_markers(restored).size(), 2, "A reload re-derives the same two road ends")
+	assert_eq(_arch_markers(restored).size(), 2, "a reload re-derives the same two road ends from the flags")
