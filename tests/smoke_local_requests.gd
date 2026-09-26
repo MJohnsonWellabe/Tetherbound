@@ -654,6 +654,14 @@ func _meadowhart_herd() -> void:
 	var counters_before: Array[int] = []
 	for member: RefCounted in party.call("members"):
 		counters_before.append(int(member.get("landmarks_visited_together")))
+	# In the full default run this section follows Juno's bout, which can end
+	# with the deployed companion fainted; the director then has no body to
+	# reconcile after Rae's dialogue. Healing the fixture five and readying a
+	# usable ally is staging outside the activity under test, the same as the
+	# trainer sections' `_ready_an_ally_for_a_bout` before each bout.
+	for member: RefCounted in party.call("members"):
+		member.call("heal_fully")
+	await _ready_an_ally_for_a_bout("meadowhart_herd")
 	var ally := _director.call("ally_body") as Node3D
 	if ally == null:
 		_fail("meadowhart_herd: no active companion can make the visit")
