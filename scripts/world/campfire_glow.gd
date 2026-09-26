@@ -122,6 +122,7 @@ var _smoke_top := SMOKE_TOP_HEIGHT
 var _smoke_top_size := SMOKE_TOP_SIZE
 var _smoke_alpha := SMOKE_COLOUR.a
 var _smoke_steps := SMOKE_STEPS
+var _smoke_rgb := Color(SMOKE_COLOUR.r, SMOKE_COLOUR.g, SMOKE_COLOUR.b)
 ## Lazy-looked-up every `_process()` tick, not cached at `_init()`/`_ready()`
 ## time -- `torch.gd::_is_on()`'s own OF18 lesson applies here too: a
 ## campfire can be built and added to the tree before `world_look.gd` has
@@ -477,15 +478,23 @@ func _build_embers() -> void:
 ## A stack of static, alpha-blended (not additive -- smoke does not glow)
 ## discs, growing and softening with height, so the whole column reads as one
 ## smudge tapering upward rather than repeated identical dots.
-## Call before the node enters the tree (its `_ready` builds the column).
+## Rebuilds the column (the constructor already built the default one).
 ## Absolute metres, like every other size here; alpha is the column's base
-## opacity before it thins with height. Steps grow with height so a tall
-## column stays continuous rather than a string of separate puffs.
-func configure_smoke(top_m: float, alpha: float, top_size_m: float = -1.0) -> void:
+## opacity before it thins with height; `rgb` (alpha ignored) tints it, the
+## default when its alpha is 0. Steps grow with height so a tall column stays
+## continuous rather than a string of separate puffs.
+func configure_smoke(top_m: float, alpha: float, top_size_m: float = -1.0, rgb: Color = Color(0, 0, 0, 0)) -> void:
 	_smoke_top = maxf(top_m, SMOKE_BASE_HEIGHT + 0.5)
 	_smoke_alpha = clampf(alpha, 0.0, 1.0)
 	_smoke_top_size = top_size_m if top_size_m > 0.0 else SMOKE_TOP_SIZE * _smoke_top / SMOKE_TOP_HEIGHT
 	_smoke_steps = maxi(SMOKE_STEPS, int(ceil(float(SMOKE_STEPS) * _smoke_top / SMOKE_TOP_HEIGHT)))
+	if rgb.a > 0.0:
+		_smoke_rgb = Color(rgb.r, rgb.g, rgb.b)
+	for child in get_children():
+		if str(child.name).begins_with("Smoke"):
+			remove_child(child)
+			child.free()
+	_build_smoke()
 
 
 func _build_smoke() -> void:
@@ -495,7 +504,7 @@ func _build_smoke() -> void:
 		# Thins out with height rather than fading linearly, so the column
 		# has a dense base and a dissipating top instead of a hard cut-off.
 		var alpha: float = _smoke_alpha * (1.0 - t * t * 0.85)
-		var colour := Color(SMOKE_COLOUR.r, SMOKE_COLOUR.g, SMOKE_COLOUR.b, alpha)
+		var colour := Color(_smoke_rgb.r, _smoke_rgb.g, _smoke_rgb.b, alpha)
 		var disc := _billboard_quad(size, colour, 0.0, 0.0, true)
 		disc.name = "Smoke%d" % i
 		# Drifts slightly downwind as it climbs, so the column is a lean, not

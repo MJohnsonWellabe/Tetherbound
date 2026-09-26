@@ -36,7 +36,9 @@ const SLOT_DIR := "user://f03_lure_walk_slots/"
 const SLOT := 1
 
 const SETTLE_FRAMES := 300
-const WALK_BUDGET_S := 360.0
+## `--budget-s=` overrides (Juno's patrol is 1.6 km and five road fights
+## from the real S07 save).
+var WALK_BUDGET_S := 360.0
 const DENSIFY_M := 8.0
 const LOOKAHEAD_M := 4.0
 ## Metres of cross-country leg are charged this much against road metres when
@@ -94,6 +96,8 @@ func _run() -> void:
 			_activity = a.trim_prefix("--activity=")
 		elif a.begins_with("--save="):
 			_save_path = a.trim_prefix("--save=")
+		elif a.begins_with("--budget-s="):
+			WALK_BUDGET_S = float(a.trim_prefix("--budget-s="))
 		elif a.begins_with("--off-road-cost="):
 			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
 		elif a.begins_with("--capture-dir="):
