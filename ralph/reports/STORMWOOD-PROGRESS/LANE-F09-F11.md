@@ -723,6 +723,15 @@ SCRIPT ERROR count is 0 in both runs.
   - **Diagnostic, committed but not run** (348ee6c6a): the press records every provider activated during it, with the trainer's position. A competing activation reports the player, both prompts and their distances, and the winner after the press.
   - The next run should name the cause in one line: for example, a second activation from a press held across the dialogue opening, or the player displaced during the press.
 
+- **Nysa-press cause found by a focused reproduction** (597b435b6; `tests/smoke_stormwood_nysa_press.gd` stages the run-26 facts and runs the earned segment's own approach and press):
+  - **At 1x** (from the stance and from the Lantern Hollow camp): Nysa is pressed and her battle is won, `outcomes { "officer_nysa_deepwood_rod": true }`.
+  - **At the witness's 8x/480 Hz clock, from the camp:** `activations=[.../Tavi/Interactable@(-883.16, 52.46, 4476.74)]; wanted prompt ... 8.66 m; activated ... 3.28 m`. The press went to Tavi from where the trainer really stood.
+  - **Not a game bug.** The arbiter pressed the nearest prompt at the true position. The helper had counted "held winner for 8 frames" without checking the trainer was at the stance.
+  - **Fix:** release the stick, walk back if the trainer is more than 1.5 m off the stance, and hold and press at 1x, counting a frame only while at the stance.
+  - **After the fix:** the 8x reproduction presses Nysa and wins, `STORMWOOD NYSA PRESS OK`.
+  - Also fixed: a cast of a freed enemy body between trainer rounds.
+- **Runs 27 and 27b:** the earned witness at 597b435b6 was dispatched twice in parallel on the GitHub render runner (headless, 150 min). Workflow runs 36240544034 and 36240553015 use `--through-aftermath --witness-dir=user://f11_witness`. The reload runs locally in a new process from the runner's saved `user://f11_witness`.
+
 ### Open presentation items (reported to the coordinator, not fixed here)
 
 - Hesk's dialogue portrait is a young villager, and Wen's is an old man; neither matches the model (F10 two-peer frames `01_host_hesk_report`, `03_host_wen_records`).
