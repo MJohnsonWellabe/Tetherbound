@@ -9,6 +9,10 @@ render_mode blend_mix, cull_disabled, depth_draw_never, diffuse_burley, specular
 // UV2.x = fraction along the route (end fades).
 uniform vec4 foam_colour : source_color = vec4(0.90, 0.97, 0.97, 1.0);
 uniform float opacity = 0.5;
+// A faint lane of disturbed water under the foam, so the current reads as a
+// band of moving sea and not only as white dashes.
+uniform vec4 lane_colour : source_color = vec4(0.72, 0.90, 0.88, 1.0);
+uniform float lane_opacity = 0.14;
 uniform float streak_width_m = 1.1;
 uniform float streak_length_m = 9.0;
 uniform float min_speed_m_s = 0.35;
@@ -51,7 +55,8 @@ void fragment() {
 	float speed = max(min_speed_m_s, strength * speed_scale) * calm_scale;
 	// Thin wandering foam lanes, broken into dashes that drift with the flow.
 	float lane = across_m / streak_width_m + noise(vec2(along / 30.0, across_m / 20.0)) * 1.5;
-	float line = smoothstep(0.72, 0.96, 1.0 - abs(fract(lane) * 2.0 - 1.0));
+	float girth = noise(vec2(floor(lane) * 1.7, along / 18.0));
+	float line = smoothstep(0.78 - girth * 0.22, 0.97, 1.0 - abs(fract(lane) * 2.0 - 1.0));
 	float dash = smoothstep(0.4, 0.8, noise(vec2(floor(lane) * 3.1, (along - TIME * speed) / streak_length_m)));
 	float fleck = smoothstep(0.8, 0.95, noise(vec2(across_m * 0.9, (along - TIME * speed) * 0.35)));
 	float streak = max(line * dash, fleck * 0.5);
@@ -59,8 +64,12 @@ void fragment() {
 	float edge = 1.0 - smoothstep(0.55, 1.0, across);
 	float ends = smoothstep(0.0, 0.12, UV2.x) * (1.0 - smoothstep(0.88, 1.0, UV2.x));
 	float fade = 1.0 - smoothstep(fade_start_m, fade_end_m, v_distance);
-	ALBEDO = foam_colour.rgb;
+	float mask = edge * ends * fade * mix(0.55, 1.0, calm_scale);
+	float foam = clamp(opacity * streak * mix(0.45, 1.0, strength), 0.0, 1.0);
+	float band = lane_opacity * mix(0.5, 1.0, strength)
+		* (0.6 + 0.4 * noise(vec2(across_m / 6.0, (along - TIME * speed * 0.5) / 25.0)));
+	float alpha = foam + band * (1.0 - foam);
+	ALBEDO = (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) / max(alpha, 0.001);
 	ROUGHNESS = 0.7;
-	ALPHA = opacity * streak * edge * ends * fade
-		* mix(0.45, 1.0, strength) * mix(0.55, 1.0, calm_scale);
+	ALPHA = alpha * mask;
 }

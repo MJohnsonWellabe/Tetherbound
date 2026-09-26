@@ -68,7 +68,7 @@ void fragment() {
 	vec3 wet = mix(rock_colour, streak_colour, smoothstep(0.35, 0.75, n * 0.65 + n2 * 0.35));
 	// Ledge moss where the face eases, and a darker, wetter foot.
 	float ledge = smoothstep(0.62, 0.8, n2) * smoothstep(0.35, 0.7, v_normal.y);
-	wet = mix(wet, grass_colour, ledge * 0.6);
+	wet = mix(wet, grass_colour, ledge * 0.6 + smoothstep(280.0, 560.0, v_world.y) * smoothstep(0.5, 0.8, n2) * 0.3);
 	float far_t = smoothstep(fog_keep_start_m, fog_keep_end_m, v_distance);
 	// Far away the lit surface only carries shape; the tone below carries value.
 	ALBEDO = mix(grass_colour, wet, rock) * mix(0.72, 1.08, smoothstep(0.0, 520.0, v_world.y))
