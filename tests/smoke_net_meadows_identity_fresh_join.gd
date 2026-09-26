@@ -615,7 +615,7 @@ func _cold_reconnect(port: int) -> void:
 	if not await _relaunch_guest():
 		return
 	var back: Dictionary = await step(1, "production_join", {
-		"host": "127.0.0.1", "port": port, "returning_route": true, "budget_frames": 6000,
+		"host": "127.0.0.1", "port": port, "returning_route": true, "pick_saved": true, "budget_frames": 6000,
 		"character": {"character_id": character_id, "appearance_id": CLIENT_APPEARANCE, "display_name": CLIENT_NAME},
 	}, 12000)
 	_check(str(back.get("verdict", "")) == "PASS",

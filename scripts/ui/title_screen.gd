@@ -957,14 +957,22 @@ func _accept_friend_invite() -> void:
 	_show_portable_character_select()
 
 
-func _show_portable_character_select() -> void:
+## The saved-character picker. Steam's friend join is the default; a direct
+## address join (`_join_via`) passes its own pick/create/back so a guest whose
+## process restarted can bring the character it saved (F01#6).
+func _show_portable_character_select(on_pick: Callable = Callable(),
+		on_create: Callable = Callable(), on_back: Callable = Callable()) -> void:
+	var pick_character := on_pick if on_pick.is_valid() else _choose_portable_character
+	var back_out := on_back if on_back.is_valid() else _cancel_steam_join
+	var create_new := on_create if on_create.is_valid() else func() -> void:
+		_show_character_select(_choose_new_steam_appearance, _show_portable_character_select)
 	_main_box.visible = false
 	_load_box.visible = false
 	_confirm_box.visible = false
 	_join_box.visible = false
 	_clear(_character_box)
 	_character_box.visible = true
-	_character_back = _cancel_steam_join
+	_character_back = back_out
 
 	var heading := Label.new()
 	heading.text = "Choose a Character to Bring"
@@ -998,7 +1006,7 @@ func _show_portable_character_select() -> void:
 			var realm := str(state.get("realm", "meadows")).capitalize()
 			var pick := _button("%s — %d Pals · %s" % [display_name, party_size, realm])
 			pick.set_meta("character_id", character_id)
-			pick.pressed.connect(func() -> void: _choose_portable_character(character_id))
+			pick.pressed.connect(func() -> void: pick_character.call(character_id))
 			_character_box.add_child(pick)
 			if first == null:
 				first = pick
@@ -1006,11 +1014,10 @@ func _show_portable_character_select() -> void:
 				first = pick
 
 	var create := _button("Create a New Character")
-	create.pressed.connect(func() -> void:
-		_show_character_select(_choose_new_steam_appearance, _show_portable_character_select))
+	create.pressed.connect(create_new)
 	_character_box.add_child(create)
 	var back := _button("Back")
-	back.pressed.connect(_cancel_steam_join)
+	back.pressed.connect(back_out)
 	_character_box.add_child(back)
 	(first if first != null else create).grab_focus()
 	UITokens.make_text_legible(_character_box)
@@ -1458,11 +1465,41 @@ func _on_address_confirmed(typed: String) -> void:
 ## resumes either this machine's local autosave or its current portable guest
 ## character is a returning player and gets no new-game step for the same
 ## reason Load Game never shows this screen.
+##
+## A machine that holds saved portable characters but whose live id names none
+## of them (a guest whose process restarted mints a new id at boot) is offered
+## those characters first, the same picker the Steam join uses (F01#6).
 func _join_via(address: String, port: int) -> void:
 	var game := _game()
 	if game != null and (bool(game.call("has_save", 0)) or _has_portable_returning_character(game)):
 		_begin_join(address, port, 0.0)
 		return
+	if not _saved_portable_character_ids(game).is_empty():
+		_show_portable_character_select(
+			func(character_id: String) -> void: _join_as_saved_character(address, port, character_id),
+			func() -> void: _join_as_new_character(address, port),
+			_show_join)
+		return
+	_join_as_new_character(address, port)
+
+
+## Direct join as a saved portable character: address the live id at its file,
+## then `_begin_join()`'s returning-guest branch restores it.
+func _join_as_saved_character(address: String, port: int, character_id: String) -> void:
+	var game := _game()
+	var local: Variant = game.get("local") if game != null else null
+	if local == null:
+		return
+	(local as RefCounted).set("character_id", character_id)
+	if not _has_portable_returning_character(game):
+		_status.text = "That portable character could not be loaded. Choose another character."
+		_join_via(address, port)
+		return
+	_begin_join(address, port, 0.0)
+
+
+func _join_as_new_character(address: String, port: int) -> void:
+	var game := _game()
 	_show_character_select(func(character_id: String) -> void:
 		_pending_character_option_id = character_id
 		_prompt_for_player_name(character_id, func(chosen_name: String) -> void:
@@ -1548,6 +1585,20 @@ func _restore_portable_returning_character(game: Node) -> bool:
 	var character_id := str((local as RefCounted).get("character_id"))
 	var characters: Variant = (save_system as RefCounted).call("characters")
 	return bool((characters as RefCounted).call("apply", game, character_id))
+
+
+## Saved portable characters this machine can bring, each one parseable.
+static func _saved_portable_character_ids(game: Node) -> Array:
+	var out: Array = []
+	var save_system: Variant = game.get("save_system") if game != null else null
+	var characters: Variant = (save_system as Object).call("characters") \
+		if save_system is Object and (save_system as Object).has_method("characters") else null
+	if not characters is Object or not (characters as Object).has_method("list_ids"):
+		return out
+	for raw_id: Variant in (characters as Object).call("list_ids") as Array:
+		if not ((characters as Object).call("state", str(raw_id)) as Dictionary).is_empty():
+			out.append(str(raw_id))
+	return out
 
 
 func _has_portable_returning_character(game: Node) -> bool:

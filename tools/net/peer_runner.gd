@@ -1852,8 +1852,12 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 	var summary: Dictionary = args.get("character", {}) as Dictionary
 	var local: Variant = game.get("local")
 	var returning_route := bool(args.get("returning_route", true))
+	# F01#6: a guest process that restarted holds a freshly minted live id. The
+	# title's direct join then offers its saved characters; the harness presses
+	# the real picker button for `character_id` (it cannot click).
+	var pick_saved := bool(args.get("pick_saved", false))
 	var wanted_id := str(summary.get("character_id", ""))
-	if returning_route:
+	if returning_route and not pick_saved:
 		var live_id := str((local as RefCounted).get("character_id")) if local != null else ""
 		if live_id != wanted_id:
 			return {"verdict": "FAIL", "detail": "returning title route retained character '%s', expected '%s'"
@@ -1902,6 +1906,10 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "production title did not become current"}
 	if returning_route:
 		title.call("_join_via", ip, port)
+		if pick_saved:
+			var pressed := _press_saved_character(title, wanted_id)
+			if not pressed.is_empty():
+				return {"verdict": "FAIL", "detail": pressed}
 	else:
 		title.call("_begin_join", ip, port, 0.0)
 	var driver := game.get_node_or_null(^"JoinDriver")
@@ -1923,6 +1931,22 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 						get_multiplayer().get_unique_id(), i]}
 	return {"verdict": "FAIL", "detail": "JoinDriver did not apply a snapshot within %d frames (scene=%s, running=%s)"
 		% [budget, current_scene.name if current_scene != null else "none", str(driver.call("is_running"))]}
+
+
+## Press the title's saved-character button for `character_id`, as a player
+## would. "" when pressed, else why not.
+func _press_saved_character(title: Node, character_id: String) -> String:
+	var box: Variant = title.get("_character_box")
+	if not box is Control or not (box as Control).visible:
+		return "direct join showed no saved-character picker"
+	var offered: Array = []
+	for child: Node in (box as Control).get_children():
+		if child is Button and child.has_meta("character_id"):
+			offered.append(str(child.get_meta("character_id")))
+			if str(child.get_meta("character_id")) == character_id:
+				(child as Button).pressed.emit()
+				return ""
+	return "saved-character picker did not offer '%s' (offered %s)" % [character_id, str(offered)]
 
 
 func _step_leave(args: Dictionary) -> Dictionary:
