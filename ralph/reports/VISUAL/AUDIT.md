@@ -28,7 +28,7 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V13 | shared look | Crimson foliage variant retint | `data/config/vegetation_presentation.json` | open |
 | V14 | shared look | Candy pickup tint | `scripts/world/band_pickups.gd:224-226` | open |
 | V15 | shared look | Golden-hour fog density 0.0016 | `data/config/art.json` times.golden | open |
-| V16 | shared look | South Bridge gully slope rock: probe first, then revive `ralph/visual-wip-slope-rock` 26b7216d | `tools/_probe_south_bridge_gully.gd` | open |
+| V16 | shared look | South Bridge gully slope rock: probe first, then re-apply 26b7216d (reverted in b864c1830) | `tools/probe_south_bridge_gully.gd` | open |
 | V17 | C2–C4 | Cloudreach, Stormwood and Tidewake region audits not yet judged; the VIS lane is judging them (read-only) and adds its findings here | §C2–C4 | open |
 
 ## How to reproduce
