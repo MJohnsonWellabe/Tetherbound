@@ -14,13 +14,13 @@ The frames are in this directory, rendered in engine through the production came
 - **Quarry (h01→h05) and approach (h03→h04).** The pylon and its cyan cable are removed. Grass, flowers, trees and light are identical, so the change reads as machinery disappearing and not as land healing.
 - **Works slope (h08→h09).** A pale, hard-edged polygonal patch becomes a darker olive patch with the same hard polygonal edge. It reads as a texture swap. A thin grey pole remains where the beam stood.
 - **Highfield (h02→h06).** No visible change. This vantage looks into the tree line, so the herd is out of frame.
-- **Fall (h10–h139).** The pylon sinks straight down over about 3.5 s. Its base clips through the ground (h106–h107) and the cables vanish, with no dust or burst visible. It reads as removal, not an event. A large shelled creature appears where the pylon stood (h108) and then wanders behind the arch.
+- **Fall (h10–h139).** The judge wrote that the pylon "sinks straight down over about 3.5 s". **The frames do not support that.** In h101–h108 (0.5–4 s) the pylon stands upright and only its cable colour changes, from cyan to dark. By h119 (8 s) it is down and out of view. The staged creak and fall therefore happen between samples, falling away from this vantage behind the trainer. So the fall was **not captured** this round; it was not seen to sink. The next capture needs a side-on vantage (round 4's `capture_pylon_side`) and dense sampling from 3 s to 8 s. A large shelled creature wanders into the frame (h119 onward).
 - **Herd close-up (h07).** Deer stand in a row along a fence, evenly spaced and facing the same way. They read as placed props. They are shoulder height or less against the 1.80 m trainer, and wolves in h04 are knee height.
 - **Placeholder look.** The judge also flagged untextured white blocks on the left and a flat maroon slab in the pylon frames.
 
 ## Judge's ranked defects and whether the scene can fix them
 1. **The land itself does not change.** The scene can fix this with ground/grass saturation, density and flower change between the before and after states, and with vantages that actually show the drained ground.
-2. **The pylon sinks instead of falling.** The scene can fix this with a tilt-and-fall, a cable snap and a dust/light burst. A dust or debris effect may need an asset.
+2. **The fall is not readable as an event from the player's vantage.** The judge's "sinks" reading is a sampling artefact, as above. Still, the frames never show the fall itself. Recapture it side-on at 3–8 s before judging the event.
 3. **The herd is a lineup and the creatures are undersized.** Placement can be fixed in the scene: scatter them, vary facing, bring them in. Relative scale is a hard-rule issue: creatures must be taller than the trainer, and a fix grows the smaller side.
 
 ## Bar questions
@@ -29,4 +29,4 @@ The frames are in this directory, rendered in engine through the production came
 
 ## Owner-lane follow-ups (not claimed here)
 - **Herd scale:** the relative-scale hard rule belongs with Meadows core/X04.
-- **Sinking pylon:** it conflicts with the round-4 description of a topple. The fall bake (`09ab35bd`) may have changed its axis. Check this in `meadow_healing.gd` before re-capturing.
+- **Placeholder props:** the white untextured blocks and the flat maroon "Tether duty board" slab are real scene content in this build. The capture log shows no resource load failures, so this is not a checkout artefact. They belong to Meadows core.
