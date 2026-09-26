@@ -52,6 +52,8 @@ var _opening_together := false
 ## opening.json's `starters.species` it takes. One press (the second starter)
 ## when not given.
 var _starter_presses: Array = [1, 1]
+## The name each peer typed in the real naming grid (opening-together only).
+var _typed_names: Array = ["", ""]
 
 
 func _initialize() -> void:
@@ -193,9 +195,11 @@ func _run() -> void:
 		("the completed opening left the fresh client exactly one starter (%s)" if _opening_together \
 		else "the moved-on host granted the fresh client exactly one starter (%s)")
 			% str(first_party))
-	var first_story := await _story(1, [STARTER_FLAG])
-	_check(_player_flag(first_story, STARTER_FLAG) == true,
-		"the production starter grant recorded its character receipt")
+	for peer in (2 if _opening_together else 1):
+		var receipt_peer: int = peer if _opening_together else 1
+		var first_story := await _story(receipt_peer, [STARTER_FLAG])
+		_check(_player_flag(first_story, STARTER_FLAG) == true,
+			"peer %d's production starter grant recorded its character receipt" % receipt_peer)
 	if _opening_together:
 		for peer in 2:
 			var reloaded: Dictionary = await step(peer, "save_reload_here", {})
@@ -213,6 +217,8 @@ func _run() -> void:
 				"item": "orb_basic", "min": 45, "max": 50})
 			_check(str(saved_orbs.get("verdict", "")) == "PASS",
 				"peer %d retained its opening catch supplies after load" % peer)
+			await _assert_named_starter(peer, "after load")
+		await _rejoin_with_starter(port)
 
 	if not _opening_together:
 		var second: Dictionary = await step(0, "story_flag",
@@ -307,6 +313,7 @@ func _complete_fresh_opening(peer: int) -> bool:
 	if int(entry.get("row", -1)) != 7 or int(entry.get("column", -1)) != 4 \
 			or str(entry.get("cell", "")) != "\n" or str(entry.get("text", "")).is_empty():
 		return false
+	_typed_names[peer] = str(entry.get("text", ""))
 	if not await _press_opening(peer, "menu_confirm", "finished naming the starter"):
 		return false
 	opening = await _opening(peer)
@@ -484,6 +491,52 @@ func _planar_gap(a: Variant, b: Variant) -> float:
 		return -1.0
 	return Vector2(float((a as Array)[0]) - float((b as Array)[0]),
 		float((a as Array)[2]) - float((b as Array)[2])).length()
+
+
+## The starter this peer picked, under the name it typed, and nothing else.
+func _assert_named_starter(peer: int, when: String) -> void:
+	var identity := await _identity(peer)
+	var rows: Array = identity.get("party", []) as Array
+	var names: Array = identity.get("party_names", []) as Array
+	var picked := _starter_species(int(_starter_presses[peer]))
+	_check(rows.size() == 1 and str(rows[0]).begins_with(picked + "@") and names == [_typed_names[peer]]
+			and not str(_typed_names[peer]).is_empty(),
+		"peer %d's starter is its %s named '%s' %s (%s %s)" % [peer, picked, _typed_names[peer], when, str(rows), str(names)])
+
+
+## A starter that already exists crosses a join: the guest's link dies, its
+## live character is blanked, and the same character comes back through the
+## title's returning route. What it holds then came from its saved character
+## and the join, not from memory.
+func _rejoin_with_starter(port: int) -> void:
+	var character_id := str((await _identity(1)).get("character_id", ""))
+	var saved: Dictionary = await step(1, "save_character_here", {})
+	_check(str(saved.get("verdict", "")) == "PASS", "the guest's character is written (%s)" % str(saved.get("detail", "")))
+	var dropped: Dictionary = await step(1, "drop_link", {"settle_frames": 60})
+	_check(str(dropped.get("verdict", "")) == "PASS", "the guest's link dies (%s)" % str(dropped.get("detail", "")))
+	var alone: Dictionary = await step(0, "expect_peers", {"count": 1}, 900)
+	_check(str(alone.get("verdict", "")) == "PASS", "the host sees the guest gone (%s)" % str(alone.get("detail", "")))
+	await step(1, "leave", {"reason": "link_died"})
+	var wiped: Dictionary = await step(1, "wipe_character", {})
+	_check(str(wiped.get("verdict", "")) == "PASS", "the guest's live character is blanked (%s)" % str(wiped.get("detail", "")))
+	var back: Dictionary = await step(1, "production_join", {
+		"host": "127.0.0.1", "port": port, "returning_route": true, "budget_frames": 6000,
+		"character": {"character_id": character_id, "appearance_id": CLIENT_APPEARANCE, "display_name": CLIENT_NAME},
+	}, 12000)
+	_check(str(back.get("verdict", "")) == "PASS",
+		"the same character rejoins through the title's returning route (%s)" % str(back.get("detail", "")))
+	for peer in 2:
+		var both: Dictionary = await step(peer, "expect_peers", {"count": 2})
+		_check(str(both.get("verdict", "")) == "PASS", "peer %d sees both players again (%s)" % [peer, str(both.get("detail", ""))])
+	var rejoined := await _identity(1)
+	_check(str(rejoined.get("character_id", "")) == character_id,
+		"the rejoined guest is the same character (%s)" % str(rejoined.get("character_id", "")))
+	await _assert_named_starter(1, "after rejoining")
+	var story := await _story(1, [STARTER_FLAG])
+	_check(_player_flag(story, STARTER_FLAG) == true, "the rejoined guest kept its starter receipt")
+	var orbs: Dictionary = await step(1, "assert", {"check": "inventory_count", "item": "orb_basic", "min": 45, "max": 50})
+	_check(str(orbs.get("verdict", "")) == "PASS", "the rejoined guest kept its opening catch supplies (%s)" % str(orbs.get("detail", "")))
+	await _assert_named_starter(0, "with the guest back")
 
 
 ## opening.json's starter at picker index `index` (the picker opens on 0).
