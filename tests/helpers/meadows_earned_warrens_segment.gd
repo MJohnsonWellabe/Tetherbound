@@ -346,6 +346,31 @@ func _prepare() -> bool:
 	return _fail("Actual care, party selection and deployment left no usable ally")
 
 
+## Wild fights on a long walk wear the five down; with no care between them
+## seed 15 lost an L15 wild on the Hall spine with four of five fainted and ten
+## revives carried. After a win, a fainted member or a lead under half health
+## sends the walker through the same Satchel care `_prepare` runs at each
+## segment's start (revive, potion, pilot), as a player would.
+const CARE_BELOW := 0.5
+
+
+func _needs_care() -> bool:
+	var party := _game.get("party") as RefCounted
+	var active: RefCounted = party.call("at", int(party.call("active_index")))
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		if bool(member.get("fainted")):
+			return true
+	return active != null and float(active.get("hp")) < CARE_BELOW * float(active.get("max_hp"))
+
+
+func _party_hp() -> Array:
+	var out := []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		out.append("L%d %.0f/%.0f%s" % [int(member.get("level")), float(member.get("hp")),
+			float(member.get("max_hp")), " fainted" if bool(member.get("fainted")) else ""])
+	return out
+
+
 func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
 	return await _walk(Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y), radius)
 
@@ -364,6 +389,10 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 			_stick(0.0, 0.0)
 			if not await _fight():
 				return false
+			if _needs_care():
+				_receipt("care_between_fights", {"party": _party_hp()})
+				if not await _prepare():
+					return false
 			_nav.reset()
 			session.reset(_player.global_position)
 		if INPUT_OWNER.current(_tree) != null:
