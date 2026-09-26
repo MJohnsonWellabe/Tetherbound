@@ -72,7 +72,7 @@ func _continue_deepwood() -> void:
 	# guardian, the Rootgate road and a Deepwood-station wild), and the
 	# challenge was refused. A player rests first: Lantern Hollow Waycamp is
 	# the camp the Rootgate opens, beside Sable, on this road.
-	if _party_worn(0.999) and not await _rest_party_at_camp("lantern_hollow_waycamp"):
+	if not await _rest_before("officer_nysa_deepwood_rod"):
 		return
 	if not await _walk_xz(Vector2(-890, 4490), "Deepwood station") \
 			or not await _trainer(TRAINERS[0]) or not await _rod("deepwood_rod_station") \
@@ -87,6 +87,10 @@ func _continue_deepwood() -> void:
 	if not await _walk_xz(Vector2(-120, 5270), "Ember Bivouac arrival") \
 			or not await _receipt("stormwood:ember_bivouac_reached") \
 			or not await _trainer(TRAINERS[2]) or not await _receipt("stormwood:kestrel_defeated"):
+		return
+	# Marrow is fought on the core, reached only by the ascent: rest at Ember
+	# Bivouac (open once every rod is down) before climbing.
+	if not await _rest_before("marrow_core_ascent"):
 		return
 	if not await _climb_core() or not await _receipt(CORE):
 		return
@@ -146,6 +150,8 @@ func _trainer(id: String) -> bool:
 	var prompt := body.call("prompt_node") as Node3D if body != null else null
 	if spec.is_empty() or body == null or prompt == null:
 		return _fail(id + " actual trainer is absent")
+	if not await _rest_before(id):
+		return false
 	if not await _ensure_usable_ally(id):
 		return false
 	# The send-out that `_ensure_usable_ally` pressed deploys asynchronously;
@@ -216,6 +222,29 @@ func _trainer(id: String) -> bool:
 			or not bool(_outcomes.get(id, false)):
 		return _fail(id + " did not publish its actual hosted victory within five minutes")
 	return await _receipt(str(spec.get("defeat_flag", "")))
+
+## The camp a player uses before each named fight: the nearest camp open at
+## that point on the route. Lantern Hollow Waycamp (opened by the Rootgate) is
+## the last open camp before Nysa and Sera; Ember Bivouac opens only once all
+## rods are down, so it serves Kestrel and Marrow.
+const REST_BEFORE := {
+	"officer_nysa_deepwood_rod": "lantern_hollow_waycamp",
+	"outerworks_lieutenant_sera": "lantern_hollow_waycamp",
+	"officer_kestrel_outer_works": "ember_bivouac",
+	"marrow_core_ascent": "ember_bivouac",
+}
+
+
+func _rest_before(fight_id: String) -> bool:
+	if not _party_worn(0.999):
+		_note("REST before %s: not needed (party whole)" % fight_id)
+		return true
+	var camp := str(REST_BEFORE.get(fight_id, ""))
+	if camp.is_empty():
+		return true
+	_note("REST before %s at %s (nearest open camp on the route)" % [fight_id, camp])
+	return await _rest_party_at_camp(camp)
+
 
 func _observe_trainer(event: Dictionary) -> void:
 	if str(event.get("kind", "")) == "finished":

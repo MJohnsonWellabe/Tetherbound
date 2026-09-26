@@ -702,6 +702,12 @@ SCRIPT ERROR count is 0 in both runs.
   - **Proposed next step,** committed but not run (5b6f3edab): rest a worn party at Lantern Hollow Waycamp before the Deepwood picket, using the Crown step's ordinary bed/rest prompts. Wait for the director to accept the challenge. Log the exact refusal reason.
   - **Open risks further on:** there is no rest before Sera, Kestrel or Marrow. Ember Bivouac opens only after all rods are down. The same-person Marrow NPC/trainer pair has not been reached yet.
 
+### Open presentation items (reported to the coordinator, not fixed here)
+
+- Hesk's dialogue portrait is a young villager, and Wen's is an old man; neither matches the model (F10 two-peer frames `01_host_hesk_report`, `03_host_wen_records`).
+- Rook stands inside the d_giant arch opening, and a large wild creature perches on top of the arch (`06_host_rook_return`, `07_after_reload_and_repeats`).
+- Pim and Rook each also exist as a same-spot trainer body. Their NPC conversation wins the press, which fits their quest-giver role. Whether a separate challenge body is needed is for the coordinator.
+
 ### Verdict (ACCEPTANCE §6.1 F11), after runs 18–24
 
 - **"Dynamo and Stormheart resolve from the earned route": NOT MET.**
