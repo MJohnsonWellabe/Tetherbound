@@ -102,6 +102,12 @@ const STALL_WINDOW_FRAMES := 90
 const STALL_PROGRESS_M := 0.5
 const TELEPORT_M := 2.5
 const BELOW_TERRAIN_M := 0.6
+## The heightmap sample (`ground_height_at`, interpolated) and the triangulated
+## terrain collider disagree by up to ~0.7 m on steep slopes, so a body standing
+## on the collider can read slightly "below" the sample. A body that is below it
+## and NOT on a floor, or below it by this much regardless, has really gone
+## through: a tunnel keeps falling.
+const THROUGH_TERRAIN_M := 2.0
 const MAX_DROP_M := 1.5
 const WATCHDOG_S := 40 * 60
 const BYPASS_REACH_M := 3.0
@@ -931,8 +937,9 @@ func _travel_leg(target: Vector3, stats: Dictionary, label: String, mounted: boo
 			if _swimming():
 				return {"ok": false, "reason": "entered swimming at %s (water depth %.2f)" % [_fmt(now), world.water_depth_at(now)]}
 			var ground: float = world.ground_height_at(now.x, now.z)
-			if now.y < ground - BELOW_TERRAIN_M:
-				return {"ok": false, "reason": "fell below terrain at %s (ground %.2f)" % [_fmt(now), ground]}
+			if now.y < ground - THROUGH_TERRAIN_M \
+					or (now.y < ground - BELOW_TERRAIN_M and not player.is_on_floor()):
+				return {"ok": false, "reason": "fell below terrain at %s (ground %.2f, on_floor=%s)" % [_fmt(now), ground, str(player.is_on_floor())]}
 			if player.is_on_floor():
 				if is_finite(airborne_from):
 					var drop := airborne_from - now.y
