@@ -367,7 +367,11 @@ func _lost_creature() -> void:
 		await _press("interact")
 		acknowledgement_guard += 1
 	if not bool(_panel.call("is_open")) or not _panel_awaiting_confirmation():
-		_fail("lost_creature: Juno's acknowledgement never reached its friendly-bout choice")
+		var ack_runner: RefCounted = _panel.call("runner") as RefCounted
+		_fail("lost_creature: Juno's acknowledgement never reached its friendly-bout choice (open=%s conversation=%s presses=%d log_tail=%s)" % [
+			str(_panel.call("is_open")),
+			str(ack_runner.call("conversation_id")) if ack_runner != null else "?",
+			acknowledgement_guard, str(_conversation_log.slice(-3))])
 		return
 	await _capture_activity("juno")
 	await _press("menu_cancel")
@@ -802,7 +806,9 @@ func _stand_at_herd_prompt(visit: Node3D, ally: Node3D) -> bool:
 	var moving := true
 	Input.action_press("move_forward")
 	_send("move_forward", true)
-	for _frame in 360:
+	# 900, not 360: the companion follows at its own pace and, seated beside
+	# the player after a long preceding leg, was still 12.7 m out at 360.
+	for _frame in 900:
 		var to := visit.global_position - _player.global_position
 		to.y = 0.0
 		if rig != null and to.length_squared() > 0.01:
