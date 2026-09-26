@@ -1,6 +1,6 @@
 {
- "name": "F15: host and guest settle the dock exchange once",
- "claim": "ACCEPTANCE F15 (T3): 'Host and guest settle the dock exchange once' - the ordinary (no-crash) half. Setup stands in for reaching Water with the swim lesson done and the materials gathered only. The guest walks to the Reedhaven departure dock and presses 'Repair departure dock' (the one PAID dock action: 6 reed fiber + 4 driftwood) through the real prompt; the host presses a different action (Deep Watch chart, free). Each must be done once, the payer's cost taken exactly once, and later presses of the finished repair by either player charge nothing.",
+ "name": "F15: paid dock debit when the host commits but the delta never reaches the guest",
+ "claim": "ACCEPTANCE F15 (T3): 'including paid-debit crash/retry'. Same setup as f15_dock_exchange_once. The guest presses the paid repair (its cost escrowed and its character saved before the intent leaves). The host commits the repair durably, and in that same commit, before the delta is sent, the guest's link is pulled (water_dock_cut), so the guest never learns the repair happened. The guest relaunches through the title's returning Join (character from disk) into the still-running host; the host's snapshot carries the durable receipt, so the escrow settles. A duplicate copy of the same txn is answered already_done by the host, and a retry press charges nothing. The repair is done exactly once and the guest's 6 reed fiber + 4 driftwood are taken exactly once (not zero, not twice), in memory and on disk.",
  "peers": 2,
  "scene": "title",
  "budget_s": 1500,
@@ -68,27 +68,10 @@
    "label": "SETUP: the swim lesson is done (the repair's prerequisite)"
   },
   {
-   "peer": 0,
-   "action": "story_flag",
-   "args": {
-    "flag": "water_named_deep_watch_tidecoil_resolved",
-    "scope": "world"
-   },
-   "label": "SETUP: Tidecoil resolved (the free Deep Watch chart's prerequisite since F13 6b022c8b3)"
-  },
-  {
    "peer": "all",
    "action": "wait_flag",
    "args": {
     "flag": "water_swim_lesson_complete",
-    "scope": "world"
-   }
-  },
-  {
-   "peer": "all",
-   "action": "wait_flag",
-   "args": {
-    "flag": "water_named_deep_watch_tidecoil_resolved",
     "scope": "world"
    }
   },
@@ -154,41 +137,54 @@
    }
   },
   {
-   "peer": 1,
-   "action": "water_dock_act",
+   "peer": 0,
+   "action": "water_dock_cut",
    "args": {
     "action_id": "reedhaven_repair"
    },
+   "label": "host arms the cut: the guest's link drops right after the host durably commits its repair, before the delta is sent"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_act",
+   "args": {
+    "action_id": "reedhaven_repair",
+    "budget_frames": 600
+   },
    "expect_data": {
-    "offered": true,
     "flag_before": false,
-    "flag_after": true,
+    "flag_after": false,
     "taken": {
      "reed_fiber": 6,
      "driftwood": 4
     },
-    "item_takes": [],
     "disk_after": {
      "reed_fiber": 2,
      "driftwood": 2
-    }
+    },
+    "item_takes": []
    },
-   "label": "guest pays for the repair through the real prompt (F15 escrow: the cost is debited and saved at the press; the host sends no item_take)"
-  },
-  {
-   "peer": 1,
-   "action": "screenshot",
-   "args": {
-    "name": "01_guest_at_dock_after_press"
-   }
+   "label": "guest presses the paid repair: escrowed and saved before sending; the host commits, the delta never arrives"
   },
   {
    "peer": 0,
-   "action": "wait_flag",
+   "action": "expect_peers",
    "args": {
-    "flag": "water_dock_reedhaven_repaired",
-    "scope": "world"
-   }
+    "count": 1
+   },
+   "label": "host sees the guest gone"
+  },
+  {
+   "peer": 0,
+   "action": "water_dock_cut",
+   "args": {
+    "report": true
+   },
+   "expect_data": {
+    "cut": true,
+    "flag_on_host": true
+   },
+   "label": "ASSERT: the host committed the repair and cut the guest before publishing it"
   },
   {
    "peer": 0,
@@ -196,64 +192,27 @@
    "args": {
     "action_id": "reedhaven_repair"
    },
+   "label": "host: the repair is committed",
    "expect_data": {
     "done": {
      "reedhaven_repair": true
     },
-    "bag": {
-     "reed_fiber": 8,
-     "driftwood": 6
-    },
     "prompt_enabled": false
-   },
-   "label": "host sees it done and paid nothing"
-  },
-  {
-   "peer": 0,
-   "action": "water_dock_act",
-   "args": {
-    "action_id": "deep_watch_chart"
-   },
-   "expect_data": {
-    "offered": true,
-    "flag_before": false,
-    "flag_after": true,
-    "taken": {}
-   },
-   "label": "host does a different (free) dock action"
-  },
-  {
-   "peer": 0,
-   "action": "screenshot",
-   "args": {
-    "name": "02_host_at_chart_after_press"
    }
   },
   {
-   "peer": 1,
-   "action": "wait_flag",
-   "args": {
-    "flag": "water_dock_deep_watch_current_charted",
-    "scope": "world"
-   }
-  },
-  {
-   "peer": 1,
+   "peer": 0,
    "action": "capture_saves",
    "args": {
-    "label": "after_pay"
+    "label": "host_after_crash"
    }
   },
   {
    "peer": 1,
    "action": "water_dock_state",
-   "args": {
-    "action_id": "reedhaven_repair"
-   },
    "expect_data": {
     "done": {
-     "reedhaven_repair": true,
-     "deep_watch_chart": true
+     "reedhaven_repair": false
     },
     "bag": {
      "reed_fiber": 2,
@@ -262,10 +221,114 @@
     "disk": {
      "reed_fiber": 2,
      "driftwood": 2
-    },
-    "prompt_enabled": false
+    }
    },
-   "label": "guest charged exactly once, in memory and on disk"
+   "label": "ASSERT: guest cut off before the delta: repair not seen, cost already escrowed in memory and on disk"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_state",
+   "args": {
+    "rejoin": true
+   },
+   "budget_frames": 10000,
+   "label": "guest relaunches: the title's returning Join loads its character from disk and rejoins the same host"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_state",
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": true
+    },
+    "bag": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "disk": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
+   },
+   "label": "ASSERT: rejoin snapshot carries the host's receipt; the escrow settles (kept, not refunded)"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_resend",
+   "args": {
+    "action_id": "reedhaven_repair"
+   },
+   "expect_data": {
+    "found": true,
+    "status_after": "settled",
+    "refusals": [
+     "already_done"
+    ],
+    "committed": false,
+    "taken": {
+     "reed_fiber": 0,
+     "driftwood": 0
+    },
+    "disk_after": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "status_before": "settled"
+   },
+   "label": "ASSERT: the rejoin snapshot already settled the row; a duplicate copy of the committed txn is answered already_done by the host and charges nothing"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_act",
+   "args": {
+    "action_id": "reedhaven_repair",
+    "force": true
+   },
+   "label": "guest retries the repair after rejoin (presses it; forced if the prompt is already dark)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_dock_reedhaven_repaired",
+    "scope": "world",
+    "budget_frames": 600
+   },
+   "continue_on_fail": true,
+   "label": "the repair is done in the world"
+  },
+  {
+   "peer": 1,
+   "action": "capture_saves",
+   "args": {
+    "label": "after_retry"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_state",
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": true
+    },
+    "bag": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "disk": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
+   },
+   "continue_on_fail": true,
+   "label": "ASSERT: crash + rejoin + retry: repair done once, the guest paid exactly once (6+4), in memory and on disk"
   },
   {
    "peer": 1,
@@ -281,7 +344,8 @@
      "driftwood": 0
     }
    },
-   "label": "guest retries the finished repair (stale resend): no second charge"
+   "continue_on_fail": true,
+   "label": "ASSERT: a second retry charges nothing"
   },
   {
    "peer": 0,
@@ -297,6 +361,7 @@
      "driftwood": 0
     }
    },
+   "continue_on_fail": true,
    "label": "host presses the finished repair: not charged"
   },
   {
@@ -307,20 +372,12 @@
    }
   },
   {
-   "peer": "all",
-   "action": "water_dock_state",
-   "expect_data": {
-    "done": {
-     "reedhaven_repair": true,
-     "deep_watch_chart": true
-    }
-   },
-   "label": "final"
-  },
-  {
    "peer": 1,
    "action": "water_dock_state",
    "expect_data": {
+    "done": {
+     "reedhaven_repair": true
+    },
     "bag": {
      "reed_fiber": 2,
      "driftwood": 2
@@ -330,7 +387,8 @@
      "driftwood": 2
     }
    },
-   "label": "guest: still charged exactly once"
+   "continue_on_fail": true,
+   "label": "ASSERT final: guest paid exactly once"
   },
   {
    "peer": 0,
@@ -345,7 +403,8 @@
      "driftwood": 6
     }
    },
-   "label": "host: never charged"
+   "continue_on_fail": true,
+   "label": "host never charged"
   },
   {
    "peer": 0,
@@ -355,32 +414,11 @@
     "dir": "worlds",
     "path_contains": "slot-0/",
     "contains": [
-     "water_dock_reedhaven_repaired",
-     "water_dock_deep_watch_current_charted"
+     "water_dock_reedhaven_repaired"
     ]
    },
-   "label": "host's saved world holds both actions"
-  },
-  {
-   "peer": 0,
-   "action": "check_saved",
-   "args": {
-    "label": "before",
-    "dir": "worlds",
-    "path_contains": "slot-0/",
-    "lacks": [
-     "water_dock_reedhaven_repaired",
-     "water_dock_deep_watch_current_charted"
-    ]
-   },
-   "label": "baseline world held neither"
-  },
-  {
-   "peer": "all",
-   "action": "screenshot",
-   "args": {
-    "name": "03_after"
-   }
+   "continue_on_fail": true,
+   "label": "host's saved world holds the repair"
   }
  ]
 }
