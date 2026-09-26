@@ -254,7 +254,7 @@ func test_runtime_builds_every_wall_as_static_collision() -> void:
 		var junction_posts := POCKETS.spur_posts(pocket, cfg)
 		assert_eq(junction_posts.size(), 2, "%s: a pair of lamps frames its spur's road junction" % pocket.id)
 		var trunks := POCKETS.gateway_trunks(pocket, cfg)
-		assert_eq(trunks.size(), 2, "%s: a gateway trunk behind each junction lamp" % pocket.id)
+		assert_eq(trunks.size(), 2 * (int(cfg.spur_marker.gateway.wing_trunks) + 1), "%s: a palisade gateway across its spur" % pocket.id)
 		assert_eq(body.get_child_count(), walls.size() + posts.size() + junction_posts.size() + trunks.size(),
 			"%s: one collider per wall segment, the two lure posts, the two junction posts and the two gateway trunks (no models headless)" % pocket.id)
 		for index in trunks.size():

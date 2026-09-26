@@ -60,51 +60,66 @@ static func spur_post(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -
 	return posts[0] if not posts.is_empty() else {}
 
 
-## WO-F09-05 round 2: the junction lamps are a PAIR framing the spur where it
-## leaves the road, one either side of its painted lane, like a gateway
-## (blind judge: a single lamp beside the road read as a streetlight). Each
-## stands `side_clear_m` outside the painted lane (stormwood_road_surface.json
-## spur width plus junction flare at that distance), at the first
-## `along_m`..`along_max_m` distance up the spur where both posts clear every
-## through road's corridor (terrain route_half_width + `road_clear_m`), capped
-## to stay on the spur's own corridor. [right, left] as {at, facing}; [] without
-## a spur or marker.
+## The two junction lamps, [right, left] as {at, facing}: gateway()'s posts
+## (round 2 made them a pair; round 3 set them at the gateway's opening).
 static func spur_posts(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> Array[Dictionary]:
+	return gateway(pocket, cfg, routes).get("posts", [] as Array[Dictionary])
+
+
+## WO-F09-05 round 3 (second blind judge: from the road the pocket read as a
+## signpost, not a place; its giant-trunk gate was invisible from the fork).
+## A section of the pocket's own palisade stands across its spur near the
+## road: an opening of `opening_m` with a trunk either side and `wing_trunks`
+## more trunks outward on each side at `trunk_spacing_m`, and the two
+## junction lamps in front of the opening's edges, facing the road. It stands
+## at the first distance from along_m to along_max_m up the spur where every
+## trunk and post clears each through road's corridor (terrain
+## route_half_width + road_clear_m + its own reach). Config
+## spur_marker.gateway. {along, trunks: [Vector2], posts: [{at, facing}]}, or
+## {} without a spur or marker.
+static func gateway(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> Dictionary:
 	var marker: Dictionary = cfg.get("spur_marker", {})
+	var spec: Dictionary = marker.get("gateway", {})
 	if routes.is_empty():
 		routes = (JSON.parse_string(FileAccess.get_file_as_string(WORLD_PATH)) as Dictionary).routes
 	var lane := spur(pocket, routes)
-	if marker.is_empty() or lane.is_empty():
-		return []
+	if spec.is_empty() or lane.is_empty():
+		return {}
 	var points: Array = lane.points
 	var junction := Vector2(float(points[0][0]), float(points[0][1]))
 	var up := (Vector2(float(points[1][0]), float(points[1][1])) - junction).normalized()
 	var right := Vector2(up.y, -up.x)
-	var surface: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SURFACE_PATH))
 	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_PATH))
-	var corridor := float(terrain.route_half_width) + float(marker.get("road_clear_m", 0.9))
-	var own_max := float(terrain.route_half_width) - float(marker.get("own_corridor_margin_m", 0.6))
-	var along := float(marker.along_m)
+	var corridor := float(terrain.route_half_width) + float(spec.road_clear_m)
+	var trunk_reach := float(spec.collider_width_m) * sqrt(2.0) * 0.5
+	var post_reach := float(spur_lamp_style(cfg).post_width_m) * sqrt(2.0) * 0.5
+	var inner := float(spec.opening_m) * 0.5 + float(spec.collider_width_m) * 0.5
+	var post_side := float(spec.opening_m) * 0.5 - float(spec.lamp_edge_m)
+	var along := float(spec.along_m)
 	var chosen := {}
-	while along <= float(marker.get("along_max_m", along)) + 0.01:
-		var flare := float(surface.junction.flare_m) * (1.0 - smoothstep(0.0, float(surface.junction.flare_length_m), along))
-		var side := minf(float(surface.lane_half_width_m.spur) + flare + float(marker.get("side_clear_m", 0.9)), own_max)
-		var pair: Array[Vector2] = [junction + up * along + right * side, junction + up * along - right * side]
+	while along <= float(spec.along_max_m) + 0.01:
+		var trunks: Array[Vector2] = []
+		for sign: float in [1.0, -1.0]:
+			for k in int(spec.wing_trunks) + 1:
+				trunks.append(junction + up * along + right * sign * (inner + k * float(spec.trunk_spacing_m)))
+		var posts: Array[Dictionary] = []
+		for sign: float in [1.0, -1.0]:
+			posts.append({"at": junction + up * (along - float(spec.lamp_ahead_m)) + right * sign * post_side, "facing": -up})
+		chosen = {"along": along, "trunks": trunks, "posts": posts}
 		var clear := true
 		for route: Dictionary in routes:
 			if str(route.get("kind", "")) == "spur":
 				continue
-			for at: Vector2 in pair:
-				if _distance_to_route(at, route) <= corridor:
+			for trunk: Vector2 in trunks:
+				if _distance_to_route(trunk, route) <= corridor + trunk_reach:
 					clear = false
-		chosen = {"pair": pair}
+			for post: Dictionary in posts:
+				if _distance_to_route(post.at, route) <= corridor + post_reach:
+					clear = false
 		if clear:
 			break
 		along += 0.5
-	var out: Array[Dictionary] = []
-	for at: Vector2 in chosen.pair:
-		out.append({"at": at, "facing": -up})
-	return out
+	return chosen
 
 
 static func _distance_to_route(at: Vector2, route: Dictionary) -> float:
@@ -279,27 +294,9 @@ func _mouth_lure(world: Node3D, body: StaticBody3D, pocket: Dictionary, cfg: Dic
 				index, show_models, draw)
 
 
-## WO-F09-05 round 3 (second blind judge: from the road the pocket read as a
-## signpost, not a place; only Verge, whose warm lamps sit against a dark tree
-## mass, worked). The pocket's own gateway comes to the fork: one palisade
-## trunk stands just behind and outside each junction lamp, so the lamps are
-## seen against the same dead-trunk mass as the pocket's gate. World XZ,
-## [right, left]; config spur_marker.gateway.
+## The gateway()'s palisade trunks, world XZ.
 static func gateway_trunks(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> Array[Vector2]:
-	var gateway: Dictionary = (cfg.get("spur_marker", {}) as Dictionary).get("gateway", {})
-	var posts := spur_posts(pocket, cfg, routes)
-	var lane := spur(pocket, routes)
-	if gateway.is_empty() or posts.size() != 2 or lane.is_empty():
-		return []
-	var points: Array = lane.points
-	var junction := Vector2(float(points[0][0]), float(points[0][1]))
-	var up := (Vector2(float(points[1][0]), float(points[1][1])) - junction).normalized()
-	var right := Vector2(up.y, -up.x)
-	var out: Array[Vector2] = []
-	for index in posts.size():
-		var outward := right if index == 0 else -right
-		out.append((posts[index].at as Vector2) + up * float(gateway.behind_m) + outward * float(gateway.out_m))
-	return out
+	return gateway(pocket, cfg, routes).get("trunks", [] as Array[Vector2])
 
 
 ## Stepping-stone positions on a pocket's spur (config `spur_trail`): its

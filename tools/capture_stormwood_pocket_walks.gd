@@ -637,9 +637,11 @@ func _log_view(tag: String) -> void:
 		var hits: Array = []
 		for node: Node in _world.find_children("*", "VisualInstance3D", true, false):
 			var visual := node as VisualInstance3D
-			if not visual.is_visible_in_tree():
+			if not visual.is_visible_in_tree() or not (visual is GeometryInstance3D):
 				continue
 			var box := visual.global_transform * visual.get_aabb()
+			if box.size.x > 300.0 or box.size.z > 300.0:
+				continue
 			var hit: Variant = box.intersects_ray(from, dir)
 			if hit != null:
 				hits.append([from.distance_to(hit as Vector3), str(visual.get_path()).trim_prefix(str(_world.get_path())), box.size])
@@ -647,7 +649,8 @@ func _log_view(tag: String) -> void:
 		_log("PICK %s px=%s -> %s" % [tag, str(pixel), str(hits.slice(0, 4))])
 	if _director != null:
 		for wild: Node3D in _director.call("wild_creatures"):
-			if is_instance_valid(wild) and _camera.is_position_in_frustum(wild.global_position + Vector3.UP):
+			if is_instance_valid(wild) and _camera.is_position_in_frustum(wild.global_position + Vector3.UP) \
+					and wild.global_position.distance_to(_camera.global_position) < 60.0:
 				var p := _camera.unproject_position(wild.global_position + Vector3.UP)
 				if p.x > -200 and p.x < size.x + 200:
 					_log("WILD %s %s species=%s at=%s screen=(%.0f,%.0f) frozen=%s" % [tag, wild.name, str(wild.get("species_id")),
