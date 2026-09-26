@@ -42,7 +42,7 @@ func _init() -> void:
 			text.append(line)
 	_write("ledger.txt", "\n".join(text))
 	# Per-phase table (baseline).
-	var phases := PackedStringArray(["phase,trainer,path_m,wild_sites_available,wild_defeats_credited,wild_xp_to_lead,candy_levels,ace,need_lead,need_all,levels_before,banked_xp_before,lead_margin,weakest_margin,trainer_xp_to_lead,levels_after,coins,reward_items,verge_recovery_items,supply_checks"])
+	var phases := PackedStringArray(["phase,trainer,path_m,wild_sites_available,wild_defeats_credited,wild_xp_to_lead,candy_levels,ace,need_lead,need_all,levels_before,banked_xp_before,lead_margin,weakest_margin,trainer_xp_to_lead,reward_xp_bonus_each,levels_after,coins,reward_items,verge_recovery_items,supply_checks"])
 	var rows: Array = (base["phases"] as Array).duplicate()
 	rows.append(base["tail"])
 	for i in rows.size():
@@ -54,7 +54,7 @@ func _init() -> void:
 			"%.0f" % float(row["path_m"]), str(row["available"]), str(row["fought"]), str(row["wild_xp"]),
 			str(row["candy"]), str(row.get("ace", "")), str(row.get("need_lead", "")), str(row.get("need_all", "")),
 			_q(row["before"]), _q(_banked(ledger, row["before"], row["before_xp"])), str(row.get("lead_margin", "")), str(row.get("all_margin", "")),
-			str(row["trainer_xp"]), _q(row["after"]), str(row["coins"]), _q(row.get("reward_items", {})),
+			str(row["trainer_xp"]), str(row.get("bonus_xp", 0)), _q(row["after"]), str(row["coins"]), _q(row.get("reward_items", {})),
 			_q(row.get("recovery", {})), _q("; ".join(costs))])))
 	_write("phases.csv", "\n".join(phases))
 	# Per-step table (baseline): what each ordered walk passed, open vs gated.
@@ -66,23 +66,28 @@ func _init() -> void:
 			_q(" ".join(PackedStringArray(row["nodes"])))])))
 	_write("steps.csv", "\n".join(steps))
 	# Controls and comparisons.
-	var controls := PackedStringArray(["variant,options,verdict,worst_lead_margin,worst_weakest_margin,levels_before_each_fight(banked xp lead/weakest),exit,exit_banked,lead_xp_wild_share,shortfalls"])
+	var controls := PackedStringArray(["variant,options,verdict,worst_lead_margin,worst_weakest_margin,veyra_margin_lead/weakest,exit_margin_lead/weakest,levels_before_each_fight(banked xp lead/weakest),exit,exit_banked,lead_xp_wild_share,shortfalls"])
 	for variant: Dictionary in VARIANTS:
 		var result: Dictionary = ledger.call("ledger", variant["options"])
 		var befores := PackedStringArray()
 		var wild := 0
 		var trainer := 0
+		var veyra := ""
 		for row: Dictionary in (result["phases"] as Array):
 			befores.append("%s:%s (%s)" % [row["name"], " ".join(PackedStringArray(row["before"])),
 				_banked(ledger, row["before"], row["before_xp"])])
 			wild += int(row["wild_xp"])
-			trainer += int(row["trainer_xp"])
+			trainer += int(row["trainer_xp"]) + int(row.get("bonus_xp", 0))
+			if bool(row.get("finale", false)):
+				veyra = "%+d/%+d" % [int(row["lead_margin"]), int(row["all_margin"])]
 		wild += int((result["tail"] as Dictionary)["wild_xp"])
 		var m: Dictionary = ledger.call("margins", result)
 		var fails: Array = ledger.call("shortfalls", result)
 		controls.append(",".join(PackedStringArray([_q(variant["label"]), _q(variant["options"]),
 			"FAIL" if fails.size() > 0 else "PASS",
 			"%+d (%s)" % [int(m["lead"]), m["lead_at"]], "%+d (%s)" % [int(m["weakest"]), m["weakest_at"]],
+			veyra, "%+d/%+d" % [int((result["exit"] as Array)[0]) - LEDGER.CLOUDREACH_EXIT_TARGET,
+				_min(result["exit"]) - LEDGER.CLOUDREACH_EXIT_TARGET + LEDGER.RETAINED_SPREAD],
 			_q(" | ".join(befores)), _q(result["exit"]), _q(_banked(ledger, result["exit"], result["exit_xp"])),
 			"%.1f%%" % (100.0 * float(wild) / maxf(1.0, float(wild + trainer))),
 			_q(" | ".join(PackedStringArray(fails)))])))
@@ -99,6 +104,13 @@ func _banked(ledger: RefCounted, levels: Array, xps: Array) -> String:
 			weakest = i
 	return "lead %s ; weakest %s" % [ledger.call("banked", int(levels[0]), int(xps[0])),
 		ledger.call("banked", int(levels[weakest]), int(xps[weakest]))]
+
+
+func _min(levels: Array) -> int:
+	var low := 1 << 30
+	for value: Variant in levels:
+		low = mini(low, int(value))
+	return low
 
 
 func _q(value: Variant) -> String:
