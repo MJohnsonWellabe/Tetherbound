@@ -1169,7 +1169,7 @@
     {
       "order": 3012,
       "name": "doss_ranger_camp",
-      "_why": "F03 lure cue, coordinator option (a). Doss's perch is 62.8 m from the nearest clear river-loop view at [-80,4165]; he and the buckled boards were a speck from the road. A ranger's large signal fire (scale 0.6, glow 1.9) 8 m behind him (east, away from the road), clear of the perch boards, mark the site from the loop. No interaction, reward or collider path changes.",
+      "_why": "F03 lure cue, coordinator ruling (b): a tall cue visible from the road, then readable on approach; the site is not moved. Doss's perch is 62.8 m from the nearest clear river-loop view at [-80,4165]; he and the buckled boards were a speck from the road. A ranger's large signal fire (scale 0.6, glow 1.9) 8 m behind him (east, away from the road), clear of the perch boards, marks the site from the loop with a 28 m dark smoke column (12 m wide at the top, alpha 0.9) that clears the trees. No interaction, reward or collider path changes.",
       "props": [
         {
           "model": "Bonfire_Fire",
@@ -1177,9 +1177,9 @@
           "sink_m": 0.03,
           "scale": 0.6,
           "glow_scale": 1.9,
-          "smoke_top_m": 24.0,
-          "smoke_alpha": 0.72,
-          "smoke_top_size_m": 7.0,
+          "smoke_top_m": 28.0,
+          "smoke_alpha": 0.9,
+          "smoke_top_size_m": 12.0,
           "smoke_colour": "#4f4a45",
           "glow": "campfire",
           "name": "DossCampFire",
