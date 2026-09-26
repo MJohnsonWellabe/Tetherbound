@@ -1,0 +1,37 @@
+extends SceneTree
+const H := preload("res://scripts/world/terrain_height.gd")
+func _init():
+	_run.call_deferred()
+func _run():
+	for realm in [["meadows","res://data/terrain/playground","res://data/config/terrain_playground.json"],["stormwood","res://data/terrain/stormwood","res://data/config/stormwood_world.json"]]:
+		var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(realm[2]))
+		var t: Node3D = ClassDB.instantiate("Terrain3D")
+		root.add_child(t)
+		await process_frame
+		var tc: Dictionary = cfg.get("terrain", cfg)
+		t.set("region_size", int(tc.get("region_size", 256)))
+		t.set("vertex_spacing", float(tc.get("vertex_spacing", 1.0)))
+		t.set("data_directory", realm[1])
+		await process_frame
+		var data: Object = t.get("data")
+		var step := float(t.get("vertex_spacing"))
+		var rng := RandomNumberGenerator.new(); rng.seed = 7
+		var n := 0; var bad_raw := 0; var bad_fix := 0; var worst := 0.0
+		var regions: Array = data.call("get_region_locations")
+		var rs := float(t.get("region_size")) * step
+		for i in 4000:
+			var r: Vector2i = regions[rng.randi() % regions.size()]
+			var vx := snappedf(r.x * rs + rng.randf() * rs, step)
+			var vz := snappedf(r.y * rs + rng.randf() * rs, step)
+			var truth := float(data.call("get_height", Vector3(vx, 0, vz)))
+			if not is_finite(truth): continue
+			var raw := float(data.call("get_height", Vector3(vx - 0.005, 0, vz - 0.005)))
+			var fixed := H.height_from(data, step, vx - 0.005, vz - 0.005)
+			n += 1
+			if absf(raw - truth) > 0.05: bad_raw += 1
+			if absf(fixed - truth) > 0.05: bad_fix += 1
+			worst = maxf(worst, absf(raw - truth))
+		print("%s spacing=%s samples=%d raw_off>5cm=%d helper_off>5cm=%d worst_raw_err=%.2fm" % [realm[0], step, n, bad_raw, bad_fix, worst])
+		t.queue_free()
+		await process_frame
+	quit()

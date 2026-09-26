@@ -1,0 +1,19 @@
+Terrain3D 1.0.2 near-vertex get_height, measured on the shipped terrain data.
+
+The probe is ralph/reports/TIDEWAKE/terrain_height_shared/probe_near_vertex.gd.txt; rename it to .gd under tests/ to rerun it.
+Engine: Godot 4.7-stable, headless.
+
+Method:
+- Pick up to 4,000 random vertices per realm (seed 7) that have a finite height.
+- Compare get_height at the vertex ("truth") with a query 5 mm below and left of it (x-0.005, z-0.005).
+- Make that comparison two ways: the raw data.get_height call on main, and terrain_height.gd::height_from.
+- Count a sample as off when it differs from the truth by more than 5 cm.
+
+meadows   spacing=2.0 samples=4000 raw_off>5cm=3564 helper_off>5cm=0 worst_raw_err=10.47m
+stormwood spacing=1.0 samples=3998 raw_off>5cm=3136 helper_off>5cm=0 worst_raw_err=4.66m
+
+Before (main): any caller querying within 0.01 m of a vertex reads the neighbouring vertex.
+These callers are playground_world.gd::ground_height_at, the spawn sample,
+grass_field.gd::_terrain_height_at and stormwood_world.gd's road-current height.
+After (this branch): the same queries read the vertex they meant.
+Queries further than 0.02 m from a vertex are unchanged by construction (query_point).
