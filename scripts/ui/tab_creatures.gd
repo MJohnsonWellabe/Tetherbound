@@ -124,7 +124,11 @@ const GUARDIAN_ROSTER_DIM := 0.45
 ## width with its head a few pixels high (blind judge: "no readable face"). The
 ## detail column is hidden for the question, so the preview takes a landscape
 ## share of the row instead and the card beside it narrows.
-const GUARDIAN_PREVIEW_WIDTH := 520.0
+## X03 text floor: 440, down from 520. The two-line roster is 180 px wider
+## than before, and at 520 the card beside the preview wrapped its body and
+## legend so far that it pushed the menu frame off a 720p screen. 440 is still
+## a landscape share against the ordinary 420 portrait preview.
+const GUARDIAN_PREVIEW_WIDTH := 440.0
 ## The card's title size while the offer is up: the UX §8 heading floor
 ## (24 px at 1280x720 is 36 logical). The row has no spare width, so the wider
 ## preview is paid for by a one-line title instead of a taller card -- at
