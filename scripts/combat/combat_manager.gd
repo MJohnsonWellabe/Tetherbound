@@ -1422,7 +1422,7 @@ func _size_framing_extra(body: Node3D, framing: Dictionary) -> float:
 		float(framing.get("max_extra_distance", 4.0)))
 
 
-func _release_camera() -> void:
+func _release_camera(fought_at: Variant = null) -> void:
 	_camera_framing_extra = 0.0
 	_camera_framing_height = 0.0
 	_camera_clear_orbit_deg = 0.0
@@ -1435,6 +1435,36 @@ func _release_camera() -> void:
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
 	_camera_rig.call("set_target", _player, {})
+	_face_the_aftermath(fought_at)
+
+
+## F04#6: the fight hands the camera back facing wherever the fight's yaw last
+## pointed, so an aftermath -- the defeated trainer, the collapsed creature,
+## whatever the win changed -- could be behind the player, and at Keeper Hald's
+## stand the arm came back collapsed against the outer works' wall for the
+## whole aftermath. Turn the exploration camera to look past the player at
+## where the opponent stood, then take the nearest orbit angle whose arm has
+## room (the same solver the fight camera uses). One shot: the player's own
+## look input owns the camera from the next frame.
+func _face_the_aftermath(fought_at: Variant) -> void:
+	var cfg: Dictionary = (MATH.config().get("camera", {}) as Dictionary).get("aftermath", {}) as Dictionary
+	if not bool(cfg.get("enabled", false)) or fought_at == null or _player == null \
+			or not is_instance_valid(_player):
+		return
+	var toward: Vector3 = (fought_at as Vector3) - _player.global_position
+	toward.y = 0.0
+	if toward.length_squared() < 0.25:
+		return
+	toward = toward.normalized()
+	var yaw := atan2(-toward.x, -toward.z)
+	_camera_rig.set("yaw", yaw)
+	if cfg.has("pitch_deg"):
+		_camera_rig.set("pitch", deg_to_rad(float(cfg.get("pitch_deg", -15.0))))
+	if _camera_rig.has_method("clear_orbit_offset_deg"):
+		var length := float(_camera_rig.get("_distance"))
+		var offset := float(_camera_rig.call("clear_orbit_offset_deg", length,
+			cfg.get("samples_deg", [30.0, 60.0, 90.0, 120.0]), float(cfg.get("min_fraction", 0.7))))
+		_camera_rig.set("yaw", wrapf(yaw + deg_to_rad(offset), -PI, PI))
 
 
 ## --- the loop -------------------------------------------------------------
@@ -3533,7 +3563,9 @@ func _finish() -> void:
 	if _arena != null:
 		_arena.queue_free()
 		_arena = null
-	_release_camera()
+	var fought_at: Variant = _wild.global_position if _wild != null and is_instance_valid(_wild) \
+		and (_wild as Node3D).is_inside_tree() else null
+	_release_camera(fought_at)
 
 	exited.emit(_outcome)
 	_realm_owned_opponent = false

@@ -178,6 +178,13 @@
       "hidden_points": 2,
       "speed": 12.0
     },
+    "aftermath": {
+      "_why": "F04#6 (X04 blind judge, #257): after every named win the camera came back facing wherever the fight left it -- away from the defeated trainer and the world beat, and at Keeper Hald's stand collapsed against the outer works' wall for the whole aftermath. On release the exploration camera looks past the player at where the opponent stood, then takes the nearest orbit angle whose arm has room (camera_rig.gd::clear_orbit_offset_deg). One shot; manual look owns it after. TUNABLE.",
+      "enabled": true,
+      "pitch_deg": -14.0,
+      "samples_deg": [30.0, 60.0, 90.0, 120.0],
+      "min_fraction": 0.7
+    },
     "framing": {
       "_comment": "OP-0905-17: the base distance/fov/height above are the tightest the camera should ever sit, tuned for two fighters at a normal opening gap. This widens the frame further, every physics frame `combat_manager.gd::_update_combat_camera_framing()` runs, as the fight itself demands more room -- the fighters backing apart, or either body's authored presentation span exceeding the small-body reference. It only ever ADDS to the base distance up to max_extra_distance. CameraRig sweeps the lateral shoulder pivot against geometry and SpringArm limits actual depth in the current camera direction; the nearest wall to any fighter is not a camera-distance ceiling.",
       "enabled": true,
