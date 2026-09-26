@@ -687,15 +687,23 @@ func _act_escort_home(panel: Node) -> Dictionary:
 	if rescued == null or juno == null:
 		return out
 	var prompt := rescued.get_node_or_null(^"Interactable")
+	# The patrol's post-defeat lines can open after the fight round has gone
+	# idle; while that panel is up the player cannot walk (the r1 escort stood
+	# still behind it for 150 s). Read them out first, as a player would.
+	out["post_fight_lines"] = await _drain_dialogue(panel, "act-60-post-fight")
 	# Walk to the Meadowhart until her prompt wins, then press it.
+	var stuck := {"best": INF, "at": _clock, "attempt": 0}
 	Input.action_press("move_forward")
 	for frame in 1800:
 		var to := _xz3(rescued.global_position) - _xz()
 		if to.length() > 0.01:
 			_rig.set("yaw", atan2(-to.x, -to.y))
 		await physics_frame
+		_tick()
 		if prompt != null and _arbiter.call("winning_provider") == prompt:
 			break
+		if await _escort_unstick(stuck, to.length()):
+			Input.action_press("move_forward")
 	_release()
 	await _press("interact")
 	for i in 30:
@@ -706,8 +714,11 @@ func _act_escort_home(panel: Node) -> Dictionary:
 		return out
 	await _capture("act-61-escort-start")
 	out["escort"] = "started"
-	# Lead her home.
+	# Lead her home. Wild bodies and trunks on the line to Juno are walked
+	# around with the same back-off-and-strafe the discovery walk uses.
 	var shots := 0
+	var start_m := _xz().distance_to(_xz3(juno.global_position))
+	stuck = {"best": INF, "at": _clock, "attempt": 0}
 	Input.action_press("move_forward")
 	for frame in 9000:
 		var to := _xz3(juno.global_position) - _xz()
@@ -720,6 +731,12 @@ func _act_escort_home(panel: Node) -> Dictionary:
 		if bool(reunion.call("is_reunited")):
 			out["escort"] = "reunited"
 			break
+		if to.length() > 2.5 and await _escort_unstick(stuck, to.length()):
+			if int(reunion.call("escort_peer")) == 0:
+				out["escort"] = "cancelled while unsticking (leash)"
+				break
+			Input.action_press("move_forward")
+			continue
 		if frame > 0 and frame % 900 == 0 and shots < 2:
 			shots += 1
 			# Look back at the Meadowhart following, then carry on.
@@ -731,9 +748,21 @@ func _act_escort_home(panel: Node) -> Dictionary:
 			await _capture("act-6%d-escort-walk" % (1 + shots))
 			Input.action_press("move_forward")
 	_release()
+	out["escort_start_m"] = snappedf(start_m, 0.1)
+	out["escort_end_m"] = snappedf(_xz().distance_to(_xz3(juno.global_position)), 0.1)
+	out["unstick_attempts"] = int(stuck["attempt"])
 	for i in 45:
 		await physics_frame
-	await _capture("act-64-reunited")
+	# Frame the reunion: Juno and the Meadowhart together, not the back of
+	# the player's head.
+	var pair := (_xz3(juno.global_position) + _xz3(rescued.global_position)) * 0.5 - _xz()
+	if pair.length() > 0.01:
+		_rig.set("yaw", atan2(-pair.x, -pair.y))
+	for i in 20:
+		await physics_frame
+	await _capture("act-64-reunited" if bool(reunion.call("is_reunited")) else "act-64-not-reunited")
+	# Juno's thanks opens on its own once the flag lands (the acknowledgement).
+	out["acknowledgement_lines"] = await _drain_dialogue(panel, "act-64-acknowledgement")
 	# Juno's acknowledgement: talk to her (her prompt), read two lines, then
 	# back out with cancel rather than accept her friendly bout.
 	var face := _xz3(juno.global_position) - _xz()
@@ -756,6 +785,46 @@ func _act_escort_home(panel: Node) -> Dictionary:
 		await _press("menu_cancel")
 	out["reunion_dialogue_lines"] = lines
 	return out
+
+
+## Reads an open dialogue out with ordinary interact presses, capturing up to
+## three lines; returns how many lines were read.
+func _drain_dialogue(panel: Node, label: String) -> int:
+	var lines := 0
+	for wait in 90:
+		if panel != null and bool(panel.call("is_open")):
+			break
+		await physics_frame
+	while panel != null and bool(panel.call("is_open")) and lines < 12:
+		lines += 1
+		if lines <= 3:
+			await _capture("%s-%02d" % [label, lines])
+		await _press("interact")
+		for i in 20:
+			await physics_frame
+	return lines
+
+
+## Escort-walk stuck check, shared by both escort legs: no gain of 0.3 m on
+## the goal for STUCK_S runs `_unstick()` (the discovery walk's back-off,
+## jump and strafe, which also stows a wedging companion on attempt 3).
+## Returns true when it unstuck, so the caller re-presses forward.
+func _escort_unstick(stuck: Dictionary, remaining: float) -> bool:
+	if remaining < float(stuck["best"]) - 0.3:
+		stuck["best"] = remaining
+		stuck["at"] = _clock
+		return false
+	if _clock - float(stuck["at"]) <= STUCK_S or int(stuck["attempt"]) >= UNSTICK_ATTEMPTS:
+		return false
+	stuck["attempt"] = int(stuck["attempt"]) + 1
+	_notes.append("t=%.1fs escort: no progress at (%.1f,%.1f); unstick attempt %d" % [
+		_clock, _xz().x, _xz().y, int(stuck["attempt"])])
+	# A companion stowed on attempt 3 stays away for the rest of the escort;
+	# the Meadowhart, not the companion, is the point of these frames.
+	await _unstick(int(stuck["attempt"]))
+	stuck["best"] = INF
+	stuck["at"] = _clock
+	return true
 
 
 func _act_round(panel: Node, actions: Array, round: int) -> void:
