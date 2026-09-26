@@ -70,6 +70,7 @@ const SCREEN_MARGIN := 0.03
 ## Spur samples (of 10) that must be in frustum with a clear ray.
 const SPUR_VISIBLE_MIN := 5
 const NEGATIVE_PUSH_FRAMES := 480
+const MEASURE_VIEWPORT := Vector2i(1280, 720)
 const COMPLETED_CLOUDREACH_FLAGS: Array[String] = [
 	"cloudreach_chapter_started", "cloudreach_act_i_complete", "cloudreach_act_ii_complete",
 	"captain_veyra_defeated", "cloudreach_winds_restored", "realm_heart_cloudreach_earned",
@@ -187,6 +188,9 @@ func _enter_stormwood() -> bool:
 			"production Player, CameraRig/Camera3D and InteractionArbiter present"):
 		return false
 	navigator = NAVIGATOR.new(self, player, rig, _stick)
+	# Headless windows default to a square viewport; project the lure at the
+	# shipped 16:9 aspect instead (the camera keeps its vertical FOV).
+	root.size = MEASURE_VIEWPORT
 	await _frames(30)
 	print("POCKET WALKS viewport=%s realm=%s pockets_node=%s" % [
 		str(camera.get_viewport().get_visible_rect().size), str(game.get("current_realm")),
