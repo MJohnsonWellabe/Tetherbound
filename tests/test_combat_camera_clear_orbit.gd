@@ -130,3 +130,21 @@ func test_the_fallback_does_not_flip_for_a_marginally_roomier_angle() -> void:
 	_rig.set("yaw", deg_to_rad(-50.0))
 	_room_at = {-50: 3.0, 75: 3.5}
 	assert_eq(_solve(), -50.0, "0.5m more room is not worth swinging across the fight")
+
+
+func test_a_swing_that_loses_the_opponent_from_frame_is_refused() -> void:
+	# Runner failure (square 1920x1920 viewport): the only room was a
+	# 100-degree swing, which put the opponent beside the lens instead of
+	# beyond the ally. With `frame_fraction` the arm stays at neutral.
+	var foe := Node3D.new()
+	foe.position = Vector3(0.0, 0.0, -12.0)
+	_rig.set_tracking_target(foe, {"composition_yaw_deg": 0.0})
+	_clear = [100]
+	assert_eq(float(_rig.clear_orbit_offset_deg(ARM, [25.0, 100.0], 0.75)), 100.0,
+		"without the frame check the solver takes the only room")
+	assert_eq(float(_rig.clear_orbit_offset_deg(ARM, [25.0, 100.0], 0.75, 0.0, 1.0, 0.75)), 0.0,
+		"a swing that loses the opponent is never chosen")
+	_clear = [25, 100]
+	assert_eq(float(_rig.clear_orbit_offset_deg(ARM, [25.0, 100.0], 0.75, 0.0, 1.0, 0.75)), 25.0,
+		"a swing that keeps both fighters in frame is still taken")
+	foe.free()
