@@ -155,7 +155,7 @@ func _lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:
 		return
 	lantern.position += at
 	lantern.rotation.y = yaw
-	_glow(lantern, float(cfg.get("glow_energy", 1.6)))
+	var glass := _glow(lantern, cfg)
 	site.add_child(lantern)
 	var light := OmniLight3D.new()
 	light.name = "PierLanternLight"
@@ -163,7 +163,9 @@ func _lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:
 	light.light_energy = float(cfg.get("light_energy", 0.9))
 	light.omni_range = float(cfg.get("light_range_m", 7.0))
 	light.shadow_enabled = false
-	light.position = at + Vector3.UP * 0.3
+	# The installed wall lantern hangs below and in front of its bracket.
+	# Centre its light on the glass, not above the mounting point.
+	light.position = lantern.transform * glass.position
 	site.add_child(light)
 
 
@@ -260,18 +262,43 @@ func _tint(node: Node, colour: Color) -> void:
 	_override_all(node, material)
 
 
-## The lantern body reads lit: a warm emissive material in place of the trim.
-func _glow(node: Node, energy: float) -> void:
+## Keep the installed metal bracket/chain/cage opaque. Only the small glass
+## insert emits: making the entire fixture emissive bleaches its silhouette.
+## Insert coordinates are in the installed Lantern_Wall model's local space,
+## so its normal fit/rotation also place and scale the glass correctly.
+func _glow(node: Node3D, cfg: Dictionary) -> MeshInstance3D:
+	_tint(node, Color(str(cfg.get("housing_colour", "#655440"))))
+	var glass := MeshInstance3D.new()
+	glass.name = "LanternGlass"
+	var box := BoxMesh.new()
+	var size: Array = cfg.get("glass_size", [0.18, 0.24, 0.18])
+	box.size = Vector3(float(size[0]), float(size[1]), float(size[2]))
+	glass.mesh = box
+	var centre: Array = cfg.get("glass_center", [0.0, 0.32, 0.807])
+	glass.position = Vector3(float(centre[0]), float(centre[1]), float(centre[2]))
+	glass.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var material := StandardMaterial3D.new()
-	material.albedo_color = Color("#ffcf8a")
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = Color(str(cfg.get("glass_colour", "#ffbc66")))
 	material.emission_enabled = true
-	material.emission = Color("#ffb766")
-	material.emission_energy_multiplier = energy
-	_override_all(node, material)
+	material.emission = Color(str(cfg.get("glow_colour", "#ff9e36")))
+	material.emission_energy_multiplier = float(cfg.get("glow_energy", 0.7))
+	glass.material_override = material
+	node.add_child(glass)
+	return glass
+
+
+func _meshes(node: Node) -> Array[Node]:
+	# glTF scenes can have a MeshInstance3D as their root. find_children()
+	# excludes that root. Cover both scene shapes without changing source assets.
+	var meshes: Array[Node] = node.find_children("*", "MeshInstance3D", true, false)
+	if node is MeshInstance3D:
+		meshes.push_front(node)
+	return meshes
 
 
 func _override_all(node: Node, material: Material) -> void:
-	for found: Node in node.find_children("*", "MeshInstance3D", true, false):
+	for found: Node in _meshes(node):
 		var mesh_instance := found as MeshInstance3D
 		if mesh_instance.mesh == null:
 			continue
