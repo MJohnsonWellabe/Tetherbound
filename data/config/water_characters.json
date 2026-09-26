@@ -1215,7 +1215,7 @@
       "_comment": "Bex guards the west control on the physically proven arrival spine; the former central-crown placement required an unmarked roughly 660m island loop around a graded cut before it could be approached. Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
-      "id": "water_trainer_calder", "foe_power_multiplier": 2.0,
+      "id": "water_trainer_calder", "foe_power_multiplier": 2.2,
       "display_name": "Calder",
       "npc_entity_id": "water_trainer_calder",
       "island_id": "sluice_isle",
@@ -1289,7 +1289,7 @@
       "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
-      "id": "water_trainer_tess", "foe_power_multiplier": 2.0,
+      "id": "water_trainer_tess", "foe_power_multiplier": 2.2,
       "display_name": "Tess",
       "npc_entity_id": "water_trainer_tess",
       "island_id": "deep_watch",
@@ -1362,7 +1362,7 @@
       "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
-      "id": "water_trainer_venn", "foe_power_multiplier": 2.0,
+      "id": "water_trainer_venn", "foe_power_multiplier": 1.8,
       "display_name": "Officer Venn",
       "npc_entity_id": "water_venn",
       "island_id": "veilfall",
@@ -1479,7 +1479,7 @@
       "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
-      "id": "water_trainer_nerissa", "foe_power_multiplier": 2.0,
+      "id": "water_trainer_nerissa", "foe_power_multiplier": 1.8,
       "display_name": "Captain Nerissa",
       "npc_entity_id": "water_nerissa",
       "island_id": "veilfall",
