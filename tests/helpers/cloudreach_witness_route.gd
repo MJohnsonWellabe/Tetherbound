@@ -43,6 +43,9 @@ var finish_done := false
 var verdict_written := false
 var leg_persistence: Dictionary = {}
 var sealed_attempt: Dictionary = {}
+var want_exhausted_fall := false
+var exhausted_window := false
+var exhausted_fall: Dictionary = {}
 var sealed_upper_box := AABB()
 
 
@@ -90,6 +93,9 @@ func _log(kind: String, details: Dictionary = {}) -> void:
 
 ## A failure after the verdict was written must not vanish silently.
 func _fail(message: String) -> bool:
+	if exhausted_window and message.begins_with("Unexpected recovery interrupts"):
+		_log("witness_expected_recovery", {"message": message})
+		return false
 	if verdict_written:
 		# The verdict file and exit code are already written; say so loudly.
 		push_error("LATE FAIL after witness verdict: " + message)
@@ -248,6 +254,88 @@ func _sealed_upper_attempt() -> bool:
 	var ok := _require(flags_unchanged and not _has("cloudreach_upper_route_unlocked"), "Refused attempt changed no progression flag")
 	stage = previous_stage
 	return ok
+
+
+## The base route captures "high-roost-landing" right after the verified
+## Fly-only shrine landing; an opted-in witness runs its exhausted fall there.
+func _capture(label: String) -> void:
+	await super._capture(label)
+	if label == "high-roost-landing" and want_exhausted_fall and not failed:
+		await _exhausted_fall_attempt()
+
+
+## Production exhausted-fall recovery, reached by ordinary input only. After the
+## verified shrine landing (the flyer's safe anchor), deploy, hold Jump in the
+## authored `cloudreach_shrine_lift` until the flight clock or stamina runs out
+## (`state == "exhausted"`), then steer off the pinnacle over the open ravine.
+## An exhausted flyer sinks; once it is `recovery_drop_m` below the anchor the
+## production `recover_to_anchor` must put it back on the verified shrine floor.
+## No position write, no stamina edit and no call into the fly controller.
+func _exhausted_fall_attempt() -> bool:
+	var previous_stage := stage
+	stage = "witness_exhausted_fall"
+	var anchor := player.global_position
+	var fly_config: Dictionary = fly.config
+	var drop_m := float(fly_config.get("recovery_drop_m", 100.0))
+	var flags_before := _flag_snapshot()
+	if not await _deploy(): return false
+	exhausted_window = true
+	var reasons: Array[String] = []
+	var on_recovered := func(reason: String) -> void: reasons.append(reason)
+	fly.recovered.connect(on_recovered)
+	var lift_centre := Vector3(972, 0, 2975)
+	var exhausted_frame := -1
+	var hover_frames := 0
+	for frame in 60 * 240:
+		if not fly.is_flying() or failed: break
+		if fly.state == "exhausted":
+			exhausted_frame = frame
+			break
+		_steer(Vector3(lift_centre.x - player.global_position.x, 0, lift_centre.z - player.global_position.z), 0.25)
+		_input("jump", 1)
+		hover_frames += 1
+		await _frames(1)
+	var exhausted_at := player.global_position
+	var lowest_y := player.global_position.y
+	var recovered_frame := -1
+	var landed_elsewhere := false
+	for frame in 60 * 60:
+		if reasons.size() > 0:
+			recovered_frame = frame
+			break
+		if not fly.is_flying():
+			landed_elsewhere = true
+			break
+		_input("jump", 0)
+		_steer(Vector3(850 - player.global_position.x, 0, 2975 - player.global_position.z), 1.0)
+		lowest_y = minf(lowest_y, player.global_position.y)
+		await _frames(1)
+	_release()
+	fly.recovered.disconnect(on_recovered)
+	await _frames(20)
+	exhausted_window = false
+	var floor_query := PhysicsRayQueryParameters3D.create(player.global_position + Vector3.UP, player.global_position - Vector3.UP * 3, 1)
+	floor_query.exclude = [player.get_rid()]
+	var floor_hit := player.get_world_3d().direct_space_state.intersect_ray(floor_query)
+	exhausted_fall = {"anchor": str(anchor), "hover_frames": hover_frames, "exhausted_after_frames": exhausted_frame,
+		"exhausted_at": str(exhausted_at), "stamina_at_exhaustion_logged": true, "lowest_y_before_recovery": lowest_y,
+		"drop_below_anchor_m": anchor.y - lowest_y, "recovery_drop_m": drop_m, "recovered_after_frames": recovered_frame,
+		"recovery_reasons": reasons, "landed_elsewhere": landed_elsewhere, "end": str(player.global_position),
+		"end_distance_to_anchor_m": player.global_position.distance_to(anchor), "on_floor": player.is_on_floor(),
+		"floor_path": str(floor_hit.collider.get_path()) if not floor_hit.is_empty() else "none",
+		"flying_after": fly.is_flying(), "party_size": game.party.members().size()}
+	_log("witness_exhausted_fall", exhausted_fall)
+	if not _require(exhausted_frame >= 0, "Holding Jump in the shrine lift ran the flight to exhaustion"): return false
+	if not _require(not landed_elsewhere and recovered_frame >= 0, "The exhausted flyer was recovered by production recover_to_anchor, not landed elsewhere"): return false
+	if not _require(anchor.y - lowest_y >= drop_m - 1.0, "Recovery fired only after falling the configured drop below the anchor"): return false
+	if not _require(player.global_position.distance_to(anchor) < 3.0 and player.is_on_floor() and not floor_hit.is_empty() and not fly.is_flying(), "Recovered onto the verified shrine anchor floor"): return false
+	if not _require(_flag_snapshot() == flags_before and game.party.members().size() == expected_party_size, "Exhausted fall changed no flag and lost no creature"): return false
+	# Ordinary standing rest before the route's next flight (as the base _deploy does).
+	for tick in 60 * 120:
+		if player.vitals.stamina >= player.vitals.max_stamina * 0.98: break
+		await _frames(1)
+	stage = previous_stage
+	return true
 
 
 ## `_finish` can be reached twice when a declared leg ends inside a route step
