@@ -59,34 +59,55 @@ func _is_yellow_gold(colour: Color) -> bool:
 	return hue >= 35.0 and hue <= 65.0 and colour.s >= 0.25
 
 
-func test_every_road_is_covered_and_no_spur_carries_current() -> void:
-	# WO-F09-05 round 3: the electrified current is road language; a pocket's
-	# spur is a plain dirt-and-stone trail and carries none.
+func test_every_route_and_spur_is_covered_by_current_chunks() -> void:
 	var routes: Array = _json(WORLD_PATH).routes
 	var built := _built(false)
 	var current: Node = built[1]
 	var coverage := _coverage(current, routes)
 	var spurs := 0
 	for route: Dictionary in routes:
-		if str(route.kind) == "spur":
-			spurs += 1
-			assert_eq(float(coverage[str(route.id)]), 0.0, "%s: a spur carries no current" % route.id)
-			continue
 		assert_true(float(coverage[str(route.id)]) >= MIN_COVERAGE,
 			"%s (%s): current covers %.1f%% of its length" % [route.id, route.kind, float(coverage[str(route.id)]) * 100.0])
+		if str(route.kind) == "spur":
+			spurs += 1
 	assert_eq(spurs, 5, "all five spurs are measured")
-	# Negative controls: dropping a road's chunks fails coverage, and the
-	# builder with spurs allowed again does cover a spur.
+	# Negative control: drop every spur chunk and the same measurement fails.
 	for chunk: Node in current.get_children():
-		if str(chunk.get_meta("route", "")) == "ash_road":
+		if str(chunk.get_meta("route", "")).begins_with("spur_"):
 			current.remove_child(chunk)
 			chunk.free()
-	assert_true(float(_coverage(current, routes)["ash_road"]) < MIN_COVERAGE, "control: a road without chunks is caught")
+	var stripped := _coverage(current, routes)
+	assert_true(float(stripped["spur_verge_ash_hollow"]) < MIN_COVERAGE, "control: a route without chunks is caught")
 	(built[0] as Node).free()
-	assert_true(CURRENT.carries_current({"kind": "critical"}, CURRENT.config()), "control: a road kind carries current")
-	var allow := CURRENT.config()
-	allow.excluded_kinds = []
-	assert_true(CURRENT.carries_current({"kind": "spur"}, allow), "control: with no exclusion a spur would carry current")
+
+
+## WO-F09-05 round 4: a spur's current is its own language: its chunks carry
+## the pocket's lamp tint as vertex colour and UV2.x = 1 (the shader's thin
+## tinted crack that starts at the road edge); a road's carry UV2.x = 0.
+func test_spur_current_carries_its_pocket_tint_and_roads_do_not() -> void:
+	var built := _built(false)
+	var current: Node = built[1]
+	var tints := CURRENT.spur_tints()
+	assert_eq(tints.size(), 5, "a tint for each of the five spurs")
+	var spur_chunks := 0
+	var road_chunks := 0
+	for chunk: Node in current.get_children():
+		if not (chunk is MeshInstance3D):
+			continue
+		var arrays := ((chunk as MeshInstance3D).mesh as ArrayMesh).surface_get_arrays(0)
+		var uv2: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV2]
+		var colours: PackedColorArray = arrays[Mesh.ARRAY_COLOR]
+		var route := str(chunk.get_meta("route", ""))
+		if tints.has(route):
+			spur_chunks += 1
+			assert_true(uv2[0].x > 0.5 and colours[0].is_equal_approx(tints[route]), "%s: a spur chunk is flagged and tinted" % route)
+			var hue := (tints[route] as Color).h * 360.0
+			assert_false(hue < 20.0 or hue > 290.0, "%s: its tint is neither red nor magenta" % route)
+		else:
+			road_chunks += 1
+			assert_true(uv2[0].x < 0.5, "%s: a road chunk is not flagged as a spur" % route)
+	assert_true(spur_chunks > 0 and road_chunks > 0, "both kinds are built")
+	(built[0] as Node).free()
 
 
 func test_chunks_are_range_limited_shadowless_and_have_no_collision() -> void:
@@ -171,6 +192,7 @@ func test_ribbon_stays_inside_the_painted_lane_and_flows_toward_the_dynamo() -> 
 		assert_true(half > 0.0 and half <= float(surface.lane_half_width_m[kind]), "%s ribbon (%.2f m) lies within its lane" % [kind, half])
 	var wide := cfg.duplicate(true)
 	wide.width_fraction = 1.3
+	wide.spur.width_fraction = 1.3
 	assert_true(CURRENT.ribbon_half_width("spur", wide, surface) > float(surface.lane_half_width_m.spur), "control: a 1.3 fraction would leave the lane")
 	var dynamo := Vector2(float(cfg.dynamo_xz[0]), float(cfg.dynamo_xz[1]))
 	for route: Dictionary in _json(WORLD_PATH).routes:

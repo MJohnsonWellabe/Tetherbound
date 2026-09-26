@@ -95,16 +95,27 @@ static func gateway(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> 
 	var post_reach := float(spur_lamp_style(cfg).post_width_m) * sqrt(2.0) * 0.5
 	var inner := float(spec.opening_m) * 0.5 + float(spec.collider_width_m) * 0.5
 	var post_side := float(spec.opening_m) * 0.5 - float(spec.lamp_edge_m)
+	var approach := approach_point(lane, routes, float(spec.get("face_approach_back_m", 25.0)))
 	var along := float(spec.along_m)
 	var chosen := {}
 	while along <= float(spec.along_max_m) + 0.01:
+		var centre := junction + up * along
+		# Round 4: the gate turns (at most face_turn_max_deg) from facing
+		# straight down its spur toward the road stand face_approach_back_m
+		# back along the road, so its opening shows from the approach.
+		var face := -up
+		if approach != Vector2.INF:
+			var turn := clampf(face.angle_to((approach - centre).normalized()) * float(spec.get("face_blend", 0.5)),
+				-deg_to_rad(float(spec.get("face_turn_max_deg", 0.0))), deg_to_rad(float(spec.get("face_turn_max_deg", 0.0))))
+			face = face.rotated(turn)
+		var row := Vector2(-face.y, face.x)
 		var trunks: Array[Vector2] = []
 		for sign: float in [1.0, -1.0]:
 			for k in int(spec.wing_trunks) + 1:
-				trunks.append(junction + up * along + right * sign * (inner + k * float(spec.trunk_spacing_m)))
+				trunks.append(centre + row * sign * (inner + k * float(spec.trunk_spacing_m)))
 		var posts: Array[Dictionary] = []
 		for sign: float in [1.0, -1.0]:
-			posts.append({"at": junction + up * (along - float(spec.lamp_ahead_m)) + right * sign * post_side, "facing": -up})
+			posts.append({"at": centre + face * float(spec.lamp_ahead_m) + row * sign * post_side, "facing": face})
 		chosen = {"along": along, "trunks": trunks, "posts": posts}
 		var clear := true
 		for route: Dictionary in routes:
@@ -120,6 +131,32 @@ static func gateway(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> 
 			break
 		along += 0.5
 	return chosen
+
+
+## The point `back_m` of road arc before a spur's junction on its joined
+## road, on the side the walk witness approaches from (the side with more
+## than back_m + 7 m of road before the junction, else the other), or
+## Vector2.INF without the road.
+static func approach_point(lane: Dictionary, routes: Array, back_m: float) -> Vector2:
+	var junction := Vector2(float(lane.points[0][0]), float(lane.points[0][1]))
+	for route: Dictionary in routes:
+		if str(route.id) != str(lane.get("joins", "")):
+			continue
+		var points: Array[Vector2] = []
+		for raw: Array in route.points:
+			points.append(Vector2(float(raw[0]), float(raw[1])))
+		var walked := 0.0
+		var best := INF
+		var at_s := 0.0
+		for i in range(1, points.size()):
+			var closest := Geometry2D.get_closest_point_to_segment(junction, points[i - 1], points[i])
+			if closest.distance_to(junction) < best:
+				best = closest.distance_to(junction)
+				at_s = walked + points[i - 1].distance_to(closest)
+			walked += points[i - 1].distance_to(points[i])
+		var s := at_s - back_m if at_s >= back_m + 7.0 else minf(at_s + back_m, walked)
+		return _along_polyline(points, s)
+	return Vector2.INF
 
 
 static func _distance_to_route(at: Vector2, route: Dictionary) -> float:
@@ -299,9 +336,11 @@ static func gateway_trunks(pocket: Dictionary, cfg: Dictionary, routes: Array = 
 	return gateway(pocket, cfg, routes).get("trunks", [] as Array[Vector2])
 
 
-## Stepping-stone positions on a pocket's spur (config `spur_trail`): its
-## first stretch from the road and its last stretch to the mouth, a stone
-## every spacing_m with a fixed hashed jitter. [{at, yaw, scale, model}].
+## Stepping-stone positions on a pocket's spur (config `spur_trail`): one
+## unbroken run from start_m (inside the road's own margin) to end_gap_m short
+## of the mouth, a stone every spacing_m with a fixed hashed jitter (round 4:
+## the judge saw the stones start and stop mid-dirt and never reach the road).
+## [{at, yaw, scale, model}].
 static func trail_stones(pocket: Dictionary, cfg: Dictionary, routes: Array = []) -> Array[Dictionary]:
 	var trail: Dictionary = cfg.get("spur_trail", {})
 	var lane := spur(pocket, routes)
@@ -318,13 +357,12 @@ static func trail_stones(pocket: Dictionary, cfg: Dictionary, routes: Array = []
 	rng.seed = int(trail.seed) + hash(str(pocket.id))
 	var d := float(trail.start_m)
 	while d <= total - float(trail.end_gap_m):
-		if d <= float(trail.from_road_m) or d >= total - float(trail.to_mouth_m):
-			var at := _along_polyline(points, d)
-			var dir := _direction_at(points, d)
-			var side := Vector2(dir.y, -dir.x)
-			out.append({"at": at + side * rng.randf_range(-float(trail.jitter_m), float(trail.jitter_m)),
-				"yaw": rng.randf_range(0.0, TAU), "scale": rng.randf_range(float(trail.scale_min), float(trail.scale_max)),
-				"model": STONES[rng.randi_range(0, STONES.size() - 1)]})
+		var at := _along_polyline(points, d)
+		var dir := _direction_at(points, d)
+		var side := Vector2(dir.y, -dir.x)
+		out.append({"at": at + side * rng.randf_range(-float(trail.jitter_m), float(trail.jitter_m)),
+			"yaw": rng.randf_range(0.0, TAU), "scale": rng.randf_range(float(trail.scale_min), float(trail.scale_max)),
+			"model": STONES[rng.randi_range(0, STONES.size() - 1)]})
 		d += float(trail.spacing_m)
 	return out
 
@@ -460,6 +498,9 @@ func _lamp_post(world: Node3D, body: StaticBody3D, at: Vector2, facing: Vector2,
 	body.add_child(holder)
 	var post := MeshInstance3D.new()
 	post.name = "Post"
+	# Round 4 (judge: the mouth lamps' pale posts read as planks nailed to the
+	# trunks): a lamp style may hide its post mesh; the collider stays.
+	post.visible = bool(lure.get("post_visible", true))
 	var box := BoxMesh.new()
 	box.size = Vector3(width, height + 0.4, width)
 	post.mesh = box

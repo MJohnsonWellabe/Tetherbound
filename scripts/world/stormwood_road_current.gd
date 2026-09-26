@@ -3,8 +3,7 @@ extends Node3D
 ## Owner direction on WO-F09-04: "Can you make the path and roads electrified
 ## with yellow electricity flowing through them somehow in the ground."
 ##
-## Every Stormwood road (not the pocket spurs; see carries_current) gets
-## terrain-conforming ribbon chunks lying
+## Every Stormwood road gets terrain-conforming ribbon chunks lying
 ## in its painted dirt lane (stormwood_road_surface.json), drawn by
 ## shaders/stormwood_road_current.gdshader: broken yellow-gold veins with
 ## charge pulses flowing toward the Dynamo. Presentation only: nothing is built
@@ -15,6 +14,7 @@ extends Node3D
 const CONFIG_PATH := "res://data/config/stormwood_road_current.json"
 const SURFACE_PATH := "res://data/config/stormwood_road_surface.json"
 const WORLD_PATH := "res://data/config/stormwood_world.json"
+const POCKETS_PATH := "res://data/config/stormwood_pockets.json"
 const SHADER := preload("res://shaders/stormwood_road_current.gdshader")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 
@@ -25,6 +25,7 @@ var _phase := ""
 var _reduced := false
 var _intensity := -1.0
 var _tween: Tween
+var _spur_tints: Dictionary = {}
 
 
 static func config() -> Dictionary:
@@ -48,12 +49,29 @@ static func flow_points(route: Dictionary, cfg: Dictionary) -> Array[Vector2]:
 
 ## Ribbon half-width for a route kind: width_fraction of its painted lane.
 static func ribbon_half_width(kind: String, cfg: Dictionary, surface: Dictionary) -> float:
-	return float(surface.lane_half_width_m.get(kind, 0.0)) * float(cfg.width_fraction)
+	var fraction := float((cfg.get("spur", {}) as Dictionary).get("width_fraction", cfg.width_fraction)) if kind == "spur" else float(cfg.width_fraction)
+	return float(surface.lane_half_width_m.get(kind, 0.0)) * fraction
 
 
-## WO-F09-05 round 3: the current is road language. A route whose kind is in
-## config `excluded_kinds` (the pocket spurs) carries none; it stays a plain
-## painted dirt trail.
+## WO-F09-05 round 4: spur route id -> its pocket's lamp tint
+## (stormwood_pockets.json pockets[].lamp_tint.flame_emission), so each spur's
+## current glows in its own pocket's colour, not road yellow.
+static func spur_tints() -> Dictionary:
+	var pockets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(POCKETS_PATH))
+	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(WORLD_PATH))
+	var by_pocket := {}
+	for pocket: Dictionary in pockets.pockets:
+		by_pocket[str(pocket.id)] = Color(str((pocket.get("lamp_tint", {}) as Dictionary).get("flame_emission", "#ffb347")))
+	var out := {}
+	for route: Dictionary in world.routes:
+		if str(route.get("kind", "")) == "spur":
+			out[str(route.id)] = by_pocket.get(str(route.get("pocket_id", "")), Color("#ffb347"))
+	return out
+
+
+## A route whose kind is in config `excluded_kinds` carries no current
+## (round 3 excluded the spurs; round 4 gives them their own thin tinted
+## crack instead, see config `spur`).
 static func carries_current(route: Dictionary, cfg: Dictionary) -> bool:
 	return not (cfg.get("excluded_kinds", []) as Array).has(str(route.get("kind", "")))
 
@@ -86,8 +104,14 @@ func build(world: Node3D, height_at: Callable = Callable()) -> void:
 	material.shader = SHADER
 	material.set_shader_parameter("colour_core", Color(str(_config.colour_core)))
 	material.set_shader_parameter("colour_edge", Color(str(_config.colour_edge)))
-	for key: String in ["core_energy", "edge_energy", "vein_scale", "vein_width", "vein_breakup", "pulse_sharpness", "depth_pull"]:
+	for key: String in ["core_energy", "edge_energy", "vein_scale", "vein_width", "vein_breakup", "pulse_sharpness", "depth_pull",
+			"vein_lane_offset", "vein_wander"]:
 		material.set_shader_parameter(key, float(_config[key]))
+	var spur: Dictionary = _config.get("spur", {})
+	material.set_shader_parameter("spur_energy", float(spur.get("energy", 0.55)))
+	material.set_shader_parameter("spur_start_m", float(spur.get("start_m", 3.0)))
+	material.set_shader_parameter("spur_fade_m", float(spur.get("fade_m", 1.5)))
+	_spur_tints = spur_tints()
 	material.set_shader_parameter("pulse_spacing", float(_config.pulse_spacing_m))
 	material.set_shader_parameter("fade_end", float(_config.draw_distance_m))
 	material.set_shader_parameter("fade_length", float(_config.draw_fade_m))
@@ -159,6 +183,16 @@ func _build_route(route: Dictionary, points: Array[Vector2], half: float, height
 	var lift := float(_config.lift_m)
 	var run := 0.0
 	var index := 0
+	# UV2 = (1 on a spur, metres from its road junction) and a vertex COLOR in
+	# the pocket's tint; roads get (0, 0) and white. The flow order may run
+	# mouth -> junction, so metres are counted from the authored first point.
+	var is_spur := str(route.get("kind", "")) == "spur"
+	var tint: Color = _spur_tints.get(str(route.id), Color.WHITE) if is_spur else Color.WHITE
+	var total := 0.0
+	for i in range(1, points.size()):
+		total += points[i - 1].distance_to(points[i])
+	var raw: Array = route.get("points", [])
+	var forward := raw.size() > 0 and points[0].distance_to(Vector2(float(raw[0][0]), float(raw[0][1]))) < 0.01
 	for i in range(1, points.size()):
 		var a := points[i - 1]
 		var b := points[i]
@@ -174,6 +208,8 @@ func _build_route(route: Dictionary, points: Array[Vector2], half: float, height
 			var rows := maxi(1, ceili((s1 - s0) / row_m))
 			var verts := PackedVector3Array()
 			var uvs := PackedVector2Array()
+			var uv2s := PackedVector2Array()
+			var colours := PackedColorArray()
 			var indices := PackedInt32Array()
 			var origin := a + dir * (s0 + s1) * 0.5
 			var origin_y := float(height_at.call(origin.x, origin.y))
@@ -185,6 +221,8 @@ func _build_route(route: Dictionary, points: Array[Vector2], half: float, height
 					var y := float(height_at.call(at.x, at.y)) + lift
 					verts.append(Vector3(at.x - origin.x, y - origin_y, at.y - origin.y))
 					uvs.append(Vector2(run + s, across))
+					uv2s.append(Vector2(1.0 if is_spur else 0.0, ((run + s) if forward else total - (run + s)) if is_spur else 0.0))
+					colours.append(tint)
 			for r in rows:
 				for c in columns - 1:
 					var i0 := r * columns + c
@@ -194,6 +232,8 @@ func _build_route(route: Dictionary, points: Array[Vector2], half: float, height
 			arrays.resize(Mesh.ARRAY_MAX)
 			arrays[Mesh.ARRAY_VERTEX] = verts
 			arrays[Mesh.ARRAY_TEX_UV] = uvs
+			arrays[Mesh.ARRAY_TEX_UV2] = uv2s
+			arrays[Mesh.ARRAY_COLOR] = colours
 			arrays[Mesh.ARRAY_INDEX] = indices
 			var mesh := ArrayMesh.new()
 			mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)

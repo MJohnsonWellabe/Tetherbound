@@ -38,8 +38,12 @@
     "poll_s": 0.5,
     "ease_s": 2.5
   },
-  "_comment_excluded": "WO-F09-05 round 3 (second blind judge: the spur carrying the road's current read as another road, a signpost not a destination): the current is road language, so route kinds listed here carry none. The pocket spurs stay plain painted dirt trails with stepping stones (stormwood_pockets.json spur_trail).",
-  "excluded_kinds": ["spur"],
+  "_comment_excluded": "Route kinds listed here carry no current (WO-F09-05 round 3 excluded the pocket spurs; round 4 restores them with their own language, see `spur`).",
+  "excluded_kinds": [],
+  "spur": {"_comment": "WO-F09-05 round 4 (blind judges 9-11: a gold spur read as another road; no spur hid the fork). A pocket spur carries ONE thin crack in its pocket's own lamp tint (stormwood_pockets.json pockets[].lamp_tint.flame_emission), not road yellow: ribbon width_fraction of the spur lane, energy x its tint, fading in over fade_m from start_m from the junction so it begins at the road edge and runs to the gate.", "width_fraction": 0.4, "energy": 0.6, "start_m": 3.0, "fade_m": 1.5},
+  "_comment_veins": "Round 4 (blind judge: a yellow loop and a doubled line on the road): each of the three cracks keeps to its own third of the lane, vein_lane_offset apart (ribbon units, -1..1), wandering vein_wander inside it, so cracks never cross.",
+  "vein_lane_offset": 0.5,
+  "vein_wander": 0.12,
   "dynamo_xz": [-100.0, 5470.0],
   "_comment_flow": "Current flows toward the Dynamo: each open route flows from the end farther from dynamo_xz to the nearer end. A closed loop (first point equals last) has no nearer end and flows in its polyline order."
 }
