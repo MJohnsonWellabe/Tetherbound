@@ -57,7 +57,7 @@ static func named_spawn_plan(site: Dictionary, named_encounters: Array) -> Dicti
 		"opts": {"name": id, "once_id": str(named.get("completion_flag", "")),
 			"level": int(named.get("level", 1)), "aggressive": false,
 			"wander_radius": float(site.get("roam_radius_m", site.get("radius_m", 4))),
-			"combat": (named.get("combat", {}) as Dictionary).duplicate(true)}}
+			"combat": (named.combat as Dictionary).duplicate(true) if named.get("combat") is Dictionary else {}}}
 
 
 ## One selector owns both authored named replacements and ordinary table rolls.
