@@ -26,7 +26,13 @@ const F08_DURABLE_FLAGS: Array[String] = ["cloudreach_winds_restored",
 
 func _run() -> void:
 	start_usec=Time.get_ticks_usec()
-	output_dir="res://ralph/reports/CLOUDREACH-CONTINUOUS-0905/persistence-tail-regression"
+	# Events go to user:// by default so a run never dirties the checkout
+	# (CI and every lane run this). Pass `-- --evidence-dir=<res:// or abs path>`
+	# to write them into a report directory on purpose.
+	output_dir="user://cloudreach_persistence_tail_events"
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--evidence-dir="):
+			output_dir = arg.trim_prefix("--evidence-dir=")
 	DirAccess.make_dir_recursive_absolute(output_dir)
 	game=root.get_node("Game")
 	game.reset_for_new_game()
