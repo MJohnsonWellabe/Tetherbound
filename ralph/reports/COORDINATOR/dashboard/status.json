@@ -1,11 +1,10 @@
 {
- "updated": "2026-09-26 19:40 UTC",
+ "updated": "2026-09-26 21:25 UTC",
  "headline": [
-  "Criteria met: 44 of 107 (no change this hour; batch 25–26 claims F01#4/#5, F15#3, F11#0/#2/#3, F13#1, F07#2/#4 await re-scoring after full CI on main). WIND-DOWN: all 9 lanes archived.",
-  "Batch 25 (#283) merged 19:19 on full CI.",
-  "Batch 26 (claude/integration-26): every remaining lane branch tip, plus the Stormwood f11 re-bake fix, the Cloudreach f07 route-ledger fix and the STATE 'Resume here' section. Local checks: 1142 tests, 0 failed. Lands on fast-tier CI (owner's fast path); then full ci.yml on main.",
-  "Batch 27: the Meadows herd-approach fix (fix/meadows-herd), still in progress.",
-  "After that: every ralph/*, claude/*, fix/* branch is contained in main except the owner's claude/lane-restart-planning-615w4s."
+  "Criteria met: 44 of 107. The official count moves only when full CI on main is green, and main's full run (32bd33079) is red in verify-combat-shard (point-blank quick attack does no damage, a batch 26 regression). A bisect-and-fix is running.",
+  "Queued to flip on the next green full run: 6 verified (F01#1/#4/#5, F02#1/#2, F13#1) and 5 landing in batch 30 (F09#1, F12#0, F13#2, F14#2, F15#3). That makes 55 of 107 when both land green.",
+  "Batch 30 (#316): 12 lane heads, review pass, auto-merge on fast tier. Batch 28 (#287) is merged (tb/ prefix + owner rulings); batch 29 (docs, Codex queue) rides in batch 30.",
+  "Rules now in force: one open PR per lane; all art goes to Codex (queue at the top of ralph/reports/VISUAL/AUDIT.md); READY work lands every 30 minutes."
  ],
  "batches": [
   {
@@ -193,58 +192,84 @@
    "sha": "e3bc011a6",
    "state": "Fast-tier CI",
    "contents": "All remaining lane tips; Stormwood/Cloudreach fixes; STATE handoff"
+  },
+  {
+   "name": "Batch 28 (PR #287)",
+   "sha": "0e2a3b60",
+   "state": "Merged (fast tier)",
+   "contents": "tb/ branch prefix; 2026-09-26 owner rulings in STATE"
+  },
+  {
+   "name": "Batch 30 (PR #316)",
+   "sha": "7af7bfcf",
+   "state": "Auto-merge on, fast-tier CI",
+   "contents": "F09#1, F12#0, F13#2, F14#2, F15#3, F01#4 fixture, herd fix, X05 camera/invite gaps, Cloudreach entry 159→20 s, Codex dock lanterns, Codex visual queue (batch 29)"
   }
  ],
  "lanes": [
   {
-   "lane": "Meadows core (F01–F04)",
-   "now": "Archived after handoff",
-   "next": "Post walk results on ralph/f01-walks"
+   "lane": "Meadows core (F01/F04) #314",
+   "now": "F01#0 overheads + judge; herd fix landing",
+   "next": "F01#2/#3 walks; F04#7 framing"
   },
   {
-   "lane": "Meadows finale (F05)",
-   "now": "Posting final handoff",
-   "next": "—"
+   "lane": "Meadows route (F02/F05) #286",
+   "now": "Seed-15 Hall run",
+   "next": "READY F02#3/#4; then F02#5 ledger"
   },
   {
-   "lane": "Cloudreach (F06–F08)",
-   "now": "Archived after handoff",
-   "next": "F08#3 art defects; co-op road shoulders (owner ruling)"
+   "lane": "Meadows activities (F03) #289",
+   "now": "r6 lure judge; Juno/Doss acts",
+   "next": "F03#0, F03#1"
   },
   {
-   "lane": "Stormwood (F09–F11)",
-   "now": "Archived after handoff",
-   "next": "—"
+   "lane": "Cloudreach (F06–F08) #311",
+   "now": "Entry fix landing in #316",
+   "next": "lower_west_anchor route fix; F07#2 re-walk"
   },
   {
-   "lane": "Tidewake (F12–F15)",
-   "now": "Posting final handoff",
-   "next": "F12#0, F13#0"
+   "lane": "Cloudreach-B #294",
+   "now": "Blocked on lower_west_anchor",
+   "next": "F06#1/#2/#3, F08#0 witnesses"
   },
   {
-   "lane": "Creature art (X04)",
-   "now": "Archived after handoff",
-   "next": "F10#4, F13#5"
+   "lane": "Stormwood (F09–F11) #305",
+   "now": "F11#3 rerun on main; F11#2 migration",
+   "next": "F11#0 Marrow smoke → continuous"
   },
   {
-   "lane": "Invite co-op (X05)",
-   "now": "Archived after handoff",
-   "next": "F01#6 portable picker; F14#3 Veilfall; same-host rejoin exact pose (owner ruling)"
+   "lane": "Stormwood-B #303",
+   "now": "F10#0 chains; F10#3 lightning read",
+   "next": "minimap arch glyph"
   },
   {
-   "lane": "Shared UI (X03)",
-   "now": "Archived after handoff",
-   "next": "F10#3 reduced-motion witness"
+   "lane": "Tidewake (F12–F15) #296",
+   "now": "F14#0 damage tunable",
+   "next": "terrain_height helper; Otto/Halen move; Aquaryn"
   },
   {
-   "lane": "Visual audit & polish (VIS)",
-   "now": "Archived after handoff",
-   "next": "Phase 2: fix shared look (lighting, fog, terrain/water materials), route creature fixes to Art"
+   "lane": "Tidewake-B #310",
+   "now": "4 criteria landing in #316",
+   "next": "F13#3 (after Otto/Halen)"
+  },
+  {
+   "lane": "X05 co-op #292",
+   "now": "Camera + invite gaps landing in #316",
+   "next": "F14#3 participants; quit hook"
+  },
+  {
+   "lane": "VIS (judge-only) #304",
+   "now": "Judging Cloudreach/Stormwood/Tidewake",
+   "next": "Feed the Codex queue"
+  },
+  {
+   "lane": "Codex (visual)",
+   "now": "V1 dock lanterns landing in #316",
+   "next": "Next Codex queue row"
   }
  ],
  "decisions": [
   "Healed Meadows: runtime regreen, herd returns, pylons fall; no re-bake.",
-  "Old Stormwood saves: ambiguous receipt reads as accepted.",
   "Bramblebun: sheet 06 approved for one Meshy redo with rust/ochre thorns.",
   "Steam: DLL redistribution approved; release builds need a Steam launch; packaging stays off until an AppID exists.",
   "Meadows pacing: more practice wilds so level 5 is reachable with margin.",
@@ -253,14 +278,12 @@
   "Shared UI is owned by the X03 lane; region lanes send UI requests through the coordinator.",
   "Stormwood strikes spare a trainer during a creature fight (interim; owner to confirm).",
   "Terrapup kept at field_emission 0.6 (owner: pick what looks better).",
-  "F03 lure cue option (a); Juno escort kept; X03 beacon kept under the presentation hold; Xbox B glyph neutral."
+  "F03 lure cue option (a); Juno escort kept; X03 beacon kept under the presentation hold; Xbox B glyph neutral.",
+  "2026-09-26 owner Q&A: tournament grant is a non-starter; a legacy Stormheart receipt is undecided (re-offered once); cliff palette by blind judge; Tether palette as is; Guardian C2/C3 = Nerissa; Meshy and all art go to Codex; one PR per lane."
  ],
  "owner_needs": [
-  "F11#2: should a legacy old-build Stormheart receipt count as acceptance?",
-  "F10#6 device profile needs a ROG Ally run.",
-  "Village roads widened to 3.0 m inside the fence (coordinator ruling); say if you want the footpath width kept there.",
-  "7-day usage limit warning on all sessions.",
-  "An old disabled 'Ralph' routine prompt contains a different Meshy key: delete it or rotate that key.",
-  "Branch cleanup: deletions are blocked for the coordinator by the auto-mode safety check. Either allow Bash(git push origin --delete:*) or enable GitHub's 'Automatically delete head branches'. 3 deletable now; 9 more after batch 24."
+  "CI queue: allow draft PRs to skip CI (ci.yml/process.yml edit was blocked by the auto-mode classifier). Otherwise lane-PR runs starve the runners.",
+  "Branch cleanup: after #316 merges, a list of deletable branches will be posted.",
+  "Deferred resources: Steam AppID/partner access, four Steam accounts, a ROG Ally run (F10#6)."
  ]
 }
