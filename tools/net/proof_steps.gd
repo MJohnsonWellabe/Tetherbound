@@ -68,7 +68,8 @@ const LEGENDARY_SPECIES := "fulgocobra"
 const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "stormheart_fixture",
 	"stormheart_answer", "stormheart_state", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
 	"rider_identity", "rider_self", "guardian_fixture", "veilfall_press", "guardian_answer", "guardian_state", "guardian_offer_again",
-	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state"]
+	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state",
+	"water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic", "water_remote_aquatic", "water_win_wild"]
 
 
 static func handles(action: String) -> bool:
@@ -578,7 +579,8 @@ static func _stormheart_state(tree: SceneTree) -> Dictionary:
 ##                                        host this peer was connected to, as this character
 
 const WATER_ACTIONS := ["homecoming_complete", "credits_continue", "ending_state", "water_dock_act",
-	"water_dock_state"]
+	"water_dock_state", "water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic",
+	"water_remote_aquatic", "water_win_wild"]
 const HOMECOMING_PATH := "res://scripts/story/regional_homecoming.gd"
 const QUEST_LOG_PATH := "res://scripts/world/quest_log.gd"
 const DOCK_RULES_PATH := "res://scripts/world/water_dock_rules.gd"
@@ -618,6 +620,16 @@ static func _water_run(tree: SceneTree, action: String, args: Dictionary) -> Dic
 			var state := _water_dock_state(tree, args)
 			state.detail = before + str(state.detail)
 			return state
+		"water_anchor_fixture":
+			return await _water_anchor_fixture(tree, args)
+		"water_swim_to_wild":
+			return await _water_swim_to_wild(tree, args)
+		"water_local_aquatic":
+			return await _water_local_aquatic(tree, args)
+		"water_remote_aquatic":
+			return await _water_remote_aquatic(tree, args)
+		"water_win_wild":
+			return await _water_win_wild(tree, args)
 	return {"verdict": "ERROR", "detail": "proof_steps: unknown Water action '%s'" % action}
 
 
@@ -1694,3 +1706,336 @@ static func _label_containing(node: Node, needle: String) -> String:
 		if not found.is_empty():
 			return found
 	return ""
+
+
+# --- F12 Tidewake: a swimmer's combat pause, seen from both peers -------------
+#
+##   water_anchor_fixture {anchor_id}      SETUP: stand this peer's trainer on an
+##                                        authored Water anchor's dry safe landing (the
+##                                        only position write), settle, and require it
+##                                        dry with a safe landing earned
+##   water_swim_to_wild {site_id, budget_frames?}  real camera-relative stick input
+##                                        from where the trainer stands toward the
+##                                        site's first live member, until the director
+##                                        offers THAT wild through the InteractionArbiter
+##                                        (the Engage press itself is the scenario's
+##                                        `press interact`)
+##   water_local_aquatic {record?, baseline?, min_frames_since?, wait_for_mode?, budget_frames?}
+##                                        this peer's own swim state and resources (mode,
+##                                        drowning, stamina, health, the fight and active
+##                                        creature), top level. `record` keeps a baseline
+##                                        under a label; `baseline` reports the change
+##                                        since that label and FAILS if it is missing
+##   water_remote_aquatic {peer_id, record?, baseline?, min_frames_since?, sample_frames?, wait_for_mode?, budget_frames?}
+##                                        this peer's picture of ANOTHER trainer's swim
+##                                        state: the snapshot its remote trainer received
+##                                        (net_*) and the one it applied (mode, drowning,
+##                                        stamina_fraction, revision), plus position.
+##                                        `sample_frames` watches every frame of a window
+##                                        and reports whether the mode held (mode_steady)
+##   water_win_wild  {enemy_hp_ceiling, budget_frames?}  finish the current WILD fight
+##                                        through the production combat path: the enemy's
+##                                        hp is capped at the ceiling (the allowance
+##                                        win_trainer_battle and smoke_water_combat_pause
+##                                        use), the creature is steered with the stick and
+##                                        `combat_quick` is pressed until the wild faints
+
+const SWIM_HUMAN := 1
+const SWIM_PAUSED := 3
+const AQUATIC_BASELINES_META := &"proof_water_aquatic_baselines"
+const SWIM_CONFIG := "res://data/config/water_swimming.json"
+
+
+static func _water_scene(tree: SceneTree) -> Node3D:
+	var scene := tree.current_scene as Node3D
+	if scene == null or not scene.has_method("world_realm") or str(scene.call("world_realm")) != "water":
+		return null
+	return scene
+
+
+static func _aquatic_baselines(tree: SceneTree) -> Dictionary:
+	if not tree.has_meta(AQUATIC_BASELINES_META):
+		tree.set_meta(AQUATIC_BASELINES_META, {})
+	return tree.get_meta(AQUATIC_BASELINES_META) as Dictionary
+
+
+static func _water_anchor_fixture(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var world := _water_scene(tree)
+	var player := (tree.get("_probe") as Object).call("player") as CharacterBody3D
+	if world == null or player == null or player.get("swim_controller") == null:
+		return {"verdict": "ERROR", "detail": "water_anchor_fixture needs the real Water scene, Player and SwimController"}
+	var id := str(args.get("anchor_id", ""))
+	var at := Vector3.INF
+	for anchor: Dictionary in (world.get("config") as Dictionary).get("anchors", []):
+		if str(anchor.get("id", "")) == id:
+			var raw: Array = anchor.safe_position
+			at = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	if not at.is_finite():
+		return {"verdict": "ERROR", "detail": "no authored Water anchor '%s'" % id}
+	at.y = float(world.call("ground_height_at", at.x, at.z)) + 0.15
+	tree.call("_drive_left", 0.0, 0.0)
+	player.global_position = at
+	player.velocity = Vector3.ZERO
+	for f in int(args.get("settle", 45)):
+		await tree.physics_frame
+	var swimming: Node = player.get("swim_controller")
+	var data := {"anchor_id": id, "on_floor": player.is_on_floor(), "swimming": bool(swimming.call("is_swimming")),
+		"has_safe_landing": bool(swimming.get("state").has_safe_landing), "mode": int(swimming.get("state").mode)}
+	var ok: bool = data.on_floor and not data.swimming and data.has_safe_landing
+	return {"verdict": "PASS" if ok else "FAIL", "data": data,
+		"detail": "SETUP: trainer stood on %s's dry landing at %s: %s" % [id, player.global_position, JSON.stringify(data)]}
+
+
+static func _water_swim_to_wild(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var world := _water_scene(tree)
+	var player := (tree.get("_probe") as Object).call("player") as CharacterBody3D
+	var camera := (tree.get("_probe") as Object).call("camera_rig") as Node3D
+	if world == null or player == null or camera == null:
+		return {"verdict": "ERROR", "detail": "water_swim_to_wild needs the real Water scene, Player and camera"}
+	var director := world.get_node_or_null(^"EncounterDirector")
+	var arbiter := world.get_node_or_null(^"InteractionArbiter")
+	var swimming: Node = player.get("swim_controller")
+	var vitals: RefCounted = player.get("vitals")
+	var site := str(args.get("site_id", ""))
+	var wild: Node3D = null
+	for f in 240:
+		for member: Variant in (director.get("_site_members") as Dictionary).get(site, []):
+			if member is Node3D and is_instance_valid(member) and bool((member as Node3D).call("is_alive")):
+				wild = member
+				break
+		if wild != null:
+			break
+		await tree.physics_frame
+	if wild == null:
+		return {"verdict": "FAIL", "detail": "the production site loop spawned no live member of %s" % site}
+	var start_stamina := -1.0
+	var swim_frames := 0
+	for frame in int(args.get("budget_frames", 2400)):
+		if not is_instance_valid(wild):
+			break
+		var offset := wild.global_position - player.global_position
+		offset.y = 0.0
+		if bool(swimming.call("is_swimming")):
+			if start_stamina < 0.0:
+				start_stamina = float(vitals.stamina)
+			swim_frames += 1
+		if bool(swimming.call("is_swimming")) and swim_frames > 90 and director.call("_engageable") == wild \
+				and arbiter.call("winning_provider") == director:
+			tree.call("_drive_left", 0.0, 0.0)
+			for f in 2:
+				await tree.physics_frame
+			var data := {"site_id": site, "species": str(wild.get("species_id")), "offered": true,
+				"swim_frames": swim_frames, "stamina_start": start_stamina, "stamina": float(vitals.stamina),
+				"stamina_spent": start_stamina - float(vitals.stamina), "mode": int(swimming.get("state").mode)}
+			var ok: bool = data.mode == SWIM_HUMAN and float(data.stamina_spent) > 0.5
+			return {"verdict": "PASS" if ok else "FAIL", "data": data,
+				"detail": "swam by stick to %s's %s: %s" % [site, data.species, JSON.stringify(data)]}
+		var direction := offset.normalized() if offset.length() > 2.0 else Vector3.ZERO
+		var local: Vector3 = (camera.call("planar_basis") as Basis).inverse() * direction
+		tree.call("_drive_left", local.x, local.z)
+		await tree.physics_frame
+	tree.call("_drive_left", 0.0, 0.0)
+	return {"verdict": "FAIL", "detail": "never reached an Engage offer for %s: player=%s wild=%s swimming=%s" % [
+		site, player.global_position, wild.global_position if is_instance_valid(wild) else Vector3.INF,
+		str(swimming.call("is_swimming"))]}
+
+
+## Baseline bookkeeping shared by the two aquatic views. `key` is the resource
+## compared (stamina for the owner, stamina_fraction for a remote view).
+static func _aquatic_compare(tree: SceneTree, scope: String, data: Dictionary, key: String,
+		args: Dictionary) -> String:
+	var store := _aquatic_baselines(tree)
+	data["frame"] = Engine.get_physics_frames()
+	if args.has("baseline"):
+		var label := scope + ":" + str(args.baseline)
+		if not store.has(label):
+			return "no baseline '%s' recorded on this peer" % str(args.baseline)
+		var base: Dictionary = store[label]
+		var frames := int(data.frame) - int(base.frame)
+		var delta := float(data[key]) - float(base[key])
+		data["baseline"] = str(args.baseline)
+		data["baseline_mode"] = int(base.mode)
+		data["baseline_" + key] = float(base[key])
+		data["frames_since"] = frames
+		data[key + "_delta"] = delta
+		data["stamina_unchanged"] = is_equal_approx(float(data[key]), float(base[key]))
+		data["stamina_decreased"] = delta < -0.0001
+		data["drain_per_s"] = -delta / (float(frames) / float(Engine.physics_ticks_per_second)) if frames > 0 else 0.0
+		if data.has("health") and base.has("health"):
+			data["health_unchanged"] = is_equal_approx(float(data.health), float(base.health))
+		if frames < int(args.get("min_frames_since", 0)):
+			return "only %d frames since baseline '%s' (need %d)" % [frames, str(args.baseline), int(args.min_frames_since)]
+	if args.has("record"):
+		store[scope + ":" + str(args.record)] = data.duplicate(true)
+	return ""
+
+
+static func _water_local_aquatic(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var world := _water_scene(tree)
+	var player := (tree.get("_probe") as Object).call("player") as CharacterBody3D
+	if world == null or player == null or player.get("swim_controller") == null:
+		return {"verdict": "ERROR", "detail": "water_local_aquatic needs the real Water scene, Player and SwimController"}
+	var state: RefCounted = (player.get("swim_controller") as Node).get("state")
+	if args.has("wait_for_mode"):
+		for f in int(args.get("budget_frames", 300)):
+			if int(state.mode) == int(args.wait_for_mode):
+				break
+			await tree.physics_frame
+	var vitals: RefCounted = player.get("vitals")
+	var manager := world.get_node_or_null(^"CombatManager")
+	var fighting := manager != null and bool(manager.call("is_fighting"))
+	var active: Variant = manager.call("active_creature") if manager != null else null
+	var enemy: Variant = manager.call("enemy") if fighting else null
+	var data := {"mode": int(state.mode), "drowning": bool(state.drowning), "revision": int(state.revision),
+		"stamina": float(vitals.stamina), "max_stamina": float(vitals.max_stamina),
+		"stamina_fraction": float(state.stamina_fraction), "health": float(vitals.health),
+		"fighting": fighting, "active_species": str((active as RefCounted).get("species_id")) if active != null else "",
+		"enemy_species": str((enemy as RefCounted).get("species_id")) if enemy != null else "",
+		"position": [player.global_position.x, player.global_position.y, player.global_position.z]}
+	var problem := _aquatic_compare(tree, "local", data, "stamina", args)
+	if data.has("drain_per_s"):
+		var configured := float((JSON.parse_string(FileAccess.get_file_as_string(SWIM_CONFIG)) as Dictionary).human.stamina_drain_per_s)
+		data["configured_drain_per_s"] = configured
+		data["drain_matches_config"] = absf(float(data.drain_per_s) - configured) <= configured * 0.1
+	return {"verdict": "FAIL" if not problem.is_empty() else "PASS", "data": data,
+		"detail": (problem + "; " if not problem.is_empty() else "") + JSON.stringify(data)}
+
+
+static func _remote_trainer_for(tree: SceneTree, pid: int) -> Node3D:
+	for node: Node in tree.get_nodes_in_group("remote_trainer"):
+		if node is Node3D and not node.is_multiplayer_authority() and int(node.get("peer_id")) == pid:
+			return node as Node3D
+	return null
+
+
+## Read in one frame with no await: the snapshot the remote trainer received
+## (`net_aquatic`) and the state it applied. `applied_matches_received` holds
+## only when the applied revision IS the received one and every field agrees;
+## a snapshot that arrived this frame and is applied on the next `_follow` is
+## reported as `applied_revision` < `revision`, never as agreement. While the
+## owner drains, a new revision arrives every owner frame, so the applied state
+## trails by `applied_lag_revisions` (one or more: unrendered and rendered peers
+## are not frame-locked); `applied_mode_matches_received` is the part of that
+## agreement that does not depend on frame timing.
+static func _remote_aquatic_view(body: Node3D, pid: int) -> Dictionary:
+	var aquatic: RefCounted = body.get("aquatic")
+	var applied: Dictionary = aquatic.call("snapshot")
+	var received: Dictionary = body.get("net_aquatic")
+	var applied_revision := int(aquatic.get("_received_revision"))
+	return {"peer_id": pid, "found": true, "mode": int(applied.get("mode", -1)),
+		"applied_revision": applied_revision,
+		"resume_mode": int(applied.get("resume_mode", -1)), "drowning": bool(applied.get("drowning", false)),
+		"stamina_fraction": float(applied.get("stamina_fraction", -1.0)),
+		"owner_peer_id": int(applied.get("owner_peer_id", 0)),
+		"revision": int(received.get("revision", -1)), "net_mode": int(received.get("mode", -1)),
+		"net_stamina_fraction": float(received.get("stamina_fraction", -1.0)),
+		"applied_matches_received": not received.is_empty() and applied_revision == int(received.get("revision", -2))
+			and int(received.get("mode", -1)) == int(applied.get("mode", -2))
+			and bool(received.get("drowning", false)) == bool(applied.get("drowning", true))
+			and is_equal_approx(float(received.get("stamina_fraction", -1.0)), float(applied.get("stamina_fraction", -2.0))),
+		"applied_mode_matches_received": not received.is_empty() and int(received.get("mode", -1)) == int(applied.get("mode", -2)),
+		"applied_lag_revisions": int(received.get("revision", -1)) - applied_revision,
+		"visible": body.visible,
+		"position": [body.global_position.x, body.global_position.y, body.global_position.z]}
+
+
+static func _water_remote_aquatic(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var pid := int(args.get("peer_id", 0))
+	if pid <= 0:
+		return {"verdict": "ERROR", "detail": "water_remote_aquatic needs args.peer_id (e.g. \"$peer1\")"}
+	var body := _remote_trainer_for(tree, pid)
+	if body == null:
+		return {"verdict": "FAIL", "data": {"peer_id": pid, "found": false},
+			"detail": "no remote trainer for peer %d on this peer" % pid}
+	if args.has("wait_for_mode"):
+		for f in int(args.get("budget_frames", 300)):
+			if int((body.get("aquatic") as RefCounted).get("mode")) == int(args.wait_for_mode):
+				break
+			await tree.physics_frame
+	var modes := {}
+	var low := INF
+	var high := -INF
+	for f in int(args.get("sample_frames", 0)):
+		await tree.physics_frame
+		if not is_instance_valid(body):
+			return {"verdict": "FAIL", "detail": "peer %d's remote trainer left mid-sample" % pid}
+		var aquatic: RefCounted = body.get("aquatic")
+		modes[int(aquatic.get("mode"))] = true
+		low = minf(low, float(aquatic.get("stamina_fraction")))
+		high = maxf(high, float(aquatic.get("stamina_fraction")))
+	# Let the newest received snapshot be applied (the remote trainer applies
+	# on its next `_follow`) before reading both sides in the same frame.
+	for f in 10:
+		if int((body.get("aquatic") as RefCounted).get("_received_revision")) \
+				== int((body.get("net_aquatic") as Dictionary).get("revision", -2)):
+			break
+		await tree.physics_frame
+	var data := _remote_aquatic_view(body, pid)
+	if not modes.is_empty():
+		var seen: Array = modes.keys()
+		seen.sort()
+		data["sample_frames"] = int(args.sample_frames)
+		data["modes_seen"] = ",".join(seen.map(func(m: Variant) -> String: return str(m)))
+		data["mode_steady"] = seen.size() == 1 and int(seen[0]) == int(data.mode)
+		data["sample_stamina_range"] = high - low
+	var problem := _aquatic_compare(tree, "remote%d" % pid, data, "stamina_fraction", args)
+	return {"verdict": "FAIL" if not problem.is_empty() else "PASS", "data": data,
+		"detail": (problem + "; " if not problem.is_empty() else "") + JSON.stringify(data)}
+
+
+static func _water_win_wild(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var world := _water_scene(tree)
+	var player := (tree.get("_probe") as Object).call("player") as CharacterBody3D
+	var camera := (tree.get("_probe") as Object).call("camera_rig") as Node3D
+	var manager := world.get_node_or_null(^"CombatManager") if world != null else null
+	var director := world.get_node_or_null(^"EncounterDirector") if world != null else null
+	if manager == null or director == null or player == null:
+		return {"verdict": "ERROR", "detail": "water_win_wild needs the Water scene's CombatManager/EncounterDirector"}
+	if not bool(manager.call("is_fighting")) or bool(director.call("trainer_battle_active")):
+		return {"verdict": "FAIL", "detail": "no wild fight is running (fighting=%s trainer=%s)"
+			% [str(manager.call("is_fighting")), str(director.call("trainer_battle_active"))]}
+	var ceiling := float(args.get("enemy_hp_ceiling", 0.0))
+	if ceiling <= 0.0:
+		return {"verdict": "ERROR", "detail": "water_win_wild needs args.enemy_hp_ceiling > 0"}
+	var state: RefCounted = (player.get("swim_controller") as Node).get("state")
+	var foe: Node3D = manager.call("enemy_body")
+	var foe_species := str(foe.get("species_id")) if foe != null else ""
+	var budget := int(args.get("budget_frames", 3600))
+	var frames := 0
+	var swings := 0
+	var capped := 0
+	var paused_throughout := true
+	while bool(manager.call("is_fighting")) and frames < budget:
+		var enemy: Variant = manager.call("enemy")
+		if enemy != null and float((enemy as RefCounted).get("hp")) > ceiling:
+			(enemy as RefCounted).set("hp", ceiling) # disclosed hp ceiling allowance
+			capped += 1
+		var target: Node3D = manager.call("enemy_body")
+		var ally: Node3D = director.call("ally_body")
+		if is_instance_valid(target) and is_instance_valid(ally):
+			var offset := target.global_position - ally.global_position
+			offset.y = 0.0
+			if offset.length() > float(manager.call("combat_move_reach", "quick")) * 0.8:
+				var local: Vector3 = (camera.call("planar_basis") as Basis).inverse() * offset.normalized()
+				tree.call("_drive_left", local.x, local.z)
+			else:
+				tree.call("_drive_left", 0.0, 0.0)
+		if frames % 20 == 0:
+			tree.call("_press_edge", "combat_quick", true)
+			swings += 1
+		elif frames % 20 == 2:
+			tree.call("_press_edge", "combat_quick", false)
+		if int(state.mode) != SWIM_PAUSED:
+			paused_throughout = false
+		frames += 1
+		await tree.physics_frame
+	tree.call("_press_edge", "combat_quick", false)
+	tree.call("_drive_left", 0.0, 0.0)
+	await tree.physics_frame
+	var fainted := foe != null and is_instance_valid(foe) and not bool(foe.call("is_alive"))
+	var data := {"enemy_species": foe_species, "fighting": bool(manager.call("is_fighting")), "enemy_fainted": fainted,
+		"frames": frames, "swings": swings, "hp_capped_frames": capped, "enemy_hp_ceiling": ceiling,
+		"paused_throughout": paused_throughout, "mode_after": int(state.mode)}
+	var ok: bool = not data.fighting and fainted and paused_throughout
+	return {"verdict": "PASS" if ok else "FAIL", "data": data,
+		"detail": "wild %s: %s" % ["won" if ok else "NOT won", JSON.stringify(data)]}
