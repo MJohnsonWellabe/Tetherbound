@@ -112,6 +112,10 @@ const FAREWELL_WARNING_ICON_PX := 40
 ## of its box and the menu draws at 2/3 scale at 1280x720, so 52 lands a
 ## ~26 px disc -- the 24 px floor with room, where 40/44 measured 20/22 px.
 const GUARDIAN_GLYPH_PX := 52
+## Farewell card row spacing, and the tighter spacing while the Guardian offer
+## (nine rows) is up.
+const FAREWELL_SEPARATION := 14
+const GUARDIAN_CARD_SEPARATION := 6
 ## Occupied belt rows recede to this while the offer is up, so the free slot
 ## the volunteer would take (highlighted) and the card are what reads.
 const GUARDIAN_ROSTER_DIM := 0.45
@@ -881,7 +885,7 @@ func _build_farewell_panel() -> Control:
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.alignment = BoxContainer.ALIGNMENT_CENTER
-	body.add_theme_constant_override("separation", 14)
+	body.add_theme_constant_override("separation", FAREWELL_SEPARATION)
 
 	_farewell_title = Label.new()
 	_farewell_title.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
@@ -1894,6 +1898,10 @@ var _guardian_decline_wait := ""
 func _begin_guardian_confirm(pending: RefCounted) -> void:
 	_ensure_guardian_controls()
 	_guardian_hint_before = _farewell_hint.text
+	# X03 text floor: at FONT_READ/FONT_PROMPT the offer card's nine rows at
+	# the farewell's 14 px spacing outgrew the 720p content height and pushed
+	# the menu frame off screen. The card packs tighter while the offer is up.
+	(_farewell_keep.get_parent() as BoxContainer).add_theme_constant_override("separation", GUARDIAN_CARD_SEPARATION)
 	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
 	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_SECONDARY)
 	_farewell_keep.visible = false
@@ -2093,7 +2101,7 @@ func _ensure_guardian_controls() -> void:
 	var body := _farewell_keep.get_parent()
 	if _guardian_accept != null and is_instance_valid(_guardian_accept) and _guardian_accept.get_parent() == body:
 		return
-	_guardian_subtitle = _guardian_label(UITokens.FONT_PROMPT, UITokens.TEXT_PRIMARY)
+	_guardian_subtitle = _guardian_label(UITokens.FONT_READ, UITokens.TEXT_PRIMARY)
 	body.add_child(_guardian_subtitle)
 	body.move_child(_guardian_subtitle, _farewell_title.get_index() + 1)
 	# X03: the legendary tag and its numbers stay on screen while the offer is
@@ -2234,6 +2242,7 @@ func _end_guardian_confirm(land: int) -> void:
 	if _farewell_panel == null:
 		return
 	_farewell_hint.text = _guardian_hint_before
+	(_farewell_keep.get_parent() as BoxContainer).add_theme_constant_override("separation", FAREWELL_SEPARATION)
 	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
 	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 	_farewell_panel.visible = false
