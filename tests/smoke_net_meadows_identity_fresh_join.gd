@@ -515,6 +515,10 @@ func _rejoin_with_starter(port: int) -> void:
 	var starter_uids: Array = before.get("party_uids", []) as Array
 	_check(starter_uids.size() == 1 and not str(starter_uids[0]).is_empty(),
 		"the guest's starter has a UID before the drop (%s)" % str(starter_uids))
+	var counted: Dictionary = await step(1, "assert", {"check": "inventory_count", "item": "orb_basic", "min": 0})
+	var orbs_before := int(str(counted.get("detail", "")).get_slice("count ", 1).to_int()) \
+		if str(counted.get("detail", "")).contains("count ") else -1
+	_check(orbs_before >= 45, "the guest's orb count before the drop is read (%d)" % orbs_before)
 	var saved: Dictionary = await step(1, "save_character_here", {})
 	_check(str(saved.get("verdict", "")) == "PASS", "the guest's character is written (%s)" % str(saved.get("detail", "")))
 	var dropped: Dictionary = await step(1, "drop_link", {"settle_frames": 60})
@@ -551,8 +555,10 @@ func _rejoin_with_starter(port: int) -> void:
 	await _assert_named_starter(1, "after rejoining")
 	var story := await _story(1, [STARTER_FLAG])
 	_check(_player_flag(story, STARTER_FLAG) == true, "the rejoined guest kept its starter receipt")
-	var orbs: Dictionary = await step(1, "assert", {"check": "inventory_count", "item": "orb_basic", "min": 45, "max": 50})
-	_check(str(orbs.get("verdict", "")) == "PASS", "the rejoined guest kept its opening catch supplies (%s)" % str(orbs.get("detail", "")))
+	var orbs: Dictionary = await step(1, "assert", {"check": "inventory_count", "item": "orb_basic",
+		"min": orbs_before, "max": orbs_before})
+	_check(str(orbs.get("verdict", "")) == "PASS",
+		"the rejoined guest holds exactly the %d orbs it had before the drop (%s)" % [orbs_before, str(orbs.get("detail", ""))])
 	await _assert_named_starter(0, "with the guest back")
 
 
