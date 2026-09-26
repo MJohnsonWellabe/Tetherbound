@@ -3,6 +3,7 @@ extends RefCounted
 ## Pure content translation over production encounter schemas. Never registers
 ## species, creates nodes, writes flags, chooses an Alpha result or mutates inputs.
 const CATALOG := preload("res://scripts/creatures/water_species_catalog.gd")
+const MATH := preload("res://scripts/combat/combat_math.gd")
 const TUNING_PATH := "res://data/config/water_combat.json"
 const INSTALLED_EXCEPTIONS := ["brooktail", "galecrest"]
 
@@ -72,10 +73,7 @@ static func build(world_config: Dictionary, characters: Dictionary, encounters: 
 		spec["reward"] = tuning.get("reward_tiers", {}).get(spec.rank, {}).duplicate(true)
 		var team: Array = []
 		for member: Dictionary in authored.get("team", []):
-			var translated := member.duplicate(true)
-			translated["species"] = _species(str(member.get("species", "")), errors)
-			translated["trainer_owned"] = true
-			team.append(translated)
+			team.append(team_member(authored, member, errors))
 		spec["team"] = team
 		trainers[id] = spec
 		placements.append({"id": id, "position": position.duplicate(), "island_id": island,
@@ -99,6 +97,31 @@ static func build(world_config: Dictionary, characters: Dictionary, encounters: 
 		return {"ok": false, "errors": errors, "chapter": {}, "encounter_config": {}, "trainer_specs": {}, "board_to_runtime": {}}
 	return {"ok": true, "errors": [], "chapter": {"realm_id": "water", "encounter_tables": tables},
 		"encounter_config": config, "trainer_specs": trainers, "board_to_runtime": mapping}
+
+## One authored trainer team member as production fields it. A trainer's
+## optional `foe_power_multiplier` (F14 top-trainer damage tunable) scales the
+## member's strike power: its own `combat.power` if authored, else the
+## `enemy_trainer` baseline every trainer-owned body already fights with. The
+## result is the member's per-creature `combat` block, which trainer_npc.gd
+## hands to `combat_override`; `damage_scale` still applies afterwards.
+static func team_member(trainer: Dictionary, member: Dictionary, errors: Array[String]) -> Dictionary:
+	var translated := member.duplicate(true)
+	translated["species"] = _species(str(member.get("species", "")), errors)
+	translated["trainer_owned"] = true
+	var multiplier := float(trainer.get("foe_power_multiplier", 1.0))
+	if not is_finite(multiplier) or multiplier <= 0.0:
+		errors.append("%s: foe_power_multiplier must be a positive number" % str(trainer.get("id", "")))
+		multiplier = 1.0
+	if not is_equal_approx(multiplier, 1.0):
+		var combat: Dictionary = (member.get("combat", {}) as Dictionary).duplicate(true) \
+			if member.get("combat", {}) is Dictionary else {}
+		var config: Dictionary = MATH.config()
+		var base := float(combat.get("power", config.get("enemy_trainer", {}).get("power",
+			config.get("enemy", {}).get("power", 8.0))))
+		combat["power"] = base * multiplier
+		translated["combat"] = combat
+	return translated
+
 
 static func _species(source: String, errors: Array[String]) -> String:
 	var mapped := CATALOG.runtime_id(source)

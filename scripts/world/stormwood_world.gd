@@ -17,6 +17,7 @@ const ROAD_CURRENT := preload("res://scripts/world/stormwood_road_current.gd")
 const GLASS_FIELD := preload("res://scripts/world/stormwood_glass_field.gd")
 const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
 const SETTLEMENTS := preload("res://scripts/world/village.gd")
+const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
 var simulation_only := false
 var shell_realm := ""
 var _ready_complete := false
@@ -290,8 +291,9 @@ func _build_road_current() -> void:
 	var data: Object = _terrain.get("data") if _terrain != null else null
 	var height := Callable()
 	if data != null and data.has_method("get_height"):
+		var spacing := float(_terrain.get("vertex_spacing"))
 		height = func(x: float, z: float) -> float:
-			var y := float(data.call("get_height", Vector3(x, 0.0, z)))
+			var y := TERRAIN_HEIGHT.height_from(data, spacing, x, z)
 			return y if is_finite(y) else ground_height_at(x, z)
 	current.build(self, height)
 

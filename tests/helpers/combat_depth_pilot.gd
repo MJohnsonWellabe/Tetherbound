@@ -84,7 +84,7 @@ func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
 			_incoming_windup = int(_manager.get("_action")) == MANAGER.Action.WINDUP)
 		_wild.telegraph_started.connect(func(seconds: float) -> void:
 			_tally.events.append({"event": "telegraph", "frame": _frames,
-				"enemy_config": _wild.combat_config(), "ally_radius": _ally.body_radius(), "enemy_radius": _wild.body_radius(),
+				"enemy_config": _wild.combat_config().duplicate(true), "ally_radius": _ally.body_radius(), "enemy_radius": _wild.body_radius(),
 				"seconds": seconds, "ally_position": _ally.global_position,
 				"enemy_position": _wild.global_position}))
 		_wild.trainer_owned = owned
@@ -196,11 +196,20 @@ func _act(policy: String) -> void:
 					and _manager.wind_value() >= _manager.wind_cost("charged") + reserve:
 				_press("combat_charged")
 				return
+			# A travelling lunge (F04 `lunge_travels`) threatens its whole drawn
+			# lane, not the strike reach: backing straight off stays in the lane
+			# until its far end. Step sideways out of it instead.
+			if _wild.has_method("lunge_travels") and bool(_wild.call("lunge_travels")):
+				_clear_lunge_lane(toward)
+				return
 			# Stop once outside the observed strike's reach. Running away for
 			# the whole tell wastes the recovery returning to attack distance.
 			var enemy_reach := float(_wild.combat_config().get("range", 2.6))
 			if distance < enemy_reach + 0.35:
-				_retreat(toward)
+				if _sidestep_cone(distance, enemy_reach):
+					_tally["cone_sidestep_frames"] = int(_tally.get("cone_sidestep_frames", 0)) + 1
+				else:
+					_retreat(toward)
 			return
 		if _manager.wind_value() < cost + reserve:
 			_retreat(toward)
@@ -245,6 +254,71 @@ func _retreat(toward: Vector3) -> void:
 		_walk(tangent)
 	else:
 		_walk(-toward)
+
+
+## Sidestep until the ally's footprint is off the lane the charger shows: the
+## lane runs `lunge` metres along the charger's facing and is as wide as
+## wild_creature.gd's contact rule, (charger radius + target radius) x
+## `charger_lunge.contact_scale`. Reads only what the lane draws on the ground.
+func _clear_lunge_lane(toward: Vector3) -> void:
+	var heading: Vector3 = _wild.call("facing") if _wild.has_method("facing") else toward
+	heading.y = 0.0
+	heading = heading.normalized() if heading.length() > 0.01 else toward
+	var offset := _ally.global_position - _wild.global_position
+	offset.y = 0.0
+	var along := offset.dot(heading)
+	var lateral := offset - heading * along
+	var ally_radius := float(_ally.call("body_radius")) if _ally.has_method("body_radius") else 0.5
+	var wild_radius := float(_wild.call("body_radius")) if _wild.has_method("body_radius") else 0.5
+	var scale := float(MATH.config().get("charger_lunge", {}).get("contact_scale", 1.2))
+	var clearance := (ally_radius + wild_radius) * scale + 0.4
+	var length := float(_wild.combat_config().get("lunge", 0.0)) + clearance
+	if along < -clearance or along > length or lateral.length() > clearance:
+		return
+	var side := lateral.normalized() if lateral.length() > 0.05 else heading.cross(Vector3.UP)
+	var arena: Node3D = _manager.arena()
+	var outward := _ally.global_position - arena.global_position
+	outward.y = 0.0
+	# Near the wall, take the side that points back into the arena.
+	if outward.length() > float(arena.get("radius")) - 2.5 and side.dot(outward) > 0.0:
+		side = -side
+	_walk(side)
+
+
+## A narrow, long strike (a jet) is left sideways, not by outrunning its
+## reach: when the perpendicular distance out of the drawn cone is shorter
+## than the radial distance out of its reach, step across the cone's axis.
+## Returns false when backing off is the shorter escape.
+func _sidestep_cone(distance: float, enemy_reach: float) -> bool:
+	var heading: Vector3 = _wild.call("facing") if _wild.has_method("facing") else Vector3.ZERO
+	heading.y = 0.0
+	if heading.length() < 0.01:
+		return false
+	heading = heading.normalized()
+	var offset := _ally.global_position - _wild.global_position
+	offset.y = 0.0
+	var along := offset.dot(heading)
+	var lateral := offset - heading * along
+	var half := deg_to_rad(float(_wild.combat_config().get("cone_degrees", 90.0)) * 0.5)
+	var ally_radius := float(_ally.call("body_radius")) if _ally.has_method("body_radius") else 0.5
+	var edge_gap := along * tan(half) - lateral.length() if along > 0.0 else 0.0
+	var sideways := maxf(0.0, edge_gap) * cos(half) + ally_radius + 0.3
+	if sideways >= enemy_reach + 0.35 - distance:
+		return false
+	var side := lateral.normalized() if lateral.length() > 0.05 else heading.cross(Vector3.UP)
+	var arena: Node3D = _manager.arena()
+	var outward := _ally.global_position - arena.global_position
+	outward.y = 0.0
+	if outward.length() > float(arena.get("radius")) - 2.5 and side.dot(outward) > 0.0:
+		side = -side
+	_walk(side)
+	# Once the shown cone has locked (COMBAT §5), walking may not clear it in
+	# the time left: burst across it, as a player reading the lock would.
+	if bool(_wild.get("_selected_heading_locked")) and edge_gap > -0.3 \
+			and _manager.wind_value() >= _manager.wind_cost("burst"):
+		_press("jump")
+		_tally.burst_uses += 1
+	return true
 
 
 func _press(action: String) -> void:

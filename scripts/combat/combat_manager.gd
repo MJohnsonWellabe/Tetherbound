@@ -1568,6 +1568,7 @@ func _refuse_combat_input() -> void:
 func _tick_active(delta: float) -> void:
 	_buffer_flee_while_input_unread(delta)
 	if _hitstop_left > 0.0:
+		_buffer_attack_while_hitstopped()
 		_hitstop_left = maxf(0.0, _hitstop_left - delta)
 		if _hitstop_left <= 0.0:
 			_set_bodies_hitstopped(false)
@@ -2495,18 +2496,49 @@ func _read_player_input() -> void:
 	# `_consume_buffered_attack()` the moment it is ready. Throws stay
 	# un-buffered: a throw is a deliberate mode change, and one that fires
 	# half a second after the press feels like the game acting on its own.
-	if Input.is_action_just_pressed("combat_charged"):
-		_buffered_attack = "charged"
-		_buffer_left = float(MATH.config().get("flow", {}).get("input_buffer", 0.3))
-	elif Input.is_action_just_pressed("combat_quick"):
-		_buffered_attack = "quick"
-		_buffer_left = float(MATH.config().get("flow", {}).get("input_buffer", 0.3))
+	_record_attack_press()
 
 	if _action != Action.READY:
 		return
 
 	if _throw_pressed():
 		_try_throw()
+
+
+## Record a quick/charged press into the attack buffer for
+## `_consume_buffered_attack()` to fire when the creature is ready.
+func _record_attack_press() -> void:
+	var pressed := _attack_pressed()
+	if pressed != "":
+		_buffered_attack = pressed
+		_buffer_left = float(MATH.config().get("flow", {}).get("input_buffer", 0.3))
+
+
+## This tick's attack EDGE: "charged", "quick" or "". Split out, like
+## `_flee_pressed()`, so a test can inject the edge.
+func _attack_pressed() -> String:
+	if Input.is_action_just_pressed("combat_charged"):
+		return "charged"
+	if Input.is_action_just_pressed("combat_quick"):
+		return "quick"
+	return ""
+
+
+## Hitstop returns from `_tick_active()` before `_read_player_input()`, so an
+## attack pressed during the freeze after any hit (including the enemy's blow
+## landing on the ally) used to be dropped outright: the edge was gone by the
+## time reading resumed. Attack presses are meant to be recorded whatever state
+## the creature is in, exactly as `_buffer_flee_while_input_unread()` already
+## keeps a disengage press. `_buffer_left` does not run down during hitstop, so
+## the press survives the freeze. Same gates as the normal read: the input
+## guard, a pending burst, an open throw/aim and a catch in progress all own
+## the attack buttons instead.
+func _buffer_attack_while_hitstopped() -> void:
+	if _input_guard > 0.0 or _burst_awaiting_host or _catch_phase != CatchPhase.NONE:
+		return
+	if active_creature() == null or bool(_throw.call("is_busy")):
+		return
+	_record_attack_press()
 
 
 func _combat_input_direction() -> Vector3:

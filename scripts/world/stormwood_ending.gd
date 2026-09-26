@@ -36,9 +36,12 @@ const ACCEPTED_FLAG := "stormwood:legendary_offer_accepted"
 ## is a prefix line in flag_scopes.json (longer than the world `stormwood:`).
 ##
 ## The older bare ceremony receipt (`PERSONAL_RECEIPT_FLAG`) is still written
-## beside it. A character holding that receipt with no scoped answer at all
-## answered under an older build that did not record Yes from No, so it reads
-## as an acceptance: no offer is ever granted twice.
+## beside it. A character holding that receipt with no scoped answer and no
+## `ACCEPTED_FLAG` answered under an older build that did not record Yes from
+## No. Owner ruling 2026-09-26: that answer is UNDECIDED (`legacy_undecided()`),
+## so the character is offered once more and its first scoped answer settles
+## it. The one exception keeps no offer granted twice: a roster that still holds
+## a Stormheart (the older build's own evidence of a Yes) reads as accepted.
 const ANSWER_PREFIX := "stormwood:legendary_answer:"
 ## Published instead of an empty list when the host knows nobody who fought,
 ## so a client never reads it as a solo freeing that anyone may answer.
@@ -90,6 +93,10 @@ var _resend_left := 0.0
 var _released_announced := false
 var _aftermath_announced := false
 var _progression_revision := -1
+## Host: settled claims without a world resolution receipt (an older build's
+## single-recipient answer) have been given one. Retried while the ledger is
+## not ready to take them.
+var _legacy_receipts_checked := false
 ## Character ids the host judges claims against, as last published: the
 ## recorded fighters, or for a save from before the list existed the host's
 ## fallback (see `participants_for_claim()`).
@@ -191,6 +198,8 @@ func _process(delta: float) -> void:
 	if _has(MARROW_FLAG) and not _has(FREED_FLAG):
 		_record_participants()
 		_chapter.call("emit_event", "dynamo:release")
+	if _has(FREED_FLAG) and not _legacy_receipts_checked:
+		_legacy_receipts_checked = _receipt_settled_claims()
 	if _has(FREED_FLAG) and not _released_announced:
 		_released_announced = true
 		_broadcast(_state_event())
@@ -370,10 +379,12 @@ func _receive_claim(claim: Dictionary) -> void:
 	if not _local_claim.is_empty() or game.get("pending_catch") != null:
 		return
 	# This character already keeps a Stormheart from another world (or holds an
-	# older build's bare receipt): this world's claim was never answered, so it
-	# settles as not kept instead of offering a second creature. Accepting THIS
-	# claim always writes its own scoped `accepted` answer first, caught above.
-	if accepted_anywhere(player_flags):
+	# older build's undecided receipt beside a roster Stormheart): this world's
+	# claim was never answered, so it settles as not kept instead of offering a
+	# second creature. An undecided receipt alone falls through to the one
+	# re-offer. Accepting THIS claim always writes its own scoped `accepted`
+	# answer first, caught above.
+	if accepted_anywhere(player_flags, game.get("party")):
 		_local_claim = claim.duplicate(true)
 		game.push_world_message("A Stormheart already walks with you.")
 		_finish_local_claim(false)
@@ -497,7 +508,7 @@ func _finish_local_claim(kept: bool) -> void:
 	var character := _local_character_id(game)
 	# The world keeps the unresolved claim; this player-owned receipt makes a
 	# reconnect resume at the acknowledgement instead of replaying a farewell.
-	record_answer(game.call("player_flags"), claim_id(_local_claim), kept)
+	record_answer(game.call("player_flags"), claim_id(_local_claim), kept, game.get("party"))
 	if saver != null and not character.is_empty() and not bool(saver.call("save_character", game, character)):
 		_save_retry_left = 1.0
 		game.push_world_message("Could not save the roster choice. The Stormheart is still waiting.")
@@ -509,23 +520,43 @@ func _finish_local_claim(kept: bool) -> void:
 
 func _on_offer() -> void:
 	var game := get_node("/root/Game")
-	session.request_stormwood_encounter(claim_intent(game.call("player_flags")))
+	session.request_stormwood_encounter(claim_intent(game.call("player_flags"), game.get("party")))
 
 
 ## The claim a client sends: its portable acceptance is the only cross-world
 ## hint. A refusal in another world withholds nothing here.
-static func claim_intent(player_flags: RefCounted) -> Dictionary:
-	return {"kind": "ending_claim", "already_accepted": accepted_anywhere(player_flags)}
+static func claim_intent(player_flags: RefCounted, party: RefCounted = null) -> Dictionary:
+	return {"kind": "ending_claim", "already_accepted": accepted_anywhere(player_flags, party)}
 
 
-## This character accepted a Stormheart in some world: the portable flag, or a
-## bare receipt left by an older build that never recorded Yes from No.
-static func accepted_anywhere(player_flags: RefCounted) -> bool:
+## This character accepted a Stormheart in some world: the portable flag, or an
+## older build's undecided receipt beside a roster that still holds a
+## Stormheart. An undecided receipt alone withholds nothing: it is re-offered.
+static func accepted_anywhere(player_flags: RefCounted, party: RefCounted = null) -> bool:
 	if player_flags == null:
 		return false
 	if bool(player_flags.call("has", ACCEPTED_FLAG)):
 		return true
+	return legacy_undecided(player_flags) and party_holds_stormheart(party)
+
+
+## An older build's bare ceremony receipt that never said Yes or No: no
+## portable acceptance and no scoped answer to any claim. It stays undecided
+## until this character's first scoped answer (the one re-offer) settles it.
+static func legacy_undecided(player_flags: RefCounted) -> bool:
+	if player_flags == null or bool(player_flags.call("has", ACCEPTED_FLAG)):
+		return false
 	return bool(player_flags.call("has", PERSONAL_RECEIPT_FLAG)) and not _has_scoped_answer(player_flags)
+
+
+## The roster already holds a Stormheart, from any world or build.
+static func party_holds_stormheart(party: RefCounted) -> bool:
+	if party == null:
+		return false
+	for creature: RefCounted in party.call("members"):
+		if creature != null and str(creature.get("species_id")) == LEGENDARY_SPECIES:
+			return true
+	return false
 
 
 ## A claim's stable identity: the uid of the Stormheart its world reserved.
@@ -549,13 +580,15 @@ static func recorded_answer(player_flags: RefCounted, id: String) -> String:
 	return ""
 
 
-## Record this character's answer to claim `id`. A bare legacy receipt is first
-## made an explicit acceptance, so writing the first scoped answer can never
-## turn an older build's Yes into a refusal. The receipt is never cleared.
-static func record_answer(player_flags: RefCounted, id: String, kept: bool) -> void:
+## Record this character's answer to claim `id`. An undecided legacy receipt
+## beside a roster Stormheart is first made an explicit acceptance, so the first
+## scoped answer can never turn an older build's evident Yes into a refusal; an
+## undecided receipt without one is settled by this answer alone. The receipt
+## is never cleared.
+static func record_answer(player_flags: RefCounted, id: String, kept: bool, party: RefCounted = null) -> void:
 	if player_flags == null:
 		return
-	if accepted_anywhere(player_flags):
+	if accepted_anywhere(player_flags, party):
 		player_flags.call("set_flag", ACCEPTED_FLAG)
 	player_flags.call("set_flag", PERSONAL_RECEIPT_FLAG)
 	if not id.is_empty():
@@ -564,6 +597,31 @@ static func record_answer(player_flags: RefCounted, id: String, kept: bool) -> v
 	# ceremony) is an acceptance another world must respect.
 	if kept:
 		player_flags.call("set_flag", ACCEPTED_FLAG)
+
+
+## An undecided legacy receipt settles as accepted once a world holds this
+## character's accepted resolution: that world recorded the older build's Yes
+## (`kept`), so no other world may grant a second Stormheart even after the
+## first was let go. A world's recorded refusal settles nothing: it may have
+## been the older build's automatic settle, so the one re-offer stands.
+static func settle_legacy_from_world(player_flags: RefCounted, world_accepted: bool) -> bool:
+	if not world_accepted or not legacy_undecided(player_flags):
+		return false
+	player_flags.call("set_flag", ACCEPTED_FLAG)
+	return true
+
+
+func _settle_legacy_receipt_from_world(game: Node) -> void:
+	if game == null:
+		return
+	var character := _local_character_id(game)
+	if character.is_empty() or not _has(resolution_flag(true, character)):
+		return
+	if not settle_legacy_from_world(game.call("player_flags"), true):
+		return
+	var saver: RefCounted = game.get("save_system")
+	if saver != null:
+		saver.call("save_character", game, character)
 
 
 static func _has_scoped_answer(player_flags: RefCounted) -> bool:
@@ -583,6 +641,7 @@ func _refresh_presentation() -> void:
 	var game := get_node_or_null("/root/Game")
 	var progression: RefCounted = game.get("progression") if game != null else null
 	_progression_revision = int(progression.get("revision")) if progression != null else -1
+	_settle_legacy_receipt_from_world(game)
 	var freed := _has(FREED_FLAG) or _released_announced
 	# Each participant sees their own Stormheart until they have answered it;
 	# a non-participant sees it leave once the world's first offer is settled.
@@ -876,19 +935,59 @@ func _submit_resolution(accepted: bool, character: String) -> void:
 		LEDGER_CLAIM.submit(self, {"kind": "set_world_flag", "realm": "stormwood", "id": flag, "value": true})
 
 
+## Host: an older build settled its single claim without the per-character
+## world receipt. The world's own record (`kept`) is that character's answer
+## there, so it is committed once; the character is never re-offered in the
+## world that already holds its answer, and every peer's prompt reads it.
+func _receipt_settled_claims() -> bool:
+	# No ledger yet: wait without submitting, so its "not ready" refusal is
+	# never shown once per frame.
+	if LEDGER_CLAIM.transport(self) == null:
+		return false
+	var state := _saved_state()
+	var present: Array = []
+	for character: String in (state.get("claims", {}) as Dictionary).keys():
+		present.append_array(_world_flags_for(character))
+	var submitted := true
+	for row: Array in unreceipted_settled_claims(state, present):
+		var verdict := LEDGER_CLAIM.submit(self, {"kind": "set_world_flag", "realm": "stormwood",
+			"id": resolution_flag(bool(row[1]), str(row[0])), "value": true})
+		# A hard refusal was already shown once; retrying would repeat it.
+		submitted = submitted and str(verdict.get("code", "")) != "offline"
+	return submitted
+
+
+## `[character, kept]` for each settled claim whose world receipt is missing
+## from `world_flags`.
+static func unreceipted_settled_claims(state: Dictionary, world_flags: Array) -> Array:
+	var out: Array = []
+	var claims: Variant = state.get("claims", {})
+	if not claims is Dictionary:
+		return out
+	for character: Variant in (claims as Dictionary).keys():
+		var claim: Variant = (claims as Dictionary)[character]
+		if not claim is Dictionary or not bool((claim as Dictionary).get("settled", false)):
+			continue
+		var id := str(character)
+		if world_flags.has(resolution_flag(true, id)) or world_flags.has(resolution_flag(false, id)):
+			continue
+		out.append([id, bool((claim as Dictionary).get("kept", false))])
+	return out
+
+
 static func resolution_flag(accepted: bool, character: String) -> String:
 	return "%s%s:%s" % [RESOLUTION_PREFIX, "accepted" if accepted else "refused", character]
 
 
 ## This peer's own character may still answer the Stormheart: not while this
 ## world holds its answer, and not once it accepted a Stormheart anywhere
-## (`accepted_anywhere()`, which reads an older build's bare receipt as Yes).
+## (`accepted_anywhere()`; an older build's undecided receipt is re-offered).
 func _local_offer_owed(game: Node) -> bool:
 	if game == null:
 		return false
 	var character := _local_character_id(game)
 	var player_flags: RefCounted = game.call("player_flags")
-	var resolved := accepted_anywhere(player_flags) \
+	var resolved := accepted_anywhere(player_flags, game.get("party")) \
 		or _has(resolution_flag(true, character)) or _has(resolution_flag(false, character))
 	var participants := _participants
 	if session != null and session.is_host():
