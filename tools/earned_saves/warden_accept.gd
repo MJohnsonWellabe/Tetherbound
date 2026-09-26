@@ -337,3 +337,141 @@ func _road_bench_care() -> bool:
 	if acted:
 		return await super._prepare()
 	return true
+
+
+## B12 (attempt 9): the trainer died on the acknowledgement road. The helper's
+## `aftermath_road` walks band2 straight from (-330,2630) to (-420,2470),
+## across the Warrens mound. The forward chain never walked that leg: warrens
+## and relay took `warren_undertrail`, west of the mound (warrens_route.gd B3
+## detour). Coordinator ruling: walk the return along the forward roads,
+## reversed. This copy of `_acknowledge_and_cross` differs from the helper in
+## three ways: (1) the band2 leg between the undertrail's two band2 joins is
+## replaced by the undertrail plus the B3 west-of-mound detour, and the whole
+## road is still walked in reverse; (2) whole-belt care (`_prepare()`) runs
+## before the walk; (3) a death watch (below) logs every trainer health loss
+## with its cause. The acknowledgement talk, gate checks, storm road and
+## physical Rift crossing are unchanged.
+const WARRENS_ROUTE := preload("res://tools/earned_saves/warrens_route.gd")
+
+
+static func forward_return_road(road: Array[Dictionary], undertrail: Array[Vector2]) -> Array[Dictionary]:
+	if undertrail.size() < 2:
+		return []
+	var points := road_points(road)
+	var start := nearest_index(points, undertrail[0])
+	var finish := nearest_index(points, undertrail[-1])
+	if start < 0 or finish <= start or points[start].distance_to(undertrail[0]) > 0.5 \
+			or points[finish].distance_to(undertrail[-1]) > 0.5:
+		return []
+	for index in range(start + 1, finish):
+		if road[index].has("gate"):
+			return []
+	var middle: Array[Dictionary] = []
+	for point: Vector2 in WARRENS_ROUTE.MOUND_WEST_DETOUR:
+		middle.append({"at": point, "source": "warrens_route B3 detour"})
+	for index in range(1, undertrail.size() - 1):
+		middle.append({"at": undertrail[index], "source": "warren_undertrail"})
+	var out: Array[Dictionary] = []
+	out.append_array(road.slice(0, start + 1))
+	out.append_array(middle)
+	out.append_array(road.slice(finish))
+	return out
+
+
+func _acknowledge_and_cross() -> bool:
+	_arm_death_watch()
+	if not _ending_ready() or not await _exit_hall():
+		return false
+	if not await _prepare():
+		return false
+	var terrain := _read(TERRAIN)
+	var gates := _open_crossings(terrain)
+	var spine_road := aftermath_road(terrain, gates)
+	var road := forward_return_road(spine_road, trail_points(terrain, "loops", "warren_undertrail"))
+	var kell := _world.get_node_or_null("VillageNPCs/Kell") as Node3D
+	var kell_spec := acknowledgement_spec(_read(NPC_CONFIG), _read(FREED_DIALOGUE))
+	if gates.size() != 3 or road.is_empty() or kell == null or kell_spec.is_empty():
+		return _fail("The actual acknowledgement actor or forward-road return route is unavailable")
+	if NPCS.greeting_for(kell_spec, _game.get("progression")) != "spoke_traveller_storm_road":
+		return _fail("The real acknowledgement actor is not offering its authored post-win branch")
+	var points := road_points(road)
+	var join := nearest_index(points, Vector2(_player.global_position.x, _player.global_position.z))
+	_receipt("acknowledgement_backtrack_started", {"road_metres_one_way": road_length(points), "target": kell.global_position,
+		"reason": "actual acknowledgement remains at the village; no earned fast travel exists",
+		"route": "forward roads reversed (B12): band5/4/3 + relay loop, warren_undertrail with B3 detour, band2/band1",
+		"spine_entries": spine_road.size(), "entries": road.size()})
+	for index in range(join, -1, -1):
+		_leg_target = points[index]
+		if not await _walk_road_entry(road[index]):
+			return false
+	if not await _talk(kell.get_node_or_null("Interactable") as Node3D, str(kell_spec.greeting)) \
+			or not _has("meadows_acknowledged") or not retained_five(_initial_ids, _party_ids()):
+		return _fail("The actual return greeting did not earn Meadows acknowledgement with the retained five")
+	_receipt("meadows_acknowledged", {"actor": kell.name, "conversation": _dialogue_finished, "player": _player.global_position})
+	var storm := storm_road(terrain)
+	if storm.is_empty():
+		return _fail("The actual rebuilt storm-road approach is missing")
+	var storm_join := nearest_index(points, storm[0])
+	for index in range(storm_join + 1):
+		_leg_target = points[index]
+		if not await _walk_road_entry(road[index]):
+			return false
+	for point: Vector2 in storm.slice(1):
+		_leg_target = point
+		if not await _walk_ground(point):
+			return false
+	return await _cross_the_live_rift()
+
+
+## Death watch (B12 root cause): every drop in the trainer's health is logged
+## with position, the last floor height and the fall since, the last `landed`
+## impact, whether a fight is on, and the leg being walked. On `died`, a
+## summary line names the cause: "fall" when a damaging landing happened in the
+## same frame, "combat" when fighting, otherwise "hazard (water/other)".
+var _death_armed := false
+var _leg_target := Vector2.INF
+var _last_health := -1.0
+var _last_floor_y := NAN
+var _last_landing := {}
+var _health_events := 0
+
+
+func _arm_death_watch() -> void:
+	if _death_armed or _player == null:
+		return
+	_death_armed = true
+	_last_health = float((_player.get("vitals") as RefCounted).get("health"))
+	_watch(_player, "landed", _on_player_landed)
+	_watch(_player, "died", _on_player_died)
+	_watch(_tree, "physics_frame", _death_watch_tick)
+
+
+func _on_player_landed(impact_speed: float, damage: float) -> void:
+	_last_landing = {"frame": Engine.get_physics_frames(), "impact_speed": impact_speed, "damage": damage,
+		"fall_m": (_last_floor_y - _player.global_position.y) if not is_nan(_last_floor_y) else NAN,
+		"at": _player.global_position}
+	if damage > 0.0:
+		print("EARNED DEATHWATCH landing ", _last_landing)
+
+
+func _death_watch_tick() -> void:
+	if not is_instance_valid(_player):
+		return
+	if _player.is_on_floor():
+		_last_floor_y = _player.global_position.y
+	var health := float((_player.get("vitals") as RefCounted).get("health"))
+	if health < _last_health - 0.01 and _health_events < 400:
+		_health_events += 1
+		var landed_now: bool = not _last_landing.is_empty() and Engine.get_physics_frames() - int(_last_landing.frame) <= 1
+		print("EARNED DEATHWATCH health %.1f -> %.1f at %s cause=%s fighting=%s floor=%s leg=%s" % [_last_health, health,
+			_player.global_position, "fall" if landed_now else ("combat" if _fighting() else "hazard(water/other)"),
+			_fighting(), _player.is_on_floor(), _leg_target])
+	_last_health = health
+
+
+func _on_player_died() -> void:
+	var landed_now: bool = not _last_landing.is_empty() and Engine.get_physics_frames() - int(_last_landing.frame) <= 1
+	var cause := "fall" if landed_now and float(_last_landing.damage) > 0.0 else ("combat" if _fighting() else "hazard(water/other)")
+	print("EARNED DEATHWATCH DIED cause=%s at=%s last_floor_y=%s last_landing=%s fighting=%s leg=%s frame=%d" % [
+		cause, _player.global_position, _last_floor_y, _last_landing, _fighting(), _leg_target, Engine.get_physics_frames()])
+	_fail("The trainer died on the acknowledgement road (cause %s at %s); see EARNED DEATHWATCH" % [cause, _player.global_position])

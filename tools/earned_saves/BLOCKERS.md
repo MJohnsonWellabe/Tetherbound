@@ -341,3 +341,15 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   segments used (the reverse of warrens/relay/hall routes) instead of the spine. That is a route
   choice, not a teleport. (3) Split `warden` so the settled ending is saved before the walk, which
   needs the aftermath mode's `_climax._stage == "done"` to survive a load.
+
+### B12 ruling (coordinator): return along the forward roads, reversed; care first; death watch
+
+- `warden_accept.gd` overrides `_acknowledge_and_cross`. The return road is the helper's
+  `aftermath_road` with its band2 leg (-420,2470)→(-330,2630)→(-180,2730), which crosses the
+  Warrens mound, replaced by the roads the warrens and relay segments walked: `warren_undertrail`
+  plus the B3 west-of-mound detour (-432,2492),(-418,2528). Band5/4/3 plus the relay loop were
+  already the forward hall/relay road. Whole-belt care (`_prepare()`) runs before the walk.
+- The death watch logs `EARNED DEATHWATCH` lines: every health drop, with position, cause
+  (fall = damaging `landed` in the same frame; combat; otherwise hazard (water/other)), floor state
+  and the leg being walked. On `died` it logs cause, position, last floor y and last landing, and
+  fails the segment with that cause. B12 attempt 1 = warden attempt 10.
