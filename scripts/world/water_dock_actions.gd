@@ -36,6 +36,7 @@ var _pending: Dictionary = {}
 var _last_revision := -1
 var _reconcile_countdown := 0
 var _last_instance := ""
+var _reconcile_due := false
 
 func build(world: Node3D) -> void:
 	add_to_group("progression_restore")
@@ -225,16 +226,17 @@ func _on_refused(kind: String, code: String, reason: String, details: Dictionary
 ## Settle/refund escrow rows from the durable receipts this peer's world holds
 ## (host world, or the host's replicated facts on a guest). Never refunds on a
 ## missing receipt.
-func _reconcile() -> void:
+## Returns false only when it could not run yet (a guest mid-handshake).
+func _reconcile() -> bool:
 	if _game == null or _game.get("local") == null or _game.get("world") == null:
-		return
+		return true
 	var instance := _world_instance()
 	if instance.is_empty():
-		return
+		return true
 	var session: Variant = _game.get("session")
 	if session is Object and not bool(_game.is_host()) and (session as Object).has_method("snapshot_ready") \
 			and bool((session as Object).call("is_active")) and not bool((session as Object).call("snapshot_ready")):
-		return
+		return false
 	var in_flight: Array = []
 	for id: Variant in _pending.keys():
 		if _in_flight(str(id)) and _pending[id] is Dictionary:
@@ -249,6 +251,7 @@ func _reconcile() -> void:
 		_persist()
 	if not (result.refunded as Array).is_empty():
 		_game.push_world_message("Your dock materials were returned: that task was already paid for.")
+	return true
 
 func _in_flight(id: String) -> bool:
 	if not _pending.has(id):
@@ -311,7 +314,11 @@ func _process(_delta: float) -> void:
 		# A delta, a load or a rejoin snapshot: settle from the new facts now.
 		_last_instance = instance_now
 		_refresh()
-		_reconcile()
+		_reconcile_due = true
+	if _reconcile_due:
+		# Retried every frame until it runs: a rejoin changes the facts before
+		# the session raises snapshot_ready(), which gates _reconcile().
+		_reconcile_due = not _reconcile()
 	if not _game.is_host():
 		return
 	for completion: Dictionary in _data.completions:

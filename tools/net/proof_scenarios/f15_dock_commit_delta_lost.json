@@ -279,10 +279,9 @@
     "disk_after": {
      "reed_fiber": 2,
      "driftwood": 2
-    },
-    "status_before": "settled"
+    }
    },
-   "label": "ASSERT: the rejoin snapshot already settled the row; a duplicate copy of the committed txn is answered already_done by the host and charges nothing"
+   "label": "ASSERT: a duplicate copy of the committed txn is answered already_done by the host and charges nothing (row settled)"
   },
   {
    "peer": 1,
