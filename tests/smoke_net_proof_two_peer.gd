@@ -44,7 +44,10 @@ const PROOF_BUILD_ALLOWANCE_S := 150.0
 const RENDER_HELLO_BUDGET_S := 900.0
 ## The harness's world-build figure, for a rendered step's in-step forced draw.
 const RENDERED_DRAW_ALLOWANCE_S := 150.0
-const WORLD_BUILD_ACTIONS := ["load_save", "boot", "enter_realm", "screenshot", "title_continue"]
+## `production_join` builds the destination world from the title before it
+## dials (join_driver.gd), the same cold build as `title_continue`: a Meadows
+## rebuild blocks well past the 15 s silence detector.
+const WORLD_BUILD_ACTIONS := ["load_save", "boot", "enter_realm", "screenshot", "title_continue", "production_join"]
 ## Steps after which a peer's session id may have changed (character ids persist unless the
 ## peer loads a save or reboots; see _run_entry).
 const IDENTITY_ACTIONS := ["host", "join", "production_join", "load_save", "boot", "leave"]
