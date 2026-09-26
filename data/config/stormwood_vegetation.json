@@ -1,6 +1,6 @@
 {
   "seed": 20260906,
-  "_comment": "Installed nature family with the existing Meadows green leaf replacement: the source twisted-tree texture is crimson and cannot become green through multiplication. Baked route and grove composition; no runtime world generation.",
+  "_comment": "Installed nature family with the existing Meadows green leaf replacement: the source twisted-tree texture is crimson and cannot become green through multiplication. Baked route and grove composition; no runtime world generation. storm_mushroom is the installed ground dome Mushroom_Common (WO-F09-05 round 2: the Laetiporus bracket shelf grows on trunks and read as fungus floating in the grass when planted loose).",
   "encounter_clearings": {"_comment": "Named fights keep trunk and rock colliders out of their arena: 18 m covers the largest named wildlife envelope (voltarach 13.89 m: fitted body, idle motion, wander) plus the largest baked collider reach (crown_canopy 0.435 m x 6.0) and 1.5 m margin. tests/test_stormwood_named_fight_clearings.gd checks the bake against each species.", "collider_clear_radius_m": 18.0, "sites": [{"id": "hollows_alpha", "at": [-520, 1660]}, {"id": "capacitor_alpha", "at": [-1080, 3020]}, {"id": "crown_guardian", "at": [700, 2700]}, {"id": "old_rodfolk_hall_guardian", "at": [-1590, 4370]}, {"id": "blackwater_elder", "at": [-150, 4460]}, {"id": "glass_field_alpha", "at": [-250, 5080]}]},
   "seat_clearings": {"_comment": "Authored seats keep baked colliders off them: no trunk or rock surface (collision_radius x the layer's scale_max) within collider_surface_m of a trainer, NPC, harvest node or pickup position, and no ground cover centred within ground_cover_m. Seats are read from stormwood_trainers/npcs/harvests/pickups.json; only their kind, id and XZ position enter the bake fingerprint. tests/test_stormwood_scatter_clearances.gd checks the committed bake.", "collider_surface_m": {"trainer": 3.5, "npc": 3.5, "harvest": 2.0, "pickup": 2.0}, "ground_cover_m": {"trainer": 3.0, "npc": 3.0, "harvest": 1.5, "pickup": 1.5}},
   "road_sample_m": 18.0,
@@ -75,7 +75,7 @@
     },
     "storm_mushroom": {
       "models": [
-        "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf"
+        "res://assets/environment/stylized_nature/Mushroom_Common.gltf"
       ],
       "scale_min": 1.0,
       "scale_max": 2.2,

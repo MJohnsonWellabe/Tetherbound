@@ -81,6 +81,34 @@ func test_every_route_and_spur_is_covered_by_current_chunks() -> void:
 	(built[0] as Node).free()
 
 
+## WO-F09-05: a spur's current is its own language: its chunks carry UV2.x = 1
+## (the shader's one thin, dimmer crack that starts at the road edge) and a
+## vertex colour in the road's yellow family (round 6); a road's carry 0.
+func test_spur_current_is_a_thin_yellow_crack_and_roads_are_not_flagged() -> void:
+	var built := _built(false)
+	var current: Node = built[1]
+	var tints := CURRENT.spur_tints()
+	assert_eq(tints.size(), 5, "a tint for each of the five spurs")
+	var spur_chunks := 0
+	var road_chunks := 0
+	for chunk: Node in current.get_children():
+		if not (chunk is MeshInstance3D):
+			continue
+		var arrays := ((chunk as MeshInstance3D).mesh as ArrayMesh).surface_get_arrays(0)
+		var uv2: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV2]
+		var colours: PackedColorArray = arrays[Mesh.ARRAY_COLOR]
+		var route := str(chunk.get_meta("route", ""))
+		if tints.has(route):
+			spur_chunks += 1
+			assert_true(uv2[0].x > 0.5 and colours[0].is_equal_approx(tints[route]), "%s: a spur chunk is flagged and tinted" % route)
+			assert_true(_is_yellow_gold(tints[route]), "%s: its crack is the road's yellow family (round 6)" % route)
+		else:
+			road_chunks += 1
+			assert_true(uv2[0].x < 0.5, "%s: a road chunk is not flagged as a spur" % route)
+	assert_true(spur_chunks > 0 and road_chunks > 0, "both kinds are built")
+	(built[0] as Node).free()
+
+
 func test_chunks_are_range_limited_shadowless_and_have_no_collision() -> void:
 	var cfg := CURRENT.config()
 	var built := _built(false)
@@ -163,6 +191,7 @@ func test_ribbon_stays_inside_the_painted_lane_and_flows_toward_the_dynamo() -> 
 		assert_true(half > 0.0 and half <= float(surface.lane_half_width_m[kind]), "%s ribbon (%.2f m) lies within its lane" % [kind, half])
 	var wide := cfg.duplicate(true)
 	wide.width_fraction = 1.3
+	wide.spur.width_fraction = 1.3
 	assert_true(CURRENT.ribbon_half_width("spur", wide, surface) > float(surface.lane_half_width_m.spur), "control: a 1.3 fraction would leave the lane")
 	var dynamo := Vector2(float(cfg.dynamo_xz[0]), float(cfg.dynamo_xz[1]))
 	for route: Dictionary in _json(WORLD_PATH).routes:
