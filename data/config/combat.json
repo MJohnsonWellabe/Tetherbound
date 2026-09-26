@@ -205,7 +205,7 @@
       "min_extra_distance": -3.0,
       "min_ally_clearance_m": 1.5,
       "height_follow": {"enabled": true, "fraction_of_top": 0.55, "max_height": 6.0},
-      "clear_orbit": {"enabled": true, "samples_deg": [25.0, 50.0, 75.0, 100.0], "min_fraction": 0.75, "probe_length_m": 8.0, "switch_margin_m": 1.0, "interval_s": 0.2, "ease_deg_per_s": 120.0}
+      "clear_orbit": {"enabled": true, "samples_deg": [25.0, 50.0, 75.0, 100.0], "min_fraction": 0.75, "probe_length_m": 8.0, "switch_margin_m": 1.0, "interval_s": 0.2, "ease_deg_per_s": 120.0, "keep_opponent_in_frame": 0.75, "_why_keep_opponent_in_frame": "F04#7 runner failure: with no room behind the ally the solver swung the full 100 degrees and the opponent left a square 1920x1920 frame (smoke_combat_camera.gd, clearance_extra 100 at every failing bearing). A swing is now allowed only if the tracked opponent stays within this fraction of the lens horizontal half-angle; otherwise the arm stays at neutral and shortens. Aspect-dependent: at 16:9 (ROG Ally) with the 46-degree combat fov the allowed band is ~28 degrees off-axis; on a square viewport only ~17, so almost every swing is refused there and the arm shortens instead. 0 disables. TUNABLE."}
     }
   },
   "wild": {
