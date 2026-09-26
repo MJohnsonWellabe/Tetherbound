@@ -280,3 +280,5 @@ The main Tidewake lane moved `water_otto` to `island_local_offset [-145, 0, -168
 | lastlight_shelter | **PASS, 60 / 0**: walked to Halen beside the camp, lead, delivery 4+4, shelter built, rest, ack `water_halen_shelter_thanks`, and completion survives reload | lastlight_npc_moved.log |
 
 With the four earlier passes, **all six chains pass the walked witness** once the NPC move is on main. F13#3 becomes met when this evidence lands together with or after that move (integration-31). Until then, on current main, Cradle and Lastlight still fail as recorded above.
+
+Review note: Lastlight's 4 driftwood + 4 reed fiber and the bed `assign_creature(0)` rest step are fixtures, not gathered or driven through the bed UI. They are disclosed above, and they weaken the normal-play claim for that one chain's delivery and rest step. The walks to Halen, the delivery prompt, the build, the acknowledgement and the reload are real.
