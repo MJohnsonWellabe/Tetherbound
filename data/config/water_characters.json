@@ -1516,7 +1516,12 @@
         {
           "trainer_owned": true,
           "species": "riptusk",
-          "level": 55
+          "level": 55,
+          "combat": {
+            "telegraph": 1.1,
+            "recovery": 0.9
+          },
+          "_why_combat": "BOSSES 4.11 Break Tether: the final Riptusk uses a 1.1 s heavy tell and 0.9 s recovery. Before this, the in-world F14#1 run measured every Nerissa tell at the 0.8 s floor. The marked lane is presentation and goes to the Codex queue."
         }
       ],
       "intro_conversation": "water_trainer_nerissa_intro",
