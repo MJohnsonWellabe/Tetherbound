@@ -504,12 +504,6 @@ func _draw_landmarks(centre: Vector2, scale_px_per_m: float, objective_position:
 			_draw_upright_text(local, "?", UITokens.FONT_LABEL, UITokens.TEXT_MUTED)
 
 
-## The same chevron-over-pip mark `assets/ui/icons/map/alpha.png` carries on
-## the full map, drawn with `draw_colored_polygon` here because the minimap is a
-## rotating canvas of primitives and does not load icon textures at all. The
-## proportions are the icon's, scaled down: at minimap size the chevron alone is
-## the readable part, and the pip is what stops a lone chevron reading as the
-## objective diamond's top half.
 ## Which glyph a dynamic marker draws with: "alpha", "arch_gate" or "camp".
 static func dynamic_marker_glyph(id: String) -> String:
 	if id.begins_with(ALPHA_MARKER_PREFIX):
@@ -536,6 +530,12 @@ func _draw_arch_gate(local: Vector2) -> void:
 	draw_polyline(points, UITokens.TEXT_PRIMARY, 2.2, true)
 
 
+## The same chevron-over-pip mark `assets/ui/icons/map/alpha.png` carries on
+## the full map, drawn with `draw_colored_polygon` here because the minimap is a
+## rotating canvas of primitives and does not load icon textures at all. The
+## proportions are the icon's, scaled down: at minimap size the chevron alone is
+## the readable part, and the pip is what stops a lone chevron reading as the
+## objective diamond's top half.
 func _draw_alpha_pin(local: Vector2) -> void:
 	var r := 8.0
 	var arm := r * 0.42
