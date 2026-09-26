@@ -25,17 +25,44 @@ func build(water_world: Node3D) -> void:
 	var anchors := {}
 	for anchor: Variant in world_cfg.get("anchors", []):
 		anchors[str((anchor as Dictionary).get("id", ""))] = anchor
+	# A physical_ramp return shortcut walks down onto its `to_anchor` from one
+	# side; dressing at that dock goes on the other side so the ramp's walk
+	# path and deck stay clear (water_return_ramps.gd owns that approach).
+	var ramp_anchors := {}
+	for shortcut: Variant in world_cfg.get("return_shortcuts", []):
+		if str((shortcut as Dictionary).get("kind", "")) == "physical_ramp":
+			ramp_anchors[str((shortcut as Dictionary).get("to_anchor", ""))] = shortcut
 	for dock: Variant in world_cfg.get("docks", []):
-		var anchor: Dictionary = anchors.get(str((dock as Dictionary).get("departure_anchor", "")), {})
+		var anchor_id := str((dock as Dictionary).get("departure_anchor", ""))
+		var anchor: Dictionary = anchors.get(anchor_id, {})
 		if anchor.is_empty():
 			continue
 		var site := Node3D.new()
 		site.name = "%sDressing" % str((dock as Dictionary).get("id", "dock"))
 		add_child(site)
-		_dress(site, water_world, anchor, cfg)
+		_dress(site, water_world, anchor, cfg, _side_away_from(anchor, ramp_anchors.get(anchor_id, {})))
 
 
-func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary) -> void:
+## +1 or -1: which side of the safe->shore line the dressing stands on. Away
+## from a ramp's walk path when the dock has one, otherwise the default +1.
+func _side_away_from(anchor: Dictionary, ramp: Dictionary) -> float:
+	var path: Array = ramp.get("path", [])
+	if path.is_empty():
+		return 1.0
+	var safe_raw: Array = anchor.get("safe_position", [])
+	var shore_raw: Array = anchor.get("shore_position", [])
+	var safe := Vector2(float(safe_raw[0]), float(safe_raw[2]))
+	var forward := (Vector2(float(shore_raw[0]), float(shore_raw[2])) - safe).normalized()
+	var side := Vector2(-forward.y, forward.x)
+	var lean := 0.0
+	for raw: Variant in path:
+		var point := raw as Array
+		var p := Vector2(float(point[0]), float(point[point.size() - 1]))
+		lean += (p - safe).dot(side)
+	return -1.0 if lean > 0.0 else 1.0
+
+
+func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, sign: float) -> void:
 	var safe_raw: Array = anchor.get("safe_position", [])
 	var shore_raw: Array = anchor.get("shore_position", [])
 	if safe_raw.size() < 3 or shore_raw.size() < 3:
@@ -45,7 +72,7 @@ func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary) ->
 	var forward := (shore - safe).normalized()
 	if forward.length() < 0.5:
 		return
-	var side := Vector2(-forward.y, forward.x)
+	var side := Vector2(-forward.y, forward.x) * sign
 	var yaw := atan2(forward.x, forward.y)
 	var pier: Dictionary = cfg.get("pier", {})
 	var length := float(pier.get("length_m", 9.0))
