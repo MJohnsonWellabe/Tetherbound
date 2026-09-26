@@ -22,7 +22,7 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V7 | F04#6 | Defeat read is weak: raise DEFEAT_FOLD and re-run the defeated clips for the grunt, captain_a, captain_b and warden rigs | `tools/art_pipeline/blender/animate_humanoid.py` | open |
 | V8 | M1/M3 | Meadows landmarks unrecognisable. Hall never dominates: exterior massing, drained ground, banners, braziers, sightline | §C1 M1/M3 | open |
 | V9 | F08#3 | Cloudreach high perch: cloud sea and horizon, pale stone, pad primitives (arrival camera stays with the Cloudreach lane) | judge on #253 (5848745065) | open |
-| V10 | F08#4 | Cloudreach settlements and cliff identity; the cliff palette is a judge pick | Cloudreach work orders M1–M12 | open |
+| V10 | F08#4 | Cloudreach settlements and cliff identity; the cliff palette is a judge pick | Cloudreach work orders M1–M12 | #338: scoped aviary architecture and trail-edge improvements accepted; cliff integration, full identity and night destination contrast remain open |
 | V11 | F10#4 | Stormwood forest, rod line and restored-sky views need a Bars A/B verdict | Stormwood capture tools | open |
 | V12 | F09#3 | Stormwood pocket lures not visible from the road: a light shaft over each pocket's reward, then re-judge (target ≥4 of 5) | `tools/capture_stormwood_pocket_walks.gd` | open |
 | V13 | shared look | Crimson foliage variant retint | `data/config/vegetation_presentation.json` | open |
