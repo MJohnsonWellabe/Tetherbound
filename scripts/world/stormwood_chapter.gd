@@ -134,7 +134,13 @@ func emit_event(event: String) -> Dictionary:
 
 func _credit_existing_circuit_wins() -> void:
 	var progression: RefCounted = get_node("/root/Game").get("progression")
-	var trainers: Dictionary = world.get_node("EncounterDirector").get("authored_specs")
+	# The authored trainer cast lives on StormwoodTrainers (stormwood_trainers.gd),
+	# the node the encounter hub and the Dynamo read. The EncounterDirector has
+	# no `authored_specs`: reading it there raised a SCRIPT ERROR on every
+	# progression change after Rook's offer, so a circuit win was never credited
+	# and step 2 could not complete (F10 two-peer proof, run 4).
+	var cast := world.get_node_or_null(^"StormwoodTrainers")
+	var trainers: Dictionary = cast.get("authored_specs") if cast != null else {}
 	for event: String in circuit_win_events(trainers, progression):
 		events.emit_event(event)
 

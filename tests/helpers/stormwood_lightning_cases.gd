@@ -180,3 +180,159 @@ func test_mitigation_applies_after_low_max_health_damage_cap() -> void:
 		"hits": {1: {"damage": 20.0, "static_seconds": 8.0}}})
 	assert_almost_eq(player.vitals.health, 32.0, 0.001,
 		"worn reduction applies to the already capped unarmoured hit")
+
+
+# --- Coordinator strike ruling (WO-F11-04): wiring through the production `_process` / `_resolve` path -------------
+#
+# The cases above call only the pure helpers. These drive the shipping
+# `_process` loop (which chooses a warning and then resolves it at impact)
+# with its real `_trainer_in_fight` read of the world's CombatManager, so
+# deleting the spare call from either the aim or the impact fails them.
+# Replaced: live discovery (`_ready`), actor listing and the roof query.
+
+class WiringSession extends Node:
+	var published: Array[Dictionary] = []
+	func is_host() -> bool: return true
+	func local_peer_id() -> int: return 1
+	func realm_of(_peer: int) -> String: return "stormwood"
+	func publish_stormwood_strike(event: Dictionary) -> void: published.append(event.duplicate(true))
+
+class WiringSurge extends Node:
+	func region_at(_at: Vector3) -> String: return "deepwood"
+	func phase_at_position(_at: Vector3) -> String: return "break"
+
+class WiringManager extends Node:
+	var fighting := false
+	func is_fighting() -> bool: return fighting
+
+class WiringDirector extends Node:
+	var creature: Node3D
+	func trainer_battle_active() -> bool: return false
+	func deployed_body_for(_peer: int) -> Variant: return creature
+
+class WiringWorld extends Node3D:
+	var simulation_only := false
+	func ground_height_near(_at: Vector3) -> float: return 0.0
+
+class WiringLightning extends LIGHTNING:
+	var trainer: Node3D
+	func _ready() -> void: pass
+	func _actors() -> Dictionary: return {1: trainer}
+	func exposed(_at: Vector3, _body: Node3D = null) -> bool: return true
+
+
+const SPARE_TRAINER := Vector3(10, 0, 20)
+
+
+func _wiring(spare: bool) -> Dictionary:
+	var tree := Engine.get_main_loop() as SceneTree
+	var world := WiringWorld.new()
+	tree.root.add_child(world)
+	var manager := WiringManager.new()
+	manager.name = "CombatManager"
+	world.add_child(manager)
+	var director := WiringDirector.new()
+	director.name = "EncounterDirector"
+	world.add_child(director)
+	var trainer := Node3D.new()
+	world.add_child(trainer)
+	trainer.global_position = SPARE_TRAINER
+	# Inside the 3 m strike radius of the trainer, so an impact aimed at the
+	# creature would still hit the trainer if the impact check were missing.
+	var creature := Node3D.new()
+	world.add_child(creature)
+	creature.global_position = SPARE_TRAINER + Vector3(2.0, 0.0, 0.0)
+	director.creature = creature
+	var lightning := WiringLightning.new()
+	lightning.world = world
+	lightning.session = WiringSession.new()
+	lightning.surge = WiringSurge.new()
+	lightning.trainer = trainer
+	lightning.rules.config.strike["spare_trainer_in_fight"] = spare
+	world.add_child(lightning)
+	var game := tree.root.get_node_or_null(^"Game")
+	return {"world": world, "manager": manager, "creature": creature, "lightning": lightning,
+		"game": game, "environment": (game.get("realm_environment") as Dictionary).duplicate(true) if game != null else {}}
+
+
+func _wiring_free(fixture: Dictionary) -> void:
+	var lightning: Node = fixture.lightning
+	(lightning.get("session") as Node).free()
+	(lightning.get("surge") as Node).free()
+	(fixture.world as Node).free()
+	if fixture.game != null:
+		(fixture.game as Node).set("realm_environment", fixture.environment)
+
+
+## `_next` elapsed: the real loop chooses and publishes one warning.
+func _warn(fixture: Dictionary) -> Dictionary:
+	var lightning: Node = fixture.lightning
+	lightning.set("_next", 0.0)
+	lightning.call("_process", 0.0)
+	var published: Array = (lightning.get("session") as Node).get("published")
+	assert_eq(published.size(), 1, "the real _process published one warning")
+	return published[0] if published.size() == 1 else {}
+
+
+## The telegraph runs out: the real loop resolves the pending impact.
+func _impact(fixture: Dictionary) -> Dictionary:
+	var lightning: Node = fixture.lightning
+	lightning.set("_next", 99.0)
+	lightning.call("_process", 1.3)
+	var published: Array = (lightning.get("session") as Node).get("published")
+	assert_eq(published.size(), 2, "the real _process resolved the pending warning")
+	return published[1] if published.size() == 2 else {}
+
+
+func test_process_aims_a_fighting_trainers_strike_at_the_creature() -> void:
+	var fixture := _wiring(true)
+	(fixture.manager as Node).set("fighting", true)
+	var warning := _warn(fixture)
+	var at: Vector3 = warning.get("at", Vector3.INF)
+	var creature_at: Vector3 = (fixture.creature as Node3D).global_position
+	assert_almost_eq(at.x, creature_at.x, 0.001, "the warning is on the piloted creature, not the trainer")
+	assert_almost_eq(at.z, creature_at.z, 0.001)
+	var impact := _impact(fixture)
+	assert_false((impact.get("hits", {}) as Dictionary).has(1),
+		"the fighting trainer standing 2 m from the impact is not hit")
+	_wiring_free(fixture)
+
+
+## Fight state is read at impact, not at the warning: a trainer warned while
+## walking who is in a fight when the strike lands is spared.
+func test_impact_rechecks_fight_state_after_the_warning() -> void:
+	var fixture := _wiring(true)
+	var warning := _warn(fixture)
+	var at: Vector3 = warning.get("at", Vector3.INF)
+	assert_almost_eq(at.x, SPARE_TRAINER.x, 0.001, "a walking trainer is aimed at")
+	(fixture.manager as Node).set("fighting", true)
+	var impact := _impact(fixture)
+	assert_false((impact.get("hits", {}) as Dictionary).has(1),
+		"the fight began before the impact, so the trainer is not hit")
+	_wiring_free(fixture)
+
+
+## Control: the same path does hit a trainer who is not fighting at impact
+## (a fight that ended before the strike landed).
+func test_impact_hits_a_trainer_whose_fight_ended_before_it_landed() -> void:
+	var fixture := _wiring(true)
+	(fixture.manager as Node).set("fighting", true)
+	_warn(fixture)
+	(fixture.manager as Node).set("fighting", false)
+	var impact := _impact(fixture)
+	assert_true((impact.get("hits", {}) as Dictionary).has(1),
+		"with the fight over, the trainer 2 m from the impact is hit")
+	_wiring_free(fixture)
+
+
+## Negative control: with the ruling's flag off, the same fighting trainer is
+## aimed at and hit through the same path.
+func test_process_negative_control_flag_off_hits_the_fighting_trainer() -> void:
+	var fixture := _wiring(false)
+	(fixture.manager as Node).set("fighting", true)
+	var warning := _warn(fixture)
+	var at: Vector3 = warning.get("at", Vector3.INF)
+	assert_almost_eq(at.x, SPARE_TRAINER.x, 0.001, "flag off: the fighting trainer is aimed at")
+	var impact := _impact(fixture)
+	assert_true((impact.get("hits", {}) as Dictionary).has(1), "flag off: the fighting trainer is hit")
+	_wiring_free(fixture)

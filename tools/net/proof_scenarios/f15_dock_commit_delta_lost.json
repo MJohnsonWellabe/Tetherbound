@@ -1,0 +1,431 @@
+{
+ "name": "F15: paid dock debit when the host commits but the delta never reaches the guest",
+ "claim": "ACCEPTANCE F15 (T3): 'including paid-debit crash/retry'. Same setup as f15_dock_exchange_once. The guest presses the paid repair (its cost escrowed and its character saved before the intent leaves). The host commits the repair durably, and in that same commit, before the delta is sent, the guest's link is pulled (water_dock_cut), so the guest never learns the repair happened. The guest relaunches through the title's returning Join (character from disk) into the still-running host; the host's snapshot carries the durable receipt, so the escrow settles. A duplicate copy of the same txn is answered already_done by the host, and a retry press charges nothing. The repair is done exactly once and the guest's 6 reed fiber + 4 driftwood are taken exactly once (not zero, not twice), in memory and on disk.",
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 1500,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+   },
+   "expect_data": {
+    "realm": "meadows"
+   },
+   "label": "named save: the host's world"
+  },
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 10000,
+   "label": "guest: its own trainer"
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_gate_water_unlocked",
+    "scope": "world"
+   },
+   "label": "SETUP: the Water route is open (stands in for Stormwood)"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_key_water",
+    "scope": "world"
+   },
+   "label": "SETUP: the Water key (stands in for Stormwood)"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "water_swim_lesson_complete",
+    "scope": "world"
+   },
+   "label": "SETUP: the swim lesson is done (the repair's prerequisite)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_swim_lesson_complete",
+    "scope": "world"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water"
+   },
+   "budget_frames": 10000,
+   "label": "host enters Water"
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water"
+   },
+   "budget_frames": 10000,
+   "label": "guest enters Water"
+  },
+  {
+   "peer": "all",
+   "action": "water_dock_state",
+   "args": {
+    "grant": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    }
+   },
+   "expect_data": {
+    "bag": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    },
+    "disk": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    }
+   },
+   "label": "SETUP: 8 reed fiber + 6 driftwood gathered and saved (cost is 6 + 4)"
+  },
+  {
+   "peer": "all",
+   "action": "water_dock_state",
+   "args": {
+    "action_id": "reedhaven_repair"
+   },
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": false,
+     "deep_watch_chart": false
+    },
+    "prompt_enabled": true
+   },
+   "label": "before: nothing done, the repair offered (baseline)"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "before"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "water_dock_cut",
+   "args": {
+    "action_id": "reedhaven_repair"
+   },
+   "label": "host arms the cut: the guest's link drops right after the host durably commits its repair, before the delta is sent"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_cut",
+   "args": {
+    "remember_host": true
+   },
+   "label": "guest remembers its host (for the relaunch)"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_act",
+   "args": {
+    "action_id": "reedhaven_repair",
+    "budget_frames": 600
+   },
+   "expect_data": {
+    "flag_before": false,
+    "flag_after": false,
+    "taken": {
+     "reed_fiber": 6,
+     "driftwood": 4
+    },
+    "disk_after": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "item_takes": []
+   },
+   "label": "guest presses the paid repair: escrowed and saved before sending; the host commits, the delta never arrives"
+  },
+  {
+   "peer": 0,
+   "action": "expect_peers",
+   "args": {
+    "count": 1
+   },
+   "label": "host sees the guest gone"
+  },
+  {
+   "peer": 0,
+   "action": "water_dock_cut",
+   "args": {
+    "report": true
+   },
+   "expect_data": {
+    "cut": true,
+    "flag_on_host": true
+   },
+   "label": "ASSERT: the host committed the repair and cut the guest before publishing it"
+  },
+  {
+   "peer": 0,
+   "action": "water_dock_state",
+   "args": {
+    "action_id": "reedhaven_repair"
+   },
+   "label": "host: the repair is committed",
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": true
+    },
+    "prompt_enabled": false
+   }
+  },
+  {
+   "peer": 0,
+   "action": "capture_saves",
+   "args": {
+    "label": "host_after_crash"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_state",
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": false
+    },
+    "bag": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "disk": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
+   },
+   "label": "ASSERT: guest cut off before the delta: repair not seen, cost already escrowed in memory and on disk"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_state",
+   "args": {
+    "rejoin": true
+   },
+   "budget_frames": 10000,
+   "label": "guest relaunches: the title's returning Join loads its character from disk and rejoins the same host"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_state",
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": true
+    },
+    "bag": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "disk": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
+   },
+   "label": "ASSERT: rejoin snapshot carries the host's receipt; the escrow settles (kept, not refunded)"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_resend",
+   "args": {
+    "action_id": "reedhaven_repair"
+   },
+   "expect_data": {
+    "found": true,
+    "status_after": "settled",
+    "refusals": [
+     "already_done"
+    ],
+    "committed": false,
+    "taken": {
+     "reed_fiber": 0,
+     "driftwood": 0
+    },
+    "disk_after": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
+   },
+   "label": "ASSERT: a duplicate copy of the committed txn is answered already_done by the host and charges nothing (row settled)"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_act",
+   "args": {
+    "action_id": "reedhaven_repair",
+    "force": true
+   },
+   "label": "guest retries the repair after rejoin (presses it; forced if the prompt is already dark)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_dock_reedhaven_repaired",
+    "scope": "world",
+    "budget_frames": 600
+   },
+   "continue_on_fail": true,
+   "label": "the repair is done in the world"
+  },
+  {
+   "peer": 1,
+   "action": "capture_saves",
+   "args": {
+    "label": "after_retry"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_state",
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": true
+    },
+    "bag": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "disk": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
+   },
+   "continue_on_fail": true,
+   "label": "ASSERT: crash + rejoin + retry: repair done once, the guest paid exactly once (6+4), in memory and on disk"
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_act",
+   "args": {
+    "action_id": "reedhaven_repair",
+    "force": true
+   },
+   "expect_data": {
+    "flag_before": true,
+    "taken": {
+     "reed_fiber": 0,
+     "driftwood": 0
+    }
+   },
+   "continue_on_fail": true,
+   "label": "ASSERT: a second retry charges nothing"
+  },
+  {
+   "peer": 0,
+   "action": "water_dock_act",
+   "args": {
+    "action_id": "reedhaven_repair",
+    "force": true
+   },
+   "expect_data": {
+    "flag_before": true,
+    "taken": {
+     "reed_fiber": 0,
+     "driftwood": 0
+    }
+   },
+   "continue_on_fail": true,
+   "label": "host presses the finished repair: not charged"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "water_dock_state",
+   "expect_data": {
+    "done": {
+     "reedhaven_repair": true
+    },
+    "bag": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    },
+    "disk": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
+   },
+   "continue_on_fail": true,
+   "label": "ASSERT final: guest paid exactly once"
+  },
+  {
+   "peer": 0,
+   "action": "water_dock_state",
+   "expect_data": {
+    "bag": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    },
+    "disk": {
+     "reed_fiber": 8,
+     "driftwood": 6
+    }
+   },
+   "continue_on_fail": true,
+   "label": "host never charged"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "water_dock_reedhaven_repaired"
+    ]
+   },
+   "continue_on_fail": true,
+   "label": "host's saved world holds the repair"
+  }
+ ]
+}

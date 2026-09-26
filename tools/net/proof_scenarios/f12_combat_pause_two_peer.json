@@ -1,0 +1,725 @@
+{
+  "name": "F12: combat pause agrees on both peers (Tidewake, surface wild)",
+  "claim": "ACCEPTANCE F12 clause 'combat pause ... agree'. A swimmer (first the GUEST while the host watches, then the HOST while the guest watches) swims by stick from the rest_03 landing to the authored surface wild pair road_visibility_tidal_cradle_to_salt_crown_sheltered_04 and engages it with the Engage press. Baselines first: both views show HUMAN and the watcher sees the swimmer's stamina_fraction draining. Then (a) the swimmer's own swim mode and the watcher's view of it are COMBAT_PAUSED (3), sampled twice 60 frames apart with stamina_fraction unchanged, and the swimmer's own stamina and health frozen; (b) a mid-fight party_cycle press switches creatures and both views stay paused; (c) the wild is won through the production combat path; (d) both views return to HUMAN (1) and 120 frames later the watcher sees stamina_fraction falling again, while the swimmer's own drain matches the configured rate. Setup (disclosed): dock unlock flags set through the ledger as smoke_water_combat_pause does, a level-50 two-member Water party granted, the swimmer placed on the authored rest_03 dry landing, the enemy's hp capped at 12 for the win (the enemy_hp_ceiling allowance). Not claimed: an aggressive interception -- every Water wild site spawns with aggressive=false.",
+  "peers": 2,
+  "scene": "water",
+  "budget_s": 2400,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_swim_lesson_complete",
+        "scope": "world"
+      },
+      "label": "setup: dock unlock flag water_swim_lesson_complete (as smoke_water_combat_pause)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_dock_reedhaven_repaired",
+        "scope": "world"
+      },
+      "label": "setup: dock unlock flag water_dock_reedhaven_repaired (as smoke_water_combat_pause)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_dock_brine_steps_trial_won",
+        "scope": "world"
+      },
+      "label": "setup: dock unlock flag water_dock_brine_steps_trial_won (as smoke_water_combat_pause)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "scope": "world"
+      },
+      "label": "setup: dock unlock flag water_dock_shellwatch_residents_freed_and_pump_disabled (as smoke_water_combat_pause)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_aquaryn_resolved",
+        "scope": "world"
+      },
+      "label": "setup: dock unlock flag water_aquaryn_resolved (as smoke_water_combat_pause)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_dock_salt_crown_landing_charted",
+        "scope": "world"
+      },
+      "label": "setup: dock unlock flag water_dock_salt_crown_landing_charted (as smoke_water_combat_pause)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_dock_sluice_isle_both_controls_disabled",
+        "scope": "world"
+      },
+      "label": "setup: dock unlock flag water_dock_sluice_isle_both_controls_disabled (as smoke_water_combat_pause)"
+    },
+    {
+      "peer": 1,
+      "action": "wait",
+      "args": {
+        "frames": 120
+      },
+      "label": "let the dock flags reach the guest"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "water_mosshell",
+        "level": 50
+      },
+      "label": "guest_swims setup: party member 0"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "water_riverdrake",
+        "level": 50
+      },
+      "label": "guest_swims setup: party member 1 (the switch target)"
+    },
+    {
+      "peer": 1,
+      "action": "water_anchor_fixture",
+      "args": {
+        "anchor_id": "tidal_cradle_to_salt_crown_rest_03"
+      },
+      "expect_data": {
+        "on_floor": true,
+        "swimming": false,
+        "has_safe_landing": true
+      },
+      "label": "guest_swims setup: swimmer on the rest_03 dry landing"
+    },
+    {
+      "peer": 1,
+      "action": "deploy_creature",
+      "label": "guest_swims production summon of party member 0"
+    },
+    {
+      "peer": 1,
+      "action": "water_swim_to_wild",
+      "args": {
+        "site_id": "road_visibility_tidal_cradle_to_salt_crown_sheltered_04"
+      },
+      "budget_frames": 3000,
+      "expect_data": {
+        "offered": true,
+        "mode": 1
+      },
+      "label": "guest_swims swimmer swims by stick until the surface wild is on offer"
+    },
+    {
+      "peer": 1,
+      "action": "water_local_aquatic",
+      "args": {
+        "record": "pre"
+      },
+      "expect_data": {
+        "mode": 1,
+        "fighting": false,
+        "drowning": false
+      },
+      "label": "guest_swims BASELINE: swimmer's own mode HUMAN, not fighting"
+    },
+    {
+      "peer": 0,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer1",
+        "wait_for_mode": 1,
+        "record": "pre"
+      },
+      "expect_data": {
+        "found": true,
+        "mode": 1,
+        "drowning": false,
+        "owner_peer_id": "$peer1",
+        "applied_mode_matches_received": true
+      },
+      "label": "guest_swims BASELINE: watcher sees the swimmer HUMAN"
+    },
+    {
+      "peer": 0,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer1",
+        "baseline": "pre",
+        "sample_frames": 30,
+        "min_frames_since": 30
+      },
+      "expect_data": {
+        "mode": 1,
+        "mode_steady": true,
+        "stamina_decreased": true,
+        "applied_mode_matches_received": true
+      },
+      "label": "guest_swims BASELINE: watcher sees the swimmer's stamina draining before the fight"
+    },
+    {
+      "peer": 1,
+      "action": "press",
+      "args": {
+        "action": "interact"
+      },
+      "label": "guest_swims the Engage press (real input)"
+    },
+    {
+      "peer": 1,
+      "action": "water_local_aquatic",
+      "args": {
+        "wait_for_mode": 3,
+        "budget_frames": 60,
+        "record": "pause"
+      },
+      "expect_data": {
+        "mode": 3,
+        "fighting": true,
+        "drowning": false,
+        "active_species": "water_mosshell"
+      },
+      "label": "guest_swims (a) swimmer's own mode COMBAT_PAUSED in the wild fight"
+    },
+    {
+      "peer": 0,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer1",
+        "wait_for_mode": 3,
+        "record": "pause"
+      },
+      "expect_data": {
+        "mode": 3,
+        "drowning": false,
+        "applied_matches_received": true
+      },
+      "label": "guest_swims (a) watcher sees the swimmer COMBAT_PAUSED (sample 1)"
+    },
+    {
+      "peer": 0,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer1",
+        "baseline": "pause",
+        "sample_frames": 60,
+        "min_frames_since": 60
+      },
+      "expect_data": {
+        "mode": 3,
+        "mode_steady": true,
+        "stamina_unchanged": true,
+        "drowning": false,
+        "applied_matches_received": true
+      },
+      "label": "guest_swims (a) watcher, 60 frames later (sample 2): still paused every frame, stamina_fraction unchanged"
+    },
+    {
+      "peer": 1,
+      "action": "water_local_aquatic",
+      "args": {
+        "baseline": "pause",
+        "min_frames_since": 60
+      },
+      "expect_data": {
+        "mode": 3,
+        "fighting": true,
+        "stamina_unchanged": true,
+        "health_unchanged": true
+      },
+      "label": "guest_swims (a) swimmer's own stamina and health frozen over the same window"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "guest_swims_01_paused"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "press",
+      "args": {
+        "action": "party_cycle",
+        "tap_frames": 3
+      },
+      "label": "guest_swims (b) mid-fight switch (real input)"
+    },
+    {
+      "peer": 1,
+      "action": "water_local_aquatic",
+      "args": {
+        "baseline": "pause"
+      },
+      "expect_data": {
+        "mode": 3,
+        "fighting": true,
+        "active_species": "water_riverdrake",
+        "stamina_unchanged": true,
+        "health_unchanged": true
+      },
+      "label": "guest_swims (b) switched to the riverdrake; own swim state still paused and frozen"
+    },
+    {
+      "peer": 0,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer1",
+        "baseline": "pause",
+        "sample_frames": 30
+      },
+      "expect_data": {
+        "mode": 3,
+        "mode_steady": true,
+        "stamina_unchanged": true,
+        "applied_matches_received": true
+      },
+      "label": "guest_swims (b) watcher still sees COMBAT_PAUSED after the switch, stamina unchanged"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "guest_swims_02_switched"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "water_win_wild",
+      "args": {
+        "enemy_hp_ceiling": 12.0,
+        "budget_frames": 3600
+      },
+      "budget_frames": 4200,
+      "expect_data": {
+        "fighting": false,
+        "enemy_fainted": true,
+        "paused_throughout": true
+      },
+      "label": "guest_swims (c) the wild is won through the production combat path"
+    },
+    {
+      "peer": 1,
+      "action": "water_local_aquatic",
+      "args": {
+        "wait_for_mode": 1,
+        "budget_frames": 60,
+        "record": "resume"
+      },
+      "expect_data": {
+        "mode": 1,
+        "fighting": false
+      },
+      "label": "guest_swims (d) swimmer's own mode back to HUMAN"
+    },
+    {
+      "peer": 0,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer1",
+        "wait_for_mode": 1,
+        "record": "resume"
+      },
+      "expect_data": {
+        "mode": 1,
+        "applied_mode_matches_received": true
+      },
+      "label": "guest_swims (d) watcher sees the swimmer HUMAN again"
+    },
+    {
+      "peer": 0,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer1",
+        "baseline": "resume",
+        "sample_frames": 120,
+        "min_frames_since": 120
+      },
+      "expect_data": {
+        "mode": 1,
+        "mode_steady": true,
+        "stamina_decreased": true,
+        "applied_mode_matches_received": true
+      },
+      "label": "guest_swims (d) watcher, 120 frames later: the swimmer's stamina_fraction is draining again"
+    },
+    {
+      "peer": 1,
+      "action": "water_local_aquatic",
+      "args": {
+        "baseline": "resume",
+        "min_frames_since": 120
+      },
+      "expect_data": {
+        "mode": 1,
+        "stamina_decreased": true,
+        "drain_matches_config": true
+      },
+      "label": "guest_swims (d) swimmer's own drain resumed at the configured rate"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "guest_swims_03_resumed"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "water_anchor_fixture",
+      "args": {
+        "anchor_id": "tidal_cradle_to_salt_crown_rest_03"
+      },
+      "expect_data": {
+        "on_floor": true,
+        "swimming": false
+      },
+      "label": "guest_swims teardown: swimmer back on the dry landing (so it cannot drown while the other half runs)"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "water_mosshell",
+        "level": 50
+      },
+      "label": "host_swims setup: party member 0"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "water_riverdrake",
+        "level": 50
+      },
+      "label": "host_swims setup: party member 1 (the switch target)"
+    },
+    {
+      "peer": 0,
+      "action": "water_anchor_fixture",
+      "args": {
+        "anchor_id": "tidal_cradle_to_salt_crown_rest_03"
+      },
+      "expect_data": {
+        "on_floor": true,
+        "swimming": false,
+        "has_safe_landing": true
+      },
+      "label": "host_swims setup: swimmer on the rest_03 dry landing"
+    },
+    {
+      "peer": 0,
+      "action": "deploy_creature",
+      "label": "host_swims production summon of party member 0"
+    },
+    {
+      "peer": 0,
+      "action": "water_swim_to_wild",
+      "args": {
+        "site_id": "road_visibility_tidal_cradle_to_salt_crown_sheltered_04"
+      },
+      "budget_frames": 3000,
+      "expect_data": {
+        "offered": true,
+        "mode": 1
+      },
+      "label": "host_swims swimmer swims by stick until the surface wild is on offer"
+    },
+    {
+      "peer": 0,
+      "action": "water_local_aquatic",
+      "args": {
+        "record": "pre"
+      },
+      "expect_data": {
+        "mode": 1,
+        "fighting": false,
+        "drowning": false
+      },
+      "label": "host_swims BASELINE: swimmer's own mode HUMAN, not fighting"
+    },
+    {
+      "peer": 1,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer0",
+        "wait_for_mode": 1,
+        "record": "pre"
+      },
+      "expect_data": {
+        "found": true,
+        "mode": 1,
+        "drowning": false,
+        "owner_peer_id": "$peer0",
+        "applied_mode_matches_received": true
+      },
+      "label": "host_swims BASELINE: watcher sees the swimmer HUMAN"
+    },
+    {
+      "peer": 1,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer0",
+        "baseline": "pre",
+        "sample_frames": 30,
+        "min_frames_since": 30
+      },
+      "expect_data": {
+        "mode": 1,
+        "mode_steady": true,
+        "stamina_decreased": true,
+        "applied_mode_matches_received": true
+      },
+      "label": "host_swims BASELINE: watcher sees the swimmer's stamina draining before the fight"
+    },
+    {
+      "peer": 0,
+      "action": "press",
+      "args": {
+        "action": "interact"
+      },
+      "label": "host_swims the Engage press (real input)"
+    },
+    {
+      "peer": 0,
+      "action": "water_local_aquatic",
+      "args": {
+        "wait_for_mode": 3,
+        "budget_frames": 60,
+        "record": "pause"
+      },
+      "expect_data": {
+        "mode": 3,
+        "fighting": true,
+        "drowning": false,
+        "active_species": "water_mosshell"
+      },
+      "label": "host_swims (a) swimmer's own mode COMBAT_PAUSED in the wild fight"
+    },
+    {
+      "peer": 1,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer0",
+        "wait_for_mode": 3,
+        "record": "pause"
+      },
+      "expect_data": {
+        "mode": 3,
+        "drowning": false,
+        "applied_matches_received": true
+      },
+      "label": "host_swims (a) watcher sees the swimmer COMBAT_PAUSED (sample 1)"
+    },
+    {
+      "peer": 1,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer0",
+        "baseline": "pause",
+        "sample_frames": 60,
+        "min_frames_since": 60
+      },
+      "expect_data": {
+        "mode": 3,
+        "mode_steady": true,
+        "stamina_unchanged": true,
+        "drowning": false,
+        "applied_matches_received": true
+      },
+      "label": "host_swims (a) watcher, 60 frames later (sample 2): still paused every frame, stamina_fraction unchanged"
+    },
+    {
+      "peer": 0,
+      "action": "water_local_aquatic",
+      "args": {
+        "baseline": "pause",
+        "min_frames_since": 60
+      },
+      "expect_data": {
+        "mode": 3,
+        "fighting": true,
+        "stamina_unchanged": true,
+        "health_unchanged": true
+      },
+      "label": "host_swims (a) swimmer's own stamina and health frozen over the same window"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "host_swims_01_paused"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "press",
+      "args": {
+        "action": "party_cycle",
+        "tap_frames": 3
+      },
+      "label": "host_swims (b) mid-fight switch (real input)"
+    },
+    {
+      "peer": 0,
+      "action": "water_local_aquatic",
+      "args": {
+        "baseline": "pause"
+      },
+      "expect_data": {
+        "mode": 3,
+        "fighting": true,
+        "active_species": "water_riverdrake",
+        "stamina_unchanged": true,
+        "health_unchanged": true
+      },
+      "label": "host_swims (b) switched to the riverdrake; own swim state still paused and frozen"
+    },
+    {
+      "peer": 1,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer0",
+        "baseline": "pause",
+        "sample_frames": 30
+      },
+      "expect_data": {
+        "mode": 3,
+        "mode_steady": true,
+        "stamina_unchanged": true,
+        "applied_matches_received": true
+      },
+      "label": "host_swims (b) watcher still sees COMBAT_PAUSED after the switch, stamina unchanged"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "host_swims_02_switched"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "water_win_wild",
+      "args": {
+        "enemy_hp_ceiling": 12.0,
+        "budget_frames": 3600
+      },
+      "budget_frames": 4200,
+      "expect_data": {
+        "fighting": false,
+        "enemy_fainted": true,
+        "paused_throughout": true
+      },
+      "label": "host_swims (c) the wild is won through the production combat path"
+    },
+    {
+      "peer": 0,
+      "action": "water_local_aquatic",
+      "args": {
+        "wait_for_mode": 1,
+        "budget_frames": 60,
+        "record": "resume"
+      },
+      "expect_data": {
+        "mode": 1,
+        "fighting": false
+      },
+      "label": "host_swims (d) swimmer's own mode back to HUMAN"
+    },
+    {
+      "peer": 1,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer0",
+        "wait_for_mode": 1,
+        "record": "resume"
+      },
+      "expect_data": {
+        "mode": 1,
+        "applied_mode_matches_received": true
+      },
+      "label": "host_swims (d) watcher sees the swimmer HUMAN again"
+    },
+    {
+      "peer": 1,
+      "action": "water_remote_aquatic",
+      "args": {
+        "peer_id": "$peer0",
+        "baseline": "resume",
+        "sample_frames": 120,
+        "min_frames_since": 120
+      },
+      "expect_data": {
+        "mode": 1,
+        "mode_steady": true,
+        "stamina_decreased": true,
+        "applied_mode_matches_received": true
+      },
+      "label": "host_swims (d) watcher, 120 frames later: the swimmer's stamina_fraction is draining again"
+    },
+    {
+      "peer": 0,
+      "action": "water_local_aquatic",
+      "args": {
+        "baseline": "resume",
+        "min_frames_since": 120
+      },
+      "expect_data": {
+        "mode": 1,
+        "stamina_decreased": true,
+        "drain_matches_config": true
+      },
+      "label": "host_swims (d) swimmer's own drain resumed at the configured rate"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "host_swims_03_resumed"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "water_anchor_fixture",
+      "args": {
+        "anchor_id": "tidal_cradle_to_salt_crown_rest_03"
+      },
+      "expect_data": {
+        "on_floor": true,
+        "swimming": false
+      },
+      "label": "host_swims teardown: swimmer back on the dry landing (so it cannot drown while the other half runs)"
+    }
+  ]
+}

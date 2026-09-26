@@ -54,6 +54,8 @@ func set_bond(caption: String, nodes: int, total_nodes: int = 5, next_progress: 
 	_nodes = clampi(nodes, 0, total_nodes)
 	_total_nodes = maxi(total_nodes, 1)
 	_next_progress = clampf(next_progress, 0.0, 1.0)
+	# An empty caption gives its row back rather than leaving a blank band.
+	custom_minimum_size = Vector2(GRAPHIC_SIZE.x, GRAPHIC_SIZE.y + (0.0 if _caption.is_empty() else CAPTION_HEIGHT))
 	queue_redraw()
 
 
