@@ -169,7 +169,7 @@ Strengths to keep: the village at P001 and the mill at E016, the badger companio
 **Judge-prep correction, disclosed.** The judge's defect 1 ("no companion or creature in any frame") is a **capture fixture, not a game defect**:
 - Place rows deliberately park the companion behind the camera; the manifest records `"companion": "parked behind camera"`.
 - The paused EncounterDirector streams no wilds at a teleported stand.
-- My judge brief wrongly said a companion stands in frame. Env rows keep the companion out, and they are the creature-in-world check.
+- My judge brief wrongly said a companion stands in frame. Env rows keep the companion in frame, and they are the creature-in-world check.
 
 | # | Sev | Domain | Frame(s) | Defect | Clause | Owner |
 |---|---|---|---|---|---|---|
@@ -186,9 +186,14 @@ Strengths to keep: the village at P001 and the mill at E016, the badger companio
 | CR11 | MINOR | composition | all | Every approach is identical: straight road, centred trainer, empty lower half, no near framing rail, no side lure. | §1 | Cloudreach |
 | CR12 | MINOR | foliage | P001, P003, P006, P008, P014, P018 | Blocky, pixel-quantised leaf texture. One species standing singly on bare grass. | §3.1 | Codex |
 
-**Env rows (E###).** These add to CR1–CR12 above; the altitude read (CR1) and settlements (CR8) are reconfirmed in E013–E018, E022–E024 and E028–E030.
+**Env rows (E###).** These add to CR1–CR12 above. The env verdict also reconfirms:
+- CR1 altitude (env #2: E013–E018, E022, E028–E030);
+- CR8 settlements (env #8: E004–E006, E022–E024);
+- CR4 blob/box rocks (env #13);
+- CR5 bald ground and dithered edges (env #9, #10);
+- CR7 night grass brighter than the ground (env #21).
 
-**Capture staging, disclosed.** The judge's env blocker 1 (Galecrest hides the trainer in E031–E033, with a talon through the trainer's legs) is **my capture's companion placement**: a fixed 3.2 m side offset, too close for a large winged companion. It is not the game's follow behaviour. The tool now clears by the companion's measured footprint. It is not a queue row.
+**Capture staging, disclosed.** The judge's env blocker 1 (Galecrest hides the trainer in E031–E033, with a talon through the trainer's legs) is **my capture's companion placement**: a fixed 3.2 m side offset, too close for a large winged companion. It is not the game's follow behaviour. The tool now clears by the companion's measured footprint. It is not a queue row. The fix is unverified until E031–E033 are recaptured.
 
 | # | Sev | Domain | Frame(s) | Defect | Clause | Owner |
 |---|---|---|---|---|---|---|
@@ -257,6 +262,6 @@ Strengths to keep: the village at P001 and the mill at E016, the badger companio
   - Cloudreach **Sky Shrine** fell back to an off-road ring stand at the foot of its pillar, where the shrine top is out of sight.
   - Each is a coverage gap to close with an authored stand, not a pass.
 - **Place rows park the companion behind the camera, and the EncounterDirector is paused.** A place frame cannot show creatures in the world. Env rows carry the companion.
-- **Env-row companion placement:** before 2026-09-26 23:00 it used a fixed 3.2 m side offset, which let a large winged companion cover the trainer (Cloudreach E031–E033). It now clears by the companion's measured footprint.
+- **Env-row companion placement:** before 2026-09-26 23:00 it used a fixed 3.2 m side offset, which let a large winged companion cover the trainer (Cloudreach E031–E033). It now clears by the companion's measured footprint (the diagonal of its model bounds). **This is unverified until the E031–E033 stands are recaptured**, because the follow logic could still move the body during the settle frames.
 - **Place-row sightline test:** it tests 15 interior points on the straight eye→target line against the terrain ground height (`_ground_guess`), not rendered geometry. It can report "clear" while the landmark is still out of the rendered view or its geometry is not at the realm-data point (Tidewake TW2). Treat "landmark absent" rows as verify-first.
 - **Local renders need a complete checkout.** Clear skip-worktree first: `git ls-files -v | grep '^S'`.
