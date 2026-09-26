@@ -32,13 +32,20 @@ All nine lane sessions were wound down and archived on owner direction: Meadows 
 | X05 (#282) | F06#5 host-restart evidence, F14 participants proof WIP | F06#5 is blocked by the Cloudreach `_excluded()` slowness above. |
 | X03 (#262) / VIS (#279) | Glyph highlights; shared-look WIP | The ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
 
-**Open owner decisions:**
-- F11#2 legacy receipt.
-- F10#6 needs an ROG Ally run.
-- Cloudreach co-op shoulders and cliff palette.
-- Steamworks redistribution sign-off for `steam_api64.dll`.
+**Owner rulings (2026-09-26, coordinator Q&A):**
+- The tournament creature grant must be a non-starter species (starters stay player-exclusive). Meadows core owns the change.
+- F11#2: an old-build Stormheart receipt with no accept/decline answer is **undecided**; that character is re-offered once and can never be granted twice.
+- The Cloudreach cliff palette is picked by a code-blind judge against ART_DIRECTION. Co-op keeps road shoulders (co-op matches single player).
+- Team Tether palette stays as built. This is an explicit owner exception to the oxblood hard-rule wording; audit findings H2/H3 and the red parts of M7 are closed as "owner: leave as is".
+- "Guardian C2/C3" in Tidewake BOSSES means the Nerissa fight.
+- Meshy/Bramblebun work is handled by Codex, not the Claude lanes.
+- Branch prefix is `tb/` (CLAUDE/AGENTS/WORKFLOW §8 updated).
+- `steam_api64.dll` redistribution is approved. Deferred owner resources: Steam AppID and partner access, four Steam accounts, a ROG Ally run (F10#6).
 
 **Coordinator rulings made this session, to keep:**
+- The Tidewake top-trainer foe damage tunable also covers Venn and Nerissa.
+- X05 may use the Player `teleport_to` helper in test harnesses only.
+- `.github/workflows/ci.yml` is edited only by the coordinator; lanes propose patches in their PRs.
 - Co-op matches single player, and rejoin returns to the exact spot (same host world only).
 - Village and spine roads are widened for the roughly 2 m/texel control map.
 - F14 named wilds are judged by the named-wild rule, and a top-trainer damage tunable is authorized.
