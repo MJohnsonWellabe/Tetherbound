@@ -71,6 +71,11 @@ var _player: CharacterBody3D = null
 var _rig: Node3D = null
 var _game: Node = null
 var _manager: Node = null
+## `--act` (F03#1 distinctness evidence): at the prompt, take the activity's own
+## action the way a player does -- press interact, answer each dialogue line
+## and confirmation with interact (Yes), fight any fight it starts with the
+## input combat pilot -- and capture `act-*` frames of what happens.
+var _act := false
 var _director: Node = null
 var _arbiter: Node = null
 
@@ -101,6 +106,8 @@ func _run() -> void:
 			WALK_BUDGET_S = float(a.trim_prefix("--budget-s="))
 		elif a.begins_with("--off-road-cost="):
 			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
+		elif a == "--act":
+			_act = true
 		elif a.begins_with("--capture-dir="):
 			_capture_dir = a.trim_prefix("--capture-dir=")
 	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall"] \
@@ -528,6 +535,8 @@ func _walk() -> void:
 				"winner": str(_arbiter.call("winner"))}
 			await _face_lure()
 			await _capture("prompt-offered")
+			if _act:
+				await _perform_action()
 			_finish("PASS", "lure seen and the activity's prompt was offered")
 			return
 
@@ -634,6 +643,56 @@ func _lookahead(here: Vector2, cursor: int) -> Vector2:
 		budget -= d
 		from = p
 	return _xz3(_path[_path.size() - 1])
+
+
+func _perform_action() -> void:
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	var actions: Array = []
+	await _press("interact")
+	for i in 30:
+		await physics_frame
+	await _capture("act-01-pressed")
+	var lines := 0
+	var fought := false
+	var idle := 0
+	for step in 240:  # up to ~60 s at 0.25 s a step
+		_tick()
+		if _manager != null and bool(_manager.call("is_fighting")):
+			fought = true
+			for i in 60:
+				await physics_frame
+			await _capture("act-02-fight-start")
+			for i in 240:
+				await physics_frame
+			await _capture("act-03-fight-mid")
+			var pilot := COMBAT_PILOT.new(self, _manager, _director, _rig)
+			pilot.listen()
+			var result: Dictionary = await pilot.fight_to_the_end()
+			actions.append({"t_s": snappedf(_clock, 0.1), "fight": str(result.get("outcome", ""))})
+			for i in 45:
+				await physics_frame
+			await _capture("act-04-fight-end")
+			idle = 0
+			continue
+		if panel != null and bool(panel.call("is_open")):
+			lines += 1
+			if lines <= 4:
+				await _capture("act-dialogue-%02d" % lines)
+			await _press("interact")
+			for i in 20:
+				await physics_frame
+			idle = 0
+			continue
+		idle += 1
+		if idle >= (8 if fought or lines > 0 else 24):
+			break
+		for i in 15:
+			await physics_frame
+	for i in 60:
+		await physics_frame
+	await _capture("act-05-after")
+	actions.append({"dialogue_lines": lines, "fought": fought})
+	_receipt["act"] = actions
 
 
 func _handle_fight(foe_name: String) -> void:
