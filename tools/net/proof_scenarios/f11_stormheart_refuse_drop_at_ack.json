@@ -179,7 +179,7 @@
         "other_claims": 1,
         "other_claim_settled": false
       },
-      "label": "the refusal acknowledgement never reached the host: no world receipt of the guest's answer, and its one claim for the guest is still unsettled"
+      "label": "the refusal acknowledgement never reached the host: no world receipt of the guest's answer, and its claim entry for the guest (one per character by construction) is still unsettled"
     },
     {
       "peer": 1,
@@ -295,7 +295,8 @@
       "peer": 1,
       "action": "stormheart_state",
       "expect_data": {
-        "has_stormheart": false
+        "has_stormheart": false,
+        "accepted_anywhere": false
       },
       "label": "still no Stormheart"
     },
@@ -311,9 +312,10 @@
         "other_accepted": false,
         "other_refused": true,
         "other_claims": 1,
-        "other_claim_settled": true
+        "other_claim_settled": true,
+        "other_claim_kept": false
       },
-      "label": "host: its own one; its single claim entry for the guest is settled, and the world holds the guest's refused receipt (not accepted)"
+      "label": "host: its own one; its claim entry for the guest is settled and not kept, and the world holds the guest's refused receipt (not accepted)"
     },
     {
       "peer": "all",
@@ -341,7 +343,8 @@
         ],
         "lacks": [
           "fulgocobra",
-          ":accepted"
+          ":accepted",
+          "stormwood:legendary_offer_accepted"
         ]
       },
       "label": "guest's saved character: answered No, no Stormheart"
@@ -361,7 +364,7 @@
           "stormwood:legendary_resolution:accepted:$character1"
         ]
       },
-      "label": "host world: the host's acceptance and the guest's refusal, each once; no acceptance for the guest"
+      "label": "host world: the host's acceptance and the guest's refusal (set semantics make 'once' structural); no acceptance for the guest"
     }
   ]
 }

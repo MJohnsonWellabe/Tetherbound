@@ -20,8 +20,8 @@ extends RefCounted
 ##   stormheart_fixture {contributors}    HOST: who fought the Dynamo, then Marrow's
 ##                                         defeat through the ledger (F11 setup only)
 ##   stormheart_answer  {answer, drop_at_ack?}  answer THIS peer's Stormheart offer through
-##                                         (drop_at_ack: Yes or No; the link closes in that answer's step)
 ##                                         the real dialogue: interact = Yes, menu_cancel = No
+##                                         (drop_at_ack: Yes or No; the link closes in that answer's own step)
 ##   stormheart_claim_again {}            send the prompt's ending_claim WITHOUT the acceptance
 ##                                         hint; the HOST must refuse from its own record
 ##   stormheart_state {character?}        this peer's view of the F11 outcome (character:
