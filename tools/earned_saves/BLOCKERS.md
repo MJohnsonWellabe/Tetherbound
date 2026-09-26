@@ -319,3 +319,25 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   `timeout` before the Rift. Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt8/`.
   `run_chain.sh` now takes `CHAIN_TIMEOUT` (default unchanged at 5400). Attempt 9 runs with
   `CHAIN_TIMEOUT=12600`. No acceleration.
+
+## B12: the trainer dies on the acknowledgement road and respawns at home (open, blocking)
+
+- Warden attempt 9 (14:26 UTC, `CHAIN_TIMEOUT=12600`, 2107 s): the ACCEPT ending passed again,
+  with Veridian L25 on the belt. Road care worked: 2 `between_fight_care`, 20 wild wins. Then:
+  `Ordinary quarry/Warrens movement did not reach (-420.0, -4.161824, 2470.0); player=(-30.45036, -2.109686, 67.91363)`.
+  The inventory at the stop is `{}` (the hall save carried 7 potions, 10 revives, tools and
+  725 coin). The player stands at the home spawn. So the trainer died on the leg towards
+  (-420,2470), everything carried went into a death satchel (`player_death.gd`), and the player
+  respawned at home, which is not a helper action. Per `player_death.gd` the only lethal paths are
+  a fall (`player_controller.gd::_resolve_landing`) and drowning (`water.gd`). The log has no death
+  line, so which one it was is not identified. The helper's `aftermath_road` walks the band1–5
+  spines in straight lines. The forward chain never walked band2/band3 that way (it took the
+  quarry/Warrens undertrail and the relay loop), so a cliff or water crossing on that spine is
+  likely. The only earlier warning is `[player] entombed at 107.61, -0.47, 4513.34 -- recovering`.
+  Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt9/`.
+- Status: blocking; not retried. Each warden attempt replays the Warden (about 35 min before the
+  road). Suggested next step: (1) trace the player's y and HP per walk leg on the return road to
+  find the lethal leg. (2) In `warden_accept.gd`, walk the return by the same roads the forward
+  segments used (the reverse of warrens/relay/hall routes) instead of the spine. That is a route
+  choice, not a teleport. (3) Split `warden` so the settled ending is saved before the walk, which
+  needs the aftermath mode's `_climax._stage == "done"` to survive a load.
