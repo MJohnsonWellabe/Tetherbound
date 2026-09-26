@@ -1,0 +1,101 @@
+{
+ "name": "REPRO: host realm crossing after a guest drop/rejoin",
+ "claim": "Focused repro for the F11#3 finding: after a guest's link drops and it rejoins, does the host's own realm crossing complete?",
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 1200,
+ "steps": [
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": "all",
+   "action": "aftermath_state",
+   "label": "epochs before any drop"
+  },
+  {
+   "peer": 1,
+   "action": "stormheart_state",
+   "expect": "any",
+   "expect_data": {
+    "character_id": "$character1"
+   },
+   "label": "learn the guest's character id"
+  },
+  {
+   "peer": 1,
+   "action": "drop_link",
+   "args": {
+    "settle_frames": 60
+   }
+  },
+  {
+   "peer": 0,
+   "action": "expect_peers",
+   "args": {
+    "count": 1,
+    "budget_frames": 3600
+   }
+  },
+  {
+   "peer": 1,
+   "action": "production_join",
+   "budget_frames": 10000,
+   "args": {
+    "budget_frames": 6000,
+    "character": {
+     "character_id": "$character1"
+    }
+   }
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2,
+    "budget_frames": 1200
+   }
+  },
+  {
+   "peer": "all",
+   "action": "aftermath_state",
+   "label": "epochs after the guest's drop + rejoin"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000,
+   "label": "the HOST crosses to Stormwood with the rejoined guest connected"
+  }
+ ]
+}
