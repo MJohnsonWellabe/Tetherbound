@@ -126,7 +126,7 @@ func _capture(world: Node3D, tag: String) -> void:
 		var ground := maxf(0.0, float(world.ground_height_at(eye.x, eye.z)))
 		camera.global_position = Vector3(eye.x, ground + eye.y, eye.z)
 		camera.look_at(pose.target, Vector3.UP)
-		await _frames(40)
+		await _frames(16)
 		await RenderingServer.frame_post_draw
 		var image := root.get_texture().get_image()
 		var path := "%s/%s_%s.png" % [capture_dir, str(pose.name), tag]
@@ -164,16 +164,20 @@ func _run() -> void:
 	# Real settlement path: the Veilfall chamber's Decline, confirmed.
 	var cave: Node3D = world.get_node("WaterVeilfall")
 	var player: Node3D = world.local_rig()
+	var prompt: Node3D = cave.get("_guardian_prompt")
+	player.global_position = prompt.global_position + Vector3(0, -1.3, -1.8)
+	player.velocity = Vector3.ZERO
+	await _frames(8)
 	var decline: Node3D = cave.get("_decline_prompt")
 	if not check(decline != null and decline.enabled, "Freed Guardian chamber offers its Decline interaction"):
 		finish()
 		return
-	player.global_position = decline.global_position + Vector3(0, -1.3, -1.8)
-	player.velocity = Vector3.ZERO
-	await _frames(8)
 	cave.request_guardian_decline()
 	check(cave.decline_armed() and not game.world.flags.has(FLAG), "First press only arms the decline")
-	await create_timer(0.6).timeout
+	# The confirm guard is wall-clock (water_veilfall.gd DECLINE_MIN_CONFIRM_MSEC);
+	# block for it without rendering, so a slow software-rendered frame cannot
+	# overrun the confirm window.
+	OS.delay_msec(600)
 	cave.request_guardian_decline()
 	check(game.world.flags.has(FLAG), "Confirmed Guardian decline settles the world: " + FLAG + " set by water_guardian_reward.refuse()")
 	var disk: Dictionary = game.save_system.get("_worlds").read(game.world.world_id)
@@ -185,7 +189,6 @@ func _run() -> void:
 	print("AFTER calm_scale=%.3f current_speed_m_s=%.4f at %s" % [calm_after, speed_after, SAMPLE])
 	check(is_equal_approx(calm_after, restored_calm), "Restored foam switches calm_scale to %.2f" % restored_calm)
 	check(speed_after < speed_before * 0.5 and speed_after > 0.0, "Restored physics current is calmer at the same point")
-	await _capture(world, "after")
 
 	var reloaded: Dictionary = await RELOAD.save_and_reload(self, game, world, FLAG, "")
 	for pair: Array in reloaded.checks:
@@ -201,4 +204,7 @@ func _run() -> void:
 	check(game.world.flags.has(FLAG), "Reloaded world keeps " + FLAG)
 	check(is_equal_approx(calm_reload, restored_calm), "Rebuilt current foam starts calm after reload")
 	check(is_equal_approx(speed_reload, speed_after), "Rebuilt physics current stays calm after reload")
+	# The "after" frames come from the reloaded world: restored state read back
+	# from the save, same camera pose and frozen clock as the "before" frames.
+	await _capture(fresh, "after_reload")
 	finish()
