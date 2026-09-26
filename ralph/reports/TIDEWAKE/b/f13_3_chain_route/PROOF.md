@@ -56,9 +56,9 @@ Godot 4 headless, Linux, 4 shared cores (3 other agents' Godot jobs running conc
 | Chain | Expected route | Result | Observed |
 |---|---|---|---|
 | side_water_lantern_return | Pell lead -> Lantern Cove Candy I cache -> Pell return -> thanks | PASS | CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks; RELOAD lantern water_pell -> water_pell_lantern_thanks; checks=54 failures=0 exit=0 |
-| side_water_gull_research | Adair lead -> Gull Rest satchel site -> Candy II -> Adair return -> thanks | NOT FINISHED | no CHAIN line; no reload line; checks=? failures=? exit=not finished |
+| side_water_gull_research | Adair lead -> Gull Rest satchel site -> Candy II -> Adair return -> thanks | PASS | CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks; RELOAD gull water_adair -> water_adair_gull_thanks; checks=59 failures=0 exit=0 |
 | side_water_cradle_care | Otto lead -> shell-nest Reef Stone seam (hotbar pickaxe) -> Otto return, 3 berries -> thanks | NOT FINISHED | no CHAIN line; no reload line; checks=? failures=? exit=not finished |
-| side_water_garden_records | Edda lead -> Drowned Garden vault wall -> Candy II -> Edda return (pre-Tether history) -> post line | NOT FINISHED | no CHAIN line; no reload line; checks=? failures=? exit=not finished |
+| side_water_garden_records | Edda lead -> Drowned Garden vault wall -> Candy II -> Edda return (pre-Tether history) -> post line | PASS | CHAIN side_water_garden_records PASS reward=Candy II +1 ack=return:water_edda_garden_return after=water_edda_garden_thanks; RELOAD garden water_edda -> water_edda_garden_thanks; checks=59 failures=0 exit=0 |
 | side_water_deep_watch_chart | Orsen names Deep Watch -> Tidecoil resolved (fixture) -> Orsen chart lead -> Candy III cache -> chart control -> Orsen charted | NOT FINISHED | no CHAIN line; no reload line; checks=? failures=? exit=not finished |
 | side_water_lastlight_shelter | Halen lead -> Veilfall delivery (4+4) -> Halen rest request -> bed rest -> thanks | NOT FINISHED | no CHAIN line; no reload line; checks=? failures=? exit=not finished |
 
@@ -109,6 +109,21 @@ SITE gull_research_satchel hud='Survey satchel recovered: Adair's current observ
 WALK water:gull_rest:pickup:002 island=gull_rest walked=3m legs=1
 CLAIM water:gull_rest:pickup:002 skill_candy_ii 0->1
 POSE brine_steps arrival landing for water_adair -> (267.637, 1.929, 580.191)
+WALK water_adair island=brine_steps walked=455m legs=70
+TALK water_adair conversation=water_adair_gull_return hud='Adair charts the safe Gull Rest crossing from the recovered observations.'
+WALK water_adair island=brine_steps walked=0m legs=1
+TALK water_adair conversation=water_adair_gull_thanks hud=''
+WALK water_adair island=brine_steps walked=0m legs=1
+TALK water_adair conversation=water_adair_gull_thanks hud=''
+CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks
+RELOAD gull water_adair -> water_adair_gull_thanks
+POSES (3 disclosed position writes):
+  brine_steps arrival landing for water_adair -> (267.637, 1.929, 580.191)
+  gull_rest arrival landing for gull_research_satchel -> (-56.825, 1.929, 789.065)
+  brine_steps arrival landing for water_adair -> (267.637, 1.929, 580.191)
+Walked total 1040m with left-stick input
+Tidewake-B chain route witness: 59 checks, 0 failures
+exit=0
 ```
 
 ### cradle (`cradle.log`)
@@ -131,6 +146,28 @@ WALK water_otto DIRECT (no baked-ground plan from (535.497, 1.931604, 1352.51) t
          [2] _run (res://tests/smoke_tidewake_b_chain_route.gd:105)
 POSE salt_crown arrival landing for water_edda -> (289.458, 1.929, 2112.224)
 WALK water_edda island=salt_crown walked=478m legs=73
+TALK water_edda conversation=water_edda_garden_lead hud='Edda's request: copy the account on the Drowned Garden's exposed vault wall and bring it to Salt Crown.'
+POSE drowned_garden arrival landing for garden_records_wall -> (1058.315, 1.929, 2249.446)
+WALK garden_records_wall island=drowned_garden walked=220m legs=35
+SITE garden_records_wall hud='Vault wall account copied: the old dock ledgers carved before the Tether. Bring it to Edda at Salt Crown.'
+WALK water:drowned_garden:pickup:002 island=drowned_garden walked=4m legs=1
+CLAIM water:drowned_garden:pickup:002 skill_candy_ii 0->1
+POSE salt_crown arrival landing for water_edda -> (289.458, 1.929, 2112.224)
+WALK water_edda island=salt_crown walked=478m legs=73
+TALK water_edda conversation=water_edda_garden_return hud='Edda adds the vault's dock account to the Salt Crown records.'
+WALK water_edda island=salt_crown walked=0m legs=1
+TALK water_edda conversation=water_edda_garden_thanks hud=''
+WALK water_edda island=salt_crown walked=0m legs=1
+TALK water_edda conversation=water_edda_garden_thanks hud=''
+CHAIN side_water_garden_records PASS reward=Candy II +1 ack=return:water_edda_garden_return after=water_edda_garden_thanks
+RELOAD garden water_edda -> water_edda_garden_thanks
+POSES (3 disclosed position writes):
+  salt_crown arrival landing for water_edda -> (289.458, 1.929, 2112.224)
+  drowned_garden arrival landing for garden_records_wall -> (1058.315, 1.929, 2249.446)
+  salt_crown arrival landing for water_edda -> (289.458, 1.929, 2112.224)
+Walked total 1180m with left-stick input
+Tidewake-B chain route witness: 59 checks, 0 failures
+exit=0
 ```
 
 ### deep (`deep.log`)
@@ -141,6 +178,13 @@ WALK water_edda island=salt_crown walked=478m legs=73
          [1] _build_world (res://tests/smoke_tidewake_b_chain_route.gd:124)
          [2] _run (res://tests/smoke_tidewake_b_chain_route.gd:105)
 POSE sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+WALK water_orsen island=sluice_isle walked=998m legs=156
+TALK water_orsen conversation=water_orsen_pre hud=''
+POSE tidecoil stand (fight fixture) -> (1456.812, -0.406972, 3442.196)
+POSE sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+WALK water_orsen island=sluice_isle walked=998m legs=156
+TALK water_orsen conversation=water_orsen_deep_watch_chart_lead hud=''
+POSE deep_watch arrival landing for water:deep_watch:pickup:002 -> (1260.318, 1.929, 3403.144)
 ```
 
 ### lastlight (`lastlight.log`)
