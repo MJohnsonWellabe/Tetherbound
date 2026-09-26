@@ -4,6 +4,9 @@ extends Node3D
 ## different islands. Gameplay services are installed separately from terrain.
 const CONFIG_PATH := "res://data/config/water_world.json"
 const VISUAL_PATH := "res://data/config/water_visual.json"
+## `ground_height_at` answers with the vertex itself inside this radius; it
+## must cover Terrain3D's own 0.01 m near-vertex shortcut (see there).
+const NEAR_VERTEX_M := 0.02
 const FIELD := preload("res://scripts/world/water_heightfield.gd")
 const CURRENTS := preload("res://scripts/world/water_current_field.gd")
 const SWIM := preload("res://scripts/player/swim_controller.gd")
@@ -229,7 +232,21 @@ func ground_height_at(x: float, z: float) -> float:
 	if terrain == null:
 		return NAN
 	var data: Object = terrain.get("data")
-	return float(data.call("get_height", Vector3(x, 0, z))) if data != null else NAN
+	if data == null:
+		return NAN
+	# Terrain3D 1.0.2 `Terrain3DData::get_height` has a near-vertex shortcut:
+	# within 0.01 m of a vertex it returns `get_pixel(pos)` for the UNROUNDED
+	# position, and get_pixel floors. Just below a vertex (x = 547.995) that is
+	# the height of the vertex one step down and left -- 0.7 m off on the
+	# 27-degree Brine terrace, while the collision surface is right. Asking for
+	# the vertex itself sends the shortcut to the vertex it meant, so this
+	# sampler agrees with Terrain3D's own collision (BRINE_ROOT_CAUSE.txt).
+	var step := float(terrain.get("vertex_spacing"))
+	var vertex := Vector3(snappedf(x, step), 0.0, snappedf(z, step))
+	var at := Vector3(x, 0.0, z)
+	if at.distance_to(vertex) < NEAR_VERTEX_M:
+		at = vertex
+	return float(data.call("get_height", at))
 
 
 func ground_height_near(x: Variant, z: float = 0.0, _reference_y: float = 0.0) -> float:

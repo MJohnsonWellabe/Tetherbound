@@ -89,6 +89,16 @@ extends SceneTree
 ## its own fixtures and every one of its checks; the shared world build and the
 ## row-count checks always run. An unknown or empty id is a failure. Without
 ## `--case` every case runs, loops first, in data order.
+##
+## REPEAT: `-- --repeat=N` runs the selected cases N times in one process,
+## printing per-iteration totals; any failing iteration fails the run. Land
+## loops only (a shortcut's unlock is one-way, so a second pass is refused).
+##
+## CONTROLS (every invocation, filtered or not, before any case): the sampler
+## regression (`SAMPLER_SITES`: `ground_height_at` matches the terrain
+## collision just short of a vertex on the Brine terrace) and the fall
+## detector's negative control (the body put CONTROL_DEPTH_M under the
+## terrain must trip it, then is put back).
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -102,12 +112,25 @@ const STALL_WINDOW_FRAMES := 90
 const STALL_PROGRESS_M := 0.5
 const TELEPORT_M := 2.5
 const BELOW_TERRAIN_M := 0.6
-## The heightmap sample (`ground_height_at`, interpolated) and the triangulated
-## terrain collider disagree by up to ~0.7 m on steep slopes, so a body standing
-## on the collider can read slightly "below" the sample. A body that is below it
-## and NOT on a floor, or below it by this much regardless, has really gone
-## through: a tunnel keeps falling.
-const THROUGH_TERRAIN_M := 2.0
+## "Fell below terrain" needs the body to be really off the ground, not just
+## under a sampled height: past BELOW_TERRAIN_M it fires only while the body is
+## NOT on its floor, or when no collider lies within FLOOR_PROBE_M under its
+## feet (`_below_terrain`). A body standing on the collision surface is on the
+## ground whatever a sampler says; batches 23/24 were exactly that, a Terrain3D
+## sampler reading one vertex off (BRINE_ROOT_CAUSE.txt).
+const FLOOR_PROBE_M := 0.3
+## At or past this depth under the sampled ground the fall fires regardless of
+## floor state or colliders: nothing legitimate stands 2 m inside the terrain.
+const DEEP_BELOW_TERRAIN_M := 2.0
+## Negative control: `_detector_control` puts the body this far under the
+## terrain on every invocation and requires the detector to fire.
+const CONTROL_DEPTH_M := 3.0
+## Sampler regression: points 5 mm short of a vertex on the Brine terrace
+## where Terrain3D's raw `get_height` answered one vertex off (0.67-0.74 m) --
+## the batch 23 and batch 24 fall sites and the loop start. `ground_height_at`
+## must agree with the terrain collision there to SAMPLER_AGREE_M.
+const SAMPLER_SITES := [Vector2(502.995, 736.995), Vector2(547.995, 704.995), Vector2(511.995, 737.995)]
+const SAMPLER_AGREE_M := 0.05
 const MAX_DROP_M := 1.5
 const WATCHDOG_S := 40 * 60
 const BYPASS_REACH_M := 3.0
@@ -197,18 +220,39 @@ func _run() -> void:
 		_finish()
 		return
 	print("LOOPS/SHORTCUTS CASES: ", "all" if cases.is_empty() else ", ".join(cases))
+	var repeat := _requested_repeat()
+	if repeat < 1:
+		_fail("--repeat must be a whole number >= 1")
+		_finish()
+		return
+	if repeat > 1:
+		for shortcut: Dictionary in world.config.return_shortcuts:
+			if _wanted(cases, str(shortcut.id)):
+				# A shortcut publishes its one-way unlock flag; a second pass would
+				# start open and could not prove the closed state.
+				_fail("--repeat=%d cannot rerun shortcut %s (its unlock is one-way); repeat land loops only" % [repeat, shortcut.id])
+				_finish()
+				return
+	await _sampler_agrees_with_collision()
+	await _detector_control()
 
-	for loop: Dictionary in world.config.land_loops:
-		if _wanted(cases, str(loop.id)):
-			await _timed_case(str(loop.id), _walk_loop.bind(loop))
-	if _wanted(cases, "reedhaven_maintenance_ramp"):
-		await _timed_case("reedhaven_maintenance_ramp",
-			_reedhaven_ramp.bind(_shortcut("reedhaven_maintenance_ramp")))
-	if _wanted(cases, "shellwatch_pump_return_channel"):
-		await _timed_case("shellwatch_pump_return_channel",
-			_shellwatch_channel.bind(_shortcut("shellwatch_pump_return_channel")))
-	if _wanted(cases, "deep_watch_current_cut"):
-		await _timed_case("deep_watch_current_cut", _deep_watch_cut.bind(_shortcut("deep_watch_current_cut")))
+	for iteration in range(1, repeat + 1):
+		var checks_before := checks
+		var failures_before := failures.size()
+		var defects_before := defects.size()
+		for loop: Dictionary in world.config.land_loops:
+			if _wanted(cases, str(loop.id)):
+				await _timed_case(str(loop.id), _walk_loop.bind(loop))
+		if _wanted(cases, "reedhaven_maintenance_ramp"):
+			await _timed_case("reedhaven_maintenance_ramp",
+				_reedhaven_ramp.bind(_shortcut("reedhaven_maintenance_ramp")))
+		if _wanted(cases, "shellwatch_pump_return_channel"):
+			await _timed_case("shellwatch_pump_return_channel",
+				_shellwatch_channel.bind(_shortcut("shellwatch_pump_return_channel")))
+		if _wanted(cases, "deep_watch_current_cut"):
+			await _timed_case("deep_watch_current_cut", _deep_watch_cut.bind(_shortcut("deep_watch_current_cut")))
+		print("LOOPS/SHORTCUTS ITERATION %d/%d: %d checks, %d failures, %d defects" % [
+			iteration, repeat, checks - checks_before, failures.size() - failures_before, defects.size() - defects_before])
 	_finish()
 
 
@@ -228,6 +272,23 @@ func _requested_cases() -> Array[String]:
 			if not part.strip_edges().is_empty() and not cases.has(part.strip_edges()):
 				cases.append(part.strip_edges())
 	return cases
+
+
+## `--repeat=N` (or `--repeat N`) after `--`: run the selected cases N times in
+## this one process; any failing iteration fails the run. Default 1; 0 on a
+## malformed value (rejected by `_run`).
+func _requested_repeat() -> int:
+	var args := OS.get_cmdline_user_args()
+	for index in args.size():
+		var raw := ""
+		if args[index].begins_with("--repeat="):
+			raw = args[index].trim_prefix("--repeat=")
+		elif args[index] == "--repeat" and index + 1 < args.size():
+			raw = args[index + 1]
+		else:
+			continue
+		return int(raw) if raw.is_valid_int() else 0
+	return 1
 
 
 func _case_arg_given() -> bool:
@@ -936,10 +997,9 @@ func _travel_leg(target: Vector3, stats: Dictionary, label: String, mounted: boo
 		if on_foot:
 			if _swimming():
 				return {"ok": false, "reason": "entered swimming at %s (water depth %.2f)" % [_fmt(now), world.water_depth_at(now)]}
-			var ground: float = world.ground_height_at(now.x, now.z)
-			if now.y < ground - THROUGH_TERRAIN_M \
-					or (now.y < ground - BELOW_TERRAIN_M and not player.is_on_floor()):
-				return {"ok": false, "reason": "fell below terrain at %s (ground %.2f, on_floor=%s)" % [_fmt(now), ground, str(player.is_on_floor())]}
+			var below := _below_terrain(now)
+			if not below.is_empty():
+				return {"ok": false, "reason": below}
 			if player.is_on_floor():
 				if is_finite(airborne_from):
 					var drop := airborne_from - now.y
@@ -1022,6 +1082,84 @@ func _prompt_of(equipment: Node3D) -> Node3D:
 		if child.has_method("interaction_offer"):
 			return child as Node3D
 	return null
+
+
+## Diagnostic for a fall-below-terrain defect: is there any collider under
+## the point where the player fell, and at what height? Tells a missing or
+## late collision shape apart from a body that tunnelled through one.
+func _collision_under(at: Vector3) -> String:
+	var ground: float = world.ground_height_at(at.x, at.z)
+	var space := world.get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(Vector3(at.x, ground + 4.0, at.z), Vector3(at.x, ground - 4.0, at.z))
+	query.exclude = [player.get_rid()]
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return "no collider within 4 m of the ground height there"
+	var collider: Object = hit.get("collider")
+	var label := str((collider as Node).get_path()) if collider is Node else str(collider)
+	return "collider %s at y %.2f" % [label, float((hit.position as Vector3).y)]
+
+
+## The fall detector. "" while the body is on the ground, else the reason.
+## Past BELOW_TERRAIN_M under the sampled ground it fires only when the body is
+## off its floor or has no collider within FLOOR_PROBE_M under its feet; past
+## DEEP_BELOW_TERRAIN_M it fires unconditionally. Thresholds are not loosened:
+## a body that is really below the terrain is off the collision surface.
+func _below_terrain(now: Vector3) -> String:
+	var ground: float = world.ground_height_at(now.x, now.z)
+	var depth := ground - now.y
+	if depth <= BELOW_TERRAIN_M:
+		return ""
+	var on_floor := player.is_on_floor()
+	var support := _collider_below(now, FLOOR_PROBE_M)
+	if depth < DEEP_BELOW_TERRAIN_M and on_floor and support:
+		return ""
+	return "fell below terrain at %s (ground %.2f, %.2f m under; on_floor=%s; collider within %.1f m below=%s; velocity %s; %s)" % [
+		_fmt(now), ground, depth, str(on_floor), FLOOR_PROBE_M, str(support), _fmt(player.velocity), _collision_under(now)]
+
+
+## Is there a collider (not the player) between the feet and `depth` under them?
+func _collider_below(at: Vector3, depth: float) -> bool:
+	var space := world.get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 0.5, at + Vector3.DOWN * depth)
+	query.exclude = [player.get_rid()]
+	return not space.intersect_ray(query).is_empty()
+
+
+## Negative control, every invocation (filtered runs included): the body put
+## CONTROL_DEPTH_M under the terrain must trip `_below_terrain`, and is then
+## put back where it was.
+func _detector_control() -> void:
+	var home := player.global_position
+	var at := home
+	at.y = float(world.ground_height_at(at.x, at.z)) - CONTROL_DEPTH_M
+	player.global_position = at
+	player.velocity = Vector3.ZERO
+	await physics_frame
+	var reason := _below_terrain(player.global_position)
+	print("CONTROL fall detector at %s: %s" % [_fmt(player.global_position), reason if not reason.is_empty() else "(silent)"])
+	player.global_position = home
+	player.velocity = Vector3.ZERO
+	await _frames(10)
+	_check(not reason.is_empty(), "fall detector fires for a body %.0f m under the terrain (negative control)" % CONTROL_DEPTH_M)
+	_check(_flat(player.global_position).distance_to(_flat(home)) < 0.5 and _below_terrain(player.global_position).is_empty(),
+		"negative control restores the player to %s" % _fmt(home))
+
+
+## Sampler regression (BRINE_ROOT_CAUSE.txt): just short of a vertex on steep
+## ground, `ground_height_at` must match the terrain collision under it.
+func _sampler_agrees_with_collision() -> void:
+	await physics_frame
+	var space := world.get_world_3d().direct_space_state
+	for site: Vector2 in SAMPLER_SITES:
+		var ground: float = world.ground_height_at(site.x, site.y)
+		var query := PhysicsRayQueryParameters3D.create(Vector3(site.x, ground + 5.0, site.y), Vector3(site.x, ground - 5.0, site.y))
+		query.exclude = [player.get_rid()]
+		var hit := space.intersect_ray(query)
+		var surface := float((hit.position as Vector3).y) if not hit.is_empty() else NAN
+		_check(is_finite(surface) and absf(surface - ground) <= SAMPLER_AGREE_M,
+			"ground_height_at(%.3f, %.3f) = %.3f agrees with the terrain collision (%.3f) within %.2f m" % [
+				site.x, site.y, ground, surface, SAMPLER_AGREE_M])
 
 
 func _place(at: Vector3, label: String) -> void:

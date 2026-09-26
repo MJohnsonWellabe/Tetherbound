@@ -89,6 +89,9 @@ var _tracking_config: Dictionary = {}
 ## piloted ally hides the opponent (`combat_manager.gd::_update_ally_occlusion`).
 ## Added to `composition_yaw_deg` on the same side; 0 outside that moment.
 var _composition_extra_deg := 0.0
+## F04#7: signed degrees the neutral tracker swings to find room for the arm
+## (`combat_manager.gd::_update_combat_clear_orbit`). 0 outside that moment.
+var _clearance_extra_deg := 0.0
 var _tracking_manual_left := 0.0
 
 ## Defaults from movement.json, kept so a combat profile can be handed back.
@@ -259,6 +262,7 @@ func set_target(target: Node3D, profile: Dictionary = {}) -> void:
 	_tracking_target = null
 	_tracking_config = {}
 	_composition_extra_deg = 0.0
+	_clearance_extra_deg = 0.0
 	_tracking_manual_left = 0.0
 
 	_distance = float(profile.get("distance", _base_distance))
@@ -305,6 +309,59 @@ func set_composition_extra(degrees: float) -> void:
 
 func composition_extra() -> float:
 	return _composition_extra_deg
+
+
+func set_clearance_extra(degrees: float) -> void:
+	_clearance_extra_deg = degrees
+
+
+func clearance_extra() -> float:
+	return _clearance_extra_deg
+
+
+## F04#7: the smallest orbit swing, in signed degrees from the tracker's
+## NEUTRAL angle (`_tracking_neutral_yaw()`), whose arm has at least
+## `max(length * min_fraction, min_room)` of free travel. `min_room` is the
+## caller's floor for "the lens is still outside the ally", so a wall that
+## would collapse the arm into the ally's body never counts as clear.
+##
+## Measured from the tracker's own neutral so the answer is stable once the rig
+## has swung. While the player steers (`_tracking_manual_left`) the current
+## swing is held rather than re-solved around the player's view. Ties -- and
+## the no-clear fallback, unless another angle is `switch_margin` roomier --
+## keep the side already in use, so small movements do not flip it.
+func clear_orbit_offset_deg(length: float, samples: Array, min_fraction: float,
+		min_room: float = 0.0, switch_margin: float = 1.0) -> float:
+	if _target == null or not is_instance_valid(_target) or length <= 0.01:
+		return 0.0
+	if _tracking_manual_left > 0.0:
+		return _clearance_extra_deg
+	var neutral_variant: Variant = _tracking_neutral_yaw()
+	var neutral := float(neutral_variant) if neutral_variant != null \
+		else yaw - deg_to_rad(_clearance_extra_deg)
+	var needed := maxf(length * clampf(min_fraction, 0.1, 1.0), minf(min_room, length))
+	var candidates: Array[float] = [0.0]
+	var side := -1.0 if _clearance_extra_deg < 0.0 else 1.0
+	for raw: Variant in samples:
+		var magnitude := absf(float(raw))
+		candidates.append(magnitude * side)
+		candidates.append(-magnitude * side)
+	var best := 0.0
+	var best_room := -1.0
+	var current_room := -1.0
+	for offset in candidates:
+		var dir := Basis.from_euler(Vector3(pitch, neutral + deg_to_rad(offset), 0.0)).z
+		var room := _free_distance_behind(global_position, dir, length)
+		if room >= needed:
+			return offset
+		if is_equal_approx(offset, _clearance_extra_deg):
+			current_room = room
+		if room > best_room + 0.01:
+			best_room = room
+			best = offset
+	if current_room >= 0.0 and best_room < current_room + switch_margin:
+		return _clearance_extra_deg
+	return best
 
 
 func set_tracking_target(target: Node3D, config: Dictionary = {}) -> void:
@@ -464,23 +521,10 @@ func _apply_tracking(delta: float) -> void:
 		return
 	if not bool(_tracking_config.get("enabled", true)) or _tracking_manual_left > 0.0:
 		return
-	var origin := _target.global_position
-	var point := _tracking_target.global_position
-	if _tracking_target.has_method("centre"):
-		point = _tracking_target.call("centre")
-	var toward := point - origin
-	toward.y = 0.0
-	if toward.length_squared() < 0.01:
+	var neutral: Variant = _tracking_neutral_yaw()
+	if neutral == null:
 		return
-	toward = toward.normalized()
-	# Camera3D looks down the arm's local -Z; the arm itself therefore sits on
-	# +Z opposite the opponent. This is the same yaw convention used by
-	# `_recentre_behind_target()` above.
-	var wanted := atan2(-toward.x, -toward.z)
-	# An oblique combat composition keeps the opponent's stance visible beside
-	# a large piloted body. Manual orbit and its grace period still win above.
-	var composition := float(_tracking_config.get("composition_yaw_deg", 0.0))
-	wanted += deg_to_rad(composition + signf(composition if composition != 0.0 else 1.0) * _composition_extra_deg)
+	var wanted := float(neutral) + deg_to_rad(_clearance_extra_deg)
 	var difference := angle_difference(yaw, wanted)
 	var dead_zone := deg_to_rad(float(_tracking_config.get("dead_zone_deg", 10.0)))
 	if absf(difference) <= dead_zone:
@@ -491,6 +535,40 @@ func _apply_tracking(delta: float) -> void:
 		float(_tracking_config.get("max_speed_deg", 120.0)))) * delta
 	yaw = wrapf(yaw + clampf(correction * strength * delta, -max_step, max_step), -PI, PI)
 	rotation = Vector3(pitch, yaw, 0.0)
+
+
+## The yaw the neutral combat tracker aims for BEFORE any clear-orbit swing,
+## or null when there is nothing to track. Shared by `_apply_tracking()` and
+## `clear_orbit_offset_deg()` so the solver measures from the real neutral,
+## not from wherever the dead zone or a lag left the rig.
+func _tracking_neutral_yaw() -> Variant:
+	if _tracking_target == null or not is_instance_valid(_tracking_target) \
+			or _target == null or not is_instance_valid(_target):
+		return null
+	var origin := _world_point(_target)
+	var point := _world_point(_tracking_target)
+	if _tracking_target.has_method("centre") and _tracking_target.is_inside_tree():
+		point = _tracking_target.call("centre")
+	var toward := point - origin
+	toward.y = 0.0
+	if toward.length_squared() < 0.01:
+		return null
+	toward = toward.normalized()
+	# Camera3D looks down the arm's local -Z; the arm itself therefore sits on
+	# +Z opposite the opponent. This is the same yaw convention used by
+	# `_recentre_behind_target()` above.
+	var wanted := atan2(-toward.x, -toward.z)
+	# An oblique combat composition keeps the opponent's stance visible beside
+	# a large piloted body. Manual orbit and its grace period still win above.
+	var composition := float(_tracking_config.get("composition_yaw_deg", 0.0))
+	return wanted + deg_to_rad(composition + signf(composition if composition != 0.0 else 1.0) * _composition_extra_deg)
+
+
+## `global_position` of a node, or its `position` when it is out of the tree
+## (a parentless node's local transform IS its world transform, and asking an
+## out-of-tree node for its global one is an engine error, not an answer).
+static func _world_point(node: Node3D) -> Vector3:
+	return node.global_position if node.is_inside_tree() else node.position
 
 
 func _follow(delta: float) -> void:
@@ -778,6 +856,11 @@ func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float,
 	query.shape = ball
 	query.transform = Transform3D(Basis(), pivot)
 	query.motion = dir * limit
+	# The arm's own mask: what SpringArm3D itself would stop against. The query
+	# default is every layer, so a body the arm walks straight through -- the
+	# trainer standing behind their creature -- read as a wall and sent the
+	# clear-orbit solver swinging away from a perfectly open fight.
+	query.collision_mask = collision_mask
 	var excluded: Array[RID] = _talk_excluded.duplicate()
 	# The ordinary follow target surrounds `pivot`; without excluding it every
 	# shoulder sweep begins inside the creature and reports zero free distance.

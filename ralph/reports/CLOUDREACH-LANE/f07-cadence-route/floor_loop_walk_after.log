@@ -1,0 +1,2 @@
+CLOUDREACH CONTINUOUS {"count":2,"kind":"fixture_wild_bodies_removed","position":"(0.0, 105.0302, -260.0)","simulated_seconds":0.33,"stage":"boot","wall_seconds":335.377801}
+CLOUDREACH FLOOR LOOP RETURN {"outbound_ok":true,"outbound_walked_m":1858.4,"player":"(-720.1445, 700.0309, 3679.713)","return_ok":true,"return_vertices":["windscar_floor_loop:6","windscar_counterweight_pass:6","windscar_counterweight_return:2"],"return_walked_m":1741.7,"verdict":"PASS"}

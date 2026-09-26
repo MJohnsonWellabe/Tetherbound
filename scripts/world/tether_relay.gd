@@ -125,6 +125,9 @@ var _centre := Vector2.ZERO
 var _u := Vector2(1.0, 0.0)    ## along the approach bearing
 var _p := Vector2(0.0, 1.0)    ## across it
 var _console_prompt: Node3D = null
+## F04#6: the light over the console that comes on when its captain falls
+## (`console.wake_beacon`). Null when the config leaves it out.
+var _console_beacon: Node3D = null
 var _built := {"walls": 0, "decks": 0, "ramps": 0, "pylons": 0}
 ## SG46: the drained-ground skin and its material, held so the healing can fade
 ## them. Null on a build where `dead_ground.enabled` is false — after a terrain
@@ -1643,6 +1646,74 @@ func _build_console(seam: Node3D, apparatus: Dictionary) -> void:
 	_console_prompt.call("configure", str(console.get("label", "Disable the relay console")), 3.2, true)
 	_console_prompt.connect("activated", _on_console_used)
 	holder.add_child(_console_prompt)
+	_build_console_beacon(holder, console, size)
+
+
+## F04#6 (X04 blind judge on #257): beating Captain Vance changed nothing a
+## player could see -- the one thing the win unlocks is this console, and it
+## looked exactly as it did while it refused. The beacon is that change made
+## visible: a warm light and a short shaft over the console, shown while the
+## console's `requires_flag` is set and the relay is still live, gone once it
+## is disabled (the conduits dying is that beat's own payoff). Presentation
+## only: no collision, no state of its own; it is re-read from the two flags.
+func _build_console_beacon(holder: Node3D, console: Dictionary, size: Vector3) -> void:
+	var cfg: Dictionary = console.get("wake_beacon", {}) as Dictionary
+	if not bool(cfg.get("enabled", false)):
+		return
+	var colour := Color(str(cfg.get("colour", "#ffd89a")))
+	_console_beacon = Node3D.new()
+	_console_beacon.name = "ConsoleWakeBeacon"
+	_console_beacon.visible = false
+	holder.add_child(_console_beacon)
+	var light := OmniLight3D.new()
+	light.name = "Light"
+	light.light_color = colour
+	light.light_energy = float(cfg.get("light_energy", 3.0))
+	light.omni_range = float(cfg.get("light_range_m", 7.0))
+	light.position = Vector3(0.0, size.y + 0.6, 0.0)
+	_console_beacon.add_child(light)
+	var shaft_height := float(cfg.get("shaft_height_m", 3.5))
+	if shaft_height > 0.0:
+		var shaft := MeshInstance3D.new()
+		shaft.name = "Shaft"
+		var mesh := CylinderMesh.new()
+		mesh.top_radius = float(cfg.get("shaft_radius_m", 0.12))
+		mesh.bottom_radius = mesh.top_radius
+		mesh.height = shaft_height
+		var material := StandardMaterial3D.new()
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		material.albedo_color = Color(colour, float(cfg.get("shaft_alpha", 0.55)))
+		material.emission_enabled = true
+		material.emission = colour
+		material.emission_energy_multiplier = float(cfg.get("shaft_emission", 2.0))
+		mesh.material = material
+		shaft.mesh = mesh
+		shaft.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		shaft.position = Vector3(0.0, size.y + shaft_height * 0.5, 0.0)
+		_console_beacon.add_child(shaft)
+	# The gate flag arrives through the ledger, but a local win and a restore
+	# can both land between deltas; a slow poll keeps this honest without a
+	# second listener contract.
+	var timer := Timer.new()
+	timer.name = "WakePoll"
+	timer.wait_time = maxf(float(cfg.get("poll_seconds", 0.5)), 0.1)
+	timer.autostart = true
+	timer.timeout.connect(_sync_console_beacon)
+	_console_beacon.add_child(timer)
+	_sync_console_beacon.call_deferred()
+
+
+## Whether the console is armed: its captain has fallen and the relay is live.
+func console_awake() -> bool:
+	var gate := str(_console().get("requires_flag", ""))
+	return (gate.is_empty() or STORY_LEDGER.world_flag(self, gate)) and not is_disabled()
+
+
+func _sync_console_beacon() -> void:
+	if _console_beacon == null or not is_instance_valid(_console_beacon) or not is_inside_tree():
+		return
+	_console_beacon.visible = console_awake()
 
 
 func _add_console_face_frame(parent: Node3D, frame_name: String,
@@ -1833,6 +1904,7 @@ func lit_conduit_count() -> int:
 ## there is no re-enable, and a player who comes back finds a dead cabinet with
 ## nothing to press.
 func _sync_console() -> void:
+	_sync_console_beacon()
 	if _console_prompt == null or not is_instance_valid(_console_prompt):
 		return
 	_console_prompt.call("set_enabled", not is_disabled())

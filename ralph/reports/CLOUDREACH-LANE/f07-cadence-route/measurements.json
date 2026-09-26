@@ -1,0 +1,27 @@
+{
+  "criterion": "F07#2 remove the measured 885-second no-action stretch (A7 limit 120 s = 600 m at walk 5 m/s)",
+  "model": "tests/test_cloudreach_route_cadence.gd: harness itinerary over the ground-route graph; distances in metres, seconds at walk speed",
+  "earned_save": "tests/fixtures/earned_saves/c1_arrival/ not on main 1c4558f6f; measured on the harness's normal fresh-Meadows-complete route (data model + production walk fixture)",
+  "definitions": {
+    "shipped_deployed": "main data incl. the 11 F07 cadence pairs (69601391c, consolidated), wild bodies count as encounters (companion deployed)",
+    "route_only_deployed": "cadence pairs removed, wild counts",
+    "no_companion": "all wild bodies removed (continuous harness walks without a deployed companion)"
+  },
+  "main_1c4558f6f": {
+    "route_m": 15704,
+    "shipped_deployed_over_600m": {"summit_bivouac spur return": 627},
+    "route_only_deployed_over_600m": {"windscar floor-loop return (the 885 s stretch)": 1609, "finale -> Waterward overlook": 781, "east anchor -> summit road": 750, "west anchor -> arch": 716, "summit_bivouac spur return": 627},
+    "no_companion_over_600m": {"windscar floor-loop return": 1609, "east anchor -> summit road": 1546, "counterweight lower flight": 1223, "finale -> overlook": 781, "west anchor -> arch": 716, "Voss -> bivouac": 628, "bivouac spur": 627},
+    "aerie_to_counterweight_walk_m": 3254,
+    "floor_loop_walk_smoke": "FAIL stalled at (-397.5, 446.9, 2931.5) against WindscarCounterweightPassCliffShoulders/Ridge001"
+  },
+  "after": {
+    "route_m": 13027,
+    "shipped_deployed_over_600m": {"summit_bivouac spur return": 627},
+    "shipped_deployed_longest_other_m": 510,
+    "route_only_deployed_over_600m": {"windscar return (flight_great_01 -> counterweight_pass_06)": 834, "finale -> overlook": 781, "west anchor -> arch": 716, "summit_bivouac spur": 627},
+    "no_companion_over_600m": {"windscar return (flight_great_01 -> counterweight_entered)": 1276, "finale -> overlook": 781, "west anchor -> arch": 716, "Voss -> bivouac": 628, "bivouac spur": 627},
+    "aerie_to_counterweight_walk_m": 1739,
+    "floor_loop_walk_smoke": "PASS outbound over the chain bridge 1858 m; return aerie -> counterweight_entered 1742 m walked via windscar_counterweight_return"
+  }
+}

@@ -1,0 +1,66 @@
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 140/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 0/363 fainted, bramblebun 340/340, terrapup 142/436, brooktail 329/329 (active bramblebun)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+STORMWOOD CONTINUOUS — PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 140/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 0/363 fainted, bramblebun 340/340, terrapup 142/436, brooktail 329/329 (active bramblebun)
+STORMWOOD CONTINUOUS — LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+F11 WITNESS STEP PASS prefix: arrival through Ondra's arch recipe wall=1118.5s
+F11 WITNESS STRIKES prefix {"damage":0.0,"deaths":0,"dodge_frames":220,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":5}
+STORMWOOD CONTINUOUS — RESTED the whole party at still_grove_shelter over 3 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 436/436, brooktail 334/334
+STORMWOOD CONTINUOUS — RESTED the whole party at still_grove_shelter over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 210/443, brooktail 334/334
+F11 WITNESS STEP PASS Capacitor Alpha, Crown gathering, two frames, paid Crown arch wall=1964.2s
+F11 WITNESS STRIKES crown {"damage":0.0,"deaths":0,"dodge_frames":1100,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":34}
+F11 WITNESS STRIKES Crown arrival, guardian, Wen, Rootgate {"damage":0.0,"deaths":0,"dodge_frames":0,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":0}
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 320/320, mudsnout 0/363 fainted, bramblebun 351/351, terrapup 210/443, brooktail 334/334
+STORMWOOD CONTINUOUS — EARNED guardian clearance, Wen truth and physically open Rootgate / Act II
+F11 WITNESS STEP PASS Crown arrival, guardian, Wen, Rootgate wall=89.6s
+F11 TRAINER DEATH during 'walk to ember_bivouac creature bed stance' at (-98.41055, 109.2312, 5370.166); strikes so far {"damage":75.0,"deaths":1,"dodge_frames":1231,"hits":3,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":33}
+F11 SATCHEL walking back to (-98.41055, 109.2312, 5370.166) from (-98.41055, 109.2312, 5370.166)
+F11 SATCHEL recovered 6 stack(s); knife x1 axe x1 pickaxe x1
+F11 WITNESS STRIKES Deepwood, rods, Kestrel, core ascent {"damage":100.0,"deaths":1,"dodge_frames":1231,"hits":4,"satchel_recoveries":1,"satchel_stacks":6,"threats":0,"warnings":33}
+STORMWOOD CONTINUOUS — EARNED stormwood:lantern_hollow_reached
+STORMWOOD CONTINUOUS — DIALOGUE Sable opened 'stormwood_defector_sable_in_progress'
+STORMWOOD CONTINUOUS — EARNED stormwood:captive_truth_learned
+STORMWOOD CONTINUOUS — REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — RESTED the whole party at lantern_hollow_waycamp over 3 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — RESTED the whole party at lantern_hollow_waycamp over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 320/320, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — PARTY before officer_nysa_deepwood_rod: sparkit 320/320, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — DIALOGUE officer_nysa_deepwood_rod opened 'stormwood_trainer_officer_nysa_deepwood_rod_challenge'
+STORMWOOD CONTINUOUS — EARNED stormwood:trainer:officer_nysa_deepwood_rod:defeated
+STORMWOOD CONTINUOUS — EARNED stormwood:rod_deepwood_disabled
+STORMWOOD CONTINUOUS — EARNED stormwood:deepwood_station_disabled
+STORMWOOD CONTINUOUS — REST before outerworks_lieutenant_sera at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — RESTED the whole party at lantern_hollow_waycamp over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 451/451, brooktail 340/340
+STORMWOOD CONTINUOUS — PARTY before outerworks_lieutenant_sera: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 451/451, brooktail 340/340
+STORMWOOD CONTINUOUS — DIALOGUE outerworks_lieutenant_sera opened 'stormwood_trainer_outerworks_lieutenant_sera_challenge'
+STORMWOOD CONTINUOUS — EARNED stormwood:trainer:outerworks_lieutenant_sera:defeated
+STORMWOOD CONTINUOUS — EARNED stormwood:rod_dynamo_disabled
+STORMWOOD CONTINUOUS — EARNED stormwood:all_rods_disabled
+STORMWOOD CONTINUOUS — EARNED stormwood:ember_bivouac_reached
+STORMWOOD CONTINUOUS — REST before officer_kestrel_outer_works at ember_bivouac (nearest open camp on the route)
+STORMWOOD CONTINUOUS — RESTED the whole party at ember_bivouac over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at ember_bivouac: sparkit 325/325, mudsnout 370/370, bramblebun 357/357, terrapup 458/458, brooktail 340/340
+STORMWOOD CONTINUOUS — PARTY before officer_kestrel_outer_works: sparkit 325/325, mudsnout 370/370, bramblebun 357/357, terrapup 458/458, brooktail 340/340
+STORMWOOD CONTINUOUS — DIALOGUE officer_kestrel_outer_works opened 'stormwood_trainer_officer_kestrel_outer_works_challenge'
+STORMWOOD CONTINUOUS — EARNED stormwood:trainer:officer_kestrel_outer_works:defeated
+STORMWOOD CONTINUOUS — EARNED stormwood:kestrel_defeated
+STORMWOOD CONTINUOUS — REST before marrow_core_ascent at ember_bivouac (nearest open camp on the route)
+STORMWOOD CONTINUOUS — RESTED the whole party at ember_bivouac over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at ember_bivouac: sparkit 330/330, mudsnout 376/376, bramblebun 357/357, terrapup 465/465, brooktail 345/345
+STORMWOOD CONTINUOUS — EARNED stormwood:core_reached
+STORMWOOD CONTINUOUS — EARNED Deepwood truth, both remaining rod switches, Kestrel and physical Dynamo core arrival
+F11 WITNESS STEP PASS Deepwood, rods, Kestrel, core ascent wall=2109.0s
+F11 WITNESS STRIKES Marrow five rounds and the real four-conduit Break {}
+F11 WITNESS STEP FAIL Marrow five rounds and the real four-conduit Break wall=0.0s
+F11 WITNESS SAFETY TOTAL trainer_deaths=1 satchel_recoveries=1 satchel_stacks=6 strike_hits=4 warnings=72 damage=100.0
+stormwood continuous FAIL: actual Marrow five-creature roster/prompt absent

@@ -1,0 +1,9 @@
+PASS (d) the active companion is a real Fly carrier, so only the lock can refuse
+PASS (e) Fly bypass: at the landing the only restriction is the counterweight seal's ('')
+FAIL (h) beam-end glide: it ended on verified ground at (-790.6511, 642.4903, 3538.905), not inside or under geometry (recoveries 0)
+PASS (h) beam-end glide: at the landing the only restriction is the counterweight seal's ('')
+PASS (i) seal closes around a flyer: the production recovery took the flyer out of the sealed volume
+PASS (j) seal closes around a flyer with no anchor: at the landing the only restriction is the counterweight seal's ('')
+CLOUDREACH CLOSED GATE SEAL FAIL checks=195 failures=1
+rc=1
+SCRIPT_ERROR_COUNT=0

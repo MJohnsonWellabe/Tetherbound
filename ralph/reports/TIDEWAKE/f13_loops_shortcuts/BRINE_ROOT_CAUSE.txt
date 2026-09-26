@@ -1,0 +1,115 @@
+BRINE TERRACE "fell below terrain" -- root cause (CI batch 23, run 36252654368)
+
+SUMMARY
+The player never left the ground. The terrain SAMPLER was wrong, not the body
+or the collision. Terrain3D 1.0.2 `Terrain3DData::get_height` has a
+near-vertex shortcut: within 0.01 m of a vertex it returns
+`get_pixel(TYPE_HEIGHT, pos)` for the UNROUNDED position, and get_pixel floors.
+A query up to 1 cm BELOW a vertex in x and/or z therefore returns the height of
+the vertex one step down/left. On the 27-degree Brine terrace that is 0.4-0.7 m
+too HIGH, so `water_world.ground_height_at()` reported the ground above a body
+that was standing on the real collision surface, and the smoke's
+BELOW_TERRAIN_M (0.6) check fired. It is intermittent because it needs a
+per-frame body position to land inside that 1 cm window just below a grid
+vertex on steep ground; frame timing decides whether any walk frame does.
+
+Discriminated:
+ (a) collision missing/late -- NO: a ray at the fall point hits
+     /root/WaterArchipelago/Terrain; the collision matches the data vertex
+     heights to 0.00 m on a 0.25/0.5 m grid at all three sites, unchanged
+     across +0/+60/+600 physics frames after load.
+ (b) tunnelling / region seam -- NO: body y equals the collision height at
+     the fall point, vertical velocity 0.0 (walking on floor). The repro fall
+     was at x=548, 36 m from the x=512 seam.
+ (c) placement artefact -- NO: failures occur hundreds of metres into the
+     loop (repro: waypoint 12, 618 m walked), long after placement.
+ (d) sampler vs collision -- YES, see below.
+
+EVIDENCE
+CI batch 23: fell at (503.0, 42.8, 737.0), "ground 43.50" (0.70 under).
+CI batch 24 (run 36257222714): fell at (548.0, 30.9, 705.0), "ground 31.51"
+(0.61 under) -- the identical site and numbers as the local repro below.
+Local repro (step A, probe diagnostic, no added load, 1 of 2 runs):
+  DEFECT: brine_terrace_circuit: waypoint 12 (518.0, 36.4, 738.0) not reached on foot
+  -- fell below terrain at (548.0, 30.9, 705.0) (ground 31.51; velocity (-3.4, 0.0, 3.7);
+  collider /root/WaterArchipelago/Terrain at y 30.85)
+Both "ground" values are the height of the vertex one step down/left of an
+integer vertex the body was a few mm short of:
+
+tests/_tmp_brine_probe.gd (not committed), direct Terrain3D queries:
+  (547.995, 704.995): Terrain3DData.get_height 31.514 | fixed ground_height_at 30.848 | collision ray 30.852
+  (548.000, 705.000): Terrain3DData.get_height 30.848 | fixed ground_height_at 30.848 | collision ray 30.848
+  (502.995, 736.995): Terrain3DData.get_height 43.497 | fixed ground_height_at 42.753 | collision ray 42.756
+  (503.000, 737.000): Terrain3DData.get_height 42.753 | fixed ground_height_at 42.753 | collision ray 42.753
+  (511.995, 737.995): Terrain3DData.get_height 39.577 | fixed ground_height_at 38.827 | collision ray 38.831
+  (535.985, 716.985): Terrain3DData.get_height 34.244 | (outside the 1 cm window: correct)
+  raw vertex (547,704) = 31.514 = the CI/repro "ground" (31.51); raw (502,736) = 43.497 (43.50).
+Island scan, every land vertex x 340..600, z 490..760, queried 5 mm below-left:
+  66145 vertices: raw get_height vs collision >0.05 m: 60354 (worst 5.049 m)
+                  fixed ground_height_at vs collision >0.05 m: 1 (an NPC body, water_adair, not terrain)
+
+Walking both sites (tests/_tmp_brine_walk.gd, not committed; waypoint 0->1
+and 11->12 with real sticks, 3 reps each): 222/222 frames within 1.5 m of the
+sites on_floor=true, feet 0.05 m above the collider under them (the body's
+safe margin), vertical velocity 0.0, velocity (-3.4, 0.0, 3.7) at (548, 705)
+as in batch 24. Samples:
+  near (503.0, 737.0): pos (502.881, 42.802, 737.138) vel (-5.0, 0.0, -0.6) on_floor true raw 42.749 fixed 42.749 collider 42.749 (feet-collider 0.053)
+  near (548.0, 705.0): pos (548.955, 30.504, 704.568) vel (-3.4, 0.0, 3.7) on_floor true raw 30.452 fixed 30.452 collider 30.452 (feet-collider 0.052)
+Those walks did not land a frame inside the 1 cm window (0 detector fires),
+which is the intermittency: the loop's accumulated trajectory decides it.
+
+Sampler vs collision sized honestly (40000 random terrain points per island;
+half of them 0.5-9.9 mm below-left of a vertex):
+  brine (steepest 75 deg): off-vertex |ground_height_at - collision| max 0.386 m
+      (cliff faces; bilinear vs triangle split); within 1 cm of a vertex raw
+      get_height max 4.915 m, fixed ground_height_at max 0.036 m
+  sluice (steepest 29 deg): off-vertex max 0.009 m; near vertex raw max 0.704 m,
+      fixed max 0.007 m
+So interpolation vs triangulation is NOT what fired (<= 0.39 m even on 75-deg
+cliffs, < BELOW_TERRAIN_M); the 1 cm near-vertex shortcut is.
+
+FIX (product, Water-owned: scripts/world/water_world.gd)
+ground_height_at() snaps a query within NEAR_VERTEX_M (0.02 m, covers the
+library's 0.01 m window) onto the vertex itself before calling get_height, so
+the shortcut reads the vertex it meant. Every gameplay caller of Water's
+sampler (creature bodies, combat, riding, ramps, docks) gets the same fix.
+No threshold changed. The smoke diagnostic `_collision_under()` is kept.
+
+SMOKE (tests/smoke_water_loops_shortcuts.gd, coordinator direction)
+ - Fall detector `_below_terrain`: past BELOW_TERRAIN_M (0.6, unchanged) it
+   fires when the body is NOT on its floor or has no collider within
+   FLOOR_PROBE_M (0.3) under its feet; at DEEP_BELOW_TERRAIN_M (2.0) or more it
+   fires regardless. The reason now carries depth, on_floor, support, velocity
+   and the collider under the point.
+ - Controls on every invocation (filtered runs too): SAMPLER_SITES regression
+   (ground_height_at within 0.05 m of the collision 5 mm short of the three
+   Brine vertices) and a negative control (body 3 m under the terrain must trip
+   the detector, then is restored).
+     CONTROL fall detector at (0.0, -1.1, 162.0): fell below terrain at (0.0, -1.1, 162.0)
+     (ground 1.93, 3.03 m under; on_floor=false; collider within 0.3 m below=false; ...)
+     PASS: fall detector fires for a body 3 m under the terrain (negative control)
+ - `--repeat=N`: selected cases N times in one process, per-iteration totals,
+   any failing iteration fails; refused for shortcut cases (one-way unlocks).
+ - CI step A timeout 460 s vs measured step A ~297-323 s (CI batch 24 step:
+   297 s, failing at waypoint 12 of 13; local 320-323 s): >= 1.42x. ci.yml untouched.
+
+NOT FIXED (shared files, outside Water ownership; same library call):
+  scripts/world/playground_world.gd:2186, scripts/world/grass_field.gd:2130,
+  scripts/world/stormwood_world.gd:290 call data.get_height(Vector3(x,0,z))
+  directly and have the same up-to-one-vertex error near vertices. The same
+  snap (or a fix in the Terrain3D addon's get_height: get_pixel(pos_round))
+  is needed there.
+
+PROOF (after fix)
+Local, 4-core container, 2 headless Godot jobs at once (own XDG_DATA_HOME),
+another agent's xvfb render running alongside; "hog" = one extra `yes`.
+ before fix: step A 1 run -> 1 FAIL (the (548, 705) defect above); brine alone 1 pass
+ sampler fix, ORIGINAL strict detector (cannot mask a fall):
+   step A x6 (2 pairs no hog, 1 pair + hog)  -> 6 pass, 0 fail (41 checks each)
+ final code (sampler fix + detector + controls + --repeat):
+   brine alone x1                            -> pass (controls + 18 loop checks)
+   step A --repeat=5 + hog, beside full smoke -> 5/5 iterations pass, 198 checks, 0 failures, 1428.7 s
+     LOOPS/SHORTCUTS ITERATION 1/5 .. 5/5: 38 checks, 0 failures, 0 defects
+   step A iteration under hog (run cut by the runner's own 600 s cap) -> 1 pass
+   full unfiltered smoke + hog                -> 164 checks, 0 failures, 0 defects, 910.3 s
+ Total with the fix: 12 step-A walks, 0 failures (7 under the hog).

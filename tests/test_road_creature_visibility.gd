@@ -15,7 +15,10 @@ const HISTORICAL_BASELINE := {
 		# village gate (27.5,-16) and cuts diagonally through the village; it
 		# continues South Street from (11.5,2), ~20m shorter. Failure ceilings
 		# unchanged (measured after the change: 0 failing samples).
-		"band1_lower_meadows": [240, 124, 130.0],
+		# F01 pond shore: 240 -> 251. The spine's pond bend waded the arm; it
+		# now follows the dry west and south shore, ~110m longer. Order 1086
+		# (two mudsnout on that shore) keeps it at 0 failing samples.
+		"band1_lower_meadows": [251, 124, 130.0],
 		"band2_stone_and_root": [267, 184, 320.0],
 		"band3_the_river_lock": [239, 144, 160.0],
 		"band4_upper_meadows_ironwood": [345, 182, 200.0],

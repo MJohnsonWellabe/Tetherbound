@@ -4,6 +4,8 @@
 # Each segment copies the previous segment's save into its own dir, runs one
 # Godot process through the shared memory limiter, and stops the chain on the
 # first failure (the previous segment's dir remains the last good save).
+# CHAIN_TIMEOUT (seconds, default 5400) bounds each segment; the warden
+# segment walks ~11.4 km to the village and back to the storm road at 1x.
 set -u
 SEED="${1:?seed}"; ROOT="${2:?chain root}"; FIRST="${3:-opening_team}"
 GODOT="${GODOT:-$HOME/godot-bin/godot}"
@@ -24,7 +26,7 @@ for seg in "${SEGMENTS[@]}"; do
     mkdir -p "$dir/save"
   fi
   echo "CHAIN START $seg $(date -u +%FT%TZ)"
-  (cd "$REPO" && TB_WORLD_SEED="$SEED" timeout 5400 "$SLOT_WRAPPER" "$GODOT" --headless --path . \
+  (cd "$REPO" && TB_WORLD_SEED="$SEED" timeout "${CHAIN_TIMEOUT:-5400}" "$SLOT_WRAPPER" "$GODOT" --headless --path . \
      --script tools/earned_saves/earned_chain_runner.gd -- \
      --segment="$seg" --save-dir="$dir/save/" --receipt="$dir/receipt.json") > "$dir/log.txt" 2>&1
   code=$?

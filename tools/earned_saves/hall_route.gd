@@ -25,7 +25,14 @@ const RIVERWATCH := Vector2(211.0, 3700.0)
 const MAX_NIGHTS := 3
 const WELL_RESTED_FRACTION := 0.8
 ## Ruling step 2 switch: when true, bench care no longer re-runs `_prepare()`.
-const BENCH_CARE_PREPARES := true
+## Attempt 7 (BLOCKERS.md B6/B5 ruling step 2): false.
+const BENCH_CARE_PREPARES := false
+## B6: every authored camp creature bed stands at twice its authored
+## coordinates (rest_point.gd gives the child bed the world `at` as its LOCAL
+## position), so riverwatch's bed is at (422,-8.5,7401), not beside the camp;
+## only bedded creatures heal overnight. The pre-Sigil camp rest is kept but
+## switched off until that Meadows defect is fixed.
+const PRE_SIGIL_CAMP := false
 
 
 class CampInput extends TAIL:
@@ -118,7 +125,7 @@ func _bench_care() -> bool:
 
 
 func _travel() -> bool:
-	if not await _pre_sigil_camp_rest():
+	if PRE_SIGIL_CAMP and not await _pre_sigil_camp_rest():
 		return false
 	return await super._travel()
 
@@ -147,11 +154,16 @@ func _pre_sigil_camp_rest() -> bool:
 		return _fail("The riverwatch rest has no real creature bed")
 	var start := Vector2(_player.global_position.x, _player.global_position.z)
 	var back: Array[Vector2] = [_mill.call("far_point", bank), _mill.call("near_point", bank)]
-	var from := nearest_index(band, _v2(road[0]))
-	var to := nearest_index(band, RIVERWATCH)
-	var step := -1 if to < from else 1
-	for index in range(from, to + step, step):
-		back.append(band[index])
+	# Attempt 5: band3's own points run straight through the Relay apparatus
+	# (stuck at (334,3756) short of (230,3670)). Walk back the exact road the
+	# relay helper walked forward (`mill_path`: relay_approach_loop, then band3
+	# to the Mill road), reversed; the loop's first point is beside the camp.
+	var relay_loop := trail_points(terrain, "loops", "relay_approach_loop")
+	if relay_loop.is_empty():
+		return _fail("The authored relay_approach_loop is unavailable for the pre-Sigil rest")
+	var forward := mill_path(terrain, relay_loop[0])
+	forward.reverse()
+	back.append_array(forward)
 	_receipt("pre_sigil_camp_route", {"from": start, "camp": RIVERWATCH, "waypoints": back.size(),
 		"party": _hp_rows()})
 	for point: Vector2 in back:

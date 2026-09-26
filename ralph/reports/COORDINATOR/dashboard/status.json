@@ -1,11 +1,11 @@
 {
- "updated": "2026-09-26 18:25 UTC",
+ "updated": "2026-09-26 19:40 UTC",
  "headline": [
-  "Criteria met: 44 of 107 (no change this hour). WIND-DOWN in progress on the owner's direction.",
-  "Batch 25 (#283) is the single combined batch: every lane's READY work plus the brine-detector fix. Local checks: 1555 tests, 0 failed. Review PASS. All other CI runs were cancelled; full CI is running with auto-merge.",
-  "Lanes archived (7 of 9): Meadows core, Art, X03, Stormwood, X05, Cloudreach, VIS. All handoff SHAs were verified on origin. F05 and Tidewake are posting final handoffs; the F08#3 judge session is posting its verdict to #253.",
-  "Parked as WIP (on origin, recorded): Stormwood f11-earned 6a4089e2a (road bake stale); Meadows village-roads 49b2915c8 (breaks herd approach); plus each lane's WIP list in its HANDOFF (final).",
-  "Next: when #283 merges, one docs PR adds STATE 'Resume here' and ralph/reports/COORDINATOR (tooling snapshot on ralph/coordinator-tooling a78dd0b7)."
+  "Criteria met: 44 of 107 (no change this hour; batch 25–26 claims F01#4/#5, F15#3, F11#0/#2/#3, F13#1, F07#2/#4 await re-scoring after full CI on main). WIND-DOWN: all 9 lanes archived.",
+  "Batch 25 (#283) merged 19:19 on full CI.",
+  "Batch 26 (claude/integration-26): every remaining lane branch tip, plus the Stormwood f11 re-bake fix, the Cloudreach f07 route-ledger fix and the STATE 'Resume here' section. Local checks: 1142 tests, 0 failed. Lands on fast-tier CI (owner's fast path); then full ci.yml on main.",
+  "Batch 27: the Meadows herd-approach fix (fix/meadows-herd), still in progress.",
+  "After that: every ralph/*, claude/*, fix/* branch is contained in main except the owner's claude/lane-restart-planning-615w4s."
  ],
  "batches": [
   {
@@ -42,7 +42,7 @@
    "name": "CI speedup (PR #240)",
    "sha": "bfbcbd94",
    "state": "Merged",
-   "contents": "Longest job 21.6\u219216.2 min; runner-min 269\u2192249"
+   "contents": "Longest job 21.6→16.2 min; runner-min 269→249"
   },
   {
    "name": "Batch 6 (PR #242)",
@@ -187,31 +187,37 @@
    "sha": "d4735c50",
    "state": "Full CI running; review PASS",
    "contents": "Batch 24 + all lanes' READY work (Art defeat reaction and docks, Cloudreach chain-bridge, X03 Juno, Stormwood net fixes, X05 Steam slices, Tidewake Veilfall, VIS audit) + brine detector fix"
+  },
+  {
+   "name": "Batch 26",
+   "sha": "e3bc011a6",
+   "state": "Fast-tier CI",
+   "contents": "All remaining lane tips; Stormwood/Cloudreach fixes; STATE handoff"
   }
  ],
  "lanes": [
   {
-   "lane": "Meadows core (F01\u2013F04)",
+   "lane": "Meadows core (F01–F04)",
    "now": "Archived after handoff",
    "next": "Post walk results on ralph/f01-walks"
   },
   {
    "lane": "Meadows finale (F05)",
    "now": "Posting final handoff",
-   "next": "\u2014"
+   "next": "—"
   },
   {
-   "lane": "Cloudreach (F06\u2013F08)",
+   "lane": "Cloudreach (F06–F08)",
    "now": "Archived after handoff",
    "next": "F08#3 art defects; co-op road shoulders (owner ruling)"
   },
   {
-   "lane": "Stormwood (F09\u2013F11)",
+   "lane": "Stormwood (F09–F11)",
    "now": "Archived after handoff",
-   "next": "\u2014"
+   "next": "—"
   },
   {
-   "lane": "Tidewake (F12\u2013F15)",
+   "lane": "Tidewake (F12–F15)",
    "now": "Posting final handoff",
    "next": "F12#0, F13#0"
   },

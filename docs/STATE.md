@@ -10,6 +10,41 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 **Recovery:** all authored unfinished work is pushed to `ralph/meadows-recovery-pr175`. Start from current origin/main and inspect that branch selectively; its old ROADMAP edits are preserved drafts, not a replacement for main's approved plan. Tournament and river/Sela witnesses remain unfinished; the bounded guardian witness is now merged. Generated import/UID churn is excluded. Evidence lives in MEADOWS-PAYOFFS/guardian-admission; river remains parser-only. The owner explicitly resumed PR175 integration/testing after the 10% usage stop.
 
+## 0. Resume here (lane wind-down, 2026-09-26)
+
+All nine lane sessions were wound down and archived on owner direction: Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03 and VIS.
+- Every lane posted `## HANDOFF (final)` on its PR. Each showed clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
+- **All lane work is on main** through batches 25 (#283) and 26. Every `ralph/*`, `claude/integration-*` and `fix/*` tip is an ancestor of main, so any branch other than main can be deleted.
+  - One exception: `claude/lane-restart-planning-615w4s` is the owner's own planning session, and it was left alone.
+- **ACCEPTANCE §6.1:** 44 of 107 were met at batch 24. Batches 25 and 26 claim F01#4/#5, F15#3, F11#0/#2/#3, F13#1 and F07#2/#4. Re-score them on the board before counting them.
+- **Acceptance Board:** rebuild it from `ralph/reports/COORDINATOR/`. Its README gives the scoring rule, the rebuild steps and the artifact URL.
+- **To resume a lane:** open its handoff comment, branch from current main, and continue from the next step below.
+- **Fast-path landing:** batch 26 landed on fast-tier CI. Run the full `ci.yml` on main, and treat any red there as the first fix-forward task.
+
+| Lane (handoff) | Landed work | Next step |
+|---|---|---|
+| Meadows core (#270) | F04#7 fight framing, F01#0 village/spine roads, F01 topology follow-ups | The village-roads band1 spawn broke `smoke_local_requests --only=herd` (the player is 1312 m from the prompt). A fix was in progress on `fix/meadows-herd` at wind-down; land it or redo it. F04#7 needs the 18-frame capture and a code-blind re-judge. |
+| F05 | F02 practice supply | Per its handoff. |
+| Cloudreach (#253) | F06 earned-handoff WIP, F07#2 cadence route with XP restored by wild pairs, which was ruling (a) (`test_cloudreach_route_ledger` passes, L33 before Captain Veyra), F06#6 mid-ride CI proof, chain-bridge stall fix | Unrelated to this batch's changes, the game drops wild sites `road_visibility_windscar_floor_loop_05/06` for unsupported placements. F06#0 is stuck at B13, where `_excluded()` in `cloudreach_look.gd:289` scans 554K times (130 s). |
+| Stormwood (#250) | F11#0/#3 earned (seats plus the moved pickup 11, scatter and terrain manifest re-baked), F09#3 pocket lures | F09#3 round 6: add a light shaft over each pocket's reward, then re-judge. |
+| Tidewake (#226) | Brine sampler product fix (`water_world.gd::ground_height_at`), F14/F15 two-peer reruns, title-continue probe, Veilfall r1 verdict | Per the handoff. |
+| Art X04 (#248) | Bramblebun Meshy candidate (raw glb), Tidewake matrix capture | Finish the Bramblebun candidate; its task IDs are in the handoff. |
+| X05 (#282) | F06#5 host-restart evidence, F14 participants proof WIP | F06#5 is blocked by the Cloudreach `_excluded()` slowness above. |
+| X03 (#262) / VIS (#279) | Glyph highlights; shared-look WIP | The ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
+
+**Open owner decisions:**
+- F11#2 legacy receipt.
+- F10#6 needs an ROG Ally run.
+- Cloudreach co-op shoulders and cliff palette.
+- Steamworks redistribution sign-off for `steam_api64.dll`.
+
+**Coordinator rulings made this session, to keep:**
+- Co-op matches single player, and rejoin returns to the exact spot (same host world only).
+- Village and spine roads are widened for the roughly 2 m/texel control map.
+- F14 named wilds are judged by the named-wild rule, and a top-trainer damage tunable is authorized.
+- F07#2 keeps both criteria, through route XP option (a).
+- Criteria are numbered from zero within each F-row.
+
 ## 1. Product decision
 
 **Follow-up:** the six owner-requested Matt Pocock skill packages are committed in `.claude/skills/` and mirrored in Codex's `.agents/skills/` at fb354d0ec, with upstream metadata/license and project overrides in AGENTS/CLAUDE. The owner answered the first `grill-me` round:

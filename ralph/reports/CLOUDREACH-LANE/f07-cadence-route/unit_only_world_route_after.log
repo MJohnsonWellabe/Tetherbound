@@ -1,0 +1,59 @@
+  ok    test_cloudreach_counterweight_seal.gd :: test_every_collidable_top_face_of_the_closed_gate_is_fly_sealed
+  ok    test_cloudreach_counterweight_seal.gd :: test_every_stair_point_past_the_gate_is_fly_sealed
+  ok    test_cloudreach_counterweight_seal.gd :: test_gate_spans_the_route_ridge_walkable_width
+  ok    test_cloudreach_counterweight_seal.gd :: test_gate_stands_where_the_pass_enters_upper_cloudreach_past_the_beacon
+  ok    test_cloudreach_counterweight_seal.gd :: test_legal_pre_unlock_content_is_outside_every_upper_seal
+  ok    test_cloudreach_counterweight_seal.gd :: test_nothing_fly_gated_is_walkable_before_the_upper_unlock
+  ok    test_cloudreach_route_cadence.gd :: test_cadence_sites_are_gated_native_route_pairs
+CLOUDREACH ROUTE CADENCE PRE-FIX {"from":"pickup:cr_candy_windscar_flight_great_01","leg":"counterweight_pass","longest_gap_m":833.6,"over_limit":{"arrive:summit_bivouac -> arrive:summit_threshold":627.136352539062,"arrive:upper_anchor_west -> pickup:cr_candy_upper_detour_great_03":716.45311808816,"flight:finale -> pickup:cr_candy_summit_detour_great_02":781.324890270367,"pickup:cr_candy_windscar_flight_great_01 -> wild:road_visibility_windscar_counterweight_pass_06":833.63277558256},"to":"wild:road_visibility_windscar_counterweight_pass_06"}
+  ok    test_cloudreach_route_cadence.gd :: test_check_rejects_the_pre_fix_route_data
+  ok    test_cloudreach_route_cadence.gd :: test_observatory_link_removes_the_east_anchor_out_and_back
+CLOUDREACH ROUTE CADENCE {"at":"(-270.5999, 464.2, 3119.6) -> (-686.7338, 580.8041, 3338.895)","from":"wild:road_visibility_windscar_floor_loop_return_01","leg":"counterweight_pass","longest_gap_m":509.8,"longest_gap_s_at_walk":102.0,"over_limit":{"arrive:summit_bivouac -> arrive:summit_threshold":627.136352539062},"route_m":13026.6,"to":"wild:road_visibility_windscar_counterweight_pass_06"}
+  ok    test_cloudreach_route_cadence.gd :: test_required_route_has_no_a7_empty_interval
+CLOUDREACH ROUTE CADENCE DEFINITIONS {"route_only_deployed":{"over_limit":{"arrive:summit_bivouac -> arrive:summit_threshold":627.136352539062,"arrive:upper_anchor_west -> pickup:cr_candy_upper_detour_great_03":716.45311808816,"flight:finale -> pickup:cr_candy_summit_detour_great_02":781.324890270367,"pickup:cr_candy_windscar_flight_great_01 -> wild:road_visibility_windscar_counterweight_pass_06":833.63277558256},"worst_m":833.6},"route_only_no_companion":{"over_limit":{"arrive:summit_bivouac -> arrive:summit_threshold":627.136352539062,"arrive:upper_anchor_west -> pickup:cr_candy_upper_detour_great_03":716.45311808816,"flight:finale -> pickup:cr_candy_summit_detour_great_02":781.324890270367,"npc:captain_veyra -> camp:summit_bivouac":628.136352539062,"pickup:cr_candy_windscar_flight_great_01 -> arrive:counterweight_pass":1276.32324829055},"worst_m":1276.3},"shipped_no_companion":{"over_limit":{"arrive:summit_bivouac -> arrive:summit_threshold":627.136352539062,"arrive:upper_anchor_west -> pickup:cr_candy_upper_detour_great_03":716.45311808816,"flight:finale -> pickup:cr_candy_summit_detour_great_02":781.324890270367,"npc:captain_veyra -> camp:summit_bivouac":628.136352539062,"pickup:cr_candy_windscar_flight_great_01 -> arrive:counterweight_pass":1276.32324829055},"worst_m":1276.3}}
+  ok    test_cloudreach_route_cadence.gd :: test_route_only_return_interval_and_both_offer_definitions
+CLOUDREACH WINDSCAR RETURN {"vertices":["400,610,3250","400,610,3250","373,610,3263","120,520,3380","-300,460,3100","-650,570,3300","-820,620,3480","-720,700,3680","-720,700,3680"],"walked_m":1739.1}
+  ok    test_cloudreach_route_cadence.gd :: test_windscar_return_closes_the_floor_loop
+  FAIL  test_cloudreach_route_ledger.gd :: test_every_retained_member_meets_each_required_fights_band
+          expected true, got false  (Captain Veyra: the lead reaches L31 but the ace is L34 and the band asks for L32 + 1 margin (3/6 wild defeats, +4 candy levels, no catch))
+  ok    test_cloudreach_route_ledger.gd :: test_gates_are_respected_leg_by_leg
+  FAIL  test_cloudreach_route_ledger.gd :: test_negative_controls_fail_the_same_assertion
+          expected 0, got 3  (baseline must pass for the controls to mean anything)
+  ok    test_cloudreach_route_ledger.gd :: test_no_required_step_requires_a_catch
+  ok    test_cloudreach_route_ledger.gd :: test_required_coin_income_before_the_finale_covers_two_losses
+  ok    test_cloudreach_route_ledger.gd :: test_required_interaction_costs_have_a_150_percent_route_supply
+  ok    test_cloudreach_route_ledger.gd :: test_the_replayed_route_follows_the_harness_and_the_data_gates
+  FAIL  test_cloudreach_route_ledger.gd :: test_the_retained_five_leave_cloudreach_inside_the_envelope
+          expected true, got false  (the lead leaves Cloudreach at L32 against WORLD §2.4's exit target L33 + 1 margin)
+          expected true, got false  (the weakest retained member leaves at L30 against L30 + 1 margin)
+  ok    test_cloudreach_route_verges.gd :: test_route_ecology_owns_no_collision_or_gameplay_state
+  ok    test_cloudreach_route_verges.gd :: test_route_ecology_plan_is_bounded_clear_and_deterministic
+  ok    test_cloudreach_route_verges.gd :: test_route_ecology_reaches_every_grounded_route_and_skips_flight
+  ok    test_cloudreach_world_data.gd :: test_authored_extent_is_large_and_vertical_enough_for_a_real_chapter
+  ok    test_cloudreach_world_data.gd :: test_authored_unlock_connects_upper_and_summit_without_using_high_roost_as_a_road
+  ok    test_cloudreach_world_data.gd :: test_bridges_are_authored_on_real_routes_with_measured_spans
+  ok    test_cloudreach_world_data.gd :: test_config_is_readable_and_identifies_cloudreach
+  ok    test_cloudreach_world_data.gd :: test_exact_six_directive_regions_are_authored_in_order
+  ok    test_cloudreach_world_data.gd :: test_fly_route_and_gate_protect_high_roost
+  ok    test_cloudreach_world_data.gd :: test_ground_graph_stops_at_windscar_before_the_authored_unlock
+  ok    test_cloudreach_world_data.gd :: test_high_roost_is_visible_early_but_fly_only
+  ok    test_cloudreach_world_data.gd :: test_landmark_ids_are_unique_and_every_region_has_a_valid_landmark
+  ok    test_cloudreach_world_data.gd :: test_meadows_entry_and_return_points_are_explicit_and_safe
+  ok    test_cloudreach_world_data.gd :: test_region_positions_and_bounds_are_valid_and_inside_the_realm
+  ok    test_cloudreach_world_data.gd :: test_routes_reference_regions_and_keep_every_authored_point_in_bounds
+  ok    test_cloudreach_world_data.gd :: test_sky_shrine_authors_the_upper_route_unlock
+  ok    test_cloudreach_world_payoffs.gd :: test_side_payoffs_restore_each_independent_canonical_fact
+  ok    test_cloudreach_world_payoffs.gd :: test_tavi_rematch_is_a_distinct_once_only_tier_using_the_existing_team_and_reward
+  ok    test_cloudreach_world_presets.gd :: test_a_comment_string_in_any_position_does_not_abort_the_merge
+  ok    test_cloudreach_world_presets.gd :: test_a_missing_or_non_dictionary_times_block_merges_nothing
+  ok    test_cloudreach_world_presets.gd :: test_atmosphere_colours_become_the_base_and_only_the_fog_delta_stays_weather
+  ok    test_cloudreach_world_presets.gd :: test_merging_the_real_art_json_touches_every_preset_and_no_comment
+  ok    test_cloudreach_world_presets.gd :: test_the_cloudreach_night_override_lifts_shadow_fill_but_stays_night
+  ok    test_cloudreach_world_presets.gd :: test_the_shipped_art_json_times_block_still_carries_comment_strings
+  ok    test_cloudreach_world_presets.gd :: test_the_shipped_cloudreach_night_is_darker_than_its_day
+  ok    test_cloudreach_world_presets.gd :: test_time_overrides_win_skip_comments_and_ignore_unknown_presets
+46 tests, 1422 assertions, 3 failed
+  test_cloudreach_route_ledger.gd :: test_every_retained_member_meets_each_required_fights_band — expected true, got false  (Captain Veyra: the lead reaches L31 but the ace is L34 and the band asks for L32 + 1 margin (3/6 wild defeats, +4 candy levels, no catch))
+  test_cloudreach_route_ledger.gd :: test_negative_controls_fail_the_same_assertion — expected 0, got 3  (baseline must pass for the controls to mean anything)
+  test_cloudreach_route_ledger.gd :: test_the_retained_five_leave_cloudreach_inside_the_envelope — expected true, got false  (the lead leaves Cloudreach at L32 against WORLD §2.4's exit target L33 + 1 margin)
+  test_cloudreach_route_ledger.gd :: test_the_retained_five_leave_cloudreach_inside_the_envelope — expected true, got false  (the weakest retained member leaves at L30 against L30 + 1 margin)
