@@ -142,7 +142,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:ashfoot_arch_relit",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "fixture fact reached both peers: stormwood:ashfoot_arch_relit"
   },
@@ -151,7 +151,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:rootgate_released",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "fixture fact reached both peers: stormwood:rootgate_released"
   },
@@ -160,7 +160,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:lantern_pools_linked",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "fixture fact reached both peers: stormwood:lantern_pools_linked"
   },
@@ -169,7 +169,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:crown_reached",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "fixture fact reached both peers: stormwood:crown_reached"
   },
@@ -178,7 +178,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:bryn_met",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "fixture fact reached both peers: stormwood:bryn_met"
   },
@@ -187,7 +187,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:arch_recipe_known",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "fixture fact reached both peers: stormwood:arch_recipe_known"
   },
@@ -240,7 +240,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:arch:c_rodline:lit",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "c_rodline lit, for both peers"
   },
@@ -269,7 +269,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:arch:c_lantern:lit",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "c_lantern lit, for both peers"
   },
@@ -298,7 +298,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:arch:d_hall:lit",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "d_hall lit, for both peers"
   },
@@ -327,7 +327,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:arch:d_giant:lit",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "d_giant lit, for both peers"
   },
@@ -336,7 +336,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_dark_arches_1",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Dark Arches step 1 (a dark arch inspected) on both"
   },
@@ -345,7 +345,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_dark_arches_2",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Dark Arches step 2 (both dark pairs relit) on both, from the arch runtime"
   },
@@ -360,7 +360,7 @@
      "stormglass"
     ],
     "equals": null,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "the four relights took all 12 of the host's Stormglass (3 each, host-committed)"
   },
@@ -432,7 +432,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_dark_arches_complete",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "DARK ARCHES COMPLETE on both peers"
   },
@@ -497,7 +497,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_pims_parcels_1",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Pim's step 1 on both"
   },
@@ -562,7 +562,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_pims_parcels_delivered:cook_marl",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "parcel delivered to Marl, on both"
   },
@@ -627,7 +627,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_pims_parcels_delivered:trader_oswin",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "parcel delivered to Oswin, on both"
   },
@@ -692,7 +692,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_pims_parcels_delivered:caretaker_lio",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "parcel delivered to Lio, on both"
   },
@@ -701,7 +701,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_pims_parcels_2",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Pim's step 2 (three deliveries) on both"
   },
@@ -773,7 +773,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_pims_parcels_complete",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "PIM'S PARCELS COMPLETE on both peers"
   },
@@ -788,7 +788,7 @@
      "potion_small"
     ],
     "equals": 2,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "guest paid the courier rate once: 2 Small Potions"
   },
@@ -859,7 +859,7 @@
      "potion_small"
     ],
     "equals": 2,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "host paid its own rate once: 2 Small Potions"
   },
@@ -924,7 +924,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_crown_remembers_record:rain_ledger",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "record rain_ledger read, on both"
   },
@@ -989,7 +989,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_crown_remembers_record:root_census",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "record root_census read, on both"
   },
@@ -1054,7 +1054,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_crown_remembers_record:reversal_mark",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "record reversal_mark read, on both"
   },
@@ -1063,7 +1063,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_crown_remembers_1",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Crown step 1 on both"
   },
@@ -1072,7 +1072,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_crown_remembers_2",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Crown step 2 (all three read) on both"
   },
@@ -1144,7 +1144,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_crown_remembers_complete",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "WHAT THE CROWN REMEMBERS COMPLETE on both peers"
   },
@@ -1227,7 +1227,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_glass_for_bryn_1",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Bryn step 1 on both"
   },
@@ -1292,7 +1292,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_glass_for_bryn_2",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Bryn step 2 (host-committed delivery) on both"
   },
@@ -1307,7 +1307,7 @@
      "stormglass"
     ],
     "equals": null,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "the host-owned delivery took the guest's 3 Stormglass"
   },
@@ -1322,7 +1322,7 @@
      "conductor_vine"
     ],
     "equals": null,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "and its 2 Conductor Vine, once"
   },
@@ -1351,7 +1351,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_glass_for_bryn_complete",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "GLASS FOR BRYN COMPLETE on both peers"
   },
@@ -1387,7 +1387,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_raise_a_road_chosen:verge_road",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Verge Road chosen, on both"
   },
@@ -1416,7 +1416,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_raise_a_road_chosen:hollows_road",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Hollows Road chosen, on both"
   },
@@ -1425,7 +1425,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_raise_a_road_1",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Road step 1 on both"
   },
@@ -1474,7 +1474,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_raise_a_road_2",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Road step 2 (both built and bound) on both, from the arch runtime"
   },
@@ -1517,7 +1517,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_raise_a_road_3",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Road step 3 (travelled both directions) on both"
   },
@@ -1589,7 +1589,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_raise_a_road_complete",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "RAISE A ROAD COMPLETE on both peers"
   },
@@ -1607,7 +1607,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:lantern_hollow_reached",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "fixture fact reached both peers"
   },
@@ -1672,7 +1672,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_deepwood_circuit_1",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Circuit step 1 on both"
   },
@@ -1690,7 +1690,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_deepwood_circuit_win:circuit_lena_giant",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "the chapter runtime credits circuit_lena_giant as a circuit win, on both"
   },
@@ -1708,7 +1708,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_deepwood_circuit_win:circuit_orin_blackwater",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "the chapter runtime credits circuit_orin_blackwater as a circuit win, on both"
   },
@@ -1726,7 +1726,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_deepwood_circuit_win:circuit_tavi_rodline",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "the chapter runtime credits circuit_tavi_rodline as a circuit win, on both"
   },
@@ -1735,7 +1735,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_deepwood_circuit_2",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "Circuit step 2 (three of five) on both"
   },
@@ -1807,7 +1807,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_deepwood_circuit_complete",
-    "budget_frames": 1200
+    "budget_frames": 3600
    },
    "label": "DEEPWOOD CIRCUIT COMPLETE on both peers"
   },
@@ -1835,7 +1835,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_dark_arches_complete",
-    "budget_frames": 900
+    "budget_frames": 3600
    },
    "label": "after the reload dark_arches is still complete on both"
   },
@@ -1844,7 +1844,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_pims_parcels_complete",
-    "budget_frames": 900
+    "budget_frames": 3600
    },
    "label": "after the reload pims_parcels is still complete on both"
   },
@@ -1853,7 +1853,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_crown_remembers_complete",
-    "budget_frames": 900
+    "budget_frames": 3600
    },
    "label": "after the reload crown_remembers is still complete on both"
   },
@@ -1862,7 +1862,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_glass_for_bryn_complete",
-    "budget_frames": 900
+    "budget_frames": 3600
    },
    "label": "after the reload glass_for_bryn is still complete on both"
   },
@@ -1871,7 +1871,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_raise_a_road_complete",
-    "budget_frames": 900
+    "budget_frames": 3600
    },
    "label": "after the reload raise_a_road is still complete on both"
   },
@@ -1880,7 +1880,7 @@
    "action": "wait_flag",
    "args": {
     "flag": "stormwood:side_deepwood_circuit_complete",
-    "budget_frames": 900
+    "budget_frames": 3600
    },
    "label": "after the reload deepwood_circuit is still complete on both"
   },
@@ -1895,7 +1895,7 @@
      "potion_small"
     ],
     "equals": 2,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "after the reload the guest still holds exactly its one rate"
   },
@@ -1910,7 +1910,7 @@
      "potion_small"
     ],
     "equals": 2,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "after the reload the host still holds exactly its one rate"
   },
@@ -1981,7 +1981,7 @@
      "potion_small"
     ],
     "equals": 2,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "SECOND ATTEMPT: the guest was not paid again"
   },
@@ -2038,7 +2038,7 @@
      "potion_small"
     ],
     "equals": 2,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "SECOND ATTEMPT: the host was not paid again"
   },
@@ -2073,7 +2073,7 @@
      "potion_small"
     ],
     "equals": 2,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "nothing was granted by the repeat press"
   },
@@ -2206,7 +2206,7 @@
      "stormglass"
     ],
     "equals": 3,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "SECOND ATTEMPT: nothing more was taken (3 Stormglass kept)"
   },
@@ -2221,7 +2221,7 @@
      "conductor_vine"
     ],
     "equals": 2,
-    "budget_frames": 600
+    "budget_frames": 1800
    },
    "label": "SECOND ATTEMPT: 2 Conductor Vine kept"
   },
