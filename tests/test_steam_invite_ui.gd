@@ -12,6 +12,12 @@ var game: Node
 var saver: RefCounted
 
 
+func test_the_join_friend_screen_names_who_sent_the_invitation() -> void:
+	assert_true(TITLE.friend_invite_text("Rin").begins_with("Rin invited you to their world."))
+	assert_true(TITLE.friend_invite_text("  ").begins_with("A friend invited you"),
+		"no Steam name falls back to a friend")
+
+
 class LobbyErrorStub extends RefCounted:
 	var message := ""
 
