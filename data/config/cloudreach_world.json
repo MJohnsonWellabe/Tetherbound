@@ -408,6 +408,28 @@
       "requires_unlock": "cloudreach_upper_route_unlocked",
       "polyline": [[100.0, 1160.0, 5350.0], [520.0, 1210.0, 5520.0], [160.0, 1180.0, 5740.0], [-420.0, 1110.0, 5650.0], [-520.0, 1080.0, 5300.0], [100.0, 1160.0, 5350.0]],
       "purpose": "Summit circuit around the stronghold, final arena and Waterward Overlook."
+    },
+    {
+      "id": "windscar_counterweight_return",
+      "from_region_id": "windscar_ravine",
+      "to_region_id": "windscar_ravine",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "polyline": [[-300.0, 460.0, 3100.0], [-650.0, 570.0, 3300.0]],
+      "purpose": "Return leg that closes the Windscar floor loop: from the chain bridge's far landing straight up to the counterweight stair's second landing, so the post-shrine return from the aerie no longer re-crosses the bridge to the junction.",
+      "_why_f07_route_edit": "F07#2 (WORLD 2.1 'use shortcuts and route edits to remove dead travel'). The floor loop dead-ended at the aerie; the required aerie -> counterweight return walked the whole loop back over the chain bridge to the Windscar junction and up the stair's lower flight (3,254 m, the recorded 885.87 s stretch). Both ends are existing pads (floor-loop vertex 2, counterweight vertex 2), the leg runs perpendicular to the chain bridge (clear of its deck), and it joins the stair 780 m of arc below the sealed upper_counterweight_gate, so the seal and its protected regions are unchanged. It opens with the stair it feeds."
+    },
+    {
+      "id": "observatory_summit_link",
+      "from_region_id": "upper_cloudreach",
+      "to_region_id": "upper_cloudreach",
+      "bidirectional": true,
+      "traversal_mode": "ground",
+      "requires_unlock": "cloudreach_upper_route_unlocked",
+      "polyline": [[430.0, 920.0, 4500.0], [450.0, 900.0, 4660.0]],
+      "purpose": "Short saddle from the Old Wind Observatory pad to the summit road's first bend, closing the plateau/summit-road fork into a triangle.",
+      "_why_f07_route_edit": "F07#2 (WORLD 2.1). The plateau circuit and the summit road both leave the (-180,900,4720) fork and end 161 m apart; after the east anchor at the observatory the required route walked 649 m west to the fork and 633 m back east on the summit road. Both ends are existing pads; no landmark, region or gate changes."
     }
   ],
   "bridges": [

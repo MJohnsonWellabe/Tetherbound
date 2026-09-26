@@ -91,6 +91,91 @@ func test_check_rejects_the_pre_fix_route_data() -> void:
 		"the cadence check has teeth: the pre-fix data still reads as an A7 failure")
 
 
+## F07#2 route shape. The recorded 885.87 s stretch was a forced re-walk: the
+## Windscar floor loop dead-ended at the aerie, so the required return from the
+## aerie dais to the counterweight stair walked the whole floor loop back over
+## the chain bridge to the Windscar junction and up the stair's lower flight
+## (3,254 m). `windscar_counterweight_return` closes the loop from the chain
+## bridge's far landing to the stair (WORLD §2.1: route edits, not scatter).
+const WINDSCAR_JUNCTION := Vector3(-100, 470, 2440)
+const CHAIN_BRIDGE_WEST := Vector3(-520, 430, 2720)
+const PLATEAU_SUMMIT_FORK := Vector3(-180, 900, 4720)
+const SUMMIT_ROAD_FIRST_BEND := Vector3(450, 900, 4660)
+## Main walked 3,254 m; the loop return is ~1,700 m. Ceiling with headroom.
+const WINDSCAR_RETURN_CEILING_M := 2000.0
+## Route-only (no F07 cadence pairs) longest no-action stretch on the return
+## leg: 1,609 m on main, 834 m after the return leg. Still over A7 route-only;
+## the fly-gated return content on the floor loop carries the remainder.
+const ROUTE_ONLY_RETURN_CEILING_M := 900.0
+
+
+func test_windscar_return_closes_the_floor_loop() -> void:
+	var data := _data(false)
+	var physical: Dictionary = data.physical
+	var aerie := _v(_by_id(physical.get("interactions", [])).flight_trial_start.position)
+	var entered := _v(_by_id(physical.get("ground_triggers", [])).counterweight_entered.position)
+	var path := _navigate(data.world, aerie, entered, POST_FLIGHT)
+	var length := 0.0
+	for index in path.size() - 1:
+		length += path[index].distance_to(path[index + 1])
+	print("CLOUDREACH WINDSCAR RETURN " + JSON.stringify({"walked_m": snappedf(length, 0.1),
+		"vertices": path.map(func(at: Vector3) -> String: return "%.0f,%.0f,%.0f" % [at.x, at.y, at.z])}))
+	assert_false(path.has(WINDSCAR_JUNCTION),
+		"the aerie return no longer walks back to the Windscar junction (dead-end re-walk)")
+	assert_false(path.has(CHAIN_BRIDGE_WEST),
+		"the aerie return no longer re-crosses the chain bridge")
+	assert_true(length <= WINDSCAR_RETURN_CEILING_M,
+		"aerie -> counterweight stair walks %.0f m; the loop return keeps it under %.0f m"
+		% [length, WINDSCAR_RETURN_CEILING_M])
+	var shortcut: Dictionary = _by_id(data.world.get("routes", [])).get("windscar_counterweight_return", {})
+	assert_false(shortcut.is_empty(), "the Windscar return leg is authored")
+	if not shortcut.is_empty():
+		assert_eq(str(shortcut.get("requires_unlock", "")), "cloudreach_upper_route_unlocked",
+			"the return leg opens with the counterweight stair it feeds")
+		var floor_loop: Array = _by_id(data.world.get("routes", [])).windscar_floor_loop.polyline
+		var pass_line: Array = _by_id(data.world.get("routes", [])).windscar_counterweight_pass.polyline
+		assert_true(floor_loop.has(shortcut.polyline[0]), "the return leg starts on a floor-loop vertex")
+		assert_true(pass_line.has(shortcut.polyline[-1]), "the return leg lands on a counterweight vertex")
+		var gate: Dictionary = _by_id(data.world.get("gates", [])).upper_counterweight_gate
+		var gate_s := _arc_to(_points(pass_line), _v(gate.position))
+		assert_true(_arc_to(_points(pass_line), _v(shortcut.polyline[-1])) < gate_s - 50.0,
+			"the return leg joins the stair on the sealed gate's legal (Windscar) side")
+
+
+func test_observatory_link_removes_the_east_anchor_out_and_back() -> void:
+	var data := _data(false)
+	var physical: Dictionary = data.physical
+	var east := _prompt(_by_id(physical.get("interactions", [])).upper_anchor_east)
+	var voss := _v(_by_id(data.scene_runtime.get("battle_yards", [])).officer_voss_summit_approach.road_position)
+	var path := _navigate(data.world, east, voss, UPPER_ANCHORS)
+	assert_false(path.has(PLATEAU_SUMMIT_FORK),
+		"east anchor -> Voss no longer walks 649 m west to the plateau fork and back")
+	assert_true(path.has(SUMMIT_ROAD_FIRST_BEND), "the link joins the summit road at its first bend")
+
+
+func test_route_only_return_interval_and_both_offer_definitions() -> void:
+	# Route-only = without the eleven F07 cadence pairs. "No companion" also
+	# drops every wild body: the continuous harness walks without a deployed
+	# companion, so it never logs a wild Engage offer.
+	var route_only := _measure(_data(true))
+	var no_companion := _measure(_data(true, true))
+	var with_pairs_no_companion := _measure(_data(false, true))
+	var return_gap := 0.0
+	for key: String in route_only.over_limit:
+		if key.contains("windscar") or key.contains("counterweight"):
+			return_gap = maxf(return_gap, float(route_only.over_limit[key]))
+	print("CLOUDREACH ROUTE CADENCE DEFINITIONS " + JSON.stringify({
+		"route_only_deployed": {"worst_m": snappedf(route_only.worst.gap_m, 0.1),
+			"over_limit": route_only.over_limit},
+		"route_only_no_companion": {"worst_m": snappedf(no_companion.worst.gap_m, 0.1),
+			"over_limit": no_companion.over_limit},
+		"shipped_no_companion": {"worst_m": snappedf(with_pairs_no_companion.worst.gap_m, 0.1),
+			"over_limit": with_pairs_no_companion.over_limit}}))
+	assert_true(return_gap <= ROUTE_ONLY_RETURN_CEILING_M,
+		"route-only Windscar return stretch %.0f m exceeds its %.0f m ceiling (main: 1,609 m)"
+		% [return_gap, ROUTE_ONLY_RETURN_CEILING_M])
+
+
 func test_cadence_sites_are_gated_native_route_pairs() -> void:
 	var data := _data(false)
 	var tables := _by_id(data.chapter.get("encounter_tables", []))
@@ -315,8 +400,10 @@ func _navigate(world: Dictionary, from: Vector3, target: Vector3, flags: Array[S
 
 # --- data -------------------------------------------------------------------
 
-func _data(without_cadence_sites: bool) -> Dictionary:
+func _data(without_cadence_sites: bool, without_wild: bool = false) -> Dictionary:
 	var encounters := _json(ENCOUNTERS_PATH)
+	if without_wild:
+		encounters["wild_sites"] = []
 	if without_cadence_sites:
 		var kept: Array = []
 		for site: Dictionary in encounters.get("wild_sites", []):
@@ -334,6 +421,19 @@ func _walk_speed() -> float:
 
 func _prompt(spec: Dictionary) -> Vector3:
 	return _v(spec.position) - Vector3.UP * 0.8
+
+
+func _arc_to(line: Array[Vector3], at: Vector3) -> float:
+	var best := INF
+	var best_s := 0.0
+	var walked := 0.0
+	for index in line.size() - 1:
+		var closest := Geometry3D.get_closest_point_to_segment(at, line[index], line[index + 1])
+		if at.distance_to(closest) < best:
+			best = at.distance_to(closest)
+			best_s = walked + line[index].distance_to(closest)
+		walked += line[index].distance_to(line[index + 1])
+	return best_s
 
 
 func _json(path: String) -> Dictionary:

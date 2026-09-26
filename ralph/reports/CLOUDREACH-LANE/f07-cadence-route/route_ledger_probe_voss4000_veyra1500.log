@@ -1,0 +1,7 @@
+  FAIL  test_cloudreach_route_ledger.gd :: test_every_retained_member_meets_each_required_fights_band
+          expected true, got false  (Captain Veyra: the lead reaches L32 but the ace is L34 and the band asks for L32 + 1 margin (3/6 wild defeats, +4 candy levels, no catch))
+  FAIL  test_cloudreach_route_ledger.gd :: test_negative_controls_fail_the_same_assertion
+          expected 0, got 1  (baseline must pass for the controls to mean anything)
+8 tests, 629 assertions, 2 failed
+  test_cloudreach_route_ledger.gd :: test_every_retained_member_meets_each_required_fights_band — expected true, got false  (Captain Veyra: the lead reaches L32 but the ace is L34 and the band asks for L32 + 1 margin (3/6 wild defeats, +4 candy levels, no catch))
+  test_cloudreach_route_ledger.gd :: test_negative_controls_fail_the_same_assertion — expected 0, got 1  (baseline must pass for the controls to mean anything)

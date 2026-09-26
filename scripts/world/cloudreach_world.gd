@@ -1644,7 +1644,8 @@ const PAD_EASE_M := 6.0
 ## The nearest point (XZ) on any road ribbon or bridge deck line and that
 ## line's walking-surface height there. `lines` is normally
 ## `_all_route_lines`; callers with a spatially culled subset pass it instead.
-func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary]) -> Dictionary:
+func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary],
+		floor_y: float = -INF) -> Dictionary:
 	var best_d := INF
 	var best_h := 0.0
 	var best_half_width := 0.0
@@ -1677,6 +1678,10 @@ func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary]) -> Dict
 		# that happens to run closer to its centre, because that box is the
 		# collider actually on top there.
 		var h := lerpf(a.y, b.y, t)
+		# An overpass, not a junction: a road/deck this far BELOW the vertex
+		# passes under it and must not drag it down (see `_walkable_height`).
+		if h < floor_y:
+			continue
 		var half_width := float(line["half_width"])
 		# A line COVERS a point only within its own length (a box, not a
 		# capsule): with rounded ends the flat pad->join stub kept "covering"
@@ -1707,8 +1712,8 @@ func _nearest_route_line(world_point: Vector3, lines: Array[Dictionary]) -> Dict
 ## road and a walker never meets a step at a crown rim or shoulder edge.
 ## `down_only` (crowns) never raises the vertex above its authored height.
 func _line_eased_height(world_point: Vector3, natural_y: float, lines: Array[Dictionary],
-		down_only: bool, lift: float) -> float:
-	var nearest := _nearest_route_line(world_point, lines)
+		down_only: bool, lift: float, floor_y: float = -INF) -> float:
+	var nearest := _nearest_route_line(world_point, lines, floor_y)
 	var d: float = nearest["distance"]
 	if is_inf(d):
 		return natural_y
@@ -1905,7 +1910,16 @@ func _nearest_pad(world_point: Vector3, pads: Array[Dictionary]) -> Dictionary:
 ## wherever they overlap, instead of stepping.
 func _walkable_height(world_point: Vector3, natural_y: float, lines: Array[Dictionary],
 		pads: Array[Dictionary]) -> float:
-	var eased := _line_eased_height(world_point, natural_y, lines, false, 0.03)
+	# F07#2 floor-loop stall: windscar_counterweight_pass's P1->P2 shoulder
+	# (natural ~500-520 m) spans the Windscar chain-bridge deck 55-70 m below.
+	# Pinning its vertices onto that deck folded the shoulder into a steep slab
+	# standing ON the deck, and a walker crossing the bridge stalled against it
+	# at (-397.5, 446.9, 2931.5) (`WindscarCounterweightPassCliffShoulders/
+	# Ridge001`). A line more than `shoulder_overpass_clearance_m` below the
+	# vertex is an overpass: the shoulder keeps its own height over it. Every
+	# junction (roads meeting within that drop) still pins exactly as before.
+	var clearance := float(_visual_config.get("landmass", {}).get("shoulder_overpass_clearance_m", INF))
+	var eased := _line_eased_height(world_point, natural_y, lines, false, 0.03, natural_y - clearance)
 	var pad := _nearest_pad(world_point, pads)
 	if pad.is_empty():
 		return eased

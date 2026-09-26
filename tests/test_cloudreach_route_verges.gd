@@ -25,7 +25,9 @@ func test_route_ecology_reaches_every_grounded_route_and_skips_flight() -> void:
 		var route := route_raw as Dictionary
 		if str(route.get("traversal_mode", "ground")) == "ground":
 			grounded_ids[str(route.get("id", ""))] = true
-	assert_eq(grounded_ids.size(), 10)
+	# Ten authored roads plus the two F07#2 return/link legs
+	# (windscar_counterweight_return, observatory_summit_link).
+	assert_eq(grounded_ids.size(), 12)
 	assert_eq(planned_ids.size(), grounded_ids.size())
 	assert_false(planned_ids.has("windscar_to_high_roost_flight"))
 	for route_id: String in grounded_ids:
@@ -41,7 +43,7 @@ func test_route_ecology_plan_is_bounded_clear_and_deterministic() -> void:
 	var second := VERGES.route_verge_plan(world.get("routes", []), cfg)
 	assert_eq(first, second)
 	assert_true(first.size() >= 100, "the mid-layer spans the biome rather than a landmark pocket")
-	assert_true(first.size() <= 10 * int(cfg.get("max_stations_per_route", 16)))
+	assert_true(first.size() <= 12 * int(cfg.get("max_stations_per_route", 16)))
 	var minimum_offset := float(cfg.get("path_half_width_m", 2.1)) \
 		+ float(cfg.get("path_clearance_m", 1.2)) \
 		+ float(cfg.get("near_offset_m", 2.1)) \
