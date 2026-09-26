@@ -356,6 +356,13 @@ func _lost_creature() -> void:
 	if TRAINERS.conversation_for(TRAINERS.trainer("pasture_drover_juno"), _progression()) != "pasture_drover_juno_reunited_challenge":
 		_fail("lost_creature: Juno did not acknowledge rescue before her own optional battle")
 		return
+	# Juno is a trainer: with every companion fainted (the full run fights the
+	# Night Watch and the patrol before this) her greeting answers with
+	# `trainer_no_usable_creature` instead of the reunion line. A player rests
+	# before talking to a trainer; this fixture heals between beats the way it
+	# seats between them, outside the activity under test.
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		member.call("heal_fully")
 	if not await _activate_trainer_prompt(owner_body, "lost_creature"):
 		return
 	# The prompt's opening press may be buffered by DialoguePanel and advance its
@@ -815,7 +822,9 @@ func _stand_at_herd_prompt(visit: Node3D, ally: Node3D) -> bool:
 			rig.set("yaw", atan2(-to.x, -to.z))
 		await physics_frame
 		await process_frame
-		if moving and (arbiter.call("winning_provider") == prompt or to.length() <= 4.0):
+		# Keep walking in to 6 m even once the prompt wins (~11 m out): the
+		# companion trails the player by ~1.5 m and must also be within 12 m.
+		if moving and to.length() <= 6.0:
 			Input.action_release("move_forward")
 			_send("move_forward", false)
 			moving = false
