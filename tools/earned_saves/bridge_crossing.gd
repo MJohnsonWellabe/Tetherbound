@@ -21,9 +21,9 @@ extends "res://tests/helpers/meadows_earned_bridge_segment.gd"
 const POST_WIN_SETTLE_FRAMES := 180
 
 
-func _press_gate(prompt: Node3D) -> bool:
+func _press_gate(prompt: Node3D, accept_open: bool = false) -> bool:
 	if not _has("defeated_south_bridge_grunt"):
-		return await super._press_gate(prompt)
+		return await super._press_gate(prompt, accept_open)
 	for _frame in POST_WIN_SETTLE_FRAMES:
 		await _tree.process_frame
 		if bool(_bridge.call("is_open")) and _has("south_bridge_open"):
