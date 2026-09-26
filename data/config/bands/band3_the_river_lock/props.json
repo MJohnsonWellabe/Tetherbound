@@ -1165,6 +1165,27 @@
           "_why": "low vegetation on the east inset shelf ties the bend to the new floodplain without hiding the tower"
         }
       ]
+    },
+    {
+      "order": 3012,
+      "name": "doss_ranger_camp",
+      "_why": "F03 lure cue, coordinator option (a). Doss's perch is 62.8 m from the nearest clear river-loop view at [-80,4165]; he and the buckled boards were a speck from the road. A ranger's large signal fire (scale 0.6, glow 1.9) 8 m behind him (east, away from the road), clear of the perch boards, mark the site from the loop. No interaction, reward or collider path changes.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "scale": 0.6,
+          "glow_scale": 1.9,
+          "glow": "campfire",
+          "name": "DossCampFire",
+          "at": [
+            -11.0,
+            4184.5
+          ],
+          "yaw_deg": 10.0
+        }
+      ]
     }
   ]
 }

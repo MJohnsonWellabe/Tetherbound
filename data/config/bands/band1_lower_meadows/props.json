@@ -1534,6 +1534,27 @@
           "sink_m": 0.03
         }
       ]
+    },
+    {
+      "order": 1057,
+      "name": "old_bram_camp",
+      "_why": "F03 lure cue, coordinator option (a). Old Bram stands 55.5 m off the nearest clear road view at [140.6,915.9]; a 1.8 m figure is only ~24 px within ~34 m at the game camera, so from the road he read as a speck. A retired champion's camp 13 m behind him (east, away from the road and outside the 11 m fight ring): a large signal fire (scale 0.6, glow 1.9, as at the River Lock camp) whose smoke column tops at 4.6 m, the same friendly waymark language as band 1's WayfarerSignalFire, so the site reads as a friendly figure worth a detour. No interaction, reward or collider path changes.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "scale": 0.6,
+          "glow_scale": 1.9,
+          "glow": "campfire",
+          "name": "OldBramCampFire",
+          "at": [
+            208.0,
+            907.5
+          ],
+          "yaw_deg": 30.0
+        }
+      ]
     }
   ]
 }
