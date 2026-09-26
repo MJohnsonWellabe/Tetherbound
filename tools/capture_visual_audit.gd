@@ -485,7 +485,7 @@ func _region_spec(region: String) -> Dictionary:
 		"meadows":
 			return {"realm": "meadows", "scene": "res://scenes/world/meadows_playground.tscn", "biome": "meadows",
 				"env_times": TIMES_DAYNIGHT, "place_times": ["day"], "major_times": ["day", "night"],
-				"flags": ["starter_chosen", "tutorial_complete"], "freeze_weather": true}
+				"flags": [], "freeze_weather": true}
 		"cloudreach":
 			return {"realm": "cloudreach", "scene": "res://scenes/world/cloudreach_cliffs.tscn", "biome": "cloudreach",
 				"env_times": TIMES_DAYNIGHT, "place_times": ["day"], "major_times": ["day", "night"],
@@ -567,6 +567,9 @@ func _places() -> Array:
 		"meadows":
 			var m: Dictionary = _json("res://data/config/map_landmarks.json")
 			for l: Dictionary in m.get("landmarks", []):
+				if not l.has("position"):
+					_skip("place_" + str(l.get("id")), "no fixed position in map_landmarks.json (resolved at runtime)")
+					continue
 				out.append({"id": str(l["id"]), "label": str(l.get("display_name", l["id"])), "pos": _p3(l["position"]),
 					"major": str(l.get("category", "")) == "major"})
 			for r: Dictionary in m.get("regions", []):
