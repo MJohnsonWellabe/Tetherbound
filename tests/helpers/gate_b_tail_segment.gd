@@ -951,12 +951,26 @@ func _walk_to_prompt(prompt: Node3D, what: String) -> bool:
 		return false
 	if not await _walk_to(prompt.global_position, "the %s" % what, 1.4):
 		return false
-	for _i in 120:
-		await _tree.physics_frame
-		if _arbiter == null:
-			return true
-		if _arbiter.has_method("winning_provider") and _arbiter.call("winning_provider") == prompt:
-			return true
+	for attempt in 3:
+		for _i in 120:
+			await _tree.physics_frame
+			if _arbiter == null:
+				return true
+			if _arbiter.has_method("winning_provider") and _arbiter.call("winning_provider") == prompt:
+				return true
+		# Another prompt is nearer (seed 15: creature bed 1 at 1.03 m beat bed 2
+		# at 1.06 m, the beds 2 m apart). A player steps round to the far side
+		# of the one they want; so does this, twice, before calling it lost.
+		var rival: Variant = _arbiter.call("winning_provider") if _arbiter.has_method("winning_provider") else null
+		if attempt == 2 or not (rival is Node3D) or not is_instance_valid(rival):
+			break
+		var away := prompt.global_position - (rival as Node3D).global_position
+		away.y = 0.0
+		if away.length() < 0.01:
+			break
+		var stance := prompt.global_position + away.normalized() * 0.9
+		if not await _walk_to(stance, "the far side of the %s" % what, 0.4):
+			return false
 	var winner: Variant = _arbiter.call("winning_provider") if _arbiter.has_method("winning_provider") else null
 	var winner_note := "none"
 	if winner is Node3D and is_instance_valid(winner):
