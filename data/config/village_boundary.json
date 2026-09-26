@@ -201,10 +201,10 @@
   ],
   "exit_signs": [
     {
-      "at": [16.4, 19.2],
+      "at": [11.4, 19.2],
       "label": "South Bridge",
       "points": [[14.0, 20.0], [-20.0, 80.0]],
-      "_why": "F01 day-walk judge (through_day_015): TrailGate, the village exit toward the South Bridge, had nothing on screen saying it was the exit. One arm, 3m inside the gate, footing 2.5m east of the South Street/spine centreline (paths.trailheads' OP21-18 standoff, so the post is not in the travel lane), aimed ~25 degrees off the spine's bearing so a player walking the road sees the plank's face, not its edge (the Rise trailhead's r2 lesson). TUNABLE."
+      "_why": "F01 day-walk judge (through_day_015): TrailGate, the village exit toward the South Bridge, had nothing on screen saying it was the exit. One arm, 3m inside the gate, footing 2.5m west of the South Street/spine centreline (the east side is the tournament ground's bench) (paths.trailheads' OP21-18 standoff, so the post is not in the travel lane), aimed ~25 degrees off the spine's bearing so a player walking the road sees the plank's face, not its edge (the Rise trailhead's r2 lesson). TUNABLE."
     }
   ]
 }
