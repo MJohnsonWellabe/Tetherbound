@@ -940,6 +940,10 @@ func _submit_resolution(accepted: bool, character: String) -> void:
 ## there, so it is committed once; the character is never re-offered in the
 ## world that already holds its answer, and every peer's prompt reads it.
 func _receipt_settled_claims() -> bool:
+	# No ledger yet: wait without submitting, so its "not ready" refusal is
+	# never shown once per frame.
+	if LEDGER_CLAIM.transport(self) == null:
+		return false
 	var state := _saved_state()
 	var present: Array = []
 	for character: String in (state.get("claims", {}) as Dictionary).keys():
@@ -948,8 +952,7 @@ func _receipt_settled_claims() -> bool:
 	for row: Array in unreceipted_settled_claims(state, present):
 		var verdict := LEDGER_CLAIM.submit(self, {"kind": "set_world_flag", "realm": "stormwood",
 			"id": resolution_flag(bool(row[1]), str(row[0])), "value": true})
-		# Only a missing ledger is retried; a hard refusal was already shown
-		# once and would repeat every frame.
+		# A hard refusal was already shown once; retrying would repeat it.
 		submitted = submitted and str(verdict.get("code", "")) != "offline"
 	return submitted
 
