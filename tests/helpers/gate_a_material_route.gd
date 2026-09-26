@@ -291,6 +291,8 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 	# and says why when it cannot.
 	var stop_at := node.global_position
 	if not await cross_village_fence_toward(stop_at):
+		if failures.is_empty():
+			_fail("village fence crossing toward authored %s at %s ended without a verdict" % [item_id, expected])
 		return false
 	if not await _walk_to(stop_at, 1.65, _travel_budget(stop_at)) \
 			and _player.global_position.distance_to(stop_at) > WITHIN_REACH:
@@ -369,7 +371,9 @@ func cross_village_fence_toward(target: Vector3) -> bool:
 	var inward := (centre - gate).normalized()
 	var inside_leg := gate + inward * GATE_CROSSING_STANDOFF_M
 	var outside_leg := gate - inward * GATE_CROSSING_STANDOFF_M
-	var legs: Array[Vector2] = [inside_leg, outside_leg] if starts_inside else [outside_leg, inside_leg]
+	var legs: Array[Vector2] = [inside_leg, outside_leg]
+	if not starts_inside:
+		legs.reverse()
 	for leg: Vector2 in legs:
 		var y := _player.global_position.y
 		if _world.has_method("ground_height_at"):
