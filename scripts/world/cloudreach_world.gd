@@ -2032,12 +2032,19 @@ func _build_routes() -> void:
 		var visible_width := minf(collision_width - 0.8,
 			float(landmass.get("path_visible_width_m", 4.2)))
 		# Owner ruling 2026-09-26: co-op matches single player, so a live
-		# (time-sliced) crossing and a host shell build the same geological
-		# shoulders solo does. They used to be deferred there because each
-		# section awaited the RefCounted `_shell_build.breathe()`, and Godot 4.7
-		# can lose such a deeply nested continuation; the sections now yield
-		# through this Node's own `_build_breathe()` like every other loop here.
-		await _build_route_shoulders(root, spec, points, width)
+		# (time-sliced) crossing builds the same geological shoulders solo does.
+		# They used to be deferred there because each section awaited the
+		# RefCounted `_shell_build.breathe()`, and Godot 4.7 can lose such a
+		# deeply nested continuation; the sections and each ridge's stations now
+		# yield through this Node's own `_build_breathe()` like every other loop
+		# here. A host SHELL still defers them: nobody sees it, and what the host
+		# simulates in it (wilds, trainers) stands on the analytic surfaces the
+		# shoulders never register, while ~20 s of ridge work would otherwise run
+		# on a host who is playing in another realm.
+		if simulation_only:
+			_shell_build.call("mark", "routes:%s:geological_shoulders:deferred_in_shell" % str(spec.get("id", "Route")))
+		else:
+			await _build_route_shoulders(root, spec, points, width)
 		var route_name_lower := str(spec.get("id", "")).to_lower()
 		var landing_top: Material = _materials["upland_dry"] if (
 			route_name_lower.contains("upper") or route_name_lower.contains("summit")
@@ -2233,7 +2240,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 			# is clamped per vertex onto any road ribbon, bridge deck or
 			# pad/landmark crown within reach (`_walkable_height`), rather than
 			# an entire segment near a detected "hub" going collision-free.
-			_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
+			await _route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
 				segment_index + int(spec.get("order", 0)) * 17 + serial,
 				_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass,
 				route_id, overpass_lines)
@@ -2489,6 +2496,9 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var arch_clearance := float(config.get("shoulder_overpass_clearance_m", INF))
 	var arch_ceilings: Array[float] = []
 	for i in station_count:
+		# ~30 ms per station; a whole ridge (up to 48 stations, 1.6 s) held one
+		# frame and cost a live crossing a heartbeat payback each time.
+		await _build_breathe()
 		var t := float(i) / float(station_count - 1)
 		var centre := a.lerp(b, t)
 		# The crest follows this route's OWN ribbon/cap surface (flat inside the
