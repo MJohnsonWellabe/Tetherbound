@@ -287,7 +287,7 @@ func _exhausted_fall_attempt() -> bool:
 	if not bool(launch_probe.clear):
 		var spot := _nearest_clear_launch(player.global_position)
 		exhausted_fall["launch_spot"] = str(spot)
-		if spot == Vector3.INF: return _fail("No clear launch point on the shrine floor within 14 m")
+		if spot == Vector3.INF: return _fail("No clear launch point on the shrine within 22 m")
 		if not await _walk(spot, 0.6): return false
 		await _frames(10)
 		anchor = player.global_position
@@ -366,18 +366,25 @@ func _launch_clearance(at: Vector3) -> Dictionary:
 	return {"at": str(at), "clear": hits.is_empty(), "overlapping": hits}
 
 
+## The shrine's own authored stands first (the base route later launches from
+## beside the windlass), then rings on walkable ground at a similar height.
 func _nearest_clear_launch(origin: Vector3) -> Vector3:
 	var space := player.get_world_3d().direct_space_state
-	for radius: float in [3.0, 5.0, 7.0, 9.0, 11.0, 14.0]:
-		for step in 12:
-			var angle := TAU * float(step) / 12.0
-			var probe := origin + Vector3(cos(angle), 0, sin(angle)) * radius
-			var ray := PhysicsRayQueryParameters3D.create(probe + Vector3.UP * 3.0, probe - Vector3.UP * 3.0, 1)
-			ray.exclude = [player.get_rid()]
-			var hit := space.intersect_ray(ray)
-			if hit.is_empty() or (hit.normal as Vector3).y < 0.8 or absf((hit.position as Vector3).y - origin.y) > 1.5: continue
-			var ground: Vector3 = hit.position
-			if bool(_launch_clearance(ground).clear): return ground
+	var probes: Array[Vector3] = []
+	for id: String in ["shrine_windlass", "shrine_vane_west", "shrine_vane_east", "shrine_vane_crown"]:
+		var prompt: Node3D = physical.get_node_or_null(id + "/Interactable")
+		if prompt != null: probes.append(prompt.global_position)
+	for radius: float in [3.0, 5.0, 7.0, 9.0, 12.0, 15.0, 18.0, 22.0]:
+		for step in 16:
+			var angle := TAU * float(step) / 16.0
+			probes.append(origin + Vector3(cos(angle), 0, sin(angle)) * radius)
+	for probe: Vector3 in probes:
+		var ray := PhysicsRayQueryParameters3D.create(probe + Vector3.UP * 4.0, probe - Vector3.UP * 4.0, 1)
+		ray.exclude = [player.get_rid()]
+		var hit := space.intersect_ray(ray)
+		if hit.is_empty() or (hit.normal as Vector3).y < 0.8 or absf((hit.position as Vector3).y - origin.y) > 3.0: continue
+		var ground: Vector3 = hit.position
+		if bool(_launch_clearance(ground).clear): return ground
 	return Vector3.INF
 
 
