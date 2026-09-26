@@ -21,6 +21,7 @@ var _captain_kills: Dictionary = {}
 var _expected_xp: Dictionary = {}
 var _dialogue_finished := ""
 var _activated_id := 0
+var _activated_name := ""
 var _supported_y := NAN
 
 
@@ -81,6 +82,15 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	return result()
 
 
+## The Lockwater Overlook's props (rocks, a rope, a log, a bag; x -132..-124,
+## z 3446-3455) sit on the road leg (-160,3420) -> (-60,3520). Seed 15 froze
+## there, standing on the rope's collider between two rocks. Rows z 3444 and
+## below are open; go round the south-east side.
+const OVERLOOK_KNOT := Vector2(-129.0, 3451.0)
+const OVERLOOK_CLEAR_M := 6.0
+const OVERLOOK_BYPASS: Array[Vector2] = [Vector2(-122.0, 3443.0)]
+
+
 func _travel() -> bool:
 	var terrain := _read(TERRAIN)
 	var gate := gate_path(_config)
@@ -91,7 +101,8 @@ func _travel() -> bool:
 	if approach.is_empty() or not await _prepare():
 		return _fail("The current Warrens-to-Relay trail or actual care is unavailable")
 	for point: Vector2 in approach:
-		if not await _walk_ground(point):
+		if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M, OVERLOOK_BYPASS, _v2p(), point) \
+				or not await _walk_ground(point):
 			return false
 	for point: Vector2 in gate:
 		if not await _walk_ground(_relay.call("world_of", point), 0.6):
@@ -269,13 +280,44 @@ func _approach_prompt(prompt: Node3D) -> bool:
 	return _fail("The exact live prompt never became actionable within its unchanged approach budget")
 
 
+## A wandering wild's "Call out" offer can win the same Interact frame (seed
+## 15, at the relay). A press that activated nothing, or that started a wild
+## fight, is fought through and pressed again as a player would; any other
+## provider is still a failure, and is named.
+const PRESS_ATTEMPTS := 3
+
+
 func _press_prompt(prompt: Node3D) -> bool:
-	if not await _approach_prompt(prompt):
-		return false
-	var expected := prompt.get_instance_id()
-	_activated_id = 0
-	await _input._tap("interact")
-	return _activated_id == expected or _fail("Physical Interact activated a different provider than the exact offered target")
+	for attempt in PRESS_ATTEMPTS:
+		if not await _approach_prompt(prompt):
+			return false
+		var expected := prompt.get_instance_id()
+		var expected_path := str(prompt.get_path())
+		_activated_id = 0
+		_activated_name = ""
+		await _input._tap("interact")
+		if _activated_id == expected:
+			return true
+		if _activated_name == expected_path:
+			# The same prompt at the same place in the tree, as a new instance
+			# (seed 15: Sela's, right after the captain fell).
+			_receipt("press_same_prompt_new_instance", {"path": expected_path,
+				"approached_id": expected, "activated_id": _activated_id})
+			return true
+		for _frame in 30:
+			if _fighting():
+				break
+			await _tree.physics_frame
+		var wild_took_it := _fighting() and not _captain_active \
+				and not bool(_director.call("trainer_battle_active"))
+		if _activated_id != 0 and not wild_took_it:
+			break
+		_receipt("press_retry", {"attempt": attempt + 1, "wanted": str(prompt.name),
+			"activated": _activated_name, "wild_fight": wild_took_it})
+		if wild_took_it and not await _fight():
+			return false
+	return _fail("Physical Interact activated a different provider than the exact offered target (wanted %s, got '%s')" % [
+		str(prompt.name) if is_instance_valid(prompt) else "<freed>", _activated_name])
 
 
 func _talk(prompt: Node3D, expected: String) -> bool:
@@ -345,6 +387,7 @@ func _on_dialogue_finished(id: String) -> void:
 
 func _on_activated(provider: Object) -> void:
 	_activated_id = provider.get_instance_id() if is_instance_valid(provider) else 0
+	_activated_name = str(provider.get_path()) if provider is Node else str(provider)
 
 
 func _captain_stock() -> Dictionary:

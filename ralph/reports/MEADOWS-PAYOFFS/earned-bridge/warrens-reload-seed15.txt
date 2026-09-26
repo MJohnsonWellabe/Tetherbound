@@ -1,0 +1,30 @@
+# F02#1 attempt: TB_WORLD_SEED=15 tests/smoke_four_biome_continuous.gd -- --through-warrens --reload-at-transitions
+# The reload after the bridge HOLDS (two runs): flags 97 -> 97, none lost or gained; party UIDs identical.
+# The Warrens segment then stalls in the quarry station's props (two runs, two directions):
+
+== warrens_seed15_quarrystall
+EARNED BRIDGE — { "trainer": "south_bridge_grunt", "wins": 2, "hits": 34, "key_reward": 1, "key_remaining": 0, "depth_before": -11.5960693359375, "depth_after": 9.4652099609375, "party_ids": [-9223324744013500237, -9223371691831324389, -9223371504362708366, -9223371505134460321, -9223371691076349650], "beat": "south_bridge_crossed" }
+RELOAD south_bridge_crossed: flags 97 -> 97 (lost [], gained []); party ["creature-8b2a4b90c19d4ff0fd9c24b326f65ab8", "creature-c0b673b8f874bf7bf67038a78e7bb0da", "creature-7adc93f837ddb8d25419a25c69155a6e", "creature-d3dd47c1a26618475bd0b319dc85fca2", "creature-8f27f61432279a22a36745b0e348904c"] -> ["creature-8b2a4b90c19d4ff0fd9c24b326f65ab8", "creature-c0b673b8f874bf7bf67038a78e7bb0da", "creature-7adc93f837ddb8d25419a25c69155a6e", "creature-d3dd47c1a26618475bd0b319dc85fca2", "creature-8f27f614
+EARNED WARRENS — { "at": (394.0, 1797.0), "node_id": 158042129924792, "yield": 2, "before": 0, "after": 2, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (399.0, 1792.0), "node_id": 158042264142526, "yield": 2, "before": 2, "after": 4, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (406.0, 1800.0), "node_id": 158042398360260, "yield": 2, "before": 4, "after": 6, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "player": (400.1023, -0.499157, 1800.318), "target": (401.0, -0.329741, 1809.0), "beat": "walk_confined_recovery" }
+EARNED WARRENS FAIL — Ordinary quarry/Warrens movement did not reach (401.0, -0.329741, 1809.0); player=(399.5413, -0.499157, 1797.788)
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"elapsed_seconds":1677.484,"failures":["Ordinary quarry/Warrens movement did not reach (401.0, -0.329741, 1809.0); player=(399.5413, -0.499157, 1797.788)"],"reached":"south_bridge_crossed","requested_prefix_passed":false,"scratch":"user://four_biome_fresh_360_5272"}
+real	28m5.715s
+
+== warrens_seed15
+EARNED BRIDGE — { "trainer": "south_bridge_grunt", "wins": 2, "hits": 42, "key_reward": 1, "key_remaining": 0, "depth_before": -11.5191650390625, "depth_after": 9.4647216796875, "party_ids": [-9223324749533224395, -9223371691831324389, -9223371505134460321, -9223371504362708366, -9223371691076349650], "beat": "south_bridge_crossed" }
+RELOAD south_bridge_crossed: flags 97 -> 97 (lost [], gained []); party ["creature-4e6b2558a1ed84546b0c1f0e6ed3c0b5", "creature-241632246b074f2364d47fb50b50edae", "creature-8a38e5fc6dc0af4ae632efd883bc1203", "creature-280afd07e5900d77091da238b7f13208", "creature-5df0154308cc7cfd38758eb6c852902d"] -> ["creature-4e6b2558a1ed84546b0c1f0e6ed3c0b5", "creature-241632246b074f2364d47fb50b50edae", "creature-8a38e5fc6dc0af4ae632efd883bc1203", "creature-280afd07e5900d77091da238b7f13208", "creature-5df01543
+EARNED WARRENS — { "at": (394.0, 1797.0), "node_id": 158202838876855, "yield": 2, "before": 0, "after": 2, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (399.0, 1792.0), "node_id": 158202973094589, "yield": 2, "before": 2, "after": 4, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (406.0, 1800.0), "node_id": 158203107312323, "yield": 2, "before": 4, "after": 6, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (401.0, 1809.0), "node_id": 158203241530057, "yield": 2, "before": 6, "after": 8, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (395.0, 1812.0), "node_id": 158203375747791, "yield": 2, "before": 8, "after": 10, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (381.0, 1824.0), "node_id": 158217451832379, "yield": 2, "before": 10, "after": 12, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (413.0, 1820.0), "node_id": 158217586050114, "yield": 2, "before": 12, "after": 14, "beat": "quarry_rootstone" }
+EARNED WARRENS FAIL — Ordinary quarry/Warrens movement did not reach (400.0, -0.5, 1800.0); player=(398.0677, -0.499157, 1804.197)
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"elapsed_seconds":1739.461,"failures":["Ordinary quarry/Warrens movement did not reach (400.0, -0.5, 1800.0); player=(398.0677, -0.499157, 1804.197)"],"reached":"south_bridge_crossed","requested_prefix_passed":false,"scratch":"user://four_biome_fresh_1513_5042"}
+real	29m7.307s
+
+# Props within 1 m of the trail line (400,1800)-(401,1809): Bucket_Wooden_1 (399.40, 1801.39) 0.57 m, Rock_Medium_2 (399.51, 1803.31) 0.72 m, TrailheadSignpost_15 post (400.34, 1797.52), Barrel (400.60, 1798.30), Bag (398.82, 1800.58) -- data/config/old_quarry.json quarry_station (Meadows core).

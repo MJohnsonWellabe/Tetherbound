@@ -165,6 +165,9 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--through-bridge"):
 		_finish(true)
 		return
+	if not await _reload_transition(game, "south_bridge_crossed"):
+		_finish(false)
+		return
 	var warrens_result: Dictionary = await WARRENS.new().run(self, live["world"], game)
 	for line: Variant in warrens_result.get("failures", []):
 		failures.append(str(line))
@@ -174,6 +177,9 @@ func _run() -> void:
 	reached = "warrens_cleared_and_exited"
 	if OS.get_cmdline_user_args().has("--through-warrens"):
 		_finish(true)
+		return
+	if not await _reload_transition(game, "warrens_cleared_and_exited"):
+		_finish(false)
 		return
 	var relay_result: Dictionary = await RELAY.new().run(self, live["world"], game)
 	for line: Variant in relay_result.get("failures", []):
@@ -185,6 +191,9 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--through-relay"):
 		_finish(true)
 		return
+	if not await _reload_transition(game, "relay_disabled_and_mill_crossed"):
+		_finish(false)
+		return
 	var hall_result: Dictionary = await HALL.new().run(self, live["world"], game)
 	for line: Variant in hall_result.get("failures", []):
 		failures.append(str(line))
@@ -194,6 +203,9 @@ func _run() -> void:
 	reached = "warden_arena_entered"
 	if OS.get_cmdline_user_args().has("--through-hall"):
 		_finish(true)
+		return
+	if not await _reload_transition(game, "warden_arena_entered"):
+		_finish(false)
 		return
 	if not _accepted(await WARDEN.new().run(self, live["world"], game), "passed"):
 		return
@@ -287,6 +299,75 @@ func _accepted(result: Dictionary, success_key: String) -> bool:
 		_finish(false)
 		return false
 	return true
+
+
+## F02 (ACCEPTANCE §6.1): "each transition, reward and recovery survives
+## reload". With `--reload-at-transitions`, after the bridge, the Warrens, the
+## relay/Mill and the Hall: a production save (the installed scratch save
+## system), the live Meadows freed, the flag store and party emptied, a
+## production load and a fresh Meadows scene; the next segment continues in the
+## rebuilt world. Every flag and the party's UIDs must come back exactly.
+## Without the flag this is a no-op, so the CI path is unchanged.
+func _reload_transition(game: Node, label: String) -> bool:
+	if not OS.get_cmdline_user_args().has("--reload-at-transitions"):
+		return true
+	var progression: RefCounted = game.get("progression")
+	var party: RefCounted = game.get("party")
+	var flags_before: Array = (progression.call("all_set") as Array).duplicate()
+	flags_before.sort()
+	var uids_before := _party_uids(party)
+	var scene_path := str(current_scene.scene_file_path)
+	if not bool(game.call("save_game", 0)):
+		failures.append("RELOAD %s: save_game(0) refused" % label)
+		return false
+	var old := current_scene
+	old.queue_free()
+	for i in 4:
+		await process_frame
+	progression.call("load_data", {})
+	party.call("clear")
+	if not bool(game.call("load_game", 0)):
+		failures.append("RELOAD %s: load_game(0) failed" % label)
+		return false
+	var world: Node = (load(scene_path) as PackedScene).instantiate()
+	root.add_child(world)
+	current_scene = world
+	for i in 240:
+		await physics_frame
+	live["world"] = world
+	live["player"] = world.get_node_or_null(^"Player")
+	live["rig"] = get_first_node_in_group("camera_rig")
+	var flags_after: Array = (progression.call("all_set") as Array).duplicate()
+	flags_after.sort()
+	var uids_after := _party_uids(party)
+	var lost: Array = []
+	for flag: Variant in flags_before:
+		if not flags_after.has(flag):
+			lost.append(flag)
+	var gained: Array = []
+	for flag: Variant in flags_after:
+		if not flags_before.has(flag):
+			gained.append(flag)
+	var player := live["player"] as Node3D
+	print("RELOAD %s: flags %d -> %d (lost %s, gained %s); party %s -> %s; player at %s" % [label,
+		flags_before.size(), flags_after.size(), str(lost), str(gained), str(uids_before), str(uids_after),
+		str(player.global_position) if player != null else "NONE"])
+	if not lost.is_empty():
+		failures.append("RELOAD %s: flags lost across the reload: %s" % [label, str(lost)])
+	if uids_after != uids_before:
+		failures.append("RELOAD %s: the party changed across the reload (%s -> %s)" % [label, str(uids_before), str(uids_after)])
+	if player == null:
+		failures.append("RELOAD %s: the rebuilt world has no Player" % label)
+	return failures.is_empty()
+
+
+func _party_uids(party: RefCounted) -> Array:
+	var out: Array = []
+	for i in int(party.call("size")):
+		var member: Variant = party.call("at", i)
+		if member != null:
+			out.append(str((member as RefCounted).get("uid")))
+	return out
 
 
 func _finish(prefix_passed: bool) -> void:
