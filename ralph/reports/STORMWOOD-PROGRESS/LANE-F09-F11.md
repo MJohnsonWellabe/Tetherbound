@@ -675,6 +675,16 @@ SCRIPT ERROR count is 0 in both runs.
   - **Stop:** a road fight at the Still Grove road point was lost (sparkit fainted). The build then failed with `controller right stick could not face the Still Grove footing`. Crown step FAIL at 2069.6 s.
   - **Strikes:** `STRIKES crown {"damage":18.0,"deaths":0,"hits":1,"satchel_recoveries":0,"warnings":29}`. 0 SCRIPT ERROR.
   - **Harness fix** (89ffa24a1): the turn fights out any running fight first. If it still cannot turn, it reports the camera, fight, input-owner, pause, arbiter and clock state.
+- **Run 22** (89ffa24a1): the first earned run past the Crown.
+  - **Prefix:** PASS in 1217.7 s.
+  - **Crown step: PASS in 1922.9 s**, the first ever. Alpha won by mudsnout; the Break window was 179.6 s open on leaving. A Still Grove road fight was lost, but the fight-aware turn then faced the footing and the paid Crown arch was built by controller placement.
+  - **Crown arrival, guardian, Wen, Rootgate: PASS in 99.0 s.** Guardian won by bramblebun at 5.5/351.5 left.
+  - **Dynamo step:** earned `lantern_hollow_reached` and `captive_truth_learned`, then FAIL at 124.5 s: `officer_nysa_deepwood_rod never won the InteractionArbiter (winner=.../StormwoodTrainers/Tavi/Interactable ... "distance": 1.14 ...; own_offer= "Challenge Officer Nysa" "distance": 1.27)`.
+  - **Safety:** trainer deaths 0, satchel recoveries 0, strike hits 0 (17 warnings in total). 0 SCRIPT ERROR.
+  - **Game data bug fixed** (c1b554646): circuit Tavi stood exactly on Officer Nysa, the critical Deepwood picket leader. Tavi moved 14 m along the road, and the scatter was re-baked (fingerprint only).
+  - **Regression:** `test_no_two_trainers_share_a_challenge_circle` (8 m) fails on the old data.
+  - **Predicted next overlap** (not fixed, because the rule is to fix only what the run shows): trainer `outerworks_lieutenant_sera` stands exactly on NPC Officer Kestrel at [-100, 107.72, 5350]. The same-person trainer/NPC pairs (Rook, Pim, Marrow) are likely intended; Ivo/Dace [-900, 1780] passes in the prefix.
+  - **Merged origin/main** (#259/#260) at this safe point, keeping main's Footing-only `standing_floor()`.
 - **Next** (queue items 2–3): rerun the same command. The first things to read are the LB press lines after the Still Grove rest and any `HARVEST NODE … left the tree` line.
 
 ### Not produced
