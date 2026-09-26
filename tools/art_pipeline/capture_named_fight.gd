@@ -98,3 +98,30 @@ func _collect_nodes() -> bool:
 		push_error("trainer '%s' not stood up anywhere in the world" % _tid)
 		return false
 	return true
+
+
+## The base challenge loop, with wall-clock progress so a stalled open-world
+## challenge (captains stand in the streamed Meadows, not the Stronghold) says
+## where it stopped instead of timing out silently.
+func _challenge() -> void:
+	var t0 := Time.get_ticks_msec()
+	for i in 60:
+		await physics_frame
+		if i % 10 == 0:
+			print("challenge: settle frame %d at %d ms, paused=%s" % [i, Time.get_ticks_msec() - t0, str(paused)])
+	print("challenge: settled in %d ms" % (Time.get_ticks_msec() - t0))
+	var presses := 0
+	for i in 900:
+		if bool(_manager.call("is_fighting")):
+			break
+		if presses == 0 or bool(_panel.call("is_open")):
+			await _press("interact")
+			presses += 1
+			print("challenge: press %d at %d ms, panel open=%s" % [presses, Time.get_ticks_msec() - t0, str(_panel.call("is_open"))])
+			for n in 8:
+				await physics_frame
+			continue
+		await physics_frame
+		if i % 120 == 0:
+			print("challenge: frame %d at %d ms, fighting=%s" % [i, Time.get_ticks_msec() - t0, str(_manager.call("is_fighting"))])
+	print("challenge: %d presses, fighting=%s" % [presses, str(_manager.call("is_fighting"))])
