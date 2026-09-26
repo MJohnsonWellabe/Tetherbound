@@ -667,6 +667,16 @@ func peer_count() -> int:
 	return maxi(1, int(_registry.call("size")))
 
 
+## Seats the host is holding for players inside the reconnect window
+## (`reconnect_window_s`). Admission already counts them; the Players tab and
+## the Steam invite need to as well, or they offer a seat nobody can take.
+## Always 0 on a client, which keeps no reservations.
+func held_seat_count() -> int:
+	if not is_active() or not is_host():
+		return 0
+	return int(_registry.call("reservation_count"))
+
+
 func peers() -> Array:
 	if not is_active():
 		return [PEER_REGISTRY.make_row(HOST_PEER_ID, _local_character_id(),
