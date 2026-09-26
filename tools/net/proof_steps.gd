@@ -81,7 +81,7 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"water_dock_resend", "water_dock_cut",
 	"water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
 	"water_guardian_let_go", "water_guardian_forge_accept",
-	"nerissa_challenge", "guardian_offer_refused"]
+	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue"]
 
 
 static func handles(action: String) -> bool:
@@ -674,7 +674,7 @@ const WATER_ACTIONS := ["homecoming_complete", "credits_continue", "ending_state
 	"water_dock_state", "water_dock_resend", "water_dock_cut", "water_anchor_fixture", "water_swim_to_wild",
 	"water_local_aquatic", "water_remote_aquatic", "water_win_wild", "water_guardian_let_go",
 	"water_guardian_forge_accept",
-	"nerissa_challenge", "guardian_offer_refused"]
+	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue"]
 const HOMECOMING_PATH := "res://scripts/story/regional_homecoming.gd"
 const QUEST_LOG_PATH := "res://scripts/world/quest_log.gd"
 const DOCK_RULES_PATH := "res://scripts/world/water_dock_rules.gd"
@@ -736,6 +736,8 @@ static func _water_run(tree: SceneTree, action: String, args: Dictionary) -> Dic
 			return await _nerissa_challenge(tree, args)
 		"guardian_offer_refused":
 			return await _guardian_offer_refused(tree, args)
+		"save_witness", "title_continue":
+			return await _real_save_run(tree, action, args)
 	return {"verdict": "ERROR", "detail": "proof_steps: unknown Water action '%s'" % action}
 
 
@@ -2161,7 +2163,8 @@ static func _water_anchor_fixture(tree: SceneTree, args: Dictionary) -> Dictiona
 		return {"verdict": "ERROR", "detail": "no authored Water anchor '%s'" % id}
 	at.y = float(world.call("ground_height_at", at.x, at.z)) + 0.15
 	tree.call("_drive_left", 0.0, 0.0)
-	player.global_position = at
+	# A teleport, not a kinematic sweep (see peer_runner `_step_teleport`).
+	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, at)
 	player.velocity = Vector3.ZERO
 	for f in int(args.get("settle", 45)):
 		await tree.physics_frame
@@ -2518,4 +2521,158 @@ static func _guardian_offer_refused(tree: SceneTree, args: Dictionary) -> Dictio
 		"detail": "asked the host for an offer: ok=%s pending=%s code='%s' message '%s'; offered=%s claim='%s' Guardians %d"
 			% [str(data.ok), str(data.pending), str(data.code), message, str(data.offered),
 				str(data.pending_guardian_id), int(data.guardians_owned)],
+		"data": data}
+
+
+# --- F15: the real save witness ------------------------------------------------------
+##   save_witness   {mark?: "name", since?: "name", contains?: [flag], lacks?: [flag], label?}
+##                  Read THIS peer's character file as it is on disk right now, through the
+##                  game's own CharacterSave reader. It never saves. `mark` records the file's
+##                  sha256 and modified time under that name; `since` requires the file to have
+##                  been rewritten after that mark (a different sha256, modified time not
+##                  earlier). `contains` / `lacks` are player flags that must / must not be in
+##                  the file's flags. A copy of the file lands under the peer's proof dir/label.
+##   title_continue {port?, settle_frames?, budget_frames?}  HOST, after it has left its
+##                  session (the player quit): enter the production title screen, reset Game
+##                  the way a new run does (a freshly started process holds no receipts and
+##                  no world), then open Load Game and press the autosave slot's button, which
+##                  is `title_screen.gd::_load_slot` -> `Game.load_game` -> `_enter_world`
+##                  (re-hosts on `port`, the harness's own UDP port) -> the realm scene.
+
+
+static func _real_save_run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
+	if action == "save_witness":
+		return _save_witness(tree, args)
+	return await _title_continue(tree, args)
+
+
+static func _character_file(game: Node) -> String:
+	var saver: Variant = game.get("save_system") if game != null else null
+	var id := _character_id(game)
+	if saver == null or id.is_empty():
+		return ""
+	return ProjectSettings.globalize_path(str(((saver as RefCounted).call("characters") as RefCounted).call("path_for", id)))
+
+
+static func _save_witness(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	if game == null:
+		return {"verdict": "ERROR", "detail": "no /root/Game", "data": {}}
+	var id := _character_id(game)
+	var path := _character_file(game)
+	if path.is_empty() or not FileAccess.file_exists(path):
+		return {"verdict": "FAIL", "detail": "no character file on disk for '%s' (%s)" % [id, path], "data": {}}
+	var sha := FileAccess.get_sha256(path)
+	var mtime := int(FileAccess.get_modified_time(path))
+	var characters: RefCounted = (game.get("save_system") as RefCounted).call("characters")
+	var on_disk: Dictionary = characters.call("state", id)
+	var disk_flags := JSON.stringify(on_disk.get("flags", {}))
+	var missing: Array[String] = []
+	for flag: Variant in (args.get("contains", []) as Array):
+		if not disk_flags.contains("\"%s\"" % str(flag)):
+			missing.append(str(flag))
+	var present: Array[String] = []
+	for flag: Variant in (args.get("lacks", []) as Array):
+		if disk_flags.contains("\"%s\"" % str(flag)):
+			present.append(str(flag))
+	var copy := ""
+	if args.has("label"):
+		var dst := out_dir(tree).path_join(str(args.label))
+		DirAccess.make_dir_recursive_absolute(dst)
+		copy = dst.path_join("%s.character.json" % id)
+		var out := FileAccess.open(copy, FileAccess.WRITE)
+		if out != null:
+			out.store_buffer(FileAccess.get_file_as_bytes(path))
+			out.close()
+	var data := {"character_id": id, "sha256": sha, "mtime": mtime, "missing": missing, "present": present,
+		"file": path.get_file(), "copy": copy}
+	var ok := missing.is_empty() and present.is_empty() and not on_disk.is_empty()
+	var since := ""
+	if args.has("since"):
+		var key := StringName("f15_save_mark_%s" % str(args.since))
+		if not tree.has_meta(key):
+			return {"verdict": "ERROR", "detail": "no save_witness mark '%s' on this peer" % str(args.since), "data": data}
+		var mark: Dictionary = tree.get_meta(key)
+		var rewritten := sha != str(mark.sha256) and mtime >= int(mark.mtime) and str(mark.character_id) == id
+		data["rewritten_since_mark"] = rewritten
+		data["mark_mtime"] = int(mark.mtime)
+		ok = ok and rewritten
+		since = "; rewritten since mark '%s' (sha %s -> %s, mtime %d -> %d)=%s" % [str(args.since),
+			str(mark.sha256).left(12), sha.left(12), int(mark.mtime), mtime, str(rewritten)]
+	if args.has("mark"):
+		tree.set_meta(StringName("f15_save_mark_%s" % str(args.mark)),
+			{"sha256": sha, "mtime": mtime, "character_id": id})
+		since += "; marked '%s'" % str(args.mark)
+	return {"verdict": "PASS" if ok else "FAIL",
+		"detail": "character '%s' on disk (%s, sha %s, mtime %d): missing %s, unexpectedly present %s%s%s"
+			% [id, path.get_file(), sha.left(12), mtime, str(missing), str(present), since,
+				"" if copy.is_empty() else "; copied to " + copy.trim_prefix(out_dir(tree) + "/")],
+		"data": data}
+
+
+static func _title_continue(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	var session: Node = game.get("session") if game != null else null
+	if game == null or session == null:
+		return {"verdict": "ERROR", "detail": "no Game/Session"}
+	if bool(session.call("is_active")):
+		return {"verdict": "FAIL", "detail": "title_continue follows a quit: this peer's session is still active"}
+	var slot := int(game.call("autosave_slot"))
+	if not bool(game.call("has_save", slot)):
+		return {"verdict": "FAIL", "detail": "no save in the autosave slot %d to Continue" % slot}
+	var id := _character_id(game)
+	var port := int(args.get("port", int(tree.get("_enet_port"))))
+	if tree.change_scene_to_file("res://scenes/ui/title_screen.tscn") != OK:
+		return {"verdict": "FAIL", "detail": "could not enter the production title"}
+	var title: Node = null
+	for f in 240:
+		await tree.physics_frame
+		if tree.current_scene != null and tree.current_scene.is_in_group(&"title_screen"):
+			title = tree.current_scene
+			break
+	if title == null:
+		return {"verdict": "FAIL", "detail": "the production title did not become current"}
+	# A freshly started process: the production new-run reset, so nothing the
+	# old session held (receipts, world facts) can survive except through disk.
+	game.call("reset_for_new_game")
+	var homecoming: Variant = load(HOMECOMING_PATH)
+	var emptied := not bool(game.get("local").get("flags").call("has", homecoming.SEEN_FLAG)) \
+		and not bool(game.get("local").get("flags").call("has", homecoming.CREDITS_SEEN_FLAG)) \
+		and not bool(game.get("world").get("flags").call("has", homecoming.WORLD_FLAG))
+	# `_host_port` is transport plumbing (as production_host sets it): the guest
+	# rejoins on the harness's port.
+	title.set("_host_port", port)
+	title.call("_show_load_slots")
+	var button: Button = null
+	for child: Node in (title.get("_load_box") as Node).get_children():
+		if child is Button and (child as Button).text != "Back":
+			button = child as Button
+			break
+	if button == null:
+		return {"verdict": "FAIL", "detail": "Load Game listed no save", "data": {"emptied": emptied}}
+	var pressed := button.text
+	button.emit_signal("pressed")
+	var budget := int(args.get("budget_frames", 9000))
+	var entered := false
+	for f in budget:
+		await tree.physics_frame
+		if tree.current_scene != null and not tree.current_scene.is_in_group(&"title_screen") \
+				and bool(session.call("is_active")) and bool(session.call("is_host")) \
+				and tree.call("_sequence_director") != null:
+			entered = true
+			break
+	if not entered:
+		return {"verdict": "FAIL", "detail": "pressing '%s' did not reach a hosted world within %d frames (scene=%s, active=%s)"
+			% [pressed, budget, tree.current_scene.name if tree.current_scene != null else "none", str(session.call("is_active"))],
+			"data": {"emptied": emptied}}
+	for f in int(args.get("settle_frames", 240)):
+		await tree.physics_frame
+	tree.set("_scene_name", "world")
+	var back := _character_id(game) == id
+	var data := {"emptied": emptied, "reloaded": true, "same_character": back, "character_id": _character_id(game),
+		"realm": str(game.get("current_realm")), "button": pressed, "hosting": bool(session.call("is_host")),
+		"scene": str(tree.current_scene.name)}
+	return {"verdict": "PASS" if emptied and back else "FAIL",
+		"detail": "title: reset as a fresh process (receipts and world facts gone=%s), Load Game pressed '%s' -> Game.load_game(%d) -> scene '%s' hosting udp/%d; character '%s' back=%s"
+			% [str(emptied), pressed, slot, str(tree.current_scene.name), port, _character_id(game), str(back)],
 		"data": data}

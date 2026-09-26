@@ -1,0 +1,9 @@
+unit_suites rc=0 scripterr=0
+smoke_recall_level rc=0 scripterr=0
+smoke_saddle_remount rc=0 scripterr=0
+smoke_companion_fall rc=1 scripterr=0
+smoke_riding rc=0 scripterr=0
+smoke_aggression rc=0 scripterr=0
+smoke_net_cloudreach_riding rc=0 scripterr=0
+DONE
+smoke_companion_fall (leg A reworked) rc=0 scripterr=0 -- CLOUDREACH COMPANION FALL OK checks=36 failures=0

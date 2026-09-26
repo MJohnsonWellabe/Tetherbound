@@ -360,6 +360,18 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   by design and do not fail the gate). A criterion counts as MET only on a SHA a green FULL run covered. A
   red scheduled full run is the coordinator's first job: bisect the batches
   merged since the last green full run and hand the fix to the owning lane.
+- **Offload long runs, never wait idle (coordinator, 2026-09-26).** Lane
+  containers have 4 CPUs and no GPU; renders are software-rasterised. Start
+  runs over ~2 minutes in the background and keep working; iterate captures
+  with `VP_FAST=1`/`--fast` and take full-resolution evidence once; run only
+  the tests the diff touches (the integration batch runs the full tier); run
+  up to 3 headless tests at once, each with its own `XDG_DATA_HOME`. To free
+  the container entirely, dispatch `.github/workflows/render.yml` from `main`
+  with `checkout_ref` = the lane branch, `script` = a `tests/` or `tools/`
+  `.gd`, `args`, `mode` (render/headless) and `label`; its artifact holds
+  every file the run wrote, `user://` and `run.log`. Several may run at once.
+  `tools/cloud_setup.sh` installs the pinned Godot, xvfb and a warm import
+  cache in a fresh container (also usable as the environment setup script).
 - **A CI run under five minutes is not a verification.** CI skips every code
   job when the diff against the base is documentation-only — check the run
   duration **and** that code jobs actually ran.

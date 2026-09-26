@@ -944,7 +944,116 @@ SCRIPT ERROR count is 0 in both runs.
   - **Stopped by me after ~12 min** on the coordinator's SNOWBALL re-order (F10#1 first), still inside the prefix. The last line was `DIAGNOSTIC: START Lantern Pools charged-window wait`, after Dace and `lower_rods_disabled`.
   - At that point: 0 SCRIPT ERROR, and no step result, death or satchel line. So trainer deaths and satchel recoveries are both 0 up to the stop; no final totals line printed.
   - Witness dir removed. No F11 clause was reached.
-- **Next** (queue items 2–3): rerun the same command. The first things to read are the LB press lines after the Still Grove rest and any `HARVEST NODE … left the tree` line.
+- **Run 19** (after F10#1; commits up to 57813ecd5):
+  - **Prefix:** PASS in 1193.5 s. 10 warnings, 275 dodge frames, 0 hits, 0 deaths, 0 satchel recoveries; tools kept.
+  - **Crown step:** rest over 3 nights. The send-out used ordinary joypad LB at 1x: **every press changed the active creature**, for example `LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit`, and presses 2–4 did the same. So the dead-press cause is confirmed and no LB binding bug is shown.
+  - **Road KO:** a road fight knocked out terrapup. The party re-rested one night and the send-out worked again.
+  - **Alpha:** both escorts won. `Capacitor Alpha outcome=won`: bramblebun L46 finished at 88.6/351.5 against voltarach L40 (511.8 HP), with 102 hits in 95.6 s.
+  - **Harvest frees, now named:** every "freed during the approach" node was freed by the harness's own Interact press. The press starts the equipped tool's swing, and the swing resolves on the node at its impact frame. Example: `HARVEST NODE stormwood_harvest_conductor_run_099 left the tree ...: receipt=true equipped=axe swinging=true distance=0.37 recent=[... interact press winner=.../stormwood_harvest_conductor_run_099/Interactable; ... swing_started ...; ... swing_connected stormwood_harvest_conductor_run_099]`. Each gather committed its exact receipt and yield. This is not a game bug.
+  - **Stop:** the thirty-minute Crown watchdog expired while the step was still gathering Crown glass (2 of the Crown nodes taken). Nothing was stuck. 0 SCRIPT ERROR. Total wall time 50m10s.
+  - **Totals:** the final `F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 ...` covered the prefix only, because the watchdog path dropped the Crown step's counts.
+  - **Fix** (the next commit): the Crown step gets a 60-minute capacity, and an unfinished step's strike and death counts are printed and summed.
+- **Run 20** (60-minute Crown capacity):
+  - **Prefix:** PASS in 1200.2 s. 1 warning, 0 hits, 0 deaths.
+  - **Crown step:** rest, send-out, escorts, Alpha, and the four west-loop gathers.
+  - **Stop:** the step left Rodline Refuge on a "fading" window and reached `stormwood_harvest_conductor_run_075` after the window closed: `did not commit its exact live yield/receipt: gained=0 expected=3`. Crown step FAIL at 1618.5 s.
+  - **Strikes:** `F11 WITNESS STRIKES crown {"damage":18.0,"deaths":0,"dodge_frames":1048,"hits":1,"satchel_recoveries":0,...,"warnings":21}`.
+  - **Totals:** `SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0`. 0 SCRIPT ERROR.
+  - **Harness fix** (next commit): leave for the seams only when the runtime's own open window at the seams is at least 150 s. This is the prefix's rule.
+- **Run 21** (150 s window rule):
+  - **Prefix:** PASS in 1190.5 s. 8 warnings, 0 hits, 0 deaths.
+  - **Alpha:** the Alpha won on its second approach. The first ended `outcome=lost` with brooktail fainted and the Alpha at 239.7/511.8.
+  - **Window rule works:** `WAITED ... { "phase": "break", "open_seconds": 179.8 }`, then 78.1 s left after seam 075 and 46.1 s after 074. All six sources were taken ("SIX sources yielded6 Crown glass/8 Thunderwood/6 vine") and both frames were crafted.
+  - **Stop:** a road fight at the Still Grove road point was lost (sparkit fainted). The build then failed with `controller right stick could not face the Still Grove footing`. Crown step FAIL at 2069.6 s.
+  - **Strikes:** `STRIKES crown {"damage":18.0,"deaths":0,"hits":1,"satchel_recoveries":0,"warnings":29}`. 0 SCRIPT ERROR.
+  - **Harness fix** (89ffa24a1): the turn fights out any running fight first. If it still cannot turn, it reports the camera, fight, input-owner, pause, arbiter and clock state.
+- **Run 22** (89ffa24a1): the first earned run past the Crown.
+  - **Prefix:** PASS in 1217.7 s.
+  - **Crown step: PASS in 1922.9 s**, the first ever. Alpha won by mudsnout; the Break window was 179.6 s open on leaving. A Still Grove road fight was lost, but the fight-aware turn then faced the footing and the paid Crown arch was built by controller placement.
+  - **Crown arrival, guardian, Wen, Rootgate: PASS in 99.0 s.** Guardian won by bramblebun at 5.5/351.5 left.
+  - **Dynamo step:** earned `lantern_hollow_reached` and `captive_truth_learned`, then FAIL at 124.5 s: `officer_nysa_deepwood_rod never won the InteractionArbiter (winner=.../StormwoodTrainers/Tavi/Interactable ... "distance": 1.14 ...; own_offer= "Challenge Officer Nysa" "distance": 1.27)`.
+  - **Safety:** trainer deaths 0, satchel recoveries 0, strike hits 0 (17 warnings in total). 0 SCRIPT ERROR.
+  - **Game data bug fixed** (c1b554646): circuit Tavi stood exactly on Officer Nysa, the critical Deepwood picket leader. Tavi moved 14 m along the road, and the scatter was re-baked (fingerprint only).
+  - **Regression:** `test_no_two_trainers_share_a_challenge_circle` (8 m) fails on the old data.
+  - **Predicted next overlap** (not fixed, because the rule is to fix only what the run shows): trainer `outerworks_lieutenant_sera` stands exactly on NPC Officer Kestrel at [-100, 107.72, 5350]. The same-person trainer/NPC pairs (Rook, Pim, Marrow) are likely intended; Ivo/Dace [-900, 1780] passes in the prefix.
+  - **Merged origin/main** (#259/#260) at this safe point, keeping main's Footing-only `standing_floor()`.
+- **Static interaction-spacing audit** (f41279a04, on the coordinator's order after run 22):
+  - Every trainer, NPC, rod switch, camp prompt and pickup now keeps its circle clear of the others. The rows moved are listed in the commit message. `test_stormwood_interaction_spacing` fails on the old data with 13 overlaps.
+  - **Open finding:** three people are authored twice, as a talking NPC and a same-named trainer body on one spot: Captain Marrow, Pim and Rook.
+    - For Pim and Rook, the NPC conversation wins the press (F10 two-peer run: every press at Rook opened the NPC). That is fine for their quest-giver role. Whether a separate challenge body is needed is for the coordinator.
+    - Marrow is on the critical path. The earned Marrow segment presses the trainer body's own challenge prompt, so run 24 will show whether the NPC's Greet steals it.
+- **Run 23:** stopped by me in the prefix to apply the static fix first.
+- **Run 24** (f41279a04 static spacing + merge):
+  - **Prefix:** PASS in 1198.9 s.
+  - **Crown step:** PASS in 1998.4 s. The window opened at 179.9 s.
+  - **Crown arrival, guardian, Wen, Rootgate:** PASS in 103.9 s.
+  - **Dynamo step:** after `lantern_hollow_reached` and `captive_truth_learned`, a Deepwood-station wild won: `FIGHT end Deepwood station outcome=lost ... sparkit ... enemy stormraven L41 240.7/302.1`. The next lines were `PARTY before officer_nysa_deepwood_rod: sparkit 0/325 fainted, mudsnout 172/370, bramblebun 0/351 fainted, terrapup 254/443, brooktail 0/334 fainted` and `LB press 1 (joypad button, 39 physics frames): active mudsnout -> terrapup`. It then failed: `officer_nysa_deepwood_rod requires an unmet earned prerequisite or usable ally`. Wall 158.5 s.
+  - **Safety:** `F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 satchel_stacks=0 strike_hits=1 warnings=44 damage=18.0`. 0 SCRIPT ERROR.
+- **STOPPED (stop rule):** this is the second real failure inside the Dynamo step (run 22: arbiter overlap, fixed; run 24: the challenge was refused with the party worn).
+  - **Diagnosis:** the Dynamo segment takes no rest after the Crown guardian fight, which leaves bramblebun at 5/351, and after road fights. It reached Nysa with 3 of 5 fainted. It also judged `can_challenge` right after an asynchronous LB send-out.
+  - **Proposed next step,** committed but not run (5b6f3edab): rest a worn party at Lantern Hollow Waycamp before the Deepwood picket, using the Crown step's ordinary bed/rest prompts. Wait for the director to accept the challenge. Log the exact refusal reason.
+  - **Open risks further on:** there is no rest before Sera, Kestrel or Marrow. Ember Bivouac opens only after all rods are down. The same-person Marrow NPC/trainer pair has not been reached yet.
+
+- **Run 25** (eaa5029f4, with a rest before every named Dynamo-segment fight):
+  - **Prefix:** PASS in 1213.0 s.
+  - **Crown step:** FAIL at 1981.8 s, at the paid-arch placement. A Still Grove road fight was lost, then: `controller right stick could not face the Still Grove footing (forward (0.768932, 0.0, -0.639331) -> (0.843254, 0.0, -0.537516), wanted (0.0, -1.0); fighting=false trainer_battle=false input_owner=<none> paused=false arbiter_enabled=true time_scale=8.0 ...)`.
+  - **Safety:** `SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 strike_hits=2 warnings=46 damage=36.0`. 0 SCRIPT ERROR.
+  - **STOPPED (stop rule):** this is the second failure of the camera turn (runs 21 and 25). Runs 22 and 24 passed the same turn.
+  - **Diagnosis:** nothing owned input. The rig reads the look stick in `_process` using the render delta. At the wrapper's 8x/480 Hz clock the camera drifted away from the target, which is consistent with the rig's target tracking taking over. A wild enemy is still near after a lost road fight.
+  - **Proposed next step,** committed but not run: turn at 1x/60 Hz with the stick held across render frames, and name the tracking target if it still fails.
+  - **Not exercised:** the Dynamo-segment rests (eaa5029f4) were not reached.
+
+- **Run 26** (c6129e774: the 1x held-stick camera turn, and a nearby wild cleared first; the authorized attempt). Wall 63m26s.
+  - **Prefix:** PASS in 1209.5 s.
+  - **Crown step:** PASS in 2002.8 s. `CAMERA TURN: wild Wild_sparkit_881250856_1 5.5 m away after the road fight (rig tracking=<none> (orbit target /root/Stormwood/Player)); walking out of engage range`, then `walked out of engage range (wild now 27.2 m away)`. The turn succeeded. The rig was not target-locked, so the auto-tracking hypothesis is ruled out.
+  - **Rootgate step:** PASS in 103.3 s.
+  - **Dynamo step, rests:** `REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp` took 5 nights. A fully rested party then won the Deepwood-station wild (terrapup L46 at 246.6/451 vs stormraven L41), followed by one more night of rest. `PARTY before officer_nysa_deepwood_rod: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 451/451, brooktail 340/340`.
+  - **Dynamo step, FAIL** at 469.7 s: `officer_nysa_deepwood_rod activated competing provider /root/Stormwood/StormwoodTrainers/Tavi/Interactable#1603432155477`, although Nysa's prompt had been the arbiter winner for 8 frames before the press.
+  - **Static probe of the live scene:** Nysa's body is at (-890, 52.1, 4482) and Tavi's at (-881.1, 52.2, 4479.2), both with r=4.2 and priority 0. At the stance (-890, 4480) the arbiter picks Nysa, and Tavi is 8.9 m away. So placement does not explain it.
+  - **Safety:** `SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 strike_hits=1 warnings=45`. 0 SCRIPT ERROR.
+- **STOPPED:** this was the authorized Dynamo attempt, and it failed at the Nysa challenge press. Cause not yet known.
+  - **Diagnostic, committed but not run** (348ee6c6a): the press records every provider activated during it, with the trainer's position. A competing activation reports the player, both prompts and their distances, and the winner after the press.
+  - The next run should name the cause in one line: for example, a second activation from a press held across the dialogue opening, or the player displaced during the press.
+
+- **Nysa-press cause found by a focused reproduction** (597b435b6; `tests/smoke_stormwood_nysa_press.gd` stages the run-26 facts and runs the earned segment's own approach and press):
+  - **At 1x** (from the stance and from the Lantern Hollow camp): Nysa is pressed and her battle is won, `outcomes { "officer_nysa_deepwood_rod": true }`.
+  - **At the witness's 8x/480 Hz clock, from the camp:** `activations=[.../Tavi/Interactable@(-883.16, 52.46, 4476.74)]; wanted prompt ... 8.66 m; activated ... 3.28 m`. The press went to Tavi from where the trainer really stood.
+  - **Not a game bug.** The arbiter pressed the nearest prompt at the true position. The helper had counted "held winner for 8 frames" without checking the trainer was at the stance.
+  - **Fix:** release the stick, walk back if the trainer is more than 1.5 m off the stance, and hold and press at 1x, counting a frame only while at the stance.
+  - **After the fix:** the 8x reproduction presses Nysa and wins, `STORMWOOD NYSA PRESS OK`.
+  - Also fixed: a cast of a freed enemy body between trainer rounds.
+- **Runs 27 and 27b:** the earned witness at 597b435b6 was dispatched twice in parallel on the GitHub render runner (headless, 150 min). Workflow runs 36240544034 and 36240553015 use `--through-aftermath --witness-dir=user://f11_witness`. The reload runs locally in a new process from the runner's saved `user://f11_witness`.
+
+- **Runner run 27** (597b435b6, workflow run 36240544034):
+  - **Prefix:** PASS in 1194.6 s.
+  - **Crown step:** PASS in 2074.3 s. The camera turn first walked clear of a sparkit, from 7.3 m to 29.1 m.
+  - **Guardian step:** FAIL at 50.9 s: `ordinary Crown guardian approaches did not earn its clear receipt`. Four approaches, and no fight started. The party was worn: bramblebun fainted, terrapup at 48/443.
+  - **Safety:** trainer deaths 0, satchel recoveries 0, 3 strike hits.
+  - **Fix:** 5f5eebee5 logs the engage snapshot for every approach that does not engage.
+- **Runner run 27b** (same SHA, workflow run 36240553015):
+  - **Prefix:** PASS in 1209.6 s.
+  - **Crown step:** PASS in 2091.6 s.
+  - **Guardian / Wen / Rootgate:** PASS in 114.3 s.
+  - **Nysa:** the party rested at Lantern Hollow and reached Nysa at full health. The press no longer went to Tavi.
+  - **Dynamo step:** FAIL at 487.2 s: `officer_nysa_deepwood_rod dialogue did not start actual hosted combat`. No reason was logged.
+  - **Safety:** trainer deaths 0, satchel recoveries 0, 1 strike hit.
+  - **Fix:** f8da62b2a logs the opened conversation and every hub start, refusal and verdict event. The focused 8x Nysa smoke opens `stormwood_trainer_officer_nysa_deepwood_rod_challenge` and wins.
+- **Runner runs 28 and 28b** (f8da62b2a; includes the audio worker's ab693a7b8): dispatched in parallel as workflow runs 36245509089 and 36245510388.
+
+### Open presentation items (reported to the coordinator, not fixed here)
+
+- Hesk's dialogue portrait is a young villager, and Wen's is an old man; neither matches the model (F10 two-peer frames `01_host_hesk_report`, `03_host_wen_records`).
+- Rook stands inside the d_giant arch opening, and a large wild creature perches on top of the arch (`06_host_rook_return`, `07_after_reload_and_repeats`).
+- Pim and Rook each also exist as a same-spot trainer body. Their NPC conversation wins the press, which fits their quest-giver role. Whether a separate challenge body is needed is for the coordinator.
+
+### Verdict (ACCEPTANCE §6.1 F11), after runs 18–24
+
+- **"Dynamo and Stormheart resolve from the earned route": NOT MET.**
+  - The earned route now reaches the Dynamo approach. The Crown step, Crown arrival, guardian, Wen and the Rootgate all pass (runs 22 and 24), and Lantern Hollow and Sable's truth are earned.
+  - It stops before the Deepwood picket. The Dynamo, Marrow and the Stormheart were not reached.
+- **"Long Storm aftermath, Spark/shrine … persist": NOT MET.** The aftermath, the disk-save/restart/load (`--verify-reload`) and the F11 captures were not reached. No capture was taken.
+- **Trainer deaths and satchel recoveries,** runs 19–24: 0 deaths and 0 recoveries in every run.
+- **Next:** rerun at 348ee6c6a once the coordinator authorizes it, to name the Nysa-press cause.
 
 ### Not produced
 

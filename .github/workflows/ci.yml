@@ -1627,6 +1627,15 @@ jobs:
       - name: Verify ordinary Stormwood to Water gate path
         if: ${{ !cancelled() }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_water_gate_path.gd
+      - name: Verify Stormwood Surge audio observer
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_surge_audio.gd
+      - name: Verify Stormwood hosted encounter admission
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_hosted_admission.gd
+      - name: Verify Stormwood Nysa press
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_nysa_press.gd
       - name: Verify Tidewake closed-gate tide-race seal
         if: ${{ !cancelled() }}
         run: timeout 300s godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
@@ -1650,6 +1659,33 @@ jobs:
       - name: Verify Tidewake combat pause while swimming
         if: ${{ !cancelled() }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_combat_pause.gd
+      - name: Verify Tidewake Guardian offer keeps controller focus across a drop
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_water_guardian_drop_refocus.gd
+      # F13 (ACCEPTANCE 6.1): the six selected Tidewake local chains, one per
+      # island group, each show lure/action/payoff/acknowledgement in the
+      # production scene, then save through Game.save_game, reset, Game.load_game
+      # into a rebuilt Water world and prove the completion persists (saved
+      # completion, ACCEPTANCE 5). Each measured ~50-55s locally, three in
+      # parallel (2026-09-26); 120s leaves headroom for slower CI runners.
+      - name: Verify Tidewake chain side_water_lantern_return
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_lantern_return.gd
+      - name: Verify Tidewake chain side_water_gull_research
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_gull_research.gd
+      - name: Verify Tidewake chain side_water_cradle_care
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_cradle_care.gd
+      - name: Verify Tidewake chain side_water_garden_records
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_garden_records.gd
+      - name: Verify Tidewake chain side_water_deep_watch_chart
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_deep_watch_chart.gd
+      - name: Verify Tidewake chain side_water_lastlight_shelter
+        if: ${{ !cancelled() }}
+        run: timeout 120s godot --headless --path . --script tests/smoke_water_lastlight_shelter.gd
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
@@ -1693,9 +1729,10 @@ jobs:
   verify-regions-relay:
     # Split from verify-regions-shard (CI wall-clock): identical steps, own runner.
     runs-on: ubuntu-latest
-    # Sum of these six tests' own run time measured 2026-09-01: 1,034s
-    # (17.2 min). 25 min covers checkout/setup with margin.
-    timeout-minutes: 35
+    # Measured 2026-09-26 (run 36244390545): 8.4 min job wall before the
+    # Tidewake loops step. That step is bounded at 1365 s (22.75 min), so the
+    # worst case is ~31 min plus runner variance; 45 min keeps margin.
+    timeout-minutes: 45
     needs: changes
     if: needs.changes.outputs.full == 'true'
     steps:
@@ -1771,6 +1808,13 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # F13 #1 (ACCEPTANCE 6.1): the four land loops and three return
+      # shortcuts walked/swum with real stick input in the production scene.
+      # Timeout = 1.5x the measured 908 s wall time of the final green run
+      # (RUN5). Placed here, not in verify-regions-shard (18 of its 35 min).
+      - name: Verify Tidewake land loops and return shortcuts walked
+        if: ${{ !cancelled() }}
+        run: timeout 1365s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd
 
   verify-owner-regressions-shard:
     runs-on: ubuntu-latest
@@ -2973,12 +3017,38 @@ jobs:
         if: ${{ !cancelled() }}
         run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
 
+  verify-cloudreach-persistence:
+    # F08 (ACCEPTANCE 6.1): restored wind roads, Wings/shrine and the Stormwood
+    # key survive a real solo disk reload, each written once across the split
+    # world/character halves. Negative controls (--f08-unsaved / --f08-double)
+    # are run locally and recorded under ralph/reports/CLOUDREACH-LANE/f08-persistence/.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Verify Cloudreach persistence tail
+        run: timeout 600s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
+
   ci-gate:
     runs-on: ubuntu-latest
     if: always()
     needs:
       - changes
       - verify-veridian-offer
+      - verify-cloudreach-persistence
       - verify-scatter-bake-freshness
       - verify-terrain-bake-freshness
       - verify-unit-tests
