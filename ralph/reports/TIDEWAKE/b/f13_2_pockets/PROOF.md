@@ -58,7 +58,7 @@ Logs: `unit_tests.log` (7 files, 32 tests, 14831 assertions, 0 failed; the print
 | cradle_shell_nest | water:tidal_cradle:harvest:007 | Tidal Cradle arrival, 500 m | 4 Reef Stone (pickaxe) | PAID |
 
 Full-run numbers above are from the first full run (unchanged legs) plus the per-pocket reruns;
-`smoke_all_pockets.log` holds the post-fix full run (FULL_RUN_RESULT (post-fix, all eight pockets, one run on commit 3855a1654ed912ca3d0a3823051f62772daf4278 code): **48 checks, 0 failures, rc=0**. Six Skill Candy pockets ACCEPTED (Deep Watch via the gate fixture), Cradle +4 Reef Stone, reed hollow +3 Reed Fiber PAID. below).
+`smoke_all_pockets.log` holds the post-fix full run (result below).
 
 FULL_RUN_RESULT (post-fix, all eight pockets, one run on commit 3855a1654ed912ca3d0a3823051f62772daf4278 code): **48 checks, 0 failures, rc=0**. Six Skill Candy pockets ACCEPTED (Deep Watch via the gate fixture), Cradle +4 Reef Stone, reed hollow +3 Reed Fiber PAID.
 
@@ -85,3 +85,8 @@ FULL_RUN_RESULT (post-fix, all eight pockets, one run on commit 3855a1654ed912ca
   (`water_local_chains.json` props, `stormwood_pockets.json` mouth_lure) is outside owned paths and
   would need its consumer confirmed. WORLD's optional-activity rule requires a discoverable lure.
 - No multiplayer (second character) claim of a pocket in the walked smoke; host claim rule unit-tested only.
+
+## Review follow-ups (open gaps)
+
+- Co-op: the pocket's `claim_authority` is `host_validates_character_owned_pickup`, but a harvest patch is gathered once per world, so in co-op only one character gets the reed (same as the Cradle precedent). This stays an open F13#2 gap.
+- 44 other `reed_fiber` rows still say `gather_action: hand`. The field is not read (the tool comes from ItemDB), so this is a harmless inconsistency to clean up later.
