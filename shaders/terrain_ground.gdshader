@@ -194,13 +194,6 @@ uniform float long_water_bank_strata_warp_m = 0.9;
 uniform float long_water_bank_strata_run_m = 29.0;
 uniform int long_water_bank_rock_texture_id = 2;
 
-// VIS slope rock: see the block after the control-map fetch in fragment().
-uniform float slope_rock_strength : hint_range(0.0, 1.0) = 0.0;
-uniform float slope_rock_start : hint_range(0.0, 1.0) = 0.78; // normal.y where rock begins (~39 deg)
-uniform float slope_rock_full : hint_range(0.0, 1.0) = 0.55;  // normal.y where it reaches full strength (~57 deg)
-uniform int slope_rock_texture_id = 2;
-uniform int slope_rock_veg_mask = 35; // bits of vegetation ids: grass 0, soil 1, forest_floor 5
-
 // Weight of texture `id` at this fragment: bilinear over the four control
 // texels when the material is bilerping, else the nearest one. The control
 // word carries base id, overlay id and the blend between them.
@@ -575,45 +568,6 @@ void fragment() {
 		floatBitsToUint(texelFetch(_control_maps, index[1], 0).r),
 		floatBitsToUint(texelFetch(_control_maps, index[2], 0).r),
 		control[3]);
-	}
-
-	// VIS slope rock (ralph/reports/VISUAL/AUDIT.md M9). The Meadows control
-	// map paints grass/verge onto cliff faces, and this override shader was
-	// generated without Terrain3D's auto-shader, so `auto_shader = true` never
-	// put stone on steep ground: gully and trench walls read as smeared grass
-	// (code-blind judge, P006/P007). On a VEGETATION cell (both ids in
-	// `slope_rock_veg_mask`) steeper than `slope_rock_start`, rewrite the
-	// overlay to the rock texture with a blend that reaches `slope_rock_strength`
-	// by `slope_rock_full`. Paths, damp ground and authored rock are never
-	// touched; strength 0 (the default) is the untouched original.
-	if (slope_rock_strength > 0.0) {
-		for (int i = 0; i < 4; i++) {
-			if (i < 3 && !bilerp) {
-				continue;
-			}
-			float s = (1.0 - smoothstep(slope_rock_full, slope_rock_start, index_normal[i].y)) * slope_rock_strength;
-			if (s <= 0.0) {
-				continue;
-			}
-			uint c = control[i];
-			int b_id = int(c >> 27u & 0x1Fu);
-			int o_id = int(c >> 22u & 0x1Fu);
-			float bl = float(c >> 14u & 0xFFu) * DIV_255;
-			if (((slope_rock_veg_mask >> b_id) & 1) == 0) {
-				continue;
-			}
-			float new_bl;
-			if (o_id == slope_rock_texture_id) {
-				new_bl = max(bl, s);
-			} else if (bl <= 0.0 || ((slope_rock_veg_mask >> o_id) & 1) == 1) {
-				new_bl = s;
-			} else {
-				continue;
-			}
-			uint nb = uint(clamp(new_bl, 0.0, 1.0) * 255.0 + 0.5);
-			c = (c & ~((0x1Fu << 22u) | (0xFFu << 14u))) | (uint(slope_rock_texture_id) << 22u) | (nb << 14u);
-			control[i] = c;
-		}
 	}
 
 
