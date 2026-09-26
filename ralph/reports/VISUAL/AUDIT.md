@@ -13,12 +13,12 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 
 | # | Criterion | Defect (source) | Where to start | Status |
 |---|---|---|---|---|
-| V1 | F13#5 | Tidewake dock lanterns and wet timber, then shore and landmark hierarchy (judge on `docks_after_v5`) | `scripts/world/water_dock_dressing.gd`, `data/config/water_dock_dressing.json` | in progress (#288) |
-| V2 | F13#5 | Veilfall far/mid/near stands fail Bars A/B: waterfalls, mist, banding, shadows; crag, terrace and gate massing (judge r1) | `water_veilfall*.gd`, `water_veilfall_fall.gdshader:49`, `water_veilfall_rock.gd:110-144` | open |
-| V3 | F13#5 | Currents read marginal; shader and framing | Tidewake current material and `capture_tidewake_matrix.gd` | open |
-| V4 | A-C1 | BLOCKER: Meadowhart creature mesh is broken | §A C1; `tools/art_pipeline/blender/` | open |
+| V1 | F13#5 | Tidewake dock lanterns and wet timber, then shore and landmark hierarchy (judge on `docks_after_v5`) | `scripts/world/water_dock_dressing.gd`, `data/config/water_dock_dressing.json` | Lantern slice #288 merged via integration-30; broader shore/material criterion open |
+| V2 | F13#5 | Veilfall far/mid/near stands fail Bars A/B: waterfalls, mist, banding, shadows; crag, terrace and gate massing (judge r1) | `water_veilfall*.gd`, `water_veilfall_fall.gdshader:49`, `water_veilfall_rock.gd:110-144` | Cascade slice #322 available; full massing/landmark bars open |
+| V3 | F13#5 | Currents read marginal; shader and framing | Tidewake current material and `capture_tidewake_matrix.gd` | #329 draft; water criterion fails, further local iteration parked for whole-game coverage |
+| V4 | A-C1 | BLOCKER: Meadowhart creature mesh is broken | §A C1; `tools/art_pipeline/blender/` | #318 reopened; main 025a09d9d still has old body; candidate anatomy accepted, whole-frame B open |
 | V5 | B-H1 | Tether rank bodies: shape and anatomy only, not palette | §B H1 | open |
-| V6 | B | Faces and cast findings in §B, other than H2/H3 | §B | open |
+| V6 | B | Faces and cast findings in §B, other than H2/H3 | §B | #331: emission repair on 22 bodies passes scoped source/image review; captain tint, source detail and geometry remain open |
 | V7 | F04#6 | Defeat read is weak: raise DEFEAT_FOLD and re-run the defeated clips for the grunt, captain_a, captain_b and warden rigs | `tools/art_pipeline/blender/animate_humanoid.py` | open |
 | V8 | M1/M3 | Meadows landmarks unrecognisable. Hall never dominates: exterior massing, drained ground, banners, braziers, sightline | §C1 M1/M3 | open |
 | V9 | F08#3 | Cloudreach high perch: cloud sea and horizon, pale stone, pad primitives (arrival camera stays with the Cloudreach lane) | judge on #253 (5848745065) | open |
@@ -47,6 +47,18 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V32 | F10#3 | Surge phases not nameable from a still: Building judged "Break" twice, Fading only as "Building or Fading" (judge in `ralph/reports/STORMWOOD/b/f10_3/VERDICT.md` (#303)) | `data/config/stormwood_surge.json` presentation.phases building/fading: give each a structural signature a still catches | open |
 | V33 | F10#3 | Strike impact bolt reads as a soft grey pillar; normal-motion impact flash washes the whole frame grey-white, like daylight (judge in `ralph/reports/STORMWOOD/b/f10_3/VERDICT.md` (#303)) | `stormwood_lightning.gd` `_strike_flash`, presentation.flash `strike_*`: jagged forked core with glow plus a ground spark/scorch; cap or localise the frame wash | open |
 | V34 | F10#3 | Always-glowing gold road veins read as a hazard and compete with the strike telegraph (judge in `ralph/reports/STORMWOOD/b/f10_3/VERDICT.md` (#303)) | Stormwood road current (`stormwood_road_current.gd`, `data/config/stormwood_road_current.json`) | open |
+| V35 | shared items | Three permanent elixirs and three temporary tonics share the same potion icon | `tools/gen_item_icons.py`, `data/items/items.json` | #331; six distinct icons pass 32/64 px, grayscale and production satchel review |
+
+Fresh main `025a09d9d` coverage: 183 roster, 128 cast and 30 representative
+four-region native 1080p frames. This is sampled coverage, not chapter acceptance.
+Independent review confirms broad attack-stage clipping, degraded faces and
+duplicated rank silhouettes. Region priorities are Cloudreach landmark architecture,
+terrain/material transitions and foliage hierarchy, then Stormwood landmark framing
+and effects integration. Meadows village is strongest but has foreground obstruction
+and crushed night values. Tidewake Veilfall and Shellwatch stands do not adequately
+show their destinations; do not count those frames as landmark proof.
+Evidence: `CAST-AND-ITEMS.md`; raw local captures under
+`shots/cross-game-main-025a09d9d/`. Whole-game A/B remain open.
 
 ## How to reproduce
 
