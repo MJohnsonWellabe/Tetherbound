@@ -1487,7 +1487,9 @@ func path_factor(x: float, z: float) -> float:
 		# one can actually decorrelate the 2m staircase. `_path_wobble_metres`
 		# is read once in `_init`, not here, because this runs once per
 		# terrain texel and per scatter candidate.
-		var wobble_metres: float = _path_wobble_metres if _path_wobble_metres >= 0.0 else shoulder * 0.5
+		var wobble_metres: float = float(band.get("wobble", -1.0))
+		if wobble_metres < 0.0:
+			wobble_metres = _path_wobble_metres if _path_wobble_metres >= 0.0 else shoulder * 0.5
 		var wobble := _path_edge.get_noise_2d(x, z) * wobble_metres
 		var edge_start: float = maxf(0.0, float(band["half"]) + wobble)
 		best = maxf(best, 1.0 - smoothstep(edge_start, edge_start + shoulder, nearest))
@@ -1771,6 +1773,11 @@ func _append_line(out: Array, points: Array, spec: Dictionary = {}) -> void:
 		"line": line,
 		"half": float(spec.get("width", paths.get("width", 3.0))) * 0.5,
 		"shoulder": float(spec.get("shoulder", paths.get("shoulder", 1.5))),
+		# F01#0: an entry may carry its own edge wobble (metres). The global
+		# `macro.path_wobble_metres` (2.0) exceeds a 1.2m half-width, so a
+		# narrow road necked to one 2m control-map texel where the noise dips
+		# (the band1 spine 7-10m past TrailGate). -1 = use the global value.
+		"wobble": float(spec.get("wobble_metres", -1.0)),
 	})
 
 
