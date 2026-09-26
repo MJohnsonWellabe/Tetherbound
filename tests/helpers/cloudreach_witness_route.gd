@@ -44,6 +44,7 @@ var verdict_written := false
 var leg_persistence: Dictionary = {}
 var sealed_attempt: Dictionary = {}
 var want_exhausted_fall := false
+var exhausted_attempted := false
 var exhausted_window := false
 var exhausted_fall: Dictionary = {}
 var sealed_upper_box := AABB()
@@ -167,6 +168,12 @@ func _rest(id: String) -> bool:
 
 ## The flight leg ends after the return-glide landing on the aerie deck.
 func _return_to_aerie() -> bool:
+	# An opted-in witness runs its exhausted fall from the exact shrine stand
+	# the base route launches its own return glide from (after the windlass),
+	# which the production launch check accepts on every recorded run.
+	if want_exhausted_fall and not exhausted_attempted and not failed:
+		exhausted_attempted = true
+		if not await _exhausted_fall_attempt(): return false
 	var ok: bool = await super._return_to_aerie()
 	if not ok or leg != "flight": return ok
 	if not _require(not skipping_to_aerie, "Declared start skip mode ended at the aerie camp rest"): return false
@@ -256,16 +263,11 @@ func _sealed_upper_attempt() -> bool:
 	return ok
 
 
-## The base route captures "high-roost-landing" right after the verified
-## Fly-only shrine landing; an opted-in witness runs its exhausted fall there.
-func _capture(label: String) -> void:
-	await super._capture(label)
-	if label == "high-roost-landing" and want_exhausted_fall and not failed:
-		await _exhausted_fall_attempt()
 
 
-## Production exhausted-fall recovery, reached by ordinary input only. After the
-## verified shrine landing (the flyer's safe anchor), deploy, hold Jump in the
+## Production exhausted-fall recovery, reached by ordinary input only. From the
+## shrine stand the route launches its return glide from (the flyer's safe
+## anchor is the shrine floor it last stood on), deploy, hold Jump in the
 ## authored `cloudreach_shrine_lift` until the flight clock or stamina runs out
 ## (`state == "exhausted"`), then steer off the pinnacle over the open ravine.
 ## An exhausted flyer sinks; once it is `recovery_drop_m` below the anchor the
