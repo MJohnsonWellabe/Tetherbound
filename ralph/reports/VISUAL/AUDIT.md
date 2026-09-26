@@ -138,6 +138,7 @@ The judge's place labels were lost to a manifest-copy error in my judge prep (no
 | M13 | MINOR | water | P012, E016, P016 | Flat pale water with a hard edge. The Pond, meant as the lush reference, is the least dressed water. | §4; §3.1 | MEADOWS (shore dressing) · VIS (shore band in the water shader) |
 | M14 | MINOR | dusk | E002, E011, E026 | Dusk is a colour shift over day, with no raking warm light or long shadows. | §3.3 | VIS |
 | M15 | MINOR | foliage artefact | E010, E011 | Alpha-cut crowns shimmer as dithered noise at dusk. | rubric 7 | VIS |
+| W1 | MAJOR | Tidewake current restoration (F14#2) | `ralph/reports/TIDEWAKE/b/f14_2_current_restore/*.jpg` | State is proven: `calm_scale` goes 1.0 → 0.5 and the physics current drops 1.3 → 0.325 m/s, and both survive a reload. The look is not proven: no WaterCurrentFlow foam ribbon is readable in the before frames from two fixed production-camera poses over the Tidal Cradle → Salt Crown current. The restored change is only a halved drift speed and about 22 % less opacity, too subtle for a still frame. The after-reload frames lost terrain streaming, so they are not comparable. Needs a readable current (and restored contrast) plus a matched before/after pose. | WORLD Tidewake "currents visibly change"; ACCEPTANCE F14 | Codex (visuals ceded) |
 
 Strengths to keep: the village at P001 and the mill at E016, the badger companion, trainer legibility at night, painted day skies and night mood, the forest interiors, the pylon line as the spine to the finale, and the Warrens mound.
 
