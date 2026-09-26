@@ -34,6 +34,15 @@ var _back_m := ROAD_BACK_DEFAULT_M
 var _fast := false
 var _pitch_start := -12.0
 var _measure := false
+## Road stands only: wild bodies within FREEZE_WILD_M of the trainer are
+## process-disabled from the tick they appear until the stand is done, so a
+## roadside pair (ROAD CP-2 authored clusters sit ~15 m from the Conductor
+## stands) stays where it spawned instead of walking into the lens. Recorded
+## per frame as `frozen_wild`.
+var _freeze_wild := false
+var _frozen: Array[Node] = []
+var _director: Node
+const FREEZE_WILD_M := 25.0
 
 
 func _run() -> void:
@@ -83,6 +92,11 @@ func _run() -> void:
 	var sync := _world.get_node_or_null(^"StormwoodPickups")
 	if sync != null:
 		sync.call("sync_progression")
+	for node: Node in _world.find_children("*", "", true, false):
+		if node.has_method("wild_creatures") and node.has_method("spawn_wild"):
+			_director = node
+			break
+	physics_frame.connect(_freeze_tick)
 	if _measure:
 		await _measure_frames()
 	else:
@@ -124,6 +138,7 @@ func _walk_frames() -> void:
 		var flame := lamp.get_node_or_null(^"AmberFlame") as Node3D if lamp != null else null
 		var obstructions: Array[Dictionary] = []
 		var lure := {}
+		_begin_freeze()
 		for attempt in ARM_RETRIES:
 			var side := sense if attempt < ARM_RETRIES / 2 else -sense
 			here = _along(points, js - _back_m * side)
@@ -157,9 +172,11 @@ func _walk_frames() -> void:
 		if not obstructions.is_empty():
 			info["road_stand_obstructions"] = obstructions
 		lure["spur_pixels"] = await _spur_pixels(id, spur, points, flame)
-		_log("SPURPIX %s side=%s %s" % [id, str(info["side"]), _pix_line(lure["spur_pixels"])])
 		await _capture("%s_1_road_lure" % id, "%s: on %s %d m of road before the spur junction (%s side), normal exploration camera looking along the road" % [
 			id, str(spur.joins), int(_back_m), str(info["side"])], _with(info, _with(lure, {"stand": [stand.x, stand.y]})))
+		lure["spur_pixels"]["frozen_wild"] = _end_freeze()
+		_frames[_frames.size() - 1]["frozen_wild"] = lure["spur_pixels"]["frozen_wild"]
+		_log("SPURPIX %s side=%s %s" % [id, str(info["side"]), _pix_line(lure["spur_pixels"])])
 		# (2) In the mouth, looking in at the reward.
 		var f := POCKET_FRAME.frame(pocket)
 		var centre: Vector2 = f.centre
@@ -328,20 +345,22 @@ func _measure_frames() -> void:
 			var heading: Vector2 = (here.dir as Vector2) * side
 			var stand: Vector2 = here.at
 			var ahead := stand + heading * 20.0
+			_begin_freeze()
 			await _stand(stand, Vector3(ahead.x, _ground(ahead.x, ahead.y) + 1.5, ahead.y), _pitch_start)
 			var metrics := await _spur_pixels(id, spur, points, flame)
 			var name := "along" if side == 1 else "against"
 			var image := await _grab()
 			image.save_jpg(ProjectSettings.globalize_path("%s/%s_road_%s.jpg" % [_output_dir, id, name]), 0.85)
+			metrics["frozen_wild"] = _end_freeze()
 			_log("SPURPIX %s side=%s arm=%.1f %s" % [id, name, _camera.global_position.distance_to(_player.global_position), _pix_line(metrics)])
 			_frames.append({"id": "%s_road_%s" % [id, name], "stand": [stand.x, stand.y], "spur_pixels": metrics})
 
 
 func _pix_line(m: Dictionary) -> String:
-	return "spur_read=%d/%d contrast_median=%.1f contrast_mean=%.1f on_screen=%d current_changed=%d lamp_changed=%d lamp_on_screen=%s" % [
-		int(m.get("readable", 0)), int(m.get("samples", 0)), float(m.get("contrast_median", 0.0)),
-		float(m.get("contrast_mean", 0.0)), int(m.get("on_screen", 0)), int(m.get("current_changed", -1)),
-		int(m.get("lamp_changed", -1)), str(m.get("lamp_on_screen", false))]
+	return "reads=%s lane_px=%d contrast=%.1f gold_px=%d lane_rgb=%s flank_rgb=%s current_changed=%d lamp_changed=%d lamp_on_screen=%s frozen_wild=%d" % [
+		str(m.get("reads", false)), int(m.get("lane_px", 0)), float(m.get("contrast", 0.0)), int(m.get("gold_px", 0)),
+		str(m.get("lane_rgb", [])), str(m.get("flank_rgb", [])), int(m.get("current_changed", -1)),
+		int(m.get("lamp_changed", -1)), str(m.get("lamp_on_screen", false)), int(m.get("frozen_wild", 0))]
 
 
 ## Colour contrast between the spur's own pixels and the ground either side
@@ -358,53 +377,47 @@ func _spur_pixels(id: String, spur: Dictionary, road_points: Array[Vector2], fla
 	var right := Vector2(up.y, -up.x)
 	var image := await _grab()
 	var size := image.get_size()
-	var contrasts: Array[float] = []
-	var on_screen := 0
+	# Dense world-space raster of the spur lane beyond the road's own lane,
+	# and of a ground band either side of it, each reduced to the unique
+	# screen pixels it lands on.
+	var lane_px := {}
+	var flank_px := {}
 	var centres: Array[Vector2] = []
-	var samples := 0
 	var d := SPUR_PIX_START_M
 	while d <= SPUR_PIX_END_M + 0.01:
-		samples += 1
 		var c := j + up * d
 		var half := lane + flare * (1.0 - smoothstep(0.0, flare_len, d))
-		var p := _screen(c, 0.05)
-		if p.x < 0.0:
-			d += SPUR_PIX_STEP_M
-			continue
-		on_screen += 1
-		centres.append(p)
-		var spur_colour := _patch(image, p)
-		var sides: Array[Color] = []
+		var across := -half
+		while across <= half + 0.01:
+			var q := c + right * across
+			if _distance_to_polyline(q, road_points) >= road_half + 1.0:
+				var qp := _screen(q, 0.05)
+				if qp.x >= 0.0:
+					lane_px[Vector2i(qp)] = true
+					if absf(across) < 0.3:
+						centres.append(qp)
+			across += SPUR_PIX_GRID_M
 		for sign: float in [1.0, -1.0]:
-			var q := c + right * sign * (half + SPUR_PIX_SIDE_M)
-			if _distance_to_polyline(q, road_points) < road_half + 1.5:
-				continue
-			var qp := _screen(q, 0.05)
-			if qp.x < 0.0:
-				continue
-			sides.append(_patch(image, qp))
-		if sides.is_empty():
-			d += SPUR_PIX_STEP_M
-			continue
-		var ground := Color(0, 0, 0)
-		for colour: Color in sides:
-			ground += colour
-		ground /= float(sides.size())
-		contrasts.append(_delta(spur_colour, ground))
-		d += SPUR_PIX_STEP_M
-	var readable := 0
-	for value: float in contrasts:
-		if value >= SPUR_PIX_THRESHOLD:
-			readable += 1
-	var sorted := contrasts.duplicate()
-	sorted.sort()
-	var mean := 0.0
-	for value: float in contrasts:
-		mean += value
-	mean = mean / maxf(1.0, contrasts.size())
-	var out := {"samples": samples, "on_screen": on_screen, "compared": contrasts.size(), "readable": readable,
-		"threshold": SPUR_PIX_THRESHOLD, "contrasts": contrasts,
-		"contrast_median": sorted[sorted.size() / 2] if not sorted.is_empty() else 0.0, "contrast_mean": mean}
+			var out_m := half + 1.0
+			while out_m <= half + 1.0 + SPUR_PIX_FLANK_M + 0.01:
+				var q := c + right * sign * out_m
+				if _distance_to_polyline(q, road_points) >= road_half + 1.0:
+					var qp := _screen(q, 0.05)
+					if qp.x >= 0.0:
+						flank_px[Vector2i(qp)] = true
+				out_m += SPUR_PIX_GRID_M
+		d += SPUR_PIX_GRID_M
+	var lane_mean := _mean_colour(image, lane_px)
+	var flank_mean := _mean_colour(image, flank_px)
+	var gold := 0
+	for key: Vector2i in lane_px:
+		if _is_gold(image.get_pixelv(key)):
+			gold += 1
+	var contrast := _delta(lane_mean, flank_mean) if not lane_px.is_empty() and not flank_px.is_empty() else 0.0
+	var reads := lane_px.size() >= SPUR_PIX_MIN_PX and (contrast >= SPUR_PIX_CONTRAST or gold >= SPUR_PIX_GOLD_PX)
+	var out := {"lane_px": lane_px.size(), "flank_px": flank_px.size(), "contrast": contrast, "gold_px": gold,
+		"lane_rgb": [lane_mean.r8, lane_mean.g8, lane_mean.b8], "flank_rgb": [flank_mean.r8, flank_mean.g8, flank_mean.b8],
+		"reads": reads, "thresholds": {"min_px": SPUR_PIX_MIN_PX, "contrast": SPUR_PIX_CONTRAST, "gold_px": SPUR_PIX_GOLD_PX}}
 	# Toggles, rain hidden so falling streaks do not count as change.
 	var rain_layers := _hide_rain()
 	var current := _world.get_node_or_null(^"StormwoodRoadCurrent")
@@ -436,15 +449,23 @@ func _spur_pixels(id: String, spur: Dictionary, road_points: Array[Vector2], fla
 	return out
 
 
-const SPUR_PIX_START_M := 3.0
-const SPUR_PIX_END_M := 21.0
-const SPUR_PIX_STEP_M := 2.0
-## Ground sample this far beyond the painted lane edge, each side.
-const SPUR_PIX_SIDE_M := 2.5
-## Weighted RGB distance (0-255 scale) at which a spur sample reads against
-## the ground either side of it. Set from the round-1 frames: see the lane
-## report for the values either side of it.
-const SPUR_PIX_THRESHOLD := 40.0
+## The spur is sampled from the junction to SPUR_PIX_END_M up it, on a
+## SPUR_PIX_GRID_M world grid; the flank band starts 1 m beyond the painted
+## lane edge and is SPUR_PIX_FLANK_M wide. Samples within the joined road's
+## lane (+1 m) are left out, so the road's own paint and current never count.
+const SPUR_PIX_START_M := 0.0
+const SPUR_PIX_END_M := 24.0
+const SPUR_PIX_GRID_M := 0.4
+const SPUR_PIX_FLANK_M := 3.0
+## A spur reads when at least SPUR_PIX_MIN_PX of its lane is on screen and
+## either its mean colour stands SPUR_PIX_CONTRAST (weighted RGB, 0-255)
+## off the flanking ground or SPUR_PIX_GOLD_PX of its pixels carry the
+## current. Set between the round-1 Verge frame (the judge's one reading
+## spur) and the Deepwood, Dynamo and Hollows frames; the lane report lists
+## the values either side.
+const SPUR_PIX_MIN_PX := 400
+const SPUR_PIX_CONTRAST := 30.0
+const SPUR_PIX_GOLD_PX := 60
 const SPUR_PIX_BAND_PX := 6
 const LAMP_PIX_BOX_PX := 40
 
@@ -460,6 +481,19 @@ func _screen(xz: Vector2, lift: float) -> Vector2:
 	if p.x < 3 or p.y < 3 or p.x > size.x - 4 or p.y > size.y - 4:
 		return Vector2(-1, -1)
 	return p
+
+
+func _mean_colour(image: Image, pixels: Dictionary) -> Color:
+	var sum := Color(0, 0, 0, 0)
+	for key: Vector2i in pixels:
+		sum += image.get_pixelv(key)
+	return sum / maxf(1.0, pixels.size()) if not pixels.is_empty() else Color(0, 0, 0)
+
+
+## The road current's yellow-gold, not the amber lamp or orange fungi:
+## bright, strongly warm, low blue.
+func _is_gold(c: Color) -> bool:
+	return c.r > 0.55 and c.g > 0.42 and c.b < 0.4 and c.g > c.b + 0.22 and c.r - c.b > 0.3
 
 
 func _patch(image: Image, p: Vector2) -> Color:
@@ -525,3 +559,28 @@ func _restore_rain(saved: Dictionary) -> void:
 	for node: Variant in saved:
 		if is_instance_valid(node):
 			(node as GPUParticles3D).layers = int(saved[node])
+
+
+func _freeze_tick() -> void:
+	if not _freeze_wild or _director == null or _player == null:
+		return
+	for wild: Node3D in _director.call("wild_creatures"):
+		if is_instance_valid(wild) and wild.process_mode != Node.PROCESS_MODE_DISABLED \
+				and wild.global_position.distance_to(_player.global_position) < FREEZE_WILD_M:
+			wild.process_mode = Node.PROCESS_MODE_DISABLED
+			_frozen.append(wild)
+
+
+func _begin_freeze() -> void:
+	_freeze_wild = true
+	_frozen.clear()
+
+
+func _end_freeze() -> int:
+	_freeze_wild = false
+	var count := _frozen.size()
+	for node: Node in _frozen:
+		if is_instance_valid(node):
+			node.process_mode = Node.PROCESS_MODE_INHERIT
+	_frozen.clear()
+	return count
