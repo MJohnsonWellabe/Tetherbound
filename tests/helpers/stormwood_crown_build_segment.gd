@@ -495,6 +495,7 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 				if held >= 8:
 					_activated_provider_id = 0
 					_activated_provider_path = ""
+					_activations.clear()
 					var observer := Callable(self, "_on_arbiter_activated")
 					_arbiter.activated.connect(observer)
 					var wanted_id := prompt.get_instance_id()
@@ -511,8 +512,16 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 						_note("%s was consumed by the press" % label)
 						return true
 					if _activated_provider_id != 0:
-						return _fail("%s activated competing provider %s#%d" % [
-							label, _activated_provider_path, _activated_provider_id])
+						var winner_now := _arbiter.call("winning_provider") as Node
+						var provider_node := instance_from_id(_activated_provider_id) as Node3D
+						return _fail(("%s activated competing provider %s#%d (activations=%s; player=%s; wanted prompt at %s %.2f m; "
+							+ "activated at %s %.2f m; winner now=%s)") % [
+							label, _activated_provider_path, _activated_provider_id, str(_activations),
+							str(_player.global_position), str(prompt.global_position),
+							_player.global_position.distance_to(prompt.global_position),
+							str(provider_node.global_position) if provider_node != null else "?",
+							_player.global_position.distance_to(provider_node.global_position) if provider_node != null else -1.0,
+							str(winner_now.get_path()) if winner_now != null else "<none>"])
 					break
 			else:
 				held = 0
@@ -1298,9 +1307,16 @@ func _settle(frames: int) -> void:
 		await _tree.physics_frame
 
 
+## Every provider activated during one press, in order, with where the
+## trainer stood (run 26: a press held on Officer Nysa reported circuit Tavi).
+var _activations: Array[String] = []
+
+
 func _on_arbiter_activated(provider: Object) -> void:
 	if provider == null:
 		return
+	_activations.append("%s@%s" % [str((provider as Node).get_path()) if provider is Node else str(provider),
+		str(_player.global_position) if _player != null else "?"])
 	_activated_provider_id = provider.get_instance_id()
 	_activated_provider_path = str((provider as Node).get_path()) if provider is Node else str(provider)
 
