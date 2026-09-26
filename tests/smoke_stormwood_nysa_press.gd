@@ -85,7 +85,17 @@ func _run() -> void:
 	# The same observers the segment's own run() connects.
 	game.get_node("Session").stormwood_encounter_message.connect(Callable(segment, "_observe_trainer"))
 	world.get_node("CombatManager").exited.connect(Callable(segment, "_on_combat_exited"))
+	# `--worn-lead` reproduces runner run 27b's order: a worn lead (as after the
+	# won Deepwood-station wild), so the segment rests at Lantern Hollow, walks
+	# back, sends out the fittest member with LB, then challenges Nysa.
+	if OS.get_cmdline_user_args().has("--worn-lead"):
+		for member: RefCounted in game.get("party").call("members"):
+			if str(member.get("species_id")) == "terrapup":
+				member.set("hp", 250.0)
 	var ok: bool = await segment.call("_trainer", "officer_nysa_deepwood_rod")
+	var hub := world.get_node_or_null("StormwoodEncounterHub")
+	print("NYSA PRESS hub last_start_refusal=%s trainer_events=%s" % [
+		str(hub.get("last_start_refusal")) if hub != null else "?", str(segment.get("_trainer_events"))])
 	print("NYSA PRESS outcomes %s defeated=%s" % [str(segment.get("_outcomes")),
 		str(game.get("progression").call("has", "stormwood:trainer:officer_nysa_deepwood_rod:defeated"))])
 	for line: String in segment.get("transcript"):

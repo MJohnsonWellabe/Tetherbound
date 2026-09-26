@@ -175,11 +175,27 @@ func _trainer(id: String) -> bool:
 			str(_manager.call("is_fighting")), str(_director.call("trainer_battle_active")),
 			str(_director.call("too_low_to_challenge", spec)), str(_has(str(spec.get("defeat_flag", "")))),
 			str(missing)])
+	# A player sees their companion out before challenging: wait for the body
+	# the send-out summons (it deploys asynchronously).
+	for _frame in 300:
+		if _director.call("ally_body") != null:
+			break
+		await _tree.physics_frame
 	if not await _activate_exact(body, prompt,
 			Vector2(body.global_position.x, body.global_position.z - 2), id) or not await _dialogue(id):
 		return false
-	for _frame in 600:
+	var refusals_before := _trainer_events.filter(func(e: String) -> bool: return e.begins_with("start_refused")).size()
+	for _frame in 900:
 		if _director.trainer_battle_active():
+			break
+		# A wild that engaged while the challenge was answered is fought out,
+		# as a player would; the host then admits (or refuses, with a reason).
+		if bool(_manager.call("is_fighting")):
+			_note("WILD engaged during %s's challenge; fighting it out" % id)
+			if not await _fight_current(id + " challenge"):
+				return false
+			continue
+		if _trainer_events.filter(func(e: String) -> bool: return e.begins_with("start_refused")).size() > refusals_before:
 			break
 		await _tree.physics_frame
 	if not _director.trainer_battle_active():
