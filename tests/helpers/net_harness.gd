@@ -103,6 +103,11 @@ const WALL_SLACK_MS := 5000.0
 ## `_init_budgets()` deliberately does not reset this: it runs inside
 ## `launch()`, which is after the only useful moment to set it.
 var heartbeat_silence_tolerance_s := HEARTBEAT_SILENT_TIMEOUT_S
+## Per-action floors a smoke may set BEFORE `launch()` to lengthen a named
+## world-build allowance above WORLD_BUILD_ALLOWANCE_S. Empty by default, so no
+## existing smoke changes. The proof runner uses it: a production join that
+## builds Cloudreach from the title took ~110 s on a 4-vCPU box (F06#5).
+var world_build_allowance_floor_s: Dictionary = {}
 
 var failures: Array[String] = []
 var _peers: Array = []
@@ -722,7 +727,8 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 	var id := "s%d" % _next_step_id
 	_next_step_id += 1
 	p["last_verdict"] = null
-	var build_allowance_s := world_build_allowance_s(action)
+	var build_allowance_s := maxf(world_build_allowance_s(action),
+		float(world_build_allowance_floor_s.get(action, 0.0)))
 	if build_allowance_s > 0.0:
 		p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 + build_allowance_s
 	_send_to(p, {"type": "step", "id": id, "action": action, "args": args, "budget_frames": budget})

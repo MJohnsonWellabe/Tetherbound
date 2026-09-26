@@ -197,14 +197,21 @@ func poll() -> void:
 		var lobby := _steam_lobby()
 		var full: bool = bool(lobby.call("is_full")) if lobby != null and lobby.has_method("is_full") \
 			else count >= cap
+		var held_full := not full and lobby != null and lobby.has_method("seats_held_full") \
+			and bool(lobby.call("seats_held_full"))
 		# The Retry button exists only without a live session, which returned above.
 		if _invite_button != null and is_instance_valid(_invite_button):
 			# Disabled, not removed: the button keeps controller focus and says
 			# why, and the lobby itself is published unjoinable (steam_lobby.gd).
-			_invite_button.disabled = full
-			_invite_button.text = "World Full (%d/%d)" % [count, cap] if full else "Invite Friends"
-		_detail.text = "Every seat is taken. A friend can be invited when someone leaves." if full \
-			else _steam_status("Friends can join through the Steam invitation or Join Game.")
+			_invite_button.disabled = full or held_full
+			_invite_button.text = "World Full (%d/%d)" % [count, cap] if full \
+				else "Seat Held for a Returning Player" if held_full else "Invite Friends"
+		if full:
+			_detail.text = "Every seat is taken. A friend can be invited when someone leaves."
+		elif held_full:
+			_detail.text = "A seat is being held for a player who lost their connection. Invite again once they return or the hold ends."
+		else:
+			_detail.text = _steam_status("Friends can join through the Steam invitation or Join Game.")
 		return
 	if _transport_kind() != "enet":
 		_summary.text = "%d/%d players in this world." % [count, cap]
