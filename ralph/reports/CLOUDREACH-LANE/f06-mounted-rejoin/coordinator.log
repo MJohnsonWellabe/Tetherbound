@@ -1,10 +1,9 @@
-run id: net-f06-20260925T195427Z-10286
 Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
 
-coordinator: launched peer 0 (host) pid=10324 control_port=38907 home=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/home-0 log=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/peer-0.log
-coordinator: launched peer 1 (client) pid=10325 control_port=40757 home=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/home-1 log=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/peer-1.log
-coordinator: peer 1 hello: {"enet_port":33962.0,"godot_version":"4.7-stable (official)","main_sha":"10b635d38e81","peer":1.0,"pid":10325.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/home-1/godot/app_userdata/Tetherbound"}
-coordinator: peer 0 hello: {"enet_port":33961.0,"godot_version":"4.7-stable (official)","main_sha":"10b635d38e81","peer":0.0,"pid":10324.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/net/run/home-0/godot/app_userdata/Tetherbound"}
+coordinator: launched peer 0 (host) pid=10751 control_port=38051 home=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06v/run3/net/home-0 log=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06v/run3/net/peer-0.log
+coordinator: launched peer 1 (client) pid=10752 control_port=43181 home=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06v/run3/net/home-1 log=/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06v/run3/net/peer-1.log
+coordinator: peer 0 hello: {"enet_port":32421.0,"godot_version":"4.7-stable (official)","main_sha":"08fcc2055bef","peer":0.0,"pid":10751.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06v/run3/net/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":32422.0,"godot_version":"4.7-stable (official)","main_sha":"08fcc2055bef","peer":1.0,"pid":10752.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06v/run3/net/home-1/godot/app_userdata/Tetherbound"}
 coordinator: all 2 peer(s) said hello
 PASS: #1 peer 0 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
 ERROR: Could not create directory: 'user://saves'.
@@ -43,7 +42,7 @@ WARNING: fallback autosave: could not commit save
          [2] poll_fallback (res://scripts/save/save_game.gd:476)
          [3] _tick_autosave (res://autoload/game_state.gd:1004)
          [4] _process (res://autoload/game_state.gd:1049)
-PASS: #9 peer 0 enter_realm (host enters Cloudreach in its own world) -> PASS -- crossed 'meadows' -> 'cloudreach' after 265 observed physics frames / 216942 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: #9 peer 0 enter_realm (host enters Cloudreach in its own world) -> PASS -- crossed 'meadows' -> 'cloudreach' after 265 observed physics frames / 308421 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
 ERROR: Could not create directory: 'user://saves'.
    at: make_dir_recursive (core/io/dir_access.cpp:179)
    GDScript backtrace (most recent call first):
@@ -70,17 +69,17 @@ WARNING: fallback autosave: could not commit save
          [2] poll_fallback (res://scripts/save/save_game.gd:476)
          [3] _tick_autosave (res://autoload/game_state.gd:1004)
          [4] _process (res://autoload/game_state.gd:1049)
-PASS: #10 peer 1 enter_realm (guest enters Cloudreach in its own world) -> PASS -- crossed 'meadows' -> 'cloudreach' after 268 observed physics frames / 217575 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: #10 peer 1 enter_realm (guest enters Cloudreach in its own world) -> PASS -- crossed 'meadows' -> 'cloudreach' after 267 observed physics frames / 308097 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
 PASS: #11 peer 1 fly_setup (setup: guest's fifth creature is its Fly carrier (galecrest)) -> PASS -- SETUP: fly_traversal_unlocked set, galecrest active, anchor=(0.0, 105.0302, -260.0), screen: no SequenceDirector here; nothing holding the screen, launch site: already clear where it stood (locomotion=true carried=false on_floor=true)
 PASS: #12 peer 1 assert (guest owns five) -> PASS -- party size 5 (wanted 5)
 PASS: #13 peer 1 teleport (setup: guest stands in Upper Cloudreach, past the gate (open in its own world)) -> PASS -- trainer stands at (-400.00, 780.03, 3890.00)
 PASS: #14 peer 1 probe position (guest pose in its own world) -> PASS -- [-400.0,780.030639648438,3890.0]
 PASS: #15 peer 1 assert (baseline: guest IS past the gate in its own world) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
-PASS: #16 peer 1 save_character_here (guest saves its own world + portable character past the gate) -> PASS -- character 'character-eb5b7cf6ff9e49160b0f319f7fa82485' is on disk (wrote_world=true)
-PASS: #17 peer 1 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-eb5b7cf6ff9e49160b0f319f7fa82485' on disk=true; copied 3 files to /tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/peer-1/guest_home_past_gate
+PASS: #16 peer 1 save_character_here (guest saves its own world + portable character past the gate) -> PASS -- character 'character-d6a2b2ddc8db4ef3ee3ef4574f77d2d9' is on disk (wrote_world=true)
+PASS: #17 peer 1 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-d6a2b2ddc8db4ef3ee3ef4574f77d2d9' on disk=true; copied 3 files to /tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06v/run3/peer-1/guest_home_past_gate
 PASS: #18 peer 1 check_saved (guest's own saved world has the gate open) -> PASS -- missing []; unexpectedly present []; read ["slot-0/world.json"] under guest_home_past_gate/worlds
-PASS: #19 peer 1 check_saved (guest's saved character: Cloudreach pose, carrier owned) -> PASS -- missing []; unexpectedly present []; read ["character-eb5b7cf6ff9e49160b0f319f7fa82485/character.json"] under guest_home_past_gate/characters
-PASS: #20 peer 0 host -> PASS -- hosting udp/33961 as peer 1
+PASS: #19 peer 1 check_saved (guest's saved character: Cloudreach pose, carrier owned) -> PASS -- missing []; unexpectedly present []; read ["character-d6a2b2ddc8db4ef3ee3ef4574f77d2d9/character.json"] under guest_home_past_gate/characters
+PASS: #20 peer 0 host -> PASS -- hosting udp/32421 as peer 1
 PASS: #21 peer 0 assert (host world: gate CLOSED before the join) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
 ERROR: Could not create directory: 'user://saves'.
    at: make_dir_recursive (core/io/dir_access.cpp:179)
@@ -95,32 +94,100 @@ WARNING: fallback autosave: could not commit save
          [2] poll_fallback (res://scripts/save/save_game.gd:476)
          [3] _tick_autosave (res://autoload/game_state.gd:1004)
          [4] _process (res://autoload/game_state.gd:1049)
-PASS: #22 peer 1 production_join (guest continues its own save through the title (world built from its autosave, then JoinDriver dials)) -> PASS -- title fresh entry built 'CloudreachCliffs' first, then JoinDriver joined 127.0.0.1:33961 as peer 591152581 after 51 frames
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #22 peer 1 production_join (guest continues its own save through the title (world built from its autosave, then JoinDriver dials)) -> PASS -- title fresh entry built 'CloudreachCliffs' first, then JoinDriver joined 127.0.0.1:32421 as peer 846283164 after 51 frames
 PASS: #23 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
 PASS: #23 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
-PASS: #24 peer 1 probe player_identity (JOIN: guest in Cloudreach, five owned) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[-400.0,780.030639648438,3890.0]},"character_id":"character-eb5b7cf6ff9e49160b0f319f7fa82485","display_name"
-PASS: #25 peer 1 probe position (JOIN: guest position) -> PASS -- [-400.0,780.030639648438,3890.0]
+PASS: #24 peer 1 probe player_identity (JOIN: guest in Cloudreach, five owned) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[-100.0,470.031036376953,2440.0]},"character_id":"character-d6a2b2ddc8db4ef3ee3ef4574f77d2d9","display_name"
+PASS: #25 peer 1 probe position (JOIN: guest position) -> PASS -- [-100.0,470.031036376953,2440.0]
 PASS: #26 peer 1 assert (JOIN: guest now reads the host's closed gate) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
-FAIL: #27 peer 1 assert (JOIN: guest is NOT standing in sealed Upper Cloudreach) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
+PASS: #27 peer 1 assert (JOIN: guest is NOT standing in sealed Upper Cloudreach) -> FAIL -- 1480.71 m from (-400.0, 3890.0), wanted within 40.00
 PASS: #28 peer 0 assert (JOIN: host world flags unchanged) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
-PASS: #29 peer 1 teleport (setup: guest stands at the gate's legal (south) side) -> PASS -- trainer stands at (-400.00, 780.03, 3890.00)
-PASS: #30 peer 1 probe position -> PASS -- [-400.0,780.0302734375,3890.0]
-PASS: #31 peer 1 save_character_here (guest saves its portable character at the gate) -> PASS -- character 'character-eb5b7cf6ff9e49160b0f319f7fa82485' is on disk (wrote_world=false)
-PASS: #32 peer 1 probe tournament (party ids before leave) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-95cad11f421610561f0d6f358f8542aa","creature-15a5d4099aa1d0a2be17bdca7006521d","creature-9750538067810ecd304a4bdac666c4a8","creature-c3b51c7d
+PASS: #29 peer 1 teleport (setup: guest stands at the gate's legal (south) side) -> PASS -- trainer stands at (-104.00, 470.03, 2436.00)
+PASS: #30 peer 1 probe position -> PASS -- [-104.0,470.030639648438,2436.0]
+PASS: #31 peer 1 save_character_here (guest saves its portable character at the gate) -> PASS -- character 'character-d6a2b2ddc8db4ef3ee3ef4574f77d2d9' is on disk (wrote_world=false)
+PASS: #32 peer 1 probe tournament (party ids before leave) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-812cf41f955d87f9ad5f655903010c60","creature-19b583c7291b3b17af654a84ff838f0d","creature-2d8fa7e873f3504dcd95874261300c50","creature-a6cd398f
 PASS: #33 peer 1 leave -> PASS -- client left cleanly after 0 frames
-PASS: #34 peer 0 expect_peers -> PASS -- registry reports 1 peer(s) after 4 frames
-PASS: #35 peer 1 join (guest rejoins) -> PASS -- joined 127.0.0.1:33961 as peer 264906796 after 5 frames; snapshot applied; 2 peer(s) in registry
+PASS: #34 peer 0 expect_peers -> PASS -- registry reports 1 peer(s) after 3 frames
+PASS: #35 peer 1 join (guest rejoins) -> PASS -- joined 127.0.0.1:32421 as peer 1475830609 after 4 frames; snapshot applied; 2 peer(s) in registry
 PASS: #36 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
 PASS: #36 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
-PASS: #37 peer 1 probe player_identity (REJOIN: guest in Cloudreach, five owned) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[-400.0,780.0302734375,3890.0]},"character_id":"character-eb5b7cf6ff9e49160b0f319f7fa82485","display_name":"
-PASS: #38 peer 1 probe tournament (REJOIN: party ids after (compare with the row before leave)) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-95cad11f421610561f0d6f358f8542aa","creature-15a5d4099aa1d0a2be17bdca7006521d","creature-9750538067810ecd304a4bdac666c4a8","creature-c3b51c7d
-PASS: #39 peer 1 probe position (REJOIN: guest position) -> PASS -- [-400.0,780.0302734375,3890.0]
-FAIL: #40 peer 1 assert (REJOIN: guest is NOT standing in sealed Upper Cloudreach) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
-FAIL: #41 peer 1 assert (REJOIN: guest stands at the gate's legal side) -> FAIL -- 1483.82 m from (-104.0, 2436.0), wanted within 20.00
+PASS: #37 peer 1 probe player_identity (REJOIN: guest in Cloudreach, five owned) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[-104.0,470.030639648438,2436.0]},"character_id":"character-d6a2b2ddc8db4ef3ee3ef4574f77d2d9","display_name"
+PASS: #38 peer 1 probe tournament (REJOIN: party ids after (compare with the row before leave)) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-812cf41f955d87f9ad5f655903010c60","creature-19b583c7291b3b17af654a84ff838f0d","creature-2d8fa7e873f3504dcd95874261300c50","creature-a6cd398f
+PASS: #39 peer 1 probe position (REJOIN: guest position) -> PASS -- [-104.0,470.030639648438,2436.0]
+PASS: #40 peer 1 assert (REJOIN: guest is NOT standing in sealed Upper Cloudreach) -> FAIL -- 1483.82 m from (-400.0, 3890.0), wanted within 40.00
+PASS: #41 peer 1 assert (REJOIN: guest stands at the gate's legal side) -> PASS -- 0.00 m from (-104.0, 2436.0), wanted within 20.00
 PASS: #42 peer 0 assert (REJOIN: host world flags unchanged) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
-FAIL: #43 peer 1 fly_launch (MOUNTED: guest launches on its galecrest at the gate's legal side) -> FAIL -- the second airborne Jump did not launch; screen: no SequenceDirector here; nothing holding the screen; launch_blockers() said 'This wind route is still sealed: cloudreach_upper.', now 'Fly is unavailable while riding or in combat.'
-FAIL: #27 peer 1 assert (JOIN: guest is NOT standing in sealed Upper Cloudreach) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
-FAIL: #40 peer 1 assert (REJOIN: guest is NOT standing in sealed Upper Cloudreach) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
-FAIL: #41 peer 1 assert (REJOIN: guest stands at the gate's legal side) -> FAIL -- 1483.82 m from (-104.0, 2436.0), wanted within 20.00
-FAIL: #43 peer 1 fly_launch (MOUNTED: guest launches on its galecrest at the gate's legal side) -> FAIL -- the second airborne Jump did not launch; screen: no SequenceDirector here; nothing holding the screen; launch_blockers() said 'This wind route is still sealed: cloudreach_upper.', now 'Fly is unavailable while riding or in combat.'
-PROOF.md: /tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06/run7/PROOF.md (exit 1)
+PASS: #43 peer 1 fly_launch (MOUNTED: guest launches on its galecrest at the gate's legal side) -> PASS -- flying (glide) at y=478.99 on attempt 0
+PASS: #44 peer 1 probe flying (MOUNTED: guest flight state before the drop) -> PASS -- {"local":{"anchor":{"accepts":2.0,"anchor":[-104.0,470.109985351562,2436.0],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"","pending":false,"proposals":5.0,"realm":"cloudreach","refusals":3.0},"blockers":"","carried":false,"carrier":true,"flying":true,"lockout":{"downed":
+PASS: #45 peer 1 probe tournament (MOUNTED: party ids before the drop) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-812cf41f955d87f9ad5f655903010c60","creature-19b583c7291b3b17af654a84ff838f0d","creature-2d8fa7e873f3504dcd95874261300c50","creature-a6cd398f
+PASS: #46 peer 1 drop_link (MOUNTED: guest's link drops mid-flight) -> PASS -- transport closed without a Session.leave()
+PASS: #47 peer 0 expect_peers -> PASS -- registry reports 1 peer(s) after 0 frames
+PASS: #48 peer 1 probe input_context (MOUNTED: the dropped guest is back at the title (Session._on_server_disconnected -> _return_to_title)) -> PASS -- "title"
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #49 peer 1 production_join (MOUNTED: guest rejoins from the title as the same character (title _join_via -> JoinDriver; reclaims its held seat)) -> PASS -- title returning entry built 'CloudreachCliffs' first, then JoinDriver joined 127.0.0.1:32421 as peer 682216101 after 29 frames
+PASS: #50 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #50 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #51 peer 1 probe flying (MOUNTED: flight state after rejoin) -> PASS -- {"local":{"anchor":{"accepts":1.0,"anchor":[0.0,106.910209655762,-260.0],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"","pending":false,"proposals":1.0,"realm":"cloudreach","refusals":0.0},"blockers":"Find a clear launch with room for your companion overhead.","carried":
+PASS: #52 peer 1 fly_land (MOUNTED: guest comes down to solid ground (not stuck mounted in the void)) -> PASS -- already grounded
+PASS: #53 peer 1 assert (MOUNTED: still five (no lost or duplicated carrier)) -> PASS -- party size 5 (wanted 5)
+PASS: #54 peer 1 probe player_identity (MOUNTED: identity after landing) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[0.0,105.030204772949,-260.0]},"character_id":"character-d6a2b2ddc8db4ef3ee3ef4574f77d2d9","display_name":""
+PASS: #55 peer 1 probe tournament (MOUNTED: party ids after (compare with the row before the drop)) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-812cf41f955d87f9ad5f655903010c60","creature-19b583c7291b3b17af654a84ff838f0d","creature-2d8fa7e873f3504dcd95874261300c50","creature-a6cd398f
+PASS: #56 peer 1 probe position (MOUNTED: landed position) -> PASS -- [0.0,105.030204772949,-260.0]
+PASS: #57 peer 1 assert (MOUNTED: guest is NOT inside sealed Upper Cloudreach) -> FAIL -- 4169.23 m from (-400.0, 3890.0), wanted within 40.00
+FAIL: #58 peer 1 assert (MOUNTED: guest landed at the gate's legal side) -> FAIL -- 2698.01 m from (-104.0, 2436.0), wanted within 30.00
+PASS: #59 peer 0 assert (MOUNTED: host world flags unchanged) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+PASS: #60 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-694afc054965b8e713d7db703495fa07' on disk=true; copied 3 files to /tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06v/run3/peer-0/after_rejoins
+PASS: #60 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-d6a2b2ddc8db4ef3ee3ef4574f77d2d9' on disk=true; copied 3 files to /tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/f06v/run3/peer-1/after_rejoins
+PASS: #61 peer 0 check_saved (host's saved world: gate still closed) -> PASS -- missing []; unexpectedly present []; read ["slot-0/world.json"] under after_rejoins/worlds
+PASS: #62 peer 0 story_flag (CONTROL setup: the host opens the gate) -> PASS -- cloudreach_upper_route_unlocked: ok=true pending=false code='' reason=''
+PASS: #63 peer 1 wait_flag -> PASS -- flag cloudreach_upper_route_unlocked (any) set after 0 frames
+PASS: #64 peer 1 teleport (CONTROL setup: guest stands past the now-open gate) -> PASS -- trainer stands at (-400.00, 780.03, 3890.00)
+PASS: #65 peer 1 save_character_here -> PASS -- character 'character-d6a2b2ddc8db4ef3ee3ef4574f77d2d9' is on disk (wrote_world=false)
+PASS: #66 peer 1 leave -> PASS -- client left cleanly after 0 frames
+PASS: #67 peer 0 expect_peers -> PASS -- registry reports 1 peer(s) after 3 frames
+PASS: #68 peer 1 join (CONTROL: guest rejoins the open world) -> PASS -- joined 127.0.0.1:32421 as peer 1429921964 after 3 frames; snapshot applied; 2 peer(s) in registry
+PASS: #69 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #69 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #70 peer 1 probe player_identity (CONTROL: guest in Cloudreach, five owned) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[-400.0,780.030639648438,3890.0]},"character_id":"character-d6a2b2ddc8db4ef3ee3ef4574f77d2d9","display_name"
+PASS: #71 peer 1 probe position (CONTROL: guest position) -> PASS -- [-400.0,780.030639648438,3890.0]
+PASS: #72 peer 1 assert (CONTROL: with the gate open the rejoined guest DOES stand past it (the 'not sealed' check can fail)) -> PASS -- 0.00 m from (-400.0, 3890.0), wanted within 40.00
+FAIL: #58 peer 1 assert (MOUNTED: guest landed at the gate's legal side) -> FAIL -- 2698.01 m from (-104.0, 2436.0), wanted within 30.00
+rc=1

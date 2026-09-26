@@ -213,7 +213,8 @@
       "probe": "player_identity",
       "expect_data": {
         "realm": "cloudreach",
-        "party_size": 5
+        "party_size": 5,
+        "character_id": "$character1"
       },
       "label": "JOIN: guest in Cloudreach, five owned"
     },
@@ -317,7 +318,8 @@
       "probe": "player_identity",
       "expect_data": {
         "realm": "cloudreach",
-        "party_size": 5
+        "party_size": 5,
+        "character_id": "$character1"
       },
       "label": "REJOIN: guest in Cloudreach, five owned"
     },
@@ -403,9 +405,21 @@
     },
     {
       "peer": 1,
-      "action": "join",
-      "args": {},
-      "label": "MOUNTED: guest rejoins (reclaims its held seat)"
+      "probe": "input_context",
+      "label": "MOUNTED: the dropped guest is back at the title (Session._on_server_disconnected -> _return_to_title)"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "returning_route": true,
+        "budget_frames": 20000,
+        "character": {
+          "character_id": "$character1"
+        }
+      },
+      "budget_frames": 20000,
+      "label": "MOUNTED: guest rejoins from the title as the same character (title _join_via -> JoinDriver; reclaims its held seat)"
     },
     {
       "peer": "all",
@@ -441,7 +455,8 @@
       "probe": "player_identity",
       "expect_data": {
         "realm": "cloudreach",
-        "party_size": 5
+        "party_size": 5,
+        "character_id": "$character1"
       },
       "label": "MOUNTED: identity after landing"
     },
@@ -583,7 +598,8 @@
       "probe": "player_identity",
       "expect_data": {
         "realm": "cloudreach",
-        "party_size": 5
+        "party_size": 5,
+        "character_id": "$character1"
       },
       "label": "CONTROL: guest in Cloudreach, five owned"
     },
@@ -605,5 +621,6 @@
       },
       "label": "CONTROL: with the gate open the rejoined guest DOES stand past it (the 'not sealed' check can fail)"
     }
-  ]
+  ],
+  "_comment_mounted_rejoin": "A dropped link returns the guest to the title (session.gd::_on_server_disconnected), so the mounted rejoin goes through the title's returning route like a player would; a bare Session.join from the title never rebuilds the world and leaves no player to land."
 }
