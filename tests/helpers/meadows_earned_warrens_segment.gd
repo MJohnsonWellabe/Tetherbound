@@ -203,7 +203,11 @@ func _travel() -> bool:
 			return _fail("The actual quarry swing did not yield the configured carried rootstone amount")
 		_receipt("quarry_rootstone", {"at": at, "node_id": node_id, "yield": expected,
 			"before": before, "after": _count("rootstone")})
-	for index in range(quarry_join + 1, warren_join + 1):
+	# Back to the trail point the quarry was entered from, then on along the
+	# trail: the straight line from the last node to the next trail point runs
+	# through the quarry station's props (barrel, bucket, bag, signpost within
+	# 1 m of it) and the walker was boxed in there (seed 15, 2026-09-26).
+	for index in range(quarry_join, warren_join + 1):
 		if not await _walk_ground(road[index]):
 			return false
 	var available: Array = _warrens.call("chamber_ids")
