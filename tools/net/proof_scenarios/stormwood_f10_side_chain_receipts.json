@@ -2037,10 +2037,23 @@
    "action": "press",
    "args": {
     "action": "interact",
-    "times": 2,
+    "times": 3,
     "gap_frames": 30
    },
-   "label": "read the ordinary lines"
+   "label": "read the three ordinary lines (finishing it emits that NPC's ordinary main-story line event)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "the ordinary conversation closed"
   },
   {
    "peer": 0,
@@ -2218,10 +2231,23 @@
    "action": "press",
    "args": {
     "action": "interact",
-    "times": 2,
+    "times": 3,
     "gap_frames": 30
    },
-   "label": "read the ordinary lines"
+   "label": "read the three ordinary lines"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "the ordinary conversation closed"
   },
   {
    "peer": 1,
@@ -2305,10 +2331,10 @@
    "action": "press",
    "args": {
     "action": "interact",
-    "times": 2,
+    "times": 3,
     "gap_frames": 30
    },
-   "label": "read the ordinary lines"
+   "label": "read the three ordinary lines (finishing it emits that NPC's ordinary main-story line event)"
   },
   {
    "peer": 0,
@@ -2362,10 +2388,10 @@
    "action": "press",
    "args": {
     "action": "interact",
-    "times": 2,
+    "times": 3,
     "gap_frames": 30
    },
-   "label": "read the ordinary lines"
+   "label": "read the three ordinary lines (finishing it emits that NPC's ordinary main-story line event)"
   },
   {
    "peer": 0,
@@ -2419,10 +2445,10 @@
    "action": "press",
    "args": {
     "action": "interact",
-    "times": 2,
+    "times": 3,
     "gap_frames": 30
    },
-   "label": "read the ordinary lines"
+   "label": "read the three ordinary lines (finishing it emits that NPC's ordinary main-story line event)"
   },
   {
    "peer": 0,
@@ -2476,10 +2502,23 @@
    "action": "press",
    "args": {
     "action": "interact",
-    "times": 2,
+    "times": 3,
     "gap_frames": 30
    },
-   "label": "read the ordinary lines"
+   "label": "read the three ordinary lines (finishing it emits that NPC's ordinary main-story line event)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "the ordinary conversation closed"
   },
   {
    "peer": "all",
