@@ -665,11 +665,97 @@ func _perform_action() -> void:
 		await _act_round(panel, actions, round)
 		lines += int(actions.back().get("dialogue_lines", 0)) if not actions.is_empty() else 0
 		fought = fought or bool(actions.back().get("fought", false)) if not actions.is_empty() else fought
+	if _activity == "juno" and fought:
+		actions.append(await _act_escort_home(panel))
 	for i in 60:
 		await physics_frame
 	await _capture("act-99-after")
 	actions.append({"total_dialogue_lines": lines, "fought": fought})
 	_receipt["act"] = actions
+
+
+## Juno's rescue after the patrol fight, as a player plays it: press "Lead the
+## Meadowhart home" at the freed Meadowhart, walk to Juno with ordinary forward
+## input (the Meadowhart follows), and capture the walk, the reunion and Juno's
+## acknowledgement.
+func _act_escort_home(panel: Node) -> Dictionary:
+	var out := {"escort": "not started"}
+	var reunion := _world.get_node_or_null(^"LostCompanionReunion")
+	var trainers := _world.get_node_or_null(^"Trainers")
+	var rescued: Node3D = reunion.get("_body") as Node3D if reunion != null else null
+	var juno: Node3D = trainers.call("body_for", "pasture_drover_juno") as Node3D if trainers != null else null
+	if rescued == null or juno == null:
+		return out
+	var prompt := rescued.get_node_or_null(^"Interactable")
+	# Walk to the Meadowhart until her prompt wins, then press it.
+	Input.action_press("move_forward")
+	for frame in 1800:
+		var to := _xz3(rescued.global_position) - _xz()
+		if to.length() > 0.01:
+			_rig.set("yaw", atan2(-to.x, -to.y))
+		await physics_frame
+		if prompt != null and _arbiter.call("winning_provider") == prompt:
+			break
+	_release()
+	await _press("interact")
+	for i in 30:
+		await physics_frame
+	if int(reunion.call("escort_peer")) == 0:
+		out["escort"] = "prompt did not start an escort"
+		await _capture("act-61-escort-not-started")
+		return out
+	await _capture("act-61-escort-start")
+	out["escort"] = "started"
+	# Lead her home.
+	var shots := 0
+	Input.action_press("move_forward")
+	for frame in 9000:
+		var to := _xz3(juno.global_position) - _xz()
+		if to.length() > 0.01:
+			_rig.set("yaw", atan2(-to.x, -to.y))
+		if to.length() <= 2.5:
+			_release()
+		await physics_frame
+		_tick()
+		if bool(reunion.call("is_reunited")):
+			out["escort"] = "reunited"
+			break
+		if frame > 0 and frame % 900 == 0 and shots < 2:
+			shots += 1
+			# Look back at the Meadowhart following, then carry on.
+			_release()
+			var back := _xz3(rescued.global_position) - _xz()
+			_rig.set("yaw", atan2(-back.x, -back.y))
+			for i in 20:
+				await physics_frame
+			await _capture("act-6%d-escort-walk" % (1 + shots))
+			Input.action_press("move_forward")
+	_release()
+	for i in 45:
+		await physics_frame
+	await _capture("act-64-reunited")
+	# Juno's acknowledgement: talk to her (her prompt), read two lines, then
+	# back out with cancel rather than accept her friendly bout.
+	var face := _xz3(juno.global_position) - _xz()
+	_rig.set("yaw", atan2(-face.x, -face.y))
+	for i in 20:
+		await physics_frame
+	await _press("interact")
+	for i in 30:
+		await physics_frame
+	var lines := 0
+	for step in 2:
+		if panel == null or not bool(panel.call("is_open")):
+			break
+		lines += 1
+		await _capture("act-65-reunion-dialogue-%02d" % lines)
+		await _press("interact")
+		for i in 20:
+			await physics_frame
+	if panel != null and bool(panel.call("is_open")):
+		await _press("menu_cancel")
+	out["reunion_dialogue_lines"] = lines
+	return out
 
 
 func _act_round(panel: Node, actions: Array, round: int) -> void:
