@@ -4,6 +4,33 @@ Standard: `docs/design/ART_DIRECTION.md` only, with the `visual-judge` rubric. R
 Judges: fresh **code-blind** subagents. Each saw only frames, ART_DIRECTION and references. None saw source, change narrative or budget.
 Renderer: Compatibility/opengl3, 1280×720 (`xvfb-run`), the production path. Software GL: composition, scale and colour relationships are trustworthy. Fine lighting and performance are not.
 
+
+## Codex visual work queue (owner, 2026-09-26)
+
+**All art and visual changes belong to the Codex lane for now.** Claude lanes do not edit art, materials, shaders, lighting, meshes or colour. They add each visual defect they find to this table instead. Codex takes items from the top, works on isolated branches, and leaves merging to the Claude coordinator, who lands the work in `tb/integration-N` batches once its before/after capture and code-blind judge verdict are recorded.
+
+Codex marks an item "in progress" with its PR number when it starts. When the work lands, the row moves to "done" with the merge SHA. Owner exceptions: the Team Tether palette stays as built, so H2, H3 and the Tether/civilian red parts of M7 are closed. The Cloudreach cliff palette is picked by a code-blind judge against ART_DIRECTION.
+
+| # | Criterion | Defect (source) | Where to start | Status |
+|---|---|---|---|---|
+| V1 | F13#5 | Tidewake dock lanterns and wet timber, then shore and landmark hierarchy (judge on `docks_after_v5`) | `scripts/world/water_dock_dressing.gd`, `data/config/water_dock_dressing.json` | in progress (#288) |
+| V2 | F13#5 | Veilfall far/mid/near stands fail Bars A/B: waterfalls, mist, banding, shadows; crag, terrace and gate massing (judge r1) | `water_veilfall*.gd`, `water_veilfall_fall.gdshader:49`, `water_veilfall_rock.gd:110-144` | open |
+| V3 | F13#5 | Currents read marginal; shader and framing | Tidewake current material and `capture_tidewake_matrix.gd` | open |
+| V4 | A-C1 | BLOCKER: Meadowhart creature mesh is broken | §A C1; `tools/art_pipeline/blender/` | open |
+| V5 | B-H1 | Tether rank bodies: shape and anatomy only, not palette | §B H1 | open |
+| V6 | B | Faces and cast findings in §B, other than H2/H3 | §B | open |
+| V7 | F04#6 | Defeat read is weak: raise DEFEAT_FOLD and re-run the defeated clips for the grunt, captain_a, captain_b and warden rigs | `tools/art_pipeline/blender/animate_humanoid.py` | open |
+| V8 | M1/M3 | Meadows landmarks unrecognisable. Hall never dominates: exterior massing, drained ground, banners, braziers, sightline | §C1 M1/M3 | open |
+| V9 | F08#3 | Cloudreach high perch: cloud sea and horizon, pale stone, pad primitives (arrival camera stays with the Cloudreach lane) | judge on #253 (5848745065) | open |
+| V10 | F08#4 | Cloudreach settlements and cliff identity; the cliff palette is a judge pick | Cloudreach work orders M1–M12 | open |
+| V11 | F10#4 | Stormwood forest, rod line and restored-sky views need a Bars A/B verdict | Stormwood capture tools | open |
+| V12 | F09#3 | Stormwood pocket lures not visible from the road: a light shaft over each pocket's reward, then re-judge (target ≥4 of 5) | `tools/capture_stormwood_pocket_walks.gd` | open |
+| V13 | shared look | Crimson foliage variant retint | `data/config/vegetation_presentation.json` | open |
+| V14 | shared look | Candy pickup tint | `scripts/world/band_pickups.gd:224-226` | open |
+| V15 | shared look | Golden-hour fog density 0.0016 | `data/config/art.json` times.golden | open |
+| V16 | shared look | South Bridge gully slope rock: probe first, then re-apply 26b7216d (reverted in b864c1830) | `tools/probe_south_bridge_gully.gd` | open |
+| V17 | C2–C4 | Cloudreach, Stormwood and Tidewake region audits not yet judged; the VIS lane is judging them (read-only) and adds its findings here | §C2–C4 | open |
+
 ## How to reproduce
 
 `tools/capture_visual_audit.gd` (one tool, four sections):

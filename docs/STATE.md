@@ -33,6 +33,7 @@ All nine lane sessions were wound down and archived on owner direction: Meadows 
 | X03 (#262) / VIS (#279) | Glyph highlights; shared-look WIP | The ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
 
 **Owner rulings (2026-09-26, coordinator Q&A):**
+- **All art/visual changes are ceded to the Codex lane.** Claude lanes record visual defects in the Codex queue at the top of `ralph/reports/VISUAL/AUDIT.md` and do not edit art, materials, shaders, lighting or meshes.
 - The tournament creature grant must be a non-starter species (starters stay player-exclusive). Meadows core owns the change.
 - F11#2: an old-build Stormheart receipt with no accept/decline answer is **undecided**; that character is re-offered once and can never be granted twice.
 - The Cloudreach cliff palette is picked by a code-blind judge against ART_DIRECTION. Co-op keeps road shoulders (co-op matches single player).
