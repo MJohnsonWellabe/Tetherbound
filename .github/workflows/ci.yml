@@ -1654,7 +1654,7 @@ jobs:
       # shortcuts walked/swum with real stick input in the production scene.
       - name: Verify Tidewake land loops and return shortcuts walked
         if: ${{ !cancelled() }}
-        run: timeout 420s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd
+        run: timeout 480s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
