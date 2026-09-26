@@ -1,0 +1,1 @@
+CLOUDREACH ROUTE CADENCE {"at":"(-365.0, 1100.0, 5312.5) -> (-477.4648, 1092.76, 5448.873)","from":"wild:road_visibility_summit_overlook_loop_03","leg":"aftermath_overlook","longest_gap_m":320.0,"longest_gap_s_at_walk":64.0,"over_limit":{"arrive:summit_bivouac -> arrive:summit_threshold":627.136352539062},"route_m":13026.6,"to":"pickup:cr_candy_summit_detour_great_02"}

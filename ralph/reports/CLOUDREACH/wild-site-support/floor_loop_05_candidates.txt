@@ -1,0 +1,14 @@
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-506.013, 431.2, 2713.68) resolved=(-506.013, 430.6736, 2713.68) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-508.787, 431.2, 2709.52) resolved=(-508.787, 430.6736, 2709.52) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-506.568, 431.2, 2712.848) resolved=(-506.568, 430.6736, 2712.848) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-497.613, 432.0, 2708.08) resolved=(-497.613, 431.4986, 2708.08) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-500.387, 432.0, 2703.92) resolved=(-500.387, 431.4985, 2703.92) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-498.168, 432.0, 2707.248) resolved=(-498.168, 431.4986, 2707.248) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-489.213, 432.8, 2702.48) resolved=(-489.213, 432.3235, 2702.48) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-491.987, 432.8, 2698.32) resolved=(-491.987, 432.3235, 2698.32) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-489.768, 432.8, 2701.648) resolved=(-489.768, 432.3235, 2701.648) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-480.813, 433.6, 2696.88) resolved=(-480.813, 433.1485, 2696.88) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-483.587, 433.6, 2692.72) resolved=(-483.587, 433.1484, 2692.72) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-481.368, 433.6, 2696.048) resolved=(-481.368, 433.1485, 2696.048) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-522.91, 430.0, 2719.31) resolved=(-522.91, 430.09, 2719.31) ok=true
+[site_try] road_visibility_windscar_floor_loop_05 authored=(-524.85, 430.0, 2718.85) resolved=(-524.85, 430.09, 2718.85) ok=true

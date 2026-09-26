@@ -791,27 +791,29 @@
       "id": "road_visibility_windscar_floor_loop_05",
       "table_id": "cloudreach_windscar_wild",
       "position": [
-        -481.94,
-        435.701,
-        2796.692
+        -524.85,
+        430.0,
+        2718.85
       ],
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
+      "_why_bridge_relocation_0926": "Relocated 2026-09-26: the authored 5.5 m shoulder point lay beside the windscar_chain_bridge span, which the runtime snaps onto the 3.5 m deck; no species pair was supportable there (dropped as unsupported) and a pair on the only ground route's bridge would stand in the walker's way. Now on the bridge's west landing crown, 5 m from the pad centre away from both the approach road and the bridge head (8 m falls off the crown surface and re-snaps beside the deck). Same table/count; no radius, draw-distance or budget change."
     },
     {
       "id": "road_visibility_windscar_floor_loop_06",
       "table_id": "cloudreach_windscar_wild",
       "position": [
-        -417.456,
-        443.199,
-        2886.169
+        -422.384,
+        439.429,
+        2651.918
       ],
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation.",
+      "_why_bridge_relocation_0926": "Relocated 2026-09-26: the authored point was over the windscar_chain_bridge span (see _05). Now on the approach road's collision ribbon, 2.5 m off the centre line on the side opposite _04, midway between _03 and _04 on the same Windscar leg. Same table/count; no radius, draw-distance or budget change."
     },
     {
       "id": "road_visibility_windscar_floor_loop_07",
