@@ -630,6 +630,30 @@ SCRIPT ERROR count is 0 in both runs.
   - Fix, e47fa1758: a prompt freed by our own press returns to the caller, which checks the receipt and the yield. A prompt freed during the approach fails with its own message.
 - **Run 15's lone strike hit.** It was logged during the "fight during Capacitor Grove road point" phase, right after that fight was lost. The phase label lags, so this was after the fight ended, not a breach of the spare rule.
 
+### WO-F11-EARNED (branch `ralph/stormwood-f11-earned`, from main 08fcc2055): review fixes, then parked
+
+- **Platform:** Linux container, Godot 4.7-stable, headless `--script`.
+- **Input:** as above. The send-out now uses ordinary joypad LB/RB events at 1x/60 Hz, and satchel recovery uses pad right/A/B.
+- **Starting save origin:** unchanged (the disclosed Cloudreach seam, then the disk save at the Stormwood arrival).
+- **Route and command:** unchanged. `--through-aftermath --witness-dir=user://f11_witness`, then `--verify-reload`.
+
+**Review findings fixed (each committed):**
+
+| Finding | Commit | Result |
+|---|---|---|
+| Closed-Arch smoke: the flank Rootgate lines aimed short of the crossing line; the final z was judged instead of the max z; there was no reach check and no real negative control | 5f64f3b0f | 15 passed, 0 failed, 0 SCRIPT ERROR (`f11_earned/closed_arch_bypass.txt`). The run 1 reach check caught pair E approaches 1 and 7 stopping short of the kill-plane edge. The edge is now the point where the ground falls away past the player's 45° `floor_max_angle`. The controls (collider disabled, temporary bridge) both register a crossing. |
+| LB send-out retry | 04b04368d | **Cause:** `_tap` held a button for two physics frames. Input is flushed once per process frame, and a slow headless Stormwood frame runs several physics steps (always at 8x/480 Hz, and even at 1x/60 Hz, which is where run 14 failed). So the press and release arrived in one flush. **Fix:** `_tap` also holds for two process frames. The send-out runs at 1x with joypad LB, logs each press, and reports a dead press instead of retrying. No LB binding bug is shown so far; this is **not yet exercised by a run**. |
+| Harvest node freed during the approach | 04b04368d | The node's `tree_exiting` is now logged with its receipt, the tool, whether a swing is running, the distance, and the last swings and Interact presses. Cause not yet observed (no run reached the gathers). |
+| `stormwood_field_safety.gd` freed satchel; `Button.pressed.emit()` / `panel.close()` | 04b04368d | A freed satchel or panel is never touched. Stacks are taken with pad right/A and the panel is closed with B. Satchel recoveries are counted. |
+| Strike ruling wiring | 0cc759c34 | Four cases through the real `_process`/`_resolve` in `smoke_stormwood_lightning` (40 assertions, 0 failures). Removing the `_resolve` spare check fails 2; removing the aim spare fails 1. A comment now states that fight state is read at impact. |
+
+- **Witness reporting:** the continuous smoke now ends with `F11 WITNESS SAFETY TOTAL trainer_deaths=… satchel_recoveries=…`, summed over every step.
+- **Earned run (run 18, 04b04368d + 5f64f3b0f):**
+  - **Stopped by me after ~12 min** on the coordinator's SNOWBALL re-order (F10#1 first), still inside the prefix. The last line was `DIAGNOSTIC: START Lantern Pools charged-window wait`, after Dace and `lower_rods_disabled`.
+  - At that point: 0 SCRIPT ERROR, and no step result, death or satchel line. So trainer deaths and satchel recoveries are both 0 up to the stop; no final totals line printed.
+  - Witness dir removed. No F11 clause was reached.
+- **Next** (queue items 2–3): rerun the same command. The first things to read are the LB press lines after the Still Grove rest and any `HARVEST NODE … left the tree` line.
+
 ### Not produced
 
 - The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.
