@@ -13,3 +13,5 @@ ERROR: Can't play finished Tween, use stop() first to reset its state.
        [7] _tick_combat (res://scripts/creatures/wild_creature.gd:551)
        [8] _physics_process (res://scripts/creatures/wild_creature.gd:196)
 WATER_C2C3 water_trainer_tess terrapup MASHER runs=24 win=0.00 med_lead=1.000 med_party=1.000 med_s=127.7 max_s=139.4 lead_faint=1.00 wipe=1.00 max_hit=0.202 tell=[0.80,0.80] stalled=0
+WATER_C2C3 water_trainer_tess terrapup READER runs=24 win=1.00 med_lead=0.061 med_party=0.015 med_s=342.4 max_s=352.9 lead_faint=0.00 wipe=0.00 max_hit=0.146 tell=[0.80,0.80] stalled=0
+WATER_C2C3_PAIR water_trainer_tess terrapup reader/masher median lead cost = 0.061 / 1.000 (ratio 0.06)
