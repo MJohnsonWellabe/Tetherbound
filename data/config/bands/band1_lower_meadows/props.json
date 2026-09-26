@@ -1538,7 +1538,7 @@
     {
       "order": 1057,
       "name": "old_bram_camp",
-      "_why": "F03 lure cue, coordinator ruling (b): a tall cue visible from the road, then readable on approach; the site is not moved. Old Bram stands 55.5 m off the nearest clear road view at [140.6,915.9]; a 1.8 m figure is only ~24 px within ~34 m at the game camera, so from the road he read as a speck. A retired champion's signal fire 11.7 m from him on the road side, just outside the 11 m fight ring (the old-growth canopy hides anything behind him), with a 28 m dark smoke column (12 m wide at the top, alpha 0.9) that clears the canopy: a large signal fire (scale 0.6, glow 1.9, as at the River Lock camp), the same friendly waymark language as band 1's WayfarerSignalFire, so the site reads as a friendly figure worth a detour. No interaction, reward or collider path changes.",
+      "_why": "F03 lure cue, coordinator ruling (b): a tall cue visible from the road, then readable on approach; the site is not moved. Old Bram stands 55.5 m off the nearest clear road view at [140.6,915.9]; a 1.8 m figure is only ~24 px within ~34 m at the game camera, so from the road he read as a speck. A retired champion's signal fire 21 m from him, on the line a player walks in from the road (137, 900) -> Bram, outside the 11 m fight ring. Round-5 judge: at the first site (184, 901) the fire sat behind a trunk on that approach, and tests/probe_lure_road_visibility.gd found no clear road view of it (0 of 94 samples). Here it has 9 hard / 7 soft / 5 canopy-clear road samples, the nearest 35.5 m from the road, with a 28 m dark smoke column (12 m wide at the top, alpha 0.9) that clears the canopy: a large signal fire (scale 0.6, glow 1.9, as at the River Lock camp), the same friendly waymark language as band 1's WayfarerSignalFire, so the site reads as a friendly figure worth a detour. No interaction, reward or collider path changes.",
       "props": [
         {
           "model": "Bonfire_Fire",
@@ -1555,8 +1555,8 @@
           "glow": "campfire",
           "name": "OldBramCampFire",
           "at": [
-            184.0,
-            901.0
+            174.0,
+            903.4
           ],
           "yaw_deg": 30.0
         }
