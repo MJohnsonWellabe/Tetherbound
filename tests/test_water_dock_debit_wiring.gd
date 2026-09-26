@@ -269,17 +269,30 @@ func test_flag_without_receipt_answers_the_legacy_receipt_and_refunds() -> void:
 	assert_eq(guest.inventory.count("reed_fiber"), 8)
 
 
-func test_journal_failed_refunds_and_the_next_press_is_a_fresh_txn() -> void:
+## Deliberate design correction (not a weakening): water_dock_actions.gd
+## cannot meet P1/P2 (refusals carry no action, no sticky host refusal), so it
+## NEVER refunds on journal_failed. The row stays pending, the next press
+## resends the SAME txn, the host commits it once and the payer is charged
+## exactly once. The node-level wiring is covered by
+## test_water_dock_actions_wiring.gd.
+func test_journal_failed_keeps_the_row_pending_and_the_same_txn_commits_once() -> void:
 	var guest := _character(GUEST)
 	var txn := _begin(guest)
-	var refund := DEBIT.refund(guest, {"txn_id": txn, "world_instance_id": INSTANCE, "code": "journal_failed"})
-	assert_true(bool(refund.ok))
-	assert_eq(guest.inventory.count("reed_fiber"), 8)
-	var next := _begin(guest)
-	assert_ne(next, txn)
-	assert_true(bool(host.commit(_intent(guest, next, GUEST_PEER, GUEST), GUEST_PEER).ok))
-	assert_eq(DEBIT.reconcile(guest, _facts(host.world), INSTANCE).settled, [next])
-	assert_eq(guest.inventory.count("reed_fiber"), 2)
+	# journal_failed: the host rolled its commit back; the wiring refunds nothing.
+	var world := _replica_from_snapshot()
+	assert_eq(DEBIT.reconcile(guest, _facts(world), INSTANCE).needs_submit, [txn],
+		"after journal_failed the row is still pending and resubmittable")
+	assert_eq(guest.inventory.count("reed_fiber"), 2, "still escrowed, never refunded")
+	var again := DEBIT.begin(guest, ACTION, cost, INSTANCE, _facts(world))
+	assert_eq(str(again.code), "already_pending")
+	assert_eq(str(again.txn_id), txn, "the resend is the same txn, never a fresh one")
+	assert_true(bool(host.commit(_intent(guest, txn, GUEST_PEER, GUEST), GUEST_PEER).ok))
+	assert_eq(str(host.commit(_intent(guest, txn, GUEST_PEER, GUEST), GUEST_PEER).code), "already_done")
+	assert_eq(int(host.seq), 1, "committed exactly once")
+	assert_eq(DEBIT.reconcile(guest, _facts(host.world), INSTANCE).settled, [txn])
+	assert_eq(guest.inventory.count("reed_fiber"), 2, "charged exactly once, never free")
+	assert_eq(guest.inventory.count("driftwood"), 2)
+	assert_eq(guest.escrow.size(), 1, "one txn only")
 
 
 # --- forged receipts (any guest can set_world_flag any world flag) ------------

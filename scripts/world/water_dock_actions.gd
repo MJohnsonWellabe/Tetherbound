@@ -192,17 +192,15 @@ func _begin_refusal(code: String) -> String:
 			return "Your returned dock materials need room in your satchel first."
 	return "The dock payment could not be started."
 
-## A host refusal of a paid copy. Only journal_failed carries this txn and
-## proves it never committed; every other code is answered by the replica's
-## durable receipts (already_done) or leaves the row pending for a resubmit.
-func _settle_verdict(verdict: Dictionary, txn: String) -> void:
-	var changed := false
-	if str(verdict.get("code", "")) == "journal_failed" and str(verdict.get("txn_id", "")) == txn:
-		changed = bool(DEBIT.refund(_debit_state(), {"txn_id": txn,
-			"world_instance_id": str(verdict.get("world_instance_id", "")),
-			"code": "journal_failed"}).get("changed", false))
-	if changed:
-		_persist()
+## A host refusal of a paid copy. NO refusal code ever refunds here, not even
+## journal_failed: this wiring cannot guarantee P1/P2 (refusals carry no
+## action, another copy of the same txn may be on the wire, and the host keeps
+## no sticky refusal), and the debit module's header forbids refunding on
+## journal_failed without them. The row stays pending; the next press (or a
+## reconnect) resubmits the SAME txn, which commits once or is answered from
+## its durable receipt. Items return only through reconcile's paid_by_other
+## proof (the action flag set with no receipt naming this txn).
+func _settle_verdict(_verdict: Dictionary, _txn: String) -> void:
 	_reconcile()
 
 func _on_delta(_delta: Dictionary) -> void:
@@ -212,16 +210,42 @@ func _on_delta(_delta: Dictionary) -> void:
 	_reconcile()
 	_refresh()
 
-func _on_refused(kind: String, code: String, reason: String, details: Dictionary) -> void:
-	if kind == "water_dock_action":
-		for id: Variant in _pending.keys():
-			var entry: Variant = _pending[id]
-			if entry is Dictionary and code == "journal_failed" \
-					and str(details.get("txn_id", "")) == str((entry as Dictionary).txn):
-				_settle_verdict(details, str((entry as Dictionary).txn))
-		_pending.clear()
-		_reconcile()
-		_game.push_world_message(reason)
+## A `water_dock_action` refusal releases ONLY the in-flight copy it can be
+## attributed to: the entry whose txn it names, else (ledger refusals carry no
+## action or txn) the single copy of this kind in flight on this peer, when
+## exactly one is. F13 local-chain steps (sibling WaterLocalChains) share the
+## intent kind, so their in-flight steps count too. With several copies in
+## flight an unattributable refusal releases nothing; those entries wait for
+## their own verdict/delta or a reconnect (new link). A wrong release could at
+## worst send a second copy of the same txn, which the host dedupes by receipt
+## and which can no longer cause a refund (see _settle_verdict).
+func _on_refused(kind: String, _code: String, reason: String, details: Dictionary) -> void:
+	if kind != "water_dock_action":
+		return
+	var txn := str(details.get("txn_id", ""))
+	var released := ""
+	for id: Variant in _pending.keys():
+		var entry: Variant = _pending[id]
+		if not txn.is_empty() and entry is Dictionary and str((entry as Dictionary).txn) == txn:
+			released = str(id)
+	if released.is_empty() and txn.is_empty() and _pending.size() == 1 and _foreign_in_flight() == 0:
+		released = str(_pending.keys()[0])
+	if not released.is_empty():
+		var entry: Variant = _pending[released]
+		_pending.erase(released)
+		if entry is Dictionary:
+			_settle_verdict(details, str((entry as Dictionary).txn))
+	_reconcile()
+	_game.push_world_message(reason)
+
+## `water_dock_action` copies this peer has in flight outside this node (F13
+## local-chain steps). Docks connect to intent_refused before local chains
+## build, so this is read before a refusal clears them.
+func _foreign_in_flight() -> int:
+	var chains: Node = get_parent().get_node_or_null(^"WaterLocalChains") if get_parent() != null else null
+	if chains == null or not chains.has_method("pending_steps"):
+		return 0
+	return (chains.call("pending_steps") as Array).size()
 
 ## Settle/refund escrow rows from the durable receipts this peer's world holds
 ## (host world, or the host's replicated facts on a guest). Never refunds on a
