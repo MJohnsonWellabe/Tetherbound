@@ -24,3 +24,24 @@ WALK water:deep_watch:pickup:002 island=deep_watch walked=231m legs=31
 CLAIM water:deep_watch:pickup:002 skill_candy_iii 0->1
 WALK deep_watch_chart island=deep_watch walked=218m legs=29
 POSE sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+WALK water_orsen island=sluice_isle walked=998m legs=156
+TALK water_orsen conversation=water_orsen_deep_watch_charted hud=''
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+WALK water_orsen island=sluice_isle walked=0m legs=1
+TALK water_orsen conversation=water_orsen_deep_watch_charted hud=''
+CHAIN side_water_deep_watch_chart PASS reward=Candy III +1 ack=water_orsen_deep_watch_charted
+RELOAD deep water_orsen -> water_orsen_deep_watch_charted
+POSES (5 disclosed position writes):
+  sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+  tidecoil stand (fight fixture) -> (1456.812, -0.406972, 3442.196)
+  sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+  deep_watch arrival landing for water:deep_watch:pickup:002 -> (1260.318, 1.929, 3403.144)
+  sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+Walked total 3442m with left-stick input
+Tidewake-B chain route witness: 61 checks, 0 failures
+exit=0

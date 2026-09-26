@@ -224,3 +224,16 @@ WALK water_halen DIRECT (no baked-ground plan from (374.1692, 5.997751, 3822.694
 - **cradle, real failure:** Otto's authored standing point is (700.0, 56.9, 1542.0). The baked-ground planner found no dry route from the Tidal Cradle arrival landing, so the witness fell back to a direct stick leg. That leg stalled at (704.3, 45.5, 1539.2), about 5 m away horizontally but 11 m lower. The trainer never reached Otto's Greet prompt, so the lead was never given. Otto may stand on a ledge that ground movement cannot reach, or this navigator/planner may just fail to find the way up. That is not yet decided.
 - **lastlight, real failure:** Halen's resident body is at (191.0, **616.1**, 4163.0), 616 m above the Veilfall landing. The walk stalled at (357.4, 105.9, 4096.9), so the lead was never given and every later step failed. This looks like a Halen placement defect rather than a navigation limit: something to do with the ground or the body at that point puts him far above any walkable ground. It needs checking before the chain can be witnessed.
 - These two failures come from walked approaches only. The per-chain smokes (teleport poses) still pass in CI. This witness shows that **the requesters Otto and Halen cannot currently be reached on foot from their island's arrival landing** with this navigator.
+
+## Final results (logs completed after the first push)
+
+| Chain | Final | Source |
+|---|---|---|
+| lantern_return | PASS, 54 checks / 0 failures | lantern.log |
+| gull_research | PASS, 59 / 0 | gull.log |
+| garden_records | PASS, 59 / 0 | garden.log |
+| deep_watch_chart | **PASS, 61 / 0** (Tidecoil resolved by the director's won handler, as disclosed) | deep.log (now complete) |
+| cradle_care | **FAIL**: Tracker Otto at (700, 56.9, 1542) is not reachable on foot. The walk stalls about 4–5 m away and 11 m lower, both from the arrival and after the nest. Mining the nest works (+4 Reef Stone), but the lead, return, berries and acknowledgement all fail. | cradle.log (now complete) |
+| lastlight_shelter | **FAIL**: Campkeeper Halen resolves to (191, 616.1, 4163) on top of the Veilfall massif (`water_characters.json` `island_local_offset [-9,0,23]`), far from the Lastlight camp at about (381, 5, 3822). The walk stalls at y≈106. | lastlight.log (the rerun was stopped by the lane lead; the first failures are unchanged) |
+
+F13#3 is **not met**: 4 of 6 chains pass the walked witness. The two failures are NPC placement defects in `data/config/water_characters.json`, owned by the main Tidewake lane. A SHARED-FILE REQUEST is on PR #310. The existing CI chain smokes teleport onto the NPC body (e.g. `tests/smoke_water_lastlight_shelter.gd:68`), which hides this.

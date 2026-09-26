@@ -20,3 +20,27 @@ FAIL: Cradle: lead recorded
 WALK water:tidal_cradle:harvest:007 island=tidal_cradle walked=175m legs=24
 MINE water:tidal_cradle:harvest:007 reef_stone 0->4
 WALK water_otto DIRECT (no baked-ground plan from (816.8746, 55.36427, 1644.533) to (700.0, 56.9451, 1542.0))
+FAIL: water_otto: walk stalled at leg 1/1 player=(705.2583, 45.63467, 1542.092) goal=(700.0, 0.0, 1542.0)
+FAIL: Cradle: Otto takes the report ()
+FAIL: Cradle: completion recorded
+FAIL: Cradle: return pays exactly 3 berries
+FAIL: water_otto: walk stalled at leg 1/1 player=(701.3607, 45.29795, 1537.236) goal=(700.0, 0.0, 1542.0)
+FAIL: Cradle: acknowledgement ()
+FAIL: Cradle: quest log done
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+FAIL: Reload keeps world record water_claim:local:cradle_care:complete
+FAIL: Reloaded quest log: shell nest done
+FAIL: water_otto: walk stalled at leg 1/1 player=(704.0841, 45.48841, 1540.099) goal=(700.0, 0.0, 1542.0)
+FAIL: Reload: water_otto acknowledges, no re-offer ()
+CHAIN side_water_cradle_care FAIL reward=berries +0 reef_stone +0 ack=
+RELOAD cradle water_otto -> 
+POSES (1 disclosed position writes):
+  tidal_cradle arrival landing for water_otto -> (535.497, 1.929, 1352.51)
+Walked total 175m with left-stick input
+Tidewake-B chain route witness: 47 checks, 14 failures
+exit=1
