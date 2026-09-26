@@ -1,0 +1,6 @@
+[climax] every participant has answered; the creature leaves the chamber
+answered: refused=true joined=false
+[live] herd display: (398.0, -6.098061, 5869.0)
+saved slot 3: true
+loaded slot 3: true; refused=true
+[reload] herd display: (398.0, -6.098061, 5869.0)
