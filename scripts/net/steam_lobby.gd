@@ -406,7 +406,9 @@ func _on_lobby_created(result: int, lobby_id: int) -> void:
 		return
 	_hosting = true
 	_state = "host_ready"
-	_status = "Friends lobby ready — 1/4 players."
+	# No player count here: this line is shown under the Players tab's live
+	# count and was never refreshed as friends joined or left.
+	_status = "Friends lobby ready."
 	_last_error = ""
 	# Ready is published only after Session owns a connected host peer.
 	if not bool(_steam.call("setLobbyData", lobby_id, "ready", "1")):

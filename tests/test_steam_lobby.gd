@@ -64,6 +64,57 @@ class MockSteam:
 	func activateGameOverlayInviteDialog(lobby_id: int) -> void:
 		overlay_opened = lobby_id
 
+	func getSteamID() -> int:
+		return 500
+
+	func setLobbyData(_lobby_id: int, key: String, value: String) -> bool:
+		metadata[key] = value
+		return true
+
+
+class FakeRelayPeer extends OfflineMultiplayerPeer:
+	var server_relay := false
+
+	func create_host(_port: int) -> int:
+		return OK
+
+
+class HostSessionStub extends Node:
+	var hosted := 0
+
+	func host_with_peer(_peer: MultiplayerPeer, _capacity: int, _kind: String) -> bool:
+		hosted += 1
+		return true
+
+	func is_active() -> bool:
+		return hosted > 0
+
+
+class GameStub extends Node:
+	var session: Node
+
+
+## The host's status line sits under the Players tab's live "n/4 players" count;
+## a count frozen at "1/4" when the lobby opened contradicted it as soon as a
+## friend joined.
+func test_a_ready_friends_host_status_carries_no_frozen_player_count() -> void:
+	var steam := MockSteam.new()
+	var game := GameStub.new()
+	game.session = HostSessionStub.new()
+	game.add_child(game.session)
+	var lobby := STEAM_LOBBY.new()
+	game.add_child(lobby)
+	lobby._inject_native_for_test(steam, 123, func() -> MultiplayerPeer: return FakeRelayPeer.new())
+	assert_true(lobby.initialize())
+	lobby._state = "host_creating"
+	steam.lobby_created.emit(STEAM_LOBBY.CALLBACK_OK, 777)
+	assert_true(lobby.is_hosting(), "the mocked relay host is ready")
+	assert_eq(steam.metadata.get("ready"), "1", "ready is published once the session hosts")
+	assert_eq(lobby.status_text(), "Friends lobby ready.")
+	assert_false(lobby.status_text().contains("/"), "no player count to go stale")
+	game.free()
+	steam.free()
+
 
 func test_native_unavailable_is_optional_and_actionable() -> void:
 	var lobby := STEAM_LOBBY.new()
