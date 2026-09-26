@@ -276,6 +276,10 @@ var _rename_panel: CanvasLayer = null
 var _list: VBoxContainer = null
 var _detail_panel: Control = null
 var _detail_scroll: ScrollContainer = null
+## The detail column's fade wrapper (see `build()`). It must hide whenever the
+## detail panel or its scroll is hidden, or its EXPAND_FILL keeps the column's
+## width and the confirm/offer card beside it cannot widen.
+var _detail_wrap: Control = null
 
 ## "" outside a ceremony, "glow" while the creature is transforming (waiting
 ## for the player's own confirm press, not a timer — see `_poll_evolution()`'s
@@ -435,6 +439,7 @@ func build() -> void:
 	detail_wrap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail_wrap.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	row.add_child(detail_wrap)
+	_detail_wrap = detail_wrap
 	detail_wrap.add_child(detail_scroll)
 	var fade := Control.new()
 	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -625,6 +630,14 @@ func _draw_scroll_fade(fade: Control, scroll: ScrollContainer) -> void:
 	fade.draw_polygon(
 		PackedVector2Array([Vector2(0, top), Vector2(w, top), Vector2(w, fade.size.y), Vector2(0, fade.size.y)]),
 		PackedColorArray([clear, clear, solid, solid]))
+
+
+func _sync_detail_column() -> void:
+	if _detail_wrap == null or not is_instance_valid(_detail_wrap):
+		return
+	var panel_on := _detail_panel != null and is_instance_valid(_detail_panel) and _detail_panel.visible
+	var scroll_on := _detail_scroll != null and is_instance_valid(_detail_scroll) and _detail_scroll.visible
+	_detail_wrap.visible = panel_on and scroll_on
 
 
 func _queue_move_stats_visibility() -> void:
@@ -1722,6 +1735,7 @@ func _read_evolve() -> void:
 	menu.call("override_footer", "")
 	_list.visible = false
 	_detail_panel.visible = false
+	_sync_detail_column()
 	_evolution_panel.visible = true
 	_evolution_title.text = "%s is evolving..." % _evolution_from_name
 	_evolution_body.text = ""
@@ -1765,6 +1779,7 @@ func _end_evolution() -> void:
 	_evolution_panel.visible = false
 	_list.visible = true
 	_detail_panel.visible = true
+	_sync_detail_column()
 	if _focused >= 0 and _focused < _rows.size():
 		(_rows[_focused] as Button).grab_focus()
 
@@ -1922,8 +1937,10 @@ func _begin_guardian_confirm(pending: RefCounted) -> void:
 	_guardian_final.visible = true
 	_guardian_final_row.visible = true
 	_detail_panel.visible = false
+	_sync_detail_column()
 	if _detail_scroll != null:
 		_detail_scroll.visible = false
+		_sync_detail_column()
 	_farewell_panel.visible = true
 	# The viewport shows the volunteer itself while the question is up, wide.
 	_viewport.custom_minimum_size.x = GUARDIAN_PREVIEW_WIDTH
@@ -2255,7 +2272,9 @@ func _end_guardian_confirm(land: int) -> void:
 	_farewell_panel.visible = false
 	if _detail_scroll != null:
 		_detail_scroll.visible = true
+		_sync_detail_column()
 	_detail_panel.visible = true
+	_sync_detail_column()
 	if not _rows.is_empty():
 		(_rows[clampi(land, 0, _rows.size() - 1)] as Button).grab_focus()
 	_resettle_detail_scroll()
@@ -2287,8 +2306,10 @@ func _show_guardian_result(title: String, body: String, land: int) -> void:
 	_farewell_done.visible = false
 	_farewell_hint.visible = false
 	_detail_panel.visible = false
+	_sync_detail_column()
 	if _detail_scroll != null:
 		_detail_scroll.visible = false
+		_sync_detail_column()
 	_farewell_panel.visible = true
 
 
@@ -2303,7 +2324,9 @@ func _hide_guardian_result() -> void:
 	_farewell_panel.visible = false
 	if _detail_scroll != null:
 		_detail_scroll.visible = true
+		_sync_detail_column()
 	_detail_panel.visible = true
+	_sync_detail_column()
 	_resettle_detail_scroll()
 
 
@@ -2398,6 +2421,7 @@ func _begin_farewell(index: int) -> void:
 	_farewell_done.visible = false
 	_farewell_hint.visible = true
 	_detail_panel.visible = false
+	_sync_detail_column()
 	_farewell_panel.visible = true
 	# Blind-judge defect #3: the confirm beat's own text already resolves the
 	# newcomer's presence in words ("X gives up their holder and NEWCOMER takes
@@ -2433,6 +2457,7 @@ func _back_to_choosing() -> void:
 	_release_stage = "choose"
 	_farewell_panel.visible = false
 	_detail_panel.visible = true
+	_sync_detail_column()
 	_show_pending_row(true)
 	menu.call("override_footer", "Up / Down  look them over        A  this one goes free")
 	var back: Button = _pending_button if _release_target >= PARTY.MAX_CREATURES \
@@ -2517,6 +2542,7 @@ func _end_release() -> void:
 	menu.call("override_footer", "")
 	_farewell_panel.visible = false
 	_detail_panel.visible = true
+	_sync_detail_column()
 	_show_pending_row(false)
 	_fence_choose_focus(false)
 	var land: int = clampi(_release_land, 0, _rows.size() - 1)
