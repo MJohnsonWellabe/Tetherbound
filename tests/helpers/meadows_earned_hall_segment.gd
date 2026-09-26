@@ -87,6 +87,13 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	return result()
 
 
+## A spine point that is only a bend in the road (not a captain's junction or
+## the gate's) counts as passed within this radius: the points are 60-150 m
+## apart, and a wild pack plus a villager standing on the (-152,4235) bend
+## held the walker 8.7 m short of it after two real wild wins (seed 15).
+const SPINE_BEND_RADIUS := 10.0
+
+
 func _travel() -> bool:
 	var road := departure_spine(_read(TERRAIN))
 	if road.is_empty() or not await _prepare():
@@ -100,7 +107,7 @@ func _travel() -> bool:
 		if join < previous:
 			return _fail("The current captain positions no longer follow the authored road order")
 		for index in range(previous, join + 1):
-			if not await _walk_ground(road[index]):
+			if not await _walk_ground(road[index], 1.5 if index == join else SPINE_BEND_RADIUS):
 				return false
 		if not await _fight_named(body, id):
 			return false
@@ -113,7 +120,7 @@ func _travel() -> bool:
 	if gate_join < previous or gate_join + 1 >= road.size():
 		return _fail("The current Sigil Gate does not lie after the three captains on the spine")
 	for index in range(previous, gate_join + 1):
-		if not await _walk_ground(road[index]):
+		if not await _walk_ground(road[index], 1.5 if index == gate_join else SPINE_BEND_RADIUS):
 			return false
 	var crossing := gate_crossing_points(_sigil_gate.global_transform, road[gate_join], road[gate_join + 1])
 	if crossing.size() != 2 or not await _walk_ground(crossing[0], 0.6):
