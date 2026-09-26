@@ -4828,6 +4828,28 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				return null
 			var p: Vector3 = player.global_position
 			return [p.x, p.y, p.z]
+		"road_signature":
+			# F01: this peer's road layout, as its own world holds it -- every
+			# road band the terrain config it loaded builds (line, half width,
+			# shoulder) and the live baked ground height at every road vertex.
+			# Two peers agree on the roads only if these match exactly.
+			var rworld := current_scene
+			if rworld == null or not rworld.has_method("ground_height_at") or not rworld.has_method("_load_terrain_config"):
+				return {"available": false}
+			var rfield: RefCounted = (load("res://scripts/world/playground_heightfield.gd") as GDScript).new(rworld.call("_load_terrain_config"))
+			var rrows: Array = []
+			var rpoints := 0
+			for rraw: Variant in (rfield.call("road_bands") as Array):
+				var rband: Dictionary = rraw
+				var rline: Array = []
+				for rpt: Vector2 in (rband["line"] as PackedVector2Array):
+					rline.append([snappedf(rpt.x, 0.001), snappedf(rpt.y, 0.001),
+						snappedf(float(rworld.call("ground_height_at", rpt.x, rpt.y)), 0.01)])
+					rpoints += 1
+				rrows.append([snappedf(float(rband["half"]), 0.001), snappedf(float(rband["shoulder"]), 0.001), rline])
+			var rtext := JSON.stringify(rrows)
+			return {"available": true, "bands": rrows.size(), "points": rpoints,
+				"signature": rtext.sha256_text(), "realm": str(root.get_node(^"Game").get("current_realm"))}
 		"player_identity":
 			# Owner T4#2-#5. Read the local identity from PlayerState, the art
 			# from the live production rig, the location from that body's real

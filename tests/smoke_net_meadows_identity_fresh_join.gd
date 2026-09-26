@@ -54,6 +54,9 @@ var _opening_together := false
 var _starter_presses: Array = [1, 1]
 ## The name each peer typed in the real naming grid (opening-together only).
 var _typed_names: Array = ["", ""]
+## `--cold` (opening-together only): after the rejoin, kill the guest's process
+## and start a fresh one on the same user-data home, from the title.
+var _cold := false
 
 
 func _initialize() -> void:
@@ -62,6 +65,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	_opening_together = OS.get_cmdline_user_args().has("--opening-together")
+	_cold = _opening_together and OS.get_cmdline_user_args().has("--cold")
 	for arg: String in OS.get_cmdline_user_args():
 		for pair: Array in [["--host-starter=", 0], ["--guest-starter=", 1]]:
 			if arg.begins_with(str(pair[0])):
@@ -78,7 +82,7 @@ func _run() -> void:
 	if _opening_together:
 		# This mode includes both production world builds and two physical UI
 		# openings; the default late-arrival witness retains its existing budget.
-		_step_phase_deadline_ms = Time.get_ticks_msec() + 600.0 * 1000.0
+		_step_phase_deadline_ms = Time.get_ticks_msec() + (900.0 if _cold else 600.0) * 1000.0
 	var before_host := await _session(0)
 	var port := int(before_host.get("enet_port", 0))
 	_check(port > 0, "the harness assigned the host a positive isolated UDP port (%d)" % port)
@@ -220,6 +224,9 @@ func _run() -> void:
 				"peer %d retained its opening catch supplies after load" % peer)
 			await _assert_named_starter(peer, "after load")
 		await _rejoin_with_starter(port)
+		await _assert_roads_agree("after the rejoin")
+		if _cold:
+			await _cold_reconnect(port)
 
 	if not _opening_together:
 		var second: Dictionary = await step(0, "story_flag",
@@ -560,6 +567,104 @@ func _rejoin_with_starter(port: int) -> void:
 	_check(str(orbs.get("verdict", "")) == "PASS",
 		"the rejoined guest holds exactly the %d orbs it had before the drop (%s)" % [orbs_before, str(orbs.get("detail", ""))])
 	await _assert_named_starter(0, "with the guest back")
+
+
+## Both peers hold the same road layout: the road bands each built from the
+## terrain config it loaded, and its live baked ground at every road vertex.
+func _assert_roads_agree(when: String) -> void:
+	var host_roads: Variant = await probe(0, "road_signature")
+	var guest_roads: Variant = await probe(1, "road_signature")
+	var h: Dictionary = host_roads if host_roads is Dictionary else {}
+	var g: Dictionary = guest_roads if guest_roads is Dictionary else {}
+	_check(bool(h.get("available", false)) and bool(g.get("available", false))
+			and int(h.get("bands", 0)) > 0 and int(h.get("points", 0)) > 0
+			and str(h.get("signature", "")) == str(g.get("signature", "")),
+		"both peers hold the same road layout %s (host %d bands / %d points %s, guest %d / %d %s)"
+			% [when, int(h.get("bands", 0)), int(h.get("points", 0)), str(h.get("signature", "")).left(12),
+				int(g.get("bands", 0)), int(g.get("points", 0)), str(g.get("signature", "")).left(12)])
+
+
+## A COLD reconnect: the guest's process is killed outright (no save, no leave),
+## a fresh process boots the title on the same user-data home, and the same
+## character comes back through the title's returning route. Everything it
+## holds then came off disk.
+func _cold_reconnect(port: int) -> void:
+	var before := await _identity(1)
+	var character_id := str(before.get("character_id", ""))
+	var uids: Array = before.get("party_uids", []) as Array
+	var counted: Dictionary = await step(1, "assert", {"check": "inventory_count", "item": "orb_basic", "min": 0})
+	var orbs_before := int(str(counted.get("detail", "")).get_slice("count ", 1).to_int()) \
+		if str(counted.get("detail", "")).contains("count ") else -1
+	var saved: Dictionary = await step(1, "save_character_here", {})
+	_check(str(saved.get("verdict", "")) == "PASS", "COLD: the guest's character is on disk before its process dies (%s)" % str(saved.get("detail", "")))
+	var p: Dictionary = _peers[1]
+	p["quit_sent"] = true
+	var pid := int(p.get("pid", -1))
+	if pid > 0 and OS.is_process_running(pid):
+		OS.execute("kill", ["-9", str(pid)])
+	for _i in 600:
+		await process_frame
+		if not OS.is_process_running(pid):
+			break
+	p["exited"] = true
+	_check(not OS.is_process_running(pid), "COLD: the guest's process is gone (pid %d, killed -9)" % pid)
+	# A killed process sends no disconnect: the host learns of it only through
+	# ENet's peer timeout (session.gd peer_timeout_min_ms 135 s .. max 180 s).
+	var alone: Dictionary = await step(0, "expect_peers", {"count": 1, "budget_frames": 13000}, 13000)
+	_check(str(alone.get("verdict", "")) == "PASS", "COLD: the host times the dead guest out (%s)" % str(alone.get("detail", "")))
+	if not await _relaunch_guest():
+		return
+	var back: Dictionary = await step(1, "production_join", {
+		"host": "127.0.0.1", "port": port, "returning_route": true, "budget_frames": 6000,
+		"character": {"character_id": character_id, "appearance_id": CLIENT_APPEARANCE, "display_name": CLIENT_NAME},
+	}, 12000)
+	_check(str(back.get("verdict", "")) == "PASS",
+		"COLD: a fresh guest process rejoins as the same character through the title's returning route (%s)" % str(back.get("detail", "")))
+	for peer in 2:
+		var both: Dictionary = await step(peer, "expect_peers", {"count": 2})
+		_check(str(both.get("verdict", "")) == "PASS", "COLD: peer %d sees both players again (%s)" % [peer, str(both.get("detail", ""))])
+	var after := await _identity(1)
+	_check(str(after.get("character_id", "")) == character_id and after.get("party_uids", []) == uids,
+		"COLD: the fresh process holds the same character and the SAME starter (UID %s -> %s)" % [str(uids), str(after.get("party_uids", []))])
+	await _assert_named_starter(1, "after the cold reconnect")
+	var story := await _story(1, [STARTER_FLAG])
+	_check(_player_flag(story, STARTER_FLAG) == true, "COLD: the starter receipt came back from disk")
+	var orbs: Dictionary = await step(1, "assert", {"check": "inventory_count", "item": "orb_basic",
+		"min": orbs_before, "max": orbs_before})
+	_check(str(orbs.get("verdict", "")) == "PASS",
+		"COLD: exactly the %d orbs it had before its process died (%s)" % [orbs_before, str(orbs.get("detail", ""))])
+	await _assert_named_starter(0, "with the cold guest back")
+	await _assert_roads_agree("after the cold reconnect")
+
+
+## A fresh process for peer 1 on its own user-data home and log, booted at the
+## title, then wait for its hello.
+func _relaunch_guest() -> bool:
+	var controls := CONTROL_PORTS.reserve(1, 0)
+	if not bool(controls.ok):
+		_check(false, "COLD: could not reserve a control port for the relaunch")
+		return false
+	var old: Dictionary = _peers[1]
+	var server: TCPServer = controls.servers[0]
+	_control_servers.append(server)
+	var pid := _spawn_peer(1, "client", int(controls.ports[0]), enet_port_for(1), "title",
+		str(old.home), str(old.log_path), [])
+	print("coordinator: relaunched peer 1 (client) pid=%d at the title" % pid)
+	_peers[1] = {
+		"index": 1, "role": "client", "server": server, "sock": null, "rx_buf": "",
+		"pid": pid, "home": old.home, "log_path": old.log_path, "control_port": int(controls.ports[0]),
+		"hashes": [], "hello": null, "exited": false, "unexpected_exit": false,
+		"quit_sent": false, "last_heartbeat_t": 0.0, "last_heartbeat": null,
+		"heartbeat_deferred_until_s": 0.0, "last_verdict": null, "last_value": null,
+	}
+	var deadline := Time.get_ticks_msec() + DEFAULT_HELLO_BUDGET_S * 1000.0
+	while Time.get_ticks_msec() < deadline:
+		await process_frame
+		_pump_once()
+		if (_peers[1] as Dictionary).get("hello") != null:
+			return true
+	_check(false, "COLD: the relaunched guest never said hello")
+	return false
 
 
 ## opening.json's starter at picker index `index` (the picker opens on 0).
