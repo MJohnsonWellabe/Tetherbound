@@ -630,6 +630,44 @@ SNOWBALL F09#3. This is a proof task: build only what the proof run shows is bro
   - `test_stormwood_road_current`, `pockets`, `scatter_bake`, `scatter_clearances`, `road_surface`, `terrain_bake`: 37 tests, 0 failed.
 - **Stop:** two attempts on this approach were used. The next gate is the coordinator's blind judge.
 
+### WO-F09-05 round 4: a worn, electrified fork plus the gate (`e5896094d`)
+
+- **Judge 11 on round 3 (`c2eb4fa6b`):**
+  - Conductor YES; Verge weak.
+  - Hollows, Deepwood and Dynamo NO: "lanterns on a trunk, no path to them".
+  - Defects: a yellow loop and a doubled current line on the road; stones that start and stop mid-dirt; plank-like posts at the gates; the gates read as one stamp.
+  - Judge's first note: nothing breaks the road edge.
+- **Changes (Stormwood-owned only; two attempts, then stop):**
+  1. **Spur current in the pocket's own tint** (`stormwood_road_current.*`):
+     - One thin crack in the pocket's lamp tint rides in vertex COLOR, with UV2 = (spur flag, metres from the junction). It is the same shared material, so no shared file is touched.
+     - It fades in at 3 m, at the road edge, and runs to the gate. Energy is 0.6 overall, and 1.9 at 1.8× width over the first 35 m (attempt 2).
+     - Roads keep the owner's yellow. `test_stormwood_road_current` checks that spur chunks are tinted and flagged and that no tint is red or magenta.
+  2. **Road veins no longer cross:** each of the three cracks keeps to its own third of the lane (`vein_lane_offset` 0.5, `vein_wander` 0.12). This removes the loop and the doubled line. No two routes overlap at those stands; the defect was the crack wander itself.
+  3. **Stepping stones in one unbroken run** from 2.4 m, inside the road margin, to 1 m short of the mouth, every 2 m. Over the first 20 m they are 1.5× larger (attempt 2).
+  4. **Gate turned toward the approach:** the palisade gateway turns 30° toward the 25 m road stand. That is 7° at Conductor, where the approach is already square on. The opening is now 7.2 m with one wing trunk a side, and the gateways sit 10.5–13 m up their spurs.
+  5. **Mouth lamps hang without their post mesh.** Our pale posts read as planks; the colliders stay.
+- **Out of scope, listed only:**
+  - The Stormheart Tree mass in fog: `stormwood_world.gd` `_build_landmark_masses()` → `stormheart_tree.gd`, Stormwood F11.
+  - The grey cliff faces on the horizon: the Hollow Crown island, heightfield `glass_sink` island in `stormwood_heightfield.gd` and the terrain bake, Stormwood F10/WORLD.
+  - `horizon_ranges.gd` is Meadows/Cloudreach and is not built in Stormwood.
+- **Frames:** `visual/f09/pocket_walks/`, full resolution from Actions render run `36247902614` at `e5896094d`.
+  - 20 frames, `frames_walks.json`, and one sheet, `before_after_round4.jpg`: round-3 road, round-4 road, round-3 gate, round-4 gate, per pocket.
+  - The superseded `before_round3/`, round-3 contact sheet and round-2/3 before/after sheet are removed. Round 3's frames stay in git at `c2eb4fa6b`.
+  - **What I saw:**
+    - The road veins run as separate lines.
+    - A pale stone strip leaves the road toward the gate in Verge, Hollows and Deepwood.
+    - The tinted crack is visible at the gates but faint from the 25 m road stands.
+    - Conductor's gateway is unchanged in character.
+    - Gates: unbroken stones, tinted crack, no planks, reward glow. Reward counts 0→1, 0→1, 1→2, 0→1, 0→1.
+- **Tests on `e5896094d`:**
+  - `smoke_stormwood_pocket_walks`: 117 checks, 0 failures, 5/5 walks, 5/5 wall controls, 30/30 LURE, 0 `SCRIPT ERROR`.
+  - `smoke_stormwood_arches`: PASS, 0 `SCRIPT ERROR`.
+  - `test_stormwood_road_current`, `pockets`, `scatter_bake`, `scatter_clearances`, `road_surface`: 33 tests, 0 failed.
+- **Open:**
+  - The fork is still faint from 25 m, where grass hides flat ground at a grazing angle.
+  - Five near-identical gates.
+  - #250 is not on main yet. When it lands, the merge and single scatter re-bake follow.
+
 ## WO-F10-06 — Surge phases readable without HUD (`ralph/stormwood-f10-surge-readability`)
 
 - **Anchor:** F10 / ACCEPTANCE §6.1 F10: lightning with a 1.2 s / 3 m telegraph, and Calm/Building/Break/Fading readable without HUD text. The restored-sky view has to be distinct. ART_DIRECTION and SYSTEMS define the Stormwood look for each phase.
