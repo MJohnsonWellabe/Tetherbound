@@ -942,16 +942,19 @@ static func once_reward_components() -> Dictionary:
 	var bands := DirAccess.open(ONCE_REWARD_BAND_DIR)
 	if bands != null:
 		for band: String in bands.get_directories():
-			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(
-				"%s/%s/spawns.json" % [ONCE_REWARD_BAND_DIR, band]))
+			var band_spawns := "%s/%s/spawns.json" % [ONCE_REWARD_BAND_DIR, band]
+			if not FileAccess.file_exists(band_spawns):
+				continue
+			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(band_spawns))
 			for raw: Variant in ((parsed as Dictionary).get("spawns", []) as Array if parsed is Dictionary else []):
 				if not raw is Dictionary:
 					continue
-				for key: String in ["alpha", "elder"]:
-					var named: Variant = (raw as Dictionary).get(key)
-					if named is Dictionary and (named as Dictionary).has("completion_reward"):
-						add.call("wild_once_%d" % int((raw as Dictionary).get("order", -1)),
-							(named as Dictionary).get("completion_reward"))
+				# Alpha only, as the director pays it (`_configure_once_completion_reward`
+				# is given the alpha block; an elder's reward is never paid).
+				var named: Variant = (raw as Dictionary).get("alpha")
+				if named is Dictionary and (named as Dictionary).has("completion_reward"):
+					add.call("wild_once_%d" % int((raw as Dictionary).get("order", -1)),
+						(named as Dictionary).get("completion_reward"))
 	var stormwood: Script = load(STORMWOOD_NAMED)
 	for raw: Variant in (stormwood.call("encounter_catalogue") as Dictionary).get("named_encounters", []):
 		if raw is Dictionary and (raw as Dictionary).has("completion_reward"):
