@@ -623,6 +623,9 @@ func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 func _stand_ally_on_trainer_level(body: Node3D, requested: Vector3) -> bool:
 	var level := _recall_floor(_player.global_position, _player.global_position.y + 0.5, body)
 	if is_nan(level):
+		# No floor straight under the trainer's centre (e.g. standing on a
+		# sloped road lip): match the trainer's own height. Every candidate
+		# still needs verified floor, so no spot is chosen in the air.
 		level = _player.global_position.y
 	var spot := _recall_spot(body, requested, level)
 	_surface_for(body, spot)
@@ -684,7 +687,8 @@ func _release_shared_footprint() -> void:
 		return
 	var apart := Vector2(body.global_position.x - _player.global_position.x,
 		body.global_position.z - _player.global_position.z).length()
-	if apart >= float(body.call("body_radius")) + RECALL_SHARED_CLEAR_M:
+	var radius := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
+	if apart >= radius + RECALL_SHARED_CLEAR_M:
 		body.remove_collision_exception_with(_player)
 		_recall_shared_footprint = null
 
