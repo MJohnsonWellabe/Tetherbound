@@ -15,6 +15,11 @@ const SETTLE_FRAMES := 300
 const RIGHT_X := JOY_AXIS_RIGHT_X
 const RIGHT_Y := JOY_AXIS_RIGHT_Y
 const LEFT_Y := JOY_AXIS_LEFT_Y
+## Consecutive frames the relocated opponent must stay framed (neutral check).
+const HOLD_IN_FRAME := 10
+## Frames that must be observed inside the live manual-look grace for the
+## "not recentred while held" check to prove anything.
+const MIN_GRACE_FRAMES_OBSERVED := 5
 
 var _failures: Array[String] = []
 var _world: Node3D = null
@@ -325,28 +330,37 @@ func _prove_neutral_camera_keeps_the_opponent_in_frame() -> void:
 		# max_speed_deg, plus a clear-orbit ease back, needed more than 1.5 s,
 		# so the old fixed wait passed or failed on the starting angle alone
 		# (runner: FAIL then PASS on one head). Converging early ends the wait.
+		# The opponent must then STAY framed for HOLD_IN_FRAME consecutive
+		# frames: a camera that only sweeps through the safe rect (spinning or
+		# oscillating) must not pass on the one frame it crosses it.
 		var budget := _neutral_convergence_frames()
 		var centre := Vector3.ZERO
 		var screen := Vector2.ZERO
 		var viewport := Vector2.ZERO
 		var safe := Rect2()
 		var behind := true
-		for i in budget:
+		var streak := 0
+		var frames := 0
+		for i in budget + HOLD_IN_FRAME:
 			await physics_frame
+			frames += 1
 			centre = _wild.call("centre") if _wild.has_method("centre") \
 				else _wild.global_position + Vector3.UP
 			viewport = _camera.get_viewport().get_visible_rect().size
 			safe = Rect2(viewport * 0.06, viewport * 0.88)
 			behind = _camera.is_position_behind(centre)
 			screen = _camera.unproject_position(centre)
-			if not behind and safe.has_point(screen):
+			streak = streak + 1 if not behind and safe.has_point(screen) else 0
+			if streak >= HOLD_IN_FRAME:
 				break
-		if behind:
-			_fail("neutral combat camera left the opponent behind the lens at %.0f degrees after %d frames" % [bearing_deg, budget])
+		if streak >= HOLD_IN_FRAME:
 			continue
-		if not safe.has_point(screen):
-			_fail("neutral combat camera lost the opponent at %.0f degrees (screen=%s viewport=%s)" % [
-				bearing_deg, screen, viewport])
+		if behind:
+			_fail("neutral combat camera left the opponent behind the lens at %.0f degrees (budget %d + hold %d frames)" % [
+				bearing_deg, budget, HOLD_IN_FRAME])
+		else:
+			_fail("neutral combat camera did not keep the opponent framed at %.0f degrees for %d frames within %d (screen=%s viewport=%s, final streak %d)" % [
+				bearing_deg, HOLD_IN_FRAME, frames, screen, viewport, streak])
 	_wild.set_physics_process(wild_was_processing)
 	_wild.global_position = ally_at + Vector3(2.0, 0.0, 0.0)
 	for i in 30:
@@ -550,9 +564,10 @@ func _assert_raw_orbit_changes(context: String) -> void:
 	# it expires the neutral tracker is SUPPOSED to recentre. The old
 	# 10 + 15 frames (0.417 s) ran past the 0.4 s grace, so "continuously
 	# recentred" failed whenever tracking resumed inside the window.
-	var grace_frames := _manual_grace_frames()
-	var settle := mini(10, maxi(grace_frames / 3, 2))
-	for i in settle:
+	# The grace is counted down in the rig's _process on the idle delta, so
+	# the window is read LIVE from `_tracking_manual_left`, not predicted from
+	# physics frames (a hitch can spend it in fewer physics ticks).
+	for i in 2:
 		await physics_frame
 	var yaw_after := float(_rig.get("yaw"))
 	var pitch_after := float(_rig.get("pitch"))
@@ -564,19 +579,22 @@ func _assert_raw_orbit_changes(context: String) -> void:
 	if absf(pitch_after - pitch_before) < 0.05:
 		_fail("%s: right-stick vertical input did not pitch the camera" % context)
 	var held_yaw := yaw_after
-	for i in maxi(grace_frames - settle - 3, 1):
+	var inside := 0
+	var drifted := 0.0
+	for i in 120:
+		if float(_rig.get("_tracking_manual_left")) <= 0.0:
+			break
 		await physics_frame
-	if absf(angle_difference(float(_rig.get("yaw")), held_yaw)) > 0.01:
-		_fail("%s: camera yaw was continuously recentered after the stick returned to neutral" % context)
-
-
-## Physics frames the rig's manual-look grace lasts (combat.json
-## camera.tracking.manual_grace_seconds).
-func _manual_grace_frames() -> int:
-	var tracking: Dictionary = (MATH.config().get("camera", {}) as Dictionary) \
-		.get("tracking", {}) as Dictionary
-	var ticks := float(Engine.physics_ticks_per_second)
-	return int(floor(float(tracking.get("manual_grace_seconds", 0.4)) * ticks))
+		if float(_rig.get("_tracking_manual_left")) <= 0.0:
+			break
+		inside += 1
+		drifted = maxf(drifted, absf(angle_difference(float(_rig.get("yaw")), held_yaw)))
+	if inside < MIN_GRACE_FRAMES_OBSERVED:
+		_fail("%s: only %d frames observed inside the manual-look grace (need %d); cannot prove the hold" % [
+			context, inside, MIN_GRACE_FRAMES_OBSERVED])
+	elif drifted > 0.01:
+		_fail("%s: camera yaw was continuously recentered after the stick returned to neutral (drift %.3f rad over %d grace frames)" % [
+			context, drifted, inside])
 
 
 ## Worst case for the neutral tracker to bring a relocated opponent back into
