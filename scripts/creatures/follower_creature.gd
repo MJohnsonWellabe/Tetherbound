@@ -62,6 +62,25 @@ const DEFAULT_FLANK_RUN_SPEED := 9.0
 ## is documented in its own header.
 const PRESENCE := preload("res://scripts/creatures/companion_presence.gd")
 
+## Placement on the trainer's floor (reviewer findings, Cloudreach narrow
+## roads): the leash snap seated the body on the terrain HEIGHT ESTIMATE, which
+## beside a narrow road is the floor below the drop, and the walk to the fixed
+## flank station stepped off a road edge. A realm director that knows its
+## collision (`cloudreach_encounter_director.gd::verified_follow_spot`) supplies
+## `station_validator`; without one the station is the unchanged flank and the
+## snap keeps `place_on_ground`, refusing only a seat far below the trainer.
+## Revalidate a changed station at most every this many physics frames (the
+## validator is tens of physics queries; never every frame).
+const STATION_VALIDATE_FRAMES := 15
+## A station that moved less than this since its last check is not re-checked.
+const STATION_VALIDATE_MOVE_M := 0.05
+## Default snap guard: a seat more than this below the trainer's feet is a floor
+## under a drop, not the trainer's ground (a Meadows hillside flank never is).
+const DEFAULT_SNAP_MAX_DROP_M := 6.0
+## With no verified station the companion closes on the trainer and stops this
+## far beyond its own radius, on the ground the trainer is standing on.
+const TRAINER_FALLBACK_CLEARANCE_M := 1.0
+
 
 ## The trainer THIS creature follows. Stage B lane 4.B: it is the body of the
 ## peer who owns the creature, not "the player" -- in a session every peer has
@@ -99,6 +118,21 @@ var _last_leader_facing: Vector3 = DEFAULT_LEADER_FACING
 ## between "close enough" and "too far" on the boundary and jitters in place.
 var _closing: bool = false
 
+## `func(body: Node3D, trainer: Node3D, requested: Vector3, snap: bool) -> Vector3`:
+## a verified spot for this body near `requested` on the trainer's floor, or
+## Vector3.INF when none. `snap` is the leash teleport (may return the trainer's
+## own footprint); otherwise it is the walking station. Set by a realm director.
+var station_validator: Callable = Callable()
+## Last validated station, as an offset from the trainer so it moves with a
+## walking trainer between checks. INF = no verified station (close on trainer).
+var _station_offset: Vector3 = Vector3.ZERO
+var _station_requested: Vector3 = Vector3.INF
+var _station_leader: Vector3 = Vector3.INF
+var _station_checked_frame: int = -STATION_VALIDATE_FRAMES
+## Default snap's last rung shares the trainer's footprint; this body ignores
+## that trainer's capsule until they are apart.
+var _footprint_exception: Node3D = null
+
 
 func configure_following(cfg: Dictionary) -> void:
 	_stop_distance = float(cfg.get("stop_distance", _stop_distance))
@@ -121,6 +155,7 @@ func configure_following(cfg: Dictionary) -> void:
 func set_following(value: bool) -> void:
 	_following = value
 	_closing = false
+	_station_requested = Vector3.INF
 	if value and _presence != null:
 		_presence.call("on_event", "deploy")
 	# Off every physics layer while following, so it can never wall the trainer
@@ -204,16 +239,30 @@ func _tick_follow() -> void:
 	var distance := to.length()
 
 	if leader_distance > LEASH:
-		# Never a raycast — docs/decisions/D09. `place_on_ground` asks the world
-		# first and only falls back to a ray for things the terrain does not know
-		# about.
-		place_on_ground(target)
+		_snap_near_leader(target, leader_position)
 		_closing = false
 		return
+	_release_footprint_exception(leader_position)
+
+	var stop_distance := _station_stop_distance
+	var resume_distance := _station_resume_distance
+	var moving_stop_distance := _moving_station_stop_distance
+	if station_validator.is_valid():
+		target = _validated_station(target, leader_position)
+		if not target.is_finite():
+			# No verified station on the trainer's floor: close on the trainer
+			# itself (the ground it stands on) and stop clear of its capsule.
+			target = leader_position
+			var clear := body_radius() + TRAINER_FALLBACK_CLEARANCE_M
+			stop_distance = maxf(stop_distance, clear)
+			resume_distance = maxf(resume_distance, clear + 0.7)
+			moving_stop_distance = maxf(moving_stop_distance, clear)
+		to = target - _world_position(self)
+		to.y = 0.0
+		distance = to.length()
 
 	_closing = station_should_close(_closing, distance, leader_speed,
-		_station_stop_distance, _station_resume_distance,
-		_moving_station_stop_distance)
+		stop_distance, resume_distance, moving_stop_distance)
 
 	if not _closing:
 		# Standing with you rather than staring past you.
@@ -231,6 +280,68 @@ func _tick_follow() -> void:
 	if _presence != null:
 		speed *= float(_presence.call("gait_scale"))
 	request_move(to / maxf(distance, 0.001), speed)
+
+
+## The leash teleport. With a realm validator: its verified spot (the trainer's
+## footprint as the last rung). Without: `place_on_ground` as before -- never a
+## per-frame raycast, docs/decisions/D09 -- but a seat far below the trainer's
+## feet is refused for the trainer's own footprint.
+func _snap_near_leader(target: Vector3, leader_position: Vector3) -> void:
+	_station_requested = Vector3.INF
+	if station_validator.is_valid():
+		var spot: Variant = station_validator.call(self, leader, target, true)
+		if spot is Vector3 and (spot as Vector3).is_finite():
+			_set_world_position(spot)
+			velocity = Vector3.ZERO
+			return
+	if not place_on_ground(target) \
+			or snap_seat_acceptable(global_position.y, leader_position.y):
+		return
+	# Seated on a floor far below the trainer: take the trainer's footprint.
+	if not place_on_ground(leader_position) \
+			or not snap_seat_acceptable(global_position.y, leader_position.y):
+		_set_world_position(leader_position)
+		velocity = Vector3.ZERO
+	if leader is PhysicsBody3D and _footprint_exception != leader:
+		add_collision_exception_with(leader)
+		_footprint_exception = leader
+
+
+static func snap_seat_acceptable(seat_y: float, leader_y: float) -> bool:
+	return seat_y >= leader_y - DEFAULT_SNAP_MAX_DROP_M
+
+
+func _release_footprint_exception(leader_position: Vector3) -> void:
+	if _footprint_exception == null:
+		return
+	if not is_instance_valid(_footprint_exception):
+		_footprint_exception = null
+		return
+	var at := _world_position(self)
+	var apart := Vector2(at.x - leader_position.x, at.z - leader_position.z).length()
+	if apart >= body_radius() + 0.6:
+		remove_collision_exception_with(_footprint_exception)
+		_footprint_exception = null
+
+
+## The walking station, verified by the realm validator on change and at most
+## every STATION_VALIDATE_FRAMES; between checks the verified offset rides with
+## the trainer. INF when the validator found no station on the trainer's floor.
+func _validated_station(requested: Vector3, leader_position: Vector3) -> Vector3:
+	var frame := Engine.get_physics_frames()
+	var offset := requested - leader_position
+	var due := not _station_requested.is_finite()
+	if not due and frame - _station_checked_frame >= STATION_VALIDATE_FRAMES:
+		due = _station_requested.distance_to(offset) > STATION_VALIDATE_MOVE_M \
+			or _station_leader.distance_to(leader_position) > STATION_VALIDATE_MOVE_M
+	if due:
+		_station_checked_frame = frame
+		_station_requested = offset
+		_station_leader = leader_position
+		var spot: Variant = station_validator.call(self, leader, requested, false)
+		_station_offset = (spot as Vector3) - leader_position \
+			if spot is Vector3 and (spot as Vector3).is_finite() else Vector3.INF
+	return leader_position + _station_offset if _station_offset.is_finite() else Vector3.INF
 
 
 func _leader_planar_speed() -> float:
@@ -361,3 +472,10 @@ func safe_presence_approach_distance(authored_distance: float) -> float:
 ## positions. Production nodes are always in-tree and take the normal global path.
 func _world_position(node: Node3D) -> Vector3:
 	return node.global_position if node.is_inside_tree() else node.position
+
+
+func _set_world_position(at: Vector3) -> void:
+	if is_inside_tree():
+		global_position = at
+	else:
+		position = at
