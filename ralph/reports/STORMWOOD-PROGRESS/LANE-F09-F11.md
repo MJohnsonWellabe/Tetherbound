@@ -661,6 +661,13 @@ SCRIPT ERROR count is 0 in both runs.
   - **Stop:** the thirty-minute Crown watchdog expired while the step was still gathering Crown glass (2 of the Crown nodes taken). Nothing was stuck. 0 SCRIPT ERROR. Total wall time 50m10s.
   - **Totals:** the final `F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 ...` covered the prefix only, because the watchdog path dropped the Crown step's counts.
   - **Fix** (the next commit): the Crown step gets a 60-minute capacity, and an unfinished step's strike and death counts are printed and summed.
+- **Run 20** (60-minute Crown capacity):
+  - **Prefix:** PASS in 1200.2 s. 1 warning, 0 hits, 0 deaths.
+  - **Crown step:** rest, send-out, escorts, Alpha, and the four west-loop gathers.
+  - **Stop:** the step left Rodline Refuge on a "fading" window and reached `stormwood_harvest_conductor_run_075` after the window closed: `did not commit its exact live yield/receipt: gained=0 expected=3`. Crown step FAIL at 1618.5 s.
+  - **Strikes:** `F11 WITNESS STRIKES crown {"damage":18.0,"deaths":0,"dodge_frames":1048,"hits":1,"satchel_recoveries":0,...,"warnings":21}`.
+  - **Totals:** `SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0`. 0 SCRIPT ERROR.
+  - **Harness fix** (next commit): leave for the seams only when the runtime's own open window at the seams is at least 150 s. This is the prefix's rule.
 - **Next** (queue items 2–3): rerun the same command. The first things to read are the LB press lines after the Still Grove rest and any `HARVEST NODE … left the tree` line.
 
 ### Not produced
