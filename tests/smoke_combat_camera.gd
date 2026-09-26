@@ -564,11 +564,17 @@ func _assert_raw_orbit_changes(context: String) -> void:
 	# it expires the neutral tracker is SUPPOSED to recentre. The old
 	# 10 + 15 frames (0.417 s) ran past the 0.4 s grace, so "continuously
 	# recentred" failed whenever tracking resumed inside the window.
-	# The grace is counted down in the rig's _process on the idle delta, so
-	# the window is read LIVE from `_tracking_manual_left`, not predicted from
-	# physics frames (a hitch can spend it in fewer physics ticks).
+	# The rig reads look input and counts down its grace in _process on the
+	# idle delta, so everything below is synced to process frames and read
+	# LIVE, not predicted from physics frames. Under load several physics
+	# ticks pass per idle frame, and a fixed physics wait measured residual
+	# stick motion from before the release registered (drift 0.31 rad).
+	for i in 120:
+		await process_frame
+		if Input.get_vector("look_left", "look_right", "look_up", "look_down").is_zero_approx():
+			break
 	for i in 2:
-		await physics_frame
+		await process_frame
 	var yaw_after := float(_rig.get("yaw"))
 	var pitch_after := float(_rig.get("pitch"))
 	# Synthetic joy-motion state may be cleared by the engine after the camera's
@@ -584,7 +590,7 @@ func _assert_raw_orbit_changes(context: String) -> void:
 	for i in 120:
 		if float(_rig.get("_tracking_manual_left")) <= 0.0:
 			break
-		await physics_frame
+		await process_frame
 		if float(_rig.get("_tracking_manual_left")) <= 0.0:
 			break
 		inside += 1
