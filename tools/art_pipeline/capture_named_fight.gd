@@ -111,16 +111,20 @@ func _capture_one() -> bool:
 		# everything after it -- defeat line, reward, world change -- is the
 		# production path.
 		# `_begin_resolve("won")` settles the CURRENT enemy; a trainer then
-		# sends out the next one. Repeat it (it no-ops while already resolving)
-		# until the whole team is down and the fight closes, saving as it goes.
+		# sends out the next one, and `is_fighting()` reads false for the
+		# moment between them. So the loop ends on the trainer's own
+		# defeat flag -- the thing the aftermath hangs off -- not on the gap.
+		var progression: RefCounted = _container.call("_progression") if _container != null else null
 		var k := 0
-		while bool(_manager.call("is_fighting")) and k < 120:
-			_manager.call("_begin_resolve", "won")
+		while k < 160 and not TRAINERS.already_beaten(_spec, progression):
+			if bool(_manager.call("is_fighting")):
+				_manager.call("_begin_resolve", "won")
 			await _wait_interval()
 			if k % 2 == 0:
 				await _save("r%02d" % (k / 2 + 1))
 			k += 1
-		print("resolved %s as won after %d steps, fighting=%s" % [_tid, k, str(_manager.call("is_fighting"))])
+		print("resolved %s after %d steps: beaten=%s fighting=%s" % [_tid, k,
+			str(TRAINERS.already_beaten(_spec, progression)), str(_manager.call("is_fighting"))])
 		for i in _after_frames:
 			await _wait_interval()
 			await _save("a%02d" % (i + 1))
