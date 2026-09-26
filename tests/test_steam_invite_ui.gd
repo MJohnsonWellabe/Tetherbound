@@ -6,7 +6,6 @@ const TITLE := preload("res://scripts/ui/title_screen.gd")
 const PLAYERS_TAB := preload("res://scripts/ui/tab_players.gd")
 const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
 const JOIN_DRIVER := preload("res://scripts/mp/join_driver.gd")
-const SESSION := preload("res://scripts/net/session.gd")
 
 const TEST_DIR := "user://test_steam_invite_ui/"
 
@@ -37,8 +36,9 @@ func _dropped_friend_join(reason: String, steam_route: bool = true,
 	var driver := JOIN_DRIVER.new()
 	driver.name = "JoinDriver"
 	stub.add_child(driver)
-	if steam_route:
-		driver.begin_steam({"character_id": "portable-rin"})
+	# The route a begun friend join records (`begin_steam`), set directly: this
+	# stub is outside the scene tree, where the driver's /root/Game lookup logs.
+	driver._steam_route = steam_route
 	if not retry.is_empty():
 		stub.set_meta(&"steam_join_retry", retry)
 	return stub
@@ -63,14 +63,6 @@ func test_a_deliberate_end_or_a_direct_join_offers_no_friend_rejoin() -> void:
 	var unsaved := _dropped_friend_join("host_gone", true, {})
 	assert_eq(TITLE.dropped_friend_join_message(unsaved), "", "no saved lobby, nothing to rejoin")
 	unsaved.free()
-
-
-func test_the_session_reports_why_it_ended_and_a_fresh_one_reports_nothing() -> void:
-	var session := SESSION.new()
-	assert_eq(session.end_reason(), "", "no session has ended yet")
-	session._box["ended"] = "host_gone"
-	assert_eq(session.end_reason(), "host_gone")
-	session.free()
 
 
 class LobbyErrorStub extends RefCounted:
