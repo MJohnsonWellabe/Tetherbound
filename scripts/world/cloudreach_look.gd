@@ -286,7 +286,140 @@ func _is_turf_top(hit: Dictionary) -> bool:
 	return not (pname.contains("deck") or pname.contains("floor"))
 
 
+## `_excluded` is asked once per candidate tuft -- about 554k times on a full
+## Cloudreach build -- and a linear walk of every cover exclusion (264 of them)
+## per call held the entry frame for ~130 s. The exclusions are compiled once
+## into typed parallel arrays and bucketed into an XZ grid by a conservative
+## bounding box, so a query only tests the few shapes whose box covers its
+## cell. The per-shape tests are the same expressions as the linear walk, so
+## the answer (and every placement downstream of it) is unchanged.
+const _EXCLUSION_CELL := 32.0
+const _EXCLUSION_MARGIN := 1.0
+const _EXCLUSION_MAX_CELLS := 4096
+const _EX_SEGMENT := 0
+const _EX_ELLIPSE := 1
+const _EX_BOX := 2
+
+var _ex_compiled_size := -1
+var _ex_kind := PackedInt32Array()
+var _ex_a: Array[Vector3] = []
+var _ex_b: Array[Vector3] = []
+var _ex_ab: Array[Vector2] = []
+var _ex_ab_len_sq := PackedFloat64Array()
+var _ex_half_width := PackedFloat64Array()
+var _ex_centre: Array[Vector3] = []
+var _ex_half: Array[Vector2] = []
+var _ex_rotation := PackedFloat64Array()
+var _ex_grid: Dictionary = {} # Vector2i cell -> PackedInt32Array of shape indices
+var _ex_everywhere := PackedInt32Array() # shapes too large or non-finite to bucket
+
+
+func _compile_exclusions() -> void:
+	_ex_compiled_size = _exclusions.size()
+	_ex_kind = PackedInt32Array()
+	_ex_a.clear()
+	_ex_b.clear()
+	_ex_ab.clear()
+	_ex_ab_len_sq = PackedFloat64Array()
+	_ex_half_width = PackedFloat64Array()
+	_ex_centre.clear()
+	_ex_half.clear()
+	_ex_rotation = PackedFloat64Array()
+	_ex_grid.clear()
+	_ex_everywhere = PackedInt32Array()
+	for raw: Variant in _exclusions:
+		if not raw is Dictionary:
+			continue
+		var exclusion: Dictionary = raw
+		var index := _ex_kind.size()
+		var lo: Vector2
+		var hi: Vector2
+		var a: Vector3 = exclusion.get("a", Vector3.ZERO)
+		var b: Vector3 = exclusion.get("b", Vector3.ZERO)
+		var centre: Vector3 = exclusion.get("centre", Vector3.ZERO)
+		var half: Vector2 = exclusion.get("half", Vector2.ONE)
+		var rotation := float(exclusion.get("rotation", 0.0))
+		var ab := Vector2(b.x - a.x, b.z - a.z)
+		var half_width := float(exclusion.get("half_width", 1.0))
+		var kind_name := str(exclusion.get("kind", ""))
+		if kind_name == "segment":
+			_ex_kind.append(_EX_SEGMENT)
+			var reach := absf(half_width) + _EXCLUSION_MARGIN
+			lo = Vector2(minf(a.x, b.x) - reach, minf(a.z, b.z) - reach)
+			hi = Vector2(maxf(a.x, b.x) + reach, maxf(a.z, b.z) + reach)
+		else:
+			_ex_kind.append(_EX_ELLIPSE if kind_name == "ellipse" else _EX_BOX)
+			var c := absf(cos(rotation))
+			var s := absf(sin(rotation))
+			var hx := absf(half.x)
+			var hz := absf(half.y)
+			var extent := Vector2(c * hx + s * hz, s * hx + c * hz) + Vector2.ONE * _EXCLUSION_MARGIN
+			lo = Vector2(centre.x, centre.z) - extent
+			hi = Vector2(centre.x, centre.z) + extent
+		_ex_a.append(a)
+		_ex_b.append(b)
+		_ex_ab.append(ab)
+		_ex_ab_len_sq.append(maxf(ab.length_squared(), 0.01))
+		_ex_half_width.append(half_width)
+		_ex_centre.append(centre)
+		_ex_half.append(half)
+		_ex_rotation.append(rotation)
+		if not (is_finite(lo.x) and is_finite(lo.y) and is_finite(hi.x) and is_finite(hi.y)):
+			_ex_everywhere.append(index)
+			continue
+		var cell_lo := Vector2i(floori(lo.x / _EXCLUSION_CELL), floori(lo.y / _EXCLUSION_CELL))
+		var cell_hi := Vector2i(floori(hi.x / _EXCLUSION_CELL), floori(hi.y / _EXCLUSION_CELL))
+		if (cell_hi.x - cell_lo.x + 1) * (cell_hi.y - cell_lo.y + 1) > _EXCLUSION_MAX_CELLS:
+			_ex_everywhere.append(index)
+			continue
+		for cx in range(cell_lo.x, cell_hi.x + 1):
+			for cz in range(cell_lo.y, cell_hi.y + 1):
+				var key := Vector2i(cx, cz)
+				var bucket: PackedInt32Array = _ex_grid.get(key, PackedInt32Array())
+				bucket.append(index)
+				_ex_grid[key] = bucket
+
+
 func _excluded(at: Vector3) -> bool:
+	# The world array is shared by reference; recompile if anything was added
+	# after the last query so a late exclusion is never missed.
+	if _ex_compiled_size != _exclusions.size():
+		_compile_exclusions()
+	var key := Vector2i(floori(at.x / _EXCLUSION_CELL), floori(at.z / _EXCLUSION_CELL))
+	var bucket: PackedInt32Array = _ex_grid.get(key, PackedInt32Array())
+	for index in bucket:
+		if _excluded_by(index, at):
+			return true
+	for index in _ex_everywhere:
+		if _excluded_by(index, at):
+			return true
+	return false
+
+
+func _excluded_by(index: int, at: Vector3) -> bool:
+	var kind := _ex_kind[index]
+	if kind == _EX_SEGMENT:
+		var a := _ex_a[index]
+		var b := _ex_b[index]
+		var ab := _ex_ab[index]
+		var t := clampf(Vector2(at.x - a.x, at.z - a.z).dot(ab) / _ex_ab_len_sq[index], 0.0, 1.0)
+		var nearest := Vector2(a.x, a.z) + ab * t
+		return absf((a.y + (b.y - a.y) * t) - at.y) < 3.0 \
+				and nearest.distance_to(Vector2(at.x, at.z)) < _ex_half_width[index]
+	var centre := _ex_centre[index]
+	if absf(at.y - centre.y) > 4.0:
+		return false
+	var half := _ex_half[index]
+	var local := Vector2(at.x - centre.x, at.z - centre.z).rotated(-_ex_rotation[index])
+	if kind == _EX_ELLIPSE:
+		return (local / half).length_squared() <= 1.0
+	return absf(local.x) <= half.x and absf(local.y) <= half.y
+
+
+## The linear walk `_excluded` replaced, kept verbatim so
+## tests/test_cloudreach_look_exclusions.gd can prove the grid answers
+## identically on real and adversarial shapes.
+func _excluded_linear(at: Vector3) -> bool:
 	for raw: Variant in _exclusions:
 		if not raw is Dictionary:
 			continue
