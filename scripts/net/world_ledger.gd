@@ -911,9 +911,27 @@ static func client_grant_sources() -> Dictionary:
 			# scripts/world/meadowhart_herd_visit.gd: the grant sets the personal
 			# COMPLETE_FLAG, and the world REVEAL_FLAG is written just before it
 			# on the same reliable channel. The landmark reach is client-checked.
-			table[str(visit.reward_source)] = {"item": str(visit.get("reward_item", "")),
-				"count": int(visit.get("reward_count", 0)), "flag": MEADOWHART_FOUND_FLAG,
-				"requires_any": [MEADOWHART_REVEAL_FLAG]}
+			# The visit pays one grant per part (its `reward_parts`): a lone part
+			# under the bare source, several as "<source>:<item>", with the
+			# completion flag only on the last part. Mirrored here, not preloaded,
+			# so this ledger does not depend on a world script.
+			var parts: Array = []
+			var listed: Variant = visit.get("rewards", [])
+			if listed is Array and not (listed as Array).is_empty():
+				for part: Variant in listed:
+					if part is Dictionary and int((part as Dictionary).get("count", 0)) > 0:
+						parts.append({"item": str((part as Dictionary).get("item", "")),
+							"count": int((part as Dictionary).get("count", 0))})
+			else:
+				parts.append({"item": str(visit.get("reward_item", "orb_basic")),
+					"count": int(visit.get("reward_count", 3))})
+			var base := str(visit.reward_source)
+			for index in parts.size():
+				var part_row: Dictionary = parts[index]
+				var key := base if parts.size() == 1 else "%s:%s" % [base, part_row.item]
+				table[key] = {"item": part_row.item, "count": part_row.count,
+					"flag": MEADOWHART_FOUND_FLAG if index == parts.size() - 1 else "",
+					"requires_any": [MEADOWHART_REVEAL_FLAG]}
 	table.erase("")
 	_client_grant_table = table
 	return table

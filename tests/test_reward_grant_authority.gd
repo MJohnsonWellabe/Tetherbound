@@ -78,8 +78,10 @@ func test_guest_cannot_claim_before_the_host_world_completes_the_activity() -> v
 		"the couriers are not home in the host's world")
 	_refused(ledger.commit(_grant("broken_cart_coll:repair", "coin", 25), GUEST), "not_earned",
 		"the cart is not repaired in the host's world")
-	_refused(ledger.commit(_grant("meadowhart_herd_visit", "orb_basic", 3,
-		"band1_meadowhart_herd_found"), GUEST), "not_earned", "nobody has met the herd")
+	_refused(ledger.commit(_grant("meadowhart_herd_visit:potion_small", "potion_small", 2), GUEST),
+		"not_earned", "nobody has met the herd")
+	_refused(ledger.commit(_grant("meadowhart_herd_visit:revive", "revive", 1,
+		"band1_meadowhart_herd_found"), GUEST), "not_earned", "nobody has met the herd (last part)")
 
 
 func test_guest_must_stand_at_a_placed_reward() -> void:
@@ -145,8 +147,10 @@ func test_guest_authored_claims_still_pay() -> void:
 	assert_true(bool(ledger.commit(_grant("stormwood_pims_parcels", "potion_small", 2), GUEST).get("ok")),
 		"Pim's parcels")
 	world.flags.set_flag("band1_meadowhart_herd_met")
-	assert_true(bool(ledger.commit(_grant("meadowhart_herd_visit", "orb_basic", 3,
-		"band1_meadowhart_herd_found"), GUEST).get("ok")), "the herd visit")
+	assert_true(bool(ledger.commit(_grant("meadowhart_herd_visit:potion_small", "potion_small", 2),
+		GUEST).get("ok")), "the herd visit's potions")
+	assert_true(bool(ledger.commit(_grant("meadowhart_herd_visit:revive", "revive", 1,
+		"band1_meadowhart_herd_found"), GUEST).get("ok")), "the herd visit's revive and completion")
 	assert_true(bool(ledger.commit(_grant("trainer:wild_once_5001:item:potion_large", "potion_large", 2),
 		GUEST).get("ok")), "an authored band alpha item")
 	assert_true(bool(ledger.commit(_grant("trainer:warrens_once_elder_trailpup:item:potion_large",
@@ -205,3 +209,20 @@ func test_guest_recipients_are_the_sender_whatever_peers_it_names() -> void:
 	assert_eq(_peers_of(from_guest), [GUEST], "a guest's `peers` cannot name anyone else")
 	assert_eq(_peers_of(one_guest), [GUEST], "nor can its `peer`")
 	assert_eq(_peers_of(from_host), [OTHER, GUEST], "the host's own list is still honoured")
+
+
+## The herd visit pays one grant per part; a retry after an interrupted claim
+## re-sends the part already paid. That part must answer as a duplicate (no
+## second payout), and the flag-carrying last part must still be payable, which
+## is what meadowhart_herd_visit.gd's claim loop relies on to keep going.
+func test_herd_retry_after_a_partial_payout_pays_the_rest_once() -> void:
+	world.flags.set_flag("band1_meadowhart_herd_met")
+	var potions := _grant("meadowhart_herd_visit:potion_small", "potion_small", 2)
+	assert_true(bool(ledger.commit(potions, GUEST).get("ok")), "first part paid")
+	var journaled: int = (world.reward_deliveries as Dictionary).size()
+	var again: Dictionary = ledger.commit(potions, GUEST)
+	assert_false(bool(again.get("ok")) and (world.reward_deliveries as Dictionary).size() > journaled,
+		"the retried first part is not paid twice")
+	assert_eq((world.reward_deliveries as Dictionary).size(), journaled, "the retry journals nothing new")
+	assert_true(bool(ledger.commit(_grant("meadowhart_herd_visit:revive", "revive", 1,
+		"band1_meadowhart_herd_found"), GUEST).get("ok")), "the last part and completion still pay")

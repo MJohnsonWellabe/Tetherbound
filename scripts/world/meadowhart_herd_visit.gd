@@ -194,7 +194,11 @@ func _on_activated() -> void:
 		if index == parts.size() - 1:
 			intent["flag"] = COMPLETE_FLAG
 		var verdict := LEDGER_CLAIM.submit(self, intent)
-		if not LEDGER_CLAIM.in_flight(verdict):
+		# A part an earlier, interrupted attempt already paid answers
+		# `already_taken`: keep going, or the flag-carrying last part is never
+		# reached and the visit is stranded (encounter_director `_grant_to`
+		# attempts every component the same way). Any other refusal stops here.
+		if not LEDGER_CLAIM.in_flight(verdict) and str(verdict.get("code", "")) != "already_taken":
 			_claiming = false
 			return
 
