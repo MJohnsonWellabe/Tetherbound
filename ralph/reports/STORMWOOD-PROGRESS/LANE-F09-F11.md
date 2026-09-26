@@ -691,7 +691,25 @@ SCRIPT ERROR count is 0 in both runs.
     - For Pim and Rook, the NPC conversation wins the press (F10 two-peer run: every press at Rook opened the NPC). That is fine for their quest-giver role. Whether a separate challenge body is needed is for the coordinator.
     - Marrow is on the critical path. The earned Marrow segment presses the trainer body's own challenge prompt, so run 24 will show whether the NPC's Greet steals it.
 - **Run 23:** stopped by me in the prefix to apply the static fix first.
-- **Next** (queue items 2–3): rerun the same command. The first things to read are the LB press lines after the Still Grove rest and any `HARVEST NODE … left the tree` line.
+- **Run 24** (f41279a04 static spacing + merge):
+  - **Prefix:** PASS in 1198.9 s.
+  - **Crown step:** PASS in 1998.4 s. The window opened at 179.9 s.
+  - **Crown arrival, guardian, Wen, Rootgate:** PASS in 103.9 s.
+  - **Dynamo step:** after `lantern_hollow_reached` and `captive_truth_learned`, a Deepwood-station wild won: `FIGHT end Deepwood station outcome=lost ... sparkit ... enemy stormraven L41 240.7/302.1`. The next lines were `PARTY before officer_nysa_deepwood_rod: sparkit 0/325 fainted, mudsnout 172/370, bramblebun 0/351 fainted, terrapup 254/443, brooktail 0/334 fainted` and `LB press 1 (joypad button, 39 physics frames): active mudsnout -> terrapup`. It then failed: `officer_nysa_deepwood_rod requires an unmet earned prerequisite or usable ally`. Wall 158.5 s.
+  - **Safety:** `F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 satchel_stacks=0 strike_hits=1 warnings=44 damage=18.0`. 0 SCRIPT ERROR.
+- **STOPPED (stop rule):** this is the second real failure inside the Dynamo step (run 22: arbiter overlap, fixed; run 24: the challenge was refused with the party worn).
+  - **Diagnosis:** the Dynamo segment takes no rest after the Crown guardian fight, which leaves bramblebun at 5/351, and after road fights. It reached Nysa with 3 of 5 fainted. It also judged `can_challenge` right after an asynchronous LB send-out.
+  - **Proposed next step,** committed but not run (5b6f3edab): rest a worn party at Lantern Hollow Waycamp before the Deepwood picket, using the Crown step's ordinary bed/rest prompts. Wait for the director to accept the challenge. Log the exact refusal reason.
+  - **Open risks further on:** there is no rest before Sera, Kestrel or Marrow. Ember Bivouac opens only after all rods are down. The same-person Marrow NPC/trainer pair has not been reached yet.
+
+### Verdict (ACCEPTANCE §6.1 F11), after runs 18–24
+
+- **"Dynamo and Stormheart resolve from the earned route": NOT MET.**
+  - The earned route now reaches the Dynamo approach. The Crown step, Crown arrival, guardian, Wen and the Rootgate all pass (runs 22 and 24), and Lantern Hollow and Sable's truth are earned.
+  - It stops before the Deepwood picket. The Dynamo, Marrow and the Stormheart were not reached.
+- **"Long Storm aftermath, Spark/shrine … persist": NOT MET.** The aftermath, the disk-save/restart/load (`--verify-reload`) and the F11 captures were not reached. No capture was taken.
+- **Trainer deaths and satchel recoveries,** runs 19–24: 0 deaths and 0 recoveries in every run.
+- **Next:** run the same command at 5b6f3edab once the coordinator authorizes a third Dynamo attempt.
 
 ### Not produced
 
