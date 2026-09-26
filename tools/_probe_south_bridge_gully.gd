@@ -12,9 +12,11 @@ extends SceneTree
 ##     plus the terrain vertex spacing (how many vertices the wall spans);
 ##   * the control-map base/overlay ids and blend along the same line;
 ##   * horizontal raycasts into each wall, one per height step: the collider's
-##     class and path (Terrain3D vs a StaticBody/CSG mesh);
+##     class and path (Terrain3D vs a StaticBody/CSG mesh). Headless runs may
+##     not build Terrain3D collision; the summary line says when no ray hit,
+##     in which case the rays prove nothing and the height/control data stand;
 ##   * every GeometryInstance3D whose world AABB reaches into the trench below
-##     the rim, largest first.
+##     the highest rim, largest extent first (so flat wall cards still show).
 ## Read-only: it boots the production Meadows scene and quits.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
@@ -54,6 +56,9 @@ func _run() -> void:
 	print("PROBE terrain=%s vertex_spacing=%.2f material_shader=%s" % [
 		terrain.get_path() if terrain != null else "NONE", spacing, _terrain_shader(terrain)])
 	var space := world.get_world_3d().direct_space_state
+	var rim_top := -INF
+	var rays := 0
+	var ray_hits := 0
 	for x: float in SECTIONS_X:
 		var profile: Array = []
 		var steepest := 0.0
@@ -70,12 +75,13 @@ func _run() -> void:
 			rim_h = maxf(rim_h, h)
 			floor_h = minf(floor_h, h)
 			z += STEP
+		rim_top = maxf(rim_top, rim_h)
 		print("PROBE section x=%.0f floor=%.2f rim=%.2f steepest=%.1fdeg profile(z %.0f..%.0f step %.1f)=%s" % [
 			x, floor_h, rim_h, steepest, cz - HALF_SPAN, cz + HALF_SPAN, STEP, " ".join(profile)])
 		# Control-map ids on the same line, one per 2 m texel: base/overlay@blend.
 		var ids: Array = []
 		var zc := cz - HALF_SPAN
-		while zc <= cz + HALF_SPAN + 0.001:
+		while data != null and zc <= cz + HALF_SPAN + 0.001:
 			var at := Vector3(x, 0, zc)
 			ids.append("%d/%d@%.2f" % [int(data.call("get_control_base_id", at)),
 				int(data.call("get_control_overlay_id", at)), float(data.call("get_control_blend", at))])
@@ -88,6 +94,9 @@ func _run() -> void:
 				var from := Vector3(x, y, cz)
 				var to := Vector3(x, y, cz + side * HALF_SPAN)
 				var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(from, to))
+				rays += 1
+				if not hit.is_empty():
+					ray_hits += 1
 				if hit.is_empty():
 					print("PROBE   ray x=%.0f side=%+.0f y=%.1f -> no hit" % [x, side, y])
 				else:
@@ -96,6 +105,8 @@ func _run() -> void:
 						x, side, y, (hit["position"] as Vector3).z, _v(hit["normal"]), col.get_class(),
 						(col as Node).get_path() if col is Node else str(col)])
 				y += 2.5
+	print("PROBE rays: %d of %d hit%s" % [ray_hits, rays,
+		" -- no collision in the trench (headless Terrain3D builds none); rays prove nothing" if ray_hits == 0 else ""])
 	# Geometry reaching into the trench below the rim anywhere along the probed run.
 	var reach := float(carve["half_width"]) + float(carve["rim"]) + 1.0
 	var box := AABB(Vector3(SECTIONS_X[0] - 10.0, -INF, cz - reach), Vector3(SECTIONS_X[-1] - SECTIONS_X[0] + 20.0, 0, 2.0 * reach))
@@ -109,14 +120,16 @@ func _run() -> void:
 			continue
 		if aabb.position.z > box.position.z + box.size.z or aabb.end.z < box.position.z:
 			continue
+		if aabb.position.y > rim_top:
+			continue  # entirely above the trench
 		if aabb.size.length() > 3000.0:
 			continue  # sky dome / world-scale cards
 		var res := ""
 		if gi is MeshInstance3D and (gi as MeshInstance3D).mesh != null:
 			res = (gi as MeshInstance3D).mesh.resource_path
-		found.append({"vol": aabb.size.x * aabb.size.y * aabb.size.z, "line": "%s %s size=%s pos=%s mesh=%s" % [
+		found.append({"extent": aabb.size.length(), "line": "%s %s size=%s pos=%s mesh=%s" % [
 			gi.get_class(), gi.get_path(), _v(aabb.size), _v(aabb.position), res]})
-	found.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a["vol"]) > float(b["vol"]))
+	found.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a["extent"]) > float(b["extent"]))
 	print("PROBE geometry in trench footprint: %d" % found.size())
 	for i in mini(found.size(), 40):
 		print("PROBE   " + str(found[i]["line"]))
