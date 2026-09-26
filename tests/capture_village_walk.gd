@@ -97,9 +97,16 @@ const VILLAGERS_PATH := "res://data/config/village_npcs.json"
 ## is world z = 5, entered from the doorstep at (13.87,5); she stands behind the
 ## counter (local z -0.6..-0.1), so the customer spot is local (0,+0.5) = world
 ## (17.5,4.0), 1.9m from her. Outside doorstep -> just inside the door -> counter.
+## The lane is walked at z 4.8, not its 5.0 centre: the Cloudreach relic slot's
+## plinth (realm_heart_shrine.gd, 1.41m radius at ~(16.1,6.7)) reaches into the
+## doorway to z ~5.3, leaving the lane's southern ~0.9m clear for the body.
 const INDOOR_APPROACH := {
-	"Mira": [Vector2(13.87, 5.0), Vector2(16.5, 5.0), Vector2(17.5, 4.0)],
+	"Mira": [Vector2(13.87, 4.8), Vector2(16.5, 4.8), Vector2(17.5, 4.0)],
 }
+## A closed door on the way is opened the way a player opens it: when the walk
+## stalls and the arbiter's actionable winner is an "Open ..." prompt, one
+## interact press. Bounded so a door that never opens still fails the walk.
+const DOOR_PRESSES_MAX := 3
 
 ## Grandpa's farmhouse: HOUSE_AT (-22,-16) in playground_world.gd, door on the
 ## east wall at x = -17 (grandpa_house.gd EXT_HALF_W 5.0). The start is 2.5m
@@ -546,6 +553,7 @@ func _walk() -> void:
 	var travel_since_capture := 0.0
 	var owned_s := 0.0
 	var next_event := 0
+	var door_presses := 0
 	var dt := 1.0 / float(Engine.physics_ticks_per_second)
 	while clock < WALK_BUDGET_S:
 		await physics_frame
@@ -582,6 +590,14 @@ func _walk() -> void:
 		if progress > best_progress + STUCK_PROGRESS_M:
 			best_progress = progress
 			best_at_s = clock
+		elif clock - best_at_s > STUCK_S * 0.5 and door_presses < DOOR_PRESSES_MAX and _door_prompt_wins():
+			_release_all()
+			door_presses += 1
+			print("[village-walk] NOTE pressed interact on \"%s\" at (%.1f,%.1f)" % [
+				_winner_label(), here.x, here.y])
+			await _press("interact")
+			best_at_s = clock
+			continue
 		elif clock - best_at_s > STUCK_S:
 			_failed = "no progress for %.1fs at (%.1f,%.1f), arc %.1f/%.1f%s" % [
 				STUCK_S, here.x, here.y, progress, total, _blocker_near(here)]
@@ -900,3 +916,18 @@ func _graph_path(graph: Dictionary, from: Vector2, to: Vector2) -> PackedVector2
 		at = prev[at]
 	out.reverse()
 	return out
+
+
+func _winner_label() -> String:
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	if arbiter == null:
+		return ""
+	return str((arbiter.call("winner") as Dictionary).get("label", ""))
+
+
+func _door_prompt_wins() -> bool:
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	if arbiter == null:
+		return false
+	var winner := arbiter.call("winner") as Dictionary
+	return bool(winner.get("actionable", false)) and str(winner.get("label", "")).begins_with("Open ")
