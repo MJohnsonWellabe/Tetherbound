@@ -121,16 +121,21 @@ func test_a_steam_join_does_not_place_a_saved_pose_before_the_host_is_known() ->
 	assert_true(saver.characters().write("portable-rin", game.local.save_data(),
 		{"last_world_instance_id": "instance-host-a"}), "fixture portable character must save")
 	game.reset_for_new_game()
-	assert_true(TITLE.prepare_steam_character(game, {"kind": "existing", "character_id": "portable-rin"}))
-	assert_false((game.get("saved_player_pose") as Dictionary).is_empty(),
-		"the portable restore brings the saved pose back (the gap this closes)")
-	var candidate: Dictionary = TITLE.rejoin_pose_candidate(game)
-	assert_eq(str(candidate.get("world_instance_id")), "instance-host-a")
 	game.set_meta("pending_fly_load", {"safe_anchor": [1.0, 2.0, 3.0]})
-	TITLE.clear_pose_for_join(game)
+	var summary: Dictionary = TITLE.prepare_steam_join(game,
+		{"kind": "existing", "character_id": "portable-rin"})
+	assert_eq(str(summary.get("character_id")), "portable-rin", "the selected character joins")
 	assert_true((game.get("saved_player_pose") as Dictionary).is_empty(),
-		"no world can place the pose before the host snapshot decides")
+		"no world can place the restored pose before the host snapshot decides")
 	assert_false(game.has_meta("pending_fly_load"), "nor a queued fly state")
+	var helper := game.get_node_or_null(^"RejoinPose")
+	assert_true(helper != null, "the host-world check is mounted for the Steam join")
+	if helper != null:
+		var candidate: Dictionary = helper.get("_candidate")
+		assert_eq(str(candidate.get("world_instance_id")), "instance-host-a",
+			"it holds the instance the pose was saved in")
+		assert_eq(candidate.get("pose", {}).get("position"), [40.0, 3.0, -60.0],
+			"and the saved pose itself")
 
 
 func test_players_invite_button_preserves_specific_coordinator_error() -> void:

@@ -1059,15 +1059,26 @@ func _start_pending_steam_join() -> void:
 		_status.text = "Game state failed to start."
 		return
 
-	# A guest imports no local world. Clear the transient run first, then apply
-	# exactly the portable character the player selected. This is deliberately
-	# separate from `_begin_join()`, whose legacy LAN continuation honors slot 0.
-	if not prepare_steam_character(game, _steam_character_pending):
+	var summary := prepare_steam_join(game, _steam_character_pending)
+	if summary.is_empty():
 		_status.text = "That portable character could not be loaded. Choose another character."
 		_steam_character_pending = {}
 		_show_portable_character_select()
 		return
+	var driver := _mount_join_driver(game)
+	driver.call("begin_steam", summary)
+	_remember_steam_retry()
+	_go_to_world("Joining your friend…")
 
+
+## Everything a Steam invite join does before the driver opens the lobby
+## socket; {} when the selected portable character can't be loaded.
+static func prepare_steam_join(game: Node, selection: Dictionary) -> Dictionary:
+	# A guest imports no local world. Clear the transient run first, then apply
+	# exactly the portable character the player selected. This is deliberately
+	# separate from `_begin_join()`, whose legacy LAN continuation honors slot 0.
+	if not prepare_steam_character(game, selection):
+		return {}
 	var summary := steam_character_summary(game)
 	if str(summary.get("character_id", "")).is_empty():
 		# Session normally mints this during join. The Steam adapter needs the
@@ -1080,10 +1091,7 @@ func _start_pending_steam_join() -> void:
 	# The Steam invite restores the portable character's saved pose too; it is
 	# only this character's to resume in the same host world.
 	_defer_rejoin_pose(game)
-	var driver := _mount_join_driver(game)
-	driver.call("begin_steam", summary)
-	_remember_steam_retry()
-	_go_to_world("Joining your friend…")
+	return summary
 
 
 static func steam_character_summary(game: Object) -> Dictionary:
@@ -1590,7 +1598,7 @@ func _begin_join(address: String, port: int, retry_for_s: float) -> void:
 ## is taken off the live character, with any queued fly/traversal state from a
 ## loaded home slot, and `rejoin_pose.gd` decides against the host snapshot's
 ## instance (owner ruling 2026-09-26).
-func _defer_rejoin_pose(game: Node) -> void:
+static func _defer_rejoin_pose(game: Node) -> void:
 	_mount_rejoin_pose(game, rejoin_pose_candidate(game))
 	clear_pose_for_join(game)
 
@@ -1620,7 +1628,7 @@ static func rejoin_pose_candidate(game: Node) -> Dictionary:
 	return {"pose": saved.get("player_pose", {}), "world_instance_id": saved.get("last_world_instance_id", null)}
 
 
-func _mount_rejoin_pose(game: Node, candidate: Dictionary) -> void:
+static func _mount_rejoin_pose(game: Node, candidate: Dictionary) -> void:
 	var existing := game.get_node_or_null(^"RejoinPose")
 	if existing != null:
 		existing.free()
