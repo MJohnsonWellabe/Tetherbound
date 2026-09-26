@@ -296,3 +296,19 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   and presses the real Interact through the exact-provider `_press_prompt`. Receipt:
   `veridian_accept_prompt`. The five-slot farewell (lowest-level member released) is unchanged.
   Attempt 7.
+- Attempt 7 (13:56 UTC, 1536 s) **passed the whole ending with ACCEPT**. Receipts: 9 care doses, Warden beaten,
+  `stronghold_warden_realm_reward` read, chamber, free, join and `veridian_choice` in order,
+  `veridian_accept_prompt` (2.56 m), and `veridian_accepted`. The five-slot farewell released the
+  lowest-level earned member (bramblebun L1x, uid creature-3fd01011…) and seated Veridian L23.
+  Then came `meadows_ending_settled` and the start of the acknowledgement backtrack
+  (`road_metres_one_way` 11416). Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt7/`.
+
+## B11: the acknowledgement road wears the belt down (helper pacing gap, like B5)
+
+- Attempt 7 then failed on the 11.4 km walk back to the village:
+  `Real wild combat did not win with landed strikes inside its unchanged physics budget` at
+  (164.1,-0.2,4564.9), after 5+ wild wins. At that point ripplet and bramblebun L23 were at 0 HP,
+  both mudsnouts were up, and Veridian was at 974 HP.
+- Alternative 1 (own file): the B5 `between_fight_care` remedy (revive the fainted, small potions
+  under 40%, then the helper's own `_prepare()` pilot selection), before each walk leg, only after
+  `meadows_ending_settled`. Attempt 8, from the hall save, so the Warden is replayed.

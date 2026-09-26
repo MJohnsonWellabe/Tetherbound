@@ -19,6 +19,8 @@ var _accepting := false
 var _outgoing_index := -1
 var _accept_receipt: Dictionary = {}
 var _last_owner_label := "<none>"
+var _ending_settled := false
+var _road_care := false
 
 
 static func outgoing_choice(levels: Array[int]) -> int:
@@ -207,6 +209,8 @@ const POST_VICTORY_TAPS := 12
 
 func _receipt(beat: String, detail: Dictionary) -> void:
 	super._receipt(beat, detail)
+	if beat == "meadows_ending_settled":
+		_ending_settled = true
 	if beat == "trainer_defeated" and str(detail.get("id", "")) == _warden_id():
 		_read_post_victory_dialogue()
 
@@ -284,3 +288,52 @@ func _drive_machine_to_ceremony(expected: Array[String], first: int) -> bool:
 		else:
 			await _tree.physics_frame
 	return _fail("The machine never reached its real five-slot ceremony within the existing story budget")
+
+
+
+## B11 (attempt 7): after the ending, the acknowledgement walk is 11.4 km of
+## road back to the village. The helper gives no care between road fights, and
+## one ordinary wild fight ran out its budget with two members fainted
+## (`Real wild combat did not win with landed strikes inside its unchanged
+## physics budget`, player (164,-0.2,4565)). This is the hall_route.gd B5 remedy
+## (`between_fight_care`), applied only after `meadows_ending_settled`, out of
+## combat and with no modal open. Revive the fainted and give a small potion to
+## anyone under ROAD_CARE_BELOW while stock lasts, each through the real
+## Satchel seam, then the helper's own `_prepare()` for pilot selection.
+const ROAD_CARE_BELOW := 0.4
+
+
+func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
+	if _ending_settled and not _road_care and not _fighting() and INPUT_OWNER.current(_tree) == null:
+		_road_care = true
+		var ok := await _road_bench_care()
+		_road_care = false
+		if not ok:
+			return false
+	return await super._walk(target, radius, budget)
+
+
+func _road_bench_care() -> bool:
+	var party: RefCounted = _game.get("party")
+	var acted := false
+	for index in int(party.call("size")):
+		var member: RefCounted = party.call("at", index)
+		var item := ""
+		if bool(member.get("fainted")) and _count("revive") > 0:
+			item = "revive"
+		elif not bool(member.get("fainted")) and _count("potion_small") > 0 \
+				and float(member.get("hp")) < float(member.get("max_hp")) * ROAD_CARE_BELOW:
+			item = "potion_small"
+		if item.is_empty():
+			continue
+		var before := {"index": index, "species": str(member.get("species_id")), "hp": float(member.get("hp")),
+			"max_hp": float(member.get("max_hp")), "fainted": bool(member.get("fainted")), "item": item}
+		var observed: Dictionary = await CARE.new().care_existing(_tree, _world, _game, item, index)
+		if not bool(observed.get("passed", false)):
+			return _fail("Real Satchel care failed on the acknowledgement road: " + str(observed.get("failures", [])))
+		before["hp_after"] = float(member.get("hp"))
+		_receipt("between_fight_care", before)
+		acted = true
+	if acted:
+		return await super._prepare()
+	return true
