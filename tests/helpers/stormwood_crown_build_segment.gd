@@ -604,7 +604,11 @@ func _walk_xz_clocked(point: Vector2, label: String, tolerance: float = 1.3,
 	return false
 
 
+var _fights_seen := 0
+
+
 func _fight_current(label: String) -> bool:
+	_fights_seen += 1
 	if _safety != null:
 		_safety.set("phase", "fight during " + label)
 	_last_combat_outcome = ""
@@ -1102,6 +1106,13 @@ func _turn_camera_toward(world_direction: Vector3) -> bool:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	await _tree.process_frame
+	# A wild that won a road fight may still stand by the trainer. A player
+	# resolves it first so the camera is not held on it: walk out of engage
+	# range (a fight that starts on the way is fought out by the walker).
+	if not await _clear_nearby_wild():
+		Engine.time_scale = previous_scale
+		Engine.physics_ticks_per_second = previous_hz
+		return false
 	var wanted := Vector2(world_direction.x, world_direction.z).normalized()
 	var start_forward := -(_camera.call("planar_basis") as Basis).z
 	var turned := false
@@ -1131,7 +1142,52 @@ func _turn_camera_toward(world_direction: Vector3) -> bool:
 		str(start_forward), str(end_forward), str(wanted), str(_manager.call("is_fighting")),
 		str(_director.call("trainer_battle_active")), str(owner.get_path()) if owner != null else "<none>",
 		str(_tree.paused), str(_arbiter.call("enabled")), Engine.time_scale,
-		str(_camera.get("_tracking_target").get_path()) if _camera.get("_tracking_target") != null and is_instance_valid(_camera.get("_tracking_target")) else "<no tracking target>"])
+		_rig_tracking()])
+
+
+## Nearest live wild within 20 m of the trainer, or null.
+func _nearby_wild() -> Node3D:
+	var best: Node3D = null
+	var best_distance := 20.0
+	for wild: Variant in (_director.get("_wild_creatures") as Array):
+		if not is_instance_valid(wild) or not (wild as Node3D).visible or not bool((wild as Node3D).call("is_alive")):
+			continue
+		var distance := _player.global_position.distance_to((wild as Node3D).global_position)
+		if distance <= best_distance:
+			best = wild
+			best_distance = distance
+	return best
+
+
+func _clear_nearby_wild() -> bool:
+	var wild := _nearby_wild()
+	if wild == null:
+		_note("CAMERA TURN: no wild within 20 m; rig tracking=%s" % _rig_tracking())
+		return true
+	var start := _player.global_position
+	var away := start - wild.global_position
+	away.y = 0.0
+	if away.length() < 0.5:
+		away = Vector3(0, 0, 1)
+	var fights_before := _fights_seen
+	var target := start + away.normalized() * 25.0
+	_note("CAMERA TURN: wild %s %.1f m away after the road fight (rig tracking=%s); walking out of engage range" % [
+		str(wild.name), start.distance_to(wild.global_position), _rig_tracking()])
+	await _walk_xz(Vector2(target.x, target.z), "away from the wild before the Crown turn", 2.0, false)
+	if _fights_seen != fights_before:
+		_note("CAMERA TURN: the wild engaged on the way and was fought out (outcome=%s)" % _last_combat_outcome)
+	else:
+		_note("CAMERA TURN: walked out of engage range (wild now %.1f m away)" % (
+			_player.global_position.distance_to(wild.global_position) if is_instance_valid(wild) else -1.0))
+	return true
+
+
+func _rig_tracking() -> String:
+	var tracked: Variant = _camera.get("_tracking_target")
+	var target: Variant = _camera.get("_target")
+	return "%s (orbit target %s)" % [
+		str((tracked as Node).get_path()) if tracked is Node and is_instance_valid(tracked) else "<none>",
+		str((target as Node).get_path()) if target is Node and is_instance_valid(target) else "<none>"]
 
 
 func _open_build_menu() -> Node:
