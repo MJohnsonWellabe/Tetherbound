@@ -621,8 +621,13 @@ func _approach(pos: Vector3, roads: Array) -> Array:
 			if is_finite(q.y) and is_finite(pos.y):
 				score += absf(q.y - pos.y) * 1.5
 			scored.append([score, q])
-	if scored.is_empty():
-		return [null, "no road point 45-180 m from the landmark"]
+	# Off-road ring stands as a lower-priority fallback (a place with no road
+	# within 180 m is itself a finding; the note says which kind was used).
+	for ring: float in [70.0, 110.0]:
+		for k in 12:
+			var ang := TAU * float(k) / 12.0
+			var q := Vector3(pos.x + sin(ang) * ring, NAN, pos.z + cos(ang) * ring)
+			scored.append([200.0 + absf(ring - 90.0), q])
 	scored.sort_custom(func(a, b): return float(a[0]) < float(b[0]))
 	var target := pos
 	var tg := _ground_guess(pos.x, pos.z, pos.y)
@@ -631,7 +636,7 @@ func _approach(pos: Vector3, roads: Array) -> Array:
 	for entry: Array in scored:
 		var q: Vector3 = entry[1]
 		tried += 1
-		if tried > 60:
+		if tried > 90:
 			break
 		var eye := Vector3(q.x, _ground_guess(q.x, q.z, q.y) + 2.6, q.z)
 		var clear := true
@@ -642,7 +647,8 @@ func _approach(pos: Vector3, roads: Array) -> Array:
 				clear = false
 				break
 		if clear:
-			return [q, "road approach %.0f m, clear sightline (candidate %d)" % [Vector2(q.x - pos.x, q.z - pos.z).length(), tried]]
+			var kind := "OFF-ROAD ring stand (no clear road approach)" if float(entry[0]) >= 200.0 else "road approach"
+			return [q, "%s %.0f m, clear sightline (candidate %d)" % [kind, Vector2(q.x - pos.x, q.z - pos.z).length(), tried]]
 	return [scored[0][1], "road approach, NO clear sightline among %d candidates (terrain occludes the landmark from its road)" % tried]
 
 
@@ -756,6 +762,13 @@ func _boot_region(spec: Dictionary) -> bool:
 		_director.call("summon_active_creature")
 		for i in 60:
 			await physics_frame
+	# DISCLOSED FIXTURE: no fight may take the camera mid-matrix (a wild engage
+	# re-targets the rig to the combat pivot and it stays there). The director
+	# is paused after the companion is out; creatures already streamed stay in
+	# the world, frozen in place.
+	if _director != null:
+		_director.set_process(false)
+		_director.set_physics_process(false)
 	return true
 
 
@@ -880,6 +893,9 @@ func _capture_region_row(spec: Dictionary, row: Dictionary, t: String) -> void:
 	var stand: Vector3 = stands[0]
 	var seat := await _seat_player(stand)
 	var feet: Vector3 = seat["feet"]
+	if Vector2(feet.x, feet.z).distance_to(Vector2(stand.x, stand.z)) > 4.0:
+		_skip(name, "trainer did not reach the stand %s (settled at %s)" % [_v(stand), _v(feet)])
+		return
 	RenderingServer.render_loop_enabled = false
 	await _apply_time(spec, t)
 	var target: Vector3 = row.get("target", feet + Vector3.FORWARD * 50.0)
@@ -923,7 +939,10 @@ func _capture_region_row(spec: Dictionary, row: Dictionary, t: String) -> void:
 		if ally is CharacterBody3D:
 			(ally as CharacterBody3D).velocity = Vector3.ZERO
 		companion = str(ally.get("species_id")) if ally.get("species_id") != null else ally.name
-	var interrupted: Array = []
+	var interrupted: Array = _clear_interruptions()
+	_rig.set("yaw", yaw)
+	_rig.set("pitch", pitch)
+	_rig.global_position = feet + Vector3.UP * float(_rig.get("_height"))
 	for i in POSE_FRAMES - RENDERED_FRAMES:
 		await process_frame
 		interrupted += _clear_interruptions()
@@ -952,6 +971,9 @@ func _capture_region_row(spec: Dictionary, row: Dictionary, t: String) -> void:
 ## camera at the previous stand. Close any open conversation and resume the rig.
 func _clear_interruptions() -> Array:
 	var closed: Array = []
+	if _rig.get("_target") != _player and _rig.has_method("set_target"):
+		_rig.call("set_target", _player)
+		closed.append("rig_target_reset")
 	for node in root.find_children("*", "", true, false):
 		if node.has_method("is_open") and node.has_method("close") and node.has_method("start") and bool(node.call("is_open")):
 			node.call("close")
