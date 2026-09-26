@@ -383,6 +383,26 @@ func _local_deployed_body() -> Node3D:
 ## placement is already this function's answer to a teleport; a proxy the world
 ## has pinned is the same problem arriving slowly, and the owner's real body is
 ## where `net_position` says regardless.
+## Teleport a kinematic body without a kinematic sweep. Setting
+## `global_position` on a CharacterBody3D is taken as one motion step across the
+## whole jump, so the next `move_and_slide()` tests collision along that entire
+## stretch -- against Terrain3D's heightmap that took 3+ s for a Deep Watch snap
+## (about 3.5 km) and starved a host's heartbeat. Committing the new transform
+## while the body is briefly STATIC makes it an instant jump.
+static func teleport_body(body: PhysicsBody3D, at: Vector3) -> void:
+	body.global_position = at
+	if not body.is_inside_tree():
+		return
+	var rid := body.get_rid()
+	var mode := PhysicsServer3D.body_get_mode(rid)
+	if mode != PhysicsServer3D.BODY_MODE_KINEMATIC:
+		return
+	PhysicsServer3D.body_set_mode(rid, PhysicsServer3D.BODY_MODE_STATIC)
+	PhysicsServer3D.body_set_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM, body.global_transform)
+	PhysicsServer3D.body_set_mode(rid, mode)
+	PhysicsServer3D.body_set_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM, body.global_transform)
+
+
 static func needs_snap(render_position: Vector3, body_position: Vector3,
 		target: Vector3, snap_m: float) -> bool:
 	return render_position.distance_to(target) > snap_m \
@@ -446,7 +466,7 @@ func _follow(delta: float) -> void:
 		_has_render = true
 	if needs_snap(_render_position, global_position, net_position, SNAP_M):
 		_render_position = net_position
-		global_position = net_position
+		teleport_body(self, net_position)
 		velocity = Vector3.ZERO
 		rotation.y = net_yaw
 		return
