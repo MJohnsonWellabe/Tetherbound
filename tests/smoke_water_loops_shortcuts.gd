@@ -21,10 +21,13 @@ extends SceneTree
 ##
 ## SHORTCUTS (`water_world.json::return_shortcuts`, 3 rows).
 ## * `reedhaven_maintenance_ramp` (kind physical_ramp, unlock
-##   `water_dock_reedhaven_repaired`). Closed: before the repair the straight
-##   Woven Hall -> departure line must NOT be walkable, and the scene must hold
-##   a runtime node for the ramp. Unlock through the production Reedhaven
-##   repair prompt. Open: walk the same line end to end. Shorter: walked length
+##   `water_dock_reedhaven_repaired`). Closed: before the repair the ramp's
+##   authored `path` (Woven Hall -> ramp top -> ramp foot -> departure; the
+##   deck bridges a terrace scarp) must NOT be walkable, the scene must hold
+##   a runtime node for the ramp, and that node must hold no walk-surface
+##   collision (the gate itself). Unlock through the production Reedhaven
+##   repair prompt; the deck collision must appear on that live flag change.
+##   Open: walk the same path end to end. Shorter: walked length
 ##   must beat the "repeat the marsh loop" return (hall -> nearest
 ##   reed_root_circuit vertex -> shorter arc -> vertex nearest the departure ->
 ##   departure, measured on the authored polyline).
@@ -227,13 +230,18 @@ func _reedhaven_ramp(shortcut: Dictionary) -> void:
 	_check(not game.world.flags.has(flag), "Reedhaven ramp starts with %s unset" % flag)
 	await _place(hall, "F2 Woven Hall (closed attempt)")
 	var closed_stats := _new_stats()
-	var closed: Dictionary = await _walk_leg(departure, closed_stats, "Reedhaven ramp closed attempt")
+	var closed: Dictionary = await _walk_path(_ramp_path(shortcut, departure), closed_stats, "Reedhaven ramp closed attempt")
 	_stop_stick()
-	var closed_ok := not bool(closed.ok)
-	_check(closed_ok, "Reedhaven ramp line is not walkable before %s (%s)" % [
+	# The gate itself, not just a failed walk: before the flag the ramp node
+	# holds no walk-surface collision (no deck) at all.
+	var closed_shapes := _ramp_collision_shapes(ramp_nodes)
+	_check(not ramp_nodes.is_empty() and closed_shapes == 0,
+		"Reedhaven ramp node has no deck collision before %s (%d collision shapes)" % [flag, closed_shapes])
+	var closed_ok := not bool(closed.ok) and not ramp_nodes.is_empty() and closed_shapes == 0
+	_check(not bool(closed.ok), "Reedhaven ramp line is not walkable before %s (%s)" % [
 		flag, "blocked: " + str(closed.reason) if closed_ok else "walked %.1f m in %.1f s with nothing in the way" % [
 			closed_stats.distance, closed_stats.frames / PHYSICS_HZ]])
-	if not closed_ok:
+	if bool(closed.ok):
 		_defect("reedhaven_maintenance_ramp: hall %s -> departure %s is already walkable before the repair (no gate/seal)" % [
 			_fmt(hall), _fmt(departure)])
 
@@ -245,13 +253,17 @@ func _reedhaven_ramp(shortcut: Dictionary) -> void:
 	await _place(equipment.global_position + Vector3(3.0, 0.0, 0.0), "F2 beside Reedhaven repair prompt")
 	var unlocked := await _activate_prompt(_prompt_of(equipment), "Reedhaven repair") and await _wait_flag(flag, 600)
 	_check(unlocked, "Production Reedhaven repair publishes %s" % flag)
+	await _frames(5)
+	var open_shapes := _ramp_collision_shapes(ramp_nodes)
+	_check(open_shapes > 0, "Reedhaven ramp deck collision appears on the live %s change, no reload (%d collision shapes)" % [
+		flag, open_shapes])
 
 	# Open.
 	await _place(hall, "F2 Woven Hall (open walk)")
 	var open_stats := _new_stats()
-	var open: Dictionary = await _walk_leg(departure, open_stats, "Reedhaven ramp open walk")
+	var open: Dictionary = await _walk_path(_ramp_path(shortcut, departure), open_stats, "Reedhaven ramp open walk")
 	_stop_stick()
-	var open_ok := unlocked and bool(open.ok)
+	var open_ok := unlocked and open_shapes > 0 and bool(open.ok)
 	_check(open_ok, "Reedhaven ramp walked end to end after %s (%s)" % [flag, str(open.get("reason", "arrived"))])
 	if not bool(open.ok):
 		_defect("reedhaven_maintenance_ramp: after unlock the hall -> departure line is still blocked -- %s" % str(open.reason))
@@ -316,7 +328,7 @@ func _shellwatch_channel(shortcut: Dictionary) -> void:
 	_check(swum, "Direct Shellwatch -> Brine return swum end to end (%.1f m, %.1f s)" % [
 		open_stats.distance, open_stats.frames / PHYSICS_HZ])
 	var shorter: bool = open_ok and normal_ok and open_stats.distance < normal_stats.distance
-	_check(shorter, "Direct return (%.1f m) is shorter than the sheltered crossing (%.1f m walked)" % [
+	_check(shorter, "Direct return (%.1f m) is shorter than the sheltered crossing (%.1f m swum)" % [
 		open_stats.distance, normal_stats.distance])
 	_row("shortcut shellwatch_pump_return_channel | closed %s (%.2f m/s exposed) | open/swum %s (%.2f m/s) | %.1f m | %.1f s | shorter %s (normal sheltered %.1f m / %.1f s)" % [
 		_yn(closed_ok), closed_flow, _yn(open_ok), open_flow, open_stats.distance, open_stats.frames / PHYSICS_HZ,
@@ -385,7 +397,7 @@ func _deep_watch_cut(shortcut: Dictionary) -> void:
 	_check(swum, "Direct Deep Watch -> Sluice return swum mounted end to end (%.1f m, %.1f s)" % [
 		open_stats.distance, open_stats.frames / PHYSICS_HZ])
 	var shorter: bool = open_ok and normal_ok and open_stats.distance < normal_stats.distance
-	_check(shorter, "Direct return (%.1f m) is shorter than the sheltered crossing (%.1f m walked)" % [
+	_check(shorter, "Direct return (%.1f m) is shorter than the sheltered crossing (%.1f m swum)" % [
 		open_stats.distance, normal_stats.distance])
 	_row("shortcut deep_watch_current_cut | closed %s (%.2f m/s exposed) | open/swum %s (%.2f m/s) | %.1f m | %.1f s | shorter %s (normal sheltered %.1f m / %.1f s)" % [
 		_yn(closed_ok), closed_flow, _yn(open_ok), open_flow, open_stats.distance, open_stats.frames / PHYSICS_HZ,
@@ -456,6 +468,36 @@ func _remount(label: String) -> bool:
 	riding.interaction_activate()
 	await _frames(12)
 	return _check(riding.is_mounted(), label + ": production Ride offer remounts the Aquaryn")
+
+
+## Walk-surface collision under the ramp node(s): the physical gate.
+func _ramp_collision_shapes(paths: Array[String]) -> int:
+	var count := 0
+	for path: String in paths:
+		var node := root.get_node_or_null(NodePath(path))
+		if node != null:
+			count += node.find_children("*", "CollisionShape3D", true, false).size()
+	return count
+
+
+## The ramp row's authored walk, after its first vertex (the hall, where the
+## walker is placed); the final vertex is the grounded departure anchor itself.
+func _ramp_path(shortcut: Dictionary, departure: Vector3) -> Array[Vector3]:
+	var points: Array[Vector3] = []
+	var raw_path: Array = shortcut.get("path", [])
+	for index in range(1, raw_path.size() - 1):
+		points.append(_v(raw_path[index]))
+	points.append(departure)
+	return points
+
+
+## Land legs through `points` in order; the first failing leg ends the walk.
+func _walk_path(points: Array[Vector3], stats: Dictionary, label: String) -> Dictionary:
+	for index in points.size():
+		var leg: Dictionary = await _walk_leg(points[index], stats, "%s leg %d" % [label, index + 1])
+		if not bool(leg.ok):
+			return leg
+	return {"ok": true}
 
 
 func _marsh_loop_return(hall: Vector3, departure: Vector3) -> float:

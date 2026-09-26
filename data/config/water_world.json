@@ -2057,10 +2057,12 @@
     },
     {
       "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
-      "grading_status": "baked_grade_checked",
+      "_comment_grade": "Walked in engine end to end on baked ground (smoke_water_loops_shortcuts, max drop 0.00 m), but the steepest 1 m chord sample is 26.6 deg, above this row's 24.0 deg target; geometry unchanged, so the status says so rather than baked_grade_checked.",
+      "grading_status": "baked_walkable_above_target_grade",
       "id": "sluice_patrol_circuit",
       "island_id": "sluice_isle",
       "maximum_target_grade_deg": 24.0,
+      "measured_max_grade_deg": 26.6,
       "measured_polyline_m": 883.265,
       "polyline": [
         [
@@ -3145,8 +3147,12 @@
   "return_shortcuts": [
     {
       "_comment": "Durable server-owned world change; shortcut exists only after physical runtime result is visible. Never a new hidden teleport.",
+      "_comment_path": "Walk path hall -> ramp top -> ramp foot -> departure (Y = baked ground, informational; the builder resamples). deck_span names the two path vertices the plank deck bridges: it crosses the 3-4 m terrace scarp east of the hall at 16.6 deg, where bare ground drops the walker. Built by scripts/world/water_return_ramps.gd.",
+      "deck_span": [1, 2],
+      "deck_width_m": 2.0,
       "from_landmark": "reedhaven_woven_hall",
       "id": "reedhaven_maintenance_ramp",
+      "path": [[-54.0, 22.19, 440.0], [54.0, 21.09, 482.0], [80.0, 13.32, 481.0], [143.505, 1.93, 515.169]],
       "island_id": "reedhaven",
       "kind": "physical_ramp",
       "purpose": "Repair opens a short dry ramp from settlement to departure instead of repeating marsh loop.",

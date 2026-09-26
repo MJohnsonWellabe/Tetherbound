@@ -1729,9 +1729,10 @@ jobs:
   verify-regions-relay:
     # Split from verify-regions-shard (CI wall-clock): identical steps, own runner.
     runs-on: ubuntu-latest
-    # Sum of these six tests' own run time measured 2026-09-01: 1,034s
-    # (17.2 min). 25 min covers checkout/setup with margin.
-    timeout-minutes: 35
+    # Measured 2026-09-26 (run 36244390545): 8.4 min job wall before the
+    # Tidewake loops step. That step is bounded at 1365 s (22.75 min), so the
+    # worst case is ~31 min plus runner variance; 45 min keeps margin.
+    timeout-minutes: 45
     needs: changes
     if: needs.changes.outputs.full == 'true'
     steps:
@@ -1807,6 +1808,13 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # F13 #1 (ACCEPTANCE 6.1): the four land loops and three return
+      # shortcuts walked/swum with real stick input in the production scene.
+      # Timeout = 1.5x the measured 908 s wall time of the final green run
+      # (RUN5). Placed here, not in verify-regions-shard (18 of its 35 min).
+      - name: Verify Tidewake land loops and return shortcuts walked
+        if: ${{ !cancelled() }}
+        run: timeout 1365s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd
 
   verify-owner-regressions-shard:
     runs-on: ubuntu-latest
