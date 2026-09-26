@@ -1677,6 +1677,8 @@ jobs:
       - name: Verify Tidewake chain side_water_lastlight_shelter
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_lastlight_shelter.gd
+      # F13 #1 (ACCEPTANCE 6.1): the four land loops and three return
+      # shortcuts walked/swum with real stick input in the production scene.
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd

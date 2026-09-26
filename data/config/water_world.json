@@ -1776,56 +1776,91 @@
   "land_loops": [
     {
       "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
-      "grading_status": "unbaked_requires_grade_check",
+      "grading_status": "baked_grade_checked",
       "id": "reed_root_circuit",
       "island_id": "reedhaven",
       "maximum_target_grade_deg": 24.0,
-      "measured_polyline_m": 684.119,
+      "measured_polyline_m": 698.165,
       "polyline": [
         [
-          107.797,
-          17.136,
-          468.884
+          108.25,
+          17.082,
+          469.25
         ],
         [
-          55.8,
-          17.136,
-          536.648
+          41.0,
+          22.856,
+          452.0
         ],
         [
-          -28.884,
-          8.851,
-          547.797
+          33.0,
+          23.25,
+          450.0
         ],
         [
-          -96.648,
-          17.136,
-          495.8
+          -23.0,
+          22.185,
+          489.0
         ],
         [
-          -107.797,
-          17.136,
-          411.116
+          -92.0,
+          17.637,
+          494.0
         ],
         [
-          -55.8,
-          17.136,
-          343.352
+          -103.0,
+          17.899,
+          425.0
         ],
         [
-          28.884,
-          17.136,
-          332.203
+          -70.0,
+          14.27,
+          364.0
         ],
         [
-          96.648,
-          17.136,
-          384.2
+          -19.0,
+          9.506,
+          324.0
         ],
         [
-          107.797,
-          17.136,
-          468.884
+          -18.0,
+          9.293,
+          324.0
+        ],
+        [
+          -12.0,
+          8.619,
+          328.0
+        ],
+        [
+          3.0,
+          21.164,
+          396.0
+        ],
+        [
+          4.0,
+          22.271,
+          406.0
+        ],
+        [
+          5.0,
+          22.704,
+          407.0
+        ],
+        [
+          61.0,
+          18.635,
+          365.0
+        ],
+        [
+          101.0,
+          18.031,
+          421.0
+        ],
+        [
+          108.25,
+          17.082,
+          469.25
         ]
       ],
       "purpose": "Marsh resources, resident conversation, repair material and raised root return.",
@@ -1833,56 +1868,81 @@
     },
     {
       "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
-      "grading_status": "unbaked_requires_grade_check",
+      "grading_status": "baked_grade_checked",
       "id": "brine_terrace_circuit",
       "island_id": "brine_steps",
       "maximum_target_grade_deg": 24.0,
-      "measured_polyline_m": 744.548,
+      "measured_polyline_m": 688.523,
       "polyline": [
         [
-          513.151,
-          38.302,
-          738.163
+          513.25,
+          38.231,
+          738.25
         ],
         [
-          430.598,
-          38.302,
-          781.137
+          468.0,
+          55.744,
+          733.0
         ],
         [
-          341.837,
-          38.302,
-          753.151
+          466.0,
+          58.895,
+          726.0
         ],
         [
-          298.863,
-          38.302,
-          670.598
+          417.0,
+          76.081,
+          680.0
         ],
         [
-          326.849,
-          38.302,
-          581.837
+          398.0,
+          74.981,
+          638.0
         ],
         [
-          409.402,
-          38.302,
-          538.863
+          363.0,
+          58.508,
+          602.0
         ],
         [
-          498.163,
-          38.302,
-          566.849
+          363.0,
+          44.925,
+          567.0
         ],
         [
-          541.137,
-          38.302,
-          649.402
+          402.0,
+          22.678,
+          509.0
         ],
         [
-          513.151,
-          38.302,
-          738.163
+          470.0,
+          25.214,
+          522.0
+        ],
+        [
+          530.0,
+          23.325,
+          557.0
+        ],
+        [
+          563.0,
+          24.115,
+          618.0
+        ],
+        [
+          565.0,
+          24.865,
+          687.0
+        ],
+        [
+          518.0,
+          36.357,
+          738.0
+        ],
+        [
+          513.25,
+          38.231,
+          738.25
         ]
       ],
       "purpose": "Trainer terrace, overlooking rock pocket, shallow habitat and dock return.",
@@ -1890,56 +1950,106 @@
     },
     {
       "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
-      "grading_status": "unbaked_requires_grade_check",
+      "grading_status": "baked_grade_checked",
       "id": "salt_shrine_circuit",
       "island_id": "salt_crown",
       "maximum_target_grade_deg": 24.0,
-      "measured_polyline_m": 955.179,
+      "measured_polyline_m": 750.533,
       "polyline": [
         [
-          303.63,
-          51.054,
-          2337.089
+          -3.75,
+          51.025,
+          2283.25
         ],
         [
-          239.478,
-          51.054,
-          2437.788
+          -45.0,
+          31.311,
+          2335.0
         ],
         [
-          122.911,
-          51.054,
-          2463.63
+          4.0,
+          47.288,
+          2384.0
         ],
         [
-          22.212,
-          51.054,
-          2399.478
+          5.0,
+          38.286,
+          2420.0
         ],
         [
-          -3.63,
-          51.054,
-          2282.911
+          54.0,
+          36.476,
+          2469.0
         ],
         [
-          60.522,
-          51.054,
-          2182.212
+          60.0,
+          36.675,
+          2472.0
         ],
         [
-          177.089,
-          51.054,
-          2156.37
+          123.0,
+          45.559,
+          2475.0
         ],
         [
-          277.788,
-          51.054,
-          2220.522
+          186.0,
+          58.867,
+          2445.0
         ],
         [
-          303.63,
-          51.054,
-          2337.089
+          218.0,
+          53.407,
+          2445.0
+        ],
+        [
+          217.0,
+          61.943,
+          2425.0
+        ],
+        [
+          169.0,
+          86.524,
+          2375.0
+        ],
+        [
+          168.0,
+          93.67,
+          2338.0
+        ],
+        [
+          153.0,
+          94.865,
+          2333.0
+        ],
+        [
+          95.0,
+          89.297,
+          2296.0
+        ],
+        [
+          40.0,
+          69.729,
+          2275.0
+        ],
+        [
+          3.0,
+          54.228,
+          2283.0
+        ],
+        [
+          2.0,
+          53.665,
+          2282.0
+        ],
+        [
+          -4.0,
+          50.967,
+          2284.0
+        ],
+        [
+          -3.75,
+          51.025,
+          2283.25
         ]
       ],
       "purpose": "Care/rest preparation, shrine, trader overlook and return bell.",
@@ -1947,56 +2057,111 @@
     },
     {
       "_comment": "Closed loop is one perimeter traversal; not multiplied for backtracking. Resource/trainer nodes are separate authored content and not counted here.",
-      "grading_status": "unbaked_requires_grade_check",
+      "grading_status": "baked_grade_checked",
       "id": "sluice_patrol_circuit",
       "island_id": "sluice_isle",
       "maximum_target_grade_deg": 24.0,
-      "measured_polyline_m": 1102.536,
+      "measured_polyline_m": 883.265,
       "polyline": [
         [
-          1018.957,
-          58.231,
-          2898.505
+          1019.25,
+          58.029,
+          2898.25
         ],
         [
-          1012.954,
-          58.231,
-          3035.987
+          1055.0,
+          44.249,
+          2958.0
         ],
         [
-          911.495,
-          58.231,
-          3128.957
+          1055.0,
+          44.22,
+          2965.0
         ],
         [
-          774.013,
-          43.222,
-          3122.954
+          1013.0,
+          61.416,
+          3021.0
         ],
         [
-          681.043,
-          58.231,
-          3021.495
+          1013.0,
+          58.205,
+          3036.0
         ],
         [
-          687.046,
-          58.231,
-          2884.013
+          975.0,
+          85.044,
+          2990.0
         ],
         [
-          788.505,
-          58.231,
-          2791.043
+          965.0,
+          88.358,
+          2921.0
         ],
         [
-          925.987,
-          58.231,
-          2797.046
+          965.0,
+          76.395,
+          2870.0
         ],
         [
-          1018.957,
-          58.231,
-          2898.505
+          903.0,
+          83.344,
+          2839.0
+        ],
+        [
+          850.0,
+          88.099,
+          2838.0
+        ],
+        [
+          799.0,
+          60.043,
+          2791.0
+        ],
+        [
+          788.0,
+          58.112,
+          2791.0
+        ],
+        [
+          850.0,
+          47.008,
+          2760.0
+        ],
+        [
+          857.0,
+          46.941,
+          2760.0
+        ],
+        [
+          916.0,
+          60.414,
+          2797.0
+        ],
+        [
+          926.0,
+          58.205,
+          2797.0
+        ],
+        [
+          992.0,
+          46.556,
+          2818.0
+        ],
+        [
+          1000.0,
+          43.403,
+          2818.0
+        ],
+        [
+          1019.0,
+          55.401,
+          2885.0
+        ],
+        [
+          1019.25,
+          58.029,
+          2898.25
         ]
       ],
       "purpose": "Two separate pump approaches, patrol bridge and maintenance descent.",
@@ -2891,7 +3056,7 @@
   "planning_census": {
     "_comment": "Counts of authored DATA, not spawned/played actuals. Water routes count sheltered edge once; direct alternatives are not additional chapter kilometres. Land lengths count listed spines and distinct loops once, not walkback multiplicity.",
     "_comment_lesson": "Separate60m inshore lesson is not counted as an inter-island edge or added to chapter water kilometres.",
-    "authored_land_spines_and_loops_m": 11026.527,
+    "authored_land_spines_and_loops_m": 10560.631,
     "islands": 12.0,
     "land_loops": 4.0,
     "landmarks": 19.0,
@@ -2903,7 +3068,7 @@
     "reward_pockets": 8.0,
     "shore_anchors": 24.0,
     "target_land_route_m": 8000.0,
-    "unique_land_plan_length_status": "Raw authored 3D planning polylines total 11.027km after 2026-09-07 composition correction, including unverified loops and terrain; this is not playable distance and must not be credited against the 8km actual walked target.",
+    "unique_land_plan_length_status": "Raw authored 3D planning polylines total 10.561km after 2026-09-07 composition correction and the 2026-09-26 re-authoring of the four land loops onto baked-ground grades; spines/terrain remain unverified and loops are verified only by tests/smoke_water_loops_shortcuts.gd walks. This is not playable distance and must not be credited against the 8km actual walked target.",
     "unique_water_edges": 11.0,
     "verified_runtime_land_m": 0.0,
     "verified_runtime_water_m": 0.0
