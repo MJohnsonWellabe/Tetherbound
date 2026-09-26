@@ -455,6 +455,7 @@ func _ready_host() -> Dictionary:
 	game.session = HostSessionStub.new()
 	game.add_child(game.session)
 	var lobby := STEAM_LOBBY.new()
+	lobby.name = "SteamLobby" # as ensure() names it
 	game.add_child(lobby)
 	lobby._inject_native_for_test(steam, 123, func() -> MultiplayerPeer: return FakeRelayPeer.new())
 	assert_true(lobby.initialize())
@@ -613,3 +614,24 @@ func test_an_empty_world_id_neither_fails_hosting_nor_is_published() -> void:
 	assert_false(steam.metadata.has("world_id"))
 	game.free()
 	steam.free()
+
+
+## The in-world "Exit game" recovery button and the title's Quit call
+## get_tree().quit(), which sends no WM_CLOSE_REQUEST; both call this first.
+func test_a_quit_button_leaves_the_hosted_lobby_through_the_game_node() -> void:
+	var h := _ready_host()
+	var steam: MockSteam = h.steam
+	STEAM_LOBBY.leave_for_quit(h.game)
+	assert_eq(steam.left, [777], "the hosted lobby is left before quitting")
+	STEAM_LOBBY.leave_for_quit(h.game)
+	assert_eq(steam.left, [777], "and only once")
+	h.game.free()
+	steam.free()
+
+
+func test_quitting_without_a_steam_lobby_is_a_no_op() -> void:
+	var game := GameStub.new()
+	STEAM_LOBBY.leave_for_quit(game)
+	STEAM_LOBBY.leave_for_quit(null)
+	assert_eq(game.get_node_or_null(^"SteamLobby"), null, "no lobby is created just to quit")
+	game.free()
