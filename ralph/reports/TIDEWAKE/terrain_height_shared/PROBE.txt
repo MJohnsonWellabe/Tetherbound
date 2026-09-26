@@ -10,10 +10,16 @@ Method:
 - Count a sample as off when it differs from the truth by more than 5 cm.
 
 meadows   spacing=2.0 samples=4000 raw_off>5cm=3564 helper_off>5cm=0 worst_raw_err=10.47m
-stormwood spacing=1.0 samples=3998 raw_off>5cm=3136 helper_off>5cm=0 worst_raw_err=4.66m
+stormwood spacing=2.0 samples=3998 raw_off>5cm=3136 helper_off>5cm=0 worst_raw_err=4.66m
 
 Before (main): any caller querying within 0.01 m of a vertex reads the neighbouring vertex.
 These callers are playground_world.gd::ground_height_at, the spawn sample,
 grass_field.gd::_terrain_height_at and stormwood_world.gd's road-current height.
 After (this branch): the same queries read the vertex they meant.
 Queries further than 0.02 m from a vertex are unchanged by construction (query_point).
+
+Correction (after review): the first Stormwood run read data/config/stormwood_world.json.
+That file has no vertex_spacing key, so the probe fell back to 1.0.
+Rerun with data/config/terrain_stormwood.json (spacing 2.0, as live stormwood_world.gd:88 sets it):
+stormwood spacing=2.0 samples=3998 raw_off>5cm=3136 helper_off>5cm=0 worst_raw_err=4.66m
+The probe file now reads terrain_stormwood.json.

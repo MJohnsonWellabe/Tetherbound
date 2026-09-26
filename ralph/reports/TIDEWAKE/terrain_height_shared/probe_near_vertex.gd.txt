@@ -3,7 +3,7 @@ const H := preload("res://scripts/world/terrain_height.gd")
 func _init():
 	_run.call_deferred()
 func _run():
-	for realm in [["meadows","res://data/terrain/playground","res://data/config/terrain_playground.json"],["stormwood","res://data/terrain/stormwood","res://data/config/stormwood_world.json"]]:
+	for realm in [["meadows","res://data/terrain/playground","res://data/config/terrain_playground.json"],["stormwood","res://data/terrain/stormwood","res://data/config/terrain_stormwood.json"]]:
 		var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(realm[2]))
 		var t: Node3D = ClassDB.instantiate("Terrain3D")
 		root.add_child(t)
