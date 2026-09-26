@@ -31,6 +31,24 @@ var launches: Array[Dictionary] = []
 var violations: Array[Dictionary] = []
 var pre_trial_probe: Dictionary = {}
 var was_flying := false
+var initial_party_keys: Array[String] = []
+
+
+## Stable across save/reload: the persisted uid when present, otherwise the
+## persisted species/IV/trait tuple.
+func _party_keys() -> Array[String]:
+	var keys: Array[String] = []
+	for member: RefCounted in game.party.members():
+		var uid := str(member.get("uid"))
+		keys.append(uid if not uid.is_empty() else "%s:%s:%s:%s:%s" % [member.species_id, member.iv_hp, member.iv_attack, member.iv_defence, member.trait_primary])
+	return keys
+
+
+## This witness's event log lives beside its verdict.
+func _write_report() -> void:
+	output_dir = WITNESS_DIR
+	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
+	super._write_report()
 
 
 func _run() -> void:
@@ -60,8 +78,13 @@ func _record_frame() -> void:
 		ids.append(member.get_instance_id())
 		if not loaner_species.is_empty() and str(member.species_id) == loaner_species and from_save.is_empty():
 			_violation("loaner_in_party", {"species": loaner_species})
-	if not initial_party_ids.is_empty() and ids != initial_party_ids:
+	# Live instance IDs are only stable until the route's own disk reload, which
+	# rebuilds every member; after that the stable identity key is compared.
+	if not initial_party_ids.is_empty() and ids != initial_party_ids and not _has("cloudreach_chapter_complete"):
 		_violation("party_identity_changed", {"ids": ids})
+	if initial_party_keys.is_empty() and ids.size() == expected_party_size: initial_party_keys = _party_keys()
+	elif not initial_party_keys.is_empty() and not paused and _party_keys() != initial_party_keys:
+		_violation("party_stable_identity_changed", {"keys": _party_keys()})
 	var flying: bool = fly.is_flying()
 	if flying:
 		flight_frames += 1
@@ -106,11 +129,11 @@ func _wait_on_floor() -> void:
 func _finish() -> void:
 	if completed_route and not failed:
 		_require(violations.is_empty(), "F06#3 no loaner/gate/identity violation (%d)" % violations.size())
-		_require(not launches.is_empty() and launches.all(func(l: Dictionary) -> bool: return bool(l.loaner) and int(l.party_size) == 5),
+		_require(not launches.is_empty() and launches.all(func(l: Dictionary) -> bool: return bool(l.loaner) and int(l.party_size) == expected_party_size),
 			"F06#3 every flight was the loaner carrying the unchanged five (%d launches)" % launches.size())
 		_require(owned_carrier_frames == 0, "F06#3 no owned creature was used as the carrier")
 		var species: Array = game.party.members().map(func(m: RefCounted) -> String: return str(m.species_id))
-		_require(species.size() == 5 and not species.has(loaner_species), "F06#3 reloaded party is the five, no loaner: " + str(species))
+		_require(species.size() == expected_party_size and not species.has(loaner_species) and _party_keys() == initial_party_keys, "F06#3 reloaded party is the same members, no loaner: " + str(species))
 	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
 	var file := FileAccess.open(WITNESS_DIR + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F06#3", "passed": completed_route and not failed,
@@ -118,7 +141,7 @@ func _finish() -> void:
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
 		"stage": stage, "loaner_species": loaner_species, "pre_trial_probe": pre_trial_probe, "launches": launches,
 		"flight_frames": flight_frames, "loaner_frames": loaner_frames, "owned_carrier_frames": owned_carrier_frames,
-		"violations": violations, "final_party": game.party.members().map(func(m: RefCounted) -> String: return str(m.species_id)),
+		"initial_party_keys": initial_party_keys, "violations": violations, "final_party": game.party.members().map(func(m: RefCounted) -> String: return str(m.species_id)),
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}, "  "))
 	print("F06#3 WITNESS %s launches=%d loaner_frames=%d violations=%d" % ["PASS" if completed_route and not failed else "FAIL", launches.size(), loaner_frames, violations.size()])
 	super._finish()
