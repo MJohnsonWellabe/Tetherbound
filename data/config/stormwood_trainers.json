@@ -1002,10 +1002,11 @@
       "display_name": "Tavi",
       "region_id": "deepwood",
       "position": [
-        -890,
-        51.57,
-        4490
+        -881.1,
+        52.38,
+        4479.2
       ],
+      "_why_moved_f11": "Tavi stood exactly on Officer Nysa ([-890, 51.57, 4490], the Deepwood rod station's critical picket leader), so Tavi's 'Challenge Tavi' prompt won the arbiter from Nysa's stance and the earned F11 witness (run 22) could not challenge Nysa. Moved 14 m back along the Lantern Hollow road; y is the heightfield + 0.15 m, as every grounded trainer.",
       "route_class": "optional",
       "critical_order": 0,
       "humanoid_key": "young_trainer",
