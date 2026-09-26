@@ -1,0 +1,538 @@
+{
+  "disclosures": [
+    "warden: Veridian offer ACCEPTED with a full belt through the production farewell ceremony; released lowest-level earned member {\"index\":4,\"level\":15,\"species\":\"bramblebun\",\"uid\":\"creature-3fd010116aee4ec96d669fb5d4ecca74\"}",
+    "warden: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+    "warden: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)",
+    "warden: ordinary Satchel care (helper's own _prepare) run before a road leg with a drained active creature (BLOCKERS.md B5)"
+  ],
+  "failures": [
+    "warden_accept: Ordinary quarry/Warrens movement did not reach (184.2, 0.109838, 52.6); player=(72.52981, -5.808105, 71.52964)"
+  ],
+  "flags_gained": [
+    "defeated_warden",
+    "learned_legendary_is_the_source",
+    "legendary_answer_world:3ee61ecf63976764c63c01fbb112e1d5",
+    "legendary_freed",
+    "legendary_joined",
+    "legendary_resolution:accepted:character-afb79936a9ddebd411e54dfa2817d5b0",
+    "legendary_resolution:live",
+    "legendary_settled",
+    "realm_heart_meadows_earned",
+    "realm_key_cloudreach"
+  ],
+  "flags_total": 128,
+  "free_build": false,
+  "game_clock_seconds": 2807.3681314443,
+  "game_day": 13,
+  "helper_receipts": [
+    {
+      "passed": false,
+      "receipts": [
+        {
+          "beat": "pre_warden_bench_care",
+          "fainted": true,
+          "hp": 0.0,
+          "hp_after": 99.75,
+          "index": 0.0,
+          "item": "revive",
+          "max_hp": 199.5,
+          "species": "ripplet"
+        },
+        {
+          "beat": "pre_warden_bench_care",
+          "fainted": true,
+          "hp": 0.0,
+          "hp_after": 93.177829117775,
+          "index": 3.0,
+          "item": "revive",
+          "max_hp": 186.35565823555,
+          "species": "mudsnout"
+        },
+        {
+          "beat": "pre_warden_bench_care",
+          "fainted": false,
+          "hp": 99.75,
+          "hp_after": 149.75,
+          "index": 0.0,
+          "item": "potion_small",
+          "max_hp": 199.5,
+          "species": "ripplet"
+        },
+        {
+          "beat": "pre_warden_bench_care",
+          "fainted": false,
+          "hp": 8.99540768418428,
+          "hp_after": 58.9954076841843,
+          "index": 1.0,
+          "item": "potion_small",
+          "max_hp": 202.364196410656,
+          "species": "bramblebun"
+        },
+        {
+          "beat": "pre_warden_bench_care",
+          "fainted": false,
+          "hp": 87.9428937329716,
+          "hp_after": 137.942893732972,
+          "index": 2.0,
+          "item": "potion_small",
+          "max_hp": 181.386343741417,
+          "species": "mudsnout"
+        },
+        {
+          "beat": "pre_warden_bench_care",
+          "fainted": false,
+          "hp": 93.177829117775,
+          "hp_after": 143.177829117775,
+          "index": 3.0,
+          "item": "potion_small",
+          "max_hp": 186.35565823555,
+          "species": "mudsnout"
+        },
+        {
+          "beat": "pre_warden_bench_care",
+          "fainted": false,
+          "hp": 37.77885808213,
+          "hp_after": 87.77885808213,
+          "index": 4.0,
+          "item": "potion_small",
+          "max_hp": 162.625689842224,
+          "species": "bramblebun"
+        },
+        {
+          "beat": "pre_warden_bench_care",
+          "fainted": false,
+          "hp": 58.9954076841843,
+          "hp_after": 108.995407684184,
+          "index": 1.0,
+          "item": "potion_small",
+          "max_hp": 202.364196410656,
+          "species": "bramblebun"
+        },
+        {
+          "beat": "pre_warden_bench_care",
+          "fainted": false,
+          "hp": 87.77885808213,
+          "hp_after": 137.77885808213,
+          "index": 4.0,
+          "item": "potion_small",
+          "max_hp": 162.625689842224,
+          "species": "bramblebun"
+        },
+        {
+          "beat": "trainer_defeated",
+          "expected_xp": {
+            "-9223371906177038313": 0.0,
+            "-9223371906193815530": 1227.0,
+            "-9223371906210592747": 1227.0,
+            "-9223371906227369964": 1561.0,
+            "-9223371906244147181": 1145.0
+          },
+          "frames": 6338.0,
+          "hits": 91.0,
+          "id": "warden_aldis",
+          "items_after": {
+            "coin": 875.0,
+            "potion_small": 4.0,
+            "revive": 10.0
+          },
+          "items_before": {
+            "coin": 725.0,
+            "potion_small": 0.0,
+            "revive": 8.0
+          },
+          "rounds": 5.0,
+          "wins": 5.0,
+          "xp_after": {
+            "-9223371906177038313": 6485.0,
+            "-9223371906193815530": 9100.0,
+            "-9223371906210592747": 8867.0,
+            "-9223371906227369964": 10990.0,
+            "-9223371906244147181": 8431.0
+          },
+          "xp_before": {
+            "-9223371906177038313": 6485.0,
+            "-9223371906193815530": 7873.0,
+            "-9223371906210592747": 7640.0,
+            "-9223371906227369964": 9429.0,
+            "-9223371906244147181": 7286.0
+          }
+        },
+        {
+          "beat": "veridian_accept_prompt",
+          "distance_m": 2.56281328201294,
+          "prompt": "/root/MeadowsPlayground/StrongholdClimax/VeridianAcceptPromptAnchor/VeridianAcceptPrompt"
+        },
+        {
+          "beat": "veridian_accepted",
+          "choice": "accept_veridian_release_lowest_level_member",
+          "joined": {
+            "level": 22.0,
+            "species": "veridian",
+            "uid": "creature-0f69d62dc0cb2afc426699e1e746750f"
+          },
+          "released": {
+            "index": 4.0,
+            "level": 15.0,
+            "species": "bramblebun",
+            "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+          }
+        },
+        {
+          "beat": "meadows_ending_settled",
+          "choice": "release_pending_legendary_keep_earned_five",
+          "dialogues": [
+            "stronghold_reveal",
+            "stronghold_warden_challenge",
+            "stronghold_warden_realm_reward",
+            "stronghold_chamber",
+            "stronghold_free_legendary",
+            "stronghold_legendary_joins",
+            "veridian_choice",
+            "stronghold_machinery_fails"
+          ],
+          "legendary_joined": true,
+          "party_ids": [
+            -9223371906244147200.0,
+            -9223371906227369984.0,
+            -9223371906210592768.0,
+            -9223371906193815552.0,
+            -9223291457463177216.0
+          ],
+          "released_pending_id": 0.0
+        },
+        {
+          "beat": "between_fight_care",
+          "fainted": true,
+          "hp": 0.0,
+          "hp_after": 102.9,
+          "index": 0.0,
+          "item": "revive",
+          "max_hp": 205.8,
+          "species": "ripplet"
+        },
+        {
+          "beat": "between_fight_care",
+          "fainted": false,
+          "hp": 32.3155205342379,
+          "hp_after": 82.3155205342379,
+          "index": 1.0,
+          "item": "potion_small",
+          "max_hp": 208.375014125824,
+          "species": "bramblebun"
+        },
+        {
+          "beat": "between_fight_care",
+          "fainted": false,
+          "hp": 82.3155205342379,
+          "hp_after": 132.315520534238,
+          "index": 1.0,
+          "item": "potion_small",
+          "max_hp": 208.375014125824,
+          "species": "bramblebun"
+        },
+        {
+          "beat": "pre_warden_bench_care",
+          "fainted": false,
+          "hp": 102.9,
+          "hp_after": 152.9,
+          "index": 0.0,
+          "item": "potion_small",
+          "max_hp": 205.8,
+          "species": "ripplet"
+        },
+        {
+          "beat": "acknowledgement_backtrack_started",
+          "entries": 87.0,
+          "reason": "actual acknowledgement remains at the village; no earned fast travel exists",
+          "road_metres_one_way": 11432.1539907455,
+          "route": "forward roads reversed (B12): band5/4/3 + relay loop, warren_undertrail with B3 detour, band2/band1",
+          "spine_entries": 82.0,
+          "target": "(184.2, 0.109838, 52.6)"
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370802286532608.0,
+          "frames": 561.0,
+          "guardian": false,
+          "hits": 9.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370804652120064.0,
+          "frames": 445.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370801498004480.0,
+          "frames": 387.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370818208111616.0,
+          "frames": 465.0,
+          "guardian": false,
+          "hits": 7.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370820624030720.0,
+          "frames": 374.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370823006394368.0,
+          "frames": 360.0,
+          "guardian": false,
+          "hits": 5.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370825422314496.0,
+          "frames": 440.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370874009133056.0,
+          "frames": 384.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370961384877056.0,
+          "frames": 384.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370959002511360.0,
+          "frames": 464.0,
+          "guardian": false,
+          "hits": 7.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370967927991296.0,
+          "frames": 362.0,
+          "guardian": false,
+          "hits": 5.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370970310354944.0,
+          "frames": 461.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370827821456384.0,
+          "frames": 407.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370828626763776.0,
+          "frames": 490.0,
+          "guardian": false,
+          "hits": 7.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370829415291904.0,
+          "frames": 355.0,
+          "guardian": false,
+          "hits": 5.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371083237797888.0,
+          "frames": 393.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223370831831212032.0,
+          "frames": 439.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371101424302080.0,
+          "frames": 402.0,
+          "guardian": false,
+          "hits": 6.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371165194501120.0,
+          "frames": 298.0,
+          "guardian": false,
+          "hits": 4.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371166788336640.0,
+          "frames": 327.0,
+          "guardian": false,
+          "hits": 5.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371165999808512.0,
+          "frames": 328.0,
+          "guardian": false,
+          "hits": 5.0
+        },
+        {
+          "beat": "wild_victory",
+          "enemy_id": -9223371258123503616.0,
+          "frames": 327.0,
+          "guardian": false,
+          "hits": 5.0
+        },
+        {
+          "beat": "acknowledgement_approach_walk",
+          "from": "(7.453481, -3.463843, 91.33675)",
+          "to": "(184.2, 0.109838, 52.6)"
+        },
+        {
+          "beat": "walk_confined_recovery",
+          "player": "(72.35719, -5.807672, 71.59579)",
+          "target": "(184.2, 0.109838, 52.6)"
+        },
+        {
+          "beat": "walk_confined_recovery",
+          "player": "(71.08493, -5.795814, 71.81744)",
+          "target": "(184.2, 0.109838, 52.6)"
+        },
+        {
+          "beat": "walk_confined_recovery",
+          "player": "(71.6637, -5.803389, 71.71894)",
+          "target": "(184.2, 0.109838, 52.6)"
+        }
+      ],
+      "segment": "warden_accept"
+    }
+  ],
+  "inventory": {
+    "axe": 1,
+    "berries": 5,
+    "coin": 875,
+    "elixir_guard": 1,
+    "elixir_vigour": 1,
+    "hammer": 1,
+    "hide_vest": 1,
+    "knife": 1,
+    "orb_basic": 51,
+    "orb_greater": 7,
+    "pickaxe": 1,
+    "potion_small": 1,
+    "revive": 9,
+    "rootstone": 17,
+    "tm_earth_fist": 1,
+    "torch": 1,
+    "wood": 1
+  },
+  "key_items": {},
+  "location": {
+    "player": [
+      72.5294418334961,
+      -5.80795335769653,
+      71.5302124023438
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+  },
+  "party_after": [
+    {
+      "hp": 162,
+      "level": 19,
+      "nickname": "Bud",
+      "species": "ripplet",
+      "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+      "hp": 139,
+      "level": 21,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+      "hp": 155,
+      "level": 20,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+      "hp": 156,
+      "level": 20,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+      "hp": 841,
+      "level": 25,
+      "nickname": "",
+      "species": "veridian",
+      "uid": "creature-0f69d62dc0cb2afc426699e1e746750f"
+    }
+  ],
+  "party_before": [
+    {
+      "hp": 0,
+      "level": 16,
+      "nickname": "Bud",
+      "species": "ripplet",
+      "uid": "creature-f4118d54a2317867246afbf1e8ea834f"
+    },
+    {
+      "hp": 8,
+      "level": 18,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-390db8e0de00cd1fcaaf1747203b0768"
+    },
+    {
+      "hp": 87,
+      "level": 16,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-c785f517af159966b72ca0f49f61d386"
+    },
+    {
+      "hp": 0,
+      "level": 17,
+      "nickname": "",
+      "species": "mudsnout",
+      "uid": "creature-8e12dace31044e591f02b96391ca2372"
+    },
+    {
+      "hp": 37,
+      "level": 15,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    }
+  ],
+  "passed": false,
+  "saved_world_seed": 1393508821,
+  "segment": "warden",
+  "wall_seconds": 3026.757,
+  "world_seed_env": "4"
+}
