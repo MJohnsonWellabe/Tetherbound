@@ -2865,6 +2865,20 @@
       ],
       "role": "distant_landmark_not_castle",
       "visible_from_island": "first_shore"
+    },
+    {
+      "_comment": "Lastlight, Campkeeper Halen's old lamp post (water_halen_shelter_lead; side_water_lastlight_shelter in water_local_chains.json). Veilfall exterior: at the lower edge of the landing camp water_camp_veilfall (camp at [381.661, 3822.923]), 4.3 m west of the arrival-to-camp line and 5 m below the creature bed, so it frames the sheltered way up from sluice_isle_to_veilfall_arrival without standing on it or inside any camp or delivery prompt (nearest: bed 5.0 m, delivery 6.4 m). Y is the baked terrain sample (5.09 m above sea, dry). Its prop is WaterLocalChains' landmark_lamps row.",
+      "grounding": "sample_terrain_after_bake",
+      "id": "lastlight",
+      "island_id": "veilfall",
+      "name": "Lastlight",
+      "position": [
+        378.2,
+        5.092,
+        3817.9
+      ],
+      "role": "lamp_post_camp_approach",
+      "visible_from_island": ""
     }
   ],
   "map": {
@@ -2880,7 +2894,7 @@
     "authored_land_spines_and_loops_m": 11026.527,
     "islands": 12.0,
     "land_loops": 4.0,
-    "landmarks": 18.0,
+    "landmarks": 19.0,
     "lesson_routes": 1.0,
     "main_sheltered_water_m": 1985.675,
     "optional_sheltered_water_m": 1246.14,

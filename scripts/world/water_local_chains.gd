@@ -29,6 +29,9 @@ func build(world: Node3D) -> void:
 	if ledger != null and not ledger.intent_refused.is_connected(_on_refused):
 		ledger.intent_refused.connect(_on_refused)
 	var data := RULES.load_data()
+	for lamp: Variant in data.get("landmark_lamps", []):
+		if lamp is Dictionary:
+			_build_landmark_lamp(lamp)
 	for row: Variant in data.get("steps", []):
 		if row is Dictionary and str(row.get("kind", "")) == "site":
 			_build_site(row, float(data.get("site_prompt_radius_m", 3.6)))
@@ -45,6 +48,100 @@ static func site_offered(row: Dictionary, world_flags: Variant) -> bool:
 func site_root(step_id: String) -> Node3D:
 	var site: Variant = _sites.get(step_id)
 	return (site as Dictionary).root if site is Dictionary else null
+
+
+## The landmark's authored position (water_world.json `landmarks`), or INF.
+func landmark_xz(landmark_id: String) -> Vector2:
+	var config: Variant = _world.get("config") if _world != null else null
+	if config is Dictionary:
+		for raw: Variant in (config as Dictionary).get("landmarks", []):
+			if raw is Dictionary and str(raw.get("id", "")) == landmark_id:
+				var at: Array = raw.position
+				return Vector2(float(at[0]), float(at[2]))
+	return Vector2.INF
+
+
+func landmark_root(landmark_id: String) -> Node3D:
+	return get_node_or_null("Landmark_" + landmark_id) as Node3D
+
+
+## A named lamp-post landmark a chain's lead points at (Lastlight). Always
+## standing: the lamp is the lure, not a chain step. The post collides on every
+## peer; the post, lantern, flame and light are art only.
+func _build_landmark_lamp(lamp: Dictionary) -> void:
+	var landmark_id := str(lamp.get("landmark_id", ""))
+	var xz := landmark_xz(landmark_id)
+	var ground := float(_world.ground_height_at(xz.x, xz.y)) if xz.is_finite() else NAN
+	if not is_finite(ground) or ground < 0.0:
+		push_error("Water landmark lamp has no dry terrain: " + landmark_id)
+		return
+	var width := float(lamp.get("post_width_m", 0.36))
+	var height := float(lamp.get("post_height_m", 4.0))
+	var root := StaticBody3D.new()
+	root.name = "Landmark_" + landmark_id
+	add_child(root)
+	root.position = Vector3(xz.x, ground, xz.y)
+	var facing_raw: Array = lamp.get("facing_xz", [0.0, 1.0])
+	root.rotation.y = atan2(float(facing_raw[0]), float(facing_raw[1]))
+	var collision := CollisionShape3D.new()
+	collision.name = "PostCollider"
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(width, height + 0.4, width)
+	collision.shape = shape
+	collision.position.y = (height - 0.4) * 0.5
+	root.add_child(collision)
+	if _world.simulation_only:
+		return
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color(str(lamp.get("post_colour", "#927448")))
+	wood.albedo_texture = load("res://assets/environment/stylized_nature/Bark_TwistedTree.png")
+	wood.uv1_scale = Vector3(0.35, 0.35, 1)
+	wood.roughness = 0.88
+	var post := MeshInstance3D.new()
+	post.name = "LampPost"
+	var box := BoxMesh.new()
+	# 0.4 m of footing below the sampled ground covers the downhill side.
+	box.size = Vector3(width, height + 0.4, width)
+	post.mesh = box
+	post.material_override = wood
+	post.position.y = (height - 0.4) * 0.5
+	root.add_child(post)
+	var lantern_scale := float(lamp.get("lantern_scale", 1.4))
+	var scene: Variant = load(str(lamp.get("lantern_model", ""))) \
+		if ResourceLoader.exists(str(lamp.get("lantern_model", ""))) else null
+	if not scene is PackedScene:
+		push_error("Water landmark lamp model missing: " + str(lamp.get("lantern_model", "")))
+		return
+	var lantern := (scene as PackedScene).instantiate() as Node3D
+	lantern.name = "Lantern"
+	lantern.scale = Vector3.ONE * lantern_scale
+	lantern.position = Vector3(0.0, float(lamp.get("lantern_mount_height_m", 2.0)), width * 0.5)
+	root.add_child(lantern)
+	# The installed lantern's cage centre sits at (0, 0.85, 0.73) in its own units.
+	var cage := lantern.position + Vector3(0.0, 0.85, 0.73) * lantern_scale
+	var flame := StandardMaterial3D.new()
+	flame.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	flame.albedo_color = Color(str(lamp.get("flame_emission", "#ffb347")))
+	flame.emission_enabled = true
+	flame.emission = flame.albedo_color
+	flame.emission_energy_multiplier = float(lamp.get("flame_emission_energy", 4.0))
+	var bulb := MeshInstance3D.new()
+	bulb.name = "AmberFlame"
+	var sphere := SphereMesh.new()
+	sphere.radius = float(lamp.get("flame_radius_m", 0.24))
+	sphere.height = sphere.radius * 2.0
+	bulb.mesh = sphere
+	bulb.material_override = flame
+	bulb.position = cage
+	root.add_child(bulb)
+	var light := OmniLight3D.new()
+	light.name = "WarmLight"
+	light.light_color = Color(str(lamp.get("light_colour", "#ffb15c")))
+	light.light_energy = float(lamp.get("light_energy", 1.6))
+	light.omni_range = float(lamp.get("light_range_m", 12.0))
+	light.shadow_enabled = false
+	light.position = cage
+	root.add_child(light)
 
 
 func _build_site(row: Dictionary, prompt_radius: float) -> void:
