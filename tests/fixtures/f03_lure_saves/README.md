@@ -11,3 +11,5 @@ These are copies of the real ordinary-play saves under `ralph/reports/`, gzipped
 | S08-exit-band4.json.gz | ralph/reports/G3-BAND4-0903/gate-f-s08-run/S08_fixed/saves/S08-exit.json |
 
 **Derived (disclosed):** `S07-exit-band3-plus-1wood-1fiber.json.gz` is S07-exit-band3 with exactly one `wood` and one `fiber` added to the first two empty satchel slots. That is the state of a player who has gathered the materials Doss asks for. It is used only to capture Doss's repair action for F03#1; the original save has neither item, so there Doss repeats his request.
+
+**Derived (disclosed):** `S04-exit-pose-on-road.json.gz` is S04-exit with only `player_pose.position` moved from the porch spot `[18.88, 0.18, 12.61]` to the road beside it, `[13.2, 0.4, 20.0]`. On main 32bd3307 the original pose loads the player entombed inside the home porch geometry, and the player controller then snaps back to it about 30 s into any walk (render.yml 36270090216 and 36271079428, reproduced twice). That is Meadows core's village issue, reported on PR #289. This fixture is used only for Bram's F03#0 lure walk; party, flags, inventory and clock are unchanged.
