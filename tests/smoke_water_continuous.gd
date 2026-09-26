@@ -17,7 +17,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
-const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+const PILOT := preload("res://tests/helpers/water_combat_pilot.gd")
 
 const START_ANCHOR := "tidal_cradle_to_salt_crown_departure"
 const LATE_ROUTES := [

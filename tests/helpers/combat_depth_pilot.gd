@@ -148,27 +148,6 @@ func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
 	return _tally.duplicate(true)
 
 
-## Production-world adapter. The continuous harnesses already own engagement,
-## victory/flag checks, faints and time limits; they call this once per physics
-## frame (then await it) so the same READER policy decides the actual combat
-## input against the live manager and bodies. Only controller-equivalent
-## actions are pressed: movement through the camera the manager reads, and the
-## ordinary attack buttons for exactly one frame.
-func drive(manager: Node, ally: Node3D, enemy: Node3D, policy: String = "READER") -> void:
-	release()
-	_manager = manager
-	_ally = ally
-	_wild = enemy
-	if _manager == null or not is_instance_valid(_ally) or not is_instance_valid(_wild):
-		return
-	_act(policy)
-
-
-func release() -> void:
-	_release_attack()
-	_release_move()
-
-
 func _on_hit(on_enemy: bool, damage: float) -> void:
 	if on_enemy:
 		_tally.hits += 1
@@ -248,12 +227,6 @@ func _act(policy: String) -> void:
 
 
 func _walk(direction: Vector3) -> void:
-	# The manager turns stick input into a world direction through the
-	# exploration camera it was given. The flat fixture passes none (identity).
-	var rig: Node = _manager.get("_camera_rig")
-	if rig != null and is_instance_valid(rig) and rig.has_method("planar_basis"):
-		direction = (rig.call("planar_basis") as Basis).inverse() * direction
-		direction.y = 0.0
 	if direction.x < 0.0: Input.action_press("move_left", -direction.x)
 	if direction.x > 0.0: Input.action_press("move_right", direction.x)
 	if direction.z < 0.0: Input.action_press("move_forward", -direction.z)
@@ -262,10 +235,6 @@ func _walk(direction: Vector3) -> void:
 
 func _retreat(toward: Vector3) -> void:
 	var arena: Node3D = _manager.arena()
-	# A shared world opponent (an Alpha) is not confined to a local arena.
-	if arena == null or not is_instance_valid(arena):
-		_walk(-toward)
-		return
 	var outward := _ally.global_position - arena.global_position
 	outward.y = 0.0
 	# At the boundary, walking straight back is no longer a dodge. Circle

@@ -6,7 +6,7 @@ extends RefCounted
 ## the game, moves an actor directly, grants a creature, repairs HP/stamina, or
 ## writes inventory/progression state.
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
-const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+const PILOT := preload("res://tests/helpers/water_combat_pilot.gd")
 const REPAIR_FLAG := "water_dock_reedhaven_repaired"
 const TOVIN_ID := "water_trainer_tovin"
 const TOVIN_FLAG := "defeated_water_trainer_tovin"

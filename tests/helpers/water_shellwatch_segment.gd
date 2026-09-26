@@ -6,7 +6,7 @@ extends RefCounted
 ## or progression value is written by this helper.
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
-const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+const PILOT := preload("res://tests/helpers/water_combat_pilot.gd")
 const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TOVIN_ID := "water_trainer_tovin"
