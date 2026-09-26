@@ -288,14 +288,21 @@ const PRESS_ATTEMPTS := 3
 
 
 func _press_prompt(prompt: Node3D) -> bool:
-	var expected := prompt.get_instance_id() if is_instance_valid(prompt) else 0
 	for attempt in PRESS_ATTEMPTS:
 		if not await _approach_prompt(prompt):
 			return false
+		var expected := prompt.get_instance_id()
+		var expected_path := str(prompt.get_path())
 		_activated_id = 0
 		_activated_name = ""
 		await _input._tap("interact")
 		if _activated_id == expected:
+			return true
+		if _activated_name == expected_path:
+			# The same prompt at the same place in the tree, as a new instance
+			# (seed 15: Sela's, right after the captain fell).
+			_receipt("press_same_prompt_new_instance", {"path": expected_path,
+				"approached_id": expected, "activated_id": _activated_id})
 			return true
 		for _frame in 30:
 			if _fighting():
