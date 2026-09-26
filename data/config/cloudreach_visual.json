@@ -194,6 +194,8 @@
     "max_steps": 26
   },
   "landmass": {
+    "_shoulder_overpass_clearance_m": "F07#2: a road/deck lying more than this far below a route-shoulder vertex passes UNDER it (an overpass) and does not pin the vertex down to its height; pinning folded the counterweight-pass shoulder into a slab standing on the Windscar chain-bridge deck. Junction drops stay well under it (max shoulder edge drop 22 m).",
+    "shoulder_overpass_clearance_m": 30.0,
     "geology_base_y": -210.0,
     "region_width_factor": 0.30,
     "region_depth_factor": 0.28,
