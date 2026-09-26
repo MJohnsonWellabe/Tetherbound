@@ -610,10 +610,11 @@ func _cold_reconnect(port: int) -> void:
 	_check(not OS.is_process_running(pid), "COLD: the guest's process is gone (pid %d, killed -9)" % pid)
 	# A killed process sends no disconnect: the host learns of it only through
 	# ENet's peer timeout (session.gd peer_timeout_min_ms 135 s .. max 180 s).
-	# Wall time, not frames. ENet's peer timeout maximum is 180 s, but ENet only
-	# tests it when it next retransmits, on a backed-off interval, so the drop
-	# lands between 180 s and one retransmit interval later (measured: 183.4 s,
-	# and one run past 190 s). 240 s bounds that; a longer silence is a real hang.
+	# Wall time, not frames. ENet's peer timeout (session.gd: minimum 135 s,
+	# maximum 180 s) is tested only when a reliable command reaches its
+	# backed-off retransmit timeout, so the drop lands between 135 s and 180 s
+	# plus one capped retransmit interval (measured: 148.9 s, 183.4 s, and one
+	# run past 190 s). 240 s bounds that; a longer silence is a real hang.
 	var alone: Dictionary = await step(0, "expect_peers", {"count": 1, "budget_s": 240.0}, 15000)
 	_check(str(alone.get("verdict", "")) == "PASS", "COLD: the host times the dead guest out (%s)" % str(alone.get("detail", "")))
 	if not await _relaunch_guest():
@@ -651,12 +652,14 @@ func _relaunch_guest() -> bool:
 	var old: Dictionary = _peers[1]
 	var server: TCPServer = controls.servers[0]
 	_control_servers.append(server)
+	# Its own log: the killed process's log is evidence too.
+	var cold_log := str(old.log_path).get_basename() + "-cold.log"
 	var pid := _spawn_peer(1, "client", int(controls.ports[0]), enet_port_for(1), "title",
-		str(old.home), str(old.log_path), [])
+		str(old.home), cold_log, [])
 	print("coordinator: relaunched peer 1 (client) pid=%d at the title" % pid)
 	_peers[1] = {
 		"index": 1, "role": "client", "server": server, "sock": null, "rx_buf": "",
-		"pid": pid, "home": old.home, "log_path": old.log_path, "control_port": int(controls.ports[0]),
+		"pid": pid, "home": old.home, "log_path": cold_log, "control_port": int(controls.ports[0]),
 		"hashes": [], "hello": null, "exited": false, "unexpected_exit": false,
 		"quit_sent": false, "last_heartbeat_t": 0.0, "last_heartbeat": null,
 		"heartbeat_deferred_until_s": 0.0, "last_verdict": null, "last_value": null,

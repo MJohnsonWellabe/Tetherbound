@@ -1477,10 +1477,10 @@ func _join_via(address: String, port: int) -> void:
 	if not _saved_portable_character_ids(game).is_empty():
 		_show_portable_character_select(
 			func(character_id: String) -> void: _join_as_saved_character(address, port, character_id),
-			func() -> void: _join_as_new_character(address, port),
+			func() -> void: _join_as_new_character(address, port, func() -> void: _join_via(address, port)),
 			_show_join)
 		return
-	_join_as_new_character(address, port)
+	_join_as_new_character(address, port, _show_join)
 
 
 ## Direct join as a saved portable character: address the live id at its file,
@@ -1498,7 +1498,8 @@ func _join_as_saved_character(address: String, port: int, character_id: String) 
 	_begin_join(address, port, 0.0)
 
 
-func _join_as_new_character(address: String, port: int) -> void:
+## `on_back` is where Back leads: the saved-character picker when it was shown.
+func _join_as_new_character(address: String, port: int, on_back: Callable) -> void:
 	var game := _game()
 	_show_character_select(func(character_id: String) -> void:
 		_pending_character_option_id = character_id
@@ -1506,7 +1507,7 @@ func _join_as_new_character(address: String, port: int) -> void:
 			_set_fresh_player_identity(game, character_id, chosen_name)
 			_begin_join(address, port, 0.0)
 		)
-	, _show_join)
+	, on_back)
 
 
 ## Game is deliberately the project's only autoload; PlayerState is its

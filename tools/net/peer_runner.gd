@@ -1944,6 +1944,8 @@ func _press_saved_character(title: Node, character_id: String) -> String:
 		if child is Button and child.has_meta("character_id"):
 			offered.append(str(child.get_meta("character_id")))
 			if str(child.get_meta("character_id")) == character_id:
+				if (child as Button).disabled:
+					return "saved-character button for '%s' is disabled" % character_id
 				(child as Button).pressed.emit()
 				return ""
 	return "saved-character picker did not offer '%s' (offered %s)" % [character_id, str(offered)]
