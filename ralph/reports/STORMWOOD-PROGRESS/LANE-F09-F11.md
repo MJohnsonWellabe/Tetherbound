@@ -668,6 +668,35 @@ SNOWBALL F09#3. This is a proof task: build only what the proof run shows is bro
   - Five near-identical gates.
   - #250 is not on main yet. When it lands, the merge and single scatter re-bake follow.
 
+### WO-F09-05 round 5: a light at the fork you can see from the road (`7698e3eb8`)
+
+- **Judge 12 on round 4 (`a47c2a23b`):**
+  - Conductor YES; Verge probably; Hollows, Deepwood and Dynamo ambiguous or weak.
+  - Judge's first note: "from the road you never see the reward".
+  - Defects: the spur crack glowed through under the stones; a detached stone shard (Dynamo); the gem hidden behind the trainer's head (Conductor mouth); a wide bare dirt fan.
+- **Measured first:** from the 25 m approach stands, the rewards sit 78–85° off the road heading (Verge −85°, Hollows +80.5°, Deepwood +81.6°, Dynamo +77.8°; only Conductor, at −15°, is ahead). A column over the reward alone therefore cannot enter any road frame, however tall.
+- **Changes (Stormwood-owned only; one attempt was enough):**
+  1. **Reward beacon** (`stormwood_pickup_runtime.gd`, config `reward_beacon.shaft`): two soft, additive, vertical-billboard light columns in the pocket's tint, with no hard edges and no animation. One stands 34 m over the reward. A 14 m one stands at the pocket's gateway opening at the fork, which is what the road view frames. Both are children of the pickup, so they exist only while it is unclaimed.
+     - Proof: `smoke_stormwood_pickup_runtime` prints `REWARD SHAFTS mounted=5 before=10 after_claim=8 claimed=stormwood_pickup_pocket_008`. No shaft remains for the claimed reward, and the control (an ordinary route cache) has none.
+     - The smoke also caught a round-2 bug: `bool(null)` when a fixture world has no `simulation_only`. It is fixed with a null-safe comparison.
+  2. **Crack beside the stones:** the spur crack runs along one edge (`spur.offset` −0.5) and the stones along the other (`spur_trail.offset_m` 0.95).
+  3. **No shard:** `RockPath_Round_Thin` is dropped from the stone set.
+  4. **Narrower dirt fan:** the spur paint is back to the WO-F09-04 widths (2.0 m, flare 2.4 m over 14 m). The terrain re-bake paints 29,580 texels, and every terrain region again equals main's.
+  5. **Mouth framing:** the mouth frame looks past the trainer's shoulder (yaw +14°, pitch −4° more). This is a capture-tool change only.
+- **Frames:** `visual/f09/pocket_walks/`, full resolution from Actions render run `36252094760` at `7698e3eb8`.
+  - 20 frames, `frames_walks.json` and `before_after_round5.jpg` (round-4 and round-5 road and gate, per pocket). They replace round 4's, which stay in git at `a47c2a23b`.
+  - **What I saw:**
+    - A tinted light column rises at the fork in every road view: amber Verge, green Hollows, cyan Conductor, white Deepwood, gold Dynamo.
+    - At the gates, the reward's column rises over the palisade.
+    - The crack runs beside the stones, not under them.
+    - The gem is clear of the trainer.
+    - Reward counts 0→1, 0→1, 1→2, 0→1, 0→1.
+- **Tests on `7698e3eb8`** (all 0 `SCRIPT ERROR`):
+  - pocket walks: 117 checks, 0 failures, 5/5 walks, 5/5 wall controls, 30/30 LURE;
+  - arches: PASS;
+  - pickup runtime: PASS;
+  - `test_stormwood_road_current`, `pockets`, `scatter_bake`, `scatter_clearances`, `road_surface`, `terrain_bake`, `pickup*`: 47 tests, 0 failed.
+
 ## WO-F10-06 — Surge phases readable without HUD (`ralph/stormwood-f10-surge-readability`)
 
 - **Anchor:** F10 / ACCEPTANCE §6.1 F10: lightning with a 1.2 s / 3 m telegraph, and Calm/Building/Break/Fading readable without HUD text. The restored-sky view has to be distinct. ART_DIRECTION and SYSTEMS define the Stormwood look for each phase.
