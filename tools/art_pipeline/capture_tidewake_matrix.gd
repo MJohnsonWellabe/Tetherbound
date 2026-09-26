@@ -17,6 +17,9 @@ extends SceneTree
 const SCENE := "res://scenes/world/water_archipelago.tscn"
 const READY_TIMEOUT_MS := 600000
 const SETTLE_FRAMES := 90
+## The third-person trainer stands at frame centre; turning the rig this far
+## off the target puts the subject beside the trainer instead of behind them.
+const YAW_OFFSET_DEG := 14.0
 
 ## stand xz, target xyz (y < -999 means ground height at target + 4 m).
 const VIEWS := [
@@ -26,8 +29,8 @@ const VIEWS := [
 		"what": "Reedhaven Woven Hall from the dock arrival point"},
 	{"name": "dock-shellwatch-jetty", "stand": Vector2(250.0, 975.0), "target": Vector3(267.0, -1000.0, 1006.3),
 		"what": "Shellwatch Rescue Jetty (occupied dock) from 35 m"},
-	{"name": "current-first-shore-reedhaven", "stand": Vector2(0.0, 196.0), "target": Vector3(0.0, 2.0, 262.0),
-		"what": "First Shore to Reedhaven current, swimming up it"},
+	{"name": "current-first-shore-reedhaven", "stand": Vector2(0.0, 162.0), "target": Vector3(0.0, 1.0, 262.0),
+		"what": "First Shore to Reedhaven current, from the dock looking along it"},
 	{"name": "current-cradle-salt-crown", "stand": Vector2(560.0, 1728.0), "target": Vector3(299.8, 2.0, 2097.5),
 		"what": "Tidal Cradle to Salt Crown current along its line"},
 	{"name": "current-sluice-veilfall", "stand": Vector2(722.0, 3192.0), "target": Vector3(393.0, 2.0, 3789.6),
@@ -111,7 +114,7 @@ func _capture(view: Dictionary, time_name: String) -> Dictionary:
 	for i in SETTLE_FRAMES:
 		_player.global_position = at
 		_player.velocity = Vector3.ZERO
-		_rig.set("yaw", atan2(-to.x, -to.z))
+		_rig.set("yaw", atan2(-to.x, -to.z) + deg_to_rad(YAW_OFFSET_DEG))
 		# Level-ish, a touch up toward a high target; the rig clamps it.
 		_rig.set("pitch", clampf(rad_to_deg(atan2(to.y, Vector2(to.x, to.z).length())) * 0.5, -10.0, 12.0))
 		await physics_frame
