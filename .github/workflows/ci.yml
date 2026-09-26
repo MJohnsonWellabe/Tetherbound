@@ -2973,12 +2973,38 @@ jobs:
         if: ${{ !cancelled() }}
         run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
 
+  verify-cloudreach-persistence:
+    # F08 (ACCEPTANCE 6.1): restored wind roads, Wings/shrine and the Stormwood
+    # key survive a real solo disk reload, each written once across the split
+    # world/character halves. Negative controls (--f08-unsaved / --f08-double)
+    # are run locally and recorded under ralph/reports/CLOUDREACH-LANE/f08-persistence/.
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Verify Cloudreach persistence tail
+        run: timeout 600s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
+
   ci-gate:
     runs-on: ubuntu-latest
     if: always()
     needs:
       - changes
       - verify-veridian-offer
+      - verify-cloudreach-persistence
       - verify-scatter-bake-freshness
       - verify-terrain-bake-freshness
       - verify-unit-tests
