@@ -1,6 +1,6 @@
 extends SceneTree
 
-## TIDEWAKE F14#0 measurement: do the named Tidewake encounters pass
+## TIDEWAKE F14#0/F14#1 measurement: do the named Tidewake encounters pass
 ## ACCEPTANCE C2 (seeded reader/masher comparison, all three starters) and the
 ## measurable half of C3 (single-hit ceiling, tell floors)?
 ##
@@ -51,7 +51,23 @@ const TRAINER_CASES := {
 	"water_trainer_bex": "named_trainer",
 	"water_trainer_calder": "top_critical",
 	"water_trainer_tess": "top",
+	# F14#1 Veilfall. BOSSES §4.10/§4.11 give Venn ("exterior Veilfall exam",
+	# "Veilfall gate") and Nerissa ("final captain") their own major-fight
+	# entries: COMBAT §7's top-trainer rule. Fennel, Morra and Evi have none:
+	# the normalized reader/masher rule. Nerissa's Channel Cycle / Pressure Rise
+	# / Break Tether staging is BOSSES "target integration", not built, so the
+	# production fight is the plain hosted four-creature roster measured here.
+	"water_trainer_venn": "veilfall_top",
+	"water_trainer_fennel": "veilfall_trainer",
+	"water_trainer_morra": "veilfall_trainer",
+	"water_trainer_evi": "veilfall_trainer",
+	"water_trainer_nerissa": "veilfall_top",
 }
+## The Abyssal Guardian (water_veilfall.json guardian_species_id, L55) has no
+## case: BOSSES §4.12 "This is not a combat boss", water_encounters.json
+## scripted reference role "legendary_ceremony_not_wild_or_named_combat_census",
+## and water_veilfall.gd::_build_guardian builds a captive body with physics
+## off and no collision. There is no production fight to pilot.
 
 
 ## Aquaryn's HP-phase overrides, as water_alpha_body.gd::_tick_combat builds them.
