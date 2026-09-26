@@ -246,7 +246,14 @@ func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 		"death_satchel_create", "death_satchel_transfer":
 			return _death_satchel_intent(intent, peer_id, realm)
 		"water_dock_action":
-			var result: Dictionary = preload("res://scripts/world/water_dock_rules.gd").evaluate(intent, intent.get("_water_actor", {}), world.flags)
+			# The HOST's own world identity, never the request's: an escrowed
+			# dock payment for another world (or a hand-made one) is refused.
+			var dock_actor: Dictionary = (intent.get("_water_actor", {}) as Dictionary).duplicate() \
+				if intent.get("_water_actor", {}) is Dictionary else {}
+			var host_instance: Variant = world.get("reward_delivery_namespace")
+			dock_actor["world_instance_id"] = host_instance as String \
+				if typeof(host_instance) == TYPE_STRING else ""
+			var result: Dictionary = preload("res://scripts/world/water_dock_rules.gd").evaluate(intent, dock_actor, world.flags)
 			if not bool(result.ok):
 				return _refuse(kind, peer_id, str(result.code), str(result.reason))
 			return _commit(result.ops, kind, peer_id, realm)
