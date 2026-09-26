@@ -33,10 +33,12 @@ const SWIMMER := preload("res://tests/helpers/water_earned_swimmer_preparation_s
 const LATE_WATER := preload("res://tests/helpers/water_earned_late_segment.gd")
 const WATER_ENDING := preload("res://tests/helpers/water_earned_ending_segment.gd")
 const COVERAGE := preload("res://tests/helpers/four_biome_road_coverage_observer.gd")
+const ROUTE_LEDGER := preload("res://tests/helpers/meadows_earned_route_ledger_segment.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const LOOK_ALIGNMENT_TOLERANCE_DEG := 0.75
 const LOOK_ALIGNMENT_STRENGTH := 0.65
 var coverage: RefCounted
+var route_ledger: RefCounted
 var failures: Array[String] = []
 var live: Dictionary = {}
 var started_ms := 0
@@ -79,6 +81,15 @@ func _run() -> void:
 		failures.append_array(coverage.failures)
 		_finish(false)
 		return
+	# F02#5/#7: `--route-ledger` measures supplies, beat spacing and A7 on this
+	# same walk. Observer only; without the flag the run is unchanged.
+	if OS.get_cmdline_user_args().has("--route-ledger"):
+		route_ledger = ROUTE_LEDGER.new()
+		if not route_ledger.start(self, func() -> String: return reached,
+				"user://route_ledger_%d_%d.jsonl" % [OS.get_process_id(), started_ms]):
+			failures.append("route ledger could not create its evidence file")
+			_finish(false)
+			return
 	print("FRESH CAMPAIGN scratch=%s slot=%s" % [ProjectSettings.globalize_path(scratch),
 		game.get("save_system").call("slot_path", 0)])
 	var opening := OPENING.new()
@@ -389,6 +400,8 @@ func _finish(prefix_passed: bool) -> void:
 		var coverage_result: Dictionary = coverage.stop()
 		failures.append_array(coverage.failures)
 		print("FRESH COVERAGE OBSERVATIONS %s" % JSON.stringify(coverage_result))
+	if route_ledger != null:
+		print("ROUTE LEDGER SUMMARY %s" % JSON.stringify(route_ledger.stop()))
 	_stop_meadows_road_camera_alignment()
 	print("FRESH CAMPAIGN RESULT %s" % JSON.stringify({
 		"requested_prefix_passed": prefix_passed,

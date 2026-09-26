@@ -1,0 +1,254 @@
+extends RefCounted
+
+## F02 (ACCEPTANCE §6.1): "The solo, two-loss and four-character ledgers are
+## solvent ... Measure WORLD §3.1 route spacing and A7 on that same route."
+##
+## Observer only: reads live state on the continuous earned route and never
+## drives play, writes state or moves anything. The smoke starts it with
+## `--route-ledger`; without that flag nothing here runs.
+##
+## What it records:
+## - A ledger receipt at every stage the smoke reaches (its `reached` label):
+##   game seconds, walked path metres, every inventory stack and the party.
+## - Beats, each once: a fight starting, a wild body first coming within
+##   BEAT_RADIUS_M, a new interaction offer the player could take, a new
+##   progression flag. Scenery that repeats does not reset anything (A7).
+## - A7: the longest run of *active travel* (moving, not fighting) with no beat.
+## - WORLD §3.1: walked-path gaps between consecutive beats; a gap over
+##   WINDOW_M means some 250 m window had no beat within 40 m.
+##
+## Limits, stated rather than hidden: a vista/landmark reveal is not detected,
+## so every gap reported is an upper bound on the real one; the walker is the
+## harness, not a person, so its detours and waits are its own.
+const BEAT_RADIUS_M := 40.0
+const WINDOW_M := 250.0
+const SPACING_MIN_M := 150.0
+const A7_LIMIT_S := 120.0
+const SAMPLE_S := 0.5
+## Metres per sample below which the player counts as standing still.
+const MOVING_M := 0.25
+## A jump this large in one sample is a reload/respawn placement, not walking.
+const DISCONTINUITY_M := 30.0
+
+var _tree: SceneTree
+var _stage_of: Callable
+var _running := false
+var _file: FileAccess
+var _t := 0.0
+var _since_sample := 0.0
+var _path_m := 0.0
+var _last_pos := Vector3.INF
+var _stage := ""
+var _fighting := false
+var _active_gap_s := 0.0
+var _active_gap_start := {}
+var _worst_gap := {"seconds": 0.0}
+var _a7_violations: Array = []
+var _seen_wilds := {}
+var _seen_offers := {}
+var _flags := {}
+var _discontinuities := 0
+var beats: Array = []
+var ledger: Array = []
+
+
+func start(tree: SceneTree, stage_of: Callable, output_path: String) -> bool:
+	if FileAccess.file_exists(output_path):
+		return false
+	_file = FileAccess.open(output_path, FileAccess.WRITE)
+	if _file == null:
+		return false
+	_tree = tree
+	_stage_of = stage_of
+	_running = true
+	_write({"kind": "contract", "beat_radius_m": BEAT_RADIUS_M, "window_m": WINDOW_M,
+		"spacing_min_m": SPACING_MIN_M, "a7_limit_s": A7_LIMIT_S, "sample_s": SAMPLE_S,
+		"beats": ["fight_started", "wild_within_radius (first time per body)",
+			"offer (first time per provider+prompt)", "flag_set"],
+		"not_detected": ["vista/landmark reveal"], "gaps_are_upper_bounds": true})
+	_seed_flags()
+	tree.physics_frame.connect(_observe)
+	return true
+
+
+func stop() -> Dictionary:
+	if _running and _tree != null and _tree.physics_frame.is_connected(_observe):
+		_tree.physics_frame.disconnect(_observe)
+	if _running:
+		_close_gap()
+		_receipt("stop")
+	_running = false
+	var summary := summary()
+	if _file != null:
+		_write(summary)
+		_file.flush()
+		_file = null
+	return summary
+
+
+func summary() -> Dictionary:
+	var gaps := spacing_gaps(beats)
+	var over: Array = []
+	var lengths: Array = []
+	for gap: Dictionary in gaps:
+		lengths.append(float(gap["metres"]))
+		if float(gap["metres"]) > WINDOW_M:
+			over.append(gap)
+	lengths.sort()
+	return {"kind": "summary", "game_seconds": snappedf(_t, 0.1), "path_m": snappedf(_path_m, 0.1),
+		"beats": beats.size(), "discontinuities": _discontinuities,
+		"a7_longest_active_gap": _worst_gap, "a7_violations": _a7_violations,
+		"spacing_median_m": snappedf(float(lengths[lengths.size() / 2]), 0.1) if not lengths.is_empty() else -1.0,
+		"spacing_over_window": over, "stages": ledger.size()}
+
+
+## Walked-path distance between consecutive beats. Pure, so a unit test can
+## hold the arithmetic without a world.
+static func spacing_gaps(beat_list: Array) -> Array:
+	var out: Array = []
+	for i in range(1, beat_list.size()):
+		var a: Dictionary = beat_list[i - 1]
+		var b: Dictionary = beat_list[i]
+		out.append({"metres": snappedf(float(b["path_m"]) - float(a["path_m"]), 0.1),
+			"from": a["kind"], "to": b["kind"], "stage": b["stage"],
+			"from_pos": a["pos"], "to_pos": b["pos"]})
+	return out
+
+
+func _observe() -> void:
+	var dt := 1.0 / float(Engine.physics_ticks_per_second)
+	_t += dt
+	_since_sample += dt
+	if _since_sample < SAMPLE_S:
+		return
+	var step := _since_sample
+	_since_sample = 0.0
+	var stage := str(_stage_of.call()) if _stage_of.is_valid() else ""
+	if stage != _stage:
+		_stage = stage
+		_receipt(stage)
+	var world := _tree.current_scene
+	var game := _tree.root.get_node_or_null(^"Game")
+	if world == null or game == null:
+		return
+	var player := world.get_node_or_null(^"Player") as Node3D
+	if player == null:
+		return
+	var pos := player.global_position
+	var moved := 0.0
+	if _last_pos != Vector3.INF:
+		moved = Vector2(pos.x - _last_pos.x, pos.z - _last_pos.z).length()
+		if moved > DISCONTINUITY_M:
+			_discontinuities += 1
+			moved = 0.0
+	_last_pos = pos
+	_path_m += moved
+
+	var combat := world.get_node_or_null(^"CombatManager")
+	var fighting := combat != null and bool(combat.call("is_fighting"))
+	if fighting and not _fighting:
+		var enemy: Variant = combat.call("enemy_body")
+		_beat("fight_started", str((enemy as Node).name) if enemy is Node else "", pos)
+	_fighting = fighting
+
+	var encounter := world.get_node_or_null(^"EncounterDirector")
+	if encounter != null:
+		var wilds: Variant = encounter.get("_wild_creatures")
+		for wild: Variant in (wilds if wilds is Array else []):
+			if not is_instance_valid(wild) or not (wild as Node3D).visible:
+				continue
+			var body := wild as Node3D
+			if not bool(body.call("is_alive")) or body.global_position.distance_to(pos) > BEAT_RADIUS_M:
+				continue
+			var key := str(body.get_path())
+			if not _seen_wilds.has(key):
+				_seen_wilds[key] = true
+				_beat("wild_within_radius", "%s %s" % [body.name, str(body.get("species_id"))], pos)
+
+	var arbiter := _tree.get_first_node_in_group(&"interaction_arbiter")
+	if arbiter != null and bool(arbiter.call("enabled")):
+		var prompt := str(arbiter.call("prompt")).strip_edges()
+		var provider: Variant = arbiter.call("winning_provider")
+		if not prompt.is_empty() and provider is Node:
+			# Glyph markup varies with the device; the words are the offer.
+			var words := prompt.substr(prompt.rfind("]") + 1).strip_edges()
+			var key := "%s|%s" % [str((provider as Node).get_path()), words]
+			if not _seen_offers.has(key):
+				_seen_offers[key] = true
+				_beat("offer", words, pos)
+
+	var progression: RefCounted = game.get("progression")
+	if progression != null:
+		for flag: Variant in progression.call("all_set"):
+			if not _flags.has(flag):
+				_flags[flag] = true
+				_beat("flag_set", str(flag), pos)
+
+	if not fighting and moved >= MOVING_M:
+		if _active_gap_s == 0.0:
+			_active_gap_start = {"t": snappedf(_t, 0.1), "path_m": snappedf(_path_m, 0.1), "pos": _v(pos), "stage": _stage}
+		_active_gap_s += step
+
+
+func _beat(kind: String, detail: String, pos: Vector3) -> void:
+	_close_gap()
+	beats.append({"kind": kind, "detail": detail, "t": snappedf(_t, 0.1),
+		"path_m": snappedf(_path_m, 0.1), "pos": _v(pos), "stage": _stage})
+	_write({"kind": "beat", "beat": beats.back()})
+
+
+func _close_gap() -> void:
+	if _active_gap_s <= 0.0:
+		return
+	var gap := {"seconds": snappedf(_active_gap_s, 0.1), "start": _active_gap_start,
+		"end_t": snappedf(_t, 0.1), "end_path_m": snappedf(_path_m, 0.1)}
+	if _active_gap_s > float(_worst_gap["seconds"]):
+		_worst_gap = gap
+	if _active_gap_s > A7_LIMIT_S:
+		_a7_violations.append(gap)
+	_active_gap_s = 0.0
+
+
+func _receipt(stage: String) -> void:
+	var game := _tree.root.get_node_or_null(^"Game")
+	var items := {}
+	var party: Array = []
+	if game != null:
+		var inventory: RefCounted = game.get("inventory")
+		if inventory != null:
+			for i in int(inventory.call("slot_count")):
+				var stack: Dictionary = inventory.call("stack_at", i)
+				if stack.is_empty():
+					continue
+				var id := str(stack.get("id", ""))
+				items[id] = int(items.get(id, 0)) + int(stack.get("n", 0))
+		var members: RefCounted = game.get("party")
+		if members != null:
+			for i in int(members.call("size")):
+				var c: Variant = members.call("at", i)
+				if c != null:
+					party.append({"species": str(c.get("species_id")), "level": int(c.get("level")),
+						"xp": int(c.get("xp")), "hp": snappedf(float(c.get("hp")), 0.1)})
+	var row := {"kind": "ledger", "stage": stage, "t": snappedf(_t, 0.1),
+		"path_m": snappedf(_path_m, 0.1), "beats": beats.size(),
+		"a7_longest_so_far_s": _worst_gap["seconds"], "items": items, "party": party}
+	ledger.append(row)
+	_write(row)
+	print("ROUTE LEDGER ", JSON.stringify(row))
+
+
+func _seed_flags() -> void:
+	var game := _tree.root.get_node_or_null(^"Game")
+	var progression: RefCounted = game.get("progression") if game != null else null
+	if progression != null:
+		for flag: Variant in progression.call("all_set"):
+			_flags[flag] = true
+
+
+func _v(p: Vector3) -> Array:
+	return [snappedf(p.x, 0.1), snappedf(p.y, 0.1), snappedf(p.z, 0.1)]
+
+
+func _write(row: Dictionary) -> void:
+	if _file != null:
+		_file.store_line(JSON.stringify(row))
