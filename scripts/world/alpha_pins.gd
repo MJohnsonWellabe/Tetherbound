@@ -135,6 +135,7 @@ func tick() -> void:
 	if map == null:
 		return
 	_prune_cleared()
+	_dress_live_alphas()
 	if _player == null or not is_instance_valid(_player):
 		return
 	var here := Vector2(_player.global_position.x, _player.global_position.z)
@@ -158,6 +159,54 @@ func tick() -> void:
 				Vector3(position.x, 0.0, position.y),
 				_icon):
 			_announce_first_pin()
+
+
+## F03#0 lure (Hall alpha): the judge read the pack leader's plate as a plain
+## "Galecrest Lv19" and could not pick it out of its pack. For a row that
+## authors `alpha.nickname` / `alpha.aura_light`, the live body is dressed the
+## way burrow_warrens.gd dresses its named Elder: the body's `display_name`
+## (engage prompt), the instance's `nickname` (combat plate; the species stays
+## underneath) and a warm OmniLight so it reads as the leader at distance.
+## Idempotent per body (meta), cheap per tick (only rows that ask for it).
+func _dress_live_alphas() -> void:
+	var director := get_parent().get_node_or_null(^"EncounterDirector") if get_parent() != null else null
+	if director == null:
+		return
+	var creatures: Variant = director.get("_wild_creatures")
+	var once_only: Variant = director.get("_once_only")
+	if not creatures is Array or not once_only is Dictionary:
+		return
+	for cluster: Dictionary in _clusters:
+		var nickname := str(cluster.get("nickname", ""))
+		var aura: Dictionary = cluster.get("aura_light", {})
+		if nickname.is_empty() and aura.is_empty():
+			continue
+		var once_id := str(cluster.get("once_id", ""))
+		for raw: Variant in creatures:
+			var body := raw as Node3D
+			if body == null or not is_instance_valid(body) or bool(body.get_meta("alpha_dressed", false)):
+				continue
+			if str((once_only as Dictionary).get(body, "")) != once_id:
+				continue
+			dress_alpha_body(body, nickname, aura)
+
+
+static func dress_alpha_body(body: Node3D, nickname: String, aura: Dictionary) -> void:
+	if not nickname.is_empty():
+		body.set("display_name", nickname)
+		var instance: Object = body.get("instance")
+		if instance != null:
+			instance.set("nickname", nickname)
+	var energy := float(aura.get("energy", 0.0))
+	if energy > 0.0 and body.get_node_or_null(^"AlphaAuraLight") == null:
+		var light := OmniLight3D.new()
+		light.name = "AlphaAuraLight"
+		light.light_energy = energy
+		light.omni_range = float(aura.get("range", 7.0))
+		light.light_color = Color(str(aura.get("colour", "#ffd479")))
+		light.position = Vector3(0.0, float(aura.get("y", 1.6)), 0.0)
+		body.add_child(light)
+	body.set_meta("alpha_dressed", true)
 
 
 ## Removes the pin of every alpha whose once-flag has already fired. Runs on
@@ -212,6 +261,10 @@ static func build_clusters() -> Array[Dictionary]:
 			"display_name": _label_for(species, alpha, elder),
 			"position": Vector2(float(centre[0]), float(centre[2])),
 			"once_id": _once_flag_for(order),
+			# F03#0 (coordinator grant): an alpha whose row authors a
+			# `nickname` / `aura_light` is dressed on its live body below.
+			"nickname": str(alpha.get("nickname", "")),
+			"aura_light": alpha.get("aura_light", {}) if alpha.get("aura_light", {}) is Dictionary else {},
 		})
 	return out
 

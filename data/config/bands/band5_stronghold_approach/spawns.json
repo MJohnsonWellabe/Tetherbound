@@ -33,6 +33,9 @@
       "radius": 18.0,
       "_why": "The approach's hunters hold the west shoulder beside the spine rather than standing on the ordinary camera and walking line. Galecrest is the `aggressor` role and this remains the largest aggressive cluster in the chapter (3, against the usual 2) because this is the last stretch before the Hall and it should not be safer than the river crossing was. The 18m territory leaves a clear gap to the travelled road while keeping the ungated pack immediately reachable from it, per the head file's rule that the aggressor role is always reachable.",
       "alpha": {
+        "nickname": "Alpha Galecrest",
+        "aura_light": {"energy": 1.6, "range": 9.0, "colour": "#ffd479", "y": 2.2},
+        "_why_presentation": "F03#0 lure (coordinator grant, 2026-09-26): the code-blind judge read the leader as a plain \"Galecrest Lv19\" that blended into its pack. alpha_pins.gd dresses the live body: nameplate/plate \"Alpha Galecrest\" (the species stays underneath) and a warm aura light, the Warrens Elder's treatment.",
         "level_bonus": 4,
         "scale": 1.5,
         "completion_reward": {
