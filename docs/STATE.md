@@ -12,6 +12,12 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 ## 0. Resume here (lane wind-down, 2026-09-26)
 
+**Current owner-directed visual goal (Codex):** inspect and improve every visual
+domain against ART_DIRECTION and ACCEPTANCE §4, on isolated branches from current
+main; Claude continues gameplay work and owns PR merges. PR288 is the first bounded
+X04 slice (Tidewake lantern materials); evidence and remaining defects are in
+`ralph/reports/VISUAL/DOCK-MATERIALS.md`. Whole-game Bars A/B remain open.
+
 All nine lane sessions were wound down and archived on owner direction: Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03 and VIS.
 - Every lane posted `## HANDOFF (final)` on its PR. Each showed clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
 - **All lane work is on main** through batches 25 (#283) and 26. Every `ralph/*`, `claude/integration-*` and `fix/*` tip is an ancestor of main, so any branch other than main can be deleted.
