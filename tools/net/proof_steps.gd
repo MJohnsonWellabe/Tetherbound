@@ -19,9 +19,12 @@ extends RefCounted
 ##                                         string is in any
 ##   stormheart_fixture {contributors}    HOST: who fought the Dynamo, then Marrow's
 ##                                         defeat through the ledger (F11 setup only)
-##   stormheart_answer  {answer}          answer THIS peer's Stormheart offer through
+##   stormheart_answer  {answer, drop_at_ack?}  answer THIS peer's Stormheart offer through
 ##                                         the real dialogue: interact = Yes, menu_cancel = No
-##   stormheart_state {}                  this peer's view of the F11 outcome
+##   stormheart_claim_again {}            send the prompt's ending_claim WITHOUT the acceptance
+##                                         hint; the HOST must refuse from its own record
+##   stormheart_state {character?}        this peer's view of the F11 outcome (character:
+##                                         also the world's receipt of that character's answer)
 ##   release_for_catch {release, species, nickname}  SETUP: at a full party, let
 ##                                         one companion go for a new catch, exactly as
 ##                                         the release ceremony does (remove_at, then add)
@@ -72,7 +75,7 @@ const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 
 const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "stormheart_fixture",
-	"stormheart_answer", "stormheart_state", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
+	"stormheart_answer", "stormheart_state", "stormheart_claim_again", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
 	"rider_identity", "rider_self", "guardian_fixture", "veilfall_press", "guardian_answer", "guardian_state", "guardian_offer_again",
 	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state",
 	"water_dock_resend", "water_dock_cut",
@@ -100,7 +103,9 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 		"stormheart_answer":
 			return await _stormheart_answer(tree, args)
 		"stormheart_state":
-			return _stormheart_state(tree)
+			return _stormheart_state(tree, args)
+		"stormheart_claim_again":
+			return await _stormheart_claim_again(tree)
 		"release_for_catch":
 			return _release_for_catch(tree, args)
 		"rename_member":
@@ -482,6 +487,53 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var shot := {}
 	if args.has("screenshot"):
 		shot = await _screenshot(tree, {"name": str(args.screenshot)})
+	var cut_at_ack := false
+	if answer == "accept" and bool(args.get("drop_at_ack", false)):
+		# F11 "disconnect at claim acknowledgement". The panel answers Yes in its
+		# `_physics_process` and emits `completed`. This one-shot handler closes
+		# the transport in that same physics step, before the frame's network
+		# poll: whatever the ending then commits (receipt, character save) is
+		# local, and the `ending_settled` acknowledgement it sends finds no
+		# connected peer. The host-side step that follows proves it never arrived.
+		var claim_uid := str(load(ENDING_PATH).call("claim_id", ending.get("_local_claim")))
+		var cut := {"done": false, "claim_left": true}
+		var on_yes := func(_conversation: String) -> void:
+			if is_instance_valid(ending):
+				cut.claim_left = not (ending.get("_local_claim") as Dictionary).is_empty()
+			(tree.root.multiplayer.multiplayer_peer as MultiplayerPeer).close()
+			cut.done = true
+		panel.connect("completed", on_yes, CONNECT_ONE_SHOT)
+		if not _edge_ok(await tree.call("_press_edge", "interact", true)):
+			return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
+		for f in 240:
+			await tree.physics_frame
+			if bool(cut.done):
+				break
+		if is_instance_valid(panel) and panel.is_connected("completed", on_yes):
+			panel.disconnect("completed", on_yes)
+		await tree.call("_press_edge", "interact", false)
+		for f in 60:
+			await tree.physics_frame
+		# The dropped guest returns to the title; its answer must already be on
+		# its saved character (the receipt the rejoin will present).
+		var game := tree.root.get_node_or_null(^"Game")
+		var character := str((game.get("local") as RefCounted).get("character_id")) if game != null else ""
+		var saved: Dictionary = (game.get("save_system") as Object).get("_characters").call("read", character) \
+			if game != null and not character.is_empty() else {}
+		var saved_flags: Array = ((saved.get("flags", {}) as Dictionary).get("flags", []) as Array) if saved.get("flags") is Dictionary else []
+		var receipt_flag := str(load(ENDING_PATH).call("answer_flag", claim_uid, true))
+		var receipt_on_disk := not claim_uid.is_empty() and saved_flags.has(receipt_flag)
+		cut_at_ack = bool(cut.done) and receipt_on_disk
+		var cut_state := _stormheart_state(tree)
+		(cut_state.data as Dictionary)["cut_at_ack"] = cut_at_ack
+		(cut_state.data as Dictionary)["committed_before_cut"] = not bool(cut.claim_left)
+		(cut_state.data as Dictionary)["receipt_on_disk"] = receipt_on_disk
+		(cut_state.data as Dictionary)["receipt_flag"] = receipt_flag
+		(cut_state.data as Dictionary)["claim_uid"] = claim_uid
+		return {"verdict": "PASS" if cut_at_ack else "FAIL",
+			"detail": "answered Yes to claim %s; link closed in the answer's own physics step=%s (claim already committed then=%s); '%s' is on the saved character=%s; %s"
+				% [claim_uid, str(cut.done), str(not bool(cut.claim_left)), receipt_flag, str(receipt_on_disk), str(cut_state.data)],
+			"data": cut_state.data}
 	if not await _tap(tree, "interact" if answer == "accept" else "menu_cancel"):
 		return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
 	var settle := 0
@@ -527,15 +579,17 @@ static func _edge_ok(result: Variant) -> bool:
 	return not (result is Dictionary) or bool((result as Dictionary).get("ok", true))
 
 
-static func _stormheart_state(tree: SceneTree) -> Dictionary:
+static func _stormheart_state(tree: SceneTree, args: Dictionary = {}) -> Dictionary:
 	var game := tree.root.get_node_or_null(^"Game")
 	if game == null:
 		return {"verdict": "ERROR", "detail": "no /root/Game", "data": {}}
 	var party: RefCounted = game.get("party")
 	var species: Array = []
+	var uids: Array = []
 	if party != null:
 		for member: Variant in (party.call("members") as Array):
 			species.append(str((member as RefCounted).get("species_id")))
+			uids.append(str((member as RefCounted).get("uid")))
 	var local: RefCounted = game.get("local")
 	var character := str(local.get("character_id")) if local != null else ""
 	var ending: Variant = load(ENDING_PATH)
@@ -550,7 +604,22 @@ static func _stormheart_state(tree: SceneTree) -> Dictionary:
 		"world_accepted": has_flag.call(ending.resolution_flag(true, character)),
 		"world_refused": has_flag.call(ending.resolution_flag(false, character)),
 		"accepted_anywhere": ending.accepted_anywhere(game.call("player_flags")),
+		"party_uids": uids,
 	}
+	# The world's receipt of ANOTHER character's answer (the host reading a guest's).
+	var other := str(args.get("character", ""))
+	if not other.is_empty():
+		data["other_accepted"] = has_flag.call(ending.resolution_flag(true, other))
+		data["other_refused"] = has_flag.call(ending.resolution_flag(false, other))
+		# The host's own claim entry for that character: one per character.
+		var node := _ending(tree)
+		if node != null and node.has_method("_saved_state"):
+			var claims: Dictionary = (node.call("_saved_state") as Dictionary).get("claims", {})
+			var entry: Dictionary = claims.get(other, {})
+			data["other_claims"] = claims.keys().filter(func(k: Variant) -> bool: return str(k) == other).size()
+			data["other_claim_settled"] = bool(entry.get("settled", false))
+			data["other_claim_kept"] = bool(entry.get("kept", false))
+			data["other_claim_uid"] = str(ending.claim_id(entry)) if not entry.is_empty() else ""
 	return {"verdict": "PASS", "detail": str(data), "data": data}
 
 
@@ -1988,6 +2057,42 @@ static func _water_dock_cut(tree: SceneTree, args: Dictionary) -> Dictionary:
 	tree.set_meta(&"f15_dock_cut", {"handler": handler, "state": state, "flag": flag})
 	return {"verdict": "PASS", "detail": "armed: the next remote commit of '%s' disconnects its requester before the delta is sent" % flag,
 		"data": {"armed": true}}
+
+
+## Once only, judged by the HOST's own record: stand beside the Stormheart and
+## send the same `ending_claim` intent the offer prompt sends, but WITHOUT this
+## character's portable acceptance hint (`already_accepted: false`), so the
+## host can only refuse from its own claims and resolution flags. It must answer
+## exactly "You have already answered the Stormheart." -- the reason it gives
+## only when it owes this character nothing -- read the moment it arrives
+## (after the frame's network poll, before the HUD takes it), never a stale line.
+static func _stormheart_claim_again(tree: SceneTree) -> Dictionary:
+	var ending := _ending(tree)
+	var game := tree.root.get_node_or_null(^"Game")
+	var session: Node = game.get("session") if game != null else null
+	if ending == null or game == null or session == null:
+		return {"verdict": "ERROR", "detail": "no StormwoodEnding/Game/Session on this peer"}
+	var prompt := ending.get("_offer_prompt") as Node3D
+	if prompt != null:
+		var at := prompt.global_position + Vector3(2, 0.5, 0)
+		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 120})
+	var before := _stormheart_state(tree).data as Dictionary
+	game.set("_pending_world_message", "")
+	session.call("request_stormwood_encounter", {"kind": "ending_claim", "already_accepted": false})
+	var reason := ""
+	for f in 600:
+		await tree.process_frame
+		var waiting := str(game.get("_pending_world_message"))
+		if not waiting.is_empty():
+			reason = waiting
+			break
+	var after := _stormheart_state(tree).data as Dictionary
+	var data := {"refusal": reason, "party_before": before.get("party_uids", []),
+		"party_after": after.get("party_uids", [])}
+	var ok: bool = reason == "You have already answered the Stormheart." and data.party_before == data.party_after
+	return {"verdict": "PASS" if ok else "FAIL",
+		"detail": "sent ending_claim without the acceptance hint: host answered '%s'; party %s -> %s"
+			% [reason, str(data.party_before), str(data.party_after)], "data": data}
 
 
 # --- F12 Tidewake: a swimmer's combat pause, seen from both peers -------------
