@@ -18,6 +18,12 @@ extends "res://tests/test_case.gd"
 ## sends, which makes the throttle's effect deterministic.
 const TRAINER := preload("res://scenes/player/remote_trainer.tscn")
 const STATE := preload("res://scripts/player/swim_state.gd")
+const TRAINER_SCRIPT := preload("res://scripts/net/remote_trainer.gd")
+## data/config/water_swimming.json human.stamina_drain_per_s, over the
+## PlayerVitals capacity of 100.
+const HUMAN_DRAIN_PER_S := 2.8
+const HUMAN_CAPACITY := 100.0
+const TICK_S := 1.0 / 60.0
 const HOST_ID := 1
 const OWNER_ID := 2
 
@@ -136,7 +142,8 @@ func _trainer(parent: Node) -> Node:
 func _publish(riding: bool) -> void:
 	_owner_body.set("net_riding", riding)
 	_owner_body.set("net_carried", riding)
-	_owner_body.set("net_aquatic", _owner_state.snapshot())
+	_owner_body.set("net_aquatic", TRAINER_SCRIPT.outbound_aquatic(
+		_owner_body.get("net_aquatic"), _owner_state.snapshot()))
 
 
 func _pump(rounds: int) -> void:
@@ -202,8 +209,50 @@ func _case_remount_reaches_host_while_unreliable_sync_is_throttled() -> void:
 	_teardown()
 
 
-## Assertions the two cases above make; the child must finish all of them.
-const EXPECTED_ASSERTIONS := 10
+## Reliable on-change must not mean one reliable delta per swimming tick:
+## `advance()` bumps the revision and drains stamina every tick.
+func _case_steady_swim_publishes_per_stamina_quantum_not_per_tick() -> void:
+	_build()
+	_owner_state.enter_water(false, 0.0)
+	_publish(false)
+	_pump(4)
+	var host_sync := _host_body.get_node("Sync") as MultiplayerSynchronizer
+	var received := [0]
+	host_sync.delta_synchronized.connect(func() -> void: received[0] += 1)
+	var published := 0
+	var stamina := HUMAN_CAPACITY * 0.9
+	var start_fraction := stamina / HUMAN_CAPACITY
+	var start_revision: int = _owner_state.revision
+	for tick in 120:
+		if tick == 60:
+			_owner_state.enter_water(true, 0.0)  # remount mid-swim: one mode change
+		var change: Dictionary = _owner_state.advance(OWNER_ID, TICK_S, stamina, HUMAN_CAPACITY, HUMAN_DRAIN_PER_S, 4.0)
+		stamina -= float(change.stamina_spent)
+		var before: Dictionary = _owner_body.get("net_aquatic")
+		_publish(tick >= 60)
+		if not is_same(before, _owner_body.get("net_aquatic")):
+			published += 1
+		_pump(1)
+	_pump(4)
+	var drop_quanta := int(ceil((start_fraction - stamina / HUMAN_CAPACITY) / 0.01))
+	print("WATER_DISMOUNT_PUBLISHES=%d over 120 ticks (revisions %d, stamina drop %d quanta, host deltas %d)" % [
+		published, _owner_state.revision - start_revision, drop_quanta, received[0]])
+	assert_true(_owner_state.revision - start_revision >= 120, "fixture: the owner snapshot changed revision every tick")
+	assert_true(published >= 2, "stamina and mode changes were still published: %d" % published)
+	# +2: the first tick's resync from the fixture's full-stamina packet, and the remount.
+	assert_true(published <= drop_quanta + 2, "publishes stay per stamina quantum plus mode changes: %d for %d quanta" % [published, drop_quanta])
+	assert_true(received[0] <= published + 1, "host received no more deltas than publishes: %d" % received[0])
+	var host_packet: Dictionary = _host_body.get("net_aquatic")
+	assert_eq(int(host_packet.get("mode", -1)), STATE.Mode.MOUNTED, "host ends on the remounted state")
+	assert_almost_eq(float(host_packet.get("stamina_fraction", -1.0)), _owner_state.stamina_fraction, 0.0101, "host stamina within one quantum")
+	var applied := STATE.new()
+	applied.owner_peer_id = OWNER_ID
+	assert_true(applied.apply_remote_snapshot(host_packet, OWNER_ID), "host decoder accepts the quantized packet")
+	_teardown()
+
+
+## Assertions the three cases above make; the child must finish all of them.
+const EXPECTED_ASSERTIONS := 17
 
 
 func test_water_mount_dismount_reaches_host_while_unreliable_sync_is_throttled() -> void:
@@ -215,7 +264,7 @@ func test_water_mount_dismount_reaches_host_while_unreliable_sync_is_throttled()
 	assert_true(runner != null)
 	if runner == null:
 		return
-	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_water_mount_dismount_replication.gd").new()\n\tfor method in ["_case_dismount_reaches_host_while_unreliable_sync_is_throttled", "_case_remount_reaches_host_while_unreliable_sync_is_throttled"]:\n\t\ttest.call(method)\n\tprint("WATER_DISMOUNT_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count == %d else 1)\n' % EXPECTED_ASSERTIONS)
+	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_water_mount_dismount_replication.gd").new()\n\tfor method in ["_case_dismount_reaches_host_while_unreliable_sync_is_throttled", "_case_remount_reaches_host_while_unreliable_sync_is_throttled", "_case_steady_swim_publishes_per_stamina_quantum_not_per_tick"]:\n\t\ttest.call(method)\n\tprint("WATER_DISMOUNT_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count == %d else 1)\n' % EXPECTED_ASSERTIONS)
 	runner.close()
 	var output: Array = []
 	var absolute := ProjectSettings.globalize_path(runner_path)
@@ -223,6 +272,9 @@ func test_water_mount_dismount_reaches_host_while_unreliable_sync_is_throttled()
 	var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", absolute, "--log-file", log_path], output, true)
 	DirAccess.remove_absolute(absolute)
 	var combined := "\n".join(output)
+	for line: String in combined.split("\n"):
+		if line.begins_with("WATER_DISMOUNT_PUBLISHES="):
+			print("          " + line)
 	var result: Dictionary = {}
 	for line: String in combined.split("\n"):
 		if line.begins_with("WATER_DISMOUNT_RESULT="):

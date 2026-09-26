@@ -33,8 +33,10 @@ height = 1.8
 ; which ENet's RTT throttle drops (31 of 32 sends at throttle 0). A slow-frame
 ; window then starved it for hundreds of ticks. The host received the reliable
 ; `net_riding = false` but kept the last MOUNTED packet (F12 host MOUNTED,
-; tests/test_water_mount_dismount_replication.gd). The owner publishes it once
-; per physics tick, so on-change is at most one reliable delta per tick.
+; tests/test_water_mount_dismount_replication.gd). The owner's snapshot bumps
+; its revision every swimming tick, so `remote_trainer.gd::outbound_aquatic()`
+; quantizes stamina to 1% and republishes only on a real change. A steady swim
+; therefore sends one reliable delta per stamina quantum, plus mode changes.
 ;
 ; `spawn = true` on all of them so a peer that joins mid-session sees a trainer
 ; who is already sprinting as sprinting, a trainer already on a mount as
