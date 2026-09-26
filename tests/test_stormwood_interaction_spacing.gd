@@ -22,24 +22,6 @@ const PICKUP_R := 2.4
 const MAX_FLOOR_GAP_M := 10.0
 ## A named wild's engage offer reaches this far (combat.json engage_range).
 const NAMED_R := 6.0
-## Named-wild seats that still share a prompt circle; reported with WO-F11-04,
-## the list can only shrink. crown_guardian was on Archivist Wen and is fixed.
-const KNOWN_NAMED: Array[String] = [
-	"named:capacitor_alpha|pickup:stormwood_pickup_route_11",
-	"named:old_rodfolk_hall_guardian|trainer:circuit_lena_giant",
-	"named:blackwater_elder|npc:ace_trainer_rook",
-	"named:blackwater_elder|trainer:rook_circuit_lantern",
-	"named:blackwater_elder|pickup:stormwood_pickup_route_16",
-]
-
-
-## "a|b" with its halves in a fixed order, so listing does not depend on
-## which provider was read first.
-static func _key(pair: String) -> String:
-	var halves := pair.get_slice(" ", 0).split("|")
-	if halves.size() != 2:
-		return pair
-	return "%s|%s" % [halves[0], halves[1]] if halves[0] < halves[1] else "%s|%s" % [halves[1], halves[0]]
 ## Pickup/NPC pairs `test_stormwood_pickups.gd` already lists as known.
 const KNOWN_PICKUP_NPC: Array[String] = [
 	"stormwood_pickup_route_19|",
@@ -108,10 +90,7 @@ func test_no_two_interaction_circles_overlap() -> void:
 		var known_pickup := false
 		for prefix: String in KNOWN_PICKUP_NPC:
 			known_pickup = known_pickup or (pair.begins_with("npc:") and pair.contains("pickup:" + prefix.trim_suffix("|")))
-		var known_named := false
-		for known: String in KNOWN_NAMED:
-			known_named = known_named or _key(known) == _key(pair)
-		assert_true(SAME_PERSON.has(ids) or known_pickup or known_named, "overlapping interaction circles: " + pair)
+		assert_true(SAME_PERSON.has(ids) or known_pickup, "overlapping interaction circles: " + pair)
 
 
 func test_same_person_pairs_are_still_real() -> void:
