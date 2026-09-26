@@ -70,6 +70,7 @@ func restore_save_data(raw: Dictionary) -> bool:
 		var ground: float = _world.ground_height_at(at.x, at.z)
 		if is_finite(ground) and ground >= float(_config.safe_landing.minimum_height_m):
 			state.reach_land(Vector3(at.x, ground, at.z))
+	_refuse_closed_seal_placement(clean)
 	if _world.water_depth_at(_player.global_position) >= float(_config.human.entry_depth_m):
 		state.enter_water(false, _world.field.water_level())
 		_player.global_position.y = state.surface_y + float(_config.human.surface_body_offset_m)
@@ -82,6 +83,30 @@ func restore_save_data(raw: Dictionary) -> bool:
 	if vitals.is_dead():
 		_player.call_deferred("emit_signal", "died")
 	return true
+
+
+## F12: the saved pose and mount live on the portable character, so a load or
+## join into a world whose dock facts are missing could restore them behind a
+## closed tide race. Such a mount stays in the party unsummoned, and the player
+## goes to this world's recovery point (bed, reachable safe landing, First
+## Shore). The saved safe anchor is left as restored; recovery skips it while
+## its landform is sealed and trusts it again once the dock opens.
+func _refuse_closed_seal_placement(clean: Dictionary) -> void:
+	var recovery := _world.get_node_or_null("PlayerDeath")
+	if recovery == null or not recovery.has_method("closed_seal_at"):
+		return
+	var game := get_node_or_null("/root/Game")
+	if clean.has("mount"):
+		var raw: Array = clean.mount.position
+		if not recovery.closed_seal_at(game, Vector3(float(raw[0]), float(raw[1]), float(raw[2]))).is_empty():
+			clean.erase("mount")
+	if recovery.closed_seal_at(game, _player.global_position).is_empty():
+		return
+	clean.erase("mount")
+	_player.global_position = recovery.recovery_position(game, _player.global_position)
+	_player.velocity = Vector3.ZERO
+	if _camera != null:
+		_camera.global_position = _player.global_position
 
 
 func _restore_mount() -> void:
