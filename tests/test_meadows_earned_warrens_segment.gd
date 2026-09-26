@@ -205,3 +205,17 @@ func test_reachable_source_uses_input_and_observation_without_fixture_callbacks(
 		"no quarry stop is special-cased with a hand-authored detour")
 	assert_true(source.contains("_walk_ground(at, 2.2)"),
 		"the pre-approach yields to the authored node's real 2.4m prompt envelope")
+
+
+func test_segment_chain_compiles_through_the_warden() -> void:
+	# Relay, Hall and Warden extend this segment and override `_walk`; a
+	# signature change here once broke all three at run time only.
+	for name: String in ["warrens", "relay", "hall", "warden"]:
+		var script := ResourceLoader.load("res://tests/helpers/meadows_earned_%s_segment.gd" % name,
+			"", ResourceLoader.CACHE_MODE_IGNORE) as GDScript
+		var methods: Array[String] = []
+		if script != null:
+			for method: Dictionary in script.get_script_method_list():
+				methods.append(str(method.get("name", "")))
+		# A script that fails to parse loads with no compiled methods at all.
+		assert_true(methods.has("_walk") and methods.has("run"), "%s segment compiles" % name)

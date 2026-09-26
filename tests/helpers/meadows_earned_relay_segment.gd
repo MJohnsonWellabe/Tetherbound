@@ -175,9 +175,9 @@ func _travel() -> bool:
 	return true
 
 
-func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
+func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort := false) -> bool:
 	if is_nan(_supported_y):
-		return await super._walk(target, radius, budget)
+		return await super._walk(target, radius, budget, best_effort)
 	# Once on the gantry, a fall followed by recovery is not a supported deck
 	# crossing. Keep the inherited minimum leg budget and watch every frame.
 	if budget < 0:
@@ -196,6 +196,8 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 		_nav.step(target)
 		await _tree.physics_frame
 	_stick(0.0, 0.0)
+	if best_effort:
+		return false
 	return _fail("Ordinary movement did not complete the supported Relay deck leg: player=%s target=%s supported_y=%.2f confined_resets=%d"
 		% [_player.global_position, target, _supported_y, _nav.confined_resets()])
 
