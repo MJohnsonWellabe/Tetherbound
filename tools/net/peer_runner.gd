@@ -2112,14 +2112,23 @@ func _step_expect_peers(args: Dictionary) -> Dictionary:
 	if want < 0:
 		return {"verdict": "ERROR", "detail": "expect_peers needs args.count"}
 	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
+	# `budget_s` > 0 bounds the wait by wall time instead, for a transport
+	# timeout (ENet's is in milliseconds, whatever the frame rate).
+	var budget_s := float(args.get("budget_s", 0.0))
+	var started := Time.get_ticks_msec()
 	var have := -1
-	for i in maxi(1, budget):
+	var i := 0
+	while (budget_s > 0.0 and Time.get_ticks_msec() - started < budget_s * 1000.0) \
+			or (budget_s <= 0.0 and i < maxi(1, budget)):
 		var sess := _session()
 		have = int(sess.call("peer_count")) if sess != null else -1
 		if have == want:
-			return {"verdict": "PASS", "detail": "registry reports %d peer(s) after %d frames" % [have, i]}
+			return {"verdict": "PASS", "detail": "registry reports %d peer(s) after %d frames (%.1f s)"
+				% [have, i, (Time.get_ticks_msec() - started) / 1000.0]}
 		await physics_frame
-	return {"verdict": "FAIL", "detail": "registry reports %d peer(s), wanted %d" % [have, want]}
+		i += 1
+	return {"verdict": "FAIL", "detail": "registry reports %d peer(s), wanted %d, after %d frames (%.1f s)"
+		% [have, want, i, (Time.get_ticks_msec() - started) / 1000.0]}
 
 
 ## Contract §4's `wait_flag`: a world or player flag becomes set within budget.

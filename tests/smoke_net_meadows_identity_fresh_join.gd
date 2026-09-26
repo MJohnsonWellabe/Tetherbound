@@ -610,7 +610,8 @@ func _cold_reconnect(port: int) -> void:
 	_check(not OS.is_process_running(pid), "COLD: the guest's process is gone (pid %d, killed -9)" % pid)
 	# A killed process sends no disconnect: the host learns of it only through
 	# ENet's peer timeout (session.gd peer_timeout_min_ms 135 s .. max 180 s).
-	var alone: Dictionary = await step(0, "expect_peers", {"count": 1, "budget_frames": 13000}, 13000)
+	# 190 s of wall time: ENet's own peer timeout is at most 180 s.
+	var alone: Dictionary = await step(0, "expect_peers", {"count": 1, "budget_s": 190.0}, 13000)
 	_check(str(alone.get("verdict", "")) == "PASS", "COLD: the host times the dead guest out (%s)" % str(alone.get("detail", "")))
 	if not await _relaunch_guest():
 		return
