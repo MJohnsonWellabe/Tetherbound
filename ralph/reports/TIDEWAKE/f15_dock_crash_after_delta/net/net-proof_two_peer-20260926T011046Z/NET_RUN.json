@@ -14,28 +14,28 @@
 	"net_conditions": {},
 	"peers": [
 		{
-			"control_port": 40673,
+			"control_port": 38913,
 			"exited": true,
 			"hashes": [
-				326333517,
-				326333517,
-				326333517
+				3719015398,
+				3719015398,
+				3719015398
 			],
 			"hello": {
-				"enet_port": 34681.0,
+				"enet_port": 27841.0,
 				"godot_version": "4.7-stable (official)",
-				"main_sha": "10b635d38e81",
+				"main_sha": "9d2a2488ae71",
 				"peer": 0.0,
-				"pid": 9195.0,
+				"pid": 5050.0,
 				"role": "host",
 				"type": "hello",
-				"user_data_dir": "/home/user/tetherbound/ralph/reports/TIDEWAKE/f15_dock_crash_after_send/net/net-proof_two_peer-20260925T183514Z/home-0/godot/app_userdata/Tetherbound"
+				"user_data_dir": "/home/user/tb-pockets/ralph/reports/TIDEWAKE/f15_dock_crash_after_delta/net/net-proof_two_peer-20260926T011046Z/home-0/godot/app_userdata/Tetherbound"
 			},
 			"index": 0,
 			"last_heartbeat": {
 				"context": "world",
-				"frame": 7209.0,
-				"physics_frame": 8040.0,
+				"frame": 5189.0,
+				"physics_frame": 10320.0,
 				"pos": [
 					139.505004882812,
 					2.35232520103455,
@@ -43,39 +43,39 @@
 				],
 				"session_peers": [
 					1.0,
-					1532777748.0
+					1907728662.0
 				],
-				"state_hash": 326333517.0,
-				"t": 245.059,
+				"state_hash": 3719015398.0,
+				"t": 354.115,
 				"type": "heartbeat"
 			},
-			"pid": 9195,
+			"pid": 5050,
 			"role": "host",
 			"unexpected_exit": false
 		},
 		{
-			"control_port": 46339,
+			"control_port": 46535,
 			"exited": true,
 			"hashes": [
-				326333517,
-				326333517,
-				326333517
+				3719015398,
+				3719015398,
+				3719015398
 			],
 			"hello": {
-				"enet_port": 34682.0,
+				"enet_port": 27842.0,
 				"godot_version": "4.7-stable (official)",
-				"main_sha": "10b635d38e81",
+				"main_sha": "9d2a2488ae71",
 				"peer": 1.0,
-				"pid": 9196.0,
+				"pid": 5051.0,
 				"role": "client",
 				"type": "hello",
-				"user_data_dir": "/home/user/tetherbound/ralph/reports/TIDEWAKE/f15_dock_crash_after_send/net/net-proof_two_peer-20260925T183514Z/home-1/godot/app_userdata/Tetherbound"
+				"user_data_dir": "/home/user/tb-pockets/ralph/reports/TIDEWAKE/f15_dock_crash_after_delta/net/net-proof_two_peer-20260926T011046Z/home-1/godot/app_userdata/Tetherbound"
 			},
 			"index": 1,
 			"last_heartbeat": {
 				"context": "world",
-				"frame": 15869.0,
-				"physics_frame": 8280.0,
+				"frame": 22715.0,
+				"physics_frame": 12720.0,
 				"pos": [
 					139.505004882812,
 					2.35232520103455,
@@ -83,19 +83,19 @@
 				],
 				"session_peers": [
 					1.0,
-					1532777748.0
+					1907728662.0
 				],
-				"state_hash": 326333517.0,
-				"t": 244.774,
+				"state_hash": 3719015398.0,
+				"t": 354.228,
 				"type": "heartbeat"
 			},
-			"pid": 9196,
+			"pid": 5051,
 			"role": "client",
 			"unexpected_exit": false
 		}
 	],
 	"proxies": [],
-	"run_id": "net-20260925T183514Z-9173",
+	"run_id": "net-20260926T011046Z-5020",
 	"scene": "title",
 	"state_hash_excluded_keys": [
 		"party",
