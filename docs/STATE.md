@@ -28,7 +28,7 @@ All nine lane sessions were wound down and archived on owner direction: Meadows 
 | Cloudreach (#253) | F06 earned-handoff WIP, F07#2 cadence route with XP restored by wild pairs, which was ruling (a) (`test_cloudreach_route_ledger` passes, L33 before Captain Veyra), F06#6 mid-ride CI proof, chain-bridge stall fix | Unrelated to this batch's changes, the game drops wild sites `road_visibility_windscar_floor_loop_05/06` for unsupported placements. F06#0 is stuck at B13, where `_excluded()` in `cloudreach_look.gd:289` scans 554K times (130 s). |
 | Stormwood (#250) | F11#0/#3 earned (seats plus the moved pickup 11, scatter and terrain manifest re-baked), F09#3 pocket lures | F09#3 round 6: add a light shaft over each pocket's reward, then re-judge. |
 | Tidewake (#226) | Brine sampler product fix (`water_world.gd::ground_height_at`), F14/F15 two-peer reruns, title-continue probe, Veilfall r1 verdict | Per the handoff. |
-| Art X04 (#248) | Bramblebun Meshy candidate (raw glb), Tidewake matrix capture | Finish the Bramblebun candidate; its task IDs are in the handoff. |
+| Art X04 (#248) | Bramblebun Meshy candidate (raw glb), Tidewake matrix capture | Bramblebun moves to Codex (owner, 2026-09-26); its task IDs are in the handoff. Next for the Claude X04 lane: Tidewake docks, then the VIS creature findings. |
 | X05 (#282) | F06#5 host-restart evidence, F14 participants proof WIP | F06#5 is blocked by the Cloudreach `_excluded()` slowness above. |
 | X03 (#262) / VIS (#279) | Glyph highlights; shared-look WIP | The ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
 
