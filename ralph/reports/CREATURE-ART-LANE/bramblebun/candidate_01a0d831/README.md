@@ -1,0 +1,3 @@
+# Bramblebun Meshy candidate 01a0d831 (WIP, not for integration)
+
+Raw Meshy multi-image-to-3d output for task `01a0d831-767e-7399-a6c6-26d962dd0954`, preserved so a later session can resume without re-spending credits. Input image, submission record and decisions: ../README.md and ../sheet06_01a0d831_*. `model.glb` is the unrigged candidate; `rig_report.json` and `rig_distance.json` record the two failed rigging attempts (bone-heat failed on the crouched pose; distance weights tear in walk/run/attack). Next step is not rigging this mesh again: resubmit the same approved image asking for a neutral standing pose (owner credit approval pending), then run tools/art_pipeline/blender/rig_quadruped.py.
