@@ -1,5 +1,0 @@
-Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
-
-WATER_C2C3 water_trainer_calder terrapup MASHER runs=24 win=0.00 med_lead=1.000 med_party=1.000 med_s=143.2 max_s=152.9 lead_faint=1.00 wipe=1.00 max_hit=0.282 tell=[0.80,0.80] stalled=0
-WATER_C2C3 water_trainer_calder terrapup READER runs=24 win=1.00 med_lead=0.109 med_party=0.026 med_s=328.8 max_s=340.3 lead_faint=0.00 wipe=0.00 max_hit=0.119 tell=[0.80,0.80] stalled=0
-WATER_C2C3_PAIR water_trainer_calder terrapup reader/masher median lead cost = 0.109 / 1.000 (ratio 0.11)
