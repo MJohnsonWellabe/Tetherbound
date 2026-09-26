@@ -93,6 +93,7 @@ const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 ## and the place it has to arrive at cannot drift apart.
 const BUILD_ROUTE_ENTRY := preload("res://tests/helpers/gate_a_build_segment.gd").BUILD_ROUTE_XZ[0]
 const TAIL := preload("res://tests/helpers/gate_b_tail_segment.gd")
+const VILLAGE_BOUNDARY_PATH := "res://data/config/village_boundary.json"
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
@@ -744,11 +745,41 @@ func _tap(action: StringName) -> void:
 ## once it picks one and an attempt that has boxed itself in will stay boxed in.
 func _walk_back_to_the_square() -> bool:
 	var y := _player.global_position.y
-	var legs: Array = [
+	var legs: Array = []
+	# The live scatter fill can end OUTSIDE the village fence (the boundary is
+	# open once the key has been used). Walking straight for the clearing then
+	# pins the player against the fence -- 3 of 8 full-chain runs stopped ~19 m
+	# short at (29,-59), just north of the outline's (27,-58)->(36,-61) run.
+	# Come back in through the nearest real gate, as a player does.
+	var boundary: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VILLAGE_BOUNDARY_PATH))
+	var outline := PackedVector2Array()
+	for raw: Variant in ((boundary.get("outline", {}) as Dictionary).get("points", []) as Array):
+		outline.append(Vector2(float(raw[0]), float(raw[1])))
+	var here2 := Vector2(_player.global_position.x, _player.global_position.z)
+	if outline.size() >= 3 and not Geometry2D.is_point_in_polygon(here2, outline):
+		var centre := Vector2.ZERO
+		for p: Vector2 in outline:
+			centre += p
+		centre /= float(outline.size())
+		var gate := Vector2.INF
+		for raw: Variant in ((boundary.get("gates", {}) as Dictionary).get("entries", []) as Array):
+			var at_raw: Array = (raw as Dictionary).get("at", [])
+			var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+			if gate == Vector2.INF or here2.distance_to(at) < here2.distance_to(gate):
+				gate = at
+		var inward := (centre - gate).normalized()
+		legs.append([Vector3(gate.x - inward.x * 5.0, y, gate.y - inward.y * 5.0), 2.5, "outside the nearest village gate"])
+		legs.append([Vector3(gate.x + inward.x * 5.0, y, gate.y + inward.y * 5.0), 2.5, "inside the nearest village gate"])
+	# Then the Practice Meadow road's own authored points (terrain_playground
+	# paths.routes "Practice Meadow"): the pre-F01 radial bend (18,-24) is no
+	# longer on any road.
+	legs.append_array([
 		[Vector3(30.0, y, -40.0), 2.5, "the Practice Meadow clearing"],
-		[Vector3(18.0, y, -24.0), 2.0, "the Practice Meadow road bend"],
+		[Vector3(21.0, y, -37.5), 2.0, "the Practice Meadow road past The Stoneyard"],
+		[Vector3(14.6, y, -31.0), 2.0, "The Stoneyard"],
+		[Vector3(13.6, y, -20.0), 2.0, "the foot of Stoneyard Lane"],
 		[Vector3(BUILD_ROUTE_ENTRY.x, y, BUILD_ROUTE_ENTRY.y), 0.5, "the Village Square"],
-	]
+	])
 	var nav = NAVIGATOR.new(self, _player, _rig, _send_stick)
 	for leg: Variant in legs:
 		var target: Vector3 = (leg as Array)[0]
