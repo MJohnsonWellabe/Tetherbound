@@ -1080,7 +1080,20 @@ func _wait_for_world_input() -> bool:
 
 
 func _turn_camera_toward(world_direction: Vector3) -> bool:
+	# Run 21 lost a road fight at the Still Grove road point right before this
+	# turn and the stick never turned the camera. A running fight is fought
+	# first (as the build menu's approach does); an armed Build ghost may own
+	# input here, so only a fight or a pause is waited out.
+	for _frame in 900:
+		if bool(_manager.call("is_fighting")) or bool(_director.call("trainer_battle_active")):
+			if not await _fight_current("Crown build stance"):
+				return false
+			continue
+		if not _tree.paused:
+			break
+		await _tree.physics_frame
 	var wanted := Vector2(world_direction.x, world_direction.z).normalized()
+	var start_forward := -(_camera.call("planar_basis") as Basis).z
 	for _frame in 480:
 		var forward := -(_camera.call("planar_basis") as Basis).z
 		if Vector2(forward.x, forward.z).normalized().dot(wanted) >= 0.995:
@@ -1091,7 +1104,13 @@ func _turn_camera_toward(world_direction: Vector3) -> bool:
 		Input.action_press(&"look_right" if right else &"look_left", 1.0)
 		await _tree.physics_frame
 	_release_look()
-	return _fail("controller right stick could not face the Still Grove footing")
+	var end_forward := -(_camera.call("planar_basis") as Basis).z
+	var owner := INPUT_OWNER.current(_tree)
+	return _fail(("controller right stick could not face the Still Grove footing (forward %s -> %s, wanted %s; "
+		+ "fighting=%s trainer_battle=%s input_owner=%s paused=%s arbiter_enabled=%s time_scale=%.1f camera=%s)") % [
+		str(start_forward), str(end_forward), str(wanted), str(_manager.call("is_fighting")),
+		str(_director.call("trainer_battle_active")), str(owner.get_path()) if owner != null else "<none>",
+		str(_tree.paused), str(_arbiter.call("enabled")), Engine.time_scale, str(_camera.get_script().resource_path) if _camera.get_script() != null else "?"])
 
 
 func _open_build_menu() -> Node:
