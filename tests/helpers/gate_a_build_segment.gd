@@ -41,8 +41,8 @@ const BUILD_PATCH_XZ := Vector2(30.0, -40.0)
 const BUILD_PATCH_APPROACH_EPSILON := 0.55
 ## The reusable paid segment begins only after ordinary exploration has reached
 ## the Village Square. From there it follows the documented walk toward the
-## Practice Meadow (the pre-F01 road's line, now open ground -- see above),
-## never a fixture-only diagonal across settlement collision.
+## Practice Meadow along that road's own authored points (see below), never a
+## fixture-only diagonal across settlement collision.
 const BUILD_ROUTE_XZ: Array[Vector2] = [
 	# BESIDE the well, not on top of it.
 	#
@@ -58,10 +58,14 @@ const BUILD_ROUTE_XZ: Array[Vector2] = [
 	# head. Three metres south of it is on that apron, clear of every
 	# structure, and on the way to the Practice Meadow road bend.
 	Vector2(10.0, -13.0), # Village Square, on the apron south of the well
-	# F01-a: (18,-24) was the old Practice Meadow road's bend. That road now
-	# goes via Stoneyard Lane; this waypoint is kept as an open-ground walk
-	# point (unchanged behaviour), not a point on the authored road.
-	Vector2(18.0, -24.0), # Practice Meadow road bend
+	# F01: the Practice Meadow road no longer radiates from the square through
+	# (18,-24); it runs up Stoneyard Lane. These are that road's own authored
+	# points (terrain_playground.json paths.routes "Practice Meadow"), from
+	# where it leaves the west street to where it opens onto the clearing.
+	Vector2(13.6, -20.0), # Practice Meadow road: foot of Stoneyard Lane
+	Vector2(14.2, -26.0), # Practice Meadow road: Stoneyard Lane
+	Vector2(14.6, -31.0), # Practice Meadow road: through The Stoneyard
+	Vector2(21.0, -37.5), # Practice Meadow road: past the Stoneyard's far edge
 	BUILD_PATCH_XZ, # Practice Meadow clearing
 ]
 const BUILD_ROUTE_ENTRY_EPSILON := 0.75
