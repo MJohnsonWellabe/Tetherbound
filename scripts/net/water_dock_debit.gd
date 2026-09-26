@@ -1,8 +1,8 @@
 extends RefCounted
 ## Portable, client-reserve-first debit for paid Water dock actions (F15).
 ##
-## Problem this addresses (only once the wiring below lands; this module is
-## deliberately UNWIRED, so the F15 paid-debit gap is still open in the game):
+## Problem this addresses (wired through water_dock_actions.gd and
+## water_dock_rules.gd; the host checks the txn against its own world instance):
 ## a paid dock action (reedhaven_repair) saves the WORLD first and only then
 ## takes items from the in-memory inventory. A crash or disconnect before the
 ## next character save yields a free repair, a guest whose delta is lost is

@@ -55,9 +55,12 @@ static func evaluate(intent: Dictionary, context: Dictionary, flags: RefCounted)
 				or typeof(instance) != TYPE_STRING or payer.is_empty() \
 				or str(intent.get("txn_id", "")) != DEBIT.txn_id(str(instance), str(action.id), payer, int(attempt)):
 			return _refuse("malformed", "That dock payment could not be checked.")
-		# The host world instance is supplied by the host's actor context when
-		# available; a stale intent for another world is never committed here.
-		if context.has("world_instance_id") and str(context.world_instance_id) != str(instance):
+		# The host's own world instance (world_ledger supplies it; never the
+		# request): an intent for another world, or with no host instance to
+		# check against, is never committed, so a hand-made self-consistent
+		# txn cannot skip the item_take below.
+		var host_instance := str(context.get("world_instance_id", ""))
+		if host_instance.is_empty() or host_instance != str(instance):
 			return _refuse("wrong_world", "That dock payment belongs to a different world.")
 	if str(context.get("realm", "")) != "water" or str(intent.get("realm", "")) != "water":
 		return _refuse("wrong_realm", "Reach this Water dock first.")

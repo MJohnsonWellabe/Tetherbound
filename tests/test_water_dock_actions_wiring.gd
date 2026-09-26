@@ -71,6 +71,7 @@ var position: Vector3
 func before_each() -> void:
 	var world: RefCounted = WORLD_STATE.new()
 	world.flags.set_flag("water_swim_lesson_complete")
+	world.reward_delivery_namespace = INSTANCE
 	host = WORLD_LEDGER.new(world)
 	var action: Dictionary = {}
 	for row: Dictionary in RULES.load_data().actions:

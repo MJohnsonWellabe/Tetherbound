@@ -45,6 +45,7 @@ var position: Vector3
 func before_each() -> void:
 	var world: RefCounted = WORLD_STATE.new()
 	world.flags.set_flag("water_swim_lesson_complete")
+	world.reward_delivery_namespace = INSTANCE
 	host = WORLD_LEDGER.new(world)
 	var action := _action()
 	cost = action.cost
@@ -165,9 +166,15 @@ func test_host_world_instance_in_context_refuses_a_stale_world() -> void:
 	var guest := _character(GUEST)
 	var txn := _begin(guest)
 	var intent := _intent(guest, txn, GUEST_PEER, GUEST)
+	# The request cannot vouch for its own world: the host's instance decides.
 	intent._water_actor["world_instance_id"] = "some-other-world"
+	host.world.reward_delivery_namespace = "some-other-world"
 	assert_eq(str(host.commit(intent, GUEST_PEER).code), "wrong_world")
-	intent._water_actor["world_instance_id"] = INSTANCE
+	host.world.reward_delivery_namespace = ""
+	assert_eq(str(host.commit(intent, GUEST_PEER).code), "wrong_world",
+		"no host instance to check against is refused, not waved through")
+	assert_false(host.world.flags.has(FLAG))
+	host.world.reward_delivery_namespace = INSTANCE
 	assert_true(bool(host.commit(intent, GUEST_PEER).ok))
 
 
