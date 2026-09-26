@@ -3047,11 +3047,13 @@ jobs:
     # guest drops its link while riding (including a ride into the host's
     # closed counterweight gate) and rejoins -- rider dismounted on a floor,
     # the same five creature UIDs, the gate still shut, plus an open-gate
-    # control. Measured on the 4-core evidence container: <= 31 min
+    # control. Measured: <= 31 min on the 4-core evidence container, 18.3 min
+    # for the whole job on a GitHub runner (PR #281 run, 2026-09-26);
+    # container run
     # (run net-f06mr-20260926T121945Z, each realm crossing ~306 s). The lane
     # runner raises only the heartbeat-silence tolerance for the crossing.
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 45
     needs: changes
     if: needs.changes.outputs.full == 'true'
     steps:
@@ -3068,7 +3070,7 @@ jobs:
             !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify F06 mid-ride two-peer rejoin proof
-        timeout-minutes: 60
+        timeout-minutes: 35
         run: |
           set -uo pipefail
           out="${RUNNER_TEMP}/f06-midride"
