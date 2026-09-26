@@ -5,6 +5,25 @@
   "site_radius_m": 4.8,
   "site_prompt_radius_m": 3.6,
   "_comment_site_radius": "Site prompts open within 3.6 m of their prop; the host allows 4.8 m horizontally for proxy slack.",
+  "landmark_lamps": [
+    {
+      "landmark_id": "lastlight",
+      "_comment": "Lastlight, Halen's old lamp post (water_halen_shelter_lead): the landmark row in water_world.json fixes where it stands; this is its visible prop, built by WaterLocalChains on every peer from the first frame, whatever the chain state, because the lamp is the lure. Same vocabulary as the Stormwood wayfinding lamps (stormwood_pockets.json mouth_lure/spur_marker): a bark-finished wooden post with its own static collider, the installed Quaternius wall lantern on its bracket, an unshaded amber flame and a short warm light. Its lantern faces the arrival landing (yaw toward -Z).",
+      "post_height_m": 4.4,
+      "post_width_m": 0.36,
+      "post_colour": "#927448",
+      "lantern_model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+      "lantern_scale": 1.7,
+      "lantern_mount_height_m": 2.5,
+      "flame_radius_m": 0.28,
+      "flame_emission": "#ffb347",
+      "flame_emission_energy": 6.0,
+      "light_colour": "#ffb15c",
+      "light_energy": 1.8,
+      "light_range_m": 12.0,
+      "facing_xz": [0.0, -1.0]
+    }
+  ],
   "steps": [
     {
       "id": "lantern_return_lead",

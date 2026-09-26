@@ -1,0 +1,40 @@
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 84/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 0/363 fainted, bramblebun 340/340, terrapup 85/436, brooktail 329/329 (active bramblebun)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+STORMWOOD CONTINUOUS — PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 84/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 0/363 fainted, bramblebun 340/340, terrapup 85/436, brooktail 329/329 (active bramblebun)
+STORMWOOD CONTINUOUS — LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+F11 WITNESS STEP PASS prefix: arrival through Ondra's arch recipe wall=1194.6s
+F11 WITNESS STRIKES prefix {"damage":0.0,"deaths":0,"dodge_frames":220,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":5}
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 436/436, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 31 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 32 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 31 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 38 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 68 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 9 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 48/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active terrapup -> brooktail
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 74 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 45 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 155/363, bramblebun 351/351, terrapup 48/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — CAMERA TURN: wild Wild_sparkit_881250856_2 7.3 m away after the road fight (rig tracking=<none> (orbit target /root/Stormwood/Player)); walking out of engage range
+STORMWOOD CONTINUOUS — CAMERA TURN: walked out of engage range (wild now 29.1 m away)
+STORMWOOD CONTINUOUS — CAMERA TURN: no wild within 20 m; rig tracking=<none> (orbit target /root/Stormwood/Player)
+F11 WITNESS STEP PASS Capacitor Alpha, Crown gathering, two frames, paid Crown arch wall=2074.3s
+F11 WITNESS STRIKES crown {"damage":54.0,"deaths":0,"dodge_frames":1283,"hits":3,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":32}
+F11 WITNESS STRIKES Crown arrival, guardian, Wen, Rootgate {"damage":0.0,"deaths":0,"dodge_frames":0,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":0}
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 325/325, mudsnout 158/370, bramblebun 0/351 fainted, terrapup 48/443, brooktail 340/340
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 45 physics frames): active terrapup -> brooktail
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 325/325, mudsnout 158/370, bramblebun 0/351 fainted, terrapup 48/443, brooktail 340/340
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 325/325, mudsnout 158/370, bramblebun 0/351 fainted, terrapup 48/443, brooktail 340/340
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 325/325, mudsnout 158/370, bramblebun 0/351 fainted, terrapup 48/443, brooktail 340/340
+F11 WITNESS STEP FAIL Crown arrival, guardian, Wen, Rootgate wall=50.9s
+F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 satchel_stacks=0 strike_hits=3 warnings=37 damage=54.0
+stormwood continuous FAIL: ordinary Crown guardian approaches did not earn its clear receipt

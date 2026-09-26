@@ -238,8 +238,8 @@ func _an_aggressive_creature_starts_the_fight_itself() -> void:
 
 	# Preserve the existing assertion that this is a complete, escapable fight,
 	# and leave the terminal scene in exploration. The wait is flow's input_guard:
-	# a fight ignores input for a moment after it opens, so a player mashing B the
-	# instant they are ambushed has the first press eaten.
+	# a fight reads no input for a moment after it opens (a Run pressed then is
+	# buffered for flow.flee_buffer and honoured when the guard drops).
 	for i in 30:
 		await physics_frame
 	await _press("combat_run")

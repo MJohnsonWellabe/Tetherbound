@@ -1,0 +1,174 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:59)
+         [1] _run (res://tests/smoke_water_loops_shortcuts.gd:114)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+PASS: Production Tidewake world finishes building
+PASS: water_world.json authors four land loops
+PASS: water_world.json authors three return shortcuts
+PASS: reed_root_circuit is authored as a closed polyline
+FIXTURE placement: F1 reed_root_circuit start at (108.2, 17.2, 469.2) (health/stamina refilled)
+PASS: F1 reed_root_circuit start placement holds (no pending recovery moved the player)
+PASS: reed_root_circuit start placement settles on floor
+PASS: reed_root_circuit waypoint 1 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 2 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 3 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 4 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 5 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 6 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 7 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 8 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 9 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 10 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 11 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 12 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 13 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 14 reached on foot, on floor, not swimming
+PASS: reed_root_circuit waypoint 15 reached on foot, on floor, not swimming
+PASS: reed_root_circuit closes back at its start
+PASS: reed_root_circuit walk had no drop/teleport/health loss
+LOOPS/SHORTCUTS +186.1s | loop reed_root_circuit | walked YES | 687.9 m | 138.8 s | authored 698.2 m | max drop 0.00 m
+PASS: brine_terrace_circuit is authored as a closed polyline
+FIXTURE placement: F1 brine_terrace_circuit start at (513.2, 38.4, 738.2) (health/stamina refilled)
+PASS: F1 brine_terrace_circuit start placement holds (no pending recovery moved the player)
+PASS: brine_terrace_circuit start placement settles on floor
+PASS: brine_terrace_circuit waypoint 1 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 2 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 3 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 4 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 5 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 6 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 7 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 8 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 9 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 10 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 11 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 12 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit waypoint 13 reached on foot, on floor, not swimming
+PASS: brine_terrace_circuit closes back at its start
+PASS: brine_terrace_circuit walk had no drop/teleport/health loss
+LOOPS/SHORTCUTS +324.7s | loop brine_terrace_circuit | walked YES | 666.7 m | 137.1 s | authored 688.5 m | max drop 0.00 m
+PASS: salt_shrine_circuit is authored as a closed polyline
+FIXTURE placement: F1 salt_shrine_circuit start at (-3.8, 51.2, 2283.2) (health/stamina refilled)
+PASS: F1 salt_shrine_circuit start placement holds (no pending recovery moved the player)
+PASS: salt_shrine_circuit start placement settles on floor
+PASS: salt_shrine_circuit waypoint 1 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 2 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 3 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 4 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 5 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 6 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 7 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 8 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 9 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 10 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 11 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 12 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 13 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 14 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 15 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 16 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 17 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit waypoint 18 reached on foot, on floor, not swimming
+PASS: salt_shrine_circuit closes back at its start
+PASS: salt_shrine_circuit walk had no drop/teleport/health loss
+LOOPS/SHORTCUTS +482.4s | loop salt_shrine_circuit | walked YES | 720.0 m | 149.6 s | authored 750.5 m | max drop 0.00 m
+PASS: sluice_patrol_circuit is authored as a closed polyline
+FIXTURE placement: F1 sluice_patrol_circuit start at (1019.2, 58.2, 2898.2) (health/stamina refilled)
+PASS: F1 sluice_patrol_circuit start placement holds (no pending recovery moved the player)
+PASS: sluice_patrol_circuit start placement settles on floor
+PASS: sluice_patrol_circuit waypoint 1 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 2 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 3 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 4 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 5 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 6 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 7 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 8 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 9 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 10 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 11 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 12 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 13 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 14 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 15 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 16 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 17 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 18 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit waypoint 19 reached on foot, on floor, not swimming
+PASS: sluice_patrol_circuit closes back at its start
+PASS: sluice_patrol_circuit walk had no drop/teleport/health loss
+LOOPS/SHORTCUTS +661.6s | loop sluice_patrol_circuit | walked YES | 850.6 m | 176.2 s | authored 883.3 m | max drop 0.00 m
+FAIL: reedhaven_maintenance_ramp has a runtime node in the production scene (found [])
+DEFECT: reedhaven_maintenance_ramp: kind physical_ramp has no runtime geometry, gate or seal in the scene; no script under scripts/ reads return_shortcuts rows of kind physical_ramp
+PASS: Reedhaven ramp starts with water_dock_reedhaven_repaired unset
+FIXTURE placement: F2 Woven Hall (closed attempt) at (-54.0, 22.3, 440.0) (health/stamina refilled)
+PASS: F2 Woven Hall (closed attempt) placement holds (no pending recovery moved the player)
+PASS: Reedhaven ramp line is not walkable before water_dock_reedhaven_repaired (blocked: health lost 4.4 at (57.7, 17.4, 481.1) (swimming=false, on_floor=true, airborne drop so far 3.03 m, last landing drop 0.00 m, fight=false, locomotion=true))
+PASS: Production Reedhaven repair equipment exists
+FIXTURE placement: F2 beside Reedhaven repair prompt at (141.5, 2.4, 512.2) (health/stamina refilled)
+PASS: F2 beside Reedhaven repair prompt placement holds (no pending recovery moved the player)
+PASS: Production Reedhaven repair publishes water_dock_reedhaven_repaired
+FIXTURE placement: F2 Woven Hall (open walk) at (-54.0, 22.3, 440.0) (health/stamina refilled)
+PASS: F2 Woven Hall (open walk) placement holds (no pending recovery moved the player)
+FAIL: Reedhaven ramp walked end to end after water_dock_reedhaven_repaired (health lost 4.4 at (57.8, 17.4, 481.2) (swimming=false, on_floor=true, airborne drop so far 3.03 m, last landing drop 0.00 m, fight=false, locomotion=true))
+DEFECT: reedhaven_maintenance_ramp: after unlock the hall -> departure line is still blocked -- health lost 4.4 at (57.8, 17.4, 481.2) (swimming=false, on_floor=true, airborne drop so far 3.03 m, last landing drop 0.00 m, fight=false, locomotion=true)
+FAIL: Reedhaven ramp walk (119.5 m) is shorter than the marsh-loop return (394.1 m authored)
+LOOPS/SHORTCUTS +712.3s | shortcut reedhaven_maintenance_ramp | closed YES | open/walked NO | 119.5 m | 23.9 s | shorter NO (normal 394.1 m authored loop return)
+PASS: Shellwatch channel starts with water_dock_shellwatch_residents_freed_and_pump_disabled unset
+PASS: Before water_dock_shellwatch_residents_freed_and_pump_disabled the direct channel flows at its exposed 0.35 m/s (live 0.350)
+FIXTURE placement: F3 Brine Steps departure at (383.5, 2.1, 828.1) (health/stamina refilled)
+PASS: F3 Brine Steps departure placement holds (no pending recovery moved the player)
+Shellwatch sheltered crossing: uncounted approach to shore vertex 16.8 m
+PASS: Shellwatch sheltered crossing actually crossed water
+PASS: Sheltered Brine -> Shellwatch crossing swum end to end (111.2 m, 25.2 s)
+FIXTURE placement: F3 beside Shellwatch pump prompt at (431.9, 2.8, 1242.2) (health/stamina refilled)
+PASS: F3 beside Shellwatch pump prompt placement holds (no pending recovery moved the player)
+PASS: Production Shellwatch release + pump prompts publish water_dock_shellwatch_residents_freed_and_pump_disabled
+PASS: After water_dock_shellwatch_residents_freed_and_pump_disabled the direct channel flows at 0.08 m/s (live 0.080)
+FIXTURE placement: F3 Shellwatch arrival (open return) at (356.5, 2.1, 951.9) (health/stamina refilled)
+PASS: F3 Shellwatch arrival (open return) placement holds (no pending recovery moved the player)
+Shellwatch direct return: uncounted approach to shore vertex 16.8 m
+PASS: Shellwatch direct return actually crossed water
+PASS: Direct Shellwatch -> Brine return swum end to end (108.8 m, 24.4 s)
+PASS: Direct return (108.8 m) is shorter than the sheltered crossing (111.2 m walked)
+LOOPS/SHORTCUTS +773.3s | shortcut shellwatch_pump_return_channel | closed YES (0.35 m/s exposed) | open/swum YES (0.08 m/s) | 108.8 m | 24.4 s | shorter YES (normal sheltered 111.2 m / 25.2 s)
+PASS: Water species catalogue accepts the Aquaryn fixture
+PASS: F4 level-60 Aquaryn fixture joins the party
+PASS: Deep Watch cut starts with water_dock_deep_watch_current_charted unset
+PASS: Before water_dock_deep_watch_current_charted the direct channel flows at its exposed 2.20 m/s (live 2.200)
+FIXTURE placement: F4 Sluice Isle departure at (1034.8, 2.1, 3159.6) (health/stamina refilled)
+PASS: F4 Sluice Isle departure placement holds (no pending recovery moved the player)
+PASS: F4 production summon + mount of the Aquaryn at Sluice Isle
+Deep Watch sheltered crossing: uncounted approach to shore vertex 16.5 m
+PASS: Deep Watch sheltered crossing actually crossed water
+PASS: Sheltered Sluice -> Deep Watch crossing swum mounted end to end (332.4 m, 35.3 s)
+PASS: Production Deep Watch chart prompt publishes water_dock_deep_watch_current_charted
+PASS: After water_dock_deep_watch_current_charted the direct channel flows at 0.10 m/s (live 0.100)
+PASS: Deep Watch: production Ride offer remounts the Aquaryn
+Deep Watch direct return: uncounted approach to shore vertex 45.0 m
+PASS: Deep Watch direct return actually crossed water
+PASS: Direct Deep Watch -> Sluice return swum mounted end to end (313.9 m, 32.4 s)
+PASS: Direct return (313.9 m) is shorter than the sheltered crossing (332.4 m walked)
+LOOPS/SHORTCUTS +858.2s | shortcut deep_watch_current_cut | closed YES (2.20 m/s exposed) | open/swum YES (0.10 m/s) | 313.9 m | 32.4 s | shorter YES (normal sheltered 332.4 m / 35.3 s)
+---- WATER LOOPS/SHORTCUTS SUMMARY (858.2 s wall) ----
+  loop reed_root_circuit | walked YES | 687.9 m | 138.8 s | authored 698.2 m | max drop 0.00 m
+  loop brine_terrace_circuit | walked YES | 666.7 m | 137.1 s | authored 688.5 m | max drop 0.00 m
+  loop salt_shrine_circuit | walked YES | 720.0 m | 149.6 s | authored 750.5 m | max drop 0.00 m
+  loop sluice_patrol_circuit | walked YES | 850.6 m | 176.2 s | authored 883.3 m | max drop 0.00 m
+  shortcut reedhaven_maintenance_ramp | closed YES | open/walked NO | 119.5 m | 23.9 s | shorter NO (normal 394.1 m authored loop return)
+  shortcut shellwatch_pump_return_channel | closed YES (0.35 m/s exposed) | open/swum YES (0.08 m/s) | 108.8 m | 24.4 s | shorter YES (normal sheltered 111.2 m / 25.2 s)
+  shortcut deep_watch_current_cut | closed YES (2.20 m/s exposed) | open/swum YES (0.10 m/s) | 313.9 m | 32.4 s | shorter YES (normal sheltered 332.4 m / 35.3 s)
+  DEFECT reedhaven_maintenance_ramp: kind physical_ramp has no runtime geometry, gate or seal in the scene; no script under scripts/ reads return_shortcuts rows of kind physical_ramp
+  DEFECT reedhaven_maintenance_ramp: after unlock the hall -> departure line is still blocked -- health lost 4.4 at (57.8, 17.4, 481.2) (swimming=false, on_floor=true, airborne drop so far 3.03 m, last landing drop 0.00 m, fight=false, locomotion=true)
+WATER LOOPS/SHORTCUTS: 124 checks, 3 failures, 2 defects
+WATER LOOPS/SHORTCUTS FAILURES: ["reedhaven_maintenance_ramp has a runtime node in the production scene (found [])", "Reedhaven ramp walked end to end after water_dock_reedhaven_repaired (health lost 4.4 at (57.8, 17.4, 481.2) (swimming=false, on_floor=true, airborne drop so far 3.03 m, last landing drop 0.00 m, fight=false, locomotion=true))", "Reedhaven ramp walk (119.5 m) is shorter than the marsh-loop return (394.1 m authored)"]
+EXIT 1

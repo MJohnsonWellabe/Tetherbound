@@ -1,0 +1,8 @@
+[cue-view] doss d=222m at=(102.2,3993.9) cue_off_road_heading=-33deg /tmp/claude-0/cue_views3/doss_220m_road.png
+[cue-view] doss d=222m at=(102.2,3993.9) cue_off_road_heading=-33deg /tmp/claude-0/cue_views3/doss_220m_glance.png
+[cue-view] doss d=160m at=(-100.0,4318.0) cue_off_road_heading=34deg /tmp/claude-0/cue_views3/doss_160m_road.png
+[cue-view] doss d=160m at=(-100.0,4318.0) cue_off_road_heading=34deg /tmp/claude-0/cue_views3/doss_160m_glance.png
+[cue-view] doss d=110m at=(-105.5,4128.1) cue_off_road_heading=73deg /tmp/claude-0/cue_views3/doss_110m_road.png
+[cue-view] doss d=110m at=(-105.5,4128.1) cue_off_road_heading=73deg /tmp/claude-0/cue_views3/doss_110m_glance.png
+[cue-view] doss d=72m at=(-80.0,4165.0) cue_off_road_heading=90deg /tmp/claude-0/cue_views3/doss_070m_road.png
+[cue-view] doss d=72m at=(-80.0,4165.0) cue_off_road_heading=90deg /tmp/claude-0/cue_views3/doss_070m_glance.png

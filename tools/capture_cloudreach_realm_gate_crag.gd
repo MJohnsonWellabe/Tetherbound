@@ -14,6 +14,8 @@ const STANDS := [
 ]
 
 var _output := DEFAULT_OUTPUT
+## Optional `--stands=arrival,approach` subset (render-only-what-changed).
+var _stand_filter: Array = []
 var _world: Node3D
 var _player: CharacterBody3D
 var _rig: SpringArm3D
@@ -30,6 +32,8 @@ func _init() -> void:
 
 func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--stands="):
+			_stand_filter = Array(argument.trim_prefix("--stands=").split(",", false))
 		if argument.begins_with("--output="):
 			var requested := argument.trim_prefix("--output=").strip_edges()
 			if not requested.is_empty():
@@ -78,6 +82,8 @@ func _run() -> void:
 	_rig.set_physics_process(false)
 	root.size = Vector2i(1280, 800)
 	for stand: Dictionary in STANDS:
+		if not _stand_filter.is_empty() and not _stand_filter.has(str(stand.id)):
+			continue
 		if not await _pose(stand.position as Vector2, stand.target as Vector3):
 			continue
 		for time_name: String in ["day", "night"]:
@@ -222,7 +228,7 @@ func _fail(message: String) -> void:
 func _finish() -> void:
 	var absolute := ProjectSettings.globalize_path(_output)
 	DirAccess.make_dir_recursive_absolute(absolute)
-	var complete := _failures.is_empty() and _records.size() == STANDS.size() * 2
+	var complete := _failures.is_empty() and _records.size() == (STANDS.size() if _stand_filter.is_empty() else _stand_filter.size()) * 2
 	var manifest := {
 		"schema_version": 1,
 		"scene": "res://scenes/world/cloudreach_cliffs.tscn",

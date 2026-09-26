@@ -13,6 +13,7 @@ const UITokens := preload("res://scripts/ui/ui_tokens.gd")
 const NAME_PROMPT_SCENE := preload("res://scenes/ui/name_prompt.tscn")
 const NAME_ENTRY := preload("res://scripts/ui/name_entry.gd")
 const LAN_BEACON := preload("res://scripts/mp/lan_beacon.gd")
+const REJOIN_POSE := preload("res://scripts/mp/rejoin_pose.gd")
 const JOIN_DRIVER := preload("res://scripts/mp/join_driver.gd")
 const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
 ## Optional by design: release exports without the Steam/GodotSteam pieces must
@@ -1569,9 +1570,49 @@ func _begin_join(address: String, port: int, retry_for_s: float) -> void:
 	else:
 		print("[title] restored returning guest character before joining")
 
+	# Owner ruling 2026-09-26 (MULTIPLAYER Return-home placement): the saved pose
+	# is resumed only in the SAME host world, which is unknown until the host
+	# snapshot arrives. Take it off the live character before the world builds
+	# (so no world ever places a pose from somewhere else) and let
+	# `rejoin_pose.gd` decide against the snapshot's instance.
+	_mount_rejoin_pose(game, rejoin_pose_candidate(game))
+	game.set("saved_player_pose", {})
+	# A loaded home slot also queues its fly/traversal state (safe anchor,
+	# stamina) for the next world; that belongs to the slot's world too.
+	if game.has_meta("pending_fly_load"):
+		game.remove_meta("pending_fly_load")
+
 	var driver := _mount_join_driver(game)
 	driver.call("begin", address, port if port > 0 else _configured_port(), retry_for_s)
 	_go_to_world("Joining %s…" % address)
+
+
+## The pose this character last saved and the world instance it saved it in,
+## read from its own character file -- the one record that pairs the two (a
+## loaded home slot has already dropped a foreign pose). {} for a new character.
+static func rejoin_pose_candidate(game: Node) -> Dictionary:
+	var local: Variant = game.get("local") if game != null else null
+	var save_system: Variant = game.get("save_system") if game != null else null
+	if local == null or not save_system is Object or not (save_system as Object).has_method("characters"):
+		return {}
+	var characters: Variant = (save_system as Object).call("characters")
+	var character_id := str((local as RefCounted).get("character_id"))
+	if character_id.is_empty() or not characters is Object:
+		return {}
+	var saved: Dictionary = (characters as Object).call("read", character_id)
+	if saved.is_empty():
+		return {}
+	return {"pose": saved.get("player_pose", {}), "world_instance_id": saved.get("last_world_instance_id", null)}
+
+
+func _mount_rejoin_pose(game: Node, candidate: Dictionary) -> void:
+	var existing := game.get_node_or_null(^"RejoinPose")
+	if existing != null:
+		existing.free()
+	var helper: Node = REJOIN_POSE.new()
+	helper.name = "RejoinPose"
+	helper.call("configure", candidate)
+	game.add_child(helper)
 
 
 ## A client writes only its portable character file on disconnect. It has no
