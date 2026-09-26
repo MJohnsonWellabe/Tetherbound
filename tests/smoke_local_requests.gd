@@ -354,6 +354,13 @@ func _lost_creature() -> void:
 	if TRAINERS.conversation_for(TRAINERS.trainer("pasture_drover_juno"), _progression()) != "pasture_drover_juno_reunited_challenge":
 		_fail("lost_creature: Juno did not acknowledge rescue before her own optional battle")
 		return
+	# Juno's friendly bout needs a usable ally out, as any trainer challenge
+	# does (trainer_npc.gd answers trainer_no_usable_creature otherwise). The
+	# patrol fight can leave the active companion fainted or stowed, and since
+	# the patrol camps 86 m from Juno the short escort no longer leaves time
+	# for recovery. So do what a player does: call the companion out, or
+	# switch to a standing member.
+	await _ready_an_ally_for_a_bout("lost_creature")
 	if not await _activate_trainer_prompt(owner_body, "lost_creature"):
 		return
 	# The prompt's opening press may be buffered by DialoguePanel and advance its
@@ -838,6 +845,19 @@ func _stand_at_herd_prompt(visit: Node3D, ally: Node3D) -> bool:
 		_fail("meadowhart_herd: the real herd prompt is not eligible for parsed interact")
 		return false
 	return true
+
+
+func _ready_an_ally_for_a_bout(label: String) -> void:
+	for attempt in 8:
+		var blocker := str(_director.call("usable_ally_blocker"))
+		if blocker.is_empty():
+			return
+		print("%s: ally %s before the bout; attempt %d" % [label, blocker, attempt + 1])
+		await _press("party_cycle" if blocker == "fainted" else "creature_recall")
+		for _frame in 45:
+			await physics_frame
+			await process_frame
+	print("%s: no usable ally after 8 attempts (%s)" % [label, str(_director.call("usable_ally_blocker"))])
 
 
 func _activate_trainer_prompt(body: Node3D, label: String) -> bool:
