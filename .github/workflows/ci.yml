@@ -1653,9 +1653,6 @@ jobs:
       # F13 #1 (ACCEPTANCE 6.1): the four land loops and three return
       # shortcuts walked/swum with real stick input in the production scene.
       # Timeout = 1.5x the measured 908 s wall time of the final green run (RUN5).
-      - name: Verify Tidewake land loops and return shortcuts walked
-        if: ${{ !cancelled() }}
-        run: timeout 1365s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
@@ -1777,6 +1774,11 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # Tidewake F13#1: ~15 min wall (908s measured). Placed here, not in
+      # verify-regions-shard (18 min of its 35), so both jobs keep margin.
+      - name: Verify Tidewake land loops and return shortcuts walked
+        if: ${{ !cancelled() }}
+        run: timeout 1365s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd
 
   verify-owner-regressions-shard:
     runs-on: ubuntu-latest
