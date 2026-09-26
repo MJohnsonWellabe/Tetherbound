@@ -148,5 +148,7 @@ func _finish() -> void:
 		"denials": denials.slice(0, 40), "trial_escape_violations": trial_escape_violations,
 		"upper_violations": upper_violations,
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}, "  "))
+	file.close()
+	verdict_written = true
 	print("F06#2 WITNESS %s attempts=%s landings=%d" % ["PASS" if completed_route and not failed else "FAIL", JSON.stringify(attempts), landings.size()])
 	super._finish()

@@ -40,6 +40,7 @@ var skipping_to_aerie := false
 var skipped_steps: Array[String] = []
 var start_record: Dictionary = {}
 var finish_done := false
+var verdict_written := false
 var leg_persistence: Dictionary = {}
 var sealed_attempt: Dictionary = {}
 var sealed_upper_box := AABB()
@@ -89,7 +90,8 @@ func _log(kind: String, details: Dictionary = {}) -> void:
 
 ## A failure after the verdict was written must not vanish silently.
 func _fail(message: String) -> bool:
-	if finish_done:
+	if verdict_written:
+		# The verdict file and exit code are already written; say so loudly.
 		push_error("LATE FAIL after witness verdict: " + message)
 		print("CLOUDREACH WITNESS LATE FAIL " + message)
 	return super._fail(message)
@@ -201,18 +203,19 @@ func _sealed_upper_attempt() -> bool:
 	var previous_stage := stage
 	stage = "witness_sealed_upper_attempt"
 	if not _require(_has("fly_traversal_unlocked") and not _has("cloudreach_upper_route_unlocked"), "Sealed attempt runs after Fly unlock and before the windlass"): return false
+	var flags_before_attempt := _flag_snapshot()
 	if not await _deploy(): return false
 	var denial_reasons: Array[String] = []
 	var on_denied := func(reason: String) -> void: denial_reasons.append(reason)
 	fly.denied.connect(on_denied)
-	var peak_y := -INF
+	var climb_end_y := -INF
 	for frame in 1500:
 		if not fly.is_flying() or player.global_position.y >= 770.0: break
 		_steer(Vector3(450, 0, 3200) - Vector3(player.global_position.x, 0, player.global_position.z), 0.3)
 		_input("jump", 1)
 		await _frames(1)
 		if failed: break
-	peak_y = player.global_position.y
+	climb_end_y = player.global_position.y
 	var target := Vector3(450, 700, sealed_upper_box.position.z + 150.0)
 	var refused_frame := -1
 	var inside_frames := 0
@@ -230,7 +233,7 @@ func _sealed_upper_attempt() -> bool:
 		if refused_frame >= 0 and frame > refused_frame + 180: break
 	_release()
 	fly.denied.disconnect(on_denied)
-	sealed_attempt = {"peak_y_after_lift": peak_y, "target": str(target), "refused_after_frames": refused_frame,
+	sealed_attempt = {"climb_end_y": climb_end_y, "target": str(target), "refused_after_frames": refused_frame,
 		"denials": denial_reasons.slice(0, 5), "closest_gap_to_box_m": closest_gap, "frames_inside_sealed_box": inside_frames,
 		"end": str(player.global_position), "still_flying": fly.is_flying(), "on_floor": player.is_on_floor()}
 	_log("witness_sealed_attempt", sealed_attempt)
@@ -241,8 +244,10 @@ func _sealed_upper_attempt() -> bool:
 		if not await _deploy(): return false
 	if not await _fly_to(Vector3(landing.x + 30, maxf(landing.y + 25.0, minf(player.global_position.y, 760.0)), landing.z), 8.0): return false
 	if not await _land(landing): return false
+	var flags_unchanged: bool = _flag_snapshot() == flags_before_attempt
+	var ok := _require(flags_unchanged and not _has("cloudreach_upper_route_unlocked"), "Refused attempt changed no progression flag")
 	stage = previous_stage
-	return _require(not _has("cloudreach_upper_route_unlocked"), "Refused attempt changed no unlock flag")
+	return ok
 
 
 ## `_finish` can be reached twice when a declared leg ends inside a route step

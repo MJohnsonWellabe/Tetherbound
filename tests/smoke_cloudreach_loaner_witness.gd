@@ -149,5 +149,7 @@ func _finish() -> void:
 		"flight_frames": flight_frames, "loaner_frames": loaner_frames, "owned_carrier_frames": owned_carrier_frames,
 		"initial_party_keys": initial_party_keys, "violations": violations, "final_party": game.party.members().map(func(m: RefCounted) -> String: return str(m.species_id)),
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}, "  "))
+	file.close()
+	verdict_written = true
 	print("F06#3 WITNESS %s launches=%d loaner_frames=%d violations=%d" % ["PASS" if completed_route and not failed else "FAIL", launches.size(), loaner_frames, violations.size()])
 	super._finish()
