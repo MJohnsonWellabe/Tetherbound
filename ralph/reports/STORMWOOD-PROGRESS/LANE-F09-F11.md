@@ -582,6 +582,54 @@ SNOWBALL F09#3. This is a proof task: build only what the proof run shows is bro
   - no night pass;
   - not run on an Ally.
 
+### WO-F09-05 round 3: the pocket as a place at the fork (`159654071`)
+
+- **Judge 10 on round 2 (`6c42aa383`), mapped to stands:**
+  - Verge is the one YES: "the brightest warm light in the frame set in a dark tree mass".
+  - Hollows and Dynamo are weak: "a junction signpost, not a destination", with the gold line running on past the posts like another road. Deepwood is ambiguous or NO. Conductor is NO: no lanterns read at the branch, a bush sits centre-frame, and a creature is clipped at the right edge.
+  - Gates: inviting, but the bulb floats above an empty cage, dirt seams show, a hard road-glow band crosses the bottom edge, and the Dynamo bracket is cut off.
+  - The coordinator re-scoped this as a change of approach, allowing two attempts, with the blind judge as the gate.
+- **Changes (Stormwood-owned only):**
+  1. **The spur is a trail, not a road** (`stormwood_road_current.json` `excluded_kinds: ["spur"]`, `carries_current()`):
+     - spurs carry no current; roads are unchanged;
+     - round 2's spur boost, band and fan are reverted to the `04d505a9e` shader and builder;
+     - pale installed RockPath stepping stones (`spur_trail`) run over each spur's first 42 m and its last 20 m to the mouth, presentation only.
+     - `test_stormwood_road_current` now requires every road covered and every spur bare, with two controls.
+     - This also removes the gates' bottom-edge glow band.
+  2. **The pocket's gate at the fork** (`stormwood_pockets.gd` `gateway()`, config `spur_marker.gateway`):
+     - A section of the pocket's own dead-trunk palisade stands across its spur: a 6 m opening, a trunk either side, and two wing trunks outward on each side at 2.2 m. Each trunk is at scale 2.6 with a 1.4 m collider.
+     - The two tinted junction lamps stand in front of the opening's edges.
+     - It sits at the first distance up the spur where every trunk and post clears each road corridor: 10–10.5 m for all five.
+     - The junction lantern now mounts at 4.05 m on a 6.6 m post, keeping its head about 2.6× the trainer.
+     - Attempt 1 had one trunk behind each lamp; from the road it read as "a lamp by a bare tree", so attempt 2 replaced it with the palisade section.
+     - `test_stormwood_pockets` checks all six trunks and both posts: colliders where the function puts them, clear of every road corridor, off the spur's painted lane, and inside the mouth-to-road walk search.
+  3. **Lantern bulb:** the flame now sits at the measured cage centre (`LANTERN_CAGE` (0, 0.3, 0.8); the Lantern_Wall cage body spans y 0.0–0.6, z 0.68–0.93, and the old (0, 0.85, 0.73) was chain height). The flame radius is now smaller than the cage (mouth 0.15 m, junction 0.24 m).
+  4. **Conductor camera lane** (`spur_junction_clear.road_lane_half_m` 8 / `road_reach_m` 45): no ground cover within 8 m of the joined road within 45 m of any junction. The Conductor bush is gone. Scatter re-bake: 34,639 placements.
+  5. **Gate framing:** the mouth frame now stands 5 m outside the opening (`MOUTH_OUT_M`), so the brackets are not cut off.
+- **Identified, not edited:**
+  - **Dynamo grey slab:** the Stormheart Tree at the Dynamo core (−100, 5470), built in `stormwood_world.gd` `_build_landmark_masses()` (Stormwood F11 landmark, outside this work order). It is about 470 m from the stand, and at that distance fog flattens its trunk into a grey block. In the round-3 frame it is hidden behind the gateway trunks.
+  - **Conductor clipped creature:** a body of ROAD CP-2's authored pair `road_visibility_conductor_road_31` (tanglevolt, around (−654.7, 3437.5)). It is process-frozen where it spawned (`frozen_wild` 2) and still shows at the right edge. The pair's position is a cross-lane road-visibility contract (`test_road_creature_visibility`), so I did not move it.
+  - **Deepwood blue object:** tentative. The nearest authored object on that view line is the voltcap harvest node `stormwood_harvest_deepwood_148` at (−1250, 3830), 259 m down hall_loop. The pick probe did not confirm it, so this stays unverified.
+- **Not addressed:**
+  - the dirt seams (the stones now cover most of the mouth ground; no seam is visible in the round-3 gate frames);
+  - the alcove depth behind the reward;
+  - the gate lantern tint;
+  - the pixel measure, which is set aside per the coordinator: spurs carry no current now, so its current toggle measures nothing.
+- **Frames:** full resolution, Actions render run `36244935684` at `159654071`: `visual/f09/pocket_walks/`.
+  - 20 frames plus `contact_sheet.jpg`, `frames_walks.json` and `road_before_after_round3.jpg` (round 2 left, round 3 right, per pocket).
+  - The round-2 road and mouth frames are kept as `pocket_walks/before_round3/`.
+  - **What I saw:**
+    - Conductor: a dark palisade wall with an opening and two teal lamps now stands at the fork.
+    - Hollows, Deepwood, Dynamo: the gateway trunks and their lamp stand at the right of the road view, partly at the frame edge because the spur leaves at an angle from a stand 25 m back.
+    - Verge: its lamps glow under a trunk mass.
+    - No gold line leaves the road anywhere now.
+    - Gates: a stone trail runs to the opening, the flames sit inside their cages, and the reward glow is visible. Reward frames 3a/3b show counts 0→1, 0→1, 1→2, 0→1 and 0→1.
+- **Tests on `159654071`:**
+  - `smoke_stormwood_pocket_walks`: 117 checks, 0 failures, 30/30 LURE, 0 `SCRIPT ERROR`, 406 s. All five walks pass through the gateway opening with `confined_resets=0`, and all five wall controls hold.
+  - `smoke_stormwood_arches`: PASS, 0 `SCRIPT ERROR`.
+  - `test_stormwood_road_current`, `pockets`, `scatter_bake`, `scatter_clearances`, `road_surface`, `terrain_bake`: 37 tests, 0 failed.
+- **Stop:** two attempts on this approach were used. The next gate is the coordinator's blind judge.
+
 ## WO-F10-06 — Surge phases readable without HUD (`ralph/stormwood-f10-surge-readability`)
 
 - **Anchor:** F10 / ACCEPTANCE §6.1 F10: lightning with a 1.2 s / 3 m telegraph, and Calm/Building/Break/Fading readable without HUD text. The restored-sky view has to be distinct. ART_DIRECTION and SYSTEMS define the Stormwood look for each phase.

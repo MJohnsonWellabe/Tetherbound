@@ -9,13 +9,13 @@
 				31.3833198547363,
 				339.609985351562
 			],
-			"camera_to_flame_m": 24.3443336486816,
+			"camera_to_flame_m": 28.3254718780518,
 			"description": "verge_ash_hollow: on ash_road 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
 			"file": "verge_ash_hollow_1_road_lure.jpg",
 			"flame_in_frustum": true,
 			"flame_screen": [
-				0.380647246042887,
-				0.336956419768157
+				0.391413497924805,
+				0.340749076560692
 			],
 			"frozen_wild": 0,
 			"hud": "off",
@@ -27,7 +27,7 @@
 				369.2
 			],
 			"label": "walks",
-			"lamp_pixels_changed": 104112,
+			"lamp_pixels_changed": 76748,
 			"player": [
 				-330.483581542969,
 				28.5521755218506,
@@ -37,39 +37,37 @@
 			"prompt": "",
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 12,
-				"frame_draw_calls": 6406
+				"chunks": 550,
+				"chunks_in_draw_range": 8,
+				"frame_draw_calls": 6459
 			},
 			"side": "along",
 			"spur_pixels": {
-				"contrast": 2.47652936049872,
-				"current_changed": 982,
+				"contrast": 4.42907811080568,
+				"current_changed": 558,
 				"current_changed_all": [
-					982,
-					1034,
-					876
+					558
 				],
-				"current_changed_first": 982,
-				"current_chunks": 6,
+				"current_changed_first": 558,
+				"current_chunks": 0,
 				"flank_px": 816,
 				"flank_rgb": [
-					67,
-					46,
+					70,
+					48,
 					34
 				],
-				"gold_px": 26,
-				"lamp_changed": 1294,
+				"gold_px": 17,
+				"lamp_changed": 575,
 				"lamp_on_screen": true,
 				"lamp_screen": [
-					0.570970869064331,
-					0.505434629652235
+					0.587120246887207,
+					0.511123614841037
 				],
 				"lane_px": 1158,
 				"lane_rgb": [
-					67,
+					68,
 					46,
-					32
+					31
 				],
 				"reads": false,
 				"reads_current": false,
@@ -91,17 +89,17 @@
 				-330.483581542969,
 				344.611328125
 			],
-			"surge_elapsed": 65.011444,
+			"surge_elapsed": 63.4061293333333,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82121562957764,
+			"camera_player_m": 5.82120800018311,
 			"camera_pos": [
-				-75.103385925293,
-				32.5351524353027,
-				417.3369140625
+				-78.5502166748047,
+				32.3827362060547,
+				416.729187011719
 			],
 			"description": "verge_ash_hollow: standing in the mouth, looking in at the reward",
 			"file": "verge_ash_hollow_2_mouth.jpg",
@@ -115,9 +113,9 @@
 			],
 			"label": "walks",
 			"player": [
-				-70.0942764282227,
-				29.7040100097656,
-				418.220092773438
+				-73.5411071777344,
+				29.5515995025635,
+				417.612335205078
 			],
 			"pocket": "verge_ash_hollow",
 			"prompt": "",
@@ -133,9 +131,9 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 4,
-				"frame_draw_calls": 410
+				"chunks": 550,
+				"chunks_in_draw_range": 0,
+				"frame_draw_calls": 429
 			},
 			"side": "along",
 			"staged": {
@@ -146,20 +144,20 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-70.0942764282227,
-				418.220092773438
+				-73.5411071777344,
+				417.612335205078
 			],
-			"surge_elapsed": 61.0161496666667,
+			"surge_elapsed": 60.9894576666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82120656967163,
+			"camera_player_m": 5.82122182846069,
 			"camera_pos": [
-				-63.3640060424805,
-				32.7139663696289,
-				421.507415771484
+				-63.364013671875,
+				32.7139701843262,
+				421.507446289062
 			],
 			"description": "verge_ash_hollow: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Good Candy' offered (HUD hidden), before interact",
 			"file": "verge_ash_hollow_3a_reward_before.jpg",
@@ -191,8 +189,8 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 4,
+				"chunks": 550,
+				"chunks_in_draw_range": 0,
 				"frame_draw_calls": 366
 			},
 			"side": "along",
@@ -207,17 +205,17 @@
 				-58.4287338256836,
 				420.276885986328
 			],
-			"surge_elapsed": 60.9948573333334,
+			"surge_elapsed": 60.9982393333333,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82120656967163,
+			"camera_player_m": 5.82122182846069,
 			"camera_pos": [
-				-63.3640060424805,
-				32.7139663696289,
-				421.507415771484
+				-63.364013671875,
+				32.7139701843262,
+				421.507446289062
 			],
 			"count_after": 1,
 			"count_before": 0,
@@ -246,8 +244,8 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 4,
+				"chunks": 550,
+				"chunks_in_draw_range": 0,
 				"frame_draw_calls": 363
 			},
 			"side": "along",
@@ -262,25 +260,25 @@
 				-58.4287338256836,
 				420.276885986328
 			],
-			"surge_elapsed": 61.9166666666667,
+			"surge_elapsed": 61.9290046666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82129573822021,
+			"camera_player_m": 5.82118082046509,
 			"camera_pos": [
 				93.7151184082031,
-				24.7143783569336,
-				1732.93811035156
+				24.7143535614014,
+				1732.93823242188
 			],
-			"camera_to_flame_m": 37.4723205566406,
+			"camera_to_flame_m": 33.6432723999023,
 			"description": "hollows_moss_nook: on crown_sightline_loop 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
 			"file": "hollows_moss_nook_1_road_lure.jpg",
 			"flame_in_frustum": true,
 			"flame_screen": [
-				0.576294326782227,
-				0.302759749801071
+				0.591529782613119,
+				0.296371036105686
 			],
 			"frozen_wild": 0,
 			"hud": "off",
@@ -292,7 +290,7 @@
 				1762.0
 			],
 			"label": "walks",
-			"lamp_pixels_changed": 92860,
+			"lamp_pixels_changed": 93284,
 			"player": [
 				95.0331573486328,
 				21.8832225799561,
@@ -302,39 +300,37 @@
 			"prompt": "",
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 10,
-				"frame_draw_calls": 3913
+				"chunks": 550,
+				"chunks_in_draw_range": 7,
+				"frame_draw_calls": 3958
 			},
 			"side": "along",
 			"spur_pixels": {
-				"contrast": 16.7050168788022,
-				"current_changed": 980,
+				"contrast": 16.0254193452782,
+				"current_changed": 304,
 				"current_changed_all": [
-					1003,
-					235,
-					980
+					304
 				],
-				"current_changed_first": 1003,
-				"current_chunks": 3,
-				"flank_px": 782,
+				"current_changed_first": 304,
+				"current_chunks": 0,
+				"flank_px": 783,
 				"flank_rgb": [
-					18,
-					18,
-					11
+					17,
+					17,
+					10
 				],
-				"gold_px": 4,
-				"lamp_changed": 2188,
+				"gold_px": 3,
+				"lamp_changed": 2054,
 				"lamp_on_screen": true,
 				"lamp_screen": [
-					0.86444149017334,
-					0.454139624701606
+					0.887294673919678,
+					0.444556554158529
 				],
 				"lane_px": 1100,
 				"lane_rgb": [
-					29,
 					28,
-					19
+					27,
+					18
 				],
 				"reads": false,
 				"reads_current": false,
@@ -356,17 +352,17 @@
 				95.0331573486328,
 				1737.85083007812
 			],
-			"surge_elapsed": 64.996737,
+			"surge_elapsed": 63.4068211111111,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82118606567383,
+			"camera_player_m": 5.82118940353394,
 			"camera_pos": [
-				-25.1864833831787,
-				28.8314666748047,
-				1796.02966308594
+				-21.8057079315186,
+				28.7934417724609,
+				1795.1240234375
 			],
 			"description": "hollows_moss_nook: standing in the mouth, looking in at the reward",
 			"file": "hollows_moss_nook_2_mouth.jpg",
@@ -380,9 +376,9 @@
 			],
 			"label": "walks",
 			"player": [
-				-30.0992603302002,
-				26.0003299713135,
-				1797.34704589844
+				-26.7185211181641,
+				25.9623050689697,
+				1796.44128417969
 			],
 			"pocket": "hollows_moss_nook",
 			"prompt": "",
@@ -398,9 +394,9 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 8,
-				"frame_draw_calls": 1761
+				"chunks": 550,
+				"chunks_in_draw_range": 5,
+				"frame_draw_calls": 1768
 			},
 			"side": "along",
 			"staged": {
@@ -411,20 +407,20 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-30.0992603302002,
-				1797.34704589844
+				-26.7185211181641,
+				1796.44128417969
 			],
-			"surge_elapsed": 60.9991616666667,
+			"surge_elapsed": 60.989208,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.8211841583252,
+			"camera_player_m": 5.82102966308594,
 			"camera_pos": [
-				-37.5957374572754,
-				29.5237064361572,
-				1797.21545410156
+				-37.595531463623,
+				29.523681640625,
+				1797.21606445312
 			],
 			"description": "hollows_moss_nook: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy' offered (HUD hidden), before interact",
 			"file": "hollows_moss_nook_3a_reward_before.jpg",
@@ -438,9 +434,9 @@
 			],
 			"label": "walks",
 			"player": [
-				-41.5477867126465,
-				26.6925754547119,
-				1800.41735839844
+				-41.5477676391602,
+				26.6925773620605,
+				1800.41748046875
 			],
 			"pocket": "hollows_moss_nook",
 			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy",
@@ -456,9 +452,9 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 7,
-				"frame_draw_calls": 4800
+				"chunks": 550,
+				"chunks_in_draw_range": 4,
+				"frame_draw_calls": 4789
 			},
 			"side": "along",
 			"staged": {
@@ -469,20 +465,20 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-41.5477867126465,
-				1800.41735839844
+				-41.5477676391602,
+				1800.41748046875
 			],
-			"surge_elapsed": 60.995609,
+			"surge_elapsed": 60.9992006666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.8211841583252,
+			"camera_player_m": 5.82102966308594,
 			"camera_pos": [
-				-37.5957374572754,
-				29.5237064361572,
-				1797.21545410156
+				-37.595531463623,
+				29.523681640625,
+				1797.21606445312
 			],
 			"count_after": 1,
 			"count_before": 0,
@@ -499,9 +495,9 @@
 			],
 			"label": "walks",
 			"player": [
-				-41.5477867126465,
-				26.6925754547119,
-				1800.41735839844
+				-41.5477676391602,
+				26.6925773620605,
+				1800.41748046875
 			],
 			"pocket": "hollows_moss_nook",
 			"prompt": "",
@@ -511,9 +507,9 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 7,
-				"frame_draw_calls": 4795
+				"chunks": 550,
+				"chunks_in_draw_range": 4,
+				"frame_draw_calls": 4785
 			},
 			"side": "along",
 			"staged": {
@@ -524,28 +520,28 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-41.5477867126465,
-				1800.41735839844
+				-41.5477676391602,
+				1800.41748046875
 			],
-			"surge_elapsed": 61.9292433333333,
+			"surge_elapsed": 61.929835,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82125997543335,
+			"camera_player_m": 5.82119512557983,
 			"camera_pos": [
-				-679.294738769531,
-				58.8146514892578,
+				-679.294677734375,
+				58.814624786377,
 				3393.14379882812
 			],
-			"camera_to_flame_m": 35.6501617431641,
+			"camera_to_flame_m": 36.0364837646484,
 			"description": "conductor_ridge_cleft: on conductor_road 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
 			"file": "conductor_ridge_cleft_1_road_lure.jpg",
 			"flame_in_frustum": true,
 			"flame_screen": [
-				0.401722526550293,
-				0.368182429560909
+				0.448828029632568,
+				0.372094613534433
 			],
 			"frozen_wild": 2,
 			"hud": "off",
@@ -557,7 +553,7 @@
 				3400.0
 			],
 			"label": "walks",
-			"lamp_pixels_changed": 64708,
+			"lamp_pixels_changed": 102572,
 			"player": [
 				-674.342163085938,
 				55.9835090637207,
@@ -567,37 +563,35 @@
 			"prompt": "",
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 14,
-				"frame_draw_calls": 689
+				"chunks": 550,
+				"chunks_in_draw_range": 10,
+				"frame_draw_calls": 736
 			},
 			"side": "along",
 			"spur_pixels": {
-				"contrast": 10.5506509897864,
-				"current_changed": 137,
+				"contrast": 17.9118327571415,
+				"current_changed": 123,
 				"current_changed_all": [
-					196,
-					63,
-					137
+					123
 				],
-				"current_changed_first": 196,
-				"current_chunks": 8,
-				"flank_px": 848,
+				"current_changed_first": 123,
+				"current_chunks": 0,
+				"flank_px": 849,
 				"flank_rgb": [
-					35,
-					33,
-					15
+					45,
+					36,
+					19
 				],
 				"gold_px": 0,
-				"lamp_changed": 693,
+				"lamp_changed": 3000,
 				"lamp_on_screen": true,
 				"lamp_screen": [
-					0.602583789825439,
-					0.552273644341363
+					0.673242044448852,
+					0.558141920301649
 				],
 				"lane_px": 1200,
 				"lane_rgb": [
-					27,
+					29,
 					26,
 					13
 				],
@@ -621,17 +615,17 @@
 				-674.342163085938,
 				3394.30297851562
 			],
-			"surge_elapsed": 65.0125,
+			"surge_elapsed": 63.3922496666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82122659683228,
+			"camera_player_m": 5.82121896743774,
 			"camera_pos": [
-				-315.315338134766,
-				38.9286117553711,
-				3380.80322265625
+				-318.810485839844,
+				39.4044189453125,
+				3380.98706054688
 			],
 			"description": "conductor_ridge_cleft: standing in the mouth, looking in at the reward",
 			"file": "conductor_ridge_cleft_2_mouth.jpg",
@@ -645,9 +639,9 @@
 			],
 			"label": "walks",
 			"player": [
-				-310.235961914062,
-				36.0974617004395,
-				3380.53637695312
+				-313.731140136719,
+				36.5732765197754,
+				3380.7197265625
 			],
 			"pocket": "conductor_ridge_cleft",
 			"prompt": "",
@@ -663,9 +657,9 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 4,
-				"frame_draw_calls": 645
+				"chunks": 550,
+				"chunks_in_draw_range": 0,
+				"frame_draw_calls": 660
 			},
 			"side": "along",
 			"staged": {
@@ -676,19 +670,19 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-310.235961914062,
-				3380.53637695312
+				-313.731140136719,
+				3380.7197265625
 			],
-			"surge_elapsed": 61.002449,
+			"surge_elapsed": 60.9889716666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82126045227051,
+			"camera_player_m": 5.82113742828369,
 			"camera_pos": [
-				-302.929779052734,
-				37.5067977905273,
+				-302.929656982422,
+				37.5067405700684,
 				3382.22338867188
 			],
 			"description": "conductor_ridge_cleft: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy' offered (HUD hidden), before interact",
@@ -721,8 +715,8 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 4,
+				"chunks": 550,
+				"chunks_in_draw_range": 0,
 				"frame_draw_calls": 689
 			},
 			"side": "along",
@@ -737,16 +731,16 @@
 				-298.398071289062,
 				3379.91357421875
 			],
-			"surge_elapsed": 60.9985115555556,
+			"surge_elapsed": 60.986699,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82126045227051,
+			"camera_player_m": 5.82113742828369,
 			"camera_pos": [
-				-302.929779052734,
-				37.5067977905273,
+				-302.929656982422,
+				37.5067405700684,
 				3382.22338867188
 			],
 			"count_after": 2,
@@ -776,8 +770,8 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 4,
+				"chunks": 550,
+				"chunks_in_draw_range": 0,
 				"frame_draw_calls": 686
 			},
 			"side": "along",
@@ -792,25 +786,25 @@
 				-298.398071289062,
 				3379.91357421875
 			],
-			"surge_elapsed": 61.9238172222222,
+			"surge_elapsed": 61.9200323333333,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82120084762573,
+			"camera_player_m": 5.82120990753174,
 			"camera_pos": [
 				-992.1767578125,
-				42.8294906616211,
+				42.8295097351074,
 				3887.17041015625
 			],
-			"camera_to_flame_m": 37.3967323303223,
+			"camera_to_flame_m": 33.5596504211426,
 			"description": "deepwood_ridge_shelter: on hall_loop 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
 			"file": "deepwood_ridge_shelter_1_road_lure.jpg",
 			"flame_in_frustum": true,
 			"flame_screen": [
-				0.574791781107585,
-				0.34956292046441
+				0.589894803365072,
+				0.337417065655744
 			],
 			"frozen_wild": 0,
 			"hud": "off",
@@ -822,7 +816,7 @@
 				3883.2
 			],
 			"label": "walks",
-			"lamp_pixels_changed": 100320,
+			"lamp_pixels_changed": 119824,
 			"player": [
 				-997.217834472656,
 				39.9983673095703,
@@ -832,38 +826,36 @@
 			"prompt": "",
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 13,
-				"frame_draw_calls": 380
+				"chunks": 550,
+				"chunks_in_draw_range": 9,
+				"frame_draw_calls": 432
 			},
 			"side": "along",
 			"spur_pixels": {
-				"contrast": 7.12181120613901,
-				"current_changed": 223,
+				"contrast": 6.54182903437584,
+				"current_changed": 552,
 				"current_changed_all": [
-					223,
-					903,
-					210
+					552
 				],
-				"current_changed_first": 223,
-				"current_chunks": 4,
+				"current_changed_first": 552,
+				"current_chunks": 0,
 				"flank_px": 778,
 				"flank_rgb": [
 					11,
-					12,
+					11,
 					6
 				],
-				"gold_px": 0,
-				"lamp_changed": 3587,
+				"gold_px": 1,
+				"lamp_changed": 2659,
 				"lamp_on_screen": true,
 				"lamp_screen": [
-					0.862187671661377,
-					0.524344380696615
+					0.884842205047607,
+					0.506125598483615
 				],
-				"lane_px": 1064,
+				"lane_px": 1061,
 				"lane_rgb": [
 					15,
-					17,
+					16,
 					8
 				],
 				"reads": false,
@@ -886,17 +878,17 @@
 				-997.217834472656,
 				3886.4931640625
 			],
-			"surge_elapsed": 65.009396,
+			"surge_elapsed": 63.4085916666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82137680053711,
+			"camera_player_m": 5.82106733322144,
 			"camera_pos": [
-				-1002.13537597656,
-				43.6647338867188,
-				3735.18701171875
+				-1002.62237548828,
+				43.3613090515137,
+				3738.65283203125
 			],
 			"description": "deepwood_ridge_shelter: standing in the mouth, looking in at the reward",
 			"file": "deepwood_ridge_shelter_2_mouth.jpg",
@@ -910,9 +902,9 @@
 			],
 			"label": "walks",
 			"player": [
-				-1001.42651367188,
-				40.8334922790527,
-				3730.15014648438
+				-1001.91363525391,
+				40.5302391052246,
+				3733.6162109375
 			],
 			"pocket": "deepwood_ridge_shelter",
 			"prompt": "",
@@ -928,9 +920,9 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 8,
-				"frame_draw_calls": 3439
+				"chunks": 550,
+				"chunks_in_draw_range": 5,
+				"frame_draw_calls": 3456
 			},
 			"side": "along",
 			"staged": {
@@ -941,20 +933,20 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-1001.42651367188,
-				3730.15014648438
+				-1001.91363525391,
+				3733.6162109375
 			],
-			"surge_elapsed": 60.9888888888889,
+			"surge_elapsed": 61.0012836666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82105875015259,
+			"camera_player_m": 5.82126331329346,
 			"camera_pos": [
-				-998.3740234375,
-				44.568904876709,
-				3723.3056640625
+				-998.373962402344,
+				44.5689125061035,
+				3723.30590820312
 			],
 			"description": "deepwood_ridge_shelter: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Revive' offered (HUD hidden), before interact",
 			"file": "deepwood_ridge_shelter_3a_reward_before.jpg",
@@ -968,8 +960,8 @@
 			],
 			"label": "walks",
 			"player": [
-				-999.775146484375,
-				41.7377738952637,
+				-999.775085449219,
+				41.7377815246582,
 				3718.41625976562
 			],
 			"pocket": "deepwood_ridge_shelter",
@@ -986,9 +978,9 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 8,
-				"frame_draw_calls": 2792
+				"chunks": 550,
+				"chunks_in_draw_range": 4,
+				"frame_draw_calls": 2787
 			},
 			"side": "along",
 			"staged": {
@@ -999,20 +991,20 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-999.775146484375,
+				-999.775085449219,
 				3718.41625976562
 			],
-			"surge_elapsed": 61.0040165238096,
+			"surge_elapsed": 61.0147503333333,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82105875015259,
+			"camera_player_m": 5.82126331329346,
 			"camera_pos": [
-				-998.3740234375,
-				44.568904876709,
-				3723.3056640625
+				-998.373962402344,
+				44.5689125061035,
+				3723.30590820312
 			],
 			"count_after": 1,
 			"count_before": 0,
@@ -1029,8 +1021,8 @@
 			],
 			"label": "walks",
 			"player": [
-				-999.775146484375,
-				41.7377738952637,
+				-999.775085449219,
+				41.7377815246582,
 				3718.41625976562
 			],
 			"pocket": "deepwood_ridge_shelter",
@@ -1041,9 +1033,9 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 8,
-				"frame_draw_calls": 2789
+				"chunks": 550,
+				"chunks_in_draw_range": 4,
+				"frame_draw_calls": 2784
 			},
 			"side": "along",
 			"staged": {
@@ -1054,28 +1046,28 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-999.775146484375,
+				-999.775085449219,
 				3718.41625976562
 			],
-			"surge_elapsed": 61.9238095238095,
+			"surge_elapsed": 61.946139,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82110738754272,
+			"camera_player_m": 5.82115507125854,
 			"camera_pos": [
-				-440.4072265625,
-				69.3637847900391,
-				5134.20751953125
+				-440.407073974609,
+				69.3638458251953,
+				5134.20703125
 			],
-			"camera_to_flame_m": 38.1997222900391,
+			"camera_to_flame_m": 34.2995262145996,
 			"description": "dynamo_scorch_pen: on dynamo_west_approach 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
 			"file": "dynamo_scorch_pen_1_road_lure.jpg",
 			"flame_in_frustum": true,
 			"flame_screen": [
-				0.579091199239095,
-				0.18418943617079
+				0.594783020019531,
+				0.180704653704608
 			],
 			"frozen_wild": 0,
 			"hud": "off",
@@ -1087,7 +1079,7 @@
 				5144.4
 			],
 			"label": "walks",
-			"lamp_pixels_changed": 114084,
+			"lamp_pixels_changed": 79532,
 			"player": [
 				-435.61962890625,
 				66.5326843261719,
@@ -1097,33 +1089,31 @@
 			"prompt": "",
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 14,
-				"frame_draw_calls": 1073
+				"chunks": 550,
+				"chunks_in_draw_range": 11,
+				"frame_draw_calls": 1116
 			},
 			"side": "along",
 			"spur_pixels": {
-				"contrast": 8.69245701854466,
-				"current_changed": 625,
+				"contrast": 8.3245177941281,
+				"current_changed": 92,
 				"current_changed_all": [
-					625,
-					135,
-					657
+					92
 				],
-				"current_changed_first": 625,
-				"current_chunks": 3,
-				"flank_px": 802,
+				"current_changed_first": 92,
+				"current_chunks": 0,
+				"flank_px": 803,
 				"flank_rgb": [
 					15,
 					17,
 					7
 				],
 				"gold_px": 0,
-				"lamp_changed": 2972,
+				"lamp_changed": 2673,
 				"lamp_on_screen": true,
 				"lamp_screen": [
-					0.868636798858643,
-					0.276284154256185
+					0.892174530029297,
+					0.271056980556912
 				],
 				"lane_px": 1158,
 				"lane_rgb": [
@@ -1151,17 +1141,17 @@
 				-435.61962890625,
 				5135.9248046875
 			],
-			"surge_elapsed": 64.9953726666667,
+			"surge_elapsed": 63.384586,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82130193710327,
+			"camera_player_m": 5.82177400588989,
 			"camera_pos": [
-				-444.753326416016,
-				82.1052780151367,
-				5235.5888671875
+				-443.556365966797,
+				81.7310104370117,
+				5232.29931640625
 			],
 			"description": "dynamo_scorch_pen: standing in the mouth, looking in at the reward",
 			"file": "dynamo_scorch_pen_2_mouth.jpg",
@@ -1175,9 +1165,9 @@
 			],
 			"label": "walks",
 			"player": [
-				-446.494293212891,
-				79.2742156982422,
-				5240.3681640625
+				-445.297210693359,
+				78.8997268676758,
+				5237.0791015625
 			],
 			"pocket": "dynamo_scorch_pen",
 			"prompt": "",
@@ -1193,9 +1183,9 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 9,
-				"frame_draw_calls": 550
+				"chunks": 550,
+				"chunks_in_draw_range": 6,
+				"frame_draw_calls": 560
 			},
 			"side": "along",
 			"staged": {
@@ -1206,19 +1196,19 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-446.494293212891,
-				5240.3681640625
+				-445.297210693359,
+				5237.0791015625
 			],
-			"surge_elapsed": 60.9966077777777,
+			"surge_elapsed": 61.0086686666667,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82082843780518,
+			"camera_player_m": 5.82089710235596,
 			"camera_pos": [
-				-450.904327392578,
-				82.6688919067383,
+				-450.904602050781,
+				82.6689987182617,
 				5246.4306640625
 			],
 			"description": "dynamo_scorch_pen: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Stoneguard Brew' offered (HUD hidden), before interact",
@@ -1233,8 +1223,8 @@
 			],
 			"label": "walks",
 			"player": [
-				-450.550842285156,
-				79.8379287719727,
+				-450.550903320312,
+				79.8379211425781,
 				5251.50439453125
 			],
 			"pocket": "dynamo_scorch_pen",
@@ -1251,8 +1241,8 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 9,
+				"chunks": 550,
+				"chunks_in_draw_range": 6,
 				"frame_draw_calls": 793
 			},
 			"side": "along",
@@ -1264,19 +1254,19 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-450.550842285156,
+				-450.550903320312,
 				5251.50439453125
 			],
-			"surge_elapsed": 61.0022743333333,
+			"surge_elapsed": 60.9913042962963,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		},
 		{
 			"camera": "player camera (production CameraRig/Camera3D)",
-			"camera_player_m": 5.82082462310791,
+			"camera_player_m": 5.82089710235596,
 			"camera_pos": [
-				-450.904266357422,
-				82.6688919067383,
+				-450.904602050781,
+				82.6689987182617,
 				5246.4306640625
 			],
 			"count_after": 1,
@@ -1294,8 +1284,8 @@
 			],
 			"label": "walks",
 			"player": [
-				-450.550842285156,
-				79.8379287719727,
+				-450.550903320312,
+				79.8379211425781,
 				5251.50439453125
 			],
 			"pocket": "dynamo_scorch_pen",
@@ -1306,8 +1296,8 @@
 			},
 			"road_back_m": 25.0,
 			"road_current": {
-				"chunks": 574,
-				"chunks_in_draw_range": 9,
+				"chunks": 550,
+				"chunks_in_draw_range": 6,
 				"frame_draw_calls": 789
 			},
 			"side": "along",
@@ -1319,10 +1309,10 @@
 				"placement": "debug_teleport_to + Player transform at stand point"
 			},
 			"stand": [
-				-450.550842285156,
+				-450.550903320312,
 				5251.50439453125
 			],
-			"surge_elapsed": 61.9313686666667,
+			"surge_elapsed": 61.9333670740741,
 			"surge_phase": "calm",
 			"time_of_day": "day"
 		}
