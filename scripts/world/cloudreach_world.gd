@@ -2886,6 +2886,8 @@ func _route_detail_ground(at: Vector3) -> float:
 ## `Parameter "material" is null` on every override, the cached one raises
 ## nothing (isolated in a 20-rock probe before this was written).
 static var _stone_palette_cache: Dictionary = {}
+const ROCK_PALETTE_ALBEDO := preload("res://assets/environment/terrain/Rock030_Color.jpg")
+const ROCK_PALETTE_NORMAL := preload("res://assets/environment/terrain/Rock030_NormalGL.jpg")
 
 
 static func apply_stone_palette(root_node: Node) -> void:
@@ -2930,6 +2932,22 @@ static func apply_stone_palette(root_node: Node) -> void:
 				# by ~0.52 puts a lit face near 0.60 and a shadowed one near
 				# 0.34, which brackets the frame median the way stone should.
 				tinted.albedo_color = Color("#676d66")
+				# F08#3: flat untextured grey read as an unfinished primitive
+				# beside the arrival road. Give every palette rock the realm's
+				# own installed Rock030 granite (the cliff geology texture),
+				# world-triplanar so scaled rocks never stretch, with the
+				# albedo set so texture mean x colour (linear) lands at the measured
+				# #676d66 value instead of the old near-black multiply.
+				tinted.albedo_texture = ROCK_PALETTE_ALBEDO
+				tinted.albedo_color = Color("#e6ebe2")
+				tinted.normal_enabled = true
+				tinted.normal_texture = ROCK_PALETTE_NORMAL
+				tinted.normal_scale = 0.8
+				tinted.uv1_triplanar = true
+				tinted.uv1_world_triplanar = true
+				tinted.uv1_triplanar_sharpness = 4.0
+				tinted.uv1_scale = Vector3.ONE * 0.45
+				tinted.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 				tinted.roughness = 0.82
 				tinted.metallic = 0.0
 				tinted.metallic_specular = 0.28
