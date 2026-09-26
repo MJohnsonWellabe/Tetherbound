@@ -52,9 +52,13 @@ extends RefCounted
 ##   The host writes it in the same durable world save as the action flag and
 ##   takes payer_character_id from its own actor resolution, never the packet.
 ##   legacy_receipt() builds the P4 placeholder in exactly this shape.
-## world_facts: Dictionary action_id -> receipt, from the host's authoritative
-##   durable world for world_instance_id (host world, or a guest's installed
-##   handshake snapshot). Absence is never treated as a refusal (see above).
+## world_facts: Dictionary action_id -> receipt, or action_id -> Array of every
+##   receipt for that action, from the host's authoritative durable world for
+##   world_instance_id (host world, or a guest's installed handshake snapshot).
+##   Absence is never treated as a refusal (see above). water_dock_rules.gd
+##   lists an action only once its own flag is set, since receipt flags alone
+##   are guest-writable; a row settles on the receipt naming its txn and
+##   refunds paid_by_other only when none does and no copy is in flight.
 ## refusal (refund reason): {"txn_id", "world_instance_id", "code",
 ##   "receipt": optional receipt}. Only codes in REFUND_CODES return items;
 ##   "already_done" returns items only when it carries a receipt proving
@@ -320,14 +324,18 @@ static func refund(state: Dictionary, reason: Dictionary) -> Dictionary:
 
 
 ## Reconnect/load path. `world_facts` must be the host's authoritative durable
-## receipts for `world_instance_id`. NEVER refunds on absence of a receipt.
+## receipts for `world_instance_id`: action_id -> one receipt, or an Array of
+## EVERY receipt the world holds for that action (a forged extra receipt must
+## never hide the genuine one). NEVER refunds on absence of a receipt, and
+## never refunds a row listed in `in_flight_txn_ids` (defer to its verdict).
 ## Returns {"changed", "settled":[txn], "refunded":[txn], "waiting":[txn],
 ##          "needs_submit":[txn]}:
 ##   - refund_due rows in ANY world retry returning their owed items (the
 ##     refund was already authoritative; items are owed regardless of world);
 ##   - pending rows of this world whose receipt names them settle;
 ##   - pending rows whose well-formed receipt names another txn/payer refund
-##     (the action is durably paid by someone else, so this txn cannot commit);
+##     (the action is durably paid by someone else, so this txn cannot commit),
+##     but only when NO receipt names this txn and no copy is in flight;
 ##   - pending rows with no receipt land in `needs_submit` (resubmit the same
 ##     txn; the host dedupes by txn id), or in `waiting` if listed in
 ##     `in_flight_txn_ids` (already sent; await the verdict);
@@ -354,18 +362,33 @@ static func reconcile(state: Dictionary, world_facts: Dictionary, world_instance
 		else:
 			if world_instance_id.is_empty() or str(row.world_instance_id) != world_instance_id:
 				continue
-			var receipt: Variant = world_facts.get(str(row.action_id))
-			if receipt == null:
+			var fact: Variant = world_facts.get(str(row.action_id))
+			if fact == null:
 				# Absence: maybe in flight, maybe lost. Never a refund.
 				var bucket := "waiting" if in_flight_txn_ids.has(str(key)) else "needs_submit"
 				(out[bucket] as Array).append(str(key))
 				continue
-			if receipt is Dictionary and _receipt_pays(receipt, row):
-				result = settle(state, receipt)
-			elif receipt is Dictionary and _receipt_for(receipt, row):
+			var receipts: Array = fact if fact is Array else [fact]
+			var paying: Dictionary = {}
+			var names_this_txn := false
+			var other_paid := false
+			for receipt: Variant in receipts:
+				if not receipt is Dictionary:
+					continue
+				if _receipt_pays(receipt, row):
+					paying = receipt
+				if str((receipt as Dictionary).get("txn_id", "")) == str(row.txn_id):
+					names_this_txn = true
+				elif _receipt_for(receipt, row):
+					other_paid = true
+			if not paying.is_empty():
+				result = settle(state, paying)
+			elif other_paid and not names_this_txn and not in_flight_txn_ids.has(str(key)):
 				result = _return_items(state, row, "paid_by_other")
 			else:
-				# Malformed or foreign receipt: never guess. Leave the row open.
+				# Malformed/contradictory receipts, or a copy of this txn is
+				# still in flight: never guess and never refund while a verdict
+				# is outstanding. Leave the row open.
 				(out.waiting as Array).append(str(key))
 				continue
 		out.changed = bool(out.changed) or bool(result.get("changed", false))

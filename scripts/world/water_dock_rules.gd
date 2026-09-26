@@ -42,7 +42,12 @@ static func evaluate(intent: Dictionary, context: Dictionary, flags: RefCounted)
 	if escrowed:
 		# P3: this txn's own receipt answers before any other check, so a
 		# resubmit of a committed txn is idempotent whatever else changed.
-		if not receipt_for_txn(flags, str(intent.get("txn_id", ""))).is_empty():
+		# The receipt counts only for this action and host-resolved payer, and
+		# only with the action's own flag set: guests can write any world flag
+		# (set_world_flag), so a receipt alone never proves a commit. A lone
+		# receipt is ignored and the intent is processed normally below.
+		if not receipt_for_txn(flags, str(intent.get("txn_id", "")), str(action.id), payer,
+				str(action.flag)).is_empty():
 			return _refuse("already_done", "This dock task is already complete.")
 		var attempt: Variant = intent.get("attempt")
 		var instance: Variant = intent.get("world_instance_id")
@@ -100,32 +105,49 @@ static func parse_receipt(id: String, world_instance_id: String) -> Dictionary:
 	return {"action_id": parts[0], "world_instance_id": world_instance_id,
 		"txn_id": parts[2], "payer_character_id": parts[1]}
 
-## The receipt naming `txn` in these world flags, or {}.
-static func receipt_for_txn(flags: RefCounted, txn: String) -> Dictionary:
-	if txn.is_empty() or flags == null:
+## The receipt naming `txn` for `action_id` paid by `payer`, or {}. It counts
+## only when the action's own flag (`action_flag`) is set too: a receipt flag
+## on its own may be a guest's forgery (set_world_flag writes any world flag),
+## and the dock commit always writes the two together.
+static func receipt_for_txn(flags: RefCounted, txn: String, action_id: String, payer: String,
+		action_flag: String) -> Dictionary:
+	if txn.is_empty() or action_id.is_empty() or payer.is_empty() or action_flag.is_empty() or flags == null:
 		return {}
-	for id: Variant in flags.call("all_set"):
-		var receipt := parse_receipt(str(id), "")
-		if not receipt.is_empty() and str(receipt.txn_id) == txn:
-			return receipt
-	return {}
+	var id := receipt_flag(action_id, payer, txn)
+	if not bool(flags.call("has", action_flag)) or not bool(flags.call("has", id)):
+		return {}
+	return parse_receipt(id, "")
 
-## water_dock_debit `world_facts` for one world: action_id -> receipt. A paid
-## action whose flag is set with no receipt (it predates receipts, or was
-## written by some other path) answers the P4 legacy receipt, so an open row
-## for it refunds as paid_by_other instead of waiting forever. Absent actions
-## are simply absent: never a refund reason.
+## water_dock_debit `world_facts` for one world: action_id -> Array of EVERY
+## receipt the world holds for that action, present ONLY when the action's own
+## flag is set. Receipt flags are writable by any guest (set_world_flag), so:
+##  - a receipt without its action flag is ignored (the action is not done;
+##    rows keep waiting/resubmitting and the host commits them normally);
+##  - all receipts are kept, so a forged foreign receipt can never hide the
+##    genuine one naming a row's own txn (the row settles on its own receipt).
+## A paid action whose flag is set with no receipt (it predates receipts, or
+## was written by some other path) answers the P4 legacy receipt, so an open
+## row for it refunds as paid_by_other instead of waiting forever. Absent
+## actions are simply absent: never a refund reason.
 static func world_facts(flags: RefCounted, world_instance_id: String, actions: Array = []) -> Dictionary:
 	var facts: Dictionary = {}
 	if flags == null:
 		return facts
+	var receipts: Dictionary = {}
 	for id: Variant in flags.call("all_set"):
 		var receipt := parse_receipt(str(id), world_instance_id)
-		if not receipt.is_empty() and not facts.has(receipt.action_id):
-			facts[str(receipt.action_id)] = receipt
+		if not receipt.is_empty():
+			if not receipts.has(receipt.action_id):
+				receipts[str(receipt.action_id)] = []
+			(receipts[str(receipt.action_id)] as Array).append(receipt)
 	for action: Dictionary in (actions if not actions.is_empty() else load_data().actions):
-		if not facts.has(str(action.id)) and bool(flags.call("has", str(action.flag))):
-			facts[str(action.id)] = DEBIT.legacy_receipt(world_instance_id, str(action.id))
+		if not bool(flags.call("has", str(action.flag))):
+			continue
+		var found: Array = receipts.get(str(action.id), [])
+		if found.is_empty():
+			found = [DEBIT.legacy_receipt(world_instance_id, str(action.id))]
+		found.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return str(a.txn_id) < str(b.txn_id))
+		facts[str(action.id)] = found
 	return facts
 
 static func _payer(intent: Dictionary, context: Dictionary) -> String:

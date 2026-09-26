@@ -126,7 +126,7 @@ func test_escrowed_intent_commits_a_receipt_and_no_item_take() -> void:
 	assert_true(host.world.flags.has(FLAG))
 	assert_true(host.world.flags.has(RULES.receipt_flag(ACTION, GUEST, txn)),
 		"the receipt lands in the same commit as the action flag")
-	var receipt: Dictionary = RULES.receipt_for_txn(host.world.flags, txn)
+	var receipt: Dictionary = RULES.receipt_for_txn(host.world.flags, txn, ACTION, GUEST, FLAG)
 	assert_eq(str(receipt.payer_character_id), GUEST)
 	assert_eq(str(receipt.action_id), ACTION)
 	assert_eq(RULES.parse_receipt("water_claim:dock_paid:a:b", INSTANCE), {}, "malformed receipt ids never parse")
@@ -264,7 +264,7 @@ func test_flag_without_receipt_answers_the_legacy_receipt_and_refunds() -> void:
 	var txn := _begin(guest)
 	host.world.flags.set_flag(FLAG)
 	var facts := _facts(host.world)
-	assert_eq(facts[ACTION], DEBIT.legacy_receipt(INSTANCE, ACTION))
+	assert_eq(facts[ACTION], [DEBIT.legacy_receipt(INSTANCE, ACTION)])
 	assert_eq(DEBIT.reconcile(guest, facts, INSTANCE).refunded, [txn])
 	assert_eq(guest.inventory.count("reed_fiber"), 8)
 
@@ -280,3 +280,81 @@ func test_journal_failed_refunds_and_the_next_press_is_a_fresh_txn() -> void:
 	assert_true(bool(host.commit(_intent(guest, next, GUEST_PEER, GUEST), GUEST_PEER).ok))
 	assert_eq(DEBIT.reconcile(guest, _facts(host.world), INSTANCE).settled, [next])
 	assert_eq(guest.inventory.count("reed_fiber"), 2)
+
+
+# --- forged receipts (any guest can set_world_flag any world flag) ------------
+
+func _forge(flag: String, peer: int = OTHER_PEER) -> void:
+	var forged: Dictionary = host.commit({"kind": "set_world_flag", "realm": "water", "id": flag, "value": true}, peer)
+	assert_true(bool(forged.ok), "the shared ledger lets a guest write the flag: %s" % str(forged))
+
+
+func test_forged_own_receipt_without_action_flag_neither_blocks_nor_charges_for_nothing() -> void:
+	var guest := _character(GUEST)
+	# The victim's txn is computable from public inputs; the griefer forges its
+	# receipt before (or while) the victim presses, without the action flag.
+	var txn := DEBIT.txn_id(INSTANCE, ACTION, GUEST, 1)
+	_forge(RULES.receipt_flag(ACTION, GUEST, txn))
+	assert_false(_facts(host.world).has(ACTION), "a receipt without its action flag is no fact")
+	assert_eq(_begin(guest, _facts(host.world)), txn)
+	var verdict: Dictionary = host.commit(_intent(guest, txn, GUEST_PEER, GUEST), GUEST_PEER)
+	assert_true(bool(verdict.ok), "the host commits the press normally: %s" % str(verdict))
+	assert_true(host.world.flags.has(FLAG), "the action is done")
+	assert_eq(DEBIT.reconcile(guest, _facts(host.world), INSTANCE).settled, [txn])
+	assert_eq(guest.inventory.count("reed_fiber"), 2, "charged exactly once")
+	assert_eq(guest.inventory.count("driftwood"), 2)
+	assert_eq(str(DEBIT.begin(guest, ACTION, cost, INSTANCE, _facts(host.world)).code), "already_paid")
+
+
+func test_forged_receipt_before_press_does_not_settle_the_victims_row() -> void:
+	var guest := _character(GUEST)
+	var txn := DEBIT.txn_id(INSTANCE, ACTION, GUEST, 1)
+	_forge(RULES.receipt_flag(ACTION, GUEST, txn))
+	assert_eq(_begin(guest, _facts(host.world)), txn)
+	var before := DEBIT.reconcile(guest, _facts(host.world), INSTANCE, [txn])
+	assert_eq(before.settled, [], "a forged receipt alone never settles the row")
+	assert_eq(before.refunded, [])
+	assert_eq(str(guest.escrow[txn].status), "pending")
+
+
+func test_forged_foreign_receipt_while_in_flight_never_refunds_and_settles_once() -> void:
+	var guest := _character(GUEST)
+	var txn := _begin(guest)
+	# The copy is on the wire; the griefer forges ANOTHER payer's receipt.
+	_forge(RULES.receipt_flag(ACTION, OTHER, DEBIT.txn_id(INSTANCE, ACTION, OTHER, 1)))
+	var during := DEBIT.reconcile(guest, _facts(_replica_from_snapshot()), INSTANCE, [txn])
+	assert_eq(during.refunded, [], "no refund while the victim's copy is in flight")
+	assert_eq(guest.inventory.count("reed_fiber"), 2)
+	assert_true(bool(host.commit(_intent(guest, txn, GUEST_PEER, GUEST), GUEST_PEER).ok))
+	var after := DEBIT.reconcile(guest, _facts(_replica_from_snapshot()), INSTANCE)
+	assert_eq(after.settled, [txn], "all receipts are kept: the victim's own one settles it")
+	assert_eq(after.refunded, [])
+	assert_eq(guest.inventory.count("reed_fiber"), 2, "charged exactly once, never free")
+	assert_eq(guest.inventory.count("driftwood"), 2)
+
+
+func test_forged_foreign_receipt_with_flag_set_refunds_only_when_not_in_flight() -> void:
+	var guest := _character(GUEST)
+	var txn := _begin(guest)
+	_forge(RULES.receipt_flag(ACTION, OTHER, "forged-txn"))
+	_forge(FLAG)
+	# Forging the flag too is today's bound: the task is marked done and the
+	# victim pays nothing. Never while its copy is still in flight, though.
+	assert_eq(DEBIT.reconcile(guest, _facts(host.world), INSTANCE, [txn]).refunded, [])
+	assert_eq(guest.inventory.count("reed_fiber"), 2)
+	assert_eq(str(host.commit(_intent(guest, txn, GUEST_PEER, GUEST), GUEST_PEER).code), "already_done",
+		"the host never commits the victim's txn after the flag is set")
+	assert_eq(DEBIT.reconcile(guest, _facts(host.world), INSTANCE).refunded, [txn])
+	assert_eq(guest.inventory.count("reed_fiber"), 8, "the victim pays nothing")
+	assert_eq(guest.inventory.count("driftwood"), 6)
+
+
+func test_host_receipt_lookup_needs_action_payer_and_flag() -> void:
+	var txn := DEBIT.txn_id(INSTANCE, ACTION, GUEST, 1)
+	host.world.flags.set_flag(RULES.receipt_flag(ACTION, GUEST, txn))
+	assert_eq(RULES.receipt_for_txn(host.world.flags, txn, ACTION, GUEST, FLAG), {}, "no action flag, no receipt")
+	host.world.flags.set_flag(FLAG)
+	assert_eq(str(RULES.receipt_for_txn(host.world.flags, txn, ACTION, GUEST, FLAG).get("txn_id", "")), txn)
+	assert_eq(RULES.receipt_for_txn(host.world.flags, txn, ACTION, OTHER, FLAG), {}, "payer must match")
+	assert_eq(RULES.receipt_for_txn(host.world.flags, txn, "shellwatch_release", GUEST, FLAG), {},
+		"action must match")
