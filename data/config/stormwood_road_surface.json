@@ -1,0 +1,25 @@
+{
+  "_comment": "WO-F09-04. Every route in stormwood_world.json is painted into the Stormwood Terrain3D control map by scripts/world/build_stormwood_terrain.gd, as the named terrain_playground.json texture slot, with blend 0 and the auto-shader bit cleared (a partial control blend does not draw on this build; see build_playground_terrain.gd). grass_field.gd reads the same control map: its grass refuses that slot and its stone tier fills it. A texel is painted when its distance to the nearest route segment is within the lane half-width for the route's kind, plus the spur junction flare, plus the coherent edge wander, plus a per-texel fringe. Moving a route or changing this file stales the terrain bake manifest.",
+  "schema_version": 1,
+  "texture": "path",
+  "lane_half_width_m": {
+    "_comment": "Metres either side of the route centreline. The trainer is 1.80 m. Spurs are narrower than any road but still read as a path; every route kind in stormwood_world.json must have a width here or the bake fails.",
+    "critical": 2.8,
+    "alternate": 2.5,
+    "loop": 2.5,
+    "island": 2.3,
+    "spur": 2.0
+  },
+  "edge": {
+    "_comment": "wander_m moves the edge in and out along the road on coherent noise with wander_wavelength_m, so the lane is not a ruled ribbon; fringe_m is a per-texel random band across the edge. half-width - wander_m - fringe_m/2 must stay above 1.25 m so every centreline point keeps a painted texel within reach on the 2 m lattice.",
+    "seed": 20260925,
+    "wander_m": 0.45,
+    "wander_wavelength_m": 26.0,
+    "fringe_m": 0.6
+  },
+  "junction": {
+    "_comment": "Where a spur leaves its road the spur widens by flare_m on each side at the junction, easing back to its lane width over flare_length_m up the spur, so the Y reads on the ground.",
+    "flare_m": 2.4,
+    "flare_length_m": 14.0
+  }
+}

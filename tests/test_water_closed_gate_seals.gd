@@ -420,3 +420,72 @@ func test_open_chain_restores_the_authored_crossing_current_exactly() -> void:
 				var b := Vector3(float(points[index][0]), 0, float(points[index][2]))
 				var point := a.lerp(b, t)
 				assert_eq(production.sample(point).velocity, authored.sample(point).velocity, str(current.id))
+
+
+## F12 "no optional mount opens an uncleared gate": a FORCED dismount (combat,
+## a modal, a despawn) places the trainer beside the mount wherever the ride
+## ended. This applies `riding_controller._dismount_spot`'s rule -- mount
+## position plus its side vector times the species `dismount_distance` -- with
+## the WIDEST authored distance, a worst case the real call never exceeds. Sweep every closed seal, 32
+## bearings, the fastest compatible swim mount at the deepest point it can
+## hold against the race, and every facing with the widest authored dismount
+## distance: the trainer must never land on the sealed landform, and never
+## deeper than a lone swimmer could reach unless the race there beats a
+## swimmer (the core band runs at full strength to the shore), so no forced
+## dismount crosses a closed seal.
+func test_forced_dismount_never_crosses_a_closed_seal() -> void:
+	var fastest := 0.0
+	var widest := 1.6
+	for species_id: String in SPECIES.table():
+		var mount: Dictionary = SPECIES.definition(species_id).get("swim_mount", {})
+		if not bool(mount.get("compatible", false)):
+			continue
+		fastest = maxf(fastest, float(mount.get("speed_mps", 0.0)))
+		widest = maxf(widest, float(SPECIES.rideable(species_id).get("dismount_distance", 1.6)))
+	var water_mounts: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_mounts.json"))
+	for raw: Variant in (water_mounts as Dictionary).values():
+		if raw is Array:
+			for row: Variant in raw:
+				if row is Dictionary:
+					widest = maxf(widest, float((row as Dictionary).get("dismount_distance", 0.0)))
+	assert_true(fastest > 0.0 and widest > 1.6, "swim mounts and dismount distances were read")
+	var human := float(_traversal.human.speed_m_s)
+	var body := Node3D.new()
+	body.set("species_id", "")
+	var flags := _flags_before(0)
+	var checked := 0
+	for seal: Dictionary in _seals:
+		var centre: Vector2 = seal.centre
+		var outer := SEALS.outer_radius(seal, _rules)
+		for bearing in 32:
+			var direction := Vector2.from_angle(TAU * bearing / 32.0)
+			# Deepest point the fastest mount can hold: walk in from the rim
+			# while the outward race is still slower than the mount.
+			var depth := outer
+			while depth > float(seal.shore_radius_m):
+				var probe := centre + direction * (depth - 0.05)
+				if SEALS.velocity_at(seal, _rules, Vector3(probe.x, 0.0, probe.y), flags).length() >= fastest:
+					break
+				depth -= 0.05
+			var held := centre + direction * depth
+			# How deep a lone human swimmer can get on this bearing.
+			var human_reach := outer
+			while human_reach > float(seal.shore_radius_m):
+				var probe_h := centre + direction * (human_reach - 0.05)
+				if SEALS.velocity_at(seal, _rules, Vector3(probe_h.x, 0.0, probe_h.y), flags).length() >= human:
+					break
+				human_reach -= 0.05
+			for facing in 16:
+				body.rotation = Vector3(0.0, TAU * facing / 16.0, 0.0)
+				var side := body.transform.basis.x
+				var spot := Vector3(held.x, 0.0, held.y) + Vector3(side.x, 0.0, side.z).normalized() * widest
+				var race := SEALS.velocity_at(seal, _rules, spot, flags).length()
+				assert_true(SEALS.shore_gap(seal, spot) > 0.0,
+					"forced dismount at %s lands in water, not on sealed %s" % [spot, seal.id])
+				# Either the race there beats a swimmer (pushed straight back out),
+				# or the spot is no deeper than a lone swimmer could reach anyway.
+				assert_true(race > human or Vector2(spot.x, spot.z).distance_to(centre) >= human_reach - 0.1,
+					"forced dismount at %s (%.2f m/s race) is no deeper than a swimmer reaches in %s's closed race" % [spot, race, seal.id])
+				checked += 1
+	assert_true(checked > 0, "every closed seal was swept")
+	body.free()

@@ -138,3 +138,16 @@ route reads only as the valley floor.
 - **No visible road surface.** The rerouted legs and `dynamo_west_approach` are
   visually indistinguishable from the surrounding grass in these views.
 - `wo03_after/` (WO-F09-03, branch `ralph/stormwood-f09-pocket-spurs`): the same tool's `spurs` group. It holds one frame per pocket from its joined road 18 m before the spur junction, facing 30 m up the spur, plus one mid-spur frame (Verge), with records in `frames_wo03.json`. The sheet is `sheet_wo03_spurs.jpg`.
+- WO-F09-04 (branch `ralph/stormwood-f09-road-surface`). Tool flag `--hud=off`; production camera; day and Calm pinned. The route paint is in the Terrain3D control map and the electric current is on its own ribbons.
+  - **`wo04_after/`**, sheet `sheet_wo04_spurs.jpg`: road paint only, with the current not mounted. It holds the six WO-F09-03 spur frames plus `road_ash_road_stretch` and `road_conductor_road_stretch`, with records in `frames_wo04.json`.
+    - Every frame shows a bare brown dirt lane with ragged grass edges and the stone tier on it. Grass stops at the lane.
+    - The Y at each junction reads on the ground.
+    - Each junction lamp is a pale post with a lit amber lantern and a glow at head height.
+    - Conductor: ferns, a bush and a mushroom shelf from the scatter understory stand on the lane.
+    - Dynamo: the tower shows beyond the lamp.
+  - **`wo04_current/`**, sheets `sheet_wo04_current_day.jpg` and `sheet_wo04_current_night_motion.jpg`: the same eight frames with the yellow road current, plus the two road stretches at the art.json `night` preset (`*_night`) and `current_motion_0..3`. The motion frames are four frames at a pinned shader clock 0.25 s apart. Records, including chunk counts and draw calls, are in `frames_wo04_current.json`.
+    - By day, thin gold cracks with brighter charge heads run in the dirt.
+    - At night, two or three bright yellow jagged cracks run the length of the lane, and the pulses move between strip frames.
+  - **`wo04_fade/`**, sheet `sheet_wo04_fade.jpg`: lamp light on/hidden at 40 m and 70 m (night, probe energy 40, rain hidden) and palisade frames at 230 m and 270 m, with probe numbers in `world_fade_probe.txt` and `synthetic_fade_probe.txt`.
+    - In the 70 m pair a bird creature blocks the lamp.
+    - The synthetic probe is the proof. The light fade works in Compatibility. Mesh FADE_SELF does not: the mesh cuts hard at 280 m.

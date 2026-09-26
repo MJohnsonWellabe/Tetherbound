@@ -269,6 +269,142 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   - The sightline is a straight 44 m-wide lane that could read as cut from above.
   - The WO-F09-01 open items still stand.
 
+## WO-F09-03 — Pocket spurs, junction lamps, review follow-ups (`ralph/stormwood-f09-pocket-spurs`, stacked on WO-F09-02)
+
+- **Finding:** pocket centres stood 112–351 m off their roads, and nothing on a road pointed to a pocket.
+- **Fix: one spur per pocket** (`stormwood_world.json`, `"kind": "spur"`, with `pocket_id`, `joins` and the joined road's `requires_unlock`). Each spur is a straight lane from the nearest point on its road to the mouth. The mouths already faced that point, so no bend was needed.
+  - Verge → `ash_road` 270 m; Hollows → `crown_sightline_loop` 137 m; Conductor → `conductor_road` 341 m; Deepwood → `hall_loop` 155 m; Dynamo → `dynamo_west_approach` 103 m.
+  - The steepest graded corridor sample is 17.7° (Dynamo). The others are at most 11.1°.
+  - **Why spurs, not moved pockets:** spurs are data plus one lamp. Moving pockets would re-validate five interiors, five moved rewards, spawn discs and region bounds, and 40–80 m would still leave a pocket out of sight of the road.
+- **Junction lamp** (`stormwood_pockets.json` `spur_marker`): a third `mouth_lure` lamp post. It stands 10 m up the spur and 3.5 m to its right, clear of every road corridor, faces the road, and has its own collider.
+- **Route consumers checked:**
+  - The ROAD visibility model, the audit/author tools and the four-biome observer read only `critical`.
+  - `smoke_stormwood_continuous._walk_route` selects routes by id.
+  - The trainers-near-routes test: no trainer's nearest route is a spur.
+  - The glass-sink and walkability tests grade spurs like roads, and they pass.
+  - `test_stormwood_pockets` now means "roads" as non-spur routes.
+- **Scatter:** spurs get the corridor clearing but no roadside stand. A stand would line a dead-end lane like a through road and claim tree cells the background forest now fills. The re-bake changed 34694 → 34691 placements. On the old bake, 3 of 5 spur lanes held a collider 0.47–1.58 m from the centre line.
+- **Review LOWs:**
+  - (a) The mouth-to-road search now sweeps the 0.4 m capsule past every committed baked collider and lamp post, and must reach a non-spur road. It has a built-in control: a closed ring of trunks outside the mouth must fail the same search, and it does.
+  - (b) An unpaired legacy arch with no saved footing no longer counts against the three-road cap, and no longer blocks the Crown twin. A legacy arch that is half of a standing pair still counts, because that road still travels. The existing cap tests use paired legacy roads and are unchanged. There are two new tests, and both fail on the old rule.
+  - (c) Config `draw_distance`: the 190 palisade trunks and the lamp art stop drawing at 250 m, with a 30 m fade. The 15 lamp lights use Light3D distance fade, ending at 60 m, because lights have no visibility range.
+  - (d) The frame maths is now in one place, `stormwood_pocket_frame.gd`, which is a bake source. The pocket collider reach is `max(collision_radius × scale_max)` and still equals 2.61.
+  - (e) A seat row without a position is skipped.
+- **Witnesses:**
+  - Two bakes are byte-identical.
+  - `--only=test_stormwood_,test_road_creature_visibility,test_scatter_,vegetation` ran 68 files and 348 tests, with 0 failed and 0 SCRIPT ERROR.
+  - `test_stormwood_pockets` has 10 tests, 0 failed.
+  - Both smokes pass: `smoke_stormwood_arches` and `smoke_stormwood_pickup_runtime`.
+- **Captures:** `visual/f09/wo03_after/` (5 road-side junction frames, 1 mid-spur frame, `frames_wo03.json`) and `visual/f09/sheet_wo03_spurs.jpg`. The frames were not self-judged; the blind judge is with the coordinator.
+- **Open:**
+  - The spur has no surface, like the roads. Much of the forest here is open grass with sparse trees, so the cleared corridor alone draws no visible line.
+  - WORLD.md says "nine top-level route records"; the data now has 15 (10 roads + 5 spurs). The coordinator owns that edit.
+  - There is still no night capture of the lamps.
+
+## WO-F09-04 — Routes visible on the ground, junction lamps, electrified roads (`ralph/stormwood-f09-road-surface`, stacked on WO-F09-03, merged with main fe07d0d28)
+
+- **Finding (code-blind judge on `sheet_wo03_spurs.jpg`):** a player walking the road would not notice a side path. Roads and spurs were invisible on the ground. The junction lamp read as decoration.
+  - **Root cause:** the Stormwood bake wrote heights only, and every control texel stayed on Terrain3D's auto shader.
+- **Route paint** (`build_stormwood_terrain.gd`, new `data/config/stormwood_road_surface.json`):
+  - **What is painted:** every one of the 15 routes, including the 5 spurs.
+  - **Texel value:** `base = overlay = path` (terrain_playground slot 3), blend 0, auto bit cleared. This is Meadows' measured base-id rule; a partial blend does not draw on this build. Every other texel keeps the default auto texel.
+  - **Lane half-width by kind:** critical 2.8 m, alternate and loop 2.5 m, island 2.3 m, spur 2.0 m.
+  - **Edge:** 0.45 m of coherent wander on a 26 m wavelength, plus a 0.6 m per-texel fringe. The fringe uses an integer hash, so it is the same on every machine.
+  - **Spur junction:** the spur flares 2.4 m wider at the junction, easing out over 14 m.
+  - **Result:** 29,580 texels painted.
+  - **Grass:** `grass_field.gd` reads the same control map, so grass leaves the lanes and its stone tier fills them. No shared file was edited.
+- **Height proof:**
+  - `tools/probe_stormwood_terrain_channels.gd` decodes every region, old against new. In all 108 regions the height_map, color_map and height_range are identical. The sha256 over all height bytes is `56dcc98c…65e7d2` both before and after.
+  - Only the control map differs: 40 regions, 29,580 texels, every one `0x18c00000`.
+  - `test_committed_heights_still_match_the_heightfield` samples about 3,000 committed heights against `stormwood_heightfield.gd`. The worst difference is under 1 mm.
+- **Determinism:**
+  - Godot's resource saver had been giving every region's map images a random `Image_xxxxx` id. Two bakes of the same content therefore differed in bytes, including the previously committed files.
+  - The bake now names the three map sub-resources before saving.
+  - Two full in-place bakes are byte-identical over all 109 files (108 regions + manifest). The sha256 of the sorted `sha256sum` list is `d045fbf2…4dbfe`.
+  - The manifest fingerprint now covers the surface config and `terrain_playground.json` too (it already covered `stormwood_world.json`). Moving a route stales the bake.
+- **Scatter:** the `stormwood_pockets.json` edit stales the scatter fingerprint (the whole file is a source). I re-baked it. All 108 bins are byte-identical and only `manifest.json` changed.
+- **Junction lamps** (`spur_marker.lamp` overrides `mouth_lure` for the junction post only):
+  - Post 5.2 m, lantern ×2.1, flame centre 4.7 m up (2.6× the trainer).
+  - Pale post `#e2cfa4`, which separates from the dark trunks.
+  - Unshaded flame at emission 8, plus a 1.2 m additive glow billboard built from a generated radial gradient (no new asset).
+  - It stands on the verge of the painted spur, inside its tree-cleared corridor. The mouth lamps are unchanged.
+- **Compatibility fades, measured** (`tools/probe_compat_fade_synthetic.gd`: a still scene with the pocket config's exact settings; in-world diffs were swamped by wind and sky motion even with a noise floor):
+  - **Lamp light (Light3D distance fade, gone by 60 m): works.**
+    - Floor light under the lamp by camera distance: 20 m 42.9, 44 m 6.9, 50 m 4.4, 55 m 1.9, 59 m 0.08, 62 m 0, 70 m 0.
+    - No fallback needed.
+  - **Palisade and lamp meshes (visibility_range_end 250 m, margin 30 m, FADE_SELF): no fade in Compatibility.**
+    - The box is at full brightness at 249, 265 and 279 m, and gone at 285 m. That is a hard pop at `models_m + models_fade_m` = 280 m.
+    - The config comment's "fading over models_fade_m" is therefore not true on this renderer. I did not re-tune it: any `stormwood_pockets.json` edit stales the scatter bake.
+  - **In-world frame pairs:** `wo04_fade/` and `sheet_wo04_fade.jpg`, with numbers in `world_fade_probe.txt`.
+    - Lamp at 40 m and 70 m, light on and hidden. The light was raised to energy 40 for the probe, and rain was hidden.
+    - Palisade at 230 m and 270 m.
+    - At 40 m the warm ground pool shows with the light on. In the 70 m pair a wild bird creature stands between the camera and the lamp. The palisade is a small grey clump on the horizon at both 230 and 270 m, as expected for a cut at 280 m.
+- **Review nit, route grounding:** `test_stormwood_trainers_data` measured the trainer anchor's route distance against every route, spurs included.
+  - **Rule now:** a trainer is route-grounded only against **through routes**, which is every kind except `spur` (a spur is a dead-end lane to one pocket).
+  - A new control shows that the Verge pocket mouth (on its spur, far from any road) fails the check, and passes only if the spur is counted as a road.
+  - **Proposed WORLD.md wording, for the coordinator:** "Route-grounded placements (trainer anchors) measure distance to through routes only; `kind: spur` lanes to pockets do not count."
+- **Owner direction (verbatim):** "Can you make the path and roads electrified with yellow electricity flowing through them somehow in the ground."
+  - **Build:** `scripts/world/stormwood_road_current.gd`, `shaders/stormwood_road_current.gdshader`, and `data/config/stormwood_road_current.json`. The config is kept separate from the surface config so tuning the look never stales the terrain bake.
+  - **Geometry:**
+    - Every route and spur gets terrain-conforming ribbon chunks: at most 48 m long, 1 m rows, 5 columns, lifted 8 cm on the live Terrain3D height.
+    - The ribbon is 0.85 of the painted lane width, and the shader feathers it to nothing well inside that.
+    - 574 chunks share one ShaderMaterial. They have no colliders and cast no shadow, and each has a visibility_range_end of 150 m.
+    - The shader fades the current out over the last 25 m itself, because FADE_SELF does not work in Compatibility.
+    - A vertex depth-pull (a slide along the view ray, so nothing moves on screen) keeps the far, coarser terrain mesh from swallowing the ribbon.
+  - **Look:**
+    - Additive and unshaded: three meandering, jagged, broken cracks per lane plus a hairline web.
+    - Comet-shaped charge pulses run along each crack on its own phase, with a pointed head. They flow at 7 m/s with 11 m spacing.
+    - A light crackle flicker plays on top.
+    - Colours are `#fff4b0` core and `#ffc21a` edge (yellow/gold). They are not the magenta telegraph `#ff40e6` and not Team Tether oxblood.
+  - **Flow direction:** toward the Dynamo `(-100, 5470)`. Each open route flows from its end farther from the Dynamo to its nearer end.
+    - Closed loops (the five loops and `crown_ring`, whose first point equals their last) have no nearer end. They flow in polyline order.
+  - **Presentation only:** nothing is built when `simulation_only`. The only script work after build is a 0.5 s timer.
+  - **Reduced motion** (`motion_prefs`): flow drops to 1.2 m/s and flicker to 0. The timer follows the setting live.
+  - **Storm coupling:** `set_storm_intensity(0..1)` sets one uniform.
+    - The timer reads `StormwoodSurge.phase`. Main's surge-readability exposes no phase signal, so this reads its public field; `stormwood_surge.gd` is not edited.
+    - Per-phase values come from config: Calm 0.55, Building 0.78, Break 1.0, Fading 0.4, eased over 2.5 s.
+    - After `stormwood:long_storm_ended` (the flag the surge itself reads for its aftermath) the value is 0.18.
+    - No OmniLights were added at junctions.
+  - **Cost** (per-frame records in `frames_wo04_current.json`):
+    - 8–14 chunks are within draw range at any stand, out of 574.
+    - At the motion-strip stand, frame draw calls are 5,744 with the current and 5,740 without: +4.
+    - Build time is not separately measured; it is inside the world build.
+    - Not profiled on an Ally.
+- **Tests (each with its negative control):**
+  - `test_stormwood_road_surface`, 10 tests:
+    - Every centreline has at least 97% path texels. Control: routes moved 40 m sideways, and an unpainted map.
+    - No path texel is more than 7.8 m from every route. Control: a stray painted patch is found.
+    - The last 12 m to each spur's mouth and its first 20 m are painted. Control: 12 m inside the pocket is not path.
+    - Painted width per kind is within 0.9 m of config. Controls: double width is rejected, and a 1.2 m synthetic lane measures as its own width.
+    - The junction flare is wider at 7 m than at 30 m. Control: no flare gives a flat half-width.
+    - The bake is fresh against its fingerprint. Control: moving a spur point 1 m stales it.
+    - Committed heights equal the heightfield. Control: a field 1 m higher is caught.
+    - Junction lamp size, emission, halo and collider all come from config. Control: the unchanged mouth lamp fails the 2.4× height check.
+    - Config validation. Control: an unknown route kind and an unknown slot are refused.
+  - `test_stormwood_road_current`, 7 tests:
+    - Chunks cover at least 98% of every route and spur. Control: stripping the spur chunks is caught.
+    - Chunks have a range limit, no shadow, one shared material and no collision. Control: an added body is found.
+    - Nothing is built on simulation_only. Control: a presentation world does build.
+    - Reduced motion gives calm flow and 0 flicker. Control: the live toggle back restores both.
+    - Colours come from config and have a yellow-gold hue (35–65°). Controls: magenta and oxblood are rejected.
+    - The ribbon lies inside the lane and flows toward the Dynamo. Controls: width fraction 1.3 leaves the lane, and an outbound polyline is reversed.
+    - Intensity comes from config per phase and is clamped. Control: an unknown phase reads as Calm.
+  - `test_stormwood_trainers_data`: the spur rule above.
+  - Tests, SCRIPT ERROR grep: the final run of the added/changed files (`test_stormwood_road_surface`, `test_stormwood_road_current`, `test_stormwood_pockets`, `test_stormwood_trainers_data` and `test_stormwood_terrain_bake`): 35 tests, 3,665 assertions, 0 failed, 0 SCRIPT ERROR. Before the main merge, `--only=test_stormwood_,test_road_creature_visibility,test_scatter_,vegetation` ran 365 tests, 0 failed, 0 SCRIPT ERROR.
+- **Captures** (production CameraRig, HUD off, Calm; `visual/f09/README.md` has per-frame notes):
+  - `wo04_after/`, sheet `sheet_wo04_spurs.jpg`: road paint only (the current not mounted); the six spur frames and two road stretches.
+  - `wo04_current/`, sheets `sheet_wo04_current_day.jpg` and `sheet_wo04_current_night_motion.jpg`: the same eight frames with the current, two stretches at the art.json `night` preset, and a four-frame motion strip at a pinned shader clock of 100.00, 100.25, 100.50 and 100.75 s.
+  - `wo04_fade/`, sheet `sheet_wo04_fade.jpg`: see above.
+  - **Sky:** main's new surge skies are merged, so these show the Calm overcast. The always-purple sky is not on this branch.
+  - The frames were not re-judged blind.
+- **Open:**
+  - **Understory on the lanes:** the scatter's non-colliding understory (ferns, mushroom shelves, bushes) still stands on painted lanes in places, e.g. Conductor's junction. Only colliders keep the road corridor. Fixing this means a `stormwood_scatter.gd` rule and a re-bake.
+  - **Palisade pop:** it pops at 280 m instead of fading, and the config comment overstates it (see above).
+  - **Path colour:** the path slot keeps the Stormwood `737080` multiplier, so the dirt is mid-brown rather than Palworld-pale.
+  - **Current by day:** the current is subtle in daylight, by design, since it is additive. It is judged at night / on the storm sky.
+  - **Not verified:** no blind re-judge, no Ally profile, and the current's Surge coupling has not been seen live across a Break.
+
+
 ## WO-F10-06 — Surge phases readable without HUD (`ralph/stormwood-f10-surge-readability`)
 
 - **Anchor:** F10 / ACCEPTANCE §6.1 F10: lightning with a 1.2 s / 3 m telegraph, and Calm/Building/Break/Fading readable without HUD text. The restored-sky view has to be distinct. ART_DIRECTION and SYSTEMS define the Stormwood look for each phase.
@@ -301,6 +437,7 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
     - no audio.
   - **Region-wide, outside this branch:** no sun shadows, an empty horizon, grass that stays bright under dark skies, and no rain wetness.
 
+
 ### WO-F11-03: LB prompt after a Break faint
 
 - **Finding (step 1, real director):** LB already sends out the next creature during Break. `party_cycle` goes to `encounter_director.gd` `_read_creature_control_input()`, then `party.cycle_active(1)`. That step skips fainted and resting creatures and bumps `revision`. `_sync_active_creature()` sees a hidden but valid `_ally_body` whose creature is not the new active one. It dismisses that body (`queue_free`) and summons the new active creature as a visible follower. The field control then pilots the follower once it is within reach of the arena. `summon_active_creature()` alone (the `creature_recall` path) is a no-op while the hidden fainted body is still deployed. The only gap was that nothing told the player to press LB. No shared file is changed.
@@ -328,38 +465,6 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   | Pause disabled | 6 fails |
   | A live partner ignored | 1 fail (the co-op check) |
   | Re-show removed | 1 fail |
-
-## WO-F09-03 — Pocket spurs, junction lamps, review follow-ups (`ralph/stormwood-f09-pocket-spurs`, stacked on WO-F09-02)
-
-- **Finding:** pocket centres stood 112–351 m off their roads, and nothing on a road pointed to a pocket.
-- **Fix: one spur per pocket** (`stormwood_world.json`, `"kind": "spur"`, with `pocket_id`, `joins` and the joined road's `requires_unlock`). Each spur is a straight lane from the nearest point on its road to the mouth. The mouths already faced that point, so no bend was needed.
-  - Verge → `ash_road` 270 m; Hollows → `crown_sightline_loop` 137 m; Conductor → `conductor_road` 341 m; Deepwood → `hall_loop` 155 m; Dynamo → `dynamo_west_approach` 103 m.
-  - The steepest graded corridor sample is 17.7° (Dynamo). The others are at most 11.1°.
-  - **Why spurs, not moved pockets:** spurs are data plus one lamp. Moving pockets would re-validate five interiors, five moved rewards, spawn discs and region bounds, and 40–80 m would still leave a pocket out of sight of the road.
-- **Junction lamp** (`stormwood_pockets.json` `spur_marker`): a third `mouth_lure` lamp post. It stands 10 m up the spur and 3.5 m to its right, clear of every road corridor, faces the road, and has its own collider.
-- **Route consumers checked:**
-  - The ROAD visibility model, the audit/author tools and the four-biome observer read only `critical`.
-  - `smoke_stormwood_continuous._walk_route` selects routes by id.
-  - The trainers-near-routes test: no trainer's nearest route is a spur.
-  - The glass-sink and walkability tests grade spurs like roads, and they pass.
-  - `test_stormwood_pockets` now means "roads" as non-spur routes.
-- **Scatter:** spurs get the corridor clearing but no roadside stand. A stand would line a dead-end lane like a through road and claim tree cells the background forest now fills. The re-bake changed 34694 → 34691 placements. On the old bake, 3 of 5 spur lanes held a collider 0.47–1.58 m from the centre line.
-- **Review LOWs:**
-  - (a) The mouth-to-road search now sweeps the 0.4 m capsule past every committed baked collider and lamp post, and must reach a non-spur road. It has a built-in control: a closed ring of trunks outside the mouth must fail the same search, and it does.
-  - (b) An unpaired legacy arch with no saved footing no longer counts against the three-road cap, and no longer blocks the Crown twin. A legacy arch that is half of a standing pair still counts, because that road still travels. The existing cap tests use paired legacy roads and are unchanged. There are two new tests, and both fail on the old rule.
-  - (c) Config `draw_distance`: the 190 palisade trunks and the lamp art stop drawing at 250 m, with a 30 m fade. The 15 lamp lights use Light3D distance fade, ending at 60 m, because lights have no visibility range.
-  - (d) The frame maths is now in one place, `stormwood_pocket_frame.gd`, which is a bake source. The pocket collider reach is `max(collision_radius × scale_max)` and still equals 2.61.
-  - (e) A seat row without a position is skipped.
-- **Witnesses:**
-  - Two bakes are byte-identical.
-  - `--only=test_stormwood_,test_road_creature_visibility,test_scatter_,vegetation` ran 68 files and 348 tests, with 0 failed and 0 SCRIPT ERROR.
-  - `test_stormwood_pockets` has 10 tests, 0 failed.
-  - Both smokes pass: `smoke_stormwood_arches` and `smoke_stormwood_pickup_runtime`.
-- **Captures:** `visual/f09/wo03_after/` (5 road-side junction frames, 1 mid-spur frame, `frames_wo03.json`) and `visual/f09/sheet_wo03_spurs.jpg`. The frames were not self-judged; the blind judge is with the coordinator.
-- **Open:**
-  - The spur has no surface, like the roads. Much of the forest here is open grass with sparse trees, so the cleared corridor alone draws no visible line.
-  - WORLD.md says "nine top-level route records"; the data now has 15 (10 roads + 5 spurs). The coordinator owns that edit.
-  - There is still no night capture of the lamps.
 
 ## WO-F11-04: earned Dynamo → aftermath witness (`ralph/stormwood-f11-proof`)
 
@@ -507,6 +612,24 @@ SCRIPT ERROR count is 0 in both runs.
     - `smoke_stormwood_lightning` 24/0 and `smoke_stormwood_lightning_cleanup` PASS.
   - **Not changed:** strikes still cannot damage a creature (none are wired to). The ruling's "hazards the creature can avoid" are presentation only.
 
+### Runs 15 and 16: the Capacitor Alpha is cleared by a rested party
+
+| Run | Commit | Prefix | Crown step | First failure |
+|---|---|---|---|---|
+| 15 | 49d9ab27f | PASS 1206.6 s; 8 warnings dodged, 0 hits | rest (3 nights), send-out OK on the retry, escorts, **Alpha CLEARED**; FAIL 966.4 s | `stormwood_harvest_conductor_run_099 never won the InteractionArbiter` |
+| 16 | ce6d8367e | PASS 1249.5 s; 0 hits | rest, re-rest after a road-fight KO, **Alpha CLEARED**; FAIL 1072.5 s | SCRIPT ERROR in `_activate_exact` diagnostic: the Thunderwood prompt was a freed instance |
+
+- **Alpha fight numbers, fully rested:**
+  - Run 15: terrapup L46 won with 143.9/444 left against voltarach L40 511.8 HP. 108 player hits, 28 enemy hits, 19 player misses; 131 s.
+  - Run 16: bramblebun L46 won with 82.7/351.5 left. 103 hits dealing 512.3 damage, 23 enemy hits dealing 268.8; 95.6 s.
+  - No tuning stop applies.
+- **LB presses.** In both runs, every other LB press left the active creature unchanged: the press landed while the director was redeploying after the previous switch. The retry covers it. Whether a real pad has the same dead press is not measured here.
+- **Gather diagnosis (run 16).** The run died with a SCRIPT ERROR in the harness's own failure message, which called a method on the freed Thunderwood prompt.
+  - Reading: the Interact press is answered by the equipped axe's swing, which gathers the node and frees it. The helper then saw no activation of the exact prompt.
+  - This is a harness reading, not proven: the receipt was not checked before the run ended.
+  - Fix, e47fa1758: a prompt freed by our own press returns to the caller, which checks the receipt and the yield. A prompt freed during the approach fails with its own message.
+- **Run 15's lone strike hit.** It was logged during the "fight during Capacitor Grove road point" phase, right after that fight was lost. The phase label lags, so this was after the fight ended, not a breach of the spare rule.
+
 ### Not produced
 
 - The Dynamo Break, the Stormheart offer (solo accept at five), the Long Storm aftermath and the Spark were not reached in the earned run.
@@ -536,3 +659,263 @@ Seven other pickup/NPC overlaps remain (route_05, 07, 16, 18, 19 and pocket_203)
 - **Last result:** two real ENet processes; the staged Dynamo frees the Stormheart; both characters are recorded as participants; the host's own offer, Yes and receipt pass.
 - **Where it stops:** the guest's offer is refused because the host's proxy for the guest never leaves the Stormwood arrival point. Not yet diagnosed.
 - **Consequence:** F11-B (two-peer, disconnect, capacity, no duplicate grants over the network) has no live proof from this lane.
+
+## WO-F11-05: two-peer Stormheart proof at space and capacity (`ralph/stormwood-f11-two-peer`)
+
+**Result: every scenario below is a rendered two-peer PASS.** Game code is unchanged from `origin/main` 10b635d38. Every commit on this branch adds only scenario JSON under `tools/net/proof_scenarios/stormwood_f*` and evidence under `ralph/reports/STORMWOOD-PROGRESS/two_peer/`. No game fix was needed. `tools/net/proof_steps.gd` (lane X05) was not edited.
+
+- **Platform:** Linux container, Godot 4.7-stable. Two real peer processes over loopback ENet, rendered with `--render` (xvfb, opengl3, 960x540 captures). This is local evidence, not internet or Steam acceptance.
+- **Tool:** lane X05's `tools/net/run_two_peer_proof.sh` + `tools/net/proof_steps.gd` + `tests/smoke_net_proof_two_peer.gd`.
+- **Command, per scenario `<S>`:** `tools/net/run_two_peer_proof.sh tools/net/proof_scenarios/<S>.json --render --out=ralph/reports/STORMWOOD-PROGRESS/two_peer/<S>`. The runs were serial, one render at a time.
+- **Starting saves:**
+  - The host always loads the named save `tools/net/proof_saves/host_meadows_stormwood_route_open/`: Meadows, Stormwood route open, party empty.
+  - The guest is a fresh trainer (`boot world`).
+  - Both enter Stormwood through `Game.enter_realm`.
+- **Disclosed setup:**
+  - x05's `stormheart_fixture` stands in for playing the Dynamo fight. It sets both peers as Dynamo contributors and commits Marrow's defeat flag through the ledger.
+  - Capacity scenarios fill one belt with five through `party_grant` (the game's `party_seam.add`). No named five-creature save exists.
+  - The Waterward scenario uses `teleport` to stand beside the view and gate prompts.
+  - The F09 scenario uses `storage_grant` for Stormglass and `explore_at` to stand at each arch.
+  - Everything from the offer on is the game's own code, driven by ordinary presses: the Yes/No dialogue, the Team-tab release ceremony (`ui_down` / `ui_accept` / `menu_cancel`), the prompts and the saves.
+- **Input:** the harness injects the physical joypad/key binding plus the action (`peer_runner.gd` `_press_edge`), guarded by `input_contexts.json`.
+- **Evidence kept:** `PROOF.md`, 256-colour PNGs, gzipped `worlds/` and `characters/` receipts, `NET-SUMMARY.md`, `NET_RUN.json` and `LOG-EXCERPTS.txt` (every SCRIPT ERROR with context and every `[downed]` line; from the Arch run on). Raw logs and `saves/` slot copies were deleted for disk.
+
+| Scenario (`<S>`) | Evidence commit | Run id | Verdict | SCRIPT ERROR |
+|---|---|---|---|---|
+| `stormwood_f11_mirror_host_refuses_guest_accepts`: space both sides, host No, guest Yes, double press | ad9806d8a | net-20260925T191033Z-20478 | PASS | 0 |
+| `stormwood_f11_mirror_clean_health`: the same mirror, asserting trainers up (DownedState `local_downed=false`, none expired or revived; the host as authority reports `downed_peers=[]`) on arrival, just before each answer and right after each answer | (the commit that adds this section) | net-20260925T203118Z-3042 | PASS (100/100 both, no `[downed]` line) | 0 |
+| `stormwood_f11_capacity_guest_full_releases_belt`: guest at five says Yes and releases bramblebun; host (space) Yes | b0f610b1b | net-20260925T191830Z-22102 | PASS | 0 |
+| `stormwood_f11_capacity_host_full_lets_stormheart_go`: host at five says Yes, lets the Stormheart go (a refusal); guest (space) Yes | 8f0e62409 | net-20260925T192701Z-23676 | PASS | 1 (guest; text lost, see below) |
+| `…_host_full_lets_stormheart_go_rerun`: same steps | 14416a5c5 | net-20260925T202421Z-1718 | PASS | 0 |
+| `stormwood_f09_arch_gates_two_peer_reload`: pair A relit by both peers, B dark, C gated, save/reload | 481676ff1 | net-20260925T194551Z-27097 | PASS | 0 |
+| `stormwood_f11_disconnect_guest_rejoins_answers_once`: two drop/rejoins, save/reload, replays | 47d2a4a71 | net-20260925T200502Z-30959 | PASS | 0 |
+| `stormwood_f11_waterward_gate_two_peer_reload`: host charts the sky, guest opens the gate once, save/reload | 9faec484d | net-20260925T201217Z-32081 | PASS | 1 (identified, shared code) |
+
+### What the runs show
+
+- **Space.** In the x05 original and in both mirror runs, each peer keeps its own answer on both sides. Each peer's world and character receipts carry its own accept or refuse, and the host's saved world holds each answer exactly once. The pre-offer saves hold no answer (non-vacuous baseline).
+- **Capacity.**
+  - A sixth `party_seam.add` is refused.
+  - A Yes at five does not settle by itself. `stormwood_ending.gd` `_begin_local_ceremony` puts the Stormheart in `Game.pending_catch`. The Team tab opens on the release ceremony ("You caught the Stormheart. The belt holds five, and one of the six goes free."; `input_context` `menu_creatures`). While the choice is open nothing is added and nothing is recorded.
+  - Guest run: the guest lets bramblebun go ("Let Bramblebun go? … the Stormheart takes it"). The belt becomes terrapup, ripplet, galewisp, mudsnout, fulgocobra. The world records the guest's acceptance.
+  - Host run: the host lets the newcomer go ("Let the Stormheart go? … your five keep their holders"). Its five are unchanged. The world and the host's character record a refusal, "exactly as letting the newcomer go at five".
+  - In both runs the other peer's own offer is still its own, and it keeps one.
+- **No duplicate grant.** A second press on an answered prompt finds it dark ("Answer the freed Stormheart", `enabled=false`) on the host and on the guest. This holds in the mirror run, the capacity runs, after reconnects, and after `save_reload_here`. Party lists stay at exactly one fulgocobra per accepting peer.
+- **Disconnect/reload, partial.**
+  - A dropped client lands on the title (`session.gd` `_on_server_disconnected` → `_return_to_title`).
+  - It rejoins through `production_join` (title `_join_via` → JoinDriver) as the same character. Its owed offer is still its own. It says Yes once.
+  - A second drop and rejoin, then `save_reload_here` on both peers (host `autosave_here` + `load_slot`; guest character save + apply), grant nothing further.
+  - **Both drops happen while the offer is owed but not yet opened.** No proof step opens the offer and stops before Yes/No. The step needed is `stormheart_open_offer` in `tools/net/proof_steps.gd`: walk up, press the prompt, wait for the offer panel, return without answering. It is left to lane X05.
+- **Waterward gate.**
+  - The host's view press sets `stormwood:waterward_revealed` and the one-time `realm_key_water` on both peers.
+  - The guest reads the 3-line `stormwood_waterward_aftermath` conversation, then presses the gate once. The host commits the key consumption and `realm_gate_water_unlocked` together.
+  - The frame reads "The Waterward gate is open." / "Enter Tidewake".
+  - After reload, both peers keep the open gate and the charted sky. The host's saved world lacks the quoted `"realm_key_water"` flag.
+  - A second gate press is not made, because it enters Tidewake.
+- **F09 gates.**
+  - The host and the guest each relight one arch of pair A through its "Relight … · 3 Stormglass" prompt, and each pays its own Stormglass.
+  - Stepping into Ashfoot carries the host to its twin (z 500 → 1436.5). Dark pair B carries nobody (z 1350 stays). Pair C, behind the closed Rootgate, is unavailable (z 2260 stays).
+  - After reload the lit flags hold on both peers, and the guest travels the pair back (→ z 503.5). The host's saved world has A lit and B/C unlit, and lacks `stormwood:rootgate_released`.
+  - The closed-pair rows are recorded positions, not numeric assertions.
+
+### Findings (not fixed here: shared files)
+
+- **Freed `winning_provider`.** `scripts/world/interaction_arbiter.gd` `_recompute()` returns early while the arbiter is disabled (lines 384-386, for example while a dialogue holds input). A provider freed meanwhile stays cached in `_winning_provider`, and `winning_provider()` (line 305) returns it unvalidated.
+  - It surfaced as `SCRIPT ERROR: Trying to cast a freed object` at `scripts/player/conversation_camera.gd:175` (`_arbiter.call("winning_provider") as Node3D`). That happens when the guest's Stormheart release conversation starts (`stormwood_ending.gd:152` → `:732` → `dialogue_panel.gd:197/367`). The effect is that the camera does not push in for that conversation.
+  - It also crashed the `downed` probe (`tools/net/peer_runner.gd:5939`).
+  - It is intermittent. It is the likely source of the first host-full run's lost SCRIPT ERROR, which did not recur in the rerun.
+  - Minimal fix, for the owner: validate the provider before the cast, or clear it on the disabled path.
+- **`stormheart_answer` stand-offsets (X05 step).** On an already-dark prompt the step tries all six stand-offsets and leaves the trainer at the last one, below or at the edge of the core platform. The trainer then falls and goes down (the 0/100 HUD frames and `[downed]` lines after double-press rows).
+  - The first mirror run's guest was already at 0/100 in its arrival frame, before any answer, so that one is a separate, unexplained arrival fall. The clean-health mirror rerun has no double press. It asserts both trainers up around every answer and ends at 100/100 on both peers.
+  - In the clean rerun the guest's own `downed` probe is taken on arrival and after the answers, not just before. During its release conversation the freed-`winning_provider` fault above crashes that probe (first attempt, not committed), so the pre-answer check reads the host's authority view (`downed_peers=[]`).
+
+### Limitations
+
+- The Dynamo fight is not played in these runs (the fixture stands in for it). The five-creature belts come from `party_grant`. The platform walk, the arch roads and the realm arrival are placement or teleport.
+- Disconnect is not tested with the offer panel open (see the missing `stormheart_open_offer` step above).
+- Process kill or relaunch is not tested (the process stays alive).
+- The host is not disconnected.
+- This is loopback ENet only.
+- The Rootgate release (opening pair C) is not shown.
+- The first host-full run's SCRIPT ERROR text was not retained.
+## WO-F10-07 — Rain around the camera, and gentler Break flashes (`ralph/stormwood-f10-rain-camera`)
+
+- **Anchor:** F10 visual acceptance. This closes the WO-F10-06 "rain, dry disc" item and the final review's reduced-motion finding (UX §8/§275: reduced motion lowers non-essential flashes).
+- **Found:**
+  - **Dry disc:** the lens-safe near rain ring was centred on the PLAYER with an inner radius of 10.6 m, so the nearest drop was about 9 m from the trainer. Rain only showed against the far sky (`visual/surge/after/r4_break_upwind.jpg`).
+  - **Lens test gap:** the test ignored the base emitter's 2° spread, which adds up to about 0.7 m of sideways drift.
+  - **Flash problems:** Break's distant sky flashes were up to 1.0 on the same 4–8 s cadence as real strikes. With no telegraph, one could read as a missed warning. They also ignored `MOTION_PREFS.reduced_motion()`.
+- **Player result** (`scripts/world/stormwood_surge.gd`, `data/config/stormwood_surge.json`):
+  - **Rain placement:** the rain emitter now sits 3 m above the ACTIVE CAMERA (`rain_centre`). Every peer follows its own camera, including the riding profile and a rig retargeted to a piloted creature.
+  - **Derived near ring:** its inner radius is 1.5 m lens clearance + half the wind drift + the spread drift + the streak's sideways half-extent (about 3.9 m), and it is 8 m wide. Rain now falls over the trainer and the near ground.
+  - **Distant flashes:** now 0.20–0.35 of a strike's flash (echo 0.25), on a separate 9–16 s cadence.
+  - **Reduced motion:** scales every sky flash, distant and strike, by 0.15. The telegraph ring and the local bolt are gameplay tells and are unchanged.
+- **Witnesses:**
+  - **New tests** in `tests/test_stormwood_surge_presentation.gd`:
+    - the lens test now models the camera-centred ring with `sin(spread)·v·t`;
+    - `test_rain_reaches_the_trainer` (≤ 3 m at every camera distance and yaw);
+    - distant flashes weaker and slower than strikes;
+    - reduced motion scales sky flashes.
+  - **Smoke:** `tests/smoke_stormwood_lightning_cleanup.gd` checks that under reduced motion the ring and bolt still draw and the sky flash is 0.15.
+  - **Negative controls:**
+    - the round-4 player-centred ring fails the reach test (8.37 m);
+    - dropping the spread term fails the lens test (0.80 m);
+    - ignoring reduced motion fails;
+    - round-4 flash strengths fail.
+  - **Frames:** `visual/surge/sheet_rain_camera.jpg`, with 4 frames compared against `r4_break_upwind.jpg`.
+- **Review follow-up (`7faf5d42c`): no rain under roofs, plus reduced-motion nits.**
+  - **Roof suppression:**
+    - Every 0.25 s, the shelter check casts physics rays up from the trainer (starting at head height) and from the camera.
+    - Any hit fades the near rain layer out over 0.6 s, and back in outside.
+    - Canopy and rod radius are ignored on purpose, so rain under trees stays.
+    - The far layer is untouched.
+    - The rain volume is clamped to at most 16 m above the ground under the camera.
+  - **Reduced motion:**
+    - The strike's local light is scaled by 0.15.
+    - The telegraph rim is steady; its growing fill still carries the 1.2 s timing.
+    - The config records why the scale is 0.15 rather than `impulse_scale()`'s 0: the flash rhythm is one of the cues that name Break without HUD text.
+  - **Test hygiene:** the presentation tests save and restore the static pref in `before_each`/`after_each`, so a failing test can't leave it set.
+  - **Witnesses:**
+    - Unit tests: roof fade without a snap, far layer untouched, height clamp, steady rim.
+    - The cleanup smoke puts a StaticBody roof over the trainer: near rain goes to 0.00, then back to 1.00 once the roof is removed. Under reduced motion the strike light reads 1.20 of 8.
+    - Negative controls, each failing: roof probe disabled, fade that snaps, strike light unscaled, rim pulsing under reduced motion.
+    - `visual/surge/sheet_rain_roof.jpg`: inside the real Ashfoot shelter (ranger station) the room is dry, while the same building from 11 m outside stands in rain.
+- **Foreground rain and review N1/N2** (`3947f56c0`, `5a10d9feb`)
+  - **Judge finding:** in the normal and night Break frames the bottom ~45% of the view (the grass between the camera and the trainer) was dry. Near streaks read as blunt, vertical, opaque "sticks".
+  - **How it was measured** (`tools/capture_stormwood_surge_phases.gd` `rainmeasure`, production camera, the four raincam poses):
+    - **Analytic:** 6000 points were sampled from the LIVE near emitter's parameters and projected through the production Camera3D. A point counts only if it is above the terrain and not occluded (physics ray).
+    - **Live:** a rain-on vs rain-off pixel diff, with the ground cover hidden.
+    - The raw numbers are in `visual/surge/after/rain_measure_{before,after}.json`. The masks are in `visual/surge/sheet_rain_foreground_measure.jpg`.
+
+    | Shot (Break) | Drops above ground before → after | Drops seen in bottom 45% (of 6000) | Live streaks in bottom 45% |
+    |---|---|---|---|
+    | day, normal camera | 25% → 53% | 122 → 387 | 45 → 98 |
+    | day, upwind camera | 28% → 59% | 75 → 318 | 27 → 76 |
+    | day, riding profile | 27% → 52% | 160 → 479 | 51 → 84 |
+    | night, normal camera | 25% → 53% | 122 → 387 | 44 → 73 |
+
+  - **Root cause:** geometry, not contrast. The camera-centred near column spawned from camera −4 m to +10 m and fell for 1.4 s (about 18 m). At any moment 72–75% of the drops were below the terrain, and the few above it were mostly above eye level.
+  - **Fix:**
+    - The near layer now spawns in a band 0.2–6.5 m above the floor. The floor is the higher of the terrain under the camera and the trainer. The band is still centred on the camera horizontally, and each drop lives 0.5 s.
+    - The shorter drift lets the derived lens-safe inner radius come in to 2.8 m, and lens clearance is still ≥ 1.5 m.
+    - Drops fade in and out over their life.
+    - Streaks are thin tapered translucent spindles (1.8 cm base) on a 14° wind slant, where they had been opaque boxes.
+    - Near and far layers have separate night tints.
+  - **Remaining trade-off:** the very bottom ~15% of a level-pitch frame (ground 2.5–4 m from the lens) stays sparse. Drops there would come within the lens clearance.
+  - **Tests:**
+    - `test_near_rain_fills_the_foreground` needs ≥ 35 drops in the bottom 45% in Break. The HEAD geometry gives 15.1 and fails; this is the negative control.
+    - N1 `test_rain_volume_follows_a_raised_trainer`: its control, a clamp against the terrain only, fails (centre at 16 m under a trainer at 60 m).
+    - N2 smoke `RAIN ROOF SUBJECT`: its control, probing the trainer instead of the framed subject, fails.
+  - **Frames:** `rc_day_break`, `rc_day_break_upwind`, `rc_day_break_riding`, `rc_night_break` and the two roof frames were re-captured under their existing names (older versions are in git). `sheet_rain_camera.jpg` is rebuilt.
+- **Open:**
+  - The riding frame uses the production riding camera PROFILE on the trainer, with no mount.
+  - Night rain is intentionally faint.
+  - No Ally GPU profile has been taken.
+
+## WO-F10-08: Stormwood is always the purple storm (`ralph/stormwood-f10-rain-camera`, `220bd0268`)
+
+- **Owner direction** (about `visual/surge/after/rc_day_break_upwind.jpg`): *"I love the purple sky look in some of the screenshots. We should not have day and night in stormwood. It should just always be that kind of purple rainy sky regardless of time of day."*
+- **Owner ruling on the aftermath:** Stormwood stays purple after the Long Storm is broken. *"The aftermath shows only through lighter rain, no lightning and the scars."*
+- **Player result.** Presentation only, in `scripts/world/stormwood_surge.gd` and `data/config/stormwood_surge.json`.
+  - **One storm look at every hour.** Stormwood's own WorldLook instance gets a config in which every time-of-day preset is the same storm reference: the day preset plus `presentation.storm_base.overrides`. Those overrides are the key light's angle (−44°/140°), its energy (1.4) and colour (#e8e0f4), and purple-grey clouds and haze.
+    - Sky, clouds, fog, ambient, exposure and the key light's angle, energy and colour are therefore the same at every hour. Shadows no longer rotate.
+    - The world clock, the day counter, `is_dark()`, the shared night-rest authority and encounter night roles are untouched.
+    - The pin lives on that WorldLook instance only, so the next realm loads `art.json` as before.
+    - Setting `storm_base.pin_time_of_day` to false brings the clock look back.
+  - **Phases, all in the purple family of the day-Break anchor.** They read from rain density (0.3 / 0.6 / 1.0 / 0.15), lightning cadence and flashes (Break only), ceiling value and motion, fog and key level (0.8 / 0.38 / 0.24 / 0.7). The sky is never blue or white and never night-black.
+  - **Aftermath (every aftermath phase).** It is separated from Calm by:
+    - lighter rain (0.1 against Calm's 0.3);
+    - no sky flashes;
+    - the stillest ceiling (speed 0.003 and contrast 0.1, against Calm's 0.006 and 0.18);
+    - the lightest ceiling (#9894b4);
+    - a steadier, higher key light (0.9 against 0.8).
+  - **Gameplay left alone.** The aftermath's Surge timings (`aftermath_seconds`) and real aftermath-Break strikes are rules, and are unchanged.
+  - **Night lights.** The capacitor grove's `night_light_*` and the glass field's `night_light` were already unconditional, not clock-gated. They needed no change and stay at their modest energies (1.45 and 0.84).
+- **Tests** (`tests/test_stormwood_surge_presentation.gd`):
+  - **New:**
+    - `test_look_is_identical_at_every_hour`: for every phase, and for the aftermath, the look WorldLook would layer is identical at hours 0/6/12/18. That covers sky top and horizon, fog colour and density, ambient colour and energy, exposure, and key energy, angle and colour.
+    - `test_leaving_stormwood_restores_the_clock_look`: the pin never mutates `art.json`, the day length and the `is_dark()` window are unchanged, and a fresh realm's WorldLook has moving sun and night again.
+  - **Rewritten to the new rule** (none skipped). Each old name maps to its replacement:
+    - `test_night_base_from_real_art_config_dims_storm_sky` → `test_storm_base_is_identical_at_every_hour`
+    - `test_cross_fade_through_native_sky_has_no_dip_at_night_dusk_or_dawn` → `test_cross_fade_between_phases_has_no_dip_at_any_hour`
+    - `test_storm_ambient_never_brightens_the_night` → `test_storm_ambient_never_exceeds_the_storm_base`
+    - `test_ceiling_builds_and_opens_in_the_aftermath` → `test_ceiling_builds_and_stays_in_the_aftermath`
+    - `test_aftermath_calm_restores_sky_and_is_distinct` → `test_aftermath_is_the_calmest_purple`
+    - `test_aftermath_flag_hides_rain_in_production_path` → `test_aftermath_flag_lightens_rain_in_production_path`
+    - `test_night_break_has_its_own_hue` → `test_break_keeps_its_violet_identity_at_every_hour`
+    - `test_ceiling_breakup_closes_at_night` → `test_fading_breakup_is_the_same_at_every_hour`
+    - `test_rain_slants_fades_with_depth_and_dims_at_night` → `test_rain_slants_and_fades_with_depth`
+    - `test_day_break_sky_is_clearly_lighter_than_night_break` → `test_break_sky_is_a_storm_afternoon_at_every_hour`
+    - `test_night_phases_separate_by_hue_and_value` → `test_phases_separate_within_the_purple_family`
+  - **Negative control:** setting `pin_time_of_day` to false (the clock blend restored) fails 6 tests, including the every-hour test ("Break sky_top same at 23:00: expected 545179, got 282639").
+- **Frames** (`visual/surge/sheet_purple_phases.jpg`, `after/purple_{calm,building,break,fading,aftermath}_h{12,00}.jpg`, records in `after/frames_after_purple.json`):
+  - Each hour-12/hour-0 pair matches: mean luminance of the sky region is identical to within 0.4/255. Break's ground differs only because a live strike telegraph happened to land in the hour-12 frame.
+  - The rain frames (`rc_*`, roof) were re-rendered with the pin as well. `rc_night_break` (hour 23) now matches the day look.
+- **Clock-keyed and NOT changed** (shared scripts outside this lane, or gameplay; listed for the owner's pending gameplay ruling):
+  - `scripts/player/torch.gd`: the trainer's torch auto-lights when `is_dark()`.
+  - `scripts/world/campfire_glow.gd` and `camp_fill_light.gd`: camp fire and fill light only when dark.
+  - `scripts/audio/world_audio.gd`: night ambience layer.
+  - `scripts/world/inn_interior.gd`: reads `time_of_day`.
+  - The HUD clock.
+  - Creature/character night emission floors come through WorldLook and are therefore pinned too. The encounter night roles and night rest are gameplay and were deliberately not touched.
+- **Open:**
+  - As stills, Calm, Fading and the aftermath sit close together. Their separation is mostly rain density, ceiling motion and flashes, which read best in motion.
+  - No blind judge has seen the purple set yet.
+
+
+### WO-F10-08, round 2: every phase in the deep purple (`cb067c58f`, `62f14e95f`)
+
+- **Owner direction** (about `sheet_purple_phases.jpg`, round 1): *"I like the building and break pictures. The other two aren't fantastic enough."* Calm, Fading and the post-release aftermath therefore move into the deep purple family of Building and Break. That covers sky, ceiling, fog, key and ambient; nothing is pale lavender or grey. The clock pin is kept.
+- **How phases separate now.** The sky changes only in small value steps inside the deep purple. The other cues are:
+
+  | Phase | Rain | Wind slant | Ceiling speed / contrast | Lightning | Fog + | Key / ambient | `surge_intensity()` |
+  |---|---|---|---|---|---|---|---|
+  | Calm | 0.4 | 0.45 | 0.008 / 0.3 (slow) | none | 0.0008 | 0.42 / 0.6 | 0.25 |
+  | Building | 0.65 | 0.85 | 0.03 / 0.5 (fast) | faint in-cloud flicker only (sheet glow 0.15) | 0.0016 | 0.3 / 0.45 | 0.65 |
+  | Break | 1.0 | 1.0 | 0.045 / 0.55 (fastest) | strikes, distant flashes and a persistent in-cloud sheet glow (0.9) | 0.0026 | 0.2 / 0.38 | 1.0 |
+  | Fading | 0.15 | 0.7 | 0.014 / 0.3 (slowing) | none | 0.0012 | 0.4 / 0.58 | 0.4 |
+  | Aftermath | 0.08 | 0.3 | 0.002 / 0.12 (almost still) | none | 0.0006 | 0.45 / 0.62 | 0.1 |
+
+- **Judge-7 findings folded in:**
+  1. **Break lightning a still can catch.** The ceiling shader has a new sheet glow: fbm patches that pulse slowly inside the cloud body. Break carries 0.9, and Building only 0.15, which reads as a rare, faint flicker. The glow is multiplied by the reduced-motion flash scale (floor 0.15, unchanged) and its clock freezes under reduced motion. There is no strobing.
+  2. **The ground darkens with the phase** through the key light and ambient, not a screen tint. Break's ground mean is 23/255, Building 33, Calm and Fading about 40, the aftermath 44.
+  3. **Fog and the distant rain curtain scale with the phase.** Fog density is added per phase as above. The far rain layer grows to 1200 drops and follows `rain_amount`.
+  4. **Ceiling motion order:** Calm slow, Building fast, Break fastest, Fading slowing, aftermath almost still. This is tested.
+  5. **Hue stays in the purple family.** Fading's pink horizon is gone. Every row is within 15° of Break's hue.
+- **Hook.** `StormwoodSurge.surge_intensity()` is a read-only 0–1 value, blended with the cross-fade. It is there for the ground-electricity effect on another branch; that effect is not built here.
+- **Review nits:**
+  - `is_instance_valid(target)` is checked before `target is Node3D`.
+  - The rain band anchors on the framed subject's last grounded height, so jumps don't bob the field.
+  - The camera ground is sampled every frame and eased at 8/s. It snaps on teleports of more than 20 m. The old 0.25 s steps are gone.
+  - On steep slopes, 6 ring samples at 6 m raise the band floor to (highest sample − 2 m).
+  - The `pin_time_of_day: false` branch is tested.
+  - Separation thresholds are visible margins, not token ones.
+- **Tests** (`tests/test_stormwood_surge_presentation.gd`, 41 tests):
+  - `test_every_phase_sits_in_the_deep_purple_band`: sky top, horizon and ceiling are 0.8–1.15× Break's luminance and within 15° of its hue.
+  - `test_phases_separate_by_non_sky_cues`: adjacent phases differ in at least two of these cues, and the ceiling-motion and rain orders hold:
+    - rain by at least 0.2;
+    - ceiling speed by at least 1.5×;
+    - wind by at least 0.2;
+    - sheet glow by at least 0.1;
+    - flashes.
+  - `test_sheet_glow_reaches_the_ceiling_and_respects_reduced_motion`
+  - `test_phase_wind_and_intensity_hook`
+  - `test_rain_anchor_holds_through_jumps_and_eases_on_slopes`
+  - `test_pin_off_restores_the_clock_look`
+  - `test_look_is_identical_at_every_hour` is kept.
+- **Negative control N24:** the round-1 pale Calm row fails `test_every_phase_sits_in_the_deep_purple_band`. Calm's sky top is 1.19×, its horizon 1.24× and its ceiling 1.27× Break's luminance.
+- **Frames:**
+  - `visual/surge/sheet_purple_phases.jpg` and `after/purple_{calm,building,break,fading,aftermath}_h{12,00}.jpg` were re-shot under the same names. Their records are in `after/frames_after_purple.json`.
+  - `visual/surge/sheet_purple_motion.jpg` holds 4 frames per phase, 0.25 s of game time apart, at hour 12. The capture group is `--only=purplemotion`, and the surge clocks are in `after/frames_after_purplemotion.json`.
+- **What I saw:**
+  - All five phases are now the deep purple. Sky means are 52–62/255 (the round-1 pale set was 86–98).
+  - The hour-12 and hour-0 pairs match: sky 55.1/55.0 (Calm), 59.5/59.5 (Building), 51.8/52.3 (Break), 54.7/54.6 (Fading) and 61.6/61.7 (aftermath).
+  - In the motion strip, Break shows lighter in-cloud glow patches low on the horizon that change from frame to frame. Its rain is the densest and most slanted.
+  - Building has heavy slanted rain and a textured ceiling, with no visible glow in these four frames.
+  - Calm and Fading show sparse, near-vertical rain.
+  - The aftermath is the stillest: a smooth ceiling and only a few drops.
+- **Open:**
+  - The grass still reads fairly green in Calm, Fading and the aftermath. The darkening is only through light and ambient, by design.
+  - Building has no distant flashes, only the faint glow, which rarely shows in stills.
+  - The slope-floor ring is exercised by the anchor test's easing but has no direct steep-terrain fixture.
+  - No blind judge has seen the round-2 set.

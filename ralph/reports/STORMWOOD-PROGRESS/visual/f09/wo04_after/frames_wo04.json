@@ -1,0 +1,343 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60108470916748,
+			"camera_pos": [
+				-335.610015869141,
+				30.0501365661621,
+				348.066589355469
+			],
+			"description": "verge_ash_hollow: on ash_road, 18 m before the spur junction, facing 30 m up the spur toward the pocket",
+			"file": "spur_verge_ash_hollow_junction.jpg",
+			"hud": "off",
+			"id": "spur_verge_ash_hollow_junction",
+			"in_fight": false,
+			"joins": "ash_road",
+			"junction": [
+				-335.0,
+				369.200012207031
+			],
+			"label": "wo04",
+			"player": [
+				-331.722381591797,
+				27.9374027252197,
+				351.500946044922
+			],
+			"pocket": "verge_ash_hollow",
+			"prompt": "",
+			"spur": "spur_verge_ash_hollow",
+			"spur_lamp_present": true,
+			"spur_length_m": 270.118499755859,
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-331.722381591797,
+				351.500946044922
+			],
+			"surge_elapsed": 61.0118403333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60105276107788,
+			"camera_pos": [
+				-207.300537109375,
+				29.8780784606934,
+				392.855194091797
+			],
+			"description": "verge_ash_hollow: halfway along the spur, facing the mouth 135 m ahead",
+			"file": "spur_verge_ash_hollow_mid.jpg",
+			"hud": "off",
+			"id": "spur_verge_ash_hollow_mid",
+			"in_fight": false,
+			"joins": "ash_road",
+			"junction": [
+				-335.0,
+				369.200012207031
+			],
+			"label": "wo04",
+			"player": [
+				-202.199996948242,
+				27.765344619751,
+				393.799987792969
+			],
+			"pocket": "verge_ash_hollow",
+			"prompt": "",
+			"spur": "spur_verge_ash_hollow",
+			"spur_lamp_present": true,
+			"spur_length_m": 270.118499755859,
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-202.199996948242,
+				393.799987792969
+			],
+			"surge_elapsed": 60.992086,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60100221633911,
+			"camera_pos": [
+				100.440147399902,
+				24.0303325653076,
+				1740.88452148438
+			],
+			"description": "hollows_moss_nook: on crown_sightline_loop, 18 m before the spur junction, facing 30 m up the spur toward the pocket",
+			"file": "spur_hollows_moss_nook_junction.jpg",
+			"hud": "off",
+			"id": "spur_hollows_moss_nook_junction",
+			"in_fight": false,
+			"joins": "crown_sightline_loop",
+			"junction": [
+				101.5,
+				1762.0
+			],
+			"label": "wo04",
+			"player": [
+				96.8356857299805,
+				21.917610168457,
+				1744.61486816406
+			],
+			"pocket": "hollows_moss_nook",
+			"prompt": "",
+			"spur": "spur_hollows_moss_nook",
+			"spur_lamp_present": true,
+			"spur_length_m": 136.980072021484,
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				96.8356857299805,
+				1744.61486816406
+			],
+			"surge_elapsed": 61.0071876666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60108470916748,
+			"camera_pos": [
+				-672.707153320312,
+				57.3254318237305,
+				3395.63745117188
+			],
+			"description": "conductor_ridge_cleft: on conductor_road, 18 m before the spur junction, facing 30 m up the spur toward the pocket",
+			"file": "spur_conductor_ridge_cleft_junction.jpg",
+			"hud": "off",
+			"id": "spur_conductor_ridge_cleft_junction",
+			"in_fight": false,
+			"joins": "conductor_road",
+			"junction": [
+				-650.0,
+				3400.0
+			],
+			"label": "wo04",
+			"player": [
+				-667.5263671875,
+				55.212703704834,
+				3395.89819335938
+			],
+			"pocket": "conductor_ridge_cleft",
+			"prompt": "",
+			"spur": "spur_conductor_ridge_cleft",
+			"spur_lamp_present": true,
+			"spur_length_m": 341.057922363281,
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-667.5263671875,
+				3395.89819335938
+			],
+			"surge_elapsed": 60.9984726666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60126876831055,
+			"camera_pos": [
+				-1002.10815429688,
+				42.1045188903809,
+				3890.36083984375
+			],
+			"description": "deepwood_ridge_shelter: on hall_loop, 18 m before the spur junction, facing 30 m up the spur toward the pocket",
+			"file": "spur_deepwood_ridge_shelter_junction.jpg",
+			"hud": "off",
+			"id": "spur_deepwood_ridge_shelter_junction",
+			"in_fight": false,
+			"joins": "hall_loop",
+			"junction": [
+				-1022.0,
+				3883.19995117188
+			],
+			"label": "wo04",
+			"player": [
+				-1004.16021728516,
+				39.991771697998,
+				3885.59643554688
+			],
+			"pocket": "deepwood_ridge_shelter",
+			"prompt": "",
+			"spur": "spur_deepwood_ridge_shelter",
+			"spur_lamp_present": true,
+			"spur_length_m": 155.186813354492,
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-1004.16021728516,
+				3885.59643554688
+			],
+			"surge_elapsed": 60.9833333333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.60087776184082,
+			"camera_pos": [
+				-430.052093505859,
+				70.0366897583008,
+				5133.23291015625
+			],
+			"description": "dynamo_scorch_pen: on dynamo_west_approach, 18 m before the spur junction, facing 30 m up the spur toward the pocket",
+			"file": "spur_dynamo_scorch_pen_junction.jpg",
+			"hud": "off",
+			"id": "spur_dynamo_scorch_pen_junction",
+			"in_fight": false,
+			"joins": "dynamo_west_approach",
+			"junction": [
+				-412.100006103516,
+				5144.39990234375
+			],
+			"label": "wo04",
+			"player": [
+				-429.042327880859,
+				67.9239730834961,
+				5138.32080078125
+			],
+			"pocket": "dynamo_scorch_pen",
+			"prompt": "",
+			"spur": "spur_dynamo_scorch_pen",
+			"spur_lamp_present": true,
+			"spur_length_m": 102.737609863281,
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-429.042327880859,
+				5138.32080078125
+			],
+			"surge_elapsed": 61.004613,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.71269512176514,
+			"camera_pos": [
+				-472.809234619141,
+				29.3540477752686,
+				605.558349609375
+			],
+			"description": "ash_road mid-segment at (-476,610), on the centreline looking 40 m along the road",
+			"file": "road_ash_road_stretch.jpg",
+			"hud": "off",
+			"id": "road_ash_road_stretch",
+			"in_fight": false,
+			"label": "wo04",
+			"player": [
+				-476.0,
+				26.8803539276123,
+				609.599975585938
+			],
+			"prompt": "",
+			"route": "ash_road",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-476.0,
+				609.599975585938
+			],
+			"surge_elapsed": 60.994608,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.7127161026001,
+			"camera_pos": [
+				-366.874877929688,
+				56.4950065612793,
+				2801.236328125
+			],
+			"description": "conductor_road mid-segment at (-372,2804), on the centreline looking 40 m along the road",
+			"file": "road_conductor_road_stretch.jpg",
+			"hud": "off",
+			"id": "road_conductor_road_stretch",
+			"in_fight": false,
+			"label": "wo04",
+			"player": [
+				-371.5,
+				54.021312713623,
+				2803.5
+			],
+			"prompt": "",
+			"route": "conductor_road",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-371.5,
+				2803.5
+			],
+			"surge_elapsed": 61.0166666666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		}
+	],
+	"label": "wo04",
+	"scatter_bake_fresh": true
+}

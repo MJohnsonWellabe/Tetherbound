@@ -1,43 +1,209 @@
 {
   "_comment": "SG46 -- the Meadows answers. Spec §9, and D41's third clause ('killing the machinery frees the whole meadow, and the land heals'). Everything here is keyed on ONE flag, `legendary_freed`, which scripts/world/stronghold_climax.gd sets exactly once. ALL NUMBERS TUNABLE.",
-
   "flag": "legendary_freed",
-
-  "_comment_what_heals_and_what_does_not": "READ D45 BEFORE CHANGING ANY OF THIS. The drained ground is THREE consumers of one authored radius, and only two of them live in the running scene. (1) THE SCATTER is live: `scatter_rules._thin_by_drain` removed real instances at build time and `vegetation.gd::restore_drained()` puts back exactly those instances -- same models, same positions, same scales -- so the bald ground around every station grows back. (2) THE RELAY'S DEAD-GROUND SKIN is live: it is a runtime overlay standing in for a bake that never happened (see tether_relay.json's `_comment_dead_ground`), and it fades out. (3) THE BAKED COLOUR AND CONTROL MAPS ARE NOT. The quarry's stations were painted into the terrain textures by build_playground_terrain.gd, D45 priced that out loud ('the grammar chosen for the damage is baked, so the grammar for the repair is a separate piece of work'), and SG46 is explicitly not allowed to re-run a 15-minute bake. So the quarry floor's discolouration survives the healing and is the honest remainder; D45's own file records it.",
-
+  "_comment_what_heals_and_what_does_not": "READ D45 BEFORE CHANGING ANY OF THIS. The drained ground is THREE consumers of one authored radius. (1) THE SCATTER is live: `scatter_rules._thin_by_drain` removed real instances at build time and `vegetation.gd::restore_drained()` puts back exactly those instances -- same models, same positions, same scales. (2) THE RUNTIME DRAIN SKINS are live (the relay's and the approach's, standing in for bakes that never happened) and fade out. (3) THE BAKED COLOUR AND CONTROL MAPS are not live and are NOT re-baked: D45's discolouration stays in the texture as the BEFORE state. The owner decided 'the land heals' at the finale anyway, installed assets only, no re-bake: the `regreen` block below lays a runtime overlay of the installed meadow grass texture over the baked stations, shaped by each station's own authored falloff, fading in over the finale beat and persisting. With it, the finale's healing also drops the dead pylons (`pylons`) and brings the Highfield herd back (`herd_return`). All of it is re-derived from `legendary_freed` on every peer and every load; nothing new is saved.",
   "vegetation": {
     "enabled": true,
     "_comment": "The single strongest beat available: the player's walk home passes the stations they walked past in hour one and the grass is back."
   },
-
   "dead_ground": {
     "enabled": true,
     "fade_seconds": 12.0,
     "_comment": "The relay's runtime drain skin, faded rather than switched off. 12 seconds is long enough that a player standing in the compound when the flag lands sees it happen and short enough that a player walking home from the stronghold arrives to ground that has already changed. D41 left 'instant or over the walk home' to this item; this is the answer -- over the walk, and the walk is about four minutes."
   },
-
+  "regreen": {
+    "enabled": true,
+    "_comment": "Owner decision, F05 'the land heals' (A). A runtime overlay over the BAKED scar stations, one mesh per entry in `groups` (so each culls on its own bounds and sorts as its own transparent instance; all share one material and one fade), built by meadow_healing.gd::_regreen_the_scars. Corner alpha = that station's own authored falloff from terrain_playground.json drains.stations (strength * (1 - smoothstep(inner, radius, d))), times drains.strength, times `max_alpha`, times (1 - path_factor) when `spare_roads` so a road through a station stays a road. One world-aligned grid, so overlapping discs draw each cell once. Material = the installed grass texture at the terrain's own `uv_scale` and `tint` (terrain_playground.json textures[0]), world triplanar, fading albedo alpha 0 -> 1 over `fade_seconds` -- the same seconds the dark skins fade out over, so it is a crossfade. `lift` 0.11 sits above the 0.09 dead-ground skins. The relay_* stations are left out on purpose: their ground was never baked (the relay's runtime skin stands in for it and heals at the console). ALL NUMBERS TUNABLE.",
+    "groups": {
+      "approach": [
+        "approach_mouth",
+        "approach_run_1",
+        "approach_run_2",
+        "approach_run_3",
+        "approach_run_4",
+        "approach_run_5",
+        "approach_run_6"
+      ],
+      "quarry": [
+        "quarry_conduit_head",
+        "quarry_run_1",
+        "quarry_run_2",
+        "quarry_run_3"
+      ],
+      "stronghold_works": [
+        "stronghold_works"
+      ]
+    },
+    "cell": 3.0,
+    "lift": 0.11,
+    "max_alpha": 0.7,
+    "fade_seconds": 12.0,
+    "spare_roads": true,
+    "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+    "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
+    "normal_depth": 0.34,
+    "uv_scale": 0.27,
+    "tint": "#e9dfc0",
+    "edge_jitter_m": 4.0,
+    "_comment_edge": "edge_jitter_m: the falloff is read at a deterministic per-corner offset of up to this many metres, so the regreen's contour is ragged, not a stencil (blind round 4)."
+  },
   "tether_lights": {
     "enabled": true,
     "_comment": "D41 in one sentence: the drain network dies with the stronghold machinery. Every LIT pylon on every road, every glowing conduit and every Team Tether fitting in the stronghold itself goes dark -- the same per-material live/dead pair severed_spokes.gd already ships (`_pylon_material`, `_conduit_material`), applied to what is already standing rather than rebuilt. This is also §9's 'stronghold effects change': the building's own tether lighting is drawn from the same reserved teal and goes out with the rest of the network. Nothing warm is touched, which is why the freed legendary's own #e8d79a light survives it.",
     "dead_albedo": "res://assets/environment/team_tether/tether_pylon_albedo_dead.png",
-    "lit_albedo": "res://assets/environment/team_tether/tether_pylon_albedo.png"
+    "lit_albedo": "res://assets/environment/team_tether/tether_pylon_albedo.png",
+    "dead_darken": 0.6,
+    "_comment_dead_darken": "How far a dead teal fitting's albedo darkens once its emission is off (0..1). 0.25 left a big flat screen (the waystop duty board) reading as an untextured teal quad after the network died (blind judge, F05 WO8 round 3)."
   },
-
+  "pylons": {
+    "enabled": true,
+    "_comment": "Owner decision, F05 'the land heals' (C): the dark tether pylons are down. meadow_healing.gd::_topple_the_pylons tips every `Pylon_<i>` under a holder matching `holders` about its own base edge (`pivot_offset` metres out in the fall direction) until it rests on the terrain: 90 degrees minus the ground slope from base to tip plus `sink_deg`, clamped to [min_angle_deg, max_angle_deg], then settled twice against where the top really lands so its underside (`tip_rest_fraction` of its lying half-depth) meets the ground. DIRECTION IS AUTHORED: `falls` maps each 'Holder/Pylon_i' to a baked azimuth in degrees (0 = +Z, 90 = +X), so the result is a pure function of this file and the terrain -- identical on every peer and every load, whatever vegetation has streamed in around whichever player or has been harvested. null there = authored to stay standing (none today). The table is generated OFFLINE by `godot --headless --path . --script tests/smoke_meadow_healing_land_heals.gd -- --bake-falls` (meadow_healing.gd::bake_fall_table): per pylon, a mixed azimuth per run plus a golden-angle turn per pylon (neighbours never fall alike), stepped round `direction_candidates` until the fall (i) rests on the ground (top within `tip_tolerance`, nothing buried deeper than `bury_tolerance`), (ii) newly covers no road CARRIAGEWAY (half-width + `road_margin`; a fallen pylon has no collider, so lying on a shoulder blocks nothing) and no building apron, and (iii) newly overlaps no fixed authored StaticBody3D (vegetation, player-built pieces, gates and moving bodies are excluded). 'Newly' = beyond one base width from the pivot, which is where the standing pylon already stood. The smoke re-checks every fallen pylon's final pose (top-end gap to ground, off the carriageway, clear of fixed static bodies), fails on any pylon missing from the table, and fails if any pylon is left standing; it does NOT re-check building aprons or the bury tolerance along the whole length, which only the bake applies. Re-bake whenever a pylon, road or structure near one moves. A pylon missing from the table falls back to the same search without the collider query, with a warning. WALKABILITY: `collider` 'remove' (default) disables each pylon's sibling box collider for the fall and removes it on landing, so a fallen pylon never blocks or traps anyone, including a co-op peer standing under it; 'lay_down' keeps it laid along the ground. Animated `fall_seconds` ease-in, staggered `stagger_seconds` down each run, when the flag lands live; snapped on a load. Only the cable pieces hanging from a fallen pylon (`Conduit_<i>_*` spans i..i+1, `DangleStub_<i>_*`) are hidden; the spans in `cable_holders` (the relay's apparatus links, the Hall landing span) all end on a run's last pylon and are hidden. HOLDERS: the quarry spur (OldQuarry/TetherConduits), the relay runs (TetherRelay/Conduits_*) and the approach trunk (ApproachConduits) were the LIVE network the finale kills. The severed spokes (SeveredSpokes/Spoke_*) are deliberately NOT listed: they were dead long before the game starts, several already lean into their rifts, and they are the severance story, not the network.",
+    "holders": [
+      "TetherConduits",
+      "Conduits_*",
+      "ApproachConduits"
+    ],
+    "cable_holders": [
+      "CableLinks",
+      "HallCableLanding"
+    ],
+    "pivot_offset": 0.85,
+    "sink_deg": 3.0,
+    "min_angle_deg": 70.0,
+    "max_angle_deg": 108.0,
+    "fall_seconds": 2.6,
+    "stagger_seconds": 0.35,
+    "direction_candidates": 32,
+    "collider": "remove",
+    "collider_match_radius": 0.35,
+    "road_margin": 0.25,
+    "tip_tolerance": 1.2,
+    "bury_tolerance": 1.5,
+    "tip_rest_fraction": 0.6,
+    "falls": {
+      "ApproachConduits/Pylon_0": 100.92,
+      "ApproachConduits/Pylon_1": 142.66,
+      "ApproachConduits/Pylon_10": 178.43,
+      "ApproachConduits/Pylon_11": 334.14,
+      "ApproachConduits/Pylon_12": 94.24,
+      "ApproachConduits/Pylon_13": 246.37,
+      "ApproachConduits/Pylon_14": 11.14,
+      "ApproachConduits/Pylon_2": 252.06,
+      "ApproachConduits/Pylon_3": 56.76,
+      "ApproachConduits/Pylon_4": 80.5,
+      "ApproachConduits/Pylon_5": 242.84,
+      "ApproachConduits/Pylon_6": 21.98,
+      "ApproachConduits/Pylon_7": 195.78,
+      "ApproachConduits/Pylon_8": 280.48,
+      "ApproachConduits/Pylon_9": 53.18,
+      "Conduits_east_run/Pylon_0": 330.81,
+      "Conduits_east_run/Pylon_1": 55.14,
+      "Conduits_east_run/Pylon_2": 196.2,
+      "Conduits_south_run/Pylon_0": 97.39,
+      "Conduits_south_run/Pylon_1": 208.41,
+      "Conduits_south_run/Pylon_2": 181.52,
+      "Conduits_west_run/Pylon_0": 357.49,
+      "Conduits_west_run/Pylon_1": 131.38,
+      "Conduits_west_run/Pylon_2": 172.96,
+      "Conduits_west_run/Pylon_3": 101.0,
+      "TetherConduits/Pylon_0": 24.7,
+      "TetherConduits/Pylon_1": 160.54,
+      "TetherConduits/Pylon_2": 289.73,
+      "TetherConduits/Pylon_3": 78.57
+    },
+    "creak_seconds": 0.9,
+    "creak_hold_seconds": 0.35,
+    "creak_fraction": 0.07,
+    "dust": {
+      "enabled": true,
+      "amount": 90,
+      "lifetime": 2.2,
+      "colour": "#dccfb2",
+      "alpha": 0.6,
+      "speed_min": 0.6,
+      "speed_max": 2.8,
+      "gravity": 0.6,
+      "size_min": 0.7,
+      "size_max": 1.6,
+      "puff_radius": 1.1
+    },
+    "_comment_staging": "Staged fall (blind judge round 3: a 2 s ease-in read as a snap). Each pylon creaks `creak_fraction` of its fall over `creak_seconds` (ease out), hangs `creak_hold_seconds`, then falls over `fall_seconds` (ease in); its cable pieces tear at the end of the creak, not when the flag lands; `dust` is a one-shot cosmetic burst along it where it lands (no collision, never on a load).",
+    "trunk_margin": 0.3,
+    "tall_prop_min_height": 2.0,
+    "tall_prop_max_width": 10.0,
+    "_comment_trees": "Bake only (bake_fall_table): a fall must not newly lie through a tree or a standing authored prop. Trees come from the scatter (collidable trunks at layer collision radius x scale, plus the visually solid non-colliding soft occluders) grown by `trunk_margin`; authored MeshInstance3D bounds at least `tall_prop_min_height` tall and at most `tall_prop_max_width` across (trees, posts, dead trees; not buildings, which the collider check owns). When every direction lies through a tree, the first otherwise-clear direction is kept (nothing is left standing)."
+  },
   "barriers": {
     "enabled": true,
     "_comment": "§9's 'barriers deactivate'. Every keyed gate in the region stands open once the machinery is dead -- the road gate and the Meadows Hall approach. Done by setting each gate's OWN flag (the same flag the key sets, the same one item_gate.gd reads on a reload) and then telling the standing body to take its open pose, so a save written after the Warden loads with the gates open for the ordinary reason rather than through a second mechanism.",
-    "flags": ["road_gate_open", "hall_approach_open"]
+    "flags": [
+      "road_gate_open",
+      "hall_approach_open"
+    ]
   },
-
   "herd_display": {
     "enabled": true,
-    "_comment": "F05 / WORLD 3.2. When EVERY eligible participant refused the freed Veridian, it stands unengageable among the healed Highfield herd: not catchable, no prompt, no fight, no reward, never a second offer. Any acceptance means it is absent. Decided from the per-character world receipts `legendary_resolution:*` (stronghold_climax.gd::all_refused), so every peer and every reload agree. `at` is world [x, z] on the Highfield (map_landmarks `the_highfield`, centre [400, 5900], radius 65), among the ordinary Highfield herd (grazing around [377.5, 5855.3], the herd point tools/capture_highfield_hero_identity.gd measures) and inside that tool's authored hero framing from the stand at [400, 5832]. Two earlier sites were rejected on in-engine finale frames: [408, 5862] read as a stag beside the stock-camp cart, apart from the herd, and [432, 5851], by the bull, was lost in the tree line from every vantage. This site was chosen so it reads as one of the herd rather than a roadside prop; its frames are ralph/reports/MEADOWS-FINALE/VISUAL-EVIDENCE.md's 08-10. TUNABLE.",
+    "_comment": "F05 / WORLD 3.2. When EVERY eligible participant refused the freed Veridian, it stands unengageable among the healed Highfield herd: not catchable, no prompt, no fight, no reward, never a second offer. Any acceptance means it is absent. Decided from the per-character world receipts `legendary_resolution:*` (stronghold_climax.gd::all_refused), so every peer and every reload agree. `at` is world [x, z] on the Highfield (map_landmarks `the_highfield`, centre [400, 5900], radius 65), among the ordinary Highfield herd (grazing around [377.5, 5855.3], the herd point tools/capture_highfield_hero_identity.gd measures) and inside that tool's authored hero framing from the stand at [400, 5832]. Two earlier sites were rejected on in-engine finale frames: [408, 5862] read as a stag beside the stock-camp cart, apart from the herd, and [432, 5851], by the bull, was lost in the tree line from every vantage. A third, [390, 5860], was judged blind as 'distinct but not part of a herd' (VISUAL-EVIDENCE.md, frames 08-10), so it now stands 6 m from the measured herd point, inside the grazing group rather than at its edge. TUNABLE.",
     "species": "veridian",
-    "at": [390.0, 5860.0],
+    "at": [
+      383.0,
+      5857.0
+    ],
     "facing_deg": 200.0,
     "climax_node": "StrongholdClimax"
   },
-
+  "herd_return": {
+    "enabled": true,
+    "_comment": "Owner decision, F05 'the land heals' (B): the Highfield herd is back. Inert Meadowharts built exactly like the Veridian herd display (no AI, no physics, on no collision layer: nothing can engage, catch or bump them), in their own holder `HighfieldHerdReturn`, whatever the Veridian answer was. `members` are world [x, z, facing_deg], grouped around the measured herd point [377.5, 5855.3] (band4 spawns order 4064) and the herd-display site [383, 5857], every one at least 9 m from that site so the Veridian (when it stands) is inside the group rather than overlapped, and facing roughly toward the hero stand at [400, 5832]. `idle_phase_step` de-syncs their idle loops. TUNABLE.",
+    "species": "meadowhart",
+    "members": [
+      [
+        368.0,
+        5861.0,
+        20.0,
+        1.0
+      ],
+      [
+        372.5,
+        5860.0,
+        95.0,
+        1.06
+      ],
+      [
+        371.5,
+        5865.5,
+        300.0,
+        1.0
+      ],
+      [
+        366.0,
+        5866.5,
+        160.0,
+        1.1
+      ],
+      [
+        389.0,
+        5868.0,
+        60.0,
+        1.04
+      ],
+      [
+        393.5,
+        5871.0,
+        250.0,
+        1.0
+      ],
+      [
+        380.0,
+        5846.0,
+        330.0,
+        1.08
+      ]
+    ],
+    "keep_clear_of_display_m": 8.0,
+    "idle_phase_step": 0.37,
+    "_comment_members": "[x, z, facing_deg, scale>=1]. A loose cluster of four west of the Veridian site, a pair to the north-east and one straggler south, facings mixed (not all toward the Highfield stands), slight up-only size variety (blind judge round 3: the previous seven stood evenly spaced, all facing the camera, one pose)."
+  },
   "patrols": {
     "enabled": true,
     "_comment": "§9's 'patrol density drops'. The rule is deliberately narrow: a Team Tether trainer the player has ALREADY BEATEN is withdrawn from the world once the machinery is dead, and one who is still unbeaten is left exactly where they stand. Beaten trainers stay beaten (their defeat flag is untouched and this file never clears one), and no fight the player has not yet taken is deleted by the ending -- which is what 'thins' has to mean if it is not to quietly destroy content. Listed by id rather than swept up by faction so nobody is withdrawn by accident.",
@@ -50,5 +216,26 @@
       "stronghold_courtyard",
       "stronghold_elite"
     ]
-  }
+  },
+  "drain": {
+    "_comment": "Coordinator ruling 2026-09-25 (F05 heal before-state): keep no re-bake; the runtime owns both halves. meadow_healing.gd::_build_the_drain lays dry browned grass over every station in regreen.groups (their own authored strength/radius/inner from terrain_playground.json drains.stations) and a disc round every pylon of pylons.holders (pylon_radius/inner/strength), joined to the station group within join_m. Built only while legendary_freed is unset; faded out over fade_seconds on the freeing (as the regreen fades in); never built on a load after it. edge_jitter_m ragged-edges the contour deterministically. The grass-field half (thin and brown the live blades) is a shared-file request on grass_field.gd.",
+    "enabled": true,
+    "cell": 3.0,
+    "lift": 0.13,
+    "max_alpha": 0.85,
+    "fade_seconds": 12.0,
+    "spare_roads": true,
+    "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+    "normal": "res://assets/environment/terrain/stylised/meadow_grass_NormalGL.png",
+    "normal_depth": 0.34,
+    "uv_scale": 0.27,
+    "tint": "#a08a5c",
+    "edge_jitter_m": 4.0,
+    "pylon_radius": 7.0,
+    "pylon_inner": 2.0,
+    "pylon_strength": 0.7,
+    "join_m": 30.0
+  },
+  "presentation_hold_seconds": 14.0,
+  "_comment_presentation_hold": "X03 (batch 9): while the heal plays live, MeadowHealing stands in the `presentation_hold` group for this many seconds (the 12 s fades plus the last pylon's fall), which stands down the objective beacon, the hint card and the recall line. A load never holds."
 }

@@ -1,0 +1,37 @@
+side_water_deep_watch_chart (ROADMAP F13) -- command evidence, branch ralph/water-deep-watch-chart
+Base origin/main 835744b35. Linux headless Godot 4.7; captures xvfb opengl3 1280x720.
+
+FAILING FIRST (implementation files checked out from origin/main, new/updated tests kept)
+  run_tests --only=water_deep_watch_chart,test_water_personal_pickup,test_water_reward_pockets
+    19 tests, 12 failed: every new chain/gate/relay test except the positive
+    "accepts after resolution" case; the two updated existing tests pass on main.
+  smoke_water_deep_watch_chart: 28 checks, 15 failures (Orsen never names Deep Watch;
+    cache spawned and claimable before Tidecoil; chart succeeds before Tidecoil; no lead/ack).
+  smoke_water_scene_pickups: 26 checks, 2 failures (cache resident before resolution).
+  smoke_water_dock_actions: 57 checks, 2 failures (chart succeeds before Tidecoil).
+  smoke_net_water_deep_watch_chart with main's water_chapter.gd (no relay):
+    TB_DEEP_WATCH_RESOLVER=client: host never receives the flag within 600 frames;
+      client mirror has it, client claim refused "locked" by the host; no receipt.
+    TB_DEEP_WATCH_RESOLVER=host: client never receives the flag; cache never streams
+      in for the client; no receipt.
+
+AFTER (branch)
+  run_tests --only=water: 235 tests, 82765 assertions, 0 failed, 0 SCRIPT ERROR.
+  run_tests --only=water_reward_pockets,flag_scope,quest_log,dialogue: 176 tests, 0 failed.
+  smoke_water_deep_watch_chart 28/0, smoke_water_scene_pickups 26/0,
+  smoke_water_dock_actions 57/0, smoke_water_scene_npcs 67/0,
+  smoke_water_scene_encounters 40/0 (all exit 0, no SCRIPT ERROR).
+  tools/net/run_net_smoke.sh water_deep_watch_chart: 12/12 PASS for both
+    TB_DEEP_WATCH_RESOLVER=client and =host.
+  smoke_water_alpha_runtime: 16 checks, 4 failures -- identical on origin/main
+    (bounded-time Aquaryn fight), not caused by this change.
+
+CAPTURE _sheet_deep_watch_chart.jpg (tools/capture_water_deep_watch_chart.gd), frames:
+  1 Orsen (water_orsen_pre) names Deep Watch/Tidecoil  2 Deep Watch pocket, cache
+  withheld, HUD toast "Tidecoil still sweeps the lookout..."  3 chart table prompt,
+  HUD toast refusal  4 same pocket after resolution, Candy III (III label) present
+  5 Orsen chart lead  6 Orsen acknowledgement after charting.
+  Fixtures: teleport poses; upstream dock flags; Tidecoil resolved by the director's
+  won-fight terminal handler (no fight played); HUD toast hold extended for capture
+  (2.2 s wall-clock hold is shorter than a few software-GL frames). Main Story tracker
+  reads "Meet Pell" because the fixture skips the opening.

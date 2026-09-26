@@ -21,7 +21,8 @@ extends SceneTree
 ## The Cradle care leg (on unless `--no-cradle`) additionally walks from the
 ## Tidal Cradle arrival to `cradle_shell_nest`, mines the nest's Reef Stone
 ## seam with a hotbar pickaxe (DISCLOSED FIXTURE: carried tool granted before
-## the world loads) and takes its berries, by the same real Interact press.
+## the world loads) by the same real Interact press. The chain's 3 berries are
+## Otto's return payout (tests/smoke_water_cradle_care.gd), not a nest find.
 ##   godot --headless --path . --script tests/smoke_water_pocket_walk_claim.gd
 ##     [-- --only=<pocket_id>] [--no-cradle]
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
@@ -152,15 +153,15 @@ func _walk_and_claim(row: Dictionary) -> String:
 		baked - analytic, to_node, to_analytic, "ACCEPTED" if accepted else "REFUSED(%s)" % _refusal]
 
 
-## Tidal Cradle (`side_water_cradle_care` payout): walk to the nest, mine its
-## Reef Stone seam with the hotbar pickaxe and take its berries, each by an
-## ordinary Interact press on the resident production body.
+## Tidal Cradle (`side_water_cradle_care` gather): walk to the nest and mine
+## its Reef Stone seam with the hotbar pickaxe by an ordinary Interact press on
+## the resident production body.
 func _cradle_leg(data: Dictionary) -> String:
 	var rows: Array = []
 	for row: Dictionary in data.pickups + data.harvest:
 		if str(row.get("reward_pocket_id", "")) == CRADLE_POCKET:
 			rows.append(row)
-	if not _check(rows.size() == 2, "cradle nest expects one Reef Stone seam + one berries find, found %d" % rows.size()):
+	if not _check(rows.size() == 1, "cradle nest expects exactly one Reef Stone seam, found %d" % rows.size()):
 		return "CRADLE FAIL rows=%d" % rows.size()
 	var pocket: Dictionary = {}
 	for spec: Dictionary in config.reward_pockets:
@@ -200,7 +201,7 @@ func _cradle_leg(data: Dictionary) -> String:
 		gains[item] = int(gains.get(item, 0)) + gained
 		notes.append("%s +%d %s" % [id, gained, item])
 	_check(int(gains.reef_stone) == 4, "cradle nest paid %d Reef Stone with the pickaxe, expected 4" % int(gains.reef_stone))
-	_check(int(gains.berries) == 3, "cradle nest paid %d berries, expected 3" % int(gains.berries))
+	_check(int(gains.berries) == 0, "cradle nest paid %d berries; Otto's return pays them" % int(gains.berries))
 	service.call("refresh")
 	await _frames(2)
 	for row: Dictionary in rows:

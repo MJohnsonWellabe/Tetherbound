@@ -1121,15 +1121,20 @@ func _update_combat_camera_framing(delta: float) -> void:
 	var weight := 1.0 - exp(-lag * delta)
 	_camera_framing_extra = lerpf(_camera_framing_extra, target_extra, weight)
 	var desired := base_distance + _camera_framing_extra
-	# No nearest-wall distance cap (F04). 9b8c3d8a7 removed it for the Warrens
-	# guardian and merge 59e088560 restored it: the nearest wall to ANY fighter
-	# is not a camera-distance ceiling. Clamped to it, the den fight put the lens
-	# 2 m behind a 3.9 m ally, inside its body, with the guardian off-frame.
-	# SpringArm3D contracts depth against real geometry in the camera's actual
-	# direction, and CameraRig sweeps the shoulder pivot against walls, so a
-	# tight room still keeps the lens out of the rock.
+	# The nearest-wall distance cap is one config value, `room_distance_cap`,
+	# and it ships off (see its `_why` in combat.json). The nearest wall to ANY
+	# fighter is not a camera-distance ceiling: clamped to it, the den fight put
+	# the lens 2 m behind a 3.9 m ally, inside its body. SpringArm3D contracts
+	# depth against real geometry in the camera's actual direction, and
+	# CameraRig sweeps the shoulder pivot against walls, so a tight room still
+	# keeps the lens out of the rock.
+	var clearance := _room_clearance() if bool(framing.get("room_distance_cap", false)) else -1.0
+	if clearance >= 0.0:
+		desired = minf(desired, maxf(1.5, clearance))
 	_camera_rig.set("_distance", desired)
-	if float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
+	if clearance >= 0.0:
+		_camera_rig.set("_shoulder", 0.0)
+	elif float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
 		# Use the live pitch/distance, and never retarget/reset manual orbit.
 		var shoulder := _combat_shoulder_offset(desired, rad_to_deg(float(_camera_rig.get("pitch"))))
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
@@ -2681,8 +2686,18 @@ func _on_enemy_strike() -> void:
 	var facing: Vector3 = _wild.call("facing")
 	var target: Vector3 = _ally_body.call("centre")
 
-	_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
-	_wild.call("play_attack")
+	# F04: a named CHARGER's lunge has already travelled by the time it strikes
+	# (`wild_creature.gd`, combat.json `charger_lunge`), and it reports whether
+	# its body actually reached the target on the way. That report replaces the
+	# cone test below, so a player who read the lane and stepped off it is
+	# missed. Every other opponent returns nothing here and strikes exactly as
+	# before: impulse, attack animation, cone test.
+	var lunge: Dictionary = _wild.call("take_lunge_outcome") \
+		if _wild.has_method("take_lunge_outcome") else {}
+	var travelled := not lunge.is_empty()
+	if not travelled:
+		_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
+		_wild.call("play_attack")
 
 	# Stage B lane 4.C, protocol §2 and §5, and 4.B's handover H1.
 	#
@@ -2697,10 +2712,19 @@ func _on_enemy_strike() -> void:
 	if _encounter_link != null:
 		if not bool(_encounter_link.call("is_encounter_host")):
 			return
+		if travelled and not bool(lunge.get("contact", false)):
+			# The charge reached nobody: a miss for everybody, decided here.
+			attack_missed.emit(false)
+			state_changed.emit()
+			return
+		# On contact the host still picks who was struck, from where the
+		# charging body actually stopped.
 		if _host_resolve_enemy_strike_for_a_participant(cfg, origin, facing):
 			return
 
-	if not MATH.move_connects(cfg, origin, facing, target):
+	var connects: bool = bool(lunge.get("contact", false)) if travelled \
+		else MATH.move_connects(cfg, origin, facing, target)
+	if not connects:
 		attack_missed.emit(false)
 		state_changed.emit()
 		return

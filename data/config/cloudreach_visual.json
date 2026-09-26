@@ -30,6 +30,17 @@
     "horizon_haze_height": 0.15,
     "horizon_haze_strength": 0.42
   },
+  "time_overrides": {
+    "_comment": "Frame-matrix M4, read by cloudreach_world.gd::apply_time_overrides onto this realm's own copy of art.json's time presets (the shared presets, which also drive the Meadows, are untouched; night_end is same_as night and inherits this). The blind judge measured the Cloudreach night route (frame 31) at mean luma 10.5/255 with two-thirds of the frame pure black, and the arrival cliff (frame 30) as a black wedge: under Compatibility only the (1 - ambient_sky_contribution) share of the ambient colour reaches a slope facing away from the moon, and the shared 1.5 x #3d50a3 at 0.2 sky share lands those slopes in ACES's toe. Ambient energy 1.5 -> 2.6, colour one step lighter in the same blue, sky share 0.2 -> 0.15: roughly 2.2x the moon-shadow fill (world_look light_budget ambient 0.46 -> 1.00) while the moon, sky, exposure and saturation stay the shared night's, so the sky stays dark and the moonlit/shadowed split still reads as night. creature_emission_floor 0.22 -> 0.08: the floor adds each plain-PBR creature's own albedo as emission, so a pale creature (Stormcapra, frame 32) glowed at a fixed value that ignored the night; with the ambient raised the creatures are lit by the night itself and keep only a small legibility floor.",
+    "night": {
+      "environment": {
+        "ambient_energy": 2.6,
+        "ambient_colour": "#4a5fae",
+        "ambient_sky_contribution": 0.15,
+        "creature_emission_floor": 0.08
+      }
+    }
+  },
   "atmosphere": {
     "environment": {"fog_density_add": -0.00015, "fog_colour": "#a2bdc8"},
     "sky": {"horizon_colour": "#a2bdc8", "ground_horizon_colour": "#a2bdc8"}

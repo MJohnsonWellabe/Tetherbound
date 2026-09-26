@@ -10,8 +10,7 @@ const TOURNAMENT_PATH := "res://scripts/world/tournament.gd"
 const BOUNDARY_PATH := "res://data/config/village_boundary.json"
 const PROPS_PATH := "res://data/config/bands/band1_lower_meadows/props.json"
 const REALMS_PATH := "res://data/config/realm_transitions.json"
-const ROUTE_A := Vector2(27.5, -16.0)
-const ROUTE_B := Vector2(14.0, 20.0)
+const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const BRYN := Vector2(13.0, 9.0)
 const HALDA := Vector2(23.5, 11.5)
 const PRACTICE_BERRY := Vector2(28.0, 6.0)
@@ -37,6 +36,39 @@ func _distance_to_segment(point: Vector2, a: Vector2, b: Vector2) -> float:
 	var ab := b - a
 	var t := clampf((point - a).dot(ab) / maxf(ab.length_squared(), 0.001), 0.0, 1.0)
 	return point.distance_to(a + ab * t)
+
+
+## F01-a/b: the tournament field's route is no longer a hard-coded copy of the
+## old spine leg (27.5,-16)->(14,20) (that leg was removed; the spine now
+## continues South Street from (11.5,2)). Clearance is measured against every
+## road the terrain actually paints -- paths.routes, paths.approaches and the
+## Lower Meadows spine -- read from the live config.
+func _road_lines() -> Array:
+	var terrain := _read_json(TERRAIN_PATH)
+	var paths := terrain.get("paths", {}) as Dictionary
+	var raw_lines: Array = []
+	for entry: Variant in (paths.get("routes", []) as Array) + (paths.get("approaches", []) as Array):
+		raw_lines.append((entry as Dictionary).get("points", []))
+	for entry: Variant in ((terrain.get("trail", {}) as Dictionary).get("bands", []) as Array):
+		if str((entry as Dictionary).get("id", "")) == "band1_lower_meadows":
+			raw_lines.append((entry as Dictionary).get("points", []))
+	return raw_lines
+
+
+func _road_clearance(point: Vector2) -> float:
+	var nearest := INF
+	for line: Variant in _road_lines():
+		var pts := line as Array
+		for index in pts.size() - 1:
+			nearest = minf(nearest, _distance_to_segment(point, _point(pts[index] as Array), _point(pts[index + 1] as Array)))
+	return nearest
+
+
+func test_the_tournament_field_route_is_read_from_the_real_roads() -> void:
+	assert_false(_road_lines().is_empty(), "the terrain config authors roads; clearance checks would be vacuous")
+	var centre := _point((_config().get("arena", {}) as Dictionary).get("centre", []) as Array)
+	assert_true(_road_clearance(centre) <= 12.0,
+		"a real road (South Street / the Lower Meadows spine) still serves the tournament field (%.1fm)" % _road_clearance(centre))
 
 
 func _boundary_clearance(point: Vector2) -> float:
@@ -118,7 +150,7 @@ func test_training_ground_has_one_primary_canopy_and_a_readable_lists_ring() -> 
 		assert_true(ResourceLoader.exists("%s/%s.gltf" % [canopy.get("dir", ""), accent]),
 			"canopy accent %s is installed" % accent)
 	var canopy_at := _point(canopy.get("at", []) as Array)
-	assert_true(_distance_to_segment(canopy_at, ROUTE_A, ROUTE_B) >= 3.5,
+	assert_true(_road_clearance(canopy_at) >= 3.5,
 		"the visual-only marshal backdrop keeps the board's authored road-side clearance")
 	var canopy_boundary_clearance := _boundary_clearance(canopy_at)
 	assert_true(canopy_boundary_clearance >= 2.0,
@@ -153,7 +185,7 @@ func test_equipment_is_asymmetric_installed_and_outside_the_fight_floor() -> voi
 			"%s leaves a measured six-metre read around the practice berry" % name)
 		assert_true(at.distance_to(BRYN) >= 8.0, "%s stays clear of Bryn" % name)
 		assert_true(at.distance_to(HALDA) >= 8.0, "%s stays clear of Halda" % name)
-		assert_true(_distance_to_segment(at, ROUTE_A, ROUTE_B) >= 8.0,
+		assert_true(_road_clearance(at) >= 8.0,
 			"%s stays clear of the real tournament-field route" % name)
 		assert_true(_boundary_clearance(at) >= 2.0,
 			"%s remains at least two metres inside the visible boundary" % name)
@@ -211,7 +243,7 @@ func test_equipment_night_light_has_an_installed_visible_source_and_safe_footpri
 	var cfg := _config()
 	var lamp := cfg.get("equipment_light", {}) as Dictionary
 	var at := _point(lamp.get("at", []) as Array)
-	assert_true(_distance_to_segment(at, ROUTE_A, ROUTE_B) >= 8.0,
+	assert_true(_road_clearance(at) >= 8.0,
 		"the standing light remains clear of the real tournament route")
 	assert_true(_boundary_clearance(at) >= 2.0,
 		"the standing light remains inside the visible village boundary")

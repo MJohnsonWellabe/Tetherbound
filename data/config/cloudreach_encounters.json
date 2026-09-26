@@ -78,7 +78,7 @@
       ]
     },
     "grunt": {
-      "coins": 65,
+      "coins": 80,
       "items": [
         {
           "id": "potion_large",
@@ -87,7 +87,7 @@
       ]
     },
     "mentor": {
-      "coins": 60,
+      "coins": 75,
       "items": [
         {
           "id": "revive",
@@ -109,7 +109,7 @@
       ]
     },
     "elite": {
-      "coins": 110,
+      "coins": 120,
       "items": [
         {
           "id": "revive",
@@ -963,7 +963,7 @@
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_01",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -262.505,
         500.146,
@@ -972,11 +972,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_02",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -311.755,
         511.45,
@@ -985,11 +985,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_03",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -476.115,
         539.055,
@@ -998,11 +998,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_04",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -537.333,
         551.137,
@@ -1011,11 +1011,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_05",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -616.271,
         563.219,
@@ -1024,11 +1024,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_06",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -682.867,
         580.424,
@@ -1037,11 +1037,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_07",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -771.47,
         604.178,
@@ -1050,11 +1050,11 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_08",
-      "table_id": "cloudreach_high_roost_wild",
+      "table_id": "cloudreach_windscar_wild",
       "position": [
         -785.021,
         643.604,
@@ -1063,7 +1063,7 @@
       "count": 2,
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
-      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. F06: this stretch of the counterweight stair lies below the moved upper_counterweight_gate, inside windscar_ravine, and is walkable before cloudreach_upper_route_unlocked, so it uses the Windscar region table (cloudreach_windscar_wild, levels 22-27, ungated) rather than the Fly-gated High Roost table; no global radius, draw-distance or spawn-budget inflation."
     },
     {
       "id": "road_visibility_windscar_counterweight_pass_09",
@@ -1311,6 +1311,171 @@
       "radius_m": 3.0,
       "purpose": "roadside creature sightline pair",
       "_why_road_visibility_0907": "ROAD CP-2 authored pair on the route shoulder. Uses the route's native encounter table; no global radius, draw-distance or spawn-budget inflation."
+    },
+    {
+      "id": "road_visibility_windscar_floor_loop_return_01",
+      "table_id": "cloudreach_high_roost_wild",
+      "position": [
+        -270.6,
+        464.2,
+        3119.6
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "windscar_floor_loop",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: the required grounded return from the aerie re-walks this whole loop after the Fly trial and shrine, and every ravine pair was already met on the way in, so it measured as one empty stretch (continuous witness 885.87 s aerie-return to west upper anchor; data model 1,609 m). The High Roost table is gated by fly_traversal_unlocked, so this pair is absent on the inbound walk and appears only once roost fliers can ride the restored updrafts down into the ravine, exactly like the counterweight-pass pairs. Placed on the authored polyline core at its interpolated height, between existing pairs and clear of the chain bridge and of the stretch overhung by the counterweight-pass shoulders (where production admission fails); no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_windscar_floor_loop_return_02",
+      "table_id": "cloudreach_high_roost_wild",
+      "position": [
+        -507.4,
+        431.2,
+        2711.6
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "windscar_floor_loop",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: the required grounded return from the aerie re-walks this whole loop after the Fly trial and shrine, and every ravine pair was already met on the way in, so it measured as one empty stretch (continuous witness 885.87 s aerie-return to west upper anchor; data model 1,609 m). The High Roost table is gated by fly_traversal_unlocked, so this pair is absent on the inbound walk and appears only once roost fliers can ride the restored updrafts down into the ravine, exactly like the counterweight-pass pairs. Placed on the authored polyline core at its interpolated height, between existing pairs and clear of the chain bridge and of the stretch overhung by the counterweight-pass shoulders (where production admission fails); no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_windscar_floor_loop_return_03",
+      "table_id": "cloudreach_high_roost_wild",
+      "position": [
+        -329.74,
+        448.12,
+        2593.16
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "windscar_floor_loop",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: the required grounded return from the aerie re-walks this whole loop after the Fly trial and shrine, and every ravine pair was already met on the way in, so it measured as one empty stretch (continuous witness 885.87 s aerie-return to west upper anchor; data model 1,609 m). The High Roost table is gated by fly_traversal_unlocked, so this pair is absent on the inbound walk and appears only once roost fliers can ride the restored updrafts down into the ravine, exactly like the counterweight-pass pairs. Placed on the authored polyline core at its interpolated height, between existing pairs and clear of the chain bridge and of the stretch overhung by the counterweight-pass shoulders (where production admission fails); no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_windscar_floor_loop_return_04",
+      "table_id": "cloudreach_high_roost_wild",
+      "position": [
+        -175.6,
+        462.8,
+        2490.4
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "windscar_floor_loop",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: the required grounded return from the aerie re-walks this whole loop after the Fly trial and shrine, and every ravine pair was already met on the way in, so it measured as one empty stretch (continuous witness 885.87 s aerie-return to west upper anchor; data model 1,609 m). The High Roost table is gated by fly_traversal_unlocked, so this pair is absent on the inbound walk and appears only once roost fliers can ride the restored updrafts down into the ravine, exactly like the counterweight-pass pairs. Placed on the authored polyline core at its interpolated height, between existing pairs and clear of the chain bridge and of the stretch overhung by the counterweight-pass shoulders (where production admission fails); no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_upper_plateau_circuit_01",
+      "table_id": "cloudreach_upper_wild",
+      "position": [
+        -852.0,
+        796.0,
+        4284.0
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "upper_plateau_circuit",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: the west-to-east upper-anchor leg crossed this plateau segment with no encounter or pickup inside prompt range (continuous witness 366.83 s west to east anchor; data model 713 m). Native Upper table, gated by cloudreach_upper_route_unlocked, so nothing appears before the counterweight stair is released. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_upper_plateau_circuit_02",
+      "table_id": "cloudreach_upper_wild",
+      "position": [
+        -780.6,
+        833.8,
+        4477.2
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "upper_plateau_circuit",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: the west-to-east upper-anchor leg crossed this plateau segment with no encounter or pickup inside prompt range (continuous witness 366.83 s west to east anchor; data model 713 m). Native Upper table, gated by cloudreach_upper_route_unlocked, so nothing appears before the counterweight stair is released. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_upper_plateau_circuit_03",
+      "table_id": "cloudreach_upper_released_wild",
+      "position": [
+        228.7,
+        913.4,
+        4572.6
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "upper_plateau_circuit",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: the summit road starts at the plateau junction, so after the east anchor the required route walks this observatory segment back west; every pickup and pair on it was already met on the way in (continuous witness 400.63 s east anchor to Voss; data model 750 m). Uses cloudreach_upper_released_wild, the plateau table gated by storm_anchor_upper_east_disabled, so the pair appears only once that anchor is off. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_upper_plateau_circuit_04",
+      "table_id": "cloudreach_upper_released_wild",
+      "position": [
+        21.3,
+        906.6,
+        4647.4
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "upper_plateau_circuit",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: the summit road starts at the plateau junction, so after the east anchor the required route walks this observatory segment back west; every pickup and pair on it was already met on the way in (continuous witness 400.63 s east anchor to Voss; data model 750 m). Uses cloudreach_upper_released_wild, the plateau table gated by storm_anchor_upper_east_disabled, so the pair appears only once that anchor is off. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_summit_overlook_loop_01",
+      "table_id": "cloudreach_summit_wild",
+      "position": [
+        -210.0,
+        1120.0,
+        5325.0
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "summit_overlook_loop",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: the summit loop's closing segment between the stronghold threshold and the summit bivouac had no encounter or pickup in prompt range (data model 561 m inbound to the bivouac). Native Summit table, gated by cloudreach_upper_route_unlocked. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_summit_overlook_loop_02",
+      "table_id": "cloudreach_summit_restored_wild",
+      "position": [
+        -55.0,
+        1140.0,
+        5337.5
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "summit_overlook_loop",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: after the finale the required walk to the Waterward overlook returns along the same closing segment, already met on the way to the bivouac (continuous witness 221.53 s last relay to Warden reward; data model 781 m). Uses cloudreach_summit_restored_wild, the summit table gated by cloudreach_winds_restored, so the pair is an aftermath arrival only. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_summit_overlook_loop_03",
+      "table_id": "cloudreach_summit_restored_wild",
+      "position": [
+        -365.0,
+        1100.0,
+        5312.5
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "summit_overlook_loop",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F07 cadence: after the finale the required walk to the Waterward overlook returns along the same closing segment, already met on the way to the bivouac (continuous witness 221.53 s last relay to Warden reward; data model 781 m). Uses cloudreach_summit_restored_wild, the summit table gated by cloudreach_winds_restored, so the pair is an aftermath arrival only. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
     }
   ]
 }

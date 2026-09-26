@@ -1,0 +1,59 @@
+SHOT after ledge_mounted_at_edge trainer=(-101.5305, 403.6682, 1667.293) mount=(-101.4752, 401.4804, 1667.54) mounted=true
+SHOT after ledge_01.0s trainer=(-98.60931, 401.8693, 1659.644) mount=(-98.4635, 399.5326, 1659.251) mounted=true
+SHOT after ledge_02.0s trainer=(-95.13029, 392.2184, 1650.269) mount=(-94.98448, 390.0307, 1649.876) mounted=true
+SHOT after ledge_03.0s trainer=(-91.65121, 392.2187, 1640.893) mount=(-91.5054, 390.0309, 1640.5) mounted=true
+SHOT after ledge_04.0s trainer=(-88.17219, 392.2187, 1631.517) mount=(-88.02638, 390.0309, 1631.124) mounted=true
+SHOT after ledge_05.0s trainer=(-84.69315, 392.2186, 1622.142) mount=(-84.54736, 390.0308, 1621.749) mounted=true
+SHOT after ledge_06.0s trainer=(-81.21413, 392.2186, 1612.765) mount=(-81.06833, 390.0309, 1612.372) mounted=true
+SHOT after ledge_07.0s trainer=(-77.73516, 392.2186, 1603.39) mount=(-77.58935, 390.0308, 1602.997) mounted=true
+SHOT after ledge_08.0s trainer=(-74.25607, 392.2184, 1594.014) mount=(-74.11027, 390.0306, 1593.621) mounted=true
+SHOT after ledge_dismounted trainer=(-76.63474, 390.031, 1592.685) mount=- mounted=false
+SHOT after ledge_remounted trainer=(-70.74655, 392.2186, 1589.729) mount=(-70.97217, 390.0308, 1589.843) mounted=true
+SHOT after ledge_ride_on_01.5s trainer=(-66.31046, 391.7878, 1577.311) mount=(-66.16466, 389.5393, 1576.918) mounted=true
+SHOT after ledge_ride_on_03.0s trainer=(-61.06481, 387.4036, 1563.233) mount=(-60.91901, 385.1634, 1562.84) mounted=true
+SHOT after ledge_ride_on_04.5s trainer=(-55.77667, 383.7966, 1549.129) mount=(-55.62953, 381.5967, 1548.735) mounted=true
+SHOT after ledge_ride_on_06.0s trainer=(-50.45942, 381.8188, 1534.985) mount=(-50.31361, 379.5891, 1534.592) mounted=true
+SHOT after terrace_mounted_at_edge trainer=(9.381023, 107.2127, -247.7863) mount=(9.632537, 105.0249, -247.8079) mounted=true
+SHOT after terrace_01.0s trainer=(10.84114, 97.90797, -239.5078) mount=(10.90142, 95.35461, -239.093) mounted=true
+SHOT after terrace_02.0s trainer=(12.27955, 63.19131, -229.6118) mount=(12.33983, 60.20462, -229.1971) mounted=true
+SHOT after terrace_after trainer=(8.313624, 107.3798, -247.9369) mount=(8.349936, 105.192, -247.6871) mounted=true
+TERRACE_AFTER after mounted=true recovered=true on_floor=true mount=(8.349936, 105.192, -247.6871) trainer=(8.313624, 107.3798, -247.9369) last_dismount_rule=clear
+SHOT after terrace_road_back_01.5s trainer=(6.399992, 107.2187, -261.1137) mount=(6.339707, 105.0309, -261.5284) mounted=true
+SHOT after terrace_road_back_03.0s trainer=(4.242574, 106.7607, -275.9628) mount=(4.18229, 104.5178, -276.3776) mounted=true
+SHOT after terrace_road_back_04.5s trainer=(2.084962, 72.88567, -290.8081) mount=(2.024678, 69.99286, -291.2228) mounted=true
+SHOT after terrace_road_back_06.0s trainer=(4.370169, 107.0375, -275.0844) mount=(4.309874, 104.7913, -275.4992) mounted=true
+SHOT after terrace_road_back_07.5s trainer=(2.212535, 76.32909, -289.9298) mount=(2.15225, 73.4724, -290.3445) mounted=true
+SHOT after terrace_road_back_09.0s trainer=(4.477876, 107.1904, -274.3786) mount=(4.419902, 104.9815, -274.7796) mounted=true
+SHOT after terrace_road_back_10.5s trainer=(2.323739, 79.50994, -289.2049) mount=(2.263454, 76.68936, -289.6197) mounted=true
+SHOT after terrace_road_back_12.0s trainer=(4.548052, 107.2186, -273.8555) mount=(4.498637, 105.0309, -274.2101) mounted=true
+RIDE_OFF after motion_s=30.5 frames=27 errors=0
+
+SHOT before ledge_mounted_at_edge trainer=(-101.5305, 403.6682, 1667.293) mount=(-101.4752, 401.4804, 1667.54) mounted=true
+SHOT before ledge_01.0s trainer=(-98.60931, 401.8693, 1659.644) mount=(-98.4635, 399.5326, 1659.251) mounted=true
+SHOT before ledge_02.0s trainer=(-99.95162, 403.2453, 1661.875) mount=(-99.80505, 401.0262, 1661.481) mounted=true
+SHOT before ledge_03.0s trainer=(-100.92, 403.5463, 1664.552) mount=(-100.7764, 401.3781, 1664.157) mounted=true
+SHOT before ledge_04.0s trainer=(-101.6816, 403.6145, 1666.674) mount=(-101.5717, 401.4096, 1666.375) mounted=true
+SHOT before ledge_05.0s trainer=(-98.44328, 400.0334, 1657.812) mount=(-98.29748, 397.6245, 1657.419) mounted=true
+SHOT before ledge_06.0s trainer=(-99.429, 402.6873, 1660.468) mount=(-99.2832, 400.4012, 1660.075) mounted=true
+SHOT before ledge_07.0s trainer=(-100.4136, 403.5391, 1663.134) mount=(-100.2678, 401.3183, 1662.741) mounted=true
+SHOT before ledge_08.0s trainer=(-101.3683, 403.5941, 1665.788) mount=(-101.2288, 401.3863, 1665.409) mounted=true
+SHOT before ledge_dismounted trainer=(-103.7552, 401.2024, 1664.471) mount=- mounted=false
+SHOT before ledge_remounted trainer=(-90.44799, 392.2173, 1657.559) mount=(-90.67213, 390.0295, 1657.676) mounted=true
+SHOT before ledge_ride_on_01.5s trainer=(-86.02437, 392.2186, 1645.151) mount=(-85.87856, 390.0307, 1644.758) mounted=true
+SHOT before ledge_ride_on_03.0s trainer=(-80.80585, 392.2185, 1631.087) mount=(-80.66004, 390.0307, 1630.694) mounted=true
+SHOT before ledge_ride_on_04.5s trainer=(-75.58727, 392.2186, 1617.024) mount=(-75.44147, 390.0308, 1616.63) mounted=true
+SHOT before ledge_ride_on_06.0s trainer=(-70.36872, 392.2187, 1602.96) mount=(-70.22292, 390.0308, 1602.567) mounted=true
+SHOT before terrace_mounted_at_edge trainer=(9.381021, 107.2127, -247.7863) mount=(9.632534, 105.0249, -247.8079) mounted=true
+SHOT before terrace_after trainer=(8.313623, 107.38, -247.9369) mount=(8.349935, 105.1922, -247.6871) mounted=true
+TERRACE_AFTER before mounted=true recovered=true on_floor=true mount=(8.349935, 105.1922, -247.6871) trainer=(8.313623, 107.38, -247.9369) last_dismount_rule=<null>
+SHOT before terrace_road_back_01.5s trainer=(6.399949, 107.2187, -261.1137) mount=(6.339664, 105.0309, -261.5284) mounted=true
+SHOT before terrace_road_back_03.0s trainer=(4.242496, 106.7606, -275.9631) mount=(4.182211, 104.5178, -276.3778) mounted=true
+SHOT before terrace_road_back_04.5s trainer=(6.168131, 107.2188, -262.7086) mount=(6.107846, 105.0309, -263.1234) mounted=true
+SHOT before terrace_road_back_06.0s trainer=(4.011178, 105.9117, -277.5595) mount=(3.950893, 103.5967, -277.9742) mounted=true
+SHOT before terrace_road_back_07.5s trainer=(5.672721, 107.2187, -266.1181) mount=(5.612437, 105.0309, -266.5328) mounted=true
+SHOT before terrace_road_back_09.0s trainer=(3.517046, 101.9379, -280.9687) mount=(3.456761, 99.47846, -281.3835) mounted=true
+SHOT before terrace_road_back_10.5s trainer=(5.155607, 107.2187, -269.6753) mount=(5.095322, 105.0309, -270.0901) mounted=true
+SHOT before terrace_road_back_12.0s trainer=(6.772173, 107.2187, -258.5526) mount=(6.711889, 105.0309, -258.9674) mounted=true
+SHOT before terrace_road_back_13.5s trainer=(4.614557, 107.2186, -273.3973) mount=(4.554272, 105.0308, -273.8121) mounted=true
+SHOT before terrace_road_back_15.0s trainer=(6.231134, 107.2187, -262.275) mount=(6.170848, 105.0309, -262.6897) mounted=true
+RIDE_OFF before motion_s=30.5 frames=27 errors=0

@@ -5,6 +5,7 @@ extends Node3D
 const RULES := preload("res://scripts/world/stormwood_surge_rules.gd")
 const SHELTER := preload("res://scripts/world/stormwood_shelter.gd")
 const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 var rules := RULES.new()
 var world: Node3D
 var surge: Node
@@ -231,7 +232,10 @@ func _strike_flash(at: Vector3) -> void:
 	var light := OmniLight3D.new()
 	light.name = "StrikeLight"
 	light.light_color = colour
-	light.light_energy = float(cfg.get("strike_light_energy", 8.0))
+	# The local light is a flash too: reduced motion scales it like the sky
+	# flash. The bolt itself is the gameplay tell and stays.
+	var motion := float(surge.call("flash_motion_scale")) if surge != null and surge.has_method("flash_motion_scale") else 1.0
+	light.light_energy = float(cfg.get("strike_light_energy", 8.0)) * motion
 	light.omni_range = float(cfg.get("strike_light_range_m", 18.0))
 	light.shadow_enabled = false
 	add_child(light)
@@ -279,6 +283,7 @@ uniform float pulse_hz_start = 2.0;
 uniform float pulse_hz_end = 7.0;
 uniform float telegraph_seconds = 1.2;
 uniform float progress = 0.0;
+uniform float pulse_enabled = 1.0;
 uniform float strike = 0.0;
 uniform float fade = 1.0;
 uniform float outer_radius = 3.45;
@@ -316,7 +321,9 @@ void fragment() {
 	// so the phase never jumps.
 	float t = progress * telegraph_seconds;
 	float phase = pulse_hz_start * t + (pulse_hz_end - pulse_hz_start) * t * t / (2.0 * telegraph_seconds);
-	float pulse = 0.65 + 0.35 * cos(phase * 6.2832);
+	// Under reduced motion the rim is steady; the fill growing with
+	// `progress` still carries the timing.
+	float pulse = mix(0.85, 0.65 + 0.35 * cos(phase * 6.2832), pulse_enabled);
 	float rim = 1.0 - smoothstep(0.0, rim_width, abs(r - rim_fraction));
 	float outer = r > rim_fraction ? 1.0 - smoothstep(rim_fraction, 1.0, r) : 0.0;
 	float fill = r < rim_fraction ? smoothstep(0.0, rim_fraction, r) * (0.3 + 0.35 * progress) : 0.0;
@@ -404,6 +411,7 @@ func _telegraph_material() -> ShaderMaterial:
 	material.set_shader_parameter("rim_radius", rim_r)
 	material.set_shader_parameter("lift", float(cfg.get("ground_lift_m", 0.07)))
 	material.set_shader_parameter("depth_pull", float(cfg.get("depth_pull_m", 0.28)))
+	material.set_shader_parameter("pulse_enabled", 0.0 if MOTION_PREFS.reduced_motion() else 1.0)
 	material.set_shader_parameter("pull_start_radius", rim_r - 0.15)
 	return material
 

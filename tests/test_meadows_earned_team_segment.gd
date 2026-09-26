@@ -355,3 +355,12 @@ func test_live_preparation_has_no_state_injection_or_direct_interaction_callback
 		"set_physics_process(", "set_process(", "rig.set(", "cycle_active(",
 		"interaction_activate(", "_on_target_row(", "_hold_the_fight_where_it_was("]:
 		assert_false(source.contains(forbidden), "earned route may not bypass input: " + forbidden)
+
+
+func test_repeated_wild_receipt_names_each_slot_fought_more_than_once() -> void:
+	var none: Array[String] = ["Wild_bramblebun_0_2", "Wild_mudsnout_1070_1"]
+	assert_eq(SEGMENT.repeated_names(none), [] as Array[String])
+	var again: Array[String] = ["Wild_mudsnout_1_1", "Wild_bramblebun_0_2",
+		"Wild_mudsnout_1_1", "Wild_mudsnout_1_1", "Wild_bramblebun_0_2"]
+	assert_eq(SEGMENT.repeated_names(again),
+		["Wild_mudsnout_1_1", "Wild_bramblebun_0_2"] as Array[String])

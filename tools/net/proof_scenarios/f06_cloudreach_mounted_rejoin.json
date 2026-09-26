@@ -1,0 +1,609 @@
+{
+  "name": "F06: two-peer join, rejoin and mounted rejoin do not bypass Cloudreach's closed counterweight gate",
+  "claim": "ACCEPTANCE F06: 'two-peer rejoin does not bypass a closed gate or lose an owned creature'. The guest's own world has Cloudreach's upper route open and its portable character is saved past upper_counterweight_gate (in Upper Cloudreach). The host's world has that gate CLOSED (no cloudreach_upper_route_unlocked). (1) JOIN: the guest continues its own save through the title's production join; it must not stand inside sealed Upper Cloudreach, must keep its five, and the host's world flags must not change. (2) REJOIN: at the gate's legal side it leaves and rejoins: same checks, same party ids. (3) MOUNTED REJOIN: it launches on its galecrest, its link drops mid-flight, it rejoins, then lands: sane rider state, same five ids, legal side, no flag change. (4) CONTROL: the host opens the gate, the guest stands past it, leaves and rejoins and DOES stand past it, so the 'not past the gate' check can fail. Setup stand-ins (disclosed): world flags through the ledger (story_flag) stand in for playing to Cloudreach, the Windscar flight trial and (guest's own world only) the Sky Shrine windlass; party_grant and fly_setup fill the guest's five; teleport places the guest past the gate in its own open world and at the gate's legal side. Saves, loads, join, leave, drop, rejoin, flight and snapshots are the game's own code. Loopback ENet: local evidence, not internet/Steam acceptance.",
+  "peers": 2,
+  "scene": "title",
+  "_comment_scene": "Both peers boot the light title scene (launching straight into the Meadows misses the harness's 180 s hello when both build at once), then boot their own fresh Meadows world and cross into Cloudreach through Game.enter_realm.",
+  "budget_s": 3000,
+  "steps": [
+    {
+      "peer": "all",
+      "action": "boot",
+      "args": {
+        "scene": "world"
+      },
+      "budget_frames": 20000,
+      "label": "each peer boots its own fresh Meadows world"
+    },
+    {
+      "peer": "all",
+      "action": "story_flag",
+      "args": {
+        "flag": "realm_key_cloudreach",
+        "scope": "world"
+      },
+      "label": "setup: both worlds hold the Cloudreach key"
+    },
+    {
+      "peer": "all",
+      "action": "story_flag",
+      "args": {
+        "flag": "fly_traversal_unlocked",
+        "scope": "world"
+      },
+      "label": "setup: both worlds finished the Windscar flight trial (the Fly gate, not the counterweight gate)"
+    },
+    {
+      "peer": 1,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach_upper_route_unlocked",
+        "scope": "world"
+      },
+      "label": "setup: ONLY the guest's own world has the upper counterweight route open"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "level": 20
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "level": 20
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "brooktail",
+        "level": 20
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "level": 20
+      }
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "budget_frames": 20000,
+      "label": "host enters Cloudreach in its own world"
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "budget_frames": 20000,
+      "label": "guest enters Cloudreach in its own world"
+    },
+    {
+      "peer": 1,
+      "action": "fly_setup",
+      "args": {
+        "species": "galecrest"
+      },
+      "label": "setup: guest's fifth creature is its Fly carrier (galecrest)"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "guest owns five"
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          -400.0,
+          783.0,
+          3890.0
+        ],
+        "settle": 120
+      },
+      "label": "setup: guest stands in Upper Cloudreach, past the gate (open in its own world)"
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "guest pose in its own world"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -400.0,
+          3890.0
+        ],
+        "within": 40.0
+      },
+      "label": "baseline: guest IS past the gate in its own world"
+    },
+    {
+      "peer": 1,
+      "action": "save_character_here",
+      "label": "guest saves its own world + portable character past the gate"
+    },
+    {
+      "peer": 1,
+      "action": "capture_saves",
+      "args": {
+        "label": "guest_home_past_gate"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "guest_home_past_gate",
+        "dir": "worlds",
+        "contains": [
+          "cloudreach_upper_route_unlocked"
+        ]
+      },
+      "label": "guest's own saved world has the gate open"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "guest_home_past_gate",
+        "dir": "characters",
+        "contains": [
+          "\"cloudreach\"",
+          "galecrest"
+        ]
+      },
+      "label": "guest's saved character: Cloudreach pose, carrier owned"
+    },
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "expect": "FAIL",
+      "label": "host world: gate CLOSED before the join"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "returning_route": false,
+        "budget_frames": 20000
+      },
+      "label": "guest continues its own save through the title (world built from its autosave, then JoinDriver dials)",
+      "budget_frames": 20000
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "player_identity",
+      "expect_data": {
+        "realm": "cloudreach",
+        "party_size": 5
+      },
+      "label": "JOIN: guest in Cloudreach, five owned"
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "JOIN: guest position"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "expect": "FAIL",
+      "label": "JOIN: guest now reads the host's closed gate"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -400.0,
+          3890.0
+        ],
+        "within": 40.0
+      },
+      "expect": "FAIL",
+      "continue_on_fail": true,
+      "label": "JOIN: guest is NOT standing in sealed Upper Cloudreach"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "expect": "FAIL",
+      "label": "JOIN: host world flags unchanged"
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          -104.0,
+          473.0,
+          2436.0
+        ],
+        "settle": 120
+      },
+      "label": "setup: guest stands at the gate's legal (south) side"
+    },
+    {
+      "peer": 1,
+      "probe": "position"
+    },
+    {
+      "peer": 1,
+      "action": "save_character_here",
+      "label": "guest saves its portable character at the gate"
+    },
+    {
+      "peer": 1,
+      "probe": "tournament",
+      "label": "party ids before leave"
+    },
+    {
+      "peer": 1,
+      "action": "leave",
+      "args": {
+        "reason": "rejoin_proof"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1
+      },
+      "budget_frames": 900
+    },
+    {
+      "peer": 1,
+      "action": "join",
+      "args": {},
+      "label": "guest rejoins"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "player_identity",
+      "expect_data": {
+        "realm": "cloudreach",
+        "party_size": 5
+      },
+      "label": "REJOIN: guest in Cloudreach, five owned"
+    },
+    {
+      "peer": 1,
+      "probe": "tournament",
+      "label": "REJOIN: party ids after (compare with the row before leave)"
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "REJOIN: guest position"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -400.0,
+          3890.0
+        ],
+        "within": 40.0
+      },
+      "expect": "FAIL",
+      "continue_on_fail": true,
+      "label": "REJOIN: guest is NOT standing in sealed Upper Cloudreach"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -104.0,
+          2436.0
+        ],
+        "within": 20.0
+      },
+      "continue_on_fail": true,
+      "label": "REJOIN: guest stands at the gate's legal side"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "expect": "FAIL",
+      "label": "REJOIN: host world flags unchanged"
+    },
+    {
+      "peer": 1,
+      "action": "fly_launch",
+      "args": {
+        "height": 10.0
+      },
+      "label": "MOUNTED: guest launches on its galecrest at the gate's legal side"
+    },
+    {
+      "peer": 1,
+      "probe": "flying",
+      "label": "MOUNTED: guest flight state before the drop"
+    },
+    {
+      "peer": 1,
+      "probe": "tournament",
+      "label": "MOUNTED: party ids before the drop"
+    },
+    {
+      "peer": 1,
+      "action": "drop_link",
+      "label": "MOUNTED: guest's link drops mid-flight"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1
+      },
+      "budget_frames": 1800
+    },
+    {
+      "peer": 1,
+      "action": "join",
+      "args": {},
+      "label": "MOUNTED: guest rejoins (reclaims its held seat)"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "flying",
+      "label": "MOUNTED: flight state after rejoin"
+    },
+    {
+      "peer": 1,
+      "action": "fly_land",
+      "args": {
+        "budget_frames": 1800
+      },
+      "label": "MOUNTED: guest comes down to solid ground (not stuck mounted in the void)"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "MOUNTED: still five (no lost or duplicated carrier)"
+    },
+    {
+      "peer": 1,
+      "probe": "player_identity",
+      "expect_data": {
+        "realm": "cloudreach",
+        "party_size": 5
+      },
+      "label": "MOUNTED: identity after landing"
+    },
+    {
+      "peer": 1,
+      "probe": "tournament",
+      "label": "MOUNTED: party ids after (compare with the row before the drop)"
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "MOUNTED: landed position"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -400.0,
+          3890.0
+        ],
+        "within": 40.0
+      },
+      "expect": "FAIL",
+      "continue_on_fail": true,
+      "label": "MOUNTED: guest is NOT inside sealed Upper Cloudreach"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -104.0,
+          2436.0
+        ],
+        "within": 30.0
+      },
+      "continue_on_fail": true,
+      "label": "MOUNTED: guest landed at the gate's legal side"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "expect": "FAIL",
+      "label": "MOUNTED: host world flags unchanged"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after_rejoins"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after_rejoins",
+        "dir": "worlds",
+        "path_contains": "slot-0/",
+        "contains": [
+          "realm_key_cloudreach"
+        ],
+        "lacks": [
+          "cloudreach_upper_route_unlocked"
+        ]
+      },
+      "label": "host's saved world: gate still closed"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach_upper_route_unlocked",
+        "scope": "world"
+      },
+      "label": "CONTROL setup: the host opens the gate"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach_upper_route_unlocked"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          -400.0,
+          783.0,
+          3890.0
+        ],
+        "settle": 120
+      },
+      "label": "CONTROL setup: guest stands past the now-open gate"
+    },
+    {
+      "peer": 1,
+      "action": "save_character_here"
+    },
+    {
+      "peer": 1,
+      "action": "leave",
+      "args": {
+        "reason": "rejoin_control"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1
+      },
+      "budget_frames": 900
+    },
+    {
+      "peer": 1,
+      "action": "join",
+      "args": {},
+      "label": "CONTROL: guest rejoins the open world"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "player_identity",
+      "expect_data": {
+        "realm": "cloudreach",
+        "party_size": 5
+      },
+      "label": "CONTROL: guest in Cloudreach, five owned"
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "CONTROL: guest position"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -400.0,
+          3890.0
+        ],
+        "within": 40.0
+      },
+      "label": "CONTROL: with the gate open the rejoined guest DOES stand past it (the 'not sealed' check can fail)"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "_comment": "Owner direction on WO-F09-04: \"Can you make the path and roads electrified with yellow electricity flowing through them somehow in the ground.\" Every Stormwood route and spur carries yellow-gold current in its painted dirt lane: broken glowing veins like charge in cracks of the dirt, with pulses travelling along them toward the Dynamo. Built by scripts/world/stormwood_road_current.gd as terrain-conforming ribbon chunks (client presentation only; no colliders; no per-frame script) drawn by shaders/stormwood_road_current.gdshader, additive and unshaded. Kept apart from stormwood_road_surface.json so tuning the look never stales the terrain bake. Yellow/gold only: magenta #ff40e6 is the lightning strike telegraph and oxblood/red is reserved for Team Tether.",
+  "schema_version": 1,
+  "colour_core": "#fff4b0",
+  "colour_edge": "#ffc21a",
+  "core_energy": 1.9,
+  "edge_energy": 0.85,
+  "width_fraction": 0.85,
+  "_comment_width": "Ribbon half-width is width_fraction x the route kind's lane_half_width_m in stormwood_road_surface.json, so the current stays inside the painted dirt; the shader feathers its edge to nothing well before the ribbon edge.",
+  "lift_m": 0.08,
+  "depth_pull": 0.004,
+  "_comment_depth": "Terrain3D coarsens its far mesh, so a ribbon conforming to the full-detail height can dip under it. The vertex shader pulls each vertex toward the camera along its own view ray by depth_pull of its distance: a depth bias only, it does not move the ribbon on screen.",
+  "row_spacing_m": 1.0,
+  "columns": 5,
+  "chunk_m": 48.0,
+  "draw_distance_m": 150.0,
+  "draw_fade_m": 25.0,
+  "vein_scale": 1.0,
+  "vein_width": 0.09,
+  "vein_breakup": 0.42,
+  "flow_speed_mps": 7.0,
+  "pulse_spacing_m": 11.0,
+  "pulse_sharpness": 6.0,
+  "flicker": 0.35,
+  "reduced_motion": {
+    "_comment": "motion_prefs.reduced_motion(): the current still flows, slowly, as a steady glow with no flicker.",
+    "flow_speed_mps": 1.2,
+    "flicker": 0.0
+  },
+  "storm_intensity": {
+    "_comment": "Shader uniform storm_intensity (0..1) by Surge phase, read every poll_s from StormwoodSurge.phase (the surge has no phase signal) and eased over ease_s. aftermath applies once aftermath_flag (the Long Storm's end, which stormwood_surge.gd also reads) is set.",
+    "aftermath_flag": "stormwood:long_storm_ended",
+    "calm": 0.55,
+    "building": 0.78,
+    "break": 1.0,
+    "fading": 0.4,
+    "aftermath": 0.18,
+    "poll_s": 0.5,
+    "ease_s": 2.5
+  },
+  "dynamo_xz": [-100.0, 5470.0],
+  "_comment_flow": "Current flows toward the Dynamo: each open route flows from the end farther from dynamo_xz to the nearer end. A closed loop (first point equals last) has no nearer end and flows in its polyline order."
+}

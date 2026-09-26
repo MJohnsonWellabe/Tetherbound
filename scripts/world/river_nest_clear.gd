@@ -99,6 +99,13 @@ func _on_delta_applied(delta: Dictionary) -> void:
 
 func _on_greeted() -> void:
 	if is_cleared():
+		# The claim's world flag can land before its delta reaches
+		# `_on_delta_applied` (host/solo commit first, then emit). A greeting in
+		# that gap already shows the thanks, so the pending claim is settled
+		# here -- otherwise the late delta said it a second time, reopening the
+		# conversation right after the player closed it (the Doss
+		# repeat-greeting flake in smoke_local_requests).
+		_claim_pending = false
 		_say(CLEARED_CONVERSATION)
 		return
 	if _claim_pending:

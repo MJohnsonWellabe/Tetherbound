@@ -3,10 +3,12 @@ extends "res://tests/test_case.gd"
 ## `reward_pockets`). The six single-item pockets are filled by EXISTING
 ## personal Skill Candy rows moved inside the pocket radius; no item, tier,
 ## amount or claim policy changes. `cradle_shell_nest` pays the
-## `side_water_cradle_care` amounts (WORLD.md Tidewake local chains: 4 Reef
-## Stone plus 3 berries, once) through two existing Tidal Cradle rows moved
+## `side_water_cradle_care` gather (WORLD.md Tidewake local chains: the dry
+## nest's 4 Reef Stone, once) through one existing Tidal Cradle seam moved
 ## into it. `reed_root_hollow` has no matching item and stays explicitly
-## unresolved pending an owner decision.
+## unresolved pending an owner decision. The chain's 3 berries are Otto's
+## return payout (side_water_cradle_care, tests/test_water_cradle_care.gd), so
+## the Tidal Cradle berries row stands at its original inland spot again.
 ## Analytic heightfield checks here; the baked-ground walk from each island's
 ## landing and the real Interact claim are tests/smoke_water_pocket_walk_claim.gd.
 const FIELD := preload("res://scripts/world/water_heightfield.gd")
@@ -39,13 +41,16 @@ const FILLED := {
 const UNRESOLVED := {
 	"reed_root_hollow": "recipe_and_reed_fiber",
 }
-## side_water_cradle_care payout: existing Tidal Cradle rows moved into the
-## nest, with the chain's authored amounts. Former positions prove the move.
+## side_water_cradle_care gather: the existing Tidal Cradle seam moved into the
+## nest, with the chain's authored amount. Former position proves the move.
 const CRADLE := "cradle_shell_nest"
 const CRADLE_ROWS := {
 	"water:tidal_cradle:harvest:007": {"item": "reef_stone", "amount": 4, "was": Vector2(568.0, 1698.0)},
-	"water:tidal_cradle:pickup:009": {"item": "berries", "amount": 3, "was": Vector2(592.0, 1668.0)},
 }
+## The berries row that briefly paid at the nest, back at its original spot
+## with its original single berry; Otto's return pays the chain's 3 berries.
+const CRADLE_BERRIES := "water:tidal_cradle:pickup:009"
+const CRADLE_BERRIES_HOME := Vector2(592.0, 1668.0)
 
 var _field
 var _world: Dictionary
@@ -194,7 +199,15 @@ func test_single_item_pockets_hold_exactly_one_matching_existing_row() -> void:
 		# The host claim rule accepts a character standing at the new spot.
 		var context := {"peer": 7, "character_id": "pocket-check", "realm": "water",
 			"position": Vector3(at.x, _field.height_at(at.x, at.y), at.y)}
-		var verdict := RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {})
+		# Disclosed fixture: a pocket gated by its named resolution (Deep Watch's
+		# Tidecoil cache) is proven locked here, then checked with its gate met.
+		var unlocked := {}
+		for flag: Variant in row.get("requires_world_flags", []):
+			unlocked[str(flag)] = true
+		if not unlocked.is_empty():
+			assert_eq(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {}).code,
+				"locked", "Gated pocket refuses before its world flag: " + str(row.id))
+		var verdict := RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, unlocked)
 		assert_true(verdict.ok, "Host claim accepted at the pocket: " + str(row.id))
 		# Just inside the host's claim reach still succeeds; the row's former
 		# position (the empty pocket's old occupant spot) is now out of reach.
@@ -210,13 +223,13 @@ func test_single_item_pockets_hold_exactly_one_matching_existing_row() -> void:
 				continue
 			reachable += 1
 			context.position = stand
-			assert_true(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {}).ok,
+			assert_true(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, unlocked).ok,
 				"Host claim accepted 3 m away within reach: " + str(row.id))
 		assert_true(reachable > 0, "Some standing spot 3 m away can claim " + str(row.id))
 		var old_at: Vector2 = OLD_POSITIONS[row.id]
 		context.position = Vector3(old_at.x, _field.height_at(old_at.x, old_at.y), old_at.y)
-		assert_false(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, {}).ok,
-			"Former position no longer claims: " + str(row.id))
+		assert_eq(RULE.evaluate({"pickup_id": row.id, "realm": "water", "personal_claimed": false}, context, unlocked).code,
+			"too_far", "Former position no longer claims: " + str(row.id))
 
 func test_cradle_nest_pays_the_care_chain_once() -> void:
 	var pocket := _pocket(CRADLE)
@@ -231,7 +244,7 @@ func test_cradle_nest_pays_the_care_chain_once() -> void:
 				inside[row.id] = row
 			if row.get("reward_pocket_id", "") == CRADLE:
 				assert_true(CRADLE_ROWS.has(row.id), "Only the documented rows name the nest: " + str(row.id))
-	assert_eq(inside.keys().size(), CRADLE_ROWS.size(), "The nest holds exactly the chain's two rows")
+	assert_eq(inside.keys().size(), CRADLE_ROWS.size(), "The nest holds exactly the chain's Reef Stone seam")
 	var paid := {}
 	for id: String in CRADLE_ROWS:
 		var spec: Dictionary = CRADLE_ROWS[id]
@@ -252,7 +265,15 @@ func test_cradle_nest_pays_the_care_chain_once() -> void:
 			assert_eq(row.claim_policy, "existing_world_pickup_policy", "Berries use the ordinary once-per-world find")
 			assert_eq(row.category, "food")
 			paid[row.item_id] = int(row.quantity)
-	assert_eq(paid, {"reef_stone": 4, "berries": 3}, "WORLD side_water_cradle_care: 4 Reef Stone plus 3 berries, once")
+	assert_eq(paid, {"reef_stone": 4}, "WORLD side_water_cradle_care: the dry nest's 4 Reef Stone, once")
+	var berries: Dictionary = {}
+	for row: Dictionary in _data.pickups:
+		if row.id == CRADLE_BERRIES:
+			berries = row
+	assert_false(berries.is_empty(), "Tidal Cradle berries row still authored")
+	assert_almost_eq(_xz(berries.position).distance_to(CRADLE_BERRIES_HOME), 0.0, 0.01, "Berries back at their original inland spot")
+	assert_eq(int(berries.get("quantity", 0)), 1, "Original single berry find")
+	assert_false(berries.has("reward_pocket_id"), "Berries no longer name the nest")
 	# Moves stay on the island: per-island and per-item row counts unchanged.
 	var cradle := {"pickups": 0, "harvest": 0}
 	var rows := {"berries": 0, "reef_stone": 0}

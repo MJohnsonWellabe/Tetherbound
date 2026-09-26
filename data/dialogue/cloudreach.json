@@ -61,7 +61,7 @@
     },
     "cloudreach_neri_delivery_report": {
       "speaker": "Neri", "portrait": "res://assets/ui/portraits/lark.png",
-      "lines": ["The shelter received it? Every parcel? Good. Now we can get the stranded pair down to a warm fire.", {"text": "I'll meet them at Galefoot Waycamp. Thank you for finishing the delivery. A route isn't open until something people need can travel along it.", "effect": "cloudreach:side:packs_on_the_wrong_side:report_to_neri"}]
+      "lines": ["The shelter received it? Every parcel? Good. Now we can get the stranded pair down to a warm fire.", "I'll leave two small potions by the Galefoot fire for you. Couriers pay their debts, even the ones nobody wrote down.", {"text": "I'll meet them at Galefoot Waycamp. Thank you for finishing the delivery. A route isn't open until something people need can travel along it.", "effect": "cloudreach:side:packs_on_the_wrong_side:report_to_neri"}]
     },
     "cloudreach_neri_home": {
       "speaker": "Neri", "portrait": "res://assets/ui/portraits/lark.png",

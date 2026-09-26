@@ -185,8 +185,11 @@ func test_south_street_has_one_continuous_hidden_road_to_trailgate() -> void:
 	assert_false(grandpa_route.is_empty(), "the west street to Grandpa remains authored")
 	assert_eq(grandpa_route.get("points", []), [[7.0, -7.0], [-4.0, -13.0], [-16.5, -16.0]],
 		"the west street runs continuously from the shared bend to Grandpa's real door")
-	assert_eq(inn_route.get("points", []), [[7.0, -7.0], [2.0, -8.5], [-1.5, -8.1]],
-		"the inn has a short forecourt branch instead of occupying the west street")
+	# F01-a: the forecourt now leaves the west street itself at the inn
+	# crossroads (-1.5,-11.64), the threshold's own projection onto that street,
+	# instead of running a second road 1m beside it into the square.
+	assert_eq(inn_route.get("points", []), [[7.0, -7.0], [-1.5, -11.64], [-1.5, -8.1]],
+		"the inn has a short forecourt branch off the west street instead of a parallel road")
 	assert_true(Vector2(7.0, -7.0).distance_to(Vector2(10.0, -10.0)) >= 4.0,
 		"the shared bend clears the well canopy and bucket instead of crossing their origin")
 

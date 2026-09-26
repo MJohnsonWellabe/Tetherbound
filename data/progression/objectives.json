@@ -362,11 +362,12 @@
     },
     {
       "id": "band4_lost_creature",
-      "flag_id": "defeated_lost_creature_rue",
+      "flag_id": "lost_creature_rue_returned",
       "scope": "world",
       "revealed_by": "lost_creature_rue_met",
       "label": "Get Juno's stolen Meadowhart back from Team Tether.",
-      "how": "Past Halder's field, take the western ironwood trail to the Tether patrol. Juno waits in the high pasture.",
+      "how": "Past Halder's field, take the western ironwood trail to the Tether patrol. Beat the patrol, then lead the Meadowhart back to Juno in the high pasture.",
+      "_comment_f03_escort": "F03 distinct action: beating the patrol (defeated_lost_creature_rue, which still pays the patrol's once-only battle reward) only frees her. The counted completion is the return, lost_creature_rue_returned, set when the player leads her to Juno (scripts/world/lost_companion_reunion.gd).",
       "_comment": "T3-ACTIVITIES, spec sec6's 'Lost Creature: track and recover a villager's missing bonded Creature'. The challenge line names whose creature it is; beating the patrol is the recovery. CI-TRAINER-CENSUS, 2026-08-30: label updated from 'Rue' to 'Team Tether' -- the trainer's own `name`/`speaker` moved to 'Tether Patrol' (band4_upper_meadows_ironwood/trainers.json's `_comment_ci_trainer_census`); `id`/`flag_id` are unchanged bookkeeping."
     },
     {

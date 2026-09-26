@@ -121,8 +121,22 @@ func _run() -> void:
 	# that crossed first spends ~65 s standing a Meadows shell up for the peer
 	# still there, and a request landing mid-build went ungranted (run 4).
 	for peer: int in [1, 0]:
-		await step(peer, "teleport", {"at": [ROAD.x, 2.0, ROAD.y], "settle": 60})
+		var placed: Dictionary = await step(peer, "teleport", {"at": [ROAD.x, 2.0, ROAD.y], "settle": 60})
+		print("[same-five] peer %d teleport: %s" % [peer, str(placed.get("detail", ""))])
 		var leg1: Dictionary = await step(peer, "move_to", {"x": NEAR.x, "z": NEAR.y, "close_enough": 1.5, "budget_frames": 1800})
+		# The host builds the crossed guest's Cloudreach shell after the guest
+		# goes over (~65 s, longer on a loaded CI runner); a walk that starts
+		# while that build still runs can find the host moved back to its
+		# spawn (CI 6c0a543c: "7536.88 m short", no step taken). Wait the
+		# build out, put the host back on the road and walk once more -- the
+		# crossing itself is still walked, not fixtured.
+		if str(leg1.get("verdict", "")) != "PASS" and str(leg1.get("detail", "")).contains(" m short") \
+				and float(str(leg1.get("detail", "")).get_slice(": ", 1).get_slice(" m short", 0)) > 100.0:
+			print("[same-five] peer %d started the walk far from the road (%s); waiting out the host's shell build, then again" % [peer, str(leg1.get("detail", ""))])
+			await step(peer, "wait", {"frames": 1200})
+			placed = await step(peer, "teleport", {"at": [ROAD.x, 2.0, ROAD.y], "settle": 60})
+			print("[same-five] peer %d re-teleport: %s" % [peer, str(placed.get("detail", ""))])
+			leg1 = await step(peer, "move_to", {"x": NEAR.x, "z": NEAR.y, "close_enough": 1.5, "budget_frames": 1800})
 		check(str(leg1.get("verdict", "")) == "PASS", "peer %d walked the storm road onto the span (%s)" % [peer, str(leg1.get("detail", ""))])
 		var leg2: Dictionary = await step(peer, "move_to", {"x": FAR.x, "z": FAR.y, "close_enough": 1.5, "budget_frames": 1800})
 		check(str(leg2.get("verdict", "")) == "PASS", "peer %d walked the span to the far rim (%s)" % [peer, str(leg2.get("detail", ""))])

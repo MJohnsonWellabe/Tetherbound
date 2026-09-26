@@ -87,10 +87,11 @@ func test_default_bake_uses_square_world_texels_over_a_rectangular_corridor() ->
 
 func test_authored_route_survives_coarse_terrain_sampling() -> void:
 	var image := MAP_BAKER.bake(FakeWorld.new(), RESOLUTION, TEST_BOUNDS).get_image()
-	# Grandpa's House route starts at (10,-10). At this deliberately coarse
+	# Grandpa's House route starts at the square bend (7,-7) (F01-a moved every
+	# route origin off the well at (10,-10)). At this deliberately coarse
 	# 8m/px bake its 3m width cannot reliably hit texel centres, so this point
 	# specifically proves the canonical-polyline overlay carries the route.
-	var route_pixel := _world_to_pixel(Vector2(10.0, -10.0))
+	var route_pixel := _world_to_pixel(Vector2(7.0, -7.0))
 	# RGB8 quantizes the authored float colour on write.
 	var actual := image.get_pixelv(route_pixel)
 	assert_true(maxf(absf(actual.r - MAP_BAKER.PATH_COLOUR.r),

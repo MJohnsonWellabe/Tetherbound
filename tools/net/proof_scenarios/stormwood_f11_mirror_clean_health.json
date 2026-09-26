@@ -1,0 +1,316 @@
+{
+ "name": "F11 mirror, clean health: host refuses, guest accepts, both trainers up when they answer",
+ "claim": "Rerun of the mirrored mix (host No, guest Yes, free slot on both sides) asserting that both trainers are up (DownedState local_downed=false, never expired or revived) on arrival, immediately before and immediately after each answer. The first mirror run's guest had gone down on arrival (0/100). No double-press steps here: stormheart_answer's fallback offsets on an already-dark prompt were the likely fall in the capacity run, and the double press is proven in the other two runs. Setup: the Dynamo fight fixture only.",
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 1500,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+   },
+   "expect_data": {
+    "realm": "meadows",
+    "form": "captured directory (split path)",
+    "character_id": "character-f41f4a49223483d6bfdf56715944bb7b"
+   },
+   "label": "named save: Meadows, Stormwood route open, loaded like Continue"
+  },
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 10000,
+   "label": "guest: a fresh trainer in the Meadows"
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "realm_gate_stormwood_unlocked"
+   },
+   "label": "the route comes from the host's save"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": "all",
+   "probe": "downed",
+   "expect_data": {
+    "local_downed": false,
+    "expired": 0,
+    "revived": 0
+   },
+   "label": "both trainers up on arrival"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "01_both_in_stormwood"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "before"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_fixture",
+   "args": {
+    "contributors": [
+     "$peer0",
+     "$peer1"
+    ]
+   },
+   "label": "both fought the Dynamo (setup)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:legendary_freed",
+    "budget_frames": 1800
+   }
+  },
+  {
+   "peer": 0,
+   "probe": "downed",
+   "expect_data": {
+    "local_downed": false,
+    "expired": 0,
+    "revived": 0,
+    "downed_peers": []
+   },
+   "label": "just before the answers: the host is up and, as the downed authority, knows no peer is down (the guest's own probe is not taken here: during its release conversation its interaction arbiter holds a freed winning_provider and the probe crashes on it; see the report)"
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_answer",
+   "args": {
+    "answer": "refuse",
+    "screenshot": "02_host_offer_yes_no"
+   },
+   "expect_data": {
+    "has_stormheart": false
+   },
+   "label": "host says No"
+  },
+  {
+   "peer": 0,
+   "probe": "downed",
+   "expect_data": {
+    "local_downed": false,
+    "expired": 0,
+    "revived": 0
+   },
+   "label": "host up right after its answer"
+  },
+  {
+   "peer": 0,
+   "probe": "downed",
+   "expect_data": {
+    "local_downed": false,
+    "expired": 0,
+    "revived": 0,
+    "downed_peers": []
+   },
+   "label": "right before the guest's answer: the host (authority) sees no peer down"
+  },
+  {
+   "peer": 1,
+   "action": "stormheart_answer",
+   "args": {
+    "answer": "accept",
+    "screenshot": "02_guest_offer_yes_no"
+   },
+   "expect_data": {
+    "has_stormheart": true
+   },
+   "label": "guest says Yes"
+  },
+  {
+   "peer": "all",
+   "probe": "downed",
+   "expect_data": {
+    "local_downed": false,
+    "expired": 0,
+    "revived": 0
+   },
+   "label": "both trainers up right after the answers"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:legendary_resolution:refused:$character0",
+    "budget_frames": 1800
+   }
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:legendary_resolution:accepted:$character1",
+    "budget_frames": 1800
+   }
+  },
+  {
+   "peer": 0,
+   "action": "stormheart_state",
+   "expect_data": {
+    "party": [],
+    "has_stormheart": false,
+    "world_accepted": false,
+    "world_refused": true,
+    "accepted_anywhere": false
+   },
+   "label": "host refused, nothing granted"
+  },
+  {
+   "peer": 1,
+   "action": "stormheart_state",
+   "expect_data": {
+    "party": [
+     "fulgocobra"
+    ],
+    "has_stormheart": true,
+    "world_accepted": true,
+    "world_refused": false,
+    "accepted_anywhere": true
+   },
+   "label": "guest kept exactly one of its own"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "03_after_answers"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "realm_gate_stormwood_unlocked"
+    ],
+    "lacks": [
+     "stormwood:legendary_freed",
+     "stormwood:legendary_resolution:"
+    ]
+   },
+   "label": "host's pre-offer saved world held no answers (non-vacuous baseline)"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "characters",
+    "lacks": [
+     "fulgocobra",
+     "stormwood:legendary_answer:"
+    ]
+   },
+   "label": "guest's pre-offer character held no answer"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "stormwood:legendary_resolution:refused:$character0",
+     "stormwood:legendary_resolution:accepted:$character1"
+    ],
+    "lacks": [
+     "stormwood:legendary_resolution:accepted:$character0",
+     "stormwood:legendary_resolution:refused:$character1"
+    ]
+   },
+   "label": "host's saved world holds each answer once, the right way round"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "characters",
+    "contains": [
+     ":refused"
+    ],
+    "lacks": [
+     "fulgocobra",
+     "stormwood:legendary_offer_accepted"
+    ]
+   },
+   "label": "host's saved character refused and holds none"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "characters",
+    "contains": [
+     "fulgocobra",
+     ":accepted",
+     "stormwood:legendary_offer_accepted"
+    ],
+    "lacks": [
+     ":refused"
+    ]
+   },
+   "label": "guest's saved character keeps its Stormheart"
+  }
+ ]
+}

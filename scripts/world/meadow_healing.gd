@@ -9,12 +9,16 @@ extends Node3D
 ## systems and forgets the fourth. What it does, all of it keyed on that flag:
 ##
 ##   * THE LAND HEALS. `vegetation.restore_drained()` puts back the exact
-##     instances the drain took out of the scatter, and the relay's runtime
-##     drain skin fades. What CANNOT heal is the baked half — see below.
+##     instances the drain took out of the scatter, the relay's and the
+##     approach's runtime drain skins fade, and a runtime REGREEN fades in over
+##     the baked scars (see below).
 ##   * THE NETWORK DIES. Every lit pylon, glowing conduit and Team Tether
 ##     fitting in the region and inside the stronghold goes to its own dead
 ##     material. §9's "stronghold effects change", D41's "the drain network
-##     dies with the stronghold machinery", one pass.
+##     dies with the stronghold machinery", one pass. Then the dead pylons of
+##     the quarry, relay and approach runs FALL, and their hanging cables go.
+##   * THE HERD COMES BACK. A returning Meadowhart herd stands on the Highfield
+##     around the freed Veridian's site, whatever the Veridian answer was.
 ##   * BARRIERS DEACTIVATE. The keyed gates stand open, through their own
 ##     flags, so a reload opens them for the ordinary reason.
 ##   * PATROLS THIN. Team Tether trainers the player has ALREADY BEATEN are
@@ -22,16 +26,18 @@ extends Node3D
 ##     beaten trainers stay beaten, which is the half of "density drops" that
 ##     is easy to break by being clever.
 ##
-## WHAT DOES NOT HEAL, STATED OUT LOUD. `D45` decided the drained-ground
-## grammar as one authored radius with three consumers, and priced this exact
-## moment while doing it: two of those consumers are live scene state and the
-## third is the terrain BAKE. The quarry's stations are painted into the baked
-## colour and control maps; nothing at run time can repaint a texel, SG46 is
-## explicitly not allowed to re-run a ~15-minute bake, and inventing a green
-## overlay to cancel a baked tint would be a second, undecided vocabulary for
-## the repair. So the quarry floor keeps its sun-killed cast, its vegetation
-## comes back over it, and `docs/decisions/D45-the-drained-ground-grammar.md`
-## carries the note. That is the honest state, not an oversight.
+## THE BAKED HALF, AND THE OWNER'S ANSWER TO IT. `D45` decided the drained-
+## ground grammar as one authored radius with three consumers: the scatter and
+## the runtime skins are live scene state, the third is the terrain BAKE, whose
+## colour and control maps nothing at run time can repaint. This node used to
+## leave that discolouration standing as "the honest remainder". The owner has
+## since decided "the land heals" at the finale WITHOUT a re-bake and with
+## installed assets only: the baked tint stays as the BEFORE state, and a
+## runtime regreen overlay -- the installed meadow grass texture, world
+## triplanar, alpha shaped by each station's own authored falloff -- fades in
+## over it and persists. Same shape as the dead-ground skins it crossfades
+## with, the opposite colour. All of it is re-derived from `legendary_freed`
+## on every peer and every load; nothing new is saved.
 ##
 ## Nothing here is built from scratch on the flag: this node re-uses the live/
 ## dead material pair `severed_spokes.gd` already ships, the placements
@@ -46,6 +52,10 @@ const TERRAIN_PATH := "res://data/config/terrain_playground.json"
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+## Set on a pylon the moment it is committed to falling, so a second `apply`
+## (or any second pass) can never rotate an already-fallen pylon again.
+const TOPPLED_META := &"meadow_toppled"
 
 var _config: Dictionary = {}
 var _world: Node3D = null
@@ -62,6 +72,26 @@ var _herd_display: Node3D = null
 ## The `legendary_resolution:` receipts the display was last decided from, so
 ## the (snapshot-reading) full-refusal rule only runs when an answer lands.
 var _herd_signature: String = "-"
+## The land heals: the regreen overlay, the returning herd, the fallen pylons.
+var _field: RefCounted = null
+var _regreen_nodes: Array[MeshInstance3D] = []
+var _regreen_material: StandardMaterial3D = null
+var _regreen_quads: int = 0
+var _herd_return: Node3D = null
+## Bake only: collidable scatter trunks by cell (see `_trunk_grid`).
+var _trunks: Variant = null
+## The runtime drain (before-state): overlay meshes, their shared material.
+var _drain_nodes: Array[MeshInstance3D] = []
+var _drain_material: StandardMaterial3D = null
+var _drain_quads := 0
+var _tall: Variant = null
+var _toppled: Array[Node3D] = []
+var _cables_hidden: int = 0
+var _left_standing: int = 0
+var _last_block_reasons: Dictionary = {}
+var _bake_reasons: Dictionary = {}
+## [grown Rect2, band] per road band, built once for the pre-filters.
+var _band_rects: Array = []
 
 
 func build(world: Node3D) -> void:
@@ -75,6 +105,10 @@ func build(world: Node3D) -> void:
 	if _progression == null:
 		return
 	var flag := str(_config.get("flag", "legendary_freed"))
+	if not bool(_progression.call("has", flag)):
+		# The machine is live: the land around every station and pylon reads
+		# drained until the freeing lifts it (never built on a load after it).
+		_build_the_drain()
 	if bool(_progression.call("has", flag)):
 		# A save loaded after the ending: no fade, no ceremony. The world has
 		# been this way since before the player pressed Continue.
@@ -194,6 +228,9 @@ func _build_herd_display(spec: Dictionary) -> Node3D:
 	body.set_process(false)
 	if body is CollisionObject3D:
 		(body as CollisionObject3D).collision_layer = 0
+	# Same guard as the returning herd: creature_body's own visibility handler
+	# would switch physics back on, and this body must never start walking.
+	body.visibility_changed.connect(_hold_still.bind(body))
 	if body.has_method("place_on_ground"):
 		body.call("place_on_ground", at)
 	print("[meadow] every participant refused: the freed stag stands with the Highfield herd at %s" % str(body.global_position))
@@ -206,16 +243,26 @@ func apply(immediate: bool = false) -> Dictionary:
 	if _applied:
 		return _report
 	_applied = true
+	if not immediate:
+		_hold_the_presentation()
 	_report = {
 		"regrown": _heal_the_scatter(),
 		"dead_ground_faded": _fade_the_drain_skins(immediate),
+		"regreened": _regreen_the_scars(immediate),
 		"lights_killed": _kill_the_tether_lights(),
+		"drain_lifted": _lift_the_drain(immediate),
+		# After the lights: what falls is already dead.
+		"pylons_toppled": _topple_the_pylons(immediate),
+		"herd_returned": _return_the_herd(),
 		"barriers_opened": _open_the_barriers(),
 		"patrols_withdrawn": _withdraw_beaten_patrols(),
 	}
-	print("[meadow] the tether let go: %d plants back, %d tether lights out, %d barriers open, %d beaten patrols withdrawn"
-		% [_report["regrown"], _report["lights_killed"], _report["barriers_opened"],
-			_report["patrols_withdrawn"]])
+	_report["cables_hidden"] = _cables_hidden
+	_report["pylons_left_standing"] = _left_standing
+	print("[meadow] the tether let go: %d plants back, %d regreen quads, %d tether lights out, %d pylons down (%d left standing, %d cable pieces gone), %d of the herd back, %d barriers open, %d beaten patrols withdrawn"
+		% [_report["regrown"], _report["regreened"], _report["lights_killed"],
+			_report["pylons_toppled"], _left_standing, _report["cables_hidden"], _report["herd_returned"],
+			_report["barriers_opened"], _report["patrols_withdrawn"]])
 	return _report
 
 
@@ -251,10 +298,10 @@ func applied() -> bool:
 ## ending, then a console pressed — every disc's placements are already gone
 ## from `_drained` and `restore_drained()` returns 0 rather than double-placing.
 ##
-## What it CANNOT do is repaint the ground: the baked colour and control maps
-## are D45's stated remainder and no run-time pass can touch a texel. The
-## relay's own skin is a runtime overlay and does fade; the terrain under it
-## keeps its cast. See D45 and this file's header.
+## It does not regreen: the relay's ground was never baked (its skin stands in
+## for the bake), so fading that skin IS its repair. The chapter-wide regreen
+## of the BAKED scars belongs to `apply()` alone, at the finale -- see
+## `_regreen_the_scars()` and this file's header for the owner decision.
 func heal_stations(station_ids: Array, immediate: bool = false) -> Dictionary:
 	var discs := _station_discs(station_ids)
 	if discs.is_empty():
@@ -296,6 +343,8 @@ func _station_discs(station_ids: Array) -> Array:
 			"id": id,
 			"centre": Vector2(float(centre[0]), float(centre[1])),
 			"radius": float(station.get("radius", 0.0)),
+			"inner": float(station.get("inner", 0.0)),
+			"strength": float(station.get("strength", 1.0)),
 		})
 	for missing: String in wanted.keys():
 		push_warning("meadow_healing: no drain station '%s' in terrain_playground.json" % missing)
@@ -491,6 +540,7 @@ func _kill_the_tether_lights() -> int:
 	var dead_texture: Texture2D = null
 	if ResourceLoader.exists(dead_path):
 		dead_texture = load(dead_path)
+	var dead_darken := clampf(float(block.get("dead_darken", 0.25)), 0.0, 1.0)
 	var killed := 0
 	var seen: Array[Material] = []
 	for node: Node in _all_nodes(_world):
@@ -502,12 +552,13 @@ func _kill_the_tether_lights() -> int:
 			if standard == null or seen.has(standard):
 				continue
 			seen.append(standard)
-			if _kill_one(standard, lit_path, dead_texture):
+			if _kill_one(standard, lit_path, dead_texture, dead_darken):
 				killed += 1
 	return killed
 
 
-func _kill_one(material: StandardMaterial3D, lit_path: String, dead: Texture2D) -> bool:
+func _kill_one(material: StandardMaterial3D, lit_path: String, dead: Texture2D,
+		darken: float = 0.25) -> bool:
 	var changed := false
 	if material.albedo_texture != null and dead != null \
 			and material.albedo_texture.resource_path == lit_path:
@@ -515,7 +566,7 @@ func _kill_one(material: StandardMaterial3D, lit_path: String, dead: Texture2D) 
 		changed = true
 	if material.emission_enabled and _is_tether_teal(material.emission):
 		material.emission_enabled = false
-		material.albedo_color = material.albedo_color.darkened(0.25)
+		material.albedo_color = material.albedo_color.darkened(darken)
 		material.roughness = 0.92
 		changed = true
 	return changed
@@ -577,6 +628,1232 @@ func _withdraw_beaten_patrols() -> int:
 		body.queue_free()
 		withdrawn += 1
 	return withdrawn
+
+
+## --- the land heals: regreen, fallen pylons, the herd back -------------------
+##
+## Owner decision (F05, "the land heals"): at the Meadows finale the baked scar
+## stations regreen over the finale beat and stay green, the Highfield herd is
+## back around the freed Veridian's site, and the dark tether pylons are down.
+## Installed assets only; NO terrain re-bake -- D45's baked discolouration is
+## the BEFORE state and stays in the texture. Every part is re-derived from
+## `legendary_freed` (world scope), deterministically, so every peer and every
+## load builds the same world; nothing below writes a flag or a save field.
+
+
+## (A) THE REGREEN. One runtime overlay mesh PER STATION GROUP (quarry,
+## approach, stronghold works -- `regreen.groups`), so each culls on its own
+## bounds and sorts as its own transparent instance. World coordinates
+## (top_level, the same convention the drain skins use), on a global grid
+## aligned to world multiples of `cell`, so where two station discs overlap
+## their cells coincide and each cell is drawn ONCE -- overlapping per-disc
+## grids would stack two alpha layers into a darker seam. Each corner's alpha
+## is the listed stations' own authored falloff (the same
+## `strength * (1 - smoothstep(inner, radius, d))` `drain_factor()` uses, so it
+## greens exactly the contour the bake browned) times `max_alpha`, times
+## `1 - path_factor` so a road through a station stays a road (only asked when
+## a road band's bounds actually reach the group). The material is the
+## installed meadow grass texture, world-triplanar at the terrain's own UV
+## scale and tint, shared by every group; its `albedo_color.a` fades 0 -> 1
+## over `fade_seconds`, the same seconds the dark skins fade out over, so the
+## two crossfade.
+func _regreen_the_scars(immediate: bool) -> int:
+	var block: Dictionary = _config.get("regreen", {})
+	if not bool(block.get("enabled", true)):
+		return 0
+	if not _regreen_nodes.is_empty():
+		return _regreen_quads
+	if _world == null or not _world.has_method("ground_height_at"):
+		return 0
+	var groups: Dictionary = block.get("groups", {})
+	if groups.is_empty():
+		return 0
+	var drains: Dictionary = _load_json(TERRAIN_PATH).get("drains", {})
+	var global_strength := clampf(float(drains.get("strength", 1.0)), 0.0, 1.0)
+	var material := _regreen_material_for(block)
+	var group_names: Array = groups.keys()
+	group_names.sort()
+	for group_name: Variant in group_names:
+		var discs := _station_discs(groups[group_name] as Array)
+		if discs.is_empty():
+			continue
+		var skin := _regreen_group(str(group_name), discs, block, global_strength, material)
+		if skin != null:
+			_regreen_nodes.append(skin)
+	if _regreen_nodes.is_empty():
+		return 0
+	_regreen_material = material
+	var seconds := 0.0 if immediate else float(block.get("fade_seconds", 12.0))
+	if seconds <= 0.0:
+		material.albedo_color.a = 1.0
+	else:
+		material.albedo_color.a = 0.0
+		create_tween().tween_property(material, "albedo_color:a", 1.0, seconds)
+	return _regreen_quads
+
+
+func _regreen_group(group_name: String, discs: Array, block: Dictionary,
+		global_strength: float, material: StandardMaterial3D, prefix: String = "Regreen") -> MeshInstance3D:
+	var cell := maxf(float(block.get("cell", 3.0)), 1.0)
+	var jitter := maxf(float(block.get("edge_jitter_m", 0.0)), 0.0)
+	var lift := float(block.get("lift", 0.11))
+	var max_alpha := clampf(float(block.get("max_alpha", 0.7)), 0.0, 1.0)
+	var field := _heightfield()
+	# Road pre-filter: `path_factor` walks every band on the map per call; ask
+	# it only when some band's bounds actually reach this group.
+	var bounds := Rect2()
+	for i in discs.size():
+		var disc: Dictionary = discs[i]
+		var r := float(disc["radius"]) + cell
+		var rect := Rect2((disc["centre"] as Vector2) - Vector2(r, r), Vector2(r, r) * 2.0)
+		bounds = rect if i == 0 else bounds.merge(rect)
+	var ask_roads := bool(block.get("spare_roads", true)) and field != null \
+		and not _bands_near(bounds, 0.0).is_empty()
+
+	var corners: Dictionary = {}  # Vector2i -> [Vector3 point, alpha] or null
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var quads := 0
+	for key: Vector2i in regreen_cells(discs, cell):
+		var quad: Array = []
+		var peak := 0.0
+		for offset: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1)]:
+			var at := key + offset
+			if not corners.has(at):
+				var x := float(at.x) * cell
+				var z := float(at.y) * cell
+				var ground := float(_world.call("ground_height_at", x, z))
+				if is_nan(ground):
+					corners[at] = null
+				else:
+					var path := float(field.call("path_factor", x, z)) if ask_roads else 0.0
+					corners[at] = [Vector3(x, ground + lift, z),
+						regreen_alpha(Vector2(x, z) + edge_jitter(at, jitter), discs, global_strength, max_alpha, path)]
+			if corners[at] == null:
+				quad.clear()
+				break
+			quad.append(corners[at])
+			peak = maxf(peak, float((corners[at] as Array)[1]))
+		if quad.size() < 4 or peak <= 0.01:
+			continue
+		for triangle: Array in [[0, 1, 2], [0, 2, 3]]:
+			for index: int in triangle:
+				var point: Array = quad[index]
+				surface.set_color(Color(1.0, 1.0, 1.0, float(point[1])))
+				surface.add_vertex(point[0] as Vector3)
+		quads += 1
+	if quads == 0:
+		return null
+	surface.generate_normals()
+	surface.set_material(material)
+	var skin := MeshInstance3D.new()
+	skin.name = "%s_%s" % [prefix, group_name]
+	skin.top_level = true
+	skin.mesh = surface.commit()
+	skin.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(skin)
+	skin.global_transform = Transform3D.IDENTITY
+	if prefix == "Regreen":
+		_regreen_quads += quads
+	else:
+		_drain_quads += quads
+	return skin
+
+
+## A deterministic offset of up to `metres` for grid corner `at`: the falloff
+## is read there instead, so the overlay's contour is ragged rather than a
+## clean ring or a straight grid-aligned edge (blind round 4: "hard stencil").
+## A pure function of the integer corner, identical on every peer and load.
+static func edge_jitter(at: Vector2i, metres: float) -> Vector2:
+	if metres <= 0.0:
+		return Vector2.ZERO
+	var h := int(rand_from_seed(("%d,%d" % [at.x, at.y]).hash())[0])
+	var u := float(h & 0xFFFF) / 65535.0 * 2.0 - 1.0
+	var v := float((h >> 16) & 0xFFFF) / 65535.0 * 2.0 - 1.0
+	return Vector2(u, v) * metres
+
+
+## (0) THE DRAIN -- the BEFORE state, owned at runtime (coordinator ruling,
+## 2026-09-25: keep "no re-bake"; the runtime owns both halves). While the
+## Warden's machine is live (`legendary_freed` not set), an overlay of dry,
+## browned grass lies over every station in `regreen.groups` (each station's
+## own authored strength/radius/inner) and a smaller disc round every pylon in
+## `pylons.holders` (`drain.pylon_*`), one mesh per group so each culls on its
+## own bounds. The freeing fades it out over `drain.fade_seconds` while the
+## regreen fades in; a load after the freeing never builds it. Pure function of
+## config, the stations and the authored pylon positions: identical on every
+## peer and every load. The grass-field half (thinning and browning the live
+## blades) is a SHARED-FILE REQUEST on grass_field.gd; not here.
+func _build_the_drain() -> int:
+	var block: Dictionary = _config.get("drain", {})
+	if not bool(block.get("enabled", false)) or _world == null or not _world.has_method("ground_height_at"):
+		return 0
+	if not _drain_nodes.is_empty():
+		return _drain_quads
+	var groups := drain_groups()
+	if groups.is_empty():
+		return 0
+	var drains: Dictionary = _load_json(TERRAIN_PATH).get("drains", {})
+	var global_strength := clampf(float(drains.get("strength", 1.0)), 0.0, 1.0)
+	var material := _regreen_material_for(block)
+	material.albedo_color.a = 1.0
+	var names: Array = groups.keys()
+	names.sort()
+	for group_name: Variant in names:
+		var skin := _regreen_group(str(group_name), groups[group_name] as Array, block, global_strength, material, "Drain")
+		if skin != null:
+			_drain_nodes.append(skin)
+	_drain_material = material
+	# The live blades: the grass field thins and browns inside the same discs
+	# (grass_field.gd::set_drain, found by method, inert on a build without it).
+	var field := _grass_field()
+	if field != null:
+		var flat: Array = []
+		for group_name: Variant in names:
+			for disc: Dictionary in (groups[group_name] as Array):
+				flat.append({"centre": disc["centre"], "radius": float(disc["radius"]),
+					"inner": float(disc.get("inner", 0.0)), "strength": float(disc.get("strength", 1.0)) * global_strength})
+		field.call("set_drain", flat, 1.0)
+	print("[meadow] the land lies drained: %d quads over %d groups%s" % [_drain_quads, _drain_nodes.size(),
+		", grass field thinned" if field != null else ""])
+	return _drain_quads
+
+
+func _grass_field() -> Node:
+	if _world == null:
+		return null
+	for node: Node in _all_nodes(_world):
+		if node.has_method("set_drain") and node.has_method("set_drain_amount"):
+			return node
+	return null
+
+
+## Group name -> disc list for the drain: each `regreen.groups` entry's
+## stations, plus every pylon of `pylons.holders` as a disc, joined to the
+## station group it stands within `drain.join_m` of (else a group of its own
+## holder). Stable order. Public for tests.
+func drain_groups() -> Dictionary:
+	var block: Dictionary = _config.get("drain", {})
+	var out: Dictionary = {}
+	var groups: Dictionary = (_config.get("regreen", {}) as Dictionary).get("groups", {})
+	for group_name: Variant in groups:
+		var discs := _station_discs(groups[group_name] as Array)
+		if not discs.is_empty():
+			out[str(group_name)] = discs
+	var radius := float(block.get("pylon_radius", 7.0))
+	var inner := float(block.get("pylon_inner", 2.0))
+	var strength := float(block.get("pylon_strength", 0.7))
+	var join := float(block.get("join_m", 30.0))
+	var patterns: Array = (_config.get("pylons", {}) as Dictionary).get("holders", [])
+	if radius <= 0.0 or _world == null:
+		return out
+	for node: Node in _all_nodes(_world):
+		var holder := node as Node3D
+		if holder == null or not _name_matches(str(holder.name), patterns):
+			continue
+		for child: Node in holder.get_children():
+			if not (child is MeshInstance3D and str(child.name).begins_with("Pylon_")):
+				continue
+			var at := _global_of(child as Node3D).origin
+			var spot := Vector2(at.x, at.z)
+			var home := str(holder.name)
+			var best := INF
+			for group_name: Variant in groups:
+				for disc: Dictionary in (out.get(str(group_name), []) as Array):
+					var gap := spot.distance_to(disc["centre"] as Vector2) - float(disc["radius"])
+					if gap < join and gap < best:
+						best = gap
+						home = str(group_name)
+			if not out.has(home):
+				out[home] = []
+			(out[home] as Array).append({"id": "%s/%s" % [holder.name, child.name], "centre": spot,
+				"radius": radius, "inner": inner, "strength": strength})
+	return out
+
+
+func _lift_the_drain(immediate: bool) -> int:
+	if _drain_nodes.is_empty() or _drain_material == null:
+		return 0
+	var seconds := 0.0 if immediate else float((_config.get("drain", {}) as Dictionary).get("fade_seconds", 12.0))
+	var field := _grass_field()
+	if seconds <= 0.0 or not is_inside_tree():
+		_hide_the_drain()
+		if field != null:
+			field.call("set_drain_amount", 0.0)
+	else:
+		var tween := create_tween()
+		tween.tween_property(_drain_material, "albedo_color:a", 0.0, seconds)
+		if field != null:
+			tween.parallel().tween_method(Callable(field, "set_drain_amount"), 1.0, 0.0, seconds)
+		tween.tween_callback(_hide_the_drain)
+	return _drain_nodes.size()
+
+
+func _hide_the_drain() -> void:
+	if _drain_material != null:
+		_drain_material.albedo_color.a = 0.0
+	for skin: MeshInstance3D in _drain_nodes:
+		if is_instance_valid(skin):
+			skin.visible = false
+
+
+## X03 contract (batch 9): while the heal plays live, this node stands in
+## `presentation_hold`, which stands the objective beacon, the hint card and
+## the recall line down so the payoff is not talked over. Left after
+## `presentation_hold_seconds` (the longest fade plus the last pylon's fall).
+## A load applies `immediate` and never holds.
+func _hold_the_presentation() -> void:
+	var seconds := float(_config.get("presentation_hold_seconds", 14.0))
+	if seconds <= 0.0 or not is_inside_tree():
+		return
+	add_to_group(&"presentation_hold")
+	get_tree().create_timer(seconds).timeout.connect(_release_the_presentation)
+
+
+func _release_the_presentation() -> void:
+	if is_inside_tree() and is_in_group(&"presentation_hold"):
+		remove_from_group(&"presentation_hold")
+
+
+func holding_presentation() -> bool:
+	return is_in_group(&"presentation_hold")
+
+
+func drain_nodes() -> Array[MeshInstance3D]:
+	return _drain_nodes.duplicate()
+
+
+func drain_alpha_now() -> float:
+	return _drain_material.albedo_color.a if _drain_material != null else 0.0
+
+
+func _regreen_material_for(block: Dictionary) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.vertex_color_use_as_albedo = true
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
+	material.roughness = 1.0
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var tint := Color(str(block.get("tint", "#e9dfc0")))
+	material.albedo_color = Color(tint.r, tint.g, tint.b, 0.0)
+	var albedo_path := str(block.get("albedo", ""))
+	if albedo_path != "" and ResourceLoader.exists(albedo_path):
+		material.albedo_texture = load(albedo_path)
+	var normal_path := str(block.get("normal", ""))
+	if normal_path != "" and ResourceLoader.exists(normal_path):
+		material.normal_enabled = true
+		material.normal_texture = load(normal_path)
+		material.normal_scale = float(block.get("normal_depth", 0.34))
+	var uv := float(block.get("uv_scale", 0.27))
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
+	material.uv1_scale = Vector3(uv, uv, uv)
+	return material
+
+
+## One station's authored falloff at `distance` -- the per-station term of
+## `playground_heightfield.drain_factor()`, restated so a disc list can be
+## evaluated without the rest of the network.
+static func station_falloff(distance: float, inner: float, radius: float, strength: float) -> float:
+	if radius <= 0.0 or distance >= radius:
+		return 0.0
+	var core := clampf(inner, 0.0, radius - 0.001)
+	return clampf(strength, 0.0, 1.0) * (1.0 - smoothstep(core, radius, distance))
+
+
+## The regreen alpha at a world XZ: the worst listed station there, scaled by
+## the global drain strength and `max_alpha`, and spared on roads.
+static func regreen_alpha(spot: Vector2, discs: Array, global_strength: float,
+		max_alpha: float, path: float) -> float:
+	var worst := 0.0
+	for raw: Variant in discs:
+		var disc: Dictionary = raw
+		worst = maxf(worst, station_falloff(spot.distance_to(disc["centre"] as Vector2),
+			float(disc.get("inner", 0.0)), float(disc["radius"]), float(disc.get("strength", 1.0))))
+	return clampf(worst * global_strength * max_alpha * (1.0 - clampf(path, 0.0, 1.0)), 0.0, 1.0)
+
+
+## Every world-aligned grid cell (index = floor(world / cell)) any disc
+## touches, each once, in a stable order.
+static func regreen_cells(discs: Array, cell: float) -> Array[Vector2i]:
+	var seen: Dictionary = {}
+	var out: Array[Vector2i] = []
+	for raw: Variant in discs:
+		var disc: Dictionary = raw
+		var centre: Vector2 = disc["centre"]
+		var radius := float(disc["radius"])
+		for i in range(int(floor((centre.x - radius) / cell)), int(ceil((centre.x + radius) / cell))):
+			for j in range(int(floor((centre.y - radius) / cell)), int(ceil((centre.y + radius) / cell))):
+				var key := Vector2i(i, j)
+				if not seen.has(key):
+					seen[key] = true
+					out.append(key)
+	return out
+
+
+## The per-group overlay meshes, in group-name order.
+func regreen_nodes() -> Array[MeshInstance3D]:
+	return _regreen_nodes.duplicate()
+
+
+func regreen_alpha_now() -> float:
+	return _regreen_material.albedo_color.a if _regreen_material != null else 0.0
+
+
+func _heightfield() -> RefCounted:
+	if _field == null:
+		_field = HEIGHTFIELD.new()
+	return _field
+
+
+## (C) THE PYLONS FALL. Every `Pylon_<i>` under a holder whose name matches
+## `pylons.holders` tips over about its own base edge, in a deterministic
+## direction, until its tip rests on the terrain. Which holders is a config
+## decision: the quarry spur, the relay's runs and the stronghold approach
+## trunk were the LIVE network the finale kills; the severed spokes at the map
+## edges were dead before the game began and their standing, leaning pylons
+## are the severance story, so they stay up.
+##
+## WALKABILITY. A fallen pylon must never block or trap anyone -- including a
+## co-op peer standing where it lands when the flag arrives. So by default its
+## box collider (a SIBLING `StaticBody3D` at the pylon's XZ, see
+## `severed_spokes.gd::_add_box_collider`) is switched off for the fall and
+## REMOVED when it lands (`collider: "remove"`; `"lay_down"` keeps it, laid
+## along the ground).
+##
+## DETERMINISM. Which way each pylon falls is AUTHORED data, `pylons.falls`,
+## baked offline by `bake_fall_table()`: it chose, per pylon, a direction whose
+## fall rests on the ground, newly covers no road carriageway or building
+## apron, and newly overlaps no fixed authored collider (ramps, walls, ruins).
+## The run-time fall reads only that table and the terrain, so it is the same
+## on every peer and every load -- it never asks the physics space, whose
+## vegetation colliders stream in around the LOCAL player and are removed by
+## harvesting. A pylon authored `null` stays standing (none today), counted in
+## `pylons_left_standing`; one missing from the table (unbaked new content)
+## falls back to the road/ground search, still without the collider query,
+## and warns.
+##
+## The cables strung between pylons would float once they fall, so the pieces
+## hanging from a fallen pylon tear as it starts to go (`_spans_hanging_from`), as are the spans
+## in `pylons.cable_holders` that end on one.
+func _topple_the_pylons(immediate: bool) -> int:
+	var block: Dictionary = _config.get("pylons", {})
+	if not bool(block.get("enabled", true)) or _world == null:
+		return 0
+	var patterns: Array = block.get("holders", [])
+	var prefixes: Array = block.get("hide_prefixes", ["Conduit_", "DangleStub_"])
+	var fall := maxf(float(block.get("fall_seconds", 2.0)), 0.1)
+	var stagger := float(block.get("stagger_seconds", 0.35))
+	var lead := maxf(float(block.get("creak_seconds", 0.0)), 0.0) + maxf(float(block.get("creak_hold_seconds", 0.0)), 0.0)
+	var toppled := 0
+	for node: Node in _all_nodes(_world):
+		var holder := node as Node3D
+		if holder == null or not _name_matches(str(holder.name), patterns):
+			continue
+		var pylons: Array[Node3D] = []
+		for child: Node in holder.get_children():
+			if child is MeshInstance3D and str(child.name).begins_with("Pylon_"):
+				pylons.append(child as Node3D)
+		if pylons.is_empty():
+			continue
+		var claimed: Dictionary = {}
+		for i in pylons.size():
+			var delay := float(i) * stagger
+			if _topple_one(pylons[i], holder, block, 0.0 if immediate else fall, delay, i):
+				toppled += 1
+				# The cable pieces hanging from it tear as it starts to go, not
+				# before: counted now, hidden at the end of its creak.
+				var spans := _spans_hanging_from(holder, _pylon_index(pylons[i]), claimed)
+				_cables_hidden += spans.size()
+				_tear_after(spans, 0.0 if immediate else delay + lead)
+	for raw: Variant in (block.get("cable_holders", []) as Array):
+		for node: Node in _all_nodes(_world):
+			if str(node.name) == str(raw):
+				_cables_hidden += _hide_named(node, prefixes)
+	return toppled
+
+
+func _pylon_index(pylon: Node) -> int:
+	return int(str(pylon.name).trim_prefix("Pylon_"))
+
+
+## Hide only the cable pieces that hang from a pylon that fell:
+## `Conduit_<i>_<s>` spans list entry i to i+1, `DangleStub_<i>_<s>` hangs
+## from entry i (severed_spokes.gd's own naming). A span between two pylons
+## that both still stand stays up.
+## The visible cable pieces that hang from pylon `index` of `holder` and no
+## earlier fallen pylon has claimed: `Conduit_<i>_<s>` spans list entry i to
+## i+1, `DangleStub_<i>_<s>` hangs from entry i (severed_spokes.gd's naming).
+func _spans_hanging_from(holder: Node, index: int, claimed: Dictionary) -> Array[Node3D]:
+	var out: Array[Node3D] = []
+	for node: Node in holder.get_children():
+		var visual := node as Node3D
+		if visual == null or not visual.visible or claimed.has(visual):
+			continue
+		var parts := str(node.name).split("_")
+		if parts.size() < 3:
+			continue
+		var i := int(parts[1])
+		var hangs := false
+		if parts[0] == "Conduit":
+			hangs = i == index or i + 1 == index
+		elif parts[0] == "DangleStub":
+			hangs = i == index
+		if hangs:
+			claimed[visual] = true
+			out.append(visual)
+	return out
+
+
+func _tear_after(spans: Array[Node3D], seconds: float) -> void:
+	if spans.is_empty():
+		return
+	if seconds <= 0.0 or not is_inside_tree():
+		_tear(spans)
+		return
+	create_tween().tween_interval(seconds).finished.connect(_tear.bind(spans))
+
+
+func _tear(spans: Array[Node3D]) -> void:
+	for span: Node3D in spans:
+		if is_instance_valid(span):
+			span.visible = false
+
+
+func _name_matches(node_name: String, patterns: Array) -> bool:
+	for raw: Variant in patterns:
+		if node_name.match(str(raw)):
+			return true
+	return false
+
+
+func _hide_named(root: Node, prefixes: Array) -> int:
+	var hidden := 0
+	for node: Node in _all_nodes(root):
+		var visual := node as Node3D
+		if visual == null or not visual.visible:
+			continue
+		for raw: Variant in prefixes:
+			if str(node.name).begins_with(str(raw)):
+				visual.visible = false
+				hidden += 1
+				break
+	return hidden
+
+
+## One pylon, `index` down its run. False (and nothing moved) when it has
+## already fallen, or when no direction is clear and it stays standing.
+func _topple_one(pylon: Node3D, holder: Node3D, block: Dictionary, seconds: float,
+		delay: float, index: int = 0) -> bool:
+	if pylon == null or pylon.has_meta(TOPPLED_META):
+		return false
+	var start := _global_of(pylon)
+	var local := AABB(Vector3(-0.5, -0.5, -0.5), Vector3.ONE)
+	var mesh_instance := pylon as MeshInstance3D
+	if mesh_instance != null and mesh_instance.mesh != null:
+		local = mesh_instance.mesh.get_aabb()
+
+	var colliders: Array[Node3D] = []
+	var reach := float(block.get("collider_match_radius", 0.35))
+	for sibling: Node in holder.get_children():
+		var body := sibling as StaticBody3D
+		if body == null:
+			continue
+		var at := _global_of(body).origin
+		if Vector2(at.x, at.z).distance_to(Vector2(start.origin.x, start.origin.z)) <= reach:
+			colliders.append(body)
+
+	# The direction is AUTHORED: `pylons.falls` holds one baked azimuth per
+	# pylon (see `bake_fall_table`), so the result is a pure function of
+	# config and terrain -- identical on every peer and every load, whatever
+	# vegetation has streamed in around whichever player, whatever has been
+	# harvested or repaired. A pylon missing from the table (new content not
+	# yet baked) falls back to the road/ground search WITHOUT the collider
+	# query, which is equally deterministic, and says so.
+	var key := "%s/%s" % [str(holder.name), str(pylon.name)]
+	var table: Dictionary = block.get("falls", {})
+	var plan: Dictionary = {}
+	if table.has(key):
+		if table[key] != null:
+			plan = _plan_along(start, local, azimuth_direction(float(table[key])), block)
+	else:
+		push_warning("meadow_healing: %s is not in pylons.falls; searching (roads and ground only) -- re-bake the table" % key)
+		plan = _plan_fall(str(holder.name), index, start, local, colliders, block, false)
+	pylon.set_meta(TOPPLED_META, true)
+	if plan.is_empty():
+		_left_standing += 1
+		push_warning("meadow_healing: %s is left standing (authored null in pylons.falls, or no clear direction)" % key)
+		return false
+	var pivot: Vector3 = plan["pivot"]
+	var dir: Vector2 = plan["dir"]
+	var angle: float = plan["angle"]
+	var final: Transform3D = plan["final"]
+	var remove := str(block.get("collider", "remove")) != "lay_down"
+	for body: Node3D in colliders:
+		_set_shapes_disabled(body, true)
+
+	_toppled.append(pylon)
+	if seconds <= 0.0 or not is_inside_tree():
+		_set_global(pylon, final)
+		_settle_colliders(colliders, pivot, dir, angle, remove)
+		return true
+	# Staged: a creak (it gives a few degrees and hangs there), then the fall
+	# gathering speed, then a dust burst where it lands.
+	var creak := maxf(float(block.get("creak_seconds", 0.0)), 0.0)
+	var creak_hold := maxf(float(block.get("creak_hold_seconds", 0.0)), 0.0)
+	var creak_part := clampf(float(block.get("creak_fraction", 0.0)), 0.0, 0.5) if creak > 0.0 else 0.0
+	var pose := _pose_pylon.bind(pylon, start, pivot, dir, angle)
+	var tween := create_tween()
+	if delay > 0.0:
+		tween.tween_interval(delay)
+	if creak_part > 0.0:
+		tween.tween_method(pose, 0.0, creak_part, creak).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		if creak_hold > 0.0:
+			tween.tween_interval(creak_hold)
+	tween.tween_method(pose, creak_part, 1.0, seconds) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.tween_callback(_finish_fall.bind(pylon, final, colliders, pivot, dir, angle, remove))
+	tween.tween_callback(_raise_dust.bind(final, local, block.get("dust", {}) as Dictionary))
+	return true
+
+
+## A one-shot dust burst along a pylon that has just landed. Cosmetic only:
+## no collision, freed once its particles are gone; never on a load.
+func _raise_dust(final: Transform3D, local: AABB, spec: Dictionary) -> void:
+	if not bool(spec.get("enabled", false)) or not is_inside_tree():
+		return
+	var dust := CPUParticles3D.new()
+	dust.name = "PylonDust"
+	dust.one_shot = true
+	dust.explosiveness = 0.85
+	dust.amount = maxi(int(spec.get("amount", 40)), 1)
+	dust.lifetime = maxf(float(spec.get("lifetime", 1.8)), 0.1)
+	dust.emission_shape = CPUParticles3D.EMISSION_SHAPE_BOX
+	# Upright in the world, spread over the landed pylon's world bounds: the
+	# pylon's own basis is lying down, so "up" in it would blow the dust
+	# sideways along the ground.
+	var bounds := final * local
+	dust.emission_box_extents = Vector3(bounds.size.x * 0.45, maxf(bounds.size.y * 0.3, 0.2), bounds.size.z * 0.45)
+	dust.direction = Vector3.UP
+	dust.spread = 70.0
+	dust.initial_velocity_min = float(spec.get("speed_min", 0.6))
+	dust.initial_velocity_max = float(spec.get("speed_max", 2.2))
+	dust.gravity = Vector3(0.0, -float(spec.get("gravity", 0.8)), 0.0)
+	dust.damping_min = 0.8
+	dust.damping_max = 1.6
+	dust.scale_amount_min = float(spec.get("size_min", 0.6))
+	dust.scale_amount_max = float(spec.get("size_max", 1.4))
+	var grow := Curve.new()
+	grow.add_point(Vector2(0.0, 0.4))
+	grow.add_point(Vector2(1.0, 1.0))
+	dust.scale_amount_curve = grow
+	var fade := Gradient.new()
+	var colour := Color(str(spec.get("colour", "#b9ab8c")))
+	fade.set_color(0, Color(colour, float(spec.get("alpha", 0.55))))
+	fade.set_color(1, Color(colour, 0.0))
+	dust.color_ramp = fade
+	# A soft round puff: a camera-facing quad with a radial falloff drawn in
+	# code (a sphere read as hard white balls in the blind round).
+	var puff := QuadMesh.new()
+	var across := float(spec.get("puff_radius", 0.45)) * 2.0
+	puff.size = Vector2(across, across)
+	var falloff := Gradient.new()
+	falloff.set_color(0, Color(1.0, 1.0, 1.0, 1.0))
+	falloff.set_color(1, Color(1.0, 1.0, 1.0, 0.0))
+	falloff.add_point(0.45, Color(1.0, 1.0, 1.0, 0.55))
+	var soft := GradientTexture2D.new()
+	soft.gradient = falloff
+	soft.fill = GradientTexture2D.FILL_RADIAL
+	soft.fill_from = Vector2(0.5, 0.5)
+	soft.fill_to = Vector2(0.5, 0.0)
+	soft.width = 64
+	soft.height = 64
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	material.albedo_texture = soft
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	puff.material = material
+	dust.mesh = puff
+	add_child(dust)
+	dust.global_transform = Transform3D(Basis.IDENTITY, bounds.get_center())
+	dust.emitting = true
+	get_tree().create_timer(dust.lifetime + 1.0).timeout.connect(dust.queue_free)
+
+
+func _pose_pylon(t: float, pylon: Node3D, start: Transform3D, pivot: Vector3, dir: Vector2,
+		angle: float) -> void:
+	if is_instance_valid(pylon):
+		_set_global(pylon, topple_transform(start, pivot, dir, angle * t))
+
+
+func _finish_fall(pylon: Node3D, final: Transform3D, colliders: Array[Node3D], pivot: Vector3,
+		dir: Vector2, angle: float, remove: bool) -> void:
+	if is_instance_valid(pylon):
+		_set_global(pylon, final)
+	_settle_colliders(colliders, pivot, dir, angle, remove)
+
+
+func _settle_colliders(colliders: Array[Node3D], pivot: Vector3, dir: Vector2,
+		angle: float, remove: bool) -> void:
+	for body: Node3D in colliders:
+		if not is_instance_valid(body):
+			continue
+		if remove:
+			if body.is_inside_tree():
+				body.queue_free()
+			else:
+				body.free()
+			continue
+		_set_global(body, topple_transform(_global_of(body), pivot, dir, angle))
+		_set_shapes_disabled(body, false)
+
+
+func _set_shapes_disabled(body: Node, disabled: bool) -> void:
+	for child: Node in body.get_children():
+		if not child is CollisionShape3D:
+			continue
+		if child.is_inside_tree():
+			(child as CollisionShape3D).set_deferred("disabled", disabled)
+		else:
+			(child as CollisionShape3D).disabled = disabled
+
+
+## World transform of a node, or its local one outside the tree (the unit
+## tests drive the topple on bare nodes, where local IS world).
+func _global_of(node: Node3D) -> Transform3D:
+	return node.global_transform if node.is_inside_tree() else node.transform
+
+
+func _set_global(node: Node3D, value: Transform3D) -> void:
+	if node.is_inside_tree():
+		node.global_transform = value
+	else:
+		node.transform = value
+
+
+## The first clear fall for this pylon, as {dir, pivot, angle, final}, or {}
+## when none of `direction_candidates` is clear. Candidate 0 is the pylon's own
+## deterministic azimuth (see `fall_direction`); later candidates step round.
+func _plan_fall(holder_key: String, index: int, start: Transform3D, local: AABB,
+		own_colliders: Array[Node3D], block: Dictionary, use_bodies: bool = true) -> Dictionary:
+	var candidates := maxi(int(block.get("direction_candidates", 32)), 1)
+	_last_block_reasons = {"ground": 0, "road": 0, "body": 0, "trunk": 0}
+	# The first fall that is clear of everything but trees: taken when every
+	# direction lies through a tree (a pylon in a thicket still falls; the
+	# smoke fails on any left standing).
+	var through_trees: Dictionary = {}
+	for attempt in candidates:
+		var plan := _plan_along(start, local, fall_direction(holder_key, index, attempt, candidates), block)
+		if plan.is_empty() or not _rests_on_ground(plan["final"], local, block):
+			_last_block_reasons["ground"] += 1
+			continue
+		# The root -- one base-width out from the pivot -- lies where the
+		# standing pylon already stood; only what the fall NEWLY covers must
+		# be clear of the carriageway and of other colliders.
+		var reach := beyond_root(local, plan["final"])
+		if not _footprint_clear_of_roads(fallen_footprint(plan["final"], reach), block):
+			_last_block_reasons["road"] += 1
+			continue
+		if use_bodies and not _footprint_clear_of_bodies(plan["final"], reach, own_colliders):
+			_last_block_reasons["body"] += 1
+			continue
+		if use_bodies and not _footprint_clear_of_trunks(fallen_footprint(plan["final"], reach), block):
+			_last_block_reasons["trunk"] += 1
+			if through_trees.is_empty():
+				through_trees = plan
+			continue
+		return plan
+	return through_trees
+
+
+## The fall toward `dir`, settled on the terrain: {dir, pivot, angle, final},
+## or {} when the tip cannot reach the ground inside the angle clamp (a pylon
+## falling across a gully would end with its tip in the air). The first angle
+## reads the ground at one point; the top lands wherever the rotation puts it,
+## so it is measured twice and turned by the gap until the pylon's UNDERSIDE
+## (not its centre line) meets the ground at the tip.
+func _plan_along(start: Transform3D, local: AABB, dir: Vector2, block: Dictionary) -> Dictionary:
+	var box := start * local
+	var height := maxf(box.size.y, 0.5)
+	var base := Vector3(start.origin.x, box.position.y, start.origin.z)
+	var sink := float(block.get("sink_deg", 3.0))
+	var min_deg := float(block.get("min_angle_deg", 70.0))
+	var max_deg := float(block.get("max_angle_deg", 108.0))
+	var pivot := base + Vector3(dir.x, 0.0, dir.y) * float(block.get("pivot_offset", 0.85))
+	var tip := Vector2(pivot.x, pivot.z) + dir * height
+	var ground_pivot := _ground(pivot.x, pivot.z)
+	var ground_tip := _ground(tip.x, tip.y)
+	if not is_nan(ground_pivot) and not is_nan(ground_tip):
+		var raw := 90.0 - rad_to_deg(atan2(ground_tip - ground_pivot, height)) + sink
+		if raw < min_deg or raw > max_deg:
+			return {}
+	var angle := deg_to_rad(fall_angle_deg(height, ground_pivot, ground_tip, sink, min_deg, max_deg))
+	var final := topple_transform(start, pivot, dir, angle)
+	for _pass in 2:
+		var gap := _tip_gap(final, local)
+		if is_nan(gap):
+			break
+		gap -= resting_half_depth(final, local) * float(block.get("tip_rest_fraction", 0.6))
+		angle = clampf(angle + atan2(gap, height), deg_to_rad(min_deg), deg_to_rad(max_deg))
+		final = topple_transform(start, pivot, dir, angle)
+	return {"dir": dir, "pivot": pivot, "angle": angle, "final": final}
+
+
+## Half the vertical thickness of the box as it lies: how far its centre line
+## sits above its underside once fallen.
+static func resting_half_depth(final: Transform3D, local: AABB) -> float:
+	var b := final.basis
+	return 0.5 * (absf(b.x.y) * local.size.x + absf(b.z.y) * local.size.z)
+
+
+## Unit XZ direction for an authored azimuth (degrees; 0 = +Z, 90 = +X, the
+## same convention as `fall_direction`).
+static func azimuth_direction(deg: float) -> Vector2:
+	return Vector2(sin(deg_to_rad(deg)), cos(deg_to_rad(deg)))
+
+
+## OFFLINE: the full search (ground, carriageway, other authored colliders)
+## over every standing pylon, as the `pylons.falls` table to paste into
+## meadow_healing.json -- `{"Holder/Pylon_i": azimuth_deg or null}`. Run by
+## `tests/smoke_meadow_healing_land_heals.gd -- --bake-falls` on a fresh world
+## before the flag; never at run time. Vegetation and other mutable bodies are
+## excluded from the collider query even here (`is_fixed_world_collider`), so
+## the table does not depend on where the baking player stood.
+func bake_fall_table() -> Dictionary:
+	var block: Dictionary = _config.get("pylons", {})
+	var out: Dictionary = {}
+	var reasons: Dictionary = {}
+	for node: Node in _all_nodes(_world):
+		var holder := node as Node3D
+		if holder == null or not _name_matches(str(holder.name), block.get("holders", []) as Array):
+			continue
+		var index := 0
+		for child: Node in holder.get_children():
+			if not (child is MeshInstance3D and str(child.name).begins_with("Pylon_")):
+				continue
+			var pylon := child as MeshInstance3D
+			var start := pylon.global_transform
+			var own: Array[Node3D] = []
+			for sibling: Node in holder.get_children():
+				var body := sibling as StaticBody3D
+				if body != null and Vector2(body.global_position.x, body.global_position.z).distance_to(
+						Vector2(start.origin.x, start.origin.z)) <= float(block.get("collider_match_radius", 0.35)):
+					own.append(body)
+			var key := "%s/%s" % [str(holder.name), str(pylon.name)]
+			var plan := _plan_fall(str(holder.name), index, start, pylon.mesh.get_aabb(), own, block, true)
+			if plan.is_empty():
+				out[key] = null
+				reasons[key] = _last_block_reasons.duplicate()
+			else:
+				var dir: Vector2 = plan["dir"]
+				out[key] = snappedf(fposmod(rad_to_deg(atan2(dir.x, dir.y)), 360.0), 0.01)
+			index += 1
+	_bake_reasons = reasons
+	return out
+
+
+## OFFLINE, bake only (`use_bodies`): the fall must not newly lie through a
+## tree. Vegetation colliders stream in around the local player, so the live
+## physics query above cannot see them; the trunks come instead from
+## vegetation's collision batches -- every collidable scatter placement, loaded
+## from the baked scatter, whether streamed in or not -- as XZ circles of the
+## layer's collision radius times the placement's scale, plus `trunk_margin`.
+func _footprint_clear_of_trunks(points: PackedVector2Array, block: Dictionary) -> bool:
+	var margin := float(block.get("trunk_margin", 0.3))
+	for point: Vector2 in points:
+		for rect: Rect2 in _tall_props():
+			if rect.grow(margin).has_point(point):
+				return false
+		var cell := Vector2i(floori(point.x / TRUNK_CELL), floori(point.y / TRUNK_CELL))
+		for dx in range(-1, 2):
+			for dz in range(-1, 2):
+				for trunk: Vector3 in _trunk_grid().get(cell + Vector2i(dx, dz), []):
+					if point.distance_to(Vector2(trunk.x, trunk.y)) <= trunk.z + margin:
+						return false
+	return true
+
+
+const TRUNK_CELL := 8.0
+
+
+## Collidable scatter trunks bucketed by `TRUNK_CELL`: cell -> [Vector3(x, z,
+## radius)]. Built once per bake from `Vegetation._collision_batches`.
+func _trunk_grid() -> Dictionary:
+	if _trunks != null:
+		return _trunks
+	_trunks = {}
+	var vegetation := _find("Vegetation")
+	var batches: Variant = vegetation.get("_collision_batches") if vegetation != null else null
+	if not batches is Array:
+		return _trunks
+	for batch: Variant in batches:
+		var radius := float((batch as Dictionary).get("radius", 0.5))
+		for placement: Variant in ((batch as Dictionary).get("placements", []) as Array):
+			var at: Vector3 = (placement as Dictionary)["position"]
+			var cell := Vector2i(floori(at.x / TRUNK_CELL), floori(at.z / TRUNK_CELL))
+			if not _trunks.has(cell):
+				_trunks[cell] = []
+			(_trunks[cell] as Array).append(Vector3(at.x, at.z, radius * float((placement as Dictionary).get("scale", 1.0))))
+	# The visually solid scatter that does NOT collide (deadfall, big bushes):
+	# `has_solid_scatter_near()`'s own per-placement reach.
+	var soft_at: Variant = vegetation.get("_soft_occluder_positions") if vegetation != null else null
+	var soft_r: Variant = vegetation.get("_soft_occluder_radii") if vegetation != null else null
+	if soft_at is PackedVector3Array and soft_r is PackedFloat32Array:
+		for i in mini((soft_at as PackedVector3Array).size(), (soft_r as PackedFloat32Array).size()):
+			var at: Vector3 = (soft_at as PackedVector3Array)[i]
+			var cell := Vector2i(floori(at.x / TRUNK_CELL), floori(at.z / TRUNK_CELL))
+			if not _trunks.has(cell):
+				_trunks[cell] = []
+			(_trunks[cell] as Array).append(Vector3(at.x, at.z, (soft_r as PackedFloat32Array)[i]))
+	return _trunks
+
+
+## Bake only: authored standing meshes a pylon must not fall through -- any
+## MeshInstance3D outside the scatter, the pylon holders and the severed spokes
+## whose world bounds stand at least `tall_prop_min_height` and are at most
+## `tall_prop_max_width` across (trees, posts, statues; not the terrain or a
+## whole building, which the collider check owns). XZ rects of those bounds.
+func _tall_props() -> Array[Rect2]:
+	if _tall != null:
+		return _tall
+	var out: Array[Rect2] = []
+	var block: Dictionary = _config.get("pylons", {})
+	var min_height := float(block.get("tall_prop_min_height", 3.0))
+	var max_width := float(block.get("tall_prop_max_width", 10.0))
+	var skip: Array = (block.get("holders", []) as Array) + ["SeveredSpokes", "Vegetation", "MeadowHealing", "Player"]
+	for node: Node in _all_nodes(_world):
+		var mesh := node as MeshInstance3D
+		if mesh == null or mesh.mesh == null or not mesh.is_inside_tree():
+			continue
+		var skipped := false
+		var up: Node = mesh
+		while up != null and up != _world:
+			if _name_matches(str(up.name), skip):
+				skipped = true
+				break
+			up = up.get_parent()
+		if skipped:
+			continue
+		var box := mesh.global_transform * mesh.get_aabb()
+		if box.size.y < min_height or maxf(box.size.x, box.size.z) > max_width:
+			continue
+		out.append(Rect2(Vector2(box.position.x, box.position.z), Vector2(box.size.x, box.size.z)))
+	_tall = out
+	return _tall
+
+
+func bake_reasons() -> Dictionary:
+	return _bake_reasons
+
+
+## Height of a fallen pylon's top (the centre of its top face) above the
+## terrain under it. NaN without ground.
+func _tip_gap(final: Transform3D, local: AABB) -> float:
+	var centre := local.get_center()
+	var top := final * Vector3(centre.x, local.end.y, centre.z)
+	var ground := _ground(top.x, top.z)
+	return NAN if is_nan(ground) else top.y - ground
+
+
+## The fallen pylon rests ON the ground: its top's underside within
+## `tip_tolerance` of the terrain, and no point of its centre line buried deeper than
+## `bury_tolerance` (a pylon lying through a hump, tip in the air over the dip
+## beyond, fails both).
+func _rests_on_ground(final: Transform3D, local: AABB, block: Dictionary) -> bool:
+	var gap := _tip_gap(final, local)
+	if is_nan(gap):
+		return true
+	gap -= resting_half_depth(final, local) * float(block.get("tip_rest_fraction", 0.6))
+	if absf(gap) > float(block.get("tip_tolerance", 1.2)):
+		return false
+	var bury := float(block.get("bury_tolerance", 1.5))
+	var centre := local.get_center()
+	for s in 11:
+		var point := final * Vector3(centre.x, local.position.y + local.size.y * float(s) / 10.0, centre.z)
+		var ground := _ground(point.x, point.z)
+		if not is_nan(ground) and ground - point.y > bury:
+			return false
+	return true
+
+
+## World XZ points covering a fallen pylon's box: the full length, root to
+## tip, at <= 1 m steps, across its whole width (both edges and the middle)
+## in both of its horizontal-ish local axes.
+static func beyond_root(local: AABB, final: Transform3D) -> AABB:
+	var scale := final.basis.get_scale()
+	var width := maxf(local.size.x * scale.x, local.size.z * scale.z)
+	var trim := minf(width / maxf(scale.y, 0.001), local.size.y * 0.5)
+	return AABB(local.position + Vector3(0.0, trim, 0.0), local.size - Vector3(0.0, trim, 0.0))
+
+
+static func fallen_footprint(final: Transform3D, local: AABB) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	var steps := maxi(int(ceil(local.size.y * final.basis.get_scale().y)), 1)
+	for s in steps + 1:
+		var y := local.position.y + local.size.y * float(s) / float(steps)
+		for u: float in [0.0, 0.5, 1.0]:
+			for w: float in [0.0, 0.5, 1.0]:
+				var point := final * Vector3(local.position.x + local.size.x * u, y,
+					local.position.z + local.size.z * w)
+				out.append(Vector2(point.x, point.z))
+	return out
+
+
+func _footprint_clear_of_roads(points: PackedVector2Array, block: Dictionary) -> bool:
+	var field := _heightfield()
+	if field == null or points.is_empty():
+		return true
+	var margin := float(block.get("road_margin", 0.25))
+	var bounds := Rect2(points[0], Vector2.ZERO)
+	for point: Vector2 in points:
+		bounds = bounds.expand(point)
+	for raw: Variant in _bands_near(bounds, margin):
+		var band: Dictionary = raw
+		# The CARRIAGEWAY only: a fallen pylon has no collider, so one lying
+		# beside or along the road on its shoulder blocks nothing.
+		var clearance := float(band["half"]) + margin
+		var line: PackedVector2Array = band["line"]
+		for point: Vector2 in points:
+			if polyline_distance(point, line) < clearance:
+				return false
+	var apron := field.has_method("building_apron_factor")
+	if apron:
+		for point: Vector2 in points:
+			if float(field.call("building_apron_factor", point.x, point.y)) > 0.001:
+				return false
+	return true
+
+
+## Road bands (`playground_heightfield.road_bands()`) whose own bounds, grown by
+## half-width + shoulder + `margin` (+ 2 m for the edge wobble), reach `rect`.
+func _bands_near(rect: Rect2, margin: float) -> Array:
+	var field := _heightfield()
+	if field == null:
+		return []
+	if _band_rects.is_empty():
+		for raw: Variant in (field.call("road_bands") as Array):
+			var band: Dictionary = raw
+			var line: PackedVector2Array = band["line"]
+			if line.is_empty():
+				continue
+			var bounds := Rect2(line[0], Vector2.ZERO)
+			for point: Vector2 in line:
+				bounds = bounds.expand(point)
+			_band_rects.append([bounds.grow(float(band["half"]) + float(band["shoulder"]) + 2.0), band])
+	var out: Array = []
+	for pair: Array in _band_rects:
+		if (pair[0] as Rect2).grow(margin).intersects(rect, true):
+			out.append(pair[1])
+	return out
+
+
+static func polyline_distance(point: Vector2, line: PackedVector2Array) -> float:
+	var nearest := INF
+	for i in line.size() - 1:
+		var a := line[i]
+		var b := line[i + 1]
+		var along := b - a
+		var length_sq := along.length_squared()
+		var t := 0.0 if length_sq < 0.0001 else clampf((point - a).dot(along) / length_sq, 0.0, 1.0)
+		nearest = minf(nearest, point.distance_to(a + along * t))
+	return nearest
+
+
+## Whether the fallen box overlaps any fixed collider in the world other than
+## the pylon's own. Terrain is not a `CollisionObject3D` and is ignored;
+## moving bodies (characters, creatures, rigid and animatable bodies such as
+## gates) and player-built pieces are ignored too, because they are not the
+## same on every peer and every load -- the direction must be.
+func _footprint_clear_of_bodies(final: Transform3D, local: AABB, own: Array[Node3D]) -> bool:
+	if not is_inside_tree() or get_world_3d() == null:
+		return true
+	var space := get_world_3d().direct_space_state
+	if space == null:
+		return true
+	var scale := final.basis.get_scale()
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(local.size.x * scale.x, local.size.y * scale.y, local.size.z * scale.z)
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = Transform3D(final.basis.orthonormalized(), final * local.get_center())
+	query.collide_with_areas = false
+	var exclude: Array[RID] = []
+	for body: Node3D in own:
+		if body is CollisionObject3D:
+			exclude.append((body as CollisionObject3D).get_rid())
+	query.exclude = exclude
+	for hit: Dictionary in space.intersect_shape(query, 32):
+		var other := hit.get("collider") as Object
+		if not is_fixed_world_collider(other):
+			continue
+		var hits: Array = _last_block_reasons.get("bodies", [])
+		var label := str(other.get("name"))
+		if not hits.has(label):
+			hits.append(label)
+		_last_block_reasons["bodies"] = hits
+		return false
+	return true
+
+
+## True for a collider that is part of the fixed world: a StaticBody3D (not an
+## AnimatableBody3D) that no player built and that is not part of a gate.
+static func is_fixed_world_collider(other: Object) -> bool:
+	if other == null or not other is StaticBody3D or other is AnimatableBody3D:
+		return false
+	var node := other as Node
+	while node != null:
+		# Player-built pieces, and gates (whose pose depends on flags that
+		# land in a different order live and on a load).
+		if node.is_in_group("placed_building") or node.has_method("open_permanently") \
+				or str(node.name) == "Vegetation":
+			return false
+		node = node.get_parent()
+	return true
+
+
+func pylons_left_standing() -> int:
+	return _left_standing
+
+
+## Deterministic unit XZ fall direction for pylon `index` of the run in
+## `holder_key`, candidate `attempt` of `count`. The run gets one well-mixed
+## azimuth (`rand_from_seed` over the name hash -- the raw djb2 low bits barely
+## move between names that differ in one character), and each pylon down it is
+## turned a further golden angle (~137.5 deg) plus a mixed +-`jitter_deg`, so
+## neighbours never fall the same way like dominoes. Identical on every peer
+## and every load.
+static func fall_direction(holder_key: String, index: int = 0, attempt: int = 0,
+		count: int = 16, jitter_deg: float = 15.0) -> Vector2:
+	var run_seed := int(rand_from_seed(holder_key.hash())[0])
+	var own_seed := int(rand_from_seed(("%s#%d" % [holder_key, index]).hash())[0])
+	var turn := float(run_seed % 65536) / 65536.0 * TAU
+	turn += float(index) * deg_to_rad(137.50776)
+	turn += (float(own_seed % 65536) / 65536.0 * 2.0 - 1.0) * deg_to_rad(jitter_deg)
+	turn += float(attempt) * TAU / float(maxi(count, 1))
+	return Vector2(sin(turn), cos(turn))
+
+
+## How far (degrees from upright) a pylon of `height` falls before its tip
+## meets the ground: 90 on the level, less when the ground rises ahead of it,
+## more when it falls away; plus a few degrees of sink so the tip rests IN the
+## grass rather than hovering. NaN ground reads as level.
+static func fall_angle_deg(height: float, ground_pivot: float, ground_tip: float,
+		sink_deg: float, min_deg: float, max_deg: float) -> float:
+	var rise := 0.0
+	if not is_nan(ground_pivot) and not is_nan(ground_tip):
+		rise = ground_tip - ground_pivot
+	var slope := rad_to_deg(atan2(rise, maxf(height, 0.01)))
+	return clampf(90.0 - slope + sink_deg, min_deg, max_deg)
+
+
+## `transform` rotated by `angle` about the horizontal axis through `pivot`
+## perpendicular to `dir`, tipping its up axis toward `dir`. The same axis
+## convention `severed_spokes.gd` leans its pylons with.
+static func topple_transform(transform: Transform3D, pivot: Vector3, dir: Vector2,
+		angle: float) -> Transform3D:
+	var along := Vector3(dir.x, 0.0, dir.y)
+	if along.length() < 0.0001:
+		return transform
+	var axis := along.normalized().cross(Vector3.UP).normalized()
+	var turn := Basis(axis, -angle)
+	return Transform3D(turn * transform.basis, pivot + turn * (transform.origin - pivot))
+
+
+func toppled_pylons() -> Array[Node3D]:
+	return _toppled.duplicate()
+
+
+func _ground(x: float, z: float) -> float:
+	if _world == null or not _world.has_method("ground_height_at"):
+		return NAN
+	return float(_world.call("ground_height_at", x, z))
+
+
+## (B) THE HERD COMES BACK. Inert Meadowharts -- built exactly the way the
+## Veridian herd display is (no AI, no physics, on no collision layer, so
+## nothing can engage, catch or bump them) -- at authored spots around the
+## Highfield herd point, in their own holder. Built whenever the healing is
+## applied, whatever the Veridian answer; `herd_display()` still returns only
+## the Veridian. Idle clip started once and phase-shifted per index so they do
+## not breathe in unison.
+func _return_the_herd() -> int:
+	var block: Dictionary = _config.get("herd_return", {})
+	if not bool(block.get("enabled", true)) or _world == null:
+		return 0
+	if _herd_return != null:
+		return _herd_return.get_child_count()
+	var holder := Node3D.new()
+	holder.name = "HighfieldHerdReturn"
+	add_child(holder)
+	_herd_return = holder
+	var species := str(block.get("species", "meadowhart"))
+	var phase := float(block.get("idle_phase_step", 0.37))
+	var places := herd_placements(block)
+	for i in places.size():
+		var place: Dictionary = places[i]
+		var spot: Vector2 = place["at"]
+		var at := Vector3(spot.x, 0.0, spot.y)
+		var ground := _ground(at.x, at.z)
+		if not is_nan(ground):
+			at.y = ground
+		var body: Node3D = CREATURE_SCENE.instantiate()
+		body.name = "HerdReturn_%d" % i
+		body.set_script(CREATURE_BODY)
+		holder.add_child(body)
+		body.global_position = at
+		body.call("setup", species, false)
+		body.rotation.y = deg_to_rad(float(place["facing_deg"]))
+		body.scale *= float(place["scale"])
+		body.set_physics_process(false)
+		body.set_process(false)
+		if body is CollisionObject3D:
+			(body as CollisionObject3D).collision_layer = 0
+		# creature_body turns physics back on whenever it becomes visible; this
+		# runs after its own handler and keeps a display body standing.
+		body.visibility_changed.connect(_hold_still.bind(body))
+		if body.has_method("place_on_ground"):
+			body.call("place_on_ground", at)
+		_start_idle(body, fposmod(float(i) * phase, 1.0))
+	return holder.get_child_count()
+
+
+func _hold_still(body: Node) -> void:
+	if is_instance_valid(body):
+		body.set_physics_process(false)
+
+
+func _start_idle(body: Node, phase: float) -> void:
+	var animator: Variant = body.get("_animator")
+	if not animator is Object or animator == null:
+		return
+	(animator as Object).call("tick", 0.0, 0.0, 1.0)
+	var player := (animator as Object).get("_player") as AnimationPlayer
+	if player == null or player.current_animation == "":
+		return
+	player.seek(player.current_animation_length * phase, true)
+
+
+## The authored herd spots, `[x, z, facing_deg, scale?]` each, as
+## `{"at": Vector2, "facing_deg": float, "scale": float >= 1}`. Pure, for tests.
+static func herd_placements(block: Dictionary) -> Array:
+	var out: Array = []
+	for raw: Variant in (block.get("members", []) as Array):
+		if not raw is Array or (raw as Array).size() < 2:
+			continue
+		var entry: Array = raw
+		out.append({
+			"at": Vector2(float(entry[0]), float(entry[1])),
+			"facing_deg": float(entry[2]) if entry.size() > 2 else 0.0,
+			# Up only (hard rule: scale fixes never shrink a creature).
+			"scale": maxf(float(entry[3]), 1.0) if entry.size() > 3 else 1.0,
+		})
+	return out
+
+
+func herd_return() -> Node3D:
+	return _herd_return
 
 
 ## --- plumbing ----------------------------------------------------------------

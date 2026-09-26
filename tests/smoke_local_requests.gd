@@ -58,6 +58,8 @@ var _player: CharacterBody3D = null
 var _manager: Node = null
 var _director: Node = null
 var _panel: Node = null
+## Diagnostic: every conversation that finished, with its physics frame.
+var _conversation_log: Array[String] = []
 var _log := QUEST_LOG.new()
 
 var _quick_hits := 0
@@ -177,6 +179,9 @@ func _collect_nodes() -> bool:
 	_manager = _world.get_node_or_null(^"CombatManager")
 	_director = _world.get_node_or_null(^"EncounterDirector")
 	_panel = _world.get_node_or_null(^"DialoguePanel")
+	if _panel != null and _panel.has_signal("finished"):
+		_panel.connect("finished", func(id: String) -> void:
+			_conversation_log.append("%s@%d" % [id, Engine.get_physics_frames()]))
 	if _game == null or _player == null or _manager == null or _director == null or _panel == null:
 		_fail("the scene is missing the Game autoload, the player, the manager, the director or the panel")
 		return false
@@ -217,6 +222,10 @@ func _old_bram() -> void:
 
 
 func _lost_creature() -> void:
+	# F03 distinct action. Beating the patrol only FREES the Meadowhart (and pays
+	# the patrol's once-only battle reward). The activity completes when the
+	# player taps "Lead the Meadowhart home" and walks her to Juno with real
+	# stick input; the host then commits `lost_creature_rue_returned`.
 	var reunion := _world.get_node_or_null("LostCompanionReunion")
 	if reunion == null:
 		_fail("lost_creature: missing physical companion presentation")
@@ -228,8 +237,14 @@ func _lost_creature() -> void:
 	if rescued == null or patrol == null or owner_body == null:
 		_fail("lost_creature: missing rescued creature, patrol or existing Juno")
 		return
+	var prompt := rescued.get_node_or_null(^"Interactable")
+	if prompt == null:
+		_fail("lost_creature: the Meadowhart offers no escort prompt")
+		return
 	if bool(reunion.call("is_reunited")) or rescued.global_position.distance_to(patrol.global_position) > 10.0:
 		_fail("lost_creature: missing companion is not beside the unbeaten patrol")
+	if bool(prompt.get("enabled")):
+		_fail("lost_creature: the escort is offered while the patrol still holds her")
 	var instance_id := rescued.get_instance_id()
 	var party_before: Array = (_game.get("party") as RefCounted).call("members")
 	if party_before.size() != 5 or not party_before.has(_director.call("ally_instance")):
@@ -238,14 +253,77 @@ func _lost_creature() -> void:
 	await _play_local_trainer(
 		"lost_creature_rue", "lost_creature_rue_challenge",
 		"defeated_lost_creature_rue", "lost_creature_rue_met", "band4_lost_creature",
-		{"coin": 50, "revive": 1})
-	# Reunion observes progression revision in _process; wait for its production
-	# reaction rather than calling the restore seam to manufacture the first move.
+		{"coin": 50, "revive": 1}, false)
+	await _close_parsed_acknowledgement("lost_creature patrol")
 	for _frame in 2:
 		await physics_frame
 		await process_frame
-	if not bool(reunion.call("is_reunited")) or rescued.global_position.distance_to(owner_body.global_position) > 10.0:
-		_fail("lost_creature: winning the actual patrol did not reunite Meadowhart with Juno")
+	if bool(_progression().call("has", RETURN_FLAG)) or bool(reunion.call("is_reunited")):
+		_fail("lost_creature: beating the patrol completed the return by itself")
+	if rescued.global_position.distance_to(patrol.global_position) > 10.0:
+		_fail("lost_creature: the freed Meadowhart left the patrol before anyone led her")
+	if not bool(prompt.get("enabled")):
+		_fail("lost_creature: the freed Meadowhart does not offer 'Lead the Meadowhart home'")
+	var coins := int(_inventory().call("count", "coin"))
+	var revives := int(_inventory().call("count", "revive"))
+	var waiting_at := rescued.global_position
+
+	# Leash: start an escort with a real press, then leave her far behind.
+	if not await _start_escort(reunion, prompt, rescued):
+		return
+	var far := rescued.global_position + Vector3(0.0, 0.0, -70.0)
+	await _seat_remote_fixture(far, _director.call("ally_body") as Node3D)
+	for _frame in 6:
+		await physics_frame
+		await process_frame
+	if int(reunion.call("escort_peer")) != 0:
+		_fail("lost_creature: outrunning the 40 m leash did not end the escort")
+	if rescued.global_position.distance_to(waiting_at) > 0.5 or not bool(prompt.get("enabled")):
+		_fail("lost_creature: a broken leash did not send her back to wait with the prompt")
+	if bool(_progression().call("has", RETURN_FLAG)):
+		_fail("lost_creature: a broken leash completed the return")
+
+	# The real walk home.
+	if not await _start_escort(reunion, prompt, rescued):
+		return
+	if not await _lead_home(reunion, rescued, owner_body):
+		return
+	for _frame in 4:
+		await physics_frame
+		await process_frame
+	if not bool(_progression().call("has", RETURN_FLAG)) or not bool(reunion.call("is_reunited")):
+		_fail("lost_creature: arriving at Juno did not set the return flag")
+	var entry := _local_entry("band4_lost_creature", _progression())
+	if not entry.get("present", false) or not bool(entry.get("done", false)):
+		_fail("lost_creature: the return does not read done in quest_log")
+	if rescued.global_position.distance_to(owner_body.global_position) > 10.0:
+		_fail("lost_creature: the returned Meadowhart is not beside Juno")
+	var runner: RefCounted = _panel.call("runner") as RefCounted
+	if not bool(_panel.call("is_open")) or runner == null \
+			or str(runner.call("conversation_id")) != "lost_creature_rue_returned":
+		_fail("lost_creature: Juno did not acknowledge the return (open=%s conversation=%s)" % [
+			str(_panel.call("is_open")), str(runner.call("conversation_id")) if runner != null else "?"])
+	await _close_parsed_acknowledgement("lost_creature return")
+	if int(_inventory().call("count", "coin")) != coins or int(_inventory().call("count", "revive")) != revives:
+		_fail("lost_creature: the return paid a second reward on top of the patrol's")
+
+	# Once-only: the prompt is gone, a direct second activation and a second
+	# arrival change nothing.
+	if bool(prompt.get("enabled")):
+		_fail("lost_creature: the returned Meadowhart still offers the escort")
+	var log_before := _conversation_log.size()
+	prompt.call("interaction_activate")
+	reunion.call("_host_complete_return")
+	for _frame in 6:
+		await physics_frame
+		await process_frame
+	if int(reunion.call("escort_peer")) != 0:
+		_fail("lost_creature: a second press started another escort")
+	if int(_inventory().call("count", "coin")) != coins or int(_inventory().call("count", "revive")) != revives:
+		_fail("lost_creature: a second press or arrival paid again")
+	if bool(_panel.call("is_open")) or _conversation_log.size() != log_before:
+		_fail("lost_creature: a second arrival acknowledged the return again")
+
 	if rescued.get_instance_id() != instance_id or not rescued.visible:
 		_fail("lost_creature: reunion replaced or hid the visible companion")
 	if int(rescued.get("collision_layer")) != 0 or int(rescued.get("collision_mask")) != 0:
@@ -255,10 +333,19 @@ func _lost_creature() -> void:
 	if party_after.size() != 5 or party_before != party_after:
 		_fail("lost_creature: the rescue changed the player's owned companions")
 	var terminal: Vector3 = rescued.global_position
-	rescued.position = Vector3.ZERO
+	reunion.global_position = Vector3.ZERO
 	reunion.call("restore_progression_from_game", _game)
 	if rescued.global_position.distance_to(terminal) > 0.01:
 		_fail("lost_creature: restored world flag did not reconstruct the reunion")
+	# Legacy shape: the patrol beaten, the return never made. She waits by the
+	# patrol with the prompt; nothing is completed retroactively.
+	_progression().call("set_flag", RETURN_FLAG, false)
+	reunion.call("restore_progression_from_game", _game)
+	if rescued.global_position.distance_to(waiting_at) > 0.5 or not bool(prompt.get("enabled")) \
+			or bool(reunion.call("is_reunited")):
+		_fail("lost_creature: a legacy beaten-but-not-returned state does not wait by the patrol")
+	_progression().call("set_flag", RETURN_FLAG, true)
+	reunion.call("restore_progression_from_game", _game)
 	if TRAINERS.conversation_for(TRAINERS.trainer("pasture_drover_juno"), _progression()) != "pasture_drover_juno_reunited_challenge":
 		_fail("lost_creature: Juno did not acknowledge rescue before her own optional battle")
 		return
@@ -284,13 +371,91 @@ func _lost_creature() -> void:
 	await _verify_juno_disk_round_trip(reunion)
 
 
+const RETURN_FLAG := "lost_creature_rue_returned"
+
+
+## Stand beside the waiting Meadowhart and press the real interact action on
+## her own prompt. One tap; nothing is held.
+func _start_escort(reunion: Node, prompt: Node, rescued: Node3D) -> bool:
+	var arbiter := _world.get_node_or_null(^"InteractionArbiter")
+	var rig := _world.get_node_or_null(^"CameraRig") as Node3D
+	for offset: Vector3 in [Vector3(2.0, 0.0, 0.0), Vector3(-2.0, 0.0, 0.0),
+			Vector3(0.0, 0.0, 2.0), Vector3(0.0, 0.0, -2.0)]:
+		var at: Vector3 = rescued.global_position + offset
+		await _seat_remote_fixture(at, _director.call("ally_body") as Node3D)
+		if rig != null:
+			rig.set("yaw", atan2(offset.x, offset.z))
+		for _frame in 90:
+			await physics_frame
+			await process_frame
+			if arbiter.call("winning_provider") == prompt and INPUT_OWNER.current(self) == null:
+				await _press("interact")
+				if int(reunion.call("escort_peer")) != 0:
+					if bool(prompt.get("enabled")):
+						_fail("lost_creature: the leader still has an escort prompt at their heels")
+					return true
+	var winner: Variant = arbiter.call("winning_provider")
+	_fail("lost_creature: pressing interact at the Meadowhart did not start an escort (winner=%s)" % [
+		str((winner as Node).get_path()) if winner is Node else str(winner)])
+	return false
+
+
+## Walk to Juno with ordinary forward input, steering the camera toward her.
+## No completion may land before the Meadowhart is within the arrival radius.
+func _lead_home(reunion: Node, rescued: Node3D, owner_body: Node3D) -> bool:
+	var rig := _world.get_node_or_null(^"CameraRig") as Node3D
+	var config: Dictionary = reunion.get("_config")
+	var radius := float(config.get("arrival_radius_m", 6.0))
+	var moving := true
+	var arrived := false
+	var started := Engine.get_physics_frames()
+	Input.action_press("move_forward")
+	_send("move_forward", true)
+	for frame in 12000:
+		var to := owner_body.global_position - _player.global_position
+		to.y = 0.0
+		if rig != null and to.length_squared() > 0.01:
+			rig.set("yaw", atan2(-to.x, -to.z))
+		if moving and to.length() <= 2.5:
+			Input.action_release("move_forward")
+			_send("move_forward", false)
+			moving = false
+		await physics_frame
+		await process_frame
+		var gap := Vector2(rescued.global_position.x - owner_body.global_position.x,
+			rescued.global_position.z - owner_body.global_position.z).length()
+		if bool(_progression().call("has", RETURN_FLAG)):
+			if gap > radius + 0.5 and not bool(reunion.call("is_reunited")):
+				_fail("lost_creature: completed %.1f m from Juno, outside the %.1f m arrival" % [gap, radius])
+			arrived = true
+			break
+		if int(reunion.call("escort_peer")) == 0:
+			_fail("lost_creature: the escort ended on the walk home at player=%s creature=%s (frame %d)" % [
+				str(_player.global_position), str(rescued.global_position), frame])
+			break
+		if bool(_panel.call("is_open")):
+			_fail("lost_creature: a conversation interrupted the walk home before arrival")
+			break
+		if frame % 600 == 0:
+			print("lost_creature walk: frame %d player=%s creature gap to Juno %.1f m" % [
+				frame, str(_player.global_position), gap])
+	Input.action_release("move_forward")
+	_send("move_forward", false)
+	print("lost_creature walk: %s after %d physics frames" % [
+		"arrived" if arrived else "did not arrive", Engine.get_physics_frames() - started])
+	if not arrived:
+		_fail("lost_creature: walking to Juno never completed the return (player=%s, creature=%s)" % [
+			str(_player.global_position), str(rescued.global_position)])
+	return arrived
+
+
 ## Shared drive for all three: find the real placed body, walk the real
 ## challenge conversation to its `battle:` line on the real panel, fight the
 ## real trainer battle to the end, then check the real flag/reward/quest-log
 ## consequences.
 func _play_local_trainer(trainer_id: String, challenge_conversation: String,
 		defeat_flag: String, met_flag: String, objective_id: String,
-		expected_reward: Dictionary = {}) -> void:
+		expected_reward: Dictionary = {}, completes_objective: bool = true) -> void:
 	var trainers := _world.get_node_or_null(^"Trainers")
 	if trainers == null:
 		_fail("%s: no 'Trainers' node in the world" % trainer_id)
@@ -351,8 +516,10 @@ func _play_local_trainer(trainer_id: String, challenge_conversation: String,
 	if not after_local.get("present", false):
 		_fail("%s: beaten, but the Local Request '%s' never appeared in quest_log's local list" % [
 			trainer_id, objective_id])
-	elif not bool(after_local.get("done", false)):
+	elif completes_objective and not bool(after_local.get("done", false)):
 		_fail("%s: the Local Request '%s' is in the log but does not read done" % [trainer_id, objective_id])
+	elif not completes_objective and bool(after_local.get("done", false)):
+		_fail("%s: the win alone completed '%s', which needs a further step" % [trainer_id, objective_id])
 
 
 ## Same HP-floor allowance smoke_boss.gd/smoke_trainer_battle.gd make: this is
@@ -693,10 +860,15 @@ func _activate_trainer_prompt(body: Node3D, label: String) -> bool:
 	var owner := INPUT_OWNER.current(self)
 	if label.begins_with("river_nest"):
 		await _capture_activity("doss-prompt-failed")
-	_fail("%s: exact prompt never became actionable at player=%s winner=%s input_owner=%s" % [
+	var runner: RefCounted = _panel.call("runner") as RefCounted if _panel != null else null
+	_fail("%s: exact prompt never became actionable at player=%s winner=%s input_owner=%s open=%s conversation=%s line=%s started=%s" % [
 		label, str(_player.global_position),
 		str((winner as Node).get_path()) if winner is Node else str(winner),
-		str(owner.get_path()) if owner != null else "none"])
+		str(owner.get_path()) if owner != null else "none",
+		str(_panel.call("is_open")) if _panel != null else "?",
+		str(runner.call("conversation_id")) if runner != null else "?",
+		str(runner.call("line")) if runner != null else "?",
+		str(_conversation_log)])
 	return false
 
 
@@ -753,7 +925,7 @@ func _verify_juno_disk_round_trip(reunion: Node) -> void:
 	if not bool(saver.call("save", _game, 4)):
 		_fail("lost_creature: production save writer refused the activity slot")
 		return
-	_progression().call("set_flag", "defeated_lost_creature_rue", false)
+	_progression().call("set_flag", RETURN_FLAG, false)
 	if not bool(saver.call("load_slot", _game, 4)):
 		_fail("lost_creature: production save reader refused the activity slot")
 		return
@@ -762,8 +934,8 @@ func _verify_juno_disk_round_trip(reunion: Node) -> void:
 		loaded_ids.append(str(member.get("uid")))
 	if loaded_ids != expected_ids:
 		_fail("lost_creature: disk reload did not preserve the five owned identities")
-	if not bool(_progression().call("has", "defeated_lost_creature_rue")):
-		_fail("lost_creature: disk reload lost the completed rescue")
+	if not bool(_progression().call("has", RETURN_FLAG)):
+		_fail("lost_creature: disk reload lost the completed return")
 	if int((_game.get("inventory") as RefCounted).call("count", "coin")) != coins:
 		_fail("lost_creature: disk reload repaid or lost the completed rescue reward")
 	if int((_game.get("inventory") as RefCounted).call("count", "revive")) != revives:
@@ -772,6 +944,8 @@ func _verify_juno_disk_round_trip(reunion: Node) -> void:
 	if int((_game.get("inventory") as RefCounted).call("count", "coin")) != coins \
 			or int((_game.get("inventory") as RefCounted).call("count", "revive")) != revives:
 		_fail("lost_creature: reunion restoration after disk reload repaid the reward")
+	if not bool(reunion.call("is_reunited")):
+		_fail("lost_creature: disk reload did not keep the reunion")
 
 
 func _verify_bram_disk_round_trip() -> void:
@@ -1210,11 +1384,15 @@ func _local_entry(objective_id: String, progression: RefCounted) -> Dictionary:
 
 
 func _press(action: String) -> void:
-	Input.action_press(action)
+	# ONE input path. Pairing Input.action_press() with a parsed
+	# InputEventAction produced two "just pressed" edges on different frames
+	# for a single press -- the parsed event is flushed a frame or more later.
+	# When the first edge dismissed Doss's thanks, the late second edge could
+	# land after the release and greet him again (the repeat-greeting flake:
+	# the same conversation reopened on line 0 with no press from this smoke).
 	_send(action, true)
 	await physics_frame
 	await physics_frame
-	Input.action_release(action)
 	_send(action, false)
 	for i in 4:
 		await physics_frame

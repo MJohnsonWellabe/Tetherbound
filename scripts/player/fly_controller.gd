@@ -324,6 +324,9 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 	if state == "climb":
 		_player.velocity.y = minf(_player.velocity.y, vertical)
 	var restriction := _restricted_reason(_player.global_position, _player.global_position + _player.velocity * delta)
+	# What a refused flyer may still do: nothing, unless it is already inside a
+	# sealed volume with no verified anchor to recover to (below).
+	var sealed_escape := Vector3.ZERO
 	if not restriction.is_empty():
 		_deny(restriction)
 		_player.velocity.x = 0.0
@@ -333,6 +336,13 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 			_player.velocity = Vector3.ZERO
 			if recover_to_anchor(restriction):
 				return true
+			# F06: a volume can close around a flyer whose anchor no longer
+			# passes its ground ray (or who has none). Zeroing velocity every
+			# frame would hang that flyer in the air forever. The sealed wind
+			# instead carries it out, horizontally, along the shortest way out
+			# of the closed volumes -- never down onto what they seal.
+			sealed_escape = sealed_escape_velocity(_player.global_position, delta)
+			_player.velocity = sealed_escape
 	else:
 		last_denial = ""
 	var spend := float(config.get("climb_stamina_per_second", 1.6)) if state == "climb" else float(config.get("stamina_per_second", 1.0))
@@ -346,7 +356,7 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 	var external_restriction := "" if _player.velocity.is_equal_approx(velocity_before_environment) else _restricted_reason(_player.global_position, _player.global_position + _player.velocity * delta)
 	if not external_restriction.is_empty():
 		_deny(external_restriction)
-		_player.velocity = Vector3.ZERO
+		_player.velocity = sealed_escape
 	_player.move_and_slide()
 	_player.call("finish_environment_velocity_step", not external_restriction.is_empty())
 	if horizontal.length() > 0.2:
@@ -391,6 +401,86 @@ func _restricted_reason(from: Vector3, to: Vector3) -> String:
 	return ""
 
 
+## The grown boxes `_restricted_reason` tests, for every closed restriction.
+func _closed_boxes() -> Array[AABB]:
+	var margin := float(config.get("body_clearance_m", 0.5))
+	var height := float(config.get("collision_height_m", 4.5))
+	var out: Array[AABB] = []
+	for restriction: Dictionary in restrictions:
+		if _has_flag(str(restriction["requires_flag"])):
+			continue
+		var box: AABB = restriction["bounds"]
+		box.position -= Vector3(margin, height, margin)
+		box.size += Vector3(2.0 * margin, height + margin, 2.0 * margin)
+		out.append(box)
+	return out
+
+
+## The shortest horizontal way out of the union of closed volumes from `p`:
+## an offset (direction x distance) to the nearest point outside all of them,
+## sampled over 16 headings and stepped exactly box to box. Zero when `p` is
+## inside none. Overlapping volumes are one region here: the nearest face of
+## one box can lead straight into the next.
+func sealed_exit(p: Vector3) -> Vector3:
+	var boxes := _closed_boxes()
+	if not _inside_any(boxes, p):
+		return Vector3.ZERO
+	var best := Vector3.ZERO
+	var best_distance := INF
+	for i in 16:
+		var angle := TAU * float(i) / 16.0
+		var heading := Vector3(cos(angle), 0.0, sin(angle))
+		var travelled := 0.0
+		for _step in 64:
+			var at := p + heading * travelled
+			var holding := AABB()
+			var found := false
+			for box: AABB in boxes:
+				if box.has_point(at):
+					holding = box
+					found = true
+					break
+			if not found:
+				break
+			travelled += _slab_exit(holding, at, heading) + 0.01
+		if travelled < best_distance:
+			best_distance = travelled
+			best = heading * travelled
+	return best
+
+
+## Velocity that carries a trapped flyer out of the closed volumes at half
+## glide speed, landing exactly on the edge rather than overshooting it.
+func sealed_escape_velocity(from: Vector3, delta: float) -> Vector3:
+	var out := sealed_exit(from)
+	var distance := out.length()
+	if distance <= 0.0:
+		return Vector3.ZERO
+	var speed := minf(float(config.get("speed_mps", 16.0)) * 0.5, distance / maxf(delta, 0.001))
+	return out / distance * speed
+
+
+static func _inside_any(boxes: Array[AABB], p: Vector3) -> bool:
+	for box: AABB in boxes:
+		if box.has_point(p):
+			return true
+	return false
+
+
+## Distance along a horizontal `heading` from `at` (inside `box`) to its edge.
+static func _slab_exit(box: AABB, at: Vector3, heading: Vector3) -> float:
+	var t := INF
+	if heading.x > 0.0001:
+		t = minf(t, (box.end.x - at.x) / heading.x)
+	elif heading.x < -0.0001:
+		t = minf(t, (box.position.x - at.x) / heading.x)
+	if heading.z > 0.0001:
+		t = minf(t, (box.end.z - at.z) / heading.z)
+	elif heading.z < -0.0001:
+		t = minf(t, (box.position.z - at.z) / heading.z)
+	return maxf(0.0, t)
+
+
 ## Take note of the ground under the trainer's feet. Called every physics frame
 ## by `player_controller.gd`, and once more the instant a glide touches down.
 ##
@@ -422,6 +512,9 @@ func observe_ground() -> void:
 ## the anchor stayed wherever the trainer last stood on foot: after a long
 ## mounted descent, a dismount or reload mid-air read as a 100 m fall and was
 ## "recovered" back up to where the ride began. Same authority path as a walk.
+## Like `observe_ground`, a proposal consumes `_touched_down`: a Fly landing
+## that ends on a mount (never today; Fly refuses while carried) would be
+## proposed as this ordinary carried observation, not as a landing.
 func observe_carried_ground(at: Vector3) -> void:
 	if is_flying() or not bool(_player.call("is_carried")) or not at.is_finite():
 		return
@@ -431,6 +524,17 @@ func observe_carried_ground(at: Vector3) -> void:
 		_anchor_host_granted = false
 		return
 	_propose_anchor(at)
+
+
+## The carried half of `physics_step`'s pending clock. `player_controller`
+## returns before `physics_step` while carried, so without this an unanswered
+## proposal (a lost packet, or a host that drops it without a reply) stayed
+## pending for the whole ride and every `observe_carried_ground` bounced off
+## it. The carrier ticks this every frame of the ride; after
+## `pending_timeout_s` the next observation re-proposes, exactly as on foot.
+func tick_carried_anchor(delta: float) -> void:
+	if _anchor_pending and bool(_player.call("is_carried")):
+		_anchor_pending_for += delta
 
 
 # --- Stage B lane 6.C: the host decides where a client may land ---------------

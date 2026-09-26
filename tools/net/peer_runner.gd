@@ -85,7 +85,6 @@ const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 ## Stage B lane 5.A. How a story trigger reaches the ledger, and how a story
 ## restore path asks the WORLD (never the merged view) what has happened.
 const STORY_LEDGER := preload("res://scripts/story/story_ledger.gd")
-const PROOF_STEPS := preload("res://tools/net/proof_steps.gd")
 
 
 ## Lane 4.D. The trainer table, read the way the game reads it.
@@ -710,12 +709,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"stormwood_hosted_deadline_window":
 			out = await _step_stormwood_hosted_deadline_window(args)
 		_:
-			# The two-peer proof command's steps (named saves, screenshots,
-			# save capture, F11): see tools/net/proof_steps.gd.
-			if PROOF_STEPS.handles(action):
-				out = await PROOF_STEPS.run(self, action, args)
-			else:
-				out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
+			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before
 	return out
 
@@ -4252,9 +4246,17 @@ func _step_veridian_answer(args: Dictionary) -> Dictionary:
 		if current_scene != null else null
 	if climax == null:
 		return {"verdict": "ERROR", "detail": "no StrongholdClimax in this scene"}
-	var cleared := await _clear_open_dialogue(int(args.get("presses", 20)))
-	for f in maxi(0, int(args.get("settle", 10))):
-		await physics_frame
+	# The choice is READ OUT a beat after the offer opens (F05 WO6: a
+	# conversation naming both answers; no answer is taken while it is open),
+	# so a line can open during the settle after the first clear. Close
+	# whatever opens, the way a player reads it through, until none is open.
+	var cleared: Variant = ""
+	for round in 6:
+		cleared = await _clear_open_dialogue(int(args.get("presses", 20)))
+		for f in maxi(0, int(args.get("settle", 10))):
+			await physics_frame
+		if not bool(climax.call("_panel_busy")):
+			break
 	var stage := str(climax.get("_stage"))
 	if stage != "choice" or bool(climax.call("_panel_busy")):
 		return {"verdict": "FAIL", "detail": "offer not answerable: stage '%s', panel open %s (%s)"
@@ -4942,6 +4944,10 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"near": vclimax != null and bool(vclimax.call("_player_near_legendary")),
 				"may_receive": vclimax != null and bool(vclimax.call("_may_receive_now")),
 				"panel_open": vclimax != null and bool(vclimax.call("_panel_busy")),
+				# The choice is READ OUT a beat after it opens (`_announce_in`);
+				# until that conversation has opened, a walk to a prompt can be
+				# caught by it mid-stride (locomotion off, the walk never ends).
+				"announce_pending": vclimax != null and float(vclimax.get("_announce_in")) >= 0.0,
 				"participants": vparticipants,
 				# The owner rule's other half, asked of the climax's own pure
 				# predicate with THIS peer's session context: a character

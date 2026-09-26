@@ -89,6 +89,9 @@ var _buffered_during_guard: bool = false
 ## NEXT `_physics_process` call the opening press's just-pressed window has
 ## already closed, so a real second press is still caught, same as OF3 intended.
 var _skip_input_this_tick: bool = false
+## True from the physics tick an `interact` press ended the conversation until
+## that key is released. See `owns_input()`.
+var _closing_interact: bool = false
 var _last_portrait: String = ""
 ## Per-conversation speaker overlay, see the file comment. Empty for every
 ## conversation whose JSON already names its speaker, which is all but the
@@ -177,6 +180,21 @@ func is_open() -> bool:
 	return _runner.is_active()
 
 
+## Input ownership outlives the conversation by the press that ended it, the
+## same contract `game_menu.gd` and `creature_bed_panel.gd` keep. Without it,
+## the `interact` press that dismissed the last line was still "just pressed"
+## when the interaction arbiter read it later in the same physics tick, so the
+## NPC's prompt fired again and the conversation reopened -- order-dependent,
+## because it hinged on which node's `_physics_process` ran first (the Doss
+## repeat-greeting flake in smoke_local_requests).
+func owns_input() -> bool:
+	# Read the key live: while the panel owns input the tree may be paused, and
+	# a paused panel never reaches the `_physics_process` that clears the flag,
+	# so a flag-only check held ownership (and the pause) forever.
+	return _runner.is_active() or (_closing_interact and Input.is_action_pressed("interact"))
+
+
+
 ## `identity` may carry `speaker` and/or `portrait` for a conversation whose
 ## JSON cannot know who is saying it (the shared trainer refusals). Either key
 ## absent or empty falls through to the line's own field; a `portrait` that is
@@ -243,6 +261,10 @@ func drain_effects() -> Array[String]:
 func advance() -> void:
 	_runner.advance()
 	_draw()
+	# Ended while `interact` is still held (the press that dismissed the last
+	# line): keep owning input until it is released. See `owns_input()`.
+	if not _runner.is_active() and Input.is_action_pressed("interact"):
+		_closing_interact = true
 
 
 func close() -> void:
@@ -269,6 +291,8 @@ func _process(_delta: float) -> void:
 ## combat manager. `is_action_just_pressed` is scoped to the frame the press
 ## landed in, and readers on different ticks disagree about which frame that was.
 func _physics_process(_delta: float) -> void:
+	if _closing_interact and not Input.is_action_pressed("interact"):
+		_closing_interact = false
 	if not _runner.is_active():
 		return
 	var skip_input := _skip_input_this_tick

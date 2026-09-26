@@ -100,6 +100,11 @@ func dispatch(peer: int, intent: Dictionary) -> void:
 		if ending != null:
 			ending.call("dispatch", peer, intent)
 		return
+	if kind.begins_with("bryn_glass_"):
+		var glass := world.get_node_or_null("GlassForBryn")
+		if glass != null:
+			glass.call("dispatch", peer, intent)
+		return
 	var fight: Node = fights.get(id)
 	if not is_instance_valid(fight):
 		return
@@ -260,6 +265,11 @@ func _receive(event: Dictionary) -> void:
 		var ending := world.get_node_or_null("StormwoodEnding")
 		if ending != null:
 			ending.call("receive", event)
+		return
+	if kind.begins_with("bryn_glass_"):
+		var glass := world.get_node_or_null("GlassForBryn")
+		if glass != null:
+			glass.call("receive", event)
 		return
 	if kind == "start_refused":
 		if _pending_challenge == id:

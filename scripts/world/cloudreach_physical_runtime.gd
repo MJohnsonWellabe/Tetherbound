@@ -31,10 +31,13 @@ const PROGRESSION_FEEDBACK := preload("res://scripts/creatures/progression_feed.
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const REST := preload("res://scripts/world/rest_point.gd")
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
+const PERSONAL_REWARD := preload("res://scripts/world/cloudreach_personal_reward.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const NPCS := preload("res://scripts/world/village_npcs.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+## F06: the companion twin of the trainer's grounded-fall rule below.
+const COMPANION_FALL := preload("res://scripts/world/cloudreach_companion_fall.gd")
 
 ## D97. Every intent this file submits is filed against Cloudreach, because that
 ## is the realm the RECORD belongs to. Never `Game.current_realm`.
@@ -78,6 +81,7 @@ var _pylon_material: StandardMaterial3D
 ## NOTHING local has changed for any of these -- no cost spent, no message, no
 ## `interaction_completed`. `_on_delta_applied()` settles them.
 var _pending_interactions: Dictionary = {}
+var _companion_fall: RefCounted = COMPANION_FALL.new()
 
 
 ## ground_resolver(Vector3) returns Vector3 on the intended walkable surface or
@@ -95,6 +99,7 @@ func configure(player: CharacterBody3D, fly: Node, event_adapter: Callable,
 	_reward = reward_callback
 	_build_content = build_content
 	config = RULES.read(DATA_PATH) if data.is_empty() else data.duplicate(true)
+	_companion_fall.call("configure", config.get("companion_fall_recovery", {}))
 	chapter = RULES.read(CHAPTER_PATH)
 	npc_runtime = RULES.read(NPC_PATH)
 	add_to_group("progression_restore")
@@ -165,6 +170,27 @@ func _physics_process(delta: float) -> void:
 		var anchor: Vector3 = _fly.get("safe_anchor")
 		if anchor != Vector3.INF and at.y < anchor.y - 100.0:
 			_fly.call("recover_to_anchor", "Recovered at your last safe landing.")
+	# F06: the same rule for the trainer's own following companion, which the
+	# shared follower walks off road edges and never re-leashes while it falls
+	# (see `cloudreach_companion_fall.gd`). Only this process's own body.
+	_companion_fall.call("tick", delta, _player, flying, _player.get_parent())
+	if bool(_companion_fall.call("take_announcement")):
+		_message(COMPANION_FALL.MESSAGE)
+
+
+## F06 evidence: how many times this realm has caught the companion.
+func companion_fall_recoveries() -> int:
+	return int(_companion_fall.get("recoveries"))
+
+
+## F06 evidence: the tunables the helper actually runs with.
+func companion_fall_settings() -> Dictionary:
+	return _companion_fall.call("settings")
+
+
+## F06 evidence: where the last recovery placed it (INF before any).
+func companion_fall_last_spot() -> Vector3:
+	return _companion_fall.get("last_spot")
 
 
 func _register_flight() -> void:
@@ -526,6 +552,7 @@ func restore_progression_from_game(game: Node) -> void:
 
 
 func _sync_pickups_and_camps() -> void:
+	_sync_personal_rewards()
 	for spec: Dictionary in chapter.get("pickups", []):
 		var id := str(spec["id"])
 		var flag := str(spec.get("requires_unlock", ""))
@@ -792,6 +819,26 @@ func _piece(parent: Node3D, mesh: Mesh, at: Vector3, color: Color) -> MeshInstan
 	instance.material_override = material
 	parent.add_child(instance)
 	return instance
+
+
+## WORLD §11 personal activity payoffs (`activity_rewards`): one per eligible
+## character through `cloudreach_personal_reward.gd`, never a first-come world
+## cache, and kept out of `chapter.pickups` so the route pickup census (100
+## candy, 75 recovery, three TMs) stays the route's own.
+func _sync_personal_rewards() -> void:
+	for spec: Dictionary in config.get("activity_rewards", []):
+		var id := str(spec.get("id", ""))
+		if id.is_empty() or (_placements.has(id) and is_instance_valid(_placements[id])):
+			continue
+		var at := _resolve(id, RULES.vec(spec.get("position", [])))
+		if at == Vector3.INF:
+			continue
+		var reward := PERSONAL_REWARD.new()
+		reward.name = id
+		add_child(reward)
+		reward.global_position = at
+		reward.call("setup", spec)
+		_placements[id] = reward
 
 
 func _resolve(id: String, at: Vector3) -> Vector3:

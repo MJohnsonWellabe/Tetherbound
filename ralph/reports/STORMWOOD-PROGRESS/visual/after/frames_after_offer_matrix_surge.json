@@ -1,0 +1,1331 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.36974096298218,
+			"camera_pos": [
+				-96.2148132324219,
+				263.446502685547,
+				5496.87060546875
+			],
+			"conversation_camera": false,
+			"description": "Freed Stormheart with its offer prompt",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "stormheart_offer_prompt.jpg",
+			"id": "stormheart_offer_prompt",
+			"in_fight": false,
+			"label": "trial",
+			"player": [
+				-98.0,
+				262.059265136719,
+				5492.0
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Accept the Stormheart's offer",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 64.9419623333334,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.36974096298218,
+			"camera_pos": [
+				-96.2148132324219,
+				263.446502685547,
+				5496.87060546875
+			],
+			"conversation_camera": true,
+			"conversation_started": "DialoguePanel.start (staged; real path needs a host participant claim)",
+			"description": "Stormheart offer conversation at its final Yes/No line",
+			"dialogue_line": "Will you walk out with the Stormheart? Yes: it joins you, and at five you choose one farewell. No: it stays free.",
+			"dialogue_open": true,
+			"dialogue_speaker": "The Stormheart",
+			"file": "stormheart_offer_yes_no.jpg",
+			"id": "stormheart_offer_yes_no",
+			"in_fight": false,
+			"label": "trial",
+			"player": [
+				-98.0,
+				262.059265136719,
+				5492.0
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Accept the Stormheart's offer",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 66.4166666666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.54410886764526,
+			"camera_pos": [
+				-472.212768554688,
+				52.8381729125977,
+				3900.2978515625
+			],
+			"conversation_camera": false,
+			"description": "Deepwood forest near Lantern Hollow, day",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "matrix_forest_day.jpg",
+			"id": "matrix_forest_day",
+			"in_fight": false,
+			"label": "trial",
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.861062,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.54410886764526,
+			"camera_pos": [
+				-472.212768554688,
+				52.8381729125977,
+				3900.2978515625
+			],
+			"conversation_camera": false,
+			"description": "Deepwood forest near Lantern Hollow, night (same stand)",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "matrix_forest_night.jpg",
+			"id": "matrix_forest_night",
+			"in_fight": false,
+			"label": "trial",
+			"player": [
+				-470.0,
+				50.9066963195801,
+				3905.0
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "night"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 62.5236883333333,
+			"surge_phase": "calm",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 3.4560387134552,
+			"camera_pos": [
+				-629.39990234375,
+				22.4598331451416,
+				804.025939941406
+			],
+			"conversation_camera": false,
+			"description": "Verge Rod Station pylon on the rod line, day",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "matrix_rod_line_day.jpg",
+			"id": "matrix_rod_line_day",
+			"in_fight": false,
+			"label": "trial",
+			"player": [
+				-631.358154296875,
+				21.0410594940186,
+				806.495056152344
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"station_node_found": true,
+			"station_pos": [
+				-650.0,
+				20.8278465270996,
+				830.0
+			],
+			"station_visible": true,
+			"surge_elapsed": 61.7395123333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 3.4560387134552,
+			"camera_pos": [
+				-629.39990234375,
+				22.4598331451416,
+				804.025939941406
+			],
+			"conversation_camera": false,
+			"description": "Verge Rod Station pylon on the rod line, night (same stand)",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "matrix_rod_line_night.jpg",
+			"id": "matrix_rod_line_night",
+			"in_fight": false,
+			"label": "trial",
+			"player": [
+				-631.358154296875,
+				21.0410594940186,
+				806.495056152344
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "night"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"station_node_found": true,
+			"station_pos": [
+				-650.0,
+				20.8278465270996,
+				830.0
+			],
+			"station_visible": true,
+			"surge_elapsed": 62.412767,
+			"surge_phase": "calm",
+			"time_of_day": "night"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.31035566329956,
+			"camera_pos": [
+				-245.167327880859,
+				63.725757598877,
+				4463.8076171875
+			],
+			"conversation_camera": false,
+			"description": "Fallen Giant catalogue stand facing the landmark (Deepwood trunks), day",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "matrix_giant_trunks_day.jpg",
+			"id": "matrix_giant_trunks_day",
+			"in_fight": false,
+			"label": "trial",
+			"player": [
+				-240.0,
+				62.5193023681641,
+				4463.60009765625
+			],
+			"prompt": "",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 61.733785,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42872190475464,
+			"camera_pos": [
+				-312.324401855469,
+				66.8728103637695,
+				5045.3515625
+			],
+			"conversation_camera": false,
+			"description": "Glass Field glass scars toward the Stormheart, day",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "matrix_glass_scars_day.jpg",
+			"id": "matrix_glass_scars_day",
+			"in_fight": false,
+			"label": "trial",
+			"player": [
+				-310.0,
+				65.3043060302734,
+				5050.0
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Small Potion",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 63.4705663333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.0698127746582,
+			"camera_pos": [
+				-100.0,
+				113.677375793457,
+				5384.9541015625
+			],
+			"conversation_camera": false,
+			"description": "Stormheart giant trunk from the southern approach road, 80 m, day",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "matrix_stormheart_trunk_day.jpg",
+			"id": "matrix_stormheart_trunk_day",
+			"in_fight": false,
+			"label": "trial",
+			"player": [
+				-100.0,
+				113.185531616211,
+				5390.0
+			],
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Challenge Officer Kestrel",
+			"staged": {
+				"clock": {
+					"surge_elapsed": 60.0,
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 65.187233,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Calm phase, t+3 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_calm_01.jpg",
+			"hud": false,
+			"id": "surge_calm_01",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 3.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to calm start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 3.461183,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Calm phase, t+8 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_calm_02.jpg",
+			"hud": false,
+			"id": "surge_calm_02",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 8.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to calm start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 8.54382,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Calm phase, t+13 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_calm_03.jpg",
+			"hud": false,
+			"id": "surge_calm_03",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 13.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to calm start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 13.462227,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Calm phase, t+18 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_calm_04.jpg",
+			"hud": false,
+			"id": "surge_calm_04",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 18.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to calm start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 18.4109673333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Calm phase, t+23 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_calm_05.jpg",
+			"hud": false,
+			"id": "surge_calm_05",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 23.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to calm start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 23.4774956666666,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Calm phase, t+28 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_calm_06.jpg",
+			"hud": false,
+			"id": "surge_calm_06",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 28.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to calm start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 28.4109673333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Building phase, t+3 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_building_01.jpg",
+			"hud": false,
+			"id": "surge_building_01",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 3.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to building start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 327.466666666667,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Building phase, t+8 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_building_02.jpg",
+			"hud": false,
+			"id": "surge_building_02",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 8.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to building start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 332.392844,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Building phase, t+13 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_building_03.jpg",
+			"hud": false,
+			"id": "surge_building_03",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 13.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to building start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 337.466665333333,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Building phase, t+18 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_building_04.jpg",
+			"hud": false,
+			"id": "surge_building_04",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 18.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to building start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 342.518235333333,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Building phase, t+23 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_building_05.jpg",
+			"hud": false,
+			"id": "surge_building_05",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 23.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to building start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 347.453889666667,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Building phase, t+28 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_building_06.jpg",
+			"hud": false,
+			"id": "surge_building_06",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 28.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to building start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 352.524349,
+			"surge_phase": "building",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Break phase, t+3 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_break_01.jpg",
+			"hud": false,
+			"id": "surge_break_01",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 3.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to break start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 417.46203,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Lightning telegraph ring during Break, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_break_telegraph.jpg",
+			"hud": false,
+			"id": "surge_break_telegraph",
+			"in_fight": false,
+			"label": "trial",
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to break start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 419.727210666667,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Break phase, t+8 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_break_02.jpg",
+			"hud": false,
+			"id": "surge_break_02",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 8.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to break start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 422.394897,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Break phase, t+13 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_break_03.jpg",
+			"hud": false,
+			"id": "surge_break_03",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 13.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to break start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 427.458984333333,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Break phase, t+18 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_break_04.jpg",
+			"hud": false,
+			"id": "surge_break_04",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 18.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to break start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 432.532331333333,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Break phase, t+23 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_break_05.jpg",
+			"hud": false,
+			"id": "surge_break_05",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 23.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to break start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 437.466414666666,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Break phase, t+28 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_break_06.jpg",
+			"hud": false,
+			"id": "surge_break_06",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 28.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to break start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 442.533275666666,
+			"surge_phase": "break",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Fading phase, t+3 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_fading_01.jpg",
+			"hud": false,
+			"id": "surge_fading_01",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 3.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to fading start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 537.472689,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Fading phase, t+8 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_fading_02.jpg",
+			"hud": false,
+			"id": "surge_fading_02",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 8.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to fading start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 542.542375333333,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Fading phase, t+13 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_fading_03.jpg",
+			"hud": false,
+			"id": "surge_fading_03",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 13.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to fading start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 547.466805333333,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Fading phase, t+18 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_fading_04.jpg",
+			"hud": false,
+			"id": "surge_fading_04",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 18.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to fading start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 552.409042,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Fading phase, t+23 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_fading_05.jpg",
+			"hud": false,
+			"id": "surge_fading_05",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 23.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to fading start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 557.475708666666,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.42840433120728,
+			"camera_pos": [
+				-600.770690917969,
+				26.4313831329346,
+				767.928283691406
+			],
+			"conversation_camera": false,
+			"description": "Fading phase, t+28 s into phase, no HUD",
+			"dialogue_open": false,
+			"dialogue_speaker": "",
+			"file": "surge_fading_06.jpg",
+			"hud": false,
+			"id": "surge_fading_06",
+			"in_fight": false,
+			"label": "trial",
+			"phase_offset_s": 28.0,
+			"player": [
+				-604.0,
+				24.8628616333008,
+				772.0
+			],
+			"prompt": "",
+			"region": "cinder_verge",
+			"staged": {
+				"clock": {
+					"surge_elapsed": "pinned to fading start + 2 s, then free-running",
+					"time": "day"
+				},
+				"flags": [
+					"stormwood:legendary_freed",
+					"(player health restored between Break frames)"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"surge_elapsed": 562.402176999999,
+			"surge_phase": "fading",
+			"time_of_day": "day"
+		}
+	],
+	"label": "trial"
+}

@@ -270,6 +270,20 @@
       "z": -54.5,
       "radius": 5.5,
       "_why": "THE-RISE-R23. Final switchback-corridor lens joining the return tread to the existing twelve-metre crown clearing, so the authored route reaches its hero tree and overlook without a random solid blocker."
+    },
+    {
+      "order": 1929,
+      "x": 16.5,
+      "z": -33.0,
+      "radius": 8.0,
+      "_why": "F01-b. The Stoneyard (terrain_playground.json paths.village_topology.subareas the_stoneyard): random trees and rocks stay off the stone-working ground so its two stone nodes and working yard read as a place, not scatter. Overlaps the practice clearing (order 3) at its east rim."
+    },
+    {
+      "order": 1930,
+      "x": -20.0,
+      "z": 6.0,
+      "radius": 9.5,
+      "_why": "F01-c. The Grove (terrain_playground.json paths.village_topology.subareas the_grove, centre [-20,6] r8): keeps baked random trees and rocks off the six authored village.json oaks (the farthest is 7.9m from this centre, so every trunk sits 1.6m+ inside). Same role as the Stoneyard's order 1929. The grove's own understorey anchor opts out of it."
     }
   ],
   "_comment_layer_anchors_vp4": "VP4-CORRIDOR (docs/VISUAL_PARITY_STAGED_GOAL_PROMPT_V2.md). Merged onto the matching head-layer's own `anchors` by `scripts/world/scatter_rules.gd::_merge_band_layer_anchors` (added by this same pass -- see that function's own header). Each fixes a specific station in `tools/_capture_corridor.gd`'s before set where the walked route showed `player -> empty grass -> sky` with no mid-ground structure: see `ralph/reports/visual-parity/CORRIDOR/REPORT.md` for the before/after frames. Never on the path, never inside an existing clearing/footprint (checked against this file's own list above before siting each one).",
@@ -721,6 +735,32 @@
         ],
         "radius": 12.0,
         "count": 8
+      },
+      {
+        "_why": "F01-b/F01-c Berry Field (paths.village_topology.subareas berry_field, centre [-8.5,-23] r6): the planted rows inside the field's L of village.json rails. F01-c: deliberately NOT the harvest model -- Bush_Common_Flowers is what every berry harvest node uses, and seven harvest-sized copies beside node 1036 read as eight pickable bushes of which one works. Bush_Common is the same installed family's flowerless shrub (green leaves only, retextured by the layer like every other bush), at model_scale 0.4 (0.16-0.36 of the raw 1.9m mesh, knee height) against the harvest node's ~1m flowering bush, so the rows read as tended low plants and the one pickable bush stands out. `cleared_by_clearings` false because the field sits 14m from Grandpa's 16m farmhouse clearing (order 2), which exists to keep trees out of fights; bushes do not collide and cannot block one.",
+        "at": [
+          -8.5,
+          -25.0
+        ],
+        "radius": 3.2,
+        "count": 10,
+        "models": [
+          "res://assets/environment/stylized_nature/Bush_Common.gltf"
+        ],
+        "model_scale": {
+          "res://assets/environment/stylized_nature/Bush_Common.gltf": 0.4
+        },
+        "cleared_by_clearings": false
+      },
+      {
+        "_why": "F01-b The Grove (subareas the_grove, centre [-20,6] r8): understorey between the six authored oaks, so the grove reads as woodland rather than six trees on lawn. F01-c: `cleared_by_clearings` false because the grove's own clearing (order 1930) exists to keep random scatter TREES and rocks off the authored oaks; bushes do not collide. path_factor still keeps them off the Pond lane.",
+        "at": [
+          -21.0,
+          6.0
+        ],
+        "radius": 5.5,
+        "count": 6,
+        "cleared_by_clearings": false
       }
     ],
     "saplings": [

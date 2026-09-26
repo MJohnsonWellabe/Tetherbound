@@ -5,11 +5,16 @@ extends Node
 const LESSON := preload("res://scripts/world/water_lesson.gd")
 const LEDGER_RPC := preload("res://scripts/net/ledger_rpc.gd")
 const NPCS := preload("res://scripts/world/water_scene_npcs.gd")
+const NAMED := preload("res://scripts/world/water_named_resolution.gd")
+## F13 local chains: a guarded conversation's `water:local_step:<step id>`
+## asks WaterLocalChains to submit that host-validated step.
+const LOCAL_STEP_EVENT := "water:local_step:"
 var world: Node3D
 var npc_bodies: Dictionary = {}
 var _game: Node
 var _lesson: RefCounted
 var _ledger: Node
+var _named: RefCounted
 
 
 func build(owner_world: Node3D) -> void:
@@ -17,6 +22,10 @@ func build(owner_world: Node3D) -> void:
 	_game = get_node("/root/Game")
 	_lesson = LESSON.new(world.config.swim_lesson)
 	_ledger = LEDGER_RPC.attach(_game)
+	_named = NAMED.new()
+	_named.baseline(_game.world.flags)
+	if _ledger != null and not _ledger.delta_applied.is_connected(_named.note_delta):
+		_ledger.delta_applied.connect(_named.note_delta)
 	var cast := NPCS.new()
 	cast.name = "WaterNPCs"
 	world.add_child(cast)
@@ -65,6 +74,31 @@ func _on_dialogue_request(event: String, npc_id: String, peer: int) -> void:
 			var veilfall := world.get_node_or_null("WaterVeilfall")
 			if veilfall != null:
 				veilfall.request_guardian_offer()
+		_:
+			if event.begins_with(LOCAL_STEP_EVENT):
+				var chains := world.get_node_or_null("WaterLocalChains")
+				if chains != null:
+					chains.call("request_step", event.trim_prefix(LOCAL_STEP_EVENT))
+
+
+## Named catch/defeat flags written locally by the shared director reach the
+## host world (client) or every peer (host). See water_named_resolution.gd.
+## Deliberately not a `progression_restore` member: that sweep runs on every
+## client delta and would swallow a local write not yet forwarded. A flag that
+## arrives by load/snapshot after build is at worst forwarded once as a no-op.
+func _process(_delta: float) -> void:
+	if _named == null or _game == null:
+		return
+	var fresh: Array[String] = _named.pending(_game.world.flags)
+	if fresh.is_empty() or not bool(_game.call("is_multi_peer")):
+		return
+	for flag: String in fresh:
+		if bool(_game.call("is_host")):
+			var world_ledger: RefCounted = _ledger.get("ledger")
+			_ledger.publish_journaled_delta({"seq": int(world_ledger.get("seq")) if world_ledger != null else 0,
+				"realm": "water", "ops": [NAMED.flag_op(flag)]})
+		else:
+			_ledger.submit({"kind": "set_world_flag", "realm": "water", "id": flag, "value": true})
 
 
 func _physics_process(_delta: float) -> void:

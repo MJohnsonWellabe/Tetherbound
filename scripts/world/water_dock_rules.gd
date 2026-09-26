@@ -1,6 +1,8 @@
 extends RefCounted
 const DATA := "res://data/config/water_dock_actions.json"
 const FIELD := preload("res://scripts/world/water_heightfield.gd")
+## F13 local-chain steps ride the same host-resolved, durably saved intent.
+const LOCAL_CHAINS := preload("res://scripts/world/water_local_chain_rules.gd")
 
 static func load_data() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(DATA))
@@ -15,6 +17,8 @@ static func action_position(action: Dictionary, world_config: Dictionary, ground
 	return Vector3.INF
 
 static func evaluate(intent: Dictionary, context: Dictionary, flags: RefCounted) -> Dictionary:
+	if LOCAL_CHAINS.has_step(str(intent.get("action_id", ""))):
+		return LOCAL_CHAINS.evaluate(intent, context, flags)
 	var data := load_data()
 	var action: Dictionary = {}
 	for row: Dictionary in data.actions:
@@ -36,7 +40,7 @@ static func evaluate(intent: Dictionary, context: Dictionary, flags: RefCounted)
 		return _refuse("already_done", "This dock task is already complete.")
 	for flag: String in action.requires_flags:
 		if not flags.has(flag):
-			return _refuse("prerequisite", "Resolve the dock's challenge first.")
+			return _refuse("prerequisite", str(action.get("refusal", "Resolve the dock's challenge first.")))
 	var bag: Variant = context.get("inventory", {})
 	if not bag is Dictionary:
 		return _refuse("malformed", "The repair materials could not be checked.")

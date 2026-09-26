@@ -188,6 +188,8 @@
       "_comment_fit": "The camera orbits the ally. Framing projects both live render bounds into its basis and solves horizontal and vertical perspective planes, including depth. `horizontal_fill` reserves margin on both axes for orbit/parallax and HUD. The open-field Guardian/Solmane probe proved the former +4m cap still put two actual mesh corners behind the camera and cropped both bodies at 10m. Actual directional SpringArm collision limits depth in tight rooms.",
       "horizontal_fill": 0.82,
       "max_extra_distance": 30.0,
+      "_why_room_distance_cap": "F04. ONE value, and it is off. When true, combat_manager.gd clamps the camera distance to the nearest room wall around the fight (_room_clearance, floor 1.5 m) and drops the shoulder. 9b8c3d8a7 removed that clamp, merge 59e088560 restored it, and the F04 guardian fix removed it again. Clamped, the Warrens den put the lens 2 m behind a 3.9 m ally, inside its body, with the guardian off-frame, and the Stronghold OP23-02 gauntlet lost its shoulder composition (ralph/reports/MEADOWS-PAYOFFS/guardian-camera/). The SpringArm contracts depth against real geometry along the camera's own direction, and CameraRig sweeps the shoulder pivot, so tight rooms are handled without it (interior capture: ralph/reports/MEADOWS-PAYOFFS/camera-room/). Flip only with a new in-engine capture.",
+      "room_distance_cap": false,
       "_comment_lag": "Exponential smoothing on the extra distance only, same shape as retarget_lag above but separate -- retarget_lag is spent once, easing the rig onto a brand-new target, while this runs continuously so the frame breathes with the fight instead of snapping every time the gap changes.",
       "lag": 4.0
     }
@@ -228,6 +230,29 @@
     "enabled": true,
     "colour": "#ff40e6",
     "radius": 1.1
+  },
+  "charger_lunge": {
+    "_comment": "F04 (BOSSES \u00a72 CHARGER: 'lunge 7 m ... distance is part of the cue'). Read by scripts/creatures/wild_creature.gd ONLY for a body whose per-member `combat` override sets `lunge_travels: true` (the three named Meadows CHARGERs: Vance's and Halder's Tuskroot, the Warden's Meadowhart). Every other opponent keeps the instantaneous strike and the `lunge` impulse exactly as before. For an opted-in body the wind-up shows the lane it will take, the heading locks, and at the end of the tell the body really travels its `lunge` metres down that lane; the blow lands only if the body reaches the target on the way (scripts/combat/combat_manager.gd::_on_enemy_strike).",
+    "_why_travel_speed": "Metres per second along the locked heading. 16 m/s runs a 7 m lane in about 0.44 s: fast enough to read as a charge rather than a walk, slow enough that the camera shows the body crossing the lane in several frames. From the profile's 4.5 m spacing contact comes after roughly 0.2 s. TUNABLE.",
+    "travel_speed": 16.0,
+    "_why_face_lock_fraction": "COMBAT \u00a75 target: 'facing tracks during the first half of windup, then locks; a telegraph's displayed shape matches that locked strike shape.' 0.5 of the 0.8 s tell = 0.4 s of tracking, then 0.4 s of a fixed lane before the charge starts, which is the window a player who read the lane has to step out of it (creature speed 5.6 m/s covers 2.2 m in that time, plus the 3 m burst). TUNABLE.",
+    "face_lock_fraction": 0.5,
+    "_why_contact_scale": "Contact = the target's centre comes within (charger radius + target radius) x this of the charger's swept path. The lane is drawn charger radius x this wide each side, so 'any part of my creature's footprint is on the lane' and 'I get hit' are the same rule. Gameplay radii are smaller than the art (creature_body footprint_allowance), and 1.2 is about where two bodies' art meets side to side; at 1.0 a charge visibly through a flank whiffed. Measured cost of the dodge (Vance's Tuskroot r1.29 v a Terrapup r1.46): 3.3 m of sideways travel between the heading locking and the charge arriving, about 0.65 s, which walking (5.6 m/s) just covers and the burst covers easily. TUNABLE.",
+    "contact_scale": 1.2,
+    "_why_obstacle": "Terrain and props stop the charge: a slide collision whose normal faces back against the heading (flat dot below `obstacle_dot`, and steeper than floor, normal.y below `obstacle_max_normal_y`) ends the lunge as a miss, as does a frame that makes less than `min_progress_fraction` of its planned distance (the arena edge's position clamp). A wall between the charger and the player therefore protects the player. TUNABLE.",
+    "obstacle_dot": -0.5,
+    "obstacle_max_normal_y": 0.7,
+    "min_progress_fraction": 0.35,
+    "_why_lane": "The path telegraph (scripts/combat/lunge_lane.gd). Same magenta as `telegraph.colour` (the must-move colour, clear of Team Tether's reserved oxblood). Fill is faint while the heading still tracks and firms up when it locks, so 'where it is going' and 'it is now committed' are both on the ground. Edges and an end bar mark the lane's width and its exact length (the configured lunge); chevrons run along it to give direction. `lane_fade` is how long the lane lingers while the body runs down it. ALL presentation.",
+    "lane_colour": "#ff40e6",
+    "lane_fill_alpha": 0.22,
+    "lane_locked_fill_alpha": 0.42,
+    "lane_edge_alpha": 0.9,
+    "lane_edge_width": 0.14,
+    "lane_end_depth": 0.35,
+    "lane_fade": 0.35,
+    "_why_lane_depth_pull": "F04 charger-lunge capture, round 1: the depth-tested lane lifted 9 cm off the sampled ground drew as scattered fragments on the relay approach because the rendered terrain between samples sits above them. The lane's vertices are pulled this many metres toward the camera in view space (stormwood_lightning.gd's technique), which beats the ground without painting through a creature standing in front of it. TUNABLE; presentation only.",
+    "lane_depth_pull": 0.45
   },
   "stagger_feedback": {
     "enabled": true,

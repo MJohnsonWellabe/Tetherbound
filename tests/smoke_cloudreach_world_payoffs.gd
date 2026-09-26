@@ -72,13 +72,35 @@ func _run() -> void:
 	check(payoffs.people.shelter_traveler.body==first_pair and payoffs.people.shelter_courier.body==second_pair,"same pair relocates without duplicate bodies")
 	check(absf(first_pair.global_position.y-180)<1 and absf(second_pair.global_position.y-180)<1,"both travelers visibly return to Galefoot")
 	for spec: Dictionary in payoffs.config.survey_markers:
+		var unsurveyed: Node3D=payoffs.markers[spec.id]
+		if not game.progression.has(spec.flag):
+			player.global_position=unsurveyed.global_position+Vector3(1.5,0.2,0)
+			player.velocity=Vector3.ZERO
+			await frames(20)
+			var rests_before: int=payoffs.aerie_rests
+			player.fly_controller.landed.emit(player.global_position,"galewisp")
+			check(payoffs.aerie_rests==rests_before,"an unsurveyed "+str(spec.id)+" aerie gives no rest")
 		game.progression.set_flag(spec.flag)
 		await frames(3)
 		var marker: Node3D=payoffs.markers[spec.id]
 		check(marker.visible,"survey reveals "+str(spec.id))
-		var prompt: Node3D=marker.get_node("SurveyRest/Interactable")
-		check(prompt.global_position.distance_to(marker.global_position)<1.0,"rest prompt remains on "+str(spec.id)+" landing")
-		check(not prompt.interaction_offer(marker.global_position+Vector3(0,0,1.5)).is_empty(),"survey creates usable rest at "+str(spec.id))
+		check(marker.get_node_or_null("SurveyRest")==null,"no night-rest bed at the "+str(spec.id)+" aerie (WORLD §11: stamina only)")
+		# Fixture: the trainer stands on the aerie floor and the landing signal
+		# fires as a Fly touchdown there would.
+		player.global_position=marker.global_position+Vector3(1.5,0.2,0)
+		player.velocity=Vector3.ZERO
+		await frames(20)
+		player.vitals.stamina=10.0
+		player.vitals.health=player.vitals.max_health*0.5
+		var hurt: float=player.vitals.health
+		var before: int=payoffs.aerie_rests
+		player.fly_controller.landed.emit(player.global_position,"galewisp")
+		check(payoffs.aerie_rests==before+1 and player.vitals.stamina>=player.vitals.max_stamina-0.01,"a landing on the "+str(spec.id)+" aerie restores traversal stamina")
+		check(absf(player.vitals.health-hurt)<0.01,"the "+str(spec.id)+" aerie does not heal")
+		var far_rests: int=payoffs.aerie_rests
+		player.fly_controller.landed.emit(marker.global_position+Vector3(30,0,0),"galewisp")
+		check(payoffs.aerie_rests==far_rests,"a landing 30 m from the "+str(spec.id)+" aerie gives no rest")
+		player.vitals.health=player.vitals.max_health
 	game.progression.set_flag("cloudreach_upper_route_unlocked")
 	game.progression.set_flag("side_cliff_circuit_complete")
 	game.progression.set_flag("defeated_cloudreach_tavi")

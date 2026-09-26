@@ -1,0 +1,13 @@
+{
+  "id": "01a0d688-9a9b-718d-83c8-d5e4c0ce9abf",
+  "status": "SUCCEEDED",
+  "created_at": 1790305673604,
+  "started_at": 1790305673615,
+  "finished_at": 1790305712485,
+  "progress": 100,
+  "art_style": "realistic",
+  "text_style_prompt": "",
+  "enable_original_uv": null,
+  "enable_pbr": null,
+  "ai_model": null
+}

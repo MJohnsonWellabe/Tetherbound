@@ -357,7 +357,7 @@ func test_each_pocket_mouth_is_walkable_from_a_road_around_every_collider() -> v
 			_bucket(colliders, post, lamp_reach)
 		var junction := POCKETS.spur_post(pocket, cfg)
 		if not junction.is_empty():
-			_bucket(colliders, junction.at, lamp_reach)
+			_bucket(colliders, junction.at, float(POCKETS.spur_lamp_style(cfg).post_width_m) * sqrt(2.0) * 0.5)
 	assert_true(colliders.size() > 100, "the committed bake's colliders are loaded")
 	for pocket: Dictionary in cfg.pockets:
 		var reached := _mouth_reaches_road(field, pocket, cfg, walls, colliders, roads, half_width)

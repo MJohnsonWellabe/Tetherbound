@@ -1,0 +1,106 @@
+[
+	{
+		"above_ground": 3160,
+		"alive_above_ground_fraction": 0.527,
+		"diff_bottom45_density": 0.0187,
+		"diff_bottom45_px": 1939,
+		"diff_top55_density": 0.0185,
+		"diff_top55_px": 2339,
+		"emitter_minus_camera": [
+			0.0,
+			2.02339553833008,
+			0.0
+		],
+		"flash_level": 0.0,
+		"lifetime": 0.5,
+		"ring": [
+			2.8062481880188,
+			10.8062477111816,
+			6.30000019073486
+		],
+		"samples": 6000,
+		"seen": 966,
+		"seen_bottom45": 387,
+		"seen_bottom45_fraction_of_seen": 0.401,
+		"seen_top55": 579,
+		"shot": "day_normal"
+	},
+	{
+		"above_ground": 3547,
+		"alive_above_ground_fraction": 0.591,
+		"diff_bottom45_density": 0.0137,
+		"diff_bottom45_px": 1424,
+		"diff_top55_density": 0.0197,
+		"diff_top55_px": 2502,
+		"emitter_minus_camera": [
+			0.0,
+			1.7814769744873,
+			0.0
+		],
+		"flash_level": 0.0,
+		"lifetime": 0.5,
+		"ring": [
+			2.8062481880188,
+			10.8062477111816,
+			6.30000019073486
+		],
+		"samples": 6000,
+		"seen": 836,
+		"seen_bottom45": 318,
+		"seen_bottom45_fraction_of_seen": 0.38,
+		"seen_top55": 518,
+		"shot": "day_upwind"
+	},
+	{
+		"above_ground": 3120,
+		"alive_above_ground_fraction": 0.52,
+		"diff_bottom45_density": 0.1248,
+		"diff_bottom45_px": 12943,
+		"diff_top55_density": 0.0169,
+		"diff_top55_px": 2147,
+		"emitter_minus_camera": [
+			0.0,
+			1.55693817138672,
+			0.0
+		],
+		"flash_level": 0.0,
+		"lifetime": 0.5,
+		"ring": [
+			2.8062481880188,
+			10.8062477111816,
+			6.30000019073486
+		],
+		"samples": 6000,
+		"seen": 971,
+		"seen_bottom45": 479,
+		"seen_bottom45_fraction_of_seen": 0.493,
+		"seen_top55": 492,
+		"shot": "day_riding"
+	},
+	{
+		"above_ground": 3160,
+		"alive_above_ground_fraction": 0.527,
+		"diff_bottom45_density": 0.0149,
+		"diff_bottom45_px": 1542,
+		"diff_top55_density": 0.0135,
+		"diff_top55_px": 1707,
+		"emitter_minus_camera": [
+			0.0,
+			2.02339553833008,
+			0.0
+		],
+		"flash_level": 0.0,
+		"lifetime": 0.5,
+		"ring": [
+			2.8062481880188,
+			10.8062477111816,
+			6.30000019073486
+		],
+		"samples": 6000,
+		"seen": 966,
+		"seen_bottom45": 387,
+		"seen_bottom45_fraction_of_seen": 0.401,
+		"seen_top55": 579,
+		"shot": "night_normal"
+	}
+]

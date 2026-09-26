@@ -45,21 +45,29 @@ extends RefCounted
 ##     means that character has not yet saved the payout (offline, full bag).
 ##   * Only when there is NO such row at all AND the session is SOLO (a solo
 ##     world, or a world whose Nerissa payout predates delivery rows) is the
-##     host's own local character the one participant. Unlike the Meadows
+##     host's own local character the one participant (never in a legacy
+##     world: see Legacy). Unlike the Meadows
 ##     reader, an empty set is NOT "anyone": in co-op an unidentified guest
 ##     must not qualify. INTERIM (same rule as F05): in a MULTI-PEER session
 ##     an empty journal offers NOBODY -- a guest may have fought Nerissa alone
 ##     on its own client (no rows), and the host who did not fight must not be
 ##     presumed the participant. The real fix journals client-run wins on the
 ##     host (branch ralph/trainer-participants-host). Known gaps of this
-##     interim rule, both until that branch lands:
+##     interim rule, both until that branch lands (each pinned by a test in
+##     tests/test_water_guardian_legacy.gd, to be updated when it lands):
 ##       - a host left solo after such a guest disconnects is treated as solo
-##         (and offered) although it may not have fought;
+##         (and offered) although it may not have fought. Once that branch
+##         lands the guest's fight journals its rows, the journal is no longer
+##         empty and names only the guest, so this host is refused;
 ##       - a SOLO Nerissa win journals no rows either (the director pays solo
 ##         with one peer), so a host who beat her alone and then invites a guest
 ##         BEFORE answering cannot answer while the guest is connected (prompt
 ##         hidden, begin/refuse `not_participant`); the offer returns when the
-##         session is solo again. Legacy worlds without rows behave the same.
+##         session is solo again. The rule is re-read on every call (the
+##         Veilfall view cache keys on the peer count), so it follows peers
+##         joining and leaving at runtime.
+##   Every refusal (tethered, already resolved, legacy_world, not_participant,
+##   not_ready) returns before anything is written -- world identity included.
 ##
 ## World instance. Offers are keyed by the WORLD INSTANCE (MULTIPLAYER §95:
 ## "keyed by world instance, source and stable character ID"), never by
@@ -99,37 +107,55 @@ extends RefCounted
 ## made" marker for existing readers; outside legacy worlds (below) it no
 ## longer locks anyone out.
 ##
-## Legacy (single-recipient) worlds -- CONSERVATIVE, never a second Guardian.
-## The pre-F14 model made ONE offer per world: begin() set
-## `water_guardian_claimed` and a claim with id sha256(world_id + ":guardian"),
-## and the acknowledgement erased that claim and set the settlement flags. It
-## never recorded per-character markers, so once its claim is erased such a
-## world cannot say who received the Guardian (the recipient's character only
-## holds `water_capture_receipt:<legacy id>`, which the host cannot see for a
-## guest). A world is a legacy world (is_legacy_world) when LEGACY_FLAG is set,
-## its legacy claim is still pending, or `water_guardian_claimed` / any
-## settlement flag is set with no per-character offer marker. In a legacy
-## world:
-##   * begin() NEVER mints a Guardian offer for anyone (code `legacy_world`);
-##     the only Guardian interaction is the replay and resolution of a still-
-##     pending legacy claim for its own recipient;
-##   * refuse() writes nothing for a character without that pending claim;
-##   * resolving the pending legacy claim journals the recipient's offered
-##     marker, LEGACY_FLAG (sticky: the world stays legacy) and
-##     `water_claim:guardian:legacy_recipient:<sha256(character)>`;
-##     restoration already happened and is not written again.
+## Legacy (pre-F14 single-recipient) worlds. The pre-F14 model made ONE
+## offer per world: begin() set `water_guardian_claimed` and a claim with id
+## sha256(world_id + ":guardian"), and the acknowledgement erased that claim
+## and set the settlement flags. It never recorded per-character markers, so
+## once its claim is erased such a world cannot say who received the Guardian
+## (the recipient's character only holds `water_capture_receipt:<legacy id>`,
+## which the host cannot see for a guest). A world is a legacy world
+## (is_legacy_world) when LEGACY_FLAG is set, its legacy claim is still
+## pending, or `water_guardian_claimed` / any settlement flag is set with no
+## per-character offer marker. Any answer journaled in a legacy world also
+## journals LEGACY_FLAG (sticky), so new offer markers never make it forget.
+##
+## OWNER DECISION (settled): "Legacy Tidewake worlds: where the world's
+## delivery journal names the freeing-fight participants, every named
+## participant gets their own once-only Guardian offer. Where the world has no
+## journal, the legacy single-recipient outcome stands." Hence:
+##   * WITH a journal (participants() non-empty): every named participant may
+##     begin()/refuse() its own once-only offer through the ordinary
+##     per-character path (never the host-local fallback: only named
+##     characters). The legacy recipient never gets a second Guardian:
+##       (a) a still-pending legacy claim's recipient is replayed THAT claim
+##           and answers it (no new mint); others' offers are independent of
+##           it, before or after it resolves;
+##       (b) a settled recipient the host cannot identify is protected on its
+##           own character by already_received() (below): a claim minted for
+##           it is acknowledged away with no creature, party unchanged, and
+##           its view shows no invite (holds_legacy_receipt);
+##       (c) a character named by `water_claim:guardian:legacy_recipient:*`
+##           is already resolved (begin refused `already_resolved`, refuse
+##           a no-op `already_resolved`).
+##   * WITHOUT a journal: unchanged -- begin() never mints a Guardian offer for
+##     anyone (code `legacy_world`) and refuse() writes nothing; the only
+##     Guardian interaction is the replay and resolution of a still-pending
+##     legacy claim for its own recipient.
+##   * Resolving the pending legacy claim journals the recipient's offered
+##     marker, LEGACY_FLAG and `water_claim:guardian:legacy_recipient:<hash>`.
+##   * Settlement stays exactly once: a legacy world whose old offer already
+##     settled writes no settlement flag again; one whose legacy claim is still
+##     pending settles on its first resolution, whoever answers first.
 ## Character side (already_received): a character holding the legacy receipt
 ## `water_capture_receipt:<sha256(claim.world_id + ":guardian")>` is treated
 ## as having ALREADY RECEIVED any Guardian claim naming that world_id; its
-## claim is acknowledged with no creature, so a legacy recipient can never be
-## given a second Guardian even where the host could not identify it.
+## claim is acknowledged with no creature.
 ##
-## OPEN OWNER QUESTION (unresolved, NOT granted here): whether the OTHER
-## participants of a legacy world's freeing should later receive their own
-## offers, and whether a legacy receipt that came from a DIFFERENT slot-0
-## world (the bare receipt cannot say which world issued it) should still
-## block that character's offer in this one. Both are withheld until an owner
-## ruling; the cost of this default is that such characters get no offer.
+## OPEN OWNER QUESTION (unresolved, NOT decided here): whether a legacy
+## receipt that came from a DIFFERENT slot-0 world (the bare receipt cannot say
+## which world issued it) should still block that character's offer in this
+## one. Withheld until an owner ruling; the cost of this conservative default
+## is that such a character's offer here is acknowledged with no creature.
 const CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const TRAINER_ID := "water_trainer_nerissa"
 const OFFERED_PREFIX := "water_claim:guardian:offered:"
@@ -168,7 +194,7 @@ static func legacy_recipient_flag(character_id: String) -> String:
 	return LEGACY_RECIPIENT_PREFIX + character_id.sha256_text()
 
 ## Journal the recipient of a still-pending legacy claim when that claim is
-## answered (resolve(); header: Legacy). Provenance only: no offer depends on it.
+## answered (resolve(); header: Legacy). has_resolved() honours it (Legacy (c)).
 static func _legacy_observation_flags(world: RefCounted) -> Array:
 	var legacy: Variant = world.water_capture_claims.get(legacy_claim_id(str(world.world_id)), {})
 	var recipient := str((legacy as Dictionary).get("character_id", "")) if legacy is Dictionary else ""
@@ -217,15 +243,27 @@ static func local_may_answer(game: Object) -> bool:
 	if game == null or game.get("world") == null:
 		return false
 	var character := host_local_character(game)
-	if character.is_empty() or has_been_offered(game.world, character):
+	if character.is_empty() or has_resolved(game.world, character):
 		return false
 	if is_legacy_world(game.world):
-		# No new offers in a legacy world; only a still-pending legacy claim.
-		return not pending_claim_for(game.world, character).is_empty()
+		# Its own still-pending legacy claim; otherwise only a participant the
+		# journal names, and never the holder of the legacy receipt (the old
+		# single recipient the host could not identify: header, Legacy (b)).
+		if not pending_claim_for(game.world, character).is_empty():
+			return true
+		return not holds_legacy_receipt(game) and participants(game.world).has(character)
 	var found := participants(game.world)
 	if not found.is_empty():
 		return found.has(character)
 	return game.has_method("is_host") and bool(game.call("is_host")) and not is_multi_peer(game)
+
+## This peer's own character holds the pre-F14 Guardian receipt for this
+## world_id (presentation only; already_received() is the real guard).
+static func holds_legacy_receipt(game: Object) -> bool:
+	var local: Variant = game.get("local") if game != null else null
+	var flags: Variant = local.get("flags") if local != null else null
+	return flags != null and game.get("world") != null \
+		and flags.has(RECEIPT_PREFIX + legacy_claim_id(str(game.world.world_id)))
 
 ## True when this character already resolved its Guardian or still holds an
 ## unresolved offer in this world (any peer's view of the world flags).
@@ -241,6 +279,14 @@ static func edda_conversation(game: Object, holds_pending_claim: bool) -> String
 	if holds_pending_claim or local_may_answer(game):
 		return EDDA_OFFER
 	return EDDA_POST if game.world.flags.has("water_currents_restored") else EDDA_NEUTRAL
+
+## side_water_garden_records: a local-chain step Edda can take now outranks
+## her neutral/post line, never the Guardian offer (nor her pre-freeing pick,
+## where the cast's own guard order already reaches it).
+static func edda_with_chain(chosen: String, chain: String) -> String:
+	if chosen == EDDA_OFFER or chain.is_empty():
+		return chosen
+	return chain
 
 ## Routes Edda's greet prompt through edda_conversation(): the cast's own
 ## dialogue guards read flags only and cannot express "this character may still
@@ -258,10 +304,19 @@ static func gate_edda_offer(cast: Node, bodies: Dictionary, game: Object) -> voi
 		var ledger: Variant = game.get("ledger")
 		var claims: Node = (ledger as Node).get_node_or_null("WaterCaptureClaims") if ledger is Node else null
 		var holds := claims != null and not str(claims.call("pending_guardian_id")).is_empty()
-		cast.call("start_conversation", EDDA_ID, edda_conversation(game, holds)))
+		var chosen := edda_conversation(game, holds)
+		if not chosen.is_empty() and cast.has_method("chain_conversation"):
+			chosen = edda_with_chain(chosen, str(cast.call("chain_conversation", EDDA_ID)))
+		cast.call("start_conversation", EDDA_ID, chosen))
 
 static func has_been_offered(world: RefCounted, character_id: String) -> bool:
 	return world != null and not character_id.is_empty() and world.flags.has(offered_flag(character_id))
+
+## This character has answered its Guardian here: its offered marker, or this
+## host recorded it as the legacy single recipient (header: Legacy (c)).
+static func has_resolved(world: RefCounted, character_id: String) -> bool:
+	return has_been_offered(world, character_id) \
+		or (world != null and not character_id.is_empty() and world.flags.has(legacy_recipient_flag(character_id)))
 
 static func pending_claim_for(world: RefCounted, character_id: String) -> Dictionary:
 	for raw: Variant in world.water_capture_claims.values():
@@ -353,35 +408,35 @@ static func release(game: Object, ledger: RefCounted) -> Dictionary:
 	return {"ok": true, "delta": {"seq": ledger.seq, "realm": "water", "ops": ops}}
 
 ## Reserve this participant's own offer. One synchronous transaction: claim,
-## offered marker and world file, or none of them.
+## offered marker and world file, or none of them. Every refusal returns
+## before anything is touched (world identity included).
 static func begin(game: Object, ledger: RefCounted, character: String, creature: RefCounted) -> Dictionary:
 	if not preload("res://scripts/world/water_alpha_rewards.gd")._ready_host(game, ledger) or character.strip_edges().is_empty():
 		return _refuse("not_ready", "The realm cannot begin that ceremony.")
-	# Identity before any claim can be minted, so a live host never keys a claim
-	# on the slot locator (a failed journal below restores it as well).
-	var before: Dictionary = game.world.save_data()
-	var revision: int = game.world.revision
-	var sequence: int = ledger.seq
-	WORLD_IDENTITY.ensure(game.world)
 	if not game.world.flags.has("water_guardian_freed"):
 		return _refuse("tethered", "The Guardian is still tethered.")
 	var existing := pending_claim_for(game.world, character)
 	if not existing.is_empty():
-		# Reconnect/replay: the same character's unresolved offer, unchanged.
+		# Reconnect/replay: the same character's unresolved offer, unchanged
+		# (a still-pending legacy claim included: its recipient answers it).
 		return {"ok": true, "code": "replay", "id": str(existing.id)}
-	if has_been_offered(game.world, character):
+	if has_resolved(game.world, character):
 		return _refuse("already_resolved", "You have already answered the Guardian's offer in this world.")
-	if is_legacy_world(game.world):
-		# Conservative (header: Legacy): never a new Guardian offer here.
-		_restore(game, ledger, before, revision, sequence)
-		return _refuse("legacy_world", "The Guardian's companionship was already given in this world.")
-	if not may_receive(character, participants(game.world), host_local_character(game), false, is_multi_peer(game)):
-		return _refuse("not_participant", "Only those who fought Captain Nerissa to free the Guardian receive its offer.")
+	var refused := _participant_refusal(game, character)
+	if not refused.is_empty():
+		return refused
 	var payload := CODEC.encode(creature)
 	if str(payload.get("species_id", "")) != "water_abyssal_guardian":
 		return _refuse("not_ready", "The Guardian is not ready.")
+	var before: Dictionary = game.world.save_data()
+	var revision: int = game.world.revision
+	var sequence: int = ledger.seq
+	# Identity before the claim is keyed, so a live host never keys it on the
+	# slot locator; a failed journal below restores it with everything else.
+	WORLD_IDENTITY.ensure(game.world)
 	var ops: Array = []
-	var flags: Array = [offered_flag(character)]
+	var flags: Array = _legacy_sticky_flags(game.world)
+	flags.append(offered_flag(character))
 	if not game.world.flags.has(CLAIMED):
 		flags.append(CLAIMED)
 	var committed := _commit_flags(game, ledger, flags, ops, before, revision, sequence)
@@ -396,6 +451,23 @@ static func begin(game: Object, ledger: RefCounted, character: String, creature:
 		_restore(game, ledger, before, revision, sequence)
 		return _refuse("journal_failed", "Could not save the ceremony. Try again.")
 	return {"ok": true, "code": "", "id": id, "delta": {"seq": ledger.seq, "realm": "water", "ops": ops}}
+
+## Why this character may not get a NEW offer here ({} = it may). Legacy
+## worlds (header: Legacy): without a delivery journal nobody is newly
+## offered; with one, only its named participants (never the host-local
+## fallback).
+static func _participant_refusal(game: Object, character: String) -> Dictionary:
+	var found := participants(game.world)
+	if is_legacy_world(game.world) and found.is_empty():
+		return _refuse("legacy_world", "The Guardian's companionship was already given in this world.")
+	if not may_receive(character, found, host_local_character(game), false, is_multi_peer(game)):
+		return _refuse("not_participant", "Only those who fought Captain Nerissa to free the Guardian receive its offer.")
+	return {}
+
+## A new answer journaled in a legacy world keeps it legacy: its offer markers
+## must never make is_legacy_world() forget the old single recipient.
+static func _legacy_sticky_flags(world: RefCounted) -> Array:
+	return [LEGACY_FLAG] if is_legacy_world(world) and not world.flags.has(LEGACY_FLAG) else []
 
 ## Host settlement of ONE participant's offer, accepted (their character saved
 ## the receipt) or refused. Removes only that claim; restores the world once.
@@ -442,23 +514,21 @@ static func decline(game: Object, ledger: RefCounted, character: String) -> Dict
 static func refuse(game: Object, ledger: RefCounted, character: String) -> Dictionary:
 	if not preload("res://scripts/world/water_alpha_rewards.gd")._ready_host(game, ledger) or character.strip_edges().is_empty():
 		return _refuse("not_ready", "The realm cannot settle that ceremony.")
-	var before: Dictionary = game.world.save_data()
-	var revision: int = game.world.revision
-	var sequence: int = ledger.seq
-	WORLD_IDENTITY.ensure(game.world) # same rule as begin(); restored on failure
 	if not game.world.flags.has("water_guardian_freed"):
 		return _refuse("tethered", "The Guardian is still tethered.")
 	if not pending_claim_for(game.world, character).is_empty():
 		return decline(game, ledger, character)
-	if has_been_offered(game.world, character):
+	if has_resolved(game.world, character):
 		return {"ok": true, "code": "already_resolved", "accepted": false}
-	if is_legacy_world(game.world):
-		# Nothing offered here, so nothing to refuse (header: Legacy).
-		_restore(game, ledger, before, revision, sequence)
-		return _refuse("legacy_world", "The Guardian's companionship was already given in this world.")
-	if not may_receive(character, participants(game.world), host_local_character(game), false, is_multi_peer(game)):
-		return _refuse("not_participant", "Only those who fought Captain Nerissa to free the Guardian receive its offer.")
-	var flags: Array = [offered_flag(character)]
+	var refused := _participant_refusal(game, character)
+	if not refused.is_empty():
+		return refused
+	var before: Dictionary = game.world.save_data()
+	var revision: int = game.world.revision
+	var sequence: int = ledger.seq
+	WORLD_IDENTITY.ensure(game.world) # same rule as begin(); restored on failure
+	var flags: Array = _legacy_sticky_flags(game.world)
+	flags.append(offered_flag(character))
 	flags.append_array(_settlement_flags(game.world))
 	var ops: Array = []
 	var committed := _commit_flags(game, ledger, flags, ops, before, revision, sequence)

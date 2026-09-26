@@ -8,8 +8,16 @@ extends "res://tools/catalogue_survey.gd"
 ##     --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tools/capture_stormwood_f09_pockets_roads.gd -- \
 ##     --out=res://ralph/reports/STORMWOOD-PROGRESS/visual/f09/after \
-##     [--label=after] [--only=rootgate,pockets,spurs,dynamo,forest] [--pockets=id,id]
-##     [--frames=pocket_verge_ash_hollow_a_approach,dynamo_west_mid,...]
+##     [--label=after] [--only=rootgate,pockets,spurs,roads,dynamo,forest] [--pockets=id,id]
+##     [--frames=pocket_verge_ash_hollow_a_approach,dynamo_west_mid,...] [--hud=off]
+##
+## --hud=off hides every CanvasLayer (HUD, minimap, banners) before each frame.
+##
+## Groups `current_night` (the two road stretches under the art.json "night"
+## preset, the darker look this branch can show) and `current_motion` (one
+## road stretch, four frames 0.25 s apart so the road current's flow is
+## visible) are WO-F09-04 owner-direction evidence; they are not in the
+## default set and run only when named in --only.
 ##
 ## --frames keeps only the named frame ids (their stands are skipped too).
 ##
@@ -20,7 +28,8 @@ extends "res://tools/catalogue_survey.gd"
 ## arriving at Ember Bivouac), spurs (WO-F09-03, per pocket: on its joined
 ## road 18 m before the spur junction, facing 30 m up the spur so the junction
 ## lamp and the lane are in frame; plus one mid-spur frame facing the mouth,
-## for the first pocket kept), forest (ash_road near (-590,1060), ash_road
+## for the first pocket kept), roads (WO-F09-04: two ordinary road stretches
+## away from any junction, looking along the painted lane), forest (ash_road near (-590,1060), ash_road
 ## through Glowmoss Hollows, and the earlier matrix_forest_day stand).
 ##
 ## Camera: always the production CameraRig/Camera3D following the real Player,
@@ -77,6 +86,8 @@ var _frames: Array[Dictionary] = []
 var _staged_flags: Array[String] = []
 var _t0 := 0
 var _scatter_fresh := false
+var _hud_off := false
+var _time_name := "day"
 
 
 func _run() -> void:
@@ -99,6 +110,8 @@ func _run() -> void:
 		elif arg.begins_with("--pockets="):
 			for part: String in arg.trim_prefix("--pockets=").split(",", false):
 				_pocket_filter.append(part.strip_edges())
+		elif arg == "--hud=off":
+			_hud_off = true
 		elif arg.begins_with("--frames="):
 			for part: String in arg.trim_prefix("--frames=").split(",", false):
 				_frame_filter.append(part.strip_edges())
@@ -122,6 +135,12 @@ func _run() -> void:
 		await _pockets()
 	if _want("spurs"):
 		await _spurs()
+	if _want("roads"):
+		await _roads()
+	if _only.has("current_night"):
+		await _current_night()
+	if _only.has("current_motion"):
+		await _current_motion()
 	if _want("dynamo"):
 		await _dynamo()
 	if _want("forest"):
@@ -186,7 +205,7 @@ func _surge_elapsed() -> float:
 func _day_calm() -> void:
 	if _look.has_method("set_clock_frozen"):
 		_look.call("set_clock_frozen", false)
-	_look.call("apply_time", "day")
+	_look.call("apply_time", _time_name)
 	if _look.has_method("set_clock_frozen"):
 		_look.call("set_clock_frozen", true)
 	_set_surge_elapsed(CALM_PIN_SECONDS)
@@ -251,6 +270,9 @@ func _stand(xz: Vector2, look_at: Vector3, pitch_deg: float, yaw_offset_deg: flo
 
 
 func _capture(frame_id: String, description: String, extra: Dictionary = {}) -> void:
+	if _hud_off:
+		for layer: Node in _world.find_children("*", "CanvasLayer", true, false) + root.find_children("*", "CanvasLayer", true, false):
+			(layer as CanvasLayer).visible = false
 	for _frame in 3:
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -271,6 +293,7 @@ func _capture(frame_id: String, description: String, extra: Dictionary = {}) -> 
 		"player": _vec3(_player.global_position), "camera_pos": _vec3(_camera.global_position),
 		"camera_player_m": _camera.global_position.distance_to(_player.global_position),
 		"prompt": str(_arbiter.call("prompt")) if _arbiter != null else "",
+		"hud": "off" if _hud_off else "on",
 		"surge_phase": str(_surge.get("phase")) if _surge != null else "",
 		"surge_elapsed": _surge_elapsed(),
 		"time_of_day": str(_look.call("time_of_day")) if _look.has_method("time_of_day") else "",
@@ -278,6 +301,15 @@ func _capture(frame_id: String, description: String, extra: Dictionary = {}) -> 
 		"staged": {"flags": _staged_flags.duplicate(), "clock": "day pinned; surge elapsed re-pinned to %d s (Calm) before the frame" % int(CALM_PIN_SECONDS),
 			"placement": "debug_teleport_to + Player transform at stand point"},
 	}
+	var current := _world.get_node_or_null(^"StormwoodRoadCurrent")
+	if current != null:
+		var near := 0
+		for chunk: Node in current.get_children():
+			if chunk is MeshInstance3D and (chunk as MeshInstance3D).global_position.distance_to(_camera.global_position) \
+					< (chunk as MeshInstance3D).visibility_range_end + 30.0:
+				near += 1
+		record["road_current"] = {"chunks": current.get_child_count() - 1, "chunks_in_draw_range": near,
+			"frame_draw_calls": RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)}
 	record.merge(extra, true)
 	_frames.append(record)
 	_log("captured %s prompt='%s' phase=%s cam=%.1fm" % [frame_id, record.prompt, record.surge_phase,
@@ -406,6 +438,84 @@ func _spurs() -> void:
 			await _stand(mid, Vector3(end.x, _ground(end.x, end.y) + 2.0, end.y), -4.0)
 			await _capture("spur_%s_mid" % id, "%s: halfway along the spur, facing the mouth %d m ahead" % [
 				id, int(mid.distance_to(end))], _with(info, {"stand": [mid.x, mid.y]}))
+
+
+# ---------------------------------------------------------------- 1c. Roads
+
+## WO-F09-04: two ordinary stretches, each mid-segment and away from every
+## junction, standing on the centreline and looking 40 m along it.
+const ROAD_STRETCHES := [
+	{"id": "road_ash_road_stretch", "route": "ash_road", "a": [-350.0, 450.0], "b": [-650.0, 830.0], "at": 0.42},
+	{"id": "road_conductor_road_stretch", "route": "conductor_road", "a": [-160.0, 2700.0], "b": [-630.0, 2930.0], "at": 0.45},
+]
+
+
+func _roads() -> void:
+	for stretch: Dictionary in ROAD_STRETCHES:
+		if not _keep(str(stretch.id)):
+			continue
+		var a := Vector2(float(stretch.a[0]), float(stretch.a[1]))
+		var b := Vector2(float(stretch.b[0]), float(stretch.b[1]))
+		var stand := a.lerp(b, float(stretch.at))
+		var look := stand + (b - a).normalized() * 40.0
+		await _stand(stand, Vector3(look.x, _ground(look.x, look.y) + 1.5, look.y), -8.0)
+		await _capture(str(stretch.id), "%s mid-segment at (%.0f,%.0f), on the centreline looking 40 m along the road" % [
+			str(stretch.route), stand.x, stand.y], {"route": str(stretch.route), "stand": [stand.x, stand.y]})
+
+
+func _current_night() -> void:
+	_time_name = "night"
+	for stretch: Dictionary in ROAD_STRETCHES:
+		var a := Vector2(float(stretch.a[0]), float(stretch.a[1]))
+		var b := Vector2(float(stretch.b[0]), float(stretch.b[1]))
+		var stand := a.lerp(b, float(stretch.at))
+		var look := stand + (b - a).normalized() * 40.0
+		await _stand(stand, Vector3(look.x, _ground(look.x, look.y) + 1.5, look.y), -8.0)
+		await _capture("%s_night" % str(stretch.id), "%s at the art.json night preset, same stand as %s" % [
+			str(stretch.route), str(stretch.id)], {"route": str(stretch.route), "stand": [stand.x, stand.y], "time_preset": "night"})
+	_time_name = "day"
+
+
+## Four frames 0.25 s apart on the first road stretch, night preset, so the
+## current's pulses can be seen moving between frames.
+func _current_motion() -> void:
+	_time_name = "night"
+	var stretch: Dictionary = ROAD_STRETCHES[0]
+	var a := Vector2(float(stretch.a[0]), float(stretch.a[1]))
+	var b := Vector2(float(stretch.b[0]), float(stretch.b[1]))
+	var stand := a.lerp(b, float(stretch.at))
+	var look := stand + (b - a).normalized() * 25.0
+	await _stand(stand, Vector3(look.x, _ground(look.x, look.y), look.y), -14.0)
+	# The software renderer runs at a few frames per second, so wall-clock
+	# waits would space the frames seconds apart in shader time. The road
+	# current's `clock_override` pins its shader clock to exact 0.25 s steps.
+	var current := _world.get_node_or_null(^"StormwoodRoadCurrent")
+	var material: ShaderMaterial = current.get("material") if current != null else null
+	var started := Time.get_ticks_msec()
+	for n in 4:
+		if material != null:
+			material.set_shader_parameter("clock_override", 100.0 + 0.25 * n)
+		await _capture("current_motion_%d" % n, "%s, night preset, motion strip frame %d (0.25 s apart)" % [str(stretch.route), n],
+			{"route": str(stretch.route), "stand": [stand.x, stand.y], "time_preset": "night",
+				"strip_ms": Time.get_ticks_msec() - started, "shader_clock_s": 100.0 + 0.25 * n})
+	if material != null:
+		material.set_shader_parameter("clock_override", -1.0)
+	# Cost: total draw calls in this frame with the current shown and hidden.
+	if current != null:
+		var shown := await _draw_calls()
+		(current as Node3D).visible = false
+		var hidden := await _draw_calls()
+		(current as Node3D).visible = true
+		_log("road current cost at the strip stand: frame draw calls %d shown, %d hidden" % [shown, hidden])
+		_frames.append({"id": "road_current_cost", "draw_calls_shown": shown, "draw_calls_hidden": hidden})
+	_time_name = "day"
+
+
+func _draw_calls() -> int:
+	for _frame in 4:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	return RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)
 
 
 ## Travel direction of `road` through `at`: the first segment whose closest
