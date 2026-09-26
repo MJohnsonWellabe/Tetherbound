@@ -44,3 +44,8 @@ REQUEST 3 (pre-existing, intermittent SCRIPT ERROR, not a Stormwood file): scrip
   committed waterward proof's LOG-EXCERPTS; 0 in run 3 (the committed PROOF.md).
   Suggested fix: read winning_provider() into a Variant, and call resolve_speaker() only when
   is_instance_valid() is true (the fallback branch below it already does this for _last_provider).
+
+RESOLUTION: all three granted and landed as one branch, ralph/stormwood-shared-net-fixes
+d69b46bf58686324b1c16e3db757183c2f919fbd (from origin/main). Fix 2 as landed: the client remembers the
+host's epoch from the install (_host_move_epoch) instead of comparing it with its own, and reset() zeroes
+_host_move_generation. Re-run evidence: rerun_shared_fixes/.
