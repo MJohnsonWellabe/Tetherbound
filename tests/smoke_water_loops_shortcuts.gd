@@ -36,9 +36,14 @@ extends SceneTree
 ##   (0.35 / 2.2 m/s). Open: after the flag it carries `strength_after_unlock`
 ##   (0.08 / 0.10), and the direct return is swum end to end with real input.
 ##   Shorter: the walked direct return is shorter than the walked sheltered
-##   (normal) crossing of the same edge.
+##   (normal) crossing of the same edge. Both swims are measured over the same
+##   span, first shore vertex -> far safe anchor; the approach from the start
+##   stance to that vertex is swum/walked but printed separately.
 ##
 ## DISCLOSED FIXTURES (all written before the leg they serve; none during it):
+##  F0  Every placement below also refills player health and stamina, so fall
+##      damage from one element's recorded defect cannot kill the player and
+##      trigger death recovery inside the next element.
 ##  F1  One placement at polyline[0] of each land loop (4 placements).
 ##  F2  Reedhaven: world flag `water_swim_lesson_complete` (the repair's
 ##      prerequisite) and 6 reed_fiber + 4 driftwood in the bag (its cost);
@@ -416,10 +421,18 @@ func _swim_route(route: Dictionary, reverse: bool, mounted: bool, stats: Diction
 	for raw: Array in polyline:
 		targets.append(_v(raw))
 	targets.append(_anchor(str(route.from_anchor if reverse else route.to_anchor)))
+	# The approach from wherever the body stands to the route's first shore
+	# vertex is travelled for real but not counted, so the direct and the
+	# sheltered crossings are measured over the same span: shore vertex ->
+	# ... -> far safe anchor.
+	var approach := _new_stats()
 	var entered_water := false
 	for index in targets.size():
-		var leg: Dictionary = await _travel_leg(targets[index], stats, "%s point %d" % [label, index], mounted)
-		entered_water = entered_water or bool(stats.swam)
+		var leg_stats: Dictionary = approach if index == 0 else stats
+		var leg: Dictionary = await _travel_leg(targets[index], leg_stats, "%s point %d" % [label, index], mounted)
+		if index == 0:
+			print("%s: uncounted approach to shore vertex %.1f m" % [label, float(approach.distance)])
+		entered_water = entered_water or bool(stats.swam) or bool(approach.swam)
 		if not bool(leg.ok):
 			_defect("%s: point %d %s not reached -- %s" % [label, index, _fmt(targets[index]), str(leg.reason)])
 			return false
@@ -530,7 +543,10 @@ func _travel_leg(target: Vector3, stats: Dictionary, label: String, mounted: boo
 		var lost := health - float(player.get("vitals").health)
 		if lost > 0.0:
 			stats.health_lost += lost
-			return {"ok": false, "reason": "health lost %.1f at %s (swimming=%s)" % [lost, _fmt(now), str(_swimming())]}
+			var fall := (airborne_from - now.y) if is_finite(airborne_from) else 0.0
+			return {"ok": false, "reason": "health lost %.1f at %s (swimming=%s, on_floor=%s, airborne drop so far %.2f m, last landing drop %.2f m, fight=%s, locomotion=%s)" % [
+				lost, _fmt(now), str(_swimming()), str(player.is_on_floor()), fall, float(stats.get("last_drop", 0.0)),
+				str(world.get_node("CombatManager").is_fighting()), str(player.locomotion_enabled())]}
 		if _swimming() or mounted:
 			stats.swam = stats.swam or _swimming() or world.water_depth_at(now) > 0.5
 		if on_foot:
@@ -542,6 +558,7 @@ func _travel_leg(target: Vector3, stats: Dictionary, label: String, mounted: boo
 			if player.is_on_floor():
 				if is_finite(airborne_from):
 					var drop := airborne_from - now.y
+					stats.last_drop = drop
 					stats.max_drop = maxf(stats.max_drop, drop)
 					if drop > MAX_DROP_M:
 						return {"ok": false, "reason": "unwalkable drop of %.2f m landing at %s" % [drop, _fmt(now)]}
@@ -626,10 +643,17 @@ func _place(at: Vector3, label: String) -> void:
 	_stop_stick()
 	var point := at
 	point.y = float(world.ground_height_at(at.x, at.z)) + 0.15
+	# F0: each element starts healthy and rested, so one element's fall damage
+	# cannot kill the player (and trigger death recovery) during the next.
+	var vitals: RefCounted = player.get("vitals")
+	vitals.health = vitals.max_health
+	vitals.stamina = vitals.max_stamina
 	player.global_position = point
 	player.velocity = Vector3.ZERO
-	print("FIXTURE placement: %s at %s" % [label, _fmt(point)])
+	print("FIXTURE placement: %s at %s (health/stamina refilled)" % [label, _fmt(point)])
 	await _frames(20)
+	_check(_flat(player.global_position).distance_to(_flat(point)) < 1.0,
+		"%s placement holds (no pending recovery moved the player)" % label)
 
 
 func _wait_flag(id: String, maximum_frames: int) -> bool:
