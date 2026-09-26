@@ -76,6 +76,14 @@ const WALK_SPEED_MPS := 5.0
 ## `south_bridge` road starts at (13,1240); this stands on the approach, in
 ## sight of the span and short of its locked gate (the grunt's fight).
 const BRIDGE_APPROACH := Vector2(11.0, 1270.0)
+## The last steps go up the crossing's own road to BRIDGE_VIEW, then turn to
+## BRIDGE_CENTRE, so the arrival frame has the span and its locked gate in it
+## (round 3: the spine arc ended facing away from the bridge).
+const BRIDGE_VIEW := Vector2(9.0, 1302.0)
+const BRIDGE_CENTRE := Vector2(8.0, 1330.0)
+## NPC frames orbit the camera this far off the player->NPC line so the
+## player's body does not hide the person being visited.
+const NPC_VIEW_ORBIT_DEG := 40.0
 const SPINE_CAPTURE_EVERY_S := 20.0
 ## Photo mode: frames the 3D view draws before a capture is read back, so
 ## shadows, LOD and scatter streaming settle.
@@ -885,16 +893,40 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 		if prompt == "":
 			_failed = "stood %.2fm from the old key but its prompt never won" % d
 			return
+		# The frame the reviewer needs: the key with its prompt up, before the take.
+		await _capture("take %s" % t.label)
 		await _press("interact")
+		print("[village-walk] NOTE key-take: pressed interact on \"%s\" at %.2fm; satchel has key=%s" % [
+			prompt, d, str(_has_key())])
 		if not _has_key():
 			_failed = "pressed interact on \"%s\" but the key is not in the satchel" % prompt
 			return
+	elif kind == "gate" and _has_key() \
+			and not bool((_game.get("progression") as RefCounted).call("has", "road_gate_open")):
+		# The key is in the satchel and this leaf is still shut: open it the way
+		# a player does, on its own prompt. Round 3 only ever earned the flag by
+		# stalling against a leaf on the way past; with the village roads at
+		# their real width the walk stops short of every gate and never did.
+		for _i in 60:
+			if _door_prompt_wins():
+				break
+			await physics_frame
+		if _door_prompt_wins():
+			prompt = str((get_first_node_in_group("interaction_arbiter").call("winner") as Dictionary).get("label", ""))
+			await _capture("at %s, closed" % t.label)
+			await _press("interact")
+			for _i in 30:
+				await physics_frame
+			print("[village-walk] NOTE pressed interact on \"%s\" at %s; road_gate_open=%s" % [
+				prompt, t.label, str((_game.get("progression") as RefCounted).call("has", "road_gate_open"))])
 	elif kind in ["grandpa", "villager"]:
 		prompt = await _prompt_winner(t.node as Node)
 		if kind == "villager" and prompt == "":
 			_failed = "stood %.2fm from %s but its prompt never won the arbiter" % [d, t.label]
 			return
 	_visited.append(str(t.label))
+	if kind in ["grandpa", "villager"]:
+		_rig.set("yaw", _yaw_toward(_xz(), at) + deg_to_rad(NPC_VIEW_ORBIT_DEG))
 	await _capture("reached %s" % t.label)
 	print("[village-walk] VISIT %s kind=%s dist_m=%.2f prompt=\"%s\"" % [t.label, kind, d, prompt])
 
@@ -1095,17 +1127,22 @@ func _through_to_bridge() -> void:
 		{"arc": gate_arc, "label": "gate TrailGate"},
 		{"arc": gate_arc + 12.0, "label": "past TrailGate"},
 		{"arc": _arcs[_arcs.size() - 1] - 25.0, "label": "approach South Bridge"},
-		{"arc": _arcs[_arcs.size() - 1] - 0.5, "label": "arrive South Bridge"},
 	]
 	_capture_every = SPINE_CAPTURE_EVERY_S
 	await _walk()
 	if not _failed.is_empty():
 		return
+	# Up the crossing's road to the gate's landing, then face the span.
+	_set_leg(PackedVector2Array([_xz(), BRIDGE_VIEW]), 0, 1)
+	await _walk()
+	if not _failed.is_empty():
+		return
+	_rig.set("yaw", _yaw_toward(_xz(), BRIDGE_CENTRE))
+	await _capture("arrive South Bridge")
 	if not bool((_game.get("progression") as RefCounted).call("has", "road_gate_open")):
 		_failed = "reached the bridge but road_gate_open was never earned"
 		return
-	print("[village-walk] VISIT South Bridge approach dist_m=%.2f walked_m=%.0f" % [
-		_xz().distance_to(BRIDGE_APPROACH), _arcs[_arcs.size() - 1]])
+	print("[village-walk] VISIT South Bridge dist_to_centre_m=%.2f" % _xz().distance_to(BRIDGE_CENTRE))
 
 
 ## Bodies (creatures, villagers) within 2.5m, for a stall message.

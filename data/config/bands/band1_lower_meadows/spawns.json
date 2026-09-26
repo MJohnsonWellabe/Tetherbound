@@ -357,12 +357,14 @@
       "count": 1,
       "habitat": "open_basin",
       "centre": [
-        -432.2,
+        -474.0,
         0.0,
-        485.5
+        512.0
       ],
-      "radius": 14.2,
-      "_why_d1": "FIRST-HOUR-FUN-REBUILD. The old route-density cluster is the open-basin catch in Creek Hollow: one visible Bramblebun pulls a player a few metres off the direct mill/pond line instead of filling the basin with a swarm."
+      "radius": 4.0,
+      "_why_d1": "FIRST-HOUR-FUN-REBUILD. The old route-density cluster is the open-basin catch in Creek Hollow: one visible Bramblebun pulls a player a few metres off the direct mill/pond line instead of filling the basin with a swarm.",
+      "wander_radius": 4.0,
+      "_why_f01_pond_shore": "F01 spine reroute: with order 1019 this is the second body in view on the new west-shore leg (road_creature_visibility_model: 0 failing samples with both, 2 with 1019 alone). Moved from (-432.2,485.5) r14.2 -- whose disc now overlaps the road's (-430,508) bend -- to the open slope above the shelf (~6m above water), radius 4 / wander 4, at worst ~8m off the road."
     },
     {
       "order": 1019,
@@ -370,12 +372,14 @@
       "count": 1,
       "habitat": "rocky_shoulder",
       "centre": [
-        -345.0,
+        -479.0,
         0.0,
-        595.0
+        530.0
       ],
-      "radius": 15.6,
-      "_why_d1": "FIRST-HOUR-FUN-REBUILD. One Mudsnout holds the dry rocky shoulder above the mill/footbridge. This retains the hand-checked clearance from the crossing while giving the pocket a Ground catch that is not another starter species."
+      "radius": 2.0,
+      "_why_d1": "FIRST-HOUR-FUN-REBUILD. One Mudsnout holds the dry rocky shoulder above the mill/footbridge. This retains the hand-checked clearance from the crossing while giving the pocket a Ground catch that is not another starter species.",
+      "wander_radius": 3.0,
+      "_why_f01_pond_shore": "F01 spine reroute (terrain_playground trail band1): the old pond bend waded ~100m of the arm, so the road now follows the dry west and south shore, and tools/gate_f/road_creature_visibility_model.gd found 3 samples (-428.6,505.9)..(-455.9,517.3) on the new west leg with fewer than two forward-visible bodies. This existing rocky-shoulder Mudsnout moves from (-345,595) -- the east shore the road no longer passes, and 15.6m of radius over the new south leg -- to the hill foot above the west shelf (8-12 degree slope, ~7m above water), radius 2 / wander 3, at worst 8m off the road. Moving an authored Creek Hollow pocket rather than adding one keeps test_spawns_data's compact 6-10 population and order set. A first attempt added a new pair ON the shelf (order 1086); the night through-walk (render 36251606095) was pinned against it on the road."
     },
     {
       "order": 1020,

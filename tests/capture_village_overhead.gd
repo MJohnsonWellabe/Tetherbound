@@ -75,9 +75,19 @@ func _run() -> void:
 	root.add_child(world)
 	current_scene = world
 	var player := world.get_node_or_null(^"Player") as Node3D
-	if player != null:
-		var y := float(world.call("ground_height_at", centre.x, centre.y)) + 1.0
-		player.global_position = Vector3(centre.x, y, centre.y)
+	# Place the player only once the terrain answers a finite height. Straight
+	# after instantiation ground_height_at() is NaN; seating the player at a
+	# NaN height gave every follower a non-finite transform, and the engine
+	# printed "Vector3 cannot be normalized" / "!v.is_finite()" on every frame
+	# of the run (~12 GB of log per capture on the offload runner).
+	var ground := NAN
+	for _i in SETTLE_FRAMES:
+		await physics_frame
+		ground = float(world.call("ground_height_at", centre.x, centre.y))
+		if is_finite(ground):
+			break
+	if player != null and is_finite(ground):
+		player.global_position = Vector3(centre.x, ground + 1.0, centre.y)
 	for _i in SETTLE_FRAMES:
 		await physics_frame
 	if player != null:
