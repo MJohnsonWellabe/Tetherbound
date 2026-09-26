@@ -30,6 +30,10 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V15 | shared look | Golden-hour fog density 0.0016 | `data/config/art.json` times.golden | open |
 | V16 | shared look | South Bridge gully slope rock: probe first, then re-apply 26b7216d (reverted in b864c1830) | `tools/probe_south_bridge_gully.gd` | open |
 | V17 | C2–C4 | Cloudreach, Stormwood and Tidewake region audits not yet judged; the VIS lane is judging them (read-only) and adds its findings here | §C2–C4 | open |
+| V18 | F10#3 | Stormwood strike telegraph reads as a thin magenta selection/target ring, not a ground danger zone, and a still frame shows no time left (code-blind judge in `ralph/reports/STORMWOOD/b/f10_3/VERDICT.md` (#303)) | `scripts/world/stormwood_lightning.gd` telegraph shader (`progress` uniform), `data/config/stormwood_surge.json` presentation.telegraph: translucent hazard fill across the 3 m disc, a thicker rim, an inner ring that fills or shrinks to complete at 1.2 s (also the reduced-motion progress cue) | open |
+| V19 | F10#3 | Surge phases not nameable from a still: Building judged "Break" twice, Fading only as "Building or Fading" (judge in `ralph/reports/STORMWOOD/b/f10_3/VERDICT.md` (#303)) | `data/config/stormwood_surge.json` presentation.phases building/fading: give each a structural signature a still catches | open |
+| V20 | F10#3 | Strike impact bolt reads as a soft grey pillar; normal-motion impact flash washes the whole frame grey-white, like daylight (judge in `ralph/reports/STORMWOOD/b/f10_3/VERDICT.md` (#303)) | `stormwood_lightning.gd` `_strike_flash`, presentation.flash `strike_*`: jagged forked core with glow plus a ground spark/scorch; cap or localise the frame wash | open |
+| V21 | F10#3 | Always-glowing gold road veins read as a hazard and compete with the strike telegraph (judge in `ralph/reports/STORMWOOD/b/f10_3/VERDICT.md` (#303)) | Stormwood road current (`stormwood_road_current.gd`, `data/config/stormwood_road_current.json`) | open |
 
 ## How to reproduce
 
