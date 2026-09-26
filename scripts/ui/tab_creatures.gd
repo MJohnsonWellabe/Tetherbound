@@ -139,8 +139,8 @@ const APPRAISAL_TOTAL := 5
 const APPRAISAL_PIP_RADIUS := 5.0
 const APPRAISAL_PIP_GAP := 16.0
 
-const ROW_HEIGHT := 110.0
-const ROW_WIDTH := 420.0
+const ROW_HEIGHT := 100.0
+const ROW_WIDTH := 600.0
 const CHIP_SIZE := Vector2(74.0, 74.0)
 ## The second line of the charged move sat only ~3 logical pixels above the
 ## detail viewport edge at the shipped 16:9 content height. That is inside the
@@ -348,7 +348,7 @@ func build() -> void:
 		_traits = TRAIT_DB.load_default()
 
 	_header = Label.new()
-	_header.add_theme_font_size_override("font_size", UITokens.FONT_HEADING)
+	_header.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	add_child(_header)
 
 	var row := HBoxContainer.new()
@@ -382,7 +382,7 @@ func build() -> void:
 	# past ASCII, and a tofu box in the middle of the ceremony's one caption
 	# would be worse than a hyphen.
 	_pending_caption.text = "JUST CAUGHT - NOT ON THE BELT"
-	_pending_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_pending_caption.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	# WARNING rather than TEXT_MUTED, same defect #4 tonal cue as the hairline
 	# above -- the caption is the first thing naming why a sixth row exists at
 	# all, so it is the natural place for the "this is not routine" signal to
@@ -416,6 +416,9 @@ func build() -> void:
 	_detail_panel = _build_detail()
 	detail_scroll.add_child(_detail_panel)
 	detail_scroll.resized.connect(_queue_move_stats_visibility)
+	# Wrapped FONT_READ lines settle their height a layout pass after the
+	# scroll does; re-aim when the content itself changes size.
+	_detail_panel.resized.connect(_queue_move_stats_visibility)
 
 	_evolution_panel = _build_evolution_panel()
 	_evolution_panel.visible = false
@@ -497,24 +500,49 @@ func _build_slot_row(index: int) -> Control:
 	text_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	content.add_child(text_col)
 
+	# X03 text floor (UX §8: 18 px at 720p): two lines, each at FONT_READ.
+	# Line 1 is the name with the bond count at its right; line 2 is level,
+	# HP and the condition words. The former third column (bond icon over
+	# "Bond N/5") could not grow to the floor inside ROW_WIDTH, and the
+	# condition words need the line's full remaining width.
+	var name_row := HBoxContainer.new()
+	name_row.add_theme_constant_override("separation", 8)
+	text_col.add_child(name_row)
+
 	var name_label := Label.new()
-	name_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
-	text_col.add_child(name_label)
+	name_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_label.clip_text = true
+	name_row.add_child(name_label)
 	_row_names.append(name_label)
 
+	var bond_icon := TextureRect.new()
+	bond_icon.texture = BOND_ICON
+	bond_icon.custom_minimum_size = Vector2(26, 26)
+	bond_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	bond_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	bond_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	name_row.add_child(bond_icon)
+
+	var bond_count := Label.new()
+	bond_count.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	bond_count.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	name_row.add_child(bond_count)
+	_row_bond_counts.append(bond_count)
+
 	var stat_row := HBoxContainer.new()
-	stat_row.add_theme_constant_override("separation", 8)
+	stat_row.add_theme_constant_override("separation", 10)
 	text_col.add_child(stat_row)
 
 	var level_label := Label.new()
-	level_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	level_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	level_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-	level_label.custom_minimum_size = Vector2(48, 0)
+	level_label.custom_minimum_size = Vector2(70, 0)
 	stat_row.add_child(level_label)
 	_row_levels.append(level_label)
 
 	var hp_bar := ProgressBar.new()
-	hp_bar.custom_minimum_size = Vector2(150, 8)
+	hp_bar.custom_minimum_size = Vector2(96, 10)
 	hp_bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	hp_bar.show_percentage = false
 	var hp_fill := StyleBoxFlat.new()
@@ -528,40 +556,13 @@ func _build_slot_row(index: int) -> Control:
 	_row_hp_bars.append(hp_bar)
 	_row_hp_fills.append(hp_fill)
 
-	# RG19-spec/D68's condition line, on its OWN row below level+HP rather
-	# than crammed beside them in `stat_row` (blind-judge pass: level(48) +
-	# this label's own 190 + the HP bar's 150 add up to 404px of fixed-width
-	# children inside a text_col that, once the chip and bond column and the
-	# row's own insets are subtracted from ROW_WIDTH, has roughly 260px to
-	# give them -- the overflow rendered underneath the 3D viewport column to
-	# its right, which draws after (so on top of) this list, and read as "HP
-	# bars poke out from behind the portrait viewport". A second line has
-	# room for the label at its full width with nothing to overlap.
 	var condition_label := Label.new()
-	condition_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	condition_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	condition_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	condition_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	condition_label.clip_text = true
-	text_col.add_child(condition_label)
+	stat_row.add_child(condition_label)
 	_row_conditions.append(condition_label)
-
-	var bond_col := VBoxContainer.new()
-	bond_col.alignment = BoxContainer.ALIGNMENT_CENTER
-	bond_col.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	bond_col.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	content.add_child(bond_col)
-
-	var bond_icon := TextureRect.new()
-	bond_icon.texture = BOND_ICON
-	bond_icon.custom_minimum_size = Vector2(18, 18)
-	bond_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	bond_col.add_child(bond_icon)
-
-	var bond_count := Label.new()
-	bond_count.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-	bond_count.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	bond_count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	bond_col.add_child(bond_count)
-	_row_bond_counts.append(bond_count)
 
 	return wrap
 
@@ -605,6 +606,9 @@ func _build_detail() -> Control:
 	_detail_name.add_theme_font_size_override("font_size", UITokens.FONT_TITLE)
 	panel.add_child(_detail_name)
 
+	# X03 text floor: at FONT_READ the short fields pair up on shared lines
+	# (type + appraisal, HP + stats, EXP + next level) so the column still
+	# shows name through both moves without scrolling at 720p.
 	var type_row := HBoxContainer.new()
 	type_row.add_theme_constant_override("separation", 8)
 	panel.add_child(type_row)
@@ -613,26 +617,33 @@ func _build_detail() -> Control:
 	_detail_type_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	type_row.add_child(_detail_type_icon)
 	_detail_type_label = Label.new()
-	_detail_type_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_detail_type_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_detail_type_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	type_row.add_child(_detail_type_label)
 
+	var hp_row := HBoxContainer.new()
+	hp_row.add_theme_constant_override("separation", 28)
+	panel.add_child(hp_row)
+
 	_detail_hp = Label.new()
-	_detail_hp.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
-	panel.add_child(_detail_hp)
+	_detail_hp.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	hp_row.add_child(_detail_hp)
 
 	_detail_stats = Label.new()
-	_detail_stats.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_detail_stats.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_detail_stats.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-	panel.add_child(_detail_stats)
+	hp_row.add_child(_detail_stats)
 
 	var appraisal_row := HBoxContainer.new()
 	appraisal_row.add_theme_constant_override("separation", 8)
-	panel.add_child(appraisal_row)
+	var type_gap := Control.new()
+	type_gap.custom_minimum_size = Vector2(20, 0)
+	type_row.add_child(type_gap)
+	type_row.add_child(appraisal_row)
 
 	_detail_appraisal_label = Label.new()
 	_detail_appraisal_label.text = "Appraisal"
-	_detail_appraisal_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_appraisal_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_detail_appraisal_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	appraisal_row.add_child(_detail_appraisal_label)
 
@@ -659,22 +670,26 @@ func _build_detail() -> Control:
 	appraisal_row.add_child(_appraisal_pips)
 
 	_detail_traits = Label.new()
-	_detail_traits.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_traits.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_detail_traits.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_detail_traits.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	panel.add_child(_detail_traits)
 
 	_detail_trait_desc = Label.new()
-	_detail_trait_desc.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_trait_desc.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_detail_trait_desc.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	_detail_trait_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_detail_trait_desc.custom_minimum_size = Vector2(320, 0)
 	panel.add_child(_detail_trait_desc)
 
+	var xp_row := HBoxContainer.new()
+	xp_row.add_theme_constant_override("separation", 28)
+	panel.add_child(xp_row)
+
 	_detail_xp = Label.new()
-	_detail_xp.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_detail_xp.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_xp.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_detail_xp.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	panel.add_child(_detail_xp)
+	xp_row.add_child(_detail_xp)
 
 	_detail_xp_bar = ProgressBar.new()
 	_detail_xp_bar.custom_minimum_size = Vector2(320, 6)
@@ -690,9 +705,11 @@ func _build_detail() -> Control:
 	panel.add_child(_detail_xp_bar)
 
 	_detail_xp_next = Label.new()
-	_detail_xp_next.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_detail_xp_next.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_detail_xp_next.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
-	panel.add_child(_detail_xp_next)
+	_detail_xp_next.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_detail_xp_next.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	xp_row.add_child(_detail_xp_next)
 
 	panel.add_child(_hairline())
 
@@ -723,7 +740,7 @@ func _build_detail() -> Control:
 
 	_bond_caption = Label.new()
 	_bond_caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_bond_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_bond_caption.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_bond_caption.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	bond_wrap.add_child(_bond_caption)
 
@@ -732,23 +749,27 @@ func _build_detail() -> Control:
 	_bond_rows.clear()
 	for i in BOND_MILESTONES.milestones(BOND_MILESTONES.config()).size():
 		var row := Label.new()
-		row.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+		row.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		row.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 		row.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 		bond_wrap.add_child(row)
 		_bond_rows.append(row)
 
 	_bond_next_benefit = Label.new()
-	_bond_next_benefit.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_bond_next_benefit.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_bond_next_benefit.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_bond_next_benefit.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	bond_wrap.add_child(_bond_next_benefit)
 
 	_best_caption = Label.new()
-	_best_caption.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_best_caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_best_caption.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_best_caption.add_theme_color_override("font_color", UITokens.WARNING)
 	bond_wrap.add_child(_best_caption)
 
 	_detail_status = Label.new()
-	_detail_status.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_detail_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_detail_status.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_detail_status.add_theme_color_override("font_color", UITokens.WARNING)
 	panel.add_child(_detail_status)
 
@@ -762,7 +783,7 @@ func _build_detail() -> Control:
 	_detail_hint.scroll_active = false
 	_detail_hint.shortcut_keys_enabled = false
 	_detail_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
 	_detail_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 	_detail_hint.text = DETAIL_HINT_BASE
 	panel.add_child(_detail_hint)
@@ -791,14 +812,14 @@ func _build_evolution_panel() -> Control:
 	body.add_child(_evolution_title)
 
 	_evolution_body = Label.new()
-	_evolution_body.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_evolution_body.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_evolution_body.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	_evolution_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_evolution_body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(_evolution_body)
 
 	_evolution_hint = Label.new()
-	_evolution_hint.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	_evolution_hint.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_evolution_hint.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	_evolution_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(_evolution_hint)
@@ -826,7 +847,7 @@ func _build_farewell_panel() -> Control:
 	body.add_child(_farewell_title)
 
 	_farewell_body = Label.new()
-	_farewell_body.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	_farewell_body.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_farewell_body.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	_farewell_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_farewell_body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -872,7 +893,7 @@ func _build_farewell_panel() -> Control:
 	_farewell_hint.shortcut_keys_enabled = false
 	_farewell_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_farewell_hint.text = "%s  keep looking" % INPUT_GLYPH.icon("cancel", 24)
-	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
 	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 	_farewell_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(_farewell_hint)
@@ -888,7 +909,7 @@ func _farewell_button(label: String) -> Button:
 	button.focus_mode = Control.FOCUS_ALL
 	button.custom_minimum_size = Vector2(300, 56)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	button.add_theme_font_size_override("font_size", UITokens.FONT_BUTTON)
+	button.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
 	return button
 
 
@@ -910,18 +931,19 @@ func _build_move_row() -> Array:
 	line1.add_child(icon)
 
 	var name_label := Label.new()
-	name_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+	name_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	line1.add_child(name_label)
 
 	var tag_label := Label.new()
-	tag_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	tag_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	tag_label.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 	tag_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	line1.add_child(tag_label)
 
 	var sub_label := Label.new()
-	sub_label.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+	sub_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	sub_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	sub_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	box.add_child(sub_label)
 
@@ -1194,7 +1216,7 @@ func _describe(index: int, cfg: Dictionary) -> void:
 			_detail_xp_next.text = ""
 		_best_caption.text = ""
 		_detail_status.text = ""
-		_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+		_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
 		_detail_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 		_detail_hint.text = DETAIL_HINT_BASE
 		if _shown_species != "":
@@ -1250,6 +1272,10 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		_detail_trait_desc.text = "%s  //  %s" % [
 			str(_traits.call("description", primary)), str(_traits.call("description", secondary))
 		]
+	# An untraited creature collapses both lines instead of leaving two empty
+	# FONT_READ rows between HP and EXP.
+	_detail_traits.visible = not _detail_traits.text.is_empty()
+	_detail_trait_desc.visible = not _detail_trait_desc.text.is_empty()
 
 	var xp: int = int(creature.get("xp"))
 	var xp_needed: int = int(creature.call("xp_to_next", cfg))
@@ -1275,7 +1301,6 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	var nodes: int = int(creature.call("bond_nodes"))
 	var ladder: Dictionary = BOND_MILESTONES.config()
 	var total: int = BOND_MILESTONES.milestones(ladder).size()
-	var progress := BOND_MILESTONES.progress_text(creature, ladder)
 	var rows: Array = BOND_MILESTONES.task_rows(creature, ladder)
 	var next_fraction := 0.0
 	for raw: Variant in rows:
@@ -1286,8 +1311,10 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	# number a contradiction -- five nodes against a count to ten. They
 	# measure different things (nodes earned vs the current task's counter),
 	# so the caption now says which it is.
-	_bond_meter.call("set_bond", "" if progress == "Fully bonded" else "next:  " + progress,
-		nodes, maxi(total, 1), next_fraction)
+	# X03 text floor: no caption under the track. The NEXT row below states
+	# the same milestone sentence at FONT_READ in the body font; the meter's
+	# own display-font caption repeated it smaller (and read as "NEHT").
+	_bond_meter.call("set_bond", "", nodes, maxi(total, 1), next_fraction)
 	var per_node: float = float(cfg.get("bond", {}).get("effects_per_node", {}).get("attack_scale", 0.0))
 	_bond_caption.text = "Bond %d / %d   ·   +%d%% ATK/DEF now (+%d%% per node)" % [
 		nodes, maxi(total, 1), int(round(per_node * 100.0 * float(nodes))), int(round(per_node * 100.0))
@@ -1352,11 +1379,11 @@ func _describe(index: int, cfg: Dictionary) -> void:
 		# font rather than the tiny stat-block size every other hint uses, and
 		# WARNING's amber rather than muted grey, the same "pay attention" tone
 		# `_detail_status` already reaches for elsewhere on this screen.
-		_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_BODY)
+		_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_PROMPT)
 		_detail_hint.add_theme_color_override("default_color", UITokens.WARNING)
 		_detail_hint.text = "%s  this one goes free" % INPUT_GLYPH.icon("confirm", 30, UITokens.WARNING)
 		return
-	_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	_detail_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
 	_detail_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 	_detail_hint.text = DETAIL_HINT_BASE
 	if not EVOLUTION.requirements(species_id, cfg).is_empty():
@@ -1824,7 +1851,7 @@ var _guardian_decline_wait := ""
 func _begin_guardian_confirm(pending: RefCounted) -> void:
 	_ensure_guardian_controls()
 	_guardian_hint_before = _farewell_hint.text
-	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_LABEL)
+	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
 	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_SECONDARY)
 	_farewell_keep.visible = false
 	_farewell_release.visible = false
@@ -2023,21 +2050,21 @@ func _ensure_guardian_controls() -> void:
 	var body := _farewell_keep.get_parent()
 	if _guardian_accept != null and is_instance_valid(_guardian_accept) and _guardian_accept.get_parent() == body:
 		return
-	_guardian_subtitle = _guardian_label(UITokens.FONT_BODY, UITokens.TEXT_PRIMARY)
+	_guardian_subtitle = _guardian_label(UITokens.FONT_PROMPT, UITokens.TEXT_PRIMARY)
 	body.add_child(_guardian_subtitle)
 	body.move_child(_guardian_subtitle, _farewell_title.get_index() + 1)
 	# X03: the legendary tag and its numbers stay on screen while the offer is
 	# up -- the detail column is hidden for the card's width, so without this
 	# the player answers a "final" choice without seeing what they are taking.
-	_guardian_tag = _guardian_label(UITokens.FONT_LABEL, UITokens.BUILD_ACCENT)
+	_guardian_tag = _guardian_label(UITokens.FONT_READ, UITokens.BUILD_ACCENT)
 	body.add_child(_guardian_tag)
 	body.move_child(_guardian_tag, _guardian_subtitle.get_index() + 1)
-	_guardian_stats = _guardian_label(UITokens.FONT_LABEL, UITokens.TEXT_SECONDARY)
+	_guardian_stats = _guardian_label(UITokens.FONT_READ, UITokens.TEXT_SECONDARY)
 	body.add_child(_guardian_stats)
 	body.move_child(_guardian_stats, _guardian_tag.get_index() + 1)
 	# "This choice is final." is the one amber line on the card, and it carries
 	# the caution glyph beside the word, so the warning never rides on colour.
-	_guardian_final = _guardian_label(UITokens.FONT_BODY, UITokens.WARNING)
+	_guardian_final = _guardian_label(UITokens.FONT_PROMPT, UITokens.WARNING)
 	_guardian_final_row = HBoxContainer.new()
 	_guardian_final_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	_guardian_final_row.add_theme_constant_override("separation", 10)
@@ -2164,7 +2191,7 @@ func _end_guardian_confirm(land: int) -> void:
 	if _farewell_panel == null:
 		return
 	_farewell_hint.text = _guardian_hint_before
-	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_TINY)
+	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
 	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
 	_farewell_panel.visible = false
 	if _detail_scroll != null:

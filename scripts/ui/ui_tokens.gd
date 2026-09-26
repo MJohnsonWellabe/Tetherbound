@@ -155,6 +155,14 @@ const FONT_BUTTON := 28
 const FONT_HEADING := 32
 const FONT_TITLE := 42
 const FONT_BIG_NUMBER := 56
+## Raster floors (UX §8). The 1920x1080 canvas draws at 2/3 scale in a
+## 1280x720 window, so these are the smallest authored sizes that still land
+## on 18 px (essential body text), 20 px (prompts/buttons) and 24 px
+## (headings) there. Menus use these instead of TINY/LABEL for text a player
+## must read.
+const FONT_READ := 27
+const FONT_PROMPT := 30
+const FONT_SECTION := 36
 
 # --- Spacing -------------------------------------------------------------
 
