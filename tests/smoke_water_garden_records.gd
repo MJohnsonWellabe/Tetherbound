@@ -89,6 +89,17 @@ func garden_entry(reader: RefCounted) -> Dictionary:
 			return entry
 	return {}
 
+## The authored landmark the lead names: listed in the production world config,
+## standing on dry terrain above the waterline (a data/terrain check only; the
+## rendered read from the normal camera is T2's visual matrix).
+func landmark_stands(landmark_id: String) -> bool:
+	for raw: Dictionary in world.config.get("landmarks", []):
+		if str(raw.get("id", "")) != landmark_id:
+			continue
+		var at := Vector3(float(raw.position[0]), 0.0, float(raw.position[2]))
+		return float(world.ground_height_at(at.x, at.z)) > 1.0 and is_zero_approx(world.water_depth_at(at))
+	return false
+
 func candy_row() -> Dictionary:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_pickups.json"))
 	for row: Dictionary in data.pickups:
@@ -129,6 +140,7 @@ func run() -> void:
 		return
 	var prompt: Node = wall.get_node("Prompt")
 	check(wall.visible and not bool(prompt.get("enabled")), "Vault wall visible as the lure, unoffered before Edda's lead")
+	check(landmark_stands("drowned_garden_terraces"), "The Drowned Garden is an authored landmark standing above the water")
 	check(garden_entry(reader).is_empty(), "Garden request not pre-labelled")
 
 	# Step 1: Edda points to the vault (greeted through her real prompt).

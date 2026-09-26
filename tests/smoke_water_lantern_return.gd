@@ -80,6 +80,17 @@ func lantern_entry(reader: RefCounted) -> Dictionary:
 			return entry
 	return {}
 
+## The authored landmark the lead names: listed in the production world config,
+## standing on dry terrain above the waterline (a data/terrain check only; the
+## rendered read from the normal camera is T2's visual matrix).
+func landmark_stands(landmark_id: String) -> bool:
+	for raw: Dictionary in world.config.get("landmarks", []):
+		if str(raw.get("id", "")) != landmark_id:
+			continue
+		var at := Vector3(float(raw.position[0]), 0.0, float(raw.position[2]))
+		return float(world.ground_height_at(at.x, at.z)) > 1.0 and is_zero_approx(world.water_depth_at(at))
+	return false
+
 func cache_row() -> Dictionary:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_pickups.json"))
 	for row: Dictionary in data.pickups:
@@ -125,6 +136,7 @@ func run() -> void:
 	heard = await hear("water_pell")
 	check(heard[0] == "water_pell_lantern_lead", "Pell gives the Lantern Cove lead (%s)" % heard[0])
 	check(str(heard[1]).contains("arch") and str(heard[1]).contains("Lantern Cove"), "Lead names the cove's rock arch")
+	check(landmark_stands("lantern_cove_drift_arch"), "The named arch is an authored landmark standing above the water")
 	check(game.world.flags.has(LEAD), "Lead conversation records the world lead through the host step")
 	check(str(heard[2]).contains("Lantern Cove"), "Lead message shown to the speaker: " + str(heard[2]))
 	var entry := lantern_entry(reader)
@@ -164,6 +176,7 @@ func run() -> void:
 	check(not entry.is_empty() and bool(entry.done), "Return completes the local request")
 	heard = await hear("water_pell")
 	check(heard[0] == "water_pell_lantern_thanks", "Pell acknowledges afterwards (%s)" % heard[0])
+	check(str(heard[1]).contains("Lantern Cove line is on my board"), "Delivered thanks acknowledges the charted cove line")
 	var again: Dictionary = game.ledger.submit({"kind": "water_dock_action", "realm": "water",
 		"action_id": "lantern_return_report", "inventory": {}})
 	check(str(again.get("code", "")) == "already_done", "A second report is refused")

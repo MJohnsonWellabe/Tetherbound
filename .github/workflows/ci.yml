@@ -1650,6 +1650,27 @@ jobs:
       - name: Verify Tidewake combat pause while swimming
         if: ${{ !cancelled() }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_combat_pause.gd
+      # F13 (ACCEPTANCE 6.1): the six selected Tidewake local chains, one per
+      # island group, each show lure/action/payoff/acknowledgement in the
+      # production scene. Each measured ~46-48s locally (2026-09-26).
+      - name: Verify Tidewake chain side_water_lantern_return
+        if: ${{ !cancelled() }}
+        run: timeout 75s godot --headless --path . --script tests/smoke_water_lantern_return.gd
+      - name: Verify Tidewake chain side_water_gull_research
+        if: ${{ !cancelled() }}
+        run: timeout 75s godot --headless --path . --script tests/smoke_water_gull_research.gd
+      - name: Verify Tidewake chain side_water_cradle_care
+        if: ${{ !cancelled() }}
+        run: timeout 75s godot --headless --path . --script tests/smoke_water_cradle_care.gd
+      - name: Verify Tidewake chain side_water_garden_records
+        if: ${{ !cancelled() }}
+        run: timeout 75s godot --headless --path . --script tests/smoke_water_garden_records.gd
+      - name: Verify Tidewake chain side_water_deep_watch_chart
+        if: ${{ !cancelled() }}
+        run: timeout 75s godot --headless --path . --script tests/smoke_water_deep_watch_chart.gd
+      - name: Verify Tidewake chain side_water_lastlight_shelter
+        if: ${{ !cancelled() }}
+        run: timeout 75s godot --headless --path . --script tests/smoke_water_lastlight_shelter.gd
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd

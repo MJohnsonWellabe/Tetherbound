@@ -81,6 +81,17 @@ func gull_entry(reader: RefCounted) -> Dictionary:
 			return entry
 	return {}
 
+## The authored landmark the lead names: listed in the production world config,
+## standing on dry terrain above the waterline (a data/terrain check only; the
+## rendered read from the normal camera is T2's visual matrix).
+func landmark_stands(landmark_id: String) -> bool:
+	for raw: Dictionary in world.config.get("landmarks", []):
+		if str(raw.get("id", "")) != landmark_id:
+			continue
+		var at := Vector3(float(raw.position[0]), 0.0, float(raw.position[2]))
+		return float(world.ground_height_at(at.x, at.z)) > 1.0 and is_zero_approx(world.water_depth_at(at))
+	return false
+
 func candy_row() -> Dictionary:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_pickups.json"))
 	for row: Dictionary in data.pickups:
@@ -128,6 +139,7 @@ func run() -> void:
 	var heard: Array = await hear("water_adair")
 	check(heard[0] == "water_adair_gull_lead", "Adair gives the Gull Rest lead (%s)" % heard[0])
 	check(str(heard[1]).contains("Gull Rest") and str(heard[1]).contains("satchel"), "Lead names the island and the satchel")
+	check(landmark_stands("gull_rest_signal_spire"), "Gull Rest's signal spire is an authored landmark standing above the water")
 	check(game.world.flags.has(LEAD), "Lead recorded through the host step")
 	check(str(heard[2]).contains("Gull Rest"), "Lead message shown: " + str(heard[2]))
 	var entry := gull_entry(reader)
@@ -182,6 +194,7 @@ func run() -> void:
 	check(not entry.is_empty() and bool(entry.done), "Report completes the request")
 	heard = await hear("water_adair")
 	check(heard[0] == "water_adair_gull_thanks", "Adair acknowledges the charted route (%s)" % heard[0])
+	check(str(heard[1]).contains("Gull Rest route is charted"), "Delivered thanks names the charted Gull Rest route")
 	finish()
 
 func finish() -> void:

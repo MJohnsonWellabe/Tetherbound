@@ -177,6 +177,7 @@ func run() -> void:
 	check(int(game.inventory.count("berries")) == berries_before + 3, "Still exactly 3 berries")
 	heard = await hear("water_otto")
 	check(heard[0] == "water_otto_nest_thanks", "Otto acknowledges afterwards (%s)" % heard[0])
+	check(str(heard[1]).contains("Mosshell on Tidal Cradle") and str(heard[1]).contains("saddle"), "Delivered thanks repeats the habitat lead and the stone's use")
 	finish()
 
 func finish() -> void:

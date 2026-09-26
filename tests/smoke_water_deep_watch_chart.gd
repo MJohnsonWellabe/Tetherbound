@@ -120,6 +120,7 @@ func run() -> void:
 	var heard: Array = await hear_orsen()
 	check(heard[0] == "water_orsen_pre", "Orsen greets with his Sluice conversation (%s)" % heard[0])
 	check(str(heard[1]).contains("Deep Watch") and str(heard[1]).contains("Tidecoil"), "Orsen names Deep Watch and Tidecoil in delivered lines")
+	check(landmark_stands("deep_watch_lookout"), "The Deep Watch lookout is an authored landmark standing above the water")
 	check(not game.world.flags.has(RESOLVED) and not game.world.flags.has(CHARTED), "Speech writes no chain flag")
 	var local_before: Array = log_reader.local_entries(game.progression)
 	check(local_before.filter(func(e: Dictionary) -> bool: return str(e.label).contains("Deep Watch")).is_empty(),
@@ -201,6 +202,12 @@ func run() -> void:
 		"pickup_id": GATED, "personal_claimed": true})
 	check(str(again.get("code", "")) == "already_taken", "Second claim by the same character refuses")
 
+	# The return-current payoff, sampled through the live world's current field.
+	var current_spot := current_probe("sluice_isle_to_deep_watch_direct")
+	check(current_spot.is_finite(), "Deep Watch return current has an unambiguous sample")
+	var current_before: float = world.current_at(current_spot).length()
+	check(current_before > 0.1, "Before the chart the return current runs strong (%.3fm/s)" % current_before)
+
 	# Step 3: operate the separate chart control through its real prompt.
 	pose(chart.global_position + Vector3(2.0, 0.0, 0.0))
 	await frames()
@@ -209,11 +216,40 @@ func run() -> void:
 			child.call("interaction_activate")
 	await frames()
 	check(game.world.flags.has(CHARTED), "Chart prompt commits the chart flag after resolution")
+	check(is_equal_approx(world.current_at(current_spot).length(), 0.1),
+		"Charting applies the authored 0.1m/s return-current shortcut (%.3fm/s)" % world.current_at(current_spot).length())
 	var done: Array = log_reader.local_entries(game.progression).filter(func(e: Dictionary) -> bool: return str(e.label).contains("Deep Watch"))
 	check(done.size() == 1 and bool(done[0].done), "Chart completes the local request")
 	heard = await hear_orsen()
 	check(heard[0] == "water_orsen_deep_watch_charted", "Orsen acknowledges the charted current (%s)" % heard[0])
+	check(str(heard[1]).contains("charted the Deep Watch eddy"), "Delivered acknowledgement names the charted eddy")
 	finish()
+
+## The authored landmark the lead names: listed in the production world config,
+## standing on dry terrain above the waterline (a data/terrain check only; the
+## rendered read from the normal camera is T2's visual matrix).
+func landmark_stands(landmark_id: String) -> bool:
+	for raw: Dictionary in world.config.get("landmarks", []):
+		if str(raw.get("id", "")) != landmark_id:
+			continue
+		var at := Vector3(float(raw.position[0]), 0.0, float(raw.position[2]))
+		return float(world.ground_height_at(at.x, at.z)) > 1.0 and is_zero_approx(world.water_depth_at(at))
+	return false
+
+## A point on the authored route's centreline that the shared current field
+## assigns wholly to that route (as smoke_water_dock_actions samples it).
+func current_probe(route: String) -> Vector3:
+	for current: Dictionary in world.config.currents:
+		if str(current.route_id) != route:
+			continue
+		for i in range(1, current.polyline.size()):
+			var a := Vector3(float(current.polyline[i - 1][0]), 0.0, float(current.polyline[i - 1][2]))
+			var b := Vector3(float(current.polyline[i][0]), 0.0, float(current.polyline[i][2]))
+			for t: float in [0.5, 0.1, 0.2, 0.3, 0.4, 0.6, 0.7, 0.8, 0.9]:
+				var sampled: Dictionary = world.currents.sample(a.lerp(b, t))
+				if str(sampled.id) == str(current.id) and is_equal_approx(float(sampled.influence), 1.0):
+					return a.lerp(b, t)
+	return Vector3.INF
 
 func finish() -> void:
 	finished = true

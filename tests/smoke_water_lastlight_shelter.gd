@@ -184,6 +184,8 @@ func run() -> void:
 	check(not entry.is_empty() and bool(entry.done), "Rest completes the request")
 	heard = await hear("water_halen")
 	check(heard[0] == "water_halen_shelter_thanks", "Halen acknowledges (%s)" % heard[0])
+	check(str(heard[1]).contains("stays sheltered for everyone"), "Delivered thanks acknowledges the permanent shared shelter")
+	check(built.visible, "The shelter still stands after the acknowledgement")
 	var interior_after: Array = []
 	for flag: String in ["water_veilfall_intake_stopped", "water_veilfall_return_opened", "water_captain_nerissa_defeated"]:
 		interior_after.append(game.world.flags.has(flag))
