@@ -62,8 +62,31 @@ var _completed := false
 var _lesson_mode := false
 
 
+## Mid-bracket recovery, as a player does it. Fainting clears `rested`
+## (`creature_condition.gd` note_faint), so an entrant who faints in one round
+## cannot enter the next until revived and given another creature-bed night.
+## Revive through the actual Satchel, then the same beds/bedroll/feeding flow as
+## `run`, keeping the three Halda already holds (no re-registration).
+func recover(tree: SceneTree, world: Node3D, game: Node,
+		creature_beds: Array, bedroll: Node3D) -> Dictionary:
+	var party: RefCounted = game.get("party") if is_instance_valid(game) else null
+	if party == null or (party.call("tournament_selection") as Array).size() != 3:
+		_fail("Mid-bracket recovery needs the three entrants Halda already holds")
+		return result()
+	for index: int in entrant_indices(party):
+		var member: RefCounted = party.call("at", index)
+		if member != null and bool(member.get("fainted")):
+			var care: Dictionary = await CARE.new().care_existing(tree, world, game, "revive", index)
+			if not bool(care.get("passed", false)):
+				_fail("Satchel revive before the bed night failed: " + str(care.get("failures", [])))
+				return result()
+			_receipt("entrant_revived", {"party_index": index, "hp": member.get("hp")})
+	return await run(tree, world, game, creature_beds, bedroll, false, true)
+
+
 func run(tree: SceneTree, world: Node3D, game: Node,
-		creature_beds: Array, bedroll: Node3D, lesson_mode: bool = false) -> Dictionary:
+		creature_beds: Array, bedroll: Node3D, lesson_mode: bool = false,
+		keep_registration: bool = false) -> Dictionary:
 	_lesson_mode = lesson_mode
 	_tree = tree
 	_world = world
@@ -98,7 +121,7 @@ func run(tree: SceneTree, world: Node3D, game: Node,
 	if not _driver.failures.is_empty() or bool(_driver._manager.call("is_fighting")):
 		_fail("The paid camp is not available for ordinary bed input")
 		return result()
-	if not await _register_three_through_halda():
+	if not keep_registration and not await _register_three_through_halda():
 		return result()
 	_initial_ids = party_ids(_party)
 	_indices = entrant_indices(_party)

@@ -165,7 +165,10 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--through-rest"):
 		_finish(true)
 		return
-	var tournament_result: Dictionary = await TOURNAMENT.new().run(self,
+	var tournament := TOURNAMENT.new()
+	tournament.recover = func() -> Dictionary:
+		return await REST.new().recover(self, live["world"], game, camp._beds, camp._bedroll)
+	var tournament_result: Dictionary = await tournament.run(self,
 		live["world"], game, live["player"], live["rig"])
 	for line: Variant in tournament_result.get("failures", []):
 		failures.append(str(line))
