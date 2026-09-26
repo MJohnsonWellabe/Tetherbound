@@ -901,6 +901,24 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 		if not _has_key():
 			_failed = "pressed interact on \"%s\" but the key is not in the satchel" % prompt
 			return
+	elif kind == "gate" and _has_key() \
+			and not bool((_game.get("progression") as RefCounted).call("has", "road_gate_open")):
+		# The key is in the satchel and this leaf is still shut: open it the way
+		# a player does, on its own prompt. Round 3 only ever earned the flag by
+		# stalling against a leaf on the way past; with the village roads at
+		# their real width the walk stops short of every gate and never did.
+		for _i in 60:
+			if _door_prompt_wins():
+				break
+			await physics_frame
+		if _door_prompt_wins():
+			prompt = str((get_first_node_in_group("interaction_arbiter").call("winner") as Dictionary).get("label", ""))
+			await _capture("at %s, closed" % t.label)
+			await _press("interact")
+			for _i in 30:
+				await physics_frame
+			print("[village-walk] NOTE pressed interact on \"%s\" at %s; road_gate_open=%s" % [
+				prompt, t.label, str((_game.get("progression") as RefCounted).call("has", "road_gate_open"))])
 	elif kind in ["grandpa", "villager"]:
 		prompt = await _prompt_winner(t.node as Node)
 		if kind == "villager" and prompt == "":
