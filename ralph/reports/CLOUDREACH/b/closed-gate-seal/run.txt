@@ -1,0 +1,197 @@
+PASS Cloudreach physical/Fly data readable
+PASS data authors the upper/summit restrictions and the aerie current
+PASS Cloudreach shell finished building
+PASS production trainer has a FlyController
+PASS cloudreach_upper is registered with the production trainer's Fly controller (11 restrictions)
+PASS cloudreach_upper is registered as authored: [P: (-1800.0, 620.0, 3600.0), S: (3600.0, 1500.0, 1350.0)] behind cloudreach_upper_route_unlocked
+PASS cloudreach_summit is registered with the production trainer's Fly controller (11 restrictions)
+PASS cloudreach_summit is registered as authored: [P: (-1800.0, 800.0, 4950.0), S: (3600.0, 1500.0, 1250.0)] behind cloudreach_upper_route_unlocked
+PASS cloudreach_aerie_lift is registered with the Fly controller
+PASS fixture starts with Fly and the upper route both locked
+PASS upper_counterweight_gate is authored in cloudreach_world.json
+PASS upper_counterweight_gate is held by cloudreach_upper_route_unlocked (cloudreach_upper_route_unlocked)
+PASS the gate sits on a cloudreach_upper_route_unlocked route polyline
+PASS the production LockedTraversalBarrier exists at (-782.5, 650.0, 3555.0)
+PASS (c) the counterweight barrier is closed while cloudreach_upper_route_unlocked is unset
+PASS (c) the trainer stands on the counterweight route 9 m before the gate
+PASS (d) the stand (-786.5249, 645.9437, 3546.95) is outside the Windscar trial volume [P: (365.0, 602.0, 3215.0), S: (110.0, 80.0, 110.0)]
+PASS (d) no flight-trial authorization is active
+PASS (d) the active companion is a real Fly carrier, so only the lock can refuse
+PASS (d) launch_blockers names the flight trial ('Complete the Windscar flight trial to unlock Fly.')
+PASS (d) a real Jump, Jump does not deploy Fly before fly_traversal_unlocked (state grounded)
+PASS (d) the refusal is reported through the denied signal (["Complete the Windscar flight trial to unlock Fly."])
+PASS (d) the refused launch does not grant Fly
+PASS (d): no unlock/gate/completion flag changed ([])
+PASS (d): the same party UIDs, same order, no sixth (5)
+PASS (c) re-seated at the gate approach
+PASS (c) walking into the closed counterweight gate never passes its plane (furthest -1.00 m)
+PASS (c) the walk actually reached the barrier rather than stalling short (-1.00 m)
+PASS (c) what held the walk is the LockedTraversalBarrier itself
+PASS (c) the trainer is still standing on the route, alive, at (-782.9501, 648.9963, 3554.098)
+PASS (c) the gate's unlock flag is untouched
+PASS (c): the same party UIDs, same order, no sixth (5)
+PASS (f) walk around: upper_counterweight_gate is authored
+PASS (f) walk around: the gate sits on its route
+PASS (f) walk around: at 11 m lateral offset the walk actually reached the gate plane (furthest -1.00 m along)
+PASS (f) walk around: on foot at 11 m lateral offset the trainer never stands more than 1 m past the closed gate plane on the stair (max -1.0 m at (-773.1142, 648.9725, 3549.189))
+PASS (f) walk around: at -11 m lateral offset the walk actually reached the gate plane (furthest -1.00 m along)
+PASS (f) walk around: on foot at -11 m lateral offset the trainer never stands more than 1 m past the closed gate plane on the stair (max -1.0 m at (-792.7991, 648.9725, 3559.031))
+PASS (f) walk around: the walk-around ran on at least two offsets (2 of 2 with ground)
+PASS (f) walk around: the upper route is still locked
+PASS (g) beacon on foot: the pass and its gate are authored
+PASS (g) beacon on foot: beacon anchor, arch heading and side_windscar_bell are authored
+PASS (g) beacon on foot: the upper route is locked
+PASS (g) beacon on foot: the trainer stands on the Windscar junction (-100.0, 470.0, 2440.0)
+PASS (g) beacon on foot: the Windscar beacon crown is walkable before cloudreach_upper_route_unlocked (closest 1.93 m)
+PASS (g) beacon on foot: the trainer stands within the bell's 3.8 m interaction radius (closest 2.93 m)
+PASS (g) beacon on foot: the whole walk stays on the open side of the gate (furthest -530.7 m)
+PASS (g) beacon on foot: the upper route is still locked
+PASS unlocking Fly leaves the counterweight gate barrier closed
+PASS unlocking Fly does not unlock the upper route
+PASS found a legal Fly launch stand at the Windscar aerie inside the aerie current
+PASS (a) owned Galecrest: the trainer stands on the aerie launch stand
+PASS (a) owned Galecrest: the aerie stand is a legal launch ('')
+PASS (a) owned Galecrest: Jump, then Jump airborne, deploys Fly (state glide, denials [])
+PASS (a) owned Galecrest: the owned active galecrest carries, not the loaner (used_loaner false)
+PASS (a) owned Galecrest: holding Jump in the aerie current climbs (611.5 -> 770.0 m)
+PASS (a) owned Galecrest toward cloudreach_upper: the trainer never enters the restricted upper or summit AABB (end (400.0, 738.4605, 3599.248), max z 3599.25)
+PASS (a) owned Galecrest toward cloudreach_upper: the carried silhouette never overlaps a restricted AABB
+PASS (a) owned Galecrest toward cloudreach_upper: the flight actually reached the sealed volume (closest 0.75 m)
+PASS (a) owned Galecrest toward cloudreach_upper: the denial 'This wind route is still sealed: cloudreach_upper.' is reported (signal 5, last_denial 'This wind route is still sealed: cloudreach_upper.', all ["This wind route is still sealed: cloudreach_upper.", "This wind route is still sealed: cloudreach_upper.", "This wind route is still sealed: cloudreach_upper.", "This wind route is still sealed: cloudreach_upper.", "This wind route is still sealed: cloudreach_upper."])
+PASS (a) owned Galecrest toward cloudreach_upper: the flyer was held at the seal, still flying (not landed past it)
+PASS (a) owned Galecrest toward cloudreach_summit: the trainer never enters the restricted upper or summit AABB (end (400.0, 732.362, 3599.248), max z 3599.25)
+PASS (a) owned Galecrest toward cloudreach_summit: the carried silhouette never overlaps a restricted AABB
+PASS (a) owned Galecrest toward cloudreach_summit: the denial 'This wind route is still sealed: cloudreach_upper.' is reported (signal 1, last_denial 'This wind route is still sealed: cloudreach_upper.', all ["This wind route is still sealed: cloudreach_upper."])
+PASS (a) owned Galecrest toward cloudreach_summit: the flyer was held at the seal, still flying (not landed past it)
+PASS (a) owned Galecrest: no unlock/gate/completion flag changed ([])
+PASS (a) owned Galecrest: the same party UIDs, same order, no sixth (5)
+PASS (a) owned Galecrest: never a sixth party slot during flight (max 5)
+PASS (a) owned Galecrest: fixture return to the launch anchor
+PASS (a) owned Galecrest: back on ground at (400.0001, 610.1302, 3237.0), not inside a drawn mass ()
+PASS (a) owned Galecrest: Fly may launch again from there ('')
+PASS (a) owned Galecrest after landing: the same party UIDs, same order, no sixth (5)
+PASS (a) summit ground points inside cloudreach_summit exist in the route data
+PASS (a) a summit stand where production launch_blockers names cloudreach_summit
+PASS (a) inside the sealed summit volume a real Jump, Jump does not deploy Fly (state grounded)
+PASS (a) the refusal names cloudreach_summit through the denied signal (["This wind route is still sealed: cloudreach_summit."])
+PASS (a) summit in-volume: no unlock/gate/completion flag changed ([])
+PASS (a) summit in-volume: the same party UIDs, same order, no sixth (5)
+PASS (e) Fly bypass: upper_counterweight_gate is authored
+PASS (e) Fly bypass: the gate sits on windscar_counterweight_pass
+PASS (e) Fly bypass: the gate lies on the windscar_counterweight_pass polyline (0.00 m off)
+PASS (e) Fly bypass: Fly unlocked, cloudreach_upper_route_unlocked unset
+PASS (e) Fly bypass: (-771.3196, 658.9443, 3577.361) is walkable ground on the stair behind the closed gate
+PASS (e) Fly bypass: the trainer stands on the aerie launch stand
+PASS (e) Fly bypass: the owned Galecrest is active
+PASS (e) Fly bypass: the aerie stand is a legal launch ('')
+PASS (e) Fly bypass: Jump, then Jump airborne, deploys Fly (state glide, denials [])
+PASS (e) Fly bypass: the owned carrier flies, not the loaner
+PASS (e) Fly bypass: the upper route is still locked
+PASS (e) Fly bypass: no unlock/gate/completion flag changed ([])
+PASS (e) Fly bypass: the same party UIDs, same order, no sixth (5)
+PASS (e) Fly bypass: SYSTEMS §8 -- with cloudreach_upper_route_unlocked unset the trainer never stands on ground past the closed counterweight gate plane (max grounded -3.8 m past it at (-785.3298, 647.9434, 3552.147); flight: landed at (-785.3298, 647.9434, 3552.147); denials ["This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_stair_4.", "This wind route is still sealed: cloudreach_counterweight_stair_4.", "This wind route is still sealed: cloudreach_counterweight_stair_4."])
+PASS (e) Fly bypass: the flight actually reached the closed gate (closest 3.8 m from its plane within +/-40 m lateral)
+PASS (e) Fly bypass: the counterweight seal refused the flight ('This wind route is still sealed: cloudreach_counterweight_gate_crown.'; denials ["This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_stair_4.", "This wind route is still sealed: cloudreach_counterweight_stair_4.", "This wind route is still sealed: cloudreach_counterweight_stair_4."])
+PASS (e) Fly bypass: never grounded on the closed gate's masonry ((inf, inf, inf))
+PASS (e) Fly bypass: the refused flight ended instead of hanging at the seal (landed at (-785.3298, 647.9434, 3552.147); denials ["This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_stair_4.", "This wind route is still sealed: cloudreach_counterweight_stair_4.", "This wind route is still sealed: cloudreach_counterweight_stair_4."])
+PASS (e) Fly bypass: it ended on verified ground at (-785.3298, 647.9225, 3552.147), not inside or under geometry (recoveries 0)
+PASS (e) Fly bypass: the landing (-785.3298, 647.9225, 3552.147) is not inside a drawn mass ()
+PASS (e) Fly bypass: at the landing the only restriction is the counterweight seal's ('')
+PASS (e) Fly bypass: walked out by real input to the pad (-820.0, 620.0, 3480.0) (1.4 m) and may launch again ('')
+PASS (e) Fly bypass: a real Jump, Jump relaunches Fly from the pad (state glide)
+PASS (e) Fly bypass relaunch: fixture return to the launch anchor
+PASS (e) Fly bypass relaunch: back on ground at (-819.5001, 620.0303, 3481.045), not inside a drawn mass ()
+PASS (e) Fly bypass relaunch: Fly may launch again from there ('')
+PASS (h) beam-end glide: upper_counterweight_gate is authored
+PASS (h) beam-end glide: the gate sits on windscar_counterweight_pass
+PASS (h) beam-end glide: the gate lies on the windscar_counterweight_pass polyline (0.00 m off)
+PASS (h) beam-end glide: Fly unlocked, cloudreach_upper_route_unlocked unset
+PASS (h) beam-end glide: the trainer stands on the aerie launch stand
+PASS (h) beam-end glide: the owned Galecrest is active
+PASS (h) beam-end glide: the aerie stand is a legal launch ('')
+PASS (h) beam-end glide: Jump, then Jump airborne, deploys Fly (state glide, denials [])
+PASS (h) beam-end glide: the owned carrier flies, not the loaner
+PASS (h) beam-end glide: the upper route is still locked
+PASS (h) beam-end glide: no unlock/gate/completion flag changed ([])
+PASS (h) beam-end glide: the same party UIDs, same order, no sixth (5)
+PASS (h) beam-end glide: never grounded on the closed gate's masonry ((inf, inf, inf); flight: landed at (-790.6511, 642.5115, 3538.905); denials ["This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown."])
+PASS (h) beam-end glide: never grounded past the closed gate plane within +/-40 m lateral (max -18.0 m at (-790.6511, 642.5115, 3538.905))
+PASS (h) beam-end glide: the glide actually reached the seal round the beam end (closest 0.75 m from a counterweight volume; 22.4 m from the beam end)
+PASS (h) beam-end glide: the counterweight seal refused the glide ('This wind route is still sealed: cloudreach_counterweight_gate_crown.'; denials ["This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown."])
+PASS (h) beam-end glide: the refused flight ended instead of hanging at the seal (landed at (-790.6511, 642.5115, 3538.905); denials ["This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown.", "This wind route is still sealed: cloudreach_counterweight_gate_crown."])
+PASS (h) beam-end glide: it ended on verified ground at (-790.6511, 642.4903, 3538.905), not inside or under geometry (recoveries 0)
+PASS (h) beam-end glide: the landing (-790.6511, 642.4903, 3538.905) is not inside a drawn mass ()
+PASS (h) beam-end glide: at the landing the only restriction is the counterweight seal's ('')
+PASS (h) beam-end glide: walked out by real input to the pad (-820.0, 620.0, 3480.0) (1.5 m) and may launch again ('')
+PASS (h) beam-end glide: a real Jump, Jump relaunches Fly from the pad (state glide)
+PASS (h) beam-end glide relaunch: fixture return to the launch anchor
+PASS (h) beam-end glide relaunch: back on ground at (-819.4311, 620.0303, 3481.146), not inside a drawn mass ()
+PASS (h) beam-end glide relaunch: Fly may launch again from there ('')
+PASS (i) seal closes around a flyer: upper_counterweight_gate is authored
+PASS (i) seal closes around a flyer: the gate sits on windscar_counterweight_pass
+PASS (i) seal closes around a flyer: the gate lies on the windscar_counterweight_pass polyline (0.00 m off)
+PASS (i) seal closes around a flyer: Fly unlocked, cloudreach_upper_route_unlocked unset
+PASS (i) seal closes around a flyer: the counterweight stair seal is authored
+PASS (i) seal closes around a flyer: the trainer stands on the aerie launch stand
+PASS (i) seal closes around a flyer: the owned Galecrest is active
+PASS (i) seal closes around a flyer: the aerie stand is a legal launch ('')
+PASS (i) seal closes around a flyer: Jump, then Jump airborne, deploys Fly (state glide, denials [])
+PASS (i) seal closes around a flyer: the owned carrier flies, not the loaner
+PASS (i) seal closes around a flyer: flew by real input into the open stair volume at least 5 m past the gate ((-780.9284, 774.3262, 3559.81))
+PASS (i) seal closes around a flyer: the re-closed seal reports itself (["This wind route is still sealed: cloudreach_counterweight_stair_2."])
+PASS (i) seal closes around a flyer: the production recovery took the flyer out of the sealed volume
+PASS (i) seal closes around a flyer: it stands on the verified launch anchor (400.0, 610.1307, 3237.0), not inside the seal or under the stair ((400.0001, 610.1302, 3237.0))
+PASS (i) seal closes around a flyer: the anchor (400.0001, 610.1302, 3237.0) is not inside a drawn mass ()
+PASS (i) seal closes around a flyer: the upper route is locked again
+PASS (i) seal closes around a flyer: no unlock/gate/completion flag changed ([])
+PASS (i) seal closes around a flyer: the same party UIDs, same order, no sixth (5)
+PASS (j) seal closes around a flyer with no anchor: upper_counterweight_gate is authored
+PASS (j) seal closes around a flyer with no anchor: the gate sits on windscar_counterweight_pass
+PASS (j) seal closes around a flyer with no anchor: the gate lies on the windscar_counterweight_pass polyline (0.00 m off)
+PASS (j) seal closes around a flyer with no anchor: Fly unlocked, cloudreach_upper_route_unlocked unset
+PASS (j) seal closes around a flyer with no anchor: the counterweight stair seal is authored
+PASS (j) seal closes around a flyer with no anchor: the trainer stands on the aerie launch stand
+PASS (j) seal closes around a flyer with no anchor: the owned Galecrest is active
+PASS (j) seal closes around a flyer with no anchor: the aerie stand is a legal launch ('')
+PASS (j) seal closes around a flyer with no anchor: Jump, then Jump airborne, deploys Fly (state glide, denials [])
+PASS (j) seal closes around a flyer with no anchor: the owned carrier flies, not the loaner
+PASS (j) seal closes around a flyer with no anchor: flew by real input into the open stair volume at least 5 m past the gate ((-780.9284, 774.3262, 3559.81))
+PASS (j) seal closes around a flyer with no anchor: the fixture closed the seal with the flyer inside it (20.2 m from a way out)
+PASS (j) seal closes around a flyer with no anchor: the flyer did not hang -- the guard carried it out of the sealed volume (2.52 s)
+PASS (j) seal closes around a flyer with no anchor: it never stood past the closed gate (route -18.0 m, plane -18.0 m)
+PASS (j) seal closes around a flyer with no anchor: it landed on verified ground on the open approach at (-790.4685, 642.5165, 3538.89)
+PASS (j) seal closes around a flyer with no anchor: the landing (-790.4685, 642.5165, 3538.89) is not inside a drawn mass ()
+PASS (j) seal closes around a flyer with no anchor: the upper route is locked again
+PASS (j) seal closes around a flyer with no anchor: no unlock/gate/completion flag changed ([])
+PASS (j) seal closes around a flyer with no anchor: the same party UIDs, same order, no sixth (5)
+PASS (j) seal closes around a flyer with no anchor: at the landing the only restriction is the counterweight seal's ('')
+PASS (j) seal closes around a flyer with no anchor: walked out by real input to the pad (-820.0, 620.0, 3480.0) (1.4 m) and may launch again ('')
+PASS (j) seal closes around a flyer with no anchor: a real Jump, Jump relaunches Fly from the pad (state glide)
+PASS (j) seal closes around a flyer with no anchor relaunch: fixture return to the launch anchor
+PASS (j) seal closes around a flyer with no anchor relaunch: back on ground at (-819.4863, 620.0301, 3481.025), not inside a drawn mass ()
+PASS (j) seal closes around a flyer with no anchor relaunch: Fly may launch again from there ('')
+PASS (b) fixture: a full five-member party with no Fly carrier
+PASS (b) Maela loaner: the trainer stands on the aerie launch stand
+PASS (b) Maela loaner: the aerie stand is a legal launch ('')
+PASS (b) Maela loaner: Jump, then Jump airborne, deploys Fly (state glide, denials [])
+PASS (b) Maela loaner: Maela's mentor loaner carries (galecrest, used_loaner true)
+PASS (b) Maela loaner at launch: the loaner is not a party member and there is no sixth slot (party 5)
+PASS (b) Maela loaner: holding Jump in the aerie current climbs (611.5 -> 770.0 m)
+PASS (b) Maela loaner toward cloudreach_upper: the trainer never enters the restricted upper or summit AABB (end (400.0, 738.4605, 3599.248), max z 3599.25)
+PASS (b) Maela loaner toward cloudreach_upper: the carried silhouette never overlaps a restricted AABB
+PASS (b) Maela loaner toward cloudreach_upper: the flight actually reached the sealed volume (closest 0.75 m)
+PASS (b) Maela loaner toward cloudreach_upper: the denial 'This wind route is still sealed: cloudreach_upper.' is reported (signal 5, last_denial 'This wind route is still sealed: cloudreach_upper.', all ["This wind route is still sealed: cloudreach_upper.", "This wind route is still sealed: cloudreach_upper.", "This wind route is still sealed: cloudreach_upper.", "This wind route is still sealed: cloudreach_upper.", "This wind route is still sealed: cloudreach_upper."])
+PASS (b) Maela loaner toward cloudreach_upper: the flyer was held at the seal, still flying (not landed past it)
+PASS (b) Maela loaner at the seal: the loaner is not a party member and there is no sixth slot (party 5)
+PASS (b) Maela loaner: no unlock/gate/completion flag changed ([])
+PASS (b) Maela loaner: the same party UIDs, same order, no sixth (5)
+PASS (b) Maela loaner: never a sixth party slot during flight (max 5)
+PASS (b) Maela loaner: fixture return to the launch anchor
+PASS (b) Maela loaner: back on ground at (400.0001, 610.1302, 3237.0), not inside a drawn mass ()
+PASS (b) Maela loaner: Fly may launch again from there ('')
+PASS (b) Maela loaner after landing: the loaner is not a party member and there is no sixth slot (party 5)
+PASS (b) Maela loaner after landing: the same party UIDs, same order, no sixth (5)
+PASS end of run: the upper route is still locked
+PASS end of run: the counterweight gate is still closed
+CLOUDREACH CLOSED GATE SEAL OK checks=195 failures=0
+EXIT 0
