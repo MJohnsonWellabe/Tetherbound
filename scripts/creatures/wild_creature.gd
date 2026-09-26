@@ -421,6 +421,9 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# or absent cadence leaves every existing opponent on its one-attack path.
 	"charged_every", "charged_telegraph", "charged_recovery",
 	"charged_face_lock_fraction",
+	# COMBAT §5: the fraction of an ordinary strike's tell after which its
+	# heading locks. Absent or 0 keeps today's full-tell tracking.
+	"face_lock_fraction",
 	# F04: opt-in travelling lunge for a named CHARGER. Absent or false, the
 	# body keeps the instantaneous strike and `lunge` stays an impulse.
 	"lunge_travels",
@@ -707,6 +710,11 @@ func _enter(intent: int) -> void:
 		_beat_left = float(_selected_attack.get("telegraph", AI.duration_for(intent, _combat_cfg)))
 	elif intent == AI.Intent.TELEGRAPH:
 		_selected_attack.clear()
+		# COMBAT §5: an ordinary strike that authors `face_lock_fraction` keeps
+		# its own spaced profile as the selected attack, so its heading locks
+		# for the rest of the tell exactly as a named heavy's does.
+		if float(_combat_cfg.get("face_lock_fraction", 0.0)) > 0.0:
+			_selected_attack = _spaced_config().duplicate(true)
 		_selected_heading_locked = false
 		_beat_left = AI.duration_for(intent, _combat_cfg)
 	elif intent == AI.Intent.RECOVER and previous == AI.Intent.TELEGRAPH and not _selected_attack.is_empty():
