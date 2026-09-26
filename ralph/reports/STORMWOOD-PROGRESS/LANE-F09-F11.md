@@ -702,6 +702,15 @@ SCRIPT ERROR count is 0 in both runs.
   - **Proposed next step,** committed but not run (5b6f3edab): rest a worn party at Lantern Hollow Waycamp before the Deepwood picket, using the Crown step's ordinary bed/rest prompts. Wait for the director to accept the challenge. Log the exact refusal reason.
   - **Open risks further on:** there is no rest before Sera, Kestrel or Marrow. Ember Bivouac opens only after all rods are down. The same-person Marrow NPC/trainer pair has not been reached yet.
 
+- **Run 25** (eaa5029f4, with a rest before every named Dynamo-segment fight):
+  - **Prefix:** PASS in 1213.0 s.
+  - **Crown step:** FAIL at 1981.8 s, at the paid-arch placement. A Still Grove road fight was lost, then: `controller right stick could not face the Still Grove footing (forward (0.768932, 0.0, -0.639331) -> (0.843254, 0.0, -0.537516), wanted (0.0, -1.0); fighting=false trainer_battle=false input_owner=<none> paused=false arbiter_enabled=true time_scale=8.0 ...)`.
+  - **Safety:** `SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 strike_hits=2 warnings=46 damage=36.0`. 0 SCRIPT ERROR.
+  - **STOPPED (stop rule):** this is the second failure of the camera turn (runs 21 and 25). Runs 22 and 24 passed the same turn.
+  - **Diagnosis:** nothing owned input. The rig reads the look stick in `_process` using the render delta. At the wrapper's 8x/480 Hz clock the camera drifted away from the target, which is consistent with the rig's target tracking taking over. A wild enemy is still near after a lost road fight.
+  - **Proposed next step,** committed but not run: turn at 1x/60 Hz with the stick held across render frames, and name the tracking target if it still fails.
+  - **Not exercised:** the Dynamo-segment rests (eaa5029f4) were not reached.
+
 ### Open presentation items (reported to the coordinator, not fixed here)
 
 - Hesk's dialogue portrait is a young villager, and Wen's is an old man; neither matches the model (F10 two-peer frames `01_host_hesk_report`, `03_host_wen_records`).
@@ -715,7 +724,7 @@ SCRIPT ERROR count is 0 in both runs.
   - It stops before the Deepwood picket. The Dynamo, Marrow and the Stormheart were not reached.
 - **"Long Storm aftermath, Spark/shrine … persist": NOT MET.** The aftermath, the disk-save/restart/load (`--verify-reload`) and the F11 captures were not reached. No capture was taken.
 - **Trainer deaths and satchel recoveries,** runs 19–24: 0 deaths and 0 recoveries in every run.
-- **Next:** run the same command at 5b6f3edab once the coordinator authorizes a third Dynamo attempt.
+- **Next:** rerun at the camera-turn commit once the coordinator authorizes a third attempt at the Crown camera turn. The Dynamo rests (eaa5029f4) are also still unexercised.
 
 ### Not produced
 
