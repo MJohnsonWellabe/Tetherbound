@@ -1652,10 +1652,10 @@ jobs:
         run: timeout 240s godot --headless --path . --script tests/smoke_water_combat_pause.gd
       # F13 #1 (ACCEPTANCE 6.1): the four land loops and three return
       # shortcuts walked/swum with real stick input in the production scene.
-      # Timeout = 1.5x the measured 891 s solo wall time (2026-09-26 run).
+      # Timeout = 1.5x the measured 908 s wall time of the final green run (RUN5).
       - name: Verify Tidewake land loops and return shortcuts walked
         if: ${{ !cancelled() }}
-        run: timeout 1340s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd
+        run: timeout 1365s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
