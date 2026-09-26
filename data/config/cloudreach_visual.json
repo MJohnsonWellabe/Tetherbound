@@ -196,6 +196,10 @@
   "landmass": {
     "_shoulder_overpass_clearance_m": "F07#2: a road/deck lying more than this far below a route-shoulder vertex passes UNDER it (an overpass) and does not pin the vertex down to its height; pinning folded the counterweight-pass shoulder into a slab standing on the Windscar chain-bridge deck. Junction drops stay well under it (max shoulder edge drop 22 m).",
     "shoulder_overpass_clearance_m": 30.0,
+    "_shoulder_overpass_arch": "F07#2 review: where such an overpass road/deck crosses a route shoulder's cross-section (+- reach_factor x shoulder half width, within corridor_margin of the deck), that station's cliff rings end headroom_m above the deck and a soffit closes the underside, so the deck runs under a rock arch instead of through rendered, non-colliding rock. Walkable top and collision unchanged.",
+    "shoulder_overpass_headroom_m": 14.0,
+    "shoulder_overpass_corridor_margin_m": 16.0,
+    "shoulder_overpass_arch_reach_factor": 3.8,
     "geology_base_y": -210.0,
     "region_width_factor": 0.30,
     "region_depth_factor": 0.28,

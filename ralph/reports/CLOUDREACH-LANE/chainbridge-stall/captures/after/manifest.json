@@ -1,0 +1,33 @@
+{
+	"fixture": "Production Cloudreach world, player, CameraRig and WorldLook; trainer stood on the chain-bridge deck at each viewpoint; realm_key_cloudreach + fly_traversal_unlocked seeded.",
+	"records": [
+		{
+			"camera": "(-443.3721, 442.9289, 2852.187)",
+			"frame": "01_approaching_the_crossing",
+			"on_floor": true,
+			"player": "(-440.8003, 440.6501, 2856.8)",
+			"standing_on": "/root/CloudreachCliffs/SuspendedBridges/WindscarChainBridge/DeckSection0/WalkableDeck/Collision"
+		},
+		{
+			"camera": "(-400.0792, 448.1488, 2927.139)",
+			"frame": "02_under_the_shoulder",
+			"on_floor": true,
+			"player": "(-397.478, 446.7627, 2931.632)",
+			"standing_on": "/root/CloudreachCliffs/SuspendedBridges/WindscarChainBridge/DeckSection0/WalkableDeck/Collision"
+		},
+		{
+			"camera": "(-354.6112, 454.7385, 3005.672)",
+			"frame": "03_looking_back",
+			"on_floor": true,
+			"player": "(-357.2001, 452.4452, 3001.2)",
+			"standing_on": "/root/CloudreachCliffs/SuspendedBridges/WindscarChainBridge/DeckSection0/WalkableDeck/Collision"
+		},
+		{
+			"camera": "(-505.8698, 434.0761, 2746.559)",
+			"frame": "04_from_the_west_landing",
+			"on_floor": true,
+			"player": "(-502.4024, 431.9622, 2750.396)",
+			"standing_on": "/root/CloudreachCliffs/SuspendedBridges/WindscarChainBridge/DeckSection0/WalkableDeck/Collision"
+		}
+	]
+}

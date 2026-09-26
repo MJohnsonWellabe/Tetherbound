@@ -130,6 +130,14 @@ var _realm_map: RefCounted
 var _surface_cells: Dictionary = {}
 var _surface_index_count := -1
 var _all_route_lines: Array[Dictionary] = []
+## Audit hook (tools/audit_cloudreach_shoulder_overpass.gd): when set before
+## the world enters the tree, every route-shoulder top vertex's UNclamped
+## position is recorded here as {route, ridge, row, column, raw}.
+var record_shoulder_audit := false
+var shoulder_audit_vertices: Array[Dictionary] = []
+## {ridge, station, ceiling} for every shoulder station opened into an arch
+## over an overpass road/deck (`_overpass_ceiling`), recorded with the above.
+var shoulder_audit_arches: Array[Dictionary] = []
 var _all_pad_points: Array[Dictionary] = []
 var _all_crown_reference_lines: Array[Dictionary] = []
 var _built_pad_keys: Dictionary = {}
@@ -2208,6 +2216,9 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 	var landmass: Dictionary = _visual_config.get("landmass", {})
 	var route_id := str(spec.get("id", "Route"))
 	var serial := 0
+	var overpass_lines := _route_overpass_lines(route_id, points, maxf(
+		float(landmass.get("route_shoulder_min_half_width_m", 24.0)),
+		width * float(landmass.get("route_shoulder_path_multiplier", 3.8))))
 	for segment_index in points.size() - 1:
 		var original_a := points[segment_index]
 		var original_b := points[segment_index + 1]
@@ -2228,7 +2239,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 			_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
 				segment_index + int(spec.get("order", 0)) * 17 + serial,
 				_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass,
-				route_id)
+				route_id, overpass_lines)
 			_add_route_edge_nature(shoulder_root, a, b, half_width, serial)
 			var cover_config: Dictionary = _visual_config.get("ground_cover", {})
 			var cover_chunks := maxi(1, int(ceilf(a.distance_to(b)
@@ -2247,6 +2258,77 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 					"dry": route_is_dry,
 				})
 			serial += 1
+
+
+## F07#2 review: every OTHER route's road/deck line that passes under this
+## route's shoulder by more than `landmass.shoulder_overpass_clearance_m`
+## (the same overpass `_walkable_height` refuses to pin a vertex to). Only
+## these lines open arches in the shoulder's rock (`_overpass_ceiling`).
+func _route_overpass_lines(route_id: String, points: Array[Vector3], half_width: float) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	var clearance := float(_visual_config.get("landmass", {}).get("shoulder_overpass_clearance_m", INF))
+	if not is_finite(clearance) or points.size() < 2:
+		return out
+	for line: Dictionary in _all_route_lines:
+		if str(line.get("route_id", "")) == route_id:
+			continue
+		var reach := half_width + float(line["half_width"])
+		var found := false
+		for i in points.size() - 1:
+			var a := points[i]
+			var b := points[i + 1]
+			if maxf(a.x, b.x) + reach < float(line["min_x"]) or minf(a.x, b.x) - reach > float(line["max_x"]) \
+					or maxf(a.z, b.z) + reach < float(line["min_z"]) or minf(a.z, b.z) - reach > float(line["max_z"]):
+				continue
+			var samples := maxi(2, int(ceilf(Vector2(b.x - a.x, b.z - a.z).length() / 8.0)) + 1)
+			for k in samples:
+				var c := a.lerp(b, float(k) / float(samples - 1))
+				var hit := _line_point_xz(line, c)
+				if float(hit["distance"]) <= reach and float(hit["height"]) < c.y - clearance:
+					found = true
+					break
+			if found:
+				break
+		if found:
+			out.append(line)
+	return out
+
+
+## Nearest point (XZ) of one road/deck line to `p`: {distance, height}.
+func _line_point_xz(line: Dictionary, p: Vector3) -> Dictionary:
+	var a: Vector3 = line["a"]
+	var b: Vector3 = line["b"]
+	var flat := Vector2(b.x - a.x, b.z - a.z)
+	var len2 := flat.length_squared()
+	var t := 0.0
+	if len2 > 0.0001:
+		t = clampf(((p.x - a.x) * flat.x + (p.z - a.z) * flat.y) / len2, 0.0, 1.0)
+	return {"distance": Vector2(p.x, p.z).distance_to(Vector2(a.x + flat.x * t, a.z + flat.y * t)),
+		"height": lerpf(a.y, b.y, t)}
+
+
+## The highest overpass line crossing a shoulder station's cross-section
+## (`centre` +- `reach` along `right`, within `margin`) whose height is below
+## `below_y`; -INF when none does.
+func _overpass_ceiling(centre: Vector3, right: Vector3, reach: float, lines: Array[Dictionary],
+		below_y: float, margin: float) -> float:
+	var best := -INF
+	for s in 17:
+		var p := centre + right * lerpf(-reach, reach, float(s) / 16.0)
+		for line: Dictionary in lines:
+			var hit := _line_point_xz(line, p)
+			if float(hit["distance"]) <= float(line["half_width"]) + margin and float(hit["height"]) < below_y:
+				best = maxf(best, float(hit["height"]))
+	return best
+
+
+## Whether any overpass line (below `below_y`) passes within `radius` of `p`.
+func _overpass_near(p: Vector3, radius: float, lines: Array[Dictionary], below_y: float) -> bool:
+	for line: Dictionary in lines:
+		var hit := _line_point_xz(line, p)
+		if float(hit["distance"]) <= radius and float(hit["height"]) < below_y:
+			return true
+	return false
 
 
 ## Split an authored ground segment around every bridge assigned to its route.
@@ -2371,7 +2453,7 @@ func _resource_position(authored: Vector3) -> Vector3:
 
 func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		half_width: float, seed_value: int, top_material: Material, config: Dictionary,
-		self_route_id: String = "") -> void:
+		self_route_id: String = "", overpass_lines: Array[Dictionary] = []) -> void:
 	var flat := Vector3(b.x - a.x, 0.0, b.z - a.z)
 	if flat.length_squared() < 0.01:
 		return
@@ -2399,6 +2481,16 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	var right_lower: Array[Vector3] = []
 	var left_bottom: Array[Vector3] = []
 	var right_bottom: Array[Vector3] = []
+	# F07#2 review: a road/deck passing UNDER this shoulder (an overpass,
+	# `_route_overpass_lines`) must not run through the ridge's rendered rock.
+	# Stations whose cross-section spans it become an arch: their wall rings
+	# end above the deck (`_overpass_ceiling`) and a soffit closes the
+	# underside. The walkable top rows and their collision are untouched.
+	var arch_reach := half_width * float(config.get("shoulder_overpass_arch_reach_factor", 3.8))
+	var arch_margin := float(config.get("shoulder_overpass_corridor_margin_m", 16.0))
+	var arch_headroom := float(config.get("shoulder_overpass_headroom_m", 14.0))
+	var arch_clearance := float(config.get("shoulder_overpass_clearance_m", INF))
+	var arch_ceilings: Array[float] = []
 	for i in station_count:
 		var t := float(i) / float(station_count - 1)
 		var centre := a.lerp(b, t)
@@ -2453,6 +2545,13 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		var lower_push := 2.10 + 0.58 * cos(float(i) * 1.83 + seed_value * 0.39)
 		var shelf_depth := 35.0 + depth_mix * 35.0
 		var talus_depth := depth * (0.38 + depth_mix * 0.22)
+		var arch_ceiling := -INF
+		if not overpass_lines.is_empty():
+			arch_ceiling = _overpass_ceiling(centre, right, arch_reach, overpass_lines,
+				centre.y - arch_clearance, arch_margin)
+			if is_finite(arch_ceiling):
+				arch_ceiling += arch_headroom
+		arch_ceilings.append(arch_ceiling)
 		if i > 0 and i < station_count - 1 and sin(float(i * 11 + seed_value)) > -0.35 and not _inside_landmark_vista(centre):
 			var side := -1.0 if sin(float(i * 7 + seed_value * 3)) > 0 else 1.0
 			var relief := 3.0 + depth_mix * 8.0
@@ -2460,11 +2559,15 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 			var spur_width := maxf(65.0, half_width * (2.8 + depth_mix * 1.6))
 			var spur_at := Vector3(centre.x, centre.y + relief - spur_height * 0.5, centre.z)
 			spur_at += right * side * (half_width + spur_width * 0.40)
-			_mesa(parent, "%sRockShoulder%d" % [label, i], spur_at,
-				Vector3(spur_width, spur_height, spur_width * (0.7 + depth_mix * 0.5)),
-				_materials["cliff_mid"], _materials["cliff_high"], false, seed_value + i * 7, true)
+			# No rock spur/shelf standing in an overpass deck's corridor.
+			if not _overpass_near(spur_at, spur_width * 0.6 + arch_margin, overpass_lines,
+					centre.y - arch_clearance):
+				_mesa(parent, "%sRockShoulder%d" % [label, i], spur_at,
+					Vector3(spur_width, spur_height, spur_width * (0.7 + depth_mix * 0.5)),
+					_materials["cliff_mid"], _materials["cliff_high"], false, seed_value + i * 7, true)
 			var shelf := centre + right * side * (half_width + 8.0) - Vector3.UP * 8.0
-			if posmod(i + seed_value, 3) == 0 and not straddles_closed_ground_gate(shelf - Vector3.UP * 9.0, Vector3(23, 18, 21)):
+			if posmod(i + seed_value, 3) == 0 and not straddles_closed_ground_gate(shelf - Vector3.UP * 9.0, Vector3(23, 18, 21)) \
+					and not _overpass_near(shelf, 16.0 + arch_margin, overpass_lines, centre.y - arch_clearance):
 				_mesa(parent, "%sRootedShelf%d" % [label, i], shelf - Vector3.UP * 9.0,
 					Vector3(23, 18, 21), _materials["cliff"], _materials["upland"], true, seed_value + i)
 				var tree := NATURE_TREES[posmod(seed_value + i, NATURE_TREES.size())].instantiate() as Node3D
@@ -2482,6 +2585,22 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		var foot_width := maxf(half_width * 4.0, depth * (0.40 + depth_mix * 0.20))
 		left_bottom.append(Vector3(centre.x, centre.y - depth, centre.z) - right * foot_width)
 		right_bottom.append(Vector3(centre.x, centre.y - depth * 0.94, centre.z) + right * foot_width * 1.15)
+		if is_finite(arch_ceiling):
+			# Rings stay in order (top edge > upper > lip > lower > bottom) and
+			# end at the arch ceiling; the foot pulls in under the lower ring.
+			left_upper[i].y = maxf(left_upper[i].y, minf(arch_ceiling + 10.0, left.y - 3.0))
+			right_upper[i].y = maxf(right_upper[i].y, minf(arch_ceiling + 10.0, right_edge.y - 3.0))
+			left_shelf_lip[i].y = maxf(left_shelf_lip[i].y, minf(arch_ceiling + 7.0, left_upper[i].y - 1.5))
+			right_shelf_lip[i].y = maxf(right_shelf_lip[i].y, minf(arch_ceiling + 7.0, right_upper[i].y - 1.5))
+			left_lower[i].y = maxf(left_lower[i].y, minf(arch_ceiling + 4.0, left_shelf_lip[i].y - 1.5))
+			right_lower[i].y = maxf(right_lower[i].y, minf(arch_ceiling + 4.0, right_shelf_lip[i].y - 1.5))
+			var lf := centre + (left_lower[i] - centre) * 0.75
+			var rf := centre + (right_lower[i] - centre) * 0.75
+			left_bottom[i] = Vector3(lf.x, minf(arch_ceiling, left_lower[i].y - 2.0), lf.z)
+			right_bottom[i] = Vector3(rf.x, minf(arch_ceiling, right_lower[i].y - 2.0), rf.z)
+			if record_shoulder_audit:
+				shoulder_audit_arches.append({"ridge": str(parent.name) + "/" + label,
+					"station": i, "ceiling": arch_ceiling, "centre": centre})
 
 	# R1 + R2 (CLOUDREACH-GROUND-0906): the walkable top -- flat crest track
 	# plus the slopes out to the true outer edge -- is ONE grid of rows, seven
@@ -2516,6 +2635,9 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		var rtr := right_track[i].lerp(right_track[i + 1], f)
 		var rt := right_top[i].lerp(right_top[i + 1], f)
 		for raw: Vector3 in [lt, ltr, ltr.lerp(c, 0.5), c, rtr.lerp(c, 0.5), rtr, rt]:
+			if record_shoulder_audit:
+				shoulder_audit_vertices.append({"route": self_route_id, "ridge": str(parent.name) + "/" + label,
+					"row": rows.size(), "column": row.size(), "raw": raw})
 			row.append(Vector3(raw.x, _walkable_height(raw, raw.y, lines, pads), raw.z))
 		rows.append(row)
 	# Walls hang from the rows' outer vertices (no separate station-only edge).
@@ -2565,6 +2687,11 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	for i in station_count - 1:
 		_add_geological_face(deep_tool, left_lower[i + 1], left_lower[i], left_bottom[i + 1], left_bottom[i], -right, -right, 15.0)
 		_add_geological_face(deep_tool, right_lower[i], right_lower[i + 1], right_bottom[i], right_bottom[i + 1], right, right, 15.0)
+		# The arch's soffit: a downward-facing underside between the two feet,
+		# wherever either end of the interval is an arch station.
+		if is_finite(arch_ceilings[i]) or is_finite(arch_ceilings[i + 1]):
+			_add_surface_triangle(deep_tool, left_bottom[i + 1], left_bottom[i], right_bottom[i + 1])
+			_add_surface_triangle(deep_tool, right_bottom[i + 1], left_bottom[i], right_bottom[i])
 	# End faces prevent the ribbon's first/last station reading as a sliced box.
 	var first_row: Array[Vector3] = rows[0]
 	var last_row: Array[Vector3] = rows[rows.size() - 1]
