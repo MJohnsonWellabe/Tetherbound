@@ -1,0 +1,401 @@
+{
+  "name": "F15#3: Grandpa acknowledges each current team after a real release-menu release",
+  "claim": "ACCEPTANCE F15 #3 'receive Grandpa's acknowledgement of each current team, including releases' (T3: 'Grandpa recognizes each character's current companions, including releases'). Replaces the rejected f15_grandpa_acknowledges_each_team.json for the HOST half: no release is replayed and water_currents_restored is NOT ledger-set. In the Tidewake, the host (at a full five) frees the Abyssal Guardian at the chamber's real control, asks at the chamber's real invite prompt and, on the Creatures tab the game opens, lets Rill go through the REAL release menu with controller presses only (Rill's row -> ui_accept -> confirm stage -> 'Let them go' -> ui_accept -> farewell Done). The guest (with room) accepts its own Guardian through the tab's Accept. The first resolution settles the world through water_guardian_reward.gd, which is what sets water_currents_restored (asserted absent from the pre-offer world save). Both peers then cross to the Meadows through Game.enter_realm and press Grandpa's real prompt: each hears exactly its own current team named in party order, the host hears the Guardian and never Rill. DISCLOSED FIXTURES (each stands in for play that is not this criterion): (1) story_flag defeated_warden (world) stands in for the Meadows opening so Grandpa is at home rather than running the intro; (2) companions are granted by name through party_grant (the water scene boots with an empty belt; distinct names make the acknowledgement checkable); (3) guardian_fixture commits the Veilfall prerequisites and Nerissa's defeat through the ledger and injects both participants into the encounter director, whose own session path journals the reward rows (standing in for playing the Veilfall and the fight; the real-fight variant is f14_guardian_refuse_real_fight.json); (4) the Meadows crossing uses Game.enter_realm (the production crossing, not a walk to the gate); (5) grandpa_homecoming teleports each player beside Grandpa before pressing his real prompt.",
+  "peers": 2,
+  "scene": "water",
+  "budget_s": 1800,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "defeated_warden",
+        "scope": "world"
+      },
+      "label": "FIXTURE 1: world past the Meadows opening (Grandpa at home)"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "nickname": "Acorn"
+      },
+      "label": "FIXTURE 2: companions by name"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "sparkit",
+        "nickname": "Pip"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "nickname": "Rill"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "mosshell",
+        "nickname": "Shelby"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "meadowhart",
+        "nickname": "Volt"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "ripplet",
+        "nickname": "Kestrel"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "nickname": "Bramble"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 5,
+        "guardians_owned": 0,
+        "party": [
+          "Acorn",
+          "Pip",
+          "Rill",
+          "Shelby",
+          "Volt"
+        ]
+      },
+      "label": "the host's belt is full (five), Rill third"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_fixture",
+      "args": {
+        "participants": [
+          "$peer0",
+          "$peer1"
+        ]
+      },
+      "label": "FIXTURE 3: both fought Nerissa (director's own session path journals one reward row each)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_captain_nerissa_defeated",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "before"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "guardian_tether"
+      },
+      "label": "the host frees the Guardian at the chamber's real control"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_guardian_freed",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "label": "the host asks for its own offer at the chamber's real prompt"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_answer",
+      "args": {
+        "release": "Rill"
+      },
+      "expect_data": {
+        "stage": "choose"
+      },
+      "label": "REAL RELEASE MENU at a full five: Rill's row, ui_accept, confirm, 'Let them go', Done; the Guardian takes Rill's holder"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_currents_restored",
+        "scope": "world"
+      },
+      "label": "the Guardian resolution itself restored the currents (not the ledger)"
+    },
+    {
+      "peer": 1,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "label": "the guest asks for its own offer"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_answer",
+      "expect_data": {
+        "stage": "guardian"
+      },
+      "label": "WITH ROOM: the guest accepts its own Guardian"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 5,
+        "guardians_owned": 1,
+        "receipt_saved": true,
+        "party": [
+          "Acorn",
+          "Pip",
+          "Abyssal Guardian",
+          "Shelby",
+          "Volt"
+        ]
+      },
+      "label": "host: Rill gone, the Guardian in Rill's holder, never a sixth"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 3,
+        "guardians_owned": 1,
+        "receipt_saved": true,
+        "party": [
+          "Kestrel",
+          "Bramble",
+          "Abyssal Guardian"
+        ]
+      }
+    },
+    {
+      "peer": 0,
+      "action": "menu_toggle",
+      "args": {
+        "open": false
+      },
+      "label": "the host leaves the Creatures tab with B (menu_cancel presses), as a player would"
+    },
+    {
+      "peer": 1,
+      "action": "menu_toggle",
+      "args": {
+        "open": false
+      },
+      "label": "the guest leaves the Creatures tab with B"
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "meadows"
+      },
+      "budget_frames": 20000,
+      "label": "FIXTURE 4: the host crosses home to the Meadows (Game.enter_realm)"
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "meadows"
+      },
+      "budget_frames": 20000,
+      "label": "FIXTURE 4: the guest crosses home to the Meadows"
+    },
+    {
+      "peer": 0,
+      "action": "grandpa_homecoming",
+      "args": {
+        "must_name": [
+          "Acorn",
+          "Pip",
+          "Abyssal Guardian",
+          "Shelby",
+          "Volt"
+        ],
+        "must_not_name": [
+          "Rill",
+          "Kestrel",
+          "Bramble"
+        ]
+      },
+      "expect_data": {
+        "homecoming_seen": true,
+        "party": [
+          "Acorn",
+          "Pip",
+          "Abyssal Guardian",
+          "Shelby",
+          "Volt"
+        ]
+      },
+      "label": "host (FIXTURE 5 teleport beside Grandpa): its current five incl. the Guardian; the released Rill is NOT named"
+    },
+    {
+      "peer": 1,
+      "action": "grandpa_homecoming",
+      "args": {
+        "must_name": [
+          "Kestrel",
+          "Bramble",
+          "Abyssal Guardian"
+        ],
+        "must_not_name": [
+          "Rill",
+          "Acorn",
+          "Pip",
+          "Shelby",
+          "Volt"
+        ]
+      },
+      "expect_data": {
+        "homecoming_seen": true,
+        "party": [
+          "Kestrel",
+          "Bramble",
+          "Abyssal Guardian"
+        ]
+      },
+      "label": "guest (FIXTURE 5): its own current three, nobody else's"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "before",
+        "dir": "worlds",
+        "lacks": [
+          "water_currents_restored"
+        ]
+      },
+      "label": "non-vacuous: the pre-offer world save had NO water_currents_restored"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "before",
+        "dir": "characters",
+        "path_contains": "$character0",
+        "contains": [
+          "Rill"
+        ],
+        "lacks": [
+          "homecoming_seen",
+          "water_abyssal_guardian"
+        ]
+      },
+      "label": "non-vacuous: the host's pre-offer save held Rill, no Guardian, no homecoming"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "worlds",
+        "contains": [
+          "water_currents_restored"
+        ],
+        "lacks": [
+          "homecoming_seen"
+        ]
+      },
+      "label": "the world is restored; the homecoming is personal (not in the shared world)"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character0",
+        "contains": [
+          "homecoming_seen",
+          "water_abyssal_guardian",
+          "Acorn",
+          "Pip",
+          "Shelby",
+          "Volt"
+        ],
+        "lacks": [
+          "Rill"
+        ]
+      },
+      "label": "host's saved character: homecoming seen, Rill released, Guardian kept"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "homecoming_seen",
+          "water_abyssal_guardian",
+          "Kestrel",
+          "Bramble"
+        ]
+      },
+      "label": "guest's saved character: homecoming seen, own team"
+    }
+  ]
+}
