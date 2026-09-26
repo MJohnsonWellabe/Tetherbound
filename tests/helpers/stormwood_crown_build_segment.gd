@@ -259,6 +259,10 @@ func _gather_site(site: Dictionary) -> bool:
 		return _fail("%s did not commit its exact live yield/receipt: gained=%d expected=%d" % [
 			id, gained, int(site.amount)])
 	_note("GATHERED %s +%d %s through its exact live prompt" % [id, gained, str(site.item)])
+	if str(site.item) == "stormglass_crown":
+		var surge := _world.get_node_or_null(^"StormwoodSurge")
+		if surge != null:
+			_note("CROWN WINDOW after %s: %s" % [id, str(_charged_window_snapshot(surge, site.at))])
 	return true
 
 
@@ -416,17 +420,57 @@ func _select_arch_from_catalogue() -> bool:
 	return _fail("controller tabs could not reach the Stormglass Arch catalogue cell")
 
 
+## Wait at the refuge until the charged window at the Crown seams stays open
+## long enough to walk out and take both. Run 20 left on a "fading" window with
+## under a minute to go and reached stormwood_harvest_conductor_run_075 after it
+## closed (gained 0); run 19 happened to leave on a fresh Break. The same rule
+## as the prefix's Lantern Pools wait: the runtime's own open seconds at the
+## site, not any live Break/Fading.
+const CROWN_ROUTE_SECONDS := 150.0
+
+
 func _wait_for_charged_window() -> bool:
 	var surge := _world.get_node_or_null(^"StormwoodSurge")
 	if surge == null:
 		return _fail("StormwoodSurge is absent before Crown glass gathering")
+	var at: Vector2 = SITE_PLAN[4].at
 	var started := Time.get_ticks_msec()
 	while Time.get_ticks_msec() - started < CHARGED_WAIT_MS:
-		if str(surge.get("phase")) in ["break", "fading"] and bool(surge.get("sheltered")):
-			_note("WAITED at Rodline Refuge for a live %s Crown-gather window" % str(surge.get("phase")))
+		var state := _charged_window_snapshot(surge, at)
+		if float(state.get("open_seconds", 0.0)) >= CROWN_ROUTE_SECONDS and bool(surge.get("sheltered")):
+			_note("WAITED at Rodline Refuge for a live Crown-gather window %s" % str(state))
 			return true
 		await _tree.physics_frame
-	return _fail("Rodline Refuge did not reach a sheltered Break/Fading window within nine minutes")
+	return _fail("Rodline Refuge did not reach a sheltered window with %.0f open seconds at the Crown seams within nine minutes (last=%s)" % [
+		CROWN_ROUTE_SECONDS, str(_charged_window_snapshot(surge, at))])
+
+
+## The runtime's own Surge phase at `at` and how long the charged window
+## (Break, then Fading) stays open, in simulation seconds.
+func _charged_window_snapshot(surge: Node, at: Vector2) -> Dictionary:
+	var environment: Dictionary = _game.get("realm_environment")
+	var saved: Variant = environment.get("stormwood", {})
+	var raw: Variant = (saved as Dictionary).get("elapsed", 0.0) if saved is Dictionary else 0.0
+	var elapsed := float(raw) if raw is float or raw is int else 0.0
+	var point := Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y)
+	var region := str(surge.call("region_at", point))
+	var rules: RefCounted = surge.get("rules") as RefCounted
+	var row: Dictionary = (rules.get("config") as Dictionary).get("regions", {}).get(region, {})
+	var rod_flag := str(row.get("rod_flag", ""))
+	var flags: RefCounted = _game.get("progression") as RefCounted
+	var rod_disabled := not rod_flag.is_empty() and bool(flags.call("has", rod_flag))
+	var aftermath := bool(flags.call("has", "stormwood:long_storm_ended"))
+	var current: Dictionary = rules.call("phase_at", elapsed, region, rod_disabled, aftermath)
+	var phase := str(current.get("phase", ""))
+	var open := 0.0
+	if phase == "fading":
+		open = float(current.get("remaining", 0.0))
+	elif phase == "break":
+		open = float(current.get("remaining", 0.0))
+		var next: Dictionary = rules.call("phase_at", elapsed + open + 0.001, region, rod_disabled, aftermath)
+		if str(next.get("phase", "")) == "fading":
+			open += float(next.get("remaining", 0.0))
+	return {"phase": phase, "open_seconds": snappedf(open, 0.1), "elapsed": snappedf(elapsed, 0.1), "region": region}
 
 
 func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
