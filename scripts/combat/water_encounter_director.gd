@@ -3,6 +3,7 @@ extends "res://scripts/combat/cloudreach_encounter_director.gd"
 ## Water content over the shared production combat pipeline. Residency is the
 ## union of occupied Water peer neighborhoods, including a remote island when
 ## this world's local rig is only a host simulation. Story bosses stay external.
+const REMOTE_CREATURE_BODY := preload("res://scripts/creatures/remote_creature.gd")
 const WATER_DATA := preload("res://scripts/world/water_encounter_runtime_data.gd")
 const RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const INTERACTION := preload("res://scripts/world/interactable.gd")
@@ -281,16 +282,8 @@ func _spawn_available_sites() -> void:
 ## heartbeat. Committing the placed transform as a static body and handing it
 ## back as kinematic makes the placement a teleport instead of a motion.
 static func settle_spawn_transform(wild: Node3D) -> void:
-	if not (wild is PhysicsBody3D) or not wild.is_inside_tree():
-		return
-	var rid := (wild as PhysicsBody3D).get_rid()
-	var mode := PhysicsServer3D.body_get_mode(rid)
-	if mode != PhysicsServer3D.BODY_MODE_KINEMATIC:
-		return
-	PhysicsServer3D.body_set_mode(rid, PhysicsServer3D.BODY_MODE_STATIC)
-	PhysicsServer3D.body_set_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM, wild.global_transform)
-	PhysicsServer3D.body_set_mode(rid, mode)
-	PhysicsServer3D.body_set_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM, wild.global_transform)
+	if wild is PhysicsBody3D:
+		REMOTE_CREATURE_BODY.teleport_body(wild as PhysicsBody3D, wild.global_position)
 
 
 static func _surface_member_position(centre: Vector3, count: int, index: int, radius: float) -> Vector3:

@@ -383,12 +383,20 @@ func _local_deployed_body() -> Node3D:
 ## placement is already this function's answer to a teleport; a proxy the world
 ## has pinned is the same problem arriving slowly, and the owner's real body is
 ## where `net_position` says regardless.
+static func needs_snap(render_position: Vector3, body_position: Vector3,
+		target: Vector3, snap_m: float) -> bool:
+	return render_position.distance_to(target) > snap_m \
+		or body_position.distance_to(target) > snap_m
+
+
 ## Teleport a kinematic body without a kinematic sweep. Setting
-## `global_position` on a CharacterBody3D is taken as one motion step across the
-## whole jump, so the next `move_and_slide()` tests collision along that entire
-## stretch -- against Terrain3D's heightmap that took 3+ s for a Deep Watch snap
-## (about 3.5 km) and starved a host's heartbeat. Committing the new transform
-## while the body is briefly STATIC makes it an instant jump.
+## `global_position` on a CharacterBody3D is taken by the physics server as one
+## kinematic motion across the whole jump, which stretches the body's cached
+## shape bounds along it; the next `move_and_slide()` then queries collision
+## over those stretched bounds -- against Terrain3D's heightmap that measured
+## about 2.9 s for a 3.5 km snap to Deep Watch and starved a host's heartbeat.
+## Committing the new transform while the body is briefly STATIC makes it an
+## instant jump.
 static func teleport_body(body: PhysicsBody3D, at: Vector3) -> void:
 	body.global_position = at
 	if not body.is_inside_tree():
@@ -401,12 +409,6 @@ static func teleport_body(body: PhysicsBody3D, at: Vector3) -> void:
 	PhysicsServer3D.body_set_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM, body.global_transform)
 	PhysicsServer3D.body_set_mode(rid, mode)
 	PhysicsServer3D.body_set_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM, body.global_transform)
-
-
-static func needs_snap(render_position: Vector3, body_position: Vector3,
-		target: Vector3, snap_m: float) -> bool:
-	return render_position.distance_to(target) > snap_m \
-		or body_position.distance_to(target) > snap_m
 
 
 ## Put the body where its owner says it is, whenever physics has lost it.
