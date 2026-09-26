@@ -283,6 +283,7 @@ func _run() -> void:
 	# 8. GUEST ACCEPTS, and its link dies at the claim acknowledgement.
 	var accept_at: Array = guest_choice.get("accept_at", []) as Array
 	await step(1, "dismiss_dialogue", {"presses": 16, "settle": 30})
+	await _read_out_settled(1)
 	var gw: Dictionary = await step(1, "move_to",
 		{"x": float(accept_at[0]), "z": float(accept_at[2]), "close_enough": 0.6, "budget_frames": 900})
 	check(str(gw.get("verdict", "")) == "PASS", "the guest walked to its accept prompt (%s)" % str(gw.get("detail", "")))
@@ -415,6 +416,17 @@ func _settle_dialogue(peer: int) -> void:
 		await step(peer, "wait", {"frames": 30})
 
 
+## Wait until this peer's choice read-out has opened, then until its panel has
+## stayed shut: only then will a walk to a prompt run to completion.
+func _read_out_settled(peer: int) -> void:
+	for _poll in SETTLE_POLLS:
+		var pending: Dictionary = await _choice(peer)
+		if not bool(pending.get("announce_pending", false)):
+			break
+		await step(peer, "wait", {"frames": 15})
+	await _settle_dialogue(peer)
+
+
 func _drive_to_choice(peer: int) -> Dictionary:
 	var last: Dictionary = {}
 	for _poll in CHOICE_POLLS:
@@ -436,10 +448,19 @@ func _answer(peer: int, key: String) -> bool:
 	if at.size() != 3:
 		return false
 	# The choice is READ OUT a beat after the offer opens (F05 WO6); while that
-	# conversation is up the trainer does not walk. Read it through first.
-	await step(peer, "dismiss_dialogue", {"presses": 16, "settle": 30})
-	var walked: Dictionary = await step(peer, "move_to",
-		{"x": float(at[0]), "z": float(at[2]), "close_enough": 0.6, "budget_frames": 900})
+	# conversation is up the trainer does not walk. Read it through first --
+	# and on a slow runner the read-out may not have OPENED yet: main-CI shard
+	# 4 (twice) dismissed nothing, the read-out opened mid-walk, the walk
+	# waited forever ("no verdict") and every later step answered late. So
+	# wait for the read-out to open, then for the panel to stay shut.
+	await _read_out_settled(peer)
+	var walked: Dictionary = {}
+	for _attempt in 3:
+		walked = await step(peer, "move_to",
+			{"x": float(at[0]), "z": float(at[2]), "close_enough": 0.6, "budget_frames": 900})
+		if str(walked.get("verdict", "")) == "PASS":
+			break
+		await _settle_dialogue(peer)
 	check(str(walked.get("verdict", "")) == "PASS", "peer %d walked to its %s prompt (%s)"
 		% [peer, key, str(walked.get("detail", ""))])
 	await step(peer, "press", {"action": "interact"})
