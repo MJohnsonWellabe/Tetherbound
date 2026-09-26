@@ -8,7 +8,7 @@
     "alternate": 2.5,
     "loop": 2.5,
     "island": 2.3,
-    "spur": 2.6
+    "spur": 2.0
   },
   "edge": {
     "_comment": "wander_m moves the edge in and out along the road on coherent noise with wander_wavelength_m, so the lane is not a ruled ribbon; fringe_m is a per-texel random band across the edge. half-width - wander_m - fringe_m/2 must stay above 1.25 m so every centreline point keeps a painted texel within reach on the 2 m lattice.",
@@ -19,8 +19,8 @@
   },
   "junction": {
     "_comment": "Where a spur leaves its road the spur widens by flare_m on each side at the junction, easing back to its lane width over flare_length_m up the spur, so the Y reads on the ground.",
-    "_comment_f09_05": "WO-F09-05 round 2 (blind judge: from the road no path surface or gap leaves at the lamp). Seen from the road at 25-40 m and 2.3 m up, the roadside grass hides a narrow lane leaving at an angle; a wide flare clears a fan of grass off the road's shoulder where the spur leaves (grass_field refuses path texels), which reads as a gap.",
-    "flare_m": 4.5,
-    "flare_length_m": 24.0
+    "_comment_f09_05": "Round 5 (judge 12: a wide bare dirt fan either side of the stones) restores the WO-F09-04 widths. Superseded note: WO-F09-05 round 2 (blind judge: from the road no path surface or gap leaves at the lamp). Seen from the road at 25-40 m and 2.3 m up, the roadside grass hides a narrow lane leaving at an angle; a wide flare clears a fan of grass off the road's shoulder where the spur leaves (grass_field refuses path texels), which reads as a gap.",
+    "flare_m": 2.4,
+    "flare_length_m": 14.0
   }
 }

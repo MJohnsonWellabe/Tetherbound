@@ -190,3 +190,78 @@ func _reward_beacon(pickup: Node3D, beacon: Dictionary, pocket: Dictionary) -> v
 	halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	halo.position = Vector3(0.0, float(beacon.halo_height_m), 0.0)
 	pickup.add_child(halo)
+	# WO-F09-05 round 5 (blind judge 12: "from the road you never see the
+	# reward"): a soft light shaft in the pocket's tint rises over the reward,
+	# and a shorter one rises from the pocket's gateway at the fork, which is
+	# what the road view can actually frame (the rewards sit 78-85 deg off the
+	# road heading from the approach stands). Both are children of the pickup,
+	# the gateway one top_level at the gate, so both exist only while the
+	# reward is unclaimed and leave with it. Static: no animation.
+	var shaft: Dictionary = beacon.get("shaft", {})
+	if shaft.is_empty():
+		return
+	var material := shaft_material(colour, float(shaft.alpha))
+	pickup.add_child(_shaft("RewardShaft", material, float(shaft.reward_height_m), float(shaft.reward_width_m),
+		pickup.global_position))
+	var gate: Dictionary = POCKETS.gateway(pocket, POCKETS.config())
+	if not gate.is_empty():
+		var lane := POCKETS.spur(pocket)
+		var junction := Vector2(float(lane.points[0][0]), float(lane.points[0][1]))
+		var up := (Vector2(float(lane.points[1][0]), float(lane.points[1][1])) - junction).normalized()
+		var at := junction + up * float(gate.along)
+		var ground := float(world.call("ground_height_at", at.x, at.y)) if world.has_method("ground_height_at") else pickup.global_position.y
+		var gate_shaft := _shaft("GateShaft", material, float(shaft.gate_height_m), float(shaft.gate_width_m),
+			Vector3(at.x, ground, at.y))
+		pickup.add_child(gate_shaft)
+
+
+const SHAFT_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_add, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled;
+uniform vec4 tint : source_color = vec4(1.0);
+uniform float alpha = 0.4;
+void vertex() {
+	// Billboard about the vertical axis only (a column that always faces the
+	// camera but stays upright), as BaseMaterial3D's BILLBOARD_FIXED_Y.
+	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(
+		vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)) * length(MODEL_MATRIX[0].xyz), 0.0),
+		vec4(0.0, length(MODEL_MATRIX[1].xyz), 0.0, 0.0),
+		vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))) * length(MODEL_MATRIX[2].xyz), 0.0),
+		MODEL_MATRIX[3]);
+	MODELVIEW_NORMAL_MATRIX = mat3(MODELVIEW_MATRIX);
+}
+void fragment() {
+	// Soft across (no hard edges), brightest at the foot, fading to nothing
+	// toward the top.
+	float across = 1.0 - smoothstep(0.0, 0.5, abs(UV.x - 0.5));
+	float up = 1.0 - UV.y;
+	float along = smoothstep(0.0, 0.08, up) * (1.0 - smoothstep(0.25, 1.0, up));
+	ALBEDO = tint.rgb * alpha * across * across * along;
+}
+"""
+
+
+static func shaft_material(colour: Color, alpha: float) -> ShaderMaterial:
+	var shader := Shader.new()
+	shader.code = SHAFT_SHADER
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter("tint", colour)
+	material.set_shader_parameter("alpha", alpha)
+	return material
+
+
+## A billboard column `height` x `width`, its foot at global `foot`.
+func _shaft(shaft_name: String, material: Material, height: float, width: float, foot: Vector3) -> MeshInstance3D:
+	var quad := QuadMesh.new()
+	quad.size = Vector2(width, height)
+	quad.center_offset = Vector3(0.0, height * 0.5, 0.0)
+	var node := MeshInstance3D.new()
+	node.name = shaft_name
+	node.mesh = quad
+	node.material_override = material
+	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	node.top_level = true
+	node.position = foot
+	node.extra_cull_margin = height
+	return node

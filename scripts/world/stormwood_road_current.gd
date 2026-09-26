@@ -114,6 +114,7 @@ func build(world: Node3D, height_at: Callable = Callable()) -> void:
 	material.set_shader_parameter("spur_near_energy", float(spur.get("near_energy", spur.get("energy", 0.55))))
 	material.set_shader_parameter("spur_near_m", float(spur.get("near_m", 35.0)))
 	material.set_shader_parameter("spur_near_width", float(spur.get("near_width", 1.0)))
+	material.set_shader_parameter("spur_offset", float(spur.get("offset", 0.0)))
 	_spur_tints = spur_tints()
 	material.set_shader_parameter("pulse_spacing", float(_config.pulse_spacing_m))
 	material.set_shader_parameter("fade_end", float(_config.draw_distance_m))

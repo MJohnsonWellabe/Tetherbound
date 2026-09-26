@@ -5,6 +5,7 @@ extends SceneTree
 ## rebuilt. Multiplayer races use this same ItemCachePickup -> ledger seam.
 const RUNTIME := preload("res://scripts/world/stormwood_pickup_runtime.gd")
 const CACHE := preload("res://scripts/world/item_cache_pickup.gd")
+const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 
 var _failures: Array[String] = []
 
@@ -79,8 +80,52 @@ func _run() -> void:
 		_expect(placements.has("stormwood_pickup_pocket_204"), "Rootgate-gated Thunder Break TM mounts after rootgate progress")
 		_expect(placements.has("stormwood_pickup_pocket_205"), "Rootgate-gated Stormfall TM mounts after rootgate progress")
 		_expect(not placements.has("stormwood_pickup_pocket_208"), "story reward remains event-owned and unmounted")
+		await _reward_shafts_are_unclaimed_only(game, runtime)
 	world.queue_free()
 	_finish()
+
+
+## WO-F09-05 round 5: each pocket reward's light shafts (over the reward and
+## at its gateway) exist only while that reward is unclaimed. An ordinary
+## route cache has none (control); claiming one reward removes exactly its
+## two shafts and leaves every other mounted pocket reward's pair.
+func _reward_shafts_are_unclaimed_only(game: Node, runtime: Node) -> void:
+	var rewards: Array[String] = []
+	for pocket: Dictionary in POCKETS.config().pockets:
+		rewards.append(str(pocket.reward_pickup_id))
+	var placements: Dictionary = runtime.get("_placements")
+	var mounted := 0
+	for id: String in rewards:
+		var reward := placements.get(id) as Node3D
+		if reward == null:
+			continue
+		mounted += 1
+		_expect(reward.get_node_or_null("RewardShaft") != null and reward.get_node_or_null("GateShaft") != null,
+			"unclaimed pocket reward %s carries its reward and gate shafts" % id)
+	_expect(mounted == rewards.size(), "all five pocket rewards are mounted once unlocked (%d)" % mounted)
+	var route := placements.get("stormwood_pickup_route_01") as Node3D
+	_expect(route != null and route.get_node_or_null("RewardShaft") == null, "control: an ordinary route cache has no shaft")
+	_expect(_shafts(runtime).size() == 2 * mounted, "two shafts per unclaimed pocket reward, none elsewhere")
+	var claimed := placements.get(rewards[0]) as Node3D
+	var item := str(claimed.get("_item_id")) if claimed.get("_item_id") != null else ""
+	claimed.call("_on_picked_up")
+	await process_frame
+	await process_frame
+	runtime.restore_progression_from_game(game)
+	await process_frame
+	var left := _shafts(runtime)
+	_expect(left.size() == 2 * (mounted - 1), "claiming %s removes exactly its two shafts (%d left)" % [rewards[0], left.size()])
+	for shaft: Node in left:
+		_expect(str(shaft.get_parent().name) != rewards[0], "no shaft remains for the claimed %s" % rewards[0])
+	print("REWARD SHAFTS mounted=%d before=%d after_claim=%d claimed=%s item=%s" % [mounted, 2 * mounted, left.size(), rewards[0], item])
+
+
+func _shafts(runtime: Node) -> Array[Node]:
+	var out: Array[Node] = []
+	for node: Node in runtime.find_children("*", "MeshInstance3D", true, false):
+		if str(node.name) in ["RewardShaft", "GateShaft"] and is_instance_valid(node) and not node.is_queued_for_deletion():
+			out.append(node)
+	return out
 
 
 func _expect(condition: bool, label: String) -> void:

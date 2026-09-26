@@ -26,10 +26,10 @@ const TRUNK_SCALE := 2.2
 ## above an empty cage): the cage body spans y 0.0-0.6 and z 0.68-0.93; above
 ## it is only the chain. The old (0, 0.85, 0.73) sat at chain height.
 const LANTERN_CAGE := Vector3(0.0, 0.3, 0.8)
+## RockPath_Round_Thin is left out (round 5: one read as a detached shard).
 const STONES: Array[String] = [
 	"res://assets/environment/stylized_nature/RockPath_Round_Small_1.gltf",
 	"res://assets/environment/stylized_nature/RockPath_Round_Small_2.gltf",
-	"res://assets/environment/stylized_nature/RockPath_Round_Thin.gltf",
 	"res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf",
 ]
 
@@ -360,7 +360,7 @@ static func trail_stones(pocket: Dictionary, cfg: Dictionary, routes: Array = []
 		var at := _along_polyline(points, d)
 		var dir := _direction_at(points, d)
 		var side := Vector2(dir.y, -dir.x)
-		out.append({"at": at + side * rng.randf_range(-float(trail.jitter_m), float(trail.jitter_m)),
+		out.append({"at": at + side * (float(trail.get("offset_m", 0.0)) + rng.randf_range(-float(trail.jitter_m), float(trail.jitter_m))),
 			"yaw": rng.randf_range(0.0, TAU), "scale": rng.randf_range(float(trail.scale_min), float(trail.scale_max))
 				* (float(trail.get("near_scale_mul", 1.0)) if d <= float(trail.get("near_m", 0.0)) else 1.0),
 			"model": STONES[rng.randi_range(0, STONES.size() - 1)]})
