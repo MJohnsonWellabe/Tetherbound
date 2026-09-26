@@ -3042,12 +3042,61 @@ jobs:
       - name: Verify Cloudreach persistence tail
         run: timeout 600s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
 
+  verify-cloudreach-midride-rejoin:
+    # F06#6 (ACCEPTANCE 6.1, counted met in batch 22): two real peers; the
+    # guest drops its link while riding (including a ride into the host's
+    # closed counterweight gate) and rejoins -- rider dismounted on a floor,
+    # the same five creature UIDs, the gate still shut, plus an open-gate
+    # control. Measured: <= 31 min on the 4-core evidence container, 18.3 min
+    # for the whole job on a GitHub runner (PR #281 run, 2026-09-26);
+    # container run
+    # (run net-f06mr-20260926T121945Z, each realm crossing ~306 s). The lane
+    # runner raises only the heartbeat-silence tolerance for the crossing.
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Verify F06 mid-ride two-peer rejoin proof
+        timeout-minutes: 35
+        run: |
+          set -uo pipefail
+          out="${RUNNER_TEMP}/f06-midride"
+          mkdir -p "$out/net"
+          TB_PROOF_SCENARIO="$PWD/tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json" \
+          TB_PROOF_OUT="$out" TB_NET_RUN_ID="net-f06mr-ci-${GITHUB_RUN_ID}" \
+          TB_NET_OUT_DIR="$out/net" TB_NET_PEERS=2 \
+            godot --headless --path . --script tests/smoke_cloudreach_rejoin_closed_gate_proof.gd
+          rc=$?
+          echo "::group::PROOF.md"; cat "$out/PROOF.md" 2>/dev/null | head -40; echo "::endgroup::"
+          exit $rc
+      - name: Upload F06 mid-ride proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: f06-midride-proof
+          path: ${{ runner.temp }}/f06-midride
+          retention-days: 7
+
   ci-gate:
     runs-on: ubuntu-latest
     if: always()
     needs:
       - changes
       - verify-veridian-offer
+      - verify-cloudreach-midride-rejoin
       - verify-cloudreach-persistence
       - verify-scatter-bake-freshness
       - verify-terrain-bake-freshness

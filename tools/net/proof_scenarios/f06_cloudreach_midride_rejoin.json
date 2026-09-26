@@ -418,8 +418,8 @@
         ],
         "within": 5.0
       },
-      "label": "A: guest stands on the authored Cloudreach arrival (MULTIPLAYER Return-home placement: returning route loads its own slot-0, a different world instance)",
-      "continue_on_fail": true
+      "label": "A: guest authored-arrival placement (recorded, not asserted) -- placement provenance depends on whether the guest has its own slot-0 on disk (MULTIPLAYER Return-home placement) and flips once same-host exact-pose rejoin lands; the F06 gate claim is #46/#83/#84 (not sealed, not past the gate)",
+      "expect": "any"
     },
     {
       "peer": 1,
@@ -746,8 +746,8 @@
         ],
         "within": 5.0
       },
-      "label": "B: on the authored arrival (Return-home placement)",
-      "continue_on_fail": true
+      "label": "B: authored-arrival placement (recorded, not asserted) -- placement provenance depends on whether the guest has its own slot-0 on disk (MULTIPLAYER Return-home placement) and flips once same-host exact-pose rejoin lands; the F06 gate claim is #46/#83/#84 (not sealed, not past the gate)",
+      "expect": "any"
     },
     {
       "peer": 1,
