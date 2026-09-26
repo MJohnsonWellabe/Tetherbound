@@ -146,11 +146,34 @@ Strengths to keep: the village at P001 and the mill at E016, the badger companio
 
 **Place reads from the approach:** only Summit Eyrie reads, weakly. Realm Gate, Three Bells, Cliffhold and the Observatory partly read. The Waycamp, Beacon, Aerie, Sky Shrine and Stormward Overlook do not.
 
-### C3–C4. Stormwood, Tidewake: rendering
+### C3. Stormwood: rendering (render.yml, after Cloudreach env)
 
-- **Tidewake places** is re-rendering on render.yml from a full checkout.
-- The earlier `_sheet_tidewake_places_unjudged.jpg` came from a container missing 533 skip-worktree asset files, `rock_scree_Color.png` among them. Its "pale untextured rock" may be that artefact rather than the `#c6c3b8` tint, so queue row V18 is marked verify-first.
-- **Stormwood** places and env follow.
+### C4. Tidewake: 19 place frames judged (env pending); judge `Bar A no, Bar B no`
+
+- **Capture:** render.yml 36271541391 at main `0e2a3b60` (full checkout), frames P001–P019, all at day.
+- **Evidence:** sheet `_sheet_tidewake_places.jpg`, verdict `judges/tidewake_places_VERDICT.md`, labels `judges/tidewake_places_LABELS.txt`.
+- **Judge brief:** stated the place-row fixture (companion parked, director paused), so creature absence is not scored.
+- **Replaced:** the previous unjudged sheet came from a checkout with missing texture files and has been removed.
+- **Owners:** art changes go to the Codex queue (V1–V3 already cover docks, Veilfall and currents). Route, terrain-cut and stand content goes to the Tidewake lane.
+
+| # | Sev | Domain | Frame(s) | Defect | Clause | Owner |
+|---|---|---|---|---|---|---|
+| TW1 | BLOCKER | route terrain | P001, P003, P005–P008, P011, P012, P017–P019 | Roads are V-trenches cut through the islands. Two smooth 20–60 m walls fill 50–80 % of the frame, with one cell texture and no ledges, strata or rubble. The walls hide the sea and islands, which is the chapter's identity. | §4 Tidewake; §3.1; §1 | Tidewake (trail grading / heightfield) · Codex (wall material, V16 steep-face projection) |
+| TW2 | BLOCKER (verify) | landmark read | P001–P004, P006, P007, P009, P011, P012, P015, P017, P018 | The named place is not visible from its approach in 12+ frames: beacon, woven hall, stairstones, jetty, shrine, pumps, arch, terraces, lookout, camp, bridge, crown. **Verify first:** the capture's sightline test samples only the straight eye→target line, so each case is either missing or unplaced art, occlusion by TW1's walls, or a framing limit. Codex/Tidewake should check one place in-editor before building. | §3.2; §3.1 lure | Tidewake + Codex |
+| TW3 | BLOCKER | finale landmark | P008, P018 | Veilfall has no mountain. The "White Cascade" is a thin white column in an empty sky gap (P008). The Mountain Crown stand has no sightline (P018). | §4 "white-falls mountain"; Bar A board | Codex (V2) |
+| TW4 | BLOCKER | camera | P018 (inside dark geometry; giant flat near-grass triangles), P017 (camera collided into the trainer's head) | The production rig breaks in narrow trenches. The stand choice triggers it, but a player on these roads hits it too. | rubric 7; §5.2 | Tidewake (stands, trench width) · camera owner (COORD) |
+| TW5 | MAJOR | distance read | P001, P013 | Veilfall is not on the First Shore horizon. | §4 "visible from First Shore" | Codex (V2) · Tidewake (sightline) |
+| TW6 | MAJOR | palette | all except P014, P016 | Reads as Meadows: 60–90 % yellow-green grass and grey-khaki walls. Water appears only in slivers. P016 (open sea) is the one Tidewake frame. | §4 Tidewake palette | Codex · Tidewake (route framing) |
+| TW7 | MAJOR | rock | P001, P007, P012 (sunlit walls) | Rock renders with its texture but sunlit faces are pale warm grey, not wet dark rock. **Queue V18 confirmed** on this full checkout. | §4 "wet dark rock" | Codex (V18) |
+| TW8 | MAJOR | ground | all grass frames | Uniform grass carpet with no readable path, verge, sand, reeds or marsh. Hard grass-to-wall seams (P005, P007, P012, P019). | §3.1 | Codex |
+| TW9 | MAJOR | islands/tide | P004, P016, P019 | Far islands are smooth olive blobs. The tidal stepping stones are identical elliptical sand discs with identical foam rings, evenly spaced. | §4; rubric 3 | Codex (V3) |
+| TW10 | MAJOR | places | P010 spire (5 m lattice box); P014 Root Walk (sand yard, barrel, crate; high-contrast sand tile); P005 basin (no basin; ~20 px figure) | The named places that are visible do not carry their names. | §3.2; §6 | Codex · Tidewake |
+| TW11 | MAJOR | mid-ground | P002, P009, P010, P015 | Open-grass frames have nothing in the 15–80 m band. | §1 | Tidewake |
+| TW12 | MINOR | foliage | P010, P014 | Pixel-leaf trees on bright orange-red trunks, a different family from P002/P004 and warm toward the reserved red. | §1; §5.2 | Codex |
+
+**Keep:** the painted sky and grounded day shadows, the trainer's colour blocks, the P016 open-sea view, the P019 slot framing, the navy banners, and close-up grass quality.
+
+**Place reads:** only P008 (a fall exists), P010 (a tower on a crest) and P013 (boulder heap plus a bannered arch) partly read. The rest do not.
 
 ## D. Capture-tool limits (VIS, not asset defects)
 
@@ -162,5 +185,6 @@ Strengths to keep: the village at P001 and the mill at E016, the badger companio
   - Cloudreach **Broken Skyroad Arch** and **High Roost Perches** have no reachable stand: the trainer settled 700+ m away.
   - Cloudreach **Sky Shrine** fell back to an off-road ring stand at the foot of its pillar, where the shrine top is out of sight.
 - **Place rows park the companion behind the camera, and the EncounterDirector is paused.** A place frame cannot show creatures in the world. Env rows carry the companion.
+- **Place-row sightline test:** it samples 16 points on the straight eye→target line against drawn terrain. It can report "clear" while the landmark is still out of the rendered view or its geometry is not at the realm-data point (Tidewake TW2). Treat "landmark absent" rows as verify-first.
 - **Local renders need a complete checkout.** Clear skip-worktree first: `git ls-files -v | grep '^S'`.
   - Each is a coverage gap to close with an authored stand, not a pass.
