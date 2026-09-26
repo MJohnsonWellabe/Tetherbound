@@ -830,6 +830,28 @@
           "_why": "One radial firewood piece closes the foreground of the compact camp without adding another seat or collider to the gate lane."
         }
       ]
+    },
+    {
+      "order": 4007,
+      "name": "tether_patrol_signal",
+      "_why": "F03#0 lure, Option B, granted by Meadows core on #257 (comment 5847142740): one prop cluster, a Bonfire_Fire about 8 m beside lost_creature_rue on the side away from the Meadowhart's waiting_offset. Smoke: smoke_top_m 30, smoke_alpha 0.72, smoke_top_size_m 8, smoke_colour #4f4a45, set through the configure_smoke hook. The patrol keeps its position ([-300, 5870]) and its 'kept out of sight' story. It stands 472 m from the nearest road, and the round-5 code-blind judge could not find it from the road; the column rising over the ironwood shows the band4 road that someone is camped in there. The fire sits 8 m from the patrol and at least 8 m from every candidate spot where the Meadowhart waits (waiting_offset [3.6, 2.8], rotated by the patrol's yaw). No trainer, reunion or escort data changes.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "scale": 0.6,
+          "glow_scale": 1.9,
+          "smoke_top_m": 30.0,
+          "smoke_alpha": 0.72,
+          "smoke_top_size_m": 8.0,
+          "smoke_colour": "#4f4a45",
+          "glow": "campfire",
+          "name": "TetherPatrolSignalFire",
+          "at": [-293.6, 5865.2],
+          "yaw_deg": 20.0
+        }
+      ]
     }
   ]
 }

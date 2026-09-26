@@ -13,6 +13,7 @@ extends SceneTree
 ##     --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tests/capture_activity_lures.gd -- \
 ##     --activity=bram --save=/abs/S04-exit.json --capture-dir=/abs/out
+##   (--save also takes res://tests/fixtures/f03_lure_saves/<name>.json.gz)
 ##
 ## `--activity`    bram | herd | vault | doss | juno | hall
 ## `--save`        absolute path of a real `S0x-exit.json` (copied, unmodified,
@@ -121,13 +122,14 @@ func _run() -> void:
 	_wipe(SLOT_DIR)
 	_game.set("save_system", SAVE_GAME.new(SLOT_DIR))
 	var dst := str(_game.get("save_system").call("slot_path", SLOT))
+	var save_bytes := _save_bytes(_save_path)
 	var out := FileAccess.open(dst, FileAccess.WRITE)
-	out.store_buffer(FileAccess.get_file_as_bytes(_save_path))
+	out.store_buffer(save_bytes)
 	out.close()
-	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(_save_path))
+	var raw: Dictionary = JSON.parse_string(save_bytes.get_string_from_utf8())
 	var saved_pose: Array = (raw.get("player_pose", {}) as Dictionary).get("position", [])
 	_receipt = {"activity": _activity, "save": _save_path,
-		"save_sha256": FileAccess.get_sha256(_save_path), "save_version": raw.get("version"),
+		"save_sha256": _sha256(save_bytes), "save_version": raw.get("version"),
 		"saved_position": saved_pose, "script_state_writes": "none",
 		"budget_s": WALK_BUDGET_S}
 	if not bool(_game.call("load_game", SLOT)):
@@ -671,6 +673,24 @@ func _ensure_companion_out(prefix: String = "") -> void:
 			await physics_frame
 		_notes.append("%spressed creature_recall (attempt %d); companion out afterwards: %s" % [
 			prefix, attempt + 1, str(_director.call("ally_body") != null)])
+
+
+## The save's bytes. A `.json.gz` (tests/fixtures/f03_lure_saves/, for the
+## render.yml runner, whose checkout leaves ralph/ out) is standard gzip,
+## inflated here; the sha256 in the receipt is of the inflated JSON, so it
+## matches the original save under ralph/reports/.
+func _save_bytes(path: String) -> PackedByteArray:
+	var bytes := FileAccess.get_file_as_bytes(path)
+	if path.ends_with(".gz"):
+		bytes = bytes.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
+	return bytes
+
+
+func _sha256(bytes: PackedByteArray) -> String:
+	var ctx := HashingContext.new()
+	ctx.start(HashingContext.HASH_SHA256)
+	ctx.update(bytes)
+	return ctx.finish().hex_encode()
 
 
 func _unstick(attempt: int) -> void:
