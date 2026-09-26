@@ -1245,13 +1245,13 @@
       "count": 2,
       "habitat": "rocky_shoulder",
       "centre": [
-        -463.0,
+        -479.0,
         0.0,
-        534.0
+        530.0
       ],
-      "radius": 3.0,
-      "wander_radius": 6.0,
-      "_why_f01_pond_shore": "F01 spine reroute (terrain_playground trail band1: the old pond bend waded ~100m of the arm, so the road now follows the dry west shore). tools/gate_f/road_creature_visibility_model.gd then found 3 samples (-428.6,505.9)..(-455.9,517.3) on the new leg with fewer than two forward-visible bodies. Two mudsnout on the dry shelf between the hill foot and the water, ahead of that leg and beside the next one, restore the owner's two-in-view rule; the cluster sits clear of the pond so its wander stays on land."
+      "radius": 2.0,
+      "wander_radius": 3.0,
+      "_why_f01_pond_shore": "F01 spine reroute (terrain_playground trail band1: the old pond bend waded ~100m of the arm, so the road now follows the dry west shore). tools/gate_f/road_creature_visibility_model.gd then found 3 samples (-428.6,505.9)..(-455.9,517.3) on the new leg with fewer than two forward-visible bodies. Two mudsnout on the hill foot above the dry shelf, ahead of that leg and beside the next one, restore the owner's two-in-view rule. First placed ON the shelf at (-463,534) r3 wander 6; the night through-walk (render 36251606095) was then pinned against one of them on the road itself, so they moved 13m up the slope (8-12 degrees, ~7m above water) with radius 2 / wander 3: at worst 8m off the road."
     }
   ]
 }
