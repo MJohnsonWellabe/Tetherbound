@@ -1,6 +1,6 @@
 extends "res://tests/smoke_net_proof_two_peer.gd"
 
-# peers: 2
+# peers: 2 -- MANUAL (about 20 min; the fix is covered by tests/test_cloudreach_director_client_veyra.gd in CI; run by hand: tools/net/run_net_smoke.sh cloudreach_veyra_reconnect)
 
 ## F08 #2 reconnect witness: a GUEST's Veyra win is journaled once in the HOST
 ## world, never written into the guest's own stores, and survives the guest
@@ -101,7 +101,7 @@ func _scenario() -> Dictionary:
 		{"peer": 1, "action": "wait_flag", "args": {"flag": VEYRA_FLAG, "scope": "world", "budget_frames": 1800},
 			"label": "REJOIN: the guest reads Veyra's defeat from the host's world"},
 		{"peer": 1, "probe": "player_identity", "expect_data": {"realm": "cloudreach"},
-			"label": "REJOIN: guest back in Cloudreach", "continue_on_fail": true},
+			"label": "REJOIN: guest's session still names realm cloudreach (title-level reseat; the Cloudreach scene is NOT rebuilt, so this is not a walk back into the realm)", "continue_on_fail": true},
 		# (No repeat-win step here: the stock `join` step reseats the dropped
 		# guest from the TITLE without rebuilding its realm scene, so no
 		# Cloudreach director exists to drive -- run 2026-09-26T053151Z. The
