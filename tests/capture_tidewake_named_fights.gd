@@ -92,7 +92,16 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 	var director: Node = world.get_node("EncounterDirector")
 	var manager: Node = world.get_node("CombatManager")
 	var player: Node3D = world.local_rig()
-	var deadline := Time.get_ticks_msec() + 20000
+	# Water trainers stand up only inside a peer's activation range
+	# (water_combat.json activation_distance_m), so go to the authored spot first.
+	var spec: Dictionary = director.trainer_specs.get(id, {})
+	if spec.has("position"):
+		var at: Array = spec.position
+		var near := Vector3(float(at[0]), 0.0, float(at[2]) + 6.0)
+		near.y = float(world.ground_height_at(near.x, near.z)) + 0.3
+		player.global_position = near
+		player.velocity = Vector3.ZERO
+	var deadline := Time.get_ticks_msec() + 60000
 	while not director.trainer_nodes.has(id) and Time.get_ticks_msec() < deadline:
 		await process_frame
 	var trainer: Node3D = director.trainer_nodes.get(id)
