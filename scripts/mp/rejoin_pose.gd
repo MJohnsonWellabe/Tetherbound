@@ -17,6 +17,8 @@ const ENFORCE_METHOD := "enforce_sealed_placement"
 var _candidate: Dictionary = {}
 var _decided := false
 var _outcome := ""
+## Where the world had placed the player (its regional spawn) when deciding.
+var _placed_at: Array = []
 
 
 ## The whole decision, pure: the pose to seat, or {} for the regional spawn.
@@ -53,6 +55,11 @@ func outcome() -> String:
 	return _outcome
 
 
+## The world's own placement at decision time, before any saved pose.
+func placed_at() -> Array:
+	return _placed_at.duplicate()
+
+
 func _process(_delta: float) -> void:
 	if _decided:
 		return
@@ -73,6 +80,9 @@ func _process(_delta: float) -> void:
 	set_process(false)
 	var world: Variant = game.get("world")
 	var host_instance: Variant = (world as RefCounted).get("reward_delivery_namespace") if world != null else null
+	var player := game.call("_find_player") as Node3D if game.has_method("_find_player") else null
+	if player != null:
+		_placed_at = [player.global_position.x, player.global_position.y, player.global_position.z]
 	var pose := decide(_candidate, host_instance, str(game.get("current_realm")))
 	if pose.is_empty():
 		_outcome = "regional"

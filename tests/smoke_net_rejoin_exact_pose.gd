@@ -16,8 +16,9 @@ extends "res://tests/helpers/net_harness.gd"
 
 const GUEST_NAME := "Wren"
 const GUEST_APPEARANCE := "sera"
-## How far from the spawn the guest walks before saving (x, z metres).
-const AWAY := Vector2(24.0, 18.0)
+## How far from the new-game landing the guest walks before saving (x, z
+## metres): well clear of it and of the returning regional spawn near the origin.
+const AWAY := Vector2(-40.0, -35.0)
 ## A seated pose is the saved position; the physics settle may move it a little.
 const EXACT_TOLERANCE_M := 1.5
 ## A regional spawn must be clearly NOT the saved spot.
@@ -56,7 +57,7 @@ func _run() -> void:
 	check(_passed(await step(2, "teleport", {"at": away, "settle": 120})), "the guest moved away from spawn")
 	var saved_at := await _position(2)
 	check(_flat(saved_at, spawn) > REGIONAL_MIN_M,
-		"it now stands %.1f m from the spawn" % _flat(saved_at, spawn))
+		"it now stands %.1f m from the landing" % _flat(saved_at, spawn))
 	var identity := _as_dict(await probe(2, "player_identity"))
 	var character_id := str(identity.get("character_id", ""))
 	check(_passed(await step(2, "save_character_here", {})), "the guest saved its character in world A")
@@ -77,6 +78,10 @@ func _run() -> void:
 	var rejoined := await _decided(2)
 	check(str(rejoined.get("outcome", "")) == "exact",
 		"host A's snapshot instance matches, so the saved pose is seated (%s)" % str(rejoined))
+	var placed_a: Array = rejoined.get("placed_at", []) as Array
+	check(_flat(placed_a, saved_at) > REGIONAL_MIN_M,
+		"before seating, A's world had placed it at its regional spawn %s, %.1f m away"
+		% [str(placed_a), _flat(placed_a, saved_at)])
 	var at_a := await _position(2)
 	check(_flat(at_a, saved_at) <= EXACT_TOLERANCE_M,
 		"SAME HOST: the guest stands %.2f m from where it saved (tolerance %.1f m)"
@@ -98,8 +103,9 @@ func _run() -> void:
 	var at_b := await _position(2)
 	check(_flat(at_b, saved_at) > REGIONAL_MIN_M,
 		"DIFFERENT HOST: the guest is %.1f m from A's saved spot, not seated there" % _flat(at_b, saved_at))
-	check(_flat(at_b, spawn) <= EXACT_TOLERANCE_M * 2.0,
-		"it stands at the regional spawn (%.2f m from it)" % _flat(at_b, spawn))
+	var placed_b: Array = in_b.get("placed_at", []) as Array
+	check(_flat(placed_b, saved_at) > REGIONAL_MIN_M and _flat(at_b, placed_b) <= EXACT_TOLERANCE_M,
+		"it stands at B's regional spawn %s (%.2f m from it)" % [str(placed_b), _flat(at_b, placed_b)])
 
 	quit(await finish())
 

@@ -4845,6 +4845,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					str((rlocal as RefCounted).get("character_id")))
 			return {
 				"outcome": str(helper.call("outcome")) if helper != null else "",
+				"placed_at": helper.call("placed_at") if helper != null else [],
 				"world_instance": str((rworld as RefCounted).get("reward_delivery_namespace")) if rworld != null else "",
 				"file_instance": str(saved.get("last_world_instance_id", "")),
 				"file_pose": saved.get("player_pose", {}),
