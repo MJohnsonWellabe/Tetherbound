@@ -312,3 +312,10 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
 - Alternative 1 (own file): the B5 `between_fight_care` remedy (revive the fainted, small potions
   under 40%, then the helper's own `_prepare()` pilot selection), before each walk leg, only after
   `meadows_ending_settled`. Attempt 8, from the hall save, so the Warden is replayed.
+- Attempt 8 had road care working: `between_fight_care` revived ripplet, then 22 wild wins, later
+  ones in 5 hits. I stopped it (PID I started) at about 33 min. The acknowledgement road is 11.4 km
+  to Kell, and then the route returns to the storm road, all at 1x walking. At the rate measured
+  in attempt 7 (about 3 km per 12 min) the segment would pass run_chain.sh's fixed 5400 s
+  `timeout` before the Rift. Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt8/`.
+  `run_chain.sh` now takes `CHAIN_TIMEOUT` (default unchanged at 5400). Attempt 9 runs with
+  `CHAIN_TIMEOUT=12600`. No acceleration.
