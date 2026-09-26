@@ -29,7 +29,7 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V14 | M8 | Great candy reads as "cyan crystal heaps": its wrapper tint `Color(0.62, 0.76, 1.0)` renders cyan-white under 0.90 emission. The medallion and glow keep `items.json` `#3f6fd0`. | `scripts/world/band_pickups.gd:225`. Unjudged reference diff: `tb/vis-candy-tint` d6666d2e (periwinkle). Before/after stand: Quarry env; a Great candy sits 26 m from the stand. | open |
 | V15 | M4/M14 dusk | Golden-hour fog is **currently** 0.0016, about 3× day's 0.00055. Ranges 2 km out fog to one beige cut-out (confirmed in a fresh village 18:30 frame). **Lower** it. | `data/config/art.json` `times.golden.environment.fog_density`. Unjudged reference diff: `tb/vis-golden-fog` f0b0242d (0.0008). Re-run `tests/test_world_look_fog_energy.gd`. | open |
 | V16 | M9, CR3, TW1 | Stretched or grass-textured steep faces: South Bridge trench, Cloudreach sheer faces, Tidewake trench walls. The probe (`tools/_probe_south_bridge_gully.gd`, output `probes/south_bridge_gully.txt`) shows the gully walls are Terrain3D cells dropping 8–10 m inside one 2 m quad, and the control map **already paints them rock (id 2)**. **Do not re-apply 26b7216d:** it only rewrites vegetation cells, so it changed nothing. | A steep-face side (XZ/ZY) projection in `shaders/terrain_ground.gdshader` and in the Cloudreach/Tidewake terrain materials | open |
-| V17 | C2–C4 | Region audits: Cloudreach places (§C2) and Tidewake places (§C4) are judged; their rows are V18–V26. Cloudreach env, Stormwood and Tidewake env are in progress (VIS lane, read-only). | §C2–C4 | in progress (#304) |
+| V17 | C2–C4 | Region audits: Cloudreach places (§C2) and Tidewake places (§C4) and Cloudreach env are judged; their rows are V18–V30. Stormwood and Tidewake env are in progress (VIS lane, read-only). | §C2–C4 | in progress (#304) |
 | V18 | C4 TW7 | Tidewake sunlit rock is pale warm grey (`terrain.textures[2]` tint `#c6c3b8` over a texture averaging RGB 128/125/114). ART_DIRECTION asks for wet dark rock. Confirmed on a full-checkout render (36271541391); the texture itself renders. | `data/config/water_visual.json` `terrain.textures[2].tint`. Unjudged reference diff: `tb/vis-tidewake-rock` 078d5628 (`#7c8086`). | open |
 | V19 | C1 (Warrens) | Burrow Warrens day frame: a dark grey smoke column cuts through the mound silhouette, and a floating white square sits at the right-hand bush line (fresh frame at 32bd3307). Not yet judge-confirmed. | Warrens chimney/smoke VFX; identify the white square | open |
 | V20 | F08#4 / CR1, CR10 | Cloudreach has no altitude read. Every stand is a flat grass tabletop. Past the edge there is white haze by day and a flat navy sea plane by night: no cloud sea below, no strata stacks above. | Cloudreach sky, fog and horizon (cloud-sea layer below plateau level); Bar A board `cloudreach-sky-aviary-stronghold-board.png` | open |
@@ -39,6 +39,10 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V24 | F13 / TW1 | Tidewake roads are V-trenches: 20–60 m featureless walls fill 50–80 % of the frame and hide the sea and islands in 11 of 19 approach frames. | Tidewake lane: `water_heightfield.gd` trail grading. Codex: wall material (V16). | open |
 | V25 | F13 / TW2 | **Verify first.** The named place is not visible from its approach in 12+ Tidewake frames. It may be missing or unplaced art, occlusion by V24's walls, or a limit of the capture sightline test (§D). | Check one place in-editor | open |
 | V26 | TW9, TW10 | Tidewake stepping stones are identical elliptical sand discs with identical foam rings, evenly spaced. The Signal Spire is a 5 m lattice box. The Root Walk is a sand yard with a barrel and a crate. | Tide-stone generation; place dressing | open |
+| V27 | C2 CR14 | Cloudreach unmaterialed geometry: a pure-white bridge deck at Three Bells, flat single-colour banner slabs, a glossy blue perch torus, blue floor ribbons and a cyan T-post, and white house trim that glows at night | Frames and stands in `judges/cloudreach_env_LABELS.txt` | open |
+| V28 | C2 CR15, CR16 | Cloudreach sky: the cloud sea is faceted white slabs (white at dusk, lavender-glowing at night), and dusk turns the pale cliffs sepia, erasing the ravine vista | Cloudreach sky/cloud material; Cloudreach golden-hour preset | open |
+| V29 | C2 CR13 | Sky Aviary stronghold: a small greenhouse dome on flat wheat, unlit at night; the board's towers, gold ribs, arches, cliff seat and falls are missing | Bar A board `cloudreach-sky-aviary-stronghold-board.png` | open |
+| V30 | C2 CR17 | Galecrest companion: noisy, posterised surface and small inexpressive face; it becomes a cobalt blob at night in two frames. Keep the silhouette and scale. | Creature texture (reference-backed workflow) | open |
 
 ## How to reproduce
 
@@ -151,12 +155,15 @@ The judge's place labels were lost to a manifest-copy error in my judge prep (no
 
 Strengths to keep: the village at P001 and the mill at E016, the badger companion, trainer legibility at night, painted day skies and night mood, the forest interiors, the pylon line as the spine to the finale, and the Warrens mound.
 
-### C2. Cloudreach: 19 place frames judged (env pending); judge `Bar A no, Bar B no`
+### C2. Cloudreach: 19 place + 33 env frames judged; places `Bar A no, Bar B no`, env `Bar A no, Bar B yes (genre only, not finish)`
 
 - **Capture:** render.yml 36268641645 at main `32bd3307`, frames P001–P019.
 - **Evidence:** sheet `_sheet_cloudreach_places.jpg`, verdict `judges/cloudreach_places_VERDICT.md`, frame labels `judges/cloudreach_places_LABELS.txt`.
 - **Skipped:** the Broken Skyroad Arch and High Roost Perches stands are unreachable (§D).
-- **Env rows:** the 36 env frames are still rendering; their verdict joins this section when judged.
+- **Env rows:** 33 frames, E001–E033, at day, dusk and night.
+  - E001–E009 are local renders at main `32bd3307`; E010–E033 are from render.yml 36275206146 at `0e2a3b60`, a docs-only difference.
+  - Evidence: sheet `_sheet_cloudreach_env.jpg`, verdict `judges/cloudreach_env_VERDICT.md` (26 defects), labels `judges/cloudreach_env_LABELS.txt`.
+  - Broken Causeways 1 was skipped because the rig detached (§D).
 - **Owners:** all art and visual changes go to the Codex queue (V9 high perch, V10 settlements and cliff identity, or a new V row). Route, stand and road-shape content goes to the Cloudreach lane.
 
 **Judge-prep correction, disclosed.** The judge's defect 1 ("no companion or creature in any frame") is a **capture fixture, not a game defect**:
@@ -178,6 +185,23 @@ Strengths to keep: the village at P001 and the mill at E016, the badger companio
 | CR10 | MAJOR | depth | P004, P006, P012, P018 (day) | The horizon dissolves into a white-grey band at 35–45 % of frame height, the "white washout" §4 warns against. | §4; §2 | Codex (sky/fog; the Cloudreach cliff palette is a judge pick per owner ruling) |
 | CR11 | MINOR | composition | all | Every approach is identical: straight road, centred trainer, empty lower half, no near framing rail, no side lure. | §1 | Cloudreach |
 | CR12 | MINOR | foliage | P001, P003, P006, P008, P014, P018 | Blocky, pixel-quantised leaf texture. One species standing singly on bare grass. | §3.1 | Codex |
+
+**Env rows (E###).** These add to CR1–CR12 above; the altitude read (CR1) and settlements (CR8) are reconfirmed in E013–E018, E022–E024 and E028–E030.
+
+**Capture staging, disclosed.** The judge's env blocker 1 (Galecrest hides the trainer in E031–E033, with a talon through the trainer's legs) is **my capture's companion placement**: a fixed 3.2 m side offset, too close for a large winged companion. It is not the game's follow behaviour. The tool now clears by the companion's measured footprint. It is not a queue row.
+
+| # | Sev | Domain | Frame(s) | Defect | Clause | Owner |
+|---|---|---|---|---|---|---|
+| CR13 | BLOCKER | stronghold | E028–E030 | The Sky Aviary is a small greenhouse dome on a low dark wall in a flat wheat field, unlit at night. The board's towers, gold ribs, arches, cliff seat and waterfalls are all absent. | §4; §3.2; Bar A board | Codex/ART |
+| CR14 | MAJOR | unmaterialed geometry | E007–E009 (pure-white bridge deck, the brightest object at night); E010–E012 and E031–E033 (flat single-colour banner slabs); E019–E021 (glossy blue torus around the perch); E025–E027 (flat blue floor ribbons and a cyan T-post); E004–E006 (pure-white house trim that glows at night) | Placeholder planes and gizmo-like shapes read as missing materials. | §6; §3.3 | Codex |
+| CR15 | MAJOR | cloud sea | E001–E003, E007, E009, E010, E012 | The cloud layer is faceted white slabs: unshaded, pure white at dusk, lavender-glowing at night. | §4 (no white washout) | Codex |
+| CR16 | MAJOR | dusk | E011, E014, E023, E026, E029 | Dusk turns the pale cliffs sepia or desert and collapses the one ravine vista (E014) into tan haze. Foreground grass stays day-green. | §3.3; §2 | Codex (Cloudreach golden preset; see V15) |
+| CR17 | MAJOR | companion art | E031 (close), E024/E027 (night) | Galecrest passes scale at 1.3–1.6× the trainer, and its silhouette is the best thing in the set. Its surface is noisy and posterised, the face is small and inexpressive, and it clashes in style with the trainer. At night in E024 and E027 it becomes a cobalt blob, losing the white chest. | §5.1; §7 | ART (Codex queue) |
+| CR18 | MAJOR | landmark | E010–E012 | The Windscar Beacon stand shows a flat plank slab with an arch cut-out, reading as a door in a field. No beacon is visible. | §3.2; §6 | Codex |
+| CR19 | MINOR | framing | E019–E021, E025–E027 (pillars box in the camera; nothing shows height); E022–E024 (camp bed centred in the foreground); E016–E018 (Sky Shrine stand has no subject) | Stand compositions. | §1; §4 high-perch camera | Cloudreach |
+| CR20 | MINOR | artefacts | E023 (Galecrest floats, no contact shadow); E032 (square dark terrain patch); E007/E009 (pink glow blob at the frame edge); E010/E012 (white beam across the cliff); E031–E033 (floating gold ring and white orbs) | Stray or ungrounded elements. | rubric 7; §5.1 | Codex |
+
+**Time of day (env):** day, dusk and night read as three distinct looks. Night is the strongest. Dusk is the weakest: it tints sky and distance while foreground grass stays green.
 
 **Strengths to keep:** the painted day sky and moonlit night sky, the trainer's legibility, the aviary dome silhouette, the Three Bells gantry icon, and the blue/gold banner language.
 
@@ -222,6 +246,7 @@ Strengths to keep: the village at P001 and the mill at E016, the badger companio
   - Cloudreach **Broken Skyroad Arch** and **High Roost Perches** have no reachable stand: the trainer settled 700+ m away.
   - Cloudreach **Sky Shrine** fell back to an off-road ring stand at the foot of its pillar, where the shrine top is out of sight.
 - **Place rows park the companion behind the camera, and the EncounterDirector is paused.** A place frame cannot show creatures in the world. Env rows carry the companion.
+- **Env-row companion placement:** before 2026-09-26 23:00 it used a fixed 3.2 m side offset, which let a large winged companion cover the trainer (Cloudreach E031–E033). It now clears by the companion's measured footprint.
 - **Place-row sightline test:** it samples 16 points on the straight eye→target line against drawn terrain. It can report "clear" while the landmark is still out of the rendered view or its geometry is not at the realm-data point (Tidewake TW2). Treat "landmark absent" rows as verify-first.
 - **Local renders need a complete checkout.** Clear skip-worktree first: `git ls-files -v | grep '^S'`.
   - Each is a coverage gap to close with an authored stand, not a pass.
