@@ -1,0 +1,4 @@
+17:35:16 PASS: #8 peer 1 party_grant -> PASS -- 'mudsnout' at level 20 joined the party (4 member(s))
+17:37:46 coordinator: ERROR: peer silent (peer 0, no heartbeat for >15 s)
+17:37:46 FAIL: #9 peer 0 enter_realm (host enters Cloudreach in its own world) -> ERROR -- ERROR: peer silent (peer 0, no heartbeat for >15 s)
+17:37:51 FAIL: ERROR: peer silent (peer 0, no heartbeat for >15 s)
