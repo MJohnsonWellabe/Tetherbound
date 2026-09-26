@@ -17,7 +17,7 @@ const RIGHT_Y := JOY_AXIS_RIGHT_Y
 const LEFT_Y := JOY_AXIS_LEFT_Y
 ## Consecutive frames the relocated opponent must stay framed (neutral check).
 const HOLD_IN_FRAME := 10
-## Wall-clock seconds that must be observed inside the live manual-look grace
+## Seconds of the rig's own grace countdown that must be observed inside the live manual-look grace
 ## for the "not recentred while held" check to prove anything (the grace
 ## itself is combat.json camera.tracking.manual_grace_seconds, 0.4).
 const MIN_GRACE_SECONDS_OBSERVED := 0.15
@@ -587,7 +587,6 @@ func _assert_raw_orbit_changes(context: String) -> void:
 	var held_yaw := yaw_after
 	var inside := 0
 	var drifted := 0.0
-	var started_ms := Time.get_ticks_msec()
 	var observed_s := 0.0
 	for i in 240:
 		if float(_rig.get("_tracking_manual_left")) <= 0.0:
@@ -596,7 +595,8 @@ func _assert_raw_orbit_changes(context: String) -> void:
 		if float(_rig.get("_tracking_manual_left")) <= 0.0:
 			break
 		inside += 1
-		observed_s = float(Time.get_ticks_msec() - started_ms) / 1000.0
+		# On the rig's own clock (its _process delta), not wall time.
+		observed_s = maxf(observed_s, grace_s - float(_rig.get("_tracking_manual_left")))
 		drifted = maxf(drifted, absf(angle_difference(float(_rig.get("yaw")), held_yaw)))
 	if observed_s < MIN_GRACE_SECONDS_OBSERVED:
 		_fail("%s: only %.2fs (%d frames) observed inside the manual-look grace (need %.2fs); cannot prove the hold" % [
@@ -606,15 +606,16 @@ func _assert_raw_orbit_changes(context: String) -> void:
 			context, drifted, observed_s])
 
 
-## Worst case for the neutral tracker to bring a relocated opponent back into
-## frame: a half-turn at max_speed_deg, plus the clear-orbit swing easing back
-## over its widest sample, plus one solver interval and a half-second margin.
+## combat.json camera.tracking.manual_grace_seconds.
 func _manual_grace_seconds() -> float:
 	var tracking: Dictionary = (MATH.config().get("camera", {}) as Dictionary) \
 		.get("tracking", {}) as Dictionary
 	return float(tracking.get("manual_grace_seconds", 0.4))
 
 
+## Worst case for the neutral tracker to bring a relocated opponent back into
+## frame: a half-turn at max_speed_deg, plus the clear-orbit swing easing back
+## over its widest sample, plus one solver interval and a half-second margin.
 func _neutral_convergence_frames() -> int:
 	var camera: Dictionary = MATH.config().get("camera", {}) as Dictionary
 	var tracking: Dictionary = camera.get("tracking", {}) as Dictionary
