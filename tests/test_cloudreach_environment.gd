@@ -66,8 +66,8 @@ func test_terrain_wear_is_true_coverage_and_route_joints_do_not_restart_fades() 
 		"Settlement wear reveals the real crown outside its dirt mask")
 	assert_false(worn.contains("mix(turf,soil,dirt)"),
 		"Wear no longer paints imitation turf over its polygon footprint")
-	assert_true(trail.contains("if(edge<=coverage_hash){discard;}"),
-		"Trail edges reveal the real terrain through stable coverage")
+	# Trail-edge appearance is verified in matched native captures. The old
+	# exact discard-expression check pinned the visible square-grid defect.
 	assert_true(trail.contains("end_distance=UV2.y"),
 		"Trail vertices carry independent distance from both true ends")
 	assert_true(world.contains("fade_start, fade_end"),
