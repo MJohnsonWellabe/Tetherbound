@@ -165,7 +165,12 @@ static func reward_fits_after_cost(inventory: RefCounted) -> bool:
 		return false
 	var trial := INVENTORY.new(inventory.get("_db"))
 	for index in int(inventory.call("slot_count")):
-		trial.set_slot(index, inventory.call("stack_at", index))
+		# stack_at() answers {} for an empty slot, and set_slot() stores any
+		# dictionary as-is, so copying it verbatim made every empty slot of the
+		# scratch copy read as occupied: no room for anything that is not
+		# already stacked.
+		var stack: Dictionary = inventory.call("stack_at", index)
+		trial.set_slot(index, null if stack.is_empty() else stack)
 	for item: String in ITEM_IDS:
 		if not trial.remove(item, 1):
 			return false
