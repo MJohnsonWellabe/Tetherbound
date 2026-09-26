@@ -14,10 +14,13 @@ const STANDS := [
 	# has come through the portal and landed on the apron, the rig looks into the
 	# court exactly as a player's stick would, and the spring arm resolves against
 	# the portal's lens-only camera stops.
-	{"id": "south-flight-arrival", "position": Vector2(900.0, 2693.0), "target": Vector3(900.0, 1026.0, 2712.0), "rig": true},
+	{"id": "south-flight-arrival", "position": Vector2(903.5, 2697.0), "target": Vector3(900.0, 1026.0, 2712.0), "rig": true},
 	# Worst case for the lens: a trainer landed just inside the portal beside a
 	# pier, so the default 5 m arm would end inside the masonry.
-	{"id": "portal-threshold", "position": Vector2(896.0, 2689.0), "target": Vector3(900.0, 1026.0, 2710.0), "rig": true},
+	# (896, 2689) sat inside needle 4 (897.5, 2688.6, r 1.8) and 2693 put the
+	# lens against the hanging arch banner; both stands keep >= 5 m from every
+	# needle axis. Render r1 (2026-09-26) showed those two defects.
+	{"id": "portal-threshold", "position": Vector2(904.0, 2689.5), "target": Vector3(900.0, 1026.0, 2710.0), "rig": true},
 	{"id": "southwest-court-oblique", "position": Vector2(886.0, 2689.0), "target": Vector2(900.0, 2701.0), "camera_back_m": 10.0, "camera_lateral_m": -3.0, "aim_up_m": 8.0},
 ]
 
