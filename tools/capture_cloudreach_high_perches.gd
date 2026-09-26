@@ -14,7 +14,11 @@ const STANDS := [
 	# has come through the portal and landed on the apron, the rig looks into the
 	# court exactly as a player's stick would, and the spring arm resolves against
 	# the portal's lens-only camera stops.
-	{"id": "south-flight-arrival", "position": Vector2(903.5, 2697.0), "target": Vector3(900.0, 1026.0, 2712.0), "rig": true},
+	# r3: a Fly arrival through the portal comes down inside its 5.5 m aperture
+	# (x 897.25-902.75), so the stand sits on that axis. At x 903.5 the default
+	# arm put the lens 1.5 m from needle 5 (908.6, 2694.8, r 2.8), which filled the
+	# left third of the frame.
+	{"id": "south-flight-arrival", "position": Vector2(900.5, 2697.0), "target": Vector3(900.0, 1026.0, 2712.0), "rig": true},
 	# Worst case for the lens: a trainer landed just inside the portal beside a
 	# pier, so the default 5 m arm would end inside the masonry.
 	# (896, 2689) sat inside needle 4 (897.5, 2688.6, r 1.8) and 2693 put the
@@ -164,9 +168,14 @@ func _pose_rig(stand: Dictionary) -> bool:
 	var model := _player.get_node_or_null(^"Model") as Node3D
 	if model != null:
 		model.global_rotation.y = atan2(-sightline.x, -sightline.z)
-	_rig.global_position = _player.global_position + Vector3.UP * 1.55
-	var pitch := clampf(atan2(sightline.y, Vector2(sightline.x, sightline.z).length()),
-		deg_to_rad(-12.0), deg_to_rad(15.0))
+	# F08#3 r3: pivot height and pitch are the rig's own production values
+	# (movement.json camera.height / pitch_start_deg, which Fly dismount keeps:
+	# riding_controller hands the rig back with an empty profile). r2 aimed the
+	# arm UP at a point 6 m overhead with a hand-set 1.55 m pivot, which swung
+	# the lens down to 0.3 m above the apron - a view no landing player gets.
+	# Only the yaw is chosen here, as a player's stick would.
+	_rig.global_position = _player.global_position + Vector3.UP * float(_rig.get("_height"))
+	var pitch := float(_rig.get("pitch"))
 	_rig.rotation = Vector3(pitch, atan2(-sightline.x, -sightline.z), 0.0)
 	_player.reset_physics_interpolation()
 	_rig.reset_physics_interpolation()
@@ -218,7 +227,7 @@ func _capture(frame_id: String, stand_id: String, observed: Dictionary) -> void:
 	_records.append({"frame_id": frame_id, "file": path, "stand_id": stand_id,
 		"observed_clock": observed, "player_position": _vec3(_player.global_position),
 		"camera_position": _vec3(_camera.global_position), "camera_fov": _camera.fov,
-		"camera": "production_rig" if _camera == _rig_camera else "evidence", "rig_spring_hit_length": _rig.get_hit_length(),
+		"camera": "production_rig" if _camera == _rig_camera else "evidence", "rig_spring_hit_length": _rig.get_hit_length(), "rig_pitch_deg": rad_to_deg(_rig.rotation.x),
 		"presentation_roles": roles, "presentation_collision_count": _collision_descendants(_presentation),
 		"bytes": FileAccess.get_file_as_bytes(path).size()})
 	print("HIGH PERCHES CAPTURE %s -> %s" % [frame_id, path])
