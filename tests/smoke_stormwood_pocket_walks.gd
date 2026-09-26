@@ -37,8 +37,11 @@ extends SceneTree
 ## flame (terrain, trunks, rocks, walls, posts). The painted spur is sampled
 ## at 2 m steps over its first 20 m: in frustum and a clear ray. Physics rays
 ## cannot see non-colliding foliage (canopies, ferns, bushes); the rendered
-## lamp-on/lamp-off pixel check in tools/capture_stormwood_pocket_walks.gd
-## covers that.
+## road frames from tools/capture_stormwood_pocket_walks.gd, inspected by eye,
+## cover that. (That tool's lamp-on/lamp-off pixel count is dominated by rain
+## and wind motion between the two grabs and is recorded, not judged.)
+## The projection is taken at a 16:9 viewport (MEASURE_VIEWPORT); a headless
+## window is otherwise square.
 ##
 ## Negative control: a straight stick push (no detour) at each pocket's back
 ## wall from outside must never put the trainer inside the pocket interior.

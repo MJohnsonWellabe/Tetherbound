@@ -110,41 +110,48 @@ func _walk_frames() -> void:
 		var stand: Vector2 = here.at
 		var info := {"pocket": id, "joins": str(spur.joins), "junction": [float(spur.points[0][0]), float(spur.points[0][1])],
 			"road_back_m": _back_m, "side": "along" if sense == 1 else "against"}
-		# (1) Road, normal exploration pose, looking along the road.
-		var ahead := stand + heading * 20.0
-		var occupied := {}
+		# (1) Road, normal exploration pose, looking along the road. The walk
+		# smoke's side first; if a body keeps blocking the view there (a
+		# creature that walks up to the trainer), the other side of the
+		# junction at the same distance.
+		var lamp := _world.get_node_or_null(NodePath("StormwoodPockets/Pocket_%s/SpurLamp" % id)) as Node3D
+		var flame := lamp.get_node_or_null(^"AmberFlame") as Node3D if lamp != null else null
+		var obstructions: Array[Dictionary] = []
+		var lure := {}
 		for attempt in ARM_RETRIES:
+			var side := sense if attempt < ARM_RETRIES / 2 else -sense
+			here = _along(points, js - _back_m * side)
+			heading = (here.dir as Vector2) * side
+			stand = here.at
+			info["side"] = "along" if side == 1 else "against"
+			var ahead := stand + heading * 20.0
 			await _stand(stand, Vector3(ahead.x, _ground(ahead.x, ahead.y) + 1.5, ahead.y), _pitch_start)
+			lure = {}
+			if flame != null:
+				var with_lamp := await _grab()
+				lamp.visible = false
+				var without := await _grab()
+				lamp.visible = true
+				var px := _camera.unproject_position(flame.global_position)
+				var size := _camera.get_viewport().get_visible_rect().size
+				lure = {"flame_in_frustum": _camera.is_position_in_frustum(flame.global_position),
+					"flame_screen": [px.x / size.x, px.y / size.y],
+					"camera_to_flame_m": _camera.global_position.distance_to(flame.global_position),
+					"lamp_pixels_changed": _diff(with_lamp, without)}
 			var arm := _camera.global_position.distance_to(_player.global_position)
 			var blocker := _flame_blocker(id)
 			if arm >= ARM_MIN_M and blocker.is_empty():
 				break
-			# The spring arm pulled in, or a body stands between the camera and
-			# the lamp flame (a roaming wild creature). Record what, and let it
-			# move on.
-			occupied = {"attempt": attempt + 1, "arm_m": arm, "flame_ray_blocked_by": blocker,
-				"bodies_near": _bodies_near(_camera.global_position, 4.0)}
-			_log("%s road stand obstructed: %s" % [id, str(occupied)])
+			var seen := {"attempt": attempt + 1, "side": info["side"], "arm_m": arm,
+				"flame_ray_blocked_by": blocker, "bodies_near": _bodies_near(_camera.global_position, 4.0)}
+			obstructions.append(seen)
+			_log("%s road stand obstructed: %s" % [id, str(seen)])
 			for _frame in 300:
 				await physics_frame
-		if not occupied.is_empty():
-			info["arm_pulled_in"] = occupied
-		var lamp := _world.get_node_or_null(NodePath("StormwoodPockets/Pocket_%s/SpurLamp" % id)) as Node3D
-		var flame := lamp.get_node_or_null(^"AmberFlame") as Node3D if lamp != null else null
-		var lure := {}
-		if flame != null:
-			var px := _camera.unproject_position(flame.global_position)
-			var size := _camera.get_viewport().get_visible_rect().size
-			lure = {"flame_in_frustum": _camera.is_position_in_frustum(flame.global_position),
-				"flame_screen": [px.x / size.x, px.y / size.y],
-				"camera_to_flame_m": _camera.global_position.distance_to(flame.global_position)}
-			var with_lamp := await _grab()
-			lamp.visible = false
-			var without := await _grab()
-			lamp.visible = true
-			lure["lamp_pixels_changed"] = _diff(with_lamp, without)
-		await _capture("%s_1_road_lure" % id, "%s: on %s %d m of road before the spur junction, normal exploration camera looking along the road" % [
-			id, str(spur.joins), int(_back_m)], _with(info, _with(lure, {"stand": [stand.x, stand.y]})))
+		if not obstructions.is_empty():
+			info["road_stand_obstructions"] = obstructions
+		await _capture("%s_1_road_lure" % id, "%s: on %s %d m of road before the spur junction (%s side), normal exploration camera looking along the road" % [
+			id, str(spur.joins), int(_back_m), str(info["side"])], _with(info, _with(lure, {"stand": [stand.x, stand.y]})))
 		# (2) In the mouth, looking in at the reward.
 		var f := POCKET_FRAME.frame(pocket)
 		var centre: Vector2 = f.centre
