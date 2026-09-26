@@ -78,6 +78,10 @@ extends SceneTree
 ## Gate A. When the gather route and tail are reliable, drop the flag split
 ## and let CI gate on the whole file again by default.
 const FULL_CHAIN_FLAG := "--gate-b-full-chain"
+## F01 (all three starters): `--starter=<species_id>` takes that starter in the
+## real picker (`gate_a_opening_drive.gd::starter_species`, resolved against the
+## picker's own live order). Absent, the drive's historical single `ui_right`.
+const STARTER_ARG := "--starter="
 
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
@@ -89,12 +93,24 @@ const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 ## and the place it has to arrive at cannot drift apart.
 const BUILD_ROUTE_ENTRY := preload("res://tests/helpers/gate_a_build_segment.gd").BUILD_ROUTE_XZ[0]
 const TAIL := preload("res://tests/helpers/gate_b_tail_segment.gd")
+const VILLAGE_BOUNDARY_PATH := "res://data/config/village_boundary.json"
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
+const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
 
 ## Never touch a player's real save directory from a regression: the tail's
 ## real camp.gd rest autosaves through night_rest.gd.
 const TEST_DIR := "user://test_saves_gate_b_continuous/"
+## The slot the in-run reload checks write. Not the autosave slot the real rest
+## path writes (`save_game.gd::AUTOSAVE_SLOT`), so the two cannot mask each other.
+const RELOAD_SLOT := 2
+## Flags that must be set, and stay set, across each reload.
+const READINESS_FLAGS := ["opening:beat:road", "road_gate_open", "tam_tools_given",
+	"tournament_team_ready", "tournament_training_ready", "home_materials_gathered",
+	"home_built", "creature_bed_built_3", "player_slept_at_home"]
+const RESULT_FLAGS := ["tournament_entered", "tournament_quarter_won", "tournament_semi_won",
+	"tournament_won", "recipe_saddle"]
 
 ## The ladder, in the order `data/progression/objectives.json` lists it. Each
 ## entry is the flag the beat writes and a fragment the tracked line must show
@@ -152,10 +168,17 @@ var _rig: Node3D = null
 var _progression: RefCounted = null
 var _reached: Array[String] = []
 var _full_chain := false
+var _starter_request := ""
+var _starter_species := ""
+var _starter_uid := ""
+var _starter_before_bracket: Dictionary = {}
 
 
 func _init() -> void:
 	_full_chain = OS.get_cmdline_user_args().has(FULL_CHAIN_FLAG)
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with(STARTER_ARG):
+			_starter_request = arg.substr(STARTER_ARG.length())
 	_run()
 
 
@@ -186,6 +209,10 @@ func _run() -> void:
 	if not await _play_the_tail():
 		_finish()
 		return
+	if not await _save_and_reload("after the third tournament round",
+			READINESS_FLAGS + RESULT_FLAGS, true):
+		_finish()
+		return
 	_assert_the_whole_ladder_was_walked()
 	_finish()
 
@@ -213,7 +240,9 @@ func _play_the_opening() -> bool:
 	# runs, extracted so both play it rather than two files each knowing how.
 	# The player ends where the game actually leaves them, which is the one
 	# position no computed coordinate reproduces.
-	var opening: Dictionary = await OPENING_DRIVE.new().run(self)
+	var drive := OPENING_DRIVE.new()
+	drive.starter_species = _starter_request
+	var opening: Dictionary = await drive.run(self)
 	for line: Variant in (opening.get("transcript", []) as Array):
 		_checkpoint("opening | %s" % str(line))
 	if not bool(opening.get("passed", false)):
@@ -227,6 +256,23 @@ func _play_the_opening() -> bool:
 	if _world == null or _game == null or _player == null:
 		_fail("the opening passed and handed back no world/game/player")
 		return false
+	_starter_species = str(opening.get("starter_species", ""))
+	_starter_uid = str(opening.get("starter_uid", ""))
+	if _starter_species == "" or _starter_uid == "":
+		_fail("the opening passed without reporting which starter reached the party")
+		return false
+	if _starter_request != "" and _starter_species != _starter_request:
+		_fail("asked for starter '%s' and the party received '%s'"
+			% [_starter_request, _starter_species])
+		return false
+	var starter := _starter()
+	if starter == null or str(starter.get("species_id")) != _starter_species \
+			or str(starter.get("nickname")) != str(OPENING_DRIVE.CHOSEN_NAME):
+		_fail("the chosen starter %s (uid %s) is not in the party named '%s' after the opening"
+			% [_starter_species, _starter_uid, OPENING_DRIVE.CHOSEN_NAME])
+		return false
+	_checkpoint("starter %s reached the party as '%s' (uid %s)"
+		% [_starter_species, OPENING_DRIVE.CHOSEN_NAME, _starter_uid])
 	# Never touch a player's real save directory from a regression: the tail
 	# played later in this run autosaves through the real rest path.
 	_game.set("save_system", SAVE_GAME.new(TEST_DIR))
@@ -379,7 +425,10 @@ func _gather_and_walk_home() -> bool:
 ## draw by the marshal's own ladder reading that condition, and fights all
 ## three rounds.
 func _play_the_tail() -> bool:
-	var tail: Dictionary = await TAIL.new().run(self, _world as Node3D, _game, _player, _rig)
+	var segment: RefCounted = TAIL.new()
+	segment.on_ready_for_draw = _reload_at_three_bed_readiness
+	var tail: Dictionary = await segment.run(self, _world as Node3D, _game, _player, _rig,
+		true, false)
 	for line: Variant in (tail.get("transcript", []) as Array):
 		_checkpoint("tail | %s" % str(line))
 	if not bool(tail.get("passed", false)):
@@ -480,6 +529,148 @@ func _note(flag_id: String, check_objective: bool = true) -> void:
 			% [flag_id, tracked] + "the beat that says '%s'" % fragment)
 
 
+## --- the reloads ---------------------------------------------------------------
+##
+## F01: "without losing state on reload". Both checks go through the game's own
+## `Game.save_game()` / `Game.load_game()` -- the same mid-session path
+## `smoke_party_count_after_catches.gd` and `smoke_clock_survives_a_reload.gd`
+## use -- into this file's private save directory, inside the same continuous
+## run. Nothing is seeded: what is compared is whatever the run itself built,
+## and the rest of the run then plays on the reloaded state.
+
+## Called by the tail segment once three beds are placed, slept in and the team
+## fed, before the sign-up.
+func _reload_at_three_bed_readiness() -> bool:
+	return await _save_and_reload("at three-bed readiness, before the tournament",
+		READINESS_FLAGS, false)
+
+
+func _save_and_reload(when: String, flags: Array, after_tournament: bool) -> bool:
+	var before := _snapshot(flags)
+	if not bool(_game.call("save_game", RELOAD_SLOT)):
+		_fail("save_game(%d) refused %s" % [RELOAD_SLOT, when])
+		return false
+	if not bool(_game.call("load_game", RELOAD_SLOT)):
+		_fail("load_game(%d) refused the slot it had just written %s" % [RELOAD_SLOT, when])
+		return false
+	# Let the rebuilt buildings, the restored clock and the tournament's own
+	# party watch settle before reading anything back.
+	for _i in 30:
+		await physics_frame
+	var after := _snapshot(flags)
+	var lost: Array[String] = []
+	for key: String in before.keys():
+		if str(before[key]) != str(after.get(key)):
+			lost.append("%s: %s -> %s" % [key, str(before[key]), str(after.get(key))])
+	if not lost.is_empty():
+		_fail("state changed across the save/reload %s:\n    %s" % [when, "\n    ".join(lost)])
+		return false
+	var starter: Dictionary = after.get("starter", {})
+	if starter.is_empty() or str(starter.get("species")) != _starter_species \
+			or str(starter.get("nickname")) != str(OPENING_DRIVE.CHOSEN_NAME):
+		_fail("the reload %s lost the chosen starter %s '%s'"
+			% [when, _starter_species, OPENING_DRIVE.CHOSEN_NAME])
+		return false
+	# The claim is per starter: the chosen starter must be one of the three
+	# entered in the bracket, and after the rounds it must have gained from them.
+	var entered: Array = after.get("tournament_selection", [])
+	if not entered.has(_starter_uid):
+		_fail("the chosen starter %s (%s) is not among the tournament entrants %s %s"
+			% [_starter_species, _starter_uid, str(entered), when])
+		return false
+	if not after_tournament:
+		_starter_before_bracket = {"level": int(starter.get("level")), "xp": int(starter.get("xp"))}
+	elif int(starter.get("level")) <= int(_starter_before_bracket.get("level", 0)) \
+			and int(starter.get("xp")) <= int(_starter_before_bracket.get("xp", 0)):
+		_fail("the chosen starter gained nothing across the three rounds (%s before, %s after)"
+			% [str(_starter_before_bracket), str(starter)])
+		return false
+	var set_flags: Array = after.get("flags", [])
+	for id: String in flags:
+		if not set_flags.has(id):
+			_fail("'%s' should be set %s and is not after the reload" % [id, when])
+			return false
+	if int(after.get("creature_beds_saved", 0)) < 3 or int(after.get("creature_beds_live", 0)) < 3:
+		_fail("the reload %s left %d saved / %d standing creature beds, wanted 3"
+			% [when, int(after.get("creature_beds_saved", 0)), int(after.get("creature_beds_live", 0))])
+		return false
+	if after_tournament and not bool(_game.call("recipe_known", "saddle")):
+		_fail("the reload %s forgot the saddle recipe the tournament awarded" % when)
+		return false
+	_checkpoint("save/reload %s kept starter %s; party %s; %d/%d flags; %d creature beds; day %d; inventory [%s]"
+		% [when, str(starter), str(after.get("party")), set_flags.size(), flags.size(),
+			int(after.get("creature_beds_live", 0)), int(after.get("day", 0)),
+			str(after.get("inventory"))])
+	return true
+
+
+func _snapshot(flags: Array) -> Dictionary:
+	var party: RefCounted = _game.get("party")
+	var members: Array[String] = []
+	for member: Variant in (party.call("members") as Array):
+		members.append(_creature_line(member as RefCounted))
+	var starter := _starter()
+	var inventory: RefCounted = _game.get("inventory")
+	var stacks: Array[String] = []
+	for i in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", i)
+		if not stack.is_empty():
+			# `inventory.gd` stacks are {id, n}; tools also carry durability.
+			var line := "%s x%d" % [str(stack.get("id", "?")), int(stack.get("n", 0))]
+			var worn := int(inventory.call("durability_at", i))
+			if worn > 0:
+				line += " d%d" % worn
+			stacks.append(line)
+	var set_flags: Array[String] = []
+	for id: String in flags:
+		if _flag(id):
+			set_flags.append(id)
+	var saved_beds := 0
+	for record: Variant in (_game.get("placed_buildings") as Array):
+		if record is Dictionary and str((record as Dictionary).get("id", "")) == "creature_bed" \
+				and not bool((record as Dictionary).get("removed", false)):
+			saved_beds += 1
+	var live_beds := 0
+	for node: Node in get_nodes_in_group(BUILD_PLACER.PLACED_GROUP):
+		if node.is_queued_for_deletion():
+			continue
+		if str(node.get_meta(BUILD_PLACER.BUILDING_ID_META, "")) == "creature_bed":
+			live_beds += 1
+	return {
+		"starter": {} if starter == null else {
+			"species": str(starter.get("species_id")),
+			"nickname": str(starter.get("nickname")),
+			"level": int(starter.get("level")),
+			"xp": int(starter.get("xp")),
+		},
+		"party": members,
+		"tournament_selection": party.call("tournament_selection_ids"),
+		"condition_ready": bool(TOURNAMENT.condition_ready(party)),
+		"inventory": ", ".join(stacks),
+		"flags": set_flags,
+		"creature_beds_saved": saved_beds,
+		"creature_beds_live": live_beds,
+		"day": int(_game.get("day")),
+	}
+
+
+func _creature_line(creature: RefCounted) -> String:
+	if creature == null:
+		return "<empty>"
+	return "%s/%s/%s L%d xp%d" % [str(creature.get("uid")), str(creature.get("species_id")),
+		str(creature.get("nickname")), int(creature.get("level")), int(creature.get("xp"))]
+
+
+func _starter() -> RefCounted:
+	var party: RefCounted = _game.get("party") if _game != null else null
+	if party == null:
+		return null
+	for member: Variant in (party.call("members") as Array):
+		if member != null and str((member as RefCounted).get("uid")) == _starter_uid:
+			return member as RefCounted
+	return null
+
+
 ## --- plumbing -----------------------------------------------------------------
 
 func _flag(id: String) -> bool:
@@ -571,11 +762,66 @@ func _tap(action: StringName) -> void:
 ## once it picks one and an attempt that has boxed itself in will stay boxed in.
 func _walk_back_to_the_square() -> bool:
 	var y := _player.global_position.y
-	var legs: Array = [
+	var legs: Array = []
+	# The live scatter fill can end OUTSIDE the village fence (the boundary is
+	# open once the key has been used). Walking straight for the clearing then
+	# pins the player against the fence -- 3 of 8 full-chain runs stopped ~19 m
+	# short at (29,-59), just north of the outline's (27,-58)->(36,-61) run.
+	# Come back in through the nearest real gate, as a player does.
+	var boundary: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VILLAGE_BOUNDARY_PATH))
+	var outline := PackedVector2Array()
+	for raw: Variant in ((boundary.get("outline", {}) as Dictionary).get("points", []) as Array):
+		outline.append(Vector2(float(raw[0]), float(raw[1])))
+	var here2 := Vector2(_player.global_position.x, _player.global_position.z)
+	if outline.size() >= 3 and not Geometry2D.is_point_in_polygon(here2, outline):
+		var centre := Vector2.ZERO
+		for p: Vector2 in outline:
+			centre += p
+		centre /= float(outline.size())
+		# Round the OUTSIDE of the fence to the gate that is nearest along the
+		# fence, not in a straight line: from (29,-59) the straight-line nearest
+		# gate (RoadGate) is across the village, and aiming at it pins the
+		# player against the same fence. Each outline vertex on the way is
+		# pushed 3 m outward so the walk slides along the outside of the line.
+		var from_edge := _nearest_edge(outline, here2)
+		var best_route: Array = []
+		var best_length := INF
+		var gate := Vector2.INF
+		for raw: Variant in ((boundary.get("gates", {}) as Dictionary).get("entries", []) as Array):
+			var at_raw: Array = (raw as Dictionary).get("at", [])
+			var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+			var to_edge := _nearest_edge(outline, at)
+			for step: int in [1, -1]:
+				var route: Array = []
+				var length := 0.0
+				var prev := here2
+				var i := from_edge
+				while i != to_edge:
+					var vertex := outline[(i + 1) % outline.size()] if step == 1 else outline[i]
+					route.append(vertex + (vertex - centre).normalized() * 3.0)
+					length += prev.distance_to(vertex)
+					prev = vertex
+					i = posmod(i + step, outline.size())
+				length += prev.distance_to(at)
+				if length < best_length:
+					best_length = length
+					best_route = route
+					gate = at
+		for waypoint: Vector2 in best_route:
+			legs.append([Vector3(waypoint.x, y, waypoint.y), 2.5, "along the outside of the village fence"])
+		var inward := (centre - gate).normalized()
+		legs.append([Vector3(gate.x - inward.x * 5.0, y, gate.y - inward.y * 5.0), 2.5, "outside the nearest village gate"])
+		legs.append([Vector3(gate.x + inward.x * 5.0, y, gate.y + inward.y * 5.0), 2.5, "inside the nearest village gate"])
+	# Then the Practice Meadow road's own authored points (terrain_playground
+	# paths.routes "Practice Meadow"): the pre-F01 radial bend (18,-24) is no
+	# longer on any road.
+	legs.append_array([
 		[Vector3(30.0, y, -40.0), 2.5, "the Practice Meadow clearing"],
-		[Vector3(18.0, y, -24.0), 2.0, "the Practice Meadow road bend"],
+		[Vector3(21.0, y, -37.5), 2.0, "the Practice Meadow road past The Stoneyard"],
+		[Vector3(14.6, y, -31.0), 2.0, "The Stoneyard"],
+		[Vector3(13.6, y, -20.0), 2.0, "the foot of Stoneyard Lane"],
 		[Vector3(BUILD_ROUTE_ENTRY.x, y, BUILD_ROUTE_ENTRY.y), 0.5, "the Village Square"],
-	]
+	])
 	var nav = NAVIGATOR.new(self, _player, _rig, _send_stick)
 	for leg: Variant in legs:
 		var target: Vector3 = (leg as Array)[0]
@@ -607,6 +853,20 @@ func _walk_back_to_the_square() -> bool:
 			return false
 	_checkpoint("walked back to the Village Square for the build")
 	return true
+
+
+## Index i of the outline edge outline[i] -> outline[i+1] nearest to `p`.
+func _nearest_edge(outline: PackedVector2Array, p: Vector2) -> int:
+	var best := 0
+	var best_d := INF
+	for i in outline.size():
+		var a := outline[i]
+		var b := outline[(i + 1) % outline.size()]
+		var d := p.distance_to(Geometry2D.get_closest_point_to_segment(p, a, b))
+		if d < best_d:
+			best_d = d
+			best = i
+	return best
 
 
 func _send_stick(x: float, y: float) -> void:

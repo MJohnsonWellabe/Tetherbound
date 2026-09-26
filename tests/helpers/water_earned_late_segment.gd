@@ -348,27 +348,18 @@ func _fight_at_normal_clock(id: String, flag: String) -> bool:
 		return _fail(id + " did not enter its production hosted trainer battle")
 	var opponents: Dictionary = {}
 	deadline = Time.get_ticks_msec() + 180000
-	var tick := 0
 	while _director.trainer_battle_active() and Time.get_ticks_msec() < deadline and not _expired():
 		var enemy: Node3D = _manager.enemy_body()
 		var ally: Node3D = _director.ally_body()
 		if is_instance_valid(enemy) and is_instance_valid(ally) and _manager.is_fighting():
 			opponents[enemy.get_instance_id()] = str(enemy.instance.species_id)
-			var offset := enemy.global_position - ally.global_position
-			offset.y = 0
-			_stop_stick()
-			# Facing is earned by ordinary movement, never body.face_towards().
-			if offset.length() > _manager.combat_move_reach("quick") * 0.8 \
-					or ally.facing().dot(offset.normalized()) < 0.95:
-				var local: Vector3 = _camera.planar_basis().inverse() * offset.normalized()
-				_stick(local.x, local.z)
-			if tick % 20 == 0:
-				Input.action_press("combat_quick")
-			elif tick % 20 == 2:
-				Input.action_release("combat_quick")
+			# Facing and movement come from ordinary input only (never
+			# body.face_towards()); the manager turns the creature into its
+			# own attack, and the pilot walks it through the camera.
+			_stop_combat_input()
+			_pilot.drive(_manager, ally, enemy)
 		else:
 			_stop_combat_input()
-		tick += 1
 		await _tree.physics_frame
 	_stop_combat_input()
 	if _expired() or _director.trainer_battle_active():

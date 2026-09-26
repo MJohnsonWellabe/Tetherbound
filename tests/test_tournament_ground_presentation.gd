@@ -262,3 +262,21 @@ func test_equipment_night_light_has_an_installed_visible_source_and_safe_footpri
 		"the warm light has a visible emissive source")
 	assert_true(source.contains("InstalledCandleStand") and source.contains("InstalledTorchHead"),
 		"the visible source is mounted on the installed standing-light pair")
+
+
+## Oxblood/red is Team Tether's alone (ART_DIRECTION). The kit's MI_Banner cloth
+## is oxblood through its COLOR_0 vertex colours and the lists ring's old
+## multiplier rendered maroon over the dirt texture; both now take Meadows ochre.
+func test_tournament_cloth_and_ring_are_not_team_tether_red() -> void:
+	var cfg := _config()
+	var ring_colour := Color(str((cfg.get("arena", {}) as Dictionary).get("colour", "#ff0000")))
+	var canopy := cfg.get("marshal_canopy", {}) as Dictionary
+	var cloth := str(canopy.get("cloth_tint", ""))
+	assert_true(not cloth.is_empty(), "the canopy cloth declares its non-red Meadows tint")
+	for pair: Array in [["lists ring", ring_colour], ["canopy cloth", Color(cloth if not cloth.is_empty() else "#ff0000")]]:
+		var c: Color = pair[1]
+		assert_true(not (c.r > c.g * 1.6 and c.r > c.b * 1.6),
+			"%s colour %s is not a red/oxblood hue" % [pair[0], c.to_html(false)])
+	var source := _source(SCRIPT_PATH)
+	assert_true(source.contains("vertex_color_use_as_albedo = false"),
+		"the canopy drops the kit's oxblood vertex tint on MI_Banner surfaces")

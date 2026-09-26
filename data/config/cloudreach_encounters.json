@@ -109,7 +109,9 @@
       ]
     },
     "elite": {
+      "_why_xp_bonus": "F07#4 ledger margin (ralph/reports/CLOUDREACH-LANE/f07-route-ledger/summary.md). Flat SC15 top-up paid to every living party member on the required Voss win (trainer_npc.gd::reward_xp_bonus). Was 0: at 50% wild engagement the lead met Captain Veyra's band and the L33 exit with zero slack and 77% of its XP came from optional wilds. PROGRESSION §7: tune existing awards so the ordinary route supports its intended encounters. Scale: about 0.8 of a level per member at L29-30 (XP to next 1922-1998), no multi-level spike; larger than the Warden precedent (400 XP, about 0.3 of a level at L20, band5_stronghold_approach/trainers.json), because Voss is the long Voss-to-Veyra leg's only required payout. TUNABLE.",
       "coins": 120,
+      "xp_bonus": 1600,
       "items": [
         {
           "id": "revive",
@@ -118,7 +120,9 @@
       ]
     },
     "captain": {
+      "_why_xp_bonus": "F07#4 ledger margin; see elite. Paid on the required Veyra win so the retained five leave above the WORLD §2.4 L33 exit rather than on it. About 0.28 of a level at L32-33, in line with the Warden precedent. Was 0. TUNABLE.",
       "coins": 150,
+      "xp_bonus": 600,
       "items": [
         {
           "id": "rare_candy",

@@ -30,9 +30,11 @@
   ],
   "beacon_light": {
     "colour": "#72dcdb",
-    "energy": 3.6,
-    "range_m": 36.0,
+    "energy": 5.2,
+    "range_m": 48.0,
     "shadow_enabled": false
   },
-  "route_clear_half_width_m": 4.8
+  "route_clear_half_width_m": 4.8,
+  "beacon_scale": 1.6,
+  "_beacon_scale_note": "F08#3 night: the judge read the gate beacons as tiny lanterns. Plinth, bowl and flame scale together from the same floor point; light energy/range raised so the approach path pools read at night."
 }

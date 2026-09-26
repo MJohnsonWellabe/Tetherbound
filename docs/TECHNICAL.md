@@ -149,7 +149,7 @@ One import/export/render writer per machine. Independent pure read-only tests ca
 
 ## 9. CI and packaging
 
-`.github/workflows/ci.yml` is execution truth: import, targeted grouped/sharded tests, scatter freshness and Windows export gates. CI runs PRs/main pushes. Open draft PR early; never push main directly. Review actual job/log execution, not just green status or elapsed time.
+`.github/workflows/ci.yml` is execution truth: import, targeted grouped/sharded tests, scatter freshness and Windows export gates. CI runs a fast tier on PRs/main pushes and the full suite every 8 hours on main, on dispatch, or on a `full-ci`-labelled PR (WORKFLOW §8). Open draft PR early; never push main directly. Review actual job/log execution, not just green status or elapsed time. `.github/workflows/render.yml` is the on-demand render/smoke offload (dispatch from `main`, inputs validated, artifact of written files); `tools/cloud_setup.sh` prepares a cloud container.
 
 Markdown/docs/site/ralph paths may intentionally take the docs-only path. A green docs-only run is **not game validation**. Preserve unconditional change detection; do not add a markdown paths-ignore trigger that prevents workflow completion events. Branch comparison uses merge-base with main; otherwise a final docs commit could hide earlier code. Empty diff fails safe to build. `[skip ci]` is only a WIP checkpoint, not final verification.
 

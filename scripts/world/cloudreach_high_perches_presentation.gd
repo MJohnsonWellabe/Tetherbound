@@ -11,6 +11,9 @@ const TORCH := preload("res://assets/props/built/torch_prop.tscn")
 const BENCH := preload("res://assets/props/quaternius_fantasy/Bench.gltf")
 const BAG := preload("res://assets/props/quaternius_fantasy/Bag.gltf")
 const CRATE := preload("res://assets/props/quaternius_fantasy/Crate_Wooden.gltf")
+## Lens-only layer shared with the production CameraRig (camera_rig.gd). It
+## stops the spring arm but is outside every traversal mask.
+const CAMERA_RIG := preload("res://scripts/player/camera_rig.gd")
 
 var _built := false
 
@@ -53,6 +56,46 @@ func _add_arrival_arch(cfg: Dictionary, material: Material) -> void:
 	arch.set_meta("high_perches_role", "arrival_portal")
 	add_child(arch)
 	_add_box("ArrivalCrown", at + Vector3(0.0, 10.8, 0.0), Vector3(12.2, 0.7, 3.0), material, "arrival_portal")
+
+
+## The arrival portal is presentation-only, so the production spring arm used to
+## pass straight through it: a trainer standing just inside the portal put the
+## lens inside or behind a solid pier (F08#3, tile 3). These bodies sit on the
+## rig's occlusion-only layer (mask 0, never on a traversal layer), so the arm
+## shortens in front of the masonry while Fly, landing and walking are unchanged.
+## Returned as a separate node: the identity layer itself stays collision-free.
+func build_camera_stops() -> Node3D:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var cfg: Dictionary = parsed if parsed is Dictionary else {}
+	var at := _v3(cfg.get("arrival_arch_position", [0.0, 0.0, -15.0]))
+	var size := _v3(cfg.get("arrival_arch_size_m", [11.0, 10.5, 2.5]))
+	var stops_cfg := cfg.get("arrival_arch_camera_stops", {}) as Dictionary
+	var opening_half := float(stops_cfg.get("opening_half_width_m", 2.75))
+	var opening_top := float(stops_cfg.get("opening_top_m", 6.7))
+	var holder := StaticBody3D.new()
+	holder.name = "HighPerchesArchCameraStops"
+	holder.collision_layer = CAMERA_RIG.OCCLUSION_ONLY_LAYER
+	holder.collision_mask = 0
+	holder.position = position
+	holder.rotation.y = deg_to_rad(float(cfg.get("arrival_arch_yaw_deg", 0.0)))
+	var pier_width := size.x * 0.5 - opening_half
+	for side: float in [-1.0, 1.0]:
+		_add_stop_shape(holder, "PierStop", at + Vector3(side * (opening_half + pier_width * 0.5),
+			size.y * 0.5, 0.0), Vector3(pier_width, size.y, size.z))
+	var crown_top := size.y + 1.15
+	_add_stop_shape(holder, "LintelStop", at + Vector3(0.0, (opening_top + crown_top) * 0.5, 0.0),
+		Vector3(size.x + 1.2, crown_top - opening_top, maxf(size.z, 3.0)))
+	return holder
+
+
+func _add_stop_shape(holder: StaticBody3D, label: String, centre: Vector3, extent: Vector3) -> void:
+	var shape := CollisionShape3D.new()
+	shape.name = label
+	var box := BoxShape3D.new()
+	box.size = extent
+	shape.shape = box
+	shape.position = centre
+	holder.add_child(shape)
 
 
 func _add_compass(cfg: Dictionary, stone: Material, bronze: Material, blue: Material) -> void:

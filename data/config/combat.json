@@ -138,7 +138,9 @@
     "_comment_guard": "Seconds of player input ignored at the start of a fight. Engage and charged attack are the same physical button (X), and without this the press that opens the fight is also read as the first attack of it.",
     "input_guard": 0.25,
     "_comment_buffer": "Seconds an attack press pressed during wind-up/recovery/cooldown stays alive to fire the moment the creature is ready again. Without it, mashing at natural rhythm drops presses into the ~0.4s dead window and combat reads as unresponsive. Tunable.",
-    "input_buffer": 0.3
+    "input_buffer": 0.3,
+    "_comment_flee_buffer": "Seconds a disengage press made while fight input is not being read (hitstop after a hit, the input_guard, a burst awaiting the host) stays alive to be honoured when reading resumes. Without it the edge is lost and a player being hit cannot reliably leave a wild fight. Longer than input_guard so a press at the very start of a fight survives it; it does not run down while hitstop freezes the fight. Tunable.",
+    "flee_buffer": 0.4
   },
   "camera": {
     "_comment": "The fight reuses the exploration orbit camera rather than adding a second one: a piloted creature wants exactly the third-person camera M1 already tuned, re-pointed at a shorter creature. These are the overrides while a fight is running.",

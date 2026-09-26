@@ -82,5 +82,5 @@ theme_override_font_sizes/font_size = 26
 theme_override_colors/font_color = Color(0.851, 0.702, 0.251, 1)
 
 [node name="Footer" type="Label" parent="Root/Frame/Panel/Body"]
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 30
 theme_override_colors/font_color = Color(0.55, 0.57, 0.52, 1)

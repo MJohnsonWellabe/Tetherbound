@@ -1,0 +1,6 @@
+unit_review rc=0 scripterr=0 :: 7 tests, 16 assertions, 0 failed
+smoke_edge_review rc=0 scripterr=0 :: CLOUDREACH FOLLOWER EDGE OK checks=16 failures=0 (airborne leg: stand-in leader, see smoke header)
+smoke_riding_review rc=0 scripterr=0 :: 
+smoke_recall_review rc=0 scripterr=0 :: CLOUDREACH RECALL LEVEL OK checks=133 failures=0
+smoke_companion_fall_review rc=0 scripterr=0 :: CLOUDREACH COMPANION FALL OK checks=36 failures=0
+DONE

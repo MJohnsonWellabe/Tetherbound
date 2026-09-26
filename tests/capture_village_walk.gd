@@ -18,6 +18,16 @@ extends SceneTree
 ##                           the through-road to that subarea's junction, then
 ##                           the lane (or, for the grove, the Pond lane) to the
 ##                           subarea from paths.village_topology.subareas
+##                 visits    ACCEPTANCE F01 "reach every opening NPC, camp and
+##                           gate": Grandpa indoors, then, nearest first, every
+##                           village villager (village_npcs.json within
+##                           VILLAGE_RADIUS_M of the well), the Practice Meadow
+##                           camp (objectives.json's beacon) and every boundary
+##                           gate. Each leg is the shortest path over the same
+##                           road polylines plus a short spur to the target; a
+##                           villager counts only when the player stands within
+##                           NPC_REACH_M and that villager's own prompt is the
+##                           arbiter's winner.
 ## `--capture-dir` absolute directory for the PNGs (created if missing)
 ## `--hide-hud`    optional: hide CanvasLayers in the saved frames
 ## `--plan-only`   print the route and data-derived events, load no world
@@ -25,10 +35,13 @@ extends SceneTree
 ## Starts as a fresh post-opening player: opening flags through `walk_out`
 ## (Grandpa's door is open because the opening says so, not because this
 ## script opens it) and one starter. The player is stood 2.5m INSIDE the
-## farmhouse and walks out through the real door. `road_gate_open` is set
-## before the world loads, standing in for the village key hunt -- this walk
-## measures the road, not that puzzle; the leaf still has to be physically
-## open for the walk to pass through it.
+## farmhouse and walks out through the real door. No gate flag is ever set:
+## routes that cross the boundary (`through`, `visits`) walk to the old key,
+## take it with interact, and open the gate they meet with interact, as a
+## player does. `through` continues down the Lower Meadows spine to the South
+## Bridge. Rendered runs use photo mode: the 3D view is off while walking and
+## switched on for PHOTO_SETTLE_FRAMES at each capture -- same process, same
+## input and physics; only frames nobody saves go undrawn.
 ##
 ## Saves a PNG every CAPTURE_EVERY_S of travel, plus one at every junction,
 ## signpost, gate and subarea arrival, and prints one receipt line per capture.
@@ -56,6 +69,21 @@ const OFF_ROAD_LIMIT_M := 2.5
 const LOOKAHEAD_M := 2.5
 const PAST_GATE_M := 10.0
 const WALK_BUDGET_S := 300.0
+## Long legs get more: two seconds per walk-speed metre plus a margin for
+## fights fled on the way.
+const WALK_SPEED_MPS := 5.0
+## The through-road's end: data/config/terrain_playground.json crossings
+## `south_bridge` road starts at (13,1240); this stands on the approach, in
+## sight of the span and short of its locked gate (the grunt's fight).
+const BRIDGE_APPROACH := Vector2(11.0, 1270.0)
+const SPINE_CAPTURE_EVERY_S := 20.0
+## Photo mode: frames the 3D view draws before a capture is read back, so
+## shadows, LOD and scatter streaming settle.
+const PHOTO_SETTLE_FRAMES := 6
+## Bram keeps the bar in the inn (village.json inn at (-1.5,-2), yaw 180;
+## inn_interior.gd door lane local x 0 in the north-facing front wall, doorstep
+## (-1.5,-8.1); counter local z -3.69 with Bram at bar_position() local z -4.39
+## = world (-1.5,2.39)). The customer spot is local (0,-2.6) = world (-1.5,0.6).
 ## Steering: look-stick strength reaches full deflection at this error.
 const STEER_FULL_DEG := 25.0
 const STEER_DEADBAND_DEG := 2.0
@@ -63,6 +91,50 @@ const STEER_DEADBAND_DEG := 2.0
 ## a sharp junction turn is made on the spot rather than cut across the grass.
 const TURN_IN_PLACE_DEG := 35.0
 const EVENT_NEAR_M := 6.0
+## `visits` route. Villagers this close to the well are the village's cast; the
+## rest of village_npcs.json stands out on the bands.
+const VILLAGE_RADIUS_M := 70.0
+const WELL := Vector2(10.0, -10.0)
+const CAMP_AT := Vector2(30.0, -40.0)
+const CAMP_ARRIVAL_M := 4.0
+const GATE_ARRIVAL_M := 3.0
+## Where a spur to a person stops: inside every prompt radius in use (Greet
+## prompts are 2.4m+, Grandpa's 3.8m) without walking into the body. The walk
+## counts arrival up to 0.5m short of a spur's end, so the player ends ~1.2-1.7m
+## away. The villager's own prompt winning the arbiter is the reachability
+## proof; NPC_REACH_M is only a sanity bound on where the walk stopped.
+const NPC_STOP_M := 1.2
+const NPC_REACH_M := 3.0
+const GRAPH_STEP_M := 1.0
+const GRAPH_LINK_M := 1.1
+const GRAPH_CLIP_M := 220.0
+const VILLAGERS_PATH := "res://data/config/village_npcs.json"
+## Villagers who stand indoors are reached through their building's real door,
+## never through a wall. Mira's shop is village.json's cottage_a at (18,4), yaw
+## -90: shop_interior.gd's doorway lane (local x = DOOR_X 1.0, front wall +z)
+## is world z = 5, entered from the doorstep at (13.87,5); she stands behind the
+## counter (local z -0.6..-0.1), so the customer spot is local (0,+0.5) = world
+## (17.5,4.0), 1.9m from her. Outside doorstep -> just inside the door -> counter.
+## The lane is walked at z 4.8, not its 5.0 centre: the Cloudreach relic slot's
+## plinth (realm_heart_shrine.gd, 1.41m radius at ~(16.1,6.7)) reaches into the
+## doorway to z ~5.3, leaving the lane's southern ~0.9m clear for the body.
+const INDOOR_APPROACH := {
+	"Mira": [Vector2(13.87, 4.8), Vector2(16.5, 4.8), Vector2(17.5, 4.0)],
+	"Bram": [Vector2(-1.5, -8.1), Vector2(-1.5, -5.0), Vector2(-1.5, 0.6)],
+}
+## A closed door on the way is opened the way a player opens it: when the walk
+## stalls and the arbiter's actionable winner is an "Open ..." prompt (or a
+## locked boundary leaf's "Try the gate", with the key in the satchel), one
+## interact press. Bounded so a door that never opens still fails the walk.
+const DOOR_PRESSES_MAX := 3
+## Pages of dialogue the walk will read through per leg before an open panel
+## counts as a stall.
+const DIALOGUE_PRESSES_MAX := 12
+## Stalled with no door to open: turn SIDESTEP_DEG away and walk
+## SIDESTEP_FRAMES, alternating sides, at most SIDESTEPS_MAX per leg.
+const SIDESTEPS_MAX := 3
+const SIDESTEP_DEG := 50.0
+const SIDESTEP_FRAMES := 48
 
 ## Grandpa's farmhouse: HOUSE_AT (-22,-16) in playground_world.gd, door on the
 ## east wall at x = -17 (grandpa_house.gd EXT_HALF_W 5.0). The start is 2.5m
@@ -102,6 +174,8 @@ var _painted_half := 1.8
 var _captures := 0
 var _max_off_road := 0.0
 var _failed := ""
+var _visited: Array[String] = []
+var _capture_every := CAPTURE_EVERY_S
 
 
 func _init() -> void:
@@ -124,8 +198,8 @@ func _parse_args() -> bool:
 	if not _time in ["day", "night"]:
 		print("[village-walk] FAIL bad --time=%s (day|night)" % _time)
 		return false
-	if not _route_name in ["through", "stoneyard", "berry", "grove"]:
-		print("[village-walk] FAIL bad --route=%s (through|stoneyard|berry|grove)" % _route_name)
+	if not _route_name in ["through", "stoneyard", "berry", "grove", "visits"]:
+		print("[village-walk] FAIL bad --route=%s (through|stoneyard|berry|grove|visits)" % _route_name)
 		return false
 	if _capture_dir.is_empty() or not _capture_dir.is_absolute_path():
 		print("[village-walk] FAIL --capture-dir must be an absolute path")
@@ -163,7 +237,6 @@ func _run() -> void:
 	var progression: RefCounted = _game.get("progression")
 	for flag: String in OPENING_FLAGS:
 		progression.call("set_flag", flag)
-	progression.call("set_flag", "road_gate_open")
 	var party: RefCounted = _game.get("party")
 	if party != null and (party.call("members") as Array).is_empty():
 		var starter: RefCounted = _game.call("make_creature", "terrapup")
@@ -173,6 +246,8 @@ func _run() -> void:
 	_world = (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(_world)
 	current_scene = _world
+	if not _headless:
+		root.get_viewport().disable_3d = true  # photo mode, see _capture
 	for i in SETTLE_FRAMES:
 		await physics_frame
 	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
@@ -209,11 +284,17 @@ func _run() -> void:
 		_route_name, _time, _capture_dir, str(_headless), _arcs[_arcs.size() - 1],
 		_road_from_arc, minf(_road_until_arc, _arcs[_arcs.size() - 1]), _events.size()])
 	await _capture("start-inside-house")
-	await _walk()
+	if _route_name == "visits":
+		await _visit_all()
+	elif _route_name == "through":
+		await _through_to_bridge()
+	else:
+		await _walk()
 	_release_all()
 	if _failed.is_empty():
-		print("[village-walk] PASS route=%s time=%s captures=%d max_off_road_m=%.2f" % [
-			_route_name, _time, _captures, _max_off_road])
+		print("[village-walk] PASS route=%s time=%s captures=%d max_off_road_m=%.2f%s" % [
+			_route_name, _time, _captures, _max_off_road,
+			(" visited=%d" % _visited.size()) if _route_name == "visits" else ""])
 		quit(0)
 	else:
 		await _capture("failure")
@@ -311,6 +392,11 @@ func _build_route() -> bool:
 	west.reverse()  # Grandpa's door -> the civic bend
 	var road := PackedVector2Array()
 	match _route_name:
+		"visits":
+			# Legs are planned live, one target at a time (_visit_all); this
+			# placeholder only feeds the START line.
+			_set_leg(PackedVector2Array([INSIDE_START, DOORWAY]), -1, -1)
+			return true
 		"through":
 			_append(road, west)
 			_append(road, _suffix(south, west[west.size() - 1]))
@@ -499,8 +585,12 @@ func _walk() -> void:
 	var travel_since_capture := 0.0
 	var owned_s := 0.0
 	var next_event := 0
+	var door_presses := 0
+	var dialogue_presses := 0
+	var sidesteps := 0
 	var dt := 1.0 / float(Engine.physics_ticks_per_second)
-	while clock < WALK_BUDGET_S:
+	var budget := maxf(WALK_BUDGET_S, total / WALK_SPEED_MPS * 2.0 + 120.0)
+	while clock < budget:
 		await physics_frame
 		clock += dt
 		var here := _xz()
@@ -514,6 +604,15 @@ func _walk() -> void:
 			print("[village-walk] NOTE a wild fight started at (%.1f,%.1f); fleeing with combat_run" % [here.x, here.y])
 			await _press("combat_run")
 			best_at_s = clock
+			continue
+		# A line said by something the walk pressed (a gate's unlock line) is
+		# read and closed the way a player closes it: interact per page.
+		if _owner_name() == "DialoguePanel" and dialogue_presses < DIALOGUE_PRESSES_MAX:
+			_release_all()
+			dialogue_presses += 1
+			await _press("interact")
+			best_at_s = clock
+			owned_s = 0.0
 			continue
 		if _input_owned():
 			owned_s += dt
@@ -535,9 +634,41 @@ func _walk() -> void:
 		if progress > best_progress + STUCK_PROGRESS_M:
 			best_progress = progress
 			best_at_s = clock
+		elif clock - best_at_s > STUCK_S * 0.5 and door_presses < DOOR_PRESSES_MAX and _door_prompt_wins():
+			_release_all()
+			door_presses += 1
+			print("[village-walk] NOTE pressed interact on \"%s\" at (%.1f,%.1f)" % [
+				_winner_label(), here.x, here.y])
+			await _press("interact")
+			best_at_s = clock
+			continue
+		elif clock - best_at_s > STUCK_S * 0.5 and sidesteps < SIDESTEPS_MAX:
+			# A player walled by a standing creature or villager steps round it:
+			# turn away and walk a short stride, alternating sides.
+			sidesteps += 1
+			_release_all()
+			var side := 1.0 if sidesteps % 2 == 1 else -1.0
+			print("[village-walk] NOTE sidestep %d at (%.1f,%.1f)%s" % [sidesteps, here.x, here.y, _bodies_near(here)])
+			var turn_to := float(_rig.get("yaw")) + deg_to_rad(SIDESTEP_DEG) * side
+			for _f in 40:
+				var err := rad_to_deg(angle_difference(float(_rig.get("yaw")), turn_to))
+				Input.action_release("look_left")
+				Input.action_release("look_right")
+				if absf(err) < 4.0:
+					break
+				Input.action_press("look_left" if err > 0.0 else "look_right", 1.0)
+				await physics_frame
+			Input.action_release("look_left")
+			Input.action_release("look_right")
+			Input.action_press("move_forward", 1.0)
+			for _f in SIDESTEP_FRAMES:
+				await physics_frame
+			Input.action_release("move_forward")
+			best_at_s = clock
+			continue
 		elif clock - best_at_s > STUCK_S:
-			_failed = "no progress for %.1fs at (%.1f,%.1f), arc %.1f/%.1f%s" % [
-				STUCK_S, here.x, here.y, progress, total, _blocker_near(here)]
+			_failed = "no progress for %.1fs at (%.1f,%.1f), arc %.1f/%.1f%s%s" % [
+				STUCK_S, here.x, here.y, progress, total, _blocker_near(here), _bodies_near(here)]
 			return
 
 		while next_event < _events.size() and progress >= float(_events[next_event].arc):
@@ -569,10 +700,10 @@ func _walk() -> void:
 			travel_since_capture += dt
 		else:
 			Input.action_release("move_forward")
-		if travel_since_capture >= CAPTURE_EVERY_S:
+		if travel_since_capture >= _capture_every:
 			travel_since_capture = 0.0
 			await _capture("travel")
-	_failed = "walk budget %.0fs spent at arc %.1f/%.1f" % [WALK_BUDGET_S, progress, total]
+	_failed = "walk budget %.0fs spent at arc %.1f/%.1f" % [budget, progress, total]
 
 
 func _press(action: String) -> void:
@@ -613,6 +744,15 @@ func _capture(label: String) -> void:
 	var file := "%s_%s_%03d_%s.png" % [_route_name, _time, _captures, slug]
 	var saved := "headless"
 	if not _headless:
+		# Photo mode: the walk runs with the 3D view off (software rendering
+		# every walked frame took hours per route); the view is switched on
+		# for this capture only and given PHOTO_SETTLE_FRAMES to draw.
+		root.get_viewport().disable_3d = false
+		# Stand still for the photograph: forward held through the settle
+		# frames with the camera not steering overshot a junction turn.
+		_release_all()
+		for _f in PHOTO_SETTLE_FRAMES:
+			await process_frame
 		await RenderingServer.frame_post_draw
 		var image := root.get_viewport().get_texture().get_image()
 		if image == null or image.is_empty():
@@ -622,5 +762,359 @@ func _capture(label: String) -> void:
 				image.resize(WIDTH, HEIGHT, Image.INTERPOLATE_LANCZOS)
 			var err := image.save_png(_capture_dir.path_join(file))
 			saved = file if err == OK else "save-error-%d" % err
+	if not _headless:
+		root.get_viewport().disable_3d = true
 	print("[village-walk] CAPTURE %03d label=\"%s\" pos=(%.2f,%.2f,%.2f) heading_deg=%.1f image=%s" % [
 		_captures, label, here.x, here.y, here.z, heading, saved])
+
+
+## --- visits (ACCEPTANCE F01: every opening NPC, camp and gate) ----------------
+
+func _visit_all() -> void:
+	var targets := _visit_targets()
+	if targets.is_empty():
+		_failed = "no visit targets found"
+		return
+	print("[village-walk] VISITS %s" % ", ".join(targets.map(func(t: Dictionary) -> String: return str(t.label))))
+	var graph := _road_graph()
+	# Grandpa first, from the start pose inside the house: no road indoors.
+	for t: Dictionary in targets:
+		if str(t.kind) == "grandpa":
+			await _visit(t, PackedVector2Array())
+			targets.erase(t)
+			break
+		if not _failed.is_empty():
+			return
+	if not _failed.is_empty():
+		return
+	# Out through the real door before the first road leg.
+	_set_leg(PackedVector2Array([_xz(), DOORWAY]), -1, -1)
+	await _walk()
+	if not _failed.is_empty():
+		return
+	while not targets.is_empty():
+		var here := _xz()
+		# Nearest first, but nothing past the boundary before the key is in the
+		# satchel: until then only villagers and the key itself are eligible.
+		var have_key := _has_key()
+		var next: Dictionary = {}
+		for t: Dictionary in targets:
+			if not have_key and not str(t.kind) in ["villager", "key"]:
+				continue
+			if next.is_empty() or here.distance_to(t.at) < here.distance_to(next.at):
+				next = t
+		if next.is_empty():
+			_failed = "no reachable target left before the key: %s" % str(targets.map(func(t: Dictionary) -> String: return str(t.label)))
+			return
+		targets.erase(next)
+		await _visit(next, _graph_path(graph, here, next.at))
+		if not _failed.is_empty():
+			return
+	# Every gate was reached; the boundary must also have been OPENED by the
+	# player's own key press, not by a flag this script set.
+	if not bool((_game.get("progression") as RefCounted).call("has", "road_gate_open")):
+		_failed = "every gate was reached but road_gate_open was never earned"
+
+
+func _visit_targets() -> Array:
+	var out: Array = []
+	var grandpa := _world.find_child("Grandpa", true, false) as Node3D
+	if grandpa != null:
+		out.append({"kind": "grandpa", "label": "Grandpa", "node": grandpa,
+			"at": Vector2(grandpa.global_position.x, grandpa.global_position.z)})
+	for raw: Variant in (_json(VILLAGERS_PATH).get("villagers", []) as Array):
+		var spec := raw as Dictionary
+		var at := _v(spec.get("position", [0, 0]))
+		if at.distance_to(WELL) > VILLAGE_RADIUS_M:
+			continue
+		var npc_name := str(spec.get("name", ""))
+		var node := _world.find_child(npc_name, true, false) as Node3D
+		if node == null:
+			print("[village-walk] FAIL villager %s is authored but not in the world" % npc_name)
+			_failed = "villager %s missing" % npc_name
+			return []
+		out.append({"kind": "villager", "label": npc_name, "node": node,
+			"at": Vector2(node.global_position.x, node.global_position.z)})
+	var key := _world.get_node_or_null(^"GateKey") as Node3D
+	if key == null:
+		_failed = "the old gate key is not lying in the world"
+		return []
+	out.append({"kind": "key", "label": "the old key", "node": key,
+		"at": Vector2(key.global_position.x, key.global_position.z)})
+	out.append({"kind": "camp", "label": "Practice Meadow camp", "at": CAMP_AT})
+	for raw: Variant in ((_json(BOUNDARY_PATH).get("gates", {}) as Dictionary).get("entries", []) as Array):
+		var gate := raw as Dictionary
+		out.append({"kind": "gate", "label": "gate %s" % str(gate.get("id", "")), "at": _v(gate.get("at", []))})
+	return out
+
+
+## One leg: (optional) road path, then a spur to the target's stopping point.
+func _visit(t: Dictionary, road: PackedVector2Array) -> void:
+	var at: Vector2 = t.at
+	var kind := str(t.kind)
+	var here := _xz()
+	var leg := PackedVector2Array([here])
+	_append(leg, road)
+	var from_road := 1 if road.size() > 0 else -1
+	var until_road := leg.size() - 1 if road.size() > 0 else -1
+	var stop := at
+	if INDOOR_APPROACH.has(str(t.label)):
+		var through: Array = INDOOR_APPROACH[str(t.label)]
+		for i in through.size() - 1:
+			leg.append(through[i] as Vector2)
+		stop = through[through.size() - 1] as Vector2
+	elif kind in ["grandpa", "villager", "key"]:
+		var back := leg[leg.size() - 1] - at
+		stop = at + (back.normalized() * NPC_STOP_M if back.length() > NPC_STOP_M else back)
+	if leg[leg.size() - 1].distance_to(stop) > 0.05:
+		leg.append(stop)
+	_set_leg(leg, from_road, until_road)
+	await _walk()
+	if not _failed.is_empty():
+		_failed = "visiting %s: %s" % [t.label, _failed]
+		return
+	var d := _xz().distance_to(at)
+	var reach := {"grandpa": NPC_REACH_M, "villager": NPC_REACH_M, "key": NPC_REACH_M,
+		"camp": CAMP_ARRIVAL_M, "gate": GATE_ARRIVAL_M}[kind] as float
+	if d > reach:
+		_failed = "ended %.2fm from %s (needs %.1fm)" % [d, t.label, reach]
+		return
+	var prompt := "-"
+	if kind == "key":
+		prompt = await _prompt_winner(t.node as Node)
+		if prompt == "":
+			_failed = "stood %.2fm from the old key but its prompt never won" % d
+			return
+		await _press("interact")
+		if not _has_key():
+			_failed = "pressed interact on \"%s\" but the key is not in the satchel" % prompt
+			return
+	elif kind in ["grandpa", "villager"]:
+		prompt = await _prompt_winner(t.node as Node)
+		if kind == "villager" and prompt == "":
+			_failed = "stood %.2fm from %s but its prompt never won the arbiter" % [d, t.label]
+			return
+	_visited.append(str(t.label))
+	await _capture("reached %s" % t.label)
+	print("[village-walk] VISIT %s kind=%s dist_m=%.2f prompt=\"%s\"" % [t.label, kind, d, prompt])
+
+
+## The arbiter's winning label when the winner belongs to `owner`, else "".
+func _prompt_winner(owner: Node) -> String:
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	if arbiter == null or owner == null:
+		return ""
+	for _i in 30:
+		await physics_frame
+		var provider := arbiter.call("winning_provider") as Node
+		if provider != null and (provider == owner or owner.is_ancestor_of(provider)):
+			return str((arbiter.call("winner") as Dictionary).get("label", "?"))
+	return ""
+
+
+func _set_leg(leg: PackedVector2Array, from_road: int, until_road: int) -> void:
+	_path = leg
+	_arcs = PackedFloat32Array([0.0])
+	for i in range(1, _path.size()):
+		_arcs.append(_arcs[i - 1] + _path[i - 1].distance_to(_path[i]))
+	_road_from_arc = _arcs[from_road] if from_road >= 0 else INF
+	_road_until_arc = _arcs[until_road] if until_road >= 0 else -INF
+	_events = []
+	_subarea = {}
+
+
+## Every village road (routes, approaches, the band-1 spine) sampled every
+## GRAPH_STEP_M within GRAPH_CLIP_M of the well; consecutive samples link, and
+## samples of different roads within GRAPH_LINK_M link (junctions/crossings).
+func _road_graph() -> Dictionary:
+	var pts := PackedVector2Array()
+	var edges: Array = []  # per node: Array of [other, cost]
+	var owner := PackedInt32Array()
+	var road_index := 0
+	for key: Variant in _roads.keys():
+		var line: PackedVector2Array = _roads[key]
+		var prev := -1
+		for i in line.size() - 1:
+			var a := line[i]
+			var b := line[i + 1]
+			var n := maxi(1, int(ceil(a.distance_to(b) / GRAPH_STEP_M)))
+			for k in n + (1 if i == line.size() - 2 else 0):
+				var p := a.lerp(b, float(k) / float(n))
+				if p.distance_to(WELL) > GRAPH_CLIP_M:
+					prev = -1
+					continue
+				pts.append(p)
+				owner.append(road_index)
+				edges.append([])
+				var idx := pts.size() - 1
+				if prev >= 0:
+					var c := pts[prev].distance_to(p)
+					(edges[prev] as Array).append([idx, c])
+					(edges[idx] as Array).append([prev, c])
+				prev = idx
+		road_index += 1
+	var cell := {}
+	for i in pts.size():
+		var key := Vector2i(floori(pts[i].x / GRAPH_LINK_M), floori(pts[i].y / GRAPH_LINK_M))
+		for dx in range(-1, 2):
+			for dy in range(-1, 2):
+				for j: int in (cell.get(key + Vector2i(dx, dy), []) as Array):
+					if owner[j] != owner[i] and pts[i].distance_to(pts[j]) <= GRAPH_LINK_M:
+						var c := pts[i].distance_to(pts[j])
+						(edges[i] as Array).append([j, c])
+						(edges[j] as Array).append([i, c])
+		if not cell.has(key):
+			cell[key] = []
+		(cell[key] as Array).append(i)
+	return {"pts": pts, "edges": edges}
+
+
+func _nearest_node(graph: Dictionary, p: Vector2) -> int:
+	var pts: PackedVector2Array = graph.pts
+	var best := -1
+	for i in pts.size():
+		if best < 0 or pts[i].distance_squared_to(p) < pts[best].distance_squared_to(p):
+			best = i
+	return best
+
+
+## Dijkstra (linear scan; a few thousand nodes) from the road point nearest
+## `from` to the road point nearest `to`.
+func _graph_path(graph: Dictionary, from: Vector2, to: Vector2) -> PackedVector2Array:
+	var pts: PackedVector2Array = graph.pts
+	var edges: Array = graph.edges
+	var s := _nearest_node(graph, from)
+	var g := _nearest_node(graph, to)
+	var dist := PackedFloat32Array()
+	dist.resize(pts.size())
+	dist.fill(INF)
+	var prev := PackedInt32Array()
+	prev.resize(pts.size())
+	prev.fill(-1)
+	var done := PackedByteArray()
+	done.resize(pts.size())
+	var frontier := {s: true}
+	dist[s] = 0.0
+	while not frontier.is_empty():
+		var u := -1
+		for k: int in frontier.keys():
+			if u < 0 or dist[k] < dist[u]:
+				u = k
+		frontier.erase(u)
+		if u == g:
+			break
+		done[u] = 1
+		for e: Array in (edges[u] as Array):
+			var v: int = e[0]
+			if done[v] == 1:
+				continue
+			var nd := dist[u] + float(e[1])
+			if nd < dist[v]:
+				dist[v] = nd
+				prev[v] = u
+				frontier[v] = true
+	var out := PackedVector2Array()
+	if dist[g] == INF:
+		return out
+	var at := g
+	while at >= 0:
+		out.append(pts[at])
+		at = prev[at]
+	out.reverse()
+	return out
+
+
+func _winner_label() -> String:
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	if arbiter == null:
+		return ""
+	return str((arbiter.call("winner") as Dictionary).get("label", ""))
+
+
+func _door_prompt_wins() -> bool:
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	if arbiter == null:
+		return false
+	var winner := arbiter.call("winner") as Dictionary
+	var label := str(winner.get("label", ""))
+	return bool(winner.get("actionable", false)) and (label.begins_with("Open ") or label == "Try the gate")
+
+
+func _has_key() -> bool:
+	var inventory: RefCounted = _game.get("inventory")
+	return inventory != null and int(inventory.call("count", "castle_gate_key")) > 0
+
+
+## --- through: home -> key -> TrailGate -> Lower Meadows spine -> South Bridge --
+
+func _through_to_bridge() -> void:
+	var graph := _road_graph()
+	# Out through the real door.
+	_set_leg(PackedVector2Array([_xz(), DOORWAY]), -1, -1)
+	await _walk()
+	if not _failed.is_empty():
+		return
+	# The old key first: nothing crosses the boundary without it.
+	var key := _world.get_node_or_null(^"GateKey") as Node3D
+	if key == null:
+		_failed = "the old gate key is not lying in the world"
+		return
+	var key_at := Vector2(key.global_position.x, key.global_position.z)
+	await _visit({"kind": "key", "label": "the old key", "node": key, "at": key_at},
+		_graph_path(graph, _xz(), key_at))
+	if not _failed.is_empty():
+		return
+	# Back through the village to TrailGate; the locked leaf is opened by the
+	# walk's own interact press when it stalls against it.
+	var gate := Vector2.INF
+	for raw: Variant in ((_json(BOUNDARY_PATH).get("gates", {}) as Dictionary).get("entries", []) as Array):
+		if str((raw as Dictionary).get("id", "")) == str(_topology().get("bridge_exit_gate", "TrailGate")):
+			gate = _v((raw as Dictionary).get("at", []))
+	var spine: PackedVector2Array = _roads.get("band1_lower_meadows", PackedVector2Array())
+	if gate == Vector2.INF or spine.size() < 2:
+		_failed = "no exit gate or Lower Meadows spine in the data"
+		return
+	# One leg from here: the village roads to the gate, then the spine itself
+	# from the gate to the bridge approach.
+	var leg := PackedVector2Array([_xz()])
+	_append(leg, _graph_path(graph, _xz(), gate))
+	var on_spine := Vector2.INF
+	for i in spine.size() - 1:
+		var c := Geometry2D.get_closest_point_to_segment(gate, spine[i], spine[i + 1])
+		if on_spine == Vector2.INF or c.distance_to(gate) < on_spine.distance_to(gate):
+			on_spine = c
+	var gate_index := leg.size()
+	_append(leg, _suffix(spine, on_spine))
+	_set_leg(leg, 1, leg.size() - 1)
+	var gate_arc := _arcs[gate_index]
+	# Stop on the bridge approach: the spine arc nearest BRIDGE_APPROACH.
+	var stop := _project(BRIDGE_APPROACH)
+	_truncate(stop.x)
+	_road_until_arc = _arcs[_arcs.size() - 1]
+	_events = [
+		{"arc": gate_arc, "label": "gate TrailGate"},
+		{"arc": gate_arc + 12.0, "label": "past TrailGate"},
+		{"arc": _arcs[_arcs.size() - 1] - 25.0, "label": "approach South Bridge"},
+		{"arc": _arcs[_arcs.size() - 1] - 0.5, "label": "arrive South Bridge"},
+	]
+	_capture_every = SPINE_CAPTURE_EVERY_S
+	await _walk()
+	if not _failed.is_empty():
+		return
+	if not bool((_game.get("progression") as RefCounted).call("has", "road_gate_open")):
+		_failed = "reached the bridge but road_gate_open was never earned"
+		return
+	print("[village-walk] VISIT South Bridge approach dist_m=%.2f walked_m=%.0f" % [
+		_xz().distance_to(BRIDGE_APPROACH), _arcs[_arcs.size() - 1]])
+
+
+## Bodies (creatures, villagers) within 2.5m, for a stall message.
+func _bodies_near(here: Vector2) -> String:
+	var names: Array[String] = []
+	for body: Node in _world.find_children("*", "CharacterBody3D", true, false):
+		if body == _player or not body is Node3D:
+			continue
+		var p := (body as Node3D).global_position
+		if Vector2(p.x, p.z).distance_to(here) <= 2.5:
+			names.append(str(body.get_path()).get_slice("MeadowsPlayground/", 1))
+	return "" if names.is_empty() else " -- bodies near: %s" % ", ".join(names)

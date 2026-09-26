@@ -154,7 +154,9 @@ func _run() -> void:
 	await process_frame
 	_expect(not _arrivals.is_empty() and bool(_arrivals.back().get("ok", false)), "walking into linked A passage emits a host-approved arrival")
 	var expected := pools.to_global(Vector3(0, 0, 3.5))
-	expected.y = 0.6
+	# Arrival stands on the twin's footing slab where it covers the landing
+	# spot (stormwood_arch_runtime.gd `standing_floor`), else on the terrain.
+	expected.y = float(runtime.call("standing_floor", 0.0, expected, player)) + 0.6
 	_expect(player.global_position.distance_to(expected) < 0.05, "arrival places player at linked twin footing")
 	_expect(ally.global_position.distance_to(player.global_position + Vector3(2, 0, 0)) < 0.05, "active companion moves alongside arriving player")
 	_expect(chapter.events.has("arch:pair_a_travel"), "A arrival reaches the production chapter event seam")

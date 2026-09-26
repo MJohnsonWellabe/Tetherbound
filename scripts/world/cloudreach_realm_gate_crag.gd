@@ -38,7 +38,8 @@ func build(materials: Dictionary) -> void:
 	_add_emblem(cfg.get("heart_emblem", {}) as Dictionary, materials)
 	for index in (cfg.get("arrival_beacons", []) as Array).size():
 		_add_beacon(index, (cfg.arrival_beacons as Array)[index] as Dictionary,
-			cfg.get("beacon_light", {}) as Dictionary, materials)
+			cfg.get("beacon_light", {}) as Dictionary, materials,
+			float(cfg.get("beacon_scale", 1.0)))
 
 
 func _add_banners(cfg: Dictionary, materials: Dictionary) -> void:
@@ -94,12 +95,12 @@ func _add_emblem(cfg: Dictionary, materials: Dictionary) -> void:
 
 
 func _add_beacon(index: int, spec: Dictionary, light_cfg: Dictionary,
-		materials: Dictionary) -> void:
+		materials: Dictionary, k: float = 1.0) -> void:
 	var at := _v3(spec.get("position", [0.0, 0.0, 0.0]))
-	_add_cylinder("ArrivalBeaconPlinth%02d" % (index + 1), at + Vector3.UP * 0.65,
-		1.15, 1.3, _material(materials, "masonry_trim"), "beacon_plinth")
-	_add_cylinder("ArrivalBeaconBowl%02d" % (index + 1), at + Vector3.UP * 1.65,
-		0.82, 0.35, _material(materials, "bronze"), "beacon_bowl")
+	_add_cylinder("ArrivalBeaconPlinth%02d" % (index + 1), at + Vector3.UP * 0.65 * k,
+		1.15 * k, 1.3 * k, _material(materials, "masonry_trim"), "beacon_plinth")
+	_add_cylinder("ArrivalBeaconBowl%02d" % (index + 1), at + Vector3.UP * 1.65 * k,
+		0.82 * k, 0.35 * k, _material(materials, "bronze"), "beacon_bowl")
 	var flame := MeshInstance3D.new()
 	flame.name = "ArrivalBeaconFlame%02d" % (index + 1)
 	var flame_mesh := SphereMesh.new()
@@ -107,8 +108,8 @@ func _add_beacon(index: int, spec: Dictionary, light_cfg: Dictionary,
 	flame_mesh.height = 1.7
 	flame.mesh = flame_mesh
 	flame.material_override = _material(materials, "key_glow")
-	flame.position = at + Vector3.UP * 2.55
-	flame.scale = Vector3(0.72, 1.0, 0.72)
+	flame.position = at + Vector3.UP * 2.55 * k
+	flame.scale = Vector3(0.72, 1.0, 0.72) * k
 	flame.set_meta("gate_role", "arrival_flame")
 	add_child(flame)
 	var light := OmniLight3D.new()
@@ -117,7 +118,7 @@ func _add_beacon(index: int, spec: Dictionary, light_cfg: Dictionary,
 	light.light_energy = float(light_cfg.get("energy", 2.4))
 	light.omni_range = float(light_cfg.get("range_m", 23.0))
 	light.shadow_enabled = bool(light_cfg.get("shadow_enabled", false))
-	light.position = at + Vector3.UP * 3.0
+	light.position = at + Vector3.UP * 3.0 * k
 	light.set_meta("gate_role", "arrival_light")
 	add_child(light)
 

@@ -239,3 +239,27 @@ func test_no_input_glyph_is_red_or_coral() -> void:
 		assert_eq(red, 0, "%s draws %d red/coral pixels; red is Team Tether's alone" % [file_name, red])
 	assert_true(files >= 20, "expected the glyph pack, scanned %d images" % files)
 
+
+
+## UX §8 raster floors. The 1920x1080 canvas draws at 720/1080 in a 1280x720
+## window, so each floor token must still land on its pixel minimum there.
+func test_raster_floor_tokens_meet_ux_minimums_at_720p() -> void:
+	var scale := 720.0 / 1080.0
+	assert_true(UI_TOKENS.FONT_READ * scale >= 18.0, "FONT_READ -> >= 18 px body text at 720p")
+	assert_true(UI_TOKENS.FONT_PROMPT * scale >= 20.0, "FONT_PROMPT -> >= 20 px prompts at 720p")
+	assert_true(UI_TOKENS.FONT_SECTION * scale >= 24.0, "FONT_SECTION -> >= 24 px headings at 720p")
+
+
+## X03 text-floor order: the Creatures tab sizes every label from a floor
+## token (or TITLE), never the sub-floor TINY/LABEL/BODY/HEADING/BUTTON tier
+## that drew 12.7-17.3 px at 720p.
+func test_creatures_tab_uses_only_floor_font_tokens() -> void:
+	var file := FileAccess.open("res://scripts/ui/tab_creatures.gd", FileAccess.READ)
+	assert_true(file != null, "tab_creatures.gd is missing")
+	if file == null:
+		return
+	var source := file.get_as_text()
+	for token: String in ["FONT_TINY", "FONT_LABEL", "FONT_BODY", "FONT_HEADING", "FONT_BUTTON"]:
+		assert_false(source.contains("UITokens." + token), "tab_creatures.gd still sizes text with %s" % token)
+	var footer := FileAccess.get_file_as_string("res://scenes/ui/game_menu.tscn")
+	assert_false(footer.contains("font_size = 22"), "menu footer prompts must be >= FONT_PROMPT")

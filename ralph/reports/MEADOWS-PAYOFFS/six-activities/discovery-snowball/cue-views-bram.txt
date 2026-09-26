@@ -1,0 +1,5 @@
+[cue-view] bram d=220m at=(101.9,696.8) cue_off_road_heading=-13deg /tmp/claude-0/cue_views3/bram_220m_road.png
+[cue-view] bram d=220m at=(101.9,696.8) cue_off_road_heading=-13deg /tmp/claude-0/cue_views3/bram_220m_glance.png
+[cue-view] bram d=160m at=(174.1,1061.2) cue_off_road_heading=17deg /tmp/claude-0/cue_views3/bram_160m_road.png
+[cue-view] bram d=160m at=(174.1,1061.2) cue_off_road_heading=17deg /tmp/claude-0/cue_views3/bram_160m_glance.png
+[cue-view] bram d=110m at=(288.5,866.0) cue_off_road_heading=-50deg /tmp/claude-0/cue_views3/bram_110m_road.png

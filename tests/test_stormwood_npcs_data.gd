@@ -50,7 +50,7 @@ func test_every_npc_has_an_actual_surface_contact_and_key_anchors_hold() -> void
 	for expected: Dictionary in [
 		{"id": "rodkeeper_hesk", "at": [-350, 450]}, {"id": "defector_sable", "at": [-450, 3948]},
 		{"id": "trader_oswin", "at": [-680, 2310]}, {"id": "keeper_ondra", "at": [-160, 2700]},
-		{"id": "officer_kestrel", "at": [-100, 5350]}, {"id": "captain_marrow", "at": [-100, 5470]},
+		{"id": "officer_kestrel", "at": [-100, 5358]}, {"id": "captain_marrow", "at": [-100, 5470]},
 	]:
 		var npc: Dictionary = by_id.get(str(expected.id), {})
 		var position: Array = npc.get("position", [])

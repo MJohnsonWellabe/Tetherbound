@@ -46,3 +46,11 @@ func test_host_authority_exempts_only_the_fighting_peer() -> void:
 func test_negative_control_flag_off_targets_the_fighting_trainer() -> void:
 	assert_eq(LIGHTNING.strike_aim(TRAINER, true, CREATURE, false), TRAINER)
 	assert_true(LIGHTNING.trainer_can_be_hit(true, false))
+
+
+
+# The wiring through the production `_process` / `_resolve` path (aim at the
+# creature, fight state re-read at impact, flag-off control) needs a live
+# SceneTree and the Game autoload, which this unit runner does not have. It
+# lives in `tests/helpers/stormwood_lightning_cases.gd` and runs in
+# `tests/smoke_stormwood_lightning.gd` (CI: "stormwood-lightning-equipment").

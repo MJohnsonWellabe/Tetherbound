@@ -1,0 +1,7 @@
+# negative control: the test with flags.set_flag(offer_flag) injected after the reward claim (not committed)
+  FAIL  test_cloudreach_finale.gd :: test_finale_to_chapter_complete_raises_no_legendary_offer
+          expected anything but stormwood:legendary_offer_made  (The finale never raises Stormwood's legendary offer)
+          expected true, got false  (Finale flag stormwood:legendary_offer_made is not a creature/offer grant)
+18 tests, 549 assertions, 1 failed
+  test_cloudreach_finale.gd :: test_finale_to_chapter_complete_raises_no_legendary_offer — expected anything but stormwood:legendary_offer_made  (The finale never raises Stormwood's legendary offer)
+  test_cloudreach_finale.gd :: test_finale_to_chapter_complete_raises_no_legendary_offer — expected true, got false  (Finale flag stormwood:legendary_offer_made is not a creature/offer grant)

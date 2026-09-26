@@ -1,0 +1,64 @@
+== smoke_cloudreach_follower_edge BEFORE (base 2953e2776 follower) ==
+PASS snap to arrival terrace road, camera yaw 23 deg: companion on the trainer's floor 105.27 for 90 frames (worst drop 0.24 at y 105.03; now 6.77 m away)
+PASS snap to arrival terrace road, camera yaw 113 deg: companion on the trainer's floor 105.27 for 90 frames (worst drop 0.24 at y 105.03; now 1.65 m away)
+FAIL snap to arrival terrace road, camera yaw 203 deg: companion on the trainer's floor 105.27 for 90 frames (worst drop 18.51 at y 86.76; now 6.50 m away)
+FAIL snap to arrival terrace road, camera yaw 293 deg: companion on the trainer's floor 105.27 for 90 frames (worst drop 34.26 at y 71.00; now 6.78 m away)
+PASS snap to arrival road, camera yaw 23 deg: companion on the trainer's floor 105.29 for 90 frames (worst drop 0.26 at y 105.03; now 6.46 m away)
+PASS snap to arrival road, camera yaw 113 deg: companion on the trainer's floor 105.29 for 90 frames (worst drop 0.26 at y 105.03; now 1.65 m away)
+PASS snap to arrival road, camera yaw 203 deg: companion on the trainer's floor 105.29 for 90 frames (worst drop 0.00 at y 0.00; now 6.50 m away)
+PASS snap to arrival road, camera yaw 293 deg: companion on the trainer's floor 105.29 for 90 frames (worst drop 0.02 at y 105.27; now 6.78 m away)
+PASS snap to Broken Causeways ledge road, camera yaw 23 deg: companion on the trainer's floor 401.17 for 90 frames (worst drop 0.28 at y 400.89; now 4.30 m away)
+FAIL snap to Broken Causeways ledge road, camera yaw 113 deg: companion on the trainer's floor 401.17 for 90 frames (worst drop 11.14 at y 390.03; now 6.34 m away)
+PASS snap to Broken Causeways ledge road, camera yaw 203 deg: companion on the trainer's floor 401.17 for 90 frames (worst drop 0.00 at y 0.00; now 6.31 m away)
+PASS snap to Broken Causeways ledge road, camera yaw 293 deg: companion on the trainer's floor 401.17 for 90 frames (worst drop 0.00 at y 0.00; now 6.32 m away)
+FAIL follow on arrival terrace road (floor 105.27), 8 camera yaws, 600 frames: worst drop 101.06 m (at (7.92921, 4.211647, -251.2061), yaw 90)
+PASS follow on arrival road (floor 105.29), 8 camera yaws, 600 frames: worst drop 0.26 m (at (4.804481, 105.0302, -253.757), yaw 0)
+FAIL follow on Broken Causeways ledge road (floor 401.17), 8 camera yaws, 600 frames: worst drop 11.16 m (at (-106.3174, 390.0121, 1662.341), yaw 90)
+worst snap drop below the trainer: 34.26 m
+worst following drop below the trainer: 101.06 m
+CLOUDREACH FOLLOWER EDGE FAIL checks=15 failures=5
+
+== AFTER ==
+PASS snap to arrival terrace road, camera yaw 23 deg: companion on the trainer's floor 105.27 for 90 frames (worst drop 0.19 at y 105.08; now 6.51 m away)
+PASS snap to arrival terrace road, camera yaw 113 deg: companion on the trainer's floor 105.27 for 90 frames (worst drop 0.19 at y 105.08; now 6.48 m away)
+PASS snap to arrival terrace road, camera yaw 203 deg: companion on the trainer's floor 105.27 for 90 frames (worst drop 0.19 at y 105.08; now 6.46 m away)
+PASS snap to arrival terrace road, camera yaw 293 deg: companion on the trainer's floor 105.27 for 90 frames (worst drop 0.20 at y 105.07; now 6.78 m away)
+PASS snap to arrival road, camera yaw 23 deg: companion on the trainer's floor 105.29 for 90 frames (worst drop 0.26 at y 105.03; now 6.45 m away)
+PASS snap to arrival road, camera yaw 113 deg: companion on the trainer's floor 105.29 for 90 frames (worst drop 0.26 at y 105.03; now 1.65 m away)
+PASS snap to arrival road, camera yaw 203 deg: companion on the trainer's floor 105.29 for 90 frames (worst drop 0.00 at y 0.00; now 6.50 m away)
+PASS snap to arrival road, camera yaw 293 deg: companion on the trainer's floor 105.29 for 90 frames (worst drop 0.02 at y 105.28; now 6.78 m away)
+PASS snap to Broken Causeways ledge road, camera yaw 23 deg: companion on the trainer's floor 401.17 for 90 frames (worst drop 0.17 at y 401.00; now 2.71 m away)
+PASS snap to Broken Causeways ledge road, camera yaw 113 deg: companion on the trainer's floor 401.17 for 90 frames (worst drop 0.10 at y 401.07; now 2.22 m away)
+PASS snap to Broken Causeways ledge road, camera yaw 203 deg: companion on the trainer's floor 401.17 for 90 frames (worst drop 0.00 at y 0.00; now 6.33 m away)
+PASS snap to Broken Causeways ledge road, camera yaw 293 deg: companion on the trainer's floor 401.17 for 90 frames (worst drop 0.00 at y 0.00; now 6.31 m away)
+PASS follow on arrival terrace road (floor 105.27), 8 camera yaws, 600 frames: worst drop 0.21 m (at (7.22442, 105.0531, -251.6601), yaw 0)
+PASS follow on arrival road (floor 105.29), 8 camera yaws, 600 frames: worst drop 0.26 m (at (5.298491, 105.0309, -253.5893), yaw 0)
+PASS follow on Broken Causeways ledge road (floor 401.17), 8 camera yaws, 600 frames: worst drop 0.49 m (at (-108.7814, 400.6786, 1659.815), yaw 90)
+worst snap drop below the trainer: 0.26 m
+worst following drop below the trainer: 0.49 m
+CLOUDREACH FOLLOWER EDGE OK checks=15 failures=0
+
+== unit test_follower_floor_station (before: parse fail, new API absent; after) ==
+unit_before.log:  FAIL  test_follower_floor_station.gd :: could not be parsed or instantiated
+unit_before.log:1 tests, 0 assertions, 1 failed
+unit_after.log:  ok    test_follower_floor_station.gd :: test_default_snap_keeps_an_ordinary_seat
+unit_after.log:  ok    test_follower_floor_station.gd :: test_no_verified_station_closes_on_the_trainer_and_stops_clear
+unit_after.log:  ok    test_follower_floor_station.gd :: test_validator_places_the_leash_snap
+unit_after.log:  ok    test_follower_floor_station.gd :: test_validator_station_steers_and_is_not_rechecked_every_frame
+unit_after.log:  ok    test_follower_floor_station.gd :: test_without_a_validator_the_station_is_unchanged
+unit_after.log:5 tests, 12 assertions, 0 failed
+
+== regressions ==
+unit_suites rc=0 scripterr=0
+smoke_recall_level rc=0 scripterr=0
+smoke_saddle_remount rc=0 scripterr=0
+smoke_companion_fall rc=1 scripterr=0
+smoke_riding rc=0 scripterr=0
+smoke_aggression rc=0 scripterr=0
+smoke_net_cloudreach_riding rc=0 scripterr=0
+DONE
+73 tests, 450 assertions, 0 failed
+CLOUDREACH RECALL LEVEL OK checks=133 failures=0
+FAIL A: the follower walks its camera-safe station off the road edge on its own (4 stretch(es) with the station over open air tried)
+CLOUDREACH COMPANION FALL FAIL checks=33 failures=1
+smoke_net_cloudreach_riding: 137 assertions, 0 failures

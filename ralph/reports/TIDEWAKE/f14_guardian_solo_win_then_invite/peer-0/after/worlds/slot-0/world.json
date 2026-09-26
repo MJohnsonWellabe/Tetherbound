@@ -1,0 +1,68 @@
+{
+	"clock_elapsed_seconds": 274.127922077916,
+	"created_at": "2026-09-26T09:36:19",
+	"day": 1,
+	"death_satchels": [],
+	"display_name": "",
+	"farm_plots": [],
+	"felled_vegetation": {},
+	"flags": {
+		"flags": [
+			"water_dock_sluice_isle_both_controls_disabled",
+			"water_veilfall_intake_stopped",
+			"water_veilfall_return_opened",
+			"water_captain_nerissa_defeated",
+			"water_tether_disabled",
+			"water_guardian_freed",
+			"water_claim:guardian:offered:285c182d3f41540f5a5b31a013d41063027a3d0cad0e0a43e3999a96bfed9410",
+			"water_guardian_claimed",
+			"water_guardian_settled",
+			"water_currents_restored",
+			"realm_relic_water_earned"
+		]
+	},
+	"harvested_vegetation": {},
+	"last_played": "2026-09-26T09:37:19",
+	"migrated_from": "",
+	"placed_buildings": [],
+	"realm_environment": {},
+	"reward_deliveries": {
+		"0e3cdf4d44a6e927cb9a11d72c7b3f621de9e769f27644c8433308710dc91a98": {
+			"character_id": "character-d8ad681138a6cab5f7f736954d8cf4e3",
+			"completion_flag": "",
+			"delivery_id": "0e3cdf4d44a6e927cb9a11d72c7b3f621de9e769f27644c8433308710dc91a98",
+			"source": "trainer:water_trainer_nerissa:item:revive",
+			"stacks": [
+				{
+					"id": "revive",
+					"n": 2
+				}
+			],
+			"status": "accepted",
+			"version": 1,
+			"world_id": "slot-0",
+			"world_namespace": "848cdb808f54da28c640968bd662f0ae"
+		},
+		"3626f578c9e201e8bdeb2c56848d0fe277d966615980afb337957e776d2b24bb": {
+			"character_id": "character-d8ad681138a6cab5f7f736954d8cf4e3",
+			"completion_flag": "",
+			"delivery_id": "3626f578c9e201e8bdeb2c56848d0fe277d966615980afb337957e776d2b24bb",
+			"source": "trainer:water_trainer_nerissa:coins",
+			"stacks": [
+				{
+					"id": "coin",
+					"n": 150
+				}
+			],
+			"status": "accepted",
+			"version": 1,
+			"world_id": "slot-0",
+			"world_namespace": "848cdb808f54da28c640968bd662f0ae"
+		}
+	},
+	"reward_delivery_namespace": "848cdb808f54da28c640968bd662f0ae",
+	"version": 2,
+	"water_capture_claims": {},
+	"world_id": "slot-0",
+	"world_seed": 315039632
+}

@@ -1,0 +1,57 @@
+PASS: #1 peer 0 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
+PASS: #1 peer 1 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
+PASS: #2 peer 0 story_flag (setup: both worlds hold the Cloudreach key) -> PASS -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: #2 peer 1 story_flag (setup: both worlds hold the Cloudreach key) -> PASS -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: #3 peer 0 enter_realm (host enters Cloudreach) -> PASS -- crossed 'meadows' -> 'cloudreach' after 265 observed physics frames / 308278 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: #4 peer 1 enter_realm (guest enters Cloudreach in its own world) -> PASS -- crossed 'meadows' -> 'cloudreach' after 264 observed physics frames / 313286 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: #5 peer 1 save_character_here (guest saves its portable character in Cloudreach) -> PASS -- character 'character-0b70dda5e5c127cde33059422c12d0af' is on disk (wrote_world=true)
+PASS: #6 peer 0 host -> PASS -- hosting udp/34741 as peer 1
+PASS: #7 peer 1 production_join (guest continues its own save into the host's world) -> PASS -- title fresh entry built 'CloudreachCliffs' first, then JoinDriver joined 127.0.0.1:34741 as peer 1840409528 after 35 frames
+PASS: #8 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #8 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #9 peer 1 probe player_identity (guest stands in Cloudreach) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[0.0,105.030204772949,-260.0]},"character_id":"character-0b70dda5e5c127cde33059422c12d0af","display_name":""
+PASS: #10 peer 0 story_flag (setup (host world): Veyra prerequisite cloudreach_act_ii_complete) -> PASS -- cloudreach_act_ii_complete: ok=true pending=false code='' reason=''
+PASS: #11 peer 0 story_flag (setup (host world): Veyra prerequisite cloudreach_upper_anchors_disabled) -> PASS -- cloudreach_upper_anchors_disabled: ok=true pending=false code='' reason=''
+PASS: #12 peer 0 story_flag (setup (host world): Veyra prerequisite summit_extraction_engine_reached) -> PASS -- summit_extraction_engine_reached: ok=true pending=false code='' reason=''
+PASS: #13 peer 1 wait_flag (the guest reads the host's prerequisites) -> PASS -- flag summit_extraction_engine_reached (world) set after 6 frames
+PASS: #14 peer 0 assert (CONTROL: host world has Veyra unbeaten before the win) -> FAIL -- flag captain_veyra_defeated NOT set
+PASS: #15 peer 1 assert (CONTROL: guest reads Veyra unbeaten before the win) -> FAIL -- flag captain_veyra_defeated NOT set
+PASS: the guest has a stable character id (character-0b70dda5e5c127cde33059422c12d0af)
+PASS: CONTROL: no Veyra journal rows anywhere before the win (host 0.0, guest 0.0)
+PASS: #17 peer 1 veyra_client_win (NEGATIVE CONTROL: main's unfixed client route (Ila) writes the world flag locally in the same frame) -> PASS -- {"flag":"defeated_cloudreach_ila","had_flag":false,"host":false,"local_flag_same_frame":true,"mode":"base","multi_peer":true,"sent_to_host":true,"trainer":"trainer_ila_lower_ring","victory_emits":0,"world_store_writes_same_frame":1}
+PASS: #18 peer 1 veyra_client_win (guest wins Veyra: one trainer_victory in flight, nothing written locally) -> PASS -- {"flag":"captain_veyra_defeated","had_flag":false,"host":false,"local_flag_same_frame":false,"mode":"production","multi_peer":true,"sent_to_host":true,"trainer":"captain_veyra_storm_anchor","victory_emits":1,"world_store_writes_same_frame":0}
+PASS: #19 peer 1 wait_flag (Veyra's flag reaches the guest with the host's delta) -> PASS -- flag captain_veyra_defeated (world) set after 35 frames
+PASS: #20 peer 0 assert (host world holds Veyra's defeat) -> PASS -- flag captain_veyra_defeated set
+PASS: host: Veyra's defeat is a WORLD flag in the host world
+PASS: host: not a player flag
+PASS: host journal: exactly 2 Veyra rows (coins, rare candy) for the guest's character ([{"character_id":"character-0b70dda5e5c127cde33059422c12d0af","source":"trainer:captain_veyra_storm_anchor:coins","status":"accepted"},{"character_id":"character-0b70dda5e5c127cde33059422c12d0af","source":"trainer:captain_veyra_storm_anchor:item:rare_candy","status":"accepted"}])
+PASS: host journal: no Veyra row for anybody else (2 rows)
+PASS: guest: the flag sits in its mirror of the host world, not in its player store
+PASS: guest satchel: Veyra's 1 rare candy landed exactly once (got 1)
+PASS: guest satchel: Veyra's 150 coin landed (got +195 incl. the Ila control)
+PASS: #22 peer 1 save_character_here (guest saves its portable character) -> PASS -- character 'character-0b70dda5e5c127cde33059422c12d0af' is on disk (wrote_world=false)
+PASS: the guest's character file exists (user://characters/character-0b70dda5e5c127cde33059422c12d0af/character.json)
+PASS: the guest's own character file holds no copy of captain_veyra_defeated
+PASS: #24 peer 1 drop_link (guest's link drops) -> PASS -- transport closed without a Session.leave()
+PASS: #25 peer 0 expect_peers -> PASS -- registry reports 1 peer(s) after 0 frames
+PASS: #26 peer 1 join (guest rejoins (reclaims its held seat)) -> PASS -- joined 127.0.0.1:34741 as peer 455010785 after 3 frames; snapshot applied; 2 peer(s) in registry
+PASS: #27 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #27 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #28 peer 1 wait_flag (REJOIN: the guest reads Veyra's defeat from the host's world) -> PASS -- flag captain_veyra_defeated (world) set after 0 frames
+PASS: #29 peer 1 probe player_identity (REJOIN: guest back in Cloudreach) -> PASS -- {"appearance_id":"trainer","body":{"exists":false,"in_current_scene":false,"model_appearance_id":"","model_exists":false,"model_has_art":false,"model_requested_appearance_id":"","position":[]},"character_id":"character-0b70dda5e5c127cde33059422c12d0af","display_name":"","inside_grandpas_village":fal
+FAIL: #30 peer 1 veyra_client_win (REJOIN: a repeat win after rejoin asks the host nothing and announces nothing) -> FAIL; data did not match {"had_flag":true,"local_flag_same_frame":true,"sent_to_host":false,"victory_emits":0,"world_store_writes_same_frame":0} -- no Game or no Cloudreach EncounterDirector in scene 'TitleScreen'
+PASS: #31 peer 1 wait -> PASS -- waited 240 physics frames
+PASS: the same character rejoined
+PASS: REJOIN: the guest still reads Veyra beaten from the host
+PASS: REJOIN: still exactly 2 Veyra journal rows in the host world ([{"character_id":"character-0b70dda5e5c127cde33059422c12d0af","source":"trainer:captain_veyra_storm_anchor:coins","status":"accepted"},{"character_id":"character-0b70dda5e5c127cde33059422c12d0af","source":"trainer:captain_veyra_storm_anchor:item:rare_candy","status":"accepted"}])
+PASS: REJOIN: no double grant (coin 195->195, rare candy 1->1)
+PASS: #33 peer 1 save_character_here (guest saves again after the rejoin) -> PASS -- character 'character-0b70dda5e5c127cde33059422c12d0af' is on disk (wrote_world=false)
+PASS: the guest's character file exists (user://characters/character-0b70dda5e5c127cde33059422c12d0af/character.json)
+PASS: the guest's own character file holds no copy of captain_veyra_defeated
+PASS: #35 peer 0 save_world (host saves its world) -> PASS -- saved slot 3 to user://saves/slot_3.json
+PASS: #36 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-bf069c59326500663fcd88c85df9090d' on disk=true; copied 4 files to /tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/net/net-cloudreach_veyra_reconnect-20260926T053151Z/proof/peer-0/final
+PASS: #36 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-0b70dda5e5c127cde33059422c12d0af' on disk=true; copied 3 files to /tmp/claude-0/-home-user/a928e74c-55ea-5de6-a21f-37d302e2ef4c/scratchpad/net/net-cloudreach_veyra_reconnect-20260926T053151Z/proof/peer-1/final
+PASS: #37 peer 0 check_saved (CONTROL: the host's saved world names Veyra's defeat) -> PASS -- missing []; unexpectedly present []; read ["slot-0/world.json"] under final/worlds
+PASS: #38 peer 1 check_saved (the guest's saved character holds no copy of the world flag) -> PASS -- missing []; unexpectedly present []; read ["character-0b70dda5e5c127cde33059422c12d0af/character.json"] under final/characters
+FAIL: #30 peer 1 veyra_client_win (REJOIN: a repeat win after rejoin asks the host nothing and announces nothing) -> FAIL; data did not match {"had_flag":true,"local_flag_same_frame":true,"sent_to_host":false,"victory_emits":0,"world_store_writes_same_frame":0} -- no Game or no Cloudreach EncounterDirector in scene 'TitleScreen'
+FAILURES:

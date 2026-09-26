@@ -2594,7 +2594,15 @@ func place_on_ground(target: Vector3) -> bool:
 		return false
 	height = _seat_over_footprint(target, height)
 
-	global_position = Vector3(target.x, height, target.z)
+	# A teleport, not a motion: see `remote_creature.teleport_body`. Written as
+	# a plain `global_position`, a placement far from where the body stood (a
+	# trainer's creature added at the origin and sent out at Veilfall, a
+	# follower leashed across the map) is taken as one kinematic step, and the
+	# next `move_and_slide()` queries Terrain3D over the whole stretch --
+	# measured at 17.8 s for Nerissa's first creature, 6.2 s for the ally.
+	# Loaded, not preloaded: remote_creature.gd extends this script.
+	load("res://scripts/creatures/remote_creature.gd").teleport_body(
+		self, Vector3(target.x, height, target.z))
 	velocity = Vector3.ZERO
 	_impulse = Vector3.ZERO
 	return true

@@ -296,6 +296,11 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		intent = intent.duplicate(true)
 		intent["world_id"] = str(ledger.world.get("world_id"))
 		intent["_reward_recipients"] = _reward_recipients(intent, peer_id)
+		# A guest's grant is judged against the host's own view of where that
+		# guest stands (world_ledger.gd `client_grant_refusal`), never a position
+		# or realm the request carries.
+		if peer_id != WORLD_LEDGER.HOST_PEER:
+			intent["_reward_actor"] = _water_actor_context(peer_id, {})
 	if str(intent.get("kind", "")) in ["water_dock_action", "water_personal_pickup"]:
 		intent = intent.duplicate(true)
 		# Never accept actor identity, realm or position from the request. The
@@ -370,7 +375,12 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 func _reward_recipients(intent: Dictionary, requesting_peer: int) -> Array:
 	var requested: Array = []
 	var raw: Variant = intent.get("peers")
-	if raw is Array:
+	if requesting_peer != WORLD_LEDGER.HOST_PEER:
+		# A guest may only ever ask for its OWN reward. Whatever `peers`/`peer`
+		# it names, the host pays the sender and nobody else, so a client can
+		# neither push a grant onto another character nor spend their claim.
+		requested.append(requesting_peer)
+	elif raw is Array:
 		for entry: Variant in raw:
 			var id := int(entry)
 			if id > 0 and not requested.has(id):

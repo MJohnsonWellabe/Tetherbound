@@ -1,0 +1,12 @@
+{
+  "service": "Meshy",
+  "endpoint": "/openapi/v1/multi-image-to-3d",
+  "mode": "refine",
+  "task_id": "01a0d831-767e-7399-a6c6-26d962dd0954",
+  "balance_before": 13785,
+  "reference": "sheet 06 main view (owner-approved patched crop: label removed, background flattened, thorn red -> rust/ochre)",
+  "prompt": "meadow rabbit creature whose coat is overlapping leaf-shaped green leaves over loam-brown fur, rust-ochre thorny bramble vines wrapping its body, long ears and legs, cream fur face, cheeks, muzzle and chest ruff, tall leaf-covered ears with warm pink-brown inner ear, brown eyes, full leafy bushy tail, sturdy clawed paws. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic fur, strand hair, humanoid anatomy, clothing, armor, weapons, accessories, text, watermark, multiple creatures, base, pedestal, antlers, horns, red colour, purple flowers, wet plastic shading",
+  "target_polycount": 30000,
+  "topology": "quad"
+}

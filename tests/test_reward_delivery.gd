@@ -67,8 +67,10 @@ func test_ledger_journals_stable_deliveries_and_replay_adds_nothing() -> void:
 	var world: RefCounted = WORLD_STATE.new()
 	world.set("world_id", WORLD_ID)
 	var ledger: RefCounted = WORLD_LEDGER.new(world)
-	var intent := {"kind": "reward_grant", "realm": "meadows", "source": "source",
-		"item": "coin", "count": 2, "peers": [7],
+	# A guest's grant must be one it earned in this world (test_reward_grant_authority.gd).
+	world.flags.set_flag("band1_broken_cart_repaired")
+	var intent := {"kind": "reward_grant", "realm": "meadows", "source": "broken_cart_coll:repair",
+		"item": "coin", "count": 25, "peers": [7],
 		"_reward_recipients": [{"peer": 7, "character_id": CHARACTER_ID}]}
 	var first: Dictionary = ledger.call("commit", intent, 7)
 	assert_true(bool(first.get("ok")))
@@ -130,7 +132,8 @@ func test_accepted_delta_keeps_recipient_and_observer_worlds_equal_to_host() -> 
 	var ledger: RefCounted = WORLD_LEDGER.new(host)
 	var journal: Dictionary = ledger.commit({"kind": "reward_grant", "realm": "meadows",
 		"source": "accepted-replay", "item": "coin", "count": 1,
-		"_reward_recipients": [{"peer": 2, "character_id": CHARACTER_ID}]}, 2)
+		"_reward_recipients": [{"peer": 2, "character_id": CHARACTER_ID}]}, 1)
+	assert_true(bool(journal.get("ok")), "the host journals peer 2's reward")
 	var recipient: RefCounted = WORLD_STATE.new()
 	var observer: RefCounted = WORLD_STATE.new()
 	for replica: RefCounted in [recipient, observer]:

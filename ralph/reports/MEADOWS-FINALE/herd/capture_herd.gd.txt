@@ -1,0 +1,202 @@
+extends SceneTree
+
+## F05#3 visual evidence: the saved herd display -- the freed Veridian Stag
+## standing AMONG the returning Highfield herd after a full (solo) refusal --
+## through the production camera rig, HUD on, clock held at 13:00; then a real
+## save, a cleared state and a load into a fresh world, and the same vantages.
+##
+## Disclosed staging: the earned main chain up to the Warden is set directly;
+## the lever, the chamber dialogue and the refuse prompt are the real ones,
+## pressed with injected `interact`; the player is placed at each vantage.
+
+const SCENE := "res://scenes/world/meadows_playground.tscn"
+const SETTLE := 120
+const SHOT_FRAMES := 24
+const HOLD_CLOCK_S := 325.0
+const SLOT := 3
+
+var _out := "user://f05_herd_shots"
+var _world: Node3D
+var _game: Node
+var _player: CharacterBody3D
+var _rig: Node3D
+var _climax: Node
+var _look: Node = null
+
+
+func _process(_delta: float) -> bool:
+	if _look != null and is_instance_valid(_look):
+		_look.set("_elapsed_seconds", HOLD_CLOCK_S)
+	return false
+
+
+func _init() -> void:
+	_run.call_deferred()
+
+
+func _boot() -> void:
+	_world = (load(SCENE) as PackedScene).instantiate()
+	root.add_child(_world)
+	current_scene = _world
+	for i in SETTLE:
+		await process_frame
+	_player = _world.get_node(^"Player") as CharacterBody3D
+	_rig = get_first_node_in_group("camera_rig") as Node3D
+	_climax = _world.get_node(^"StrongholdClimax")
+	_look = null
+	for node: Node in _world.find_children("*", "", true, false):
+		if node.has_method("elapsed_seconds") and "_elapsed_seconds" in node:
+			_look = node
+			break
+
+
+func _run() -> void:
+	var args := OS.get_cmdline_user_args()
+	if args.size() > 0:
+		_out = args[0]
+	DirAccess.make_dir_recursive_absolute(_out)
+	await process_frame
+	RenderingServer.render_loop_enabled = false
+	_game = root.get_node(^"Game")
+	var party: RefCounted = _game.get("party")
+	party.call("clear")
+	for species: String in ["terrapup", "mudsnout", "bramblebun", "brooktail"]:
+		party.call("add", _game.call("make_creature", species, species.capitalize()))
+	var chain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/progression/objectives.json"))
+	for entry: Dictionary in chain.get("main", []):
+		var id := str(entry.get("flag_id", ""))
+		if id == "legendary_freed":
+			break
+		_game.get("progression").call("set_flag", id)
+	_game.get("progression").call("set_flag", "realm_key_cloudreach")
+	await _boot()
+
+	# The real solo refusal: lever, chamber dialogue, refuse prompt.
+	var control := _climax.find_child("MachineControl", true, false) as Node3D
+	var bound := _climax.call("legendary_body") as Node3D
+	await _shot_at("00-lever", control.global_position, bound.global_position)
+	await _press("interact")
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	for i in 1500:
+		await process_frame
+		if bool(_climax.call("choice_open")):
+			break
+		if panel != null and bool(panel.call("is_open")):
+			await _press("interact")
+	for i in 300:
+		await process_frame
+		if panel != null and bool(panel.call("is_open")):
+			await _press("interact")
+		elif i > 120:
+			break
+	var stag := _climax.call("legendary_body") as Node3D
+	var refuse := _world.find_child("VeridianRefusePrompt", true, false) as Node3D
+	await _shot_at("01-refuse-prompt", refuse.get_parent().global_position, stag.global_position)
+	await _press("interact")
+	for i in 240:
+		await process_frame
+		if panel != null and bool(panel.call("is_open")):
+			await _press("interact")
+	print("answered: refused=%s joined=%s" % [str(_game.get("progression").call("has", "legendary_refused")),
+		str(_game.get("progression").call("has", "legendary_joined"))])
+	for i in 60 * 3:
+		await process_frame
+	await _herd_shots("live")
+
+	# A real save, a cleared state and a load into a fresh world.
+	var saved := bool(_game.call("save_game", SLOT))
+	print("saved slot %d: %s" % [SLOT, str(saved)])
+	_world.queue_free()
+	await process_frame
+	await process_frame
+	_game.get("progression").call("load_data", {})
+	var loaded := bool(_game.call("load_game", SLOT))
+	print("loaded slot %d: %s; refused=%s" % [SLOT, str(loaded), str(_game.get("progression").call("has", "legendary_refused"))])
+	await _boot()
+	await _herd_shots("reload")
+	print("done: %s" % ProjectSettings.globalize_path(_out))
+	quit(0)
+
+
+func _herd_shots(tag: String) -> void:
+	var healing := _world.get_node(^"MeadowHealing")
+	var herd := healing.call("herd_display") as Node3D
+	print("[%s] herd display: %s" % [tag, str(herd.global_position) if herd != null else "ABSENT"])
+	if herd == null:
+		return
+	var at := herd.global_position
+	await _shot("%s-1-approach" % tag, Vector2(at.x - 1.0, at.z - 18.0), at)
+	await _shot("%s-2-close" % tag, Vector2(at.x + 6.0, at.z - 14.0), at)
+	await _shot("%s-3-west" % tag, Vector2(at.x - 14.0, at.z - 3.0), at)
+
+
+## Stand at `flat` on the ground, face `target`, recentre the rig, capture.
+func _shot(name: String, flat: Vector2, target: Vector3) -> void:
+	var y := float(_world.call("ground_height_at", flat.x, flat.y))
+	var t := target
+	if t.y == 0.0:
+		t.y = float(_world.call("ground_height_at", t.x, t.z))
+	await _shot_at(name, Vector3(flat.x, y, flat.y), t)
+
+
+func _shot_at(name: String, at: Vector3, target: Vector3) -> void:
+	_player.global_position = at + Vector3(0.0, 0.3, 0.0)
+	_player.velocity = Vector3.ZERO
+	var dir := target - at
+	dir.y = 0.0
+	if dir.length() > 0.01:
+		_player.rotation.y = atan2(dir.x, dir.z)
+		if _rig != null:
+			_rig.set("yaw", wrapf(atan2(-dir.x, -dir.z), -PI, PI))
+			_rig.set("pitch", deg_to_rad(-8.0))
+	var started := Time.get_ticks_msec()
+	for i in SHOT_FRAMES:
+		await process_frame
+	print("  %s: %d frames in %.1f s" % [name, SHOT_FRAMES, (Time.get_ticks_msec() - started) / 1000.0])
+	await _grab(name)
+
+
+func _grab(name: String) -> void:
+	var path := "%s/%s.png" % [_out, name]
+	# One synchronous draw in the SAME frame the image is read, so a HUD line
+	# with a 2.2 s wall-clock life is still up when the frame is saved (a
+	# software-GL frame costs seconds; waiting several frames outlived it).
+	RenderingServer.force_draw(false)
+	root.get_texture().get_image().save_png(path)
+	var hud_line := _world.find_child("Message", true, false) as Label if is_instance_valid(_world) else null
+	print("shot -> %s   [hud message visible=%s text='%s']" % [path,
+		str(hud_line != null and hud_line.is_visible_in_tree()), hud_line.text if hud_line != null else ""])
+
+
+## Wait for a conversation to open, save a frame of each line, read it through.
+func _read_through(prefix: String, panel: Node) -> void:
+	for i in 300:
+		await process_frame
+		if panel != null and bool(panel.call("is_open")):
+			break
+	var n := 0
+	while panel != null and bool(panel.call("is_open")) and n < 8:
+		for i in 30:
+			await process_frame
+		await _grab("%s-%d" % [prefix, n + 1])
+		await _press("interact")
+		for i in 10:
+			await process_frame
+		n += 1
+	print("%s: %d line frame(s)" % [prefix, n])
+
+
+func _press(action: String) -> void:
+	for pressed: bool in [true, false]:
+		var event := InputEventAction.new()
+		event.action = action
+		event.pressed = pressed
+		Input.parse_input_event(event)
+		if pressed:
+			Input.action_press(action)
+		else:
+			Input.action_release(action)
+		for i in 3:
+			await process_frame
+
+

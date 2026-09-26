@@ -249,14 +249,19 @@ func test_a_reward_pays_each_participant_once_and_refuses_a_replay() -> void:
 	assert_eq(_reward_granted(first.get("delta"), PEER_A, "sigil_shard"), 1)
 	assert_eq(_reward_granted(first.get("delta"), PEER_B, "sigil_shard"), 1)
 
-	var replay: Dictionary = ledger.call("commit", intent, PEER_B)
+	# A shared victory is the host's to report (PEER_A is the host); the host's
+	# retry is the replay. A guest cannot report it at all
+	# (test_reward_grant_authority.gd).
+	var replay: Dictionary = ledger.call("commit", intent, PEER_A)
 	assert_false(replay.get("ok"), "the same victory reported twice pays nobody twice")
 	assert_eq(str(replay.get("code")), "already_taken")
+	var from_guest: Dictionary = ledger.call("commit", intent, PEER_B)
+	assert_false(from_guest.get("ok"), "a guest cannot report the host's shared victory")
 
 	var latecomer: Dictionary = ledger.call("commit", {"kind": "reward_grant", "realm": "meadows",
 		"source": "warden", "peers": [PEER_A, PEER_C], "item": "sigil_shard", "count": 1,
 		"_reward_recipients": [{"peer": PEER_A, "character_id": "char-a"},
-			{"peer": PEER_C, "character_id": "char-c"}]}, PEER_C)
+			{"peer": PEER_C, "character_id": "char-c"}]}, PEER_A)
 	assert_true(latecomer.get("ok"), "a participant who has not been paid still is")
 	assert_eq((latecomer.get("paid") as Array), [PEER_C])
 

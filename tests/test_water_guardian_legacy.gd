@@ -1,7 +1,7 @@
 extends "res://tests/test_case.gd"
 
 ## F14 Guardian offers in LEGACY (pre-F14 single-recipient) Tidewake worlds,
-## plus the interim multi-peer rule and refusal-path hygiene.
+## plus the multi-peer rule, the journal-less fallback and refusal-path hygiene.
 ##
 ## Owner decision (settled): where a legacy world's delivery journal names the
 ## freeing-fight participants (Nerissa `trainer:water_trainer_nerissa:` rows),
@@ -343,28 +343,66 @@ func test_legacy_world_without_journal_keeps_the_single_recipient_outcome() -> v
 	assert_eq(REWARD.begin(pending, pending_ledger, "host-char", guardian()).code, "replay")
 	assert_eq(REWARD.begin(pending, pending_ledger, "A", guardian()).code, "legacy_world")
 
-# --- interim multi-peer rule (documented gaps) --------------------------------------
+# --- multi-peer rule and the journal-less (pre-row) fallback ------------------------
 
-## INTERIM GAP (documented, not fixed here): a lone guest fights Nerissa on its
-## own client, which journals no delivery rows today, then leaves. The host,
-## now solo with an empty journal, is treated as the solo winner and offered.
-## Once ralph/trainer-participants-host lands, the host journals the guest's
-## win as delivery rows; the journal is then non-empty and names only the
-## guest, so this host is refused `not_participant` -- update this test then.
-func test_interim_gap_guest_fights_alone_then_leaves_and_host_is_offered() -> void:
-	var game := freed([])
+## Formerly INTERIM GAP "a lone guest fights Nerissa, leaves, and the solo host
+## is offered". Client-run wins are now journaled by the host
+## (`encounter_director.gd` `trainer_victory` -> `_host_trainer_victory`), so
+## the guest's fight leaves a row naming ONLY the guest: the host is refused
+## while the guest is connected AND after it leaves. Deliberate design change
+## (F14 ledger ids): the gap is closed by the journal, not by narrowing the
+## empty-journal fallback, which old (pre-row) saves still need -- see the
+## second half, unchanged in strength.
+func test_guest_fights_alone_then_leaves_and_host_is_refused() -> void:
+	var game := freed(["guest-char"])
 	var ledger := LEDGER.new(game.world)
-	game.multi = true
-	assert_eq(REWARD.begin(game, ledger, "host-char", guardian()).code, "not_participant",
-		"while the guest is connected nobody is presumed")
-	game.multi = false # the guest left
-	assert_true(REWARD.local_may_answer(game), "INTERIM GAP: the solo host is offered")
-	assert_true(REWARD.begin(game, ledger, "host-char", guardian()).ok, "INTERIM GAP: documented, see header")
+	for multi: bool in [true, false]:
+		game.multi = multi
+		var label := "guest connected" if multi else "guest left"
+		assert_false(REWARD.local_may_answer(game), label + ": the host did not fight")
+		assert_eq(assert_untouched(game, ledger,
+			func() -> Dictionary: return REWARD.begin(game, ledger, "host-char", guardian()), label + " begin").code,
+			"not_participant", label + ": begin")
+		assert_eq(assert_untouched(game, ledger,
+			func() -> Dictionary: return REWARD.refuse(game, ledger, "host-char"), label + " refuse").code,
+			"not_participant", label + ": refuse")
+	assert_true(REWARD.begin(game, ledger, "guest-char", guardian()).ok, "the guest who fought is offered")
+	# A journal-less world (Nerissa paid before rows existed, or a solo win whose
+	# journal could not be written) keeps the host-local fallback: nobody while a
+	# guest is connected, the solo host once solo.
+	var old := freed([])
+	var old_ledger := LEDGER.new(old.world)
+	old.multi = true
+	assert_eq(REWARD.begin(old, old_ledger, "host-char", guardian()).code, "not_participant",
+		"journal-less: while a guest is connected nobody is presumed")
+	old.multi = false
+	assert_true(REWARD.local_may_answer(old), "journal-less: the solo host is offered")
+	assert_true(REWARD.begin(old, old_ledger, "host-char", guardian()).ok, "journal-less solo fallback")
 
-## Disclosed delay: a SOLO Nerissa win journals no rows either, so a host who
-## beat her alone and then invites a guest before answering cannot answer
-## while the guest is connected; the offer returns when the session is solo.
-func test_solo_win_then_invite_delays_the_answer_until_solo_again() -> void:
+## Formerly "a SOLO Nerissa win journals no rows, so the answer is delayed
+## until solo again". A solo win now journals the host's own row
+## (`_journal_solo_trainer_win`), so the host who beat her alone and then
+## invites a guest answers while the guest is connected; the guest, who did not
+## fight, is refused. Deliberate design change (F14 ledger ids).
+func test_solo_win_then_invite_the_host_answers_while_the_guest_is_connected() -> void:
+	var game := freed(["host-char"])
+	var ledger := LEDGER.new(game.world)
+	assert_true(REWARD.local_may_answer(game))
+	game.multi = true
+	assert_true(REWARD.local_may_answer(game), "the journal names the host: the prompt stays")
+	assert_false(REWARD.local_may_answer(view(game, "guest-char")), "the guest's view shows no invite")
+	assert_eq(assert_untouched(game, ledger,
+		func() -> Dictionary: return REWARD.begin(game, ledger, "guest-char", guardian()), "guest begin").code, "not_participant")
+	assert_eq(assert_untouched(game, ledger,
+		func() -> Dictionary: return REWARD.refuse(game, ledger, "guest-char"), "guest refuse").code, "not_participant")
+	assert_true(REWARD.begin(game, ledger, "host-char", guardian()).ok, "the host answers with the guest connected")
+
+## Residual for PRE-ROW saves only: a world whose solo Nerissa win predates
+## delivery rows has an empty journal, so a host who invites a guest before
+## answering still cannot answer while the guest is connected; the offer
+## returns when the session is solo again (the previous pinned behaviour,
+## unchanged in strength, now scoped to journal-less worlds).
+func test_journal_less_solo_win_then_invite_delays_the_answer_until_solo_again() -> void:
 	var game := freed([])
 	var ledger := LEDGER.new(game.world)
 	assert_true(REWARD.local_may_answer(game))

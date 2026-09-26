@@ -1,0 +1,37 @@
+== net/net-proof_two_peer-20260926T042934Z/peer-0.log
+SCRIPT ERROR count: 0
+296:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+298:ERROR: Parameter "node" is null.
+300:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+302:ERROR: Failed to get path from RPC: Game/Session/SleepVote.
+304:ERROR: Invalid packet received. Requested node was not found.
+307:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+309:ERROR: Failed to get path from RPC: Game/Session/SleepVote.
+311:ERROR: Invalid packet received. Requested node was not found.
+313:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+315:ERROR: Failed to get path from RPC: Game/Session/SleepVote.
+317:ERROR: Invalid packet received. Requested node was not found.
+319:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+321:ERROR: Failed to get path from RPC: Game/Session/SleepVote.
+323:ERROR: Invalid packet received. Requested node was not found.
+325:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+327:ERROR: Failed to get path from RPC: Game/Session/SleepVote.
+329:ERROR: Invalid packet received. Requested node was not found.
+331:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+333:ERROR: Failed to get path from RPC: Game/Session/SleepVote.
+335:ERROR: Invalid packet received. Requested node was not found.
+337:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+339:ERROR: Failed to get path from RPC: Game/Session/SleepVote.
+341:ERROR: Invalid packet received. Requested node was not found.
+343:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+345:ERROR: Failed to get path from RPC: Game/Session/SleepVote.
+347:ERROR: Invalid packet received. Requested node was not found.
+349:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+351:ERROR: Failed to get path from RPC: Game/Session/SleepVote.
+353:ERROR: Invalid packet received. Requested node was not found.
+355:ERROR: Node not found: "Game/Session/SleepVote" (relative to "/root").
+357:ERROR: Failed to get path from RPC: Game/Session/SleepVote.
+359:ERROR: Invalid packet received. Requested node was not found.
+== net/net-proof_two_peer-20260926T042934Z/peer-1.log
+SCRIPT ERROR count: 0
+145:ERROR: NO GRAB

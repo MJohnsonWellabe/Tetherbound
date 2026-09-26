@@ -59,8 +59,10 @@ extends "res://scripts/world/riding_controller.gd"
 ##    authors its own climb (the legendary's 60).
 ## 5. The finale's creature-piloting exam owns the ally: no ride offer while
 ##    it does (`cloudreach_world_runtime.gd` dismounts before taking it).
+## 6. Never onto a companion falling over open air (see `_mountable_body`).
 ##
-## Overrides of `riding_controller.gd`: `_ready` (jump cap), `_riding_allowed`
+## Overrides of `riding_controller.gd`: `_ready` (jump cap), `_mountable_body`
+## (not while falling over air), `_riding_allowed`
 ## (finale pilot), `_combat_took_the_mount` (the pilot keeps the body too),
 ## `mount` (per-ride state), `interaction_activate` (refusal), `dismount`
 ## (verify first, defer when nothing verifies), `_physics_process`
@@ -132,6 +134,32 @@ static func _trainer_jump_height() -> float:
 
 func _riding_allowed() -> bool:
 	return super._riding_allowed() and not _creature_piloted()
+
+
+## Never onto a companion falling over open air. On a live crossing's 7 m
+## road ribbon the follower's station can sit past the edge, and a Ride
+## press a few frames after it stepped off took the falling body: the rider
+## went down with it, and the mounted-fall recovery had only the take-off
+## point in the air to return to (`tests/smoke_net_cloudreach_riding.gd`,
+## 2026-09-26). Off the floor with no walkable floor within the probe under
+## it is not mountable, for the prompt and `mount()` alike (both ask this).
+## Off the floor OVER ground (a hop, an edge flicker) stays mountable.
+func _mountable_body() -> Node3D:
+	var body := super._mountable_body()
+	if body == null or _body_on_floor(body):
+		return body
+	return null if is_nan(_floor_under(body)) else body
+
+
+func _body_on_floor(body: Node3D) -> bool:
+	return not (body is CharacterBody3D) or (body as CharacterBody3D).is_on_floor()
+
+
+## Walkable floor under `body`'s own origin within the ground probe, or NAN.
+func _floor_under(body: Node3D) -> float:
+	if _player == null or not is_instance_valid(_player) or not _player.is_inside_tree():
+		return NAN
+	return _supported_floor(body.global_position, body.global_position.y, body)
 
 
 func _creature_piloted() -> bool:

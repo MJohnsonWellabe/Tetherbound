@@ -301,7 +301,7 @@ func _pocket(pocket: Dictionary, spur: Dictionary) -> void:
 	for raw: Array in spur.points:
 		legs.append(_p(raw))
 	var reward_id := str(pocket.reward_pickup_id)
-	var service := world.get_node_or_null(^"StormwoodPickupRuntime")
+	var service := world.get_node_or_null(^"StormwoodPickups")
 	var reward: Node3D = null
 	if service != null:
 		reward = (service.get("_placements") as Dictionary).get(reward_id) as Node3D

@@ -333,7 +333,7 @@ func _push_from_local_rig() -> void:
 	_push_ride(rig)
 	_push_flight(rig)
 	var swimming: Node = rig.get("swim_controller")
-	net_aquatic = swimming.call("snapshot") if swimming != null else {}
+	net_aquatic = outbound_aquatic(net_aquatic, swimming.call("snapshot") if swimming != null else {})
 	var skills_game := get_node_or_null("/root/Game")
 	if skills_game != null and skills_game.get("local") != null:
 		net_catching_level = int(skills_game.get("local").skills.level("catching"))
@@ -342,6 +342,39 @@ func _push_from_local_rig() -> void:
 	# a body parked at the origin.
 	global_position = net_position
 	_ensure_combat_link()
+
+
+## Stamina steps published to other peers, as a fraction of capacity.
+const AQUATIC_STAMINA_QUANTUM := 0.01
+
+
+## The aquatic packet other peers are sent, given the one last published.
+##
+## `net_aquatic` is replicated on change (reliable), because it carries the
+## MOUNTED/HUMAN/LAND mode that a dismount must deliver. The raw snapshot
+## cannot go out as-is: `swim_state.advance()` bumps `revision` and drains
+## `stamina_fraction` every swimming tick, which would make one reliable
+## delta per tick per swimmer. So stamina is quantized, and a new packet is
+## published only when something other than `revision` differs. The
+## published packet keeps the snapshot's current revision, so receivers
+## still see revisions only grow (gaps are fine: they accept any greater one).
+## The local snapshot itself is never altered.
+static func outbound_aquatic(previous: Dictionary, snapshot: Dictionary) -> Dictionary:
+	if snapshot.is_empty():
+		return {}
+	var candidate := snapshot.duplicate(true)
+	var stamina: Variant = candidate.get("stamina_fraction")
+	if (stamina is float or stamina is int) and is_finite(float(stamina)):
+		candidate["stamina_fraction"] = clampf(
+			snappedf(float(stamina), AQUATIC_STAMINA_QUANTUM), 0.0, 1.0)
+	if not previous.is_empty():
+		var before := previous.duplicate()
+		var after := candidate.duplicate()
+		before.erase("revision")
+		after.erase("revision")
+		if before == after:
+			return previous
+	return candidate
 
 
 # --- lane 6.B, owner side: what the ride looks like from outside ---------------
@@ -634,7 +667,7 @@ func _follow(delta: float) -> void:
 		# snagged proxy refuses this peer's legitimate claims from a place the
 		# peer has not been for some time.
 		_render_position = net_position
-		global_position = net_position
+		REMOTE_CREATURE.teleport_body(self, net_position)
 		velocity = Vector3.ZERO
 		_ground_speed = 0.0
 		rotation.y = net_yaw

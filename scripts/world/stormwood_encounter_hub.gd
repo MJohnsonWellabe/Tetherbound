@@ -15,6 +15,14 @@ var _action := 0
 var _pending_state: Dictionary = {}
 var _pending_challenge := ""
 var last_start_refusal: Dictionary = {}
+## A host admission ("state") the local player could not take up: its record id
+## and how long it has waited. Retried every frame (an ally body still being
+## summoned appears a frame or two later), then withdrawn with an explicit
+## start_refused so the challenge is never pending forever (F11 witness run
+## 27b: Nysa's challenge dialogue finished and no battle ever began).
+const ADMISSION_WINDOW_S := 6.0
+var _admission_record := ""
+var _admission_wait := 0.0
 ## A reliable state already in flight may still include a departed participant.
 ## Keep that trainer retired locally until the player explicitly challenges anew.
 var _withdrawn_trainers: Dictionary = {}
@@ -285,6 +293,10 @@ func _receive(event: Dictionary) -> void:
 			"dynamo_not_ready": "Disable the rods, defeat Kestrel and reach the Dynamo Core first.",
 			"already_fighting": "Finish your current battle first.",
 			"opponent_unavailable": "This opponent is not available right now.",
+			"engaged_in_wild_fight": "Finish your current battle first, then challenge again.",
+			"companion_not_deployed": "Call out your companion, then challenge again.",
+			"no_active_creature": "You need a companion ready before this battle.",
+			"combat_refused": "This battle could not begin. Challenge again.",
 		}
 		get_node("/root/Game").push_world_message(str(messages.get(str(event.get("reason", "")), "This challenge is not available right now.")))
 		return
@@ -325,11 +337,11 @@ func _receive(event: Dictionary) -> void:
 			_local_trainer = ""
 			_local_record = ""
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not _pending_state.is_empty():
-		_apply_state()
+		_apply_state(delta)
 
-func _apply_state() -> void:
+func _apply_state(delta: float = 0.0) -> void:
 	if _withdrawn_trainers.has(str(_pending_state.get("trainer_id", ""))):
 		_pending_state.clear()
 		return
@@ -345,12 +357,16 @@ func _apply_state() -> void:
 			# trip.  Host admission wins that race.  Only a fleeable wild may be
 			# yielded; a trainer fight remains protected by CombatManager.
 			if not manager.yield_wild_fight_for_hosted_trainer():
+				_admission_blocked(incoming_id, "engaged_in_wild_fight", delta)
 				return
 		if str(incoming.get("phase", "")) == "done":
 			_pending_state.clear()
 			return
 		if not director.begin_hosted_round(self, _pending_state):
+			_admission_blocked(incoming_id, str(director.get("hosted_round_blocker")), delta)
 			return
+		_admission_record = ""
+		_admission_wait = 0.0
 		_local_trainer = str(_pending_state.trainer_id)
 		_local_record = incoming_id
 		if _pending_challenge == _local_trainer:
@@ -384,3 +400,34 @@ func withdraw_peer_for_realm_transition(peer: int) -> void:
 	for fight: Node in fights.values().duplicate():
 		if is_instance_valid(fight) and fight.participants.has(peer):
 			fight.leave(peer)
+
+
+## One more frame the local player could not take up this admission. Past the
+## window: withdraw from the host's fight through the same self-only withdrawal
+## a finalized death uses, record the refusal and tell the player, so the
+## pending challenge clears and they can challenge again.
+func _admission_blocked(record_id: String, reason: String, delta: float) -> void:
+	if record_id != _admission_record:
+		_admission_record = record_id
+		_admission_wait = 0.0
+	_admission_wait += delta
+	if _admission_wait < ADMISSION_WINDOW_S:
+		return
+	var id := str(_pending_state.get("trainer_id", ""))
+	if reason.is_empty():
+		reason = "admission_stalled"
+	_admission_record = ""
+	_admission_wait = 0.0
+	_pending_state.clear()
+	if _pending_challenge == id:
+		_pending_challenge = ""
+	_withdrawn_trainers[id] = true
+	director.remove_hosted_observer(id)
+	last_start_refusal = {"kind": "start_refused", "trainer_id": id, "reason": reason,
+		"encounter_id": record_id, "local": true}
+	print("[stormwood] hosted trainer %s: admission withdrawn after %.0f s (%s)" % [id, ADMISSION_WINDOW_S, reason])
+	# Through the ordinary refusal path: `_receive` records it and tells the
+	# player; listeners (the witness harness) see the reason too.
+	session.stormwood_encounter_message.emit(last_start_refusal.duplicate(true))
+	session.request_stormwood_encounter({"kind": "finalized_death_withdrawal",
+		"trainer_id": id, "encounter_id": record_id})

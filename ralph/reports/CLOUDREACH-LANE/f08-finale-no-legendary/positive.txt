@@ -1,0 +1,20 @@
+# --only=cloudreach_finale (positive, after review nit)
+  ok    test_cloudreach_finale.gd :: test_a_different_store_resets_even_mid_fight
+  ok    test_cloudreach_finale.gd :: test_break_the_eye_delta_sweep_keeps_the_wind_clock_and_drift
+  ok    test_cloudreach_finale.gd :: test_break_the_eye_reload_without_a_delta_still_resets
+  ok    test_cloudreach_finale.gd :: test_break_the_eye_without_a_ledger_resets_conservatively
+  ok    test_cloudreach_finale.gd :: test_client_pending_network_repair_submits_once_and_settles_once
+  ok    test_cloudreach_finale.gd :: test_client_pending_win_settles_from_revision_poll_alone
+  ok    test_cloudreach_finale.gd :: test_client_pending_win_submits_once_and_settles_once_when_delta_lands
+  ok    test_cloudreach_finale.gd :: test_finale_to_chapter_complete_raises_no_legendary_offer
+  ok    test_cloudreach_finale.gd :: test_hazards_rotate_telegraph_and_preserve_three_lee_pockets
+  ok    test_cloudreach_finale.gd :: test_older_unearned_save_cannot_infer_a_captain_win_from_relay_flags
+  ok    test_cloudreach_finale.gd :: test_production_win_is_required_and_idempotent
+  ok    test_cloudreach_finale.gd :: test_refused_pending_intent_releases_its_guard
+  ok    test_cloudreach_finale.gd :: test_reloaded_flags_that_no_longer_admit_the_encounter_reset_it
+  ok    test_cloudreach_finale.gd :: test_restore_resets_once_the_fight_is_over
+  ok    test_cloudreach_finale.gd :: test_restore_resets_when_another_trainer_is_being_fought
+  ok    test_cloudreach_finale.gd :: test_save_restores_partial_relays_and_repairs_only_completed_network
+  ok    test_cloudreach_finale.gd :: test_unrelated_delta_sweep_keeps_crosswind_and_overload_phases
+  ok    test_cloudreach_finale.gd :: test_without_a_director_a_sweep_resets_the_encounter
+18 tests, 532 assertions, 0 failed

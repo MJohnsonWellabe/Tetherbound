@@ -2,16 +2,30 @@ extends "res://scripts/world/player_death.gd"
 ## Water keeps the production downed, owned storage, map and save seams.
 ## Only recovery location, surface placement and aquatic teardown differ.
 const SWIMMING_CONFIG := "res://data/config/water_swimming.json"
+const WORLD_CONFIG := "res://data/config/water_world.json"
+const SEALS := preload("res://scripts/world/water_gate_seals.gd")
 @export var satchel_surface_clearance_m := 0.15 # Visible bag above the no-diving surface.
 @export var respawn_clearance_m := 1.0 # Capsule settles onto the validated dry patch.
 var _swimming_rules: Dictionary = {}
 var _riding: Node
 var _death_in_progress := false
+var _seals: Array[Dictionary] = []
+var _seal_rules: Dictionary = {}
 
 func build(world: Node3D, player: CharacterBody3D, spawn_position: Vector3) -> void:
-	_swimming_rules = JSON.parse_string(FileAccess.get_file_as_string(SWIMMING_CONFIG))
+	bind_rules(world)
 	super.build(world, player, spawn_position)
 	_recovery_camps.clear() # Water has owned landing history, not Cloudreach camps.
+
+## Swimming placement rules plus the closed-gate seals of this world's config
+## (the authored file when the world carries none), compiled once.
+func bind_rules(world: Node3D) -> void:
+	_swimming_rules = JSON.parse_string(FileAccess.get_file_as_string(SWIMMING_CONFIG))
+	var world_config: Variant = world.get("config")
+	if not world_config is Dictionary or (world_config as Dictionary).is_empty():
+		world_config = JSON.parse_string(FileAccess.get_file_as_string(WORLD_CONFIG))
+	_seals = SEALS.compile(world_config)
+	_seal_rules = SEALS.load_rules()
 
 ## Bind the existing controller once available so death restores both mount
 ## following and rider/camera state through its ordinary dismount seam.
@@ -53,6 +67,15 @@ func _safe_ground(at: Vector3) -> Vector3:
 			return Vector3(INF, INF, INF)
 	return Vector3(at.x, ground + respawn_clearance_m, at.z)
 
+## F12: the closed tide race (landform plus race band) containing `at` under
+## THIS world's shared flags, or {}. Safe landings and saved poses live on the
+## portable character, so one earned in another world must not place the
+## player behind a dock this world has not cleared.
+func closed_seal_at(game: Node, at: Vector3) -> Dictionary:
+	var world_state: Object = game.get("world") if game != null else null
+	var flags: Object = world_state.get("flags") if world_state != null else null
+	return SEALS.closed_seal_at(_seals, _seal_rules, at, flags)
+
 func recovery_position(game: Node, _from: Vector3) -> Vector3:
 	# Same last-placed-bed preference as the base component, restricted to this
 	# realm and rechecked against terrain so flooded/removed beds cannot trap us.
@@ -67,12 +90,13 @@ func recovery_position(game: Node, _from: Vector3) -> Vector3:
 		if raw.size() != 3:
 			continue
 		var candidate := _safe_ground(Vector3(float(raw[0]) + 2.0, float(raw[1]), float(raw[2]) + 2.0))
-		if candidate.is_finite():
+		if candidate.is_finite() and closed_seal_at(game, candidate).is_empty():
 			return candidate
 	var state := _swim_state()
 	if state != null and bool(state.get("has_safe_landing")):
 		var landing := _safe_ground(state.get("safe_landing"))
-		if landing.is_finite():
+		# The anchor itself is kept: once this world opens the dock it counts again.
+		if landing.is_finite() and closed_seal_at(game, landing).is_empty():
 			return landing
 	var first_shore := _safe_ground(_fallback_home)
 	return first_shore if first_shore.is_finite() else _fallback_home

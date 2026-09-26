@@ -1,0 +1,964 @@
+{
+  "name": "F06: two-peer MID-RIDE rejoin keeps the rider sane, the party whole and Cloudreach's closed counterweight gate shut",
+  "claim": "ACCEPTANCE F06: 'two-peer rejoin does not bypass a closed gate or lose an owned creature', extended to a MID-RIDE drop. The guest's own world has Cloudreach's upper counterweight route OPEN; the host's world has it CLOSED. (A) POSITIVE: in the host's session the guest mounts its own saddled Meadowhart on the Cloudreach arrival landing (Cloudreach RidingController, production mount(), which fits the saddle), rides ~20 m up the arrival road with the real stick, and its link drops (drop_link) while mounted. It rejoins as the same character through the title's returning join route. Asserted: not mounted, not carried, not flying, on a floor (no phantom mount, not stuck mounted in the void); same character and five owned (party ids compared before/after in the rows); the Meadowhart can be mounted and dismounted again; not inside sealed Upper Cloudreach; host world flags unchanged; host and guest deployed-body rows recorded to judge that the carrier exists once. (B) CLOSED GATE: the guest mounts on the counterweight pass below the closed gate, rides up the pass and INTO the closed gate (the ride cannot reach the far side), and its link drops there, mounted. Same rejoin and checks, plus: not past the gate on the pass, and its own world's open-gate flag does not leak into the host session. Post-rejoin rider state: no spec line covers ground-riding reconnect; mounted state is not a portable save fact (MULTIPLAYER \u00a73 portable column lists 'current realm and safe pose', SYSTEMS \u00a78 ground riding has no reload rule, and the character save carries no mounted field), MULTIPLAYER \u00a74 'reconnect save a safe pose; if that pose is no longer legal, seat the character at the authored safe entrance', so the safe behaviour asserted is: dismounted, on its own feet on legal ground. Placement: the title returning route first loads the guest's own slot-0 (a different world instance), so it stands at the home slot's authored Cloudreach arrival per MULTIPLAYER 'Return-home placement' (the owner's 2026-09-26 same-host exact-pose ruling is assigned to X05 and not yet built). (C) CONTROL: the host opens the gate; the guest mounts past it, rides, leaves (clean leave, world kept) and rejoins, and DOES stand past it, so the 'not sealed' check can fail. Fixtures (disclosed): story_flag world flags stand in for playing to Cloudreach and (guest's own world only) the Sky Shrine windlass; party_grant fills the guest's five (Meadowhart first); storage_grant puts one saddle in the satchel; teleport places the guest on the arrival landing, on the counterweight pass and past the opened gate; ride_mount stands the trainer 1.2 m beside its own companion and calls the production mount() (the interact press's own door) instead of walking and pressing; deploy_creature summons the active companion if it is not out. Saves, loads, join, drop, rejoin, riding, stick movement and snapshots are the game's own code. Loopback ENet: local evidence, not internet/Steam acceptance.",
+  "peers": 2,
+  "scene": "title",
+  "_comment_scene": "As f06_cloudreach_mounted_rejoin.json: both peers boot the light title scene, then boot their own fresh Meadows world and cross into Cloudreach through Game.enter_realm.",
+  "budget_s": 4200,
+  "steps": [
+    {
+      "peer": "all",
+      "action": "boot",
+      "args": {
+        "scene": "world"
+      },
+      "label": "each peer boots its own fresh Meadows world",
+      "budget_frames": 20000
+    },
+    {
+      "peer": "all",
+      "action": "story_flag",
+      "args": {
+        "flag": "realm_key_cloudreach",
+        "scope": "world"
+      },
+      "label": "setup: both worlds hold the Cloudreach key"
+    },
+    {
+      "peer": 1,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach_upper_route_unlocked",
+        "scope": "world"
+      },
+      "label": "setup: ONLY the guest's own world has the upper counterweight route open"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "meadowhart",
+        "level": 20
+      },
+      "label": "setup: guest party_grant meadowhart (its ground mount, first = active)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "level": 20
+      },
+      "label": "setup: guest party_grant bramblebun"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "level": 20
+      },
+      "label": "setup: guest party_grant terrapup"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "brooktail",
+        "level": 20
+      },
+      "label": "setup: guest party_grant brooktail"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "level": 20
+      },
+      "label": "setup: guest party_grant mudsnout"
+    },
+    {
+      "peer": 1,
+      "action": "storage_grant",
+      "args": {
+        "item": "saddle",
+        "n": 1
+      },
+      "label": "setup: a saddle in the guest's satchel (not pre-fitted: mount() fits it)"
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "label": "host enters Cloudreach in its own world",
+      "budget_frames": 20000
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "cloudreach"
+      },
+      "label": "guest enters Cloudreach in its own world",
+      "budget_frames": 20000
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "guest owns five"
+    },
+    {
+      "peer": 1,
+      "action": "save_character_here",
+      "label": "guest saves its own world (gate open) + portable character at the Cloudreach arrival"
+    },
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "label": "host world: gate CLOSED before the join",
+      "expect": "FAIL"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "returning_route": false,
+        "budget_frames": 20000
+      },
+      "label": "guest continues its own save through the title's production join",
+      "budget_frames": 20000
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "label": "JOIN: guest now reads the host's closed gate",
+      "expect": "FAIL"
+    },
+    {
+      "peer": 1,
+      "probe": "player_identity",
+      "label": "JOIN: guest in Cloudreach, five owned",
+      "expect_data": {
+        "realm": "cloudreach",
+        "party_size": 5,
+        "character_id": "$character1"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          0.0,
+          106.5,
+          -260.0
+        ],
+        "settle": 120
+      },
+      "label": "A setup: guest on the arrival landing (the authored arrival itself)"
+    },
+    {
+      "peer": 1,
+      "action": "deploy_creature",
+      "args": {
+        "settle": 60
+      },
+      "label": "A: the guest's Meadowhart is out (already out, or summoned by the director)"
+    },
+    {
+      "peer": 1,
+      "action": "ride_mount",
+      "args": {
+        "settle": 30
+      },
+      "label": "A: guest mounts its Meadowhart (production mount(); harness stands it 1.2 m beside the mount first)"
+    },
+    {
+      "peer": 1,
+      "probe": "riding",
+      "label": "A: guest is riding its own saddled Meadowhart",
+      "expect_data": {
+        "local": {
+          "mounted": true,
+          "species": "meadowhart",
+          "saddle_worn": true
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "action": "move_to",
+      "args": {
+        "x": -1.6,
+        "z": -254.0,
+        "close_enough": 2.5,
+        "budget_frames": 900
+      },
+      "label": "A: guest rides onto the arrival road (real stick)",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "move_to",
+      "args": {
+        "x": -5.33,
+        "z": -240.0,
+        "close_enough": 3.0,
+        "budget_frames": 900
+      },
+      "label": "A: guest rides up the road centreline",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -5.33,
+          -240.0
+        ],
+        "within": 4.0
+      },
+      "label": "A: the ride covered the ~20 m to the waypoint",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "probe": "riding",
+      "label": "A: still mounted just before the drop",
+      "expect_data": {
+        "local": {
+          "mounted": true,
+          "species": "meadowhart"
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "flying",
+      "label": "A: trainer carried by the mount before the drop",
+      "expect_data": {
+        "local": {
+          "carried": true
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "A: ride pose before the drop"
+    },
+    {
+      "peer": 1,
+      "probe": "tournament",
+      "label": "A: party ids before the drop"
+    },
+    {
+      "peer": 1,
+      "probe": "deployed_creatures",
+      "label": "A: guest's deployed bodies before the drop"
+    },
+    {
+      "peer": 0,
+      "probe": "riding",
+      "label": "A: host's view of the guest riding before the drop"
+    },
+    {
+      "peer": 0,
+      "probe": "deployed_creatures",
+      "label": "A: host's deployed bodies before the drop"
+    },
+    {
+      "peer": 1,
+      "action": "drop_link",
+      "label": "A: guest's link drops MID-RIDE"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1
+      },
+      "budget_frames": 1800
+    },
+    {
+      "peer": 1,
+      "probe": "input_context",
+      "label": "A: the dropped guest is back at the title"
+    },
+    {
+      "peer": 0,
+      "probe": "deployed_creatures",
+      "label": "A: host after the drop: the guest's proxies are gone"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "returning_route": true,
+        "budget_frames": 20000,
+        "character": {
+          "character_id": "$character1"
+        }
+      },
+      "label": "A: guest rejoins from the title as the same character (returning route)",
+      "budget_frames": 20000
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "action": "wait",
+      "args": {
+        "frames": 120
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "player_identity",
+      "label": "A: identity after rejoin: same character, five owned",
+      "expect_data": {
+        "realm": "cloudreach",
+        "party_size": 5,
+        "character_id": "$character1"
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "tournament",
+      "label": "A: party ids after rejoin (compare with the row before the drop)"
+    },
+    {
+      "peer": 1,
+      "probe": "riding",
+      "label": "A: rider state after rejoin: NOT mounted (no phantom ride)",
+      "expect_data": {
+        "local": {
+          "mounted": false
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "flying",
+      "label": "A: trainer on its own feet on a floor, not carried, not flying",
+      "expect_data": {
+        "local": {
+          "carried": false,
+          "flying": false,
+          "on_floor": true
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "on_floor",
+      "label": "A: on_floor"
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "A: position after rejoin"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -400.0,
+          3890.0
+        ],
+        "within": 40.0
+      },
+      "label": "A: guest is NOT inside sealed Upper Cloudreach",
+      "expect": "FAIL",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          0.0,
+          -260.0
+        ],
+        "within": 5.0
+      },
+      "label": "A: guest stands on the authored Cloudreach arrival (MULTIPLAYER Return-home placement: returning route loads its own slot-0, a different world instance)",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "probe": "deployed_creatures",
+      "label": "A: guest's deployed bodies after rejoin (one local Meadowhart at most)"
+    },
+    {
+      "peer": 0,
+      "probe": "deployed_creatures",
+      "label": "A: host's deployed bodies after rejoin (one proxy of the guest's companion at most)"
+    },
+    {
+      "peer": 0,
+      "probe": "riding",
+      "label": "A: host's view of the rejoined guest (remote row: riding/carried expected false; judged in the reviewer note)"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "label": "A: host world flags unchanged",
+      "expect": "FAIL"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "label": "A: guest reads the host's closed gate after rejoin",
+      "expect": "FAIL"
+    },
+    {
+      "peer": 1,
+      "action": "deploy_creature",
+      "args": {
+        "settle": 60
+      },
+      "label": "A: companion out after rejoin"
+    },
+    {
+      "peer": 1,
+      "action": "ride_mount",
+      "args": {
+        "settle": 30
+      },
+      "label": "A: the same Meadowhart can be mounted again (no stuck/phantom ride state)"
+    },
+    {
+      "peer": 1,
+      "probe": "riding",
+      "label": "A: remounted its own Meadowhart",
+      "expect_data": {
+        "local": {
+          "mounted": true,
+          "species": "meadowhart"
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "action": "ride_dismount",
+      "args": {
+        "settle": 60
+      },
+      "label": "A: and dismounts onto ground"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "A: still five after remount/dismount"
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          -786.0,
+          613.0,
+          3444.0
+        ],
+        "settle": 120
+      },
+      "label": "B setup: guest on the counterweight pass, ~120 m below the closed gate, legal (windscar_ravine) side"
+    },
+    {
+      "peer": 1,
+      "action": "wait",
+      "args": {
+        "frames": 60
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "B: pose on the pass"
+    },
+    {
+      "peer": 1,
+      "probe": "on_floor",
+      "label": "B: on the pass floor"
+    },
+    {
+      "peer": 1,
+      "action": "deploy_creature",
+      "args": {
+        "settle": 60
+      },
+      "label": "B: Meadowhart out (the follower reappears beside a teleported trainer)"
+    },
+    {
+      "peer": 1,
+      "action": "ride_mount",
+      "args": {
+        "settle": 30
+      },
+      "label": "B: guest mounts on the pass"
+    },
+    {
+      "peer": 1,
+      "action": "move_to",
+      "args": {
+        "x": -818.0,
+        "z": 3478.0,
+        "close_enough": 3.0,
+        "budget_frames": 1200
+      },
+      "label": "B: rides up the pass to its bend",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "move_to",
+      "args": {
+        "x": -790.0,
+        "z": 3540.0,
+        "close_enough": 3.0,
+        "budget_frames": 1200
+      },
+      "label": "B: rides toward the closed gate (17 m short)",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "move_to",
+      "args": {
+        "x": -770.0,
+        "z": 3580.0,
+        "close_enough": 3.0,
+        "budget_frames": 600
+      },
+      "label": "B: rides INTO the closed gate: cannot reach the far side",
+      "expect": "FAIL",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "probe": "riding",
+      "label": "B: still mounted against the gate",
+      "expect_data": {
+        "local": {
+          "mounted": true
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "B: ride pose at the gate before the drop"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -770.0,
+          3580.0
+        ],
+        "within": 15.0
+      },
+      "label": "B: the ride did not pass the closed gate",
+      "expect": "FAIL",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "probe": "tournament",
+      "label": "B: party ids before the drop"
+    },
+    {
+      "peer": 1,
+      "action": "drop_link",
+      "label": "B: guest's link drops MID-RIDE at the closed gate"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1
+      },
+      "budget_frames": 1800
+    },
+    {
+      "peer": 1,
+      "probe": "input_context",
+      "label": "B: dropped guest is at the title"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "returning_route": true,
+        "budget_frames": 20000,
+        "character": {
+          "character_id": "$character1"
+        }
+      },
+      "label": "B: guest rejoins from the title (returning route; its own world has the gate OPEN)",
+      "budget_frames": 20000
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "action": "wait",
+      "args": {
+        "frames": 120
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "player_identity",
+      "label": "B: identity after rejoin",
+      "expect_data": {
+        "realm": "cloudreach",
+        "party_size": 5,
+        "character_id": "$character1"
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "tournament",
+      "label": "B: party ids after rejoin"
+    },
+    {
+      "peer": 1,
+      "probe": "riding",
+      "label": "B: NOT mounted after rejoin",
+      "expect_data": {
+        "local": {
+          "mounted": false
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "flying",
+      "label": "B: on its own feet on a floor",
+      "expect_data": {
+        "local": {
+          "carried": false,
+          "flying": false,
+          "on_floor": true
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "B: position after rejoin"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -770.0,
+          3580.0
+        ],
+        "within": 15.0
+      },
+      "label": "B: NOT past the closed gate on the pass",
+      "expect": "FAIL",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -400.0,
+          3890.0
+        ],
+        "within": 40.0
+      },
+      "label": "B: NOT inside sealed Upper Cloudreach",
+      "expect": "FAIL",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          0.0,
+          -260.0
+        ],
+        "within": 5.0
+      },
+      "label": "B: on the authored arrival (Return-home placement)",
+      "continue_on_fail": true
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "label": "B: guest reads the host's closed gate (its own world's open flag did not leak)",
+      "expect": "FAIL"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "cloudreach_upper_route_unlocked"
+      },
+      "label": "B: host world flags unchanged",
+      "expect": "FAIL"
+    },
+    {
+      "peer": 1,
+      "probe": "deployed_creatures",
+      "label": "B: guest's deployed bodies after rejoin"
+    },
+    {
+      "peer": 0,
+      "probe": "deployed_creatures",
+      "label": "B: host's deployed bodies after rejoin"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after_midride_rejoins"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after_midride_rejoins",
+        "dir": "worlds",
+        "path_contains": "slot-0/",
+        "contains": [
+          "realm_key_cloudreach"
+        ],
+        "lacks": [
+          "cloudreach_upper_route_unlocked"
+        ]
+      },
+      "label": "host's saved world: gate still closed"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after_midride_rejoins",
+        "dir": "characters",
+        "contains": [
+          "meadowhart",
+          "\"cloudreach\""
+        ]
+      },
+      "label": "guest's saved character: Cloudreach, Meadowhart owned"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach_upper_route_unlocked",
+        "scope": "world"
+      },
+      "label": "CONTROL setup: the host opens the gate"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach_upper_route_unlocked"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          -400.0,
+          783.0,
+          3890.0
+        ],
+        "settle": 120
+      },
+      "label": "CONTROL setup: guest past the now-open gate"
+    },
+    {
+      "peer": 1,
+      "action": "wait",
+      "args": {
+        "frames": 60
+      }
+    },
+    {
+      "peer": 1,
+      "action": "deploy_creature",
+      "args": {
+        "settle": 60
+      }
+    },
+    {
+      "peer": 1,
+      "action": "ride_mount",
+      "args": {
+        "settle": 30
+      },
+      "label": "CONTROL: guest mounts past the open gate"
+    },
+    {
+      "peer": 1,
+      "action": "stick",
+      "args": {
+        "stick": "left",
+        "x": 0.0,
+        "y": 1.0,
+        "frames": 45
+      },
+      "label": "CONTROL: rides a few metres"
+    },
+    {
+      "peer": 1,
+      "probe": "riding",
+      "label": "CONTROL: mounted before leaving",
+      "expect_data": {
+        "local": {
+          "mounted": true
+        }
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "position"
+    },
+    {
+      "peer": 1,
+      "action": "leave",
+      "args": {
+        "reason": "midride_control"
+      },
+      "label": "CONTROL: guest leaves mid-ride (clean leave, world scene kept)"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1
+      },
+      "budget_frames": 900
+    },
+    {
+      "peer": 1,
+      "action": "join",
+      "args": {},
+      "label": "CONTROL: guest rejoins the open world"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "action": "wait",
+      "args": {
+        "frames": 60
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "player_identity",
+      "label": "CONTROL: five owned",
+      "expect_data": {
+        "realm": "cloudreach",
+        "party_size": 5,
+        "character_id": "$character1"
+      }
+    },
+    {
+      "peer": 1,
+      "probe": "riding",
+      "label": "CONTROL: rider state after a clean mid-ride leave/join (recorded)"
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "CONTROL: position"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "near",
+        "at": [
+          -400.0,
+          3890.0
+        ],
+        "within": 40.0
+      },
+      "label": "CONTROL: with the gate open the rejoined guest DOES stand past it (the 'not sealed' check can fail)"
+    }
+  ]
+}

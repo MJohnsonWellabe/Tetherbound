@@ -47,6 +47,7 @@ extends Node3D
 
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
+const SIGNPOST := preload("res://scripts/world/signpost.gd")
 const CONFIG_PATH := "res://data/config/village_boundary.json"
 
 ## OWNER-0901-VILLAGE-GATE-ROADS-V2. 2026-09-01 owner playtest, second
@@ -212,6 +213,56 @@ func build(world: Node3D) -> void:
 
 	_build_gates(world)
 	_build_fence(world, prefabs, points)
+	_clear_road_scatter(world)
+	_build_exit_signs(world)
+
+
+## One-arm fingerposts at a gate saying where its road goes, built exactly as
+## playground_world.gd builds `paths.trailheads` (signpost.gd, one route
+## override). They live here, not in terrain_playground.json, because every
+## byte of that file is in both bake fingerprints: a sign is not a re-bake.
+func _build_exit_signs(world: Node3D) -> void:
+	var i := 0
+	for raw: Variant in (_config.get("exit_signs", []) as Array):
+		if not raw is Dictionary:
+			continue
+		var entry := raw as Dictionary
+		var at := entry.get("at", []) as Array
+		var label := str(entry.get("label", ""))
+		var aim := entry.get("points", []) as Array
+		if at.size() != 2 or label.is_empty() or aim.size() < 2:
+			push_warning("village_boundary.json: skipped a malformed exit_signs entry")
+			continue
+		var post: Node3D = SIGNPOST.new()
+		post.name = "VillageExitSign_%d" % i
+		world.add_child(post)
+		post.call("build", world, Vector2(float(at[0]), float(at[1])), [{"label": label, "points": aim}])
+		i += 1
+
+
+## Baked scatter a village road runs into, cleared at load. A placement is kept
+## off a road by its ORIGIN's distance to the centreline; a medium rock whose
+## origin sits just outside the painted band still overhangs the road. Same
+## runtime `Vegetation.clear_area` contract old_quarry.gd, mill_crossing.gd and
+## tether_relay.gd use, so no re-bake: `village_boundary.json`'s
+## `road_scatter_clear` lists each disc with its own `_why`.
+var scatter_removed := 0
+
+func _clear_road_scatter(world: Node3D) -> void:
+	var vegetation := world.get_node_or_null(^"Vegetation")
+	if vegetation == null or not vegetation.has_method("clear_area"):
+		return
+	for raw: Variant in (_config.get("road_scatter_clear", []) as Array):
+		if not raw is Dictionary:
+			continue
+		var at := (raw as Dictionary).get("at", []) as Array
+		var radius := float((raw as Dictionary).get("radius_m", 0.0))
+		if at.size() != 2 or radius <= 0.0:
+			continue
+		var x := float(at[0])
+		var z := float(at[1])
+		scatter_removed += int(vegetation.call("clear_area",
+			Vector3(x, float(world.call("ground_height_at", x, z)), z), radius))
 
 
 ## The leaves first, because the fence has to know where the holes are.

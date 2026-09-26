@@ -113,6 +113,9 @@ func _resolve(event: Dictionary) -> void:
 	for peer: int in event.peers:
 		if not actors.has(peer):
 			continue
+		# Fight state is checked here, at impact, not only when the warning
+		# was chosen: a trainer who entered a fight during the 1.2 s telegraph
+		# is spared, and one whose fight ended in it is hit as normal.
 		if not trainer_can_be_hit(_trainer_in_fight(peer), _spare_trainer_in_fight()):
 			continue
 		var body: Node3D = actors[peer]

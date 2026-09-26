@@ -358,13 +358,18 @@ func _route_rows_asserted(id: String) -> int:
 ## The shortest healthy completion on record for `segment`, in route.csv rows.
 ## Filtered exactly as S02-60's own derivation filters: a run whose measured
 ## rate is not ~2 rows per play second is on a different clock and is excluded
-## rather than averaged in.
+## rather than averaged in. A segment the harness itself marked INCOMPLETE is
+## not a completion at all: gate-f-run-20260907T023802Z-owner stopped S04 at
+## step 15/89 and S05 at 48/120 on a harness error, and its 363- and 500-row
+## routes were being read as the shortest HEALTHY runs.
 func _shortest_healthy_route(segment: String) -> int:
 	var shortest := -1
 	var runs := DirAccess.open(REPORTS)
 	if runs == null:
 		return -1
 	for run in runs.get_directories():
+		if FileAccess.file_exists("%s/%s/%s/INCOMPLETE.md" % [REPORTS, run, segment]):
+			continue
 		var path := "%s/%s/%s/telemetry/route.csv" % [REPORTS, run, segment]
 		var file := FileAccess.open(path, FileAccess.READ)
 		if file == null:

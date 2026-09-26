@@ -1,0 +1,55 @@
+# tests/smoke_net_veridian_full_refusal.gd, two real peers (tools/net/run_net_smoke.sh veridian_full_refusal), Godot 4.7 headless, loopback, on origin/main 08fcc205 + this smoke
+# 3 consecutive passes: run 1 normal (3m39s), run 2 throttled (taskset -c 0,1, nice 15; 2m23s), run 3 normal (2m21s); 46 PASS / 0 FAIL each.
+# Run 1 verdict lines, unedited:
+
+PASS: host reported its ENet port (31701)
+PASS: FIXTURE: peer 0 received terrapup
+PASS: FIXTURE: peer 0 received bramblebun
+PASS: FIXTURE: peer 0 received trailpup
+PASS: FIXTURE: peer 0 received mudsnout
+PASS: FIXTURE: peer 1 received terrapup
+PASS: FIXTURE: peer 1 received bramblebun
+PASS: FIXTURE: peer 1 received trailpup
+PASS: FIXTURE: peer 1 received mudsnout
+PASS: two distinct stable characters (host 'character-d51a394e30801f1b9be68448e41fb410', guest 'character-aa1af2c22da9478be7c9714c819f81f4')
+PASS: host hosted and guest joined (hosting udp/31701 as peer 1 / joined 127.0.0.1:31701 as peer 1464888625 after 17 frames; snapshot applied; 2 peer(s) in registry)
+PASS: FIXTURE: host journaled both participants (reward_grant to peers [1, 1464888625]: ok=true code='' reason='' paid=[1, 1464888625])
+PASS: FIXTURE: host set world 'defeated_warden' (defeated_warden: ok=true pending=false code='' reason='')
+PASS: FIXTURE: host set world 'legendary_freed' (legendary_freed: ok=true pending=false code='' reason='')
+PASS: peer 0 sees the freeing and both participants ({ "accept_at": [], "announce_pending": false, "choice_open": false, "climax_found": true, "freed": true, "healing_found": true, "herd_display": false, "joined": false, "live_id": "character-d51a394e30801f1b9be68448e41fb410", "may_receive": true, "near": false, "panel_open": false, "participants": ["character-d51a394e30801f1b9be68448e41fb410", "character-aa1af2c22da9478be7c9714c819f81f4"], "party_size": 4.0, "pending_catch": false, "receipts": [], "refuse_at": [], "refused": false, "stage": "", "stranger_may_receive": false, "veridian_count": 0.0 })
+PASS: peer 0 starts with four creatures and no Veridian
+PASS: peer 0: a non-participant character would be offered nothing
+PASS: peer 1 sees the freeing and both participants ({ "accept_at": [], "announce_pending": false, "choice_open": false, "climax_found": true, "freed": true, "healing_found": true, "herd_display": false, "joined": false, "live_id": "character-aa1af2c22da9478be7c9714c819f81f4", "may_receive": true, "near": false, "panel_open": false, "participants": ["character-d51a394e30801f1b9be68448e41fb410", "character-aa1af2c22da9478be7c9714c819f81f4"], "party_size": 4.0, "pending_catch": false, "receipts": [], "refuse_at": [], "refused": false, "stage": "", "stranger_may_receive": false, "veridian_count": 0.0 })
+PASS: peer 1 starts with four creatures and no Veridian
+PASS: peer 1: a non-participant character would be offered nothing
+PASS: the Hall names its machine foot ([-17.0, 6.17194271087646, 7650.2001953125])
+PASS: peer 0's own choice opened ({ "accept_at": [-18.8207244873047, 7.17194271087646, 7652.60009765625], "announce_pending": true, "choice_open": true, "climax_found": true, "freed": true, "healing_found": true, "herd_display": false, "joined": false, "live_id": "character-d51a394e30801f1b9be68448e41fb410", "may_receive": true, "near": true, "panel_open": false, "participants": ["character-d51a394e30801f1b9be68448e41fb410", "character-aa1af2c22da9478be7c9714c819f81f4"], "party_size": 4.0, "pending_catch": false, "receipts": [], "refuse_at": [-18.8207244873047, 7.17194271087646, 7647.80029296875], "refused": false, "stage": "choice", "stranger_may_receive": false, "veridian_count": 0.0 })
+PASS: peer 1's own choice opened ({ "accept_at": [-15.9779491424561, 6.17194271087646, 7652.60009765625], "announce_pending": true, "choice_open": true, "climax_found": true, "freed": true, "healing_found": true, "herd_display": false, "joined": false, "live_id": "character-aa1af2c22da9478be7c9714c819f81f4", "may_receive": true, "near": true, "panel_open": false, "participants": ["character-d51a394e30801f1b9be68448e41fb410", "character-aa1af2c22da9478be7c9714c819f81f4"], "party_size": 4.0, "pending_catch": false, "receipts": [], "refuse_at": [-17.6750049591064, 6.17194271087646, 7648.5029296875], "refused": false, "stage": "choice", "stranger_may_receive": false, "veridian_count": 0.0 })
+PASS: the host refused its own offer (refuse_offer() -> true; stage now 'ceremony')
+PASS: peer 0: no herd display while the guest's answer is still owed
+PASS: peer 1: no herd display while the guest's answer is still owed
+PASS: the guest refused its own offer (refuse_offer() -> true; stage now 'ceremony')
+PASS: after both refused: peer 0's belt is unchanged by refusing ({ "accept_at": [], "announce_pending": false, "choice_open": false, "climax_found": true, "freed": true, "healing_found": true, "herd_display": true, "joined": false, "live_id": "character-d51a394e30801f1b9be68448e41fb410", "may_receive": false, "near": true, "panel_open": false, "participants": ["character-d51a394e30801f1b9be68448e41fb410", "character-aa1af2c22da9478be7c9714c819f81f4"], "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"], "refuse_at": [], "refused": true, "stage": "ceremony", "stranger_may_receive": false, "veridian_count": 0.0 })
+PASS: after both refused: peer 0's personal flag is legendary_refused only
+PASS: after both refused: peer 0's WORLD holds exactly ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"] (got ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"])
+PASS: after both refused: peer 0 shows the herd display (every participant refused)
+PASS: after both refused: peer 1's belt is unchanged by refusing ({ "accept_at": [], "announce_pending": false, "choice_open": false, "climax_found": true, "freed": true, "healing_found": true, "herd_display": true, "joined": false, "live_id": "character-aa1af2c22da9478be7c9714c819f81f4", "may_receive": false, "near": true, "panel_open": false, "participants": ["character-d51a394e30801f1b9be68448e41fb410", "character-aa1af2c22da9478be7c9714c819f81f4"], "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"], "refuse_at": [], "refused": true, "stage": "ceremony", "stranger_may_receive": false, "veridian_count": 0.0 })
+PASS: after both refused: peer 1's personal flag is legendary_refused only
+PASS: after both refused: peer 1's WORLD holds exactly ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"] (got ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"])
+PASS: after both refused: peer 1 shows the herd display (every participant refused)
+PASS: peer 0 completed a production save/reload (host slot reload preserved party=true selection=true hosted_world=true)
+PASS: peer 1 completed a production save/reload (client character reload preserved party=true selection=true hosted_world=true)
+PASS: after save/reload: peer 0's belt is unchanged by refusing ({ "accept_at": [], "announce_pending": false, "choice_open": false, "climax_found": true, "freed": true, "healing_found": true, "herd_display": true, "joined": false, "live_id": "character-d51a394e30801f1b9be68448e41fb410", "may_receive": false, "near": true, "panel_open": true, "participants": ["character-aa1af2c22da9478be7c9714c819f81f4", "character-d51a394e30801f1b9be68448e41fb410"], "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"], "refuse_at": [], "refused": true, "stage": "failure", "stranger_may_receive": false, "veridian_count": 0.0 })
+PASS: after save/reload: peer 0's personal flag is legendary_refused only
+PASS: after save/reload: peer 0's WORLD holds exactly ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"] (got ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"])
+PASS: after save/reload: peer 0 shows the herd display (every participant refused)
+PASS: after save/reload: peer 1's belt is unchanged by refusing ({ "accept_at": [], "announce_pending": false, "choice_open": false, "climax_found": true, "freed": true, "healing_found": true, "herd_display": true, "joined": false, "live_id": "character-aa1af2c22da9478be7c9714c819f81f4", "may_receive": false, "near": true, "panel_open": true, "participants": ["character-d51a394e30801f1b9be68448e41fb410", "character-aa1af2c22da9478be7c9714c819f81f4"], "party_size": 4.0, "pending_catch": false, "receipts": ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"], "refuse_at": [], "refused": true, "stage": "failure", "stranger_may_receive": false, "veridian_count": 0.0 })
+PASS: after save/reload: peer 1's personal flag is legendary_refused only
+PASS: after save/reload: peer 1's WORLD holds exactly ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"] (got ["legendary_resolution:live", "legendary_resolution:refused:character-aa1af2c22da9478be7c9714c819f81f4", "legendary_resolution:refused:character-d51a394e30801f1b9be68448e41fb410"])
+PASS: after save/reload: peer 1 shows the herd display (every participant refused)
+PASS: neither peer was offered the freeing again (stages seen: ["0:done", "1:done"])
+real	3m38.814s
+
+# Run 2 (throttled) and run 3 tallies:
+full_refusal2_throttled: 46 PASS, 0 FAIL, real	2m22.563s
+full_refusal3: 46 PASS, 0 FAIL, real	2m21.170s

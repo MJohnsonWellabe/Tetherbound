@@ -186,6 +186,14 @@ func _apply_canopy_cloth_exposure(model: Node, spec: Dictionary) -> void:
 			if source == null or source.resource_name != "MI_Banner":
 				continue
 			var material := source.duplicate() as StandardMaterial3D
+			# The kit paints MI_Banner cloth oxblood through its COLOR_0
+			# vertex colours (about 0.29, 0.01, 0.0). Oxblood is Team Tether's
+			# alone (ART_DIRECTION), so the canopy cloth drops the vertex tint
+			# and takes the Meadows ochre from config over its own texture.
+			var cloth_tint := str(spec.get("cloth_tint", ""))
+			if not cloth_tint.is_empty():
+				material.vertex_color_use_as_albedo = false
+				material.albedo_color = Color(cloth_tint)
 			material.backlight_enabled = true
 			material.backlight = backlight
 			if emission_floor > 0.0:

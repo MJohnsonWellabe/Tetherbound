@@ -68,10 +68,27 @@
    "label": "SETUP: the swim lesson is done (the repair's prerequisite)"
   },
   {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "water_named_deep_watch_tidecoil_resolved",
+    "scope": "world"
+   },
+   "label": "SETUP: Tidecoil resolved (the free Deep Watch chart's prerequisite since F13 6b022c8b3)"
+  },
+  {
    "peer": "all",
    "action": "wait_flag",
    "args": {
     "flag": "water_swim_lesson_complete",
+    "scope": "world"
+   }
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "water_named_deep_watch_tidecoil_resolved",
     "scope": "world"
    }
   },
@@ -150,12 +167,13 @@
      "reed_fiber": 6,
      "driftwood": 4
     },
-    "item_takes": [
-     "reed_fiber x6",
-     "driftwood x4"
-    ]
+    "item_takes": [],
+    "disk_after": {
+     "reed_fiber": 2,
+     "driftwood": 2
+    }
    },
-   "label": "guest pays for the repair through the real prompt"
+   "label": "guest pays for the repair through the real prompt (F15 escrow: the cost is debited and saved at the press; the host sends no item_take)"
   },
   {
    "peer": 1,

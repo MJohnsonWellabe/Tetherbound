@@ -64,6 +64,10 @@ func run() -> void:
 	var center: Array = config.islands[1].center_xz_m
 	var anchor := Vector3(float(center[0]), world.ground_height_at(center[0], center[1]), float(center[1]))
 	swim.state.reach_land(anchor)
+	# F12#6: the landing is portable character data. While this world has not
+	# cleared Reedhaven's dock, its landing must not carry recovery past the race.
+	check(service.recovery_position(game, Vector3.ZERO).distance_to(fallback) < 0.01, "Sealed second-island landing cannot bypass its closed dock")
+	game.get("world").flags.set_flag("water_swim_lesson_complete")
 	check(service.recovery_position(game, Vector3.ZERO).distance_to(anchor + Vector3.UP) < 0.01, "Owned second-island safe landing determines recovery")
 	game.get("placed_buildings").append({"id": "bedroll", "realm": "stormwood", "position": [0, 36, 0]})
 	check(service.recovery_position(game, Vector3.ZERO).distance_to(anchor + Vector3.UP) < 0.01, "Other-realm bed cannot teleport the Water player")

@@ -18,7 +18,9 @@ extends "res://tests/smoke_net_proof_two_peer.gd"
 ##   TB_NET_RUN_ID=net-<unique> TB_NET_OUT_DIR=<out>/net TB_NET_PEERS=2 \
 ##   godot --headless --path . --script tests/smoke_cloudreach_rejoin_closed_gate_proof.gd
 ##
-## Scenario: tools/net/proof_scenarios/f06_cloudreach_mounted_rejoin.json.
+## Scenarios: tools/net/proof_scenarios/f06_cloudreach_mounted_rejoin.json
+## (mid-flight) and f06_cloudreach_midride_rejoin.json (mid-ground-ride drop,
+## including a ride into the closed gate).
 
 const F06_SILENCE_TOLERANCE_S := 420.0
 

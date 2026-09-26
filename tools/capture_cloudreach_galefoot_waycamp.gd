@@ -8,7 +8,10 @@ const DEFAULT_OUTPUT := "res://shots/locations/cloudreach-galefoot-waycamp"
 const CAMP_CENTRE := Vector3(-280.0, 180.0, 520.0)
 const STANDS := [
 	{"id": "overview", "position": Vector2(-286.0, 535.0), "target": CAMP_CENTRE + Vector3(4.0, 6.0, -2.0)},
-	{"id": "hearth", "position": Vector2(-286.0, 535.0), "target": Vector3(-277.0, 183.0, 517.0)},
+	# F08#3: the hearth view used to share the overview's stand, so the two
+	# receipts were nearly identical. It now stands on the camp's east lane and
+	# looks west across the hearth cluster toward the far cottages.
+	{"id": "hearth", "position": Vector2(-271.0, 522.0), "target": Vector3(-285.0, 181.0, 518.0)},
 ]
 
 var _output := DEFAULT_OUTPUT

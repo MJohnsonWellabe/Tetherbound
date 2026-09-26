@@ -10,6 +10,8 @@ const VEYRA := "captain_veyra_storm_anchor"
 const VEYRA_FLAG := "captain_veyra_defeated"
 const VEYRA_COINS_SOURCE := "trainer:captain_veyra_storm_anchor:coins"
 const VEYRA_CANDY_SOURCE := "trainer:captain_veyra_storm_anchor:item:rare_candy"
+## F07#4: the captain tier's flat `xp_bonus` is a third, item-less component.
+const VEYRA_XP_SOURCE := "trainer:captain_veyra_storm_anchor:xp"
 ## A joiner's peer id: never 1 (only the listen server is 1).
 const GUEST_PEER := 424242
 const NATIVE_WILD_SITE_IDS: Array[String] = [
@@ -46,6 +48,7 @@ class PayoutDirector:
 	var intents: Array[Dictionary] = []
 	var victories: Array = []
 	var told: Array = []
+	var told_xp: Array = []
 	var solo_pays := 0
 	## source -> {peer: true}; `world_ledger.gd::_reward_grant()`'s per-recipient
 	## per-source receipt, so a repeat grant is `already_taken` with no `paid`.
@@ -80,8 +83,9 @@ class PayoutDirector:
 	func _trainer_reward_line(_spec: Dictionary) -> String:
 		return ""
 
-	func _tell_participant_they_were_paid(peer_id: int, _payload: Dictionary) -> void:
+	func _tell_participant_they_were_paid(peer_id: int, payload: Dictionary) -> void:
 		told.append(peer_id)
+		told_xp.append(int(payload.get("xp", 0)))
 
 	func _submit_reward_intent(intent: Dictionary) -> Dictionary:
 		intents.append(intent.duplicate(true))
@@ -141,7 +145,9 @@ func test_host_run_veyra_pays_each_participant_once_through_the_session_path() -
 	assert_eq(facts.size(), 1, "the world fact is submitted once")
 	assert_eq(str((facts[0] as Dictionary).get("id", "")), VEYRA_FLAG)
 	var grants := _intents_of(director, "reward_grant")
-	assert_eq(grants.size(), 2, "one reward_grant per component: coins and rare_candy")
+	assert_eq(grants.size(), 3, "one reward_grant per component: coins, rare_candy and the xp receipt")
+	var xp_bonus := int((spec["reward"] as Dictionary).get("xp_bonus", 0))
+	assert_true(xp_bonus > 0, "the captain tier carries the F07#4 xp_bonus")
 	var sources: Array = []
 	for grant: Dictionary in grants:
 		sources.append(str(grant["source"]))
@@ -150,15 +156,18 @@ func test_host_run_veyra_pays_each_participant_once_through_the_session_path() -
 		if str(grant["source"]) == VEYRA_COINS_SOURCE:
 			assert_eq(str(grant["item"]), "coin")
 			assert_eq(int(grant["count"]), 150, "Veyra's authored coins, not divided")
+		elif str(grant["source"]) == VEYRA_XP_SOURCE:
+			assert_false(grant.has("item"), "the xp receipt carries no item; each peer applies its own bonus")
 		else:
 			assert_eq(str(grant["item"]), "rare_candy")
 			assert_eq(int(grant["count"]), 1)
 	sources.sort()
-	assert_eq(sources, [VEYRA_COINS_SOURCE, VEYRA_CANDY_SOURCE])
-	assert_eq(director.paid_log.size(), 4, "two components x two participants, each once")
+	assert_eq(sources, [VEYRA_COINS_SOURCE, VEYRA_CANDY_SOURCE, VEYRA_XP_SOURCE])
+	assert_eq(director.paid_log.size(), 6, "three components x two participants, each once")
 	var told := director.told.duplicate()
 	told.sort()
 	assert_eq(told, [1, GUEST_PEER], "each participant is told once, the guest included")
+	assert_eq(director.told_xp, [xp_bonus, xp_bonus], "each participant is owed the whole bonus, not a split")
 	director.free()
 
 
@@ -178,7 +187,7 @@ func test_repeat_veyra_defeat_pays_nobody_again() -> void:
 	# refuse a second grant: nobody is paid or told twice.
 	director.store.set_flag(VEYRA_FLAG, false)
 	director._record_trainer_defeat(spec)
-	assert_eq(director.paid_log.size(), 4, "receipts refuse every second grant")
+	assert_eq(director.paid_log.size(), 6, "receipts refuse every second grant")
 	assert_eq(director.told.size(), 2, "nobody is told they were paid twice")
 	assert_eq(director.solo_pays, 0)
 	director.free()

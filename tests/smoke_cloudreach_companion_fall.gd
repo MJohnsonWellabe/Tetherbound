@@ -31,9 +31,11 @@ extends SceneTree
 ##
 ## Pins, in order:
 ##   A. Stood still at the arrival road's edge (the reported section, near
-##      (7, 105, -246)), the follower walks its camera-safe station off the
-##      road on its own (the root cause), is caught at the configured fall_drop_m (100 m as shipped)
-##      and is back on verified ground beside the trainer in bounded time.
+##      (7, 105, -246)) where the raw flank station is over open air, the
+##      follower -- with Cloudreach's station validator -- stays on the road;
+##      then, put over that edge by position (disclosed, as legs B and D), it is
+##      caught at the configured fall_drop_m (100 m as shipped) and is back on
+##      verified ground beside the trainer in bounded time.
 ##   B. A companion dropped over open air is recovered to verified walkable
 ##      ground next to the trainer, clear of the trainer's capsule where it
 ##      was placed.
@@ -171,7 +173,8 @@ func _runtime_loaded_the_config() -> void:
 
 
 ## Leg A. Walk from the road centre toward the follower's station side to the first
-## road point whose station is over open air; stand the trainer there, let it be.
+## road point whose raw station is over open air; stand the trainer there, let
+## the follower follow, then drop it over that edge by position.
 func _walk_off_the_road_edge() -> void:
 	# Which side the station lies on depends on the camera (a fixed flank),
 	# so measure it from the road centre first and walk that way to the edge.
@@ -182,10 +185,10 @@ func _walk_off_the_road_edge() -> void:
 	offset.y = 0.0
 	var toward := offset.normalized()
 	# Rocks and verge props hold the edge in places. Try successive stretches
-	# of the reported section until the follower, left to itself, walks off.
+	# of the reported section until one has its raw station over open air.
 	var ally := _ally()
 	var tried := 0
-	var walked_off := false
+	var tried_edge := false
 	for row in range(-12, 28, 4):
 		var from := centre + Vector3(0.0, 0.0, float(row))
 		from.y = _floor_y(from, 6.0)
@@ -209,32 +212,38 @@ func _walk_off_the_road_edge() -> void:
 		var station: Vector3 = ally.call("formation_target")
 		if not _void_below(station):
 			continue
-		var fell := false
+		# With the realm's station validator (follower_creature.gd
+		# station_validator -> cloudreach_encounter_director.gd
+		# verified_follow_spot) the follower, left to itself, stays on the road.
+		tried_edge = true
+		var worst_drop := 0.0
 		for frame in 300:
 			await physics_frame
-			if ally.global_position.y < _player.global_position.y - 10.0:
-				fell = true
-				break
-		print("A: trainer %s station %s over open air; follower %s" % [_player.global_position, station, "walked off" if fell else "held by the edge at %s" % ally.global_position])
-		if not fell:
-			continue
-		walked_off = true
+			worst_drop = maxf(worst_drop, _player.global_position.y - ally.global_position.y)
+		print("A: trainer %s station %s over open air; follower worst drop %.2f m, now %s" % [_player.global_position, station, worst_drop, ally.global_position])
+		_check((ally.get("station_validator") as Callable).is_valid() and worst_drop <= 1.5,
+			"A: with the station validator, a companion following at the edge stays on the road (worst drop %.2f m <= 1.5)" % worst_drop)
+		# Disclosed fixture, as legs B and D: put the companion over that open
+		# air by position; the runtime must catch and recover it.
+		# Well out past the edge (as leg B's 24 m): a body dropped just past the
+		# lip steers back onto the road before it has fallen at all.
+		var drop_at := station + toward * 20.0
+		drop_at.y = _player.global_position.y + 3.0
+		_check(_void_below(drop_at), "A precondition: open air past that edge at %s" % drop_at)
 		var before: Variant = _recoveries()
-		var result := await _watch_for_fall_and_recovery(20.0, true)
+		ally.global_position = drop_at
+		ally.velocity = Vector3.ZERO
+		var result := await _watch_for_fall_and_recovery(20.0)
 		var during := int(_recoveries()) - int(before)
+		_check(bool(result.fell), "A: the companion put over the edge falls (lowest %.1f m)" % result.lowest)
 		_check(result.lowest > _player.global_position.y - _caught_by_m,
 			"A: the companion is caught before it is %.0f m down, within %.1f m (lowest %.1f m, trainer at %.1f m)" % [_fall_drop_m, _caught_by_m, result.lowest, _player.global_position.y])
 		_check(bool(result.recovered),
 			"A: the companion is back on verified ground beside the trainer within %.0f s of falling (%s)" % [RECOVERY_BUDGET_S, result.detail])
 		_check(int(before) >= 0 and during >= 1, "A: the runtime's recovery caught it during the 20 s watch (%d recoveries)" % during)
-		# pending follower_creature.gd grant: until the shared follower stops
-		# walking its station off an edge, a trainer standing still here gets a
-		# recovery every few seconds. Once that grant lands this should become
-		# `during <= 1`; it is printed, not asserted, so this smoke does not
-		# claim a behaviour the lane cannot yet deliver.
-		print("A: recoveries during the 20 s watch: %d (expected <= 1 once the follower_creature.gd edge fix lands)" % during)
+		print("A: recoveries during the 20 s watch: %d" % during)
 		break
-	_check(walked_off, "A: the follower walks its camera-safe station off the road edge on its own (%d stretch(es) with the station over open air tried)" % tried)
+	_check(tried_edge, "A: found a stretch of the arrival road whose flank station is over open air (%d tried)" % tried)
 
 
 ## Leg B. Disclosed fixture: the companion is put over open air beside the road.

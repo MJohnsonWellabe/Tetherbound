@@ -496,3 +496,53 @@ func test_the_intro_message_is_authored_in_config_not_hard_coded() -> void:
 	assert_eq(str(pin.get("icon", "")), "alpha")
 	assert_true(ResourceLoader.exists("res://assets/ui/icons/map/alpha.png"),
 		"the pin icon the config names does not exist")
+
+
+## F03#0 (Hall alpha lure): the leader row authors a nickname and an aura, and
+## dressing a body writes the plate/prompt names and one light, idempotently.
+func test_the_hall_alpha_row_is_dressed_as_the_named_pack_leader() -> void:
+	var hall: Dictionary = {}
+	for cluster: Dictionary in ALPHA_PINS.build_clusters():
+		if int(cluster.get("order", 0)) == 5001:
+			hall = cluster
+	assert_false(hall.is_empty(), "spawn order 5001 is an alpha cluster")
+	assert_eq(str(hall.get("nickname", "")), "Alpha Galecrest")
+	assert_true(float((hall.get("aura_light", {}) as Dictionary).get("energy", 0.0)) > 0.0, "the leader carries an aura light")
+	assert_true(float((hall.get("nameplate", {}) as Dictionary).get("y", 0.0)) > 3.0, "the leader's world nameplate floats above it")
+
+
+class _FakeInstance extends RefCounted:
+	var nickname := ""
+
+
+func test_dress_alpha_body_sets_names_and_one_light() -> void:
+	var body := Node3D.new()
+	var instance := _FakeInstance.new()
+	# A bare Node3D has no `display_name` / `instance`; a two-field script
+	# stands in for creature_body.gd so the setters land.
+	var scripted := GDScript.new()
+	scripted.source_code = "extends Node3D\nvar display_name := \"\"\nvar instance: Object = null\n"
+	scripted.reload()
+	body.set_script(scripted)
+	body.set("instance", instance)
+	ALPHA_PINS.dress_alpha_body(body, "Alpha Galecrest", {"energy": 1.6, "range": 9.0}, {"y": 4.4})
+	assert_eq(str(body.get("display_name")), "Alpha Galecrest", "the engage prompt names the leader")
+	assert_eq(instance.nickname, "Alpha Galecrest", "the combat plate names the leader")
+	assert_true(body.get_node_or_null(^"AlphaAuraLight") is OmniLight3D)
+	var plate := body.get_node_or_null(^"AlphaNameplate") as Label3D
+	assert_true(plate != null, "the leader carries a world nameplate")
+	if plate != null:
+		assert_eq(plate.text, "Alpha Galecrest")
+	body.set_meta("alpha_dressed", false)
+	ALPHA_PINS.dress_alpha_body(body, "Alpha Galecrest", {"energy": 1.6}, {"y": 4.4})
+	var lights := 0
+	for child in body.get_children():
+		if child is OmniLight3D:
+			lights += 1
+	assert_eq(lights, 1, "dressing twice adds no second light")
+	var plates := 0
+	for child in body.get_children():
+		if child is Label3D:
+			plates += 1
+	assert_eq(plates, 1, "dressing twice adds no second nameplate")
+	body.free()

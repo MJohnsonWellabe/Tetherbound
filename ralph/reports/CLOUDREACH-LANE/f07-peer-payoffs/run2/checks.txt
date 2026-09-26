@@ -1,0 +1,91 @@
+PASS: SETUP: peer 0 boots its own Meadows world -- booted world (240 settle frames)
+PASS: SETUP: peer 1 boots its own Meadows world -- booted world (240 settle frames)
+PASS: SETUP: peer 0 holds the world -- SETUP: no dialogue box was open; locomotion now true
+PASS: SETUP: peer 0's own world holds the Cloudreach key -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: SETUP: peer 0 owns a terrapup -- 'terrapup' at level 20 joined the party (1 member(s))
+PASS: SETUP: peer 1 holds the world -- SETUP: no dialogue box was open; locomotion now true
+PASS: SETUP: peer 1's own world holds the Cloudreach key -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: SETUP: peer 1 owns a terrapup -- 'terrapup' at level 20 joined the party (1 member(s))
+PASS: SETUP: peer 0 crosses into Cloudreach -- crossed 'meadows' -> 'cloudreach' after 266 observed physics frames / 319900 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: SETUP: peer 1 crosses into Cloudreach -- crossed 'meadows' -> 'cloudreach' after 266 observed physics frames / 311430 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: peer 0 hosts from Cloudreach -- hosting udp/28681 as peer 1
+PASS: peer 1 joins the host -- joined 127.0.0.1:28681 as peer 641073512 after 5 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0's registry holds both players -- registry reports 2 peer(s) after 0 frames
+PASS: peer 1's registry holds both players -- registry reports 2 peer(s) after 0 frames
+PASS: both peers stand in the production Cloudreach scene (CloudreachCliffs / CloudreachCliffs)
+PASS: host and guest are distinct characters (character-f3a5e0ec0eb774532b72b292a81d7b55 / character-aeb2c387a2d58c951b3e8d5651d2d4bb)
+PASS: SETUP: host commits world fact cloudreach_chapter_started -- cloudreach_chapter_started: ok=true pending=false code='' reason=''
+PASS: SETUP: host commits world fact cloudreach_crisis_learned -- cloudreach_crisis_learned: ok=true pending=false code='' reason=''
+PASS: SETUP: host commits world fact causeway_survivors_reconnected -- causeway_survivors_reconnected: ok=true pending=false code='' reason=''
+PASS: SETUP: host commits world fact side_courier_pack_recovered -- side_courier_pack_recovered: ok=true pending=false code='' reason=''
+PASS: SETUP: host commits world fact side_courier_medicine_delivered -- side_courier_medicine_delivered: ok=true pending=false code='' reason=''
+PASS: SETUP: peer 0 received the seeded chain steps -- flag side_courier_medicine_delivered (world) set after 0 frames
+PASS: SETUP: peer 1 received the seeded chain steps -- flag side_courier_medicine_delivered (world) set after 9 frames
+PASS: peer 0: the thanks is not offered before Neri hears the report ({"aerie_rests":0.0,"character_id":"character-f3a5e0ec0eb774532b72b292a81d7b55","claimed":false,"claims_paid":0.0,"markers":{"high_perches":false,"observatory":false,"waterward":false},"max_stamina":100.0,"offered":false,"peer_id":1.0,"people_returned":{"shelter_courier":false,"shelter_traveler":false},"potions":0.0,"realm":"cloudreach","refusals":[],"reward_exists":true,"scene":"CloudreachCliffs","stamina":100.0,"world":{"side_aerie_high_perches_surveyed":false,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":false}})
+PASS: peer 1: the thanks is not offered before Neri hears the report ({"aerie_rests":0.0,"character_id":"character-aeb2c387a2d58c951b3e8d5651d2d4bb","claimed":false,"claims_paid":-1.0,"markers":{"high_perches":false,"observatory":false,"waterward":false},"max_stamina":100.0,"offered":false,"peer_id":641073512.0,"people_returned":{"shelter_courier":false,"shelter_traveler":false},"potions":0.0,"realm":"cloudreach","refusals":[],"reward_exists":false,"scene":"CloudreachCliffs","stamina":100.0,"world":{"side_aerie_high_perches_surveyed":false,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":false}})
+PASS: the GUEST reports to Neri through the dialogue guard -- Neri's report effect through the dialogue guard: accepted=true
+PASS: peer 0 sees the WORLD chain completion committed once by the host -- flag side_stranded_couriers_complete (world) set after 0 frames
+PASS: peer 1 sees the WORLD chain completion committed once by the host -- flag side_stranded_couriers_complete (world) set after 0 frames
+PASS: peer 0: its own couriers' thanks is offered after the shared completion
+PASS: peer 0: the shared world consequence shows (stranded pair returned to Galefoot)
+PASS: peer 1: its own couriers' thanks is offered after the shared completion
+PASS: peer 1: the shared world consequence shows (stranded pair returned to Galefoot)
+PASS: guest stands beside the thanks -- beside the thanks at (-288.0, 180.0, 516.0); prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take the couriers' thanks'
+PASS: guest's live prompt is the couriers' thanks ('[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take the couriers' thanks')
+PASS: guest presses interact at the thanks -- pressed 'interact' x1
+PASS: guest's OWN player-scoped receipt arrives -- flag cloudreach_payout:couriers_thanks (player) set after 0 frames
+PASS: guest received exactly two small potions (0 -> 2)
+PASS: the thanks is no longer offered to the guest
+PASS: the guest's OWN character file holds its receipt and +2 potions, written by the production delivery (no explicit save): {"flags":{"cloudreach_payout:couriers_thanks":true,"side_aerie_high_perches_surveyed":false,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":false},"potions":2.0}
+PASS: NEGATIVE CONTROL: the host holds NO receipt from the guest's claim
+PASS: NEGATIVE CONTROL: the host's potions are unchanged (0 -> 0)
+PASS: the host's own thanks is still offered (independent)
+PASS: NEGATIVE CONTROL: 'host holds the claimed flag' is asserted and must FAIL (flag cloudreach_payout:couriers_thanks NOT set)
+PASS: a repeat interact press pays the guest nothing more
+PASS: NEGATIVE CONTROL: a forged second reward_grant from the guest is refused 'already_taken' and pays nothing (forged reward_grant: ok=false pending=true final code 'already_taken'; potions 2 -> 2)
+PASS: host stands beside the thanks -- beside the thanks at (-288.0, 180.0, 516.0); prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take the couriers' thanks'
+PASS: host presses interact at the thanks -- pressed 'interact' x1
+PASS: host's OWN player-scoped receipt arrives -- flag cloudreach_payout:couriers_thanks (player) set after 0 frames
+PASS: host received its own two small potions (0 -> 2)
+PASS: the thanks is no longer offered to the host
+PASS: NEGATIVE CONTROL: the host's claim did not pay the guest again (2)
+PASS: NEGATIVE CONTROL: a forged second reward_grant from the host is refused and pays nothing (forged reward_grant: ok=false pending=false final code 'already_taken'; potions 2 -> 2)
+PASS: SETUP: host commits the High Perches survey (world) -- side_aerie_high_perches_surveyed: ok=true pending=false code='' reason=''
+PASS: peer 0 received the survey -- flag side_aerie_high_perches_surveyed (world) set after 0 frames
+PASS: peer 1 received the survey -- flag side_aerie_high_perches_surveyed (world) set after 0 frames
+PASS: peer 0 draws the surveyed High Perches landing and not the unsurveyed Observatory ({"high_perches":true,"observatory":false,"waterward":false})
+PASS: peer 1 draws the surveyed High Perches landing and not the unsurveyed Observatory ({"high_perches":true,"observatory":false,"waterward":false})
+PASS: CONTROL: a landing ON the UNSURVEYED Observatory aerie rests nobody ({"at_marker":true,"landed_at":[431.5,920.03076171875,4500.0],"marker_visible":false,"max_stamina":100.0,"on_floor":true,"rests_after":0,"rests_before":0,"stamina_after":10.3,"stamina_before":10.0})
+PASS: the GUEST's landing on the surveyed aerie restores the guest's stamina ({"at_marker":true,"landed_at":[901.5,1020.13006591797,2700.0],"marker_visible":true,"max_stamina":100.0,"on_floor":true,"rests_after":1,"rests_before":0,"stamina_after":100.0,"stamina_before":10.0})
+PASS: NEGATIVE CONTROL: the guest's landing gave the HOST no rest (host rests 0 -> 0)
+PASS: the HOST's own landing on the same aerie rests the host ({"at_marker":true,"landed_at":[901.5,1020.13006591797,2700.0],"marker_visible":true,"max_stamina":100.0,"on_floor":true,"rests_after":1,"rests_before":0,"stamina_after":100.0,"stamina_before":10.0})
+PASS: NEGATIVE CONTROL: the host's landing gave the guest no rest
+PASS: host saves (world + its character) -- character 'character-f3a5e0ec0eb774532b72b292a81d7b55' is on disk (wrote_world=true)
+PASS: guest saves its own character -- character 'character-aeb2c387a2d58c951b3e8d5651d2d4bb' is on disk (wrote_world=false)
+HOST DISK: {"characters":{"character-f3a5e0ec0eb774532b72b292a81d7b55":{"flags":{"cloudreach_payout:couriers_thanks":true,"side_aerie_high_perches_surveyed":false,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":false},"potions":2.0}},"worlds":{"slot-0":{"couriers_deliveries":[{"character_id":"character-aeb2c387a2d58c951b3e8d5651d2d4bb","completion_flag":"cloudreach_payout:couriers_thanks","stacks":[{"id":"potion_small","n":2.0}],"state":"accepted"},{"character_id":"character-f3a5e0ec0eb774532b72b292a81d7b55","completion_flag":"cloudreach_payout:couriers_thanks","stacks":[{"id":"potion_small","n":2.0}],"state":"accepted"}],"flags":{"cloudreach_payout:couriers_thanks":false,"side_aerie_high_perches_surveyed":true,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":true}}}}
+GUEST DISK: {"characters":{"character-aeb2c387a2d58c951b3e8d5651d2d4bb":{"flags":{"cloudreach_payout:couriers_thanks":true,"side_aerie_high_perches_surveyed":false,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":false},"potions":2.0}},"worlds":{"slot-0":{"couriers_deliveries":[],"flags":{"cloudreach_payout:couriers_thanks":false,"side_aerie_high_perches_surveyed":false,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":false}}}}
+PASS: host world 'slot-0' saved the aerie survey
+PASS: host world 'slot-0' holds no personal receipt flag
+PASS: exactly one host world file holds the chain completion (1)
+PASS: the host world journals exactly one couriers' delivery per character, host and guest (["character-aeb2c387a2d58c951b3e8d5651d2d4bb", "character-f3a5e0ec0eb774532b72b292a81d7b55"])
+PASS: no GUEST-side world file holds the shared activity state (the host saves the world once)
+PASS: peer 0's OWN character file: its receipt and exactly +2 potions ({"flags":{"cloudreach_payout:couriers_thanks":true,"side_aerie_high_perches_surveyed":false,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":false},"potions":2.0})
+PASS: peer 0's character file carries no world activity state
+PASS: peer 0 holds no file for the other character
+PASS: peer 1's OWN character file: its receipt and exactly +2 potions ({"flags":{"cloudreach_payout:couriers_thanks":true,"side_aerie_high_perches_surveyed":false,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":false},"potions":2.0})
+PASS: peer 1's character file carries no world activity state
+PASS: peer 1 holds no file for the other character
+PASS: guest leaves -- client left cleanly after 0 frames
+PASS: host sees the guest gone -- registry reports 1 peer(s) after 1 frames
+PASS: guest rejoins -- joined 127.0.0.1:28681 as peer 920098625 after 2 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 sees both after the rejoin -- registry reports 2 peer(s) after 0 frames
+PASS: peer 1 sees both after the rejoin -- registry reports 2 peer(s) after 0 frames
+PASS: the guest rejoined as the same character
+PASS: after reconnect: guest keeps its receipt, exactly +2 potions, no new offer ({"aerie_rests":1.0,"character_id":"character-aeb2c387a2d58c951b3e8d5651d2d4bb","claimed":true,"claims_paid":0.0,"markers":{"high_perches":true,"observatory":false,"waterward":false},"max_stamina":100.0,"offered":false,"peer_id":920098625.0,"people_returned":{"shelter_courier":true,"shelter_traveler":true},"potions":2.0,"realm":"cloudreach","refusals":[{"code":"already_taken","kind":"reward_grant"}],"reward_exists":true,"scene":"CloudreachCliffs","stamina":100.0,"world":{"side_aerie_high_perches_surveyed":true,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":true}})
+PASS: after reconnect: the rejoined guest still sees the shared world state
+PASS: guest re-applies its character FILE -- client character reload preserved party=true selection=true hosted_world=true
+PASS: after character reload: guest keeps exactly one payment and no offer ({"aerie_rests":1.0,"character_id":"character-aeb2c387a2d58c951b3e8d5651d2d4bb","claimed":true,"claims_paid":0.0,"markers":{"high_perches":true,"observatory":false,"waterward":false},"max_stamina":100.0,"offered":false,"peer_id":920098625.0,"people_returned":{"shelter_courier":true,"shelter_traveler":true},"potions":2.0,"realm":"cloudreach","refusals":[{"code":"already_taken","kind":"reward_grant"}],"reward_exists":true,"scene":"CloudreachCliffs","stamina":100.0,"world":{"side_aerie_high_perches_surveyed":true,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":true}})
+PASS: host reloads its autosave (world + character) -- host slot reload preserved party=true selection=true hosted_world=true
+PASS: after host reload: host keeps exactly one payment and no offer ({"aerie_rests":1.0,"character_id":"character-f3a5e0ec0eb774532b72b292a81d7b55","claimed":true,"claims_paid":1.0,"markers":{"high_perches":true,"observatory":false,"waterward":false},"max_stamina":100.0,"offered":false,"peer_id":1.0,"people_returned":{"shelter_courier":true,"shelter_traveler":true},"potions":2.0,"realm":"cloudreach","refusals":[],"reward_exists":true,"scene":"CloudreachCliffs","stamina":100.0,"world":{"side_aerie_high_perches_surveyed":true,"side_aerie_observatory_surveyed":false,"side_aeries_complete":false,"side_stranded_couriers_complete":true}})
+PASS: after host reload: the world still holds the chain completion and the survey
+PASS: the host's reload re-delivered nothing to the guest

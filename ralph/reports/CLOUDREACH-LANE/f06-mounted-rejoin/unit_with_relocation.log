@@ -1,0 +1,7 @@
+  ok    test_cloudreach_rejoin_gate.gd :: test_authored_approach_is_outside_every_region_its_gate_protects
+  ok    test_cloudreach_rejoin_gate.gd :: test_closed_gate_also_seals_the_summit
+  ok    test_cloudreach_rejoin_gate.gd :: test_closed_gate_seats_a_sealed_pose_on_the_legal_side
+  ok    test_cloudreach_rejoin_gate.gd :: test_fly_gate_region_is_left_to_fly_restrictions
+  ok    test_cloudreach_rejoin_gate.gd :: test_legal_side_pose_is_kept_under_a_closed_gate
+  ok    test_cloudreach_rejoin_gate.gd :: test_open_gate_keeps_the_loaded_pose
+6 tests, 13 assertions, 0 failed

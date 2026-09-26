@@ -62,6 +62,14 @@ func test_doss_keeps_materials_when_complete_reward_will_not_fit() -> void:
 	assert_eq(satchel.count("fiber"), 2)
 	assert_eq(satchel.count("potion_large"), 0)
 
+## Regression (F03#2): the preview copied empty slots as {} and read them as
+## occupied, so a mostly empty satchel with the materials was refused.
+func test_doss_reward_fits_a_mostly_empty_satchel() -> void:
+	var satchel := INVENTORY.new(ITEM_DB.new())
+	satchel.set_slot(5, {"id": "wood", "n": 3})
+	satchel.set_slot(9, {"id": "fiber", "n": 3})
+	assert_true(RIVER_NEST.reward_fits_after_cost(satchel), "a satchel with 22 empty slots holds the coins and the potion")
+
 var db: RefCounted = null
 var bag: RefCounted = null
 var progression: RefCounted = null

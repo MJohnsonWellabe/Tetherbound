@@ -95,6 +95,20 @@ func test_deliberate_new_friend_character_clears_stale_identity_and_world() -> v
 	assert_eq(str(game.local.display_name), "New Ranger")
 
 
+## F01#6: a guest process that restarted holds a freshly minted live id, so a
+## direct-address join must still find the character it saved.
+func test_a_restarted_guest_still_sees_its_saved_portable_characters() -> void:
+	assert_true(TITLE._saved_portable_character_ids(game).is_empty(), "a new machine has none")
+	game.local.character_id = "portable-rin"
+	game.local.display_name = "Rin"
+	assert_true(saver.save_character(game, "portable-rin"), "fixture portable character must save")
+	game.reset_for_new_game()
+	game.local.character_id = CHARACTER_IDENTITY.mint()
+	assert_ne(str(game.local.character_id), "portable-rin", "boot minted a new live id")
+	assert_eq(TITLE._saved_portable_character_ids(game), ["portable-rin"],
+		"the saved character is offered even though the live id names no file")
+
+
 func test_players_invite_button_preserves_specific_coordinator_error() -> void:
 	var lobby := LobbyErrorStub.new()
 	lobby.message = "Steam is offline. Sign in before using friend invitations."

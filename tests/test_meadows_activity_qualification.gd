@@ -383,9 +383,11 @@ func test_every_qualified_activity_pays_a_real_once_only_reward() -> void:
 				_assert_once_receipts(id, str(spec["id"]), ENCOUNTER_REWARDS.grants(spec, "meadows", [1]))
 			"herd":
 				var visit: Dictionary = HERD_VISIT.definition().get("visit", {}) as Dictionary
-				var item := str(visit.get("reward_item", ""))
-				assert_true(bool(db.call("has", item)), "%s rewards unknown item '%s'" % [id, item])
-				assert_true(int(visit.get("reward_count", 0)) > 0, "%s pays a zero count" % id)
+				var parts: Array[Dictionary] = HERD_VISIT.reward_parts(visit)
+				assert_false(parts.is_empty(), "%s pays nothing" % id)
+				for part: Dictionary in parts:
+					assert_true(bool(db.call("has", str(part.item))), "%s rewards unknown item '%s'" % [id, part.item])
+					assert_true(int(part.count) > 0, "%s pays a zero count" % id)
 				assert_false(str(visit.get("reward_source", "")).is_empty(),
 					"%s has no stable reward source, so its payout is not once-only" % id)
 				assert_eq(HERD_VISIT.COMPLETE_FLAG, flag, "%s: the visit completes on another flag" % id)

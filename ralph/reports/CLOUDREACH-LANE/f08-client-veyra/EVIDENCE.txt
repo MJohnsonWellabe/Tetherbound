@@ -1,0 +1,20 @@
+F08 #2 -- client Veyra win: no local world-flag write; reconnect witness
+
+Defect: scripts/combat/encounter_director.gd::_record_trainer_defeat_for_the_session
+(client route, reached from cloudreach_encounter_director.gd::_record_trainer_defeat via super)
+set captain_veyra_defeated into the CLIENT's Game.progression world half ("local note")
+before the host committed; a refusal then cleared it.
+Fix: cloudreach_encounter_director.gd sends the same host-journaled trainer_victory
+without the note (_send_client_trainer_victory); repeat guarded by the in-flight send.
+
+Unit (tests/test_cloudreach_director_client_veyra.gd, real Cloudreach director both sides,
+real merged_progression/world_state/world_ledger):
+  main:  2 of 3 FAIL -- client world store logged [["captain_veyra_defeated", true]]
+  fixed: 3/3 ok; with cloudreach_encounters + cloudreach_finale: 27 tests, 3833 assertions, 0 failed; 0 SCRIPT ERROR
+Finale smoke tests/smoke_cloudreach_finale.gd: PASS, 0 SCRIPT ERROR.
+
+Two-peer (tests/smoke_net_cloudreach_veyra_reconnect.gd, run 20260926T053151Z): see
+run2_checks.txt / run2_SUMMARY.md / run2_PROOF.md. All checks PASS except the post-rejoin
+repeat-win step (guest reseated at TitleScreen by the stock join step, no director);
+that step was removed from the committed smoke (no-double-grant is proven by the host
+journal and guest satchel checks). 0 SCRIPT ERROR on both peers.

@@ -1,0 +1,360 @@
+PASS a carried guest proposes its anchor to the host (asked 1)
+PASS while the proposal is pending (under 5.0 s) it is not re-sent (asked 1)
+PASS an unanswered carried proposal times out after 5.0 s and is re-proposed (asked 2)
+PASS the active Meadowhart follows the trainer into Cloudreach
+PASS Cloudreach has a ground-riding controller
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS first mount: the ordinary interact press mounts
+PASS first mount: the trainer is carried by the owned mount
+PASS first mount: the same five companions, same order, no sixth (5)
+PASS the stick moves the mount (14.50 m in 1.5 s)
+PASS while carried, the ride ticks Fly's anchor-proposal clock (0.50 s over 30 frames)
+PASS a mounted hop leaves the ground (1.42 m)
+PLACEMENT { "at": (1.702102, 106.1342, -239.6641), "rule": "clear", "mount_at": (-0.89883, 106.0936, -240.361), "distance": 2.69298934936523, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS first dismount: interact dismounts
+PASS first dismount: nothing carries the trainer afterwards
+PASS first dismount: the trainer stands, solid, on ground (trainer (1.702102, 106.0865, -239.6641), vy 0.00)
+DISMOUNT first dismount trainer_y=106.09 collider_top=106.08423614502 surface_index=105.00 mount_level=106.09
+PASS first dismount: the trainer's feet are on the collider top, not inside it
+PASS first dismount: rule 'clear' (expected ["clear"])
+PASS first dismount: set down 2.69 m from the mount (reach 8 m)
+PASS first dismount: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS first dismount: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS first dismount: the trainer's capsule is not inside world collision
+PASS first dismount: a clear line from the saddle to the spot
+PASS first dismount: the same five companions, same order, no sixth (5)
+PASS SYSTEMS §8: the mounted hop (1.42 m) is no higher than the trainer's own (1.42 m)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS remount after dismount: the ordinary interact press mounts
+PASS remount after dismount: the trainer is carried by the owned mount
+PASS remount after dismount: the same five companions, same order, no sixth (5)
+PASS a mounted double jump does not deploy Fly
+PASS Fly names riding as the reason it will not launch (Fly is unavailable while riding or in combat.)
+PLACEMENT { "at": (2.02433, 106.6774, -232.7861), "rule": "clear", "mount_at": (4.450587, 107.1731, -233.9539), "distance": 2.7379355430603, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS second dismount: interact dismounts
+PASS second dismount: nothing carries the trainer afterwards
+PASS second dismount: the trainer stands, solid, on ground (trainer (2.02433, 106.6296, -232.7861), vy 0.00)
+DISMOUNT second dismount trainer_y=106.63 collider_top=106.627365112305 surface_index=nan mount_level=107.27
+PASS second dismount: the trainer's feet are on the collider top, not inside it
+PASS second dismount: rule 'clear' (expected ["clear"])
+PASS second dismount: set down 2.74 m from the mount (reach 8 m)
+PASS second dismount: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS second dismount: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS second dismount: the trainer's capsule is not inside world collision
+PASS second dismount: a clear line from the saddle to the spot
+PASS second dismount: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount at the closed gate: the ordinary interact press mounts
+PASS mount at the closed gate: the trainer is carried by the owned mount
+PASS mount at the closed gate: the same five companions, same order, no sixth (5)
+PASS a mounted run does not cross the closed counterweight gate (furthest -1.85 m past its plane)
+PASS the mounted run actually reached the barrier rather than stalling short (-1.85 m)
+PASS the gate's unlock flag is untouched
+PLACEMENT { "at": (-784.6416, 648.4584, 3553.308), "rule": "clear", "mount_at": (-786.7051, 648.7319, 3555.038), "distance": 2.70658493041992, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS dismount at the closed gate: interact dismounts
+PASS dismount at the closed gate: nothing carries the trainer afterwards
+PASS dismount at the closed gate: the trainer stands, solid, on ground (trainer (-784.6416, 648.4365, 3553.308), vy 0.00)
+DISMOUNT dismount at the closed gate trainer_y=648.44 collider_top=648.408386230469 surface_index=648.38 mount_level=648.73
+PASS dismount at the closed gate: the trainer's feet are on the collider top, not inside it
+PASS dismount at the closed gate: rule 'clear' (expected ["clear"])
+PASS dismount at the closed gate: set down 2.71 m from the mount (reach 8 m)
+PASS dismount at the closed gate: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS dismount at the closed gate: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS dismount at the closed gate: the trainer's capsule is not inside world collision
+PASS dismount at the closed gate: a clear line from the saddle to the spot
+PASS dismount at the closed gate: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount for the long descent: the ordinary interact press mounts
+PASS mount for the long descent: the trainer is carried by the owned mount
+PASS mount for the long descent: the same five companions, same order, no sixth (5)
+PASS the fixture puts the rider more than 100 m below the last anchor (542.4 m)
+PASS a mounted descent past 100 m is not treated as a fall (recoveries 0)
+PASS the ride keeps Fly's safe anchor on the mount's ground (anchor y 105.2, mount y 105.3)
+PLACEMENT { "at": (-1.434146, 105.1885, -252.279), "rule": "clear", "mount_at": (0.0, 105.298, -250.0), "distance": 2.69490170478821, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS dismount after the long descent: interact dismounts
+PASS dismount after the long descent: nothing carries the trainer afterwards
+PASS dismount after the long descent: the trainer stands, solid, on ground (trainer (-1.434146, 105.1407, -252.279), vy 0.00)
+DISMOUNT dismount after the long descent trainer_y=105.14 collider_top=105.138458251953 surface_index=105.11 mount_level=105.30
+PASS dismount after the long descent: the trainer's feet are on the collider top, not inside it
+PASS dismount after the long descent: rule 'clear' (expected ["clear"])
+PASS dismount after the long descent: set down 2.69 m from the mount (reach 8 m)
+PASS dismount after the long descent: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS dismount after the long descent: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS dismount after the long descent: the trainer's capsule is not inside world collision
+PASS dismount after the long descent: a clear line from the saddle to the spot
+PASS dismount after the long descent: the same five companions, same order, no sixth (5)
+PASS getting off after the descent leaves the trainer where they got off (y 105.1, recoveries 0)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount above the ledge: the ordinary interact press mounts
+PASS mount above the ledge: the trainer is carried by the owned mount
+PASS mount above the ledge: the same five companions, same order, no sixth (5)
+PASS the mount stands on the ledge road before the ride-off ((-104.3529, 401.2387, 1666.024))
+EDGE RIDE ledge drops=[{ "from": 400.819091796875, "to": 390.030792236328, "fell": 10.7882995605469, "recovered": false }] end=(-56.45163, 384.0427, 1577.885) mounted=true
+PASS riding off the causeway ledge by input drops to the floor below and lands ([{ "from": 400.819091796875, "to": 390.030792236328, "fell": 10.7882995605469, "recovered": false }])
+PASS a 10.8 m ride-off a walker would survive is not snapped back
+PASS the survivable ride-off triggers no mounted-fall recovery
+PASS after the ride-off the mount stands on the lower floor with the rider seated ((-56.45163, 384.0427, 1577.885))
+PLACEMENT { "at": (-58.81677, 385.0522, 1576.598), "rule": "clear", "mount_at": (-56.45163, 384.0427, 1577.885), "distance": 2.87568879127502, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS dismount on the floor below the ledge: interact dismounts
+PASS dismount on the floor below the ledge: nothing carries the trainer afterwards
+PASS dismount on the floor below the ledge: the trainer stands, solid, on ground (trainer (-58.80996, 385.0639, 1576.596), vy 0.00)
+DISMOUNT dismount on the floor below the ledge trainer_y=385.06 collider_top=384.997955322266 surface_index=nan mount_level=384.04
+PASS dismount on the floor below the ledge: the trainer's feet are on the collider top, not inside it
+PASS dismount on the floor below the ledge: rule 'clear' (expected ["clear"])
+PASS dismount on the floor below the ledge: set down 2.88 m from the mount (reach 8 m)
+PASS dismount on the floor below the ledge: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS dismount on the floor below the ledge: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS dismount on the floor below the ledge: the trainer's capsule is not inside world collision
+PASS dismount on the floor below the ledge: a clear line from the saddle to the spot
+PASS dismount on the floor below the ledge: the same five companions, same order, no sixth (5)
+PASS ledge ride: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount above the terrace: the ordinary interact press mounts
+PASS mount above the terrace: the trainer is carried by the owned mount
+PASS mount above the terrace: the same five companions, same order, no sixth (5)
+PASS the mount stands on the terrace road before the ride-off ((5.023627, 105.4382, -245.47))
+EDGE RIDE terrace drops=[{ "from": 105.454696655273, "to": 4.66634893417358, "fell": 100.7883477211, "recovered": true }] end=(7.206228, 105.6421, -243.0978) mounted=true
+PASS riding on off the terrace into open air is eventually caught by the mounted-fall recovery
+PASS the mount fell as far as a walker would before recovery (100.8 m)
+PASS after the recovery the mount stands on ground with the rider seated ((7.206228, 105.6421, -243.0978))
+PASS edge ride: the same five companions, same order, no sixth (5)
+PASS riding on open ground records a clear dismount spot ((5.223294, 105.9148, -241.2761))
+PASS fixture: the remembered spot lies beyond a wall from the saddle ((5.223294, 105.9148, -241.2761))
+PASS boxed in, the interact press does not dismount
+PASS the refusal says why ('No room to dismount here.')
+PASS fixture: the modal lockout holds for the leg
+PASS a modal cannot put the trainer down with nothing verified: the rider stays seated (mounted true)
+PASS the forced dismount in the box is 'deferred' (deferred)
+PASS the trainer never crossed a wall to the remembered spot ((7.035447, 107.8299, -243.2837), box half-width 1.50)
+PLACEMENT { "at": (5.223294, 105.9148, -241.2761), "rule": "clear", "mount_at": (7.206228, 105.6421, -243.0978), "distance": 2.70645928382874, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS once the walls are gone the held modal ends the ride on its next retry
+PASS modal retry after the walls fell: rule 'clear' (expected ["clear"])
+PASS modal retry after the walls fell: set down 2.71 m from the mount (reach 8 m)
+PASS modal retry after the walls fell: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS modal retry after the walls fell: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS modal retry after the walls fell: the trainer's capsule is not inside world collision
+PASS modal retry after the walls fell: a clear line from the saddle to the spot
+PASS refusal and modal deferral: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount on open ground for the ladder: remembered is used: the ordinary interact press mounts
+PASS mount on open ground for the ladder: remembered is used: the trainer is carried by the owned mount
+PASS mount on open ground for the ladder: remembered is used: the same five companions, same order, no sixth (5)
+PASS fixture: the mount stands on open ground for the ladder: remembered is used ((-75.02345, 390.0309, 1575.233))
+PLACEMENT { "at": (-73.62269, 390.08, 1576.93), "rule": "remembered", "mount_at": (-75.02345, 390.0309, 1575.233), "distance": 2.20053553581238, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS ladder remembered is used: rule 'remembered' (expected 'remembered')
+PASS ladder remembered is used: the ride ended
+PASS ladder remembered is used: the trainer is set down at P, not the older sample 20 m back ((-73.62269, 390.08, 1576.93) vs P (-73.62269, 390.0309, 1576.93))
+PASS ladder remembered is used: rule 'remembered' (expected ["remembered"])
+PASS ladder remembered is used: set down 2.20 m from the mount (reach 8 m)
+PASS ladder remembered is used: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS ladder remembered is used: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS ladder remembered is used: the trainer's capsule is not inside world collision
+PASS ladder remembered is used: a clear line from the saddle to the spot
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount on open ground for the ladder: remembered behind a wall: the ordinary interact press mounts
+PASS mount on open ground for the ladder: remembered behind a wall: the trainer is carried by the owned mount
+PASS mount on open ground for the ladder: remembered behind a wall: the same five companions, same order, no sixth (5)
+PASS fixture: the mount stands on open ground for the ladder: remembered behind a wall ((-75.02345, 390.0309, 1575.234))
+PASS ladder remembered behind a wall: rule 'deferred' (expected 'deferred')
+PASS ladder remembered behind a wall: nothing verified, so the rider stays seated
+PASS ladder remembered behind a wall: the trainer was not moved to the rejected spot ((-74.7821, 392.2188, 1575.16))
+PLACEMENT { "at": (-74.23412, 390.08, 1577.808), "rule": "clear", "mount_at": (-75.02345, 390.0309, 1575.234), "distance": 2.69307947158813, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS dismount before the ladder: newest in-reach history: interact dismounts
+PASS dismount before the ladder: newest in-reach history: nothing carries the trainer afterwards
+PASS dismount before the ladder: newest in-reach history: the trainer stands, solid, on ground (trainer (-74.23412, 390.031, 1577.808), vy 0.00)
+DISMOUNT dismount before the ladder: newest in-reach history trainer_y=390.03 collider_top=390.029998779297 surface_index=390.00 mount_level=390.03
+PASS dismount before the ladder: newest in-reach history: the trainer's feet are on the collider top, not inside it
+PASS dismount before the ladder: newest in-reach history: rule 'clear' (expected ["clear"])
+PASS dismount before the ladder: newest in-reach history: set down 2.69 m from the mount (reach 8 m)
+PASS dismount before the ladder: newest in-reach history: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS dismount before the ladder: newest in-reach history: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS dismount before the ladder: newest in-reach history: the trainer's capsule is not inside world collision
+PASS dismount before the ladder: newest in-reach history: a clear line from the saddle to the spot
+PASS dismount before the ladder: newest in-reach history: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount on open ground for the ladder: newest in-reach history: the ordinary interact press mounts
+PASS mount on open ground for the ladder: newest in-reach history: the trainer is carried by the owned mount
+PASS mount on open ground for the ladder: newest in-reach history: the same five companions, same order, no sixth (5)
+PASS fixture: the mount stands on open ground for the ladder: newest in-reach history ((-75.02342, 390.0309, 1575.234))
+PLACEMENT { "at": (-73.62272, 390.08, 1576.931), "rule": "history", "mount_at": (-75.02342, 390.0309, 1575.234), "distance": 2.20059084892273, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS ladder newest in-reach history: rule 'history' (expected 'history')
+PASS ladder newest in-reach history: the ride ended
+PASS ladder newest in-reach history: the trainer is set down at P, not the older sample 20 m back ((-73.62272, 390.08, 1576.931) vs P (-73.62272, 390.0309, 1576.931))
+PASS ladder newest in-reach history: rule 'history' (expected ["history"])
+PASS ladder newest in-reach history: set down 2.20 m from the mount (reach 8 m)
+PASS ladder newest in-reach history: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS ladder newest in-reach history: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS ladder newest in-reach history: the trainer's capsule is not inside world collision
+PASS ladder newest in-reach history: a clear line from the saddle to the spot
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount on open ground for the ladder: history out of reach: the ordinary interact press mounts
+PASS mount on open ground for the ladder: history out of reach: the trainer is carried by the owned mount
+PASS mount on open ground for the ladder: history out of reach: the same five companions, same order, no sixth (5)
+PASS fixture: the mount stands on open ground for the ladder: history out of reach ((-75.02354, 390.0309, 1575.234))
+PASS ladder history out of reach: rule 'deferred' (expected 'deferred')
+PASS ladder history out of reach: nothing verified, so the rider stays seated
+PASS ladder history out of reach: the trainer was not moved to the rejected spot ((-74.7822, 392.2188, 1575.16))
+PLACEMENT { "at": (-74.23435, 390.08, 1577.808), "rule": "clear", "mount_at": (-75.02354, 390.0309, 1575.234), "distance": 2.69315576553345, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS dismount before the ladder: mounted_from: interact dismounts
+PASS dismount before the ladder: mounted_from: nothing carries the trainer afterwards
+PASS dismount before the ladder: mounted_from: the trainer stands, solid, on ground (trainer (-74.23435, 390.031, 1577.808), vy 0.00)
+DISMOUNT dismount before the ladder: mounted_from trainer_y=390.03 collider_top=390.029998779297 surface_index=390.00 mount_level=390.03
+PASS dismount before the ladder: mounted_from: the trainer's feet are on the collider top, not inside it
+PASS dismount before the ladder: mounted_from: rule 'clear' (expected ["clear"])
+PASS dismount before the ladder: mounted_from: set down 2.69 m from the mount (reach 8 m)
+PASS dismount before the ladder: mounted_from: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS dismount before the ladder: mounted_from: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS dismount before the ladder: mounted_from: the trainer's capsule is not inside world collision
+PASS dismount before the ladder: mounted_from: a clear line from the saddle to the spot
+PASS dismount before the ladder: mounted_from: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount on open ground for the ladder: mounted_from: the ordinary interact press mounts
+PASS mount on open ground for the ladder: mounted_from: the trainer is carried by the owned mount
+PASS mount on open ground for the ladder: mounted_from: the same five companions, same order, no sixth (5)
+PASS fixture: the mount stands on open ground for the ladder: mounted_from ((-75.02345, 390.0309, 1575.234))
+PLACEMENT { "at": (-73.62274, 390.08, 1576.93), "rule": "mounted_from", "mount_at": (-75.02345, 390.0309, 1575.234), "distance": 2.20059084892273, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS ladder mounted_from: rule 'mounted_from' (expected 'mounted_from')
+PASS ladder mounted_from: the ride ended
+PASS ladder mounted_from: the trainer is set down at P, not the older sample 20 m back ((-73.62274, 390.08, 1576.93) vs P (-73.62274, 390.0309, 1576.93))
+PASS ladder mounted_from: rule 'mounted_from' (expected ["mounted_from"])
+PASS ladder mounted_from: set down 2.20 m from the mount (reach 8 m)
+PASS ladder mounted_from: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS ladder mounted_from: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS ladder mounted_from: the trainer's capsule is not inside world collision
+PASS ladder mounted_from: a clear line from the saddle to the spot
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount on open ground for the ladder: mid-hop prefers ground: the ordinary interact press mounts
+PASS mount on open ground for the ladder: mid-hop prefers ground: the trainer is carried by the owned mount
+PASS mount on open ground for the ladder: mid-hop prefers ground: the same five companions, same order, no sixth (5)
+PASS fixture: the mount stands on open ground for the ladder: mid-hop prefers ground ((-75.02341, 390.0309, 1575.233))
+PASS fixture: the mount is mid-hop (0.73 m up)
+PLACEMENT { "at": (-73.62261, 390.08, 1576.929), "rule": "remembered", "mount_at": (-75.02341, 390.7605, 1575.233), "distance": 2.30284428596497, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS ladder mid-hop prefers ground: rule 'remembered' (expected 'remembered')
+PASS ladder mid-hop prefers ground: the ride ended
+PASS ladder mid-hop prefers ground: the trainer is set down at P, not the older sample 20 m back ((-73.62261, 390.08, 1576.929) vs P (-73.62261, 390.0309, 1576.929))
+PASS ladder mid-hop prefers ground: rule 'remembered' (expected ["remembered"])
+PASS ladder mid-hop prefers ground: set down 2.30 m from the mount (reach 8 m)
+PASS ladder mid-hop prefers ground: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS ladder mid-hop prefers ground: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS ladder mid-hop prefers ground: the trainer's capsule is not inside world collision
+PASS ladder mid-hop prefers ground: a clear line from the saddle to the spot
+PASS dismount rule ladder: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount on open ground for the closed-wall leg: the ordinary interact press mounts
+PASS mount on open ground for the closed-wall leg: the trainer is carried by the owned mount
+PASS mount on open ground for the closed-wall leg: the same five companions, same order, no sixth (5)
+PASS fixture: the mount stands on open ground for the closed-wall leg ((-75.02353, 390.0309, 1575.234))
+PASS fixture: the ride covered ground before the wall went up (14.8 m)
+PASS fixture: 8 of the ride's 8 ground samples lie beyond the wall
+PASS a forced dismount never puts the trainer beyond the wall that closed behind the ride (rule deferred, 1.64 m on the mount's side)
+PASS closed wall: nothing verified on the near side, so the rider stays seated (deferred)
+PASS closed wall: the same five companions, same order, no sixth (5)
+PLACEMENT { "at": (-76.35537, 390.08, 1590.607), "rule": "clear", "mount_at": (-78.9563, 390.0308, 1589.91), "distance": 2.6931254863739, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS dismount before the mid-drop leg: interact dismounts
+PASS dismount before the mid-drop leg: nothing carries the trainer afterwards
+PASS dismount before the mid-drop leg: the trainer stands, solid, on ground (trainer (-76.35537, 390.031, 1590.607), vy 0.00)
+DISMOUNT dismount before the mid-drop leg trainer_y=390.03 collider_top=390.029998779297 surface_index=390.00 mount_level=390.03
+PASS dismount before the mid-drop leg: the trainer's feet are on the collider top, not inside it
+PASS dismount before the mid-drop leg: rule 'clear' (expected ["clear"])
+PASS dismount before the mid-drop leg: set down 2.69 m from the mount (reach 8 m)
+PASS dismount before the mid-drop leg: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS dismount before the mid-drop leg: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS dismount before the mid-drop leg: the trainer's capsule is not inside world collision
+PASS dismount before the mid-drop leg: a clear line from the saddle to the spot
+PASS dismount before the mid-drop leg: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount above the ledge for the mid-drop leg: the ordinary interact press mounts
+PASS mount above the ledge for the mid-drop leg: the trainer is carried by the owned mount
+PASS mount above the ledge for the mid-drop leg: the same five companions, same order, no sixth (5)
+PLACEMENT { "at": (-101.5157, 397.0638, 1655.065), "rule": "airborne", "mount_at": (-99.14847, 397.0638, 1656.348), "distance": 2.69270873069763, "overlap": false, "floor_ok": false, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS the ride reached 4 m into the causeway drop (takeoff 401.2, mount (-99.14847, 397.0638, 1656.348))
+PASS a forced dismount mid-drop uses the 'airborne' rule (airborne)
+PASS mid-drop the trainer comes off beside the mount (2.7 m), not back along the route
+PASS mid-drop placement: clear of the mount and a clear line from the saddle ({ "at": (-101.5157, 397.0638, 1655.065), "rule": "airborne", "mount_at": (-99.14847, 397.0638, 1656.348), "distance": 2.69270873069763, "overlap": false, "floor_ok": false, "floor_is_mount": false, "line_clear": true, "in_geometry": false })
+PASS mid-drop placement is below the road, not on it (y 397.1, road 401.2)
+PASS the trainer lands on the causeway floor below the ledge (y 390.0, road 401.2)
+PASS mid-drop forced dismount: the same five companions, same order, no sixth (5)
+PASS fixture: on foot on the causeway road, Fly's anchor is up there ((-104.0004, 401.1692, 1664.0))
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount on the causeway road before saving: the ordinary interact press mounts
+PASS mount on the causeway road before saving: the trainer is carried by the owned mount
+PASS mount on the causeway road before saving: the same five companions, same order, no sixth (5)
+PASS still mounted at the save
+PASS save WHILE MOUNTED on the arrival road, ~300 m below where the trainer last stood
+PASS load that save
+PASS a mounted save reloads with the trainer standing on ground, not carried ((-1.235823, 105.6585, -245.3873))
+PASS ...at the saved spot (trainer (-1.235823, 105.6585, -245.3873), saved (-1.235823, 107.8759, -245.3873))
+PASS ...and Fly's anchor came down with the ride, not left on the road ~300 m up (anchor (-1.235823, 105.6585, -245.3873), saved level 105.7)
+PASS mounted save/reload: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS remount after reloading a mounted save: the ordinary interact press mounts
+PASS remount after reloading a mounted save: the trainer is carried by the owned mount
+PASS remount after reloading a mounted save: the same five companions, same order, no sixth (5)
+PLACEMENT { "at": (-0.60724, 106.279, -238.5659), "rule": "clear", "mount_at": (1.761129, 106.0733, -239.8471), "distance": 2.70052480697632, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS dismount after the reload: interact dismounts
+PASS dismount after the reload: nothing carries the trainer afterwards
+PASS dismount after the reload: the trainer stands, solid, on ground (trainer (-0.60724, 106.2312, -238.5659), vy 0.00)
+DISMOUNT dismount after the reload trainer_y=106.23 collider_top=106.228958129883 surface_index=nan mount_level=106.07
+PASS dismount after the reload: the trainer's feet are on the collider top, not inside it
+PASS dismount after the reload: rule 'clear' (expected ["clear"])
+PASS dismount after the reload: set down 2.70 m from the mount (reach 8 m)
+PASS dismount after the reload: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS dismount after the reload: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS dismount after the reload: the trainer's capsule is not inside world collision
+PASS dismount after the reload: a clear line from the saddle to the spot
+PASS dismount after the reload: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount on open ground for the finale pilot: the ordinary interact press mounts
+PASS mount on open ground for the finale pilot: the trainer is carried by the owned mount
+PASS mount on open ground for the finale pilot: the same five companions, same order, no sixth (5)
+PASS fixture: the mount stands on open ground for the finale pilot ((-70.94078, 390.0286, 1576.826))
+PASS fixture: the finale is in break_the_eye (break_the_eye)
+PASS boxed in: the creature is never piloted while the trainer is carried (0 frames)
+PASS boxed in: the exam waits for the rider; the rider stays seated (piloted false)
+PASS 60 frames of waiting are one deferral event, told once (1)
+PLACEMENT { "at": (-68.49775, 390.08, 1577.006), "rule": "clear", "mount_at": (-71.18984, 390.0287, 1577.062), "distance": 2.69317269325256, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS the creature is never piloted while the trainer is carried (0 frames)
+PASS with room, the rider comes off and the exam pilots the ally
+PASS finale pilot handoff: rule 'clear' (expected ["clear", "remembered", "history", "mounted_from"])
+PASS finale pilot handoff: set down 2.69 m from the mount (reach 8 m)
+PASS finale pilot handoff: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS finale pilot handoff: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS finale pilot handoff: the trainer's capsule is not inside world collision
+PASS finale pilot handoff: a clear line from the saddle to the spot
+PASS a second into the exam the camera is on the piloted creature
+PASS the trainer stands, not carried, while the creature is piloted
+PASS clearing the phase releases the pilot
+PASS after release the ally follows and no ride resumes on it (mounted false)
+PASS after release the camera is back on the trainer
+PASS finale pilot handoff: the same five companions, same order, no sixth (5)
+PASS the ride offer wins the prompt beside the saddled Meadowhart (prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Ride Meadowhart')
+PASS mount on open ground for the fight: the ordinary interact press mounts
+PASS mount on open ground for the fight: the trainer is carried by the owned mount
+PASS mount on open ground for the fight: the same five companions, same order, no sixth (5)
+PASS fixture: the mount stands on open ground for the fight ((3.061635, 105.4262, -246.2775))
+PASS boxed in, the fight is refused rather than begun with a rider on (fighting false)
+PASS every refused engage press shows the refusal, the second one too (["No room to dismount here.", "No room to dismount here."])
+PASS boxed in, challenging trainer_ila_lower_ring is refused: false, no trainer_started, no battle (began false, starts [])
+PASS the refused challenge shows the refusal ('No room to dismount here.')
+PASS boxed in, the rider stays seated: no mounted combat, no spot guessed
+PASS the refused admission's dismount is 'deferred' (deferred)
+PASS three refused requests over two seconds are one deferral episode (2, was 1)
+PLACEMENT { "at": (5.753823, 105.3857, -246.3292), "rule": "clear", "mount_at": (3.061635, 105.4262, -246.2775), "distance": 2.69298839569092, "overlap": false, "floor_ok": true, "floor_is_mount": false, "line_clear": true, "in_geometry": false }
+PASS the rider came off BEFORE the fight began (fighting at placement: false)
+PASS with room, the fight starts
+PASS combat admission: rule 'clear' (expected ["clear"])
+PASS combat admission: set down 2.69 m from the mount (reach 8 m)
+PASS combat admission: walkable floor under the trainer's feet at placement (on the mount: false)
+PASS combat admission: the trainer's capsule does not overlap the mount's capsule (geometry, any layer)
+PASS combat admission: the trainer's capsule is not inside world collision
+PASS combat admission: a clear line from the saddle to the spot
+PASS in the fight nothing carries the trainer
+PASS the trainer stands, solid, on ground in the fight ((5.753823, 105.3379, -246.3292))
+PASS a second into the fight the camera is on the ally, not the trainer (M-B)
+PASS the trainer is not inside the ally in the fight
+PASS fixture: the wild fight is fled
+PASS fixture: the wild fight is over
+PASS a later challenge of trainer_ila_lower_ring works (began true, starts ["trainer_ila_lower_ring"])
+PASS combat admission: the same five companions, same order, no sixth (5)
+PASS end of run: the same five companions, same order, no sixth (5)
+CLOUDREACH SADDLE REMOUNT OK checks=331 failures=0

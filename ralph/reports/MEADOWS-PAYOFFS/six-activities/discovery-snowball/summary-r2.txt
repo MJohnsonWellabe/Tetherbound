@@ -1,0 +1,6 @@
+herd exit=3 
+vault exit=0 
+juno exit=0 
+hall exit=3 
+
+[exited with code 0]

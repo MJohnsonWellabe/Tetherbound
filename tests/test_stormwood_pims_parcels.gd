@@ -144,6 +144,10 @@ func test_ledger_pays_each_character_once_for_the_courier_rate() -> void:
 	assert_eq(str(again.get("code", "")), "already_taken", "The same character cannot be paid twice")
 	var companion := PARCELS.reward_intent()
 	companion["_reward_recipients"] = [{"peer": 2, "character_id": "character-companion"}]
+	var early: Dictionary = ledger.call("commit", companion, 2)
+	assert_eq(str(early.get("code", "")), "not_earned",
+		"A guest's share waits until the host's world has the parcels delivered")
+	world.flags.set_flag(PARCELS.STEP_2)
 	assert_true(bool((ledger.call("commit", companion, 2) as Dictionary).get("ok")),
 		"A second character collects their own share")
 	assert_eq(world.reward_deliveries.size(), 2)

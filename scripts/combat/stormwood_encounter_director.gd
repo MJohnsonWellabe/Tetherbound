@@ -91,21 +91,33 @@ func _process(delta: float) -> void:
 			_announce_deployment(active)
 
 
+## Why the last `begin_hosted_round` could not admit the local player ("" once
+## it did). The hub retries a refused admission every frame for a bounded
+## window and then withdraws with this reason, so a stall is never silent.
+var hosted_round_blocker := ""
+
+
 func begin_hosted_round(link: Node, state: Dictionary) -> bool:
+	hosted_round_blocker = ""
 	if _manager.is_fighting():
+		hosted_round_blocker = "engaged_in_wild_fight"
 		return false
 	var party := _party()
 	if party == null or party.call("active") == null:
+		hosted_round_blocker = "no_active_creature"
 		return false
 	if not is_instance_valid(_ally_body):
+		# Asynchronous: the body appears on a later frame. The hub retries.
 		summon_active_creature()
 	if not is_instance_valid(_ally_body):
+		hosted_round_blocker = "companion_not_deployed"
+		return false
+	var creature := TRAINERS.creature_for(state.get("team_entry", {}))
+	if creature == null:
+		hosted_round_blocker = "opponent_unavailable"
 		return false
 	if is_instance_valid(_hosted_body):
 		_hosted_body.queue_free()
-	var creature := TRAINERS.creature_for(state.get("team_entry", {}))
-	if creature == null:
-		return false
 	_hosted_body = CREATURE_SCENE.instantiate()
 	_hosted_body.set_script(WILD_SCRIPT)
 	get_parent().add_child(_hosted_body)
@@ -134,6 +146,7 @@ func begin_hosted_round(link: Node, state: Dictionary) -> bool:
 	if not started:
 		_hosted_trainer = ""
 		_set_exploration_active(true)
+		hosted_round_blocker = "combat_refused"
 		return false
 	# The manager stages the local party; enemy location remains host truth.
 	_hosted_body.global_position = state.position

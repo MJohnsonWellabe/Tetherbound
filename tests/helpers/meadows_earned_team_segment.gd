@@ -293,6 +293,10 @@ static func preferred_candidate_index(distances: Array[float], offered_index: in
 	return best
 
 
+## Presses that land on another prompt before an engage counts as failed.
+const ENGAGE_REFUSALS := 3
+
+
 func _engage(target: Node3D) -> bool:
 	_nav.reset()
 	var closest := INF
@@ -300,6 +304,8 @@ func _engage(target: Node3D) -> bool:
 	if bool(boundary.required) and (boundary.points as Array).is_empty():
 		return _fail("The selected wild needs a physical village crossing but no current open gate route is available")
 	var waypoint := 0
+	var refusals := 0
+	var press_after := 0
 	var points: Array = boundary.points
 	if not points.is_empty():
 		_receipt("wild_boundary_route", {"target": str(target.name), "gate": boundary.gate, "points": points})
@@ -314,7 +320,7 @@ func _engage(target: Node3D) -> bool:
 			return _fail("The selected living wild disappeared before engagement")
 		closest = minf(closest, _player.global_position.distance_to(target.global_position))
 		var offer: Dictionary = _arbiter.call("winner")
-		if waypoint >= points.size() and _arbiter.call("winning_provider") == _director \
+		if waypoint >= points.size() and _frame >= press_after and _arbiter.call("winning_provider") == _director \
 				and bool(offer.get("actionable", false)) \
 				and _director.call("_engageable") == target:
 			_stick(0, 0)
@@ -333,7 +339,15 @@ func _engage(target: Node3D) -> bool:
 				"active_hp": float(active.get("hp")) if active != null else -1.0,
 				"arbiter_enabled": bool(_arbiter.call("enabled")),
 				"target_alive": is_instance_valid(target) and bool(target.call("is_alive"))})
-			return _fail("The offered wild did not enter combat after Interact")
+			# A nearer prompt (seed 26: a 'Prise loose stones' node 1.8 m away)
+			# can take Interact on the press frame from a wild 5 m out. A player
+			# whose press lands on the wrong prompt keeps walking up and presses
+			# again; so does this, three times, before calling it a failure.
+			refusals += 1
+			if refusals >= ENGAGE_REFUSALS:
+				return _fail("The offered wild did not enter combat after Interact")
+			# Walk on toward it (the approach below) before pressing again.
+			press_after = _frame + 30
 		if waypoint < points.size():
 			if not _open_boundary_gate(str(boundary.gate)):
 				_stick(0, 0)

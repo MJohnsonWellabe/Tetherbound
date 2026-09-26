@@ -46,8 +46,12 @@ func test_reusable_segment_enters_and_preflights_the_documented_patch_before_spe
 		"the authored Practice Meadow clearing must be the documented patch")
 	assert_true(source.contains("Vector2(10.0, -13.0), # Village Square"),
 		"the reusable route must begin at the real-exploration Village Square entry")
-	assert_true(source.contains("Vector2(18.0, -24.0), # Practice Meadow road bend"),
-		"the route must follow the authored road bend instead of a settlement diagonal")
+	for waypoint: String in ["Vector2(13.6, -20.0)", "Vector2(14.2, -26.0)",
+			"Vector2(14.6, -31.0)", "Vector2(21.0, -37.5)"]:
+		assert_true(source.contains(waypoint),
+			"the route must follow the authored Practice Meadow road (%s) instead of a settlement diagonal" % waypoint)
+	assert_false(source.contains("Vector2(18.0, -24.0)"),
+		"the pre-F01 radial road bend (18,-24) is no longer on any road")
 	assert_true(source.contains("all twelve planned anchors were green/reachable before spending"),
 		"canonical evidence must walk to the patch rather than arrive by fixture warp")
 	assert_true(source.contains("Practice Meadow road waypoint %d"),

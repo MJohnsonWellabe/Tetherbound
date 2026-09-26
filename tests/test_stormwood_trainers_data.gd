@@ -164,3 +164,22 @@ func test_route_grounding_ignores_pocket_spurs() -> void:
 			copy.kind = "loop"
 			spur_only.routes.append(copy)
 	assert_true(_distance_to_routes(mouth, spur_only) < 1.0, "control: counted as a road, the spur grounds the point")
+
+## Two trainers on one spot share one challenge circle and the arbiter picks
+## whichever is fractionally nearer: circuit Tavi stood exactly on Officer
+## Nysa, and the earned F11 witness (run 22) pressed to challenge Nysa and was
+## offered Tavi. No two trainers may stand within `MIN_TRAINER_SPACING_M`.
+const MIN_TRAINER_SPACING_M := 8.0
+
+
+func test_no_two_trainers_share_a_challenge_circle() -> void:
+	var rows: Array = _read(PATH).get("trainers", [])
+	for i in rows.size():
+		for j in range(i + 1, rows.size()):
+			var a: Array = (rows[i] as Dictionary).get("position", [])
+			var b: Array = (rows[j] as Dictionary).get("position", [])
+			if a.size() != 3 or b.size() != 3:
+				continue
+			var gap := Vector2(float(a[0]), float(a[2])).distance_to(Vector2(float(b[0]), float(b[2])))
+			assert_true(gap >= MIN_TRAINER_SPACING_M, "%s and %s stand %.1f m apart" % [
+				str(rows[i].get("id", "")), str(rows[j].get("id", "")), gap])

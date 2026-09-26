@@ -1,0 +1,31 @@
+  PASS: production Stormwood built
+  PASS: negative control: the walker reaches (-560, 2480) along the conductor road (0.0 m left)
+CLOSED ARCH E approach 0 from (1405.0, 2700.0): void edge (standable ground ends) 693.5 m, closest 658.6 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 2
+CLOSED ARCH E approach 1 from (1198.51, 3198.51): void edge (standable ground ends) 689.0 m, closest 659.4 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 2
+CLOSED ARCH E approach 2 from (699.9999, 3405.0): void edge (standable ground ends) 691.5 m, closest 657.4 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 8
+CLOSED ARCH E approach 3 from (201.4897, 3198.51): void edge (standable ground ends) 689.0 m, closest 659.0 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 3
+CLOSED ARCH E approach 4 from (-5.0, 2700.0): void edge (standable ground ends) 691.0 m, closest 659.6 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 3
+CLOSED ARCH E approach 5 from (201.4897, 2201.49): void edge (standable ground ends) 691.0 m, closest 660.6 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 1
+CLOSED ARCH E approach 6 from (700.0, 1995.0): void edge (standable ground ends) 685.0 m, closest 661.9 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 5
+CLOSED ARCH E approach 7 from (1198.51, 2201.49): void edge (standable ground ends) 685.0 m, closest 667.1 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 0
+  PASS: every pair E approach reached the void edge on its line (within 5 m, or fell in): 8 of 8
+  PASS: with no Still Grove twin, none of 8 approaches from the mainland edge (with jumps) reaches the Crown plateau (closest 657.4 m; 24 fall recoveries)
+CONTROL ARCH E bridged approach 4: closest 2.0 m, on_island=true
+  PASS: negative control: with a temporary bridge over the void, the same walker on approach 4's line reaches the Crown plateau (closest 2.0 m)
+ROOTGATE line (-650.0, 3480.0) -> (-650.0, 3640.0): max z=3542.1 (face 3542.5, crossing 3562.0) final z=3542.1 reached=true crossed=false
+ROOTGATE line (-650.0, 3480.0) -> (-740.0, 3640.0): max z=3542.1 (face 3542.5, crossing 3562.0) final z=3542.1 reached=true crossed=false
+ROOTGATE line (-650.0, 3480.0) -> (-560.0, 3640.0): max z=3542.1 (face 3542.5, crossing 3562.0) final z=3542.1 reached=true crossed=false
+ROOTGATE line (-650.0, 3480.0) -> (-800.0, 3620.0): max z=3542.1 (face 3542.5, crossing 3562.0) final z=3540.6 reached=true crossed=false
+ROOTGATE line (-650.0, 3480.0) -> (-500.0, 3620.0): max z=3542.1 (face 3542.5, crossing 3562.0) final z=3542.1 reached=true crossed=false
+  PASS: every Rootgate line's furthest-north point came within 6 m of the wall face z=3542.5: 5 of 5
+  PASS: with the Rootgate closed, none of 5 lines (through and around it, with jumps) crosses north of z=3562.0
+  PASS: the closed Rootgate collider exists and is enabled
+ROOTGATE line (-650.0, 3480.0) -> (-650.0, 3640.0): max z=3638.0 (face 3542.5, crossing 3562.0) final z=3638.0 reached=true crossed=true
+  PASS: negative control: with the wall collider temporarily disabled, the same line counts as crossed (max z 3638.0 > 3562.0)
+  PASS: the Rootgate collider is restored after the control
+  PASS: Rootgate world fact committed
+  PASS: with the Rootgate open, the same player walks through to (-650, 3640)
+  PASS: arch recipe fact committed
+  PASS: Still Grove twin placed through the ledger: 
+  PASS: with the pair open, walking through the Still Grove twin puts the player on the Crown plateau at (488.5, 74.6, 2700.0)
+STORMWOOD CLOSED ARCH BYPASS OK: 15 passed, 0 failed

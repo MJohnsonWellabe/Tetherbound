@@ -44,9 +44,10 @@
       "display_name": "Road Gate",
       "icon": "gate",
       "position": [
-        27.5,
-        -16.0
+        38.72,
+        -19.85
       ],
+      "_why_f01_position": "F01 (village road settlement). Was [27.5,-16] = playground_world.gd GATE_AT, which places nothing since village_boundary.gd took over the gates; the leaf the old key sits beside is village_boundary.json's RoadGate at [38.72,-19.85], 11.9m away (the same correction tools/gate_f/segments/S02.json's anchor already records).",
       "discover_radius": 25.0,
       "category": "minor"
     },

@@ -184,6 +184,10 @@ func _ready() -> void:
 	var lightning := preload("res://scripts/world/stormwood_lightning.gd").new()
 	lightning.name = "StormwoodLightning"
 	add_child(lightning)
+	# AUDIO §4.3 Surge/lightning cues: an observer only (silent until assets land).
+	var surge_audio := preload("res://scripts/world/stormwood_surge_audio.gd").new()
+	surge_audio.name = "StormwoodSurgeAudio"
+	add_child(surge_audio)
 	var arches := preload("res://scripts/world/stormwood_arch_runtime.gd").new()
 	arches.name = "StormglassArches"
 	add_child(arches)

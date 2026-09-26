@@ -1,0 +1,101 @@
+{
+	"clock_elapsed_seconds": 246.871850878785,
+	"created_at": "2026-09-26T04:26:49",
+	"day": 1,
+	"death_satchels": [],
+	"display_name": "",
+	"farm_plots": [],
+	"felled_vegetation": {},
+	"flags": {
+		"flags": [
+			"water_dock_sluice_isle_both_controls_disabled",
+			"water_veilfall_intake_stopped",
+			"water_veilfall_return_opened",
+			"water_captain_nerissa_defeated",
+			"water_tether_disabled",
+			"water_guardian_freed",
+			"water_claim:guardian:offered:499c050f3af19ae14ef822fd80c52f921a6b4a8e8840417a3f29a4f3e18f8cfc",
+			"water_guardian_claimed",
+			"water_guardian_settled",
+			"water_currents_restored",
+			"realm_relic_water_earned",
+			"water_claim:guardian:offered:90b18480510d0cb4657257966c354913be4b624614d6604127c4ef27fd01acd8"
+		]
+	},
+	"harvested_vegetation": {},
+	"last_played": "2026-09-26T04:27:51",
+	"migrated_from": "",
+	"placed_buildings": [],
+	"realm_environment": {},
+	"reward_deliveries": {
+		"1d6c533a531339425886f21622c7124e4ccc35b0f8dc4f0aeb5a902cfdf9d03a": {
+			"character_id": "character-ad3f2faefc3205552d9421346405b088",
+			"completion_flag": "",
+			"delivery_id": "1d6c533a531339425886f21622c7124e4ccc35b0f8dc4f0aeb5a902cfdf9d03a",
+			"source": "trainer:water_trainer_nerissa:coins",
+			"stacks": [
+				{
+					"id": "coin",
+					"n": 150
+				}
+			],
+			"status": "accepted",
+			"version": 1,
+			"world_id": "slot-0",
+			"world_namespace": "0cb27bc597fbdd79d390c919fb8a5f96"
+		},
+		"57fda653542b36fb4af8d9a5a6851ee89b76c0ef9a753221622a6d93c1f232f7": {
+			"character_id": "character-ad3f2faefc3205552d9421346405b088",
+			"completion_flag": "",
+			"delivery_id": "57fda653542b36fb4af8d9a5a6851ee89b76c0ef9a753221622a6d93c1f232f7",
+			"source": "trainer:water_trainer_nerissa:item:revive",
+			"stacks": [
+				{
+					"id": "revive",
+					"n": 2
+				}
+			],
+			"status": "accepted",
+			"version": 1,
+			"world_id": "slot-0",
+			"world_namespace": "0cb27bc597fbdd79d390c919fb8a5f96"
+		},
+		"d78e4937f52b30952fc7af43b56f8d83079d294e89c5f8a3f8dc4b6a58f2da28": {
+			"character_id": "character-94f4194916fa585bd090f3ecf7d3b90f",
+			"completion_flag": "",
+			"delivery_id": "d78e4937f52b30952fc7af43b56f8d83079d294e89c5f8a3f8dc4b6a58f2da28",
+			"source": "trainer:water_trainer_nerissa:coins",
+			"stacks": [
+				{
+					"id": "coin",
+					"n": 150
+				}
+			],
+			"status": "accepted",
+			"version": 1,
+			"world_id": "slot-0",
+			"world_namespace": "0cb27bc597fbdd79d390c919fb8a5f96"
+		},
+		"daa8debb5689756f487a9eb6df84ad5746ddd73462773cb59521997433659ea6": {
+			"character_id": "character-94f4194916fa585bd090f3ecf7d3b90f",
+			"completion_flag": "",
+			"delivery_id": "daa8debb5689756f487a9eb6df84ad5746ddd73462773cb59521997433659ea6",
+			"source": "trainer:water_trainer_nerissa:item:revive",
+			"stacks": [
+				{
+					"id": "revive",
+					"n": 2
+				}
+			],
+			"status": "accepted",
+			"version": 1,
+			"world_id": "slot-0",
+			"world_namespace": "0cb27bc597fbdd79d390c919fb8a5f96"
+		}
+	},
+	"reward_delivery_namespace": "0cb27bc597fbdd79d390c919fb8a5f96",
+	"version": 2,
+	"water_capture_claims": {},
+	"world_id": "slot-0",
+	"world_seed": 684308694
+}

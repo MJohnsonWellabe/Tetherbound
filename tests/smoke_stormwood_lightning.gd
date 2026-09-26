@@ -18,6 +18,10 @@ func _run() -> void:
 		"test_unequipping_one_piece_removes_full_set_immunity": 3,
 		"test_remote_addressed_impact_does_not_use_local_gear_or_vitals": 2,
 		"test_mitigation_applies_after_low_max_health_damage_cap": 1,
+		"test_process_aims_a_fighting_trainers_strike_at_the_creature": 5,
+		"test_impact_rechecks_fight_state_after_the_warning": 4,
+		"test_impact_hits_a_trainer_whose_fight_ended_before_it_landed": 3,
+		"test_process_negative_control_flag_off_hits_the_fighting_trainer": 4,
 	}
 	for method: String in methods:
 		var before := cases.assertion_count

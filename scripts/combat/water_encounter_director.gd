@@ -3,6 +3,7 @@ extends "res://scripts/combat/cloudreach_encounter_director.gd"
 ## Water content over the shared production combat pipeline. Residency is the
 ## union of occupied Water peer neighborhoods, including a remote island when
 ## this world's local rig is only a host simulation. Story bosses stay external.
+const REMOTE_CREATURE_BODY := preload("res://scripts/creatures/remote_creature.gd")
 const WATER_DATA := preload("res://scripts/world/water_encounter_runtime_data.gd")
 const RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const INTERACTION := preload("res://scripts/world/interactable.gd")
@@ -237,6 +238,7 @@ func _spawn_available_sites() -> void:
 			else:
 				wild = spawn_wild(str(plan.species), spawn_at, opts)
 			if wild != null:
+				settle_spawn_transform(wild)
 				var initial_yaw := float(opts.get("initial_yaw_deg", NAN))
 				if is_finite(initial_yaw):
 					wild.rotation.y = deg_to_rad(initial_yaw)
@@ -269,6 +271,19 @@ func _spawn_available_sites() -> void:
 		else:
 			_site_failures[id] = true
 			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
+
+
+## A wild body enters the tree at the origin and is placed afterwards. For a
+## kinematic body the physics server reads that placement as one step of
+## motion and sweeps the body's shape AABB across every metre in between; the
+## body's first `move_and_slide()` then culls Terrain3D's heightmap under that
+## whole sweep. Measured on the host when a remote peer reached Deep Watch,
+## ~3.5 km from the origin: 3.1-3.4 s per spawned body, back to back, with no
+## heartbeat. Committing the placed transform as a static body and handing it
+## back as kinematic makes the placement a teleport instead of a motion.
+static func settle_spawn_transform(wild: Node3D) -> void:
+	if wild is PhysicsBody3D:
+		REMOTE_CREATURE_BODY.teleport_body(wild as PhysicsBody3D, wild.global_position)
 
 
 static func _surface_member_position(centre: Vector3, count: int, index: int, radius: float) -> Vector3:

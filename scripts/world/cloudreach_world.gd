@@ -2886,6 +2886,8 @@ func _route_detail_ground(at: Vector3) -> float:
 ## `Parameter "material" is null` on every override, the cached one raises
 ## nothing (isolated in a 20-rock probe before this was written).
 static var _stone_palette_cache: Dictionary = {}
+const ROCK_PALETTE_ALBEDO := preload("res://assets/environment/terrain/Rock030_Color.jpg")
+const ROCK_PALETTE_NORMAL := preload("res://assets/environment/terrain/Rock030_NormalGL.jpg")
 
 
 static func apply_stone_palette(root_node: Node) -> void:
@@ -2930,6 +2932,22 @@ static func apply_stone_palette(root_node: Node) -> void:
 				# by ~0.52 puts a lit face near 0.60 and a shadowed one near
 				# 0.34, which brackets the frame median the way stone should.
 				tinted.albedo_color = Color("#676d66")
+				# F08#3: flat untextured grey read as an unfinished primitive
+				# beside the arrival road. Give every palette rock the realm's
+				# own installed Rock030 granite (the cliff geology texture),
+				# world-triplanar so scaled rocks never stretch, with the
+				# albedo set so texture mean x colour (linear) lands at the measured
+				# #676d66 value instead of the old near-black multiply.
+				tinted.albedo_texture = ROCK_PALETTE_ALBEDO
+				tinted.albedo_color = Color("#e6ebe2")
+				tinted.normal_enabled = true
+				tinted.normal_texture = ROCK_PALETTE_NORMAL
+				tinted.normal_scale = 0.8
+				tinted.uv1_triplanar = true
+				tinted.uv1_world_triplanar = true
+				tinted.uv1_triplanar_sharpness = 4.0
+				tinted.uv1_scale = Vector3.ONE * 0.45
+				tinted.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 				tinted.roughness = 0.82
 				tinted.metallic = 0.0
 				tinted.metallic_specular = 0.28
@@ -3901,8 +3919,14 @@ func _build_high_perches(root: Node3D) -> void:
 		var outward := Vector3(cos(angle), 0.0, sin(angle))
 		perch_points.append(foot)
 		perch_radii.append(radius)
-		_cylinder(root, "RoostNeedle%d" % i,
-			foot + Vector3.UP * height * 0.5, radius, height, _materials["stone"])
+		# F08#3: the needles are natural rock spires, so they carry the realm's
+		# pale stratified cliff geology rather than the brown masonry tint that
+		# read as brick chimneys/silos beside the grey-green crags.
+		var needle := _cylinder(root, "RoostNeedle%d" % i,
+			foot + Vector3.UP * height * 0.5, radius, height, _materials["cliff"])
+		# Few, uneven facets read as a weathered basalt stack, not a turned flue.
+		(needle.mesh as CylinderMesh).radial_segments = 7 + i % 3
+		needle.rotation.y = angle * 1.7
 		_box(root, "PerchCap%d" % i,
 			foot + Vector3.UP * height,
 			Vector3(8.0, 0.8, 4.0), _materials["wood"], false,
@@ -3971,6 +3995,9 @@ func _build_high_perches(root: Node3D) -> void:
 	presentation.name = "HighPerchesPresentation"
 	root.add_child(presentation)
 	presentation.call("build", _materials)
+	# Lens-only stops for the non-colliding arrival portal (F08#3): the production
+	# camera arm stops in front of the piers instead of sitting inside them.
+	root.add_child(presentation.call("build_camera_stops") as Node3D)
 	_cover_exclusions.append({"kind":"ellipse", "centre":root.global_position,
 		"half":Vector2(17.5,17.5), "rotation":0.0})
 	_cover_exclusions.append({"centre":root.to_global(Vector3(0.0,0.0,-20.0)),

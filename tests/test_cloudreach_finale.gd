@@ -580,3 +580,66 @@ func test_break_the_eye_without_a_ledger_resets_conservatively() -> void:
 	assert_eq(finale.elapsed, 0.0)
 	assert_true(finale._hazard_drift.is_empty())
 	_free_all(fixture)
+
+
+## F08: "Cloudreach presents no legendary offer." The whole finale -- the real
+## controller's production win callback, the three relays, the witnessed
+## aftermath and the Wings/key reward claim -- runs to chapter completion, and
+## (fixtures: relay flags, and the aftermath/reward events sent directly, since
+## `strike_relay`/`witness_restoration`/the dialogue runner need a scene)
+## nothing it grants is a creature or a legendary offer. The offer vocabulary is
+## read from the realms that DO make one (Stormwood's `OFFER_FLAG` and the
+## `legendary_offer` flag family), so this cannot pass by naming nothing.
+## The static and data-wide proof is `test_cloudreach_no_legendary_offer.gd`.
+func test_finale_to_chapter_complete_raises_no_legendary_offer() -> void:
+	var offer_re := RegEx.create_from_string("const OFFER_FLAG := \"([^\"]+)\"")
+	var stormwood_offer := offer_re.search(FileAccess.get_file_as_string(
+		"res://scripts/world/stormwood_ending.gd"))
+	assert_true(stormwood_offer != null, "Stormwood still declares the offer flag this test guards against")
+	var offer_flag := stormwood_offer.get_string(1) if stormwood_offer != null else ""
+	var forbidden := RegEx.create_from_string("legendary|offer|volunteer|pending_catch|creature|species")
+	var chapter := _chapter()
+	var flags := FLAGS.new()
+	var events: Array[String] = []
+	var finale := FINALE.new()
+	finale.setup(flags, func(event: String) -> Dictionary:
+		events.append(event)
+		return CHAPTER.dispatch(flags, chapter, event), Callable(), Callable())
+	_unlock(flags)
+	var before: Array = flags.all_set()
+	assert_true(finale.encounter_started(ENCOUNTER))
+	assert_true(finale.encounter_won(ENCOUNTER), "The production win callback drives the finale")
+	# Relays: flag fixture (strike_relay needs a scene body), as the save test does.
+	for relay: Dictionary in FINALE.read_config()["relays"]:
+		flags.set_flag(str(relay["flag_id"]))
+	finale.sync_progression()
+	assert_eq(finale.phase, "awaiting_restoration")
+	var config: Dictionary = FINALE.read_config()
+	for event: String in [str(config["aftermath_event"]), "dialogue:cloudreach_aila_final_reward_complete"]:
+		events.append(event)
+		CHAPTER.dispatch(flags, chapter, event)
+	finale.sync_progression()
+	assert_true(flags.has("cloudreach_chapter_complete"), "The finale reached chapter completion")
+	assert_true(flags.has("realm_heart_cloudreach_earned") and flags.has("realm_key_stormwood"),
+		"The chapter's real rewards were granted")
+	var gained: Array[String] = []
+	for flag: Variant in flags.all_set():
+		if not before.has(flag):
+			gained.append(str(flag))
+	assert_true(gained.size() >= 6, "The run granted the finale's flags (%d)" % gained.size())
+	for flag: String in gained:
+		assert_ne(flag, offer_flag, "The finale never raises Stormwood's legendary offer")
+		assert_true(forbidden.search(flag) == null, "Finale flag %s is not a creature/offer grant" % flag)
+	# Stormwood raises its offer through a chapter event (`legendary:offer_shown`);
+	# no event this finale sends may name one.
+	assert_true(events.size() >= 3, "The finale sent its chapter events (%d)" % events.size())
+	for event: String in events:
+		assert_true(forbidden.search(event) == null, "Finale event %s names no creature/offer" % event)
+	for method: Dictionary in finale.get_method_list() + finale.get_signal_list():
+		assert_true(forbidden.search(str(method["name"])) == null,
+			"The finale controller exposes no offer surface (%s)" % method["name"])
+	var rewards: Array = chapter["rewards"]["grants"]
+	for grant: Dictionary in rewards:
+		assert_true(forbidden.search(str(grant.get("kind", ""))) == null,
+			"Chapter reward %s is not a creature or offer" % grant.get("id", ""))
+	finale.free()

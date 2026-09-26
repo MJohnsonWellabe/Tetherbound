@@ -4,7 +4,7 @@ extends SceneTree
 ##
 ##   xvfb-run -a -s "-screen 0 1920x1080x24" \
 ##     godot --path . --rendering-driver opengl3 \
-##     --script tools/capture_release.gd
+##     --script tools/capture_release.gd [-- --gamepad]
 ##
 ## Four frames, one per thing the ceremony has to sell:
 ##   release_choose   - the six-up choice beat, focus on the newcomer
@@ -43,6 +43,10 @@ func _run() -> void:
 		push_error("Game autoload not in the tree")
 		quit(1)
 		return
+	# `-- --gamepad`: show the controller glyphs a pad player sees (the default
+	# follows whatever device the headless/xvfb session reports, a keyboard).
+	if "--gamepad" in OS.get_cmdline_user_args():
+		game.set("_last_input_was_gamepad", true)
 	var menu: Node = game.call("menu")
 	var party: RefCounted = game.get("party")
 	if menu == null or party == null:
