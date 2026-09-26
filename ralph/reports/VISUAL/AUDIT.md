@@ -30,6 +30,7 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V15 | shared look | Golden-hour fog density 0.0016 | `data/config/art.json` times.golden | open |
 | V16 | shared look | South Bridge gully slope rock: probe first, then re-apply 26b7216d (reverted in b864c1830) | `tools/probe_south_bridge_gully.gd` | open |
 | V17 | C2–C4 | Cloudreach, Stormwood and Tidewake region audits not yet judged; the VIS lane is judging them (read-only) and adds its findings here | §C2–C4 | open |
+| V18 | F14#2 | Current restoration is not visible (state proven, look not; full notes in row W1 below). **Pass when** a code-blind judge, shown a matched before/after pair from the production CameraRig at the same pose and time of day over a mandatory current (e.g. Tidal Cradle → Salt Crown direct, around (425, 0, 1920)), both with terrain streamed in, says: (1) in the before frame, a moving current is visible on the water (foam or streaks that follow the flow), and (2) in the after frame the same current is clearly calmer (the streaks are sparser, slower or fainter), without being told what changed. Same verdict in a short clip or two frames 1 s apart if a still cannot show motion. Test of state: `tests/smoke_tidewake_b_current_restore.gd` (flag, calm_scale 1.0→0.5, 1.30→0.325 m/s, survives reload). | `scripts/world/water_current_flow_view.gd`, `shaders/water_current_flow.gdshader`, `data/config/water_veilfall.json` current_flow; capture poses in `ralph/reports/TIDEWAKE/b/f14_2_current_restore/PROOF.md` | open |
 
 ## How to reproduce
 
