@@ -1,4 +1,4 @@
-# --only=cloudreach_finale at the commit below (positive)
+# --only=cloudreach_finale (positive, after review nit)
   ok    test_cloudreach_finale.gd :: test_a_different_store_resets_even_mid_fight
   ok    test_cloudreach_finale.gd :: test_break_the_eye_delta_sweep_keeps_the_wind_clock_and_drift
   ok    test_cloudreach_finale.gd :: test_break_the_eye_reload_without_a_delta_still_resets
@@ -17,4 +17,4 @@
   ok    test_cloudreach_finale.gd :: test_save_restores_partial_relays_and_repairs_only_completed_network
   ok    test_cloudreach_finale.gd :: test_unrelated_delta_sweep_keeps_crosswind_and_overload_phases
   ok    test_cloudreach_finale.gd :: test_without_a_director_a_sweep_resets_the_encounter
-18 tests, 547 assertions, 0 failed
+18 tests, 532 assertions, 0 failed
