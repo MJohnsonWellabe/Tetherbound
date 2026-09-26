@@ -84,8 +84,11 @@ func _paid() -> bool:
 	return paid_in_world(game.get("world"), str((local as Object).get("character_id")))
 
 
-func mount(_owner_world: Node3D) -> void:
+func mount(owner_world: Node3D) -> void:
 	game = get_node_or_null("/root/Game")
+	if owner_world != null and bool(owner_world.get("simulation_only")):
+		set_process(false)
+		return
 	var transport := LEDGER_CLAIM.transport(self)
 	if transport != null:
 		transport.connect("intent_refused", _on_intent_refused)
@@ -159,8 +162,6 @@ func claim_reward() -> void:
 	if not LEDGER_CLAIM.in_flight(verdict):
 		_claiming = false
 		_announce_payment = false
-		if bool(verdict.get("ok", false)) or _paid():
-			game.call("push_world_message", PAID_MESSAGE)
 
 
 ## A client's refusal arrives here, not as the submit verdict. The ledger has
