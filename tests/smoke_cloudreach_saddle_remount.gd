@@ -499,11 +499,19 @@ func _ride_off_edge(road: Vector3, toward: Vector3, mount_offset: Vector3, label
 		await _dismount_by_interact("dismount before the %s ride" % label)
 	_player.global_position = road
 	_player.velocity = Vector3.ZERO
+	# The follower's own catch-up after the trainer's teleport moves the ally
+	# during the first frames and can set it off the road's side, so the
+	# fixture waits it out and seats the ally last (as the mid-drop leg does).
+	# Moved there first: the Cloudreach ground source picks the stratum
+	# nearest the body's own height.
+	for i in 60:
+		await physics_frame
 	var ally: Node3D = _director.call("ally_body")
 	if ally != null:
 		# On the road itself, not its steep shoulder.
+		ally.global_position = road + mount_offset
 		ally.call("place_on_ground", road + mount_offset)
-	for i in 60:
+	for i in 10:
 		await physics_frame
 	await _walk_to_mount()
 	await _mount_by_interact("mount above the %s" % label)

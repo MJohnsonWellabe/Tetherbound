@@ -667,7 +667,7 @@ func _follow(delta: float) -> void:
 		# snagged proxy refuses this peer's legitimate claims from a place the
 		# peer has not been for some time.
 		_render_position = net_position
-		global_position = net_position
+		REMOTE_CREATURE.teleport_body(self, net_position)
 		velocity = Vector3.ZERO
 		_ground_speed = 0.0
 		rotation.y = net_yaw
