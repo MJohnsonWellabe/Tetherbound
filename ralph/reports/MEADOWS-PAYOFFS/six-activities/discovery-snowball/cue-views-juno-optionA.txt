@@ -1,0 +1,8 @@
+[cue-view] juno d=161m at=(-14.2,5483.3) cue_off_road_heading=-20deg res://shots/cue_juno/juno_160m_road.png
+[cue-view] juno d=161m at=(-14.2,5483.3) cue_off_road_heading=-20deg res://shots/cue_juno/juno_160m_glance.png
+[cue-view] juno d=112m at=(-63.8,5460.0) cue_off_road_heading=-30deg res://shots/cue_juno/juno_110m_road.png
+[cue-view] juno d=112m at=(-63.8,5460.0) cue_off_road_heading=-30deg res://shots/cue_juno/juno_110m_glance.png
+[cue-view] juno d=70m at=(-113.3,5436.7) cue_off_road_heading=-54deg res://shots/cue_juno/juno_070m_road.png
+[cue-view] juno d=70m at=(-113.3,5436.7) cue_off_road_heading=-54deg res://shots/cue_juno/juno_070m_glance.png
+[cue-view] juno d=56m at=(-148.8,5420.0) cue_off_road_heading=-88deg res://shots/cue_juno/juno_056m_road.png
+[cue-view] juno d=56m at=(-148.8,5420.0) cue_off_road_heading=-88deg res://shots/cue_juno/juno_056m_glance.png
