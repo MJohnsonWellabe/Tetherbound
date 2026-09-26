@@ -57,10 +57,10 @@ Godot 4 headless, Linux, 4 shared cores (3 other agents' Godot jobs running conc
 |---|---|---|---|
 | side_water_lantern_return | Pell lead -> Lantern Cove Candy I cache -> Pell return -> thanks | PASS | CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks; RELOAD lantern water_pell -> water_pell_lantern_thanks; checks=54 failures=0 exit=0 |
 | side_water_gull_research | Adair lead -> Gull Rest satchel site -> Candy II -> Adair return -> thanks | PASS | CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks; RELOAD gull water_adair -> water_adair_gull_thanks; checks=59 failures=0 exit=0 |
-| side_water_cradle_care | Otto lead -> shell-nest Reef Stone seam (hotbar pickaxe) -> Otto return, 3 berries -> thanks | NOT FINISHED | no CHAIN line; no reload line; checks=? failures=? exit=not finished |
+| side_water_cradle_care | Otto lead -> shell-nest Reef Stone seam (hotbar pickaxe) -> Otto return, 3 berries -> thanks | NOT FINISHED | no CHAIN line; no reload line; checks=? failures=? exit=not finished; first failures: FAIL: water_otto: walk stalled at leg 1/1 player=(704.3495, 45.45381, 1539.247) goal=(700.0, 0.0, 1542.0) / FAIL: Cradle: Otto gives the lead () / FAIL: Cradle: lead recorded |
 | side_water_garden_records | Edda lead -> Drowned Garden vault wall -> Candy II -> Edda return (pre-Tether history) -> post line | PASS | CHAIN side_water_garden_records PASS reward=Candy II +1 ack=return:water_edda_garden_return after=water_edda_garden_thanks; RELOAD garden water_edda -> water_edda_garden_thanks; checks=59 failures=0 exit=0 |
 | side_water_deep_watch_chart | Orsen names Deep Watch -> Tidecoil resolved (fixture) -> Orsen chart lead -> Candy III cache -> chart control -> Orsen charted | NOT FINISHED | no CHAIN line; no reload line; checks=? failures=? exit=not finished |
-| side_water_lastlight_shelter | Halen lead -> Veilfall delivery (4+4) -> Halen rest request -> bed rest -> thanks | NOT FINISHED | no CHAIN line; no reload line; checks=? failures=? exit=not finished |
+| side_water_lastlight_shelter | Halen lead -> Veilfall delivery (4+4) -> Halen rest request -> bed rest -> thanks | NOT FINISHED | no CHAIN line; no reload line; checks=? failures=? exit=not finished; first failures: FAIL: water_halen: walk stalled at leg 1/1 player=(357.3599, 105.9417, 4096.896) goal=(191.0, 0.0, 4163.0) / FAIL: Lastlight: Halen gives the lead () / FAIL: Lastlight: lead recorded |
 
 ### lantern (`lantern.log`)
 ```
@@ -135,6 +135,12 @@ exit=0
          [2] _run (res://tests/smoke_tidewake_b_chain_route.gd:105)
 POSE tidal_cradle arrival landing for water_otto -> (535.497, 1.929, 1352.51)
 WALK water_otto DIRECT (no baked-ground plan from (535.497, 1.931604, 1352.51) to (700.0, 56.9451, 1542.0))
+FAIL: water_otto: walk stalled at leg 1/1 player=(704.3495, 45.45381, 1539.247) goal=(700.0, 0.0, 1542.0)
+FAIL: Cradle: Otto gives the lead ()
+FAIL: Cradle: lead recorded
+WALK water:tidal_cradle:harvest:007 island=tidal_cradle walked=175m legs=24
+MINE water:tidal_cradle:harvest:007 reef_stone 0->4
+WALK water_otto DIRECT (no baked-ground plan from (816.8746, 55.36427, 1644.533) to (700.0, 56.9451, 1542.0))
 ```
 
 ### garden (`garden.log`)
@@ -185,6 +191,10 @@ POSE sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
 WALK water_orsen island=sluice_isle walked=998m legs=156
 TALK water_orsen conversation=water_orsen_deep_watch_chart_lead hud=''
 POSE deep_watch arrival landing for water:deep_watch:pickup:002 -> (1260.318, 1.929, 3403.144)
+WALK water:deep_watch:pickup:002 island=deep_watch walked=231m legs=31
+CLAIM water:deep_watch:pickup:002 skill_candy_iii 0->1
+WALK deep_watch_chart island=deep_watch walked=218m legs=29
+POSE sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
 ```
 
 ### lastlight (`lastlight.log`)
@@ -196,4 +206,21 @@ POSE deep_watch arrival landing for water:deep_watch:pickup:002 -> (1260.318, 1.
          [2] _run (res://tests/smoke_tidewake_b_chain_route.gd:105)
 POSE veilfall arrival landing for water_halen -> (384.311, 1.929, 3805.405)
 WALK water_halen DIRECT (no baked-ground plan from (384.311, 1.931604, 3805.405) to (191.0, 616.1026, 4163.0))
+FAIL: water_halen: walk stalled at leg 1/1 player=(357.3599, 105.9417, 4096.896) goal=(191.0, 0.0, 4163.0)
+FAIL: Lastlight: Halen gives the lead ()
+FAIL: Lastlight: lead recorded
+FAIL: lastlight_shelter_supply visible and offered after the lead
+WALK lastlight_shelter_supply island=veilfall walked=274m legs=46
+FAIL: lastlight_shelter_supply prompt offered (winner=)
+FAIL: Lastlight: delivery recorded by walk + Interact
+FAIL: Lastlight: host debited 4 + 4
+FAIL: Lastlight: delivery message: 
+FAIL: Lastlight: shelter piece stands
+WALK water_halen DIRECT (no baked-ground plan from (374.1692, 5.997751, 3822.694) to (191.0, 616.1026, 4163.0))
 ```
+## Findings at the deadline (21:00 UTC)
+- **PASS, walked end to end with save/reload:** lantern (54 checks, 0 failures), gull (59/0), and garden (59/0).
+- **deep:** not finished at commit time. Orsen's lead, the chart lead after the Tidecoil fixture, and the Candy III cache claim by walk + Interact all worked. Its log is a partial snapshot.
+- **cradle, real failure:** Otto's authored standing point is (700.0, 56.9, 1542.0). The baked-ground planner found no dry route from the Tidal Cradle arrival landing, so the witness fell back to a direct stick leg. That leg stalled at (704.3, 45.5, 1539.2), about 5 m away horizontally but 11 m lower. The trainer never reached Otto's Greet prompt, so the lead was never given. Otto may stand on a ledge that ground movement cannot reach, or this navigator/planner may just fail to find the way up. That is not yet decided.
+- **lastlight, real failure:** Halen's resident body is at (191.0, **616.1**, 4163.0), 616 m above the Veilfall landing. The walk stalled at (357.4, 105.9, 4096.9), so the lead was never given and every later step failed. This looks like a Halen placement defect rather than a navigation limit: something to do with the ground or the body at that point puts him far above any walkable ground. It needs checking before the chain can be witnessed.
+- These two failures come from walked approaches only. The per-chain smokes (teleport poses) still pass in CI. This witness shows that **the requesters Otto and Halen cannot currently be reached on foot from their island's arrival landing** with this navigator.
