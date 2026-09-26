@@ -1,0 +1,275 @@
+{
+  "name": "F14: a host who beat Nerissa alone answers the Guardian after inviting a guest",
+  "claim": "ACCEPTANCE F14 clause 'every participant in the fight that freed it receives their own offer; a non-participant receives nothing'. The host hosts and fights Captain Nerissa ALONE (a one-peer session: no guest connected) through the production challenge and strikes; the solo win journals the host's own per-participant Nerissa delivery rows (encounter_director.gd `_journal_solo_trainer_win`), paid once through the ledger. A guest then joins. The host frees the Guardian at the chamber's real control and, WITH THE GUEST CONNECTED, asks at the chamber's real prompt and accepts on the Creatures tab with controller presses. The guest, who did not fight, sees no invite prompt and its offer intent (sent past the hidden prompt) is refused by the host with begin()'s not_participant reason; it receives no claim, marker or Guardian. Setup only: the Veilfall chain up to Nerissa is committed through the ledger (standing in for playing it); companions are granted by name (the water scene boots with an empty belt); the fight uses win_trainer_battle's enemy_hp_ceiling (a wiring test, not balance).",
+  "peers": 2,
+  "scene": "water",
+  "budget_s": 2400,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1
+      },
+      "label": "nobody else is in the session"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "nickname": "Acorn",
+        "level": 55
+      },
+      "label": "setup: the host's companion by name"
+    },
+    {
+      "peer": 0,
+      "action": "deploy_creature",
+      "label": "the host calls its companion out"
+    },
+    {
+      "peer": 0,
+      "action": "nerissa_challenge",
+      "expect_data": {
+        "multi_peer": false
+      },
+      "label": "the host alone takes up Captain Nerissa's challenge at her Veilfall spot"
+    },
+    {
+      "peer": 0,
+      "action": "win_trainer_battle",
+      "args": {
+        "enemy_hp_ceiling": 1.0,
+        "budget_frames": 9000
+      },
+      "budget_frames": 9000,
+      "label": "the host wins alone (no guest connected)"
+    },
+    {
+      "peer": 0,
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_captain_nerissa_defeated",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "participants": [
+          "$character0"
+        ],
+        "guardian_freed": false
+      },
+      "label": "the solo win journaled the host's own Nerissa rows: the participant set names the host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "ripplet",
+        "nickname": "Kestrel"
+      },
+      "label": "setup: the guest's companion by name"
+    },
+    {
+      "peer": 1,
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_captain_nerissa_defeated",
+        "scope": "world"
+      },
+      "label": "the guest's snapshot holds Nerissa's defeat"
+    },
+    {
+      "peer": 0,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "guardian_tether"
+      },
+      "label": "the HOST frees the Guardian at the chamber's real control, the guest connected"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_guardian_freed",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "00_guardian_freed"
+      },
+      "label": "first rendered frame (shader warm-up under its own allowance)"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "participants": [
+          "$character0"
+        ],
+        "guardian_freed": true,
+        "offered": false
+      },
+      "label": "with the guest connected the journal still names only the host"
+    },
+    {
+      "peer": 1,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "expect": "FAIL",
+      "expect_data": {
+        "enabled": false
+      },
+      "label": "the guest, who did not fight, is not offered the invite prompt"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_offer_refused",
+      "expect_data": {
+        "refused": true,
+        "offered": false,
+        "pending_guardian_id": "",
+        "guardians_owned": 0
+      },
+      "label": "the guest's offer intent, sent past the hidden prompt, is refused by the host (not_participant)"
+    },
+    {
+      "peer": 0,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "label": "the host asks for its own offer WITH THE GUEST CONNECTED (formerly hidden)"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_answer",
+      "args": {
+        "screenshot": "01_host_offer_guest_connected"
+      },
+      "expect_data": {
+        "stage": "guardian"
+      },
+      "label": "the host accepts its own Guardian with controller presses"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      },
+      "label": "the guest was connected throughout the answer"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "guardians_owned": 1,
+        "saved_guardians": 1,
+        "receipt_saved": true,
+        "pending_guardian_id": "",
+        "host_open_claims": [],
+        "host_settled": true,
+        "participants": [
+          "$character0"
+        ],
+        "party": [
+          "Acorn",
+          "Abyssal Guardian"
+        ]
+      },
+      "label": "host: exactly one Guardian, receipt saved, no claim open, world settled"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "guardians_owned": 0,
+        "offered": false,
+        "pending_guardian_id": "",
+        "party": [
+          "Kestrel"
+        ]
+      },
+      "label": "guest: nothing received"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_offer_again",
+      "expect_data": {
+        "refused": true,
+        "code": "already_resolved"
+      },
+      "label": "once only: the host's repeat request is refused already_resolved"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "02_after"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character0",
+        "contains": [
+          "water_abyssal_guardian",
+          "Acorn"
+        ]
+      },
+      "label": "host's saved character holds its Guardian"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "Kestrel"
+        ],
+        "lacks": [
+          "water_abyssal_guardian"
+        ]
+      },
+      "label": "guest's saved character holds no Guardian"
+    }
+  ],
+  "_comment_status": "BLOCKED headless (2026-09-26, ralph/tidewake-f14-ledger-ids): steps 1-4 PASS; step 5 (nerissa_challenge) reaches begin_trainer_battle() but the host's FIRST combat frame after it blocks ~16.7 s wall clock (measured frame 0 -> frame 1: 62604 -> 79434 ms), past net_harness.gd's 15 s heartbeat detector, so the coordinator reports 'peer silent'. Threaded pre-loading of the team's models did not shorten it (cache already warm). Needs a named heartbeat allowance for this fight in the proof coordinator (tests/smoke_net_proof_two_peer.gd WORLD_BUILD_ACTIONS-style deferral), which this lane does not own."
+}

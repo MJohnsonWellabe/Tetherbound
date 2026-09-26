@@ -83,6 +83,9 @@ const CATCH_ARBITER_SCRIPT := preload("res://scripts/net/catch_arbiter.gd")
 ## arithmetic (and above all the division that does NOT happen) is asserted
 ## against no world at all in `tests/test_encounter_rewards.gd`.
 const ENCOUNTER_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
+## Which trainers' SOLO wins are journaled per participant (the Guardian's
+## participant reader; `_journal_solo_trainer_win()`).
+const WATER_GUARDIAN_REWARD := preload("res://scripts/world/water_guardian_reward.gd")
 ## For `host_move_profile()` only -- the ONE copy of what a move reaches, so the
 ## host rebuilding a peer's named move cannot disagree with what that peer's own
 ## manager built for itself.
@@ -5652,7 +5655,39 @@ func _record_trainer_defeat(spec: Dictionary) -> void:
 		return
 	for extra: String in TRAINERS.reward_flags(spec):
 		progression.call("set_flag", extra)
+	if _journal_solo_trainer_win(spec):
+		return
 	_pay_trainer_reward(spec)
+
+
+## F14 (Tidewake): a SOLO win (no session, or a one-peer one) of a trainer
+## whose delivery rows name the participants of a later offer -- Nerissa, whose
+## rows `water_guardian_reward.gd::participants()` reads -- is paid through the
+## SAME per-participant `reward_grant` path a session win uses, addressed to
+## this peer alone, so the journal names the local character and keeps naming it
+## after a guest joins. It REPLACES `_pay_trainer_reward()` (never both): the
+## ledger's `reward_delivery` is the payment, `_tell_the_paid()` the XP and line.
+##
+## False (the caller pays locally, exactly as before) only when this win
+## journaled nothing at all: not such a trainer, no ledger / no durable world
+## file (`journal_failed` rolls back), or a process that is not the host of the
+## world it holds. Once any component was journaled, already taken or sent, the
+## local payout never also runs, so nothing is paid twice.
+func _journal_solo_trainer_win(spec: Dictionary) -> bool:
+	if not WATER_GUARDIAN_REWARD.journals_solo_win(ENCOUNTER_REWARDS.trainer_key(spec)):
+		return false
+	if _session != null and _session.has_method("is_active") and bool(_session.call("is_active")) \
+			and not _is_host():
+		return false
+	var realm := _encounter_realm()
+	var local := _local_peer_id()
+	if ENCOUNTER_REWARDS.grants(spec, realm, [local]).is_empty():
+		return false
+	var granted := _grant_to(spec, realm, [local])
+	if int(granted.get("journaled", 0)) <= 0:
+		return false
+	_tell_the_paid(spec, (granted.get("paid", []) as Array))
+	return true
 
 
 ## The authored payout (spec §17 P1 step 9; D39: payouts include coins). SC15
@@ -5825,20 +5860,26 @@ func _pay_every_participant(spec: Dictionary, realm: String, participants: Array
 ## when each component was journaled or had already been (`already_taken`), so a
 ## caller that must not commit a world fact over a failed payout can tell;
 ## `code`/`reason` are the first failure's. Every component is still attempted,
-## exactly as the host-run fight always has.
+## exactly as the host-run fight always has. `journaled` counts the components
+## the journal now holds or will (ok, `already_taken`, or sent and pending).
 func _grant_to(spec: Dictionary, realm: String, participants: Array) -> Dictionary:
 	var paid_any: Dictionary = {}
 	var failure: Dictionary = {}
+	var journaled := 0
 	for raw: Variant in ENCOUNTER_REWARDS.grants(spec, realm, participants):
 		var verdict: Dictionary = _submit_reward_intent(raw as Dictionary)
 		if not bool(verdict.get("ok", false)):
-			if failure.is_empty() and str(verdict.get("code", "")) != "already_taken":
+			var code := str(verdict.get("code", ""))
+			if code == "already_taken" or bool(verdict.get("pending", false)):
+				journaled += 1
+			if failure.is_empty() and code != "already_taken":
 				failure = verdict
 			continue
+		journaled += 1
 		for peer: Variant in (verdict.get("paid", []) as Array):
 			paid_any[int(peer)] = true
 	return {"ok": failure.is_empty(), "code": str(failure.get("code", "")),
-		"reason": str(failure.get("reason", "")), "paid": paid_any.keys()}
+		"reason": str(failure.get("reason", "")), "paid": paid_any.keys(), "journaled": journaled}
 
 
 func _tell_the_paid(spec: Dictionary, paid: Array) -> void:
