@@ -167,7 +167,9 @@ func _travel() -> bool:
 		return _fail("The current trail no longer places the quarry before the Warrens approach")
 	if not await _prepare():
 		return false
-	for index in range(quarry_join + 1):
+	# Up the trail to the vertex before the quarry's; the nodes are walked to
+	# from there (the quarry vertex itself stands in the station's props).
+	for index in range(quarry_join):
 		if not await _walk_ground(road[index]):
 			return false
 	var gather := QuarryInput.new()
@@ -186,7 +188,7 @@ func _travel() -> bool:
 		# HarvestNode's production prompt is configured at 2.4m. Requiring a
 		# 1.5m centre approach first adds a stricter, non-gameplay collision
 		# gate; 2.2m gets the real prompt/arbiter check its intended turn.
-		if not await _walk_ground(at, 2.2):
+		if not await _around_station(_v2p(), at) or not await _walk_ground(at, 2.2):
 			return false
 		var node := gather._authored_node_at(at, "rootstone")
 		if node == null:
@@ -203,11 +205,13 @@ func _travel() -> bool:
 			return _fail("The actual quarry swing did not yield the configured carried rootstone amount")
 		_receipt("quarry_rootstone", {"at": at, "node_id": node_id, "yield": expected,
 			"before": before, "after": _count("rootstone")})
-	# Back to the trail point the quarry was entered from, then on along the
-	# trail: the straight line from the last node to the next trail point runs
-	# through the quarry station's props (barrel, bucket, bag, signpost within
-	# 1 m of it) and the walker was boxed in there (seed 15, 2026-09-26).
-	for index in range(quarry_join, warren_join + 1):
+	# On along the trail from the last node, not back through its quarry vertex:
+	# that vertex stands inside the station's props (barrel, bucket, bag,
+	# signpost and a rock within 1 m of it) and the walker was boxed in there
+	# twice (seed 15, 2026-09-26). A player walks round them; so does this.
+	if not await _around_station(_v2p(), road[quarry_join + 1]):
+		return false
+	for index in range(quarry_join + 1, warren_join + 1):
 		if not await _walk_ground(road[index]):
 			return false
 	var available: Array = _warrens.call("chamber_ids")
@@ -220,7 +224,8 @@ func _travel() -> bool:
 	if outside == Vector3.INF:
 		return _fail("The live entrance has no usable mouth direction or authored apron")
 	for index in range(nearest_index(undertrail, Vector2(outside.x, outside.z)) + 1):
-		if not await _walk_ground(undertrail[index]):
+		if not await _around("spike_bypass", SPIKE_KNOT, SPIKE_CLEAR_M, SPIKE_BYPASS, _v2p(), undertrail[index]) \
+				or not await _walk_ground(undertrail[index]):
 			return false
 	# This is a staging pose outside the authored mouth, not an interaction.
 	# Ordinary wild detours can finish against the bank about 4.2 m from this
@@ -253,6 +258,45 @@ func _travel() -> bool:
 	_receipt("warrens_exited", {"player": _player.global_position, "entrance": entrance,
 		"outside": outside, "party_ids": _party_ids()})
 	return true
+
+
+## The quarry station's props, the OldQuarry foundation and its TetherConduits
+## box fill x 394-407, z 1798-1807 round the trail's quarry vertex (a 0.45 m
+## sphere cast on a 1 m grid, 2026-09-26); x 408 and east is open. A leg whose
+## straight line passes within STATION_CLEAR_M of that knot goes round its east
+## side. (A single bypass point at (404.5,1804.5) sat on the conduit box.)
+const STATION_KNOT := Vector2(401.0, 1802.5)
+const STATION_CLEAR_M := 5.0
+const STATION_BYPASS: Array[Vector2] = [Vector2(405.0, 1796.8), Vector2(409.5, 1797.0), Vector2(409.5, 1808.5)]
+## The undertrail's first leg, (-420,2470) -> (-380,2540), runs over a rock
+## spike near (-400,2500) that stands ~7 m above the ground either side of it
+## (ground_height_at grid, 2026-09-26); the walker stalled against it (seed 15).
+## The valley west of it (x -410..-405, heights -4..-6) is open.
+const SPIKE_KNOT := Vector2(-400.0, 2500.0)
+const SPIKE_CLEAR_M := 6.0
+const SPIKE_BYPASS: Array[Vector2] = [Vector2(-409.0, 2512.0)]
+
+
+func _around_station(from: Vector2, to: Vector2) -> bool:
+	return await _around("station_bypass", STATION_KNOT, STATION_CLEAR_M, STATION_BYPASS, from, to)
+
+
+## Walks the `via` points in order first when the straight leg from -> to passes within `clear` of `knot`. Ordinary movement
+## input either way; only the line is chosen.
+func _around(beat: String, knot: Vector2, clear: float, via: Array[Vector2], from: Vector2, to: Vector2) -> bool:
+	if Geometry2D.get_closest_point_to_segment(knot, from, to).distance_to(knot) >= clear:
+		return true
+	_receipt(beat, {"from": from, "to": to, "via": via})
+	for point: Vector2 in via:
+		if from.distance_to(point) < 1.5 or to.distance_to(point) < 1.5:
+			continue
+		if not await _walk_ground(point):
+			return false
+	return true
+
+
+func _v2p() -> Vector2:
+	return Vector2(_player.global_position.x, _player.global_position.z)
 
 
 func _prepare() -> bool:
@@ -350,7 +394,15 @@ func _fight() -> bool:
 	pilot._move_toward(Vector3.ZERO)
 	if not within_battle_deadline(Engine.get_physics_frames() - _fight_started) \
 			or _fighting() or str(_combat.call("outcome")) != "won" or _fight_hits <= 0:
-		return _fail("Real wild combat did not win with landed strikes inside its unchanged physics budget")
+		var party_hp := []
+		for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+			party_hp.append("%s L%d %.0f%s" % [member.get("species"), int(member.get("level")),
+				float(member.get("hp")), " fainted" if bool(member.get("fainted")) else ""])
+		var foe: RefCounted = _fight_enemy
+		return _fail("Real wild combat did not win with landed strikes inside its unchanged physics budget (outcome '%s', fighting %s, hits %d, frames %d, foe %s, party %s)" % [
+			str(_combat.call("outcome")), _fighting(), _fight_hits, Engine.get_physics_frames() - _fight_started,
+			"%s L%d %.0f" % [foe.get("species"), int(foe.get("level")), float(foe.get("hp"))] if foe != null else "none",
+			party_hp])
 	_receipt("wild_victory", {"guardian": guardian_fight, "hits": _fight_hits,
 		"enemy_id": _fight_enemy.get_instance_id(), "frames": Engine.get_physics_frames() - _fight_started})
 	# Close the reward window before resuming walking: another actual wild on
