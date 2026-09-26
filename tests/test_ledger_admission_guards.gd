@@ -250,7 +250,9 @@ func test_only_the_host_journals_the_guardian_participant_trainers() -> void:
 	var xp_forged: Dictionary = ledger.commit(xp_only, GUEST)
 	assert_false(bool(xp_forged.get("ok")), "the XP-only receipt path is guarded too")
 	assert_eq(str(xp_forged.get("code")), "host_only")
-	assert_true(bool(ledger.commit(_grant("trainer:meadows_alpha_bramble:item:stick"), GUEST).get("ok")),
+	var own_once := _grant("trainer:hollows_alpha:item:great_candy")
+	own_once["item"] = "great_candy"
+	assert_true(bool(ledger.commit(own_once, GUEST).get("ok")),
 		"a guest's own named-wild completion reward shares the prefix and stays allowed")
 
 

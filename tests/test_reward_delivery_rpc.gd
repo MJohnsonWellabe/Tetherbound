@@ -105,6 +105,16 @@ func _intent(peer: int = 1, character_id: String = "host-a") -> Dictionary:
 		"item": "coin", "count": 3, "peers": [peer]}
 
 
+## A guest may only send a grant it earned in the host's world
+## (test_reward_grant_authority.gd), so a guest-sent fixture is the cart repair.
+func _guest_intent(peer: int, character_id: String) -> Dictionary:
+	assert_false(_game.session.rows.add(peer, character_id).is_empty(),
+		"the intended reward recipient must be admitted")
+	_game.world.flags.set_flag("band1_broken_cart_repaired")
+	return {"kind": "reward_grant", "realm": "meadows", "source": "broken_cart_coll:repair",
+		"item": "coin", "count": 25, "peers": [peer]}
+
+
 func _dock_intent(id: String, inventory: Dictionary = {}) -> Dictionary:
 	var action: Dictionary = {}
 	for row: Dictionary in DOCK_RULES.load_data().actions:
@@ -157,7 +167,7 @@ func test_character_save_failure_rolls_back_personal_mutation_and_sends_no_ack()
 func test_ack_sender_must_own_the_journal_character() -> void:
 	assert_false(_game.session.rows.add(2, "recipient-b").is_empty())
 	assert_false(_game.session.rows.add(3, "spoofer-c").is_empty())
-	var verdict: Dictionary = _rpc.call("_commit_here", _intent(2, "recipient-b"), 2)
+	var verdict: Dictionary = _rpc.call("_commit_here", _guest_intent(2, "recipient-b"), 2)
 	assert_true(bool(verdict.get("ok")))
 	var id := str(_game.world.reward_deliveries.keys()[0])
 	var writes_before := int(_game.save_system.world_writes)
@@ -168,7 +178,7 @@ func test_ack_sender_must_own_the_journal_character() -> void:
 
 func test_host_ack_save_failure_keeps_delivery_pending_for_retry() -> void:
 	assert_false(_game.session.rows.add(2, "recipient-b").is_empty())
-	var verdict: Dictionary = _rpc.call("_commit_here", _intent(2, "recipient-b"), 2)
+	var verdict: Dictionary = _rpc.call("_commit_here", _guest_intent(2, "recipient-b"), 2)
 	assert_true(bool(verdict.get("ok")))
 	var id := str(_game.world.reward_deliveries.keys()[0])
 	var seq_before := int(_rpc.get("ledger").seq)
@@ -192,8 +202,9 @@ func test_pre_admission_delta_stages_world_only_then_character_settles_after_gat
 	var host_world: RefCounted = WORLD_STATE.new()
 	host_world.world_id = _game.world.world_id
 	var host_ledger: RefCounted = WORLD_LEDGER.new(host_world)
+	host_world.flags.set_flag("band1_broken_cart_repaired")
 	var verdict: Dictionary = host_ledger.commit({"kind": "reward_grant", "realm": "meadows",
-		"source": "join-replay", "item": "coin", "count": 3,
+		"source": "broken_cart_coll:repair", "item": "coin", "count": 25,
 		"_reward_recipients": [{"peer": 2, "character_id": "recipient-b"}]}, 2)
 	_rpc.call("apply_remote_delta", verdict.delta)
 	assert_eq(_game.world.reward_deliveries.size(), 1, "the host journal can stage during bootstrap")
@@ -203,7 +214,7 @@ func test_pre_admission_delta_stages_world_only_then_character_settles_after_gat
 	_game.session.admitted = true
 	_rpc.call("reconcile_reward_deliveries")
 	assert_eq(_game.save_system.character_writes, 1)
-	assert_eq(int(_game.local.inventory.count("coin")), 3)
+	assert_eq(int(_game.local.inventory.count("coin")), 25)
 	assert_eq(str((_game.local.satchel_escrow.values()[0] as Dictionary).status), "settled")
 
 
