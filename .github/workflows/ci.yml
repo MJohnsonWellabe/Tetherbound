@@ -92,7 +92,7 @@ on:
   pull_request:
     # `labeled` so adding `full-ci` to an open PR starts the full tier at once
     # (the default types would wait for the next push).
-    types: [opened, synchronize, reopened, labeled]
+    types: [opened, synchronize, reopened, labeled, ready_for_review]
   workflow_dispatch:
   # TWO TIERS, 2026-09-26 (owner: "pare it down and run a full run every 8
   # hours instead of every hour"). Every pull request and main push runs the
@@ -142,6 +142,18 @@ jobs:
   # `skipped`, not `success`, and would be refused. Keep this job unconditional.
   changes:
     runs-on: ubuntu-latest
+    # LIGHTER CI (owner, 2026-09-26: "lighten CI and batch things together").
+    # Draft PRs run no CI: a dozen lane sessions push draft PRs constantly and
+    # every push queued a fast-tier run that starved render.yml evidence runs
+    # and the batch PRs. Lanes verify locally or with render.yml; the
+    # non-draft `tb/integration-N` batch PR runs CI before anything lands.
+    # Label a draft `full-ci`, or mark it ready, to run CI on it anyway.
+    # With `changes` skipped every verify job skips, but ci-gate still runs
+    # (`if: always()`), so the run executes a job and concludes `success`
+    # (the "keep unconditional" concern above is met; ralph-merge.yml is an
+    # unused legacy helper). A draft cannot merge, so that green is never a
+    # landing signal.
+    if: github.event_name != 'pull_request' || !github.event.pull_request.draft || contains(github.event.pull_request.labels.*.name, 'full-ci')
     # Was 5, which this job's own checkout outgrew. A `timeout-minutes` kill
     # reports as CANCELLED, not failed, and every downstream job then skips --
     # so the run looks like a tidy no-op rather than a job that died. Raised as
@@ -302,12 +314,12 @@ jobs:
   # Does NOT catch: a config edit that lands together with a correct re-bake
   # but describes the wrong intent (this only checks the fingerprint matches,
   # not that the bake is "good"). `data/terrain/playground` has its own,
-  # separate equivalent check now: `verify-terrain-bake-freshness` below
+  # separate equivalent check now: folded into this same job (terrain steps below)
   # (HARNESS-HYGIENE-0903). Does NOT re-bake or auto-commit anything --
   # failing here means a human or a lane runs `godot --headless --path .
   # --script scripts/world/bake_playground_scatter.gd` and commits the
   # result, same as today.
-  verify-scatter-bake-freshness:
+  verify-bake-freshness:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: changes
@@ -330,40 +342,6 @@ jobs:
         run: |
           godot --headless --path . --script tests/run_tests.gd \
             -- --only=test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh
-
-  # HARNESS-HYGIENE-0903. `data/terrain/playground`'s own equivalent of the
-  # job above -- the gap the scatter job's own comment names ("anything about
-  # data/terrain/playground, which has no equivalent freshness check at
-  # all"). `terrain_playground.json` was edited (doc-path text in comments)
-  # during the 2026-09-02 repository reset with no re-bake, and nothing on
-  # disk or in CI could have caught it. Same shape as the job above: one
-  # dedicated, fast, named job so a stale terrain bake shows up as one red
-  # line in the run summary instead of buried in a shard's log.
-  #
-  # Does NOT catch a config edit that lands together with a correct re-bake
-  # but describes the wrong intent. Does NOT re-bake or auto-commit anything
-  # -- failing here means a human or a lane runs `godot --headless --path .
-  # --script scripts/world/build_playground_terrain.gd` and commits the
-  # result (region files AND manifest.json).
-  verify-terrain-bake-freshness:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: needs.changes.outputs.code == 'true'
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
       - name: Check the playground terrain bake is fresh
         run: |
           godot --headless --path . --script tests/run_tests.gd \
@@ -376,6 +354,21 @@ jobs:
             exit 1
           fi
 
+  # HARNESS-HYGIENE-0903 (terrain steps now folded into verify-bake-freshness
+  # above, 2026-09-26, one runner instead of two). `data/terrain/playground`'s
+  # own equivalent of the scatter check -- the gap the scatter job's own comment names ("anything about
+  # data/terrain/playground, which has no equivalent freshness check at
+  # all"). `terrain_playground.json` was edited (doc-path text in comments)
+  # during the 2026-09-02 repository reset with no re-bake, and nothing on
+  # disk or in CI could have caught it. Same shape as the job above: one
+  # dedicated, fast, named job so a stale terrain bake shows up as one red
+  # line in the run summary instead of buried in a shard's log.
+  #
+  # Does NOT catch a config edit that lands together with a correct re-bake
+  # but describes the wrong intent. Does NOT re-bake or auto-commit anything
+  # -- failing here means a human or a lane runs `godot --headless --path .
+  # --script scripts/world/build_playground_terrain.gd` and commits the
+  # result (region files AND manifest.json).
   verify-unit-tests:
     runs-on: ubuntu-latest
     # FOUR shards, 2026-09-01 (down from ten). This shard's file list already
@@ -3111,8 +3104,7 @@ jobs:
       - verify-veridian-offer
       - verify-cloudreach-midride-rejoin
       - verify-cloudreach-persistence
-      - verify-scatter-bake-freshness
-      - verify-terrain-bake-freshness
+      - verify-bake-freshness
       - verify-unit-tests
       - verify-veg-corridor
       - verify-scatter-rules

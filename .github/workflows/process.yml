@@ -9,6 +9,9 @@ permissions:
 
 jobs:
   traceability:
+    # Drafts are not landing candidates (owner, 2026-09-26: lighter CI). The
+    # check runs when a PR is marked ready and on every batch PR.
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
