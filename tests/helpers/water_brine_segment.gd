@@ -6,6 +6,7 @@ extends RefCounted
 ## the game, moves an actor directly, grants a creature, repairs HP/stamina, or
 ## writes inventory/progression state.
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
+const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
 const REPAIR_FLAG := "water_dock_reedhaven_repaired"
 const TOVIN_ID := "water_trainer_tovin"
 const TOVIN_FLAG := "defeated_water_trainer_tovin"
@@ -27,6 +28,8 @@ var _manager: Node
 var _navigator: RefCounted
 var _activated: Object
 var _completed := false
+# Wind-aware READER policy (COMBAT §2) instead of spamming unpaid quicks.
+var _pilot: RefCounted = PILOT.new()
 
 
 func setup(tree: SceneTree, world: Node3D, player: CharacterBody3D,
@@ -196,25 +199,15 @@ func _fight_tovin() -> bool:
 		return _fail("Tovin challenge never entered its production trainer battle")
 	var opponents: Dictionary = {}
 	deadline = Time.get_ticks_msec() + 180000
-	var tick := 0
 	while _director.trainer_battle_active() and Time.get_ticks_msec() < deadline:
 		var enemy: Node3D = _manager.enemy_body()
 		var ally: Node3D = _director.ally_body()
 		if is_instance_valid(enemy) and is_instance_valid(ally) and _manager.is_fighting():
 			opponents[enemy.get_instance_id()] = str(enemy.instance.species_id)
-			var offset := enemy.global_position - ally.global_position
-			offset.y = 0.0
 			_stop_combat_input()
-			if offset.length() > _manager.combat_move_reach("quick") * 0.8:
-				var local: Vector3 = _camera.planar_basis().inverse() * offset.normalized()
-				_stick(local.x, local.z)
-			if tick % 20 == 0:
-				Input.action_press("combat_quick")
-			elif tick % 20 == 2:
-				Input.action_release("combat_quick")
+			_pilot.drive(_manager, ally, enemy)
 		else:
 			_stop_combat_input()
-		tick += 1
 		await _tree.physics_frame
 	_stop_combat_input()
 	if _director.trainer_battle_active():
@@ -345,6 +338,7 @@ func _stop_stick() -> void:
 
 
 func _stop_combat_input() -> void:
+	_pilot.release()
 	_stop_stick()
 	Input.action_release("combat_quick")
 

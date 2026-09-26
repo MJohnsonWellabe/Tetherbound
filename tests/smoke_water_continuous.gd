@@ -17,6 +17,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
 
 const START_ANCHOR := "tidal_cradle_to_salt_crown_departure"
 const LATE_ROUTES := [
@@ -42,6 +43,8 @@ var checks := 0
 var failures: Array[String] = []
 var finished := false
 var started_ms := 0
+# Wind-aware READER policy (COMBAT §2) instead of spamming unpaid quicks.
+var pilot: RefCounted = PILOT.new()
 
 
 func _init() -> void:
@@ -470,26 +473,16 @@ func _defeat_trainer(id: String, flag: String) -> bool:
 		return _fail(id + " challenge never entered production combat")
 	var opponents: Dictionary = {}
 	deadline = Time.get_ticks_msec() + 180000
-	var tick := 0
 	while director.trainer_battle_active() and Time.get_ticks_msec() < deadline:
 		var enemy: Node3D = manager.enemy_body()
 		var ally: Node3D = director.ally_body()
 		if is_instance_valid(enemy) and is_instance_valid(ally) and manager.is_fighting():
 			opponents[enemy.get_instance_id()] = str(enemy.instance.species_id)
 			ally.face_towards(enemy.global_position)
-			var offset := enemy.global_position - ally.global_position
-			offset.y = 0
 			_stop_combat_input()
-			if offset.length() > manager.combat_move_reach("quick") * 0.8:
-				var local: Vector3 = camera.planar_basis().inverse() * offset.normalized()
-				_send_stick(local.x, local.z)
-			if tick % 20 == 0:
-				Input.action_press("combat_quick")
-			elif tick % 20 == 2:
-				Input.action_release("combat_quick")
+			pilot.drive(manager, ally, enemy)
 		else:
 			_stop_combat_input()
-		tick += 1
 		await physics_frame
 	_stop_combat_input()
 	if director.trainer_battle_active():
@@ -688,6 +681,7 @@ func _stop_stick() -> void:
 
 
 func _stop_combat_input() -> void:
+	pilot.release()
 	_stop_stick()
 	Input.action_release("combat_quick")
 

@@ -6,6 +6,9 @@ extends RefCounted
 ## or progression value is written by this helper.
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TOVIN_ID := "water_trainer_tovin"
 const TOVIN_FLAG := "defeated_water_trainer_tovin"
 const TRIAL_FLAG := "water_dock_brine_steps_trial_won"
@@ -36,6 +39,9 @@ var _camps: Node
 var _navigator: RefCounted
 var _activated: Object
 var _completed := false
+# Wind-aware READER policy (COMBAT §2): keeps a Wind reserve, spends it on
+# charged hits and punishes recovery instead of spamming unpaid quicks.
+var _pilot: RefCounted = PILOT.new()
 
 
 func setup(tree: SceneTree, world: Node3D, player: CharacterBody3D,
@@ -98,6 +104,11 @@ func run() -> bool:
 			or not await _walk_to(shellwatch[1], "resident-release return"):
 		return false
 	if not await _activate_dock_action("shellwatch_release", RELEASE_FLAG):
+		return false
+	# Irva fields water creatures. Lead with the best type matchup the party
+	# holds, chosen through the ordinary party_cycle input, and bed that
+	# creature at the camp so it enters the fight rested.
+	if not await _select_matchup_lead("water", "before Irva"):
 		return false
 	if not await _recover_at_camp("between Solm and Irva"):
 		return false
@@ -271,25 +282,15 @@ func _fight_trainer(id: String, flag: String, expected_opponents: int) -> bool:
 		return _fail(id + " challenge never entered production trainer combat")
 	var opponents: Dictionary = {}
 	deadline = Time.get_ticks_msec() + 180000
-	var tick := 0
 	while _director.trainer_battle_active() and Time.get_ticks_msec() < deadline:
 		var enemy: Node3D = _manager.enemy_body()
 		var ally: Node3D = _director.ally_body()
 		if is_instance_valid(enemy) and is_instance_valid(ally) and _manager.is_fighting():
 			opponents[enemy.get_instance_id()] = str(enemy.instance.species_id)
-			var offset := enemy.global_position - ally.global_position
-			offset.y = 0.0
 			_stop_combat_input()
-			if offset.length() > _manager.combat_move_reach("quick") * 0.8:
-				var local: Vector3 = _camera.planar_basis().inverse() * offset.normalized()
-				_stick(local.x, local.z)
-			if tick % 20 == 0:
-				Input.action_press("combat_quick")
-			elif tick % 20 == 2:
-				Input.action_release("combat_quick")
+			_pilot.drive(_manager, ally, enemy)
 		else:
 			_stop_combat_input()
-		tick += 1
 		await _tree.physics_frame
 	_stop_combat_input()
 	if _director.trainer_battle_active():
@@ -324,6 +325,48 @@ func _ensure_ally_deployed(label: String) -> bool:
 		await _tree.physics_frame
 	return _fail("%s has no controller-deployed usable campaign creature; blocker=%s" % [
 		label, str(_director.usable_ally_blocker())])
+
+
+## The available member whose equipped moves hit `defender_type` hardest,
+## tie-broken by how little that type's own attacks hurt it. Move-keyed like
+## the production chart (`combat_manager.gd::active_matchup()`).
+static func matchup_member(party: RefCounted, defender_type: String) -> RefCounted:
+	if party == null:
+		return null
+	var moves: RefCounted = MOVE_DB.load_default()
+	var best: RefCounted = null
+	var best_score := -INF
+	for member: RefCounted in party.members():
+		if member == null or member.fainted or member.resting:
+			continue
+		var offence := maxf(
+			TYPE_CHART.multiplier(str(moves.type_of(str(member.move_quick))), defender_type),
+			TYPE_CHART.multiplier(str(moves.type_of(str(member.move_charged))), defender_type))
+		var defence := TYPE_CHART.multiplier(defender_type, str(member.creature_type))
+		var score := offence / maxf(0.01, defence)
+		if score > best_score + 0.0001:
+			best = member
+			best_score = score
+	return best
+
+
+func _select_matchup_lead(defender_type: String, label: String) -> bool:
+	var member := matchup_member(_game.local.party, defender_type)
+	if member == null:
+		return _fail("no available party member to lead " + label)
+	var presses := recovery_cycle_count(_game.local.party, member)
+	if presses < 0:
+		return _fail("matchup lead cannot be reached by party_cycle " + label)
+	for step in presses:
+		await _tap(&"party_cycle")
+	if _game.local.party.active() != member:
+		return _fail("party_cycle did not select the matchup lead " + label)
+	for frame in 180:
+		if _director.ally_body() != null and _director.ally_instance() == member:
+			break
+		await _tree.physics_frame
+	_note("%s matchup lead %s (%d party_cycle presses)" % [label, str(member.species_id), presses])
+	return true
 
 
 func _recover_at_camp(label: String, camp_id: String = CAMP_ID) -> bool:
@@ -544,6 +587,7 @@ func _stop_stick() -> void:
 
 
 func _stop_combat_input() -> void:
+	_pilot.release()
 	_stop_stick()
 	Input.action_release("combat_quick")
 

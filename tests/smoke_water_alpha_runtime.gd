@@ -5,6 +5,7 @@ extends SceneTree
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CATALOG := preload("res://scripts/creatures/water_species_catalog.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
 var checks := 0
 var failures := 0
 
@@ -65,20 +66,20 @@ func _run() -> void:
 	check(alpha.body.global_position.distance_to(before) > 0.1, "Real Alpha AI moves toward deployed opponent")
 	check(ally.hp < hp_before, "Host enemy strike reaches actual participant through transport")
 	check(not game.local.flags.has("water_swim_stone_earned"), "An unfinished fight never grants Stone")
-	# Drive normal quick-attack input and face the live target. No damage/HP
-	# injection: the manager windup, host geometry and damage roll must execute.
+	# Drive normal attack input through the Wind-aware READER pilot and face
+	# the live target. No damage/HP injection: the manager windup, host
+	# geometry and damage roll must execute.
+	var pilot: RefCounted = PILOT.new()
 	var deadline_fight := Time.get_ticks_msec() + 90000
-	var tick := 0
 	while manager.is_fighting() and Time.get_ticks_msec() < deadline_fight:
 		var deployed: Node3D = director.get("_ally_body")
 		if deployed != null:
 			deployed.face_towards(alpha.body.global_position)
-		if tick % 24 == 0:
-			Input.action_press("combat_quick")
-		elif tick % 24 == 2:
-			Input.action_release("combat_quick")
-		tick += 1
+			pilot.drive(manager, deployed, alpha.body)
+		else:
+			pilot.release()
 		await physics_frame
+	pilot.release()
 	Input.action_release("combat_quick")
 	check(not manager.is_fighting(), "Real fight reaches an exit within bounded time")
 	check(str(alpha.authority.resolution.get("outcome", "")) == "defeated", "Normal attack input defeats actual Alpha")

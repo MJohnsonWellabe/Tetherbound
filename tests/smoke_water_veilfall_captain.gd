@@ -5,6 +5,7 @@ extends SceneTree
 ## captain victory or Guardian release injection.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
 var checks := 0
 var failures := 0
 
@@ -74,7 +75,8 @@ func _run() -> void:
 		_finish()
 		return
 	var opponents: Dictionary = {}
-	var tick := 0
+	# Wind-aware READER policy (COMBAT §2) instead of spamming unpaid quicks.
+	var pilot: RefCounted = PILOT.new()
 	deadline = Time.get_ticks_msec() + 180000
 	while director.trainer_battle_active() and Time.get_ticks_msec() < deadline:
 		var enemy: Node3D = manager.enemy_body()
@@ -86,22 +88,13 @@ func _run() -> void:
 				check(enemy.trainer_owned and enemy.instance.level == 55, "Production opponent %d is trainer-owned level55" % opponents.size())
 				print("Captain opponent ", opponents.size(), ": ", enemy.instance.species_id, " HP ", enemy.instance.hp)
 			ally.face_towards(enemy.global_position)
-			var offset: Vector3 = enemy.global_position - ally.global_position
-			offset.y = 0
-			_release_movement()
-			if offset.length() > 2.3:
-				var direction: Vector3 = world.get_node("CameraRig").planar_basis().inverse() * offset.normalized()
-				if direction.x < 0: Input.action_press("move_left", -direction.x)
-				else: Input.action_press("move_right", direction.x)
-				if direction.z < 0: Input.action_press("move_forward", -direction.z)
-				else: Input.action_press("move_back", direction.z)
-			if tick % 24 == 0: Input.action_press("combat_quick")
-			elif tick % 24 == 2: Input.action_release("combat_quick")
+			pilot.drive(manager, ally, enemy)
 		else:
+			pilot.release()
 			_release_movement()
 			Input.action_release("combat_quick")
-		tick += 1
 		await physics_frame
+	pilot.release()
 	_release_movement()
 	Input.action_release("combat_quick")
 	check(opponents.size() == 4, "Normal combat reaches every authored captain opponent")
