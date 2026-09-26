@@ -711,6 +711,18 @@ SCRIPT ERROR count is 0 in both runs.
   - **Proposed next step,** committed but not run: turn at 1x/60 Hz with the stick held across render frames, and name the tracking target if it still fails.
   - **Not exercised:** the Dynamo-segment rests (eaa5029f4) were not reached.
 
+- **Run 26** (c6129e774: the 1x held-stick camera turn, and a nearby wild cleared first; the authorized attempt). Wall 63m26s.
+  - **Prefix:** PASS in 1209.5 s.
+  - **Crown step:** PASS in 2002.8 s. `CAMERA TURN: wild Wild_sparkit_881250856_1 5.5 m away after the road fight (rig tracking=<none> (orbit target /root/Stormwood/Player)); walking out of engage range`, then `walked out of engage range (wild now 27.2 m away)`. The turn succeeded. The rig was not target-locked, so the auto-tracking hypothesis is ruled out.
+  - **Rootgate step:** PASS in 103.3 s.
+  - **Dynamo step, rests:** `REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp` took 5 nights. A fully rested party then won the Deepwood-station wild (terrapup L46 at 246.6/451 vs stormraven L41), followed by one more night of rest. `PARTY before officer_nysa_deepwood_rod: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 451/451, brooktail 340/340`.
+  - **Dynamo step, FAIL** at 469.7 s: `officer_nysa_deepwood_rod activated competing provider /root/Stormwood/StormwoodTrainers/Tavi/Interactable#1603432155477`, although Nysa's prompt had been the arbiter winner for 8 frames before the press.
+  - **Static probe of the live scene:** Nysa's body is at (-890, 52.1, 4482) and Tavi's at (-881.1, 52.2, 4479.2), both with r=4.2 and priority 0. At the stance (-890, 4480) the arbiter picks Nysa, and Tavi is 8.9 m away. So placement does not explain it.
+  - **Safety:** `SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 strike_hits=1 warnings=45`. 0 SCRIPT ERROR.
+- **STOPPED:** this was the authorized Dynamo attempt, and it failed at the Nysa challenge press. Cause not yet known.
+  - **Diagnostic, committed but not run** (348ee6c6a): the press records every provider activated during it, with the trainer's position. A competing activation reports the player, both prompts and their distances, and the winner after the press.
+  - The next run should name the cause in one line: for example, a second activation from a press held across the dialogue opening, or the player displaced during the press.
+
 ### Open presentation items (reported to the coordinator, not fixed here)
 
 - Hesk's dialogue portrait is a young villager, and Wen's is an old man; neither matches the model (F10 two-peer frames `01_host_hesk_report`, `03_host_wen_records`).
@@ -724,7 +736,7 @@ SCRIPT ERROR count is 0 in both runs.
   - It stops before the Deepwood picket. The Dynamo, Marrow and the Stormheart were not reached.
 - **"Long Storm aftermath, Spark/shrine … persist": NOT MET.** The aftermath, the disk-save/restart/load (`--verify-reload`) and the F11 captures were not reached. No capture was taken.
 - **Trainer deaths and satchel recoveries,** runs 19–24: 0 deaths and 0 recoveries in every run.
-- **Next:** rerun at the camera-turn commit once the coordinator authorizes a third attempt at the Crown camera turn. The Dynamo rests (eaa5029f4) are also still unexercised.
+- **Next:** rerun at 348ee6c6a once the coordinator authorizes it, to name the Nysa-press cause.
 
 ### Not produced
 
