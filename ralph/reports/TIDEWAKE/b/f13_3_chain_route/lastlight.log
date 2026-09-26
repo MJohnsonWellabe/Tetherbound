@@ -1,0 +1,27 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _build_world (res://tests/smoke_tidewake_b_chain_route.gd:124)
+         [2] _run (res://tests/smoke_tidewake_b_chain_route.gd:105)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+POSE veilfall arrival landing for water_halen -> (384.311, 1.929, 3805.405)
+WALK water_halen DIRECT (no baked-ground plan from (384.311, 1.931604, 3805.405) to (191.0, 616.1026, 4163.0))
+FAIL: water_halen: walk stalled at leg 1/1 player=(357.3599, 105.9417, 4096.896) goal=(191.0, 0.0, 4163.0)
+FAIL: Lastlight: Halen gives the lead ()
+FAIL: Lastlight: lead recorded
+FAIL: lastlight_shelter_supply visible and offered after the lead
+WALK lastlight_shelter_supply island=veilfall walked=274m legs=46
+FAIL: lastlight_shelter_supply prompt offered (winner=)
+FAIL: Lastlight: delivery recorded by walk + Interact
+FAIL: Lastlight: host debited 4 + 4
+FAIL: Lastlight: delivery message: 
+FAIL: Lastlight: shelter piece stands
+WALK water_halen DIRECT (no baked-ground plan from (374.1692, 5.997751, 3822.694) to (191.0, 616.1026, 4163.0))
