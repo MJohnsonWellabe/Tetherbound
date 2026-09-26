@@ -54,7 +54,8 @@ var _activity := ""
 var _save_path := ""
 ## What the player looks at (the herd's nearest member for the herd visit).
 var _lure_body: Node3D = null
-## Minimum on-screen height for a lure to count as readable, not just present.
+## Minimum on-screen height, in 1280x720 FRAME pixels, for a lure to count as
+## readable, not just present.
 const READABLE_PX := 24.0
 var _capture_dir := ""
 ## True while the walker has put the companion away to get unstuck.
@@ -284,6 +285,11 @@ func _lure_visible() -> Dictionary:
 	var size := root.get_viewport().get_visible_rect().size
 	if screen.x < 0 or screen.y < 0 or screen.x > size.x or screen.y > size.y:
 		return {}
+	# A lure behind a HUD panel (hotbar, quest card, minimap) is not seen, even
+	# if the world ray is clear (code-blind judge, discovery-snowball round).
+	var hud_panel := _hud_panel_at(screen)
+	if hud_panel != "":
+		return {}
 	var query := PhysicsRayQueryParameters3D.create(cam.global_position, target)
 	var exclude: Array[RID] = [_player.get_rid()]
 	var ally := _director.call("ally_body") as CollisionObject3D if _director != null else null
@@ -300,9 +306,34 @@ func _lure_visible() -> Dictionary:
 	var h := float(body.call("body_height")) if body.has_method("body_height") else 1.8
 	var top := cam.unproject_position(body.global_position + Vector3(0.0, h, 0.0))
 	var foot := cam.unproject_position(body.global_position)
-	var px := absf(foot.y - top.y)
-	return {"distance_m": snappedf(dist, 0.1), "screen": [int(screen.x), int(screen.y)],
+	# unproject_position works in the logical canvas (1920x1080 under
+	# canvas_items stretch); frames and the readable floor are window pixels.
+	var to_frame := float(root.size.y) / size.y
+	var px := absf(foot.y - top.y) * to_frame
+	return {"distance_m": snappedf(dist, 0.1),
+		"screen": [int(screen.x * to_frame), int(screen.y * to_frame)],
 		"height_px": int(px), "readable": px >= READABLE_PX}
+
+
+## Name of the visible HUD panel covering `point` (logical canvas coordinates),
+## or "" when the point is clear of the HUD.
+func _hud_panel_at(point: Vector2) -> String:
+	var hud := _world.get_node_or_null(^"PlaygroundHUD") if _world != null else null
+	if hud == null:
+		return ""
+	var stack: Array[Node] = [hud]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		for child in node.get_children():
+			stack.append(child)
+		var panel := node as Control
+		if panel == null or not (panel is PanelContainer or panel is Panel):
+			continue
+		if not panel.is_visible_in_tree() or panel.size.x < 8.0 or panel.size.y < 8.0:
+			continue
+		if panel.get_global_rect().has_point(point):
+			return str(panel.name)
+	return ""
 
 
 ## --- route graph --------------------------------------------------------------
