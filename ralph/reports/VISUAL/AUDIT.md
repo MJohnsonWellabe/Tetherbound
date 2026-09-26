@@ -114,14 +114,43 @@ The judge's place labels were lost to a manifest-copy error in my judge prep (no
 
 Strengths to keep: the village at P001 and the mill at E016, the badger companion, trainer legibility at night, painted day skies and night mood, the forest interiors, the pylon line as the spine to the finale, and the Warrens mound.
 
-### C2–C4. Cloudreach, Stormwood, Tidewake: NOT YET JUDGED
+### C2. Cloudreach: 19 place frames judged (env pending); judge `Bar A no, Bar B no`
 
-The lane wound down (owner directive) before these were judged.
-- **Tidewake places:** captured, 18 frames, sheet `_sheet_tidewake_places_unjudged.jpg`. Unjudged, but visible in the sheet:
-  - pale untextured rock slopes ("rock" texture tinted `#c6c3b8` in `data/config/water_visual.json` `terrain.textures[2]`; ART_DIRECTION asks for wet dark rock);
-  - one frame renders white (camera inside geometry or water).
-- **Cloudreach and Stormwood:** not captured with the fixed tool. The first-round Stormwood frames (rig-stuck bug) are superseded.
-- **To resume:** see the handoff on PR #279.
+- **Capture:** render.yml 36268641645 at main `32bd3307`, frames P001–P019.
+- **Evidence:** sheet `_sheet_cloudreach_places.jpg`, verdict `judges/cloudreach_places_VERDICT.md`, frame labels `judges/cloudreach_places_LABELS.txt`.
+- **Skipped:** the Broken Skyroad Arch and High Roost Perches stands are unreachable (§D).
+- **Env rows:** the 36 env frames are still rendering; their verdict joins this section when judged.
+- **Owners:** all art and visual changes go to the Codex queue (V9 high perch, V10 settlements and cliff identity, or a new V row). Route, stand and road-shape content goes to the Cloudreach lane.
+
+**Judge-prep correction, disclosed.** The judge's defect 1 ("no companion or creature in any frame") is a **capture fixture, not a game defect**:
+- Place rows deliberately park the companion behind the camera; the manifest records `"companion": "parked behind camera"`.
+- The paused EncounterDirector streams no wilds at a teleported stand.
+- My judge brief wrongly said a companion stands in frame. Env rows keep the companion out, and they are the creature-in-world check.
+
+| # | Sev | Domain | Frame(s) | Defect | Clause | Owner |
+|---|---|---|---|---|---|---|
+| CR1 | BLOCKER | altitude read | all; clearest in P004, P006, P012, P018 | Every stand is a flat grass tabletop. Past the edge there is white haze by day and a flat navy sea plane by night. No stacked or strata cliffs rise above the player, and there are no waterfalls, floating islands or cloud sea below. It reads as "Meadows on a table", not cliffs above the clouds. | §4 Cloudreach row; §1 distant mass | Codex (cloud-sea layer and horizon, scene-fixable) · ART/Codex (strata cliffs, falls and islands need new art) |
+| CR2 | BLOCKER | landmark | P010, P011 | The Sky Shrine approach shows only a giant blank grey pillar: noise-marble material, a black slab floating on its face, and a tree stuck to its wall. The shrine on top is out of sight. Partly a stand limit: an off-road ring stand at the pillar's foot. | §3.2; §6 | Cloudreach (authored approach stand) · Codex (pillar material, slab and tree) |
+| CR3 | MAJOR | terrain material | P014/P015, P018/P019; plateau edges in P001, P012 | Grass texture runs down sheer faces, with grey triangular rock wedges pasted onto a flat olive wall. Same root as Meadows M9 and queue V16: the terrain shader has no steep-face treatment. | §4 "grass does not go on sheer faces"; §3.1 | Codex (V16 terrain shader) |
+| CR4 | MAJOR | cliff art | P003 | Waycamp cliffs are vertically smeared grey texture, or soft blobby stacks with mushroom ledges. They read as sculpt blockout. | §4 pale weathered strata | ART/Codex |
+| CR5 | MAJOR | ground and vegetation | P003, P008, P012, P013 (bare); P004/P005, P014, P018/P019 (strips); P010/P011 (carpet) | 40–50 % of the frame is one tiled green. Grass sits in straight strips parallel to ruler-straight roads, or as a uniform carpet, with no drifts or clearings. The road edge is a pixel-stair dither mask. | §3.1 | Codex (scatter clustering, road-edge blend) · Cloudreach (road curvature) |
+| CR6 | MAJOR | stray geometry | P002 (pale plane), P014/P015 (triangle), P008/P009 (two dark wedge planes, hard road-end rectangle), P001/P002/P005/P006/P007/P013 (pale faceted blocks glowing at night) | Unshaded or unlit planes and blocks read as broken geometry. | rubric 7; §6 | Codex (identify; likely cloud or snow cards) |
+| CR7 | MAJOR | night | all night frames | Night is the day scene tinted navy. No practical lights at Cliffhold windows, the beacon, the shrine, the aviary interior or the bells. Grass blades glow brighter than the ground. | §3.3; §3.1 lure | Codex |
+| CR8 | MAJOR | landmark read | P006/P007 beacon; P008/P009 aerie; P003 waycamp; P012/P013 Cliffhold; P004/P005 bells; P018/P019 overlook | The beacon is a thin 40 px frame, unlit even at 23:00. The Aerie tower is cropped off the top of frame and screened by five trees. The Waycamp shows no camp. Cliffhold is four Meadows cottages on a lawn. Three Bells shows no bridge. The Overlook has no platform or vista. Only Summit Eyrie reads, weakly. | §3.2; §4 height-aware settlements | Codex (V10 settlements; beacon fire) · Cloudreach (stand framing) |
+| CR9 | MAJOR | stronghold | P016/P017 | The Summit Eyrie glass dome matches the board. The base is a dark mossy block wall on flat grass with brown ribs where the board has gold, and the night dome is cold with no warm interior. | §4; Bar A board | Codex/ART |
+| CR10 | MAJOR | depth | P004, P006, P012, P018 (day) | The horizon dissolves into a white-grey band at 35–45 % of frame height, the "white washout" §4 warns against. | §4; §2 | Codex (sky/fog; the Cloudreach cliff palette is a judge pick per owner ruling) |
+| CR11 | MINOR | composition | all | Every approach is identical: straight road, centred trainer, empty lower half, no near framing rail, no side lure. | §1 | Cloudreach |
+| CR12 | MINOR | foliage | P001, P003, P006, P008, P014, P018 | Blocky, pixel-quantised leaf texture. One species standing singly on bare grass. | §3.1 | Codex |
+
+**Strengths to keep:** the painted day sky and moonlit night sky, the trainer's legibility, the aviary dome silhouette, the Three Bells gantry icon, and the blue/gold banner language.
+
+**Place reads from the approach:** only Summit Eyrie reads, weakly. Realm Gate, Three Bells, Cliffhold and the Observatory partly read. The Waycamp, Beacon, Aerie, Sky Shrine and Stormward Overlook do not.
+
+### C3–C4. Stormwood, Tidewake: rendering
+
+- **Tidewake places** is re-rendering on render.yml from a full checkout.
+- The earlier `_sheet_tidewake_places_unjudged.jpg` came from a container missing 533 skip-worktree asset files, `rock_scree_Color.png` among them. Its "pale untextured rock" may be that artefact rather than the `#c6c3b8` tint, so queue row V18 is marked verify-first.
+- **Stormwood** places and env follow.
 
 ## D. Capture-tool limits (VIS, not asset defects)
 
@@ -130,4 +159,8 @@ The lane wound down (owner directive) before these were judged.
   - Meadows **Old Mill Crossing** has no dry sightline stand; the trainer ended up in the river, so the row was SKIPPED.
   - Stormwood **Glass Sink** has no reachable stand; the game returns the trainer to spawn.
   - **Meadowhart Grazing Ground** has no fixed position.
+  - Cloudreach **Broken Skyroad Arch** and **High Roost Perches** have no reachable stand: the trainer settled 700+ m away.
+  - Cloudreach **Sky Shrine** fell back to an off-road ring stand at the foot of its pillar, where the shrine top is out of sight.
+- **Place rows park the companion behind the camera, and the EncounterDirector is paused.** A place frame cannot show creatures in the world. Env rows carry the companion.
+- **Local renders need a complete checkout.** Clear skip-worktree first: `git ls-files -v | grep '^S'`.
   - Each is a coverage gap to close with an authored stand, not a pass.
