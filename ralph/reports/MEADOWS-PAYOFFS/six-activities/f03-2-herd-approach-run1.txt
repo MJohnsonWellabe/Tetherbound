@@ -1,0 +1,2 @@
+meadowhart_herd original stance: paused=false arbiter_enabled=true input_owner=none winner=/root/MeadowsPlayground/MeadowhartHerdVisit/Interactable herd_prompt=/root/MeadowsPlayground/MeadowhartHerdVisit/Interactable prompt_enabled=true
+selected local activities smoke test passed: herd
