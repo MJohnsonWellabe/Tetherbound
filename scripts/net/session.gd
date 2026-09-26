@@ -537,6 +537,13 @@ func is_host() -> bool:
 	return _mode != "client" and not _preparing_client
 
 
+## Why the last session ended ("host_gone" when the host link dropped without
+## the host's own reason, else the reason the host or this peer gave). Empty
+## while a session is live or before the first one; a new session clears it.
+func end_reason() -> String:
+	return str(_box.get("ended", ""))
+
+
 func is_active() -> bool:
 	return _mode != ""
 
