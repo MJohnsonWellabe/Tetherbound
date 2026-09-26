@@ -26,6 +26,9 @@ extends "res://tools/capture_stormwood_f09_pockets_roads.gd"
 const ROAD_BACK_DEFAULT_M := 25.0
 const WALK_START_BACK_M := 32.0
 const PIXEL_DIFF_THRESHOLD := 24
+## A normal exploration arm is 5.2 m; shorter means a body is in the way.
+const ARM_MIN_M := 4.0
+const ARM_RETRIES := 3
 
 var _back_m := ROAD_BACK_DEFAULT_M
 var _fast := false
@@ -109,7 +112,20 @@ func _walk_frames() -> void:
 			"road_back_m": _back_m, "side": "along" if sense == 1 else "against"}
 		# (1) Road, normal exploration pose, looking along the road.
 		var ahead := stand + heading * 20.0
-		await _stand(stand, Vector3(ahead.x, _ground(ahead.x, ahead.y) + 1.5, ahead.y), _pitch_start)
+		var occupied := {}
+		for attempt in ARM_RETRIES:
+			await _stand(stand, Vector3(ahead.x, _ground(ahead.x, ahead.y) + 1.5, ahead.y), _pitch_start)
+			if _camera.global_position.distance_to(_player.global_position) >= ARM_MIN_M:
+				break
+			# The spring arm pulled in: something stands between the camera and
+			# the trainer. Record what, and let a roaming creature move on.
+			occupied = {"attempt": attempt + 1, "arm_m": _camera.global_position.distance_to(_player.global_position),
+				"bodies_near": _bodies_near(_camera.global_position, 4.0)}
+			_log("%s road stand arm pulled in: %s" % [id, str(occupied)])
+			for _frame in 300:
+				await physics_frame
+		if not occupied.is_empty():
+			info["arm_pulled_in"] = occupied
 		var lamp := _world.get_node_or_null(NodePath("StormwoodPockets/Pocket_%s/SpurLamp" % id)) as Node3D
 		var flame := lamp.get_node_or_null(^"AmberFlame") as Node3D if lamp != null else null
 		var lure := {}
@@ -139,8 +155,10 @@ func _walk_frames() -> void:
 		# (3) Claim with the ordinary interact action, then the frame.
 		var toward := (mouth - Vector2(reward_at.x, reward_at.z)).normalized()
 		var close := Vector2(reward_at.x, reward_at.z) + toward * 1.4
-		await _stand(close, reward_at, _pitch_start)
+		await _stand(close, reward_at, _pitch_start, 24.0)
 		var prompt_before := str(_arbiter.call("prompt")) if _arbiter != null else ""
+		await _capture("%s_3a_reward_before" % id, "%s: 1.4 m from the reward, its prompt '%s' offered (HUD hidden), before interact" % [id, prompt_before],
+			_with(info, {"stand": [close.x, close.y], "reward_node": _reward_state(reward_id)}))
 		var item := _item_of(reward_id)
 		var inventory: RefCounted = _game.get("inventory")
 		var before := int(inventory.call("count", item))
@@ -150,9 +168,18 @@ func _walk_frames() -> void:
 		var after := int(inventory.call("count", item))
 		if after != before + 1:
 			_failures.append("%s: claim did not land (%s %d->%d, prompt '%s')" % [id, item, before, after, prompt_before])
-		await _capture("%s_3_reward_claimed" % id, "%s: after pressing interact on the reward prompt '%s'" % [id, prompt_before],
+		await _capture("%s_3b_reward_claimed" % id, "%s: same pose, after pressing interact on the reward prompt '%s'" % [id, prompt_before],
 			_with(info, {"stand": [close.x, close.y], "prompt_before": prompt_before, "item": item,
 				"count_before": before, "count_after": after, "reward_node": _reward_state(reward_id)}))
+
+
+func _bodies_near(at: Vector3, radius: float) -> Array[String]:
+	var out: Array[String] = []
+	for node: Node in _world.find_children("*", "PhysicsBody3D", true, false):
+		var body := node as Node3D
+		if body != _player and body.global_position.distance_to(at) < radius + 3.0:
+			out.append("%s (%s) %.1fm" % [body.get_path(), body.get_class(), body.global_position.distance_to(at)])
+	return out
 
 
 func _grab() -> Image:
