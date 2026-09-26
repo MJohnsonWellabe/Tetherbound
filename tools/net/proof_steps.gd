@@ -75,7 +75,7 @@ const LEGENDARY_SPECIES := "fulgocobra"
 const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "stormheart_fixture",
 	"stormheart_answer", "stormheart_state", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
 	"rider_identity", "rider_self", "guardian_fixture", "veilfall_press", "guardian_answer", "guardian_state", "guardian_offer_again",
-	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state", "nerissa_challenge", "join_running_fight", "perf_snapshot"]
+	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state", "nerissa_challenge", "join_running_fight", "perf_snapshot", "cost_probe"]
 
 
 static func handles(action: String) -> bool:
@@ -126,6 +126,8 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _join_running_fight(tree, args)
 		"perf_snapshot":
 			return await _perf_snapshot(tree, args)
+		"cost_probe":
+			return _cost_probe(tree)
 	if WATER_ACTIONS.has(action):
 		return await _water_run(tree, action, args)
 	return {"verdict": "ERROR", "detail": "proof_steps: unknown action '%s'" % action}
@@ -1767,6 +1769,14 @@ static func _nerissa_challenge(tree: SceneTree) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "Nerissa's encounter or body is missing"}
 	var at := body.global_position + Vector3(2.0, 0.2, 2.0)
 	await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 240})
+	# Send a companion out here, beside her, as a player arriving would -- not
+	# at the spawn 4 km away before the Veilfall.
+	if director.call("ally_body") == null:
+		var out: Dictionary = await tree.call("_step_deploy_creature", {})
+		if str(out.get("verdict", "")) != "PASS":
+			return {"verdict": "FAIL", "detail": "could not send a companion out beside Nerissa: %s" % str(out.get("detail", ""))}
+		for f in 60:
+			await tree.physics_frame
 	if not bool(director.call("can_challenge", spec)):
 		return {"verdict": "FAIL", "detail": "Nerissa will not take the challenge (requires %s)" % str(spec.get("requires_flags", []))}
 	if not bool(director.call("begin_trainer_battle", spec, body)):
@@ -1844,4 +1854,39 @@ static func _perf_snapshot(tree: SceneTree, args: Dictionary) -> Dictionary:
 		"physics_3d_islands": Performance.get_monitor(Performance.PHYSICS_3D_ISLAND_COUNT),
 		"navigation_maps": Performance.get_monitor(Performance.NAVIGATION_ACTIVE_MAPS),
 	}
+	return {"verdict": "PASS", "detail": JSON.stringify(data), "data": data}
+
+
+## Diagnosis only: wall time of single calls that could make one frame take
+## seconds at this peer's position, and how many wild bodies it holds.
+static func _cost_probe(tree: SceneTree) -> Dictionary:
+	var scene := tree.current_scene
+	var player := (tree.get("_probe") as Object).call("player") as Node3D
+	var game := tree.root.get_node_or_null(^"Game")
+	var at := player.global_position if player != null else Vector3.ZERO
+	var data := {"at": [at.x, at.y, at.z]}
+	var veg := scene.find_child("Vegetation", true, false) if scene != null else null
+	if veg == null and scene != null:
+		for n: Node in scene.find_children("*", "", true, false):
+			if n.has_method("has_solid_scatter_near"):
+				veg = n
+				break
+	if veg != null:
+		var t := Time.get_ticks_usec()
+		veg.call("has_solid_scatter_near", at, 1.0)
+		data["scatter_query_ms"] = (Time.get_ticks_usec() - t) / 1000.0
+	if scene != null and scene.has_method("ground_height_at"):
+		var t := Time.get_ticks_usec()
+		scene.call("ground_height_at", at.x, at.z)
+		data["ground_height_ms"] = (Time.get_ticks_usec() - t) / 1000.0
+	if game != null and game.has_method("autosave_here"):
+		var t := Time.get_ticks_usec()
+		game.call("autosave_here")
+		data["autosave_ms"] = (Time.get_ticks_usec() - t) / 1000.0
+	var wilds := 0
+	if scene != null:
+		for n: Node in scene.find_children("*", "", true, false):
+			if n.get_script() != null and str((n.get_script() as Script).resource_path).ends_with("wild_creature.gd"):
+				wilds += 1
+	data["wild_bodies"] = wilds
 	return {"verdict": "PASS", "detail": JSON.stringify(data), "data": data}
