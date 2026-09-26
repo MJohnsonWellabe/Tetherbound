@@ -589,7 +589,8 @@ static func _stormheart_state(tree: SceneTree) -> Dictionary:
 ##                                        requester is disconnected inside delta_applied,
 ##                                        before `_rpc_delta` is queued: the host committed,
 ##                                        the delta never reaches the guest. report: what
-##                                        the armed cut did (and disarm it)
+##                                        the armed cut did (and disarm it). remember_host
+##                                        (GUEST): record the host address for a later rejoin
 
 const WATER_ACTIONS := ["homecoming_complete", "credits_continue", "ending_state", "water_dock_act",
 	"water_dock_state", "water_dock_resend", "water_dock_cut"]
@@ -1782,6 +1783,15 @@ static func _water_dock_resend(tree: SceneTree, args: Dictionary) -> Dictionary:
 
 static func _water_dock_cut(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var game := _game(tree)
+	if bool(args.get("remember_host", false)):
+		# GUEST, before its press: keep the host address for the later rejoin
+		# (water_dock_act only records it after its press, which the cut can beat).
+		var link: Variant = tree.root.multiplayer.multiplayer_peer
+		var server: ENetPacketPeer = (link as ENetMultiplayerPeer).get_peer(1) if link is ENetMultiplayerPeer else null
+		if server == null:
+			return {"verdict": "ERROR", "detail": "not connected to a host"}
+		tree.set_meta(&"f15_host_address", [server.get_remote_address(), server.get_remote_port()])
+		return {"verdict": "PASS", "detail": "remembered host %s:%d" % [server.get_remote_address(), server.get_remote_port()]}
 	if game == null or not bool(game.call("is_host")):
 		return {"verdict": "ERROR", "detail": "water_dock_cut runs on the host"}
 	var ledger: Node = game.get("ledger")

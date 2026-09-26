@@ -146,6 +146,14 @@
   },
   {
    "peer": 1,
+   "action": "water_dock_cut",
+   "args": {
+    "remember_host": true
+   },
+   "label": "guest remembers its host (for the relaunch)"
+  },
+  {
+   "peer": 1,
    "action": "water_dock_act",
    "args": {
     "action_id": "reedhaven_repair",
