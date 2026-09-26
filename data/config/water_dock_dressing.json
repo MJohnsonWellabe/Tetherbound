@@ -13,8 +13,8 @@
     "post_spacing_m": 3.0,
     "post_height_m": 1.9,
     "post_radius_m": 0.16,
-    "post_tint": "#4a3b2e",
-    "_why_post_tint": "The installed log's texture rendered salmon-pink under the Tidewake light, close to Team Tether's reserved red; posts take a dark wet-wood multiply (ART_DIRECTION Tidewake: wet dark rock and timber)."
+    "post_tint": "#3a3129",
+    "_why_post_tint": "The installed log is atlas-textured (Kenney colormap) and read oxblood-maroon (~RGB 102,41,24) even under a multiply; posts take a flat dark wet-timber material instead (ART_DIRECTION Tidewake: wet dark rock and timber; red is Team Tether's)."
   },
   "lanterns": {
     "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
@@ -22,8 +22,8 @@
     "light_colour": "#ffc98a",
     "light_energy": 2.2,
     "light_range_m": 9.0,
-    "glow_energy": 1.6,
-    "_why_glow": "The lantern model has no emissive surface, so at night a blind pass read every dock lantern as unlit. The lantern body now glows warm (emission from its own albedo) and the omni light is stronger."
+    "glow_energy": 2.4,
+    "_why_glow": "The lantern model is trim-sheet textured with no emissive surface; a blind pass read it as an unlit white box. It takes a warm emissive material and a stronger omni light."
   },
   "cargo": {
     "side_offset_m": 3.6,
@@ -105,5 +105,35 @@
       ]
     ],
     "_why_variants": "Each dock takes one of these item subsets (by dock index) with a per-dock yaw so the docks stop reading as one repeated template."
-  }
+  },
+  "deck_cargo": [
+    {
+      "model": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+      "height_m": 0.95,
+      "at": [
+        0.55,
+        1.2
+      ],
+      "yaw_deg": 0.0
+    },
+    {
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "height_m": 0.75,
+      "at": [
+        -0.5,
+        1.6
+      ],
+      "yaw_deg": 20.0
+    },
+    {
+      "model": "res://assets/props/quaternius_fantasy/Rope_1.gltf",
+      "height_m": 0.3,
+      "at": [
+        0.1,
+        3.2
+      ],
+      "yaw_deg": 0.0
+    }
+  ],
+  "_why_deck_cargo": "A blind pass found nothing on the pier itself said anyone used it; a barrel, crate and rope sit at its seaward end, inside the deck width."
 }

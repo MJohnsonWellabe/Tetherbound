@@ -114,6 +114,18 @@ func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, si
 			# Lanterns on the seaward pair and the landward pair.
 			if i == 0 or i == posts - 1:
 				_lantern(site, lantern_cfg, Vector3(at.x, top, at.y), yaw + (PI if edge < 0.0 else 0.0))
+	# A little working cargo at the seaward end of the deck itself.
+	var deck_items: Array = cfg.get("deck_cargo", [])
+	for item: Variant in deck_items:
+		var spec := item as Dictionary
+		var off: Array = spec.get("at", [0.0, 0.0])
+		var at2 := start + forward * (length - float(off[1])) + side * float(off[0])
+		var prop := _fit_height(str(spec.get("model", "")), float(spec.get("height_m", 0.8)), "DeckCargo")
+		if prop == null:
+			continue
+		prop.position += Vector3(at2.x, deck_y, at2.y)
+		prop.rotation.y = yaw + deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		site.add_child(prop)
 	# Cargo: a working cluster on land, to the pier's side, behind the route.
 	var cargo: Dictionary = cfg.get("cargo", {})
 	var origin := safe - forward * float(cargo.get("back_from_safe_m", 1.0)) \
@@ -237,35 +249,31 @@ func _fit_upright(path: String, height: float, radius: float, id: String) -> Nod
 	return holder
 
 
-## Multiply every surface of `node` by `colour` (per-instance override, the
-## installed material itself is left alone).
+## Replace every surface of `node` with a flat material of `colour`. The
+## installed log and lantern are atlas-textured (Kenney colormap, Quaternius
+## trim sheet): a multiply keeps the atlas's red-brown, so the dock pieces take
+## their own flat material instead (per-instance override; the asset is untouched).
 func _tint(node: Node, colour: Color) -> void:
-	for found: Node in node.find_children("*", "MeshInstance3D", true, false):
-		var mesh_instance := found as MeshInstance3D
-		if mesh_instance.mesh == null:
-			continue
-		for surface in mesh_instance.mesh.get_surface_count():
-			var source := mesh_instance.mesh.surface_get_material(surface) as StandardMaterial3D
-			if source == null:
-				continue
-			var material := source.duplicate() as StandardMaterial3D
-			material.albedo_color = source.albedo_color * colour
-			mesh_instance.set_surface_override_material(surface, material)
+	var material := StandardMaterial3D.new()
+	material.albedo_color = colour
+	material.roughness = 0.85
+	_override_all(node, material)
 
 
-## Make the lantern body read lit: emission from its own albedo texture.
+## The lantern body reads lit: a warm emissive material in place of the trim.
 func _glow(node: Node, energy: float) -> void:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color("#ffcf8a")
+	material.emission_enabled = true
+	material.emission = Color("#ffb766")
+	material.emission_energy_multiplier = energy
+	_override_all(node, material)
+
+
+func _override_all(node: Node, material: Material) -> void:
 	for found: Node in node.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := found as MeshInstance3D
 		if mesh_instance.mesh == null:
 			continue
 		for surface in mesh_instance.mesh.get_surface_count():
-			var source := mesh_instance.mesh.surface_get_material(surface) as StandardMaterial3D
-			if source == null:
-				continue
-			var material := source.duplicate() as StandardMaterial3D
-			material.emission_enabled = true
-			material.emission = Color("#ffc98a")
-			material.emission_texture = source.albedo_texture
-			material.emission_energy_multiplier = energy
 			mesh_instance.set_surface_override_material(surface, material)
