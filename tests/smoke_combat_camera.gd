@@ -320,16 +320,30 @@ func _prove_neutral_camera_keeps_the_opponent_in_frame() -> void:
 		var bearing := deg_to_rad(bearing_deg)
 		_ally.global_position = ally_at
 		_wild.global_position = ally_at + Vector3(sin(bearing), 0.0, cos(bearing)) * 6.0
-		for i in 90:
+		# Poll up to the budget the tunables themselves allow, rather than a
+		# fixed 90 frames. A bearing jump near 190 degrees at the tracker's
+		# max_speed_deg, plus a clear-orbit ease back, needed more than 1.5 s,
+		# so the old fixed wait passed or failed on the starting angle alone
+		# (runner: FAIL then PASS on one head). Converging early ends the wait.
+		var budget := _neutral_convergence_frames()
+		var centre := Vector3.ZERO
+		var screen := Vector2.ZERO
+		var viewport := Vector2.ZERO
+		var safe := Rect2()
+		var behind := true
+		for i in budget:
 			await physics_frame
-		var centre: Vector3 = _wild.call("centre") if _wild.has_method("centre") \
-			else _wild.global_position + Vector3.UP
-		if _camera.is_position_behind(centre):
-			_fail("neutral combat camera left the opponent behind the lens at %.0f degrees" % bearing_deg)
+			centre = _wild.call("centre") if _wild.has_method("centre") \
+				else _wild.global_position + Vector3.UP
+			viewport = _camera.get_viewport().get_visible_rect().size
+			safe = Rect2(viewport * 0.06, viewport * 0.88)
+			behind = _camera.is_position_behind(centre)
+			screen = _camera.unproject_position(centre)
+			if not behind and safe.has_point(screen):
+				break
+		if behind:
+			_fail("neutral combat camera left the opponent behind the lens at %.0f degrees after %d frames" % [bearing_deg, budget])
 			continue
-		var screen := _camera.unproject_position(centre)
-		var viewport := _camera.get_viewport().get_visible_rect().size
-		var safe := Rect2(viewport * 0.06, viewport * 0.88)
 		if not safe.has_point(screen):
 			_fail("neutral combat camera lost the opponent at %.0f degrees (screen=%s viewport=%s)" % [
 				bearing_deg, screen, viewport])
@@ -532,7 +546,13 @@ func _assert_raw_orbit_changes(context: String) -> void:
 		await physics_frame
 	_send_axis(RIGHT_X, 0.0)
 	_send_axis(RIGHT_Y, 0.0)
-	for i in 10:
+	# Everything below must happen inside the rig's manual-look grace: once
+	# it expires the neutral tracker is SUPPOSED to recentre. The old
+	# 10 + 15 frames (0.417 s) ran past the 0.4 s grace, so "continuously
+	# recentred" failed whenever tracking resumed inside the window.
+	var grace_frames := _manual_grace_frames()
+	var settle := mini(10, maxi(grace_frames / 3, 2))
+	for i in settle:
 		await physics_frame
 	var yaw_after := float(_rig.get("yaw"))
 	var pitch_after := float(_rig.get("pitch"))
@@ -544,10 +564,36 @@ func _assert_raw_orbit_changes(context: String) -> void:
 	if absf(pitch_after - pitch_before) < 0.05:
 		_fail("%s: right-stick vertical input did not pitch the camera" % context)
 	var held_yaw := yaw_after
-	for i in 15:
+	for i in maxi(grace_frames - settle - 3, 1):
 		await physics_frame
 	if absf(angle_difference(float(_rig.get("yaw")), held_yaw)) > 0.01:
 		_fail("%s: camera yaw was continuously recentered after the stick returned to neutral" % context)
+
+
+## Physics frames the rig's manual-look grace lasts (combat.json
+## camera.tracking.manual_grace_seconds).
+func _manual_grace_frames() -> int:
+	var tracking: Dictionary = (MATH.config().get("camera", {}) as Dictionary) \
+		.get("tracking", {}) as Dictionary
+	var ticks := float(Engine.physics_ticks_per_second)
+	return int(floor(float(tracking.get("manual_grace_seconds", 0.4)) * ticks))
+
+
+## Worst case for the neutral tracker to bring a relocated opponent back into
+## frame: a half-turn at max_speed_deg, plus the clear-orbit swing easing back
+## over its widest sample, plus one solver interval and a half-second margin.
+func _neutral_convergence_frames() -> int:
+	var camera: Dictionary = MATH.config().get("camera", {}) as Dictionary
+	var tracking: Dictionary = camera.get("tracking", {}) as Dictionary
+	var orbit: Dictionary = ((camera.get("framing", {}) as Dictionary) \
+		.get("clear_orbit", {}) as Dictionary)
+	var turn_s := 180.0 / maxf(float(tracking.get("max_speed_deg", 120.0)), 1.0)
+	var widest := 0.0
+	for raw: Variant in orbit.get("samples_deg", []):
+		widest = maxf(widest, absf(float(raw)))
+	var ease_s := widest / maxf(float(orbit.get("ease_deg_per_s", 90.0)), 1.0)
+	var seconds := turn_s + ease_s + float(orbit.get("interval_s", 0.2)) + 0.5
+	return int(ceil(seconds * float(Engine.physics_ticks_per_second)))
 
 
 func _press_button(index: JoyButton) -> void:
