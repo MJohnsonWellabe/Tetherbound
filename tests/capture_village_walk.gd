@@ -129,6 +129,11 @@ const DOOR_PRESSES_MAX := 3
 ## Pages of dialogue the walk will read through per leg before an open panel
 ## counts as a stall.
 const DIALOGUE_PRESSES_MAX := 12
+## Stalled with no door to open: turn SIDESTEP_DEG away and walk
+## SIDESTEP_FRAMES, alternating sides, at most SIDESTEPS_MAX per leg.
+const SIDESTEPS_MAX := 3
+const SIDESTEP_DEG := 50.0
+const SIDESTEP_FRAMES := 48
 
 ## Grandpa's farmhouse: HOUSE_AT (-22,-16) in playground_world.gd, door on the
 ## east wall at x = -17 (grandpa_house.gd EXT_HALF_W 5.0). The start is 2.5m
@@ -581,6 +586,7 @@ func _walk() -> void:
 	var next_event := 0
 	var door_presses := 0
 	var dialogue_presses := 0
+	var sidesteps := 0
 	var dt := 1.0 / float(Engine.physics_ticks_per_second)
 	var budget := maxf(WALK_BUDGET_S, total / WALK_SPEED_MPS * 2.0 + 120.0)
 	while clock < budget:
@@ -635,9 +641,33 @@ func _walk() -> void:
 			await _press("interact")
 			best_at_s = clock
 			continue
+		elif clock - best_at_s > STUCK_S * 0.5 and sidesteps < SIDESTEPS_MAX:
+			# A player walled by a standing creature or villager steps round it:
+			# turn away and walk a short stride, alternating sides.
+			sidesteps += 1
+			_release_all()
+			var side := 1.0 if sidesteps % 2 == 1 else -1.0
+			print("[village-walk] NOTE sidestep %d at (%.1f,%.1f)%s" % [sidesteps, here.x, here.y, _bodies_near(here)])
+			var turn_to := float(_rig.get("yaw")) + deg_to_rad(SIDESTEP_DEG) * side
+			for _f in 40:
+				var err := rad_to_deg(angle_difference(float(_rig.get("yaw")), turn_to))
+				Input.action_release("look_left")
+				Input.action_release("look_right")
+				if absf(err) < 4.0:
+					break
+				Input.action_press("look_left" if err > 0.0 else "look_right", 1.0)
+				await physics_frame
+			Input.action_release("look_left")
+			Input.action_release("look_right")
+			Input.action_press("move_forward", 1.0)
+			for _f in SIDESTEP_FRAMES:
+				await physics_frame
+			Input.action_release("move_forward")
+			best_at_s = clock
+			continue
 		elif clock - best_at_s > STUCK_S:
-			_failed = "no progress for %.1fs at (%.1f,%.1f), arc %.1f/%.1f%s" % [
-				STUCK_S, here.x, here.y, progress, total, _blocker_near(here)]
+			_failed = "no progress for %.1fs at (%.1f,%.1f), arc %.1f/%.1f%s%s" % [
+				STUCK_S, here.x, here.y, progress, total, _blocker_near(here), _bodies_near(here)]
 			return
 
 		while next_event < _events.size() and progress >= float(_events[next_event].arc):
@@ -1074,3 +1104,15 @@ func _through_to_bridge() -> void:
 		return
 	print("[village-walk] VISIT South Bridge approach dist_m=%.2f walked_m=%.0f" % [
 		_xz().distance_to(BRIDGE_APPROACH), _arcs[_arcs.size() - 1]])
+
+
+## Bodies (creatures, villagers) within 2.5m, for a stall message.
+func _bodies_near(here: Vector2) -> String:
+	var names: Array[String] = []
+	for body: Node in _world.find_children("*", "CharacterBody3D", true, false):
+		if body == _player or not body is Node3D:
+			continue
+		var p := (body as Node3D).global_position
+		if Vector2(p.x, p.z).distance_to(here) <= 2.5:
+			names.append(str(body.get_path()).get_slice("MeadowsPlayground/", 1))
+	return "" if names.is_empty() else " -- bodies near: %s" % ", ".join(names)

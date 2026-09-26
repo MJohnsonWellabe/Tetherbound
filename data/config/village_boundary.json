@@ -197,6 +197,31 @@
       "at": [10.8, 37.5],
       "radius_m": 2.5,
       "_why": "F01 day-walk judge (through_day_016/017): a baked Rock_Medium_1 sits across the band-1 spine 15m past TrailGate (centreline x 12.5 at z 37.5); its origin is ~2m off the centreline, just outside path_factor's 1.8m exclusion, but its body overhangs the road and its collider spans x 10.5-12.5. This disc covers that origin only, not the verge. TUNABLE."
+    },
+    {
+      "at": [-86.5, 232.6],
+      "radius_m": 2.5,
+      "_why": "tests/probe_road_blockers.gd: a baked Rock_Medium_1 collider stands on the band-1 spine centreline here (the walk to the South Bridge stalled against the rock at (-86,232)). Same origin-outside-the-band cause as the first entry. TUNABLE."
+    },
+    {
+      "at": [-343.6, 579.1],
+      "radius_m": 2.5,
+      "_why": "tests/probe_road_blockers.gd: a baked Rock_Medium_1 collider stands on the band-1 spine centreline here (the walk to the South Bridge stalled against the rock at (-86,232)). Same origin-outside-the-band cause as the first entry. TUNABLE."
+    },
+    {
+      "at": [180.1, 805.0],
+      "radius_m": 2.5,
+      "_why": "tests/probe_road_blockers.gd: a baked CommonTree_1 collider stands on the band-1 spine centreline here (the walk to the South Bridge stalled against the rock at (-86,232)). Same origin-outside-the-band cause as the first entry. TUNABLE."
+    },
+    {
+      "at": [195.6, 812.8],
+      "radius_m": 2.5,
+      "_why": "tests/probe_road_blockers.gd: a baked CommonTree_1 collider stands on the band-1 spine centreline here (the walk to the South Bridge stalled against the rock at (-86,232)). Same origin-outside-the-band cause as the first entry. TUNABLE."
+    },
+    {
+      "at": [-3.1, 1278.4],
+      "radius_m": 2.5,
+      "_why": "tests/probe_road_blockers.gd: a baked CommonTree_1 collider stands on the band-1 spine centreline here (the walk to the South Bridge stalled against the rock at (-86,232)). Same origin-outside-the-band cause as the first entry. TUNABLE."
     }
   ],
   "exit_signs": [
