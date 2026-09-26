@@ -86,7 +86,37 @@ Do not touch: the trainer (the scale ruler, with clean 3-block read), Grandpa, K
 
 ## C. Regions
 
-_Pending: region frames (Meadows done; Cloudreach, Stormwood and Tidewake rendering) go to a fresh code-blind judge. This section is replaced by that ranked table._
+Stands, frame lists and manifests: `shots/visual_audit/region/<region>_<env|places>/`.
+- **E### = environment frame:** the hand-checked teleport stand at day, dusk and night.
+- **P### = place frame:** the landmark from its road approach.
+
+### C1. Meadows: 30 env + 23 place frames; judge `Bar A yes, Bar B no`
+
+The judge's place labels were lost to a manifest-copy error in my judge prep (not in the tool). The P-frame names still carry the place id.
+
+| # | Sev | Domain | Frame(s) | Defect | Clause | Owner |
+|---|---|---|---|---|---|---|
+| M1 | BLOCKER | landmark read | P003, P006–P011, P014, P015, P019, P020, P022, P023 | In 13 of 23 approach frames the named place is absent or unreadable ~90 m out: no gate, the bridge a 30 px sliver in a trench, no relay, no camp smoke or light, no quarry workings, tower or Hall. | §3.2 read at 400 m / 100 m; §3.1 lure per activity | MEADOWS (staging, lure dressing, sightlines). The quarry, tower and reach need visible landmark art: ART-X04 / MEADOWS. VIS re-checks the stands against authored approach stands. |
+| M2 | BLOCKER | creature in world | P008, P009 | The Meadowhart herd on the relay approach shows the broken mesh from **C1**. | §5.1 | ART-X04 |
+| M3 | BLOCKER | finale read | E025–E030, P004, P005 | Meadows Hall never dominates: a 10–15 px speck from 590 m, one narrow tower with a ramp, no palisade, drained ground, oxblood or night lights. The Hall stand is an interior box that looks the same at every hour. | §4 Meadows "Hall's occupation must dominate"; §3.2 | ART-X04 (exterior massing) + MEADOWS (drained ground, banners, braziers, sightline) |
+| M4 | MAJOR | sky/fog/lighting | night E003, E006, E012, E018, E024, E027, P002, P007, P023; dusk E011, E026 | At night the far range glows brighter than the land and sky. **Measured: #6080b0 against a #263f6c sky.** Dusk flattens the range to beige. Night clouds read as soot smears. | §3.3; §2 depth from value separation | **VIS.** Fog/sky-energy mismatch **fixed in d5ef26fb** (after-frames pending). Night cloud lighting and dusk range: VIS, next. |
+| M5 | MAJOR | ground/paths | P001, P012, P018, P021, P022, E004, E016, E025 | One blotchy dirt material laid in round pads with a hard grass edge and white pebble dots. The route breaks into dashes, and there is no worn verge. | §3.1; §4 "broad roads, worn verges" | VIS (road/verge blend in the terrain shader) + MEADOWS (route splines, road width, edge scatter) |
+| M6 | MAJOR | vegetation | E010, E012, E016, E022, E024, P012, P018, P021 | An even carpet of identical tufts and "lollipop" flowers over bare yellow-green paint. Flower beds read as purple plastic puddles. No shrub mid-layer. | §3.1 clusters and clearings, three layers | COORD (`grass_field.json` / `vegetation.json` are named shared files). VIS proposes the clustering and density falloff there. |
+| M7 | MAJOR | faction colour | P001/P002, E004–E006, E010–E012, P015; pylons E025–E027, P022/P023 | Red on friendly elements: the village gate, the South Bridge banners, crimson-foliage trees. The Tether pylons are teal with no oxblood and no night glow. | §4, §3.2, §5.2 | VIS (the shared foliage tint recolours the crimson trees) · MEADOWS (gate and banner materials; South Bridge gate is a ledger exception, so recolour only) · ART-X04 (pylon oxblood trim and emissive) |
+| M8 | MAJOR | props/object art | P014, P016, P018, P019, E019/E021; E007/E009; E009, P013 | Nature Kit meshes render cyan/white (a known ledger defect) and are scattered in the open. Boulder tops are bleached white. There is a floating `Label3D` sign and a flat black plane. | §6; §7 Nature Kit row | VIS (shared prop material: repair or swap to Quaternius rocks) · MEADOWS (sign boards and placement) |
+| M9 | MAJOR | terrain material | P006/P007, P016, P004, E016, E013–E015 | Vertically stretched cliff projection on trench walls, pale untextured slabs, a voxel-looking wall texture, and stray yellow decal squares. | §3.1; rubric 7 | VIS (triplanar or slope blend in `terrain_ground.gdshader`) · MEADOWS (the stray decals) |
+| M10 | MAJOR | staging | E004, P018, P022/P023, E007, E019, P017, E013–E015 | The companion's paws float above a slope. Pairs share pose and facing, and the griffin wings interpenetrate. The trainer is pressed into creatures, and an NPC's head sits between the camera and the trainer. | §5.1 | MEADOWS (spawn staging) · VIS (companion placement in the capture) |
+| M11 | MAJOR | composition | E001–E003, P008/P009, E022, P020, P021 | A dead sapling sits dead-centre at 3 m, near trees block 35 % of the frame, and some stands have no mid subject. | §1 | MEADOWS |
+| M12 | MAJOR | hero tree | E019–E021, P017 | The Ironwood canopy is flat-shaded paper facets, a different family from the other trees, and a black cut-out at night. | §1; §7 Ironwood row | ART-X04 |
+| M13 | MINOR | water | P012, E016, P016 | Flat pale water with a hard edge. The Pond, meant as the lush reference, is the least dressed water. | §4; §3.1 | MEADOWS (shore dressing) · VIS (shore band in the water shader) |
+| M14 | MINOR | dusk | E002, E011, E026 | Dusk is a colour shift over day, with no raking warm light or long shadows. | §3.3 | VIS |
+| M15 | MINOR | foliage artefact | E010, E011 | Alpha-cut crowns shimmer as dithered noise at dusk. | rubric 7 | VIS |
+
+Strengths to keep: the village at P001 and the mill at E016, the badger companion, trainer legibility at night, painted day skies and night mood, the forest interiors, the pylon line as the spine to the finale, and the Warrens mound.
+
+### C2–C4. Cloudreach, Stormwood, Tidewake
+
+_Pending: rendering locally (Tidewake places done) and going to fresh per-chapter judges with that chapter's reference boards._
 
 ## D. Capture-tool limits (VIS, not asset defects)
 
