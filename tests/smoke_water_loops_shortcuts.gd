@@ -932,7 +932,8 @@ func _travel_leg(target: Vector3, stats: Dictionary, label: String, mounted: boo
 				return {"ok": false, "reason": "entered swimming at %s (water depth %.2f)" % [_fmt(now), world.water_depth_at(now)]}
 			var ground: float = world.ground_height_at(now.x, now.z)
 			if now.y < ground - BELOW_TERRAIN_M:
-				return {"ok": false, "reason": "fell below terrain at %s (ground %.2f)" % [_fmt(now), ground]}
+				return {"ok": false, "reason": "fell below terrain at %s (ground %.2f; velocity %s; %s)" % [
+					_fmt(now), ground, _fmt(player.velocity), _collision_under(now)]}
 			if player.is_on_floor():
 				if is_finite(airborne_from):
 					var drop := airborne_from - now.y
@@ -1015,6 +1016,22 @@ func _prompt_of(equipment: Node3D) -> Node3D:
 		if child.has_method("interaction_offer"):
 			return child as Node3D
 	return null
+
+
+## Diagnostic for a fall-below-terrain defect: is there any collider under
+## the point where the player fell, and at what height? Tells a missing or
+## late collision shape apart from a body that tunnelled through one.
+func _collision_under(at: Vector3) -> String:
+	var ground: float = world.ground_height_at(at.x, at.z)
+	var space := world.get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(Vector3(at.x, ground + 4.0, at.z), Vector3(at.x, ground - 4.0, at.z))
+	query.exclude = [player.get_rid()]
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return "no collider within 4 m of the ground height there"
+	var collider: Object = hit.get("collider")
+	var label := str((collider as Node).get_path()) if collider is Node else str(collider)
+	return "collider %s at y %.2f" % [label, float((hit.position as Vector3).y)]
 
 
 func _place(at: Vector3, label: String) -> void:
