@@ -311,12 +311,16 @@
         "spawn_order": 1005,
         "landmark_id": "meadowhart_grazing_ground",
         "radius_m": 12.0,
-        "reward_item": "orb_basic",
-        "reward_count": 3,
+        "rewards": [
+          {"item": "potion_small", "count": 2},
+          {"item": "revive", "count": 1}
+        ],
+        "reward_text": "two Small Potions and a Revive",
+        "_why_rewards": "F03#2, coordinator option (a), 2026-09-26: the code-blind usefulness judge found the former three Basic Orbs catch-only, so no use to the retained five; two Small Potions and a Revive heal and recover the same five. One reward_grant per part (source meadowhart_herd_visit:<item>), the completion flag on the last.",
         "reward_source": "meadowhart_herd_visit",
         "acknowledgement": "meadowhart_herd_found"
       },
-      "_comment": "MEADOWS-DETOUR. The herd remains the existing merged spawn order 1005; its position is resolved from that spawn row at runtime, never copied here. Rae reveals the request, but the content-specific visit node owns personal discovery of the manual Meadowhart Grazing Ground landmark, existing whole-party bond credit, completion and the existing three-Basic-Orb payout only after the player and active companion reach this tunable 12m circle. Landmark/bond credit is independent of satchel room and the Orb ledger claim. Valid discovery can precede Rae. No catch or fight is required."
+      "_comment": "MEADOWS-DETOUR. The herd remains the existing merged spawn order 1005; its position is resolved from that spawn row at runtime, never copied here. Rae reveals the request, but the content-specific visit node owns personal discovery of the manual Meadowhart Grazing Ground landmark, existing whole-party bond credit, completion and the herd-visit payout (see `rewards`) only after the player and active companion reach this tunable 12m circle. Landmark/bond credit is independent of satchel room and the Orb ledger claim. Valid discovery can precede Rae. No catch or fight is required."
     },
     {
       "id": "band1_broken_cart",

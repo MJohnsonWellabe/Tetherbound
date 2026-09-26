@@ -1852,8 +1852,12 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 	var summary: Dictionary = args.get("character", {}) as Dictionary
 	var local: Variant = game.get("local")
 	var returning_route := bool(args.get("returning_route", true))
+	# F01#6: a guest process that restarted holds a freshly minted live id. The
+	# title's direct join then offers its saved characters; the harness presses
+	# the real picker button for `character_id` (it cannot click).
+	var pick_saved := bool(args.get("pick_saved", false))
 	var wanted_id := str(summary.get("character_id", ""))
-	if returning_route:
+	if returning_route and not pick_saved:
 		var live_id := str((local as RefCounted).get("character_id")) if local != null else ""
 		if live_id != wanted_id:
 			return {"verdict": "FAIL", "detail": "returning title route retained character '%s', expected '%s'"
@@ -1902,6 +1906,10 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "production title did not become current"}
 	if returning_route:
 		title.call("_join_via", ip, port)
+		if pick_saved:
+			var pressed := _press_saved_character(title, wanted_id)
+			if not pressed.is_empty():
+				return {"verdict": "FAIL", "detail": pressed}
 	else:
 		title.call("_begin_join", ip, port, 0.0)
 	var driver := game.get_node_or_null(^"JoinDriver")
@@ -1923,6 +1931,24 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 						get_multiplayer().get_unique_id(), i]}
 	return {"verdict": "FAIL", "detail": "JoinDriver did not apply a snapshot within %d frames (scene=%s, running=%s)"
 		% [budget, current_scene.name if current_scene != null else "none", str(driver.call("is_running"))]}
+
+
+## Press the title's saved-character button for `character_id`, as a player
+## would. "" when pressed, else why not.
+func _press_saved_character(title: Node, character_id: String) -> String:
+	var box: Variant = title.get("_character_box")
+	if not box is Control or not (box as Control).visible:
+		return "direct join showed no saved-character picker"
+	var offered: Array = []
+	for child: Node in (box as Control).get_children():
+		if child is Button and child.has_meta("character_id"):
+			offered.append(str(child.get_meta("character_id")))
+			if str(child.get_meta("character_id")) == character_id:
+				if (child as Button).disabled:
+					return "saved-character button for '%s' is disabled" % character_id
+				(child as Button).pressed.emit()
+				return ""
+	return "saved-character picker did not offer '%s' (offered %s)" % [character_id, str(offered)]
 
 
 func _step_leave(args: Dictionary) -> Dictionary:
@@ -2088,14 +2114,23 @@ func _step_expect_peers(args: Dictionary) -> Dictionary:
 	if want < 0:
 		return {"verdict": "ERROR", "detail": "expect_peers needs args.count"}
 	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
+	# `budget_s` > 0 bounds the wait by wall time instead, for a transport
+	# timeout (ENet's is in milliseconds, whatever the frame rate).
+	var budget_s := float(args.get("budget_s", 0.0))
+	var started := Time.get_ticks_msec()
 	var have := -1
-	for i in maxi(1, budget):
+	var i := 0
+	while (budget_s > 0.0 and Time.get_ticks_msec() - started < budget_s * 1000.0) \
+			or (budget_s <= 0.0 and i < maxi(1, budget)):
 		var sess := _session()
 		have = int(sess.call("peer_count")) if sess != null else -1
 		if have == want:
-			return {"verdict": "PASS", "detail": "registry reports %d peer(s) after %d frames" % [have, i]}
+			return {"verdict": "PASS", "detail": "registry reports %d peer(s) after %d frames (%.1f s)"
+				% [have, i, (Time.get_ticks_msec() - started) / 1000.0]}
 		await physics_frame
-	return {"verdict": "FAIL", "detail": "registry reports %d peer(s), wanted %d" % [have, want]}
+		i += 1
+	return {"verdict": "FAIL", "detail": "registry reports %d peer(s), wanted %d, after %d frames (%.1f s)"
+		% [have, want, i, (Time.get_ticks_msec() - started) / 1000.0]}
 
 
 ## Contract §4's `wait_flag`: a world or player flag becomes set within budget.
@@ -4828,6 +4863,28 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				return null
 			var p: Vector3 = player.global_position
 			return [p.x, p.y, p.z]
+		"road_signature":
+			# F01: this peer's road layout, as its own world holds it -- every
+			# road band the terrain config it loaded builds (line, half width,
+			# shoulder) and the live baked ground height at every road vertex.
+			# Two peers agree on the roads only if these match exactly.
+			var rworld := current_scene
+			if rworld == null or not rworld.has_method("ground_height_at") or not rworld.has_method("_load_terrain_config"):
+				return {"available": false}
+			var rfield: RefCounted = (load("res://scripts/world/playground_heightfield.gd") as GDScript).new(rworld.call("_load_terrain_config"))
+			var rrows: Array = []
+			var rpoints := 0
+			for rraw: Variant in (rfield.call("road_bands") as Array):
+				var rband: Dictionary = rraw
+				var rline: Array = []
+				for rpt: Vector2 in (rband["line"] as PackedVector2Array):
+					rline.append([snappedf(rpt.x, 0.001), snappedf(rpt.y, 0.001),
+						snappedf(float(rworld.call("ground_height_at", rpt.x, rpt.y)), 0.01)])
+					rpoints += 1
+				rrows.append([snappedf(float(rband["half"]), 0.001), snappedf(float(rband["shoulder"]), 0.001), rline])
+			var rtext := JSON.stringify(rrows)
+			return {"available": true, "bands": rrows.size(), "points": rpoints,
+				"signature": rtext.sha256_text(), "realm": str(root.get_node(^"Game").get("current_realm"))}
 		"player_identity":
 			# Owner T4#2-#5. Read the local identity from PlayerState, the art
 			# from the live production rig, the location from that body's real
