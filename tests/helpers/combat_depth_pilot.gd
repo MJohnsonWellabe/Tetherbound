@@ -196,6 +196,12 @@ func _act(policy: String) -> void:
 					and _manager.wind_value() >= _manager.wind_cost("charged") + reserve:
 				_press("combat_charged")
 				return
+			# A travelling lunge (F04 `lunge_travels`) threatens its whole drawn
+			# lane, not the strike reach: backing straight off stays in the lane
+			# until its far end. Step sideways out of it instead.
+			if _wild.has_method("lunge_travels") and bool(_wild.call("lunge_travels")):
+				_clear_lunge_lane(toward)
+				return
 			# Stop once outside the observed strike's reach. Running away for
 			# the whole tell wastes the recovery returning to attack distance.
 			var enemy_reach := float(_wild.combat_config().get("range", 2.6))
@@ -245,6 +251,35 @@ func _retreat(toward: Vector3) -> void:
 		_walk(tangent)
 	else:
 		_walk(-toward)
+
+
+## Sidestep until the ally's footprint is off the lane the charger shows: the
+## lane runs `lunge` metres along the charger's facing and is as wide as
+## wild_creature.gd's contact rule, (charger radius + target radius) x
+## `charger_lunge.contact_scale`. Reads only what the lane draws on the ground.
+func _clear_lunge_lane(toward: Vector3) -> void:
+	var heading: Vector3 = _wild.call("facing") if _wild.has_method("facing") else toward
+	heading.y = 0.0
+	heading = heading.normalized() if heading.length() > 0.01 else toward
+	var offset := _ally.global_position - _wild.global_position
+	offset.y = 0.0
+	var along := offset.dot(heading)
+	var lateral := offset - heading * along
+	var ally_radius := float(_ally.call("body_radius")) if _ally.has_method("body_radius") else 0.5
+	var wild_radius := float(_wild.call("body_radius")) if _wild.has_method("body_radius") else 0.5
+	var scale := float(MATH.config().get("charger_lunge", {}).get("contact_scale", 1.2))
+	var clearance := (ally_radius + wild_radius) * scale + 0.4
+	var length := float(_wild.combat_config().get("lunge", 0.0)) + clearance
+	if along < -clearance or along > length or lateral.length() > clearance:
+		return
+	var side := lateral.normalized() if lateral.length() > 0.05 else heading.cross(Vector3.UP)
+	var arena: Node3D = _manager.arena()
+	var outward := _ally.global_position - arena.global_position
+	outward.y = 0.0
+	# Near the wall, take the side that points back into the arena.
+	if outward.length() > float(arena.get("radius")) - 2.5 and side.dot(outward) > 0.0:
+		side = -side
+	_walk(side)
 
 
 func _press(action: String) -> void:
