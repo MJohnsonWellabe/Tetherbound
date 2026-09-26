@@ -5776,10 +5776,11 @@
       "id": "crown_guardian",
       "region_id": "hollow_crown",
       "position": [
-        700,
+        640,
         74,
         2700
       ],
+      "_why_moved_f11": "The guardian's seat was exactly Archivist Wen's ([700, 74.15, 2700]), so near the guardian Wen's Greet prompt (2.6 m) won the arbiter over the guardian's engage offer (3.9 m) and a player could not challenge it: earned F11 runner run 29, four approaches, winner '.../Archivist Wen/Interactable'. Moved 60 m west onto the approach from the Crown arch (the plateau is flat at y 74 there), still guarding the heartstone grove; 40 m from Wen and 34 m from the nearest Crown record.",
       "level": 41,
       "behavior_profile": "WALL",
       "placeholder_species": "staticub",
