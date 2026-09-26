@@ -668,6 +668,13 @@ SCRIPT ERROR count is 0 in both runs.
   - **Strikes:** `F11 WITNESS STRIKES crown {"damage":18.0,"deaths":0,"dodge_frames":1048,"hits":1,"satchel_recoveries":0,...,"warnings":21}`.
   - **Totals:** `SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0`. 0 SCRIPT ERROR.
   - **Harness fix** (next commit): leave for the seams only when the runtime's own open window at the seams is at least 150 s. This is the prefix's rule.
+- **Run 21** (150 s window rule):
+  - **Prefix:** PASS in 1190.5 s. 8 warnings, 0 hits, 0 deaths.
+  - **Alpha:** the Alpha won on its second approach. The first ended `outcome=lost` with brooktail fainted and the Alpha at 239.7/511.8.
+  - **Window rule works:** `WAITED ... { "phase": "break", "open_seconds": 179.8 }`, then 78.1 s left after seam 075 and 46.1 s after 074. All six sources were taken ("SIX sources yielded6 Crown glass/8 Thunderwood/6 vine") and both frames were crafted.
+  - **Stop:** a road fight at the Still Grove road point was lost (sparkit fainted). The build then failed with `controller right stick could not face the Still Grove footing`. Crown step FAIL at 2069.6 s.
+  - **Strikes:** `STRIKES crown {"damage":18.0,"deaths":0,"hits":1,"satchel_recoveries":0,"warnings":29}`. 0 SCRIPT ERROR.
+  - **Harness fix** (89ffa24a1): the turn fights out any running fight first. If it still cannot turn, it reports the camera, fight, input-owner, pause, arbiter and clock state.
 - **Next** (queue items 2–3): rerun the same command. The first things to read are the LB press lines after the Still Grove rest and any `HARVEST NODE … left the tree` line.
 
 ### Not produced
