@@ -145,15 +145,18 @@ var _move_y_sign := 1.0
 ## says so in its own output, so a passing run that skipped it cannot be
 ## mistaken for a passing run that did not.
 ##
-## `on_ready_for_draw`, when valid, is awaited once the three beds are placed,
+## `on_ready_for_draw` (a member, set before `run()` so subclasses' `run()`
+## overrides keep the parent signature), when valid, is awaited once the three beds are placed,
 ## slept in and the team fed -- after three-bed readiness and before the sign-up
 ## -- and must return a bool; false stops the segment (the callable records its
 ## own failure). `smoke_gate_b_continuous.gd` uses it to save and reload through
 ## the game's own path at exactly that point. Nothing the segment does after it
 ## holds a node the reload rebuilds: the beds and bedroll are finished with.
+var on_ready_for_draw: Callable = Callable()
+
+
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
-		rig: Node3D, stage_arena: bool = true, skip_house: bool = false,
-		on_ready_for_draw: Callable = Callable()) -> Dictionary:
+		rig: Node3D, stage_arena: bool = true, skip_house: bool = false) -> Dictionary:
 	_tree = tree
 	_world = world
 	_game = game

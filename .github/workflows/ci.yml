@@ -1627,6 +1627,15 @@ jobs:
       - name: Verify ordinary Stormwood to Water gate path
         if: ${{ !cancelled() }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_water_gate_path.gd
+      - name: Verify Stormwood Surge audio observer
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_surge_audio.gd
+      - name: Verify Stormwood hosted encounter admission
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_hosted_admission.gd
+      - name: Verify Stormwood Nysa press
+        if: ${{ !cancelled() }}
+        run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_nysa_press.gd
       - name: Verify Tidewake closed-gate tide-race seal
         if: ${{ !cancelled() }}
         run: timeout 300s godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
@@ -1677,8 +1686,6 @@ jobs:
       - name: Verify Tidewake chain side_water_lastlight_shelter
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_lastlight_shelter.gd
-      # F13 #1 (ACCEPTANCE 6.1): the four land loops and three return
-      # shortcuts walked/swum with real stick input in the production scene.
       - name: Verify regional credits survive a disk reload
         if: ${{ !cancelled() }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd

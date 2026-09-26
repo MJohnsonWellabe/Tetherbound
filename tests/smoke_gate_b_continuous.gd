@@ -425,8 +425,10 @@ func _gather_and_walk_home() -> bool:
 ## draw by the marshal's own ladder reading that condition, and fights all
 ## three rounds.
 func _play_the_tail() -> bool:
-	var tail: Dictionary = await TAIL.new().run(self, _world as Node3D, _game, _player, _rig,
-		true, false, _reload_at_three_bed_readiness)
+	var segment: RefCounted = TAIL.new()
+	segment.on_ready_for_draw = _reload_at_three_bed_readiness
+	var tail: Dictionary = await segment.run(self, _world as Node3D, _game, _player, _rig,
+		true, false)
 	for line: Variant in (tail.get("transcript", []) as Array):
 		_checkpoint("tail | %s" % str(line))
 	if not bool(tail.get("passed", false)):
