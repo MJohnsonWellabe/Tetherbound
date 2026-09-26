@@ -51,7 +51,9 @@ func test_authored_face_lock_locks_after_its_fraction() -> void:
 	assert_almost_eq(float((wild.call("combat_config") as Dictionary).range), 16.0, 0.5,
 		"the locked profile keeps the authored reach")
 	wild.call("_enter", AI.Intent.RECOVER)
+	assert_true(wild.call("_selected_heading_is_locked"), "the lock holds through recovery")
 	wild.call("_enter", AI.Intent.REPOSITION)
+	assert_true((wild.get("_selected_attack") as Dictionary).is_empty(), "the tell is released afterwards")
 	assert_true((wild.get("_combat_cfg") as Dictionary).has("range"),
 		"clearing the selected attack never clears the live config")
 	wild.free()

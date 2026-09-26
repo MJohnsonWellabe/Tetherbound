@@ -9,7 +9,7 @@ Aquaryn's phase attacks are ordinary strikes, and an ordinary strike never locks
 - **Before, 6 seeds:** all 21 reader hits landed in Broken Wake, at 10–15 m, while the reader backed straight down the jet line.
 - **With a sidestep but no lock, 6 seeds:** 19 hits, all still in Broken Wake. The tracking jet follows the sidestep.
 
-## Fix (proposed, needs shared files)
+## Fix (applied in 5cb1ce1 under the coordinator's 21:15 shared-file grant)
 - **`shared_face_lock.patch`** (`scripts/creatures/wild_creature.gd`, `scripts/creatures/water_alpha_body.gd`):
   - `face_lock_fraction` becomes an allowed override key;
   - an ordinary telegraph whose config authors it keeps a copy of its spaced profile as the selected attack, so its heading locks after that fraction of the tell;
@@ -31,7 +31,8 @@ Aquaryn's phase attacks are ordinary strikes, and an ordinary strike never locks
 - **Raw data:** `A_aquaryn_ripplet.json` and `RUN_aquaryn_ripplet.txt`.
 
 ## Limits
-- This is not yet on main: it needs the shared-file grant.
+- The shared change landed on the lane branch in 5cb1ce1, with `tests/test_water_alpha_face_lock.gd` (2 of 3 fail with it reverted).
+- Once locked, Aquaryn also holds its heading through recovery, as a named heavy does. A phase change mid-tell resolves with that tell's frozen profile, and the next tell uses the new phase.
 - The pilot change is only exercised on Aquaryn here. It applies to any narrow long cone, so the other named cases should be re-run once it lands.
 - Terrapup and Galewisp leads with the lock were not re-run. They passed before (0.46 and 0.29 at 24 seeds on main), and the lock can only widen the reader's options.
 - Surface-channel runs are not reproduced on the flat fixture (unchanged limit).
