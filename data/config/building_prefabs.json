@@ -15,7 +15,9 @@
         {"module": "Rope_2", "dir": "res://assets/props/quaternius_fantasy", "at": [-1.6, 0.2, 0.7], "scale": 0.6},
         {"module": "Rope_2", "dir": "res://assets/props/quaternius_fantasy", "at": [1.6, 0.2, 0.7], "scale": 0.6}
       ],
-      "colliders": [{"at": [0.0, 0.1, 0.0], "size": [4.0, 0.2, 2.0]}]
+      "colliders": [{"at": [0.0, 0.1, 0.0], "size": [4.0, 0.2, 2.0]}],
+      "retint": {"MI_WoodTrim": {"color": "#7a5636", "metallic": 0.0}},
+      "_why_retint": "F03#1 round-5 judge: the kit's wood-trim sheet maps its pale painted band onto the floor tiles and fence rails, so in daylight the whole perch read as untextured white planes. A warm dark-timber multiply on this prefab alone makes it read as a wooden bank perch; no other recipe changes."
     },
     "workshop": {
       "_why": "The settlement's big working building, standing where the red gambrel Barn stood. Stone walls (UnevenBrick), an open Wall_Arch work bay for bible sec12's 'broader doors', and the biggest roof in the family. The EV7 work_area cluster (anvil, workbench) sits off its front-left corner and becomes this building's yard.",
