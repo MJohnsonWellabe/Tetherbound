@@ -652,6 +652,15 @@ SCRIPT ERROR count is 0 in both runs.
   - **Stopped by me after ~12 min** on the coordinator's SNOWBALL re-order (F10#1 first), still inside the prefix. The last line was `DIAGNOSTIC: START Lantern Pools charged-window wait`, after Dace and `lower_rods_disabled`.
   - At that point: 0 SCRIPT ERROR, and no step result, death or satchel line. So trainer deaths and satchel recoveries are both 0 up to the stop; no final totals line printed.
   - Witness dir removed. No F11 clause was reached.
+- **Run 19** (after F10#1; commits up to 57813ecd5):
+  - **Prefix:** PASS in 1193.5 s. 10 warnings, 275 dodge frames, 0 hits, 0 deaths, 0 satchel recoveries; tools kept.
+  - **Crown step:** rest over 3 nights. The send-out used ordinary joypad LB at 1x: **every press changed the active creature**, for example `LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit`, and presses 2–4 did the same. So the dead-press cause is confirmed and no LB binding bug is shown.
+  - **Road KO:** a road fight knocked out terrapup. The party re-rested one night and the send-out worked again.
+  - **Alpha:** both escorts won. `Capacitor Alpha outcome=won`: bramblebun L46 finished at 88.6/351.5 against voltarach L40 (511.8 HP), with 102 hits in 95.6 s.
+  - **Harvest frees, now named:** every "freed during the approach" node was freed by the harness's own Interact press. The press starts the equipped tool's swing, and the swing resolves on the node at its impact frame. Example: `HARVEST NODE stormwood_harvest_conductor_run_099 left the tree ...: receipt=true equipped=axe swinging=true distance=0.37 recent=[... interact press winner=.../stormwood_harvest_conductor_run_099/Interactable; ... swing_started ...; ... swing_connected stormwood_harvest_conductor_run_099]`. Each gather committed its exact receipt and yield. This is not a game bug.
+  - **Stop:** the thirty-minute Crown watchdog expired while the step was still gathering Crown glass (2 of the Crown nodes taken). Nothing was stuck. 0 SCRIPT ERROR. Total wall time 50m10s.
+  - **Totals:** the final `F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 ...` covered the prefix only, because the watchdog path dropped the Crown step's counts.
+  - **Fix** (the next commit): the Crown step gets a 60-minute capacity, and an unfinished step's strike and death counts are printed and summed.
 - **Next** (queue items 2–3): rerun the same command. The first things to read are the LB press lines after the Still Grove rest and any `HARVEST NODE … left the tree` line.
 
 ### Not produced
