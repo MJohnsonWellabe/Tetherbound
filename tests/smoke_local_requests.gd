@@ -1445,8 +1445,15 @@ func _wait_for_ground_under(at: Vector3, max_frames: int) -> bool:
 	var space := _player.get_world_3d().direct_space_state
 	var query := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 30.0, at + Vector3.DOWN * 60.0)
 	query.exclude = [_player.get_rid()]
+	# Any hit is not enough: Terrain3D builds collision only around the camera,
+	# and after a long leg (the Juno return ends ~4 km away) a scatter or prop
+	# collider can answer the ray while the terrain surface itself is not there
+	# yet -- the herd seat then dropped straight through it. Require a hit at
+	# the heightmap's own ground height.
+	var ground := float(_world.call("ground_height_at", at.x, at.z))
 	for _frame in max_frames:
-		if not space.intersect_ray(query).is_empty():
+		var hit := space.intersect_ray(query)
+		if not hit.is_empty() and (is_nan(ground) or absf((hit.position as Vector3).y - ground) <= 1.0):
 			return true
 		await physics_frame
 	push_warning("seat at %s never had ground collision under it after %d frames" % [str(at), max_frames])
