@@ -849,6 +849,11 @@ func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float,
 	query.shape = ball
 	query.transform = Transform3D(Basis(), pivot)
 	query.motion = dir * limit
+	# The arm's own mask: what SpringArm3D itself would stop against. The query
+	# default is every layer, so a body the arm walks straight through -- the
+	# trainer standing behind their creature -- read as a wall and sent the
+	# clear-orbit solver swinging away from a perfectly open fight.
+	query.collision_mask = collision_mask
 	var excluded: Array[RID] = _talk_excluded.duplicate()
 	# The ordinary follow target surrounds `pivot`; without excluding it every
 	# shoulder sweep begins inside the creature and reports zero free distance.
