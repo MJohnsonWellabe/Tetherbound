@@ -88,6 +88,15 @@ const GRAPH_STEP_M := 1.0
 const GRAPH_LINK_M := 1.1
 const GRAPH_CLIP_M := 220.0
 const VILLAGERS_PATH := "res://data/config/village_npcs.json"
+## Villagers who stand indoors are reached through their building's real door,
+## never through a wall. Mira's shop is village.json's cottage_a at (18,4), yaw
+## -90: shop_interior.gd's doorway lane (local x = DOOR_X 1.0, front wall +z)
+## is world z = 5, entered from the doorstep at (13.87,5); she stands behind the
+## counter (local z -0.6..-0.1), so the customer spot is local (0,+0.5) = world
+## (17.5,4.0), 1.9m from her. Outside doorstep -> just inside the door -> counter.
+const INDOOR_APPROACH := {
+	"Mira": [Vector2(13.87, 5.0), Vector2(16.5, 5.0), Vector2(17.5, 4.0)],
+}
 
 ## Grandpa's farmhouse: HOUSE_AT (-22,-16) in playground_world.gd, door on the
 ## east wall at x = -17 (grandpa_house.gd EXT_HALF_W 5.0). The start is 2.5m
@@ -733,7 +742,12 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 	var from_road := 1 if road.size() > 0 else -1
 	var until_road := leg.size() - 1 if road.size() > 0 else -1
 	var stop := at
-	if kind in ["grandpa", "villager"]:
+	if INDOOR_APPROACH.has(str(t.label)):
+		var through: Array = INDOOR_APPROACH[str(t.label)]
+		for i in through.size() - 1:
+			leg.append(through[i] as Vector2)
+		stop = through[through.size() - 1] as Vector2
+	elif kind in ["grandpa", "villager"]:
 		var back := leg[leg.size() - 1] - at
 		stop = at + (back.normalized() * NPC_STOP_M if back.length() > NPC_STOP_M else back)
 	if leg[leg.size() - 1].distance_to(stop) > 0.05:
