@@ -68,6 +68,12 @@ func _continue_deepwood() -> void:
 	if not await _activate_exact(sable, prompt, approach, "Sable captive truth") \
 			or not await _dialogue("Sable") or not await _receipt("stormwood:captive_truth_learned"):
 		return
+	# Run 24 reached Officer Nysa with three of five fainted (the Crown
+	# guardian, the Rootgate road and a Deepwood-station wild), and the
+	# challenge was refused. A player rests first: Lantern Hollow Waycamp is
+	# the camp the Rootgate opens, beside Sable, on this road.
+	if _party_worn(0.999) and not await _rest_party_at_camp("lantern_hollow_waycamp"):
+		return
 	if not await _walk_xz(Vector2(-890, 4490), "Deepwood station") \
 			or not await _trainer(TRAINERS[0]) or not await _rod("deepwood_rod_station") \
 			or not await _receipt("stormwood:deepwood_station_disabled"):
@@ -142,8 +148,25 @@ func _trainer(id: String) -> bool:
 		return _fail(id + " actual trainer is absent")
 	if not await _ensure_usable_ally(id):
 		return false
+	# The send-out that `_ensure_usable_ally` pressed deploys asynchronously;
+	# wait for the director to agree before judging the challenge.
+	for _frame in 300:
+		if bool(_director.call("can_challenge", spec)):
+			break
+		await _tree.physics_frame
 	if not _director.call("can_challenge", spec):
-		return _fail(id + " requires an unmet earned prerequisite or usable ally")
+		var ally: RefCounted = _director.call("ally_instance")
+		var missing: Array[String] = []
+		for flag: String in spec.get("requires_flags", []):
+			if not _has(flag):
+				missing.append(flag)
+		return _fail(("%s requires an unmet earned prerequisite or usable ally (ally=%s fainted=%s ally_body=%s "
+			+ "fighting=%s battle=%s too_low=%s beaten=%s missing_flags=%s)") % [id,
+			str(ally.get("species_id")) if ally != null else "none",
+			str(ally.get("fainted")) if ally != null else "?", str(_director.call("ally_body") != null),
+			str(_manager.call("is_fighting")), str(_director.call("trainer_battle_active")),
+			str(_director.call("too_low_to_challenge", spec)), str(_has(str(spec.get("defeat_flag", "")))),
+			str(missing)])
 	if not await _activate_exact(body, prompt,
 			Vector2(body.global_position.x, body.global_position.z - 2), id) or not await _dialogue(id):
 		return false
