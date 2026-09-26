@@ -1,8 +1,8 @@
-# Two-peer proof: F01 opening, every starter, through a reload and a two-peer rejoin
+# Two-peer proof: F01 opening, every starter, through a reload; each starter also crosses a guest's drop and rejoin
 
-**Verdict: PASS.** 3 of 3 runs, with 0 failed checks (141 / 140 / 142 checks). The smoke's default late-arrival mode is unchanged: 74 checks, PASS.
+**Verdict: PASS.** 3 of 3 runs, with 0 failed checks (142 / 141 / 143 checks). The smoke's default late-arrival mode is unchanged: 74 checks, PASS on `8608ec2d9`. The later change touches only the opening-together path.
 
-Base: `ralph/x05-f01-join` `8608ec2d9`, which is main 08fcc2055 plus the smoke changes. Headless. One run per starter pair:
+Base: `ralph/x05-f01-join` `58b5defc0`, which is main 08fcc2055 plus the smoke changes. Headless. One run per starter pair:
 
 ```
 TB_NET_OUT_DIR=DIR TB_NET_PEERS=2 godot --headless --path . \
@@ -12,9 +12,9 @@ TB_NET_OUT_DIR=DIR TB_NET_PEERS=2 godot --headless --path . \
 
 | Run | Host picks | Guest picks | Checks | Result |
 |---|---|---|---|---|
-| host0-guest2 | terrapup | galewisp | 141 | PASS |
-| host1-guest0 | ripplet | terrapup | 140 | PASS |
-| host2-guest1 | galewisp | ripplet | 142 | PASS |
+| host0-guest2 | terrapup | galewisp | 142 | PASS |
+| host1-guest0 | ripplet | terrapup | 141 | PASS |
+| host2-guest1 | galewisp | ripplet | 143 | PASS |
 
 Every starter is chosen once by a host and once by a guest.
 
@@ -28,20 +28,22 @@ Every starter is chosen once by a host and once by a guest.
    - back to Grandpa for the catch supplies.
    Straight after the opening, each peer holds exactly one starter, of the species it picked, under the name it typed. It also has the `opening:starter_granted` receipt on its own character (checked on both peers) and 45–50 orbs.
 3. **In-place save and reload** (`save_reload_here`). The host saves and reloads its slot. The guest saves its character file and applies it again. That apply lands on an in-memory state that was never cleared, so step 4 is what covers restoring into a blank state. Each still holds the same starter species (and UID), the same typed name, the receipt and its orbs.
-4. **Rejoin, the starter crossing a join.** The guest writes its character, then its link dies with `drop_link`. The host sees it gone. The guest's in-memory character is blanked (party 1 → 0). The same character id then rejoins through the title's returning route, and both peers see both players again. Then:
-   - the guest holds the same starter creature, with the UID recorded before the drop, under its species and typed name, plus its receipt and orbs;
+4. **Rejoin: the GUEST's starter crosses a join.** The host never drops. Each species crosses the rejoin once, as a guest's starter. The guest's character file is written by the harness save and again by the game's own disconnect path (`session.gd` `_on_server_disconnected` saves the character). Then its link dies with `drop_link`. The host sees it gone. The guest's in-memory character is blanked (party 1 → 0). The same character id then rejoins through the title's returning route, and both peers see both players again. Then:
+   - the guest holds the same starter creature, with the UID recorded before the drop, under its species and typed name, plus its receipt and exactly the orb count it had before the drop (50);
    - both registries hold exactly the host and the returning character;
-   - the host still holds its own starter.
+   - the host still holds its own starter species and name. The host's UID, receipt and orbs are checked across the reload (step 3), not re-checked after the rejoin.
 
 ## Known and not covered
 
 - **Save error in the logs.** Every run logs one `ERROR: Could not create directory 'user://saves'` and a fallback-autosave warning. They come only from the harness's own coordinator process, which still ticks its Game autosave and cannot write into its empty isolated data home. That is a harness gap, not game behaviour. Both peer logs, committed as `<run>/peer-N.log.gz`, contain it 0 times.
+- **Guest log errors after the drop.** Each guest `peer-1.log` holds 18–20 `ERROR: The multiplayer instance isn't currently active` lines, from `scripts/creatures/remote_creature.gd` `_apply_ownership` running while the link is dead. They stop once the guest rejoins, and nothing in the run depends on them. They are log noise from a file outside X05's lane, reported, not fixed here.
 - **Weak name check.** The typed names are one letter, and both peers typed the same one ("A"). The check is per peer, against what that peer typed.
 - **Rest of the F01 clause, not covered:**
   - the first fight and catch;
   - three-bed readiness;
   - three played tournament rounds;
-  - a cold restart with Continue from the title.
+  - a cold restart with Continue from the title;
+  - the host dropping and returning.
 
 ## Files
 
