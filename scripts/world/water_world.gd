@@ -131,6 +131,10 @@ func _ready() -> void:
 	docks.name = "WaterDocks"
 	add_child(docks)
 	docks.build(self)
+	var dock_dressing := preload("res://scripts/world/water_dock_dressing.gd").new()
+	dock_dressing.name = "WaterDockDressing"
+	add_child(dock_dressing)
+	dock_dressing.build(self)
 	var local_chains := LOCAL_CHAINS.new()
 	local_chains.name = "WaterLocalChains"
 	add_child(local_chains)

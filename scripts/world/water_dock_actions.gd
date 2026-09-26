@@ -79,10 +79,12 @@ func build(world: Node3D) -> void:
 		var rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
 		var height := float(rules.docks.barrier_height_m)
 		var width := float(rules.docks.barrier_width_m)
-		if str(dock.id) == FIRST_SHORE_DOCK:
-			_build_first_shore_barrier_visual(barrier, width, height)
-		else:
-			_box(barrier, Vector3(0, height * 0.5, 0), Vector3(width, height, 0.35), Color("70583e"))
+		# X04 / F13#5: every closed departure dock wears the installed
+		# cross-braced fence First Shore already uses. The former plain
+		# plain brown `_box` (#70583e) read as an untextured tan slab by day
+		# and a black one at night at the Tidal Cradle and Sluice Isle stands.
+		# Collision (the box shape below) and unlock behaviour are unchanged.
+		_build_first_shore_barrier_visual(barrier, width, height)
 		var shape := CollisionShape3D.new()
 		var box := BoxShape3D.new()
 		box.size = Vector3(width, height, 0.35)
