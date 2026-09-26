@@ -1554,9 +1554,10 @@
           "smoke_colour": "#4f4a45",
           "glow": "campfire",
           "name": "OldBramCampFire",
+          "_why_r6": "Round-6 code-blind judge: at (174, 903.4) the fire sat exactly on the road-to-Bram line, so on approach its flames and smoke column stood between the player and Bram, who never appeared at 30 m. Moved 6 m north of that line to (176, 909); tests/probe_lure_road_visibility.gd --at=bram:176,909 finds 2 hard-clear road samples at ground level (nearest 42.4 m), against 0 at the old spot, and the 28 m column still clears the canopy.",
           "at": [
-            174.0,
-            903.4
+            176.0,
+            909.0
           ],
           "yaw_deg": 30.0
         }

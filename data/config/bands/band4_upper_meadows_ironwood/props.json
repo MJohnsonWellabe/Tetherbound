@@ -830,6 +830,21 @@
           "_why": "One radial firewood piece closes the foreground of the compact camp without adding another seat or collider to the gate lane."
         }
       ]
+    },
+    {
+      "order": 4007,
+      "name": "tether_patrol_holding_camp",
+      "_why": "F03#0 lure, round-6 code-blind judge: the Tether Patrol holding Juno's Meadowhart (trainers.json lost_creature_rue at [-175,5470], moved to the road's edge by #257 Option A) stood on bare grass, so at the save's night hour it read as dark silhouettes and a stray deer ('no oxblood, tent or camp structure at any distance'). This gives the patrol the camp language the band's other Tether postings already use (ridge_road_picket, severed_conduit_post): the installed Banner_1 standard in the Tether oxblood retint, a small bonfire in the generated stone ring, crate, barrel and the band-4 camp tent. It sits 9-13 m behind the patrol, on the side away from the road, so the fight ring and the Meadowhart's waiting post (south of the patrol) stay clear. The fire's warm glow is the night read and the two standards are the day read; oxblood is Team Tether's reserved colour. No interaction, reward, trainer or collider-path change.",
+      "props": [
+        {"name": "TetherHoldingStandardEast", "model": "Banner_1", "dir": "res://assets/props/quaternius_fantasy", "at": [-167.5, 5477.0], "yaw_deg": 160.0, "sink_m": -2.4, "scale": 1.55, "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}},
+        {"name": "TetherHoldingStandardWest", "model": "Banner_1", "dir": "res://assets/props/quaternius_fantasy", "at": [-182.5, 5477.5], "yaw_deg": 160.0, "sink_m": -2.4, "scale": 1.55, "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}},
+        {"model": "campfire_stone_ring", "dir": "res://assets/props/generated_camp", "at": [-172.0, 5478.5], "yaw_deg": 10.0, "sink_m": 0.03, "scale": 0.6},
+        {"name": "TetherHoldingFire", "model": "Bonfire_Fire", "dir": "res://assets/props/quaternius_survival", "at": [-172.0, 5478.5], "yaw_deg": 25.0, "sink_m": 0.02, "scale": 0.45, "glow": "campfire", "glow_scale": 2.0},
+        {"model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [-177.0, 5481.5], "yaw_deg": 160.0, "sink_m": -0.64, "scale": 0.85},
+        {"model": "Crate_Wooden", "at": [-180.5, 5480.0], "yaw_deg": 20.0, "sink_m": 0.06, "scale": 1.0},
+        {"model": "Barrel", "at": [-179.5, 5481.8], "yaw_deg": -30.0, "sink_m": 0.05, "scale": 1.0},
+        {"model": "Rope_1", "at": [-181.3, 5481.2], "yaw_deg": 70.0, "sink_m": 0.03, "scale": 1.0}
+      ]
     }
   ]
 }
