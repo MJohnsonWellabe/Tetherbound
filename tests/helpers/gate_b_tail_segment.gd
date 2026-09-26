@@ -144,8 +144,16 @@ var _move_y_sign := 1.0
 ## twice. `tests/smoke_gate_b_tail.gd` sets it from GATEB_TAIL_SKIP_HOUSE and
 ## says so in its own output, so a passing run that skipped it cannot be
 ## mistaken for a passing run that did not.
+##
+## `on_ready_for_draw`, when valid, is awaited once the three beds are placed,
+## slept in and the team fed -- after three-bed readiness and before the sign-up
+## -- and must return a bool; false stops the segment (the callable records its
+## own failure). `smoke_gate_b_continuous.gd` uses it to save and reload through
+## the game's own path at exactly that point. Nothing the segment does after it
+## holds a node the reload rebuilds: the beds and bedroll are finished with.
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
-		rig: Node3D, stage_arena: bool = true, skip_house: bool = false) -> Dictionary:
+		rig: Node3D, stage_arena: bool = true, skip_house: bool = false,
+		on_ready_for_draw: Callable = Callable()) -> Dictionary:
 	_tree = tree
 	_world = world
 	_game = game
@@ -178,6 +186,11 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	if not await _sleep_the_team_into_condition():
 		return _result()
 	_feed_the_team()
+	if on_ready_for_draw.is_valid():
+		var survived: bool = await on_ready_for_draw.call()
+		if not survived:
+			_fail("the caller's readiness checkpoint (save/reload) did not pass")
+			return _result()
 	if not await _enter_the_tournament():
 		return _result()
 	if not await _fight_the_bracket():
