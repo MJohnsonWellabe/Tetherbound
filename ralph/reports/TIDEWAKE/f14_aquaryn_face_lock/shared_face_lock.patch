@@ -1,0 +1,38 @@
+diff --git a/scripts/creatures/water_alpha_body.gd b/scripts/creatures/water_alpha_body.gd
+index dc65910c..1354b1ae 100644
+--- a/scripts/creatures/water_alpha_body.gd
++++ b/scripts/creatures/water_alpha_body.gd
+@@ -35,6 +35,7 @@ func _tick_combat(delta: float) -> void:
+ 			"range": float(phase.reach_m),
+ 			"preferred_range": float(phase.reach_m) * float(authority_node.rules.movement.preferred_reach_fraction),
+ 			"cone_degrees": float(phase.cone_degrees),
++			"face_lock_fraction": float(phase.get("face_lock_fraction", 0.0)),
+ 			"power": float(MATH.config().get("enemy", {}).get("power", 8.0)) * float(phase.power_multiplier)
+ 		}
+ 		refresh_combat_profile()
+diff --git a/scripts/creatures/wild_creature.gd b/scripts/creatures/wild_creature.gd
+index 91543f9c..15837fd7 100644
+--- a/scripts/creatures/wild_creature.gd
++++ b/scripts/creatures/wild_creature.gd
+@@ -421,6 +421,9 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
+ 	# or absent cadence leaves every existing opponent on its one-attack path.
+ 	"charged_every", "charged_telegraph", "charged_recovery",
+ 	"charged_face_lock_fraction",
++	# COMBAT §5: the fraction of an ordinary strike's tell after which its
++	# heading locks. Absent or 0 keeps today's full-tell tracking.
++	"face_lock_fraction",
+ 	# F04: opt-in travelling lunge for a named CHARGER. Absent or false, the
+ 	# body keeps the instantaneous strike and `lunge` stays an impulse.
+ 	"lunge_travels",
+@@ -707,6 +710,11 @@ func _enter(intent: int) -> void:
+ 		_beat_left = float(_selected_attack.get("telegraph", AI.duration_for(intent, _combat_cfg)))
+ 	elif intent == AI.Intent.TELEGRAPH:
+ 		_selected_attack.clear()
++		# COMBAT §5: an ordinary strike that authors `face_lock_fraction` keeps
++		# its own spaced profile as the selected attack, so its heading locks
++		# for the rest of the tell exactly as a named heavy's does.
++		if float(_combat_cfg.get("face_lock_fraction", 0.0)) > 0.0:
++			_selected_attack = _spaced_config().duplicate(true)
+ 		_selected_heading_locked = false
+ 		_beat_left = AI.duration_for(intent, _combat_cfg)
+ 	elif intent == AI.Intent.RECOVER and previous == AI.Intent.TELEGRAPH and not _selected_attack.is_empty():
