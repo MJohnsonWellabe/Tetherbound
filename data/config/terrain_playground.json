@@ -3185,11 +3185,35 @@
           ],
           [
             -430,
-            510
+            508
           ],
           [
-            -330,
-            590
+            -458,
+            518
+          ],
+          [
+            -466,
+            540
+          ],
+          [
+            -469,
+            572
+          ],
+          [
+            -443,
+            600
+          ],
+          [
+            -400,
+            605
+          ],
+          [
+            -345,
+            610
+          ],
+          [
+            -322,
+            594
           ],
           [
             -190,
@@ -3241,6 +3265,7 @@
           ]
         ],
         "_why_f01": "F01-a. The first point was [27.5,-16] -- the retired pre-boundary GATE_AT (playground_world.gd) -- so the spine's first leg ran a second, diagonal road from the old gate site through Mira's shop footprint (1.9m from its centre) and across the tournament field to [14,20]. It now starts at South Street's own vertex [11.5,2.0], so the spine continues the through-road through TrailGate instead of crossing the village on its own. Index 1 is still [14,20], the TrailGate approach meadows_earned_bridge_segment.gd walks from.",
+        "_why_f01_pond_shore": "F01 DAY walk round 3 (through_day_021): the old pond bend (-430,510) -> (-330,590) crossed ~100m of the pond arm below water.level -17.0 (ground -17.5..-20.7, probed with playground_heightfield.height_at), so the walk swam and took damage. The mill pad is an island since OW5D, so the road cannot use the footbridge; it now follows the dry west and south shore (every metre, +-2m either side, at least 0.2m above water; worst grade 0.35, the same as the existing descent from (-360,400)). The east shore was also dry and 170m shorter but passes 8m from the pond alpha (order 1900, [-318,505]), which OP-0905-06 places on the far shore so the player sees it across the water.",
         "_comment_ow5c_bridge_fix": "Inserted (0,1330) before the Band 2 handoff: the spine crosses South Bridge (crossings[0], carve centre (0,1330)) AT the bridge, not to the side of it -- the straight line from (-40,1310) to (0,1360) alone passed through the carve trench near x=-24 at z=1330, cutting an unbridged second gap in the gully."
       },
       {
