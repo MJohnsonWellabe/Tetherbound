@@ -29,7 +29,7 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V14 | M8 | Great candy reads as "cyan crystal heaps": its wrapper tint `Color(0.62, 0.76, 1.0)` renders cyan-white under 0.90 emission. The medallion and glow keep `items.json` `#3f6fd0`. | `scripts/world/band_pickups.gd:225`. Unjudged reference diff: `tb/vis-candy-tint` d6666d2e (periwinkle). Before/after stand: Quarry env; a Great candy sits 26 m from the stand. | open |
 | V15 | M4/M14 dusk | Golden-hour fog is **currently** 0.0016, about 3× day's 0.00055. Ranges 2 km out fog to one beige cut-out (evidence: `_sheet_meadows_env_32bd3307.jpg` (local capture at main 32bd3307), 'village 18:30'). **Lower** it. | `data/config/art.json` `times.golden.environment.fog_density`. Unjudged reference diff: `tb/vis-golden-fog` f0b0242d (0.0008). Re-run `tests/test_world_look_fog_energy.gd`. | open |
 | V16 | M9, CR3, TW1 | Stretched or grass-textured steep faces: the South Bridge trench, Cloudreach sheer faces (CR3) and Tidewake trench walls (TW1; also Tidewake verdict defect 16). The probe (`tools/_probe_south_bridge_gully.gd`, output `probes/south_bridge_gully.txt`) shows the gully walls are **Terrain3D cells, not a mesh**: about 8 m of drop inside one 2 m vertex step (76°). The wall texels are a mix of rock (id 2) and soil (id 1). **At the bridge (x=8), which is what the camera sees, they are path (id 3).** 26b7216d rewrites only vegetation ids {0,1,5}, so it cannot touch the path-painted bridge walls, which is why it showed no change there. Either way the stretch comes from top-down projection over a near-vertical quad. **Do not re-apply it as-is.** | A steep-face side (XZ/ZY) projection for steep fragments in `shaders/terrain_ground.gdshader` and the Cloudreach/Tidewake terrain materials. Keep path paint off the 76° walls at the bridge. | open |
-| V17 | C2–C4 | Region audits: Cloudreach places (§C2) and Tidewake places (§C4) and Cloudreach env are judged; their rows are V18–V30. Stormwood and Tidewake env are in progress (VIS lane, read-only). | §C2–C4 | in progress (#304) |
+| V17 | C2–C4 | Region audits: Cloudreach (§C2), Stormwood places (§C3) and Tidewake places (§C4) are judged; their rows are V18–V35. Stormwood env and Tidewake env are in progress (VIS lane, read-only). | §C2–C4 | in progress (#304) |
 | V18 | C4 TW7 | Tidewake rock does not read as wet dark rock. The judge reports "neutral grey-khaki walls" and "no dark wet rock", plus a cell rock texture (`judges/tidewake_places_VERDICT.md` defects 7 and 2). The auditor's own reading of sunlit faces (P001, P007, P012) is pale warm grey. The texture itself renders on a full checkout (render 36271541391). The tint is `#c6c3b8` over a texture averaging RGB 128/125/114. | `data/config/water_visual.json` `terrain.textures[2].tint`. Unjudged reference diff: `tb/vis-tidewake-rock` 078d5628 (`#7c8086`). | open |
 | V19 | C1 (Warrens) | Burrow Warrens: a dark grey smoke column cuts through the mound silhouette, and a floating white square sits at the right-hand bush line (evidence: `_sheet_meadows_env_32bd3307.jpg` (local capture at main 32bd3307), 'Warrens day'). Auditor observation, not yet judge-confirmed. | Warrens chimney/smoke VFX; identify the white square | open |
 | V20 | F08#4 / CR1, CR10 | Cloudreach has no altitude read. Every stand is a flat grass tabletop. Past the edge there is white haze by day and a flat navy sea plane by night: no cloud sea below, no strata stacks above. | Cloudreach sky, fog and horizon (cloud-sea layer below plateau level); Bar A board `cloudreach-sky-aviary-stronghold-board.png` | open |
@@ -43,6 +43,11 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V28 | C2 CR15, CR16 | Cloudreach sky: the cloud sea is faceted white slabs (white at dusk, lavender-glowing at night), and dusk turns the pale cliffs sepia, erasing the ravine vista | Cloudreach sky/cloud material; Cloudreach golden-hour preset | open |
 | V29 | C2 CR13 | Sky Aviary stronghold: a small greenhouse dome on flat wheat, unlit at night; the board's towers, gold ribs, arches, cliff seat and falls are missing | Bar A board `cloudreach-sky-aviary-stronghold-board.png` | open |
 | V30 | C2 CR17 | Galecrest companion: noisy, posterised surface and small inexpressive face; it becomes a cobalt blob at night in two frames. Keep the silhouette and scale. | Creature texture (reference-backed workflow) | open |
+| V31 | F10#4 / C3 SW1, SW10 | Stormwood reads as open Meadows plain: evenly spaced broadleaf trees, 35–45 % open sky, no moss, black pools, roots, copper vines or glass scars. Needs canopy closure, clustering and understory. | Stormwood scatter/vegetation config; Bar A boards `stormwood-stormheart-tree-stronghold-board-a/b.png` | open |
+| V32 | C3 SW3 | Stormwood road glow: yellow-gold emissive cracks are the brightest thing in every frame. **The Stormwood lane first confirms whether this is authored wayfinding**; if so, keep it and shift to copper wear. | Stormwood road material | open |
+| V33 | C3 SW4, SW5 | Meadows cottages with orange-red roofs (P003, P005, P006, P010, P013, P017, P024) and a saturated-blue toy gate prop standing in for four places | Stormwood place dressing | open |
+| V34 | C3 SW8 | The Stormheart Tree is a smooth cone with ring discs and matches neither board | Hero asset (reference-backed workflow) | open |
+| V35 | C3 SW11, SW9 | Break phase differs only by exposure and rain (no flash, copper flicker, steam or afterglow), and the trainer is lost in Break frames | Stormwood surge presentation; trainer value floor | open |
 
 ## How to reproduce
 
@@ -217,7 +222,34 @@ Strengths to keep: the village at P001 and the mill at E016, the badger companio
 
 **Place reads from the approach:** only Summit Eyrie reads, weakly. Realm Gate, Three Bells, Cliffhold and the Observatory partly read. The Waycamp, Beacon, Aerie, Sky Shrine and Stormward Overlook do not.
 
-### C3. Stormwood: rendering (render.yml, after Cloudreach env)
+### C3. Stormwood: 25 place frames judged (env pending); judge `Bar A no, Bar B no (narrowly)`
+
+- **Capture:** render.yml 36277205730 at main `025a09d9`. Frames P001–P025 cover the Calm and Break Surge phases; there is no day/night (owner ruling).
+- **Evidence:** sheet `_sheet_stormwood_places.jpg`, verdict `judges/stormwood_places_VERDICT.md` (19 defects), labels `judges/stormwood_places_LABELS.txt`.
+- **Skipped:** Glass Sink, unreachable (§D). The brief stated the place-row fixture.
+- **Env:** rendering from `tb/vis` 14d34d4e. It is also the first render with the corrected companion placement.
+
+| # | Sev | Domain | Frame(s) | Defect | Clause | Owner |
+|---|---|---|---|---|---|---|
+| SW1 | BLOCKER | biome identity | P001–P023 | Not a forest. Every frame is an open grass plain with evenly spaced broadleaf trees and 35–45 % open purple sky. None of the §4 materials appear: giant trunks, moss from below, black pools, wet roots, copper vines, glass scars or Stormglass arches. | §4 Stormwood row | Codex (scatter density and understory) · Stormwood (landform) · ART (hero trunks and arches) |
+| SW2 | BLOCKER (verify) | landmark read | P001, P002, P004, P007–P009, P011, P012, P014, P015, P018, P020, P021 | In 13 of 25 frames the named place is missing, or is a 10–40 px speck, from its 90 m stand. The same verify-first caveat as TW2 applies (§D sightline test). | §3.2 | Stormwood + Codex |
+| SW3 | MAJOR (design check) | route glow | every frame | Saturated yellow-gold emissive cracks run down the centre of every road and are the brightest element in the chapter. The judge reads them as a GPS trail. ART_DIRECTION asks for copper highlights and says the rod line and Dynamo should be the destination read. **If this is authored wayfinding, keep the function and cut it to copper wear.** | §4; §3.1 | Stormwood (confirm intent) → Codex |
+| SW4 | MAJOR | faction/family | P003, P005, P006, P010, P013, P017, P024 | Unchanged Meadows cottages with bright orange-red tile roofs, including one at the Dynamo Outer Works (P024). | §1 one coherent family per place; §5.2 red reserved | Stormwood / Codex |
+| SW5 | MAJOR | props | P005, P006, P014, P017–P019 (flat saturated-blue crenellated gate standing in for four places); P010 (Rodline Post is a blue box and a tarp heap) | Toy-block props. | §6; §4 rod-line scaffolds | Codex |
+| SW6 | MAJOR | water | P005/P006 | Lantern Pools has no pools and no lanterns. No black reflective water appears in any of the 25 frames. | §4 palette | Codex/Stormwood |
+| SW7 | MAJOR | distance | P011, P017, P018, P022, P023 | Distance masses are untextured grey slabs. | §2; §3.1 | Codex |
+| SW8 | MAJOR | finale landmark | P024, P025 | The Stormheart Tree is a smooth cone trunk with a slot of ring discs, matching neither board. The "approach" stand sits at the trunk base. | §4; Bar A boards | ART/Codex · Stormwood (stand) |
+| SW9 | MAJOR | trainer read | P019 (a ~700 px black disc with a magenta rim covers the trainer); P006, P012, P023 (legs merge with the black road) | In Break the trainer is lost. The P019 disc looks like a strike telegraph: its readability is a Stormwood/UX question, not a request to remove it. | §3.3 trainer value; §5.2 | Stormwood (telegraph) · Codex (value floor) |
+| SW10 | MAJOR | intentionality | P001–P023 | Trees are evenly spaced along both verges at the same heights, and the flowers are a uniform carpet. | §3.1; rubric 3 | Codex |
+| SW11 | MAJOR | Surge phases | calm vs break pairs | Break differs mostly by darker exposure and denser rain. There is no lightning flash, copper flicker, steam, afterglow or wind response. | §3.3 Surge art half | Codex/Stormwood |
+| SW12 | MAJOR | creature art | P004 | Stormravens are flat navy blobs with no lightning veining, well below the roster board. | §5.1 | ART (Codex queue) |
+| SW13 | MINOR | artefacts | P003 (yellow light shaft smear; flat cobble pad); P011/P012 (floating cyan line); P014–P016 (mahogany-red trunks); P001, P004, P018 (distant creatures or rocks without contact) | Stray or ungrounded elements. | rubric 7 | Codex |
+
+**Keep:** the coherent purple-storm palette; the Staticub (closest to its roster card), the Tanglevolt and the Voltarach; the Glass Field spikes; broadly correct scale; and trainer legibility in Calm.
+
+**Place reads:** none fully. Waycamp, Rodline Post, Still Grove, Lantern Hollow, Glass Field, Outer Works and Stormheart partly read.
+
+**Not carried from the verdict:** #18 (creatures cropped at the frame edge) is a composition note for the place-row framing (§D). The companion is parked, and wild creatures appear only where already streamed.
 
 ### C4. Tidewake: 19 place frames judged (env pending); judge `Bar A no, Bar B no`
 
