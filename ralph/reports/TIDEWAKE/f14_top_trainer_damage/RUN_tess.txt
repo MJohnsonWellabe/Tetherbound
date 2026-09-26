@@ -1,0 +1,15 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+ERROR: Can't play finished Tween, use stop() first to reset its state.
+   at: play (scene/animation/tween.cpp:206)
+   GDScript backtrace (most recent call first):
+       [0] set_combat_hitstop (res://scripts/creatures/creature_body.gd:1887)
+       [1] _set_bodies_hitstopped (res://scripts/combat/combat_manager.gd:1877)
+       [2] _end_hitstop (res://scripts/combat/combat_manager.gd:1889)
+       [3] _begin_resolve (res://scripts/combat/combat_manager.gd:3548)
+       [4] _handle_active_faint (res://scripts/combat/combat_manager.gd:3007)
+       [5] _on_enemy_strike (res://scripts/combat/combat_manager.gd:2981)
+       [6] _enter (res://scripts/creatures/wild_creature.gd:740)
+       [7] _tick_combat (res://scripts/creatures/wild_creature.gd:551)
+       [8] _physics_process (res://scripts/creatures/wild_creature.gd:196)
+WATER_C2C3 water_trainer_tess terrapup MASHER runs=24 win=0.00 med_lead=1.000 med_party=1.000 med_s=127.7 max_s=139.4 lead_faint=1.00 wipe=1.00 max_hit=0.202 tell=[0.80,0.80] stalled=0
