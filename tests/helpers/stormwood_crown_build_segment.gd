@@ -259,6 +259,10 @@ func _gather_site(site: Dictionary) -> bool:
 		return _fail("%s did not commit its exact live yield/receipt: gained=%d expected=%d" % [
 			id, gained, int(site.amount)])
 	_note("GATHERED %s +%d %s through its exact live prompt" % [id, gained, str(site.item)])
+	if str(site.item) == "stormglass_crown":
+		var surge := _world.get_node_or_null(^"StormwoodSurge")
+		if surge != null:
+			_note("CROWN WINDOW after %s: %s" % [id, str(_charged_window_snapshot(surge, site.at))])
 	return true
 
 
@@ -416,17 +420,57 @@ func _select_arch_from_catalogue() -> bool:
 	return _fail("controller tabs could not reach the Stormglass Arch catalogue cell")
 
 
+## Wait at the refuge until the charged window at the Crown seams stays open
+## long enough to walk out and take both. Run 20 left on a "fading" window with
+## under a minute to go and reached stormwood_harvest_conductor_run_075 after it
+## closed (gained 0); run 19 happened to leave on a fresh Break. The same rule
+## as the prefix's Lantern Pools wait: the runtime's own open seconds at the
+## site, not any live Break/Fading.
+const CROWN_ROUTE_SECONDS := 150.0
+
+
 func _wait_for_charged_window() -> bool:
 	var surge := _world.get_node_or_null(^"StormwoodSurge")
 	if surge == null:
 		return _fail("StormwoodSurge is absent before Crown glass gathering")
+	var at: Vector2 = SITE_PLAN[4].at
 	var started := Time.get_ticks_msec()
 	while Time.get_ticks_msec() - started < CHARGED_WAIT_MS:
-		if str(surge.get("phase")) in ["break", "fading"] and bool(surge.get("sheltered")):
-			_note("WAITED at Rodline Refuge for a live %s Crown-gather window" % str(surge.get("phase")))
+		var state := _charged_window_snapshot(surge, at)
+		if float(state.get("open_seconds", 0.0)) >= CROWN_ROUTE_SECONDS and bool(surge.get("sheltered")):
+			_note("WAITED at Rodline Refuge for a live Crown-gather window %s" % str(state))
 			return true
 		await _tree.physics_frame
-	return _fail("Rodline Refuge did not reach a sheltered Break/Fading window within nine minutes")
+	return _fail("Rodline Refuge did not reach a sheltered window with %.0f open seconds at the Crown seams within nine minutes (last=%s)" % [
+		CROWN_ROUTE_SECONDS, str(_charged_window_snapshot(surge, at))])
+
+
+## The runtime's own Surge phase at `at` and how long the charged window
+## (Break, then Fading) stays open, in simulation seconds.
+func _charged_window_snapshot(surge: Node, at: Vector2) -> Dictionary:
+	var environment: Dictionary = _game.get("realm_environment")
+	var saved: Variant = environment.get("stormwood", {})
+	var raw: Variant = (saved as Dictionary).get("elapsed", 0.0) if saved is Dictionary else 0.0
+	var elapsed := float(raw) if raw is float or raw is int else 0.0
+	var point := Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y)
+	var region := str(surge.call("region_at", point))
+	var rules: RefCounted = surge.get("rules") as RefCounted
+	var row: Dictionary = (rules.get("config") as Dictionary).get("regions", {}).get(region, {})
+	var rod_flag := str(row.get("rod_flag", ""))
+	var flags: RefCounted = _game.get("progression") as RefCounted
+	var rod_disabled := not rod_flag.is_empty() and bool(flags.call("has", rod_flag))
+	var aftermath := bool(flags.call("has", "stormwood:long_storm_ended"))
+	var current: Dictionary = rules.call("phase_at", elapsed, region, rod_disabled, aftermath)
+	var phase := str(current.get("phase", ""))
+	var open := 0.0
+	if phase == "fading":
+		open = float(current.get("remaining", 0.0))
+	elif phase == "break":
+		open = float(current.get("remaining", 0.0))
+		var next: Dictionary = rules.call("phase_at", elapsed + open + 0.001, region, rod_disabled, aftermath)
+		if str(next.get("phase", "")) == "fading":
+			open += float(next.get("remaining", 0.0))
+	return {"phase": phase, "open_seconds": snappedf(open, 0.1), "elapsed": snappedf(elapsed, 0.1), "region": region}
 
 
 func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
@@ -442,42 +486,33 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 			break
 		if not await _walk_xz(stance, label + " stance", 0.75, false):
 			continue
-		var held := 0
-		for _frame in 180:
-			if not is_instance_valid(prompt):
-				break
-			if _arbiter.call("winning_provider") == prompt:
-				held += 1
-				if held >= 8:
-					_activated_provider_id = 0
-					_activated_provider_path = ""
-					var observer := Callable(self, "_on_arbiter_activated")
-					_arbiter.activated.connect(observer)
-					var wanted_id := prompt.get_instance_id()
-					await _tap(&"interact")
-					if _arbiter.activated.is_connected(observer):
-						_arbiter.activated.disconnect(observer)
-					if _activated_provider_id == wanted_id:
-						return true
-					# A harvest node answers the press by being gathered and
-					# freed (the equipped tool's swing resolves it). Run 16's
-					# Thunderwood node vanished under the press this way; the
-					# caller checks the receipt and the yield.
-					if not is_instance_valid(prompt) or not is_instance_valid(body):
-						_note("%s was consumed by the press" % label)
-						return true
-					if _activated_provider_id != 0:
-						return _fail("%s activated competing provider %s#%d" % [
-							label, _activated_provider_path, _activated_provider_id])
-					break
-			else:
-				held = 0
-			await _tree.physics_frame
+		# Focused Nysa smoke (--witness-clock) reproduced run 26: a road fight
+		# at the stance ended with the trainer displaced 7 m, beside circuit
+		# Tavi, while the arbiter's last published winner was still Nysa; the
+		# press at the 8x/480 Hz clock then went, correctly, to Tavi. A player
+		# looks at the prompt before pressing: settle at the real clock, stick
+		# released, and press only while standing at the stance.
+		_drive_stick(0, 0)
+		var here := Vector2(_player.global_position.x, _player.global_position.z)
+		if here.distance_to(stance) > 1.5:
+			_note("%s: displaced %.1f m from the stance before the press; walking back" % [label, here.distance_to(stance)])
+			if not await _walk_xz(stance, label + " stance again", 0.75, false):
+				continue
+			_drive_stick(0, 0)
+		var clock_scale := Engine.time_scale
+		var clock_hz := Engine.physics_ticks_per_second
+		await _tree.process_frame
+		Engine.time_scale = 1.0
+		Engine.physics_ticks_per_second = 60
+		await _tree.process_frame
+		var pressed: Variant = await _hold_and_press(body, prompt, stance, label)
+		await _tree.process_frame
+		Engine.time_scale = clock_scale
+		Engine.physics_ticks_per_second = clock_hz
+		if pressed is bool:
+			return pressed
 	var winner := _arbiter.call("winning_provider") as Node
 	if not is_instance_valid(prompt) or not is_instance_valid(body):
-		# Run 17: the vine node was gathered and freed during the approach,
-		# not by this helper's Interact. The caller (`_gather_site`) judges
-		# the receipt and the exact yield; any other caller's check fails.
 		_note("%s was freed during its approach (winner=%s); the caller checks what happened" % [label,
 			str(winner.get_path()) if winner != null else "<none>"])
 		return true
@@ -488,6 +523,54 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 		str(prompt.get("enabled")), str(body.is_visible_in_tree()), str(body.is_inside_tree()), str(own_offer),
 		str(_player.global_position), str(prompt.global_position),
 		_player.global_position.distance_to(prompt.global_position), str(_game.get("equipped_tool"))])
+
+
+## Hold the exact prompt as the arbiter winner for 8 frames while standing at
+## `stance`, then press once. Returns true/false when the press decided the
+## outcome, or null to try the next stance.
+func _hold_and_press(body: Node3D, prompt: Node3D, stance: Vector2, label: String) -> Variant:
+	var held := 0
+	for _frame in 180:
+		if not is_instance_valid(prompt):
+			break
+		var at := Vector2(_player.global_position.x, _player.global_position.z)
+		if _arbiter.call("winning_provider") == prompt and at.distance_to(stance) <= 1.5:
+			held += 1
+			if held >= 8:
+				_activated_provider_id = 0
+				_activated_provider_path = ""
+				_activations.clear()
+				var observer := Callable(self, "_on_arbiter_activated")
+				_arbiter.activated.connect(observer)
+				var wanted_id := prompt.get_instance_id()
+				await _tap(&"interact")
+				if _arbiter.activated.is_connected(observer):
+					_arbiter.activated.disconnect(observer)
+				if _activated_provider_id == wanted_id:
+					return true
+				# A harvest node answers the press by being gathered and
+				# freed (the equipped tool's swing resolves it). Run 16's
+				# Thunderwood node vanished under the press this way; the
+				# caller checks the receipt and the yield.
+				if not is_instance_valid(prompt) or not is_instance_valid(body):
+					_note("%s was consumed by the press" % label)
+					return true
+				if _activated_provider_id != 0:
+					var winner_now := _arbiter.call("winning_provider") as Node
+					var provider_node := instance_from_id(_activated_provider_id) as Node3D
+					return _fail(("%s activated competing provider %s#%d (activations=%s; player=%s; wanted prompt at %s %.2f m; "
+						+ "activated at %s %.2f m; winner now=%s)") % [
+						label, _activated_provider_path, _activated_provider_id, str(_activations),
+						str(_player.global_position), str(prompt.global_position),
+						_player.global_position.distance_to(prompt.global_position),
+						str(provider_node.global_position) if provider_node != null else "?",
+						_player.global_position.distance_to(provider_node.global_position) if provider_node != null else -1.0,
+						str(winner_now.get_path()) if winner_now != null else "<none>"])
+				break
+		else:
+			held = 0
+		await _tree.physics_frame
+	return null
 
 
 func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,
@@ -560,7 +643,11 @@ func _walk_xz_clocked(point: Vector2, label: String, tolerance: float = 1.3,
 	return false
 
 
+var _fights_seen := 0
+
+
 func _fight_current(label: String) -> bool:
+	_fights_seen += 1
 	if _safety != null:
 		_safety.set("phase", "fight during " + label)
 	_last_combat_outcome = ""
@@ -1036,18 +1123,110 @@ func _wait_for_world_input() -> bool:
 
 
 func _turn_camera_toward(world_direction: Vector3) -> bool:
+	# Run 21 lost a road fight at the Still Grove road point right before this
+	# turn and the stick never turned the camera. A running fight is fought
+	# first (as the build menu's approach does); an armed Build ghost may own
+	# input here, so only a fight or a pause is waited out.
+	for _frame in 900:
+		if bool(_manager.call("is_fighting")) or bool(_director.call("trainer_battle_active")):
+			if not await _fight_current("Crown build stance"):
+				return false
+			continue
+		if not _tree.paused:
+			break
+		await _tree.physics_frame
+	# The rig reads the look stick in `_process` (render frames). Run 25 turned
+	# at the wrapper's 8x/480 Hz clock and the camera drifted the wrong way
+	# (forward (0.77, -0.64) -> (0.84, -0.54), wanted (0, -1)). Turn at the real
+	# 1x/60 Hz clock, holding the stick across render frames, as a player does.
+	var previous_scale := Engine.time_scale
+	var previous_hz := Engine.physics_ticks_per_second
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
+	# A wild that won a road fight may still stand by the trainer. A player
+	# resolves it first so the camera is not held on it: walk out of engage
+	# range (a fight that starts on the way is fought out by the walker).
+	if not await _clear_nearby_wild():
+		Engine.time_scale = previous_scale
+		Engine.physics_ticks_per_second = previous_hz
+		return false
 	var wanted := Vector2(world_direction.x, world_direction.z).normalized()
-	for _frame in 480:
+	var start_forward := -(_camera.call("planar_basis") as Basis).z
+	var turned := false
+	var held := &""
+	for _frame in 600:
 		var forward := -(_camera.call("planar_basis") as Basis).z
 		if Vector2(forward.x, forward.z).normalized().dot(wanted) >= 0.995:
-			_release_look()
-			return true
+			turned = true
+			break
 		var right := -Vector3(forward.x, 0.0, forward.z).cross(world_direction).y > 0.0
-		_release_look()
-		Input.action_press(&"look_right" if right else &"look_left", 1.0)
-		await _tree.physics_frame
+		var want: StringName = &"look_right" if right else &"look_left"
+		if want != held:
+			_release_look()
+			Input.action_press(want, 1.0)
+			held = want
+		await _tree.process_frame
 	_release_look()
-	return _fail("controller right stick could not face the Still Grove footing")
+	await _tree.process_frame
+	Engine.time_scale = previous_scale
+	Engine.physics_ticks_per_second = previous_hz
+	if turned:
+		return true
+	var end_forward := -(_camera.call("planar_basis") as Basis).z
+	var owner := INPUT_OWNER.current(_tree)
+	return _fail(("controller right stick could not face the Still Grove footing (forward %s -> %s, wanted %s; "
+		+ "fighting=%s trainer_battle=%s input_owner=%s paused=%s arbiter_enabled=%s time_scale=%.1f tracking=%s)") % [
+		str(start_forward), str(end_forward), str(wanted), str(_manager.call("is_fighting")),
+		str(_director.call("trainer_battle_active")), str(owner.get_path()) if owner != null else "<none>",
+		str(_tree.paused), str(_arbiter.call("enabled")), Engine.time_scale,
+		_rig_tracking()])
+
+
+## Nearest live wild within 20 m of the trainer, or null.
+func _nearby_wild() -> Node3D:
+	var best: Node3D = null
+	var best_distance := 20.0
+	for wild: Variant in (_director.get("_wild_creatures") as Array):
+		if not is_instance_valid(wild) or not (wild as Node3D).visible or not bool((wild as Node3D).call("is_alive")):
+			continue
+		var distance := _player.global_position.distance_to((wild as Node3D).global_position)
+		if distance <= best_distance:
+			best = wild
+			best_distance = distance
+	return best
+
+
+func _clear_nearby_wild() -> bool:
+	var wild := _nearby_wild()
+	if wild == null:
+		_note("CAMERA TURN: no wild within 20 m; rig tracking=%s" % _rig_tracking())
+		return true
+	var start := _player.global_position
+	var away := start - wild.global_position
+	away.y = 0.0
+	if away.length() < 0.5:
+		away = Vector3(0, 0, 1)
+	var fights_before := _fights_seen
+	var target := start + away.normalized() * 25.0
+	_note("CAMERA TURN: wild %s %.1f m away after the road fight (rig tracking=%s); walking out of engage range" % [
+		str(wild.name), start.distance_to(wild.global_position), _rig_tracking()])
+	await _walk_xz(Vector2(target.x, target.z), "away from the wild before the Crown turn", 2.0, false)
+	if _fights_seen != fights_before:
+		_note("CAMERA TURN: the wild engaged on the way and was fought out (outcome=%s)" % _last_combat_outcome)
+	else:
+		_note("CAMERA TURN: walked out of engage range (wild now %.1f m away)" % (
+			_player.global_position.distance_to(wild.global_position) if is_instance_valid(wild) else -1.0))
+	return true
+
+
+func _rig_tracking() -> String:
+	var tracked: Variant = _camera.get("_tracking_target")
+	var target: Variant = _camera.get("_target")
+	return "%s (orbit target %s)" % [
+		str((tracked as Node).get_path()) if tracked is Node and is_instance_valid(tracked) else "<none>",
+		str((target as Node).get_path()) if target is Node and is_instance_valid(target) else "<none>"]
 
 
 func _open_build_menu() -> Node:
@@ -1158,9 +1337,16 @@ func _settle(frames: int) -> void:
 		await _tree.physics_frame
 
 
+## Every provider activated during one press, in order, with where the
+## trainer stood (run 26: a press held on Officer Nysa reported circuit Tavi).
+var _activations: Array[String] = []
+
+
 func _on_arbiter_activated(provider: Object) -> void:
 	if provider == null:
 		return
+	_activations.append("%s@%s" % [str((provider as Node).get_path()) if provider is Node else str(provider),
+		str(_player.global_position) if _player != null else "?"])
 	_activated_provider_id = provider.get_instance_id()
 	_activated_provider_path = str((provider as Node).get_path()) if provider is Node else str(provider)
 

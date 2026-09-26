@@ -123,9 +123,10 @@
       "amount": 3,
       "label": "Pick berries",
       "at": [
-        20.0,
-        -16.0
+        -6.0,
+        -24.5
       ],
+      "_why_f01_berry_field": "F01 (village road settlement): the cottage_b re-pose at (19,-18) left this bush INSIDE the cottage, 2.2m from its centre, and the day-walk judge found Berry Field reading as one bush. Moved into paths.village_topology's berry_field subarea (centre (-8.5,-23), r 6) beside order 1036, 2.9m from the centre and 6.3m from 1036, off the berry lane. Same item, yield, model and order.",
       "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
       "model_scale": 0.52,
       "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale."

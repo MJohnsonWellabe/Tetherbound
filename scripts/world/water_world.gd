@@ -13,6 +13,7 @@ const PICKUPS := preload("res://scripts/world/water_scene_pickups.gd")
 const DEATH := preload("res://scripts/world/water_player_death.gd")
 const ENCOUNTERS := preload("res://scripts/world/water_scene_encounters.gd")
 const DOCKS := preload("res://scripts/world/water_dock_actions.gd")
+const RETURN_RAMPS := preload("res://scripts/world/water_return_ramps.gd")
 const LOCAL_CHAINS := preload("res://scripts/world/water_local_chains.gd")
 const RIDING := preload("res://scripts/world/water_riding_controller.gd")
 const MOUNTED_SWIM := preload("res://scripts/world/water_mounted_swim.gd")
@@ -132,6 +133,11 @@ func _ready() -> void:
 	add_child(docks)
 	docks.build(self)
 	var dock_dressing: Node3D = preload("res://scripts/world/water_dock_dressing.gd").new(); dock_dressing.name = "WaterDockDressing"; add_child(dock_dressing); dock_dressing.call("build", self)
+	# F13 physical_ramp return shortcuts: built from the replicated dock flag.
+	var return_ramps := RETURN_RAMPS.new()
+	return_ramps.name = "WaterReturnRamps"
+	add_child(return_ramps)
+	return_ramps.build(self)
 	var local_chains := LOCAL_CHAINS.new()
 	local_chains.name = "WaterLocalChains"
 	add_child(local_chains)

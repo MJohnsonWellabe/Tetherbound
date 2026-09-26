@@ -11,6 +11,18 @@ const BONFIRE_FIRE := preload("res://assets/props/quaternius_survival/Bonfire_Fi
 const BENCH := preload("res://assets/props/quaternius_fantasy/Bench.gltf")
 const CRATE := preload("res://assets/props/quaternius_fantasy/Crate_Wooden.gltf")
 const BARREL := preload("res://assets/props/quaternius_fantasy/Barrel.gltf")
+## Hearth-cluster dressing: the accepted generated camp set plus the same
+## Quaternius Fantasy family already used here (installed files only).
+const CLUSTER_ASSETS := {
+	"cauldron": "res://assets/props/quaternius_fantasy/Cauldron.gltf",
+	"stool": "res://assets/props/quaternius_fantasy/Stool.gltf",
+	"cart": "res://assets/props/quaternius_fantasy/Stall_Cart_Empty.gltf",
+	"apple_barrel": "res://assets/props/quaternius_fantasy/Barrel_Apples.gltf",
+	"apple_crate": "res://assets/props/quaternius_fantasy/FarmCrate_Apple.gltf",
+	"tent": "res://assets/props/generated_camp/camp_tent.glb",
+	"firewood": "res://assets/props/generated_camp/camp_firewood.glb",
+	"bedroll": "res://assets/props/generated_camp/camp_bed.glb",
+}
 
 var _built := false
 
@@ -37,6 +49,15 @@ func build(materials: Dictionary) -> void:
 		_add_scene("WaycampSupply%02d" % (index + 1), packed, _v3(spec.position),
 			float(spec.get("height_m", 1.0)), float(spec.get("yaw_deg", 0.0)),
 			"supply_dressing")
+	for index in (cfg.get("hearth_cluster", []) as Array).size():
+		var spec := (cfg.hearth_cluster as Array)[index] as Dictionary
+		var path := str(CLUSTER_ASSETS.get(str(spec.get("asset", "")), ""))
+		var packed := load(path) as PackedScene if path != "" else null
+		if packed == null:
+			push_warning("Galefoot hearth cluster: unknown asset %s" % spec.get("asset", ""))
+			continue
+		_add_scene("WaycampCluster%02d_%s" % [index + 1, str(spec.asset)], packed, _v3(spec.position),
+			float(spec.get("height_m", 1.0)), float(spec.get("yaw_deg", 0.0)), "hearth_cluster")
 
 
 func _add_hearth(cfg: Dictionary, materials: Dictionary) -> void:

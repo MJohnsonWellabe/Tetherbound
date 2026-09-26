@@ -36,23 +36,34 @@ const SLOT_DIR := "user://f03_lure_walk_slots/"
 const SLOT := 1
 
 const SETTLE_FRAMES := 300
-const WALK_BUDGET_S := 360.0
+## `--budget-s=` overrides (Juno's patrol is 1.6 km and five road fights
+## from the real S07 save).
+var WALK_BUDGET_S := 360.0
 const DENSIFY_M := 8.0
 const LOOKAHEAD_M := 4.0
 ## Metres of cross-country leg are charged this much against road metres when
 ## choosing where to leave the road for the activity.
-const OFF_ROAD_COST := 3.0
+## `--off-road-cost=` overrides (a player keeps to the road until the
+## activity is close; at 3.0 the herd walk left the road 295 m early).
+var OFF_ROAD_COST := 3.0
 const LURE_RANGE_M := 160.0
 const STUCK_S := 4.0
+## Unstick attempts allowed at one blocked spot, and the route progress (m)
+## that counts as having left it (more than the 2 x DENSIFY_M an unstick skips).
+const UNSTICK_ATTEMPTS := 6
+const UNSTICK_RESET_M := 25.0
 const APPROACH_FRAME_M := 30.0
 
 var _activity := ""
 var _save_path := ""
 ## What the player looks at (the herd's nearest member for the herd visit).
 var _lure_body: Node3D = null
-## Minimum on-screen height for a lure to count as readable, not just present.
+## Minimum on-screen height, in 1280x720 FRAME pixels, for a lure to count as
+## readable, not just present.
 const READABLE_PX := 24.0
 var _capture_dir := ""
+## True while the walker has put the companion away to get unstuck.
+var _companion_stowed := false
 
 var _world: Node3D = null
 var _player: CharacterBody3D = null
@@ -85,6 +96,10 @@ func _run() -> void:
 			_activity = a.trim_prefix("--activity=")
 		elif a.begins_with("--save="):
 			_save_path = a.trim_prefix("--save=")
+		elif a.begins_with("--budget-s="):
+			WALK_BUDGET_S = float(a.trim_prefix("--budget-s="))
+		elif a.begins_with("--off-road-cost="):
+			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
 		elif a.begins_with("--capture-dir="):
 			_capture_dir = a.trim_prefix("--capture-dir=")
 	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall"] \
@@ -148,18 +163,7 @@ func _run() -> void:
 	# the result rather than assuming it: one press toggles.
 	# If the active member is fainted in the save, the recall key cannot bring it
 	# out; a player cycles to a standing member (Change Creature) first.
-	for attempt in 4:
-		if _director == null or _director.call("ally_body") != null:
-			break
-		var active: RefCounted = (_game.get("party") as RefCounted).call("active")
-		if attempt >= 1 and active != null and float(active.get("hp")) <= 0.0:
-			await _press("party_cycle")
-			_notes.append("active member %s is fainted in the save; pressed party_cycle" % str(active.get("nickname")))
-		await _press("creature_recall")
-		for i in 60:
-			await physics_frame
-		_notes.append("pressed creature_recall (attempt %d); companion out afterwards: %s" % [
-			attempt + 1, str(_director.call("ally_body") != null)])
+	await _ensure_companion_out()
 	_receipt["companion_out_at_start"] = _director != null and _director.call("ally_body") != null
 
 	# --- the lure and the route ------------------------------------------------
@@ -203,7 +207,10 @@ func _resolve_lure() -> void:
 	match _activity:
 		"bram", "juno":
 			var trainers := _world.get_node_or_null(^"Trainers")
-			var id := "old_champion_bram" if _activity == "bram" else "pasture_drover_juno"
+			# Juno's activity is lured by the Tether patrol holding the stolen
+			# Meadowhart (WORLD §11: "follow missing-Meadowhart lead; defeat the
+			# named Tether patrol"), not by Juno herself, who only gives the lead.
+			var id := "old_champion_bram" if _activity == "bram" else "lost_creature_rue"
 			if trainers != null:
 				_lure = trainers.call("body_for", id) as Node3D
 		"herd":
@@ -278,6 +285,11 @@ func _lure_visible() -> Dictionary:
 	var size := root.get_viewport().get_visible_rect().size
 	if screen.x < 0 or screen.y < 0 or screen.x > size.x or screen.y > size.y:
 		return {}
+	# A lure behind a HUD panel (hotbar, quest card, minimap) is not seen, even
+	# if the world ray is clear (code-blind judge, discovery-snowball round).
+	var hud_panel := _hud_panel_at(screen)
+	if hud_panel != "":
+		return {}
 	var query := PhysicsRayQueryParameters3D.create(cam.global_position, target)
 	var exclude: Array[RID] = [_player.get_rid()]
 	var ally := _director.call("ally_body") as CollisionObject3D if _director != null else null
@@ -294,9 +306,34 @@ func _lure_visible() -> Dictionary:
 	var h := float(body.call("body_height")) if body.has_method("body_height") else 1.8
 	var top := cam.unproject_position(body.global_position + Vector3(0.0, h, 0.0))
 	var foot := cam.unproject_position(body.global_position)
-	var px := absf(foot.y - top.y)
-	return {"distance_m": snappedf(dist, 0.1), "screen": [int(screen.x), int(screen.y)],
+	# unproject_position works in the logical canvas (1920x1080 under
+	# canvas_items stretch); frames and the readable floor are window pixels.
+	var to_frame := float(root.size.y) / size.y
+	var px := absf(foot.y - top.y) * to_frame
+	return {"distance_m": snappedf(dist, 0.1),
+		"screen": [int(screen.x * to_frame), int(screen.y * to_frame)],
 		"height_px": int(px), "readable": px >= READABLE_PX}
+
+
+## Name of the visible HUD panel covering `point` (logical canvas coordinates),
+## or "" when the point is clear of the HUD.
+func _hud_panel_at(point: Vector2) -> String:
+	var hud := _world.get_node_or_null(^"PlaygroundHUD") if _world != null else null
+	if hud == null:
+		return ""
+	var stack: Array[Node] = [hud]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		for child in node.get_children():
+			stack.append(child)
+		var panel := node as Control
+		if panel == null or not (panel is PanelContainer or panel is Panel):
+			continue
+		if not panel.is_visible_in_tree() or panel.size.x < 8.0 or panel.size.y < 8.0:
+			continue
+		if panel.get_global_rect().has_point(point):
+			return str(panel.name)
+	return ""
 
 
 ## --- route graph --------------------------------------------------------------
@@ -426,6 +463,11 @@ func _walk() -> void:
 	var best_remaining := INF
 	var best_at := 0.0
 	var unstick := 0
+	var near_checked := false
+	## Route distance left when the last unstick fired; the count resets only
+	## after real progress past it (best_remaining is reset to INF after an
+	## unstick, so it cannot be the reference).
+	var unstick_anchor := INF
 	var frame := 0
 	while _clock < WALK_BUDGET_S:
 		await physics_frame
@@ -499,6 +541,13 @@ func _walk() -> void:
 				await _face_lure()
 				continue
 		var lure_d := here.distance_to(_xz3(_lure.global_position))
+		if not near_checked and lure_d <= APPROACH_FRAME_M:
+			# Whatever happened on the road (stowed to get unstuck, a toggle that
+			# did not take), the Engage prompt needs the companion out.
+			near_checked = true
+			_release()
+			_companion_stowed = false
+			await _ensure_companion_out("t=%.1fs near the activity; " % _clock)
 		if not approach_saved and seen and lure_d <= APPROACH_FRAME_M:
 			approach_saved = true
 			_release()
@@ -518,18 +567,33 @@ func _walk() -> void:
 		for i in range(cursor + 1, _path.size()):
 			remaining += _xz3(_path[i - 1]).distance_to(_xz3(_path[i]))
 		if remaining < best_remaining - 0.3:
+			# Real progress since the last unstick clears the count: five snags
+			# spread over a kilometre are not one blocked spot.
+			if unstick > 0 and unstick_anchor - remaining > UNSTICK_RESET_M:
+				unstick = 0
+				unstick_anchor = INF
+				if _companion_stowed:
+					_release()
+					_companion_stowed = false
+					await _ensure_companion_out("t=%.1fs moving again; " % _clock)
 			best_remaining = remaining
 			best_at = _clock
 		elif _clock - best_at > STUCK_S:
 			unstick += 1
 			_notes.append("t=%.1fs no progress at (%.1f,%.1f); unstick attempt %d (jump + strafe)" % [
 				_clock, here.x, here.y, unstick])
-			if unstick > 4:
+			if unstick > UNSTICK_ATTEMPTS:
 				_release()
 				await _capture("stuck")
 				_finish("GAP", "stuck at (%.1f,%.1f), %.1fm of route left" % [here.x, here.y, remaining])
 				return
+			unstick_anchor = remaining
 			await _unstick(unstick)
+			# From the second attempt, aim past the blocked waypoint: a boulder
+			# or trunk on the road centreline is walked around, not into.
+			if unstick >= 2:
+				cursor = mini(cursor + 2, _path.size() - 1)
+			best_remaining = INF
 			best_at = _clock
 			continue
 
@@ -590,16 +654,48 @@ func _handle_fight(foe_name: String) -> void:
 	_fights.append(entry)
 
 
+## Calls the active companion out with the ordinary key and checks the result
+## rather than assuming it: one press toggles, so a press when it is already
+## out would put it away. If the active member is fainted, the recall key
+## cannot bring it out; a player cycles to a standing member first.
+func _ensure_companion_out(prefix: String = "") -> void:
+	for attempt in 4:
+		if _director == null or _director.call("ally_body") != null:
+			return
+		var active: RefCounted = (_game.get("party") as RefCounted).call("active")
+		if attempt >= 1 and active != null and float(active.get("hp")) <= 0.0:
+			await _press("party_cycle")
+			_notes.append("%sactive member %s is fainted; pressed party_cycle" % [prefix, str(active.get("nickname"))])
+		await _press("creature_recall")
+		for i in 60:
+			await physics_frame
+		_notes.append("%spressed creature_recall (attempt %d); companion out afterwards: %s" % [
+			prefix, attempt + 1, str(_director.call("ally_body") != null)])
+
+
 func _unstick(attempt: int) -> void:
 	_release()
+	# A companion walking at the player's shoulder can wedge them on a narrow
+	# road shoulder (herd r3: pinned between a boulder and the Terrapup). From
+	# the third attempt, put it away with the ordinary key; the walk calls it
+	# back out once it is moving again.
+	if attempt == 3 and _director != null and _director.call("ally_body") != null:
+		await _press("creature_recall")
+		_companion_stowed = true
+		_notes.append("t=%.1fs put the companion away to get unstuck" % _clock)
 	var side := "move_left" if attempt % 2 == 1 else "move_right"
+	# Back off first so the strafe is not pressed flat against the obstacle.
+	Input.action_press("move_back")
+	for i in 24:
+		await physics_frame
+	Input.action_release("move_back")
 	Input.action_press("jump")
 	Input.action_press(side)
 	Input.action_press("move_forward")
 	for i in 30:
 		await physics_frame
 	Input.action_release("jump")
-	for i in 30:
+	for i in 30 + 15 * attempt:
 		await physics_frame
 	Input.action_release(side)
 	Input.action_release("move_forward")
@@ -632,7 +728,7 @@ func _press(action: String) -> void:
 
 
 func _release() -> void:
-	for a: String in ["move_forward", "sprint", "move_left", "move_right", "jump"]:
+	for a: String in ["move_forward", "sprint", "move_left", "move_right", "move_back", "jump"]:
 		Input.action_release(a)
 
 
