@@ -1238,6 +1238,20 @@
       "radius": 9.0,
       "habitat": "practice_supply_north_edge",
       "_why_f02b_practice_supply": "F02-b owner decision (relayed 2026-09-25): 'Raise the practice-wild supply on the Meadows route so that level 5 for the South Bridge is reachable with margin and no repeated wilds.' PROGRESSION 7 requires XP solvency on an earned route with zero repeat wild encounters. Measured before this change (spawn_tables.plan_for, seeds 0-1000; ralph/reports/MEADOWS-PAYOFFS/earned-bridge/RESULT.md): the practice-meadow training pool (level<=5 Bramblebun/Mudsnout within 160m of the practice meadow) was 7-14 bodies depending on what rolled clusters 1006/1007 drew, against 14 needed (one opening catch, three team catches, about ten training wins), so 71% of seeds could only reach level 5 by re-fighting respawned wilds. Orders 1920-1923 are four ANCHORED (no `table`) practice-supply clusters of the two practice species, so the supply no longer depends on the world seed. Levels are NOT pinned: each rolls Band 1's own [2,6] band like every other band-1 cluster. Sited outside the village fence, with every centre at least 33m from a road centreline, and placed so that no straight walk between any two outside practice clusters (orders 1, 1006, 1007, 1920-1923) cuts through the village; none is within 60m of the aggressive Galecrest (order 12) or 25m of the night Duskhush stand (order 1050). Appended with fresh orders, so no existing cluster moves or rerolls. This one: open ground west of the spine beyond order 1006, reached through TrailGate or the Pond gate."
+    },
+    {
+      "order": 1086,
+      "species": "mudsnout",
+      "count": 2,
+      "habitat": "rocky_shoulder",
+      "centre": [
+        -463.0,
+        0.0,
+        534.0
+      ],
+      "radius": 3.0,
+      "wander_radius": 6.0,
+      "_why_f01_pond_shore": "F01 spine reroute (terrain_playground trail band1: the old pond bend waded ~100m of the arm, so the road now follows the dry west shore). tools/gate_f/road_creature_visibility_model.gd then found 3 samples (-428.6,505.9)..(-455.9,517.3) on the new leg with fewer than two forward-visible bodies. Two mudsnout on the dry shelf between the hill foot and the water, ahead of that leg and beside the next one, restore the owner's two-in-view rule; the cluster sits clear of the pond so its wander stays on land."
     }
   ]
 }
