@@ -1,0 +1,28 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _run (res://tests/smoke_water_hop_walked.gd:93)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+FIXTURE original_five party=[terrapup:L44,bramblebun:L43,mudsnout:L42,pipwing:L42,trailpup:L41]
+FIXTURE departure_flags=water_dock_shellwatch_residents_freed_and_pump_disabled,water_aquaryn_resolved
+FIXTURE position_write=1 at=(436.92, 2.078504, 1246.15) (shellwatch_to_tidal_cradle_departure)
+WALKED HOP id=shellwatch_to_tidal_cradle_sheltered hop=1 from=shellwatch_to_tidal_cradle_departure to=shellwatch_to_tidal_cradle_rest_01 path_m=74.056 straight_m=73.679 steer_ratio_vs_path=1.155 steer_ratio_vs_straight=1.161 actual_swim_m=34.760 arrive_pct=100.00 rest_frames=0 start_pct=100.00 min_stamina_pct=73.40 end_pct=100.00 pinned_min_efficiency=1.0000 start_snap_m=0.000 elapsed_s=22.71 result=PASS
+WALKED HOP id=shellwatch_to_tidal_cradle_sheltered hop=2 from=shellwatch_to_tidal_cradle_rest_01 to=shellwatch_to_tidal_cradle_arrival path_m=74.057 straight_m=73.679 steer_ratio_vs_path=1.155 steer_ratio_vs_straight=1.161 actual_swim_m=35.158 arrive_pct=100.00 rest_frames=0 start_pct=100.00 min_stamina_pct=72.89 end_pct=100.00 pinned_min_efficiency=1.0000 start_snap_m=0.283 elapsed_s=25.08 result=PASS
+ISLAND WALK to=tidal_cradle_to_salt_crown_departure from=(535.2303, 1352.347) straight_m=376.28 walked_m=713.32 legs=105 spur_m=8.0 confined_resets=0 stamina_pct_after=100.00
+WALKED HOP id=tidal_cradle_to_salt_crown_sheltered hop=1 from=tidal_cradle_to_salt_crown_departure to=tidal_cradle_to_salt_crown_rest_01 path_m=110.341 straight_m=109.447 steer_ratio_vs_path=1.155 steer_ratio_vs_straight=1.164 actual_swim_m=78.492 arrive_pct=100.00 rest_frames=0 start_pct=100.00 min_stamina_pct=38.63 end_pct=100.00 pinned_min_efficiency=1.0000 start_snap_m=0.158 elapsed_s=42.23 result=PASS
+WALKED HOP id=tidal_cradle_to_salt_crown_sheltered hop=2 from=tidal_cradle_to_salt_crown_rest_01 to=tidal_cradle_to_salt_crown_rest_02 path_m=92.340 straight_m=92.340 steer_ratio_vs_path=1.155 steer_ratio_vs_straight=1.155 actual_swim_m=54.484 arrive_pct=100.00 rest_frames=0 start_pct=100.00 min_stamina_pct=57.25 end_pct=100.00 pinned_min_efficiency=1.0000 start_snap_m=0.388 elapsed_s=28.12 result=PASS
+WALKED HOP id=tidal_cradle_to_salt_crown_sheltered hop=3 from=tidal_cradle_to_salt_crown_rest_02 to=tidal_cradle_to_salt_crown_rest_03 path_m=92.341 straight_m=86.882 steer_ratio_vs_path=1.155 steer_ratio_vs_straight=1.228 actual_swim_m=53.608 arrive_pct=100.00 rest_frames=0 start_pct=100.00 min_stamina_pct=58.00 end_pct=100.00 pinned_min_efficiency=1.0000 start_snap_m=0.410 elapsed_s=26.27 result=PASS
+WALKED HOP id=tidal_cradle_to_salt_crown_sheltered hop=4 from=tidal_cradle_to_salt_crown_rest_03 to=tidal_cradle_to_salt_crown_rest_04 path_m=92.340 straight_m=92.340 steer_ratio_vs_path=1.155 steer_ratio_vs_straight=1.155 actual_swim_m=54.633 arrive_pct=100.00 rest_frames=0 start_pct=100.00 min_stamina_pct=56.88 end_pct=100.00 pinned_min_efficiency=1.0000 start_snap_m=0.358 elapsed_s=27.71 result=PASS
+WALKED HOP id=tidal_cradle_to_salt_crown_sheltered hop=5 from=tidal_cradle_to_salt_crown_rest_04 to=tidal_cradle_to_salt_crown_arrival path_m=110.342 straight_m=109.448 steer_ratio_vs_path=1.155 steer_ratio_vs_straight=1.164 actual_swim_m=78.379 arrive_pct=100.00 rest_frames=0 start_pct=100.00 min_stamina_pct=38.59 end_pct=100.00 pinned_min_efficiency=1.0000 start_snap_m=0.384 elapsed_s=31.94 result=PASS
+ROUTE shellwatch_to_tidal_cradle_sheltered worst=72.89 hops=[73.40 / 72.89]
+ROUTE tidal_cradle_to_salt_crown_sheltered worst=38.59 hops=[38.63 / 57.25 / 58.00 / 56.88 / 38.59]
+WATER HOP WALKED OK variant=sheltered routes=3..4 hops=7 assertions=224 worst_min_stamina_pct=38.59 position_writes=1 island_walk_m=713.3 rest=true party=[terrapup:L44,bramblebun:L43,mudsnout:L42,pipwing:L42,trailpup:L41] max_gain_per_frame=0.3000 elapsed_s=521.1 final_health=100.0
+EXIT 0

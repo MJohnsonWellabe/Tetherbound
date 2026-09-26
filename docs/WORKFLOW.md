@@ -339,8 +339,10 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
 
 # 8. Branches, CI and landing
 
-- Work on a branch from current `main`. `ralph/<task>` is the lane prefix,
-  `claude/<task>` the orchestrator prefix, `scratch/<x>` for throwaways.
+- Work on a branch from current `main`. Every branch uses the `tb/` prefix
+  (owner, 2026-09-26): lanes `tb/<lane>-<task>`, integration batches
+  `tb/integration-N`, throwaways `tb/scratch-<x>`. Never create `ralph/` or
+  `claude/` branches; cloud sessions set their outcome branch to a `tb/` name.
 - **CI runs only on `pull_request` events and on pushes to `main`.** A branch
   with no pull request is **never verified** — open a draft PR early and batch
   pushes to it (a newer push cancels the run in flight on the same ref).
