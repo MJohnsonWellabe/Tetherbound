@@ -12,6 +12,11 @@ extends Node
 ## regional spawn the world already chose.
 
 const ENFORCE_METHOD := "enforce_sealed_placement"
+## `teleport_body()`: commit a jump without a kinematic sweep. Seating a saved
+## pose can move the guest kilometres from its regional spawn; set as a plain
+## position, GodotPhysics sweeps the body across the whole jump and the next
+## `move_and_slide()` against Terrain3D collision measured ~4.4 s (F14#3).
+const REMOTE_CREATURE := preload("res://scripts/creatures/remote_creature.gd")
 
 ## {"pose": saved_player_pose, "world_instance_id": the instance it was saved in}
 var _candidate: Dictionary = {}
@@ -96,6 +101,9 @@ func _process(_delta: float) -> void:
 		_outcome = "regional"
 		print("[rejoin] saved pose could not be applied; regional spawn kept")
 		return
+	var seated := game.call("_find_player") as PhysicsBody3D if game.has_method("_find_player") else null
+	if seated != null:
+		REMOTE_CREATURE.teleport_body(seated, seated.global_position)
 	var scene := get_tree().current_scene
 	if scene != null and scene.has_method(ENFORCE_METHOD):
 		scene.call(ENFORCE_METHOD)
