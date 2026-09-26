@@ -10,6 +10,53 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 **Recovery:** all authored unfinished work is pushed to `ralph/meadows-recovery-pr175`. Start from current origin/main and inspect that branch selectively; its old ROADMAP edits are preserved drafts, not a replacement for main's approved plan. Tournament and river/Sela witnesses remain unfinished; the bounded guardian witness is now merged. Generated import/UID churn is excluded. Evidence lives in MEADOWS-PAYOFFS/guardian-admission; river remains parser-only. The owner explicitly resumed PR175 integration/testing after the 10% usage stop.
 
+## 0. Resume here (lane wind-down, 2026-09-26)
+
+All nine lane sessions (Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03, VIS) were wound down and archived on owner direction.
+- **Nothing was lost.** Every lane posted `## HANDOFF (final)` on its PR, showing clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
+- **Integration:** all READY work landed through batch 25 (#283) and batch 26. Main: `MAINSHA`. ACCEPTANCE §6.1: **MET_COUNT of 107** met.
+- **Acceptance Board:** rebuilt from `ralph/reports/COORDINATOR/`. Its README gives the scoring rule, the rebuild steps and the artifact URL.
+
+**To resume a lane:**
+1. Open its handoff comment.
+2. Branch from current main.
+3. Merge or cherry-pick the parked branch below.
+4. Continue from the listed next step.
+
+**Parked branches (on origin, not merged):**
+
+| Lane (handoff) | Branch @ SHA | Why parked / next step |
+|---|---|---|
+| Meadows core (#270) | `ralph/f04-fight-framing` @ a199d8d47 | F04#7 size-adaptive fight camera: tunables in `combat.json camera.framing`. Needs the 18-frame capture and a code-blind re-judge. |
+| Meadows core (#270) | `ralph/f01-village-roads` @ 49b2915c8 | F01#0 spine at 2.4 m / 1.2 m (coordinator ruling b''). Its band1 spawn edit breaks `smoke_local_requests --only=herd` (player 1312 m from the prompt). Fix the herd approach, then re-bake. |
+| Meadows core (#270) | `ralph/f01-topology` @ c8d1ca963 | WIP topology follow-ups. |
+| Cloudreach (#253) | `ralph/f06-earned-handoff` @ 2950ac0e9 | F06#0: stuck at B13 before Cloudreach arrival. X05 found `_excluded()` in `cloudreach_look.gd:289` scanning 554K times (130 s). |
+| Cloudreach (#253) | `ralph/cloudreach-f07-cadence-route` @ 55f465afd | F07#2 route shortening. Coordinator ruling (a): restore XP with wild pairs on the new legs. |
+| Cloudreach (#253) | `ralph/cloudreach-ci-midride-proof` @ 8559b1dcd | F06#6 proof CI step, not yet proven at this SHA. |
+| Cloudreach (#253) | `ralph/cloudreach-chainbridge-stall` @ 7488f93f9, `ralph/cloudreach-wip-matrix-tool-drafts` @ 739ede52f | WIP and reference only. |
+| Stormwood (#250) | `ralph/stormwood-f11-earned` @ 6a4089e2a | F11#0/#3. Its seat and pickup moves need a fresh road-surface bake (`test_stormwood_road_surface` freshness fails). |
+| Stormwood (#250) | `ralph/stormwood-f09-pocket-lures` @ 01c2e34df | F09#3 round 6: a light shaft over each pocket's reward, then a re-judge. |
+| Tidewake (#226) | `ralph/tidewake-wip-brine-sampler` @ 1a6672513 | Product root cause of the brine fall-throughs: the Terrain3D 1.0.2 height sample is wrong at 4 call sites. Finish the fix; the smoke's 2 m / on-floor guard (batch 25) is the stopgap. |
+| Art X04 (#248) | `ralph/x04-wip-bramblebun-meshy` @ be21ff5bf | Meshy candidate in progress; task IDs are in the handoff. |
+| X05 (#282) | `ralph/x05-f06-host-restart-mounted` @ e2134d5c2 | F06#5 co-op half. Blocked by the Cloudreach `_excluded()` slowness above. |
+| X05 (#282) | `ralph/x05-f14-participants` @ 54fb404fe | Old F14 proof WIP; the handoff states its status. |
+| X03 (#262) | `ralph/rescue-x03` @ 8f88b453e | Old; the handoff states its status. |
+| VIS (#279) | `ralph/visual-wip-slope-rock` @ 26b7216df | Shared-look WIP. The audit's ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
+
+**Open owner decisions:**
+- F11#2 legacy receipt;
+- F10#6 needs an ROG Ally run;
+- Cloudreach co-op shoulders and cliff palette;
+- Steamworks redistribution sign-off for shipping `steam_api64.dll`;
+- permission for agents to delete merged branches (the auto-mode classifier blocks `git push --delete`).
+
+**Coordinator rulings made this session, to keep:**
+- Co-op matches single player, and rejoin returns to the exact spot (same host world only).
+- Village and spine roads are widened for the roughly 2 m/texel control map.
+- F14 named wilds are judged by the named-wild rule, and a top-trainer damage tunable is authorized.
+- F07#2 keeps both criteria, through route XP option (a).
+- Criteria are numbered from zero within each F-row.
+
 ## 1. Product decision
 
 **Follow-up:** the six owner-requested Matt Pocock skill packages are committed in `.claude/skills/` and mirrored in Codex's `.agents/skills/` at fb354d0ec, with upstream metadata/license and project overrides in AGENTS/CLAUDE. The owner answered the first `grill-me` round:
