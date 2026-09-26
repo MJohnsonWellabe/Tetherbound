@@ -111,11 +111,11 @@ func test_room_that_would_put_the_lens_in_the_ally_is_not_clear() -> void:
 
 func test_neutral_is_the_trackers_own_bearing_not_the_current_yaw() -> void:
 	# In the tree so `global_position` is real (the bearing is read from it).
-	var root := (Engine.get_main_loop() as SceneTree).root
-	root.add_child(_player)
+	# The runner executes tests from its own `_init`, before any main loop
+	# exists, so there is no tree to add to; out of the tree `global_position`
+	# is the local `position`, which is all the bearing needs here.
 	var foe := Node3D.new()
-	root.add_child(foe)
-	foe.global_position = Vector3(0.0, 0.0, -10.0)  # straight ahead: tracker neutral is yaw 0
+	foe.position = Vector3(0.0, 0.0, -10.0)  # straight ahead: tracker neutral is yaw 0
 	_rig.set_tracking_target(foe, {"composition_yaw_deg": 0.0})
 	# The rig has drifted 8 degrees inside the dead zone; the answer must not.
 	_rig.set("yaw", deg_to_rad(8.0))

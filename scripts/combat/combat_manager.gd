@@ -1271,16 +1271,42 @@ func _combat_camera_framing_target(framing: Dictionary) -> float:
 	# F04#7: never closer than the piloted body's own depth plus a clearance,
 	# measured along the arm's horizontal setback -- a push-in for a small foe
 	# must not put the lens in the ally's fur (Oreth 03/12/20).
-	var pitch_cos := maxf(cos(float(_camera_rig.get("pitch"))), 0.2)
-	var ally_floor := (_body_horizontal_extent(_ally_body)
-		+ float(framing.get("min_ally_clearance_m", 1.5))) / pitch_cos
-	required_distance = maxf(required_distance, ally_floor)
-	var base_distance := float(cfg.get("distance", 6.0))
-	# F04#7: a negative floor lets a small pair be pushed in (Halder's owl read
-	# at ~5% of screen height from the fixed 9.5m arm); 0.0 keeps the old
-	# widen-only behaviour.
-	return clampf(required_distance - base_distance,
-		minf(0.0, float(framing.get("min_extra_distance", 0.0))), max_extra)
+	var ally_floor := ally_floor_distance(_body_horizontal_extent(_ally_body),
+		float(framing.get("min_ally_clearance_m", 1.5)), _rig_float("pitch", deg_to_rad(-25.0)))
+	return framing_extra_for(required_distance, float(cfg.get("distance", 6.0)),
+		float(framing.get("min_extra_distance", 0.0)), max_extra, ally_floor)
+
+
+## A numeric rig field, or `fallback` when the rig does not carry it (test
+## fixtures and any rig without the F04#7 fields).
+func _rig_float(field: String, fallback: float) -> float:
+	var value: Variant = _camera_rig.get(field) if _camera_rig != null else null
+	return float(value) if value is float or value is int else fallback
+
+
+## F04#7, pure so it can be tested without a fight. The arm length the frame
+## asks for, as an extra over `base_distance`: never nearer than `ally_floor`
+## (the lens stays out of the ally), never below `min_extra` (a negative value
+## lets a small pair be pushed in -- Halder's owl read at ~5% of screen height
+## from the fixed 9.5m arm; 0.0 keeps the old widen-only behaviour), never
+## above `max_extra`.
+static func framing_extra_for(required_distance: float, base_distance: float,
+		min_extra: float, max_extra: float, ally_floor: float) -> float:
+	return clampf(maxf(required_distance, ally_floor) - base_distance,
+		minf(0.0, min_extra), max_extra)
+
+
+## The nearest the arm may come, measured along it: the ally's horizontal
+## render extent plus a clearance, over the arm's horizontal share at `pitch`.
+static func ally_floor_distance(ally_extent: float, clearance: float, pitch: float) -> float:
+	return (maxf(ally_extent, 0.0) + maxf(clearance, 0.0)) / maxf(cos(pitch), 0.2)
+
+
+## Pivot height over the ally for `height_follow`: a fraction of the tallest
+## fighter's top, never below the configured base, never above `max_height`.
+static func follow_height_for(top: float, fraction: float, base_height: float,
+		max_height: float) -> float:
+	return clampf(top * fraction, base_height, maxf(base_height, max_height))
 
 
 ## Widest horizontal half-extent of `body`'s live render bounds about its own
@@ -1329,10 +1355,10 @@ func _update_combat_camera_height(framing: Dictionary, weight: float) -> void:
 	var base_height := float((MATH.config().get("camera", {}) as Dictionary).get("height", 2.3))
 	if not bool(follow.get("enabled", false)):
 		return
-	var target := clampf(_combined_top_above_ally() * float(follow.get("fraction_of_top", 0.55)),
-		base_height, maxf(base_height, float(follow.get("max_height", 6.0))))
+	var target := follow_height_for(_combined_top_above_ally(), float(follow.get("fraction_of_top", 0.55)),
+		base_height, float(follow.get("max_height", 6.0)))
 	if _camera_framing_height <= 0.0:
-		_camera_framing_height = float(_camera_rig.get("_height"))
+		_camera_framing_height = _rig_float("_height", base_height)
 	_camera_framing_height = lerpf(_camera_framing_height, target, weight)
 	_camera_rig.set("_height", _camera_framing_height)
 
@@ -1359,9 +1385,8 @@ func _update_combat_clear_orbit(framing: Dictionary, desired: float, delta: floa
 	# Probe the arm the frame needs, not the widest request: `desired` can be
 	# 30m past the base distance, and indoors nothing would ever count as clear.
 	var length := minf(desired, maxf(float(orbit.get("probe_length_m", 8.0)), 1.0))
-	var pitch_cos := maxf(cos(float(_camera_rig.get("pitch"))), 0.2)
-	var ally_room := (_body_horizontal_extent(_ally_body)
-		+ float(framing.get("min_ally_clearance_m", 1.5))) / pitch_cos
+	var ally_room := ally_floor_distance(_body_horizontal_extent(_ally_body),
+		float(framing.get("min_ally_clearance_m", 1.5)), _rig_float("pitch", deg_to_rad(-25.0)))
 	_camera_clear_orbit_target = float(_camera_rig.call("clear_orbit_offset_deg", length,
 		orbit.get("samples_deg", [30.0, 60.0, 90.0]), float(orbit.get("min_fraction", 0.75)),
 		ally_room, float(orbit.get("switch_margin_m", 1.0))))

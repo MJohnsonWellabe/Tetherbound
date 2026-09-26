@@ -545,9 +545,9 @@ func _tracking_neutral_yaw() -> Variant:
 	if _tracking_target == null or not is_instance_valid(_tracking_target) \
 			or _target == null or not is_instance_valid(_target):
 		return null
-	var origin := _target.global_position
-	var point := _tracking_target.global_position
-	if _tracking_target.has_method("centre"):
+	var origin := _world_point(_target)
+	var point := _world_point(_tracking_target)
+	if _tracking_target.has_method("centre") and _tracking_target.is_inside_tree():
 		point = _tracking_target.call("centre")
 	var toward := point - origin
 	toward.y = 0.0
@@ -562,6 +562,13 @@ func _tracking_neutral_yaw() -> Variant:
 	# a large piloted body. Manual orbit and its grace period still win above.
 	var composition := float(_tracking_config.get("composition_yaw_deg", 0.0))
 	return wanted + deg_to_rad(composition + signf(composition if composition != 0.0 else 1.0) * _composition_extra_deg)
+
+
+## `global_position` of a node, or its `position` when it is out of the tree
+## (a parentless node's local transform IS its world transform, and asking an
+## out-of-tree node for its global one is an engine error, not an answer).
+static func _world_point(node: Node3D) -> Vector3:
+	return node.global_position if node.is_inside_tree() else node.position
 
 
 func _follow(delta: float) -> void:
