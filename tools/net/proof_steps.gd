@@ -2161,7 +2161,8 @@ static func _water_anchor_fixture(tree: SceneTree, args: Dictionary) -> Dictiona
 		return {"verdict": "ERROR", "detail": "no authored Water anchor '%s'" % id}
 	at.y = float(world.call("ground_height_at", at.x, at.z)) + 0.15
 	tree.call("_drive_left", 0.0, 0.0)
-	player.global_position = at
+	# A teleport, not a kinematic sweep (see peer_runner `_step_teleport`).
+	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, at)
 	player.velocity = Vector3.ZERO
 	for f in int(args.get("settle", 45)):
 		await tree.physics_frame
