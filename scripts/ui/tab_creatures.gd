@@ -456,6 +456,9 @@ func build() -> void:
 	row.add_child(_evolution_panel)
 
 	_farewell_panel = _build_farewell_panel()
+	# The card takes whatever width the row leaves, so its text wraps less
+	# and it stays inside the 720p content height (X03 text floor).
+	_farewell_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_farewell_panel.visible = false
 	row.add_child(_farewell_panel)
 
