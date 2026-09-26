@@ -137,6 +137,8 @@ func _dialogue(label: String) -> bool:
 		await _tree.physics_frame
 	if not panel.is_open():
 		return _fail(label + " exact interaction did not open dialogue")
+	var runner: Variant = panel.call("runner") if panel.has_method("runner") else null
+	_note("DIALOGUE %s opened '%s'" % [label, str((runner as Object).call("conversation_id")) if runner is Object else "?"])
 	for _line in 64:
 		if not panel.is_open():
 			return true
@@ -181,7 +183,11 @@ func _trainer(id: String) -> bool:
 			break
 		await _tree.physics_frame
 	if not _director.trainer_battle_active():
-		return _fail(id + " dialogue did not start actual hosted combat")
+		var ally: RefCounted = _director.call("ally_instance")
+		return _fail("%s dialogue did not start actual hosted combat (hub events=%s; ally=%s ally_body=%s can_challenge=%s fighting=%s player=%s trainer=%s)" % [
+			id, str(_trainer_events.slice(-6)), str(ally.get("species_id")) if ally != null else "none",
+			str(_director.call("ally_body") != null), str(_director.call("can_challenge", spec)),
+			str(_manager.call("is_fighting")), str(_player.global_position), str(body.global_position)])
 	# One wall-clock bounded driver spans all actual roster rounds; no nested
 	# fight wait can outlive this five-minute sequence cap.
 	var scale_before := Engine.time_scale
@@ -250,7 +256,13 @@ func _rest_before(fight_id: String) -> bool:
 	return await _rest_party_at_camp(camp)
 
 
+var _trainer_events: Array[String] = []
+
+
 func _observe_trainer(event: Dictionary) -> void:
+	var kind := str(event.get("kind", ""))
+	if kind in ["start_refused", "started", "verdict", "finished"] or kind.contains("refus"):
+		_trainer_events.append("%s %s %s" % [kind, str(event.get("trainer_id", "")), str(event.get("reason", ""))])
 	if str(event.get("kind", "")) == "finished":
 		_outcomes[str(event.get("trainer_id", ""))] = bool(event.get("won", false))
 
