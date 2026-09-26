@@ -110,8 +110,17 @@ func _capture_one() -> bool:
 		# through the same call smoke_stronghold_battle_camera.gd uses, and
 		# everything after it -- defeat line, reward, world change -- is the
 		# production path.
-		print("resolving %s as won" % _tid)
-		_manager.call("_begin_resolve", "won")
+		# `_begin_resolve("won")` settles the CURRENT enemy; a trainer then
+		# sends out the next one. Repeat it (it no-ops while already resolving)
+		# until the whole team is down and the fight closes, saving as it goes.
+		var k := 0
+		while bool(_manager.call("is_fighting")) and k < 120:
+			_manager.call("_begin_resolve", "won")
+			await _wait_interval()
+			if k % 2 == 0:
+				await _save("r%02d" % (k / 2 + 1))
+			k += 1
+		print("resolved %s as won after %d steps, fighting=%s" % [_tid, k, str(_manager.call("is_fighting"))])
 		for i in _after_frames:
 			await _wait_interval()
 			await _save("a%02d" % (i + 1))
