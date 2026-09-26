@@ -58,9 +58,9 @@ Logs: `unit_tests.log` (7 files, 32 tests, 14831 assertions, 0 failed; the print
 | cradle_shell_nest | water:tidal_cradle:harvest:007 | Tidal Cradle arrival, 500 m | 4 Reef Stone (pickaxe) | PAID |
 
 Full-run numbers above are from the first full run (unchanged legs) plus the per-pocket reruns;
-`smoke_all_pockets.log` holds the post-fix full run (FULL_RUN_RESULT below).
+`smoke_all_pockets.log` holds the post-fix full run (FULL_RUN_RESULT (post-fix, all eight pockets, one run on commit 3855a1654ed912ca3d0a3823051f62772daf4278 code): **48 checks, 0 failures, rc=0**. Six Skill Candy pockets ACCEPTED (Deep Watch via the gate fixture), Cradle +4 Reef Stone, reed hollow +3 Reed Fiber PAID. below).
 
-FULL_RUN_RESULT
+FULL_RUN_RESULT (post-fix, all eight pockets, one run on commit 3855a1654ed912ca3d0a3823051f62772daf4278 code): **48 checks, 0 failures, rc=0**. Six Skill Candy pockets ACCEPTED (Deep Watch via the gate fixture), Cradle +4 Reef Stone, reed hollow +3 Reed Fiber PAID.
 
 ## Disclosed fixtures
 
