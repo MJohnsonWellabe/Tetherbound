@@ -191,5 +191,20 @@
     "_comment_collision": "`bury_m` and `footprint_samples` are `road_gate.gd`'s own wing lesson, imported wholesale rather than relearned: a collider sized from the ground under a panel's CENTRE leaks wherever the ground falls across the panel's span, which is how the Sigil Gate was walked around at +6m off centre while its span check reported a contiguous barrier. Each panel's box is sized from the lowest and highest ground its whole footprint spans, sunk `bury_m` below the lowest, and topped a full panel height above the highest.",
     "vault_guard_m": 1.0,
     "_comment_vault_guard": "OWNER-0901-VILLAGE-GATE-ROADS-V2. 2026-09-01 owner playtest: 'I can still jump it some places.' Measured against the LIVE built scene with tools/_probe_village_gate_roads_v2.gd, not the prefab's own '~1.4m' comment: real collision-top clearance above the actual ground a player stands on was only 1.41m at both gate leaves and as low as 1.46m at ordinary fence panels -- movement.json's jump.height is 1.35m, so the unpadded margin was 0.06-0.11m. A running jump timed at several different frames against the actual built scene cleared BOTH gates and 3 of 8 sampled fence panels in that same probe run. This value is added to the COLLISION top only (both village_boundary.gd's own fence panels and, via _build_gates, road_gate.gd's leaf for these two gates) -- the visible mesh height and course placement are untouched, the same invisible-collision-supports-a-visible-boundary split this file's own top-level `_why` already documents. Re-run the same probe after any change here; it reports real clearance-above-ground and runs a live jump test, not a comment."
-  }
+  },
+  "road_scatter_clear": [
+    {
+      "at": [10.8, 37.5],
+      "radius_m": 2.5,
+      "_why": "F01 day-walk judge (through_day_016/017): a baked Rock_Medium_1 sits across the band-1 spine 15m past TrailGate (centreline x 12.5 at z 37.5); its origin is ~2m off the centreline, just outside path_factor's 1.8m exclusion, but its body overhangs the road and its collider spans x 10.5-12.5. This disc covers that origin only, not the verge. TUNABLE."
+    }
+  ],
+  "exit_signs": [
+    {
+      "at": [16.4, 19.2],
+      "label": "South Bridge",
+      "points": [[14.0, 20.0], [-20.0, 80.0]],
+      "_why": "F01 day-walk judge (through_day_015): TrailGate, the village exit toward the South Bridge, had nothing on screen saying it was the exit. One arm, 3m inside the gate, footing 2.5m east of the South Street/spine centreline (paths.trailheads' OP21-18 standoff, so the post is not in the travel lane), aimed ~25 degrees off the spine's bearing so a player walking the road sees the plank's face, not its edge (the Rise trailhead's r2 lesson). TUNABLE."
+    }
+  ]
 }
