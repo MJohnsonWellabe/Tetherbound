@@ -486,51 +486,33 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 			break
 		if not await _walk_xz(stance, label + " stance", 0.75, false):
 			continue
-		var held := 0
-		for _frame in 180:
-			if not is_instance_valid(prompt):
-				break
-			if _arbiter.call("winning_provider") == prompt:
-				held += 1
-				if held >= 8:
-					_activated_provider_id = 0
-					_activated_provider_path = ""
-					_activations.clear()
-					var observer := Callable(self, "_on_arbiter_activated")
-					_arbiter.activated.connect(observer)
-					var wanted_id := prompt.get_instance_id()
-					await _tap(&"interact")
-					if _arbiter.activated.is_connected(observer):
-						_arbiter.activated.disconnect(observer)
-					if _activated_provider_id == wanted_id:
-						return true
-					# A harvest node answers the press by being gathered and
-					# freed (the equipped tool's swing resolves it). Run 16's
-					# Thunderwood node vanished under the press this way; the
-					# caller checks the receipt and the yield.
-					if not is_instance_valid(prompt) or not is_instance_valid(body):
-						_note("%s was consumed by the press" % label)
-						return true
-					if _activated_provider_id != 0:
-						var winner_now := _arbiter.call("winning_provider") as Node
-						var provider_node := instance_from_id(_activated_provider_id) as Node3D
-						return _fail(("%s activated competing provider %s#%d (activations=%s; player=%s; wanted prompt at %s %.2f m; "
-							+ "activated at %s %.2f m; winner now=%s)") % [
-							label, _activated_provider_path, _activated_provider_id, str(_activations),
-							str(_player.global_position), str(prompt.global_position),
-							_player.global_position.distance_to(prompt.global_position),
-							str(provider_node.global_position) if provider_node != null else "?",
-							_player.global_position.distance_to(provider_node.global_position) if provider_node != null else -1.0,
-							str(winner_now.get_path()) if winner_now != null else "<none>"])
-					break
-			else:
-				held = 0
-			await _tree.physics_frame
+		# Focused Nysa smoke (--witness-clock) reproduced run 26: a road fight
+		# at the stance ended with the trainer displaced 7 m, beside circuit
+		# Tavi, while the arbiter's last published winner was still Nysa; the
+		# press at the 8x/480 Hz clock then went, correctly, to Tavi. A player
+		# looks at the prompt before pressing: settle at the real clock, stick
+		# released, and press only while standing at the stance.
+		_drive_stick(0, 0)
+		var here := Vector2(_player.global_position.x, _player.global_position.z)
+		if here.distance_to(stance) > 1.5:
+			_note("%s: displaced %.1f m from the stance before the press; walking back" % [label, here.distance_to(stance)])
+			if not await _walk_xz(stance, label + " stance again", 0.75, false):
+				continue
+			_drive_stick(0, 0)
+		var clock_scale := Engine.time_scale
+		var clock_hz := Engine.physics_ticks_per_second
+		await _tree.process_frame
+		Engine.time_scale = 1.0
+		Engine.physics_ticks_per_second = 60
+		await _tree.process_frame
+		var pressed: Variant = await _hold_and_press(body, prompt, stance, label)
+		await _tree.process_frame
+		Engine.time_scale = clock_scale
+		Engine.physics_ticks_per_second = clock_hz
+		if pressed is bool:
+			return pressed
 	var winner := _arbiter.call("winning_provider") as Node
 	if not is_instance_valid(prompt) or not is_instance_valid(body):
-		# Run 17: the vine node was gathered and freed during the approach,
-		# not by this helper's Interact. The caller (`_gather_site`) judges
-		# the receipt and the exact yield; any other caller's check fails.
 		_note("%s was freed during its approach (winner=%s); the caller checks what happened" % [label,
 			str(winner.get_path()) if winner != null else "<none>"])
 		return true
@@ -541,6 +523,54 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 		str(prompt.get("enabled")), str(body.is_visible_in_tree()), str(body.is_inside_tree()), str(own_offer),
 		str(_player.global_position), str(prompt.global_position),
 		_player.global_position.distance_to(prompt.global_position), str(_game.get("equipped_tool"))])
+
+
+## Hold the exact prompt as the arbiter winner for 8 frames while standing at
+## `stance`, then press once. Returns true/false when the press decided the
+## outcome, or null to try the next stance.
+func _hold_and_press(body: Node3D, prompt: Node3D, stance: Vector2, label: String) -> Variant:
+	var held := 0
+	for _frame in 180:
+		if not is_instance_valid(prompt):
+			break
+		var at := Vector2(_player.global_position.x, _player.global_position.z)
+		if _arbiter.call("winning_provider") == prompt and at.distance_to(stance) <= 1.5:
+			held += 1
+			if held >= 8:
+				_activated_provider_id = 0
+				_activated_provider_path = ""
+				_activations.clear()
+				var observer := Callable(self, "_on_arbiter_activated")
+				_arbiter.activated.connect(observer)
+				var wanted_id := prompt.get_instance_id()
+				await _tap(&"interact")
+				if _arbiter.activated.is_connected(observer):
+					_arbiter.activated.disconnect(observer)
+				if _activated_provider_id == wanted_id:
+					return true
+				# A harvest node answers the press by being gathered and
+				# freed (the equipped tool's swing resolves it). Run 16's
+				# Thunderwood node vanished under the press this way; the
+				# caller checks the receipt and the yield.
+				if not is_instance_valid(prompt) or not is_instance_valid(body):
+					_note("%s was consumed by the press" % label)
+					return true
+				if _activated_provider_id != 0:
+					var winner_now := _arbiter.call("winning_provider") as Node
+					var provider_node := instance_from_id(_activated_provider_id) as Node3D
+					return _fail(("%s activated competing provider %s#%d (activations=%s; player=%s; wanted prompt at %s %.2f m; "
+						+ "activated at %s %.2f m; winner now=%s)") % [
+						label, _activated_provider_path, _activated_provider_id, str(_activations),
+						str(_player.global_position), str(prompt.global_position),
+						_player.global_position.distance_to(prompt.global_position),
+						str(provider_node.global_position) if provider_node != null else "?",
+						_player.global_position.distance_to(provider_node.global_position) if provider_node != null else -1.0,
+						str(winner_now.get_path()) if winner_now != null else "<none>"])
+				break
+		else:
+			held = 0
+		await _tree.physics_frame
+	return null
 
 
 func _walk_xz(point: Vector2, label: String, tolerance: float = 1.3,

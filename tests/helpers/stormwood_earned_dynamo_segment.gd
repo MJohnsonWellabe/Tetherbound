@@ -199,8 +199,12 @@ func _trainer(id: String) -> bool:
 		if release_tick >= 0 and tick >= release_tick:
 			_set_action(&"combat_quick", false)
 			release_tick = -1
-		var enemy := _manager.call("enemy_body") as Node3D
-		var ally := _director.call("ally_body") as Node3D
+		# Between rounds the fainted creature's body is freed; never cast a
+		# freed instance (focused Nysa smoke: "Trying to cast a freed object").
+		var enemy_raw: Variant = _manager.call("enemy_body")
+		var ally_raw: Variant = _director.call("ally_body")
+		var enemy := enemy_raw as Node3D if is_instance_valid(enemy_raw) else null
+		var ally := ally_raw as Node3D if is_instance_valid(ally_raw) else null
 		if _manager.is_fighting() and enemy != null and ally != null:
 			var offset := enemy.global_position - ally.global_position
 			offset.y = 0
