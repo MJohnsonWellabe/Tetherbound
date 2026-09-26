@@ -404,6 +404,15 @@ func _acknowledge_and_cross() -> bool:
 		_leg_target = points[index]
 		if not await _walk_road_entry(road[index]):
 			return false
+	# B12 attempt 1 reached the village road start and then spent the
+	# helper's 1800-frame prompt approach on the ~180 m from (8,90) to Kell,
+	# stopping at (143,-7,62). Walk there first as on every other leg (fights,
+	# confined recovery), then let `_talk` do its unchanged exact approach.
+	var kell_at := Vector2(kell.global_position.x, kell.global_position.z)
+	_leg_target = kell_at
+	_receipt("acknowledgement_approach_walk", {"from": _player.global_position, "to": kell.global_position})
+	if not await _walk_ground(kell_at, 3.0):
+		return false
 	if not await _talk(kell.get_node_or_null("Interactable") as Node3D, str(kell_spec.greeting)) \
 			or not _has("meadows_acknowledged") or not retained_five(_initial_ids, _party_ids()):
 		return _fail("The actual return greeting did not earn Meadows acknowledgement with the retained five")

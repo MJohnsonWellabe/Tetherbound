@@ -59,6 +59,10 @@ def main():
             "Veridian accepted through the full-belt farewell ceremony: the lowest-level earned member was let go "
             "(tools/earned_saves/warden_accept.gd). The inherited helper receipt 'meadows_ending_settled' keeps its "
             "hard-coded 'release_pending_legendary_keep_earned_five' label; 'veridian_accepted' is the actual choice.",
+            "Every helper workaround is disclosed in tools/earned_saves/BLOCKERS.md (B1-B12) with per-beat receipts: "
+            "bench/road/pre-Warden Satchel care (between_fight_care, pre_warden_bench_care), delayed-dialogue prompt "
+            "presses, the Warden reward read-out, the F05 spatial accept prompt, and the acknowledgement walk on the "
+            "forward roads reversed (warren_undertrail and the B3 mound detour). None writes a flag, item, party member or position.",
         ] + [d for s in segments for d in s.get("disclosures", [])],
         "segments": [{k: s[k] for k in (
             "segment", "passed", "wall_seconds", "game_day", "game_clock_seconds", "location",

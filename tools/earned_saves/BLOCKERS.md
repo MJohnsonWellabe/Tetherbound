@@ -353,3 +353,17 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   (fall = damaging `landed` in the same frame; combat; otherwise hazard (water/other)), floor state
   and the leg being walked. On `died` it logs cause, position, last floor y and last landing, and
   fails the segment with that cause. B12 attempt 1 = warden attempt 10.
+- **B12 attempt 1 (warden attempt 10, 15:15 UTC, 3056 s): the return walk passed.** The ACCEPT
+  ending passed again, and the 11.4 km forward-road return reached the village with no death.
+  Death watch root-cause evidence: the only trainer damage was 10 ticks of
+  `cause=hazard(water/other)` at y≈-20 (pond water level -17) on the band1 leg
+  (-330,590)→(-430,510), from (-385,-20.2,546) to (-420,-19.5,518), health 100→40, with no fall
+  and no fight. So band1's spine runs through the relocated pond (the `water` block notes OW5D
+  moved the basin). Attempt 9's death is therefore most likely drowning. The attempt-9 run had no
+  watch, and it probably drowned on band2's straight leg, which this route replaces; the band1 pond
+  was survivable this time. The run then failed at Kell:
+  `The exact live prompt never became actionable within its unchanged approach budget`. The
+  helper's 1800-frame prompt approach started at the band1 road start (8,90), about 180 m from
+  Kell (184,0.1,52.6), and ended at (143,-7.1,62.3). Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt10/`.
+- B12 attempt 2: walk to within 3 m of Kell with the ordinary walker (receipt
+  `acknowledgement_approach_walk`), then run the unchanged `_talk`.
