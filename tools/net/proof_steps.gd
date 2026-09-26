@@ -31,6 +31,12 @@ extends RefCounted
 ##   rename_member   {from, to}           SETUP: give a companion a distinct name
 ##   await_probe     {what, path, equals, budget_frames?}  poll one of this peer's
 ##                                         probes until the value at `path` equals `equals`
+##   party_uids      {remember?, equals?}  this peer's owned creature UIDs in party order;
+##                                         `remember` keeps them in this process under a
+##                                         name, `equals` FAILS unless they are exactly the
+##                                         ones kept under that name (a peer that only
+##                                         dropped its link keeps its process, so the
+##                                         list outlives a host restart and a rejoin)
 ##   rider_identity  {character_id}       F12: this peer's picture of ANOTHER player's
 ##                                         ride, found by character (peer ids change on
 ##                                         rejoin): registry row, trainer body, mount
@@ -81,7 +87,7 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"water_dock_resend", "water_dock_cut",
 	"water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
 	"water_guardian_let_go", "water_guardian_forge_accept",
-	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue"]
+	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids"]
 
 
 static func handles(action: String) -> bool:
@@ -112,6 +118,8 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return _rename_member(tree, args)
 		"grandpa_homecoming":
 			return await _grandpa_homecoming(tree, args)
+		"party_uids":
+			return _party_uids(tree, args)
 		"await_probe":
 			return await _await_probe(tree, args)
 		"rider_identity":
@@ -1370,6 +1378,35 @@ static func _dig(value: Variant, path: Array) -> Variant:
 		else:
 			return null
 	return at
+
+
+static func _party_uids(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var party: Variant = game.get("party") if game != null else null
+	if party == null:
+		return {"verdict": "ERROR", "detail": "no Game.party on this peer"}
+	var uids: Array = []
+	for index in int((party as RefCounted).call("size")):
+		var member: Variant = (party as RefCounted).call("at", index)
+		if member != null:
+			uids.append(str((member as RefCounted).get("uid")))
+	var kept: Dictionary = tree.get_meta(&"proof_party_uids", {})
+	var detail := "%d owned: %s" % [uids.size(), str(uids)]
+	var data := {"uids": uids, "size": uids.size()}
+	if args.has("remember"):
+		kept[str(args.remember)] = uids.duplicate()
+		tree.set_meta(&"proof_party_uids", kept)
+		detail += "; kept as '%s'" % str(args.remember)
+	if args.has("equals"):
+		var name := str(args.equals)
+		if not kept.has(name):
+			return {"verdict": "ERROR", "detail": "no party UIDs kept as '%s'" % name}
+		var want: Array = kept[name]
+		data["equals"] = want == uids
+		if want != uids:
+			return {"verdict": "FAIL", "detail": "%s; '%s' was %s" % [detail, name, str(want)], "data": data}
+		detail += "; exactly the '%s' list" % name
+	return {"verdict": "PASS", "detail": detail, "data": data}
 
 
 static func _await_probe(tree: SceneTree, args: Dictionary) -> Dictionary:
