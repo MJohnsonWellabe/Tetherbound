@@ -405,6 +405,100 @@ Per the coordinator's throughput condition, WO-F10-01…04 and WO-F11-01 land as
   - **Not verified:** no blind re-judge, no Ally profile, and the current's Surge coupling has not been seen live across a Break.
 
 
+## WO-F09-05: pocket lures from the road and walk witness (`ralph/stormwood-f09-pocket-lures`, from main bbe380fdc)
+
+SNOWBALL F09#3. This is a proof task: build only what the proof run shows is broken. **The measurement found nothing broken in the world.** No lamp, scatter, emissive or bake change was made, so there is no re-bake. The diff is test and tooling only.
+
+- **§1 record:**
+  - **Commit:** smoke verdict on `d75315649`. Later commits change only the smoke's header comment, the capture tool and this report.
+  - **Package:** none. This is a source checkout, not a packaged build.
+  - **Platform:** Linux container, Godot 4.7.
+    - Smoke: `--headless`.
+    - Frames: `xvfb-run`, `--rendering-driver opengl3`, 1280×720.
+  - **Input:** left-stick joypad motion events through `tests/helpers/stick_navigator.gd`. The reward is claimed with the ordinary `interact` action on the production InteractionArbiter prompt.
+  - **Starting save origin:** an in-memory chapter-entry fixture (seam 1 below). No save file is loaded or written.
+  - **Route:** instrumented start, ordinary walk. See the seams.
+  - **Result:** PASS.
+  - **Limitations:** listed at the end of this section.
+- **Disclosed seams** (also in the smoke header):
+  1. **Chapter entry.** This uses the `smoke_stormwood_continuous.gd` pattern.
+     - In-memory completed-Cloudreach flags, plus an L44 five-creature party.
+     - Then the production `enter_realm("stormwood", "stormwood_arrival_from_cloudreach")`.
+  2. **Start position.** One `Game.debug_teleport_to` per pocket, onto its joined road.
+     - The start is 32 m of road arc before the spur junction, facing along the road.
+     - It is derived from the `stormwood_world.json` polylines, not from literals.
+  3. **Rootgate flag.** `stormwood:rootgate_released` is set for the two pockets behind the Rootgate (Deepwood and Dynamo). Earning it is the continuous smoke's job.
+  4. **Surge.** When the Surge was Building at a walk, the harness waited for Calm at `time_scale` 8. It fired once, before Dynamo.
+- **Measurement method** (`LURE` lines, asserted):
+  - **Stands:** on the joined road at 30, 25 and 20 m before the junction, on both sides of it: 30 stands in all.
+  - **Camera:** the production CameraRig at `pitch_start_deg` −12, behind the trainer, facing along the road.
+  - **Recorded per stand:**
+    - whether the junction lamp flame is inside the frustum;
+    - the flame's normalised screen position, at a 16:9 viewport;
+    - a physics ray from the camera to the flame;
+    - painted-spur samples every 2 m over its first 20 m, each counting when it is in the frustum with a clear ray.
+  - **Pass bar:** the flame on screen within a 3% margin, a clear ray, and at least 5 of 10 spur samples.
+- **Line of sight, before (= after; nothing was changed):** every one of the 30 stands has a clear camera-to-flame ray and the flame in frustum.
+
+| Pocket (road) | Side | Camera→flame m (30/25/20) | Flame screen x,y at 25 m | Spur visible /10 (30/25/20) |
+|---|---|---|---|---|
+| verge_ash_hollow (ash_road) | along | 32.7 / 27.8 / 23.1 | 0.372, 0.343 | 10 / 10 / 9 |
+| | against | 39.5 / 34.6 / 29.8 | 0.602, 0.334 | 8 / 10 / 10 |
+| hollows_moss_nook (crown_sightline_loop) | along | 39.3 / 34.7 / 29.8 | 0.602, 0.300 | 10 / 10 / 10 |
+| | against | 32.6 / 27.8 / 23.1 | 0.373, 0.352 | 10 / 10 / 9 |
+| conductor_ridge_cleft (conductor_road) | along | 42.2 / 37.4 / 32.5 | 0.437, 0.371 | 10 / 10 / 10 |
+| | against | 39.9 / 35.0 / 30.2 | 0.598, 0.308 | 10 / 10 / 10 |
+| deepwood_ridge_shelter (hall_loop) | along | 39.2 / 34.6 / 29.7 | 0.600, 0.341 | 10 / 10 / 10 |
+| | against | 32.7 / 28.0 / 23.3 | 0.370, 0.269 | 10 / 10 / 9 |
+| dynamo_scorch_pen (dynamo_west_approach) | along | 40.3 / 35.3 / 30.4 | 0.606, 0.180 | 10 / 10 / 10 |
+| | against | 32.7 / 27.9 / 23.1 | 0.373, 0.367 | 10 / 10 / 9 |
+
+  - The flame sits 7.7–21.0° off the road heading, and 18–38% down from the top of the frame. Dynamo's "along" side is highest (y 0.18), because the road climbs toward the lamp.
+  - The first measurement pass ran at the headless default square viewport (1920×1920). It gave the same frustum and ray results; only the x positions were stretched (0.22–0.72). The smoke now sets a 16:9 viewport (`MEASURE_VIEWPORT`).
+- **Walk witness** (`tests/smoke_stormwood_pocket_walks.gd`, finished):
+  - **Fixes:** the pickup service node name was wrong (`StormwoodPickupRuntime` → `StormwoodPickups`), and the viewport is now 16:9.
+  - **Full run on `d75315649`:** 117 checks, 0 failures, 0 `SCRIPT ERROR`, 404 s wall. The first full run, on `ac5c3044e`, gave the same result at 402 s.
+  - **Every walk:**
+    - road leg to the junction, then spur, then mouth, then through the mouth to the reward;
+    - `confined_resets=0`;
+    - prompt "Take …" offered and `interact` pressed;
+    - item count +1, realm-qualified cache flag set, pickup node gone.
+  - **Per pocket:**
+    - Verge: 312 m, 64 s, Good Candy 0→1.
+    - Hollows: 179 m, 37 s, Great Candy 0→1.
+    - Conductor: 384 m, 79 s, Great Candy 1→2 (the Hollows candy was already held).
+    - Deepwood: 197 m, 41 s, Revive 0→1.
+    - Dynamo: 145 m, 31 s, Stoneguard Brew 0→1.
+  - **Negative control, per pocket:** 480 frames of straight stick push at the back wall from outside.
+    - The closest approach to the centre was 9.90–9.91 m. The interior half is 8.0 m; the wall's inner face plus the capsule is 9.9 m.
+    - `entered=false` in all five.
+- **Other tests:** `test_stormwood_pockets` passed 10/10 (2919 assertions, 0 `SCRIPT ERROR`). No world, arch or scatter code was touched, so `smoke_stormwood_arches` and the freshness tests were not re-run. The capture tool reports the scatter bake fresh.
+- **Captures:** `visual/f09/pocket_walks/`.
+  - **Contents:** 20 frames plus `frames_walks.json` and `contact_sheet.jpg`.
+  - **Camera:** production CameraRig, HUD hidden, day pinned, Surge pinned to Calm.
+  - **Frames per pocket:**
+    - `1_road_lure`: the walk's side of the junction, 25 m before it, normal −12° pose facing along the road;
+    - `2_mouth`;
+    - `3a_reward_before`: 1.4 m from the reward with its prompt offered;
+    - `3b_reward_claimed`: the same pose after `interact`, with the count +1 recorded.
+  - **Tool:** `tools/capture_stormwood_pocket_walks.gd`. It re-stands if the arm pulls in or a body blocks the camera-to-flame ray. After three attempts it moves to the other side of the junction; none were needed in the kept frames.
+  - **What I saw:**
+    - **Road frames:** the pale junction post and its glowing lantern stand beside the yellow-current road in all five, left of centre (Verge, Conductor) or right of centre (Hollows, Deepwood, Dynamo). The painted spur can be made out leaving the road for Verge, Conductor and Dynamo. For Hollows and Deepwood the lamp reads, but the spur mouth at 25 m is a thin line in the grass.
+    - **Mouths:** both mouth lanterns glow on the dead-trunk palisade, the current lane runs in, and a small reward glint shows inside.
+    - **3a/3b:** the reward's glow sits beside the trainer and is gone after the claim. The HUD toast is hidden, so the receipt is the recorded count.
+- **Finding (not fixed; not a lure defect):** at the Conductor road stand `(-674.3, 3394.3)`, a large blue wild creature walked into the camera in 3 of 5 renders.
+  - The spring arm was pulled to 2.6 m, and in one frame the creature hid the lamp.
+  - The smoke's physics rays were clear at that stand in both runs, so it is transient.
+  - A player standing there may see the same thing. It is ordinary encounter behaviour, left to the encounter owner.
+  - The kept Conductor frames are from a clean re-render.
+- **Limitations:**
+  - Physics rays cannot see non-colliding foliage, so foliage occlusion rests on the rendered frames and the blind judge.
+  - The capture tool's lamp-on/lamp-off pixel count is swamped by rain and wind motion between grabs. It is recorded, not judged.
+  - Measured by day only; there is no night pass.
+  - The walks start from a teleport onto the road, not from a continuous chapter walk.
+  - Not run on an Ally, and not run two-peer.
+  - The code-blind visual judge is with the lead.
+
 ## WO-F10-06 — Surge phases readable without HUD (`ralph/stormwood-f10-surge-readability`)
 
 - **Anchor:** F10 / ACCEPTANCE §6.1 F10: lightning with a 1.2 s / 3 m telegraph, and Calm/Building/Break/Fading readable without HUD text. The restored-sky view has to be distinct. ART_DIRECTION and SYSTEMS define the Stormwood look for each phase.

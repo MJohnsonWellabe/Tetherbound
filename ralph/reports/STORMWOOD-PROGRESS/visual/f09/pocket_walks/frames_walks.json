@@ -1,0 +1,1138 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82122087478638,
+			"camera_pos": [
+				-329.557403564453,
+				31.3833198547363,
+				339.609985351562
+			],
+			"camera_to_flame_m": 27.8450546264648,
+			"description": "verge_ash_hollow: on ash_road 25 m of road before the spur junction, normal exploration camera looking along the road",
+			"file": "verge_ash_hollow_1_road_lure.jpg",
+			"flame_in_frustum": true,
+			"flame_screen": [
+				0.372017574310303,
+				0.342879514341001
+			],
+			"hud": "off",
+			"id": "verge_ash_hollow_1_road_lure",
+			"in_fight": false,
+			"joins": "ash_road",
+			"junction": [
+				-335.0,
+				369.2
+			],
+			"label": "walks",
+			"lamp_pixels_changed": 109328,
+			"player": [
+				-330.483581542969,
+				28.5521755218506,
+				344.611328125
+			],
+			"pocket": "verge_ash_hollow",
+			"prompt": "",
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 12,
+				"frame_draw_calls": 6422
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-330.483581542969,
+				344.611328125
+			],
+			"surge_elapsed": 61.8110136666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82121562957764,
+			"camera_pos": [
+				-75.103385925293,
+				32.5351524353027,
+				417.3369140625
+			],
+			"description": "verge_ash_hollow: standing in the mouth, looking in at the reward",
+			"file": "verge_ash_hollow_2_mouth.jpg",
+			"hud": "off",
+			"id": "verge_ash_hollow_2_mouth",
+			"in_fight": false,
+			"joins": "ash_road",
+			"junction": [
+				-335.0,
+				369.2
+			],
+			"label": "walks",
+			"player": [
+				-70.0942764282227,
+				29.7040100097656,
+				418.220092773438
+			],
+			"pocket": "verge_ash_hollow",
+			"prompt": "",
+			"reward_node": {
+				"found": true,
+				"ground_below": 29.8740731209517,
+				"pos": [
+					-57.0499992370605,
+					30.2199993133545,
+					420.519989013672
+				],
+				"visible": true
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 4,
+				"frame_draw_calls": 410
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-70.0942764282227,
+				418.220092773438
+			],
+			"surge_elapsed": 61.0,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82120656967163,
+			"camera_pos": [
+				-63.3640060424805,
+				32.7139663696289,
+				421.507415771484
+			],
+			"description": "verge_ash_hollow: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Good Candy' offered (HUD hidden), before interact",
+			"file": "verge_ash_hollow_3a_reward_before.jpg",
+			"hud": "off",
+			"id": "verge_ash_hollow_3a_reward_before",
+			"in_fight": false,
+			"joins": "ash_road",
+			"junction": [
+				-335.0,
+				369.2
+			],
+			"label": "walks",
+			"player": [
+				-58.4287338256836,
+				29.8828296661377,
+				420.276885986328
+			],
+			"pocket": "verge_ash_hollow",
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Good Candy",
+			"reward_node": {
+				"found": true,
+				"ground_below": 29.8740731209517,
+				"pos": [
+					-57.0499992370605,
+					30.2199993133545,
+					420.519989013672
+				],
+				"visible": true
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 4,
+				"frame_draw_calls": 365
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-58.4287338256836,
+				420.276885986328
+			],
+			"surge_elapsed": 60.9898856666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82120656967163,
+			"camera_pos": [
+				-63.3640060424805,
+				32.7139663696289,
+				421.507415771484
+			],
+			"count_after": 1,
+			"count_before": 0,
+			"description": "verge_ash_hollow: same pose, after pressing interact on the reward prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Good Candy'",
+			"file": "verge_ash_hollow_3b_reward_claimed.jpg",
+			"hud": "off",
+			"id": "verge_ash_hollow_3b_reward_claimed",
+			"in_fight": false,
+			"item": "good_candy",
+			"joins": "ash_road",
+			"junction": [
+				-335.0,
+				369.2
+			],
+			"label": "walks",
+			"player": [
+				-58.4287338256836,
+				29.8828296661377,
+				420.276885986328
+			],
+			"pocket": "verge_ash_hollow",
+			"prompt": "",
+			"prompt_before": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Good Candy",
+			"reward_node": {
+				"found": false
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 4,
+				"frame_draw_calls": 363
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-58.4287338256836,
+				420.276885986328
+			],
+			"surge_elapsed": 61.9166666666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82129573822021,
+			"camera_pos": [
+				93.7151184082031,
+				24.7143783569336,
+				1732.93811035156
+			],
+			"camera_to_flame_m": 34.6511077880859,
+			"description": "hollows_moss_nook: on crown_sightline_loop 25 m of road before the spur junction, normal exploration camera looking along the road",
+			"file": "hollows_moss_nook_1_road_lure.jpg",
+			"flame_in_frustum": true,
+			"flame_screen": [
+				0.602235921223958,
+				0.299978468153212
+			],
+			"hud": "off",
+			"id": "hollows_moss_nook_1_road_lure",
+			"in_fight": false,
+			"joins": "crown_sightline_loop",
+			"junction": [
+				101.5,
+				1762.0
+			],
+			"label": "walks",
+			"lamp_pixels_changed": 97732,
+			"player": [
+				95.0331573486328,
+				21.8832225799561,
+				1737.85083007812
+			],
+			"pocket": "hollows_moss_nook",
+			"prompt": "",
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 10,
+				"frame_draw_calls": 3897
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				95.0331573486328,
+				1737.85083007812
+			],
+			"surge_elapsed": 61.8154326666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82118606567383,
+			"camera_pos": [
+				-25.1864833831787,
+				28.8314666748047,
+				1796.02966308594
+			],
+			"description": "hollows_moss_nook: standing in the mouth, looking in at the reward",
+			"file": "hollows_moss_nook_2_mouth.jpg",
+			"hud": "off",
+			"id": "hollows_moss_nook_2_mouth",
+			"in_fight": false,
+			"joins": "crown_sightline_loop",
+			"junction": [
+				101.5,
+				1762.0
+			],
+			"label": "walks",
+			"player": [
+				-30.0992603302002,
+				26.0003299713135,
+				1797.34704589844
+			],
+			"pocket": "hollows_moss_nook",
+			"prompt": "",
+			"reward_node": {
+				"found": true,
+				"ground_below": 26.6984605312347,
+				"pos": [
+					-42.9000015258789,
+					27.0499992370605,
+					1800.78002929688
+				],
+				"visible": true
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 8,
+				"frame_draw_calls": 1759
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-30.0992603302002,
+				1797.34704589844
+			],
+			"surge_elapsed": 60.9922886666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.8211841583252,
+			"camera_pos": [
+				-37.5957374572754,
+				29.5237064361572,
+				1797.21545410156
+			],
+			"description": "hollows_moss_nook: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy' offered (HUD hidden), before interact",
+			"file": "hollows_moss_nook_3a_reward_before.jpg",
+			"hud": "off",
+			"id": "hollows_moss_nook_3a_reward_before",
+			"in_fight": false,
+			"joins": "crown_sightline_loop",
+			"junction": [
+				101.5,
+				1762.0
+			],
+			"label": "walks",
+			"player": [
+				-41.5477867126465,
+				26.6925754547119,
+				1800.41735839844
+			],
+			"pocket": "hollows_moss_nook",
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy",
+			"reward_node": {
+				"found": true,
+				"ground_below": 26.6984605312347,
+				"pos": [
+					-42.9000015258789,
+					27.0499992370605,
+					1800.78002929688
+				],
+				"visible": true
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 7,
+				"frame_draw_calls": 4795
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-41.5477867126465,
+				1800.41735839844
+			],
+			"surge_elapsed": 60.987622,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.8211841583252,
+			"camera_pos": [
+				-37.5957374572754,
+				29.5237064361572,
+				1797.21545410156
+			],
+			"count_after": 1,
+			"count_before": 0,
+			"description": "hollows_moss_nook: same pose, after pressing interact on the reward prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy'",
+			"file": "hollows_moss_nook_3b_reward_claimed.jpg",
+			"hud": "off",
+			"id": "hollows_moss_nook_3b_reward_claimed",
+			"in_fight": false,
+			"item": "great_candy",
+			"joins": "crown_sightline_loop",
+			"junction": [
+				101.5,
+				1762.0
+			],
+			"label": "walks",
+			"player": [
+				-41.5477867126465,
+				26.6925754547119,
+				1800.41735839844
+			],
+			"pocket": "hollows_moss_nook",
+			"prompt": "",
+			"prompt_before": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy",
+			"reward_node": {
+				"found": false
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 7,
+				"frame_draw_calls": 4793
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-41.5477867126465,
+				1800.41735839844
+			],
+			"surge_elapsed": 61.9203906666666,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82120323181152,
+			"camera_pos": [
+				-679.294616699219,
+				58.8146476745605,
+				3393.1435546875
+			],
+			"camera_to_flame_m": 37.4476165771484,
+			"description": "conductor_ridge_cleft: on conductor_road 25 m of road before the spur junction (along side), normal exploration camera looking along the road",
+			"file": "conductor_ridge_cleft_1_road_lure.jpg",
+			"flame_in_frustum": true,
+			"flame_screen": [
+				0.43726847966512,
+				0.371356116400825
+			],
+			"hud": "off",
+			"id": "conductor_ridge_cleft_1_road_lure",
+			"in_fight": false,
+			"joins": "conductor_road",
+			"junction": [
+				-650.0,
+				3400.0
+			],
+			"label": "walks",
+			"lamp_pixels_changed": 76180,
+			"player": [
+				-674.342163085938,
+				55.9835090637207,
+				3394.30297851562
+			],
+			"pocket": "conductor_ridge_cleft",
+			"prompt": "",
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 14,
+				"frame_draw_calls": 681
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-674.342163085938,
+				3394.30297851562
+			],
+			"surge_elapsed": 61.8166666666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82122659683228,
+			"camera_pos": [
+				-315.315338134766,
+				38.9286117553711,
+				3380.80322265625
+			],
+			"description": "conductor_ridge_cleft: standing in the mouth, looking in at the reward",
+			"file": "conductor_ridge_cleft_2_mouth.jpg",
+			"hud": "off",
+			"id": "conductor_ridge_cleft_2_mouth",
+			"in_fight": false,
+			"joins": "conductor_road",
+			"junction": [
+				-650.0,
+				3400.0
+			],
+			"label": "walks",
+			"player": [
+				-310.235961914062,
+				36.0974617004395,
+				3380.53637695312
+			],
+			"pocket": "conductor_ridge_cleft",
+			"prompt": "",
+			"reward_node": {
+				"found": true,
+				"ground_below": 34.4299945290997,
+				"pos": [
+					-297.0,
+					34.7799987792969,
+					3379.84008789062
+				],
+				"visible": true
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 4,
+				"frame_draw_calls": 644
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-310.235961914062,
+				3380.53637695312
+			],
+			"surge_elapsed": 61.0099803333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82113742828369,
+			"camera_pos": [
+				-302.929656982422,
+				37.5067405700684,
+				3382.22338867188
+			],
+			"description": "conductor_ridge_cleft: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy' offered (HUD hidden), before interact",
+			"file": "conductor_ridge_cleft_3a_reward_before.jpg",
+			"hud": "off",
+			"id": "conductor_ridge_cleft_3a_reward_before",
+			"in_fight": false,
+			"joins": "conductor_road",
+			"junction": [
+				-650.0,
+				3400.0
+			],
+			"label": "walks",
+			"player": [
+				-298.398071289062,
+				34.6756401062012,
+				3379.91357421875
+			],
+			"pocket": "conductor_ridge_cleft",
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy",
+			"reward_node": {
+				"found": true,
+				"ground_below": 34.4299945290997,
+				"pos": [
+					-297.0,
+					34.7799987792969,
+					3379.84008789062
+				],
+				"visible": true
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 4,
+				"frame_draw_calls": 689
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-298.398071289062,
+				3379.91357421875
+			],
+			"surge_elapsed": 60.9863743333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82113742828369,
+			"camera_pos": [
+				-302.929656982422,
+				37.5067405700684,
+				3382.22338867188
+			],
+			"count_after": 1,
+			"count_before": 0,
+			"description": "conductor_ridge_cleft: same pose, after pressing interact on the reward prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy'",
+			"file": "conductor_ridge_cleft_3b_reward_claimed.jpg",
+			"hud": "off",
+			"id": "conductor_ridge_cleft_3b_reward_claimed",
+			"in_fight": false,
+			"item": "great_candy",
+			"joins": "conductor_road",
+			"junction": [
+				-650.0,
+				3400.0
+			],
+			"label": "walks",
+			"player": [
+				-298.398071289062,
+				34.6756401062012,
+				3379.91357421875
+			],
+			"pocket": "conductor_ridge_cleft",
+			"prompt": "",
+			"prompt_before": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy",
+			"reward_node": {
+				"found": false
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 4,
+				"frame_draw_calls": 687
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-298.398071289062,
+				3379.91357421875
+			],
+			"surge_elapsed": 61.9197076666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82120084762573,
+			"camera_pos": [
+				-992.1767578125,
+				42.8294906616211,
+				3887.17041015625
+			],
+			"camera_to_flame_m": 34.5728073120117,
+			"description": "deepwood_ridge_shelter: on hall_loop 25 m of road before the spur junction, normal exploration camera looking along the road",
+			"file": "deepwood_ridge_shelter_1_road_lure.jpg",
+			"flame_in_frustum": true,
+			"flame_screen": [
+				0.600495211283366,
+				0.341186551694517
+			],
+			"hud": "off",
+			"id": "deepwood_ridge_shelter_1_road_lure",
+			"in_fight": false,
+			"joins": "hall_loop",
+			"junction": [
+				-1022.0,
+				3883.2
+			],
+			"label": "walks",
+			"lamp_pixels_changed": 116132,
+			"player": [
+				-997.217834472656,
+				39.9983673095703,
+				3886.4931640625
+			],
+			"pocket": "deepwood_ridge_shelter",
+			"prompt": "",
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 13,
+				"frame_draw_calls": 372
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-997.217834472656,
+				3886.4931640625
+			],
+			"surge_elapsed": 61.814957,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82137680053711,
+			"camera_pos": [
+				-1002.13537597656,
+				43.6647338867188,
+				3735.18701171875
+			],
+			"description": "deepwood_ridge_shelter: standing in the mouth, looking in at the reward",
+			"file": "deepwood_ridge_shelter_2_mouth.jpg",
+			"hud": "off",
+			"id": "deepwood_ridge_shelter_2_mouth",
+			"in_fight": false,
+			"joins": "hall_loop",
+			"junction": [
+				-1022.0,
+				3883.2
+			],
+			"label": "walks",
+			"player": [
+				-1001.42651367188,
+				40.8334922790527,
+				3730.15014648438
+			],
+			"pocket": "deepwood_ridge_shelter",
+			"prompt": "",
+			"reward_node": {
+				"found": true,
+				"ground_below": 41.8825886515525,
+				"pos": [
+					-999.580017089844,
+					42.2299995422363,
+					3717.03002929688
+				],
+				"visible": true
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 8,
+				"frame_draw_calls": 3460
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-1001.42651367188,
+				3730.15014648438
+			],
+			"surge_elapsed": 60.9954333333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82105875015259,
+			"camera_pos": [
+				-998.3740234375,
+				44.568904876709,
+				3723.3056640625
+			],
+			"description": "deepwood_ridge_shelter: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Revive' offered (HUD hidden), before interact",
+			"file": "deepwood_ridge_shelter_3a_reward_before.jpg",
+			"hud": "off",
+			"id": "deepwood_ridge_shelter_3a_reward_before",
+			"in_fight": false,
+			"joins": "hall_loop",
+			"junction": [
+				-1022.0,
+				3883.2
+			],
+			"label": "walks",
+			"player": [
+				-999.775146484375,
+				41.7377738952637,
+				3718.41625976562
+			],
+			"pocket": "deepwood_ridge_shelter",
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Revive",
+			"reward_node": {
+				"found": true,
+				"ground_below": 41.8825886515525,
+				"pos": [
+					-999.580017089844,
+					42.2299995422363,
+					3717.03002929688
+				],
+				"visible": true
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 8,
+				"frame_draw_calls": 2813
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-999.775146484375,
+				3718.41625976562
+			],
+			"surge_elapsed": 60.9920046666667,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82105875015259,
+			"camera_pos": [
+				-998.3740234375,
+				44.568904876709,
+				3723.3056640625
+			],
+			"count_after": 1,
+			"count_before": 0,
+			"description": "deepwood_ridge_shelter: same pose, after pressing interact on the reward prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Revive'",
+			"file": "deepwood_ridge_shelter_3b_reward_claimed.jpg",
+			"hud": "off",
+			"id": "deepwood_ridge_shelter_3b_reward_claimed",
+			"in_fight": false,
+			"item": "revive",
+			"joins": "hall_loop",
+			"junction": [
+				-1022.0,
+				3883.2
+			],
+			"label": "walks",
+			"player": [
+				-999.775146484375,
+				41.7377738952637,
+				3718.41625976562
+			],
+			"pocket": "deepwood_ridge_shelter",
+			"prompt": "",
+			"prompt_before": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Revive",
+			"reward_node": {
+				"found": false
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 8,
+				"frame_draw_calls": 2811
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-999.775146484375,
+				3718.41625976562
+			],
+			"surge_elapsed": 61.925338,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82110738754272,
+			"camera_pos": [
+				-440.4072265625,
+				69.3637847900391,
+				5134.20751953125
+			],
+			"camera_to_flame_m": 35.3324203491211,
+			"description": "dynamo_scorch_pen: on dynamo_west_approach 25 m of road before the spur junction, normal exploration camera looking along the road",
+			"file": "dynamo_scorch_pen_1_road_lure.jpg",
+			"flame_in_frustum": true,
+			"flame_screen": [
+				0.605944951375326,
+				0.180381534717701
+			],
+			"hud": "off",
+			"id": "dynamo_scorch_pen_1_road_lure",
+			"in_fight": false,
+			"joins": "dynamo_west_approach",
+			"junction": [
+				-412.1,
+				5144.4
+			],
+			"label": "walks",
+			"lamp_pixels_changed": 114928,
+			"player": [
+				-435.61962890625,
+				66.5326843261719,
+				5135.9248046875
+			],
+			"pocket": "dynamo_scorch_pen",
+			"prompt": "",
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 14,
+				"frame_draw_calls": 1062
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-435.61962890625,
+				5135.9248046875
+			],
+			"surge_elapsed": 61.797504,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82130193710327,
+			"camera_pos": [
+				-444.753326416016,
+				82.1052780151367,
+				5235.5888671875
+			],
+			"description": "dynamo_scorch_pen: standing in the mouth, looking in at the reward",
+			"file": "dynamo_scorch_pen_2_mouth.jpg",
+			"hud": "off",
+			"id": "dynamo_scorch_pen_2_mouth",
+			"in_fight": false,
+			"joins": "dynamo_west_approach",
+			"junction": [
+				-412.1,
+				5144.4
+			],
+			"label": "walks",
+			"player": [
+				-446.494293212891,
+				79.2742156982422,
+				5240.3681640625
+			],
+			"pocket": "dynamo_scorch_pen",
+			"prompt": "",
+			"reward_node": {
+				"found": true,
+				"ground_below": 79.8683490614662,
+				"pos": [
+					-451.029998779297,
+					80.2200012207031,
+					5252.81982421875
+				],
+				"visible": true
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 9,
+				"frame_draw_calls": 549
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-446.494293212891,
+				5240.3681640625
+			],
+			"surge_elapsed": 60.9833333333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82082843780518,
+			"camera_pos": [
+				-450.904327392578,
+				82.6688919067383,
+				5246.4306640625
+			],
+			"description": "dynamo_scorch_pen: 1.4 m from the reward, its prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Stoneguard Brew' offered (HUD hidden), before interact",
+			"file": "dynamo_scorch_pen_3a_reward_before.jpg",
+			"hud": "off",
+			"id": "dynamo_scorch_pen_3a_reward_before",
+			"in_fight": false,
+			"joins": "dynamo_west_approach",
+			"junction": [
+				-412.1,
+				5144.4
+			],
+			"label": "walks",
+			"player": [
+				-450.550842285156,
+				79.8379287719727,
+				5251.50439453125
+			],
+			"pocket": "dynamo_scorch_pen",
+			"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Stoneguard Brew",
+			"reward_node": {
+				"found": true,
+				"ground_below": 79.8683490614662,
+				"pos": [
+					-451.029998779297,
+					80.2200012207031,
+					5252.81982421875
+				],
+				"visible": true
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 9,
+				"frame_draw_calls": 792
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-450.550842285156,
+				5251.50439453125
+			],
+			"surge_elapsed": 61.003138,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		},
+		{
+			"camera": "player camera (production CameraRig/Camera3D)",
+			"camera_player_m": 5.82082462310791,
+			"camera_pos": [
+				-450.904266357422,
+				82.6688919067383,
+				5246.4306640625
+			],
+			"count_after": 1,
+			"count_before": 0,
+			"description": "dynamo_scorch_pen: same pose, after pressing interact on the reward prompt '[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Stoneguard Brew'",
+			"file": "dynamo_scorch_pen_3b_reward_claimed.jpg",
+			"hud": "off",
+			"id": "dynamo_scorch_pen_3b_reward_claimed",
+			"in_fight": false,
+			"item": "stoneguard_brew",
+			"joins": "dynamo_west_approach",
+			"junction": [
+				-412.1,
+				5144.4
+			],
+			"label": "walks",
+			"player": [
+				-450.550842285156,
+				79.8379287719727,
+				5251.50439453125
+			],
+			"pocket": "dynamo_scorch_pen",
+			"prompt": "",
+			"prompt_before": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Stoneguard Brew",
+			"reward_node": {
+				"found": false
+			},
+			"road_back_m": 25.0,
+			"road_current": {
+				"chunks": 574,
+				"chunks_in_draw_range": 9,
+				"frame_draw_calls": 789
+			},
+			"side": "along",
+			"staged": {
+				"clock": "day pinned; surge elapsed re-pinned to 60 s (Calm) before the frame",
+				"flags": [
+					"stormwood:rootgate_released"
+				],
+				"placement": "debug_teleport_to + Player transform at stand point"
+			},
+			"stand": [
+				-450.550842285156,
+				5251.50439453125
+			],
+			"surge_elapsed": 61.9286673333333,
+			"surge_phase": "calm",
+			"time_of_day": "day"
+		}
+	],
+	"label": "walks",
+	"scatter_bake_fresh": true,
+	"note": "conductor_ridge_cleft frames re-rendered at commit 5 of WO-F09-05 (a wild creature walked into the first full-res road stand); every other frame from the first full-res run"
+}
