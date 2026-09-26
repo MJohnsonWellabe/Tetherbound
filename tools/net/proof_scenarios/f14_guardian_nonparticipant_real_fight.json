@@ -1,0 +1,293 @@
+{
+  "name": "F14: only an actual freeing-fight participant receives a Guardian offer",
+  "claim": "ACCEPTANCE F14 clause 'Each actual freeing-fight participant's ... decision grants at most their own once-only creature' and the hard rule 'A non-participant receives nothing'. The guest alone challenges and defeats Captain Nerissa in the Veilfall through the production trainer battle; the host, in the same world, never joins the fight. The host records only the guest as a freeing-fight participant (trainer-participants-host). The guest, at a full belt, asks at the chamber and lets Rill go for the Guardian with controller presses. The host is not offered the invite prompt, and its request sent past the prompt is refused by the host (not_participant); it ends with no Guardian and no claim. Setup only: the Veilfall prerequisites before Nerissa are committed through the ledger; companions are granted by name; win_trainer_battle keeps the fighting creature topped up between swings.",
+  "peers": 2,
+  "scene": "water",
+  "budget_s": 2400,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "nickname": "Acorn"
+      },
+      "label": "setup: companions by name"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "mosshell",
+        "nickname": "Shelby"
+      },
+      "label": "setup: the host has room (two of five)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "ripplet",
+        "nickname": "Kestrel"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "nickname": "Bramble"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "mudsnout",
+        "nickname": "Rill"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "sparkit",
+        "nickname": "Tuff"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "meadowhart",
+        "nickname": "Fern"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "party_size": 5,
+        "guardians_owned": 0
+      },
+      "label": "setup: the guest's belt is full (five)"
+    },
+    {
+      "peer": "all",
+      "action": "deploy_creature",
+      "args": {},
+      "label": "each player sends a companion out"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_fixture",
+      "args": {
+        "prerequisites_only": true
+      },
+      "label": "setup: the Veilfall chain up to Nerissa (her fight itself is played next)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_veilfall_return_opened",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "nerissa_challenge",
+      "label": "the GUEST challenges Captain Nerissa in the Veilfall (production begin_trainer_battle)"
+    },
+    {
+      "peer": 1,
+      "action": "win_trainer_battle",
+      "args": {},
+      "budget_frames": 9000,
+      "label": "the guest fights Nerissa's team down through host-arbitrated strikes"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_captain_nerissa_defeated",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "participants": [
+          "$character1"
+        ]
+      },
+      "label": "the host journals exactly the players who FOUGHT as freeing-fight participants"
+    },
+    {
+      "peer": 1,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "guardian_tether"
+      },
+      "label": "the guest frees the Guardian at the chamber's real control"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_guardian_freed",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "00_guardian_freed"
+      },
+      "label": "first rendered frame (shader warm-up under its own allowance)"
+    },
+    {
+      "peer": 1,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "label": "the guest, who fought, asks for its offer"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_answer",
+      "args": {
+        "release": "Rill",
+        "screenshot": "01_guest_offer_at_capacity"
+      },
+      "expect_data": {
+        "stage": "choose"
+      },
+      "label": "AT CAPACITY, ACCEPT: the guest lets Rill go and the Guardian takes the holder"
+    },
+    {
+      "peer": 0,
+      "action": "veilfall_press",
+      "args": {
+        "prompt": "invite"
+      },
+      "expect": "FAIL",
+      "expect_data": {
+        "enabled": false
+      },
+      "label": "the host, who never fought, is not offered the invite prompt"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_offer_again",
+      "args": {
+        "code": "not_participant"
+      },
+      "expect_data": {
+        "refused": true,
+        "code": "not_participant"
+      },
+      "label": "a NON-PARTICIPANT's request, sent past the prompt, is refused by the host (not_participant)"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_state",
+      "expect_data": {
+        "guardians_owned": 0,
+        "party": [
+          "Acorn",
+          "Shelby"
+        ],
+        "host_open_claims": []
+      },
+      "label": "the host, a non-participant with room, has no Guardian and no claim"
+    },
+    {
+      "peer": 1,
+      "action": "guardian_state",
+      "expect_data": {
+        "guardians_owned": 1,
+        "saved_guardians": 1,
+        "receipt_saved": true,
+        "party": [
+          "Kestrel",
+          "Bramble",
+          "Abyssal Guardian",
+          "Tuff",
+          "Fern"
+        ],
+        "pending_guardian_id": ""
+      },
+      "label": "the participant has exactly one Guardian in Rill's holder, receipt saved"
+    },
+    {
+      "peer": "all",
+      "action": "screenshot",
+      "args": {
+        "name": "02_after"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "water_abyssal_guardian",
+          "Kestrel",
+          "Bramble",
+          "Tuff",
+          "Fern"
+        ],
+        "lacks": [
+          "Rill"
+        ]
+      },
+      "label": "the participant's saved character holds the Guardian"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character0",
+        "contains": [
+          "Acorn",
+          "Shelby"
+        ],
+        "lacks": [
+          "water_abyssal_guardian"
+        ]
+      },
+      "label": "the non-participant's saved character does not"
+    }
+  ]
+}
