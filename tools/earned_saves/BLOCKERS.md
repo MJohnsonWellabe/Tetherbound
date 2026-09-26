@@ -367,3 +367,32 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   Kell (184,0.1,52.6), and ended at (143,-7.1,62.3). Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt10/`.
 - B12 attempt 2: walk to within 3 m of Kell with the ordinary walker (receipt
   `acknowledgement_approach_walk`), then run the unchanged `_talk`.
+- **B12 attempt 2 (warden attempt 11, 16:42 UTC): the return walk passed again.** The same band1
+  pond water damage appeared (health 100→38, no death). It failed on the new approach to Kell:
+  `Ordinary quarry/Warrens movement did not reach (184.2, 0.109838, 52.6); player=(72.52981, -5.808105, 71.52964)`
+  after 3 `walk_confined_recovery`. Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt11/`.
+
+## B13: Kell stands at a stale storm-road end, about 180 m off every road (Meadows data drift, open)
+
+- `village_npcs.json` places Kell at (184.2,52.6). Its comment says this is "at the storm road's
+  own end (spokes.routes[1] finishes at [185.5,49.7])". The current `terrain_playground.json`
+  `storm_road` spoke runs (0,7000)→(-34,7513), beside the Hall. So Kell is now in open ground about
+  180 m east of the band1 road start (8,90), and no authored path reaches that spot. A straight
+  walk from (8,90) stalls in a hollow at about (72,-5.8,71). Both approaches failed: attempt 10
+  (the helper's 1800-frame prompt approach) and attempt 11 (the ordinary walker).
+- Not fixed (Meadows data). `tools/earned_saves/kell_probe.gd` (read-only terrain/obstacle map
+  from (8,90) to Kell) was written but not run to completion; it was stopped at wrap-up.
+
+## Where the chain stands (wrap-up 2026-09-26 ~17:50 UTC)
+
+- Passed with saves: opening_team, camp_tournament, bridge, warrens, relay, **hall**. Last good
+  save: `/tmp/claude-0/earned_chain/seed4/hall/save/`.
+- `warden` passes the Warden, the Veridian ACCEPT (farewell releases the lowest-level member) and
+  the settled ending. It also passes the full 11.4 km return to the village on the forward roads
+  (B12 fixed). It stops at Kell (B13). Two of the coordinator's three B12 attempts are used.
+- Next step: run `kell_probe.gd` and route the Kell approach around the hollow on walkable cells
+  (for example via The Rise road (74,-41)), or get Kell's position fixed to the current storm-road
+  end. Then: storm road → Rift → Cloudreach arrival → `assemble_fixture.py` → fixture test →
+  `smoke_cloudreach_continuous.gd -- --from-save=res://tests/fixtures/earned_saves/c1_arrival --leg=opening`.
+  Resume with `CHAIN_TIMEOUT=12600 tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4 warden`
+  (about 55 min to Kell).
