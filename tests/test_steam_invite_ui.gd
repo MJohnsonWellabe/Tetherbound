@@ -5,11 +5,70 @@ const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const TITLE := preload("res://scripts/ui/title_screen.gd")
 const PLAYERS_TAB := preload("res://scripts/ui/tab_players.gd")
 const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
+const JOIN_DRIVER := preload("res://scripts/mp/join_driver.gd")
 
 const TEST_DIR := "user://test_steam_invite_ui/"
 
 var game: Node
 var saver: RefCounted
+
+
+func test_the_join_friend_screen_names_who_sent_the_invitation() -> void:
+	assert_true(TITLE.friend_invite_text("Rin").begins_with("Rin invited you to their world."))
+	assert_true(TITLE.friend_invite_text("  ").begins_with("A friend invited you"),
+		"no Steam name falls back to a friend")
+
+
+class EndedSessionStub extends Node:
+	var reason := ""
+
+	func end_reason() -> String:
+		return reason
+
+
+class DroppedGameStub extends Node:
+	var session: Node
+
+
+## A friend join that succeeded, then ended with `reason`: the driver the
+## title finds on return, the session's end reason and the saved retry.
+func _dropped_friend_join(reason: String, steam_route: bool = true,
+		retry: Dictionary = {"lobby_id": 777, "selection": {"kind": "existing", "character_id": "portable-rin"}}) -> Node:
+	var stub := DroppedGameStub.new()
+	var ended := EndedSessionStub.new()
+	ended.reason = reason
+	stub.session = ended
+	stub.add_child(ended)
+	var driver := JOIN_DRIVER.new()
+	driver.name = "JoinDriver"
+	stub.add_child(driver)
+	# The route a begun friend join records (`begin_steam`), set directly: this
+	# stub is outside the scene tree, where the driver's /root/Game lookup logs.
+	driver._steam_route = steam_route
+	if not retry.is_empty():
+		stub.set_meta(&"steam_join_retry", retry)
+	return stub
+
+
+func test_a_friend_join_whose_link_dropped_offers_the_same_lobby_again() -> void:
+	var stub := _dropped_friend_join("host_gone")
+	assert_eq(TITLE.dropped_friend_join_message(stub), TITLE.STEAM_LINK_LOST_TEXT,
+		"a lost link (no host reason) comes back with a rejoin offer, not a blank title")
+	stub.free()
+
+
+func test_a_deliberate_end_or_a_direct_join_offers_no_friend_rejoin() -> void:
+	for reason: String in ["left", "kicked", "session_full", ""]:
+		var ended := _dropped_friend_join(reason)
+		assert_eq(TITLE.dropped_friend_join_message(ended), "",
+			"the host's own reason '%s' keeps no retry" % reason)
+		ended.free()
+	var direct := _dropped_friend_join("host_gone", false)
+	assert_eq(TITLE.dropped_friend_join_message(direct), "", "a direct-address join is not a friend join")
+	direct.free()
+	var unsaved := _dropped_friend_join("host_gone", true, {})
+	assert_eq(TITLE.dropped_friend_join_message(unsaved), "", "no saved lobby, nothing to rejoin")
+	unsaved.free()
 
 
 class LobbyErrorStub extends RefCounted:
@@ -107,6 +166,35 @@ func test_a_restarted_guest_still_sees_its_saved_portable_characters() -> void:
 	assert_ne(str(game.local.character_id), "portable-rin", "boot minted a new live id")
 	assert_eq(TITLE._saved_portable_character_ids(game), ["portable-rin"],
 		"the saved character is offered even though the live id names no file")
+
+
+## Owner ruling "rejoin returns to exact spot": a Steam invite restores the
+## portable character, pose included; that pose must not place the guest in
+## whatever world the friend hosts. The join clears it (and a loaded slot's
+## queued fly state) so only `rejoin_pose.gd`'s host-instance check can seat it.
+func test_a_steam_join_does_not_place_a_saved_pose_before_the_host_is_known() -> void:
+	game.local.character_id = "portable-rin"
+	game.local.display_name = "Rin"
+	game.local.pose = {"realm": "meadows", "position": [40.0, 3.0, -60.0], "model_yaw": 0.0,
+		"camera_yaw": 0.0, "camera_pitch": 0.0}
+	assert_true(saver.characters().write("portable-rin", game.local.save_data(),
+		{"last_world_instance_id": "instance-host-a"}), "fixture portable character must save")
+	game.reset_for_new_game()
+	game.set_meta("pending_fly_load", {"safe_anchor": [1.0, 2.0, 3.0]})
+	var summary: Dictionary = TITLE.prepare_steam_join(game,
+		{"kind": "existing", "character_id": "portable-rin"})
+	assert_eq(str(summary.get("character_id")), "portable-rin", "the selected character joins")
+	assert_true((game.get("saved_player_pose") as Dictionary).is_empty(),
+		"no world can place the restored pose before the host snapshot decides")
+	assert_false(game.has_meta("pending_fly_load"), "nor a queued fly state")
+	var helper := game.get_node_or_null(^"RejoinPose")
+	assert_true(helper != null, "the host-world check is mounted for the Steam join")
+	if helper != null:
+		var candidate: Dictionary = helper.get("_candidate")
+		assert_eq(str(candidate.get("world_instance_id")), "instance-host-a",
+			"it holds the instance the pose was saved in")
+		assert_eq(candidate.get("pose", {}).get("position"), [40.0, 3.0, -60.0],
+			"and the saved pose itself")
 
 
 func test_players_invite_button_preserves_specific_coordinator_error() -> void:

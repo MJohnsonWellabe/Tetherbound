@@ -4,6 +4,7 @@ extends Control
 ## vegetation or world scripts behind it: launch becomes interactive before the
 ## expensive Meadows exists, then New/Load transitions into the real world.
 
+const STEAM_LINK_LOST_TEXT := "The connection to your friend’s world was lost. You can rejoin with the same character."
 const WORLD_SCENE := "res://scenes/world/meadows_playground.tscn"
 const THEME_PATH := "res://assets/ui/theme/tetherbound_theme.tres"
 const EXPORT_VERIFY_FLAG := "--verify-export"
@@ -925,7 +926,10 @@ func _show_friend_invite() -> void:
 
 	var join: Button = null
 	if _pending_invite_id > 0:
-		explanation.text = _steam_status("A friend invited you to their world. Choose Join, then pick the portable character you want to bring.")
+		# The invitation itself, with who sent it. `_steam_status` would show the
+		# lobby's idle "Steam friends are ready." here instead; only a real
+		# error (e.g. leave the current world first) replaces it.
+		explanation.text = _steam_error(friend_invite_text(_steam_inviter_name()))
 		join = _button("Join Friend")
 		join.pressed.connect(_accept_friend_invite)
 		_join_box.add_child(join)
@@ -1059,15 +1063,26 @@ func _start_pending_steam_join() -> void:
 		_status.text = "Game state failed to start."
 		return
 
-	# A guest imports no local world. Clear the transient run first, then apply
-	# exactly the portable character the player selected. This is deliberately
-	# separate from `_begin_join()`, whose legacy LAN continuation honors slot 0.
-	if not prepare_steam_character(game, _steam_character_pending):
+	var summary := prepare_steam_join(game, _steam_character_pending)
+	if summary.is_empty():
 		_status.text = "That portable character could not be loaded. Choose another character."
 		_steam_character_pending = {}
 		_show_portable_character_select()
 		return
+	var driver := _mount_join_driver(game)
+	driver.call("begin_steam", summary)
+	_remember_steam_retry()
+	_go_to_world("Joining your friend…")
 
+
+## Everything a Steam invite join does before the driver opens the lobby
+## socket; {} when the selected portable character can't be loaded.
+static func prepare_steam_join(game: Node, selection: Dictionary) -> Dictionary:
+	# A guest imports no local world. Clear the transient run first, then apply
+	# exactly the portable character the player selected. This is deliberately
+	# separate from `_begin_join()`, whose legacy LAN continuation honors slot 0.
+	if not prepare_steam_character(game, selection):
+		return {}
 	var summary := steam_character_summary(game)
 	if str(summary.get("character_id", "")).is_empty():
 		# Session normally mints this during join. The Steam adapter needs the
@@ -1077,10 +1092,10 @@ func _start_pending_steam_join() -> void:
 		var fresh_id: String = CHARACTER_IDENTITY.mint()
 		(local as Object).set("character_id", fresh_id)
 		summary["character_id"] = fresh_id
-	var driver := _mount_join_driver(game)
-	driver.call("begin_steam", summary)
-	_remember_steam_retry()
-	_go_to_world("Joining your friend…")
+	# The Steam invite restores the portable character's saved pose too; it is
+	# only this character's to resume in the same host world.
+	_defer_rejoin_pose(game)
+	return summary
 
 
 static func steam_character_summary(game: Object) -> Dictionary:
@@ -1261,6 +1276,42 @@ func _on_steam_changed() -> void:
 ## pending friend join.
 static func pending_steam_join_has_failure(joining_lobby_id: int, error: String) -> bool:
 	return joining_lobby_id > 0 and not error.strip_edges().is_empty()
+
+
+static func friend_invite_text(inviter_name: String) -> String:
+	var who := inviter_name.strip_edges()
+	return "%s invited you to their world. Choose Join, then pick the portable character you want to bring." \
+		% (who if not who.is_empty() else "A friend")
+
+
+func _steam_inviter_name() -> String:
+	if _steam_lobby != null and _steam_lobby.has_method("pending_inviter_name"):
+		return str(_steam_lobby.call("pending_inviter_name", _pending_invite_id))
+	return ""
+
+
+## A friend join that succeeded and later lost its host link comes back here
+## with no driver error, and used to land on the plain title with its saved
+## lobby and character discarded. When the link dropped without the host's own
+## reason (`host_gone`: a lost connection, or a host that crashed), offer that
+## lobby again with the same character; a deliberate close, a kick or the
+## player's own leave keep no retry. Empty when there is nothing to offer.
+static func dropped_friend_join_message(game: Node) -> String:
+	if game == null:
+		return ""
+	var driver := game.get_node_or_null(^"JoinDriver")
+	if driver == null or not str(driver.call("last_error")).is_empty():
+		return ""
+	if not driver.has_method("target") or str(driver.call("target")) != "friend’s world":
+		return ""
+	var retry: Variant = game.get_meta(&"steam_join_retry", {})
+	if not retry is Dictionary or int((retry as Dictionary).get("lobby_id", 0)) <= 0:
+		return ""
+	var session: Variant = game.get("session")
+	if not session is Object or not (session as Object).has_method("end_reason") \
+			or str((session as Object).call("end_reason")) != "host_gone":
+		return ""
+	return STEAM_LINK_LOST_TEXT
 
 
 static func steam_retry_is_actionable(pending_reason: String) -> bool:
@@ -1575,16 +1626,28 @@ func _begin_join(address: String, port: int, retry_for_s: float) -> void:
 	# snapshot arrives. Take it off the live character before the world builds
 	# (so no world ever places a pose from somewhere else) and let
 	# `rejoin_pose.gd` decide against the snapshot's instance.
-	_mount_rejoin_pose(game, rejoin_pose_candidate(game))
-	game.set("saved_player_pose", {})
-	# A loaded home slot also queues its fly/traversal state (safe anchor,
-	# stamina) for the next world; that belongs to the slot's world too.
-	if game.has_meta("pending_fly_load"):
-		game.remove_meta("pending_fly_load")
+	_defer_rejoin_pose(game)
 
 	var driver := _mount_join_driver(game)
 	driver.call("begin", address, port if port > 0 else _configured_port(), retry_for_s)
 	_go_to_world("Joining %s…" % address)
+
+
+## Both join routes (direct address `_begin_join`, Steam invite
+## `_start_pending_steam_join`) end here before the world builds: the saved pose
+## is taken off the live character, with any queued fly/traversal state from a
+## loaded home slot, and `rejoin_pose.gd` decides against the host snapshot's
+## instance (owner ruling 2026-09-26).
+static func _defer_rejoin_pose(game: Node) -> void:
+	_mount_rejoin_pose(game, rejoin_pose_candidate(game))
+	clear_pose_for_join(game)
+
+
+## The pose-clearing half of `_defer_rejoin_pose`, pure enough to unit test.
+static func clear_pose_for_join(game: Node) -> void:
+	game.set("saved_player_pose", {})
+	if game.has_meta("pending_fly_load"):
+		game.remove_meta("pending_fly_load")
 
 
 ## The pose this character last saved and the world instance it saved it in,
@@ -1605,7 +1668,7 @@ static func rejoin_pose_candidate(game: Node) -> Dictionary:
 	return {"pose": saved.get("player_pose", {}), "world_instance_id": saved.get("last_world_instance_id", null)}
 
 
-func _mount_rejoin_pose(game: Node, candidate: Dictionary) -> void:
+static func _mount_rejoin_pose(game: Node, candidate: Dictionary) -> void:
 	var existing := game.get_node_or_null(^"RejoinPose")
 	if existing != null:
 		existing.free()
@@ -1684,6 +1747,8 @@ func _report_failed_join() -> bool:
 		return false
 	var message := str(driver.call("last_error"))
 	var was_steam := driver.has_method("target") and str(driver.call("target")) == "friend’s world"
+	if message.is_empty():
+		message = dropped_friend_join_message(game)
 	driver.free()
 	if message.is_empty():
 		if game.has_meta(&"steam_join_retry"):

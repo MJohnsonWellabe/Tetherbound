@@ -5,8 +5,9 @@ extends Node
 ## the SAME host world: the one whose instance the character last stood in
 ## (`last_world_instance_id`). A guest builds its world BEFORE the socket opens
 ## (`join_driver.gd`), so which world it joined is unknown when the pose would
-## normally apply. `title_screen.gd::_begin_join()` therefore takes the pose off
-## the live character before the build and mounts this node; once the host
+## normally apply. Both join routes (`title_screen.gd::_begin_join()` and the
+## Steam invite's `prepare_steam_join()`) therefore take the pose off the live
+## character before the build and mount this node; once the host
 ## snapshot is applied it compares instances and either seats the saved pose
 ## (then re-runs the realm's sealed-gate placement) or leaves the authored
 ## regional spawn the world already chose.

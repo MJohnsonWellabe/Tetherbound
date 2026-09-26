@@ -1,0 +1,87 @@
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 105/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 0/363 fainted, bramblebun 340/340, terrapup 107/436, brooktail 329/329 (active bramblebun)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+STORMWOOD CONTINUOUS — PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 105/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 0/363 fainted, bramblebun 340/340, terrapup 107/436, brooktail 329/329 (active bramblebun)
+STORMWOOD CONTINUOUS — LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+F11 WITNESS STEP PASS prefix: arrival through Ondra's arch recipe wall=1135.0s
+F11 WITNESS STRIKES prefix {"damage":0.0,"deaths":0,"dodge_frames":182,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":4}
+STORMWOOD CONTINUOUS — RESTED the whole party at still_grove_shelter over 3 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 436/436, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 37 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 38 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 37 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — FIGHT end conductor road west bend outcome=won elapsed_ms=56605 ally={ "species": "terrapup", "level": 45, "hp": 240.023008571425, "max_hp": 436.8, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 0.0, "max_hp": 310.094044503212, "fainted": true, "resting": false } strikes={ "player_hits": 51, "enemy_hits": 18, "player_misses": 0, "e
+STORMWOOD CONTINUOUS — FIGHT end Capacitor Grove road point outcome=won elapsed_ms=60203 ally={ "species": "terrapup", "level": 46, "hp": 48.1218411894434, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 0.0, "max_hp": 294.829272730112, "fainted": true, "resting": false } strikes={ "player_hits": 55, "enemy_hits": 19, "player_misses": 0, 
+STORMWOOD CONTINUOUS — FIGHT end Capacitor Grove road point outcome=lost elapsed_ms=16283 ally={ "species": "terrapup", "level": 46, "hp": 0.0, "max_hp": 444.0, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 202.976076345302, "max_hp": 301.841093326569, "fainted": false, "resting": false } strikes={ "player_hits": 14, "enemy_hits": 5, "player_misses": 0, 
+STORMWOOD CONTINUOUS — RESTED the whole party at still_grove_shelter over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 28 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 27 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 27 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — FIGHT end Capacitor Alpha escort outcome=won elapsed_ms=63033 ally={ "species": "terrapup", "level": 46, "hp": 239.037772723699, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 0.0, "max_hp": 318.632497200012, "fainted": true, "resting": false } strikes={ "player_hits": 57, "enemy_hits": 20, "player_misses": 0, "ene
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 239/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active terrapup -> brooktail
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 69 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 11 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — FIGHT end Capacitor Alpha escort outcome=won elapsed_ms=47366 ally={ "species": "mudsnout", "level": 45, "hp": 208.69038428874, "max_hp": 364.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 0.0, "max_hp": 313.536377044678, "fainted": true, "resting": false } strikes={ "player_hits": 49, "enemy_hits": 15, "player_misses": 0, "enem
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 208/363, bramblebun 351/351, terrapup 239/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — FIGHT end Capacitor Alpha outcome=won elapsed_ms=97429 ally={ "species": "bramblebun", "level": 46, "hp": 83.2540829707609, "max_hp": 351.5, "fainted": false, "resting": false } enemy={ "species": "voltarach", "level": 40, "hp": 0.0, "max_hp": 511.754956651688, "fainted": true, "resting": false } strikes={ "player_hits": 104, "enemy_hits": 23, "player_misses": 0, "enemy_mi
+STORMWOOD CONTINUOUS — FIGHT end Still Grove road point outcome=lost elapsed_ms=23985 ally={ "species": "bramblebun", "level": 46, "hp": 0.0, "max_hp": 351.5, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 34, "hp": 135.164722714906, "max_hp": 286.865110990524, "fainted": false, "resting": false } strikes={ "player_hits": 22, "enemy_hits": 8, "player_misses": 0, "e
+F11 WITNESS STEP PASS Capacitor Alpha, Crown gathering, two frames, paid Crown arch wall=2059.9s
+F11 WITNESS STRIKES crown {"damage":18.0,"deaths":0,"dodge_frames":1255,"hits":1,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":32}
+F11 WITNESS STRIKES Crown arrival, guardian, Wen, Rootgate {"damage":0.0,"deaths":0,"dodge_frames":0,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":0}
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 320/320, mudsnout 208/363, bramblebun 0/351 fainted, terrapup 239/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 43 physics frames): active terrapup -> brooktail
+STORMWOOD CONTINUOUS — FIGHT end Crown guardian outcome=lost elapsed_ms=43071 ally={ "species": "brooktail", "level": 45, "hp": 0.0, "max_hp": 334.88, "fainted": true, "resting": false } enemy={ "species": "staticub", "level": 41, "hp": 127.652561248346, "max_hp": 317.889272050858, "fainted": false, "resting": false } strikes={ "player_hits": 37, "enemy_hits": 12, "player_misses": 0, "enemy_miss
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 320/320, mudsnout 208/363, bramblebun 0/351 fainted, terrapup 239/443, brooktail 0/334 fainted
+STORMWOOD CONTINUOUS — FIGHT end Crown guardian outcome=won elapsed_ms=17878 ally={ "species": "sparkit", "level": 46, "hp": 207.499781319621, "max_hp": 325.6, "fainted": false, "resting": false } enemy={ "species": "staticub", "level": 41, "hp": 0.0, "max_hp": 317.889272050858, "fainted": true, "resting": false } strikes={ "player_hits": 17, "enemy_hits": 5, "player_misses": 0, "enemy_misses": 
+STORMWOOD CONTINUOUS — EARNED guardian clearance, Wen truth and physically open Rootgate / Act II
+F11 WITNESS STEP PASS Crown arrival, guardian, Wen, Rootgate wall=102.5s
+F11 WITNESS STRIKES Deepwood, rods, Kestrel, core ascent {"damage":0.0,"deaths":0,"dodge_frames":774,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":14}
+STORMWOOD CONTINUOUS — FIGHT end released Rootgate road to Lantern Hollow outcome=won elapsed_ms=34820 ally={ "species": "sparkit", "level": 46, "hp": 28.1300094471097, "max_hp": 325.6, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 36, "hp": 0.0, "max_hp": 270.868629299402, "fainted": true, "resting": false } strikes={ "player_hits": 37, "enemy_hits": 11, "player
+STORMWOOD CONTINUOUS — EARNED stormwood:lantern_hollow_reached
+STORMWOOD CONTINUOUS — DIALOGUE Sable opened 'stormwood_defector_sable_in_progress'
+STORMWOOD CONTINUOUS — EARNED stormwood:captive_truth_learned
+STORMWOOD CONTINUOUS — REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — RESTED the whole party at lantern_hollow_waycamp over 5 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 35 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 42 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 42 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — FIGHT end Deepwood station outcome=won elapsed_ms=57641 ally={ "species": "terrapup", "level": 46, "hp": 250.384980220059, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 0.0, "max_hp": 302.146216007471, "fainted": true, "resting": false } strikes={ "player_hits": 54, "enemy_hits": 18, "player_misses": 0, "enemy_mis
+STORMWOOD CONTINUOUS — REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — RESTED the whole party at lantern_hollow_waycamp over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 36 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 40 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 40 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 42 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before officer_nysa_deepwood_rod: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — FIGHT end officer_nysa_deepwood_rod stance outcome=won elapsed_ms=55747 ally={ "species": "terrapup", "level": 47, "hp": 241.865345680689, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 0.0, "max_hp": 302.146216007471, "fainted": true, "resting": false } strikes={ "player_hits": 52, "enemy_hits": 19, "player_misses
+STORMWOOD CONTINUOUS — DIALOGUE officer_nysa_deepwood_rod opened 'stormwood_trainer_officer_nysa_deepwood_rod_challenge'
+STORMWOOD CONTINUOUS — EARNED stormwood:trainer:officer_nysa_deepwood_rod:defeated
+STORMWOOD CONTINUOUS — EARNED stormwood:rod_deepwood_disabled
+STORMWOOD CONTINUOUS — EARNED stormwood:deepwood_station_disabled
+STORMWOOD CONTINUOUS — FIGHT end Deepwood road to Dynamo approach outcome=won elapsed_ms=62116 ally={ "species": "terrapup", "level": 47, "hp": 38.7452926529607, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 40, "hp": 0.0, "max_hp": 334.863882933617, "fainted": true, "resting": false } strikes={ "player_hits": 57, "enemy_hits": 21, "player_misses
+STORMWOOD CONTINUOUS — FIGHT end Deepwood road to Dynamo approach outcome=lost elapsed_ms=11807 ally={ "species": "terrapup", "level": 47, "hp": 0.0, "max_hp": 451.2, "fainted": true, "resting": false } enemy={ "species": "stormraven", "level": 38, "hp": 212.850219691206, "max_hp": 276.378295455456, "fainted": false, "resting": false } strikes={ "player_hits": 9, "enemy_hits": 4, "player_misses"
+STORMWOOD CONTINUOUS — REST before outerworks_lieutenant_sera at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — RESTED the whole party at lantern_hollow_waycamp over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 451/451, brooktail 340/340
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 35 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 42 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 41 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 41 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before outerworks_lieutenant_sera: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 451/451, brooktail 340/340
+STORMWOOD CONTINUOUS — FIGHT end outerworks_lieutenant_sera stance outcome=won elapsed_ms=69351 ally={ "species": "terrapup", "level": 48, "hp": 199.644037713754, "max_hp": 458.4, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 0.0, "max_hp": 353.910233847618, "fainted": true, "resting": false } strikes={ "player_hits": 64, "enemy_hits": 23, "player_misse
+STORMWOOD CONTINUOUS — FIGHT end outerworks_lieutenant_sera stance outcome=lost elapsed_ms=59817 ally={ "species": "terrapup", "level": 48, "hp": 0.0, "max_hp": 458.4, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 15.209137320473, "max_hp": 321.711556896448, "fainted": false, "resting": false } strikes={ "player_hits": 55, "enemy_hits": 19, "player_misse
+STORMWOOD CONTINUOUS — DIALOGUE outerworks_lieutenant_sera opened 'trainer_no_usable_creature'
+F11 WITNESS STEP FAIL Deepwood, rods, Kestrel, core ascent wall=1289.8s
+F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 satchel_stacks=0 strike_hits=1 warnings=50 damage=18.0
+stormwood continuous FAIL: outerworks_lieutenant_sera dialogue did not start actual hosted combat (hub events=["verdict officer_nysa_deepwood_rod ", "verdict officer_nysa_deepwood_rod ", "verdict officer_nysa_deepwood_rod ", "verdict officer_nysa_deepwood_rod ", "finished officer_nysa_deepwood_rod ", "finished officer_nysa_deepwood_rod "]; ally=terrapup ally_body=true can_challenge=false fighting=

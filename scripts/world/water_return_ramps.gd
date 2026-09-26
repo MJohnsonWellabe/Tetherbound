@@ -1,18 +1,23 @@
 extends Node3D
 
 ## F13 `return_shortcuts` rows of kind `physical_ramp`: a durable, server-owned
-## world change made visible. Each row authors a walk `path` (settlement ->
-## ramp top -> ramp foot -> departure) and a `deck_span` naming the two path
-## vertices the plank deck bridges. The deck carries the walker over a terrace
-## scarp the bare ground cannot be walked down.
+## world change made visible. Each row authors a walk `path` in the direction
+## the shortcut is proven (Reedhaven, `direction` dock_to_reed_root: departure
+## dock -> ramp foot -> ramp top -> reed_root_circuit vertex 0) and a
+## `deck_span` naming the two path vertices the plank deck bridges, entry end
+## first. The deck carries the walker up a baked terrain cliff no walker can
+## climb (the departure valley's north wall under the loop's east terrace).
 ##
 ## Gating is the replicated world flag and nothing else: the host commits
 ## `unlock_flag` through the ordinary ledger (the Reedhaven dock repair), every
 ## peer receives it in its world flags, and every peer builds the same state
-## from the same flag here. Before the flag only the driven pilings and a few
-## loose planks stand (visibly unbuilt, no deck, no collision on the gap); after
-## it the deck, stringers and railings appear with their collision. A live flag
-## change, a rejoin snapshot and a loaded save all take the same path.
+## from the same flag here. Before the flag the driven pilings and a few loose
+## planks stand (visibly unbuilt, no deck) and a boarded-off barricade with
+## real collision closes the deck's entry end (round its ends the cliff
+## stops the walker); after it the barricade is gone and the deck, stringers and railings
+## appear with their collision. A live flag change, a rejoin snapshot and a
+## loaded save all take the same path. Collision is built in simulation_only
+## too; only the meshes are presentation.
 ##
 ## Composed from the one village family already on the water: the Medieval kit's
 ## `Floor_WoodDark` planks (the Gull Rest signal platform) and `WoodenFence`
@@ -28,6 +33,9 @@ const DECK_CLEARANCE_M := 0.1  # deck top over the ground at each end; well insi
 const DECK_THICKNESS_M := 0.3
 const PILING_MIN_SPAN_M := 0.3
 const WOOD_TINT := Color("6b5843")
+const BARRICADE_SEGMENT_M := 1.0  # collision follows the ground in 1 m boxes.
+const BARRICADE_FOOTING_M := 0.5  # boxes reach this far below the lower ground.
+const BARRICADE_THICKNESS_M := 0.3
 
 var _world: Node3D
 var _game: Node
@@ -115,7 +123,10 @@ func _compile(row: Dictionary) -> Dictionary:
 	var modules := maxi(1, ceili(a.distance_to(b) / MODULE_M))
 	return {"id": str(row.id), "flag": str(row.unlock_flag), "a": a, "b": b,
 		"forward": forward, "right": right, "up": up, "length": a.distance_to(b),
-		"modules": modules, "width": float(row.get("deck_width_m", MODULE_M))}
+		"modules": modules, "width": float(row.get("deck_width_m", MODULE_M)),
+		"barricade_offset": float(row.get("barricade_offset_m", 0.3)),
+		"barricade_width": float(row.get("barricade_width_m", 6.0)),
+		"barricade_height": float(row.get("barricade_height_m", 1.65))}
 
 
 func _grounded(raw: Variant) -> Vector3:
@@ -176,9 +187,10 @@ func _build_deck(ramp: Dictionary) -> void:
 		_build_pilings(ramp, true)
 
 
-## Before the repair: pilings already driven, planks stacked at the top and
-## lying at the scarp foot. No deck, no collision -- nothing to walk on.
+## Before the repair: pilings already driven, planks stacked by the entry end
+## and one fallen on the cliff, no deck -- and the entry end boarded off.
 func _build_unbuilt(ramp: Dictionary) -> void:
+	_build_barricade(ramp)
 	if bool(_world.simulation_only):
 		return
 	var root: Node3D = ramp.root
@@ -204,6 +216,89 @@ func _build_unbuilt(ramp: Dictionary) -> void:
 	fallen.transform = Transform3D(Basis(Vector3.UP, yaw + 0.7) * Basis(Vector3.RIGHT, 0.08)
 		* Basis.from_scale(Vector3(1.0, 1.0, 0.45)), foot)
 	root.add_child(fallen)
+
+
+## The closure is physical: a two-rail plank hoarding with an X of boards
+## across the deck's entry end (`deck_span[0]`), `barricade_offset_m` along
+## the deck line from it, `barricade_width_m` wide. Its collision is a row of ground-following
+## boxes `barricade_height_m` tall (well over STEP_HEIGHT), so a walker stops
+## at it instead of walking onto the ramp. The body's local -Z is the deck
+## direction of travel (its origin is the barricade centre line).
+func _build_barricade(ramp: Dictionary) -> void:
+	var root: Node3D = ramp.root
+	var forward: Vector3 = ramp.forward
+	var flat := Vector3(forward.x, 0.0, forward.z).normalized()
+	var side := flat.cross(Vector3.UP).normalized()
+	var width: float = ramp.barricade_width
+	var height: float = ramp.barricade_height
+	var centre: Vector3 = ramp.a + flat * float(ramp.barricade_offset)
+	centre.y = float(_world.ground_height_at(centre.x, centre.z))
+	var body := StaticBody3D.new()
+	body.name = "BarricadeBody"
+	body.transform = Transform3D(Basis(side, Vector3.UP, -flat), centre)
+	root.add_child(body)
+	var segments := maxi(1, ceili(width / BARRICADE_SEGMENT_M))
+	var segment := width / float(segments)
+	for index in segments:
+		var lateral := -width * 0.5 + segment * (float(index) + 0.5)
+		var low := INF
+		var high := -INF
+		for t: float in [-0.5, 0.0, 0.5]:
+			var at := centre + side * (lateral + segment * t)
+			var ground := float(_world.ground_height_at(at.x, at.z))
+			if is_finite(ground):
+				low = minf(low, ground)
+				high = maxf(high, ground)
+		if not is_finite(low):
+			continue
+		var bottom := low - BARRICADE_FOOTING_M
+		var top := high + height
+		# Overlap neighbours by 5 cm so no seam is left between boxes.
+		_add_box(body, Basis.IDENTITY, Vector3(lateral, (bottom + top) * 0.5 - centre.y, 0.0),
+			Vector3(segment + 0.05, top - bottom, BARRICADE_THICKNESS_M))
+	if bool(_world.simulation_only):
+		return
+	# Hoarding: fence panels in two courses, sheared to follow the ground with
+	# posts plumb, tinted the ramp's wood.
+	var panels := maxi(1, ceili(width / FENCE_LENGTH_M))
+	var panel := width / float(panels)
+	for index in panels:
+		var from := centre + side * (-width * 0.5 + panel * float(index))
+		var to := from + side * panel
+		from.y = float(_world.ground_height_at(from.x, from.z))
+		to.y = float(_world.ground_height_at(to.x, to.z))
+		var mid := (from + to) * 0.5
+		for course in 2:
+			var fence := FENCE_SCENE.instantiate() as Node3D
+			fence.name = "Barricade_%d_%d" % [index, course]
+			fence.transform = Transform3D(Basis((to - from) / FENCE_LENGTH_M, Vector3.UP, -flat),
+				mid + Vector3.UP * (FENCE_HEIGHT_M * 0.98 * float(course)))
+			_tint(fence)
+			root.add_child(fence)
+	# End posts.
+	for end: float in [-1.0, 1.0]:
+		var at := centre + side * (width * 0.5 + 0.1) * end
+		var ground := float(_world.ground_height_at(at.x, at.z))
+		var span := height + 0.35 + 0.3
+		var post := _log(Basis(Vector3.RIGHT, -PI * 0.5).scaled(Vector3(1.6, span / LOG_LENGTH_M, 1.6)),
+			Vector3(at.x, ground - 0.3 + span * 0.5, at.z))
+		post.name = "BarricadePost_%s" % ("r" if end > 0.0 else "l")
+		root.add_child(post)
+	# An X of boards nailed across the approach face, over the path itself.
+	var face := centre - flat * (BARRICADE_THICKNESS_M * 0.5 + 0.04)
+	var span_x := minf(width * 0.5, 1.0)
+	for lean: float in [-1.0, 1.0]:
+		var along := (side * span_x * lean + Vector3.UP * (height - 0.25)).normalized()
+		var length := Vector2(span_x, height - 0.25).length()
+		var across := along.cross(flat).normalized()
+		var plank_basis := Basis(across * 0.14, -flat * 0.6, along * (length / MODULE_M))
+		if plank_basis.determinant() < 0.0:
+			plank_basis.y = -plank_basis.y
+		var board := DECK_SCENE.instantiate() as Node3D
+		board.name = "BarricadeBoard_%s" % ("r" if lean > 0.0 else "l")
+		board.transform = Transform3D(plank_basis, face + Vector3.UP * (height * 0.5 + 0.05))
+		_tint(board)
+		root.add_child(board)
 
 
 func _build_pilings(ramp: Dictionary, deck_built: bool) -> void:

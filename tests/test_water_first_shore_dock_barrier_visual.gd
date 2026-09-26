@@ -36,11 +36,14 @@ func test_first_shore_blocker_visually_fills_the_existing_collision() -> void:
 	builder.free()
 
 
-func test_other_departure_barriers_keep_the_existing_box_path() -> void:
+func test_every_departure_barrier_wears_the_installed_fence() -> void:
+	# X04 / F13#5: the plain untextured box every other dock used read as a
+	# flat tan slab (black at night) at normal camera; all docks now share
+	# First Shore's installed fence. Only the visual changed.
 	var source := FileAccess.get_file_as_string("res://scripts/world/water_dock_actions.gd")
-	assert_true(source.contains('if str(dock.id) == FIRST_SHORE_DOCK:'),
-		"installed fence treatment is explicitly scoped to First Shore")
-	assert_true(source.contains('_box(barrier, Vector3(0, height * 0.5, 0), Vector3(width, height, 0.35), Color("70583e"))'),
-		"all other departure barriers retain their existing visual path")
+	assert_true(not source.contains('Color("70583e")'),
+		"no departure barrier falls back to the untextured box visual")
+	assert_true(source.contains("_build_first_shore_barrier_visual(barrier, width, height)"),
+		"every departure barrier builds the installed fence")
 	assert_true(source.contains("box.size = Vector3(width, height, 0.35)"),
 		"the shared physical barrier keeps its exact configured dimensions")

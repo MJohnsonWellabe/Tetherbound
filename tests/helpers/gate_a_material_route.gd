@@ -50,6 +50,12 @@ const AUTHORED_ROUTE: Array[Dictionary] = [
 ]
 
 var failures: Array[String] = []
+## Set by `_press_and_confirm()` when the stop was lost to a wild creature
+## parked on it (an actionable "Engage" holding X through every back-off).
+var _parked_wild := false
+## Authored stops a parked wild kept us off; retried once after the others.
+var _deferred: Array[Dictionary] = []
+var _retrying_deferred := false
 var transcript: Array[String] = []
 var _tree: SceneTree
 var _world: Node3D
@@ -96,6 +102,11 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	if not await _unlock_road_gate():
 		return _result()
 	for stop in AUTHORED_ROUTE:
+		if not await _harvest_authored_stop(stop):
+			return _result()
+	# A wild that sat on a stand has had the rest of the route to wander off.
+	_retrying_deferred = true
+	for stop in _deferred.duplicate():
 		if not await _harvest_authored_stop(stop):
 			return _result()
 	if not await _fill_with_live_scatter("wood"):
@@ -284,7 +295,17 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 		_fail("controller could not reach authored %s at %s (stopped %.1fm short)" % [
 			item_id, expected, _player.global_position.distance_to(stop_at)])
 		return false
+	var failures_before := failures.size()
+	_parked_wild = false
 	if not await _harvest_node(node, item_id, true):
+		if _parked_wild and not _retrying_deferred:
+			# A player leaves the creature to it and comes back later; the stock
+			# invariant at the end still decides whether the route gathered enough.
+			failures.resize(failures_before)
+			_deferred.append(stop)
+			transcript.append("a wild stayed parked on authored %s at %s; coming back after the other stops"
+				% [item_id, expected])
+			return true
 		return false
 	transcript.append("authored %s %+d at (%.1f, %.1f)" % [item_id, int(stop["amount"]), expected.x, expected.y])
 	return true
@@ -890,6 +911,8 @@ func _clear_a_statement_off_the_button() -> bool:
 ## instead of ten. Eight consecutive frames of the same winner already proves
 ## the distances have stopped moving, which is the thing that matters.
 const HOLD_FRAMES := 8
+const BACK_OFF_M := 8.0
+const BACK_OFF_WAIT_FRAMES := 240
 
 
 ## INSTANCE IDS, not object references, all the way through. A press that
@@ -921,7 +944,10 @@ func _press_and_confirm(prompt: Node3D) -> bool:
 			# is what a player does and what `_stand_where_it_wins()` is for.
 			if not is_instance_valid(prompt):
 				break
-			await _step_aside_from(around, attempt)
+			if _wild_holds_the_line():
+				await _back_off_from_wild(around, attempt)
+			else:
+				await _step_aside_from(around, attempt)
 			continue
 		fired.clear()
 		await _tap_action(&"interact")
@@ -941,7 +967,45 @@ func _press_and_confirm(prompt: Node3D) -> bool:
 		for _i in 20:
 			await _tree.physics_frame
 	_arbiter.disconnect("activated", watch)
+	if not landed and _wild_holds_the_line():
+		_parked_wild = true
 	return landed
+
+
+## X is held by a wild creature's own actionable "Engage" offer.
+##
+## Gate B full chain, CI run 36246134182: a Practice Meadow Bramblebun (cluster
+## order 0, radius 15 round the camp) stood 0.79m from the player at every spot
+## round the fiber stand at (34,-46), so walking round the stand never gave the
+## line back -- the arbiter ranks by distance (`prompt_arbiter.gd`) and the
+## creature was on the stand. Walking round cannot fix that; backing off and
+## letting it wander can.
+func _wild_holds_the_line() -> bool:
+	var winner: Variant = _arbiter.call("winning_provider")
+	# Validity first: a press that landed may have freed the provider, and a
+	# freed instance cannot even be asked `is Node`.
+	if not is_instance_valid(winner) or not winner is Node \
+			or str((winner as Node).name) != "EncounterDirector":
+		return false
+	var offer := _arbiter.call("winner") as Dictionary
+	return bool(offer.get("actionable", false)) and str(offer.get("label", "")).contains("Engage")
+
+
+## Back well off the stand, give the wild time to wander, and come back.
+func _back_off_from_wild(around: Vector3, attempt: int) -> void:
+	var away := _player.global_position - around
+	away.y = 0.0
+	if away.length() < 0.1:
+		away = Vector3(1.0, 0.0, 0.0)
+	away = away.normalized().rotated(Vector3.UP, TAU * float(attempt) / 6.0)
+	transcript.append("a wild holds X at %s (%s); backing off %.0fm and letting it wander"
+		% [around, str((_arbiter.call("winner") as Dictionary).get("label", "")), BACK_OFF_M])
+	await _walk_to(around + away * BACK_OFF_M, 1.0, 360)
+	for _i in BACK_OFF_WAIT_FRAMES:
+		await _tree.physics_frame
+	await _walk_to(around, 1.65, 360)
+	for _i in 12:
+		await _tree.physics_frame
 
 
 ## Our prompt has held the interact line for `HOLD_FRAMES` running, with the

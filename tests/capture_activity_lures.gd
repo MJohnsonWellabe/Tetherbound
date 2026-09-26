@@ -13,6 +13,7 @@ extends SceneTree
 ##     --rendering-driver opengl3 --resolution 1280x720 \
 ##     --script tests/capture_activity_lures.gd -- \
 ##     --activity=bram --save=/abs/S04-exit.json --capture-dir=/abs/out
+##   (--save also takes res://tests/fixtures/f03_lure_saves/<name>.json.gz)
 ##
 ## `--activity`    bram | herd | vault | doss | juno | hall
 ## `--save`        absolute path of a real `S0x-exit.json` (copied, unmodified,
@@ -70,6 +71,11 @@ var _player: CharacterBody3D = null
 var _rig: Node3D = null
 var _game: Node = null
 var _manager: Node = null
+## `--act` (F03#1 distinctness evidence): at the prompt, take the activity's own
+## action the way a player does -- press interact, answer each dialogue line
+## and confirmation with interact (Yes), fight any fight it starts with the
+## input combat pilot -- and capture `act-*` frames of what happens.
+var _act := false
 var _director: Node = null
 var _arbiter: Node = null
 
@@ -100,6 +106,8 @@ func _run() -> void:
 			WALK_BUDGET_S = float(a.trim_prefix("--budget-s="))
 		elif a.begins_with("--off-road-cost="):
 			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
+		elif a == "--act":
+			_act = true
 		elif a.begins_with("--capture-dir="):
 			_capture_dir = a.trim_prefix("--capture-dir=")
 	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall"] \
@@ -121,13 +129,14 @@ func _run() -> void:
 	_wipe(SLOT_DIR)
 	_game.set("save_system", SAVE_GAME.new(SLOT_DIR))
 	var dst := str(_game.get("save_system").call("slot_path", SLOT))
+	var save_bytes := _save_bytes(_save_path)
 	var out := FileAccess.open(dst, FileAccess.WRITE)
-	out.store_buffer(FileAccess.get_file_as_bytes(_save_path))
+	out.store_buffer(save_bytes)
 	out.close()
-	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(_save_path))
+	var raw: Dictionary = JSON.parse_string(save_bytes.get_string_from_utf8())
 	var saved_pose: Array = (raw.get("player_pose", {}) as Dictionary).get("position", [])
 	_receipt = {"activity": _activity, "save": _save_path,
-		"save_sha256": FileAccess.get_sha256(_save_path), "save_version": raw.get("version"),
+		"save_sha256": _sha256(save_bytes), "save_version": raw.get("version"),
 		"saved_position": saved_pose, "script_state_writes": "none",
 		"budget_s": WALK_BUDGET_S}
 	if not bool(_game.call("load_game", SLOT)):
@@ -526,6 +535,8 @@ func _walk() -> void:
 				"winner": str(_arbiter.call("winner"))}
 			await _face_lure()
 			await _capture("prompt-offered")
+			if _act:
+				await _perform_action()
 			_finish("PASS", "lure seen and the activity's prompt was offered")
 			return
 
@@ -634,6 +645,159 @@ func _lookahead(here: Vector2, cursor: int) -> Vector2:
 	return _xz3(_path[_path.size() - 1])
 
 
+func _perform_action() -> void:
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	var actions: Array = []
+	var lines := 0
+	var fought := false
+	# An activity can take more than one press: Doss first explains the
+	# buckled perch, then offers "Help Doss repair the bank perch" as a second
+	# prompt. Press again while the activity's own prompt is still offered.
+	for round in 3:
+		if round > 0:
+			if not _prompt_offered():
+				break
+			await _face_lure()
+		await _press("interact")
+		for i in 30:
+			await physics_frame
+		await _capture("act-%d1-pressed" % round)
+		await _act_round(panel, actions, round)
+		lines += int(actions.back().get("dialogue_lines", 0)) if not actions.is_empty() else 0
+		fought = fought or bool(actions.back().get("fought", false)) if not actions.is_empty() else fought
+	if _activity == "juno" and fought:
+		actions.append(await _act_escort_home(panel))
+	for i in 60:
+		await physics_frame
+	await _capture("act-99-after")
+	actions.append({"total_dialogue_lines": lines, "fought": fought})
+	_receipt["act"] = actions
+
+
+## Juno's rescue after the patrol fight, as a player plays it: press "Lead the
+## Meadowhart home" at the freed Meadowhart, walk to Juno with ordinary forward
+## input (the Meadowhart follows), and capture the walk, the reunion and Juno's
+## acknowledgement.
+func _act_escort_home(panel: Node) -> Dictionary:
+	var out := {"escort": "not started"}
+	var reunion := _world.get_node_or_null(^"LostCompanionReunion")
+	var trainers := _world.get_node_or_null(^"Trainers")
+	var rescued: Node3D = reunion.get("_body") as Node3D if reunion != null else null
+	var juno: Node3D = trainers.call("body_for", "pasture_drover_juno") as Node3D if trainers != null else null
+	if rescued == null or juno == null:
+		return out
+	var prompt := rescued.get_node_or_null(^"Interactable")
+	# Walk to the Meadowhart until her prompt wins, then press it.
+	Input.action_press("move_forward")
+	for frame in 1800:
+		var to := _xz3(rescued.global_position) - _xz()
+		if to.length() > 0.01:
+			_rig.set("yaw", atan2(-to.x, -to.y))
+		await physics_frame
+		if prompt != null and _arbiter.call("winning_provider") == prompt:
+			break
+	_release()
+	await _press("interact")
+	for i in 30:
+		await physics_frame
+	if int(reunion.call("escort_peer")) == 0:
+		out["escort"] = "prompt did not start an escort"
+		await _capture("act-61-escort-not-started")
+		return out
+	await _capture("act-61-escort-start")
+	out["escort"] = "started"
+	# Lead her home.
+	var shots := 0
+	Input.action_press("move_forward")
+	for frame in 9000:
+		var to := _xz3(juno.global_position) - _xz()
+		if to.length() > 0.01:
+			_rig.set("yaw", atan2(-to.x, -to.y))
+		if to.length() <= 2.5:
+			_release()
+		await physics_frame
+		_tick()
+		if bool(reunion.call("is_reunited")):
+			out["escort"] = "reunited"
+			break
+		if frame > 0 and frame % 900 == 0 and shots < 2:
+			shots += 1
+			# Look back at the Meadowhart following, then carry on.
+			_release()
+			var back := _xz3(rescued.global_position) - _xz()
+			_rig.set("yaw", atan2(-back.x, -back.y))
+			for i in 20:
+				await physics_frame
+			await _capture("act-6%d-escort-walk" % (1 + shots))
+			Input.action_press("move_forward")
+	_release()
+	for i in 45:
+		await physics_frame
+	await _capture("act-64-reunited")
+	# Juno's acknowledgement: talk to her (her prompt), read two lines, then
+	# back out with cancel rather than accept her friendly bout.
+	var face := _xz3(juno.global_position) - _xz()
+	_rig.set("yaw", atan2(-face.x, -face.y))
+	for i in 20:
+		await physics_frame
+	await _press("interact")
+	for i in 30:
+		await physics_frame
+	var lines := 0
+	for step in 2:
+		if panel == null or not bool(panel.call("is_open")):
+			break
+		lines += 1
+		await _capture("act-65-reunion-dialogue-%02d" % lines)
+		await _press("interact")
+		for i in 20:
+			await physics_frame
+	if panel != null and bool(panel.call("is_open")):
+		await _press("menu_cancel")
+	out["reunion_dialogue_lines"] = lines
+	return out
+
+
+func _act_round(panel: Node, actions: Array, round: int) -> void:
+	var lines := 0
+	var fought := false
+	var idle := 0
+	for step in 240:  # up to ~60 s at 0.25 s a step
+		_tick()
+		if _manager != null and bool(_manager.call("is_fighting")):
+			fought = true
+			for i in 60:
+				await physics_frame
+			await _capture("act-%d2-fight-start" % round)
+			for i in 240:
+				await physics_frame
+			await _capture("act-%d3-fight-mid" % round)
+			var pilot := COMBAT_PILOT.new(self, _manager, _director, _rig)
+			pilot.listen()
+			var result: Dictionary = await pilot.fight_to_the_end()
+			actions.append({"t_s": snappedf(_clock, 0.1), "fight": str(result.get("outcome", ""))})
+			for i in 45:
+				await physics_frame
+			await _capture("act-%d4-fight-end" % round)
+			idle = 0
+			continue
+		if panel != null and bool(panel.call("is_open")):
+			lines += 1
+			if lines <= 4:
+				await _capture("act-%d5-dialogue-%02d" % [round, lines])
+			await _press("interact")
+			for i in 20:
+				await physics_frame
+			idle = 0
+			continue
+		idle += 1
+		if idle >= (8 if fought or lines > 0 else 24):
+			break
+		for i in 15:
+			await physics_frame
+	actions.append({"round": round, "dialogue_lines": lines, "fought": fought})
+
+
 func _handle_fight(foe_name: String) -> void:
 	var entry := {"t_s": snappedf(_clock, 0.1), "foe": foe_name}
 	await _capture("fight-%s" % foe_name.to_lower())
@@ -671,6 +835,24 @@ func _ensure_companion_out(prefix: String = "") -> void:
 			await physics_frame
 		_notes.append("%spressed creature_recall (attempt %d); companion out afterwards: %s" % [
 			prefix, attempt + 1, str(_director.call("ally_body") != null)])
+
+
+## The save's bytes. A `.json.gz` (tests/fixtures/f03_lure_saves/, for the
+## render.yml runner, whose checkout leaves ralph/ out) is standard gzip,
+## inflated here; the sha256 in the receipt is of the inflated JSON, so it
+## matches the original save under ralph/reports/.
+func _save_bytes(path: String) -> PackedByteArray:
+	var bytes := FileAccess.get_file_as_bytes(path)
+	if path.ends_with(".gz"):
+		bytes = bytes.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
+	return bytes
+
+
+func _sha256(bytes: PackedByteArray) -> String:
+	var ctx := HashingContext.new()
+	ctx.start(HashingContext.HASH_SHA256)
+	ctx.update(bytes)
+	return ctx.finish().hex_encode()
 
 
 func _unstick(attempt: int) -> void:
