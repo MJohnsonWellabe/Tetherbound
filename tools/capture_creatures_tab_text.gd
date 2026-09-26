@@ -135,8 +135,7 @@ func _audit_frame() -> void:
 
 
 func _detail_scroll(node: Node) -> ScrollContainer:
-	if node is ScrollContainer and (node as Control).is_visible_in_tree() \
-			and str(node.get_parent().get_parent().get_class()) == "VBoxContainer":
+	if node is ScrollContainer and (node as Control).is_visible_in_tree():
 		return node as ScrollContainer
 	for child in node.get_children():
 		var found := _detail_scroll(child)

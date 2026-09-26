@@ -962,9 +962,11 @@ func _build_farewell_panel() -> Control:
 	_farewell_hint.scroll_active = false
 	_farewell_hint.shortcut_keys_enabled = false
 	_farewell_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_farewell_hint.text = "%s  keep looking" % INPUT_GLYPH.icon("cancel", 36)
+	# The same glyph size as the Guardian card's legend (GUARDIAN_GLYPH_PX lands
+	# the 24 px floor at 720p); at 36 a keyboard keycap's letters were ~4 px.
+	_farewell_hint.text = "%s  keep looking" % INPUT_GLYPH.icon("cancel", GUARDIAN_GLYPH_PX)
 	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
-	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
+	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_SECONDARY)
 	_farewell_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_child(_farewell_hint)
 
@@ -2271,7 +2273,7 @@ func _end_guardian_confirm(land: int) -> void:
 	_farewell_hint.text = _guardian_hint_before
 	(_farewell_keep.get_parent() as BoxContainer).add_theme_constant_override("separation", FAREWELL_SEPARATION)
 	_farewell_hint.add_theme_font_size_override("normal_font_size", UITokens.FONT_READ)
-	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_MUTED)
+	_farewell_hint.add_theme_color_override("default_color", UITokens.TEXT_SECONDARY)
 	_farewell_panel.visible = false
 	if _detail_scroll != null:
 		_detail_scroll.visible = true
