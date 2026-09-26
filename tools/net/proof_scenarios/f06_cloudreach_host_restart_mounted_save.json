@@ -474,7 +474,8 @@
    "args": {
     "action": "build_cancel"
    },
-   "label": "CONTROL setup: close the build menu the REJOIN fly_land left open. Product defect, disclosed: on a controller fly_descend and build_shortcut are both the left trigger, so holding LT to descend opens the build catalogue mid-flight (playground_hud.gd build_shortcut is not gated on flight); a player closes it with B, as here"
+   "expect": "any",
+   "label": "CONTROL setup (any verdict: once the defect is fixed no menu is open and the harness refuses B as an inert press; the CONTROL fly_launch below still fails on a menu left open): close the build menu the REJOIN fly_land left open. Product defect, disclosed: on a controller fly_descend and build_shortcut are both the left trigger, so holding LT to descend opens the build catalogue mid-flight (playground_hud.gd build_shortcut is not gated on flight); a player closes it with B, as here"
   },
   {
    "peer": 1,
