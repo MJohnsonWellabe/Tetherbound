@@ -191,6 +191,25 @@ func test_host_ack_save_failure_keeps_delivery_pending_for_retry() -> void:
 	assert_eq(str((_game.world.reward_deliveries[id] as Dictionary).status), "accepted")
 
 
+## The host judges a guest's placed claim by ITS copy of the guest
+## (`_water_actor_context`), never by where the request says it stands.
+func test_guest_placed_claim_is_judged_by_the_hosts_view_of_the_guest() -> void:
+	assert_false(_game.session.rows.add(2, "recipient-b").is_empty())
+	_game.world.flags.set_flag("side_stranded_couriers_complete")
+	var claim := {"kind": "reward_grant", "realm": "cloudreach", "source": "cloudreach_couriers_thanks",
+		"item": "potion_small", "count": 2, "flag": "cloudreach_payout:couriers_thanks", "peers": [2],
+		"_reward_actor": {"peer": 2, "realm": "cloudreach", "position": Vector3(-288.0, 180.0, 516.0)},
+		"position": Vector3(-288.0, 180.0, 516.0)}
+	(_rpc as RpcFixture).dock_actor = {"peer": 2, "character_id": "recipient-b",
+		"realm": "cloudreach", "position": Vector3(-200.0, 180.0, 516.0)}
+	var far: Dictionary = _rpc.call("_commit_here", claim, 2)
+	assert_eq(str(far.get("code", "")), "too_far",
+		"the host's copy of the guest is 88 m away, whatever the request carried")
+	(_rpc as RpcFixture).dock_actor["position"] = Vector3(-287.0, 180.0, 517.0)
+	var near: Dictionary = _rpc.call("_commit_here", claim, 2)
+	assert_true(bool(near.get("ok")), str(near))
+
+
 func test_pre_admission_delta_stages_world_only_then_character_settles_after_gate() -> void:
 	_game.session.host = false
 	_game.session.active = true

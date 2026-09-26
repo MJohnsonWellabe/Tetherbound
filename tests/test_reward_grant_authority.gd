@@ -91,15 +91,46 @@ func test_guest_must_stand_at_a_placed_reward() -> void:
 		"position": COURIER_BAG}), GUEST), "too_far", "the right spot in another realm")
 
 
+func test_guest_cannot_mint_rewards_under_made_up_once_ids() -> void:
+	# Each new source would be a new delivery: the id itself must be real.
+	for forged: String in ["a1", "a2", "wild_once_999999", "hollows_alpha"]:
+		_refused(ledger.commit(_grant("trainer:%s:coins" % forged, "coin", 90), GUEST),
+			"not_authored", "%s: the Warrens clear coins under a made-up id" % forged)
+		_refused(ledger.commit(_grant("trainer:%s:item:potion_large" % forged, "potion_large", 2), GUEST),
+			"not_authored", "%s: an authored item under a made-up id" % forged)
+		_refused(ledger.commit(_grant("trainer:%s:xp" % forged, "", 0), GUEST),
+			"not_authored", "%s: an XP receipt under a made-up id" % forged)
+
+
+func test_guest_xp_receipt_is_its_own_whatever_peers_it_names() -> void:
+	var xp := _grant("trainer:warrens_cleared:xp", "", 0)
+	xp["peers"] = [HOST, OTHER]
+	var verdict: Dictionary = ledger.commit(xp, GUEST)
+	assert_true(bool(verdict.get("ok")), str(verdict))
+	assert_eq(verdict.get("paid", []), [GUEST], "only the sender's receipt is written")
+	assert_false(world.flags.has(WORLD_LEDGER.reward_flag("trainer:warrens_cleared:xp", HOST)),
+		"the host's receipt is untouched")
+	assert_false(world.flags.has(WORLD_LEDGER.reward_flag("trainer:warrens_cleared:xp", OTHER)),
+		"another guest's receipt is untouched")
+
+
 func test_guest_trainer_sources_carry_only_authored_once_rewards() -> void:
 	_refused(ledger.commit(_grant("trainer:meadows_alpha_bramble:item:stick", "stick", 1), GUEST),
 		"not_authored", "an item no named wild pays")
-	_refused(ledger.commit(_grant("trainer:hollows_alpha:item:great_candy", "rare_candy", 1), GUEST),
+	_refused(ledger.commit(_grant("trainer:wild_once_5001:item:potion_large", "revive", 2), GUEST),
 		"not_authored", "the item differs from the source")
-	_refused(ledger.commit(_grant("trainer:hollows_alpha:item:great_candy", "great_candy", 9), GUEST),
+	_refused(ledger.commit(_grant("trainer:wild_once_5001:item:potion_large", "potion_large", 9), GUEST),
 		"not_authored", "an inflated authored item")
-	_refused(ledger.commit(_grant("trainer:x:coins", "coin", 777777), GUEST),
+	_refused(ledger.commit(_grant("trainer:wild_once_5001:item:revive", "revive", 2), GUEST),
+		"not_authored", "another component's count")
+	_refused(ledger.commit(_grant("trainer:warrens_cleared:coins", "coin", 777777), GUEST),
 		"not_authored", "an unauthored coin payout")
+	_refused(ledger.commit(_grant("trainer:wild_once_5001:coins", "coin", 90), GUEST),
+		"not_authored", "a payout that belongs to another once id")
+	_refused(ledger.commit(_grant("trainer:wild_once_5001:xp", "", 0), GUEST),
+		"not_authored", "an XP receipt the once id does not pay")
+	_refused(ledger.commit(_grant("trainer:warrens_cleared:xp:again", "", 0), GUEST),
+		"not_authored", "an XP source with extra segments")
 	_refused(ledger.commit(_grant("trainer:x:flag:band1_champion", "", 0, "band1_champion"), GUEST),
 		"not_authored", "a trainer flag grant")
 
@@ -116,10 +147,18 @@ func test_guest_authored_claims_still_pay() -> void:
 	world.flags.set_flag("band1_meadowhart_herd_met")
 	assert_true(bool(ledger.commit(_grant("meadowhart_herd_visit", "orb_basic", 3,
 		"band1_meadowhart_herd_found"), GUEST).get("ok")), "the herd visit")
-	assert_true(bool(ledger.commit(_grant("trainer:hollows_alpha:item:great_candy", "great_candy", 1),
-		GUEST).get("ok")), "an authored once-only item")
-	assert_true(bool(ledger.commit(_grant("trainer:hollows_alpha:xp", "", 0), GUEST).get("ok")),
+	assert_true(bool(ledger.commit(_grant("trainer:wild_once_5001:item:potion_large", "potion_large", 2),
+		GUEST).get("ok")), "an authored band alpha item")
+	assert_true(bool(ledger.commit(_grant("trainer:warrens_once_elder_trailpup:item:potion_large",
+		"potion_large", 2), GUEST).get("ok")), "an authored Warrens resident item")
+	assert_true(bool(ledger.commit(_grant("trainer:warrens_cleared:coins", "coin", 90), GUEST).get("ok")),
+		"the Warrens clear coins")
+	assert_true(bool(ledger.commit(_grant("trainer:warrens_cleared:xp", "", 0), GUEST).get("ok")),
 		"the once-only XP component")
+	var hollows := "wild_once_%d" % int(load("res://scripts/combat/stormwood_encounter_catalogue.gd")
+		.call("named_order", "hollows_alpha"))
+	assert_true(bool(ledger.commit(_grant("trainer:%s:item:great_candy" % hollows, "great_candy", 1),
+		GUEST).get("ok")), "a Stormwood named encounter's item")
 
 
 func test_host_grants_are_not_restricted() -> void:

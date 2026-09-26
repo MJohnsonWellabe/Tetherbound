@@ -857,7 +857,8 @@ func _reward_grant(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 ##     from the request).
 ## The recipient is always the sender alone (ledger_rpc.gd `_reward_recipients`).
 ## Named-wild once-only rewards (`trainer:<once id>:...`) are a guest's own local
-## fight: their payout must be one of the authored `completion_reward`s.
+## fight: `<once id>` must be a real once id and the component must be exactly
+## that id's authored `completion_reward` (`once_reward_components`).
 const CLIENT_GRANT_SOURCES := {
 	# scripts/world/cart_repair.gd REWARD_SOURCE / REWARD_COINS; paid after the
 	# host's delta sets the repaired flag.
@@ -875,9 +876,9 @@ const MEADOWHART_FOUND_FLAG := "band1_meadowhart_herd_found"
 const OBJECTIVES := "res://data/progression/objectives.json"
 ## The claim bag's prompt reach plus a margin for the proxy's lag.
 const CLIENT_GRANT_REACH_M := 8.0
-const ONCE_REWARD_FILES := ["res://data/config/stormwood_encounters.json",
-	"res://data/config/burrow_warrens.json"]
 const ONCE_REWARD_BAND_DIR := "res://data/config/bands"
+const STORMWOOD_NAMED := "res://scripts/combat/stormwood_encounter_catalogue.gd"
+const WARRENS_CONFIG := "res://data/config/burrow_warrens.json"
 static var _client_grant_table: Dictionary = {}
 static var _once_reward_table: Dictionary = {}
 
@@ -918,45 +919,54 @@ static func client_grant_sources() -> Dictionary:
 	return table
 
 
-## Every authored once-only payout a named wild can carry, as
-## {"items": {"id:count": true}, "coins": {n: true}}.
-static func once_reward_payouts() -> Dictionary:
+## Every named wild's authored once-only payout, keyed by the once id the
+## encounter director pays it under (`_award_once_completion_reward`), as
+## {once_id: {"coins": n, "items": {item_id: count}, "xp": bool}}:
+## - band alpha/elder spawns: `wild_once_<order>`;
+## - Stormwood named encounters: `wild_once_<named order>`;
+## - Burrow Warrens named residents: `warrens_once_<nickname>`, and the
+##   guardian's clear payout under its clear flag.
+static func once_reward_components() -> Dictionary:
 	if not _once_reward_table.is_empty():
 		return _once_reward_table
-	var items: Dictionary = {}
-	var coins: Dictionary = {}
-	var add := func(reward: Variant) -> void:
-		if not reward is Dictionary:
+	var table: Dictionary = {}
+	var add := func(once_id: String, reward: Variant) -> void:
+		if once_id.is_empty() or not reward is Dictionary:
 			return
+		var items: Dictionary = {}
 		for entry: Variant in ((reward as Dictionary).get("items", []) as Array):
 			if entry is Dictionary:
-				items["%s:%d" % [str((entry as Dictionary).get("id", "")), int((entry as Dictionary).get("count", 1))]] = true
-		if int((reward as Dictionary).get("coins", 0)) > 0:
-			coins[int((reward as Dictionary).get("coins", 0))] = true
-	var walk := func(node: Variant, recurse: Callable) -> void:
-		if node is Dictionary:
-			if (node as Dictionary).has("completion_reward"):
-				add.call((node as Dictionary)["completion_reward"])
-			for key: Variant in (node as Dictionary).keys():
-				recurse.call((node as Dictionary)[key], recurse)
-		elif node is Array:
-			for entry: Variant in node:
-				recurse.call(entry, recurse)
-	var paths: Array = ONCE_REWARD_FILES.duplicate()
+				items[str((entry as Dictionary).get("id", ""))] = maxi(1, int((entry as Dictionary).get("count", 1)))
+		table[once_id] = {"coins": maxi(0, int((reward as Dictionary).get("coins", 0))), "items": items,
+			"xp": int((reward as Dictionary).get("xp_bonus", 0)) > 0}
 	var bands := DirAccess.open(ONCE_REWARD_BAND_DIR)
 	if bands != null:
 		for band: String in bands.get_directories():
-			paths.append("%s/%s/spawns.json" % [ONCE_REWARD_BAND_DIR, band])
-	for path: String in paths:
-		if not FileAccess.file_exists(path):
-			continue
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-		walk.call(parsed, walk)
-		# The Warren Guardian's clear payout rides the same once-only receipt.
-		if parsed is Dictionary and ((parsed as Dictionary).get("clear", {}) as Dictionary).has("reward"):
-			add.call(((parsed as Dictionary).get("clear", {}) as Dictionary).get("reward"))
-	_once_reward_table = {"items": items, "coins": coins}
-	return _once_reward_table
+			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(
+				"%s/%s/spawns.json" % [ONCE_REWARD_BAND_DIR, band]))
+			for raw: Variant in ((parsed as Dictionary).get("spawns", []) as Array if parsed is Dictionary else []):
+				if not raw is Dictionary:
+					continue
+				for key: String in ["alpha", "elder"]:
+					var named: Variant = (raw as Dictionary).get(key)
+					if named is Dictionary and (named as Dictionary).has("completion_reward"):
+						add.call("wild_once_%d" % int((raw as Dictionary).get("order", -1)),
+							(named as Dictionary).get("completion_reward"))
+	var stormwood: Script = load(STORMWOOD_NAMED)
+	for raw: Variant in (stormwood.call("encounter_catalogue") as Dictionary).get("named_encounters", []):
+		if raw is Dictionary and (raw as Dictionary).has("completion_reward"):
+			add.call("wild_once_%d" % int(stormwood.call("named_order", str((raw as Dictionary).get("id", "")))),
+				(raw as Dictionary).get("completion_reward"))
+	var warrens: Variant = JSON.parse_string(FileAccess.get_file_as_string(WARRENS_CONFIG))
+	if warrens is Dictionary:
+		for raw: Variant in ((warrens as Dictionary).get("spawns", []) as Array):
+			if raw is Dictionary and not str((raw as Dictionary).get("nickname", "")).is_empty():
+				add.call("warrens_once_%s" % str((raw as Dictionary).nickname).to_lower().replace(" ", "_"),
+					(raw as Dictionary).get("completion_reward"))
+		var clear: Dictionary = (warrens as Dictionary).get("clear", {}) as Dictionary
+		add.call(str(clear.get("flag", "warrens_cleared")), clear.get("reward"))
+	_once_reward_table = table
+	return table
 
 
 ## Why the host must refuse this GUEST's reward_grant, or {} when it may pay.
@@ -969,15 +979,17 @@ static func client_grant_refusal(intent: Dictionary, flags: Variant) -> Dictiona
 	var flag := str(intent.get("flag", ""))
 	if source.begins_with("trainer:"):
 		var parts := source.split(":")
-		var tail := source.get_slice(":", 2) if parts.size() >= 3 else ""
-		if tail == "xp" and item.is_empty() and flag.is_empty():
-			return {}
-		var once := once_reward_payouts()
-		if tail == "item" and parts.size() == 4 and parts[3] == item and flag.is_empty() \
-				and (once.items as Dictionary).has("%s:%d" % [item, count]):
-			return {}
-		if tail == "coins" and item == "coin" and flag.is_empty() and (once.coins as Dictionary).has(count):
-			return {}
+		var once: Dictionary = once_reward_components().get(parts[1] if parts.size() >= 2 else "", {})
+		var tail := parts[2] if parts.size() >= 3 else ""
+		if not once.is_empty() and flag.is_empty():
+			if parts.size() == 3 and tail == "xp" and item.is_empty() and bool(once.xp):
+				return {}
+			if parts.size() == 4 and tail == "item" and parts[3] == item \
+					and int((once.items as Dictionary).get(item, 0)) == count and count > 0:
+				return {}
+			if parts.size() == 3 and tail == "coins" and item == "coin" and count > 0 \
+					and int(once.coins) == count:
+				return {}
 		return {"code": "not_authored", "reason": "That reward was never offered to you."}
 	var entry: Dictionary = client_grant_sources().get(source, {})
 	if entry.is_empty():
@@ -1059,7 +1071,9 @@ func _legacy_receipt_only_reward(intent: Dictionary, peer_id: int, realm: String
 		source: String) -> Dictionary:
 	var ops: Array = []
 	var paid: Array = []
-	for raw: Variant in _peers(intent, peer_id):
+	# A guest's receipt is its own: never a `peers` list it wrote, which could
+	# spend another player's XP receipt before the host pays them.
+	for raw: Variant in (_peers(intent, peer_id) if peer_id == HOST_PEER else [peer_id]):
 		var target := int(raw)
 		var receipt := reward_flag(source, target)
 		if _flag_set(receipt):
