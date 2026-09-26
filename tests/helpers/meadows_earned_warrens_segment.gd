@@ -89,6 +89,35 @@ var _guardian_verified := false
 var _fight_started := 0
 var _fight_enemy: RefCounted
 var _fight_hits := 0
+var _sidestepping := false
+const SIDESTEP_M := 6.0
+const SIDESTEP_FRAMES := 600
+
+
+## A wild fight is lost the moment the lead faints (combat_manager.gd
+## `_handle_active_faint`: the automatic switch is for trainer fights only), so
+## a player swaps a nearly-down lead for a healthy one. The campaign pilot only
+## switches on a bad matchup; this adds that player's low-HP swap, through the
+## same `party_cycle` input. Seed 15 lost a wild at 3 HP left with four healthy
+## creatures on the bench (2026-09-26).
+class WildPilot extends LIVE.CampaignPilot:
+	const SWAP_BELOW := 0.3
+	const HEALTHY := 0.5
+
+	func _should_switch() -> bool:
+		if super._should_switch():
+			return true
+		if not bool(manager.call("can_switch")):
+			return false
+		var active: RefCounted = manager.call("active_creature")
+		if active == null or float(active.get("hp")) > SWAP_BELOW * float(active.get("max_hp")):
+			return false
+		var party: Array = manager.get("_party")
+		for index: int in manager.call("switchable_indices"):
+			var member: RefCounted = party[index]
+			if float(member.get("hp")) >= HEALTHY * float(member.get("max_hp")):
+				return true
+		return false
 
 
 func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
@@ -167,7 +196,9 @@ func _travel() -> bool:
 		return _fail("The current trail no longer places the quarry before the Warrens approach")
 	if not await _prepare():
 		return false
-	for index in range(quarry_join + 1):
+	# Up the trail to the vertex before the quarry's; the nodes are walked to
+	# from there (the quarry vertex itself stands in the station's props).
+	for index in range(quarry_join):
 		if not await _walk_ground(road[index]):
 			return false
 	var gather := QuarryInput.new()
@@ -186,7 +217,7 @@ func _travel() -> bool:
 		# HarvestNode's production prompt is configured at 2.4m. Requiring a
 		# 1.5m centre approach first adds a stricter, non-gameplay collision
 		# gate; 2.2m gets the real prompt/arbiter check its intended turn.
-		if not await _walk_ground(at, 2.2):
+		if not await _around_station(_v2p(), at) or not await _walk_ground(at, 2.2):
 			return false
 		var node := gather._authored_node_at(at, "rootstone")
 		if node == null:
@@ -203,6 +234,12 @@ func _travel() -> bool:
 			return _fail("The actual quarry swing did not yield the configured carried rootstone amount")
 		_receipt("quarry_rootstone", {"at": at, "node_id": node_id, "yield": expected,
 			"before": before, "after": _count("rootstone")})
+	# On along the trail from the last node, not back through its quarry vertex:
+	# that vertex stands inside the station's props (barrel, bucket, bag,
+	# signpost and a rock within 1 m of it) and the walker was boxed in there
+	# twice (seed 15, 2026-09-26). A player walks round them; so does this.
+	if not await _around_station(_v2p(), road[quarry_join + 1]):
+		return false
 	for index in range(quarry_join + 1, warren_join + 1):
 		if not await _walk_ground(road[index]):
 			return false
@@ -216,7 +253,8 @@ func _travel() -> bool:
 	if outside == Vector3.INF:
 		return _fail("The live entrance has no usable mouth direction or authored apron")
 	for index in range(nearest_index(undertrail, Vector2(outside.x, outside.z)) + 1):
-		if not await _walk_ground(undertrail[index]):
+		if not await _around("spike_bypass", SPIKE_KNOT, SPIKE_CLEAR_M, SPIKE_BYPASS, _v2p(), undertrail[index]) \
+				or not await _walk_ground(undertrail[index]):
 			return false
 	# This is a staging pose outside the authored mouth, not an interaction.
 	# Ordinary wild detours can finish against the bank about 4.2 m from this
@@ -251,6 +289,45 @@ func _travel() -> bool:
 	return true
 
 
+## The quarry station's props, the OldQuarry foundation and its TetherConduits
+## box fill x 394-407, z 1798-1807 round the trail's quarry vertex (a 0.45 m
+## sphere cast on a 1 m grid, 2026-09-26); x 408 and east is open. A leg whose
+## straight line passes within STATION_CLEAR_M of that knot goes round its east
+## side. (A single bypass point at (404.5,1804.5) sat on the conduit box.)
+const STATION_KNOT := Vector2(401.0, 1802.5)
+const STATION_CLEAR_M := 5.0
+const STATION_BYPASS: Array[Vector2] = [Vector2(405.0, 1796.8), Vector2(409.5, 1797.0), Vector2(409.5, 1808.5)]
+## The undertrail's first leg, (-420,2470) -> (-380,2540), runs over a rock
+## spike near (-400,2500) that stands ~7 m above the ground either side of it
+## (ground_height_at grid, 2026-09-26); the walker stalled against it (seed 15).
+## The valley west of it (x -410..-405, heights -4..-6) is open.
+const SPIKE_KNOT := Vector2(-400.0, 2500.0)
+const SPIKE_CLEAR_M := 6.0
+const SPIKE_BYPASS: Array[Vector2] = [Vector2(-409.0, 2512.0)]
+
+
+func _around_station(from: Vector2, to: Vector2) -> bool:
+	return await _around("station_bypass", STATION_KNOT, STATION_CLEAR_M, STATION_BYPASS, from, to)
+
+
+## Walks the `via` points in order first when the straight leg from -> to passes within `clear` of `knot`. Ordinary movement
+## input either way; only the line is chosen.
+func _around(beat: String, knot: Vector2, clear: float, via: Array[Vector2], from: Vector2, to: Vector2) -> bool:
+	if Geometry2D.get_closest_point_to_segment(knot, from, to).distance_to(knot) >= clear:
+		return true
+	_receipt(beat, {"from": from, "to": to, "via": via})
+	for point: Vector2 in via:
+		if from.distance_to(point) < 1.5 or to.distance_to(point) < 1.5:
+			continue
+		if not await _walk_ground(point):
+			return false
+	return true
+
+
+func _v2p() -> Vector2:
+	return Vector2(_player.global_position.x, _player.global_position.z)
+
+
 func _prepare() -> bool:
 	# Bind only the existing care/selection seam, never the opening/team run.
 	var care := CARE.new()
@@ -269,6 +346,31 @@ func _prepare() -> bool:
 	return _fail("Actual care, party selection and deployment left no usable ally")
 
 
+## Wild fights on a long walk wear the five down; with no care between them
+## seed 15 lost an L15 wild on the Hall spine with four of five fainted and ten
+## revives carried. After a win, a fainted member or a lead under half health
+## sends the walker through the same Satchel care `_prepare` runs at each
+## segment's start (revive, potion, pilot), as a player would.
+const CARE_BELOW := 0.5
+
+
+func _needs_care() -> bool:
+	var party := _game.get("party") as RefCounted
+	var active: RefCounted = party.call("at", int(party.call("active_index")))
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		if bool(member.get("fainted")):
+			return true
+	return active != null and float(active.get("hp")) < CARE_BELOW * float(active.get("max_hp"))
+
+
+func _party_hp() -> Array:
+	var out := []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		out.append("L%d %.0f/%.0f%s" % [int(member.get("level")), float(member.get("hp")),
+			float(member.get("max_hp")), " fainted" if bool(member.get("fainted")) else ""])
+	return out
+
+
 func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
 	return await _walk(Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y), radius)
 
@@ -278,6 +380,8 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 		budget = maxi(1800, int(_player.global_position.distance_to(target) / 2.5 * 60.0) + 600)
 	_nav.reset()
 	var session := WalkSession.new(_player.global_position)
+	var last_recovery := Vector3.INF
+	var sidestep_sign := 1.0
 	for _frame in budget:
 		if not _failures.is_empty():
 			return false
@@ -285,6 +389,10 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 			_stick(0.0, 0.0)
 			if not await _fight():
 				return false
+			if _needs_care():
+				_receipt("care_between_fights", {"party": _party_hp()})
+				if not await _prepare():
+					return false
 			_nav.reset()
 			session.reset(_player.global_position)
 		if INPUT_OWNER.current(_tree) != null:
@@ -293,10 +401,32 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 		if _player.global_position.distance_to(target) <= radius:
 			_stick(0.0, 0.0)
 			return true
-		if session.step(_nav, _player.global_position, target):
-			_receipt("walk_confined_recovery", {"player": _player.global_position, "target": target})
+		var at := _player.global_position
+		if session.step(_nav, at, target):
+			_receipt("walk_confined_recovery", {"player": at, "target": target})
+			# A back-off that leaves the body where it was (seed 15: twice at
+			# the same point on a rope collider between two rocks) will not
+			# free it. Step aside across the heading, alternating sides, as a
+			# player would, then resume this leg.
+			if not _sidestepping and last_recovery != Vector3.INF and at.distance_to(last_recovery) < 1.0:
+				var heading := target - at
+				heading.y = 0.0
+				var side := Vector3(-heading.z, 0.0, heading.x).normalized() * SIDESTEP_M * sidestep_sign
+				sidestep_sign = -sidestep_sign
+				var aside := Vector2(at.x + side.x, at.z + side.z)
+				_receipt("walk_sidestep", {"player": at, "target": target, "aside": aside})
+				_sidestepping = true
+				await _walk(Vector3(aside.x, float(_world.call("ground_height_at", aside.x, aside.y)), aside.y), 1.5, SIDESTEP_FRAMES)
+				_sidestepping = false
+				if not _failures.is_empty():
+					return false
+				_nav.reset()
+				session.reset(_player.global_position)
+			last_recovery = at
 		await _tree.physics_frame
 	_stick(0.0, 0.0)
+	if _sidestepping:
+		return false  # A sidestep is best effort; the leg it serves resumes.
 	return _fail("Ordinary quarry/Warrens movement did not reach %s; player=%s" % [target, _player.global_position])
 
 
@@ -329,7 +459,7 @@ func _fight() -> bool:
 	var guardian_fight := _fight_enemy == _guardian_creature
 	if guardian_fight and not _allow_guardian:
 		return _fail("The guardian encounter began before the actual cave approach/preparation")
-	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
+	var pilot := WildPilot.new(_tree, _combat, _director, _rig)
 	pilot.use_switching = false
 	pilot.switch_input = true
 	while _fighting() and within_battle_deadline(Engine.get_physics_frames() - _fight_started):
@@ -346,8 +476,16 @@ func _fight() -> bool:
 	pilot._move_toward(Vector3.ZERO)
 	if not within_battle_deadline(Engine.get_physics_frames() - _fight_started) \
 			or _fighting() or str(_combat.call("outcome")) != "won" or _fight_hits <= 0:
-		return _fail("Real wild combat did not win with landed strikes inside its unchanged physics budget")
-	_receipt("wild_victory", {"guardian": guardian_fight, "hits": _fight_hits,
+		var party_hp := []
+		for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+			party_hp.append("%s L%d %.0f%s" % [member.get("species"), int(member.get("level")),
+				float(member.get("hp")), " fainted" if bool(member.get("fainted")) else ""])
+		var foe: RefCounted = _fight_enemy
+		return _fail("Real wild combat did not win with landed strikes inside its unchanged physics budget (outcome '%s', fighting %s, hits %d, frames %d, foe %s, party %s)" % [
+			str(_combat.call("outcome")), _fighting(), _fight_hits, Engine.get_physics_frames() - _fight_started,
+			"%s L%d %.0f" % [foe.get("species"), int(foe.get("level")), float(foe.get("hp"))] if foe != null else "none",
+			party_hp])
+	_receipt("wild_victory", {"guardian": guardian_fight, "hits": _fight_hits, "switches": pilot.voluntary_switches,
 		"enemy_id": _fight_enemy.get_instance_id(), "frames": Engine.get_physics_frames() - _fight_started})
 	# Close the reward window before resuming walking: another actual wild on
 	# the way to the den centre must not be counted as this guardian's XP.
