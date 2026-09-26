@@ -4,9 +4,8 @@ extends RefCounted
 ## (`tools/net/run_two_peer_proof.sh`), handed over by `proof_peer_runner.gd`
 ## beside the shared `proof_steps.gd`. Kept in their own file so the Stormwood
 ## lane's F11#3 steps never collide with other lanes' edits there.
-## The dispatch hook in `proof_peer_runner.gd` and the coordinator actions the
-## F11#3 scenario also uses (`restart_peer`, `hashes_agree`) are a pending
-## SHARED-FILE REQUEST: ralph/reports/STORMWOOD-PROGRESS/f11_3/SHARED-FILE-REQUEST.txt.
+## `proof_peer_runner.gd` dispatches these; the F11#3 scenario also uses the
+## coordinator's own `restart_peer` and `hashes_agree` (tests/smoke_net_proof_two_peer.gd).
 ##
 ##   title_load      {slot?, budget_frames?, settle?}   the title screen's own Load
 ##                                        of a slot already on this peer's disk
@@ -236,19 +235,28 @@ static func _spark_socket(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var prompt: Node = slot.get("_prompt") as Node
 	if prompt == null:
 		return {"verdict": "FAIL", "detail": "the Spark socket has no Interactable"}
+	# Stand where the socket's prompt is the one the interaction arbiter would
+	# fire: another trainer standing at the socket offers its own prompt, and a
+	# press there would go to that player instead.
+	var arbiter := tree.get_first_node_in_group(&"interaction_arbiter")
 	var standing := ""
+	var winners: Array = []
 	for offset: Vector3 in [Vector3(0, 0.6, 1.6), Vector3(1.2, 0.6, 1.2), Vector3(-1.2, 0.6, 1.2),
-			Vector3(0, 0.8, 2.2)]:
+			Vector3(0, 0.8, 2.2), Vector3(1.6, 0.6, 0), Vector3(-1.6, 0.6, 0), Vector3(0, 0.6, -1.6)]:
 		var at := slot.global_position + offset
 		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": int(args.get("settle", 60))})
-		if not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
+		if (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
+			continue
+		var winner: Variant = arbiter.call("winning_provider") if arbiter != null else prompt
+		if winner == prompt:
 			standing = str(offset)
 			break
+		winners.append(str((winner as Node).name) if winner is Node and is_instance_valid(winner) else str(winner))
 	var before := str(slot.call("current_state"))
 	var label := str(prompt.get("label"))
 	if standing.is_empty():
-		return {"verdict": "FAIL", "detail": "the Spark socket's prompt never offered itself (state %s, label '%s')"
-			% [before, label]}
+		return {"verdict": "FAIL", "detail": "the Spark socket's prompt never won the interaction arbiter (state %s, label '%s'; won instead: %s)"
+			% [before, label, str(winners)]}
 	var pressed := ""
 	if bool(args.get("press", false)):
 		var press: Dictionary = await tree.call("_step_press", {"action": "interact"})
