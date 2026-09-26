@@ -1546,6 +1546,9 @@
           "sink_m": 0.03,
           "scale": 0.6,
           "glow_scale": 1.9,
+          "smoke_top_m": 14.0,
+          "smoke_alpha": 0.6,
+          "smoke_top_size_m": 5.0,
           "glow": "campfire",
           "name": "OldBramCampFire",
           "at": [

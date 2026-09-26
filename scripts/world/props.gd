@@ -286,6 +286,12 @@ func place(into: Node3D, spec: Dictionary) -> void:
 		# `ridge_patrol_camp` is the one site that passes anything else.
 		var glow_scale := float(spec.get("glow_scale", 1.0))
 		var overlay: Node3D = CAMPFIRE_GLOW.new(true, 1.0, glow_scale)
+		# `smoke_top_m` / `smoke_alpha` (optional): a signal fire meant to be
+		# found from a road (F03 lure cue). Absent, the column is unchanged.
+		if spec.has("smoke_top_m"):
+			overlay.call("configure_smoke", float(spec.get("smoke_top_m")),
+				float(spec.get("smoke_alpha", CAMPFIRE_GLOW.SMOKE_COLOUR.a)),
+				float(spec.get("smoke_top_size_m", -1.0)))
 		if not is_zero_approx(scale_factor):
 			overlay.scale = Vector3.ONE / scale_factor
 		root.add_child(overlay)

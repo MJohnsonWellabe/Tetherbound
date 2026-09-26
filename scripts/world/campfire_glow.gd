@@ -115,6 +115,13 @@ var _light_time := 0.0
 ## pass anything else, because the audit found its glow legible but too small
 ## to register behind the player's own head at the site's own capture stand.
 var _glow_scale := 1.0
+## Per-prop smoke column (F03 lure cue, coordinator grant 2026-09-26). The
+## defaults reproduce every existing campfire exactly; a signal fire that must
+## be seen from a road passes a taller, denser column via `configure_smoke`.
+var _smoke_top := SMOKE_TOP_HEIGHT
+var _smoke_top_size := SMOKE_TOP_SIZE
+var _smoke_alpha := SMOKE_COLOUR.a
+var _smoke_steps := SMOKE_STEPS
 ## Lazy-looked-up every `_process()` tick, not cached at `_init()`/`_ready()`
 ## time -- `torch.gd::_is_on()`'s own OF18 lesson applies here too: a
 ## campfire can be built and added to the tree before `world_look.gd` has
@@ -470,13 +477,24 @@ func _build_embers() -> void:
 ## A stack of static, alpha-blended (not additive -- smoke does not glow)
 ## discs, growing and softening with height, so the whole column reads as one
 ## smudge tapering upward rather than repeated identical dots.
+## Call before the node enters the tree (its `_ready` builds the column).
+## Absolute metres, like every other size here; alpha is the column's base
+## opacity before it thins with height. Steps grow with height so a tall
+## column stays continuous rather than a string of separate puffs.
+func configure_smoke(top_m: float, alpha: float, top_size_m: float = -1.0) -> void:
+	_smoke_top = maxf(top_m, SMOKE_BASE_HEIGHT + 0.5)
+	_smoke_alpha = clampf(alpha, 0.0, 1.0)
+	_smoke_top_size = top_size_m if top_size_m > 0.0 else SMOKE_TOP_SIZE * _smoke_top / SMOKE_TOP_HEIGHT
+	_smoke_steps = maxi(SMOKE_STEPS, int(ceil(float(SMOKE_STEPS) * _smoke_top / SMOKE_TOP_HEIGHT)))
+
+
 func _build_smoke() -> void:
-	for i in SMOKE_STEPS:
-		var t := float(i) / float(SMOKE_STEPS - 1)
-		var size: float = lerp(SMOKE_BASE_SIZE, SMOKE_TOP_SIZE, t)
+	for i in _smoke_steps:
+		var t := float(i) / float(_smoke_steps - 1)
+		var size: float = lerp(SMOKE_BASE_SIZE, _smoke_top_size, t)
 		# Thins out with height rather than fading linearly, so the column
 		# has a dense base and a dissipating top instead of a hard cut-off.
-		var alpha: float = SMOKE_COLOUR.a * (1.0 - t * t * 0.85)
+		var alpha: float = _smoke_alpha * (1.0 - t * t * 0.85)
 		var colour := Color(SMOKE_COLOUR.r, SMOKE_COLOUR.g, SMOKE_COLOUR.b, alpha)
 		var disc := _billboard_quad(size, colour, 0.0, 0.0, true)
 		disc.name = "Smoke%d" % i
@@ -484,7 +502,7 @@ func _build_smoke() -> void:
 		# a stack of concentric rings on one axis.
 		disc.position = Vector3(
 			0.35 * t * t,
-			lerp(SMOKE_BASE_HEIGHT, SMOKE_TOP_HEIGHT, t),
+			lerp(SMOKE_BASE_HEIGHT, _smoke_top, t),
 			-0.22 * t * t)
 		add_child(disc)
 
