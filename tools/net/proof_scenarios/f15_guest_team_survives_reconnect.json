@@ -174,8 +174,7 @@
           "Fern",
           "Newt",
           "Terrapup"
-        ],
-        "visit": "repeat"
+        ]
       },
       "expect_data": {
         "homecoming_seen": true,
@@ -207,8 +206,7 @@
           "Shelby",
           "Volt",
           "Terrapup"
-        ],
-        "visit": "repeat"
+        ]
       },
       "expect_data": {
         "homecoming_seen": true,
