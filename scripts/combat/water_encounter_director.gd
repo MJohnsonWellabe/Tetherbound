@@ -237,6 +237,7 @@ func _spawn_available_sites() -> void:
 			else:
 				wild = spawn_wild(str(plan.species), spawn_at, opts)
 			if wild != null:
+				settle_spawn_transform(wild)
 				var initial_yaw := float(opts.get("initial_yaw_deg", NAN))
 				if is_finite(initial_yaw):
 					wild.rotation.y = deg_to_rad(initial_yaw)
@@ -269,6 +270,27 @@ func _spawn_available_sites() -> void:
 		else:
 			_site_failures[id] = true
 			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
+
+
+## A wild body enters the tree at the origin and is placed afterwards. For a
+## kinematic body the physics server reads that placement as one step of
+## motion and sweeps the body's shape AABB across every metre in between; the
+## body's first `move_and_slide()` then culls Terrain3D's heightmap under that
+## whole sweep. Measured on the host when a remote peer reached Deep Watch,
+## ~3.5 km from the origin: 3.1-3.4 s per spawned body, back to back, with no
+## heartbeat. Committing the placed transform as a static body and handing it
+## back as kinematic makes the placement a teleport instead of a motion.
+static func settle_spawn_transform(wild: Node3D) -> void:
+	if not (wild is PhysicsBody3D) or not wild.is_inside_tree():
+		return
+	var rid := (wild as PhysicsBody3D).get_rid()
+	var mode := PhysicsServer3D.body_get_mode(rid)
+	if mode != PhysicsServer3D.BODY_MODE_KINEMATIC:
+		return
+	PhysicsServer3D.body_set_mode(rid, PhysicsServer3D.BODY_MODE_STATIC)
+	PhysicsServer3D.body_set_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM, wild.global_transform)
+	PhysicsServer3D.body_set_mode(rid, mode)
+	PhysicsServer3D.body_set_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM, wild.global_transform)
 
 
 static func _surface_member_position(centre: Vector3, count: int, index: int, radius: float) -> Vector3:
