@@ -11,31 +11,38 @@ extends "res://tests/smoke_stronghold_battle_camera.gd"
 ##
 ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
 ##     --resolution 1280x720 --script res://tools/art_pipeline/capture_named_fight.gd \
-##     -- --trainer=warden_aldis --out=res://shots/x04/f04/warden [--frames=24] [--interval=0.5]
+##     -- --trainer=warden_aldis[,captain_field,...] --out=res://shots/x04/f04/warden \
+##     [--frames=24] [--interval=0.5] [--resolve=won --after-frames=16]
+##
+## `--resolve=won` ends each fight through combat_manager's own resolve call
+## after the in-fight frames and keeps saving (`-aNN`) through the defeat
+## line and the world's aftermath: F04's "distinct aftermath" evidence.
 
 var _tid := ""
 var _out := ""
 var _frames := 24
 var _interval := 0.5
 var _container: Node = null
+var _resolve_won := false
+var _after_frames := 16
 
 func _run() -> void:
+	var ids: PackedStringArray = []
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--trainer="):
-			_tid = arg.trim_prefix("--trainer=")
+			ids = arg.trim_prefix("--trainer=").split(",", false)
 		elif arg.begins_with("--out="):
 			_out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--frames="):
 			_frames = maxi(1, int(arg.trim_prefix("--frames=")))
 		elif arg.begins_with("--interval="):
 			_interval = maxf(0.1, float(arg.trim_prefix("--interval=")))
-	if _tid.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
+		elif arg == "--resolve=won":
+			_resolve_won = true
+		elif arg.begins_with("--after-frames="):
+			_after_frames = maxi(1, int(arg.trim_prefix("--after-frames=")))
+	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --trainer=, --out= and a rendering display")
-		quit(1)
-		return
-	_spec = TRAINERS.trainer(_tid)
-	if _spec.is_empty():
-		push_error("no trainer '%s'" % _tid)
 		quit(1)
 		return
 	_world = (load(SCENE) as PackedScene).instantiate()
@@ -44,35 +51,82 @@ func _run() -> void:
 	for i in SETTLE_FRAMES:
 		await physics_frame
 	await _ensure_ally()
+	var failures := 0
+	# Several trainers share one world load: the open-world boot is ~15 min
+	# under software GL, the fights themselves under two.
+	for id in ids:
+		_tid = id
+		_spec = TRAINERS.trainer(_tid)
+		if _spec.is_empty():
+			push_error("no trainer '%s'" % _tid)
+			failures += 1
+			continue
+		if not await _capture_one():
+			failures += 1
+	quit(1 if failures > 0 else 0)
+
+
+func _save(tag: String) -> void:
+	await RenderingServer.frame_post_draw
+	var path := "%s/%s-%s.png" % [_out, _tid, tag]
+	root.get_texture().get_image().save_png(path)
+	print("frame %s fighting=%s panel=%s" % [path, str(_manager.call("is_fighting")),
+		str(_panel.call("is_open"))])
+
+
+func _wait_interval() -> void:
+	var t := 0.0
+	while t < _interval:
+		await physics_frame
+		t += 1.0 / Engine.physics_ticks_per_second
+
+
+func _capture_one() -> bool:
 	if not _collect_nodes():
-		_report()
-		return
+		return false
+	# A previous capture in this run may have left the ally hurt or fainted,
+	# which would turn the next challenge into the "no usable creature" line.
+	var ally: Variant = _director.call("ally_instance")
+	if ally != null:
+		ally.call("heal_fully")
 	_stand_in_front_of_the_trainer()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_out))
-	await RenderingServer.frame_post_draw
-	root.get_texture().get_image().save_png("%s/%s-00-before.png" % [_out, _tid])
+	for i in 30:
+		await physics_frame
+	await _save("00-before")
 	await _challenge()
 	if not bool(_manager.call("is_fighting")):
 		print("FIGHT DID NOT START vs %s" % _tid)
-		quit(1)
-		return
+		return false
 	print("fight live vs %s" % _tid)
 	for i in _frames:
-		var t := 0.0
-		while t < _interval:
-			await physics_frame
-			t += 1.0 / Engine.physics_ticks_per_second
-		await RenderingServer.frame_post_draw
-		var path := "%s/%s-%02d.png" % [_out, _tid, i + 1]
-		root.get_texture().get_image().save_png(path)
-		print("frame %s fighting=%s" % [path, str(_manager.call("is_fighting"))])
+		await _wait_interval()
+		await _save("%02d" % (i + 1))
 		if not bool(_manager.call("is_fighting")):
 			break
+	if _resolve_won and bool(_manager.call("is_fighting")):
+		# Evidence for the AFTERMATH, not the fight: the capture cannot pilot
+		# a level-3 starter through a captain, so the fight is resolved as won
+		# through the same call smoke_stronghold_battle_camera.gd uses, and
+		# everything after it -- defeat line, reward, world change -- is the
+		# production path.
+		print("resolving %s as won" % _tid)
+		_manager.call("_begin_resolve", "won")
+		for i in _after_frames:
+			await _wait_interval()
+			await _save("a%02d" % (i + 1))
+			if bool(_panel.call("is_open")) and i % 3 == 2:
+				await _press("interact")
+		for i in 40:
+			if not bool(_panel.call("is_open")):
+				break
+			await _press("interact")
+			for n in 8:
+				await physics_frame
 	for i in 90:
 		await physics_frame
-	await RenderingServer.frame_post_draw
-	root.get_texture().get_image().save_png("%s/%s-99-after.png" % [_out, _tid])
-	quit(0)
+	await _save("99-after")
+	return true
 
 
 func _collect_nodes() -> bool:
