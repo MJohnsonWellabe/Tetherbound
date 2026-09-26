@@ -46,6 +46,8 @@ extends RefCounted
 ##                                         begin_trainer_battle (her installed encounter)
 ##   join_running_fight {kind?}           join the trainer/boss fight another player is
 ##                                         running, as the joinable list announces it
+##   perf_snapshot   {frames?}            this peer's own engine monitors over N frames:
+##                                         frame rate, script/physics time, objects, bodies
 ##   guardian_offer_again {}              ask the HOST for this character's offer once more,
 ##                                         past the hidden prompt: the intent the prompt sends
 ##   grandpa_homecoming {screenshot?, must_name?, must_not_name?}  F15: walk up to
@@ -73,7 +75,7 @@ const LEGENDARY_SPECIES := "fulgocobra"
 const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "stormheart_fixture",
 	"stormheart_answer", "stormheart_state", "release_for_catch", "rename_member", "grandpa_homecoming", "await_probe",
 	"rider_identity", "rider_self", "guardian_fixture", "veilfall_press", "guardian_answer", "guardian_state", "guardian_offer_again",
-	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state", "nerissa_challenge", "join_running_fight"]
+	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state", "nerissa_challenge", "join_running_fight", "perf_snapshot"]
 
 
 static func handles(action: String) -> bool:
@@ -122,6 +124,8 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _nerissa_challenge(tree)
 		"join_running_fight":
 			return await _join_running_fight(tree, args)
+		"perf_snapshot":
+			return await _perf_snapshot(tree, args)
 	if WATER_ACTIONS.has(action):
 		return await _water_run(tree, action, args)
 	return {"verdict": "ERROR", "detail": "proof_steps: unknown action '%s'" % action}
@@ -1815,3 +1819,29 @@ static func _join_running_fight(tree: SceneTree, args: Dictionary) -> Dictionary
 	data["kind"] = str(row.get("kind", ""))
 	joined["data"] = data
 	return joined
+
+
+## Where this peer's frame time goes, read off the engine's own monitors over
+## `frames` physics frames. Diagnosis only: it asserts nothing.
+static func _perf_snapshot(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var frames := int(args.get("frames", 30))
+	var t0 := Time.get_ticks_usec()
+	var worst_process := 0.0
+	var worst_physics := 0.0
+	for f in frames:
+		await tree.physics_frame
+		worst_process = maxf(worst_process, Performance.get_monitor(Performance.TIME_PROCESS))
+		worst_physics = maxf(worst_physics, Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS))
+	var seconds := (Time.get_ticks_usec() - t0) / 1000000.0
+	var data := {
+		"physics_fps": frames / maxf(seconds, 0.000001),
+		"worst_process_ms": worst_process * 1000.0,
+		"worst_physics_ms": worst_physics * 1000.0,
+		"objects": Performance.get_monitor(Performance.OBJECT_COUNT),
+		"nodes": Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
+		"physics_3d_active": Performance.get_monitor(Performance.PHYSICS_3D_ACTIVE_OBJECTS),
+		"physics_3d_pairs": Performance.get_monitor(Performance.PHYSICS_3D_COLLISION_PAIRS),
+		"physics_3d_islands": Performance.get_monitor(Performance.PHYSICS_3D_ISLAND_COUNT),
+		"navigation_maps": Performance.get_monitor(Performance.NAVIGATION_ACTIVE_MAPS),
+	}
+	return {"verdict": "PASS", "detail": JSON.stringify(data), "data": data}

@@ -1,6 +1,6 @@
 {
   "name": "F14: each freeing-fight participant refuses their own Guardian offer, at capacity and with room",
-  "claim": "ACCEPTANCE F14 clause 'Each actual freeing-fight participant's capacity/space accept/refuse decision grants at most their own once-only creature, never an owned sixth' -- the REFUSE half (the accept half is f14_guardian_offer_capacity_space.json). The guest challenges Captain Nerissa in the Veilfall through the production trainer battle and the host joins that fight in progress; the guest fights her team down through host-arbitrated strikes, so the host records both players as participants itself (trainer-participants-host). The guest, at a full belt, refuses at the chamber's own two-press 'Decline the Deep Watcher'; the host, with room, refuses with the Creatures tab's Decline then Confirm decline, with controller presses only. Neither gains a Guardian, both keep their parties unchanged, the host settles both refusals, and each repeat request is refused by the host (already_resolved). Setup only: the Veilfall prerequisites before Nerissa (the dock controls, intake pump and return sluice) are committed through the ledger; companions are granted by name; win_trainer_battle keeps the fighting creature topped up between swings and caps each opponent's HP at 20 (enemy_hp_ceiling, the boss smokes' own allowance: wiring, not balance), so every creature of Nerissa's team is still met and struck down in order. Not covered here: a disconnect at the claim (f14_guardian_offer_capacity_space_drop.json, blocked by the lost-focus defect).",
+  "claim": "ACCEPTANCE F14 clause 'Each actual freeing-fight participant's capacity/space accept/refuse decision grants at most their own once-only creature, never an owned sixth' -- the REFUSE half (the accept half is f14_guardian_offer_capacity_space.json). The host challenges Captain Nerissa in the Veilfall through the production trainer battle and the guest joins that fight in progress (a guest-run trainer fight is local to the guest and is not offered to others); the host fights her team down, recording both players as participants itself. The guest, at a full belt, refuses at the chamber's own two-press 'Decline the Deep Watcher'; the host, with room, refuses with the Creatures tab's Decline then Confirm decline, with controller presses only. Neither gains a Guardian, both keep their parties unchanged, the host settles both refusals, and each repeat request is refused by the host (already_resolved). Setup only: the Veilfall prerequisites before Nerissa (the dock controls, intake pump and return sluice) are committed through the ledger; companions are granted by name; win_trainer_battle keeps the fighting creature topped up between swings and caps each opponent's HP at 20 (enemy_hp_ceiling, the boss smokes' own allowance: wiring, not balance), so every creature of Nerissa's team is still met and struck down in order. Not covered here: a disconnect at the claim (f14_guardian_offer_capacity_space_drop.json, blocked by the lost-focus defect).",
   "peers": 2,
   "scene": "water",
   "budget_s": 2400,
@@ -110,28 +110,28 @@
       }
     },
     {
-      "peer": 1,
+      "peer": 0,
       "action": "nerissa_challenge",
-      "label": "the GUEST challenges Captain Nerissa in the Veilfall (production begin_trainer_battle)"
+      "label": "the HOST challenges Captain Nerissa in the Veilfall (production begin_trainer_battle; a host-run fight is joinable)"
     },
     {
-      "peer": 0,
+      "peer": 1,
       "action": "join_running_fight",
       "args": {
         "near": "nerissa",
         "kind": "trainer"
       },
-      "label": "the host walks up and joins the guest's fight (production join_encounter)"
+      "label": "the guest walks up and joins the host's fight in progress (production join_encounter)"
     },
     {
-      "peer": 1,
+      "peer": 0,
       "action": "win_trainer_battle",
       "args": {
         "budget_frames": 9000,
         "enemy_hp_ceiling": 20
       },
       "budget_frames": 9000,
-      "label": "the guest fights Nerissa's team down through host-arbitrated strikes"
+      "label": "the host fights Nerissa's team down through host-arbitrated strikes"
     },
     {
       "peer": "all",
