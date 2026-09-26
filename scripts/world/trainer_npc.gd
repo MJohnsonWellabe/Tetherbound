@@ -123,6 +123,10 @@ var _progression_revision: int = -1
 ## `Game.progression`, looked up once. Null until the first frame that finds
 ## it, and never re-fetched: the autoload outlives every world.
 var _progression_cache: RefCounted = null
+## trainer id -> beaten as last seen by `_refresh_prompts`. A body only plays
+## its defeat reaction on a false -> true flip it witnessed, so a world that
+## loads with the trainer already beaten does not replay the slump.
+var _beaten_seen: Dictionary = {}
 
 
 ## `group` selects which rows of the table this placer owns, matched against
@@ -419,6 +423,28 @@ func _refresh_prompts(progression: RefCounted) -> void:
 			continue
 		prompt.set("label", prompt_for(spec, progression))
 		prompt.set("priority", prompt_priority_for(spec, progression))
+		var id := str(spec.get("id", ""))
+		var beaten := already_beaten(spec, progression)
+		if beaten and _beaten_seen.has(id) and not bool(_beaten_seen[id]):
+			_play_defeat_reaction(body)
+		_beaten_seen[id] = beaten
+
+
+## F04#6 aftermath: the beaten trainer visibly reacts where they stand. The
+## rig's `defeated` role is a one-shot slump (animate_humanoid.py); a rig
+## without it resolves to idle, which `play()` already treats as a no-op.
+func _play_defeat_reaction(body: Node3D) -> void:
+	if not body.has_method("clip_for") or not body.has_method("play"):
+		return
+	var clip := str(body.call("clip_for", "defeated", ""))
+	if clip.is_empty():
+		return
+	body.call("play", clip, false)
+	var reactions := CHARACTER_MODEL.config_for("cast_reactions")
+	var hold := float(reactions.get("defeat_hold_seconds", 7.0))
+	await get_tree().create_timer(hold).timeout
+	if is_instance_valid(body):
+		body.call("play", str(body.call("clip_for", "idle")))
 
 
 ## --- the table ----------------------------------------------------------------

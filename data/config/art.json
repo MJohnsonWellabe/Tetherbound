@@ -1,4 +1,8 @@
 {
+  "cast_reactions": {
+    "defeat_hold_seconds": 7.0,
+    "_why": "X04 / F04#6 aftermath: a named trainer whose defeat flag lands while they stand in the world plays their rig's one-shot `defeated` clip (head down, upper-body slump; animate_humanoid.py) and holds it this long before returning to idle. Rigs without the clip keep idling; trainers already beaten when the world loads do not replay it (trainer_npc.gd)."
+  },
   "_comment": "Presentation. ALL of it is TUNABLE and none of it is a mechanic. The expected feedback is 'too dark', 'the grass is the wrong green', 'the creatures don't move enough' \u2014 every one of those has to be answerable by editing this file rather than by editing a scene.",
   "_comment_scale": "Nothing here sets a collider or a hit range. Art is fitted to the gameplay size the species and the controller already declare; if a value in this file could change how far an attack reaches, it is in the wrong file.",
   "trainer": {
@@ -629,7 +633,8 @@
       "walk": "walk",
       "sprint": "sprint",
       "jump": "jump",
-      "throw": "throw"
+      "throw": "throw",
+      "defeated": "defeated"
     },
     "_comment_gait_speeds": "MQ1A. Same values as the trainer's: all humanoid rigs share the clips animate_humanoid.py bakes, authored against movement.json's speeds. Nothing moves this character at gait speed yet, but any future mover gets honest cadence through character_model.match_gait_rate() for free.",
     "gait_reference_speeds": {
@@ -659,7 +664,8 @@
       "walk": "walk",
       "sprint": "sprint",
       "jump": "jump",
-      "throw": "throw"
+      "throw": "throw",
+      "defeated": "defeated"
     },
     "gait_reference_speeds": {
       "walk": 5.0,
@@ -767,7 +773,8 @@
       "walk": "walk",
       "sprint": "sprint",
       "jump": "jump",
-      "throw": "throw"
+      "throw": "throw",
+      "defeated": "defeated"
     },
     "gait_reference_speeds": {
       "walk": 5.0,
@@ -785,7 +792,8 @@
       "walk": "walk",
       "sprint": "sprint",
       "jump": "jump",
-      "throw": "throw"
+      "throw": "throw",
+      "defeated": "defeated"
     },
     "gait_reference_speeds": {
       "walk": 5.0,
