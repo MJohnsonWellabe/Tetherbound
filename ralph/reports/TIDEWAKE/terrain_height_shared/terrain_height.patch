@@ -1,0 +1,233 @@
+diff --git a/scripts/world/grass_field.gd b/scripts/world/grass_field.gd
+index ffee6355..c335e721 100644
+--- a/scripts/world/grass_field.gd
++++ b/scripts/world/grass_field.gd
+@@ -37,6 +37,7 @@ const FAR_SHADER_PATH := "res://shaders/far_cover.gdshader"
+ ## below. The two systems have to exclude the same building ground, and the way
+ ## to guarantee that is to read one list rather than keep two in step.
+ const SCATTER_RULES := preload("res://scripts/world/scatter_rules.gd")
++const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
+ 
+ ## Read once and cached, the same way `scatter_rules.gd::config()` does it, so a
+ ## test can ask what the config says without standing a world up.
+@@ -2122,12 +2123,7 @@ func _field_materials() -> Array[ShaderMaterial]:
+ ## `playground_world.gd::ground_height_at` uses; not shared with it directly
+ ## because that lives outside this lane's file scope.
+ func _terrain_height_at(x: float, z: float) -> float:
+-	if _terrain == null:
+-		return NAN
+-	var data: Object = _terrain.get("data")
+-	if data == null:
+-		return NAN
+-	return float(data.call("get_height", Vector3(x, 0.0, z)))
++	return TERRAIN_HEIGHT.height_at(_terrain, x, z)
+ 
+ 
+ ## The real min/max terrain height under a `radius`-metre square centred on
+diff --git a/scripts/world/playground_world.gd b/scripts/world/playground_world.gd
+index 129fc977..c307d6e1 100644
+--- a/scripts/world/playground_world.gd
++++ b/scripts/world/playground_world.gd
+@@ -31,6 +31,7 @@ const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
+ const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
+ const STRUCTURE_VISIBILITY_RANGE := preload("res://scripts/world/structure_visibility_range.gd")
+ const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
++const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
+ const WATER := preload("res://scripts/world/water.gd")
+ const VILLAGE := preload("res://scripts/world/village.gd")
+ const PROPS := preload("res://scripts/world/props.gd")
+@@ -2178,12 +2179,7 @@ func _place_farm_plots() -> void:
+ ## silently missed, and the creature was never spawned at all — no error, no
+ ## body, just an encounter that could not happen.
+ func ground_height_at(x: float, z: float) -> float:
+-	if _terrain == null:
+-		return NAN
+-	var data: Object = _terrain.get("data")
+-	if data == null:
+-		return NAN
+-	return float(data.call("get_height", Vector3(x, 0.0, z)))
++	return TERRAIN_HEIGHT.height_at(_terrain, x, z)
+ 
+ 
+ func _load_terrain_config() -> Dictionary:
+@@ -2205,7 +2201,7 @@ func _place_player() -> void:
+ 		return
+ 
+ 	var spawn := Vector3(_player.global_position.x, 0.0, _player.global_position.z)
+-	var ground: float = data.call("get_height", spawn)
++	var ground: float = TERRAIN_HEIGHT.height_from(data, float(_terrain.get("vertex_spacing")), spawn.x, spawn.z)
+ 	if is_nan(ground):
+ 		push_warning("no terrain height at spawn; leaving the player where it is")
+ 		return
+diff --git a/scripts/world/stormwood_world.gd b/scripts/world/stormwood_world.gd
+index fac98f0d..59752fb4 100644
+--- a/scripts/world/stormwood_world.gd
++++ b/scripts/world/stormwood_world.gd
+@@ -17,6 +17,7 @@ const ROAD_CURRENT := preload("res://scripts/world/stormwood_road_current.gd")
+ const GLASS_FIELD := preload("res://scripts/world/stormwood_glass_field.gd")
+ const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
+ const SETTLEMENTS := preload("res://scripts/world/village.gd")
++const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
+ var simulation_only := false
+ var shell_realm := ""
+ var _ready_complete := false
+@@ -290,8 +291,9 @@ func _build_road_current() -> void:
+ 	var data: Object = _terrain.get("data") if _terrain != null else null
+ 	var height := Callable()
+ 	if data != null and data.has_method("get_height"):
++		var spacing := float(_terrain.get("vertex_spacing"))
+ 		height = func(x: float, z: float) -> float:
+-			var y := float(data.call("get_height", Vector3(x, 0.0, z)))
++			var y := TERRAIN_HEIGHT.height_from(data, spacing, x, z)
+ 			return y if is_finite(y) else ground_height_at(x, z)
+ 	current.build(self, height)
+ 
+diff --git a/scripts/world/terrain_height.gd b/scripts/world/terrain_height.gd
+new file mode 100644
+index 00000000..a228804f
+--- /dev/null
++++ b/scripts/world/terrain_height.gd
+@@ -0,0 +1,40 @@
++extends RefCounted
++
++## One Terrain3D height sampler for every realm.
++##
++## Terrain3D 1.0.2 `Terrain3DData::get_height` has a near-vertex shortcut:
++## within 0.01 m of a vertex it returns `get_pixel(pos)` for the UNROUNDED
++## position, and get_pixel floors. Just below a vertex (x = 547.995) that is
++## the height of the vertex one step down and left: 0.6-0.7 m off on a
++## 27-degree slope and up to 5 m on cliffs, while the collision surface is
++## right. Asking for the vertex itself sends the shortcut to the vertex it
++## meant, so this sampler agrees with Terrain3D's own collision
++## (ralph/reports/TIDEWAKE/f13_loops_shortcuts/BRINE_ROOT_CAUSE.txt).
++## Water fixed this first in water_world.gd::ground_height_at.
++const NEAR_VERTEX_M := 0.02
++
++
++## Ground height under (x, z), or NAN when the terrain or its data is absent.
++static func height_at(terrain: Object, x: float, z: float) -> float:
++	if terrain == null or not is_instance_valid(terrain):
++		return NAN
++	var data: Object = terrain.get("data")
++	if data == null:
++		return NAN
++	return height_from(data, float(terrain.get("vertex_spacing")), x, z)
++
++
++## The same, for a caller that already holds the Terrain3DData object.
++static func height_from(data: Object, vertex_spacing: float, x: float, z: float) -> float:
++	return float(data.call("get_height", query_point(vertex_spacing, x, z)))
++
++
++## The point to hand `get_height`: (x, 0, z), or the vertex it lies within
++## NEAR_VERTEX_M of. Pure, so the snap is testable without a terrain.
++static func query_point(vertex_spacing: float, x: float, z: float) -> Vector3:
++	var at := Vector3(x, 0.0, z)
++	if vertex_spacing > 0.0 and is_finite(vertex_spacing):
++		var vertex := Vector3(snappedf(x, vertex_spacing), 0.0, snappedf(z, vertex_spacing))
++		if at.distance_to(vertex) < NEAR_VERTEX_M:
++			return vertex
++	return at
+diff --git a/scripts/world/water_world.gd b/scripts/world/water_world.gd
+index ffb641ef..09b3823a 100644
+--- a/scripts/world/water_world.gd
++++ b/scripts/world/water_world.gd
+@@ -6,7 +6,6 @@ const CONFIG_PATH := "res://data/config/water_world.json"
+ const VISUAL_PATH := "res://data/config/water_visual.json"
+ ## `ground_height_at` answers with the vertex itself inside this radius; it
+ ## must cover Terrain3D's own 0.01 m near-vertex shortcut (see there).
+-const NEAR_VERTEX_M := 0.02
+ const FIELD := preload("res://scripts/world/water_heightfield.gd")
+ const CURRENTS := preload("res://scripts/world/water_current_field.gd")
+ const SWIM := preload("res://scripts/player/swim_controller.gd")
+@@ -31,6 +30,7 @@ const GULL_REST_SIGNAL_SITE := preload("res://scripts/world/water_gull_rest_sign
+ const WATER_VEGETATION := preload("res://scripts/world/water_vegetation.gd")
+ const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
+ const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
++const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
+ const GROUND_COVER_PATH := "res://data/config/water_ground_cover.json"
+ 
+ @export var simulation_only: bool = false
+@@ -229,24 +229,8 @@ func ground_height_at(x: float, z: float) -> float:
+ 		var built: float = veilfall.built_floor_height_at(x, z)
+ 		if is_finite(built):
+ 			return built
+-	if terrain == null:
+-		return NAN
+-	var data: Object = terrain.get("data")
+-	if data == null:
+-		return NAN
+-	# Terrain3D 1.0.2 `Terrain3DData::get_height` has a near-vertex shortcut:
+-	# within 0.01 m of a vertex it returns `get_pixel(pos)` for the UNROUNDED
+-	# position, and get_pixel floors. Just below a vertex (x = 547.995) that is
+-	# the height of the vertex one step down and left -- 0.7 m off on the
+-	# 27-degree Brine terrace, while the collision surface is right. Asking for
+-	# the vertex itself sends the shortcut to the vertex it meant, so this
+-	# sampler agrees with Terrain3D's own collision (BRINE_ROOT_CAUSE.txt).
+-	var step := float(terrain.get("vertex_spacing"))
+-	var vertex := Vector3(snappedf(x, step), 0.0, snappedf(z, step))
+-	var at := Vector3(x, 0.0, z)
+-	if at.distance_to(vertex) < NEAR_VERTEX_M:
+-		at = vertex
+-	return float(data.call("get_height", at))
++	# Terrain3D 1.0.2's near-vertex get_height shortcut: see terrain_height.gd.
++	return TERRAIN_HEIGHT.height_at(terrain, x, z)
+ 
+ 
+ func ground_height_near(x: Variant, z: float = 0.0, _reference_y: float = 0.0) -> float:
+diff --git a/tests/test_terrain_height.gd b/tests/test_terrain_height.gd
+new file mode 100644
+index 00000000..653f603c
+--- /dev/null
++++ b/tests/test_terrain_height.gd
+@@ -0,0 +1,50 @@
++extends "res://tests/test_case.gd"
++
++## terrain_height.gd: every realm's Terrain3D sampler snaps a query within
++## NEAR_VERTEX_M of a vertex onto that vertex, so Terrain3D 1.0.2's
++## near-vertex get_height shortcut reads the vertex meant, not its neighbour.
++
++const HEIGHT := preload("res://scripts/world/terrain_height.gd")
++
++
++class FakeData:
++	extends RefCounted
++	var asked: Array[Vector3] = []
++	func get_height(at: Vector3) -> float:
++		asked.append(at)
++		return at.x + at.z * 1000.0
++
++
++class FakeTerrain:
++	extends RefCounted
++	var data: RefCounted = FakeData.new()
++	var vertex_spacing := 2.0
++
++
++func test_query_just_below_a_vertex_asks_for_the_vertex() -> void:
++	assert_eq(HEIGHT.query_point(2.0, 547.995, 100.004), Vector3(548.0, 0.0, 100.0))
++
++
++func test_query_away_from_a_vertex_is_unchanged() -> void:
++	assert_eq(HEIGHT.query_point(2.0, 547.5, 101.0), Vector3(547.5, 0.0, 101.0))
++	# Exactly NEAR_VERTEX_M off is outside the snap.
++	assert_eq(HEIGHT.query_point(2.0, 548.0 - HEIGHT.NEAR_VERTEX_M, 100.0),
++		Vector3(548.0 - HEIGHT.NEAR_VERTEX_M, 0.0, 100.0))
++
++
++func test_unusable_spacing_never_snaps() -> void:
++	assert_eq(HEIGHT.query_point(0.0, 547.995, 100.0), Vector3(547.995, 0.0, 100.0))
++	assert_eq(HEIGHT.query_point(NAN, 547.995, 100.0), Vector3(547.995, 0.0, 100.0))
++
++
++func test_height_at_reads_the_snapped_vertex_through_terrain_data() -> void:
++	var terrain := FakeTerrain.new()
++	assert_eq(HEIGHT.height_at(terrain, 3.996, 6.0), 4.0 + 6000.0)
++	assert_eq((terrain.data as FakeData).asked, [Vector3(4.0, 0.0, 6.0)])
++
++
++func test_missing_terrain_or_data_is_nan() -> void:
++	assert_true(is_nan(HEIGHT.height_at(null, 1.0, 1.0)))
++	var terrain := FakeTerrain.new()
++	terrain.data = null
++	assert_true(is_nan(HEIGHT.height_at(terrain, 1.0, 1.0)))
