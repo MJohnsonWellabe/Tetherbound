@@ -511,7 +511,12 @@ func _build() -> void:
 	_host_friends_button.pressed.connect(_show_host_friends_choices)
 	_join_friend_button.pressed.connect(_show_friend_invite)
 	_join_button.pressed.connect(_show_join)
-	_quit_button.pressed.connect(func() -> void: get_tree().quit())
+	_quit_button.pressed.connect(func() -> void:
+		# get_tree().quit() sends no WM_CLOSE_REQUEST; leave any Steam lobby first.
+		var steam_lobby: Variant = load(STEAM_LOBBY_PATH)
+		if steam_lobby != null:
+			steam_lobby.call("leave_for_quit", _game())
+		get_tree().quit())
 
 	_load_box = VBoxContainer.new()
 	_load_box.visible = false

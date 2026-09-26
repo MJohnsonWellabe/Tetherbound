@@ -734,6 +734,14 @@ func _notification(what: int) -> void:
 		leave_lobbies_for_quit()
 
 
+## For `get_tree().quit()` call sites, which never send WM_CLOSE_REQUEST.
+## A no-op when this game has no SteamLobby (stock build, solo, ENet).
+static func leave_for_quit(game: Node) -> void:
+	var lobby := game.get_node_or_null(^"SteamLobby") if game != null else null
+	if lobby != null and lobby.has_method("leave_lobbies_for_quit"):
+		lobby.call("leave_lobbies_for_quit")
+
+
 func leave_lobbies_for_quit() -> void:
 	if _joining_lobby != 0:
 		_cancelled_joins[_joining_lobby] = "cancelled"
