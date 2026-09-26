@@ -429,6 +429,9 @@
         "_why": "The west street from its shared south-street bend to Grandpa's door. OWNER-0912 visual acceptance repair moves the civic bend from the well's physical origin to [7,-7]: the first replan ran both street centre-lines through the canopy, bucket chains and sign board, so a real third-person view toward TrailGate was occluded even outside the evidence harness. The retained endpoint (-16.5,-16) remains 0.5m clear of Grandpa's east wall and aligned to the real door; the middle point keeps the street outside the repaired inn frontage.",
         "_why_f01": "F01-a (WORLD 3.2 road settlement). Unchanged points: this is now the WEST HALF OF THE THROUGH-ROAD -- Grandpa's door -> the inn crossroads -> the civic bend at [7,-7], where it continues without a junction as South Street to TrailGate and on down the Lower Meadows spine to the South Bridge. The well sits in the inside corner of that bend as the square's feature, not as a hub.",
         "label": "Grandpa's House",
+        "width": 3.0,
+        "shoulder": 1.2,
+        "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
         "points": [
           [
             7.0,
@@ -448,6 +451,9 @@
         "_why": "The shared street bend to the village inn's north-facing public threshold. OWNER-0912 visual acceptance repair makes this a short forecourt branch rather than a second path entering the inn's wall: it begins at the same [7,-7] bend and ends on the moved doorstep at [-1.5,-8.1].",
         "_why_f01": "F01-a. Was [7,-7]->[2,-8.5]->[-1.5,-8.1]: a second road running 1m beside the west street into the square. Now follows the through-road to the inn crossroads [-1.5,-11.64] (the inn door's own projection onto the west street) and turns 3.5m up to the north-facing threshold, so the inn fronts the through-road and the square has one road, not two parallel ones. The fingerpost arm (first leg) still points west down the through-road.",
         "label": "The Inn",
+        "width": 3.0,
+        "shoulder": 1.2,
+        "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
         "points": [
           [
             7.0,
@@ -467,6 +473,9 @@
         "_why": "the square to the practice meadow (the opening's bramblebun)",
         "_why_f01": "F01-a/F01-b. Was [10,-10]->[18,-24]->[30,-40]: a spoke radiating from the well. Now follows the through-road west to the inn crossroads, turns north up Stoneyard Lane (paths.approaches village_stoneyard_lane) past the stone cottage's door and through The Stoneyard, and continues past its far edge to the practice meadow centre (30,-40), unchanged, so objectives.json's beacon and the bramblebun cluster are where they were. Fingerpost arm points west, which is the way a player actually walks.",
         "label": "Practice Meadow",
+        "width": 3.0,
+        "shoulder": 1.2,
+        "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
         "points": [
           [
             7.0,
@@ -582,6 +591,9 @@
     "approaches": [
       {
         "id": "village_south_street",
+        "width": 3.0,
+        "shoulder": 1.2,
+        "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
         "label": "South Street",
         "_why": "OWNER-0912 / C3 V-1 plus production visual acceptance repair. The L-shaped village street now turns at [7,-7], on the paved civic bend but 4.24m clear of the fixed well's canopy and bucket. It shares that exact endpoint with the west street, then runs between Mira's east-side shop and Tam's west-side workshop before meeting TrailGate. It lives here rather than paths.routes so a local continuation does not add a redundant destination arm to the junction fingerpost.",
         "points": [
@@ -601,6 +613,9 @@
       },
       {
         "id": "village_stoneyard_lane",
+        "width": 3.0,
+        "shoulder": 1.2,
+        "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
         "label": "Stoneyard Lane",
         "_why_f01": "F01-a/F01-b (WORLD 3.2: a visible side lane to the berry field, grove or stone-working area). Leaves the through-road at the inn crossroads [-1.5,-11.64], runs 9m+ clear of the well, passes 2.8m in front of the stone cottage's real threshold [15.72,-18.13] (so cottage_b keeps its 0912 pose and its door fronts a road), then turns north into The Stoneyard (paths.village_topology.subareas), the stone-working ground around band-1 stone nodes 4 [22,-34] and 1037 [11,-32]. An approach, not a route: the fingerpost's Practice Meadow arm already points down it. Harvest nodes it passes (fiber 7, deadwood 0) stay 1.6m+ off the centreline. REQUIRES the terrain + scatter re-bake.",
         "points": [
@@ -628,6 +643,9 @@
       },
       {
         "id": "village_berry_lane",
+        "width": 3.0,
+        "shoulder": 1.2,
+        "_why_width_f01": "F01 (#270): village roads only. At the global 1.4/1.1 footpath width the 2 m control texel breaks every village road into dirt blobs separated by grass (blind overhead + walk judges: 'one continuous through-road' NOT MET). 3.0 is the smallest core that always covers a 2 m texel centre on a diagonal (2*sqrt2 = 2.83). Roads outside the fence keep the owner-directed GRASS-FIELD 1.4/1.1. TUNABLE.",
         "label": "Berry Lane",
         "_why_f01": "F01-b (WORLD 3.2 / ART_DIRECTION: berry field, grove and stone-working area). The Berry Field's own lane: it leaves the through-road at the Pond crossroads [-8,-13.96] (the Pond lane goes south, this goes north) and ends inside the Berry Field (paths.village_topology.subareas), 1.6m clear of berry node 1036 [-9,-19]. An approach, not a route, so the junction fingerpost keeps its arms. REQUIRES the terrain + scatter re-bake.",
         "points": [
