@@ -375,7 +375,7 @@ static func trail_stones(pocket: Dictionary, cfg: Dictionary, routes: Array = []
 			"yaw": rng.randf_range(0.0, TAU), "scale": rng.randf_range(float(trail.scale_min), float(trail.scale_max)) * float(pocket.get("trail_scale_mul", 1.0))
 				* (float(trail.get("near_scale_mul", 1.0)) if d <= float(trail.get("near_m", 0.0)) else 1.0),
 			"model": STONES[rng.randi_range(0, STONES.size() - 1)]})
-		d += float(trail.spacing_m)
+		d += float(trail.spacing_m) * float(pocket.get("trail_scale_mul", 1.0))
 	return out
 
 
