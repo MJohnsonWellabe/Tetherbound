@@ -59,6 +59,17 @@ const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 ## somebody authors from silently becoming a world fact.
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 
+## Trainers whose SOLO win is journaled per participant, because a later
+## per-participant offer reads those rows (F14: Nerissa, read by
+## `water_guardian_reward.gd::participants()`). Kept HERE, in the realm-neutral
+## rewards module, so the shared encounter director never loads one realm's
+## reward controller into every other realm's script closure.
+const SOLO_WIN_JOURNAL_TRAINERS := ["water_trainer_nerissa"]
+
+
+static func journals_solo_win(trainer_key: String) -> bool:
+	return SOLO_WIN_JOURNAL_TRAINERS.has(trainer_key)
+
 
 ## The trainer id every source below is built from. "" for a spec with no id,
 ## which `world_facts()`/`grants()` both refuse rather than mint a receipt

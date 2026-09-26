@@ -20,9 +20,15 @@ class FixtureWorld extends Node3D:
 		return "stormwood"
 
 
-class DirectorStub extends Node:
+## The authored cast: production keeps it on StormwoodTrainers, which the
+## chapter, the hub and the Dynamo all read.
+class CastStub extends Node:
 	var authored_specs := {}
 
+
+## No `authored_specs` here: the production EncounterDirector has none, and a
+## stub that did hid the chapter reading the wrong node (F10 proof, run 4).
+class DirectorStub extends Node:
 	func award_hosted_trainer(spec: Dictionary, _contributors: Array) -> void:
 		get_node("/root/Game").ledger.submit({"kind": "set_world_flag", "realm": "stormwood",
 			"id": str(spec.defeat_flag), "value": true})
@@ -77,8 +83,11 @@ func _run() -> void:
 	var director := DirectorStub.new()
 	director.name = "EncounterDirector"
 	world.add_child(director)
+	var cast := CastStub.new()
+	cast.name = "StormwoodTrainers"
+	world.add_child(cast)
 	for spec: Dictionary in CATALOGUE.trainer_specs():
-		director.authored_specs[str(spec.id)] = spec
+		cast.authored_specs[str(spec.id)] = spec
 	var chapter := CHAPTER.new()
 	chapter.name = "StormwoodChapter"
 	world.add_child(chapter)
@@ -92,7 +101,7 @@ func _run() -> void:
 	chapter.events = events
 	await process_frame
 	var specs: Array[Dictionary] = []
-	for spec: Dictionary in director.authored_specs.values():
+	for spec: Dictionary in cast.authored_specs.values():
 		if str(spec.group) == "deepwood_circuit":
 			specs.append(spec)
 	_expect(specs.size() == 5, "production catalogue exposes all five circuit members")

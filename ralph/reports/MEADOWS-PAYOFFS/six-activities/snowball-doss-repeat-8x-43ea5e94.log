@@ -1,0 +1,17 @@
+# smoke_local_requests.gd --only=doss, 8 consecutive headless runs on 43ea5e94 (main 08fcc205 + Juno anchor fix)
+run 1 exit=0 selected local activities smoke test passed: doss 
+run 2 exit=0 selected local activities smoke test passed: doss 
+run 3 exit=0 selected local activities smoke test passed: doss 
+run 4 exit=0 selected local activities smoke test passed: doss 
+run 5 exit=0 selected local activities smoke test passed: doss 
+run 6 exit=0 selected local activities smoke test passed: doss 
+run 7 exit=0 selected local activities smoke test passed: doss 
+run 8 exit=0 selected local activities smoke test passed: doss 
+## run 1 tail
+[meadow] the land lies drained: 2462 quads over 7 groups, grass field thinned
+
+selected local activities smoke test passed: doss
+## run 8 tail
+[meadow] the land lies drained: 2462 quads over 7 groups, grass field thinned
+
+selected local activities smoke test passed: doss

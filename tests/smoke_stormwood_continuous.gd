@@ -73,6 +73,10 @@ var _witness_dir := ""
 var _step_started_ms := 0
 var _step_results: Array = []
 var _bryn_complete := false
+## Every witness report lists trainer deaths and satchel recoveries: the sum of
+## each step's field-safety counts, printed once at the end.
+var _safety_totals := {"warnings": 0, "hits": 0, "damage": 0.0, "deaths": 0,
+	"satchel_recoveries": 0, "satchel_stacks": 0}
 
 
 static func through_crown(arguments: PackedStringArray) -> bool:
@@ -199,6 +203,7 @@ func _run() -> void:
 	_step_end("prefix: arrival through Ondra's arch recipe", _prefix_complete)
 	if _segment.get("safety") != null:
 		print("F11 WITNESS STRIKES prefix %s" % JSON.stringify(_segment.safety.counts))
+		_add_safety(_segment.safety.counts)
 		_segment.safety.detach()
 	print("F11 WITNESS TOOLS after prefix: knife x%d axe x%d pickaxe x%d hotbar=%s" % [
 		int(game.get("inventory").call("count", "knife")), int(game.get("inventory").call("count", "axe")),
@@ -216,6 +221,7 @@ func _run() -> void:
 		_crown_complete = bool(built.get("passed", false))
 		_step_end("Capacitor Alpha, Crown gathering, two frames, paid Crown arch", _crown_complete)
 		print("F11 WITNESS STRIKES crown %s" % JSON.stringify(crown.strike_counts()))
+		_add_safety(crown.strike_counts())
 		_expect(_crown_complete, "same live chapter path reached the paid Crown arch")
 	if _crown_complete and through_aftermath(OS.get_cmdline_user_args()):
 		_aftermath_watchdog.call_deferred()
@@ -228,6 +234,7 @@ func _run() -> void:
 			var later: Dictionary = await later_segment.run(self, current_scene as Node3D, game)
 			if later_segment.has_method("strike_counts"):
 				print("F11 WITNESS STRIKES %s %s" % [str(entry[1]), JSON.stringify(later_segment.strike_counts())])
+				_add_safety(later_segment.strike_counts())
 			_print_transcript(later)
 			for line: Variant in later.get("failures", []):
 				_failures.append(str(line))
@@ -251,6 +258,13 @@ func _run() -> void:
 		_bryn_complete = _failures.is_empty() and bool(glass.get("passed", false))
 		_expect(_bryn_complete, "same live chapter path completed Glass for Bryn to its care point")
 	_finish()
+
+
+func _add_safety(counts: Variant) -> void:
+	if not counts is Dictionary:
+		return
+	for key: String in _safety_totals:
+		_safety_totals[key] += (counts as Dictionary).get(key, 0)
 
 
 func _step_begin() -> void:
@@ -457,6 +471,10 @@ func _finish() -> void:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
 	Engine.max_physics_steps_per_frame = 8
+	if not OS.get_cmdline_user_args().has("--verify-reload"):
+		print("F11 WITNESS SAFETY TOTAL trainer_deaths=%d satchel_recoveries=%d satchel_stacks=%d strike_hits=%d warnings=%d damage=%.1f" % [
+			int(_safety_totals.deaths), int(_safety_totals.satchel_recoveries), int(_safety_totals.satchel_stacks),
+			int(_safety_totals.hits), int(_safety_totals.warnings), float(_safety_totals.damage)])
 	if _failures.is_empty():
 		var endpoint := "paid Crown arch" if _crown_complete else (
 			"Glass for Bryn care point" if _bryn_complete else "Act-II arch recipe")
