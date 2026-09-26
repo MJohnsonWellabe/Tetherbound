@@ -115,7 +115,10 @@ const GUARDIAN_GLYPH_PX := 52
 ## Farewell card row spacing, and the tighter spacing while the Guardian offer
 ## (nine rows) is up.
 const FAREWELL_SEPARATION := 14
-const GUARDIAN_CARD_SEPARATION := 6
+const GUARDIAN_CARD_SEPARATION := 3
+## Farewell/Guardian card padding (the shared default is 18). The offer card
+## is the tallest thing on the tab at the text floor; 12 keeps it on screen.
+const FAREWELL_CARD_MARGIN := 12
 ## Occupied belt rows recede to this while the offer is up, so the free slot
 ## the volunteer would take (highlighted) and the card are what reads.
 const GUARDIAN_ROSTER_DIM := 0.45
@@ -967,7 +970,7 @@ func _build_farewell_panel() -> Control:
 
 	_fence_farewell_buttons()
 	_equalize_farewell_widths.call_deferred()
-	return _panel(body)
+	return _panel(body, FAREWELL_CARD_MARGIN)
 
 
 func _farewell_button(label: String) -> Button:
