@@ -158,51 +158,51 @@
     "species": "meadowhart",
     "members": [
       [
-        368.0,
-        5861.0,
-        20.0,
+        386.4,
+        5866.4,
+        215.0,
         1.0
       ],
       [
-        372.5,
-        5860.0,
-        95.0,
+        390.8,
+        5861.5,
+        250.0,
         1.06
       ],
       [
-        371.5,
-        5865.5,
-        300.0,
+        392.9,
+        5853.4,
+        330.0,
         1.0
       ],
       [
-        366.0,
-        5866.5,
-        160.0,
+        374.1,
+        5853.8,
+        60.0,
         1.1
       ],
       [
-        389.0,
-        5868.0,
-        60.0,
+        372.7,
+        5860.8,
+        95.0,
         1.04
       ],
       [
-        393.5,
-        5871.0,
-        250.0,
+        378.5,
+        5864.8,
+        170.0,
         1.0
       ],
       [
-        380.0,
-        5846.0,
-        330.0,
+        380.7,
+        5869.8,
+        185.0,
         1.08
       ]
     ],
     "keep_clear_of_display_m": 8.0,
     "idle_phase_step": 0.37,
-    "_comment_members": "[x, z, facing_deg, scale>=1]. A loose cluster of four west of the Veridian site, a pair to the north-east and one straggler south, facings mixed (not all toward the Highfield stands), slight up-only size variety (blind judge round 3: the previous seven stood evenly spaced, all facing the camera, one pose)."
+    "_comment_members": "[x, z, facing_deg, scale>=1]. F05#3 (coordinator queue): the herd GROUPS AROUND the stag at herd_display.at -- a loose ring 9-13 m out (never nearer than keep_clear_of_display_m to its centre), covering its north, east and west and leaving the south side (toward the Highfield hero stand) open so the stag is seen among them; most face roughly toward it, with variety; slight up-only size variety. Built on any answer; the stag itself stands only on a full refusal."
   },
   "patrols": {
     "enabled": true,

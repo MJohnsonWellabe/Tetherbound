@@ -380,3 +380,16 @@ func test_edge_jitter_is_deterministic_and_bounded() -> void:
 			assert_true(absf(j.x) <= 4.0 and absf(j.y) <= 4.0, "inside the bound")
 	assert_true(HEALING.edge_jitter(Vector2i(5, 9), 0.0) == Vector2.ZERO, "0 m = no jitter")
 	assert_false(HEALING.edge_jitter(Vector2i(0, 0), 4.0).is_equal_approx(HEALING.edge_jitter(Vector2i(1, 0), 4.0)), "neighbours differ")
+
+func test_the_herd_groups_around_the_stag() -> void:
+	# F05#3: the stag is seen AMONG the herd, not beside it -- every member
+	# within 14 m of it, and the herd on at least three sides of it.
+	var config := _config()
+	var display: Dictionary = config.get("herd_display", {})
+	var site := Vector2(float(display["at"][0]), float(display["at"][1]))
+	var sides: Dictionary = {}
+	for place: Dictionary in HEALING.herd_placements(config.get("herd_return", {}) as Dictionary):
+		var off: Vector2 = (place["at"] as Vector2) - site
+		assert_true(off.length() <= 14.0, "member %s is %.1f m from the stag" % [str(place["at"]), off.length()])
+		sides[("E" if off.x >= 0.0 else "W") + ("N" if off.y >= 0.0 else "S")] = true
+	assert_true(sides.size() >= 3, "the herd stands on at least three sides of the stag (%s)" % str(sides.keys()))
