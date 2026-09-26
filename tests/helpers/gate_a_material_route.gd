@@ -290,6 +290,10 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 	# a perfectly harvestable stop unreachable. `_harvest_node()` below decides,
 	# and says why when it cannot.
 	var stop_at := node.global_position
+	if not await cross_village_fence_toward(stop_at):
+		if failures.is_empty():
+			_fail("village fence crossing toward authored %s at %s ended without a verdict" % [item_id, expected])
+		return false
 	if not await _walk_to(stop_at, 1.65, _travel_budget(stop_at)) \
 			and _player.global_position.distance_to(stop_at) > WITHIN_REACH:
 		_fail("controller could not reach authored %s at %s (stopped %.1fm short)" % [
@@ -308,6 +312,79 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 			return true
 		return false
 	transcript.append("authored %s %+d at (%.1f, %.1f)" % [item_id, int(stop["amount"]), expected.x, expected.y])
+	return true
+
+
+## The village fence (`data/config/village_boundary.json`, OP-0830-1) is a
+## real closed line with a gate wherever a road crosses it. An authored stop on
+## the far side of it -- the open-spine fiber at (-5, 141) is outside, the route
+## before it is inside -- is reached THROUGH a gate, as a player walks it, not by
+## pointing the stick 170m across the fence and hoping the wall-slide finds the
+## hole. CI run 36267784789 is that hope failing: the straight line from
+## (29.9, -31.9) meets the fence 6m east of TrailGate, the navigator slid WEST
+## past the open gate and pinned itself in the fence corner at (-13.6, 24.5)
+## for its whole 10,826-frame budget ("stopped 116.8m short"). The same leg
+## passes whenever the slide happens to pick the gate side, which is why it was
+## intermittent rather than always red.
+##
+## No-op when both ends are on the same side of the fence. Uses the gate that
+## makes here -> gate -> target shortest, and walks 5m either side of its line
+## along the polygon's inward direction (the same construction
+## `smoke_gate_b_continuous.gd::_walk_back_to_the_square` uses coming home).
+const VILLAGE_BOUNDARY_PATH := "res://data/config/village_boundary.json"
+const GATE_CROSSING_STANDOFF_M := 5.0
+
+
+func cross_village_fence_toward(target: Vector3) -> bool:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(VILLAGE_BOUNDARY_PATH))
+	if not parsed is Dictionary:
+		return true
+	var outline := PackedVector2Array()
+	for raw: Variant in (((parsed as Dictionary).get("outline", {}) as Dictionary).get("points", []) as Array):
+		outline.append(Vector2(float(raw[0]), float(raw[1])))
+	if outline.size() < 3:
+		return true
+	var here := Vector2(_player.global_position.x, _player.global_position.z)
+	var there := Vector2(target.x, target.z)
+	var starts_inside := Geometry2D.is_point_in_polygon(here, outline)
+	if starts_inside == Geometry2D.is_point_in_polygon(there, outline):
+		return true
+	var centre := Vector2.ZERO
+	for p: Vector2 in outline:
+		centre += p
+	centre /= float(outline.size())
+	var gate := Vector2.INF
+	var gate_id := ""
+	var best := INF
+	for raw: Variant in (((parsed as Dictionary).get("gates", {}) as Dictionary).get("entries", []) as Array):
+		var at_raw: Array = (raw as Dictionary).get("at", [])
+		if at_raw.size() < 2:
+			continue
+		var at := Vector2(float(at_raw[0]), float(at_raw[1]))
+		var length := here.distance_to(at) + at.distance_to(there)
+		if length < best:
+			best = length
+			gate = at
+			gate_id = str((raw as Dictionary).get("id", "gate"))
+	if gate == Vector2.INF:
+		return true
+	var inward := (centre - gate).normalized()
+	var inside_leg := gate + inward * GATE_CROSSING_STANDOFF_M
+	var outside_leg := gate - inward * GATE_CROSSING_STANDOFF_M
+	var legs: Array[Vector2] = [inside_leg, outside_leg]
+	if not starts_inside:
+		legs.reverse()
+	for leg: Vector2 in legs:
+		var y := _player.global_position.y
+		if _world.has_method("ground_height_at"):
+			y = float(_world.call("ground_height_at", leg.x, leg.y))
+		var point := Vector3(leg.x, y, leg.y)
+		if not await _walk_to(point, 2.5, _travel_budget(point)):
+			_fail("controller could not pass through the village fence at %s toward %s (stopped %.1fm from %s)" % [
+				gate_id, there, Vector2(point.x - _player.global_position.x,
+					point.z - _player.global_position.z).length(), leg])
+			return false
+	transcript.append("passed %s the village fence through %s" % ["out of" if starts_inside else "into", gate_id])
 	return true
 
 
