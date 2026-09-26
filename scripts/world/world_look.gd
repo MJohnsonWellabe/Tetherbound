@@ -837,6 +837,15 @@ func _load() -> Dictionary:
 	return merged_look(parsed as Dictionary, overlay as Dictionary)
 
 
+## The fog colour the Environment actually receives: `fog_colour` scaled by
+## the sky's own energy (clamped to 1, so a brightened sky never brightens
+## fog). See `_apply_environment()`'s comment on the night mountain card.
+static func fog_light_colour(env_cfg: Dictionary, sky_cfg: Dictionary) -> Color:
+	var energy := clampf(float(sky_cfg.get("energy", 1.0)), 0.0, 1.0)
+	var base := _as_colour(env_cfg.get("fog_colour"), "#c4d2d8")
+	return Color(base.r * energy, base.g * energy, base.b * energy, 1.0)
+
+
 ## `overlay` over `base`, recursively for dictionaries, key by key; anything
 ## else in `overlay` replaces the base value outright. Neither input changes.
 static func merged_look(base: Dictionary, overlay: Dictionary) -> Dictionary:
@@ -1114,7 +1123,15 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	env.ssao_radius = float(cfg.get("ssao_radius", 1.2))
 
 	env.fog_enabled = bool(cfg.get("fog_enabled", true))
-	env.fog_light_color = _as_colour(cfg.get("fog_colour"), "#c4d2d8")
+	# The sky shader draws `colour * sky_energy` (sky_clouds.gdshader), so the
+	# horizon the fog must meet is horizon_colour SCALED by the preset's sky
+	# energy. Every preset keeps fog_colour == horizon_colour (the EV8
+	# invariant in art.json), but night (0.75) and dawn (0.9) dim the sky and
+	# not the fog: VIS audit measured the fogged Meadows ranges at #6080b0
+	# against a #263f6c sky at 23:00, a glowing mountain card brighter than
+	# the land. Scaling here keeps the invariant true on screen, not just in
+	# the config; presets at energy 1.0 are unchanged.
+	env.fog_light_color = fog_light_colour(cfg, sky_cfg)
 	env.fog_density = float(cfg.get("fog_density", 0.0016))
 	# Sky affect at zero, deliberately. Fog that tints the sky produces the hard
 	# grey band the critic found across `03-rise-overlook`, where the terrain rose
