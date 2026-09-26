@@ -303,6 +303,29 @@ func _drive_machine_to_ceremony(expected: Array[String], first: int) -> bool:
 const ROAD_CARE_BELOW := 0.4
 
 
+## B2 in reverse (2026-09-26 run): the forward-roads return leaves the quarry
+## northward toward (330,1950) from about (397.7,1801) and stalls in the same
+## pocket south of the retained foundation and west of the conduit pylon that
+## the outbound `warrens_route.gd` walks round with its disclosed east detour.
+## Walk that ordinary detour back round the pylon's east side first, once.
+const QUARRY_POCKET := Vector2(399.0, 1802.0)
+const QUARRY_REVERSE_DETOUR: Array[Vector2] = [Vector2(403.0, 1797.5), Vector2(408.5, 1803.5), Vector2(406.5, 1809.5)]
+var _quarry_reverse_detoured := false
+
+
+func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
+	var here := Vector2(_player.global_position.x, _player.global_position.z)
+	if not _quarry_reverse_detoured and here.distance_to(QUARRY_POCKET) < 14.0 and at.y > here.y + 20.0:
+		_quarry_reverse_detoured = true
+		_receipt("quarry_reverse_east_detour", {"from": _player.global_position, "to": at,
+			"waypoints": str(QUARRY_REVERSE_DETOUR),
+			"reason": "B2 pocket on the return: ordinary walk round the pylon's east side, as outbound"})
+		for point: Vector2 in QUARRY_REVERSE_DETOUR:
+			if not await super._walk_ground(point, 1.5):
+				return false
+	return await super._walk_ground(at, radius)
+
+
 func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
 	if _ending_settled and not _road_care and not _fighting() and INPUT_OWNER.current(_tree) == null:
 		_road_care = true
