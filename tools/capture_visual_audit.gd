@@ -288,9 +288,23 @@ func _run_roster() -> void:
 		_frame(x0, x1, top, 0.0, maxf(size.x, size.z) * 0.4)
 		if body.has_method("play_attack"):
 			body.call("play_attack")
-		for i in (4 if _fast else 9):
+		await process_frame
+		# Deterministic pose: the clip the attack call started, held at 45 %
+		# (between wind-up and contact). "none" means no attack clip resolved,
+		# which is an asset/animation-map finding, not a capture artefact.
+		var ap: AnimationPlayer = null
+		for n in body.find_children("*", "AnimationPlayer", true, false):
+			ap = n as AnimationPlayer
+			break
+		var clip := ""
+		if ap != null and ap.current_animation != "":
+			clip = str(ap.current_animation)
+			ap.seek(ap.get_animation(clip).length * 0.45, true)
+			ap.pause()
+		for i in 3:
 			await process_frame
-		await _shoot("%s_attack" % id, info.merged({"view": "side_attack_pose"}))
+		await _shoot("%s_attack" % id, info.merged({"view": "side_attack_pose", "attack_clip": clip if clip != "" else "none",
+			"anim_player": ap != null}))
 		body.queue_free()
 		await process_frame
 	_trainer.rotation.y = 0.0
@@ -403,8 +417,10 @@ func _run_cast() -> void:
 		await _shoot("%s_rear" % slug, info.merged({"view": "rear34_idle"}))
 		# Face close-up: named NPCs need distinct hair/face treatment.
 		person.rotation.y = 0.0
-		var head := Vector3(0.9, maxf(h, 1.0) * 0.93, 0.0)
-		_camera.global_position = head + Vector3(0.0, 0.05, 1.3)
+		var top := RENDER_BOUNDS.measure(person)
+		var top_y := (top.position.y + top.size.y) * person.global_transform.basis.get_scale().y if top.size.y > 0.1 else maxf(h, 1.0)
+		var head := Vector3(0.9, top_y - 0.16, 0.0)
+		_camera.global_position = head + Vector3(0.0, 0.02, 0.95)
 		_camera.look_at(head, Vector3.UP)
 		await _shoot("%s_face" % slug, info.merged({"view": "face"}))
 		person.queue_free()
