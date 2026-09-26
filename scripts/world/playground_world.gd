@@ -31,6 +31,7 @@ const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
 const STRUCTURE_VISIBILITY_RANGE := preload("res://scripts/world/structure_visibility_range.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
 const WATER := preload("res://scripts/world/water.gd")
 const VILLAGE := preload("res://scripts/world/village.gd")
 const PROPS := preload("res://scripts/world/props.gd")
@@ -2178,12 +2179,7 @@ func _place_farm_plots() -> void:
 ## silently missed, and the creature was never spawned at all — no error, no
 ## body, just an encounter that could not happen.
 func ground_height_at(x: float, z: float) -> float:
-	if _terrain == null:
-		return NAN
-	var data: Object = _terrain.get("data")
-	if data == null:
-		return NAN
-	return float(data.call("get_height", Vector3(x, 0.0, z)))
+	return TERRAIN_HEIGHT.height_at(_terrain, x, z)
 
 
 func _load_terrain_config() -> Dictionary:
@@ -2205,7 +2201,7 @@ func _place_player() -> void:
 		return
 
 	var spawn := Vector3(_player.global_position.x, 0.0, _player.global_position.z)
-	var ground: float = data.call("get_height", spawn)
+	var ground: float = TERRAIN_HEIGHT.height_from(data, float(_terrain.get("vertex_spacing")), spawn.x, spawn.z)
 	if is_nan(ground):
 		push_warning("no terrain height at spawn; leaving the player where it is")
 		return

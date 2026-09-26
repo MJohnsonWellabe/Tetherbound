@@ -1,0 +1,24 @@
+PASS: Config declares a calmer restored_calm_scale (0.50)
+PASS: Production Water world builds
+PASS: Fixture does not pre-set water_currents_restored
+BEFORE calm_scale=1.000 current_speed_m_s=1.3000 at (425.0, 0.0, 1920.0)
+PASS: Unrestored current foam runs at calm_scale 1.0
+PASS: Unrestored Tidal Cradle -> Salt Crown current pushes at authored strength
+PASS: Freed Guardian chamber offers its Decline interaction
+PASS: First press only arms the decline
+PASS: Confirmed Guardian decline settles the world: water_currents_restored set by water_guardian_reward.refuse()
+PASS: World journal persists water_currents_restored at settlement
+AFTER calm_scale=0.500 current_speed_m_s=0.3250 at (425.0, 0.0, 1920.0)
+PASS: Restored foam switches calm_scale to 0.50
+PASS: Restored physics current is calmer at the same point
+PASS: Completed chain saved through production Game.save_game(1)
+PASS: Previous Water world destroyed before the reload
+PASS: Fresh reset_for_new_game state holds none of the chain's results
+PASS: Production Game.load_game(1) restores the save
+PASS: Reload resumes the same character in Water
+PASS: Fresh production Water world rebuilt from the loaded save
+RELOAD calm_scale=0.500 current_speed_m_s=0.3250 at (425.0, 0.0, 1920.0)
+PASS: Reloaded world keeps water_currents_restored
+PASS: Rebuilt current foam starts calm after reload
+PASS: Rebuilt physics current stays calm after reload
+Tidewake current restore smoke: 20 checks, 0 failures

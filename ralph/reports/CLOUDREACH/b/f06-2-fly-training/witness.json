@@ -1,0 +1,24 @@
+{
+  "accelerated": true,
+  "attempts": [],
+  "combat_mode": "mechanics_only_test_lethal",
+  "criterion": "F06#2",
+  "denials": [],
+  "failure": [
+    {
+      "kind": "FAIL",
+      "message": "Walking stalled toward (-260.0, 235.0, 790.0)",
+      "position": "(-129.1493, 205.5938, 704.3981)",
+      "simulated_seconds": 322.4,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 422.420168
+    }
+  ],
+  "landings": [],
+  "passed": false,
+  "recoveries": [],
+  "stage": "lower_west_anchor",
+  "start_state": "committed completed-Meadows fixture (smoke_cloudreach_continuous default; earned c1_arrival save not yet available)",
+  "trial_escape_violations": 0,
+  "upper_violations": 0
+}

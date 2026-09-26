@@ -252,6 +252,12 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 			_ids.clear()
 			if action in ["load_save", "boot"]:
 				_characters.erase(peer)
+			# Learn every live peer's character now, while its session is up.
+			# `$characterN` was learned only when first used, so a scenario that
+			# first names a guest after its host restarted (the guest is back at
+			# the title with no session to ask) could never resolve it (F06#5).
+			for i in _peers.size():
+				await _learn_identity(i)
 	var verdict := str(result.get("verdict", ""))
 	var ok := want == "any" or verdict == want
 	var data_ok := expected.is_empty() or _subset(expected, result.get("data", {}))

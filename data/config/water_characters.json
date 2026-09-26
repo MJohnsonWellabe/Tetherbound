@@ -237,10 +237,11 @@
       "model": "res://assets/characters/trader/trader_lod0.glb",
       "portrait": "res://assets/ui/portraits/corin.png",
       "portrait_mode": "installed_body_render",
+      "_why_offset": "F15#2 (A7 on the measured return, tests/test_tidewake_return_cadence.gd): moved from 9.6 m off the Reedhaven spine to 2.5 m beside it at the same point (world -13.34, 468.56; about 2 degrees, dry), so his post-restoration line sits inside the 3.8 m greet prompt on the walk home. Without him the Brine Steps camp -> Stormwood gate stretch had no live offer for 151 s; with him it splits into 78 s + 85 s.",
       "island_local_offset": [
-        -9.0,
+        -13.34,
         0.0,
-        23.0
+        28.56
       ],
       "greeting": "water_rowan_pre",
       "greeting_when": [
@@ -414,10 +415,11 @@
       "model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
       "portrait": "res://assets/ui/portraits/wandering_trainer.png",
       "portrait_mode": "installed_body_render",
+      "_why_offset": "Tidewake #310: moved from the 79-degree face above the basin (700, 1542), unreachable on foot, to gentle dry ground (about 6 degrees, 5.7 m) 20 m inland of shellwatch_to_tidal_cradle_arrival, where a landing player meets him.",
       "island_local_offset": [
+        -145.0,
         0.0,
-        0.0,
-        12.0
+        -168.0
       ],
       "greeting": "water_otto_pre",
       "_why_greeting_when": "side_water_cradle_care: acknowledgement once the return is recorded (before or after restoration); a wait line when the nest is mined but this character has no swimmer and Aquaryn's trial is unsettled; a reminder while the lead is open. The guarded lead/return conversations take priority.",
@@ -582,10 +584,11 @@
       "model": "res://assets/characters/innkeeper/innkeeper_lod0.glb",
       "portrait": "res://assets/ui/portraits/wilhelm.png",
       "portrait_mode": "installed_body_render",
+      "_why_offset": "Tidewake #310: moved from the Veilfall massif (191, 616 m up) to the Lastlight camp, 3 m west of the lamp he belongs to (world 375.2, 3817.9; about 10 degrees, dry).",
       "island_local_offset": [
-        -9.0,
+        175.2,
         0.0,
-        23.0
+        -322.1
       ],
       "greeting": "water_halen_pre",
       "_why_greeting_when": "side_water_lastlight_shelter: a reminder while the delivery is open, a rest request once the shelter stands, and the acknowledgement after a companion rested there (before or after restoration). The guarded lead takes priority.",
@@ -1215,7 +1218,7 @@
       "_comment": "Bex guards the west control on the physically proven arrival spine; the former central-crown placement required an unmarked roughly 660m island loop around a graded cut before it could be approached. Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
-      "id": "water_trainer_calder",
+      "id": "water_trainer_calder", "foe_power_multiplier": 2.2,
       "display_name": "Calder",
       "npc_entity_id": "water_trainer_calder",
       "island_id": "sluice_isle",
@@ -1289,7 +1292,7 @@
       "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
-      "id": "water_trainer_tess",
+      "id": "water_trainer_tess", "foe_power_multiplier": 2.2,
       "display_name": "Tess",
       "npc_entity_id": "water_trainer_tess",
       "island_id": "deep_watch",
@@ -1362,7 +1365,7 @@
       "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
-      "id": "water_trainer_venn",
+      "id": "water_trainer_venn", "foe_power_multiplier": 1.9,
       "display_name": "Officer Venn",
       "npc_entity_id": "water_venn",
       "island_id": "veilfall",
@@ -1479,7 +1482,7 @@
       "_comment": "Win is spoken after the player wins. Dialogue has no victory effect: EncounterHost must own results. Named profile is intent for integration into existing combat overrides, not an implemented AI selector."
     },
     {
-      "id": "water_trainer_nerissa",
+      "id": "water_trainer_nerissa", "foe_power_multiplier": 1.8,
       "display_name": "Captain Nerissa",
       "npc_entity_id": "water_nerissa",
       "island_id": "veilfall",

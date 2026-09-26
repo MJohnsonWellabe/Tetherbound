@@ -37,6 +37,7 @@ const FAR_SHADER_PATH := "res://shaders/far_cover.gdshader"
 ## below. The two systems have to exclude the same building ground, and the way
 ## to guarantee that is to read one list rather than keep two in step.
 const SCATTER_RULES := preload("res://scripts/world/scatter_rules.gd")
+const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
 
 ## Read once and cached, the same way `scatter_rules.gd::config()` does it, so a
 ## test can ask what the config says without standing a world up.
@@ -2122,12 +2123,7 @@ func _field_materials() -> Array[ShaderMaterial]:
 ## `playground_world.gd::ground_height_at` uses; not shared with it directly
 ## because that lives outside this lane's file scope.
 func _terrain_height_at(x: float, z: float) -> float:
-	if _terrain == null:
-		return NAN
-	var data: Object = _terrain.get("data")
-	if data == null:
-		return NAN
-	return float(data.call("get_height", Vector3(x, 0.0, z)))
+	return TERRAIN_HEIGHT.height_at(_terrain, x, z)
 
 
 ## The real min/max terrain height under a `radius`-metre square centred on

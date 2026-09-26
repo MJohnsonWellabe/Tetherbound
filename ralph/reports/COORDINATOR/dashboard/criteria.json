@@ -27,7 +27,8 @@
      "text": "Usable side lane serves road-facing houses, berry field, grove and stone work",
      "status": "in_progress",
      "evidence": "Stoneyard/Berry/Grove lanes and fingerposts on ralph/f01-village-road-plan; berry-node move reverted (Gate-F segments pin node 10)",
-     "gap": "Berry nodes still in cottage_b; verify in engine. Now on main."
+     "gap": "Berry nodes still in cottage_b; verify in engine. Now on main.",
+     "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress."
     },
     {
      "text": "Normal-controller DAY walk reaches every opening NPC, camp and gate",
@@ -45,13 +46,15 @@
      "text": "All three starters separately complete naming, practice fight/catch, three-bed readiness, three played tournament rounds",
      "status": "partial",
      "evidence": "smoke_four_biome_continuous --through-bridge passed once (run 4) with one starter; earned-bridge/RESULT.md on main",
-     "gap": "Separate witnesses for the other two starters"
+     "gap": "Separate witnesses for the other two starters",
+     "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress. Fixture fixed to grant non-starters in batch #316."
     },
     {
      "text": "Opening/tournament state survives save/reload",
      "status": "partial",
      "evidence": "Two-peer --tournament leg 57/0 incl. production reload (proxy-ground-plane report, main); fixture party",
-     "gap": "Reload on the earned solo opening path for each starter"
+     "gap": "Reload on the earned solo opening path for each starter",
+     "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress."
     },
     {
      "text": "Opening/tournament state survives two-peer join",
@@ -80,31 +83,35 @@
      "text": "Fresh ordinary save reaches and crosses the South Bridge with no teleport/state injection",
      "status": "met",
      "evidence": "Batch 13: fresh ordinary save crosses the South Bridge with no teleport | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Continues through Quarry/Warrens on the same fresh save",
      "status": "partial",
      "evidence": "test_meadows_earned_warrens_segment.gd; two-peer Warrens earned approach/exit 42/0 (fixture entrance seat)",
-     "gap": "No continuous fresh-save --through-warrens pass recorded"
+     "gap": "No continuous fresh-save --through-warrens pass recorded",
+     "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress."
     },
     {
      "text": "Continues through Sela/relay crossing",
      "status": "partial",
      "evidence": "test_meadows_earned_relay_segment.gd; two-peer --relay-crossing leg 46/0 with proxy fix (fixture fight seat)",
-     "gap": "Continuous fresh-save pass"
+     "gap": "Continuous fresh-save pass",
+     "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress."
     },
     {
      "text": "Continues through three Sigils and the Hall in order",
      "status": "partial",
      "evidence": "test_meadows_earned_hall_segment.gd; two-peer --hall leg 46/0 (entrance seat fixture)",
-     "gap": "Continuous fresh-save pass through Hall"
+     "gap": "Continuous fresh-save pass through Hall",
+     "note": "Seed-15 continuous route through the Hall; opening flake fixed. Meadows route (#286)."
     },
     {
      "text": "Each transition, reward and recovery survives reload on that route",
      "status": "partial",
      "evidence": "Per-leg production save/reload with agreeing state hashes in two-peer legs (main)",
-     "gap": "Reload checks on the continuous earned route"
+     "gap": "Reload checks on the continuous earned route",
+     "note": "Same run as F02#3, with reloads at each transition. Meadows route (#286)."
     },
     {
      "text": "Solo, two-loss and four-character ledgers solvent",
@@ -116,10 +123,10 @@
      "text": "No repeated wilds required",
      "status": "met",
      "evidence": "Batch 13: practice-wild supply; fresh saves earn L5 from non-repeated wilds (3 seeds) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
-     "text": "WORLD \u00a73.1 route spacing and A7 measured on the same route",
+     "text": "WORLD §3.1 route spacing and A7 measured on the same route",
      "status": "not_started",
      "evidence": "No spacing/A7 measurement on the earned route found",
      "gap": "Measure on continuous route"
@@ -144,19 +151,20 @@
      "text": "At least six activities show a visible lure",
      "status": "partial",
      "evidence": "F03 record (MEADOWS-PAYOFFS REPORT, main): 4 outright + 2 conditional; lures file-checked; runtime staged",
-     "gap": "Unstaged ordinary-discovery witness"
+     "gap": "Unstaged ordinary-discovery witness",
+     "note": "r6 lure judge in progress. Meadows activities (#289)."
     },
     {
      "text": "Each is a distinct optional action",
      "status": "partial",
-     "evidence": "Record lists actions; 4 complete on trainer defeats \u2014 'distinct' left as judgement",
+     "evidence": "Record lists actions; 4 complete on trainer defeats — 'distinct' left as judgement",
      "gap": "Independent judgement on distinctness"
     },
     {
      "text": "Useful once-only reward and acknowledgement",
      "status": "met",
      "evidence": "Batch 13: Doss repeat step fixed; usefulness judged | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014",
+     "gap": "—",
      "note": "Batch 17 (#269) merged 11:39; full-ci run 36237141477 green on 05b6d86b; only the render workflow/docs landed between"
     },
     {
@@ -177,19 +185,19 @@
      "text": "No story gate requires a detour",
      "status": "met",
      "evidence": "test_no_qualified_activity_gates_or_is_credited_by_the_main_route passes (main)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Exact source IDs and rejected candidates recorded",
      "status": "met",
      "evidence": "F03 candidate table with IDs and rejections (cart, Farro, Pond alpha, Ironwood) on main",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Vault Elder and Hall alpha have local objective rows",
      "status": "met",
      "evidence": "main 3a01cdeb: objectives.json band2_warrens_vault_elder, band5_hall_alpha_galecrest",
-     "gap": "\u2014",
+     "gap": "—",
      "missing": ""
     }
    ]
@@ -242,7 +250,7 @@
      "text": "Specified tell/recovery timing",
      "status": "met",
      "evidence": "test_named_fight_tell_timing.gd (resolves effective tell/recovery through the game's own merge; pinned to BOSSES with citation check): 6 tests, 230 assertions pass on main 5132387d (coordinator local run)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Distinct aftermath per fight",
@@ -290,21 +298,21 @@
      "text": "Solo accept at capacity (five) via ceremony: no sixth slot, no accidental release",
      "status": "met",
      "evidence": "main 10b635d3: smoke_veridian_offer_choice (walked to each prompt, save/reload after each answer), CI job verify-veridian-offer green on 377cec6c (run 36160763068); independent evidence audit",
-     "gap": "\u2014",
+     "gap": "—",
      "missing": ""
     },
     {
      "text": "Solo refuse paths (space and capacity) complete",
      "status": "met",
      "evidence": "main 10b635d3: smoke_veridian_offer_choice (walked to each prompt, save/reload after each answer), CI job verify-veridian-offer green on 377cec6c (run 36160763068); independent evidence audit",
-     "gap": "\u2014",
+     "gap": "—",
      "missing": ""
     },
     {
      "text": "Full refusal produces the saved herd display",
      "status": "met",
      "evidence": "Batch 13 (0ca7bb7b): herd grouped around the stag (meadow_healing.json) + durable two-peer display | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Only fight participants are offered",
@@ -337,7 +345,7 @@
      "text": "Physical gate opens exactly once and carries the same five into Cloudreach",
      "status": "met",
      "evidence": "smoke_net_veridian_same_five (two peers, CI net shard, green on #246) carries the same five UIDs, no sixth, through the physical crossing; gate-once latch smoke_rift_gate_opens_once in CI; on main 5c8948ea",
-     "gap": "\u2014",
+     "gap": "—",
      "missing": "Earned save; two peers"
     }
    ]
@@ -366,19 +374,22 @@
      "text": "Ordinary foot path traverses all six regions",
      "status": "partial",
      "evidence": "Historical smoke_cloudreach_continuous / arrival walk (CI); not from earned save",
-     "gap": "Current earned foot traversal witness"
+     "gap": "Current earned foot traversal witness",
+     "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
      "text": "Fly training, landing and invalid-landing recovery",
      "status": "partial",
      "evidence": "smoke_fly_traversal 30/0, smoke_cloudreach_fall_recovery pass; Fly anchor follows ride (batch 3)",
-     "gap": "Normal-input training witness from earned route"
+     "gap": "Normal-input training witness from earned route",
+     "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
      "text": "Loaner path does not bypass gates or lose creatures",
      "status": "partial",
      "evidence": "Finale exam-pilot release/restore fixes + test_cloudreach_finale one-frame-later release (main fe07d0d2)",
-     "gap": "Normal-input loaner traversal witness"
+     "gap": "Normal-input loaner traversal witness",
+     "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
      "text": "Remount works (owner report) with no gate bypass",
@@ -417,7 +428,7 @@
    },
    "criteria": [
     {
-     "text": "Six WORLD \u00a711 activities, one per principal region, pass \u00a75",
+     "text": "Six WORLD §11 activities, one per principal region, pass §5",
      "status": "in_progress",
      "evidence": "Audit: none fully qualified; couriers/aeries payoffs on ralph/cloudreach-activity-rewards; waycamp and latch unbuilt",
      "gap": "Bells map reveal, circuit TM, two unbuilt activities"
@@ -426,13 +437,14 @@
      "text": "Each payoff useful to retained five with saved state",
      "status": "met",
      "evidence": "Batch 13: two-peer activity payoff witness (smoke_net_cloudreach_activity_payoffs) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Measured 885-second no-action stretch removed",
      "status": "in_progress",
      "evidence": "Baseline measured (Windscar return 1,609 m / 322 s); route edits drafted",
-     "gap": "Coordinator ruling (a): restore the XP on the shortened legs, then the ledger test and an A7 re-measure"
+     "gap": "Coordinator ruling (a): restore the XP on the shortened legs, then the ledger test and an A7 re-measure",
+     "note": "Verifier rejected the batch 26 claim: data only, with no engine re-walk or committed A7 re-measure. Cloudreach lane (#311)."
     },
     {
      "text": "Every A7 empty interval gone",
@@ -467,19 +479,20 @@
      "text": "Veyra's team and flight-relay exam completed by ordinary input",
      "status": "partial",
      "evidence": "Finale pending/restore fixes and test_cloudreach_finale on main fe07d0d2; smoke_cloudreach_finale not in CI, fails in lane container",
-     "gap": "Normal-input finale witness passing"
+     "gap": "Normal-input finale witness passing",
+     "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
      "text": "Wind roads, Wings/shrine, Stormwood key persist through solo reload",
      "status": "met",
      "evidence": "smoke_cloudreach_persistence_tail in CI (green on #246): wind roads, Wings/shrine and Stormwood key written once and restored after disk reload with nothing re-granted, plus 2 negative controls; on main 5c8948ea",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Same persist through two-peer reload/reconnect without double grants",
      "status": "met",
      "evidence": "Batch 14: client routes Veyra's win to the host; no client world-flag writes (unit + reconnect witness) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Correct high-perch production camera",
@@ -491,13 +504,13 @@
      "text": "Settlements and cliff identity pass C2 visual matrix",
      "status": "failing",
      "evidence": "36-frame matrix blind verdict A: no; B: yes at lower tier (ralph/cloudreach-frame-matrix)",
-     "gap": "Work orders M1\u2013M12 plus art assets"
+     "gap": "Work orders M1–M12 plus art assets"
     },
     {
      "text": "Cloudreach presents no legendary offer",
      "status": "met",
      "evidence": "Batch 13: test_cloudreach_finale / no-legendary-offer closure 36/208 green | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     }
    ]
   },
@@ -525,13 +538,14 @@
      "text": "Lawful Surge phases, grounded paths, rod safe radii",
      "status": "partial",
      "evidence": "Existing Surge clock/lightning/rod safety (baseline check); Stormwood suites pass",
-     "gap": "Traversal witness under each phase"
+     "gap": "Traversal witness under each phase",
+     "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
      "text": "Arch pairs; a closed Arch cannot be bypassed",
      "status": "met",
      "evidence": "smoke_stormwood_closed_arch_bypass.gd on main 5132387d: 8 approaches with jumps and 5 Rootgate lines cannot bypass; the opened pair walks through. 9 passed, 0 failed (coordinator local run)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Four loops, three shortcuts, five pockets, alternate routes physically traversable",
@@ -543,7 +557,7 @@
      "text": "Two peers and reload retain the same world gates",
      "status": "met",
      "evidence": "Rendered two-peer PROOF.md PASS stormwood_f09_arch_gates_two_peer_reload (52 rows, 0 FAIL): a relit Arch pair, a dark pair and the Rootgate keep their state for both peers through save/reload; on main 5c8948ea",
-     "gap": "\u2014"
+     "gap": "—"
     }
    ]
   },
@@ -562,16 +576,17 @@
    },
    "criteria": [
     {
-     "text": "All six selected chains satisfy \u00a75 (lure/action/payoff/acknowledgement)",
+     "text": "All six selected chains satisfy §5 (lure/action/payoff/acknowledgement)",
      "status": "partial",
      "evidence": "Crown Remembers, Pim's Parcels, Dark Arches, Raise a Road landed (batch 1); Deepwood Circuit historical; Glass for Bryn untouched",
-     "gap": "Bryn chain; ordinary-play and map-layer gaps"
+     "gap": "Bryn chain; ordinary-play and map-layer gaps",
+     "note": "Dark Arches map payoff and six-chain §5. Stormwood-B (#303)."
     },
     {
      "text": "Persistent receipts for each chain",
      "status": "met",
      "evidence": "Batch 13: stormwood_f10_side_chain_receipts two-process proof | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Named fights pass C2/C3",
@@ -623,31 +638,34 @@
      "text": "Dynamo and Stormheart resolve from the earned route",
      "status": "partial",
      "evidence": "test_stormwood_earned_dynamo_segment (main, historical); not from C3 save",
-     "gap": "Continuous earned witness"
+     "gap": "Continuous earned witness",
+     "note": "Verifier rejected the claim: Marrow, the Break and Stormheart never ran (stops at core_reached). Stormwood lane (#305)."
     },
     {
      "text": "Eligible peers accept/refuse independently at space and capacity",
      "status": "met",
      "evidence": "Rendered two-peer PROOF.md PASS: mirror (host refuses, guest accepts), host full lets Stormheart go, guest full releases a belt member; ralph/reports/STORMWOOD-PROGRESS/two_peer on main 5132387d",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Through disconnect/reload without duplicated grants",
      "status": "partial",
      "evidence": "Batch 15 (merged 09:18): f11_stormheart_drop_at_ack two-peer proof, host refuses a repeat claim from its own record",
-     "gap": "Disconnect-at-ack half landed; the legacy-receipt owner ruling is still pending"
+     "gap": "Disconnect-at-ack half landed; the legacy-receipt owner ruling is still pending",
+     "note": "Owner ruling: a legacy receipt is UNDECIDED and is re-offered once. Migration in progress, Stormwood lane (#305)."
     },
     {
      "text": "Long Storm aftermath and Spark/shrine persist",
      "status": "partial",
      "evidence": "Consumers mounted (STATE); aftermath blue-sky presentation (main fe07d0d2)",
-     "gap": "Earned persistence witness"
+     "gap": "Earned persistence witness",
+     "note": "Needs a re-run on main from committed code. Stormwood lane (#305)."
     },
     {
      "text": "Once-opened physical Tidewake gate persists",
      "status": "met",
      "evidence": "Rendered two-peer PROOF.md PASS stormwood_f11_waterward_gate_two_peer_reload: host charts, guest opens the Waterward gate once, both keep it through save/reload (the 2 FAIL rows are the expected closed-before baseline); on main 5c8948ea",
-     "gap": "\u2014"
+     "gap": "—"
     }
    ]
   },
@@ -666,34 +684,35 @@
    },
    "criteria": [
     {
-     "text": "Level-0 human swimming, original five, finishes every mandatory hop \u226520% stamina at 15% deviation",
+     "text": "Level-0 human swimming, original five, finishes every mandatory hop ≥20% stamina at 15% deviation",
      "status": "partial",
      "evidence": "Final hop 33.75% at 15.3% (smoke_water_swimming --rest-route); analytic bounds all seven routes (test_water_heightfield)",
-     "gap": "Walked witness for every mandatory hop"
+     "gap": "Walked witness for every mandatory hop",
+     "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
      "text": "Combat pause while swimming",
      "status": "met",
      "evidence": "Batch 12 (#258): f12_combat_pause_two_peer proof PASS (guest and host swimmers) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Drowning and safe shore",
      "status": "met",
      "evidence": "CI on 3c517985 (merged in 5132387d): smoke_water_swimming (gradual drowning, stops on dry landing) OK 22 assertions; smoke_water_player_death 36 checks, 0 failures",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Optional mounted route, dismount/remount",
      "status": "met",
      "evidence": "Batch 14: mount state replicated reliably; host no longer stays MOUNTED (replication test) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Reload agrees",
      "status": "met",
      "evidence": "CI on 3c517985: smoke_water_reconnect_save 21/0 (midwater pose restored, drowning resumes) and smoke_water_mounted_reconnect_save 43/0",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Remote rider identity agrees",
@@ -706,7 +725,7 @@
      "text": "No optional mount opens an uncleared gate",
      "status": "met",
      "evidence": "Batch 14: forced-dismount/recovery never lands past a closed seal (closed-seal unit + sealed-anchor reload smoke) | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     }
    ]
   },
@@ -734,19 +753,22 @@
      "text": "Four land loops and three shortcuts",
      "status": "partial",
      "evidence": "4 land loops walked; Shellwatch and Deep Watch shortcuts pass (RUN5, CI green in batch 22)",
-     "gap": "Reedhaven ramp is no real shortcut: the pre-repair walk is 217-221 m vs 212.6 m; the lane is relocating it with a walked baseline"
+     "gap": "Reedhaven ramp is no real shortcut: the pre-repair walk is 217-221 m vs 212.6 m; the lane is relocating it with a walked baseline",
+     "note": "Evidence verified 20:2x. Counts as MET once a full CI run is green on main; main's full run is red on the smoke_combat regression, and the fix is in progress."
     },
     {
      "text": "Eight reward pockets reachable and paid",
      "status": "partial",
      "evidence": "Six candy pockets walked and claimed in engine (smoke_water_pocket_walk_claim, disclosed arrival fixture) + Cradle nest payout (main fe07d0d2)",
-     "gap": "reed_root_hollow empty; Deep Watch gate unimplemented; long-range lure"
+     "gap": "reed_root_hollow empty; Deep Watch gate unimplemented; long-range lure",
+     "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
-     "text": "Six local chains, one per group, satisfy \u00a75",
+     "text": "Six local chains, one per group, satisfy §5",
      "status": "partial",
      "evidence": "Six chain smokes with production save/reload in CI (batch 22)",
-     "gap": "Normal-play route (lane: PARTIAL)"
+     "gap": "Normal-play route (lane: PARTIAL)",
+     "note": "Blocked on moving Otto and Halen to reachable ground (Tidewake lane). Tidewake-B (#310)."
     },
     {
      "text": "Four-character supplies solvent without new catch or repeated wild",
@@ -758,7 +780,8 @@
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
      "status": "failing",
      "evidence": "Tide-race shader on main fe07d0d2; blind judges: surf read 'no' then 'weakly' (WATER-HUMAN-ROUTE); stop rule reached",
-     "gap": "Readable currents; docks/Veilfall matrix"
+     "gap": "Readable currents; docks/Veilfall matrix",
+     "note": "Art: Codex lane (queue V1–V3). Dock lanterns (V1) landing in #316."
     }
    ]
   },
@@ -780,7 +803,8 @@
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "partial",
      "evidence": "smoke_water_named_c2c3 (batch 23): 1,488 fights; named wilds, floor and ladder pass C2 and measured C3",
-     "gap": "Top fights: Aquaryn/Ripplet 0.61 ratio; Calder/Tess need the authorized damage tunable"
+     "gap": "Top fights: Aquaryn/Ripplet 0.61 ratio; Calder/Tess need the authorized damage tunable",
+     "note": "Damage tunable for Calder, Tess, Venn and Nerissa; 24-seed run. Tidewake lane (#296)."
     },
     {
      "text": "Veilfall and Guardian pass C2/C3",
@@ -792,7 +816,8 @@
      "text": "Water/current network visibly changes and persists",
      "status": "partial",
      "evidence": "Relic shrine placement/activation 35-check (scorecard)",
-     "gap": "Visible current restoration unproven"
+     "gap": "Visible current restoration unproven",
+     "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
      "text": "Each actual participant gets own once-only accept/refuse at space/capacity",
@@ -805,13 +830,13 @@
      "text": "Never an owned sixth",
      "status": "met",
      "evidence": "Batch 12 (#258): f14_guardian_never_sixth plus forged-accept proof PASS | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Disconnect/reload cannot duplicate or erase it",
      "status": "met",
      "evidence": "Batch 13: solo-win-then-invite journal (host-only, Nerissa); ledger ids | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     }
    ]
   },
@@ -833,13 +858,13 @@
      "text": "Host and guest settle the dock exchange once",
      "status": "met",
      "evidence": "Batch 11 (#255, 14674ed5): two-peer dock settle, charged once across crash/loss; host checks its own world instance | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Paid-debit crash/retry settles once",
      "status": "met",
      "evidence": "Batch 11 (#255): water_dock_debit wired; crash-after-send/after-delta/commit-lost proofs PASS; unit 16/116 + 5/26 | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Measured physical return without A7 empty interval",
@@ -851,19 +876,20 @@
      "text": "Grandpa acknowledges each current team incl. releases",
      "status": "partial",
      "evidence": "Fixture disk witness; test_homecoming_ending_invariants never names released companion (main)",
-     "gap": "Guest acknowledgement; earned party"
+     "gap": "Guest acknowledgement; earned party",
+     "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
      "text": "Credits occur once",
      "status": "met",
      "evidence": "Rendered two-peer PROOF.md PASS ralph/reports/TIDEWAKE/f15_homecoming_credits_reload: host and guest each roll credits once, acknowledged once, no second roll after disk reload",
-     "gap": "\u2014"
+     "gap": "—"
     },
     {
      "text": "Reload resumes safe completed world with local requests, no fifth key or sequel prompt",
      "status": "met",
      "evidence": "test_homecoming_ending_invariants + credits reload smoke on main (batch 3 CI green 36107136757)",
-     "gap": "\u2014"
+     "gap": "—"
     }
    ]
   }
@@ -937,22 +963,22 @@
  ],
  "cross_cutting": [
   {
-   "id": "Visual bar (\u00a74)",
+   "id": "Visual bar (§4)",
    "status": "failing",
    "note": "Bars A/B open: Meadows R7 key art no/Palworld yes (R9 re-judge pending); Cloudreach matrix A no; Tidewake surf fails."
   },
   {
-   "id": "Ally device performance (\u00a77)",
+   "id": "Ally device performance (§7)",
    "status": "not_started",
    "note": "No ROG Ally hardware measurement for this plan; horizon/flowers cost and 1080p/15W targets unmeasured."
   },
   {
-   "id": "Internet co-op (\u00a77)",
+   "id": "Internet co-op (§7)",
    "status": "blocked",
    "note": "Main fe07d0d2 adds world-save ownership gates, Steam archive cache and portable-across-hosts ENet smoke; rolling export still lacks GodotSteam (opt-in, default off); blocked on AppID/partner access, four accounts on separate networks."
   },
   {
-   "id": "Release reliability (\u00a77)",
+   "id": "Release reliability (§7)",
    "status": "not_started",
    "note": "No five solo / two four-peer exported-binary clears; migration and 10x cycle checks not run as release gate (ENet teardown race fixed in harness only)."
   }
