@@ -131,7 +131,8 @@ func _check_lawful_cycle() -> void:
 	var rules: RefCounted = _lightning.get("rules")
 	_expect(is_equal_approx(float(rules.call("phase_at", 1.0, "cinder_verge").duration), 324.0),
 		"gentle Cinder Verge Calm is 240 x 1.35 = 324 s")
-	var rod_off: Dictionary = rules.call("phase_at", 240.0 * 1.35 * 1.5 + 90.0 + 1.0, "deepwood", true)
+	# Deepwood is not gentle: Calm 240 x 1.5 = 360 s, Building 90 s, then Break.
+	var rod_off: Dictionary = rules.call("phase_at", 240.0 * 1.5 + 90.0 + 1.0, "deepwood", true)
 	_expect(is_equal_approx(float(rules.call("phase_at", 1.0, "deepwood", true).duration), 360.0)
 		and str(rod_off.phase) == "break" and is_equal_approx(float(rod_off.duration), 72.0),
 		"disabled Deepwood rod: Calm 360 s, Break 72 s")
