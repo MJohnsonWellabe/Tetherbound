@@ -8,10 +8,16 @@ const WORLD_SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const DEFAULT_OUTPUT := "res://shots/locations/cloudreach-high-perches-r2"
 const CENTRE := Vector2(900.0, 2700.0)
 const STANDS := [
-	# The flight portal projects beyond the crown edge at z=2680. The evidence
-	# actor must remain on production terrain, so frame that threshold from the
-	# nearest supported south-court point instead of teleporting onto open air.
-	{"id": "south-flight-arrival", "position": Vector2(900.0, 2689.0), "target": Vector2(900.0, 2700.0), "camera_back_m": 12.0, "camera_lateral_m": 0.0, "aim_up_m": 9.5},
+	# F08#3: the south arrival used to be a free camera parked 12 m behind the
+	# stand, i.e. south of the non-colliding arrival portal, so a solid pier
+	# filled ~80% of the frame. It now uses the PRODUCTION CameraRig: the trainer
+	# has come through the portal and landed on the apron, the rig looks into the
+	# court exactly as a player's stick would, and the spring arm resolves against
+	# the portal's lens-only camera stops.
+	{"id": "south-flight-arrival", "position": Vector2(900.0, 2693.0), "target": Vector3(900.0, 1026.0, 2712.0), "rig": true},
+	# Worst case for the lens: a trainer landed just inside the portal beside a
+	# pier, so the default 5 m arm would end inside the masonry.
+	{"id": "portal-threshold", "position": Vector2(896.0, 2689.0), "target": Vector3(900.0, 1026.0, 2710.0), "rig": true},
 	{"id": "southwest-court-oblique", "position": Vector2(886.0, 2689.0), "target": Vector2(900.0, 2701.0), "camera_back_m": 10.0, "camera_lateral_m": -3.0, "aim_up_m": 8.0},
 ]
 
@@ -19,6 +25,9 @@ var _output := DEFAULT_OUTPUT
 var _world: Node3D
 var _player: CharacterBody3D
 var _camera: Camera3D
+var _evidence_camera: Camera3D
+var _rig: SpringArm3D
+var _rig_camera: Camera3D
 var _look: Node
 var _presentation: Node3D
 var _records: Array[Dictionary] = []
@@ -73,16 +82,20 @@ func _run() -> void:
 		return
 	if _collision_descendants(_presentation) != 0:
 		_fail("High Perches presentation changed collision")
-	var production_rig := _world.get_node_or_null(^"CameraRig") as SpringArm3D
-	if production_rig != null:
-		production_rig.set_process(false)
-		production_rig.set_physics_process(false)
-	_camera = Camera3D.new()
-	_camera.name = "HighPerchesEvidenceCamera"
-	_camera.fov = 65.0
-	_camera.far = 3000.0
-	_world.add_child(_camera)
-	_camera.make_current()
+	_rig = _world.get_node_or_null(^"CameraRig") as SpringArm3D
+	_rig_camera = _world.get_node_or_null(^"CameraRig/Camera3D") as Camera3D
+	if _rig == null or _rig_camera == null:
+		_fail("production CameraRig is missing")
+		_finish()
+		return
+	_rig.set_process(false)
+	_rig.set_physics_process(false)
+	_evidence_camera = Camera3D.new()
+	_evidence_camera.name = "HighPerchesEvidenceCamera"
+	_evidence_camera.fov = 65.0
+	_evidence_camera.far = 3000.0
+	_world.add_child(_evidence_camera)
+	_camera = _evidence_camera
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
 	_player.velocity = Vector3.ZERO
 	_hide_overlays()
@@ -98,6 +111,10 @@ func _run() -> void:
 
 
 func _pose(stand: Dictionary) -> bool:
+	if bool(stand.get("rig", false)):
+		return await _pose_rig(stand)
+	_camera = _evidence_camera
+	_camera.make_current()
 	var at := stand.position as Vector2
 	var target := stand.target as Vector2
 	var ground := _surface(at)
@@ -125,6 +142,36 @@ func _pose(stand: Dictionary) -> bool:
 	for _frame in 12:
 		await process_frame
 	return _player.global_position.distance_to(Vector3(at.x, ground + 0.22, at.y)) <= 0.1
+
+
+## Production framing: the real spring arm behind the real trainer, aimed the
+## way galefoot/realm-gate receipts aim it (camera_rig yaw/pitch convention).
+func _pose_rig(stand: Dictionary) -> bool:
+	_camera = _rig_camera
+	_camera.make_current()
+	var at := stand.position as Vector2
+	var ground := _surface(at)
+	if not is_finite(ground):
+		_fail("stand %s has no production ground" % at)
+		return false
+	_player.global_position = Vector3(at.x, ground + 0.10, at.y)
+	_player.velocity = Vector3.ZERO
+	var target := stand.target as Vector3
+	var sightline := target - _player.global_position
+	var model := _player.get_node_or_null(^"Model") as Node3D
+	if model != null:
+		model.global_rotation.y = atan2(-sightline.x, -sightline.z)
+	_rig.global_position = _player.global_position + Vector3.UP * 1.55
+	var pitch := clampf(atan2(sightline.y, Vector2(sightline.x, sightline.z).length()),
+		deg_to_rad(-12.0), deg_to_rad(15.0))
+	_rig.rotation = Vector3(pitch, atan2(-sightline.x, -sightline.z), 0.0)
+	_player.reset_physics_interpolation()
+	_rig.reset_physics_interpolation()
+	_camera.reset_physics_interpolation()
+	_hide_overlays()
+	for _frame in 24:
+		await physics_frame
+	return Vector2(_player.global_position.x, _player.global_position.z).distance_to(at) <= 0.6
 
 
 func _pin_time(time_name: String) -> Dictionary:
@@ -168,6 +215,7 @@ func _capture(frame_id: String, stand_id: String, observed: Dictionary) -> void:
 	_records.append({"frame_id": frame_id, "file": path, "stand_id": stand_id,
 		"observed_clock": observed, "player_position": _vec3(_player.global_position),
 		"camera_position": _vec3(_camera.global_position), "camera_fov": _camera.fov,
+		"camera": "production_rig" if _camera == _rig_camera else "evidence", "rig_spring_hit_length": _rig.get_hit_length(),
 		"presentation_roles": roles, "presentation_collision_count": _collision_descendants(_presentation),
 		"bytes": FileAccess.get_file_as_bytes(path).size()})
 	print("HIGH PERCHES CAPTURE %s -> %s" % [frame_id, path])
@@ -230,7 +278,7 @@ func _finish() -> void:
 	var complete := _failures.is_empty() and _records.size() == STANDS.size() * 2
 	var manifest := {"schema_version": 1, "scene": "res://scenes/world/cloudreach_cliffs.tscn",
 		"named_location": "The High Perches",
-		"fixture_disclosure": "Production Cloudreach world, terrain, High Perches landmark, player and WorldLook. HUD/modal overlays are hidden, player locomotion is frozen on two real crown stands, and a fixed 65-degree evidence camera frames the south Fly arrival and court. No route, terrain, encounter, progression, landmark or actor transform is injected.",
+		"fixture_disclosure": "Production Cloudreach world, terrain, High Perches landmark, player and WorldLook. HUD/modal overlays are hidden, player locomotion is frozen on two real crown stands, and the south Fly arrival uses the production CameraRig spring arm while the court oblique keeps a fixed 65-degree evidence camera. No route, terrain, encounter, progression, landmark or actor transform is injected.",
 		"resolution": [root.size.x, root.size.y], "records": _records, "failures": _failures,
 		"complete": complete, "capture_finished_utc": Time.get_datetime_string_from_system(true)}
 	var file := FileAccess.open(absolute.path_join("manifest.json"), FileAccess.WRITE)

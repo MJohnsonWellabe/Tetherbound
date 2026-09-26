@@ -3971,6 +3971,9 @@ func _build_high_perches(root: Node3D) -> void:
 	presentation.name = "HighPerchesPresentation"
 	root.add_child(presentation)
 	presentation.call("build", _materials)
+	# Lens-only stops for the non-colliding arrival portal (F08#3): the production
+	# camera arm stops in front of the piers instead of sitting inside them.
+	root.add_child(presentation.call("build_camera_stops") as Node3D)
 	_cover_exclusions.append({"kind":"ellipse", "centre":root.global_position,
 		"half":Vector2(17.5,17.5), "rotation":0.0})
 	_cover_exclusions.append({"centre":root.to_global(Vector3(0.0,0.0,-20.0)),
