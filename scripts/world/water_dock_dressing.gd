@@ -271,7 +271,12 @@ func _glow(node: Node, energy: float) -> void:
 
 
 func _override_all(node: Node, material: Material) -> void:
-	for found: Node in node.find_children("*", "MeshInstance3D", true, false):
+	# glTF scenes can have a MeshInstance3D as their root. find_children()
+	# excludes that root, so the lantern kept its original pale trim material.
+	var meshes: Array[Node] = node.find_children("*", "MeshInstance3D", true, false)
+	if node is MeshInstance3D:
+		meshes.push_front(node)
+	for found: Node in meshes:
 		var mesh_instance := found as MeshInstance3D
 		if mesh_instance.mesh == null:
 			continue
