@@ -53,3 +53,4 @@ ok   18.0 px  (27)  Root/Frame/Panel/Body/Content/@VBoxContainer@6/@HBoxContaine
 ok   18.0 px  (27)  Root/Frame/Panel/Body/Content/@VBoxContainer@6/@HBoxContainer@23/@MarginContainer@121/@ScrollContainer@122/@VBoxContainer@171/@RichTextLabel@170  "A  pick up, then A again to reorder      E / X  "
 ok   20.0 px  (30)  Root/Frame/Panel/Body/Footer  "A / Enter  Select        B / Esc  Close        L"
 ok   frame [P: (96.0, 56.0), S: (1728.0, 968.0)] inside canvas (1920.0, 1080.0)
+detail scroll: at 0 of 616
