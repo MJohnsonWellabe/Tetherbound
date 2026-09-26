@@ -45,9 +45,9 @@ const OFF_ROAD_COST := 3.0
 const LURE_RANGE_M := 160.0
 const STUCK_S := 4.0
 ## Unstick attempts allowed at one blocked spot, and the route progress (m)
-## that counts as having left it.
+## that counts as having left it (more than the 2 x DENSIFY_M an unstick skips).
 const UNSTICK_ATTEMPTS := 6
-const UNSTICK_RESET_M := 8.0
+const UNSTICK_RESET_M := 25.0
 const APPROACH_FRAME_M := 30.0
 
 var _activity := ""
@@ -430,6 +430,10 @@ func _walk() -> void:
 	var best_remaining := INF
 	var best_at := 0.0
 	var unstick := 0
+	## Route distance left when the last unstick fired; the count resets only
+	## after real progress past it (best_remaining is reset to INF after an
+	## unstick, so it cannot be the reference).
+	var unstick_anchor := INF
 	var frame := 0
 	while _clock < WALK_BUDGET_S:
 		await physics_frame
@@ -524,8 +528,9 @@ func _walk() -> void:
 		if remaining < best_remaining - 0.3:
 			# Real progress since the last unstick clears the count: five snags
 			# spread over a kilometre are not one blocked spot.
-			if unstick > 0 and best_remaining - remaining > UNSTICK_RESET_M:
+			if unstick > 0 and unstick_anchor - remaining > UNSTICK_RESET_M:
 				unstick = 0
+				unstick_anchor = INF
 			best_remaining = remaining
 			best_at = _clock
 		elif _clock - best_at > STUCK_S:
@@ -537,6 +542,7 @@ func _walk() -> void:
 				await _capture("stuck")
 				_finish("GAP", "stuck at (%.1f,%.1f), %.1fm of route left" % [here.x, here.y, remaining])
 				return
+			unstick_anchor = remaining
 			await _unstick(unstick)
 			# From the second attempt, aim past the blocked waypoint: a boulder
 			# or trunk on the road centreline is walked around, not into.
