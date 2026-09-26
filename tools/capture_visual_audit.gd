@@ -432,9 +432,240 @@ func _run_cast() -> void:
 
 ## --- region -------------------------------------------------------------------
 
+## Region state.
+var _world: Node3D = null
+var _player: CharacterBody3D = null
+var _rig: SpringArm3D = null
+var _rcam: Camera3D = null
+var _look: Node = null
+var _director: Node = null
+var _rest_pitch_deg := -12.0
+
+## Filled from the landmark survey; one entry per chapter.
+const REGION_SPECS := {}
+
+const HOURS := {"day": 10.0, "dusk": 18.3, "night": 23.0}
+const FLOOR_WAIT_MAX := 600
+const RENDERED_FRAMES := 5
+const POSE_FRAMES := 14
+
+
 func _run_region() -> bool:
-	push_error("visual audit: region section not implemented yet")
-	return false
+	if not REGION_SPECS.has(_region):
+		push_error("visual audit: unknown --region=%s (have %s)" % [_region, REGION_SPECS.keys()])
+		return false
+	var spec: Dictionary = REGION_SPECS[_region]
+	if not await _boot_region(spec):
+		return false
+	var times: Array = spec.get("times", ["day", "dusk", "night"])
+	for row: Dictionary in spec["rows"]:
+		var id := str(row["id"])
+		if not _only.is_empty() and not _only.has(id):
+			continue
+		var row_times: Array = row.get("times", times)
+		for t: String in row_times:
+			await _apply_time(spec, t)
+			await _capture_region_row(row, t)
+	_write_sheet("_sheet_%s_day" % _region, "_day")
+	_write_sheet("_sheet_%s_dusk" % _region, "_dusk")
+	_write_sheet("_sheet_%s_night" % _region, "_night")
+	for extra: String in spec.get("sheet_tags", []):
+		_write_sheet("_sheet_%s_%s" % [_region, extra], "_" + extra)
+	return true
+
+
+func _boot_region(spec: Dictionary) -> bool:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		push_error("visual audit: Game autoload missing")
+		return false
+	game.call("reset_for_new_game")
+	var save_script: Script = load("res://scripts/save/save_game.gd")
+	game.set("save_system", save_script.new("user://capture_visual_audit_%s/" % _region))
+	game.set("current_realm", str(spec["realm"]))
+	var party: RefCounted = game.get("party")
+	for species: String in spec.get("party", ["terrapup", "bramblebun", "mudsnout", "galecrest", "brooktail"]):
+		party.call("add", SPECIES.spawn(species))
+	var progression: RefCounted = game.get("progression")
+	for flag: String in spec.get("flags", []):
+		progression.call("set_flag", flag)
+	var scene: PackedScene = load(str(spec["scene"]))
+	if scene == null:
+		push_error("visual audit: could not load %s" % spec["scene"])
+		return false
+	_world = scene.instantiate() as Node3D
+	root.add_child(_world)
+	current_scene = _world
+	_player = _world.find_child("Player", true, false) as CharacterBody3D
+	_rig = _world.find_child("CameraRig", true, false) as SpringArm3D
+	_rcam = (_rig.get_node_or_null(^"Camera3D") if _rig != null else null) as Camera3D
+	_look = _world.find_child("WorldLook", true, false)
+	if _player == null or _rig == null or _rcam == null:
+		push_error("visual audit: production Player/CameraRig/Camera3D missing in %s" % spec["scene"])
+		return false
+	var cam_cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
+	if cam_cfg is Dictionary:
+		_rest_pitch_deg = float(((cam_cfg as Dictionary).get("camera", {}) as Dictionary).get("pitch_start_deg", -12.0))
+	RenderingServer.render_loop_enabled = false
+	var booted := false
+	for i in 1200:
+		await process_frame
+		_director = _world.find_child("EncounterDirector", true, false)
+		if _director != null and i >= 30:
+			booted = true
+			print("visual audit: %s booted after %d frames" % [_region, i])
+			break
+	if not booted:
+		print("visual audit: WARN EncounterDirector never appeared in %s; continuing with scene only" % _region)
+	for i in 10:
+		await physics_frame
+	_rcam.make_current()
+	if _director != null and _director.has_method("summon_active_creature"):
+		_director.call("summon_active_creature")
+		for i in 60:
+			await physics_frame
+	return true
+
+
+func _apply_time(spec: Dictionary, t: String) -> void:
+	# Stormwood has no day/night (owner ruling, ART_DIRECTION §3.3): its "times"
+	# are storm phases, applied through the spec's phase hook.
+	if spec.has("phase_hook"):
+		var hook: Callable = Callable(self, str(spec["phase_hook"]))
+		await hook.call(t)
+		return
+	if _look == null or not HOURS.has(t):
+		return
+	var hour: float = HOURS[t]
+	if _look.has_method("set_clock_frozen"):
+		_look.call("set_clock_frozen", true)
+	var cycle: Variant = _look.get("_cycle")
+	if cycle != null and _look.has_method("_apply_blended"):
+		_look.set("_elapsed_seconds", float((cycle as Object).call("elapsed_for_hour", hour)))
+		_look.call("_apply_blended", hour)
+	elif _look.has_method("apply_time"):
+		_look.call("apply_time", {"day": "day", "dusk": "golden", "night": "night"}.get(t, "day"))
+
+
+func _ally() -> Node3D:
+	if _director == null or not _director.has_method("ally_body"):
+		return null
+	var body := _director.call("ally_body") as Node3D
+	return body if body != null and is_instance_valid(body) else null
+
+
+func _ground_guess(x: float, z: float, hint_y: float) -> float:
+	for method: String in ["ground_height_near", "ground_height_at"]:
+		if not _world.has_method(method):
+			continue
+		var y: float = NAN
+		if method == "ground_height_near" and _region == "tidewake":
+			y = float(_world.call(method, x, z))
+		elif method == "ground_height_near":
+			y = float(_world.call(method, Vector3(x, hint_y + 3.0, z)))
+		else:
+			y = float(_world.call(method, x, z))
+		if is_finite(y):
+			return y
+	return hint_y
+
+
+func _floor_hit(spot: Vector3, reach: float = 40.0) -> float:
+	var query := PhysicsRayQueryParameters3D.create(spot + Vector3.UP * reach, spot + Vector3.DOWN * reach)
+	query.collision_mask = _player.collision_mask
+	var exclude: Array[RID] = [_player.get_rid()]
+	var ally := _ally()
+	if ally is CollisionObject3D:
+		exclude.append((ally as CollisionObject3D).get_rid())
+	query.exclude = exclude
+	var hit := _world.get_world_3d().direct_space_state.intersect_ray(query)
+	return NAN if hit.is_empty() else float((hit["position"] as Vector3).y)
+
+
+func _seat_player(stand: Vector3) -> Dictionary:
+	RenderingServer.render_loop_enabled = false
+	var y := _ground_guess(stand.x, stand.z, stand.y)
+	var spot := Vector3(stand.x, y, stand.z)
+	var floor_y := NAN
+	for i in FLOOR_WAIT_MAX:
+		_player.global_position = spot + Vector3.UP * 0.3
+		_player.velocity = Vector3.ZERO
+		floor_y = _floor_hit(spot, 6.0)
+		if not is_nan(floor_y):
+			break
+		await physics_frame
+	if is_nan(floor_y):
+		# Water or an uncollided surface: stand on the drawn height, reported.
+		floor_y = y
+	_player.global_position = Vector3(stand.x, floor_y + 0.05, stand.z)
+	_player.velocity = Vector3.ZERO
+	for i in (6 if _fast else 12):
+		await physics_frame
+	return {"feet": _player.global_position, "floor": floor_y}
+
+
+func _capture_region_row(row: Dictionary, t: String) -> void:
+	var id := str(row["id"])
+	var name := "%s_%s_%s" % [_region, id, t]
+	var stands: Array = row.get("stands", [])
+	if stands.is_empty():
+		_skip(name, "row has no stand")
+		return
+	var stand: Vector3 = stands[0]
+	var seat := await _seat_player(stand)
+	var feet: Vector3 = seat["feet"]
+	var target: Vector3 = row.get("target", feet + Vector3.FORWARD * 50.0)
+	if row.has("target_ground"):
+		target.y = _ground_guess(target.x, target.z, target.y) + float(row["target_ground"])
+	var d := target - feet
+	var yaw := atan2(-d.x, -d.z)
+	var pitch_min := deg_to_rad(float(_rig.get("_pitch_min")))
+	var pitch_max := deg_to_rad(float(_rig.get("_pitch_max")))
+	var pitch := deg_to_rad(_rest_pitch_deg)
+	if row.has("pitch_deg"):
+		pitch = deg_to_rad(float(row["pitch_deg"]))
+	else:
+		var pivot_y := feet.y + float(_rig.get("_height"))
+		var flat := maxf(Vector2(d.x, d.z).length(), 0.01)
+		pitch = maxf(pitch, atan2(target.y - pivot_y, flat) - deg_to_rad(_rcam.fov * 0.5 - 6.0))
+	pitch = clampf(pitch, pitch_min, pitch_max)
+	var model := _player.get_node_or_null(^"Model") as Node3D
+	if model != null:
+		var fwd := Basis(Vector3.UP, yaw) * Vector3.FORWARD
+		model.rotation.y = atan2(fwd.x, fwd.z)
+	_rig.set("yaw", yaw)
+	_rig.set("pitch", pitch)
+	_rig.rotation = Vector3(pitch, yaw, 0.0)
+	_rig.global_position = feet + Vector3.UP * float(_rig.get("_height"))
+	_rig.spring_length = float(_rig.get("_distance"))
+	var ally := _ally()
+	var companion := "none"
+	if ally != null:
+		var basis := Basis(Vector3.UP, yaw)
+		var spot := feet + basis * Vector3(1.9, 0.0, -1.6)
+		var fy := _floor_hit(spot, 6.0)
+		ally.global_position = Vector3(spot.x, (fy if is_finite(fy) else feet.y) + 0.05, spot.z)
+		if ally is CharacterBody3D:
+			(ally as CharacterBody3D).velocity = Vector3.ZERO
+		companion = str(ally.get("species_id")) if ally.get("species_id") != null else ally.name
+	for i in POSE_FRAMES - RENDERED_FRAMES:
+		await process_frame
+	RenderingServer.render_loop_enabled = true
+	for i in RENDERED_FRAMES:
+		await process_frame
+	_rig.set("yaw", yaw)
+	_rig.set("pitch", pitch)
+	for node in root.find_children("*", "CanvasLayer", true, false):
+		(node as CanvasLayer).visible = false
+	var dist := Vector2(d.x, d.z).length()
+	await _shoot(name, {"subject": id, "label": row.get("label", id), "region": _region, "time": t,
+		"feet": _v(feet), "target": _v(target), "target_dist_m": snappedf(dist, 0.1),
+		"yaw_deg": snappedf(rad_to_deg(yaw), 0.1), "pitch_deg": snappedf(rad_to_deg(pitch), 0.1),
+		"camera": _v(_rcam.global_position), "companion": companion, "why": row.get("why", "")})
+
+
+func _v(p: Vector3) -> Array:
+	return [snappedf(p.x, 0.1), snappedf(p.y, 0.1), snappedf(p.z, 0.1)]
 
 
 ## --- output -------------------------------------------------------------------
