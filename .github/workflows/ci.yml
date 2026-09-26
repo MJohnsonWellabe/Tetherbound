@@ -1652,7 +1652,10 @@ jobs:
         run: timeout 240s godot --headless --path . --script tests/smoke_water_combat_pause.gd
       # F13 (ACCEPTANCE 6.1): the six selected Tidewake local chains, one per
       # island group, each show lure/action/payoff/acknowledgement in the
-      # production scene. Each measured ~46-48s locally (2026-09-26).
+      # production scene, then save through Game.save_game, reset, Game.load_game
+      # into a rebuilt Water world and prove the completion persists (saved
+      # completion, ACCEPTANCE 5). Each measured ~50-55s locally, three in
+      # parallel (2026-09-26).
       - name: Verify Tidewake chain side_water_lantern_return
         if: ${{ !cancelled() }}
         run: timeout 75s godot --headless --path . --script tests/smoke_water_lantern_return.gd

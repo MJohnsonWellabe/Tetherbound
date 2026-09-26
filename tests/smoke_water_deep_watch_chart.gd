@@ -14,8 +14,12 @@ extends SceneTree
 ## does; the Tidecoil fight itself is not played -- its body is marked engaged
 ## and the director's terminal handler is invoked with outcome "won". Solo only;
 ## co-op resolution is covered by unit tests of the relay.
+## Saved completion: the finished chain is written through Game.save_game,
+## the world destroyed, Game reset and reloaded through Game.load_game into a
+## rebuilt production Water world (tests/helpers/water_chain_reload.gd).
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
+const RELOAD := preload("res://tests/helpers/water_chain_reload.gd")
 const GATED := "water:deep_watch:pickup:002"
 const RESOLVED := "water_named_deep_watch_tidecoil_resolved"
 const CHARTED := "water_dock_deep_watch_current_charted"
@@ -92,6 +96,7 @@ func run() -> void:
 	game.reset_for_new_game()
 	game.current_realm = "water"
 	game.local.character_id = "water-deep-watch-chart"
+	RELOAD.isolate(game, "water_deep_watch_chart")
 	for upstream: String in ["water_dock_brine_steps_trial_won", "water_aquaryn_resolved",
 			"water_dock_salt_crown_landing_charted", "water_swim_stone_earned"]:
 		if upstream.begins_with("water_swim_stone"):
@@ -223,6 +228,50 @@ func run() -> void:
 	heard = await hear_orsen()
 	check(heard[0] == "water_orsen_deep_watch_charted", "Orsen acknowledges the charted current (%s)" % heard[0])
 	check(str(heard[1]).contains("charted the Deep Watch eddy"), "Delivered acknowledgement names the charted eddy")
+
+	# Saved completion: production save -> fresh state -> production load ->
+	# a rebuilt Water world. World half: Tidecoil's resolution and the chart
+	# flag; character half: the Candy III and its personal receipt.
+	var reloaded: Dictionary = await RELOAD.save_and_reload(self, game, world, CHARTED, "skill_candy_iii")
+	for pair: Array in reloaded.checks:
+		check(pair[0], pair[1])
+	if reloaded.world == null:
+		finish()
+		return
+	world = reloaded.world
+	player = world.get_node("Player")
+	player.set_physics_process(false)
+	pickups = world.get_node("WaterPickups")
+	docks = world.get_node("WaterDocks")
+	director = world.get_node("EncounterDirector")
+	check(game.world.flags.has(RESOLVED) and game.world.flags.has(CHARTED), "Reload keeps Tidecoil's resolution and the chart")
+	check(game.local.flags.has("water_candy:" + GATED), "Reload keeps the personal cache receipt")
+	check(int(game.inventory.count("skill_candy_iii")) == candy_before + 1, "Reload keeps exactly the one Candy III")
+	done = log_reader.local_entries(game.progression).filter(func(e: Dictionary) -> bool: return str(e.label).contains("Deep Watch"))
+	check(done.size() == 1 and bool(done[0].done), "Reloaded quest log shows the request done")
+	check(is_equal_approx(world.current_at(current_spot).length(), 0.1),
+		"Rebuilt world keeps the reduced 0.1m/s return current (%.3fm/s)" % world.current_at(current_spot).length())
+	pose(cache_at + Vector3(1.0, 0.0, 0.0))
+	await frames(2)
+	await create_timer(0.7).timeout
+	pickups.call("refresh")
+	check(RELOAD.neighbour_resident(pickups, cache_at, GATED), "Deep Watch finds stream in around the pocket after reload")
+	check(pickups.call("node_for", GATED) == null, "Claimed Tidecoil cache does not respawn after reload")
+	again = game.ledger.submit({"kind": "water_personal_pickup", "realm": "water",
+		"pickup_id": GATED, "personal_claimed": true})
+	check(str(again.get("code", "")) == "already_taken", "Reloaded host refuses a second cache claim (%s)" % str(again.get("code", "")))
+	pose(stand)
+	for attempt in 120:
+		await process_frame
+	check(tidecoil_body(director) == null, "Resolved Tidecoil does not return to its reef edge after reload")
+	chart = docks.get_node("deep_watch_chart")
+	pose(chart.global_position + Vector3(2.0, 0.0, 0.0))
+	await frames()
+	var recharted: Dictionary = game.ledger.submit({"kind": "water_dock_action", "realm": "water", "action_id": "deep_watch_chart", "inventory": {}})
+	check(str(recharted.get("code", "")) == "already_done", "Reloaded chart control refuses a second charting (%s)" % str(recharted.get("code", "")))
+	heard = await hear_orsen()
+	check(heard[0] == "water_orsen_deep_watch_charted", "Reloaded Orsen acknowledges, no re-offer (%s)" % heard[0])
+	check(int(game.inventory.count("skill_candy_iii")) == candy_before + 1, "No second Candy III after reload")
 	finish()
 
 ## The authored landmark the lead names: listed in the production world config,

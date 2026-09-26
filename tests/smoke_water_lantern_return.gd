@@ -13,8 +13,12 @@ extends SceneTree
 ## pocket from its landing); the swim lesson's world completion is pre-set.
 ## Solo host only; the co-op split (world records, per-character receipts) is
 ## covered by the rule unit tests.
+## Saved completion: the finished chain is written through Game.save_game,
+## the world destroyed, Game reset and reloaded through Game.load_game into a
+## rebuilt production Water world (tests/helpers/water_chain_reload.gd).
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
+const RELOAD := preload("res://tests/helpers/water_chain_reload.gd")
 const CACHE := "water:lantern_cove:pickup:002"
 const LEAD := "water_claim:local:lantern_return:lead"
 const DONE := "water_claim:local:lantern_return:complete"
@@ -107,6 +111,7 @@ func run() -> void:
 	game.reset_for_new_game()
 	game.current_realm = "water"
 	game.local.character_id = "water-lantern-return"
+	RELOAD.isolate(game, "water_lantern_return")
 	game.world.flags.set_flag("water_swim_lesson_complete")
 	world = WORLD.instantiate()
 	root.add_child(world)
@@ -180,6 +185,39 @@ func run() -> void:
 	var again: Dictionary = game.ledger.submit({"kind": "water_dock_action", "realm": "water",
 		"action_id": "lantern_return_report", "inventory": {}})
 	check(str(again.get("code", "")) == "already_done", "A second report is refused")
+
+	# Saved completion: production save -> fresh state -> production load ->
+	# a rebuilt Water world. World half: lead/complete records and the
+	# per-character cache receipt; character half: the Candy I.
+	var reloaded: Dictionary = await RELOAD.save_and_reload(self, game, world, DONE, "skill_candy_i")
+	for pair: Array in reloaded.checks:
+		check(pair[0], pair[1])
+	if reloaded.world == null:
+		finish()
+		return
+	world = reloaded.world
+	player = world.get_node("Player")
+	player.set_physics_process(false)
+	pickups = world.get_node("WaterPickups")
+	check(game.world.flags.has(LEAD) and game.world.flags.has(DONE), "Reload keeps the lead and completion records")
+	check(game.world.flags.has("water_claim:water-lantern-return:" + CACHE), "Reload keeps the per-character cache receipt")
+	check(int(game.inventory.count("skill_candy_i")) == candy_before + 1, "Reload keeps exactly the one Candy I")
+	entry = lantern_entry(reader)
+	check(not entry.is_empty() and bool(entry.done), "Reloaded quest log shows the request done")
+	var cache_at := Vector3(float(row.position[0]), 0.0, float(row.position[2]))
+	pose(cache_at + Vector3(1.0, 0.0, 0.0))
+	await frames(2)
+	await create_timer(0.7).timeout
+	pickups.call("refresh")
+	check(RELOAD.neighbour_resident(pickups, cache_at, CACHE), "Lantern Cove finds stream in around the arch after reload")
+	check(pickups.call("node_for", CACHE) == null, "Claimed cache does not respawn after reload")
+	heard = await hear("water_pell")
+	check(heard[0] == "water_pell_lantern_thanks", "Reloaded Pell acknowledges, no re-offer (%s)" % heard[0])
+	check(str(heard[1]).contains("Lantern Cove line is on my board"), "Reloaded thanks still names the charted cove line")
+	again = game.ledger.submit({"kind": "water_dock_action", "realm": "water",
+		"action_id": "lantern_return_report", "inventory": {}})
+	check(str(again.get("code", "")) == "already_done", "Reloaded host still refuses a second report")
+	check(int(game.inventory.count("skill_candy_i")) == candy_before + 1, "No second Candy I after reload")
 	finish()
 
 func finish() -> void:

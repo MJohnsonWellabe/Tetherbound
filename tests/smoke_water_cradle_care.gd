@@ -16,9 +16,13 @@ extends SceneTree
 ## tests/smoke_water_pocket_walk_claim.gd's Cradle leg); the owned Mosshell is
 ## added to the real party with CreatureSpecies.spawn (not caught here).
 ## Solo host only; the co-op split is covered by the rule unit tests.
+## Saved completion: the finished chain is written through Game.save_game,
+## the world destroyed, Game reset and reloaded through Game.load_game into a
+## rebuilt production Water world (tests/helpers/water_chain_reload.gd).
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const RELOAD := preload("res://tests/helpers/water_chain_reload.gd")
 const SEAM_ROW := "water:tidal_cradle:harvest:007"
 const SEAM := "harvest_node:order:water:tidal_cradle:harvest:007"
 const LEAD := "water_claim:local:cradle_care:lead"
@@ -104,6 +108,7 @@ func run() -> void:
 	game.reset_for_new_game()
 	game.current_realm = "water"
 	game.local.character_id = "water-cradle-care"
+	RELOAD.isolate(game, "water_cradle_care")
 	world = WORLD.instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -178,6 +183,44 @@ func run() -> void:
 	heard = await hear("water_otto")
 	check(heard[0] == "water_otto_nest_thanks", "Otto acknowledges afterwards (%s)" % heard[0])
 	check(str(heard[1]).contains("Mosshell on Tidal Cradle") and str(heard[1]).contains("saddle"), "Delivered thanks repeats the habitat lead and the stone's use")
+
+	# Saved completion: production save -> fresh state -> production load ->
+	# a rebuilt Water world. World half: lead/complete records and the
+	# world-once seam; character half: the berries, Reef Stone and Mosshell.
+	var reloaded: Dictionary = await RELOAD.save_and_reload(self, game, world, DONE, "berries")
+	for pair: Array in reloaded.checks:
+		check(pair[0], pair[1])
+	if reloaded.world == null:
+		finish()
+		return
+	world = reloaded.world
+	player = world.get_node("Player")
+	player.set_physics_process(false)
+	pickups = world.get_node("WaterPickups")
+	for flag: String in [LEAD, DONE, SEAM]:
+		check(game.world.flags.has(flag), "Reload keeps " + flag)
+	check(int(game.inventory.count("berries")) == berries_before + 3, "Reload keeps exactly the 3 berries")
+	check(int(game.inventory.count("reef_stone")) == stone_before + 4, "Reload keeps the 4 Reef Stone")
+	var swimmers: Array = []
+	for member: Variant in game.local.party.members():
+		swimmers.append(str((member as Object).get("species_id")))
+	check(swimmers.has("water_mosshell"), "Reload keeps the owned Mosshell in the party (%s)" % str(swimmers))
+	entry = nest_entry(reader)
+	check(not entry.is_empty() and bool(entry.done), "Reloaded quest log shows the request done")
+	var seam_at := Vector3(float(row.position[0]), 0.0, float(row.position[2]))
+	pose(seam_at + Vector3(1.0, 0.0, 0.0))
+	await frames(2)
+	await create_timer(0.7).timeout
+	pickups.call("refresh")
+	check(RELOAD.neighbour_resident(pickups, seam_at, SEAM_ROW), "Shell-nest finds stream in after reload")
+	check(pickups.call("node_for", SEAM_ROW) == null, "Mined nest seam does not respawn after reload")
+	heard = await hear("water_otto")
+	check(heard[0] == "water_otto_nest_thanks", "Reloaded Otto acknowledges, no re-offer (%s)" % heard[0])
+	check(str(heard[1]).contains("Mosshell on Tidal Cradle"), "Reloaded thanks still gives the habitat lead")
+	again = game.ledger.submit({"kind": "water_dock_action", "realm": "water",
+		"action_id": "cradle_care_report", "inventory": {}, "party_species": ["water_mosshell"]})
+	check(str(again.get("code", "")) == "already_done", "Reloaded host refuses a second payout (%s)" % str(again.get("code", "")))
+	check(int(game.inventory.count("berries")) == berries_before + 3, "No second berry grant after reload")
 	finish()
 
 func finish() -> void:

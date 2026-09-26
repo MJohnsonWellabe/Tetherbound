@@ -16,9 +16,15 @@ extends SceneTree
 ## companion is put to rest by calling the production bed's
 ## `assign_creature()` (the bed panel UI is not driven); if the reset party is
 ## empty, one Brooktail is spawned into it. Solo host only.
+## Saved completion: the finished chain is written through Game.save_game,
+## the world destroyed, Game reset and reloaded through Game.load_game into a
+## rebuilt production Water world (tests/helpers/water_chain_reload.gd).
+## Lure: Lastlight is an authored water_world.json landmark on dry ground
+## with WaterLocalChains' lamp post standing at it.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const RELOAD := preload("res://tests/helpers/water_chain_reload.gd")
 const LEAD := "water_claim:local:lastlight_shelter:lead"
 const SUPPLIED := "water_claim:local:lastlight_shelter:supplied"
 const RESTED := "water_claim:local:lastlight_shelter:rested"
@@ -87,6 +93,35 @@ func shelter_entry(reader: RefCounted) -> Dictionary:
 			return entry
 	return {}
 
+## The authored landmark the lead names: listed in the production world config,
+## standing on dry terrain above the waterline (a data/terrain check only; the
+## rendered read from the approach is ralph/reports/TIDEWAKE/f13_local_chains/lastlight.png).
+func landmark_stands(landmark_id: String) -> bool:
+	for raw: Dictionary in world.config.get("landmarks", []):
+		if str(raw.get("id", "")) != landmark_id:
+			continue
+		var at := Vector3(float(raw.position[0]), 0.0, float(raw.position[2]))
+		return float(world.ground_height_at(at.x, at.z)) > 1.0 and is_zero_approx(world.water_depth_at(at))
+	return false
+
+## Lastlight's lamp post stands in the scene at its landmark, grounded, lit,
+## and clear of the delivery and bed prompts it frames.
+func lamp_post_stands(chains: Node, site: Node3D) -> bool:
+	var at: Vector2 = chains.call("landmark_xz", "lastlight")
+	var lamp: Node3D = chains.call("landmark_root", "lastlight")
+	if not at.is_finite() or lamp == null or not lamp.is_visible_in_tree():
+		return false
+	var post := lamp.get_node_or_null("LampPost") as MeshInstance3D
+	var lantern := lamp.get_node_or_null("Lantern") as Node3D
+	var ground := float(world.ground_height_at(at.x, at.y))
+	var bed: Node3D = world.get_node("WaterCamps").get_node_or_null("water_camp_veilfall_creature_bed")
+	var lamp_xz := Vector2(lamp.global_position.x, lamp.global_position.z)
+	return post != null and lantern != null and lamp.get_node_or_null("WarmLight") != null \
+		and lamp_xz.distance_to(at) < 0.05 and absf(lamp.global_position.y - ground) < 0.05 \
+		and lantern.global_position.y > ground + 2.0 \
+		and lamp_xz.distance_to(Vector2(site.global_position.x, site.global_position.z)) > 4.8 \
+		and bed != null and lamp_xz.distance_to(Vector2(bed.global_position.x, bed.global_position.z)) > 4.8
+
 func run() -> void:
 	create_timer(240.0).timeout.connect(func() -> void:
 		if not finished:
@@ -96,6 +131,7 @@ func run() -> void:
 	game.reset_for_new_game()
 	game.current_realm = "water"
 	game.local.character_id = "water-lastlight-shelter"
+	RELOAD.isolate(game, "water_lastlight_shelter")
 	world = WORLD.instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -128,6 +164,8 @@ func run() -> void:
 	var heard: Array = await hear("water_halen")
 	check(heard[0] == "water_halen_shelter_lead", "Halen gives the shelter lead (%s)" % heard[0])
 	check(str(heard[1]).contains("Lastlight") and str(heard[1]).contains("4 driftwood"), "Lead names Lastlight and the delivery")
+	check(landmark_stands("lastlight"), "Lastlight is an authored landmark standing on dry ground above the water")
+	check(lamp_post_stands(chains, site), "Lastlight's lamp post stands in the scene at its landmark, clear of the camp prompts")
 	check(game.world.flags.has(LEAD), "Lead recorded through the host step")
 	var entry := shelter_entry(reader)
 	check(not entry.is_empty() and not bool(entry.done), "Lead reveals the open request")
@@ -190,6 +228,42 @@ func run() -> void:
 	for flag: String in ["water_veilfall_intake_stopped", "water_veilfall_return_opened", "water_captain_nerissa_defeated"]:
 		interior_after.append(game.world.flags.has(flag))
 	check(interior_after == interior_before, "The chain opened nothing inside the Veilfall")
+
+	# Saved completion: production save -> fresh state -> production load ->
+	# a rebuilt Water world. World half: lead/supplied/rested records (the
+	# shelter is world-visible); character half: the debited satchel and the
+	# resting companion.
+	var reloaded: Dictionary = await RELOAD.save_and_reload(self, game, world, RESTED, "")
+	for pair: Array in reloaded.checks:
+		check(pair[0], pair[1])
+	if reloaded.world == null:
+		finish()
+		return
+	world = reloaded.world
+	player = world.get_node("Player")
+	player.set_physics_process(false)
+	chains = world.get_node("WaterLocalChains")
+	for flag: String in [LEAD, SUPPLIED, RESTED]:
+		check(game.world.flags.has(flag), "Reload keeps " + flag)
+	check(int(game.inventory.count("driftwood")) == 0 and int(game.inventory.count("reed_fiber")) == 0,
+		"Reload keeps the delivery debited (no materials returned)")
+	entry = shelter_entry(reader)
+	check(not entry.is_empty() and bool(entry.done), "Reloaded quest log shows the request done")
+	site = chains.call("site_root", "lastlight_shelter_supply")
+	check(site != null, "Delivery site rebuilt at the Veilfall camp")
+	if site != null:
+		built = site.get_node_or_null("Built")
+		await frames(2)
+		check(site.visible and built != null and built.visible, "The shelter still stands over the bed after reload")
+		check(not bool(site.get_node("Prompt").get("enabled")), "The delivery stays closed after reload")
+		check(lamp_post_stands(chains, site), "Lastlight still stands after reload")
+		pose(site.global_position + Vector3(0.0, 0.0, -1.5))
+		await frames()
+		var again: Dictionary = game.ledger.submit({"kind": "water_dock_action", "realm": "water",
+			"action_id": "lastlight_shelter_supply", "inventory": {"driftwood": 4, "reed_fiber": 4}})
+		check(str(again.get("code", "")) == "already_done", "Reloaded host refuses a second delivery at the camp (%s)" % str(again.get("code", "")))
+	heard = await hear("water_halen")
+	check(heard[0] == "water_halen_shelter_thanks", "Reloaded Halen acknowledges, no re-offer (%s)" % heard[0])
 	finish()
 
 func finish() -> void:
