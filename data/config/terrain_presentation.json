@@ -8,6 +8,8 @@
     "aerial_desaturate": 0.3,
     "aerial_fade_strength": 0.18,
     "_comment_blend": "terrain_ground.gdshader raises each control texel's weight to the power 8 + 56 * blend_sharpness; at terrain_playground.json's 0.5 that is 36, so every 2m texel boundary between two surfaces rendered as a hard polygon edge -- a blind round read the grass on The Rise's rocky crown as 'yellow-grass islands with hard polygonal edges, like camouflage'. 0.12 (exponent about 15) keeps the height-aware blend but feathers the boundary. TUNABLE.",
-    "blend_sharpness": 0.12
+    "blend_sharpness": 0.12,
+    "_comment_slope_rock": "VIS audit M9 (ralph/reports/VISUAL/AUDIT.md). The baked control map paints grass/verge onto gully and trench walls and the override shader has no auto-shader, so cliffs read as smeared grass (judge P006/P007, E016). terrain_ground.gdshader now rewrites steep VEGETATION cells toward the rock texture (id 2): from normal.y 0.78 (~39 deg) to full at 0.55 (~57 deg). Paths, damp and authored rock are untouched. 0.85 leaves a little verge on the wall face. TUNABLE; 0 restores the original look.",
+    "slope_rock_strength": 0.85
   }
 }
