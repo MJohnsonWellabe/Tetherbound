@@ -1,0 +1,51 @@
+F11#3 SHARED-FILE REQUESTS (Stormwood lane). Neither change is committed by the lane.
+
+REQUEST 1: X05 two-peer proof harness (tests/smoke_net_proof_two_peer.gd, tools/net/proof_peer_runner.gd)
+  Exact diff: SHARED-FILE-REQUEST-harness.patch (applies cleanly to the branch head at commit time;
+  PROOF.md in this directory was produced with it applied, then it was reverted).
+  - proof_peer_runner.gd: a generic hook that also dispatches actions to the lane step module
+    tools/net/proof_steps_stormwood.gd (committed by the lane): title_load, aftermath_state, spark_socket.
+  - smoke_net_proof_two_peer.gd, two coordinator-run actions:
+      restart_peer {scene}: graceful quit (kill -9 fallback) of one peer process, then a fresh process on
+        the same user-data home, ENet port and log. This is the "full host process restart" F11#3 asks for;
+        no existing step can end and relaunch a peer process.
+      hashes_agree {remember?, equals?}: waits for a common heartbeat world-state hash across peers
+        (net_harness _hashes_agree), can remember it and compare later (FAIL on difference).
+    Plus title_load in WORLD_BUILD_ACTIONS/IDENTITY_ACTIONS, and peer logs opened with >> instead of >
+    so a restarted peer's log keeps the first process's output for the SCRIPT ERROR grep.
+  Without this, the committed scenario stormwood_f11_aftermath_shrine_two_peer_reload_rejoin.json fails at
+  step 9 (unknown action hashes_agree).
+
+REQUEST 2: real co-op bug in scripts/net/realm_transition.gd (+ session join path). Not fixed by the lane.
+  Symptom: after any guest reconnect (a drop + rejoin, or a host restart + rejoin), the HOST's own
+  Game.enter_realm stalls exactly 120 s (TIMEOUT_MS) in begin_host() and fails; the host cannot change
+  realms for the rest of the session.
+  Cause: realm_transition.epoch is a per-process counter bumped by reset() on every Session._teardown().
+  begin_host() sends _install_host_move.rpc(epoch, generation, ...) and the CLIENT drops it when
+  installed_epoch != its own epoch (line 168; same test in _clear_host_move, line 191). A rejoined guest
+  has torn down once more than the host (guest epoch 2 vs host 1 after one drop; 3 vs 1 after a host
+  restart plus a drop), so it never acks and _host_move_installed_everywhere() never becomes true.
+  _host_move_generation is also not reset by reset(), so a restarted host's generation 1 would be dropped
+  by a client that saw generation >= 2 from the previous host process.
+  Repro: repro_host_crossing_after_rejoin/ (scenario.json + PROOF.md): host + guest join (epochs 1/1),
+  guest drop_link + production_join (epochs 1/2), host enter_realm stormwood -> FAIL after 7192 frames /
+  120018 ms. run2_full_scenario_PROOF.md is the same failure inside the full F11#3 scenario.
+  Suggested fix (for the owner of realm_transition.gd): the client adopts the host's epoch/generation for
+  host-move RPCs (e.g. carry epoch in _joined_sender_policy or the snapshot and set it on join), or drop the
+  client-side installed_epoch == epoch test for these authority RPCs (the host already validates the echoed
+  epoch in _host_move_installed) and reset _host_move_generation in reset(). Needs a focused two-peer test:
+  guest drop + rejoin, then a host realm crossing completes.
+  The F11#3 scenario avoids a host crossing after any reconnect so the persistence proof stands on its own.
+
+REQUEST 3 (pre-existing, intermittent SCRIPT ERROR, not a Stormwood file): scripts/player/conversation_camera.gd:175
+  current_speaker() casts _arbiter.call("winning_provider") as Node3D while the arbiter can still hold a
+  freed provider -> "SCRIPT ERROR: Trying to cast a freed object", reached from stormwood_ending.gd:732
+  (_start_dialogue_when_free on ending_release). Seen once in each of runs 1 and 2 of this scenario and in the
+  committed waterward proof's LOG-EXCERPTS; 0 in run 3 (the committed PROOF.md).
+  Suggested fix: read winning_provider() into a Variant, and call resolve_speaker() only when
+  is_instance_valid() is true (the fallback branch below it already does this for _last_provider).
+
+RESOLUTION: all three granted and landed as one branch, ralph/stormwood-shared-net-fixes
+d69b46bf58686324b1c16e3db757183c2f919fbd (from origin/main). Fix 2 as landed: the client remembers the
+host's epoch from the install (_host_move_epoch) instead of comparing it with its own, and reset() zeroes
+_host_move_generation. Re-run evidence: rerun_shared_fixes/.

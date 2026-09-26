@@ -5776,10 +5776,11 @@
       "id": "crown_guardian",
       "region_id": "hollow_crown",
       "position": [
-        700,
+        640,
         74,
         2700
       ],
+      "_why_moved_f11": "The guardian's seat was exactly Archivist Wen's ([700, 74.15, 2700]), so near the guardian Wen's Greet prompt (2.6 m) won the arbiter over the guardian's engage offer (3.9 m) and a player could not challenge it: earned F11 runner run 29, four approaches, winner '.../Archivist Wen/Interactable'. Moved 60 m west onto the approach from the Crown arch (the plateau is flat at y 74 there), still guarding the heartstone grove; 40 m from Wen and 34 m from the nearest Crown record.",
       "level": 41,
       "behavior_profile": "WALL",
       "placeholder_species": "staticub",
@@ -5792,10 +5793,11 @@
       "id": "old_rodfolk_hall_guardian",
       "region_id": "deepwood",
       "position": [
-        -1590,
-        57,
-        4370
+        -1605,
+        57.85,
+        4385
       ],
+      "_why_moved_f11": "Stood exactly on circuit trainer Lena, so near it 'Challenge Lena' and the guardian's engage offer competed for one press. Moved 21 m off Lena and 21 m off the road, same height above the ground.",
       "level": 43,
       "behavior_profile": "ACE",
       "placeholder_species": "tanglevolt",
@@ -5809,10 +5811,11 @@
       "id": "blackwater_elder",
       "region_id": "deepwood",
       "position": [
-        -150,
-        65,
-        4460
+        -130,
+        64.46,
+        4450
       ],
+      "_why_moved_f11": "Stood exactly on Rook (NPC and circuit trainer) inside the d_giant arch, 8 m from route pickup 16. Moved 22 m east, 11 m off the road and 30 m from pickup 16, same height above the ground.",
       "level": 43,
       "behavior_profile": "CURRENT",
       "placeholder_species": "mosshock",
