@@ -235,3 +235,52 @@ func _read_post_victory_dialogue() -> void:
 func _on_dialogue_finished(id: String) -> void:
 	super._on_dialogue_finished(id)
 	print("EARNED WARDEN dialogue_finished %s frame=%d" % [id, Engine.get_physics_frames()])
+
+
+## B9 (attempt 5): the machine's chamber -> free -> join conversations all
+## finished in order (dialogue_finished at frames 8088/8111/8127), but between
+## conversations the production DialoguePanel stays open for a few frames with
+## an EMPTY conversation id (8089-8096, 8128-8132). The helper's loop reads that
+## hand-over frame as "an unexpected live dialogue". This copy of
+## `_drive_machine_to_ceremony` waits a frame on an open panel with no
+## conversation yet. B10 (attempt 6): production now follows the join with
+## the F05 `veridian_choice` read-out and two spatial prompts
+## (stronghold_climax.json `choice`); the helper predates it. The copy reads
+## that conversation and then answers ACCEPT the way smoke_gate_e_finale.gd
+## does: step to `VeridianAcceptPrompt` and press the real Interact
+## (`_press_prompt`, exact-provider checked). Receipt `veridian_accept_prompt`.
+func _drive_machine_to_ceremony(expected: Array[String], first: int) -> bool:
+	var choice := str((_ending_config.get("choice", {}) as Dictionary).get("conversation", ""))
+	var start := Engine.get_physics_frames()
+	var pressed_accept := false
+	while Engine.get_physics_frames() - start < SEQUENCE_FRAMES:
+		var observed: Array = _finished_dialogues.slice(first)
+		var story: Array = observed.slice(0, expected.size())
+		var tail: Array = observed.slice(expected.size())
+		if not dialogue_prefix(story, expected) or not (tail.is_empty() or tail == [choice]) or not _failures.is_empty():
+			return _fail("The machine's real conversations diverged from chamber/free/join(/choice) order: " + str(observed))
+		if _game.get("pending_catch") != null:
+			return story == expected and pressed_accept and _has("legendary_freed") \
+				and str(_climax.get("_stage")) == "ceremony" \
+				or _fail("The voluntary pending creature arrived before the complete authored join sequence")
+		if bool(_panel.call("is_open")) and _current_conversation().is_empty():
+			await _tree.physics_frame
+		elif bool(_panel.call("is_open")):
+			var wanted: String = expected[observed.size()] if observed.size() < expected.size() else choice
+			if (observed.size() >= expected.size() and not tail.is_empty()) or _current_conversation() != wanted:
+				return _fail("An unexpected live dialogue interrupted the machine sequence: " + _current_conversation())
+			await _input._tap("interact")
+		elif story == expected and tail == [choice] and not pressed_accept and bool(_climax.call("choice_open")):
+			# F05 accept, as a player: the read-out named both answers; step to
+			# the creature's shoulder prompt and press the real Interact.
+			var accept := _climax.find_child("VeridianAcceptPrompt", true, false) as Node3D
+			if accept == null:
+				return _fail("The Veridian choice opened without its accept prompt")
+			_receipt("veridian_accept_prompt", {"prompt": str(accept.get_path()),
+				"distance_m": _player.global_position.distance_to(accept.global_position)})
+			if not await _press_prompt(accept):
+				return false
+			pressed_accept = true
+		else:
+			await _tree.physics_frame
+	return _fail("The machine never reached its real five-slot ceremony within the existing story budget")

@@ -269,3 +269,30 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   `An unexpected live dialogue interrupted the machine sequence` (a DialoguePanel was open at
   frames 7942–8007, before or at the machine press). Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt4/`.
   Attempt 5 adds conversation ids to the input-owner trace and a `dialogue_finished` trace.
+
+## B9: machine-sequence helper reads the DialoguePanel's hand-over frame as an interruption
+
+- Attempt 5 trace: `stronghold_chamber` finished at frame 8088, `stronghold_free_legendary` at 8111,
+  `stronghold_legendary_joins` at 8127, all in the authored order. Between conversations the
+  production panel stays open with an empty conversation id (frames 8089–8096, 8128–8132). The
+  helper `_drive_machine_to_ceremony` fails on any open panel whose id is not the next expected
+  one, so it reported `An unexpected live dialogue interrupted the machine sequence`. This is a race
+  in the Meadows helper, not in the game. Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt5/`.
+- Alternative 1 (own file, `warden_accept.gd`): a copy of that function that waits one frame on
+  an open panel with an empty id. Everything else is unchanged, including the exact order check
+  and the failure message, which now names the conversation. Attempt 6.
+- Attempt 6 got past the hand-over frames. It then stopped on
+  `An unexpected live dialogue interrupted the machine sequence: veridian_choice`.
+
+## B10: the Warden helper predates the F05 spatial accept/refuse choice
+
+- Production (`stronghold_climax.gd::_open_choice`, `stronghold_climax.json` `choice`) now follows
+  `stronghold_legendary_joins` with the `veridian_choice` read-out and two spatial prompts,
+  `VeridianAcceptPrompt` and `VeridianRefusePrompt`. The pending catch only appears after one of
+  them is pressed. The read-only Warden helper expects the pending catch straight after the join.
+  Log: `/tmp/claude-0/earned_chain/seed4_warden_attempt6/`.
+- Alternative 1 (own file): the `_drive_machine_to_ceremony` copy (B9) reads `veridian_choice`,
+  then answers ACCEPT as `tests/smoke_gate_e_finale.gd` does: it steps to `VeridianAcceptPrompt`
+  and presses the real Interact through the exact-provider `_press_prompt`. Receipt:
+  `veridian_accept_prompt`. The five-slot farewell (lowest-level member released) is unchanged.
+  Attempt 7.
