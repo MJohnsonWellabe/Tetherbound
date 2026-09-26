@@ -353,12 +353,18 @@ func _exhausted_fall_attempt() -> bool:
 	return true
 
 
+const LAUNCH_PROBE_LIFT_M := 1.9
+
+
 ## The production launch overhead query (fly_controller.launch_blockers), read
 ## only: which colliders the companion's flight shape would overlap at `at`.
 func _launch_clearance(at: Vector3) -> Dictionary:
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = fly._flight_shape()
-	query.transform = Transform3D(player.global_transform.basis, at + Vector3.UP * float(fly.config.get("collision_height_m", 4.5)) * 0.5)
+	# Production evaluates this after the first Jump, airborne; the recorded
+	# launches sit ~1.9 m above the floor they left. Probing at the feet would
+	# overlap the floor itself.
+	query.transform = Transform3D(player.global_transform.basis, at + Vector3.UP * (LAUNCH_PROBE_LIFT_M + float(fly.config.get("collision_height_m", 4.5)) * 0.5))
 	query.collision_mask = player.collision_mask
 	query.exclude = [player.get_rid()]
 	var hits: Array[String] = []
