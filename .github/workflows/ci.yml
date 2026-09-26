@@ -1777,8 +1777,11 @@ jobs:
       # shortcuts walked/swum with real stick input in the production scene,
       # split by --case so no step runs past ~8 min. Measured on a GitHub
       # runner (render.yml run 36249272344): ~28 s world build, then reed
-      # 138 s, brine 138 s, salt 151 s, sluice 179 s, ramp 70 s, shellwatch
-      # 61 s, deep watch 84 s. Each timeout is 1.5x its group's measured wall.
+      # 138 s, brine 138 s, salt 151 s, sluice 179 s, shellwatch 61 s, deep
+      # watch 84 s; ramp 112 s since the uphill rework (local container,
+      # ralph/reports/TIDEWAKE/f13_loops_shortcuts/RUN8_shortcuts.txt: 270 s
+      # process wall for the shortcut group, 1.37x under its 370 s timeout).
+      # Each timeout is 1.5x its group's measured wall.
       - name: Verify Tidewake land loops walked (reed root, brine terrace)
         if: ${{ !cancelled() }}
         run: timeout 460s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reed_root_circuit,brine_terrace_circuit
