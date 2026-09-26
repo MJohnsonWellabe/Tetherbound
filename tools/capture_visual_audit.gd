@@ -48,7 +48,7 @@ const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const DEFAULT_OUT := "res://shots/visual_audit"
 const TRAINER_HEIGHT := 1.8
 const STAGE_FOV := 40.0
-const LINEUP_PAGE := 8
+const LINEUP_PAGE := 5
 const SHEET_CELL_W := 400
 
 var _out := DEFAULT_OUT
@@ -56,6 +56,8 @@ var _section := "roster"
 var _region := ""
 var _only := {}
 var _fast := false
+var _kind := ""  # region rows: "", "env" or "places"
+var _variant := ""  # region: "aftermath" for post-finale state
 
 var _dir := ""
 var _manifest: FileAccess = null
@@ -83,6 +85,10 @@ func _parse_args() -> void:
 		elif arg.begins_with("--only="):
 			for part: String in arg.substr(7).split(",", false):
 				_only[part.strip_edges()] = true
+		elif arg.begins_with("--kind="):
+			_kind = arg.substr(7)
+		elif arg.begins_with("--variant="):
+			_variant = arg.substr(10)
 		elif arg == "--fast":
 			_fast = true
 		elif arg.begins_with("--out="):
@@ -95,7 +101,8 @@ func _run() -> void:
 		print("visual audit: headless has no renderer; run under xvfb-run with --rendering-driver opengl3")
 		quit(1)
 		return
-	_dir = "%s/%s" % [_out, _section] if _region.is_empty() else "%s/%s/%s" % [_out, _section, _region]
+	_dir = "%s/%s" % [_out, _section] if _region.is_empty() else "%s/%s/%s%s%s" % [_out, _section, _region,
+		("_" + _kind) if not _kind.is_empty() else "", ("_" + _variant) if not _variant.is_empty() else ""]
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_dir))
 	_manifest = FileAccess.open(_dir + "/manifest.jsonl", FileAccess.WRITE)
 	var ok := true
@@ -441,37 +448,228 @@ var _look: Node = null
 var _director: Node = null
 var _rest_pitch_deg := -12.0
 
-## Filled from the landmark survey; one entry per chapter.
-const REGION_SPECS := {}
-
 const HOURS := {"day": 10.0, "dusk": 18.3, "night": 23.0}
 const FLOOR_WAIT_MAX := 600
-const RENDERED_FRAMES := 5
+const RENDERED_FRAMES := 4
 const POSE_FRAMES := 14
 
 
 func _run_region() -> bool:
-	if not REGION_SPECS.has(_region):
-		push_error("visual audit: unknown --region=%s (have %s)" % [_region, REGION_SPECS.keys()])
+	var spec := _region_spec(_region)
+	if spec.is_empty():
+		push_error("visual audit: unknown --region=%s (meadows|cloudreach|stormwood|tidewake)" % _region)
 		return false
-	var spec: Dictionary = REGION_SPECS[_region]
+	if _variant == "aftermath":
+		spec["flags"] = (spec.get("flags", []) as Array) + (spec.get("aftermath_flags", []) as Array)
 	if not await _boot_region(spec):
 		return false
-	var times: Array = spec.get("times", ["day", "dusk", "night"])
-	for row: Dictionary in spec["rows"]:
+	var rows: Array = _build_rows(spec)
+	_log_line({"kind": "note", "text": "%s: %d rows (%s)" % [_region, rows.size(), _kind if not _kind.is_empty() else "env+places"]})
+	for row: Dictionary in rows:
 		var id := str(row["id"])
 		if not _only.is_empty() and not _only.has(id):
 			continue
-		var row_times: Array = row.get("times", times)
-		for t: String in row_times:
-			await _apply_time(spec, t)
-			await _capture_region_row(row, t)
-	_write_sheet("_sheet_%s_day" % _region, "_day")
-	_write_sheet("_sheet_%s_dusk" % _region, "_dusk")
-	_write_sheet("_sheet_%s_night" % _region, "_night")
-	for extra: String in spec.get("sheet_tags", []):
-		_write_sheet("_sheet_%s_%s" % [_region, extra], "_" + extra)
+		for t: String in row["times"]:
+			await _capture_region_row(spec, row, t)
+	_write_sheet("_sheet_%s_env" % _region, "_env_")
+	_write_sheet("_sheet_%s_places" % _region, "_place_")
 	return true
+
+
+## --- region data: every row comes from shipped data, not from this tool ---------
+
+const TIMES_DAYNIGHT := ["day", "dusk", "night"]
+
+func _region_spec(region: String) -> Dictionary:
+	match region:
+		"meadows":
+			return {"realm": "meadows", "scene": "res://scenes/world/meadows_playground.tscn", "biome": "meadows",
+				"env_times": TIMES_DAYNIGHT, "place_times": ["day"], "major_times": ["day", "night"],
+				"flags": ["starter_chosen", "tutorial_complete"], "freeze_weather": true}
+		"cloudreach":
+			return {"realm": "cloudreach", "scene": "res://scenes/world/cloudreach_cliffs.tscn", "biome": "cloudreach",
+				"env_times": TIMES_DAYNIGHT, "place_times": ["day"], "major_times": ["day", "night"],
+				"party": ["galecrest", "bramblebun", "mudsnout", "terrapup", "brooktail"],
+				"flags": ["realm_key_cloudreach", "realm_gate_cloudreach_unlocked", "cloudreach_chapter_started",
+					"cloudreach_crisis_learned", "storm_anchor_lower_west_mapped", "storm_anchor_lower_east_mapped",
+					"cloudreach_lower_anchors_investigated", "causeway_survivors_reconnected", "windscar_aerie_prepared",
+					"cloudreach_act_i_complete", "fly_traversal_unlocked", "fly_tutorial_completed", "sky_shrine_reached",
+					"cloudreach_shrine_vane_west_aligned", "cloudreach_shrine_vane_east_aligned",
+					"cloudreach_shrine_vane_crown_aligned", "storm_anchor_engine_truth_learned",
+					"cloudreach_upper_route_unlocked", "cloudreach_act_ii_complete"],
+				"aftermath_flags": ["captain_veyra_defeated", "storm_anchor_network_disabled",
+					"cloudreach_winds_restored", "stormward_route_revealed"]}
+		"stormwood":
+			# Fixed purple storm, no day/night (owner ruling): "times" are Surge phases.
+			return {"realm": "stormwood", "scene": "res://scenes/world/stormwood.tscn", "biome": "stormwood",
+				"env_times": ["calm", "building", "break"], "place_times": ["calm"], "major_times": ["calm", "break"],
+				"phase_hook": "_stormwood_phase",
+				"flags": ["realm_key_stormwood", "stormwood:rootgate_released"],
+				"aftermath_flags": ["stormwood:long_storm_ended"]}
+		"tidewake":
+			return {"realm": "water", "scene": "res://scenes/world/water_archipelago.tscn", "biome": "water",
+				"env_times": TIMES_DAYNIGHT, "place_times": ["day"], "major_times": ["day", "night"],
+				"flags": ["realm_key_water"]}
+	return {}
+
+
+func _json(path: String) -> Variant:
+	return JSON.parse_string(FileAccess.get_file_as_string(path))
+
+
+func _p3(v: Variant) -> Vector3:
+	var a: Array = v
+	if a.size() >= 3:
+		return Vector3(float(a[0]), float(a[1]), float(a[2]))
+	return Vector3(float(a[0]), NAN, float(a[1]))
+
+
+## Road polylines (y NAN where the data is 2-D), densified to 8 m steps.
+func _roads() -> Array:
+	var raw: Array = []
+	match _region:
+		"meadows":
+			var trail: Dictionary = (_json("res://data/config/terrain_playground.json") as Dictionary).get("trail", {})
+			for group: String in ["bands", "loops", "shortcuts"]:
+				for r: Dictionary in trail.get(group, []):
+					raw.append(r.get("points", []))
+			var paths: Dictionary = (_json("res://data/config/terrain_playground.json") as Dictionary).get("paths", {})
+			for r: Dictionary in paths.get("routes", []):
+				raw.append(r.get("points", []))
+		"cloudreach":
+			for r: Dictionary in (_json("res://data/config/cloudreach_world.json") as Dictionary).get("routes", []):
+				raw.append(r.get("polyline", []))
+		"stormwood":
+			for r: Dictionary in (_json("res://data/config/stormwood_world.json") as Dictionary).get("routes", []):
+				raw.append(r.get("points", []))
+		"tidewake":
+			for r: Dictionary in (_json("res://data/config/water_world.json") as Dictionary).get("land_routes", []):
+				raw.append(r.get("polyline", []))
+	var out: Array = []
+	for line: Array in raw:
+		var pts: Array = []
+		for i in line.size():
+			var a := _p3(line[i])
+			pts.append(a)
+			if i + 1 < line.size():
+				var b := _p3(line[i + 1])
+				var n := int(Vector2(b.x - a.x, b.z - a.z).length() / 8.0)
+				for k in range(1, n):
+					pts.append(a.lerp(b, float(k) / float(n)))
+		out.append(pts)
+	return out
+
+
+## Named places: the realm's landmark table (plus Meadows map regions/sites).
+func _places() -> Array:
+	var out: Array = []
+	match _region:
+		"meadows":
+			var m: Dictionary = _json("res://data/config/map_landmarks.json")
+			for l: Dictionary in m.get("landmarks", []):
+				out.append({"id": str(l["id"]), "label": str(l.get("display_name", l["id"])), "pos": _p3(l["position"]),
+					"major": str(l.get("category", "")) == "major"})
+			for r: Dictionary in m.get("regions", []):
+				out.append({"id": str(r["id"]), "label": str(r.get("display_name", r["id"])), "pos": _p3(r.get("centre", r.get("position"))), "major": false})
+			# WORLD.md Meadows spine sites not in the map tables.
+			for extra: Array in [["south_bridge", "The South Bridge", [0.0, 1330.0]], ["trail_camp", "Trail Camp", [348.0, 919.5]],
+					["old_quarry", "The Old Quarry", [403.0, 1794.0]], ["ranger_camp", "Abandoned Ranger Camp", [-259.0, 2256.5]],
+					["burrow_warrens", "The Burrow Warrens", [-357.0, 2610.0]], ["stonewater_reach", "Stonewater Reach", [-120.0, 3420.0]],
+					["tether_relay", "The Tether Relay", [350.0, 3760.0]], ["old_mill_crossing", "Old Mill Crossing", [-152.0, 4203.0]],
+					["long_water", "Long Water", [-280.0, 4195.0]], ["ironwood_grove", "The Ironwood Grove", [-345.0, 5060.0]],
+					["highfield", "Highfield", [400.0, 5900.0]], ["ridgeline_watch", "The Ridgeline Watch", [-250.0, 6490.0]],
+					["broken_tower", "The Broken Tower", [40.0, 6800.0]], ["stronghold_approach", "Stronghold Approach", [0.0, 7000.0]],
+					["meadows_hall", "Meadows Hall", [8.0, 7590.0]], ["the_pond", "The Pond", [-342.0, 507.0]],
+					["the_rise", "The Rise", [88.0, -43.0]]]:
+				out.append({"id": extra[0], "label": extra[1], "pos": _p3(extra[2]), "major": true})
+		"cloudreach", "stormwood", "tidewake":
+			var file: String = {"cloudreach": "cloudreach_world", "stormwood": "stormwood_world", "tidewake": "water_world"}[_region]
+			for l: Dictionary in (_json("res://data/config/%s.json" % file) as Dictionary).get("landmarks", []):
+				if not l.has("position"):
+					continue
+				out.append({"id": str(l["id"]), "label": str(l.get("display_name", l.get("name", l["id"]))), "pos": _p3(l["position"]),
+					"major": str(l.get("category", "")) == "major" or bool(l.get("silhouette", false))})
+	# Dedupe places within 40 m of an earlier one.
+	var kept: Array = []
+	for p: Dictionary in out:
+		var dup := false
+		for k: Dictionary in kept:
+			if Vector2(p.pos.x, p.pos.z).distance_to(Vector2(k.pos.x, k.pos.z)) < 40.0:
+				dup = true
+				break
+		if not dup:
+			kept.append(p)
+	return kept
+
+
+## The road point that approaches `pos` from about 90 m (45..180 m window),
+## preferring a point at a similar height where the data is 3-D.
+func _approach(pos: Vector3, roads: Array) -> Variant:
+	var best: Variant = null
+	var best_score := INF
+	for line: Array in roads:
+		for q: Vector3 in line:
+			var d := Vector2(q.x - pos.x, q.z - pos.z).length()
+			if d < 45.0 or d > 180.0:
+				continue
+			var score := absf(d - 90.0)
+			if is_finite(q.y) and is_finite(pos.y):
+				score += absf(q.y - pos.y) * 1.5
+			if score < best_score:
+				best_score = score
+				best = q
+	return best
+
+
+func _build_rows(spec: Dictionary) -> Array:
+	var rows: Array = []
+	if _kind != "places":
+		# Environment: the hand-checked debug teleport spots, two per band/region.
+		var spots: Dictionary = _json("res://data/config/debug_teleport_spots.json")
+		for biome: Dictionary in spots.get("biomes", []):
+			if str(biome.get("id")) != str(spec["biome"]):
+				continue
+			var band_list: Array = biome.get("bands", [])
+			for bi in band_list.size():
+				var band: Dictionary = band_list[bi]
+				var list: Array = band.get("spots", [])
+				for si in list.size():
+					var spot: Dictionary = list[si]
+					var at := _p3(spot["position"])
+					var target: Vector3
+					if spot.has("view_heading_deg") and spot["view_heading_deg"] != null:
+						var h := deg_to_rad(float(spot["view_heading_deg"]))
+						target = at + Vector3(sin(h), 0.0, cos(h)) * 90.0
+					else:
+						# Look along the journey: at the next spot (or back at the previous one).
+						var nxt: Variant = null
+						if si + 1 < list.size():
+							nxt = list[si + 1]
+						elif bi + 1 < band_list.size() and not (band_list[bi + 1].get("spots", []) as Array).is_empty():
+							nxt = band_list[bi + 1]["spots"][0]
+						elif si > 0:
+							nxt = list[si - 1]
+						target = _p3(nxt["position"]) if nxt != null else at + Vector3(0, 0, 90)
+					target.y = NAN
+					rows.append({"id": "env_%s_%d" % [str(band.get("id")), si], "label": "%s / %s" % [band.get("id"), spot.get("display_name")],
+						"stands": [at], "target": target, "target_ground": 2.0, "times": spec["env_times"],
+						"why": "debug_teleport_spots.json hand-checked stand; environment/terrain/sky/lighting"})
+	if _kind != "env":
+		var roads := _roads()
+		for p: Dictionary in _places():
+			var pos: Vector3 = p["pos"]
+			var stand: Variant = _approach(pos, roads)
+			var why := "road approach ~90 m from landmark (densified route polyline)"
+			if stand == null:
+				stand = pos + Vector3(0, 0, -70)
+				why = "NO road point 45-180 m from the landmark; stood 70 m south of it"
+			var target := pos
+			var tg := 3.0
+			if not is_finite(target.y):
+				target.y = NAN
+			rows.append({"id": "place_%s" % p["id"], "label": p["label"], "stands": [stand], "target": target,
+				"target_ground": tg, "times": spec["major_times"] if bool(p["major"]) else spec["place_times"], "why": why})
+	return rows
 
 
 func _boot_region(spec: Dictionary) -> bool:
@@ -508,15 +706,23 @@ func _boot_region(spec: Dictionary) -> bool:
 		_rest_pitch_deg = float(((cam_cfg as Dictionary).get("camera", {}) as Dictionary).get("pitch_start_deg", -12.0))
 	RenderingServer.render_loop_enabled = false
 	var booted := false
-	for i in 1200:
+	for i in 3000:
 		await process_frame
 		_director = _world.find_child("EncounterDirector", true, false)
-		if _director != null and i >= 30:
+		var shell_ok := not _world.has_method("shell_build_complete") or bool(_world.call("shell_build_complete"))
+		if shell_ok and i >= 30:
 			booted = true
-			print("visual audit: %s booted after %d frames" % [_region, i])
+			print("visual audit: %s booted after %d frames (director %s)" % [_region, i, _director != null])
 			break
 	if not booted:
-		print("visual audit: WARN EncounterDirector never appeared in %s; continuing with scene only" % _region)
+		push_error("visual audit: %s shell never finished building; refusing partial-scene evidence" % _region)
+		return false
+	if bool(spec.get("freeze_weather", false)):
+		var weather := _world.find_child("WorldWeather", true, false)
+		if weather != null and weather.has_method("set_weather"):
+			weather.call("set_weather", "clear")
+			weather.set_process(false)
+			weather.set_physics_process(false)
 	for i in 10:
 		await physics_frame
 	_rcam.make_current()
@@ -545,6 +751,37 @@ func _apply_time(spec: Dictionary, t: String) -> void:
 		_look.call("_apply_blended", hour)
 	elif _look.has_method("apply_time"):
 		_look.call("apply_time", {"day": "day", "dusk": "golden", "night": "night"}.get(t, "day"))
+
+
+## Stormwood Surge phase pin (tools/capture_stormwood_surge_phases.gd's method).
+func _stormwood_phase(phase: String) -> void:
+	var surge := _world.find_child("StormwoodSurge", true, false)
+	var game := root.get_node_or_null(^"Game")
+	if surge == null or game == null:
+		return
+	var aftermath := _variant == "aftermath"
+	var rules: RefCounted = surge.get("rules")
+	var region := str(surge.call("region_at", _player.global_position)) if surge.has_method("region_at") else ""
+	var start := 0.0
+	var t := 0.0
+	while t < 6000.0 and rules != null:
+		var r: Dictionary = rules.call("phase_at", t, region, false, aftermath)
+		if str(r.get("phase", "")) == phase:
+			start = t
+			break
+		t += 1.0
+	var env: Dictionary = game.get("realm_environment")
+	var storm: Dictionary = (env.get("stormwood", {}) as Dictionary).duplicate(true)
+	storm["elapsed"] = start + 2.0
+	storm["schema_version"] = 1
+	env["stormwood"] = storm
+	game.set("realm_environment", env)
+	for i in 3:
+		await process_frame
+	if surge.has_method("settle_presentation"):
+		surge.call("settle_presentation")
+	for i in 12:
+		await physics_frame
 
 
 func _ally() -> Node3D:
@@ -604,7 +841,7 @@ func _seat_player(stand: Vector3) -> Dictionary:
 	return {"feet": _player.global_position, "floor": floor_y}
 
 
-func _capture_region_row(row: Dictionary, t: String) -> void:
+func _capture_region_row(spec: Dictionary, row: Dictionary, t: String) -> void:
 	var id := str(row["id"])
 	var name := "%s_%s_%s" % [_region, id, t]
 	var stands: Array = row.get("stands", [])
@@ -614,9 +851,13 @@ func _capture_region_row(row: Dictionary, t: String) -> void:
 	var stand: Vector3 = stands[0]
 	var seat := await _seat_player(stand)
 	var feet: Vector3 = seat["feet"]
+	RenderingServer.render_loop_enabled = false
+	await _apply_time(spec, t)
 	var target: Vector3 = row.get("target", feet + Vector3.FORWARD * 50.0)
-	if row.has("target_ground"):
-		target.y = _ground_guess(target.x, target.z, target.y) + float(row["target_ground"])
+	if row.has("target_ground") and not is_finite(target.y):
+		target.y = _ground_guess(target.x, target.z, feet.y) + float(row["target_ground"])
+	elif not is_finite(target.y):
+		target.y = feet.y + 2.0
 	var d := target - feet
 	var yaw := atan2(-d.x, -d.z)
 	var pitch_min := deg_to_rad(float(_rig.get("_pitch_min")))
