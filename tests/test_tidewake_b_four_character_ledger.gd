@@ -174,12 +174,15 @@ func test_gate_order_is_derived_and_the_mandatory_route_needs_no_swimmer() -> vo
 			assert_true((dock.get("required_equipment", []) as Array).is_empty()
 				and not bool(dock.get("requires_compatible_active_swim_mount", false)),
 				"%s: the mandatory route must not require a saddle or owned swimmer (no new catch)" % dock.id)
+	var sheltered_checked := 0
 	for route: Dictionary in _json(WORLD).get("water_routes", []):
 		var to := str(route.edge_id).split("_to_")[1]
 		if str(route.choice) == "sheltered" and not _saddle_gated.has(to):
+			sheltered_checked += 1
 			assert_true((route.get("required_equipment", []) as Array).is_empty()
 				and not bool(route.get("requires_compatible_active_swim_mount", false)),
 				"%s: sheltered human route stays open to the retained five" % route.id)
+	assert_true(sheltered_checked > 0, "sheltered human routes exist to check")
 
 
 func test_four_character_material_ledger_is_solvent_by_gate() -> void:

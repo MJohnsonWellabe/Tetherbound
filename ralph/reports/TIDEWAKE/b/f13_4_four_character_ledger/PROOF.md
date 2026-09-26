@@ -83,3 +83,16 @@ Result: `5 tests, 66 assertions, 0 failed` (Godot 4.7, headless, Linux). The ful
 5. **Rest-shoal harvest proposal:** not needed for solvency, so no rest-shoal rows were added.
 6. **Data only:** no runtime or co-op depletion run. Harvest rows are spawned by `water_scene_pickups.gd`, but this
    test does not gather them.
+
+## Independent review (read-only subagent): APPROVE on 22af7276
+
+- **Debits are complete.** Only `reedhaven_repair` (dock actions) and `lastlight_shelter_supply` (local chains) carry costs. The Veilfall controls, the other chain steps, camps and objectives have no item costs. No recipe is required on the main path; the saddle is counted conservatively as ×4.
+- **No coin costs.** Tidewake has no shops or fees; coins appear only as payouts.
+- **The stage mapping matches** the 7 mandatory docks. The supply rows are world-once through the order ledger, and no regrowth is assumed.
+- **The tool assumption is fair.** Axe and pickaxe are base recipes, and repair is free.
+- **Assertions are not vacuous.**
+- **Non-blocking notes:**
+  - Island inference by nearest centre (`test:88`).
+  - A whole-file text search of `spawn_tables.json` (`test:279`).
+  - A stale `runtime_proven:false` comment in `water_pickups.json`.
+  - A sheltered-route loop that could pass on zero routes. **Fixed in the follow-up commit:** it now asserts that at least one sheltered route was checked, giving 5 tests, 67 assertions, 0 failed (`unit_ledger.log`).
