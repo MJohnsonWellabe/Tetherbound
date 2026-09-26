@@ -1,0 +1,2317 @@
+{
+ "name": "F10 six Stormwood side chains: receipts on both peers through a save/reload, never twice",
+ "claim": "ACCEPTANCE F10: all six Stormwood side chains satisfy section 5 with persistent receipts. Two real processes. Each chain's final step (and every earlier step that has one) is played through its production path by ordinary Interact presses: Dark Arches (host: Relight prompts on the four dark arches, the arch runtime's step 2, Hesk's report), Pim's Parcels (guest, client path: Pim, three deliveries, Pim's return; host: Pim's thanks; each character paid 2 Small Potions once through reward_grant), What the Crown Remembers (host: three record prompts, Wen), Glass for Bryn (guest: Bryn's offer and request, the host-owned delivery transaction taking the guest's materials, the inspect prompt), Raise a Road (host: two footing prompts, two Stormglass Arches built through build_place, travel through the new road both ways, Ondra's report), Deepwood Circuit (host: Rook's offer, the chapter runtime crediting three circuit wins, Rook's return). Each completion flag reaches both peers; both save_reload_here; every completion and each character's rate hold on both and in the saved world/character files; a second visit to each completing NPC or prompt offers and grants nothing again. Disclosed fixtures: the host's named save; debug travel (explore_at) to each NPC or prompt instead of walking; main-route facts set as world flags where the side chain has no step of its own (ashfoot_arch_relit, rootgate_released, lantern_pools_linked, crown_reached, crown guardian cleared, engine_truth_learned, bryn_met, arch_recipe_known, lantern_hollow_reached); Stormglass and Conductor Vine granted in place of gathering; the road arches built with Free Build (materials not charged); and three circuit trainers' defeat facts set in place of three hosted fights (the chapter runtime itself turns them into circuit wins).",
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 3600,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+   },
+   "expect_data": {
+    "realm": "meadows",
+    "form": "captured directory (split path)"
+   },
+   "label": "named save: Meadows, Stormwood route open, loaded like Continue"
+  },
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 10000,
+   "label": "guest: a fresh trainer in the Meadows"
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   }
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "realm_gate_stormwood_unlocked"
+   },
+   "label": "the route comes from the host's save"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood"
+   },
+   "budget_frames": 10000
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:ashfoot_arch_relit",
+    "scope": "world"
+   },
+   "label": "FIXTURE (main-route fact, no side-chain step): stormwood:ashfoot_arch_relit \u2014 reveals Dark Arches"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:rootgate_released",
+    "scope": "world"
+   },
+   "label": "FIXTURE (main-route fact, no side-chain step): stormwood:rootgate_released \u2014 pairs C and D stand beyond it (Act II)"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:lantern_pools_linked",
+    "scope": "world"
+   },
+   "label": "FIXTURE (main-route fact, no side-chain step): stormwood:lantern_pools_linked \u2014 reveals Pim's Parcels"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:crown_reached",
+    "scope": "world"
+   },
+   "label": "FIXTURE (main-route fact, no side-chain step): stormwood:crown_reached \u2014 reveals What the Crown Remembers"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:named:crown_guardian:cleared",
+    "scope": "world"
+   },
+   "label": "FIXTURE (main-route fact, no side-chain step): stormwood:named:crown_guardian:cleared \u2014 Wen speaks only after the Crown guardian"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:engine_truth_learned",
+    "scope": "world"
+   },
+   "label": "FIXTURE (main-route fact, no side-chain step): stormwood:engine_truth_learned \u2014 Wen tells the main truth before the records report"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:bryn_met",
+    "scope": "world"
+   },
+   "label": "FIXTURE (main-route fact, no side-chain step): stormwood:bryn_met \u2014 reveals Glass for Bryn"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:arch_recipe_known",
+    "scope": "world"
+   },
+   "label": "FIXTURE (main-route fact, no side-chain step): stormwood:arch_recipe_known \u2014 reveals Raise a Road (Ondra's recipe)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:ashfoot_arch_relit",
+    "budget_frames": 1200
+   },
+   "label": "fixture fact reached both peers: stormwood:ashfoot_arch_relit"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:rootgate_released",
+    "budget_frames": 1200
+   },
+   "label": "fixture fact reached both peers: stormwood:rootgate_released"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:lantern_pools_linked",
+    "budget_frames": 1200
+   },
+   "label": "fixture fact reached both peers: stormwood:lantern_pools_linked"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:crown_reached",
+    "budget_frames": 1200
+   },
+   "label": "fixture fact reached both peers: stormwood:crown_reached"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:bryn_met",
+    "budget_frames": 1200
+   },
+   "label": "fixture fact reached both peers: stormwood:bryn_met"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:arch_recipe_known",
+    "budget_frames": 1200
+   },
+   "label": "fixture fact reached both peers: stormwood:arch_recipe_known"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "before"
+   },
+   "label": "BASELINE: both peers' saves with every prerequisite and no side-chain step"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "00_both_in_stormwood"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "storage_grant",
+   "args": {
+    "item": "stormglass",
+    "n": 12
+   },
+   "label": "SETUP (stands in for gathering): 12 Stormglass for four relights"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -720,
+     2257
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand at dark arch c_rodline"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "host presses 'Relight' on dark arch c_rodline (tries it: the inspection; pays 3 Stormglass)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:arch:c_rodline:lit",
+    "budget_frames": 1200
+   },
+   "label": "c_rodline lit, for both peers"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -420,
+     4013
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand at dark arch c_lantern"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "host presses 'Relight' on dark arch c_lantern (tries it: the inspection; pays 3 Stormglass)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:arch:c_lantern:lit",
+    "budget_frames": 1200
+   },
+   "label": "c_lantern lit, for both peers"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -1120,
+     3867
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand at dark arch d_hall"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "host presses 'Relight' on dark arch d_hall (tries it: the inspection; pays 3 Stormglass)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:arch:d_hall:lit",
+    "budget_frames": 1200
+   },
+   "label": "d_hall lit, for both peers"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -150,
+     4463
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand at dark arch d_giant"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "host presses 'Relight' on dark arch d_giant (tries it: the inspection; pays 3 Stormglass)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:arch:d_giant:lit",
+    "budget_frames": 1200
+   },
+   "label": "d_giant lit, for both peers"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_dark_arches_1",
+    "budget_frames": 1200
+   },
+   "label": "Dark Arches step 1 (a dark arch inspected) on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_dark_arches_2",
+    "budget_frames": 1200
+   },
+   "label": "Dark Arches step 2 (both dark pairs relit) on both, from the arch runtime"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -350,
+     448
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Rodkeeper Hesk"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Rodkeeper Hesk"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_hesk_dark_arches_report",
+    "budget_frames": 240
+   },
+   "label": "Rodkeeper Hesk opens 'stormwood_hesk_dark_arches_report'"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "01_host_hesk_report"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_hesk_dark_arches_report' (the owed report)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_hesk_dark_arches_report' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_dark_arches_complete",
+    "budget_frames": 1200
+   },
+   "label": "DARK ARCHES COMPLETE on both peers"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -380,
+     1398
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Pim"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Pim"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_pim_parcels_offer",
+    "budget_frames": 240
+   },
+   "label": "Pim opens 'stormwood_pim_parcels_offer'"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_pim_parcels_offer' (take the sealed parcels)"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_pim_parcels_offer' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_pims_parcels_1",
+    "budget_frames": 1200
+   },
+   "label": "Pim's step 1 on both"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -360,
+     441
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Marl"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Marl"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_pim_parcel_cook_marl",
+    "budget_frames": 240
+   },
+   "label": "Marl opens 'stormwood_pim_parcel_cook_marl'"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_pim_parcel_cook_marl' (hand over a parcel)"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_pim_parcel_cook_marl' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_pims_parcels_delivered:cook_marl",
+    "budget_frames": 1200
+   },
+   "label": "parcel delivered to Marl, on both"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -680,
+     2308
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Oswin"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Oswin"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_pim_parcel_trader_oswin",
+    "budget_frames": 240
+   },
+   "label": "Oswin opens 'stormwood_pim_parcel_trader_oswin'"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_pim_parcel_trader_oswin' (hand over a parcel)"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_pim_parcel_trader_oswin' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_pims_parcels_delivered:trader_oswin",
+    "budget_frames": 1200
+   },
+   "label": "parcel delivered to Oswin, on both"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -350,
+     4048
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Lio"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Lio"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_pim_parcel_caretaker_lio",
+    "budget_frames": 240
+   },
+   "label": "Lio opens 'stormwood_pim_parcel_caretaker_lio'"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_pim_parcel_caretaker_lio' (hand over a parcel)"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_pim_parcel_caretaker_lio' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_pims_parcels_delivered:caretaker_lio",
+    "budget_frames": 1200
+   },
+   "label": "parcel delivered to Lio, on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_pims_parcels_2",
+    "budget_frames": 1200
+   },
+   "label": "Pim's step 2 (three deliveries) on both"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -380,
+     1398
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Pim"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Pim"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_pim_parcels_return",
+    "budget_frames": 240
+   },
+   "label": "Pim opens 'stormwood_pim_parcels_return'"
+  },
+  {
+   "peer": 1,
+   "action": "screenshot",
+   "args": {
+    "name": "02_guest_pim_return"
+   }
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_pim_parcels_return' (return to Pim: completion and the guest's rate)"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_pim_parcels_return' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_pims_parcels_complete",
+    "budget_frames": 1200
+   },
+   "label": "PIM'S PARCELS COMPLETE on both peers"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "potion_small"
+    ],
+    "equals": 2,
+    "budget_frames": 600
+   },
+   "label": "guest paid the courier rate once: 2 Small Potions"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -380,
+     1398
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Pim"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Pim"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_pim_parcels_thanks",
+    "budget_frames": 240
+   },
+   "label": "Pim opens 'stormwood_pim_parcels_thanks'"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_pim_parcels_thanks' (host's own thanks: the host's rate)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_pim_parcels_thanks' closed"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "potion_small"
+    ],
+    "equals": 2,
+    "budget_frames": 600
+   },
+   "label": "host paid its own rate once: 2 Small Potions"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     670.7,
+     2730.2
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Crown record rain_ledger"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Crown record rain_ledger"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_crown_record_rain_ledger",
+    "budget_frames": 240
+   },
+   "label": "Crown record rain_ledger opens 'stormwood_crown_record_rain_ledger'"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_crown_record_rain_ledger' (read the record)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_crown_record_rain_ledger' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_crown_remembers_record:rain_ledger",
+    "budget_frames": 1200
+   },
+   "label": "record rain_ledger read, on both"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     735.1,
+     2715.2
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Crown record root_census"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Crown record root_census"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_crown_record_root_census",
+    "budget_frames": 240
+   },
+   "label": "Crown record root_census opens 'stormwood_crown_record_root_census'"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_crown_record_root_census' (read the record)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_crown_record_root_census' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_crown_remembers_record:root_census",
+    "budget_frames": 1200
+   },
+   "label": "record root_census read, on both"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     689.2,
+     2686.1
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Crown record reversal_mark"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Crown record reversal_mark"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_crown_record_reversal_mark",
+    "budget_frames": 240
+   },
+   "label": "Crown record reversal_mark opens 'stormwood_crown_record_reversal_mark'"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_crown_record_reversal_mark' (read the record)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_crown_record_reversal_mark' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_crown_remembers_record:reversal_mark",
+    "budget_frames": 1200
+   },
+   "label": "record reversal_mark read, on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_crown_remembers_1",
+    "budget_frames": 1200
+   },
+   "label": "Crown step 1 on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_crown_remembers_2",
+    "budget_frames": 1200
+   },
+   "label": "Crown step 2 (all three read) on both"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     700,
+     2697.5
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Archivist Wen"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Archivist Wen"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_wen_crown_records_return",
+    "budget_frames": 240
+   },
+   "label": "Archivist Wen opens 'stormwood_wen_crown_records_return'"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "03_host_wen_records"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_wen_crown_records_return' (bring the account to Wen)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_wen_crown_records_return' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_crown_remembers_complete",
+    "budget_frames": 1200
+   },
+   "label": "WHAT THE CROWN REMEMBERS COMPLETE on both peers"
+  },
+  {
+   "peer": 1,
+   "action": "storage_grant",
+   "args": {
+    "item": "stormglass",
+    "n": 3
+   },
+   "label": "SETUP (stands in for gathering): 3 Stormglass"
+  },
+  {
+   "peer": 1,
+   "action": "storage_grant",
+   "args": {
+    "item": "conductor_vine",
+    "n": 2
+   },
+   "label": "SETUP (stands in for gathering): 2 Conductor Vine"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -700,
+     2298
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Warden-Elect Bryn"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Warden-Elect Bryn"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_bryn_glass_offer",
+    "budget_frames": 240
+   },
+   "label": "Warden-Elect Bryn opens 'stormwood_bryn_glass_offer'"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_bryn_glass_offer' (ask what the crews need)"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_bryn_glass_offer' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_glass_for_bryn_1",
+    "budget_frames": 1200
+   },
+   "label": "Bryn step 1 on both"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -700,
+     2298
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Warden-Elect Bryn"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Warden-Elect Bryn"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_bryn_glass_request",
+    "budget_frames": 240
+   },
+   "label": "Warden-Elect Bryn opens 'stormwood_bryn_glass_request'"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_bryn_glass_request' (hand over the materials)"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_bryn_glass_request' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_glass_for_bryn_2",
+    "budget_frames": 1200
+   },
+   "label": "Bryn step 2 (host-committed delivery) on both"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -713.2,
+     2308.3
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand at the repaired supplies"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "guest presses 'Inspect the repaired supplies'"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_glass_for_bryn_complete",
+    "budget_frames": 1200
+   },
+   "label": "GLASS FOR BRYN COMPLETE on both peers"
+  },
+  {
+   "peer": 1,
+   "action": "screenshot",
+   "args": {
+    "name": "04_guest_bryn_supplies"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -630,
+     793.5
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand at the Verge Road footing prompt"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "host chooses the Verge Road footing"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_raise_a_road_chosen:verge_road",
+    "budget_frames": 1200
+   },
+   "label": "Verge Road chosen, on both"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -1050,
+     1743.5
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand at the Hollows Road footing prompt"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "host chooses the Hollows Road footing"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_raise_a_road_chosen:hollows_road",
+    "budget_frames": 1200
+   },
+   "label": "Hollows Road chosen, on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_raise_a_road_1",
+    "budget_frames": 1200
+   },
+   "label": "Road step 1 on both"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -630,
+     797
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): on the Verge Road footing"
+  },
+  {
+   "peer": 0,
+   "action": "build_place",
+   "args": {
+    "id": "stormglass_arch"
+   },
+   "label": "SETUP (free build: materials not charged): raise a Stormglass Arch on the Verge Road footing"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -1050,
+     1747
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): on the Hollows Road footing"
+  },
+  {
+   "peer": 0,
+   "action": "build_place",
+   "args": {
+    "id": "stormglass_arch"
+   },
+   "label": "SETUP (free build): raise its twin on the Hollows Road footing"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_raise_a_road_2",
+    "budget_frames": 1200
+   },
+   "label": "Road step 2 (both built and bound) on both, from the arch runtime"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -630,
+     800
+    ],
+    "settle": 240
+   },
+   "label": "SETUP (debug travel): walk into the Verge Road arch"
+  },
+  {
+   "peer": 0,
+   "probe": "position",
+   "label": "the host was carried to the Hollows Road twin"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -1050,
+     1750
+    ],
+    "settle": 240
+   },
+   "label": "SETUP (debug travel): walk into the Hollows Road arch"
+  },
+  {
+   "peer": 0,
+   "probe": "position",
+   "label": "the host was carried back to the Verge Road twin"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_raise_a_road_3",
+    "budget_frames": 1200
+   },
+   "label": "Road step 3 (travelled both directions) on both"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -160,
+     2698
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Keeper Ondra"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Keeper Ondra"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_ondra_raise_a_road_report",
+    "budget_frames": 240
+   },
+   "label": "Keeper Ondra opens 'stormwood_ondra_raise_a_road_report'"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "05_host_ondra_road"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_ondra_raise_a_road_report' (report the new road)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_ondra_raise_a_road_report' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_raise_a_road_complete",
+    "budget_frames": 1200
+   },
+   "label": "RAISE A ROAD COMPLETE on both peers"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:lantern_hollow_reached",
+    "scope": "world"
+   },
+   "label": "FIXTURE (main-route fact, no side-chain step): stormwood:lantern_hollow_reached \u2014 reveals the Deepwood Circuit (Lantern Hollow arrival)"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:lantern_hollow_reached",
+    "budget_frames": 1200
+   },
+   "label": "fixture fact reached both peers"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -150,
+     4458
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Rook"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Rook"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_rook_circuit_offer",
+    "budget_frames": 240
+   },
+   "label": "Rook opens 'stormwood_rook_circuit_offer'"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_rook_circuit_offer' (accept the circuit)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_rook_circuit_offer' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_deepwood_circuit_1",
+    "budget_frames": 1200
+   },
+   "label": "Circuit step 1 on both"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:trainer:circuit_lena_giant:defeated",
+    "scope": "world"
+   },
+   "label": "FIXTURE (stands in for the hosted fight; hosted trainer wins are proven by smoke_net_stormwood_hosted_trainers): circuit_lena_giant defeated"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_deepwood_circuit_win:circuit_lena_giant",
+    "budget_frames": 1200
+   },
+   "label": "the chapter runtime credits circuit_lena_giant as a circuit win, on both"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:trainer:circuit_orin_blackwater:defeated",
+    "scope": "world"
+   },
+   "label": "FIXTURE (stands in for the hosted fight; hosted trainer wins are proven by smoke_net_stormwood_hosted_trainers): circuit_orin_blackwater defeated"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_deepwood_circuit_win:circuit_orin_blackwater",
+    "budget_frames": 1200
+   },
+   "label": "the chapter runtime credits circuit_orin_blackwater as a circuit win, on both"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "stormwood:trainer:circuit_tavi_rodline:defeated",
+    "scope": "world"
+   },
+   "label": "FIXTURE (stands in for the hosted fight; hosted trainer wins are proven by smoke_net_stormwood_hosted_trainers): circuit_tavi_rodline defeated"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_deepwood_circuit_win:circuit_tavi_rodline",
+    "budget_frames": 1200
+   },
+   "label": "the chapter runtime credits circuit_tavi_rodline as a circuit win, on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_deepwood_circuit_2",
+    "budget_frames": 1200
+   },
+   "label": "Circuit step 2 (three of five) on both"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -150,
+     4458
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Rook"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Rook"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_rook_circuit_return",
+    "budget_frames": 240
+   },
+   "label": "Rook opens 'stormwood_rook_circuit_return'"
+  },
+  {
+   "peer": 0,
+   "action": "screenshot",
+   "args": {
+    "name": "06_host_rook_return"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_rook_circuit_return' (return to Rook)"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_rook_circuit_return' closed"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_deepwood_circuit_complete",
+    "budget_frames": 1200
+   },
+   "label": "DEEPWOOD CIRCUIT COMPLETE on both peers"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "complete"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "save_reload_here",
+   "continue_on_fail": true,
+   "label": "RELOAD: host autosave + load_slot in place"
+  },
+  {
+   "peer": 1,
+   "action": "save_reload_here",
+   "continue_on_fail": true,
+   "label": "RELOAD: guest character save + apply from disk"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_dark_arches_complete",
+    "budget_frames": 900
+   },
+   "label": "after the reload dark_arches is still complete on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_pims_parcels_complete",
+    "budget_frames": 900
+   },
+   "label": "after the reload pims_parcels is still complete on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_crown_remembers_complete",
+    "budget_frames": 900
+   },
+   "label": "after the reload crown_remembers is still complete on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_glass_for_bryn_complete",
+    "budget_frames": 900
+   },
+   "label": "after the reload glass_for_bryn is still complete on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_raise_a_road_complete",
+    "budget_frames": 900
+   },
+   "label": "after the reload raise_a_road is still complete on both"
+  },
+  {
+   "peer": "all",
+   "action": "wait_flag",
+   "args": {
+    "flag": "stormwood:side_deepwood_circuit_complete",
+    "budget_frames": 900
+   },
+   "label": "after the reload deepwood_circuit is still complete on both"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "potion_small"
+    ],
+    "equals": 2,
+    "budget_frames": 600
+   },
+   "label": "after the reload the guest still holds exactly its one rate"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "potion_small"
+    ],
+    "equals": 2,
+    "budget_frames": 600
+   },
+   "label": "after the reload the host still holds exactly its one rate"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -380,
+     1398
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand beside Pim"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "Interact with Pim"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_pim_parcels_thanks",
+    "budget_frames": 240
+   },
+   "label": "Pim opens 'stormwood_pim_parcels_thanks'"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read both lines of 'stormwood_pim_parcels_thanks' (second visit: thanks only (already paid in this world))"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": false,
+    "budget_frames": 240
+   },
+   "label": "'stormwood_pim_parcels_thanks' closed"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "potion_small"
+    ],
+    "equals": 2,
+    "budget_frames": 600
+   },
+   "label": "SECOND ATTEMPT: the guest was not paid again"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -380,
+     1396
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): beside Pim again"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "host speaks to Pim again"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "dialogue_open"
+    ],
+    "equals": true,
+    "budget_frames": 240
+   },
+   "label": "Pim answers"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   }
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "potion_small"
+    ],
+    "equals": 2,
+    "budget_frames": 600
+   },
+   "label": "SECOND ATTEMPT: the host was not paid again"
+  },
+  {
+   "peer": 1,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -713.2,
+     2308.3
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): stand at the repaired supplies again"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "SECOND ATTEMPT: the guest presses where the inspect prompt was"
+  },
+  {
+   "peer": 1,
+   "action": "await_probe",
+   "args": {
+    "what": "character_restore",
+    "path": [
+     "live",
+     "satchel",
+     "potion_small"
+    ],
+    "equals": 2,
+    "budget_frames": 600
+   },
+   "label": "nothing was granted by the repeat press"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -350,
+     448
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): beside Rodkeeper Hesk again"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "SECOND ATTEMPT: host speaks to Rodkeeper Hesk again"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_hesk_dark_arches_report",
+    "budget_frames": 120
+   },
+   "expect": "FAIL",
+   "label": "SECOND ATTEMPT: Rodkeeper Hesk does not offer 'stormwood_hesk_dark_arches_report' again"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read the ordinary lines"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     700,
+     2697.5
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): beside Archivist Wen again"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "SECOND ATTEMPT: host speaks to Archivist Wen again"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_wen_crown_records_return",
+    "budget_frames": 120
+   },
+   "expect": "FAIL",
+   "label": "SECOND ATTEMPT: Archivist Wen does not offer 'stormwood_wen_crown_records_return' again"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read the ordinary lines"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -160,
+     2698
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): beside Keeper Ondra again"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "SECOND ATTEMPT: host speaks to Keeper Ondra again"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_ondra_raise_a_road_report",
+    "budget_frames": 120
+   },
+   "expect": "FAIL",
+   "label": "SECOND ATTEMPT: Keeper Ondra does not offer 'stormwood_ondra_raise_a_road_report' again"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read the ordinary lines"
+  },
+  {
+   "peer": 0,
+   "action": "explore_at",
+   "args": {
+    "at": [
+     -150,
+     4458
+    ],
+    "settle": 90
+   },
+   "label": "SETUP (debug travel): beside Rook again"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact"
+   },
+   "label": "SECOND ATTEMPT: host speaks to Rook again"
+  },
+  {
+   "peer": 0,
+   "action": "await_probe",
+   "args": {
+    "what": "relay_crossing",
+    "path": [
+     "conversation_id"
+    ],
+    "equals": "stormwood_rook_circuit_return",
+    "budget_frames": 120
+   },
+   "expect": "FAIL",
+   "label": "SECOND ATTEMPT: Rook does not offer 'stormwood_rook_circuit_return' again"
+  },
+  {
+   "peer": 0,
+   "action": "press",
+   "args": {
+    "action": "interact",
+    "times": 2,
+    "gap_frames": 30
+   },
+   "label": "read the ordinary lines"
+  },
+  {
+   "peer": "all",
+   "action": "screenshot",
+   "args": {
+    "name": "07_after_reload_and_repeats"
+   }
+  },
+  {
+   "peer": "all",
+   "probe": "downed",
+   "label": "trainer vitals at the end"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after"
+   }
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "stormwood:rootgate_released",
+     "stormwood:lantern_pools_linked",
+     "stormwood:crown_reached",
+     "stormwood:bryn_met",
+     "stormwood:arch_recipe_known"
+    ],
+    "lacks": [
+     "side_dark_arches",
+     "side_pims_parcels",
+     "side_crown_remembers",
+     "side_glass_for_bryn",
+     "side_raise_a_road",
+     "side_deepwood_circuit",
+     "stormwood_pims_parcels"
+    ]
+   },
+   "label": "BASELINE (non-vacuous): the host's pre-run world holds every prerequisite and no side-chain step or rate"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "before",
+    "dir": "characters",
+    "lacks": [
+     "potion_small",
+     "pims_parcels_reward_received"
+    ]
+   },
+   "label": "BASELINE: the guest's pre-run character holds no rate"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "stormwood:side_dark_arches_complete",
+     "stormwood:side_pims_parcels_complete",
+     "stormwood:side_crown_remembers_complete",
+     "stormwood:side_glass_for_bryn_complete",
+     "stormwood:side_raise_a_road_complete",
+     "stormwood:side_deepwood_circuit_complete",
+     "stormwood_pims_parcels",
+     "$character0",
+     "$character1"
+    ]
+   },
+   "label": "the host's saved world after the reload holds all six completions and the rate journal"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "characters",
+    "contains": [
+     "potion_small",
+     "stormwood:pims_parcels_reward_received"
+    ]
+   },
+   "label": "the guest's saved character holds its rate and Pim's thanks receipt"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after",
+    "dir": "characters",
+    "contains": [
+     "potion_small",
+     "stormwood:pims_parcels_reward_received"
+    ]
+   },
+   "label": "the host's saved character holds its rate and Pim's thanks receipt"
+  }
+ ]
+}
