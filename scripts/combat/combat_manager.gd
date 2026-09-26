@@ -232,6 +232,14 @@ var _outcome: String = ""
 ## attack of it.
 var _input_guard: float = 0.0
 
+## Seconds left on a disengage press made while input was not being read
+## (hitstop, `_input_guard`, a burst awaiting the host). `_flee_pressed()` is an
+## EDGE: without this, a player pressing Run on a frame the fight happens to be
+## frozen for a hit loses the press entirely, and a creature under steady
+## attack can make leaving a fight a lottery. Honoured the moment input is read
+## again, and dropped once `flow.flee_buffer` runs out.
+var _flee_buffer_left: float = 0.0
+
 ## Catching. The aim and the projectile live in throw_aim.gd; what lives here is
 ## deciding whether a throw is allowed and what its result means to the fight.
 ##
@@ -519,6 +527,7 @@ func begin(
 	_resolve_timer = 0.0
 	_outcome = ""
 	_input_guard = float(MATH.config().get("flow", {}).get("input_guard", 0.25))
+	_flee_buffer_left = 0.0
 
 	_catch_phase = CatchPhase.NONE
 	_catch_timer = 0.0
@@ -1382,6 +1391,7 @@ func _refuse_combat_input() -> void:
 
 
 func _tick_active(delta: float) -> void:
+	_buffer_flee_while_input_unread(delta)
 	if _hitstop_left > 0.0:
 		_hitstop_left = maxf(0.0, _hitstop_left - delta)
 		if _hitstop_left <= 0.0:
@@ -2294,7 +2304,8 @@ func _read_player_input() -> void:
 	# `combat_run` keeps its keyboard Escape and lost its pad button, so the pad
 	# reaches this through `creature_recall` -- the same button that calls the
 	# creature out and puts it away outside a fight.
-	if _flee_pressed():
+	if _flee_pressed() or _flee_buffer_left > 0.0:
+		_flee_buffer_left = 0.0
 		try_flee()
 		return
 
@@ -2420,6 +2431,22 @@ func apply_host_burst_verdict(payload: Dictionary) -> void:
 func _throw_pressed() -> bool:
 	return Input.is_action_just_pressed("combat_throw") \
 			or Input.is_action_just_pressed("interact")
+
+
+## Keep a disengage press made on a tick whose input `_read_player_input()`
+## will not read. Aiming is left alone: there Run cancels the aim
+## (`throw_aim.gd` owns it), and buffering it too would make one press do two
+## things. A catch in progress is left alone too; the orb decides that fight.
+func _buffer_flee_while_input_unread(delta: float) -> void:
+	# Hitstop also freezes `_input_guard`, so the buffer holds too: a guard plus
+	# a hit or two landing in it could otherwise outlast `flow.flee_buffer`.
+	if _hitstop_left <= 0.0:
+		_flee_buffer_left = maxf(0.0, _flee_buffer_left - delta)
+	var unread := _hitstop_left > 0.0 or _input_guard > 0.0 or _burst_awaiting_host
+	if not unread or _catch_phase != CatchPhase.NONE or bool(_throw.call("is_busy")):
+		return
+	if _flee_pressed():
+		_flee_buffer_left = float(MATH.config().get("flow", {}).get("flee_buffer", 0.4))
 
 
 ## The disengage button, on both devices. See `_read_player_input`.
