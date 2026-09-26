@@ -81,9 +81,12 @@ const CAMP_AT := Vector2(30.0, -40.0)
 const CAMP_ARRIVAL_M := 4.0
 const GATE_ARRIVAL_M := 3.0
 ## Where a spur to a person stops: inside every prompt radius in use (Greet
-## prompts are 2.4m+, Grandpa's 3.8m) without walking into the body.
-const NPC_STOP_M := 1.6
-const NPC_REACH_M := 2.6
+## prompts are 2.4m+, Grandpa's 3.8m) without walking into the body. The walk
+## counts arrival up to 0.5m short of a spur's end, so the player ends ~1.2-1.7m
+## away. The villager's own prompt winning the arbiter is the reachability
+## proof; NPC_REACH_M is only a sanity bound on where the walk stopped.
+const NPC_STOP_M := 1.2
+const NPC_REACH_M := 3.0
 const GRAPH_STEP_M := 1.0
 const GRAPH_LINK_M := 1.1
 const GRAPH_CLIP_M := 220.0
