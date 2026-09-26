@@ -21,6 +21,7 @@ extends RefCounted
 ##                                         defeat through the ledger (F11 setup only)
 ##   stormheart_answer  {answer, drop_at_ack?}  answer THIS peer's Stormheart offer through
 ##                                         the real dialogue: interact = Yes, menu_cancel = No
+##                                         (drop_at_ack: Yes or No; the link closes in that answer's own step)
 ##   stormheart_claim_again {}            send the prompt's ending_claim WITHOUT the acceptance
 ##                                         hint; the HOST must refuse from its own record
 ##   stormheart_state {character?}        this peer's view of the F11 outcome (character:
@@ -52,7 +53,8 @@ extends RefCounted
 ##   nerissa_challenge {}                 F14: Veilfall prerequisites via the ledger, then take up
 ##                                         Nerissa's challenge at her Veilfall spot (then
 ##                                         win_trainer_battle); data.multi_peer at the time
-##   grandpa_homecoming {screenshot?, must_name?, must_not_name?}  F15: walk up to
+##   grandpa_homecoming {screenshot?, must_name?, must_not_name?, visit?}  F15: walk up to
+##                                         (visit: "repeat" expects the repeat conversation, no names)
 ##                                         Grandpa, press his real prompt, read the whole
 ##                                         conversation, report every line and check names
 ##
@@ -488,13 +490,16 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if args.has("screenshot"):
 		shot = await _screenshot(tree, {"name": str(args.screenshot)})
 	var cut_at_ack := false
-	if answer == "accept" and bool(args.get("drop_at_ack", false)):
+	if bool(args.get("drop_at_ack", false)):
 		# F11 "disconnect at claim acknowledgement". The panel answers Yes in its
 		# `_physics_process` and emits `completed`. This one-shot handler closes
 		# the transport in that same physics step, before the frame's network
 		# poll: whatever the ending then commits (receipt, character save) is
 		# local, and the `ending_settled` acknowledgement it sends finds no
 		# connected peer. The host-side step that follows proves it never arrived.
+		# A No is the panel's `declined` (emitted before `finished`); the ending
+		# then refuses, writes its receipt and sends the same acknowledgement.
+		var accepting := answer == "accept"
 		var claim_uid := str(load(ENDING_PATH).call("claim_id", ending.get("_local_claim")))
 		var cut := {"done": false, "claim_left": true}
 		var on_yes := func(_conversation: String) -> void:
@@ -502,16 +507,18 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 				cut.claim_left = not (ending.get("_local_claim") as Dictionary).is_empty()
 			(tree.root.multiplayer.multiplayer_peer as MultiplayerPeer).close()
 			cut.done = true
-		panel.connect("completed", on_yes, CONNECT_ONE_SHOT)
-		if not _edge_ok(await tree.call("_press_edge", "interact", true)):
+		var answer_signal := "completed" if accepting else "declined"
+		var answer_action := "interact" if accepting else "menu_cancel"
+		panel.connect(answer_signal, on_yes, CONNECT_ONE_SHOT)
+		if not _edge_ok(await tree.call("_press_edge", answer_action, true)):
 			return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
 		for f in 240:
 			await tree.physics_frame
 			if bool(cut.done):
 				break
-		if is_instance_valid(panel) and panel.is_connected("completed", on_yes):
-			panel.disconnect("completed", on_yes)
-		await tree.call("_press_edge", "interact", false)
+		if is_instance_valid(panel) and panel.is_connected(answer_signal, on_yes):
+			panel.disconnect(answer_signal, on_yes)
+		await tree.call("_press_edge", answer_action, false)
 		for f in 60:
 			await tree.physics_frame
 		# The dropped guest returns to the title; its answer must already be on
@@ -521,7 +528,7 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 		var saved: Dictionary = (game.get("save_system") as Object).get("_characters").call("read", character) \
 			if game != null and not character.is_empty() else {}
 		var saved_flags: Array = ((saved.get("flags", {}) as Dictionary).get("flags", []) as Array) if saved.get("flags") is Dictionary else []
-		var receipt_flag := str(load(ENDING_PATH).call("answer_flag", claim_uid, true))
+		var receipt_flag := str(load(ENDING_PATH).call("answer_flag", claim_uid, accepting))
 		var receipt_on_disk := not claim_uid.is_empty() and saved_flags.has(receipt_flag)
 		cut_at_ack = bool(cut.done) and receipt_on_disk
 		var cut_state := _stormheart_state(tree)
@@ -531,8 +538,8 @@ static func _stormheart_answer(tree: SceneTree, args: Dictionary) -> Dictionary:
 		(cut_state.data as Dictionary)["receipt_flag"] = receipt_flag
 		(cut_state.data as Dictionary)["claim_uid"] = claim_uid
 		return {"verdict": "PASS" if cut_at_ack else "FAIL",
-			"detail": "answered Yes to claim %s; link closed in the answer's own physics step=%s (claim already committed then=%s); '%s' is on the saved character=%s; %s"
-				% [claim_uid, str(cut.done), str(not bool(cut.claim_left)), receipt_flag, str(receipt_on_disk), str(cut_state.data)],
+			"detail": "answered %s to claim %s; link closed in the answer's own physics step=%s (claim already committed then=%s); '%s' is on the saved character=%s; %s"
+				% ["Yes" if accepting else "No", claim_uid, str(cut.done), str(not bool(cut.claim_left)), receipt_flag, str(receipt_on_disk), str(cut_state.data)],
 			"data": cut_state.data}
 	if not await _tap(tree, "interact" if answer == "accept" else "menu_cancel"):
 		return {"verdict": "ERROR", "detail": "the answer press did not reach this peer"}
@@ -1330,7 +1337,11 @@ static func _grandpa_homecoming(tree: SceneTree, args: Dictionary) -> Dictionary
 	# The acknowledgement itself: one "<name> came home with you." per current
 	# companion, in party order, and no other such line.
 	var named_lines: Array = lines.filter(func(l: String) -> bool: return l.ends_with(" came home with you."))
-	var expected_lines: Array = party_before.map(func(n: String) -> String:
+	# `visit: "repeat"`: a character who already saved its homecoming (e.g.
+	# after a reconnect) hears the repeat conversation, which names nobody:
+	# the team is not acknowledged twice.
+	var repeat := str(args.get("visit", "initial")) == "repeat"
+	var expected_lines: Array = [] if repeat else party_before.map(func(n: String) -> String:
 		return "Grandpa Elias: %s came home with you." % n)
 	data["named_lines"] = named_lines
 	var text := "\n".join(lines)
@@ -1346,7 +1357,8 @@ static func _grandpa_homecoming(tree: SceneTree, args: Dictionary) -> Dictionary
 	data["wrongly_named"] = wrongly_named
 	# The game's rule (regional_homecoming.gd): the first visit's conversation
 	# is chosen by the live party size, so it must match this player's team.
-	var expected := "regional_homecoming_%d" % mini(party_before.size(), 5)
+	var expected := str(load(HOMECOMING_PATH).REPEAT_ID) if repeat \
+		else "regional_homecoming_%d" % mini(party_before.size(), 5)
 	data["expected_conversation"] = expected
 	var ok := conversation == expected and not bool(panel.call("is_open")) and seen \
 		and named_lines == expected_lines \
