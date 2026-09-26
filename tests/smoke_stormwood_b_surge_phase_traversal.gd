@@ -190,8 +190,9 @@ func _phase_leg(phase: String) -> void:
 				"break: warning at (%.0f, %.0f) is outside every safe zone and rod radius" % [at.x, at.z])
 			_expect(is_equal_approx(float(warning.remaining), 1.2), "break: warning carries the 1.2 s telegraph")
 		for impact: Dictionary in _impacts:
-			var lead := float(impact.msec) - _warning_msec(int(impact.id))
-			_expect(lead >= 1150.0 / 4.0, "break: impact %d landed %.0f ms (real, x4) after its warning" % [int(impact.id), lead])
+			var lead := float(impact.game_s) - _warning_game_s(int(impact.id))
+			# One physics tick of slack (4/240 s) around the 1.2 s telegraph.
+			_expect(lead >= 1.2 - 0.02, "break: impact %d landed %.3f game s after its warning" % [int(impact.id), lead])
 	else:
 		_expect(_warnings.is_empty(), "%s: no strike warning anywhere on the road (%d)" % [phase, _warnings.size()])
 
@@ -260,7 +261,8 @@ func _exposed_road_point() -> Vector2:
 
 func _on_strike(event: Dictionary) -> void:
 	var row := event.duplicate(true)
-	row["msec"] = Time.get_ticks_msec()
+	# Game seconds from physics ticks: wall-clock ms at time_scale 4 is noisy.
+	row["game_s"] = float(Engine.get_physics_frames()) * Engine.time_scale / float(Engine.physics_ticks_per_second)
 	if str(event.get("kind")) == "warning":
 		_warnings.append(row)
 	elif str(event.get("kind")) == "impact":
@@ -278,10 +280,10 @@ func _refill() -> void:
 		vitals.health = float(vitals.max_health)
 
 
-func _warning_msec(id: int) -> float:
+func _warning_game_s(id: int) -> float:
 	for warning: Dictionary in _warnings:
 		if int(warning.id) == id:
-			return float(warning.msec)
+			return float(warning.game_s)
 	return INF
 
 
