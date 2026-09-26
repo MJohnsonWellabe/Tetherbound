@@ -269,3 +269,14 @@ WALK water_halen DIRECT (no baked-ground plan from (374.1692, 5.997751, 3822.694
 | lastlight_shelter | **FAIL**: Campkeeper Halen resolves to (191, 616.1, 4163) on top of the Veilfall massif (`water_characters.json` `island_local_offset [-9,0,23]`), far from the Lastlight camp at about (381, 5, 3822). The walk stalls at y≈106. | lastlight.log (the rerun was stopped by the lane lead; the first failures are unchanged) |
 
 F13#3 is **not met**: 4 of 6 chains pass the walked witness. The two failures are NPC placement defects in `data/config/water_characters.json`, owned by the main Tidewake lane. A SHARED-FILE REQUEST is on PR #310. The existing CI chain smokes teleport onto the NPC body (e.g. `tests/smoke_water_lastlight_shelter.gd:68`), which hides this.
+
+## Rerun with the main Tidewake lane's NPC move (21:46–21:51 UTC)
+
+The main Tidewake lane moved `water_otto` to `island_local_offset [-145, 0, -168]` and `water_halen` to `[175.2, 0, -322.1]` in `data/config/water_characters.json`. That change is on `tb/tidewake-top-trainer-damage` and `tb/integration-31` (`040c039594dd5d9055ab2f874d3436630187a4e0`); it is not on main yet. For this rerun that single file was taken from `tb/integration-31` into the working tree, **uncommitted**, and restored afterwards. This PR still changes no data. The test code is unchanged (`164c4f68`).
+
+| Chain | Result | Log |
+|---|---|---|
+| cradle_care | **PASS, 55 checks / 0 failures**: walked to Otto (lead), the nest's Reef Stone +4, walked back, return pays berries +3, ack `water_otto_nest_thanks`, and completion survives reload | cradle_npc_moved.log |
+| lastlight_shelter | **PASS, 60 / 0**: walked to Halen beside the camp, lead, delivery 4+4, shelter built, rest, ack `water_halen_shelter_thanks`, and completion survives reload | lastlight_npc_moved.log |
+
+With the four earlier passes, **all six chains pass the walked witness** once the NPC move is on main. F13#3 becomes met when this evidence lands together with or after that move (integration-31). Until then, on current main, Cradle and Lastlight still fail as recorded above.
