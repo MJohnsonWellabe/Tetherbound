@@ -65,12 +65,14 @@ const TEAM_SIZE := 5
 const LEAD_INDEX := 0
 
 ## --- the difficulty band a required fight asks for -----------------------------
-## WORLD.md §2.4 Cloudreach row: intended exit 33 against Veyra's ace 34 -- the
-## chapter's own envelope expects the lead to FINISH one level under the final
-## ace, i.e. to fight it about two under. PROGRESSION.md §3's only per-creature
-## level tolerance is "deficit≤2" (and "wild high≥entry−2"). So the lead must
-## stand within 2 of each required trainer's ace before the fight, and every
-## other retained member within RETAINED_SPREAD of that lead band.
+## LEDGER CRITERIA, CHOSEN HERE -- no spec states a per-fight level band.
+## PROGRESSION.md §3's Cloudreach row says only "L18–21 overlap → L33"; WORLD.md
+## §2.4 gives exit 33 against Veyra's ace 34. (PROGRESSION §3's "deficit≤2" is
+## about a replacement catch relative to regional entry, NOT a fight band, and is
+## not the source of these numbers.) This ledger's chosen criteria: the lead
+## stands at >= ace-2 before each required fight; the weakest retained member at
+## >= ace-2-RETAINED_SPREAD (ace-5); at exit the lead >= 33 (WORLD §2.4) and the
+## weakest >= 30 (33 - RETAINED_SPREAD, again a ledger choice).
 const LEAD_ACE_TOLERANCE := 2
 ## WORLD.md §2.4: "Cloudreach | 18–21 overlap | 33 target; Veyra ace 34".
 const CLOUDREACH_EXIT_TARGET := 33
@@ -461,12 +463,51 @@ func _feed_candy(member: Dictionary, levels: int) -> void:
 
 ## combat_manager.gd::_award_victory: the active creature gets the award, every
 ## other non-fainted member gets party_share of it.
-func _defeat(party: Array, enemy_level: int) -> int:
+## `active` < 0 means the lead; otherwise the member at that index lands the
+## kill (sensitivity: a bench member landing kills).
+func _defeat(party: Array, enemy_level: int, active: int = -1) -> int:
 	var award: int = PROGRESSION.xp_award_for(enemy_level, _cfg())
 	var share: int = PROGRESSION.party_share(award, _cfg())
+	var who := LEAD_INDEX if active < 0 else active
 	for i in party.size():
-		_gain(party[i] as Dictionary, award if i == LEAD_INDEX else share)
+		_gain(party[i] as Dictionary, award if i == who else share)
 	return award
+
+
+func _xps(party: Array) -> Array:
+	var out: Array = []
+	for raw: Variant in party:
+		out.append(int((raw as Dictionary)["xp"]))
+	return out
+
+
+## Banked XP toward the next level vs that level's cost, as "xp/cost".
+func banked(level: int, xp: int) -> String:
+	return "%d/%d" % [xp, PROGRESSION.xp_to_next(level, _cfg())]
+
+
+## Worst lead and weakest margins over every fight band and the exit.
+func margins(result: Dictionary) -> Dictionary:
+	var lead := 1 << 30
+	var weakest := 1 << 30
+	var where_lead := ""
+	var where_weak := ""
+	for raw: Variant in (result["phases"] as Array):
+		var row := raw as Dictionary
+		if int(row["lead_margin"]) < lead:
+			lead = int(row["lead_margin"])
+			where_lead = str(row["name"])
+		if int(row["all_margin"]) < weakest:
+			weakest = int(row["all_margin"])
+			where_weak = str(row["name"])
+	var exit_levels: Array = result["exit"] as Array
+	if int(exit_levels[LEAD_INDEX]) - CLOUDREACH_EXIT_TARGET < lead:
+		lead = int(exit_levels[LEAD_INDEX]) - CLOUDREACH_EXIT_TARGET
+		where_lead = "exit"
+	if _min_level(exit_levels) - (CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD) < weakest:
+		weakest = _min_level(exit_levels) - (CLOUDREACH_EXIT_TARGET - RETAINED_SPREAD)
+		where_weak = "exit"
+	return {"lead": lead, "lead_at": where_lead, "weakest": weakest, "weakest_at": where_weak}
 
 
 func _lowest(party: Array) -> Dictionary:
@@ -506,6 +547,7 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 		return _cache[key] as Dictionary
 	var ignore_gates := bool(options.get("ignore_gates", false))
 	var fraction := float(options.get("wild_fraction", WILD_FRACTION))
+	var on_route := float(options.get("on_route_m", ON_ROUTE_M))
 	var lead := _meadows_exit_lead()
 	var party: Array = []
 	for i in TEAM_SIZE:
@@ -555,7 +597,7 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 			for raw: Variant in (_json(ENCOUNTERS_PATH).get("wild_sites", []) as Array):
 				var site := raw as Dictionary
 				var id := str(site.get("id", ""))
-				if sites_used.has(id) or _path_distance(_vec(site.get("position", [])), path) > ON_ROUTE_M:
+				if sites_used.has(id) or _path_distance(_vec(site.get("position", [])), path) > on_route:
 					continue
 				var table: Dictionary = tables.get(str(site.get("table_id", "")), {}) as Dictionary
 				var gate := str(table.get("requires_unlock", ""))
@@ -575,7 +617,7 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 				var gate := str(spec.get("requires_unlock", ""))
 				if not gate.is_empty() and not flags.has(gate) and not ignore_gates:
 					continue
-				if _path_distance(_pickup_position(spec), path) > ON_ROUTE_M:
+				if _path_distance(_pickup_position(spec), path) > on_route:
 					continue
 				pickups_used[id] = true
 				var item_id := str(spec.get("item_id", ""))
@@ -632,10 +674,19 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 			if int(options.get("drop_wild_phase", -1)) == phases.size():
 				fought = 0
 			var wild_xp := 0
+			# Sensitivity: the first N of this phase's wild kills are landed by
+			# the weakest bench member instead of the lead.
+			var bench_kills := int((options.get("bench_kills", {}) as Dictionary).get(phases.size(), 0))
 			for i in fought:
 				fought_ids.append(str((sites[i] as Dictionary)["id"]))
-				wild_xp += _defeat(party, int((sites[i] as Dictionary)["level"]))
+				var active := -1
+				if i < bench_kills:
+					active = party.find(_lowest(party))
+				var award := _defeat(party, int((sites[i] as Dictionary)["level"]), active)
+				if active < 0:
+					wild_xp += award
 			var before := _levels(party)
+			var before_xp := _xps(party)
 			var trainer_xp := 0
 			if str(options.get("drop_trainer_xp", "")) != trainer_id:
 				for raw: Variant in _slots(trainer_id):
@@ -653,7 +704,7 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 				"available": sites.size(), "fought": fought, "wild_xp": wild_xp,
 				"ace": ace, "need_lead": ace - LEAD_ACE_TOLERANCE,
 				"need_all": ace - LEAD_ACE_TOLERANCE - RETAINED_SPREAD,
-				"before": before, "trainer_xp": trainer_xp, "after": _levels(party),
+				"before": before, "before_xp": before_xp, "trainer_xp": trainer_xp, "after": _levels(party),
 				"coins": int(reward.get("coins", 0))}, true)
 			phase["lead_margin"] = int(before[LEAD_INDEX]) - int(phase["need_lead"])
 			phase["all_margin"] = _min_level(before) - int(phase["need_all"])
@@ -669,11 +720,19 @@ func ledger(options: Dictionary = {}) -> Dictionary:
 	for i in tail_fought:
 		fought_ids.append(str((tail_sites[i] as Dictionary)["id"]))
 		tail_xp += _defeat(party, int((tail_sites[i] as Dictionary)["level"]))
+	# Sensitivity only: the finale's reward candy fed before the overlook
+	# (affects the exit, never a fight band).
+	if bool(options.get("feed_finale_reward", false)):
+		for raw: Variant in (_reward(str(_json(FINALE_PATH).get("encounter_id", ""))).get("items", []) as Array):
+			var grant := raw as Dictionary
+			var up := int((items.get(str(grant.get("id", "")), {}) as Dictionary).get("level_up", 0)) * int(grant.get("count", 0))
+			for _i in up:
+				_feed_candy(_lowest(party), 1)
 	phase.merge({"trainer": "", "name": "Exit (overlook)", "available": tail_sites.size(),
-		"fought": tail_fought, "wild_xp": tail_xp, "before": _levels(party), "after": _levels(party),
+		"fought": tail_fought, "wild_xp": tail_xp, "before": _levels(party), "before_xp": _xps(party), "after": _levels(party),
 		"trainer_xp": 0, "coins": 0}, true)
 	var result := {"entry": entry, "phases": phases, "tail": phase, "steps": steps,
-		"exit": _levels(party), "fought_ids": fought_ids, "problems": problems, "options": options}
+		"exit": _levels(party), "exit_xp": _xps(party), "fought_ids": fought_ids, "problems": problems, "options": options}
 	_cache[key] = result
 	return result
 
