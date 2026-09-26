@@ -17,6 +17,7 @@ var _tid := ""
 var _out := ""
 var _frames := 24
 var _interval := 0.5
+var _container: Node = null
 
 func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
@@ -92,6 +93,7 @@ func _collect_nodes() -> bool:
 			var body := node.call("body_for", _tid) as Node3D
 			if body != null:
 				_trainer = body
+				_container = node
 				print("trainer %s found under %s" % [_tid, _world.get_path_to(node)])
 				break
 	if _trainer == null:
@@ -142,5 +144,12 @@ func _diagnose_and_activate() -> void:
 	var provider: Variant = arbiter.call("winning_provider")
 	print("challenge: arbiter enabled=%s input_owner=%s winner=%s" % [
 		str(arbiter.get("_enabled")), str(owner), str(provider)])
+	print("challenge: winning offer %s" % str(arbiter.get("_winner")))
 	print("challenge: activate() -> %s, panel open=%s" % [
 		str(arbiter.call("activate")), str(_panel.call("is_open"))])
+	if not bool(_panel.call("is_open")) and _container != null and _container.has_method("_on_challenged"):
+		# The trainer container's own handler -- what its prompt's
+		# interaction_activate() runs -- so the conversation and the fight
+		# that follows are the production ones.
+		_container.call("_on_challenged", _spec)
+		print("challenge: trainer _on_challenged -> panel open=%s" % str(_panel.call("is_open")))
