@@ -1,0 +1,256 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=4608 control_port=32903 home=<scratch>/run1/net/home-0 log=<scratch>/run1/net/peer-0.log
+coordinator: launched peer 1 (client) pid=4609 control_port=37653 home=<scratch>/run1/net/home-1 log=<scratch>/run1/net/peer-1.log
+coordinator: peer 0 hello: {"enet_port":28761.0,"godot_version":"4.7-stable (official)","main_sha":"1c4558f6f8cc","peer":0.0,"pid":4608.0,"role":"host","type":"hello","user_data_dir":"<scratch>/run1/net/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":28762.0,"godot_version":"4.7-stable (official)","main_sha":"1c4558f6f8cc","peer":1.0,"pid":4609.0,"role":"client","type":"hello","user_data_dir":"<scratch>/run1/net/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #1 peer 1 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
+PASS: #2 peer 0 story_flag (setup: both worlds hold the Cloudreach key) -> PASS -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: #2 peer 1 story_flag (setup: both worlds hold the Cloudreach key) -> PASS -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: #3 peer 1 story_flag (setup: ONLY the guest's own world has the upper counterweight route open) -> PASS -- cloudreach_upper_route_unlocked: ok=true pending=false code='' reason=''
+PASS: #4 peer 1 party_grant (setup: guest party_grant meadowhart (its ground mount, first = active)) -> PASS -- 'meadowhart' at level 20 joined the party (1 member(s))
+PASS: #5 peer 1 party_grant (setup: guest party_grant bramblebun) -> PASS -- 'bramblebun' at level 20 joined the party (2 member(s))
+PASS: #6 peer 1 party_grant (setup: guest party_grant terrapup) -> PASS -- 'terrapup' at level 20 joined the party (3 member(s))
+PASS: #7 peer 1 party_grant (setup: guest party_grant brooktail) -> PASS -- 'brooktail' at level 20 joined the party (4 member(s))
+PASS: #8 peer 1 party_grant (setup: guest party_grant mudsnout) -> PASS -- 'mudsnout' at level 20 joined the party (5 member(s))
+PASS: #9 peer 1 storage_grant (setup: a saddle in the guest's satchel (not pre-fitted: mount() fits it)) -> PASS -- granted 1 saddle (0 did not fit)
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #10 peer 0 enter_realm (host enters Cloudreach in its own world) -> PASS -- crossed 'meadows' -> 'cloudreach' after 265 observed physics frames / 305577 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #11 peer 1 enter_realm (guest enters Cloudreach in its own world) -> PASS -- crossed 'meadows' -> 'cloudreach' after 269 observed physics frames / 306961 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: #12 peer 1 assert (guest owns five) -> PASS -- party size 5 (wanted 5)
+PASS: #13 peer 1 save_character_here (guest saves its own world (gate open) + portable character at the Cloudreach arrival) -> PASS -- character 'character-d6bec432d53fecd1b1c956b2a2529114' is on disk (wrote_world=true)
+PASS: #14 peer 0 host -> PASS -- hosting udp/28761 as peer 1
+PASS: #15 peer 0 assert (host world: gate CLOSED before the join) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #16 peer 1 production_join (guest continues its own save through the title's production join) -> PASS -- title fresh entry built 'CloudreachCliffs' first, then JoinDriver joined 127.0.0.1:28761 as peer 1582486458 after 42 frames
+PASS: #17 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #17 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #18 peer 1 assert (JOIN: guest now reads the host's closed gate) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+PASS: #19 peer 1 probe player_identity (JOIN: guest in Cloudreach, five owned) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[0.0,105.030204772949,-260.0]},"character_id":"character-d6bec432d53fecd1b1c956b2a2529114","display_name":""
+PASS: #20 peer 1 teleport (A setup: guest on the arrival landing (the authored arrival itself)) -> PASS -- trainer stands at (0.00, 105.03, -260.00)
+PASS: #21 peer 1 deploy_creature (A: the guest's Meadowhart is out (already out, or summoned by the director)) -> PASS -- deployed AllyCreature
+PASS: #22 peer 1 ride_mount (A: guest mounts its Meadowhart (production mount(); harness stands it 1.2 m beside the mount first)) -> PASS -- riding AllyCreature
+PASS: #23 peer 1 probe riding (A: guest is riding its own saddled Meadowhart) -> PASS -- {"local":{"mount":"AllyCreature","mounted":true,"saddle_worn":true,"seated":true,"species":"meadowhart","speed":10.0},"remote":{"1":{"above":0.0,"carried":false,"gap":-1.0,"mount":"","mount_saddle_worn":false,"mount_species":"","pos":[0.0,105.030204772949,-260.0],"riding":false,"saddled":false,"seat
+PASS: #24 peer 1 move_to (A: guest rides onto the arrival road (real stick)) -> PASS -- arrived within 2.50 m of (-1.6, -254.0)
+PASS: #25 peer 1 move_to (A: guest rides up the road centreline) -> PASS -- arrived within 3.00 m of (-5.3, -240.0)
+PASS: #26 peer 1 assert (A: the ride covered the ~20 m to the waypoint) -> PASS -- 2.82 m from (-5.3, -240.0), wanted within 4.00
+PASS: #27 peer 1 probe riding (A: still mounted just before the drop) -> PASS -- {"local":{"mount":"AllyCreature","mounted":true,"saddle_worn":true,"seated":true,"species":"meadowhart","speed":10.0},"remote":{"1":{"above":0.0,"carried":false,"gap":-1.0,"mount":"","mount_saddle_worn":false,"mount_species":"","pos":[0.0,105.030204772949,-260.0],"riding":false,"saddled":false,"seat
+PASS: #28 peer 1 probe flying (A: trainer carried by the mount before the drop) -> PASS -- {"local":{"anchor":{"accepts":3.0,"anchor":[-1.70069003105164,105.964721679688,-242.793151855469],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"","pending":false,"proposals":3.0,"realm":"cloudreach","refusals":0.0},"blockers":"Fly is unavailable while riding or in combat.
+PASS: #29 peer 1 probe position (A: ride pose before the drop) -> PASS -- [-4.5771918296814,108.206649780273,-242.556503295898]
+PASS: #30 peer 1 probe tournament (A: party ids before the drop) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-0d78a4d104c42bd0d0c1ea975c19ee18","creature-8b6bf45eda994a8e40b8861df2bc444c","creature-d61a1bdcd792118a18d9a0783f26d762","creature-c9be7fc9
+PASS: #31 peer 1 probe deployed_creatures (A: guest's deployed bodies before the drop) -> PASS -- {"AllyCreature":{"authority":1.0,"local":true,"mine":false,"owner":1582486458.0,"pos":[-4.72857522964478,106.043655395508,-242.042190551758],"species":"meadowhart","visible":true},"AllyCreature_1582486458":{"authority":1582486458.0,"local":false,"mine":true,"owner":1582486458.0,"pos":[-4.68970918655
+PASS: #32 peer 0 probe riding (A: host's view of the guest riding before the drop) -> PASS -- {"local":{"mount":"","mounted":false,"saddle_worn":false,"seated":false,"species":"","speed":0.0},"remote":{"1582486458":{"above":2.18780517578125,"carried":true,"gap":2.20232033729553,"mount":"AllyCreature_1582486458","mount_saddle_worn":true,"mount_species":"meadowhart","pos":[-4.39898443222046,10
+PASS: #33 peer 0 probe deployed_creatures (A: host's deployed bodies before the drop) -> PASS -- {"AllyCreature_1582486458":{"authority":1582486458.0,"local":false,"mine":false,"owner":1582486458.0,"pos":[-4.47028255462646,105.963851928711,-242.919891357422],"species":"meadowhart","visible":true}}
+PASS: #34 peer 1 drop_link (A: guest's link drops MID-RIDE) -> PASS -- transport closed without a Session.leave()
+PASS: #35 peer 0 expect_peers -> PASS -- registry reports 1 peer(s) after 0 frames
+PASS: #36 peer 1 probe input_context (A: the dropped guest is back at the title) -> PASS -- "title"
+PASS: #37 peer 0 probe deployed_creatures (A: host after the drop: the guest's proxies are gone) -> PASS -- {}
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #38 peer 1 production_join (A: guest rejoins from the title as the same character (returning route)) -> PASS -- title returning entry built 'CloudreachCliffs' first, then JoinDriver joined 127.0.0.1:28761 as peer 105835569 after 30 frames
+PASS: #39 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #39 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #40 peer 1 wait -> PASS -- waited 120 physics frames
+PASS: #41 peer 1 probe player_identity (A: identity after rejoin: same character, five owned) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[0.0,105.030204772949,-260.0]},"character_id":"character-d6bec432d53fecd1b1c956b2a2529114","display_name":""
+PASS: #42 peer 1 probe tournament (A: party ids after rejoin (compare with the row before the drop)) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-0d78a4d104c42bd0d0c1ea975c19ee18","creature-8b6bf45eda994a8e40b8861df2bc444c","creature-d61a1bdcd792118a18d9a0783f26d762","creature-c9be7fc9
+PASS: #43 peer 1 probe riding (A: rider state after rejoin: NOT mounted (no phantom ride)) -> PASS -- {"local":{"mount":"","mounted":false,"saddle_worn":false,"seated":false,"species":"","speed":0.0},"remote":{"1":{"above":0.0,"carried":false,"gap":-1.0,"mount":"","mount_saddle_worn":false,"mount_species":"","pos":[0.0,105.030204772949,-260.0],"riding":false,"saddled":false,"seated":false,"visible":
+PASS: #44 peer 1 probe flying (A: trainer on its own feet on a floor, not carried, not flying) -> PASS -- {"local":{"anchor":{"accepts":1.0,"anchor":[0.0,106.910209655762,-260.0],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"","pending":false,"proposals":1.0,"realm":"cloudreach","refusals":0.0},"blockers":"Complete the Windscar flight trial to unlock Fly.","carried":false,"ca
+PASS: #45 peer 1 probe on_floor (A: on_floor) -> PASS -- true
+PASS: #46 peer 1 probe position (A: position after rejoin) -> PASS -- [0.0,105.030204772949,-260.0]
+PASS: #47 peer 1 assert (A: guest is NOT inside sealed Upper Cloudreach) -> FAIL -- 4169.23 m from (-400.0, 3890.0), wanted within 40.00
+PASS: #48 peer 1 assert (A: guest stands on the authored Cloudreach arrival (MULTIPLAYER Return-home placement: returning route loads its own slot-0, a different world instance)) -> PASS -- 0.00 m from (0.0, -260.0), wanted within 5.00
+PASS: #49 peer 1 probe deployed_creatures (A: guest's deployed bodies after rejoin (one local Meadowhart at most)) -> PASS -- {}
+PASS: #50 peer 0 probe deployed_creatures (A: host's deployed bodies after rejoin (one proxy of the guest's companion at most)) -> PASS -- {}
+PASS: #51 peer 0 probe riding (A: host's view of the rejoined guest (remote row: riding/carried expected false; judged in the reviewer note)) -> PASS -- {"local":{"mount":"","mounted":false,"saddle_worn":false,"seated":false,"species":"","speed":0.0},"remote":{"105835569":{"above":0.0,"carried":false,"gap":-1.0,"mount":"","mount_saddle_worn":false,"mount_species":"","pos":[0.0,105.030204772949,-260.0],"riding":false,"saddled":false,"seated":false,"v
+PASS: #52 peer 0 assert (A: host world flags unchanged) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+PASS: #53 peer 1 assert (A: guest reads the host's closed gate after rejoin) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+PASS: #54 peer 1 deploy_creature (A: companion out after rejoin) -> PASS -- deployed AllyCreature
+PASS: #55 peer 1 ride_mount (A: the same Meadowhart can be mounted again (no stuck/phantom ride state)) -> PASS -- riding AllyCreature
+PASS: #56 peer 1 probe riding (A: remounted its own Meadowhart) -> PASS -- {"local":{"mount":"AllyCreature","mounted":true,"saddle_worn":true,"seated":true,"species":"meadowhart","speed":10.0},"remote":{"1":{"above":0.0,"carried":false,"gap":-1.0,"mount":"","mount_saddle_worn":false,"mount_species":"","pos":[0.0,105.030204772949,-260.0],"riding":false,"saddled":false,"seat
+PASS: #57 peer 1 ride_dismount (A: and dismounts onto ground) -> PASS -- dismounted; trainer visible=true on_floor=true
+PASS: #58 peer 1 assert (A: still five after remount/dismount) -> PASS -- party size 5 (wanted 5)
+PASS: #59 peer 1 teleport (B setup: guest on the counterweight pass, ~120 m below the closed gate, legal (windscar_ravine) side) -> PASS -- trainer stands at (-786.00, 611.18, 3444.00)
+PASS: #60 peer 1 wait -> PASS -- waited 60 physics frames
+PASS: #61 peer 1 probe position (B: pose on the pass) -> PASS -- [-786.0,611.184204101562,3444.0]
+PASS: #62 peer 1 probe on_floor (B: on the pass floor) -> PASS -- true
+PASS: #63 peer 1 deploy_creature (B: Meadowhart out (the follower reappears beside a teleported trainer)) -> PASS -- a creature was already out
+PASS: #64 peer 1 ride_mount (B: guest mounts on the pass) -> PASS -- riding AllyCreature
+PASS: #65 peer 1 move_to (B: rides up the pass to its bend) -> PASS -- arrived within 3.00 m of (-818.0, 3478.0)
+PASS: #66 peer 1 move_to (B: rides toward the closed gate (17 m short)) -> PASS -- arrived within 3.00 m of (-790.0, 3540.0)
+PASS: #67 peer 1 move_to (B: rides INTO the closed gate: cannot reach the far side) -> FAIL -- did not reach (-770.0, 3580.0): 30.22 m short of close_enough=3.00
+PASS: #68 peer 1 probe riding (B: still mounted against the gate) -> PASS -- {"local":{"mount":"AllyCreature","mounted":true,"saddle_worn":true,"seated":true,"species":"meadowhart","speed":10.0},"remote":{"1":{"above":0.0,"carried":false,"gap":-1.0,"mount":"","mount_saddle_worn":false,"mount_species":"","pos":[0.0,105.030204772949,-260.0],"riding":false,"saddled":false,"seat
+PASS: #69 peer 1 probe position (B: ride pose at the gate before the drop) -> PASS -- [-786.238952636719,650.916870117188,3554.51196289062]
+PASS: #70 peer 1 assert (B: the ride did not pass the closed gate) -> FAIL -- 30.22 m from (-770.0, 3580.0), wanted within 15.00
+PASS: #71 peer 1 probe tournament (B: party ids before the drop) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-0d78a4d104c42bd0d0c1ea975c19ee18","creature-8b6bf45eda994a8e40b8861df2bc444c","creature-d61a1bdcd792118a18d9a0783f26d762","creature-c9be7fc9
+PASS: #72 peer 1 drop_link (B: guest's link drops MID-RIDE at the closed gate) -> PASS -- transport closed without a Session.leave()
+PASS: #73 peer 0 expect_peers -> PASS -- registry reports 1 peer(s) after 0 frames
+PASS: #74 peer 1 probe input_context (B: dropped guest is at the title) -> PASS -- "title"
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #75 peer 1 production_join (B: guest rejoins from the title (returning route; its own world has the gate OPEN)) -> PASS -- title returning entry built 'CloudreachCliffs' first, then JoinDriver joined 127.0.0.1:28761 as peer 637967801 after 29 frames
+PASS: #76 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #76 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:515)
+       [1] write_snapshot (res://scripts/save/save_game.gd:500)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:489)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:476)
+         [3] _tick_autosave (res://autoload/game_state.gd:1004)
+         [4] _process (res://autoload/game_state.gd:1049)
+PASS: #77 peer 1 wait -> PASS -- waited 120 physics frames
+PASS: #78 peer 1 probe player_identity (B: identity after rejoin) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[0.0,105.030204772949,-260.0]},"character_id":"character-d6bec432d53fecd1b1c956b2a2529114","display_name":""
+PASS: #79 peer 1 probe tournament (B: party ids after rejoin) -> PASS -- {"battle_active":false,"flags":{"recipe_saddle":false,"tournament_quarter_won":false,"tournament_semi_won":false,"tournament_won":false},"party_ids":["creature-0d78a4d104c42bd0d0c1ea975c19ee18","creature-8b6bf45eda994a8e40b8861df2bc444c","creature-d61a1bdcd792118a18d9a0783f26d762","creature-c9be7fc9
+PASS: #80 peer 1 probe riding (B: NOT mounted after rejoin) -> PASS -- {"local":{"mount":"","mounted":false,"saddle_worn":false,"seated":false,"species":"","speed":0.0},"remote":{"1":{"above":0.0,"carried":false,"gap":-1.0,"mount":"","mount_saddle_worn":false,"mount_species":"","pos":[0.0,105.030204772949,-260.0],"riding":false,"saddled":false,"seated":false,"visible":
+PASS: #81 peer 1 probe flying (B: on its own feet on a floor) -> PASS -- {"local":{"anchor":{"accepts":1.0,"anchor":[0.0,106.910209655762,-260.0],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"","pending":false,"proposals":1.0,"realm":"cloudreach","refusals":0.0},"blockers":"Complete the Windscar flight trial to unlock Fly.","carried":false,"ca
+PASS: #82 peer 1 probe position (B: position after rejoin) -> PASS -- [0.0,105.030204772949,-260.0]
+PASS: #83 peer 1 assert (B: NOT past the closed gate on the pass) -> FAIL -- 3916.44 m from (-770.0, 3580.0), wanted within 15.00
+PASS: #84 peer 1 assert (B: NOT inside sealed Upper Cloudreach) -> FAIL -- 4169.23 m from (-400.0, 3890.0), wanted within 40.00
+PASS: #85 peer 1 assert (B: on the authored arrival (Return-home placement)) -> PASS -- 0.00 m from (0.0, -260.0), wanted within 5.00
+PASS: #86 peer 1 assert (B: guest reads the host's closed gate (its own world's open flag did not leak)) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+PASS: #87 peer 0 assert (B: host world flags unchanged) -> FAIL -- flag cloudreach_upper_route_unlocked NOT set
+PASS: #88 peer 1 probe deployed_creatures (B: guest's deployed bodies after rejoin) -> PASS -- {}
+PASS: #89 peer 0 probe deployed_creatures (B: host's deployed bodies after rejoin) -> PASS -- {}
+PASS: #90 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-00263a7ae410fae032137d6cf8b39f90' on disk=true; copied 3 files to <scratch>/run1/peer-0/after_midride_rejoins
+PASS: #90 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-d6bec432d53fecd1b1c956b2a2529114' on disk=true; copied 3 files to <scratch>/run1/peer-1/after_midride_rejoins
+PASS: #91 peer 0 check_saved (host's saved world: gate still closed) -> PASS -- missing []; unexpectedly present []; read ["slot-0/world.json"] under after_midride_rejoins/worlds
+PASS: #92 peer 1 check_saved (guest's saved character: Cloudreach, Meadowhart owned) -> PASS -- missing []; unexpectedly present []; read ["character-d6bec432d53fecd1b1c956b2a2529114/character.json"] under after_midride_rejoins/characters
+PASS: #93 peer 0 story_flag (CONTROL setup: the host opens the gate) -> PASS -- cloudreach_upper_route_unlocked: ok=true pending=false code='' reason=''
+PASS: #94 peer 1 wait_flag -> PASS -- flag cloudreach_upper_route_unlocked (any) set after 0 frames
+PASS: #95 peer 1 teleport (CONTROL setup: guest past the now-open gate) -> PASS -- trainer stands at (-400.00, 780.03, 3890.00)
+PASS: #96 peer 1 wait -> PASS -- waited 60 physics frames
+PASS: #97 peer 1 deploy_creature -> PASS -- deployed AllyCreature
+PASS: #98 peer 1 ride_mount (CONTROL: guest mounts past the open gate) -> PASS -- riding AllyCreature
+PASS: #99 peer 1 stick (CONTROL: rides a few metres) -> PASS -- left stick (0.00, 1.00) for 45 frames
+PASS: #100 peer 1 probe riding (CONTROL: mounted before leaving) -> PASS -- {"local":{"mount":"AllyCreature","mounted":true,"saddle_worn":true,"seated":true,"species":"meadowhart","speed":10.0},"remote":{"1":{"above":0.0,"carried":false,"gap":-1.0,"mount":"","mount_saddle_worn":false,"mount_species":"","pos":[0.0,105.030204772949,-260.0],"riding":false,"saddled":false,"seat
+PASS: #101 peer 1 probe position -> PASS -- [-397.845550537109,782.218688964844,3894.50122070312]
+PASS: #102 peer 1 leave (CONTROL: guest leaves mid-ride (clean leave, world scene kept)) -> PASS -- client left cleanly after 0 frames
+PASS: #103 peer 0 expect_peers -> PASS -- registry reports 1 peer(s) after 2 frames
+PASS: #104 peer 1 join (CONTROL: guest rejoins the open world) -> PASS -- joined 127.0.0.1:28761 as peer 946747432 after 3 frames; snapshot applied; 2 peer(s) in registry
+PASS: #105 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #105 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames
+PASS: #106 peer 1 wait -> PASS -- waited 60 physics frames
+PASS: #107 peer 1 probe player_identity (CONTROL: five owned) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[-397.845550537109,782.218688964844,3894.50122070312]},"character_id":"character-d6bec432d53fecd1b1c956b2a25
+PASS: #108 peer 1 probe riding (CONTROL: rider state after a clean mid-ride leave/join (recorded)) -> PASS -- {"local":{"mount":"AllyCreature","mounted":true,"saddle_worn":true,"seated":true,"species":"meadowhart","speed":10.0},"remote":{"1":{"above":0.0,"carried":false,"gap":-1.0,"mount":"","mount_saddle_worn":false,"mount_species":"","pos":[0.0,105.030204772949,-260.0],"riding":false,"saddled":false,"seat
+PASS: #109 peer 1 probe position (CONTROL: position) -> PASS -- [-397.845550537109,782.218688964844,3894.50122070312]
+PASS: #110 peer 1 assert (CONTROL: with the gate open the rejoined guest DOES stand past it (the 'not sealed' check can fail)) -> PASS -- 4.99 m from (-400.0, 3890.0), wanted within 40.00
+ALL CHECKS PASSED
+exit 0
