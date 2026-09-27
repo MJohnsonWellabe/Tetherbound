@@ -4,6 +4,7 @@ extends RefCounted
 const SWIMMER := preload("res://tests/helpers/water_earned_swimmer_segment.gd")
 const HARVEST := preload("res://tests/helpers/water_reedhaven_segment.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const POCKET := preload("res://tests/smoke_water_pocket_walk_claim.gd")
 var failures: Array[String] = []
 var _tree: SceneTree
 var world: Node3D
@@ -195,6 +196,12 @@ func _gather_costs() -> bool:
 		if selected.has("approach_from") and not await _harvest._walk_to(_point(selected.approach_from), str(selected.id) + " authored approach"):
 			_fail("Saddle supply approach failed: %s" % str(_harvest.failures))
 			return false
+		elif not selected.has("approach_from"):
+			var node_at := _point(selected.position)
+			node_at.y = float(world.call("ground_height_at", node_at.x, node_at.z)) + 0.1
+			if not await planned_approach(_harvest, world, player, node_at, str(selected.id)):
+				_fail("Saddle supply planned approach failed: %s" % str(_harvest.failures))
+				return false
 		var item := str(selected.item_id)
 		var tool := "knife" if item == "reed_fiber" else str(selected.gather_action)
 		if not await _harvest._gather(str(selected.id), item, tool):
@@ -207,6 +214,26 @@ func _gather_costs() -> bool:
 		return true
 	_fail("Finite unclaimed Tidal supplies did not cover the exact production saddle cost")
 	return false
+
+## Route planning only (real stick input, no position write): the straight
+## residency walk cannot leave the Tidal Cradle plateau (the preparation's
+## own harvest:013/014 detour and the Aquaryn end pose are ~40 m above the
+## driftwood/reed rows; DRY RUN 5 stalled at its rim). Walk the baked-ground
+## A* legs toward a row first; the residency walk then finishes the approach.
+## An empty plan (row already at hand or no dry route) keeps the old path.
+static func planned_approach(harvest: RefCounted, actual_world: Node3D, body: Node3D,
+		target: Vector3, label: String) -> bool:
+	var from := Vector2(body.global_position.x, body.global_position.z)
+	if from.distance_to(Vector2(target.x, target.z)) <= 12.0:
+		return true
+	var route: Array = POCKET.plan_route(actual_world, from, Vector2(target.x, target.z)).points
+	# The last A* point is the row itself; the residency walk owns that leg.
+	for index in maxi(route.size() - 1, 0):
+		var point: Vector2 = route[index]
+		var leg := Vector3(point.x, float(actual_world.call("ground_height_at", point.x, point.y)) + 0.1, point.y)
+		if not await harvest._walk_to(leg, "%s planned leg %d/%d" % [label, index + 1, route.size()], 1.8):
+			return false
+	return true
 
 func _nearest_dry_swimmer() -> Node3D:
 	var selected: Node3D
