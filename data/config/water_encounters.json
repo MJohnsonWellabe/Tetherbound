@@ -6691,15 +6691,16 @@
       "region_id": "tidal_cradle",
       "table_id": "water_tidal_cradle_land",
       "island_local_offset": [
-        -93.617,
-        33.981,
-        -137.858
+        -125.0,
+        35.32,
+        -105.0
       ],
       "position": [
-        606.383,
-        33.981,
-        1392.142
+        575.0,
+        35.32,
+        1425.0
       ],
+      "_why_moved_0927_visuals": "F14#0 C3 (tb/tidewake-visuals): this pair stood 4.5 m from the Aquaryn Alpha's spine vertex (601.6, 1389.4); the shared Alpha fight has no local arena, so both creatures walked into it and one sat between the fight camera and both fighters (capture r6w). 44.9 m back up the same spine toward (560.4, 1449.4), on the graded road (4 m ground deviation 0.24 m; the cut shoulders here rise 2.4-4.8 m), 55 m from spine_02.",
       "count": 2,
       "radius_m": 3.0,
       "habitat": "land",
