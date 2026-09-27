@@ -14,13 +14,18 @@ extends "res://tests/helpers/cloudreach_witness_route.gd"
 ##     never inside a sealed restriction box (High Roost before Fly unlock,
 ##     Upper/Summit before the counterweight route) or outside the trial box
 ##     while the trial is the only authorization;
+##   * full route only (coordinator Q2): after the windlass lifts every Fly
+##     restriction and before Officer Voss is beaten, an active overfly: launch
+##     the loaner by double-jump where the route stands after the two upper
+##     anchors and fly straight at the
+##     summit threshold. The flyer must never stand on a floor within
+##     OVERFLY_GATE_RADIUS_M of the threshold or arena, and no Voss-gated
+##     progression flag may be set before Voss falls;
 ##   * after the route's save/reload, no loaner species is in the saved party.
 ##
-## `--start=aerie` runs from the declared aerie fixture instead (see
-## tests/helpers/cloudreach_witness_route.gd); its evidence goes to `aerie-start/`.
-## START STATE (disclosed): committed completed-Meadows fixture of
-## smoke_cloudreach_continuous (the earned c1_arrival save is F06#0 and does not
-## exist yet). `--from-save=<dir>` runs it from an earned save.
+## START STATE: `--from-save=res://tests/fixtures/earned_saves/c1_arrival` runs
+## from the earned C1 handoff save. `--start=aerie` runs from the declared aerie
+## fixture instead (DRY RUN, does not count; evidence in `aerie-start/`).
 const WITNESS_DIR := "res://ralph/reports/CLOUDREACH/b/f06-3-loaner"
 
 var sealed_boxes: Array[Dictionary] = []
@@ -34,6 +39,12 @@ var violations: Array[Dictionary] = []
 var pre_trial_probe: Dictionary = {}
 var was_flying := false
 var initial_party_keys: Array[String] = []
+const SUMMIT_THRESHOLD := Vector3(100, 1160, 5350)
+const SUMMIT_ARENA := Vector3(100, 1160, 5450)
+const OVERFLY_GATE_RADIUS_M := 40.0
+const OVERFLY_FRAMES := 3600
+const VOSS_GATED_FLAGS: Array[String] = ["cloudreach_upper_anchors_disabled", "summit_extraction_engine_reached", "captain_veyra_defeated"]
+var pre_voss_overfly: Dictionary = {}
 
 
 ## Stable across save/reload: the persisted uid when present, otherwise the
@@ -123,6 +134,66 @@ func _trial() -> bool:
 	return await _sealed_upper_attempt()
 
 
+func _battle(id: String) -> bool:
+	if id == "officer_voss_summit_approach" and pre_voss_overfly.is_empty() and leg.is_empty():
+		if not await _pre_voss_overfly(): return false
+	return await super._battle(id)
+
+
+## Coordinator Q2: the windlass has lifted every Fly restriction box; Voss's
+## approach is now the only thing between the trainer and the summit. Launch
+## the loaner by ordinary double-jump and fly straight at the summit threshold
+## for up to OVERFLY_FRAMES, then descend and land wherever the glide ends. The
+## base route then walks on to Voss from there.
+func _pre_voss_overfly() -> bool:
+	stage = "witness_pre_voss_overfly"
+	await _wait_on_floor()
+	var start := player.global_position
+	var flags_before := VOSS_GATED_FLAGS.filter(func(f: String) -> bool: return _has(f))
+	var previous_clock := await _normal_input_clock("pre-Voss loaner overfly launch")
+	await _tap("jump")
+	await _tap("jump")
+	await _frames(5)
+	await _restore_route_clock(previous_clock)
+	var launched: bool = fly.is_flying()
+	var loaner: bool = launched and fly.last_flight_used_mentor_loaner()
+	var closest := INF
+	var grounded_near := 0
+	var frames := 0
+	overfly_window = true
+	if launched:
+		for frame in OVERFLY_FRAMES:
+			if not fly.is_flying(): break
+			var offset := SUMMIT_THRESHOLD - player.global_position
+			_steer(offset, 1.0)
+			_input("jump", 1 if offset.y > 2 else 0)
+			await _frames(1)
+			frames += 1
+			closest = minf(closest, minf(player.global_position.distance_to(SUMMIT_THRESHOLD), player.global_position.distance_to(SUMMIT_ARENA)))
+		_release()
+		for frame in 2400:
+			if not fly.is_flying(): break
+			_input("fly_descend", 1)
+			await _frames(1)
+		_release()
+	await _wait_on_floor()
+	overfly_window = false
+	for tick in 60:
+		var near := minf(player.global_position.distance_to(SUMMIT_THRESHOLD), player.global_position.distance_to(SUMMIT_ARENA))
+		closest = minf(closest, near)
+		if player.is_on_floor() and near < OVERFLY_GATE_RADIUS_M: grounded_near += 1
+		await _frames(1)
+	var flags_after := VOSS_GATED_FLAGS.filter(func(f: String) -> bool: return _has(f))
+	pre_voss_overfly = {"start": str(start), "launched": launched, "loaner": loaner, "flight_frames": frames,
+		"end": str(player.global_position), "closest_to_summit_m": snappedf(closest, 0.1), "grounded_frames_within_gate_radius": grounded_near,
+		"voss_defeated": _has("defeated_cloudreach_voss"), "recoveries_to_last_safe_landing": overfly_recoveries, "gated_flags_before": flags_before, "gated_flags_after": flags_after,
+		"party_size": game.party.members().size()}
+	_log("witness_pre_voss_overfly", pre_voss_overfly)
+	if not _require(grounded_near == 0, "F06#3 the pre-Voss loaner overfly never stands within %.0f m of the summit threshold/arena" % OVERFLY_GATE_RADIUS_M): return false
+	if not _require(flags_after == flags_before, "F06#3 the pre-Voss overfly set no Voss-gated progression flag"): return false
+	return _require(game.party.members().size() == expected_party_size, "F06#3 party unchanged after the pre-Voss overfly")
+
+
 func _wait_on_floor() -> void:
 	_release()
 	for tick in 600:
@@ -138,6 +209,8 @@ func _finish() -> void:
 			"F06#3 every flight was the loaner carrying the unchanged five (%d launches)" % launches.size())
 		_require(owned_carrier_frames == 0, "F06#3 no owned creature was used as the carrier")
 		_require(not sealed_attempt.is_empty() and int(sealed_attempt.refused_after_frames) >= 0, "F06#3 the loaner flight was refused by the sealed Upper wind wall")
+		if leg.is_empty():
+			_require(not pre_voss_overfly.is_empty(), "F06#3 the full route ran the pre-Voss loaner overfly")
 		var species: Array = game.party.members().map(func(m: RefCounted) -> String: return str(m.species_id))
 		_require(species.size() == expected_party_size and not species.has(loaner_species) and _party_keys() == initial_party_keys, "F06#3 reloaded party is the same members, no loaner: " + str(species))
 	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
@@ -145,7 +218,7 @@ func _finish() -> void:
 	file.store_string(JSON.stringify({"criterion": "F06#3", "passed": completed_route and not failed,
 		"start_state": _start_state_label(), "leg": leg, "leg_persistence": leg_persistence, "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
-		"stage": stage, "sealed_attempt": sealed_attempt, "loaner_species": loaner_species, "pre_trial_probe": pre_trial_probe, "launches": launches,
+		"stage": stage, "sealed_attempt": sealed_attempt, "pre_voss_overfly": pre_voss_overfly, "loaner_species": loaner_species, "pre_trial_probe": pre_trial_probe, "launches": launches,
 		"flight_frames": flight_frames, "loaner_frames": loaner_frames, "owned_carrier_frames": owned_carrier_frames,
 		"initial_party_keys": initial_party_keys, "violations": violations, "final_party": game.party.members().map(func(m: RefCounted) -> String: return str(m.species_id)),
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}, "  "))

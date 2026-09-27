@@ -326,14 +326,14 @@ func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
 	return await super._walk_ground(at, radius)
 
 
-func _walk(target: Vector3, radius: float = 1.5, budget: int = -1) -> bool:
+func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort := false) -> bool:
 	if _ending_settled and not _road_care and not _fighting() and INPUT_OWNER.current(_tree) == null:
 		_road_care = true
 		var ok := await _road_bench_care()
 		_road_care = false
 		if not ok:
 			return false
-	return await super._walk(target, radius, budget)
+	return await super._walk(target, radius, budget, best_effort)
 
 
 func _road_bench_care() -> bool:
@@ -563,7 +563,7 @@ func _kell_to_rift(terrain: Dictionary, road: Array[Dictionary], points: Array[V
 	if through < storm_join or points[through].distance_to(SIGIL_NORTH) > 2.0:
 		return _fail("The forward road no longer passes the Sigil Gate north point")
 	for index in range(first, through + 1):
-		if index > 0 and points[index - 1].distance_to(QUARRY_POCKET) < 2.0:
+		if index > 0 and points[index - 1].distance_to(B14_QUARRY_ROAD_POINT) < 2.0:
 			if not await _quarry_northbound_detour():
 				return false
 		_leg_target = points[index]
@@ -591,7 +591,9 @@ func _kell_to_rift(terrain: Dictionary, road: Array[Dictionary], points: Array[V
 ## (404,1804). The southbound return had dropped off a ledge there. Walk round
 ## the foundation's east side by ordinary stick input and rejoin the road;
 ## disclosed as a helper-routing detour in the receipts.
-const QUARRY_POCKET := Vector2(400.0, 1800.0)
+## (tb/cloudreach's QUARRY_REVERSE_DETOUR in `_walk_ground` covers the same
+## pocket; this one runs first and ends outside its 14 m trigger.)
+const B14_QUARRY_ROAD_POINT := Vector2(400.0, 1800.0)
 const SIGIL_NORTH := Vector2(20.0, 7480.0)
 const GORGE_NORTH_Z := 7400.0
 const QUARRY_NORTHBOUND_DETOUR: Array[Vector2] = [Vector2(408.5, 1803.5), Vector2(406.5, 1809.5),

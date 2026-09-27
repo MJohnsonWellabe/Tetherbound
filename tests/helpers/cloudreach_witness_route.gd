@@ -58,12 +58,20 @@ var sealed_attempt: Dictionary = {}
 var want_exhausted_fall := false
 var exhausted_attempted := false
 var exhausted_window := false
+## Set by the loaner witness's pre-Voss overfly: a flight that cannot reach the
+## summit sinks and the production exhausted-fall branch carries the trainer
+## back to the last safe landing. That recovery is the gate holding, not a
+## route failure; it is counted, logged and asserted by the witness.
+var overfly_window := false
+var overfly_recoveries := 0
 var exhausted_fall: Dictionary = {}
 var sealed_upper_box := AABB()
 var write_checkpoints := false
 var resume_mode := false
 var checkpoint_regions: Dictionary = {}
 var checkpoint_world: Dictionary = {}
+var export_flight_dir := ""
+var flight_export: Dictionary = {}
 const CHECKPOINT_ROOT := "user://cloudreach_witness_checkpoints/"
 const MAP_STATE_SCRIPT := preload("res://scripts/world/cloudreach_map_state.gd")
 
@@ -73,6 +81,7 @@ func _run() -> void:
 		if arg.begins_with("--start="): start_point = arg.trim_prefix("--start=")
 		elif arg == "--checkpoints": write_checkpoints = true
 		elif arg == "--resume": resume_mode = true
+		elif arg.begins_with("--export-flight-trained="): export_flight_dir = arg.trim_prefix("--export-flight-trained=")
 	checkpoint_world = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
 	if resume_mode: skipping_to_aerie = false
 	if start_point == "aerie":
@@ -106,6 +115,7 @@ func _purpose(purpose: String, choice: String) -> void:
 
 func _record_frame() -> void:
 	super._record_frame()
+	_maybe_export_flight_trained()
 	if not write_checkpoints or failed or not is_instance_valid(player) or runtime == null: return
 	if fly == null or fly.is_flying() or not player.is_on_floor() or runtime.creature_piloted(): return
 	if director != null and director.trainer_battle_active(): return
@@ -120,6 +130,35 @@ func _record_frame() -> void:
 	var ok: bool = game.save_game(EARNED_SLOT)
 	game.save_system = previous
 	_log("witness_checkpoint", {"region": region, "dir": dir, "saved": ok, "earned": from_save.is_empty() == false and not resume_mode and start_point.is_empty()})
+
+
+## `--export-flight-trained=<absolute dir>` (coordinator, for X05's F06#5):
+## the first physics frame after Fly is trained on which the trainer stands on
+## a floor out of flight, fights and modals, write an ordinary game save of
+## that moment to <dir>/save/ (slot EARNED_SLOT). Only from an earned start;
+## nothing is written to the running game's own save directory.
+func _maybe_export_flight_trained() -> void:
+	if export_flight_dir.is_empty() or not flight_export.is_empty() or failed: return
+	if from_save.is_empty() or resume_mode or not start_point.is_empty(): return
+	if not is_instance_valid(player) or runtime == null or fly == null: return
+	if not _has("fly_traversal_unlocked") or fly.is_flying() or not player.is_on_floor() or runtime.creature_piloted(): return
+	if director != null and director.trainer_battle_active(): return
+	if manager != null and manager.is_fighting(): return
+	if INPUT_OWNER.current(self) != null: return
+	var dir := export_flight_dir.path_join("save/")
+	DirAccess.make_dir_recursive_absolute(dir)
+	var previous: RefCounted = game.save_system
+	game.save_system = SAVE.new(dir)
+	var ok: bool = game.save_game(EARNED_SLOT)
+	game.save_system = previous
+	flight_export = {"dir": dir, "saved": ok, "stage": stage, "position": str(player.global_position),
+		"simulated_seconds": snappedf(simulated_seconds, 0.01), "team": _team_snapshot(),
+		"flags": _flag_snapshot().size(), "fly_unlocked": true, "from_save": from_save}
+	_log("witness_flight_trained_export", flight_export)
+	var file := FileAccess.open(export_flight_dir.path_join("export.json"), FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify(flight_export, "  "))
+		file.close()
 
 
 ## Resume mode: a step already completed in the loaded save is skipped; plain
@@ -153,8 +192,9 @@ func _log(kind: String, details: Dictionary = {}) -> void:
 
 ## A failure after the verdict was written must not vanish silently.
 func _fail(message: String) -> bool:
-	if exhausted_window and message == "Unexpected recovery interrupts continuous route: " + EXHAUSTED_RECOVERY_REASON:
-		_log("witness_expected_recovery", {"message": message})
+	if (exhausted_window or overfly_window) and message == "Unexpected recovery interrupts continuous route: " + EXHAUSTED_RECOVERY_REASON:
+		_log("witness_expected_recovery", {"message": message, "window": "exhausted_fall" if exhausted_window else "pre_voss_overfly"})
+		if overfly_window: overfly_recoveries += 1
 		return false
 	if verdict_written:
 		# The verdict file and exit code are already written; say so loudly.

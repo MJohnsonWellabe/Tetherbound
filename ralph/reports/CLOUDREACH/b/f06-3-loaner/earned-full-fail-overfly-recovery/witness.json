@@ -1,0 +1,118 @@
+{
+  "accelerated": true,
+  "combat_mode": "live_input",
+  "criterion": "F06#3",
+  "failure": [
+    {
+      "kind": "FAIL",
+      "message": "Unexpected recovery interrupts continuous route: The wind carried you back to your last safe landing.",
+      "position": "(435.3028, 920.11, 4503.041)",
+      "simulated_seconds": 2501.95,
+      "stage": "witness_pre_voss_overfly",
+      "wall_seconds": 926.551493
+    }
+  ],
+  "final_party": [
+    "ripplet",
+    "bramblebun",
+    "mudsnout",
+    "mudsnout",
+    "veridian"
+  ],
+  "flight_frames": 17860,
+  "initial_party_keys": [
+    "creature-f4118d54a2317867246afbf1e8ea834f",
+    "creature-390db8e0de00cd1fcaaf1747203b0768",
+    "creature-c785f517af159966b72ca0f49f61d386",
+    "creature-8e12dace31044e591f02b96391ca2372",
+    "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+  ],
+  "launches": [
+    {
+      "fly_unlocked": false,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(400.0773, 611.3936, 3248.431)",
+      "stage": "flight_trial_start",
+      "trial_active": true
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(400.1872, 611.3935, 3250.653)",
+      "stage": "witness_sealed_upper_attempt",
+      "trial_active": false
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(400.5888, 611.3935, 3249.931)",
+      "stage": "mandatory_high_roost_flight",
+      "trial_active": false
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(1110.241, 1051.393, 2950.534)",
+      "stage": "return_glide_to_grounded_counterweight",
+      "trial_active": false
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(435.3026, 921.2935, 4503.041)",
+      "stage": "witness_pre_voss_overfly",
+      "trial_active": false
+    }
+  ],
+  "leg": "",
+  "leg_persistence": {},
+  "loaner_frames": 17860,
+  "loaner_species": "galecrest",
+  "owned_carrier_frames": 0,
+  "passed": false,
+  "pre_trial_probe": {
+    "eligible_carrier": false,
+    "fly_unlocked": false,
+    "flying_after_double_jump": false,
+    "position": "(388.4249, 610.4976, 3258.84)",
+    "trial_active": false
+  },
+  "pre_voss_overfly": {
+    "closest_to_summit_m": 242.4,
+    "end": "(435.3028, 920.0303, 4503.041)",
+    "flight_frames": 3600,
+    "gated_flags_after": [],
+    "gated_flags_before": [],
+    "grounded_frames_within_gate_radius": 0,
+    "launched": true,
+    "loaner": true,
+    "party_size": 5,
+    "start": "(435.3026, 920.0309, 4503.041)",
+    "voss_defeated": false
+  },
+  "sealed_attempt": {
+    "climb_end_y": 770.281311035156,
+    "closest_gap_to_box_m": 0.750244140625,
+    "denials": [
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper."
+    ],
+    "end": "(439.4942, 723.9066, 3599.25)",
+    "frames_inside_sealed_box": 0,
+    "on_floor": false,
+    "refused_after_frames": 1408,
+    "still_flying": true,
+    "target": "(450.0, 700.0, 3750.0)"
+  },
+  "skipped_steps": 0,
+  "stage": "battle_officer_voss_summit_approach",
+  "start_state": "earned save res://tests/fixtures/earned_saves/c1_arrival",
+  "violations": []
+}
