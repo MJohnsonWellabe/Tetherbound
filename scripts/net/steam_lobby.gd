@@ -163,8 +163,8 @@ func pending_inviter_name(lobby_id: int = 0) -> String:
 		return ""
 	if lobby_id > 0 and lobby_id != _pending_invite:
 		return ""
-	var name := str(_steam.call("getFriendPersonaName", _pending_inviter)).strip_edges()
-	return "" if name == "[unknown]" else name
+	var persona := str(_steam.call("getFriendPersonaName", _pending_inviter)).strip_edges()
+	return "" if persona == "[unknown]" else persona
 
 
 ## Native lobby requests have no request token.  After a timeout the old
@@ -643,8 +643,8 @@ func _host_character_name() -> String:
 	var local: Variant = game.get("local") if game != null else null
 	if not (local is Object) or not is_instance_valid(local):
 		return ""
-	var name := str((local as Object).get("display_name")).strip_edges()
-	return name.left(HOST_NAME_MAX_CHARS)
+	var trainer_name := str((local as Object).get("display_name")).strip_edges()
+	return trainer_name.left(HOST_NAME_MAX_CHARS)
 
 
 ## The host trainer name a lobby published; empty when unknown. Read on the
