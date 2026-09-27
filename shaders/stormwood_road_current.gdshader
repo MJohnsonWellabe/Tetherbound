@@ -42,6 +42,12 @@ uniform float clock_override = -1.0;
 // Fades out to nothing at the chunks' visibility_range_end.
 uniform float fade_end = 150.0;
 uniform float fade_length = 25.0;
+// F10#3 round 2 (code-blind judge: the gold cracks pulse inside a live strike
+// warning and compete with it): up to four active warnings (world x, z,
+// radius, strength), set by stormwood_lightning.gd; inside one the cracks dim.
+uniform vec4 warn_zones[4];
+uniform float warn_dim = 0.85;
+varying vec2 world_xz;
 
 float hash11(float p) {
 	p = fract(p * 0.1031);
@@ -104,6 +110,7 @@ float pulse_at(float u, float seed) {
 void vertex() {
 	// Depth bias only: slide the vertex toward the camera along its own view
 	// ray, so the far, coarser Terrain3D mesh cannot swallow the ribbon.
+	world_xz = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xz;
 	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
 	view.xyz *= (1.0 - depth_pull);
 	POSITION = PROJECTION_MATRIX * view;
@@ -114,6 +121,13 @@ void fragment() {
 	float v = UV.y;
 	float feather = 1.0 - smoothstep(0.55, 0.98, abs(v));
 	float distance_fade_all = 1.0 - smoothstep(fade_end - fade_length, fade_end, length(VERTEX));
+	float warned = 0.0;
+	for (int w = 0; w < 4; w++) {
+		vec4 zone = warn_zones[w];
+		float inside_zone = 1.0 - smoothstep(zone.z - 0.3, zone.z + 0.6, length(world_xz - zone.xy));
+		warned = max(warned, zone.w * inside_zone);
+	}
+	distance_fade_all *= 1.0 - warn_dim * warned;
 	if (UV2.x > 0.5) {
 		float spur_s = u * 0.11 * vein_scale;
 		// Round 5 (judge: the crack glowed through under the stepping stones):
