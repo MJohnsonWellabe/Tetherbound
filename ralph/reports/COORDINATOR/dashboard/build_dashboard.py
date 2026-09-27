@@ -93,9 +93,40 @@ for name, letter, ids in CHAPTERS:
 cc = "".join(
     f'<tr><td>{E(x["id"])}</td><td>{pill(x.get("status"))}</td><td>{E(x.get("note", ""))}</td></tr>'
     for x in crit.get("cross_cutting", []))
-cards_tbl = "".join(
-    f'<tr><td>{E(x["id"])}</td><td>{pill(x.get("status"))}</td><td>{E(x.get("note", ""))}</td></tr>'
-    for x in crit.get("chapter_cards", []))
+# Chapter exit cards: progress = the weighted share of their feeder F-row criteria
+# met (80%) plus the integrated continuous-path run and its evidence card (20%),
+# which only counts once a card's `integrated_run` field is set.
+CARD_FEEDERS = {"M1": ["F01"], "M2": ["F02"], "M3": ["F03", "F04"], "M4": ["F05"],
+                "C1": ["F06"], "C2": ["F07"], "C3": ["F08"],
+                "S1": ["F09"], "S2": ["F10"], "S3": ["F11"],
+                "T1": ["F12"], "T2": ["F13", "F14"], "T3": ["F15"]}
+
+
+def card_pct(card):
+    feeders = [x for f in CARD_FEEDERS.get(card["id"], []) for x in rows.get(f, {}).get("criteria", [])]
+    w = {"met": 1.0, "partial": 0.5, "in_progress": 0.25}
+    fp = sum(w.get(norm(x.get("status")), 0) for x in feeders) / max(1, len(feeders))
+    met = sum(1 for x in feeders if norm(x.get("status")) == "met")
+    run = 1.0 if card.get("integrated_run") else 0.0
+    return round(100 * (0.8 * fp + 0.2 * run)), met, len(feeders)
+
+
+def card_row(x):
+    cp, met, n = card_pct(x)
+    run = x.get("integrated_run") or "not yet run"
+    return (f'<tr><td>{E(x["id"])}</td><td>{bar(cp)} {cp}%</td><td>{met} / {n} feeder criteria met '
+            f'({E(", ".join(CARD_FEEDERS.get(x["id"], [])))})</td><td>{E(run)}</td><td>{E(card_note(x))}</td></tr>')
+
+
+def card_note(card):
+    open_ids = [f"{f}#{i}" for f in CARD_FEEDERS.get(card["id"], [])
+                for i, c in enumerate(rows.get(f, {}).get("criteria", [])) if norm(c.get("status")) != "met"]
+    if not open_ids:
+        return "All feeder criteria met; needs the integrated continuous run and its evidence card."
+    return "Open: " + ", ".join(open_ids) + "."
+
+
+cards_tbl = "".join(card_row(x) for x in crit.get("chapter_cards", []))
 
 
 def li(items):
@@ -230,8 +261,8 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <div class="legend">{legend}</div>
   <section class="panel"><h2>This hour</h2><ul class="plain">{li(status.get("headline", []))}</ul></section>
   {''.join(chapter_html)}
-  <section class="panel"><h2>Chapter exit cards</h2><p class="note">Integrated continuous-path gates; required even when every F row passes.</p>
-    <div class="tbl"><table><thead><tr><th>Card</th><th>Status</th><th>Note</th></tr></thead><tbody>{cards_tbl}</tbody></table></div></section>
+  <section class="panel"><h2>Chapter exit cards</h2><p class="note">Integrated continuous-path gates; required even when every F row passes. Progress = 80% feeder criteria met (weighted) + 20% for the integrated continuous run with its evidence card.</p>
+    <div class="tbl"><table><thead><tr><th>Card</th><th>Progress</th><th>Feeder criteria</th><th>Integrated run</th><th>Note</th></tr></thead><tbody>{cards_tbl}</tbody></table></div></section>
   <section class="panel"><h2>Release-wide requirements</h2>
     <div class="tbl"><table><thead><tr><th>Requirement</th><th>Status</th><th>Note</th></tr></thead><tbody>{cc}</tbody></table></div></section>
   <section class="panel"><h2>Shortcut debt</h2><p class="note">Criteria closed under the relaxed-proof rule, and what each proof skipped. The chapter-exit and release playthroughs must exercise every row; a failure there points at the row. High = a sub-part not proven anywhere else.</p>
