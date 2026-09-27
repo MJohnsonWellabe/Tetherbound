@@ -470,6 +470,10 @@ func _reload_transition(game: Node, label: String) -> bool:
 	if not bool(game.call("load_game", 0)):
 		failures.append("RELOAD %s: load_game(0) failed" % label)
 		return false
+	# Read what the save restored at once: nourishment drains in real time,
+	# so reading after the world rebuild's settle frames drifts by a tick
+	# (0.1 over 240 frames, local 7a0634a3 validation) without any defect.
+	var members_after := _party_condition(party)
 	var world: Node = (load(scene_path) as PackedScene).instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -482,7 +486,6 @@ func _reload_transition(game: Node, label: String) -> bool:
 	flags_after.sort()
 	var uids_after := _party_uids(party)
 	var items_after := _inventory_totals(inventory)
-	var members_after := _party_condition(party)
 	var lost: Array = []
 	for flag: Variant in flags_before:
 		if not flags_after.has(flag):
