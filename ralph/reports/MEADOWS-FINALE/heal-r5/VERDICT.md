@@ -1,5 +1,7 @@
 # F05#7 "the land heals": blind verdict, round 5
 
+**DRY RUN — does not count.** Under the finish-then-land rule (WORKFLOW §8), this capture is staging. It sets flags directly and places the player at each viewpoint, so it can only find blockers. It cannot close F05#7, and it failed anyway.
+
 **Result: FAIL.** The code-blind judge's answer to "does the land visibly heal, readable without being told?" was **NO**. F05#7 stays **PARTIAL**. The shared world key, relic and gate flags on both peers after reload are already evidenced on main. The missing part is the visible healing payoff.
 
 ## Frames
