@@ -23,6 +23,11 @@ The run exited 0 with 0 SCRIPT ERROR. Log: `run9-d3414e84.txt`. Its last line is
 
 **Shortcuts (disclosed under the 06:58 owner ruling):**
 - The start is the smoke's Cloudreach-boundary fixture: an in-memory completed-Cloudreach party and entitlement, then entry through the production realm router. It is not an earned Cloudreach save.
+- The party is five fresh spawns forced to level 44 (`set_level`), not the individual creatures earned in Cloudreach.
+- The knife, axe and pickaxe are added to the inventory and bound to hotbar slots 0–2 by `assign_hotbar` (`smoke_stormwood_continuous.gd` lines 161–165).
+- The run uses an accelerated clock (`Engine.time_scale` 8, 480 Hz physics). Fights, button presses and some walks and harvest windows switch back to 1x.
 - Harness-driven input throughout: stick and button presses, with fights driven by the harness pilot.
 - Helper routing for blockers B1–B8 (`ralph/reports/STORMWOOD/dry-run/BLOCKERS.md`). That includes rests at camps, the Crown-footing entry, fighting nearer wilds first, the plant-edge retry, and the approach-slab east lane with a direct heading.
 - No Stormwood flag, position or party write.
+
+Independent strict re-check: the run and all six regions are confirmed. The only open item is the gate on green full CI once this branch lands on main. Commits after d3414e84 change only F10#3/#4 presentation (sky and telegraph values, the telegraph shader, the bolt position and the Sentinel scar), none of which affects movement, flags, fights or region logic.
