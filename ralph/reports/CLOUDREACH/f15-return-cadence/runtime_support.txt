@@ -1,0 +1,3 @@
+[site_support] road_visibility_upper_plateau_circuit_05 ok=true centre=(-450.98, 876.3176, 4643.93) road_clear_m=-3.5 detail=
+[site_support] road_visibility_upper_plateau_circuit_06 ok=true centre=(-759.87, 766.123, 4035.33) road_clear_m=-3.5 detail=
+[site_support] failed_sites=0

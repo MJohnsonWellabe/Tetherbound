@@ -1,0 +1,71 @@
+CODE-BLIND VISUAL JUDGE — STORMWOOD F10.3 weather/strike frames
+Inputs viewed: img_00 .. img_13 (all 14). No source, docs or history read.
+Observation: two capture sizes. 640x360 = 00,04,05,06,08,09,10,12 (no ring; look like phase frames).
+960x540 = 01,02,03,07,11,13 (closer camera, strike sequence frames).
+The trainer is roughly 110 px tall in the 960x540 frames and roughly 70 px tall in the 640x360 frames.
+
+Q1. Classification. Could a player name the phase with no text? PARTLY. Calm vs "storming" is readable from rain density. Building vs Fading is NOT distinguishable. Break is only readable when a strike is on screen.
+- img_05: Calm. Confidence: medium. Cue: sparse, thin rain and flat, dull sky.
+- img_08: Calm. Confidence: medium. Cue: almost identical to 05, with sparse rain.
+  05 and 08 cannot be told apart, so one of them may be Fading.
+- img_06: Building or Fading. Confidence: low. Cue: moderate rain and a more magenta/pink sky tint.
+- img_10: Building or Fading. Confidence: low. Cue: near-identical to 06 (moderate rain, magenta sky). Nothing indicates the storm's direction.
+- img_00: Break. Confidence: medium. Cue: dense, long rain streaks and a dark purple sky.
+- img_09: Break. Confidence: medium. Cue: same as 00.
+- img_12: Break. Confidence: medium. Cue: heaviest rain and a slightly darker sky.
+- img_04: Break, possibly with a sky flash. Confidence: low-medium. Cue: heavy rain and a bright glowing patch in the central clouds.
+  It could also be read as Building.
+- img_01: strike WARNING. Confidence: high. Cue: magenta ring on the ground with a darkened disc inside. No bolt is visible.
+- img_07: strike WARNING. Confidence: high. Cue: same as 01.
+- img_03: strike WARNING. Confidence: high. Cue: magenta ring plus a thin forked bolt at the far left sky edge.
+  The bolt is off-target; it is not in the ring.
+- img_11: strike WARNING. Confidence: high. Cue: same as 03, with the bolt at the left edge.
+- img_02: strike IMPACT. Confidence: high. Cue: the whole scene is bright/greyed, a white ring replaces the magenta one, and a vertical grey column rises from the ring centre.
+- img_13: probably IMPACT or just after it, with reduced flashing. Confidence: LOW. Cue: no ring, and the ground "vein" lines glow much brighter than in the warning frames. There is no bolt, column or flash, so it could just as easily be a plain Break frame.
+
+Q2. Warning as a DANGER ZONE:
+- Reads as a danger zone: NO, only partly. What you see is mainly a thin, bright magenta ring. The slight darkening inside it helps a little, but it still looks closer to a selection or target circle than to "get out of this area".
+  - There is no filled hazard colour, no pulse or fill-progress visible, and no inner hatching.
+  - Magenta also reads as a "UI/target" colour rather than danger.
+- Radius: about 3 m (between 2.8 and 3.3 m). The ring spans about 380 px horizontally at roughly the character's depth, against a character about 110 px tall (1.80 m), so the diameter is about 6 m.
+- Time to leave / "about to happen": NO, not clearly. A single frame gives no countdown cue, such as a shrinking/filling ring, rising intensity or a pre-glow column. In 03 and 11 a bolt is already visible in the sky, which reads as "already striking", although it is elsewhere. The ring looks the same in 01, 03, 07 and 11, so nothing shows progress through the 1.2 s.
+
+Q3. Flashing grouping (low-to-medium confidence):
+- Set A, flashing ON: 02, 03, 11, 04.
+  - 02: full-scene white/grey brightening.
+  - 03 and 11: visible bright sky bolt.
+  - 04: bright glow patch in the clouds.
+- Set B, REDUCED flashing: 01, 07, 13 and the remaining phase frames 00, 05, 06, 08, 09, 10, 12.
+In Set B, are flashes gentle while the ground warning stays clear? YES. There is no sky white-out, and the magenta ring in 01 and 07 is just as clear as in 03 and 11.
+  - Caveat: in 13 the impact is so gentle that it is barely identifiable as a strike at all. The only change is brighter ground veins.
+HARSH FLASH: YES — img_02.
+  - The whole frame is lifted to a pale grey-white overcast look, and the sky goes nearly white.
+  - It is the only frame with a large full-screen brightness jump, and it is severe enough to look like a different time of day.
+
+Q4. ONE storm at all times, and can day be told from night?
+- One storm: YES. Every frame except 02 shares the same purple, dusky storm grade.
+- Day vs night: NO, not reliably. Frames 00 and 12 are marginally darker than 05, 06, 08 and 10, but the difference is too small to call night with confidence.
+  - The only frame that looks like "daytime" is img_02, and that brightness appears to come from the strike flash, not the clock.
+  - If a night variant exists, it is not visually distinct: there is no moon, no darker ambient light, no change in sky colour and no lamps or stars.
+
+Q5. Specific defects:
+1. img_01/03/07/11: the warning is a thin ring that reads as a selection circle.
+   Fix: fill the disc with a translucent hazard colour (e.g. electric white-blue or yellow). Add an inner ring that shrinks or fills over 1.2 s to show the countdown. Increase the edge thickness.
+2. img_01/03/07/11: nothing in a still frame distinguishes the ring's early moments from its final ones.
+   Fix: make intensity or pulse rate ramp toward impact, and add a faint descending column or crackle above the zone in the last 0.3 s.
+3. img_03/11: the bolt at the far left sky edge is disconnected from the warned zone. It suggests the strike already happened somewhere else and confuses where the danger is.
+   Fix: suppress off-target sky bolts while a warning is active near the player, or aim the visible bolt at the ring centre on impact.
+4. img_02: the impact bolt is a flat, soft grey cylinder with no jagged/forked shape, no glow and no ground burst. It reads as a pillar or beacon, not lightning.
+   Fix: use a forked, bright core bolt with bloom, plus a ground scorch/spark burst and a debris ring.
+5. img_02 (flashing ON): a full-scene white/grey wash with a large exposure jump. It is harsh, and it turns the scene into a daytime overcast look.
+   Fix: cap the flash amplitude and duration, and localise it (sky plus ring area) rather than lifting the whole frame.
+6. img_13 (reduced): the impact is almost invisible. The only change is brighter ground veins, with no ring, no bolt shape and no scorch mark.
+   Fix: keep a non-flashing impact marker, such as a static bolt silhouette, a scorch decal or a persistent brief ring burst, so the strike still reads with reduced flashing.
+7. All frames: the permanently glowing gold "vein" lines on the path compete with the warning. They look like a hazard or lava crack themselves, so the ground already reads as dangerous before any warning.
+   Fix: dim them substantially during Break, or use a colour that cannot be confused with a hazard.
+8. Phase readability: Building and Fading look identical (06 vs 10), and Calm vs Fading also blur (05 vs 08).
+   Fix: give each phase a distinct cue, for example:
+   - Building: darkening, swirling cloud front and gusting foliage.
+   - Fading: brightening horizon gap and thinning rain with drips.
+   - Calm: no rain or mist only.
+9. Day/night: no discernible night variant. If a night hour is meant to differ, the grade needs a visibly darker ambient and sky, and the warning ring should be checked for contrast at night.
