@@ -526,12 +526,14 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 	# finish policy. Include the tri-state in the cache identity: an opted-out body
 	# must never receive a shared material built for the same model with emission on.
 	var body_emission_enabled: Variant = _cfg.get("body_emission_enabled", null) if body else null
+	# A ranked and unranked copy of one body can share tint but not its floor.
+	var emission_floor := float(_cfg.get("emission_floor", 0.0)) if body else 0.0
 	var night_rim: Dictionary = _cfg.get("night_rim", {}) if body else {}
 	var rim_strength := clampf(float(night_rim.get("strength", 0.0)), 0.0, 1.0)
 	var rim_tint := clampf(float(night_rim.get("tint", 0.15)), 0.0, 1.0)
-	var key := "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
+	var key := "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
 		("" if finish.is_empty() else "%s/%s" % [finish.get("metallic", ""), finish.get("roughness", "")]),
-		str(body), body_albedo_path, body_emission_path, str(body_emission_enabled), rim_strength, rim_tint]
+		str(body), body_albedo_path, body_emission_path, str(body_emission_enabled), emission_floor, rim_strength, rim_tint]
 	if _variant_materials.has(key):
 		return _variant_materials[key]
 	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
@@ -550,6 +552,10 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 			push_warning("Character body emission override did not load: %s" % body_emission_path)
 	if body_emission_enabled is bool:
 		material.emission_enabled = bool(body_emission_enabled)
+		if not material.emission_enabled:
+			# The opt-out rejects the imported atlas, not an authored rank floor.
+			# Clear it before a floor below deliberately enables additive emission.
+			material.emission_texture = null
 	material.albedo_color = material.albedo_color * colour
 	# A default StandardMaterial3D is roughness 1.0 / metallic 0.0 -- perfectly
 	# matte. On a flat-faced primitive under one directional key that renders as
@@ -641,7 +647,6 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 	# Keying off an explicit per-rank number fixes that without touching a
 	# single unranked character: a config with no `emission_floor` gets 0.0 and
 	# takes the untouched `else` branch below, exactly as today.
-	var emission_floor := float(_cfg.get("emission_floor", 0.0))
 	if body and emission_floor > 0.0:
 		material.emission_enabled = true
 	if material.emission_enabled:

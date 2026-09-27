@@ -804,7 +804,10 @@ func _visit_all() -> void:
 		var here := _xz()
 		# Nearest first, but nothing past the boundary before the key is in the
 		# satchel: until then only villagers and the key itself are eligible.
-		var have_key := _has_key()
+		# Opening a gate spends the key ("one lock, one key"), so an open road
+		# gate counts as holding it -- otherwise the walk stalled right after
+		# RoadGate with the camp, PondGate and TrailGate still left.
+		var have_key := _has_key() or bool((_game.get("progression") as RefCounted).call("has", "road_gate_open"))
 		var next: Dictionary = {}
 		for t: Dictionary in targets:
 			if not have_key and not str(t.kind) in ["villager", "key"]:
