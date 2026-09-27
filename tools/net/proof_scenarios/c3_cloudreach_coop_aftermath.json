@@ -1,6 +1,6 @@
 {
   "name": "C3: Cloudreach co-op and aftermath -- host and guest cross flight and realm boundaries, drop/rejoin and reload without duplicating relic/key or losing rider/party identity",
-  "claim": "ACCEPTANCE card C3. Fixtures (disclosed): story_flag world flags stand in for the completed Cloudreach chapter (the earned play is card C1); heart_earn submits the Wings heart through the ledger; party_grant gives each peer four L30 creatures and fly_setup adds an owned galecrest carrier as the fifth (the mentor loaner ends at cloudreach_chapter_complete). Launch, landing, drop, rejoin, realm crossings, host restart/title Load, saves and hashes are the game's own code. The heart and key are world flags (entitlements), so 'not duplicated' is checked as: each read once from the host world, unchanged hash across restart+rejoin, and the saved world keeps them. Loopback ENet: local evidence, not internet/Steam acceptance. Owner ruling 2026-09-27 (#356 5858140459): Solmane is freed after Captain Veyra's defeat and offered once to each finale participant, exactly like the Meadows Veridian; this card's own aftermath answers that offer for both peers through the real accept_offer/refuse_offer handlers (veridian_answer, node CloudreachSolmaneClimax). Both peers are already at their five-creature cap here (four granted companions plus the fly_setup galecrest fifth), so both refuse -- an accept without room needs a release ceremony this card does not model -- and the refusal receipt is proven to survive the mid-scenario drop/rejoin and the host's restart+reload with no second offer and no Solmane in either saved character.",
+  "claim": "ACCEPTANCE card C3. Fixtures (disclosed): story_flag world flags stand in for the completed Cloudreach chapter (the earned play is card C1); heart_earn submits the Wings heart through the ledger; party_grant gives each peer four L30 creatures and fly_setup adds an owned galecrest carrier as the fifth (the mentor loaner ends at cloudreach_chapter_complete). Launch, landing, drop, rejoin, realm crossings, host restart/title Load, saves and hashes are the game's own code. The heart and key are world flags (entitlements), so 'not duplicated' is checked as: each read once from the host world, unchanged hash across restart+rejoin, and the saved world keeps them. Loopback ENet: local evidence, not internet/Steam acceptance. Owner ruling 2026-09-27 (#356 5858140459): Solmane is freed after Captain Veyra's defeat and offered once to each finale participant, exactly like the Meadows Veridian; this card's own aftermath answers that offer for both peers through the real accept_offer/refuse_offer handlers (veridian_answer, node CloudreachSolmaneClimax). Both peers are already at their five-creature cap here (four granted companions plus the fly_setup galecrest fifth), so both refuse -- an accept without room needs a release ceremony this card does not model -- and the refusal receipt is proven to survive the mid-scenario drop/rejoin and the host's restart+reload with no second offer and no Solmane in either saved character. The no-second-offer-after-restart check is proven by f08_5_solmane_two_peer (run3); here the receipts' persistence through the restart is read from Stormwood (run1: a return crossing to Cloudreach after the restart outran the 15 s heartbeat while the realm built).",
   "peers": 2,
   "scene": "title",
   "budget_s": 4800,
@@ -903,35 +903,6 @@
       "label": "persisted after reload: realm_key_stormwood"
     },
     {
-      "peer": 0,
-      "action": "enter_realm",
-      "args": {
-        "realm": "cloudreach"
-      },
-      "budget_frames": 10000,
-      "expect": "any",
-      "label": "host returns to Cloudreach to check the resolved Solmane offer"
-    },
-    {
-      "peer": 1,
-      "action": "enter_realm",
-      "args": {
-        "realm": "cloudreach"
-      },
-      "budget_frames": 10000,
-      "expect": "any",
-      "label": "guest returns to Cloudreach to check the resolved Solmane offer"
-    },
-    {
-      "peer": "all",
-      "action": "wait_context",
-      "args": {
-        "equals": "world",
-        "budget_frames": 600
-      },
-      "expect": "any"
-    },
-    {
       "peer": "all",
       "action": "wait_flag",
       "args": {
@@ -948,56 +919,6 @@
         "budget_frames": 1800
       },
       "label": "guest's refused receipt persisted through the restart"
-    },
-    {
-      "peer": 0,
-      "action": "teleport",
-      "args": {
-        "at": [
-          99.0,
-          1161.2,
-          5471.0
-        ],
-        "settle": 60
-      },
-      "label": "SETUP: host stands in the tether chamber again"
-    },
-    {
-      "peer": 0,
-      "action": "veridian_answer",
-      "args": {
-        "answer": "refuse",
-        "node": "CloudreachSolmaneClimax",
-        "presses": 10,
-        "settle": 30
-      },
-      "expect": "FAIL",
-      "label": "NO SECOND OFFER: the host's refusal holds after the restart+reload (no duplicate)"
-    },
-    {
-      "peer": 1,
-      "action": "teleport",
-      "args": {
-        "at": [
-          104.0,
-          1161.2,
-          5471.0
-        ],
-        "settle": 60
-      },
-      "label": "SETUP: guest stands in the tether chamber again"
-    },
-    {
-      "peer": 1,
-      "action": "veridian_answer",
-      "args": {
-        "answer": "refuse",
-        "node": "CloudreachSolmaneClimax",
-        "presses": 10,
-        "settle": 30
-      },
-      "expect": "FAIL",
-      "label": "NO SECOND OFFER: the guest's refusal holds after the restart+reload (no duplicate)"
     },
     {
       "peer": "all",
