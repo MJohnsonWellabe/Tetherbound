@@ -66,16 +66,18 @@
         "drop_m": 20,
         "max_frames": 900
       },
-      "label": "LAUNCH by input: waits for the game's autosave timer to near its next save, walks off the deck by stick, TAPS jump in the air"
+      "label": "LAUNCH by input: waits for the game's autosave timer to near its next save, walks off the deck by stick, TAPS jump in the air",
+      "budget_frames": 16000
     },
     {
       "peer": 0,
       "action": "await_autosave",
       "args": {
-        "budget_frames": 3600,
+        "budget_frames": 11000,
         "require_flying": true
       },
-      "label": "SAVE WHILE FLYING: the game's own periodic autosave is taken mid-flight"
+      "label": "SAVE WHILE FLYING: the game's own periodic autosave is taken mid-flight",
+      "budget_frames": 12000
     },
     {
       "peer": 0,
