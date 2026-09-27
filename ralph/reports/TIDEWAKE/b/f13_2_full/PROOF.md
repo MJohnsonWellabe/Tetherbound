@@ -21,7 +21,7 @@ Four gaps remain:
 | F13#2 "paid" (claim) | 7 of 8 roles fully paid | Six candies are paid by one Interact press each. Cradle pays 4 Reef Stone (pickaxe). Reedhaven pays 3 reed fiber (knife). The `recipe_and_reed_fiber` recipe half is **not paid** (item 4). |
 | F13 "earned route reaches ... eight pockets" | not covered as one chain | See item 3. The composition argument is below. |
 | Re-score 1: Deep Watch through the REAL gate | **covered, with two disclosed fixtures** | `--real-tidecoil` runs the fight through `tests/helpers/tidewake_b_tidecoil_fight.gd`, then walks to the candy and claims it. The gate flag is written only by the director's won terminal. Results below. |
-| Re-score 2: long-range lure witness | **not covered (stopped)** | `tools/capture_tidewake_b_pocket_lures.gd` exists. 3 of 8 frames were captured. No judge was run. |
+| Re-score 2: long-range lure witness | **not covered (stopped)** | `tools/capture_tidewake_b_pocket_lures.gd` exists. 4 of 8 frames were captured (frame 04 was saved just before the stop, without its log line). No judge was run. |
 | Re-score 3: teleports replaced by travel | **not covered; disclosed (option b)** | See "Travel" below. |
 | Re-score 4: reed_root_hollow recipe half | not implemented; **owner question** (investigation finished before the scope change) | See "Reed recipe half" below. |
 
@@ -92,7 +92,7 @@ Method:
 - Per-frame geometry is in `lures/capture.log`.
 
 **Stopped at 00:08 UTC on the lane lead's instruction.** F13#2 is deferred, and the lane is closing F13#3 first.
-- Three of the eight frames were captured: `lures/01_lantern_hidden_cache.jpg`, `lures/02_reed_root_hollow.jpg` and `lures/03_brine_upper_shelf.jpg`.
+- Four of the eight frames were captured, 01–04. Frame 04 (Gull Rest) was saved without its log line.
 - No code-blind judge was run, so no Codex row was added.
 - My own look, which is not a judge verdict: in all three frames nothing at the pocket position draws the eye. Lantern and Reed show open grass there. At Brine, the grass hill crest hides the shelf.
 - Re-run the tool for all eight frames, then judge them.
