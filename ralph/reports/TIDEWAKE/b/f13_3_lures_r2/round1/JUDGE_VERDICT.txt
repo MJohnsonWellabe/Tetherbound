@@ -1,0 +1,32 @@
+Here's the frame-by-frame breakdown, based only on what's visible in each image.
+
+**frame_01: NOT NOTICEABLE** — Player faces a plain grassy hillcrest with two tree clusters and a small blue banner-post tucked against the grass on the right, partly crowded by the quest-text panel. Nothing has scale, motion, or color contrast to pull the eye; the grass slope reads as generic filler, not a destination. A taller/brighter landmark, or moving the banner out from behind the UI panel, would help.
+
+**frame_02: NOTICEABLE** — A thin grey smoke column rises dead-center against clear blue sky — the strongest, most legible beacon in the whole set (reads directly as "the pump" from the quest text). A large turtle-creature stands beside the player too, but it's incidental wildlife, not a lure toward anywhere. The smoke plume alone sells this as "go there."
+
+**frame_03: NOT NOTICEABLE** — A sand corridor between two featureless hill walls leads to a green crest with a barely-visible pale figure and a tiny blue banner post, both too small and low-contrast to register at a glance. Nothing in the frame says "goal" — it just reads as a path forward.
+
+**frame_04: NOTICEABLE** — A distant mountain with a bright white waterfall streak anchors the skyline, and two closer wooden banner posts with blue flags flank the trail. Good layered composition: landmark far away, waypoint markers near. Clearly reads as "head this way."
+
+**frame_05: WEAK** — A small camp cluster (tent, workbench, an NPC figure) sits on the far ridge, pale against green grass, easy to miss at a glance; a blue banner is again clipped by the quest panel. The elements exist but are too small/low-contrast to be an obvious pull from this distance.
+
+**frame_06: NOTICEABLE** — A thin smoke plume reappears above the ridge, plus a pink creature crouched in the grass ahead — color and verticality both draw the eye down the valley. Reads as a clear "something's over there" cue.
+
+**frame_07: NOT NOTICEABLE** — Empty sandy clearing, plain sky, and a small banner post half-lost in shadow at the frame edge. Nothing commands attention; it's a transition space, not a lure.
+
+**frame_08: NOTICEABLE** — The smoke column dominates the sky again, and beyond the ridge a glimpse of open ocean adds a sense of a bigger destination past this point. Strongest "vista + beacon" combo in the set.
+
+**frame_09: NOTICEABLE** — A tall post with hanging lantern and full blue banner stands centered against grass and rock — good silhouette, decent size, clearly placed as a waypoint marker.
+
+**frame_10: NOTICEABLE** — Same post now filling more of the frame, lantern and banner unmistakable. Confirms the destination read from frame_09; works well as the "arrival" beat.
+
+**frame_11: NOTICEABLE** — A colorful fish/pal creature lies on the sand at left, while a lit campfire, tent, and an NPC figure cluster on the far grass — multiple competing points of interest, all with enough color/contrast to catch the eye even though small.
+
+**frame_12: NOTICEABLE** — A large leviathan-like creature breaches the water directly ahead of the player, big, dark, and colorful against the blue sea — by far the most immediate, impossible-to-miss "look at that" moment in the whole sequence.
+
+**PLACE 1 (frames 01+02): WEAK** — arrival shot has no hook; the smoke plume only pays off once you've moved.
+**PLACE 2 (frames 03+04): WEAK** — same pattern: weak entrance, strong payoff via the waterfall mountain/banners only partway in.
+**PLACE 3 (frames 05+06): WEAK** — camp is too small/low-contrast at arrival; smoke plume rescues it partway.
+**PLACE 4 (frames 07+08): WEAK** — empty at arrival, then a strong smoke+vista reveal partway.
+**PLACE 5 (frames 09+10): YES** — banner/lantern post is a clear, well-scaled waypoint from the start.
+**PLACE 6 (frames 11+12): YES** — camp/creature cluster is interesting on arrival, and the leviathan reveal partway is the strongest lure in the whole set.

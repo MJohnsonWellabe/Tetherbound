@@ -1,0 +1,32 @@
+diff --git a/scripts/net/encounter_host.gd b/scripts/net/encounter_host.gd
+index 681e5f74..964bc47c 100644
+--- a/scripts/net/encounter_host.gd
++++ b/scripts/net/encounter_host.gd
+@@ -364,6 +364,27 @@ func note_opponent_position(encounter_id: String, at: Vector3, now_ms: int) -> v
+ 	while not samples.is_empty() and int((samples[0] as Array)[0]) < cutoff:
+ 		samples.remove_at(0)
+ 	opponent["samples"] = samples
++	# COMBAT-2. This is the host's per-tick clock feed and it precedes every
++	# record publication, so bring each participant's Wind up to the same clock
++	# here. Otherwise a waiting participant's row stays frozen at its
++	# post-action value and every broadcast overwrites their regenerating pool.
++	advance_wind(encounter_id, now_ms)
++
++
++## Regenerate every participant's stored Wind to `now_ms` from that row's own
++## stored profile. Idempotent on the host clock (regeneration starts from
++## max(updated, ready) and `wind_updated_ms` advances), so a later preview or
++## commit at the same instant cannot regenerate twice. Rows that have never
++## spent Wind carry no pool yet and are left alone.
++func advance_wind(encounter_id: String, now_ms: int) -> void:
++	var rec: Dictionary = encounters.get(encounter_id, {})
++	if rec.is_empty():
++		return
++	for row: Variant in (rec.get("participants", {}) as Dictionary).values():
++		if not (row is Dictionary) or not (row as Dictionary).has("wind"):
++			continue
++		_advance_participant_wind(row, {"max": float(row.get("wind_max", 100.0)),
++			"regen_per_second": float(row.get("wind_regen_per_second", 18.0))}, now_ms)
+ 
+ 
+ func opponent_position(encounter_id: String) -> Vector3:

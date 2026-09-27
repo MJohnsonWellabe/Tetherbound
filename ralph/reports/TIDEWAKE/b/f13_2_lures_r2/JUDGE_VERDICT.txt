@@ -1,0 +1,21 @@
+# Visual Read: Frames 01–08
+
+**Context note:** These aren't eight unrelated locations — they read as one continuous walk (same "Day 1 · 08:00" timestamp, same quest banner, same distant blue-and-white creature, same smoke column recurring across frames), seen from progressively closer angles. I'm judging each frame on its own visual merits per your question.
+
+**frame_01: WEAK** — A grey smoke column rises dead-center behind the player, the strongest vertical accent in the shot, but it's just a plume with no visible source. A rocky island with waterfall streaks sits upper-left, and a wooden banner-post is barely visible, half-buried in foreground grass at center. Nothing reads as a clear "go here" until you already know what the smoke means.
+
+**frame_02: WEAK** — A single well-lit tree cluster near center draws some attention against the flat overcast sky, but it's a generic tree, not a landmark. The distant mountain silhouette is pushed to the far-left edge and is small/easy to miss; a small creature on the right horizon barely registers. Nothing insists on being a destination.
+
+**frame_03: NOTICEABLE** — A wooden frame with a hanging dark blue banner sits left-of-center at mid-height, silhouetted clearly against pale sky/sea. High contrast, clean man-made shape — this reads unambiguously as a placed waypoint/marker worth walking to.
+
+**frame_04: WEAK** — The player is in a grass-filled gully with slopes converging toward a small blue banner post dead-center. The framing does funnel the eye there, but the banner is small, backlit, and blends into the grey smoke-haze sky, so it's a weak pull rather than a strong one.
+
+**frame_05: NOTICEABLE** — A large pale blue/white dragon-turtle creature stands beside the banner post in the mid-ground. It's colorful, animate, and unusual — by far the strongest draw in the whole set, even though it sits center-right rather than left-third.
+
+**frame_06: NOTICEABLE** — A big dark island/mountain with bright waterfall streaks fills the upper-left of the frame, a strong silhouette against open sky — the most striking single landmark shown. The banner post is also visible further down-slope as a secondary cue reinforcing the same direction.
+
+**frame_07: NOT NOTICEABLE** — The frame is almost entirely a plain sand dune slope with nothing else in view — no structure, creature, or landmark. There is genuinely nothing here to walk toward besides "up the dune."
+
+**frame_08: WEAK** — The banner post reappears at left-center between two slopes, readable against open sky, and the corridor shape does aim the eye at it. But it's small and un-elaborated (just a flag on a pole) — enough to register as a marker, not enough to feel like a compelling destination on its own.
+
+**Overall:** The banner post and the mountain/creature are the only recurring "lures," and they only land when large or high-contrast against sky (03, 05, 06). When they're small, backlit, or buried in grass (01, 02, 04, 08) they weaken to background noise, and 07 has no lure at all.

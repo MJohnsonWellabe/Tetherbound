@@ -856,6 +856,12 @@ func _views(aftermath: bool) -> void:
 		{"id": "rod_line", "at": rod, "focus": station + Vector3.UP * 5.0, "pitch": 6.0, "text": "Verge Rod Station pylon (rod line), 30 m"},
 		{"id": "forest", "at": forest, "focus": forest_focus, "pitch": 4.0, "text": "Deepwood forest near Lantern Hollow"},
 	]
+	# F10#4: the Struck Sentinel from its Ash Road seat, so the strike scar
+	# reads live before the Long Storm ends and cooled, light out, after it.
+	var sentinel := _world.get_node_or_null(^"StruckSentinelPresentation") as Node3D
+	if sentinel != null:
+		stands.append({"id": "sentinel", "at": Vector2(-320.0, 240.0), "focus": sentinel.global_position + Vector3.UP * 14.0,
+			"pitch": 8.0, "text": "The Struck Sentinel's strike scar from its Ash Road seat"})
 	var phases: Array = ["calm"] if aftermath else ["calm", "break"]
 	for stand: Dictionary in stands:
 		await _stand(stand.at, stand.focus, float(stand.pitch))

@@ -1,0 +1,772 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_chapter_started
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_act_i_complete
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_act_ii_complete
+  PASS: chapter-entry fixture accepted completed Cloudreach fact captain_veyra_defeated
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_winds_restored
+  PASS: chapter-entry fixture accepted completed Cloudreach fact realm_heart_cloudreach_earned
+  PASS: chapter-entry fixture accepted completed Cloudreach fact realm_key_stormwood
+  PASS: chapter-entry fixture accepted completed Cloudreach fact stormward_route_revealed
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_chapter_complete
+  PASS: chapter-entry fixture carries sparkit in the completed Cloudreach party
+  PASS: chapter-entry fixture carries mudsnout in the completed Cloudreach party
+  PASS: chapter-entry fixture carries bramblebun in the completed Cloudreach party
+  PASS: chapter-entry fixture carries terrapup in the completed Cloudreach party
+  PASS: chapter-entry fixture carries brooktail in the completed Cloudreach party
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_chapter_started)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_act_i_complete)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_act_ii_complete)
+  PASS: chapter-entry fixture contains no Stormwood progress (captain_veyra_defeated)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_winds_restored)
+  PASS: chapter-entry fixture contains no Stormwood progress (realm_heart_cloudreach_earned)
+  PASS: chapter-entry fixture contains no Stormwood progress (realm_key_stormwood)
+  PASS: chapter-entry fixture contains no Stormwood progress (stormward_route_revealed)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_chapter_complete)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/stormwood_world.gd:89)
+STORMWOOD BUILD shell=false elapsed_ms=224 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=520 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=782 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=787 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=789 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=790 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=790 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=790 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=792 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=792 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1068 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1092 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1092 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=145 reorder[7 layers]=40
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=218 mark_harvestable=19 group_by_model=49 register_mesh_assets=25 build_batches_total=981 (of which harvest_points[11099 nodes]=799, initial_collision_stream[11161 solid]=39) update_mmis=181
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:771)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:552)
+STORMWOOD ENCOUNTERS READY wild=808
+  PASS: production router accepted the completed-Cloudreach Stormwood entry
+  PASS: production Stormwood scene became current
+  PASS: production router settled in Stormwood
+  PASS: authored Stormwood arrival settled its pending entry
+  PASS: wrote the chapter-entry save to disk at the Stormwood arrival
+ENTRY SAVE /tmp/claude-0/dryrun/xdg9/godot/app_userdata/Tetherbound/storm_run9_d3414e84/slot_0.json sha256=7f08dec71e20162079b6477ba74fdda61f5f736f5d2594f909c6651c646183c3
+ENTRY SAVE /tmp/claude-0/dryrun/xdg9/godot/app_userdata/Tetherbound/storm_run9_d3414e84/worlds/slot-0/world.json sha256=b3535cef94f45a84550997c81dbc599d43e09604881226e9452871a3ef1d3b6d
+ENTRY SAVE /tmp/claude-0/dryrun/xdg9/godot/app_userdata/Tetherbound/storm_run9_d3414e84/characters/stormwood-continuous-solo/character.json sha256=937ebd251533265ba1ad176a7d30cf6f4734fd09336b80d3093523b366292eba
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ashfoot Waycamp arrival from=(-300.0, 32.27173, 180.0) target=(-350.0, 30.16094, 450.0) distance_m=274.6 budget_frames=21967
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ashfoot Waycamp arrival elapsed_ms=10223 walked_frames=3284 player=(-349.6704, 30.12792, 448.2448)
+STORMWOOD CONTINUOUS — CHECKPOINT: ARRIVED Ashfoot; chapter_started was earned by the proximity event
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Hesk's Long Storm account stance from=(-349.6704, 30.12792, 448.2448) target=(-350.0, 30.18008, 447.5) distance_m=0.8 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Hesk's Long Storm account stance elapsed_ms=2180 walked_frames=624 player=(-349.4773, 30.11595, 447.9175)
+STORMWOOD CONTINUOUS — CHECKPOINT: HEARD Hesk; crisis_learned came from the completed dialogue
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Tamsin's Break lesson stance from=(-350.4464, 30.27146, 447.1399) target=(-300.0, 26.42247, 347.5) distance_m=111.7 budget_frames=8934
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Tamsin's Break lesson stance elapsed_ms=3942 walked_frames=1365 player=(-300.2853, 26.41857, 348.0635)
+STORMWOOD CONTINUOUS — CHECKPOINT: HEARD Tamsin through her ordinary NPC prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ashfoot lightning shelter from=(-299.8613, 26.46322, 347.2267) target=(-325.0, 29.25002, 466.0) distance_m=121.4 budget_frames=9712
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ashfoot lightning shelter elapsed_ms=3607 walked_frames=1458 player=(-324.7025, 29.22774, 464.5684)
+STORMWOOD CONTINUOUS — CHECKPOINT: WITNESSED a production Break while sheltered at Ashfoot
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Verge rod clearing leg 1 from=(-324.8453, 29.24633, 465.2509) target=(-350.0, 30.16094, 450.0) distance_m=29.4 budget_frames=2353
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Verge rod clearing leg 1 elapsed_ms=1289 walked_frames=358 player=(-348.3039, 30.01687, 451.0267)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Verge rod clearing leg 2 from=(-348.3039, 30.01687, 451.0267) target=(-650.0, 20.82785, 830.0) distance_m=484.4 budget_frames=38751
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Verge rod clearing leg 2 elapsed_ms=17034 walked_frames=5821 player=(-648.8079, 20.92038, 828.4905)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to first charged Stormglass node stance from=(-648.8079, 20.92038, 828.4905) target=(-762.0, 27.28783, 893.0) distance_m=130.3 budget_frames=10422
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to first charged Stormglass node stance elapsed_ms=3470 walked_frames=1561 player=(-761.4354, 27.22445, 892.6796)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED first charged Stormglass through the live tool and interaction path
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to second charged Stormglass node stance from=(-762.2527, 27.30288, 893.1417) target=(-738.0, 25.38799, 877.0) distance_m=29.1 budget_frames=2330
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to second charged Stormglass node stance elapsed_ms=738 walked_frames=362 player=(-738.5325, 25.44496, 877.3517)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED the real six-Stormglass cost for both ends of pair A
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Verge rod road return from=(-738.0023, 25.39474, 876.9997) target=(-650.0, 20.82785, 830.0) distance_m=99.8 budget_frames=7981
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Verge rod road return elapsed_ms=2839 walked_frames=1192 player=(-651.726, 20.76969, 830.9208)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to a_ashfoot relight stance from=(-651.726, 20.76969, 830.9208) target=(-350.0, 28.76447, 503.0) distance_m=445.6 budget_frames=35649
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to a_ashfoot relight stance elapsed_ms=16936 walked_frames=5366 player=(-350.3455, 29.03016, 503.5277)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to a_ashfoot relight stance from=(-349.9268, 29.03017, 503.0689) target=(-350.0, 29.09796, 497.45) distance_m=5.6 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to a_ashfoot relight stance elapsed_ms=287 walked_frames=79 player=(-349.9916, 29.03018, 498.0751)
+STORMWOOD CONTINUOUS — CHECKPOINT: RELIT Ashfoot's ancient arch through its ordinary prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ash road toward Lantern Pools from=(-350.0001, 29.05672, 497.7272) target=(-590.0, 27.06199, 1060.0) distance_m=611.4 budget_frames=48908
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ash road toward Lantern Pools elapsed_ms=20102 walked_frames=7510 player=(-589.2307, 26.97479, 1058.234)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ash road toward Lantern Pools from=(-589.2307, 26.97479, 1058.234) target=(-380.0, 32.23082, 1400.0) distance_m=400.7 budget_frames=32058
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ash road toward Lantern Pools elapsed_ms=14061 walked_frames=4963 player=(-380.8123, 32.09846, 1398.226)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to a_pools relight stance from=(-380.8123, 32.09846, 1398.226) target=(-350.0, 31.57998, 1437.0) distance_m=49.5 budget_frames=3962
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to a_pools relight stance elapsed_ms=2139 walked_frames=619 player=(-350.4074, 31.68508, 1436.457)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to a_pools relight stance from=(-349.8848, 31.6851, 1437.154) target=(-350.0, 31.48207, 1440.45) distance_m=3.3 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to a_pools relight stance elapsed_ms=158 walked_frames=47 player=(-349.9778, 31.68509, 1439.815)
+STORMWOOD CONTINUOUS — CHECKPOINT: RELIT Lantern Pools' twin with the remaining earned Stormglass
+STORMWOOD CONTINUOUS — CHECKPOINT: TRAVELLED pair A; the production arch moved player and companion to Ashfoot
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_pickup_route_03 route reward stance from=(-350.0, 29.62934, 503.5) target=(-655.0, 20.67128, 835.25) distance_m=450.6 budget_frames=36051
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_pickup_route_03 route reward stance elapsed_ms=19144 walked_frames=5435 player=(-654.5818, 20.69293, 834.7941)
+STORMWOOD CONTINUOUS — CHECKPOINT: COLLECTED stormwood_pickup_route_03 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEAD for officer_maren_verge_rod: terrapup at 429/429
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to officer_maren_verge_rod challenge stance from=(-655.0029, 20.69618, 835.2537) target=(-650.0, 20.38286, 820.0) distance_m=16.1 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to officer_maren_verge_rod challenge stance elapsed_ms=983 walked_frames=214 player=(-650.3385, 20.41456, 820.5818)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: WON officer_maren_verge_rod; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to verge_rod_station switch stance from=(-656.3995, 20.69612, 815.4053) target=(-647.0, 21.03137, 828.2) distance_m=15.9 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to verge_rod_station switch stance elapsed_ms=1128 walked_frames=255 player=(-647.4733, 20.9842, 827.7538)
+STORMWOOD CONTINUOUS — CHECKPOINT: DEFEATED Maren and disabled the Verge rod through its live switch
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ash road to the Hollows station from=(-647.2148, 21.00766, 827.9976) target=(-590.0, 27.06199, 1060.0) distance_m=239.0 budget_frames=19116
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during Ash road to the Hollows station (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during Ash road to the Hollows station (outcome=won)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ash road to the Hollows station elapsed_ms=110030 walked_frames=2750 player=(-590.3942, 27.16833, 1058.072)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ash road to the Hollows station from=(-590.3942, 27.16833, 1058.072) target=(-380.0, 32.23082, 1400.0) distance_m=401.5 budget_frames=32117
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ash road to the Hollows station elapsed_ms=22214 walked_frames=4963 player=(-380.8003, 32.10048, 1398.253)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ash road to the Hollows station from=(-380.8003, 32.10048, 1398.253) target=(-900.0, 31.94764, 1780.0) distance_m=644.4 budget_frames=51554
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ash road to the Hollows station elapsed_ms=36275 walked_frames=7736 player=(-898.4075, 32.15836, 1778.836)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_pickup_route_06 route reward stance from=(-898.4075, 32.15836, 1778.836) target=(-896.8, 30.84074, 1787.35) distance_m=8.7 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_pickup_route_06 route reward stance elapsed_ms=413 walked_frames=111 player=(-897.0756, 30.98264, 1786.719)
+STORMWOOD CONTINUOUS — CHECKPOINT: COLLECTED stormwood_pickup_route_06 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 86/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEAD for lieutenant_dace_hollows_rod: mudsnout at 358/358
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to lieutenant_dace_hollows_rod challenge stance from=(-896.8525, 30.90903, 1787.232) target=(-880.0, 32.02861, 1768.0) distance_m=25.6 budget_frames=2045
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to lieutenant_dace_hollows_rod challenge stance elapsed_ms=1177 walked_frames=328 player=(-880.4105, 32.03622, 1768.468)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: WON lieutenant_dace_hollows_rod; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hollows_rod_station switch stance from=(-879.2756, 31.94011, 1767.174) target=(-897.0, 32.24791, 1778.2) distance_m=20.9 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hollows_rod_station switch stance elapsed_ms=1150 walked_frames=314 player=(-896.4881, 32.27093, 1777.776)
+STORMWOOD CONTINUOUS — CHECKPOINT: DEFEATED Dace and earned lower_rods_disabled from both live switches
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Lantern Pools safe camp from=(-897.1014, 32.2445, 1778.285) target=(-410.0, 34.91586, 1425.0) distance_m=601.7 budget_frames=48138
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Lantern Pools safe camp elapsed_ms=29670 walked_frames=7438 player=(-411.3862, 35.05641, 1426.132)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START Lantern Pools charged-window wait
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END Lantern Pools charged-window wait elapsed_ms=55147 state={ "phase": "break", "remaining": 71.8569328417771, "next_phase": "fading", "next_remaining": 59.9989999999998, "open_seconds": 131.855932841777, "elapsed": 1992.14306715822, "rod_disabled": true, "aftermath": false }
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_harvest_glowmoss_hollows_036 stance from=(-410.4396, 34.97248, 1425.361) target=(-538.0, 29.87428, 1503.0) distance_m=149.3 budget_frames=11946
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_harvest_glowmoss_hollows_036 stance elapsed_ms=7482 walked_frames=1857 player=(-537.4212, 29.97552, 1502.627)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED stormwood_harvest_glowmoss_hollows_036 exact +3 Stormglass receipt with one pickaxe wear
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_harvest_glowmoss_hollows_037 stance from=(-539.8431, 29.53328, 1504.182) target=(-522.0, 30.74479, 1517.0) distance_m=22.0 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_harvest_glowmoss_hollows_037 stance elapsed_ms=1283 walked_frames=284 player=(-522.5654, 30.67438, 1516.596)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED stormwood_harvest_glowmoss_hollows_037 exact +3 Stormglass receipt with one pickaxe wear
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to b_pools relight stance from=(-520.397, 30.94909, 1518.148) target=(-410.0, 29.0281, 1347.0) distance_m=203.7 budget_frames=16293
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to b_pools relight stance elapsed_ms=9482 walked_frames=2470 player=(-410.3698, 29.55112, 1347.573)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to road to Rodline Post from=(-409.3554, 29.55112, 1346.0) target=(-900.0, 31.94764, 1780.0) distance_m=655.0 budget_frames=52403
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to road to Rodline Post elapsed_ms=29595 walked_frames=8052 player=(-898.5137, 32.18556, 1778.671)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to road to Rodline Post from=(-898.5137, 32.18556, 1778.671) target=(-700.0, 44.03091, 2300.0) distance_m=557.8 budget_frames=44627
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during road to Rodline Post (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during road to Rodline Post (outcome=won)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to road to Rodline Post elapsed_ms=116117 walked_frames=6838 player=(-700.9827, 43.85278, 2298.266)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to b_rodline relight stance from=(-700.9827, 43.85278, 2298.266) target=(-680.0, 53.48518, 2363.0) distance_m=68.0 budget_frames=5443
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to b_rodline relight stance elapsed_ms=5888 walked_frames=1427 player=(-680.582, 53.51394, 2362.692)
+STORMWOOD CONTINUOUS — CHECKPOINT: RELIT pair B with entirely harvested Stormglass
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_pickup_route_07 route reward stance from=(-678.5505, 53.43611, 2363.763) target=(-702.9, 43.23544, 2291.45) distance_m=76.3 budget_frames=6104
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during stormwood_pickup_route_07 route reward stance (outcome=lost)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_pickup_route_07 route reward stance from=(-553.4582, 25.80731, 1825.811) target=(-702.9, 43.23544, 2291.45) distance_m=489.0 budget_frames=39122
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_pickup_route_07 route reward stance elapsed_ms=14626 walked_frames=5912 player=(-702.8565, 43.16182, 2290.79)
+STORMWOOD CONTINUOUS — CHECKPOINT: COLLECTED stormwood_pickup_route_07 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's shattered-road account stance from=(-702.9955, 43.35938, 2292.875) target=(-700.0, 43.70059, 2297.0) distance_m=5.1 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's shattered-road account stance elapsed_ms=282 walked_frames=81 player=(-700.4097, 43.65279, 2296.437)
+STORMWOOD CONTINUOUS — CHECKPOINT: COMPLETED Act I through the production task chain at Rodline Post
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor ascent to Lieutenant Varga from=(-699.8625, 43.73151, 2297.19) target=(-630.0, 56.45764, 2390.0) distance_m=116.2 budget_frames=9293
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor ascent to Lieutenant Varga elapsed_ms=23137 walked_frames=1390 player=(-631.1536, 56.27038, 2388.465)
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 0/363 fainted, bramblebun 340/340, terrapup 88/436, brooktail 329/329 (active bramblebun)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEAD for lieutenant_varga_rodline_bridge: bramblebun at 340/340
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to lieutenant_varga_rodline_bridge challenge stance from=(-630.9449, 56.3051, 2388.742) target=(-630.0, 56.18335, 2388.0) distance_m=1.2 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to lieutenant_varga_rodline_bridge challenge stance elapsed_ms=62 walked_frames=27 player=(-630.4935, 56.24912, 2388.387)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: WON lieutenant_varga_rodline_bridge; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — CHECKPOINT: RECLAIMED the conductor bridge through Varga's authored trainer fight
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor road to Keeper Ondra from=(-629.1486, 56.15286, 2387.331) target=(-560.0, 62.52928, 2480.0) distance_m=115.6 budget_frames=9249
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor road to Keeper Ondra elapsed_ms=22869 walked_frames=1373 player=(-561.1566, 62.81881, 2478.449)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor road to Keeper Ondra from=(-560.9895, 62.77785, 2478.672) target=(-160.0, 34.53936, 2700.0) distance_m=458.0 budget_frames=36641
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during conductor road to Keeper Ondra (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during conductor road to Keeper Ondra (outcome=lost)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor road to Keeper Ondra elapsed_ms=178241 walked_frames=5484 player=(-161.6619, 34.58185, 2699.04)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_pickup_route_09 route reward stance from=(-161.5897, 34.58009, 2699.082) target=(-166.1, 34.94352, 2695.55) distance_m=5.7 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_pickup_route_09 route reward stance elapsed_ms=262 walked_frames=75 player=(-165.5582, 34.92276, 2695.961)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_pickup_route_09 route reward stance from=(-167.3853, 34.88129, 2694.573) target=(-166.1, 34.94352, 2695.55) distance_m=1.6 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_pickup_route_09 route reward stance elapsed_ms=123 walked_frames=40 player=(-166.5951, 34.9178, 2695.173)
+STORMWOOD CONTINUOUS — CHECKPOINT: COLLECTED stormwood_pickup_route_09 exact +1 great_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ondra's Stormglass Arch lesson stance from=(-165.231, 34.90112, 2696.211) target=(-160.0, 34.45423, 2697.5) distance_m=5.4 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ondra's Stormglass Arch lesson stance elapsed_ms=287 walked_frames=85 player=(-160.6433, 34.47493, 2697.339)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+STORMWOOD CONTINUOUS — ARRIVED Ashfoot; chapter_started was earned by the proximity event
+STORMWOOD CONTINUOUS — HEARD Hesk; crisis_learned came from the completed dialogue
+STORMWOOD CONTINUOUS — HEARD Tamsin through her ordinary NPC prompt
+STORMWOOD CONTINUOUS — WITNESSED a production Break while sheltered at Ashfoot
+STORMWOOD CONTINUOUS — GATHERED first charged Stormglass through the live tool and interaction path
+STORMWOOD CONTINUOUS — GATHERED the real six-Stormglass cost for both ends of pair A
+STORMWOOD CONTINUOUS — RELIT Ashfoot's ancient arch through its ordinary prompt
+STORMWOOD CONTINUOUS — RELIT Lantern Pools' twin with the remaining earned Stormglass
+STORMWOOD CONTINUOUS — TRAVELLED pair A; the production arch moved player and companion to Ashfoot
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_03 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — LEAD for officer_maren_verge_rod: terrapup at 429/429
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — WON officer_maren_verge_rod; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — DEFEATED Maren and disabled the Verge rod through its live switch
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during Ash road to the Hollows station (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during Ash road to the Hollows station (outcome=won)
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_06 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 86/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — LEAD for lieutenant_dace_hollows_rod: mudsnout at 358/358
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — WON lieutenant_dace_hollows_rod; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — DEFEATED Dace and earned lower_rods_disabled from both live switches
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_glowmoss_hollows_036 exact +3 Stormglass receipt with one pickaxe wear
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_glowmoss_hollows_037 exact +3 Stormglass receipt with one pickaxe wear
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during road to Rodline Post (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during road to Rodline Post (outcome=won)
+STORMWOOD CONTINUOUS — RELIT pair B with entirely harvested Stormglass
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during stormwood_pickup_route_07 route reward stance (outcome=lost)
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_07 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — COMPLETED Act I through the production task chain at Rodline Post
+STORMWOOD CONTINUOUS — PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 0/363 fainted, bramblebun 340/340, terrapup 88/436, brooktail 329/329 (active bramblebun)
+STORMWOOD CONTINUOUS — LEAD for lieutenant_varga_rodline_bridge: bramblebun at 340/340
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — WON lieutenant_varga_rodline_bridge; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — RECLAIMED the conductor bridge through Varga's authored trainer fight
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during conductor road to Keeper Ondra (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during conductor road to Keeper Ondra (outcome=lost)
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_09 exact +1 great_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+F11 WITNESS STEP PASS prefix: arrival through Ondra's arch recipe wall=1259.7s
+F11 WITNESS STRIKES prefix {"damage":0.0,"deaths":0,"dodge_frames":55,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":7}
+F11 WITNESS TOOLS after prefix: knife x1 axe x1 pickaxe x1 hotbar=["knife", "axe", "pickaxe", "", ""]
+STORMWOOD CROWN BUILD — CAMP still_grove_shelter night 1: sparkit 320/320, mudsnout 0/363 KO, bramblebun 0/345 KO, terrapup 88/436, brooktail 334/334; bedding row 1
+[rest] rested; day 7
+STORMWOOD CROWN BUILD — CAMP still_grove_shelter night 2: sparkit 320/320, mudsnout 363/363, bramblebun 0/345 KO, terrapup 88/436, brooktail 334/334; bedding row 2
+[rest] rested; day 8
+STORMWOOD CROWN BUILD — CAMP still_grove_shelter night 3: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 88/436, brooktail 334/334; bedding row 3
+[rest] rested; day 9
+STORMWOOD CROWN BUILD — RESTED the whole party at still_grove_shelter over 3 night(s) with ordinary bed and rest prompts
+STORMWOOD CROWN BUILD — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 436/436, brooktail 334/334
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CROWN BUILD — LB press 2 (joypad button, 6 physics frames): active sparkit -> mudsnout
+STORMWOOD CROWN BUILD — LB press 3 (joypad button, 6 physics frames): active mudsnout -> bramblebun
+STORMWOOD CROWN BUILD — LB press 4 (joypad button, 6 physics frames): active bramblebun -> terrapup
+STORMWOOD CROWN BUILD — FIGHT start conductor road west bend ally={ "species": "terrapup", "level": 45, "hp": 436.8, "max_hp": 436.8, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 310.094044503212, "max_hp": 310.094044503212, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end conductor road west bend outcome=won elapsed_ms=59425 ally={ "species": "terrapup", "level": 45, "hp": 243.485060178643, "max_hp": 436.8, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 0.0, "max_hp": 310.094044503212, "fainted": true, "resting": false } strikes={ "player_hits": 53, "enemy_hits": 18, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 312.18467867005, "damage_taken": 193.314939821357 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during conductor road west bend (outcome=won)
+STORMWOOD CROWN BUILD — FIGHT start Capacitor Grove road point ally={ "species": "terrapup", "level": 45, "hp": 243.485060178643, "max_hp": 436.8, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 294.829272730112, "max_hp": 294.829272730112, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end Capacitor Grove road point outcome=won elapsed_ms=56234 ally={ "species": "terrapup", "level": 46, "hp": 52.5133200905984, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 0.0, "max_hp": 294.829272730112, "fainted": true, "resting": false } strikes={ "player_hits": 53, "enemy_hits": 19, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 295.513917966345, "damage_taken": 191.823307440865 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during Capacitor Grove road point (outcome=won)
+STORMWOOD CROWN BUILD — FIGHT start Capacitor Grove road point ally={ "species": "terrapup", "level": 46, "hp": 52.5133200905984, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 307.977908794403, "max_hp": 307.977908794403, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end Capacitor Grove road point outcome=lost elapsed_ms=19291 ally={ "species": "terrapup", "level": 46, "hp": 0.0, "max_hp": 444.0, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 189.37300044068, "max_hp": 307.977908794403, "fainted": false, "resting": false } strikes={ "player_hits": 17, "enemy_hits": 6, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 118.604908353723, "damage_taken": 55.4097175491791 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during Capacitor Grove road point (outcome=lost)
+STORMWOOD CROWN BUILD — CAMP still_grove_shelter night 1: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 0/443 KO, brooktail 334/334; bedding row 3
+[rest] rested; day 10
+STORMWOOD CROWN BUILD — RESTED the whole party at still_grove_shelter over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CROWN BUILD — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 443/443, brooktail 334/334
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CROWN BUILD — LB press 2 (joypad button, 6 physics frames): active sparkit -> mudsnout
+STORMWOOD CROWN BUILD — LB press 3 (joypad button, 6 physics frames): active mudsnout -> bramblebun
+STORMWOOD CROWN BUILD — LB press 4 (joypad button, 6 physics frames): active bramblebun -> terrapup
+STORMWOOD CROWN BUILD — FIGHT start conductor road to the Capacitor Grove again ally={ "species": "terrapup", "level": 46, "hp": 444.0, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 294.829272730112, "max_hp": 294.829272730112, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end conductor road to the Capacitor Grove again outcome=won elapsed_ms=55832 ally={ "species": "terrapup", "level": 46, "hp": 276.485500421483, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 0.0, "max_hp": 294.829272730112, "fainted": true, "resting": false } strikes={ "player_hits": 54, "enemy_hits": 17, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 298.05025235635, "damage_taken": 167.514499578517 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during conductor road to the Capacitor Grove again (outcome=won)
+STORMWOOD CROWN BUILD — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 276/443, brooktail 334/334
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 6 physics frames): active terrapup -> brooktail
+STORMWOOD CROWN BUILD — LB press 2 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CROWN BUILD — LB press 3 (joypad button, 6 physics frames): active sparkit -> mudsnout
+STORMWOOD CROWN BUILD — ALPHA admission before input: { "body": "/root/Stormwood/Named_capacitor_alpha", "aggressive": true, "announced": true, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 4.76152038574219, "no_usable_ally": false, "ally_deployed": true, "candidate": "/root/Stormwood/Wild_tanglevolt_881250888_1", "winner": "/root/Stormwood/EncounterDirector", "offer": { "label": "Engage Tanglevolt", "distance": 0.90052014350891, "priority": 0, "actionable": true }, "fighting": false, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/StormwoodCamps/still_grove_shelter/Interactable", "ally_fainted": false, "ally_resting": false, "ally_hp": 364.0, "manager_state": 0 }
+STORMWOOD CROWN BUILD — ENGAGING the Alpha's escort /root/Stormwood/Wild_tanglevolt_881250888_1 first (Engage offers the nearest body)
+STORMWOOD CROWN BUILD — FIGHT start Capacitor Alpha escort ally={ "species": "mudsnout", "level": 45, "hp": 364.0, "max_hp": 364.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 313.536377044678, "max_hp": 313.536377044678, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end Capacitor Alpha escort outcome=won elapsed_ms=82850 ally={ "species": "mudsnout", "level": 45, "hp": 262.814240790365, "max_hp": 364.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 0.0, "max_hp": 313.536377044678, "fainted": true, "resting": false } strikes={ "player_hits": 50, "enemy_hits": 9, "player_misses": 37, "enemy_misses": 0, "damage_dealt": 317.942348748735, "damage_taken": 101.185759209635 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during Capacitor Alpha escort (outcome=won)
+STORMWOOD CROWN BUILD — ALPHA approach ended: { "body": "/root/Stormwood/Named_capacitor_alpha", "aggressive": true, "announced": true, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 2.69640064239502, "no_usable_ally": false, "ally_deployed": true, "candidate": "/root/Stormwood/Named_capacitor_alpha", "winner": "/root/Stormwood/EncounterDirector", "offer": { "label": "Engage Voltarach", "distance": 1.20890064239502, "priority": 0, "actionable": true }, "fighting": false, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/StormwoodCamps/still_grove_shelter/Interactable", "ally_fainted": false, "ally_resting": false, "ally_hp": 262.814240790365, "manager_state": 0 }
+F11 STRIKE HIT during 'fight during Capacitor Alpha escort' at (-1067.732, 74.31259, 3021.312) damage=18.0 health_left=82.0/100.0
+STORMWOOD CROWN BUILD — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 262/363, bramblebun 351/351, terrapup 276/443, brooktail 334/334
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 7 physics frames): active mudsnout -> bramblebun
+STORMWOOD CROWN BUILD — ALPHA admission before input: { "body": "/root/Stormwood/Named_capacitor_alpha", "aggressive": true, "announced": true, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 3.23496055603027, "no_usable_ally": false, "ally_deployed": true, "candidate": "/root/Stormwood/Named_capacitor_alpha", "winner": "/root/Stormwood/EncounterDirector", "offer": { "label": "Engage Voltarach", "distance": 1.7429470539093, "priority": 0, "actionable": true }, "fighting": false, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/StormwoodCamps/still_grove_shelter/Interactable", "ally_fainted": false, "ally_resting": false, "ally_hp": 351.5, "manager_state": 0 }
+STORMWOOD CROWN BUILD — ALPHA admission after input: { "body": "/root/Stormwood/Named_capacitor_alpha", "aggressive": true, "announced": true, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 7.27091455459595, "no_usable_ally": false, "ally_deployed": true, "candidate": "<none>", "winner": "<none>", "offer": {  }, "fighting": true, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/EncounterDirector", "ally_fainted": false, "ally_resting": false, "ally_hp": 351.5, "manager_state": 1 }
+STORMWOOD CROWN BUILD — ALPHA approach ended: { "body": "/root/Stormwood/Named_capacitor_alpha", "aggressive": true, "announced": true, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 7.27091455459595, "no_usable_ally": false, "ally_deployed": true, "candidate": "<none>", "winner": "<none>", "offer": {  }, "fighting": true, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/EncounterDirector", "ally_fainted": false, "ally_resting": false, "ally_hp": 351.5, "manager_state": 1 }
+STORMWOOD CROWN BUILD — FIGHT start Capacitor Alpha ally={ "species": "bramblebun", "level": 46, "hp": 351.5, "max_hp": 351.5, "fainted": false, "resting": false } enemy={ "species": "voltarach", "level": 40, "hp": 511.754956651688, "max_hp": 511.754956651688, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end Capacitor Alpha outcome=won elapsed_ms=105257 ally={ "species": "bramblebun", "level": 46, "hp": 156.49723643366, "max_hp": 351.5, "fainted": false, "resting": false } enemy={ "species": "voltarach", "level": 40, "hp": 0.0, "max_hp": 511.754956651688, "fainted": true, "resting": false } strikes={ "player_hits": 102, "enemy_hits": 17, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 511.871190417886, "damage_taken": 195.00276356634 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during Capacitor Alpha (outcome=won)
+STORMWOOD CROWN BUILD — CLEARED the named Capacitor Alpha through its production once-only fight
+STORMWOOD CROWN BUILD — stormwood_harvest_conductor_run_099: node gone after the approach; receipt=true gained=4
+STORMWOOD CROWN BUILD — GATHERED stormwood_harvest_conductor_run_099 +4 thunderwood through its exact live prompt
+STORMWOOD CROWN BUILD — stormwood_harvest_conductor_run_097: node gone after the approach; receipt=true gained=3
+STORMWOOD CROWN BUILD — GATHERED stormwood_harvest_conductor_run_097 +3 conductor_vine through its exact live prompt
+STORMWOOD CROWN BUILD — stormwood_harvest_conductor_run_092: node gone after the approach; receipt=true gained=3
+STORMWOOD CROWN BUILD — GATHERED stormwood_harvest_conductor_run_092 +3 conductor_vine through its exact live prompt
+STORMWOOD CROWN BUILD — stormwood_harvest_conductor_run_094: node gone after the approach; receipt=true gained=4
+STORMWOOD CROWN BUILD — GATHERED stormwood_harvest_conductor_run_094 +4 thunderwood through its exact live prompt
+STORMWOOD CROWN BUILD — WAITED at Rodline Refuge for a live Crown-gather window { "phase": "break", "open_seconds": 179.9, "elapsed": 4920.1, "region": "conductor_run" }
+STORMWOOD CROWN BUILD — stormwood_harvest_conductor_run_075: node gone after the approach; receipt=true gained=3
+STORMWOOD CROWN BUILD — GATHERED stormwood_harvest_conductor_run_075 +3 stormglass_crown through its exact live prompt
+STORMWOOD CROWN BUILD — CROWN WINDOW after stormwood_harvest_conductor_run_075: { "phase": "break", "open_seconds": 76.9, "elapsed": 5023.1, "region": "conductor_run" }
+STORMWOOD CROWN BUILD — stormwood_harvest_conductor_run_074: node gone after the approach; receipt=true gained=3
+STORMWOOD CROWN BUILD — GATHERED stormwood_harvest_conductor_run_074 +3 stormglass_crown through its exact live prompt
+STORMWOOD CROWN BUILD — CROWN WINDOW after stormwood_harvest_conductor_run_074: { "phase": "fading", "open_seconds": 45.5, "elapsed": 5054.5, "region": "conductor_run" }
+STORMWOOD CROWN BUILD — SIX sources yielded6 Crown glass/8 Thunderwood/6 vine; the indivisible wood nodes carry2 surplus
+STORMWOOD CROWN BUILD — CRAFTED two Thunderwood Frames through focused CraftPanel rows
+STORMWOOD CROWN BUILD — FIGHT start Still Grove road point ally={ "species": "bramblebun", "level": 46, "hp": 156.49723643366, "max_hp": 351.5, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 34, "hp": 286.865110990524, "max_hp": 286.865110990524, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end Still Grove road point outcome=lost elapsed_ms=41225 ally={ "species": "bramblebun", "level": 46, "hp": 0.0, "max_hp": 351.5, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 34, "hp": 40.9887710399699, "max_hp": 286.865110990524, "fainted": false, "resting": false } strikes={ "player_hits": 39, "enemy_hits": 14, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 245.876339950554, "damage_taken": 158.868202884943 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during Still Grove road point (outcome=lost)
+STORMWOOD CROWN BUILD — CAMERA TURN: wild Wild_sparkit_881250856_2 1.1 m away after the road fight (rig tracking=<none> (orbit target /root/Stormwood/Player)); walking out of engage range
+STORMWOOD CROWN BUILD — CAMERA TURN: walked out of engage range (wild now 24.3 m away)
+STORMWOOD CROWN BUILD — CAMERA TURN: no wild within 20 m; rig tracking=<none> (orbit target /root/Stormwood/Player)
+STORMWOOD CROWN BUILD — BUILT the Crown arch from six live harvests, two camp crafts and one paid controller placement
+STORMWOOD CONTINUOUS — CAMP still_grove_shelter night 1: sparkit 320/320, mudsnout 0/363 KO, bramblebun 0/345 KO, terrapup 88/436, brooktail 334/334; bedding row 1
+STORMWOOD CONTINUOUS — CAMP still_grove_shelter night 2: sparkit 320/320, mudsnout 363/363, bramblebun 0/345 KO, terrapup 88/436, brooktail 334/334; bedding row 2
+STORMWOOD CONTINUOUS — CAMP still_grove_shelter night 3: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 88/436, brooktail 334/334; bedding row 3
+STORMWOOD CONTINUOUS — RESTED the whole party at still_grove_shelter over 3 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 436/436, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 6 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 6 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 6 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — FIGHT start conductor road west bend ally={ "species": "terrapup", "level": 45, "hp": 436.8, "max_hp": 436.8, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 310.094044503212, "max_hp": 310.094044503212, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end conductor road west bend outcome=won elapsed_ms=59425 ally={ "species": "terrapup", "level": 45, "hp": 243.485060178643, "max_hp": 436.8, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 0.0, "max_hp": 310.094044503212, "fainted": true, "resting": false } strikes={ "player_hits": 53, "enemy_hits": 18, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 312.18467867005, "damage_taken": 193.314939821357 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during conductor road west bend (outcome=won)
+STORMWOOD CONTINUOUS — FIGHT start Capacitor Grove road point ally={ "species": "terrapup", "level": 45, "hp": 243.485060178643, "max_hp": 436.8, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 294.829272730112, "max_hp": 294.829272730112, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end Capacitor Grove road point outcome=won elapsed_ms=56234 ally={ "species": "terrapup", "level": 46, "hp": 52.5133200905984, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 0.0, "max_hp": 294.829272730112, "fainted": true, "resting": false } strikes={ "player_hits": 53, "enemy_hits": 19, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 295.513917966345, "damage_taken": 191.823307440865 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during Capacitor Grove road point (outcome=won)
+STORMWOOD CONTINUOUS — FIGHT start Capacitor Grove road point ally={ "species": "terrapup", "level": 46, "hp": 52.5133200905984, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 307.977908794403, "max_hp": 307.977908794403, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end Capacitor Grove road point outcome=lost elapsed_ms=19291 ally={ "species": "terrapup", "level": 46, "hp": 0.0, "max_hp": 444.0, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 189.37300044068, "max_hp": 307.977908794403, "fainted": false, "resting": false } strikes={ "player_hits": 17, "enemy_hits": 6, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 118.604908353723, "damage_taken": 55.4097175491791 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during Capacitor Grove road point (outcome=lost)
+STORMWOOD CONTINUOUS — CAMP still_grove_shelter night 1: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 0/443 KO, brooktail 334/334; bedding row 3
+STORMWOOD CONTINUOUS — RESTED the whole party at still_grove_shelter over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 345/345, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 6 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 6 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 6 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — FIGHT start conductor road to the Capacitor Grove again ally={ "species": "terrapup", "level": 46, "hp": 444.0, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 294.829272730112, "max_hp": 294.829272730112, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end conductor road to the Capacitor Grove again outcome=won elapsed_ms=55832 ally={ "species": "terrapup", "level": 46, "hp": 276.485500421483, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 38, "hp": 0.0, "max_hp": 294.829272730112, "fainted": true, "resting": false } strikes={ "player_hits": 54, "enemy_hits": 17, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 298.05025235635, "damage_taken": 167.514499578517 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during conductor road to the Capacitor Grove again (outcome=won)
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 276/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 6 physics frames): active terrapup -> brooktail
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 6 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 6 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — ALPHA admission before input: { "body": "/root/Stormwood/Named_capacitor_alpha", "aggressive": true, "announced": true, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 4.76152038574219, "no_usable_ally": false, "ally_deployed": true, "candidate": "/root/Stormwood/Wild_tanglevolt_881250888_1", "winner": "/root/Stormwood/EncounterDirector", "offer": { "label": "Engage Tanglevolt", "distance": 0.90052014350891, "priority": 0, "actionable": true }, "fighting": false, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/StormwoodCamps/still_grove_shelter/Interactable", "ally_fainted": false, "ally_resting": false, "ally_hp": 364.0, "manager_state": 0 }
+STORMWOOD CONTINUOUS — ENGAGING the Alpha's escort /root/Stormwood/Wild_tanglevolt_881250888_1 first (Engage offers the nearest body)
+STORMWOOD CONTINUOUS — FIGHT start Capacitor Alpha escort ally={ "species": "mudsnout", "level": 45, "hp": 364.0, "max_hp": 364.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 313.536377044678, "max_hp": 313.536377044678, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end Capacitor Alpha escort outcome=won elapsed_ms=82850 ally={ "species": "mudsnout", "level": 45, "hp": 262.814240790365, "max_hp": 364.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 35, "hp": 0.0, "max_hp": 313.536377044678, "fainted": true, "resting": false } strikes={ "player_hits": 50, "enemy_hits": 9, "player_misses": 37, "enemy_misses": 0, "damage_dealt": 317.942348748735, "damage_taken": 101.185759209635 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during Capacitor Alpha escort (outcome=won)
+STORMWOOD CONTINUOUS — ALPHA approach ended: { "body": "/root/Stormwood/Named_capacitor_alpha", "aggressive": true, "announced": true, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 2.69640064239502, "no_usable_ally": false, "ally_deployed": true, "candidate": "/root/Stormwood/Named_capacitor_alpha", "winner": "/root/Stormwood/EncounterDirector", "offer": { "label": "Engage Voltarach", "distance": 1.20890064239502, "priority": 0, "actionable": true }, "fighting": false, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/StormwoodCamps/still_grove_shelter/Interactable", "ally_fainted": false, "ally_resting": false, "ally_hp": 262.814240790365, "manager_state": 0 }
+STORMWOOD CONTINUOUS — PARTY before Capacitor Alpha re-engagement: sparkit 320/320, mudsnout 262/363, bramblebun 351/351, terrapup 276/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 7 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — ALPHA admission before input: { "body": "/root/Stormwood/Named_capacitor_alpha", "aggressive": true, "announced": true, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 3.23496055603027, "no_usable_ally": false, "ally_deployed": true, "candidate": "/root/Stormwood/Named_capacitor_alpha", "winner": "/root/Stormwood/EncounterDirector", "offer": { "label": "Engage Voltarach", "distance": 1.7429470539093, "priority": 0, "actionable": true }, "fighting": false, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/StormwoodCamps/still_grove_shelter/Interactable", "ally_fainted": false, "ally_resting": false, "ally_hp": 351.5, "manager_state": 0 }
+STORMWOOD CONTINUOUS — ALPHA admission after input: { "body": "/root/Stormwood/Named_capacitor_alpha", "aggressive": true, "announced": true, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 7.27091455459595, "no_usable_ally": false, "ally_deployed": true, "candidate": "<none>", "winner": "<none>", "offer": {  }, "fighting": true, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/EncounterDirector", "ally_fainted": false, "ally_resting": false, "ally_hp": 351.5, "manager_state": 1 }
+STORMWOOD CONTINUOUS — ALPHA approach ended: { "body": "/root/Stormwood/Named_capacitor_alpha", "aggressive": true, "announced": true, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 7.27091455459595, "no_usable_ally": false, "ally_deployed": true, "candidate": "<none>", "winner": "<none>", "offer": {  }, "fighting": true, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/EncounterDirector", "ally_fainted": false, "ally_resting": false, "ally_hp": 351.5, "manager_state": 1 }
+STORMWOOD CONTINUOUS — FIGHT start Capacitor Alpha ally={ "species": "bramblebun", "level": 46, "hp": 351.5, "max_hp": 351.5, "fainted": false, "resting": false } enemy={ "species": "voltarach", "level": 40, "hp": 511.754956651688, "max_hp": 511.754956651688, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end Capacitor Alpha outcome=won elapsed_ms=105257 ally={ "species": "bramblebun", "level": 46, "hp": 156.49723643366, "max_hp": 351.5, "fainted": false, "resting": false } enemy={ "species": "voltarach", "level": 40, "hp": 0.0, "max_hp": 511.754956651688, "fainted": true, "resting": false } strikes={ "player_hits": 102, "enemy_hits": 17, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 511.871190417886, "damage_taken": 195.00276356634 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during Capacitor Alpha (outcome=won)
+STORMWOOD CONTINUOUS — CLEARED the named Capacitor Alpha through its production once-only fight
+STORMWOOD CONTINUOUS — stormwood_harvest_conductor_run_099: node gone after the approach; receipt=true gained=4
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_conductor_run_099 +4 thunderwood through its exact live prompt
+STORMWOOD CONTINUOUS — stormwood_harvest_conductor_run_097: node gone after the approach; receipt=true gained=3
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_conductor_run_097 +3 conductor_vine through its exact live prompt
+STORMWOOD CONTINUOUS — stormwood_harvest_conductor_run_092: node gone after the approach; receipt=true gained=3
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_conductor_run_092 +3 conductor_vine through its exact live prompt
+STORMWOOD CONTINUOUS — stormwood_harvest_conductor_run_094: node gone after the approach; receipt=true gained=4
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_conductor_run_094 +4 thunderwood through its exact live prompt
+STORMWOOD CONTINUOUS — WAITED at Rodline Refuge for a live Crown-gather window { "phase": "break", "open_seconds": 179.9, "elapsed": 4920.1, "region": "conductor_run" }
+STORMWOOD CONTINUOUS — stormwood_harvest_conductor_run_075: node gone after the approach; receipt=true gained=3
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_conductor_run_075 +3 stormglass_crown through its exact live prompt
+STORMWOOD CONTINUOUS — CROWN WINDOW after stormwood_harvest_conductor_run_075: { "phase": "break", "open_seconds": 76.9, "elapsed": 5023.1, "region": "conductor_run" }
+STORMWOOD CONTINUOUS — stormwood_harvest_conductor_run_074: node gone after the approach; receipt=true gained=3
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_conductor_run_074 +3 stormglass_crown through its exact live prompt
+STORMWOOD CONTINUOUS — CROWN WINDOW after stormwood_harvest_conductor_run_074: { "phase": "fading", "open_seconds": 45.5, "elapsed": 5054.5, "region": "conductor_run" }
+STORMWOOD CONTINUOUS — SIX sources yielded6 Crown glass/8 Thunderwood/6 vine; the indivisible wood nodes carry2 surplus
+STORMWOOD CONTINUOUS — CRAFTED two Thunderwood Frames through focused CraftPanel rows
+STORMWOOD CONTINUOUS — FIGHT start Still Grove road point ally={ "species": "bramblebun", "level": 46, "hp": 156.49723643366, "max_hp": 351.5, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 34, "hp": 286.865110990524, "max_hp": 286.865110990524, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end Still Grove road point outcome=lost elapsed_ms=41225 ally={ "species": "bramblebun", "level": 46, "hp": 0.0, "max_hp": 351.5, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 34, "hp": 40.9887710399699, "max_hp": 286.865110990524, "fainted": false, "resting": false } strikes={ "player_hits": 39, "enemy_hits": 14, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 245.876339950554, "damage_taken": 158.868202884943 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during Still Grove road point (outcome=lost)
+STORMWOOD CONTINUOUS — CAMERA TURN: wild Wild_sparkit_881250856_2 1.1 m away after the road fight (rig tracking=<none> (orbit target /root/Stormwood/Player)); walking out of engage range
+STORMWOOD CONTINUOUS — CAMERA TURN: walked out of engage range (wild now 24.3 m away)
+STORMWOOD CONTINUOUS — CAMERA TURN: no wild within 20 m; rig tracking=<none> (orbit target /root/Stormwood/Player)
+STORMWOOD CONTINUOUS — BUILT the Crown arch from six live harvests, two camp crafts and one paid controller placement
+F11 WITNESS STEP PASS Capacitor Alpha, Crown gathering, two frames, paid Crown arch wall=2059.0s
+F11 WITNESS STRIKES crown {"damage":18.0,"deaths":0,"dodge_frames":1158,"hits":1,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":33}
+  PASS: same live chapter path reached the paid Crown arch
+STORMWOOD CROWN BUILD — CAMP still_grove_shelter night 1: sparkit 320/320, mudsnout 262/363, bramblebun 0/351 KO, terrapup 276/443, brooktail 334/334; bedding row 1
+[rest] rested; day 14
+STORMWOOD CROWN BUILD — CAMP still_grove_shelter night 2: sparkit 320/320, mudsnout 363/363, bramblebun 0/351 KO, terrapup 276/443, brooktail 334/334; bedding row 2
+[rest] rested; day 15
+STORMWOOD CROWN BUILD — CAMP still_grove_shelter night 3: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 276/443, brooktail 334/334; bedding row 3
+[rest] rested; day 16
+STORMWOOD CROWN BUILD — RESTED the whole party at still_grove_shelter over 3 night(s) with ordinary bed and rest prompts
+STORMWOOD CROWN BUILD — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 9 physics frames): active brooktail -> sparkit
+STORMWOOD CROWN BUILD — LB press 2 (joypad button, 7 physics frames): active sparkit -> mudsnout
+STORMWOOD CROWN BUILD — LB press 3 (joypad button, 7 physics frames): active mudsnout -> bramblebun
+STORMWOOD CROWN BUILD — LB press 4 (joypad button, 7 physics frames): active bramblebun -> terrapup
+STORMWOOD CROWN BUILD — TRAVELLED the actual paid Crown arch; Crown arrival earned
+STORMWOOD CROWN BUILD — PARTY before Crown guardian: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CROWN BUILD — ENGAGING /root/Stormwood/Wild_staticub_1326803654_2 first beside the Crown guardian (Engage offers the nearest body)
+STORMWOOD CROWN BUILD — FIGHT start wild beside the Crown guardian ally={ "species": "terrapup", "level": 46, "hp": 444.0, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "staticub", "level": 38, "hp": 301.307778267622, "max_hp": 301.307778267622, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end wild beside the Crown guardian outcome=won elapsed_ms=57322 ally={ "species": "terrapup", "level": 46, "hp": 259.593310714972, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "staticub", "level": 38, "hp": 0.0, "max_hp": 301.307778267622, "fainted": true, "resting": false } strikes={ "player_hits": 53, "enemy_hits": 19, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 306.903194168759, "damage_taken": 184.406689285028 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during wild beside the Crown guardian (outcome=won)
+STORMWOOD CROWN BUILD — GUARDIAN approach 1 did not engage: { "body": "/root/Stormwood/Named_crown_guardian", "aggressive": false, "announced": false, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 8.97354125976562, "no_usable_ally": false, "ally_deployed": true, "candidate": "<none>", "winner": "/root/Stormwood/EncounterDirector", "offer": { "label": "[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Put Terrapup away", "distance": 0.0, "priority": -2, "actionable": false }, "fighting": false, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/StormwoodCamps/still_grove_shelter/Interactable", "ally_fainted": false, "ally_resting": false, "ally_hp": 259.593310714972, "manager_state": 0 }
+STORMWOOD CROWN BUILD — PARTY before Crown guardian: sparkit 320/320, mudsnout 370/370, bramblebun 351/351, terrapup 259/443, brooktail 334/334
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 22 physics frames): active terrapup -> brooktail
+STORMWOOD CROWN BUILD — LB press 2 (joypad button, 8 physics frames): active brooktail -> sparkit
+STORMWOOD CROWN BUILD — LB press 3 (joypad button, 9 physics frames): active sparkit -> mudsnout
+STORMWOOD CROWN BUILD — FIGHT start Crown guardian ally={ "species": "mudsnout", "level": 46, "hp": 370.0, "max_hp": 370.0, "fainted": false, "resting": false } enemy={ "species": "staticub", "level": 41, "hp": 317.889272050858, "max_hp": 317.889272050858, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end Crown guardian outcome=won elapsed_ms=52200 ally={ "species": "mudsnout", "level": 46, "hp": 134.421333455308, "max_hp": 370.0, "fainted": false, "resting": false } enemy={ "species": "staticub", "level": 41, "hp": 0.0, "max_hp": 317.889272050858, "fainted": true, "resting": false } strikes={ "player_hits": 52, "enemy_hits": 14, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 320.977308823385, "damage_taken": 235.578666544692 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during Crown guardian (outcome=won)
+STORMWOOD CROWN BUILD — EARNED guardian clearance, Wen truth and physically open Rootgate / Act II
+F11 WITNESS STRIKES Crown arrival, guardian, Wen, Rootgate {"damage":0.0,"deaths":0,"dodge_frames":0,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":0}
+STORMWOOD CONTINUOUS — CAMP still_grove_shelter night 1: sparkit 320/320, mudsnout 262/363, bramblebun 0/351 KO, terrapup 276/443, brooktail 334/334; bedding row 1
+STORMWOOD CONTINUOUS — CAMP still_grove_shelter night 2: sparkit 320/320, mudsnout 363/363, bramblebun 0/351 KO, terrapup 276/443, brooktail 334/334; bedding row 2
+STORMWOOD CONTINUOUS — CAMP still_grove_shelter night 3: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 276/443, brooktail 334/334; bedding row 3
+STORMWOOD CONTINUOUS — RESTED the whole party at still_grove_shelter over 3 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at still_grove_shelter: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 9 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 7 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 7 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 7 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — TRAVELLED the actual paid Crown arch; Crown arrival earned
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 320/320, mudsnout 363/363, bramblebun 351/351, terrapup 443/443, brooktail 334/334
+STORMWOOD CONTINUOUS — ENGAGING /root/Stormwood/Wild_staticub_1326803654_2 first beside the Crown guardian (Engage offers the nearest body)
+STORMWOOD CONTINUOUS — FIGHT start wild beside the Crown guardian ally={ "species": "terrapup", "level": 46, "hp": 444.0, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "staticub", "level": 38, "hp": 301.307778267622, "max_hp": 301.307778267622, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end wild beside the Crown guardian outcome=won elapsed_ms=57322 ally={ "species": "terrapup", "level": 46, "hp": 259.593310714972, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "staticub", "level": 38, "hp": 0.0, "max_hp": 301.307778267622, "fainted": true, "resting": false } strikes={ "player_hits": 53, "enemy_hits": 19, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 306.903194168759, "damage_taken": 184.406689285028 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during wild beside the Crown guardian (outcome=won)
+STORMWOOD CONTINUOUS — GUARDIAN approach 1 did not engage: { "body": "/root/Stormwood/Named_crown_guardian", "aggressive": false, "announced": false, "grace": 0.0, "returning_home": false, "alive": true, "visible": true, "distance": 8.97354125976562, "no_usable_ally": false, "ally_deployed": true, "candidate": "<none>", "winner": "/root/Stormwood/EncounterDirector", "offer": { "label": "[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Put Terrapup away", "distance": 0.0, "priority": -2, "actionable": false }, "fighting": false, "arbiter_enabled": true, "tree_paused": false, "input_owner": "<none>", "interact_pressed": false, "activated_provider": "/root/Stormwood/StormwoodCamps/still_grove_shelter/Interactable", "ally_fainted": false, "ally_resting": false, "ally_hp": 259.593310714972, "manager_state": 0 }
+STORMWOOD CONTINUOUS — PARTY before Crown guardian: sparkit 320/320, mudsnout 370/370, bramblebun 351/351, terrapup 259/443, brooktail 334/334
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 22 physics frames): active terrapup -> brooktail
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 8 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 9 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — FIGHT start Crown guardian ally={ "species": "mudsnout", "level": 46, "hp": 370.0, "max_hp": 370.0, "fainted": false, "resting": false } enemy={ "species": "staticub", "level": 41, "hp": 317.889272050858, "max_hp": 317.889272050858, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end Crown guardian outcome=won elapsed_ms=52200 ally={ "species": "mudsnout", "level": 46, "hp": 134.421333455308, "max_hp": 370.0, "fainted": false, "resting": false } enemy={ "species": "staticub", "level": 41, "hp": 0.0, "max_hp": 317.889272050858, "fainted": true, "resting": false } strikes={ "player_hits": 52, "enemy_hits": 14, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 320.977308823385, "damage_taken": 235.578666544692 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during Crown guardian (outcome=won)
+STORMWOOD CONTINUOUS — EARNED guardian clearance, Wen truth and physically open Rootgate / Act II
+F11 WITNESS STEP PASS Crown arrival, guardian, Wen, Rootgate wall=195.2s
+STORMWOOD CROWN BUILD — FIGHT start released Rootgate road to Lantern Hollow ally={ "species": "mudsnout", "level": 46, "hp": 134.421333455308, "max_hp": 370.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 36, "hp": 270.868629299402, "max_hp": 270.868629299402, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end released Rootgate road to Lantern Hollow outcome=lost elapsed_ms=37950 ally={ "species": "mudsnout", "level": 46, "hp": 0.0, "max_hp": 370.0, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 36, "hp": 14.7023634715722, "max_hp": 270.868629299402, "fainted": false, "resting": false } strikes={ "player_hits": 40, "enemy_hits": 12, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 256.16626582783, "damage_taken": 137.437962015785 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during released Rootgate road to Lantern Hollow (outcome=lost)
+STORMWOOD CROWN BUILD — EARNED stormwood:lantern_hollow_reached
+STORMWOOD CROWN BUILD — DIALOGUE Sable opened 'stormwood_defector_sable_in_progress'
+STORMWOOD CROWN BUILD — EARNED stormwood:captive_truth_learned
+STORMWOOD CROWN BUILD — REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CROWN BUILD — CAMP lantern_hollow_waycamp night 1: sparkit 325/325, mudsnout 0/370 KO, bramblebun 351/351, terrapup 259/443, brooktail 340/340; bedding row 1
+[rest] rested; day 18
+STORMWOOD CROWN BUILD — CAMP lantern_hollow_waycamp night 2: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 259/443, brooktail 340/340; bedding row 3
+[rest] rested; day 19
+STORMWOOD CROWN BUILD — RESTED the whole party at lantern_hollow_waycamp over 2 night(s) with ordinary bed and rest prompts
+STORMWOOD CROWN BUILD — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 340/340
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 9 physics frames): active bramblebun -> terrapup
+STORMWOOD CROWN BUILD — FIGHT start Deepwood station ally={ "species": "terrapup", "level": 46, "hp": 444.0, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 40, "hp": 350.590704789639, "max_hp": 350.590704789639, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end Deepwood station outcome=won elapsed_ms=64009 ally={ "species": "terrapup", "level": 47, "hp": 225.678844293389, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 40, "hp": 0.0, "max_hp": 350.590704789639, "fainted": true, "resting": false } strikes={ "player_hits": 63, "enemy_hits": 21, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 353.623244297113, "damage_taken": 221.922413860229 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during Deepwood station (outcome=won)
+STORMWOOD CROWN BUILD — FIGHT start Deepwood station ally={ "species": "terrapup", "level": 47, "hp": 225.678844293389, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 302.146216007471, "max_hp": 302.146216007471, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end Deepwood station outcome=won elapsed_ms=55230 ally={ "species": "terrapup", "level": 47, "hp": 21.7119242292317, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 0.0, "max_hp": 302.146216007471, "fainted": true, "resting": false } strikes={ "player_hits": 52, "enemy_hits": 19, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 305.367442047016, "damage_taken": 203.966920064157 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during Deepwood station (outcome=won)
+STORMWOOD CROWN BUILD — REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CROWN BUILD — CAMP lantern_hollow_waycamp night 1: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 21/451, brooktail 340/340; bedding row 3
+[rest] rested; day 20
+STORMWOOD CROWN BUILD — RESTED the whole party at lantern_hollow_waycamp over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CROWN BUILD — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 451/451, brooktail 340/340
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 8 physics frames): active brooktail -> sparkit
+STORMWOOD CROWN BUILD — LB press 2 (joypad button, 8 physics frames): active sparkit -> mudsnout
+STORMWOOD CROWN BUILD — LB press 3 (joypad button, 7 physics frames): active mudsnout -> bramblebun
+STORMWOOD CROWN BUILD — LB press 4 (joypad button, 9 physics frames): active bramblebun -> terrapup
+STORMWOOD CROWN BUILD — PARTY before officer_nysa_deepwood_rod: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 451/451, brooktail 340/340
+STORMWOOD CROWN BUILD — FIGHT start officer_nysa_deepwood_rod stance ally={ "species": "terrapup", "level": 47, "hp": 439.806043486389, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 302.146216007471, "max_hp": 302.146216007471, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end officer_nysa_deepwood_rod stance outcome=won elapsed_ms=56356 ally={ "species": "terrapup", "level": 47, "hp": 252.598632110757, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 0.0, "max_hp": 302.146216007471, "fainted": true, "resting": false } strikes={ "player_hits": 51, "enemy_hits": 18, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 302.839360701502, "damage_taken": 187.207411375633 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during officer_nysa_deepwood_rod stance (outcome=won)
+STORMWOOD CROWN BUILD — FIGHT start officer_nysa_deepwood_rod stance ally={ "species": "terrapup", "level": 47, "hp": 242.580538273378, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 287.926586879194, "max_hp": 287.926586879194, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end officer_nysa_deepwood_rod stance outcome=won elapsed_ms=56575 ally={ "species": "terrapup", "level": 47, "hp": 33.8445134859762, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 0.0, "max_hp": 287.926586879194, "fainted": true, "resting": false } strikes={ "player_hits": 51, "enemy_hits": 19, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 291.962308555904, "damage_taken": 208.736024787402 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during officer_nysa_deepwood_rod stance (outcome=won)
+STORMWOOD CROWN BUILD — DIALOGUE officer_nysa_deepwood_rod opened 'stormwood_trainer_officer_nysa_deepwood_rod_challenge'
+STORMWOOD CROWN BUILD — EARNED stormwood:trainer:officer_nysa_deepwood_rod:defeated
+STORMWOOD CROWN BUILD — EARNED stormwood:rod_deepwood_disabled
+STORMWOOD CROWN BUILD — EARNED stormwood:deepwood_station_disabled
+STORMWOOD CROWN BUILD — FIGHT start Deepwood road to Dynamo approach ally={ "species": "terrapup", "level": 48, "hp": 34.3845855096886, "max_hp": 458.4, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 40, "hp": 334.863882933617, "max_hp": 334.863882933617, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end Deepwood road to Dynamo approach outcome=lost elapsed_ms=12833 ally={ "species": "terrapup", "level": 48, "hp": 0.0, "max_hp": 458.4, "fainted": true, "resting": false } enemy={ "species": "stormraven", "level": 40, "hp": 251.856012350357, "max_hp": 334.863882933617, "fainted": false, "resting": false } strikes={ "player_hits": 11, "enemy_hits": 4, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 83.0078705832596, "damage_taken": 36.4000072918236 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during Deepwood road to Dynamo approach (outcome=lost)
+STORMWOOD CROWN BUILD — REST before outerworks_lieutenant_sera at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CROWN BUILD — CAMP lantern_hollow_waycamp night 1: sparkit 325/325, mudsnout 376/376, bramblebun 357/357, terrapup 0/458 KO, brooktail 340/340; bedding row 3
+[rest] rested; day 22
+STORMWOOD CROWN BUILD — RESTED the whole party at lantern_hollow_waycamp over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CROWN BUILD — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 376/376, bramblebun 357/357, terrapup 458/458, brooktail 340/340
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 9 physics frames): active brooktail -> sparkit
+STORMWOOD CROWN BUILD — LB press 2 (joypad button, 9 physics frames): active sparkit -> mudsnout
+STORMWOOD CROWN BUILD — LB press 3 (joypad button, 10 physics frames): active mudsnout -> bramblebun
+STORMWOOD CROWN BUILD — LB press 4 (joypad button, 8 physics frames): active bramblebun -> terrapup
+STORMWOOD CROWN BUILD — PARTY before outerworks_lieutenant_sera: sparkit 325/325, mudsnout 376/376, bramblebun 357/357, terrapup 458/458, brooktail 340/340
+STORMWOOD CROWN BUILD — FIGHT start outerworks_lieutenant_sera stance ally={ "species": "terrapup", "level": 48, "hp": 458.4, "max_hp": 458.4, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 353.910233847618, "max_hp": 353.910233847618, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end outerworks_lieutenant_sera stance outcome=won elapsed_ms=67397 ally={ "species": "terrapup", "level": 48, "hp": 226.730457581898, "max_hp": 458.4, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 0.0, "max_hp": 353.910233847618, "fainted": true, "resting": false } strikes={ "player_hits": 64, "enemy_hits": 21, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 357.199205200769, "damage_taken": 231.669542418102 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during outerworks_lieutenant_sera stance (outcome=won)
+STORMWOOD CROWN BUILD — FIGHT start outerworks_lieutenant_sera stance ally={ "species": "terrapup", "level": 48, "hp": 226.730457581898, "max_hp": 458.4, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 321.711556896448, "max_hp": 321.711556896448, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end outerworks_lieutenant_sera stance outcome=lost elapsed_ms=61998 ally={ "species": "terrapup", "level": 48, "hp": 0.0, "max_hp": 458.4, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 17.8373393250489, "max_hp": 321.711556896448, "fainted": false, "resting": false } strikes={ "player_hits": 55, "enemy_hits": 21, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 303.874217571399, "damage_taken": 230.519672078466 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during outerworks_lieutenant_sera stance (outcome=lost)
+STORMWOOD CROWN BUILD — DIALOGUE outerworks_lieutenant_sera opened 'trainer_no_usable_creature'
+STORMWOOD CROWN BUILD — outerworks_lieutenant_sera answered with 'trainer_no_usable_creature' (the lead was worn at the stance); sending out a healthy member and challenging again
+STORMWOOD CROWN BUILD — PARTY before outerworks_lieutenant_sera: sparkit 325/325, mudsnout 376/376, bramblebun 357/357, terrapup 0/458 fainted, brooktail 340/340
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 9 physics frames): active brooktail -> sparkit
+STORMWOOD CROWN BUILD — LB press 2 (joypad button, 10 physics frames): active sparkit -> mudsnout
+F11 STRIKE HIT during 'walk to outerworks_lieutenant_sera stance' at (-94.12111, 107.2533, 5339.637) damage=25.0 health_left=75.0/100.0
+F11 STRIKE HIT during 'walk to outerworks_lieutenant_sera stance' at (-94.06387, 107.2485, 5340.239) damage=25.0 health_left=50.0/100.0
+STORMWOOD CROWN BUILD — DIALOGUE outerworks_lieutenant_sera opened 'stormwood_trainer_outerworks_lieutenant_sera_challenge'
+STORMWOOD CROWN BUILD — EARNED stormwood:trainer:outerworks_lieutenant_sera:defeated
+STORMWOOD CROWN BUILD — EARNED stormwood:rod_dynamo_disabled
+STORMWOOD CROWN BUILD — EARNED stormwood:all_rods_disabled
+STORMWOOD CROWN BUILD — FIGHT start Ember Bivouac arrival ally={ "species": "mudsnout", "level": 47, "hp": 376.0, "max_hp": 376.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 343.338860714912, "max_hp": 343.338860714912, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end Ember Bivouac arrival outcome=won elapsed_ms=55399 ally={ "species": "mudsnout", "level": 47, "hp": 168.519606874332, "max_hp": 376.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 0.0, "max_hp": 343.338860714912, "fainted": true, "resting": false } strikes={ "player_hits": 56, "enemy_hits": 18, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 346.733846862056, "damage_taken": 207.480393125668 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during Ember Bivouac arrival (outcome=won)
+STORMWOOD CROWN BUILD — EARNED stormwood:ember_bivouac_reached
+STORMWOOD CROWN BUILD — REST before officer_kestrel_outer_works at ember_bivouac (nearest open camp on the route)
+STORMWOOD CROWN BUILD — CAMP ember_bivouac night 1: sparkit 330/330, mudsnout 168/376, bramblebun 357/357, terrapup 0/458 KO, brooktail 345/345; bedding row 1
+STORMWOOD CROWN BUILD — FIGHT start ember_bivouac creature bed stance ally={ "species": "mudsnout", "level": 47, "hp": 168.519606874332, "max_hp": 376.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 17.8373393250489, "max_hp": 321.711556896448, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — FIGHT end ember_bivouac creature bed stance outcome=won elapsed_ms=4669 ally={ "species": "mudsnout", "level": 48, "hp": 160.133727188774, "max_hp": 382.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 0.0, "max_hp": 321.711556896448, "fainted": true, "resting": false } strikes={ "player_hits": 2, "enemy_hits": 1, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 17.9099230657347, "damage_taken": 10.9010691178419 }
+STORMWOOD CROWN BUILD — RESOLVED live route encounter during ember_bivouac creature bed stance (outcome=won)
+[rest] rested; day 24
+STORMWOOD CROWN BUILD — CAMP ember_bivouac night 2: sparkit 330/330, mudsnout 382/382, bramblebun 357/357, terrapup 0/458 KO, brooktail 345/345; bedding row 3
+[rest] rested; day 25
+STORMWOOD CROWN BUILD — RESTED the whole party at ember_bivouac over 2 night(s) with ordinary bed and rest prompts
+STORMWOOD CROWN BUILD — PARTY before after resting at ember_bivouac: sparkit 330/330, mudsnout 382/382, bramblebun 357/357, terrapup 458/458, brooktail 345/345
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 9 physics frames): active bramblebun -> terrapup
+STORMWOOD CROWN BUILD — PARTY before officer_kestrel_outer_works: sparkit 330/330, mudsnout 382/382, bramblebun 357/357, terrapup 458/458, brooktail 345/345
+STORMWOOD CROWN BUILD — DIALOGUE officer_kestrel_outer_works opened 'stormwood_trainer_officer_kestrel_outer_works_challenge'
+STORMWOOD CROWN BUILD — EARNED stormwood:trainer:officer_kestrel_outer_works:defeated
+STORMWOOD CROWN BUILD — EARNED stormwood:kestrel_defeated
+STORMWOOD CROWN BUILD — REST before marrow_core_ascent: not needed (party whole)
+STORMWOOD CROWN BUILD — ASCENT trace stage=0 at (-100.1679, 107.498, 5349.024) floor slides=["Terrain"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=0 at (-98.33655, 112.9096, 5387.944) floor slides=["OuterWorksApproach", "OuterWorksApproach"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=1 at (-100.095, 118.06, 5427.54) floor slides=["OuterWorks", "OuterWorks"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-84.54773, 121.8669, 5450.289) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-77.08852, 129.4088, 5480.008) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-103.956, 136.9541, 5494.691) floor slides=["HollowTrunkAscent", "HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-124.895, 144.5076, 5472.365) floor slides=["HollowTrunkAscent", "HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-108.5599, 152.0541, 5446.505) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-80.63323, 159.547, 5456.362) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-81.93945, 167.0974, 5485.324) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-110.3081, 174.6494, 5491.327) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-123.2521, 182.1703, 5465.485) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-101.4709, 189.7072, 5446.357) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-77.50449, 197.235, 5462.601) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-87.63036, 204.9514, 5490.49) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-116.7382, 212.5047, 5487.111) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-120.7586, 220.0575, 5458.085) floor slides=["HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-93.69483, 227.6034, 5446.914) floor slides=["HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-75.67599, 235.3186, 5471.096) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-94.97291, 242.8752, 5493.835) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-121.8047, 250.4261, 5480.848) floor slides=["HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — ASCENT trace stage=3 at (-115.9789, 257.9758, 5451.619) floor slides=["HollowTrunkAscent"]
+STORMWOOD CROWN BUILD — EARNED stormwood:core_reached
+STORMWOOD CROWN BUILD — EARNED Deepwood truth, both remaining rod switches, Kestrel and physical Dynamo core arrival
+F11 WITNESS STRIKES Deepwood, rods, Kestrel, core ascent {"damage":50.0,"deaths":0,"dodge_frames":891,"hits":2,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":29}
+STORMWOOD CONTINUOUS — FIGHT start released Rootgate road to Lantern Hollow ally={ "species": "mudsnout", "level": 46, "hp": 134.421333455308, "max_hp": 370.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 36, "hp": 270.868629299402, "max_hp": 270.868629299402, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end released Rootgate road to Lantern Hollow outcome=lost elapsed_ms=37950 ally={ "species": "mudsnout", "level": 46, "hp": 0.0, "max_hp": 370.0, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 36, "hp": 14.7023634715722, "max_hp": 270.868629299402, "fainted": false, "resting": false } strikes={ "player_hits": 40, "enemy_hits": 12, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 256.16626582783, "damage_taken": 137.437962015785 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during released Rootgate road to Lantern Hollow (outcome=lost)
+STORMWOOD CONTINUOUS — EARNED stormwood:lantern_hollow_reached
+STORMWOOD CONTINUOUS — DIALOGUE Sable opened 'stormwood_defector_sable_in_progress'
+STORMWOOD CONTINUOUS — EARNED stormwood:captive_truth_learned
+STORMWOOD CONTINUOUS — REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — CAMP lantern_hollow_waycamp night 1: sparkit 325/325, mudsnout 0/370 KO, bramblebun 351/351, terrapup 259/443, brooktail 340/340; bedding row 1
+STORMWOOD CONTINUOUS — CAMP lantern_hollow_waycamp night 2: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 259/443, brooktail 340/340; bedding row 3
+STORMWOOD CONTINUOUS — RESTED the whole party at lantern_hollow_waycamp over 2 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 443/443, brooktail 340/340
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 9 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — FIGHT start Deepwood station ally={ "species": "terrapup", "level": 46, "hp": 444.0, "max_hp": 444.0, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 40, "hp": 350.590704789639, "max_hp": 350.590704789639, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end Deepwood station outcome=won elapsed_ms=64009 ally={ "species": "terrapup", "level": 47, "hp": 225.678844293389, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 40, "hp": 0.0, "max_hp": 350.590704789639, "fainted": true, "resting": false } strikes={ "player_hits": 63, "enemy_hits": 21, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 353.623244297113, "damage_taken": 221.922413860229 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during Deepwood station (outcome=won)
+STORMWOOD CONTINUOUS — FIGHT start Deepwood station ally={ "species": "terrapup", "level": 47, "hp": 225.678844293389, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 302.146216007471, "max_hp": 302.146216007471, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end Deepwood station outcome=won elapsed_ms=55230 ally={ "species": "terrapup", "level": 47, "hp": 21.7119242292317, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 0.0, "max_hp": 302.146216007471, "fainted": true, "resting": false } strikes={ "player_hits": 52, "enemy_hits": 19, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 305.367442047016, "damage_taken": 203.966920064157 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during Deepwood station (outcome=won)
+STORMWOOD CONTINUOUS — REST before officer_nysa_deepwood_rod at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — CAMP lantern_hollow_waycamp night 1: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 21/451, brooktail 340/340; bedding row 3
+STORMWOOD CONTINUOUS — RESTED the whole party at lantern_hollow_waycamp over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 451/451, brooktail 340/340
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 8 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 8 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 7 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 9 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before officer_nysa_deepwood_rod: sparkit 325/325, mudsnout 370/370, bramblebun 351/351, terrapup 451/451, brooktail 340/340
+STORMWOOD CONTINUOUS — FIGHT start officer_nysa_deepwood_rod stance ally={ "species": "terrapup", "level": 47, "hp": 439.806043486389, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 302.146216007471, "max_hp": 302.146216007471, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end officer_nysa_deepwood_rod stance outcome=won elapsed_ms=56356 ally={ "species": "terrapup", "level": 47, "hp": 252.598632110757, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 0.0, "max_hp": 302.146216007471, "fainted": true, "resting": false } strikes={ "player_hits": 51, "enemy_hits": 18, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 302.839360701502, "damage_taken": 187.207411375633 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during officer_nysa_deepwood_rod stance (outcome=won)
+STORMWOOD CONTINUOUS — FIGHT start officer_nysa_deepwood_rod stance ally={ "species": "terrapup", "level": 47, "hp": 242.580538273378, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 287.926586879194, "max_hp": 287.926586879194, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end officer_nysa_deepwood_rod stance outcome=won elapsed_ms=56575 ally={ "species": "terrapup", "level": 47, "hp": 33.8445134859762, "max_hp": 451.2, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 41, "hp": 0.0, "max_hp": 287.926586879194, "fainted": true, "resting": false } strikes={ "player_hits": 51, "enemy_hits": 19, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 291.962308555904, "damage_taken": 208.736024787402 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during officer_nysa_deepwood_rod stance (outcome=won)
+STORMWOOD CONTINUOUS — DIALOGUE officer_nysa_deepwood_rod opened 'stormwood_trainer_officer_nysa_deepwood_rod_challenge'
+STORMWOOD CONTINUOUS — EARNED stormwood:trainer:officer_nysa_deepwood_rod:defeated
+STORMWOOD CONTINUOUS — EARNED stormwood:rod_deepwood_disabled
+STORMWOOD CONTINUOUS — EARNED stormwood:deepwood_station_disabled
+STORMWOOD CONTINUOUS — FIGHT start Deepwood road to Dynamo approach ally={ "species": "terrapup", "level": 48, "hp": 34.3845855096886, "max_hp": 458.4, "fainted": false, "resting": false } enemy={ "species": "stormraven", "level": 40, "hp": 334.863882933617, "max_hp": 334.863882933617, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end Deepwood road to Dynamo approach outcome=lost elapsed_ms=12833 ally={ "species": "terrapup", "level": 48, "hp": 0.0, "max_hp": 458.4, "fainted": true, "resting": false } enemy={ "species": "stormraven", "level": 40, "hp": 251.856012350357, "max_hp": 334.863882933617, "fainted": false, "resting": false } strikes={ "player_hits": 11, "enemy_hits": 4, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 83.0078705832596, "damage_taken": 36.4000072918236 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during Deepwood road to Dynamo approach (outcome=lost)
+STORMWOOD CONTINUOUS — REST before outerworks_lieutenant_sera at lantern_hollow_waycamp (nearest open camp on the route)
+STORMWOOD CONTINUOUS — CAMP lantern_hollow_waycamp night 1: sparkit 325/325, mudsnout 376/376, bramblebun 357/357, terrapup 0/458 KO, brooktail 340/340; bedding row 3
+STORMWOOD CONTINUOUS — RESTED the whole party at lantern_hollow_waycamp over 1 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at lantern_hollow_waycamp: sparkit 325/325, mudsnout 376/376, bramblebun 357/357, terrapup 458/458, brooktail 340/340
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 9 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 9 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — LB press 3 (joypad button, 10 physics frames): active mudsnout -> bramblebun
+STORMWOOD CONTINUOUS — LB press 4 (joypad button, 8 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before outerworks_lieutenant_sera: sparkit 325/325, mudsnout 376/376, bramblebun 357/357, terrapup 458/458, brooktail 340/340
+STORMWOOD CONTINUOUS — FIGHT start outerworks_lieutenant_sera stance ally={ "species": "terrapup", "level": 48, "hp": 458.4, "max_hp": 458.4, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 353.910233847618, "max_hp": 353.910233847618, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end outerworks_lieutenant_sera stance outcome=won elapsed_ms=67397 ally={ "species": "terrapup", "level": 48, "hp": 226.730457581898, "max_hp": 458.4, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 0.0, "max_hp": 353.910233847618, "fainted": true, "resting": false } strikes={ "player_hits": 64, "enemy_hits": 21, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 357.199205200769, "damage_taken": 231.669542418102 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during outerworks_lieutenant_sera stance (outcome=won)
+STORMWOOD CONTINUOUS — FIGHT start outerworks_lieutenant_sera stance ally={ "species": "terrapup", "level": 48, "hp": 226.730457581898, "max_hp": 458.4, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 321.711556896448, "max_hp": 321.711556896448, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end outerworks_lieutenant_sera stance outcome=lost elapsed_ms=61998 ally={ "species": "terrapup", "level": 48, "hp": 0.0, "max_hp": 458.4, "fainted": true, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 17.8373393250489, "max_hp": 321.711556896448, "fainted": false, "resting": false } strikes={ "player_hits": 55, "enemy_hits": 21, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 303.874217571399, "damage_taken": 230.519672078466 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during outerworks_lieutenant_sera stance (outcome=lost)
+STORMWOOD CONTINUOUS — DIALOGUE outerworks_lieutenant_sera opened 'trainer_no_usable_creature'
+STORMWOOD CONTINUOUS — outerworks_lieutenant_sera answered with 'trainer_no_usable_creature' (the lead was worn at the stance); sending out a healthy member and challenging again
+STORMWOOD CONTINUOUS — PARTY before outerworks_lieutenant_sera: sparkit 325/325, mudsnout 376/376, bramblebun 357/357, terrapup 0/458 fainted, brooktail 340/340
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 9 physics frames): active brooktail -> sparkit
+STORMWOOD CONTINUOUS — LB press 2 (joypad button, 10 physics frames): active sparkit -> mudsnout
+STORMWOOD CONTINUOUS — DIALOGUE outerworks_lieutenant_sera opened 'stormwood_trainer_outerworks_lieutenant_sera_challenge'
+STORMWOOD CONTINUOUS — EARNED stormwood:trainer:outerworks_lieutenant_sera:defeated
+STORMWOOD CONTINUOUS — EARNED stormwood:rod_dynamo_disabled
+STORMWOOD CONTINUOUS — EARNED stormwood:all_rods_disabled
+STORMWOOD CONTINUOUS — FIGHT start Ember Bivouac arrival ally={ "species": "mudsnout", "level": 47, "hp": 376.0, "max_hp": 376.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 343.338860714912, "max_hp": 343.338860714912, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end Ember Bivouac arrival outcome=won elapsed_ms=55399 ally={ "species": "mudsnout", "level": 47, "hp": 168.519606874332, "max_hp": 376.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 0.0, "max_hp": 343.338860714912, "fainted": true, "resting": false } strikes={ "player_hits": 56, "enemy_hits": 18, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 346.733846862056, "damage_taken": 207.480393125668 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during Ember Bivouac arrival (outcome=won)
+STORMWOOD CONTINUOUS — EARNED stormwood:ember_bivouac_reached
+STORMWOOD CONTINUOUS — REST before officer_kestrel_outer_works at ember_bivouac (nearest open camp on the route)
+STORMWOOD CONTINUOUS — CAMP ember_bivouac night 1: sparkit 330/330, mudsnout 168/376, bramblebun 357/357, terrapup 0/458 KO, brooktail 345/345; bedding row 1
+STORMWOOD CONTINUOUS — FIGHT start ember_bivouac creature bed stance ally={ "species": "mudsnout", "level": 47, "hp": 168.519606874332, "max_hp": 376.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 17.8373393250489, "max_hp": 321.711556896448, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — FIGHT end ember_bivouac creature bed stance outcome=won elapsed_ms=4669 ally={ "species": "mudsnout", "level": 48, "hp": 160.133727188774, "max_hp": 382.0, "fainted": false, "resting": false } enemy={ "species": "tanglevolt", "level": 42, "hp": 0.0, "max_hp": 321.711556896448, "fainted": true, "resting": false } strikes={ "player_hits": 2, "enemy_hits": 1, "player_misses": 0, "enemy_misses": 0, "damage_dealt": 17.9099230657347, "damage_taken": 10.9010691178419 }
+STORMWOOD CONTINUOUS — RESOLVED live route encounter during ember_bivouac creature bed stance (outcome=won)
+STORMWOOD CONTINUOUS — CAMP ember_bivouac night 2: sparkit 330/330, mudsnout 382/382, bramblebun 357/357, terrapup 0/458 KO, brooktail 345/345; bedding row 3
+STORMWOOD CONTINUOUS — RESTED the whole party at ember_bivouac over 2 night(s) with ordinary bed and rest prompts
+STORMWOOD CONTINUOUS — PARTY before after resting at ember_bivouac: sparkit 330/330, mudsnout 382/382, bramblebun 357/357, terrapup 458/458, brooktail 345/345
+STORMWOOD CONTINUOUS — LB press 1 (joypad button, 9 physics frames): active bramblebun -> terrapup
+STORMWOOD CONTINUOUS — PARTY before officer_kestrel_outer_works: sparkit 330/330, mudsnout 382/382, bramblebun 357/357, terrapup 458/458, brooktail 345/345
+STORMWOOD CONTINUOUS — DIALOGUE officer_kestrel_outer_works opened 'stormwood_trainer_officer_kestrel_outer_works_challenge'
+STORMWOOD CONTINUOUS — EARNED stormwood:trainer:officer_kestrel_outer_works:defeated
+STORMWOOD CONTINUOUS — EARNED stormwood:kestrel_defeated
+STORMWOOD CONTINUOUS — REST before marrow_core_ascent: not needed (party whole)
+STORMWOOD CONTINUOUS — ASCENT trace stage=0 at (-100.1679, 107.498, 5349.024) floor slides=["Terrain"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=0 at (-98.33655, 112.9096, 5387.944) floor slides=["OuterWorksApproach", "OuterWorksApproach"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=1 at (-100.095, 118.06, 5427.54) floor slides=["OuterWorks", "OuterWorks"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-84.54773, 121.8669, 5450.289) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-77.08852, 129.4088, 5480.008) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-103.956, 136.9541, 5494.691) floor slides=["HollowTrunkAscent", "HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-124.895, 144.5076, 5472.365) floor slides=["HollowTrunkAscent", "HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-108.5599, 152.0541, 5446.505) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-80.63323, 159.547, 5456.362) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-81.93945, 167.0974, 5485.324) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-110.3081, 174.6494, 5491.327) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-123.2521, 182.1703, 5465.485) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-101.4709, 189.7072, 5446.357) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-77.50449, 197.235, 5462.601) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-87.63036, 204.9514, 5490.49) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-116.7382, 212.5047, 5487.111) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-120.7586, 220.0575, 5458.085) floor slides=["HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-93.69483, 227.6034, 5446.914) floor slides=["HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-75.67599, 235.3186, 5471.096) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-94.97291, 242.8752, 5493.835) floor slides=["HollowTrunkAscent", "HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-121.8047, 250.4261, 5480.848) floor slides=["HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — ASCENT trace stage=3 at (-115.9789, 257.9758, 5451.619) floor slides=["HollowTrunkAscent"]
+STORMWOOD CONTINUOUS — EARNED stormwood:core_reached
+STORMWOOD CONTINUOUS — EARNED Deepwood truth, both remaining rod switches, Kestrel and physical Dynamo core arrival
+F11 WITNESS STEP PASS Deepwood, rods, Kestrel, core ascent wall=1908.6s
+STORMWOOD CROWN BUILD — PARTY before captain_marrow_dynamo_core: sparkit 330/330, mudsnout 382/382, bramblebun 362/362, terrapup 465/465, brooktail 345/345
+STORMWOOD CROWN BUILD — DIALOGUE captain_marrow_dynamo_core opened 'stormwood_trainer_captain_marrow_dynamo_core_challenge'
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 1 at 5496.7 s: { "species": "tanglevolt", "level": 42 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 2 at 53.8 s: { "species": "stormraven", "level": 43 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 3 at 108.5 s: { "species": "stormbrush", "level": 43 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 4 at 164.1 s: { "species": "sparkit", "level": 44 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 5 at 210.7 s: { "species": "voltarach", "level": 44 }
+STORMWOOD CROWN BUILD — ENTERED first actual conduit cycle 0
+STORMWOOD CROWN BUILD — CONDUIT feasibility start_world=(-93.9874, 262.0596, 5444.087) local=(6.012596, -0.15036, -25.9126) base_speed=5.600 remaining_cycle_s=27.989 conservative_travel_s=24.462 ally={ "species": "terrapup", "level": 50, "hp": 472.8, "max_hp": 472.8, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — BREAK lap [3, 0, 1, 2] from (6.012596, -25.9126)
+STORMWOOD CROWN BUILD — BREAK t=308.0s ally_local=(3.921753, -0.149933, -29.94092) piloted=true waiting=-1 fired=[] struck=[] window_left=35.2 fighting=false target=3 active=0 bank_state=charge leg=(0.0, -38.0) next_quick_in=-2789 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK lap [0, 1, 2] from (1.06118, -32.84668)
+STORMWOOD CROWN BUILD — ACCEPTED ordinary conduit 3
+STORMWOOD CROWN BUILD — BREAK t=310.0s ally_local=(4.242012, -0.150085, -28.85693) piloted=true waiting=-1 fired=[3] struck=[3] window_left=33.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-826 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=312.0s ally_local=(12.90978, -0.150391, -21.98193) piloted=true waiting=-1 fired=[3] struck=[3] window_left=31.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-2826 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=314.0s ally_local=(21.87654, -0.150024, -15.26953) piloted=true waiting=-1 fired=[3] struck=[3] window_left=29.2 fighting=false target=0 active=-1 bank_state=recovery leg=(37.8554, -3.311911) next_quick_in=-4815 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=316.0s ally_local=(30.84332, -0.150024, -8.55957) piloted=true waiting=-1 fired=[3] struck=[3] window_left=27.2 fighting=false target=0 active=1 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-6830 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK lap [1, 2] from (34.73158, -2.441406)
+STORMWOOD CROWN BUILD — ACCEPTED ordinary conduit 0
+STORMWOOD CROWN BUILD — BREAK t=318.0s ally_local=(37.40832, -0.150024, -0.401367) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=25.2 fighting=false target=1 active=1 bank_state=charge leg=(38.0, 0.0) next_quick_in=-189 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=320.0s ally_local=(31.41408, -0.150024, 7.038086) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=23.2 fighting=false target=1 active=1 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-2176 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=322.0s ally_local=(23.19444, -0.150024, 14.64258) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=21.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-4175 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=324.0s ally_local=(14.97489, -0.150116, 22.24951) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=19.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-6202 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=326.0s ally_local=(12.5172, -0.150238, 16.43066) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=17.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-8188 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=328.0s ally_local=(11.15547, -0.150269, 10.09619) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=15.2 fighting=false target=1 active=-1 bank_state=recovery leg=(3.311921, 37.8554) next_quick_in=-10188 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=330.0s ally_local=(7.01255, -0.150665, 20.49561) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=13.2 fighting=false target=1 active=3 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-12181 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=332.0s ally_local=(3.039871, -0.149933, 30.85742) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=11.2 fighting=false target=1 active=3 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-14175 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK lap [2] from (1.994843, 33.5752)
+STORMWOOD CROWN BUILD — ACCEPTED ordinary conduit 1
+STORMWOOD CROWN BUILD — BREAK t=334.0s ally_local=(-3.980888, -0.150085, 31.03955) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=9.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-1022 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=336.0s ally_local=(-12.05304, -0.150024, 23.27148) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=7.2 fighting=false target=2 active=0 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-3029 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=338.0s ally_local=(-20.12482, -0.150085, 15.50977) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=5.2 fighting=false target=2 active=0 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-5013 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=340.0s ally_local=(-28.19661, -0.150024, 7.743652) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=3.2 fighting=false target=2 active=0 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-7009 release_tick=-1
+STORMWOOD CROWN BUILD — EARNED actual Marrow five-round victory, four conduits and automatic Stormheart release; STOP before offer
+F11 WITNESS STRIKES Marrow five rounds and the real four-conduit Break {"damage":0.0,"deaths":0,"dodge_frames":0,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":0}
+STORMWOOD CONTINUOUS — PARTY before captain_marrow_dynamo_core: sparkit 330/330, mudsnout 382/382, bramblebun 362/362, terrapup 465/465, brooktail 345/345
+STORMWOOD CONTINUOUS — DIALOGUE captain_marrow_dynamo_core opened 'stormwood_trainer_captain_marrow_dynamo_core_challenge'
+STORMWOOD CONTINUOUS — OBSERVED Marrow round 1 at 5496.7 s: { "species": "tanglevolt", "level": 42 }
+STORMWOOD CONTINUOUS — OBSERVED Marrow round 2 at 53.8 s: { "species": "stormraven", "level": 43 }
+STORMWOOD CONTINUOUS — OBSERVED Marrow round 3 at 108.5 s: { "species": "stormbrush", "level": 43 }
+STORMWOOD CONTINUOUS — OBSERVED Marrow round 4 at 164.1 s: { "species": "sparkit", "level": 44 }
+STORMWOOD CONTINUOUS — OBSERVED Marrow round 5 at 210.7 s: { "species": "voltarach", "level": 44 }
+STORMWOOD CONTINUOUS — ENTERED first actual conduit cycle 0
+STORMWOOD CONTINUOUS — CONDUIT feasibility start_world=(-93.9874, 262.0596, 5444.087) local=(6.012596, -0.15036, -25.9126) base_speed=5.600 remaining_cycle_s=27.989 conservative_travel_s=24.462 ally={ "species": "terrapup", "level": 50, "hp": 472.8, "max_hp": 472.8, "fainted": false, "resting": false }
+STORMWOOD CONTINUOUS — BREAK lap [3, 0, 1, 2] from (6.012596, -25.9126)
+STORMWOOD CONTINUOUS — BREAK t=308.0s ally_local=(3.921753, -0.149933, -29.94092) piloted=true waiting=-1 fired=[] struck=[] window_left=35.2 fighting=false target=3 active=0 bank_state=charge leg=(0.0, -38.0) next_quick_in=-2789 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK lap [0, 1, 2] from (1.06118, -32.84668)
+STORMWOOD CONTINUOUS — ACCEPTED ordinary conduit 3
+STORMWOOD CONTINUOUS — BREAK t=310.0s ally_local=(4.242012, -0.150085, -28.85693) piloted=true waiting=-1 fired=[3] struck=[3] window_left=33.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-826 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=312.0s ally_local=(12.90978, -0.150391, -21.98193) piloted=true waiting=-1 fired=[3] struck=[3] window_left=31.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-2826 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=314.0s ally_local=(21.87654, -0.150024, -15.26953) piloted=true waiting=-1 fired=[3] struck=[3] window_left=29.2 fighting=false target=0 active=-1 bank_state=recovery leg=(37.8554, -3.311911) next_quick_in=-4815 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=316.0s ally_local=(30.84332, -0.150024, -8.55957) piloted=true waiting=-1 fired=[3] struck=[3] window_left=27.2 fighting=false target=0 active=1 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-6830 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK lap [1, 2] from (34.73158, -2.441406)
+STORMWOOD CONTINUOUS — ACCEPTED ordinary conduit 0
+STORMWOOD CONTINUOUS — BREAK t=318.0s ally_local=(37.40832, -0.150024, -0.401367) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=25.2 fighting=false target=1 active=1 bank_state=charge leg=(38.0, 0.0) next_quick_in=-189 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=320.0s ally_local=(31.41408, -0.150024, 7.038086) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=23.2 fighting=false target=1 active=1 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-2176 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=322.0s ally_local=(23.19444, -0.150024, 14.64258) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=21.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-4175 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=324.0s ally_local=(14.97489, -0.150116, 22.24951) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=19.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-6202 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=326.0s ally_local=(12.5172, -0.150238, 16.43066) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=17.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-8188 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=328.0s ally_local=(11.15547, -0.150269, 10.09619) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=15.2 fighting=false target=1 active=-1 bank_state=recovery leg=(3.311921, 37.8554) next_quick_in=-10188 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=330.0s ally_local=(7.01255, -0.150665, 20.49561) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=13.2 fighting=false target=1 active=3 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-12181 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=332.0s ally_local=(3.039871, -0.149933, 30.85742) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=11.2 fighting=false target=1 active=3 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-14175 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK lap [2] from (1.994843, 33.5752)
+STORMWOOD CONTINUOUS — ACCEPTED ordinary conduit 1
+STORMWOOD CONTINUOUS — BREAK t=334.0s ally_local=(-3.980888, -0.150085, 31.03955) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=9.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-1022 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=336.0s ally_local=(-12.05304, -0.150024, 23.27148) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=7.2 fighting=false target=2 active=0 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-3029 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=338.0s ally_local=(-20.12482, -0.150085, 15.50977) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=5.2 fighting=false target=2 active=0 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-5013 release_tick=-1
+STORMWOOD CONTINUOUS — BREAK t=340.0s ally_local=(-28.19661, -0.150024, 7.743652) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=3.2 fighting=false target=2 active=0 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-7009 release_tick=-1
+STORMWOOD CONTINUOUS — EARNED actual Marrow five-round victory, four conduits and automatic Stormheart release; STOP before offer
+F11 WITNESS STEP PASS Marrow five rounds and the real four-conduit Break wall=344.4s
+STORMWOOD CROWN BUILD — EARNED stormwood:legendary_offer_made
+STORMWOOD CROWN BUILD — ACCEPTED the Stormheart at five: kept creature-3f4beb7800f2b4755724839cd2ecdd60, released belt row 4; world offer fact and personal receipt saved
+STORMWOOD CROWN BUILD — EARNED stormwood:waterward_revealed
+STORMWOOD CROWN BUILD — EARNED realm_key_water
+STORMWOOD CROWN BUILD — EARNED waterward_route_revealed
+STORMWOOD CROWN BUILD — EARNED stormwood:chapter_complete
+STORMWOOD CROWN BUILD — REVEALED the Waterward aftermath; Water key held; STOP before the gate
+F11 WITNESS STRIKES Stormheart offer kept at five, Waterward aftermath {"damage":0.0,"deaths":0,"dodge_frames":0,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":0}
+STORMWOOD CONTINUOUS — EARNED stormwood:legendary_offer_made
+STORMWOOD CONTINUOUS — ACCEPTED the Stormheart at five: kept creature-3f4beb7800f2b4755724839cd2ecdd60, released belt row 4; world offer fact and personal receipt saved
+STORMWOOD CONTINUOUS — EARNED stormwood:waterward_revealed
+STORMWOOD CONTINUOUS — EARNED realm_key_water
+STORMWOOD CONTINUOUS — EARNED waterward_route_revealed
+STORMWOOD CONTINUOUS — EARNED stormwood:chapter_complete
+STORMWOOD CONTINUOUS — REVEALED the Waterward aftermath; Water key held; STOP before the gate
+F11 WITNESS STEP PASS Stormheart offer kept at five, Waterward aftermath wall=9.4s
+  PASS: wrote the post-aftermath save to disk
+F11 WITNESS EXPECT {"answers":["stormwood:legendary_answer:creature-3f4beb7800f2b4755724839cd2ecdd60:accepted"],"character_id":"stormwood-continuous-solo","party":[{"species":"sparkit","uid":"creature-66f7185af178f4102a807ae4d64a9375"},{"species":"mudsnout","uid":"creature-933d928c4954637b3ecb7b3b4a3fec5c"},{"species":"bramblebun","uid":"creature-f94c95ceb3a17daa80acaa713181da6d"},{"species":"terrapup","uid":"creature-ac6d47c5cb82dfe439f034116ce7e381"},{"species":"fulgocobra","uid":"creature-3f4beb7800f2b4755724839cd2ecdd60"}],"realm":"stormwood","world_flags":{"realm_gate_water_unlocked":false,"realm_heart_stormwood_earned":true,"realm_heart_stormwood_placed":false,"realm_key_water":true,"stormwood:chapter_complete":true,"stormwood:legendary_freed":true,"stormwood:legendary_offer_made":true,"stormwood:legendary_resolution:accepted:stormwood-continuous-solo":true,"stormwood:long_storm_ended":true,"stormwood:marrow_defeated":true,"stormwood:waterward_revealed":true,"waterward_route_revealed":true}}
+FINAL SAVE /tmp/claude-0/dryrun/xdg9/godot/app_userdata/Tetherbound/storm_run9_d3414e84/f11_witness_expect.json sha256=e0c6a459dcad8abb63f35bbd62dd587bee3a6e2b77461e1efa68bab93dd7f10e
+FINAL SAVE /tmp/claude-0/dryrun/xdg9/godot/app_userdata/Tetherbound/storm_run9_d3414e84/slot_0.json sha256=d18a0c5e1390bdc1d01760ca53aa02150ddcd41ea9f912d727dcc41006bb59cd
+FINAL SAVE /tmp/claude-0/dryrun/xdg9/godot/app_userdata/Tetherbound/storm_run9_d3414e84/worlds/slot-0/world.json sha256=beed57b0441cb3694739de283f582cf4a57829035ac982dec98d90bced697b51
+FINAL SAVE /tmp/claude-0/dryrun/xdg9/godot/app_userdata/Tetherbound/storm_run9_d3414e84/characters/stormwood-continuous-solo/character.json sha256=ff973d025eb61ba9512e7a2ca576febcb748686f85a08b8a748e7f7721d2d7ba
+F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 satchel_stacks=0 strike_hits=3 warnings=69 damage=68.0
+stormwood continuous: OK — chapter-entry through the Stormheart kept and Waterward aftermath passed without Stormwood flag or position fixtures
