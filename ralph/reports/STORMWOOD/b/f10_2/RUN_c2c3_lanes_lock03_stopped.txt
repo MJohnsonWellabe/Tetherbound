@@ -1,0 +1,7 @@
+STORMWOOD_C2C3 hollows_alpha terrapup MASHER L35 runs=24 win=0.25 med_lead=1.000 med_party=0.241 med_s=70.8 max_s=75.2 lead_faint=0.75 wipe=0.00 max_hit=0.050 tell=[0.80,0.80] incoming=529 stalled=0
+STORMWOOD_C2C3 hollows_alpha terrapup READER L35 runs=24 win=0.83 med_lead=0.547 med_party=0.132 med_s=122.1 max_s=132.4 lead_faint=0.17 wipe=0.00 max_hit=0.050 tell=[0.80,0.80] incoming=330 stalled=0
+STORMWOOD_C2C3_VERDICT hollows_alpha terrapup FAIL ratio=0.55 reader_win=0.83 max_hit=0.050 min_tell=0.80 reader win 0.83 < 0.90
+STORMWOOD_C2C3 hollows_alpha ripplet MASHER L35 runs=24 win=1.00 med_lead=0.854 med_party=0.186 med_s=42.5 max_s=44.2 lead_faint=0.00 wipe=0.00 max_hit=0.095 tell=[0.80,0.80] incoming=236 stalled=0
+STORMWOOD_C2C3 hollows_alpha ripplet READER L35 runs=24 win=1.00 med_lead=0.000 med_party=0.000 med_s=59.7 max_s=60.0 lead_faint=0.00 wipe=0.00 max_hit=0.094 tell=[0.80,0.80] incoming=7 stalled=0
+STORMWOOD_C2C3_VERDICT hollows_alpha ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.095 min_tell=0.80 
+EXIT 143
