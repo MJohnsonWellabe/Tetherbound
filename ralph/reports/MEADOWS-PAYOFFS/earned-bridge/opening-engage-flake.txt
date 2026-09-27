@@ -1,0 +1,22 @@
+# Opening tutorial-engage flake: root cause and fix validation (tests/smoke_four_biome_continuous.gd --through-opening, local Godot 4.7 headless)
+## Before (origin/main 32bd3307 + diagnostic): 3 failures in 20 runs
+wild approach exhausted: target=Wild_bramblebun_0_2 at (17.88511, 1.183434, -37.95425) player=(10.37187, 0.891851, -33.02383) alive=true winner=Interactable:<Node3D#39882898767553> engageable=<null> colliders=["/root/MeadowsPlayground/Terrain", "/root/MeadowsPlayground/Terrain", "/root/MeadowsPlayground/Terrain"]
+ERROR: natural travel did not reach and engage the tutorial Bramblebun
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"elapsed_seconds":152.092,"failures":["natural travel did not reach and engage the tutorial Bramblebun"],"reached":"title","requested_prefix_passed":false,"scratch":"user://four_biome_fresh_9813_3469"}
+wild approach exhausted: target=Wild_bramblebun_0_2 at (17.8177, 1.411636, -40.98692) player=(10.3767, 1.028846, -35.9418) alive=true winner=EncounterDirector:<Node#289792854625> engageable=<null> colliders=["/root/MeadowsPlayground/Terrain", "/root/MeadowsPlayground/Terrain", "/root/MeadowsPlayground/Props/work_area/Workbench_Collision"]
+ERROR: natural travel did not reach and engage the tutorial Bramblebun
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"elapsed_seconds":150.769,"failures":["natural travel did not reach and engage the tutorial Bramblebun"],"reached":"title","requested_prefix_passed":false,"scratch":"user://four_biome_fresh_9815_3520"}
+(the third failure, seed 14 in the first batch, stalled at (10.2,0.9,-33.4) per its route ledger, before the diagnostic existed)
+## After (stick navigator): 12 of 12 passed
+EXIT=0 seed=14
+EXIT=0 seed=81
+EXIT=0 seed=55
+EXIT=0 seed=68
+EXIT=0 seed=94
+EXIT=0 seed=14
+EXIT=0 seed=81
+EXIT=0 seed=94
+EXIT=0 seed=3
+EXIT=0 seed=16
+EXIT=0 seed=29
+EXIT=0 seed=42
