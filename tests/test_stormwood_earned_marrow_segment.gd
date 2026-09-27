@@ -101,7 +101,7 @@ func test_controller_preserves_one_window_and_production_authority() -> void:
 		assert_true(source.contains(condition), condition)
 	# 900 s: five captain rounds at the 1x clock outlast 300 s (focused Marrow smoke).
 	assert_eq(SEGMENT.ATTEMPT_MS, 900000)
-	assert_eq(SEGMENT.MAX_BREAK_WINDOWS, 3)
+	assert_eq(SEGMENT.MAX_BREAK_WINDOWS, 1, "acceptance is one 30 s Break window (BOSSES §3)")
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_dynamo.json"))
 	var phase: Dictionary = config.phases.break_core
 	assert_almost_eq(float(config.bank_count) * (float(phase.charge_seconds) + float(phase.fire_seconds)

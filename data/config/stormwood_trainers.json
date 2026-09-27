@@ -540,6 +540,8 @@
         5450
       ],
       "_why_moved_f11": "Stood at the Dynamo core centre (-100, 5470), over the 9 m hole in the DynamoCore deck ring (stormheart_tree.gd _ring(\"DynamoCore\", 9, 44)): walking to its prompt dropped the player 150 m through the hole. Moved onto solid deck at local (+10, -20) (east of the ring gap where the ascent rises through, segments 43-47), 10 m from the ascent landing, off every discharge lane and plate (stormwood_dynamo.json). Focused smoke tests/smoke_stormwood_marrow_press.gd.",
+      "challenge_prompt_priority": 1,
+      "_why_challenge_prompt_priority": "The same person as NPC captain_marrow on one seat: at equal distance the arbiter picked Greet over Challenge, so the Dynamo fight could not be started (focused smoke tests/smoke_stormwood_marrow_press.gd). The challenge wins while open; once beaten the base rule drops it below the NPC.",
       "route_class": "critical",
       "critical_order": 14,
       "humanoid_key": "captain_a",

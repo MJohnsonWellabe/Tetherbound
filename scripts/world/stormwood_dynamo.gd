@@ -32,6 +32,8 @@ const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
 ## The DynamoCore deck's outer radius (`stormheart_tree.gd` `_ring("DynamoCore", 9, 44, ...)`).
 const DECK_OUTER_RADIUS_M := 44.0
 const DECK_INNER_RADIUS_M := 9.0
+## How near the deck this peer's trainer must stand for the deck floor claim.
+const DECK_CLAIM_VERTICAL_M := 6.0
 ## `_ring("DynamoCore")` leaves segments 43-47 of 64 open for the ascent's
 ## final turn. The ascent needs headroom only over its own band (radius
 ## RAMP_RADIUS +- RAMP_WIDTH/2, rails included); the rest of that wedge is
@@ -135,11 +137,30 @@ func arena_ready() -> bool:
 ## terrain under the tree). Outside the fight nothing is claimed, so a body on
 ## the ascent ramp inside the same footprint keeps its own ground.
 func built_floor_height_at(x: float, z: float) -> float:
-	if not core_fight_live():
+	if _deck_tree() == null or not core_fight_live():
 		return NAN
-	if Vector2(x - global_position.x, z - global_position.z).length() > DECK_OUTER_RADIUS_M:
+	# The claim carries no height of its own, and the ascent (a helix inside
+	# the same footprint) and the Outer Works ring lie below it: it holds only
+	# while this peer's trainer is up on the deck, where the fight is.
+	var player := world.get_node_or_null("Player") as Node3D
+	if player == null or absf(player.global_position.y - deck_height()) > DECK_CLAIM_VERTICAL_M:
+		return NAN
+	if not deck_solid_at(Vector2(x - global_position.x, z - global_position.z)):
 		return NAN
 	return deck_height()
+
+
+## Solid deck at Dynamo-local `local` x/z: the ring outside the core hole,
+## minus the ascent's open band in the ring gap (the infill covers the rest).
+static func deck_solid_at(local: Vector2) -> bool:
+	var r := local.length()
+	if r < DECK_INNER_RADIUS_M or r > DECK_OUTER_RADIUS_M:
+		return false
+	var deg := fposmod(rad_to_deg(local.angle()), 360.0)
+	var in_gap := deg >= float(DECK_GAP_SEGMENTS.x) * 360.0 / 64.0 and deg < float(DECK_GAP_SEGMENTS.y) * 360.0 / 64.0
+	var band_in := STORMHEART.RAMP_RADIUS - STORMHEART.RAMP_WIDTH * 0.5 - DECK_GAP_CLEARANCE_M
+	var band_out := STORMHEART.RAMP_RADIUS + STORMHEART.RAMP_WIDTH * 0.5 + DECK_GAP_CLEARANCE_M
+	return not (in_gap and r > band_in and r < band_out)
 
 
 ## Marrow's hosted rounds, the Overload and the conduit Break.
@@ -243,9 +264,15 @@ func _rail(id: String, points: Array[Vector3], material: StandardMaterial3D) -> 
 			rail.add_child(visual)
 
 
+## The Stormheart Tree's deck height, or this node's own height where no tree
+## was built (a fixture world, which then claims no floor at all).
 func deck_height() -> float:
-	var tree := world.get_node_or_null("StormheartTree") as Node3D if world != null else null
-	return tree.global_position.y + STORMHEART.CORE_HEIGHT if tree != null else CORE_POSITION.y
+	var tree := _deck_tree()
+	return tree.global_position.y + STORMHEART.CORE_HEIGHT if tree != null else global_position.y
+
+
+func _deck_tree() -> Node3D:
+	return world.get_node_or_null("StormheartTree") as Node3D if is_instance_valid(world) else null
 
 
 func begin_for_peer(peer: int) -> void:

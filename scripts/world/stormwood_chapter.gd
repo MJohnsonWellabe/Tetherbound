@@ -79,15 +79,6 @@ func mount(owner_world: Node3D) -> void:
 			var body := people.get_node_or_null(NodePath(str(actor.name))) as Node3D
 			if body != null:
 				body.global_position = Vector3(float(actor.position[0]), float(actor.position[1]), float(actor.position[2]))
-	# One person authored twice (NPC + trainer body on one seat): an NPC that
-	# declares a lower prompt priority yields the press to its own trainer's
-	# challenge while that is offered, and still greets once it is not.
-	for actor: Dictionary in _read("res://data/config/stormwood_npcs.json").get("characters", []):
-		if not actor.has("prompt_priority"):
-			continue
-		var prompt := people.get_node_or_null(NodePath("%s/Interactable" % str(actor.name)))
-		if prompt != null:
-			prompt.set("priority", int(actor.prompt_priority))
 	if not _local:
 		people.visible = false
 		set_process(false)

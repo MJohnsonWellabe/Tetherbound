@@ -8,9 +8,10 @@ const CAPTAIN := "captain_marrow_dynamo_core"
 ## focused smoke (tests/smoke_stormwood_marrow_press.gd) was still in round 5's
 ## overload phase at 300 s (round 1 alone ~65 s), before any conduit window.
 const ATTEMPT_MS := 900000
-## Break windows one attempt may use. BOSSES §3: a timed-out Break clears the
-## partial conduits and restarts with a fresh 30 s window; a player retries.
-const MAX_BREAK_WINDOWS := 3
+## Break windows the witness accepts. BOSSES §3: a timed-out Break retries with
+## a fresh 30 s window in play, but acceptance is the live controller finishing
+## within one; a timeout fails here, naming how far it got.
+const MAX_BREAK_WINDOWS := 1
 var _attempt_started_ms := 0
 const END_FLAGS := ["stormwood:marrow_defeated", "stormwood:legendary_freed",
 	"realm_heart_stormwood_earned", "stormwood:long_storm_ended"]
