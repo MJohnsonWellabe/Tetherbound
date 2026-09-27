@@ -368,6 +368,10 @@ func _refresh() -> void:
 			_barriers.erase(flag)
 
 func _build_equipment(parent: Node3D, kind: String) -> void:
+	# This station's persistent installed awning and chart live beside WaterDocks,
+	# so loading progression can rebuild its prompt without duplicating scenery.
+	if kind == "chart" and parent.name == "deep_watch_chart":
+		return
 	_box(parent, Vector3(0, 0.2, 0), Vector3(2.0, 0.4, 1.5), Color("736044"))
 	if kind in ["pump", "sluice"]:
 		_box(parent, Vector3(0, 0.9, 0), Vector3(1.0, 1.0, 0.8), Color("67736d"))

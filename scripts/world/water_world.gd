@@ -145,6 +145,10 @@ func _ready() -> void:
 	local_chains.name = "WaterLocalChains"
 	add_child(local_chains)
 	local_chains.build(self)
+	var lure_dressing := preload("res://scripts/world/water_local_lure_dressing.gd").new()
+	lure_dressing.name = "WaterLocalLureDressing"
+	add_child(lure_dressing)
+	lure_dressing.build(self)
 	var director := ENCOUNTERS.build(self, chapter.npc_bodies)
 	var alpha := preload("res://scripts/combat/water_alpha.gd").new()
 	alpha.name = "WaterAlpha"
