@@ -652,4 +652,22 @@ func _fail(message: String) -> bool:
 			"shell_build_complete": bool(scene.call("shell_build_complete")) if scene != null and scene.has_method("shell_build_complete") else null,
 			"input_owner": str(owner.get_path()) if owner != null else "",
 			"input_owner_script": str(owner.get_script().resource_path) if owner != null and owner.get_script() != null else ""}))
+		# B16: the inherited wait tests its 120 s wall deadline BEFORE readiness,
+		# and the headless Cloudreach build is one indivisible call longer than
+		# that, so the first frame after the build fails on time alone. The
+		# production wait (`GameState._realm_scene_wait_state`) lets readiness
+		# win on the frame that crosses the deadline; apply that same rule once.
+		if scene != null and scene.get_instance_id() != _source_world_id and str(_game.get("current_realm")) == "cloudreach" \
+				and str(_game.get("pending_realm_entry")).is_empty() and owner == null \
+				and bool(_game.call("_realm_scene_ready", scene, "cloudreach")):
+			_world = scene as Node3D
+			_player = scene.get_node_or_null("Player") as CharacterBody3D
+			_rig = scene.get_node_or_null("CameraRig") as Node3D
+			if _player == null or _rig == null or not retained_five(_initial_ids, _party_ids()) \
+					or not _has("realm_gate_cloudreach_unlocked") or not _ending_ready():
+				return super._fail("Production Cloudreach arrival lost an earned identity or handoff fact")
+			_receipt("cloudreach_arrived", {"party_ids": _party_ids(), "player": _player.global_position,
+				"trigger_entries": _rift_crossings, "travel": "production Rift collision callback",
+				"readiness": "evaluated on the deadline frame (B16): the headless scene build exceeded the helper's 120 s wall wait"})
+			return true
 	return super._fail(message)

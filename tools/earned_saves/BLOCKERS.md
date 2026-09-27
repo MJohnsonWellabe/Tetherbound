@@ -419,6 +419,20 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
 - Checkpoint `storm_road_join` is written at the road index nearest (0,7000). A `kell_rift`
   resume from it skips the (already earned) Kell talk.
 
+## B16: the helper's arrival wait fails on its wall deadline after a long headless Cloudreach build
+
+- `tests/helpers/meadows_earned_warden_segment.gd` `_cross_the_live_rift` waits `ARRIVAL_MSEC` (120 s,
+  wall clock) with `while elapsed < ARRIVAL_MSEC:` and tests readiness only inside the loop. The
+  headless Cloudreach build is one indivisible call of more than 120 s here, so on the first
+  frame after it the loop exits and fails. It never evaluates readiness.
+- The diagnostic (`storm1`, 2026-09-27) showed every condition true when the wait failed:
+  realm `cloudreach`, a new `CloudreachCliffs` scene, no pending entry, `shell_build_complete`,
+  and no input owner. Production arrival had completed.
+- Harness fix, disclosed in `warden_accept.gd` `_fail`: apply production's own rule
+  (`GameState._realm_scene_wait_state`: readiness wins on the frame that crosses the deadline)
+  once, with the same identity/handoff checks and a `cloudreach_arrived` receipt that notes it.
+- Proposed fix in the Meadows helper: check readiness before the deadline in that loop.
+
 ## Where the chain stands (wrap-up 2026-09-26 ~17:50 UTC)
 
 - Passed with saves: opening_team, camp_tournament, bridge, warrens, relay, **hall**. Last good
