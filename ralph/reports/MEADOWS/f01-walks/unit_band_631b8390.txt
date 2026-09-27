@@ -1,0 +1,3 @@
+run_tests.gd --only=band_content,props,camp,village at 631b8390
+109 tests, 4925 assertions, 0 failed
+rc=0

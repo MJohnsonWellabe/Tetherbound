@@ -1,0 +1,3 @@
+run_tests.gd --only=village,tournament_ground,gate_f_instrumentation,signpost,band_content at 820423eb
+106 tests, 56645 assertions, 0 failed
+rc=0

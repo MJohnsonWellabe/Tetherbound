@@ -1,0 +1,37 @@
+GATE A OPENING +2.11s — title interactive
+GATE A OPENING +2.27s — answered the returning-player fresh-game confirmation
+GATE A OPENING +2.40s — answered the character-choice step
+GATE A OPENING +14.56s — confirmed the configured trainer-name prefill
+GATE A OPENING +14.56s — new game world entered
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+GATE A OPENING +97.67s — wake/Get Up complete
+GATE A OPENING +102.31s — Grandpa briefing and pack complete
+GATE A OPENING +102.31s — starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE A OPENING +107.04s — starter selected and named (terrapup, uid creature-73d63b27c20ef93b5a02a7cfd11fd0e9)
+GATE A OPENING +108.58s — Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE A OPENING +110.23s — usable house/front doorway exited
+GATE A OPENING +122.04s — tutorial Bramblebun combat entered
+GATE A OPENING +141.68s — Bramblebun naturally weakened to 25/106 HP
+GATE A OPENING +141.68s — satchel drained to 1 orb(s) so the empty case is on the real path
+GATE A OPENING +144.63s — running dry restocked the tutorial satchel to 5 orb(s)
+GATE A OPENING +153.26s — physical landed throw caught Bramblebun on launch 2 (1 strike(s), 1 miss(es))
+GATE A OPENING +154.90s — catch complete; exploration resumed with two-creature party
+GATE A OPENING — title interactive
+GATE A OPENING — answered the returning-player fresh-game confirmation
+GATE A OPENING — answered the character-choice step
+GATE A OPENING — confirmed the configured trainer-name prefill
+GATE A OPENING — new game world entered
+GATE A OPENING — wake/Get Up complete
+GATE A OPENING — Grandpa briefing and pack complete
+GATE A OPENING — starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE A OPENING — starter selected and named (terrapup, uid creature-73d63b27c20ef93b5a02a7cfd11fd0e9)
+GATE A OPENING — Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE A OPENING — usable house/front doorway exited
+GATE A OPENING — tutorial Bramblebun combat entered
+GATE A OPENING — Bramblebun naturally weakened to 25/106 HP
+GATE A OPENING — satchel drained to 1 orb(s) so the empty case is on the real path
+GATE A OPENING — running dry restocked the tutorial satchel to 5 orb(s)
+GATE A OPENING — physical landed throw caught Bramblebun on launch 2 (1 strike(s), 1 miss(es))
+GATE A OPENING — catch complete; exploration resumed with two-creature party
+gate A opening segment: OK — title through natural catch passed continuously with parsed controller input
+rc=0
