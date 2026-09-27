@@ -119,7 +119,8 @@ func test_rotated_live_marker_approach_is_outside_and_never_projects_rooms_to_te
 	var rotated := Basis(Vector3.UP, 1.1)
 	assert_true(SEGMENT.outside_approach(rotated * entrance, rotated * mouth, 8).is_equal_approx(rotated * outside))
 	var source := FileAccess.get_file_as_string("res://tests/helpers/meadows_earned_warrens_segment.gd")
-	assert_true(source.contains('await _walk(_warrens.call("marker", chamber))'))
+	assert_true(source.contains('var marker: Vector3 = _warrens.call("marker", chamber)'))
+	assert_true(source.contains('await _chamber_leg(previous, marker)'))
 	assert_false(source.contains('_walk_ground(_warrens.call("marker"'))
 
 

@@ -279,18 +279,23 @@ func _travel() -> bool:
 	# the room, and projecting a chamber back to that surface would walk the roof.
 	if not await _walk(entrance):
 		return false
+	var previous: Vector3 = entrance
 	for chamber: String in chambers:
-		if not await _walk(_warrens.call("marker", chamber)):
+		var marker: Vector3 = _warrens.call("marker", chamber)
+		if not await _chamber_leg(previous, marker):
 			return false
+		previous = marker
 	if _guardian_wins == 0:
 		if not await _engage_guardian() or not await _fight():
 			return false
 	if not _guardian_verified:
 		return _fail("The guardian victory never produced a complete immediate reward receipt")
 	for index in range(chambers.size() - 2, -1, -1):
-		if not await _walk(_warrens.call("marker", chambers[index])):
+		var marker: Vector3 = _warrens.call("marker", chambers[index])
+		if not await _chamber_leg(previous, marker):
 			return false
-	if not await _walk(entrance) or not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS):
+		previous = marker
+	if not await _chamber_leg(previous, entrance) or not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS):
 		return false
 	if not retained_five(_initial_ids, _party_ids()) or _tree.current_scene != _world \
 			or str(_game.get("current_realm")) != "meadows" or _fighting():
@@ -318,6 +323,22 @@ const SPIKE_BYPASS: Array[Vector2] = [Vector2(-409.0, 2512.0)]
 
 
 const BANK_RISE_M := 1.5
+
+
+## One leg between authored chamber markers. A wild fight inside the cave can
+## leave the player off the passage line, where the straight leg is confined
+## by the walls (seed 15 resume dry run, 21420e92: 14.5 m short of the next
+## marker after a fight). A player backs up to the last room they stood in
+## and goes on from there; so does this, once, before the leg fails.
+func _chamber_leg(from: Vector3, to: Vector3) -> bool:
+	if await _walk(to, 1.5, -1, true):
+		return true
+	if not _failures.is_empty():
+		return false
+	_receipt("chamber_leg_retrace", {"player": _player.global_position, "back_to": from, "target": to})
+	if not await _walk(from, 1.5, -1, true) and not _failures.is_empty():
+		return false
+	return await _walk(to)
 
 
 func _off_the_bank(entrance: Vector3, mouth: Vector3, outside: Vector3) -> bool:
