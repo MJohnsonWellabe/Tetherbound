@@ -3351,7 +3351,7 @@ static func _solo_member(director: Node, trainer_id: String, species: String, le
 		var cfg: Dictionary = (FIGHT_MATH.config().get("enemy", {}) as Dictionary).duplicate(true)
 		var overlay: Dictionary = FIGHT_MATH.config().get("enemy_trainer", {})
 		var override: Dictionary = built.get("combat_override") as Dictionary
-		var keys: Array = FIGHT_WILD.get_script_constant_map().get("_COMBAT_OVERRIDE_KEYS", [])
+		var keys: Array = FIGHT_WILD._COMBAT_OVERRIDE_KEYS
 		for key: Variant in keys:
 			if overlay.has(key):
 				cfg[key] = overlay[key]
