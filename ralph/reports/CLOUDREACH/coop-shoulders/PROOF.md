@@ -54,3 +54,15 @@ integration check; they run in the full tier.
 
 **Unit tests:** 258 `test_cloudreach*` tests, 0 failed.
 Raw files: `main_32bd33079.txt`, `branch.txt`, `ridge_profile_solo.txt`.
+
+## Folded onto `tb/cloudreach` (one PR per lane), after re-review APPROVE WITH NITS
+- **Two-peer net smokes on 0909d164** (the reviewer's merge condition):
+  - `smoke_net_cloudreach_riding`: 137 assertions, 0 failures, ALL CHECKS PASSED;
+  - `smoke_net_split_realms`: ALL CHECKS PASSED, both peers exited cleanly.
+
+  Files: `net_smokes_0909d164.txt`, `net_*_SUMMARY.md`.
+- **Re-run on the combined branch** (main 51d6dc44 plus route blockers, `branch_on_main_51d6dc44.txt`): PASS.
+  - Solo and live both have 720 ridges and 218 walkable collisions, with the same faces hash `54fc5dea…`. The shell defers.
+  - The live build took 88.7 s with 596 yields, and its worst held slice was 421 ms, with 1 heartbeat payback. On the older base it took 60.6 s. This base carries newer realm content; X05 measured roughly 110 s for local Cloudreach `enter_realm` builds and about 80 s on GitHub runners.
+  - The realm transition timeout is 120 s. A slower machine could approach it, so it is worth watching in the full-tier net jobs.
+- **Known mismatch, recorded for STATE:** host shells still defer the shoulders. A wild or trainer the host simulates in a shell stands on analytic ground, while the guest's own world has shoulders. This mismatch predates the change.
