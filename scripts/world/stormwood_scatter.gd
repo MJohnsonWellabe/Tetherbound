@@ -145,15 +145,40 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 					_add(out,cfg,field,world,rng,occupied,["storm_fern","storm_mushroom","storm_bush"][j%3],under)
 			if rng.randf()<0.45:
 				_add(out,cfg,field,world,rng,occupied,"storm_rock",at+Vector2(12,7))
+	# Deep-forest stands (vegetation.json `dense_stands`): the background grid
+	# is one tree per background_spacing_m cell, which reads as parkland. Each
+	# stand fills its circle on a finer jittered grid with its own seed, after
+	# every road and background placement, through the same _add() clearances.
+	for stand: Dictionary in cfg.get("dense_stands", []):
+		var centre := Vector2(float(stand.centre[0]), float(stand.centre[1]))
+		var radius := float(stand.radius_m)
+		var step := float(stand.spacing_m)
+		var jitter := step * 0.4
+		var n := int(radius / step)
+		for gz in range(-n, n + 1):
+			for gx in range(-n, n + 1):
+				rng.seed = _seed_for(int(cfg.seed), "stand:%s:%d:%d" % [str(stand.id), gx, gz])
+				var at := centre + Vector2(gx * step + rng.randf_range(-jitter, jitter), gz * step + rng.randf_range(-jitter, jitter))
+				if at.distance_to(centre) > radius or rng.randf() < float(stand.get("skip", 0.15)):
+					continue
+				var giant := rng.randf() < float(stand.get("giant_chance", 0.0))
+				_add(out,cfg,field,world,rng,occupied,"giant_canopy" if giant else str(stand.get("layer", "storm_canopy")),at)
+				if rng.randf() < float(stand.get("understory", 0.0)):
+					for j in 2:
+						var under := at+Vector2.from_angle(rng.randf()*TAU)*rng.randf_range(3,8)
+						_add(out,cfg,field,world,rng,occupied,["storm_fern","storm_mushroom"][j%2],under)
 	return out
 
 ## The largest collider surface any baked layer can reach from its centre:
-## collision_radius x scale_max over the colliding layers.
+## collision_radius x scale_max over the colliding layers. Layers marked
+## `stand_only` (planted only by dense_stands) are left out; _add() widens the
+## pocket and fight clearings by their own extra reach instead, so adding one
+## does not move every other tree's clearance.
 static func max_collider_reach(cfg: Dictionary) -> float:
 	var reach := 0.0
 	for layer: String in cfg.layers:
 		var spec: Dictionary = cfg.layers[layer]
-		if bool(spec.get("collides", false)):
+		if bool(spec.get("collides", false)) and not bool(spec.get("stand_only", false)):
 			reach = maxf(reach, float(spec.get("collision_radius", 0.0)) * float(spec.scale_max))
 	return reach
 
@@ -211,11 +236,17 @@ static func _add(out: Dictionary,cfg: Dictionary,field: RefCounted,world: Dictio
 		var radius := 36.0 if str(landmark.category) in ["camp","settlement","stronghold"] else 13.0
 		if at.distance_to(Vector2(float(p[0]),float(p[2])))<radius:
 			return
+	# A stand_only layer's collider can reach past max_collider_reach: widen
+	# the fixed pocket and fight clearings by the difference.
+	var layer_spec: Dictionary = cfg.layers[layer]
+	var extra_reach := 0.0
+	if collides and bool(layer_spec.get("stand_only", false)):
+		extra_reach = maxf(0.0, float(layer_spec.get("collision_radius", 0.0)) * float(layer_spec.scale_max) - max_collider_reach(cfg))
 	# Named fights keep trunk and rock colliders out of their arena.
 	var clearings: Dictionary = cfg.get("encounter_clearings", {})
 	if collides:
 		for site: Dictionary in clearings.get("sites", []):
-			if at.distance_to(Vector2(float(site.at[0]), float(site.at[1]))) < float(clearings.collider_clear_radius_m):
+			if at.distance_to(Vector2(float(site.at[0]), float(site.at[1]))) < float(clearings.collider_clear_radius_m) + extra_reach:
 				return
 	# Authored seats (trainers, NPCs, harvest nodes, pickups): no collider
 	# surface within the kind's `collider_surface_m` at the layer's largest
@@ -266,7 +297,7 @@ static func _add(out: Dictionary,cfg: Dictionary,field: RefCounted,world: Dictio
 							return
 	if collides:
 		for pocket: Dictionary in cfg.get("pocket_clearings", []):
-			if at.distance_to(Vector2(float(pocket.at[0]), float(pocket.at[1]))) < float(cfg.pocket_clear_radius_m):
+			if at.distance_to(Vector2(float(pocket.at[0]), float(pocket.at[1]))) < float(cfg.pocket_clear_radius_m) + extra_reach:
 				return
 	# Roads stay open: no trunk or colliding rock reaches into the terrain
 	# contract's road corridor (route_half_width), and trees keep their 9 m

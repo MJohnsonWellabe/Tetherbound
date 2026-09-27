@@ -1,0 +1,4 @@
+Round 1 (baseline) of F10#4 at main e59b0c97 (before the rod line cherry-pick).
+Command: xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_stormwood_f10_matrix.gd -- --out=res://ralph/reports/STORMWOOD/f10_4/r1 --label=r1
+Adapter: llvmpipe (LLVM 20.1.2, 256 bits) ; Godot 4.7-stable, Compatibility (opengl3), Linux container, no GPU.
+Sheet: _sheet.jpg (ralph/reports/STORMWOOD/f10_4/sheet.py). Judge: JUDGE.md (code-blind sonnet subagent, prompt ../JUDGE_PROMPT.md).

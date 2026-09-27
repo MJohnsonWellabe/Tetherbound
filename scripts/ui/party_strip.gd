@@ -970,6 +970,33 @@ func hide_now() -> void:
 ## Inactive combat strips still advance their cursor without replaying awards.
 var progression_feedback_enabled := true
 
+## F10#6 device profile (code-blind 7-inch judge: the in-fight team list's
+## "bond n/5  Lv n" rows fuse into a grey smear; the translucent rows let the
+## trainer standing behind them read as a second portrait). Set only by
+## `combat_hud.gd`. Compact rows show the name one font step larger and a wider
+## HP bar, drop the bond and level text, and stay fully opaque: a row's state
+## (out, benched, resting, fainted) moves into the name's colour instead of the
+## row's alpha, so nothing in the world shows through the roster.
+const COMPACT_NAME_FONT_SIZE := STRIP_READABLE_FONT_SIZE + 2
+const COMPACT_HP_BAR_SIZE := Vector2(96.0, 8.0)
+var compact := false
+
+
+func set_compact(enabled: bool) -> void:
+	compact = enabled
+	for i in _name_labels.size():
+		_name_labels[i].add_theme_font_size_override("font_size",
+			COMPACT_NAME_FONT_SIZE if compact else STRIP_READABLE_FONT_SIZE)
+		_hp_bars[i].custom_minimum_size = COMPACT_HP_BAR_SIZE if compact else HP_BAR_SIZE
+		# The larger name must not grow the row past ROW_SIZE.y: every bound
+		# derived from TOTAL_HEIGHT (combat_hud.gd::_party_strip_position())
+		# assumes it. Two pixels less vertical margin pay for the step.
+		var margin := _rows[i].get_child(0) as MarginContainer
+		for side in ["top", "bottom"]:
+			margin.add_theme_constant_override("margin_%s" % side, ROW_MARGIN - 2 if compact else ROW_MARGIN)
+		# Force the next update_from_party() to re-apply every row.
+		_last_vacant[i] = not _last_vacant[i]
+
 
 ## `entries`: up to `SLOTS` Dictionaries of
 ## `{label: String, level: int, hp_fraction: float, tint: Color,
@@ -1060,6 +1087,11 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 		FAINTED_MODULATE if fainted
 		else (RESTING_MODULATE if resting else (SELECTED_MODULATE if selected else UNSELECTED_MODULATE))
 	)
+	if compact:
+		_rows[i].modulate.a = SELECTED_MODULATE
+		_name_labels[i].add_theme_color_override("font_color",
+			UI_TOKENS.TEXT_MUTED if fainted or resting
+			else (UI_TOKENS.TEXT_PRIMARY if selected else UI_TOKENS.TEXT_SECONDARY))
 
 	_set_label(_name_labels[i], i, str(entry.get("label", "")))
 	var level := int(entry.get("level", 1))
@@ -1078,7 +1110,8 @@ func _update_row(i: int, entry: Dictionary, has_creature: bool, selected: bool, 
 	if has_xp:
 		_xp_bars[i].value = clampf(float(entry.get("xp_fraction", 0.0)), 0.0, 1.0)
 	var has_bond := entry.has("bond_nodes")
-	_bond_labels[i].visible = has_bond
+	_bond_labels[i].visible = has_bond and not compact
+	_level_labels[i].visible = not compact
 	if has_bond:
 		_bond_labels[i].text = "bond %d/%d" % [int(entry.get("bond_nodes", 0)), int(entry.get("bond_total", 5))]
 	_near[i] = bool(entry.get("bond_near", false)) or bool(entry.get("xp_near", false))

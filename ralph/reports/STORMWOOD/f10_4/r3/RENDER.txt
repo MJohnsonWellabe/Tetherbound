@@ -1,0 +1,3 @@
+Round 3 of F10#4 at tb/stormwood-visuals a7344fba (aftermath lift, giant stand on a 7.5x trunk).
+Command: xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/capture_stormwood_f10_matrix.gd -- --out=res://ralph/reports/STORMWOOD/f10_4/r3 --label=r3
+Adapter: llvmpipe (LLVM 20.1.2, 256 bits); Godot 4.7-stable Compatibility (opengl3), Linux container, no GPU.

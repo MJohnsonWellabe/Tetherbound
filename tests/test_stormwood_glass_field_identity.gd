@@ -77,3 +77,21 @@ func _entry(entries: Array, wanted: String) -> Dictionary:
 		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == wanted:
 			return raw as Dictionary
 	return {}
+
+
+## F10#4 scorched-scar pass (behind `scorched_scars`, default off): each scar
+## clears its grass, carries three fused lumps, and stays non-colliding.
+func test_scorched_scar_pass_builds_behind_its_flag() -> void:
+	var world := FlatWorld.new()
+	var field := PRESENTATION.new()
+	world.add_child(field)
+	field.force_scorched_scars = true
+	field.build(world, false)
+	assert_eq(field.find_children("FusedStrikeScar", "MeshInstance3D", true, false).size(), 8)
+	assert_eq(field.find_children("ScarGrassClearance", "Node3D", true, false).size(), 8)
+	for clearing: Node in field.find_children("ScarGrassClearance", "Node3D", true, false):
+		assert_true(clearing.is_in_group("grass_clear") and float(clearing.get_meta("grass_clear_radius", 0.0)) > 0.0)
+	assert_eq(field.find_children("FusedLump*", "Node3D", true, false).size(), 24)
+	assert_true(field.find_children("GlassShard*", "MeshInstance3D", true, false).size() >= 48)
+	assert_true(field.find_children("*", "CollisionObject3D", true, false).is_empty(), "still non-colliding")
+	world.free()

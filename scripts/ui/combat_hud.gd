@@ -275,6 +275,8 @@ func _ready() -> void:
 	_party_strip = PARTY_STRIP.new()
 	_party_strip.set("progression_feedback_enabled", false)
 	$Root.add_child(_party_strip)
+	# F10#6: the fight roster is name + HP, opaque (party_strip.gd `compact`).
+	_party_strip.call("set_compact", true)
 	# `set_rest_position()`, not a plain `.position` write: the strip is not
 	# visible yet (`party_strip.gd::_ready()` leaves it hidden), so this both
 	# snaps `.position` now and records the real `_rest_position` the widget's

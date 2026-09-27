@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+STORMWOOD_C2C3 capacitor_alpha terrapup MASHER L37 runs=24 win=1.00 med_lead=0.217 med_party=0.052 med_s=64.6 max_s=67.4 lead_faint=0.00 wipe=0.00 max_hit=0.034 tell=[0.80,0.80] incoming=175 stalled=0
+STORMWOOD_C2C3 capacitor_alpha terrapup READER L37 runs=24 win=1.00 med_lead=0.091 med_party=0.022 med_s=107.0 max_s=132.2 lead_faint=0.00 wipe=0.00 max_hit=0.033 tell=[0.80,0.80] incoming=98 stalled=0
+STORMWOOD_C2C3_VERDICT capacitor_alpha terrapup PASS ratio=0.42 reader_win=1.00 max_hit=0.034 min_tell=0.80 
+STORMWOOD_C2C3 capacitor_alpha ripplet MASHER L37 runs=24 win=1.00 med_lead=0.116 med_party=0.025 med_s=40.9 max_s=43.0 lead_faint=0.00 wipe=0.00 max_hit=0.063 tell=[0.80,0.80] incoming=48 stalled=0
+STORMWOOD_C2C3 capacitor_alpha ripplet READER L37 runs=24 win=1.00 med_lead=0.113 med_party=0.025 med_s=88.4 max_s=93.0 lead_faint=0.00 wipe=0.00 max_hit=0.063 tell=[0.80,0.80] incoming=67 stalled=0
+STORMWOOD_C2C3_VERDICT capacitor_alpha ripplet FAIL ratio=0.98 reader_win=1.00 max_hit=0.063 min_tell=0.80 reader/masher lead cost 0.98 > 0.55
+STORMWOOD_C2C3 capacitor_alpha galewisp MASHER L37 runs=24 win=1.00 med_lead=0.347 med_party=0.068 med_s=41.3 max_s=42.9 lead_faint=0.00 wipe=0.00 max_hit=0.077 tell=[0.80,0.80] incoming=107 stalled=0
+STORMWOOD_C2C3 capacitor_alpha galewisp READER L37 runs=24 win=1.00 med_lead=0.245 med_party=0.048 med_s=84.7 max_s=92.4 lead_faint=0.00 wipe=0.00 max_hit=0.077 tell=[0.80,0.80] incoming=91 stalled=0
+STORMWOOD_C2C3_VERDICT capacitor_alpha galewisp FAIL ratio=0.71 reader_win=1.00 max_hit=0.077 min_tell=0.80 reader/masher lead cost 0.71 > 0.55
+STORMWOOD_C2C3 done: 3 rows, 144 runs, 2 failing rows, 0 errors

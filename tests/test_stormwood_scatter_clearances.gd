@@ -11,7 +11,7 @@ const BAKE_DIR := "res://data/scatter/stormwood"
 ## The brief's floor: no collider surface within ~3 m of a trainer or NPC and
 ## ~1.5 m of a pickup or harvest node. The config may only be stricter.
 const FLOOR_M := {"trainer": 3.0, "npc": 3.0, "harvest": 1.5, "pickup": 1.5}
-const TREE_LAYERS: Array[String] = ["storm_canopy", "storm_deadwood", "crown_canopy"]
+const TREE_LAYERS: Array[String] = ["storm_canopy", "storm_deadwood", "crown_canopy", "giant_canopy"]
 
 
 func _placements() -> Dictionary:
