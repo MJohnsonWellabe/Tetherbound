@@ -6,6 +6,7 @@ extends Node
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
 const CONFIG_PATH := "res://data/config/fly_traversal.json"
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SESSION_PATH := ^"/root/Game/Session"
 
 signal state_changed(state: String)
@@ -102,6 +103,7 @@ var _touched_down := false
 
 
 func setup(player: CharacterBody3D, rig: Node3D, model: Node3D) -> void:
+	add_to_group(INPUT_OWNER.TRAVERSAL_GROUP)
 	_player = player
 	_rig = rig
 	_model = model
@@ -121,6 +123,12 @@ func setup(player: CharacterBody3D, rig: Node3D, model: Node3D) -> void:
 
 func is_flying() -> bool:
 	return state in ["glide", "climb", "descent", "exhausted"]
+
+
+## X03 (`input_owner.gd::TRAVERSAL_GROUP`): while flying or carried, LT is
+## `fly_descend`, not a world verb.
+func owns_traversal_input() -> bool:
+	return is_flying() or (_player != null and is_instance_valid(_player) and bool(_player.call("is_carried")))
 
 
 static func _new_anchor_request_id() -> int:
