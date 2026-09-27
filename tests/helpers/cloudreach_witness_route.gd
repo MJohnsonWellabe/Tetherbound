@@ -581,4 +581,8 @@ func _start_state_label() -> String:
 ## Aerie-start evidence never overwrites a full-route run's evidence.
 func _witness_dir(base: String) -> String:
 	if resume_mode: return base + "/resume-dry-run"
-	return base + ("/aerie-start" if start_point == "aerie" else "")
+	if start_point == "aerie": return base + "/aerie-start"
+	# Earned runs land in a git-ignored scratch folder; a passing run is copied
+	# into a named evidence folder (earned*/) with its run.txt.
+	if not from_save.is_empty(): return base + "/latest-run"
+	return base

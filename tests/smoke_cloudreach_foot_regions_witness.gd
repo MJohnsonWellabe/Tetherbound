@@ -49,8 +49,8 @@ func _run() -> void:
 ## This witness's event log lives beside its verdict, not in the shared
 ## continuous-route directory another run could overwrite.
 func _write_report() -> void:
-	output_dir = WITNESS_DIR
-	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
+	output_dir = _witness_dir(WITNESS_DIR)
+	DirAccess.make_dir_recursive_absolute(output_dir)
 	super._write_report()
 
 
@@ -119,11 +119,11 @@ func _finish() -> void:
 
 
 func _write_witness(summary: Array[Dictionary]) -> void:
-	DirAccess.make_dir_recursive_absolute(WITNESS_DIR)
-	var file := FileAccess.open(WITNESS_DIR + "/witness.json", FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute(_witness_dir(WITNESS_DIR))
+	var file := FileAccess.open(_witness_dir(WITNESS_DIR) + "/witness.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify({"criterion": "F06#1",
 		"passed": completed_route and not failed,
-		"start_state": ("earned save " + from_save) if not from_save.is_empty() else "committed completed-Meadows fixture (smoke_cloudreach_continuous default; earned c1_arrival save not yet available)",
+		"start_state": _start_state_label(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal",
 		"accelerated": accelerated, "stage": stage, "distance_m": distance_m,
 		"witness_frames": witness_frames, "regions": summary,
