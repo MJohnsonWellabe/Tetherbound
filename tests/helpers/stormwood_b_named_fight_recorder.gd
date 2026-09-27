@@ -43,6 +43,11 @@ var _tell_index := 0
 var _pending: Array[Dictionary] = []
 var _saving := false
 var _on_lunge := Callable()
+## Render runs only: while a named fight is recorded, at most one physics step
+## per drawn frame, so game time cannot run ahead of the screenshots and a
+## `tellN-b-mid` frame really is mid-tell (render DRY RUN judge: labels were
+## late because a slow draw let several physics steps pass per frame).
+var _steps_before := -1
 var _on_strike := Callable()
 
 
@@ -147,6 +152,9 @@ func _begin_fight(id: String, enemy: Node3D) -> void:
 		"party": _party_summary(game),
 		"tells": [], "hits": [], "frames": [], "outcome": "",
 	}
+	if _render and _steps_before < 0:
+		_steps_before = Engine.max_physics_steps_per_frame
+		Engine.max_physics_steps_per_frame = 1
 	enemy.connect("telegraph_started", _on_telegraph)
 	_on_lunge = func(_h: Vector3, _d: float) -> void: _on_strike_begin("lunge_started")
 	_on_strike = func() -> void: _on_strike_begin("strike_ready")
@@ -175,6 +183,9 @@ func _end_fight(reason: String) -> void:
 	if _render:
 		_pending.append({"tag": "99-over", "at": _phys + int(0.5 * ticks)})
 	_flush()
+	if _steps_before >= 0:
+		Engine.max_physics_steps_per_frame = _steps_before
+		_steps_before = -1
 	_row = {}
 	_enemy = null
 	_tell_open = {}
@@ -269,6 +280,9 @@ func _flush() -> void:
 func _exit_tree() -> void:
 	if gate_rendering:
 		RenderingServer.render_loop_enabled = true
+	if _steps_before >= 0:
+		Engine.max_physics_steps_per_frame = _steps_before
+		_steps_before = -1
 
 
 func is_recording() -> bool:
