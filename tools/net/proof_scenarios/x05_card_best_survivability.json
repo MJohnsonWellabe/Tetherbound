@@ -1,6 +1,6 @@
 {
   "name": "X05: host-rolled guest defence carries Best Creature survivability (co-op parity)",
-  "claim": "encounter_director._creature_card now passes is_best and the species' Best Creature ability to effective_defence, as combat_manager's solo hit path does, and re-announces the card when the title moves while the creature stays deployed. Two peers: the host reads the card it holds for the guest (the defence host_pick_struck_participant hands to every host-rolled blow) and compares it with the solo reference rebuilt from the card's species and level, before, during and after the guest designates its deployed Terrapup. Setup: production deploy/adopt only; no fixtures.",
+  "claim": "encounter_director._creature_card now passes is_best and the species' Best Creature ability to effective_defence, as combat_manager's solo hit path does, and re-announces the card when the title moves while the creature stays deployed. Two peers: the host reads the card it holds for the guest (the defence host_pick_struck_participant hands to every host-rolled blow) and compares it with the solo reference rebuilt from the card's species and level, before, during and after the guest designates its deployed Terrapup. Setup (disclosed): party_grant of one creature per peer into Game.party before the production summon (adopt_starter never enters Game.party, so there would be no slot to designate).",
   "peers": 2,
   "budget_s": 900,
   "steps": [
@@ -21,13 +21,31 @@
     },
     {
       "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "level": 20
+      },
+      "label": "setup: host party member (so summon uses Game.party)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "level": 20
+      },
+      "label": "setup: guest party gains a Terrapup (Best Creature ability shell_guard, survivability +15%) in Game.party slot 0"
+    },
+    {
+      "peer": 0,
       "action": "deploy_creature",
       "label": "host production summon (a creature out on both sides)"
     },
     {
       "peer": 1,
       "action": "deploy_creature",
-      "label": "guest production summon/adopt of the Terrapup starter; its card is announced to the host"
+      "label": "guest production summon of its party Terrapup; its card is announced to the host"
     },
     {
       "peer": 0,
