@@ -1,0 +1,418 @@
+[
+  {
+    "ally": [
+      609.98,
+      38.0,
+      1390.16,
+      36.75
+    ],
+    "camera": [
+      612.14,
+      41.5,
+      1388.61,
+      41.3
+    ],
+    "enemy": [
+      602.64,
+      33.96,
+      1389.61,
+      33.96
+    ],
+    "fight_s": 0.0,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/t-000.00.png",
+    "gap_m": 7.36,
+    "opponent": "water_aquaryn",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      609.3,
+      35.74,
+      1391.85,
+      35.09
+    ],
+    "camera": [
+      615.27,
+      41.26,
+      1395.19,
+      40.61
+    ],
+    "enemy": [
+      603.01,
+      33.98,
+      1390.01,
+      33.97
+    ],
+    "fight_s": 0.68,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/tell-start-000.68.png",
+    "gap_m": 6.55,
+    "opponent": "water_aquaryn",
+    "tag": "tell-start",
+    "tell_s": 1.25
+  },
+  {
+    "ally": [
+      610.57,
+      36.46,
+      1393.13,
+      35.6
+    ],
+    "camera": [
+      616.62,
+      42.4,
+      1398.1,
+      40.03
+    ],
+    "enemy": [
+      603.01,
+      33.98,
+      1390.01,
+      33.97
+    ],
+    "fight_s": 1.45,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/tell-ended-001.45.png",
+    "gap_m": 8.18,
+    "opponent": "water_aquaryn",
+    "tag": "tell-ended",
+    "tell_s": 1.25
+  },
+  {
+    "ally": [
+      609.84,
+      35.74,
+      1392.86,
+      35.09
+    ],
+    "camera": [
+      616.63,
+      42.01,
+      1397.95,
+      40.2
+    ],
+    "enemy": [
+      602.89,
+      33.97,
+      1389.96,
+      33.97
+    ],
+    "fight_s": 1.52,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/hit-001.52.png",
+    "gap_m": 7.54,
+    "opponent": "water_aquaryn",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      609.3,
+      35.25,
+      1392.66,
+      34.83
+    ],
+    "camera": [
+      616.36,
+      41.62,
+      1397.77,
+      39.91
+    ],
+    "enemy": [
+      602.75,
+      33.97,
+      1389.9,
+      33.97
+    ],
+    "fight_s": 1.6,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/hit-001.60.png",
+    "gap_m": 7.11,
+    "opponent": "water_aquaryn",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      607.53,
+      34.28,
+      1391.96,
+      34.26
+    ],
+    "camera": [
+      614.79,
+      41.04,
+      1397.31,
+      37.78
+    ],
+    "enemy": [
+      602.75,
+      33.93,
+      1387.47,
+      33.93
+    ],
+    "fight_s": 4.48,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/tell-start-004.48.png",
+    "gap_m": 6.56,
+    "opponent": "water_aquaryn",
+    "tag": "tell-start",
+    "tell_s": 1.25
+  },
+  {
+    "ally": [
+      609.5,
+      34.93,
+      1393.69,
+      34.7
+    ],
+    "camera": [
+      616.4,
+      41.41,
+      1399.0,
+      38.75
+    ],
+    "enemy": [
+      602.75,
+      33.93,
+      1387.47,
+      33.93
+    ],
+    "fight_s": 5.3,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/tell-ended-005.30.png",
+    "gap_m": 9.18,
+    "opponent": "water_aquaryn",
+    "tag": "tell-ended",
+    "tell_s": 1.25
+  },
+  {
+    "ally": [
+      607.09,
+      34.2,
+      1391.55,
+      34.19
+    ],
+    "camera": [
+      615.21,
+      41.23,
+      1396.01,
+      39.67
+    ],
+    "enemy": [
+      603.06,
+      34.15,
+      1385.53,
+      34.08
+    ],
+    "fight_s": 8.02,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/t-008.02.png",
+    "gap_m": 7.25,
+    "opponent": "water_aquaryn",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      607.09,
+      34.2,
+      1391.55,
+      34.19
+    ],
+    "camera": [
+      615.67,
+      41.48,
+      1396.08,
+      40.42
+    ],
+    "enemy": [
+      603.1,
+      34.23,
+      1385.36,
+      34.12
+    ],
+    "fight_s": 8.63,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/tell-start-008.63.png",
+    "gap_m": 7.38,
+    "opponent": "water_aquaryn",
+    "tag": "tell-start",
+    "tell_s": 1.25
+  },
+  {
+    "ally": [
+      608.52,
+      34.42,
+      1393.98,
+      34.41
+    ],
+    "camera": [
+      616.78,
+      41.58,
+      1398.61,
+      39.79
+    ],
+    "enemy": [
+      603.1,
+      34.23,
+      1385.36,
+      34.12
+    ],
+    "fight_s": 9.45,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/tell-ended-009.45.png",
+    "gap_m": 10.19,
+    "opponent": "water_aquaryn",
+    "tag": "tell-ended",
+    "tell_s": 1.25
+  },
+  {
+    "ally": [
+      606.54,
+      34.12,
+      1390.85,
+      34.13
+    ],
+    "camera": [
+      615.87,
+      42.11,
+      1395.38,
+      41.49
+    ],
+    "enemy": [
+      604.26,
+      34.88,
+      1385.27,
+      34.45
+    ],
+    "fight_s": 13.27,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/tell-start-013.27.png",
+    "gap_m": 6.03,
+    "opponent": "water_aquaryn",
+    "tag": "tell-start",
+    "tell_s": 1.5
+  },
+  {
+    "ally": [
+      608.09,
+      34.42,
+      1394.64,
+      34.41
+    ],
+    "camera": [
+      617.21,
+      42.31,
+      1399.38,
+      39.75
+    ],
+    "enemy": [
+      604.26,
+      34.88,
+      1385.27,
+      34.45
+    ],
+    "fight_s": 14.35,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/tell-ended-014.35.png",
+    "gap_m": 10.12,
+    "opponent": "water_aquaryn",
+    "tag": "tell-ended",
+    "tell_s": 1.5
+  },
+  {
+    "ally": [
+      606.8,
+      34.15,
+      1391.5,
+      34.15
+    ],
+    "camera": [
+      616.36,
+      42.24,
+      1396.06,
+      41.71
+    ],
+    "enemy": [
+      604.16,
+      34.91,
+      1385.13,
+      34.45
+    ],
+    "fight_s": 16.0,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/t-016.00.png",
+    "gap_m": 6.9,
+    "opponent": "water_aquaryn",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      606.19,
+      34.27,
+      1394.23,
+      34.26
+    ],
+    "camera": [
+      614.93,
+      41.29,
+      1398.44,
+      37.02
+    ],
+    "enemy": [
+      603.6,
+      33.94,
+      1387.47,
+      33.94
+    ],
+    "fight_s": 24.02,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/t-024.02.png",
+    "gap_m": 7.24,
+    "opponent": "water_aquaryn",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      602.23,
+      34.2,
+      1395.72,
+      34.2
+    ],
+    "camera": [
+      609.29,
+      40.87,
+      1400.83,
+      34.81
+    ],
+    "enemy": [
+      601.13,
+      33.93,
+      1387.13,
+      33.93
+    ],
+    "fight_s": 32.02,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/t-032.02.png",
+    "gap_m": 8.65,
+    "opponent": "water_aquaryn",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      601.44,
+      34.09,
+      1393.48,
+      34.09
+    ],
+    "camera": [
+      605.07,
+      41.28,
+      1402.6,
+      35.02
+    ],
+    "enemy": [
+      602.88,
+      34.06,
+      1385.72,
+      34.02
+    ],
+    "fight_s": 40.02,
+    "file": "res://shots/twvis/r7aquaryn/aquaryn/t-040.02.png",
+    "gap_m": 7.89,
+    "opponent": "water_aquaryn",
+    "tag": "t",
+    "tell_s": 0.0
+  }
+]

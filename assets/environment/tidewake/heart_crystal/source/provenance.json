@@ -1,0 +1,17 @@
+{
+  "subject": "Veilfall Heart Chamber tether crystal",
+  "request": "#356 comment 5859533602",
+  "creator": "Codex, original project-authored geometry and shader",
+  "created": "2026-09-27",
+  "source": "build_heart_crystal.py in this folder; all vertices authored mathematically for this subject",
+  "reference": "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png; Heart Chamber and Crystal (Subtle) panels inspected before authoring",
+  "reference_use": "Silhouette, cool blue-white facets, subdued internal light and chamber hero scale only. No board pixels or traced shapes included.",
+  "rights": "Original project-authored work. No acquired third-party asset, licence, Meshy task, image generation API, purchase or external redistribution condition introduced.",
+  "export": "Blender 4.2.9 glTF 2.0 binary, +Y up, metres, applied vertex scale, no texture dependencies, one mesh, one surface, seven closed faceted crystal components",
+  "runtime": "heart_crystal.tscn applies the Compatibility shader to the GLB mesh; GLB has a basic blue mineral fallback material",
+  "origin": "Base origin; bounds Y=0..10 m, X=-2.5..2.5 m. Use scene position (0,0,113) to replace the centered 5x10x5 PrismMesh at (0,5,113).",
+  "integration": "Instantiate scene as the existing _crystal Node3D so freed-state visibility remains authoritative. Keep existing scene light external. No collider, light, process script or gameplay state added.",
+  "material_controls": "ShaderMaterial glow_strength default 1.0; edge_strength default 0.24. Material uses opaque direct shading plus localized emission and requires no bloom or screen texture.",
+  "validation": "geometry_validation.json records bounds, each closed component, positive signed volumes, manifold edges, degeneracy and export hash. Components intentionally overlap at the heart; do not use the render mesh for collision.",
+  "acceptance": "Native integration capture and independent visual judgement are owned by the coordinating agent; geometry validation is not visual acceptance."
+}

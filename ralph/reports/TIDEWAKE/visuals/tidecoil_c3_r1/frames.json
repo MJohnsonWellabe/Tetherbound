@@ -1,0 +1,470 @@
+[
+  {
+    "ally": [
+      1484.52,
+      -0.86,
+      3427.75,
+      -0.94
+    ],
+    "camera": [
+      1485.74,
+      5.48,
+      3436.36,
+      0.64
+    ],
+    "enemy": [
+      1488.65,
+      -2.58,
+      3424.93,
+      -2.69
+    ],
+    "fight_s": 0.0,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/t-000.00.png",
+    "gap_m": 5.0,
+    "opponent": "water_tidecoil",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1485.81,
+      -0.95,
+      3429.68,
+      -1.03
+    ],
+    "camera": [
+      1491.24,
+      6.12,
+      3438.2,
+      -1.46
+    ],
+    "enemy": [
+      1488.44,
+      -2.5,
+      3425.0,
+      -2.61
+    ],
+    "fight_s": 0.6,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/tell-start-000.60.png",
+    "gap_m": 5.37,
+    "opponent": "water_tidecoil",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1484.04,
+      -0.46,
+      3429.26,
+      -0.55
+    ],
+    "camera": [
+      1485.7,
+      6.61,
+      3439.43,
+      4.18
+    ],
+    "enemy": [
+      1488.36,
+      -2.45,
+      3425.16,
+      -2.56
+    ],
+    "fight_s": 0.92,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/tell-ended-000.92.png",
+    "gap_m": 5.96,
+    "opponent": "water_tidecoil",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1484.57,
+      -0.72,
+      3428.72,
+      -0.8
+    ],
+    "camera": [
+      1486.25,
+      6.11,
+      3438.28,
+      1.46
+    ],
+    "enemy": [
+      1488.49,
+      -2.59,
+      3424.56,
+      -2.7
+    ],
+    "fight_s": 0.98,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/hit-000.98.png",
+    "gap_m": 5.72,
+    "opponent": "water_tidecoil",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1484.84,
+      -0.85,
+      3428.45,
+      -0.93
+    ],
+    "camera": [
+      1486.04,
+      5.69,
+      3437.45,
+      0.87
+    ],
+    "enemy": [
+      1488.26,
+      -2.8,
+      3422.86,
+      -2.91
+    ],
+    "fight_s": 1.07,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/hit-001.07.png",
+    "gap_m": 6.55,
+    "opponent": "water_tidecoil",
+    "tag": "hit",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1487.07,
+      -1.22,
+      3430.41,
+      -1.3
+    ],
+    "camera": [
+      1489.14,
+      5.14,
+      3438.71,
+      -0.72
+    ],
+    "enemy": [
+      1488.15,
+      -2.82,
+      3422.54,
+      -2.93
+    ],
+    "fight_s": 1.27,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/tell-start-001.27.png",
+    "gap_m": 7.94,
+    "opponent": "water_tidecoil",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1485.54,
+      -0.61,
+      3431.26,
+      -0.69
+    ],
+    "camera": [
+      1487.89,
+      5.28,
+      3438.72,
+      -0.31
+    ],
+    "enemy": [
+      1488.13,
+      -2.78,
+      3422.79,
+      -2.89
+    ],
+    "fight_s": 1.5,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/tell-ended-001.50.png",
+    "gap_m": 8.86,
+    "opponent": "water_tidecoil",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1485.51,
+      -0.77,
+      3430.19,
+      -0.85
+    ],
+    "camera": [
+      1488.76,
+      5.65,
+      3438.43,
+      -0.63
+    ],
+    "enemy": [
+      1487.02,
+      -2.64,
+      3421.63,
+      -2.75
+    ],
+    "fight_s": 2.77,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/tell-start-002.77.png",
+    "gap_m": 8.68,
+    "opponent": "water_tidecoil",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1485.51,
+      -0.77,
+      3430.19,
+      -0.85
+    ],
+    "camera": [
+      1488.76,
+      5.65,
+      3438.43,
+      -0.63
+    ],
+    "enemy": [
+      1487.02,
+      -2.64,
+      3421.63,
+      -2.75
+    ],
+    "fight_s": 2.87,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/tell-ended-002.87.png",
+    "gap_m": 8.68,
+    "opponent": "water_tidecoil",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1487.12,
+      -1.13,
+      3431.09,
+      -1.21
+    ],
+    "camera": [
+      1489.83,
+      5.2,
+      3439.1,
+      -0.88
+    ],
+    "enemy": [
+      1488.67,
+      -3.05,
+      3422.14,
+      -3.16
+    ],
+    "fight_s": 4.05,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/tell-start-004.05.png",
+    "gap_m": 9.09,
+    "opponent": "water_tidecoil",
+    "tag": "tell-start",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1485.21,
+      -0.49,
+      3431.37,
+      -0.57
+    ],
+    "camera": [
+      1487.49,
+      5.34,
+      3438.69,
+      -0.16
+    ],
+    "enemy": [
+      1488.64,
+      -3.0,
+      3422.37,
+      -3.11
+    ],
+    "fight_s": 4.37,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/tell-ended-004.37.png",
+    "gap_m": 9.63,
+    "opponent": "water_tidecoil",
+    "tag": "tell-ended",
+    "tell_s": 0.8
+  },
+  {
+    "ally": [
+      1483.91,
+      -0.61,
+      3428.11,
+      -0.7
+    ],
+    "camera": [
+      1485.17,
+      6.26,
+      3437.92,
+      3.75
+    ],
+    "enemy": [
+      1489.17,
+      -3.19,
+      3422.24,
+      -3.3
+    ],
+    "fight_s": 8.02,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/t-008.02.png",
+    "gap_m": 7.89,
+    "opponent": "water_tidecoil",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1482.85,
+      -0.56,
+      3426.46,
+      -0.65
+    ],
+    "camera": [
+      1486.43,
+      8.16,
+      3440.01,
+      2.89
+    ],
+    "enemy": [
+      1491.45,
+      -3.44,
+      3424.91,
+      -3.55
+    ],
+    "fight_s": 16.0,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/t-016.00.png",
+    "gap_m": 8.74,
+    "opponent": "water_tidecoil",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1484.15,
+      -0.93,
+      3426.64,
+      -1.01
+    ],
+    "camera": [
+      1478.99,
+      3.82,
+      3425.44,
+      3.03
+    ],
+    "enemy": [
+      1491.74,
+      -3.3,
+      3426.35,
+      -3.41
+    ],
+    "fight_s": 24.02,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/t-024.02.png",
+    "gap_m": 7.59,
+    "opponent": "water_tidecoil",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1483.92,
+      -0.62,
+      3428.1,
+      -0.7
+    ],
+    "camera": [
+      1483.95,
+      1.82,
+      3428.4,
+      -0.66
+    ],
+    "enemy": [
+      1491.49,
+      -3.33,
+      3425.66,
+      -3.44
+    ],
+    "fight_s": 32.02,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/t-032.02.png",
+    "gap_m": 7.96,
+    "opponent": "water_tidecoil",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1483.95,
+      -0.84,
+      3426.84,
+      -0.92
+    ],
+    "camera": [
+      1478.7,
+      4.05,
+      3425.01,
+      3.14
+    ],
+    "enemy": [
+      1491.74,
+      -3.2,
+      3426.94,
+      -3.31
+    ],
+    "fight_s": 40.02,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/t-040.02.png",
+    "gap_m": 7.79,
+    "opponent": "water_tidecoil",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1484.9,
+      -1.74,
+      3423.23,
+      -1.83
+    ],
+    "camera": [
+      1477.39,
+      4.69,
+      3419.09,
+      -0.32
+    ],
+    "enemy": [
+      1490.8,
+      -2.63,
+      3428.72,
+      -2.74
+    ],
+    "fight_s": 48.02,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/t-048.02.png",
+    "gap_m": 8.05,
+    "opponent": "water_tidecoil",
+    "tag": "t",
+    "tell_s": 0.0
+  },
+  {
+    "ally": [
+      1484.52,
+      -1.46,
+      3424.22,
+      -1.54
+    ],
+    "camera": [
+      1476.31,
+      5.06,
+      3422.24,
+      5.03
+    ],
+    "enemy": [
+      1490.69,
+      -2.48,
+      3429.43,
+      -2.59
+    ],
+    "fight_s": 56.02,
+    "file": "res://shots/twvis/r9tidecoil/tidecoil/t-056.02.png",
+    "gap_m": 8.07,
+    "opponent": "water_tidecoil",
+    "tag": "t",
+    "tell_s": 0.0
+  }
+]

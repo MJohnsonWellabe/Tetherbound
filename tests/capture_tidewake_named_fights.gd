@@ -38,6 +38,23 @@ var _policy := "QUICK"
 ## (e.g. Calder needs `water_dock_salt_crown_landing_charted`).
 var _extra_flags: PackedStringArray = []
 var _reader: RefCounted
+## --render-only-saves: the render loop is off during the fight and turned on
+## only for the few frames around each saved image. llvmpipe drawing every
+## physics tick at 1080p ran ~200x slower than the fight clock; the fight
+## itself (physics, AI, pilot, camera _process) is unchanged.
+var _sparse := false
+## --wild=aquaryn,tidecoil: F14#0's named wilds. Aquaryn is engaged through
+## WaterAlpha.request_engage() (smoke_water_alpha_runtime.gd); Tidecoil by the
+## ordinary interact prompt beside its Deep Watch reef shore, the stand
+## tidewake_b_tidecoil_fight.gd walks to. Fixture (disclosed): placement.
+var _wilds: PackedStringArray = []
+## --hits-per-opponent=N: also save a frame HIT_LAG_S after a landed hit (each
+## way), so impact VFX and hit reactions are on record, not only wind-ups.
+var _hits_per_opponent := 2
+const HIT_LAG_S := 0.08
+var _hit_at := -1.0
+const TIDECOIL_SHORE := Vector3(1465.6, 0.0, 3437.4)
+const SPARSE_WARM_FRAMES := 3
 
 var _out := ""
 var _interval := 1.0
@@ -69,7 +86,10 @@ func _run() -> void:
 		elif arg.begins_with("--pilot="): _policy = arg.trim_prefix("--pilot=").to_upper()
 		elif arg.begins_with("--cap-s="): _fight_cap_s = maxf(30.0, float(arg.trim_prefix("--cap-s=")))
 		elif arg.begins_with("--flags="): _extra_flags = arg.trim_prefix("--flags=").split(",", false)
-	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
+		elif arg == "--render-only-saves": _sparse = true
+		elif arg.begins_with("--hits-per-opponent="): _hits_per_opponent = maxi(0, int(arg.trim_prefix("--hits-per-opponent=")))
+		elif arg.begins_with("--wild="): _wilds = arg.trim_prefix("--wild=").split(",", false)
+	if (ids.is_empty() and _wilds.is_empty()) or _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --trainer=, --out= and a rendering display")
 		quit(1)
 		return
@@ -101,6 +121,9 @@ func _run() -> void:
 	var failures := 0
 	for id: String in ids:
 		if not await _capture(world, game, id):
+			failures += 1
+	for wild: String in _wilds:
+		if not await _capture_wild(world, game, wild):
 			failures += 1
 	var file := FileAccess.open(_out.path_join("frames.json"), FileAccess.WRITE)
 	if file != null:
@@ -156,6 +179,14 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 		push_error("challenge did not start the %s fight" % id)
 		return false
 	var dir := _out.path_join(id.trim_prefix("water_trainer_"))
+	return await _record(world, game, dir, id, director.trainer_battle_active)
+
+
+## The fight loop shared by trainers and named wilds: periodic and tell frames
+## while `active` holds, piloted by the chosen policy.
+func _record(world: Node3D, game: Node, dir: String, label: String, active: Callable) -> bool:
+	var director: Node = world.get_node("EncounterDirector")
+	var manager: Node = world.get_node("CombatManager")
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir))
 	var saved := 0
 	_fight_t = 0.0
@@ -175,7 +206,18 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 			_reader._entry_maxima[member.get_instance_id()] = float(member.max_hp)
 		manager.hit_landed.connect(_reader._on_hit)
 		manager.state_changed.connect(_reader._on_state_changed)
-	while director.trainer_battle_active() and _fight_t < _fight_cap_s and saved < _max_frames:
+	var hits_seen: Dictionary = {}
+	var on_hit := func(_on_enemy: bool, _amount: float) -> void:
+		var foe: Node3D = manager.enemy_body()
+		var key := foe.get_instance_id() if is_instance_valid(foe) else 0
+		if int(hits_seen.get(key, 0)) < _hits_per_opponent and _hit_at < 0.0:
+			hits_seen[key] = int(hits_seen.get(key, 0)) + 1
+			_hit_at = _fight_t + HIT_LAG_S
+	manager.hit_landed.connect(on_hit)
+	_hit_at = -1.0
+	if _sparse:
+		RenderingServer.render_loop_enabled = false
+	while bool(active.call()) and _fight_t < _fight_cap_s and saved < _max_frames:
 		var enemy: Node3D = manager.enemy_body()
 		var ally: Node3D = director.ally_body()
 		if is_instance_valid(enemy) and not watched.has(enemy.get_instance_id()):
@@ -203,6 +245,9 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 				_tell.late_saved = true
 				saved += await _save(dir, "tell-late" if _winding_up(enemy) else "tell-ended", _fight_t, enemy, ally, _tell)
 				_tell = {}
+		if _hit_at >= 0.0 and _fight_t >= _hit_at:
+			_hit_at = -1.0
+			saved += await _save(dir, "hit", _fight_t, enemy, ally, {})
 		if _fight_t >= next_periodic:
 			next_periodic += _interval
 			saved += await _save(dir, "t", _fight_t, enemy, ally, {})
@@ -222,13 +267,15 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 		tick += 1
 		await physics_frame
 		_fight_t += 1.0 / Engine.physics_ticks_per_second
+	RenderingServer.render_loop_enabled = true
+	manager.hit_landed.disconnect(on_hit)
 	_release()
 	if _reader != null:
 		_reader._release_attack()
 		_reader._release_move()
-	print("TIDEWAKE C3 CAPTURE %s: %d frames over %.1f s, fight active=%s" % [id, saved, _fight_t,
-		director.trainer_battle_active()])
-	if director.trainer_battle_active():
+	print("TIDEWAKE C3 CAPTURE %s: %d frames over %.1f s, fight active=%s" % [label, saved, _fight_t,
+		bool(active.call())])
+	if bool(active.call()):
 		manager.call("_begin_resolve", "fled")
 		await _frames(30)
 	return saved > 0
@@ -243,9 +290,15 @@ func _winding_up(enemy: Node3D) -> bool:
 
 
 func _save(dir: String, tag: String, t: float, enemy: Node3D, ally: Node3D, tell: Dictionary) -> int:
+	if _sparse:
+		RenderingServer.render_loop_enabled = true
+		for i in SPARSE_WARM_FRAMES:
+			await RenderingServer.frame_post_draw
 	await RenderingServer.frame_post_draw
 	var name := "%s-%06.2f.png" % [tag, t]
 	var image := root.get_viewport().get_texture().get_image()
+	if _sparse:
+		RenderingServer.render_loop_enabled = false
 	if image == null or image.save_png(dir.path_join(name)) != OK:
 		return 0
 	var gap := -1.0
@@ -254,7 +307,8 @@ func _save(dir: String, tag: String, t: float, enemy: Node3D, ally: Node3D, tell
 			enemy.global_position.z - ally.global_position.z).length()
 	_log.append({"file": dir.path_join(name), "tag": tag, "fight_s": snappedf(t, 0.01),
 		"opponent": str(enemy.instance.species_id) if is_instance_valid(enemy) and enemy.get("instance") != null else "",
-		"tell_s": float(tell.get("seconds", 0.0)), "gap_m": snappedf(gap, 0.01)})
+		"tell_s": float(tell.get("seconds", 0.0)), "gap_m": snappedf(gap, 0.01),
+		"camera": _pose(root.get_viewport().get_camera_3d()), "ally": _pose(ally), "enemy": _pose(enemy)})
 	return 1
 
 
@@ -283,3 +337,76 @@ func _release() -> void:
 func _frames(count: int) -> void:
 	for frame in count:
 		await physics_frame
+
+
+## Position plus the world's ground height under it, so a frame whose camera
+## is below or inside terrain is visible in frames.json without the image.
+func _pose(node: Node3D) -> Array:
+	if not is_instance_valid(node):
+		return []
+	var at := node.global_position
+	var ground := float(current_scene.call("ground_height_at", at.x, at.z)) if current_scene != null and current_scene.has_method("ground_height_at") else NAN
+	return [snappedf(at.x, 0.01), snappedf(at.y, 0.01), snappedf(at.z, 0.01), snappedf(ground, 0.01)]
+
+
+
+func _capture_wild(world: Node3D, game: Node, wild: String) -> bool:
+	var director: Node = world.get_node("EncounterDirector")
+	var manager: Node = world.get_node("CombatManager")
+	var player: Node3D = world.local_rig()
+	var body: Node3D = null
+	if wild == "aquaryn":
+		var alpha: Node = world.get_node("WaterAlpha")
+		body = alpha.get("body")
+		player.global_position = body.global_position + Vector3(7, 0, 0)
+		player.global_position.y = float(world.ground_height_at(player.global_position.x, player.global_position.z)) + 0.2
+		await _frames(20)
+		if not await director.summon_active_creature():
+			push_error("summon failed before Aquaryn")
+			return false
+		await _frames(12)
+		alpha.call("request_engage")
+	elif wild == "tidecoil":
+		# Two-strike rule (owner, 18:46): the walked approach failed twice in
+		# this harness, so the disclosed shortcut is a placement on the first
+		# dry ground (>1 m) between the body and the island centre, and the
+		# director's own fight start once the lead is out.
+		var shore := TIDECOIL_SHORE
+		shore.y = float(world.ground_height_at(shore.x, shore.z)) + 0.2
+		player.global_position = shore
+		for _frame in 600:
+			await physics_frame
+			for candidate: Variant in director.get("_wild_creatures"):
+				if is_instance_valid(candidate) and str((candidate as Node).get_meta("water_named_encounter", "")) == "water_deep_watch_tidecoil":
+					body = candidate
+			if body != null:
+				break
+		if body == null:
+			push_error("named Tidecoil body never resident")
+			return false
+		var inland := Vector3(1350.0, 0.0, 3500.0) - body.global_position
+		inland.y = 0.0
+		inland = inland.normalized()
+		var stand := body.global_position
+		for step in 80:
+			stand = body.global_position + inland * (4.0 + step)
+			stand.y = float(world.ground_height_at(stand.x, stand.z))
+			if stand.y > 1.0:
+				break
+		player.global_position = stand + Vector3.UP * 0.2
+		player.velocity = Vector3.ZERO
+		await _frames(30)
+		if not await director.summon_active_creature():
+			push_error("summon failed before Tidecoil at %s" % stand)
+			return false
+		await _frames(12)
+		director.call("_start_fight", body)
+	else:
+		push_error("unknown --wild=%s" % wild)
+		return false
+	if not manager.is_fighting():
+		push_error("the %s fight did not start" % wild)
+		return false
+	var dir := _out.path_join(wild)
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir))
+	return await _record(world, game, dir, wild, manager.is_fighting)

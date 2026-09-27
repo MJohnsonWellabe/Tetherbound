@@ -472,6 +472,37 @@ func is_fighting() -> bool:
 	return state != State.INACTIVE
 
 
+## F14 C3 (tb/tidewake-visuals, #356 grant 5859072534): a trainer's send-out
+## beat. Set by the director before a trainer round's `begin()` while that
+## trainer still has creatures to send. A round won under it keeps the fight
+## camera on the player's creature and that creature on the field instead of
+## handing both back to exploration for `send_out_seconds`, so the HUD no
+## longer flashes the exploration layer (quest tracker, hotbar) mid-battle and
+## the next round does not snap in from the exploration arm. Wild fights and
+## a trainer's last creature never set it.
+var hold_round: bool = false
+var _holding_round: bool = false
+
+
+## True through a fight AND a held send-out beat: what the HUD shows, never
+## what gameplay asks. `is_fighting()` stays the state machine's answer.
+func presenting_fight() -> bool:
+	return state != State.INACTIVE or _holding_round
+
+
+## End a held beat without a next round (the trainer had nobody left to send,
+## or the battle was torn down): the camera goes back to the player now.
+func end_round_hold() -> void:
+	hold_round = false
+	if not _holding_round:
+		return
+	_holding_round = false
+	if _ally_body != null and is_instance_valid(_ally_body):
+		_ally_body.visible = false
+	_release_camera(null)
+	state_changed.emit()
+
+
 func arena() -> Node3D:
 	return _arena
 
@@ -506,6 +537,7 @@ func begin(
 		push_error("cannot begin combat without a player, a wild creature, a deployed body and a party")
 		return false
 
+	_holding_round = false
 	_player = player
 	_wild = wild
 	_ally_body = ally_body
@@ -817,6 +849,11 @@ func _place_fighters() -> void:
 ## follower stranded on the route must still enter the fight it is asked to
 ## pilot. Use the same contained, grounded ally spot as ordinary combat without
 ## moving the enemy or stepping the trainer aside.
+## How far a realm fight seats the player's creature beside the trainer's line
+## to the shared opponent (see `_place_realm_owned_ally`).
+const REALM_SEAT_LATERAL_M := 2.4
+
+
 func _place_realm_owned_ally() -> void:
 	var cfg: Dictionary = MATH.config().get("arena", {})
 	var ally_spot: Vector3 = _staging_spots(cfg)[0]
@@ -833,6 +870,18 @@ func _place_realm_owned_ally() -> void:
 			var deploy := float(cfg.get("deploy_offset", 2.6))
 			ally_spot = _combat_position(_player) \
 				+ away * _staging_reach(_combat_position(_player), away, deploy)
+	# F14#0 C3 (#356 grant 5860240387, Aquaryn): spot 0 is on the trainer's
+	# own line to the shared opponent, and the fight camera sits behind the
+	# ally, so the ally opened every realm fight squarely between the lens and
+	# the target (judge r1: 3 of 4 framing fails in the first 1.6 s). Seat it
+	# beside that line instead, on the side with room.
+	var line := enemy_at - _combat_position(_player)
+	line.y = 0.0
+	if line.length_squared() > 0.001 and REALM_SEAT_LATERAL_M > 0.0:
+		var side := Vector3(-line.z, 0.0, line.x).normalized()
+		var right := _staging_reach(ally_spot, side, REALM_SEAT_LATERAL_M)
+		var left := _staging_reach(ally_spot, -side, REALM_SEAT_LATERAL_M)
+		ally_spot += side * right if right >= left else -side * left
 	_ally_body.visible = true
 	_place(_ally_body, ally_spot)
 	_ally_body.call("face_towards", _combat_position(_wild))
@@ -3795,8 +3844,12 @@ func _finish() -> void:
 	_encounter_seq = 0
 
 	_throw.call("disarm")
+	var hold := hold_round and _enemy_owned and _outcome == "won" and not _realm_owned_opponent
+	hold_round = false
+	_holding_round = hold
 	if _ally_body != null:
-		_ally_body.visible = false
+		if not hold:
+			_ally_body.visible = false
 		_ally_body.set("arena", null)
 	# Freed with the arena it was parented to; only the stale reference needs
 	# clearing here.
@@ -3810,7 +3863,12 @@ func _finish() -> void:
 			and aftermath_focus.is_inside_tree():
 		fought_at = aftermath_focus.global_position
 	aftermath_focus = null
-	_release_camera(fought_at)
+	if hold:
+		# The fallen body is freed during the beat; stop tracking it.
+		if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_tracking_target"):
+			_camera_rig.call("set_tracking_target", null, {})
+	else:
+		_release_camera(fought_at)
 
 	exited.emit(_outcome)
 	_realm_owned_opponent = false
