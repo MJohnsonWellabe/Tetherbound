@@ -15,6 +15,21 @@ const TETHER_BANNER := preload("res://assets/environment/team_tether/hall/team_t
 const GLASS_BLUE := Color("#57c8d5")
 const GLASS_CORE := Color("#b8f4f0")
 const FUSED_GROUND := Color("#182d31")
+## F10#4 scene-art pass (owner 5860380772): scars are burnt, glass-fused ground.
+const SCAR_SPREAD := 1.45
+const SCAR_RINGS := 6
+const SCAR_SEGMENTS := 28
+const SCAR_CORE := Color("#120e18")
+const SCAR_CHAR := Color("#261c24")
+const SCAR_EDGE := Color("#3d2c24")
+const SMOKED_GLASS := Color("#2d4152")
+const FUSED_LUMP := Color("#1b1720")
+const FISSURE_GLOW := Color("#d9c8ff")
+const SHARD_HEIGHT_SCALE := 0.32
+const LUMP_MODELS: Array[String] = [
+	"res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+	"res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+]
 
 var config: Dictionary = {}
 var _world: Node3D
@@ -51,18 +66,24 @@ func _build_cluster(spec: Dictionary) -> void:
 	var root := Node3D.new()
 	root.name = "StormglassCluster_%s" % str(spec.id)
 	add_child(root)
+	# F10#4 (code-blind judges r1-r3: "crystal props on clean grass, not scars
+	# in the land"; owner 5860380772 scene-art scope): the scar is a burnt,
+	# glass-fused patch that follows the ground, the grass inside it is gone,
+	# and dark fused lumps from the installed rock family sit in it.
+	var scar_radius := float(spec.scar_radius_m) * SCAR_SPREAD
 	var scar := MeshInstance3D.new()
 	scar.name = "FusedStrikeScar"
-	var scar_mesh := CylinderMesh.new()
-	scar_mesh.top_radius = float(spec.scar_radius_m)
-	scar_mesh.bottom_radius = float(spec.scar_radius_m) * 1.08
-	scar_mesh.height = 0.10
-	scar_mesh.radial_segments = 11
-	scar.mesh = scar_mesh
+	scar.mesh = _scar_patch_mesh(centre, scar_radius, str(spec.id).hash())
 	scar.material_override = _fused_material()
-	scar.position = _local_grounded(centre, 0.07)
-	scar.rotation.y = deg_to_rad(float(str(spec.id).hash() % 37))
+	scar.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	root.add_child(scar)
+	var clearing := Node3D.new()
+	clearing.name = "ScarGrassClearance"
+	clearing.position = _local_grounded(centre, 0.0)
+	clearing.set_meta("grass_clear_radius", scar_radius * 0.82)
+	root.add_child(clearing)
+	clearing.add_to_group("grass_clear")
+	_add_fused_lumps(root, centre, float(spec.scar_radius_m), str(spec.id).hash())
 	var count := int(spec.shards)
 	var spread := float(config.shard_spread_m)
 	for index in count:
@@ -89,18 +110,21 @@ func _build_cluster(spec: Dictionary) -> void:
 func _add_shard(parent: Node3D, suffix: String, local: Vector2, height: float, angle: float) -> void:
 	var shard := MeshInstance3D.new()
 	shard.name = "GlassShard%s" % suffix
+	# Low fused blades leaning out of the strike point, half buried, not
+	# upright crystal spires (F10#4 judges r1-r3).
+	var low := height * SHARD_HEIGHT_SCALE
 	var mesh := CylinderMesh.new()
-	mesh.top_radius = 0.04
-	mesh.bottom_radius = clampf(height * 0.105, 0.42, 1.15)
-	mesh.height = height
-	mesh.radial_segments = 5
+	mesh.top_radius = 0.03
+	mesh.bottom_radius = clampf(low * 0.28, 0.22, 0.7)
+	mesh.height = low
+	mesh.radial_segments = 4
 	mesh.rings = 1
 	shard.mesh = mesh
 	shard.material_override = _glass_material()
-	shard.position = _local_grounded(local, height * 0.48)
+	shard.position = _local_grounded(local, low * 0.18)
 	shard.rotation.y = angle * 1.7
-	shard.rotation.x = deg_to_rad(sin(angle * 2.0) * 5.5)
-	shard.rotation.z = deg_to_rad(cos(angle * 1.3) * 4.5)
+	shard.rotation.x = deg_to_rad(52.0 + 14.0 * absf(sin(angle * 2.3)))
+	shard.rotation.z = deg_to_rad(cos(angle * 1.3) * 9.0)
 	parent.add_child(shard)
 
 
@@ -109,13 +133,13 @@ func _add_fissures(parent: Node3D, centre: Vector2, radius: float, seed_value: i
 		var angle := float(seed_value % 31) * 0.09 + TAU * float(index) / 3.0
 		var start := centre + Vector2(cos(angle), sin(angle)) * radius * 0.18
 		var finish := centre + Vector2(cos(angle + 0.18), sin(angle + 0.18)) * radius * 1.15
-		var a := _local_grounded(start, 0.16)
-		var b := _local_grounded(finish, 0.16)
+		var a := _local_grounded(start, 0.06)
+		var b := _local_grounded(finish, 0.06)
 		var segment := MeshInstance3D.new()
 		segment.name = "GlassFissure%d" % index
 		var mesh := CylinderMesh.new()
-		mesh.top_radius = 0.07
-		mesh.bottom_radius = 0.13
+		mesh.top_radius = 0.025
+		mesh.bottom_radius = 0.06
 		mesh.height = a.distance_to(b)
 		mesh.radial_segments = 5
 		segment.mesh = mesh
@@ -164,28 +188,106 @@ func _vec2(raw: Array) -> Vector2:
 
 func _glass_material() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(GLASS_BLUE, 0.72)
+	material.albedo_color = Color(SMOKED_GLASS, 0.9)
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.metallic = 0.38
-	material.roughness = 0.18
+	material.metallic = 0.55
+	material.roughness = 0.14
 	material.emission_enabled = true
-	material.emission = GLASS_BLUE.darkened(0.28)
-	material.emission_energy_multiplier = 0.24
+	material.emission = GLASS_BLUE.darkened(0.55)
+	material.emission_energy_multiplier = 0.12
 	return material
 
 
+## Charcoal glass at the strike point fading through scorched earth to the
+## untouched ground at the rim (vertex colour and alpha from _scar_patch_mesh).
 func _fused_material() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
-	material.albedo_color = FUSED_GROUND
-	material.metallic = 0.48
-	material.roughness = 0.32
+	material.vertex_color_use_as_albedo = true
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.metallic = 0.42
+	material.roughness = 0.28
+	return material
+
+
+func _lump_material() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = FUSED_LUMP
+	material.metallic = 0.5
+	material.roughness = 0.22
 	return material
 
 
 func _glow_material() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
-	material.albedo_color = GLASS_CORE.darkened(0.36)
+	material.albedo_color = FISSURE_GLOW.darkened(0.4)
 	material.emission_enabled = true
-	material.emission = GLASS_CORE
-	material.emission_energy_multiplier = 1.25
+	material.emission = FISSURE_GLOW
+	material.emission_energy_multiplier = 0.9
 	return material
+
+
+## A radial patch that follows the terrain: each vertex sits on the ground a
+## few centimetres up, the rim is irregular, and colour runs from glassy
+## charcoal at the strike point to scorched earth that fades out at the edge.
+func _scar_patch_mesh(centre: Vector2, radius: float, seed_value: int) -> ArrayMesh:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value
+	var rim: Array[float] = []
+	for seg in SCAR_SEGMENTS:
+		rim.append(rng.randf_range(0.72, 1.12))
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var rows: Array = []
+	for ring in SCAR_RINGS + 1:
+		var t := float(ring) / float(SCAR_RINGS)
+		var row: Array = []
+		for seg in (1 if ring == 0 else SCAR_SEGMENTS):
+			var angle := TAU * float(seg) / float(SCAR_SEGMENTS)
+			var r := radius * t * (rim[seg] if ring > 0 else 1.0)
+			var local := centre + Vector2(cos(angle), sin(angle)) * r
+			var colour := SCAR_CORE.lerp(SCAR_CHAR, smoothstep(0.0, 0.55, t)).lerp(SCAR_EDGE, smoothstep(0.55, 0.9, t))
+			colour.a = 1.0 - smoothstep(0.7, 1.0, t)
+			row.append([_local_grounded(local, 0.05 + 0.03 * (1.0 - t)), colour])
+		rows.append(row)
+	for ring in SCAR_RINGS:
+		for seg in SCAR_SEGMENTS:
+			var next := (seg + 1) % SCAR_SEGMENTS
+			var a: Array = rows[ring][0 if ring == 0 else seg]
+			var b: Array = rows[ring][0 if ring == 0 else next]
+			var c: Array = rows[ring + 1][seg]
+			var d: Array = rows[ring + 1][next]
+			for v: Array in [a, d, c]:
+				st.set_color(v[1])
+				st.set_normal(Vector3.UP)
+				st.add_vertex(v[0])
+			if ring > 0:
+				for v: Array in [a, b, d]:
+					st.set_color(v[1])
+					st.set_normal(Vector3.UP)
+					st.add_vertex(v[0])
+	return st.commit()
+
+
+## Three low fused lumps from the installed rock family, blackened glass.
+func _add_fused_lumps(parent: Node3D, centre: Vector2, radius: float, seed_value: int) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value + 7
+	for index in 3:
+		var scene := load(LUMP_MODELS[index % LUMP_MODELS.size()]) as PackedScene
+		if scene == null:
+			continue
+		var lump := scene.instantiate() as Node3D
+		lump.name = "FusedLump%d" % index
+		var angle := rng.randf() * TAU
+		var local := centre + Vector2(cos(angle), sin(angle)) * radius * rng.randf_range(0.25, 0.7)
+		var size := rng.randf_range(0.55, 0.95)
+		lump.position = _local_grounded(local, -0.15 * size)
+		lump.rotation.y = rng.randf() * TAU
+		lump.scale = Vector3(size * 1.3, size * 0.55, size * 1.1)
+		var material := _lump_material()
+		for mesh: Node in lump.find_children("*", "MeshInstance3D", true, false):
+			(mesh as MeshInstance3D).material_override = material
+		for body: Node in lump.find_children("*", "CollisionObject3D", true, false):
+			body.queue_free()
+		parent.add_child(lump)
