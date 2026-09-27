@@ -159,7 +159,11 @@
     "water_camp_cordage": {
       "name": "Reed Camp Cordage",
       "realm_id": "water",
-      "unlocked_by": "water_chapter_started",
+      "unlocked_by": "water_cordage_recipe_learned",
+      "requires_personal_flags": [
+        "water_cordage_recipe_learned"
+      ],
+      "_why_unlock": "F13#2 reed_root_hollow (water_world.json reward_pockets, role recipe_and_reed_fiber): the hollow's reed patch (water_pickups.json water:reedhaven:harvest:012, learn_recipe_flag) teaches each character this recipe on their own claim. No mandatory path consumes it: Reedhaven's pier repair takes raw reed_fiber/driftwood, and ordinary fiber stays available from earlier chapters. Characters who knew it from water_chapter_started before this gate keep it (scripts/save/water_recipe_migration.gd).",
       "cost": [
         {
           "id": "reed_fiber",
@@ -399,7 +403,8 @@
     "saddle_transaction": "Remove exactly8 reed_fiber,6 driftwood,4 reef_stone and add one swim_saddle atomically; insufficient room or any failed requirement leaves inventory unchanged.",
     "saddle_fit": "Use existing item identity-based saddle fitting with explicit Water species compatibility and personal Swim Stone. Do not consume the saddle on every mount.",
     "candy_transaction": "Use player_skills.json to validate the full1/2/3-level award before removing one owning-character item; preserve fractional progress and deduplicate repeated request IDs.",
-    "normal_recipe_unlock": "water_chapter_started routes normal recipes; progression bands describe intended first usefulness and material availability, not a hidden player-level gate.",
+    "cordage_unlock": "water_cordage_recipe_learned is a personal durable flag written only by the host-validated reed_root_hollow claim (one per character). Legacy characters that knew the recipe through water_chapter_started keep it.",
+    "normal_recipe_unlock": "water_chapter_started routes the other normal recipes; progression bands describe intended first usefulness and material availability, not a hidden player-level gate.",
     "food_supply": "Cloudberries and ordinary berries are existing items. Offer their ordinary trade supply at Salt Crown or preserve cross-biome return access; these two optional preparations cannot gate the mandatory saddle or crossing.",
     "dock_scope": "Wood/fiber/stone outputs support existing building and repair consumers. Reedhaven dock may still require its authored raw materials; crafting never grants dock flags.",
     "temporary_buffs": "Use existing item effect values unchanged. No health/stamina restoration while swimming is introduced by this file."
