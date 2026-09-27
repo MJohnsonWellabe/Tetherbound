@@ -298,11 +298,16 @@ func _build_heart_chamber() -> void:
 		if rules.has("banner_x_m"):
 			# The Tetherbound diamond sigil, not a blank square: the emblem
 			# turned 45 degrees in the banner's plane, with a smaller inset.
-			_box(interior, Vector3(side * (banner_x - 0.08), 7.6, 105), Vector3(0.06, 1.1, 1.1), Color(rules.colours.get("emblem", "#d8e6ea")), false)
+			_box(interior, Vector3(side * (banner_x - 0.08), 7.4, 105), Vector3(0.06, 1.7, 1.7), Color(rules.colours.get("emblem", "#d8e6ea")), false)
 			var sigil: Node3D = interior.get_child(interior.get_child_count() - 1)
 			sigil.rotation.x = PI * 0.25
-			_box(interior, Vector3(side * (banner_x - 0.12), 7.6, 105), Vector3(0.06, 0.5, 0.5), Color(rules.colours.banner), false)
+			_box(interior, Vector3(side * (banner_x - 0.12), 7.4, 105), Vector3(0.06, 0.8, 0.8), Color(rules.colours.banner), false)
 			interior.get_child(interior.get_child_count() - 1).rotation.x = PI * 0.25
+			# A brass frame: side strips and a bottom bar, so the cloth reads
+			# as a hung, trimmed banner rather than a painted rectangle.
+			for edge in [-1, 1]:
+				_box(interior, Vector3(side * (banner_x - 0.1), 7, 105 + edge * 1.46), Vector3(0.1, 6, 0.1), Color(rules.colours.brass), false)
+			_box(interior, Vector3(side * (banner_x - 0.1), 4.05, 105), Vector3(0.12, 0.14, 3.2), Color(rules.colours.brass), false)
 			_box(interior, Vector3(side * (banner_x - 0.1), 10.1, 105), Vector3(0.14, 0.14, 3.6), Color(rules.colours.brass), false)
 		_box(interior, Vector3(side * 7, 1, 113), Vector3(2, 2, 3), Color(rules.colours.metal), true)
 
