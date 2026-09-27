@@ -1,0 +1,39 @@
+[lure-walk] START activity=bram save=S04-exit-pose-on-road.json.gz pos=[13.2, 0.9, 20.26] lure=[300.0, 983.0] route_m=1708.2 hour=8.20
+[lure-walk] CAPTURE bram_01_start.png t=0.0s walked=0.0m pos=(13.2,20.3) lure_m=1004.5
+[lure-walk] PROGRESS t=10.0s walked=78.7m pos=(3.6,97.8) cursor=11/217
+[lure-walk] PROGRESS t=20.0s walked=140.9m pos=(-25.5,152.7) cursor=19/217
+[lure-walk] CAPTURE bram_02_fight-wild_galecrest_1009_2.png t=27.5s walked=186.8m pos=(-48.6,184.2) lure_m=871.6
+[lure-walk] PROGRESS t=32.7s walked=207.0m pos=(-59.0,201.2) cursor=27/217
+[lure-walk] PROGRESS t=42.7s walked=273.8m pos=(-103.3,251.2) cursor=36/217
+[lure-walk] PROGRESS t=52.7s walked=336.1m pos=(-152.8,287.9) cursor=44/217
+[lure-walk] PROGRESS t=62.7s walked=397.9m pos=(-207.0,317.5) cursor=52/217
+[lure-walk] PROGRESS t=72.7s walked=459.3m pos=(-261.0,346.7) cursor=59/217
+[lure-walk] PROGRESS t=82.7s walked=520.7m pos=(-315.1,375.8) cursor=67/217
+[lure-walk] PROGRESS t=92.7s walked=582.3m pos=(-364.9,409.8) cursor=75/217
+[lure-walk] PROGRESS t=102.7s walked=643.9m pos=(-390.0,465.7) cursor=84/217
+[lure-walk] PROGRESS t=112.7s walked=704.4m pos=(-393.9,526.0) cursor=91/217
+[lure-walk] PROGRESS t=122.7s walked=752.3m pos=(-381.8,517.6) cursor=98/217
+[lure-walk] PROGRESS t=136.3s walked=784.6m pos=(-365.9,510.9) cursor=101/217
+[lure-walk] PROGRESS t=147.9s walked=819.3m pos=(-346.2,510.9) cursor=104/217
+[lure-walk] PROGRESS t=157.9s walked=880.7m pos=(-334.6,570.8) cursor=112/217
+[lure-walk] PROGRESS t=167.9s walked=937.3m pos=(-297.4,608.6) cursor=120/217
+[lure-walk] PROGRESS t=179.6s walked=991.5m pos=(-253.3,631.8) cursor=127/217
+[lure-walk] PROGRESS t=189.6s walked=1052.4m pos=(-195.0,648.6) cursor=135/217
+[lure-walk] PROGRESS t=199.6s walked=1114.1m pos=(-136.7,669.0) cursor=143/217
+[lure-walk] PROGRESS t=209.6s walked=1176.2m pos=(-78.3,689.9) cursor=151/217
+[lure-walk] PROGRESS t=219.6s walked=1237.9m pos=(-20.8,712.5) cursor=159/217
+[lure-walk] PROGRESS t=229.6s walked=1299.7m pos=(35.9,736.8) cursor=167/217
+[lure-walk] PROGRESS t=239.6s walked=1361.5m pos=(92.7,761.4) cursor=175/217
+[lure-walk] PROGRESS t=249.6s walked=1423.7m pos=(148.3,789.1) cursor=183/217
+[lure-walk] PROGRESS t=259.6s walked=1485.4m pos=(203.5,816.8) cursor=191/217
+[lure-walk] PROGRESS t=269.6s walked=1547.7m pos=(256.5,849.0) cursor=199/217
+[lure-walk] PROGRESS t=279.6s walked=1609.0m pos=(305.5,885.7) cursor=207/217
+[lure-walk] CAPTURE bram_03_left-road-lure-not-yet-on-screen.png t=289.1s walked=1666.7m pos=(346.3,926.5) lure_m=73.0
+[lure-walk] PROGRESS t=290.1s walked=1670.3m pos=(344.3,929.3) cursor=215/217
+[lure-walk] CAPTURE bram_04_lure-first-seen.png t=296.9s walked=1679.0m pos=(343.0,934.0) lure_m=65.2
+[lure-walk] PROGRESS t=303.6s walked=1692.9m pos=(333.6,938.4) cursor=216/217
+[lure-walk] CAPTURE bram_05_approach-30m.png t=309.2s walked=1726.9m pos=(313.3,956.7) lure_m=29.4
+[lure-walk] CAPTURE bram_06_lure-first-readable.png t=309.3s walked=1726.9m pos=(313.3,956.8) lure_m=29.4
+[lure-walk] CAPTURE bram_07_prompt-offered.png t=313.3s walked=1753.0m pos=(301.5,980.1) lure_m=3.3
+[lure-walk] RECEIPT {"activity":"bram","budget_s":1500.0,"clock_hour":8.20448484848487,"companion_out_at_start":true,"entered_road_at":[14.0,20.0],"fights":[{"foe":"Wild_galecrest_1009_2","resolved_by":"combat_run","t_s":27.5}],"final_position":[301.5,980.1],"flags_set_by_game_during_walk":["alpha_pin_intro_seen"],"frames":[{"file":"bram_01_start.png","label":"start","lure_m":1004.5,"pos":[13.2,20.3],"t_s":0.0,"walked_m":0.0},{"file":"bram_02_fight-wild_galecrest_1009_2.png","label":"fight-wild_galecrest_1009_2","lure_m":871.6,"pos":[-48.6,184.2],"t_s":27.5,"walked_m":186.8},{"file":"bram_03_left-road-lure-not-yet-on-screen.png","label":"left-road-lure-not-yet-on-screen","lure_m":73.0,"pos":[346.3,926.5],"t_s":289.1,"walked_m":1666.7},{"file":"bram_04_lure-first-seen.png","label":"lure-first-seen","lure_m":65.2,"pos":[343.0,934.0],"t_s":296.9,"walked_m":1679.0},{"file":"bram_05_approach-30m.png","label":"approach-30m","lure_m":29.4,"pos":[313.3,956.7],"t_s":309.2,"walked_m":1726.9},{"file":"bram_06_lure-first-readable.png","label":"lure-first-readable","lure_m":29.4,"pos":[313.3,956.8],"t_s":309.3,"walked_m":1726.9},{"file":"bram_07_prompt-offered.png","label":"prompt-offered","lure_m":3.3,"pos":[301.5,980.1],"t_s":313.3,"walked_m":1753.0}],"game_seconds":313.3,"left_road_at":[348.5,928.5],"load_vs_saved_xz_m":0.26,"lure_first_readable":{"after_deliberate_look":true,"camera_to_lure_m":34.6,"height_px":29,"t_s":309.3,"walked_m":1726.9,"while_on_road":false},"lure_first_seen":{"after_deliberate_look":true,"camera_to_lure_m":70.3,"screen_px":[640,233],"t_s":296.9,"walked_m":1679.0,"while_on_road":false},"lure_node":"/root/MeadowsPlayground/Trainers/Old Bram","lure_position":[300.0,983.0],"notes":["pressed creature_recall (attempt 1); companion out afterwards: true","t=126.6s no progress at (-381.8,517.6); unstick attempt 1 (jump + strafe)","t=132.9s no progress at (-382.8,517.6); unstick attempt 2 (jump + strafe)","t=142.2s no progress at (-353.5,506.0); unstick attempt 1 (jump + strafe)","t=171.4s no progress at (-297.4,608.6); unstick attempt 1 (jump + strafe)","t=294.6s no progress at (341.5,932.7); unstick attempt 1 (jump + strafe)","t=300.5s no progress at (343.0,934.0); unstick attempt 2 (jump + strafe)"],"off_road_leg_m":73.0,"position_after_load":[13.2,0.9,20.26],"prompt":{"t_s":312.8,"walked_m":1752.8,"winner":"{ \"label\": \"Challenge Old Bram\", \"distance\": 3.66248512268066, \"priority\": 0, \"actionable\": true }"},"route_m":1708.2,"route_road_points":215,"save":"res://tests/fixtures/f03_lure_saves/S04-exit-pose-on-road.json.gz","save_sha256":"25d221d3828422a5370fdc367d209a553707820130c1f2dbb2fdcacf23285371","save_version":15.0,"saved_position":[13.2,0.4,20.0],"scene":"res://scenes/world/meadows_playground.tscn","script_state_writes":"none","start_distance_to_lure_m":1004.5,"verdict":"PASS","walked_m":1753.0,"why":"lure seen and the activity's prompt was offered"}
+[lure-walk] PASS activity=bram: lure seen and the activity's prompt was offered

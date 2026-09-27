@@ -1,0 +1,19 @@
+[lure-walk] START activity=doss save=S07-exit-band3.json.gz pos=[344.79, 5.35, 3759.43] lure=[-19.0, 4180.0] route_m=686.0 hour=8.20
+[lure-walk] CAPTURE doss_01_start.png t=0.0s walked=0.0m pos=(344.8,3759.4) lure_m=556.1
+[lure-walk] PROGRESS t=10.0s walked=74.2m pos=(320.2,3819.6) cursor=10/84
+[lure-walk] PROGRESS t=20.0s walked=136.4m pos=(292.4,3875.2) cursor=18/84
+[lure-walk] PROGRESS t=30.0s walked=197.8m pos=(249.8,3916.1) cursor=26/84
+[lure-walk] PROGRESS t=40.0s walked=259.8m pos=(195.2,3945.2) cursor=34/84
+[lure-walk] PROGRESS t=50.0s walked=321.5m pos=(140.7,3974.3) cursor=42/84
+[lure-walk] PROGRESS t=60.0s walked=383.8m pos=(85.2,4002.4) cursor=50/84
+[lure-walk] PROGRESS t=70.0s walked=445.9m pos=(29.6,4030.2) cursor=58/84
+[lure-walk] CAPTURE doss_02_lure-first-seen.png t=71.5s walked=455.6m pos=(20.8,4034.6) lure_m=150.7
+[lure-walk] PROGRESS t=80.0s walked=507.6m pos=(-25.5,4057.8) cursor=66/84
+[lure-walk] PROGRESS t=91.7s walked=554.6m pos=(-48.0,4091.5) cursor=72/84
+[lure-walk] PROGRESS t=101.7s walked=616.4m pos=(-74.8,4146.8) cursor=80/84
+[lure-walk] CAPTURE doss_03_lure-first-readable.png t=106.2s walked=644.4m pos=(-59.4,4163.0) lure_m=43.8
+[lure-walk] CAPTURE doss_04_approach-30m.png t=108.9s walked=658.6m pos=(-46.4,4168.4) lure_m=29.7
+[lure-walk] PROGRESS t=112.2s walked=679.2m pos=(-27.4,4176.4) cursor=82/84
+[lure-walk] CAPTURE doss_05_prompt-offered.png t=113.6s walked=685.0m pos=(-22.0,4178.7) lure_m=3.3
+[lure-walk] RECEIPT {"activity":"doss","budget_s":1500.0,"clock_hour":8.20448484848484,"companion_out_at_start":true,"entered_road_at":[343.7,3755.3],"fights":[],"final_position":[-22.0,4178.7],"flags_set_by_game_during_walk":[],"frames":[{"file":"doss_01_start.png","label":"start","lure_m":556.1,"pos":[344.8,3759.4],"t_s":0.0,"walked_m":0.0},{"file":"doss_02_lure-first-seen.png","label":"lure-first-seen","lure_m":150.7,"pos":[20.8,4034.6],"t_s":71.5,"walked_m":455.6},{"file":"doss_03_lure-first-readable.png","label":"lure-first-readable","lure_m":43.8,"pos":[-59.4,4163.0],"t_s":106.2,"walked_m":644.4},{"file":"doss_04_approach-30m.png","label":"approach-30m","lure_m":29.7,"pos":[-46.4,4168.4],"t_s":108.9,"walked_m":658.6},{"file":"doss_05_prompt-offered.png","label":"prompt-offered","lure_m":3.3,"pos":[-22.0,4178.7],"t_s":113.6,"walked_m":685.0}],"game_seconds":113.6,"left_road_at":[-78.0,4158.0],"load_vs_saved_xz_m":0.0,"lure_first_readable":{"after_deliberate_look":false,"camera_to_lure_m":49.1,"height_px":24,"t_s":106.2,"walked_m":644.4,"while_on_road":false},"lure_first_seen":{"after_deliberate_look":false,"camera_to_lure_m":154.6,"screen_px":[25,88],"t_s":71.5,"walked_m":455.6,"while_on_road":true},"lure_node":"/root/MeadowsPlayground/RiverNestClear/Doss","lure_position":[-19.0,4180.0],"notes":["pressed creature_recall (attempt 1); companion out afterwards: true","t=85.0s no progress at (-29.2,4061.2); unstick attempt 1 (jump + strafe)"],"off_road_leg_m":63.0,"position_after_load":[344.79,5.35,3759.43],"prompt":{"t_s":113.1,"walked_m":684.8,"winner":"{ \"label\": \"Help Doss repair the bank perch\", \"distance\": 3.77153611183167, \"priority\": 0, \"actionable\": true }"},"route_m":686.0,"route_road_points":82,"save":"res://tests/fixtures/f03_lure_saves/S07-exit-band3.json.gz","save_sha256":"90edf5b9d06fbdb0db9b81fc9de7634d0ff8cff6207c36a748a7be826de41148","save_version":16.0,"saved_position":[344.794708251953,5.35583591461182,3759.42504882812],"scene":"res://scenes/world/meadows_playground.tscn","script_state_writes":"none","start_distance_to_lure_m":556.1,"verdict":"PASS","walked_m":685.0,"why":"lure seen and the activity's prompt was offered"}
+[lure-walk] PASS activity=doss: lure seen and the activity's prompt was offered
