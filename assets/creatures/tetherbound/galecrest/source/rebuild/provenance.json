@@ -1,0 +1,15 @@
+{
+  "asset": "Galecrest complete owner-requested rebuild",
+  "authority": "Owner: Then fix the eagle. Redo it entirely. Existing Meshy licence and inspected project-authored reference workflow authorized.",
+  "reference": "../../reference/rebuild/galecrest.png",
+  "reference_prompt": "../../reference/rebuild/imagegen-prompt.txt",
+  "reference_origin": "OpenAI imagegen exec-78a8a658-222b-435e-b166-d7d787a604a4",
+  "meshy_task_id": "01a0e4a9-3cfa-7210-b6d6-70f332337328",
+  "generation": "Single inspected-image-to-3D submission on the existing licence. No purchase, text-only generation or roster addition.",
+  "source": "model.glb is the unmodified downloaded Meshy source; submission.json records the inspected reference hash and settings.",
+  "preparation": "prepare_galecrest.py uses measured bird landmarks, preserves source UV/material, reduces to 29048 triangles and authors the existing six-clip contract on a 19-bone rig. The rebuild preserves the established 3.5m runtime height, footprint and collider parameters.",
+  "colourways": "prepare_colourways.py --source <installed GLB> --out <output folder> rasterizes the new UV mesh and skin influences. Ordinary source pixels remain unchanged; shiny and alpha use smooth anatomical masks. Whole face and feet preserve source detail. Legacy atlas and rust-based rules retired.",
+  "portrait": "Blender CPU Cycles rendering of the replacement model through the existing render_portrait.py pipeline at 512px, 24 samples; no reference image pasted into runtime UI.",
+  "evidence": "ralph/reports/VISUAL/galecrest-rebuild",
+  "limits": "Native Windows Compatibility frames support appearance; still samples do not prove continuous animation or ROG Ally performance. Cloudreach environmental Bars A/B and F08#4 are separate open acceptance work. See current visual verdict, including failures, in the evidence folder."
+}

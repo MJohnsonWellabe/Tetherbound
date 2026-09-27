@@ -930,118 +930,16 @@
       }
     },
     "galecrest": {
-      "_comment": "Base: rust red-orange raptor. Vivid (board: 'White + blue + Noble'): saturated rust becomes teal-blue feathering, pale rust bleaches white, and the crest goes GOLD the way the board draws it. Shiny: REBUILT as a storm-dark eagle. The previous shiny was a brighter rust, and a blind round called the rarity inverted -- 'the shiny is natural brown plumage while the normal is the exotic white-and-blue one; the rare looks more common than the common.' Swapping the two was rejected: the board defines the ORDINARY bird as the white-and-blue noble, so a swap would contradict the owner's own reference. Instead the RARE moves to the one reading that outranks a noble white bird -- storm plumage with electric tips. The first attempt at that took it to mean luminance 43 against a 56 backdrop, which a blind round called 'a black cutout -- eyes, feather pattern, everything gone, the least readable frame on the sheet'. Same overshoot brooktail made. Lifted into a deep storm SLATE that still reads far darker than the white ordinary while staying above its own background.",
-      "rules": [
-        {
-          "match": {
-            "hue": [
-              0,
-              60
-            ],
-            "sat_min": 0.35
-          },
-          "set_hue": 237,
-          "set_sat": 0.46,
-          "val_scale": 0.9
-        },
-        {
-          "match": {
-            "hue": [
-              0,
-              60
-            ],
-            "sat_min": 0.12
-          },
-          "set_sat": 0.18,
-          "val_scale": 0.8
-        }
-      ],
-      "vivid_comment": "Teal rather than the old flat slate 215: the board's wing feathers are blue-GREEN, and teal is what separates this bird from pipwing's pale blue at thumbnail size.",
-      "vivid_rules": [
-        {
-          "match": {
-            "hue": [
-              0,
-              60
-            ],
-            "sat_min": 0.35
-          },
-          "set_hue": 193,
-          "set_sat": 0.5
-        },
-        {
-          "match": {
-            "hue": [
-              0,
-              60
-            ],
-            "sat_min": 0.12
-          },
-          "set_sat": 0.1,
-          "val_scale": 1.14
-        }
-      ],
-      "overlays": [
-        {
-          "id": "storm_tips",
-          "_why": "Round 1 put slate-blue on galecrest as a colourway RULE, so the blue landed wherever the source texture happened to be rusty -- blotches that cross feather boundaries, which a blind critic named. This is the same blue placed anatomically instead: the distal third of both wings (lateral extremes, above the feet), TINTED so every quill line, barb shadow and specular edge in the value channel survives and the colour flows along the feathers.",
-          "where": {
-            "lateral_min": 0.62,
-            "y_min": 0.4
-          },
-          "mode": "tint",
-          "color": "#3a6ec4",
-          "sat_floor": 0.45,
-          "softness": 0.12
-        },
-        {
-          "id": "crest_gold",
-          "_why": "The board draws this crest and the legs GOLD, not blue. The old overlay put the wing's own slate on the crest as well, which left the bird reading as one blue note and cost it the warm accent the board gives it. Gold is also the only warm on any bird in the roster once galewisp takes its own.",
-          "where": {
-            "y_min": 0.8,
-            "lateral_max": 0.3
-          },
-          "mode": "tint",
-          "color": "#e0b23c",
-          "sat_floor": 0.45,
-          "softness": 0.1,
-          "strength": 0.7
-        }
-      ],
-      "overlays_alpha": [
-        {
-          "id": "alpha_storm",
-          "_why": "ALPHA PRESENCE: the same storm blue, darker and reaching further up the wing.",
-          "where": {
-            "lateral_min": 0.38,
-            "y_min": 0.35
-          },
-          "mode": "tint",
-          "color": "#20438f",
-          "sat_floor": 0.9,
-          "softness": 0.12,
-          "val_scale": 0.88
-        }
-      ],
-      "overlays_shiny": [
-        {
-          "id": "storm_charge",
-          "_why": "The rare's pattern against a near-black body: electric cyan on the distal wing. This is what makes the shiny outrank the ordinary noble bird instead of reading as a duller version of it.",
-          "where": {
-            "lateral_min": 0.58,
-            "y_min": 0.4
-          },
-          "mode": "tint",
-          "color": "#7fe8ff",
-          "sat_floor": 0.55,
-          "softness": 0.12
-        }
-      ],
-      "finish": {
-        "feature_percentile": 2.5,
-        "feature_max_val": 0.178,
-        "feature_set_val": 0.052
-      }
+      "_comment": "Owner-directed complete Galecrest rebuild. Legacy rust-source masks are retired; do not apply them to the new UV atlas.",
+      "generator": "assets/creatures/tetherbound/galecrest/source/rebuild/prepare_colourways.py",
+      "source": "assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb",
+      "vivid_comment": "Unaltered decoded Meshy reference-backed slate/cream/tan texture.",
+      "shiny_comment": "Storm slate body, cyan distal wing tips, whole face and feet preserved with smooth anatomical boundaries.",
+      "alpha_comment": "Broader darker blue wing field, source cream torso and face.",
+      "finish": {},
+      "rules": [],
+      "vivid_rules": [],
+      "alpha_rules": []
     },
     "duskhush": {
       "_comment": "Base: grey-teal nocturne. Vivid: the board's dark plum (see vivid_comment). Shiny: REBUILT -- was plum-magenta 305, which the corrected plum vivid collides with, and which was one of the seven-of-seventeen shinies that all landed on pink/coral ('rare = turn it pink' is a filter language, not a design language). The midnight-blue rebuild did not work either: a blind round measured it at value 0.23 against the plum ordinary's 0.25 and called it a sideways hue nudge between two dark equally-saturated colours, invisible at range. Inverted instead -- the rare is now a PALE GHOST owl, near-white with its frost barring reading as pattern on a light body, against a genuinely dark plum ordinary. That is the largest value gap available on this species, and it is safe from the roster's other pale birds on silhouette and size: pipwing is a 0.60 m chick and galewisp a 1.90 m starter, against this owl's 1.28 m.",

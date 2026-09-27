@@ -1,0 +1,27 @@
+{
+  "task_id": "01a0e4a9-3cfa-7210-b6d6-70f332337328",
+  "prompt": "Reconstruct this single large powerful hawk exactly, slate blue and tan broad layered wings, cream face and chest, hooked charcoal beak, amber eyes, heavy talons. Strong upright natural raptor neck, level head, broad shoulder support. Two legs, two extended wings, long tail. Clean feather group forms. Preserve the entire inspected reference silhouette, no pedestal or background. Symmetrical anatomy suitable for bird rigging, head straight ahead and never tilted.",
+  "settings": {
+    "mode": "refine",
+    "negative_prompt": "crooked neck, tilted head, skinny neck, extra legs, fused toes, pedestal, landscape, armor, noise, neon",
+    "should_remesh": true,
+    "should_texture": true,
+    "topology": "triangle",
+    "target_polycount": 40000,
+    "symmetry_mode": "auto"
+  },
+  "reference": "assets\\creatures\\tetherbound\\galecrest\\reference\\rebuild\\galecrest.png",
+  "reference_sha256": "1b1bf0615888d500f7881cbf513ccc03f5b62af185e5126b78e3e15eb52b7933",
+  "reference_inspected": true,
+  "reference_review": "Complete visible subject; straight supported neck; level eyes; slate/cream/tan identity; separate feet and primary feathers. Approved as model source, not game acceptance.",
+  "reference_origin": "OpenAI built-in imagegen exec-78a8a658-222b-435e-b166-d7d787a604a4",
+  "balance_before": {
+    "balance": 13605
+  },
+  "status": "SUCCEEDED",
+  "created_at": 1790542693011,
+  "finished_at": 1790542881832,
+  "balance_after": {
+    "balance": 13575
+  }
+}
