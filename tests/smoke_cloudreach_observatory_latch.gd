@@ -9,7 +9,7 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 
 const TOP := Vector3(-520.0, 1080.0, 5300.0)
 const FORK := Vector3(-180.0, 900.0, 4720.0)
-const MID := Vector3(-350.0, 990.0, 5010.0)
+const MID := Vector3(-435.0, 1035.0, 5155.0) # middle of the upper span
 const START_FLAGS: Array[String] = ["realm_key_cloudreach", "fly_traversal_unlocked", "cloudreach_crisis_learned",
 	"cloudreach_upper_route_unlocked", "cloudreach_act_ii_complete", "storm_anchor_upper_west_disabled",
 	"storm_anchor_upper_east_disabled", "cloudreach_upper_anchors_disabled"]
@@ -49,7 +49,7 @@ func _run() -> void:
 	await _frames(30)
 	var report := {}
 	report["mid_ground_before"] = float(world.call("ground_height_near", MID))
-	var stair := world.get_node_or_null(^"SuspendedBridges/ObservatoryLatchStair") as Node3D
+	var stair := world.get_node_or_null(^"SuspendedBridges/ObservatoryLatchStairUpper") as Node3D
 	report["stair_built"] = stair != null
 	report["deck_visible_before"] = stair != null and (stair.get_node(^"DeckSection1") as Node3D).visible
 	# Sighting at the fork, then the latch at the summit loop's west pad.

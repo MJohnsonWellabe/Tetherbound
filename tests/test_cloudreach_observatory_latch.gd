@@ -50,10 +50,21 @@ func test_the_latch_builds_a_walkable_descent_between_existing_pads() -> void:
 	var route: Dictionary = _by_id(world.routes).get("observatory_latch_descent", {})
 	assert_eq(str(route.get("requires_unlock", "")), LATCH, "the route opens with the latch")
 	assert_eq(str(route.get("traversal_mode", "")), "ground")
-	var bridge: Dictionary = _by_id(world.bridges).get("observatory_latch_stair", {})
-	assert_eq(str(bridge.get("built_by_flag", "")), LATCH, "the deck exists only after the latch")
-	assert_eq(str(bridge.get("route_id", "")), "observatory_latch_descent")
-	assert_eq(bridge.endpoints, route.polyline, "the stair is the whole route: no new ground crown")
+	var spans := [_by_id(world.bridges).get("observatory_latch_stair_upper", {}),
+		_by_id(world.bridges).get("observatory_latch_stair_lower", {})]
+	for i in spans.size():
+		var bridge: Dictionary = spans[i]
+		assert_eq(str(bridge.get("built_by_flag", "")), LATCH, "the deck exists only after the latch")
+		assert_eq(str(bridge.get("route_id", "")), "observatory_latch_descent")
+		assert_eq(bridge.get("endpoints", []), [route.polyline[i], route.polyline[i + 1]],
+			"the two spans are the whole route: no ground ribbon, only the mid landing pad")
+	# The mid landing carries an activity so the descent is never A7-empty.
+	var mid := RULES.vec(route.polyline[1])
+	var landing_node := false
+	for node: Dictionary in RULES.read(RUNTIME.CHAPTER_PATH)["resource_tier"]["nodes"]:
+		if RULES.vec(node.position).distance_to(mid) < 8.0:
+			landing_node = true
+	assert_true(landing_node, "a gatherable on the mid landing")
 	# Both ends are existing route pads: the summit loop and the plateau fork.
 	var summit: Array = _by_id(world.routes).summit_overlook_loop.polyline
 	var plateau: Array = _by_id(world.routes).upper_plateau_circuit.polyline
