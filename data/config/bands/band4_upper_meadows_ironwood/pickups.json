@@ -400,6 +400,9 @@
       ],
       "tier": "critical",
       "why": "On the road 15m before the band 5 seam: basic supplies before Corr and the danger beat, the approach's own attrition, found before it starts."
-    }
+    },
+    {"id": "b4_road_mushroom_5271", "item": "wild_mushroom", "pos": [-351.2, 5271.9], "tier": "critical", "why": "F02#8 route cadence (WORLD 3.1, A7): a roadside find on the alpha crag to the galecrest field stretch, which the earned seed-15 route walked 260 m with no beat; a recovery/food find, not a candy, so the critical path's two-Good-candy rule stands."},
+    {"id": "b4_road_potion_5457", "item": "potion_small", "pos": [-74.6, 5457.4], "tier": "critical", "why": "F02#8 route cadence (WORLD 3.1, A7): a roadside find on the Juno paddock to Halder stretch, which the earned seed-15 route walked 257 m with no beat; a recovery/food find, not a candy, so the critical path's two-Good-candy rule stands."},
+    {"id": "b4_road_mushroom_6205", "item": "wild_mushroom", "pos": [99.2, 6205.6], "tier": "critical", "why": "F02#8 route cadence (WORLD 3.1, A7): a roadside find on the wind overlook to the ridge road picket stretch, which the earned seed-15 route walked 277 m with no beat; a recovery/food find, not a candy, so the critical path's two-Good-candy rule stands."}
   ]
 }

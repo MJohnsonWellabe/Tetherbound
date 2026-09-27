@@ -4,6 +4,12 @@ extends "res://tests/helpers/fresh_opening_segment.gd"
 ## explicit outgoing-member choice through the production farewell UI.
 ## This neither creates a pending catch nor releases anyone through Party APIs.
 const CEREMONY_FRAMES := 60 # Same automatic-open bound as smoke_release.
+## Charged hits stay well clear of the 0.28 catch window (no accidental KO).
+const CHARGED_ABOVE_FRACTION := 0.5
+## Hold position (stick released) once this close; the lunge closes the rest.
+const STANDOFF_REACH_FRACTION := 0.5
+## Piloting goal stays this far inside the combat arena wall.
+const ARENA_WALL_MARGIN_M := 2.5
 
 
 func _replacement_realm() -> String:
@@ -28,12 +34,40 @@ func _fight_until_catchable() -> bool:
 			_checkpoint("%s naturally weakened to %.0f/%.0f HP" % [
 				foe.get("species_id"), foe.get("hp"), foe.get("max_hp")])
 			return true
-		await _drive_body_toward(ally, _wild.global_position, 1)
 		var reach := float(_combat.call("combat_move_reach", "quick"))
 		if reach <= 0.0:
 			_fail("replacement fighter has no production quick-attack reach")
 			return false
-		if ally.global_position.distance_to(_wild.global_position) < reach and frame % 35 == 0:
+		# Every step is one physics frame. _drive_body_toward returns without a
+		# frame when the ally stands on the target's back (DRY RUN 7 geometry:
+		# the Mosshell slides off its ledge and the ally lands on its shell),
+		# which burned ~1/3 of the bound in zero time. Release the stick inside
+		# half the quick reach instead of pressing into the target, and steer
+		# for the arena's own clamp_point: combat_arena.hold_inside() pins a
+		# fighter at the wall with a horizontal raw position write, which on
+		# the cliff below that ledge put the ally inside the terrain (freefall).
+		var goal := _wild.global_position
+		var arena: Node3D = _combat.get("_arena")
+		if arena != null and arena.has_method("clamp_point"):
+			goal = arena.call("clamp_point", goal, ARENA_WALL_MARGIN_M)
+		var flat := _wild.global_position - ally.global_position
+		flat.y = 0.0
+		var to_goal := goal - ally.global_position
+		to_goal.y = 0.0
+		if flat.length() <= reach * STANDOFF_REACH_FRACTION or to_goal.length() <= 0.5:
+			_stop_left_stick()
+			await _tree.physics_frame
+		else:
+			await _drive_body_toward(ally, goal, 1)
+		var distance := ally.global_position.distance_to(_wild.global_position)
+		# Landed quicks fill the charged meter (4 x 26 energy) that quick-only
+		# piloting never spent. Tap it when production says it is ready while
+		# the foe is still well clear of the catch window.
+		if bool(_combat.call("charged_ready")) \
+				and float(foe.get("hp")) > float(foe.get("max_hp")) * CHARGED_ABOVE_FRACTION \
+				and distance < float(_combat.call("combat_move_reach", "charged")):
+			await _tap_action("combat_charged")
+		elif distance < reach and frame % 35 == 0:
 			await _tap_action("combat_quick")
 	_stop_left_stick()
 	_fail("real piloted attacks did not weaken the replacement target within the existing 1800-step bound")

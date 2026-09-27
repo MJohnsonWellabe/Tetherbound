@@ -17,3 +17,5 @@ The helper allows one window (`MAX_BREAK_WINDOWS` 1), so every pass is a
 single-window lap. For comparison, at 30 s the same smoke finished inside one
 window on about half the runs (0.3–3 s misses), which is the evidence behind the
 coordinator's ruling (#356, 02:40, option a).
+
+The run logs are committed as `.txt` because the repository ignores `*.log`.

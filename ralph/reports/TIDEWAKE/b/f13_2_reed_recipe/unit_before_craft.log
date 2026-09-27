@@ -1,0 +1,13 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only craft: 2 of 597 test files
+  ok    test_craftsperson_material_contract.gd :: test_craftsperson_keeps_held_albedo_and_rejects_full_body_emission
+  ok    test_craftsperson_material_contract.gd :: test_explicit_opt_out_keeps_absent_source_behavior_and_cache_isolated
+  ok    test_craftsperson_material_contract.gd :: test_generated_face_representatives_remove_emission_without_repainting_albedo
+  ok    test_craftsperson_material_contract.gd :: test_ranked_opt_out_keeps_only_authored_floor_and_separates_floor_cache_entries
+  ok    test_stormwood_crafting.gd :: test_item_db_merges_the_eight_live_stormwood_inventory_recipes
+  ok    test_stormwood_crafting.gd :: test_locked_stormwood_recipe_refuses_even_with_its_full_cost
+  ok    test_stormwood_crafting.gd :: test_stew_and_tonic_remain_distinct_consumables
+  ok    test_stormwood_crafting.gd :: test_unlocked_recipe_spends_every_ingredient_and_grants_exactly_one_output
+
+8 tests, 101 assertions, 0 failed

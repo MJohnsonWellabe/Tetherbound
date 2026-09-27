@@ -23,13 +23,10 @@ static func requirements_met(row: Dictionary, world_flags: Variant) -> bool:
 static func evaluate(intent: Dictionary, host_context: Dictionary, world_flags: Variant) -> Dictionary:
 	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(DATA))
 	var id := str(intent.get("pickup_id", ""))
-	var selected: Dictionary = {}
-	for row: Dictionary in source.get("pickups", []):
-		if str(row.id) == id and str(row.get("claim_policy", "")) == "character_once" and str(row.get("category", "")) == "skill_candy":
-			selected = row
-			break
+	var selected := personal_row(source, id)
 	if selected.is_empty():
 		return _refuse("unknown_pickup", "That Skill Candy is not an authored find.")
+	var harvest := str(selected.get("placement_kind", "")) == "harvest"
 	if str(intent.get("realm", "")) != "water" or str(host_context.get("realm", "")) != "water":
 		return _refuse("wrong_realm", "Reach this Water island before collecting its Candy.")
 	var peer := int(host_context.get("peer", 0))
@@ -49,17 +46,39 @@ static func evaluate(intent: Dictionary, host_context: Dictionary, world_flags: 
 	var tuning: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(TUNING))
 	var radius := float(tuning.get("pickups", {}).get("claim_radius_m", 3.6))
 	if not target.is_finite() or position.distance_to(target) > radius:
-		return _refuse("too_far", "Move closer to collect this Skill Candy.")
+		return _refuse("too_far", "Move closer to gather this." if harvest else "Move closer to collect this Skill Candy.")
 	var proof: Variant = intent.get("personal_claimed", false)
 	if not proof is bool:
 		return _refuse("malformed", "The character claim could not be checked.")
 	var receipt := "water_claim:" + character + ":" + id
 	if proof or (world_flags != null and world_flags.has(receipt)):
-		return _refuse("already_taken", "This character has already collected this Skill Candy.")
-	return {"ok": true, "code": "", "reason": "", "ops": [
+		return _refuse("already_taken", "This character has already gathered here." if harvest else "This character has already collected this Skill Candy.")
+	# Yield and any taught recipe come from host data, never the request.
+	var count := int(selected.get("yield", 1)) if harvest else int(selected.quantity)
+	var ops: Array = [
 		{"op": "flag", "scope": "world", "realm": "water", "id": receipt, "value": true},
 		{"op": "flag", "scope": "player", "realm": "water", "id": personal_flag(id), "value": true, "peers": [peer]},
-		{"op": "item_grant", "scope": "player", "peers": [peer], "item": str(selected.item_id), "count": int(selected.quantity), "txn_id": receipt}
-	]}
+		{"op": "item_grant", "scope": "player", "peers": [peer], "item": str(selected.item_id), "count": count, "txn_id": receipt}
+	]
+	var learn := str(selected.get("learn_recipe_flag", ""))
+	if not learn.is_empty():
+		ops.append({"op": "flag", "scope": "player", "realm": "water", "id": learn, "value": true, "peers": [peer]})
+	return {"ok": true, "code": "", "reason": "", "ops": ops}
+
+
+## The authored character-once row `id` names: a Skill Candy pickup, or (F13#2)
+## a reward-pocket harvest patch marked `claim_policy: character_once`, which
+## may carry `learn_recipe_flag`. Harvest rows come back with
+## `placement_kind: "harvest"`. {} for anything else.
+static func personal_row(source: Dictionary, id: String) -> Dictionary:
+	for row: Dictionary in source.get("pickups", []):
+		if str(row.id) == id and str(row.get("claim_policy", "")) == "character_once" and str(row.get("category", "")) == "skill_candy":
+			return row
+	for row: Dictionary in source.get("harvest", []):
+		if str(row.id) == id and str(row.get("claim_policy", "")) == "character_once":
+			var out := row.duplicate(true)
+			out["placement_kind"] = "harvest"
+			return out
+	return {}
 static func _refuse(code: String, reason: String) -> Dictionary:
 	return {"ok": false, "code": code, "reason": reason, "ops": []}
