@@ -1,8 +1,8 @@
 {
- "updated": "2026-09-27 14:30 UTC",
+ "updated": "2026-09-27 15:15 UTC",
  "headline": [
-  "Criteria met: 76 of 101 (counted at merge). F09#0 lands in batch 58.",
-  "WIND-DOWN (owner, 14:07): lanes finish in-flight items only, post FINAL, then are archived. Archived: VIS, Stormwood, Stormwood-B."
+  "Criteria met: 78 of 101 (counted at merge). Batch 59 merged (F04#4, card M4); batch 60: F07#0 six Cloudreach activities.",
+  "PHASE 2 (owner): finish every Meadows and Cloudreach criterion. Six lanes: full Meadows run, full Cloudreach run, F04 readability, Cloudreach F07/F08#4, F01 walks, F03 lures. Lanes render locally (xvfb + opengl3)."
  ],
  "batches": [
   {
@@ -229,9 +229,21 @@
   },
   {
    "name": "Batch 58",
+   "sha": "9850b3be",
+   "state": "Merged, full CI green",
+   "contents": "Stormwood F09#0 earned six-region traversal"
+  },
+  {
+   "name": "Batch 59",
+   "sha": "pending",
+   "state": "Merged",
+   "contents": "Meadows core F04#4 hit/avoid witness + fight-camera headroom; Meadows route M4 integrated run"
+  },
+  {
+   "name": "Batch 60",
    "sha": "pending",
    "state": "Auto-merge",
-   "contents": "Stormwood F09#0 earned six-region traversal"
+   "contents": "Cloudreach F07#0 six activities (Waycamp bed rest, Circuit ground TM)"
   }
  ],
  "lanes": [

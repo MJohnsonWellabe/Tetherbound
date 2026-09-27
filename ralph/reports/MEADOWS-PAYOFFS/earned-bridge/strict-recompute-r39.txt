@@ -1,0 +1,5 @@
+r39 windows> 200.0 4 over250 2 A7 []
+    (251, 'earned_team', 'tournament_training_ready', 'home_materials_gathered', [63, 82], [70, 64], 956)
+    (227, 'earned_team', 'creature_bed_built_2', 'creature_bed_built_3', [25, -34], [30, -42], 1360)
+    (290, 'south_bridge_crossed', 'BandPickup_b2_candy_bridge_foo', 'BandPickup_b2_candy_grove_edge', [4, 1351], [202, 1552], 4259)
+    (233, 'south_bridge_crossed', 'Greet Quarry Foreman', 'BandPickup_b2_candy_rim_south', [388, 1791], [388, 1874], 4950)

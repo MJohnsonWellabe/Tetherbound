@@ -1367,12 +1367,37 @@ func _update_combat_camera_height(framing: Dictionary, weight: float) -> void:
 	var base_height := float((MATH.config().get("camera", {}) as Dictionary).get("height", 2.3))
 	if not bool(follow.get("enabled", false)):
 		return
+	var max_height := float(follow.get("max_height", 6.0))
 	var target := follow_height_for(_combined_top_above_ally(), float(follow.get("fraction_of_top", 0.55)),
-		base_height, float(follow.get("max_height", 6.0)))
+		base_height, max_height)
+	# Under a roof the lift stops `ceiling_headroom_m` short of the ceiling over
+	# the ally, never below the base height: Keeper Hald's 6.5 m room with a
+	# 6.0 m lift left the arm no room to stand back (F04, frames 19-22).
+	var headroom := float(follow.get("ceiling_headroom_m", 0.0))
+	if headroom > 0.0:
+		var ceiling := _ceiling_above_ally(max_height + headroom)
+		if ceiling > 0.0:
+			target = minf(target, maxf(base_height, ceiling - headroom))
 	if _camera_framing_height <= 0.0:
 		_camera_framing_height = _rig_float("_height", base_height)
 	_camera_framing_height = lerpf(_camera_framing_height, target, weight)
 	_camera_rig.set("_height", _camera_framing_height)
+
+
+## Metres from the ally's feet up to the first solid surface over it, within
+## `reach`; 0 when open sky (or no ally/world to ask).
+func _ceiling_above_ally(reach: float) -> float:
+	if _ally_body == null or not is_instance_valid(_ally_body) or not _ally_body.is_inside_tree():
+		return 0.0
+	var feet := _ally_body.global_position
+	var query := PhysicsRayQueryParameters3D.create(feet + Vector3.UP * 0.5, feet + Vector3.UP * reach)
+	query.collision_mask = 1
+	if _ally_body is CollisionObject3D:
+		query.exclude = [(_ally_body as CollisionObject3D).get_rid()]
+	var hit := _ally_body.get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return 0.0
+	return (hit.position as Vector3).y - feet.y
 
 
 ## F04#7 defects 1-3: a wall or trunk behind the ally collapsed the arm, and

@@ -1,0 +1,5 @@
+{
+  "_why": "F04 (named fights, code-blind judge): a tree's only collider is its trunk cylinder (vegetation.gd::_make_collision_shape), so the fight camera's arm and clear-orbit sweep saw straight through canopies and parked the lens inside them (Captain Oreth's grove: 14 of 24 probed bearings). Each resident trunk of a layer listed here also carries one box over its canopy -- the model's render bounds above the trunk collider, inset by `inset` -- on the camera rig's occlusion-only layer (mask 0): it stops the lens and nothing else. Walking, scatter and harvest see only the trunk. Kept out of vegetation.json on purpose: that file is part of the scatter bake's config fingerprint, and a camera-only setting must not stale the bake. TUNABLE.",
+  "layers": ["trees", "grove", "saplings"],
+  "inset": 0.8
+}

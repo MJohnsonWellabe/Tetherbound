@@ -1949,6 +1949,8 @@ func _kit_mesh_and_material(dir: String, model: String) -> Array:
 ## capped by the girder they must clear -- came out as narrow ribbons, which is
 ## the toy read arriving by a second route. A heraldic banner on a curtain wall
 ## is broad; 1.35 x 2.0 keeps it broad at every drop this building asks for.
+## camera_rig.gd::OCCLUSION_ONLY_LAYER (see `_hang_banner`).
+const BANNER_CAMERA_OCCLUSION_LAYER := 1 << 31
 const BANNER_CLOTH_W := 1.35
 const BANNER_CLOTH_H := 2.0
 const BANNER_CLOTH_T := 0.07
@@ -1994,6 +1996,22 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	panel.position = Vector3(BANNER_CLOTH_T, -height * 0.5 - 0.09, 0.0)
 	panel.rotation.y = PI * 0.5
 	holder.add_child(panel)
+
+	# F04 (Warden Aldis's fight): the cloth has no collider, so the fight
+	# camera's arm swept through it and parked the lens behind the banner. One
+	# thin box over the cloth on the camera rig's occlusion-only layer stops
+	# the lens and nothing else (mask 0; the player's mask is layer 1).
+	var occluder := StaticBody3D.new()
+	occluder.name = "CameraOccluder"
+	occluder.collision_layer = BANNER_CAMERA_OCCLUSION_LAYER
+	occluder.collision_mask = 0
+	var occluder_shape := CollisionShape3D.new()
+	var occluder_box := BoxShape3D.new()
+	occluder_box.size = Vector3(0.3, height, width)
+	occluder_shape.shape = occluder_box
+	occluder.position = panel.position
+	occluder.add_child(occluder_shape)
+	holder.add_child(occluder)
 
 
 func _folded_banner_mesh(width: float, height: float) -> ArrayMesh:

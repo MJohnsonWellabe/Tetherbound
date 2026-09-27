@@ -46,6 +46,11 @@ const HARVEST_POINT := preload("res://scripts/world/vegetation_harvest_point.gd"
 ## RG9: the felled/downed pickup a chop stands where a tree or rock stood.
 const FELLED_RESOURCE := preload("res://scripts/world/felled_resource.gd")
 const BAKE := preload("res://scripts/world/scatter_bake.gd")
+## F04: canopy occlusion boxes for the fight camera (see _canopy_for()).
+const CAMERA_CANOPY_PATH := "res://data/config/vegetation_camera_canopy.json"
+## camera_rig.gd::OCCLUSION_ONLY_LAYER: the arm and its clear-orbit sweep mask
+## it; the player (mask 1) and every other body ignore it.
+const CAMERA_OCCLUSION_ONLY_LAYER := 1 << 31
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const CAMERA_VISIBILITY := preload("res://scripts/world/foliage_camera_visibility.gd")
@@ -1685,6 +1690,9 @@ func _add_collision(model_path: String, placements: Array) -> void:
 		# `clear_area()` can ask `_mesh_id_for()` which instances to remove.
 		# Nothing else reads it.
 		"model": model_path,
+		# F04: the canopy box every resident trunk of this model carries for
+		# the camera; empty for layers without one (rocks).
+		"canopy": _canopy_for(model_path, layer),
 	}
 	_reindex_batch_cells(batch)
 	_collision_batches.append(batch)
@@ -1791,7 +1799,7 @@ func _stream_batch(batch: Dictionary, center: Vector3) -> void:
 				var within := spot.distance_squared_to(center) <= radius_sq
 				var has_shape: bool = resident[i] != null
 				if within and not has_shape:
-					var node := _make_collision_shape(placement, shape_radius)
+					var node := _make_collision_shape(placement, shape_radius, batch.get("canopy", {}))
 					resident[i] = node
 					body.add_child(node)
 				elif not within and has_shape:
@@ -1812,7 +1820,45 @@ func _stream_batch(batch: Dictionary, center: Vector3) -> void:
 
 ## One prop's collider, split out of `_add_collision` unchanged -- COLL1 did
 ## not touch the shape itself, only when it exists.
-func _make_collision_shape(placement: Dictionary, radius: float) -> CollisionShape3D:
+## F04: the camera canopy box for `model_path`, in model units: the render
+## bounds above the trunk collider's top (4 model units, see
+## `_make_collision_shape`), inset on x/z. A model shorter than that gets its
+## upper half. Empty when the layer is not listed, or the mesh is missing.
+func _canopy_for(model_path: String, layer: Dictionary) -> Dictionary:
+	var cfg := _camera_canopy_config()
+	var layer_name := ""
+	var layers: Dictionary = _vegetation_config().get("layers", {})
+	for name: String in layers.keys():
+		if layers[name] == layer:
+			layer_name = name
+			break
+	if not (cfg.get("layers", []) as Array).has(layer_name):
+		return {}
+	var mesh := _mesh_for(model_path)
+	if mesh == null:
+		return {}
+	var box := mesh.get_aabb()
+	var bottom := 4.0
+	if box.end.y <= bottom:
+		bottom = box.position.y + box.size.y * 0.5
+	var inset := float(cfg.get("inset", 0.8))
+	var size := Vector3(box.size.x * inset, box.end.y - bottom, box.size.z * inset)
+	if size.x <= 0.01 or size.y <= 0.01 or size.z <= 0.01:
+		return {}
+	var centre := box.get_center()
+	return {"size": size, "centre": Vector3(centre.x, bottom + size.y * 0.5, centre.z)}
+
+
+var _camera_canopy_cfg: Dictionary = {}
+
+func _camera_canopy_config() -> Dictionary:
+	if _camera_canopy_cfg.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CAMERA_CANOPY_PATH))
+		_camera_canopy_cfg = parsed as Dictionary if parsed is Dictionary else {"layers": []}
+	return _camera_canopy_cfg
+
+
+func _make_collision_shape(placement: Dictionary, radius: float, canopy: Dictionary = {}) -> CollisionShape3D:
 	var scale := float(placement["scale"])
 	var shape := CylinderShape3D.new()
 	shape.radius = radius * scale
@@ -1834,6 +1880,23 @@ func _make_collision_shape(placement: Dictionary, radius: float) -> CollisionSha
 		up = placement["normal"]
 		node.basis = Basis(Quaternion(Vector3.UP, up))
 	node.position = (placement["position"] as Vector3) + up * (shape.height * 0.5)
+	if not canopy.is_empty():
+		# A child body, so the box streams in, is evicted and is freed with the
+		# trunk shape that owns it -- harvest, clear_area and the residency
+		# sweep all handle it without knowing it exists.
+		var occluder := StaticBody3D.new()
+		occluder.name = "CameraCanopy"
+		occluder.collision_layer = CAMERA_OCCLUSION_ONLY_LAYER
+		occluder.collision_mask = 0
+		var box_node := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = (canopy["size"] as Vector3) * scale
+		box_node.shape = box
+		occluder.add_child(box_node)
+		# The trunk node sits at base + up * half its height; the canopy centre
+		# is measured from the base in model units.
+		occluder.position = (canopy["centre"] as Vector3) * scale - Vector3.UP * (shape.height * 0.5)
+		node.add_child(occluder)
 	return node
 
 
@@ -1903,7 +1966,7 @@ func force_collision_resident(prefix: String) -> void:
 		var resident: Array = batch["resident"]
 		for i in placements.size():
 			if resident[i] == null:
-				var node := _make_collision_shape(placements[i], batch["radius"])
+				var node := _make_collision_shape(placements[i], batch["radius"], batch.get("canopy", {}))
 				resident[i] = node
 				body.add_child(node)
 		# PERF-ROG: the streaming sweep now only clears cells it has seen, so a
