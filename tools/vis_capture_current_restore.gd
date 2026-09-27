@@ -13,7 +13,14 @@ extends SceneTree
 ##  - The rig's follow logic, the trainer and the WorldLook clock are paused;
 ##    the Camera3D is posed directly (production fov/far/environment). The
 ##    trainer is hidden and parked under the stand; HUD layers are hidden.
-##  - The same fixture flags as the smoke test open the earlier docks.
+##  - The smoke test's fixture flags plus the Salt Crown and Sluice Isle dock
+##    facts are set, so every sampled direct current is an open route and not a
+##    closed-gate tide race (any run that reaches the Guardian has them).
+##  - Shader clock: software rendering takes seconds per frame, so the shader
+##    TIME of two frames "1 s apart" is not controllable. The tool clones the
+##    current-flow, sea-surface and tide-race shaders at runtime with TIME
+##    replaced by a `vis_time` uniform (code otherwise identical) and pins it:
+##    t0 = CLOCK_T0 in both states, t1 = CLOCK_T0 + 1 s. Game files unchanged.
 ##
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1920x1080 \
 ##     --script tools/vis_capture_current_restore.gd -- --out=shots/vis_f14_2
@@ -26,7 +33,15 @@ const FIXTURE := [
 	"water_dock_brine_steps_trial_won",
 	"water_dock_shellwatch_residents_freed_and_pump_disabled",
 	"water_aquaryn_resolved",
+	"water_dock_salt_crown_landing_charted",
+	"water_dock_sluice_isle_both_controls_disabled",
 ]
+const PINNED_SHADERS := [
+	"res://shaders/water_current_flow.gdshader",
+	"res://shaders/water.gdshader",
+	"res://shaders/water_tide_race.gdshader",
+]
+const CLOCK_T0 := 100.0
 ## Each stand looks at the midpoint of a direct current from the side, a
 ## little back along the route, so the streaks cross the frame.
 const STANDS := [
@@ -42,7 +57,7 @@ const STANDS := [
 const SIDE_M := 40.0
 const BACK_M := 25.0
 const EYE_HEIGHT_M := 16.0
-const SETTLE_FRAMES := 90
+const SETTLE_FRAMES := 30
 const SETTLE_S := 2.0
 const GAP_S := 1.0
 const POLL_WAIT_S := 1.4
@@ -52,6 +67,7 @@ var failures: Array[String] = []
 var world: Node3D
 var game: Node
 var camera: Camera3D
+var pinned: Array[ShaderMaterial] = []
 
 
 func _init() -> void:
@@ -85,9 +101,43 @@ func _shot(stand: String, state: String, tick: String, t_start: int) -> void:
 	var path := "%s/%s_%s_%s.png" % [out_dir, stand, state, tick]
 	if image.save_png(path) != OK:
 		_fail("save " + path)
-	print("SHOT %s ms_since_t0=%d calm_scale=%.3f flag=%s size=%dx%d" % [
-		path, Time.get_ticks_msec() - t_start, _calm(), game.world.flags.has(FLAG),
+	print("SHOT %s vis_time=%.2f ms_since_t0=%d calm_scale=%.3f flag=%s size=%dx%d" % [
+		path, float(pinned[0].get_shader_parameter("vis_time")) if not pinned.is_empty() else -1.0, Time.get_ticks_msec() - t_start, _calm(), game.world.flags.has(FLAG),
 		image.get_width(), image.get_height()])
+
+
+func _pin_clocks() -> void:
+	var clones := {}
+	var regex := RegEx.create_from_string("\\bTIME\\b")
+	for node: Node in world.find_children("*", "GeometryInstance3D", true, false):
+		var material := (node as GeometryInstance3D).material_override as ShaderMaterial
+		if material == null or material.shader == null or not PINNED_SHADERS.has(material.shader.resource_path):
+			continue
+		var path := material.shader.resource_path
+		if not clones.has(path):
+			var lines := material.shader.code.split("\n")
+			var out := PackedStringArray()
+			var inserted := false
+			for line: String in lines:
+				out.append(regex.sub(line, "vis_time", true))
+				if not inserted and line.begins_with("render_mode"):
+					out.append("uniform float vis_time = 0.0;")
+					inserted = true
+			var clone := Shader.new()
+			clone.code = "\n".join(out)
+			clones[path] = clone
+		material.shader = clones[path]
+		if not pinned.has(material):
+			pinned.append(material)
+	print("PINNED clocks on %d materials from %s" % [pinned.size(), clones.keys()])
+	if not clones.has(PINNED_SHADERS[0]):
+		_fail("current-flow shader was not pinned")
+
+
+func _clock(t: float) -> void:
+	for material: ShaderMaterial in pinned:
+		material.set_shader_parameter("vis_time", t)
+	await _frames(3)
 
 
 func _set_restored(restored: bool) -> void:
@@ -106,7 +156,7 @@ func _run() -> void:
 		push_error("capture requires a rendering display")
 		quit(1)
 		return
-	create_timer(1500.0).timeout.connect(func() -> void:
+	create_timer(4200.0).timeout.connect(func() -> void:
 		_fail("watchdog")
 		quit(1))
 	await process_frame
@@ -145,6 +195,7 @@ func _run() -> void:
 	for node: Node in world.find_children("*", "CanvasLayer", true, false):
 		(node as CanvasLayer).visible = false
 	camera.make_current()
+	_pin_clocks()
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	print("fov=%.1f far=%.1f" % [camera.fov, camera.far])
 	for stand: Dictionary in STANDS:
@@ -176,12 +227,14 @@ func _stand(stand: Dictionary, look: Node, player: Node3D) -> void:
 		stand.name, stand.current, stand.time, eye, target, ground,
 		float(world.ground_height_at(mid.x, mid.y)), (world.current_at(target) as Vector3).length()])
 	var t0 := Time.get_ticks_msec()
+	await _clock(CLOCK_T0)
 	await _shot(stand.name, "live", "t0", t0)
-	await create_timer(GAP_S).timeout
+	await _clock(CLOCK_T0 + GAP_S)
 	await _shot(stand.name, "live", "t1", t0)
 	await _set_restored(true)
 	print("STAND %s restored current_speed_m_s=%.3f" % [stand.name, (world.current_at(target) as Vector3).length()])
 	t0 = Time.get_ticks_msec()
+	await _clock(CLOCK_T0)
 	await _shot(stand.name, "restored", "t0", t0)
-	await create_timer(GAP_S).timeout
+	await _clock(CLOCK_T0 + GAP_S)
 	await _shot(stand.name, "restored", "t1", t0)
