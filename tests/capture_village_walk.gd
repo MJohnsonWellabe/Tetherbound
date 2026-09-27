@@ -78,8 +78,11 @@ const WALK_SPEED_MPS := 5.0
 const BRIDGE_APPROACH := Vector2(11.0, 1270.0)
 ## The last steps go up the crossing's own road to BRIDGE_VIEW, then turn to
 ## BRIDGE_CENTRE, so the arrival frame has the span and its locked gate in it
-## (round 3: the spine arc ended facing away from the bridge).
-const BRIDGE_VIEW := Vector2(9.0, 1302.0)
+## (round 3: the spine arc ended facing away from the bridge). The locked leaf
+## stands at the carve centre minus gate_offset (z 1321.5); from 20 m back the
+## flanking trees and the barricade itself hid the span (F01#2/#3 judge), so
+## the view spot is 8 m short of the leaf, on the crossing road's last run.
+const BRIDGE_VIEW := Vector2(8.4, 1313.5)
 const BRIDGE_CENTRE := Vector2(8.0, 1330.0)
 ## NPC frames orbit the camera this far off the player->NPC line so the
 ## player's body does not hide the person being visited.
