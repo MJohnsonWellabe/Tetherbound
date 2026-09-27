@@ -673,20 +673,33 @@ func _go(target: Vector3, tolerance: float, label: String) -> bool:
 
 ## Stick-walk on the current island (no island check, no position write).
 func _walk_here(target: Vector3, tolerance: float, label: String, want: String) -> bool:
+	# Continuous mode retries a stalled walk (still stick input, no write) from
+	# wherever the trainer stopped: re-plan on the baked ground, else plan to the
+	# island's own landing (First Shore: its spawn) and go direct from there,
+	# else one more straight leg. The per-attempt stall is printed as RETRY.
+	var attempts := 3 if continuous else 1
+	for attempt in attempts:
+		var result := await _walk_attempt(target, tolerance, label, want, attempt, attempt == attempts - 1)
+		if result:
+			return true
+	return false
+
+
+func _walk_attempt(target: Vector3, tolerance: float, label: String, want: String, attempt: int, last_try: bool) -> bool:
 	var from := Vector2(player.global_position.x, player.global_position.z)
 	var plan: Dictionary = POCKET.plan_route(world, from, Vector2(target.x, target.z))
 	var route: Array = plan.points
 	if route.is_empty() and continuous:
-		# Continuous mode: a swim can leave the trainer on a beach anchor from
-		# which the straight leg to a dock deck climbs a slope. Plan to the
-		# island's own landing (First Shore: its spawn) first, then go direct.
 		var hub := _landing(want)
 		if hub.is_finite() and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
 			var hub_plan: Dictionary = POCKET.plan_route(world, from, Vector2(hub.x, hub.z))
 			if not (hub_plan.points as Array).is_empty():
-				print("WALK %s VIA %s landing" % [label, want])
+				print("WALK %s VIA %s landing (attempt %d)" % [label, want, attempt + 1])
 				route = (hub_plan.points as Array).duplicate()
 				route.append(Vector2(target.x, target.z))
+			elif attempt > 0:
+				print("WALK %s VIA %s landing DIRECT (attempt %d)" % [label, want, attempt + 1])
+				route = [Vector2(hub.x, hub.z), Vector2(target.x, target.z)]
 	if route.is_empty():
 		# The baked-ground planner treats docks/decks over water as impassable;
 		# fall back to one straight stick leg (still real input, navigator
@@ -704,8 +717,14 @@ func _walk_here(target: Vector3, tolerance: float, label: String, want: String) 
 		metres += Vector2(last.x, last.z).distance_to(Vector2(player.global_position.x, player.global_position.z))
 		last = player.global_position
 		if not arrived:
-			_check(false, "%s: walk stalled at leg %d/%d player=%s goal=%s" % [label, index + 1, route.size(), player.global_position, goal])
 			_stick(0.0, 0.0)
+			walked_total += metres
+			if last_try:
+				_check(false, "%s: walk stalled at leg %d/%d player=%s goal=%s" % [label, index + 1, route.size(), player.global_position, goal])
+			else:
+				print("RETRY %s: stalled at leg %d/%d player=%s goal=%s" % [label, index + 1, route.size(), player.global_position, goal])
+				navigator.call("reset")
+				await _frames(10)
 			return false
 	_stick(0.0, 0.0)
 	await _frames(20)
