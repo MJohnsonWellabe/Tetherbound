@@ -235,22 +235,40 @@ func _diagnose_and_activate() -> void:
 ## A far trainer's terrain collision streams in after the teleport; a player
 ## dropped there first falls through and `world_perimeter_corridor` returns
 ## them to spawn -- the fight then runs somewhere the camera is not. Wait for
-## a downward ray at the stand spot to hit, and stand on what it hit.
+## a downward ray at the stand spot to hit, and stand on what it hit. Of every
+## surface under the spot, stand on the one nearest the TRAINER's own level:
+## under a roof (Keeper Hald's hall) the first hit from above was the ceiling
+## slab 7.5 m over the floor, so every Hald frame was shot from on top of the
+## hall with the lens inside its roof mesh (F04#6 "tunnel").
+const GROUND_PROBE_MAX_SURFACES := 8
+
 func _settle_on_ground() -> bool:
 	var spot := _player.global_position
 	var space := _player.get_world_3d().direct_space_state
+	var level := _trainer.global_position.y
 	for i in 1800:
 		_player.global_position = spot + Vector3.UP * 0.5
 		_player.velocity = Vector3.ZERO
-		var query := PhysicsRayQueryParameters3D.create(spot + Vector3.UP * 40.0,
-			spot + Vector3.DOWN * 40.0)
-		query.exclude = [_player.get_rid()]
-		var hit := space.intersect_ray(query)
-		if not hit.is_empty():
-			_player.global_position = (hit.position as Vector3) + Vector3.UP * 0.2
+		var best: Dictionary = {}
+		# Each next ray starts just under the last surface (a ray starting
+		# inside a solid does not report it), so a floor that shares a body
+		# with the ceiling above it is still found.
+		var from := spot + Vector3.UP * 40.0
+		for n in GROUND_PROBE_MAX_SURFACES:
+			var query := PhysicsRayQueryParameters3D.create(from, spot + Vector3.DOWN * 40.0)
+			query.exclude = [_player.get_rid()]
+			var hit := space.intersect_ray(query)
+			if hit.is_empty():
+				break
+			if best.is_empty() or absf((hit.position as Vector3).y - level) \
+					< absf((best.position as Vector3).y - level):
+				best = hit
+			from = (hit.position as Vector3) + Vector3.DOWN * 0.05
+		if not best.is_empty():
+			_player.global_position = (best.position as Vector3) + Vector3.UP * 0.2
 			_player.velocity = Vector3.ZERO
 			print("ground under %s after %d frames at y=%.2f (trainer y=%.2f)" % [
-				_tid, i, (hit.position as Vector3).y, _trainer.global_position.y])
+				_tid, i, (best.position as Vector3).y, level])
 			return true
 		await physics_frame
 	print("NO GROUND under the stand spot for %s" % _tid)
