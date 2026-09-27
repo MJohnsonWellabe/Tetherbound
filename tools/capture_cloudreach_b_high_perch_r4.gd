@@ -119,7 +119,13 @@ func _run() -> void:
 	_player.velocity = Vector3.ZERO
 	_hide_overlays()
 	root.size = Vector2i(1920, 1080)
+	var only := ""
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--only="):
+			only = argument.trim_prefix("--only=")
 	for stand: Dictionary in STANDS:
+		if not only.is_empty() and not str(stand.id) in only.split(","):
+			continue
 		if not await _pose(stand):
 			continue
 		for time_name: String in ["day", "night"]:
