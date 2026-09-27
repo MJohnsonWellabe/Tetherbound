@@ -121,6 +121,11 @@ binary, texture, world height, placement anchors and all item behavior remain
 unchanged. Only the six authored badge binaries change. No further Meshy run
 or credits were needed.
 
+A final fetch brought main `ce1a3c6e5`, merged through `1ce945b71`. Its only
+production delta is an unmounted Deepwood dialogue-completion fallback;
+inspection confirms no bottle, rendering, placement or material change.
+The captures above were made on the `8bd3a6462` baseline.
+
 Reverse faces grow from 70% to the full front-face size. Larger marks use the
 space previously occupied by tiny pips; permanent elixirs now have ivory fields
 and dark coloured marks, while temporary tonics have dark fields and ivory
