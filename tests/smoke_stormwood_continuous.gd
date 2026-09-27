@@ -1331,6 +1331,13 @@ class Segment extends RefCounted:
 							if not await _ensure_usable_ally("retrying %s" % label):
 								return false
 							break
+						# Runs 6b25c50d and 1f292b92: at the a_ashfoot relight a scatter
+						# plant's harvest prompt won the recomputed edge. Harvesting it
+						# is an ordinary player action; note it and try the next stance.
+						if _activated_provider_path.contains("/Vegetation/"):
+							_note("HARVESTED a plant whose prompt won the button edge before %s (%s); next stance" % [
+								label, _activated_provider_path])
+							break
 						_fail("%s press activated competing provider %s#%d" % [
 							label, _activated_provider_path, _activated_provider_id])
 						return false
