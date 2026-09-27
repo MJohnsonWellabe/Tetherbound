@@ -1,0 +1,79 @@
+{
+  "model": "D:\\tetherbound\\visual-acceptance\\assets_raw\\cloudreach_cliff_buttress\\model.glb",
+  "bounds": {
+    "min": [
+      -0.6129,
+      -0.6774,
+      -0.9527
+    ],
+    "max": [
+      0.6185,
+      0.6771,
+      0.9507
+    ],
+    "size": [
+      1.2314,
+      1.3545,
+      1.9033
+    ],
+    "height_m": 1.9033,
+    "longest_axis_m": 1.9033,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "vertices": 17433,
+      "edges": 26997,
+      "faces": 12389,
+      "triangles": 12389,
+      "tris": 12389,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 16827,
+      "boundary_edges": 16827,
+      "loose_vertices": 0,
+      "duplicate_vertices": 11227,
+      "components": 2825,
+      "debris_components": 2825,
+      "flipped_normals": 237,
+      "uv_layers": 1,
+      "stretched_uv_faces": 761,
+      "materials": [
+        "Material_0"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "Material_0",
+      "textures": [
+        "Image_0"
+      ],
+      "textured": true
+    }
+  ],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 12389,
+    "vertices": 17433,
+    "materials": 1,
+    "animations": 0
+  },
+  "problems": [
+    "Mesh_0: 16827 non-manifold edges",
+    "Mesh_0: 11227 duplicate vertices \u2014 will split under deformation",
+    "Mesh_0: 2825 microscopic disconnected components",
+    "Mesh_0: ~237 inward-facing faces",
+    "Mesh_0: 761 faces with texel density 4.0x off the median",
+    "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-0.9527)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}

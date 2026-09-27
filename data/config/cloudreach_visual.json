@@ -165,6 +165,9 @@
   },
   "geology": {
     "rock_sections": {
+      "limestone_buttress_enabled": true,
+      "haze_near_blend": 0.25,
+      "haze_far_blend": 0.5,
       "_comment": "Reuse overlapping installed boulders for extreme visual crag stretches. Overall placement, height and material preserved; no crown, route or collision changes. Pending visual acceptance.",
       "enabled": true,
       "minimum_aspect": 3.2,

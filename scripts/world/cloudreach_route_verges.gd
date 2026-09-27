@@ -87,8 +87,10 @@ func build(world: Node3D, routes: Array, cfg: Dictionary) -> void:
 		"ScreeA": [], "ScreeB": [],
 	}
 	var meshes := {
-		"GrassWide": _prepared_mesh(world, GRASS_WIDE, false, seed),
-		"GrassWispy": _prepared_mesh(world, GRASS_WISPY, false, seed + 1),
+		"GrassWide": _prepared_mesh(world, GRASS_WIDE, false, seed, false,
+			Color(str(cfg.get("wide_grass_colour", "#52643b")))),
+		"GrassWispy": _prepared_mesh(world, GRASS_WISPY, false, seed + 1, false,
+			Color(str(cfg.get("wispy_grass_colour", "#727447")))),
 		"Bush": _prepared_mesh(world, BUSH, true, seed + 2),
 		"Flowers": _prepared_mesh(world, FLOWERS, true, seed + 3),
 		"ScreeA": _prepared_mesh(world, SCREE[0], false, seed + 4, true),
@@ -183,7 +185,7 @@ func _supported_ground(world: Node3D, at: Vector3) -> float:
 
 
 func _prepared_mesh(world: Node3D, scene: PackedScene, foliage: bool, palette_seed: int,
-		stone: bool = false) -> Dictionary:
+		stone: bool = false, grass_colour: Color = Color.TRANSPARENT) -> Dictionary:
 	var temp := scene.instantiate() as Node3D
 	if foliage:
 		world.call("_apply_tree_palette", temp, palette_seed)
@@ -201,6 +203,16 @@ func _prepared_mesh(world: Node3D, scene: PackedScene, foliage: bool, palette_se
 	var mesh_copy := mesh_instance.mesh.duplicate(true) as Mesh
 	for surface_index in mesh_copy.get_surface_count():
 		var active := mesh_instance.get_active_material(surface_index)
+		if grass_colour.a > 0.0 and active is StandardMaterial3D:
+			# These solid blades use a neon palette swatch, not a cutout texture.
+			# Override only this Cloudreach batch; keep the shared source intact.
+			var grass := active.duplicate() as StandardMaterial3D
+			grass.albedo_texture = null
+			grass.vertex_color_use_as_albedo = false
+			grass.albedo_color = grass_colour
+			grass.roughness = 0.94
+			grass.emission_enabled = false
+			active = grass
 		if active != null:
 			mesh_copy.surface_set_material(surface_index, active)
 	# Imported scene roots are intentionally never attached to the live world.

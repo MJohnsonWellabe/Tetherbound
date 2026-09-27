@@ -65,3 +65,46 @@ daytime stills do not cover night, motion, interiors or full C2.
 Next real changes must address the approach/terrace composition, coherent cliff
 modules and creature/material hierarchy rather than rejudging these frames.
 The checkpoint branch is work in progress, **not READY FOR INTEGRATION**.
+
+## Limestone buttress candidate and summit trial disposition
+
+One inspected original reference was submitted to Meshy task
+`01a0e3c1-a953-719a-9c87-e05490ca595f`, using 30 existing credits. The raw
+candidate had 61 nonmanifold edges after seam welding. A closed reconstruction
+and 12,000-triangle reduction passed topology checks. Direct UV transfer was
+rejected after inspecting all four turntable views: source seams smeared into
+zigzags. The replacement preparation unwraps the closed mesh and bakes source
+diffuse colour without lighting. Its four inspected views retain fractures,
+ledges and moss without the smear. This validates a candidate for an in-game
+trial, not C2 acceptance. Provenance and preparation evidence are under
+`cloudreach-c2-candidate/buttress/`.
+
+Two summit crown-cut trials were rejected before rendering. A 0.9 bank slope
+introduced steep join fins (12 smoke failures); slope 1.6 with a wider floor
+also exposed floating supports (14 failures). Both changes were reverted.
+The restored crown passed the same complete smoke, including solo/co-op
+geometry and two real input walks, with zero failures. No approach improvement
+is claimed from those trials. Raw logs are retained with the candidate evidence.
+
+The owner also rejected the lime-green foreground clump in Windscar frame 12.
+Cloudreach's two imported roadside grass batches now use muted olive materials
+instead of their saturated palette swatches; shared source assets are unchanged.
+Three existing route-verge tests / 60 assertions pass. The matching native
+daylight frame confirms the colour change. The 8-frame candidate run completed
+at 1920x1080 on Windows NVIDIA Compatibility, exit 0 and zero skips; all eight
+individual frames were opened. Separate dense ground cover remains too bright
+at night, and pale distant cliff/cloud integration remains unsolved.
+
+Shortcuts disclosed: candidate subset, scripted progression, hidden HUD,
+stationary production-camera stands; this packet does not certify full C2 or
+motion. The first launch was stopped after a missing extracted texture
+dependency; the complete dependency was copied and the corrected run succeeded.
+Local scoped-import UID warnings fell back to the valid texture path.
+
+Two supplemental native night frames at the exact Windscar 12/13 stands also
+completed with zero skips and were individually inspected. The broad grass
+stays subdued blue-grey. Independent blind review of the eight-frame set plus
+these night views gives **A: No, B: Yes** (genre/readability only, not quality
+parity). The full visual gate remains failed. See `buttress/visual-judge.md`.
+The next work remains coherent foliage/ground response, cliff-cloud integration,
+inhabited vertical architecture and actor readability. No READY is claimed.

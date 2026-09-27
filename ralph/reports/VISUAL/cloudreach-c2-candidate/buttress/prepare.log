@@ -1,0 +1,18 @@
+12:00:32 | INFO: Data are loaded, start creating Blender stuff
+12:00:32 | INFO: Blender create Mesh node 0
+12:00:33 | INFO: glTF import finished in 0.01s
+Blender 4.2.9 LTS (hash a10f621e649a built 2025-04-15 03:32:43)
+Fra:1 Mem:405.95M (Peak 409.09M) | Time:101:09:01.04 | Mem:0.00M, Peak:0.00M | Scene | Synchronizing object | SourceTextureTransferOnly
+Fra:1 Mem:407.17M (Peak 409.09M) | Time:101:09:01.05 | Mem:0.00M, Peak:0.00M | Scene | Initializing
+Fra:1 Mem:407.17M (Peak 409.09M) | Time:101:09:01.05 | Mem:0.00M, Peak:0.00M | Scene | Updating Images | Loading Image_0
+Fra:1 Mem:407.17M (Peak 409.09M) | Time:101:09:01.05 | Mem:0.00M, Peak:0.00M | Scene | Updating Images | Loading CloudreachLimestoneColour
+Info: Baking map saved to internal image, save it externally or pack it
+INFO Draco mesh compression is available, use library at C:\Users\mattj\.cache\tetherbound-art\blender-4.2.9-windows-x64\4.2\python\lib\site-packages\extern_draco.dll
+12:00:42 | INFO: Starting glTF 2.0 export
+12:00:42 | INFO: Extracting primitive: Mesh_0
+12:00:42 | INFO: Primitives created: 1
+12:00:42 | INFO: Finished glTF 2.0 export in 0.02608513832092285 s
+
+{"source": "assets_raw\\cloudreach_cliff_buttress\\model.glb", "vertices_before": 17433, "vertices_prepared": 6002, "repair": "voxel_320_decimate_12000_colour_bake_2048", "original_welded_nonmanifold": 61, "triangles": 12000, "components": [6002], "non_manifold_edges": 0, "boundary_edges": 0, "degenerate_faces": 0, "edge_face_counts": {"0": 0, "1": 0, "2": 18000, "3": 0, "4": 0}, "signed_volume": 0.7841241526778586, "uv_layers": 1, "material_count": 1}
+
+Blender quit

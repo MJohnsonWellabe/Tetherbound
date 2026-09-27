@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only cloudreach_route_verges,cloudreach_rock_sections: 1 of 615 test files
+  ok    test_cloudreach_route_verges.gd :: test_route_ecology_owns_no_collision_or_gameplay_state
+  ok    test_cloudreach_route_verges.gd :: test_route_ecology_plan_is_bounded_clear_and_deterministic
+  ok    test_cloudreach_route_verges.gd :: test_route_ecology_reaches_every_grounded_route_and_skips_flight
+
+3 tests, 60 assertions, 0 failed

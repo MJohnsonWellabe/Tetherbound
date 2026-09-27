@@ -17,6 +17,7 @@ const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const GROUND_COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
+const LIMESTONE_BUTTRESS := preload("res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const ROUTE_DETAIL_SCENES := {
 	"bush": preload("res://assets/environment/stylized_nature/Bush_Common.gltf"),
@@ -286,7 +287,25 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 	root.rotation.y=float(posmod(seed_value*37,360))*PI/180.0
 	parent.add_child(root)
 	var section_config: Dictionary = _visual_config.get("geology", {}).get("rock_sections", {})
-	if material_key in ["haze_near", "haze_far"]:
+	var imported_buttress := bool(section_config.get("limestone_buttress_enabled", false)) and (
+		material_key in ["haze_near", "haze_far"] or label.begins_with("SettlementRootedButtress"))
+	if imported_buttress:
+		var buttress := LIMESTONE_BUTTRESS.instantiate() as Node3D
+		var bounds: AABB = BUILDING_PREFABS.new().combined_aabb(buttress)
+		buttress.scale = size / bounds.size
+		buttress.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * buttress.scale
+		root.add_child(buttress)
+		for part: MeshInstance3D in buttress.find_children("*", "MeshInstance3D", true, false):
+			var source_material := part.get_active_material(0) as StandardMaterial3D
+			var stone := ShaderMaterial.new()
+			stone.shader = preload("res://shaders/cloudreach_buttress.gdshader")
+			if source_material != null:
+				stone.set_shader_parameter("stone_colour", source_material.albedo_texture)
+			var relief: Dictionary = _visual_config.get("distant_relief", {})
+			stone.set_shader_parameter("distance_colour", Color(str(relief.get(material_key + "_colour", "#8ba1b2"))))
+			stone.set_shader_parameter("aerial_blend", float(section_config.get(material_key + "_blend", 0.0)))
+			part.material_override = stone
+	elif material_key in ["haze_near", "haze_far"]:
 		# Purpose-built distant limestone: its normalized proportions preserve
 		# the authored range envelope without stretching a ground boulder.
 		var spire := MeshInstance3D.new()
@@ -301,8 +320,9 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 		rock.position=-Vector3(bounds.get_center().x,bounds.position.y,bounds.get_center().z)*rock.scale
 		root.add_child(rock)
 	var mass_material: Material = _materials.get(material_key, _materials["cliff"])
-	for mesh: MeshInstance3D in root.find_children("*","MeshInstance3D",true,false):
-		mesh.material_override=mass_material
+	if not imported_buttress:
+		for mesh: MeshInstance3D in root.find_children("*","MeshInstance3D",true,false):
+			mesh.material_override=mass_material
 	_set_geometry_visibility(root,visible_distance)
 	return root
 

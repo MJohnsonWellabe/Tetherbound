@@ -29,6 +29,12 @@ companion formation instead of forcing its position. Aviary belvedere/gold-rib
 candidate has native evidence and corrected source review; 10 tests/202
 assertions pass, but its separate blind Bars A/B verdict is NO/NO. Approach
 composition, cliff integration and material coherence remain open.
+One reference-backed Meshy limestone buttress now has eight native trial frames,
+plus two Windscar night views; blind subset verdict A NO/B YES, full C2 open.
+Owner-rejected lime roadside grass is muted; native day/night views inspected.
+Closed geometry and four baked-texture turntable views inspected. Two summit
+bank-cut trials failed geometry/support checks and were reverted; restored
+crown smoke passes with zero failures. Details: CLOUDREACH-DISTANT-SPIRES.md.
 Native high-perch
 request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
 missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.

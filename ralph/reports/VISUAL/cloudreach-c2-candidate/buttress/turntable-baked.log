@@ -1,0 +1,33 @@
+12:00:42 | INFO: Data are loaded, start creating Blender stuff
+12:00:42 | INFO: Blender create Mesh node Mesh_0
+12:00:42 | INFO: glTF import finished in 0.02s
+Blender 4.2.9 LTS (hash a10f621e649a built 2025-04-15 03:32:43)
+Fra:1 Mem:78.88M (Peak 93.48M) | Time:00:00.66 | Rendering 1 / 32 samples
+Fra:1 Mem:78.88M (Peak 93.48M) | Time:00:00.91 | Rendering 25 / 32 samples
+Fra:1 Mem:78.88M (Peak 93.48M) | Time:00:00.97 | Rendering 32 / 32 samples
+Saved: 'D:\tetherbound\visual-acceptance\shots\cloudreach-cliff-buttress-baked\front.png'
+Time: 00:01.10 (Saving: 00:00.09)
+
+Fra:1 Mem:78.88M (Peak 78.88M) | Time:00:00.04 | Rendering 1 / 32 samples
+Fra:1 Mem:78.88M (Peak 78.88M) | Time:00:00.27 | Rendering 25 / 32 samples
+Fra:1 Mem:78.88M (Peak 78.88M) | Time:00:00.34 | Rendering 32 / 32 samples
+Saved: 'D:\tetherbound\visual-acceptance\shots\cloudreach-cliff-buttress-baked\side.png'
+Time: 00:00.47 (Saving: 00:00.09)
+
+Fra:1 Mem:78.88M (Peak 78.88M) | Time:00:00.04 | Rendering 1 / 32 samples
+Fra:1 Mem:78.88M (Peak 78.88M) | Time:00:00.27 | Rendering 25 / 32 samples
+Fra:1 Mem:78.88M (Peak 78.88M) | Time:00:00.33 | Rendering 32 / 32 samples
+Saved: 'D:\tetherbound\visual-acceptance\shots\cloudreach-cliff-buttress-baked\back.png'
+Time: 00:00.46 (Saving: 00:00.09)
+
+Fra:1 Mem:78.88M (Peak 78.88M) | Time:00:00.04 | Rendering 1 / 32 samples
+Fra:1 Mem:78.88M (Peak 78.88M) | Time:00:00.27 | Rendering 25 / 32 samples
+Fra:1 Mem:78.88M (Peak 78.88M) | Time:00:00.33 | Rendering 32 / 32 samples
+Saved: 'D:\tetherbound\visual-acceptance\shots\cloudreach-cliff-buttress-baked\three_quarter.png'
+Time: 00:00.46 (Saving: 00:00.09)
+
+
+prepared.glb: 4 views -> D:\tetherbound\visual-acceptance\shots\cloudreach-cliff-buttress-baked
+  normalised to 1.000 units on its longest axis, standing on z=0
+
+Blender quit

@@ -12,6 +12,7 @@ extends SceneTree
 ##     --resolution 1280x720 --script tools/capture_cloudreach_frame_matrix.gd
 ##   ... --script tools/capture_cloudreach_frame_matrix.gd -- --motion
 ##   ... --script tools/capture_cloudreach_frame_matrix.gd -- --only=1,7,34
+##   ... --script tools/capture_cloudreach_frame_matrix.gd -- --only=12,13 --night
 ##
 ## Never combine `--headless` with a rendering driver (WORKFLOW §7).
 ##
@@ -314,6 +315,7 @@ var _hour := DAY_HOUR
 var _rest_pitch_deg := -12.0
 var _only: Dictionary = {}
 var _motion := false
+var _force_night := false
 var _flag_state := ""
 
 
@@ -326,6 +328,8 @@ func _parse_args() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg == "--motion":
 			_motion = true
+		elif arg == "--night":
+			_force_night = true
 		elif arg.begins_with("--output="):
 			OUT = arg.substr("--output=".length()).strip_edges().trim_suffix("/")
 		elif arg.begins_with("--only="):
@@ -476,7 +480,7 @@ func _apply_row_flags(kind: String) -> void:
 
 func _capture_row(row: Dictionary) -> void:
 	var n := int(row["n"])
-	var time := str(row.get("time", "day"))
+	var time := "night" if _force_night else str(row.get("time", "day"))
 	var name := "%02d_%s_%s_%s" % [n, str(row["region"]), str(row["row"]), time]
 	_pin_hour(NIGHT_HOUR if time == "night" else DAY_HOUR)
 	var stands: Array = []

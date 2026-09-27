@@ -1,0 +1,19 @@
+{
+  "task_id": "01a0e3c1-a953-719a-9c87-e05490ca595f",
+  "prompt": "Single solid stylized limestone cliff buttress exactly matching the reference. Tall asymmetric rooted stone mass with deep vertical fractures, broad broken planes and staggered stepped ledges. Neutral cool-grey limestone, blue-grey seams, sparse muted olive moss in ledge cracks. Preserve silhouette, substantial thickness and large readable stone faces. Closed base and rear, no ground plane, detached stones, trees, grass blades, water, clouds, buildings, text or pedestal.",
+  "negative_prompt": "floating parts, separate rocks, thin sheets, columns, cylinder, pedestal, ground plane, grass blades, trees, water, clouds, buildings, text, glowing, metallic",
+  "reference": "assets\\environment\\cloudreach\\cliff_buttress\\reference\\three_quarter.png",
+  "reference_inspected": true,
+  "mode": "refine",
+  "target_polycount": 12000,
+  "symmetry_mode": "off",
+  "balance_before": {
+    "balance": 13665
+  },
+  "status": "SUCCEEDED",
+  "created_at": 1790527516085,
+  "finished_at": 1790527620910,
+  "balance_after": {
+    "balance": 13635
+  }
+}

@@ -83,6 +83,8 @@
     "plant_visibility_m": 520.0,
     "stone_visibility_m": 820.0,
     "grass_scale": [0.85, 1.25],
+    "wide_grass_colour": "#52643b",
+    "wispy_grass_colour": "#727447",
     "bush_scale": [0.72, 1.08],
     "flower_scale": [0.58, 0.88],
     "stone_scale": [0.85, 1.45],
