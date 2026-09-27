@@ -360,6 +360,9 @@ func _write_checkpoint(label: String, scene_path: String) -> void:
 		print("CHECKPOINT %s: copy failed" % label)
 		return
 	var meta := FileAccess.open(to.path_join("checkpoint.json"), FileAccess.WRITE)
+	if meta == null:
+		print("CHECKPOINT %s: checkpoint.json could not be written" % label)
+		return
 	meta.store_string(JSON.stringify({"label": label, "scene": scene_path,
 		"world_seed": OS.get_environment("TB_WORLD_SEED"), "elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0}))
 	meta.close()
@@ -371,13 +374,24 @@ func _resume_checkpoint(game: Node, from: String) -> bool:
 	if not meta is Dictionary or not STAGE_ORDER.has(str((meta as Dictionary).get("label", ""))):
 		failures.append("--resume-from has no readable earned checkpoint: " + from)
 		return false
+	# The checkpoint's rolled world, unless the command line pinned the same one.
+	var seed := str((meta as Dictionary).get("world_seed", ""))
+	if not seed.is_empty():
+		if OS.has_environment("TB_WORLD_SEED") and OS.get_environment("TB_WORLD_SEED") != seed:
+			failures.append("--world-seed %s conflicts with the checkpoint's seed %s" % [OS.get_environment("TB_WORLD_SEED"), seed])
+			return false
+		OS.set_environment("TB_WORLD_SEED", seed)
 	if not copy_tree(from.path_join("save"), ProjectSettings.globalize_path(scratch)):
 		failures.append("could not copy the checkpoint save into this run's scratch")
 		return false
 	if not bool(game.call("load_game", 0)):
 		failures.append("load_game(0) refused the earned checkpoint")
 		return false
-	var world: Node = (load(str(meta["scene"])) as PackedScene).instantiate()
+	var packed := load(str(meta.get("scene", ""))) as PackedScene if not str(meta.get("scene", "")).is_empty() else null
+	if packed == null:
+		failures.append("the earned checkpoint names no loadable scene")
+		return false
+	var world: Node = packed.instantiate()
 	root.add_child(world)
 	current_scene = world
 	for i in 240:
@@ -490,6 +504,7 @@ func _finish(prefix_passed: bool) -> void:
 		"reached": reached,
 		"campaign_complete": campaign_complete and failures.is_empty(),
 		"resumed_from": resumed_from,
+		"counts_as_proof": resumed_from.is_empty(),
 		"scratch": scratch,
 		"elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"failures": failures,
