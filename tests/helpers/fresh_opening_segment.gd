@@ -302,6 +302,22 @@ func _step_until_the_shot_is_clear() -> bool:
 	return true
 
 
+## The inherited aim recovery walks for a new angle only on a camera
+## `line_of_sight_blocked`. A clear camera ray whose hand-to-target trajectory
+## is blocked (seed 15: CommonTree_1 between hand and Bramblebun) reads
+## "eligible", so it re-aimed from the same spot until the deadline. Report a
+## blocked trajectory as the blocked line it is, so the player steps round.
+func _launch_reason() -> String:
+	var reason := super._launch_reason()
+	if reason != "eligible":
+		return reason
+	var throw: Node = _combat.call("throw_aim") if _combat != null else null
+	if throw != null and throw.has_method("aim_report") \
+			and bool((throw.call("aim_report") as Dictionary).get("trajectory_blocked", false)):
+		return "line_of_sight_blocked"
+	return reason
+
+
 func _live_catch_finished() -> bool:
 	return (_catch_results.size() > 0 and _catch_results[-1]) or (
 		not bool(_combat.call("is_fighting")) and str(_combat.call("outcome")) == CAUGHT_OUTCOME)
