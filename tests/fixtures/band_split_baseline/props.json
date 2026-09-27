@@ -217,9 +217,10 @@
         },
         {
           "model": "Crate_Wooden",
+          "_why_b14": "B14: 1m further from band2's centreline than (401.4,1799.2), where its collider crowded the road's lane; still touching the FarmCrate and the pickaxe. Mirrored from the live band2 props.json (127e24e0e).",
           "at": [
-            401.4,
-            1799.2
+            402.3,
+            1799.6
           ],
           "yaw_deg": 20.0,
           "sink_m": 0.08,
