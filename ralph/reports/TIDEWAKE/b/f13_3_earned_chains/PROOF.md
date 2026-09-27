@@ -144,3 +144,18 @@ above.
 - **Open:** the default `--through-opening` failed once, at "natural travel did not reach and engage the tutorial Bramblebun". Its one confirming rerun passed. The cause is unexplained and was reported to Meadows.
 
 - **Unified `--resume-from` (merge with main's F02):** `--resume-from=<name>:water_arrived` always names a chapter-boundary checkpoint. A `:<boundary>` suffix or a bare name never reaches main's Meadows reload-transition resume, which only takes a dir holding `checkpoint.json`. See `../four_biome_checkpoints/PROOF.md`. `--dry-run-water-fixture` is still refused with either kind of `--resume-from`.
+
+## DRY RUN 5 (with X05's host-Wind fix merged, `tb/x05` @ 7ff64a15) — does not count
+
+`dry_run_5_with_x05_wind.log`, 3067 s, exit 1. `--dry-run-water-fixture --with-local-chains`.
+- **Earned main path, all passed:** the opening lesson, Reedhaven (paid), the Brine trial (Tovin won), Shellwatch (liberated), Tidal (Aquaryn Alpha defeated, now past the B1 stall; Swim Stone and saddle recipe earned; the same five kept).
+- **Woven chains:** Lantern **PASS** (swum), Gull **PASS** (swum), Cradle **PASS** (Otto's lead, nest Reef Stone +4, return berries +3, thanks).
+- **Stopped in** `water_earned_swimmer_preparation_segment` (saddle supply): `water:tidal_cradle:harvest:004 residency walk failed: player=(709.06, 46.27, 1548.55) target=(556.0, 6.83, 1692.0)`. The walk starts from the Tidal plateau where the Tidal segment itself leaves the trainer; the Cradle visit returned the trainer to that same spot. Root-causing is in progress.
+- **Not reached:** the swimmer catch and craft, the late main path, Deep Watch, Garden, Lastlight, and saved completion.
+
+### DRY RUN 5 saddle-supply stall: root cause and fix (harness only)
+
+- **Cause:** a harness defect, not the Cradle chain. `_gather_costs` picks the nearest unclaimed row, and it calls the straight residency walk (`stick_navigator.walk_to`) with no route planning. Harvest:013 and :014 sit on the Tidal Cradle plateau, about 40 m above harvest:004 at (556, 6.8, 1692). The straight walk cannot find a way down the plateau and stalls near its rim. The same order happens without chains: the Tidal end pose is on the plateau and :013/:014 come first. Without the chain's Reef Stone, :007 on the plateau is also needed. So the main lane would hit the same walk. The chain return pose is within 1.1 m of the Tidal end pose.
+- **Reproduction** (`tests/probe_tidewake_b_swimmer_supply_walk.gd`, DRY RUN, posed start, log `probe_swimmer_supply_walk.log`): the trainer is posed at the :014 stance (803, 60.2, 1647). The straight walk to :004 fails after 277 s at (677.2, 42.5, 1500.9). The baked-ground A* finds a dry route (42 points; 58 from the Tidal end pose).
+- **Fix** (`water_earned_swimmer_preparation_segment.gd`, route planning only, no fixtures or position writes): for rows without `approach_from`, the new `planned_approach` walks the A* legs from `smoke_water_pocket_walk_claim.gd::plan_route` with the same stick navigator. The existing residency walk then finishes the approach. Rows within 12 m, or with no plan, keep the old path. In the probe the planned walk reached :004 in 57 s (PASS).
+- `run_tests --only=test_four_biome_checkpoints`: 11 tests, 0 failed. The next full dry run still has to prove the catch, craft and later steps.

@@ -26,7 +26,10 @@ extends SceneTree
 ## The Reedhaven leg (on unless `--no-reed`) walks from the Reedhaven arrival
 ## to `reed_root_hollow` and gathers its reed patch with a hotbar knife
 ## (DISCLOSED FIXTURE: carried knife granted with the pickaxe) by the same real
-## Interact press: the pocket's reed-fiber half. Its recipe half is not paid.
+## Interact press: the pocket's reed-fiber half. The same host-validated
+## character-once claim pays the recipe half: Reed Camp Cordage
+## (`water_camp_cordage`, the row's `learn_recipe_flag`) must be unknown to the
+## fresh character before the press and known after it (F13#2).
 ##   godot --headless --path . --script tests/smoke_water_pocket_walk_claim.gd
 ##     [-- --only=<pocket_id>] [--no-cradle] [--no-reed] [--real-tidecoil]
 ## `--real-tidecoil` replaces the Deep Watch gate-flag fixture with the real
@@ -54,6 +57,7 @@ const MARGIN_M := 80.0
 const WAYPOINT_EVERY := 3
 const CRADLE_POCKET := "cradle_shell_nest"
 const REED_POCKET := "reed_root_hollow"
+const REED_RECIPE := "water_camp_cordage"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const RETAINED_FIVE := ["terrapup", "bramblebun", "mudsnout", "pipwing", "trailpup"]
@@ -319,6 +323,13 @@ func _seam_leg(data: Dictionary, pocket_id: String, island_id: String, expected:
 	for item: String in expected:
 		before[item] = game.inventory.count(item)
 	var main_item := str(row.item_id)
+	var learn := str(row.get("learn_recipe_flag", ""))
+	var recipe_note := ""
+	if not learn.is_empty():
+		var known_before: bool = game.recipe_known(REED_RECIPE)
+		_check(not known_before and not game.local.flags.has(learn),
+			"%s: %s already known before the claim" % [pocket_id, REED_RECIPE])
+		recipe_note = " recipe_before=%s" % known_before
 	await _press_interact()
 	for _frame in 240:
 		await physics_frame
@@ -335,11 +346,18 @@ func _seam_leg(data: Dictionary, pocket_id: String, island_id: String, expected:
 	await _frames(2)
 	var gone: bool = service.call("node_for", id) == null
 	_check(gone, "%s seam still resident after its one gather: %s" % [pocket_id, id])
+	if not learn.is_empty():
+		var known_after: bool = game.recipe_known(REED_RECIPE)
+		var listed: bool = game.known_recipe_ids().has(REED_RECIPE)
+		_check(known_after and listed and game.local.flags.has(learn),
+			"%s: the claim did not teach %s (known=%s listed=%s)" % [pocket_id, REED_RECIPE, known_after, listed])
+		paid = paid and known_after and listed
+		recipe_note += " recipe_after=%s listed=%s" % [known_after, listed]
 	var baked: float = world.call("ground_height_at", centre.x, centre.z)
 	var in_pocket := Vector2(centre.x, centre.z).distance_to(Vector2(float(pocket.position[0]), float(pocket.position[2])))
-	return "SEAM %s row=%s landing=%s walked=%.0fm legs=%d off_trail=%.0fm steepest_off_trail=%.1fdeg tool=%s baked_y=%.3f analytic_y=%.3f from_pocket_centre=%.2fm gains=%s result=%s" % [
+	return "SEAM %s row=%s landing=%s walked=%.0fm legs=%d off_trail=%.0fm steepest_off_trail=%.1fdeg tool=%s baked_y=%.3f analytic_y=%.3f from_pocket_centre=%.2fm gains=%s%s result=%s" % [
 		pocket_id, id, _landing_id(island_id), float(walked.metres), int(walked.legs), float(walked.spur_m), float(walked.spur_max_slope),
-		tool, baked, field.height_at(centre.x, centre.z), in_pocket, gains, "PAID" if paid and gone else "FAIL"]
+		tool, baked, field.height_at(centre.x, centre.z), in_pocket, gains, recipe_note, "PAID" if paid and gone else "FAIL"]
 
 
 ## Places the trainer on `landing` (the one disclosed position write) and walks
