@@ -64,6 +64,14 @@ var _save_dir := ""
 ## `--probe-hotbar`: after load, press the knife's quick slot the way the Doss
 ## gather does and report what the HUD saw; then quit. A diagnostic only.
 var _probe_hotbar := false
+## Diagnostic only (never evidence): places the player at candidate camera
+## stands and captures, to choose where the evidence walk should stand.
+var _probe_stands := false
+## Path index -> {label, face}: frames taken on reaching a named leg.
+var _leg_shots := {}
+## Doss's perch framed from its east side, where the river channel runs
+## behind it (chosen from the diagnostic stand probe; offset from the perch).
+const PERCH_RIVER_STAND := Vector3(8.0, 0.0, 4.0)
 var _receipt_save_dir := ""
 ## What the player looks at (the herd's nearest member for the herd visit).
 var _lure_body: Node3D = null
@@ -121,6 +129,8 @@ func _run() -> void:
 			_act = true
 		elif a == "--probe-hotbar":
 			_probe_hotbar = true
+		elif a == "--probe-stands":
+			_probe_stands = true
 		elif a.begins_with("--capture-dir="):
 			_capture_dir = a.trim_prefix("--capture-dir=")
 	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall", "cart"] \
@@ -193,6 +203,9 @@ func _run() -> void:
 	if _probe_hotbar:
 		await _run_hotbar_probe()
 		return
+	if _probe_stands:
+		await _run_stand_probe()
+		return
 	await _ensure_companion_out()
 	_receipt["companion_out_at_start"] = _director != null and _director.call("ally_body") != null
 
@@ -217,8 +230,17 @@ func _run() -> void:
 		if outward.length() > 0.1:
 			legs.append(entrance + outward.normalized() * 12.0)
 		legs.append(entrance)
-		for leg: String in ["mouth", "hall", "den", "vault"]:
+		for leg: String in ["mouth", "hall", "den"]:
 			legs.append(warrens.call("marker", leg))
+		# The optional branch: from the (already cleared) guardian's den, the
+		# passage to the lit vault. Frame the den looking down it, and the
+		# passage itself, so the branch being taken is on screen.
+		var den: Vector3 = warrens.call("marker", "den")
+		var vault_at: Vector3 = warrens.call("marker", "vault")
+		_leg_shots[legs.size() - 1] = {"label": "branch-den-toward-vault", "face": vault_at}
+		legs.append(den.lerp(vault_at, 0.5))
+		_leg_shots[legs.size() - 1] = {"label": "branch-passage", "face": vault_at}
+		legs.append(vault_at)
 	# A save taken inside the Hall (an earned checkpoint before the Warden)
 	# starts in walled chambers the road graph does not know: walk out the way
 	# the player came in, chamber by chamber to the ramp foot, then take roads.
@@ -232,9 +254,16 @@ func _run() -> void:
 		prefixed.append_array(_path)
 		_path = prefixed
 		_receipt["stronghold_exit_waypoints"] = exits.size()
+	var leg_path_index := {}
 	for i in range(1, legs.size()):
 		var m: Vector3 = legs[i]
 		_path.append(Vector3(m.x, 0.0, m.z))
+		leg_path_index[i] = _path.size() - 1
+	# Re-key the leg shots by path index (leg 0 is the route's own end point).
+	var by_path := {}
+	for leg: int in _leg_shots:
+		by_path[int(leg_path_index.get(leg, _path.size() - legs.size() + leg))] = _leg_shots[leg]
+	_leg_shots = by_path
 	if legs.is_empty():
 		_path.append(Vector3(lure_xz.x, 0.0, lure_xz.y))
 	_receipt["route_m"] = snappedf(_path_length(), 0.1)
@@ -635,6 +664,12 @@ func _walk() -> void:
 
 		# Advance the cursor along the path.
 		while cursor < _path.size() - 1 and here.distance_to(_xz3(_path[cursor])) < 3.0:
+			if _leg_shots.has(cursor):
+				var shot: Dictionary = _leg_shots[cursor]
+				_leg_shots.erase(cursor)
+				_release()
+				await _face_point(shot["face"])
+				await _capture(str(shot["label"]))
 			cursor += 1
 			if cursor == _road_count() and not seen and not looked:
 				# At the point the route leaves the road. Glance at the activity,
@@ -752,7 +787,10 @@ func _perform_action() -> void:
 	if _activity == "doss":
 		actions.append(await _gather_for_doss())
 	if perch != null:
-		await _capture_perch(perch, "act-00-perch-before")
+		actions.append({"satchel_before": await _satchel_shot("act-0c-satchel-before")})
+		await _perch_from_river(perch, "act-00-perch-before")
+		var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+		await _walk_straight_to(body.global_position, 1.8, _prompt)
 		await _face_lure()
 	# An activity can take more than one press: Doss first explains the
 	# buckled perch, then offers "Help Doss repair the bank perch" as a second
@@ -774,7 +812,8 @@ func _perform_action() -> void:
 	if perch != null:
 		for i in 30:
 			await physics_frame
-		await _capture_perch(perch, "act-98-perch-after")
+		actions.append({"satchel_after": await _satchel_shot("act-97-satchel-after")})
+		await _perch_from_river(perch, "act-98-perch-after")
 		actions.append({"perch_repaired": bool(perch.get_meta("repaired", false))})
 	for i in 60:
 		await physics_frame
@@ -1218,6 +1257,36 @@ func _capture_perch(perch: Node3D, label: String) -> void:
 		await _ensure_companion_out("%s; " % label)
 
 
+## Walk (ordinary input) to the stand east of the perch, where the river
+## channel is behind it, and frame the perch from there.
+func _perch_from_river(perch: Node3D, label: String) -> void:
+	await _walk_straight_to(perch.global_position + PERCH_RIVER_STAND, 1.2, null)
+	await _capture_perch(perch, label)
+
+
+## Open the Satchel with its ordinary key, frame it, close it again. Returns
+## the wood/fiber counts read (read-only) at the moment of the frame.
+func _satchel_shot(label: String) -> Dictionary:
+	var inventory: RefCounted = _game.get("inventory")
+	var counts := {"wood": int(inventory.call("count", "wood")), "fiber": int(inventory.call("count", "fiber"))}
+	await _press_hud("inventory")
+	for i in 40:
+		await physics_frame
+	var owner := INPUT_OWNER.current(self)
+	counts["open"] = owner != null
+	await _capture(label)
+	if owner != null:
+		await _press_hud("inventory")
+		for i in 30:
+			await physics_frame
+		if INPUT_OWNER.current(self) != null:
+			await _press_hud("menu_cancel")
+			for i in 30:
+				await physics_frame
+	counts["closed"] = INPUT_OWNER.current(self) == null
+	return counts
+
+
 func _face_point(at: Vector3) -> void:
 	var to := _xz3(at) - _xz()
 	if to.length() > 0.01:
@@ -1250,6 +1319,40 @@ func _press(action: String) -> void:
 	Input.parse_input_event(up)
 	for i in 10:
 		await physics_frame
+
+
+## DIAGNOSTIC, not evidence: teleports the player (recorded in the receipt)
+## to candidate stands around Doss's perch and inside the Warrens, faces a
+## point and captures, so the evidence walk can be told where to stand.
+func _run_stand_probe() -> void:
+	_receipt["script_state_writes"] = "PROBE: player position written; diagnostic frames only"
+	var stands: Array = []
+	var perch := _world.get_node_or_null(^"RiverNestClear/BankPerch") as Node3D
+	if perch != null:
+		var p := perch.global_position
+		for off: Vector3 in [Vector3(0, 0, -7), Vector3(-6, 0, -6), Vector3(6, 0, -6), Vector3(0, 0, -11), Vector3(-8, 0, 4), Vector3(8, 0, 4)]:
+			stands.append({"label": "doss-%d-%d" % [int(off.x), int(off.z)], "at": p + off, "face": p})
+		stands.append({"label": "doss-rim-west", "at": p + Vector3(-10, 0, 12), "face": p + Vector3(6, 0, 20)})
+	var warrens := _world.get_node_or_null(^"BurrowWarrens")
+	if warrens != null:
+		var den: Vector3 = warrens.call("marker", "den")
+		var vault: Vector3 = warrens.call("marker", "vault")
+		var hall: Vector3 = warrens.call("marker", "hall")
+		stands.append({"label": "warrens-hall-to-den", "at": hall, "face": den})
+		stands.append({"label": "warrens-den-to-vault", "at": den, "face": vault})
+		stands.append({"label": "warrens-den-back-to-vault", "at": den + (den - vault).normalized() * 4.0, "face": vault})
+		stands.append({"label": "warrens-passage", "at": den.lerp(vault, 0.5), "face": vault})
+	for st: Dictionary in stands:
+		var at: Vector3 = st["at"]
+		var ground := float(_world.call("ground_height_at", at.x, at.z))
+		if st["label"].begins_with("warrens"):
+			ground = at.y
+		_player.global_position = Vector3(at.x, (ground if not is_nan(ground) else at.y) + 0.5, at.z)
+		for i in 45:
+			await physics_frame
+		await _face_point(st["face"])
+		await _capture("probe-%s" % st["label"])
+	_finish("PROBE", "stand probe done")
 
 
 func _run_hotbar_probe() -> void:
