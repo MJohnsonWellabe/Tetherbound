@@ -427,9 +427,8 @@ func run_from_village(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 		if not _has(flag):
 			_fail("kell_rift needs the earned ending flag " + flag)
 			return result()
-	if _has("meadows_acknowledged"):
-		_fail("kell_rift starts before the acknowledgement")
-		return result()
+	# Resumes either from `village_pre_kell` (before Kell) or from
+	# `storm_road_join` (after the acknowledgement, on the forward road).
 	_source_world_id = world.get_instance_id()
 	_player = world.get_node_or_null("Player") as CharacterBody3D
 	_rig = world.get_node_or_null("CameraRig") as Node3D
@@ -485,16 +484,20 @@ func run_from_village(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 ## segment instead of replaying the Warden and the whole return road. Written
 ## only when the variable is set; the running segment is unaffected.
 func _save_village_checkpoint() -> void:
+	_save_checkpoint("village_pre_kell")
+
+
+func _save_checkpoint(name: String) -> void:
 	var root_dir := OS.get_environment("TB_CHAIN_CHECKPOINT_DIR")
 	if root_dir.is_empty():
 		return
-	var dir := root_dir.path_join("village_pre_kell/save/")
+	var dir := root_dir.path_join(name + "/save/")
 	DirAccess.make_dir_recursive_absolute(dir)
 	var previous: Variant = _game.get("save_system")
 	_game.set("save_system", CHECKPOINT_SAVE.new(dir))
 	var ok := bool(_game.call("save_game", 1))
 	_game.set("save_system", previous)
-	_receipt("checkpoint_village_pre_kell", {"dir": dir, "saved": ok, "player": _player.global_position,
+	_receipt("checkpoint_" + name, {"dir": dir, "saved": ok, "player": _player.global_position,
 		"party": _party_ids().size()})
 
 
@@ -509,27 +512,49 @@ func _kell_to_rift(terrain: Dictionary, road: Array[Dictionary], points: Array[V
 	# helper's 1800-frame prompt approach on the ~180 m from (8,90) to Kell,
 	# stopping at (143,-7,62). Walk there first as on every other leg (fights,
 	# confined recovery), then let `_talk` do its unchanged exact approach.
-	var kell_at := Vector2(kell.global_position.x, kell.global_position.z)
-	_leg_target = kell_at
-	_receipt("acknowledgement_approach_walk", {"from": _player.global_position, "to": kell.global_position})
-	if not await _walk_ground(kell_at, 3.0):
-		return false
-	if not await _talk(kell.get_node_or_null("Interactable") as Node3D, str(kell_spec.greeting)) \
-			or not _has("meadows_acknowledged") or not retained_five(_initial_ids, _party_ids()):
-		return _fail("The actual return greeting did not earn Meadows acknowledgement with the retained five")
-	_receipt("meadows_acknowledged", {"actor": kell.name, "conversation": _dialogue_finished, "player": _player.global_position})
+	var first := 0
+	if _has("meadows_acknowledged"):
+		# `storm_road_join` resume: the acknowledgement is already earned.
+		first = nearest_index(points, Vector2(_player.global_position.x, _player.global_position.z))
+		_receipt("storm_road_resumed", {"player": _player.global_position, "road_index": first})
+	else:
+		var kell_at := Vector2(kell.global_position.x, kell.global_position.z)
+		_leg_target = kell_at
+		_receipt("acknowledgement_approach_walk", {"from": _player.global_position, "to": kell.global_position})
+		if not await _walk_ground(kell_at, 3.0):
+			return false
+		if not await _talk(kell.get_node_or_null("Interactable") as Node3D, str(kell_spec.greeting)) \
+				or not _has("meadows_acknowledged") or not retained_five(_initial_ids, _party_ids()):
+			return _fail("The actual return greeting did not earn Meadows acknowledgement with the retained five")
+		_receipt("meadows_acknowledged", {"actor": kell.name, "conversation": _dialogue_finished, "player": _player.global_position})
 	var storm := storm_road(terrain)
 	if storm.is_empty():
 		return _fail("The actual rebuilt storm-road approach is missing")
 	var storm_join := nearest_index(points, storm[0])
-	for index in range(storm_join + 1):
+	# B15: the storm spoke's authored road crosses the Sigil Gate gorge
+	# (`sigil_gate_gorge_west`, full depth at z~7350) with no crossing; the
+	# only way over is the Sigil Gate on the spine (band points (-20,7250) ->
+	# (80,7370) -> (20,7480)). Keep walking the forward road through the gate,
+	# then take the storm points north of the gorge.
+	var through := nearest_index(points, SIGIL_NORTH)
+	if through < storm_join or points[through].distance_to(SIGIL_NORTH) > 2.0:
+		return _fail("The forward road no longer passes the Sigil Gate north point")
+	for index in range(first, through + 1):
 		if index > 0 and points[index - 1].distance_to(QUARRY_POCKET) < 2.0:
 			if not await _quarry_northbound_detour():
 				return false
 		_leg_target = points[index]
 		if not await _walk_road_entry(road[index]):
 			return false
+		if index == storm_join and first < storm_join:
+			_save_checkpoint("storm_road_join")
+	var north: Array[Vector2] = []
 	for point: Vector2 in storm.slice(1):
+		if point.y > GORGE_NORTH_Z:
+			north.append(point)
+	_receipt("storm_road_via_sigil_gate", {"from": _player.global_position, "storm_points": str(north),
+		"reason": "B15 storm spoke road severed by sigil_gate_gorge_west; crossed at the Sigil Gate on the forward road"})
+	for point: Vector2 in north:
 		_leg_target = point
 		if not await _walk_ground(point):
 			return false
@@ -544,6 +569,8 @@ func _kell_to_rift(terrain: Dictionary, road: Array[Dictionary], points: Array[V
 ## the foundation's east side by ordinary stick input and rejoin the road;
 ## disclosed as a helper-routing detour in the receipts.
 const QUARRY_POCKET := Vector2(400.0, 1800.0)
+const SIGIL_NORTH := Vector2(20.0, 7480.0)
+const GORGE_NORTH_Z := 7400.0
 const QUARRY_NORTHBOUND_DETOUR: Array[Vector2] = [Vector2(408.5, 1803.5), Vector2(406.5, 1809.5),
 	Vector2(401.0, 1818.0), Vector2(398.0, 1828.0)]
 

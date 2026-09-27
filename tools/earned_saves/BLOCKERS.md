@@ -401,6 +401,24 @@ Chain: `tools/earned_saves/run_chain.sh 4 /tmp/claude-0/earned_chain/seed4` on
   clear of the quarry foundation, or re-author that road point east of the foundation.
 - Resume: segment `kell_rift` from the `village_pre_kell` checkpoint.
 
+## B15: the storm spoke road crosses the Sigil Gate gorge with no crossing (route through the gate)
+
+- The chain's storm-road leg walks `spokes.routes[storm_road].road` straight from (-17.55,7277.71)
+  to (-28.12,7409.87). That line crosses `crossings[sigil_gate_gorge_west]` (centre (10,7370.8),
+  axis 28.6°, full depth 11 m). At z≈7350 the road is inside the trench's full-depth span, and the
+  west wing continues it westward.
+- On 2026-09-27, `kell_rift` run 2 fell in repeatedly. Every time, the gorge failsafe put the
+  trainer back at (16.7,5.0,7358.5) on the south rim. It then failed at (17.6,4.2,7362.1).
+- Route: the only way across is the Sigil Gate on the spine (band points (-20,7250) → (80,7370) →
+  (20,7480)), which the forward chain already opened and crossed. `warden_accept.gd` now walks
+  the forward road through the gate to (20,7480), then the storm points north of z 7400, with the
+  receipt `storm_road_via_sigil_gate`.
+- Proposed product fix (Meadows terrain data): re-author the storm spoke's first legs to leave
+  the spine north of the Sigil Gate, or add the missing crossing. As authored, a player following
+  the storm road's own polyline walks into the gorge.
+- Checkpoint `storm_road_join` is written at the road index nearest (0,7000). A `kell_rift`
+  resume from it skips the (already earned) Kell talk.
+
 ## Where the chain stands (wrap-up 2026-09-26 ~17:50 UTC)
 
 - Passed with saves: opening_team, camp_tournament, bridge, warrens, relay, **hall**. Last good
