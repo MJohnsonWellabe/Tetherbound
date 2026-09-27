@@ -622,10 +622,10 @@ func _assert_raw_orbit_changes(context: String) -> void:
 			context, drifted, observed_s])
 
 
-## combat.json camera.tracking.manual_grace_seconds.
+## The grace the rig itself applies right now: combat.json's
+## camera.tracking.manual_grace_seconds in combat, the rig default outside it.
 func _manual_grace_seconds() -> float:
-	var tracking: Dictionary = (MATH.config().get("camera", {}) as Dictionary) \
-		.get("tracking", {}) as Dictionary
+	var tracking: Dictionary = _rig.get("_tracking_config") as Dictionary
 	return float(tracking.get("manual_grace_seconds", 0.4))
 
 
