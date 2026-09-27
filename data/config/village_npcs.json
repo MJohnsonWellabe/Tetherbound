@@ -25,7 +25,7 @@
         {
           "unless_flag": "opening:mira_visited",
           "conversation": "village_mira_shop_intro",
-          "_why": "F02#6 (2026-09-27, coordinator grant): gated on the PLAYER-scope `opening:mira_visited` the same conversation sets, not the WORLD-scope `mira_shop_open`, so every character in a co-op world gets their own first visit -- tools, starting float and fiber bundle -- once. OF31/D39. The shop opening: she explains the front room, hands over the starting float on the same line that says so, and ends by opening the store. Sets `mira_shop_open`, so this entry stops matching after the first visit."
+          "_why": "F02#6 (2026-09-27, coordinator grant): gated on the PLAYER-scope `opening:mira_visited` the same conversation sets, not the WORLD-scope `mira_shop_open`, so every character in a co-op world gets their own first visit -- tools, starting float and fiber bundle -- once. OF31/D39. The shop opening: she explains the front room, hands over the starting float on the same line that says so, and ends by opening the store. Sets `mira_shop_open` (world) and `opening:mira_visited` (this character), and the latter is what stops this entry matching after that character's first visit."
         },
         {
           "if_flag": "mira_shop_open",
