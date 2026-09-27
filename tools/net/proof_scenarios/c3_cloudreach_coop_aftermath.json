@@ -319,6 +319,19 @@
     },
     {
       "peer": 0,
+      "action": "teleport",
+      "args": {
+        "at": [
+          400.0,
+          612.0,
+          3250.0
+        ],
+        "settle": 120
+      },
+      "label": "SETUP (disclosed): stand on the Windscar aerie launch deck (open sky; the arrival spot has no overhead room for the carrier)"
+    },
+    {
+      "peer": 0,
       "action": "fly_launch",
       "label": "host launches Fly by double jump (production input)"
     },
@@ -333,6 +346,19 @@
       "args": {
         "check": "on_floor"
       }
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          404.0,
+          612.0,
+          3246.0
+        ],
+        "settle": 120
+      },
+      "label": "SETUP (disclosed): stand on the Windscar aerie launch deck (open sky; the arrival spot has no overhead room for the carrier)"
     },
     {
       "peer": 1,
