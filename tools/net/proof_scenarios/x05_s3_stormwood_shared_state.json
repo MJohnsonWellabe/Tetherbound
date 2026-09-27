@@ -1,0 +1,1147 @@
+{
+  "name": "Card S3: two peers build/use Arches, resolve the Dynamo by play, answer Stormheart independently; aftermath, Spark shrine, Water key and the physical gate into Tidewake persist through restart, rejoin and drop",
+  "claim": "ACCEPTANCE chapter card S3 (Stormwood shared state and Water gate) with two real peers. Arches: pair A relit through each arch's own Relight prompt by host and guest, the host travels the lit pair, a dark pair stays closed. Dynamo by play (no stormheart_fixture): from a declared start at the core, the host presses Marrow's own prompt and the earned segment plays five hosted rounds, four conduit strikes and the automatic release; the guest presses Marrow's prompt during the live captain fight and is admitted as a contributor; the Dynamo's own contributor list names both. Stormheart: host (full five) refuses, guest (room) accepts, each bound to its stable character. Long Storm aftermath, Spark earned/placed/active, Water key, the Waterward gate opened once and walked through into Tidewake, then a host process restart + title load, a guest rejoin as the same character and a mid-session drop/rejoin; hashes, aftermath presentation, answers and saved characters agree. Declared fixtures: the host's named Meadows save; chapter flags through stormwood:core_reached; Stormglass grants for the arches; party_replace (host five at L46, guest two at L46); teleports to authored positions (arches, core seat, platform, gate).",
+  "peers": 2,
+  "scene": "title",
+  "budget_s": 5400,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "load_save",
+      "args": {
+        "from": "tools/net/proof_saves/host_meadows_stormwood_route_open"
+      },
+      "expect_data": {
+        "realm": "meadows",
+        "form": "captured directory (split path)",
+        "character_id": "character-f41f4a49223483d6bfdf56715944bb7b"
+      },
+      "label": "named save: Meadows, Stormwood route open, loaded like Continue"
+    },
+    {
+      "peer": 1,
+      "action": "boot",
+      "args": {
+        "scene": "world"
+      },
+      "budget_frames": 10000,
+      "label": "guest: a fresh trainer in the Meadows"
+    },
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_gate_stormwood_unlocked"
+      },
+      "label": "the route comes from the host's save"
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000
+    },
+    {
+      "peer": 0,
+      "action": "hashes_agree",
+      "args": {
+        "remember": "arrival",
+        "budget_frames": 900
+      },
+      "label": "both peers' world-state hash on arrival (remembered for a negative control)"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "before"
+      }
+    },
+    {
+      "peer": "all",
+      "action": "aftermath_state",
+      "args": {
+        "require": {
+          "long_storm_ended": true
+        }
+      },
+      "expect": "FAIL",
+      "label": "NEGATIVE CONTROL: the same aftermath assertion on the fresh route save (no Long Storm end yet) fails"
+    },
+    {
+      "peer": 0,
+      "action": "storage_grant",
+      "args": {
+        "item": "stormglass",
+        "n": 9
+      },
+      "label": "ARCHES: SETUP: 9 Stormglass in the host's satchel"
+    },
+    {
+      "peer": 1,
+      "action": "storage_grant",
+      "args": {
+        "item": "stormglass",
+        "n": 3
+      },
+      "label": "ARCHES: SETUP: 3 Stormglass in the guest's satchel"
+    },
+    {
+      "peer": 0,
+      "action": "explore_at",
+      "args": {
+        "at": [
+          -350,
+          497
+        ],
+        "settle": 90
+      },
+      "label": "ARCHES: SETUP: the host stands before Ashfoot Arch (A)"
+    },
+    {
+      "peer": 0,
+      "action": "screenshot",
+      "args": {
+        "name": "01_host_dark_ashfoot"
+      },
+      "label": "ARCHES: screenshot"
+    },
+    {
+      "peer": 0,
+      "action": "press",
+      "args": {
+        "action": "interact"
+      },
+      "label": "ARCHES: the host presses 'Relight Ashfoot Arch'"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:arch:a_ashfoot:lit",
+        "budget_frames": 1200
+      },
+      "label": "ARCHES: Ashfoot lit, for both peers"
+    },
+    {
+      "peer": 1,
+      "action": "explore_at",
+      "args": {
+        "at": [
+          -350,
+          1443
+        ],
+        "settle": 90
+      },
+      "label": "ARCHES: SETUP: the guest stands before Lantern Pools South Arch (A)"
+    },
+    {
+      "peer": 1,
+      "action": "press",
+      "args": {
+        "action": "interact"
+      },
+      "label": "ARCHES: the guest presses 'Relight Lantern Pools South Arch' (client path, its own Stormglass)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:arch:a_pools:lit",
+        "budget_frames": 1200
+      },
+      "label": "ARCHES: Lantern Pools South lit, for both peers: pair A is open"
+    },
+    {
+      "peer": 1,
+      "action": "screenshot",
+      "args": {
+        "name": "02_guest_lit_pools"
+      },
+      "label": "ARCHES: screenshot"
+    },
+    {
+      "peer": 0,
+      "action": "explore_at",
+      "args": {
+        "at": [
+          -350,
+          500
+        ],
+        "settle": 180
+      },
+      "label": "ARCHES: the host steps into the lit Ashfoot arch"
+    },
+    {
+      "peer": 0,
+      "probe": "position",
+      "label": "ARCHES: OPEN PAIR: the host now stands at the Lantern Pools South twin (z ~ 1436), not at Ashfoot (z 500)"
+    },
+    {
+      "peer": 0,
+      "action": "screenshot",
+      "args": {
+        "name": "03_host_arrived_at_twin"
+      },
+      "label": "ARCHES: screenshot"
+    },
+    {
+      "peer": 1,
+      "action": "explore_at",
+      "args": {
+        "at": [
+          -410,
+          1350
+        ],
+        "settle": 180
+      },
+      "label": "ARCHES: the guest steps into dark Lantern Pools North (B)"
+    },
+    {
+      "peer": 1,
+      "probe": "position",
+      "label": "ARCHES: CLOSED PAIR: the guest is still at Lantern Pools North (z ~ 1350)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:arch:a_ashfoot:lit",
+        "budget_frames": 600
+      },
+      "label": "ARCHES: pair A still lit for both before the Dynamo"
+    },
+    {
+      "peer": 0,
+      "action": "stormwood_core_fixture",
+      "label": "DECLARED START: chapter flags through stormwood:core_reached (Kestrel beaten), as the solo Marrow press smoke; Marrow and the Dynamo are NOT written"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:core_reached",
+        "budget_frames": 1800
+      }
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:marrow_defeated",
+        "budget_frames": 30
+      },
+      "expect": "FAIL",
+      "label": "NEGATIVE CONTROL: Marrow is not beaten before the fight"
+    },
+    {
+      "peer": 0,
+      "action": "party_replace",
+      "args": {
+        "species": [
+          "sparkit",
+          "mudsnout",
+          "bramblebun",
+          "terrapup",
+          "brooktail"
+        ],
+        "level": 46
+      },
+      "label": "DECLARED PARTY: the host's five at L46 (the solo Marrow smoke's team; the earned segment requires exactly five)"
+    },
+    {
+      "peer": 1,
+      "action": "party_replace",
+      "args": {
+        "species": [
+          "ripplet",
+          "galewisp"
+        ],
+        "level": 46
+      },
+      "label": "DECLARED PARTY: the guest's two at L46 (room for a Stormheart)"
+    },
+    {
+      "peer": "all",
+      "action": "deploy_creature",
+      "label": "each player sends its companion out"
+    },
+    {
+      "peer": 0,
+      "action": "stormwood_core_stand",
+      "label": "SETUP (teleport): the host at the top of the Stormheart helix beside Marrow's seat"
+    },
+    {
+      "peer": 0,
+      "action": "marrow_segment_start",
+      "budget_frames": 6000,
+      "label": "DYNAMO BY PLAY: the host presses Marrow's own prompt and reads his dialogue; the hosted five-round captain fight goes live (tests/helpers/stormwood_earned_marrow_segment.gd)"
+    },
+    {
+      "peer": 1,
+      "action": "stormwood_hosted_start",
+      "args": {
+        "trainer": "captain_marrow_dynamo_core",
+        "settle": 360
+      },
+      "label": "DYNAMO BY PLAY: the guest presses Marrow's prompt too and is admitted into the LIVE captain fight (stormwood_dynamo.begin_for_peer -> fight.join: a contributor)"
+    },
+    {
+      "peer": 0,
+      "action": "marrow_segment_wait",
+      "args": {
+        "contributors": [
+          "$peer0",
+          "$peer1"
+        ],
+        "budget_frames": 80000
+      },
+      "budget_frames": 82000,
+      "label": "DYNAMO BY PLAY: five hosted rounds, the host's four conduit strikes in one Break window, the automatic Stormheart release; the Dynamo's own contributor list names BOTH peers"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:legendary_freed",
+        "budget_frames": 1800
+      },
+      "label": "the host's ending frees the Stormheart (chapter event dynamo:release)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:long_storm_ended",
+        "budget_frames": 1800
+      },
+      "label": "the Long Storm is ended: the release objective's own grant, a world ledger flag, on both peers"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_heart_stormwood_earned",
+        "budget_frames": 1800
+      },
+      "label": "the Spark of the Stormwood is earned by the same grant"
+    },
+    {
+      "peer": 0,
+      "action": "stormheart_answer",
+      "args": {
+        "answer": "refuse"
+      },
+      "expect_data": {
+        "has_stormheart": false
+      },
+      "label": "host (a full five) says No"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_answer",
+      "args": {
+        "answer": "accept"
+      },
+      "expect_data": {
+        "has_stormheart": true
+      },
+      "label": "guest (room for one) says Yes: its own Stormheart, bound to its stable character"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:legendary_offer_made",
+        "budget_frames": 1800
+      }
+    },
+    {
+      "peer": "all",
+      "action": "aftermath_state",
+      "args": {
+        "watch_frames": 600,
+        "require": {
+          "long_storm_ended": true,
+          "stormwood:legendary_freed": true,
+          "realm_heart_stormwood_earned": true,
+          "spark_earned": true,
+          "surge": {
+            "aftermath": true,
+            "flashes": false,
+            "cycle_seconds": 2550
+          }
+        }
+      },
+      "label": "AFTERMATH LIVE: both peers' surge presents the aftermath (aftermath timings, no flashes); strike warnings watched for 10 s"
+    },
+    {
+      "peer": 0,
+      "action": "teleport",
+      "args": {
+        "at": [
+          -98.0,
+          263.0,
+          5487.0
+        ],
+        "settle": 120
+      },
+      "label": "SETUP: the host stands on the high platform beside the view"
+    },
+    {
+      "peer": 0,
+      "action": "press",
+      "args": {
+        "action": "interact"
+      },
+      "label": "the host presses 'Look beyond the broken storm'"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "stormwood:waterward_revealed",
+        "budget_frames": 1800
+      }
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_key_water",
+        "budget_frames": 1800
+      },
+      "label": "the one-time Water key exists (before the gate)"
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          -100.0,
+          263.0,
+          5498.0
+        ],
+        "settle": 120
+      },
+      "label": "SETUP: the guest stands at the Waterward gate"
+    },
+    {
+      "peer": 1,
+      "probe": "input_context",
+      "label": "the Stormheart's 3-line aftermath conversation holds the guest's screen"
+    },
+    {
+      "peer": 1,
+      "action": "press",
+      "args": {
+        "action": "interact",
+        "times": 3,
+        "gap_frames": 40
+      },
+      "label": "the guest reads the 3 aftermath lines"
+    },
+    {
+      "peer": 1,
+      "action": "wait_context",
+      "args": {
+        "equals": "world",
+        "budget_frames": 240
+      }
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_gate_water_unlocked",
+        "budget_frames": 30
+      },
+      "expect": "FAIL",
+      "label": "NEGATIVE CONTROL: the gate is still sealed before the guest's press"
+    },
+    {
+      "peer": 1,
+      "action": "press",
+      "args": {
+        "action": "interact"
+      },
+      "label": "the guest presses 'Unlock the way to Tidewake' once"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_gate_water_unlocked",
+        "budget_frames": 1800
+      },
+      "label": "the gate is open for both peers"
+    },
+    {
+      "peer": "all",
+      "action": "aftermath_state",
+      "args": {
+        "require": {
+          "long_storm_ended": true,
+          "stormwood:legendary_freed": true,
+          "realm_heart_stormwood_earned": true,
+          "spark_earned": true,
+          "stormwood:waterward_revealed": true,
+          "realm_gate_water_unlocked": true,
+          "realm_key_water": false,
+          "world_resolutions": [
+            "stormwood:legendary_resolution:refused:$character0",
+            "stormwood:legendary_resolution:accepted:$character1"
+          ]
+        }
+      },
+      "label": "gate open, Water key consumed, one resolution per character"
+    },
+    {
+      "peer": 1,
+      "action": "press",
+      "args": {
+        "action": "interact"
+      },
+      "label": "PHYSICAL GATE: the guest presses the now-open Waterward gate (stormwood_water_gate.try_enter)"
+    },
+    {
+      "peer": 1,
+      "action": "wait_realm",
+      "args": {
+        "realm": "water",
+        "budget_frames": 6000
+      },
+      "label": "PHYSICAL GATE: the gate carries the guest into Tidewake"
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "meadows"
+      },
+      "budget_frames": 10000,
+      "label": "host home to the Meadows"
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "meadows"
+      },
+      "budget_frames": 10000,
+      "label": "guest home to the Meadows"
+    },
+    {
+      "peer": "all",
+      "action": "wait_context",
+      "args": {
+        "equals": "world",
+        "budget_frames": 600
+      }
+    },
+    {
+      "peer": 1,
+      "action": "spark_socket",
+      "args": {
+        "press": true
+      },
+      "expect_data": {
+        "before": "earned_unplaced",
+        "after": "placed_inactive"
+      },
+      "label": "the GUEST sets the Spark into its Meadows socket (client intent -> host ledger)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "realm_heart_stormwood_placed",
+        "budget_frames": 1800
+      },
+      "label": "the Spark is placed for both peers"
+    },
+    {
+      "peer": 0,
+      "action": "spark_socket",
+      "args": {
+        "press": true
+      },
+      "expect_data": {
+        "before": "placed_inactive",
+        "after": "active"
+      },
+      "label": "the HOST wears the Spark's power (Livewire): personal, never on the ledger"
+    },
+    {
+      "peer": 0,
+      "action": "aftermath_state",
+      "args": {
+        "require": {
+          "long_storm_ended": true,
+          "stormwood:legendary_freed": true,
+          "realm_heart_stormwood_earned": true,
+          "spark_earned": true,
+          "stormwood:waterward_revealed": true,
+          "realm_gate_water_unlocked": true,
+          "realm_key_water": false,
+          "spark_placed": true,
+          "spark_socket": "active",
+          "active_relic": "stormwood",
+          "world_resolutions": [
+            "stormwood:legendary_resolution:refused:$character0",
+            "stormwood:legendary_resolution:accepted:$character1"
+          ],
+          "stormhearts_in_party": 1
+        }
+      },
+      "label": "SHRINE LIVE (host): placed, and active for the host"
+    },
+    {
+      "peer": 1,
+      "action": "aftermath_state",
+      "args": {
+        "require": {
+          "long_storm_ended": true,
+          "stormwood:legendary_freed": true,
+          "realm_heart_stormwood_earned": true,
+          "spark_earned": true,
+          "stormwood:waterward_revealed": true,
+          "realm_gate_water_unlocked": true,
+          "realm_key_water": false,
+          "spark_placed": true,
+          "spark_socket": "placed_inactive",
+          "world_resolutions": [
+            "stormwood:legendary_resolution:refused:$character0",
+            "stormwood:legendary_resolution:accepted:$character1"
+          ],
+          "stormhearts_in_party": 0
+        }
+      },
+      "label": "SHRINE LIVE (guest): placed, not active for the guest"
+    },
+    {
+      "peer": 0,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000,
+      "label": "host back to Stormwood, so the saved world reloads there (the host makes no realm crossing after the guest reconnects: see the finding in the claim)"
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000,
+      "label": "guest back to Stormwood"
+    },
+    {
+      "peer": 0,
+      "action": "hashes_agree",
+      "args": {
+        "remember": "pre_restart",
+        "budget_frames": 900
+      },
+      "label": "both peers' world-state hash before the restart"
+    },
+    {
+      "peer": 0,
+      "action": "hashes_agree",
+      "args": {
+        "equals": "arrival",
+        "budget_frames": 300
+      },
+      "expect": "FAIL",
+      "label": "NEGATIVE CONTROL: the hash check can fail: today's world is not the arrival world"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "pre_restart"
+      },
+      "label": "HOST SAVE: the host's autosave (world + character), the guest's character"
+    },
+    {
+      "peer": 0,
+      "action": "restart_peer",
+      "args": {
+        "scene": "title"
+      },
+      "label": "RESTART: the host's Godot process ends; a fresh process boots the title on the same user data"
+    },
+    {
+      "peer": 1,
+      "probe": "input_context",
+      "label": "the guest, whose host vanished, is back at the title"
+    },
+    {
+      "peer": 0,
+      "action": "title_load",
+      "expect_data": {
+        "realm": "stormwood",
+        "character_id": "character-f41f4a49223483d6bfdf56715944bb7b"
+      },
+      "label": "RELOAD: the restarted host presses Load on its autosave (title_screen _load_slot), which hosts"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "budget_frames": 6000,
+        "character": {
+          "character_id": "$character1"
+        }
+      },
+      "label": "REJOIN: the guest joins the restarted host from the title as the same character",
+      "budget_frames": 10000
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2,
+        "budget_frames": 1200
+      }
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000,
+      "expect": "any",
+      "label": "guest into Stormwood (ANY: the rejoin may already stand there)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_context",
+      "args": {
+        "equals": "world",
+        "budget_frames": 600
+      },
+      "expect": "any"
+    },
+    {
+      "peer": 0,
+      "action": "hashes_agree",
+      "args": {
+        "equals": "pre_restart",
+        "budget_frames": 1800
+      },
+      "label": "AFTER RESTART + REJOIN: both peers' world-state hash agrees AND equals the pre-restart hash"
+    },
+    {
+      "peer": 0,
+      "action": "aftermath_state",
+      "args": {
+        "watch_frames": 600,
+        "require": {
+          "long_storm_ended": true,
+          "stormwood:legendary_freed": true,
+          "realm_heart_stormwood_earned": true,
+          "spark_earned": true,
+          "stormwood:waterward_revealed": true,
+          "realm_gate_water_unlocked": true,
+          "realm_key_water": false,
+          "surge": {
+            "aftermath": true,
+            "flashes": false,
+            "cycle_seconds": 2550
+          },
+          "dialogue_open": false,
+          "ending": {
+            "view_label": "Waterward route charted",
+            "cage_visible": false
+          },
+          "spark_placed": true,
+          "active_relic": "stormwood",
+          "world_resolutions": [
+            "stormwood:legendary_resolution:refused:$character0",
+            "stormwood:legendary_resolution:accepted:$character1"
+          ],
+          "stormhearts_in_party": 1
+        }
+      },
+      "label": "AFTER RESTART (host, Stormwood): aftermath presentation, view charted, cage gone, no replayed conversation; Spark placed and still active for the host; gate open, key consumed; one Stormheart"
+    },
+    {
+      "peer": 1,
+      "action": "aftermath_state",
+      "args": {
+        "watch_frames": 600,
+        "require": {
+          "long_storm_ended": true,
+          "stormwood:legendary_freed": true,
+          "realm_heart_stormwood_earned": true,
+          "spark_earned": true,
+          "stormwood:waterward_revealed": true,
+          "realm_gate_water_unlocked": true,
+          "realm_key_water": false,
+          "surge": {
+            "aftermath": true,
+            "flashes": false,
+            "cycle_seconds": 2550
+          },
+          "dialogue_open": false,
+          "ending": {
+            "view_label": "Waterward route charted",
+            "cage_visible": false
+          },
+          "spark_placed": true,
+          "active_relic": "",
+          "world_resolutions": [
+            "stormwood:legendary_resolution:refused:$character0",
+            "stormwood:legendary_resolution:accepted:$character1"
+          ],
+          "stormhearts_in_party": 0
+        }
+      },
+      "label": "AFTER RESTART (guest, Stormwood): the same world facts and presentation; the Spark placed, not active for the guest; no Stormheart"
+    },
+    {
+      "peer": 0,
+      "action": "stormheart_state",
+      "expect_data": {
+        "has_stormheart": false,
+        "world_accepted": false,
+        "world_refused": true
+      },
+      "label": "host: its refusal kept, nothing granted"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_state",
+      "expect_data": {
+        "has_stormheart": true,
+        "world_accepted": true,
+        "world_refused": false
+      },
+      "label": "guest: exactly its own accepted Stormheart"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_answer",
+      "args": {
+        "answer": "accept",
+        "budget_frames": 600
+      },
+      "expect": "FAIL",
+      "label": "replay after the restart: the guest's prompt offers nothing"
+    },
+    {
+      "peer": 0,
+      "action": "stormheart_answer",
+      "args": {
+        "answer": "accept",
+        "budget_frames": 600
+      },
+      "expect": "FAIL",
+      "label": "replay after the restart: the host's prompt offers nothing"
+    },
+    {
+      "peer": 1,
+      "action": "drop_link",
+      "args": {
+        "settle_frames": 60
+      },
+      "label": "MID-SESSION DROP: the guest's link dies (transport closed, no Session.leave)"
+    },
+    {
+      "peer": 0,
+      "action": "expect_peers",
+      "args": {
+        "count": 1,
+        "budget_frames": 3600
+      },
+      "label": "the host sees the guest gone"
+    },
+    {
+      "peer": 1,
+      "action": "production_join",
+      "args": {
+        "budget_frames": 6000,
+        "character": {
+          "character_id": "$character1"
+        }
+      },
+      "label": "REJOIN: the guest rejoins from the title as the same character",
+      "budget_frames": 10000
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2,
+        "budget_frames": 1200
+      }
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "stormwood"
+      },
+      "budget_frames": 10000,
+      "expect": "any",
+      "label": "back into Stormwood (ANY: the rejoin may already stand there)"
+    },
+    {
+      "peer": 1,
+      "action": "aftermath_state",
+      "args": {
+        "require": {
+          "long_storm_ended": true,
+          "stormwood:legendary_freed": true,
+          "realm_heart_stormwood_earned": true,
+          "spark_earned": true,
+          "stormwood:waterward_revealed": true,
+          "realm_gate_water_unlocked": true,
+          "realm_key_water": false,
+          "surge": {
+            "aftermath": true,
+            "flashes": false,
+            "cycle_seconds": 2550
+          },
+          "dialogue_open": false,
+          "ending": {
+            "view_label": "Waterward route charted",
+            "cage_visible": false
+          },
+          "spark_placed": true,
+          "world_resolutions": [
+            "stormwood:legendary_resolution:refused:$character0",
+            "stormwood:legendary_resolution:accepted:$character1"
+          ],
+          "stormhearts_in_party": 0
+        }
+      },
+      "label": "AFTER MID-SESSION REJOIN (guest): the aftermath, the Spark and the gate reconstructed from the host; no replayed conversation; no grant"
+    },
+    {
+      "peer": 0,
+      "action": "aftermath_state",
+      "args": {
+        "require": {
+          "long_storm_ended": true,
+          "stormwood:legendary_freed": true,
+          "realm_heart_stormwood_earned": true,
+          "spark_earned": true,
+          "stormwood:waterward_revealed": true,
+          "realm_gate_water_unlocked": true,
+          "realm_key_water": false,
+          "surge": {
+            "aftermath": true,
+            "flashes": false,
+            "cycle_seconds": 2550
+          },
+          "spark_placed": true,
+          "active_relic": "stormwood",
+          "world_resolutions": [
+            "stormwood:legendary_resolution:refused:$character0",
+            "stormwood:legendary_resolution:accepted:$character1"
+          ],
+          "stormhearts_in_party": 1
+        }
+      },
+      "label": "the host, unchanged by the guest's rejoin"
+    },
+    {
+      "peer": 0,
+      "action": "hashes_agree",
+      "args": {
+        "equals": "pre_restart",
+        "budget_frames": 1800
+      },
+      "label": "AFTER MID-SESSION REJOIN: hashes agree and equal the pre-restart world"
+    },
+    {
+      "peer": 1,
+      "action": "stormheart_answer",
+      "args": {
+        "answer": "accept",
+        "budget_frames": 600
+      },
+      "expect": "FAIL",
+      "label": "replay after the rejoin: the guest's prompt offers nothing"
+    },
+    {
+      "peer": 1,
+      "action": "enter_realm",
+      "args": {
+        "realm": "meadows"
+      },
+      "budget_frames": 10000,
+      "label": "the rejoined guest walks home to the Meadows"
+    },
+    {
+      "peer": 1,
+      "action": "aftermath_state",
+      "args": {
+        "require": {
+          "long_storm_ended": true,
+          "stormwood:legendary_freed": true,
+          "realm_heart_stormwood_earned": true,
+          "spark_earned": true,
+          "stormwood:waterward_revealed": true,
+          "realm_gate_water_unlocked": true,
+          "realm_key_water": false,
+          "spark_placed": true,
+          "spark_socket": "placed_inactive",
+          "world_resolutions": [
+            "stormwood:legendary_resolution:refused:$character0",
+            "stormwood:legendary_resolution:accepted:$character1"
+          ],
+          "stormhearts_in_party": 0
+        }
+      },
+      "label": "AFTER MID-SESSION REJOIN (guest, Meadows): the Spark socket shows placed"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "before",
+        "dir": "worlds",
+        "path_contains": "slot-0/",
+        "contains": [
+          "realm_gate_stormwood_unlocked"
+        ],
+        "lacks": [
+          "stormwood:long_storm_ended",
+          "realm_heart_stormwood_earned",
+          "realm_heart_stormwood_placed",
+          "realm_gate_water_unlocked"
+        ]
+      },
+      "label": "baseline: the host's pre-run world holds no aftermath, Spark or gate"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "before",
+        "dir": "worlds",
+        "path_contains": "slot-0/",
+        "contains": [
+          "stormwood:long_storm_ended"
+        ]
+      },
+      "expect": "FAIL",
+      "label": "NEGATIVE CONTROL: the saved-aftermath check fails on the pre-run world"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "pre_restart",
+        "dir": "worlds",
+        "path_contains": "slot-0/",
+        "contains": [
+          "stormwood:long_storm_ended",
+          "realm_heart_stormwood_earned",
+          "realm_heart_stormwood_placed",
+          "stormwood:waterward_revealed",
+          "realm_gate_water_unlocked",
+          "stormwood:legendary_resolution:refused:$character0",
+          "stormwood:legendary_resolution:accepted:$character1"
+        ],
+        "lacks": [
+          "\"realm_key_water\""
+        ]
+      },
+      "label": "the host's SAVED world the restart loaded: aftermath, Spark earned + placed, gate open, key consumed, both answers"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "worlds",
+        "path_contains": "slot-0/",
+        "contains": [
+          "stormwood:long_storm_ended",
+          "realm_heart_stormwood_earned",
+          "realm_heart_stormwood_placed",
+          "stormwood:waterward_revealed",
+          "realm_gate_water_unlocked",
+          "stormwood:legendary_resolution:refused:$character0",
+          "stormwood:legendary_resolution:accepted:$character1"
+        ],
+        "lacks": [
+          "\"realm_key_water\"",
+          "stormwood:legendary_resolution:accepted:$character0",
+          "stormwood:legendary_resolution:refused:$character1"
+        ]
+      },
+      "label": "the host's saved world at the end: the same, no crossed answers"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "contains": [
+          "fulgocobra",
+          ":accepted"
+        ],
+        "lacks": [
+          ":refused"
+        ]
+      },
+      "label": "the guest's saved character: one accepted Stormheart"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "contains": [
+          ":refused"
+        ],
+        "lacks": [
+          "fulgocobra",
+          ":accepted"
+        ]
+      },
+      "label": "the host's saved character: its refusal, no Stormheart"
+    }
+  ]
+}

@@ -112,7 +112,8 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"water_anchor_fixture", "water_swim_to_wild", "water_swim_to_anchor", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
 	"water_guardian_let_go", "water_guardian_forge_accept",
 	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe", "shared_cue_shape", "ledge_probe",
-	"ledge_launch", "await_autosave", "slot_mtime", "party_best", "host_card_defence", "trainer_foe_numbers", "hit_sample"]
+	"ledge_launch", "await_autosave", "slot_mtime", "party_best", "host_card_defence", "trainer_foe_numbers", "hit_sample",
+	"stormwood_core_fixture", "party_replace", "stormwood_core_stand", "marrow_segment_start", "marrow_segment_wait", "wait_realm"]
 
 
 static func handles(action: String) -> bool:
@@ -183,6 +184,18 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _trainer_foe_numbers(tree, args)
 		"hit_sample":
 			return await _hit_sample(tree, args)
+		"stormwood_core_fixture":
+			return _stormwood_core_fixture(tree)
+		"party_replace":
+			return _party_replace(tree, args)
+		"stormwood_core_stand":
+			return await _stormwood_core_stand(tree, args)
+		"marrow_segment_start":
+			return await _marrow_segment_start(tree, args)
+		"marrow_segment_wait":
+			return await _marrow_segment_wait(tree, args)
+		"wait_realm":
+			return await _wait_realm(tree, args)
 		"cost_probe":
 			return _cost_probe(tree)
 	if WATER_ACTIONS.has(action):
@@ -3551,3 +3564,165 @@ static func _hit_sample(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var ok: bool = out_of_bounds.is_empty() and hits.size() >= int(args.get("min_hits", 0))
 	return {"verdict": "PASS" if ok else "FAIL", "data": data,
 		"detail": "%d hit(s) on this peer's creature, %d outside the solo formula range: %s" % [hits.size(), out_of_bounds.size(), JSON.stringify(data)]}
+
+
+# --- card S3: the Dynamo resolved by play ------------------------------------
+
+const MARROW_SEGMENT := preload("res://tests/helpers/stormwood_earned_marrow_segment.gd")
+const MARROW_TRAINER := "captain_marrow_dynamo_core"
+## The same declared start the solo Marrow press smoke uses
+## (tests/smoke_stormwood_marrow_press.gd): every critical chapter flag before
+## Marrow's defeat, plus the facts an earned run holds at the core.
+const CORE_EARNED_EXTRA: Array[String] = ["realm_key_stormwood", "stormwood:act_i_complete",
+	"stormwood:act_ii_complete", "stormwood:rod_verge_disabled", "stormwood:rod_hollows_disabled",
+	"stormwood:rod_deepwood_disabled", "stormwood:trainer:officer_nysa_deepwood_rod:defeated",
+	"stormwood:trainer:outerworks_lieutenant_sera:defeated", "stormwood:trainer:officer_kestrel_outer_works:defeated"]
+
+
+static func _core_staged_flags() -> Array[String]:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(STORMWOOD_CHAPTER))
+	var out: Array[String] = []
+	if parsed is Dictionary:
+		var persistent: Dictionary = (parsed as Dictionary).get("persistent_flags", {})
+		for raw: Variant in (persistent.get("main", []) as Array):
+			if str(raw) == MARROW_FLAG:
+				break
+			out.append(str(raw))
+	for flag: String in CORE_EARNED_EXTRA:
+		if not out.has(flag):
+			out.append(flag)
+	return out
+
+
+## HOST, declared start: the chapter up to the Dynamo core (Kestrel beaten,
+## core reached) through the host ledger. Marrow and the Dynamo are NOT
+## written: they are fought by `marrow_segment_*`.
+static func _stormwood_core_fixture(tree: SceneTree) -> Dictionary:
+	var sess: Node = tree.call("_session")
+	if sess == null or not bool(sess.call("is_host")):
+		return {"verdict": "ERROR", "detail": "stormwood_core_fixture runs on the session host only"}
+	var game := _game(tree)
+	var flags := _core_staged_flags()
+	if not flags.has("stormwood:core_reached") or flags.has(MARROW_FLAG):
+		return {"verdict": "ERROR", "detail": "chapter list lacks the core or includes Marrow: %s" % str(flags)}
+	var written: Array[String] = []
+	for flag: String in flags:
+		if bool((game.get("progression") as RefCounted).call("has", flag)):
+			continue
+		var verdict: Dictionary = STORY_LEDGER.set_world_flag(game, flag)
+		if not (bool(verdict.get("ok", false)) or bool(verdict.get("pending", false))):
+			return {"verdict": "FAIL", "detail": "%s refused: %s" % [flag, JSON.stringify(verdict)]}
+		written.append(flag)
+	return {"verdict": "PASS", "data": {"written": written.size(), "flags": flags},
+		"detail": "DECLARED START: %d chapter flags through stormwood:core_reached (none past it): %s" % [written.size(), str(written)]}
+
+
+## Declared party fixture: this peer's party becomes exactly `species` at
+## `level` (the solo Marrow smoke's five at L46), through Game.party.
+static func _party_replace(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	var party: RefCounted = game.get("party") if game != null else null
+	if party == null:
+		return {"verdict": "ERROR", "detail": "party_replace needs Game.party"}
+	party.call("clear")
+	var cfg: Dictionary = NET_PROGRESSION.config()
+	var added: Array = []
+	for raw: Variant in (args.get("species", []) as Array):
+		var creature: RefCounted = SPECIES_DATA.spawn(str(raw))
+		if creature == null:
+			return {"verdict": "ERROR", "detail": "unknown species %s" % str(raw)}
+		creature.call("set_level", int(args.get("level", 46)), cfg)
+		if not bool(party.call("add", creature)):
+			return {"verdict": "FAIL", "detail": "party refused %s" % str(raw)}
+		added.append(str(raw))
+	return {"verdict": "PASS", "data": {"species": added, "size": int(party.call("size"))},
+		"detail": "DECLARED PARTY: %s at L%d" % [str(added), int(args.get("level", 46))]}
+
+
+## Stand at the top of the Stormheart helix beside Marrow's seat, where the
+## earned ascent ends (the solo press smoke's placement), with the companion.
+static func _stormwood_core_stand(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var world := tree.current_scene
+	var player := (tree.get("_probe") as Object).call("player") as CharacterBody3D
+	var trunk := world.get_node_or_null("StormheartTree") as Node3D if world != null else null
+	if player == null or trunk == null:
+		return {"verdict": "ERROR", "detail": "stormwood_core_stand needs the Stormwood scene's Player and StormheartTree"}
+	var at: Vector3 = (trunk.call("core_anchor") as Vector3) + Vector3.UP * 0.5
+	var offset: Array = args.get("offset", [0.0, 0.0, 0.0])
+	at += Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
+	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, at)
+	player.velocity = Vector3.ZERO
+	for f in int(args.get("settle", 60)):
+		await tree.physics_frame
+	return {"verdict": "PASS", "data": {"position": [player.global_position.x, player.global_position.y, player.global_position.z]},
+		"detail": "SETUP (teleport): standing at the core seat %s" % player.global_position}
+
+
+## HOST: the earned Marrow segment (tests/helpers/stormwood_earned_marrow_segment.gd:
+## Marrow's own prompt and dialogue, five hosted rounds, the four-conduit
+## Break, the automatic Stormheart release) started WITHOUT awaiting it, so a
+## guest can join the live captain fight. Returns once Marrow's hosted fight is
+## registered with the hub.
+static func _marrow_segment_start(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var world := tree.current_scene as Node3D
+	var game := _game(tree)
+	var hub := world.get_node_or_null("StormwoodEncounterHub") if world != null else null
+	if world == null or game == null or hub == null:
+		return {"verdict": "ERROR", "detail": "marrow_segment_start needs the Stormwood scene and its encounter hub"}
+	var segment: RefCounted = MARROW_SEGMENT.new()
+	var holder := {"segment": segment, "done": false, "result": {}}
+	tree.set_meta("x05_marrow_segment", holder)
+	var runner := func() -> void:
+		holder["result"] = await segment.call("run", tree, world, game)
+		holder["done"] = true
+	runner.call()
+	for f in int(args.get("budget_frames", 5400)):
+		if bool(holder.done):
+			return {"verdict": "FAIL", "data": holder.result,
+				"detail": "the segment ended before Marrow's fight went live: %s" % JSON.stringify(holder.result)}
+		if (hub.get("fights") as Dictionary).has(MARROW_TRAINER):
+			var dynamo := world.get_node_or_null("StormwoodDynamo")
+			return {"verdict": "PASS", "data": {"phase": str(dynamo.get("phase")) if dynamo != null else ""},
+				"detail": "Marrow's hosted fight is live (phase %s) after the host's own press" % (str(dynamo.get("phase")) if dynamo != null else "?")}
+		await tree.physics_frame
+	return {"verdict": "FAIL", "detail": "Marrow's fight never went live within budget; transcript %s" % str(segment.call("result").get("transcript", []))}
+
+
+## HOST: wait for the segment to finish, then report its verdict with the
+## Dynamo's own contributor list and the characters recorded for release.
+static func _marrow_segment_wait(tree: SceneTree, args: Dictionary) -> Dictionary:
+	if not tree.has_meta("x05_marrow_segment"):
+		return {"verdict": "ERROR", "detail": "marrow_segment_wait before marrow_segment_start"}
+	var holder: Dictionary = tree.get_meta("x05_marrow_segment")
+	for f in int(args.get("budget_frames", 72000)):
+		if bool(holder.done):
+			break
+		await tree.physics_frame
+	var result: Dictionary = holder.result if bool(holder.done) else (holder.segment as RefCounted).call("result")
+	var world := tree.current_scene
+	var dynamo := world.get_node_or_null("StormwoodDynamo") if world != null else null
+	var data := {"done": bool(holder.done), "passed": bool(result.get("passed", false)),
+		"failures": result.get("failures", []), "transcript_tail": (result.get("transcript", []) as Array).slice(-12),
+		"phase": str(dynamo.get("phase")) if dynamo != null else "",
+		"contributors": (dynamo.get("contributors") as Array).duplicate() if dynamo != null else [],
+		"fighter_characters": (dynamo.get("fighter_characters") as Array).duplicate() if dynamo != null else []}
+	var want: Array = args.get("contributors", [])
+	var have_all := true
+	for raw: Variant in want:
+		have_all = have_all and (data.contributors as Array).has(int(raw))
+	data["contributors_include_expected"] = have_all
+	var ok: bool = bool(data.done) and bool(data.passed) and have_all
+	return {"verdict": "PASS" if ok else "FAIL", "data": data,
+		"detail": "earned Marrow segment: %s" % JSON.stringify(data)}
+
+
+## Wait until this peer's Game is in `realm` with that realm's scene current.
+static func _wait_realm(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	var realm := str(args.get("realm", ""))
+	for f in int(args.get("budget_frames", 3600)):
+		if game != null and str(game.get("current_realm")) == realm and tree.current_scene != null:
+			return {"verdict": "PASS", "data": {"realm": realm, "scene": str(tree.current_scene.name)},
+				"detail": "in %s (scene %s)" % [realm, tree.current_scene.name]}
+		await tree.physics_frame
+	return {"verdict": "FAIL", "detail": "still in %s, not %s" % [str(game.get("current_realm")) if game != null else "?", realm]}
