@@ -10,6 +10,11 @@ const ASCENT_FRAMES := 6000
 const ASCENT_SCALE := 4.0
 const ASCENT_HZ := 60
 const CORE_TOLERANCE := 3.5
+## The Outer Works approach slab's foot (the rod station) and a lane 3 m west
+## of its west edge (x -105; 10 m wide on x -100), clear of Kestrel's NPC seat.
+const APPROACH_FOOT := Vector2(-100, 5350)
+const APPROACH_WEST_LANE_X := -108.0
+const APPROACH_SOUTH_Z := 5345.0
 const TRAINERS := ["officer_nysa_deepwood_rod", "outerworks_lieutenant_sera",
 	"officer_kestrel_outer_works"]
 var _outcomes: Dictionary = {}
@@ -316,8 +321,14 @@ func _climb_core() -> bool:
 	var trunk := _world.get_node_or_null("StormheartTree") as Node3D
 	if trunk == null:
 		return _fail("actual Stormheart ascent absent")
-	if not await _walk_xz(Vector2(-100, 5350), "Stormheart approach foot"):
-		return false
+	# The Outer Works approach slab floats up to 3 m over the terrain between
+	# its foot and the deck edge, so a body walking the ground under it wedges
+	# beneath its lowering edge (relay DRY RUN 44adfbe4 at z 5374.6). Keep
+	# west of it and mount it at its foot from the south, as a player would.
+	var from := Vector2(_player.global_position.x, _player.global_position.z)
+	for point: Vector2 in approach_foot_route(from):
+		if not await _walk_xz(point, "Stormheart approach foot"):
+			return false
 	var scale_before := Engine.time_scale
 	var hz_before := Engine.physics_ticks_per_second
 	await _tree.process_frame
@@ -330,6 +341,18 @@ func _climb_core() -> bool:
 	Engine.time_scale = scale_before
 	Engine.physics_ticks_per_second = hz_before
 	return passed
+
+## From north of the foot (Kestrel's fight is under the slab): out sideways
+## to the west lane, south past the foot, then onto it. From the south (Ember
+## Bivouac after a rest) the slab is never underfoot: straight to the foot.
+static func approach_foot_route(from: Vector2) -> Array[Vector2]:
+	var route: Array[Vector2] = []
+	if from.y > APPROACH_SOUTH_Z:
+		route.append(Vector2(APPROACH_WEST_LANE_X, from.y))
+		route.append(Vector2(APPROACH_WEST_LANE_X, APPROACH_SOUTH_Z))
+	route.append(Vector2(APPROACH_FOOT.x, APPROACH_SOUTH_Z))
+	route.append(APPROACH_FOOT)
+	return route
 
 func _walk_actual_ascent(trunk: Node3D) -> bool:
 	var started := Engine.get_physics_frames()

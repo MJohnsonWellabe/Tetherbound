@@ -1,0 +1,5 @@
+CLOUDREACH CONTINUOUS {"kind":"FAIL","message":"Reload preserved all five species, levels, XP and HP","position":"(-413.957, 1110.609, 5642.45)","simulated_seconds":3305.3,"stage":"talk_warden_aila","wall_seconds":1321.098897}
+F08#0 WITNESS FAIL veyra=true relays={"cloudreach_summit_relay_crown_disabled":true,"cloudreach_summit_relay_east_disabled":true,"cloudreach_summit_relay_west_disabled":true}
+CLOUDREACH CONTINUOUS FAIL from_save=res://tests/fixtures/earned_saves/c1_arrival stage=talk_warden_aila distance_m=16010.7 dead_travel_max_s=373.0
+EXIT 1
+cause: final team snapshot compares raw floats (fixed on tb/cloudreach 01da26f3); field-by-field reload check passed. run code 0883848d

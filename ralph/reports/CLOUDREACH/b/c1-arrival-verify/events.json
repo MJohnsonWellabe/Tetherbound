@@ -1,0 +1,524 @@
+{
+  "accelerated": false,
+  "activity_intervals": [
+    {
+      "end_seconds": 31.5,
+      "from": "meaningful_offer",
+      "from_stage": "arrival_to_aila",
+      "gap_seconds": 0.5,
+      "start_seconds": 31.0,
+      "to": "input_interact",
+      "to_stage": "arrival_to_aila"
+    },
+    {
+      "end_seconds": 59.0,
+      "from": "input_interact",
+      "from_stage": "arrival_to_aila",
+      "gap_seconds": 27.5,
+      "start_seconds": 31.5,
+      "to": "meaningful_offer",
+      "to_stage": "arrival_to_aila"
+    },
+    {
+      "end_seconds": 87.13,
+      "from": "meaningful_offer",
+      "from_stage": "arrival_to_aila",
+      "gap_seconds": 28.13,
+      "start_seconds": 59.0,
+      "to": "input_interact",
+      "to_stage": "arrival_to_aila"
+    },
+    {
+      "end_seconds": 88.8,
+      "from": "input_interact",
+      "from_stage": "arrival_to_aila",
+      "gap_seconds": 1.67,
+      "start_seconds": 87.13,
+      "to": "optional_gather",
+      "to_stage": "arrival_to_aila"
+    },
+    {
+      "end_seconds": 97.0,
+      "from": "optional_gather",
+      "from_stage": "arrival_to_aila",
+      "gap_seconds": 8.2,
+      "start_seconds": 88.8,
+      "to": "meaningful_offer",
+      "to_stage": "arrival_to_aila"
+    },
+    {
+      "end_seconds": 133.5,
+      "from": "meaningful_offer",
+      "from_stage": "arrival_to_aila",
+      "gap_seconds": 36.5,
+      "start_seconds": 97.0,
+      "to": "meaningful_offer",
+      "to_stage": "arrival_to_aila"
+    },
+    {
+      "end_seconds": 144.0,
+      "from": "meaningful_offer",
+      "from_stage": "arrival_to_aila",
+      "gap_seconds": 10.5,
+      "start_seconds": 133.5,
+      "to": "meaningful_offer",
+      "to_stage": "arrival_to_aila"
+    }
+  ],
+  "combat_mode": "test_only_lethal",
+  "distance_m": 703.472115037497,
+  "events": [
+    {
+      "accelerated": false,
+      "combat_mode": "mechanics_only_test_lethal",
+      "description": "EARNED Meadows handoff save loaded through the title Load list: res://tests/fixtures/earned_saves/c1_arrival",
+      "flags": 130,
+      "from_save": "res://tests/fixtures/earned_saves/c1_arrival",
+      "inventory": [
+        {
+          "slot": 0,
+          "stack": {
+            "id": "orb_basic",
+            "n": 20
+          }
+        },
+        {
+          "slot": 1,
+          "stack": {
+            "id": "orb_basic",
+            "n": 20
+          }
+        },
+        {
+          "slot": 2,
+          "stack": {
+            "id": "orb_basic",
+            "n": 11
+          }
+        },
+        {
+          "slot": 4,
+          "stack": {
+            "id": "berries",
+            "n": 5
+          }
+        },
+        {
+          "slot": 5,
+          "stack": {
+            "id": "revive",
+            "n": 10
+          }
+        },
+        {
+          "slot": 6,
+          "stack": {
+            "durability": 30,
+            "id": "axe",
+            "n": 1
+          }
+        },
+        {
+          "slot": 7,
+          "stack": {
+            "durability": 31,
+            "id": "pickaxe",
+            "n": 1
+          }
+        },
+        {
+          "slot": 8,
+          "stack": {
+            "id": "coin",
+            "n": 875
+          }
+        },
+        {
+          "slot": 9,
+          "stack": {
+            "durability": 24,
+            "id": "knife",
+            "n": 1
+          }
+        },
+        {
+          "slot": 10,
+          "stack": {
+            "id": "torch",
+            "n": 1
+          }
+        },
+        {
+          "slot": 11,
+          "stack": {
+            "id": "hammer",
+            "n": 1
+          }
+        },
+        {
+          "slot": 12,
+          "stack": {
+            "id": "wood",
+            "n": 1
+          }
+        },
+        {
+          "slot": 13,
+          "stack": {
+            "id": "rootstone",
+            "n": 17
+          }
+        },
+        {
+          "slot": 14,
+          "stack": {
+            "id": "orb_greater",
+            "n": 7
+          }
+        },
+        {
+          "slot": 16,
+          "stack": {
+            "id": "hide_vest",
+            "n": 1
+          }
+        },
+        {
+          "slot": 17,
+          "stack": {
+            "id": "elixir_vigour",
+            "n": 1
+          }
+        },
+        {
+          "slot": 20,
+          "stack": {
+            "id": "tm_earth_fist",
+            "n": 1
+          }
+        },
+        {
+          "slot": 21,
+          "stack": {
+            "id": "elixir_guard",
+            "n": 1
+          }
+        }
+      ],
+      "kind": "precondition",
+      "leg": "opening",
+      "position": "(0.0, 105.0302, -260.0)",
+      "simulated_seconds": 0.33,
+      "stage": "boot",
+      "team": [
+        {
+          "hp": 177.322864641988,
+          "label": "Bud",
+          "level": 21,
+          "species_id": "ripplet",
+          "xp": 576
+        },
+        {
+          "hp": 145.311437615929,
+          "label": "Bramblebun",
+          "level": 22,
+          "species_id": "bramblebun",
+          "xp": 884
+        },
+        {
+          "hp": 159.723350638177,
+          "label": "Mudsnout",
+          "level": 21,
+          "species_id": "mudsnout",
+          "xp": 262
+        },
+        {
+          "hp": 160.709808193421,
+          "label": "Mudsnout",
+          "level": 21,
+          "species_id": "mudsnout",
+          "xp": 622
+        },
+        {
+          "hp": 796.746109780671,
+          "label": "Veridian Stag",
+          "level": 26,
+          "species_id": "veridian",
+          "xp": 1196
+        }
+      ],
+      "wall_seconds": 127.334824
+    },
+    {
+      "choice": "Take the authored arrival road, inspect its landmark, and gather useful preparation instead of beelining",
+      "kind": "player_purpose",
+      "position": "(0.0, 105.0302, -260.0)",
+      "purpose": "Orient in Cloudreach and learn why the routes are broken",
+      "simulated_seconds": 0.33,
+      "stage": "boot",
+      "wall_seconds": 127.335451
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(0.0, 105.0302, -260.0)",
+      "kind": "travel_start",
+      "position": "(0.0, 105.0302, -260.0)",
+      "simulated_seconds": 0.33,
+      "stage": "arrival_to_aila",
+      "target": "(-40.5, 117.5, -112.0)",
+      "wall_seconds": 127.343677
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.26721382141113,
+      "kind": "meaningful_offer",
+      "label": "Inspect the weathered route marker",
+      "path": "/root/CloudreachCliffs/ArrivalRoadObservation/InspectArrivalRuin",
+      "position": "(-40.22045, 117.2905, -113.0222)",
+      "simulated_seconds": 31.0,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 157.996546
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-40.40018, 117.3478, -112.3651)",
+      "simulated_seconds": 31.27,
+      "stage": "arrival_to_aila",
+      "target": "(-40.5, 117.5, -112.0)",
+      "wall_seconds": 158.265538
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-40.40018, 117.3478, -112.3651)",
+      "prompt": "/root/CloudreachCliffs/ArrivalRoadObservation/InspectArrivalRuin",
+      "prompt_position": "(-40.5, 118.5, -110.0)",
+      "root_distance": 2.40355610847473,
+      "root_position": "(-40.0, 117.5, -110.0)",
+      "senn_defeated": false,
+      "simulated_seconds": 31.3,
+      "stage": "arrival_to_aila",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 158.295707
+    },
+    {
+      "kind": "offer_activated",
+      "path": "/root/CloudreachCliffs/ArrivalRoadObservation/InspectArrivalRuin",
+      "position": "(-40.40018, 117.3478, -112.3651)",
+      "simulated_seconds": 31.32,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 158.314426
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-40.40018, 117.3478, -112.3651)",
+      "prompt": "/root/CloudreachCliffs/ArrivalRoadObservation/InspectArrivalRuin",
+      "simulated_seconds": 31.5,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 158.493663
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/ArrivalRoadObservation/InspectArrivalRuin",
+      "position": "(-40.40018, 117.3478, -112.3651)",
+      "simulated_seconds": 31.5,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 158.494216
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-40.40018, 117.3478, -112.3651)",
+      "kind": "travel_start",
+      "position": "(-40.40018, 117.3478, -112.3651)",
+      "simulated_seconds": 31.5,
+      "stage": "arrival_to_aila",
+      "target": "(-80.0, 130.0, 40.0)",
+      "wall_seconds": 158.494871
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.34451055526733,
+      "kind": "meaningful_offer",
+      "label": "Take Small Potion",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_gate_route_potion_small_01/Interactable",
+      "position": "(-74.69509, 128.8083, 19.57965)",
+      "simulated_seconds": 59.0,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 185.985972
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-79.90492, 130.0308, 39.63418)",
+      "simulated_seconds": 63.28,
+      "stage": "arrival_to_aila",
+      "target": "(-80.0, 130.0, 40.0)",
+      "wall_seconds": 190.284058
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-79.90492, 130.0308, 39.63418)",
+      "kind": "travel_start",
+      "position": "(-79.90492, 130.0308, 39.63418)",
+      "simulated_seconds": 63.28,
+      "stage": "arrival_to_aila",
+      "target": "(-175.0, 136.2714, 107.5)",
+      "wall_seconds": 190.284767
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-175.0263, 136.3905, 107.5187)",
+      "simulated_seconds": 86.9,
+      "stage": "arrival_to_aila",
+      "target": "(-175.0, 136.2714, 107.5)",
+      "wall_seconds": 213.899707
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-175.0263, 136.3905, 107.5187)",
+      "prompt": "/root/CloudreachCliffs/CloudreachResources/cr_node_cloudberry_waycamp/DailyHarvest/Interactable",
+      "prompt_position": "(-175.0, 137.0714, 109.0)",
+      "root_distance": 1.48374593257904,
+      "root_position": "(-175.0, 136.4714, 109.0)",
+      "senn_defeated": false,
+      "simulated_seconds": 86.93,
+      "stage": "arrival_to_aila",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 213.936884
+    },
+    {
+      "kind": "offer_activated",
+      "path": "/root/CloudreachCliffs/CloudreachResources/cr_node_cloudberry_waycamp/DailyHarvest/Interactable",
+      "position": "(-175.0263, 136.3905, 107.5187)",
+      "simulated_seconds": 86.95,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 213.952121
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-175.0263, 136.3905, 107.5187)",
+      "prompt": "/root/CloudreachCliffs/CloudreachResources/cr_node_cloudberry_waycamp/DailyHarvest/Interactable",
+      "simulated_seconds": 87.13,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 214.136627
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachResources/cr_node_cloudberry_waycamp/DailyHarvest/Interactable",
+      "position": "(-175.0263, 136.3905, 107.5187)",
+      "simulated_seconds": 87.13,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 214.137259
+    },
+    {
+      "gained": 4,
+      "id": "cr_node_cloudberry_waycamp",
+      "item": "cloudberry",
+      "kind": "optional_gather",
+      "position": "(-175.0263, 136.3905, 107.5187)",
+      "simulated_seconds": 88.8,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 215.799646
+    },
+    {
+      "kind": "assertion",
+      "label": "Optional arrival gather produced cloudberry",
+      "position": "(-175.0263, 136.3905, 107.5187)",
+      "simulated_seconds": 88.8,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 215.80069
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-175.0263, 136.3905, 107.5187)",
+      "kind": "travel_start",
+      "position": "(-175.0263, 136.3905, 107.5187)",
+      "simulated_seconds": 88.8,
+      "stage": "arrival_to_aila",
+      "target": "(-300.0, 145.0, 200.0)",
+      "wall_seconds": 215.801629
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.2744847536087,
+      "kind": "meaningful_offer",
+      "label": "Take Revive",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_recovery_gate_route_revive_01/Interactable",
+      "position": "(-207.6367, 138.7664, 131.6528)",
+      "simulated_seconds": 97.0,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 224.00274
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-299.7274, 145.0309, 199.7983)",
+      "simulated_seconds": 120.08,
+      "stage": "arrival_to_aila",
+      "target": "(-300.0, 145.0, 200.0)",
+      "wall_seconds": 247.073753
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-299.7274, 145.0309, 199.7983)",
+      "kind": "travel_start",
+      "position": "(-299.7274, 145.0309, 199.7983)",
+      "simulated_seconds": 120.08,
+      "stage": "arrival_to_aila",
+      "target": "(-292.0, 159.2031, 318.5)",
+      "wall_seconds": 247.074575
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.95478975772858,
+      "kind": "meaningful_offer",
+      "label": "Take Good Candy",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/cr_candy_gate_route_good_02/Interactable",
+      "position": "(-295.4229, 152.548, 265.8575)",
+      "simulated_seconds": 133.5,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 260.492006
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.3925039768219,
+      "kind": "meaningful_offer",
+      "label": "Gather Gale Fiber",
+      "path": "/root/CloudreachCliffs/CloudreachResources/cr_node_gale_fiber_gate/DailyHarvest/Interactable",
+      "position": "(-292.0464, 159.0983, 317.7856)",
+      "simulated_seconds": 144.0,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 270.994202
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-291.9977, 159.1928, 318.5341)",
+      "simulated_seconds": 144.28,
+      "stage": "arrival_to_aila",
+      "target": "(-292.0, 159.2031, 318.5)",
+      "wall_seconds": 271.276967
+    },
+    {
+      "kind": "FAIL",
+      "message": "Real hotbar input equipped gathering knife",
+      "position": "(-291.9977, 159.1928, 318.5341)",
+      "simulated_seconds": 144.48,
+      "stage": "arrival_to_aila",
+      "wall_seconds": 271.47708
+    }
+  ],
+  "evidence_scope": "mechanics_only_test_lethal",
+  "from_save": "res://tests/fixtures/earned_saves/c1_arrival",
+  "leg": "opening",
+  "leg_completed": false,
+  "longest_dead_travel_seconds": 36.5000000000026,
+  "mechanics_route_completed": false,
+  "passed": false,
+  "recovery_choices": [],
+  "stage": "arrival_to_aila"
+}

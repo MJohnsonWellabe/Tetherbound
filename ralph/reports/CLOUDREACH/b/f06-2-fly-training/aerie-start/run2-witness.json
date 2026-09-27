@@ -1,0 +1,134 @@
+{
+  "accelerated": true,
+  "attempts": [
+    {
+      "attempt": "trial_escape",
+      "directions_tried": [
+        "(0.0, 0.0, -1.0)"
+      ],
+      "end": "(425.143, 641.3781, 3215.784)",
+      "from": "(417.2396, 627.137, 3249.786)",
+      "inside_trial": true,
+      "refused": true,
+      "still_flying": true,
+      "trial_active": true
+    }
+  ],
+  "combat_mode": "mechanics_only_test_lethal",
+  "criterion": "F06#2",
+  "denials": [
+    {
+      "position": "(425.143, 641.4114, 3215.784)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(425.143, 641.2448, 3215.751)",
+      "reason": "Stay inside the marked flight trial.",
+      "stage": "flight_trial_start"
+    },
+    {
+      "position": "(439.4745, 740.9586, 3599.065)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "position": "(439.4872, 740.592, 3599.248)",
+      "reason": "This wind route is still sealed: cloudreach_upper.",
+      "stage": "witness_sealed_upper_attempt"
+    }
+  ],
+  "exhausted_fall": {
+    "anchor": "(1110.239, 1050.131, 2950.534)",
+    "drop_below_anchor_m": 99.9974365234375,
+    "end": "(1110.256, 1050.131, 2950.534)",
+    "end_distance_to_anchor_m": 0.0174560546875,
+    "exhausted_after_frames": 8392,
+    "exhausted_at": "(972.7607, 1085.992, 2974.87)",
+    "floor_path": "/root/CloudreachCliffs/Landmarks/SkyShrineHeartstone/LandmarkLedge/Collision",
+    "flying_after": false,
+    "hover_frames": 8392,
+    "landed_elsewhere": false,
+    "launch_blocker_at_landing": {
+      "at": "(1110.239, 1050.131, 2950.534)",
+      "clear": true,
+      "overlapping": []
+    },
+    "lowest_y_before_recovery": 950.13330078125,
+    "on_floor": true,
+    "party_size": 5,
+    "recovered_after_frames": 927,
+    "recovery_drop_m": 100.0,
+    "recovery_reasons": [
+      "The wind carried you back to your last safe landing."
+    ],
+    "stamina_at_exhaustion_logged": true
+  },
+  "failure": [],
+  "landings": [
+    {
+      "carrier": "galecrest",
+      "fly_unlocked": true,
+      "on_floor": true,
+      "position": "(399.7205, 610.1301, 3248.951)",
+      "stage": "flight_trial_start"
+    },
+    {
+      "carrier": "galecrest",
+      "fly_unlocked": true,
+      "on_floor": true,
+      "position": "(398.9034, 610.1294, 3250.447)",
+      "stage": "witness_sealed_upper_attempt"
+    },
+    {
+      "carrier": "galecrest",
+      "fly_unlocked": true,
+      "on_floor": true,
+      "position": "(1098.955, 1051.301, 2940.773)",
+      "stage": "mandatory_high_roost_flight"
+    },
+    {
+      "carrier": "galecrest",
+      "fly_unlocked": true,
+      "on_floor": true,
+      "position": "(400.813, 610.1305, 3250.19)",
+      "stage": "return_glide_to_grounded_counterweight"
+    }
+  ],
+  "leg": "flight",
+  "leg_persistence": {
+    "differences": [],
+    "flags_equal": true,
+    "fly_unlocked_after": true,
+    "load_ok": true,
+    "party_size_after": 5,
+    "save_ok": true
+  },
+  "passed": true,
+  "recoveries": [
+    {
+      "position": "(1110.239, 1050.21, 2950.534)",
+      "reason": "The wind carried you back to your last safe landing.",
+      "stage": "witness_exhausted_fall"
+    }
+  ],
+  "sealed_attempt": {
+    "climb_end_y": 770.28125,
+    "closest_gap_to_box_m": 0.75244140625,
+    "denials": [
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper."
+    ],
+    "end": "(439.4872, 724.5399, 3599.248)",
+    "frames_inside_sealed_box": 0,
+    "on_floor": false,
+    "refused_after_frames": 1415,
+    "still_flying": true,
+    "target": "(450.0, 700.0, 3750.0)"
+  },
+  "skipped_steps": 21,
+  "stage": "return_glide_to_grounded_counterweight",
+  "start_state": "DECLARED aerie fixture (--start=aerie): committed completed-Meadows fixture party, Act I flags seeded before scene build, single placement beside the aerie repair; ordinary input from the aerie camp rest onward",
+  "trial_escape_violations": 0,
+  "upper_violations": 0
+}

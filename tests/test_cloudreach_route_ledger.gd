@@ -955,10 +955,22 @@ func test_gates_are_respected_leg_by_leg() -> void:
 	for raw: Variant in (maela["sites"] as Array):
 		var gate := str((tables.get(str((sites[str((raw as Dictionary)["id"])] as Dictionary).get("table_id", "")), {}) as Dictionary).get("requires_unlock", ""))
 		assert_true(gate.is_empty(), "Maela's phase credits gated site %s" % str((raw as Dictionary)["id"]))
-	# Restored-summit pairs open only at the overlook: never credited.
+	# F07#3: restored-summit pairs are gated on Veyra's defeat (the gate check
+	# above keeps them out of every earlier step) and exist for the aftermath
+	# walk to the overlook, so that walk must credit them. Under the former
+	# `cloudreach_winds_restored` gate they could never appear on it.
+	var restored := 0
 	for id: String in credited:
-		assert_ne(str((sites[id] as Dictionary).get("table_id", "")), "cloudreach_summit_restored_wild",
-			"a restored-winds pair was credited before the winds were restored")
+		if str((sites[id] as Dictionary).get("table_id", "")) == "cloudreach_summit_restored_wild":
+			restored += 1
+	assert_true(restored > 0, "the aftermath walk credits the restored-summit pairs")
+	for raw: Variant in (result["phases"] as Array):
+		var row := raw as Dictionary
+		if str(row.get("trainer", "")) == "" :
+			continue
+		for site: Variant in (row.get("sites", []) as Array):
+			assert_ne(str((sites[str((site as Dictionary)["id"])] as Dictionary).get("table_id", "")), "cloudreach_summit_restored_wild",
+				"a restored-summit pair was credited before Veyra fell (phase %s)" % str(row.get("trainer", "")))
 
 
 func test_every_retained_member_meets_each_required_fights_band() -> void:

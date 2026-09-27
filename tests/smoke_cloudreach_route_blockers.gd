@@ -10,7 +10,8 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ##   B2 (223.6, 556.5, 3331.9) aerie -> grounded counterweight: the
 ##      `ravine_wind` pair standing on the floor-loop ribbon.
 ##   B3 (500.5, 986.4, 4890.0) Upper Summit road toward Voss: the
-##      `roost_perches` pair standing on that ribbon.
+##      `roost_perches` pair, bound there 1.5 km from its authored point; it
+##      now stands on High Roost ground, so none of its bodies may be here.
 ##
 ## Fixture (declared): post-shrine flags so the grounded counterweight/upper
 ## routes are open, and the player is placed once at each leg's start. Every
@@ -35,7 +36,7 @@ const LEGS := [
 	{"id": "B2", "blocker": Vector3(223.6, 556.5, 3331.9), "start": Vector3(400.0, 610.0, 3250.0),
 		"target": Vector3(-720.0, 700.0, 3680.0), "wild_prefix": "ravine_wind_"},
 	{"id": "B3", "blocker": Vector3(500.5, 986.4, 4890.0), "start": Vector3(491.9854, 951.379, 4793.862),
-		"target": Vector3(302.8, 1078.7, 5097.0), "wild_prefix": "roost_perches_"},
+		"target": Vector3(302.8, 1078.7, 5097.0), "absent_prefix": "roost_perches_"},
 ]
 
 var _nearest := INF
@@ -97,13 +98,20 @@ func _run() -> void:
 		# and, for the wild blockers, the named pair actually standing there.
 		var wild_prefix := str(leg.get("wild_prefix", ""))
 		var named_present := wild_prefix.is_empty()
+		var absent_prefix := str(leg.get("absent_prefix", ""))
+		var absent_seen := false
 		for seen: String in _wilds_near.get(leg.id, []):
-			named_present = named_present or seen.begins_with(wild_prefix)
-		var ok := reached and not failed and _nearest <= PASS_NEAR_M and _detours == 0 and named_present
+			if not wild_prefix.is_empty() and seen.begins_with(wild_prefix):
+				named_present = true
+			# B3 (#340): roost_perches now lives on High Roost ground; its
+			# bodies must no longer stand on the Upper Summit road at all.
+			if not absent_prefix.is_empty() and seen.begins_with(absent_prefix):
+				absent_seen = true
+		var ok := reached and not failed and _nearest <= PASS_NEAR_M and _detours == 0 and named_present and not absent_seen
 		all_ok = all_ok and ok
 		results.append({"id": leg.id, "ok": ok, "reached_target": reached, "nearest_to_blocker_m": snappedf(_nearest, 0.1),
 			"walked_m": snappedf(distance_m - before, 0.1), "wild_bodies_within_15m": _wilds_near.get(leg.id, []),
-			"named_wilds_present": named_present, "mobile_obstacle_detours": _detours,
+			"named_wilds_present": named_present, "absent_wilds_seen": absent_seen, "mobile_obstacle_detours": _detours,
 			"player": str(player.global_position)})
 		await _frames(10)
 	var skipped: Variant = world.get("shelves_skipped_for_routes")

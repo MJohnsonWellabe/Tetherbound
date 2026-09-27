@@ -1,0 +1,8 @@
+near.log:[site_near] road_visibility_broken_causeway_main_03 found=0
+near.log:[site_near] road_visibility_windscar_floor_loop_15 found=0
+roost_try.log:[site_try] roost_perches authored=(900.0, 1020.0, 2715.0) resolved=(900.0, 1020.06, 2715.0) ok=true road_clear_m=inf
+roost_try.log:[site_try] roost_perches authored=(912.0, 1020.0, 2708.0) resolved=(912.0, 1020.06, 2708.0) ok=true road_clear_m=inf
+roost_try.log:[site_try] roost_perches authored=(888.0, 1020.0, 2708.0) resolved=(888.0, 1020.06, 2708.0) ok=true road_clear_m=inf
+roost_try.log:[site_try] roost_perches authored=(900.0, 1020.0, 2688.0) resolved=(900.0, 1020.06, 2688.0) ok=true road_clear_m=inf
+roost_try.log:[site_try] roost_perches authored=(915.0, 1020.0, 2695.0) resolved=(915.0, 1020.06, 2695.0) ok=true road_clear_m=inf
+roost_try.log:[site_try] roost_perches authored=(885.0, 1020.0, 2695.0) resolved=(885.0, 1020.06, 2695.0) ok=true road_clear_m=inf
