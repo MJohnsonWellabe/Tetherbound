@@ -845,10 +845,19 @@ func _use_remedy(item: String, index: int) -> bool:
 	if not await _focus_slot(buttons, slot):
 		return _fail("Controller focus did not reach the carried " + item)
 	await _tap("interact")
+	# Under a real renderer the care picker can open a frame or two after the
+	# tap returns (seed4_hall xvfb render, 2026-09-27; headless opened at
+	# once). Wait for it before reading its rows.
+	for _frame in 30:
+		if int(backpack.get("_targeting")) >= 0:
+			break
+		await _tree.process_frame
 	var feeding := not str(backpack.get("_targeting_food")).is_empty()
 	var rows: Array = backpack.get("_target_rows")
 	if int(backpack.get("_targeting")) < 0 or index >= rows.size() or rows[index].disabled:
-		return _fail("The real Satchel refused the requested creature care target")
+		return _fail("The real Satchel refused the requested creature care target (item %s, targeting %d, index %d of %d rows, disabled %s, hp %.1f)" % [
+			item, int(backpack.get("_targeting")), index, rows.size(),
+			str(rows[index].disabled) if index < rows.size() else "n/a", old_hp])
 	for _step in rows.size():
 		if _focus() == rows[index]:
 			break
