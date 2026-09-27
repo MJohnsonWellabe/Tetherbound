@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/environment/tidewake/pump_station/pump_station.glb" id="1"]
+
+[node name="VeilfallPumpStation" type="Node3D"]
+
+[node name="Geometry" parent="." instance=ExtResource("1")]
