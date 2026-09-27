@@ -50,12 +50,14 @@
         "rain_visible":true,"rain_amount":0.6,"flashes":false,"wind":1.0,"sheet_glow":0.0,"sheet_glow_rate":0.0,"steam":1.0,"afterglow":1.0,"intensity":0.4,
         "ramp":{"rain_amount":[0.6,0.15],"wind":[1.0,0.15],"steam":[1.0,0.0,0.7],"afterglow":[1.0,0.0,0.8]}}
     },
+    "_why_f10_4_restored_sky": "F10#4 (coordinator 13:20, #356; VIS F10#4 FAIL fix list), inside WO-F10-08's purple band: the aftermath lifts toward a restored sky without turning blue. Key light 0.45 -> 0.6 and ambient 0.62 -> 0.75; fog thins 0.0006 -> 0.0003; the deck softens (ceiling_contrast 0.6 -> 0.45, still above Calm's 0.3; definition 0.7 -> 0.5) while its lit rims and thin-spot glow rise (rim 0.3 -> 0.45, thin_glow 0.18 -> 0.3), so the clouds read as breaking light rather than a hard card. Sky colours, rain and stillness are unchanged.",
+    "aftermath_scar": {"colour":"#3b3548","emission_energy":0.0,"_why":"F10#4 (coordinator 13:20, #356): after long_storm_ended the Struck Sentinel's live cyan strike scar cools to a dark violet seam in the purple band and its StrikeAfterglow light goes out; the spent strike reads as a scar, not a live bolt."},
     "_comment_aftermath": "OWNER RULING (WO-F10-08): Stormwood stays purple after the Long Storm is broken; 'the aftermath shows only through lighter rain, no lightning and the scars'. Every aftermath phase (`all`) is the stillest version: the lightest drizzle (0.08), the gentlest wind (0.3), an almost still ceiling (speed 0.002), no flashes, sheet glow, steam or afterglow (and no ramp), the least fog and a steady key. Round 3 (blind judge 8: 'a flat, blank lavender card'): the still deck gets structure, a defined high-contrast cloud body (ceiling_definition, contrast 0.6) with lit rims and thin spots (ceiling_rim, ceiling_thin_glow), in the deep purple. The shorter aftermath Surge durations (aftermath_seconds) are unchanged gameplay; real strikes in an aftermath Break still telegraph and strike (rules), but no ambient flashes are added.",
     "aftermath": {
-      "all": {"sun_energy_mult":0.45,"ambient_colour":"#9c98b8","ambient_energy_mult":0.62,"fog_density_add":0.0006,
+      "all": {"sun_energy_mult":0.6,"ambient_colour":"#9c98b8","ambient_energy_mult":0.75,"fog_density_add":0.0003,
         "sky_top":"#59507d","sky_horizon":"#766e97","sky_ground_horizon":"#686089",
-        "ceiling_colour":"#6f6597","ceiling_opacity":1.0,"ceiling_speed":0.002,"ceiling_contrast":0.6,"ceiling_breakup":0.0,
-        "ceiling_definition":0.7,"ceiling_rim":0.3,"ceiling_thin_glow":0.18,
+        "ceiling_colour":"#6f6597","ceiling_opacity":1.0,"ceiling_speed":0.002,"ceiling_contrast":0.45,"ceiling_breakup":0.0,
+        "ceiling_definition":0.5,"ceiling_rim":0.45,"ceiling_thin_glow":0.3,
         "rain_visible":true,"rain_amount":0.08,"flashes":false,"wind":0.3,"sheet_glow":0.0,"sheet_glow_rate":0.0,"steam":0.0,"afterglow":0.0,"ramp":{},"intensity":0.1}
     },
     "_comment_steam": "Round 3: Fading's ground steam (stormwood_surge.gd _build_steam): soft procedural billboards (generated radial-gradient texture, no texture art) rising slowly from a ring inner_radius_m..outer_radius_m around the framed subject. max_puffs is the count at steam 1.0; each row's `steam` (Fading's ramp eases it 1 -> 0) scales it. Unshaded, in the storm's purple-grey.",
