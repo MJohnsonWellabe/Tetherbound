@@ -234,19 +234,22 @@ func _run() -> void:
 		if outward.length() > 0.1:
 			legs.append(entrance + outward.normalized() * 12.0)
 		legs.append(entrance)
+		var den_at: Vector3 = warrens.call("marker", "den")
+		var hall_at: Vector3 = warrens.call("marker", "hall")
 		for leg: String in ["mouth", "hall", "den"]:
+			if leg == "den":
+				# Just inside the den from the hall: the required guardian and,
+				# beyond him, the shut vault door's lit seam (the designed lure).
+				legs.append(den_at + (hall_at - den_at).normalized() * 6.0)
+				_leg_shots[legs.size() - 1] = {"label": "den-entry-guardian-and-vault-door",
+					"face": warrens.call("marker", "vault"), "stow": true}
 			legs.append(warrens.call("marker", leg))
-			if leg == "hall":
-				# From the hall, look across to the den: with the guardian still
-				# standing, the shut vault door's lit seam is the designed lure.
-				_leg_shots[legs.size() - 1] = {"label": "hall-toward-den-and-vault-door",
-					"face": warrens.call("marker", "vault")}
 		# The optional branch: from the (already cleared) guardian's den, the
 		# passage to the lit vault. Frame the den looking down it, and the
 		# passage itself, so the branch being taken is on screen.
 		var den: Vector3 = warrens.call("marker", "den")
 		var vault_at: Vector3 = warrens.call("marker", "vault")
-		_leg_shots[legs.size() - 1] = {"label": "branch-den-toward-vault", "face": vault_at}
+		_leg_shots[legs.size() - 1] = {"label": "branch-den-toward-vault", "face": vault_at, "stow": true}
 		legs.append(den.lerp(vault_at, 0.5))
 		_leg_shots[legs.size() - 1] = {"label": "branch-passage", "face": vault_at}
 		legs.append(vault_at)
@@ -685,10 +688,21 @@ func _walk() -> void:
 			for i in 20:
 				await physics_frame
 			if _manager == null or not bool(_manager.call("is_fighting")):
+				# A big companion at the shoulder can fill the frame: put it away
+				# with the ordinary key for the shot, as `_capture_perch` does.
+				var stowed := false
+				if bool(_pending_shot.get("stow", false)) and _director != null \
+						and _director.call("ally_body") != null:
+					await _press("creature_recall")
+					for i in 60:
+						await physics_frame
+					stowed = _director.call("ally_body") == null
 				await _face_point(_pending_shot["face"])
 				if _manager == null or not bool(_manager.call("is_fighting")):
 					await _capture(str(_pending_shot["label"]))
 					_pending_shot = {}
+				if stowed:
+					await _ensure_companion_out("leg shot; ")
 			continue
 			if cursor == _road_count() and not seen and not looked:
 				# At the point the route leaves the road. Glance at the activity,
