@@ -1,0 +1,244 @@
+{
+  "name": "F13#2: two characters each claim reed_root_hollow (fiber + Reed Camp Cordage) and a Skill Candy pocket, once each",
+  "claim": "ACCEPTANCE F13#2 reward pockets, co-op per-character claim. Host and guest in the Tidewake each gather the reed_root_hollow patch (water:reedhaven:harvest:012) by the production WaterPickups body, interaction arbiter and interact press; the host validates each character's claim (water_personal_pickup.gd) and each gets its own 3 Reed Fiber and learns Reed Camp Cordage (water_cordage_recipe_learned, player scope). Neither knows the recipe before its own claim; the other character's claim pays and teaches nothing. The same holds for a second pocket (lantern_hidden_cache, Skill Candy I). A repeat request from either character (hand-made, denying the personal receipt) is refused already_taken by the host's per-character world receipt. Saved characters and the host world file are checked. DISCLOSED FIXTURES: (1) a knife granted to each satchel (storage_grant) and bound to hotbar slot 5 by the step, equipped by pressing hotbar_5; (2) each trainer is teleported beside the body instead of walking (the walk is tests/smoke_water_pocket_walk_claim.gd); (3) both peers start in the Water scene (no crossing).",
+  "peers": 2,
+  "scene": "water",
+  "budget_s": 1800,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": "all",
+      "action": "water_pocket_state",
+      "args": {
+        "pickup_id": "water:reedhaven:harvest:012",
+        "require": {
+          "receipt": false,
+          "learned": false,
+          "recipe_known": false,
+          "count": 0
+        }
+      },
+      "label": "non-vacuous: neither fresh character knows Reed Camp Cordage at chapter start"
+    },
+    {
+      "peer": 0,
+      "action": "storage_grant",
+      "args": {
+        "item": "knife",
+        "n": 1
+      },
+      "label": "FIXTURE 1: a carried knife (reed fiber is gathered with a knife)"
+    },
+    {
+      "peer": 1,
+      "action": "storage_grant",
+      "args": {
+        "item": "knife",
+        "n": 1
+      },
+      "label": "FIXTURE 1: a carried knife"
+    },
+    {
+      "peer": 0,
+      "action": "water_pocket_claim",
+      "args": {
+        "pickup_id": "water:reedhaven:harvest:012",
+        "tool": "knife"
+      },
+      "expect_data": {
+        "gained": 3
+      },
+      "label": "host gathers the reed_root_hollow patch by the real prompt: +3 fiber, learns cordage"
+    },
+    {
+      "peer": 1,
+      "action": "water_pocket_state",
+      "args": {
+        "pickup_id": "water:reedhaven:harvest:012",
+        "require": {
+          "receipt": false,
+          "learned": false,
+          "recipe_known": false,
+          "count": 0
+        }
+      },
+      "label": "the host's claim taught and paid the guest nothing"
+    },
+    {
+      "peer": 1,
+      "action": "water_pocket_claim",
+      "args": {
+        "pickup_id": "water:reedhaven:harvest:012",
+        "tool": "knife"
+      },
+      "expect_data": {
+        "gained": 3
+      },
+      "label": "guest walks up (teleport) to the patch the host already gathered: it still stands and is offered for the guest; gathered through host validation: +3 fiber, learns its own cordage"
+    },
+    {
+      "peer": 0,
+      "action": "water_pocket_state",
+      "args": {
+        "pickup_id": "water:reedhaven:harvest:012",
+        "require": {
+          "receipt": true,
+          "learned": true,
+          "recipe_known": true,
+          "count": 3,
+          "resident": false
+        }
+      },
+      "label": "the guest's claim paid the host nothing more"
+    },
+    {
+      "peer": 0,
+      "action": "water_pocket_resend",
+      "args": {
+        "pickup_id": "water:reedhaven:harvest:012"
+      },
+      "expect_data": {
+        "code": "already_taken",
+        "committed": false
+      },
+      "label": "host repeat (hand-made request denying its receipt) refused"
+    },
+    {
+      "peer": 1,
+      "action": "water_pocket_resend",
+      "args": {
+        "pickup_id": "water:reedhaven:harvest:012"
+      },
+      "expect_data": {
+        "code": "already_taken",
+        "committed": false
+      },
+      "label": "guest repeat refused by the host's world receipt"
+    },
+    {
+      "peer": 0,
+      "action": "water_pocket_claim",
+      "args": {
+        "pickup_id": "water:lantern_cove:pickup:002"
+      },
+      "expect_data": {
+        "gained": 1
+      },
+      "label": "second pocket (lantern_hidden_cache Skill Candy I): host claims its own"
+    },
+    {
+      "peer": 1,
+      "action": "water_pocket_state",
+      "args": {
+        "pickup_id": "water:lantern_cove:pickup:002",
+        "require": {
+          "receipt": false,
+          "count": 0
+        }
+      },
+      "label": "the host's candy claim paid the guest nothing"
+    },
+    {
+      "peer": 1,
+      "action": "water_pocket_claim",
+      "args": {
+        "pickup_id": "water:lantern_cove:pickup:002"
+      },
+      "expect_data": {
+        "gained": 1
+      },
+      "label": "guest claims its own candy"
+    },
+    {
+      "peer": 0,
+      "action": "water_pocket_resend",
+      "args": {
+        "pickup_id": "water:lantern_cove:pickup:002"
+      },
+      "expect_data": {
+        "code": "already_taken",
+        "committed": false
+      }
+    },
+    {
+      "peer": 1,
+      "action": "water_pocket_resend",
+      "args": {
+        "pickup_id": "water:lantern_cove:pickup:002"
+      },
+      "expect_data": {
+        "code": "already_taken",
+        "committed": false
+      }
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "after"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character0",
+        "contains": [
+          "water_cordage_recipe_learned",
+          "water_candy:water:reedhaven:harvest:012",
+          "water_candy:water:lantern_cove:pickup:002"
+        ]
+      },
+      "label": "host's saved character holds its own recipe and receipts"
+    },
+    {
+      "peer": 1,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "path_contains": "$character1",
+        "contains": [
+          "water_cordage_recipe_learned",
+          "water_candy:water:reedhaven:harvest:012",
+          "water_candy:water:lantern_cove:pickup:002"
+        ]
+      },
+      "label": "guest's saved character holds its own recipe and receipts"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "worlds",
+        "contains": [
+          "water_claim:$character0:water:reedhaven:harvest:012",
+          "water_claim:$character1:water:reedhaven:harvest:012",
+          "water_claim:$character0:water:lantern_cove:pickup:002",
+          "water_claim:$character1:water:lantern_cove:pickup:002"
+        ],
+        "lacks": [
+          "water_cordage_recipe_learned"
+        ]
+      },
+      "label": "the world records one receipt per character per pocket; the recipe is not world state"
+    }
+  ]
+}

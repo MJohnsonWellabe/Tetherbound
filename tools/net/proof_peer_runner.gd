@@ -12,17 +12,22 @@ extends "res://tools/net/peer_runner.gd"
 const PROOF_STEPS := preload("res://tools/net/proof_steps.gd")
 ## The Stormwood lane's own proof steps (F11#3), in their own file.
 const STORMWOOD_STEPS := preload("res://tools/net/proof_steps_stormwood.gd")
+## The Tidewake lane's reward-pocket claim steps (F13#2), in their own file.
+const TIDEWAKE_POCKET_STEPS := preload("res://tools/net/proof_steps_tidewake_pockets.gd")
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
 	var stormwood := STORMWOOD_STEPS.handles(action)
-	if not stormwood and not PROOF_STEPS.handles(action):
+	var pockets := TIDEWAKE_POCKET_STEPS.handles(action)
+	if not stormwood and not pockets and not PROOF_STEPS.handles(action):
 		return await super(msg)
 	var before := _physics_count
 	var args := msg.get("args", {}) as Dictionary
 	var out: Dictionary
-	if stormwood:
+	if pockets:
+		out = await TIDEWAKE_POCKET_STEPS.run(self, action, args)
+	elif stormwood:
 		out = await STORMWOOD_STEPS.run(self, action, args)
 	else:
 		out = await PROOF_STEPS.run(self, action, args)
