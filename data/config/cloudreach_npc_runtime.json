@@ -24,9 +24,9 @@
     "walk_speed_mps": 0.85,
     "walk_pause_seconds": 5.0,
     "survey_markers": [
-      {"id":"high_perches","flag":"side_aerie_high_perches_surveyed","position":[900,1020,2700],"label":"High Perches · safe landing"},
-      {"id":"observatory","flag":"side_aerie_observatory_surveyed","position":[430,920,4500],"label":"Observatory · safe landing"},
-      {"id":"waterward","flag":"side_aeries_complete","position":[-420,1110,5650],"label":"Waterward roost · safe landing"}
+      {"id":"high_perches","flag":"side_aerie_high_perches_surveyed","position":[900,1020,2700],"label":"High Perches · safe landing", "map_reveal_requires": ["fly_traversal_unlocked"]},
+      {"id":"observatory","flag":"side_aerie_observatory_surveyed","position":[430,920,4500],"label":"Observatory · safe landing", "map_reveal_requires": ["cloudreach_upper_route_unlocked"]},
+      {"id":"waterward","flag":"side_aeries_complete","position":[-420,1110,5650],"label":"Waterward roost · safe landing", "map_reveal_requires": ["cloudreach_upper_anchors_disabled"]}
     ],
     "circuit_board": {"position":[-183,850,4101],"facing_degrees":180},
     "tavi_rematch": {"id":"young_trainer_tavi_rematch","base_id":"young_trainer_tavi_upper_ring","name":"Tavi · Circuit Mastery","defeat_flag":"defeated_cloudreach_tavi_rematch","requires_flags":["side_cliff_circuit_complete","cloudreach_upper_route_unlocked"],"level_bonus":3,"reward_tier":"ace"}
