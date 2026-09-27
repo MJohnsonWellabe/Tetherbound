@@ -1,0 +1,30 @@
+F08#0 WITNESS PASS veyra=true relays={"cloudreach_summit_relay_crown_disabled":true,"cloudreach_summit_relay_east_disabled":true,"cloudreach_summit_relay_west_disabled":true}
+CLOUDREACH CONTINUOUS PASS from_save=res://tests/fixtures/earned_saves/c1_arrival stage=complete distance_m=17571.5 dead_travel_max_s=255.9
+EXIT 0
+"label":"F08#0 Anchor Overload began with one Veyra creature left (same-frame count 1): [{ \
+"label":"F08#0 Stage A wind lanes pushed the controlled body: { \
+"label":"F08#0 Stage B: relay arc active in the arena and the controlled body pushed during Anchor Overload: { \
+"label":"F08#0 Veyra defeated by live controller input through the production callback
+"label":"F08#0 Veyra's whole team was defeated (opposition reached 0)
+"label":"F08#0 drift decays to zero inside the lee pocket (0.00 m/s)
+"label":"F08#0 every lee pocket is sheltered at every arc rotation
+"label":"F08#0 exam outcome flags committed
+"label":"F08#0 lee pocket hold ran
+"label":"F08#0 one Veyra victory; losses only the planned failed attempt
+"label":"F08#0 requires --live-combat (ordinary-input fights, no lethal seam)
+"label":"F08#0 stages ran Crosswind Command -> Anchor Overload -> Break the Eye: [\
+"label":"F08#0 the failed exam kept the same five
+"label":"F08#0 the failed exam kept the threshold and did not grant Veyra
+"label":"F08#0 the failed exam returned the trainer to Summit Bivouac (2.8 m)
+"label":"F08#0 the idle attempt lost through the production callback
+"label":"F08#0 the piloted creature sheltered in a lee pocket with no push (240 frames)
+"label":"F08#0 the planned failed exam ran and returned to Summit Bivouac
+"label":"F08#0 the relay arc itself pushed the controlled body (Overload or Break): { \
+"label":"F08#0 three relays struck: { \
+CLOUDREACH CONTINUOUS {"distance_to_bivouac_m":2.8,"failed":false,"kind":"witness_failed_exam_return","loss_callback":true,"party_size":5,"party_uids_same":true,"phase_after":"dormant","player":"(-518.0, 1080.209, 5302.0)","position":"(-518.0, 1080.209, 5302.0)","simulated_seconds":3199.13,"stage":"battle_captain_veyra_storm_anchor","threshold_kept":true,"veyra_defeated":false,"wall_seconds":1438.795388}
+CLOUDREACH CONTINUOUS {"cycle_check":{"cycle_seconds":128.57,"samples":1545,"unsheltered_samples":0},"hold":{"drift_after_hold_mps":0.0,"drift_on_entry_mps":0.0,"frames_held":240,"frames_sheltered":240,"phase":"break_the_eye","pocket":"west_lee","pushed_frames_inside":0},"kind":"witness_lee_pocket_hold","position":"(88.14461, 1160.151, 5443.548)","simulated_seconds":3489.15,"stage":"creature_relay_phase","wall_seconds":1614.098435}
+CLOUDREACH CONTINUOUS {"kind":"witness_relay_windbreak_detour","position":"(88.14461, 1160.151, 5443.548)","reason":"the straight relay leg grazes a lee-pocket windbreak (summit presentation box); stick-walked through the open arena centre","simulated_seconds":3489.15,"stage":"creature_relay_phase","to":"(72.98124, 1160.2, 5453.727)","via":"(100.0, 1160.2, 5450.0)","wall_seconds":1614.165181}
+CLOUDREACH CONTINUOUS {"kind":"witness_relay_windbreak_detour","position":"(83.35839, 1160.151, 5441.62)","reason":"the straight relay leg grazes a lee-pocket windbreak (summit presentation box); stick-walked through the open arena centre","simulated_seconds":3515.32,"stage":"creature_relay_phase","to":"(100.0, 1160.2, 5423.0)","via":"(100.0, 1160.2, 5450.0)","wall_seconds":1635.599809}
+CLOUDREACH CONTINUOUS {"kind":"witness_relay_windbreak_detour","position":"(83.35839, 1160.151, 5441.62)","reason":"the straight relay leg grazes a lee-pocket windbreak (summit presentation box); stick-walked through the open arena centre","simulated_seconds":3541.18,"stage":"creature_relay_phase","to":"(127.0188, 1160.2, 5453.727)","via":"(100.0, 1160.2, 5450.0)","wall_seconds":1654.484717}
+timeout 10800 /tmp/claude-0/godot_slot.sh $HOME/godot-bin/godot --headless --path . --script tests/smoke_cloudreach_veyra_exam_witness.gd -- --from-save=res://tests/fixtures/earned_saves/c1_arrival  --live-combat --accelerated --fail-exam-first > /tmp/claude-0/runs/e_veyra_exam/log.txt 2>&1
+run code: tb/cloudreach-b d01c0e7b (tightened witness >= e1d13b20)
