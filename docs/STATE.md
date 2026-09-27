@@ -12,6 +12,12 @@ Read this first. Update in place; keep under25KB. No dated status, goal, directi
 
 ## 0. Resume here (lane wind-down, 2026-09-26)
 
+**Current owner-directed visual goal (Codex):** inspect and improve every visual
+domain against ART_DIRECTION and ACCEPTANCE §4, on isolated branches from current
+main; Claude continues gameplay work and owns PR merges. PR288 is the first bounded
+X04 slice (Tidewake lantern materials); evidence and remaining defects are in
+`ralph/reports/VISUAL/DOCK-MATERIALS.md`. Whole-game Bars A/B remain open.
+
 All nine lane sessions were wound down and archived on owner direction: Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03 and VIS.
 - Every lane posted `## HANDOFF (final)` on its PR. Each showed clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
 - **All lane work is on main** through batches 25 (#283) and 26. Every `ralph/*`, `claude/integration-*` and `fix/*` tip is an ancestor of main, so any branch other than main can be deleted.
@@ -32,13 +38,17 @@ All nine lane sessions were wound down and archived on owner direction: Meadows 
 | X05 (#282) | F06#5 host-restart evidence, F14 participants proof WIP | F06#5 is blocked by the Cloudreach `_excluded()` slowness above. |
 | X03 (#262) / VIS (#279) | Glyph highlights; shared-look WIP | The ranked defects are in `ralph/reports/VISUAL/AUDIT.md`. |
 
+**Owner ruling (2026-09-27): one reused `tb/<lane>` branch per lane, one `tb/integration` batch branch, no scratch branches (WORKFLOW §8).** **Owner ruling (2026-09-27): finish, then land.** READY means a criterion fully closes (or unblocks another lane), with an attached independent strict re-check; fixture starts only as labelled dry runs; one criterion at a time per lane; lane-prefixed append-only Codex-queue IDs; the coordinator batches about every 2 hours and runs full CI after each batch. Details are in WORKFLOW §8. Owner-approved: Stormwood and Tidewake run whole-chapter blocker-finding dry runs from disclosed handoff fixtures.
+
 **Owner rulings (2026-09-26, coordinator Q&A):**
+- **All art/visual changes are ceded to the Codex lane.** Claude lanes record visual defects in the Codex queue at the top of `ralph/reports/VISUAL/AUDIT.md` and do not edit art, materials, shaders, lighting or meshes.
 - The tournament creature grant must be a non-starter species (starters stay player-exclusive). Meadows core owns the change.
 - F11#2: an old-build Stormheart receipt with no accept/decline answer is **undecided**; that character is re-offered once and can never be granted twice.
 - The Cloudreach cliff palette is picked by a code-blind judge against ART_DIRECTION. Co-op keeps road shoulders (co-op matches single player).
 - Team Tether palette stays as built. This is an explicit owner exception to the oxblood hard-rule wording; audit findings H2/H3 and the red parts of M7 are closed as "owner: leave as is".
 - "Guardian C2/C3" in Tidewake BOSSES means the Nerissa fight.
 - Meshy/Bramblebun work is handled by Codex, not the Claude lanes.
+- Rook's Deepwood Circuit reward (F10#0) is `tm_thunder_break`, paid once per character through the `reward_grant` delivery receipt (STORMWOOD-B, `stormwood_rook_circuit_reward.gd`).
 - Branch prefix is `tb/` (CLAUDE/AGENTS/WORKFLOW §8 updated).
 - `steam_api64.dll` redistribution is approved. Deferred owner resources: Steam AppID and partner access, four Steam accounts, a ROG Ally run (F10#6).
 

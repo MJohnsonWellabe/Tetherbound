@@ -6,6 +6,8 @@ extends "res://tests/test_case.gd"
 ## Stormheart follows the owner's per-participant legendary rule.
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const PARTY := preload("res://autoload/party.gd")
+const CREATURE_INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
 
 
 func test_every_participant_gets_their_own_once_only_offer() -> void:
@@ -200,21 +202,109 @@ func test_only_a_portable_acceptance_withholds_an_offer_in_another_world() -> vo
 	assert_true(ENDING.claim_intent(null).get("already_accepted") == false)
 
 
-func test_a_bare_legacy_receipt_is_an_acceptance_and_is_never_cleared() -> void:
-	var state := {"participants": ["trainer-a"]}
+## An older build's saves, as written before per-claim answers existed: the
+## world's single-recipient ending and that character's bare receipt, with no
+## `accepted` flag and no scoped answer (owner ruling 2026-09-26: UNDECIDED).
+const LEGACY_WORLD_ENDING := {
+	"recipient_character_id": "trainer-old",
+	"creature": {"uid": "creature-old", "species_id": "fulgocobra"},
+	"settled": true,
+	"kept": false,
+}
+const LEGACY_CHARACTER_FLAGS := {"flags": ["stormwood:legendary_ceremony_settled", "meadows:first_camp"]}
+
+
+func _legacy_flags() -> RefCounted:
+	var flags := PROGRESSION_STATE.new()
+	flags.load_data(LEGACY_CHARACTER_FLAGS.duplicate(true))
+	return flags
+
+
+func _party_with(species: Array) -> RefCounted:
+	var party: RefCounted = PARTY.new()
+	for id: String in species:
+		var creature: RefCounted = CREATURE_INSTANCE.new()
+		creature.set("species_id", id)
+		creature.set("uid", "held-%s" % id)
+		party.call("add", creature)
+	return party
+
+
+func test_a_legacy_receipt_is_undecided_and_is_re_offered_once() -> void:
+	var state := {"participants": ["trainer-old"]}
 	var freed := [ENDING.FREED_FLAG]
-	var legacy := PROGRESSION_STATE.new()
-	legacy.set_flag(ENDING.PERSONAL_RECEIPT_FLAG)
-	assert_true(ENDING.accepted_anywhere(legacy),
-		"an older build's receipt never said Yes or No, so it reads as an acceptance")
-	assert_false(ENDING.offer_owed(state, "trainer-a", freed, bool(ENDING.claim_intent(legacy).already_accepted)),
-		"a legacy receipt withholds a fresh Stormheart: no offer is ever granted twice")
-	# That character later answers a claim some world already held for it (a
-	# resume) with No. The legacy Yes must survive the first scoped answer.
-	ENDING.record_answer(legacy, "creature-held", false)
+	var legacy := _legacy_flags()
+	var party := _party_with(["sparkit", "sparkit"])
+	assert_true(ENDING.legacy_undecided(legacy), "a bare receipt with no answer is undecided")
+	assert_false(ENDING.accepted_anywhere(legacy, party),
+		"an undecided receipt is no acceptance: it never said Yes")
+	var intent := ENDING.claim_intent(legacy, party)
+	assert_false(bool(intent.already_accepted), "an undecided receipt sends no withholding hint")
+	assert_true(ENDING.offer_owed(state, "trainer-old", freed, bool(intent.already_accepted)),
+		"a world where the character fought offers it the Stormheart once more")
+	# The re-offer is answered No: that scoped answer settles the receipt.
+	ENDING.record_answer(legacy, "creature-new", false, party)
+	assert_false(ENDING.legacy_undecided(legacy), "the first scoped answer ends the undecided state")
+	assert_false(legacy.has(ENDING.ACCEPTED_FLAG), "a refused re-offer never becomes an acceptance")
+	assert_true(legacy.has(ENDING.PERSONAL_RECEIPT_FLAG), "the legacy receipt is never cleared")
+	assert_eq(ENDING.recorded_answer(legacy, "creature-new"), "refused")
+	var answered := {"participants": ["trainer-old"], "claims": {
+		"trainer-old": {"creature": {"uid": "creature-new"}, "settled": true, "kept": false}}}
+	assert_false(ENDING.offer_owed(answered, "trainer-old",
+			freed + [ENDING.resolution_flag(false, "trainer-old")], false),
+		"the world that re-offered it never offers a second time")
+
+
+func test_a_legacy_re_offer_accepted_is_granted_once() -> void:
+	var legacy := _legacy_flags()
+	var party := _party_with(["sparkit"])
+	ENDING.record_answer(legacy, "creature-new", true, party)
+	assert_true(legacy.has(ENDING.ACCEPTED_FLAG), "a kept re-offer is a portable acceptance")
+	assert_false(ENDING.legacy_undecided(legacy))
+	assert_false(ENDING.offer_owed({"participants": ["trainer-old"]}, "trainer-old", [ENDING.FREED_FLAG],
+			bool(ENDING.claim_intent(legacy, party).already_accepted)),
+		"after accepting the re-offer no other world grants a second Stormheart")
+
+
+func test_a_legacy_receipt_beside_a_held_stormheart_reads_as_accepted() -> void:
+	var legacy := _legacy_flags()
+	var holding := _party_with(["sparkit", ENDING.LEGENDARY_SPECIES])
+	assert_true(ENDING.party_holds_stormheart(holding))
+	assert_true(ENDING.accepted_anywhere(legacy, holding),
+		"a roster still holding the older build's Stormheart is that build's Yes")
+	assert_false(ENDING.offer_owed({"participants": ["trainer-old"]}, "trainer-old", [ENDING.FREED_FLAG],
+			bool(ENDING.claim_intent(legacy, holding).already_accepted)),
+		"no offer is granted twice: a held Stormheart withholds the re-offer")
+	# A later scoped No (a world's held claim resumed) cannot turn that Yes into No.
+	ENDING.record_answer(legacy, "creature-held", false, holding)
 	assert_true(legacy.has(ENDING.ACCEPTED_FLAG) and legacy.has(ENDING.PERSONAL_RECEIPT_FLAG),
-		"the legacy receipt becomes an explicit acceptance before any scoped answer, and stays")
-	assert_true(ENDING.accepted_anywhere(legacy), "a later refusal never turns a legacy Yes into No")
+		"the evident legacy Yes becomes an explicit acceptance before any scoped answer")
+	assert_true(ENDING.accepted_anywhere(legacy), "and stays one without the roster check")
+
+
+func test_the_legacy_world_keeps_its_own_recorded_answer() -> void:
+	var migrated := ENDING.migrate_state(LEGACY_WORLD_ENDING.duplicate(true))
+	var claim: Dictionary = (migrated.claims as Dictionary)["trainer-old"]
+	assert_true(bool(claim.settled) and not bool(claim.kept),
+		"the old single-recipient record migrates as that character's settled claim")
+	assert_false(ENDING.offer_owed(migrated, "trainer-old", [ENDING.FREED_FLAG], false),
+		"the world that already recorded the old answer does not re-offer it")
+	assert_eq(ENDING.unreceipted_settled_claims(migrated, [ENDING.FREED_FLAG]), [["trainer-old", false]],
+		"the host commits the old answer as that character's world receipt, once")
+	assert_eq(ENDING.unreceipted_settled_claims(migrated,
+			[ENDING.FREED_FLAG, ENDING.resolution_flag(false, "trainer-old")]), [],
+		"a world already holding the receipt commits nothing more")
+	var legacy := _legacy_flags()
+	assert_false(ENDING.settle_legacy_from_world(legacy, false),
+		"a world's recorded refusal (maybe the older build's automatic settle) keeps the re-offer")
+	assert_true(ENDING.legacy_undecided(legacy))
+	assert_true(ENDING.settle_legacy_from_world(legacy, true),
+		"a world that recorded the older build's Yes settles the receipt as accepted")
+	assert_true(ENDING.accepted_anywhere(legacy, _party_with(["sparkit"])),
+		"even with that Stormheart since let go, no other world grants a second one")
+	assert_false(ENDING.settle_legacy_from_world(legacy, true), "settled once")
+	var open_claim := {"claims": {"trainer-b": {"creature": {}, "settled": false, "kept": false}}}
+	assert_eq(ENDING.unreceipted_settled_claims(open_claim, []), [], "an unanswered claim is not receipted")
 
 
 func test_a_saved_answer_resumes_only_the_claim_it_answered() -> void:

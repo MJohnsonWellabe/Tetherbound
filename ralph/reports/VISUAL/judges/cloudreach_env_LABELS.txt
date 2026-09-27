@@ -1,0 +1,38 @@
+Cloudreach ENVIRONMENT frames. Each is a hand-checked traversal stand, shot with the production gameplay camera at three times: day 10:00, dusk 18:30, night 23:00. The trainer (1.80 m) stands with their companion creature beside them. Wild creatures are not spawned (spawner paused for capture), so absence of wild creatures is not a defect; the companion IS expected in frame. Frames are named for the traversal stand, not a landmark.
+
+E001 E001_cloudreach_env_gate_lower_cliffs_0_day.png | stand: gate_lower_cliffs / Realm Gate Crag | companion: galecrest
+E002 E002_cloudreach_env_gate_lower_cliffs_0_dusk.png | stand: gate_lower_cliffs / Realm Gate Crag | companion: galecrest
+E003 E003_cloudreach_env_gate_lower_cliffs_0_night.png | stand: gate_lower_cliffs / Realm Gate Crag | companion: galecrest
+E004 E004_cloudreach_env_gate_lower_cliffs_1_day.png | stand: gate_lower_cliffs / Galefoot Waycamp | companion: galecrest
+E005 E005_cloudreach_env_gate_lower_cliffs_1_dusk.png | stand: gate_lower_cliffs / Galefoot Waycamp | companion: galecrest
+E006 E006_cloudreach_env_gate_lower_cliffs_1_night.png | stand: gate_lower_cliffs / Galefoot Waycamp | companion: galecrest
+E007 E007_cloudreach_env_broken_causeways_0_day.png | stand: broken_causeways / Three Bells Bridge | companion: galecrest
+E008 E008_cloudreach_env_broken_causeways_0_dusk.png | stand: broken_causeways / Three Bells Bridge | companion: galecrest
+E009 E009_cloudreach_env_broken_causeways_0_night.png | stand: broken_causeways / Three Bells Bridge | companion: galecrest
+SKIPPED cloudreach_env_broken_causeways_1_day: camera 25.4 m from the trainer pivot (rig detached); interruptions []
+SKIPPED cloudreach_env_broken_causeways_1_dusk: camera 23.1 m from the trainer pivot (rig detached); interruptions []
+SKIPPED cloudreach_env_broken_causeways_1_night: camera 26.7 m from the trainer pivot (rig detached); interruptions []
+E010 E010_cloudreach_env_windscar_ravine_0_day.png | stand: windscar_ravine / Windscar Beacon | companion: galecrest
+E011 E011_cloudreach_env_windscar_ravine_0_dusk.png | stand: windscar_ravine / Windscar Beacon | companion: galecrest
+E012 E012_cloudreach_env_windscar_ravine_0_night.png | stand: windscar_ravine / Windscar Beacon | companion: galecrest
+E013 E013_cloudreach_env_windscar_ravine_1_day.png | stand: windscar_ravine / Windscar Flight Aerie | companion: galecrest
+E014 E014_cloudreach_env_windscar_ravine_1_dusk.png | stand: windscar_ravine / Windscar Flight Aerie | companion: galecrest
+E015 E015_cloudreach_env_windscar_ravine_1_night.png | stand: windscar_ravine / Windscar Flight Aerie | companion: galecrest
+E016 E016_cloudreach_env_high_roost_sky_shrine_0_day.png | stand: high_roost_sky_shrine / Sky Shrine | companion: galecrest
+E017 E017_cloudreach_env_high_roost_sky_shrine_0_dusk.png | stand: high_roost_sky_shrine / Sky Shrine | companion: galecrest
+E018 E018_cloudreach_env_high_roost_sky_shrine_0_night.png | stand: high_roost_sky_shrine / Sky Shrine | companion: galecrest
+E019 E019_cloudreach_env_high_roost_sky_shrine_1_day.png | stand: high_roost_sky_shrine / The High Perches | companion: galecrest
+E020 E020_cloudreach_env_high_roost_sky_shrine_1_dusk.png | stand: high_roost_sky_shrine / The High Perches | companion: galecrest
+E021 E021_cloudreach_env_high_roost_sky_shrine_1_night.png | stand: high_roost_sky_shrine / The High Perches | companion: galecrest
+E022 E022_cloudreach_env_upper_cloudreach_0_day.png | stand: upper_cloudreach / Cliffhold | companion: galecrest
+E023 E023_cloudreach_env_upper_cloudreach_0_dusk.png | stand: upper_cloudreach / Cliffhold | companion: galecrest
+E024 E024_cloudreach_env_upper_cloudreach_0_night.png | stand: upper_cloudreach / Cliffhold | companion: galecrest
+E025 E025_cloudreach_env_upper_cloudreach_1_day.png | stand: upper_cloudreach / Old Wind Observatory | companion: galecrest
+E026 E026_cloudreach_env_upper_cloudreach_1_dusk.png | stand: upper_cloudreach / Old Wind Observatory | companion: galecrest
+E027 E027_cloudreach_env_upper_cloudreach_1_night.png | stand: upper_cloudreach / Old Wind Observatory | companion: galecrest
+E028 E028_cloudreach_env_summit_final_stronghold_0_day.png | stand: summit_final_stronghold / Summit Eyrie | companion: galecrest
+E029 E029_cloudreach_env_summit_final_stronghold_0_dusk.png | stand: summit_final_stronghold / Summit Eyrie | companion: galecrest
+E030 E030_cloudreach_env_summit_final_stronghold_0_night.png | stand: summit_final_stronghold / Summit Eyrie | companion: galecrest
+E031 E031_cloudreach_env_summit_final_stronghold_1_day.png | stand: summit_final_stronghold / Stormward Overlook | companion: galecrest
+E032 E032_cloudreach_env_summit_final_stronghold_1_dusk.png | stand: summit_final_stronghold / Stormward Overlook | companion: galecrest
+E033 E033_cloudreach_env_summit_final_stronghold_1_night.png | stand: summit_final_stronghold / Stormward Overlook | companion: galecrest

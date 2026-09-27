@@ -1,0 +1,39 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_tidewake_b_four_character_ledger: 1 of 574 test files
+F13#4 CHAIN PAYOUTS (who is paid)
+  side_water_cradle_care seam water:tidal_cradle:harvest:007 reef_stone x4 -> first gatherer only (world-once harvest)
+  cradle_care_report grant {"berries":3.0} -> reporting character only (world-scoped step record)
+  pocket brine_upper_shelf skill_candy_i x1 -> each character (character_once)
+  pocket salt_bell_terrace skill_candy_i x1 -> each character (character_once)
+  pocket lantern_hidden_cache skill_candy_i x1 -> each character (character_once)
+  pocket gull_research_satchel skill_candy_ii x1 -> each character (character_once)
+  pocket garden_exposed_vault skill_candy_ii x1 -> each character (character_once)
+  pocket deep_watch_tidecoil_cache skill_candy_iii x1 -> each character (character_once)
+  swim-mount compatible: cannonback, aquaryn, riverdrake, sirenseal, mosshell; wild before Tidewake: mosshell
+  saddle-gated chain islands: drowned_garden, deep_watch
+  ok    test_tidewake_b_four_character_ledger.gd :: test_chain_payouts_and_swimmer_precondition_are_disclosed
+F13#4 RESERVE before Veilfall (stage<=6): world-once basic-heal pickups=35 (+42 craftable Small Potions from residual tide_bloom=42 reed=88) vs 8 required (4 chars x 2); 19 each on an even split
+  ok    test_tidewake_b_four_character_ledger.gd :: test_emergency_reserve_before_veilfall_for_four_characters
+F13#4 LEDGER (4 characters; world-once debits once, personal kits x4; supply = world-once harvest on islands reachable without a swim mount)
+  DEBIT dock reedhaven_repair              reed_fiber   6  by stage 1  scope=world
+  DEBIT dock reedhaven_repair              driftwood    4  by stage 1  scope=world
+  DEBIT chain lastlight_shelter_supply     driftwood    4  by stage 7  scope=world
+  DEBIT chain lastlight_shelter_supply     reed_fiber   4  by stage 7  scope=world
+  DEBIT craft water_swim_saddle            reed_fiber   8  by stage 5  scope=character
+  DEBIT craft water_swim_saddle            driftwood    6  by stage 5  scope=character
+  DEBIT craft water_swim_saddle            reef_stone   4  by stage 5  scope=character
+  item        stage  world personal  required supply   margin per-chr verdict
+  reed_fiber      1      6        0         6     60   10.00x      13 SOLVENT
+  reed_fiber      5      6        8        38    117    3.08x      27 SOLVENT
+  reed_fiber      7     10        8        42    129    3.07x      29 SOLVENT
+  driftwood       1      4        0         4     42   10.50x       9 SOLVENT
+  driftwood       5      4        6        28     99    3.54x      23 SOLVENT
+  driftwood       7      8        6        32    114    3.56x      26 SOLVENT
+  reef_stone      5      0        4        16     64    4.00x      16 SOLVENT
+  reef_stone      7      0        4        16     74    4.62x      18 SOLVENT
+  ok    test_tidewake_b_four_character_ledger.gd :: test_four_character_material_ledger_is_solvent_by_gate
+  ok    test_tidewake_b_four_character_ledger.gd :: test_gate_order_is_derived_and_the_mandatory_route_needs_no_swimmer
+  ok    test_tidewake_b_four_character_ledger.gd :: test_saddle_recipe_matches_swimming_config_and_is_a_personal_optional_kit
+
+5 tests, 67 assertions, 0 failed

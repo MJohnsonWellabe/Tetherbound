@@ -11,7 +11,7 @@ extends SceneTree
 const OPENING_DRIVE := preload("res://tests/helpers/gate_a_opening_drive.gd")
 const NPC_GATHER_SEGMENT := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
-const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
+const CAMPSITE_SEGMENT := preload("res://tests/helpers/gate_a_campsite_segment.gd")
 const CONTINUOUS_CORE_FLAG := "--gate-a-continuous-core"
 
 var _failures: Array[String] = []
@@ -59,12 +59,22 @@ func _run_continuous_core() -> void:
 		for failure: String in npc_failures:
 			_failures.append("NPC/gather continuation: %s" % failure)
 		return
-	var route: Dictionary = await MATERIAL_ROUTE.new().run(self, _world, _game, _player, _rig)
+	var material_route = MATERIAL_ROUTE.new()
+	var route: Dictionary = await material_route.run(self, _world, _game, _player, _rig)
+	for line: Variant in (route.get("transcript", []) as Array):
+		print("GATE A MATERIAL — %s" % str(line))
 	if not bool(route.get("passed", false)):
 		for failure: Variant in (route.get("failures", []) as Array):
 			_failures.append("material route: %s" % str(failure))
 		return
-	var built: Dictionary = await BUILD_SEGMENT.new().run(self, _world, _player, _rig)
+	# The CURRENT paid build: tent, campfire, bedroll and three creature beds,
+	# exactly what the material route funds. The legacy house segment
+	# (`gate_a_build_segment.gd`, 39 wood / 34 stone) is no longer the paid
+	# build; see `gate_a_campsite_segment.gd`'s header.
+	var built: Dictionary = await CAMPSITE_SEGMENT.new().run_campsite(
+		self, _world, _game, _player, _rig, material_route)
+	for line: Variant in (built.get("transcript", []) as Array):
+		print("GATE A PAID BUILD — %s" % str(line))
 	if not bool(built.get("passed", false)):
 		for failure: Variant in (built.get("failures", []) as Array):
 			_failures.append("paid build: %s" % str(failure))
@@ -73,7 +83,8 @@ func _run_continuous_core() -> void:
 func _finish() -> void:
 	print("")
 	if _failures.is_empty():
-		print("gate A opening segment: OK — title through natural catch passed continuously with parsed controller input")
+		print("gate A opening segment: OK — title through natural catch%s passed continuously with parsed controller input" % (
+			", village, material route and paid campsite" if OS.get_cmdline_user_args().has(CONTINUOUS_CORE_FLAG) else ""))
 		quit(0)
 		return
 	for line: String in _failures:

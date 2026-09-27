@@ -461,6 +461,31 @@
   },
   {
    "peer": 1,
+   "probe": "downed",
+   "expect_data": {
+    "locomotion": true
+   },
+   "continue_on_fail": true,
+   "label": "DIAG: the guest can still move after the control teleport (before any launch attempt)"
+  },
+  {
+   "peer": 1,
+   "action": "press",
+   "args": {
+    "action": "build_cancel"
+   },
+   "expect": "any",
+   "label": "CONTROL setup (any verdict: once the defect is fixed no menu is open and the harness refuses B as an inert press; the CONTROL fly_launch below still fails on a menu left open): close the build menu the REJOIN fly_land left open. Product defect, disclosed: on a controller fly_descend and build_shortcut are both the left trigger, so holding LT to descend opens the build catalogue mid-flight (playground_hud.gd build_shortcut is not gated on flight); a player closes it with B, as here"
+  },
+  {
+   "peer": 1,
+   "probe": "flying",
+   "expect": "any",
+   "continue_on_fail": true,
+   "label": "DIAG: flight and landing-anchor state just before the control launch"
+  },
+  {
+   "peer": 1,
    "action": "fly_launch",
    "args": {
     "height": 10.0

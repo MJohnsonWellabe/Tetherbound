@@ -949,7 +949,14 @@ func _capture_region_row(spec: Dictionary, row: Dictionary, t: String) -> void:
 		ally = null
 	if ally != null:
 		var basis := Basis(Vector3.UP, yaw)
-		var spot := feet + basis * Vector3(3.2, 0.0, -0.8)
+		# Clear the trainer by the companion's own footprint: a fixed 3.2 m put
+		# Galecrest's spread wings over the trainer (Cloudreach env E031-E033).
+		var ally_model := ally.get_node_or_null(^"Model") as Node3D
+		var size := _measured(ally_model if ally_model != null else ally)
+		# Half the horizontal diagonal: the companion's yaw is not set here, so
+		# a wing span may lie across the camera's side axis. Empty bounds keep 3.2.
+		var side := maxf(3.2, Vector2(size.x, size.z).length() * 0.5 + 1.2)
+		var spot := feet + basis * Vector3(side, 0.0, -0.8)
 		var fy := _floor_hit(spot, 6.0)
 		ally.global_position = Vector3(spot.x, (fy if is_finite(fy) else feet.y) + 0.05, spot.z)
 		if ally is CharacterBody3D:

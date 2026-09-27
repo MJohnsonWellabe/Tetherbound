@@ -1,0 +1,2767 @@
+{
+  "accepted": false,
+  "errors": [],
+  "fixture": "production CombatManager + WildCreature bodies on a flat collider (combat_depth_pilot.gd)",
+  "multiplier_override": 0.0,
+  "party": {
+    "lead": [
+      "terrapup",
+      "ripplet",
+      "galewisp"
+    ],
+    "level": 43,
+    "retained": [
+      "bramblebun",
+      "mudsnout",
+      "pipwing",
+      "trailpup"
+    ]
+  },
+  "rows": [
+    {
+      "case": "water_aquaryn_alpha",
+      "kind": "alpha",
+      "party_level": 43,
+      "pilots": {
+        "MASHER": {
+          "hits": 1727,
+          "incoming_hits": 160,
+          "lead_faint_rate": 0.0,
+          "max_seconds": 58.2666666666667,
+          "max_single_hit_frac": 0.0661427048709979,
+          "max_tell_s": 1.7,
+          "mean_lead_cost": 0.374584674888037,
+          "median_lead_cost": 0.390300381925726,
+          "median_party_cost": 0.0848479091142883,
+          "median_seconds": 56.4833333333333,
+          "min_tell_s": 1.25,
+          "party_wipe_rate": 0.0,
+          "runs": 24,
+          "stalled": 0,
+          "win_rate": 1.0,
+          "wins": 24
+        },
+        "READER": {
+          "hits": 1087,
+          "incoming_hits": 54,
+          "lead_faint_rate": 0.0,
+          "max_seconds": 122.75,
+          "max_single_hit_frac": 0.0659113685479429,
+          "max_tell_s": 1.7,
+          "mean_lead_cost": 0.136005738555318,
+          "median_lead_cost": 0.122945965013168,
+          "median_party_cost": 0.0267273836985147,
+          "median_seconds": 101.591666666667,
+          "min_tell_s": 1.25,
+          "party_wipe_rate": 0.0,
+          "runs": 24,
+          "stalled": 0,
+          "win_rate": 1.0,
+          "wins": 24
+        }
+      },
+      "reader_to_masher_lead_cost": 0.315003445311935,
+      "starter": "ripplet"
+    }
+  ],
+  "runs": [
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 15,
+      "exhausted_frames": 2942,
+      "faints": 0,
+      "hits": 72,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.388701904217799,
+      "max_hit_frac": 0.0642045195105754,
+      "misses": 0,
+      "party_lost_frac": 0.0845004139603911,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 999,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2094,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3386,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.4333333333333,
+      "seed": 2072280379,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 14,
+      "exhausted_frames": 2911,
+      "faints": 0,
+      "hits": 71,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.401224531489397,
+      "max_hit_frac": 0.0620414193761626,
+      "misses": 0,
+      "party_lost_frac": 0.0872227242368253,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2056,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3383,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.3833333333333,
+      "seed": 2072280380,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 15,
+      "exhausted_frames": 2941,
+      "faints": 0,
+      "hits": 72,
+      "incoming_hits": 6,
+      "lead_lost_frac": 0.336958221570901,
+      "max_hit_frac": 0.0632421194539016,
+      "misses": 0,
+      "party_lost_frac": 0.0732517872980221,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2062,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3398,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.6333333333333,
+      "seed": 2072280381,
+      "stagger_events": 14,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 15,
+      "exhausted_frames": 2929,
+      "faints": 0,
+      "hits": 72,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.389368305138587,
+      "max_hit_frac": 0.0648345851435443,
+      "misses": 0,
+      "party_lost_frac": 0.08464528372578,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2114,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3388,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.4666666666667,
+      "seed": 2072280382,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 15,
+      "exhausted_frames": 2933,
+      "faints": 0,
+      "hits": 72,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.399487394336561,
+      "max_hit_frac": 0.0623313646641815,
+      "misses": 0,
+      "party_lost_frac": 0.0868450857253392,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2050,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3409,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 6,
+      "quick_uses": 63,
+      "seconds": 56.8166666666667,
+      "seed": 2072280383,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 15,
+      "exhausted_frames": 3020,
+      "faints": 0,
+      "hits": 73,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.400199927072374,
+      "max_hit_frac": 0.0661427048709979,
+      "misses": 0,
+      "party_lost_frac": 0.0869999841461683,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2137,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3496,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 63,
+      "seconds": 58.2666666666667,
+      "seed": 2072280384,
+      "stagger_events": 14,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 15,
+      "exhausted_frames": 2931,
+      "faints": 0,
+      "hits": 72,
+      "incoming_hits": 6,
+      "lead_lost_frac": 0.324940314866753,
+      "max_hit_frac": 0.0636895572106508,
+      "misses": 0,
+      "party_lost_frac": 0.0706391988840765,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2056,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3371,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 4,
+      "quick_uses": 61,
+      "seconds": 56.1833333333333,
+      "seed": 2072280385,
+      "stagger_events": 14,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 14,
+      "exhausted_frames": 2847,
+      "faints": 0,
+      "hits": 69,
+      "incoming_hits": 6,
+      "lead_lost_frac": 0.345871345391538,
+      "max_hit_frac": 0.0635137511953335,
+      "misses": 0,
+      "party_lost_frac": 0.0751894229112038,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2056,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3296,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 4,
+      "quick_uses": 59,
+      "seconds": 54.9333333333333,
+      "seed": 2072280386,
+      "stagger_events": 14,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 14,
+      "exhausted_frames": 2917,
+      "faints": 0,
+      "hits": 71,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.391931175771684,
+      "max_hit_frac": 0.0632843026737862,
+      "misses": 0,
+      "party_lost_frac": 0.0852024295155833,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2062,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3389,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.4833333333333,
+      "seed": 2072280387,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 14,
+      "exhausted_frames": 2917,
+      "faints": 0,
+      "hits": 71,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.381706298414644,
+      "max_hit_frac": 0.0585492062449574,
+      "misses": 0,
+      "party_lost_frac": 0.0829796300901399,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2062,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3389,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.4833333333333,
+      "seed": 2072280388,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 14,
+      "exhausted_frames": 2911,
+      "faints": 0,
+      "hits": 71,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.391232458712865,
+      "max_hit_frac": 0.0616074043057249,
+      "misses": 0,
+      "party_lost_frac": 0.0850505345027966,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2056,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3383,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.3833333333333,
+      "seed": 3960743148,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 14,
+      "exhausted_frames": 2917,
+      "faints": 0,
+      "hits": 71,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.393788723234139,
+      "max_hit_frac": 0.0639917494489545,
+      "misses": 0,
+      "party_lost_frac": 0.0856062441813344,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2137,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3389,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.4833333333333,
+      "seed": 3960743149,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 0,
+      "charged_uses": 15,
+      "exhausted_frames": 2971,
+      "faints": 0,
+      "hits": 72,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.388299251520057,
+      "max_hit_frac": 0.0611194644948122,
+      "misses": 0,
+      "party_lost_frac": 0.0844128807652296,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 999,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2094,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3430,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 57.1666666666667,
+      "seed": 3960743150,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 15,
+      "exhausted_frames": 2990,
+      "faints": 0,
+      "hits": 75,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.397848187567794,
+      "max_hit_frac": 0.0621633164906818,
+      "misses": 0,
+      "party_lost_frac": 0.0864887364277813,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2108,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3440,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 65,
+      "seconds": 57.3333333333333,
+      "seed": 3960743151,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 14,
+      "exhausted_frames": 2917,
+      "faints": 0,
+      "hits": 71,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.409490817814695,
+      "max_hit_frac": 0.0650682311795042,
+      "misses": 0,
+      "party_lost_frac": 0.0890197430031945,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2137,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3389,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.4833333333333,
+      "seed": 3960743152,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 14,
+      "exhausted_frames": 2864,
+      "faints": 0,
+      "hits": 71,
+      "incoming_hits": 6,
+      "lead_lost_frac": 0.340155915722997,
+      "max_hit_frac": 0.0629398825765081,
+      "misses": 0,
+      "party_lost_frac": 0.0739469382006517,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2030,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3302,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 4,
+      "quick_uses": 61,
+      "seconds": 55.0333333333333,
+      "seed": 3960743153,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 15,
+      "exhausted_frames": 2970,
+      "faints": 0,
+      "hits": 73,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.39285747073628,
+      "max_hit_frac": 0.0653032840667785,
+      "misses": 0,
+      "party_lost_frac": 0.0854037979861477,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 999,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2161,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3433,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 6,
+      "quick_uses": 64,
+      "seconds": 57.2166666666667,
+      "seed": 3960743154,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 16,
+      "exhausted_frames": 3040,
+      "faints": 0,
+      "hits": 77,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.400074434636815,
+      "max_hit_frac": 0.0659845413759497,
+      "misses": 0,
+      "party_lost_frac": 0.0869727031819162,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2056,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3481,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 6,
+      "quick_uses": 67,
+      "seconds": 58.0166666666667,
+      "seed": 3960743155,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 14,
+      "exhausted_frames": 2847,
+      "faints": 0,
+      "hits": 69,
+      "incoming_hits": 6,
+      "lead_lost_frac": 0.343801551785911,
+      "max_hit_frac": 0.0613487085405287,
+      "misses": 0,
+      "party_lost_frac": 0.0747394677795455,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2030,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3296,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 4,
+      "quick_uses": 59,
+      "seconds": 54.9333333333333,
+      "seed": 3960743156,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 15,
+      "exhausted_frames": 2937,
+      "faints": 0,
+      "hits": 73,
+      "incoming_hits": 6,
+      "lead_lost_frac": 0.319675110325545,
+      "max_hit_frac": 0.0573501838504018,
+      "misses": 0,
+      "party_lost_frac": 0.0694945892012053,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2132,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3398,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 6,
+      "quick_uses": 64,
+      "seconds": 56.6333333333333,
+      "seed": 3960743157,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 14,
+      "exhausted_frames": 2937,
+      "faints": 0,
+      "hits": 72,
+      "incoming_hits": 6,
+      "lead_lost_frac": 0.322769402997273,
+      "max_hit_frac": 0.0571194136314561,
+      "misses": 0,
+      "party_lost_frac": 0.0701672615211462,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2137,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3392,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 4,
+      "quick_uses": 62,
+      "seconds": 56.5333333333333,
+      "seed": 3960743181,
+      "stagger_events": 14,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 15,
+      "exhausted_frames": 2941,
+      "faints": 0,
+      "hits": 72,
+      "incoming_hits": 6,
+      "lead_lost_frac": 0.325177487684279,
+      "max_hit_frac": 0.0584196505839872,
+      "misses": 0,
+      "party_lost_frac": 0.0706907581922345,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2062,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3398,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.6333333333333,
+      "seed": 3960743182,
+      "stagger_events": 14,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 1,
+      "charged_uses": 14,
+      "exhausted_frames": 2911,
+      "faints": 0,
+      "hits": 71,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.398775105159259,
+      "max_hit_frac": 0.0629576129349863,
+      "misses": 0,
+      "party_lost_frac": 0.0866902402520127,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2056,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3383,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 62,
+      "seconds": 56.3833333333333,
+      "seed": 3960743183,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 0,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 15,
+      "exhausted_frames": 2978,
+      "faints": 0,
+      "hits": 74,
+      "incoming_hits": 7,
+      "lead_lost_frac": 0.405696861144733,
+      "max_hit_frac": 0.0642945515148238,
+      "misses": 0,
+      "party_lost_frac": 0.0881949698140724,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 958,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2143,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 3426,
+      "pilot": "MASHER",
+      "player_windup_cancellations": 5,
+      "quick_uses": 64,
+      "seconds": 57.1,
+      "seed": 3960743184,
+      "stagger_events": 13,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 22,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 696,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 3,
+      "lead_lost_frac": 0.184355960864049,
+      "max_hit_frac": 0.064877095236764,
+      "misses": 0,
+      "party_lost_frac": 0.0400773827965324,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1333,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2915,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6167,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 102.783333333333,
+      "seed": 2072280379,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 12,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 4,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 639,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 44,
+      "incoming_hits": 2,
+      "lead_lost_frac": 0.121415109907286,
+      "max_hit_frac": 0.0615556308813845,
+      "misses": 0,
+      "party_lost_frac": 0.0263945891102795,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1336,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2950,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 5595,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 37,
+      "seconds": 93.25,
+      "seed": 2072280380,
+      "stagger_events": 10,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 26,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 758,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 44,
+      "incoming_hits": 2,
+      "lead_lost_frac": 0.12049721070324,
+      "max_hit_frac": 0.0608032635021468,
+      "misses": 0,
+      "party_lost_frac": 0.0261950458050522,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1330,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2912,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6385,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 37,
+      "seconds": 106.416666666667,
+      "seed": 2072280381,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 30,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 861,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 46,
+      "incoming_hits": 2,
+      "lead_lost_frac": 0.111083382761085,
+      "max_hit_frac": 0.0556368499052615,
+      "misses": 0,
+      "party_lost_frac": 0.0241485614698012,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1332,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2913,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6798,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 39,
+      "seconds": 113.3,
+      "seed": 2072280382,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 20,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 4,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 695,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 2,
+      "lead_lost_frac": 0.122701877750104,
+      "max_hit_frac": 0.0657795421158823,
+      "misses": 0,
+      "party_lost_frac": 0.0266743212500227,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1344,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2737,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 5928,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 98.8,
+      "seed": 2072280383,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 14,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 546,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 1,
+      "lead_lost_frac": 0.0547325632161568,
+      "max_hit_frac": 0.0547325632161568,
+      "misses": 0,
+      "party_lost_frac": 0.0118983833078601,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1215,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2752,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 5478,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 91.3,
+      "seed": 2072280384,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 18,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 4,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 668,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 3,
+      "lead_lost_frac": 0.178974960142593,
+      "max_hit_frac": 0.0635531531119289,
+      "misses": 0,
+      "party_lost_frac": 0.0389076000309982,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1330,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2948,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6035,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 100.583333333333,
+      "seed": 2072280385,
+      "stagger_events": 10,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 26,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 781,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 46,
+      "incoming_hits": 3,
+      "lead_lost_frac": 0.179552978576803,
+      "max_hit_frac": 0.0649171652997358,
+      "misses": 0,
+      "party_lost_frac": 0.0390332562123485,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1222,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2753,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6549,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 39,
+      "seconds": 109.15,
+      "seed": 2072280386,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 16,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 628,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 1,
+      "lead_lost_frac": 0.0561202129494945,
+      "max_hit_frac": 0.0561202129494945,
+      "misses": 0,
+      "party_lost_frac": 0.0122000462933682,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1332,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2914,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 5772,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 96.2,
+      "seed": 2072280387,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 20,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 723,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 46,
+      "incoming_hits": 0,
+      "lead_lost_frac": 0.0,
+      "max_hit_frac": 0.0,
+      "misses": 0,
+      "party_lost_frac": 0.0,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1335,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2916,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6198,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 39,
+      "seconds": 103.3,
+      "seed": 2072280388,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 16,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 8,
+      "cone_sidestep_frames": 633,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 46,
+      "incoming_hits": 2,
+      "lead_lost_frac": 0.123190052276231,
+      "max_hit_frac": 0.0628448740337312,
+      "misses": 0,
+      "party_lost_frac": 0.0267804461470067,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1330,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2913,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 5966,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 99.4333333333333,
+      "seed": 3960743148,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 38,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 8,
+      "cone_sidestep_frames": 927,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 5,
+      "lead_lost_frac": 0.309857122096795,
+      "max_hit_frac": 0.0643727260808453,
+      "misses": 0,
+      "party_lost_frac": 0.0673602439340858,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1362,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2915,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 7365,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 37,
+      "seconds": 122.75,
+      "seed": 3960743149,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 18,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 4,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 736,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 46,
+      "incoming_hits": 1,
+      "lead_lost_frac": 0.0611027536355464,
+      "max_hit_frac": 0.0611027536355464,
+      "misses": 0,
+      "party_lost_frac": 0.0132832073120752,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1372,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2736,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 5909,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 39,
+      "seconds": 98.4833333333333,
+      "seed": 3960743150,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 24,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 709,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 4,
+      "lead_lost_frac": 0.245513355265471,
+      "max_hit_frac": 0.0634512607895122,
+      "misses": 0,
+      "party_lost_frac": 0.0533724685359719,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1337,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2952,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6326,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 105.433333333333,
+      "seed": 3960743151,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 18,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 637,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 1,
+      "lead_lost_frac": 0.0577330668234223,
+      "max_hit_frac": 0.0577330668234223,
+      "misses": 0,
+      "party_lost_frac": 0.0125506667007439,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1228,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2753,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 5884,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 98.0666666666667,
+      "seed": 3960743152,
+      "stagger_events": 10,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 22,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 4,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 698,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 1,
+      "lead_lost_frac": 0.0638060364356408,
+      "max_hit_frac": 0.0638060364356408,
+      "misses": 0,
+      "party_lost_frac": 0.0138708774860088,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1215,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2904,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6113,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 101.883333333333,
+      "seed": 3960743153,
+      "stagger_events": 8,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 16,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 626,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 1,
+      "lead_lost_frac": 0.0581293269436829,
+      "max_hit_frac": 0.0581293269436829,
+      "misses": 0,
+      "party_lost_frac": 0.0126368102051485,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1330,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2913,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 5767,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 96.1166666666667,
+      "seed": 3960743154,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 30,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 865,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 46,
+      "incoming_hits": 4,
+      "lead_lost_frac": 0.243197189942056,
+      "max_hit_frac": 0.0657732458442632,
+      "misses": 0,
+      "party_lost_frac": 0.0528689543352293,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1221,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2964,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6778,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 39,
+      "seconds": 112.966666666667,
+      "seed": 3960743155,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 20,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 704,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 3,
+      "lead_lost_frac": 0.172567469151261,
+      "max_hit_frac": 0.0585178223822653,
+      "misses": 0,
+      "party_lost_frac": 0.037514667206796,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1334,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2914,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6078,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 101.3,
+      "seed": 3960743156,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 26,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 768,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 3,
+      "lead_lost_frac": 0.185710071813742,
+      "max_hit_frac": 0.0657330541037724,
+      "misses": 0,
+      "party_lost_frac": 0.0403717547421177,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1222,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2758,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6390,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 106.5,
+      "seed": 3960743157,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 28,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 2,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 858,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 48,
+      "incoming_hits": 4,
+      "lead_lost_frac": 0.248375012156319,
+      "max_hit_frac": 0.0646232701722541,
+      "misses": 0,
+      "party_lost_frac": 0.0539945678600694,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1332,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2914,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6894,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 41,
+      "seconds": 114.9,
+      "seed": 3960743181,
+      "stagger_events": 8,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 10,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 4,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 548,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 44,
+      "incoming_hits": 1,
+      "lead_lost_frac": 0.0640352495219886,
+      "max_hit_frac": 0.0640352495219885,
+      "misses": 0,
+      "party_lost_frac": 0.0139207064178236,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1337,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2923,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 5385,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 37,
+      "seconds": 89.75,
+      "seed": 3960743182,
+      "stagger_events": 10,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 18,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 604,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 45,
+      "incoming_hits": 3,
+      "lead_lost_frac": 0.174154760212746,
+      "max_hit_frac": 0.0659113685479429,
+      "misses": 0,
+      "party_lost_frac": 0.0378597304810318,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1224,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2920,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 5828,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 38,
+      "seconds": 97.1333333333333,
+      "seed": 3960743183,
+      "stagger_events": 10,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    },
+    {
+      "burst_uses": 30,
+      "case": "water_aquaryn_alpha",
+      "charged_interrupts": 3,
+      "charged_uses": 7,
+      "cone_sidestep_frames": 857,
+      "exhausted_frames": 0,
+      "faints": 0,
+      "hits": 46,
+      "incoming_hits": 2,
+      "lead_lost_frac": 0.12733200218192,
+      "max_hit_frac": 0.0657720189892788,
+      "misses": 0,
+      "party_lost_frac": 0.0276808700395478,
+      "phases": [
+        {
+          "frame": 0,
+          "phase": "shore_crest"
+        },
+        {
+          "frame": 1364,
+          "phase": "tidal_run"
+        },
+        {
+          "frame": 2916,
+          "phase": "broken_wake"
+        }
+      ],
+      "physics_frames": 6868,
+      "pilot": "READER",
+      "player_windup_cancellations": 0,
+      "quick_uses": 39,
+      "seconds": 114.466666666667,
+      "seed": 3960743184,
+      "stagger_events": 9,
+      "stalled": false,
+      "starter": "ripplet",
+      "tells": [
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.25,
+        1.5,
+        1.5,
+        1.5,
+        1.5,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7,
+        1.7
+      ],
+      "won": true
+    }
+  ],
+  "seeds": 24,
+  "selection": "aquaryn"
+}

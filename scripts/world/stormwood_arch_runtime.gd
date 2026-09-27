@@ -16,6 +16,14 @@ const DARK_ARCHES: Array[String] = ["c_rodline", "c_lantern", "d_hall", "d_giant
 const DARK_INSPECTED_PREFIX := "stormwood:side_dark_arches_inspected:"
 const DARK_STEP_1 := "stormwood:side_dark_arches_1"
 const DARK_STEP_2 := "stormwood:side_dark_arches_2"
+## WORLD's dark-arches payoff: a relit road is "visible on known map". Each end
+## of a pair whose two ends both answer becomes a map marker on this player's
+## Stormwood map, derived from the world's paid lit flags on every sync (so a
+## world whose arches are still dark shows none). No new flag or save field:
+## the markers ride the map's existing dynamic_markers as a derived cache and
+## every sync reconciles them to the current world.
+const DARK_MAP_PREFIX := "stormwood_arch_road_"
+const DARK_MAP_ICON := "gate"
 var world: Node3D
 var game: Node
 var session: Node
@@ -206,6 +214,45 @@ func restore_progression_from_game(_game: Node) -> void:
 		for footing: String in _footing_prompts:
 			(_footing_prompts[footing] as Node).call("configure",
 				footing_prompt_label(footing, flags), 2.5, true)
+		var map: RefCounted = game.call("bind_realm_map", "stormwood")
+		if map != null:
+			sync_dark_arch_map(map, flags)
+
+
+## The map markers the relit dark roads earn: one per end of a pair whose two
+## ends are both available and lit, named for where that end's road leads.
+static func dark_arch_map_markers(flags: RefCounted) -> Dictionary:
+	var out := {}
+	for id: String in DARK_ARCHES:
+		var twin := RULES.linked_twin(id, flags)
+		if twin.is_empty():
+			continue
+		var spec := RULES.definition(id)
+		out[DARK_MAP_PREFIX + id] = {
+			"at": Vector3(float(spec.at[0]), 0.0, float(spec.at[1])),
+			"name": "%s · road to %s" % [str(spec.name), str(twin.name)],
+		}
+	return out
+
+
+## Adds the owed road markers and removes stale ones; returns whether the map
+## changed. A repeated call adds nothing, so the map's revision stays put.
+static func sync_dark_arch_map(map: RefCounted, flags: RefCounted) -> bool:
+	var wanted := dark_arch_map_markers(flags)
+	var present := {}
+	for entry: Dictionary in map.call("landmarks"):
+		if bool(entry.get("dynamic", false)) and str(entry.get("id", "")).begins_with(DARK_MAP_PREFIX):
+			present[str(entry.id)] = true
+	var changed := false
+	for id: String in present:
+		if not wanted.has(id):
+			map.call("remove_dynamic_marker", id)
+			changed = true
+	for id: String in wanted:
+		if not present.has(id):
+			map.call("add_dynamic_marker", id, DARK_MAP_ICON, wanted[id].at, str(wanted[id].name))
+			changed = true
+	return changed
 
 static func dark_inspection_event(id: String) -> String:
 	return "count:" + DARK_INSPECTED_PREFIX + id if DARK_ARCHES.has(id) else ""

@@ -21,7 +21,7 @@ extends Node3D
 
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const VISUAL_CONFIG_PATH := "res://data/config/realm_gate_visual.json"
-const STONE_TEXTURE := preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png")
+const PRESENTATION := preload("res://scripts/world/realm_gate_presentation.gd")
 
 const STATE_LOCKED := "locked"
 const STATE_UNLOCKABLE := "unlockable"
@@ -46,7 +46,8 @@ var _prompt: Node3D = null
 var _barrier_shape: CollisionShape3D = null
 var _sealed_visual: Node3D = null
 var _open_visual: Node3D = null
-var _open_material: StandardMaterial3D = null
+var _open_material: ShaderMaterial = null
+var _visual_config: Dictionary = {}
 var _built := false
 var _observed_progression: RefCounted = null
 var _progression_revision := -1
@@ -204,13 +205,10 @@ func _set_open_visual(opened: bool, key_present: bool) -> void:
 	# Before the Warden reward the seal is cold blue-grey.  Once the player has
 	# the key it brightens visibly, making the next interaction legible without
 	# turning the progression requirement into floating UI text.
-	var seal_material := _sealed_visual.get_meta("material") as StandardMaterial3D
-	if seal_material != null:
-		seal_material.albedo_color = SEALED if key_present else SEALED.darkened(0.58)
-		seal_material.emission = SEALED if key_present else SEALED.darkened(0.68)
-		seal_material.emission_energy_multiplier = 1.8 if key_present else 0.28
-	if opened:
-		_open_material.emission_energy_multiplier = 0.65
+	var seal_material := _sealed_visual.get_meta("material") as ShaderMaterial
+	PRESENTATION.style(seal_material, SEALED if key_present else SEALED.darkened(0.58),
+		_visual_config.unlockable if key_present else _visual_config.locked)
+	PRESENTATION.style(_open_material, OPEN, _visual_config.open)
 
 
 func _build_prompt() -> void:
@@ -227,40 +225,16 @@ func _build_visual() -> void:
 	if _built:
 		return
 	_built = true
-	var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG_PATH))
-	var stone := _masonry_material(Color(str(visual["stone_tint"])), visual)
-	var edge := _masonry_material(Color(str(visual["edge_tint"])), visual)
-
-	_add_box("LeftPillar", Vector3(-1.75, 2.2, 0.0), Vector3(0.72, 4.4, 0.86), stone)
-	_add_box("RightPillar", Vector3(1.75, 2.2, 0.0), Vector3(0.72, 4.4, 0.86), stone)
-	_add_box("Lintel", Vector3(0.0, 4.25, 0.0), Vector3(4.2, 0.72, 0.9), stone)
-	_add_box("LeftCap", Vector3(-1.75, 4.45, 0.0), Vector3(0.98, 0.28, 1.05), edge)
-	_add_box("RightCap", Vector3(1.75, 4.45, 0.0), Vector3(0.98, 0.28, 1.05), edge)
-
+	_visual_config = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG_PATH))
+	PRESENTATION.frame(self, _visual_config)
 	_sealed_visual = Node3D.new()
 	_sealed_visual.name = "RealmSeal"
 	add_child(_sealed_visual)
-	var seal_material := _glow_material(SEALED.darkened(0.58), 0.28, 0.72)
-	_sealed_visual.set_meta("material", seal_material)
-	_add_box_to(_sealed_visual, "EnergyVeil", Vector3(0.0, 2.15, 0.0), Vector3(2.95, 3.55, 0.06), seal_material)
-	var lock := MeshInstance3D.new()
-	lock.name = "KeySeal"
-	var lock_mesh := CylinderMesh.new()
-	lock_mesh.top_radius = 0.46
-	lock_mesh.bottom_radius = 0.46
-	lock_mesh.height = 0.12
-	lock_mesh.radial_segments = 12
-	lock.mesh = lock_mesh
-	lock.position = Vector3(0.0, 2.2, 0.12)
-	lock.rotation.x = deg_to_rad(90.0)
-	lock.material_override = seal_material
-	_sealed_visual.add_child(lock)
-
+	_sealed_visual.set_meta("material", PRESENTATION.veil(_sealed_visual, "EnergyVeil", _visual_config))
 	_open_visual = Node3D.new()
 	_open_visual.name = "OpenThreshold"
 	add_child(_open_visual)
-	_open_material = _glow_material(OPEN, 0.65, 0.16)
-	_add_box_to(_open_visual, "OpenAirShimmer", Vector3(0.0, 2.15, 0.0), Vector3(2.95, 3.55, 0.025), _open_material)
+	_open_material = PRESENTATION.veil(_open_visual, "OpenAirShimmer", _visual_config)
 
 	var body := StaticBody3D.new()
 	body.name = "LockedBarrier"
@@ -271,45 +245,6 @@ func _build_visual() -> void:
 	_barrier_shape.position.y = 2.05
 	body.add_child(_barrier_shape)
 	add_child(body)
-
-
-func _add_box(name_: String, at: Vector3, size: Vector3, material: Material) -> void:
-	_add_box_to(self, name_, at, size, material)
-
-
-func _add_box_to(parent: Node, name_: String, at: Vector3, size: Vector3, material: Material) -> void:
-	var node := MeshInstance3D.new()
-	node.name = name_
-	var mesh := BoxMesh.new()
-	mesh.size = size
-	node.mesh = mesh
-	node.position = at
-	node.material_override = material
-	parent.add_child(node)
-
-
-func _masonry_material(colour: Color, visual: Dictionary) -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
-	material.albedo_color = colour
-	material.albedo_texture = STONE_TEXTURE
-	material.roughness = float(visual["roughness"])
-	# World-space mapping keeps stone courses the same size across differently
-	# sized pillars and caps, using the installed village/Hall masonry family.
-	material.uv1_triplanar = true
-	material.uv1_world_triplanar = true
-	material.uv1_scale = Vector3.ONE * float(visual["stone_tile"])
-	return material
-
-
-func _glow_material(colour: Color, energy: float, alpha: float) -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.albedo_color = Color(colour.r, colour.g, colour.b, alpha)
-	material.emission_enabled = true
-	material.emission = colour
-	material.emission_energy_multiplier = energy
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	return material
 
 
 func _game() -> Node:
