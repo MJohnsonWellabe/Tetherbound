@@ -68,6 +68,8 @@ extends RefCounted
 ##                                         jump in the air -- the ordinary Fly launch
 ##   await_autosave  {budget_frames?, require_flying?}  wait for the game's own periodic
 ##                                         autosave; report whether this peer was flying then
+##   slot_mtime      {slot, remember? | newer_than?}  read-only: a save slot file's modified
+##                                         time, kept under a name or required newer than one
 ##   perf_snapshot   {frames?}            this peer's own engine monitors over N frames:
 ##                                         frame rate, script/physics time, objects, bodies
 ##   guardian_offer_again {}              ask the HOST for this character's offer once more,
@@ -110,7 +112,7 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
 	"water_guardian_let_go", "water_guardian_forge_accept",
 	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe", "shared_cue_shape", "ledge_probe",
-	"ledge_launch", "await_autosave"]
+	"ledge_launch", "await_autosave", "slot_mtime"]
 
 
 static func handles(action: String) -> bool:
@@ -171,6 +173,8 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _ledge_launch(tree, args)
 		"await_autosave":
 			return await _await_autosave(tree, args)
+		"slot_mtime":
+			return _slot_mtime(tree, args)
 		"cost_probe":
 			return _cost_probe(tree)
 	if WATER_ACTIONS.has(action):
@@ -3041,6 +3045,34 @@ static func _await_autosave(tree: SceneTree, args: Dictionary) -> Dictionary:
 		await tree.physics_frame
 	var ok := not bool(args.get("require_flying", false)) or bool(at.get("flying", false))
 	return {"verdict": "PASS" if ok else "FAIL", "detail": "autosave taken: %s" % JSON.stringify(at), "data": at}
+
+
+## F06#5, read-only: when this home's save slot file was last written, so a
+## proof can show which write a later reload reads.
+static func _slot_mtime(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := tree.root.get_node_or_null(^"Game")
+	var saver: Variant = game.get("save_system") if game != null else null
+	if saver == null:
+		return {"verdict": "ERROR", "detail": "no Game.save_system"}
+	var slot := int(args.get("slot", 0))
+	var path := ProjectSettings.globalize_path(str((saver as RefCounted).call("slot_path", slot)))
+	var mtime := int(FileAccess.get_modified_time(path)) if FileAccess.file_exists(path) else -1
+	var kept: Dictionary = tree.get_meta(&"proof_slot_mtimes", {})
+	var data := {"slot": slot, "path": path, "mtime": mtime}
+	var detail := "slot_%d.json modified %d" % [slot, mtime]
+	if args.has("remember"):
+		kept[str(args.remember)] = mtime
+		tree.set_meta(&"proof_slot_mtimes", kept)
+		detail += "; kept as '%s'" % str(args.remember)
+	if args.has("newer_than"):
+		var name := str(args.newer_than)
+		if not kept.has(name):
+			return {"verdict": "ERROR", "detail": "no slot mtime kept as '%s'" % name}
+		data["newer"] = mtime > int(kept[name])
+		detail += "; '%s' was %d" % [name, int(kept[name])]
+		if mtime <= int(kept[name]):
+			return {"verdict": "FAIL", "detail": detail + " -- not rewritten", "data": data}
+	return {"verdict": "PASS", "detail": detail, "data": data}
 
 
 ## Where this peer's frame time goes, read off the engine's own monitors over
