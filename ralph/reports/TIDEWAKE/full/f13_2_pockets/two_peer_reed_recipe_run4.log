@@ -1,0 +1,38 @@
+proof:    f13_tidewake_b_reed_recipe_two_character_pockets
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/f13_tidewake_b_reed_recipe_two_character_pockets.json
+out:      /tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T194046Z
+run id:  net-20260927T194046Z-31941
+run dir: /tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T194046Z/net/net-proof_two_peer-20260927T194046Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=31964 control_port=44781 home=/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T194046Z/net/net-proof_two_peer-20260927T194046Z/home-0 log=/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T194046Z/net/net-proof_two_peer-20260927T194046Z/peer-0.log
+coordinator: launched peer 1 (client) pid=31965 control_port=37395 home=/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T194046Z/net/net-proof_two_peer-20260927T194046Z/home-1 log=/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T194046Z/net/net-proof_two_peer-20260927T194046Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":31201.0,"godot_version":"4.7-stable (official)","main_sha":"ced5addde09f","peer":0.0,"pid":31964.0,"role":"host","type":"hello","user_data_dir":"/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T194046Z/net/net-proof_two_peer-20260927T194046Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":31202.0,"godot_version":"4.7-stable (official)","main_sha":"ced5addde09f","peer":1.0,"pid":31965.0,"role":"client","type":"hello","user_data_dir":"/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T194046Z/net/net-proof_two_peer-20260927T194046Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 host -> PASS -- hosting udp/31201 as peer 1
+PASS: #2 peer 1 join -> PASS -- joined 127.0.0.1:31201 as peer 37521147 after 13 frames; snapshot applied; 2 peer(s) in registry
+PASS: #3 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #3 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #4 peer 0 water_pocket_state (non-vacuous: neither fresh character knows Reed Camp Cordage at chapter start) -> PASS -- { "pickup_id": "water:reedhaven:harvest:012", "character_id": "character-c868cf08d9ebdc95dfe9aa4e71e82e70", "item": "reed_fiber", "count": 0, "receipt": false, "learn_flag": "water_cordage_recipe_learned", "learned": false, "recipe": "water_camp_cordage", "recipe_known": false, "resident": false }
+PASS: #4 peer 1 water_pocket_state (non-vacuous: neither fresh character knows Reed Camp Cordage at chapter start) -> PASS -- { "pickup_id": "water:reedhaven:harvest:012", "character_id": "character-311ee81483d8ec776ebf32c9b42e7640", "item": "reed_fiber", "count": 0, "receipt": false, "learn_flag": "water_cordage_recipe_learned", "learned": false, "recipe": "water_camp_cordage", "recipe_known": false, "resident": false }
+PASS: #5 peer 0 storage_grant (FIXTURE 1: a carried knife (reed fiber is gathered with a knife)) -> PASS -- granted 1 knife (0 did not fit)
+PASS: #6 peer 1 storage_grant (FIXTURE 1: a carried knife) -> PASS -- granted 1 knife (0 did not fit)
+FAIL: #7 peer 0 water_pocket_claim (host gathers the reed_root_hollow patch by the real prompt: +3 fiber, learns cordage) -> FAIL; data did not match {"gained":3.0} -- water:reedhaven:harvest:012: +0 reed_fiber receipt=false recipe_known false -> false resident_after=true
+FAIL: #7 peer 0 water_pocket_claim (host gathers the reed_root_hollow patch by the real prompt: +3 fiber, learns cordage) -> FAIL; data did not match {"gained":3.0} -- water:reedhaven:harvest:012: +0 reed_fiber receipt=false recipe_known false -> false resident_after=true
+
+=== /tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T194046Z/net/net-proof_two_peer-20260927T194046Z/SUMMARY.md ===
+# Net smoke run net-20260927T194046Z-31941
+
+Scene: water
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=31964 exited=true unexpected_exit=false
+- peer 1 (client) pid=31965 exited=true unexpected_exit=false
+
+FAILURES:
+- #7 peer 0 water_pocket_claim (host gathers the reed_root_hollow patch by the real prompt: +3 fiber, learns cordage) -> FAIL; data did not match {"gained":3.0} -- water:reedhaven:harvest:012: +0 reed_fiber receipt=false recipe_known false -> false resident_after=true
+
+PROOF.md: /tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T194046Z/PROOF.md (exit 1)

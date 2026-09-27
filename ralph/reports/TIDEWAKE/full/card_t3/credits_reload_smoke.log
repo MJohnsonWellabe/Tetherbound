@@ -1,0 +1,5 @@
+== credits_reload_smoke: /root/godot-bin/godot --headless --path . --script tests/smoke_regional_credits_reload.gd
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+Regional credits reload smoke: 40 checks, 0 failures
+== credits_reload_smoke exit=0

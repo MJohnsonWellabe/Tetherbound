@@ -1,0 +1,30 @@
+== ending_units: /root/godot-bin/godot --headless --path . --script tests/run_tests.gd -- --only=test_homecoming_ending_invariants.gd,test_regional_homecoming.gd
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_homecoming_ending_invariants.gd,test_regional_homecoming.gd: 2 of 613 test files
+  ok    test_homecoming_ending_invariants.gd :: test_ending_path_adds_no_realm_key_to_either_store
+  ok    test_homecoming_ending_invariants.gd :: test_ending_sources_never_name_a_realm_key
+  ok    test_homecoming_ending_invariants.gd :: test_ending_text_makes_no_sequel_or_all_forces_claim
+  ok    test_homecoming_ending_invariants.gd :: test_forbidden_phrase_scan_detects_a_planted_claim
+  ok    test_homecoming_ending_invariants.gd :: test_homecoming_and_credits_change_only_documented_player_flags
+  ok    test_homecoming_ending_invariants.gd :: test_only_three_realm_keys_are_declared
+  ok    test_homecoming_ending_invariants.gd :: test_realm_transition_keys_are_declared_chapter_keys
+  ok    test_homecoming_ending_invariants.gd :: test_released_companion_is_not_named_by_grandpa
+  ok    test_homecoming_ending_invariants.gd :: test_second_visit_changes_nothing_and_grants_nothing
+  ok    test_regional_homecoming.gd :: test_close_is_finished_but_only_last_line_is_completed
+  ok    test_regional_homecoming.gd :: test_completion_rechecks_realm_and_character_identity
+  ok    test_regional_homecoming.gd :: test_current_world_unlocks_homecoming_for_a_behind_character
+  ok    test_regional_homecoming.gd :: test_failed_character_save_rolls_back_and_retry_commits
+  ok    test_regional_homecoming.gd :: test_five_names_are_spoken_on_separate_lines
+  ok    test_regional_homecoming.gd :: test_homecoming_seen_is_player_scoped
+  ok    test_regional_homecoming.gd :: test_live_party_names_use_nickname_then_display_name_and_cap_at_five
+  ok    test_regional_homecoming.gd :: test_player_name_that_looks_like_a_token_stays_literal
+  ok    test_regional_homecoming.gd :: test_regional_credits_refuse_changed_character_realm_or_world_without_mutation
+  ok    test_regional_homecoming.gd :: test_regional_credits_require_homecoming_current_world_and_pending_receipt
+  ok    test_regional_homecoming.gd :: test_regional_credits_save_failure_rolls_back_and_retries
+  ok    test_regional_homecoming.gd :: test_regional_credits_save_is_idempotent_and_player_local
+  ok    test_regional_homecoming.gd :: test_runtime_hooks_compile
+  ok    test_regional_homecoming.gd :: test_terminal_consent_decline_is_not_completion_but_accept_is
+
+23 tests, 2866 assertions, 0 failed
+== ending_units exit=0

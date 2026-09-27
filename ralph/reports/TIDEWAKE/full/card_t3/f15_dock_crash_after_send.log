@@ -1,0 +1,83 @@
+== f15_dock_crash_after_send: tools/net/run_two_peer_proof.sh tools/net/proof_scenarios/f15_dock_crash_after_send.json --out=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send
+proof:    f15_dock_crash_after_send
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/f15_dock_crash_after_send.json
+out:      /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send
+run id:  net-20260927T203334Z-3929
+run dir: /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/net/net-proof_two_peer-20260927T203334Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=3953 control_port=40965 home=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/net/net-proof_two_peer-20260927T203334Z/home-0 log=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/net/net-proof_two_peer-20260927T203334Z/peer-0.log
+coordinator: launched peer 1 (client) pid=3954 control_port=34407 home=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/net/net-proof_two_peer-20260927T203334Z/home-1 log=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/net/net-proof_two_peer-20260927T203334Z/peer-1.log
+coordinator: peer 1 hello: {"enet_port":35602.0,"godot_version":"4.7-stable (official)","main_sha":"95aa83573dd2","peer":1.0,"pid":3954.0,"role":"client","type":"hello","user_data_dir":"/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/net/net-proof_two_peer-20260927T203334Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":35601.0,"godot_version":"4.7-stable (official)","main_sha":"95aa83573dd2","peer":0.0,"pid":3953.0,"role":"host","type":"hello","user_data_dir":"/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/net/net-proof_two_peer-20260927T203334Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 load_save (named save: the host's world) -> PASS -- loaded host_meadows_stormwood_route_open (captured directory (split path)) as slot 0; realm 'meadows' booted as 'world'; character 'character-f41f4a49223483d6bfdf56715944bb7b'
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:516)
+       [1] write_snapshot (res://scripts/save/save_game.gd:501)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:490)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:477)
+         [3] _tick_autosave (res://autoload/game_state.gd:1005)
+         [4] _process (res://autoload/game_state.gd:1050)
+PASS: #2 peer 1 boot (guest: its own trainer) -> PASS -- booted world (240 settle frames)
+PASS: #3 peer 0 host -> PASS -- hosting udp/35601 as peer 1
+PASS: #4 peer 1 join -> PASS -- joined 127.0.0.1:35601 as peer 1575277730 after 14 frames; snapshot applied; 2 peer(s) in registry
+PASS: #5 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #5 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #6 peer 0 story_flag (SETUP: the Water route is open (stands in for Stormwood)) -> PASS -- realm_gate_water_unlocked: ok=true pending=false code='' reason=''
+PASS: #7 peer 0 story_flag (SETUP: the Water key (stands in for Stormwood)) -> PASS -- realm_key_water: ok=true pending=false code='' reason=''
+PASS: #8 peer 0 story_flag (SETUP: the swim lesson is done (the repair's prerequisite)) -> PASS -- water_swim_lesson_complete: ok=true pending=false code='' reason=''
+PASS: #9 peer 0 wait_flag -> PASS -- flag water_swim_lesson_complete (world) set after 0 frames
+PASS: #9 peer 1 wait_flag -> PASS -- flag water_swim_lesson_complete (world) set after 0 frames
+PASS: #10 peer 0 enter_realm (host enters Water) -> PASS -- crossed 'meadows' -> 'water' after 279 observed physics frames / 28135 ms (budget 6000 physics frames); current scene is /root/WaterArchipelago
+PASS: #11 peer 1 enter_realm (guest enters Water) -> PASS -- crossed 'meadows' -> 'water' after 408 observed physics frames / 16433 ms (budget 6000 physics frames); current scene is /root/WaterArchipelago
+PASS: #12 peer 0 water_dock_state (SETUP: 8 reed fiber + 6 driftwood gathered and saved (cost is 6 + 4)) -> PASS -- SETUP (stands in for gathering): bag { "driftwood": 6, "reed_fiber": 8 }, on disk { "driftwood": 6, "reed_fiber": 8 }, saved=true; then { "character_id": "character-f41f4a49223483d6bfdf56715944bb7b", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_cr
+PASS: #12 peer 1 water_dock_state (SETUP: 8 reed fiber + 6 driftwood gathered and saved (cost is 6 + 4)) -> PASS -- SETUP (stands in for gathering): bag { "driftwood": 6, "reed_fiber": 8 }, on disk { "driftwood": 6, "reed_fiber": 8 }, saved=true; then { "character_id": "character-bb8067e524cce1750a99dff973e83882", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_cr
+PASS: #13 peer 0 water_dock_state (before: nothing done, the repair offered (baseline)) -> PASS -- { "character_id": "character-f41f4a49223483d6bfdf56715944bb7b", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 8, "d
+PASS: #13 peer 1 water_dock_state (before: nothing done, the repair offered (baseline)) -> PASS -- { "character_id": "character-bb8067e524cce1750a99dff973e83882", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 8, "d
+PASS: #14 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk=true; copied 3 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/peer-0/before
+PASS: #14 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-bb8067e524cce1750a99dff973e83882' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/peer-1/before
+PASS: #15 peer 1 water_dock_act (guest presses the paid repair, then crashes (after_send)) -> PASS -- prompt activated (offered) standing (1.4, 0.3, 0.0); flag false -> false; bag { "reed_fiber": 8, "driftwood": 6 } -> { "reed_fiber": 2, "driftwood": 2 } (disk { "reed_fiber": 8, "driftwood": 6 } -> { "reed_fiber": 2, "driftwood": 2 }); item_take ops seen []; refusals []; CRASH stand-in: transport cl
+PASS: #16 peer 0 expect_peers (host sees the guest gone) -> PASS -- registry reports 1 peer(s) after 0 frames (0.0 s)
+PASS: #17 peer 0 water_dock_state (host: did the repair commit before the crash? (reported)) -> PASS -- { "character_id": "character-f41f4a49223483d6bfdf56715944bb7b", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 8, "d
+PASS: #18 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk=true; copied 3 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/peer-0/host_after_crash
+PASS: #19 peer 1 water_dock_state (guest after the crash stand-in, before rejoin (reported)) -> PASS -- { "character_id": "character-bb8067e524cce1750a99dff973e83882", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 2, "d
+PASS: #20 peer 1 water_dock_state (guest relaunches: the title's returning Join loads its character from disk and rejoins the same host) -> PASS -- REJOIN: title returning entry built 'WaterArchipelago' first, then JoinDriver joined 127.0.0.1:35601 as peer 850908002 after 42 frames; then { "character_id": "character-bb8067e524cce1750a99dff973e83882", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "sa
+PASS: #21 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #21 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #22 peer 1 water_dock_state (guest after rejoin (reported)) -> PASS -- { "character_id": "character-bb8067e524cce1750a99dff973e83882", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 2, "d
+PASS: #23 peer 1 water_dock_act (guest retries the repair after rejoin (presses it; forced if the prompt is already dark)) -> PASS -- interact on the offered prompt standing (1.4, 0.3, 0.0); flag false -> true; bag { "reed_fiber": 2, "driftwood": 2 } -> { "reed_fiber": 2, "driftwood": 2 } (disk { "reed_fiber": 2, "driftwood": 2 } -> { "reed_fiber": 2, "driftwood": 2 }); item_take ops seen []; refusals []
+PASS: #24 peer 0 wait_flag (the repair is done in the world) -> PASS -- flag water_dock_reedhaven_repaired (world) set after 0 frames
+PASS: #24 peer 1 wait_flag (the repair is done in the world) -> PASS -- flag water_dock_reedhaven_repaired (world) set after 0 frames
+PASS: #25 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-bb8067e524cce1750a99dff973e83882' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/peer-1/after_retry
+PASS: #26 peer 1 water_dock_state (ASSERT: crash + rejoin + retry: repair done once, the guest paid exactly once (6+4), in memory and on disk) -> PASS -- { "character_id": "character-bb8067e524cce1750a99dff973e83882", "done": { "reedhaven_repair": true, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 2, "dr
+PASS: #27 peer 1 water_dock_act (ASSERT: a second retry charges nothing) -> PASS -- prompt activated (FORCED: prompt dark, stale-client resend) standing (not offered); flag true -> true; bag { "reed_fiber": 2, "driftwood": 2 } -> { "reed_fiber": 2, "driftwood": 2 } (disk { "reed_fiber": 2, "driftwood": 2 } -> { "reed_fiber": 2, "driftwood": 2 }); item_take ops seen []; refusals []
+PASS: #28 peer 0 water_dock_act (host presses the finished repair: not charged) -> PASS -- prompt activated (FORCED: prompt dark, stale-client resend) standing (not offered); flag true -> true; bag { "reed_fiber": 8, "driftwood": 6 } -> { "reed_fiber": 8, "driftwood": 6 } (disk { "reed_fiber": 8, "driftwood": 6 } -> { "reed_fiber": 8, "driftwood": 6 }); item_take ops seen []; refusals []
+PASS: #29 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk=true; copied 3 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/peer-0/after
+PASS: #29 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-bb8067e524cce1750a99dff973e83882' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/peer-1/after
+PASS: #30 peer 1 water_dock_state (ASSERT final: guest paid exactly once) -> PASS -- { "character_id": "character-bb8067e524cce1750a99dff973e83882", "done": { "reedhaven_repair": true, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 2, "dr
+PASS: #31 peer 0 water_dock_state (host never charged) -> PASS -- { "character_id": "character-f41f4a49223483d6bfdf56715944bb7b", "done": { "reedhaven_repair": true, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 8, "dr
+PASS: #32 peer 0 check_saved (host's saved world holds the repair) -> PASS -- missing []; unexpectedly present []; read ["slot-0/world.json"] under after/worlds
+ALL CHECKS PASSED
+
+=== /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/net/net-proof_two_peer-20260927T203334Z/SUMMARY.md ===
+# Net smoke run net-20260927T203334Z-3929
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=3953 exited=true unexpected_exit=false
+- peer 1 (client) pid=3954 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+PROOF.md: /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_dock_crash_after_send/PROOF.md (exit 0)
+== f15_dock_crash_after_send exit=0

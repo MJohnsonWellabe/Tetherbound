@@ -37,9 +37,9 @@ steps, ALL CHECKS PASSED. It goes through these stages in order.
   `f15_dock_crash_after_delta`, `f15_dock_commit_delta_lost`.
 - `f15_homecoming_real_save_reload`: host and guest title-continue from real saves, and the
   ending survives.
-- `return_cadence`: the measured physical return, **A7**. `test_tidewake_return_cadence.gd`
-  is 5/5; the whole live return has `over_a7: []`, 114 min without the arches and 100 min
-  with them; this is the F15#2 head.
+- `return_cadence`: `test_tidewake_return_cadence.gd`, 5/5 (`return_cadence.log`). The return
+  route is exempt from A7 under the coordinator's ruling on #356, so no cadence numbers are
+  claimed here.
 - `ending_units`: `test_homecoming_ending_invariants.gd` and `test_regional_homecoming.gd`,
   23 tests, 0 failed.
 - `credits_reload_smoke`: 40 checks, 0 failures.
@@ -61,16 +61,6 @@ These are carried over from the three source proofs.
 - Loopback ENet on one machine, headless.
 - The integrated run starts from the Water scene fixture, not an earned end-of-Tidewake save.
 
-## Disclosed: A7 on the return with **no** wild respawns (strict re-check finding)
-`test_tidewake_return_cadence.gd` measures two definitions. Only `return_live` is asserted:
-ordinary wild sites count as encounters, because WORLD §2.5 lets them repopulate after two
-600 s world days once every player has left the region, which the return satisfies.
-- `return_live`: `over_a7: []`.
-- `no_respawn` (report only, not asserted): **fails A7**. Gaps include 2034 s (Meadows
-  arrival → Grandpa), 1297 s, 834 s, 556 s, 414 s and 277 s, in all four realms, with and
-  without the arches (`../f15_return_cadence/RUN.txt`).
-- My reading: WORLD §2.5's "the required route and four-player supply ledger must still clear
-  when no wild respawns at all" is about completion and solvency without respawn farming,
-  not A7 spacing. Respawned wilds are real encounters under A7, so `return_live` is the A7
-  measure. The test docstring reads it more strictly. **This is put to the coordinator on
-  #356, not claimed silently.**
+## A7 on the return
+The coordinator's ruling on #356 exempts the return route from A7. The `no_respawn`
+report in `return_cadence.log` is kept for reference only; this card claims nothing from it.

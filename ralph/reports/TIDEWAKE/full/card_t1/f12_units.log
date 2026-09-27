@@ -1,0 +1,41 @@
+== f12_units: /root/godot-bin/godot --headless --path . --script tests/run_tests.gd -- --only=test_water_closed_gate_seals.gd,test_water_recovery_closed_seals.gd,test_water_mount_dismount_replication.gd,test_water_mounted_replication.gd,test_swim_state.gd,test_water_traversal_save.gd
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_water_closed_gate_seals.gd,test_water_recovery_closed_seals.gd,test_water_mount_dismount_replication.gd,test_water_mounted_replication.gd,test_swim_state.gd,test_water_traversal_save.gd: 6 of 613 test files
+  ok    test_swim_state.gd :: test_combat_freezes_resources_and_failed_mount_resumes_human
+  ok    test_swim_state.gd :: test_combat_returns_to_surviving_mount
+  ok    test_swim_state.gd :: test_efficiency_reduces_drain_without_granting_regeneration
+  ok    test_swim_state.gd :: test_exhaustion_charges_only_remaining_frame_and_is_partition_invariant
+  ok    test_swim_state.gd :: test_invalid_snapshot_is_atomic
+  ok    test_swim_state.gd :: test_land_ends_pressure_without_refilling_stamina
+  ok    test_swim_state.gd :: test_owned_snapshot_reconstructs_drowning_and_rejects_wrong_peer_or_replay
+  ok    test_swim_state.gd :: test_remote_peer_cannot_advance_owned_resources
+  ok    test_water_closed_gate_seals.gd :: test_a_later_fact_keeps_every_earlier_landform_open
+  ok    test_water_closed_gate_seals.gd :: test_core_band_pushes_every_heading_outward_while_the_chain_is_closed
+  ok    test_water_closed_gate_seals.gd :: test_every_island_is_reached_by_a_dock_or_is_the_arrival
+  ok    test_water_closed_gate_seals.gd :: test_every_landform_behind_a_mandatory_dock_is_sealed_in_dock_order
+  ok    test_water_closed_gate_seals.gd :: test_flight_volumes_cover_only_equally_sealed_land
+  ok    test_water_closed_gate_seals.gd :: test_fly_refuses_a_sealed_volume_until_its_dock_opens
+  ok    test_water_closed_gate_seals.gd :: test_forced_dismount_never_crosses_a_closed_seal
+  ok    test_water_closed_gate_seals.gd :: test_open_chain_restores_the_authored_crossing_current_exactly
+  ok    test_water_closed_gate_seals.gd :: test_overlapping_races_hold_their_seam
+  ok    test_water_closed_gate_seals.gd :: test_race_outpaces_every_swimmer_and_swim_mount
+  ok    test_water_closed_gate_seals.gd :: test_races_leave_every_less_gated_shore_and_anchor_swimmable
+  ok    test_water_closed_gate_seals.gd :: test_seal_follows_the_landforms_own_dock_fact
+  ok    test_water_closed_gate_seals.gd :: test_swimmers_and_mounts_cannot_land_but_open_gate_swimmer_can
+          WATER_DISMOUNT_PUBLISHES=8 over 120 ticks (revisions 121, stamina drop 6 quanta, host deltas 8)
+  ok    test_water_mount_dismount_replication.gd :: test_water_mount_dismount_reaches_host_while_unreliable_sync_is_throttled
+  ok    test_water_mounted_replication.gd :: test_actual_driver_recovery_packets_reach_remote_state
+  ok    test_water_recovery_closed_seals.gd :: test_bed_behind_a_closed_seal_is_skipped_for_the_next_candidate
+  ok    test_water_recovery_closed_seals.gd :: test_closed_seal_at_covers_the_landform_and_its_race_band_only_while_closed
+  ok    test_water_recovery_closed_seals.gd :: test_every_sealed_landform_landing_is_skipped_until_its_own_fact
+  ok    test_water_recovery_closed_seals.gd :: test_foreign_safe_landing_on_a_sealed_island_is_not_a_recovery_point
+  ok    test_water_recovery_closed_seals.gd :: test_same_landing_is_used_once_this_world_opens_the_dock
+  ok    test_water_traversal_save.gd :: test_corrupt_aquatic_data_rejects_the_entire_pose
+  ok    test_water_traversal_save.gd :: test_exhaustion_survives_json_and_pose_sanitisation_without_session_ids
+  ok    test_water_traversal_save.gd :: test_mount_identity_round_trip_uses_owned_party_slot_not_transport_id
+  ok    test_water_traversal_save.gd :: test_old_pose_is_preserved_and_aquatic_state_cannot_attach_to_another_realm
+  ok    test_water_traversal_save.gd :: test_pause_and_mount_modes_are_data_without_importing_transport_revision
+
+33 tests, 108050 assertions, 0 failed
+== f12_units exit=0
