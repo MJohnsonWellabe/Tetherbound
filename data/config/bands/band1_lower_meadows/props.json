@@ -575,8 +575,8 @@
         {
           "model": "log_large",
           "at": [
-            188.7,
-            913.9
+            298.7,
+            983.9
           ],
           "yaw_deg": 18.0,
           "scale": 1.0,
@@ -586,8 +586,8 @@
         {
           "model": "Rock_Medium_1",
           "at": [
-            191.9,
-            912.6
+            301.9,
+            982.6
           ],
           "yaw_deg": 40.0,
           "scale": 0.19,
@@ -597,8 +597,8 @@
         {
           "model": "Rock_Medium_3",
           "at": [
-            191.2,
-            914.6
+            301.2,
+            984.6
           ],
           "yaw_deg": 110.0,
           "scale": 0.16,
@@ -608,8 +608,8 @@
         {
           "model": "Rock_Medium_2",
           "at": [
-            192.4,
-            914.1
+            302.4,
+            984.1
           ],
           "yaw_deg": 260.0,
           "scale": 0.14,
@@ -619,8 +619,8 @@
         {
           "model": "Bag",
           "at": [
-            187.4,
-            913.4
+            297.4,
+            983.4
           ],
           "yaw_deg": 25.0,
           "scale": 1.0,
@@ -629,8 +629,8 @@
         {
           "model": "Bush_Common",
           "at": [
-            193.6,
-            915.9
+            303.6,
+            985.9
           ],
           "yaw_deg": 0.0,
           "scale": 0.45,
@@ -640,8 +640,8 @@
         {
           "model": "Grass_Wide_Tall",
           "at": [
-            186.6,
-            910.8
+            296.6,
+            980.8
           ],
           "yaw_deg": 0.0,
           "scale": 0.5,
@@ -1556,10 +1556,10 @@
           "name": "OldBramCampFire",
           "_why_r7_bram_road": "Walk on main integration-32 (ralph/reports/MEADOWS-PAYOFFS/six-activities/discovery-snowball/bram-woods-integration32/): Bram is 55 m east of the band1 woodland road behind dense trunks; neither this fire nor a trial 42 m column (reverted: smoke colour/opacity are art under the Codex rule, and it had no passing capture) read from the road. Relocating the camp needs a coordinator decision.",
           "_why_r6": "Round-6 code-blind judge: at (174, 903.4) the fire sat exactly on the road-to-Bram line, so on approach its flames and smoke column stood between the player and Bram, who never appeared at 30 m. Moved 6 m north of that line to (176, 909); tests/probe_lure_road_visibility.gd --at=bram:176,909 finds 2 hard-clear road samples at ground level (nearest 42.4 m), against 0 at the old spot, and the 28 m column clears the canopy from the older road line (not from the integration-32 woodland road; see _why_r7_bram_road).",
-          "_why_f03_0_site": "Moved with Bram to his woodline-edge site (190,913), coordinator option A on #356. The fire sits 13 m from him toward the woodland road (144,931), outside the 11 m fight ring, and 5 m north of the road-to-Bram line, so it never stands between an approaching player and him (the round-6 defect).",
+          "_why_f03_0_site": "Moved with Bram to his woodline-edge site (300,983), coordinator option A on #356. The fire sits 13 m from him toward the trail-camp road (359,939), outside the 11 m fight ring, and 5 m north of the road-to-Bram line, so it never stands between an approaching player and him (the round-6 defect).",
           "at": [
-            179.7,
-            922.3
+            313.4,
+            979.2
           ],
           "yaw_deg": 30.0
         }
