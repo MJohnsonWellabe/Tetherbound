@@ -446,8 +446,9 @@ func run_from_village(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	_initial_ids = _party_ids()
 	_hall_config = _read(HALL_CONFIG)
 	_ending_config = _read(CLIMAX_CONFIG)
-	if _hold != null and bool(_hold.call("has_marker", "warden_arena")):
-		_supported_y = (_hold.call("marker", "warden_arena") as Vector3).y
+	# The resume starts on village ground: the Hall's supported-deck watch was
+	# cleared by the full run's ramp descent and must stay off here.
+	_supported_y = NAN
 	_input = INPUTS.new()
 	_input._tree = tree
 	_gui = CEREMONY.new()
