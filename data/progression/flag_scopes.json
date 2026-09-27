@@ -152,7 +152,9 @@
       "realm_relic_water_earned",
       "realm_relic_water_placed",
       "stormward_route_revealed",
-      "cloudreach_reward_retargeted_stormwood"
+      "cloudreach_reward_retargeted_stormwood",
+      "cloudreach:legendary_freed",
+      "cloudreach:legendary_settled"
     ],
     "prefixes": [
       "reward:trainer:warrens_cleared:xp:",
@@ -168,7 +170,8 @@
       "wild_once_",
       "warrens_once_",
       "stormwood:",
-      "legendary_resolution:"
+      "legendary_resolution:",
+      "cloudreach:legendary_resolution:"
     ]
   },
   "player": {
@@ -204,7 +207,9 @@
       "south_bridge_team_prompt_heard",
       "nessa_overlook_gift_taken",
       "homecoming_seen",
-      "regional_credits_seen"
+      "regional_credits_seen",
+      "cloudreach:legendary_joined",
+      "cloudreach:legendary_refused"
     ],
     "prefixes": [
       "legendary_answer_world:",
@@ -216,7 +221,9 @@
       "saddle_fitted_",
       "creature_bed_built_",
       "oskar_swap_taken_",
-      "stormwood:legendary_answer:"
+      "stormwood:legendary_answer:",
+      "cloudreach:legendary_answer_world:"
     ]
-  }
+  },
+  "_why_cloudreach_solmane": "Owner ruling 2026-09-27 (#356 5858140459): Solmane is Cloudreach's freed legendary, offered to each Veyra participant through stronghold_climax.gd with cloudreach:-prefixed receipts (data/config/cloudreach_solmane_climax.json). World: the freeing and settle, and per-character resolution receipts. Player: each character's own joined/refused answer and the world it was given in."
 }

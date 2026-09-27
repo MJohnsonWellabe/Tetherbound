@@ -2,6 +2,8 @@ extends "res://tests/test_case.gd"
 
 const SPECIES_PATH := "res://data/creatures/species.json"
 const CLOUDREACH_PATH := "res://data/config/cloudreach_chapter.json"
+## Owner ruling 2026-09-27 (#356 5858140459): Cloudreach's freed legendary.
+const CLOUDREACH_SOLMANE_PATH := "res://data/config/cloudreach_solmane_climax.json"
 const STORMWOOD_PATH := "res://data/config/stormwood_encounters.json"
 const STORMWOOD_TRAINERS_PATH := "res://data/config/stormwood_trainers.json"
 const WATER_PATH := "res://data/config/water_encounters.json"
@@ -13,11 +15,11 @@ const CLOUDREACH_NEW: Array[String] = [
 	"pebbik", "craghorn", "stormcapra", "skyrill", "aeriex", "ribbonray",
 	"breezetail", "cloudfang", "cliffspike", "tempestwing", "solmane",
 ]
-## Installed but deliberately unplaced: the coordinator ruling on #356
-## (5857058456, 2026-09-27) removed the catchable wild legendary `solmane` from
-## both Cloudreach summit tables, because freed legendaries volunteer and are
-## never caught in the wild (hard rule; card C3 "No legendary offer appears").
-const UNPLACED_BY_RULING: Array[String] = ["solmane"]
+## Ruling 5857058456 removed `solmane` from both Cloudreach summit wild tables
+## (freed legendaries are never caught in the wild); owner ruling 5858140459
+## then placed it as Cloudreach's freed legendary, like the Meadows Veridian
+## (`cloudreach_solmane_climax.json`). Nothing is unplaced any more.
+const UNPLACED_BY_RULING: Array[String] = []
 const STORMWOOD_NEW: Array[String] = [
 	"voltwig", "glimmermoth", "stormbrush", "mosshock", "staticub",
 	"tanglevolt", "stormraven", "thundertunnel", "voltarach", "fulgocobra",
@@ -88,6 +90,10 @@ func test_alpha_and_legendary_identities_match_the_authoritative_roster() -> voi
 	# Ruling #356 5857058456: the summit sentinel is the non-legendary tempestwing.
 	assert_eq(str(cloud_roles.get("summit_sentinel", {}).get("placeholder_species", "")), "tempestwing")
 	assert_ne(str(cloud_roles.get("summit_sentinel", {}).get("roster_identity", "")), "legendary")
+	# Ruling #356 5858140459: solmane is the freed legendary, not a wild role.
+	assert_eq(str(_read(CLOUDREACH_SOLMANE_PATH).get("legendary", {}).get("species", "")), "solmane")
+	for role: String in cloud_roles:
+		assert_ne(str(cloud_roles[role].get("placeholder_species", "")), "solmane", "solmane is never a wild role (%s)" % role)
 
 	var stormwood := _read(STORMWOOD_PATH)
 	var alpha_count := 0
@@ -132,6 +138,8 @@ func _cloudreach_placements() -> Dictionary:
 			_record(placed, str(member.get("placeholder_species", "")))
 	for member: Dictionary in chapter.get("final_encounter", {}).get("opposition_contract", {}).get("slots", []):
 		_record(placed, str(member.get("placeholder_species", "")))
+	# The freed legendary, the way Stormwood's `legendary_placeholder` counts.
+	_record(placed, str(_read(CLOUDREACH_SOLMANE_PATH).get("legendary", {}).get("species", "")))
 	return placed
 
 

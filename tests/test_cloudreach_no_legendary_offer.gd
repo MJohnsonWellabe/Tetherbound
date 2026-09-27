@@ -26,6 +26,19 @@ extends "res://tests/test_case.gd"
 ##   * legendary species anywhere in Cloudreach data -> _species_violations,
 ##     _wild_table_legendaries
 ##
+## OWNER RULING 2026-09-27 (#356 5858140459; docs #385): Solmane is Cloudreach's
+## freed legendary and works exactly like the Meadows Veridian -- freed after
+## Captain Veyra, offered once to each actual finale participant, never wild or
+## catchable. So this test now allows EXACTLY ONE offer path and nothing else:
+## the second `stronghold_climax.gd` instance `cloudreach_world_runtime.gd`
+## mounts with `data/config/cloudreach_solmane_climax.json`, its five
+## `cloudreach_solmane_*` conversations, and the `cloudreach:legendary_resolution:`
+## receipts the ledger owns for it (`_unauthorized` below lists every exempt
+## violation text; `test_solmane_is_the_one_authorized_offer` pins that path's
+## shape; `test_negative_control_authorized_path_does_not_grow` proves a
+## look-alike is still caught). Every other check below is unchanged, and no
+## Cloudreach wild table may list a legendary.
+##
 ## Vocabulary is applied to identifiers only (effect ids, flags, keys, kinds,
 ## code), never to spoken or descriptive prose: "the legendary skyroad" in a
 ## line of dialogue is scenery, `cloudreach:legendary_joined` is machinery.
@@ -1024,6 +1037,55 @@ func _all_species() -> Dictionary:
 	return out
 
 
+## The one authorized offer path (owner ruling above). Each entry is matched
+## as an exact violation text or an exact prefix of one; nothing else passes.
+const SOLMANE_CONFIG_PATH := "res://data/config/cloudreach_solmane_climax.json"
+const AUTHORIZED_PREFIXES := [
+	"cloudreach_solmane_climax.json:",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_chamber ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_free ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_joins ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_choice ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_engine_fails ",
+	# The five conversations wear Solmane's own plate (as Stormwood's
+	# Stormheart lines wear fulgocobra.png), not the player's face.
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_chamber.portrait ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_free.portrait ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_joins.portrait ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_choice.portrait ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_engine_fails.portrait ",
+]
+const AUTHORIZED_EXACT := [
+	"res://scripts/world/cloudreach_world_runtime.gd code references 'stronghold_climax.gd'",
+	"res://scripts/world/cloudreach_world_runtime.gd code references 'solmane'",
+	"Cloudreach reaches offer controller: res://scripts/world/stronghold_climax.gd <- res://scripts/world/cloudreach_world_runtime.gd",
+	"legendary receipt prefix 'cloudreach:legendary_resolution:accepted:' names Cloudreach",
+	"legendary receipt prefix 'cloudreach:legendary_resolution:refused:' names Cloudreach",
+]
+## Cross-scan lines: the ledger's two owned receipt prefixes and their comment,
+## and the runtime's mount lines.
+const AUTHORIZED_CROSS_SCAN := [
+	["res://scripts/net/world_ledger.gd:", "\"cloudreach:legendary_resolution:accepted:\","],
+	["res://scripts/net/world_ledger.gd:", "\"cloudreach:legendary_resolution:refused:\","],
+	["res://scripts/net/world_ledger.gd:", "# Solmane (owner ruling 2026-09-27, #356 5858140459): Cloudreach's freed"],
+	["res://scripts/world/cloudreach_world_runtime.gd:", "const SOLMANE_CONFIG := \"res://data/config/cloudreach_solmane_climax.json\""],
+	["res://scripts/world/cloudreach_world_runtime.gd:", "solmane.name = \"CloudreachSolmaneClimax\""],
+]
+
+
+static func _unauthorized(bad: Array[String]) -> Array[String]:
+	var out: Array[String] = []
+	for line: String in bad:
+		var allowed := AUTHORIZED_EXACT.has(line)
+		for prefix: String in AUTHORIZED_PREFIXES:
+			allowed = allowed or line.begins_with(prefix)
+		for pair: Array in AUTHORIZED_CROSS_SCAN:
+			allowed = allowed or (line.begins_with(str(pair[0])) and line.ends_with(str(pair[1])))
+		if not allowed:
+			out.append(line)
+	return out
+
+
 func _report(label: String, bad: Array[String]) -> void:
 	for line: String in bad:
 		print("    VIOLATION %s: %s" % [label, line])
@@ -1089,7 +1151,7 @@ func test_finale_config_and_whole_cloudreach_corpus_name_no_legendary_offer() ->
 	assert_true(corpus.has("cloudreach_finale.json") and str(corpus["cloudreach_finale.json"]) != "{}",
 		"the finale config is part of the scanned corpus")
 	var chapter := _dict(CHAPTER_PATH)
-	_report("corpus", _corpus_violations(corpus, _legendary_species(), _offer_vocabulary(), _pending_exempt(chapter)))
+	_report("corpus", _unauthorized(_corpus_violations(corpus, _legendary_species(), _offer_vocabulary(), _pending_exempt(chapter))))
 
 
 func test_every_cloudreach_owned_script_makes_no_offer() -> void:
@@ -1098,13 +1160,13 @@ func test_every_cloudreach_owned_script_makes_no_offer() -> void:
 	for required: String in ["res://scripts/world/cloudreach_finale_controller.gd", "res://scripts/world/cloudreach_chapter.gd",
 			"res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/world/cloudreach_world.gd"]:
 		assert_true(owned.has(required), "%s is content-scanned" % required)
-	_report("scripts", _source_violations(_sources(owned), _legendary_species(), _offer_vocabulary()))
+	_report("scripts", _unauthorized(_source_violations(_sources(owned), _legendary_species(), _offer_vocabulary())))
 
 
 func test_no_line_in_scripts_ties_cloudreach_to_a_legendary() -> void:
 	var sources := _cross_scan_sources()
 	assert_true(sources.size() > 200, "scripts/ and autoload/ were scanned (%d files)" % sources.size())
-	_report("cross scan", _cross_scan_violations(sources, _legendary_species(), _offer_vocabulary()))
+	_report("cross scan", _unauthorized(_cross_scan_violations(sources, _legendary_species(), _offer_vocabulary())))
 
 
 func test_no_cloudreach_script_or_scene_reaches_another_realms_offer_controller() -> void:
@@ -1115,7 +1177,7 @@ func test_no_cloudreach_script_or_scene_reaches_another_realms_offer_controller(
 			% [roots[root], _chain(root, closure["parent"])])
 	if roots.is_empty():
 		print("    INFO realm scenes are not checked out; realm roots are unknown and every edge is followed")
-	_report("closure", _closure_violations({}, roots))
+	_report("closure", _unauthorized(_closure_violations({}, roots)))
 
 
 func test_cloudreach_dialogue_effects_grant_no_creature_or_offer() -> void:
@@ -1130,14 +1192,14 @@ func test_trainer_and_activity_rewards_grant_no_creature() -> void:
 
 func test_no_legendary_species_anywhere_in_cloudreach_data_but_the_pending_entry() -> void:
 	var chapter := _dict(CHAPTER_PATH)
-	_report("species", _species_violations(_corpus(), _legendary_species(), _pending_exempt(chapter)))
+	_report("species", _unauthorized(_species_violations(_corpus(), _legendary_species(), _pending_exempt(chapter))))
 
 
 func test_other_realms_offer_registries_do_not_name_cloudreach() -> void:
 	var configs := _offer_configs()
 	for label: String in configs:
 		assert_false(str(configs[label]) in ["{}", "[]", "<null>"], "offer registry slice %s is not empty" % label)
-	_report("registries", _registry_violations(_ledger_prefixes(), configs, _sources(_offer_controllers())))
+	_report("registries", _unauthorized(_registry_violations(_ledger_prefixes(), configs, _sources(_offer_controllers()))))
 
 
 func test_pending_solmane_is_the_only_wild_legendary_in_cloudreach() -> void:
@@ -1150,6 +1212,40 @@ func test_pending_solmane_is_the_only_wild_legendary_in_cloudreach() -> void:
 		print("    INFO PENDING OWNER DECISION: cloudreach_chapter.json '%s' lists '%s' (roster_identity legendary) as a catchable wild. " % [PENDING_TABLE_ID, PENDING_SPECIES]
 			+ "It is not an adoption offer and is tolerated only until ruled on; flip PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD in tests/test_cloudreach_no_legendary_offer.gd.")
 	assert_eq(result["found"], expected, "legendary species in Cloudreach wild tables")
+
+
+func test_solmane_is_the_one_authorized_offer() -> void:
+	# The ruling's shape, pinned: Veyra's defeat gates it, her per-participant
+	# journal decides who is offered, the receipts are Cloudreach's own, and it
+	# is the Veridian flow (stronghold_climax.gd), not a second system.
+	var cfg := _dict(SOLMANE_CONFIG_PATH)
+	var flags: Dictionary = cfg.get("flags", {})
+	assert_eq(str((cfg.get("legendary", {}) as Dictionary).get("species", "")), "solmane")
+	assert_eq(str(flags.get("gate", "")), "captain_veyra_defeated", "Veyra's defeat opens the tether chamber")
+	assert_eq(str((cfg.get("machine", {}) as Dictionary).get("warden_trainer", "")), "captain_veyra_storm_anchor",
+		"participants come from Veyra's per-participant journal")
+	for key: String in ["legendary_freed", "legendary_joined", "legendary_refused", "legendary_settled"]:
+		assert_true(str(flags.get(key, "")).begins_with("cloudreach:"), "%s is a Cloudreach receipt" % key)
+	var receipts: Dictionary = cfg.get("receipts", {})
+	for key: String in ["resolution_prefix", "live_marker", "answer_world_prefix"]:
+		assert_true(str(receipts.get(key, "")).begins_with("cloudreach:"), "%s is Cloudreach's own" % key)
+	var runtime := _text("res://scripts/world/cloudreach_world_runtime.gd")
+	assert_true(runtime.contains("preload(\"res://scripts/world/stronghold_climax.gd\")")
+		and runtime.contains(SOLMANE_CONFIG_PATH), "the runtime mounts the Veridian flow with the Solmane config")
+	# Never wild or catchable: no Cloudreach wild table lists a legendary.
+	assert_true((_wild_table_legendaries(_dict(CHAPTER_PATH), _legendary_species())["found"] as Dictionary).is_empty(),
+		"no Cloudreach wild table lists a legendary")
+
+
+func test_negative_control_authorized_path_does_not_grow() -> void:
+	var lookalikes: Array[String] = [
+		"cloudreach_solmane_climax2.json:.legendary.species names legendary species 'solmane'",
+		"dialogue/cloudreach.json:.conversations.cloudreach_solmane_extra names legendary species 'solmane'",
+		"res://scripts/world/cloudreach_chapter.gd code references 'stronghold_climax.gd'",
+		"legendary receipt prefix 'cloudreach:legendary_answer:' names Cloudreach",
+		"res://scripts/world/cloudreach_finale_controller.gd:12 ties Cloudreach to 'solmane': solmane",
+	]
+	assert_eq(_unauthorized(lookalikes).size(), lookalikes.size(), "no look-alike of the authorized path is exempt")
 
 
 # --- harmless words must pass ---------------------------------------------------------

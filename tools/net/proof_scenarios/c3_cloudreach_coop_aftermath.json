@@ -1,6 +1,6 @@
 {
   "name": "C3: Cloudreach co-op and aftermath -- host and guest cross flight and realm boundaries, drop/rejoin and reload without duplicating relic/key or losing rider/party identity",
-  "claim": "ACCEPTANCE card C3. Fixtures (disclosed): story_flag world flags stand in for the completed Cloudreach chapter (the earned play is card C1); heart_earn submits the Wings heart through the ledger; party_grant gives each peer four L30 creatures and fly_setup adds an owned galecrest carrier as the fifth (the mentor loaner ends at cloudreach_chapter_complete). Launch, landing, drop, rejoin, realm crossings, host restart/title Load, saves and hashes are the game's own code. The heart and key are world flags (entitlements), so 'not duplicated' is checked as: each read once from the host world, unchanged hash across restart+rejoin, and the saved world keeps them. Loopback ENet: local evidence, not internet/Steam acceptance.",
+  "claim": "ACCEPTANCE card C3. Fixtures (disclosed): story_flag world flags stand in for the completed Cloudreach chapter (the earned play is card C1); heart_earn submits the Wings heart through the ledger; party_grant gives each peer four L30 creatures and fly_setup adds an owned galecrest carrier as the fifth (the mentor loaner ends at cloudreach_chapter_complete). Launch, landing, drop, rejoin, realm crossings, host restart/title Load, saves and hashes are the game's own code. The heart and key are world flags (entitlements), so 'not duplicated' is checked as: each read once from the host world, unchanged hash across restart+rejoin, and the saved world keeps them. Loopback ENet: local evidence, not internet/Steam acceptance. Owner ruling 2026-09-27 (#356 5858140459): Solmane is freed after Captain Veyra's defeat and offered once to each finale participant, exactly like the Meadows Veridian; this card's own aftermath answers that offer for both peers through the real accept_offer/refuse_offer handlers (veridian_answer, node CloudreachSolmaneClimax). Both peers are already at their five-creature cap here (four granted companions plus the fly_setup galecrest fifth), so both refuse -- an accept without room needs a release ceremony this card does not model -- and the refusal receipt is proven to survive the mid-scenario drop/rejoin and the host's restart+reload with no second offer and no Solmane in either saved character. The no-second-offer-after-restart check is proven by f08_5_solmane_two_peer (run3); here the receipts' persistence through the restart is read from Stormwood (run1: a return crossing to Cloudreach after the restart outran the 15 s heartbeat while the realm built).",
   "peers": 2,
   "scene": "title",
   "budget_s": 4800,
@@ -526,6 +526,147 @@
     },
     {
       "peer": 0,
+      "action": "veridian_fixture",
+      "args": {
+        "trainer": "captain_veyra_storm_anchor",
+        "realm": "cloudreach"
+      },
+      "label": "SETUP (disclosed): host journals both peers as Veyra participants through the reward_grant the director pays a shared trainer win with (C3's own Veyra defeat is a story_flag fixture, not a live fight)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "cloudreach:legendary_freed",
+        "scope": "world"
+      },
+      "label": "SETUP (disclosed): the freeing as a world fact (the lever press itself is proven by smoke_cloudreach_solmane_offer_choice)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach:legendary_freed",
+        "budget_frames": 1800
+      },
+      "label": "both peers read cloudreach:legendary_freed from the host world"
+    },
+    {
+      "peer": 0,
+      "action": "teleport",
+      "args": {
+        "at": [
+          99.0,
+          1161.2,
+          5471.0
+        ],
+        "settle": 60
+      },
+      "label": "SETUP: host stands in the tether chamber"
+    },
+    {
+      "peer": 1,
+      "action": "teleport",
+      "args": {
+        "at": [
+          104.0,
+          1161.2,
+          5471.0
+        ],
+        "settle": 60
+      },
+      "label": "SETUP: guest stands in the tether chamber"
+    },
+    {
+      "peer": "all",
+      "action": "wait",
+      "args": {
+        "frames": 240
+      }
+    },
+    {
+      "peer": 0,
+      "action": "veridian_answer",
+      "args": {
+        "answer": "refuse",
+        "node": "CloudreachSolmaneClimax",
+        "presses": 40,
+        "settle": 30
+      },
+      "label": "HOST refuses its own offer: already at capacity (four granted companions plus the fly_setup galecrest fifth), and an accept without room needs a release ceremony this card does not model (owner ruling #356 5858140459: offered, not forced)"
+    },
+    {
+      "peer": 1,
+      "action": "veridian_answer",
+      "args": {
+        "answer": "refuse",
+        "node": "CloudreachSolmaneClimax",
+        "presses": 40,
+        "settle": 30
+      },
+      "label": "GUEST refuses its own offer: also at capacity (four granted companions plus the fly_setup galecrest fifth)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach:legendary_resolution:refused:$character0",
+        "budget_frames": 1800
+      },
+      "label": "host's world receipt: refused"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach:legendary_resolution:refused:$character1",
+        "budget_frames": 1800
+      },
+      "label": "guest's world receipt: refused"
+    },
+    {
+      "peer": 0,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "host still exactly five: refusing left the belt as it was"
+    },
+    {
+      "peer": 0,
+      "action": "party_uids",
+      "args": {
+        "equals": "uids0"
+      },
+      "label": "host's five are unchanged (no accidental release)"
+    },
+    {
+      "peer": 1,
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "label": "guest still exactly five: refusing left the belt as it was"
+    },
+    {
+      "peer": 1,
+      "action": "party_uids",
+      "args": {
+        "equals": "uids1"
+      },
+      "label": "guest's five are unchanged (no accidental release)"
+    },
+    {
+      "peer": "all",
+      "action": "capture_saves",
+      "args": {
+        "label": "solmane_answered"
+      }
+    },
+    {
+      "peer": 0,
       "action": "enter_realm",
       "args": {
         "realm": "stormwood"
@@ -586,7 +727,8 @@
     {
       "peer": 0,
       "action": "title_load",
-      "label": "RELOAD: the restarted host presses Load on its autosave, which hosts"
+      "label": "RELOAD: the restarted host presses Load on its autosave, which hosts",
+      "budget_frames": 20000
     },
     {
       "peer": 1,
@@ -762,6 +904,24 @@
     },
     {
       "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach:legendary_resolution:refused:$character0",
+        "budget_frames": 1800
+      },
+      "label": "host's refused receipt persisted through the restart"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "cloudreach:legendary_resolution:refused:$character1",
+        "budget_frames": 1800
+      },
+      "label": "guest's refused receipt persisted through the restart"
+    },
+    {
+      "peer": "all",
       "action": "capture_saves",
       "args": {
         "label": "after"
@@ -808,7 +968,7 @@
           "solmane"
         ]
       },
-      "label": "no legendary in this character's saved party"
+      "label": "host's saved character holds no Solmane (refused: already at capacity)"
     },
     {
       "peer": 1,
@@ -820,7 +980,20 @@
           "solmane"
         ]
       },
-      "label": "no legendary in this character's saved party"
+      "label": "guest's saved character holds no Solmane (refused: already at capacity)"
+    },
+    {
+      "peer": 0,
+      "action": "check_saved",
+      "args": {
+        "label": "after",
+        "dir": "characters",
+        "contains": [
+          "solmane"
+        ]
+      },
+      "expect": "FAIL",
+      "label": "NEGATIVE CONTROL: the saved-character check reads real content (a 'contains Solmane' claim fails since the host refused)"
     }
   ],
   "build_allowance_s": 600

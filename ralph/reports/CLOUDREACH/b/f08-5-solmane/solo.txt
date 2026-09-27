@@ -1,0 +1,26 @@
+(space-accept) read 'cloudreach_solmane_choice': Step to its shoulder to take it with you, or step back to leave it free. Both are final.
+(space-accept) walked 2.40 m to the accept prompt; offered 'Fly out with Solmane (final)'
+(space-accept) answered: party 5, solmane 1, receipt cloudreach:legendary_resolution:accepted:character-0730dc9125493c07f84f189e20389dfc
+(space-accept) reload: no re-offer, same party, receipts kept
+(space-accept) the personal receipt alone prevents a second offer
+(space-refuse) read 'cloudreach_solmane_choice': Step to its shoulder to take it with you, or step back to leave it free. Both are final.
+(space-refuse) walked 2.40 m to the refuse prompt; offered 'Leave Solmane free (final)'
+(space-refuse) answered: party 4, solmane 0, receipt cloudreach:legendary_resolution:refused:character-0730dc9125493c07f84f189e20389dfc
+(space-refuse) reload: no re-offer, same party, receipts kept
+(space-refuse) the personal receipt alone prevents a second offer
+(capacity-refuse-at-prompt) read 'cloudreach_solmane_choice': Step to its shoulder to take it with you, or step back to leave it free. Both are final.
+(capacity-refuse-at-prompt) walked 2.40 m to the refuse prompt; offered 'Leave Solmane free (final)'
+(capacity-refuse-at-prompt) answered: party 5, solmane 0, receipt cloudreach:legendary_resolution:refused:character-0730dc9125493c07f84f189e20389dfc
+(capacity-refuse-at-prompt) reload: no re-offer, same party, receipts kept
+(capacity-refuse-at-prompt) the personal receipt alone prevents a second offer
+(capacity-accept-then-let-newcomer-go) read 'cloudreach_solmane_choice': Step to its shoulder to take it with you, or step back to leave it free. Both are final.
+(capacity-accept-then-let-newcomer-go) walked 2.40 m to the accept prompt; offered 'Fly out with Solmane (final)'
+(capacity-accept-then-let-newcomer-go) answered: party 5, solmane 0, receipt cloudreach:legendary_resolution:refused:character-0730dc9125493c07f84f189e20389dfc
+(capacity-accept-then-let-newcomer-go) reload: no re-offer, same party, receipts kept
+(capacity-accept-then-let-newcomer-go) the personal receipt alone prevents a second offer
+(capacity-accept-release-one) read 'cloudreach_solmane_choice': Step to its shoulder to take it with you, or step back to leave it free. Both are final.
+(capacity-accept-release-one) walked 2.40 m to the accept prompt; offered 'Fly out with Solmane (final)'
+(capacity-accept-release-one) answered: party 5, solmane 1, receipt cloudreach:legendary_resolution:accepted:character-0730dc9125493c07f84f189e20389dfc
+(capacity-accept-release-one) reload: no re-offer, same party, receipts kept
+(capacity-accept-release-one) the personal receipt alone prevents a second offer
+exit=124
