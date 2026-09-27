@@ -173,9 +173,15 @@ func _walk_and_claim(row: Dictionary) -> String:
 			if not won:
 				return "POCKET %s FAIL real Tidecoil fight (%s)" % [pocket, tidecoil_note]
 			# Walk back from wherever the fight ended to the candy, real input only.
-			var back: Variant = await _walk_from(Vector3.INF, target, 1.6, pocket + "_after_tidecoil")
+			# The fight ends in the shallows under Deep Watch's ~12 m reef cliff.
+			# No wading route climbs out (planner at dry_m=-1.0 finds none) and an
+			# open-water stick return stalled against the cliff base twice
+			# (PROOF.md). DISCLOSED FIXTURE: a second position write, back to
+			# Deep Watch's arrival landing -- the same write every pocket walk
+			# starts from -- then the ordinary walk and Interact claim.
+			var back: Variant = await _walk_from(landing, target, 1.6, pocket + "_after_tidecoil")
 			if back == null:
-				return "POCKET %s FAIL walk back after Tidecoil" % pocket
+				return "POCKET %s FAIL walk after Tidecoil" % pocket
 			gate_note = "locked_before_REAL_tidecoil_win(%s)[%s]" % [",".join(gates), tidecoil_note]
 		else:
 			for flag: Variant in gates:
