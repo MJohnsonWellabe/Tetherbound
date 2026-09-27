@@ -16,6 +16,9 @@ const APPROACH_FOOT := Vector2(-100, 5350)
 const STORMHEART_TREE := preload("res://scripts/world/stormheart_tree.gd")
 const APPROACH_WEST_LANE_X := -108.0
 const APPROACH_SOUTH_Z := 5345.0
+## On the slab, 2.5 m east of Kestrel's NPC seat (-100, 5358) and 2.5 m inside
+## the slab's east edge (x -95), past the seat.
+const APPROACH_LANE := Vector2(-97.5, 5366)
 const TRAINERS := ["officer_nysa_deepwood_rod", "outerworks_lieutenant_sera",
 	"officer_kestrel_outer_works"]
 var _outcomes: Dictionary = {}
@@ -354,6 +357,14 @@ static func under_approach_slab(at: Vector3, foot: Vector3, top: Vector3) -> boo
 	return at.y < surface - 1.0
 
 
+## Standing on the approach slab: inside its footprint and within 1 m of its surface.
+static func on_approach_slab(at: Vector3, foot: Vector3, top: Vector3) -> bool:
+	if at.z < foot.z - 0.5 or at.z > top.z or absf(at.x - foot.x) > 5.0:
+		return false
+	var surface := lerpf(foot.y, top.y, clampf((at.z - foot.z) / (top.z - foot.z), 0.0, 1.0))
+	return absf(at.y - surface) <= 1.0
+
+
 ## From north of the foot (Kestrel's fight is under the slab): out sideways
 ## to the west lane, south past the foot, then onto it. From the south (Ember
 ## Bivouac after a rest) the slab is never underfoot: straight to the foot.
@@ -419,6 +430,13 @@ func _walk_actual_ascent(trunk: Node3D) -> bool:
 		if stage == 2 and _player.global_position.distance_to(ramp_start) < 0.8:
 			stage = 3
 			_navigator.reset()
+		if (Engine.get_physics_frames() - started) % 120 == 0:
+			var slides: Array[String] = []
+			for i in _player.get_slide_collision_count():
+				var hit := _player.get_slide_collision(i).get_collider()
+				slides.append(str((hit as Node).name) if hit is Node else "?")
+			_note("ASCENT trace stage=%d at %s %s slides=%s" % [stage, str(_player.global_position),
+				"floor" if _player.is_on_floor() else "air", str(slides)])
 		var progress := clampf((_player.global_position.y - (trunk.global_position.y + 6.0)) / 144.0, 0, 1)
 		furthest = maxf(furthest, progress)
 		if stage == 3 and furthest >= 0.998 and _player.is_on_floor() \
@@ -428,12 +446,26 @@ func _walk_actual_ascent(trunk: Node3D) -> bool:
 		# spaced turns can reject a valid sloped foot position or cut the helix.
 		var fraction := minf(1.0, maxf(progress + 0.008, last_progress + 0.002))
 		var target := approach
+		# Kestrel's NPC twin stands at (-100, 5358) and its body pokes up
+		# through the slab. Walking the slab's centre line meets it, and the
+		# navigator's sideways detour steps off the open edge (reproduced from
+		# run 40086d6f's save). Climb the east lane past it first.
+		if stage == 0 and _player.global_position.z < APPROACH_LANE.y:
+			var lane_y := lerpf(slab_foot.y, slab_top.y, (APPROACH_LANE.y - slab_foot.z) / (slab_top.z - slab_foot.z))
+			target = Vector3(APPROACH_LANE.x, lane_y, APPROACH_LANE.y)
 		match stage:
 			1: target = mouth
 			2: target = ramp_start
 			3: target = trunk.to_global(trunk.call("ascent_point", fraction))
 		last_progress = maxf(last_progress, progress)
-		if _navigator.can_walk():
+		# On the open-sided slab, head straight for the target. The navigator's
+		# sideways detours (its look-ahead avoiding a body or the slab's rise)
+		# step off the edge: traced from run 40086d6f's save at z 5374.6.
+		if stage == 0 and on_approach_slab(_player.global_position, slab_foot, slab_top):
+			var heading := Vector3(target.x - _player.global_position.x, 0, target.z - _player.global_position.z)
+			_navigator.push_once(heading.normalized())
+			await _tree.physics_frame
+		elif _navigator.can_walk():
 			await _navigator.step(target)
 		else:
 			await _tree.physics_frame

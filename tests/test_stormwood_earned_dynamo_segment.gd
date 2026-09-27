@@ -135,3 +135,18 @@ func test_walking_under_the_approach_slab_is_detected() -> void:
 	var on := lerpf(foot.y, top.y, (5400.0 - foot.z) / (top.z - foot.z))
 	assert_false(SEGMENT.under_approach_slab(Vector3(-100, on + 0.9, 5400), foot, top), "standing on the slab")
 	assert_false(SEGMENT.under_approach_slab(Vector3(-108, 100, 5400), foot, top), "west of the footprint")
+
+
+## On the open-sided approach slab the climb heads straight for its target
+## (run 40086d6f's save: the navigator's sideways detour stepped off the edge).
+func test_standing_on_the_approach_slab_is_detected() -> void:
+	var foot := Vector3(-100, 107.77, 5350)
+	var top := Vector3(-100, 118.06, 5426)
+	var on := lerpf(foot.y, top.y, (5374.6 - foot.z) / (top.z - foot.z))
+	assert_true(SEGMENT.on_approach_slab(Vector3(-97.94, on, 5374.6), foot, top), "the traced detour point is on the slab")
+	assert_false(SEGMENT.on_approach_slab(Vector3(-107.9, 110.0, 5374.3), foot, top), "west of the slab, on the terrain")
+	assert_false(SEGMENT.on_approach_slab(Vector3(-99.8, 111.95, 5410.0), foot, top), "on the ground beneath it")
+	assert_true(SEGMENT.APPROACH_LANE.x > -100.0 + 2.0 and SEGMENT.APPROACH_LANE.x < -95.0 - 2.0,
+		"the east lane clears Kestrel's NPC seat and the slab's east edge by 2 m or more")
+	var source := FileAccess.get_file_as_string("res://tests/helpers/stormwood_earned_dynamo_segment.gd")
+	assert_true(source.contains("_navigator.push_once(heading.normalized())"), "the slab is climbed without navigator detours")
