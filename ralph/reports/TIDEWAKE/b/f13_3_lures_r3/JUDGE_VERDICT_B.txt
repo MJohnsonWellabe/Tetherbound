@@ -1,0 +1,30 @@
+frame_01: WEAK — Foreground is empty sand; the only landmark is a small wooden post-and-banner arch on the far left-mid distance, partly cut off by the hillcrest, plus a strange flat-black spike/cone shape hovering top-center (reads as a rendering artifact, not a lure). Nothing central or large pulls the eye. Bringing the banner post closer to frame-center, adding light/glow, or removing the black spike artifact would help it read as a destination.
+
+frame_02: NOTICEABLE — A blue-armored, mechanical-looking turtle creature sits just left of the player, close and clearly foreign to the terrain — the strongest draw in the shot. The banner post is now atop the hill dead-center behind it, giving a secondary directional pull. The black spike artifact is still present above the banner and is visually confusing rather than enticing.
+
+frame_03: NOT NOTICEABLE — The banner/smoke landmark is far away and tiny, near the top-center vanishing point, easily lost against the sky. A faint human silhouette on the hill (upper right) and a green blip on the minimap are the only other cues, both too small/subtle to register as "go there." Needs to be bigger, brighter, or paired with sound/particle cues at this distance.
+
+frame_04: NOTICEABLE — Two wooden banner arches sit along the ridge ahead (mid-right of frame), one with a visible smoke column rising against the sky — good silhouette contrast and a legible waypoint chain leading forward.
+
+frame_05: NOTICEABLE — A cluster of camp elements (tent, campfire, small workbench, a standing figure) sits together at the top of the slope, ahead and centered, with a banner and smoke plume above it. Reads clearly as an outpost/objective.
+
+frame_06: NOTICEABLE — The canyon walls funnel the eye straight down a grass corridor to a lit scene at the vanishing point: banner, smoke column, and a couple of pale blue/rock shapes. The composition itself is the lure even though the distant objects are too small to identify individually.
+
+frame_07: NOTICEABLE — A banner post with a small hanging/tied figure and glowing embers sits mid-upper frame, close enough to read as a "someone needs help here" scene, which ties directly to the visible objective text. The captive figure is small and could be more clearly posed/lit to read faster as a person.
+
+frame_08: NOTICEABLE — A banner arch is now close and large in the mid-frame, with a second banner further down the ridge and ocean/mountain behind — clear staged waypoint with good depth cueing.
+
+frame_09: NOTICEABLE — Camera is close to a lantern-topped post with blue banner and a wooden crate, dominating the upper-mid frame; unambiguous "you have arrived" framing.
+
+frame_10: NOTICEABLE — Same post/lantern/banner/crate cluster now fills the frame at close range — no ambiguity that this is the current point of interest, though it's more "you're here" than "come here" since the player is already on top of it.
+
+frame_11: NOTICEABLE — Two draws compete for attention: a standing NPC beside a tent/campfire camp (right-mid) and a small blue finned/winged creature close to the player (far left). Both are legible against the sand and grass.
+
+frame_12: NOTICEABLE — A large, pale-blue seal/dragon-like creature looms directly ahead in the water, glowing and clearly animated — the strongest single lure of all twelve frames, impossible to miss.
+
+PLACE 1 (frames 01+02): WEAK/YES — arrival shot is empty, but the creature and banner in frame 02 pull you forward strongly once you've moved a few steps.
+PLACE 2 (frames 03+04): WEAK — the far shot (03) gives almost nothing to notice; only the closer shot (04) reads clearly, so first impression on arrival is poor.
+PLACE 3 (frames 05+06): YES — camp cluster and funneling canyon composition both clearly point to the same destination.
+PLACE 4 (frames 07+08): YES — banner-and-captive framing plus a clean waypoint chain along the ridge.
+PLACE 5 (frames 09+10): YES — consistent, close, unambiguous landmark, though it reads better as "arrived" than "lure from afar."
+PLACE 6 (frames 11+12): YES — NPC/camp and creature reads well at distance, and the water creature up close is the most compelling visual in the set.
