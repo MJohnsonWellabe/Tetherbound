@@ -35,6 +35,7 @@ const PERSONAL_REWARD := preload("res://scripts/world/cloudreach_personal_reward
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const NPCS := preload("res://scripts/world/village_npcs.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const PROGRESSION_CONFIG := preload("res://scripts/creatures/progression.gd")
 const TM_DB := preload("res://scripts/creatures/tm_db.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
@@ -105,6 +106,7 @@ func configure(player: CharacterBody3D, fly: Node, event_adapter: Callable,
 	chapter = RULES.read(CHAPTER_PATH)
 	npc_runtime = RULES.read(NPC_PATH)
 	add_to_group("progression_restore")
+	add_to_group("creature_bed_rest_bonus")
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	if _fly != null:
 		_register_flight()
@@ -262,6 +264,8 @@ func activate(id: String) -> bool:
 	if not cost.is_empty() and (inventory == null or int(inventory.call("count", cost["item_id"])) < int(cost["count"])):
 		_message("Bring %d %s to finish this repair." % [int(cost["count"]), str(cost["item_id"]).replace("_", " ")])
 		return false
+	if spec.has("claims_pickup"):
+		return _claim_circuit_prize(id, spec)
 	var changed := false
 	var pending := false
 	if spec.has("set_physical_flag"):
@@ -308,17 +312,59 @@ func _settle_interaction(id: String, spec: Dictionary) -> void:
 		var inventory: RefCounted = _game.get("inventory") if _game != null else null
 		if inventory != null:
 			inventory.call("remove", cost["item_id"], int(cost["count"]))
-	# F07#0 Cliff Circuit prize: the chosen TM is collected through its own
-	# placed pickup's receipt (`claim_pickup`, the cache flag), granted to the
-	# peer that chose it; the field cache then reads as taken everywhere.
-	var pickup := str(spec.get("claims_pickup", ""))
-	if not pickup.is_empty():
-		LEDGER_CLAIM.submit(self, {"kind": "claim_pickup", "realm": REALM_ID,
-			"flag": CACHE.flag_id(str(spec["item_id"]), pickup, REALM_ID),
-			"item": str(spec["item_id"]), "count": 1})
 	interaction_completed.emit(id)
 	_message(str(spec["label"]).split(" (")[0] + " — complete")
 	sync_progression()
+
+
+## F07#0 Waycamp shelter payoff (ruling (a), #356 14:00): a companion whose
+## night in Galefoot's sheltered bed completes is paid the bed's rest XP
+## (`PROGRESSION.rest_xp`) once more, times `rest_xp_multiplier`. Called by
+## `game_state.complete_creature_bed_rests()` through the
+## `creature_bed_rest_bonus` group, before the sleep autosave, on each peer
+## for its own party.
+func on_creature_bed_rest_completed(creature: RefCounted, bed_index: int) -> void:
+	sheltered_rest_xp(creature, bed_index, _flags, config.get("sheltered_rest", {}))
+
+
+static func sheltered_rest_xp(creature: RefCounted, bed_index: int, flags: RefCounted, cfg: Dictionary) -> int:
+	if creature == null or flags == null or cfg.is_empty() or bed_index != int(cfg.get("bed_index", 0)):
+		return 0
+	if not bool(flags.call("has", str(cfg.get("requires_flag", "")))):
+		return 0
+	var progression_cfg := PROGRESSION_CONFIG.config()
+	var bonus := int(round(float(PROGRESSION_CONFIG.rest_xp(progression_cfg)) * float(cfg.get("rest_xp_multiplier", 1.0))))
+	if bonus > 0:
+		creature.call("gain_xp", bonus, progression_cfg)
+	return bonus
+
+
+## F07#0 Cliff Circuit prize. The chosen TM is collected through its own
+## placed pickup's receipt first (`claim_pickup`: the cache flag, the item to
+## the peer that chose it). Only a committed claim spends the world's one
+## choice (`side_cliff_circuit_tm_chosen`), so a claim the host refuses
+## (another peer took that TM in the field meanwhile) leaves the choice open.
+## Disclosed limit: two peers claiming DIFFERENT TMs within one round trip are
+## each paid one; an atomic choice+claim needs a world_ledger op.
+func _claim_circuit_prize(id: String, spec: Dictionary) -> bool:
+	var cache_flag := CACHE.flag_id(str(spec["item_id"]), str(spec["claims_pickup"]), REALM_ID)
+	var verdict := LEDGER_CLAIM.submit(self, {"kind": "claim_pickup", "realm": REALM_ID,
+		"flag": cache_flag, "item": str(spec["item_id"]), "count": 1})
+	if bool(verdict.get("ok", false)):
+		_commit_circuit_choice(id, spec)
+		return true
+	if bool(verdict.get("pending", false)):
+		_pending_interactions[cache_flag] = {"kind": "prize", "id": id, "spec": spec}
+	return false
+
+
+func _commit_circuit_choice(id: String, spec: Dictionary) -> void:
+	var flag := str(spec.get("set_physical_flag", ""))
+	if (npc_runtime.get("world_choice_flags", []) as Array).has(flag):
+		var verdict := _write_flag(flag)
+		if str(verdict.get("code", "")) == "offline":
+			_flags.call("set_flag", flag)
+	_settle_interaction(id, spec)
 
 
 ## A committed delta landed on this peer, host or client. The only thing this
@@ -352,6 +398,8 @@ func _on_delta_applied(delta: Dictionary) -> void:
 				if bool(ticket.get("bond", false)):
 					_award_fly_route_bond()
 				_message("Fly unlocked. Follow the rising currents to the Sky Shrine.")
+			"prize":
+				_commit_circuit_choice(str(ticket["id"]), ticket["spec"] as Dictionary)
 			_:
 				_settle_interaction(str(ticket["id"]), ticket["spec"] as Dictionary)
 
