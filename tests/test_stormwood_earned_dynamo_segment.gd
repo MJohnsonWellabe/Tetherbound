@@ -116,3 +116,37 @@ func _seat(path: String, key: String, id: String) -> Vector2:
 			return Vector2(float(row.position[0]), float(row.position[2]))
 	assert_true(false, "%s seat %s missing" % [path, id])
 	return Vector2.ZERO
+
+
+## Relay run ec5febd1 left the approach slab during two ascent fights and ran
+## out its climb budget on the ground 6 m beneath the slab's top.
+func test_walking_under_the_approach_slab_is_detected() -> void:
+	# Foot at ground + 0.2 (stormwood_world.gd add_approach), top 6 m over the tree base.
+	var foot := Vector3(-100, 107.77, 5350)
+	var top := Vector3(-100, 118.1, 5470 - 44)
+	assert_true(SEGMENT.under_approach_slab(Vector3(-99.79, 111.95, 5429.64), foot, top),
+		"run ec5febd1's stall: on the ground under the deck ring's rim, past the slab's top")
+	assert_false(SEGMENT.under_approach_slab(Vector3(-100, 118.3, 5429.64), foot, top),
+		"on the deck ring at the approach point")
+	assert_true(SEGMENT.under_approach_slab(Vector3(-99.79, 111.95, 5420.0), foot, top),
+		"run ec5febd1's line: on the ground well below the slab")
+	assert_true(SEGMENT.under_approach_slab(Vector3(-96.1, 109.36, 5374.6), foot, top),
+		"run 44adfbe4's wedge point is under the slab")
+	var on := lerpf(foot.y, top.y, (5400.0 - foot.z) / (top.z - foot.z))
+	assert_false(SEGMENT.under_approach_slab(Vector3(-100, on + 0.9, 5400), foot, top), "standing on the slab")
+	assert_false(SEGMENT.under_approach_slab(Vector3(-108, 100, 5400), foot, top), "west of the footprint")
+
+
+## On the open-sided approach slab the climb heads straight for its target
+## (run 40086d6f's save: the navigator's sideways detour stepped off the edge).
+func test_standing_on_the_approach_slab_is_detected() -> void:
+	var foot := Vector3(-100, 107.77, 5350)
+	var top := Vector3(-100, 118.06, 5426)
+	var on := lerpf(foot.y, top.y, (5374.6 - foot.z) / (top.z - foot.z))
+	assert_true(SEGMENT.on_approach_slab(Vector3(-97.94, on, 5374.6), foot, top), "the traced detour point is on the slab")
+	assert_false(SEGMENT.on_approach_slab(Vector3(-107.9, 110.0, 5374.3), foot, top), "west of the slab, on the terrain")
+	assert_false(SEGMENT.on_approach_slab(Vector3(-99.8, 111.95, 5410.0), foot, top), "on the ground beneath it")
+	assert_true(SEGMENT.APPROACH_LANE.x > -100.0 + 2.0 and SEGMENT.APPROACH_LANE.x < -95.0 - 2.0,
+		"the east lane clears Kestrel's NPC seat and the slab's east edge by 2 m or more")
+	var source := FileAccess.get_file_as_string("res://tests/helpers/stormwood_earned_dynamo_segment.gd")
+	assert_true(source.contains("_navigator.push_once(heading.normalized())"), "the slab is climbed without navigator detours")
