@@ -1,0 +1,364 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_chapter_started
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_act_i_complete
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_act_ii_complete
+  PASS: chapter-entry fixture accepted completed Cloudreach fact captain_veyra_defeated
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_winds_restored
+  PASS: chapter-entry fixture accepted completed Cloudreach fact realm_heart_cloudreach_earned
+  PASS: chapter-entry fixture accepted completed Cloudreach fact realm_key_stormwood
+  PASS: chapter-entry fixture accepted completed Cloudreach fact stormward_route_revealed
+  PASS: chapter-entry fixture accepted completed Cloudreach fact cloudreach_chapter_complete
+  PASS: chapter-entry fixture carries sparkit in the completed Cloudreach party
+  PASS: chapter-entry fixture carries mudsnout in the completed Cloudreach party
+  PASS: chapter-entry fixture carries bramblebun in the completed Cloudreach party
+  PASS: chapter-entry fixture carries terrapup in the completed Cloudreach party
+  PASS: chapter-entry fixture carries brooktail in the completed Cloudreach party
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_chapter_started)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_act_i_complete)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_act_ii_complete)
+  PASS: chapter-entry fixture contains no Stormwood progress (captain_veyra_defeated)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_winds_restored)
+  PASS: chapter-entry fixture contains no Stormwood progress (realm_heart_cloudreach_earned)
+  PASS: chapter-entry fixture contains no Stormwood progress (realm_key_stormwood)
+  PASS: chapter-entry fixture contains no Stormwood progress (stormward_route_revealed)
+  PASS: chapter-entry fixture contains no Stormwood progress (cloudreach_chapter_complete)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/stormwood_world.gd:90)
+STORMWOOD BUILD shell=false elapsed_ms=239 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=477 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=738 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=745 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=746 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=748 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=748 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=748 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=750 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=750 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1009 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1028 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1029 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=87 reorder[7 layers]=29
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=143 mark_harvestable=17 group_by_model=35 register_mesh_assets=16 build_batches_total=813 (of which harvest_points[11099 nodes]=646, initial_collision_stream[11161 solid]=40) update_mmis=148
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:771)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:552)
+STORMWOOD ENCOUNTERS READY wild=808
+  PASS: production router accepted the completed-Cloudreach Stormwood entry
+  PASS: production Stormwood scene became current
+  PASS: production router settled in Stormwood
+  PASS: authored Stormwood arrival settled its pending entry
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ashfoot Waycamp arrival from=(-300.0, 32.27173, 180.0) target=(-350.0, 30.16094, 450.0) distance_m=274.6 budget_frames=21967
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ashfoot Waycamp arrival elapsed_ms=10006 walked_frames=3284 player=(-349.6706, 30.12793, 448.2463)
+STORMWOOD CONTINUOUS — CHECKPOINT: ARRIVED Ashfoot; chapter_started was earned by the proximity event
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Hesk's Long Storm account stance from=(-349.6706, 30.12793, 448.2463) target=(-350.0, 30.18008, 447.5) distance_m=0.8 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Hesk's Long Storm account stance elapsed_ms=130 walked_frames=31 player=(-349.9425, 30.1529, 448.1795)
+STORMWOOD CONTINUOUS — CHECKPOINT: HEARD Hesk; crisis_learned came from the completed dialogue
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Tamsin's Break lesson stance from=(-350.5079, 30.25206, 447.5687) target=(-300.0, 26.42247, 347.5) distance_m=112.1 budget_frames=8967
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Tamsin's Break lesson stance elapsed_ms=3959 walked_frames=1425 player=(-300.3079, 26.41875, 348.0622)
+STORMWOOD CONTINUOUS — CHECKPOINT: HEARD Tamsin through her ordinary NPC prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ashfoot lightning shelter from=(-300.0944, 26.43319, 347.6731) target=(-325.0, 29.25002, 466.0) distance_m=120.9 budget_frames=9673
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ashfoot lightning shelter elapsed_ms=3815 walked_frames=1453 player=(-324.7093, 29.22859, 464.6014)
+STORMWOOD CONTINUOUS — CHECKPOINT: WITNESSED a production Break while sheltered at Ashfoot
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Verge rod clearing leg 1 from=(-324.9366, 29.26533, 465.6887) target=(-350.0, 30.16094, 450.0) distance_m=29.6 budget_frames=2365
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Verge rod clearing leg 1 elapsed_ms=1122 walked_frames=360 player=(-348.3301, 30.01951, 451.0435)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Verge rod clearing leg 2 from=(-348.3301, 30.01951, 451.0435) target=(-650.0, 20.82785, 830.0) distance_m=484.4 budget_frames=38749
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Verge rod clearing leg 2 elapsed_ms=17148 walked_frames=5819 player=(-648.8066, 20.92049, 828.4891)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to first charged Stormglass node stance from=(-648.8066, 20.92049, 828.4891) target=(-762.0, 27.28783, 893.0) distance_m=130.3 budget_frames=10422
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to first charged Stormglass node stance elapsed_ms=3740 walked_frames=1562 player=(-761.4573, 27.22705, 892.6936)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED first charged Stormglass through the live tool and interaction path
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to second charged Stormglass node stance from=(-762.1287, 27.29467, 893.0699) target=(-738.0, 25.38799, 877.0) distance_m=29.0 budget_frames=2319
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to second charged Stormglass node stance elapsed_ms=874 walked_frames=411 player=(-738.5377, 25.45442, 877.4365)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED the real six-Stormglass cost for both ends of pair A
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Verge rod road return from=(-737.205, 25.29965, 876.3506) target=(-650.0, 20.82785, 830.0) distance_m=98.8 budget_frames=7900
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Verge rod road return elapsed_ms=2651 walked_frames=1192 player=(-651.7126, 20.76997, 830.9091)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to a_ashfoot relight stance from=(-651.7126, 20.76997, 830.9091) target=(-350.0, 28.76447, 503.0) distance_m=445.6 budget_frames=35647
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to a_ashfoot relight stance elapsed_ms=17507 walked_frames=5353 player=(-350.3189, 29.03016, 503.5393)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to a_ashfoot relight stance from=(-349.7868, 29.03017, 502.9585) target=(-350.0, 29.09796, 497.45) distance_m=5.5 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to a_ashfoot relight stance elapsed_ms=313 walked_frames=79 player=(-349.9738, 29.03016, 498.1348)
+STORMWOOD CONTINUOUS — CHECKPOINT: RELIT Ashfoot's ancient arch through its ordinary prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ash road toward Lantern Pools from=(-349.9937, 29.0661, 497.6211) target=(-590.0, 27.06199, 1060.0) distance_m=611.5 budget_frames=48916
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ash road toward Lantern Pools elapsed_ms=18645 walked_frames=7368 player=(-589.2224, 26.97401, 1058.195)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ash road toward Lantern Pools from=(-589.2224, 26.97401, 1058.195) target=(-380.0, 32.23082, 1400.0) distance_m=400.8 budget_frames=32060
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ash road toward Lantern Pools elapsed_ms=14050 walked_frames=4968 player=(-380.8307, 32.09537, 1398.186)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to a_pools relight stance from=(-380.8307, 32.09537, 1398.186) target=(-350.0, 31.57998, 1437.0) distance_m=49.6 budget_frames=3965
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to a_pools relight stance elapsed_ms=2074 walked_frames=597 player=(-350.3857, 31.68508, 1436.507)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to a_pools relight stance from=(-349.0271, 31.68508, 1438.243) target=(-350.0, 31.48207, 1440.45) distance_m=2.4 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to a_pools relight stance elapsed_ms=92 walked_frames=31 player=(-349.7305, 31.6851, 1439.838)
+STORMWOOD CONTINUOUS — CHECKPOINT: RELIT Lantern Pools' twin with the remaining earned Stormglass
+STORMWOOD CONTINUOUS — CHECKPOINT: TRAVELLED pair A; the production arch moved player and companion to Ashfoot
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_pickup_route_03 route reward stance from=(-350.0, 29.62934, 503.5) target=(-655.0, 20.67128, 835.25) distance_m=450.6 budget_frames=36051
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_pickup_route_03 route reward stance elapsed_ms=17600 walked_frames=5422 player=(-654.5645, 20.69256, 834.7755)
+STORMWOOD CONTINUOUS — CHECKPOINT: COLLECTED stormwood_pickup_route_03 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEAD for officer_maren_verge_rod: terrapup at 429/429
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to officer_maren_verge_rod challenge stance from=(-656.3386, 20.65098, 836.7081) target=(-650.0, 20.38286, 820.0) distance_m=17.9 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to officer_maren_verge_rod challenge stance elapsed_ms=840 walked_frames=235 player=(-650.2809, 20.41403, 820.5958)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: WON officer_maren_verge_rod; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to verge_rod_station switch stance from=(-655.4732, 20.62633, 814.8101) target=(-647.0, 21.03137, 828.2) distance_m=15.8 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to verge_rod_station switch stance elapsed_ms=1124 walked_frames=254 player=(-647.4744, 20.98019, 827.6858)
+STORMWOOD CONTINUOUS — CHECKPOINT: DEFEATED Maren and disabled the Verge rod through its live switch
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ash road to the Hollows station from=(-647.1766, 21.00926, 828.0071) target=(-590.0, 27.06199, 1060.0) distance_m=238.9 budget_frames=19114
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during Ash road to the Hollows station (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during Ash road to the Hollows station (outcome=won)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ash road to the Hollows station elapsed_ms=112288 walked_frames=2855 player=(-590.6571, 27.19899, 1058.153)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ash road to the Hollows station from=(-590.6571, 27.19899, 1058.153) target=(-380.0, 32.23082, 1400.0) distance_m=401.5 budget_frames=32123
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ash road to the Hollows station elapsed_ms=19840 walked_frames=4966 player=(-380.8291, 32.09578, 1398.191)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ash road to the Hollows station from=(-380.8291, 32.09578, 1398.191) target=(-900.0, 31.94764, 1780.0) distance_m=644.5 budget_frames=51556
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ash road to the Hollows station elapsed_ms=33354 walked_frames=7840 player=(-898.376, 32.15843, 1778.841)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_pickup_route_06 route reward stance from=(-898.376, 32.15843, 1778.841) target=(-896.8, 30.84074, 1787.35) distance_m=8.7 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_pickup_route_06 route reward stance elapsed_ms=336 walked_frames=110 player=(-897.0438, 30.97754, 1786.753)
+STORMWOOD CONTINUOUS — CHECKPOINT: COLLECTED stormwood_pickup_route_06 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 124/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEAD for lieutenant_dace_hollows_rod: mudsnout at 358/358
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to lieutenant_dace_hollows_rod challenge stance from=(-896.8637, 30.91409, 1787.196) target=(-880.0, 32.02861, 1768.0) distance_m=25.6 budget_frames=2044
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to lieutenant_dace_hollows_rod challenge stance elapsed_ms=1013 walked_frames=327 player=(-880.4526, 32.03674, 1768.516)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: WON lieutenant_dace_hollows_rod; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to hollows_rod_station switch stance from=(-879.2614, 31.93834, 1767.161) target=(-897.0, 32.24791, 1778.2) distance_m=20.9 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to hollows_rod_station switch stance elapsed_ms=1236 walked_frames=314 player=(-896.4667, 32.2719, 1777.758)
+STORMWOOD CONTINUOUS — CHECKPOINT: DEFEATED Dace and earned lower_rods_disabled from both live switches
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Lantern Pools safe camp from=(-897.0799, 32.24554, 1778.266) target=(-410.0, 34.91586, 1425.0) distance_m=601.7 budget_frames=48136
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Lantern Pools safe camp elapsed_ms=30371 walked_frames=7680 player=(-411.3742, 35.05555, 1426.116)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START Lantern Pools charged-window wait
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END Lantern Pools charged-window wait elapsed_ms=53113 state={ "phase": "break", "remaining": 71.9338061446758, "next_phase": "fading", "next_remaining": 59.9989999999998, "open_seconds": 131.932806144676, "elapsed": 1992.06619385532, "rod_disabled": true, "aftermath": false }
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_harvest_glowmoss_hollows_036 stance from=(-409.5274, 34.87835, 1424.618) target=(-538.0, 29.87428, 1503.0) distance_m=150.5 budget_frames=12039
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_harvest_glowmoss_hollows_036 stance elapsed_ms=7334 walked_frames=1873 player=(-537.4646, 29.97056, 1502.655)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED stormwood_harvest_glowmoss_hollows_036 exact +3 Stormglass receipt with one pickaxe wear
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_harvest_glowmoss_hollows_037 stance from=(-538.7763, 29.75129, 1503.495) target=(-522.0, 30.74479, 1517.0) distance_m=21.5 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_harvest_glowmoss_hollows_037 stance elapsed_ms=1001 walked_frames=279 player=(-522.5252, 30.67896, 1516.578)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED stormwood_harvest_glowmoss_hollows_037 exact +3 Stormglass receipt with one pickaxe wear
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to b_pools relight stance from=(-522.1907, 30.72071, 1516.848) target=(-410.0, 29.0281, 1347.0) distance_m=203.6 budget_frames=16284
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to b_pools relight stance elapsed_ms=9289 walked_frames=2469 player=(-410.3521, 29.55114, 1347.532)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to b_pools relight stance from=(-408.4419, 28.90489, 1344.645) target=(-410.0, 29.07378, 1347.45) distance_m=3.2 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to b_pools relight stance elapsed_ms=3406 walked_frames=762 player=(-410.3076, 29.55113, 1348.018)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to road to Rodline Post from=(-408.94, 29.55113, 1345.494) target=(-900.0, 31.94764, 1780.0) distance_m=655.7 budget_frames=52455
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to road to Rodline Post elapsed_ms=30078 walked_frames=7891 player=(-898.5348, 32.17862, 1778.706)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to road to Rodline Post from=(-898.5348, 32.17862, 1778.706) target=(-700.0, 44.03091, 2300.0) distance_m=557.8 budget_frames=44625
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during road to Rodline Post (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during road to Rodline Post (outcome=won)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to road to Rodline Post elapsed_ms=116965 walked_frames=6746 player=(-700.2017, 43.83407, 2298.08)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to b_rodline relight stance from=(-700.2017, 43.83407, 2298.08) target=(-680.0, 53.48518, 2363.0) distance_m=68.0 budget_frames=5439
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to b_rodline relight stance elapsed_ms=3973 walked_frames=1127 player=(-679.3035, 53.44272, 2362.958)
+STORMWOOD CONTINUOUS — CHECKPOINT: RELIT pair B with entirely harvested Stormglass
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_pickup_route_07 route reward stance from=(-682.0585, 53.66241, 2363.123) target=(-702.9, 43.23544, 2291.45) distance_m=74.6 budget_frames=5971
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_pickup_route_07 route reward stance elapsed_ms=3405 walked_frames=1144 player=(-702.3612, 43.2719, 2291.87)
+STORMWOOD CONTINUOUS — CHECKPOINT: COLLECTED stormwood_pickup_route_07 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's shattered-road account stance from=(-702.6655, 43.24421, 2291.632) target=(-700.0, 43.70059, 2297.0) distance_m=6.0 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's shattered-road account stance elapsed_ms=568 walked_frames=148 player=(-700.64, 43.70004, 2296.8)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's shattered-road account stance from=(-699.9745, 43.71242, 2297.023) target=(-700.0, 43.92709, 2298.95) distance_m=1.9 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's shattered-road account stance elapsed_ms=123 walked_frames=35 player=(-699.9909, 43.85347, 2298.259)
+STORMWOOD CONTINUOUS — CHECKPOINT: COMPLETED Act I through the production task chain at Rodline Post
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor ascent to Lieutenant Varga from=(-700.0039, 43.95421, 2299.239) target=(-630.0, 56.45764, 2390.0) distance_m=114.6 budget_frames=9169
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor ascent to Lieutenant Varga elapsed_ms=23808 walked_frames=1428 player=(-631.1695, 56.27261, 2388.479)
+STORMWOOD CONTINUOUS — CHECKPOINT: PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 16/363, bramblebun 340/340, terrapup 127/436, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEAD for lieutenant_varga_rodline_bridge: bramblebun at 340/340
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to lieutenant_varga_rodline_bridge challenge stance from=(-630.9573, 56.30698, 2388.755) target=(-630.0, 56.18335, 2388.0) distance_m=1.2 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to lieutenant_varga_rodline_bridge challenge stance elapsed_ms=90 walked_frames=35 player=(-630.5065, 56.25093, 2388.399)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: WON lieutenant_varga_rodline_bridge; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — CHECKPOINT: RECLAIMED the conductor bridge through Varga's authored trainer fight
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor road to Keeper Ondra from=(-628.835, 56.13803, 2387.082) target=(-560.0, 62.52928, 2480.0) distance_m=115.6 budget_frames=9251
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor road to Keeper Ondra elapsed_ms=22944 walked_frames=1376 player=(-561.1618, 62.8208, 2478.433)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor road to Keeper Ondra from=(-560.9246, 62.76256, 2478.752) target=(-160.0, 34.53936, 2700.0) distance_m=457.9 budget_frames=36633
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during conductor road to Keeper Ondra (outcome=won)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESOLVED live combat through controller input during conductor road to Keeper Ondra (outcome=won)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor road to Keeper Ondra elapsed_ms=181117 walked_frames=5503 player=(-161.7419, 34.58549, 2699.033)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_pickup_route_09 route reward stance from=(-161.6691, 34.58363, 2699.073) target=(-166.1, 34.94352, 2695.55) distance_m=5.7 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_pickup_route_09 route reward stance elapsed_ms=224 walked_frames=74 player=(-165.5501, 34.92221, 2695.971)
+STORMWOOD CONTINUOUS — CHECKPOINT: COLLECTED stormwood_pickup_route_09 exact +1 great_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Ondra's Stormglass Arch lesson stance from=(-166.841, 34.90625, 2694.98) target=(-160.0, 34.45423, 2697.5) distance_m=7.3 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Ondra's Stormglass Arch lesson stance elapsed_ms=395 walked_frames=108 player=(-160.6082, 34.472, 2697.275)
+STORMWOOD CONTINUOUS — CHECKPOINT: LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+STORMWOOD CONTINUOUS — ARRIVED Ashfoot; chapter_started was earned by the proximity event
+STORMWOOD CONTINUOUS — HEARD Hesk; crisis_learned came from the completed dialogue
+STORMWOOD CONTINUOUS — HEARD Tamsin through her ordinary NPC prompt
+STORMWOOD CONTINUOUS — WITNESSED a production Break while sheltered at Ashfoot
+STORMWOOD CONTINUOUS — GATHERED first charged Stormglass through the live tool and interaction path
+STORMWOOD CONTINUOUS — GATHERED the real six-Stormglass cost for both ends of pair A
+STORMWOOD CONTINUOUS — RELIT Ashfoot's ancient arch through its ordinary prompt
+STORMWOOD CONTINUOUS — RELIT Lantern Pools' twin with the remaining earned Stormglass
+STORMWOOD CONTINUOUS — TRAVELLED pair A; the production arch moved player and companion to Ashfoot
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_03 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — LEAD for officer_maren_verge_rod: terrapup at 429/429
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — WON officer_maren_verge_rod; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — DEFEATED Maren and disabled the Verge rod through its live switch
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during Ash road to the Hollows station (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during Ash road to the Hollows station (outcome=won)
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_06 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 124/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — LEAD for lieutenant_dace_hollows_rod: mudsnout at 358/358
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — WON lieutenant_dace_hollows_rod; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — DEFEATED Dace and earned lower_rods_disabled from both live switches
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_glowmoss_hollows_036 exact +3 Stormglass receipt with one pickaxe wear
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_glowmoss_hollows_037 exact +3 Stormglass receipt with one pickaxe wear
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during road to Rodline Post (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during road to Rodline Post (outcome=won)
+STORMWOOD CONTINUOUS — RELIT pair B with entirely harvested Stormglass
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_07 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — COMPLETED Act I through the production task chain at Rodline Post
+STORMWOOD CONTINUOUS — PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 16/363, bramblebun 340/340, terrapup 127/436, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — LEAD for lieutenant_varga_rodline_bridge: bramblebun at 340/340
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — WON lieutenant_varga_rodline_bridge; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — RECLAIMED the conductor bridge through Varga's authored trainer fight
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during conductor road to Keeper Ondra (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during conductor road to Keeper Ondra (outcome=won)
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_09 exact +1 great_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+F11 WITNESS STEP PASS prefix: arrival through Ondra's arch recipe wall=1210.6s
+F11 WITNESS STRIKES prefix {"damage":0.0,"deaths":0,"dodge_frames":56,"hits":0,"satchel_recoveries":0,"satchel_stacks":0,"threats":0,"warnings":1}
+F11 WITNESS TOOLS after prefix: knife x1 axe x1 pickaxe x1 hotbar=["knife", "axe", "pickaxe", "", ""]
+STORMWOOD CONTINUOUS — CHECKPOINT: START Glass for Bryn from the earned prefix: stormglass=0 conductor_vine=0
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor road back to Rodline Post from=(-159.3122, 34.42133, 2697.753) target=(-560.0, 62.52928, 2480.0) distance_m=456.0 budget_frames=36482
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor road back to Rodline Post elapsed_ms=92130 walked_frames=5530 player=(-558.3371, 62.28607, 2480.975)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to conductor road back to Rodline Post from=(-558.556, 62.31873, 2480.846) target=(-700.0, 44.03091, 2300.0) distance_m=229.6 budget_frames=18367
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to conductor road back to Rodline Post elapsed_ms=46025 walked_frames=2761 player=(-698.7809, 44.29771, 2301.547)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's rod-crew brief stance from=(-698.8321, 44.28678, 2301.482) target=(-700.0, 43.70059, 2297.0) distance_m=4.6 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's rod-crew brief stance elapsed_ms=1394 walked_frames=358 player=(-699.3384, 43.68367, 2296.79)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's rod-crew brief stance from=(-701.7514, 43.78201, 2297.555) target=(-700.0, 43.92709, 2298.95) distance_m=2.2 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's rod-crew brief stance elapsed_ms=94 walked_frames=29 player=(-700.5204, 43.88128, 2298.537)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's rod-crew brief stance from=(-699.6635, 43.96717, 2299.22) target=(-698.95, 44.07672, 2300.0) distance_m=1.1 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's rod-crew brief stance elapsed_ms=94 walked_frames=30 player=(-699.3882, 44.01001, 2299.52)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's rod-crew brief stance from=(-697.8726, 44.27857, 2301.179) target=(-700.0, 44.16909, 2301.05) distance_m=2.1 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's rod-crew brief stance elapsed_ms=60 walked_frames=25 player=(-699.3617, 44.21473, 2301.087)
+STORMWOOD CONTINUOUS — CHECKPOINT: HEARD Bryn's brief; step 1 came from the completed conversation
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to west-loop road from Rodline from=(-700.398, 44.19686, 2301.025) target=(-1100.0, 51.49195, 2385.0) distance_m=408.3 budget_frames=32666
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to west-loop road from Rodline elapsed_ms=11871 walked_frames=4934 player=(-1098.123, 51.46925, 2384.608)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_harvest_conductor_run_078 stance from=(-1099.075, 51.50554, 2384.809) target=(-1450.0, 38.8602, 2505.0) distance_m=370.9 budget_frames=29674
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_harvest_conductor_run_078 stance elapsed_ms=74322 walked_frames=4459 player=(-1449.384, 38.85919, 2504.789)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_harvest_conductor_run_078 stance from=(-1449.744, 38.84987, 2504.912) target=(-1450.0, 39.25485, 2508.95) distance_m=4.0 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_harvest_conductor_run_078 stance elapsed_ms=748 walked_frames=45 player=(-1449.959, 39.18673, 2508.294)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED stormwood_harvest_conductor_run_078 +3 stormglass through its live prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_harvest_conductor_run_077 stance from=(-1449.981, 39.21629, 2508.645) target=(-1600.0, 26.32584, 2505.0) distance_m=150.1 budget_frames=12005
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_harvest_conductor_run_077 stance elapsed_ms=30095 walked_frames=1806 player=(-1599.301, 26.2808, 2505.018)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to stormwood_harvest_conductor_run_077 stance from=(-1599.661, 26.29709, 2505.009) target=(-1600.0, 26.23566, 2508.95) distance_m=4.0 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to stormwood_harvest_conductor_run_077 stance elapsed_ms=734 walked_frames=44 player=(-1599.947, 26.27024, 2508.322)
+STORMWOOD CONTINUOUS — CHECKPOINT: GATHERED stormwood_harvest_conductor_run_077 +3 conductor_vine through its live prompt
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to west-loop road back to Bryn from=(-1599.979, 26.2645, 2508.696) target=(-1100.0, 51.49195, 2385.0) distance_m=515.1 budget_frames=41204
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to west-loop road back to Bryn elapsed_ms=13828 walked_frames=6208 player=(-1101.923, 51.59701, 2385.471)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to west-loop road back to Bryn from=(-1101.923, 51.59701, 2385.471) target=(-700.0, 44.03091, 2300.0) distance_m=410.9 budget_frames=32872
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to west-loop road back to Bryn elapsed_ms=11666 walked_frames=4938 player=(-701.8911, 44.13789, 2300.401)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's delivery request stance from=(-701.8911, 44.13789, 2300.401) target=(-700.0, 43.70059, 2297.0) distance_m=3.9 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's delivery request stance elapsed_ms=183 walked_frames=44 player=(-700.0314, 43.79171, 2297.696)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's delivery request stance from=(-699.7815, 43.52154, 2295.004) target=(-700.0, 43.92709, 2298.95) distance_m=4.0 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's delivery request stance elapsed_ms=259 walked_frames=67 player=(-700.6056, 43.89388, 2298.658)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's delivery request stance from=(-700.492, 43.97204, 2299.409) target=(-698.95, 44.07672, 2300.0) distance_m=1.7 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's delivery request stance elapsed_ms=151 walked_frames=39 player=(-699.2808, 44.00251, 2299.405)
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to Bryn's delivery request stance from=(-698.1749, 44.09305, 2299.829) target=(-700.0, 44.16909, 2301.05) distance_m=2.2 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to Bryn's delivery request stance elapsed_ms=155 walked_frames=45 player=(-699.4839, 44.15454, 2300.705)
+STORMWOOD CONTINUOUS — CHECKPOINT: DELIVERED 3 Stormglass and 2 Conductor Vine through the host transaction
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to repaired supplies at the rod shelter stance from=(-700.3959, 44.24033, 2301.316) target=(-712.0, 47.15, 2309.4) distance_m=14.1 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to repaired supplies at the rod shelter stance elapsed_ms=585 walked_frames=199 player=(-711.3968, 47.15084, 2309.045)
+STORMWOOD CONTINUOUS — CHECKPOINT: INSPECTED the repaired supplies; the chain is complete
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to shelter creature bed stance from=(-712.938, 47.15084, 2309.952) target=(-720.7242, 47.15, 2310.237) distance_m=7.8 budget_frames=1800
+STORMWOOD CONTINUOUS — DIAGNOSTIC: END walk to shelter creature bed stance elapsed_ms=4301 walked_frames=1169 player=(-720.1441, 47.42526, 2309.978)
+STORMWOOD CONTINUOUS — CHECKPOINT: RESTED party member 0 in the shelter's creature bed through its live panel
+STORMWOOD CONTINUOUS — DIAGNOSTIC: START walk to out through the workshop arch from=(-720.8639, 47.42407, 2310.298) target=(-713.9, 47.15, 2307.8) distance_m=7.4 budget_frames=1800
+ERROR: STORMWOOD CONTINUOUS SEGMENT: ordinary locomotion could not reach out through the workshop arch (7.4m remain; player=(-720.8639, 47.42407, 2310.298) target=(-713.9, 47.15, 2307.8))
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://tests/smoke_stormwood_continuous.gd:1688)
+       [1] _walk_xz_clocked (res://tests/smoke_stormwood_continuous.gd:1509)
+       [2] step (res://tests/helpers/stick_navigator.gd:510)
+STORMWOOD CONTINUOUS — ARRIVED Ashfoot; chapter_started was earned by the proximity event
+STORMWOOD CONTINUOUS — HEARD Hesk; crisis_learned came from the completed dialogue
+STORMWOOD CONTINUOUS — HEARD Tamsin through her ordinary NPC prompt
+STORMWOOD CONTINUOUS — WITNESSED a production Break while sheltered at Ashfoot
+STORMWOOD CONTINUOUS — GATHERED first charged Stormglass through the live tool and interaction path
+STORMWOOD CONTINUOUS — GATHERED the real six-Stormglass cost for both ends of pair A
+STORMWOOD CONTINUOUS — RELIT Ashfoot's ancient arch through its ordinary prompt
+STORMWOOD CONTINUOUS — RELIT Lantern Pools' twin with the remaining earned Stormglass
+STORMWOOD CONTINUOUS — TRAVELLED pair A; the production arch moved player and companion to Ashfoot
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_03 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — PARTY before officer_maren_verge_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 429/429, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — LEAD for officer_maren_verge_rod: terrapup at 429/429
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during officer_maren_verge_rod (outcome=won)
+STORMWOOD CONTINUOUS — WON officer_maren_verge_rod; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — DEFEATED Maren and disabled the Verge rod through its live switch
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during Ash road to the Hollows station (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during Ash road to the Hollows station (outcome=won)
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_06 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — PARTY before lieutenant_dace_hollows_rod: sparkit 315/315, mudsnout 358/358, bramblebun 340/340, terrapup 124/429, brooktail 329/329 (active terrapup)
+STORMWOOD CONTINUOUS — LEAD for lieutenant_dace_hollows_rod: mudsnout at 358/358
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_dace_hollows_rod (outcome=won)
+STORMWOOD CONTINUOUS — WON lieutenant_dace_hollows_rod; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — DEFEATED Dace and earned lower_rods_disabled from both live switches
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_glowmoss_hollows_036 exact +3 Stormglass receipt with one pickaxe wear
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_glowmoss_hollows_037 exact +3 Stormglass receipt with one pickaxe wear
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during road to Rodline Post (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during road to Rodline Post (outcome=won)
+STORMWOOD CONTINUOUS — RELIT pair B with entirely harvested Stormglass
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_07 exact +1 good_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — COMPLETED Act I through the production task chain at Rodline Post
+STORMWOOD CONTINUOUS — PARTY before lieutenant_varga_rodline_bridge: sparkit 315/315, mudsnout 16/363, bramblebun 340/340, terrapup 127/436, brooktail 329/329 (active mudsnout)
+STORMWOOD CONTINUOUS — LEAD for lieutenant_varga_rodline_bridge: bramblebun at 340/340
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during lieutenant_varga_rodline_bridge (outcome=won)
+STORMWOOD CONTINUOUS — WON lieutenant_varga_rodline_bridge; hosted authority published its finished outcome
+STORMWOOD CONTINUOUS — RECLAIMED the conductor bridge through Varga's authored trainer fight
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during conductor road to Keeper Ondra (outcome=won)
+STORMWOOD CONTINUOUS — RESOLVED live combat through controller input during conductor road to Keeper Ondra (outcome=won)
+STORMWOOD CONTINUOUS — COLLECTED stormwood_pickup_route_09 exact +1 great_candy through its ordinary route prompt
+STORMWOOD CONTINUOUS — LEARNED the Stormglass Arch recipe through Ondra's production dialogue
+STORMWOOD CONTINUOUS — START Glass for Bryn from the earned prefix: stormglass=0 conductor_vine=0
+STORMWOOD CONTINUOUS — HEARD Bryn's brief; step 1 came from the completed conversation
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_conductor_run_078 +3 stormglass through its live prompt
+STORMWOOD CONTINUOUS — GATHERED stormwood_harvest_conductor_run_077 +3 conductor_vine through its live prompt
+STORMWOOD CONTINUOUS — DELIVERED 3 Stormglass and 2 Conductor Vine through the host transaction
+STORMWOOD CONTINUOUS — INSPECTED the repaired supplies; the chain is complete
+STORMWOOD CONTINUOUS — RESTED party member 0 in the shelter's creature bed through its live panel
+ERROR: STORMWOOD CONTINUOUS: same live chapter path completed Glass for Bryn to its care point
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _expect (res://tests/smoke_stormwood_continuous.gd:520)
+       [1] _run (res://tests/smoke_stormwood_continuous.gd:277)
+       [2] run_glass_for_bryn (res://tests/smoke_stormwood_continuous.gd:1193)
+       [3] _walk_xz (res://tests/smoke_stormwood_continuous.gd:1445)
+       [4] _walk_xz_clocked (res://tests/smoke_stormwood_continuous.gd:1511)
+       [5] step (res://tests/helpers/stick_navigator.gd:510)
+F11 WITNESS SAFETY TOTAL trainer_deaths=0 satchel_recoveries=0 satchel_stacks=0 strike_hits=0 warnings=1 damage=0.0
+stormwood continuous FAIL: ordinary locomotion could not reach out through the workshop arch (7.4m remain; player=(-720.8639, 47.42407, 2310.298) target=(-713.9, 47.15, 2307.8))
+stormwood continuous FAIL: same live chapter path completed Glass for Bryn to its care point
