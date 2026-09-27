@@ -219,3 +219,8 @@ func test_segment_chain_compiles_through_the_warden() -> void:
 				methods.append(str(method.get("name", "")))
 		# A script that fails to parse loads with no compiled methods at all.
 		assert_true(methods.has("_walk") and methods.has("run"), "%s segment compiles" % name)
+
+
+func test_on_the_bank_reads_height_above_the_apron() -> void:
+	assert_true(SEGMENT.on_the_bank(7.43, 4.15), "the seed-15 stall stood 3.3 m above the apron")
+	assert_false(SEGMENT.on_the_bank(4.9, 4.15), "ordinary apron slope is not the bank")

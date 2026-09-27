@@ -268,6 +268,12 @@ func _travel() -> bool:
 	# wider tolerance applies only to the non-interactive preparation checkpoint.
 	if not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS) or not await _prepare():
 		return false
+	# The staging radius is flat; a fight on the approach can leave the player
+	# up on the earth bank over the mouth, inside that radius but 3 m above the
+	# apron (seed 15, bade6d57: stuck at y 7.4 over an entrance at y 4.1). Step
+	# back out along the approach onto the apron before walking in.
+	if not await _off_the_bank(entrance, mouth, outside):
+		return false
 	_allow_guardian = true
 	# Use marker Y underground. Terrain height there describes the bank above
 	# the room, and projecting a chamber back to that surface would walk the roof.
@@ -309,6 +315,28 @@ const STATION_BYPASS: Array[Vector2] = [Vector2(405.0, 1796.8), Vector2(409.5, 1
 const SPIKE_KNOT := Vector2(-400.0, 2500.0)
 const SPIKE_CLEAR_M := 6.0
 const SPIKE_BYPASS: Array[Vector2] = [Vector2(-409.0, 2512.0)]
+
+
+const BANK_RISE_M := 1.5
+
+
+func _off_the_bank(entrance: Vector3, mouth: Vector3, outside: Vector3) -> bool:
+	var apron_y := float(_world.call("ground_height_at", outside.x, outside.z))
+	if not on_the_bank(_player.global_position.y, apron_y):
+		return true
+	var apron := float((_config.get("site", {}) as Dictionary).get("apron_run_m", 0.0))
+	var further := outside_approach(entrance, mouth, apron * 2.0)
+	_receipt("off_the_bank", {"player": _player.global_position, "apron_y": apron_y, "via": further})
+	if further == Vector3.INF or not await _walk_ground(Vector2(further.x, further.z)) \
+			or not await _walk_ground(Vector2(outside.x, outside.z)):
+		return false
+	if on_the_bank(_player.global_position.y, apron_y):
+		return _fail("Still above the Warrens apron after stepping back out: player=%s apron_y=%.2f" % [_player.global_position, apron_y])
+	return true
+
+
+static func on_the_bank(player_y: float, apron_y: float) -> bool:
+	return player_y - apron_y > BANK_RISE_M
 
 
 func _around_station(from: Vector2, to: Vector2) -> bool:
