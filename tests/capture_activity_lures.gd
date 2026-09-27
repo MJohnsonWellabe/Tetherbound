@@ -15,7 +15,7 @@ extends SceneTree
 ##     --activity=bram --save=/abs/S04-exit.json --capture-dir=/abs/out
 ##   (--save also takes res://tests/fixtures/f03_lure_saves/<name>.json.gz)
 ##
-## `--activity`    bram | herd | vault | doss | juno | hall
+## `--activity`    bram | herd | vault | doss | juno | hall | cart
 ## `--save`        absolute path of a real `S0x-exit.json` (copied, unmodified,
 ##                 into slot 1 of a scratch save directory, then loaded)
 ## `--capture-dir` absolute directory for the PNG frames
@@ -57,6 +57,25 @@ const APPROACH_FRAME_M := 30.0
 
 var _activity := ""
 var _save_path := ""
+## `--save-dir=`: a whole split-format save directory (slot_1.json plus its
+## worlds/ and characters/ halves, e.g. an earned-chain checkpoint), copied
+## unmodified into the scratch slot directory. `_save_path` is its slot_1.json.
+var _save_dir := ""
+## `--probe-hotbar`: after load, press the knife's quick slot the way the Doss
+## gather does and report what the HUD saw; then quit. A diagnostic only.
+var _probe_hotbar := false
+## Diagnostic only (never evidence): places the player at candidate camera
+## stands and captures, to choose where the evidence walk should stand.
+var _probe_stands := false
+## Path index -> {label, face}: frames taken on reaching a named leg.
+var _leg_shots := {}
+## Doss's perch framed from its east side, where the river channel runs
+## behind it (chosen from the diagnostic stand probe; offset from the perch).
+const PERCH_RIVER_STAND := Vector3(8.0, 0.0, 4.0)
+## Camera pitch for those perch shots (a disclosed camera write, like yaw):
+## at the rig's -12 degree start the bank rim hides the water; -24 shows it.
+const PERCH_PITCH_DEG := -24.0
+var _receipt_save_dir := ""
 ## What the player looks at (the herd's nearest member for the herd visit).
 var _lure_body: Node3D = null
 ## Minimum on-screen height, in 1280x720 FRAME pixels, for a lure to count as
@@ -102,18 +121,25 @@ func _run() -> void:
 			_activity = a.trim_prefix("--activity=")
 		elif a.begins_with("--save="):
 			_save_path = a.trim_prefix("--save=")
+		elif a.begins_with("--save-dir="):
+			_save_dir = a.trim_prefix("--save-dir=").trim_suffix("/")
+			_save_path = _save_dir + "/slot_%d.json" % SLOT
 		elif a.begins_with("--budget-s="):
 			WALK_BUDGET_S = float(a.trim_prefix("--budget-s="))
 		elif a.begins_with("--off-road-cost="):
 			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
 		elif a == "--act":
 			_act = true
+		elif a == "--probe-hotbar":
+			_probe_hotbar = true
+		elif a == "--probe-stands":
+			_probe_stands = true
 		elif a.begins_with("--capture-dir="):
 			_capture_dir = a.trim_prefix("--capture-dir=")
-	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall"] \
+	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall", "cart"] \
 			or not _save_path.is_absolute_path() or not FileAccess.file_exists(_save_path) \
 			or not _capture_dir.is_absolute_path():
-		print("[lure-walk] FAIL usage: --activity=bram|herd|vault|doss|juno|hall --save=/abs/file --capture-dir=/abs/dir")
+		print("[lure-walk] FAIL usage: --activity=bram|herd|vault|doss|juno|hall|cart --save=/abs/file --capture-dir=/abs/dir")
 		quit(2)
 		return
 	if DisplayServer.get_name() == "headless":
@@ -130,6 +156,9 @@ func _run() -> void:
 	_game.set("save_system", SAVE_GAME.new(SLOT_DIR))
 	var dst := str(_game.get("save_system").call("slot_path", SLOT))
 	var save_bytes := _save_bytes(_save_path)
+	if not _save_dir.is_empty():
+		_copy_tree(_save_dir, SLOT_DIR.trim_suffix("/"))
+		_receipt_save_dir = _save_dir
 	var out := FileAccess.open(dst, FileAccess.WRITE)
 	out.store_buffer(save_bytes)
 	out.close()
@@ -139,6 +168,8 @@ func _run() -> void:
 		"save_sha256": _sha256(save_bytes), "save_version": raw.get("version"),
 		"saved_position": saved_pose, "script_state_writes": "none",
 		"budget_s": WALK_BUDGET_S}
+	if not _receipt_save_dir.is_empty():
+		_receipt["save_dir"] = _receipt_save_dir
 	if not bool(_game.call("load_game", SLOT)):
 		_finish("FAIL", "Game.load_game refused the real save")
 		return
@@ -172,6 +203,12 @@ func _run() -> void:
 	# the result rather than assuming it: one press toggles.
 	# If the active member is fainted in the save, the recall key cannot bring it
 	# out; a player cycles to a standing member (Change Creature) first.
+	if _probe_hotbar:
+		await _run_hotbar_probe()
+		return
+	if _probe_stands:
+		await _run_stand_probe()
+		return
 	await _ensure_companion_out()
 	_receipt["companion_out_at_start"] = _director != null and _director.call("ally_body") != null
 
@@ -187,13 +224,49 @@ func _run() -> void:
 	var legs: Array = []
 	if _activity == "vault":
 		var warrens := _world.get_node_or_null(^"BurrowWarrens")
-		legs.append(warrens.call("marker", "entrance"))
-		for leg: String in ["mouth", "hall", "den", "vault"]:
+		# Line up on the doorway first: a point 12 m out along the mouth's
+		# outward axis, so a walk arriving from the side of the mound does not
+		# press into its wall short of the entrance.
+		var entrance: Vector3 = warrens.call("marker", "entrance")
+		var mouth: Vector3 = warrens.call("marker", "mouth")
+		var outward := Vector3(entrance.x - mouth.x, 0.0, entrance.z - mouth.z)
+		if outward.length() > 0.1:
+			legs.append(entrance + outward.normalized() * 12.0)
+		legs.append(entrance)
+		for leg: String in ["mouth", "hall", "den"]:
 			legs.append(warrens.call("marker", leg))
-	_plan_route(_xz(), _xz3(legs[0]) if not legs.is_empty() else lure_xz)
+		# The optional branch: from the (already cleared) guardian's den, the
+		# passage to the lit vault. Frame the den looking down it, and the
+		# passage itself, so the branch being taken is on screen.
+		var den: Vector3 = warrens.call("marker", "den")
+		var vault_at: Vector3 = warrens.call("marker", "vault")
+		_leg_shots[legs.size() - 1] = {"label": "branch-den-toward-vault", "face": vault_at}
+		legs.append(den.lerp(vault_at, 0.5))
+		_leg_shots[legs.size() - 1] = {"label": "branch-passage", "face": vault_at}
+		legs.append(vault_at)
+	# A save taken inside the Hall (an earned checkpoint before the Warden)
+	# starts in walled chambers the road graph does not know: walk out the way
+	# the player came in, chamber by chamber to the ramp foot, then take roads.
+	var exits := _stronghold_exit_path()
+	_plan_route(_xz3(exits.back()) if not exits.is_empty() else _xz(),
+		_xz3(legs[0]) if not legs.is_empty() else lure_xz)
+	if not exits.is_empty():
+		var prefixed := PackedVector3Array()
+		for e: Vector3 in exits:
+			prefixed.append(Vector3(e.x, 0.0, e.z))
+		prefixed.append_array(_path)
+		_path = prefixed
+		_receipt["stronghold_exit_waypoints"] = exits.size()
+	var leg_path_index := {}
 	for i in range(1, legs.size()):
 		var m: Vector3 = legs[i]
 		_path.append(Vector3(m.x, 0.0, m.z))
+		leg_path_index[i] = _path.size() - 1
+	# Re-key the leg shots by path index (leg 0 is the route's own end point).
+	var by_path := {}
+	for leg: int in _leg_shots:
+		by_path[int(leg_path_index.get(leg, _path.size() - legs.size() + leg))] = _leg_shots[leg]
+	_leg_shots = by_path
 	if legs.is_empty():
 		_path.append(Vector3(lure_xz.x, 0.0, lure_xz.y))
 	_receipt["route_m"] = snappedf(_path_length(), 0.1)
@@ -229,6 +302,13 @@ func _resolve_lure() -> void:
 			_lure_body = _herd_member()
 		"doss":
 			_lure = _world.get_node_or_null(^"RiverNestClear/Doss") as Node3D
+		"cart":
+			# WORLD §11's band1 broken cart: the wagon off the bridge road.
+			_lure = _world.get_node_or_null(^"BrokenCart") as Node3D
+			if _lure != null:
+				var wagon := _lure.find_child("Wagon", true, false) as Node3D
+				if wagon != null:
+					_lure_body = wagon
 		"vault":
 			var warrens := _world.get_node_or_null(^"BurrowWarrens")
 			if warrens != null:
@@ -345,11 +425,55 @@ func _hud_panel_at(point: Vector2) -> String:
 	return ""
 
 
+## Stronghold chambers from the deepest to the door, then the ramp foot. Empty
+## unless the player starts within a chamber's reach; otherwise the walk
+## starts from the nearest chamber and heads outward.
+const STRONGHOLD_OUTWARD := ["legendary_chamber", "warden_arena", "tether_approach",
+	"courtyard", "outer_works", "entrance", "ramp_foot"]
+const STRONGHOLD_INSIDE_M := 22.0
+
+func _stronghold_exit_path() -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	var hold := _world.get_node_or_null(^"Stronghold")
+	if hold == null or not hold.has_method("marker"):
+		return out
+	var here := _xz()
+	var nearest := -1
+	var nearest_d := INF
+	for i in STRONGHOLD_OUTWARD.size() - 2:
+		if not bool(hold.call("has_marker", STRONGHOLD_OUTWARD[i])):
+			continue
+		var m: Vector3 = hold.call("marker", STRONGHOLD_OUTWARD[i])
+		var d := here.distance_to(_xz3(m))
+		if d < nearest_d:
+			nearest_d = d
+			nearest = i
+	if nearest < 0 or nearest_d > STRONGHOLD_INSIDE_M:
+		return out
+	for i in range(nearest, STRONGHOLD_OUTWARD.size()):
+		if bool(hold.call("has_marker", STRONGHOLD_OUTWARD[i])):
+			out.append(hold.call("marker", STRONGHOLD_OUTWARD[i]))
+	return out
+
+
 ## --- route graph --------------------------------------------------------------
 
 ## Dense road graph from every authored band, loop and shortcut. Returns the
 ## path (road points, then a cross-country leg to `goal`) that minimises road
 ## metres + OFF_ROAD_COST x off-road metres.
+## Road-graph points a walk must not route through: the Old Quarry's sealed
+## gate (old_quarry.json `at` [397,1805]; render.yml 36282593108 stood at its
+## barrier). A player takes the open road around it.
+const BLOCKED_ROAD_POINTS := [Vector2(397.0, 1805.0)]
+const BLOCKED_RADIUS_M := 15.0
+
+func _blocked(p: Vector2) -> bool:
+	for b: Vector2 in BLOCKED_ROAD_POINTS:
+		if p.distance_to(b) < BLOCKED_RADIUS_M:
+			return true
+	return false
+
+
 func _plan_route(start: Vector2, goal: Vector2) -> void:
 	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_PATH))
 	var trail := terrain.get("trail", {}) as Dictionary
@@ -372,8 +496,9 @@ func _plan_route(start: Vector2, goal: Vector2) -> void:
 			var a := Vector2(float(pts[j - 1][0]), float(pts[j - 1][1]))
 			var steps := maxi(1, int(ceil(a.distance_to(p) / DENSIFY_M)))
 			for s in range(1, steps + 1):
-				var k := _node_at(a.lerp(p, float(s) / float(steps)))
-				if k != prev:
+				var q := a.lerp(p, float(s) / float(steps))
+				var k := _node_at(q)
+				if k != prev and not _blocked(q) and not _blocked(_nodes[prev]):
 					_adj[prev].append(k)
 					_adj[k].append(prev)
 				prev = k
@@ -542,6 +667,12 @@ func _walk() -> void:
 
 		# Advance the cursor along the path.
 		while cursor < _path.size() - 1 and here.distance_to(_xz3(_path[cursor])) < 3.0:
+			if _leg_shots.has(cursor):
+				var shot: Dictionary = _leg_shots[cursor]
+				_leg_shots.erase(cursor)
+				_release()
+				await _face_point(shot["face"])
+				await _capture(str(shot["label"]))
 			cursor += 1
 			if cursor == _road_count() and not seen and not looked:
 				# At the point the route leaves the road. Glance at the activity,
@@ -650,6 +781,20 @@ func _perform_action() -> void:
 	var actions: Array = []
 	var lines := 0
 	var fought := false
+	# Doss's action changes the world: the buckled bank perch straightens.
+	# Frame the perch itself before and after, not only Doss's lines.
+	var perch := _world.get_node_or_null(^"RiverNestClear/BankPerch") as Node3D if _activity == "doss" else null
+	# From an earned save the player may not carry Doss's materials. Gather
+	# what is missing from the nearest harvest points by ordinary input first,
+	# as a player sent off by his request would, then come back.
+	if _activity == "doss":
+		actions.append(await _gather_for_doss())
+	if perch != null:
+		actions.append({"satchel_before": await _satchel_shot("act-0c-satchel-before")})
+		await _perch_from_river(perch, "act-00-perch-before")
+		var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+		await _walk_straight_to(body.global_position, 1.8, _prompt)
+		await _face_lure()
 	# An activity can take more than one press: Doss first explains the
 	# buckled perch, then offers "Help Doss repair the bank perch" as a second
 	# prompt. Press again while the activity's own prompt is still offered.
@@ -667,6 +812,12 @@ func _perform_action() -> void:
 		fought = fought or bool(actions.back().get("fought", false)) if not actions.is_empty() else fought
 	if _activity == "juno" and fought:
 		actions.append(await _act_escort_home(panel))
+	if perch != null:
+		for i in 30:
+			await physics_frame
+		actions.append({"satchel_after": await _satchel_shot("act-97-satchel-after")})
+		await _perch_from_river(perch, "act-98-perch-after")
+		actions.append({"perch_repaired": bool(perch.get_meta("repaired", false))})
 	for i in 60:
 		await physics_frame
 	await _capture("act-99-after")
@@ -687,15 +838,28 @@ func _act_escort_home(panel: Node) -> Dictionary:
 	if rescued == null or juno == null:
 		return out
 	var prompt := rescued.get_node_or_null(^"Interactable")
+	# The patrol's post-defeat lines can open after the fight round has gone
+	# idle; while that panel is up the player cannot walk (the r1 escort stood
+	# still behind it for 150 s). Read them out first, as a player would.
+	out["post_fight_lines"] = await _drain_dialogue(panel, "act-60-post-fight")
 	# Walk to the Meadowhart until her prompt wins, then press it.
+	var stuck := {"best": INF, "at": _clock, "attempt": 0}
 	Input.action_press("move_forward")
 	for frame in 1800:
 		var to := _xz3(rescued.global_position) - _xz()
 		if to.length() > 0.01:
 			_rig.set("yaw", atan2(-to.x, -to.y))
 		await physics_frame
+		_tick()
+		if panel != null and bool(panel.call("is_open")):
+			_release()
+			out["post_fight_lines"] = int(out["post_fight_lines"]) + await _drain_dialogue(panel, "act-60-post-fight-late")
+			Input.action_press("move_forward")
+			continue
 		if prompt != null and _arbiter.call("winning_provider") == prompt:
 			break
+		if await _escort_unstick(stuck, to.length()):
+			Input.action_press("move_forward")
 	_release()
 	await _press("interact")
 	for i in 30:
@@ -706,8 +870,11 @@ func _act_escort_home(panel: Node) -> Dictionary:
 		return out
 	await _capture("act-61-escort-start")
 	out["escort"] = "started"
-	# Lead her home.
+	# Lead her home. Wild bodies and trunks on the line to Juno are walked
+	# around with the same back-off-and-strafe the discovery walk uses.
 	var shots := 0
+	var start_m := _xz().distance_to(_xz3(juno.global_position))
+	stuck = {"best": INF, "at": _clock, "attempt": 0}
 	Input.action_press("move_forward")
 	for frame in 9000:
 		var to := _xz3(juno.global_position) - _xz()
@@ -720,6 +887,22 @@ func _act_escort_home(panel: Node) -> Dictionary:
 		if bool(reunion.call("is_reunited")):
 			out["escort"] = "reunited"
 			break
+		# The patrol's post-defeat lines open once its reward banner clears,
+		# which can be after the escort has started; a player reads them and
+		# walks on.
+		if panel != null and bool(panel.call("is_open")):
+			_release()
+			out["post_fight_lines"] = int(out["post_fight_lines"]) + await _drain_dialogue(panel, "act-62-escort-dialogue")
+			stuck["best"] = INF
+			stuck["at"] = _clock
+			Input.action_press("move_forward")
+			continue
+		if to.length() > 2.5 and await _escort_unstick(stuck, to.length()):
+			if int(reunion.call("escort_peer")) == 0:
+				out["escort"] = "cancelled while unsticking (leash)"
+				break
+			Input.action_press("move_forward")
+			continue
 		if frame > 0 and frame % 900 == 0 and shots < 2:
 			shots += 1
 			# Look back at the Meadowhart following, then carry on.
@@ -731,9 +914,21 @@ func _act_escort_home(panel: Node) -> Dictionary:
 			await _capture("act-6%d-escort-walk" % (1 + shots))
 			Input.action_press("move_forward")
 	_release()
+	out["escort_start_m"] = snappedf(start_m, 0.1)
+	out["escort_end_m"] = snappedf(_xz().distance_to(_xz3(juno.global_position)), 0.1)
+	out["unstick_attempts"] = int(stuck["attempt"])
 	for i in 45:
 		await physics_frame
-	await _capture("act-64-reunited")
+	# Frame the reunion: Juno and the Meadowhart together, not the back of
+	# the player's head.
+	var pair := (_xz3(juno.global_position) + _xz3(rescued.global_position)) * 0.5 - _xz()
+	if pair.length() > 0.01:
+		_rig.set("yaw", atan2(-pair.x, -pair.y))
+	for i in 20:
+		await physics_frame
+	await _capture("act-64-reunited" if bool(reunion.call("is_reunited")) else "act-64-not-reunited")
+	# Juno's thanks opens on its own once the flag lands (the acknowledgement).
+	out["acknowledgement_lines"] = await _drain_dialogue(panel, "act-64-acknowledgement")
 	# Juno's acknowledgement: talk to her (her prompt), read two lines, then
 	# back out with cancel rather than accept her friendly bout.
 	var face := _xz3(juno.global_position) - _xz()
@@ -756,6 +951,156 @@ func _act_escort_home(panel: Node) -> Dictionary:
 		await _press("menu_cancel")
 	out["reunion_dialogue_lines"] = lines
 	return out
+
+
+const DOSS_NEEDS := {"wood": 1, "fiber": 1}
+const GATHER_SEARCH_M := 120.0
+
+## For each material Doss asks for that the satchel lacks: find the nearest
+## harvest point of that item, walk to it with forward input, tap its prompt,
+## and walk back to the prompt spot. Returns counts before/after per item.
+func _gather_for_doss() -> Dictionary:
+	var inventory: RefCounted = _game.get("inventory")
+	var out := {"gathered": {}}
+	for item: String in DOSS_NEEDS:
+		var have := int(inventory.call("count", item)) if inventory != null else 0
+		out["gathered"][item] = {"before": have}
+		if have >= int(DOSS_NEEDS[item]):
+			continue
+		var point := _nearest_harvest_point(item)
+		if point == null:
+			out["gathered"][item]["result"] = "no %s harvest point within %.0f m" % [item, GATHER_SEARCH_M]
+			continue
+		var prompt := point.get_node_or_null(^"Interactable")
+		await _walk_straight_to(point.global_position, 1.6, prompt)
+		await _capture("act-0a-gather-%s" % item)
+		# RG9: the standing plant is cut with its tool in hand ("press slot,
+		# tool in hand"), which fells it into a pile gathered bare-handed.
+		var items_db: RefCounted = _game.get("items")
+		var tool := str(items_db.call("gathered_with", item)) if items_db != null else ""
+		var slot := int(_game.call("hotbar_slot_of", tool)) if not tool.is_empty() else -1
+		var drew := false
+		out["gathered"][item]["hotbar_slot"] = slot
+		var hud := _world.get_node_or_null(^"PlaygroundHUD")
+		var tries_log: Array = []
+		for attempt in 3:
+			if slot < 0 or str(_game.get("equipped_tool")) == tool:
+				break
+			tries_log.append({"input_owner": str(INPUT_OWNER.current(self)),
+				"world_input_allowed": bool(hud.call("_world_input_allowed", false, true)) if hud != null else null,
+				"fighting": _manager != null and bool(_manager.call("is_fighting"))})
+			await _press_hud("hotbar_%d" % (slot + 1))
+			for i in 30:
+				await physics_frame
+		drew = str(_game.get("equipped_tool")) == tool
+		out["gathered"][item]["equip_tries"] = tries_log
+		out["gathered"][item]["equipped_after_press"] = str(_game.get("equipped_tool"))
+		out["gathered"][item]["tool"] = tool
+		out["gathered"][item]["tool_in_hand"] = str(_game.get("equipped_tool")) == tool
+		for tries in 3:
+			await _press("interact")
+			for i in 90:
+				await physics_frame
+			if not is_instance_valid(point) or not point.is_inside_tree():
+				break
+		if drew:
+			await _press_hud("hotbar_%d" % (slot + 1))
+		# Gather the felled pile by hand.
+		var pile := _nearest_harvest_point(item, 12.0)
+		if pile != null:
+			await _walk_straight_to(pile.global_position, 1.4, pile.get_node_or_null(^"Interactable"))
+			for tries in 3:
+				await _press("interact")
+				for i in 45:
+					await physics_frame
+				if int(inventory.call("count", item)) > have:
+					break
+		out["gathered"][item]["after"] = int(inventory.call("count", item))
+		await _capture("act-0b-gathered-%s" % item)
+	# Back to Doss until his own prompt wins (a nearby gather prompt must not
+	# take the press).
+	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+	await _walk_straight_to(body.global_position, 1.8, _prompt)
+	await _face_lure()
+	out["doss_prompt_winning_after_gather"] = _prompt_offered()
+	return out
+
+
+func _nearest_harvest_point(item: String, within_m: float = GATHER_SEARCH_M) -> Node3D:
+	var best: Node3D = null
+	var best_d := within_m
+	for node: Node in _world.find_children("*", "", true, false):
+		if not node is Node3D or not node.is_inside_tree():
+			continue
+		var node_item := str(node.call("resource_item")) if node.has_method("resource_item") else str(node.get("_item_id"))
+		if node_item != item:
+			continue
+		if node.get_node_or_null(^"Interactable") == null:
+			continue
+		var d := _xz().distance_to(_xz3((node as Node3D).global_position))
+		if d < best_d:
+			best_d = d
+			best = node as Node3D
+	return best
+
+
+## Forward input toward a point, steering the look yaw, with the walk's
+## unstick; stops within `radius` or when `prompt` wins the arbiter.
+func _walk_straight_to(at: Vector3, radius: float, prompt: Node) -> void:
+	var stuck := {"best": INF, "at": _clock, "attempt": 0}
+	Input.action_press("move_forward")
+	for frame in 3600:
+		var to := _xz3(at) - _xz()
+		if to.length() <= radius or (prompt != null and _arbiter.call("winning_provider") == prompt):
+			break
+		_rig.set("yaw", atan2(-to.x, -to.y))
+		await physics_frame
+		_tick()
+		if await _escort_unstick(stuck, to.length()):
+			Input.action_press("move_forward")
+	_release()
+	for i in 20:
+		await physics_frame
+
+
+## Reads an open dialogue out with ordinary interact presses, capturing up to
+## three lines; returns how many lines were read.
+func _drain_dialogue(panel: Node, label: String) -> int:
+	var lines := 0
+	for wait in 90:
+		if panel != null and bool(panel.call("is_open")):
+			break
+		await physics_frame
+	while panel != null and bool(panel.call("is_open")) and lines < 12:
+		lines += 1
+		if lines <= 3:
+			await _capture("%s-%02d" % [label, lines])
+		await _press("interact")
+		for i in 20:
+			await physics_frame
+	return lines
+
+
+## Escort-walk stuck check, shared by both escort legs: no gain of 0.3 m on
+## the goal for STUCK_S runs `_unstick()` (the discovery walk's back-off,
+## jump and strafe, which also stows a wedging companion on attempt 3).
+## Returns true when it unstuck, so the caller re-presses forward.
+func _escort_unstick(stuck: Dictionary, remaining: float) -> bool:
+	if remaining < float(stuck["best"]) - 0.3:
+		stuck["best"] = remaining
+		stuck["at"] = _clock
+		return false
+	if _clock - float(stuck["at"]) <= STUCK_S or int(stuck["attempt"]) >= UNSTICK_ATTEMPTS:
+		return false
+	stuck["attempt"] = int(stuck["attempt"]) + 1
+	_notes.append("t=%.1fs escort: no progress at (%.1f,%.1f); unstick attempt %d" % [
+		_clock, _xz().x, _xz().y, int(stuck["attempt"])])
+	# A companion stowed on attempt 3 stays away for the rest of the escort;
+	# the Meadowhart, not the companion, is the point of these frames.
+	await _unstick(int(stuck["attempt"]))
+	stuck["best"] = INF
+	stuck["at"] = _clock
+	return true
 
 
 func _act_round(panel: Node, actions: Array, round: int) -> void:
@@ -841,6 +1186,22 @@ func _ensure_companion_out(prefix: String = "") -> void:
 ## render.yml runner, whose checkout leaves ralph/ out) is standard gzip,
 ## inflated here; the sha256 in the receipt is of the inflated JSON, so it
 ## matches the original save under ralph/reports/.
+## Copies a save directory tree byte for byte (no JSON rewrite).
+func _copy_tree(from: String, to: String) -> void:
+	DirAccess.make_dir_recursive_absolute(to)
+	var dir := DirAccess.open(from)
+	if dir == null:
+		return
+	for f in dir.get_files():
+		if f.ends_with(".import") or f.ends_with(".uid"):
+			continue
+		var out := FileAccess.open(to + "/" + f, FileAccess.WRITE)
+		out.store_buffer(FileAccess.get_file_as_bytes(from + "/" + f))
+		out.close()
+	for d in dir.get_directories():
+		_copy_tree(from + "/" + d, to + "/" + d)
+
+
 func _save_bytes(path: String) -> PackedByteArray:
 	var bytes := FileAccess.get_file_as_bytes(path)
 	if path.ends_with(".gz"):
@@ -883,6 +1244,61 @@ func _unstick(attempt: int) -> void:
 	Input.action_release("move_forward")
 
 
+## The companion stands at the player's shoulder and, beside the perch, sits
+## right in front of the boards. Put it away with the ordinary key for the
+## shot, as a player looking at the bank could, then call it back out.
+func _capture_perch(perch: Node3D, label: String) -> void:
+	var stowed := false
+	if _director != null and _director.call("ally_body") != null:
+		await _press("creature_recall")
+		for i in 60:
+			await physics_frame
+		stowed = _director.call("ally_body") == null
+	await _face_point(perch.global_position)
+	await _capture(label)
+	if stowed:
+		await _ensure_companion_out("%s; " % label)
+
+
+## Walk (ordinary input) to the stand east of the perch, where the river
+## channel is behind it, and frame the perch from there.
+func _perch_from_river(perch: Node3D, label: String) -> void:
+	await _walk_straight_to(perch.global_position + PERCH_RIVER_STAND, 1.2, null)
+	_rig.set("pitch", deg_to_rad(PERCH_PITCH_DEG))
+	await _capture_perch(perch, label)
+
+
+## Open the Satchel with its ordinary key, frame it, close it again. Returns
+## the wood/fiber counts read (read-only) at the moment of the frame.
+func _satchel_shot(label: String) -> Dictionary:
+	var inventory: RefCounted = _game.get("inventory")
+	var counts := {"wood": int(inventory.call("count", "wood")), "fiber": int(inventory.call("count", "fiber"))}
+	await _press_hud("inventory")
+	for i in 40:
+		await physics_frame
+	var owner := INPUT_OWNER.current(self)
+	counts["open"] = owner != null
+	await _capture(label)
+	if owner != null:
+		await _press_hud("inventory")
+		for i in 30:
+			await physics_frame
+		if INPUT_OWNER.current(self) != null:
+			await _press_hud("menu_cancel")
+			for i in 30:
+				await physics_frame
+	counts["closed"] = INPUT_OWNER.current(self) == null
+	return counts
+
+
+func _face_point(at: Vector3) -> void:
+	var to := _xz3(at) - _xz()
+	if to.length() > 0.01:
+		_rig.set("yaw", atan2(-to.x, -to.y))
+	for i in 30:
+		await physics_frame
+
+
 func _face_lure() -> void:
 	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
 	var to := _xz3(body.global_position) - _xz()
@@ -906,6 +1322,86 @@ func _press(action: String) -> void:
 	up.pressed = false
 	Input.parse_input_event(up)
 	for i in 10:
+		await physics_frame
+
+
+## DIAGNOSTIC, not evidence: teleports the player (recorded in the receipt)
+## to candidate stands around Doss's perch and inside the Warrens, faces a
+## point and captures, so the evidence walk can be told where to stand.
+func _run_stand_probe() -> void:
+	_receipt["script_state_writes"] = "PROBE: player position written; diagnostic frames only"
+	var stands: Array = []
+	var perch := _world.get_node_or_null(^"RiverNestClear/BankPerch") as Node3D
+	if perch != null:
+		var p := perch.global_position
+		for off: Vector3 in [Vector3(-8, 0, 4), Vector3(8, 0, 4), Vector3(0, 0, -8)]:
+			for pitch_deg: float in [-12.0, -24.0]:
+				stands.append({"label": "doss-%d-%d-p%d" % [int(off.x), int(off.z), int(-pitch_deg)],
+					"at": p + off, "face": p, "pitch": pitch_deg})
+	var warrens := _world.get_node_or_null(^"BurrowWarrens")
+	if warrens != null:
+		var den: Vector3 = warrens.call("marker", "den")
+		var vault: Vector3 = warrens.call("marker", "vault")
+		var hall: Vector3 = warrens.call("marker", "hall")
+		stands.append({"label": "warrens-hall-to-den", "at": hall, "face": den})
+		stands.append({"label": "warrens-den-to-vault", "at": den, "face": vault})
+		stands.append({"label": "warrens-den-back-to-vault", "at": den + (den - vault).normalized() * 4.0, "face": vault})
+		stands.append({"label": "warrens-passage", "at": den.lerp(vault, 0.5), "face": vault})
+	for st: Dictionary in stands:
+		var at: Vector3 = st["at"]
+		var ground := float(_world.call("ground_height_at", at.x, at.z))
+		if st["label"].begins_with("warrens"):
+			ground = at.y
+		_player.global_position = Vector3(at.x, (ground if not is_nan(ground) else at.y) + 0.5, at.z)
+		for i in 45:
+			await physics_frame
+		if st.has("pitch"):
+			_rig.set("pitch", deg_to_rad(float(st["pitch"])))
+		await _face_point(st["face"])
+		await _capture("probe-%s" % st["label"])
+	_finish("PROBE", "stand probe done")
+
+
+func _run_hotbar_probe() -> void:
+	var hud := get_first_node_in_group("playground_hud")
+	if hud == null:
+		for n: Node in _world.find_children("*", "CanvasLayer", true, false):
+			if n.has_method("_read_hotbar_input"):
+				hud = n
+	var slot := int(_game.call("hotbar_slot_of", "knife"))
+	var report := {"slot": slot, "hud": str(hud.get_path()) if hud != null else "none",
+		"render_loop": RenderingServer.render_loop_enabled,
+		"input_owner": str(INPUT_OWNER.current(self)),
+		"world_input_allowed": bool(hud.call("_world_input_allowed", false, true)) if hud != null else null,
+		"equipped_before": str(_game.get("equipped_tool"))}
+	await _press_hud("hotbar_%d" % (slot + 1))
+	report["equipped_after_press_hud"] = str(_game.get("equipped_tool"))
+	RenderingServer.render_loop_enabled = true
+	await _press_hud("hotbar_%d" % (slot + 1))
+	report["equipped_after_second_press_render_on"] = str(_game.get("equipped_tool"))
+	print("[lure-walk] HOTBAR-PROBE %s" % JSON.stringify(report))
+	quit(0)
+
+
+## A press read by a HUD's `_process` with `is_action_just_pressed` (the
+## hotbar): held across process frames, not only physics frames, so the
+## just-pressed edge lands on a frame the HUD actually polls.
+func _press_hud(action: String) -> void:
+	Input.action_press(action)
+	var ev := InputEventAction.new()
+	ev.action = action
+	ev.pressed = true
+	Input.parse_input_event(ev)
+	for i in 3:
+		await process_frame
+	Input.action_release(action)
+	var up := InputEventAction.new()
+	up.action = action
+	up.pressed = false
+	Input.parse_input_event(up)
+	for i in 3:
+		await process_frame
+	for i in 20:
 		await physics_frame
 
 

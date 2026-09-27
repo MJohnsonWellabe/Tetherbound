@@ -1554,9 +1554,11 @@
           "smoke_colour": "#4f4a45",
           "glow": "campfire",
           "name": "OldBramCampFire",
+          "_why_r7_bram_road": "Walk on main integration-32 (ralph/reports/MEADOWS-PAYOFFS/six-activities/discovery-snowball/bram-woods-integration32/): Bram is 55 m east of the band1 woodland road behind dense trunks; neither this fire nor a trial 42 m column (reverted: smoke colour/opacity are art under the Codex rule, and it had no passing capture) read from the road. Relocating the camp needs a coordinator decision.",
+          "_why_r6": "Round-6 code-blind judge: at (174, 903.4) the fire sat exactly on the road-to-Bram line, so on approach its flames and smoke column stood between the player and Bram, who never appeared at 30 m. Moved 6 m north of that line to (176, 909); tests/probe_lure_road_visibility.gd --at=bram:176,909 finds 2 hard-clear road samples at ground level (nearest 42.4 m), against 0 at the old spot, and the 28 m column clears the canopy from the older road line (not from the integration-32 woodland road; see _why_r7_bram_road).",
           "at": [
-            174.0,
-            903.4
+            176.0,
+            909.0
           ],
           "yaw_deg": 30.0
         }

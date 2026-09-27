@@ -1,0 +1,1 @@
+Local renders at the tb/meadows-activities head (holding camp + road standards + 28 m column): cue view tests/capture_lure_cue_views.gd --cue=juno; walk tests/capture_activity_lures.gd --activity=juno, save S07-exit-band4.
