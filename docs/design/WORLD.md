@@ -48,7 +48,7 @@ Relics are Heart of the Meadows (**2× max stamina**), Wings of Cloudreach/Skybo
 
 ### 2.3 Legendary offer
 
-When a chapter frees a legendary, that creature volunteers. The player never weakens it for capture and never throws an Orb at it. With fewer than five companions it may join directly. With five, the existing ceremony presents the volunteer beside the five companions' names and history and requires one permanent release or a refusal. Refusal completes the chapter. This contract applies to Meadows, Stormwood and Tidewake; Cloudreach has no offer.
+When a chapter frees a legendary, that creature volunteers. The player never weakens it for capture and never throws an Orb at it. With fewer than five companions it may join directly. With five, the existing ceremony presents the volunteer beside the five companions' names and history and requires one permanent release or a refusal. Refusal completes the chapter. This contract applies to Meadows, Cloudreach (Solmane, freed after Veyra (owner, 2026-09-27)), Stormwood and Tidewake.
 
 In co-op the host owns the shared freeing result, then records a separate, once-only offer for **each participant in that fight** against that participant's stable character. Each may accept or refuse independently; a non-participant receives no offer. Every accepter keeps their own legendary within the five-creature cap. The UI states this and the permanent-release consequence before each personal commitment. The world relic and gate remain shared. This supersedes the historical single-recipient interpretation everywhere in this file.
 
