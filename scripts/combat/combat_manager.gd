@@ -1301,7 +1301,11 @@ func _update_ally_occlusion_fade(delta: float) -> void:
 	if _camera_rig != null and _camera_rig.has_method("set_composition_extra"):
 		var current := float(_camera_rig.call("composition_extra"))
 		var holding := current > 0.0 and _ally_clear_for < float(cfg.get("composition_hold_s", 1.5))
-		var extra_target := float(cfg.get("composition_extra_deg", 40.0)) if hidden or holding else 0.0
+		# F10#2 C3: a low, wide foe reads as "hidden" behind even a small ally,
+		# and the wider swing then put the foe's body in front of the ally.
+		var foe_in_front := (hidden or holding) and _wild_hides_ally(model, int(cfg.get("hidden_points", 2)))
+		var extra_target := composition_swing_target(hidden, holding, foe_in_front,
+			float(cfg.get("composition_extra_deg", 40.0)))
 		var ease_rate := maxf(float(cfg.get("composition_ease_deg_per_s", 90.0)), 1.0)
 		_camera_rig.call("set_composition_extra", move_toward(current, extra_target, ease_rate * delta))
 	var target := 0.0
@@ -1333,6 +1337,36 @@ func _ally_hides_wild(ally_model: Node3D, needed: int) -> bool:
 	var base := Vector3(_wild.global_position.x, wild_world.position.y, _wild.global_position.z)
 	return OCCLUSION_FADE.hidden_points(camera.global_position, base, wild_world.size.y,
 		ally_model.global_transform, ally_bounds) >= maxi(1, needed)
+
+
+## The occlusion swing's target: the authored extra while the ally hides the
+## foe (or the swing is holding), but never while the foe's own body stands
+## between the lens and the ally -- then the piloted creature is the one lost,
+## and the dither fallback keeps the foe readable instead.
+static func composition_swing_target(ally_hides_foe: bool, holding: bool, foe_hides_ally: bool,
+		extra_deg: float) -> float:
+	if foe_hides_ally:
+		return 0.0
+	return extra_deg if ally_hides_foe or holding else 0.0
+
+
+## True when the foe's inscribed render ellipsoid hides at least `needed` of
+## the ally's three sample heights from the live camera.
+func _wild_hides_ally(ally_model: Node3D, needed: int) -> bool:
+	if _wild == null or not is_instance_valid(_wild) or not _wild.has_method("model_pivot"):
+		return false
+	var camera := get_viewport().get_camera_3d() if is_inside_tree() else null
+	var wild_model := _wild.call("model_pivot") as Node3D
+	if camera == null or wild_model == null:
+		return false
+	var ally_bounds := _body_render_bounds(_ally_body)
+	var wild_bounds := _body_render_bounds(_wild)
+	if ally_bounds.size.is_zero_approx() or wild_bounds.size.is_zero_approx():
+		return false
+	var ally_world: AABB = ally_model.global_transform * ally_bounds
+	var base := Vector3(_ally_body.global_position.x, ally_world.position.y, _ally_body.global_position.z)
+	return OCCLUSION_FADE.hidden_points(camera.global_position, base, ally_world.size.y,
+		wild_model.global_transform, wild_bounds) >= maxi(1, needed)
 
 
 func _clear_ally_fade() -> void:

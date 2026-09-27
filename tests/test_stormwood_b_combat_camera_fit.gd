@@ -7,6 +7,7 @@ extends "res://tests/test_case.gd"
 
 const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const RIG := preload("res://scripts/player/camera_rig.gd")
+const SPECIES_DATA := preload("res://scripts/creatures/creature_species.gd")
 const VIEW := Vector2(1280, 720)
 
 
@@ -72,3 +73,23 @@ func test_the_config_declares_both_fixes() -> void:
 	var camera: Dictionary = preload("res://scripts/combat/combat_math.gd").config().get("camera", {})
 	assert_true(bool(camera.get("hud_safe", {}).get("enabled", false)))
 	assert_true(bool(camera.get("body_clear", {}).get("enabled", false)))
+
+
+## F10#2 C3 judge fight B: the occlusion swing that frees a hidden foe must
+## never be the thing that buries the ally behind that foe.
+func test_the_occlusion_swing_never_puts_the_foe_in_front_of_the_ally() -> void:
+	assert_eq(MANAGER.composition_swing_target(true, false, false, 40.0), 40.0, "ally hides foe: swing")
+	assert_eq(MANAGER.composition_swing_target(false, true, false, 40.0), 40.0, "holding: keep the swing")
+	assert_eq(MANAGER.composition_swing_target(false, false, false, 40.0), 0.0, "clear: ease back")
+	assert_eq(MANAGER.composition_swing_target(true, false, true, 40.0), 0.0, "foe hides ally: no swing")
+	assert_eq(MANAGER.composition_swing_target(false, true, true, 40.0), 0.0, "and no hold either")
+
+
+## The Mosshock collider covers its art's width, so spacing by it keeps the
+## pilot out of the frog; the art fit (radius x allowance) is unchanged.
+func test_mosshock_collider_covers_its_art_width() -> void:
+	var look: Dictionary = SPECIES_DATA.placeholder("mosshock")
+	assert_true(float(look.radius) >= 1.45, "collider radius %.2f: spacing reach clears the art (hidden below 3.24 m)" % float(look.radius))
+	assert_almost_eq(float(look.radius) * float(look.footprint_allowance), 1.0325 * 3.2, 0.01,
+		"the art fit bound is unchanged")
+	assert_almost_eq(float(look.height), 2.95, 0.0001)
