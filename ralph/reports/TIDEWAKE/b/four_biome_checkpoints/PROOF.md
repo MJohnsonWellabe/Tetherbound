@@ -93,7 +93,8 @@ TB_WORLD_SEED=4 godot --headless --path . --script tests/smoke_four_biome_contin
   --resume-from=<scratch>/cps/t:hall --stop-at=hall
   -> exit 1; RESUME REFUSED: party mismatch + missing flag  (run4_tampered_receipt_refused.log)
 
-# 5. Default path prefix, no checkpoint args: --through-opening   (run5_default_through_opening.log)
+# 5. Default path prefix, no checkpoint args: --through-opening
+  -> exit 0, reached=opening, no failures (156 s)   (run5_default_through_opening.log)
 ```
 
 ## Limitation (run 3)
