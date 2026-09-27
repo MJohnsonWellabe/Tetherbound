@@ -257,7 +257,8 @@
         630
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the lower_cliff_road walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "causeway_watch",
@@ -268,7 +269,8 @@
         1750
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the split_stone_viaduct deck end walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "ravine_wind",
@@ -280,7 +282,8 @@
       ],
       "count": 2,
       "radius_m": 8.0,
-      "_why_flight_aerie_composition_0911": "The original pair stood only 70m from the Aerie centre and both large flight creatures still filled the route-arrival frame after the lesson dais itself was cleared. This keeps the same count, table and radius on the same incoming Windscar route, but one route segment earlier at the interpolated road elevation, so wildlife remains part of the approach instead of becoming the landmark's dominant silhouette."
+      "_why_flight_aerie_composition_0911": "The original pair stood only 70m from the Aerie centre and both large flight creatures still filled the route-arrival frame after the lesson dais itself was cleared. This keeps the same count, table and radius on the same incoming Windscar route, but one route segment earlier at the interpolated road elevation, so wildlife remains part of the approach instead of becoming the landmark's dominant silhouette.",
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the windscar_floor_loop walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "roost_perches",
@@ -291,7 +294,8 @@
         3450
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the upper_summit_road walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "upper_scouts",
@@ -302,7 +306,8 @@
         4300
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the upper_plateau_circuit walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "summit_watch",
@@ -313,7 +318,8 @@
         5300
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the summit_overlook_loop walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "road_visibility_arrival_gate_road_01",
@@ -1435,6 +1441,36 @@
       "cadence_route_id": "observatory_summit_link",
       "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F07 cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
       "_why_cadence_f07": "F07 cadence, re-placed by F07#2: this pair paced the observatory segment the required route used to walk back west to the plateau fork after the east anchor. observatory_summit_link now takes the route straight from the observatory pad to the summit road's first bend, so the pair moves onto that link (the walk it paced) and the route ledger still credits it (coordinator ruling (a)). Uses cloudreach_upper_released_wild, gated by storm_anchor_upper_east_disabled, so it appears only once that anchor is off. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_upper_plateau_circuit_05",
+      "table_id": "cloudreach_upper_wild",
+      "position": [
+        -450.98,
+        876.23,
+        4643.93
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "upper_plateau_circuit",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F15#2 return cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F15#2 return cadence (Tidewake #330, tests/test_tidewake_return_cadence.gd): the measured Stormwood->Meadows return crossed this plateau segment with no live offer for 156 s (road_visibility_upper_summit_road_01 -> road_visibility_upper_plateau_circuit_02, A7 limit 120 s). Native Upper table, gated by cloudreach_upper_route_unlocked, so nothing appears before the counterweight stair is released. Placed on the authored polyline core at its interpolated height, at the gap's midpoint; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_upper_plateau_circuit_06",
+      "table_id": "cloudreach_upper_wild",
+      "position": [
+        -759.87,
+        766.16,
+        4035.33
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "upper_plateau_circuit",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F15#2 return cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F15#2 return cadence (Tidewake #330, tests/test_tidewake_return_cadence.gd): the measured Stormwood->Meadows return crossed this plateau segment with no live offer for 151 s (road_visibility_upper_plateau_circuit_01 -> road_visibility_windscar_counterweight_pass_13, A7 limit 120 s). Native Upper table, gated by cloudreach_upper_route_unlocked, so nothing appears before the counterweight stair is released. Placed on the authored polyline core at its interpolated height, at the gap's midpoint; no pickup, flag or route change."
     },
     {
       "id": "road_visibility_summit_overlook_loop_01",
