@@ -27,3 +27,7 @@ Harness fixes along the way:
 
 ## Solo
 `tests/smoke_cloudreach_solmane_offer_choice.gd` is the Veridian solo smoke run against the Cloudreach instance. It covers accept/refuse with space, refuse at five, accept at five then let the newcomer go, accept at five releasing one, and a save while the choice is open. Each case includes a real reload. See `solo.txt`.
+
+**Disclosed: the solo run did not finish.** Five cases passed with 0 failures: accept with space, refuse with space, refuse at five, accept at five then let the newcomer go, and accept at five releasing one. The sixth, a save while the choice is open, was cut off by the 3000 s `timeout` (exit 124) while the full unit suite shards ran alongside it. This was the second harness failure on this smoke; the first was a null-Game harness bug, fixed. Under the owner's two-strike rule I took the shortcut: the save, restart and reload path is covered by `two-peer-run3`, and the Meadows Veridian smoke covers the same shared code. The sixth case is unrun, not passed.
+
+Shared-code fix found by the full unit suite: the Summit Engine lines first wore the player's plate (`test_dialogue_portraits`). They now wear `creatures/solmane.png`, as Stormwood's Stormheart lines wear `fulgocobra.png` (22a050d4).
