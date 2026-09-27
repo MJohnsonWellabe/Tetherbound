@@ -326,8 +326,8 @@
       "amount": 1,
       "label": "A stashed tonic",
       "at": [-345.0, 2585.0],
-      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
-      "model_scale": 0.85,
+      "model": "res://assets/props/stat_draughts/stoneguard_brew.glb",
+      "model_scale": 0.8,
       "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: stoneguard_brew was shop-only at Mira's before this pass, no world presence. Just outside the Burrow Warrens mouth (burrow_warrens.json site.at (-357,2610)) -- a defence tonic where a player braces before the Guardian, matching the coordinator's own guidance that a temporary tonic suits a cache near where a fight is about to go badly."
     },
     {"order": 2020, "item": "rootstone", "amount": 2, "label": "Prise out rootstone", "at": [381.0, 1824.0], "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "model_scale": 1.1, "_why": "W17-DENSITY-B2-B3. A second Rootstone seam on the quarry floor, 15m south of the first five (orders 12-16): the quarry is where Rootstone is learned (prompt 63) and five nodes were one visit's worth; a second seam among the burrowback nest (spawns 2073) is why the floor is walked twice."},
