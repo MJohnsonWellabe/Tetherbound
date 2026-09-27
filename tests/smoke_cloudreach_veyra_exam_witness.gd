@@ -241,8 +241,16 @@ func _finish() -> void:
 		var b := order.rfind("anchor_overload")
 		var c := order.rfind("break_the_eye")
 		_require(a >= 0 and b > a and c > b, "F08#0 stages ran Crosswind Command -> Anchor Overload -> Break the Eye: " + str(order))
+		# The finale reacts to the director's opposition signal before the
+		# harness logs it, so read the count logged on the same frame.
 		var overload: Array = phase_sequence.filter(func(r: Dictionary) -> bool: return str(r.phase) == "anchor_overload")
-		_require(not overload.is_empty() and int(overload[-1].opposition_remaining) == 1, "F08#0 Anchor Overload began with one Veyra creature left: " + str(overload))
+		var at_overload := -1
+		if not overload.is_empty():
+			var t := float(overload[-1].simulated_seconds)
+			for row: Dictionary in rows:
+				if row.kind == "opposition" and str(row.get("id", "")) == VEYRA and absf(float(row.get("simulated_seconds", -99.0)) - t) <= 0.05:
+					at_overload = int(row.get("remaining", -1))
+		_require(at_overload == 1, "F08#0 Anchor Overload began with one Veyra creature left (same-frame count %d): %s" % [at_overload, str(overload)])
 		var cw: Dictionary = hazard_frames.get("crosswind_command", {})
 		var ov: Dictionary = hazard_frames.get("anchor_overload", {})
 		_require(int(cw.get("wind_frames", 0)) > 0 and int(cw.get("pushed_frames", 0)) > 0, "F08#0 Stage A wind lanes pushed the controlled body: " + str(cw))
