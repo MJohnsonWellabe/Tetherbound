@@ -21,9 +21,10 @@
         },
         {
           "model": "Crate_Wooden",
+          "_why_b14": "B14: 1m further from band2's centreline than (401.4,1799.2), where its collider crowded the road's lane; still touching the FarmCrate and the pickaxe.",
           "at": [
-            401.4,
-            1799.2
+            402.3,
+            1799.6
           ],
           "yaw_deg": 20.0,
           "sink_m": 0.08,
@@ -196,7 +197,8 @@
           "name": "OldQuarryCutFaceEast",
           "model": "Rock_Medium_2",
           "dir": "res://assets/environment/stylized_nature",
-          "at": [386.8, 1802.8],
+          "_why_b14": "B14: 1.5m west of (386.8,1802.8); the scaled hull reached band2's centreline at (397.9,1803.4) on the leg out of the quarry vertex.",
+          "at": [385.3, 1802.8],
           "yaw_deg": 218.0,
           "sink_m": 1.65,
           "scale_xyz": [3.62, 3.02, 1.92],
