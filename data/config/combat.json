@@ -178,6 +178,19 @@
       "hidden_points": 2,
       "speed": 12.0
     },
+    "hud_safe": {
+      "_why": "F10#2 C3 (V-SW-3/5, Tidewake's matching finding): the shoulder solver pushes the pivot up to max_shoulder_offset sideways so the foe clears the ally, which slides the ally into the combat HUD's left column (TEAM list + pilot card), where every code-blind judge found it hidden. Each physics frame combat_manager.gd projects the ally's live render bounds through the live camera and caps the shoulder so their left edge stays right of left_column.right wherever they reach below left_column.top (fractions of the viewport). The occlusion swing/dither stays the fallback when the capped shoulder lets the ally hide the foe. Presentation only. TUNABLE.",
+      "enabled": true,
+      "left_column": {"right": 0.26, "top": 0.42},
+      "margin": 0.02,
+      "min_shoulder": -1.5
+    },
+    "body_clear": {
+      "_why": "F10#2 C3 (V-SW-7): the SpringArm stops at collision capsules, but a large foe's render mesh (Voltarach's legs) reaches well past its capsule, so at the strike the lens sat inside the mesh and the frame was flat geometry. The arm is clamped short of the foe's live render box along the arm. TUNABLE.",
+      "enabled": true,
+      "margin_m": 0.35,
+      "min_length_m": 2.0
+    },
     "aftermath": {
       "_why": "F04#6 (X04 blind judge, #257): after every named win the camera came back facing wherever the fight left it -- away from the defeated trainer and the world beat, and at Keeper Hald's stand collapsed against the outer works' wall for the whole aftermath. On release the exploration camera looks past the player at where the opponent stood, then takes the nearest orbit angle whose arm has room (camera_rig.gd::clear_orbit_offset_deg). One shot; manual look owns it after. TUNABLE.",
       "enabled": true,

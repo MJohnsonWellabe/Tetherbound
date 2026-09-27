@@ -1173,7 +1173,108 @@ func _update_combat_camera_framing(delta: float) -> void:
 	elif float(_camera_rig.get("_tracking_manual_left")) <= 0.0:
 		# Use the live pitch/distance, and never retarget/reset manual orbit.
 		var shoulder := _combat_shoulder_offset(desired, rad_to_deg(float(_camera_rig.get("pitch"))))
+		shoulder = minf(shoulder, _hud_safe_shoulder_cap(cfg.get("hud_safe", {}) as Dictionary))
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
+	_update_combat_body_clear(cfg.get("body_clear", {}) as Dictionary)
+
+
+## F10#2 C3 (V-SW-3/5): the largest shoulder that keeps the ally's live render
+## bounds out of the combat HUD's left column, measured through the live
+## camera. INF when disabled, without a live camera, or while the ally's bounds
+## stay above the column; otherwise finite (it may exceed the live shoulder when
+## the ally has room to spare).
+func _hud_safe_shoulder_cap(hud: Dictionary) -> float:
+	if not bool(hud.get("enabled", false)) or _camera_rig == null or _ally_body == null \
+			or not is_instance_valid(_ally_body):
+		return INF
+	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera == null or not camera.is_inside_tree():
+		return INF
+	var viewport := camera.get_viewport().get_visible_rect().size
+	var world := _body_world_bounds(_ally_body)
+	if world.size.is_zero_approx() or viewport.x <= 1.0 or viewport.y <= 1.0:
+		return INF
+	var corners: Array[Vector2] = []
+	var depth := 0.0
+	var forward := -camera.global_basis.z
+	for i in 8:
+		var corner := world.get_endpoint(i)
+		var ahead := (corner - camera.global_position).dot(forward)
+		if ahead <= 0.05:
+			return INF
+		depth = maxf(depth, ahead)
+		corners.append(camera.unproject_position(corner))
+	var column: Dictionary = hud.get("left_column", {}) as Dictionary
+	var centre := world.get_center()
+	var centre_depth := maxf((centre - camera.global_position).dot(forward), 0.05)
+	# Pixels one metre of shoulder moves the ally at its own depth.
+	var pixels_per_metre := viewport.y * 0.5 / (centre_depth * tan(deg_to_rad(camera.fov) * 0.5))
+	return hud_safe_shoulder_cap(float(_camera_rig.get("_shoulder")), corners, viewport,
+		pixels_per_metre, float(column.get("right", 0.26)), float(column.get("top", 0.42)),
+		float(hud.get("margin", 0.02)), float(hud.get("min_shoulder", -1.5)))
+
+
+## Pure form of the cap. Lowering the shoulder by one metre moves the pivot
+## one metre left and the ally `pixels_per_metre` right on screen, so the cap
+## is the live shoulder plus the ally's clearance (negative = overlap) from the
+## column's right edge, converted to metres. INF when the ally's bounds stay
+## above the column's top.
+static func hud_safe_shoulder_cap(live_shoulder: float, corners: Array[Vector2], viewport: Vector2,
+		pixels_per_metre: float, column_right: float, column_top: float, margin: float,
+		min_shoulder: float) -> float:
+	if corners.is_empty() or pixels_per_metre <= 0.0:
+		return INF
+	var left := INF
+	var bottom := -INF
+	for p: Vector2 in corners:
+		left = minf(left, p.x)
+		bottom = maxf(bottom, p.y)
+	if bottom < column_top * viewport.y:
+		return INF
+	var clearance_px := left - (column_right + margin) * viewport.x
+	return maxf(min_shoulder, live_shoulder + clearance_px / pixels_per_metre)
+
+
+## F10#2 C3 (V-SW-7): keep the lens out of the foe's render mesh, which
+## reaches past its collision capsule (the SpringArm only knows the capsule).
+func _update_combat_body_clear(clear: Dictionary) -> void:
+	if _camera_rig == null or not _camera_rig.has_method("set_body_limit"):
+		return
+	if not bool(clear.get("enabled", false)) or _wild == null or not is_instance_valid(_wild):
+		_camera_rig.call("set_body_limit", INF)
+		return
+	var pivot: Vector3 = (_camera_rig as Node3D).global_position
+	var arm := (_camera_rig as Node3D).global_basis.z * float(_camera_rig.get("_distance"))
+	_camera_rig.call("set_body_limit", body_limit_along_arm(pivot, pivot + arm,
+		_body_world_bounds(_wild), float(clear.get("margin_m", 0.35)),
+		float(clear.get("min_length_m", 2.0))))
+
+
+## Pure form: the arm length that stops `margin` short of where the arm first
+## enters `bounds` (grown by `margin`), never below `min_length`; INF when the
+## arm misses the box or the pivot is already inside it (a clinch: the
+## ally-side guards own that case).
+static func body_limit_along_arm(pivot: Vector3, arm_end: Vector3, bounds: AABB, margin: float,
+		min_length: float) -> float:
+	if bounds.size.is_zero_approx():
+		return INF
+	var grown := bounds.grow(maxf(margin, 0.0))
+	if grown.has_point(pivot):
+		return INF
+	var hit: Variant = grown.intersects_segment(pivot, arm_end)
+	if hit == null:
+		return INF
+	return maxf(min_length, pivot.distance_to(hit as Vector3) - maxf(margin, 0.0))
+
+
+## A body's live render bounds in world space (the model's transform applied
+## to `_body_render_bounds`, which is measured in the model's own space).
+func _body_world_bounds(body: Node3D) -> AABB:
+	var local := _body_render_bounds(body)
+	if local.size.is_zero_approx() or not body.is_inside_tree():
+		return AABB()
+	var model := body.call("model_pivot") as Node3D
+	return model.global_transform * local if model != null and model.is_inside_tree() else AABB()
 
 
 ## MEADOWS-VISUAL-PASS: while the piloted ally hides the foe from the live
