@@ -54,7 +54,7 @@ Code:
 * `tests/helpers/tidewake_b_water_arrival_dry_fixture.gd` is the DRY RUN start.
   It mirrors the earned Waterward handoff's end state (completed Stormwood
   world facts through the ledger, `realm_gate_water_unlocked`, key consumed,
-  five creatures at L46 with one duplicate species, knife/axe/pickaxe on the
+  five creatures at L55 (`ENTRY_LEVEL`; the first two dry runs used L46) with one duplicate species, knife/axe/pickaxe on the
   hotbar). It then calls production `enter_realm("water",
   "water_arrival_from_stormwood", bypass_gate=true)`, where the bypass stands
   in for the consumed key.
@@ -133,3 +133,12 @@ above.
    therefore depends on the swimmer-preparation path. The owner decision is
    recorded by the lane, not taken here.
 5. The lure clause remains with Codex (V-TW-2..6).
+
+## Independent review (read-only subagent): APPROVE
+
+- **Scope:** 12 files, all test or evidence; no product changes.
+- **Flag gating:** `--with-local-chains` and `--dry-run-water-fixture` run only when given, and the dry-run fixture is refused together with `--resume-from`.
+- **Receipts:** a dry run starts past the last checkpoint boundary, so it can never export a "no fixtures" receipt.
+- **Other lanes:** the default and checkpoint flags are unchanged.
+- **Follow-ups:** a dry run no longer reports `campaign_complete: true`. The fixture-party level in this file is corrected.
+- **Open:** the default `--through-opening` failed once, at "natural travel did not reach and engage the tutorial Bramblebun". Its one confirming rerun passed. The cause is unexplained and was reported to Meadows.

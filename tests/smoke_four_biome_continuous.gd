@@ -399,7 +399,8 @@ func _stage_water_to_ending(game: Node) -> void:
 	reached = "tidewake_ending_earned"
 	if local_chains != null and not await _saved_chain_completion(game):
 		return
-	campaign_complete = true
+	# A DRY RUN (declared Water fixture) never counts as a completed campaign.
+	campaign_complete = not dry_run
 	_finish(true)
 
 
