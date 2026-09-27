@@ -1443,6 +1443,36 @@
       "_why_cadence_f07": "F07 cadence, re-placed by F07#2: this pair paced the observatory segment the required route used to walk back west to the plateau fork after the east anchor. observatory_summit_link now takes the route straight from the observatory pad to the summit road's first bend, so the pair moves onto that link (the walk it paced) and the route ledger still credits it (coordinator ruling (a)). Uses cloudreach_upper_released_wild, gated by storm_anchor_upper_east_disabled, so it appears only once that anchor is off. Placed on the authored polyline core at its interpolated height; no pickup, flag or route change."
     },
     {
+      "id": "road_visibility_upper_plateau_circuit_05",
+      "table_id": "cloudreach_upper_wild",
+      "position": [
+        -450.98,
+        876.23,
+        4643.93
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "upper_plateau_circuit",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F15#2 return cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F15#2 return cadence (Tidewake #330, tests/test_tidewake_return_cadence.gd): the measured Stormwood->Meadows return crossed this plateau segment with no live offer for 156 s (road_visibility_upper_summit_road_01 -> road_visibility_upper_plateau_circuit_02, A7 limit 120 s). Native Upper table, gated by cloudreach_upper_route_unlocked, so nothing appears before the counterweight stair is released. Placed on the authored polyline core at its interpolated height, at the gap's midpoint; no pickup, flag or route change."
+    },
+    {
+      "id": "road_visibility_upper_plateau_circuit_06",
+      "table_id": "cloudreach_upper_wild",
+      "position": [
+        -759.87,
+        766.16,
+        4035.33
+      ],
+      "count": 2,
+      "radius_m": 3.0,
+      "purpose": "roadside creature sightline pair",
+      "cadence_route_id": "upper_plateau_circuit",
+      "_why_road_visibility_0907": "ROAD CP-2 pair contract (native-route shoulder core, count 2, radius 3); authored by F15#2 return cadence, not a visibility baseline repair. No global radius, draw-distance or spawn-budget inflation.",
+      "_why_cadence_f07": "F15#2 return cadence (Tidewake #330, tests/test_tidewake_return_cadence.gd): the measured Stormwood->Meadows return crossed this plateau segment with no live offer for 151 s (road_visibility_upper_plateau_circuit_01 -> road_visibility_windscar_counterweight_pass_13, A7 limit 120 s). Native Upper table, gated by cloudreach_upper_route_unlocked, so nothing appears before the counterweight stair is released. Placed on the authored polyline core at its interpolated height, at the gap's midpoint; no pickup, flag or route change."
+    },
+    {
       "id": "road_visibility_summit_overlook_loop_01",
       "table_id": "cloudreach_summit_wild",
       "position": [
