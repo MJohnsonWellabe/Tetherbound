@@ -1,0 +1,41 @@
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66222
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66223
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66224
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66225
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66226
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66227
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 105 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 2462 quads over 7 groups, grass field thinned
+quarry leg: 1005 capsule samples on [(310.0, 1660.0), (400.0, 1800.0), (330.0, 1950.0)]
+PASS: band2's quarry leg is walkable -- no collider on the centreline or 0.5m either side within 25m of (400.0, 1800.0), and no trainer body on the leg
+EXIT 0
+head 7fe6e703
