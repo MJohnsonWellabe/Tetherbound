@@ -138,3 +138,26 @@ progression, hidden HUD, fixed60fps; seven separate studio diagnostic frames.
 No complete C2 matrix, motion pass, creature PASS, full unit suite or READY.
 Native log retains the existing unscoped fly_tutorial_completed flag warning
 and absent placement warnings; no shader compilation failure found.
+
+
+## Cloudfang shiny placeholder repair
+
+V-CX-9 now has an authored region repaint through the existing texture pipeline.
+Only the Cloudfang config entry and new shiny PNG/import change. Ordinary,
+mesh, spawn odds, save data and shared creature runtime are untouched.
+Inspected source atlas and Cloudfang roster reference; provenance records hashes.
+
+Six native Windows NVIDIA Compatibility 1920x1080 Windscar frames compare
+ordinary, explicitly reproduced old placeholder and new shiny by day/night.
+Production camera and follower retained; fixture party and shiny state set
+directly. All six frames and two studio views individually inspected. Two
+existing source-colourway tests / 76 assertions pass; independent source review
+finds no blocker. Evidence: `cloudreach-c2-candidate/cloudfang-shiny/`.
+
+Code-blind verdict: old placeholder FAIL, new shiny and ordinary PASS for
+replacing flat placeholder presentation. Overall Bars A NO/B NO. Remaining:
+coarse plated fur, shoulder boundaries, and weak at-a-glance distinction of
+the variants at night. No full creature-art, F08#4 or C2 closure claimed.
+Galecrest remains next: rest-basis inspection shows its neck turn channel has
+only 0.191 alignment to upright yaw, versus 0.98 on the head; motion/weights
+still need a reproduced correction before blaming the mesh or calling it fixed.

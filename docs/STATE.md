@@ -39,7 +39,9 @@ Turf-linked grass has eight native subset frames and independent comparison:
 preferred over prior grass, but Bars A NO/B NO, full C2 still open. Owner
 creature defects diagnosed: Cloudfang shiny invokes a hot-pink placeholder
 (missing authored shiny texture); Galecrest rest/idle requires motion/weight
-review before deciding on Meshy replacement. Neither creature issue fixed.
+review before deciding on Meshy replacement. Cloudfang now has an authored shiny texture with six native day/night frames
+and scoped placeholder-replacement PASS; coarse fur/night variant recognition
+remain open. Galecrest motion/weight defect remains open.
 Native high-perch
 request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
 missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.

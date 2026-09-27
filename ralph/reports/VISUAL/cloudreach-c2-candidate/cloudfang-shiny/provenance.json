@@ -1,0 +1,23 @@
+{
+  "row": "V-CX-9",
+  "source": "assets\\creatures\\tetherbound\\cloudfang\\models\\creature_cloudfang_lod0.glb",
+  "source_sha256": "b1eccad461c2474020b9bbe4bebe535b621c63baa571aa6b9a3fcfd05ac64727",
+  "reference": "docs/art/reference/36_Cloudreach_Breezetail_Cloudfang_Cliffspike_Tempestwing_Solmane.png",
+  "reference_inspected": true,
+  "method": "Existing reference-backed model atlas, deterministic authored region repaint. No new Meshy generation.",
+  "command": "python tools/repaint_creature_textures.py --only shiny cloudfang",
+  "output": "assets\\creatures\\tetherbound\\cloudfang\\models\\cloudfang_extracted_base_color_shiny.png",
+  "output_sha256": "19da42b3494f0bc00e73ecf35841e2b7589396356ed80f253549de3958203eb5",
+  "scope": "New Cloudfang shiny texture and colourway rules only; ordinary art unchanged.",
+  "native_frames": 6,
+  "studio_frames": 2,
+  "render": "Godot 4.7 Windows NVIDIA GTX1060 OpenGL Compatibility 1920x1080",
+  "shortcuts": [
+    "fixture party includes Cloudfang instead of Galecrest",
+    "direct shiny-state assignment",
+    "old magenta fallback explicitly reproduced via the same runtime functions with a missing diagnostic suffix",
+    "scripted progression and stationary production camera",
+    "hidden HUD, fixed 60 fps",
+    "native follower spacing retained; no random shiny odds or catching proof"
+  ]
+}

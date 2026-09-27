@@ -1,0 +1,7 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only cloudreach_source_colourways: 1 of 615 test files
+  ok    test_cloudreach_source_colourways.gd :: test_outputs_reject_the_previous_neon_collapses
+  ok    test_cloudreach_source_colourways.gd :: test_policy_preserves_authored_anatomical_regions
+
+2 tests, 76 assertions, 0 failed
