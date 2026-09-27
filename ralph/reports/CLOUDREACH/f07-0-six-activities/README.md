@@ -42,9 +42,10 @@ delivery; the Circuit TM co-op race is accepted as disclosed.
   real Interactable + interact input, walked down on foot, 137 s),
   `smoke_cloudreach_ground_truth` (holds the latch flag; open deck has no hole),
   `smoke_cloudreach_foundation` (7 bridges), `smoke_cloudreach_physical_placements`
-  (the new interactions stand on ground), `smoke_cloudreach_summit_lip_rail`,
+  (every new interaction stands on ground; the smoke still exits 1 on the unrelated
+  `cr_candy_broken_route_good_07`, which fails on main too), `smoke_cloudreach_summit_lip_rail`,
   `smoke_cloudreach_activity_rewards` (the Windscar thanks, claim and reload).
-  Key result lines are in `logs/`.
+  Key result lines are in `results/`.
 
 ## Shortcuts (disclosed; owner ruling 06:58)
 
