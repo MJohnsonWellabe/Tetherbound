@@ -1529,6 +1529,9 @@ func _inject(action: String, frames: int) -> Dictionary:
 	var down := _press_edge(action, true)
 	if not bool(down.get("ok", false)):
 		return down
+	# The physical event is buffered until the next process frame; let it land
+	# while action_press still holds, or a release first makes it a second edge.
+	await process_frame
 	for i in maxi(1, frames):
 		await physics_frame
 	var up := _press_edge(action, false)
