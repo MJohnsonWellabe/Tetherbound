@@ -1,0 +1,107 @@
+{
+  "samples": [
+    {
+      "distance": 0,
+      "weight": 0,
+      "values": {
+        "item_size": 0.74,
+        "size_jitter": 0.3,
+        "density_gain": 0.85,
+        "drift_scale": 0.04,
+        "drift_contrast": 0.93
+      },
+      "offset": [
+        0,
+        0
+      ],
+      "threshold_mix": 0
+    },
+    {
+      "distance": 71.9,
+      "weight": 0,
+      "values": {
+        "item_size": 0.74,
+        "size_jitter": 0.3,
+        "density_gain": 0.85,
+        "drift_scale": 0.04,
+        "drift_contrast": 0.93
+      },
+      "offset": [
+        0,
+        0
+      ],
+      "threshold_mix": 0
+    },
+    {
+      "distance": 72,
+      "weight": 0,
+      "values": {
+        "item_size": 0.74,
+        "size_jitter": 0.3,
+        "density_gain": 0.85,
+        "drift_scale": 0.04,
+        "drift_contrast": 0.93
+      },
+      "offset": [
+        0,
+        0
+      ],
+      "threshold_mix": 0
+    },
+    {
+      "distance": 80,
+      "weight": 0.5,
+      "values": {
+        "item_size": 0.63,
+        "size_jitter": 0.375,
+        "density_gain": 1.125,
+        "drift_scale": 0.05500000000000001,
+        "drift_contrast": 0.9650000000000001
+      },
+      "offset": [
+        10.85,
+        18.65
+      ],
+      "threshold_mix": 0.5
+    },
+    {
+      "distance": 88,
+      "weight": 1,
+      "values": {
+        "item_size": 0.52,
+        "size_jitter": 0.45,
+        "density_gain": 1.4,
+        "drift_scale": 0.07,
+        "drift_contrast": 1
+      },
+      "offset": [
+        21.7,
+        37.3
+      ],
+      "threshold_mix": 1
+    },
+    {
+      "distance": 100,
+      "weight": 1,
+      "values": {
+        "item_size": 0.52,
+        "size_jitter": 0.45,
+        "density_gain": 1.4,
+        "drift_scale": 0.07,
+        "drift_contrast": 1
+      },
+      "offset": [
+        21.7,
+        37.3
+      ],
+      "threshold_mix": 1
+    }
+  ],
+  "noise_z_sweep": 232.84000000000003,
+  "mid_annulus_noise_z_derivative": 21.828749999315278,
+  "camera_independent_inputs": [
+    "world cell centre",
+    "authored zone"
+  ],
+  "scope": "Scalar transition math only; prior hash probe does not validate this spatial blend"
+}

@@ -158,21 +158,17 @@
     {
       "_why": "Flower drifts. The defect this answers was measured rather than judged: a blind pass counted flowers appearing EXACTLY TWICE in twelve frames, both the same violet bush asset, each 'a single isolated ball of saturated violet with a hard base', against moong-02 running a pink drift across ~40% of frame width and the keyart putting purple, gold and white wildflowers in every panel. The numbers here are shaped by that: a LOW drift_scale (0.03) means broad patches rather than a sprinkle, and a high drift_contrast means genuinely empty ground between them. Prompt 72 asked for the same thing in its own words -- 'the reference pink drifts are tight and irregular'. Colour is the one place this tier deliberately leaves the meadow palette: palette.json reserves flower_gold #d9b340 as an accent and the keyart carries lilac, so the bloom is lilac over an olive stalk. It is NOT oxblood and must never drift toward it -- that red is reserved for Team Tether and three blind passes have confirmed the reservation is still clean.",
       "name": "flowers",
-      "_comment_patch_review": "FLOWER-PATCHES: independent native comparisons favor smaller flowers in uneven groups across Meadows and Stormwood. placement_seed replaces the unused seed field; offsets give each color its own noise field, and thresholds leave flower-poor intervals. Counts, grass, bushes, litter, baked scatter and lighting are unchanged. Density above one changes survival within the same fixed lattice; it does not add instances. Ridgeline authored composition remains a separate local mask. Both visual bars remain open.",
       "mesh": "flower",
       "enabled": true,
       "count": 12000,
-      "placement_seed": 8830145,
+      "seed": 8830145,
       "centre_bias": 0.6,
-      "item_size": 0.52,
-      "size_jitter": 0.45,
+      "item_size": 0.74,
+      "size_jitter": 0.3,
       "sink": 0.04,
-      "density_gain": 1.4,
-      "drift_scale": 0.07,
-      "drift_contrast": 1.0,
-      "drift_offset": [21.7, 37.3],
-      "patch_start": 0.5,
-      "patch_full": 0.7,
+      "density_gain": 0.85,
+      "drift_scale": 0.04,
+      "drift_contrast": 0.93,
       "tint_base": "#4a5a26",
       "tint_tip": "#c2a8d4",
       "tint_jitter": 0.16,
@@ -206,15 +202,7 @@
           ]
         ],
         "quiet_keep": 0.08,
-        "scale_boost": 0.38,
-        "_comment_preserve_scatter": "FLOWER-PATCHES final Ridgeline review rejected thinning its diagonal purple-white route-edge group. Keep this tier's original position/yaw/rank and size/distribution inside the authored zone, blending to the regional patch treatment over 16m outside it.",
-        "preserve_scatter": {
-          "item_size": 0.74,
-          "size_jitter": 0.3,
-          "density_gain": 0.85,
-          "drift_scale": 0.04,
-          "drift_contrast": 0.93
-        }
+        "scale_boost": 0.38
       },
       "ground": [
         "grass",
@@ -226,17 +214,14 @@
       "mesh": "flower",
       "enabled": true,
       "count": 7000,
-      "placement_seed": 4417703,
+      "seed": 4417703,
       "centre_bias": 0.6,
-      "item_size": 0.46,
-      "size_jitter": 0.45,
+      "item_size": 0.7,
+      "size_jitter": 0.3,
       "sink": 0.04,
-      "density_gain": 1.2,
-      "drift_scale": 0.07,
-      "drift_contrast": 1.0,
-      "drift_offset": [-19.2, 63.1],
-      "patch_start": 0.56,
-      "patch_full": 0.76,
+      "density_gain": 0.72,
+      "drift_scale": 0.04,
+      "drift_contrast": 0.93,
       "tint_base": "#4a5a26",
       "tint_tip": "#d9b340",
       "tint_jitter": 0.16,
@@ -249,7 +234,7 @@
         "grass",
         "soil"
       ],
-      "_why": "Gold wildflower drifts (Meadows visual pass). Same mesh as the lilac tier; placement_seed decorrelates within-cell positions and drift_offset separates the noise fields. Color patches can overlap. flower_gold #d9b340 is palette.json's reserved accent. Never oxblood."
+      "_why": "Gold wildflower drifts (Meadows visual pass). Same mesh and drift model as the lilac tier; own seed so its patches sit apart from the lilac ones. flower_gold #d9b340 is palette.json's reserved accent. Never oxblood."
     },
     {
       "_why": "Forest litter. Band 2 is called forest floor and a blind pass found it carrying meadow grass and sand under the trees -- 'no leaf litter, no needles, no moss, no fungi, no fallen branches' -- and separately that 'a player walking these four bands would not know the region had changed'. This is the band-differentiating dressing, and it is restricted to the forest_floor ground type so it appears where the terrain already says there are trees rather than being scattered everywhere and hoping. slope_lie 1.0 lays it ON the ground following the gradient, which is what makes litter read as litter and not as flat cards standing on a slope; sway 0 because leaves on the ground do not move in a breeze.",

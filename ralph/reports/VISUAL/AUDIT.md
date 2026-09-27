@@ -9,7 +9,28 @@ PR365 candidates are present; other unmerged visual branches are absent.
 See [whole-game review](WHOLE-GAME-REVIEW.md) for build identity, independent
 verdicts, coverage, PR dispositions and the Cloudreach fixture error.
 
-## Current repair order
+## Current owner acceptance priorities
+
+The owner's explicit eight failing criteria supersede further general-family
+polish. Rechecked against GitHub main `4316362e2` and its criterion board; none
+is newly closed here. Board evidence often names older `fe07d0d2` captures,
+so verify current source and pending visual PRs before duplicating repairs.
+Claude continues to own gameplay and merges; Codex owns the visual fixes and
+independent visual evidence. Start with relay/strike readability, then complete
+the remaining listed failures. The family ranking below remains diagnostic.
+
+| Criterion | Required visual result | Completion evidence still required |
+|---|---|---|
+| F04#1 — Meadows relay officers | Visible lunge travel and a readable ground-path tell conveying the tactical question | Current normal-camera tell/travel/recovery sequence and independent verdict; preserve combat timing and collision ownership |
+| F04#6 — Meadows fight aftermaths | Each required named fight leaves a visible, distinct aftermath | Matched before/after views and played aftermath sequence for each fight; flags alone do not qualify |
+| F08#4 — Cloudreach settlements/cliffs | Settlement and cliff identity pass the full C2 matrix, including remaining M1–M12 work | Locate original work orders, reconcile merged assets and rerun matrix; Windscar's limited improvement is not a pass |
+| F09#3 — Stormwood reward pockets | All five pocket lures visible from their road approaches while routes remain traversable | Road-to-pocket walks and blind lure recognition; existing 1/5 result remains failing |
+| F10#3 — Stormwood lightning | A recognizable strike tell, readable at night, correct 1.2 s/3 m cue and reduced-motion presentation | Current day/night phase/tell/impact sequences, reduced-motion comparison and independent judgment; PR365 warning-ring slice alone does not close it |
+| F10#4 — Stormwood forest/rod line/restored sky | These views pass both identity and finish bars | Full matching regional matrix including restored state; flower grouping is only a small component |
+| F13#5 — Tidewake currents/docks/Veilfall | Readable currents, inhabited docks and convincing far/mid/near Veilfall | T2 matrix and current motion, reconciling merged cascades/lanterns and pending current/fence work |
+| F14#2 — Tidewake water network | Current-network changes are visible and persist | Identical-view before/after/reload captures plus motion and independent change recognition; state assertions are insufficient |
+
+## Cross-game diagnostic ranking
 
 This order supersedes taking the oldest or easiest table row next. It ranks
 repeated visual impact and exposure, not implementation cost. Existing defect
@@ -27,9 +48,10 @@ or whole-game Bar A/B pass is claimed.
 | 7 | **Inventory identity and small tools.** Many of 89 items share indistinguishable icons despite 46 available paths; torch/rod/knife have weak slot weight. The six stat drinks already have merged distinct icons. | V35 merged; V-CX-8 | Differentiate commonly compared resource, food, armour and TM entries through strong silhouettes/marks. Verify actual 32/64 px slots and grayscale without labels. Do not redo the accepted six-drink icon slice. |
 | 8 | **Prop-family finish and missing in-use coverage.** Bottles, docks, portals, gatherables, camp pieces, saddles and held tools still need complete use-distance coverage. A coverage gap is not a proven failed asset. | V1, V14; #328/#329/#355 dispositions | Retain promising #355 shared bottle/badge candidate, resolve merge/disposition and cross-view recognition before another generation. Check actual pickup, held and approach distances across families; inspect portal transitions and dock shoreline contact. Escalate a newly verified severe defect above this order when warranted. |
 
-**Next repair batch:** priority 2, plant shape/grouping and ground/path transitions
-across representative regions. The two grass-lighting experiments below failed
-retention; stop normal/brightness tuning and change the visible structure.
+**Next repair batch:** the owner's eight criteria above, beginning with relay
+and lightning readability. The flower grouping below is a modest two-region
+improvement; it does not close priority 2 or F10#4. The two grass-lighting
+experiments failed; stop normal/brightness tuning.
 Priority 1 remains open after its limited retained improvements. Do not return
 to repeated bottle, fence or single-dock polish while these scene-wide defects
 remain. Coverage gaps are a separate verification obligation, not accepted areas.
@@ -59,6 +81,22 @@ clutter; the second trades daylight gains for lost shade/night coherence.
 No grass shader, material or config change was retained. Stop this tuning
 approach and address shapes, grouping and verges. [Evidence and verdicts](GRASS-PRESENTATION.md).
 Main `3dad15f41` is now integrated; captures retain their actual earlier build ID.
+
+**Flower grouping:** 36 native comparison frames across Meadows, Stormwood and
+Tidewake, followed by twelve loaded-config/Ridgeline frames and 24 Ironwood
+movement samples. Independent review favors Meadows/Stormwood's smaller,
+independently positioned flower groups (five preferences and one tie per
+region). Tidewake has four ties and two weak baseline preferences; its settings
+remain unchanged. The old color seeds were never read; new optional controls
+fix that shared-cell overlap without changing instance counts. Native loaded
+materials match all 18 candidate values. Focused ground-cover tests pass
+22 tests /87,833 assertions. Bar A/B and priority 2 remain open; flower shape,
+grass repetition, ground transitions and broader biome structure remain.
+The first Ridgeline check blocked unrestricted rollout by revealing a weakened
+purple-white route-edge group. Its lilac tier now preserves original scatter
+inside the authored zone, with a separate-field blend outside; see the final
+scoped regression verdict rather than treating the initial packet as accepted.
+[Evidence, source review and limits](FLOWER-PATCHES.md).
 
 
 ## Codex visual work queue (owner, 2026-09-26)
@@ -121,7 +159,7 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V-MA-1 | F03#1 (Doss) | Doss's river-bank perch (`building_prefabs.json` `river_bank_perch`: two `Floor_WoodDark` tiles and four `Prop_WoodenFence_Single` rails) renders as pale, near-white planes in daylight, because the kit's `MI_WoodTrim` trim sheet maps its pale painted band onto these pieces. The code-blind judge (`ralph/reports/MEADOWS-PAYOFFS/six-activities/distinct-actions/F03-1-DISTINCT-JUDGE-r5.md`) read it as "untextured white planes" and "a missing-texture decal". A dark-timber `MI_WoodTrim` multiply on this recipe alone (#7a5636, metallic 0) read as wood and passed (r6, frames in `distinct-actions/doss-perch/`), but it was reverted under the art-to-Codex rule. | `data/config/building_prefabs.json` `river_bank_perch` (a recipe-level `retint` is supported by `building_prefabs.gd`); capture with `tests/capture_activity_lures.gd --act --activity=doss --save=res://tests/fixtures/f03_lure_saves/S07-exit-band3-plus-1wood-1fiber.json.gz` | In progress #365: current native capture shows wood with speckled aliasing, not the historical blank-white look. Dark tint rejected for night regression; shared WoodTrim mipmaps pass independent final day/night perch and village review. Source pixels/repair logic unchanged. Whole scene/grounding and full Bars remain open. See [wood evidence](WOOD-MATERIALS.md). |
 | V-MA-1 | F03#0 (Juno Tether camp lure) | The Tether patrol camp at (-172, 5485.5) sits behind a crest, so neither oxblood standard shows at the 159 m road sighting. Meadows activities added an opaque dark 42 m smoke column as a signal; the coordinator removed it in batch 47 under the art-to-Codex rule (the same class as V19). **Pass when** a code-blind judge sees the camp's lure from the road at dusk in the gameplay camera. | `data/config/bands/band4_upper_meadows_ironwood/props.json` TetherHoldingFire, signal fire or standards | open |
 | V-CX-5 | X04 camera / foliage | Nearby non-colliding bushes hide the trainer during exploration; distance-only fading also removed unrelated Meadows plants. | `foliage_camera_visibility.gd` / `.gdshader`, material-only vegetation registration | In progress #365: projected-bounds gate restores sampled Stormwood trainer visibility and preserves Meadows peripheral foliage. Full hazard edges, dither finish, other camera profiles and device cost remain open. Evidence `FOLIAGE-CAMERA.md`. |
-| V-CX-6 | ART_DIRECTION §3.1 / whole-frame Bars A/B | Ground cover and terrain transitions read as uniform scatter, coarse grass carpets and hard path/settlement boundaries across the four regions. Native Meadows 004/010/016/022; Cloudreach 019/028/037/041; current regional verdicts. | Shared vegetation assets/materials and authored regional distribution, path verges and settlement ground integration | Open; priority 2. Two normal/brightness candidates rejected after 60 native frames; no production change. Next: plant shapes/grouping and verges, with day/shade/night and motion. See GRASS-PRESENTATION.md. |
+| V-CX-6 | ART_DIRECTION §3.1 / whole-frame Bars A/B | Ground cover and terrain transitions read as uniform scatter, coarse grass carpets and hard path/settlement boundaries across the four regions. Native Meadows 004/010/016/022; Cloudreach 019/028/037/041; current regional verdicts. | Shared vegetation assets/materials and authored regional distribution, path verges and settlement ground integration | Open; priority 2. Two lighting candidates rejected (GRASS-PRESENTATION.md). Meadows/Stormwood flower grouping retained as a modest improvement; Tidewake candidate not retained (FLOWER-PATCHES.md). Next: ground/verge structure and integrated plant masses, with motion and full-route coverage. |
 | V-CX-7 | F10#4 / ART_DIRECTION Stormwood identity | Stormwood forest lacks layered enclosure and regional differentiation: sparse oversized trunks over repeated flowers expose broad empty horizons; luminous road seams compete with destinations. | Regional canopy/mid-layer/clearings and road-current presentation; coordinate encounter/route changes with Claude | Open; priorities 2 and 5. Require recognizable forest subregions and distinct visual hierarchy in Calm/Building/Break native traversal, without hiding trainer or combat. |
 | V-CX-8 | ART_DIRECTION §6 / inventory identity | Distinct resources, foods, armour and TMs share indistinguishable icons; torch/rod/knife have weak slot weight. Current census:89 definitions/46 icon paths, no missing icon files. | Item icon family; preserve merged six-stat-drink work | Open; priority 7. Recognize commonly compared items without labels at actual 32/64 px slots and grayscale. See [item verdict](ranked-audit/items-verdict.md). |
 | V-SW-6 | F10#2 | Crown Guardian identity: no Crown glass reads on or around the body, it stands in an ordinary quadruped walk pose (no guard stance), and it looks identical to the background Staticub herd, so it does not read as a guardian. Its frontal guard cone does read (judge (b) PASS). Evidence: X 00-before, tell2-a-start, i15 (code-blind judge round 3, `ralph/reports/STORMWOOD/b/f10_2/JUDGE_ANSWERS_r3.txt`) | Crown Guardian body/material/pose (X04: crown-glass dressing on the named Staticub, guard-stance idle/anticipation clip); Crown arena dressing | open |

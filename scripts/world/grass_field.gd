@@ -839,6 +839,7 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		for key: String in [
 			"item_size", "size_jitter", "sink", "slope_lie", "density_gain",
 			"drift_scale", "drift_contrast", "drift_gate", "tint_jitter", "ground_blend",
+			"patch_start", "patch_full",
 			"contact_darken", "normal_soften", "sway", "wind_scale", "gust", "gust_speed",
 			"gust_length", "field_radius", "fade_start", "leaf_cut", "leaf_serrate",
 			"leaf_teeth", "leaf_root_darken", "leaf_tint_jitter",
@@ -850,6 +851,9 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		for key2: String in ["tint_base", "tint_tip", "tint_wood"]:
 			if tier.has(key2):
 				mat.set_shader_parameter(key2, Color(str(tier[key2])))
+		mat.set_shader_parameter("placement_seed", maxi(0, int(tier.get("placement_seed", 0))))
+		var drift_offset: Array = tier.get("drift_offset", [0.0, 0.0])
+		mat.set_shader_parameter("drift_offset", Vector2(float(drift_offset[0]), float(drift_offset[1])))
 		if tier.has("wind_dir"):
 			var d: Array = tier["wind_dir"]
 			mat.set_shader_parameter("wind_dir", Vector2(float(d[0]), float(d[1])).normalized())
@@ -902,6 +906,11 @@ static func _apply_authored_composition(mat: ShaderMaterial, tier: Dictionary) -
 			clampf(float(authored.get("quiet_keep", 1.0)), 0.0, 1.0))
 	mat.set_shader_parameter("composition_scale_boost",
 			clampf(float(authored.get("scale_boost", 0.0)), 0.0, 1.0))
+	var preserved: Dictionary = authored.get("preserve_scatter", {})
+	mat.set_shader_parameter("composition_preserve_scatter", not preserved.is_empty())
+	for key: String in ["item_size", "size_jitter", "density_gain", "drift_scale", "drift_contrast"]:
+		if preserved.has(key):
+			mat.set_shader_parameter("composition_" + key, float(preserved[key]))
 
 
 # ---------------------------------------------------------------------------

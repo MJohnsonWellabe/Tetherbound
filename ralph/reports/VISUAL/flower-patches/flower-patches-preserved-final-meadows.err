@@ -1,0 +1,76 @@
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1134)
+       [1] _ready (res://scripts/world/playground_world.gd:786)
+       [2] _boot_region (res://tools/capture_visual_audit.gd:743)
+       [3] _boot_region (D:/tetherbound/visual-acceptance-local/capture_flower_patches.gd:31)
+       [4] _boot_region (D:/tetherbound/visual-acceptance-local/capture_flower_final.gd:10)
+       [5] _boot_region (D:/tetherbound/visual-acceptance-local/capture_flower_preserved.gd:8)
+       [6] _run_region (res://tools/capture_visual_audit.gd:480)
+       [7] _run (res://tools/capture_visual_audit.gd:115)
+       [8] _run (D:/tetherbound/visual-acceptance-local/capture_flower_patches.gd:17)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
+       [3] _ready (res://scripts/world/playground_world.gd:843)
+WARNING: band pickup 'b1_potion_old_champion_detour' authored at 212, 882 stands 6.5m away -- the only clear ground within 8m; re-author it if its `_why` is about the exact spot
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place_one (res://scripts/world/band_pickups.gd:472)
+       [1] place_all (res://scripts/world/band_pickups.gd:433)
+       [2] _place_band_pickups (res://scripts/world/playground_world.gd:1978)
+       [3] _build_settlement (res://scripts/world/playground_world.gd:1704)
+       [4] _ready (res://scripts/world/playground_world.gd:843)

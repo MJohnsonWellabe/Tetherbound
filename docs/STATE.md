@@ -39,6 +39,27 @@ shape/grouping and ground/verge structure, not another light/tint adjustment.
 See `ralph/reports/VISUAL/GRASS-PRESENTATION.md`. Main `3dad15f41` is integrated
 after these captures; their actual earlier build identity remains recorded.
 
+The next priority-2 slice retains smaller, independently positioned flower
+groups in Meadows and Stormwood, with five independent candidate preferences
+and one tie in each region. Tidewake's candidate shows no useful improvement
+and is not enabled. Thirty-six comparison frames, twelve loaded-config/
+Ridgeline frames and 24 short-walk samples support the bounded change; focused
+ground-cover tests pass 22/87,833. See `ralph/reports/VISUAL/FLOWER-PATCHES.md`.
+This is not a vegetation-family pass; whole-game Bars A/B remain open. The
+captures use integrated main `3dad15f41`. The first Ridgeline check rejected a loss
+of its purple-white route-edge group; the revised lilac tier preserves original
+scatter in that authored area. Claude owns merging draft #365.
+
+**Current owner visual criteria:** F04#1 relay lunge/path tell; F04#6 distinct
+fight aftermaths; F08#4 Cloudreach settlements/cliffs and M1–M12; F09#3 five
+road-visible pocket lures; F10#3 lightning/night/reduced motion; F10#4 forest,
+rod line and restored sky Bars A/B; F13#5 currents/docks/Veilfall; F14#2 visible
+persistent current-network change. These supersede further general vegetation
+polish. Main `4316362e2` was fetched and its board still lists all eight open or
+partial; old board references must be checked against current gameplay and
+pending PRs. The exact result/witness checklist is in VISUAL/AUDIT.md. Start
+with relay and lightning readability; Claude owns gameplay and merges.
+
 All nine lane sessions were wound down and archived on owner direction: Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03 and VIS.
 - Every lane posted `## HANDOFF (final)` on its PR. Each showed clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
 - **All lane work is on main** through batches 25 (#283) and 26. Every `ralph/*`, `claude/integration-*` and `fix/*` tip is an ancestor of main, so any branch other than main can be deleted.
