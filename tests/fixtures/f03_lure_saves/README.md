@@ -1,6 +1,6 @@
 # F03 lure-walk saves (gzip)
 
-These are copies of the real ordinary-play saves under `ralph/reports/` (except where disclosed below as derived or seeded), gzipped so that `render.yml` (whose checkout leaves out `ralph/`) can load them. The walker's receipt sha256 is of the inflated JSON, so it matches the original.
+These are gzipped copies of Gate F leg saves under `ralph/reports/`, so that `render.yml` (whose checkout leaves out `ralph/`) can load them. The walker's receipt sha256 is of the inflated JSON, so it matches the original. **None of them is earned play** (strict re-score, 2026-09-27): S04-exit is the hand-authored seed of leg s05 (`gate-f-leg-s05/RUN_METADATA.json`); S06-exit-band3 and S07-exit-band4 are written by `tools/gate_f/build_s07_entry_synthetic.gd` / `build_s08_entry_synthetic.gd`; S07-exit-band3 and S08-exit-band4 are exits of legs played from those synthetic entries. They are fine for dry runs that find blockers; a criterion close needs an earned save such as `tests/fixtures/earned_saves/checkpoints/seed4_hall/`.
 
 | file | source |
 |---|---|
