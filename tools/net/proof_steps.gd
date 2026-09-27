@@ -112,7 +112,7 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"water_anchor_fixture", "water_swim_to_wild", "water_swim_to_anchor", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
 	"water_guardian_let_go", "water_guardian_forge_accept",
 	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe", "shared_cue_shape", "ledge_probe",
-	"ledge_launch", "await_autosave", "slot_mtime", "party_best", "host_card_defence"]
+	"ledge_launch", "await_autosave", "slot_mtime", "party_best", "host_card_defence", "trainer_foe_numbers", "hit_sample"]
 
 
 static func handles(action: String) -> bool:
@@ -179,6 +179,10 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _party_best(tree, args)
 		"host_card_defence":
 			return await _host_card_defence(tree, args)
+		"trainer_foe_numbers":
+			return await _trainer_foe_numbers(tree, args)
+		"hit_sample":
+			return await _hit_sample(tree, args)
 		"cost_probe":
 			return _cost_probe(tree)
 	if WATER_ACTIONS.has(action):
@@ -3311,3 +3315,214 @@ static func _host_card_defence(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var ok: bool = bool(data.get("matches_" + want, false)) and int(data.bond_nodes) == 0 and bool(data.bonus_is_real)
 	return {"verdict": "PASS" if ok else "FAIL", "data": data,
 		"detail": "host card for peer %d (want %s): %s" % [pid, want, JSON.stringify(data)]}
+
+
+# --- F14#1 co-op half: a hosted trainer fight's numbers against solo ----------
+
+const TRAINER_BUILD := preload("res://scripts/world/trainer_npc.gd")
+const FIGHT_MATH := preload("res://scripts/combat/combat_math.gd")
+const FIGHT_TYPES := preload("res://scripts/combat/type_chart.gd")
+const FIGHT_MOVES := preload("res://scripts/creatures/move_db.gd")
+const FIGHT_WILD := preload("res://scripts/creatures/wild_creature.gd")
+const FIGHT_HOST := preload("res://scripts/net/encounter_host.gd")
+
+
+static func _fight_parts(tree: SceneTree) -> Dictionary:
+	var scene := tree.current_scene
+	var director := scene.find_child("EncounterDirector", true, false) if scene != null else null
+	var manager := scene.find_child("CombatManager", true, false) if scene != null else null
+	return {"director": director, "manager": manager}
+
+
+## The solo build of the team member the current foe is: the same
+## `trainer_npc.creature_for()` solo `begin_trainer_battle()` queues, found by
+## species and level in the trainer's own spec. Its live-config reference is
+## `wild_creature._enemy_config_for_this_body()`'s layering (enemy, then the
+## enemy_trainer overlay, then the member's combat block) rebuilt here.
+static func _solo_member(director: Node, trainer_id: String, species: String, level: int) -> Dictionary:
+	var specs: Variant = director.get("trainer_specs")
+	var spec: Dictionary = (specs as Dictionary).get(trainer_id, {}) if specs is Dictionary else {}
+	for entry: Variant in TRAINER_BUILD.team_of(spec):
+		if not entry is Dictionary:
+			continue
+		var built: RefCounted = TRAINER_BUILD.creature_for(entry as Dictionary)
+		if built == null or str(built.get("species_id")) != species or int(built.get("level")) != level:
+			continue
+		var cfg: Dictionary = (FIGHT_MATH.config().get("enemy", {}) as Dictionary).duplicate(true)
+		var overlay: Dictionary = FIGHT_MATH.config().get("enemy_trainer", {})
+		var override: Dictionary = built.get("combat_override") as Dictionary
+		var keys: Array = FIGHT_WILD.get_script_constant_map().get("_COMBAT_OVERRIDE_KEYS", [])
+		for key: Variant in keys:
+			if overlay.has(key):
+				cfg[key] = overlay[key]
+		for key: Variant in keys:
+			if override.has(key):
+				cfg[key] = override[key]
+		return {"creature": built, "config": cfg}
+	return {}
+
+
+## This peer's view of the foe it is fighting in `trainer_id`'s battle, against
+## the solo build of the same member times the declared `multiplayer.json`
+## scaling row for `participants`: attack and defence x stat_multiplier, the
+## swing interval x attack_cooldown_multiplier, and everything else (max HP,
+## telegraph, power, level, moves) exactly solo. The host also checks its own
+## record's participant count. A guest reports its view (HP/max HP/species)
+## against the same reference; it never rolls the foe's damage.
+static func _trainer_foe_numbers(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var parts := _fight_parts(tree)
+	var director: Node = parts.director
+	var manager: Node = parts.manager
+	if director == null or manager == null:
+		return {"verdict": "ERROR", "detail": "trainer_foe_numbers needs the scene's EncounterDirector and CombatManager"}
+	var participants := int(args.get("participants", 1))
+	var trainer_id := str(args.get("trainer_id", "water_trainer_nerissa"))
+	var foe: RefCounted = null
+	for f in int(args.get("budget_frames", 600)):
+		if bool(manager.call("is_fighting")):
+			foe = manager.call("enemy")
+			if foe != null:
+				break
+		await tree.physics_frame
+	if foe == null:
+		return {"verdict": "FAIL", "detail": "no foe in this peer's fight within budget"}
+	for f in int(args.get("settle", 30)):
+		await tree.physics_frame
+	var species := str(foe.get("species_id"))
+	var level := int(foe.get("level"))
+	var solo := _solo_member(director, trainer_id, species, level)
+	if solo.is_empty():
+		return {"verdict": "FAIL", "detail": "%s L%d is not a member of %s's authored team" % [species, level, trainer_id]}
+	var ref: RefCounted = solo.creature
+	var ref_cfg: Dictionary = solo.config
+	var row: Dictionary = FIGHT_HOST.scaling_for(participants)
+	var stat := float(row.get("stat_multiplier", 1.0))
+	var cd := float(row.get("attack_cooldown_multiplier", 1.0))
+	var sess: Node = tree.call("_session")
+	var is_host: bool = sess == null or not bool(sess.call("is_active")) or bool(sess.call("is_host"))
+	var data := {"peer_role": "host" if is_host else "guest", "trainer_id": trainer_id,
+		"species": species, "level": level, "participants_declared": participants,
+		"stat_multiplier": stat, "attack_cooldown_multiplier": cd,
+		"max_hp": float(foe.get("max_hp")), "hp": float(foe.get("hp")),
+		"ref_max_hp": float(ref.get("max_hp")),
+		"attack": float(foe.get("attack")), "defence": float(foe.get("defence")),
+		"ref_attack": float(ref.get("attack")), "ref_defence": float(ref.get("defence")),
+		"move_quick": str(foe.get("move_quick")), "move_charged": str(foe.get("move_charged")),
+		"ref_move_quick": str(ref.get("move_quick")), "ref_move_charged": str(ref.get("move_charged"))}
+	data["max_hp_matches_solo"] = is_equal_approx(float(data.max_hp), float(data.ref_max_hp))
+	data["moves_match_solo"] = data.move_quick == data.ref_move_quick and data.move_charged == data.ref_move_charged
+	var checks := ["max_hp_matches_solo", "moves_match_solo"]
+	if is_host:
+		var rec_row: Dictionary = {}
+		var enc_id := str(manager.get("_encounter_id")) if manager.get("_encounter_id") != null else ""
+		var host_node: Variant = director.get("_encounter_host")
+		if host_node != null and not enc_id.is_empty():
+			var rec: Dictionary = (host_node as Object).call("record", enc_id)
+			data["participants_record"] = (rec.get("participants", {}) as Dictionary).size() if not rec.is_empty() else 0
+			rec_row = (host_node as Object).call("scaling", enc_id)
+		else:
+			data["participants_record"] = 1
+			rec_row = FIGHT_HOST.scaling_for(1)
+		data["record_row"] = rec_row
+		data["participants_match"] = int(data.participants_record) == participants
+		data["attack_matches_solo_x_row"] = absf(float(data.attack) - float(data.ref_attack) * stat) < 0.01
+		data["defence_matches_solo_x_row"] = absf(float(data.defence) - float(data.ref_defence) * stat) < 0.01
+		var body: Variant = manager.get("_wild")
+		var live: Dictionary = (body as Object).get("_combat_cfg") if body != null else {}
+		data["live_attack_cooldown"] = float(live.get("attack_cooldown", -1.0))
+		data["ref_attack_cooldown"] = float(ref_cfg.get("attack_cooldown", -1.0))
+		data["live_telegraph"] = float(live.get("telegraph", -1.0))
+		data["ref_telegraph"] = float(ref_cfg.get("telegraph", -1.0))
+		data["live_power"] = float(live.get("power", -1.0))
+		data["ref_power"] = float(ref_cfg.get("power", -1.0))
+		data["cooldown_matches_solo_x_row"] = absf(float(data.live_attack_cooldown) - maxf(0.1, float(data.ref_attack_cooldown) * cd)) < 0.001
+		data["telegraph_matches_solo"] = is_equal_approx(float(data.live_telegraph), float(data.ref_telegraph))
+		data["power_matches_solo"] = is_equal_approx(float(data.live_power), float(data.ref_power))
+		checks += ["participants_match", "attack_matches_solo_x_row", "defence_matches_solo_x_row",
+			"cooldown_matches_solo_x_row", "telegraph_matches_solo", "power_matches_solo"]
+	var failed: Array = []
+	for key: String in checks:
+		if not bool(data.get(key, false)):
+			failed.append(key)
+	data["failed_checks"] = failed
+	return {"verdict": "PASS" if failed.is_empty() else "FAIL", "data": data,
+		"detail": "%s view of %s's %s L%d at %d participant(s): %s" % [data.peer_role, trainer_id, species,
+			level, participants, JSON.stringify(data)]}
+
+
+## Watch this peer's own active creature for `frames` and check every health
+## drop against the solo damage formula's whole range for the current foe:
+## `rolled_damage(power, solo attack x row, own defence, roll 0..1,
+## quick-or-charged move power, that move's type multiplier)`, with the player
+## stagger critical (`poise.crit_scale`) allowed on top. The defence is the
+## same `effective_defence(cfg, is_best, ability)` solo uses. A host's own
+## creature is hit through the local solo path; a guest's through the
+## host-rolled delivery, so both halves of the co-op damage path are measured.
+static func _hit_sample(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var parts := _fight_parts(tree)
+	var director: Node = parts.director
+	var manager: Node = parts.manager
+	if director == null or manager == null:
+		return {"verdict": "ERROR", "detail": "hit_sample needs the scene's EncounterDirector and CombatManager"}
+	var participants := int(args.get("participants", 1))
+	var trainer_id := str(args.get("trainer_id", "water_trainer_nerissa"))
+	var prog: Dictionary = NET_PROGRESSION.config()
+	var moves: RefCounted = FIGHT_MOVES.new()
+	var row: Dictionary = FIGHT_HOST.scaling_for(participants)
+	var stat := float(row.get("stat_multiplier", 1.0))
+	var crit := maxf(1.0, float(((FIGHT_MATH.config().get("poise", {}) as Dictionary)).get("crit_scale", 1.5)))
+	var hits: Array = []
+	var last_hp := -1.0
+	var last_uid := ""
+	for f in int(args.get("frames", 1800)):
+		await tree.physics_frame
+		if not bool(manager.call("is_fighting")):
+			last_hp = -1.0
+			continue
+		var mine: RefCounted = manager.call("active_creature")
+		var foe: RefCounted = manager.call("enemy")
+		if mine == null or foe == null:
+			continue
+		var hp := float(mine.get("hp"))
+		var uid := str(mine.get("uid"))
+		if uid != last_uid:
+			last_uid = uid
+			last_hp = hp
+			continue
+		if last_hp >= 0.0 and hp < last_hp - 0.0001:
+			var solo := _solo_member(director, trainer_id, str(foe.get("species_id")), int(foe.get("level")))
+			var row_hit := {"frame": Engine.get_physics_frames(), "damage": last_hp - hp,
+				"foe": str(foe.get("species_id")), "creature": str(mine.get("species_id"))}
+			if solo.is_empty():
+				row_hit["in_bounds"] = false
+				row_hit["why"] = "foe not in the authored team"
+			else:
+				var ref: RefCounted = solo.creature
+				var cfg: Dictionary = solo.config
+				var party: RefCounted = (_game(tree).get("party") as RefCounted)
+				var is_best: bool = party != null and party.call("best") == mine
+				var ability: Dictionary = SPECIES_DATA.best_creature_ability(str(mine.get("species_id"))) if is_best else {}
+				var defence := float(mine.call("effective_defence", prog, is_best, ability))
+				var attack := float(ref.call("effective_attack", prog)) * stat
+				var lo := INF
+				var hi := 0.0
+				for move_id: String in [str(ref.get("move_quick")), str(ref.get("move_charged"))]:
+					if move_id.is_empty():
+						continue
+					var tm: float = FIGHT_TYPES.multiplier_dual(moves.type_of(move_id), str(mine.get("creature_type")), str(mine.get("secondary_type")))
+					lo = minf(lo, FIGHT_MATH.rolled_damage(float(cfg.get("power", 8.0)), attack, maxf(1.0, defence), 0.0, moves.power(move_id), tm))
+					hi = maxf(hi, FIGHT_MATH.rolled_damage(float(cfg.get("power", 8.0)), attack, maxf(1.0, defence), 1.0, moves.power(move_id), tm) * crit)
+				row_hit["min"] = lo
+				row_hit["max"] = hi
+				# A killing blow is clamped at the remaining HP, so only its floor is unknowable.
+				var d := float(row_hit.damage)
+				row_hit["in_bounds"] = d <= hi + 0.01 and (d >= lo - 0.01 or hp <= 0.0001)
+				row_hit["max_hp_fraction"] = d / maxf(1.0, float(mine.get("max_hp")))
+			hits.append(row_hit)
+		last_hp = hp
+	var out_of_bounds := hits.filter(func(h: Dictionary) -> bool: return not bool(h.get("in_bounds", false)))
+	var data := {"participants_declared": participants, "hits": hits.size(), "out_of_bounds": out_of_bounds.size(),
+		"sample": hits.slice(0, 8), "max_hit_fraction": hits.reduce(func(a: float, h: Dictionary) -> float: return maxf(a, float(h.get("max_hp_fraction", 0.0))), 0.0)}
+	var ok: bool = out_of_bounds.is_empty() and hits.size() >= int(args.get("min_hits", 0))
+	return {"verdict": "PASS" if ok else "FAIL", "data": data,
+		"detail": "%d hit(s) on this peer's creature, %d outside the solo formula range: %s" % [hits.size(), out_of_bounds.size(), JSON.stringify(data)]}

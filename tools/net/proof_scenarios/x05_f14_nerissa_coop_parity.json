@@ -1,0 +1,210 @@
+{
+  "name": "F14#1 co-op half: Captain Nerissa's hosted fight numbers equal solo x the declared scaling row",
+  "claim": "Co-op half of ACCEPTANCE F14 'Veilfall ... pass C2/C3' for Tidewake to cite: C2's harness is solo, so this proves the two-peer fight is the same fight. Two real peers; the host challenges Captain Nerissa through the production trainer battle and the guest joins in progress. At one participant the foe equals the solo build (trainer_npc.creature_for + enemy/enemy_trainer/member combat layering) exactly. At two, the host's foe equals solo x multiplayer.json by_participants['2'] (attack/defence x1.10, attack_cooldown x0.85; max HP, telegraph, power, moves unchanged), for the creature on the field at the join and for the one sent out after it; the guest sees the same species/level/max HP/moves. Every health drop on either peer's creature over 50 s lies inside the solo rolled_damage range (roll 0..1, quick or charged move, stagger critical allowed) computed from solo attack x row and the creature's own effective_defence(is_best, ability). Setup (disclosed): party grants at L55, guardian_fixture prerequisites (the Veilfall chain up to Nerissa), win_trainer_battle's enemy_hp_ceiling 20 to end rounds after the samples. Not claimed: C2's masher/reader outcome rates (statistical, solo harness) or C3 framing.",
+  "peers": 2,
+  "scene": "water",
+  "budget_s": 2700,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "level": 55
+      },
+      "label": "setup: host party (L55, survives the sampling windows)"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "mosshell",
+        "level": 55
+      },
+      "label": "setup: host party (L55, survives the sampling windows)"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "galewisp",
+        "level": 55
+      },
+      "label": "setup: host party (L55, survives the sampling windows)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "ripplet",
+        "level": 55
+      },
+      "label": "setup: guest party (L55)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "bramblebun",
+        "level": 55
+      },
+      "label": "setup: guest party (L55)"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "meadowhart",
+        "level": 55
+      },
+      "label": "setup: guest party (L55)"
+    },
+    {
+      "peer": "all",
+      "action": "deploy_creature",
+      "label": "each player sends its first companion out"
+    },
+    {
+      "peer": 0,
+      "action": "guardian_fixture",
+      "args": {
+        "prerequisites_only": true
+      },
+      "label": "setup: the Veilfall chain up to Nerissa (her fight itself is real)"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_veilfall_return_opened",
+        "scope": "world"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "nerissa_challenge",
+      "label": "the HOST challenges Captain Nerissa (production begin_trainer_battle)"
+    },
+    {
+      "peer": 0,
+      "action": "trainer_foe_numbers",
+      "args": {
+        "trainer_id": "water_trainer_nerissa",
+        "participants": 1
+      },
+      "label": "SOLO BASELINE: one participant -- Nerissa's first creature equals the solo build exactly (identity row)"
+    },
+    {
+      "peer": 1,
+      "action": "join_running_fight",
+      "args": {
+        "near": "nerissa",
+        "kind": "trainer"
+      },
+      "label": "the guest joins the host's fight in progress (production join_encounter)"
+    },
+    {
+      "peer": 0,
+      "action": "trainer_foe_numbers",
+      "args": {
+        "trainer_id": "water_trainer_nerissa",
+        "participants": 2
+      },
+      "label": "TWO PEERS, foe on field at the join: host's foe = solo x declared 2-participant row (atk/def x1.10, cooldown x0.85, HP/telegraph/power unchanged)"
+    },
+    {
+      "peer": 1,
+      "action": "trainer_foe_numbers",
+      "args": {
+        "trainer_id": "water_trainer_nerissa",
+        "participants": 2
+      },
+      "label": "TWO PEERS, guest's view of the same foe: species/level/max HP/moves equal the solo build"
+    },
+    {
+      "peer": "all",
+      "action": "hit_sample",
+      "args": {
+        "trainer_id": "water_trainer_nerissa",
+        "participants": 2,
+        "frames": 1800
+      },
+      "budget_frames": 2400,
+      "label": "DAMAGE PARITY, 30 s: every hit on the host's creature (local solo path) and on the guest's (host-rolled delivery) lies inside the solo formula range"
+    },
+    {
+      "peer": 0,
+      "action": "win_trainer_battle",
+      "args": {
+        "budget_frames": 6000,
+        "enemy_hp_ceiling": 20,
+        "stop_when_creatures_left": 2
+      },
+      "budget_frames": 6600,
+      "label": "fixture: first creature fought down (hp ceiling 20, disclosed); stop as her second is sent out at full health"
+    },
+    {
+      "peer": 0,
+      "action": "trainer_foe_numbers",
+      "args": {
+        "trainer_id": "water_trainer_nerissa",
+        "participants": 2
+      },
+      "label": "TWO PEERS, foe sent out after the join: host's second foe = solo x row"
+    },
+    {
+      "peer": 1,
+      "action": "trainer_foe_numbers",
+      "args": {
+        "trainer_id": "water_trainer_nerissa",
+        "participants": 2
+      },
+      "label": "TWO PEERS, guest's view of the second foe"
+    },
+    {
+      "peer": "all",
+      "action": "hit_sample",
+      "args": {
+        "trainer_id": "water_trainer_nerissa",
+        "participants": 2,
+        "frames": 1200
+      },
+      "budget_frames": 1800,
+      "label": "DAMAGE PARITY, second foe, 20 s"
+    },
+    {
+      "peer": 0,
+      "action": "win_trainer_battle",
+      "args": {
+        "budget_frames": 9000,
+        "enemy_hp_ceiling": 20
+      },
+      "budget_frames": 9600,
+      "label": "fixture: the rest of her team fought down"
+    },
+    {
+      "peer": "all",
+      "action": "wait_flag",
+      "args": {
+        "flag": "water_captain_nerissa_defeated",
+        "scope": "world"
+      },
+      "label": "the shared defeat reaches both peers"
+    }
+  ]
+}
