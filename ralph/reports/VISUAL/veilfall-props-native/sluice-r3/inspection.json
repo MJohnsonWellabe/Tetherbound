@@ -1,0 +1,26 @@
+{
+  "inspected": "All nine PNGs individually opened by Codex root",
+  "run_exit": 0,
+  "engine": "Windows Godot4.7 Compatibility NVIDIA GTX1060",
+  "dimensions": "1920x1080 every frame",
+  "collider_pre_post": [
+    167,
+    167
+  ],
+  "observations": {
+    "before/gate_intake": "Existing sparse vertical bars, block pump; party popover visible.",
+    "before/gate_return": "Existing sparse crossing bars, destination visible.",
+    "before/intake_gallery": "Existing bare gate rods from entrance.",
+    "after/gate_intake": "Dark iron/bronze, separate lower board courses, washer-seated bolts and segmented bars; top receiving assembly partly cropped at closer stand.",
+    "after/gate_return": "Closed full-width leaf visible over crossing; top assembly partly cropped.",
+    "after/intake_gallery": "Complete gate and receiving housing visible from entrance; metal white-export defect absent.",
+    "after-open/gate_intake": "Passage clears, fixed overhead housing stays.",
+    "after-open/gate_return": "Passage clears with remaining overhead housing; existing water planes/rails unchanged.",
+    "after-open/intake_gallery": "Both fixed receiving housings visible, no gate leaf blocking route."
+  },
+  "limits": [
+    "Static housing fill; actual winding animation is not supplied.",
+    "Same fixture and clock progression limitations as r2; native import fixed between r3 export-defect rejection and this run.",
+    "No criterion or ally/fight acceptance claim."
+  ]
+}

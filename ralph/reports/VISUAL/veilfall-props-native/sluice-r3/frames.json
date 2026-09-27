@@ -1,0 +1,91 @@
+{
+  "baseline": "e993b8977",
+  "colliders_after": 167,
+  "colliders_before": 146,
+  "colliders_post_install": 167,
+  "colliders_pre_install": 167,
+  "fixture": "Declared stand placements, granted five-member party; no summoned companion; closed gate baseline/after then genuine existing flag refresh for open state. No fight or route-completion claim.",
+  "frames": [
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (-0.0, 0.970296, 0.241922), Z: (0.0, 0.241922, -0.970296), O: (1799.961, 43.00857, 4155.864)]",
+      "file": "res://shots/veilfall-sluice-r3-fixed/before/gate_intake.png",
+      "player": "(1800.0, 40.00015, 4161.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (-0.0, 0.970296, 0.241922), Z: (0.0, 0.241922, -0.970296), O: (1800.0, 43.00788, 4201.954)]",
+      "file": "res://shots/veilfall-sluice-r3-fixed/before/gate_return.png",
+      "player": "(1800.0, 39.99984, 4207.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (-0.0, 0.990268, 0.139173), Z: (0.0, 0.139173, -0.990268), O: (1800.0, 42.41676, 4141.265)]",
+      "file": "res://shots/veilfall-sluice-r3-fixed/before/intake_gallery.png",
+      "player": "(1800.0, 40.00104, 4146.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (-0.0, 0.970296, 0.241922), Z: (0.0, 0.241922, -0.970296), O: (1800.0, 43.00895, 4155.954)]",
+      "file": "res://shots/veilfall-sluice-r3-fixed/after/gate_intake.png",
+      "player": "(1800.0, 40.00104, 4161.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (-0.0, 0.970296, 0.241922), Z: (0.0, 0.241922, -0.970296), O: (1800.0, 43.00788, 4201.954)]",
+      "file": "res://shots/veilfall-sluice-r3-fixed/after/gate_return.png",
+      "player": "(1800.0, 39.99984, 4207.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (-0.0, 0.990268, 0.139173), Z: (0.0, 0.139173, -0.990268), O: (1800.0, 42.41675, 4141.265)]",
+      "file": "res://shots/veilfall-sluice-r3-fixed/after/intake_gallery.png",
+      "player": "(1800.0, 40.00104, 4146.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (-0.0, 0.970296, 0.241922), Z: (0.0, 0.241922, -0.970296), O: (1800.0, 43.00895, 4155.954)]",
+      "file": "res://shots/veilfall-sluice-r3-fixed/after-open/gate_intake.png",
+      "player": "(1800.0, 40.00104, 4161.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (-0.0, 0.970296, 0.241922), Z: (0.0, 0.241922, -0.970296), O: (1800.0, 43.00776, 4201.954)]",
+      "file": "res://shots/veilfall-sluice-r3-fixed/after-open/gate_return.png",
+      "player": "(1800.0, 39.99984, 4207.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "camera": "[X: (-1.0, 0.0, -0.0), Y: (-0.0, 0.990268, 0.139173), Z: (0.0, 0.139173, -0.990268), O: (1800.0, 42.41675, 4141.265)]",
+      "file": "res://shots/veilfall-sluice-r3-fixed/after-open/intake_gallery.png",
+      "player": "(1800.0, 40.00104, 4146.0)",
+      "viewport": [
+        1920,
+        1080
+      ]
+    }
+  ]
+}
