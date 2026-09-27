@@ -61,6 +61,9 @@ var _save_path := ""
 ## worlds/ and characters/ halves, e.g. an earned-chain checkpoint), copied
 ## unmodified into the scratch slot directory. `_save_path` is its slot_1.json.
 var _save_dir := ""
+## `--probe-hotbar`: after load, press the knife's quick slot the way the Doss
+## gather does and report what the HUD saw; then quit. A diagnostic only.
+var _probe_hotbar := false
 var _receipt_save_dir := ""
 ## What the player looks at (the herd's nearest member for the herd visit).
 var _lure_body: Node3D = null
@@ -116,6 +119,8 @@ func _run() -> void:
 			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
 		elif a == "--act":
 			_act = true
+		elif a == "--probe-hotbar":
+			_probe_hotbar = true
 		elif a.begins_with("--capture-dir="):
 			_capture_dir = a.trim_prefix("--capture-dir=")
 	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall", "cart"] \
@@ -185,6 +190,9 @@ func _run() -> void:
 	# the result rather than assuming it: one press toggles.
 	# If the active member is fainted in the save, the recall key cannot bring it
 	# out; a player cycles to a standing member (Change Creature) first.
+	if _probe_hotbar:
+		await _run_hotbar_probe()
+		return
 	await _ensure_companion_out()
 	_receipt["companion_out_at_start"] = _director != null and _director.call("ally_body") != null
 
@@ -931,10 +939,20 @@ func _gather_for_doss() -> Dictionary:
 		var slot := int(_game.call("hotbar_slot_of", tool)) if not tool.is_empty() else -1
 		var drew := false
 		out["gathered"][item]["hotbar_slot"] = slot
-		if slot >= 0 and str(_game.get("equipped_tool")) != tool:
+		var hud := _world.get_node_or_null(^"PlaygroundHUD")
+		var tries_log: Array = []
+		for attempt in 3:
+			if slot < 0 or str(_game.get("equipped_tool")) == tool:
+				break
+			tries_log.append({"input_owner": str(INPUT_OWNER.current(self)),
+				"world_input_allowed": bool(hud.call("_world_input_allowed", false, true)) if hud != null else null,
+				"fighting": _manager != null and bool(_manager.call("is_fighting"))})
 			await _press_hud("hotbar_%d" % (slot + 1))
-			drew = str(_game.get("equipped_tool")) == tool
-			out["gathered"][item]["equipped_after_press"] = str(_game.get("equipped_tool"))
+			for i in 30:
+				await physics_frame
+		drew = str(_game.get("equipped_tool")) == tool
+		out["gathered"][item]["equip_tries"] = tries_log
+		out["gathered"][item]["equipped_after_press"] = str(_game.get("equipped_tool"))
 		out["gathered"][item]["tool"] = tool
 		out["gathered"][item]["tool_in_hand"] = str(_game.get("equipped_tool")) == tool
 		for tries in 3:
@@ -1232,6 +1250,27 @@ func _press(action: String) -> void:
 	Input.parse_input_event(up)
 	for i in 10:
 		await physics_frame
+
+
+func _run_hotbar_probe() -> void:
+	var hud := get_first_node_in_group("playground_hud")
+	if hud == null:
+		for n: Node in _world.find_children("*", "CanvasLayer", true, false):
+			if n.has_method("_read_hotbar_input"):
+				hud = n
+	var slot := int(_game.call("hotbar_slot_of", "knife"))
+	var report := {"slot": slot, "hud": str(hud.get_path()) if hud != null else "none",
+		"render_loop": RenderingServer.render_loop_enabled,
+		"input_owner": str(INPUT_OWNER.current(self)),
+		"world_input_allowed": bool(hud.call("_world_input_allowed", false, true)) if hud != null else null,
+		"equipped_before": str(_game.get("equipped_tool"))}
+	await _press_hud("hotbar_%d" % (slot + 1))
+	report["equipped_after_press_hud"] = str(_game.get("equipped_tool"))
+	RenderingServer.render_loop_enabled = true
+	await _press_hud("hotbar_%d" % (slot + 1))
+	report["equipped_after_second_press_render_on"] = str(_game.get("equipped_tool"))
+	print("[lure-walk] HOTBAR-PROBE %s" % JSON.stringify(report))
+	quit(0)
 
 
 ## A press read by a HUD's `_process` with `is_action_just_pressed` (the
