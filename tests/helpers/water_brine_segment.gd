@@ -7,6 +7,8 @@ extends RefCounted
 ## writes inventory/progression state.
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const PILOT := preload("res://tests/helpers/water_combat_pilot.gd")
+## Owns the shared move-keyed matchup rule and party_cycle press count.
+const SHELLWATCH := preload("res://tests/helpers/water_shellwatch_segment.gd")
 const REPAIR_FLAG := "water_dock_reedhaven_repaired"
 const TOVIN_ID := "water_trainer_tovin"
 const TOVIN_FLAG := "defeated_water_trainer_tovin"
@@ -75,6 +77,12 @@ func run() -> bool:
 		if not await _walk_to(spine[index], "Brine Steps spine point %d" % index):
 			return false
 	if not await _ensure_ally_deployed():
+		return false
+	# Tovin fields two water creatures. A ground lead (the earned belt's
+	# terrapup) lands 0.8x and needs ~160-180 s of paid play for 955 HP
+	# against the 180 s bound; lead with the party's best matchup through the
+	# ordinary party_cycle input, as Shellwatch does before Irva.
+	if not await _select_matchup_lead("water", "before Tovin"):
 		return false
 	if not await _fight_tovin():
 		return false
@@ -188,6 +196,28 @@ func _ensure_ally_deployed() -> bool:
 		str(_director.usable_ally_blocker()))
 
 
+func _select_matchup_lead(defender_type: String, label: String) -> bool:
+	var party: RefCounted = _game.local.party
+	var member: RefCounted = SHELLWATCH.matchup_member(party, defender_type)
+	if member == null:
+		return _fail("no available party member to lead " + label)
+	var presses: int = SHELLWATCH.recovery_cycle_count(party, member)
+	if presses < 0:
+		return _fail("matchup lead cannot be reached by party_cycle " + label)
+	for step in presses:
+		await _tap(&"party_cycle")
+	if party.active() != member:
+		return _fail("party_cycle did not select the matchup lead " + label)
+	for frame in 180:
+		if _director.ally_body() != null and _director.ally_instance() == member:
+			break
+		await _tree.physics_frame
+	if not await _ensure_ally_deployed():
+		return false
+	_note("%s matchup lead %s (%d party_cycle presses)" % [label, str(member.species_id), presses])
+	return true
+
+
 func _fight_tovin() -> bool:
 	var prompt: Node3D = _director.trainer_prompts.get(TOVIN_ID) as Node3D
 	if not await _activate(prompt, "Tovin challenge"):
@@ -211,6 +241,16 @@ func _fight_tovin() -> bool:
 		await _tree.physics_frame
 	_stop_combat_input()
 	if _director.trainer_battle_active():
+		# Diagnostic only. DRY RUNs 9/11 timed out here with nobody lost:
+		# a resisted (0.8x) ground lead simply needed ~175 s (see
+		# tests/probe_water_brine_tovin_fight.gd).
+		var stalled_ally: Node3D = _director.ally_body()
+		var stalled_enemy: Node3D = _manager.enemy_body()
+		print("WATER BRINE stall: ally=%s enemy=%s ally_hp=%s enemy_hp=%s" % [
+			stalled_ally.global_position if is_instance_valid(stalled_ally) else "none",
+			stalled_enemy.global_position if is_instance_valid(stalled_enemy) else "none",
+			str(_director.ally_instance().hp) if _director.ally_instance() != null else "?",
+			str(stalled_enemy.instance.hp) if is_instance_valid(stalled_enemy) else "?"])
 		return _fail("Tovin combat exceeded 180 seconds after opponents=%s" %
 			str(opponents.values()))
 	if opponents.size() != 2:

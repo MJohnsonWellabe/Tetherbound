@@ -24,7 +24,10 @@ extends "res://tests/helpers/cloudreach_witness_route.gd"
 ##     VOSS_PLANE_MARGIN_M past Voss's road point toward the summit, may be
 ##     recovered at most once (back to the overfly start), and no Voss-gated
 ##     progression flag may be set before Voss falls;
-##   * after the route's save/reload, no loaner species is in the saved party.
+##   * after the route's save/reload, no loaner species is in the saved party;
+##   * full route only: after the chapter completes and the disk reload runs,
+##     the ordinary double-jump deploys no flight and no carrier is eligible
+##     (the loaner ends at `mentor_loaner.ends_at_flag`).
 ##
 ## START STATE: `--from-save=res://tests/fixtures/earned_saves/c1_arrival` runs
 ## from the earned C1 handoff save. `--start=aerie` runs from the declared aerie
@@ -52,6 +55,8 @@ const VOSS_GATED_FLAGS: Array[String] = ["cloudreach_upper_anchors_disabled", "s
 var pre_voss_overfly: Dictionary = {}
 var start_had_loaner_species := false
 var trial_escape: Dictionary = {}
+var post_chapter_probe: Dictionary = {}
+var _post_chapter_running := false
 var _start_species_checked := false
 
 
@@ -307,7 +312,40 @@ func _wait_on_floor() -> void:
 		await _frames(1)
 
 
+## After the chapter completes and the route's disk reload has run, the
+## ordinary double-jump must no longer produce a loaner flight (fly_traversal.json
+## `mentor_loaner.ends_at_flag`). Runs once, then finishes normally.
+func _post_chapter_loaner_probe() -> void:
+	stage = "witness_post_chapter_loaner_probe"
+	await _wait_on_floor()
+	var previous_clock := await _normal_input_clock("post-chapter loaner probe")
+	await _tap("jump")
+	await _tap("jump")
+	await _frames(10)
+	await _restore_route_clock(previous_clock)
+	var mentor: Dictionary = fly.config.get("mentor_loaner", {}) if fly.get("config") is Dictionary else {}
+	post_chapter_probe = {"flying_after_double_jump": fly.is_flying(), "eligible_carrier": fly.eligible_creature() != null,
+		"loaner_used": fly.is_flying() and fly.last_flight_used_mentor_loaner(), "chapter_complete": _has("cloudreach_chapter_complete"),
+		"ends_at_flag": str(mentor.get("ends_at_flag", "")), "after_disk_reload": true, "party_size": game.party.members().size(),
+		"position": str(player.global_position)}
+	_log("witness_post_chapter_loaner_probe", post_chapter_probe)
+	if fly.is_flying():
+		for frame in 2400:
+			if not fly.is_flying(): break
+			_input("fly_descend", 1)
+			await _frames(1)
+		_release()
+	_require(bool(post_chapter_probe.chapter_complete) and not bool(post_chapter_probe.flying_after_double_jump) and not bool(post_chapter_probe.eligible_carrier),
+		"F06#3 after the chapter and a disk reload the loaner is no longer offered: " + str(post_chapter_probe))
+	_finish()
+
+
 func _finish() -> void:
+	if completed_route and not failed and leg.is_empty() and post_chapter_probe.is_empty():
+		if not _post_chapter_running:
+			_post_chapter_running = true
+			_post_chapter_loaner_probe()
+		return
 	if _finish_already_done(): return
 	if completed_route and not failed:
 		_require(violations.is_empty(), "F06#3 no loaner/gate/identity violation (%d)" % violations.size())
@@ -325,7 +363,7 @@ func _finish() -> void:
 	file.store_string(JSON.stringify({"criterion": "F06#3", "passed": completed_route and not failed,
 		"start_state": _start_state_label(), "leg": leg, "leg_persistence": leg_persistence, "skipped_steps": skipped_steps.size(),
 		"combat_mode": "live_input" if live_combat else "mechanics_only_test_lethal", "accelerated": accelerated,
-		"stage": stage, "sealed_attempt": sealed_attempt, "pre_voss_overfly": pre_voss_overfly, "trial_escape": trial_escape,
+		"stage": stage, "sealed_attempt": sealed_attempt, "pre_voss_overfly": pre_voss_overfly, "trial_escape": trial_escape, "post_chapter_probe": post_chapter_probe,
 		"counterweight_crown_seal": "active coverage: tests/test_cloudreach_counterweight_seal.gd (crown and stair boxes); watched per frame here", "loaner_species": loaner_species, "pre_trial_probe": pre_trial_probe, "launches": launches,
 		"flight_frames": flight_frames, "loaner_frames": loaner_frames, "owned_carrier_frames": owned_carrier_frames,
 		"initial_party_keys": initial_party_keys, "violations": violations, "final_party": game.party.members().map(func(m: RefCounted) -> String: return str(m.species_id)),
