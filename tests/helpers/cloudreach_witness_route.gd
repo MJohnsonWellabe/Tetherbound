@@ -633,7 +633,13 @@ func _exhausted_fall_attempt() -> bool:
 	if not await _deploy(): return false
 	exhausted_window = true
 	var reasons: Array[String] = []
-	var on_recovered := func(reason: String) -> void: reasons.append(reason)
+	# Where production recover_to_anchor put the trainer, read in its own
+	# signal: a later frame can already carry a companion's nudge (C1 run 9
+	# measured 1.06 m after 928 frames; the recovery itself was exact).
+	var recovered_at := [Vector3.INF]
+	var on_recovered := func(reason: String) -> void:
+		reasons.append(reason)
+		if recovered_at[0] == Vector3.INF: recovered_at[0] = player.global_position
 	fly.recovered.connect(on_recovered)
 	var lift_centre := Vector3(972, 0, 2975)
 	var exhausted_frame := -1
@@ -690,7 +696,8 @@ func _exhausted_fall_attempt() -> bool:
 	var drop := anchor.y - lowest_y
 	if not _require(drop >= drop_m - 1.0 and drop <= drop_m + 1.0, "Recovery fired at the configured drop below the anchor (%.3f m vs %.1f m)" % [drop, drop_m]): return false
 	if not _require(controller_anchor.is_finite() and controller_anchor.distance_to(anchor) < 0.5, "The recorded anchor is the controller's own safe anchor"): return false
-	if not _require(player.global_position.distance_to(controller_anchor) < 0.5 and player.is_on_floor() and not fly.is_flying() and str(exhausted_fall.get("floor_path", "")).contains("SkyShrineHeartstone"), "Recovered onto the verified shrine anchor floor"): return false
+	exhausted_fall["recovered_at"] = str(recovered_at[0])
+	if not _require((recovered_at[0] as Vector3).distance_to(controller_anchor) < 0.5 and player.is_on_floor() and not fly.is_flying() and str(exhausted_fall.get("floor_path", "")).contains("SkyShrineHeartstone"), "Recovered onto the verified shrine anchor floor"): return false
 	if not _require(_flag_snapshot() == flags_before and game.party.members().size() == expected_party_size, "Exhausted fall changed no flag and lost no creature"): return false
 	# Ordinary standing rest before the route's next flight (as the base _deploy does).
 	for tick in 60 * 120:
