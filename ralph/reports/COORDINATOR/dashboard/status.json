@@ -1,8 +1,8 @@
 {
- "updated": "2026-09-27 15:15 UTC",
+ "updated": "2026-09-27 15:55 UTC",
  "headline": [
-  "Criteria met: 78 of 101 (counted at merge). Batch 59 merged (F04#4, card M4); batch 60: F07#0 six Cloudreach activities.",
-  "PHASE 2 (owner): finish every Meadows and Cloudreach criterion. Six lanes: full Meadows run, full Cloudreach run, F04 readability, Cloudreach F07/F08#4, F01 walks, F03 lures. Lanes render locally (xvfb + opengl3)."
+  "Criteria met: 79 of 101 (counted at merge). Batches 59-60 merged; hotfix #380 fixed the band-baseline mirror that turned batch 59 CI red. Batch 61: F02#7 route spacing and A7 on one route.",
+  "PHASE 2, owner away: full runs for Meadows, Cloudreach, Stormwood and Tidewake, plus Meadows F04 readability, F01 walks and F03 lures; Codex on F10#3 and F08#4. Lanes render locally and hand mechanical work to lower-tier subagents."
  ],
  "batches": [
   {
@@ -236,14 +236,20 @@
   {
    "name": "Batch 59",
    "sha": "pending",
-   "state": "Merged",
+   "state": "Merged; main green after hotfix #380",
    "contents": "Meadows core F04#4 hit/avoid witness + fight-camera headroom; Meadows route M4 integrated run"
   },
   {
    "name": "Batch 60",
    "sha": "pending",
-   "state": "Auto-merge",
+   "state": "Merged; main green after hotfix #380",
    "contents": "Cloudreach F07#0 six activities (Waycamp bed rest, Circuit ground TM)"
+  },
+  {
+   "name": "Batch 61",
+   "sha": "pending",
+   "state": "Auto-merge",
+   "contents": "Meadows route F02#7 route spacing + A7 on one continuous route; device-profile ruling in STATE"
   }
  ],
  "lanes": [
