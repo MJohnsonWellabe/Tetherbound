@@ -59,7 +59,7 @@ extends SceneTree
 ## the upstream flags above plus the Shellwatch and Sluice departure facts, and
 ## one landing write after the Tidecoil win if stranded under Deep Watch's
 ## cliff (no owned swimmer yet). `--save-dir=user://<dir>` writes a production
-## checkpoint save after each chain (slot 20 + chain index);
+## checkpoint save after each chain (slot 2 of <save-dir>/ck_<chain index>/);
 ## `--resume-from=<chain>` loads the previous chain's checkpoint (DRY RUN);
 ## `--start-slot=<n>` starts from a save in --save-dir through Game.load_game.
 ## `-- --only=lantern,gull,cradle,garden,deep,lastlight` selects chains; the
@@ -100,7 +100,7 @@ var only: PackedStringArray = []
 ## rest panel. See CONTINUOUS MODE below.
 var continuous := false
 const CHAINS := ["lantern", "gull", "cradle", "garden", "deep", "lastlight"]
-const CHECKPOINT_SLOT := 20
+const CHECKPOINT_SLOT := 2
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 var save_dir := ""
 var resume_from := ""
@@ -129,7 +129,7 @@ func _run() -> void:
 	RELOAD.isolate(game, "tidewake_b_chain_route")
 	# Checkpoints (continuous debugging aid): `--save-dir=<dir>` keeps the
 	# production SaveGame in a stable directory; after each chain the run saves
-	# through Game.save_game(CHECKPOINT_SLOT + chain index). `--resume-from=<chain>`
+	# through Game.save_game(CHECKPOINT_SLOT) in <save-dir>/ck_<chain index>/. `--resume-from=<chain>`
 	# loads the checkpoint written after the previous chain through
 	# Game.load_game and runs from <chain> on. A resumed run is a DRY RUN: it is
 	# never the closing proof, which must be one uninterrupted run.
@@ -190,8 +190,11 @@ func _run() -> void:
 		if not _check(index > 0 and save_dir != "", "--resume-from needs a later chain and --save-dir"):
 			_finish()
 			return
-		var loaded := bool(game.load_game(CHECKPOINT_SLOT + index - 1))
-		print("DRY RUN: resumed from checkpoint slot %d (after %s) loaded=%s" % [CHECKPOINT_SLOT + index - 1, CHAINS[index - 1], loaded])
+		var base: RefCounted = game.save_system
+		game.save_system = SAVE_GAME.new(_checkpoint_dir(index - 1))
+		var loaded := bool(game.load_game(CHECKPOINT_SLOT))
+		game.save_system = base
+		print("DRY RUN: resumed from checkpoint %s (after %s) loaded=%s" % [_checkpoint_dir(index - 1), CHAINS[index - 1], loaded])
 		if not _check(loaded, "checkpoint loaded"):
 			_finish()
 			return
@@ -215,8 +218,13 @@ func _run() -> void:
 			"lastlight": summary.append(await _lastlight())
 		print(summary[-1])
 		if save_dir != "":
-			var saved := bool(game.save_game(CHECKPOINT_SLOT + index))
-			print("CHECKPOINT slot=%d after %s saved=%s at %s" % [CHECKPOINT_SLOT + index, chain, saved, player.global_position])
+			# SaveGame has 5 slots, so each checkpoint is slot CHECKPOINT_SLOT
+			# in its own directory <save-dir>/ck_<chain index>/.
+			var base: RefCounted = game.save_system
+			game.save_system = SAVE_GAME.new(_checkpoint_dir(index))
+			var saved := bool(game.save_game(CHECKPOINT_SLOT))
+			game.save_system = base
+			print("CHECKPOINT %s slot=%d after %s saved=%s at %s" % [_checkpoint_dir(index), CHECKPOINT_SLOT, chain, saved, player.global_position])
 	await _reload_leg()
 	_finish()
 
@@ -920,6 +928,10 @@ func _finish() -> void:
 # the real `move_forward` action with the camera yawed at each polyline vertex
 # in turn (rest shoals included), idling to full on any dry vertex, until the
 # far anchor. No position or stamina write.
+
+func _checkpoint_dir(index: int) -> String:
+	return "%s/ck_%d/" % [save_dir.trim_suffix("/"), index]
+
 
 func _route_island(anchor_id: String) -> String:
 	for anchor: Dictionary in config.anchors:
