@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-27 13:10 UTC",
+ "updated": "2026-09-27 13:15 UTC",
  "headline": [
-  "Criteria met: 70 of 101. Full CI 36319498130 (22/31 jobs green) covers F06#0, F02#5 (ledgers) and F13#0: 73 when it finishes (~13:25).",
+  "Criteria met: 73 of 101. Owner rule (13:15): a criterion counts when its batch merges with a passing independent re-check; full CI is a safety net. F06#0, F02#5 and F13#0 counted at merge.",
   "Next: F10#5 (re-check MET) lands after that CI. Stormwood-B pushed the fight-camera fix (95664d01), which unblocks F10#2, F14#0, F14#1 and the F04 Meadows fights. Every lane is on a coding task; renders go to the owner's desktop GPU via Codex.",
   "Rules: relaxed proofs with disclosed shortcuts; independent re-check per close; one render per lane; a green full CI on main flips a criterion."
  ],
