@@ -39,12 +39,12 @@ Out of scope for this pass: biomes five through eight, simulated continental rea
 
 ## 5. The four chapters
 
-| Chapter | Player experience | Culmination and consequence | Grounding at b8eda885 |
+| Chapter | Player experience | Culmination and consequence | Grounding (baseline b8eda885; STATE owns current status) |
 |---|---|---|---|
 | The Meadows | Leave a lived-in village, prove readiness, cross grassland, quarry and river, ride into high pasture and old growth, choose a team for the Hall. | Break relays, free captives, defeat Aldis, free Veridian, see healing and open Cloudreach. | **Partial:** continuous world, five band configs, 31 trainer rows, 365 wild rows, seven local objectives, stronghold/ceremony code. Accepted continuous first clear and distinct combat remain open. |
-| Cloudreach Cliffs | Follow wind roads through six vertical regions; learn safe landings, Fly and how height makes a route. | Veyra's summit/aviary sequence and Wings; next realm becomes reachable. After Veyra, the players free the captive Solmane, which volunteers to each finale participant like Meadows' Veridian (owner, 2026-09-27). | **Partial:** cloudreach configs, scene, 82 wild rows/seven trainer encounters, act/finale consumers. Flight/remount and full path/device proof remain open. |
+| Cloudreach Cliffs | Follow wind roads through six vertical regions; learn safe landings, Fly and how height makes a route. | Veyra's summit/aviary sequence and Wings; next realm becomes reachable. After Veyra, the players free the captive Solmane, which volunteers to each finale participant like Meadows' Veridian (owner, 2026-09-27). | **Partial:** cloudreach configs, scene, 82 wild rows/seven trainer encounters, act/finale consumers. Card C1 (earned flight route) and Solmane's per-participant offer are now proven; art, cadence and device proof remain open. |
 | The Stormwood | Travel beneath the Long Storm; read grounded clearings, rods and dangerous routes; restore the Stormglass circuit. | Dynamo and Stormheart, storm aftermath, Spark and Water passage. | **Partial:** stormwood data/world scripts, 26 trainer rows plus leader handling, 401 wild rows. Dynamo is instantiated; unbuilt was false. Earned accepted play is unproven. |
-| Tidewake | Read currents across 12 islands in six groups; ride swimmers, open shortcuts, choose sea and land approaches. | Venn, Tidecoil, Nerissa/Veilfall and Abyssal Guardian; restored currents/docks and regional network closure. | **Partial:** Water runtime integration, 24 trainers, 303 wild rows and five named spawns. **Not built:** final regional-resolution/homecoming sequence below. |
+| Tidewake | Read currents across 12 islands in six groups; ride swimmers, open shortcuts, choose sea and land approaches. | Venn, Tidecoil, Nerissa/Veilfall and Abyssal Guardian; restored currents/docks and regional network closure. | **Partial:** Water runtime integration, 24 trainers, 303 wild rows and five named spawns. The regional ending below (dock exchange, physical return, Grandpa homecoming, credits) is now built; card T3 passed. |
 
 Detailed maps, activities, counts and named fights are in WORLD and BOSSES. There is no mandatory 3–4-hour chapter or 12–16-hour campaign floor. Measure the earned route and preserve density, useful rewards and the ending; an eight-hour four-chapter clear can pass. Keep 6–10 meaningful optional activities per chapter and at least one per principal region. The old multiplication to 6–10 per subregion is explicitly reversed: it had no production budget and encourages shallow errands. Geography is not shrunk to meet duration.
 
@@ -54,7 +54,7 @@ Tidewake is the regional supply network's final relay, not the final legendary f
 
 Grandpa acknowledges the current five by their actual names, the starter if still owned, one bond/victory memory and chapter choices. Do not fabricate participation. A released starter is acknowledged without guilt or reversing the release. The scene ends with the team present and credits. Control returns to the completed world with outstanding optional activities available; no new compulsory quest, enemy scaling tier or fifth-chapter tease appears. WORLD specifies transactional flags/co-op playback; UX/AUDIO own presentation.
 
-This is a new design decision, not a recovered implemented feature. The archive contained no complete four-chapter resolution; ending at the Water exit was not a finished product.
+This was a new design decision, not a recovered feature; it is now built and card T3 has passed. The archive contained no complete four-chapter resolution; ending at the Water exit was not a finished product.
 
 ## 6. Systems earn their place
 

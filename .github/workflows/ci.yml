@@ -115,7 +115,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 env:
-  # Pinned deliberately. See docs/decisions/D01-godot-version-and-renderer.md.
+  # Pinned deliberately. See archive/docs/decisions/D01-godot-version-and-renderer.md.
   # Export templates must match the editor exactly or the export fails with a
   # message that does not obviously say "version mismatch".
   GODOT_VERSION: 4.7-stable
@@ -300,7 +300,7 @@ jobs:
   # nobody opened a shard log to find the one red line. A config edit
   # (`data/config/vegetation.json` or `data/config/grass_field.json`) landing
   # without its re-bake reintroduces the ~5-8 minute live-recompute stall
-  # `ralph/reports/OWNER-0902-LOAD-TIME.md` root-caused from an owner
+  # `archive/reports/OWNER-0902-LOAD-TIME.md` root-caused from an owner
   # playtest complaint, on every single New Game / load.
   #
   # This job runs the SAME assertion `scatter_bake.gd::is_fresh()` backs --
@@ -1071,7 +1071,7 @@ jobs:
       # the three HUD smokes that already exist
       # (hud_handheld_legibility, prompt_hotbar_dock, exploration_legend)
       # are in no job in this file, which is its own gap and is recorded
-      # in ralph/reports/hist-clusters-log.md rather than fixed here.
+      # in archive/reports/hist-clusters-log.md rather than fixed here.
       - name: Verify objective_hint_card
         if: ${{ !cancelled() }}
         env: { SMOKE: objective_hint_card, RETRIES: 1 }
@@ -1698,7 +1698,7 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
-      # GATE-D. smoke_art.gd was in NO ci job at all; docs/AGENT_WORKFLOW.md
+      # GATE-D. smoke_art.gd was in NO ci job at all; docs/WORKFLOW.md §5
       # requires it and nothing ran it. Kept here, now as its own leg.
       - name: Verify bramblebun_colourway_binding
         if: ${{ !cancelled() }}
@@ -2006,7 +2006,7 @@ jobs:
     #
     # A ninth step, trainer_no_usable_ally, was added south-bridge-fainted-
     # party (2026-09-01) alongside the eight above. The file existed on
-    # `main` already (FINDING-T2-STRANDING-2026-08-30.md's own regression
+    # `main` already (archive/reports/FINDING-T2-STRANDING-2026-08-30.md's own regression
     # proof) but was never wired into any CI job, so it never actually ran
     # after the day it was written. Its own world stand-up is the same
     # 300-frame boot smoke_trainer_battle.gd pays in verify-combat-shard
@@ -2152,7 +2152,7 @@ jobs:
       # "defeated" one, no fight starts, the trainer is not wrongly recorded
       # as beaten, and healing the ally (the same fainted -> false, hp ->
       # max_hp a creature bed's own rest completes, per
-      # FINDING-T2-STRANDING-2026-08-30.md) restores the ordinary challenge
+      # archive/reports/FINDING-T2-STRANDING-2026-08-30.md) restores the ordinary challenge
       # on the very same trainer. This file existed on `main` already but
       # was never in any CI job, so it never ran after the day it proved the
       # fix -- this wires it in rather than writing a second test.
@@ -2229,7 +2229,7 @@ jobs:
     #
     # A ninth step, trainer_no_usable_ally, was added south-bridge-fainted-
     # party (2026-09-01) alongside the eight above. The file existed on
-    # `main` already (FINDING-T2-STRANDING-2026-08-30.md's own regression
+    # `main` already (archive/reports/FINDING-T2-STRANDING-2026-08-30.md's own regression
     # proof) but was never wired into any CI job, so it never actually ran
     # after the day it was written. Its own world stand-up is the same
     # 300-frame boot smoke_trainer_battle.gd pays in verify-combat-shard
@@ -2310,7 +2310,7 @@ jobs:
   # at all -- not even a known-red one -- which is exactly how two of
   # `gate_b_tail_segment.gd`'s own assertions sat failing against label
   # strings that had never existed in `data/progression/objectives.json`:
-  # nothing was watching, so nothing noticed (`docs/CURRENT_STATE.md` §4).
+  # nothing was watching, so nothing noticed (`archive/docs/CURRENT_STATE.md` §4).
   #
   # The file's default (no flag) run now stops after tournament readiness --
   # the opening, the road gate, the village visit for tools and tournament
@@ -2352,7 +2352,7 @@ jobs:
             !/assets_raw/
             !/archive/
       - uses: ./.github/actions/setup-godot
-      # RETRIES: 2, not 1. `docs/CURRENT_STATE.md` §3 already tracks a real,
+      # RETRIES: 2, not 1. `archive/docs/CURRENT_STATE.md` §3 already tracks a real,
       # open P1 here: the tutorial catch's clear-shot-to-target search is
       # unstable across KO/re-engage rounds inside this same opening drive
       # (verified locally 2026-09-03 -- one of two runs on an unrelated commit
@@ -2435,7 +2435,7 @@ jobs:
   # `stick_navigator.gd`'s wall-hugging measures progress as straight-line
   # closing distance on a target 114m away, which a perpendicular slide barely
   # moves, so it re-triggers short detours that flip side almost every attempt
-  # instead of clearing the corner. See `docs/CURRENT_STATE.md` for the full
+  # instead of clearing the corner. See `archive/docs/CURRENT_STATE.md` for the full
   # numbers. Fixing this is out of this job's scope either way: it is
   # `stick_navigator.gd`'s own corner-following (test harness) or the gather
   # route's authoring (GATHER-ROUTE lane), never `data/config/vegetation.json`
@@ -2474,7 +2474,7 @@ jobs:
           godot --headless --path . --script tests/smoke_gate_b_continuous.gd -- --gate-b-full-chain
 
   # Stage B lane 0.E — the named fence
-  # `docs/specs/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` Wave 1 row 1.B refers to.
+  # `archive/docs/specs-2026-09-19/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` Wave 1 row 1.B refers to.
   # This job runs nothing new: it is a checkpoint that every job the plan
   # calls "the existing 46 CI smokes" (the six verify-*-shard jobs) plus
   # verify-gate-b-core actually ran and passed before a Wave 1 state-seam
@@ -2483,7 +2483,7 @@ jobs:
   # six shard jobs by hand every time, and so a future job rename or an
   # accidentally-dropped `needs:` entry is a visible CI failure instead of a
   # silent gap in the fence.
-  # Stage B Wave 0 lane 0.F. docs/specs/MP_NET_HARNESS_CONTRACT.md §10: runs
+  # Stage B Wave 0 lane 0.F. archive/docs/specs-2026-09-19/MP_NET_HARNESS_CONTRACT.md §10: runs
   # every tests/smoke_net_*.gd whose header declares `# peers: 2` through
   # tools/net/run_net_smoke.sh -- two real, isolated headless Godot processes
   # per smoke, coordinated over a TCP control channel
@@ -2491,7 +2491,7 @@ jobs:
   # XDG_DATA_HOME. `# peers: 3`/`# peers: 4` smokes are nightly/owner-kit only
   # (`verify-multiplayer-wide`, not created by this lane) and do not run here.
   # RETRIES: 1 -- a net smoke that only passes on retry is a finding, same
-  # rule AGENT_WORKFLOW.md §5 already holds every other smoke to.
+  # rule docs/WORKFLOW.md §5 already holds every other smoke to.
   # SPLIT 2026-09-06 (owner direction): this used to be verify-multiplayer-shard
   # itself, run once as a plain job. It was 46 minutes on run 34049435929
   # because ~29 two-process net smokes ran SEQUENTIALLY in that one job -- the

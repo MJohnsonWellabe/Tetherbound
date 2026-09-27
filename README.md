@@ -39,7 +39,8 @@ godot --headless --path . --script tests/smoke_opening.gd      # one smoke test
 ## Working on the project (humans and agents)
 
 **Start with `AGENTS.md` (identical to `CLAUDE.md`), then `docs/STATE.md`.**
-There are five live documents and only five. `archive/` is history and is not a
+The live set is `AGENTS.md` = `CLAUDE.md`, seven documents in `docs/` and the ten
+design specs in `docs/design/` (WORKFLOW §11). `archive/` is history and is not a
 starting point.
 
 | Document | Purpose |
@@ -50,21 +51,22 @@ starting point.
 | `docs/ACCEPTANCE.md` | What "done" looks like — visual bar, content density, combat, reliability |
 | `docs/WORKFLOW.md` | How work is briefed, tested, rendered, landed, and when to stop |
 | `docs/TECHNICAL.md` | Engine, structure, systems map, pipelines, CI |
+| `docs/PRODUCT.md`, `docs/ROADMAP.md` | Scope, audience and cuts; feature rows F01–F15 and order |
+| `docs/design/*.md` | The ten owning design specs (combat, creatures, bosses, world, systems, progression, UX, multiplayer, art, audio) |
 
 Do not create new dated documents. Status goes in `docs/STATE.md`, updated in
 place; evidence artifacts go in `ralph/reports/<LANE>/`.
 
 ## Scope
 
-Four chapters: the Meadows, Cloudreach Cliffs, the Stormwood, and Tidewake. The
-Meadows is the current priority and the proof of the whole shape; Cloudreach runs
-a scoped visual lane beside it. See `docs/STATE.md` for what is actually being
-worked right now.
+Four chapters: the Meadows, Cloudreach Cliffs, the Stormwood, and Tidewake, ending
+with the Tidewake regional victory and homecoming. See `docs/STATE.md` for current
+status and the pickup list for unfinished work.
 
 ## Owner playtesting
 
 Automated evidence is required but real-device play remains the most valuable signal.
 Useful feedback is experiential and specific: "input froze after leaving this menu",
 "this road has too much empty running", "I do not understand why I am going here", "I
-never need to stop and rest". Record it in `docs/STATE.md` §6; it outranks every
+never need to stop and rest". Record it in `docs/STATE.md` (owner direction section); it outranks every
 other document for what it covers and reopens anything a ledger says is fixed.
