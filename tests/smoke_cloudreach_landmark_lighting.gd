@@ -45,12 +45,32 @@ func _run() -> void:
 			var support := BeaconSupport.new()
 			support.name = "OpenWindscarBeacon"
 			site.add_child(support)
+			var signal_node := load("res://assets/props/built/torch_prop.tscn").instantiate() as Node3D
+			signal_node.name = "WindscarSignalFlame"
+			signal_node.scale = Vector3.ONE * 2.0
+			support.add_child(signal_node)
+			var signal_light := OmniLight3D.new()
+			signal_light.name = "WindscarSignalLight"
+			signal_light.light_energy = 1.45
+			signal_light.omni_range = 10.0
+			support.add_child(signal_light)
 	var controller := LIGHTING.new()
 	world.add_child(controller)
 	controller.build(world)
 	var lights := world.find_children("ArchitecturalLight", "OmniLight3D", true, false)
 	_check(lights.size() == 10, "all configured physical lamps must build")
-	_check(world.find_children("*", "OmniLight3D", true, false).size() == 10, "aviary accents must reuse existing lights, not add four more")
+	_check(world.find_children("*", "OmniLight3D", true, false).size() == 11, "aviary accents and beacon signal must reuse existing lights")
+	var signal_light := landmarks.get_node("WindscarBeacon/OpenWindscarBeacon/WindscarSignalLight") as OmniLight3D
+	var signal_node := landmarks.get_node("WindscarBeacon/OpenWindscarBeacon/WindscarSignalFlame") as Node3D
+	_check(signal_light.global_position.is_equal_approx(signal_node.to_global(signal_node.call("flame_local_position"))), "signal light must coincide with its visible flame")
+	var control_torch := load("res://assets/props/built/torch_prop.tscn").instantiate() as Node3D
+	var control_flame := control_torch.get_node("FlameOuter") as MeshInstance3D
+	var beacon_flame := signal_node.get_node("FlameOuter") as MeshInstance3D
+	_check((control_flame.mesh as QuadMesh).size.is_equal_approx(Vector2.ONE * 0.22), "other torch geometry must retain handheld size")
+	_check((beacon_flame.mesh as QuadMesh).size.is_equal_approx(Vector2.ONE * 0.88), "beacon halo mesh must be enlarged locally")
+	_check(not (control_flame.material_override as StandardMaterial3D).billboard_keep_scale, "other torch materials must remain unchanged")
+	_check((beacon_flame.material_override as StandardMaterial3D).billboard_keep_scale, "beacon billboard must retain parent scale")
+	control_torch.free()
 	_check(world.find_children("*", "CollisionObject3D", true, false).is_empty(), "presentation must not add collision")
 	for light: OmniLight3D in lights:
 		_check(is_zero_approx(light.light_energy), "daylight must switch extra light energy off")
@@ -62,12 +82,14 @@ func _run() -> void:
 	await process_frame
 	for light: OmniLight3D in lights:
 		_check(light.light_energy >= 3.0, "night lighting must follow clock even while paused")
+	_check(is_equal_approx(signal_light.light_energy, 5.0), "signal night energy must follow paused clock")
 	clock.current_hour = 10.0
 	await process_frame
 	await process_frame
 	for light: OmniLight3D in lights:
 		_check(is_zero_approx(light.light_energy), "return to day must clear night light")
 	paused = false
+	_check(is_equal_approx(signal_light.light_energy, 1.45) and is_equal_approx(signal_light.omni_range, 10.0), "signal daylight energy/range must be restored")
 	for lamp: Node3D in landmarks.get_node("WindscarBeacon").get_children():
 		if str(lamp.name).begins_with("ArchitecturalLantern"):
 			_check(is_equal_approx(lamp.position.y, 9.0), "beacon mounts must follow terrain-fit base plus height")

@@ -7,6 +7,7 @@ var _lamps: Array[Dictionary] = []
 var _clock: Node
 var _spec: Dictionary
 var _last_weight := -1.0
+var _signals: Array[Dictionary] = []
 
 func build(world: Node3D) -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -17,6 +18,8 @@ func build(world: Node3D) -> void:
 		if target == null:
 			push_error("Missing architectural lamp landmark: " + str(site.id))
 			continue
+		if site.has("signal"):
+			_configure_signal(target, site.signal)
 		var base_y := 0.0
 		if site.has("frame_base_node"):
 			var support := target.get_node(NodePath(str(site.frame_base_node)))
@@ -36,7 +39,7 @@ func build(world: Node3D) -> void:
 			lamp.rotation.y = deg_to_rad(float(fixture.get("yaw", 0.0)))
 			var model := LANTERN.instantiate() as Node3D
 			var bounds: AABB = BOUNDS.measure(model)
-			var height := float(site.get("height_m", 1.8))
+			var height := float(fixture.get("height_m", site.get("height_m", 1.8)))
 			var scale_factor := height / maxf(bounds.size.y, 0.01)
 			model.scale = Vector3.ONE * scale_factor
 			model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * scale_factor
@@ -66,11 +69,28 @@ func build(world: Node3D) -> void:
 			light.name = "ArchitecturalLight"
 			light.position = core.position + Vector3.BACK * float(site.get("light_offset_m", 0.4))
 			light.light_color = colour
-			light.omni_range = float(site.range_m)
+			light.omni_range = float(fixture.get("range_m", site.range_m))
 			light.omni_attenuation = float(site.get("attenuation", 1.0))
 			light.shadow_enabled = false
-			_lamps.append({"light":light,"material":glow,"energy":float(site.energy)})
+			_lamps.append({"light":light,"material":glow,"energy":float(fixture.get("energy", site.energy))})
 	_process(0.0)
+
+func _configure_signal(target: Node3D, spec: Dictionary) -> void:
+	var signal_node := target.get_node(NodePath(str(spec.node))) as Node3D
+	var light := target.get_node(NodePath(str(spec.light))) as OmniLight3D
+	# Only this landmark's instantiated flame geometry changes. The carried torch
+	# scene, particle material and all shared mesh/material resources stay intact.
+	for entry: Array in [["FlameOuter", "outer_scale"], ["FlameCore", "core_scale"]]:
+		var flame := signal_node.get_node(NodePath(entry[0])) as MeshInstance3D
+		var quad := flame.mesh.duplicate() as QuadMesh
+		quad.size *= float(spec[entry[1]])
+		flame.mesh = quad
+		var material := flame.material_override.duplicate() as StandardMaterial3D
+		material.billboard_keep_scale = true
+		flame.material_override = material
+	light.global_position = signal_node.to_global(signal_node.call("flame_local_position"))
+	_signals.append({"light":light,"day_energy":light.light_energy,"day_range":light.omni_range,
+		"night_energy":float(spec.energy),"night_range":float(spec.range_m)})
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(_clock): return
@@ -81,6 +101,10 @@ func _process(_delta: float) -> void:
 	for lamp: Dictionary in _lamps:
 		(lamp.light as OmniLight3D).light_energy = float(lamp.energy) * weight
 		(lamp.material as StandardMaterial3D).emission_energy_multiplier = 2.0 * weight
+	for signal_spec: Dictionary in _signals:
+		var light := signal_spec.light as OmniLight3D
+		light.light_energy = lerpf(float(signal_spec.day_energy), float(signal_spec.night_energy), weight)
+		light.omni_range = lerpf(float(signal_spec.day_range), float(signal_spec.night_range), weight)
 
 static func night_weight(hour: float, spec: Dictionary) -> float:
 	var dawn: Array = spec.get("dawn_hours", [5.0, 7.0])

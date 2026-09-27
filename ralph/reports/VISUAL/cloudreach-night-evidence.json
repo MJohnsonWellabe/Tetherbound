@@ -1,0 +1,1752 @@
+{
+  "status": "DRY RUN \u2014 does not count",
+  "baseline_commit": "8bd3a6462479afe316fc0d5a48bc264174c7a93d",
+  "renderer": "Godot 4.7 5b4e0cb0f / Compatibility / GTX 1060 3GB",
+  "runs": {
+    "baseline": {
+      "frames": [
+        {
+          "camera": [
+            -424.2,
+            349.3,
+            1387.3
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -427.6,
+            346.4,
+            1383.5
+          ],
+          "file": "001_cloudreach_place_three_bells_bridge_day.png",
+          "kind": "frame",
+          "label": "Three Bells Bridge",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_three_bells_bridge",
+          "target": [
+            -485.0,
+            338.0,
+            1320.0
+          ],
+          "target_dist_m": 85.6,
+          "time": "day",
+          "why": "road approach 86 m, clear sightline (candidate 1)",
+          "yaw_deg": 42.1,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "517e167548203029f83b698aa13e0952dd4d04284b9d05214a43343f155c74f9"
+        },
+        {
+          "camera": [
+            -424.2,
+            349.3,
+            1387.3
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -427.6,
+            346.4,
+            1383.5
+          ],
+          "file": "002_cloudreach_place_three_bells_bridge_night.png",
+          "kind": "frame",
+          "label": "Three Bells Bridge",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_three_bells_bridge",
+          "target": [
+            -485.0,
+            338.0,
+            1320.0
+          ],
+          "target_dist_m": 85.6,
+          "time": "night",
+          "why": "road approach 86 m, clear sightline (candidate 1)",
+          "yaw_deg": 42.1,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "397b0f16172188496e754a30720426930f87398acfe08d5cabed703722d981bf"
+        },
+        {
+          "camera": [
+            -286.6,
+            508.8,
+            2772.5
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -285.2,
+            505.9,
+            2767.6
+          ],
+          "file": "003_cloudreach_place_windscar_beacon_day.png",
+          "kind": "frame",
+          "label": "Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_windscar_beacon",
+          "target": [
+            -260.0,
+            500.0,
+            2680.0
+          ],
+          "target_dist_m": 91.1,
+          "time": "day",
+          "why": "road approach 91 m, clear sightline (candidate 1)",
+          "yaw_deg": -16.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "acecec06c39d5def65c5422acc862a85a9033f4411a87841604a6c97167dd7f4"
+        },
+        {
+          "camera": [
+            -286.6,
+            508.8,
+            2772.5
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -285.2,
+            505.9,
+            2767.6
+          ],
+          "file": "004_cloudreach_place_windscar_beacon_night.png",
+          "kind": "frame",
+          "label": "Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_windscar_beacon",
+          "target": [
+            -260.0,
+            500.0,
+            2680.0
+          ],
+          "target_dist_m": 91.1,
+          "time": "night",
+          "why": "road approach 91 m, clear sightline (candidate 1)",
+          "yaw_deg": -16.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "5e29af39accbd926ac332c4ff734eaea3137b49a836aad2a1a76accccea8427d"
+        },
+        {
+          "camera": [
+            1110.0,
+            1022.9,
+            2824.9
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1110.0,
+            1020.0,
+            2830.0
+          ],
+          "file": "005_cloudreach_place_sky_shrine_heartstone_day.png",
+          "kind": "frame",
+          "label": "Sky Shrine",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_sky_shrine_heartstone",
+          "target": [
+            1110.0,
+            1050.0,
+            2940.0
+          ],
+          "target_dist_m": 110.0,
+          "time": "day",
+          "why": "OFF-ROAD ring stand (no clear road approach) 110 m, clear sightline (candidate 22)",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "a2ffaa7d83f1a590efd02fcabc065977ac51cd628225ddc7f7ad84caa214d75f"
+        },
+        {
+          "camera": [
+            1110.0,
+            1022.9,
+            2824.9
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1110.0,
+            1020.0,
+            2830.0
+          ],
+          "file": "006_cloudreach_place_sky_shrine_heartstone_night.png",
+          "kind": "frame",
+          "label": "Sky Shrine",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_sky_shrine_heartstone",
+          "target": [
+            1110.0,
+            1050.0,
+            2940.0
+          ],
+          "target_dist_m": 110.0,
+          "time": "night",
+          "why": "OFF-ROAD ring stand (no clear road approach) 110 m, clear sightline (candidate 22)",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "331eac35efe783946fdcbd4ea4a6e94366f3e1f7f09a2db2b5769efefd49f3d4"
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "007_cloudreach_place_cliffhold_settlement_day.png",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "day",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "57886144d2d117c26567bf3173524c8b79a905e29e457769dd2928e36be7742b"
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "008_cloudreach_place_cliffhold_settlement_night.png",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "night",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "19448861b5b9d2dbf41dde439ea9555f42391d5f565006ddb0ec9822b43a8a68"
+        },
+        {
+          "camera": [
+            187.2,
+            1172.2,
+            5385.3
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            182.5,
+            1169.4,
+            5383.4
+          ],
+          "file": "009_cloudreach_place_summit_eyrie_stronghold_day.png",
+          "kind": "frame",
+          "label": "Summit Eyrie",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_summit_eyrie_stronghold",
+          "target": [
+            100.0,
+            1160.0,
+            5350.0
+          ],
+          "target_dist_m": 89.0,
+          "time": "day",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 68.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "7b53f7d8008b53d389b437483ba1e18cf85f8e06b40cdfacc6e74ebd630e4f4a"
+        },
+        {
+          "camera": [
+            187.2,
+            1172.2,
+            5385.3
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            182.5,
+            1169.4,
+            5383.4
+          ],
+          "file": "010_cloudreach_place_summit_eyrie_stronghold_night.png",
+          "kind": "frame",
+          "label": "Summit Eyrie",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_summit_eyrie_stronghold",
+          "target": [
+            100.0,
+            1160.0,
+            5350.0
+          ],
+          "target_dist_m": 89.0,
+          "time": "night",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 68.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "5dc3bcdf084b238c8746052e73f0f3f0dbcb82269e7e176859ceecdb445c4b68"
+        },
+        {
+          "camera": [
+            100.0,
+            1161.3,
+            5290.8
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.0,
+            5296.0
+          ],
+          "file": "011_cloudreach_place_aviary_entrance_day.png",
+          "kind": "frame",
+          "label": "place_aviary_entrance",
+          "pitch_deg": 5.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_entrance",
+          "target": [
+            100.0,
+            1175.0,
+            5350.0
+          ],
+          "target_dist_m": 54.0,
+          "time": "day",
+          "why": "Disclosed summit diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "43bf41f3736197ba8f16f1d82f7c9f0733c6fbd93574eb5e4fde829f1317e284"
+        },
+        {
+          "camera": [
+            100.0,
+            1161.3,
+            5290.8
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.0,
+            5296.0
+          ],
+          "file": "012_cloudreach_place_aviary_entrance_night.png",
+          "kind": "frame",
+          "label": "place_aviary_entrance",
+          "pitch_deg": 5.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_entrance",
+          "target": [
+            100.0,
+            1175.0,
+            5350.0
+          ],
+          "target_dist_m": 54.0,
+          "time": "night",
+          "why": "Disclosed summit diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "04267552ae619dd5986ed8959eedc76e13ea04a2e3d7281e3a957bf2bca907b4"
+        },
+        {
+          "camera": [
+            100.0,
+            1160.7,
+            5325.0
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.2,
+            5330.0
+          ],
+          "file": "013_cloudreach_place_aviary_interior_day.png",
+          "kind": "frame",
+          "label": "place_aviary_interior",
+          "pitch_deg": 14.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_interior",
+          "target": [
+            100.0,
+            1170.0,
+            5364.0
+          ],
+          "target_dist_m": 34.0,
+          "time": "day",
+          "why": "Disclosed summit diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "d4cf5dad698db1ee14671a58c7aed98749edb57a3a457cdec4d849c945c16e63"
+        },
+        {
+          "camera": [
+            100.0,
+            1160.7,
+            5325.0
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.2,
+            5330.0
+          ],
+          "file": "014_cloudreach_place_aviary_interior_night.png",
+          "kind": "frame",
+          "label": "place_aviary_interior",
+          "pitch_deg": 14.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_interior",
+          "target": [
+            100.0,
+            1170.0,
+            5364.0
+          ],
+          "target_dist_m": 34.0,
+          "time": "night",
+          "why": "Disclosed summit diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "170bae512417a7e050efdc780c9e785f01a467753e526e346e4046d10bdf98a3"
+        }
+      ],
+      "energy_receipts": [],
+      "summary": [
+        {
+          "kind": "summary",
+          "text": "visual audit region/cloudreach: 14 frames, 0 skips"
+        }
+      ],
+      "stderr_sha256": "13a18da5bc7866292fe7ff276a09eb6f0928a5ead6f00eca366afd5909a0316c"
+    },
+    "mounted": {
+      "frames": [
+        {
+          "camera": [
+            -424.2,
+            349.3,
+            1387.3
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -427.6,
+            346.4,
+            1383.5
+          ],
+          "file": "001_cloudreach_place_three_bells_bridge_day.png",
+          "kind": "frame",
+          "label": "Three Bells Bridge",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_three_bells_bridge",
+          "target": [
+            -485.0,
+            338.0,
+            1320.0
+          ],
+          "target_dist_m": 85.6,
+          "time": "day",
+          "why": "road approach 86 m, clear sightline (candidate 1)",
+          "yaw_deg": 42.1,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "517e167548203029f83b698aa13e0952dd4d04284b9d05214a43343f155c74f9"
+        },
+        {
+          "camera": [
+            -424.2,
+            349.3,
+            1387.3
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -427.6,
+            346.4,
+            1383.5
+          ],
+          "file": "002_cloudreach_place_three_bells_bridge_night.png",
+          "kind": "frame",
+          "label": "Three Bells Bridge",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_three_bells_bridge",
+          "target": [
+            -485.0,
+            338.0,
+            1320.0
+          ],
+          "target_dist_m": 85.6,
+          "time": "night",
+          "why": "road approach 86 m, clear sightline (candidate 1)",
+          "yaw_deg": 42.1,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "397b0f16172188496e754a30720426930f87398acfe08d5cabed703722d981bf"
+        },
+        {
+          "camera": [
+            -286.6,
+            508.8,
+            2772.5
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -285.2,
+            505.9,
+            2767.6
+          ],
+          "file": "003_cloudreach_place_windscar_beacon_day.png",
+          "kind": "frame",
+          "label": "Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_windscar_beacon",
+          "target": [
+            -260.0,
+            500.0,
+            2680.0
+          ],
+          "target_dist_m": 91.1,
+          "time": "day",
+          "why": "road approach 91 m, clear sightline (candidate 1)",
+          "yaw_deg": -16.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "2549e12787cc537315c3527254331670357c01aefb7a08e867043867fbc7b190"
+        },
+        {
+          "camera": [
+            -286.6,
+            508.8,
+            2772.5
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -285.2,
+            505.9,
+            2767.6
+          ],
+          "file": "004_cloudreach_place_windscar_beacon_night.png",
+          "kind": "frame",
+          "label": "Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_windscar_beacon",
+          "target": [
+            -260.0,
+            500.0,
+            2680.0
+          ],
+          "target_dist_m": 91.1,
+          "time": "night",
+          "why": "road approach 91 m, clear sightline (candidate 1)",
+          "yaw_deg": -16.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "fc0116e81d2c4b875de7dee41ade99b48c4916bb8df371805afd08490e0472f6"
+        },
+        {
+          "camera": [
+            1110.0,
+            1022.9,
+            2824.9
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1110.0,
+            1020.0,
+            2830.0
+          ],
+          "file": "005_cloudreach_place_sky_shrine_heartstone_day.png",
+          "kind": "frame",
+          "label": "Sky Shrine",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_sky_shrine_heartstone",
+          "target": [
+            1110.0,
+            1050.0,
+            2940.0
+          ],
+          "target_dist_m": 110.0,
+          "time": "day",
+          "why": "OFF-ROAD ring stand (no clear road approach) 110 m, clear sightline (candidate 22)",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "a2ffaa7d83f1a590efd02fcabc065977ac51cd628225ddc7f7ad84caa214d75f"
+        },
+        {
+          "camera": [
+            1110.0,
+            1022.9,
+            2824.9
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1110.0,
+            1020.0,
+            2830.0
+          ],
+          "file": "006_cloudreach_place_sky_shrine_heartstone_night.png",
+          "kind": "frame",
+          "label": "Sky Shrine",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_sky_shrine_heartstone",
+          "target": [
+            1110.0,
+            1050.0,
+            2940.0
+          ],
+          "target_dist_m": 110.0,
+          "time": "night",
+          "why": "OFF-ROAD ring stand (no clear road approach) 110 m, clear sightline (candidate 22)",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "331eac35efe783946fdcbd4ea4a6e94366f3e1f7f09a2db2b5769efefd49f3d4"
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "007_cloudreach_place_cliffhold_settlement_day.png",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "day",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "ab26839e708ec784e478e6d3c8eed5f9cb29933d8bdcc29f9a9a771fb77be910"
+        },
+        {
+          "camera": [
+            -262.8,
+            840.8,
+            4023.1
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -267.0,
+            838.0,
+            4020.3
+          ],
+          "file": "008_cloudreach_place_cliffhold_settlement_night.png",
+          "kind": "frame",
+          "label": "Cliffhold",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_cliffhold_settlement",
+          "target": [
+            -340.0,
+            830.0,
+            3970.0
+          ],
+          "target_dist_m": 88.6,
+          "time": "night",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 55.5,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "603a9265c8efe4405f98d51b2d5ca93e34dcc39800a05d4e0da214e57b29cd45"
+        },
+        {
+          "camera": [
+            187.2,
+            1172.2,
+            5385.3
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            182.5,
+            1169.4,
+            5383.4
+          ],
+          "file": "009_cloudreach_place_summit_eyrie_stronghold_day.png",
+          "kind": "frame",
+          "label": "Summit Eyrie",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_summit_eyrie_stronghold",
+          "target": [
+            100.0,
+            1160.0,
+            5350.0
+          ],
+          "target_dist_m": 89.0,
+          "time": "day",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 68.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "7e82fb95b8b03284674eea8595ae16ffa002c998a1e4cb26f10a9aa1ed170fa4"
+        },
+        {
+          "camera": [
+            187.2,
+            1172.2,
+            5385.3
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            182.5,
+            1169.4,
+            5383.4
+          ],
+          "file": "010_cloudreach_place_summit_eyrie_stronghold_night.png",
+          "kind": "frame",
+          "label": "Summit Eyrie",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_summit_eyrie_stronghold",
+          "target": [
+            100.0,
+            1160.0,
+            5350.0
+          ],
+          "target_dist_m": 89.0,
+          "time": "night",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 68.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "e7785a9961057301649f038a8cbf0bf9eabf3ff9904df4188c81654fddb0fd55"
+        },
+        {
+          "camera": [
+            100.0,
+            1161.3,
+            5290.8
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.0,
+            5296.0
+          ],
+          "file": "011_cloudreach_place_aviary_entrance_day.png",
+          "kind": "frame",
+          "label": "place_aviary_entrance",
+          "pitch_deg": 5.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_entrance",
+          "target": [
+            100.0,
+            1175.0,
+            5350.0
+          ],
+          "target_dist_m": 54.0,
+          "time": "day",
+          "why": "Disclosed landmark diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "a02911fff433a26ae616597748fd20ac4dd4c71cac9f6788f43e674e04b6639e"
+        },
+        {
+          "camera": [
+            100.0,
+            1161.3,
+            5290.8
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.0,
+            5296.0
+          ],
+          "file": "012_cloudreach_place_aviary_entrance_night.png",
+          "kind": "frame",
+          "label": "place_aviary_entrance",
+          "pitch_deg": 5.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_entrance",
+          "target": [
+            100.0,
+            1175.0,
+            5350.0
+          ],
+          "target_dist_m": 54.0,
+          "time": "night",
+          "why": "Disclosed landmark diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "4277728ab8fa200722fd0798b5d0f7762dd3c0e3df3f9c2360bafa4f9381ad7d"
+        },
+        {
+          "camera": [
+            100.0,
+            1160.7,
+            5325.0
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.2,
+            5330.0
+          ],
+          "file": "013_cloudreach_place_aviary_interior_day.png",
+          "kind": "frame",
+          "label": "place_aviary_interior",
+          "pitch_deg": 14.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_interior",
+          "target": [
+            100.0,
+            1170.0,
+            5364.0
+          ],
+          "target_dist_m": 34.0,
+          "time": "day",
+          "why": "Disclosed landmark diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "d3d2855b0fa736a0b18d7da62663360205828491904b1ce632cca356ab3cfd95"
+        },
+        {
+          "camera": [
+            100.0,
+            1160.7,
+            5325.0
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.2,
+            5330.0
+          ],
+          "file": "014_cloudreach_place_aviary_interior_night.png",
+          "kind": "frame",
+          "label": "place_aviary_interior",
+          "pitch_deg": 14.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_interior",
+          "target": [
+            100.0,
+            1170.0,
+            5364.0
+          ],
+          "target_dist_m": 34.0,
+          "time": "night",
+          "why": "Disclosed landmark diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "370cc056873743ddf37bd66778ab40fcf2e122f0561e4c8ba3d3934c240f64fb"
+        },
+        {
+          "camera": [
+            1110.0,
+            1020.9,
+            2906.9
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1110.0,
+            1020.0,
+            2912.0
+          ],
+          "file": "015_cloudreach_place_shrine_crown_day.png",
+          "kind": "frame",
+          "label": "place_shrine_crown",
+          "pitch_deg": 10.0,
+          "region": "cloudreach",
+          "subject": "place_shrine_crown",
+          "target": [
+            1110.0,
+            1058.5,
+            2940.0
+          ],
+          "target_dist_m": 28.0,
+          "time": "day",
+          "why": "Disclosed landmark diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "7423fd79abc64cea795da26420f15d5eda045911f59787c8a3398277b6afad85"
+        },
+        {
+          "camera": [
+            1110.0,
+            1020.9,
+            2906.9
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            1110.0,
+            1020.0,
+            2912.0
+          ],
+          "file": "016_cloudreach_place_shrine_crown_night.png",
+          "kind": "frame",
+          "label": "place_shrine_crown",
+          "pitch_deg": 10.0,
+          "region": "cloudreach",
+          "subject": "place_shrine_crown",
+          "target": [
+            1110.0,
+            1058.5,
+            2940.0
+          ],
+          "target_dist_m": 28.0,
+          "time": "night",
+          "why": "Disclosed landmark diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "bb2c1501828cdeb455cbec252d13411a1cf77e7d2ed4d6ad474e93a49ac061aa"
+        }
+      ],
+      "energy_receipts": [
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_three_bells_bridge",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_three_bells_bridge",
+          "time": "night"
+        },
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_windscar_beacon",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_windscar_beacon",
+          "time": "night"
+        },
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_sky_shrine_heartstone",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_sky_shrine_heartstone",
+          "time": "night"
+        },
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_cliffhold_settlement",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_cliffhold_settlement",
+          "time": "night"
+        },
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_summit_eyrie_stronghold",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_summit_eyrie_stronghold",
+          "time": "night"
+        },
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_aviary_entrance",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_aviary_entrance",
+          "time": "night"
+        },
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_aviary_interior",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_aviary_interior",
+          "time": "night"
+        },
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_shrine_crown",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_shrine_crown",
+          "time": "night"
+        }
+      ],
+      "summary": [
+        {
+          "kind": "summary",
+          "text": "visual audit region/cloudreach: 16 frames, 0 skips"
+        }
+      ],
+      "stderr_sha256": "13a18da5bc7866292fe7ff276a09eb6f0928a5ead6f00eca366afd5909a0316c"
+    },
+    "doorway": {
+      "frames": [
+        {
+          "camera": [
+            -286.6,
+            508.8,
+            2772.5
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -285.2,
+            505.9,
+            2767.6
+          ],
+          "file": "001_cloudreach_place_windscar_beacon_day.png",
+          "kind": "frame",
+          "label": "Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_windscar_beacon",
+          "target": [
+            -260.0,
+            500.0,
+            2680.0
+          ],
+          "target_dist_m": 91.1,
+          "time": "day",
+          "why": "road approach 91 m, clear sightline (candidate 1)",
+          "yaw_deg": -16.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "1eb1beb8028ef9b7043342a3c139c6c0fc056c5aabf84d3bd9f52ee3926a0311"
+        },
+        {
+          "camera": [
+            -286.6,
+            508.8,
+            2772.5
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            -285.2,
+            505.9,
+            2767.6
+          ],
+          "file": "002_cloudreach_place_windscar_beacon_night.png",
+          "kind": "frame",
+          "label": "Windscar Beacon",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_windscar_beacon",
+          "target": [
+            -260.0,
+            500.0,
+            2680.0
+          ],
+          "target_dist_m": 91.1,
+          "time": "night",
+          "why": "road approach 91 m, clear sightline (candidate 1)",
+          "yaw_deg": -16.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "5278e9a6b24e904f1b560e62066915cdf71c17cccfae04ba90ba5e93e2541068"
+        },
+        {
+          "camera": [
+            187.2,
+            1172.2,
+            5385.3
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            182.5,
+            1169.4,
+            5383.4
+          ],
+          "file": "003_cloudreach_place_summit_eyrie_stronghold_day.png",
+          "kind": "frame",
+          "label": "Summit Eyrie",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_summit_eyrie_stronghold",
+          "target": [
+            100.0,
+            1160.0,
+            5350.0
+          ],
+          "target_dist_m": 89.0,
+          "time": "day",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 68.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "854842c764609186d6ea060cdf5553a4faca5495014d218f7be582266f10dbd2"
+        },
+        {
+          "camera": [
+            187.2,
+            1172.2,
+            5385.3
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            182.5,
+            1169.4,
+            5383.4
+          ],
+          "file": "004_cloudreach_place_summit_eyrie_stronghold_night.png",
+          "kind": "frame",
+          "label": "Summit Eyrie",
+          "pitch_deg": -12.0,
+          "region": "cloudreach",
+          "subject": "place_summit_eyrie_stronghold",
+          "target": [
+            100.0,
+            1160.0,
+            5350.0
+          ],
+          "target_dist_m": 89.0,
+          "time": "night",
+          "why": "road approach 89 m, clear sightline (candidate 1)",
+          "yaw_deg": 68.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "7052f289fd44cf537cd80020910abdd1dfb062432a83f10c97b183c75d6cdee8"
+        },
+        {
+          "camera": [
+            100.0,
+            1161.3,
+            5290.8
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.0,
+            5296.0
+          ],
+          "file": "005_cloudreach_place_aviary_entrance_day.png",
+          "kind": "frame",
+          "label": "place_aviary_entrance",
+          "pitch_deg": 5.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_entrance",
+          "target": [
+            100.0,
+            1175.0,
+            5350.0
+          ],
+          "target_dist_m": 54.0,
+          "time": "day",
+          "why": "Disclosed landmark diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "ab735146d9fde44763ac23d409d640d5ca886a06ccb81b10acdc3f76aed456fc"
+        },
+        {
+          "camera": [
+            100.0,
+            1161.3,
+            5290.8
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.0,
+            5296.0
+          ],
+          "file": "006_cloudreach_place_aviary_entrance_night.png",
+          "kind": "frame",
+          "label": "place_aviary_entrance",
+          "pitch_deg": 5.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_entrance",
+          "target": [
+            100.0,
+            1175.0,
+            5350.0
+          ],
+          "target_dist_m": 54.0,
+          "time": "night",
+          "why": "Disclosed landmark diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "137e48cb23c91d3d41804abd5c070929536257e2c8485aa5c313c2c62cf10b03"
+        },
+        {
+          "camera": [
+            100.0,
+            1160.7,
+            5325.0
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.2,
+            5330.0
+          ],
+          "file": "007_cloudreach_place_aviary_interior_day.png",
+          "kind": "frame",
+          "label": "place_aviary_interior",
+          "pitch_deg": 14.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_interior",
+          "target": [
+            100.0,
+            1170.0,
+            5364.0
+          ],
+          "target_dist_m": 34.0,
+          "time": "day",
+          "why": "Disclosed landmark diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "6c952594ea1b7d8da2bce4a3373ce33e4be36b5e380baf7a7141f5808844e102"
+        },
+        {
+          "camera": [
+            100.0,
+            1160.7,
+            5325.0
+          ],
+          "closed_dialogue": [],
+          "companion": "parked behind camera",
+          "feet": [
+            100.0,
+            1160.2,
+            5330.0
+          ],
+          "file": "008_cloudreach_place_aviary_interior_night.png",
+          "kind": "frame",
+          "label": "place_aviary_interior",
+          "pitch_deg": 14.0,
+          "region": "cloudreach",
+          "subject": "place_aviary_interior",
+          "target": [
+            100.0,
+            1170.0,
+            5364.0
+          ],
+          "target_dist_m": 34.0,
+          "time": "night",
+          "why": "Disclosed landmark diagnostic stand/pitch, production camera, companion parked behind camera",
+          "yaw_deg": -180.0,
+          "raster": [
+            1920,
+            1080
+          ],
+          "sha256": "dc9ca9053eb809fcdec439de587f6f0eba9daccc68629f97589811bd15644e11"
+        }
+      ],
+      "energy_receipts": [
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_windscar_beacon",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            9.0,
+            9.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_windscar_beacon",
+          "time": "night"
+        },
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_summit_eyrie_stronghold",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            9.0,
+            9.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_summit_eyrie_stronghold",
+          "time": "night"
+        },
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_aviary_entrance",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            9.0,
+            9.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_aviary_entrance",
+          "time": "night"
+        },
+        {
+          "energies": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_aviary_interior",
+          "time": "day"
+        },
+        {
+          "energies": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            9.0,
+            9.0,
+            4.0,
+            4.0
+          ],
+          "kind": "landmark_lights",
+          "subject": "place_aviary_interior",
+          "time": "night"
+        }
+      ],
+      "summary": [
+        {
+          "kind": "summary",
+          "text": "visual audit region/cloudreach: 8 frames, 0 skips"
+        }
+      ],
+      "stderr_sha256": "13a18da5bc7866292fe7ff276a09eb6f0928a5ead6f00eca366afd5909a0316c"
+    }
+  },
+  "source_sha256": {
+    "scripts/world/cloudreach_landmark_lighting.gd": "880d4ea608aba5feee022924d911996f68c6a0a5869daaab028e4531c12efdad",
+    "scripts/world/cloudreach_look.gd": "adf669dd009e4373e32baaea4052fcb0c247af7abaf7afd9df407e227f0fcd35",
+    "data/config/cloudreach_landmark_lighting.json": "bc7a9b4e7b36221e3adb88dbca8b171b1724f94ded53d6f03eaab292b4758fdc",
+    "tools/capture_cloudreach_night_landmarks.gd": "f670424d32fc23931fa5174ba73f8b254be392e8aa321e80bf313d8f04b915c5"
+  },
+  "matched_camera_receipts": true
+}

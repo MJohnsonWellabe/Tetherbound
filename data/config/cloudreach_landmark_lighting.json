@@ -6,11 +6,11 @@
     {
       "id": "SummitEyrieStronghold", "height_m": 1.8,
       "reuse_lights": "AviaryEntryLanternLight",
-      "_comment": "Move the four existing entry accent lights to mounted exterior sources; retain all six interior lights without increasing the aviary light count. Backplates seat 1 cm into the actual pier shafts, below the capitals.",
+      "_comment": "Reuse four entry lights: two front pier mounts plus front/rear keystone lanterns. Upper brackets seat 1 cm into the arch crown, hanging above the original 7m clearance. Keep all six interior lights and the existing total light count.",
       "colour": "#ffc17d", "energy": 4.0, "range_m": 36.0, "attenuation": 1.0,
       "fixtures": [
-        {"at": [16.88990, 6.3, 24.12128], "yaw": 35.0},
-        {"at": [-16.88990, 6.3, 24.12128], "yaw": -35.0},
+        {"at": [0.0, 9.7, 26.74802], "yaw": 0.0, "height_m":2.0, "energy":9.0, "range_m":34.0},
+        {"at": [0.0, 9.7, -26.74802], "yaw": 180.0, "height_m":2.0, "energy":9.0, "range_m":34.0},
         {"at": [-16.88990, 6.3, -24.12128], "yaw": -145.0},
         {"at": [16.88990, 6.3, -24.12128], "yaw": 145.0}
       ]
@@ -27,6 +27,7 @@
     },
     {
       "id": "WindscarBeacon", "frame_base_node": "OpenWindscarBeacon", "height_m": 2.0,
+      "signal": {"node":"OpenWindscarBeacon/WindscarSignalFlame", "light":"OpenWindscarBeacon/WindscarSignalLight", "outer_scale":4.0, "core_scale":3.0, "energy":5.0, "range_m":24.0},
       "_comment": "Mounted on the two approach-facing arch posts. Y follows the beacon's existing terrain-fit frame base; the opening/colliders stay untouched.",
       "colour": "#ffc17d", "energy": 3.0, "range_m": 14.0, "attenuation": 1.0,
       "fixtures": [
