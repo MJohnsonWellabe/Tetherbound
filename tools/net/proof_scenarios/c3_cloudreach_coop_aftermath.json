@@ -322,13 +322,27 @@
       "action": "teleport",
       "args": {
         "at": [
-          400.0,
-          612.0,
-          3250.0
+          1110.0,
+          1052.0,
+          2940.0
         ],
         "settle": 120
       },
-      "label": "SETUP (disclosed): stand on the Windscar aerie launch deck (open sky; the arrival spot has no overhead room for the carrier)"
+      "label": "SETUP (disclosed): stand on the Sky Shrine landing pad (open sky, Fly-only landmark)"
+    },
+    {
+      "peer": 0,
+      "probe": "input_context",
+      "label": "diagnostic: what owns input before the launch"
+    },
+    {
+      "peer": 0,
+      "action": "wait_context",
+      "args": {
+        "equals": "world",
+        "budget_frames": 600
+      },
+      "label": "ordinary world control before launching"
     },
     {
       "peer": 0,
@@ -352,13 +366,27 @@
       "action": "teleport",
       "args": {
         "at": [
-          404.0,
-          612.0,
-          3246.0
+          1106.0,
+          1052.0,
+          2944.0
         ],
         "settle": 120
       },
-      "label": "SETUP (disclosed): stand on the Windscar aerie launch deck (open sky; the arrival spot has no overhead room for the carrier)"
+      "label": "SETUP (disclosed): stand on the Sky Shrine landing pad (open sky, Fly-only landmark)"
+    },
+    {
+      "peer": 1,
+      "probe": "input_context",
+      "label": "diagnostic: what owns input before the launch"
+    },
+    {
+      "peer": 1,
+      "action": "wait_context",
+      "args": {
+        "equals": "world",
+        "budget_frames": 600
+      },
+      "label": "ordinary world control before launching"
     },
     {
       "peer": 1,
