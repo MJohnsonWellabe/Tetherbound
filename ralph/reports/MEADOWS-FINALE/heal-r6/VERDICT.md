@@ -1,6 +1,6 @@
 # F05#7 "the land heals": blind verdict, round 6
 
-**DRY RUN — staged capture; it does not close F05#7 by itself.** Under the finish-then-land rule (WORKFLOW §8), this capture is staging. It sets flags directly and places the player at each viewpoint. It shows the heal now reads. The earned end-to-end path still has to be walked.
+**Staged capture, disclosed under the 06:55 owner ruling (2026-09-27).** The capture sets flags directly and places the player at each viewpoint. The ruling makes that a disclosed shortcut, not a reason to hold the claim, and the earned end-to-end walk was not made. The code-blind judge is still required for this visual row, and it passed. F05#7's READY is `tb/meadows-route` 35a547bb (#356).
 
 **Result: the code-blind judge answered YES** to "does the land visibly heal, readable without being told?" on both passes. The verbatim verdicts are in `JUDGE-VERDICT.txt` (pass 2, final frames) and `JUDGE-VERDICT-pass1.txt`. Pass 2 said: "YES — in three of four pairs the land itself reads as healed; in the fourth (h04) what reads is 'life came back', not 'the land changed'." The fall "readable as an event: YES."
 
