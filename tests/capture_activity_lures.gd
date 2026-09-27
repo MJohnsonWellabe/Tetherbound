@@ -930,11 +930,11 @@ func _gather_for_doss() -> Dictionary:
 		var tool := str(items_db.call("gathered_with", item)) if items_db != null else ""
 		var slot := int(_game.call("hotbar_slot_of", tool)) if not tool.is_empty() else -1
 		var drew := false
+		out["gathered"][item]["hotbar_slot"] = slot
 		if slot >= 0 and str(_game.get("equipped_tool")) != tool:
-			await _press("hotbar_%d" % (slot + 1))
-			for i in 30:
-				await physics_frame
+			await _press_hud("hotbar_%d" % (slot + 1))
 			drew = str(_game.get("equipped_tool")) == tool
+			out["gathered"][item]["equipped_after_press"] = str(_game.get("equipped_tool"))
 		out["gathered"][item]["tool"] = tool
 		out["gathered"][item]["tool_in_hand"] = str(_game.get("equipped_tool")) == tool
 		for tries in 3:
@@ -944,9 +944,7 @@ func _gather_for_doss() -> Dictionary:
 			if not is_instance_valid(point) or not point.is_inside_tree():
 				break
 		if drew:
-			await _press("hotbar_%d" % (slot + 1))
-			for i in 30:
-				await physics_frame
+			await _press_hud("hotbar_%d" % (slot + 1))
 		# Gather the felled pile by hand.
 		var pile := _nearest_harvest_point(item, 12.0)
 		if pile != null:
@@ -1233,6 +1231,28 @@ func _press(action: String) -> void:
 	up.pressed = false
 	Input.parse_input_event(up)
 	for i in 10:
+		await physics_frame
+
+
+## A press read by a HUD's `_process` with `is_action_just_pressed` (the
+## hotbar): held across process frames, not only physics frames, so the
+## just-pressed edge lands on a frame the HUD actually polls.
+func _press_hud(action: String) -> void:
+	Input.action_press(action)
+	var ev := InputEventAction.new()
+	ev.action = action
+	ev.pressed = true
+	Input.parse_input_event(ev)
+	for i in 3:
+		await process_frame
+	Input.action_release(action)
+	var up := InputEventAction.new()
+	up.action = action
+	up.pressed = false
+	Input.parse_input_event(up)
+	for i in 3:
+		await process_frame
+	for i in 20:
 		await physics_frame
 
 
