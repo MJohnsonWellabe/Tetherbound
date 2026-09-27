@@ -1,0 +1,2 @@
+MASHER: runs=12 errors=0 win=0.00 wipe=1.00 med_lead=1.000 med_party=1.000 med_s=159 max_s=168 max_hit=0.165 tell=[0.80,0.80] capped=0 opp4=0
+READER: runs=12 errors=0 win=1.00 wipe=0.00 med_lead=0.480 med_party=0.104 med_s=330 max_s=407 max_hit=0.135 tell=[0.80,1.10] capped=0 opp4=12

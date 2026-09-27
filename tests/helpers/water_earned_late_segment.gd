@@ -9,6 +9,11 @@ const LATE_ROUTES := ["tidal_cradle_to_salt_crown_sheltered",
 const WATCHDOG_MS := 50 * 60 * 1000
 const TRAINERS := {"water_trainer_bex": 2, "water_trainer_calder": 3,
 	"water_trainer_venn": 3, "water_trainer_nerissa": 4}
+## Overridable bounds (the defaults are this segment's originals). A human-swim
+## subclass fighting at reader pace raises them: C2 reader medians are
+## 214-329 s for Calder alone (ralph/reports/TIDEWAKE/f14_confirm_main/).
+var fight_bound_ms := 180000
+var watchdog_ms := WATCHDOG_MS
 var _riding: Node
 var _swimmer: RefCounted
 var _carried: Array = []
@@ -28,7 +33,7 @@ func run() -> bool:
 	if not _entry_valid():
 		return false
 	_carried = _game.local.party.members().duplicate()
-	_deadline = Time.get_ticks_msec() + WATCHDOG_MS
+	_deadline = Time.get_ticks_msec() + watchdog_ms
 	_deadline_reported = false
 	_running = true
 	_tree.physics_frame.connect(_observe_deadline)
@@ -347,7 +352,7 @@ func _fight_at_normal_clock(id: String, flag: String) -> bool:
 	if not _director.trainer_battle_active() or _director.trainer_battle_id() != id:
 		return _fail(id + " did not enter its production hosted trainer battle")
 	var opponents: Dictionary = {}
-	deadline = Time.get_ticks_msec() + 180000
+	deadline = Time.get_ticks_msec() + fight_bound_ms
 	while _director.trainer_battle_active() and Time.get_ticks_msec() < deadline and not _expired():
 		var enemy: Node3D = _manager.enemy_body()
 		var ally: Node3D = _director.ally_body()

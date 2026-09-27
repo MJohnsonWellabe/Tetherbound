@@ -283,6 +283,7 @@ const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
 const CHARACTER_IDENTITY := preload("res://scripts/save/character_identity.gd")
 const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
+const WATER_RECIPE_MIGRATION := preload("res://scripts/save/water_recipe_migration.gd")
 const FALLBACK_WORKER := preload("res://scripts/save/fallback_save_worker.gd")
 
 signal fallback_completed(success: bool)
@@ -728,6 +729,10 @@ func load_slot(game: Object, slot: int) -> bool:
 		(progression_obj as RefCounted).call("load_data", progression_data if typeof(progression_data) == TYPE_DICTIONARY else {})
 		_reconcile_meadows_realm_rewards(progression_obj as RefCounted)
 		_reconcile_meadows_tournament_rewards(progression_obj as RefCounted)
+		# F13#2: a legacy character keeps the cordage recipe it already knew.
+		# Player flags live in `Game.local.flags`; a flat test store is the same.
+		var personal_store: Variant = game.get("local")
+		WATER_RECIPE_MIGRATION.repair(personal_store.get("flags") if personal_store is Object else progression_obj)
 	if game.has_method("restore_realm_maps"):
 		game.call("restore_realm_maps", _realm_map_payloads(data))
 

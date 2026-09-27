@@ -63,6 +63,14 @@
       "speaker": "Neri", "portrait": "res://assets/ui/portraits/lark.png",
       "lines": ["The shelter received it? Every parcel? Good. Now we can get the stranded pair down to a warm fire.", "I'll leave two small potions by the Galefoot fire for you. Couriers pay their debts, even the ones nobody wrote down.", {"text": "I'll meet them at Galefoot Waycamp. Thank you for finishing the delivery. A route isn't open until something people need can travel along it.", "effect": "cloudreach:side:packs_on_the_wrong_side:report_to_neri"}]
     },
+    "cloudreach_iven_waycamp_shelter": {
+      "speaker": "Iven", "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": ["Neri's canvas, and a proper roof over the bed at last. The wind used to find every patient before I did.", "Your companion slept dry. Anyone resting here will, from now on. Galefoot is a camp people can stop at, not just get through."]
+    },
+    "cloudreach_rusk_observatory_latch": {
+      "speaker": "Rusk", "portrait": "res://assets/ui/portraits/ren.png",
+      "lines": ["You threw the latch on the far side? I watched that descent rust shut for a season.", "From the summit you can walk straight down to the Observatory now. Nobody has to climb back the long way round."]
+    },
     "cloudreach_neri_home": {
       "speaker": "Neri", "portrait": "res://assets/ui/portraits/lark.png",
       "lines": ["Both travelers made it to Galefoot. The shelter has medicine and Iven has his courier back.", "I've shortened my next route and left room for a rest. You can keep a promise without running yourself into the ground."]
