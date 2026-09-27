@@ -306,11 +306,13 @@ func _meadows_after_bridge(game: Node) -> bool:
 			_finish(false)
 			return false
 		reached = label
-		if OS.get_cmdline_user_args().has(str(stage[2])):
-			_finish(true)
-			return false
+		# F02#4: the stage's own save/reload happens before a `--through-*`
+		# stop, so the last transition of a prefix run is reload-checked too.
 		if not await _reload_transition(game, label):
 			_finish(false)
+			return false
+		if OS.get_cmdline_user_args().has(str(stage[2])):
+			_finish(true)
 			return false
 	return true
 
