@@ -1,0 +1,2393 @@
+{
+  "baseline_commit": "555c30affcfc29ccd90f090e84c815fcbec89b44",
+  "main_baseline": "1ba253eb05aa728dd06424854d7523c5ce6e0068",
+  "evidence_class": "DRY RUN: synthetic inventory fixture; comparison/filtering/production stage arrival and pin clock; ordinary repair interaction",
+  "renderer": "Godot 4.7 5b4e0cb0f Compatibility/OpenGL 3.3; GTX 1060 3GB driver 560.94",
+  "production_change": "Generate mipmaps for three existing Medieval Village WoodTrim textures. No tint, geometry or gameplay changes.",
+  "runs": {
+    "before": {
+      "receipt": {
+        "act": [
+          {
+            "doss_prompt_winning_after_gather": true,
+            "gathered": {
+              "fiber": {
+                "before": 1
+              },
+              "wood": {
+                "before": 1
+              }
+            }
+          },
+          {
+            "satchel_before": {
+              "closed": true,
+              "fiber": 1,
+              "open": true,
+              "wood": 1
+            }
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 0
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 1
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 2
+          },
+          {
+            "satchel_after": {
+              "closed": true,
+              "fiber": 0,
+              "open": true,
+              "wood": 0
+            }
+          },
+          {
+            "perch_repaired": true
+          },
+          {
+            "fought": false,
+            "total_dialogue_lines": 6
+          }
+        ],
+        "activity": "doss",
+        "budget_s": 360.0,
+        "clock_hour": 8.20000000000016,
+        "companion_out_at_start": true,
+        "entered_road_at": [
+          343.7,
+          3755.3
+        ],
+        "fights": [],
+        "final_position": [
+          -13.4,
+          4187.9
+        ],
+        "flags_set_by_game_during_walk": [
+          "river_nest_doss_met",
+          "river_nest_doss_cleared"
+        ],
+        "frames": [
+          {
+            "file": "doss_01_start.png",
+            "label": "start",
+            "lure_m": 556.1,
+            "pos": [
+              344.8,
+              3759.4
+            ],
+            "t_s": 0.0,
+            "walked_m": 0.0
+          },
+          {
+            "file": "doss_02_lure-first-seen.png",
+            "label": "lure-first-seen",
+            "lure_m": 150.7,
+            "pos": [
+              20.8,
+              4034.6
+            ],
+            "t_s": 71.5,
+            "walked_m": 455.6
+          },
+          {
+            "file": "doss_03_lure-first-readable.png",
+            "label": "lure-first-readable",
+            "lure_m": 94.4,
+            "pos": [
+              -45.3,
+              4089.3
+            ],
+            "t_s": 118.8,
+            "walked_m": 569.5
+          },
+          {
+            "file": "doss_04_approach-30m.png",
+            "label": "approach-30m",
+            "lure_m": 29.8,
+            "pos": [
+              -43.3,
+              4162.8
+            ],
+            "t_s": 134.2,
+            "walked_m": 665.8
+          },
+          {
+            "file": "doss_05_prompt-offered.png",
+            "label": "prompt-offered",
+            "lure_m": 3.3,
+            "pos": [
+              -21.7,
+              4178.1
+            ],
+            "t_s": 138.9,
+            "walked_m": 692.3
+          },
+          {
+            "file": "doss_06_act-0c-satchel-before.png",
+            "label": "act-0c-satchel-before",
+            "lure_m": 3.3,
+            "pos": [
+              -21.7,
+              4178.1
+            ],
+            "t_s": 140.8,
+            "walked_m": 692.3
+          },
+          {
+            "file": "doss_07_act-00-perch-before.png",
+            "label": "act-00-perch-before",
+            "lure_m": 9.7,
+            "pos": [
+              -13.5,
+              4188.0
+            ],
+            "t_s": 147.3,
+            "walked_m": 705.2
+          },
+          {
+            "file": "doss_08_act-01-pressed.png",
+            "label": "act-01-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.1,
+              4182.7
+            ],
+            "t_s": 151.3,
+            "walked_m": 711.6
+          },
+          {
+            "file": "doss_09_act-05-dialogue-01.png",
+            "label": "act-05-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.1,
+              4182.7
+            ],
+            "t_s": 151.3,
+            "walked_m": 711.6
+          },
+          {
+            "file": "doss_10_act-05-dialogue-02.png",
+            "label": "act-05-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.1,
+              4182.7
+            ],
+            "t_s": 151.9,
+            "walked_m": 711.6
+          },
+          {
+            "file": "doss_11_act-11-pressed.png",
+            "label": "act-11-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.1,
+              4182.7
+            ],
+            "t_s": 155.3,
+            "walked_m": 711.6
+          },
+          {
+            "file": "doss_12_act-15-dialogue-01.png",
+            "label": "act-15-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.1,
+              4182.7
+            ],
+            "t_s": 155.3,
+            "walked_m": 711.6
+          },
+          {
+            "file": "doss_13_act-15-dialogue-02.png",
+            "label": "act-15-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.1,
+              4182.7
+            ],
+            "t_s": 155.9,
+            "walked_m": 711.6
+          },
+          {
+            "file": "doss_14_act-21-pressed.png",
+            "label": "act-21-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.1,
+              4182.7
+            ],
+            "t_s": 159.4,
+            "walked_m": 711.6
+          },
+          {
+            "file": "doss_15_act-25-dialogue-01.png",
+            "label": "act-25-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.1,
+              4182.7
+            ],
+            "t_s": 159.4,
+            "walked_m": 711.6
+          },
+          {
+            "file": "doss_16_act-25-dialogue-02.png",
+            "label": "act-25-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.1,
+              4182.7
+            ],
+            "t_s": 159.9,
+            "walked_m": 711.6
+          },
+          {
+            "file": "doss_17_act-97-satchel-after.png",
+            "label": "act-97-satchel-after",
+            "lure_m": 3.3,
+            "pos": [
+              -17.1,
+              4182.7
+            ],
+            "t_s": 163.8,
+            "walked_m": 711.6
+          },
+          {
+            "file": "doss_18_act-98-perch-after.png",
+            "label": "act-98-perch-after",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 169.0,
+            "walked_m": 718.0
+          },
+          {
+            "file": "doss_19_act-99-after.png",
+            "label": "act-99-after",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 171.2,
+            "walked_m": 718.0
+          }
+        ],
+        "game_seconds": 171.2,
+        "left_road_at": [
+          -74.0,
+          4144.0
+        ],
+        "load_vs_saved_xz_m": 0.0,
+        "lure_first_readable": {
+          "after_deliberate_look": false,
+          "camera_to_lure_m": 98.2,
+          "height_px": 24,
+          "t_s": 118.8,
+          "walked_m": 569.5,
+          "while_on_road": true
+        },
+        "lure_first_seen": {
+          "after_deliberate_look": false,
+          "camera_to_lure_m": 154.5,
+          "screen_px": [
+            38,
+            133
+          ],
+          "t_s": 71.5,
+          "walked_m": 455.6,
+          "while_on_road": true
+        },
+        "lure_node": "/root/MeadowsPlayground/RiverNestClear/Doss",
+        "lure_position": [
+          -19.0,
+          4180.0
+        ],
+        "notes": [
+          "pressed creature_recall (attempt 1); companion out afterwards: true",
+          "t=85.0s no progress at (-29.2,4061.2); unstick attempt 1 (jump + strafe)",
+          "t=92.4s no progress at (-36.0,4070.0); unstick attempt 2 (jump + strafe)",
+          "t=98.6s no progress at (-40.7,4070.0); unstick attempt 3 (jump + strafe)",
+          "t=98.6s put the companion away to get unstuck",
+          "t=105.0s no progress at (-37.4,4070.0); unstick attempt 4 (jump + strafe)",
+          "t=111.4s no progress at (-43.4,4068.4); unstick attempt 5 (jump + strafe)",
+          "t=119.5s moving again; pressed creature_recall (attempt 1); companion out afterwards: true",
+          "act-00-perch-before; pressed creature_recall (attempt 1); companion out afterwards: true",
+          "act-98-perch-after; pressed creature_recall (attempt 1); companion out afterwards: true"
+        ],
+        "off_road_leg_m": 65.7,
+        "position_after_load": [
+          344.79,
+          5.35,
+          3759.43
+        ],
+        "prompt": {
+          "t_s": 138.4,
+          "walked_m": 692.1,
+          "winner": "{ \"label\": \"Help Doss repair the bank perch\", \"distance\": 3.77077269554138, \"priority\": 0, \"actionable\": true }"
+        },
+        "route_m": 674.2,
+        "route_road_points": 80,
+        "save": "res://tests/fixtures/f03_lure_saves/S07-exit-band3-plus-1wood-1fiber.json.gz",
+        "save_sha256": "db6b6ff913f63fd9f121f2fc0dc2c5cc073cf8cfd767dae4ee0941cb225e78bd",
+        "save_version": 16.0,
+        "saved_position": [
+          344.794708251953,
+          5.35583591461182,
+          3759.42504882812
+        ],
+        "scene": "res://scenes/world/meadows_playground.tscn",
+        "script_state_writes": "none",
+        "start_distance_to_lure_m": 556.1,
+        "verdict": "PASS",
+        "walked_m": 718.0,
+        "why": "lure seen and the activity's prompt was offered"
+      },
+      "frames": [
+        {
+          "path": "shots/doss-material-before/doss_01_start.png",
+          "sha256": "c35043db8370209bab34c43972d278016d0702b361f9114c7f6aac9ba5ccbf6c",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_02_lure-first-seen.png",
+          "sha256": "f6d1b74304ccada9d76afa40ef8c5a010ac603865dc049a5344efd14a29a089f",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_03_lure-first-readable.png",
+          "sha256": "e38cf5bb8c1be52d6c1bc69f6a3dde2577a2550961dcc8d08f0f0e80ede03d78",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_04_approach-30m.png",
+          "sha256": "41efd0f5d8147fe2220e5ecc79f70a769c323c6c32b95a295597768797eb3400",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_05_prompt-offered.png",
+          "sha256": "7546557cac1f627e1ab4b34352ff5a9847036f2f7384d696101e7a1d4ca82088",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_06_act-0c-satchel-before.png",
+          "sha256": "efbefa40a29860129ce1e7ad6df41d189daaa4d76fc9df67522f1a8472f2f35e",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_07_act-00-perch-before.png",
+          "sha256": "0bb9892f156b51ad1527279db48fe815c4aaf720bfb616ce50f285b9ca8f023b",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_08_act-01-pressed.png",
+          "sha256": "32a1a6699cf3fa88f8d7e2931102e5e3aadc89a477d5627cfa8000eecc3332cc",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_09_act-05-dialogue-01.png",
+          "sha256": "af1bc17c4a5e50fbc8a14e70b769e5ddc86aa65179708a6de5c989d610dc36c9",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_10_act-05-dialogue-02.png",
+          "sha256": "021a8312b1163f2d70a7a7dcd322ec08c77b8ea0eab6471705353febc26a5fc3",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_11_act-11-pressed.png",
+          "sha256": "bcbfb6b7d247ae7dbec533b58bc434bddc6458b64cc689415ff1a220bc142c35",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_12_act-15-dialogue-01.png",
+          "sha256": "3f0926f376e2b016a6aa533040ad5cdb1dcbbba5ae7db2631b5c6d7dbeb671c4",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_13_act-15-dialogue-02.png",
+          "sha256": "7bd04aaf2e483109192a763bf9bf33b1128508526b18a015468a9d58ec5fdd67",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_14_act-21-pressed.png",
+          "sha256": "3683c0028b6ca3a53d0b26871f4b8278fa1bb9d6b52638474a2cc54c0299838e",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_15_act-25-dialogue-01.png",
+          "sha256": "80ead72892c79c2b0bcd3e9629d032ba4849295c263cea4513ba6b2e46eb3dc4",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_16_act-25-dialogue-02.png",
+          "sha256": "064c195f58c4d8bf505d07f2667d8667d38f85bb1f76c1fc21c3705d2e5a1a28",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_17_act-97-satchel-after.png",
+          "sha256": "cfef9ca45f808866ceea38f892080a0e1697d646e8c6adc12f9a7081e594b7fe",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_18_act-98-perch-after.png",
+          "sha256": "b14bb1224e984770eadc7fcb35e8e08bb8da5432f81c3ffefe1722d43a3d9db5",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-before/doss_19_act-99-after.png",
+          "sha256": "e7f1082b1a7ae4935d1970e8403262b5cc69950d09976e082704c0a505bcef34",
+          "width": 1920,
+          "height": 1080
+        }
+      ],
+      "error_count": 0,
+      "log_path": "D:\\tetherbound\\visual-acceptance-local\\doss-material-before.log",
+      "log_sha256": "d482c8f59d9d63d3ae789f96f5b76ce1b28c69a1c447483c3482a4dc51406374",
+      "stderr_sha256": "1ef7acc7a4b399cf80c1d87f1c759f336fe780ba8b9142c8990625e5f6cd286e",
+      "material_observations": [],
+      "recovery_events": [
+        "[player] entombed at -40.08, 1.75, 4071.26 -- recovering to -32.24, 0.84, 4066.76"
+      ]
+    },
+    "comparison": {
+      "receipt": {
+        "act": [
+          {
+            "doss_prompt_winning_after_gather": true,
+            "gathered": {
+              "fiber": {
+                "before": 1
+              },
+              "wood": {
+                "before": 1
+              }
+            }
+          },
+          {
+            "satchel_before": {
+              "closed": true,
+              "fiber": 1,
+              "open": true,
+              "wood": 1
+            }
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 0
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 1
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 2
+          },
+          {
+            "satchel_after": {
+              "closed": true,
+              "fiber": 0,
+              "open": true,
+              "wood": 0
+            }
+          },
+          {
+            "perch_repaired": true
+          },
+          {
+            "fought": false,
+            "total_dialogue_lines": 6
+          }
+        ],
+        "activity": "doss",
+        "budget_s": 360.0,
+        "clock_hour": 8.20000000000016,
+        "companion_out_at_start": true,
+        "entered_road_at": [
+          343.7,
+          3755.3
+        ],
+        "fights": [],
+        "final_position": [
+          -13.4,
+          4187.9
+        ],
+        "flags_set_by_game_during_walk": [
+          "river_nest_doss_met",
+          "river_nest_doss_cleared"
+        ],
+        "frames": [
+          {
+            "file": "doss_01_start.png",
+            "label": "start",
+            "lure_m": 556.1,
+            "pos": [
+              344.8,
+              3759.4
+            ],
+            "t_s": 0.0,
+            "walked_m": 0.0
+          },
+          {
+            "file": "doss_02_act-0c-satchel-before.png",
+            "label": "act-0c-satchel-before",
+            "lure_m": 3.6,
+            "pos": [
+              -16.0,
+              4182.0
+            ],
+            "t_s": 7.8,
+            "walked_m": 0.0
+          },
+          {
+            "file": "doss_03_act-00-perch-before-day-control.png",
+            "label": "act-00-perch-before-day-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_04_act-00-perch-before-day-candidate.png",
+            "label": "act-00-perch-before-day-candidate",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_05_act-00-perch-before-night-control.png",
+            "label": "act-00-perch-before-night-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_06_act-00-perch-before-night-candidate.png",
+            "label": "act-00-perch-before-night-candidate",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_07_act-01-pressed.png",
+            "label": "act-01-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 19.2,
+            "walked_m": 12.5
+          },
+          {
+            "file": "doss_08_act-05-dialogue-01.png",
+            "label": "act-05-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 20.8,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_09_act-05-dialogue-02.png",
+            "label": "act-05-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 21.3,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_10_act-11-pressed.png",
+            "label": "act-11-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 23.6,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_11_act-15-dialogue-01.png",
+            "label": "act-15-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 24.8,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_12_act-15-dialogue-02.png",
+            "label": "act-15-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 25.4,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_13_act-21-pressed.png",
+            "label": "act-21-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 27.6,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_14_act-25-dialogue-01.png",
+            "label": "act-25-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 28.8,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_15_act-25-dialogue-02.png",
+            "label": "act-25-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 29.4,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_16_act-97-satchel-after.png",
+            "label": "act-97-satchel-after",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 31.7,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_17_act-98-perch-after-day-control.png",
+            "label": "act-98-perch-after-day-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.4,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_18_act-98-perch-after-day-candidate.png",
+            "label": "act-98-perch-after-day-candidate",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.4,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_19_act-98-perch-after-night-control.png",
+            "label": "act-98-perch-after-night-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.4,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_20_act-98-perch-after-night-candidate.png",
+            "label": "act-98-perch-after-night-candidate",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.4,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_21_act-99-after.png",
+            "label": "act-99-after",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.4,
+            "walked_m": 18.8
+          }
+        ],
+        "game_seconds": 36.4,
+        "left_road_at": [
+          -74.0,
+          4144.0
+        ],
+        "load_vs_saved_xz_m": 0.0,
+        "lure_node": "/root/MeadowsPlayground/RiverNestClear/Doss",
+        "lure_position": [
+          -19.0,
+          4180.0
+        ],
+        "notes": [
+          "pressed creature_recall (attempt 1); companion out afterwards: true",
+          "act-00-perch-before; pressed creature_recall (attempt 1); companion out afterwards: true",
+          "act-98-perch-after; pressed creature_recall (attempt 1); companion out afterwards: true"
+        ],
+        "off_road_leg_m": 65.7,
+        "position_after_load": [
+          344.79,
+          5.35,
+          3759.43
+        ],
+        "route_m": 674.2,
+        "route_road_points": 80,
+        "save": "res://tests/fixtures/f03_lure_saves/S07-exit-band3-plus-1wood-1fiber.json.gz",
+        "save_sha256": "db6b6ff913f63fd9f121f2fc0dc2c5cc073cf8cfd767dae4ee0941cb225e78bd",
+        "save_version": 16.0,
+        "saved_position": [
+          344.794708251953,
+          5.35583591461182,
+          3759.42504882812
+        ],
+        "scene": "res://scenes/world/meadows_playground.tscn",
+        "script_state_writes": "DRY RUN: staged arrival and day/night clock; private material overrides; no flag/inventory writes",
+        "start_distance_to_lure_m": 556.1,
+        "verdict": "PASS",
+        "walked_m": 18.8,
+        "why": "staged arrival; paired visual material comparison only"
+      },
+      "frames": [
+        {
+          "path": "shots/doss-material-comparison/doss_01_start.png",
+          "sha256": "c64d0e61b75cdf10b08ad4ecd006575f986de76784da01e46afbaf0f62f970e1",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_02_act-0c-satchel-before.png",
+          "sha256": "00f677fa18380b245439e9e932a4d0f2d97c55095a188da5f8f5e65aa52dcf20",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_03_act-00-perch-before-day-control.png",
+          "sha256": "d23106ecce17e652e1faa168ac7433387cfa483940d90b39ebfa4230c44f266a",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_04_act-00-perch-before-day-candidate.png",
+          "sha256": "116bfb99e15e9eb557d341967b4b1f16dbd442c4298078c4449b65eb4f193acb",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_05_act-00-perch-before-night-control.png",
+          "sha256": "c33142c72dd666649e4fcf5ffc963dab50f2607c5ababa5e0da09642dff04e00",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_06_act-00-perch-before-night-candidate.png",
+          "sha256": "864a7bb3e73e74fdbeb9e2f9327f090a27d0af35ea3509fb765234c83eb8cd19",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_07_act-01-pressed.png",
+          "sha256": "331a3527d27873e202e29304f2122fd4606c32798b4c88212383175e1b309c7e",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_08_act-05-dialogue-01.png",
+          "sha256": "34f24f33dcbef7f7faecab9a75e7e95b22cdb1d383d6ec3b115a0e76e1ad4fb2",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_09_act-05-dialogue-02.png",
+          "sha256": "f0c89db65b13e6f869f585e7c09ebc07a58c02a0c559f8fe738afc4cbf999d0e",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_10_act-11-pressed.png",
+          "sha256": "2d560dcb66f9ba81eb96c1d3cbcc9bef9ff7a760b2a855f9bb6977606083ee6c",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_11_act-15-dialogue-01.png",
+          "sha256": "7d97e80299c15eea00d09965cb84305f3a87c2335011dac02e9e080736fd4ea3",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_12_act-15-dialogue-02.png",
+          "sha256": "e5721abee85dbb855e00b349b654ae908f7c41de8977870a9186781b2bb42cca",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_13_act-21-pressed.png",
+          "sha256": "918e9ef170f35e940b018eb1eb49eee86dc9c4ee23649cdd96eba8cc5d63adb0",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_14_act-25-dialogue-01.png",
+          "sha256": "443f261b169d09acd845c7c0c71a311ab8e0863774949979a95fd527e602bb06",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_15_act-25-dialogue-02.png",
+          "sha256": "fd528a54153ca255bf4e6e0da9a7029cabe1bd274290b492153a715129a8e4cb",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_16_act-97-satchel-after.png",
+          "sha256": "2ab62de0b5253c43e4b79e667badc380dad2a879bdc9679a4d63ad9c8b6394c1",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_17_act-98-perch-after-day-control.png",
+          "sha256": "fe67d6785e7d864ef7f19dec6793f894b474a55be24ab415357411a5723327b7",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_18_act-98-perch-after-day-candidate.png",
+          "sha256": "5c471049a28474f44f8f5b70e4af19ef8dcecbc7cda2801c38b202a0e1ec8c27",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_19_act-98-perch-after-night-control.png",
+          "sha256": "5a573ed9c4b2ccc32c9b7344144ba6593fe8e1d2467f46c34a0b21515356ba74",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_20_act-98-perch-after-night-candidate.png",
+          "sha256": "6e0ab517774d3c7e3134128523da583c4c0e9f85d1c65533c6aef81173984146",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-comparison/doss_21_act-99-after.png",
+          "sha256": "027edae5ead33444022fc70b07b2716e09d6af7144afd072d5f1ca1f01b1d152",
+          "width": 1920,
+          "height": 1080
+        }
+      ],
+      "error_count": 0,
+      "log_path": "D:\\tetherbound\\visual-acceptance-local\\doss-material-comparison.log",
+      "log_sha256": "1fff3ec2f922adccbbb1e18101f55c8452c27a17f18ecd5c60768337fbc6d4cf",
+      "stderr_sha256": "1ef7acc7a4b399cf80c1d87f1c759f336fe780ba8b9142c8990625e5f6cd286e",
+      "material_observations": [
+        "[doss-material] wood surfaces=6 state=act-00-perch-before",
+        "[doss-material] wood surfaces=6 state=act-98-perch-after"
+      ],
+      "recovery_events": []
+    },
+    "filtering": {
+      "receipt": {
+        "act": [
+          {
+            "doss_prompt_winning_after_gather": true,
+            "gathered": {
+              "fiber": {
+                "before": 1
+              },
+              "wood": {
+                "before": 1
+              }
+            }
+          },
+          {
+            "satchel_before": {
+              "closed": true,
+              "fiber": 1,
+              "open": true,
+              "wood": 1
+            }
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 0
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 1
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 2
+          },
+          {
+            "satchel_after": {
+              "closed": true,
+              "fiber": 0,
+              "open": true,
+              "wood": 0
+            }
+          },
+          {
+            "perch_repaired": true
+          },
+          {
+            "fought": false,
+            "total_dialogue_lines": 6
+          }
+        ],
+        "activity": "doss",
+        "budget_s": 360.0,
+        "clock_hour": 8.20000000000016,
+        "companion_out_at_start": true,
+        "entered_road_at": [
+          343.7,
+          3755.3
+        ],
+        "fights": [],
+        "final_position": [
+          -13.4,
+          4187.9
+        ],
+        "flags_set_by_game_during_walk": [
+          "river_nest_doss_met",
+          "river_nest_doss_cleared"
+        ],
+        "frames": [
+          {
+            "file": "doss_01_start.png",
+            "label": "start",
+            "lure_m": 556.1,
+            "pos": [
+              344.8,
+              3759.4
+            ],
+            "t_s": 0.0,
+            "walked_m": 0.0
+          },
+          {
+            "file": "doss_02_act-0c-satchel-before.png",
+            "label": "act-0c-satchel-before",
+            "lure_m": 3.6,
+            "pos": [
+              -16.0,
+              4182.0
+            ],
+            "t_s": 7.8,
+            "walked_m": 0.0
+          },
+          {
+            "file": "doss_03_act-00-perch-before-day-control.png",
+            "label": "act-00-perch-before-day-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_04_act-00-perch-before-day-candidate.png",
+            "label": "act-00-perch-before-day-candidate",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_05_act-00-perch-before-day-filtered.png",
+            "label": "act-00-perch-before-day-filtered",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_06_act-00-perch-before-day-filtered_tint.png",
+            "label": "act-00-perch-before-day-filtered_tint",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_07_act-00-perch-before-day-no_normal.png",
+            "label": "act-00-perch-before-day-no_normal",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_08_act-00-perch-before-night-control.png",
+            "label": "act-00-perch-before-night-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_09_act-00-perch-before-night-candidate.png",
+            "label": "act-00-perch-before-night-candidate",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_10_act-00-perch-before-night-filtered.png",
+            "label": "act-00-perch-before-night-filtered",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_11_act-00-perch-before-night-filtered_tint.png",
+            "label": "act-00-perch-before-night-filtered_tint",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_12_act-00-perch-before-night-no_normal.png",
+            "label": "act-00-perch-before-night-no_normal",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_13_act-01-pressed.png",
+            "label": "act-01-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 19.3,
+            "walked_m": 12.5
+          },
+          {
+            "file": "doss_14_act-05-dialogue-01.png",
+            "label": "act-05-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 20.9,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_15_act-05-dialogue-02.png",
+            "label": "act-05-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 21.4,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_16_act-11-pressed.png",
+            "label": "act-11-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 23.7,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_17_act-15-dialogue-01.png",
+            "label": "act-15-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 24.9,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_18_act-15-dialogue-02.png",
+            "label": "act-15-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 25.4,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_19_act-21-pressed.png",
+            "label": "act-21-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 27.7,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_20_act-25-dialogue-01.png",
+            "label": "act-25-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 28.9,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_21_act-25-dialogue-02.png",
+            "label": "act-25-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 29.5,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_22_act-97-satchel-after.png",
+            "label": "act-97-satchel-after",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 31.8,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_23_act-98-perch-after-day-control.png",
+            "label": "act-98-perch-after-day-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_24_act-98-perch-after-day-candidate.png",
+            "label": "act-98-perch-after-day-candidate",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_25_act-98-perch-after-day-filtered.png",
+            "label": "act-98-perch-after-day-filtered",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_26_act-98-perch-after-day-filtered_tint.png",
+            "label": "act-98-perch-after-day-filtered_tint",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_27_act-98-perch-after-day-no_normal.png",
+            "label": "act-98-perch-after-day-no_normal",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_28_act-98-perch-after-night-control.png",
+            "label": "act-98-perch-after-night-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_29_act-98-perch-after-night-candidate.png",
+            "label": "act-98-perch-after-night-candidate",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_30_act-98-perch-after-night-filtered.png",
+            "label": "act-98-perch-after-night-filtered",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_31_act-98-perch-after-night-filtered_tint.png",
+            "label": "act-98-perch-after-night-filtered_tint",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_32_act-98-perch-after-night-no_normal.png",
+            "label": "act-98-perch-after-night-no_normal",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_33_act-99-after.png",
+            "label": "act-99-after",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.5,
+            "walked_m": 18.8
+          }
+        ],
+        "game_seconds": 36.5,
+        "left_road_at": [
+          -74.0,
+          4144.0
+        ],
+        "load_vs_saved_xz_m": 0.0,
+        "lure_node": "/root/MeadowsPlayground/RiverNestClear/Doss",
+        "lure_position": [
+          -19.0,
+          4180.0
+        ],
+        "notes": [
+          "pressed creature_recall (attempt 1); companion out afterwards: true",
+          "act-00-perch-before; pressed creature_recall (attempt 1); companion out afterwards: true",
+          "act-98-perch-after; pressed creature_recall (attempt 1); companion out afterwards: true"
+        ],
+        "off_road_leg_m": 65.7,
+        "position_after_load": [
+          344.79,
+          5.35,
+          3759.43
+        ],
+        "route_m": 674.2,
+        "route_road_points": 80,
+        "save": "res://tests/fixtures/f03_lure_saves/S07-exit-band3-plus-1wood-1fiber.json.gz",
+        "save_sha256": "db6b6ff913f63fd9f121f2fc0dc2c5cc073cf8cfd767dae4ee0941cb225e78bd",
+        "save_version": 16.0,
+        "saved_position": [
+          344.794708251953,
+          5.35583591461182,
+          3759.42504882812
+        ],
+        "scene": "res://scenes/world/meadows_playground.tscn",
+        "script_state_writes": "DRY RUN: staged arrival and day/night clock; private material overrides; no flag/inventory writes",
+        "start_distance_to_lure_m": 556.1,
+        "verdict": "PASS",
+        "walked_m": 18.8,
+        "why": "staged arrival; paired visual material comparison only"
+      },
+      "frames": [
+        {
+          "path": "shots/doss-material-filtering/doss_01_start.png",
+          "sha256": "560910cad989d7af26aeafdfd606c798cd242dbb3202ac8572c829ce827afc0e",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_02_act-0c-satchel-before.png",
+          "sha256": "d1a19c8325bac8db62747641b88fa82ed802917c2255144aa413fe45f3684cfe",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_03_act-00-perch-before-day-control.png",
+          "sha256": "a0791197e20ec5dcf74323cb352910388b1f113552806a37c757caa2639a883a",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_04_act-00-perch-before-day-candidate.png",
+          "sha256": "464ec87e0376b1f9fc2b2646a4f2cf20fe322189511d0b30c1e29b021125489f",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_05_act-00-perch-before-day-filtered.png",
+          "sha256": "0376708c7d837c2ff91f0e9ae84778392e119fb73f6315d3c3dc61183ddfe32e",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_06_act-00-perch-before-day-filtered_tint.png",
+          "sha256": "e6e38a147fbcab5b5310af7e5521f32940b3a71259a001a86776b64c76db84bb",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_07_act-00-perch-before-day-no_normal.png",
+          "sha256": "2fac6667027d55eae595cfb3d5e5adc6ee93950da506c0be67c2cc427e16b729",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_08_act-00-perch-before-night-control.png",
+          "sha256": "bd080189ce16ba0b840466b3e748225fc1b5b9fefc874c18cfb9f2c52842ce1a",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_09_act-00-perch-before-night-candidate.png",
+          "sha256": "87dc51d85a6d09bec60f74a8f678a04cf80a478c26f7b6202d77aa88c5787dcc",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_10_act-00-perch-before-night-filtered.png",
+          "sha256": "cd67d92abf3c41c67f9468cc7dace3b0fd49e56a7db182d3bc11353616fea398",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_11_act-00-perch-before-night-filtered_tint.png",
+          "sha256": "2f5ded417008d7e0c4383eda94bfa9f1edd889b470d01d4014d28a241acc3b2e",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_12_act-00-perch-before-night-no_normal.png",
+          "sha256": "c71987dc52ab0963e0f6fabef25394a011f918605ff5856fbd3ff15d942a37ba",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_13_act-01-pressed.png",
+          "sha256": "36b249a7a96e1b5e727ee74c3ab6c242a82a7b0da10ed8dd853d5464a3935cf6",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_14_act-05-dialogue-01.png",
+          "sha256": "e55a343ae9bcc4cad802123d1da344493b5301dc470f10210dba7966f96ffc4a",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_15_act-05-dialogue-02.png",
+          "sha256": "4c98c4b8eeb3550b06ccca614b868b220e089c576a4ebfc37a82a18e1d58a5c2",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_16_act-11-pressed.png",
+          "sha256": "d045f4bbd9e602649c230e80fd87b0475f3e048122ae8f0047c07991dccb0fdb",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_17_act-15-dialogue-01.png",
+          "sha256": "f0b4c8217cbacf6a98d3bd7f81fd188e23c6cba84c949342245dd55f60fa509d",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_18_act-15-dialogue-02.png",
+          "sha256": "764eab805896a6ec1480ed8392efab427cd91f6e7ed7b78fe882e67fa3bd4c8c",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_19_act-21-pressed.png",
+          "sha256": "e1f9b166ef6c5c32bb9e554e246f9447ed888f9308a8b6e94b0900fa0a587b8c",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_20_act-25-dialogue-01.png",
+          "sha256": "3f5d53dbf773a653c48327b0a6ce08e26744cb7fba86aff6e323b9abfbaa8a7e",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_21_act-25-dialogue-02.png",
+          "sha256": "f8f77debd04025c660d9324bf03e4384a795fec7319ac27b8a9cc6c34b3755c2",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_22_act-97-satchel-after.png",
+          "sha256": "4dc5b9529367ccb667cf64871365500ff660f2f1f14a5892b8a1750e18ae5206",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_23_act-98-perch-after-day-control.png",
+          "sha256": "25f3122281ad375d89ee40e39136a60c568dd297680800ed6f16b800b096af39",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_24_act-98-perch-after-day-candidate.png",
+          "sha256": "2a8498eef910920a4134624021a865418e5752e272af7964caaf86da662650df",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_25_act-98-perch-after-day-filtered.png",
+          "sha256": "faffead95e074373f215fa72d79be9b429fb5356a4969191a8fd98072a40551a",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_26_act-98-perch-after-day-filtered_tint.png",
+          "sha256": "2917917050c7967a95cdaf7a83c4dcdb5405586d9cf972294ffd98daa50213b4",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_27_act-98-perch-after-day-no_normal.png",
+          "sha256": "21761a8e5ed2c43df4e1c43146bb4c44367148699db3065d6839cdb1f8a4170d",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_28_act-98-perch-after-night-control.png",
+          "sha256": "e0467bc3486a50223d9b3d24cae2468c3b5528dadcc57de9ca866af91530cde7",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_29_act-98-perch-after-night-candidate.png",
+          "sha256": "02ac55a4a74c0d504d8d6e21e03e68e8a5c4e68714406fc07d06fa64937a4d87",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_30_act-98-perch-after-night-filtered.png",
+          "sha256": "802e93ee34740e41f2571d2f5214557c001f08870d3aae54081e3d61d9ae1274",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_31_act-98-perch-after-night-filtered_tint.png",
+          "sha256": "6957680bae613ea022c7177d1d2c285a5eb7097ee8a57827c034a05163f2b734",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_32_act-98-perch-after-night-no_normal.png",
+          "sha256": "1bc6905b77077931f6cf3df45531aa726bc513ccddbdb14aa6673861470fcbe7",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-filtering/doss_33_act-99-after.png",
+          "sha256": "b1a5a2bf4aa543bed0d84269bbe5db1ebfd5e527922b2070a26968c56920fc77",
+          "width": 1920,
+          "height": 1080
+        }
+      ],
+      "error_count": 0,
+      "log_path": "D:\\tetherbound\\visual-acceptance-local\\doss-material-filtering.log",
+      "log_sha256": "659f948cbf5ea0836edb460fad2519aeb62fb94018670cb84d3e727b856e1c79",
+      "stderr_sha256": "1ef7acc7a4b399cf80c1d87f1c759f336fe780ba8b9142c8990625e5f6cd286e",
+      "material_observations": [
+        "[doss-material] source=res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png mips=false format=17",
+        "[doss-material] source=res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png mips=false format=17",
+        "[doss-material] source=res://assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png mips=false format=17",
+        "[doss-material] wood surfaces=6 state=act-00-perch-before",
+        "[doss-material] wood surfaces=6 state=act-98-perch-after"
+      ],
+      "recovery_events": []
+    },
+    "production": {
+      "receipt": {
+        "act": [
+          {
+            "doss_prompt_winning_after_gather": true,
+            "gathered": {
+              "fiber": {
+                "before": 1
+              },
+              "wood": {
+                "before": 1
+              }
+            }
+          },
+          {
+            "satchel_before": {
+              "closed": true,
+              "fiber": 1,
+              "open": true,
+              "wood": 1
+            }
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 0
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 1
+          },
+          {
+            "dialogue_lines": 2,
+            "fought": false,
+            "round": 2
+          },
+          {
+            "satchel_after": {
+              "closed": true,
+              "fiber": 0,
+              "open": true,
+              "wood": 0
+            }
+          },
+          {
+            "perch_repaired": true
+          },
+          {
+            "fought": false,
+            "total_dialogue_lines": 6
+          }
+        ],
+        "activity": "doss",
+        "budget_s": 360.0,
+        "clock_hour": 8.20000000000016,
+        "companion_out_at_start": true,
+        "entered_road_at": [
+          343.7,
+          3755.3
+        ],
+        "fights": [],
+        "final_position": [
+          4.0,
+          -2.0
+        ],
+        "flags_set_by_game_during_walk": [
+          "river_nest_doss_met",
+          "river_nest_doss_cleared"
+        ],
+        "frames": [
+          {
+            "file": "doss_01_start.png",
+            "label": "start",
+            "lure_m": 556.1,
+            "pos": [
+              344.8,
+              3759.4
+            ],
+            "t_s": 0.0,
+            "walked_m": 0.0
+          },
+          {
+            "file": "doss_02_act-0c-satchel-before.png",
+            "label": "act-0c-satchel-before",
+            "lure_m": 3.6,
+            "pos": [
+              -16.0,
+              4182.0
+            ],
+            "t_s": 7.8,
+            "walked_m": 0.0
+          },
+          {
+            "file": "doss_03_act-00-perch-before-day-control.png",
+            "label": "act-00-perch-before-day-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_04_act-00-perch-before-day-production.png",
+            "label": "act-00-perch-before-day-production",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_05_act-00-perch-before-night-control.png",
+            "label": "act-00-perch-before-night-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_06_act-00-perch-before-night-production.png",
+            "label": "act-00-perch-before-night-production",
+            "lure_m": 9.7,
+            "pos": [
+              -13.3,
+              4187.8
+            ],
+            "t_s": 13.6,
+            "walked_m": 6.1
+          },
+          {
+            "file": "doss_07_act-01-pressed.png",
+            "label": "act-01-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 19.7,
+            "walked_m": 12.5
+          },
+          {
+            "file": "doss_08_act-05-dialogue-01.png",
+            "label": "act-05-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 21.3,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_09_act-05-dialogue-02.png",
+            "label": "act-05-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 21.8,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_10_act-11-pressed.png",
+            "label": "act-11-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 24.1,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_11_act-15-dialogue-01.png",
+            "label": "act-15-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 25.3,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_12_act-15-dialogue-02.png",
+            "label": "act-15-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 25.9,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_13_act-21-pressed.png",
+            "label": "act-21-pressed",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 28.1,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_14_act-25-dialogue-01.png",
+            "label": "act-25-dialogue-01",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 29.3,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_15_act-25-dialogue-02.png",
+            "label": "act-25-dialogue-02",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 29.9,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_16_act-97-satchel-after.png",
+            "label": "act-97-satchel-after",
+            "lure_m": 3.3,
+            "pos": [
+              -17.0,
+              4182.7
+            ],
+            "t_s": 32.2,
+            "walked_m": 12.8
+          },
+          {
+            "file": "doss_17_act-98-perch-after-day-control.png",
+            "label": "act-98-perch-after-day-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_18_act-98-perch-after-day-production.png",
+            "label": "act-98-perch-after-day-production",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_19_act-98-perch-after-night-control.png",
+            "label": "act-98-perch-after-night-control",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_20_act-98-perch-after-night-production.png",
+            "label": "act-98-perch-after-night-production",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_21_act-99-after.png",
+            "label": "act-99-after",
+            "lure_m": 9.7,
+            "pos": [
+              -13.4,
+              4187.9
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_22_village-shop-day-control.png",
+            "label": "village-shop-day-control",
+            "lure_m": 4170.1,
+            "pos": [
+              10.0,
+              10.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_23_village-shop-day-production.png",
+            "label": "village-shop-day-production",
+            "lure_m": 4170.1,
+            "pos": [
+              10.0,
+              10.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_24_village-shop-night-control.png",
+            "label": "village-shop-night-control",
+            "lure_m": 4170.1,
+            "pos": [
+              10.0,
+              10.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_25_village-shop-night-production.png",
+            "label": "village-shop-night-production",
+            "lure_m": 4170.1,
+            "pos": [
+              10.0,
+              10.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_26_village-workshop-day-control.png",
+            "label": "village-workshop-day-control",
+            "lure_m": 4162.1,
+            "pos": [
+              14.0,
+              18.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_27_village-workshop-day-production.png",
+            "label": "village-workshop-day-production",
+            "lure_m": 4162.1,
+            "pos": [
+              14.0,
+              18.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_28_village-workshop-night-control.png",
+            "label": "village-workshop-night-control",
+            "lure_m": 4162.1,
+            "pos": [
+              14.0,
+              18.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_29_village-workshop-night-production.png",
+            "label": "village-workshop-night-production",
+            "lure_m": 4162.1,
+            "pos": [
+              14.0,
+              18.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_30_village-well-day-control.png",
+            "label": "village-well-day-control",
+            "lure_m": 4182.1,
+            "pos": [
+              4.0,
+              -2.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_31_village-well-day-production.png",
+            "label": "village-well-day-production",
+            "lure_m": 4182.1,
+            "pos": [
+              4.0,
+              -2.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_32_village-well-night-control.png",
+            "label": "village-well-night-control",
+            "lure_m": 4182.1,
+            "pos": [
+              4.0,
+              -2.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          },
+          {
+            "file": "doss_33_village-well-night-production.png",
+            "label": "village-well-night-production",
+            "lure_m": 4182.1,
+            "pos": [
+              4.0,
+              -2.0
+            ],
+            "t_s": 36.9,
+            "walked_m": 18.8
+          }
+        ],
+        "game_seconds": 36.9,
+        "left_road_at": [
+          -74.0,
+          4144.0
+        ],
+        "load_vs_saved_xz_m": 0.0,
+        "lure_node": "/root/MeadowsPlayground/RiverNestClear/Doss",
+        "lure_position": [
+          -19.0,
+          4180.0
+        ],
+        "notes": [
+          "pressed creature_recall (attempt 1); companion out afterwards: true",
+          "act-00-perch-before; pressed creature_recall (attempt 1); companion out afterwards: true",
+          "act-98-perch-after; pressed creature_recall (attempt 1); companion out afterwards: true"
+        ],
+        "off_road_leg_m": 65.7,
+        "position_after_load": [
+          344.79,
+          5.35,
+          3759.43
+        ],
+        "route_m": 674.2,
+        "route_road_points": 80,
+        "save": "res://tests/fixtures/f03_lure_saves/S07-exit-band3-plus-1wood-1fiber.json.gz",
+        "save_sha256": "db6b6ff913f63fd9f121f2fc0dc2c5cc073cf8cfd767dae4ee0941cb225e78bd",
+        "save_version": 16.0,
+        "saved_position": [
+          344.794708251953,
+          5.35583591461182,
+          3759.42504882812
+        ],
+        "scene": "res://scenes/world/meadows_playground.tscn",
+        "script_state_writes": "DRY RUN: staged arrival and day/night clock; private no-mipmap control; no flag/inventory writes",
+        "start_distance_to_lure_m": 556.1,
+        "verdict": "PASS",
+        "walked_m": 18.8,
+        "why": "paired production wood imports, Doss repair and village material samples; staged DRY RUN"
+      },
+      "frames": [
+        {
+          "path": "shots/doss-material-production/doss_01_start.png",
+          "sha256": "307f7b8803eee6678bf7e8c20b5cd1e4147cec7f97ab481d4ced221c70d2bcf3",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_02_act-0c-satchel-before.png",
+          "sha256": "b6fc4fe91839f5df427d7ee2ba5579a1f493864a0bb352aeec0ff0a34d15ff5e",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_03_act-00-perch-before-day-control.png",
+          "sha256": "c461d603047ff077db0a135eaa8b037c82cdf3a2d1c3e0cc1461e960b8bd0f8b",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_04_act-00-perch-before-day-production.png",
+          "sha256": "1a29a7e3e34ce9854856932f01572e4451bbcf4143b4b110917f4b9b888519b6",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_05_act-00-perch-before-night-control.png",
+          "sha256": "1b11c43cad3e12cd3bec7af07928e4fb4b476a86a6ec002bce03745f4508c632",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_06_act-00-perch-before-night-production.png",
+          "sha256": "893cf9cb67353adae2706244cfaa47d0e5cd9731fe1a0ae9683dee1bb1398dfd",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_07_act-01-pressed.png",
+          "sha256": "024c7823f0f1952e48993e5e1d31c3ffca66947798d3f6a7e70b5c64b8b5fd23",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_08_act-05-dialogue-01.png",
+          "sha256": "aaa6b8786c7dc544fad57ef8e608868e8436f0b15714290f9809e96bfd723282",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_09_act-05-dialogue-02.png",
+          "sha256": "76ee0240175bfb7221a9856509765ff6b42a94cc79379a9b36201526651a2283",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_10_act-11-pressed.png",
+          "sha256": "0df939d00c54b8d585773af599f609cb9a9507ef9ec4169608537f777e9c1d6a",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_11_act-15-dialogue-01.png",
+          "sha256": "a4349538b0aeee8fb551a01fde09c21928c1d5399b7a8a975dfd85b4322e9da1",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_12_act-15-dialogue-02.png",
+          "sha256": "88e6482a5dd3dfa5422c90b99114f4f77e0c3a9fb79e5d55e2a993ee99d93521",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_13_act-21-pressed.png",
+          "sha256": "802a23a3b73ca81231ae280f111990602f94f7417a5dd3a599ad86de45b47bfb",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_14_act-25-dialogue-01.png",
+          "sha256": "df220f4aa15f5784f6b4bc2dd32a0a4637c930a1231556b2b0471c565e6f2cf8",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_15_act-25-dialogue-02.png",
+          "sha256": "8ab2311db9ef60e143ee5901703570083447f01efdfe4fa53552d65f194c2286",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_16_act-97-satchel-after.png",
+          "sha256": "6ee5c8b4e4c9dc83733175dd991a3657ec3935cdf011af34e6533bc84705e127",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_17_act-98-perch-after-day-control.png",
+          "sha256": "787e4d6a95764314622a4349b4c9c43328471c832089bf80ed8cb4273950d8b7",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_18_act-98-perch-after-day-production.png",
+          "sha256": "061bc0134cc0ff35f2183423e56527484136df5d68aa7222099e43b47f050309",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_19_act-98-perch-after-night-control.png",
+          "sha256": "d699b3b06495a373c7d3e2287475093a9ede050b3059216f43657f90b6cd7ee4",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_20_act-98-perch-after-night-production.png",
+          "sha256": "b46867e168d77d22f32d947cbe51dc8f26ea57a3fe0c529741ca4e613bd40022",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_21_act-99-after.png",
+          "sha256": "500606f73846c08b2d74bbc5d5429a692951d8952e78fc5335dd669aecd8292d",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_22_village-shop-day-control.png",
+          "sha256": "5a380d6df032d46bf576605452b88e9ecb80590ccb38c958ee037bb94a2af4e7",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_23_village-shop-day-production.png",
+          "sha256": "a5f56568621e369c2b48d8c52d769d39402151fe7461481e6a8538faeae05a62",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_24_village-shop-night-control.png",
+          "sha256": "8769dc37ad116134dea79ffe9908fbc805a57d462b9c10af1fedbc75116f2fd0",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_25_village-shop-night-production.png",
+          "sha256": "fcb142c819e5b76e707f71ca49467a4e63124b81a001c7b32554e5c3398d77d0",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_26_village-workshop-day-control.png",
+          "sha256": "30de37ca388e07bfbcadc9d51d1b178dcecb7280511298fdb7a7c323455b35d4",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_27_village-workshop-day-production.png",
+          "sha256": "62498c4e7e8fec76b7a9a1dacee8c79c59967298c96ceaa3bbd5a61c82008484",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_28_village-workshop-night-control.png",
+          "sha256": "52d4b6071a671d06bb0377e9299ec9987757ffdcd549932ce630fccc7d5bd077",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_29_village-workshop-night-production.png",
+          "sha256": "6ade40dd12cfd5fadc7a80a86ad332895fd218584ea883a18633516e47bba6f3",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_30_village-well-day-control.png",
+          "sha256": "95c974f822963f692e7bae7f2d8ac4272221b229826dda618a5ab4b54eabfc77",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_31_village-well-day-production.png",
+          "sha256": "7270efe868408f0d3ff25a12a8e73dc0dca15fa5c144b5e056f0e2878fe3b4e6",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_32_village-well-night-control.png",
+          "sha256": "fcbe2182757733ddc9b2c6d7944590f6cdef553d622e602365b74f62579c160a",
+          "width": 1920,
+          "height": 1080
+        },
+        {
+          "path": "shots/doss-material-production/doss_33_village-well-night-production.png",
+          "sha256": "452694b5ed8cd832bcaf33b7025935adf9aa8e80196e76173d081561f6c121fd",
+          "width": 1920,
+          "height": 1080
+        }
+      ],
+      "error_count": 0,
+      "log_path": "D:\\tetherbound\\visual-acceptance-local\\doss-material-production.log",
+      "log_sha256": "b964e72ab72dcccbecbd530aabf35c723ff040b1fab4160a85fcbba5a541a2a1",
+      "stderr_sha256": "1ef7acc7a4b399cf80c1d87f1c759f336fe780ba8b9142c8990625e5f6cd286e",
+      "material_observations": [
+        "[wood-import] source=res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png mips=true levels=11 filter=original",
+        "[wood-import] source=res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png mips=true levels=11 filter=original",
+        "[wood-import] source=res://assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png mips=true levels=11 filter=original",
+        "[wood-import] state=act-00-perch-before-day surfaces=6 camera=(-8.939899, 9.383574, 4189.668) feet=(-13.31713, 5.518468, 4187.823)",
+        "[wood-import] state=act-00-perch-before-night surfaces=6 camera=(-8.939899, 9.383574, 4189.668) feet=(-13.31713, 5.518468, 4187.823)",
+        "[wood-import] state=act-98-perch-after-day surfaces=6 camera=(-9.091637, 9.397678, 4189.808) feet=(-13.4416, 5.532585, 4187.9)",
+        "[wood-import] state=act-98-perch-after-night surfaces=6 camera=(-9.091637, 9.397678, 4189.808) feet=(-13.4416, 5.532585, 4187.9)",
+        "[wood-import] state=village-shop-day surfaces=1003 camera=(7.017735, 3.649107, 12.2367) feet=(10.0, 0.900237, 10.0)",
+        "[wood-import] state=village-shop-night surfaces=1003 camera=(7.017735, 3.649107, 12.2367) feet=(10.0, 0.900237, 10.0)",
+        "[wood-import] state=village-workshop-day surfaces=1003 camera=(18.49249, 3.996256, 20.24624) feet=(14.0, 0.900411, 18.0)",
+        "[wood-import] state=village-workshop-night surfaces=1003 camera=(18.49249, 3.996256, 20.24624) feet=(14.0, 0.900411, 18.0)",
+        "[wood-import] state=village-well-day surfaces=1003 camera=(1.975201, 3.554651, 0.699734) feet=(4.0, 0.900411, -2.0)",
+        "[wood-import] state=village-well-night surfaces=1003 camera=(1.975201, 3.554651, 0.699734) feet=(4.0, 0.900411, -2.0)"
+      ],
+      "recovery_events": []
+    }
+  },
+  "assets": [
+    {
+      "source": "assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+      "sha256": "a59f410b07a9bc5f0664df3ba7a2c1e37acffc7979795911f3fc8730ab60e33e",
+      "dimensions": [
+        2048,
+        2048
+      ],
+      "source_pixels_unchanged": true,
+      "import_sha256": "a0fe4aa61ffd99efea7f5ee21435c10efa4f3df34cd1f0961e0bd1fefe5ccb20",
+      "only_import_change": "mipmaps/generate false -> true"
+    },
+    {
+      "source": "assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png",
+      "sha256": "5847623e4ed6c206e59f32d1718ee75dcb2b49a1d55ede7ef70a254739caf4a8",
+      "dimensions": [
+        2048,
+        2048
+      ],
+      "source_pixels_unchanged": true,
+      "import_sha256": "d232bddeb6db7f91706c9e03a30f9f3860d28a27d76c1c4ed481cc226444c5aa",
+      "only_import_change": "mipmaps/generate false -> true"
+    },
+    {
+      "source": "assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png",
+      "sha256": "e888464fd4199d458d8cf39e00fa07d56f8a0bcb658aa03b4a7c95d466ceefa3",
+      "dimensions": [
+        2048,
+        2048
+      ],
+      "source_pixels_unchanged": true,
+      "import_sha256": "974ee0b20da35ef4ac273c38f6c1d3c37bb1d462f32973c6a6b4dd8bfd1cffe3",
+      "only_import_change": "mipmaps/generate false -> true"
+    }
+  ],
+  "reproduction_scripts": {
+    "capture_doss_material.gd": "extends \"res://tests/capture_activity_lures.gd\"\n\nfunc _run() -> void:\n\tawait process_frame\n\troot.size = Vector2i(1920, 1080)\n\tawait super._run()\n",
+    "capture_doss_comparison.gd": "extends \"res://tests/capture_activity_lures.gd\"\n## DRY RUN: staged arrival and pinned clock, paired private material candidates.\nvar _filtered_maps: Dictionary = {}\n\nfunc _run() -> void:\n\tawait process_frame\n\troot.size = Vector2i(1920, 1080)\n\tawait super._run()\n\nfunc _walk() -> void:\n\t_receipt[\"script_state_writes\"] = \"DRY RUN: staged arrival and day/night clock; private material overrides; no flag/inventory writes\"\n\tvar at := _lure_body.global_position + Vector3(3, 0, 2)\n\t_player.global_position = Vector3(at.x, float(_world.call(\"ground_height_at\", at.x, at.z)) + 0.5, at.z)\n\t_player.velocity = Vector3.ZERO\n\tfor i in 90:\n\t\tawait physics_frame\n\tawait _walk_straight_to(_lure_body.global_position, 1.8, _prompt)\n\tawait _face_lure()\n\tawait _perform_action()\n\t_finish(\"PASS\", \"staged arrival; paired visual material comparison only\")\n\nfunc _capture_perch(perch: Node3D, label: String) -> void:\n\tvar stowed := false\n\tif _director != null and _director.call(\"ally_body\") != null:\n\t\tawait _press(\"creature_recall\")\n\t\tfor i in 60:\n\t\t\tawait physics_frame\n\t\tstowed = _director.call(\"ally_body\") == null\n\tawait _face_point(perch.global_position)\n\tvar surfaces: Array[Dictionary] = []\n\tfor node: Node in perch.find_children(\"*\", \"MeshInstance3D\", true, false):\n\t\tvar mi := node as MeshInstance3D\n\t\tfor surface in mi.mesh.get_surface_count():\n\t\t\tvar source := mi.get_active_material(surface) as StandardMaterial3D\n\t\t\tif source == null or source.resource_name != \"MI_WoodTrim\": continue\n\t\t\tvar candidate := source.duplicate() as StandardMaterial3D\n\t\t\tcandidate.albedo_color = Color(\"#7a5636\")\n\t\t\tcandidate.metallic = 0.0\n\t\t\tvar filtered := source.duplicate() as StandardMaterial3D\n\t\t\tfiltered.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC\n\t\t\tfiltered.albedo_texture = _mip_texture(source.albedo_texture)\n\t\t\tfiltered.normal_texture = _mip_texture(source.normal_texture, true)\n\t\t\tfiltered.roughness_texture = _mip_texture(source.roughness_texture)\n\t\t\tvar filtered_tint := filtered.duplicate() as StandardMaterial3D\n\t\t\tfiltered_tint.albedo_color = Color(\"#7a5636\")\n\t\t\tfiltered_tint.metallic = 0.0\n\t\t\tvar no_normal := source.duplicate() as StandardMaterial3D\n\t\t\tno_normal.normal_enabled = false\n\t\t\tsurfaces.append({\"mesh\":mi, \"surface\":surface, \"source\":mi.get_surface_override_material(surface), \"candidate\":candidate,\"filtered\":filtered,\"filtered_tint\":filtered_tint,\"no_normal\":no_normal})\n\tprint(\"[doss-material] wood surfaces=%d state=%s\" % [surfaces.size(), label])\n\tvar look := _world.get_node(\"WorldLook\")\n\tfor time_name in [\"day\", \"night\"]:\n\t\tlook.call(\"set_clock_frozen\", false)\n\t\tlook.call(\"apply_time\", time_name)\n\t\tlook.call(\"set_clock_frozen\", true)\n\t\tfor i in 30: await physics_frame\n\t\tfor variant in [\"control\", \"candidate\", \"filtered\", \"filtered_tint\", \"no_normal\"]:\n\t\t\tfor s: Dictionary in surfaces:\n\t\t\t\t(s.mesh as MeshInstance3D).set_surface_override_material(s.surface, s.source if variant == \"control\" else s[variant])\n\t\t\tawait _capture(\"%s-%s-%s\" % [label,time_name,variant])\n\tfor s: Dictionary in surfaces:\n\t\t(s.mesh as MeshInstance3D).set_surface_override_material(s.surface, s.source)\n\tlook.call(\"set_clock_frozen\", false)\n\tlook.call(\"apply_time\", \"day\")\n\tlook.call(\"set_clock_frozen\", true)\n\tif stowed: await _ensure_companion_out(\"%s; \" % label)\n\nfunc _mip_texture(texture: Texture2D, normal := false) -> Texture2D:\n\tif texture == null: return null\n\tif _filtered_maps.has(texture): return _filtered_maps[texture]\n\tvar image := texture.get_image()\n\tprint(\"[doss-material] source=%s mips=%s format=%d\" % [texture.resource_path, image.has_mipmaps(),image.get_format()])\n\tif image.is_compressed(): image.decompress()\n\timage.generate_mipmaps(normal)\n\tvar filtered := ImageTexture.create_from_image(image)\n\t_filtered_maps[texture] = filtered\n\treturn filtered\n",
+    "capture_doss_production.gd": "extends \"res://tests/capture_activity_lures.gd\"\n## DRY RUN: production imports versus private copies with their mip chain removed.\nvar _unfiltered_maps: Dictionary = {}\n\nfunc _run() -> void:\n\tawait process_frame\n\troot.size = Vector2i(1920, 1080)\n\tawait super._run()\n\nfunc _walk() -> void:\n\t_receipt[\"script_state_writes\"] = \"DRY RUN: staged arrival and day/night clock; private no-mipmap control; no flag/inventory writes\"\n\tawait _stage(_lure_body.global_position + Vector3(3,0,2))\n\tawait _walk_straight_to(_lure_body.global_position, 1.8, _prompt)\n\tawait _face_lure()\n\tawait _perform_action()\n\tif _director != null and _director.call(\"ally_body\") != null:\n\t\tawait _press(\"creature_recall\")\n\tfor stand: Dictionary in [\n\t\t{\"name\":\"shop\", \"at\":Vector3(10,0,10), \"face\":Vector3(18,1,4)},\n\t\t{\"name\":\"workshop\", \"at\":Vector3(14,0,18), \"face\":Vector3(2,2,12)},\n\t\t{\"name\":\"well\", \"at\":Vector3(4,0,-2), \"face\":Vector3(10,1,-10)}]:\n\t\tawait _stage(stand.at)\n\t\t_rig.set(\"pitch\", deg_to_rad(-15.0))\n\t\tawait _face_point(stand.face)\n\t\tfor time_name in [\"day\",\"night\"]:\n\t\t\tawait _set_time(time_name)\n\t\t\tawait _pair(_world,\"village-%s-%s\" % [stand.name,time_name])\n\t_finish(\"PASS\", \"paired production wood imports, Doss repair and village material samples; staged DRY RUN\")\n\nfunc _stage(at: Vector3) -> void:\n\t_player.global_position = Vector3(at.x,float(_world.call(\"ground_height_at\",at.x,at.z))+0.5,at.z)\n\t_player.velocity = Vector3.ZERO\n\tfor i in 90: await physics_frame\n\nfunc _set_time(time_name: String) -> void:\n\tvar look := _world.get_node(\"WorldLook\")\n\tlook.call(\"set_clock_frozen\",false)\n\tlook.call(\"apply_time\",time_name)\n\tlook.call(\"set_clock_frozen\",true)\n\tfor i in 30: await physics_frame\n\nfunc _capture_perch(perch: Node3D, label: String) -> void:\n\tvar stowed := false\n\tif _director != null and _director.call(\"ally_body\") != null:\n\t\tawait _press(\"creature_recall\")\n\t\tfor i in 60: await physics_frame\n\t\tstowed = _director.call(\"ally_body\") == null\n\tawait _face_point(perch.global_position)\n\tfor time_name in [\"day\",\"night\"]:\n\t\tawait _set_time(time_name)\n\t\tawait _pair(perch,\"%s-%s\" % [label,time_name])\n\tawait _set_time(\"day\")\n\tif stowed: await _ensure_companion_out(\"%s; \" % label)\n\nfunc _pair(target: Node3D, label: String) -> void:\n\tvar surfaces: Array[Dictionary] = []\n\tfor node: Node in target.find_children(\"*\",\"MeshInstance3D\",true,false):\n\t\tvar mi := node as MeshInstance3D\n\t\tif mi.mesh == null: continue\n\t\tfor surface in mi.mesh.get_surface_count():\n\t\t\tvar source := mi.get_active_material(surface) as StandardMaterial3D\n\t\t\tif source == null or source.resource_name != \"MI_WoodTrim\": continue\n\t\t\tif source.albedo_texture == null or not source.albedo_texture.resource_path.contains(\"quaternius_medieval/T_WoodTrim_\"): continue\n\t\t\tvar control := source.duplicate() as StandardMaterial3D\n\t\t\tcontrol.albedo_texture = _without_mips(source.albedo_texture)\n\t\t\tcontrol.normal_texture = _without_mips(source.normal_texture)\n\t\t\tcontrol.roughness_texture = _without_mips(source.roughness_texture)\n\t\t\tsurfaces.append({\"mesh\":mi,\"surface\":surface,\"source\":mi.get_surface_override_material(surface),\"control\":control})\n\tprint(\"[wood-import] state=%s surfaces=%d camera=%s feet=%s\" % [label,surfaces.size(),root.get_camera_3d().global_position,_player.global_position])\n\tfor variant in [\"control\",\"production\"]:\n\t\tfor s: Dictionary in surfaces:\n\t\t\t(s.mesh as MeshInstance3D).set_surface_override_material(s.surface,s.control if variant == \"control\" else s.source)\n\t\tawait _capture(\"%s-%s\" % [label,variant])\n\nfunc _without_mips(texture: Texture2D) -> Texture2D:\n\tif texture == null: return null\n\tif _unfiltered_maps.has(texture): return _unfiltered_maps[texture]\n\tvar image := texture.get_image()\n\tprint(\"[wood-import] source=%s mips=%s levels=%d filter=original\" % [texture.resource_path,image.has_mipmaps(),image.get_mipmap_count()])\n\tassert(image.has_mipmaps(),\"Production texture must contain mipmaps\")\n\tif image.is_compressed(): image.decompress()\n\timage.clear_mipmaps()\n\tvar control := ImageTexture.create_from_image(image)\n\t_unfiltered_maps[texture] = control\n\treturn control\n",
+    "run-doss-material.ps1": "param([string]$Tag='before', [switch]$Comparison, [switch]$Production)\n$ErrorActionPreference='Stop'\n$lockPath='D:/tetherbound/RENDER_LOCK.json'\n$old=Get-Content -LiteralPath $lockPath -Raw | ConvertFrom-Json\nif ($old.held_by) { throw \"Render lock held by $($old.held_by)\" }\n$env:APPDATA='D:/tetherbound/visual-acceptance-local/profile'\n$logBase=\"D:/tetherbound/visual-acceptance-local/doss-material-$Tag\"\n$record=@{held_by='combat';since_utc=[DateTime]::UtcNow.ToString('o');pid=0;shell_pid=$PID}\n$record | ConvertTo-Json | Set-Content -LiteralPath $lockPath\ntry {\n  $argsList=@('--path','D:/tetherbound/visual-acceptance','--rendering-method','gl_compatibility','--borderless','--position','0,0','--resolution','1920x1080','--fixed-fps','60','--script','D:/tetherbound/visual-acceptance-local/capture_doss_material.gd','--','--act','--activity=doss','--save=res://tests/fixtures/f03_lure_saves/S07-exit-band3-plus-1wood-1fiber.json.gz',\"--capture-dir=D:/tetherbound/visual-acceptance/shots/doss-material-$Tag\")\n  if ($Comparison) { $argsList = $argsList | ForEach-Object { if ($_ -eq 'D:/tetherbound/visual-acceptance-local/capture_doss_material.gd') { 'D:/tetherbound/visual-acceptance-local/capture_doss_comparison.gd' } else { $_ } } }\n  if ($Production) { $argsList = $argsList | ForEach-Object { if ($_ -eq 'D:/tetherbound/visual-acceptance-local/capture_doss_material.gd') { 'D:/tetherbound/visual-acceptance-local/capture_doss_production.gd' } else { $_ } } }\n  $proc=Start-Process 'D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe' -ArgumentList $argsList -WindowStyle Hidden -RedirectStandardOutput \"$logBase.log\" -RedirectStandardError \"$logBase.err\" -PassThru\n  $record.pid=$proc.Id\n  $record | ConvertTo-Json | Set-Content -LiteralPath $lockPath\n  if (-not $proc.WaitForExit(600000)) { $proc.Kill(); throw 'Capture exceeded ten-minute deadline' }\n  $proc.Refresh()\n  Write-Output \"$Tag exit: $($proc.ExitCode)\"\n  if (Select-String -LiteralPath \"$logBase.err\" -Pattern 'SCRIPT ERROR:|^ERROR:' -Quiet) { throw 'Capture emitted error diagnostics' }\n  if ($proc.ExitCode -ne 0) { throw 'Capture failed; inspect logs' }\n} finally {\n  $current=Get-Content -LiteralPath $lockPath -Raw | ConvertFrom-Json\n  if ($current.shell_pid -eq $PID) { '{}' | Set-Content -LiteralPath $lockPath }\n}\n"
+  },
+  "import_log": {
+    "path": "D:\\tetherbound\\visual-acceptance-local\\lures-import-wood-mipmaps.log",
+    "sha256": "759ca164d7c595e4fcc6e0e3286d9eb0e526731c1d7f3eb6c252a6491d02429b",
+    "stderr_bytes": 0
+  }
+}
