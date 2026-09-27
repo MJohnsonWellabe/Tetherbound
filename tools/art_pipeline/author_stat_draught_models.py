@@ -22,6 +22,7 @@ SPECS = {
  'attack_tonic': ('attack', False, '#905021'),
  'stoneguard_brew': ('defence', False, '#465764'),
 }
+BADGE_PLANES = {}
 
 def linear(v):
     return v/12.92 if v <= .04045 else ((v+.055)/1.055)**2.4
@@ -74,28 +75,42 @@ def prepare(source,out):
     bpy.context.view_layer.objects.active=objects[0];bpy.ops.object.join()
     bottle=bpy.context.object;bottle.name='Shared Meshy bottle'
     bpy.context.view_layer.update();export([bottle],out/'bottle_base.glb')
+    # Fit a shallow planar insert within each mount. Projecting every glyph
+    # vertex separately bent concave polygons through their backing surface.
+    # One shared plane per face keeps all inlay layers parallel and separated.
+    for front in (True,False):
+        direction=1 if front else -1
+        radius=.066 if front else .071*.70
+        samples=[]
+        for k in range(5):
+            for j in range(48):
+                a=j*2*math.pi/48;r=radius*k/4
+                hit,at,_,_=bottle.ray_cast(Vector((math.cos(a)*r,-2*direction,.33+math.sin(a)*r*1.1)),Vector((0,direction,0)))
+                if not hit:raise RuntimeError('Badge mount misses bottle')
+                samples.append(at.y)
+        BADGE_PLANES[front]=min(samples) if front else max(samples)
     return bottle
 
 def fitted_point(bottle,x,z,front,depth):
     direction=1 if front else -1
-    hit,at,_,_=bottle.ray_cast(Vector((x,-2*direction,z)),Vector((0,direction,0)))
-    if not hit:raise RuntimeError(f'Badge misses bottle at {x},{z}')
-    return (x,at.y-direction*depth,z)
+    return (x,BADGE_PLANES[front]-direction*depth,z)
 
 def disc(bottle,mat,front,radius,depth,name,inner=0):
-    # Subdivision conforms to the modeled leather face's gentle curvature.
-    n=48;rings=3;verts=[];scale=1 if front else .70
-    for k in range(rings+1):
-        r=inner+(radius-inner)*k/rings
+    # Thin enamel insert, seated inside the existing mount's silhouette.
+    n=48;verts=[];scale=1 if front else .70
+    if inner==0:verts.append(fitted_point(bottle,0,.33,front,depth))
+    for r in ((inner,radius) if inner else (radius,)):
         for j in range(n):
             a=2*math.pi*j/n
             verts.append(fitted_point(bottle,math.cos(a)*r*scale,.33+math.sin(a)*r*scale*1.10,front,depth))
     faces=[]
-    for k in range(rings):
-        for j in range(n):
-            a=k*n+j;b=k*n+(j+1)%n
+    for j in range(n):
+        if inner:
+            a=j;b=(j+1)%n
             # Angular-then-radial ordering faces +Y; the front faces -Y.
             face=(a,b,b+n,a+n);faces.append(tuple(reversed(face)) if front else face)
+        else:
+            face=(0,j+1,(j+1)%n+1);faces.append(face if front else tuple(reversed(face)))
     obj=mesh(name,verts,faces,mat)
     for polygon in obj.data.polygons:polygon.use_smooth=True
     return obj
@@ -108,7 +123,7 @@ def relief(bottle,points,mat,front,name,depth=.009):
     n=len(points)
     verts=[fitted_point(bottle,x,z,front,d) for d in (depth,depth-.0015) for x,z in points]
     faces=[tuple(range(n)),tuple(reversed(range(n,2*n)))]
-    faces += [(j,(j+1)%n,(j+1)%n+n,j+n) for j in range(n)]
+    faces += [(j+n,(j+1)%n+n,(j+1)%n,j) for j in range(n)]
     if not front:faces=[tuple(reversed(f)) for f in faces]
     return mesh(name,verts,faces,mat)
 
@@ -121,8 +136,16 @@ def badge(bottle,item,stat,permanent,colour,out):
         parts.append(disc(bottle,enamel,front,.066,.006,'Fitted enamel'))
         if not front:parts.append(disc(bottle,gold,front,.071,.0065,'Reverse rim',.065))
         points=symbol(stat)
+        if stat=='attack' and permanent:
+            # Crossed blades distinguish Might from the single Attack sword
+            # at pickup range without relying solely on the tiny seal pips.
+            for angle in (-.55,.55):
+                c,s=math.cos(angle),math.sin(angle)
+                blade=[((x*.65*c-z*.82*s)*.88,(x*.65*s+z*.82*c)*.88-.016) for x,z in points]
+                parts.append(relief(bottle,blade,ivory,front,'Might crossed blade'))
+            points=[]
         if permanent:points=[(x*.88,z*.88-.016) for x,z in points]
-        parts.append(relief(bottle,points,ivory,front,'Stat '+stat))
+        if points:parts.append(relief(bottle,points,ivory,front,'Stat '+stat))
         if stat=='defence':
             inset=[(x*.52,z*.52) for x,z in symbol(stat)]
             if permanent:inset=[(x*.88,z*.88-.016) for x,z in inset]

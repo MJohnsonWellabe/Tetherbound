@@ -22,7 +22,7 @@
   "world_scale": 0.8,
   "world_height_m": 0.64,
   "source_triangles": 9858,
-  "processing": "Normalize origin and height, weld coincident position vertices preserving corner UVs, preserve texture/material; fit colored stat badges on front and back. One shared bottle base across six composition scenes.",
+  "processing": "Normalize origin and height, weld coincident position vertices preserving corner UVs, preserve texture/material; fit shallow planar stat badges inside the front mount and on the rear band. Shared planes prevent glyph/backing intersections. Might uses crossed swords; Attack uses one sword. One shared bottle base across six composition scenes.",
   "badge_authoring": "tools/art_pipeline/author_stat_draught_models.py",
   "reference_sha256": "015bc3f00f0237fccb6db738221236fe9a178ffeb95f9b8d745dfd2393ff5411",
   "raw_meshy_glb_sha256": "8595a2a1dd66e3bd15e41796903f7709be98b432e20ba3f2e4e30fd097fac04a",
