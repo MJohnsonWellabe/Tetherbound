@@ -270,6 +270,18 @@ func _build_heart_chamber() -> void:
 	crystal.mesh = prism
 	interior.add_child(crystal)
 	crystal.position = _v(rules.crystal_position)
+	# A faceted cluster rather than one smooth prism: smaller shards of the same
+	# material lean out of its base (`crystal_shards`: [x, y, z, w, h, lean_deg, yaw_deg]).
+	for shard: Array in rules.get("crystal_shards", []):
+		var piece := MeshInstance3D.new()
+		piece.name = "CaptiveHeartChamberShard"
+		var shape := PrismMesh.new()
+		shape.size = Vector3(float(shard[3]), float(shard[4]), float(shard[3]))
+		shape.material = material
+		piece.mesh = shape
+		interior.add_child(piece)
+		piece.position = crystal.position + Vector3(float(shard[0]), float(shard[1]), float(shard[2]))
+		piece.rotation = Vector3(0.0, deg_to_rad(float(shard[6])), deg_to_rad(float(shard[5])))
 	if rules.has("crystal_light"):
 		var glow := OmniLight3D.new()
 		glow.name = "HeartCrystalLight"
@@ -284,7 +296,13 @@ func _build_heart_chamber() -> void:
 	for side in [-1, 1]:
 		_box(interior, Vector3(side * banner_x, 7, 105), Vector3(0.12, 6, 3), Color(rules.colours.banner), false)
 		if rules.has("banner_x_m"):
-			_box(interior, Vector3(side * (banner_x - 0.08), 7.6, 105), Vector3(0.06, 1.3, 1.3), Color(rules.colours.get("emblem", "#d8e6ea")), false)
+			# The Tetherbound diamond sigil, not a blank square: the emblem
+			# turned 45 degrees in the banner's plane, with a smaller inset.
+			_box(interior, Vector3(side * (banner_x - 0.08), 7.6, 105), Vector3(0.06, 1.1, 1.1), Color(rules.colours.get("emblem", "#d8e6ea")), false)
+			var sigil: Node3D = interior.get_child(interior.get_child_count() - 1)
+			sigil.rotation.x = PI * 0.25
+			_box(interior, Vector3(side * (banner_x - 0.12), 7.6, 105), Vector3(0.06, 0.5, 0.5), Color(rules.colours.banner), false)
+			interior.get_child(interior.get_child_count() - 1).rotation.x = PI * 0.25
 			_box(interior, Vector3(side * (banner_x - 0.1), 10.1, 105), Vector3(0.14, 0.14, 3.6), Color(rules.colours.brass), false)
 		_box(interior, Vector3(side * 7, 1, 113), Vector3(2, 2, 3), Color(rules.colours.metal), true)
 

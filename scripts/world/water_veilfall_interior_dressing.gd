@@ -34,12 +34,16 @@ func build(interior: Node3D, rules: Dictionary) -> void:
 		Color(str(colours.get("stone", "#4c5857"))).to_html(false): _masonry(cfg.get("stone", {})),
 		Color(str(colours.get("floor", "#77817a"))).to_html(false): _masonry(cfg.get("floor", {})),
 	}
+	if cfg.has("metal"):
+		skins[Color(str(colours.get("metal", "#697676"))).to_html(false)] = _masonry(cfg.metal)
 	if cfg.has("channel_water"):
 		skins[Color(str(colours.get("channel", "#347c89"))).to_html(false)] = _water(cfg.channel_water)
 	receipt["reskinned"] = _reskin(interior, skins)
 	receipt["members"] = _structure(interior, rules, cfg.get("structure", {}))
 	receipt["lanterns"] = _lanterns(interior, rules, cfg.get("lanterns", {}))
 	receipt["fall_wall"] = _fall_wall(interior, cfg.get("fall_wall", {}))
+	receipt["ledges"] = _ledges(interior, cfg.get("ledges", []), _masonry(cfg.get("stone", {})))
+	receipt["props"] = _props(interior, cfg.get("props", []))
 	_room_light(interior, cfg.get("room_light", {}))
 
 
@@ -269,3 +273,56 @@ func _room_light(interior: Node3D, cfg: Dictionary) -> void:
 		if child is OmniLight3D and child.name.begins_with("RoomFill"):
 			(child as OmniLight3D).light_color = Color(str(cfg.get("colour", "#9fb4c4")))
 			(child as OmniLight3D).light_energy = float(cfg.get("energy", 1.1))
+
+
+## Board: the Heart Chamber is a multi-level hall (galleries, a bridge before
+## the falls). Stone ledges in the wall masonry, out of reach and without
+## colliders, carry the installed balcony railings and vines placed by
+## `_props`. Each entry: {at: [x, y, z], size: [x, y, z]} interior-local.
+func _ledges(interior: Node3D, entries: Array, stone: StandardMaterial3D) -> int:
+	var placed := 0
+	for entry: Dictionary in entries:
+		var mesh := MeshInstance3D.new()
+		mesh.name = "VeilfallLedge"
+		var box := BoxMesh.new()
+		box.size = _vec(entry.get("size", [1, 1, 1]))
+		mesh.mesh = box
+		mesh.material_override = stone
+		mesh.position = _vec(entry.get("at", [0, 0, 0]))
+		interior.add_child(mesh)
+		placed += 1
+	return placed
+
+
+## Installed props at authored interior-local spots, dressing each room for
+## what it is named for. Entry: {model, at, yaw_deg, scale, rows?}. A `row`
+## repeats the prop `count` times along `step` (railings, arches, vines).
+## Presentation only: no colliders are added, and every spot is kept against a
+## wall or up on a ledge, outside the Heart Chamber's fight ring.
+func _props(interior: Node3D, entries: Array) -> int:
+	var placed := 0
+	var scenes: Dictionary = {}
+	for entry: Dictionary in entries:
+		var path := str(entry.get("model", ""))
+		if not scenes.has(path):
+			scenes[path] = load(path)
+		var scene: PackedScene = scenes[path]
+		if scene == null:
+			continue
+		var at := _vec(entry.get("at", [0, 0, 0]))
+		var step := _vec(entry.get("step", [0, 0, 0]))
+		for index in int(entry.get("count", 1)):
+			var node: Node3D = scene.instantiate()
+			node.name = "VeilfallProp"
+			interior.add_child(node)
+			node.position = at + step * index
+			node.rotation = Vector3(deg_to_rad(float(entry.get("pitch_deg", 0.0))),
+				deg_to_rad(float(entry.get("yaw_deg", 0.0))), deg_to_rad(float(entry.get("roll_deg", 0.0))))
+			node.scale = Vector3.ONE * float(entry.get("scale", 1.0))
+			placed += 1
+	return placed
+
+
+func _vec(raw: Variant) -> Vector3:
+	var a: Array = raw if raw is Array else [0, 0, 0]
+	return Vector3(float(a[0]), float(a[1]), float(a[2]))
