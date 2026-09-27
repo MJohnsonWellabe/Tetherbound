@@ -26,16 +26,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	if tree.current_scene != world or str(game.get("current_realm")) != "meadows" or INPUT_OWNER.current(tree) != null:
 		_fail("Earned Hall requires ordinary world input in the retained Meadows")
 		return result()
-	_player = world.get_node_or_null("Player") as CharacterBody3D
-	_rig = world.get_node_or_null("CameraRig") as Node3D
-	_mill = world.get_node_or_null("MillCrossing") as Node3D
-	_hold = world.get_node_or_null("Stronghold") as Node3D
-	_sigil_gate = world.get_node_or_null("SigilGate") as Node3D
-	_trainers = world.get_node_or_null("Trainers") as Node3D
-	_panel = world.get_node_or_null("DialoguePanel")
-	_director = world.get_node_or_null("EncounterDirector")
-	_combat = world.get_node_or_null("CombatManager")
-	_arbiter = tree.get_first_node_in_group("interaction_arbiter")
+	_collect(world)
 	if _player == null or _rig == null or _mill == null or _hold == null or _sigil_gate == null \
 			or _trainers == null or _panel == null or _director == null or _combat == null or _arbiter == null:
 		_fail("The actual Mill, Sigil Gate, Hall or input dependencies are missing")
@@ -71,20 +62,69 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 			return result()
 	_input = INPUTS.new()
 	_input._tree = tree
-	_nav = NAV.new(tree, _player, _rig, _stick)
+	_hook()
+	_completed = await _travel()
+	_stick(0.0, 0.0)
+	_unhook()
+	return result()
+
+
+## M2 "save/reload at ... Sigils": an optional reload with all three earned
+## Sigils carried, between the last captain and the Sigil Gate. The caller's
+## hook saves, frees the world and loads it back; the segment then binds to
+## the rebuilt world. Unset (the default) changes nothing.
+var before_gate: Callable
+
+
+func _collect(world: Node) -> void:
+	_world = world as Node3D
+	_player = world.get_node_or_null("Player") as CharacterBody3D
+	_rig = world.get_node_or_null("CameraRig") as Node3D
+	_mill = world.get_node_or_null("MillCrossing") as Node3D
+	_hold = world.get_node_or_null("Stronghold") as Node3D
+	_sigil_gate = world.get_node_or_null("SigilGate") as Node3D
+	_trainers = world.get_node_or_null("Trainers") as Node3D
+	_panel = world.get_node_or_null("DialoguePanel")
+	_director = world.get_node_or_null("EncounterDirector")
+	_combat = world.get_node_or_null("CombatManager")
+	_arbiter = _tree.get_first_node_in_group("interaction_arbiter")
+
+
+func _hook() -> void:
+	_nav = NAV.new(_tree, _player, _rig, _stick)
 	_combat.connect("entered", _on_entered)
 	_combat.connect("hit_landed", _on_hit)
 	_combat.connect("exited", _on_exit)
 	_panel.connect("finished", _on_dialogue_finished)
 	_arbiter.connect("activated", _on_activated)
-	_completed = await _travel()
+
+
+func _unhook() -> void:
+	for pair: Array in [[_combat, "entered", _on_entered], [_combat, "hit_landed", _on_hit],
+			[_combat, "exited", _on_exit], [_panel, "finished", _on_dialogue_finished],
+			[_arbiter, "activated", _on_activated]]:
+		var node: Object = pair[0]
+		if is_instance_valid(node) and node.is_connected(str(pair[1]), pair[2]):
+			node.disconnect(str(pair[1]), pair[2])
+
+
+func _reload_with_sigils() -> bool:
+	if not before_gate.is_valid():
+		return true
+	if not all_sigils(_sigil_stock(), 1):
+		return _fail("The Sigil reload was reached without the three earned Sigils")
 	_stick(0.0, 0.0)
-	_combat.disconnect("entered", _on_entered)
-	_combat.disconnect("hit_landed", _on_hit)
-	_combat.disconnect("exited", _on_exit)
-	_panel.disconnect("finished", _on_dialogue_finished)
-	_arbiter.disconnect("activated", _on_activated)
-	return result()
+	_unhook()
+	var ok: bool = await before_gate.call()
+	if not ok:
+		return _fail("The save/reload with the three Sigils carried failed")
+	_collect(_tree.current_scene)
+	if _player == null or _sigil_gate == null or _combat == null or _panel == null or _arbiter == null:
+		return _fail("The reloaded world lacks the Sigil Gate route dependencies")
+	_hook()
+	if not all_sigils(_sigil_stock(), 1):
+		return _fail("The three earned Sigils did not survive the reload")
+	return true
 
 
 ## A spine point that is only a bend in the road (not a captain's junction or
@@ -115,6 +155,8 @@ func _travel() -> bool:
 		if not await _walk_ground(road[join]):
 			return false
 		previous = join + 1
+	if not await _reload_with_sigils():
+		return false
 	var gate_at := Vector2(_sigil_gate.global_position.x, _sigil_gate.global_position.z)
 	var gate_join := nearest_index(road, gate_at)
 	if gate_join < previous or gate_join + 1 >= road.size():

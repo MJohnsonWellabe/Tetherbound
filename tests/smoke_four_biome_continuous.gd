@@ -780,7 +780,11 @@ func _meadows_after_bridge(game: Node) -> bool:
 		var label := str(stage[1])
 		if _resumed_past(label):
 			continue
-		var result: Dictionary = await (stage[0] as GDScript).new().run(self, live["world"], game)
+		var segment: RefCounted = (stage[0] as GDScript).new()
+		if stage[0] == HALL and OS.get_cmdline_user_args().has("--reload-at-transitions"):
+			# M2: save/reload with the three earned Sigils carried, before the gate.
+			segment.set("before_gate", func() -> bool: return await _reload_transition(game, "sigils_earned"))
+		var result: Dictionary = await segment.run(self, live["world"], game)
 		for line: Variant in result.get("failures", []):
 			failures.append(str(line))
 		if not bool(result.get("passed", false)) or not failures.is_empty():
