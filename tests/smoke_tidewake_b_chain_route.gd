@@ -86,6 +86,11 @@ var only: PackedStringArray = []
 ## Interact, and the Lastlight rest goes through the bed's real prompt and
 ## rest panel. See CONTINUOUS MODE below.
 var continuous := false
+const CHAINS := ["lantern", "gull", "cradle", "garden", "deep", "lastlight"]
+const CHECKPOINT_SLOT := 20
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+var save_dir := ""
+var resume_from := ""
 var swimming: Node
 var swims: Array[String] = []
 
@@ -109,6 +114,19 @@ func _run() -> void:
 	game.current_realm = "water"
 	game.local.character_id = CHARACTER
 	RELOAD.isolate(game, "tidewake_b_chain_route")
+	# Checkpoints (continuous debugging aid): `--save-dir=<dir>` keeps the
+	# production SaveGame in a stable directory; after each chain the run saves
+	# through Game.save_game(CHECKPOINT_SLOT + chain index). `--resume-from=<chain>`
+	# loads the checkpoint written after the previous chain through
+	# Game.load_game and runs from <chain> on. A resumed run is a DRY RUN: it is
+	# never the closing proof, which must be one uninterrupted run.
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--save-dir="):
+			save_dir = argument.trim_prefix("--save-dir=")
+		elif argument.begins_with("--resume-from="):
+			resume_from = argument.trim_prefix("--resume-from=")
+	if save_dir != "":
+		game.save_system = SAVE_GAME.new(save_dir.trim_suffix("/") + "/")
 	for upstream: String in ["water_swim_lesson_complete", "water_dock_reedhaven_repaired",
 			"water_dock_brine_steps_trial_won", "water_aquaryn_resolved", "water_dock_salt_crown_landing_charted"]:
 		game.world.flags.set_flag(upstream)
@@ -139,18 +157,38 @@ func _run() -> void:
 	pickups_data = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_pickups.json"))
 	reader = QUEST_LOG.new()
 	reader.set_realm("water")
+	if resume_from != "":
+		var index := CHAINS.find(resume_from)
+		if not _check(index > 0 and save_dir != "", "--resume-from needs a later chain and --save-dir"):
+			_finish()
+			return
+		var loaded := bool(game.load_game(CHECKPOINT_SLOT + index - 1))
+		print("DRY RUN: resumed from checkpoint slot %d (after %s) loaded=%s" % [CHECKPOINT_SLOT + index - 1, CHAINS[index - 1], loaded])
+		if not _check(loaded, "checkpoint loaded"):
+			_finish()
+			return
+		only = PackedStringArray(CHAINS.slice(index))
 	if not await _build_world(WORLD.instantiate()):
 		return
 	await _frames(30)
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--only="):
 			only = argument.trim_prefix("--only=").split(",")
-	if _on("lantern"): summary.append(await _lantern())
-	if _on("gull"): summary.append(await _gull())
-	if _on("cradle"): summary.append(await _cradle())
-	if _on("garden"): summary.append(await _garden())
-	if _on("deep"): summary.append(await _deep_watch())
-	if _on("lastlight"): summary.append(await _lastlight())
+	for index in CHAINS.size():
+		var chain: String = CHAINS[index]
+		if not _on(chain):
+			continue
+		match chain:
+			"lantern": summary.append(await _lantern())
+			"gull": summary.append(await _gull())
+			"cradle": summary.append(await _cradle())
+			"garden": summary.append(await _garden())
+			"deep": summary.append(await _deep_watch())
+			"lastlight": summary.append(await _lastlight())
+		print(summary[-1])
+		if save_dir != "":
+			var saved := bool(game.save_game(CHECKPOINT_SLOT + index))
+			print("CHECKPOINT slot=%d after %s saved=%s at %s" % [CHECKPOINT_SLOT + index, chain, saved, player.global_position])
 	await _reload_leg()
 	_finish()
 
