@@ -40,12 +40,16 @@ preferred over prior grass, but Bars A NO/B NO, full C2 still open.
 Completed bounded creature repairs (do not reopen without new regression evidence):
 Cloudfang has an authored shiny texture with six native day/night frames
 and scoped placeholder-replacement PASS; coarse fur/night variant recognition
-remain open. Galecrest strained neck is reproduced in live head tracking: the
-Galecrest-only candidate corrects its turn axis, limit and trainer gaze target.
-Eight native day/night comparisons and 32 tests/183 assertions are in
-`cloudreach-c2-candidate/galecrest-gaze`; independent source review clean.
-Blind scoped head/neck PASS (old variant FAIL); texture/whole-motion and full
-C2 remain open, overall Bars A/B NO.
+remain open. The owner subsequently required a complete Galecrest rebuild.
+New inspected reference, Meshy task 01a0e4a9-3cfa-7210-b6d6-70f332337328,
+new mesh/UV atlas and measured bird rig replace the old asset; 3.50m scale is
+preserved. Evidence: `ralph/reports/VISUAL/galecrest-rebuild`. Final native
+blind review passes anatomy, face/neck and production readability across
+12 day/night colourway frames. Revised faint has no clear gross penetration
+in sampled frames; continuous animation/contact is not certified. Feather
+highlights and alpha night wing midtones remain polish work; V30/full C2
+remain open. Focused regressions pass 37 tests/211 assertions. The replacement
+is a scoped asset delivery; see visual-judge-final.md for all limitations.
 Cloud volume checkpoint: six native subset frames and a nine-frame palette
 comparison remain Bars A/B NO. The judge narrowly prefers palette S; bounded
 cloud volumes fix rejected card silhouettes but do not close cliff/cloud

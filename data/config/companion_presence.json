@@ -106,10 +106,11 @@
     "influence": 0.75,
     "species_overrides": {
       "galecrest": {
-        "_comment": "V30: native comparison reproduced a strained neck when the head-forward Y axis was also used for the primary rotation. Measure an upright turn axis, aim at the trainer upper body, and bound the turn without changing the mesh, scale or other species.",
+        "_comment": "V30 rebuilt raptor: preserve the alert head pose while acknowledging the trainer. A restrained pitch and partial influence keep the brow from covering the eyes at the production camera; the upright turn axis still prevents neck roll.",
         "align_to_body_up": true,
         "primary_limit_deg": 55.0,
-        "secondary_limit_deg": 30.0,
+        "secondary_limit_deg": 15.0,
+        "influence": 0.4,
         "target_height_m": 1.55
       }
     }
