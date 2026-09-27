@@ -85,17 +85,28 @@ func _activate_alpha_challenge(alpha: Node) -> bool:
 	var player_collision := _player.get_node_or_null("Collision") as CollisionShape3D
 	if prompt == null or player_collision == null or not player_collision.shape is CapsuleShape3D:
 		return _fail("Aquaryn challenge geometry/provider is absent")
-	var target := alpha_challenge_stance(alpha.body.global_position, _player.global_position,
-		float(alpha.body.body_radius()), float(player_collision.shape.radius))
-	if not target.is_finite():
-		return _fail("Aquaryn has no outside approach direction")
-	target.y = _world.ground_height_at(target.x, target.z) + 0.1
-	if target.distance_to(prompt.global_position) > float(prompt.radius):
-		return _fail("Aquaryn outside stance is beyond its production challenge radius")
-	if not await _walk_to(target, "Aquaryn outside-capsule challenge stance", 1.0):
-		return false
-	await _frames(8)
-	if _arbiter.winning_provider() != prompt:
+	# Aquaryn keeps moving while the player walks to a stance, so recompute the
+	# stance from where it now stands and try again (a player re-approaches too).
+	var won := false
+	for attempt in 4:
+		var target := alpha_challenge_stance(alpha.body.global_position, _player.global_position,
+			float(alpha.body.body_radius()), float(player_collision.shape.radius))
+		if not target.is_finite():
+			return _fail("Aquaryn has no outside approach direction")
+		target.y = _world.ground_height_at(target.x, target.z) + 0.1
+		if target.distance_to(prompt.global_position) > float(prompt.radius):
+			return _fail("Aquaryn outside stance is beyond its production challenge radius")
+		if not await _walk_to(target, "Aquaryn outside-capsule challenge stance", 1.0):
+			return false
+		await _frames(8)
+		if _arbiter.winning_provider() == prompt:
+			won = true
+			break
+		var rival: Object = _arbiter.winning_provider()
+		_note("Aquaryn challenge not winning on attempt %d: winner=%s label=%s stance=%s aquaryn=%s" % [attempt + 1,
+			str(rival.get_path()) if rival is Node else str(rival), str(_arbiter.winner().get("label", "")),
+			target, alpha.body.global_position])
+	if not won:
 		return _fail("Aquaryn challenge does not win at the physical outside stance")
 	_activated = null
 	await _tap(&"interact")
@@ -121,9 +132,16 @@ func _fight_alpha() -> bool:
 	if not _manager.is_fighting() or _manager.encounter_id() != alpha.authority.encounter_id:
 		return _fail("Real Aquaryn interaction did not enter its authoritative fight")
 	var deadline := Time.get_ticks_msec() + 180000
+	var fight_frames := 0
 	while _manager.is_fighting() and Time.get_ticks_msec() < deadline:
 		var enemy: Node3D = _manager.enemy_body()
 		var ally: Node3D = _director.ally_body()
+		fight_frames += 1
+		if fight_frames % 600 == 0 and is_instance_valid(enemy) and is_instance_valid(ally):
+			_note("Aquaryn fight t=%.0fs wall=%.0fs enemy_hp=%.2f ally=%s hp=%.2f gap=%.1fm enemy_y=%.1f ally_y=%.1f" % [
+				fight_frames / 60.0, (180000 - (deadline - Time.get_ticks_msec())) / 1000.0,
+				enemy.instance.hp_fraction(), str(_manager.active_creature().species_id), _manager.active_creature().hp_fraction(),
+				ally.global_position.distance_to(enemy.global_position), enemy.global_position.y, ally.global_position.y])
 		_stop_combat_input()
 		if is_instance_valid(enemy) and is_instance_valid(ally):
 			_pilot.drive(_manager, ally, enemy)

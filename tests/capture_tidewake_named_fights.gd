@@ -32,6 +32,7 @@ const PARTY := ["ripplet", "bramblebun", "mudsnout", "pipwing", "trailpup"]
 ## interior body stand up, exactly as smoke_water_veilfall_captain.gd prepares.
 const INTERIOR_FLAGS := ["water_veilfall_intake_stopped", "water_veilfall_return_opened"]
 var _fight_cap_s := 240.0
+const TELL_START_LAG_S := 0.1
 var _policy := "QUICK"
 var _reader: RefCounted
 
@@ -178,9 +179,13 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 					return
 				watched[uid] = int(watched.get(uid, 0)) + 1
 				_tell = {"start": _fight_t, "seconds": seconds, "late_saved": false, "start_saved": false})
-		# Tell frames: the first frame of the tell and the frame before it lands.
+		# Tell frames: early in the tell and the frame before it lands. The
+		# early frame waits TELL_START_LAG_S: the viewport image is the frame
+		# already rendered, and the HUD cue and ground ring appear on the next
+		# process frame after the telegraph signal, so a same-tick grab shows
+		# the pre-tell frame (the first code-blind judge read that as "no cue").
 		if not _tell.is_empty():
-			if not bool(_tell.start_saved):
+			if not bool(_tell.start_saved) and _fight_t >= float(_tell.start) + TELL_START_LAG_S:
 				_tell.start_saved = true
 				saved += _save(dir, "tell-start", _fight_t, enemy, ally, _tell)
 			elif not bool(_tell.late_saved) and _fight_t >= float(_tell.start) + float(_tell.seconds) - 0.1:
