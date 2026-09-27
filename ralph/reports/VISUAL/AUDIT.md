@@ -11,6 +11,19 @@ verdicts, coverage, PR dispositions and the Cloudreach fixture error.
 
 ## Current owner acceptance priorities
 
+**Current ownership and order (owner, 2026-09-27):** Codex owns new assets,
+meshes, textures and reference-backed hero/creature art. Claude owns existing
+asset tint, placement, VFX/shader-parameter tuning and all fight-camera/collision
+work. This supersedes conflicting implementation assignments below. Start with
+Priority 1 criterion-closing art, top to bottom: Cloudreach V10/V20/V28/V29,
+then remaining listed Cloudreach, Stormwood, Tidewake and Meadows asset work;
+Priority 2 fight identity/tells and Priority 3 whole-game art follow. The owner's
+SKIP rows stay with Claude. Read V-VIS-1..13 on `origin/tb/vis` until merged.
+V10 new cloud/cliff mesh work is in progress on #365; CODEX START is posted on
+#356. The flat-height vegetation diagnosis is handed to Claude as placement
+evidence, not continued as a Codex implementation. See VEGETATION-ISOLATION.md.
+GPU service is fourth priority and skips requests replaced or withdrawn on #356.
+
 The owner's explicit eight failing criteria supersede further general-family
 polish. Rechecked against GitHub main `4316362e2` and its criterion board; none
 is newly closed here. Board evidence often names older `fe07d0d2` captures,

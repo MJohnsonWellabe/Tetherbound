@@ -18,6 +18,16 @@ main; Claude continues gameplay work and owns PR merges. PR288 is the first boun
 X04 slice (Tidewake lantern materials); evidence and remaining defects are in
 `ralph/reports/VISUAL/DOCK-MATERIALS.md`. Whole-game Bars A/B remain open.
 
+Owner's revised split: Codex now owns new assets/meshes/textures and reference-
+backed creature/hero art; Claude owns existing-asset placement/tint/VFX tuning
+and fight-camera/collision. V10 new cloud/cliff meshes supporting V20/V28 are
+active on #365, ahead of V29's remaining aviary assets; CODEX START posted #356.
+Read the V-VIS rows on tb/vis until merged. The grass-grounding draft was removed
+from the production worktree; native layer isolation is placement evidence for
+Claude, not an accepted visual fix. Main `ddaf7a7bd` integrated in `f8b07a081`.
+See `ralph/reports/VISUAL/VEGETATION-ISOLATION.md`. GPU service remains secondary
+and now skips replaced/withdrawn requests under the owner's updated instructions.
+
 The current F04#1 native relay witness still fails visible travel/path readability.
 After integrating main `4ee9f4157`, measured Vance/Tuskroot travel is
 1.333 / 0.000 / 0.267 m (7 m is only the configured maximum). Contact spacing
