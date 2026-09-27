@@ -1,0 +1,33 @@
+{
+  "_comment": "V-VIS-9 / F10#4 (code-blind judge: the rod line was only gold stripes painted on the road; no rods, scaffold, copper or cable). Team Tether's rod line made physical from installed art: the Team Tether rod pylon (the rod stations' own model, smaller) stands beside the critical road every spacing_m, offset side_offset_m from the centreline on the side_sign side of the flow toward the Dynamo, and a sagging copper cable with a pale-violet charge bead runs pylon to pylon toward the Stormheart. Presentation only: no colliders, nothing on a simulation_only world. Pylons skip exclusion_radius_m around settlements, arches and footings, camps, rod stations, trainers and pocket spur junctions; a span longer than max_span_m (a skipped pylon) gets no cable. After stormwood:long_storm_ended the pylons go dark (tether_pylon_materials unlit) and the charge beads go out.",
+  "routes": ["ash_road", "conductor_road", "deepwood_road"],
+  "spacing_m": 38.0,
+  "start_m": 20.0,
+  "side_offset_m": 8.5,
+  "side_sign": 1,
+  "pylon_model": "res://assets/environment/team_tether/tether_pylon.glb",
+  "pylon_height_m": 6.2,
+  "sink_m": 0.25,
+  "cable_attach_m": 5.6,
+  "cable_radius_m": 0.07,
+  "cable_sag_m": 1.1,
+  "cable_segments": 8,
+  "cable_colour": "#b8733a",
+  "cable_metallic": 0.85,
+  "cable_roughness": 0.35,
+  "bead_radius_m": 0.28,
+  "bead_colour": "#d9c8ff",
+  "bead_energy": 4.0,
+  "max_span_m": 60.0,
+  "exclusion_radius_m": 14.0,
+  "road_clear_m": 0.5,
+  "exclusion_sources": [
+    "res://data/config/stormwood_settlements.json",
+    "res://data/config/stormwood_arches.json",
+    "res://data/config/stormwood_camps.json",
+    "res://data/config/stormwood_rod_stations.json",
+    "res://data/config/stormwood_trainers.json"
+  ],
+  "visibility_range_m": 420.0,
+  "aftermath_flag": "stormwood:long_storm_ended"
+}

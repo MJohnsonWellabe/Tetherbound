@@ -14,6 +14,7 @@ const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
 const STRUCK_SENTINEL := preload("res://scripts/world/stormwood_struck_sentinel.gd")
 const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 const ROAD_CURRENT := preload("res://scripts/world/stormwood_road_current.gd")
+const ROD_LINE := preload("res://scripts/world/stormwood_rod_line.gd")
 const GLASS_FIELD := preload("res://scripts/world/stormwood_glass_field.gd")
 const GROUND_COVER := preload("res://scripts/world/grass_field.gd")
 const SETTLEMENTS := preload("res://scripts/world/village.gd")
@@ -112,6 +113,7 @@ func _ready() -> void:
 	_build_rootgate()
 	_build_pockets()
 	_build_road_current()
+	_build_rod_line()
 	var settlements := SETTLEMENTS.new()
 	settlements.name = "RodfolkSettlements"
 	settlements.config_path = "res://data/config/stormwood_settlements.json"
@@ -296,6 +298,14 @@ func _build_road_current() -> void:
 			var y := TERRAIN_HEIGHT.height_from(data, spacing, x, z)
 			return y if is_finite(y) else ground_height_at(x, z)
 	current.build(self, height)
+
+## V-VIS-9 / F10#4: the physical rod line beside the critical road (client
+## presentation only; stormwood_rod_line.gd builds nothing when simulating).
+func _build_rod_line() -> void:
+	var line := ROD_LINE.new()
+	line.name = "StormwoodRodLine"
+	add_child(line)
+	line.build(self)
 
 func _stand_up_ground_cover() -> void:
 	if simulation_only or not GROUND_COVER.is_enabled():
