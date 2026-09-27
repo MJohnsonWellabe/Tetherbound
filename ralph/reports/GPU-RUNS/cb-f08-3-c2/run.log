@@ -1,0 +1,43 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] configure (res://scripts/world/cloudreach_physical_runtime.gd:119)
+       [4] _ready (res://scripts/world/cloudreach_chapter.gd:82)
+       [5] _ready (res://scripts/world/cloudreach_world.gd:417)
+       [6] _run (res://tools/capture_cloudreach_b_high_perch_r4.gd:80)
+[village_npcs] placed 11 of 11
+WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:418)
+       [4] _run (res://tools/capture_cloudreach_b_high_perch_r4.gd:80)
+WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:418)
+       [4] _run (res://tools/capture_cloudreach_b_high_perch_r4.gd:80)
+HIGH PERCHES CAPTURE high-perches-glide-approach-day -> res://shots/locations/cloudreach-high-perches-c2/high-perches-glide-approach-day.png
+HIGH PERCHES CAPTURE high-perches-glide-approach-night -> res://shots/locations/cloudreach-high-perches-c2/high-perches-glide-approach-night.png
+HIGH PERCHES CAPTURE high-perches-southeast-glide-approach-day -> res://shots/locations/cloudreach-high-perches-c2/high-perches-southeast-glide-approach-day.png
+HIGH PERCHES CAPTURE high-perches-southeast-glide-approach-night -> res://shots/locations/cloudreach-high-perches-c2/high-perches-southeast-glide-approach-night.png
+HIGH PERCHES CAPTURE high-perches-west-glide-high-day -> res://shots/locations/cloudreach-high-perches-c2/high-perches-west-glide-high-day.png
+HIGH PERCHES CAPTURE high-perches-west-glide-high-night -> res://shots/locations/cloudreach-high-perches-c2/high-perches-west-glide-high-night.png
+HIGH PERCHES CAPTURE high-perches-court-high-oblique-day -> res://shots/locations/cloudreach-high-perches-c2/high-perches-court-high-oblique-day.png
+HIGH PERCHES CAPTURE high-perches-court-high-oblique-night -> res://shots/locations/cloudreach-high-perches-c2/high-perches-court-high-oblique-night.png
+HIGH PERCHES CAPTURE high-perches-rig-fly-arrival-day -> res://shots/locations/cloudreach-high-perches-c2/high-perches-rig-fly-arrival-day.png
+HIGH PERCHES CAPTURE high-perches-rig-fly-arrival-night -> res://shots/locations/cloudreach-high-perches-c2/high-perches-rig-fly-arrival-night.png
+HIGH PERCHES CAPTURE high-perches-rig-fly-departure-day -> res://shots/locations/cloudreach-high-perches-c2/high-perches-rig-fly-departure-day.png
+HIGH PERCHES CAPTURE high-perches-rig-fly-departure-night -> res://shots/locations/cloudreach-high-perches-c2/high-perches-rig-fly-departure-night.png
+HIGH PERCHES CAPTURE OK: 12/12
