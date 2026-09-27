@@ -112,3 +112,25 @@ func _cost_map(raw: Array) -> Dictionary:
 		if value is Dictionary:
 			result[str(value.get("id", ""))] = int(value.get("n", 0))
 	return result
+
+
+## Continuous run 4aa31d44 stalled at the Still Grove footing's east curb (a
+## flat 9 m slab on ground falling east: east edge ~0.75 m proud, south edge
+## flush west of centre). The walk to its south entry never crosses the slab.
+func test_the_footing_entry_route_never_climbs_onto_the_slab() -> void:
+	var half := SEGMENT.FOOTING_HALF_M + 0.3
+	var centre: Vector2 = SEGMENT.FOOTING_XZ
+	for from: Vector2 in [Vector2(-157.34, 2745.11), Vector2(-135, 2760), Vector2(-157, 2762),
+			Vector2(-165, 2762), Vector2(-175, 2750), Vector2(-140, 2730), Vector2(-160, 2700)]:
+		var route: Array[Vector2] = SEGMENT.footing_entry_route(from)
+		assert_eq(route[route.size() - 1], SEGMENT.FOOTING_SOUTH_ENTRY, "every route ends at the flush entry")
+		var at := from
+		for point: Vector2 in route:
+			for i in 41:
+				var p := at.lerp(point, i / 40.0)
+				assert_false(absf(p.x - centre.x) < half and absf(p.y - centre.y) < half,
+					"from %s the leg %s -> %s crosses the footing at %s" % [str(from), str(at), str(point), str(p)])
+			at = point
+	var entry: Vector2 = SEGMENT.FOOTING_SOUTH_ENTRY
+	assert_true(entry.y < centre.y - SEGMENT.FOOTING_HALF_M and absf(entry.x - centre.x) < 2.0,
+		"the entry faces the slab's flush south edge, west of centre")

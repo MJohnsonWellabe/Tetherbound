@@ -44,7 +44,18 @@ func _on_enemy_strike() -> void:
 	var cfg: Dictionary = _wild.call("combat_config")
 	var origin: Vector3 = _wild.call("centre")
 	var facing: Vector3 = _wild.call("facing")
-	_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
+	# F04/F10#2: a travelling lunge has already run down its lane and judged
+	# contact on the way (as `combat_manager._on_enemy_strike` reads it solo).
+	# No second impulse, and a charge that reached nobody misses everybody.
+	var lunge: Dictionary = _wild.call("take_lunge_outcome") \
+		if _wild.has_method("take_lunge_outcome") else {}
+	if lunge.is_empty():
+		_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
+	elif not bool(lunge.get("contact", false)):
+		attack_missed.emit(false)
+		state_changed.emit()
+		swung.emit()
+		return
 	# The link reports local peer zero: every actual participant, including the
 	# listen-server player, receives the same host damage delivery path.
 	_host_resolve_enemy_strike_for_a_participant(cfg, origin, facing)

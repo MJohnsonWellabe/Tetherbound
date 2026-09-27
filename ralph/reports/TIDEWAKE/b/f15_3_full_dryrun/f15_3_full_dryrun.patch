@@ -1,0 +1,2335 @@
+From 2abefdf61e016aaa2906f68c576db79712681ad5 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 27 Sep 2026 00:00:14 +0000
+Subject: [PATCH 1/2] F15#3 full: title-loaded saved teams, guest in-run
+ real-menu release, stick-walk attempt to Grandpa (WIP evidence)
+
+Fixture save (captured by f15_tidewake_b_full_fixture_make.json, disclosed)
+loaded through the title Continue path (host) and returning route (guest);
+no party_grant/story_flag/guardian_fixture in the run. Additive harness
+options: load_save copy_only, title_continue any_realm/expect_character,
+grandpa_homecoming/veilfall_press walk, production_join adopted-character.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_012DN8r8YmVbrS3ATxVTNU66
+---
+ ralph/reports/TIDEWAKE/b/f15_3_full/PROOF.md  |  52 +++
+ .../b/f15_3_full/fixture_make/PROOF.md        |  58 +++
+ .../NET_RUN.json.gz                           | Bin 0 -> 937 bytes
+ .../SUMMARY.md                                |  10 +
+ .../peer-0.log                                |  25 ++
+ .../peer-1.log                                |  25 ++
+ .../character.json.gz                         | Bin 0 -> 5740 bytes
+ .../peer-0/before/worlds/slot-0/world.json.gz | Bin 0 -> 798 bytes
+ .../character.json.gz                         | Bin 0 -> 6020 bytes
+ .../fixture/worlds/slot-0/world.json.gz       | Bin 0 -> 900 bytes
+ .../character.json.gz                         | Bin 0 -> 5757 bytes
+ .../character.json.gz                         | Bin 0 -> 5828 bytes
+ tools/net/peer_runner.gd                      |   8 +-
+ .../character.json.gz                         | Bin 0 -> 5828 bytes
+ .../character.json.gz                         | Bin 0 -> 6020 bytes
+ .../saves/slot_0.json.gz                      | Bin 0 -> 7198 bytes
+ .../worlds/slot-0/world.json.gz               | Bin 0 -> 900 bytes
+ .../f15_tidewake_b_full_fixture_make.json     | 272 +++++++++++++
+ .../f15_tidewake_b_grandpa_full.json          | 362 ++++++++++++++++++
+ tools/net/proof_steps.gd                      | 133 +++++--
+ 20 files changed, 919 insertions(+), 26 deletions(-)
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/PROOF.md
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/PROOF.md
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/NET_RUN.json.gz
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/SUMMARY.md
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/peer-0.log
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/peer-1.log
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/before/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/before/worlds/slot-0/world.json.gz
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/fixture/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/fixture/worlds/slot-0/world.json.gz
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-1/before/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-1/fixture/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz
+ create mode 100644 tools/net/proof_saves/f15_tidewake_b_full_guest/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz
+ create mode 100644 tools/net/proof_saves/f15_tidewake_b_full_host/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz
+ create mode 100644 tools/net/proof_saves/f15_tidewake_b_full_host/saves/slot_0.json.gz
+ create mode 100644 tools/net/proof_saves/f15_tidewake_b_full_host/worlds/slot-0/world.json.gz
+ create mode 100644 tools/net/proof_scenarios/f15_tidewake_b_full_fixture_make.json
+ create mode 100644 tools/net/proof_scenarios/f15_tidewake_b_grandpa_full.json
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/PROOF.md b/ralph/reports/TIDEWAKE/b/f15_3_full/PROOF.md
+new file mode 100644
+index 00000000..082c87ba
+--- /dev/null
++++ b/ralph/reports/TIDEWAKE/b/f15_3_full/PROOF.md
+@@ -0,0 +1,52 @@
++# F15#3: saved teams loaded through the title, the guest releases in-run, then Grandpa
++
++**Verdict: PARTIAL.** RESULT_LINE
++
++Criterion: ACCEPTANCE §6.1 **F15#3**: host and guest "receive Grandpa's acknowledgement of each current team, including releases" (T3: "Grandpa recognizes each character's current companions, including releases").
++
++Under the coordinator's bar, a fixture save is still a fixture. This run removes `party_grant`, `story_flag` and `guardian_fixture` from the run itself, and the guest now releases a companion in-run. The start state is still a fixture save, and three placement steps remain (below). It does not close F15#3.
++
++- Scenario: `tools/net/proof_scenarios/f15_tidewake_b_grandpa_full.json`
++- Rerun: `tools/net/run_two_peer_proof.sh tools/net/proof_scenarios/f15_tidewake_b_grandpa_full.json --out=<dir>`
++- Runner table (generated, unedited): `run/PROOF.md`. Captured saves are under `run/peer-*/{before,after}/` (gzip).
++
++## Start state: the disclosed fixture save
++
++| | |
++|---|---|
++| Files | `tools/net/proof_saves/f15_tidewake_b_full_host/` (host `saves/slot_0`, `worlds/slot-0/world.json`, `characters/character-e8e1…/character.json`) and `tools/net/proof_saves/f15_tidewake_b_full_guest/` (`characters/character-3f0b…/character.json`). All are gzip'd. `load_save` gunzips them on copy. |
++| Produced by | `tools/net/proof_scenarios/f15_tidewake_b_full_fixture_make.json`, run `net-proof_two_peer-20260926T232530Z`, exit 0 (runner table: `fixture_make/PROOF.md`). Its step `capture_saves {label: fixture}` is the game's own autosave plus character save. The files were copied from `fixture_make/peer-{0,1}/fixture/` and gzip'd, unedited. |
++| How that state was made | This is **not actual play**. The fixture-make run uses the same setup fixtures as the landed `f15_tidewake_b_grandpa_real_release` proof: `story_flag defeated_warden` (world, ledger), `party_grant` of named companions (host Acorn/Pip/Rill/Shelby/Volt; guest Kestrel/Bramble/Tuff/Fern/Moss), and `guardian_fixture` (Veilfall prerequisites plus Nerissa's defeat through the ledger, with both players injected as participants). After that, the rest is real. The host frees the Guardian at the chamber control, asks at the invite prompt, and at a full five lets **Rill** go through the real Creatures-tab release menu. That resolution sets `water_currents_restored` through `water_guardian_reward.gd`. The guest does **not** ask, so its own Guardian row stays open in the host world. |
++| What the save holds | World (realm `water`): `defeated_warden`, `water_captain_nerissa_defeated`, `water_guardian_freed`, `water_currents_restored`, the guest's open reward row, and no `homecoming_seen`. Host character: Acorn, Pip, Abyssal Guardian, Shelby, Volt (Rill already released), no `homecoming_seen`. Guest character: Kestrel, Bramble, Tuff, Fern, Moss, no Guardian, no `homecoming_seen`. |
++
++## Clause-by-clause
++
++| Clause / objection | This run | Status |
++|---|---|---|
++| Host receives Grandpa's acknowledgement of its current team | HOST_ACK | HOST_ACK_S |
++| Guest receives Grandpa's acknowledgement of its current team | GUEST_ACK | GUEST_ACK_S |
++| "including releases" | The **guest releases in-run**. At a full five it asks for its own Guardian and lets **Tuff** go through the real release menu with controller presses only (Tuff's row, `ui_accept`, "Let them go forever", Done): `[Kestrel, Bramble, Tuff, Fern, Moss]` → `[Kestrel, Bramble, Abyssal Guardian, Fern, Moss]`. The host's release (Rill) is in the loaded save; it was made through the real menu in the fixture run. Grandpa must name neither Tuff nor Rill. | REL_S |
++| Personal, not world | `homecoming_seen` is checked in each character save and absent from the shared world save (`check_saved` after). | PERS_S |
++| (a) parties GRANTED (`party_grant`) | No `party_grant` in this run. Both teams load from saves through the title. **Remaining:** the teams inside the fixture save were originally granted in the fixture-make run. | PARTIAL |
++| (b) player TELEPORTED beside Grandpa | Each peer first attempts a **left-stick-only walk**: `grandpa_homecoming {walk: true}`, which uses the runner's stick navigator along the house's own `outside` → `door` → inside markers, then Grandpa. WALK_RESULT **Remaining:** acknowledgement is taken by the placing `grandpa_homecoming`. | OPEN |
++| (c) `defeated_warden` ledger-set via `story_flag`, plus `guardian_fixture` | Neither runs in this run. **Remaining:** both are baked into the fixture save's world by the fixture-make run. | PARTIAL |
++| (d) the guest does not release in-run | The guest releases Tuff in-run through the real menu (above). **Remaining:** `veilfall_press` places the guest at the chamber's invite prompt. An earlier `walk: true` attempt from the rejoin spot freed the player body mid-walk (`stick_navigator.gd:339`, "previously freed"). | MET (placement disclosed) |
++| Title Continue (host) | `load_save {copy_only}` places the files on disk and loads nothing. `title_continue {any_realm}` then does the production title reset, Load Game, the autosave slot, `Game.load_game`, and rebuilds and hosts the Tidewake. Character `character-e8e1…` comes back. | MET |
++| Title returning route (guest) | `load_save {copy_only}` places the guest's character file. `production_join {returning_route, pick_saved}` then calls `title._join_via`. The title had already adopted the saved character, so `_begin_join` → `_restore_portable_returning_character` → JoinDriver (log: "[title] restored returning guest character before joining"). `guardian_state` confirms character `character-3f0b…` with its saved five. | MET |
++| Crossing home | `Game.enter_realm("meadows")`, the production crossing. It stands in for walking to the Tidewake's gate. | FIXTURE (disclosed) |
++
++## Harness changes (shared files, additive; existing callers unchanged)
++
++- `tools/net/proof_steps.gd`
++  - `load_save {copy_only}` copies a named save into the home and returns without loading, so the title route does the load. A guest home may hold only `characters/`.
++  - `title_continue {any_realm, expect_character}`: `any_realm` accepts a non-Meadows realm root (`world_realm()` equals `current_realm`), because the Tidewake has no `SequenceDirector`. `expect_character` names the saved character that Continue must bring back. The step's `_scene_name` is now set from the loaded realm; for the Meadows it is `world`, as before.
++  - `grandpa_homecoming {walk, walk_budget_frames, settle_frames, close_enough}` walks by left stick through the house markers and never teleports. It FAILs if the prompt is not in reach, and reports the legs, the input context and locomotion.
++  - `veilfall_press {walk}` is the same walk option for a Veilfall prompt.
++- `tools/net/peer_runner.gd`: in `production_join {pick_saved}`, if the title has already adopted the wanted character and mounted JoinDriver, no picker press is needed. Before this change the step failed with "direct join showed no saved-character picker" even though the returning route was running.
++
++## Run notes
++
++RUN_NOTES
++- Loopback headless runs are local evidence, not internet or Steam acceptance. No screenshots.
++- The 4-core host was shared with other agents' rendered captures (load average about 18). One attempt had the host's Meadows crossing refused: "realm 'meadows' did not become ready within 120.0 s" (`game_state.gd:1691`). A passing crossing took 98 s. A 180-frame wait before the crossings was added, and the run was repeated once.
++- Evidence was trimmed for disk. Peer homes and legacy `saves/slot_0.json` copies were removed and captured JSON is gzip'd. Peer `.log` files are force-added.
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/PROOF.md b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/PROOF.md
+new file mode 100644
+index 00000000..22ce2910
+--- /dev/null
++++ b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/PROOF.md
+@@ -0,0 +1,58 @@
++# Two-peer proof: F15#3 fixture maker: Tidewake after the host's Guardian, the guest's offer still open
++
++**Verdict: PASS** (exit 0)
++
++Scenario: `/home/user/wt/f15-3-full/tools/net/proof_scenarios/f15_tidewake_b_full_fixture_make.json`  
++Run: `net-20260926T232530Z-3593`  
++Rendered: no (headless)
++
++NOT A CRITERION PROOF. Produces the disclosed start-state saves for f15_tidewake_b_grandpa_full.json. Same disclosed fixtures as f15_tidewake_b_grandpa_real_release.json (story_flag defeated_warden, party_grant by name, guardian_fixture for the Veilfall/Nerissa fight); the host frees the Guardian and lets Rill go through the real release menu (the game sets water_currents_restored); the guest (full five) does NOT ask for its own offer, so its reward row stays open. capture_saves 'fixture' is the game's own autosave/character save of that state.
++
++| # | Peer | Step | Expected | Verdict | Detail |
++|---|---|---|---|---|---|
++| 1 | 0 | host | PASS | PASS | hosting udp/30401 as peer 1 |
++| 2 | 1 | join | PASS | PASS | joined 127.0.0.1:30401 as peer 93934433 after 8 frames; snapshot applied; 2 peer(s) in registry |
++| 3 | 0 | expect_peers | PASS | PASS | registry reports 2 peer(s) after 0 frames (0.0 s) |
++| 3 | 1 | expect_peers | PASS | PASS | registry reports 2 peer(s) after 0 frames (0.0 s) |
++| 4 | 0 | story_flag — FIXTURE 1: world past the Meadows opening (Grandpa at home) | PASS | PASS | defeated_warden: ok=true pending=false code='' reason='' |
++| 5 | 0 | party_grant — FIXTURE 2: companions by name | PASS | PASS | 'terrapup' at level 3 joined the party (1 member(s)) |
++| 6 | 0 | party_grant | PASS | PASS | 'sparkit' at level 3 joined the party (2 member(s)) |
++| 7 | 0 | party_grant | PASS | PASS | 'mudsnout' at level 3 joined the party (3 member(s)) |
++| 8 | 0 | party_grant | PASS | PASS | 'mosshell' at level 3 joined the party (4 member(s)) |
++| 9 | 0 | party_grant | PASS | PASS | 'meadowhart' at level 3 joined the party (5 member(s)) |
++| 10 | 1 | party_grant | PASS | PASS | 'ripplet' at level 3 joined the party (1 member(s)) |
++| 11 | 1 | party_grant | PASS | PASS | 'bramblebun' at level 3 joined the party (2 member(s)) |
++| 12 | 1 | party_grant | PASS | PASS | 'terrapup' at level 3 joined the party (3 member(s)) |
++| 13 | 1 | party_grant | PASS | PASS | 'meadowhart' at level 3 joined the party (4 member(s)) |
++| 14 | 1 | party_grant | PASS | PASS | 'mosshell' at level 3 joined the party (5 member(s)) |
++| 15 | 0 | guardian_state — the host's belt is full (five), Rill third | PASS + {"guardians_owned":0.0,"party":["Acorn","Pip","Rill","Shelby","Volt"],"party_size":5.0} | PASS | {"character_id":"character-e8e1afb2382815d151f40cf291ac1a6b","claim_id":"a1c0a220eb66ee7753346a2f3a718f2357e5e8a4cd4d3b0135e00766abcfdf7e","guardian_freed":false,"guardians_owned":0,"host_open_claims":[],"host_settled":false,"offered":false,"participants":[],"party":["Acorn","Pip","Rill","Shelby","Volt"],"party_size":5,"pending_guardian_id":"","receipt_saved":false,"saved_guardians":0,"saved_party_size":0} |
++| 16 | 1 | guardian_state — the guest's belt is full (five) | PASS + {"guardians_owned":0.0,"party":["Kestrel","Bramble","Tuff","Fern","Moss"],"party_size":5.0} | PASS | {"character_id":"character-3f0b7175d4a0a1435f39030f2ae5c1c8","claim_id":"e945b277adac7b4c43097b531618695febca0cb53b4179ee6ea5c7ddd7394437","guardian_freed":false,"guardians_owned":0,"offered":false,"party":["Kestrel","Bramble","Tuff","Fern","Moss"],"party_size":5,"pending_guardian_id":"","receipt_saved":false,"saved_guardians":0,"saved_party_size":0} |
++| 17 | 0 | guardian_fixture — FIXTURE 3: both fought Nerissa (director's own session path journals one reward row each) | PASS | PASS | prerequisites committed ["water_dock_sluice_isle_both_controls_disabled", "water_veilfall_intake_stopped", "water_veilfall_return_opened"]; Nerissa fought by peers [1, 93934433]; session path handled=true; 'water_captain_nerissa_defeated' set=true; participant characters ["character-e8e1afb2382815d151f40cf291ac1a6b", "character-3f0b7175d4a0a1435f39030f2ae5c1c8"] |
++| 18 | 0 | wait_flag | PASS | PASS | flag water_captain_nerissa_defeated (world) set after 0 frames |
++| 18 | 1 | wait_flag | PASS | PASS | flag water_captain_nerissa_defeated (world) set after 0 frames |
++| 19 | 0 | capture_saves | PASS | PASS | host (world + character): autosave_here()=true, character 'character-e8e1afb2382815d151f40cf291ac1a6b' on disk=true; copied 3 files to /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/before |
++| 19 | 1 | capture_saves | PASS | PASS | client (character only): autosave_here()=false, character 'character-3f0b7175d4a0a1435f39030f2ae5c1c8' on disk=true; copied 1 files to /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-1/before |
++| 20 | 0 | veilfall_press — the host frees the Guardian at the chamber's real control | PASS | PASS | pressed 'Release the Abyssal Guardian' standing at (0.0, -1.2, -1.6); 'water_guardian_freed' set |
++| 21 | 0 | wait_flag | PASS | PASS | flag water_guardian_freed (world) set after 0 frames |
++| 21 | 1 | wait_flag | PASS | PASS | flag water_guardian_freed (world) set after 0 frames |
++| 22 | 0 | veilfall_press — the host asks for its own offer at the chamber's real prompt | PASS | PASS | pressed 'Invite the Deep Watcher' standing at (0.0, -1.2, -1.6) |
++| 23 | 0 | guardian_answer — REAL RELEASE MENU at a full five: Rill's row, ui_accept, confirm, 'Let them go', Done; the Guardian takes Rill's holder | PASS + {"stage":"choose"} | PASS | answered let Rill go: party ["Acorn", "Pip", "Rill", "Shelby", "Volt"] -> ["Acorn", "Pip", "Abyssal Guardian", "Shelby", "Volt"]; Guardians owned 1; receipt on the saved character=true |
++| 24 | 0 | wait_flag — the Guardian resolution itself restored the currents (not the ledger) | PASS | PASS | flag water_currents_restored (world) set after 0 frames |
++| 24 | 1 | wait_flag — the Guardian resolution itself restored the currents (not the ledger) | PASS | PASS | flag water_currents_restored (world) set after 0 frames |
++| 25 | 0 | guardian_state — host: Rill gone, the Guardian in Rill's holder, never a sixth | PASS + {"guardians_owned":1.0,"party":["Acorn","Pip","Abyssal Guardian","Shelby","Volt"],"party_size":5.0,"receipt_saved":true} | PASS | {"character_id":"character-e8e1afb2382815d151f40cf291ac1a6b","claim_id":"a1c0a220eb66ee7753346a2f3a718f2357e5e8a4cd4d3b0135e00766abcfdf7e","guardian_freed":true,"guardians_owned":1,"host_open_claims":[],"host_settled":true,"offered":true,"participants":["character-3f0b7175d4a0a1435f39030f2ae5c1c8","character-e8e1afb2382815d151f40cf291ac1a6b"],"party":["Acorn","Pip","Abyssal Guardian","Shelby","Volt"],"party_size":5,"pending_guardian_id":"","receipt_saved":true,"saved_guardians":1,"saved_party_size":5} |
++| 26 | 1 | guardian_state — the guest has NOT asked for its offer: its Guardian row stays open in the host's world | PASS + {"guardians_owned":0.0,"party":["Kestrel","Bramble","Tuff","Fern","Moss"],"party_size":5.0} | PASS | {"character_id":"character-3f0b7175d4a0a1435f39030f2ae5c1c8","claim_id":"e945b277adac7b4c43097b531618695febca0cb53b4179ee6ea5c7ddd7394437","guardian_freed":true,"guardians_owned":0,"offered":false,"party":["Kestrel","Bramble","Tuff","Fern","Moss"],"party_size":5,"pending_guardian_id":"","receipt_saved":false,"saved_guardians":0,"saved_party_size":5} |
++| 27 | 0 | menu_toggle — the host leaves the Creatures tab with B (menu_cancel presses), as a player would | PASS | PASS | the menu is shut 1 frames after press 1 of 'menu_cancel' (context 'world', tree paused=false) |
++| 28 | 1 | menu_toggle | PASS | PASS | the menu was already shut |
++| 29 | 0 | capture_saves — THE FIXTURE: host world + host character + guest character, as the game saved them | PASS | PASS | host (world + character): autosave_here()=true, character 'character-e8e1afb2382815d151f40cf291ac1a6b' on disk=true; copied 3 files to /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/fixture |
++| 29 | 1 | capture_saves — THE FIXTURE: host world + host character + guest character, as the game saved them | PASS | PASS | client (character only): autosave_here()=false, character 'character-3f0b7175d4a0a1435f39030f2ae5c1c8' on disk=true; copied 1 files to /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-1/fixture |
++
++## Captured files
++
++- `peer-0/before/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json`
++- `peer-0/before/saves/slot_0.json`
++- `peer-0/before/worlds/slot-0/world.json`
++- `peer-0/fixture/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json`
++- `peer-0/fixture/saves/slot_0.json`
++- `peer-0/fixture/worlds/slot-0/world.json`
++- `peer-1/before/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json`
++- `peer-1/fixture/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json`
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/NET_RUN.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/NET_RUN.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..655551ae0667491f5d9ba41dfe355e8b9322da7e
+GIT binary patch
+literal 937
+zcmV;a16KSWiwFp@RJdva15QO$Us6?0E^2dcZUEI*TZ`j16n=Jo#p0(HHnAnyp15y?
+z?nCM8K%r$2ihVpbBU?t6XA+kA?>$GpWjCR83rp!kAo|Yz@=5-@3&PV_K7$*=pFVuv
+z1wmNCaOnzJS=9o8Jc$qSN0QW_tUG~nn=spCS{pgJk|bfrMbx30bVh?!T>-K+t}&f#
+zQ75^tVPSAy&JL-U53P9tIXLLo2$J^z7Ij3t#JQ*S)|5bw(oO41zLtSbP`(S^Q6;QY
+zqetuUKc6PRDUGKvq*I56h3U$M%J5zDR+Nr6!64MfAVei+jh4N!j*88a)Rz;4aBduw
+zh&emL1l4M&VX+T_G!=QC#WDYQ@5qliXK9*eIUS#74>W;!h!lhJoI{H^iP=;?N}f$=
+zoP5P}u>dM7IXvtKr%oC^{9vl8DH^4J3}@|DHJu!4MT*r!kt@bdrxcP!K93<@-S-Vu
+zCbDFMunRPWur`BR?A)cFFrW4ejssX(V!LJ8kk>G(O$!mh(VL4ZmhQ#A8nuqB(tRCS
+zpbCfR@z-BI{r>ZBpQ01#NFlvW)tns;Qnu;^B5Vi!_PsTxlJ3n&%6!jbp2a!O9=YJD
+zi2v{b_i^N#6sf+K6r56u9>LXMPiE}OkkWmh`rdRUoT&rTQ7c^Dl_}diXdB>6K-fYz
+z%EF@9ui0F?Uq%$?oNv9XFGEuda*-Xcn%bLfT>|!yuabb2ViqSXVO*plU0|Mw!!ghE
+zn2SU_q#k{my$vwXI>_raCcmrGT;w82gdmz++d1Vx()Q9-vF_!XB^8`y2hRA-+?N(z
+z^>W*t>3q95;n=~shXVN{iAE@`lpbI=`?ya%oU-`usK>uA_1G=-*bVgx-9Y#MARqe|
+z<YWJsd~e3;@@vj9WXrdcZetuf<bvUj9Yw}OddwC$<6qO|`_e3C$8Vw;`;unYOY(O_
+z+xfggoaVW?dMEAJN$;87$eZErMVbr$f(`{T#LohYvJ<q{hrtRxmKgN~E=!BT9;>+c
+z#Bk)Vn541uu{Q3c?DT(7u7O3bRsHk_FIwH=9`@5!8`APB**D#M?zOt$=HqB#0t#)4
+z7YQ0IFpUA|wV!p1(OQfyz0cVk@LQmJo*;?BC9?_e1DLHB;?MoND%#&cUzS{H^}J<R
+zp!760nnKNJrEDvEZ5Hn(PPvxYg92$iW3{rc_%(&buYg}XioRK9Yoz`ixKtNPZ}<Ke
+Lr%J=J8VUdayVBZ@
+
+literal 0
+HcmV?d00001
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/SUMMARY.md b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/SUMMARY.md
+new file mode 100644
+index 00000000..29ed003e
+--- /dev/null
++++ b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/SUMMARY.md
+@@ -0,0 +1,10 @@
++# Net smoke run net-20260926T232530Z-3593
++
++Scene: water
++Peers: 2
++Net conditions: clean (no proxy)
++
++- peer 0 (host) pid=3640 exited=true unexpected_exit=false
++- peer 1 (client) pid=3641 exited=true unexpected_exit=false
++
++ALL CHECKS PASSED
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/peer-0.log b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/peer-0.log
+new file mode 100644
+index 00000000..3beea1d0
+--- /dev/null
++++ b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/peer-0.log
+@@ -0,0 +1,25 @@
++Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
++
++peer[0/host]: starting scene=water control_port=46455 enet_port=30401 xdg_data_home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/home-0 user_data_dir=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/home-0/godot/app_userdata/Tetherbound
++WARNING: instance_reset_physics_interpolation() is deprecated.
++     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
++     GDScript backtrace (most recent call first):
++         [0] _ready (res://scripts/world/water_world.gd:63)
++         [1] _boot_scene (res://tools/net/peer_runner.gd:373)
++[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
++[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
++[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
++[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
++[grass_field] 2 cover tier(s) up
++[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
++[session] hosting via enet (cap 4); local peer id 1
++[session] hosting on udp/30401 (cap 4, channels 2); local peer id 1
++[session] transport: peer 93934433 connected
++[session] peer 93934433 joined as 'Trainer' (character-3f0b7175d4a0a1435f39030f2ae5c1c8) in water
++[trainers] spawning a body for peer 1 at (0.0, 162.0)
++[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
++[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
++[trainers] spawning a body for peer 93934433 at (0.0, 162.0)
++[trainers] built Trainer_93934433 for peer 93934433, authority 93934433 (this peer is 1)
++[trainers] Trainer_93934433 stands up: authority 93934433, this peer is 1 (another player)
++[fly] peer 93934433 claimed a landing at (0.0, 1.931024, 162.0) -- granted (ok)
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/peer-1.log b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/peer-1.log
+new file mode 100644
+index 00000000..6c7fcad7
+--- /dev/null
++++ b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/peer-1.log
+@@ -0,0 +1,25 @@
++Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
++
++peer[1/client]: starting scene=water control_port=42023 enet_port=30402 xdg_data_home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/home-1 user_data_dir=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/net/net-proof_two_peer-20260926T232530Z/home-1/godot/app_userdata/Tetherbound
++WARNING: instance_reset_physics_interpolation() is deprecated.
++     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
++     GDScript backtrace (most recent call first):
++         [0] _ready (res://scripts/world/water_world.gd:63)
++         [1] _boot_scene (res://tools/net/peer_runner.gd:373)
++[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
++[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
++[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
++[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
++[grass_field] 2 cover tier(s) up
++[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
++[session] dialling via enet as 'Trainer' (character-3f0b7175d4a0a1435f39030f2ae5c1c8)
++[session] dialling 127.0.0.1:30401 as 'Trainer' (character-3f0b7175d4a0a1435f39030f2ae5c1c8)
++[session] transport: peer 1 connected
++[session] connected as peer 93934433; sending hello
++[session] snapshot applied (14 keys, day 1)
++[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 93934433)
++[trainers] Trainer_1 stands up: authority 1, this peer is 93934433 (another player)
++[trainers] built Trainer_93934433 for peer 93934433, authority 93934433 (this peer is 93934433)
++[trainers] Trainer_93934433 stands up: authority 93934433, this peer is 93934433 (our own proxy)
++[session] client leave: wrote character 'character-3f0b7175d4a0a1435f39030f2ae5c1c8' (no world file -- D100)
++[session] client leave: wrote character 'character-3f0b7175d4a0a1435f39030f2ae5c1c8' (no world file -- D100)
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/before/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/before/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..557f4050563a755bdc782f8a1ea246651e1457b9
+GIT binary patch
+literal 5740
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/before/worlds/slot-0/world.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/before/worlds/slot-0/world.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..7e4c2ff5586786c20e4be54b0113deef5fde1798
+GIT binary patch
+literal 798
+zcmV+(1L6E1iwFp#RJdva19xw7Y-BEKb8l_{<yPHl8$A%ccAnzH*Ug81ceQ?w-j%S7
+zq*1a&`-3FAgphadXuYx9l0ri+TBtF`8Xb+!nKRne^UZGW;_M!KjId<%eMUD=KJO3z
+z38w#Vw2@lK`ca=MHX#&3K_S3iFwxwy?p8FPg*=FczWa*u@I=#m{Y&_VK0|R27;Dxq
+zcWZdaON6I>f)Q(`by<Kk_Dh`06&El@+U|t+SfC8^L^IDX>r90EihI7<T?b!iQ1=XH
+zmR})xoN8{0ex*?Aebt)dad6lVIbv^T;zyE8nq%&X7g*Zyhczc0Vt^R?VJh&5eJ=B|
+z{0ft>9Mja#3r;^l94rNfsh=<nIYa+Sb5EGNo87AF0n!O`d0TRXT>4rzTJvW0+qI12
+zaGzHBA<g5ZxU|ku%pQm6hw1)WVsbQ&Jx-?~&C`fex$Kv)7La(x;Y6JAQtrky%rIs}
+zBQ1imQrWhVp%Gp{YfWga@WBUbmE&G=!rFk2S!@xEl(^-gb|SstYH@~D(q(*$1~~*P
+zq!ET|&ovK<xga_YjzeR&%DQ=6BGxMPwFh3+u1&DAe%dmBnDRMmo{!0`9a|E4iRp0m
+zb{oBVdvNnG<<~U@+~cJ?cdK#=Z;A<c#!;wR%{5y`FZK8ClA#=HhCMikOSv=_3C!mX
+z;ajK8Df&%vrjvBb_TNv`<CYgVD?p}%>N-gRo$qYhIR~ua47E_qAgg^@`(U>>ylcIJ
+zRt42T2*I@$CAnY%FeYRmW4!aW)k=1abc|+Lki6rpu}(1d8-7y~+wxY^HVn9uI>?Sm
+z76hPn+?n_K{b9=gwBNviqm>3|5|s~KLuWxX3XJ9oTg`=PY!J@3T6(WJbWI?m=#8N}
+z#>1cR`=gZK=l4)>JS033h2L@gd*tT3`0HHv%sLjhRt6COg~4FddK^4R-3iZH<t<ko
+zwk@5l`bcI-PfB5pS6;h6@KpaW<$v1s?auMzYyRn-iE4%`RZ)l6>&`J@?;;FizFaEa
+cR<VUMu2&mQo3^SkO5ePE1A9+qS)vL604M{IL;wH)
+
+literal 0
+HcmV?d00001
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/fixture/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/fixture/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..c7f10793d33de2604fd6a2b504465115b60b72d0
+GIT binary patch
+literal 6020
+zcmeI0e>f9r|HpgkoOH^MPKo5l$`O(u@yM?hog7Mq&>BTTgqWCLW41bp=O9Ap8IhbU
+zn<l0$n;-SeEY=d5Uo*0qUmM!A4YTdh^E}t}eE&Sx^Vhk)SNC<@|9n38=f3ajb>H{r
+zx<79~?zU|&F1(7~yd^9$Bq1a$F+9OC8X5=Lv@jYJ$8sla`gCIk{2eJ@t>{VnW`Wxd
+z&6)X4=wWKhq0P4qPuY1J`JC-e9^0>!s~#LF)xX|HO}>0%8Td?J$Q!!3B6?Ik)*JUe
+zjR)$};@LG1kmlQvvR80}t^*d+_<EQ3U2~7msLTPqdti1Rxi%JA_;E6Okzrh4tC60R
+zJxp+G%K@bDS?6P1k6IAeDD&>DneHi|uEK)f(VHdgU|$5a1z6>f=P>?R5OUCwbvfyZ
+z6$QguUM|Pu$Lmd9aNJ(GmUX`^i^1i9{LLwncv#<97aw($$qo~wwK?avIm-GU-Do$p
+zw3p7b1g{*ltPn$TaZt|pI5N_n_2k|V{@5Ue^lF}@HemOl`byk{cGTZB14=VTZtnd@
+zr0uM9Ii!#wqnhgX;uTjlw}u2xg_nTk0Yws(10L>_5bMJ;Ot@xf&3k9PeaXz2>u%|h
+z=Ni=P#h$~#Z+CP|RAkIb>cIAmLnz7O3)W1~Wep;+4xHW9z)5gA&6!y|=S^^O>P3(R
+z2rN?^8gHgFAcgtF5C$yUPKra-r#+TJ@T}UP3)v<i_(;M`aKmM)rhm!g3!l>>^Qv=e
+z)qBgB*X&Ra!V6Ugj8vO|I@$6?`dSnF`1i|%0Ou*GQ$+v3<qI)H*_ZdC+?a_~eCY1l
+z0-?arF$WxC5b8(T(_Op=%wHTgP$9D1hR@9~#5|Dn))=iEl+^mMlMZ(nDW2ulRc5A`
+zIQ`P|<k(7cfG3u-XgUVEwJ01Of1aWt4QB;5ELJ_PIh*>5FvI*5R~?%x7L%ke(vT{p
+z1F=vY0+@^`uGQxH*qz%duXjQHen(C?Fj!3w3R~20E_fM5rf0$$hcjJ|WJW{b&6F--
+zbui7BFo$`wzvH2*%AG`@fqIu5p?pEbp=GOX?ZLRXe5cQ$pLYW1J8EXzWs6&KLqQg~
+z5^hAAU);Q9a66>Wa4gd;Pyn!i)RqOkd0tBtOQO?;0$m{O=FXl~_VFWQnL%&b$6R)n
+z$KrFS{4^-@*yw((iHxT~*&{JOE?wE3K6!p82PI2ib{%Qf`2J}NgwJ4BU(+zru7N+0
+z(B$x<nbpV+Pu<YLcPFKKph>?m0r2>xMoie&w#1)EFMH!go$c6}HW9)I(zfLV;l0I+
+zLs&XmCa||0C1=L~n=_!GhQ-QQvU<2a042ZEo`K3NXQhp(ZKbDyI%!V%8A<rV&!p(3
+zt#AC3N1ev|$ThncxEc!%m!KKXK4j1ETC3FDyRX@nGX~->sm-kJ*U=2QPy2Piik^6L
+zcwxXYyYixt_N#UK-gf`fSrev4QA++v8-tD>r(IgrV}ztt&_R#oTm`*ks-bZjQBQ1m
+zazD@bPAm2&+TCk5?R!;&Qw}&rbCyr~HuG%rA6S(YdJc&P0%90DKvT$hvCFdqK`r;9
+zkZVV;EgQ)dw{{gVB1Rk<igxC}eLD~J0Kd?pt{7LJ<LWi9TO2fEY}MwLMW5F5X}8wV
+zX*;5$BX4mtlDq#n!uZsI*<ajEo#Jg5Q3MeDA+0zipA?BD`O7K3qWh;hpyG#}DLF>o
+z1>0$+S*Jz-mmRm>K{h4o*^6Kce^aT;T>v$rAh<9Ab(il(I(P`-==SZ{Gj*94X0xbK
+zgeX$2@v{QRh>Xyx+XHm8&Wg%~V#7L&@R~z`E7<ukK18d@hM|H-2tKVwY9aiN&ULIu
+z6eE@y5i2LH=Q`fomzU*sbM*u;>(wO(bo=&P>Wzm5c}+j-?IY2qR;b2+z*f=fTc6!k
+zLl0tgOFfUpmS-Cv><-SYA)L}H8uhdvbaa*A$#K1BIG3;5q4H>4k2Fqr_^Ry=<*k!8
+zs+4$NP5FH^&!{}FIAN!fpMA~uBK3E3gx>+3wtsJ9`e}fNlf%=7)BQr~tZs>sCJ3tQ
+zrv$aK@&=5&jpy)}cJV*0lnfQojGY?}+E+i%0l{B4uox0*bOO_MIiR(`>SK{IR*Mw}
+zF7mM3*ERH7nR!M8+*tjRjahMhy$A;4$w&6nue&+sS1o^7GI4XPLW0h!Pi$|XU~<Zw
+z@6iIx(ZXb4<x`@p>D41#x#ufo`3ZaJ*dQ;YQRe5`_&3;>{-YM<^Ut=$<iP5^up&&0
+zQcEciv@3i2b3N<~^7`Qq)nrkFF27{Q+kDJeyXnyBGW+^rS-I<M`}r<2ylSj<&=5<6
+zp;t~Bo;8LcZB7^0yUbmu>9Y3_3w~(4vBn87mz>OS;N!$|kqHwDAmTI!Upd{la7Ur|
+zVWGW}wAb6XIJK$OWnZgf;HkKw0dKSiJ7W>|*dLe}lk%Iek>o8$XQY|tX&{lX$@^B)
+z6`z`5i1;i+5i9SA>{**kU$03|U!R=4+6x(;>;(n~zjd~~2OER{6gEi{j!fYMPNHj>
+zE2c#7p0waXQ&VIbY?6O)(xJvtc?kbQX_Kyaq9Y^quMLZ#R17@|931x70zzvHKYEm1
+z0QAT=>_|>W%deMgB#GMRR(xh+aA#Jx>!f2RS>CJC?Q?wIlJ_~&<w~c#hdvxnJJkXB
+zO9TZjg{W`(*8c1SKKF>nD;{OQw2|V{>SrjH=aQV&8!xN}n-7Aii9rpd4_1Kjg<r${
+z%{ifnLO~gp3~H>W&oxE5WJyx#bONrnD)j38h*O2ZVMb>~Lg!}Fiy$IjnD2Qxco56R
+z%|sO)ubAJtq<+(&00w|i!r8zmu4h{vu^RP03zjDt3;W*zA!-1~l~pv_<?|@8*Jrio
+z(8vA;<d<FO`{?My=wdV(px<?9st&fvq!>N@msXrKqooHcw3@05<Y{&xT6zxg>XtUA
+zE<i7|^mH>XKsR|kt?dC_5vF$p@;-j`*X79*O8hW&3go|CUNyCAkP^STx`dM5b#>!d
+zhZ2+-*s%~b-<I<)<G`~G<BGogOHGSeG$xSuOEjj%3@!8u$K?nCM?pBz@xcpFkQet+
+zPv9P|OBeEMKcWa*x8LY0|26ysW?oS2p2pnV2L%P?2>~sbS`nK8N;+a<1HN1Q7Su-n
+z?Hy>+C;>E-V7LUjxvK>e=2$2-bNDTgiLH2>zNg|B+`O+Br|nEZ!oHU6CWTn1;@#b#
+z6{4@-YUMn}Yic7><Esa06y~DrTLP!u^LwZ=d&Dcm;4#+WF6`D7&Uev=Ti4*sga7-<
+ze2e@>;2VK&1pdqfUP}d5$hkJhV=|GYVm_AONp6irVWf(MnY|ADJ-K4g#*Yr`sVWyu
+zvMv3ysD_sLRz>oJB%)bql4Fq80_}rA9BgEe`NdCF)tyrFw!zwFU%s@^tr0^yULd_O
+zy4G}MK?3aEN|{oe%T6UKUF+4Tp^neVc7UMQauS^c>z9;oly|O2AE_-vRHT4EGpcWU
+z`!f@`HSt6`EfCPjE7+9FF|Mq1r34!I$FA@qLBP3Ac1`5-8EHOap4^KEZ~}P}tC`NK
+zts5tVq_c73SGu5*aeV@g9>I)dzEfB|V69C@dWsX^?3nr3Hr5R!2amTsW{Z;n^LEI3
+z0m(}E90GvjH9g19p<i7`0-bZ#_x(iay9x-<#A3(<u5;vno`yHxsAVbFwUwoWf8M+C
+zF^u^XHuPmWi9F(E5BAheJH=?J<37!dcG8_@zdUp9j~&2@$@=<0fy;WmZhM%^BJ_m8
+z+uIb438DXEE%-z}^pgqufXc_s(9JJTSlr(deOtQa<q7pv?+07{*yR5oN8Ox9C_Di0
+zA;g;X^y>oA3H7&kmPX^%I|2HJDj$DcO7vQ>)mRyy`7Zjl@Px(r9aFb1eUg8Lw=wdM
+z;XtCsHzZA~xcBX?>Ci!zCQD>yUK`>^V8s5b&IpflFfisC{XLwbFxOnIuj+NDDBur4
+z0oJH{Gc^Gh8Q9gB(y}O~H<y5inHC4^y&F2Vlue2MKe}wr8yau<h<cQDRk%Ff&PxU4
+zbb1En`yTIc=|Plrg?M~H{rp|GjNPMTib9z{k(`qIHza4@pv3lF9FP_34MI?Sf&f=d
+zjLl8kGb$yzrTmcnG-|!hzMPXW@)66BJF`O5+vX%AnG4B3VqAd+$$s|OSB7jANO`i4
+zJ}%;`e(AB4O5M<L8KmJVXCqjtx3PR!(u8{FUfg6}6oSh9xzvPvUjVsAOlde15pLtH
+zvg(leWZQ_tI~vTUq9g$HMWwj@j63Y;*=3Kt_uN6_;^bYS(rftm67U_-L^4Ie%aT{x
+z*N<oMWOien8Okp#$;vu2BwahD{G6rxoi~wj6~B{T0{GNWsPcm4KRi?YbBLJqL_RZI
+z)ksEor=8+m$|9wa;BA+V{}2P=^F%vgZ=VkTTs=$T$XT)J`pJ#g<$bbdM5B&&@X;v_
+zwl)yXeweF`f)?tD`|ZX*;c~&OIb-vaEo>sMOoQD+BdATlSCN~3j_*1hW47s^g*aK7
+
+literal 0
+HcmV?d00001
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/fixture/worlds/slot-0/world.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-0/fixture/worlds/slot-0/world.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..c06321a7d3cd388cf3d7f16ea55b8d654d77653b
+GIT binary patch
+literal 900
+zcmV-~1AF`*iwFp?RJdva19xw7Y-BEKb8l_{<yPBnBPkGlcD`ce=gEp|L;E}SZ4|W%
+zD3Vriw*}avD9XQ2(Y_^7Mw%!Ov(i|R72r^HigOC{e6w2nH2cQ^6YL6xp`f3qP}ZA&
+z1h@anSD$YUn-MCZpb}s$nCNa<e=EBGgxrXZ{?-i@;E9&`@-N{Zh62?;U}{mn-!0Q)
+z*(G=yCfH(&v}}uzx5F;Y^@@v_5~VxfJyxjWJkiSY%d(Q-zTuv4R@cFI8nm48$npo|
+zfK!W2vp;Am524js(th+fj3wdVX5vRB*F2{(5HE0)@y(tCjwwP)!#GuV#G%xAxBC?)
+zW8LRzn0Gk6gLv3g7^h*vJeC5(ndTc%#rn`_e#GN`PxXv24Kd^U*a^n%<_y@(F=EEB
+z>4j54L=}UHMj8ae1yici22cg2xCZT_1RpSHZ>{#+ng9$LNo!R1ar!0MuecSg^*wRF
+z&l#s$=y2%l@@19Gl(saPMn4>p2)P{_t=`?N7M&j;A86OdCP+}~(2PWTKJueti?O!j
+zeO?R^^Sr&-jrMt(bNexcak{^n?nn!#!<gr3OT;hvGB!(*a%nt}ig+<#XFFyYbE1<D
+zK{=_M>16Cg5MZ2*#)%L^bWV95Bqywk=$S*(#7c>$IMiTNFZgy8<5JRPe2W%2L?@&b
+zmg~SZkBa#ydJdjL=T2wp=j|?GJEfs@#ktz0Ef&^Kr^sKXe2iM=efCQa*G%rlyg3>9
+zI6Aw1<L7ZI=RFnt<E39$OXW0us+fRB98EQ;xn|4grG4LBBGi40um<mOckLo7upAx2
+zPY#@O3a63_-7U9l{d%EYKxGHV3XmzG`d(6jKJ?D?-UI76LoF1u$eJ&k4_0f-dlM8G
+z6;%&0MsFNSQo%-GOvp&W1RtEyO7@-fj8<5byyvWQUNH6>dQ%W*xY3k`0asE-*)z$a
+z0Hikc_Op6_netz)H*nzSq@}x2)72UKj(S0L3asV|jpjmiE(#xvmLX^keHTe6!L;rf
+zkAFh%uTuV;-ebk>CgXu9{Eq6cktf~7|4#M5oM(}1Wf1{TSd3OJ?GQlfUIb=Ta9s6h
+z4E0vKk{QxXDVz<8eo+6wt^Q@of3@nTH^<wb`KM0?Y7wqfMH^lpfcuQc_fxq%Dn72_
+aG+l6c+Hgur?=h?N&C5^Z;lc8>3jhFp3&Cpu
+
+literal 0
+HcmV?d00001
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-1/before/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-1/before/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..540b114bd513c146d0c543598679b5e372998e37
+GIT binary patch
+literal 5757
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-1/fixture/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/fixture_make/peer-1/fixture/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..83072402d7e10c3224dc6677b0062049591050a3
+GIT binary patch
+literal 5828
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/tools/net/peer_runner.gd b/tools/net/peer_runner.gd
+index 6012a234..abd1039d 100644
+--- a/tools/net/peer_runner.gd
++++ b/tools/net/peer_runner.gd
+@@ -1908,7 +1908,13 @@ func _step_production_join(args: Dictionary) -> Dictionary:
+ 	if returning_route:
+ 		title.call("_join_via", ip, port)
+ 		if pick_saved:
+-			var pressed := _press_saved_character(title, wanted_id)
++			# The title may already have adopted this machine's saved character
++			# (then `_join_via` goes straight to `_begin_join`, no picker): that
++			# is the returning route itself, so no press is needed. Only a picker
++			# that is up must offer `character_id`.
++			var adopted := local != null and str((local as RefCounted).get("character_id")) == wanted_id \
++				and game.get_node_or_null(^"JoinDriver") != null
++			var pressed := "" if adopted else _press_saved_character(title, wanted_id)
+ 			if not pressed.is_empty():
+ 				return {"verdict": "FAIL", "detail": pressed}
+ 	else:
+diff --git a/tools/net/proof_saves/f15_tidewake_b_full_guest/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz b/tools/net/proof_saves/f15_tidewake_b_full_guest/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..ba278b2337ae10981c4fb1d440004bc5d2e52315
+GIT binary patch
+literal 5828
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/tools/net/proof_saves/f15_tidewake_b_full_host/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz b/tools/net/proof_saves/f15_tidewake_b_full_host/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..73205e9e7389d2d310c029ac3aeaa8af9d061d0e
+GIT binary patch
+literal 6020
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/tools/net/proof_saves/f15_tidewake_b_full_host/saves/slot_0.json.gz b/tools/net/proof_saves/f15_tidewake_b_full_host/saves/slot_0.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..9bc8693a13df06bd82493a0699d446d39704044d
+GIT binary patch
+literal 7198
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/tools/net/proof_saves/f15_tidewake_b_full_host/worlds/slot-0/world.json.gz b/tools/net/proof_saves/f15_tidewake_b_full_host/worlds/slot-0/world.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..9101ec498b8ef254d9a2860396444d90537699ec
+GIT binary patch
+literal 900
+zcmV-~1AF`*iwFqXRJdva19xw7Y-BEKb8l_{<yPBnBPkGlcD`ce=gEp|L;E}SZ4|W%
+zD3Vriw*}avD9XQ2(Y_^7Mw%!Ov(i|R72r^HigOC{e6w2nH2cQ^6YL6xp`f3qP}ZA&
+z1h@anSD$YUn-MCZpb}s$nCNa<e=EBGgxrXZ{?-i@;E9&`@-N{Zh62?;U}{mn-!0Q)
+z*(G=yCfH(&v}}uzx5F;Y^@@v_5~VxfJyxjWJkiSY%d(Q-zTuv4R@cFI8nm48$npo|
+zfK!W2vp;Am524js(th+fj3wdVX5vRB*F2{(5HE0)@y(tCjwwP)!#GuV#G%xAxBC?)
+zW8LRzn0Gk6gLv3g7^h*vJeC5(ndTc%#rn`_e#GN`PxXv24Kd^U*a^n%<_y@(F=EEB
+z>4j54L=}UHMj8ae1yici22cg2xCZT_1RpSHZ>{#+ng9$LNo!R1ar!0MuecSg^*wRF
+z&l#s$=y2%l@@19Gl(saPMn4>p2)P{_t=`?N7M&j;A86OdCP+}~(2PWTKJueti?O!j
+zeO?R^^Sr&-jrMt(bNexcak{^n?nn!#!<gr3OT;hvGB!(*a%nt}ig+<#XFFyYbE1<D
+zK{=_M>16Cg5MZ2*#)%L^bWV95Bqywk=$S*(#7c>$IMiTNFZgy8<5JRPe2W%2L?@&b
+zmg~SZkBa#ydJdjL=T2wp=j|?GJEfs@#ktz0Ef&^Kr^sKXe2iM=efCQa*G%rlyg3>9
+zI6Aw1<L7ZI=RFnt<E39$OXW0us+fRB98EQ;xn|4grG4LBBGi40um<mOckLo7upAx2
+zPY#@O3a63_-7U9l{d%EYKxGHV3XmzG`d(6jKJ?D?-UI76LoF1u$eJ&k4_0f-dlM8G
+z6;%&0MsFNSQo%-GOvp&W1RtEyO7@-fj8<5byyvWQUNH6>dQ%W*xY3k`0asE-*)z$a
+z0Hikc_Op6_netz)H*nzSq@}x2)72UKj(S0L3asV|jpjmiE(#xvmLX^keHTe6!L;rf
+zkAFh%uTuV;-ebk>CgXu9{Eq6cktf~7|4#M5oM(}1Wf1{TSd3OJ?GQlfUIb=Ta9s6h
+z4E0vKk{QxXDVz<8eo+6wt^Q@of3@nTH^<wb`KM0?Y7wqfMH^lpfcuQc_fxq%Dn72_
+aG+l6c+Hgur?=h?N&C5^Z;lc8>3jhER8o`wS
+
+literal 0
+HcmV?d00001
+
+diff --git a/tools/net/proof_scenarios/f15_tidewake_b_full_fixture_make.json b/tools/net/proof_scenarios/f15_tidewake_b_full_fixture_make.json
+new file mode 100644
+index 00000000..aa26363d
+--- /dev/null
++++ b/tools/net/proof_scenarios/f15_tidewake_b_full_fixture_make.json
+@@ -0,0 +1,272 @@
++{
++  "name": "F15#3 fixture maker: Tidewake after the host's Guardian, the guest's offer still open",
++  "claim": "NOT A CRITERION PROOF. Produces the disclosed start-state saves for f15_tidewake_b_grandpa_full.json. Same disclosed fixtures as f15_tidewake_b_grandpa_real_release.json (story_flag defeated_warden, party_grant by name, guardian_fixture for the Veilfall/Nerissa fight); the host frees the Guardian and lets Rill go through the real release menu (the game sets water_currents_restored); the guest (full five) does NOT ask for its own offer, so its reward row stays open. capture_saves 'fixture' is the game's own autosave/character save of that state.",
++  "peers": 2,
++  "scene": "water",
++  "budget_s": 1500,
++  "steps": [
++    {
++      "peer": 0,
++      "action": "host"
++    },
++    {
++      "peer": 1,
++      "action": "join"
++    },
++    {
++      "peer": "all",
++      "action": "expect_peers",
++      "args": {
++        "count": 2
++      }
++    },
++    {
++      "peer": 0,
++      "action": "story_flag",
++      "args": {
++        "flag": "defeated_warden",
++        "scope": "world"
++      },
++      "label": "FIXTURE 1: world past the Meadows opening (Grandpa at home)"
++    },
++    {
++      "peer": 0,
++      "action": "party_grant",
++      "args": {
++        "species": "terrapup",
++        "nickname": "Acorn"
++      },
++      "label": "FIXTURE 2: companions by name"
++    },
++    {
++      "peer": 0,
++      "action": "party_grant",
++      "args": {
++        "species": "sparkit",
++        "nickname": "Pip"
++      }
++    },
++    {
++      "peer": 0,
++      "action": "party_grant",
++      "args": {
++        "species": "mudsnout",
++        "nickname": "Rill"
++      }
++    },
++    {
++      "peer": 0,
++      "action": "party_grant",
++      "args": {
++        "species": "mosshell",
++        "nickname": "Shelby"
++      }
++    },
++    {
++      "peer": 0,
++      "action": "party_grant",
++      "args": {
++        "species": "meadowhart",
++        "nickname": "Volt"
++      }
++    },
++    {
++      "peer": 1,
++      "action": "party_grant",
++      "args": {
++        "species": "ripplet",
++        "nickname": "Kestrel"
++      }
++    },
++    {
++      "peer": 1,
++      "action": "party_grant",
++      "args": {
++        "species": "bramblebun",
++        "nickname": "Bramble"
++      }
++    },
++    {
++      "peer": 1,
++      "action": "party_grant",
++      "args": {
++        "species": "terrapup",
++        "nickname": "Tuff"
++      }
++    },
++    {
++      "peer": 1,
++      "action": "party_grant",
++      "args": {
++        "species": "meadowhart",
++        "nickname": "Fern"
++      }
++    },
++    {
++      "peer": 1,
++      "action": "party_grant",
++      "args": {
++        "species": "mosshell",
++        "nickname": "Moss"
++      }
++    },
++    {
++      "peer": 0,
++      "action": "guardian_state",
++      "expect_data": {
++        "party_size": 5,
++        "guardians_owned": 0,
++        "party": [
++          "Acorn",
++          "Pip",
++          "Rill",
++          "Shelby",
++          "Volt"
++        ]
++      },
++      "label": "the host's belt is full (five), Rill third"
++    },
++    {
++      "peer": 1,
++      "action": "guardian_state",
++      "expect_data": {
++        "party_size": 5,
++        "guardians_owned": 0,
++        "party": [
++          "Kestrel",
++          "Bramble",
++          "Tuff",
++          "Fern",
++          "Moss"
++        ]
++      },
++      "label": "the guest's belt is full (five)"
++    },
++    {
++      "peer": 0,
++      "action": "guardian_fixture",
++      "args": {
++        "participants": [
++          "$peer0",
++          "$peer1"
++        ]
++      },
++      "label": "FIXTURE 3: both fought Nerissa (director's own session path journals one reward row each)"
++    },
++    {
++      "peer": "all",
++      "action": "wait_flag",
++      "args": {
++        "flag": "water_captain_nerissa_defeated",
++        "scope": "world"
++      }
++    },
++    {
++      "peer": "all",
++      "action": "capture_saves",
++      "args": {
++        "label": "before"
++      }
++    },
++    {
++      "peer": 0,
++      "action": "veilfall_press",
++      "args": {
++        "prompt": "guardian_tether"
++      },
++      "label": "the host frees the Guardian at the chamber's real control"
++    },
++    {
++      "peer": "all",
++      "action": "wait_flag",
++      "args": {
++        "flag": "water_guardian_freed",
++        "scope": "world"
++      }
++    },
++    {
++      "peer": 0,
++      "action": "veilfall_press",
++      "args": {
++        "prompt": "invite"
++      },
++      "label": "the host asks for its own offer at the chamber's real prompt"
++    },
++    {
++      "peer": 0,
++      "action": "guardian_answer",
++      "args": {
++        "release": "Rill"
++      },
++      "expect_data": {
++        "stage": "choose"
++      },
++      "label": "REAL RELEASE MENU at a full five: Rill's row, ui_accept, confirm, 'Let them go', Done; the Guardian takes Rill's holder"
++    },
++    {
++      "peer": "all",
++      "action": "wait_flag",
++      "args": {
++        "flag": "water_currents_restored",
++        "scope": "world"
++      },
++      "label": "the Guardian resolution itself restored the currents (not the ledger)"
++    },
++    {
++      "peer": 0,
++      "action": "guardian_state",
++      "expect_data": {
++        "party_size": 5,
++        "guardians_owned": 1,
++        "receipt_saved": true,
++        "party": [
++          "Acorn",
++          "Pip",
++          "Abyssal Guardian",
++          "Shelby",
++          "Volt"
++        ]
++      },
++      "label": "host: Rill gone, the Guardian in Rill's holder, never a sixth"
++    },
++    {
++      "peer": 1,
++      "action": "guardian_state",
++      "expect_data": {
++        "party_size": 5,
++        "guardians_owned": 0,
++        "party": [
++          "Kestrel",
++          "Bramble",
++          "Tuff",
++          "Fern",
++          "Moss"
++        ]
++      },
++      "label": "the guest has NOT asked for its offer: its Guardian row stays open in the host's world"
++    },
++    {
++      "peer": 0,
++      "action": "menu_toggle",
++      "args": {
++        "open": false
++      },
++      "label": "the host leaves the Creatures tab with B (menu_cancel presses), as a player would"
++    },
++    {
++      "peer": 1,
++      "action": "menu_toggle",
++      "args": {
++        "open": false
++      }
++    },
++    {
++      "peer": "all",
++      "action": "capture_saves",
++      "args": {
++        "label": "fixture"
++      },
++      "label": "THE FIXTURE: host world + host character + guest character, as the game saved them"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/tools/net/proof_scenarios/f15_tidewake_b_grandpa_full.json b/tools/net/proof_scenarios/f15_tidewake_b_grandpa_full.json
+new file mode 100644
+index 00000000..c4af09de
+--- /dev/null
++++ b/tools/net/proof_scenarios/f15_tidewake_b_grandpa_full.json
+@@ -0,0 +1,362 @@
++{
++  "name": "F15#3 full: saved teams loaded through the title, guest releases in-run, both walk to Grandpa",
++  "claim": "ACCEPTANCE F15 #3 'receive Grandpa's acknowledgement of each current team, including releases' (T3). START STATE (disclosed): the fixture save tools/net/proof_saves/f15_tidewake_b_full_{host,guest}, captured by tools/net/proof_scenarios/f15_tidewake_b_full_fixture_make.json (the game's own autosave/character save after the host freed the Guardian and let Rill go through the real release menu; its own setup fixtures are listed there). No party_grant, story_flag or guardian_fixture step runs here. The host loads through the production title (Load Game -> autosave slot); the guest joins through the title's direct join and presses its own saved-character button. The guest, at a full five, walks to the Veilfall invite prompt, asks for its own Guardian and lets Tuff go through the real Creatures-tab release menu. Both cross to the Meadows (Game.enter_realm, the one remaining in-run fixture), then walk by left stick to Grandpa and press his prompt; each hears only its own current team, the released companions (host Rill, guest Tuff) not named. homecoming_seen is saved per character, not in the world.",
++  "peers": 2,
++  "scene": "water",
++  "budget_s": 2400,
++  "steps": [
++    {
++      "peer": 0,
++      "action": "load_save",
++      "args": {
++        "from": "tools/net/proof_saves/f15_tidewake_b_full_host",
++        "copy_only": true
++      },
++      "label": "START STATE (disclosed fixture save): the host's world + character placed on disk; nothing loaded"
++    },
++    {
++      "peer": 0,
++      "action": "title_continue",
++      "args": {
++        "any_realm": true,
++        "budget_frames": 11000,
++        "expect_character": "character-e8e1afb2382815d151f40cf291ac1a6b"
++      },
++      "label": "HOST LOADS THROUGH THE TITLE: fresh-process reset, Load Game -> autosave slot -> Game.load_game -> the Tidewake rebuilt and hosted"
++    },
++    {
++      "peer": 1,
++      "action": "load_save",
++      "args": {
++        "from": "tools/net/proof_saves/f15_tidewake_b_full_guest",
++        "copy_only": true
++      },
++      "label": "START STATE: the guest's own character file placed on its disk"
++    },
++    {
++      "peer": 1,
++      "action": "production_join",
++      "args": {
++        "returning_route": true,
++        "budget_frames": 9000,
++        "character": {
++          "character_id": "character-3f0b7175d4a0a1435f39030f2ae5c1c8"
++        },
++        "pick_saved": true
++      },
++      "label": "GUEST JOINS THROUGH THE TITLE's returning route (_join_via -> _begin_join -> _restore_portable_returning_character from its own file -> JoinDriver)"
++    },
++    {
++      "peer": "all",
++      "action": "expect_peers",
++      "args": {
++        "count": 2,
++        "budget_frames": 1200
++      }
++    },
++    {
++      "peer": 0,
++      "action": "guardian_state",
++      "expect_data": {
++        "character_id": "character-e8e1afb2382815d151f40cf291ac1a6b",
++        "party_size": 5,
++        "guardians_owned": 1,
++        "party": [
++          "Acorn",
++          "Pip",
++          "Abyssal Guardian",
++          "Shelby",
++          "Volt"
++        ]
++      },
++      "label": "host's loaded team: its saved five (Rill already let go in the fixture's real release menu)"
++    },
++    {
++      "peer": 1,
++      "action": "guardian_state",
++      "expect_data": {
++        "character_id": "character-3f0b7175d4a0a1435f39030f2ae5c1c8",
++        "party_size": 5,
++        "guardians_owned": 0,
++        "party": [
++          "Kestrel",
++          "Bramble",
++          "Tuff",
++          "Fern",
++          "Moss"
++        ]
++      },
++      "label": "guest's loaded team: its saved five, no Guardian yet"
++    },
++    {
++      "peer": "all",
++      "action": "capture_saves",
++      "args": {
++        "label": "before"
++      }
++    },
++    {
++      "peer": 0,
++      "action": "check_saved",
++      "args": {
++        "label": "before",
++        "dir": "worlds",
++        "contains": [
++          "water_currents_restored",
++          "water_guardian_freed"
++        ],
++        "lacks": [
++          "homecoming_seen"
++        ]
++      },
++      "label": "loaded world: currents restored (by the game, in the fixture run), no homecoming"
++    },
++    {
++      "peer": 1,
++      "action": "check_saved",
++      "args": {
++        "label": "before",
++        "dir": "characters",
++        "path_contains": "character-3f0b7175d4a0a1435f39030f2ae5c1c8",
++        "contains": [
++          "Tuff",
++          "Kestrel"
++        ],
++        "lacks": [
++          "water_abyssal_guardian",
++          "homecoming_seen"
++        ]
++      },
++      "label": "non-vacuous: the guest's save holds Tuff, no Guardian, no homecoming"
++    },
++    {
++      "peer": 1,
++      "action": "veilfall_press",
++      "args": {
++        "prompt": "invite"
++      },
++      "label": "REMAINING FIXTURE: veilfall_press places the guest at the chamber's invite prompt (a stick walk from its rejoin spot freed the player body mid-walk in an earlier attempt), then the real interact press asks for its own offer"
++    },
++    {
++      "peer": 1,
++      "action": "guardian_answer",
++      "args": {
++        "release": "Tuff"
++      },
++      "expect_data": {
++        "stage": "choose"
++      },
++      "label": "IN-RUN GUEST RELEASE through the real Creatures-tab menu at a full five: Tuff's row, ui_accept, 'Let them go forever', Done"
++    },
++    {
++      "peer": 1,
++      "action": "guardian_state",
++      "expect_data": {
++        "party_size": 5,
++        "guardians_owned": 1,
++        "receipt_saved": true,
++        "party": [
++          "Kestrel",
++          "Bramble",
++          "Abyssal Guardian",
++          "Fern",
++          "Moss"
++        ]
++      },
++      "label": "guest: Tuff gone, the Guardian in Tuff's holder, never a sixth"
++    },
++    {
++      "peer": 0,
++      "action": "menu_toggle",
++      "args": {
++        "open": false
++      }
++    },
++    {
++      "peer": 1,
++      "action": "menu_toggle",
++      "args": {
++        "open": false
++      },
++      "label": "the guest leaves the Creatures tab with B"
++    },
++    {
++      "peer": "all",
++      "action": "wait",
++      "args": {
++        "frames": 180
++      },
++      "label": "let the guest's Guardian settlement save finish before either crossing (an earlier attempt's host crossing was refused right after it)"
++    },
++    {
++      "peer": 0,
++      "action": "enter_realm",
++      "args": {
++        "realm": "meadows"
++      },
++      "budget_frames": 20000,
++      "label": "REMAINING FIXTURE: the production realm crossing (Game.enter_realm) stands in for walking to the Tidewake's gate"
++    },
++    {
++      "peer": 1,
++      "action": "enter_realm",
++      "args": {
++        "realm": "meadows"
++      },
++      "budget_frames": 20000,
++      "label": "REMAINING FIXTURE: the guest crosses home"
++    },
++    {
++      "peer": 0,
++      "action": "grandpa_homecoming",
++      "args": {
++        "walk": true,
++        "walk_budget_frames": 1500
++      },
++      "budget_frames": 8000,
++      "expect": "any",
++      "label": "ATTEMPT (host): walk to Grandpa by left stick only, through the house's outside/door/inside markers; recorded as-is (in debug runs the body did not move after the realm crossing)"
++    },
++    {
++      "peer": 0,
++      "action": "grandpa_homecoming",
++      "args": {
++        "must_name": [
++          "Acorn",
++          "Pip",
++          "Abyssal Guardian",
++          "Shelby",
++          "Volt"
++        ],
++        "must_not_name": [
++          "Rill",
++          "Tuff",
++          "Kestrel",
++          "Bramble",
++          "Fern",
++          "Moss"
++        ]
++      },
++      "budget_frames": 20000,
++      "expect_data": {
++        "homecoming_seen": true,
++        "party": [
++          "Acorn",
++          "Pip",
++          "Abyssal Guardian",
++          "Shelby",
++          "Volt"
++        ]
++      },
++      "label": "HOST (REMAINING FIXTURE: grandpa_homecoming places the player beside Grandpa) then presses his prompt: its own current five, the released Rill not named"
++    },
++    {
++      "peer": 1,
++      "action": "grandpa_homecoming",
++      "args": {
++        "walk": true,
++        "walk_budget_frames": 1500
++      },
++      "budget_frames": 8000,
++      "expect": "any",
++      "label": "ATTEMPT (guest): walk to Grandpa by left stick only, through the house's outside/door/inside markers; recorded as-is (in debug runs the body did not move after the realm crossing)"
++    },
++    {
++      "peer": 1,
++      "action": "grandpa_homecoming",
++      "args": {
++        "must_name": [
++          "Kestrel",
++          "Bramble",
++          "Abyssal Guardian",
++          "Fern",
++          "Moss"
++        ],
++        "must_not_name": [
++          "Tuff",
++          "Rill",
++          "Acorn",
++          "Pip",
++          "Shelby",
++          "Volt"
++        ]
++      },
++      "budget_frames": 20000,
++      "expect_data": {
++        "homecoming_seen": true,
++        "party": [
++          "Kestrel",
++          "Bramble",
++          "Abyssal Guardian",
++          "Fern",
++          "Moss"
++        ]
++      },
++      "label": "GUEST (REMAINING FIXTURE: grandpa_homecoming places the player beside Grandpa) to Grandpa: its own current five incl. its Guardian; the just-released Tuff not named"
++    },
++    {
++      "peer": "all",
++      "action": "capture_saves",
++      "args": {
++        "label": "after"
++      }
++    },
++    {
++      "peer": 0,
++      "action": "check_saved",
++      "args": {
++        "label": "after",
++        "dir": "worlds",
++        "contains": [
++          "water_currents_restored"
++        ],
++        "lacks": [
++          "homecoming_seen"
++        ]
++      },
++      "label": "the homecoming is personal: not in the shared world"
++    },
++    {
++      "peer": 0,
++      "action": "check_saved",
++      "args": {
++        "label": "after",
++        "dir": "characters",
++        "path_contains": "character-e8e1afb2382815d151f40cf291ac1a6b",
++        "contains": [
++          "homecoming_seen",
++          "water_abyssal_guardian",
++          "Acorn",
++          "Pip",
++          "Shelby",
++          "Volt"
++        ],
++        "lacks": [
++          "Rill"
++        ]
++      },
++      "label": "host's saved character"
++    },
++    {
++      "peer": 1,
++      "action": "check_saved",
++      "args": {
++        "label": "after",
++        "dir": "characters",
++        "path_contains": "character-3f0b7175d4a0a1435f39030f2ae5c1c8",
++        "contains": [
++          "homecoming_seen",
++          "water_abyssal_guardian",
++          "Kestrel",
++          "Bramble",
++          "Fern",
++          "Moss"
++        ],
++        "lacks": [
++          "Tuff"
++        ]
++      },
++      "label": "guest's saved character: homecoming seen, Tuff released, Guardian kept"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/tools/net/proof_steps.gd b/tools/net/proof_steps.gd
+index ab4f9809..4f5e5ae1 100644
+--- a/tools/net/proof_steps.gd
++++ b/tools/net/proof_steps.gd
+@@ -45,7 +45,7 @@ extends RefCounted
+ ##   guardian_fixture {participants}      HOST, F14 SETUP: the Veilfall prerequisites,
+ ##                                         then Nerissa's defeat by `participants` (peer
+ ##                                         ids) through the director's own session path
+-##   veilfall_press  {prompt}             press a Veilfall prompt: a control id, `invite`
++##   veilfall_press  {prompt, walk?}      (walk: true = left-stick walk, no teleport) press a Veilfall prompt: a control id, `invite`
+ ##                                         or `decline`
+ ##   guardian_answer {release?, until?, screenshot?}  answer THIS peer's Guardian offer
+ ##                                         with controller presses: Accept, or at a full
+@@ -66,7 +66,8 @@ extends RefCounted
+ ##   nerissa_challenge {}                 F14: Veilfall prerequisites via the ledger, then take up
+ ##                                         Nerissa's challenge at her Veilfall spot (then
+ ##                                         win_trainer_battle); data.multi_peer at the time
+-##   grandpa_homecoming {screenshot?, must_name?, must_not_name?, visit?}  F15: walk up to
++##   grandpa_homecoming {screenshot?, must_name?, must_not_name?, visit?, walk?}  F15: walk up to
++##                                         (walk: true = left-stick walk from where the player stands, no teleport)
+ ##                                         (visit: "repeat" expects the repeat conversation, no names)
+ ##                                         Grandpa, press his real prompt, read the whole
+ ##                                         conversation, report every line and check names
+@@ -199,7 +200,12 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
+ 				var m := RegEx.create_from_string("^slot_(\\d+)\\.json(\\.gz)?$").search(entry)
+ 				if m != null:
+ 					found = int(m.get_string(1)) if found < 0 else -2
+-		if found < 0:
++		# `copy_only`: place the named save on this peer's disk and stop -- the
++		# production title route (title_continue for a host, production_join's
++		# saved-character picker for a guest) then does the loading. A guest's
++		# captured home holds only characters/, so no slot is required.
++		var copy_only := bool(args.get("copy_only", false))
++		if found < 0 and not (copy_only and found == -1):
+ 			return {"verdict": "FAIL", "detail": "%s needs exactly one saves/slot_N.json" % from}
+ 		slot = found
+ 		var user := OS.get_user_data_dir()
+@@ -208,6 +214,9 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
+ 			copied += _copy_tree(from.path_join(sub), user.path_join(sub), true)
+ 		if copied == 0:
+ 			return {"verdict": "FAIL", "detail": "nothing to copy from %s" % from}
++		if copy_only:
++			return {"verdict": "PASS", "detail": "copied %d file(s) of %s into this home; nothing loaded (the title route loads it)"
++				% [copied, from.get_file()], "data": {"copied": copied, "slot": slot}}
+ 	elif FileAccess.file_exists(from):
+ 		form = "single slot json (legacy-migration path)"
+ 		var dst := str((saver as RefCounted).call("slot_path", slot))
+@@ -1307,13 +1316,63 @@ static func _grandpa_homecoming(tree: SceneTree, args: Dictionary) -> Dictionary
+ 	var game := tree.root.get_node_or_null(^"Game")
+ 	var party_before := _party_names(game)
+ 	var standing := ""
+-	for offset: Vector3 in [Vector3(0.9, 0.2, 0), Vector3(-0.9, 0.2, 0), Vector3(0, 0.2, 0.9),
+-			Vector3(0, 0.2, -0.9), Vector3(1.6, 0.2, 1.6), Vector3(-1.6, 0.2, -1.6)]:
+-		var at := prompt.global_position + offset
+-		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 60})
+-		if not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
+-			standing = str(offset)
+-			break
++	var walk := {}
++	if bool(args.get("walk", false)):
++		# `walk`: never teleported. The left stick carries the player from
++		# wherever they stand to Grandpa (`_step_move_to`, the runner's
++		# wall-aware stick navigator), and his prompt must then be in reach.
++		for f in int(args.get("settle_frames", 0)):
++			await tree.physics_frame
++		var from := player.global_position
++		var context_before := str((tree.get("_probe") as Object).call("input_context"))
++		var locomotion := bool(player.call("locomotion_enabled")) if player.has_method("locomotion_enabled") else true
++		# Grandpa waits indoors: the legs are the house's own navigation markers
++		# (outside -> door -> just inside), then Grandpa -- the way through the
++		# doorway a player takes; the stick navigator only walks straight legs.
++		var legs: Array = []
++		var house := director.get_parent().get_node_or_null(^"GrandpaHouse") as Node3D
++		if house != null and house.has_method("marker"):
++			var consts: Dictionary = house.get_script().get_script_constant_map()
++			legs.append(["outside", house.call("marker", "outside")])
++			legs.append(["door", house.call("marker", "door")])
++			legs.append(["inside", house.to_global(Vector3(float(consts.get("INNER_W", 8.0)) * 0.5 - 1.2, 0.0, 0.0))])
++		legs.append(["grandpa", prompt.global_position])
++		var moved := {}
++		var leg_log: Array = []
++		for leg: Array in legs:
++			var at: Vector3 = leg[1]
++			var last := str(leg[0]) == "grandpa"
++			moved = await tree.call("_step_move_to", {"x": at.x, "z": at.z,
++				"close_enough": float(args.get("close_enough", 2.2)) if last else 0.9,
++				"budget_frames": int(args.get("walk_budget_frames", 6000))})
++			leg_log.append("%s:%s@(%.1f,%.1f)" % [str(leg[0]), str(moved.get("verdict", "")),
++				player.global_position.x, player.global_position.z])
++			if str(moved.get("verdict", "")) != "PASS":
++				break
++		moved["legs"] = leg_log
++		for f in 20:
++			await tree.physics_frame
++		var in_reach := not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty()
++		walk = {"from": [snappedf(from.x, 0.1), snappedf(from.z, 0.1)],
++			"to": [snappedf(player.global_position.x, 0.1), snappedf(player.global_position.z, 0.1)],
++			"grandpa": [snappedf(prompt.global_position.x, 0.1), snappedf(prompt.global_position.z, 0.1)],
++			"straight_line_m": snappedf(Vector2(from.x - prompt.global_position.x, from.z - prompt.global_position.z).length(), 0.1),
++			"stick": str(moved.get("verdict", "")), "stick_detail": str(moved.get("detail", "")), "in_reach": in_reach,
++			"legs": moved.get("legs", []),
++			"input_context_before": context_before, "locomotion_before": locomotion,
++			"player_in_tree": player.is_inside_tree(), "player_path": str(player.get_path()) if player.is_inside_tree() else ""}
++		if not in_reach:
++			return {"verdict": "FAIL", "detail": "walked by stick but Grandpa's prompt is not in reach: %s" % JSON.stringify(walk),
++				"data": {"walk": walk}}
++		standing = "walked"
++	else:
++		for offset: Vector3 in [Vector3(0.9, 0.2, 0), Vector3(-0.9, 0.2, 0), Vector3(0, 0.2, 0.9),
++				Vector3(0, 0.2, -0.9), Vector3(1.6, 0.2, 1.6), Vector3(-1.6, 0.2, -1.6)]:
++			var at := prompt.global_position + offset
++			await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 60})
++			if not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
++				standing = str(offset)
++				break
+ 	var cleared := 0
+ 	while cleared < 40 and bool(panel.call("is_open")):
+ 		if not await _tap(tree, "interact"):
+@@ -1354,7 +1413,7 @@ static func _grandpa_homecoming(tree: SceneTree, args: Dictionary) -> Dictionary
+ 	var seen := flags != null and bool(flags.call("has", "homecoming_seen"))
+ 	var credits := tree.root.find_child("RegionalCredits", true, false) != null
+ 	var data := {"conversation_id": conversation, "lines": lines, "party": party_before,
+-		"homecoming_seen": seen, "credits_opened": credits}
++		"homecoming_seen": seen, "credits_opened": credits, "walk": walk}
+ 	# The acknowledgement itself: one "<name> came home with you." per current
+ 	# companion, in party order, and no other such line.
+ 	var named_lines: Array = lines.filter(func(l: String) -> bool: return l.ends_with(" came home with you."))
+@@ -1636,17 +1695,31 @@ static func _veilfall_press(tree: SceneTree, args: Dictionary) -> Dictionary:
+ 	if prompt == null or player == null:
+ 		return {"verdict": "ERROR", "detail": "no Veilfall prompt '%s' (or no player)" % which}
+ 	var standing := ""
+-	for offset: Vector3 in [Vector3(0, -1.2, -1.6), Vector3(0, -1.2, 1.6), Vector3(1.6, -1.2, 0),
+-			Vector3(-1.6, -1.2, 0), Vector3(0, -0.4, 0)]:
+-		var at := prompt.global_position + offset
+-		await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 30})
++	var walked := {}
++	if bool(args.get("walk", false)):
++		# `walk`: no teleport -- the left stick (`_step_move_to`) from where the player stands.
++		var from := player.global_position
++		var moved: Dictionary = await tree.call("_step_move_to", {"x": prompt.global_position.x,
++			"z": prompt.global_position.z, "close_enough": float(args.get("close_enough", 1.4)),
++			"budget_frames": int(args.get("walk_budget_frames", 6000))})
++		walked = {"from": [snappedf(from.x, 0.1), snappedf(from.z, 0.1)],
++			"to": [snappedf(player.global_position.x, 0.1), snappedf(player.global_position.z, 0.1)],
++			"straight_line_m": snappedf(Vector2(from.x - prompt.global_position.x, from.z - prompt.global_position.z).length(), 0.1),
++			"stick": str(moved.get("verdict", "")), "stick_detail": str(moved.get("detail", ""))}
+ 		if bool(prompt.get("enabled")) and not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
+-			standing = str(offset)
+-			break
++			standing = "walked"
++	else:
++		for offset: Vector3 in [Vector3(0, -1.2, -1.6), Vector3(0, -1.2, 1.6), Vector3(1.6, -1.2, 0),
++				Vector3(-1.6, -1.2, 0), Vector3(0, -0.4, 0)]:
++			var at := prompt.global_position + offset
++			await tree.call("_step_teleport", {"at": [at.x, at.y, at.z], "settle": 30})
++			if bool(prompt.get("enabled")) and not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty():
++				standing = str(offset)
++				break
+ 	if standing.is_empty():
+-		return {"verdict": "FAIL", "detail": "the '%s' prompt ('%s') does not offer itself (enabled=%s)"
+-			% [which, str(prompt.get("label")), str(prompt.get("enabled"))],
+-			"data": {"enabled": bool(prompt.get("enabled")), "label": str(prompt.get("label"))}}
++		return {"verdict": "FAIL", "detail": "the '%s' prompt ('%s') does not offer itself (enabled=%s)%s"
++			% [which, str(prompt.get("label")), str(prompt.get("enabled")), "" if walked.is_empty() else "; walk " + JSON.stringify(walked)],
++			"data": {"enabled": bool(prompt.get("enabled")), "label": str(prompt.get("label")), "walk": walked}}
+ 	# The host judges "beside the mechanism" on ITS copy of this body, which
+ 	# follows a 4 km teleport into the interior a few seconds late (a player
+ 	# walking up gives it that time). Stand still that long before pressing.
+@@ -1673,8 +1746,9 @@ static func _veilfall_press(tree: SceneTree, args: Dictionary) -> Dictionary:
+ 	if not flag.is_empty() and not game.world.flags.has(flag):
+ 		return {"verdict": "FAIL", "detail": "pressed '%s' but '%s' was never set (HUD says '%s')"
+ 			% [label, flag, _label_containing(tree.root, "mechanism")], "data": {"label": label}}
+-	return {"verdict": "PASS", "detail": "pressed '%s' standing at %s%s" % [label, standing,
+-		"" if flag.is_empty() else "; '%s' set" % flag], "data": {"label": label}}
++	return {"verdict": "PASS", "detail": "pressed '%s' standing at %s%s%s" % [label, standing,
++		"" if flag.is_empty() else "; '%s' set" % flag, "" if walked.is_empty() else "; walk " + JSON.stringify(walked)],
++		"data": {"label": label, "walk": walked}}
+ 
+ 
+ static func _creatures_tab(game: Node) -> Node:
+@@ -2607,7 +2681,7 @@ static func _guardian_offer_refused(tree: SceneTree, args: Dictionary) -> Dictio
+ ##                  been rewritten after that mark (a different sha256, modified time not
+ ##                  earlier). `contains` / `lacks` are player flags that must / must not be in
+ ##                  the file's flags. A copy of the file lands under the peer's proof dir/label.
+-##   title_continue {port?, settle_frames?, budget_frames?}  HOST, after it has left its
++##   title_continue {port?, settle_frames?, budget_frames?, any_realm?}  HOST, after it has left its
+ ##                  session (the player quit): enter the production title screen, reset Game
+ ##                  the way a new run does (a freshly started process holds no receipts and
+ ##                  no world), then open Load Game and press the autosave slot's button, which
+@@ -2731,9 +2805,14 @@ static func _title_continue(tree: SceneTree, args: Dictionary) -> Dictionary:
+ 	var entered := false
+ 	for f in budget:
+ 		await tree.physics_frame
++		# `any_realm`: a save standing in another realm (the Tidewake) has no
++		# Meadows SequenceDirector; its realm root (world_realm()) is the arrival.
++		var arrived_scene: bool = tree.call("_sequence_director") != null or (bool(args.get("any_realm", false))
++			and tree.current_scene != null and tree.current_scene.has_method("world_realm")
++			and str(tree.current_scene.call("world_realm")) == str(game.get("current_realm")))
+ 		if tree.current_scene != null and not tree.current_scene.is_in_group(&"title_screen") \
+ 				and bool(session.call("is_active")) and bool(session.call("is_host")) \
+-				and tree.call("_sequence_director") != null:
++				and arrived_scene:
+ 			entered = true
+ 			break
+ 	if not entered:
+@@ -2742,7 +2821,11 @@ static func _title_continue(tree: SceneTree, args: Dictionary) -> Dictionary:
+ 			"data": {"emptied": emptied}}
+ 	for f in int(args.get("settle_frames", 240)):
+ 		await tree.physics_frame
+-	tree.set("_scene_name", "world")
++	tree.set("_scene_name", str(WORLD_SCENES.get(str(game.get("current_realm")), "world")))
++	# `expect_character`: a save placed on disk by load_save {copy_only} belongs to
++	# a character this fresh process never held; Continue must bring THAT one.
++	if args.has("expect_character"):
++		id = str(args.expect_character)
+ 	var back := _character_id(game) == id
+ 	var data := {"emptied": emptied, "reloaded": true, "same_character": back, "character_id": _character_id(game),
+ 		"realm": str(game.get("current_realm")), "button": pressed, "hosting": bool(session.call("is_host")),
+-- 
+2.43.0
+
+
+From d9ae0499995274571a8f88feb57368cbdedef136 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 27 Sep 2026 00:03:54 +0000
+Subject: [PATCH 2/2] F15#3 full: committed run evidence (PASS through guest
+ in-run release; FAIL at Meadows crossing timeout under load) and clause table
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_012DN8r8YmVbrS3ATxVTNU66
+---
+ ralph/reports/TIDEWAKE/b/f15_3_full/PROOF.md  |  17 +-
+ .../TIDEWAKE/b/f15_3_full/run/PROOF.md        |  43 +++++
+ .../NET_RUN.json.gz                           | Bin 0 -> 1073 bytes
+ .../SUMMARY.md                                |  11 ++
+ .../peer-0.log                                | 160 ++++++++++++++++++
+ .../peer-1.log                                |  38 +++++
+ .../character.json.gz                         | Bin 0 -> 6031 bytes
+ .../peer-0/before/worlds/slot-0/world.json.gz | Bin 0 -> 936 bytes
+ .../character.json.gz                         | Bin 0 -> 5842 bytes
+ 9 files changed, 261 insertions(+), 8 deletions(-)
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/run/PROOF.md
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/NET_RUN.json.gz
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/SUMMARY.md
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/peer-0.log
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/peer-1.log
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-0/before/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-0/before/worlds/slot-0/world.json.gz
+ create mode 100644 ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-1/before/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/PROOF.md b/ralph/reports/TIDEWAKE/b/f15_3_full/PROOF.md
+index 082c87ba..ed09de1a 100644
+--- a/ralph/reports/TIDEWAKE/b/f15_3_full/PROOF.md
++++ b/ralph/reports/TIDEWAKE/b/f15_3_full/PROOF.md
+@@ -1,6 +1,6 @@
+ # F15#3: saved teams loaded through the title, the guest releases in-run, then Grandpa
+ 
+-**Verdict: PARTIAL.** RESULT_LINE
++**Verdict: PARTIAL, and NOT MET for the acknowledgement in this run.** The last run, `run/` (`net-proof_two_peer` at 23:57Z, exit 1), passes steps 1–16: the title loads, the guest's in-run release goes through the real menu, and saves are checked. It then FAILs at step 17 because the host's Meadows crossing timed out under CPU load ("realm 'meadows' did not become ready within 120.0 seconds"). **Grandpa's acknowledgement is therefore not re-proven in this run.** The only Grandpa evidence from this start state is an earlier attempt of the same scenario. Its crossings passed (98 s and 101 s), and its stick walk to Grandpa then FAILed because the host body did not move. That attempt's output was overwritten and is described here, not committed.
+ 
+ Criterion: ACCEPTANCE §6.1 **F15#3**: host and guest "receive Grandpa's acknowledgement of each current team, including releases" (T3: "Grandpa recognizes each character's current companions, including releases").
+ 
+@@ -23,17 +23,17 @@ Under the coordinator's bar, a fixture save is still a fixture. This run removes
+ 
+ | Clause / objection | This run | Status |
+ |---|---|---|
+-| Host receives Grandpa's acknowledgement of its current team | HOST_ACK | HOST_ACK_S |
+-| Guest receives Grandpa's acknowledgement of its current team | GUEST_ACK | GUEST_ACK_S |
+-| "including releases" | The **guest releases in-run**. At a full five it asks for its own Guardian and lets **Tuff** go through the real release menu with controller presses only (Tuff's row, `ui_accept`, "Let them go forever", Done): `[Kestrel, Bramble, Tuff, Fern, Moss]` → `[Kestrel, Bramble, Abyssal Guardian, Fern, Moss]`. The host's release (Rill) is in the loaded save; it was made through the real menu in the fixture run. Grandpa must name neither Tuff nor Rill. | REL_S |
+-| Personal, not world | `homecoming_seen` is checked in each character save and absent from the shared world save (`check_saved` after). | PERS_S |
++| Host receives Grandpa's acknowledgement of its current team | Not reached in the committed run (crossing timeout). The landed `f15_3_grandpa_real_release` run shows the acknowledgement mechanics (own team only, Rill absent), but from a different start. | OPEN |
++| Guest receives Grandpa's acknowledgement of its current team | Not reached (same timeout). | OPEN |
++| "including releases" | The **guest releases in-run**. At a full five it asks for its own Guardian and lets **Tuff** go through the real release menu with controller presses only (Tuff's row, `ui_accept`, "Let them go forever", Done): `[Kestrel, Bramble, Tuff, Fern, Moss]` → `[Kestrel, Bramble, Abyssal Guardian, Fern, Moss]`. The host's release (Rill) is in the loaded save; it was made through the real menu in the fixture run. Grandpa must name neither Tuff nor Rill. | Release MET in-run (steps 12–13). Acknowledgement of it OPEN. |
++| Personal, not world | `homecoming_seen` is checked in each character save and absent from the shared world save (`check_saved` after). | OPEN (the after-checks were not reached) |
+ | (a) parties GRANTED (`party_grant`) | No `party_grant` in this run. Both teams load from saves through the title. **Remaining:** the teams inside the fixture save were originally granted in the fixture-make run. | PARTIAL |
+-| (b) player TELEPORTED beside Grandpa | Each peer first attempts a **left-stick-only walk**: `grandpa_homecoming {walk: true}`, which uses the runner's stick navigator along the house's own `outside` → `door` → inside markers, then Grandpa. WALK_RESULT **Remaining:** acknowledgement is taken by the placing `grandpa_homecoming`. | OPEN |
++| (b) player TELEPORTED beside Grandpa | Each peer first attempts a **left-stick-only walk**: `grandpa_homecoming {walk: true}`, which uses the runner's stick navigator along the house's own `outside` → `door` → inside markers, then Grandpa. Not reached in the committed run. In the earlier attempt (walk code without the house legs), the host's body did not move. It went from (0.9, 1.8) toward Grandpa at (10.0, 32.0), 31.5 m away, and was still 31.53 m short after the budget. A host-only debug run gave the same result: `input_context` was `world` and `locomotion_enabled` was true, yet two plain `move_to` legs in other directions after a 900-frame settle also moved under 1 m. So in this harness the post-crossing Meadows body does not respond to the stick. The cause is not diagnosed. It is not a navigator detour problem. **Remaining:** acknowledgement is taken by the placing `grandpa_homecoming`. | OPEN |
+ | (c) `defeated_warden` ledger-set via `story_flag`, plus `guardian_fixture` | Neither runs in this run. **Remaining:** both are baked into the fixture save's world by the fixture-make run. | PARTIAL |
+ | (d) the guest does not release in-run | The guest releases Tuff in-run through the real menu (above). **Remaining:** `veilfall_press` places the guest at the chamber's invite prompt. An earlier `walk: true` attempt from the rejoin spot freed the player body mid-walk (`stick_navigator.gd:339`, "previously freed"). | MET (placement disclosed) |
+ | Title Continue (host) | `load_save {copy_only}` places the files on disk and loads nothing. `title_continue {any_realm}` then does the production title reset, Load Game, the autosave slot, `Game.load_game`, and rebuilds and hosts the Tidewake. Character `character-e8e1…` comes back. | MET |
+ | Title returning route (guest) | `load_save {copy_only}` places the guest's character file. `production_join {returning_route, pick_saved}` then calls `title._join_via`. The title had already adopted the saved character, so `_begin_join` → `_restore_portable_returning_character` → JoinDriver (log: "[title] restored returning guest character before joining"). `guardian_state` confirms character `character-3f0b…` with its saved five. | MET |
+-| Crossing home | `Game.enter_realm("meadows")`, the production crossing. It stands in for walking to the Tidewake's gate. | FIXTURE (disclosed) |
++| Crossing home | `Game.enter_realm("meadows")`, the production crossing. It stands in for walking to the Tidewake's gate. In the committed run it timed out at 120 s under CPU load (load average about 18). | FIXTURE (disclosed); FAIL in this run |
+ 
+ ## Harness changes (shared files, additive; existing callers unchanged)
+ 
+@@ -46,7 +46,8 @@ Under the coordinator's bar, a fixture save is still a fixture. This run removes
+ 
+ ## Run notes
+ 
+-RUN_NOTES
++- Committed runner table: `run/PROOF.md`, 20 PASS rows before the failure at #17. Captured `before` saves are under `run/peer-*/before/`. No `after` saves exist because that step was not reached.
++- Attempt history (same start state): (1) the title load of a water save needed `any_realm`; (2) the saved-character picker issue (fixed in `peer_runner.gd`); (3) the guest's `veilfall_press {walk}` freed the player body mid-walk, so it was switched to placement; (4) crossings passed, then the host walk FAILed (did not move); (5) and (6) the host crossing timed out at 120 s under load. Per the two-attempts rule, the approach needs to change, not another rerun.
+ - Loopback headless runs are local evidence, not internet or Steam acceptance. No screenshots.
+ - The 4-core host was shared with other agents' rendered captures (load average about 18). One attempt had the host's Meadows crossing refused: "realm 'meadows' did not become ready within 120.0 s" (`game_state.gd:1691`). A passing crossing took 98 s. A 180-frame wait before the crossings was added, and the run was repeated once.
+ - Evidence was trimmed for disk. Peer homes and legacy `saves/slot_0.json` copies were removed and captured JSON is gzip'd. Peer `.log` files are force-added.
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/run/PROOF.md b/ralph/reports/TIDEWAKE/b/f15_3_full/run/PROOF.md
+new file mode 100644
+index 00000000..04849078
+--- /dev/null
++++ b/ralph/reports/TIDEWAKE/b/f15_3_full/run/PROOF.md
+@@ -0,0 +1,43 @@
++# Two-peer proof: F15#3 full: saved teams loaded through the title, guest releases in-run, both walk to Grandpa
++
++**Verdict: FAIL** (exit 1)
++
++Scenario: `/home/user/wt/f15-3-full/tools/net/proof_scenarios/f15_tidewake_b_grandpa_full.json`  
++Run: `net-20260926T235728Z-15843`  
++Rendered: no (headless)
++
++ACCEPTANCE F15 #3 'receive Grandpa's acknowledgement of each current team, including releases' (T3). START STATE (disclosed): the fixture save tools/net/proof_saves/f15_tidewake_b_full_{host,guest}, captured by tools/net/proof_scenarios/f15_tidewake_b_full_fixture_make.json (the game's own autosave/character save after the host freed the Guardian and let Rill go through the real release menu; its own setup fixtures are listed there). No party_grant, story_flag or guardian_fixture step runs here. The host loads through the production title (Load Game -> autosave slot); the guest joins through the title's direct join and presses its own saved-character button. The guest, at a full five, walks to the Veilfall invite prompt, asks for its own Guardian and lets Tuff go through the real Creatures-tab release menu. Both cross to the Meadows (Game.enter_realm, the one remaining in-run fixture), then walk by left stick to Grandpa and press his prompt; each hears only its own current team, the released companions (host Rill, guest Tuff) not named. homecoming_seen is saved per character, not in the world.
++
++## Failures
++
++- #17 peer 0 enter_realm (REMAINING FIXTURE: the production realm crossing (Game.enter_realm) stands in for walking to the Tidewake's gate) -> FAIL -- Game.enter_realm('meadows') refused from 'water' (can_enter=true)
++
++| # | Peer | Step | Expected | Verdict | Detail |
++|---|---|---|---|---|---|
++| 1 | 0 | load_save — START STATE (disclosed fixture save): the host's world + character placed on disk; nothing loaded | PASS | PASS | copied 3 file(s) of f15_tidewake_b_full_host into this home; nothing loaded (the title route loads it) |
++| 2 | 0 | title_continue — HOST LOADS THROUGH THE TITLE: fresh-process reset, Load Game -> autosave slot -> Game.load_game -> the Tidewake rebuilt and hosted | PASS | PASS | title: reset as a fresh process (receipts and world facts gone=true), Load Game pressed 'Autosave — Day 1 · 5 Pals' -> Game.load_game(0) -> scene 'WaterArchipelago' hosting udp/30341; character 'character-e8e1afb2382815d151f40cf291ac1a6b' back=true |
++| 3 | 1 | load_save — START STATE: the guest's own character file placed on its disk | PASS | PASS | copied 1 file(s) of f15_tidewake_b_full_guest into this home; nothing loaded (the title route loads it) |
++| 4 | 1 | production_join — GUEST JOINS THROUGH THE TITLE's returning route (_join_via -> _begin_join -> _restore_portable_returning_character from its own file -> JoinDriver) | PASS | PASS | title returning entry built 'WaterArchipelago' first, then JoinDriver joined 127.0.0.1:30341 as peer 1492415521 after 77 frames |
++| 5 | 0 | expect_peers | PASS | PASS | registry reports 2 peer(s) after 0 frames (0.0 s) |
++| 5 | 1 | expect_peers | PASS | PASS | registry reports 2 peer(s) after 0 frames (0.0 s) |
++| 6 | 0 | guardian_state — host's loaded team: its saved five (Rill already let go in the fixture's real release menu) | PASS + {"character_id":"character-e8e1afb2382815d151f40cf291ac1a6b","guardians_owned":1.0,"party":["Acorn","Pip","Abyssal Guardian","Shelby","Volt"],"party_size":5.0} | PASS | {"character_id":"character-e8e1afb2382815d151f40cf291ac1a6b","claim_id":"a1c0a220eb66ee7753346a2f3a718f2357e5e8a4cd4d3b0135e00766abcfdf7e","guardian_freed":true,"guardians_owned":1,"host_open_claims":[],"host_settled":true,"offered":true,"participants":["character-3f0b7175d4a0a1435f39030f2ae5c1c8","character-e8e1afb2382815d151f40cf291ac1a6b"],"party":["Acorn","Pip","Abyssal Guardian","Shelby","Volt"],"party_size":5,"pending_guardian_id":"","receipt_saved":true,"saved_guardians":1,"saved_party_size":5} |
++| 7 | 1 | guardian_state — guest's loaded team: its saved five, no Guardian yet | PASS + {"character_id":"character-3f0b7175d4a0a1435f39030f2ae5c1c8","guardians_owned":0.0,"party":["Kestrel","Bramble","Tuff","Fern","Moss"],"party_size":5.0} | PASS | {"character_id":"character-3f0b7175d4a0a1435f39030f2ae5c1c8","claim_id":"e945b277adac7b4c43097b531618695febca0cb53b4179ee6ea5c7ddd7394437","guardian_freed":true,"guardians_owned":0,"offered":false,"party":["Kestrel","Bramble","Tuff","Fern","Moss"],"party_size":5,"pending_guardian_id":"","receipt_saved":false,"saved_guardians":0,"saved_party_size":5} |
++| 8 | 0 | capture_saves | PASS | PASS | host (world + character): autosave_here()=true, character 'character-e8e1afb2382815d151f40cf291ac1a6b' on disk=true; copied 3 files to /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-0/before |
++| 8 | 1 | capture_saves | PASS | PASS | client (character only): autosave_here()=false, character 'character-3f0b7175d4a0a1435f39030f2ae5c1c8' on disk=true; copied 1 files to /home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-1/before |
++| 9 | 0 | check_saved — loaded world: currents restored (by the game, in the fixture run), no homecoming | PASS | PASS | missing []; unexpectedly present []; read ["slot-0/world.json"] under before/worlds |
++| 10 | 1 | check_saved — non-vacuous: the guest's save holds Tuff, no Guardian, no homecoming | PASS | PASS | missing []; unexpectedly present []; read ["character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json"] under before/characters |
++| 11 | 1 | veilfall_press — REMAINING FIXTURE: veilfall_press places the guest at the chamber's invite prompt (a stick walk from its rejoin spot freed the player body mid-walk in an earlier attempt), then the real interact press asks for its own offer | PASS | PASS | pressed 'Invite the Deep Watcher' standing at (0.0, -1.2, -1.6) |
++| 12 | 1 | guardian_answer — IN-RUN GUEST RELEASE through the real Creatures-tab menu at a full five: Tuff's row, ui_accept, 'Let them go forever', Done | PASS + {"stage":"choose"} | PASS | answered let Tuff go: party ["Kestrel", "Bramble", "Tuff", "Fern", "Moss"] -> ["Kestrel", "Bramble", "Abyssal Guardian", "Fern", "Moss"]; Guardians owned 1; receipt on the saved character=true |
++| 13 | 1 | guardian_state — guest: Tuff gone, the Guardian in Tuff's holder, never a sixth | PASS + {"guardians_owned":1.0,"party":["Kestrel","Bramble","Abyssal Guardian","Fern","Moss"],"party_size":5.0,"receipt_saved":true} | PASS | {"character_id":"character-3f0b7175d4a0a1435f39030f2ae5c1c8","claim_id":"e945b277adac7b4c43097b531618695febca0cb53b4179ee6ea5c7ddd7394437","guardian_freed":true,"guardians_owned":1,"offered":true,"party":["Kestrel","Bramble","Abyssal Guardian","Fern","Moss"],"party_size":5,"pending_guardian_id":"","receipt_saved":true,"saved_guardians":1,"saved_party_size":5} |
++| 14 | 0 | menu_toggle | PASS | PASS | the menu was already shut |
++| 15 | 1 | menu_toggle — the guest leaves the Creatures tab with B | PASS | PASS | the menu is shut 1 frames after press 1 of 'menu_cancel' (context 'world', tree paused=false) |
++| 16 | 0 | wait — let the guest's Guardian settlement save finish before either crossing (an earlier attempt's host crossing was refused right after it) | PASS | PASS | waited 180 physics frames |
++| 16 | 1 | wait — let the guest's Guardian settlement save finish before either crossing (an earlier attempt's host crossing was refused right after it) | PASS | PASS | waited 180 physics frames |
++| 17 | 0 | enter_realm — REMAINING FIXTURE: the production realm crossing (Game.enter_realm) stands in for walking to the Tidewake's gate | PASS | FAIL **(unexpected)** | Game.enter_realm('meadows') refused from 'water' (can_enter=true) |
++
++## Captured files
++
++- `peer-0/before/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json`
++- `peer-0/before/saves/slot_0.json`
++- `peer-0/before/worlds/slot-0/world.json`
++- `peer-1/before/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json`
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/NET_RUN.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/NET_RUN.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..306203ee00145d2b1ae9435a3f97f71058b1b50c
+GIT binary patch
+literal 1073
+zcmV-11kU>(iwFokUASrj15QO$Us6?0E^2dcZUD_zTZ`j16n;*Ag>WBc1}3rPTatwq
+z20FV8ZTDfB($X>r#g=0;vSlQBGGUqj-gD$jvdy%+Z7J+SAUgNU_sRM=pLyFZ-wA8H
+zH{|1dHuG{}4o$`i&1-?eFb<Z%HEK%1wcQGCkIM9@lTxuh6hjSNkE#aTm{n3}-eiK+
+z%2ujjHQ2<jTWDdd)6-?*^rlvif*C8?DFX{zAvD-T!I<YYt9_LV43r$LPV`e75Crt|
+z*$bF>1+QeMo&0z7_=c_sCL;k6jTIW|<FY1~A8voTxqE;2{vCOH_v`)7A8y|eTME)@
+zm3JBTNP5FeD`To=M=sw%y5&iXD`G5fazm<y6iSmlmyc*@m5X!_#qar}xG-eLt+*nK
+z@5tMmyC2D7LH-=-@}d?zS9^1D1!;@Uh@2E!)#PFiuKI#pX1rm};ajUaaplct4}G_m
+zOK8>e@YKLmGS%c2*6$$UMuP2+^FWZyJTS6aN!BWDag#KSSJzG>o+~SIkYSo$RB}^J
+z^PJ7XbxK!3kgnqE&z$l2FvLKB4H(5NSm}^F3Zj_y>jlkD<;t=rC>UD6#^U8_0dw9;
+zK`vEMR9VI4l{Z+|ylR*!IT{wLY{MztZW9rY`T=FZ6uzx;2dE9*Ofnb*qRcCmv7@6s
+zw7tyLJqTefn&mKYmRA_o^Gj6=AI1LO`UOoE(W2<2^fi}l>1%;48vp+8``ce`ez^6w
+zXu~4b+jNZ&W5C}6P^SuJ_ljY~i!cb&U=ybIVU(=G^=~fEBJkaCeBQPUb7Cd_y#TD~
+zt?HWG!zy3;c~?y?p0V@(C^>L)x&V%QKpco?6nJ~3Wj=Q5sD-!3W^<fVTOLf688#~8
+zV0|)JbwtRFt~Qfqh8IvkgP6t?+KG};9LCXd4e^68ilbHHqz^+hBMk1Jogx?GPC;qB
+z31gZhAw}Y!dRib1L&#$J6BMU99pa*3nI`Gks>ku1%<%*-z2F=yUe}1{R%AdMhU@`t
+z!KD%NA;_zYi_$bnzLars7_I>baZ0a0bN+J1h5s+(=sDxU;EZvZtl&=jnmI@R1?T90
+z;~b?xtiL234ZeET9pQM!x-i`QBi4n%r>r{#%-`{D_&UOhpR1lo?hNZ^E;N2A&o;iG
+z$vTeQhty=i7q=n&{Pv=$MaY)PE{C*_;xN54TIl28Dgz)qL6u4m$5PoX*ZqIPZ6!v#
+znz#KQ_Xc2aH2oQo%voDC!?~6G05pJYi(ZgPl|3>c!2`-L0zdkLZPsZG+530J;4a`v
+z(Cm5<z9PoTdVyQP;5}Xg!vIg3c6ZXJEf<pSjumF0-FB74RD-nOx@N6ZWAq&MTr!wJ
+r1{@z`CD%{zVg%<W0k1laPnW?P?txdtIX_@|^OrvWm`C*={t5s9AH@`F
+
+literal 0
+HcmV?d00001
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/SUMMARY.md b/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/SUMMARY.md
+new file mode 100644
+index 00000000..3eb4984e
+--- /dev/null
++++ b/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/SUMMARY.md
+@@ -0,0 +1,11 @@
++# Net smoke run net-20260926T235728Z-15843
++
++Scene: water
++Peers: 2
++Net conditions: clean (no proxy)
++
++- peer 0 (host) pid=15919 exited=true unexpected_exit=false
++- peer 1 (client) pid=15920 exited=true unexpected_exit=false
++
++FAILURES:
++- #17 peer 0 enter_realm (REMAINING FIXTURE: the production realm crossing (Game.enter_realm) stands in for walking to the Tidewake's gate) -> FAIL -- Game.enter_realm('meadows') refused from 'water' (can_enter=true)
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/peer-0.log b/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/peer-0.log
+new file mode 100644
+index 00000000..4b161d84
+--- /dev/null
++++ b/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/peer-0.log
+@@ -0,0 +1,160 @@
++Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
++
++peer[0/host]: starting scene=water control_port=41647 enet_port=30341 xdg_data_home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/home-0 user_data_dir=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/home-0/godot/app_userdata/Tetherbound
++WARNING: instance_reset_physics_interpolation() is deprecated.
++     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
++     GDScript backtrace (most recent call first):
++         [0] _ready (res://scripts/world/water_world.gd:63)
++         [1] _boot_scene (res://tools/net/peer_runner.gd:373)
++[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
++[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
++[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
++[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
++[grass_field] 2 cover tier(s) up
++[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
++[session] hosting via enet (cap 4); local peer id 1
++[session] hosting on udp/30341 (cap 4, channels 2); local peer id 1
++[lan] advertising udp/30342 for a session on udp/30341
++[trainers] spawning a body for peer 1 at (0.0, 0.0)
++[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
++[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
++[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
++[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
++[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
++[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
++[grass_field] 2 cover tier(s) up
++[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
++[session] transport: peer 1492415521 connected
++[session] peer 1492415521 joined as 'Trainer' (character-3f0b7175d4a0a1435f39030f2ae5c1c8) in water
++[trainers] spawning a body for peer 1492415521 at (1790.0, 4243.9)
++[trainers] built Trainer_1492415521 for peer 1492415521, authority 1492415521 (this peer is 1)
++[trainers] Trainer_1492415521 stands up: authority 1492415521, this peer is 1 (another player)
++[fly] peer 1492415521 claimed a landing at (0.0, 1.931024, 162.0) -- refused (too_far)
++[fly] peer 1492415521 claimed a landing at (0.0, 1.931024, 162.0) -- granted (ok)
++[fly] peer 1492415521 claimed a landing at (1790.0, 40.00104, 4243.9) -- refused (too_far)
++[fly] peer 1492415521 claimed a landing at (1790.0, 40.00104, 4243.9) -- refused (too_far)
++[fly] peer 1492415521 claimed a landing at (1790.0, 40.00104, 4243.9) -- refused (too_far)
++[fly] peer 1492415521 claimed a landing at (1790.0, 40.00104, 4243.9) -- granted (ok)
++[trainers] spawning a body for peer 1 at (0.0, 0.0)
++[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
++[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
++[shell_build] MeadowsPlayground begin:live_crossing total=0ms slice=0ms
++[shell_build] MeadowsPlayground complete:terrain_node total=60ms slice=60ms
++[shell_build] MeadowsPlayground complete:terrain_data total=9459ms slice=9034ms
++[shell_build] MeadowsPlayground complete:terrain_collision total=11113ms slice=500ms
++[shell_build] MeadowsPlayground complete:ground_materials total=12418ms slice=257ms
++[playground] spawned at 0.0, 2.9, 0.0
++[shell_build] MeadowsPlayground complete:player_placed total=13816ms slice=1ms
++[scatter bake] load phases (ms): read[256 regions, 379874 placements, 446747 skipped]=4477 reorder[16 layers]=608
++[vegetation] grass field is on; 446747 placements across 2 layers left unbuilt (grass, flowers)
++[vegetation] boot phases (ms): placements=5650 mark_harvestable=1289 group_by_model=1112 register_mesh_assets=231 build_batches_total=32384 (of which harvest_points[56992 nodes]=10892, initial_collision_stream[51822 solid]=476) update_mmis=1335
++[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
++[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
++[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
++[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
++[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
++[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
++[grass_field] 4 cover tier(s) up
++[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
++[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
++[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
++[playground] scattered 378157 props in 36 batches (56992 harvestable, 0 already chopped, 376/51822 collision resident)
++[shell_build] MeadowsPlayground complete:vegetation total=58481ms slice=451ms
++[water] pond quads 2538, stream points 46, reeds 152, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 49, jetty 18, level -17.0
++[water] stream bank reeds 77, bank scrub 12
++[water] river quads 390, bank reeds 134, bank scrub 57
++[village] placed 32 structures
++WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
++     at: push_warning (core/variant/variant_utility.cpp:1033)
++     GDScript backtrace (most recent call first):
++         [0] place (res://scripts/world/props.gd:281)
++         [1] build (res://scripts/world/props.gd:64)
++         [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
++         [3] build (res://scripts/world/village.gd:73)
++         [4] _breathe (res://scripts/world/village.gd:82)
++         [5] breathe (res://scripts/world/shell_build_budget.gd:200)
++WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
++     at: push_warning (core/variant/variant_utility.cpp:1033)
++     GDScript backtrace (most recent call first):
++         [0] place (res://scripts/world/props.gd:281)
++         [1] build (res://scripts/world/props.gd:64)
++         [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
++         [3] build (res://scripts/world/village.gd:73)
++         [4] _breathe (res://scripts/world/village.gd:82)
++         [5] breathe (res://scripts/world/shell_build_budget.gd:200)
++WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
++     at: push_warning (core/variant/variant_utility.cpp:1033)
++     GDScript backtrace (most recent call first):
++         [0] place (res://scripts/world/props.gd:281)
++         [1] build (res://scripts/world/props.gd:64)
++         [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
++         [3] build (res://scripts/world/village.gd:73)
++         [4] _breathe (res://scripts/world/village.gd:82)
++         [5] breathe (res://scripts/world/shell_build_budget.gd:200)
++WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
++     at: push_warning (core/variant/variant_utility.cpp:1033)
++     GDScript backtrace (most recent call first):
++         [0] place (res://scripts/world/props.gd:281)
++         [1] build (res://scripts/world/props.gd:64)
++         [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
++         [3] build (res://scripts/world/village.gd:73)
++         [4] _breathe (res://scripts/world/village.gd:82)
++         [5] breathe (res://scripts/world/shell_build_budget.gd:200)
++WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
++     at: push_warning (core/variant/variant_utility.cpp:1033)
++     GDScript backtrace (most recent call first):
++         [0] place (res://scripts/world/props.gd:281)
++         [1] build (res://scripts/world/props.gd:64)
++         [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
++         [3] build (res://scripts/world/village.gd:73)
++         [4] _breathe (res://scripts/world/village.gd:82)
++         [5] breathe (res://scripts/world/shell_build_budget.gd:200)
++WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
++     at: push_warning (core/variant/variant_utility.cpp:1033)
++     GDScript backtrace (most recent call first):
++         [0] place (res://scripts/world/props.gd:281)
++         [1] build (res://scripts/world/props.gd:64)
++         [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
++         [3] build (res://scripts/world/village.gd:73)
++         [4] _breathe (res://scripts/world/village.gd:82)
++         [5] breathe (res://scripts/world/shell_build_budget.gd:200)
++WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
++     at: push_warning (core/variant/variant_utility.cpp:1033)
++     GDScript backtrace (most recent call first):
++         [0] place (res://scripts/world/props.gd:281)
++         [1] build (res://scripts/world/props.gd:64)
++         [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
++         [3] build (res://scripts/world/village.gd:73)
++         [4] _breathe (res://scripts/world/village.gd:82)
++         [5] breathe (res://scripts/world/shell_build_budget.gd:200)
++WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
++     at: push_warning (core/variant/variant_utility.cpp:1033)
++     GDScript backtrace (most recent call first):
++         [0] place (res://scripts/world/props.gd:281)
++         [1] build (res://scripts/world/props.gd:64)
++         [2] _build_settlement (res://scripts/world/playground_world.gd:1495)
++         [3] build (res://scripts/world/village.gd:73)
++         [4] _breathe (res://scripts/world/village.gd:82)
++         [5] breathe (res://scripts/world/shell_build_budget.gd:200)
++[props] placed 415 props in 52 clusters (6 usable rest points)
++[village_npcs] placed 18 of 20
++[relay_site] placed 3 of 3
++[pond_npc] placed 1 of 1
++[trainers] placed 21 trainer(s)
++ERROR: realm 'meadows' did not become ready within 120.0 seconds
++   at: push_error (core/variant/variant_utility.cpp:1023)
++   GDScript backtrace (most recent call first):
++       [0] _enter_realm_owned (res://autoload/game_state.gd:1691)
++       [1] _await_realm_scene_ready (res://autoload/game_state.gd:1774)
++[trainers] spawning a body for peer 1 at (0.0, 0.0)
++[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
++[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
++[trainers] spawning a body for peer 1492415521 at (0.0, 0.0)
++[trainers] built Trainer_1492415521 for peer 1492415521, authority 1492415521 (this peer is 1)
++[trainers] Trainer_1492415521 stands up: authority 1492415521, this peer is 1 (another player)
++[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
++[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
++[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
++[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
++[grass_field] 2 cover tier(s) up
++[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/peer-1.log b/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/peer-1.log
+new file mode 100644
+index 00000000..ea007df0
+--- /dev/null
++++ b/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/peer-1.log
+@@ -0,0 +1,38 @@
++Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
++
++peer[1/client]: starting scene=water control_port=36655 enet_port=30342 xdg_data_home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/home-1 user_data_dir=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/f15_3_full/run/net/net-proof_two_peer-20260926T235728Z/home-1/godot/app_userdata/Tetherbound
++WARNING: instance_reset_physics_interpolation() is deprecated.
++     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
++     GDScript backtrace (most recent call first):
++         [0] _ready (res://scripts/world/water_world.gd:63)
++         [1] _boot_scene (res://tools/net/peer_runner.gd:373)
++[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
++[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
++[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
++[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
++[grass_field] 2 cover tier(s) up
++[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
++[title] restored returning guest character before joining
++[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
++[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
++[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
++[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
++[grass_field] 2 cover tier(s) up
++[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
++[join] world is up; dialling 127.0.0.1:30341
++[session] dialling via enet as 'Trainer' (character-3f0b7175d4a0a1435f39030f2ae5c1c8)
++[session] dialling 127.0.0.1:30341 as 'Trainer' (character-3f0b7175d4a0a1435f39030f2ae5c1c8)
++[session] transport: peer 1 connected
++[session] connected as peer 1492415521; sending hello
++[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1492415521)
++[trainers] Trainer_1 stands up: authority 1, this peer is 1492415521 (another player)
++[session] snapshot applied (14 keys, day 1)
++[trainers] built Trainer_1492415521 for peer 1492415521, authority 1492415521 (this peer is 1492415521)
++[trainers] Trainer_1492415521 stands up: authority 1492415521, this peer is 1492415521 (our own proxy)
++[rejoin] same host world e0424993ea8cd9b79cca0610e52408e0: seated the saved pose
++[join] joined 127.0.0.1:30341; the host's world is applied
++[session] client leave: wrote character 'character-3f0b7175d4a0a1435f39030f2ae5c1c8' (no world file -- D100)
++[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1492415521)
++[trainers] Trainer_1 stands up: authority 1, this peer is 1492415521 (another player)
++[trainers] built Trainer_1492415521 for peer 1492415521, authority 1492415521 (this peer is 1492415521)
++[trainers] Trainer_1492415521 stands up: authority 1492415521, this peer is 1492415521 (our own proxy)
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-0/before/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-0/before/characters/character-e8e1afb2382815d151f40cf291ac1a6b/character.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..9116bc5847be6609a94cacdfb1ebe7df5799a6fe
+GIT binary patch
+literal 6031
+zcmeI0cTf{px4>Qb6f0P0u0n*51x1#&0#YQdh{{S4F%;?D0trNVLh`LBSq(*q7$t#-
+zQA$EnkQNB5Y-k~%QbLFULnH_xL<l5=nDE$d=Dj!b{@VHe+Ii!hIWu?8x#!NE-#Pc5
+zxd(vWwhbTHe0{S@#MLlpSVUqJ)a?3A2zZllJP5)*|8UdWm>J)Hr04D~SW~l5=bVZl
+zXpMF4l04tLO~e0XOa7VNN7)IgGEu;T$be-0S@r0$?m4^)+tR$_9*rL0Vn>+7uiPWI
+z^`hghMuS+ebxDHE(d~4RIo}^y;Ql`BvDy&r@KG(+aR&N0fB_RFQ<!mngL;xVwHI+q
+z*L9JcYRGBo?rGD><Qp#y4;C8_iDQ?Ws@9zj(rP(AQ6u1oGEQu9?dc|tnT`?>6z3Dh
+z5z1r?mOrFK8(_OAN1$~o1#$A`RLzIvx{Sc!(Wb>#eo~rLhcXeH8vz-hCeB<j71Je3
+zN9oRvKkn2|#7!i5wEgZbg-{r{)RUBmlT~PP4bI}m>AfU|B%?&jwIs^*QQleo?Cwqk
+z(xR{41qdj|xQqgFJ1yLne)dx9Q#!iJJMSCv-W?%mqoI~+FT7#^YP%_<CUKkH@iOLZ
+z+?>(8`KLPs$beI#{IUQyb|dL#%9v1GQ;lK=_zIkP%mh1Kqebb0n`fiF{UCxek07tC
+zK+{at^;#nyH?jS(!KLtmOkT$iz4Fz<9GE(eGs<}B=(t_@a-zgIq&lEm!%v%A=XHK7
+zE7V?yf?s+tBul-bk!JM^#-e{~ui<=32nfqqIO=zNWlq1t))G@P@f1$sl&9D<_ehF?
+zgKP^}c8qqfSKBW19^Cut^CeZy<B3wqiDr(OvqQiz6YI-SfdXoo(~FmM&BfeE&!>6i
+z>H8*%KkqrZwD7S${p2w*g&6PqU2As)tci8<1J*sGor=7bYsTe{m-uFO+$rm|W#T3}
+z=M=hrjK-Cyv0x#|qbS&|i*@9Hq+Xd?q$Xu&`Jv2Ga$10^2BT#{v;A7Km%CA++oE9b
+zhR&|V(#bzAjV6zTo@jn#G-P_vxc9iQT+yjTDOpfA+bW-)<5#GdXQ{s?Djn`EP()63
+z{mf|-h*M)dj#S+Wm$kak<M%&Ic!6vf8!)5X3K#&Bg(LGdRKy2(A+qQsWQs)HPPvuQ
+zf;>DP*Pcrgw6@Rb#_d6isPDmV;MDAt+T8Z|Bij-figsCP1rBxVQiv@GmUM(goOP*!
+z&4%g_vbgby&0R)+R6Ry5*qL;eH?z{x8^VKVyV7URCf*=SHe|$(W*I~$I0R(TB&%mr
+z$mEsjp$y5v83xDMMsIu~7$l&?u)(LjXsGD*ClG>B7%ZT=^>rwyTD<Dl{i2qXvSmfN
+z%sH$>_wc4Uq^Bf4&G=fXd+tV!y5`!KHoUZ+d*X5KjM&BAmHsZ=!YwOJM=kvIthS52
+z<Gkb=*4dN18u9v3V0N&nArYcc(6FAQ|JW@!N_RW`Vl0ldN-B7kiB{4JKh?hABdQu}
+zpWb)tB3`pkzjD3|gXVrt(k>txIhh-#dG}A9mq8C)qtp->5jTP>4A#Bl5X7uq<q2nW
+zmD{hMmm4aS|Jql;m|;a;G}8Z+c}=hU2>LDIS*F2um+xnu&_qY|ui3OcYP;+__1jWT
+zZ_nzT4FLw6c@NRZ=j>9FcUTn%yM@#o2KI}_Z9=GuT0z@UGF*Xs{z*SiNgE*^1Q~bw
+zJt@Nwrz~^HT`WMr$*fLf9sH2(Qkvp7)ygFyh+6WBX(<Um(7TQ(9volwSw5{P^Vxp4
+z^Rq=xy>c<t(QakmOC+yf>VJX)FS>&~<<g6JiFZ4P=BC;|(q<jm>A$x=VZw8*H{4OZ
+zgZy+k1VM4_kR|_=UixG?WQNV4Z<$Wele9hgnu7NYxih_F-S4_pfq=&q=WZqPu(;P>
+zrV0mLbBk8n%3^VKB%HrDaQRF9HCLvzUdF4MZhrFBx&}X)0gJXelv7}cpxM6JZ+?ti
+z?!T(4QQ)QHUf?J~{d~oZcj}===jw=hZ^IGswfyy((^d$X&`7~&GcNpuNlg6(fO&>N
+zFWQ>8_R!aC%9P~Pjss;0Sp~aGMhg5?jceN;I@&Cz{n)bI{c$Z%1;J@xYm<9HLFW8L
+zC+fuu%BEm&N094T)-xbpZGBhar!+0)cdsG?4gI~;w4&@j4@SIah{N|G0k;vrUNmir
+zd<D81nYw>8s%_cdaR6$KZsIMPwsTaw7_r_>T%~9;=flkaO%!cmaJS5g|Ly{_fkY=7
+zyyc_)ibrXnjCEHfi<PlXc&<GZYjvnR)5~VA+<$$KF0J>Xl#S}tM-Wvaf*Vn9GfJ~T
+z(V9i@#>z$-2z#>EWi&@L1UC3Ukks>X7M9rEx5unAWTslMQhR(7b1l)a9kPB{S@6si
+z{=?lkfJEwfRl0YC7HMDHh1tEv<KjA#mXl8^5{rg8GYdPGrk%T!u{r><d>A=ij(W5D
+z#rBc5nhcr;uwI+?=@_1$WUkX&EA*V`z}BYjjzhZhtlbV@D`x~dS*U2s!6IR2Ncn<8
+zxua4(g6ITM)5fa&MwwB&MBw$(04$Dd_QNOz2-Y3Hlt@&{o75pQ(?L~!AWOmAjadG>
+zhgf&eK&#yHd;zhimNOwGgrB_3Co1O3TB}CuGxnnEpUZ#Jo#H5GIzLtDC1IhdZvf^~
+zi0P>LW*%`eZ<F|4s1%{L>D&0b6Zq1%GJ!A7NYh3x`{<hs*o{)9aHctRl)jN58(BRX
+z^ckxzN`7r%icLs}&!5NADM?h)J=R8z%HpTe>18G{gz(Tu(dY6*A`CBV#bjK4TuTQt
+zdAfo>6NM5qIAjPrF`_@A`_WNP?DXL_orHMbwNcv|OYw|znL5Ij?*AOnR}Y}_i`dh%
+zgZnD2gt%1bUGY2wDfq!d-*d#r!`L%r(mva}$6LI~!^o4Nk{TqELkoR*gdXpfzN6U+
+zXrXtXH(|?{@tF!}A%<MZ--Q3gy^!2CB}KIKRp$I@KOmnrDZlKkKyLDQUe*WlAeODg
+z7J64!LJRj-R!)#l6c(BI+T|C`wcq=<a;RcMxvIT3d+sJ^_;O3%-QmkOK_0x~zCcYL
+z@H#1Q8dg=wC*ivs3R_INklE{hO6b?_Rmg^@|F7a)4XN_$0X`}I`<tMk>_tEescebE
+z03}%%TlwC>^nlvwcl$wHLnw#|H4uT~_qC8B?DC~1C+-H0knue*P5hafxl0~X?Z4zf
+zzi-)LoKLpL?C%AwHeK?TmCTVmK5cla|7k%QMgWm>(qrviNBdP0b;>Q&--7UO98Z}i
+zY<{H~oI#!2_n$}Ro98zI-w1po@OLKg5hlTQEdO`y8;|2ufd#Ge?MS)Z)`4^x^k(6p
+z%}8rbX^2xBdkeZQu#48~@-oCsG%6#RM3dWOIz_x6&2c1r#=T#;sfijg>$6?NUZ<D+
+z%&4ZBMMRQ!kdJ^<GQ*00@PRP9M<hZ1X00Dm6AfbWi94G^Qv63e#}VGIMr<C`%dWl^
+zepIUbol$)|+uxbM7uf$~F<2aTHC;4`$lV#!4sU7ci@{yzbiFkPObBne_?hvhJ{hpg
+zu_*#LNV6U^0pG;{)6Ec#4riLE*KO%v!CFl_5~4)4>{fryXp*dPJ6jN~kXV(}OBd>r
+zK*ItsIbDe?9rLk0ccTx>!?jj7j(}?wcLxXF&%bS6ka`7<tt-Q%gV==`?iI6t-wc?<
+z7_;$vu(bMKU78<7HKW{cSjcRxG$XHo2gS!P6v(M3{-7uZQF&aWz^<)M$?gy@Yhm(e
+z@QC|oUF(^$d)R$_Eco%yHK6d#e<=XJ13%6X5MQ}5oG-fa1cJ)aDYZjXS#I~{S0Clc
+zcopERn%xtvNBb+bT>tgZ#hq<{iY?IJVNVbJrM>@OF8Y_ZRP4F-ks=w&vs6VqP=%h-
+zgEMn)9!3cEY><MN-+WV^_Pf-{_~OoN)$6}rIjlOoS+p@ZbYB(v*LbYv&9>V)$d~x@
+zbc$_EyUnDQZ<yWAxOc-%?NSJ^yRiLT<O8>Y$da5j@qKl^;x*iH&it(Z<7u8O(y}CG
+z`e|VQOs2t)@@pTGsoPwv)Oq(k*A($52K;NA`*3YzS<ya)maENhJtKXFwzvw|YcyNu
+zhMEn(uYry&;=2^(@!L}<Di6Z^Ik))>b?ZP*ox%&a@h)?V;&Haq^GZY1tGEn~2FH52
+z(LK1@S*)}XnQ`lmqbEUZz6jlVrAaD}6$_Kt!l5i-@_{~QN4>`Cxun4SU_<%aIF2d3
+zbEScv4l7yC^{o<vuG-3|-{~KS%$#ii1cdybHl`sZfF<M{!=&Y#zUPMSJ6(c`-KT~5
+z*{Vp}|FIM`ROQx{2`y183v<-NX4Z6I_Bb5DdG`HmXR3^AnkRtAI+h-S*mdcXw{gv)
+zW6cS9gQ1#@DG5!p%i(xK)@ut+wZiX5tWbez*=5TOJ33Lduvk5cwT!>|DLhRY*;3h8
+zPG<^MFsC+Jb3UjZXB(Q?jx^>0(Iglrs6*?n^nhhUd|GrMeB?g5wg|eI6k!&8b-)EW
+oe1V;crkDjoV&eR=!YL5CIiR&LFYaKwY-v4_@Xw1EV@)>w7w3&+%>V!Z
+
+literal 0
+HcmV?d00001
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-0/before/worlds/slot-0/world.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-0/before/worlds/slot-0/world.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..acffc4910e345df4a34eaeac50d7942c12ceaaf8
+GIT binary patch
+literal 936
+zcmV;Z16TYXiwFpuT)1ii19xw7Y-BEKb8l_{<yPBjBRLR#cD`cq^Csxp>h^cc+Yp+P
+zRI;1M-A0lfOvt})seMaA1}5ZT7ABZrsgCNRbE>SDyT#JQ$vyQLVVBYO8QnDcyj=Yw
+z6nij|HJUZ`ulu)R6G9;r6ap*-6U{yA?nU!M$dzd5v#cl&M>6yIE8#bNhT=9DtJj~8
+z^Y)N;5sv)`TdbbuV*%2(-^HoiZ~<eaa0gstfig@ZSzcaeON4dBz1%Hsi=VWpF~cd#
+zXGk8$>YH|-X)E=<)|%sfaM%wyVs9tPk4i3Sin*t}z*59_XAU^T05SH%Sl|i!T&CUb
+zSD1ulpT>UL;rIdKU{_!m`w`QSGxV1<-+>C2O-=K&Jl1=vXMnK}2|xOdFl<*Bz-kHs
+z6Z%yrtnwnL;7u^nAQ&!~QjIo%$}`0^Xd5Irk6ydB)sDBu14BmC8r6Ireh&7l+%lH(
+zF>$v~3CEJ@a_H{T)k<QDTiT3+>rY68G=4BY;gKRvdrwQZd1u-Xy!2ZHKRxHmS+YOg
+zEoO~uARQ>;=K_k5OJ7AuXWnYr{9tTFA7N%uZijW6#T3%Cy-JnNIoh-PA^Krl-voO~
+z49CNerg2L}U*jdLawOK{a3BTXRlH5xu$D0^8fg)fmCBk%hDLY+#<sy&;e!v>D#yL#
+zgtY-3vq*flQsUVUH7C^zu3qCXmvmj<V~ZSu6|xmA*Pd%06mvmz92|$no^RDn+g-$Z
+zOMUIAOSN-L%~>DMp1+;)$!nhW$<6&=5_JZq)wu~yt4pV>+%$~&a;AWLy7u~FuAH{d
+z6%+7;qpeCc*X)7K>(~1K@#>@OtB)l(hr3%3Qi=Jb5&po=3Z7E*=dv@+rhB%0Yp4S(
+z@8DDgG9^^kNh;F$&YI3SU=3%eX_mIgsy3?@7R#1*#w#!?s18C1&RCShL>quHAp?=)
+zowr6S*)`HJvald|$5~^YVC*+ICnwf$qbUpnuA~mKW0C~{NNw)guX6tFl>d6pfdfY?
+zTbi$$#&75v>Iu~-Xf;=8G#9F|K{#);^j>r5nm}X;rgg`7_!FFeH|4K!J`~)p5*{dp
+z-(mhO^31*XUo!8Rbu4hLT0{U8ErwRjZQ()cPIzXNw_J5-4E0zY&kSj53fp=`Kg@q%
+z!hbvEzn=N?8|3}Z{_%^Bs)t*$qAqWb$$i4pTP$B68J|~i-p)8bbvOm3w_U6B-Rpnj
+KB9*`Z3;+NzA<}37
+
+literal 0
+HcmV?d00001
+
+diff --git a/ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-1/before/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz b/ralph/reports/TIDEWAKE/b/f15_3_full/run/peer-1/before/characters/character-3f0b7175d4a0a1435f39030f2ae5c1c8/character.json.gz
+new file mode 100644
+index 0000000000000000000000000000000000000000..a716cc380ce0f5cc643ff1e904ca99b06206c7f7
+GIT binary patch
+literal 5842
+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
+
+literal 0
+HcmV?d00001
+
+-- 
+2.43.0
+

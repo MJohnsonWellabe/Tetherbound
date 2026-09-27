@@ -177,7 +177,7 @@ const HARNESS_ORDER := ["_talk(\"warden_aila\"", "lower_west", "cr_node_gale_fib
 	"_talk(\"naturalist_sora\"", "_physical_action(\"shrine_windlass\"", "_return_to_aerie()",
 	"Vector3(-720,700,3680)", "_physical_action(\"upper_anchor_west\"",
 	"_physical_action(\"upper_anchor_east\"", "_battle(\"officer_voss_summit_approach\"",
-	"_physical_action(\"summit_feed\"", "_rest(\"summit_bivouac\"", "Vector3(100,1160,5350)",
+	"_physical_action(\"summit_feed\"", "_rest(\"summit_bivouac\"", "_leave_summit_bivouac()",
 	"_battle(\"captain_veyra_storm_anchor\"", "Vector3(-420,1110,5650)",
 	"_talk(\"warden_aila\", \"cloudreach_chapter_complete\""]
 

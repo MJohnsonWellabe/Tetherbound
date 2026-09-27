@@ -366,8 +366,18 @@ func _walk_actual_ascent(trunk: Node3D) -> bool:
 	var furthest := 0.0
 	_navigator.reset()
 	while Engine.get_physics_frames() - started < ASCENT_FRAMES:
-		if _manager.is_fighting() or _director.trainer_battle_active():
-			return _fail("unexpected combat blocks the bounded physical Stormheart ascent")
+		if _director.trainer_battle_active():
+			return _fail("unexpected trainer combat blocks the bounded physical Stormheart ascent")
+		if _manager.is_fighting():
+			# A wild on the Outer Works approach can engage, as on any road
+			# (relay DRY RUN a9b6da46): fight it at 1x like every walk does,
+			# then resume. Its frames are not climbing, so the budget excludes them.
+			var fight_started := Engine.get_physics_frames()
+			if not await _fight_ascent_wild():
+				return false
+			started += Engine.get_physics_frames() - fight_started
+			_navigator.reset()
+			continue
 		if stage == 0 and _player.global_position.distance_to(approach) < CORE_TOLERANCE:
 			stage = 1
 			_navigator.reset()
@@ -396,6 +406,23 @@ func _walk_actual_ascent(trunk: Node3D) -> bool:
 		else:
 			await _tree.physics_frame
 	return _fail("physical Stormheart ascent exceeded its shared 6000-frame budget at " + str(_player.global_position))
+
+func _fight_ascent_wild() -> bool:
+	var scale_before := Engine.time_scale
+	var hz_before := Engine.physics_ticks_per_second
+	_drive_stick(0, 0)
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
+	# Won or lost, a resolved fight returns true; a healthy member leads on.
+	var resolved := await _fight_current("Stormheart ascent")
+	if resolved:
+		resolved = await _ensure_usable_ally("resuming the Stormheart ascent")
+	await _tree.process_frame
+	Engine.time_scale = scale_before
+	Engine.physics_ticks_per_second = hz_before
+	return resolved
 
 func _receipt(flag: String) -> bool:
 	if flag.is_empty() or not await _wait_flag(flag, 300):

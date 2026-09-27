@@ -21,6 +21,11 @@ const ENTRY_XZ := Vector2(-160.0, 2697.5)
 const RODLINE_XZ := Vector2(-660.0, 2318.0)
 const BUILD_MENU_GROUP := "build_menu"
 const PLACE_AHEAD := 3.0
+## 4.5 m south of the Still Grove footing's south edge, west of centre, where
+## the slab is flush with the ground (probe of run 4aa31d44: lip -0.19 m).
+const FOOTING_SOUTH_ENTRY := Vector2(-161.0, 2741.0)
+## Half the footing slab's 9 m side (`stormwood_arch_runtime.gd`).
+const FOOTING_HALF_M := 4.5
 const POSITION_EPSILON := 0.75
 const CHARGED_WAIT_MS := 9 * 60 * 1000
 
@@ -325,6 +330,20 @@ func _craft_two_frames() -> bool:
 	return true
 
 
+## Round the footing to its flush south-west entry without climbing a proud
+## edge: unless already south of the entry line, step sideways clear of the
+## slab (west or east, whichever side is nearer), go south past it, then in.
+static func footing_entry_route(from: Vector2) -> Array[Vector2]:
+	var route: Array[Vector2] = []
+	if from.y > FOOTING_SOUTH_ENTRY.y:
+		var clear := FOOTING_HALF_M + 3.5
+		var side := FOOTING_XZ.x - clear if from.x <= FOOTING_XZ.x else FOOTING_XZ.x + clear
+		route.append(Vector2(side, from.y))
+		route.append(Vector2(side, FOOTING_SOUTH_ENTRY.y))
+	route.append(FOOTING_SOUTH_ENTRY)
+	return route
+
+
 func _build_paid_crown_arch() -> bool:
 	var placer := _tree.get_first_node_in_group(&"build_placer")
 	if placer == null:
@@ -334,6 +353,15 @@ func _build_paid_crown_arch() -> bool:
 	var forward := -(_camera.call("planar_basis") as Basis).z
 	var anchor := _grounded(FOOTING_XZ)
 	var stance := anchor - forward * PLACE_AHEAD
+	# The Still Grove footing is a flat 9 m slab on ground that falls to the
+	# east: its east edge stands ~0.75 m proud, a curb no step climbs, while
+	# the south edge west of centre is flush. Run 4aa31d44 came back from a
+	# post-fight detour on the east side and stalled at the curb. Step on
+	# over the flush edge, as the road from the south does.
+	var here := Vector2(_player.global_position.x, _player.global_position.z)
+	for point: Vector2 in footing_entry_route(here):
+		if not await _walk_xz(point, "Still Grove footing south entry", 1.0):
+			return false
 	if not await _walk_xz(Vector2(stance.x, stance.z), "Still Grove Crown build stance", 0.55):
 		return false
 	if not await _select_arch_from_catalogue():

@@ -171,6 +171,8 @@
       "water_swim_saddle_recipe_learned",
       "water_swim_lesson_briefed",
       "water_chapter_started",
+      "water_cordage_recipe_learned",
+      "water_cordage_recipe_gated",
       "stormwood:legendary_ceremony_settled",
       "stormwood:legendary_offer_accepted",
       "stormwood:pims_parcels_reward_received",

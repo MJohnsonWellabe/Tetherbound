@@ -72,3 +72,11 @@ func test_strict_a7_reads_active_travel_between_beats() -> void:
 	var out: Dictionary = LEDGER.strict_a7(strict, 120.0)
 	assert_almost_eq(float(out["longest"]["seconds"]), 150.0)
 	assert_eq((out["violations"] as Array).size(), 1)
+
+
+func test_strict_beats_keep_map_reveals() -> void:
+	# A7 counts "new vista/landmark reveal"; a map reveal is never a repeated verb.
+	var strict: Array = LEDGER.strict_beats([{"kind": "reveal", "detail": "region:the_old_quarry"},
+		{"kind": "offer", "detail": "Chop"}])
+	assert_eq(strict.size(), 1)
+	assert_eq(str(strict[0]["detail"]), "region:the_old_quarry")
