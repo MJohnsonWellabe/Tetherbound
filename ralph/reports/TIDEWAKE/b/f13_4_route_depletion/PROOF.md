@@ -1,5 +1,19 @@
 # F13#4: four-character route depletion run
 
+> **Rerun on the F13#2 head (coordinator hold, 2026-09-27 11:01).** F13#2 (4556899d) made `water:reedhaven:harvest:012` a `character_once` claim. The committed log predated that change: it had D claim 012 and A refused.
+> The smoke now claims a character-owned row once for **each** of the four characters, through real Interact presses. It checks the per-character world receipt `water_claim:<character>:<row>` and that the node is retired for that character after its own claim. Every other row keeps the world-once check and the refusal of the next character.
+> **Rerun at d4aa0fa7 plus this smoke change: 598 checks, 0 failures.** Claims are A 37, B 36, C 35, D 32. Each character gains +3 reed fiber from 012.
+>
+> | Character | reed | driftwood | reef stone | tide bloom |
+> |---|---|---|---|---|
+> | A | 20 | 20 | 16 | 10 |
+> | B | 22 | 20 | 12 | 10 |
+> | C | 26 | 21 | 12 | 10 |
+> | D | 20 | 21 | 12 | 8 |
+>
+> The numbers below are from the first run and are kept for the record. `route_depletion.log` is the rerun.
+
+
 Criterion: ACCEPTANCE §6.1 **F13#4**, "... leave four-character supplies solvent without a new catch or
 repeated wild." This run closes the ledger's gap 6 ("data only, no runtime or co-op depletion run") by spending
 the supplies in the production Water scene. The data ledger is `../f13_4_four_character_ledger/`.

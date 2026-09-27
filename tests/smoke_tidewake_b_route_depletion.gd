@@ -51,6 +51,8 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const PLAYER_STATE := preload("res://autoload/player_state.gd")
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
+## F13#2 character-owned harvest rows (water_pickups.json claim_policy).
+const CHARACTER_ONCE := "character_once"
 const IDENTITY := preload("res://scripts/save/character_identity.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -206,6 +208,12 @@ func _run() -> void:
 		else:
 			who = int(turn.get(item, 0)) % 4
 			turn[item] = int(turn.get(item, 0)) + 1
+		if str(row.get("claim_policy", "")) == CHARACTER_ONCE:
+			# F13#2: a character-owned row (the reed hollow) pays each
+			# character once; all four claim it for themselves.
+			for each in 4:
+				await _claim(row, each)
+			continue
 		await _claim(row, who)
 	while done_stage < max_stage:
 		done_stage += 1
@@ -278,8 +286,11 @@ func _become(index: int) -> void:
 func _claim(row: Dictionary, who: int) -> void:
 	var id := str(row.id)
 	var item := str(row.item_id)
-	var flag := "harvest_node:order:" + id
 	_become(who)
+	var personal := str(row.get("claim_policy", "")) == CHARACTER_ONCE
+	# A character-owned row's world receipt names the claiming character.
+	var flag := ("water_claim:%s:%s" % [str(game.local.get("character_id")), id]) if personal \
+		else "harvest_node:order:" + id
 	var at := Vector3(float(row.position[0]), float(row.position[1]), float(row.position[2]))
 	var stances := _stances(at)
 	if stances.is_empty():
@@ -331,6 +342,16 @@ func _claim(row: Dictionary, who: int) -> void:
 	claims[who] += 1
 	if id == CRADLE_SEAM:
 		cradle_amount = gained
+	if personal:
+		# Depletion for a character-owned row: this character's own receipt
+		# retires the node for it (no second offer); the others still get it.
+		service.call("refresh")
+		await _frames(2)
+		_check(service.call("node_for", id) == null,
+			"%s still offered to %s after its own claim" % [id, NAMES[who]])
+		print("CLAIM %s stage=%d %s +%d %s -> %s (inv %d) depleted_for_self=%s" % [id, int(stage[str(row.island_id)]),
+			NAMES[who], gained, item, NAMES[who], before + gained, service.call("node_for", id) == null])
+		return
 	# Depletion: the next character asks the host for the same node.
 	var other := (who + 1) % 4
 	_become(other)
