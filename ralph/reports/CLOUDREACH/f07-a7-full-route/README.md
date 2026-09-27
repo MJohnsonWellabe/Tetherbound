@@ -29,7 +29,12 @@ On the second pass every body along the corridor has already offered, and no
 flag changes between the two passes. The options (move the camp, count re-passed
 unfought pairs, or add a rest-dependent beat) are on #356.
 
-**Reload check (harness fixed).** The team-snapshot comparison ran after 30
-live frames. A `rested` member below max HP regenerated in that time, so the
-check failed, while the exact field-by-field comparison taken at the reload
-instant had passed. The comparison now runs at the reload instant.
+**Reload check (harness fixed).** The final team check compared raw floats.
+A damage-derived HP such as 50.739446608544 can differ in its binary tail bits
+after the JSON save/load round trip while still serializing identically. The
+exact field check just above it already treats that case as equal. The team
+check now compares the JSON form too. (A first attempt that only moved the
+check to the reload instant assumed HP regeneration was the cause; the
+confirming run disproved that.)
+
+| `after-json-team-check/` (both fixes) | **PASS**, 15.9 km, live | **152.3 s** bivouac → Veyra only (open design item) |

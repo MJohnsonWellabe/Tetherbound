@@ -326,9 +326,10 @@ func _run() -> void:
 		"before":saved_party_exact,"after":loaded_party_exact})
 	_require(party_differences.is_empty(),"Disk reload preserved every persisted field of all five members")
 	_require(_flag_snapshot() == saved_flags,"Disk reload preserved the exact progression-flag set")
-	# Compared at the reload instant: over the next frames a `rested` member
-	# below max HP regenerates, which is play, not a persistence change.
-	_require(_team_snapshot() == saved_team,"Reload preserved all five species, levels, XP and HP")
+	# Compared as JSON, the production disk form, like the exact field check
+	# above: a damage-derived HP (e.g. 50.739446608544) can differ in binary
+	# tail bits after the JSON round trip while serializing identically.
+	_require(JSON.stringify(_team_snapshot()) == JSON.stringify(saved_team),"Reload preserved all five species, levels, XP and HP")
 	await _frames(30)
 	for flag: String in ["realm_heart_cloudreach_earned", "realm_key_stormwood", "stormward_route_revealed", "captain_veyra_defeated", "cloudreach_chapter_complete"]:
 		_require(_has(flag), "Reload preserved " + flag)
