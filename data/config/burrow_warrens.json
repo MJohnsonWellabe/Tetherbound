@@ -52,12 +52,17 @@
     "_comment_vault_door_seam": "CONTENT-0828. The shut branch door was a grey slab the same value as the wall it sits in, so from the den floor it was a wall: the player fought the guardian in a room with no visible reason to be there and found the branch afterwards, if at all. `seam` is a thin emissive line down the door's own face and a warm spill on the VAULT side of it, so what the player can see across the den WHILE THE ALPHA IS STILL ALIVE is a shut way on with something lit behind it. That is the difference between a fight at the end of a corridor and a fight for what is through the door, and it is the `encounter context` lever CLAUDE.md names -- no new mesh, no new system. `open_seconds` is how long the slab takes to sink when the guardian falls; it animates ONLY on that transition, never on a returning player's build (burrow_warrens.gd::_sync_vault_door). Set `energy` to 0 to turn the whole treatment off. ALL TUNABLE.",
     "vault_door_seam": {
       "_comment_under": "CONTENT-0828B. The spill above is on the VAULT side and only a player already looking at the door sees it. tools/_probe_den_door_sightline.gd measured the sightline from the stands a player is actually at -- the den doorway and a ring at engage range around the guardian -- and the shut door is on screen at one of eight: it reads on the way in and then leaves the frame for the whole fight, because the guardian is in the middle of the room and the door is on a side wall. `under_*` is a low warm pool at the foot of the slab on the DEN side, which is in frame from every facing because it lights the floor the player is standing on. Scaled off the seam's own energy so retuning one retunes both; set `under_energy_scale` to 0 to remove it.",
-      "under_energy_scale": 0.55,
-      "under_range_m": 4.5,
-      "colour": "#e0a761",
-      "energy": 1.1,
-      "emission": 1.6,
-      "width_m": 0.14,
+      "_why_f03_0_read": "F03#0 lure judge D (2026-09-27, ralph/reports/MEADOWS-PAYOFFS/six-activities/earned/LURE-JUDGE-earned-d.md) failed the vault lure: from the den entry the door 'reads unlit beyond the guardian'. Tuning of the existing seam/spill only (owner ruling: placement, tint and VFX with existing assets): a wider (0.14 -> 0.28 m), brighter (emission 1.6 -> 3.2, energy 1.1 -> 2.0) seam strip and a stronger (under scale 0.55 -> 2.0, range 4.5 -> 7.5 m), wider den-side pool so the lit door reads across the 16 m den; from the den threshold the seam's face is hidden in the door recess, so the floor pool in front of the door carries the read there.",
+      "under_energy_scale": 2.0,
+      "under_range_m": 7.5,
+      "_why_lintel": "F03#0 lure judge E: from the den threshold the door is side-on in its recess and read as 'an unlit dark slab'; the seam at emission 3.2 read as 'a bright white untextured plank' up close. A den-side light under the lintel lights the arch and recess walls that the threshold does see (burrow_warrens.gd `VaultDoorLintelGlow`, off at 0), and the seam is warmer and lower so it reads as amber light, not white.",
+      "lintel_energy_scale": 1.5,
+      "lintel_range_m": 4.5,
+      "lintel_offset_m": 0.7,
+      "colour": "#e8913a",
+      "energy": 2.0,
+      "emission": 2.2,
+      "width_m": 0.28,
       "range_m": 6.0,
       "spill_offset_m": 0.9,
       "open_seconds": 1.4
@@ -1272,6 +1277,8 @@
   ],
   "_comment_dressing": "BAND2-63-WARRENS. Prompt 63's required-dungeon list names `evidence of Team Tether activity` as part of the Burrow Warrens itself, and the band had none INSIDE the cave -- the only Team Tether trace in the region was the `quarry_supply_cache` prop cluster out at the ranger camp spur, which a player who walks the road to the warrens mouth and goes straight down never sees. This is that evidence, and it is deliberately EVIDENCE AND NOT EXPLANATION: the same rule `old_quarry.json`'s own `_comment_evidence` states for the quarry (Sec32's reveal ladder), so there is no note to read, no interactable, and nobody down here who knows what the seam is for. What the player is shown is a working face somebody was cutting rootstone out of and left mid-load, deeper in a cave than anyone local has a reason to be. Every model is from the ONE prop family the settlement already uses (`assets/props/quaternius_fantasy`, D24) and is the same crate/barrel/pickaxe vocabulary `quarry_station` puts on the quarry floor, so the player reads the two sites as one operation. Placed by `scripts/world/props.gd::place()` -- the same placer, collider and sink behaviour as every authored prop above ground -- through a `top_level` child so the cave's own `ground_height_at()` puts them on the CAVE FLOOR rather than on the hillside now several metres overhead. `chamber` + `offset` are chamber-local metres, the same authoring shape `spawns` above already uses, so the whole set rotates and translates with `site.at`/`site.yaw_deg` if this cave is ever relocated again. `yaw_deg` is likewise cave-local. NO ROPE: `Rope_1` is illegible at normal camera distance, a limitation the shipped `ranger_camp` cluster's own rope already has and this pass did not repeat.",
   "dressing": [
+    {"model": "Bonfire_Fire", "dir": "res://assets/props/quaternius_survival", "chamber": "den", "offset": [6.8, -1.8], "yaw_deg": 20.0, "scale": 0.24, "sink_m": 0.03, "glow": "campfire", "smoke_top_m": 2.2, "smoke_alpha": 0.25, "_why": "F03#0 lure judge E (2026-09-27): from the den threshold the shut vault door read as 'an unlit dark slab in a recess' beyond the guardian. Two small fire-pots flank it on the den side -- the chapter's own lit-doorway recipe (band1 props.json grandpa door fire-pot: Bonfire_Fire + glow campfire at ~0.22 scale), no new asset -- so a player entering the den sees a lit, tended door across the room while the guardian still stands. Den-local: the door is on the den's +x wall at [8,0]; these stand 1.2 m in from it and 1.8 m either side of its 2.4 m opening, clear of the guardian at [3,4] and the crate at [5.4,-4.2]. The door's own light dies with the slab; these stay as the tended threshold of the vault passage."},
+    {"model": "Bonfire_Fire", "dir": "res://assets/props/quaternius_survival", "chamber": "den", "offset": [6.8, 1.8], "yaw_deg": 70.0, "scale": 0.24, "sink_m": 0.03, "glow": "campfire", "smoke_top_m": 2.2, "smoke_alpha": 0.25},
     {
       "model": "FarmCrate_Empty",
       "chamber": "mouth",
