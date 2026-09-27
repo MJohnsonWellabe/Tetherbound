@@ -25,7 +25,7 @@ func test_all_physical_actions_respect_real_event_prerequisites() -> void:
 			assert_false(str(spec["event"]).begins_with("dialogue:"))
 			assert_false(str(spec["event"]).begins_with("encounter:"))
 			assert_false(LOGIC.dispatch(FLAGS.new(), chapter, spec["event"])["accepted"])
-	assert_eq(ids.size(), 18, "15 + the three Waycamp shelter steps (F07#0)")
+	assert_eq(ids.size(), 21, "15 + three Waycamp shelter steps + three Circuit prize TMs (F07#0)")
 
 
 func test_trial_requires_ordered_air_crossings_and_real_floor_landing_volume() -> void:
