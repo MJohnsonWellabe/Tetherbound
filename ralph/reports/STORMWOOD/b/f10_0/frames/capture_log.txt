@@ -1,0 +1,6 @@
+markers before: []
+frame res://ralph/reports/STORMWOOD/b/f10_0/frames/before_minimap.png
+frame res://ralph/reports/STORMWOOD/b/f10_0/frames/before_map.png
+markers after: ["stormwood_arch_road_c_rodline \'Rodline Long Road Arch · road to Lantern Hollow Arch\' icon=gate", "stormwood_arch_road_c_lantern \'Lantern Hollow Arch · road to Rodline Long Road Arch\' icon=gate"]
+frame res://ralph/reports/STORMWOOD/b/f10_0/frames/after_minimap.png
+EXIT 124
