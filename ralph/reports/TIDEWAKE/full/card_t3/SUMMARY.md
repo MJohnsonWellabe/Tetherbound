@@ -60,3 +60,17 @@ These are carried over from the three source proofs.
 - The dock actions are pressed standing 1.4 m from the prompt, after a teleport.
 - Loopback ENet on one machine, headless.
 - The integrated run starts from the Water scene fixture, not an earned end-of-Tidewake save.
+
+## Disclosed: A7 on the return with **no** wild respawns (strict re-check finding)
+`test_tidewake_return_cadence.gd` measures two definitions. Only `return_live` is asserted:
+ordinary wild sites count as encounters, because WORLD §2.5 lets them repopulate after two
+600 s world days once every player has left the region, which the return satisfies.
+- `return_live`: `over_a7: []`.
+- `no_respawn` (report only, not asserted): **fails A7**. Gaps include 2034 s (Meadows
+  arrival → Grandpa), 1297 s, 834 s, 556 s, 414 s and 277 s, in all four realms, with and
+  without the arches (`../f15_return_cadence/RUN.txt`).
+- My reading: WORLD §2.5's "the required route and four-player supply ledger must still clear
+  when no wild respawns at all" is about completion and solvency without respawn farming,
+  not A7 spacing. Respawned wilds are real encounters under A7, so `return_live` is the A7
+  measure. The test docstring reads it more strictly. **This is put to the coordinator on
+  #356, not claimed silently.**
