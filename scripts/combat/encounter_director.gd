@@ -287,6 +287,10 @@ var _party_revision_seen: int = -1
 ## same deploy-time card as the creature's other owner-held facts. A revision
 ## change re-announces that card once while the creature remains deployed.
 var _heart_revision_seen: int = -1
+## Whether the deployed creature was the party's Best Creature when its card
+## was announced. Its survivability rides the card's defence, so toggling the
+## title while it stays out re-announces the card once, like a relic change.
+var _card_best_seen := false
 var _deployment_waiting_for_receiver := false
 
 ## Set when the scene has an InteractionArbiter to hand the prompt line to.
@@ -1436,6 +1440,7 @@ func _announce_deployment(creature: RefCounted) -> void:
 		var hearts: Variant = game.get("realm_hearts") if game != null else null
 		if hearts is RefCounted:
 			_heart_revision_seen = int((hearts as RefCounted).get("revision"))
+	_card_best_seen = _is_best_creature(creature)
 	if not _is_multi_peer():
 		# No receiver yet: a one-peer session, or no session at all because the
 		# returning route restores a mid-water ride before it dials. Hold the
@@ -3122,12 +3127,16 @@ func _creature_card(creature: RefCounted) -> Dictionary:
 		return {}
 	var cfg: Dictionary = PROGRESSION.config()
 	var condition_cfg: Dictionary = CONDITION.config()
+	# The host rolls a guest's incoming hits against this defence, so it carries
+	# the same Best Creature survivability the solo path applies per hit.
+	var is_best := _is_best_creature(creature)
+	var ability: Dictionary = SPECIES.best_creature_ability(str(creature.get("species_id"))) if is_best else {}
 	return {
 		"creature_uid": str(creature.get("uid")),
 		"species_id": str(creature.get("species_id")),
 		"level": int(creature.get("level")),
 		"attack": float(creature.call("effective_attack", cfg)),
-		"defence": float(creature.call("effective_defence", cfg)),
+		"defence": float(creature.call("effective_defence", cfg, is_best, ability)),
 		"creature_type": str(creature.get("creature_type")),
 		"secondary_type": str(creature.get("secondary_type")),
 		"move_quick": str(creature.get("move_quick")),
@@ -3144,6 +3153,11 @@ func _creature_card(creature: RefCounted) -> Dictionary:
 		# against its own config and verifies the world says it is placed.
 		"active_relic_id": _local_active_relic_id(),
 	}
+
+
+func _is_best_creature(creature: RefCounted) -> bool:
+	var party_obj: RefCounted = _party() if is_inside_tree() else null
+	return creature != null and party_obj != null and party_obj.call("best") == creature
 
 
 func _local_active_relic_id() -> String:
@@ -3191,7 +3205,8 @@ func _sync_active_relic_card() -> void:
 	var game := get_node_or_null(^"/root/Game")
 	var hearts: Variant = game.get("realm_hearts") if game != null else null
 	var revision := int((hearts as RefCounted).get("revision")) if hearts is RefCounted else -1
-	if revision == _heart_revision_seen:
+	var best_changed := _ally != null and _is_best_creature(_ally) != _card_best_seen
+	if revision == _heart_revision_seen and not best_changed:
 		return
 	_heart_revision_seen = revision
 	if _ally == null or _ally_body == null or not is_instance_valid(_ally_body):

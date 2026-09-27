@@ -112,7 +112,7 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"water_anchor_fixture", "water_swim_to_wild", "water_swim_to_anchor", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
 	"water_guardian_let_go", "water_guardian_forge_accept",
 	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe", "shared_cue_shape", "ledge_probe",
-	"ledge_launch", "await_autosave", "slot_mtime"]
+	"ledge_launch", "await_autosave", "slot_mtime", "party_best", "host_card_defence"]
 
 
 static func handles(action: String) -> bool:
@@ -175,6 +175,10 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _await_autosave(tree, args)
 		"slot_mtime":
 			return _slot_mtime(tree, args)
+		"party_best":
+			return await _party_best(tree, args)
+		"host_card_defence":
+			return await _host_card_defence(tree, args)
 		"cost_probe":
 			return _cost_probe(tree)
 	if WATER_ACTIONS.has(action):
@@ -3229,3 +3233,72 @@ static func _cost_probe(tree: SceneTree) -> Dictionary:
 				wilds += 1
 	data["wild_bodies"] = wilds
 	return {"verdict": "PASS", "detail": JSON.stringify(data), "data": data}
+
+
+## Put this peer's Best Creature title on (`best` true) or off slot `index`
+## through `Game.party.set_best` (the party screen's own toggle), then wait
+## `settle` frames so the director's per-frame card sync can re-announce.
+static func _party_best(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(tree)
+	var party: RefCounted = game.get("party") if game != null else null
+	if party == null:
+		return {"verdict": "ERROR", "detail": "party_best needs Game.party"}
+	var index := int(args.get("index", 0))
+	var want := bool(args.get("best", true))
+	if (int(party.call("best_index")) == index) != want:
+		party.call("set_best", index)
+	for f in int(args.get("settle", 30)):
+		await tree.physics_frame
+	var member: RefCounted = party.call("at", index)
+	var data := {"index": index, "best_index": int(party.call("best_index")),
+		"species": str(member.get("species_id")) if member != null else "",
+		"active_index": int(party.call("active_index"))}
+	var ok: bool = member != null and (int(data.best_index) == index) == want
+	return {"verdict": "PASS" if ok else "FAIL", "data": data,
+		"detail": "Best Creature %s slot %d: %s" % ["on" if want else "off", index, JSON.stringify(data)]}
+
+
+## HOST: the defence on the card it holds for `peer_id` -- the number
+## `host_pick_struck_participant` hands to every host-rolled blow against that
+## guest -- against the solo reference rebuilt from the card's own species and
+## level (species stats are deterministic; a fresh creature has no bond nodes or
+## tonics, which the step checks). Polls up to `budget_frames` until the card
+## matches `want` ("best" or "plain") so a re-announcement in flight is waited
+## for, not raced.
+static func _host_card_defence(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var sess: Node = tree.call("_session")
+	if sess == null or not bool(sess.call("is_host")):
+		return {"verdict": "ERROR", "detail": "host_card_defence runs on the session host only"}
+	var scene := tree.current_scene
+	var director := scene.find_child("EncounterDirector", true, false) if scene != null else null
+	if director == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector in the host's scene"}
+	var pid := int(args.get("peer_id", 0))
+	var want := str(args.get("want", "best"))
+	var cfg: Dictionary = NET_PROGRESSION.config()
+	var data := {}
+	for f in maxi(1, int(args.get("budget_frames", 300))):
+		var card: Dictionary = director.call("_creature_card_for", pid)
+		if not card.is_empty():
+			var species := str(card.get("species_id", ""))
+			var reference: RefCounted = SPECIES_DATA.spawn(species)
+			if reference == null:
+				return {"verdict": "ERROR", "detail": "card names unknown species '%s'" % species}
+			reference.call("set_level", int(card.get("level", 1)), cfg)
+			var ability: Dictionary = SPECIES_DATA.best_creature_ability(species)
+			var plain := float(reference.call("effective_defence", cfg))
+			var best := float(reference.call("effective_defence", cfg, true, ability))
+			var defence := float(card.get("defence", -1.0))
+			data = {"peer_id": pid, "species": species, "level": int(card.get("level", 0)),
+				"bond_nodes": int(card.get("bond_nodes", -1)), "ability_kind": str(ability.kind),
+				"defence": defence, "plain_ref": plain, "best_ref": best,
+				"matches_plain": absf(defence - plain) < 0.001, "matches_best": absf(defence - best) < 0.001,
+				"bonus_is_real": best > plain + 0.001}
+			if bool(data["matches_" + want]):
+				break
+		await tree.physics_frame
+	if data.is_empty():
+		return {"verdict": "FAIL", "detail": "the host holds no creature card for peer %d" % pid}
+	var ok: bool = bool(data.get("matches_" + want, false)) and int(data.bond_nodes) == 0 and bool(data.bonus_is_real)
+	return {"verdict": "PASS" if ok else "FAIL", "data": data,
+		"detail": "host card for peer %d (want %s): %s" % [pid, want, JSON.stringify(data)]}

@@ -1,0 +1,92 @@
+{
+  "name": "X05: host-rolled guest defence carries Best Creature survivability (co-op parity)",
+  "claim": "encounter_director._creature_card now passes is_best and the species' Best Creature ability to effective_defence, as combat_manager's solo hit path does, and re-announces the card when the title moves while the creature stays deployed. Two peers: the host reads the card it holds for the guest (the defence host_pick_struck_participant hands to every host-rolled blow) and compares it with the solo reference rebuilt from the card's species and level, before, during and after the guest designates its deployed Terrapup. Setup: production deploy/adopt only; no fixtures.",
+  "peers": 2,
+  "budget_s": 900,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "deploy_creature",
+      "label": "host production summon (a creature out on both sides)"
+    },
+    {
+      "peer": 1,
+      "action": "deploy_creature",
+      "label": "guest production summon/adopt of the Terrapup starter; its card is announced to the host"
+    },
+    {
+      "peer": 0,
+      "action": "host_card_defence",
+      "args": {
+        "peer_id": "$peer1",
+        "want": "plain",
+        "budget_frames": 600
+      },
+      "label": "BASELINE: guest creature not designated -- host card defence equals plain solo effective defence"
+    },
+    {
+      "peer": 1,
+      "action": "party_best",
+      "args": {
+        "index": 0,
+        "best": true
+      },
+      "expect_data": {
+        "best_index": 0,
+        "species": "terrapup"
+      },
+      "label": "guest designates its deployed Terrapup Best Creature (party toggle)"
+    },
+    {
+      "peer": 0,
+      "action": "host_card_defence",
+      "args": {
+        "peer_id": "$peer1",
+        "want": "best",
+        "budget_frames": 600
+      },
+      "expect_data": {
+        "ability_kind": "survivability",
+        "bonus_is_real": true
+      },
+      "label": "PARITY: host card defence now equals the solo Best Creature survivability defence (shell_guard +15%) -- the number every host-rolled blow on the guest uses"
+    },
+    {
+      "peer": 1,
+      "action": "party_best",
+      "args": {
+        "index": 0,
+        "best": false
+      },
+      "expect_data": {
+        "best_index": -1
+      },
+      "label": "guest clears the title"
+    },
+    {
+      "peer": 0,
+      "action": "host_card_defence",
+      "args": {
+        "peer_id": "$peer1",
+        "want": "plain",
+        "budget_frames": 600
+      },
+      "label": "PARITY: the refreshed card drops the bonus"
+    }
+  ]
+}
