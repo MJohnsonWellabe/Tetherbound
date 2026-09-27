@@ -197,6 +197,9 @@ var _form_terrace_step := 0.0
 var _form_terrace_strength := 0.0
 var _form_rim_in := 0.03
 var _form_rim_out := 0.18
+## Metres beyond a road's shoulder over which rock relief fades back in
+## (`rock_form.road_clearance_m`); 0 leaves roads over rises unprotected.
+var _form_road_clearance := 0.0
 var _form_bias := 0.25
 var _form_riser := 0.38
 var _form_dip_x := 0.0
@@ -434,6 +437,7 @@ func _build_shape_cache() -> void:
 	_relief_off = _form_amplitude <= 0.0 and (_form_terrace_step <= 0.0 or _form_terrace_strength <= 0.0)
 	_form_rim_in = float(form.get("rim_in", 0.03))
 	_form_rim_out = float(form.get("rim_out", 0.18))
+	_form_road_clearance = maxf(float(form.get("road_clearance_m", 0.0)), 0.0)
 	_form_bias = float(form.get("bias", 0.25))
 	_form_riser = clampf(float(form.get("terrace_riser", 0.38)), 0.02, 1.0)
 	var bed_dip: Array = form.get("bed_dip", [0.0, 0.0])
@@ -1147,7 +1151,31 @@ func _rise_relief(x: float, z: float) -> float:
 			var combined := raw + thickness
 			relief += (_terrace(combined, terrace_step, riser) - combined) * terrace_strength * gate
 		total += relief
+	if total != 0.0 and _form_road_clearance > 0.0:
+		total *= 1.0 - _relief_road_clear(x, z)
 	return total
+
+
+## How much of the rock relief to suppress at (x, z) for a road: 1.0 on the
+## roadbed and its shoulder, fading to 0.0 over `rock_form.road_clearance_m`
+## beyond it. Where a road crosses a rise's flank the ridged gullies and
+## terrace risers otherwise cut straight across it -- the Quarry Haul Road at
+## (21.9, 171.9) on peaks[2] sat in a 1m-deep, ~47-degree V the walking
+## player could not climb out of. The road keeps the smooth cone under it.
+func _relief_road_clear(x: float, z: float) -> float:
+	var spot := Vector2(x, z)
+	var best := 0.0
+	for entry: Variant in road_bands():
+		var band: Dictionary = entry
+		var line: PackedVector2Array = band["line"]
+		var edge: float = float(band["half"]) + float(band["shoulder"])
+		var nearest := INF
+		for i in line.size() - 1:
+			nearest = minf(nearest, _segment_distance(spot, line[i], line[i + 1]))
+		best = maxf(best, 1.0 - smoothstep(edge, edge + _form_road_clearance, nearest))
+		if best >= 1.0:
+			return 1.0
+	return best
 
 
 ## Snap a height onto bedding planes: near-level ledges separated by a riser

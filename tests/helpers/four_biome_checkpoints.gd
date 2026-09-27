@@ -111,6 +111,37 @@ static func resolve_source(source: String, checkpoint_dir: String) -> String:
 	return ""
 
 
+## `--resume-from` serves two checkpoint kinds; this tells them apart by what
+## the named directory holds, so one argument is never ambiguous:
+## - RESUME_RELOAD_TRANSITION: `checkpoint.json` + `save/`, the Meadows
+##   reload-transition checkpoint the smoke's `_reload_transition` writes under
+##   user://four_biome_checkpoints/<label>_<pid>/ (resumed by the smoke's
+##   `_resume_checkpoint`; stops after the Hall; never closes proof);
+## - RESUME_BOUNDARY: a chapter-boundary checkpoint (`receipts/` + `save/`),
+##   given as a dir or a bare name `resolve_source` finds.
+## A `:<boundary>` suffix, a dir without `checkpoint.json`, or any bare name
+## means RESUME_BOUNDARY (its own resolve/receipt checks then apply). A dir
+## holding both `checkpoint.json` and `receipts/` without a suffix is refused.
+## Returns {kind, error}.
+const RESUME_RELOAD_TRANSITION := "reload_transition"
+const RESUME_BOUNDARY := "chapter_boundary"
+const RELOAD_CHECKPOINT_META := "checkpoint.json"
+
+
+static func classify_resume(source: String, explicit_boundary: String) -> Dictionary:
+	if source.is_empty():
+		return {"kind": "", "error": "--resume-from needs a checkpoint dir or name"}
+	if not explicit_boundary.is_empty():
+		return {"kind": RESUME_BOUNDARY, "error": ""}
+	if not FileAccess.file_exists(_abs(source.path_join(RELOAD_CHECKPOINT_META))):
+		return {"kind": RESUME_BOUNDARY, "error": ""}
+	if DirAccess.dir_exists_absolute(_abs(source.path_join("receipts"))):
+		return {"kind": "", "error": ("%s holds both %s (reload-transition checkpoint) and receipts/ "
+			+ "(chapter-boundary checkpoint); add :<boundary> to resume it as a chapter boundary") % [
+			source, RELOAD_CHECKPOINT_META]}
+	return {"kind": RESUME_RELOAD_TRANSITION, "error": ""}
+
+
 ## The boundary to resume a checkpoint at: the explicit one, else the latest
 ## boundary that has a receipt in receipts/.
 static func pick_boundary(checkpoint: String, explicit: String) -> String:

@@ -142,3 +142,5 @@ above.
 - **Other lanes:** the default and checkpoint flags are unchanged.
 - **Follow-ups:** a dry run no longer reports `campaign_complete: true`. The fixture-party level in this file is corrected.
 - **Open:** the default `--through-opening` failed once, at "natural travel did not reach and engage the tutorial Bramblebun". Its one confirming rerun passed. The cause is unexplained and was reported to Meadows.
+
+- **Unified `--resume-from` (merge with main's F02):** `--resume-from=<name>:water_arrived` always names a chapter-boundary checkpoint. A `:<boundary>` suffix or a bare name never reaches main's Meadows reload-transition resume, which only takes a dir holding `checkpoint.json`. See `../four_biome_checkpoints/PROOF.md`. `--dry-run-water-fixture` is still refused with either kind of `--resume-from`.

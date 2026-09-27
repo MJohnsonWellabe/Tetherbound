@@ -1,9 +1,9 @@
 {
-  "dependency_fingerprint": 360603671,
+  "dependency_fingerprint": 861904637,
   "dependency_hashes": {
     "res://data/config/stormwood_road_surface.json": 1270024112,
     "res://data/config/stormwood_world.json": 2386913423,
-    "res://data/config/terrain_playground.json": 3360567724,
+    "res://data/config/terrain_playground.json": 4115349266,
     "res://data/config/terrain_stormwood.json": 1602270296,
     "res://scripts/world/build_stormwood_terrain.gd": 5696053664,
     "res://scripts/world/stormwood_heightfield.gd": 2242839411
