@@ -893,6 +893,12 @@ func _bloom_the_healed_ground(immediate: bool) -> int:
 		node.multimesh = mm
 		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		node.set_meta(&"full", list)
+		# The instances start collapsed and grow; bound the node on where they
+		# will stand, not where they start, so it is never culled.
+		var box := AABB((list[0] as Transform3D).origin, Vector3.ZERO)
+		for xf: Transform3D in list:
+			box = box.expand(xf.origin)
+		node.custom_aabb = box.grow(1.0)
 		add_child(node)
 		node.global_transform = Transform3D.IDENTITY
 		_bloom_nodes.append(node)

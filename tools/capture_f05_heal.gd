@@ -49,6 +49,7 @@ const VANTAGES := [
 const FALL_INDICES := [6, 5, 7, 8, 4, 9]
 const FALL_DISTANCES := [22.0, 26.0, 18.0]
 const WILD_CLEAR_M := 70.0
+const FALL_SETTLE_S := 4.0
 const FALL_SAMPLES_S := [1.0, 2.0, 3.0, 3.25, 3.5, 3.75, 4.0, 4.25, 4.5, 4.75, 5.0, 5.25,
 	5.5, 5.75, 6.0, 6.25, 6.5, 6.75, 7.0, 7.25, 7.5, 7.75, 8.0, 12.0]
 
@@ -136,7 +137,9 @@ func _run() -> void:
 	# hidden for the fall frames (round 6 first pass: a wild Galecrest walked
 	# into the lens and hid the pylon for the whole fall).
 	_hide_wildlife(Vector3(stand.x, 0.0, stand.y))
-	await _shot("f00-t00.00", stand, look, 2.0)
+	# The team panel shows for a few seconds after a teleport and hid one
+	# tower at t=0 (blind round 6, f00): let it go before the first frame.
+	await _shot("f00-t00.00", stand, look, 2.0, FALL_SETTLE_S)
 	_game.get("progression").call("set_flag", "legendary_freed")
 	print("freed at the pylon vantage")
 	var elapsed := 0.0
@@ -223,7 +226,7 @@ func _hide_wildlife(near: Vector3) -> void:
 			print("staging: hid wild %s at %.0f m" % [str(body.get("species_id")), flat.length()])
 
 
-func _shot(name: String, flat: Vector2, target: Vector3, pitch_deg: float) -> void:
+func _shot(name: String, flat: Vector2, target: Vector3, pitch_deg: float, settle_s: float = SHOT_S) -> void:
 	var y := float(_world.call("ground_height_at", flat.x, flat.y))
 	var t := target
 	if t.y == 0.0:
@@ -238,7 +241,7 @@ func _shot(name: String, flat: Vector2, target: Vector3, pitch_deg: float) -> vo
 		if _rig != null:
 			_rig.set("yaw", wrapf(atan2(-dir.x, -dir.z), -PI, PI))
 			_rig.set("pitch", deg_to_rad(pitch_deg))
-	await _wait(SHOT_S)
+	await _wait(settle_s)
 	await _grab(name)
 
 

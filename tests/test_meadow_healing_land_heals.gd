@@ -449,3 +449,20 @@ func test_the_overlays_feather_their_edge_and_bias_over_the_slope() -> void:
 	assert_true(code.contains("mh_noise(v_world.xz * feather_scale)"), "world-noise feathered contour")
 	assert_true(code.contains("view.xyz *= max(len - view_bias, 0.05) / len;"), "decal bias toward the camera")
 	assert_true(code.contains("ALPHA = a * max_alpha * master_alpha;"), "one master fade over the authored cap")
+
+
+func test_the_healed_ground_blooms_deterministically_inside_the_stations() -> void:
+	# F05#7 round 6: wildflower drifts come up on the healed stations.
+	var config := _config()
+	var block: Dictionary = config.get("bloom", {})
+	assert_true(bool(block.get("enabled", false)), "the bloom is on")
+	for path: Variant in (block.get("models", []) as Array):
+		assert_true(ResourceLoader.exists(str(path)), "installed model %s" % str(path))
+	var discs := [{"id": "a", "centre": Vector2(0, 0), "radius": 20.0, "inner": 6.0, "strength": 1.0}]
+	var spots := HEALING.bloom_spots(discs, block, "g")
+	var again := HEALING.bloom_spots(discs, block, "g")
+	assert_true(spots.size() > 20, "a real drift count (%d)" % spots.size())
+	assert_eq(spots.size(), again.size())
+	for i in spots.size():
+		assert_true((spots[i]["at"] as Vector2).is_equal_approx(again[i]["at"] as Vector2), "same spot every build")
+		assert_true((spots[i]["at"] as Vector2).length() <= 20.0 + float(block.get("drift_radius", 2.4)) + 0.01, "inside the station")

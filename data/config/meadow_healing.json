@@ -85,9 +85,9 @@
       6,
       14
     ],
-    "drift_radius": 2.4,
-    "scale_min": 0.055,
-    "scale_max": 0.095,
+    "drift_radius": 2.8,
+    "scale_min": 0.16,
+    "scale_max": 0.26,
     "sink": 0.02,
     "max_path": 0.25,
     "grow_delay": 3.0,
@@ -162,10 +162,10 @@
     "creak_fraction": 0.07,
     "dust": {
       "enabled": true,
-      "amount": 90,
+      "amount": 140,
       "lifetime": 2.2,
-      "colour": "#dccfb2",
-      "alpha": 0.6,
+      "colour": "#9a8766",
+      "alpha": 0.85,
       "speed_min": 0.6,
       "speed_max": 2.8,
       "gravity": 0.6,
@@ -177,7 +177,8 @@
     "trunk_margin": 0.3,
     "tall_prop_min_height": 2.0,
     "tall_prop_max_width": 10.0,
-    "_comment_trees": "Bake only (bake_fall_table): a fall must not newly lie through a tree or a standing authored prop. Trees come from the scatter (collidable trunks at layer collision radius x scale, plus the visually solid non-colliding soft occluders) grown by `trunk_margin`; authored MeshInstance3D bounds at least `tall_prop_min_height` tall and at most `tall_prop_max_width` across (trees, posts, dead trees; not buildings, which the collider check owns). When every direction lies through a tree, the first otherwise-clear direction is kept (nothing is left standing)."
+    "_comment_trees": "Bake only (bake_fall_table): a fall must not newly lie through a tree or a standing authored prop. Trees come from the scatter (collidable trunks at layer collision radius x scale, plus the visually solid non-colliding soft occluders) grown by `trunk_margin`; authored MeshInstance3D bounds at least `tall_prop_min_height` tall and at most `tall_prop_max_width` across (trees, posts, dead trees; not buildings, which the collider check owns). When every direction lies through a tree, the first otherwise-clear direction is kept (nothing is left standing).",
+    "_comment_dust_round6": "F05#7 round 6: blind judge 'impact dust a low-contrast pale haze, invisible at 30%' -- darker earth colour, more opaque, more particles."
   },
   "barriers": {
     "enabled": true,
@@ -268,14 +269,14 @@
       "clusters": [
         {
           "bearing_deg": 318.0,
-          "distance_m": 11.5,
+          "distance_m": 10.5,
           "count": 3,
           "spread_m": 5.5,
           "heading_deg": 250.0
         },
         {
-          "bearing_deg": 12.0,
-          "distance_m": 11.5,
+          "bearing_deg": 50.0,
+          "distance_m": 10.0,
           "count": 2,
           "spread_m": 4.0,
           "heading_deg": 320.0
