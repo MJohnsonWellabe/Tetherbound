@@ -339,10 +339,21 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
 
 # 8. Branches, CI and landing
 
-- Work on a branch from current `main`. Every branch uses the `tb/` prefix
-  (owner, 2026-09-26): lanes `tb/<lane>-<task>`, integration batches
-  `tb/integration-N`, throwaways `tb/scratch-<x>`. Never create `ralph/` or
-  `claude/` branches; cloud sessions set their outcome branch to a `tb/` name.
+- **One reused branch per lane (owner, 2026-09-27).** Every branch uses the
+  `tb/` prefix.
+  - **Lanes:** each lane works on one long-lived `tb/<lane>` branch
+    (`tb/meadows-core`, `tb/meadows-activities`, `tb/meadows-route`,
+    `tb/cloudreach`, `tb/cloudreach-b`, `tb/stormwood`, `tb/stormwood-b`,
+    `tb/tidewake`, `tb/tidewake-b`, `tb/vis`, `tb/x05`), with one standing
+    draft PR. The lane merges `origin/main` into it after each landing and
+    keeps going. It never opens a new branch per task.
+  - **Batches:** the coordinator reuses one `tb/integration` branch, reset to
+    `main` for each batch.
+  - **No scratch branches:** dispatch `render.yml` with `checkout_ref` set to a
+    commit SHA.
+  - **Codex** keeps its own branch practice.
+  - **Forbidden prefixes:** never create `ralph/` or `claude/` branches. Cloud
+    sessions set their outcome branch to the lane's `tb/` name.
 - **Finish, then land (owner, 2026-09-27).** Lanes commit and push to their own
   branch freely; that is backup, not landing. A lane posts READY only when:
   - **a criterion fully closes.** State it as `closes F0x#n`. Partial progress
