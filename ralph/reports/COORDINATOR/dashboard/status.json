@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-27T21:12Z",
+ "updated": "2026-09-27T22:05Z",
  "headline": [
-  "Criteria met: 80 of 101 once batch 65 lands. Batches 63-64 merged (F15#2; T1, S3, S1 card runs). Batch 65 staged: Cloudreach card C1 complete, F13#2 Tidewake pockets met.",
+  "Criteria met: 80 of 101. Batch 65 merged (#388, CI green): Cloudreach card C1 complete, F13#2 Tidewake pockets. Next: T3 (logs pending), Solmane F08#5, F04 captain/Warden/aftermath, F01 gates, F03 lures.",
   "Owner rules today: full visual bar on every visual row; Solmane is a Veridian-style freed legendary; build the game, not proof machinery (every round player-visible, two-strike harness rule, hourly Balance line). 9 Claude lanes plus Codex."
  ],
  "batches": [
@@ -271,9 +271,15 @@
   },
   {
    "name": "Batch 65",
-   "sha": "pending",
-   "state": "PR open with auto-merge; both heads VERIFIED",
+   "sha": "92105d01",
+   "state": "Merged 92105d01 (#388), CI green",
    "contents": "Cloudreach card C1 earned flight-route run (card complete); F13#2 eight pockets walked and paid (dd9f504a)"
+  },
+  {
+   "name": "Batch 66",
+   "sha": "pending",
+   "state": "PR open with auto-merge",
+   "contents": "Owner ruling: return route exempt from A7; interim Capacitor Alpha ruling; heightfield cost test robust under parallel load"
   }
  ],
  "lanes": [
@@ -329,6 +335,7 @@
   }
  ],
  "decisions": [
+  "Owner 21:20: the homeward return route after Tidewake is exempt from A7 (T3/F15).",
   "Healed Meadows: runtime regreen, herd returns, pylons fall; no re-bake.",
   "Bramblebun: sheet 06 approved for one Meshy redo with rust/ochre thorns.",
   "Steam: DLL redistribution approved; release builds need a Steam launch; packaging stays off until an AppID exists.",
