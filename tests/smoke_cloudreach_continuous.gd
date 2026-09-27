@@ -370,9 +370,9 @@ func _input(action: String, strength: float) -> void:
 ## wants instead of holding. A pressed action is released on the next call,
 ## which makes every press a fresh edge.
 func _fly_intent(climb: bool, descend: bool) -> void:
-	var tap_descend := descend != bool(fly.descend_toggled)
+	var tap_descend: bool = descend != bool(fly.descend_toggled)
 	_input("fly_descend", 1.0 if tap_descend and float(input_values.get("fly_descend", 0.0)) == 0.0 else 0.0)
-	var tap_climb := climb and not descend and fly.state != "climb"
+	var tap_climb: bool = climb and not descend and str(fly.state) != "climb"
 	_input("jump", 1.0 if tap_climb and float(input_values.get("jump", 0.0)) == 0.0 else 0.0)
 
 
