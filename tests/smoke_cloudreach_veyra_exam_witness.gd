@@ -93,7 +93,17 @@ func _record_frame() -> void:
 	if not (sample.arc as Vector3).is_zero_approx(): row.arc_frames += 1
 	if bool(sample.sheltered): row.sheltered_frames += 1
 	if drift.length() > 0.05: row.pushed_frames += 1
+	if not (sample.arc as Vector3).is_zero_approx() and drift.length() > 0.05: row.arc_pushed_frames = int(row.get("arc_pushed_frames", 0)) + 1
 	row.max_drift_mps = maxf(float(row.max_drift_mps), drift.length())
+	# The field itself, independent of where the fight put the creature: is
+	# the relay arc active anywhere on a ring inside its 14-33 m band?
+	if phase == "anchor_overload":
+		var origin: Vector3 = finale.global_position
+		for k in 12:
+			var ring := origin + Vector3(cos(k * TAU / 12.0), 0, sin(k * TAU / 12.0)) * 22.0
+			if not (finale.hazard_at(ring).arc as Vector3).is_zero_approx():
+				row.arc_field_frames = int(row.get("arc_field_frames", 0)) + 1
+				break
 	hazard_frames[phase] = row
 
 
@@ -254,7 +264,9 @@ func _finish() -> void:
 		var cw: Dictionary = hazard_frames.get("crosswind_command", {})
 		var ov: Dictionary = hazard_frames.get("anchor_overload", {})
 		_require(int(cw.get("wind_frames", 0)) > 0 and int(cw.get("pushed_frames", 0)) > 0, "F08#0 Stage A wind lanes pushed the controlled body: " + str(cw))
-		_require(int(ov.get("arc_frames", 0)) > 0 and int(ov.get("pushed_frames", 0)) > 0, "F08#0 Stage B relay arc pushed the controlled body: " + str(ov))
+		var be: Dictionary = hazard_frames.get("break_the_eye", {})
+		_require(int(ov.get("arc_field_frames", 0)) > 0 and int(ov.get("pushed_frames", 0)) > 0, "F08#0 Stage B: relay arc active in the arena and the controlled body pushed during Anchor Overload: " + str(ov))
+		_require(int(ov.get("arc_pushed_frames", 0)) + int(be.get("arc_pushed_frames", 0)) > 0, "F08#0 the relay arc itself pushed the controlled body (Overload or Break): " + str(ov) + " / " + str(be))
 		_require(not lee_hold.is_empty() and lee_hold.has("frames_sheltered"), "F08#0 lee pocket hold ran")
 		if fail_exam_first:
 			_require(not failed_exam.is_empty() and battle_losses.count(VEYRA) == 1, "F08#0 the planned failed exam ran and returned to Summit Bivouac")
