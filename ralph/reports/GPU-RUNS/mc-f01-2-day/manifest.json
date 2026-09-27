@@ -1,0 +1,408 @@
+{
+  "label": "mc-f01-2-day",
+  "comment_id": 5854946712,
+  "sha": "6a4299274abc8a7b0d1599ff3d912570badbb669",
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/mc-f01-2-day",
+  "script": "tests/capture_village_walk.gd",
+  "args": [
+    "--time=day",
+    "--route=visits",
+    "--from-title",
+    "--capture-dir=res://shots/f01w/f01_2_day"
+  ],
+  "mode": "render",
+  "stage": "ready_to_publish",
+  "runner_pid": 3936,
+  "started_utc": "2026-09-27T10:32:52.341852+00:00",
+  "engine_pid": 18260,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\mc-f01-2-day",
+    "--rendering-method",
+    "gl_compatibility",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tests/capture_village_walk.gd",
+    "--",
+    "--time=day",
+    "--route=visits",
+    "--from-title",
+    "--capture-dir=res://shots/f01w/f01_2_day"
+  ],
+  "exit_code": 1,
+  "completed_utc": "2026-09-27T10:39:24.411536+00:00",
+  "output_worktree_files": [],
+  "artifact_files": [
+    {
+      "path": "import.log",
+      "bytes": 230638,
+      "sha256": "cde3acc1287665cd6629f1ad13089e3b1d0facb421a332268f5b5836bb86949c"
+    },
+    {
+      "path": "run.log",
+      "bytes": 12339,
+      "sha256": "be7b1452117b991439d31bc4616029da6fb03d029cc4a939a8cfd21c8e962b5a"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 2672,
+      "sha256": "3646d6080565f79e6b505c23a958e3529a47f362fd456ce9ed9429a53f66291b"
+    },
+    {
+      "path": "user/cache/map_meadows.png",
+      "bytes": 916214,
+      "sha256": "c713ec481bec294e9567e211946035fc890a70dbf161a6ea7530725da006fd0f"
+    },
+    {
+      "path": "user/cache/map_meadows.png.key",
+      "bytes": 49,
+      "sha256": "82d3740546650100143c24da534e295ec7ad257140b8a563cf9165d045e12f02"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 12166,
+      "sha256": "8670d4441ff0b492fc8de41a7c8d225d93cee44d998da86b0282e1a954051c1f"
+    },
+    {
+      "path": "user/shader_cache/CanvasShaderGLES3/7c031e087d38a21a2b702ec534c46a20f33c6438a46501f445ba2a5574dd658f/59a5a7739d056c05e188956d37572e2124bdc4f3.cache",
+      "bytes": 15739,
+      "sha256": "15c8c4e82eedec34fae339ba2e63323a34b020e9531affc620500fcc3092217d"
+    },
+    {
+      "path": "user/shader_cache/CanvasShaderGLES3/7c031e087d38a21a2b702ec534c46a20f33c6438a46501f445ba2a5574dd658f/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 51565,
+      "sha256": "a73f94fa1739d78b3d4d64f74c5d357a26ed404cef443982eb69caf84bcaa5d6"
+    },
+    {
+      "path": "user/shader_cache/CopyShaderGLES3/83277179491d134674d67060b198ff75c555e8867f19d861cffb61da9b89360b/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 118003,
+      "sha256": "e0bcb02e60f4520a7a65c3fa28eee24121e53f6538b5d9562f1d912e7ab0accc"
+    },
+    {
+      "path": "user/shader_cache/CubemapFilterShaderGLES3/9cba4f30fd80e4ff3a85bbb3abfad10ffe6e0ee75e5db6904b7db3958d978a3d/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 26049,
+      "sha256": "3d709d13f2c19b275518347928a0ef42a49579e17b5dcddd0b0b7cad8d97f883"
+    },
+    {
+      "path": "user/shader_cache/FeedShaderGLES3/8dcd8e258b3ceae6ff6f4a0c3dedd60872aee6fa4b5ae0149da2241f8c6a19be/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 8257,
+      "sha256": "c846a5442185c9c19e050a6501c9d773039e2d85de83f1811dd22f0af5458341"
+    },
+    {
+      "path": "user/shader_cache/ParticlesCopyShaderGLES3/9759013b9d714cb62fa96f10d90523817ef23d83b75276ad9d89af4583546dca/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 45109,
+      "sha256": "bb9a091f006496809f7724c12629c8b37b243d592194fded75234f00df26ba8f"
+    },
+    {
+      "path": "user/shader_cache/ParticlesShaderGLES3/8beaef0415894113ceabeef48ad3661ec6fd246c2fa5ae3c242c935779dbd09d/677ef8c4b5c0a60a2dc6660e2d12b9ae7906f07c.cache",
+      "bytes": 292863,
+      "sha256": "bb4a29f083776985a007a7eec87fbd70f17a9e655ffd83c76a9e2594f188f2e2"
+    },
+    {
+      "path": "user/shader_cache/PostShaderGLES3/1476b81a5185dfe8258349d6f46d2cb240ac13bc6c4a84c61a13228bd9a967f0/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 30200,
+      "sha256": "17a49eef45f353957cac505147d5e4cead297151205d7799d8db8c79543d7c4d"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/0143f5ea411f3d8a6a366c3d137112d572298aa5.cache",
+      "bytes": 1508460,
+      "sha256": "204d9811729c21838ce0591769d53dd31ddf286835838dadce9053573984dc98"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/086e0eb86a25a785ef2c7d63a3e327c7d3f11e6d.cache",
+      "bytes": 1516799,
+      "sha256": "ad4d30dfb9afe9d0b5ea42bfbaacd5e7916a223ccbaac926b3beba845807d8ef"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/08f597fa86cc3fe780e1a5a51ab3d2f910567c36.cache",
+      "bytes": 1517000,
+      "sha256": "65546d2d9cebf5d620f70ba7fdf425c33e4c1ab6b048755be5c1d3119455f009"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/0b52136668b1404e52bde3d36f3e5567e3a45a0b.cache",
+      "bytes": 2608150,
+      "sha256": "ee454e1925923b474236fdc954cfa1b45c78670fdcb3051f9e79eb5f9a056add"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/0deb7674b101eae2d9d03a11aa119ebfe1a92001.cache",
+      "bytes": 2532611,
+      "sha256": "5938275090be2d7fc55cb9fc10672e7217edd0cc4e073257b056e9005ffe5b47"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/13ab7ceb2c3df96664de240b3f363f14cb44c19c.cache",
+      "bytes": 1463645,
+      "sha256": "afdb5824df5d29f8b6ad2c4cabbc4611ceac9e2591ed558a5a565a4a4aacf3d7"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/17e0272655dc804ff602d153fe466e2e48e50a20.cache",
+      "bytes": 1770113,
+      "sha256": "e4bf7ebc943057082a5cb4b9bcfc9170294879d89758c91469563b0ddc8bf692"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/1c391b2d44274649404846aed0752d6dc54823a3.cache",
+      "bytes": 2187064,
+      "sha256": "23a1963c62f17375f986a48b44456c4e4d0e26ba1e37e7ddd3b647b6fa9cd3a2"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/1ec0123743a4d1cc73e25ebb40fa89572262e3b6.cache",
+      "bytes": 2514127,
+      "sha256": "e32a2870194ddc3f6068587e39985b76903ccf73f8117bb42418beda316216d0"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/2115c615c01c3a0177be29c6ddcef01907dcf654.cache",
+      "bytes": 1513082,
+      "sha256": "371231e73e30e20b1f862097ee1f7247eb45645225951b3fe3f3b1a310138d56"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/312ad42a7fd06585fad3eca6bb0eef83490b1da7.cache",
+      "bytes": 3113444,
+      "sha256": "dd11517644a9dc5e1ab2f3549a803ad9d7612e53bc93e278158857efa07d52a9"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/3722845ebb7d8536e1b159ed3e4643a6c4c96bae.cache",
+      "bytes": 1796434,
+      "sha256": "890cff279e7bc5321e76b02a25e7593d5dc57925d0662c1e47972a6fae305096"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/422a1b88b7c247bcfc19ff943a54f18b4cbd3ed3.cache",
+      "bytes": 1506862,
+      "sha256": "73abdb16b91e13fb79a84259dcf63a19175a46dcc6eadba638c94767e869289f"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/435dbe1cde22e3e49fd517c472846f3136aae0d8.cache",
+      "bytes": 3468269,
+      "sha256": "137baea2fffe365d1c57d0ab553ca33c40645dba3d2dc5a810c74e118fc5a882"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/459e4010898dde26a6b92d3602a8b6d0c125a151.cache",
+      "bytes": 1547083,
+      "sha256": "28a479e1b8b1dc44b4c234318115896855433bd4827731ff1ce5d7019c51d73c"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/46256a5e5dd61baf8b9c471f97388e1b26f8f4d7.cache",
+      "bytes": 1508864,
+      "sha256": "061509386873a42175379eb3e915ab175ef00728cb60ca1b251986d9708bc85a"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/4a0507620aa57edc09897babb6305543b9ee326b.cache",
+      "bytes": 2819840,
+      "sha256": "ea398a72924f182639a9468e7bac19a1106e5676744adadb92368c7b79d9a658"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/4b0d2bdf4a52d29ca777d07b1f5669e6b24773d3.cache",
+      "bytes": 2428827,
+      "sha256": "3cda01677d9ceebcc54c1b8ef614eb71b48c37059da02a6f3f782551c3befb42"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/5692d1b25dc3051ed19067f2f8ff0d8cb934e9cc.cache",
+      "bytes": 1521179,
+      "sha256": "b1e920bb3a09bed852caf87bafe048fc7e03516f678e742a7942304b5faf1681"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/622b3a97eaab017f6ba70cd1089093a43f15b08a.cache",
+      "bytes": 1505037,
+      "sha256": "a675bedaab9429271ef94f71b0fb2f3cdfb858c1b9950015e783fbc3236199c3"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/65ee8a64bce8864ce9523e0c7cae479097880bb2.cache",
+      "bytes": 1508466,
+      "sha256": "36d127f4588e8b27edcf6f430605bf193d002dcc85fce7318e9f984c8829b756"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/66549625e9c5a3c5fa5bb95dec35ec30a96af5a4.cache",
+      "bytes": 1944212,
+      "sha256": "24b5b625b8c1562e7f28beecfd8ef2378f891406a757e9e3a2182ce4de047e8d"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/6a0938a9a0fc1fd50d0db66009eca4d3fe324bcc.cache",
+      "bytes": 1503956,
+      "sha256": "ce7ce3cda9a31929caa18b5b28c70e21c33426de5a8501deb5c192823a21a6ba"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 1368453,
+      "sha256": "6730918e5e968c5ed024d7838456a1ed1b53a522651b791f1b35e3ca3de363ac"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/75dbda390b4d6b8d1bba67e8943ace8a4f64f756.cache",
+      "bytes": 2848573,
+      "sha256": "28dae856d96a9af083da1a1cd6abe4b2ca44073464b379fd9d7c0ec0a8a2cdec"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/7610c7e24170c9ff2ef8d8f3a542d89520b2e49f.cache",
+      "bytes": 2449256,
+      "sha256": "fd4584b43055b7d116ad084351dbf1389155ea2cc855c60ed8a142d49365018c"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/76eb3470d76bd8b759e123d8aefb517d33f71999.cache",
+      "bytes": 1506063,
+      "sha256": "bd0375f371fd44f768da690bd46dc1f81468daa1f0c62a50bf81b55df8e7c440"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/77047cd41f429f33ceff24e890e174f5465e755e.cache",
+      "bytes": 1447985,
+      "sha256": "3b10e65eae0f138b45d500c875930639d620765d1e351fedd8a052762c5f042c"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/78fbd053620135d8e48335930909c5510f2cbd86.cache",
+      "bytes": 1757390,
+      "sha256": "73942722c3716ad059e70ca6e029d629c930a81cb276c75e30d7f1981ef48b68"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/79b92e0eaa374b797c1f1f9b8c3da44c004d72ba.cache",
+      "bytes": 1559195,
+      "sha256": "33c0bd81a80ae50a2a82b7e4cabae6dd5629c8b13a3aee4f878c4aa6594bcb10"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/7ef334d65fa65790fe4ba9a537dff0b6721ef8ca.cache",
+      "bytes": 2223358,
+      "sha256": "c601df0d4383822ce95710d0aee121e04887b118e47c4229bf8fa41c78101e0c"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/83007f281ad5b9a130b77898b847189ad1d2aa29.cache",
+      "bytes": 1678104,
+      "sha256": "c74a787c8fa068d014afd4d5b68fd521a87d4dd256f42dea3781f8ecf421f8de"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/84366ed46520476083c6b869fefb772ed1a067ee.cache",
+      "bytes": 2877150,
+      "sha256": "83611c9b0d8f115aa32bf23e04142bdde39309e58a68d2cfbeb394d98fffbfec"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/8aa2ca0d142139a382e42dd317881cf2ee88335d.cache",
+      "bytes": 1331170,
+      "sha256": "639adaa7de946d625f35f83c2b17833bde6665b078058d3b502cf9335200e56e"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/928cabbe1c59c1025608a336089807ac84403089.cache",
+      "bytes": 3283405,
+      "sha256": "8bbfba95dc2e830e9b18eb25b46c6c5340929a55d91a6c74f891a86295ed0c35"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/95b9c3e1a5f3b26e9a87a680b216c8a691c24d2e.cache",
+      "bytes": 1317308,
+      "sha256": "9275a4d56e5ab15f48f984a739e4b06d3994b738683d82d40768650e87666168"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/9d42c89d3306ba93ffd60acfba04b21930702e6f.cache",
+      "bytes": 2107339,
+      "sha256": "456304c933638786291c8a8c3b2b58fba566739e7602dbd06a059ba17c7b9e35"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a2567f30315778528fe6a3c52cc4208a38ebd4d3.cache",
+      "bytes": 1553932,
+      "sha256": "d84a1e37fd4d33bb4a9c881be689c364f196314873ca86ce3bedc09f2e31a7a4"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a337fd395264406b70bc21432ea1a85b0fce4b96.cache",
+      "bytes": 2955467,
+      "sha256": "e077d310dfb0030ccd55c6316d0087711db5d8f4ca2972aff68c997a59f4f47e"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a6712e925863fb1a995c70645cad9d69d70bbb87.cache",
+      "bytes": 1706076,
+      "sha256": "8035643664547506177c47af47250ca2465baf958e464ccc27ff2729ea3cda7a"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/a8777be15f781463e27cb3b841a738f050b8c925.cache",
+      "bytes": 2219918,
+      "sha256": "b5fbb822ae2046c4701da2e1656aca9766991af94bf82a33171ceb1a792615ef"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/aefff12cfaa14849010e7fed61c8973f2d55722e.cache",
+      "bytes": 1900921,
+      "sha256": "79c56f38a8443fa8a3227058c107916e08508a4cb8b727c80051597a338890fd"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/b041643a643abf05307e9fac0e55811db7c17d4f.cache",
+      "bytes": 1932990,
+      "sha256": "2ea4c7e383dae3a75b25ac0bd6b98baea7f5e7e1e508f9d5f3b2df5512e6b4a5"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/ba45550439f819044f7dca8232a5aecc4c7e928d.cache",
+      "bytes": 1506694,
+      "sha256": "c028ce5884bdc407bc510061c3c0857edc47017eb7147350b1ac455a01281ec7"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/cff41c46c9761fadeb31bdac88c7af1296f3e20b.cache",
+      "bytes": 2775411,
+      "sha256": "02183ca1b33878b5ae92f3b7e66a30747ee3f939f782880cfa232c61fc1e94cf"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/d66cd92dcecb8b97995d48d1fa89044f76b80ccf.cache",
+      "bytes": 1304321,
+      "sha256": "9f55c7a2bb4c6963281fc4e893f289960dd340670e28062c56bfcf034ce98e33"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/de225c33839522f11071e04ddecdf3090bec4d4f.cache",
+      "bytes": 2236228,
+      "sha256": "e45972c1570782f4dafd45c0364264bb7b0f7d18ca8c4c381714d612fa60ad4b"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/e1afe3ef17914403530b340f9c0b60998a3f9bd4.cache",
+      "bytes": 1492584,
+      "sha256": "5907cf406fb57e1a339c4dd3c7faccc0090c369baa16bd3da4b3dd16f43697d0"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f00cbd7a1b5573406fd43d486793e520640b1325.cache",
+      "bytes": 1320158,
+      "sha256": "1c0908987ef327bfc599f3453ef5c887678f0c9c55a2e08573bebb4fbf7d8a5f"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f2e328ac8a780a17a0c65e242b0c8bc4fc063f03.cache",
+      "bytes": 2744680,
+      "sha256": "3f7c288e45dbb1a9be6fae47eaf2cc227e4934d7414ca47bde2264766ef5b1bf"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f3898120a1b86c86cb0b128ae6a563c539a13e3f.cache",
+      "bytes": 2186866,
+      "sha256": "4d5118ddd617d8332f54747f268af5498dea77f34881c00b185a83b057114863"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f3d38ef465c59bc9091bfc25876abd6e62e9b744.cache",
+      "bytes": 2223595,
+      "sha256": "3c3c1eb86a435615a9db7b06450f5f33ce3348e47ad7ded655b32f508af927b6"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f7c62a226f4fa9e3df267f8bc4a22b3e82dc3315.cache",
+      "bytes": 1809884,
+      "sha256": "f5ab975f7e55f2494c7d21a0eff22c64732e290d1feb9cd099b17caa8054b6aa"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/f8ab93aeebbe5f7232a9778ed024a542819aa220.cache",
+      "bytes": 3186917,
+      "sha256": "04328c629f240014c3373e7931e8b4c8bc41f0e4c594929a7920c2eafe6c80a5"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/fd411a04ee5fac0e114fb87a6c6d28f32d325805.cache",
+      "bytes": 1535225,
+      "sha256": "42c304fc2361a95f1029ab97961e978d12c6e31e54261e4017deb56154ce75e1"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/fec03c535999cdaa57cbe3862dea7521873aaf32.cache",
+      "bytes": 1504075,
+      "sha256": "0466e7f2d68f4f87b5e8f92c2283af283678524221c8a617963cf2db6818fea6"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/ff9c6151af09a0e5763aff254f80ae7482be7004.cache",
+      "bytes": 1508002,
+      "sha256": "d019d742c286c98fc34342a4f026c9d7ba77a61a8bb7bbca95fa8635f58a1d8e"
+    },
+    {
+      "path": "user/shader_cache/SkeletonShaderGLES3/97be9536d60b9601b92136a85ef4815a2b488345169e702ea7328ea503c309bc/6bb7c9a2fd1c4a8fa77cb96555b9b4a720209981.cache",
+      "bytes": 28055,
+      "sha256": "09de218fc7a3220c996da50c110f5e0b0953a661c078ef595c38cbf766f16ea3"
+    },
+    {
+      "path": "user/shader_cache/SkyShaderGLES3/4797eb681bd52648317f1c86841acba6734092fd4db1cd285e9695d4eefa0875/da1b7da2ee3464a48514015c41474f7d92626b72.cache",
+      "bytes": 138825,
+      "sha256": "989f6b04b02c66100064299fe98633880900250c068a19b74c7a9d654819b9ef"
+    }
+  ],
+  "rendering": "1920x1080 gl_compatibility; capture script controls saved-image dimensions"
+}

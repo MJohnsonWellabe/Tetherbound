@@ -1,0 +1,6 @@
+{
+  "result": "Exit 1 before route capture: naming prompt did not remain in gamepad mode after real pad input.",
+  "display": "Windows constrained startup client to 1920x1061. Border/frame removed and client verified 1920x1080 during world setup. No route PNGs were produced. Subsequent service launches use --borderless directly.",
+  "script_output": "Pinned script contains a 1280x720 downsample for saved route images; script was not edited.",
+  "scope": "Execution result only, not acceptance proof."
+}
