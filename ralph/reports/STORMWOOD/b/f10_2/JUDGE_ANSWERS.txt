@@ -1,0 +1,57 @@
+CODE-BLIND JUDGE, F10#2 named-fight footage — BASELINE (before the lunge-lane fix)
+Footage: tb/stormwood-b-f10-2-footage 2b99ee0a7 (capture_named_fights.gd, production camera, HUD on).
+Judge: separate subagent that read ONLY judge_packet/JUDGE_PROMPT.txt and sheet-fight-A..F.jpg.
+Key (withheld from the judge): A=blackwater_elder, B=hollows_alpha, C=old_rodfolk_hall_guardian,
+D=glass_field_alpha, E=crown_guardian, F=capacitor_alpha.
+Answers recorded verbatim below.
+
+--------------------------------------------------------------------------------
+CODE-BLIND VISUAL JUDGE — STORMWOOD f10_2, fights A–F
+(I viewed only JUDGE_PROMPT.txt and the six sheet-fight images. Tell duration in seconds cannot be measured from stills, so the 0.8 s / 1.1 s timing bar is not scored; nothing visual distinguishes a heavy tell from a normal one.)
+
+FIGHT A (Mossshock – green moss toad-like creature, dark flower meadow)
+(a) PASS — A partial magenta arc under Mossshock plus the "incoming — move" banner is visible at tell1-a-start, tell1-c-late, tell4-a-start, tell4-c-late; but at tell1-b-mid and tell4-b-mid the player's own tan hit-burst covers the opponent mid-tell, and at tell3-a-start the arc is barely visible.
+(b) FAIL — The cue is a ring hugging the opponent's own feet; it does not project a lane toward Sparkit or show an exit, and no "full-body lane cue" appears anywhere (the constant teal arena arc, i05 onward, doesn't change during tells).
+(c) FAIL — Mossshock reads well, but Sparkit is repeatedly clipped at the left edge / under the team panel (tell3-e-impact, tell3-f-recovery show the trainer more than the creature; tell1-c-late Sparkit barely visible).
+(d) PASS — tell3-d-strike and tell4-d-strike show a burst landing on Sparkit.
+(e) FAIL — Distinct creature model, but the same dark flower meadow, magenta ring and teal arc as B, C, D, E; no glowmoss glow visible.
+
+FIGHT B (Voltarach – blue spider, meadow; 00-before banner reads "Glowmoss Hollows")
+(a) PASS — Magenta ring around the spider's legs at tell1-c-late, tell2-b-mid, tell2-c-late, tell3-a-start, tell3-c-late, with the banner; at tell1-a-start the ring is not yet visible.
+(b) FAIL — The ring is centred on the spider and Sparkit stands on its edge (tell2-c-late, tell3-c-late); nothing indicates hit direction or a safe side.
+(c) PASS — Spider large and centred, Sparkit readable beside it (some overlap with the team panel at i01, tell1-e-impact).
+(d) PASS — tell1-e-impact, tell2-e-impact, tell3-e-impact show bursts landing on Sparkit.
+(e) FAIL — Visually almost interchangeable with D: same Voltarach, same meadow, same ring. No 99-after frame.
+
+FIGHT C (Tanglevolt – purple lightning-patterned wolf, meadow with faint lit path at back)
+(a) PASS — Magenta arc at the wolf's forefeet visible at tell1-b-mid, tell2-a-start, tell3-a-start, tell3-b-mid, tell3-c-late; tell1 is interrupted (tell1-c-late shows a cyan "STAGGERED" ring instead of the warning).
+(b) FAIL — Only a partial foot arc; no projected lane across glass, no visible side exit; no glass field appears.
+(c) FAIL — The wolf drifts far away and becomes small (i06, tell2-c-late, tell2-e-impact, tell2-f-recovery); Sparkit clipped at the left edge under the panel (tell3-d-strike, tell3-e-impact).
+(d) FAIL — tell2-d-strike/tell2-e-impact and tell3-d-strike/tell3-e-impact show no attack motion — the wolf just stands at range and only the caption "it missed you" asserts an avoidance; no clearly legible hit on Sparkit found.
+(e) FAIL — Only the creature model differs; meadow, cue and HUD identical to A, B, D, E.
+
+FIGHT D (Voltarach – blue spider, meadow)
+(a) PASS — Strong, consistent magenta ring from tell1-a-start through tell1-c-late, tell2-a-start–c-late, tell3-a-start–c-late, tell4-a-start.
+(b) FAIL — Ring centred on the spider; no crown glass, no stationary frontal guard stance, no indication of facing or safe side.
+(c) PASS — Spider large and centred, Sparkit visible (partly under the team panel at tell1-a-start, tell3-a-start).
+(d) PASS — tell1-d-strike shows a burst on Sparkit; tell2-d-strike/tell2-e-impact show Sparkit clearly clear of the spider with "it missed you".
+(e) FAIL — Near-duplicate of B; the sequence is also truncated (tell4 stops at tell4-b-mid).
+
+FIGHT E (Staticub – brown/purple bear, meadow)
+(a) PASS — Magenta ring plus banner at tell1-a-start–c-late, tell2-a-start–c-late, tell3-b-mid, tell3-c-late (ring missing at tell3-a-start).
+(b) FAIL — Same foot ring; no lit lane telegraph, hall architecture, pool edge or dry-ground exit visible.
+(c) PASS — The bear clearly towers over Sparkit and the trainer (tell2-d-strike); both creatures read, though the trainer standing inside the fight frame adds clutter.
+(d) PASS — tell1-d-strike and tell3-e-impact show bursts on Sparkit; tell2-d-strike shows Sparkit dodging with a "missed" caption.
+(e) FAIL — Distinct bear, but none of the listed identities (hall guardian, pool elder, glass field) is visible; shared meadow setting.
+
+FIGHT F (Voltarach on a road of glowing gold conductor lines)
+(a) PASS — Magenta ring visible over the gold lines at tell1-b-mid, tell1-c-late, tell2-a-start–c-late, tell3-b-mid, tell3-c-late.
+(b) FAIL — The gold lines are present in every frame (i00–i09), so they read as floor decoration, not a route cue before the dive; the spider never visibly dives (tell2-d-strike, tell3-d-strike: it stays in place). The only telegraph is the foot ring.
+(c) FAIL — Sparkit is a small brown creature on a dark brown/gold road and nearly disappears (tell2-e-impact, tell3-d-strike, tell3-e-impact); the spider reads well.
+(d) PASS — tell1-d-strike shows a burst on Sparkit; tell2-d-strike/tell3-d-strike show Sparkit away from the spider with "it missed you".
+(e) PASS — The conductor-road lighting makes it the one clearly different fight, though the opponent model is shared with B and D.
+
+THREE MOST IMPORTANT LOOK DEFECTS
+1. One generic, non-directional telegraph for every fight: the same magenta ring around the attacker's feet in all six (D tell1-b-mid, E tell1-a-start, F tell3-b-mid, B tell2-c-late); nothing shows a lane, route, facing or safe exit, and no heavy tell looks different from a normal one.
+2. Intended arenas/identities absent: five fights share one dark flower meadow with a teal arena arc (A i05, B tell2-a-start, C tell2-a-start, D tell2-a-start, E tell2-a-start); no glass field, crown glass, hall or pool edge, and B and D read as the same Voltarach fight twice.
+3. The player creature and the attack itself are hard to read: Sparkit is small, low-contrast and often clipped under the left team panel or at the frame edge (A tell3-e-impact, C tell3-d-strike, F tell3-d-strike), and the same tan burst VFX is used for both sides' hits (A tell1-b-mid vs A tell3-d-strike), so who hit whom is unclear; many strike frames show no attacker motion at all, only a caption (C tell2-d-strike, D tell2-d-strike).
