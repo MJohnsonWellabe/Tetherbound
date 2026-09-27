@@ -117,7 +117,7 @@
      "text": "Solo, two-loss and four-character ledgers solvent",
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/MEADOWS-PAYOFFS/earned-bridge/ledger-seed15-r35|r36-679329ac: reserve_ok and two_loss_ok at all 5 stages, no repeated wilds; fourchar-ledger-result.txt solvent. Shortcuts disclosed: four-character ledger is a static computation over the seed-15 path, harness fights, seed fixture, assumed two-loss basket. Independent re-check: MET.",
-     "gap": "Merged in batch 55 (#374); counted at merge (owner rule 2026-09-27). Safety-net full CI 36319498130 running."
+     "gap": "Counted at merge; confirmed by green full CI 36319498130 (run 5709) on main ddaf7a7bd."
     },
     {
      "text": "No repeated wilds required",
@@ -368,7 +368,7 @@
      "text": "Starts from the earned Meadows handoff save",
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). tests/fixtures/earned_saves/c1_arrival PROVENANCE (injections 0, seed 4) built from the earned seed4_hall checkpoint; ralph/reports/CLOUDREACH/b/f06-1-foot-regions/earned/run.txt CONTINUOUS PASS from the save via the production title Load. Shortcuts disclosed: checkpoint joins (seed4_hall, village_pre_kell, storm_road_join) with two failed leg tails discarded, routing detours B1-B16, Load pressed by signal. Also carries the earned full-route A7 corroboration for F07#3 (0 intervals over 120 s). Independent re-check: MET.",
-     "gap": "Merged in batch 54 (#373); counted at merge (owner rule 2026-09-27). Safety-net full CI 36319498130 running."
+     "gap": "Counted at merge; confirmed by green full CI 36319498130 (run 5709) on main ddaf7a7bd."
     },
     {
      "text": "Ordinary foot path traverses all six regions",
@@ -610,7 +610,7 @@
      "text": "Audio witness for phases/lightning",
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). tests/smoke_stormwood_surge_audio.gd on main; ralph/reports/STORMWOOD-PROGRESS/audio/f10_5/vis-rerun/run_summary.txt 19 passed, 0 failed: each phase cue fires once in order, 21 warnings/21 strikes, warning-to-strike 1.200-1.211 s, captions with direction wedges. Shortcuts disclosed: Surge clock jumped, trainer pinned/healed, Long Storm ended by flag, headless single peer; all 9 cue assets missing so nothing is audible (witness proves wiring and timing only); blinded-listener test open. Independent re-check: MET.",
-     "gap": "Merged in batch 56 (#375); counted at merge."
+     "gap": "Counted at merge (batch 56); safety-net full CI dispatched 13:40."
     },
     {
      "text": "Device profile",
@@ -747,7 +747,7 @@
      "text": "Earned route reaches all six island groups",
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/TIDEWAKE/f13_0_six_groups/: all six groups reached, same five, no mount, reload drift 0. Shortcuts disclosed: declared start (gate flags, key consumed, L44 five), run 2 is a checkpoint resume, harness-driven fights and walking, rest shoals not exercised. Independent re-check: MET.",
-     "gap": "Merged in batch 55 (#374); counted at merge (owner rule 2026-09-27). Safety-net full CI 36319498130 running."
+     "gap": "Counted at merge; confirmed by green full CI 36319498130 (run 5709) on main ddaf7a7bd."
     },
     {
      "text": "Four land loops and three shortcuts",
