@@ -26,3 +26,9 @@
 | water_trainer_venn | ripplet | READER | 1.00 | 0.00 | 0.205 | 250.6 | 0.121 | [0.80,0.80] |
 | water_trainer_venn | galewisp | MASHER | 0.08 | 0.92 | 1.000 | 152.2 | 0.243 | [0.80,0.80] |
 | water_trainer_venn | galewisp | READER | 1.00 | 0.00 | 0.111 | 197.6 | 0.121 | [0.80,0.80] |
+| water_deep_watch_tidecoil | terrapup | MASHER | 0.00 | 0.00 | 1.000 | 60.9 | 0.055 | [0.80,0.80] |
+| water_deep_watch_tidecoil | terrapup | READER | 1.00 | 0.00 | 0.050 | 149.1 | 0.055 | [0.80,0.80] |
+| water_deep_watch_tidecoil | ripplet | MASHER | 1.00 | 0.00 | 0.682 | 63.4 | 0.053 | [0.80,0.80] |
+| water_deep_watch_tidecoil | ripplet | READER | 1.00 | 0.00 | 0.048 | 103.6 | 0.053 | [0.80,0.80] |
+| water_deep_watch_tidecoil | galewisp | MASHER | 1.00 | 0.00 | 0.748 | 55.0 | 0.051 | [0.80,0.80] |
+| water_deep_watch_tidecoil | galewisp | READER | 1.00 | 0.00 | 0.046 | 79.5 | 0.050 | [0.80,0.80] |

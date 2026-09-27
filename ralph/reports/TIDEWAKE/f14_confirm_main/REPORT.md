@@ -9,3 +9,11 @@ Result (TABLE.md): 13 rows, 624 runs, 0 errors, 0 stalls.
 - Aquaryn (named wild): reader/masher median lead-cost ratio 0.32 (≤ 0.55), reader win 1.00, max hit 0.066, tells 1.25–1.70 s.
 
 The C2 numbers pass on main. F14#0 still needs its closing witness by ordinary play, which is not provided here.
+
+## Addendum (2026-09-27 10:12): Deep Watch Tidecoil on tb/tidewake 193e08f4 (main plus Tidewake harness/data)
+The same harness, `--case=tidecoil`, 24 seeds × 3 starters, 144 runs, 0 errors:
+- reader/masher median lead-cost ratios are 0.05 (terrapup), 0.07 (ripplet) and 0.06 (galewisp), against the ≤ 0.55 bar;
+- reader win is 1.00 in all three;
+- max hit is ≤ 0.055 of entry HP, and tells are 0.80 s.
+
+C2 passes. With this addendum, every named Tidewake encounter passes C2 on current main: Calder, Tess, Venn, Nerissa, Aquaryn and Tidecoil.
