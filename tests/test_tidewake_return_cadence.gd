@@ -366,8 +366,13 @@ func _meadows_segments(use_haul_road: bool = true) -> Array:
 	return [{"mode": "walk", "points": _navigate2d(polylines, arrival, grandpa), "id": "meadows_trail"}]
 
 
+## Probe hook: proposed Meadows sources (another lane's data, not yet landed)
+## measured against the same walk. Empty in the test itself.
+var extra_meadows_sources: Array = []
+
+
 func _meadows_sources(with_wilds: bool) -> Array:
-	var out: Array = []
+	var out: Array = extra_meadows_sources.duplicate()
 	var engage := float(_json(COMBAT_PATH).get("flow", {}).get("engage_range", 6.0))
 	for band: Dictionary in _json("res://data/config/terrain_playground.json").trail.bands:
 		var dir := "res://data/config/bands/%s/" % band.id
@@ -440,10 +445,6 @@ func _whole_return(with_wilds: bool, use_arches: bool, use_haul_road: bool = tru
 ## anywhere else fails the test.
 const KNOWN_MATCH_M := 200.0
 const KNOWN_OPEN: Array[Dictionary] = [
-	{"realm": "cloudreach", "midpoint": Vector2(-451, 4644),
-		"note": "upper summit road -> plateau circuit (156 s at walk)"},
-	{"realm": "cloudreach", "midpoint": Vector2(-760, 4035),
-		"note": "plateau circuit -> counterweight pass (151 s at walk)"},
 	{"realm": "meadows", "midpoint": Vector2(316, 1535),
 		"note": "quarry haul road, upper half (133 s at walk); the band trail has no gap"},
 	{"realm": "meadows", "midpoint": Vector2(65, 469),

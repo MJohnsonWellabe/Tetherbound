@@ -487,9 +487,13 @@ func _on_alpha_strike() -> void:
 	var card: Dictionary = picked.card
 	var enemy: RefCounted = body.instance
 	var moves: RefCounted = _manager.get("_moves")
-	var type_mult: float = preload("res://scripts/combat/type_chart.gd").multiplier_dual(moves.type_of(enemy.move_quick), str(card.creature_type), str(card.secondary_type))
-	var damage: float = MATH.rolled_damage(float(cfg.get("power", 8)), enemy.effective_attack(PROGRESSION.config()), maxf(1, float(card.defence)), _encounter_roll(), moves.power(enemy.move_quick), type_mult)
-	host_deliver_enemy_hit(authority.encounter_id, int(picked.peer_id), {"damage": damage, "type_mult": type_mult, "move_id": enemy.move_quick, "lunge": float(cfg.get("lunge", 0))})
+	# Parity with the shared-wild host path: a named or charged attack in
+	# combat_config carries its own move id; a guest must take that move's
+	# type and power, not always move_quick's.
+	var move_id := str(cfg.get("move_id", enemy.move_quick))
+	var type_mult: float = preload("res://scripts/combat/type_chart.gd").multiplier_dual(moves.type_of(move_id), str(card.creature_type), str(card.secondary_type))
+	var damage: float = MATH.rolled_damage(float(cfg.get("power", 8)), enemy.effective_attack(PROGRESSION.config()), maxf(1, float(card.defence)), _encounter_roll(), moves.power(move_id), type_mult)
+	host_deliver_enemy_hit(authority.encounter_id, int(picked.peer_id), {"damage": damage, "type_mult": type_mult, "move_id": move_id, "lunge": float(cfg.get("lunge", 0))})
 
 func host_deliver_enemy_hit(_id: String, peer: int, payload: Dictionary) -> void:
 	transport.deliver(peer, "enemy_hit", payload)

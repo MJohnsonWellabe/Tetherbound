@@ -1,0 +1,65 @@
+TIDEWAKE DRY RUN: DRY RUN — fixture start, does not count
+TIDEWAKE DRY RUN FIXTURE: declared start only: gate flags ["realm_gate_water_unlocked", "stormwood:waterward_revealed"], key consumed, belt ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"] at L44, knife/axe
+TIDEWAKE DRY RUN CHECKPOINT start saved at [0.0, 2.08, 162.0]
+WATER EARNED OPENING ARRIVED: actual First Shore pose=(0.0, 1.931024, 162.0)
+WATER EARNED OPENING: Pell and physical lesson complete; swimming=64.674m
+TIDEWAKE DRY RUN SEGMENT pell {"failures":[],"name":"pell","passed":true,"player":[102.62,1.92,125.55],"seconds":48.1}
+TIDEWAKE DRY RUN CHECKPOINT pell saved at [102.62, 1.92, 125.55]
+TIDEWAKE DRY RUN RELOADED pell: pose drift 0.00 m, party same=true
+WATER REEDHAVEN: ordinary human crossing reached Reedhaven
+WATER REEDHAVEN: water:reedhaven:harvest:019 +3 reed_fiber through controller interaction
+WATER REEDHAVEN: water:reedhaven:harvest:017 +3 driftwood through controller interaction
+WATER REEDHAVEN: water:reedhaven:harvest:003 +3 driftwood through controller interaction
+WATER REEDHAVEN: water:reedhaven:harvest:001 +3 reed_fiber through controller interaction
+WATER REEDHAVEN: four named nodes yielded6 reed/6 drift; repair spent6 reed/4 drift
+TIDEWAKE DRY RUN SEGMENT reedhaven {"failures":[],"name":"reedhaven","passed":true,"player":[140.68,2.32,512.79],"seconds":206.1}
+TIDEWAKE DRY RUN CHECKPOINT reedhaven saved at [140.68, 2.32, 512.79]
+TIDEWAKE DRY RUN RELOADED reedhaven: pose drift 0.00 m, party same=true
+WATER BRINE: ordinary 107.088m human crossing reached Brine Steps
+WATER BRINE: Tovin production combat reached two opponents; ally_hp=292.6/315.0
+WATER BRINE: Tovin durable victory and Brine Steps trial completion earned
+TIDEWAKE DRY RUN SEGMENT brine {"failures":[],"name":"brine","passed":true,"player":[398.54,8.69,808.68],"seconds":220.9}
+TIDEWAKE DRY RUN CHECKPOINT brine saved at [398.54, 8.69, 808.68]
+TIDEWAKE DRY RUN RELOADED brine: pose drift 0.00 m, party same=true
+WATER SHELLWATCH: ordinary 93.320m human crossing reached Shellwatch
+WATER SHELLWATCH: Shellwatch camp recovered active creature before Solm
+WATER SHELLWATCH: water_trainer_solm victory opponents=["water_mirejaw", "water_mangrove_monitor"] ally_hp=315.0/315.0
+WATER SHELLWATCH: Shellwatch dock action earned water_shellwatch_residents_freed
+WATER SHELLWATCH: before Irva matchup lead sparkit (0 party_cycle presses)
+WATER SHELLWATCH: Shellwatch camp recovered active creature between Solm and Irva
+WATER SHELLWATCH: water_trainer_irva victory opponents=["water_riptusk", "water_cannonback"] ally_hp=296.4/320.3
+WATER SHELLWATCH: Shellwatch dock action earned water_shellwatch_pump_disabled
+WATER SHELLWATCH: Solm, resident release, Irva, pump and departure barrier all resolved
+TIDEWAKE DRY RUN SEGMENT shellwatch {"failures":[],"name":"shellwatch","passed":true,"player":[431.3,2.69,1242.78],"seconds":450.2}
+TIDEWAKE DRY RUN CHECKPOINT shellwatch saved at [431.3, 2.69, 1242.78]
+TIDEWAKE DRY RUN RELOADED shellwatch: pose drift 0.00 m, party same=true
+WATER TIDAL: 112.113m authored sheltered human crossing completed
+WATER TIDAL: Shellwatch camp recovered active creature Tidal before Aquaryn
+WATER TIDAL: Aquaryn challenge activated outside both physical capsules
+WATER TIDAL: Aquaryn fight t=10s wall=12s enemy_hp=0.72 ally=sparkit hp=1.00 gap=5.9m enemy_y=34.0 ally_y=34.0
+WATER TIDAL: Aquaryn fight t=20s wall=23s enemy_hp=0.57 ally=sparkit hp=1.00 gap=9.7m enemy_y=33.9 ally_y=34.1
+WATER TIDAL: Aquaryn fight t=30s wall=35s enemy_hp=0.35 ally=sparkit hp=1.00 gap=6.1m enemy_y=34.5 ally_y=34.0
+WATER TIDAL: Aquaryn fight t=40s wall=47s enemy_hp=0.16 ally=sparkit hp=0.85 gap=5.9m enemy_y=34.3 ally_y=34.0
+WATER TIDAL: Aquaryn defeat earned world completion and personal Swim Stone
+WATER TIDAL: Alpha defeated, personal Stone and recipe earned; same five retained. STOP before paid saddle/capture ceremony.
+TIDEWAKE DRY RUN SEGMENT tidal {"failures":[],"name":"tidal","passed":true,"player":[713.68,46.33,1549.5],"seconds":185.5}
+TIDEWAKE DRY RUN CHECKPOINT tidal saved at [713.68, 46.33, 1549.5]
+TIDEWAKE DRY RUN RELOADED tidal: pose drift 0.00 m, party same=true
+EARNED LATE WATER 1430.341: tidal_cradle_to_salt_crown_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1452.491: tidal_cradle_to_salt_crown_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1474.598: tidal_cradle_to_salt_crown_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1496.741: tidal_cradle_to_salt_crown_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1524.276: Human sheltered crossing completed tidal_cradle_to_salt_crown_sheltered (4 rest shoals)
+EARNED LATE WATER 1686.221: Earned water_dock_salt_crown_landing_charted
+EARNED LATE WATER 1712.463: salt_crown_to_sluice_isle_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1732.891: salt_crown_to_sluice_isle_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1753.293: salt_crown_to_sluice_isle_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1773.722: salt_crown_to_sluice_isle_sheltered rest shoal: idled 0.0 s to stamina 100/100
+EARNED LATE WATER 1799.480: Human sheltered crossing completed salt_crown_to_sluice_isle_sheltered (4 rest shoals)
+EARNED LATE WATER 1925.626: Hosted victory water_trainer_bex opponents=["water_cragclaw", "water_cannonback"] hp=161.7/325.6
+EARNED LATE WATER 1928.009: Earned water_sluice_west_disabled
+EARNED LATE WATER 1935.680: Shellwatch camp recovered active creature after Bex
+EARNED LATE WATER 2282.211: FAIL: water_trainer_calder exceeded its original 180-second fight bound or total deadline
+EARNED LATE WATER 2282.352: FAIL: Both physical Sluice controls did not publish completion
+TIDEWAKE DRY RUN SEGMENT late {"failures":["water_trainer_calder exceeded its original 180-second fight bound or total deadline","Both physical Sluice controls did not publish completion"],"name":"late","passed":false,"player":[742.97,8.78,3169.95],"seconds":1089.0,"transcript_tail":["Human sheltered crossing completed salt_crown_to_sluice_isle_sheltered (4 rest shoals)","Hosted victory water_trainer_bex opponents=[\"water_cragclaw\", \"water_cannonback\"] hp=161.7/325.6","Earned water_sluice_west_disabled","Shellwatch camp recovered active creature after Bex","FAIL: water_trainer_calder exceeded its original 180-second fight bound or total deadline","FAIL: Both physical Sluice controls did not publish completion"]}
+TIDEWAKE DRY RUN {"blocker":"late: [\"water_trainer_calder exceeded its original 180-second fight bound or total deadline\", \"Both physical Sluice controls did not publish completion\"]","final_pose":[742.97,8.78,3169.95],"fixture":"declared start only: gate flags [\"realm_gate_water_unlocked\", \"stormwood:waterward_revealed\"], key consumed, belt [\"sparkit\", \"mudsnout\", \"bramblebun\", \"terrapup\", \"brooktail\"] at L44, knife/axe","label":"DRY RUN — fixture start, does not count","minutes":37.9,"passed":false,"reached":"tidal","segments":[{"failures":[],"name":"pell","passed":true,"player":[102.62,1.92,125.55],"seconds":48.1},{"failures":[],"name":"reedhaven","passed":true,"player":[140.68,2.32,512.79],"seconds":206.1},{"failures":[],"name":"brine","passed":true,"player":[398.54,8.69,808.68],"seconds":220.9},{"failures":[],"name":"shellwatch","passed":true,"player":[431.3,2.69,1242.78],"seconds":450.2},{"failures":[],"name":"tidal","passed":true,"player":[713.68,46.33,1549.5],"seconds":185.5},{"failures":["water_trainer_calder exceeded its original 180-second fight bound or total deadline","Both physical Sluice controls did not publish completion"],"name":"late","passed":false,"player":[742.97,8.78,3169.95],"seconds":1089.0,"transcript_tail":["Human sheltered crossing completed salt_crown_to_sluice_isle_sheltered (4 rest shoals)","Hosted victory water_trainer_bex opponents=[\"water_cragclaw\", \"water_cannonback\"] hp=161.7/325.6","Earned water_sluice_west_disabled","Shellwatch camp recovered active creature after Bex","FAIL: water_trainer_calder exceeded its original 180-second fight bound or total deadline","FAIL: Both physical Sluice controls did not publish completion"]}]}
