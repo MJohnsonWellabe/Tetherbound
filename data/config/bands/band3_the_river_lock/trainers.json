@@ -155,8 +155,10 @@
       "_comment_ow5d": "OW5D relocation, same (+242,+3726) offset as relay_site.json's `site.centre`.",
       "_comment_ow6": "OW6 (owner: 'the captain to challenge is way too close to where you start'). Verified rather than moved: this site's own position is a fixed 3.6m offset past `relay_site.json`'s console (see `_why_here` below) and gates SE27's rescue conversation, so it is not free to relocate without moving the whole relay station. Distance was the open question, and it is now answerable for the first time with real data -- OW5-walk's measured spine (11,316.6m walked, 37.7min, walked/config ratio 0.983) puts this site's own waypoint (wp42, (350,3760)) at 5969m of authored polyline / 51.8% in, ~19.5 walked minutes, behind three prior fights (Hess, Orrin, Dell) at the same site. Not 'right next to the village' by any measure -- OW6's premise (the captain_field stand-in that WAS at (52,-122), effectively at the village, per OW5D's own note on that entry) does not describe this trainer. Left in place.",
       "rank": "captain",
-      "position": [353.0, 3764.5],
-      "_why_position_f04": "F04#1 (tools/f04_fight_camera_probe.gd; code-blind judge 2026-09-27): at (352,3757) the fight opened 2.5m from the yard_service_frame scaffold (relay-local (2.55,-4.15)), so the combat camera either collapsed onto the ally against its camera box or parked behind its timbers. Moved 5m to the yard's open east side at relay-local (-2,5): the fight opens ~11.6m from the scaffold, the captive stays further along the approach bearing (smoke_relay's gate check) and the facing is unchanged. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+      "position": [
+        352.0,
+        3757.0
+      ],
       "facing_deg": -34.4,
       "_why_here": "At the console end of the site, 3.6m past centre on the bearing, so he is between the player and the captive -- the fight cannot be walked around. Ground -2.31m, 1.05m spread.",
       "challenge": "relay_captain_challenge",
