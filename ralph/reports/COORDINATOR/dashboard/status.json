@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-27 15:55 UTC",
+ "updated": "2026-09-27 17:00 UTC",
  "headline": [
-  "Criteria met: 79 of 101 (counted at merge). Batches 59-60 merged; hotfix #380 fixed the band-baseline mirror that turned batch 59 CI red. Batch 61: F02#7 route spacing and A7 on one route.",
+  "Criteria met: 79 of 101; main green at 61ab468b after hotfixes #380/#382. Batch 62: Cloudreach card C3 two-peer integrated run.",
   "PHASE 2, owner away: full runs for Meadows, Cloudreach, Stormwood and Tidewake, plus Meadows F04 readability, F01 walks and F03 lures; Codex on F10#3 and F08#4. Lanes render locally and hand mechanical work to lower-tier subagents."
  ],
  "batches": [
@@ -248,8 +248,14 @@
   {
    "name": "Batch 61",
    "sha": "pending",
-   "state": "Auto-merge",
+   "state": "Merged; main green",
    "contents": "Meadows route F02#7 route spacing + A7 on one continuous route; device-profile ruling in STATE"
+  },
+  {
+   "name": "Batch 62",
+   "sha": "pending",
+   "state": "Auto-merge",
+   "contents": "Cloudreach-B card C3 two-peer co-op/aftermath run; summit wild legendary removed"
   }
  ],
  "lanes": [
