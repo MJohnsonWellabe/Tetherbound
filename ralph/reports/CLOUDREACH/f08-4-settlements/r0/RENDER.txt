@@ -1,0 +1,9 @@
+F08#4 baseline (r0), partial: frames 01-13 of 36 of the Cloudreach frame matrix.
+Stopped at 15:25 UTC when the owner reassigned F08#4 to Codex (#356 5857157478).
+
+Command (local, llvmpipe software GL, 1280x720; PNG converted to JPEG q85):
+  xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
+    --resolution 1280x720 --script tools/capture_cloudreach_frame_matrix.gd \
+    -- --output=res://ralph/reports/CLOUDREACH/f08-4-settlements/r0
+Head: tb/cloudreach 861bfb48 (origin/main merged) + the tool's new --output arg.
+No work order was applied before this render; it is the "before" state.
