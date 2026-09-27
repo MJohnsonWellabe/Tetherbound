@@ -19,6 +19,10 @@ const REST_FRAME_LIMIT := 3600
 
 
 func run_human() -> bool:
+	# Reader-pace trainer fights (Calder median 214-329 s in C2) and the swum
+	# sheltered crossings need more than the mounted segment's bounds.
+	fight_bound_ms = 600000
+	watchdog_ms = 120 * 60 * 1000
 	_swimmer = _game.local.party.active() if _game != null else null
 	_abort = func(_reason: String) -> void: pass
 	return await run()
