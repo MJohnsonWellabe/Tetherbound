@@ -42,7 +42,7 @@ extends "res://tests/test_case.gd"
 ## volunteer) have not been reconciled with it. While true, exactly two leaves
 ## of exactly that entry are exempt (its `placeholder_species` and
 ## `roster_identity`), and the entry may carry no other key.
-const PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD := true
+const PENDING_OWNER_RULING_SOLMANE_SUMMIT_WILD := false
 const PENDING_TABLE_ID := "cloudreach_summit_wild"
 const PENDING_SPECIES := "solmane"
 ## F07 cadence added `cloudreach_summit_restored_wild`: the same summit entries

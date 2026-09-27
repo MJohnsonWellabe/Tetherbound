@@ -58,7 +58,17 @@ func _fail(message: String) -> bool:
 ## trainer (wild creatures, the companion, NPCs), so a blocker the slide
 ## contacts never reported is named instead of being called a flake.
 func _log(kind: String, details: Dictionary = {}) -> void:
-	if kind == "collision_block" and is_instance_valid(world) and is_instance_valid(player):
+	if kind in ["collision_block", "precision_timeout"] and is_instance_valid(world) and is_instance_valid(player):
+		var owner_node: Node = INPUT_OWNER.current(self)
+		details["control"] = {"locomotion_enabled": player.locomotion_enabled(), "carried": player.is_carried(),
+			"on_floor": player.is_on_floor(), "flying": fly != null and fly.is_flying(),
+			"controlled_body": str(runtime.controlled_body().get_path()) if runtime != null else "",
+			"dialogue_open": world.get_node("DialoguePanel").is_open(),
+			"input_owner": str(owner_node.get_path()) if owner_node != null else "",
+			"finale_phase": str(runtime.finale.phase) if runtime != null and runtime.finale != null else "",
+			"manager_state": int(manager.state) if manager != null else -1,
+			"wanted_dir": str(player.get("_wanted_dir")), "deflect": str(player.get("_deflect")),
+			"time_scale": Engine.time_scale}
 		var near: Array[Dictionary] = []
 		for node: Node in world.find_children("*", "CharacterBody3D", true, false):
 			var body := node as CharacterBody3D
