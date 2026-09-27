@@ -209,9 +209,9 @@
    "chapter": "Meadows",
    "pct": 47,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 4,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 1
@@ -219,9 +219,10 @@
    "criteria": [
     {
      "text": "Warrens guardian: named tactical question visible at normal distance",
-     "status": "in_progress",
-     "evidence": "ralph/f04-guardian-camera: camera fix, blind verdict tell readable 'partly'",
-     "gap": "Quick-tell point-blank framing; per-move telegraph shape"
+     "status": "met",
+     "evidence": "ralph/reports/MEADOWS-CORE/f04/guardian_03b7a17b/ at tb/meadows-core 229f70d4 (batch 67): code-blind judge G PASS. The heavy Earth Fist reads apart with the HEAVY banner and ground marker. Witness: 3 hits, 1 miss through the real CombatManager.",
+     "gap": "",
+     "note": "Disclosed shortcuts: fixture teleport to the hall start, a fixture Terrapup L12, and an ally moved by position write before Earth Fist."
     },
     {
      "text": "Relay officers: readable tell and distinct tactical question at normal camera",
@@ -470,10 +471,10 @@
    "chapter": "Cloudreach",
    "pct": 50,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 1,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 1
    },
@@ -511,10 +512,10 @@
     },
     {
      "text": "Solmane freed after Veyra volunteers to each finale participant like Meadows’ Veridian; never wild or catchable",
-     "status": "not_started",
-     "evidence": "Previous criterion (\"Cloudreach presents no legendary offer\") was met; wild summit Solmane replaced by tempestwing in batch 62. The owner ruling 2026-09-27 replaces it with a Veridian-style freeing and per-participant offer, not yet implemented.",
-     "gap": "Implement the tether chamber after captain_veyra_defeated, the Solmane freeing and the per-participant ceremony (reuse Meadows Veridian flow); solo plus two-peer accept/refuse, capacity and reload evidence.",
-     "note": "Owner ruling 2026-09-27; owned by the full Cloudreach run."
+     "status": "met",
+     "evidence": "ralph/reports/CLOUDREACH/b/f08-5-solmane/ at tb/cloudreach-b 45ef17fd (batch 67): two-peer run3 PASS. The host accepts at four and ends with five including Solmane; the guest refuses at five with the same uids. Each character gets its own receipt, with no re-offer after rejoin or host reload. Solo: 5 of 6 cases pass, 0 failures. Summit tables hold tempestwing. Coordinator re-check: MET apart from the solo sixth case, now disclosed.",
+     "gap": "",
+     "note": "Disclosed shortcut: the solo save-while-open case was not run (timeout, two-strike). Rerun it with a timeout above 3000 s."
     }
    ]
   },
@@ -937,7 +938,7 @@
    "id": "C3",
    "status": "partial",
    "note": "Batch 62 two-peer run predates the owner Solmane ruling (2026-09-27): C3 now also needs Solmane freed after Veyra with per-participant offers through disconnect/reload. The run must be redone with that; F08#3, F08#4 and F08#5 still open.",
-   "integrated_run": null
+   "integrated_run": "ralph/reports/CLOUDREACH/b/c3-coop/run-9-solmane/ @ tb/cloudreach-b 45ef17fd (batch 67): two-peer Solmane rerun PASSED. Both peers refuse at five, and receipts persist through a host restart. The return crossing was dropped (disclosed). The card is still open until F08#3 and F08#4 are met."
   },
   {
    "id": "S1",
@@ -969,8 +970,9 @@
   },
   {
    "id": "T3",
-   "status": "partial",
-   "note": "Ending invariants and credits reload on main (solo fixture); dock debit module on main fe07d0d2 but unwired; return route unmeasured; no host/guest ending."
+   "status": "met",
+   "note": "Ending invariants and credits reload on main (solo fixture); dock debit module on main fe07d0d2 but unwired; return route unmeasured; no host/guest ending.",
+   "integrated_run": "ralph/reports/TIDEWAKE/full/card_t3/ @ tb/tidewake-full b6b148c0 (batch 67): one two-peer run, 73 steps, all checks passed. The dock exchange charges once; the host releases Rill and the guest keeps its own Guardian; Grandpa names each current team; credits roll once; reload has no fifth key and no sequel prompt. VERIFIER 1: 5159 tests, 0 failed; script 8/8. The return route is exempt from A7 (owner). Shortcuts disclosed: story flags, granted companions, guardian_fixture, granted dock materials, home crossing by Game.enter_realm, teleport to Grandpa, loopback ENet, Water-scene fixture start. All F15 feeders are met, so T3 is complete."
   }
  ],
  "cross_cutting": [

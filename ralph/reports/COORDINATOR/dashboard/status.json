@@ -1,8 +1,8 @@
 {
- "updated": "2026-09-27T23:00Z",
+ "updated": "2026-09-27T23:25Z",
  "headline": [
-  "Criteria met: 80 of 101 on main (batch 66 merged). WIND-DOWN (owner, 22:30): lanes finish, push everything including work in progress, and post FINAL; the coordinator consolidates into one branch, runs the unit tests once and CI once.",
-  "Pending in the consolidation (credited only after tests are green): cards T3 and T1, F08#5 Solmane (solo 6th case pending), C3 Solmane rerun, F04#0 Warrens guardian, F04#4 witness, and F01#2/#3 (conflicting claims to check). Work in progress lands switched off or unwired."
+  "Criteria met: 82 of 101 once batch 67 lands. Batch 67 consolidates every lane's work, partial work included: cards T3 (complete) and C3 run, F08#5 Solmane, F04#0 guardian, plus game fixes across all four chapters. Unit tests once, then CI once.",
+  "Lanes wound down (owner, 22:30). Partial work lands switched off or unwired; the list below says how to pick each item up."
  ],
  "batches": [
   {
@@ -284,7 +284,7 @@
   {
    "name": "Batch 67 (consolidation)",
    "sha": "pending",
-   "state": "Collecting FINALs; consolidation at 23:12, then one unit run and one CI run",
+   "state": "Consolidated; unit tests once (VERIFIER 1), then one PR",
    "contents": "Every lane head, including work in progress (switched off or unwired)"
   }
  ],
@@ -380,5 +380,23 @@
   "Branch cleanup: after #316 merges, a list of deletable branches will be posted.",
   "Deferred resources: Steam AppID/partner access, four Steam accounts, a ROG Ally run (F10#6)."
  ],
- "four_chapter_run": null
+ "four_chapter_run": null,
+ "wip": [
+  "Stormwood Glass Field scorched scars: flag stormwood_glass_field.json scorched_scars=false. Next: render the glass stand and judge Bars A/B, then flip the flag.",
+  "Stormwood F10#4 round 5 and F10#6 re-judge: tools at 7cddbc95. Next: render with capture_stormwood_f10_matrix.gd and run the f10_6 judge.",
+  "Stormwood F10#2: route-cue option (a) in; ripplet 0.98 and galewisp 0.71 above the 0.55 C2 bar (needs a rules decision). Stormwood-B commits 07bc9cad, 45927814 and 85ba1c57 (Elder cone and heading, guard cone) are NOT on main; cherry-pick them when F10#2 C3 is re-captured.",
+  "Stormwood F10#3 (full run): countdown PASS at r4; r5 road-flare fix 1ae14190 is unjudged.",
+  "Tidewake Pump Hall/Sluice kitbash: flag water_veilfall.json interior_dressing.machines.enabled=false. Codex pump, banner and sluice assets are on main but unplaced (assets/environment/tidewake/pump_station, heart_banner, sluice_gate); placement contracts are in each source/integration.md.",
+  "Tidewake telegraph ring render_priority 1: unit-tested, not yet seen in a frame. Next: re-render Tidecoil.",
+  "Tidewake F13#3 chains (619/0, one pose) and lures (Lantern WEAK): strict re-check, then lure visuals.",
+  "Tidewake F14: Aquaryn C3 12/16 (camera arm against the cliff), Tidecoil tells, Nerissa re-judge, Veilfall interior re-judge; Tess needs an ordinary-route witness and a graded pad.",
+  "Meadows Vance relay: camera.body_clear.ignore_lunging_foe=false; the Vance move is reverted. Next: re-apply both, render and judge (F04#1).",
+  "Meadows F04#7: named trainers are too soft (team wipe 0 against 0.25); needs a COMBAT/BOSSES tuning decision. The DIVER 0.4 s tell needs a harness exemption.",
+  "Meadows F04#2/#3/#6: captain victory conversations and the objective-beam fight hide are in; aftermath frames need a judge.",
+  "Meadows F01#2/#3: signposts in; the camp firepit is unwired (re-apply 631b8390). Next: render day and night and judge. Meadows core's claim via 562c9924 conflicts with the F01 walks judge FAIL, so it is not credited.",
+  "Meadows F03#0: lure work re-applied over revert 6dafb23f3; full-bar judge still FAIL on Doss and herd; the Hall pack move is pending.",
+  "Cloudreach F08#3: camera read PASS; aerie environment art (dome, towers, banners, rock, cloud floor) is unassigned. The aerie art lane pushed nothing.",
+  "Cloudreach owned-carrier Fly debt; Solmane solo sixth case rerun; unscoped fly_tutorial_completed flag.",
+  "Galecrest rebuild (Codex 4dea7705c) is on main; the companion_presence head-tracking override was not taken because main lacks its code."
+ ]
 }
