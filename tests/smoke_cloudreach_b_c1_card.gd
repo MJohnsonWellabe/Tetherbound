@@ -49,9 +49,13 @@ func _party_ids() -> Array[int]:
 
 
 func _fail(message: String) -> bool:
-	if not failed:
+	# Recorded only when it actually fails the run: the helper withdraws the
+	# exhausted-fall / pre-Voss overfly's expected recovery (not a failure).
+	var was_failed := failed
+	var result: bool = super._fail(message)
+	if not was_failed and failed:
 		failures.append(message)
-	return super._fail(message)
+	return result
 
 
 ## Diagnostic: when a walk stalls, record every character body near the
