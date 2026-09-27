@@ -5245,6 +5245,15 @@ func _tournament_refusal(reason: String) -> void:
 		game.call("push_world_message", reason)
 
 
+## F04#6 is a Meadows ruling: only this director's own trainer battles name
+## the trainer as the aftermath focus. Cloudreach and Tidewake inherit this
+## file (cloudreach_encounter_director.gd, water_encounter_director.gd) and keep
+## the camera's creature-spot aftermath until their own lanes choose otherwise.
+func names_aftermath_focus() -> bool:
+	var script := get_script() as Script
+	return script != null and script.resource_path == "res://scripts/combat/encounter_director.gd"
+
+
 ## Put the trainer's next creature on the field and open a fight against it.
 ##
 ## The body is `wild_creature.gd` — the same script the meadow's own creatures
@@ -5317,10 +5326,13 @@ func _send_out_next_creature() -> bool:
 	_trainer_body = body
 	# F04#6: the round's aftermath camera faces the trainer, not where this
 	# creature falls (combat_manager.gd::aftermath_focus, consumed by _finish).
-	if _manager != null:
+	if _manager != null and names_aftermath_focus():
 		_manager.set("aftermath_focus", _trainer_node)
 	_start_fight(body, true)
 	if not bool(_manager.call("is_fighting")):
+		# A refused start never reaches `_finish()`; do not leave the focus
+		# for some later opponent-owned fight to consume.
+		_manager.set("aftermath_focus", null)
 		body.queue_free()
 		_trainer_body = null
 		return false

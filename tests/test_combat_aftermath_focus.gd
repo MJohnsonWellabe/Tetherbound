@@ -156,11 +156,27 @@ func test_aftermath_focus_in_an_initialized_tree() -> void:
 	assert_eq(code, 0, "the child exited cleanly")
 
 
-## Only a Meadows trainer battle names a focus: the one write is the director's
-## `_send_out_next_creature()`. Wild spawns, the shared-host realm path and the
-## Stormwood/Tidewake directors and hosted trainer never set it, so their
-## aftermath keeps the opponent's spot.
-func test_only_the_meadows_trainer_round_names_an_aftermath_focus() -> void:
+## Only a Meadows trainer battle names a focus. Cloudreach and Tidewake inherit
+## encounter_director.gd, so a text scan of their files cannot see the write;
+## each director is asked directly. Stormwood overrides begin_trainer_battle and
+## the gate refuses it too.
+func test_only_the_meadows_director_names_an_aftermath_focus() -> void:
+	var expected := {
+		"res://scripts/combat/encounter_director.gd": true,
+		"res://scripts/combat/cloudreach_encounter_director.gd": false,
+		"res://scripts/combat/water_encounter_director.gd": false,
+		"res://scripts/combat/stormwood_encounter_director.gd": false,
+	}
+	for path: String in expected:
+		var director: Node = (load(path) as Script).new()
+		assert_eq(bool(director.call("names_aftermath_focus")), bool(expected[path]),
+			"%s names an aftermath focus: %s" % [path.get_file(), str(expected[path])])
+		director.free()
+
+
+## Outside the director, nothing writes the focus: wild spawns, the shared-host
+## realm path and Stormwood's hosted trainer keep the opponent's spot.
+func test_nothing_else_writes_an_aftermath_focus() -> void:
 	var writers: Array[String] = []
 	var dirs: Array[String] = ["res://scripts"]
 	while not dirs.is_empty():
@@ -168,23 +184,15 @@ func test_only_the_meadows_trainer_round_names_an_aftermath_focus() -> void:
 		for sub in DirAccess.get_directories_at(dir):
 			dirs.append(dir.path_join(sub))
 		for file in DirAccess.get_files_at(dir):
-			if not file.ends_with(".gd") or file == "combat_manager.gd":
-				continue
-			var path := dir.path_join(file)
-			var text := FileAccess.get_file_as_string(path)
-			if text.contains("aftermath_focus"):
-				writers.append(path)
+			if file.ends_with(".gd") and file != "combat_manager.gd" \
+					and FileAccess.get_file_as_string(dir.path_join(file)).contains("aftermath_focus"):
+				writers.append(dir.path_join(file))
 	assert_eq(writers, ["res://scripts/combat/encounter_director.gd"],
-		"only the Meadows encounter director names an aftermath focus")
+		"only encounter_director.gd touches the focus")
 	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
-	assert_eq(director.count('set("aftermath_focus"'), 1, "the director sets it in exactly one place")
-	var at := director.find('set("aftermath_focus"')
+	var at := director.find('set("aftermath_focus", _trainer_node)')
+	assert_true(at >= 0 and director.count('set("aftermath_focus", _trainer_node)') == 1,
+		"the trainer is named in exactly one place")
 	var owner_func := director.rfind("\nfunc ", at)
 	assert_true(director.substr(owner_func, 40).begins_with("\nfunc _send_out_next_creature("),
-		"the one write is inside _send_out_next_creature(), right before its fight starts")
-	for other in ["res://scripts/combat/stormwood_encounter_director.gd",
-			"res://scripts/combat/water_encounter_director.gd",
-			"res://scripts/combat/stormwood_hosted_trainer.gd"]:
-		assert_true(FileAccess.file_exists(other), "%s still exists to check" % other)
-		assert_false(FileAccess.get_file_as_string(other).contains("aftermath_focus"),
-			"%s never names an aftermath focus" % other)
+		"that one place is _send_out_next_creature(), right before its fight starts")
