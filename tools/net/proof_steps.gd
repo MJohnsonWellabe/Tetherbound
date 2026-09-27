@@ -56,6 +56,10 @@ extends RefCounted
 ##                                         begin_trainer_battle (her installed encounter)
 ##   join_running_fight {kind?}           join the trainer/boss fight another player is
 ##                                         running, as the joinable list announces it
+##   shared_cue_shape {want?, screenshot?} F04/F10#2: wait until THIS peer draws the
+##                                         shared opponent's lane (`want`: lane|cone) --
+##                                         a guest's proxy, or the host's own wild body --
+##                                         then capture the frame
 ##   perf_snapshot   {frames?}            this peer's own engine monitors over N frames:
 ##                                         frame rate, script/physics time, objects, bodies
 ##   guardian_offer_again {}              ask the HOST for this character's offer once more,
@@ -96,7 +100,7 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"water_dock_resend", "water_dock_cut",
 	"water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
 	"water_guardian_let_go", "water_guardian_forge_accept",
-	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe"]
+	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe", "shared_cue_shape"]
 
 
 static func handles(action: String) -> bool:
@@ -149,6 +153,8 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _join_running_fight(tree, args)
 		"perf_snapshot":
 			return await _perf_snapshot(tree, args)
+		"shared_cue_shape":
+			return await _shared_cue_shape(tree, args)
 		"cost_probe":
 			return _cost_probe(tree)
 	if WATER_ACTIONS.has(action):
@@ -2818,6 +2824,58 @@ static func _join_running_fight(tree: SceneTree, args: Dictionary) -> Dictionary
 	data["kind"] = str(row.get("kind", ""))
 	joined["data"] = data
 	return joined
+
+
+## F04/F10#2 guest-side presentation: the body THIS peer sees for the shared
+## wild opponent (a guest's SharedOpponentProxy, or the host's own wild body)
+## and whether it is drawing the tell's lane or guard cone right now. Waits up
+## to `budget_frames` for the mark `want` names, then captures the frame.
+static func _shared_cue_shape(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var director := tree.current_scene.find_child("EncounterDirector", true, false) if tree.current_scene != null else null
+	if director == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector in this peer's scene"}
+	var want := str(args.get("want", "lane"))
+	var seen := {}
+	for f in int(args.get("budget_frames", 1800)):
+		seen = _shared_cue_marks(director)
+		if bool(seen.get(want, false)):
+			break
+		await tree.physics_frame
+	if not bool(seen.get(want, false)):
+		return {"verdict": "FAIL", "detail": "no %s drawn on this peer's %s within budget: %s"
+			% [want, str(seen.get("body", "body")), JSON.stringify(seen)], "data": seen}
+	if args.has("screenshot"):
+		var shot: Dictionary = await _screenshot(tree, {"name": str(args.get("screenshot"))})
+		seen["screenshot"] = (shot.get("data", {}) as Dictionary).get("path", "")
+	return {"verdict": "PASS", "detail": "%s draws the %s: %s" % [str(seen.get("body")), want,
+		JSON.stringify(seen)], "data": seen}
+
+
+static func _shared_cue_marks(director: Node) -> Dictionary:
+	var proxy: Variant = director.get("_shared_opponent_proxy")
+	if proxy != null and is_instance_valid(proxy):
+		var lane: Variant = (proxy as Node).call("shape_lane")
+		var cone: Variant = (proxy as Node).call("shape_guard_cone")
+		return {"body": "guest proxy", "lane": lane != null,
+			"lane_length": float((lane as Node).call("lane_length")) if lane != null else 0.0,
+			"lane_locked": bool((lane as Node).call("is_locked")) if lane != null else false,
+			"cone": cone != null, "telegraphs": int((proxy as Node).get("telegraph_count")),
+			"routes": int((proxy as Node).get("route_count"))}
+	for runtime: Variant in (director.get("_shared_host_fights") as Dictionary).values():
+		if runtime == null or not is_instance_valid(runtime):
+			continue
+		var wild: Variant = (runtime as Node).call("body")
+		if wild == null or not is_instance_valid(wild):
+			continue
+		var lane: Variant = (wild as Node).get("_lunge_lane")
+		var has_lane: bool = lane != null and is_instance_valid(lane)
+		var cone: Variant = (wild as Node).get("_guard_cone")
+		return {"body": "host wild", "lane": has_lane,
+			"lane_length": float((lane as Node).call("lane_length")) if has_lane else 0.0,
+			"lane_locked": bool((lane as Node).call("is_locked")) if has_lane else false,
+			"cone": cone != null and is_instance_valid(cone),
+			"telegraphs": int((runtime as Node).get("telegraph_count"))}
+	return {"body": "none"}
 
 
 ## Where this peer's frame time goes, read off the engine's own monitors over
