@@ -413,12 +413,13 @@
       "peer": 1,
       "action": "production_join",
       "args": {
-        "budget_frames": 6000,
+        "budget_frames": 20000,
         "character": {
           "character_id": "$character1"
-        }
+        },
+        "returning_route": true
       },
-      "budget_frames": 10000,
+      "budget_frames": 20000,
       "label": "REJOIN from the title as the same character"
     },
     {
@@ -577,12 +578,13 @@
       "peer": 1,
       "action": "production_join",
       "args": {
-        "budget_frames": 6000,
+        "budget_frames": 20000,
         "character": {
           "character_id": "$character1"
-        }
+        },
+        "returning_route": true
       },
-      "budget_frames": 10000,
+      "budget_frames": 20000,
       "label": "REJOIN the restarted host as the same character"
     },
     {
