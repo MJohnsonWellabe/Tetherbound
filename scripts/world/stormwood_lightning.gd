@@ -19,6 +19,8 @@ var _received_impacts: Array[int] = []
 var _rng := RandomNumberGenerator.new()
 
 var _road_zones_clear := true
+var _road_afterglow: Dictionary = {}
+const ROAD_AFTERGLOW_MS := 1200
 
 func _ready() -> void:
 	world = get_parent() as Node3D
@@ -94,6 +96,15 @@ func _sync_road_warnings() -> void:
 		if is_instance_valid(_visuals[id]) and _warning_centres.has(id):
 			var at: Vector3 = _warning_centres[id]
 			zones.append(Vector4(at.x, at.z, radius, 1.0))
+	var now := Time.get_ticks_msec()
+	for id: Variant in _road_afterglow.keys():
+		var glow: Dictionary = _road_afterglow[id]
+		var left := int(glow.until_ms) - now
+		if left <= 0:
+			_road_afterglow.erase(id)
+		elif zones.size() < 4:
+			var at: Vector3 = glow.at
+			zones.append(Vector4(at.x, at.z, radius, clampf(float(left) / 400.0, 0.0, 1.0)))
 	if zones.is_empty() and _road_zones_clear:
 		return
 	_road_zones_clear = zones.is_empty()
@@ -200,6 +211,10 @@ func _receive(event: Dictionary) -> void:
 			tween.tween_interval(0.12)
 		tween.tween_callback(ring.queue_free)
 	_strike_flash(bolt_centre(_warning_centres.get(id), event.at))
+	var landed := bolt_centre(_warning_centres.get(id), event.at)
+	# The road stays dark over the struck zone a little past impact, so its
+	# cracks do not flare out of the zone as if the strike spread (judge r3).
+	_road_afterglow[id] = {"at": landed, "until_ms": Time.get_ticks_msec() + ROAD_AFTERGLOW_MS}
 	_warning_centres.erase(id)
 	var hits: Dictionary = event.get("hits", {})
 	if not hits.has(session.local_peer_id()):
@@ -582,7 +597,7 @@ void fragment() {
 	float a_edge = outer * dash_solid * 0.10;
 	float a_fill = inside * (fill_alpha + charged * (charged_fill_alpha - fill_alpha)
 		+ urgency * (final_fill_alpha - charged_fill_alpha) * (1.0 - strike));
-	float white_hot = urgency * urgency * (1.0 - strike);
+	float white_hot = urgency * (1.0 - strike);
 	vec3 hot = mix(mix(rim_colour, vec3(1.0, 0.9, 1.0), white_hot), vec3(0.92, 0.72, 1.0), strike);
 	vec3 fill_colour = mix(rim_colour * 0.55, vec3(1.0, 0.75, 1.0), white_hot);
 	vec3 colour = (hot * intensity * (a_rim + leaders) + edge_colour * a_edge + fill_colour * a_fill)
