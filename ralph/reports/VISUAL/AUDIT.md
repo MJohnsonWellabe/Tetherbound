@@ -27,11 +27,12 @@ or whole-game Bar A/B pass is claimed.
 | 7 | **Inventory identity and small tools.** Many of 89 items share indistinguishable icons despite 46 available paths; torch/rod/knife have weak slot weight. The six stat drinks already have merged distinct icons. | V35 merged; V-CX-8 | Differentiate commonly compared resource, food, armour and TM entries through strong silhouettes/marks. Verify actual 32/64 px slots and grayscale without labels. Do not redo the accepted six-drink icon slice. |
 | 8 | **Prop-family finish and missing in-use coverage.** Bottles, docks, portals, gatherables, camp pieces, saddles and held tools still need complete use-distance coverage. A coverage gap is not a proven failed asset. | V1, V14; #328/#329/#355 dispositions | Retain promising #355 shared bottle/badge candidate, resolve merge/disposition and cross-view recognition before another generation. Check actual pickup, held and approach distances across families; inspect portal transitions and dock shoreline contact. Escalate a newly verified severe defect above this order when warranted. |
 
-**Next repair batch:** priority 1, terrain/cliff/shore form, using representative
-Cloudreach and Tidewake routes. Priority 2 supplies the adjoining ground/verge
-context. Do not return to repeated bottle, fence or single-dock polish while
-these scene-wide defects remain. The audit's coverage gaps are a separate
-verification obligation, not silently accepted areas.
+**Next repair batch:** priority 2, plant shape/grouping and ground/path transitions
+across representative regions. The two grass-lighting experiments below failed
+retention; stop normal/brightness tuning and change the visible structure.
+Priority 1 remains open after its limited retained improvements. Do not return
+to repeated bottle, fence or single-dock polish while these scene-wide defects
+remain. Coverage gaps are a separate verification obligation, not accepted areas.
 
 **First ranked repair experiment:** current main `94c63b1f2` integrated;
 69 additional native matching frames across Cloudreach and Tidewake.
@@ -50,6 +51,14 @@ all three Windscar lighting views; other nine comparisons tie. This is a modest
 intermediate form improvement, with final cliff form/material still failing
 and added mesh cost unverified on device. Another procedural terrace candidate
 was rejected. See the [trace, verdict and native bounds checks](CLIFF-FAMILY.md).
+
+**Cross-region grass experiment:** 60 additional native frames test upright
+back-face lighting across all four regions, then one lower-brightness Meadows
+revision. Independent review rejects both: the first increases pale wire-like
+clutter; the second trades daylight gains for lost shade/night coherence.
+No grass shader, material or config change was retained. Stop this tuning
+approach and address shapes, grouping and verges. [Evidence and verdicts](GRASS-PRESENTATION.md).
+Main `3dad15f41` is now integrated; captures retain their actual earlier build ID.
 
 
 ## Codex visual work queue (owner, 2026-09-26)
@@ -112,7 +121,7 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V-MA-1 | F03#1 (Doss) | Doss's river-bank perch (`building_prefabs.json` `river_bank_perch`: two `Floor_WoodDark` tiles and four `Prop_WoodenFence_Single` rails) renders as pale, near-white planes in daylight, because the kit's `MI_WoodTrim` trim sheet maps its pale painted band onto these pieces. The code-blind judge (`ralph/reports/MEADOWS-PAYOFFS/six-activities/distinct-actions/F03-1-DISTINCT-JUDGE-r5.md`) read it as "untextured white planes" and "a missing-texture decal". A dark-timber `MI_WoodTrim` multiply on this recipe alone (#7a5636, metallic 0) read as wood and passed (r6, frames in `distinct-actions/doss-perch/`), but it was reverted under the art-to-Codex rule. | `data/config/building_prefabs.json` `river_bank_perch` (a recipe-level `retint` is supported by `building_prefabs.gd`); capture with `tests/capture_activity_lures.gd --act --activity=doss --save=res://tests/fixtures/f03_lure_saves/S07-exit-band3-plus-1wood-1fiber.json.gz` | In progress #365: current native capture shows wood with speckled aliasing, not the historical blank-white look. Dark tint rejected for night regression; shared WoodTrim mipmaps pass independent final day/night perch and village review. Source pixels/repair logic unchanged. Whole scene/grounding and full Bars remain open. See [wood evidence](WOOD-MATERIALS.md). |
 | V-MA-1 | F03#0 (Juno Tether camp lure) | The Tether patrol camp at (-172, 5485.5) sits behind a crest, so neither oxblood standard shows at the 159 m road sighting. Meadows activities added an opaque dark 42 m smoke column as a signal; the coordinator removed it in batch 47 under the art-to-Codex rule (the same class as V19). **Pass when** a code-blind judge sees the camp's lure from the road at dusk in the gameplay camera. | `data/config/bands/band4_upper_meadows_ironwood/props.json` TetherHoldingFire, signal fire or standards | open |
 | V-CX-5 | X04 camera / foliage | Nearby non-colliding bushes hide the trainer during exploration; distance-only fading also removed unrelated Meadows plants. | `foliage_camera_visibility.gd` / `.gdshader`, material-only vegetation registration | In progress #365: projected-bounds gate restores sampled Stormwood trainer visibility and preserves Meadows peripheral foliage. Full hazard edges, dither finish, other camera profiles and device cost remain open. Evidence `FOLIAGE-CAMERA.md`. |
-| V-CX-6 | ART_DIRECTION §3.1 / whole-frame Bars A/B | Ground cover and terrain transitions read as uniform scatter, coarse grass carpets and hard path/settlement boundaries across the four regions. Native Meadows 004/010/016/022; Cloudreach 019/028/037/041; current regional verdicts. | Shared vegetation assets/materials and authored regional distribution, path verges and settlement ground integration | Open; priority 2. Prove clustered ecology, quiet ground, natural verges and clear subject/hazard space at native travel camera and in motion. |
+| V-CX-6 | ART_DIRECTION §3.1 / whole-frame Bars A/B | Ground cover and terrain transitions read as uniform scatter, coarse grass carpets and hard path/settlement boundaries across the four regions. Native Meadows 004/010/016/022; Cloudreach 019/028/037/041; current regional verdicts. | Shared vegetation assets/materials and authored regional distribution, path verges and settlement ground integration | Open; priority 2. Two normal/brightness candidates rejected after 60 native frames; no production change. Next: plant shapes/grouping and verges, with day/shade/night and motion. See GRASS-PRESENTATION.md. |
 | V-CX-7 | F10#4 / ART_DIRECTION Stormwood identity | Stormwood forest lacks layered enclosure and regional differentiation: sparse oversized trunks over repeated flowers expose broad empty horizons; luminous road seams compete with destinations. | Regional canopy/mid-layer/clearings and road-current presentation; coordinate encounter/route changes with Claude | Open; priorities 2 and 5. Require recognizable forest subregions and distinct visual hierarchy in Calm/Building/Break native traversal, without hiding trainer or combat. |
 | V-CX-8 | ART_DIRECTION §6 / inventory identity | Distinct resources, foods, armour and TMs share indistinguishable icons; torch/rod/knife have weak slot weight. Current census:89 definitions/46 icon paths, no missing icon files. | Item icon family; preserve merged six-stat-drink work | Open; priority 7. Recognize commonly compared items without labels at actual 32/64 px slots and grayscale. See [item verdict](ranked-audit/items-verdict.md). |
 | V-SW-6 | F10#2 | Crown Guardian identity: no Crown glass reads on or around the body, it stands in an ordinary quadruped walk pose (no guard stance), and it looks identical to the background Staticub herd, so it does not read as a guardian. Its frontal guard cone does read (judge (b) PASS). Evidence: X 00-before, tell2-a-start, i15 (code-blind judge round 3, `ralph/reports/STORMWOOD/b/f10_2/JUDGE_ANSWERS_r3.txt`) | Crown Guardian body/material/pose (X04: crown-glass dressing on the named Staticub, guard-stance idle/anticipation clip); Crown arena dressing | open |

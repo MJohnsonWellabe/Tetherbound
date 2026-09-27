@@ -32,6 +32,13 @@ improves all three Windscar lighting comparisons and passes 22 native imported
 geometry checks. Final form/material and device cost remain open; the second
 procedural wall candidate was rejected. Receipts are in the same cliff report.
 
+The priority-2 grass experiment adds 60 native comparison frames across four
+regions and one Meadows revision. Independent review rejects both lighting/
+brightness candidates; no production grass change was retained. Next: plant
+shape/grouping and ground/verge structure, not another light/tint adjustment.
+See `ralph/reports/VISUAL/GRASS-PRESENTATION.md`. Main `3dad15f41` is integrated
+after these captures; their actual earlier build identity remains recorded.
+
 All nine lane sessions were wound down and archived on owner direction: Meadows core, F05, Cloudreach, Stormwood, Tidewake, Art X04, X05, X03 and VIS.
 - Every lane posted `## HANDOFF (final)` on its PR. Each showed clean `git status` and no unpushed commits, and every SHA it listed was verified on origin.
 - **All lane work is on main** through batches 25 (#283) and 26. Every `ralph/*`, `claude/integration-*` and `fix/*` tip is an ancestor of main, so any branch other than main can be deleted.
