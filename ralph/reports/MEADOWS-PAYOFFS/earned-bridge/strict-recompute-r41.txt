@@ -1,0 +1,5 @@
+r41 windows> 200.0 4 over250 1 A7 []
+    (308, 'earned_team', 'tournament_training_ready', 'home_materials_gathered', [-65, 28], [-61, 92], 764)
+    (202, 'tournament_won', 'BandPickup_b1_candy_grove_retu', 'BandPickup_b1_candy_field_east', [426, 1023], [277, 1154], 3348)
+    (213, 'south_bridge_crossed', 'Greet Quarry Foreman', 'BandPickup_b2_candy_rim_south', [392, 1790], [388, 1873], 4569)
+    (201, 'relay_disabled_and_mill_crossed', 'Greet Captain Oreth', 'BandPickup_b3_mushroom_north_b', [-98, 4352], [32, 4462], 8966)
