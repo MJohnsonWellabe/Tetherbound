@@ -1237,6 +1237,13 @@ func _tap_action(action: StringName) -> void:
 		_fail("'%s' has no physical joypad binding" % action)
 		return
 	Input.parse_input_event(event)
+	# Parsed events are flushed once per PROCESS frame. Under a slow renderer
+	# several physics ticks run inside one frame, so counting physics frames
+	# alone let a release and the next press land in the same flush: a
+	# polled grid (name_prompt.gd::_tick_cursor) never saw the gap between
+	# taps, read them as one hold and never moved (xvfb: "controller stopped
+	# on 'A' instead of 'B'"). Each edge now spans a process frame.
+	await _tree.process_frame
 	for _i in 3:
 		await _tree.physics_frame
 	var released := event.duplicate() as InputEvent
@@ -1245,6 +1252,7 @@ func _tap_action(action: StringName) -> void:
 	elif released is InputEventJoypadMotion:
 		(released as InputEventJoypadMotion).axis_value = 0.0
 	Input.parse_input_event(released)
+	await _tree.process_frame
 	for _i in 5:
 		await _tree.physics_frame
 
