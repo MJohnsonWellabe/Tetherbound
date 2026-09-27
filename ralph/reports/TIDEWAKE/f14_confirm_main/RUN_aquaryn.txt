@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WATER_C2C3 water_aquaryn_alpha ripplet MASHER runs=24 win=1.00 med_lead=0.390 med_party=0.085 med_s=56.5 max_s=58.3 lead_faint=0.00 wipe=0.00 max_hit=0.066 tell=[1.25,1.70] stalled=0
+WATER_C2C3 water_aquaryn_alpha ripplet READER runs=24 win=1.00 med_lead=0.123 med_party=0.027 med_s=101.6 max_s=122.8 lead_faint=0.00 wipe=0.00 max_hit=0.066 tell=[1.25,1.70] stalled=0
+WATER_C2C3_PAIR water_aquaryn_alpha ripplet reader/masher median lead cost = 0.123 / 0.390 (ratio 0.32)
+WATER_C2C3 done: 1 rows, 48 runs, 0 errors
