@@ -344,9 +344,11 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   - **Lanes:** each lane works on one long-lived `tb/<lane>` branch
     (`tb/meadows-core`, `tb/meadows-activities`, `tb/meadows-route`,
     `tb/cloudreach`, `tb/cloudreach-b`, `tb/stormwood`, `tb/stormwood-b`,
-    `tb/tidewake`, `tb/tidewake-b`, `tb/vis`, `tb/x05`), with one standing
-    draft PR. The lane merges `origin/main` into it after each landing and
-    keeps going. It never opens a new branch per task.
+    `tb/tidewake`, `tb/tidewake-b`, `tb/vis`, `tb/x05`). The lane opens no
+    PR: READY posts, SHARED-FILE REQUESTs and questions go on the single
+    Lane channel issue #356 (owner, 2026-09-27), with the READY SHA pushed to
+    origin first. The lane merges `origin/main` into its branch after each
+    landing and keeps going. It never opens a new branch per task.
   - **Batches:** the coordinator reuses one `tb/integration` branch, reset to
     `main` for each batch.
   - **No scratch branches:** dispatch `render.yml` with `checkout_ref` set to a
@@ -357,9 +359,7 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
 - **Finish, then land (owner, 2026-09-27).** Lanes commit and push to their own
   branch freely; that is backup, not landing. A lane posts READY only when:
   - **a criterion fully closes.** State it as `closes F0x#n`. Partial progress
-    stays on the branch; or
-  - **it is a fix another lane is blocked on.** State it as `unblocks <lane>:
-    <blocker>`.
+    and fixes other lanes need stay on the branch (other lanes merge it).
 
   Rules for READY:
   - **Attach an independent strict re-check.** Before READY, a read-only
@@ -385,9 +385,13 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   - **Codex-queue IDs carry a lane prefix and are append-only**
     (`V-MC-n`, `V-CR-n`, `V-SW-n`, `V-TW-n`, `V-VIS-n`, `V-X05-n`). Rows never
     renumber, and existing `V1`–`V35` keep their IDs.
-  - **The coordinator lands on a cadence.** It lands READY heads in one batch
-    about every 2 hours, or at once for `unblocks` fixes, and dispatches a
-    full CI run on `main` after each batch.
+  - **Main moves only when a criterion closes (owner, 2026-09-27).** The
+    coordinator lands `closes` READY heads in one batch about every 2 hours
+    and dispatches a full CI run on `main` after each batch. There are no
+    `unblocks` landings: a lane blocked on another lane's fix merges that
+    lane's `tb/<lane>` branch into its own and keeps going; the fix reaches
+    main with the first close that carries it. Docs, board data and Codex
+    work ride with the next close batch.
 - **CI runs only on `pull_request` events and on pushes to `main`.** A branch
   with no pull request is **never verified** — open a draft PR early and batch
   pushes to it (a newer push cancels the run in flight on the same ref).

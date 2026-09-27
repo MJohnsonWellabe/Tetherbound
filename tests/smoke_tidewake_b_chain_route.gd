@@ -59,6 +59,7 @@ const FIELD := preload("res://scripts/world/water_heightfield.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const RELOAD := preload("res://tests/helpers/water_chain_reload.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CHARACTER := "tidewake-b-chain-route"
 
 var game: Node
@@ -79,6 +80,14 @@ var walked_total := 0.0
 var summary: Array[String] = []
 var spawn := Vector3.INF
 var only: PackedStringArray = []
+## `--continuous`: inter-island legs are SWUM with real `move_forward` input
+## along the authored water_routes polylines instead of position writes, the
+## Lastlight materials are gathered from production harvest rows by walk +
+## Interact, and the Lastlight rest goes through the bed's real prompt and
+## rest panel. See CONTINUOUS MODE below.
+var continuous := false
+var swimming: Node
+var swims: Array[String] = []
 
 
 func _on(chain: String) -> bool:
@@ -90,9 +99,10 @@ func _init() -> void:
 
 
 func _run() -> void:
-	create_timer(2400.0).timeout.connect(func() -> void:
+	var watchdog := 7200.0 if OS.get_cmdline_user_args().has("--continuous") else 2400.0
+	create_timer(watchdog).timeout.connect(func() -> void:
 		if not finished:
-			_check(false, "2400 second watchdog expired")
+			_check(false, "%d second watchdog expired" % int(watchdog))
 			_finish())
 	game = root.get_node("Game")
 	game.reset_for_new_game()
@@ -108,6 +118,24 @@ func _run() -> void:
 		_check(false, "could not create the disclosed carried pickaxe fixture")
 		_finish()
 		return
+	continuous = OS.get_cmdline_user_args().has("--continuous")
+	if continuous:
+		# DISCLOSED (continuous): the two remaining main-route departure facts
+		# the swim chain crosses, and a carried axe for the driftwood rows.
+		for upstream: String in ["water_dock_shellwatch_residents_freed_and_pump_disabled",
+				"water_dock_sluice_isle_both_controls_disabled"]:
+			game.world.flags.set_flag(upstream)
+		# DISCLOSED (continuous): the retained five at the Tidewake band level
+		# (same fixture as smoke_water_pocket_walk_claim.gd --real-tidecoil).
+		game.local.party.clear()
+		for species: String in ["terrapup", "bramblebun", "mudsnout", "pipwing", "trailpup"]:
+			var creature: RefCounted = SPECIES.spawn(species)
+			creature.set_level(43, PROGRESSION.config())
+			game.local.party.add(creature)
+		if game.inventory.add("axe", 1) != 0 or not game.assign_hotbar(1, "axe"):
+			_check(false, "could not create the disclosed carried axe fixture")
+			_finish()
+			return
 	pickups_data = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_pickups.json"))
 	reader = QUEST_LOG.new()
 	reader.set_realm("water")
@@ -144,6 +172,7 @@ func _build_world(fresh: Node3D) -> bool:
 	arbiter = get_first_node_in_group("interaction_arbiter")
 	config = world.get("config")
 	navigator = NAV.new(self, player, camera, _stick)
+	swimming = player.get("swim_controller")
 	if not spawn.is_finite():
 		spawn = player.global_position
 	return _check(arbiter != null, "production interaction arbiter present")
@@ -261,6 +290,36 @@ func _deep_watch() -> String:
 	var heard: Array = await _talk("water_orsen")
 	_check(heard[0] == "water_orsen_pre", "Deep Watch: Orsen's Sluice conversation (%s)" % heard[0])
 	_check(str(heard[1]).contains("Deep Watch") and str(heard[1]).contains("Tidecoil"), "Deep Watch: Orsen names Deep Watch and Tidecoil")
+	if continuous:
+		# Real fight: tests/helpers/tidewake_b_tidecoil_fight.gd (walk to the
+		# reef shore, deploy by creature_recall, engage, win with the shared
+		# campaign pilot; the director's own won terminal writes the flag).
+		var here := _island(player.global_position)
+		if here != "deep_watch":
+			_check(await _swim_between(here, "deep_watch", "Tidecoil"), "Deep Watch: swam to Deep Watch for Tidecoil")
+		var fight: Dictionary = await load("res://tests/helpers/tidewake_b_tidecoil_fight.gd").new().run(self, world)
+		print("TIDECOIL ", fight)
+		_check(bool(fight.get("won", false)), "Deep Watch: real Tidecoil fight won (%s)" % str(fight.get("step", "")))
+		_stick(0.0, 0.0)
+		await _frames(30)
+		# Known stranding (helper note): after the win the trainer stands in
+		# the shallows under Deep Watch's ~12 m cliff with no wading path up and
+		# a swim back beyond level-0 stamina; the intended route rides an owned
+		# swimmer, which this party does not have. DISCLOSED POSITION WRITE.
+		var up: Dictionary = POCKET.plan_route(world, Vector2(player.global_position.x, player.global_position.z),
+			Vector2(_landing("deep_watch").x, _landing("deep_watch").z))
+		if (up.points as Array).is_empty() or (swimming != null and swimming.is_swimming()):
+			_pose(_landing("deep_watch"), "deep_watch arrival landing after the Tidecoil win (stranded below the cliff)")
+			await _frames(60)
+	else:
+		await _tidecoil_fixture()
+	_check(game.world.flags.has(resolved), "Deep Watch: Tidecoil resolution recorded")
+	heard = await _talk("water_orsen")
+	_check(heard[0] == "water_orsen_deep_watch_chart_lead", "Deep Watch: Orsen gives the chart lead (%s)" % heard[0])
+	return await _deep_watch_rest(charted, gated)
+
+
+func _tidecoil_fixture() -> void:
 	# DISCLOSED FIXTURE: Tidecoil's fight resolved through the director's handler.
 	var director: Node = world.get_node("EncounterDirector")
 	var site := Vector3(1483.196, -0.5075, 3427.917)
@@ -284,9 +343,10 @@ func _deep_watch() -> String:
 		director.set("_engaged_with", body)
 		director.call("_on_combat_exited", "won")
 		await _frames(4)
-	_check(game.world.flags.has(resolved), "Deep Watch: Tidecoil resolution recorded")
-	heard = await _talk("water_orsen")
-	_check(heard[0] == "water_orsen_deep_watch_chart_lead", "Deep Watch: Orsen gives the chart lead (%s)" % heard[0])
+
+
+func _deep_watch_rest(charted: String, gated: String) -> String:
+	var heard: Array = ["", "", ""]
 	var before: int = game.inventory.count("skill_candy_iii")
 	_check(await _claim_pickup(gated, 1), "Deep Watch: Candy III cache claimed by walk + Interact")
 	_check(game.local.flags.has("water_candy:" + gated), "Deep Watch: personal cache receipt")
@@ -318,13 +378,26 @@ func _lastlight() -> String:
 	var heard: Array = await _talk("water_halen")
 	_check(heard[0] == "water_halen_shelter_lead", "Lastlight: Halen gives the lead (%s)" % heard[0])
 	_check(game.world.flags.has(lead), "Lastlight: lead recorded")
-	# DISCLOSED FIXTURE: the delivered materials.
-	_check(game.inventory.add("driftwood", 4) == 0 and game.inventory.add("reed_fiber", 4) == 0, "Lastlight: disclosed material fixture")
+	if continuous:
+		# Gathered: reed patches on Veilfall (3) and Sluice Isle (3, swum to and
+		# back), driftwood from two Veilfall rows with the carried axe (3 + 3).
+		_check(await _gather_hand("water:veilfall:harvest:005"), "Lastlight: Veilfall reed gathered by walk + Interact")
+		_check(await _mine_seam("water:veilfall:harvest:007"), "Lastlight: Veilfall driftwood 007 cut by walk + Interact")
+		_check(await _mine_seam("water:veilfall:harvest:011"), "Lastlight: Veilfall driftwood 011 cut by walk + Interact")
+		if game.inventory.count("reed_fiber") < 4:
+			_check(await _gather_hand("water:sluice_isle:harvest:012"), "Lastlight: Sluice Isle reed gathered by walk + Interact")
+		_check(game.inventory.count("driftwood") >= 4 and game.inventory.count("reed_fiber") >= 4,
+			"Lastlight: gathered 4+ driftwood and 4+ reed (%d, %d)" % [game.inventory.count("driftwood"), game.inventory.count("reed_fiber")])
+	else:
+		# DISCLOSED FIXTURE: the delivered materials.
+		_check(game.inventory.add("driftwood", 4) == 0 and game.inventory.add("reed_fiber", 4) == 0, "Lastlight: disclosed material fixture")
+	var wood_before: int = game.inventory.count("driftwood")
+	var reed_before: int = game.inventory.count("reed_fiber")
 	var chains: Node = world.get_node("WaterLocalChains")
 	var site: Node3D = chains.call("site_root", "lastlight_shelter_supply")
 	var message := await _use_site("lastlight_shelter_supply")
 	_check(game.world.flags.has(supplied), "Lastlight: delivery recorded by walk + Interact")
-	_check(game.inventory.count("driftwood") == 0 and game.inventory.count("reed_fiber") == 0, "Lastlight: host debited 4 + 4")
+	_check(game.inventory.count("driftwood") == wood_before - 4 and game.inventory.count("reed_fiber") == reed_before - 4, "Lastlight: host debited 4 + 4")
 	_check(message.contains("sheltered"), "Lastlight: delivery message: " + message)
 	var built: Node3D = site.get_node_or_null("Built") if site != null else null
 	_check(built != null and built.visible, "Lastlight: shelter piece stands")
@@ -337,8 +410,11 @@ func _lastlight() -> String:
 		if game.local.party.size() == 0:
 			_check(game.local.party.add(SPECIES.spawn("brooktail")), "Lastlight: disclosed companion fixture")
 		hud_seen = ""
-		# DISCLOSED FIXTURE: production bed assignment called directly.
-		_check(bool(bed.call("assign_creature", 0)), "Lastlight: production bed takes the companion")
+		if continuous:
+			await _rest_via_panel(bed)
+		else:
+			# DISCLOSED FIXTURE: production bed assignment called directly.
+			_check(bool(bed.call("assign_creature", 0)), "Lastlight: production bed takes the companion")
 		for _attempt in 120:
 			await _frames(1)
 			if game.world.flags.has(rested):
@@ -586,11 +662,44 @@ func _go(target: Vector3, tolerance: float, label: String) -> bool:
 		var landing := _landing(want)
 		if not _check(landing.is_finite(), "%s: no arrival landing for island '%s' (trainer on '%s')" % [label, want, here]):
 			return false
-		_pose(landing, "%s arrival landing for %s" % [want, label])
-		await _frames(60)
+		if continuous:
+			if not await _swim_between(here, want, label):
+				return false
+		else:
+			_pose(landing, "%s arrival landing for %s" % [want, label])
+			await _frames(60)
+	return await _walk_here(target, tolerance, label, want)
+
+
+## Stick-walk on the current island (no island check, no position write).
+func _walk_here(target: Vector3, tolerance: float, label: String, want: String) -> bool:
+	# Continuous mode retries a stalled walk (still stick input, no write) from
+	# wherever the trainer stopped: re-plan on the baked ground, else plan to the
+	# island's own landing (First Shore: its spawn) and go direct from there,
+	# else one more straight leg. The per-attempt stall is printed as RETRY.
+	var attempts := 3 if continuous else 1
+	for attempt in attempts:
+		var result := await _walk_attempt(target, tolerance, label, want, attempt, attempt == attempts - 1)
+		if result:
+			return true
+	return false
+
+
+func _walk_attempt(target: Vector3, tolerance: float, label: String, want: String, attempt: int, last_try: bool) -> bool:
 	var from := Vector2(player.global_position.x, player.global_position.z)
 	var plan: Dictionary = POCKET.plan_route(world, from, Vector2(target.x, target.z))
 	var route: Array = plan.points
+	if route.is_empty() and continuous:
+		var hub := _landing(want)
+		if hub.is_finite() and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
+			var hub_plan: Dictionary = POCKET.plan_route(world, from, Vector2(hub.x, hub.z))
+			if not (hub_plan.points as Array).is_empty():
+				print("WALK %s VIA %s landing (attempt %d)" % [label, want, attempt + 1])
+				route = (hub_plan.points as Array).duplicate()
+				route.append(Vector2(target.x, target.z))
+			elif attempt > 0:
+				print("WALK %s VIA %s landing DIRECT (attempt %d)" % [label, want, attempt + 1])
+				route = [Vector2(hub.x, hub.z), Vector2(target.x, target.z)]
 	if route.is_empty():
 		# The baked-ground planner treats docks/decks over water as impassable;
 		# fall back to one straight stick leg (still real input, navigator
@@ -608,8 +717,14 @@ func _go(target: Vector3, tolerance: float, label: String) -> bool:
 		metres += Vector2(last.x, last.z).distance_to(Vector2(player.global_position.x, player.global_position.z))
 		last = player.global_position
 		if not arrived:
-			_check(false, "%s: walk stalled at leg %d/%d player=%s goal=%s" % [label, index + 1, route.size(), player.global_position, goal])
 			_stick(0.0, 0.0)
+			walked_total += metres
+			if last_try:
+				_check(false, "%s: walk stalled at leg %d/%d player=%s goal=%s" % [label, index + 1, route.size(), player.global_position, goal])
+			else:
+				print("RETRY %s: stalled at leg %d/%d player=%s goal=%s" % [label, index + 1, route.size(), player.global_position, goal])
+				navigator.call("reset")
+				await _frames(10)
 			return false
 	_stick(0.0, 0.0)
 	await _frames(20)
@@ -715,5 +830,210 @@ func _finish() -> void:
 	for line: String in poses:
 		print("  ", line)
 	print("Walked total %.0fm with left-stick input" % walked_total)
+	print("SWIMS (%d inter-island crossings with real move_forward input):" % swims.size())
+	for line: String in swims:
+		print("  ", line)
 	print("Tidewake-B chain route witness: %d checks, %d failures" % [checks, failures.size()])
 	quit(0 if failures.is_empty() else 1)
+
+
+# ---------------------------------------------------------------- CONTINUOUS MODE
+# Inter-island travel by real swimming: the island graph is the authored
+# water_routes (sheltered variants preferred, either direction). For each edge
+# the trainer stick-walks to the route's start anchor on its current island,
+# idles (no input, no write) until natural stamina regen is full, then holds
+# the real `move_forward` action with the camera yawed at each polyline vertex
+# in turn (rest shoals included), idling to full on any dry vertex, until the
+# far anchor. No position or stamina write.
+
+func _route_island(anchor_id: String) -> String:
+	for anchor: Dictionary in config.anchors:
+		if str(anchor.id) == anchor_id:
+			return str(anchor.get("island_id", ""))
+	return ""
+
+
+func _anchor_at(anchor_id: String) -> Vector3:
+	for anchor: Dictionary in config.anchors:
+		if str(anchor.id) == anchor_id:
+			var at: Array = anchor.safe_position
+			return Vector3(float(at[0]), float(at[1]), float(at[2]))
+	return Vector3.INF
+
+
+## Breadth-first island path over the sheltered routes (then direct ones).
+func _island_path(from: String, to: String) -> Array:
+	for suffix: String in ["_sheltered", "_direct"]:
+		var edges := {}
+		for raw: Variant in config.get("water_routes", []):
+			var route: Dictionary = raw
+			if not str(route.id).ends_with(suffix):
+				continue
+			var a := _route_island(str(route.from_anchor))
+			var b := _route_island(str(route.to_anchor))
+			if not edges.has(a): edges[a] = []
+			if not edges.has(b): edges[b] = []
+			edges[a].append([b, route, false])
+			edges[b].append([a, route, true])
+		var previous := {from: null}
+		var queue: Array = [from]
+		while not queue.is_empty():
+			var island: String = queue.pop_front()
+			if island == to:
+				var steps: Array = []
+				var at := to
+				while previous[at] != null:
+					steps.push_front(previous[at][1])
+					at = previous[at][0]
+				return steps
+			for edge: Array in edges.get(island, []):
+				if not previous.has(edge[0]):
+					previous[edge[0]] = [island, [edge[1], edge[2]]]
+					queue.append(edge[0])
+	return []
+
+
+func _swim_between(here: String, want: String, label: String) -> bool:
+	var steps := _island_path(here, want)
+	if not _check(not steps.is_empty(), "%s: no water route chain from '%s' to '%s'" % [label, here, want]):
+		return false
+	for step: Array in steps:
+		if not await _swim_route(step[0], step[1], label):
+			return false
+	return true
+
+
+func _rest_to_full() -> int:
+	var vitals: RefCounted = player.get("vitals")
+	var frames := 0
+	_stick(0.0, 0.0)
+	_move_forward(false)
+	while float(vitals.stamina) < float(vitals.max_stamina) and frames < 2400:
+		await physics_frame
+		frames += 1
+	return frames
+
+
+func _swim_route(route: Dictionary, reverse: bool, label: String) -> bool:
+	var points: Array[Vector3] = [_anchor_at(str(route.from_anchor))]
+	for raw: Variant in route.get("polyline", []):
+		points.append(Vector3(float(raw[0]), float(raw[1]), float(raw[2])))
+	points.append(_anchor_at(str(route.to_anchor)))
+	if reverse:
+		points.reverse()
+	var id := "%s%s" % [route.id, " (reversed)" if reverse else ""]
+	var start := points[0]
+	if Vector2(player.global_position.x - start.x, player.global_position.z - start.z).length() > 1.5:
+		if not await _walk_here(start, 1.0, "start of " + id, _island(start)):
+			return false
+	var vitals: RefCounted = player.get("vitals")
+	var rested := await _rest_to_full()
+	var health_before := float(vitals.health)
+	var minimum := float(vitals.stamina)
+	var swum := 0.0
+	var began := Time.get_ticks_msec()
+	for index in range(1, points.size()):
+		var target := points[index]
+		var final := index == points.size() - 1
+		var previous := player.global_position
+		var budget := int(Vector2(target.x - previous.x, target.z - previous.z).length() * 45.0) + 900
+		var arrived := false
+		for _frame in budget:
+			var offset := target - player.global_position
+			offset.y = 0.0
+			if offset.length() <= (0.8 if final else 1.6):
+				arrived = true
+				break
+			camera.set("yaw", atan2(-offset.x, -offset.z))
+			_move_forward(true)
+			await physics_frame
+			if swimming != null and swimming.is_swimming():
+				var moved := player.global_position - previous
+				moved.y = 0.0
+				swum += moved.length()
+				minimum = minf(minimum, float(vitals.stamina))
+			previous = player.global_position
+			if float(vitals.health) <= 0.0:
+				break
+		_move_forward(false)
+		if not _check(arrived, "%s: %s stalled at vertex %d/%d player=%s target=%s swimming=%s stamina=%.1f" % [
+				label, id, index, points.size() - 1, player.global_position, target,
+				swimming != null and swimming.is_swimming(), float(vitals.stamina)]):
+			return false
+		await _frames(4)
+		if not final and player.is_on_floor() and (swimming == null or not swimming.is_swimming()):
+			rested += await _rest_to_full()
+	await _frames(20)
+	var dry: bool = player.is_on_floor() and (swimming == null or not swimming.is_swimming())
+	var line := "SWIM %s swum=%.0fm min_stamina=%.1f rest_frames=%d health %.0f->%.0f dry=%s elapsed_s=%.0f" % [
+		id, swum, minimum, rested, health_before, float(vitals.health), dry, float(Time.get_ticks_msec() - began) / 1000.0]
+	print(line)
+	swims.append(line)
+	_check(swum > 1.0, "%s: %s actually swam" % [label, id])
+	_check(float(vitals.health) > 0.0, "%s: %s survived" % [label, id])
+	return _check(dry, "%s: %s ended on dry land" % [label, id])
+
+
+func _move_forward(pressed: bool) -> void:
+	var event := InputEventAction.new()
+	event.action = &"move_forward"
+	event.pressed = pressed
+	event.strength = 1.0 if pressed else 0.0
+	Input.parse_input_event(event)
+
+
+## Walk + Interact on a hand-gathered harvest row (reed patch).
+func _gather_hand(id: String) -> bool:
+	var row := _row(id)
+	if not _check(not row.is_empty(), "harvest row exists: " + id):
+		return false
+	var at := Vector3(float(row.position[0]), 0.0, float(row.position[2]))
+	if not await _go(at, 1.6, id):
+		return false
+	var service: Node = world.get_node("WaterPickups")
+	var node: Node3D = null
+	for _i in 120:
+		node = service.call("node_for", id)
+		if node != null:
+			break
+		await physics_frame
+	if not _check(node != null, id + " resident on arrival"):
+		return false
+	if not _check(await _approach_prompt(node.get_node_or_null("Interactable"), node.global_position), "%s prompt offered (winner=%s)" % [id, arbiter.call("prompt")]):
+		return false
+	var item := str(row.item_id)
+	var before: int = game.inventory.count(item)
+	await _press_interact()
+	for _frame in 240:
+		await physics_frame
+		if game.inventory.count(item) > before:
+			break
+	await _frames(10)
+	print("GATHER %s %s %d->%d" % [id, item, before, game.inventory.count(item)])
+	return game.inventory.count(item) > before
+
+
+## Rest the first companion through the bed's own prompt and rest panel:
+## walk until the arbiter's winner is the bed's Interactable, press Interact,
+## then press `ui_accept` on the panel's focused first row, then `menu_cancel`.
+func _rest_via_panel(bed: Node3D) -> bool:
+	var prompt: Node = bed.get_node_or_null("Interactable")
+	if not _check(prompt != null, "Lastlight: bed has its Rest prompt"):
+		return false
+	if not _check(await _approach_prompt(prompt, bed.global_position), "Lastlight: bed Rest prompt offered (winner=%s)" % arbiter.call("prompt")):
+		return false
+	await _press_interact()
+	await _frames(10)
+	var panel: Node = null
+	for child: Node in root.get_children():
+		if child.has_method("is_open") and child.has_method("owns_input") and str(child.get_script().resource_path).ends_with("creature_bed_panel.gd"):
+			panel = child
+	if not _check(panel != null and bool(panel.call("is_open")), "Lastlight: Interact opened the bed's rest panel"):
+		return false
+	var focus: Control = root.get_viewport().gui_get_focus_owner()
+	print("BED PANEL focus=%s" % (focus.get("text") if focus != null else "<none>"))
+	await _tap(&"ui_accept")
+	await _frames(20)
+	await _tap(&"menu_cancel")
+	await _frames(20)
+	return _check(not bool(panel.call("is_open")), "Lastlight: rest panel closed by menu_cancel")

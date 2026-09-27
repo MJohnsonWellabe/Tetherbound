@@ -69,6 +69,17 @@ func test_food_shortfall_reads_thresholds_and_leaves_fed_unhappy_creatures_for_r
 	assert_eq(REST.berries_needed(member, food, cfg), 1)
 
 
+func test_feeding_fills_above_the_fed_line_and_never_past_max() -> void:
+	var member: RefCounted = SPECIES.spawn("bramblebun")
+	var cfg := {"nourishment": {"max": 100.0, "fed_at": 0.55}}
+	var food := {"nourishment": 20.0}
+	member.set("nourishment", 56.0)
+	assert_eq(REST.berries_needed(member, food, cfg), 0, "just over the line is fed")
+	assert_eq(REST.berries_needed(member, food, cfg, REST.FEED_MARGIN), 1,
+		"with the walk-back margin one more bite keeps it fed at Halda")
+	assert_almost_eq(REST.feed_target(cfg, 60.0), 100.0)
+
+
 func test_legacy_feeding_and_sleep_composition_are_fail_closed() -> void:
 	var driver := REST.BedInput.new()
 	driver._feed_the_team()
