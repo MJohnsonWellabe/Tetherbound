@@ -90,6 +90,7 @@ func _run() -> void:
 
 	var progression: RefCounted = _game.get("progression")
 	progression.call("set_flag", MIRA_FLAG)
+	progression.call("set_flag", "opening:mira_visited")
 	progression.call("set_flag", DEFEATED_FLAG, false)
 
 	if not await _greeting_offers_the_challenge():

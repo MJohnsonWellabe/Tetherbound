@@ -23,9 +23,9 @@
           "_why": "SG46, spec §9's 'villagers acknowledge the victory'. FIRST in the list on purpose and safely: `legendary_freed` is the last flag the chapter sets, everything below it has already been spent by then, and this branch's own conversation carries the same `shop:goods:mira` effect her beaten and standing branches carry so nothing that was reachable before the Warden becomes unreachable after him (D39's rule -- a vendor branch is never lost, only ever carried forward). Additive as always: the standing greeting is untouched. Paired with `mira_shop_open` so a player who never opened the stall still gets that one-time introduction (and its starting float) rather than losing it to this branch."
         },
         {
-          "unless_flag": "mira_shop_open",
+          "unless_flag": "opening:mira_visited",
           "conversation": "village_mira_shop_intro",
-          "_why": "OF31/D39. The shop opening: she explains the front room, hands over the starting float on the same line that says so, and ends by opening the store. Sets `mira_shop_open`, so this entry stops matching after the first visit."
+          "_why": "F02#6 (2026-09-27, coordinator grant): gated on the PLAYER-scope `opening:mira_visited` the same conversation sets, not the WORLD-scope `mira_shop_open`, so every character in a co-op world gets their own first visit -- tools, starting float and fiber bundle -- once. OF31/D39. The shop opening: she explains the front room, hands over the starting float on the same line that says so, and ends by opening the store. Sets `mira_shop_open`, so this entry stops matching after the first visit."
         },
         {
           "if_flag": "mira_shop_open",

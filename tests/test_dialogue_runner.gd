@@ -603,6 +603,7 @@ func test_the_hammer_given_is_the_real_hammer_item() -> void:
 
 const TRADE_DB := preload("res://scripts/trade/trade_db.gd")
 const MIRA_FLAG := "mira_shop_open"
+const MIRA_VISITED_FLAG := "opening:mira_visited"
 const OSKAR_FLAG := "oskar_trade_open"
 const MIRA_INTRO := "village_mira_shop_intro"
 const MIRA_SHOP := "village_mira_shop"
@@ -759,7 +760,12 @@ func test_the_merchants_branches_resolve_in_order() -> void:
 	var progression: RefCounted = PROGRESSION_STATE.new()
 	assert_eq(VILLAGE_NPCS.greeting_for(mira, progression), MIRA_INTRO,
 		"a fresh save should get the shop-opening conversation")
+	# A second character in a world whose shop is already open still gets
+	# their own first visit: the gift is personal (F02#6).
 	progression.set_flag(MIRA_FLAG)
+	assert_eq(VILLAGE_NPCS.greeting_for(mira, progression), MIRA_INTRO,
+		"the shop being open in the world must not spend another character's first visit")
+	progression.set_flag(MIRA_VISITED_FLAG)
 	assert_eq(VILLAGE_NPCS.greeting_for(mira, progression), MIRA_CHALLENGE,
 		"once the shop is open and she is unbeaten, greeting her should offer the Band-1 challenge")
 	progression.set_flag(DEFEATED_MIRA)
