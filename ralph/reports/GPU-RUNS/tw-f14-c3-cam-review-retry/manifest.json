@@ -1,0 +1,214 @@
+{
+  "label": "tw-f14-c3-cam-review-retry",
+  "sha": "5084826c9accfbddb00a66e25e7ccaaa6a16468b",
+  "script": "tests/capture_tidewake_named_fights.gd",
+  "args": [
+    "--trainer=water_trainer_tess,water_trainer_calder,water_trainer_venn,water_trainer_nerissa",
+    "--out=res://shots/tidewake/f14_c3_cam",
+    "--interval=8.0",
+    "--max-frames=80",
+    "--pilot=READER",
+    "--cap-s=600",
+    "--level=43",
+    "--tells-per-opponent=3",
+    "--flags=water_dock_salt_crown_landing_charted"
+  ],
+  "mode": "render",
+  "comment_id": 5856401382,
+  "worktree": "D:/tetherbound/gpu-runs-worktrees/tw-f14-c3-cam",
+  "followup_of": "tw-f14-c3-cam",
+  "visual_retry_attempt": 1,
+  "fixed_fps_60_capture_retry": true,
+  "adjustment": "One capture-only retry with engine --fixed-fps 60 to make script frame waits deterministic. Pinned script, requested script args and production camera unchanged. No further automatic retries if clipping or summon failures recur.",
+  "stage": "ready_to_publish",
+  "runner_pid": 10172,
+  "started_utc": "2026-09-27T14:25:28.382324+00:00",
+  "engine_pid": 13884,
+  "import_exit_code": 0,
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\gpu-runs-worktrees\\tw-f14-c3-cam",
+    "--rendering-method",
+    "gl_compatibility",
+    "--fixed-fps",
+    "60",
+    "--borderless",
+    "--resolution",
+    "1920x1080",
+    "--position",
+    "0,0",
+    "-s",
+    "tests/capture_tidewake_named_fights.gd",
+    "--",
+    "--trainer=water_trainer_tess,water_trainer_calder,water_trainer_venn,water_trainer_nerissa",
+    "--out=res://shots/tidewake/f14_c3_cam",
+    "--interval=8.0",
+    "--max-frames=80",
+    "--pilot=READER",
+    "--cap-s=600",
+    "--level=43",
+    "--tells-per-opponent=3",
+    "--flags=water_dock_salt_crown_landing_charted"
+  ],
+  "exit_code": 1,
+  "completed_utc": "2026-09-27T14:29:46.700623+00:00",
+  "output_worktree_files": [
+    "shots\\tidewake\\f14_c3_cam\\frames.json",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-000.00.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-008.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-016.00.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-024.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-032.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-040.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-048.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-056.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-064.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-072.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\t-080.02.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-late-001.33.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-late-003.55.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-late-005.75.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-start-000.73.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-start-002.95.png",
+    "shots\\tidewake\\f14_c3_cam\\tess\\tell-start-005.13.png"
+  ],
+  "artifact_files": [
+    {
+      "path": "execution-notes.json",
+      "bytes": 577,
+      "sha256": "fe65c184312a2779a38e0a31e001b43e03844c09c4e0a69cbd605e331549a34c"
+    },
+    {
+      "path": "import.log",
+      "bytes": 6163,
+      "sha256": "b021cd84d31826337b67819c274a48d51f5151f67c5a9c005edf1aff4cf278b8"
+    },
+    {
+      "path": "run.log",
+      "bytes": 2428,
+      "sha256": "4201fea382ce4abdc56d409d0f66a6143e79901cf6e44b4e43602bac61f35b66"
+    },
+    {
+      "path": "user/boot_log.txt",
+      "bytes": 219,
+      "sha256": "97416fb0fec6e2888cc725bb44d64934b11d32d771f6aa72ff34e68ac2b9ce08"
+    },
+    {
+      "path": "user/cache/map_meadows.png",
+      "bytes": 50033,
+      "sha256": "bd844932c0e450887ef3c2c97ecac916823c29f69b2f94b51e18263c74d479de"
+    },
+    {
+      "path": "user/cache/map_meadows.png.key",
+      "bytes": 49,
+      "sha256": "82d3740546650100143c24da534e295ec7ad257140b8a563cf9165d045e12f02"
+    },
+    {
+      "path": "user/logs/godot.log",
+      "bytes": 2396,
+      "sha256": "0dec176868cb74d1f79ecdccdd74e6d0a45ffd5defaf79abaeb2a25e8791dcaa"
+    },
+    {
+      "path": "user/shader_cache/SceneShaderGLES3/e6de8efd8bab1f62e5e1c267bfcd1328b72b0f63d590dc839be899d230d3c70f/d4f273d3ea40fa122366d3a5799bda6e53853c07.cache",
+      "bytes": 1541533,
+      "sha256": "6045254b0c9bc93fbfebf3d108c6d462c81b2b27e02c37e0c569c17a2350b3bd"
+    },
+    {
+      "path": "window-setup.log",
+      "bytes": 77,
+      "sha256": "15d2a62c11dc177aa35c18e3db856d8e99f4000ec4546621859d73e97502aa71"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/frames.json",
+      "bytes": 3185,
+      "sha256": "d3ef9b426aedf395d2a1d8106944bac16d680560af5cdbe04e22efa7053a09d5"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-000.00.png",
+      "bytes": 918336,
+      "sha256": "49842817c5d003ed3f7c7af55fa01faf6fa39d47076b37df522fb1c312796994"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-008.02.png",
+      "bytes": 3497541,
+      "sha256": "2d3c7072a801548f5b20d4984ce57c6a6dc58e3f7b59be5801a4fc0fd949c4f3"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-016.00.png",
+      "bytes": 3387717,
+      "sha256": "4bd2deaf5a56273ca65448dc2a0661ef0d56bae33e06f978aaa22a74709bc45a"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-024.02.png",
+      "bytes": 2683248,
+      "sha256": "6b27b31e6c921602cf81ca6656c94ef0d96a11dd5b1517930fc39d24eb5261ea"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-032.02.png",
+      "bytes": 1527780,
+      "sha256": "ee2b7ed636c1cd87af40993137b72ee610061fcd3de0623e063f3c00b19928e4"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-040.02.png",
+      "bytes": 3116929,
+      "sha256": "f085f2d9099984aa5ee1c740ad62488fc7a13d2ee691369c532c2bc506469c07"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-048.02.png",
+      "bytes": 3089423,
+      "sha256": "2531e6b6740526337b3d7c8e536ec09f4a9e877f9a0f71065f58b86b6555eba2"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-056.02.png",
+      "bytes": 3091497,
+      "sha256": "76bc2be1262d2af4c3f67b0bdd180671816ec17d511238121d078f33f5b1ead9"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-064.02.png",
+      "bytes": 1038218,
+      "sha256": "4c47c30ee4728465b669fa861498f379cd6ff04092a9169d5db2be566492c5ce"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-072.02.png",
+      "bytes": 2448854,
+      "sha256": "fe84c184afc01432ced3d788526a746b269f01287d15ad9e58ea2674070772f9"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/t-080.02.png",
+      "bytes": 2414013,
+      "sha256": "b52873a893c65d0377ef56b0439862b3873dea0f739b1c9543bbbd2c3c4d87a1"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-late-001.33.png",
+      "bytes": 3504443,
+      "sha256": "0f8e850691932bfd46ea25421516b980e1064505f18d735ceb3633185fb1d7d7"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-late-003.55.png",
+      "bytes": 3494040,
+      "sha256": "0ea081a086f0cb20e8869daa2281dec59121fcb7e96dd18a5253756e71d35bdc"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-late-005.75.png",
+      "bytes": 3510369,
+      "sha256": "d1768f0d24eb594d29cfdc6d9c05912b11959745adb32fb34ec693a12bb2c220"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-start-000.73.png",
+      "bytes": 3130807,
+      "sha256": "15d3a0d91d7de0d4cebf9b16212c8f04a13852387262cd920e63eb398c6261ec"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-start-002.95.png",
+      "bytes": 3487866,
+      "sha256": "ff31fbc6039f97277eb86b07785a3c7598e313b5913903c2578aa9099146d8a3"
+    },
+    {
+      "path": "worktree/shots/tidewake/f14_c3_cam/tess/tell-start-005.13.png",
+      "bytes": 3470426,
+      "sha256": "0ae4f0dc3c25a8151adba9571f4f9fc67d6b6d434fd2ecf7fec68e2335e40fed"
+    }
+  ],
+  "rendering": "1920x1080 gl_compatibility; capture script controls saved-image dimensions"
+}

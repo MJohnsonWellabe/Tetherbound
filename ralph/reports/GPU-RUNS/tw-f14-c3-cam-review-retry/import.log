@@ -1,0 +1,89 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (29 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bramblebun_extracted_base_color.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | bramblebun_extracted_emissive.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | cragclaw_extracted_base_color.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | mangrove_monitor_extracted_base_color.png[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | mirejaw_extracted_base_color.png[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | mudsnout_extracted_base_color.png[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | mudsnout_extracted_emissive.png[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | riptusk_extracted_base_color.png[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | sirenseal_extracted_base_color.png[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | trailpup_extracted_base_color.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | trailpup_extracted_emissive.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | veridian_extracted_base_color.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | veridian_extracted_emissive.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | t-000.00.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | t-008.02.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | t-016.00.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | t-024.02.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | t-032.02.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | t-040.02.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | t-048.02.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | t-056.02.png[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | t-064.02.png[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | t-072.02.png[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | tell-late-001.23.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | tell-late-003.45.png[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | tell-late-007.02.png[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | tell-start-000.63.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | tell-start-002.85.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | tell-start-006.40.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (16 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mreimport[22m | t-000.00.png[39m[0m
+[   5% ] [90m[1mreimport[22m | t-008.02.png[39m[0m
+[  11% ] [90m[1mreimport[22m | t-016.00.png[39m[0m
+[  17% ] [90m[1mreimport[22m | t-024.02.png[39m[0m
+[  23% ] [90m[1mreimport[22m | t-032.02.png[39m[0m
+[  29% ] [90m[1mreimport[22m | t-040.02.png[39m[0m
+[  35% ] [90m[1mreimport[22m | t-048.02.png[39m[0m
+[  41% ] [90m[1mreimport[22m | t-056.02.png[39m[0m
+[  47% ] [90m[1mreimport[22m | t-064.02.png[39m[0m
+[  52% ] [90m[1mreimport[22m | t-072.02.png[39m[0m
+[  58% ] [90m[1mreimport[22m | tell-late-001.23.png[39m[0m
+[  64% ] [90m[1mreimport[22m | tell-late-003.45.png[39m[0m
+[  70% ] [90m[1mreimport[22m | tell-late-007.02.png[39m[0m
+[  76% ] [90m[1mreimport[22m | tell-start-000.63.png[39m[0m
+[  82% ] [90m[1mreimport[22m | tell-start-002.85.png[39m[0m
+[  88% ] [90m[1mreimport[22m | tell-start-006.40.png[39m[0m
+[  94% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (16 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m

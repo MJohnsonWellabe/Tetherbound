@@ -1,0 +1,32 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+TIDEWAKE C3 CAPTURE fixture flag: water_dock_salt_crown_landing_charted
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/world/water_world.gd:63)
+       [1] _run (res://tests/capture_tidewake_named_fights.gd:92)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+TIDEWAKE C3 CAPTURE water_trainer_tess: 17 frames over 85.2 s, fight active=false
+ERROR: summon failed before water_trainer_calder
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _capture (res://tests/capture_tidewake_named_fights.gd:137)
+       [1] _frames (res://tests/capture_tidewake_named_fights.gd:277)
+ERROR: summon failed before water_trainer_venn
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _capture (res://tests/capture_tidewake_named_fights.gd:137)
+       [1] _frames (res://tests/capture_tidewake_named_fights.gd:277)
+ERROR: summon failed before water_trainer_nerissa
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _capture (res://tests/capture_tidewake_named_fights.gd:137)
+       [1] _frames (res://tests/capture_tidewake_named_fights.gd:277)
+TIDEWAKE C3 CAPTURE done: 4 trainer(s), 3 failure(s), 17 frames
