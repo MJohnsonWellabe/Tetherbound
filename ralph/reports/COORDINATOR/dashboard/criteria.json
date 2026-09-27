@@ -420,19 +420,20 @@
    "chapter": "Cloudreach",
    "pct": 40,
    "counts": {
-    "met": 2,
+    "met": 5,
     "partial": 0,
-    "in_progress": 2,
-    "not_started": 1,
+    "in_progress": 0,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Six WORLD §11 activities, one per principal region, pass §5",
-     "status": "in_progress",
-     "evidence": "Audit: none fully qualified; couriers/aeries payoffs on ralph/cloudreach-activity-rewards; waycamp and latch unbuilt",
-     "gap": "Bells map reveal, circuit TM, two unbuilt activities"
+     "status": "met",
+     "evidence": "ralph/reports/CLOUDREACH/b/f07-0-six-activities-witness/default-five/run-3-2d144ebd/ @ tb/cloudreach-b 34502d97 (batch 60): F07#0 SIX ACTIVITIES PASS with the default five (no flier): lure, real action, payoff, acknowledgement and disk-reload survival for all six; Cliff Circuit pays tm_rock_throw per ruling 5856818138, covered by test_every_retained_five_has_a_usable_circuit_pick; Waycamp bed rest pays 2x rest XP; independent re-check MET. Shortcuts disclosed: fixture flags through Act II; L30 five using Maela's loaner for flights; teleport to each prompt; 4 Gale Fiber granted; Tavi via mechanics-mode lethal seam after real challenge input; accelerated clock. Bells/Aeries map-pin and stamina payoffs unit-tested only.",
+     "gap": "",
+     "note": "Counted at merge of batch 60."
     },
     {
      "text": "Each payoff useful to retained five with saved state",
