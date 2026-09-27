@@ -30,3 +30,18 @@ F07#4 ledger credits (within 12 m of the walked path). See `named_sites_road_cle
 Regressions:
 - `smoke_cloudreach_ground_truth` PASS.
 - `run_tests.gd --only=test_cloudreach`: 260 tests, 18242 assertions, 0 failed.
+
+## Review round 1 (APPROVE WITH NITS) applied
+- **Probe hardened.** A leg now also fails on any `mobile_obstacle_detour*` walk-around; that is how a
+  walker can squeeze past a pair on main. B2 and B3 also fail unless their named pair
+  (`ravine_wind_*`, `roost_perches_*`) actually stood within 15 m of the blocker. The run fails
+  unless B1's `VegetatedGeologicalShelf2` is gone.
+  - Branch run 3 (`branch_run3_hardened.txt`): PASS. 0 detours on every leg, the named pairs were
+    present, and the shelf is absent.
+- **Headroom moved to config.** It is now `landmass.route_shelf_headroom_m` (3.2) in `cloudreach_visual.json`.
+- **Honest note on B2 for main.** In the one main run, the walker passed B2 with no walk-around, so
+  the pair was not on its line that time. Cloudreach-B hit B2 on 2 of 3 runs. Main's B3 failure did
+  involve 4 walk-arounds of `roost_perches_0` before the stall.
+- **Known limits, inherited from the ROAD CP-2 exception.** Only the local trainer body is exempt. A
+  piloted or ally creature body still collides with a pair. Visual-only shelves (i ≥ 3) and landing
+  pad caps are not checked, because they cannot block a road.

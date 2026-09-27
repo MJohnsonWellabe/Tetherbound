@@ -5927,19 +5927,18 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 ## Whether a colliding shelf whose top centre is `top` (global) would stand in
 ## a ground route's walking space: horizontally within the road ribbon plus the
 ## shelf's own radius, and vertically overlapping the band from just above the
-## road surface to a walker's headroom (ROUTE_HEADROOM_M).
-const ROUTE_HEADROOM_M := 3.2
-
+## road surface to a walker's headroom (`landmass.route_shelf_headroom_m`).
 func _shelf_in_route_headroom(top: Vector3, radius: float, height: float) -> bool:
 	if _all_route_lines.is_empty():
 		_collect_all_route_lines()
 	var bottom_y := top.y - height
+	var headroom := float(_visual_config.get("landmass", {}).get("route_shelf_headroom_m", 3.2))
 	for line: Dictionary in _lines_near(top.x - radius, top.x + radius, top.z - radius, top.z + radius):
 		var hit := _line_point_xz(line, top)
 		if float(hit["distance"]) > float(line["half_width"]) + radius + 1.0:
 			continue
 		var road_y := float(hit["height"])
-		if bottom_y < road_y + ROUTE_HEADROOM_M and top.y > road_y + 0.3:
+		if bottom_y < road_y + headroom and top.y > road_y + 0.3:
 			return true
 	return false
 

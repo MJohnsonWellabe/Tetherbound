@@ -19,8 +19,10 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ##
 ##   godot --headless --path . --script tests/smoke_cloudreach_route_blockers.gd
 ##
-## Prints `CLOUDREACH ROUTE BLOCKERS {...}`; exit 0 only when every leg passes
-## within PASS_NEAR_M of its blocker point and reaches its target.
+## Prints `CLOUDREACH ROUTE BLOCKERS {...}`; exit 0 only when every leg reaches
+## its target through a point within PASS_NEAR_M of its blocker with no
+## mobile-obstacle walk-around, B2/B3's named wild pair was actually there, and
+## the B1 shelf is gone.
 
 const FLAGS: Array[String] = ["warden_defeated", "realm_key_cloudreach",
 	"realm_heart_meadows_earned", "realm_heart_meadows_placed", "realm_gate_cloudreach_unlocked",
@@ -31,14 +33,15 @@ const LEGS := [
 	{"id": "B1", "blocker": Vector3(-128.4, 205.5, 704.5), "start": Vector3(-280.0, 180.0, 508.0),
 		"target_node": "lower_west"},
 	{"id": "B2", "blocker": Vector3(223.6, 556.5, 3331.9), "start": Vector3(400.0, 610.0, 3250.0),
-		"target": Vector3(-720.0, 700.0, 3680.0)},
+		"target": Vector3(-720.0, 700.0, 3680.0), "wild_prefix": "ravine_wind_"},
 	{"id": "B3", "blocker": Vector3(500.5, 986.4, 4890.0), "start": Vector3(491.9854, 951.379, 4793.862),
-		"target": Vector3(302.8, 1078.7, 5097.0)},
+		"target": Vector3(302.8, 1078.7, 5097.0), "wild_prefix": "roost_perches_"},
 ]
 
 var _nearest := INF
 var _blocker := Vector3.INF
 var _wilds_near := {}
+var _detours := 0
 
 
 func _run() -> void:
@@ -76,6 +79,7 @@ func _run() -> void:
 	for leg: Dictionary in LEGS:
 		stage = "route_blocker_" + str(leg.id)
 		failed = false
+		_detours = 0
 		_nearest = INF
 		_blocker = leg.blocker
 		var start: Vector3 = leg.start
@@ -88,19 +92,35 @@ func _run() -> void:
 		var before := distance_m
 		var reached := await _navigate(target)
 		_release()
-		var ok := reached and not failed and _nearest <= PASS_NEAR_M
+		# A leg only proves its blocker when the walker went straight through
+		# it: no mobile-obstacle walk-around (how main can squeeze past a pair),
+		# and, for the wild blockers, the named pair actually standing there.
+		var wild_prefix := str(leg.get("wild_prefix", ""))
+		var named_present := wild_prefix.is_empty()
+		for seen: String in _wilds_near.get(leg.id, []):
+			named_present = named_present or seen.begins_with(wild_prefix)
+		var ok := reached and not failed and _nearest <= PASS_NEAR_M and _detours == 0 and named_present
 		all_ok = all_ok and ok
 		results.append({"id": leg.id, "ok": ok, "reached_target": reached, "nearest_to_blocker_m": snappedf(_nearest, 0.1),
 			"walked_m": snappedf(distance_m - before, 0.1), "wild_bodies_within_15m": _wilds_near.get(leg.id, []),
+			"named_wilds_present": named_present, "mobile_obstacle_detours": _detours,
 			"player": str(player.global_position)})
 		await _frames(10)
 	var skipped: Variant = world.get("shelves_skipped_for_routes")
 	var shelves := int(skipped) if skipped != null else -1
 	var b1_shelf := world.find_child("Ridge002RockShoulder38", true, false)
+	var shelf_present := b1_shelf != null and b1_shelf.find_child("VegetatedGeologicalShelf2", true, false) != null
+	all_ok = all_ok and not shelf_present
 	print("CLOUDREACH ROUTE BLOCKERS " + JSON.stringify({"verdict": "PASS" if all_ok else "FAIL",
 		"legs": results, "shelves_skipped_for_routes": shelves,
-		"b1_shelf2_present": b1_shelf != null and b1_shelf.find_child("VegetatedGeologicalShelf2", true, false) != null}))
+		"b1_shelf2_present": shelf_present}))
 	quit(0 if all_ok else 1)
+
+
+func _log(kind: String, details: Dictionary = {}) -> void:
+	if kind.begins_with("mobile_obstacle_detour"):
+		_detours += 1
+	super._log(kind, details)
 
 
 func _track_blocker() -> void:
