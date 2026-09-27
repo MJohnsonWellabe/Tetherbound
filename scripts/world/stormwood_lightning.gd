@@ -13,6 +13,8 @@ var session: Node
 var _next := 0.0
 var _pending: Array[Dictionary] = []
 var _visuals: Dictionary = {}
+## Each drawn warning's ring centre by strike id, so its bolt lands there.
+var _warning_centres: Dictionary = {}
 var _received_impacts: Array[int] = []
 var _rng := RandomNumberGenerator.new()
 
@@ -135,6 +137,7 @@ func _receive(event: Dictionary) -> void:
 		# Hold decorative sky bolts while this warning is drawn (F10#3).
 		if surge != null and surge.has_method("hold_sky_bolts"):
 			surge.hold_sky_bolts(float(rules.config.strike.telegraph_seconds) + 0.3)
+		_warning_centres[id] = event.at
 		var ring := _build_telegraph(event.at)
 		add_child(ring)
 		ring.global_position = event.at
@@ -167,7 +170,8 @@ func _receive(event: Dictionary) -> void:
 		else:
 			tween.tween_interval(0.12)
 		tween.tween_callback(ring.queue_free)
-	_strike_flash(event.at)
+	_strike_flash(bolt_centre(_warning_centres.get(id), event.at))
+	_warning_centres.erase(id)
 	var hits: Dictionary = event.get("hits", {})
 	if not hits.has(session.local_peer_id()):
 		return
@@ -299,6 +303,8 @@ uniform float rim_heights[16];
 uniform float lift = 0.07;
 uniform float depth_pull = 0.28;
 uniform float pull_start_radius = 2.88;
+uniform float countdown_width = 0.05;
+uniform float ramp_start = 0.75;
 varying float r;
 void vertex() {
 	float len = length(VERTEX.xz);
@@ -333,18 +339,49 @@ void fragment() {
 	float rim = 1.0 - smoothstep(0.0, rim_width, abs(r - rim_fraction));
 	float outer = r > rim_fraction ? 1.0 - smoothstep(rim_fraction, 1.0, r) : 0.0;
 	float fill = r < rim_fraction ? smoothstep(0.0, rim_fraction, r) * (0.3 + 0.35 * progress) : 0.0;
-	float a_rim = rim * mix(pulse, 1.0, strike);
+	// Countdown (F10#3): a second ring closes from the rim to the centre over
+	// the telegraph, so early and late warning frames differ at a glance. It
+	// does not pulse, so it also carries the timing under reduced motion.
+	float closing_r = rim_fraction * (1.0 - progress);
+	float countdown = (1.0 - smoothstep(0.0, countdown_width, abs(r - closing_r))) * (1.0 - strike);
+	// The last `final_ramp_seconds` brighten the rim and deepen the fill.
+	float ramp = smoothstep(ramp_start, 1.0, progress);
+	float a_rim = rim * mix(pulse, 1.0, max(strike, ramp));
 	float a_edge = outer * 0.6 * pulse;
+	float a_count = countdown * 0.9;
+	fill *= 1.0 + 0.6 * ramp;
 	vec3 hot = mix(rim_colour, vec3(1.0), strike);
-	vec3 colour = (hot * intensity * mix(1.0, 2.2, strike) * a_rim + edge_colour * a_edge
-		+ fill_colour * fill) / max(a_rim + a_edge + fill, 0.001);
+	vec3 colour = (hot * intensity * mix(1.0, 2.2, strike) * mix(1.0, 1.5, ramp) * a_rim + edge_colour * a_edge
+		+ hot * intensity * a_count + fill_colour * fill) / max(a_rim + a_edge + a_count + fill, 0.001);
 	ALBEDO = colour;
-	ALPHA = clamp(a_rim + a_edge + fill, 0.0, 1.0) * fade;
+	ALPHA = clamp(a_rim + a_edge + a_count + fill, 0.0, 1.0) * fade;
 }
 """
 static var _telegraph_mesh: ArrayMesh
 ## Test/probe hook: ground_height_near calls made by the last warning build.
 var last_telegraph_height_calls := 0
+
+## Where the final brightening ramp starts, as a fraction of the telegraph.
+static func telegraph_ramp_start(telegraph_seconds: float, final_ramp_seconds: float) -> float:
+	return clampf(1.0 - final_ramp_seconds / maxf(telegraph_seconds, 0.001), 0.0, 1.0)
+
+
+## The warning ring's countdown state at `elapsed` seconds into the telegraph,
+## the same maths the shader applies to `progress` (F10#3): the closing
+## ring's radius as a fraction of the rim, the dark fill's strength and the
+## final ramp.
+static func telegraph_state(elapsed: float, telegraph_seconds: float, final_ramp_seconds: float) -> Dictionary:
+	var progress := clampf(elapsed / maxf(telegraph_seconds, 0.001), 0.0, 1.0)
+	var ramp := smoothstep(telegraph_ramp_start(telegraph_seconds, final_ramp_seconds), 1.0, progress)
+	return {"progress": progress, "closing_radius_fraction": 1.0 - progress,
+		"fill": (0.3 + 0.35 * progress) * (1.0 + 0.6 * ramp), "ramp": ramp}
+
+
+## The bolt lands at the centre of the ring that warned of it: the warning's
+## own position, whatever an impact event carries.
+static func bolt_centre(warning_at: Variant, impact_at: Vector3) -> Vector3:
+	return warning_at if warning_at is Vector3 else impact_at
+
 
 ## The game's one hazard colour: combat.json telegraph.colour (magenta,
 ## settled by its `_why_colour_0905` note after amber read as reward gold,
@@ -418,6 +455,9 @@ func _telegraph_material() -> ShaderMaterial:
 	material.set_shader_parameter("lift", float(cfg.get("ground_lift_m", 0.07)))
 	material.set_shader_parameter("depth_pull", float(cfg.get("depth_pull_m", 0.28)))
 	material.set_shader_parameter("pulse_enabled", 0.0 if MOTION_PREFS.reduced_motion() else 1.0)
+	material.set_shader_parameter("countdown_width", float(cfg.get("countdown_ring_width_m", 0.16)) / outer_r)
+	material.set_shader_parameter("ramp_start", telegraph_ramp_start(float(rules.config.strike.telegraph_seconds),
+		float(cfg.get("final_ramp_seconds", 0.3))))
 	material.set_shader_parameter("pull_start_radius", rim_r - 0.15)
 	return material
 
@@ -487,6 +527,7 @@ func _prewarm_telegraph() -> void:
 func _expire_warning(id: int) -> void:
 	var ring: Variant = _visuals.get(id)
 	_visuals.erase(id)
+	_warning_centres.erase(id)
 	if is_instance_valid(ring):
 		ring.queue_free()
 

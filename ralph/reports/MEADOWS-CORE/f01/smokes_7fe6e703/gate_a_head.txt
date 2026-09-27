@@ -1,0 +1,41 @@
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 2462 quads over 7 groups, grass field thinned
+GATE A OPENING +105.36s — wake/Get Up complete
+GATE A OPENING +109.79s — Grandpa briefing and pack complete
+GATE A OPENING +109.79s — starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE A OPENING +114.03s — starter selected and named (terrapup, uid creature-5949bb60336ea485312c31ab79db2898)
+GATE A OPENING +115.46s — Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE A OPENING +117.07s — usable house/front doorway exited
+wild approach: ready at 5.60m with '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Bramblebun'
+GATE A OPENING +129.62s — tutorial Bramblebun combat entered
+GATE A OPENING +140.18s — Bramblebun naturally weakened to 27/106 HP
+GATE A OPENING +140.18s — satchel drained to 1 orb(s) so the empty case is on the real path
+catch launch: commit eligible=false reticle=1.145/1.133 first_hit=Wild_bramblebun_0_2 los=true reason=reticle_outside_body
+catch launch: release assist=false predicted=none range=7.70 from=(21.29, 3.03, -45.07) dir=(-0.35, 0.14, -0.93)
+catch launch: placement closest=0.089 clamped=0.089 body_radius=0.666 orb_radius=0.60
+catch launch: strike assist=false predicted=none offset=0.089
+GATE A OPENING +141.85s — running dry restocked the tutorial satchel to 5 orb(s)
+GATE A OPENING +146.89s — physical landed throw caught Bramblebun on launch 1 (1 strike(s), 0 miss(es))
+GATE A OPENING +148.51s — catch complete; exploration resumed with two-creature party
+GATE A OPENING — title interactive
+GATE A OPENING — answered the character-choice step
+GATE A OPENING — confirmed the configured trainer-name prefill
+GATE A OPENING — new game world entered
+GATE A OPENING — wake/Get Up complete
+GATE A OPENING — Grandpa briefing and pack complete
+GATE A OPENING — starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE A OPENING — starter selected and named (terrapup, uid creature-5949bb60336ea485312c31ab79db2898)
+GATE A OPENING — Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE A OPENING — usable house/front doorway exited
+GATE A OPENING — tutorial Bramblebun combat entered
+GATE A OPENING — Bramblebun naturally weakened to 27/106 HP
+GATE A OPENING — satchel drained to 1 orb(s) so the empty case is on the real path
+GATE A OPENING — running dry restocked the tutorial satchel to 5 orb(s)
+GATE A OPENING — physical landed throw caught Bramblebun on launch 1 (1 strike(s), 0 miss(es))
+GATE A OPENING — catch complete; exploration resumed with two-creature party
+gate A opening segment: OK — title through natural catch passed continuously with parsed controller input
+EXIT 0
+head 7fe6e703

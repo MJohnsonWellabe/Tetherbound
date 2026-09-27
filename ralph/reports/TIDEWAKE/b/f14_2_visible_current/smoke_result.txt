@@ -1,0 +1,7 @@
+BEFORE calm_scale=1.000 current_speed_m_s=1.3000 at (425.0, 0.0, 1920.0)
+BEFORE LOOK { "calm_scale": 1.0, "opacity": 0.95, "lane_opacity": 0.22, "streak_density": 1.0, "dash_fill": 0.85, "fleck_amount": 0.9, "speed_scale": 2.4, "min_speed_m_s": 0.6, "brightness": 1.15 }
+AFTER calm_scale=0.500 current_speed_m_s=0.3250 at (425.0, 0.0, 1920.0)
+AFTER LOOK { "calm_scale": 0.5, "opacity": 0.4, "lane_opacity": 0.04, "streak_density": 0.25, "dash_fill": 0.2, "fleck_amount": 0.05, "speed_scale": 0.65, "min_speed_m_s": 0.15, "brightness": 0.85 }
+RELOAD calm_scale=0.500 current_speed_m_s=0.3250 at (425.0, 0.0, 1920.0)
+RELOAD LOOK { "calm_scale": 0.5, "opacity": 0.4, "lane_opacity": 0.04, "streak_density": 0.25, "dash_fill": 0.2, "fleck_amount": 0.05, "speed_scale": 0.65, "min_speed_m_s": 0.15, "brightness": 0.85 }
+Tidewake current restore smoke: 77 checks, 0 failures

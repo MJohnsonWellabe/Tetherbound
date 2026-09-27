@@ -11,6 +11,15 @@ const VISUAL_OFFSET := Vector2(-20.0, 24.0)
 const COL_CHAR := Color("#282b29")
 const COL_SCAR := Color("#78e4ed")
 const COL_SCAR_CORE := Color("#d0fbff")
+const LONG_STORM_ENDED := "stormwood:long_storm_ended"
+const SURGE_CONFIG := "res://data/config/stormwood_surge.json"
+
+## F10#4: once the Long Storm is broken the strike is spent. The live scar
+## cools to a dark seam (presentation.aftermath_scar) and its afterglow goes
+## out; before that it glows as authored.
+var _scar_materials: Array[StandardMaterial3D] = []
+var _afterglow: OmniLight3D
+var _storm_ended := false
 
 
 static func visual_offset_xz() -> Vector2:
@@ -33,6 +42,37 @@ func build() -> void:
 	afterglow.omni_range = 24.0
 	afterglow.shadow_enabled = false
 	add_child(afterglow)
+	_afterglow = afterglow
+
+
+func _process(_delta: float) -> void:
+	var game := get_node_or_null("/root/Game")
+	var flags: Variant = game.get("progression") if game != null else null
+	var ended := flags is RefCounted and bool((flags as RefCounted).call("has", LONG_STORM_ENDED))
+	if ended != _storm_ended:
+		set_storm_ended(ended)
+
+
+func set_storm_ended(ended: bool) -> void:
+	_storm_ended = ended
+	var cfg: Dictionary = aftermath_scar_config()
+	for material: StandardMaterial3D in _scar_materials:
+		var live: Color = material.get_meta("live_colour")
+		material.albedo_color = Color(str(cfg.get("colour", "#3b3548"))) if ended else live
+		material.emission_enabled = not ended or float(cfg.get("emission_energy", 0.0)) > 0.0
+		material.emission = material.albedo_color
+		material.emission_energy_multiplier = float(cfg.get("emission_energy", 0.0)) if ended else 3.0
+	if _afterglow != null:
+		_afterglow.visible = not ended
+
+
+func storm_ended() -> bool:
+	return _storm_ended
+
+
+static func aftermath_scar_config() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SURGE_CONFIG))
+	return (parsed as Dictionary).get("presentation", {}).get("aftermath_scar", {}) if parsed is Dictionary else {}
 
 
 func _charred_ground() -> void:
@@ -89,7 +129,10 @@ func _energy_segment(parent: Node3D, node_name: String, start: Vector3,
 	mesh.height = start.distance_to(finish)
 	mesh.radial_segments = 8
 	segment.mesh = mesh
-	segment.material_override = _material(colour, true)
+	var material := _material(colour, true)
+	material.set_meta("live_colour", colour)
+	_scar_materials.append(material)
+	segment.material_override = material
 	segment.position = (start + finish) * 0.5
 	segment.quaternion = Quaternion(Vector3.UP, (finish - start).normalized())
 	parent.add_child(segment)

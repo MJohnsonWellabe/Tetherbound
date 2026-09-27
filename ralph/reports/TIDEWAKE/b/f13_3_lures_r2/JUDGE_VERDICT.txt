@@ -1,0 +1,30 @@
+**frame_01:** WEAK — Faint gray smoke column rises top-center against pale sky, and a small blue banner-topped post is half-hidden behind a tree trunk beyond the grass patch. Both are far, small, and muted in tone against the equally gray hillsides, so a player glancing around would likely miss it at first look; the smoke's height helps a little but color contrast is low.
+
+**frame_02:** NOTICEABLE — A large silver/blue-shelled creature sits close to the player, left-of-center, impossible to miss. Behind it, the same smoke plume and banner post reappear top-center, reinforcing a direction to walk. Two separate pulls here (creature + landmark).
+
+**frame_03:** NOTICEABLE — The sandy path is flanked by tall dark hillsides that funnel the eye straight down the corridor to the small blue banner and smoke column sitting exactly on the vanishing point. Strong "path leads to target" framing even though the banner itself is small.
+
+**frame_04:** NOTICEABLE — The blue banner post sits mid-frame on the right, its saturated navy color popping against the green hillside; a snow-capped peak in the distance adds scenery but doesn't steal focus from the closer, warmer-toned banner.
+
+**frame_05:** NOTICEABLE — Ahead on the hilltop sits a small camp cluster (teepee tent, orange campfire glow, a standing figure, plus the smoke column and banner), all silhouetted against the sky. Multiple varied shapes read clearly as "something built here, go look."
+
+**frame_06:** NOTICEABLE — Another canyon corridor shot; the dark hill walls frame a bright, detailed camp (crates, standing figures, banner, smoke) sitting right at the end of the visual tunnel. One of the strongest "obvious destination" compositions in the set.
+
+**frame_07:** WEAK — The banner and smoke sit off to the left-of-center, small and set against a hillside of similar gray-green tone; foreground bushes don't help draw the eye that direction. A player would likely need the quest marker/minimap rather than the visual alone.
+
+**frame_08:** WEAK — The pump site is reduced to a tiny mark near the horizon over open water, blending into the haze. The wide, scenic water view actively competes for attention and wins; the actual lure is easy to overlook entirely.
+
+**frame_09:** NOTICEABLE — The banner-and-lantern post is medium-sized, centered, and sits at a clear break in the grass ahead — reads immediately as a built waypoint to approach.
+
+**frame_10:** NOTICEABLE — Player is now right at the post; banner, hanging lantern, and a crate fill a large portion of the frame. Clearly the arrival point, no ambiguity.
+
+**frame_11:** NOTICEABLE — A small beach camp (tent, fire, banner post, a tiny NPC figure) sits ahead, and an odd blue-and-pink finned/winged creature at the frame's left edge is visually striking and pulls the eye almost as much as the camp itself.
+
+**frame_12:** NOTICEABLE — A large whale-like creature is partially surfaced directly in front of the player in the water — big, close, and impossible to ignore; the camp is faintly visible on the shore behind it as a secondary point of interest.
+
+PLACE 1 (frames 01+02): WEAK — arrival shot undersells the landmark; only becomes compelling once the nearby creature and closer banner appear in frame 2.
+PLACE 2 (frames 03+04): YES — corridor framing and a color-contrasted banner make the destination clear from both angles.
+PLACE 3 (frames 05+06): YES — a readable camp silhouette at both distances, reinforced by strong canyon framing in frame 6.
+PLACE 4 (frames 07+08): NO — the landmark stays small, off-center, and low-contrast in both frames; the vista overwhelms it.
+PLACE 5 (frames 09+10): YES — the waypoint post is legible from a distance and unmistakable up close.
+PLACE 6 (frames 11+12): YES — an odd creature carcass, a camp, and a large live creature in the water all give strong, escalating pulls to continue forward.

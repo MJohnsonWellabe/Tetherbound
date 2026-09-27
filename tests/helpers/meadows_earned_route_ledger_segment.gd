@@ -163,9 +163,14 @@ static func solvency(rows: Array, beat_list: Array, potion_price: int, revive_pr
 ## seen. Fights, story flags and every other offer (a person, a trainer, a
 ## TM, a craft or rest spot, a gate) count. Reported beside the loose reading.
 const REPEATED_VERBS := ["Chop", "Gather", "Pick up", "Mine", "Strip meadow grass",
-	"Gather deadwood", "Prise loose stones", "Prise out rootstone", "Pick berries",
-	"Open Door", "Close Door"]
+	"Gather deadwood", "Prise loose stones", "Prise loose stone", "Prise out rootstone",
+	"Break out rootstone", "Cut river fiber", "Fell an ironwood", "Pick berries",
+	"Open Door", "Close Door", "Rest a Creature", "Get up"]
 const CONTROL_PREFIXES := ["Put ", "Call out ", "Change Creature"]
+## The flags a harvest writes (the node spent, the scatter felled) are the
+## same repeated resource verb over again, not a story beat (strict re-score
+## 2026-09-27: 42 of r37's strict beats were these).
+const HARVEST_FLAG_PREFIXES := ["vegetation:", "felled:", "harvest_node:"]
 
 
 static func strict_beats(beat_list: Array) -> Array:
@@ -182,6 +187,12 @@ static func strict_beats(beat_list: Array) -> Array:
 			for prefix: String in CONTROL_PREFIXES:
 				control = control or detail.begins_with(prefix)
 			if control:
+				continue
+		elif kind == "flag_set":
+			var harvest := false
+			for prefix: String in HARVEST_FLAG_PREFIXES:
+				harvest = harvest or detail.begins_with(prefix)
+			if harvest:
 				continue
 		elif kind == "wild_within_radius":
 			var species := detail.get_slice(" ", 1)

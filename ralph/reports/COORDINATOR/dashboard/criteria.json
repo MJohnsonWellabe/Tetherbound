@@ -71,10 +71,10 @@
    "chapter": "Meadows",
    "pct": 62,
    "counts": {
-    "met": 5,
-    "partial": 2,
+    "met": 8,
+    "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -117,7 +117,7 @@
      "text": "Solo, two-loss and four-character ledgers solvent",
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/MEADOWS-PAYOFFS/earned-bridge/ledger-seed15-r35|r36-679329ac: reserve_ok and two_loss_ok at all 5 stages, no repeated wilds; fourchar-ledger-result.txt solvent. Shortcuts disclosed: four-character ledger is a static computation over the seed-15 path, harness fights, seed fixture, assumed two-loss basket. Independent re-check: MET.",
-     "gap": "Merged in batch 55 (#374); counted at merge (owner rule 2026-09-27). Safety-net full CI 36319498130 running."
+     "gap": "Counted at merge; confirmed by green full CI 36319498130 (run 5709) on main ddaf7a7bd."
     },
     {
      "text": "No repeated wilds required",
@@ -127,9 +127,10 @@
     },
     {
      "text": "WORLD §3.1 route spacing and A7 measured on the same route",
-     "status": "not_started",
-     "evidence": "No spacing/A7 measurement on the earned route found",
-     "gap": "Measure on continuous route"
+     "status": "met",
+     "evidence": "ralph/reports/MEADOWS-PAYOFFS/earned-bridge/hall-seed15-r41-0336cf9f.txt, ledger-seed15-r41-0336cf9f.jsonl.txt, strict-recompute-r41.txt @ tb/meadows-route d9fce875 (batch 61): one continuous seed-15 run measures route spacing and A7 together; a7_violations [], every window at most 213 m except the Home-materials trip (308 m); independent re-check MET. Shortcuts disclosed: Home-materials out-and-back over 250 m (accepted skipped sub-part, owner 13:20); harness walker, one seed, one run per content version; caches count within 40 m without line of sight (A7 passes because of the 17 placed caches); unmapped vista not detected; run stops at warden_arena_entered.",
+     "gap": "",
+     "note": "Counted at merge of batch 61."
     }
    ]
   },
@@ -208,8 +209,8 @@
    "chapter": "Meadows",
    "pct": 47,
    "counts": {
-    "met": 2,
-    "partial": 5,
+    "met": 3,
+    "partial": 4,
     "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
@@ -242,9 +243,10 @@
     },
     {
      "text": "Real hit/avoidance witness per fight",
-     "status": "partial",
-     "evidence": "smoke_warrens --guardian-attacks 3 hits/1 miss (branch); charger sidestep whiff, blind 'partly' (main fe07d0d2)",
-     "gap": "Witnesses for captains and Warden"
+     "status": "met",
+     "evidence": "tests/smoke_named_fight_hit_avoid.gd + ralph/reports/MEADOWS-CORE/f04/hit_avoid/ @ tb/meadows-core c86258f3 (batch 59): Oreth, Halder, Vess and Warden each show pad-input dodges avoided plus landed strikes via combat_manager hit_landed/attack_missed; mutation check fails the test; Warrens guardian and relay officers already on main; independent re-check re-ran it and passed. Shortcuts disclosed: fixture Terrapup healed after each strike; fixture teleport to stand spot (skips progression gates); four fights in one world each ended by forced loss; ordinary quicks only; headless; dodge counts vary run to run (Vess can pass on one dodge).",
+     "gap": "",
+     "note": "Counted at merge of batch 59."
     },
     {
      "text": "Specified tell/recovery timing",
@@ -368,7 +370,7 @@
      "text": "Starts from the earned Meadows handoff save",
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). tests/fixtures/earned_saves/c1_arrival PROVENANCE (injections 0, seed 4) built from the earned seed4_hall checkpoint; ralph/reports/CLOUDREACH/b/f06-1-foot-regions/earned/run.txt CONTINUOUS PASS from the save via the production title Load. Shortcuts disclosed: checkpoint joins (seed4_hall, village_pre_kell, storm_road_join) with two failed leg tails discarded, routing detours B1-B16, Load pressed by signal. Also carries the earned full-route A7 corroboration for F07#3 (0 intervals over 120 s). Independent re-check: MET.",
-     "gap": "Merged in batch 54 (#373); counted at merge (owner rule 2026-09-27). Safety-net full CI 36319498130 running."
+     "gap": "Counted at merge; confirmed by green full CI 36319498130 (run 5709) on main ddaf7a7bd."
     },
     {
      "text": "Ordinary foot path traverses all six regions",
@@ -419,19 +421,20 @@
    "chapter": "Cloudreach",
    "pct": 40,
    "counts": {
-    "met": 2,
+    "met": 5,
     "partial": 0,
-    "in_progress": 2,
-    "not_started": 1,
+    "in_progress": 0,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "Six WORLD §11 activities, one per principal region, pass §5",
-     "status": "in_progress",
-     "evidence": "Audit: none fully qualified; couriers/aeries payoffs on ralph/cloudreach-activity-rewards; waycamp and latch unbuilt",
-     "gap": "Bells map reveal, circuit TM, two unbuilt activities"
+     "status": "met",
+     "evidence": "ralph/reports/CLOUDREACH/b/f07-0-six-activities-witness/default-five/run-3-2d144ebd/ @ tb/cloudreach-b 34502d97 (batch 60): F07#0 SIX ACTIVITIES PASS with the default five (no flier): lure, real action, payoff, acknowledgement and disk-reload survival for all six; Cliff Circuit pays tm_rock_throw per ruling 5856818138, covered by test_every_retained_five_has_a_usable_circuit_pick; Waycamp bed rest pays 2x rest XP; independent re-check MET. Shortcuts disclosed: fixture flags through Act II; L30 five using Maela's loaner for flights; teleport to each prompt; 4 Gale Fiber granted; Tavi via mechanics-mode lethal seam after real challenge input; accelerated clock. Bells/Aeries map-pin and stamina payoffs unit-tested only.",
+     "gap": "",
+     "note": "Counted at merge of batch 60."
     },
     {
      "text": "Each payoff useful to retained five with saved state",
@@ -468,9 +471,9 @@
    "pct": 50,
    "counts": {
     "met": 3,
-    "partial": 2,
+    "partial": 1,
     "in_progress": 0,
-    "not_started": 0,
+    "not_started": 1,
     "blocked": 0,
     "failing": 1
    },
@@ -507,10 +510,11 @@
      "gap": "Work orders M1–M12 plus art assets"
     },
     {
-     "text": "Cloudreach presents no legendary offer",
-     "status": "met",
-     "evidence": "Batch 13: test_cloudreach_finale / no-legendary-offer closure 36/208 green | Full CI green on main 749634d9 (run 36229707080)",
-     "gap": "—"
+     "text": "Solmane freed after Veyra volunteers to each finale participant like Meadows’ Veridian; never wild or catchable",
+     "status": "not_started",
+     "evidence": "Previous criterion (\"Cloudreach presents no legendary offer\") was met; wild summit Solmane replaced by tempestwing in batch 62. The owner ruling 2026-09-27 replaces it with a Veridian-style freeing and per-participant offer, not yet implemented.",
+     "gap": "Implement the tether chamber after captain_veyra_defeated, the Solmane freeing and the per-participant ceremony (reuse Meadows Veridian flow); solo plus two-peer accept/refuse, capacity and reload evidence.",
+     "note": "Owner ruling 2026-09-27; owned by the full Cloudreach run."
     }
    ]
   },
@@ -520,8 +524,8 @@
    "chapter": "Stormwood",
    "pct": 60,
    "counts": {
-    "met": 3,
-    "partial": 2,
+    "met": 4,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -530,9 +534,10 @@
    "criteria": [
     {
      "text": "Earned traversal demonstrates all six regions",
-     "status": "partial",
-     "evidence": "Earned rootgate/marrow/dynamo segment tests and smoke_stormwood_continuous (main); not from C3 save",
-     "gap": "Earned run from Cloudreach handoff"
+     "status": "met",
+     "evidence": "ralph/reports/STORMWOOD/f09_0/{README.md,run9-d3414e84.txt} @ tb/stormwood a7ea3647 (batch 58): continuous earned run across all six regions from the Cloudreach-boundary fixture, no Stormwood flag/position fixtures; independent re-check MET. Shortcuts disclosed: start is Cloudreach-boundary fixture (not an earned C3 save); party five fresh L44 spawns; knife/axe/pickaxe granted; accelerated clock 8x; harness-driven input and fights; helper routing B1-B8.",
+     "gap": "",
+     "note": "Counted at merge of batch 58 (count-at-merge rule)."
     },
     {
      "text": "Lawful Surge phases, grounded paths, rod safe radii",
@@ -608,15 +613,15 @@
     },
     {
      "text": "Audio witness for phases/lightning",
-     "status": "not_started",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). tests/smoke_stormwood_surge_audio.gd on main; ralph/reports/STORMWOOD-PROGRESS/audio/f10_5/vis-rerun/run_summary.txt 19 passed, 0 failed: each phase cue fires once in order, 21 warnings/21 strikes, warning-to-strike 1.200-1.211 s, captions with direction wedges. Shortcuts disclosed: Surge clock jumped, trainer pinned/healed, Long Storm ended by flag, headless single peer; all 9 cue assets missing so nothing is audible (witness proves wiring and timing only); blinded-listener test open. Independent re-check: MET.",
-     "gap": "Landing in batch 56; counts at merge."
+     "gap": "Counted at merge (batch 56); safety-net full CI dispatched 13:40."
     },
     {
      "text": "Device profile",
      "status": "not_started",
      "evidence": "No Ally GPU profile (lane report)",
-     "gap": "Ally capture"
+     "gap": "Computer capture per owner ruling 2026-09-27 (#356 5857144944): 1920x1080 opengl3, handheld profile if present, code-blind 7-inch readability verdict; no Ally hardware needed."
     }
    ]
   },
@@ -747,7 +752,7 @@
      "text": "Earned route reaches all six island groups",
      "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/TIDEWAKE/f13_0_six_groups/: all six groups reached, same five, no mount, reload drift 0. Shortcuts disclosed: declared start (gate flags, key consumed, L44 five), run 2 is a checkpoint resume, harness-driven fights and walking, rest shoals not exercised. Independent re-check: MET.",
-     "gap": "Merged in batch 55 (#374); counted at merge (owner rule 2026-09-27). Safety-net full CI 36319498130 running."
+     "gap": "Counted at merge; confirmed by green full CI 36319498130 (run 5709) on main ddaf7a7bd."
     },
     {
      "text": "Four land loops and three shortcuts",
@@ -814,9 +819,9 @@
     },
     {
      "text": "Water/current network visibly changes and persists",
-     "status": "partial",
-     "evidence": "Relic shrine placement/activation 35-check (scorecard)",
-     "gap": "Visible current change not shown in frames; no code-blind judge verdict (W1). (strict re-score 23:40)",
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/TIDEWAKE/b/f14_2_visible_current/JUDGE_VERDICT.md: code-blind judge picks the live current as rougher at a glance (randomised A/B); smoke_tidewake_b_current_restore 77 checks, 0 failures incl. production save/load persistence. Shortcuts disclosed: flag flipped through the world flag store, shader clock pinned, CameraRig off with Camera3D placed directly, trainer and HUD hidden, software-GL frames. Independent re-check: MET.",
+     "gap": "Merged in batch 57; counted at merge.",
      "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
@@ -912,8 +917,9 @@
   },
   {
    "id": "M4",
-   "status": "in_progress",
-   "note": "Veridian choice held out of batch 4 (not on main fe07d0d2); main offers every peer (journal defect); healing payoff blind-fail; crossing witness fixture-only."
+   "status": "met",
+   "note": "Integrated run passed review in batch 59.",
+   "integrated_run": "ralph/reports/MEADOWS-FINALE/m4/ @ tb/meadows-route 6cd2ca83 (batch 59): 19/19 steps PASS, party max 5; independent re-check re-ran exit 0; all F05 feeders met. Shortcuts disclosed: declared start save seed4_hall; harness title/Load; branches C and A from copied offer-open save; Kell acknowledgement skipped; with-space covered by fixture witness; co-op halves from earlier two-peer runs."
   },
   {
    "id": "C1",
@@ -928,7 +934,8 @@
   {
    "id": "C3",
    "status": "partial",
-   "note": "Veyra per-participant payout landed; client writes Veyra flag locally; no host/guest flight/realm rejoin witness."
+   "note": "Batch 62 two-peer run predates the owner Solmane ruling (2026-09-27): C3 now also needs Solmane freed after Veyra with per-participant offers through disconnect/reload. The run must be redone with that; F08#3, F08#4 and F08#5 still open.",
+   "integrated_run": null
   },
   {
    "id": "S1",
