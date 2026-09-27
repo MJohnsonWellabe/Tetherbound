@@ -1,0 +1,163 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+DRY RUN mount fixture: water_mosshell
+DRY RUN - does not count: declared fixture start (see header)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _build_world (res://tests/smoke_tidewake_b_chain_route.gd:228)
+         [2] _run (res://tests/smoke_tidewake_b_chain_route.gd:197)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+ERROR: Cannot open file 'res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://assets/props/realm_gate_meshy/models/realm_gate_frame.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+SCRIPT ERROR: Cannot call method 'instantiate' on a null value.
+          at: frame (res://scripts/world/realm_gate_presentation.gd:13)
+          GDScript backtrace (most recent call first):
+              [0] frame (res://scripts/world/realm_gate_presentation.gd:13)
+              [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+              [2] _ready (res://scripts/world/realm_gate.gd:77)
+              [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+              [4] _ready (res://scripts/world/water_world.gd:113)
+RIDE first_shore_to_reedhaven_sheltered ridden=116m dry=true elapsed_s=24
+WALK start of reedhaven_to_brine_steps_sheltered island=reedhaven walked=444m legs=61
+RIDE reedhaven_to_brine_steps_sheltered ridden=145m dry=true elapsed_s=120
+WALK start of brine_steps_to_shellwatch_sheltered island=brine_steps walked=447m legs=70
+RIDE brine_steps_to_shellwatch_sheltered ridden=131m dry=true elapsed_s=122
+WALK start of shellwatch_to_tidal_cradle_sheltered island=shellwatch walked=466m legs=61
+RIDE shellwatch_to_tidal_cradle_sheltered ridden=149m dry=true elapsed_s=126
+RETRY start of tidal_cradle_to_salt_crown_sheltered: stalled at leg 46/105 player=(702.278, 44.99691, 1531.9) goal=(702.0, 0.0, 1534.0)
+WALK start of tidal_cradle_to_salt_crown_sheltered island=tidal_cradle walked=391m legs=60
+RIDE tidal_cradle_to_salt_crown_sheltered ridden=499m dry=true elapsed_s=268
+WALK water_edda island=salt_crown walked=480m legs=73
+TALK water_edda conversation=water_edda_garden_lead hud='Edda's request: copy the account on the Drowned Garden's exposed vault wall and bring it to Salt Crown.'
+WALK start of salt_crown_to_drowned_garden_sheltered island=salt_crown walked=827m legs=126
+RIDE salt_crown_to_drowned_garden_sheltered ridden=709m dry=true elapsed_s=301
+WALK garden_records_wall island=drowned_garden walked=223m legs=35
+SITE garden_records_wall hud='Vault wall account copied: the old dock ledgers carved before the Tether. Bring it to Edda at Salt Crown.'
+WALK water:drowned_garden:pickup:002 island=drowned_garden walked=4m legs=1
+CLAIM water:drowned_garden:pickup:002 skill_candy_ii 0->1
+WALK start of salt_crown_to_drowned_garden_sheltered (reversed) island=drowned_garden walked=222m legs=35
+RIDE salt_crown_to_drowned_garden_sheltered (reversed) ridden=709m dry=true elapsed_s=153
+WALK water_edda island=salt_crown walked=830m legs=126
+TALK water_edda conversation=water_edda_garden_return hud='Edda adds the vault's dock account to the Salt Crown records.'
+WALK water_edda island=salt_crown walked=0m legs=1
+TALK water_edda conversation=water_edda_garden_thanks hud=''
+CHAIN side_water_garden_records PASS reward=Candy II +1 ack=return:water_edda_garden_return after=water_edda_garden_thanks
+WALK start of salt_crown_to_sluice_isle_sheltered island=salt_crown walked=582m legs=88
+RIDE salt_crown_to_sluice_isle_sheltered ridden=468m dry=true elapsed_s=228
+WALK water_orsen island=sluice_isle walked=999m legs=156
+TALK water_orsen conversation=water_orsen_pre hud=''
+WALK start of sluice_isle_to_deep_watch_sheltered island=sluice_isle walked=550m legs=80
+RIDE sluice_isle_to_deep_watch_sheltered ridden=351m dry=true elapsed_s=178
+TIDECOIL { "won": true, "resolved": true, "outcome": "won", "engaged_by": "interact_engage", "step": "won", &"shore_kind": "cliff_plateau", &"shore": (1465.607, -0.440482, 3437.436), &"walked_to_shore_m": 369.0, &"engage_prompt": "[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Tidecoil, the Abyss Serpent", &"closest_approach_m": 3.8, &"swimming_at_engage": false, &"opponent": "water_deep_watch_tidecoil", &"timed_out": false, &"fight_frames": 8137, &"fight_seconds": 135.6, &"hits_dealt": 109, &"hits_taken": 25, &"charged": 22, &"quick": 90, &"switches": 0, &"fainted": "0/5" }
+TIDECOIL { "won": true, "resolved": true, "outcome": "won", "engaged_by": "interact_engage", "step": "won", &"shore_kind": "cliff_plateau", &"shore": (1465.607, -0.440482, 3437.436), &"walked_to_shore_m": 369.0, &"engage_prompt": "[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Tidecoil, the Abyss Serpent", &"closest_approach_m": 3.8, &"swimming_at_engage": false, &"opponent": "water_deep_watch_tidecoil", &"timed_out": false, &"fight_frames": 8137, &"fight_seconds": 135.6, &"hits_dealt": 109, &"hits_taken": 25, &"charged": 22, &"quick": 90, &"switches": 0, &"fainted": "0/5" }
+RETRY start of sluice_isle_to_deep_watch_sheltered (reversed): stalled at leg 1/62 player=(1484.88, -0.516793, 3430.907) goal=(1480.0, 0.0, 3435.144)
+RETRY start of sluice_isle_to_deep_watch_sheltered (reversed): stalled at leg 1/62 player=(1488.189, -0.534305, 3437.667) goal=(1482.0, 0.0, 3437.144)
+FAIL: start of sluice_isle_to_deep_watch_sheltered (reversed): walk stalled at leg 1/61 player=(1487.786, -0.197086, 3438.918) goal=(1484.0, 0.0, 3443.144)
+FAIL: Deep Watch: Orsen gives the chart lead ()
+RETRY water:deep_watch:pickup:002: stalled at leg 1/19 player=(1488.488, -0.274737, 3440.182) goal=(1484.0, 0.0, 3444.0)
+RETRY water:deep_watch:pickup:002: stalled at leg 1/19 player=(1490.38, -0.241703, 3445.026) goal=(1486.0, 0.0, 3446.0)
+FAIL: water:deep_watch:pickup:002: walk stalled at leg 1/18 player=(1491.354, 0.051046, 3448.967) goal=(1488.0, 0.0, 3452.0)
+FAIL: Deep Watch: Candy III cache claimed by walk + Interact
+FAIL: Deep Watch: personal cache receipt
+RETRY deep_watch_chart: stalled at leg 1/57 player=(1492.145, -0.338004, 3448.943) goal=(1488.0, 0.0, 3454.0)
+RETRY deep_watch_chart: stalled at leg 1/57 player=(1491.601, -0.250092, 3448.182) goal=(1488.0, 0.0, 3454.0)
+FAIL: deep_watch_chart: walk stalled at leg 1/57 player=(1492.307, -0.131652, 3451.094) goal=(1488.0, 0.0, 3454.0)
+FAIL: Deep Watch: chart prompt offered (winner=[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Ride Mosshell)
+FAIL: Deep Watch: chart recorded by walk + Interact
+FAIL: water_orsen sluice_isle_to_deep_watch_sheltered (reversed) vertex 1/4: mounted leg exhausted 11416 frames at (1491.092, 0.207522, 3446.963) target (1248.089, 0.0, 3389.936)
+FAIL: Deep Watch: acknowledgement ()
+FAIL: Deep Watch: quest log done
+CHAIN side_water_deep_watch_chart FAIL reward=Candy III +0 ack=
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+ERROR: Cannot open file 'res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://assets/props/realm_gate_meshy/models/realm_gate_frame.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+SCRIPT ERROR: Cannot call method 'instantiate' on a null value.
+          at: frame (res://scripts/world/realm_gate_presentation.gd:13)
+          GDScript backtrace (most recent call first):
+              [0] frame (res://scripts/world/realm_gate_presentation.gd:13)
+              [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+              [2] _ready (res://scripts/world/realm_gate.gd:77)
+              [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+              [4] _ready (res://scripts/world/water_world.gd:113)
+FAIL: water_edda sluice_isle_to_deep_watch_sheltered (reversed): already mounted on the owned swimmer (mounted=true body=AllyCreature:<CharacterBody3D#125811688483433> body.instance=<null> ally=AllyCreature:<CharacterBody3D#125811688483433> ally_instance=<RefCounted#-9223246510009862801> mount=<RefCounted#-9223371782025639672>)
+FAIL: Reload: Edda does not re-offer ()
+FAIL: Reload keeps world record water_dock_deep_watch_current_charted
+FAIL: Reload keeps personal receipt water_candy:water:deep_watch:pickup:002
+FAIL: Reloaded quest log: Deep Watch done
+FAIL: water_orsen sluice_isle_to_deep_watch_sheltered (reversed): already mounted on the owned swimmer (mounted=true body=AllyCreature:<CharacterBody3D#125811688483433> body.instance=<null> ally=AllyCreature:<CharacterBody3D#125811688483433> ally_instance=<RefCounted#-9223246510009862801> mount=<RefCounted#-9223371782025639672>)
+FAIL: Reload: water_orsen acknowledges, no re-offer ()
+CHAIN side_water_garden_records PASS reward=Candy II +1 ack=return:water_edda_garden_return after=water_edda_garden_thanks
+CHAIN side_water_deep_watch_chart FAIL reward=Candy III +0 ack=
+RELOAD garden water_edda -> 
+RELOAD deep water_orsen -> 
+POSES (0 disclosed position writes):
+Walked total 6814m with left-stick input
+SWIMS (0 inter-island crossings with real move_forward input):
+RIDES (9 crossings ridden on the owned swimmer):
+  RIDE first_shore_to_reedhaven_sheltered ridden=116m dry=true elapsed_s=24
+  RIDE reedhaven_to_brine_steps_sheltered ridden=145m dry=true elapsed_s=120
+  RIDE brine_steps_to_shellwatch_sheltered ridden=131m dry=true elapsed_s=122
+  RIDE shellwatch_to_tidal_cradle_sheltered ridden=149m dry=true elapsed_s=126
+  RIDE tidal_cradle_to_salt_crown_sheltered ridden=499m dry=true elapsed_s=268
+  RIDE salt_crown_to_drowned_garden_sheltered ridden=709m dry=true elapsed_s=301
+  RIDE salt_crown_to_drowned_garden_sheltered (reversed) ridden=709m dry=true elapsed_s=153
+  RIDE salt_crown_to_sluice_isle_sheltered ridden=468m dry=true elapsed_s=228
+  RIDE sluice_isle_to_deep_watch_sheltered ridden=351m dry=true elapsed_s=178
+Tidewake-B chain route witness: 148 checks, 18 failures
+EXIT 1
