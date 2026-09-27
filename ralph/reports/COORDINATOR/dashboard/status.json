@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-27 12:00 UTC",
+ "updated": "2026-09-27 12:36 UTC",
  "headline": [
-  "Criteria met: 69 of 101. Batch 52 flipped F11#0 and F05#7 on green full CI 36314695987. F13#4 (batch 53, #372) is merged and in full CI (makes 70). F06#0 is in re-check.",
+  "Criteria met: 70 of 101. Batch 53 flipped F13#4 on green full CI 36316414307 (12:30). Merged and waiting on the next full CI: F06#0 (batch 54), F02#6 and F13#0 (batch 55), which make 73.",
   "Re-checking or held: F11#0 (Stormwood must commit its Marrow logs), F01#2/#3 (independent code-blind verdict), F05#7 (green-grass heal in progress). Each lane targets one close per hour; the enforcement check runs at :55.",
   "Remaining 34 after these: visual rows (Codex art queue plus capture work, now with Codex GPU runs), failing behavior, missing evidence."
  ],

@@ -772,9 +772,9 @@
     },
     {
      "text": "Four-character supplies solvent without new catch or repeated wild",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/TIDEWAKE/b/f13_4_route_depletion/route_depletion.log at a7648529: 598 checks, 0 failures, fights 0, catches 0, same five per character. Shortcuts disclosed: one process swapping Game.local for four characters, position writes near nodes, fixture party, encounter director off, flag writes, direct Game.craft, Cradle seam forced to A, Garden/Deep Watch excluded (swimmer question open with the owner). Independent re-check: MET.",
-     "gap": "Landing in batch 53."
+     "gap": "Green full CI 36316414307 on main f04d82fa1 (batch 53)."
     },
     {
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
