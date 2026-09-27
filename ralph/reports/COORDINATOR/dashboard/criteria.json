@@ -608,9 +608,9 @@
     },
     {
      "text": "Audio witness for phases/lightning",
-     "status": "not_started",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). tests/smoke_stormwood_surge_audio.gd on main; ralph/reports/STORMWOOD-PROGRESS/audio/f10_5/vis-rerun/run_summary.txt 19 passed, 0 failed: each phase cue fires once in order, 21 warnings/21 strikes, warning-to-strike 1.200-1.211 s, captions with direction wedges. Shortcuts disclosed: Surge clock jumped, trainer pinned/healed, Long Storm ended by flag, headless single peer; all 9 cue assets missing so nothing is audible (witness proves wiring and timing only); blinded-listener test open. Independent re-check: MET.",
-     "gap": "Landing in batch 56; counts at merge."
+     "gap": "Merged in batch 56 (#375); counted at merge."
     },
     {
      "text": "Device profile",
