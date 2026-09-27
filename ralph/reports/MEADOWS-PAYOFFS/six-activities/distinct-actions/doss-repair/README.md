@@ -1,0 +1,1 @@
+Source: render.yml run 36268625871 (tb-act-doss) at 32bd33079787600729f4b83df7da532fa6442fde; save tests/fixtures/f03_lure_saves/S07-exit-band3-plus-1wood-1fiber.json.gz (disclosed derived save). Game-set flags: river_nest_doss_met, river_nest_doss_cleared.

@@ -1,8 +1,8 @@
 {
- "updated": "2026-09-27 02:46 UTC",
+ "updated": "2026-09-27 04:13 UTC",
  "headline": [
-  "Criteria met: 54 of 101. Full CI 36285209146 (batches 36–44) is RED: verify-cloudreach-midride-rejoin and verify-regions-shard regressed since batch 35. A bisect is running and Cloudreach/X05 are checking; the fix lands with the next close.",
-  "F02#3 is on main (batch 45, strict re-check MET) and flips to met (55) on the first green full CI after the regression fix. Next closes expected: F11#3 (after the X05 harness press fix) and F01#2/#3 (day/night walks rendering).",
+  "Criteria met: 55 of 101. F02#3 (fresh-game run through three Sigils and the Hall, one uninterrupted run) flipped on green full CI 36290042517, which also confirms the batch-36 Stormwood regression hotfix (#364).",
+  "Next to flip: F03#1 (six distinct activities from the earned seed4_hall checkpoint; strict re-check MET; batch 47) → 56. Top blocker: held-button flight (hard-rule defect) blocks F06#2/#3/#5 until Cloudreach lands the SYSTEMS tap-pulse.",
   "Rules in force: one open PR per lane; all art goes to Codex (queue V1–V34 at the top of ralph/reports/VISUAL/AUDIT.md); READY posts must say \"closes\" or \"partial\"; nothing is counted until an independent re-score and a green full CI."
  ],
  "batches": [
