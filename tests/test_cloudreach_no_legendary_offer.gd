@@ -1047,6 +1047,13 @@ const AUTHORIZED_PREFIXES := [
 	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_joins ",
 	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_choice ",
 	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_engine_fails ",
+	# The five conversations wear Solmane's own plate (as Stormwood's
+	# Stormheart lines wear fulgocobra.png), not the player's face.
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_chamber.portrait ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_free.portrait ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_joins.portrait ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_choice.portrait ",
+	"dialogue/cloudreach.json:.conversations.cloudreach_solmane_engine_fails.portrait ",
 ]
 const AUTHORIZED_EXACT := [
 	"res://scripts/world/cloudreach_world_runtime.gd code references 'stronghold_climax.gd'",
