@@ -16,8 +16,11 @@ const STANDS := [
 	# Height: the camera is off the crown in open air, where a Fly arrival
 	# approaches from, looking back up at the trainer on the south rim, so the
 	# cliff face falls away below the lip and the roost needles read against sky.
-	{"id": "glide-approach", "player": Vector2(900.0, 2687.0), "face": Vector2(900.0, 2640.0),
-		"camera": Vector3(900.0, 1033.0, 2630.0), "look": Vector3(900.0, 1016.0, 2694.0)},
+	# c3 (code-blind judge c2: needles cut by the top rim, a mesa level with the
+	# crown behind): from the open east side, near level with the court, so the
+	# needles have sky above and the lip falls away below.
+	{"id": "glide-approach", "player": Vector2(912.0, 2698.0), "face": Vector2(960.0, 2692.0),
+		"camera": Vector3(966.0, 1030.0, 2690.0), "look": Vector3(901.0, 1024.0, 2698.0)},
 	# c2 (Codex frame review: trainer obscured): lower and further south so the
 	# lip, not a needle, is between the lens and the trainer's feet.
 	{"id": "southeast-glide-approach", "player": Vector2(900.0, 2687.0), "face": Vector2(930.0, 2650.0),
@@ -28,8 +31,10 @@ const STANDS := [
 		"camera": Vector3(838.0, 1036.0, 2662.0), "look": Vector3(900.0, 1016.0, 2702.0)},
 	# Crowding: the court seen from high on its southwest side, pulled back so the
 	# needles stand apart instead of filling the rim line.
-	{"id": "court-high-oblique", "player": Vector2(900.0, 2700.0), "face": Vector2(905.0, 2712.0),
-		"camera": Vector3(866.0, 1046.0, 2664.0), "look": Vector3(906.0, 1016.0, 2710.0)},
+	# c3 (judge c2: two needles cut, camera too close, mesa behind): from the
+	# north-northwest at ~77 m, where the ground behind is below the crown.
+	{"id": "court-high-oblique", "player": Vector2(900.0, 2712.0), "face": Vector2(880.0, 2760.0),
+		"camera": Vector3(870.0, 1044.0, 2772.0), "look": Vector3(902.0, 1026.0, 2702.0)},
 	# Production CameraRig frames (judge r4: gameplay camera also required).
 	# Arrival: the trainer on the Fly approach 45 m south of the rim, 8 m above
 	# the crown, rig behind looking at the crown. Departure: the same off the
@@ -37,7 +42,8 @@ const STANDS := [
 	{"id": "rig-fly-arrival", "rig": true, "position": Vector2(915.0, 2610.0), "air_y": 1008.0, "target": Vector3(900.0, 1030.0, 2700.0)},
 	# c2 (Codex frame review: departure lacked the perch): the trainer lifts off
 	# north of the rim and the rig looks back over it at the crown it left.
-	{"id": "rig-fly-departure", "rig": true, "position": Vector2(906.0, 2748.0), "air_y": 1030.0, "target": Vector3(900.0, 1022.0, 2700.0)},
+	# c3 (judge c2: needles cut by the top rim): 72 m out instead of 48.
+	{"id": "rig-fly-departure", "rig": true, "position": Vector2(906.0, 2772.0), "air_y": 1030.0, "target": Vector3(900.0, 1026.0, 2700.0)},
 ]
 
 var _output := DEFAULT_OUTPUT
