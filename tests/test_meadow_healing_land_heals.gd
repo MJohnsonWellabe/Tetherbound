@@ -393,3 +393,59 @@ func test_the_herd_groups_around_the_stag() -> void:
 		assert_true(off.length() <= 14.0, "member %s is %.1f m from the stag" % [str(place["at"]), off.length()])
 		sides[("E" if off.x >= 0.0 else "W") + ("N" if off.y >= 0.0 else "S")] = true
 	assert_true(sides.size() >= 3, "the herd stands on at least three sides of the stag (%s)" % str(sides.keys()))
+
+
+func test_the_herd_grazes_in_clusters_not_a_ring() -> void:
+	# F05#7 round 6 (blind round 5: "a row along a fence, evenly spaced, same
+	# facing -- placed props"). The seeded scatter puts the herd in loose
+	# clusters: uneven spacing, mixed facing, and nobody in the open arc toward
+	# the hero stand.
+	var block: Dictionary = _config().get("herd_return", {})
+	assert_true(block.get("scatter", null) is Dictionary, "the herd is scattered from a seed")
+	var spec: Dictionary = block["scatter"]
+	var places := HEALING.herd_placements(block)
+	var total := 0
+	for cluster: Dictionary in (spec["clusters"] as Array):
+		total += int(cluster["count"])
+	assert_eq(places.size(), total, "every cluster member found a spot")
+	var around := Vector2(float(spec["around"][0]), float(spec["around"][1]))
+	var nearest: Array[float] = []
+	var facings: Array[float] = []
+	for i in places.size():
+		var at: Vector2 = places[i]["at"]
+		var az := fposmod(rad_to_deg(atan2(at.x - around.x, at.y - around.y)), 360.0)
+		assert_false(az >= float(spec["open_arc"][0]) and az <= float(spec["open_arc"][1]),
+			"member %d stands in the open arc (%.0f deg)" % [i, az])
+		var best := INF
+		for j in places.size():
+			if j != i:
+				best = minf(best, at.distance_to(places[j]["at"] as Vector2))
+		nearest.append(best)
+		facings.append(float(places[i]["facing_deg"]))
+	nearest.sort()
+	assert_true(nearest[-1] - nearest[0] >= 1.5, "spacing varies (nearest-neighbour %.1f..%.1f m)" % [nearest[0], nearest[-1]])
+	facings.sort()
+	assert_true(facings[-1] - facings[0] >= 90.0, "facing varies (%.0f..%.0f deg)" % [facings[0], facings[-1]])
+
+
+func test_the_herd_scatter_is_a_pure_function_of_its_seed() -> void:
+	var spec: Dictionary = (_config().get("herd_return", {}) as Dictionary)["scatter"]
+	var a := HEALING.herd_scatter(spec)
+	var b := HEALING.herd_scatter(spec)
+	assert_eq(a.size(), b.size())
+	for i in a.size():
+		assert_true((a[i]["at"] as Vector2).is_equal_approx(b[i]["at"] as Vector2), "same spot every build")
+		assert_almost_eq(float(a[i]["facing_deg"]), float(b[i]["facing_deg"]))
+		assert_true(float(a[i]["scale"]) >= 1.0, "up-only scale")
+	var other := spec.duplicate(true)
+	other["seed"] = int(spec["seed"]) + 1
+	var c := HEALING.herd_scatter(other)
+	assert_false((a[0]["at"] as Vector2).is_equal_approx(c[0]["at"] as Vector2), "the seed is what places them")
+
+
+func test_the_overlays_feather_their_edge_and_bias_over_the_slope() -> void:
+	# F05#7 round 6 (blind round 5: the works patch "a hard-edged polygon").
+	var code := HEALING.OVERLAY_SHADER
+	assert_true(code.contains("mh_noise(v_world.xz * feather_scale)"), "world-noise feathered contour")
+	assert_true(code.contains("view.xyz *= max(len - view_bias, 0.05) / len;"), "decal bias toward the camera")
+	assert_true(code.contains("ALPHA = a * max_alpha * master_alpha;"), "one master fade over the authored cap")

@@ -56,6 +56,76 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 ## Set on a pylon the moment it is committed to falling, so a second `apply`
 ## (or any second pass) can never rotate an already-fallen pylon again.
 const TOPPLED_META := &"meadow_toppled"
+## F05#7 round 6: the drain and regreen overlays' own shader. Blind round 5
+## read the works patch as "a hard-edged polygon that becomes a darker olive
+## polygon -- a texture swap". Two causes, both fixed here rather than in any
+## shared file: (1) the per-vertex falloff interpolates linearly across 3 m
+## cells, so its contour is a polygon; it is now thresholded against two
+## octaves of world-space value noise (`feather_*`), which gives a soft,
+## organic, deterministic edge -- the same on every peer, nothing saved. (2) A
+## flat skin lifted a few centimetres above the ground is cut off where the
+## terrain bulges above a cell's chord (the "slope occlusion" of round 4's A/B);
+## the skin is pulled `view_bias` metres toward the camera in view space, a
+## decal bias, so the terrain no longer clips it while hills, trees and bodies
+## still do. `desaturate`/`value` let the drain read as sun-killed straw and
+## the regreen as saturated new growth from the same installed grass texture.
+const OVERLAY_SHADER := """
+shader_type spatial;
+render_mode blend_mix, depth_draw_never, cull_disabled;
+
+uniform sampler2D albedo_tex : source_color, filter_linear_mipmap, repeat_enable;
+uniform sampler2D normal_tex : hint_normal, filter_linear_mipmap, repeat_enable;
+uniform bool use_normal = false;
+uniform vec4 tint : source_color = vec4(1.0);
+uniform float uv_scale = 0.27;
+uniform float normal_depth = 0.34;
+uniform float max_alpha = 1.0;
+uniform float master_alpha = 1.0;
+uniform float desaturate = 0.0;
+uniform float value = 1.0;
+uniform float feather_scale = 0.09;
+uniform float feather_amount = 0.75;
+uniform float feather_soft = 0.35;
+uniform float view_bias = 0.35;
+varying vec3 v_world;
+
+float mh_hash(vec2 p) {
+	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+}
+
+float mh_noise(vec2 p) {
+	vec2 i = floor(p);
+	vec2 f = fract(p);
+	vec2 u = f * f * (3.0 - 2.0 * f);
+	return mix(mix(mh_hash(i), mh_hash(i + vec2(1.0, 0.0)), u.x),
+		mix(mh_hash(i + vec2(0.0, 1.0)), mh_hash(i + vec2(1.0, 1.0)), u.x), u.y);
+}
+
+void vertex() {
+	v_world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
+	float len = max(length(view.xyz), 0.001);
+	view.xyz *= max(len - view_bias, 0.05) / len;
+	POSITION = PROJECTION_MATRIX * view;
+}
+
+void fragment() {
+	vec2 uv = v_world.xz * uv_scale;
+	vec3 tex = texture(albedo_tex, uv).rgb;
+	float lum = dot(tex, vec3(0.299, 0.587, 0.114));
+	ALBEDO = mix(tex, vec3(lum), desaturate) * tint.rgb * value;
+	if (use_normal) {
+		NORMAL_MAP = texture(normal_tex, uv).rgb;
+		NORMAL_MAP_DEPTH = normal_depth;
+	}
+	ROUGHNESS = 1.0;
+	float n = mh_noise(v_world.xz * feather_scale) * 0.65
+		+ mh_noise(v_world.xz * feather_scale * 3.1 + vec2(17.3, 5.1)) * 0.35;
+	float a = clamp(COLOR.a * (1.0 + feather_amount) - n * feather_amount, 0.0, 1.0);
+	a = smoothstep(0.0, feather_soft, a) * mix(0.8, 1.0, n);
+	ALPHA = a * max_alpha * master_alpha;
+}
+"""
 
 var _config: Dictionary = {}
 var _world: Node3D = null
@@ -75,14 +145,17 @@ var _herd_signature: String = "-"
 ## The land heals: the regreen overlay, the returning herd, the fallen pylons.
 var _field: RefCounted = null
 var _regreen_nodes: Array[MeshInstance3D] = []
-var _regreen_material: StandardMaterial3D = null
+var _regreen_material: ShaderMaterial = null
 var _regreen_quads: int = 0
 var _herd_return: Node3D = null
+## F05#7 round 6: the wildflowers that come up on the healed ground.
+var _bloom_nodes: Array[MultiMeshInstance3D] = []
+var _bloom_count := 0
 ## Bake only: collidable scatter trunks by cell (see `_trunk_grid`).
 var _trunks: Variant = null
 ## The runtime drain (before-state): overlay meshes, their shared material.
 var _drain_nodes: Array[MeshInstance3D] = []
-var _drain_material: StandardMaterial3D = null
+var _drain_material: ShaderMaterial = null
 var _drain_quads := 0
 var _tall: Variant = null
 var _toppled: Array[Node3D] = []
@@ -254,6 +327,7 @@ func apply(immediate: bool = false) -> Dictionary:
 		# After the lights: what falls is already dead.
 		"pylons_toppled": _topple_the_pylons(immediate),
 		"herd_returned": _return_the_herd(),
+		"bloomed": _bloom_the_healed_ground(immediate),
 		"barriers_opened": _open_the_barriers(),
 		"patrols_withdrawn": _withdraw_beaten_patrols(),
 	}
@@ -654,7 +728,7 @@ func _withdraw_beaten_patrols() -> int:
 ## `1 - path_factor` so a road through a station stays a road (only asked when
 ## a road band's bounds actually reach the group). The material is the
 ## installed meadow grass texture, world-triplanar at the terrain's own UV
-## scale and tint, shared by every group; its `albedo_color.a` fades 0 -> 1
+## scale and tint, shared by every group; its `master_alpha` fades 0 -> 1
 ## over `fade_seconds`, the same seconds the dark skins fade out over, so the
 ## two crossfade.
 func _regreen_the_scars(immediate: bool) -> int:
@@ -674,7 +748,7 @@ func _regreen_the_scars(immediate: bool) -> int:
 	var group_names: Array = groups.keys()
 	group_names.sort()
 	for group_name: Variant in group_names:
-		var discs := _station_discs(groups[group_name] as Array)
+		var discs := scaled_discs(_station_discs(groups[group_name] as Array), block)
 		if discs.is_empty():
 			continue
 		var skin := _regreen_group(str(group_name), discs, block, global_strength, material)
@@ -685,19 +759,21 @@ func _regreen_the_scars(immediate: bool) -> int:
 	_regreen_material = material
 	var seconds := 0.0 if immediate else float(block.get("fade_seconds", 12.0))
 	if seconds <= 0.0:
-		material.albedo_color.a = 1.0
+		material.set_shader_parameter("master_alpha", 1.0)
 	else:
-		material.albedo_color.a = 0.0
-		create_tween().tween_property(material, "albedo_color:a", 1.0, seconds)
+		material.set_shader_parameter("master_alpha", 0.0)
+		create_tween().tween_property(material, "shader_parameter/master_alpha", 1.0, seconds)
 	return _regreen_quads
 
 
 func _regreen_group(group_name: String, discs: Array, block: Dictionary,
-		global_strength: float, material: StandardMaterial3D, prefix: String = "Regreen") -> MeshInstance3D:
+		global_strength: float, material: ShaderMaterial, prefix: String = "Regreen") -> MeshInstance3D:
 	var cell := maxf(float(block.get("cell", 3.0)), 1.0)
 	var jitter := maxf(float(block.get("edge_jitter_m", 0.0)), 0.0)
 	var lift := float(block.get("lift", 0.11))
-	var max_alpha := clampf(float(block.get("max_alpha", 0.7)), 0.0, 1.0)
+	# `max_alpha` is the material's own uniform: the vertex alpha is the raw
+	# falloff, so the shader's feather thresholds the true contour.
+	var max_alpha := 1.0
 	var field := _heightfield()
 	# Road pre-filter: `path_factor` walks every band on the map per call; ask
 	# it only when some band's bounds actually reach this group.
@@ -760,6 +836,180 @@ func _regreen_group(group_name: String, discs: Array, block: Dictionary,
 	return skin
 
 
+## F05#7 round 6: WILDFLOWERS COME UP ON THE HEALED GROUND. Blind round 5:
+## "grass, flowers, trees and light identical -- machinery disappearing, not
+## land healing". The regreen answers the colour; this answers "flowers". The
+## installed stylized-nature flower groups (the same models vegetation.json's
+## `flowers` layer places) grow in drifts over every regreen station, weighted
+## by that station's own authored falloff (the worst-drained ground blooms
+## most), off the roads, growing in over `grow_seconds` after `grow_delay`.
+## Placement is one seeded RandomNumberGenerator per group over the station
+## discs: identical on every peer and every load, nothing saved. A load snaps.
+func _bloom_the_healed_ground(immediate: bool) -> int:
+	var block: Dictionary = _config.get("bloom", {})
+	if not bool(block.get("enabled", false)) or _world == null or not _world.has_method("ground_height_at"):
+		return 0
+	if not _bloom_nodes.is_empty():
+		return _bloom_count
+	var groups: Dictionary = (_config.get("regreen", {}) as Dictionary).get("groups", {})
+	var meshes: Array[Mesh] = []
+	var tints: Array = block.get("tints", [])
+	var models: Array = block.get("models", [])
+	for i in models.size():
+		var mesh := _bloom_mesh(str(models[i]), tints[i % tints.size()] as Dictionary if not tints.is_empty() else {})
+		if mesh != null:
+			meshes.append(mesh)
+	if meshes.is_empty() or groups.is_empty():
+		return 0
+	var field := _heightfield()
+	var names: Array = groups.keys()
+	names.sort()
+	var transforms: Array = []  # per mesh: Array[Transform3D]
+	for m in meshes.size():
+		transforms.append([])
+	for group_name: Variant in names:
+		var discs := _station_discs(groups[group_name] as Array)
+		for spot: Dictionary in bloom_spots(discs, block, str(group_name)):
+			var at: Vector2 = spot["at"]
+			if field != null and float(field.call("path_factor", at.x, at.y)) > float(block.get("max_path", 0.25)):
+				continue
+			var y := float(_world.call("ground_height_at", at.x, at.y))
+			if is_nan(y):
+				continue
+			var basis := Basis(Vector3.UP, float(spot["yaw"])).scaled(Vector3.ONE * float(spot["scale"]))
+			(transforms[int(spot["model"]) % meshes.size()] as Array).append(
+				Transform3D(basis, Vector3(at.x, y - float(block.get("sink", 0.02)), at.y)))
+	for m in meshes.size():
+		var list: Array = transforms[m]
+		if list.is_empty():
+			continue
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = meshes[m]
+		mm.instance_count = list.size()
+		var node := MultiMeshInstance3D.new()
+		node.name = "Bloom_%d" % m
+		node.top_level = true
+		node.multimesh = mm
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		node.set_meta(&"full", list)
+		add_child(node)
+		node.global_transform = Transform3D.IDENTITY
+		_bloom_nodes.append(node)
+		_bloom_count += list.size()
+	var seconds := 0.0 if immediate else float(block.get("grow_seconds", 8.0))
+	if seconds <= 0.0 or not is_inside_tree():
+		_grow_bloom(1.0)
+	else:
+		_grow_bloom(0.0)
+		var tween := create_tween()
+		tween.tween_interval(maxf(float(block.get("grow_delay", 3.0)), 0.0))
+		tween.tween_method(_grow_bloom, 0.0, 1.0, seconds).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	return _bloom_count
+
+
+func _grow_bloom(t: float) -> void:
+	for node: MultiMeshInstance3D in _bloom_nodes:
+		if not is_instance_valid(node):
+			continue
+		var list: Array = node.get_meta(&"full", [])
+		for i in list.size():
+			var full: Transform3D = list[i]
+			# Each flower opens on its own phase, so the drift comes up
+			# unevenly rather than as one inflating sheet.
+			var local := clampf(t * 1.6 - fposmod(float(i) * 0.618034, 1.0) * 0.6, 0.0, 1.0)
+			var s := maxf(local, 0.001)
+			node.multimesh.set_instance_transform(i, Transform3D(full.basis.scaled(Vector3(s, s, s)), full.origin))
+
+
+func bloom_nodes() -> Array[MultiMeshInstance3D]:
+	return _bloom_nodes.duplicate()
+
+
+## The installed flower model's mesh with its `Flowers`/`Leaves` surfaces
+## retinted like vegetation.json's `flowers` layer does.
+func _bloom_mesh(path: String, tint: Dictionary) -> Mesh:
+	if not ResourceLoader.exists(path):
+		return null
+	var scene := load(path) as PackedScene
+	if scene == null:
+		return null
+	var root := scene.instantiate()
+	var found: MeshInstance3D = null
+	for node: Node in _all_nodes(root):
+		if node is MeshInstance3D:
+			found = node as MeshInstance3D
+			break
+	var mesh: Mesh = null
+	if found != null and found.mesh != null:
+		mesh = found.mesh.duplicate() as Mesh
+		for s in mesh.get_surface_count():
+			var material := mesh.surface_get_material(s)
+			if material is StandardMaterial3D:
+				var own := (material as StandardMaterial3D).duplicate() as StandardMaterial3D
+				if tint.has(str(own.resource_name)):
+					own.albedo_color = Color(str(tint[str(own.resource_name)]))
+				mesh.surface_set_material(s, own)
+	root.free()
+	return mesh
+
+
+## Where the flowers stand over one group's discs: `drifts_per_100m2` drift
+## centres per 100 m2 of disc, each accepted with probability equal to the
+## station falloff there (worst-drained ground blooms most), then
+## `per_drift` flowers within `drift_radius` of it. Pure function of the
+## discs, the block and the group name. Public for tests.
+static func bloom_spots(discs: Array, block: Dictionary, group_name: String) -> Array:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(block.get("seed", 1)) + group_name.hash()
+	var area := 0.0
+	for disc: Dictionary in discs:
+		area += PI * pow(float(disc["radius"]), 2.0)
+	var drifts := int(round(area / 100.0 * float(block.get("drifts_per_100m2", 0.6))))
+	var per := block.get("per_drift", [4, 10]) as Array
+	var radius := float(block.get("drift_radius", 2.2))
+	var models := maxi((block.get("models", []) as Array).size(), 1)
+	var out: Array = []
+	for _k in drifts:
+		var disc: Dictionary = discs[rng.randi() % discs.size()]
+		var angle := rng.randf() * TAU
+		var centre := (disc["centre"] as Vector2) + Vector2(cos(angle), sin(angle)) * float(disc["radius"]) * sqrt(rng.randf())
+		var worst := 0.0
+		for other: Dictionary in discs:
+			worst = maxf(worst, station_falloff(centre.distance_to(other["centre"] as Vector2),
+				float(other.get("inner", 0.0)), float(other["radius"]), float(other.get("strength", 1.0))))
+		if rng.randf() > worst:
+			continue
+		var model := rng.randi() % models
+		for _j in rng.randi_range(int(per[0]), int(per[1])):
+			var a := rng.randf() * TAU
+			var at := centre + Vector2(cos(a), sin(a)) * radius * sqrt(rng.randf())
+			out.append({"at": at, "model": model, "yaw": rng.randf() * TAU,
+				"scale": rng.randf_range(float(block.get("scale_min", 0.05)), float(block.get("scale_max", 0.09)))})
+	return out
+
+
+## F05#7 round 6: the overlay's reach over a station, as a scale on the
+## authored disc (`radius_scale`, `inner_scale`, default 1). The baked scar is
+## a splat swap to soil with a hard, blocky contour INSIDE the authored radius;
+## an overlay that stops at the same radius shares that contour (blind round 5:
+## "the same hard polygon edge"). Reaching past it lets the feathered edge fall
+## on ordinary grass instead. Same centres and strengths. Pure, for tests.
+static func scaled_discs(discs: Array, block: Dictionary) -> Array:
+	var rs := maxf(float(block.get("radius_scale", 1.0)), 0.1)
+	var inner_scale := maxf(float(block.get("inner_scale", 1.0)), 0.0)
+	if is_equal_approx(rs, 1.0) and is_equal_approx(inner_scale, 1.0):
+		return discs
+	var out: Array = []
+	for raw: Variant in discs:
+		var disc: Dictionary = (raw as Dictionary).duplicate()
+		var radius := float(disc["radius"]) * rs
+		disc["radius"] = radius
+		disc["inner"] = minf(float(disc.get("inner", 0.0)) * inner_scale, radius * 0.9)
+		out.append(disc)
+	return out
+
+
 ## A deterministic offset of up to `metres` for grid corner `at`: the falloff
 ## is read there instead, so the overlay's contour is ragged rather than a
 ## clean ring or a straight grid-aligned edge (blind round 4: "hard stencil").
@@ -796,7 +1046,7 @@ func _build_the_drain() -> int:
 	var drains: Dictionary = _load_json(TERRAIN_PATH).get("drains", {})
 	var global_strength := clampf(float(drains.get("strength", 1.0)), 0.0, 1.0)
 	var material := _regreen_material_for(block)
-	material.albedo_color.a = 1.0
+	material.set_shader_parameter("master_alpha", 1.0)
 	var names: Array = groups.keys()
 	names.sort()
 	for group_name: Variant in names:
@@ -837,7 +1087,7 @@ func drain_groups() -> Dictionary:
 	var out: Dictionary = {}
 	var groups: Dictionary = (_config.get("regreen", {}) as Dictionary).get("groups", {})
 	for group_name: Variant in groups:
-		var discs := _station_discs(groups[group_name] as Array)
+		var discs := scaled_discs(_station_discs(groups[group_name] as Array), block)
 		if not discs.is_empty():
 			out[str(group_name)] = discs
 	var radius := float(block.get("pylon_radius", 7.0))
@@ -882,7 +1132,7 @@ func _lift_the_drain(immediate: bool) -> int:
 			field.call("set_drain_amount", 0.0)
 	else:
 		var tween := create_tween()
-		tween.tween_property(_drain_material, "albedo_color:a", 0.0, seconds)
+		tween.tween_property(_drain_material, "shader_parameter/master_alpha", 0.0, seconds)
 		if field != null:
 			tween.parallel().tween_method(Callable(field, "set_drain_amount"), 1.0, 0.0, seconds)
 		tween.tween_callback(_hide_the_drain)
@@ -891,7 +1141,7 @@ func _lift_the_drain(immediate: bool) -> int:
 
 func _hide_the_drain() -> void:
 	if _drain_material != null:
-		_drain_material.albedo_color.a = 0.0
+		_drain_material.set_shader_parameter("master_alpha", 0.0)
 	for skin: MeshInstance3D in _drain_nodes:
 		if is_instance_valid(skin):
 			skin.visible = false
@@ -924,30 +1174,29 @@ func drain_nodes() -> Array[MeshInstance3D]:
 
 
 func drain_alpha_now() -> float:
-	return _drain_material.albedo_color.a if _drain_material != null else 0.0
+	return float(_drain_material.get_shader_parameter("master_alpha")) if _drain_material != null else 0.0
 
 
-func _regreen_material_for(block: Dictionary) -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
-	material.vertex_color_use_as_albedo = true
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
-	material.roughness = 1.0
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	var tint := Color(str(block.get("tint", "#e9dfc0")))
-	material.albedo_color = Color(tint.r, tint.g, tint.b, 0.0)
+func _regreen_material_for(block: Dictionary) -> ShaderMaterial:
+	var shader := Shader.new()
+	shader.code = OVERLAY_SHADER
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter("tint", Color(str(block.get("tint", "#e9dfc0"))))
 	var albedo_path := str(block.get("albedo", ""))
 	if albedo_path != "" and ResourceLoader.exists(albedo_path):
-		material.albedo_texture = load(albedo_path)
+		material.set_shader_parameter("albedo_tex", load(albedo_path))
 	var normal_path := str(block.get("normal", ""))
 	if normal_path != "" and ResourceLoader.exists(normal_path):
-		material.normal_enabled = true
-		material.normal_texture = load(normal_path)
-		material.normal_scale = float(block.get("normal_depth", 0.34))
-	var uv := float(block.get("uv_scale", 0.27))
-	material.uv1_triplanar = true
-	material.uv1_world_triplanar = true
-	material.uv1_scale = Vector3(uv, uv, uv)
+		material.set_shader_parameter("normal_tex", load(normal_path))
+		material.set_shader_parameter("use_normal", true)
+		material.set_shader_parameter("normal_depth", float(block.get("normal_depth", 0.34)))
+	material.set_shader_parameter("uv_scale", float(block.get("uv_scale", 0.27)))
+	material.set_shader_parameter("max_alpha", clampf(float(block.get("max_alpha", 0.7)), 0.0, 1.0))
+	material.set_shader_parameter("master_alpha", 0.0)
+	for key: String in ["desaturate", "value", "feather_scale", "feather_amount", "feather_soft", "view_bias"]:
+		if block.has(key):
+			material.set_shader_parameter(key, float(block[key]))
 	return material
 
 
@@ -997,7 +1246,7 @@ func regreen_nodes() -> Array[MeshInstance3D]:
 
 
 func regreen_alpha_now() -> float:
-	return _regreen_material.albedo_color.a if _regreen_material != null else 0.0
+	return float(_regreen_material.get_shader_parameter("master_alpha")) if _regreen_material != null else 0.0
 
 
 func _heightfield() -> RefCounted:
@@ -1838,6 +2087,8 @@ func _start_idle(body: Node, phase: float) -> void:
 ## The authored herd spots, `[x, z, facing_deg, scale?]` each, as
 ## `{"at": Vector2, "facing_deg": float, "scale": float >= 1}`. Pure, for tests.
 static func herd_placements(block: Dictionary) -> Array:
+	if block.get("scatter", null) is Dictionary:
+		return herd_scatter(block["scatter"] as Dictionary)
 	var out: Array = []
 	for raw: Variant in (block.get("members", []) as Array):
 		if not raw is Array or (raw as Array).size() < 2:
@@ -1850,6 +2101,65 @@ static func herd_placements(block: Dictionary) -> Array:
 			"scale": maxf(float(entry[3]), 1.0) if entry.size() > 3 else 1.0,
 		})
 	return out
+
+
+## F05#7 round 6: the herd as loose GRAZING CLUSTERS rather than an evenly
+## spaced ring (blind round 5: "a row along a fence, evenly spaced, same
+## facing -- placed props"). Each cluster is a bearing/distance off `around`
+## with a count, a spread and a shared heading; members are drawn from one
+## seeded RandomNumberGenerator (`seed`), rejection-sampled to stay inside
+## [min_r, max_r] of `around`, out of the `open_arc` [from, to] degrees
+## (azimuth 0 = +Z, 90 = +X) and at least `min_gap_m` from each other. Facing
+## is the cluster heading +- `heading_jitter_deg`; scale is up-only in
+## `scale_range`. Pure function of the dictionary: identical on every peer
+## and every load, nothing saved.
+static func herd_scatter(spec: Dictionary) -> Array:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(spec.get("seed", 1))
+	var raw_around: Array = spec.get("around", [0.0, 0.0])
+	var around := Vector2(float(raw_around[0]), float(raw_around[1]))
+	var min_r := float(spec.get("min_r", 8.5))
+	var max_r := float(spec.get("max_r", 13.5))
+	var gap := float(spec.get("min_gap_m", 4.0))
+	var arc: Array = spec.get("open_arc", [])
+	var jitter := float(spec.get("heading_jitter_deg", 40.0))
+	var scale_range: Array = spec.get("scale_range", [1.0, 1.0])
+	var tries := int(spec.get("tries", 64))
+	var out: Array = []
+	for raw: Variant in (spec.get("clusters", []) as Array):
+		if not raw is Dictionary:
+			continue
+		var cluster: Dictionary = raw
+		var bearing := deg_to_rad(float(cluster.get("bearing_deg", 0.0)))
+		var centre := around + Vector2(sin(bearing), cos(bearing)) * float(cluster.get("distance_m", 10.0))
+		var spread := float(cluster.get("spread_m", 3.0))
+		var heading := float(cluster.get("heading_deg", 0.0))
+		for _k in int(cluster.get("count", 1)):
+			for _attempt in tries:
+				var angle := rng.randf() * TAU
+				var at := centre + Vector2(cos(angle), sin(angle)) * spread * sqrt(rng.randf())
+				var facing := fposmod(heading + rng.randf_range(-jitter, jitter), 360.0)
+				var scale := maxf(rng.randf_range(float(scale_range[0]), float(scale_range[1])), 1.0)
+				if not _herd_spot_ok(at, around, min_r, max_r, arc, gap, out):
+					continue
+				out.append({"at": at, "facing_deg": facing, "scale": scale})
+				break
+	return out
+
+
+static func _herd_spot_ok(at: Vector2, around: Vector2, min_r: float, max_r: float,
+		arc: Array, gap: float, placed: Array) -> bool:
+	var off := at - around
+	if off.length() < min_r or off.length() > max_r:
+		return false
+	if arc.size() >= 2:
+		var az := fposmod(rad_to_deg(atan2(off.x, off.y)), 360.0)
+		if az >= float(arc[0]) and az <= float(arc[1]):
+			return false
+	for other: Dictionary in placed:
+		if at.distance_to(other["at"] as Vector2) < gap:
+			return false
+	return true
 
 
 func herd_return() -> Node3D:
