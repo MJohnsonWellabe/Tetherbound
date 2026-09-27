@@ -552,7 +552,14 @@ func _landing(island_id: String) -> Vector3:
 		if str(anchor.island_id) == island_id and str(anchor.kind) == "arrival":
 			var at: Array = anchor.safe_position
 			return Vector3(float(at[0]), float(at[1]), float(at[2]))
-	# First Shore has no arrival anchor: the world's own start spawn stands in.
+	# First Shore has no arrival anchor: its first authored departure anchor
+	# (first_shore_to_reedhaven_departure, the world's own start spawn) is the
+	# hub. Not the trainer's position at bind, which in the four-biome stage is
+	# the lesson landing, not a hub with dry routes onward.
+	for anchor: Dictionary in config.anchors:
+		if str(anchor.island_id) == island_id and str(anchor.kind) == "departure":
+			var at: Array = anchor.safe_position
+			return Vector3(float(at[0]), float(at[1]), float(at[2]))
 	if island_id == _island(spawn):
 		return spawn
 	return Vector3.INF
@@ -995,7 +1002,19 @@ func _ride_route(route: Dictionary, reverse: bool, label: String) -> bool:
 	var ridden := 0.0
 	for index in range(1, points.size()):
 		var before: Vector3 = riding.mount_body().global_position
-		if not await _move_mount_to(points[index], 2.5 if index < points.size() - 1 else 1.8, "%s %s vertex %d/%d" % [label, id, index, points.size() - 1]):
+		var final := index == points.size() - 1
+		var vertex_label := "%s %s vertex %d/%d" % [label, id, index, points.size() - 1]
+		if not await _move_mount_to(points[index], 1.8 if final else 2.5, vertex_label, final):
+			# The mount grounded short of the far landing (a shore step it
+			# cannot climb): dismount there by Interact and walk the rest.
+			if final and mount_grounded:
+				print("RIDE %s: mount grounded at %s short of the landing; dismount and walk" % [vertex_label, riding.mount_body().global_position])
+				print("RIDE grounded water_depth=%.2f" % float(world.call("water_depth_at", riding.mount_body().global_position)))
+				if not await _dismount(vertex_label + " (grounded)", false):
+					return false
+				if not await _walk_here(points[index], 2.0, vertex_label + " walk to landing", _island(points[index])):
+					return false
+				break
 			return false
 		ridden += Vector2(before.x, before.z).distance_to(Vector2(riding.mount_body().global_position.x, riding.mount_body().global_position.z))
 	if not await _dismount(label + " " + id):
@@ -1027,8 +1046,7 @@ func _mount_swimmer(label: String) -> bool:
 	if riding == null or director == null:
 		return _check(false, label + ": no RidingController/EncounterDirector")
 	if riding.is_mounted():
-		return _check(riding.mount_body() != null and riding.mount_body().get("instance") == mount,
-			label + ": already mounted on the owned swimmer")
+		return _check(_on_mount(), label + ": already mounted on the owned swimmer (%s)" % _mount_diag())
 	if not _check(game.local.party.members().has(mount) and not bool(mount.fainted),
 			"%s: owned swimmer in the party and not fainted (fainted=%s)" % [label, mount.fainted if mount != null else "?"]):
 		return false
@@ -1072,13 +1090,38 @@ func _mount_swimmer(label: String) -> bool:
 			await _frames(12)
 			if riding.is_mounted():
 				break
-	return _check(riding.is_mounted() and riding.mount_body().get("instance") == mount,
-		"%s: Interact on Ride mounted the owned swimmer (winner=%s)" % [label, arbiter.call("prompt")])
+	return _check(_on_mount(),
+		"%s: Interact on Ride mounted the owned swimmer (winner=%s; %s)" % [label, arbiter.call("prompt"), _mount_diag()])
 
 
-func _move_mount_to(target: Vector3, tolerance: float, label: String) -> bool:
+## Mounted on the owned swimmer: the ridden body is the director's deployed
+## ally and that ally is the owned swimmer instance.
+func _on_mount() -> bool:
+	if not riding.is_mounted() or riding.mount_body() == null:
+		return false
+	var body: Node = riding.mount_body()
+	return body.get("instance") == mount or (body == director.ally_body() and director.ally_instance() == mount)
+
+
+func _mount_diag() -> String:
+	var body: Node = riding.mount_body() if riding.is_mounted() else null
+	return "mounted=%s body=%s body.instance=%s ally=%s ally_instance=%s mount=%s" % [riding.is_mounted(), body,
+		body.get("instance") if body != null else null, director.ally_body(), director.ally_instance(), mount]
+
+
+var mount_grounded := false
+
+
+## Stick-steers the mount to `target`. A mount that makes < 1 m progress in
+## 240 frames is stalled; on the final (landing) leg `mount_grounded` is set
+## and false returned without a failure so the caller can dismount and
+## walk/wade the last metres.
+func _move_mount_to(target: Vector3, tolerance: float, label: String, landing: bool = false) -> bool:
+	mount_grounded = false
 	var distance: float = Vector2(riding.mount_body().global_position.x - target.x, riding.mount_body().global_position.z - target.z).length()
 	var budget := maxi(900, int(distance * 45.0))
+	var anchor: Vector3 = riding.mount_body().global_position
+	var anchor_age := 0
 	for _frame in budget:
 		if not riding.is_mounted():
 			return _check(false, label + ": thrown off the mount")
@@ -1088,6 +1131,14 @@ func _move_mount_to(target: Vector3, tolerance: float, label: String) -> bool:
 			_stick(0.0, 0.0)
 			await _frames(6)
 			return true
+		anchor_age += 1
+		if riding.mount_body().global_position.distance_to(anchor) > 1.0:
+			anchor = riding.mount_body().global_position
+			anchor_age = 0
+		elif anchor_age >= 240 and landing:
+			_stick(0.0, 0.0)
+			mount_grounded = true
+			return false
 		var local: Vector3 = camera.call("planar_basis").inverse() * offset.normalized()
 		_stick(local.x, local.z)
 		await _tree.physics_frame
@@ -1097,7 +1148,7 @@ func _move_mount_to(target: Vector3, tolerance: float, label: String) -> bool:
 		riding.mount_body().global_position, target])
 
 
-func _dismount(label: String) -> bool:
+func _dismount(label: String, require_floor: bool = true) -> bool:
 	for _frame in 120:
 		if arbiter.call("winning_provider") == riding:
 			break
@@ -1107,7 +1158,7 @@ func _dismount(label: String) -> bool:
 	if riding.is_mounted():
 		await _press_interact()
 		await _frames(20)
-	return _check(not riding.is_mounted() and player.is_on_floor(),
+	return _check(not riding.is_mounted() and (player.is_on_floor() or not require_floor),
 		"%s: Interact on Dismount left the trainer grounded (mounted=%s floor=%s at %s)" % [label,
 		riding.is_mounted(), player.is_on_floor(), player.global_position])
 

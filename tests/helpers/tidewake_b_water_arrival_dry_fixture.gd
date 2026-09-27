@@ -17,7 +17,7 @@ extends RefCounted
 ## this point is the unchanged earned Water stage.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
-const ENTRY_LEVEL := 46
+const ENTRY_LEVEL := 55
 const ENTRY_PARTY: Array[String] = ["terrapup", "bramblebun", "mudsnout", "sparkit", "sparkit"]
 const COMPLETED_STORMWOOD_FLAGS: Array[String] = ["stormwood:marrow_defeated", "stormwood:legendary_freed",
 	"realm_heart_stormwood_earned", "stormwood:long_storm_ended", "stormwood:legendary_offer_made",

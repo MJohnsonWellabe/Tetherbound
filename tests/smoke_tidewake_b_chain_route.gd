@@ -152,6 +152,20 @@ func _run() -> void:
 			_check(false, "could not create the disclosed carried axe fixture")
 			_finish()
 			return
+		if OS.get_cmdline_user_args().has("--mount-fixture"):
+			# DISCLOSED (DRY RUN ridden-leg iteration only): the fifth member is
+			# a Water Mosshell with a carried Swim Saddle, standing in for the
+			# earned swimmer the four-biome stage hands the helper.
+			game.local.party.clear()
+			for species: String in ["terrapup", "bramblebun", "mudsnout", "pipwing", "water_mosshell"]:
+				var member: RefCounted = SPECIES.spawn(species)
+				member.set_level(43, PROGRESSION.config())
+				game.local.party.add(member)
+			game.local.flags.set_flag("water_swim_saddle_recipe_learned")
+			if game.inventory.add("swim_saddle", 1) != 0:
+				_check(false, "could not create the disclosed swim saddle fixture")
+			chains.mount = game.local.party.at(4)
+			print("DRY RUN mount fixture: %s" % chains.mount.species_id)
 	var start_slot := -1
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--start-slot="):
