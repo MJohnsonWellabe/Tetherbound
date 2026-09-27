@@ -941,7 +941,8 @@
   {
    "id": "S1",
    "status": "partial",
-   "note": "Walkable roads, second Dynamo road and five walled pockets on main fe07d0d2; pocket lure not visible from road; earned segments historical; not from C3 save."
+   "note": "Integrated run passed review in batch 64; card completes when F09#3 (pocket lures, full art bar) closes.",
+   "integrated_run": "ralph/reports/STORMWOOD/full_run/run_a.txt + s1/ @ tb/stormwood 9dc96424 (batch 64): one continuous chapter run passes prefix, Crown arch, Rootgate, core, Marrow and aftermath with live fights; route unit tests 101/0; closed-arch bypass 15/0; VERIFIER full suite 5159 tests 0 failed. Shortcuts disclosed: Cloudreach-boundary fixture start (no earned C3 save), fresh L44 party with granted tools, 8x clock, harness input and fights, helper routing B1-B8, one teleport per pocket for the walk witness."
   },
   {
    "id": "S2",
