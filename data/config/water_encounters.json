@@ -7016,15 +7016,16 @@
       "region_id": "outer_reaches",
       "table_id": "water_salt_crown_land",
       "island_local_offset": [
-        -5.176,
-        65.792,
-        -10.595
+        -0.463,
+        66.338,
+        -9.304
       ],
       "position": [
-        144.824,
-        65.792,
-        2299.405
+        149.537,
+        66.338,
+        2300.696
       ],
+      "_why_trainer_ring_0926": "Was 15.9 m from Sera's spot, inside ring radius 11 + camera-edge margin 2 + roam 3. Moved 4.9 m along the spine to 20.5 m.",
       "count": 2,
       "radius_m": 3.0,
       "habitat": "land",
@@ -7266,15 +7267,16 @@
       "region_id": "veilfall",
       "table_id": "water_veilfall_land",
       "island_local_offset": [
-        105.343,
-        141.681,
-        -243.171
+        50.762,
+        145.856,
+        -222.852
       ],
       "position": [
-        305.343,
-        141.681,
-        3896.829
+        250.762,
+        145.856,
+        3917.148
       ],
+      "_why_trainer_ring_0926": "F14#1 capture: at [305.343,141.681,3896.829] this pair stood 6.9 m from Officer Venn, inside his 11 m fight ring, and its two land wilds occluded the fighters at the fight camera. Moved 58 m west along the same spine segment: 65 m from every trainer, 18.3 m from the nearest cluster; road visibility still has 0 failing samples.",
       "count": 2,
       "radius_m": 3.0,
       "habitat": "land",

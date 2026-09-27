@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WATER_C2C3 water_deep_watch_tidecoil terrapup MASHER runs=24 win=0.00 med_lead=1.000 med_party=0.241 med_s=60.9 max_s=66.5 lead_faint=1.00 wipe=0.00 max_hit=0.055 tell=[0.80,0.80] stalled=0
+WATER_C2C3 water_deep_watch_tidecoil terrapup READER runs=24 win=1.00 med_lead=0.050 med_party=0.012 med_s=149.1 max_s=155.2 lead_faint=0.00 wipe=0.00 max_hit=0.055 tell=[0.80,0.80] stalled=0
+WATER_C2C3_PAIR water_deep_watch_tidecoil terrapup reader/masher median lead cost = 0.050 / 1.000 (ratio 0.05)
+WATER_C2C3 water_deep_watch_tidecoil ripplet MASHER runs=24 win=1.00 med_lead=0.682 med_party=0.148 med_s=63.4 max_s=65.3 lead_faint=0.00 wipe=0.00 max_hit=0.053 tell=[0.80,0.80] stalled=0
+WATER_C2C3 water_deep_watch_tidecoil ripplet READER runs=24 win=1.00 med_lead=0.048 med_party=0.010 med_s=103.6 max_s=108.0 lead_faint=0.00 wipe=0.00 max_hit=0.053 tell=[0.80,0.80] stalled=0
+WATER_C2C3_PAIR water_deep_watch_tidecoil ripplet reader/masher median lead cost = 0.048 / 0.682 (ratio 0.07)
+WATER_C2C3 water_deep_watch_tidecoil galewisp MASHER runs=24 win=1.00 med_lead=0.748 med_party=0.146 med_s=55.0 max_s=60.1 lead_faint=0.00 wipe=0.00 max_hit=0.051 tell=[0.80,0.80] stalled=0
+WATER_C2C3 water_deep_watch_tidecoil galewisp READER runs=24 win=1.00 med_lead=0.046 med_party=0.009 med_s=79.5 max_s=83.3 lead_faint=0.00 wipe=0.00 max_hit=0.050 tell=[0.80,0.80] stalled=0
+WATER_C2C3_PAIR water_deep_watch_tidecoil galewisp reader/masher median lead cost = 0.046 / 0.748 (ratio 0.06)
+WATER_C2C3 done: 3 rows, 144 runs, 0 errors

@@ -1,0 +1,138 @@
+[
+ {
+  "tag": "t",
+  "fight_s": 0.0,
+  "opponent": "water_cannonback",
+  "tell_s": 0.0,
+  "gap_m": 5.0,
+  "file": "t-000.00.png"
+ },
+ {
+  "tag": "tell-start",
+  "fight_s": 0.7,
+  "opponent": "water_cannonback",
+  "tell_s": 0.8,
+  "gap_m": 6.05,
+  "file": "tell-start-000.70.png"
+ },
+ {
+  "tag": "tell-late",
+  "fight_s": 1.4,
+  "opponent": "water_cannonback",
+  "tell_s": 0.8,
+  "gap_m": 3.55,
+  "file": "tell-late-001.40.png"
+ },
+ {
+  "tag": "tell-start",
+  "fight_s": 4.33,
+  "opponent": "water_cannonback",
+  "tell_s": 0.8,
+  "gap_m": 1.74,
+  "file": "tell-start-004.33.png"
+ },
+ {
+  "tag": "tell-late",
+  "fight_s": 5.03,
+  "opponent": "water_cannonback",
+  "tell_s": 0.8,
+  "gap_m": 1.8,
+  "file": "tell-late-005.03.png"
+ },
+ {
+  "tag": "t",
+  "fight_s": 12.0,
+  "opponent": "water_cannonback",
+  "tell_s": 0.0,
+  "gap_m": 3.12,
+  "file": "t-012.00.png"
+ },
+ {
+  "tag": "t",
+  "fight_s": 24.02,
+  "opponent": "water_cannonback",
+  "tell_s": 0.0,
+  "gap_m": 3.1,
+  "file": "t-024.02.png"
+ },
+ {
+  "tag": "t",
+  "fight_s": 36.02,
+  "opponent": "water_cannonback",
+  "tell_s": 0.0,
+  "gap_m": 3.1,
+  "file": "t-036.02.png"
+ },
+ {
+  "tag": "t",
+  "fight_s": 48.02,
+  "opponent": "water_cannonback",
+  "tell_s": 0.0,
+  "gap_m": 2.33,
+  "file": "t-048.02.png"
+ },
+ {
+  "tag": "t",
+  "fight_s": 60.02,
+  "opponent": "water_cannonback",
+  "tell_s": 0.0,
+  "gap_m": 2.45,
+  "file": "t-060.02.png"
+ },
+ {
+  "tag": "t",
+  "fight_s": 72.02,
+  "opponent": "water_cannonback",
+  "tell_s": 0.0,
+  "gap_m": 2.44,
+  "file": "t-072.02.png"
+ },
+ {
+  "tag": "tell-start",
+  "fight_s": 79.52,
+  "opponent": "water_riptusk",
+  "tell_s": 0.8,
+  "gap_m": 5.81,
+  "file": "tell-start-079.52.png"
+ },
+ {
+  "tag": "tell-late",
+  "fight_s": 80.22,
+  "opponent": "water_riptusk",
+  "tell_s": 0.8,
+  "gap_m": 3.35,
+  "file": "tell-late-080.22.png"
+ },
+ {
+  "tag": "tell-start",
+  "fight_s": 83.12,
+  "opponent": "water_riptusk",
+  "tell_s": 0.8,
+  "gap_m": 2.4,
+  "file": "tell-start-083.12.png"
+ },
+ {
+  "tag": "tell-late",
+  "fight_s": 83.82,
+  "opponent": "water_riptusk",
+  "tell_s": 0.8,
+  "gap_m": 2.35,
+  "file": "tell-late-083.82.png"
+ },
+ {
+  "tag": "t",
+  "fight_s": 84.02,
+  "opponent": "water_riptusk",
+  "tell_s": 0.0,
+  "gap_m": 2.33,
+  "file": "t-084.02.png"
+ },
+ {
+  "tag": "t",
+  "fight_s": 93.02,
+  "opponent": "water_riptusk",
+  "tell_s": 0.0,
+  "gap_m": 3.81,
+  "file": "t-093.02.png"
+ }
+]
