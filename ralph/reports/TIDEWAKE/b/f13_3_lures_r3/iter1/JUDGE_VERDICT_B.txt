@@ -1,0 +1,32 @@
+Findings from all twelve frames and the keyart reference (stylized realism, cozy but with mystery — no precedent there for the harsh black beam shapes seen in-game):
+
+frame_01: WEAK — A blue banner-on-gallows structure sits upper-left on the distant grassy knoll, next to a tree cluster; the blue cloth does pop against the green/grey palette, but it's small, off-center, and partly obscured by an odd dark wedge-shaped blur at top-center of the frame (reads like a rendering artifact or lens/foreground clipping, not an intentional effect) that competes for attention. Nothing else in the scene reads as "go here" — it would need to be bigger, more centered, or accompanied by motion/light to register as a clear destination.
+
+frame_02: NOTICEABLE — A large blue crystalline creature lies in the grass just ahead of the player, close, big, and distinctly colored/patterned against the green field; its reclining pose invites approach/interaction. The banner and a strange black vertical beam are still visible in the far background, reinforcing direction of travel.
+
+frame_03: WEAK — Looking down a grass corridor between two rock walls toward a small banner post with a thin grey smoke plume; a tiny dark humanoid figure stands on the ridge to the right. All of these are legible but small and low-contrast at this distance — the smoke is the strongest cue, the figure is easy to miss entirely.
+
+frame_04: NOTICEABLE — The view opens into a vista: a snow-capped peak, ocean, a taller grey smoke plume, and two banner posts spaced along the ridge. The combination of landmark silhouette (mountain) + smoke + repeated banners gives a much stronger sense of "there's something over there" than frame_03 alone.
+
+frame_05: NOTICEABLE — A small camp reads clearly as a destination: tent, campfire glow, a standing NPC figure, and the banner post beside a tree. The cluster of man-made objects plus a person is the most legible "go here" composition so far, though a solid black smoke pillar rising straight up from behind the tree looks visually harsh/unnatural compared to the rest of the scene.
+
+frame_06: NOTICEABLE — Down the valley corridor, two blue dragon/lizard creatures are visible standing near the banner and smoke pillar at the far end. Live creatures add motion and curiosity, making the far marker more compelling than a static banner alone.
+
+frame_07: WEAK — Banner post directly ahead, but by now it's a repeated motif and no longer feels like a distinct discovery. The tall black beam overhead is cropped at the top of frame and reads more like a rendering artifact than an environmental feature; foreground sand dominates the shot with little else drawing the eye.
+
+frame_08: WEAK — A wide vista shows two tall, stark black beam/smoke pillars rising from banner posts over the ocean. Thematically these might be the "pumps" from the quest text, but visually the pure-black cone shapes look like a VFX placeholder or bug rather than a deliberate landmark, undercutting their pull as an intentional lure.
+
+frame_09: NOT NOTICEABLE — Mostly empty sand and grass leading to a plain hillside with a banner post ahead. No creature, NPC, smoke, or unique prop; nothing new distinguishes this from earlier banner shots.
+
+frame_10: WEAK — Slightly closer to the post, revealing a hanging lantern and a wooden crate at its base — minor added detail, but still just the same recurring banner-marker with no figure or event to make it feel like a true destination.
+
+frame_11: NOTICEABLE — A camp with tent, ember/fire, banner+lantern post, and a standing NPC figure to the right. The human figure is the strongest cue here, suggesting a person to talk to/rescue, which ties naturally to the "free the residents" objective.
+
+frame_12: NOTICEABLE — Strongest frame of the set: player has waded into the water toward a rearing blue dragon-like creature and a dark rocky mass with glowing pink accents, with a cyan curved targeting/prompt UI line pointing right at the creature. High color contrast, motion, and an explicit UI cue make this unambiguous as an interaction point.
+
+PLACE 1 (frames 01+02): YES — weak distant banner becomes a strong pull once the sleeping blue creature is revealed close-up.
+PLACE 2 (frames 03+04): YES — thin at first, but the mountain/smoke/banner vista in frame_04 sells the destination.
+PLACE 3 (frames 05+06): YES — camp-with-NPC and later camp-with-creatures both read clearly as places to go.
+PLACE 4 (frames 07+08): WEAK — banner motif is by now repetitive, and the black beam effect reads as a visual glitch rather than a landmark, so the "pump" doesn't land as intended.
+PLACE 5 (frames 09+10): NO — plain terrain and a now-familiar banner post with no figure, creature, or event to justify the trip.
+PLACE 6 (frames 11+12): YES — an NPC figure at arrival followed by a vivid creature encounter in the water makes this the most compelling pair in the set.

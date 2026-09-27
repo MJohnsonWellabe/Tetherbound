@@ -164,7 +164,8 @@ func lure_root(lure_id: String) -> Node3D:
 ## makes a destination (or the next rise of the walked way to it) read from the
 ## island's landing or approach. Built on every peer from the first frame,
 ## whatever the chain state, like the Lastlight lamp. Only lamp posts collide
-## (a post-width box, on every peer); banners and the signal fire (its log
+## (a post-width box, on every peer); banners, `prop` pieces (the Water docks'
+## own crates and barrels, fitted to `height_m`) and the signal fire (its log
 ## pile, flame and smoke) are art only, so a simulation-only host and a
 ## rendering client agree on collision. Pieces use the
 ## installed Water set: the Lastlight bark lamp post + Quaternius wall lantern,
@@ -198,7 +199,7 @@ func _build_wayfinding_lure(lure: Dictionary) -> void:
 			_dress_lamp_post(post, piece)
 		elif _world.simulation_only:
 			continue
-		elif kind == "banner":
+		elif kind == "banner" or kind == "prop":
 			var banner := _fit_height(str(piece.get("model", "")), float(piece.get("height_m", 4.0)))
 			if banner != null:
 				banner.name = "Banner%d" % index
@@ -220,7 +221,8 @@ func _build_wayfinding_lure(lure: Dictionary) -> void:
 			for glow: Node in fire.find_children("CampfireGlow", "", true, false):
 				glow.call("configure_smoke", float(piece.get("smoke_top_m", 4.6)),
 					float(piece.get("smoke_alpha", 0.3)), float(piece.get("smoke_top_size_m", -1.0)),
-					Color(0, 0, 0, 0), float(piece.get("smoke_fade", 0.85)), float(piece.get("smoke_base_size_m", -1.0)))
+					Color(str(piece.get("smoke_colour", "#00000000"))), float(piece.get("smoke_fade", 0.85)),
+					float(piece.get("smoke_base_size_m", -1.0)))
 		else:
 			push_error("Water wayfinding lure %s: unknown piece kind %s" % [lure_id, kind])
 
