@@ -1,0 +1,316 @@
+{
+  "name": "F13#5 probe: can a party with no owned swimmer reach Drowned Garden and Deep Watch?",
+  "claim": "Report-only reachability probe for coordinator question F13#5 (not an acceptance claim). Both peers carry only non-swimmer creatures (granted Terrapup and Galewisp at L50 on top of the boot party; the step records the party species and asserts no swim-compatible species) and swim by stick, unmounted, from the authored departure anchor toward the authored arrival anchor of the two optional mounted routes. Positive control first: the same step must record an arrival on the rest_03 -> rest_04 sheltered hop. Setup (disclosed): all seven mandatory dock flags set through the ledger so no seal race interferes, teleports to authored anchors, party grants. Not probed: Fly (needs an owned carrier after Cloudreach; analysed separately), swimming skill or food buffs above level 0.",
+  "peers": 2,
+  "scene": "water",
+  "budget_s": 2400,
+  "steps": [
+    {
+      "peer": 0,
+      "action": "host"
+    },
+    {
+      "peer": 1,
+      "action": "join"
+    },
+    {
+      "peer": "all",
+      "action": "expect_peers",
+      "args": {
+        "count": 2
+      }
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_swim_lesson_complete",
+        "scope": "world"
+      },
+      "label": "setup: every mandatory dock open so no seal race stands in the way (water_swim_lesson_complete)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_dock_reedhaven_repaired",
+        "scope": "world"
+      },
+      "label": "setup: every mandatory dock open so no seal race stands in the way (water_dock_reedhaven_repaired)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_dock_brine_steps_trial_won",
+        "scope": "world"
+      },
+      "label": "setup: every mandatory dock open so no seal race stands in the way (water_dock_brine_steps_trial_won)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "scope": "world"
+      },
+      "label": "setup: every mandatory dock open so no seal race stands in the way (water_dock_shellwatch_residents_freed_and_pump_disabled)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_aquaryn_resolved",
+        "scope": "world"
+      },
+      "label": "setup: every mandatory dock open so no seal race stands in the way (water_aquaryn_resolved)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_dock_salt_crown_landing_charted",
+        "scope": "world"
+      },
+      "label": "setup: every mandatory dock open so no seal race stands in the way (water_dock_salt_crown_landing_charted)"
+    },
+    {
+      "peer": 0,
+      "action": "story_flag",
+      "args": {
+        "flag": "water_dock_sluice_isle_both_controls_disabled",
+        "scope": "world"
+      },
+      "label": "setup: every mandatory dock open so no seal race stands in the way (water_dock_sluice_isle_both_controls_disabled)"
+    },
+    {
+      "peer": "all",
+      "action": "wait",
+      "args": {
+        "frames": 120
+      }
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "level": 50
+      },
+      "label": "setup: peer 0 party gains non-swimmer terrapup"
+    },
+    {
+      "peer": 0,
+      "action": "party_grant",
+      "args": {
+        "species": "galewisp",
+        "level": 50
+      },
+      "label": "setup: peer 0 party gains non-swimmer galewisp"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "terrapup",
+        "level": 50
+      },
+      "label": "setup: peer 1 party gains non-swimmer terrapup"
+    },
+    {
+      "peer": 1,
+      "action": "party_grant",
+      "args": {
+        "species": "galewisp",
+        "level": 50
+      },
+      "label": "setup: peer 1 party gains non-swimmer galewisp"
+    },
+    {
+      "peer": 0,
+      "action": "water_anchor_fixture",
+      "args": {
+        "anchor_id": "tidal_cradle_to_salt_crown_rest_03"
+      },
+      "expect_data": {
+        "on_floor": true,
+        "swimming": false
+      },
+      "label": "setup: peer 0 on tidal_cradle_to_salt_crown_rest_03"
+    },
+    {
+      "peer": 0,
+      "action": "water_swim_to_anchor",
+      "args": {
+        "anchor_id": "tidal_cradle_to_salt_crown_rest_04",
+        "expect_reached": true,
+        "expect_swimmer": false,
+        "budget_frames": 3600
+      },
+      "budget_frames": 4200,
+      "label": "HOST CONTROL: the unmounted human reaches the next authored rest shoal (the step can see an arrival)"
+    },
+    {
+      "peer": 0,
+      "action": "screenshot",
+      "args": {
+        "name": "p0_tidal_cradle_to_salt_crown_rest_04"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "water_anchor_fixture",
+      "args": {
+        "anchor_id": "salt_crown_to_drowned_garden_departure"
+      },
+      "expect_data": {
+        "on_floor": true,
+        "swimming": false
+      },
+      "label": "setup: peer 0 on salt_crown_to_drowned_garden_departure"
+    },
+    {
+      "peer": 0,
+      "action": "water_swim_to_anchor",
+      "args": {
+        "anchor_id": "salt_crown_to_drowned_garden_arrival",
+        "expect_reached": false,
+        "expect_swimmer": false,
+        "budget_frames": 9000
+      },
+      "budget_frames": 9600,
+      "label": "HOST no-swimmer party, unmounted: Salt Crown -> Drowned Garden is NOT reached"
+    },
+    {
+      "peer": 0,
+      "action": "screenshot",
+      "args": {
+        "name": "p0_salt_crown_to_drowned_garden_arrival"
+      }
+    },
+    {
+      "peer": 0,
+      "action": "water_anchor_fixture",
+      "args": {
+        "anchor_id": "sluice_isle_to_deep_watch_departure"
+      },
+      "expect_data": {
+        "on_floor": true,
+        "swimming": false
+      },
+      "label": "setup: peer 0 on sluice_isle_to_deep_watch_departure"
+    },
+    {
+      "peer": 0,
+      "action": "water_swim_to_anchor",
+      "args": {
+        "anchor_id": "sluice_isle_to_deep_watch_arrival",
+        "expect_reached": false,
+        "expect_swimmer": false,
+        "budget_frames": 9000
+      },
+      "budget_frames": 9600,
+      "label": "HOST no-swimmer party, unmounted: Sluice Isle -> Deep Watch is NOT reached"
+    },
+    {
+      "peer": 0,
+      "action": "screenshot",
+      "args": {
+        "name": "p0_sluice_isle_to_deep_watch_arrival"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "water_anchor_fixture",
+      "args": {
+        "anchor_id": "tidal_cradle_to_salt_crown_rest_03"
+      },
+      "expect_data": {
+        "on_floor": true,
+        "swimming": false
+      },
+      "label": "setup: peer 1 on tidal_cradle_to_salt_crown_rest_03"
+    },
+    {
+      "peer": 1,
+      "action": "water_swim_to_anchor",
+      "args": {
+        "anchor_id": "tidal_cradle_to_salt_crown_rest_04",
+        "expect_reached": true,
+        "expect_swimmer": false,
+        "budget_frames": 3600
+      },
+      "budget_frames": 4200,
+      "label": "GUEST CONTROL: the unmounted human reaches the next authored rest shoal (the step can see an arrival)"
+    },
+    {
+      "peer": 1,
+      "action": "screenshot",
+      "args": {
+        "name": "p1_tidal_cradle_to_salt_crown_rest_04"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "water_anchor_fixture",
+      "args": {
+        "anchor_id": "salt_crown_to_drowned_garden_departure"
+      },
+      "expect_data": {
+        "on_floor": true,
+        "swimming": false
+      },
+      "label": "setup: peer 1 on salt_crown_to_drowned_garden_departure"
+    },
+    {
+      "peer": 1,
+      "action": "water_swim_to_anchor",
+      "args": {
+        "anchor_id": "salt_crown_to_drowned_garden_arrival",
+        "expect_reached": false,
+        "expect_swimmer": false,
+        "budget_frames": 9000
+      },
+      "budget_frames": 9600,
+      "label": "GUEST no-swimmer party, unmounted: Salt Crown -> Drowned Garden is NOT reached"
+    },
+    {
+      "peer": 1,
+      "action": "screenshot",
+      "args": {
+        "name": "p1_salt_crown_to_drowned_garden_arrival"
+      }
+    },
+    {
+      "peer": 1,
+      "action": "water_anchor_fixture",
+      "args": {
+        "anchor_id": "sluice_isle_to_deep_watch_departure"
+      },
+      "expect_data": {
+        "on_floor": true,
+        "swimming": false
+      },
+      "label": "setup: peer 1 on sluice_isle_to_deep_watch_departure"
+    },
+    {
+      "peer": 1,
+      "action": "water_swim_to_anchor",
+      "args": {
+        "anchor_id": "sluice_isle_to_deep_watch_arrival",
+        "expect_reached": false,
+        "expect_swimmer": false,
+        "budget_frames": 9000
+      },
+      "budget_frames": 9600,
+      "label": "GUEST no-swimmer party, unmounted: Sluice Isle -> Deep Watch is NOT reached"
+    },
+    {
+      "peer": 1,
+      "action": "screenshot",
+      "args": {
+        "name": "p1_sluice_isle_to_deep_watch_arrival"
+      }
+    }
+  ]
+}

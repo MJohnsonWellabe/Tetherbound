@@ -109,7 +109,7 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"rider_identity", "rider_self", "guardian_fixture", "veilfall_press", "guardian_answer", "guardian_state", "guardian_offer_again",
 	"homecoming_complete", "credits_continue", "ending_state", "water_dock_act", "water_dock_state",
 	"water_dock_resend", "water_dock_cut",
-	"water_anchor_fixture", "water_swim_to_wild", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
+	"water_anchor_fixture", "water_swim_to_wild", "water_swim_to_anchor", "water_local_aquatic", "water_remote_aquatic", "water_win_wild",
 	"water_guardian_let_go", "water_guardian_forge_accept",
 	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe", "shared_cue_shape", "ledge_probe",
 	"ledge_launch", "await_autosave", "slot_mtime"]
@@ -745,7 +745,7 @@ static func _stormheart_state(tree: SceneTree, args: Dictionary = {}) -> Diction
 ##                                        (GUEST): record the host address for a later rejoin
 
 const WATER_ACTIONS := ["homecoming_complete", "credits_continue", "ending_state", "water_dock_act",
-	"water_dock_state", "water_dock_resend", "water_dock_cut", "water_anchor_fixture", "water_swim_to_wild",
+	"water_dock_state", "water_dock_resend", "water_dock_cut", "water_anchor_fixture", "water_swim_to_wild", "water_swim_to_anchor",
 	"water_local_aquatic", "water_remote_aquatic", "water_win_wild", "water_guardian_let_go",
 	"water_guardian_forge_accept",
 	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue"]
@@ -796,6 +796,8 @@ static func _water_run(tree: SceneTree, action: String, args: Dictionary) -> Dic
 			return await _water_anchor_fixture(tree, args)
 		"water_swim_to_wild":
 			return await _water_swim_to_wild(tree, args)
+		"water_swim_to_anchor":
+			return await _water_swim_to_anchor(tree, args)
 		"water_local_aquatic":
 			return await _water_local_aquatic(tree, args)
 		"water_remote_aquatic":
@@ -2350,6 +2352,99 @@ static func _water_swim_to_wild(tree: SceneTree, args: Dictionary) -> Dictionary
 	return {"verdict": "FAIL", "detail": "never reached an Engage offer for %s: player=%s wild=%s swimming=%s" % [
 		site, player.global_position, wild.global_position if is_instance_valid(wild) else Vector3.INF,
 		str(swimming.call("is_swimming"))]}
+
+
+## Reachability probe (F13#5): steer the trainer by stick from where it stands
+## toward an authored anchor's shore point, with no mount, and report what the
+## production swim simulation did. Stops on arrival (on floor within
+## `arrive_m` of the anchor's safe point), on a position jump larger than
+## `jump_m` (a respawn or shore recovery moved the trainer), on death, or when
+## the frame budget runs out. The verdict is PASS when `reached` matches
+## `expect_reached` (default false); the data carries the closest approach,
+## the metres swum, stamina/health spent and whether drowning began.
+static func _water_swim_to_anchor(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var world := _water_scene(tree)
+	var player := (tree.get("_probe") as Object).call("player") as CharacterBody3D
+	var camera := (tree.get("_probe") as Object).call("camera_rig") as Node3D
+	if world == null or player == null or camera == null or player.get("swim_controller") == null:
+		return {"verdict": "ERROR", "detail": "water_swim_to_anchor needs the real Water scene, Player, SwimController and camera"}
+	var id := str(args.get("anchor_id", ""))
+	var shore := Vector3.INF
+	var safe := Vector3.INF
+	for anchor: Dictionary in (world.get("config") as Dictionary).get("anchors", []):
+		if str(anchor.get("id", "")) == id:
+			var raw: Array = anchor.get("shore_position", anchor.safe_position)
+			shore = Vector3(float(raw[0]), 0.0, float(raw[2]))
+			var s: Array = anchor.safe_position
+			safe = Vector3(float(s[0]), 0.0, float(s[2]))
+	if not shore.is_finite():
+		return {"verdict": "ERROR", "detail": "no authored Water anchor '%s'" % id}
+	var swimming: Node = player.get("swim_controller")
+	var vitals: RefCounted = player.get("vitals")
+	var arrive_m := float(args.get("arrive_m", 10.0))
+	var jump_m := float(args.get("jump_m", 12.0))
+	var start := player.global_position
+	var start_gap := Vector2(start.x - safe.x, start.z - safe.z).length()
+	var closest := start_gap
+	var stamina0 := float(vitals.stamina)
+	var health0 := float(vitals.health)
+	var swum_m := 0.0
+	var swim_frames := 0
+	var drowning_seen := false
+	var outcome := "budget"
+	var last := player.global_position
+	var target := shore
+	for frame in int(args.get("budget_frames", 9000)):
+		var here := player.global_position
+		var step := Vector2(here.x - last.x, here.z - last.z).length()
+		if step > jump_m:
+			outcome = "moved_%.1fm_in_one_frame" % step
+			break
+		last = here
+		if bool(swimming.call("is_swimming")):
+			swim_frames += 1
+			swum_m += step
+		drowning_seen = drowning_seen or bool(swimming.get("state").drowning)
+		if bool(vitals.call("is_dead")):
+			outcome = "died"
+			break
+		var gap := Vector2(here.x - safe.x, here.z - safe.z).length()
+		closest = minf(closest, gap)
+		if gap <= arrive_m and player.is_on_floor() and not bool(swimming.call("is_swimming")):
+			outcome = "arrived"
+			break
+		# Past the shore point, finish on the safe point so the trainer walks out.
+		if Vector2(here.x - shore.x, here.z - shore.z).length() < 3.0:
+			target = safe
+		var offset := target - here
+		offset.y = 0.0
+		var local: Vector3 = (camera.call("planar_basis") as Basis).inverse() * offset.normalized()
+		tree.call("_drive_left", local.x, local.z)
+		await tree.physics_frame
+	tree.call("_drive_left", 0.0, 0.0)
+	for f in 2:
+		await tree.physics_frame
+	var at := player.global_position
+	var data := {"anchor_id": id, "outcome": outcome, "reached": outcome == "arrived",
+		"start_gap_m": start_gap, "closest_m": closest, "swum_m": swum_m,
+		"swim_s": float(swim_frames) / float(Engine.physics_ticks_per_second),
+		"stamina_start": stamina0, "stamina": float(vitals.stamina), "max_stamina": float(vitals.max_stamina),
+		"health_start": health0, "health": float(vitals.health), "drowning_seen": drowning_seen,
+		"dead": bool(vitals.call("is_dead")), "mode": int(swimming.get("state").mode),
+		"position": [at.x, at.y, at.z]}
+	var species: Array = []
+	for member: Dictionary in ((tree.get("_probe") as Object).call("party_state") as Array):
+		species.append(str(member.get("species", "")))
+	data["party_species"] = species
+	data["party_has_swimmer"] = load("res://scripts/world/water_local_chain_rules.gd").has_swimmer(species)
+	data["mounted"] = bool(world.get_node_or_null(^"RidingController") != null
+		and world.get_node(^"RidingController").call("is_mounted"))
+	var ok: bool = bool(data.reached) == bool(args.get("expect_reached", false))
+	if args.has("expect_swimmer"):
+		ok = ok and bool(data.party_has_swimmer) == bool(args.expect_swimmer)
+	ok = ok and not bool(data.mounted)
+	return {"verdict": "PASS" if ok else "FAIL", "data": data,
+		"detail": "unmounted swim toward %s: %s" % [id, JSON.stringify(data)]}
 
 
 ## Baseline bookkeeping shared by the two aquatic views. `key` is the resource
