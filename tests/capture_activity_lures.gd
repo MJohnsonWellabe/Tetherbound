@@ -69,6 +69,9 @@ var _probe_hotbar := false
 var _probe_stands := false
 ## Path index -> {label, face}: frames taken on reaching a named leg.
 var _leg_shots := {}
+var _queued_shots: Array = []
+## Longest a leg shot waits for a wild creature to leave the player's shoulder.
+const SHOT_DEFER_S := 5.0
 var _pending_shot := {}
 ## `--via=x,z`: the road point the route leaves the road at (disclosed).
 var _via := Vector2(INF, INF)
@@ -245,9 +248,22 @@ func _run() -> void:
 			if leg == "den":
 				# Just inside the den from the hall: the required guardian and,
 				# beyond him, the shut vault door's lit seam (the designed lure).
-				legs.append(den_at + (hall_at - den_at).normalized() * 6.0)
+				# Stand at the den's threshold (10.5 m back toward the hall, the
+				# den's near wall is 11 m), 1.2 m toward the vault side: at 6 m
+				# in, the guardian closed on the player and judge D's frame had
+				# the camera inside him.
+				var back := (hall_at - den_at).normalized()
+				var side: Vector3 = warrens.call("marker", "vault") - den_at
+				side = (side - back * side.dot(back)).normalized()
+				legs.append(den_at + back * 10.5 + side * 1.2)
+				# Face the door itself (on the den's vault-side wall, 8 m from
+				# the den centre), not the vault's centre: from the threshold
+				# that line runs into the den's side wall.
+				var door_at := den_at + side * 8.0
+				# No stow: the guardian closes on a player who lingers here, and
+				# the stow's second is what let him fill the frame.
 				_leg_shots[legs.size() - 1] = {"label": "den-entry-guardian-and-vault-door",
-					"face": warrens.call("marker", "vault"), "stow": true}
+					"face": door_at}
 			legs.append(warrens.call("marker", leg))
 		# The optional branch: from the (already cleared) guardian's den, the
 		# passage to the lit vault. Frame the den looking down it, and the
@@ -626,6 +642,11 @@ func _walk() -> void:
 	## after real progress past it (best_remaining is reset to INF after an
 	## unstick, so it cannot be the reference).
 	var unstick_anchor := INF
+	## Engage prompts pressed when stuck beside a wild creature (at most two).
+	var engage_presses := 0
+	var stuck_recalled := false
+	var shot_deferred := false
+	var shot_deferred_at := 0.0
 	var frame := 0
 	while _clock < WALK_BUDGET_S:
 		await physics_frame
@@ -705,7 +726,12 @@ func _walk() -> void:
 		# Advance the cursor along the path.
 		while cursor < _path.size() - 1 and here.distance_to(_xz3(_path[cursor])) < 3.0:
 			if _leg_shots.has(cursor):
-				_pending_shot = _leg_shots[cursor]
+				# A shot still waiting (deferred beside a creature) keeps its
+				# place; this one queues behind it rather than replacing it.
+				if _pending_shot.is_empty():
+					_pending_shot = _leg_shots[cursor]
+				else:
+					_queued_shots.append(_leg_shots[cursor])
 				_leg_shots.erase(cursor)
 			cursor += 1
 			if cursor == _road_count() and not seen and not looked:
@@ -746,7 +772,19 @@ func _walk() -> void:
 		# A leg shot is taken only while walking: a fight that starts on the
 		# same step would turn it into a combat close-up, so it waits for the
 		# walk to resume after the fight.
-		if not _pending_shot.is_empty():
+		# A wild creature at the shoulder (its Engage prompt is up) puts the
+		# camera inside it: the shot waits, and the walk goes on, until the
+		# creature is off the player's shoulder.
+		if not _pending_shot.is_empty() and _arbiter != null \
+				and str(_arbiter.call("winner")).contains("\"Engage ") \
+				and (not shot_deferred or _clock - shot_deferred_at < SHOT_DEFER_S):
+			if not shot_deferred:
+				shot_deferred = true
+				shot_deferred_at = _clock
+				_notes.append("t=%.1fs leg shot %s deferred beside %s" % [
+					_clock, str(_pending_shot["label"]), str(_arbiter.call("winner"))])
+		elif not _pending_shot.is_empty():
+			shot_deferred = false
 			_release()
 			for i in 20:
 				await physics_frame
@@ -763,7 +801,7 @@ func _walk() -> void:
 				await _face_point(_pending_shot["face"])
 				if _manager == null or not bool(_manager.call("is_fighting")):
 					await _capture(str(_pending_shot["label"]))
-					_pending_shot = {}
+					_pending_shot = _queued_shots.pop_front() if not _queued_shots.is_empty() else {}
 				if stowed:
 					await _ensure_companion_out("leg shot; ")
 			continue
@@ -805,6 +843,28 @@ func _walk() -> void:
 					await _ensure_companion_out("t=%.1fs moving again; " % _clock)
 			best_remaining = remaining
 			best_at = _clock
+		elif _clock - best_at > STUCK_S and not stuck_recalled and _director != null \
+				and _director.call("ally_body") == null:
+			# Stuck with no companion out (a recall at the start that did not
+			# take): a blocking wild creature offers no Engage prompt without
+			# one. Call it out once before jumping at the obstacle.
+			stuck_recalled = true
+			_release()
+			await _ensure_companion_out("t=%.1fs stuck; " % _clock)
+			best_at = _clock
+			continue
+		elif _clock - best_at > STUCK_S and engage_presses < 2 and _arbiter != null \
+				and str(_arbiter.call("winner")).contains("\"Engage "):
+			# A wild creature standing in the way offers its Engage prompt; a
+			# player presses it rather than jumping at it. The fight that starts
+			# is handled like any other (`_handle_fight` runs from it), which
+			# is what gets the creature off the path.
+			engage_presses += 1
+			_notes.append("t=%.1fs blocked beside %s; pressed interact" % [_clock, str(_arbiter.call("winner"))])
+			_release()
+			await _press("interact")
+			best_at = _clock
+			continue
 		elif _clock - best_at > STUCK_S:
 			unstick += 1
 			_notes.append("t=%.1fs no progress at (%.1f,%.1f); unstick attempt %d (jump + strafe)" % [

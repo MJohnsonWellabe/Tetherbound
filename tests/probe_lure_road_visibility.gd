@@ -83,6 +83,7 @@ func _run() -> void:
 	var grids: Array = []
 	var six := false
 	var column_grids: Array = []
+	var camp_grids: Array = []
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--activity="):
 			only = a.trim_prefix("--activity=")
@@ -94,6 +95,10 @@ func _run() -> void:
 			six = true
 		elif a.begins_with("--column-grid="):
 			column_grids.append(a.trim_prefix("--column-grid="))
+		elif a.begins_with("--camp-grid="):
+			camp_grids.append(a.trim_prefix("--camp-grid="))
+		elif a.begins_with("--camp-margin="):
+			_camp_margin = float(a.trim_prefix("--camp-margin="))
 	_load_roads()
 	_world = (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(_world)
@@ -124,6 +129,11 @@ func _run() -> void:
 	_collect_canopies()
 	if six:
 		_six_lures()
+		quit(0)
+		return
+	if not camp_grids.is_empty():
+		for spec: String in camp_grids:
+			_camp_scan(spec)
 		quit(0)
 		return
 	if not column_grids.is_empty():
@@ -346,6 +356,78 @@ func _scan(spec: String) -> void:
 			z += step
 		x += step
 	print("[lure-sight] grid %s: %d qualifying sites" % [parts[0], hits])
+
+
+## `--camp-grid=doss:cx,cz,half,step`: stricter than `--grid`, for a camp that
+## must read from the road rather than only be reachable by a ray. A site
+## qualifies when it is CAMP_OFF_MIN_M..CAMP_OFF_MAX_M off every road and some
+## road sample in that band sees BOTH its ground (+0.3 m: the fire and perch
+## boards) and its body height (+1 m) clear of terrain by CAMP_MARGIN_M
+## (`--camp-margin=` overrides), hard
+## scatter and soft scatter. Sites print with the count of such samples.
+const CAMP_OFF_MIN_M := 40.0
+const CAMP_OFF_MAX_M := 70.0
+const CAMP_MARGIN_M := 0.5
+var _camp_margin := CAMP_MARGIN_M
+
+
+func _camp_scan(spec: String) -> void:
+	var parts := spec.split(":")
+	var v := parts[1].split(",")
+	var cx := float(v[0])
+	var cz := float(v[1])
+	var half := float(v[2])
+	var step := float(v[3])
+	var hits := 0
+	var x := cx - half
+	while x <= cx + half:
+		var z := cz - half
+		while z <= cz + half:
+			var c := Vector2(x, z)
+			var off := _road_offset(c)
+			if off >= CAMP_OFF_MIN_M and off <= CAMP_OFF_MAX_M:
+				var g := _ground(x, z) - Vector3(0, BODY_M, 0)
+				if not bool(_vegetation.call("has_solid_scatter_near", g + Vector3.UP, ARENA_CLEAR_M)):
+					var seen := 0
+					var nearest := INF
+					var best := Vector2.ZERO
+					for n: Vector2 in _nodes:
+						var d := n.distance_to(c)
+						if d > CAMP_OFF_MAX_M + 10.0:
+							continue
+						var eye := Vector3(n.x, float(_terrain_data.call("get_height", Vector3(n.x, 0, n.y))) + EYE_M, n.y)
+						var ok := true
+						for h: float in [0.3, BODY_M]:
+							var t := g + Vector3(0, h, 0)
+							if not (_clear_terrain_margin(eye, t, _camp_margin) and _clear_physics(eye, t) and _clear_soft(eye, t)):
+								ok = false
+								break
+						if ok:
+							seen += 1
+							if d < nearest:
+								nearest = d
+								best = n
+					if seen > 0:
+						hits += 1
+						print("[lure-sight] camp-grid %s ok (%.0f,%.0f) road_offset=%.1f slope=%.1f seen_by=%d nearest=%.1f from (%.0f,%.0f) moved=%.1f" % [
+							parts[0], x, z, off, _slope(x, z), seen, nearest, best.x, best.y, c.distance_to(Vector2(cx, cz))])
+			z += step
+		x += step
+	print("[lure-sight] camp-grid %s: %d qualifying sites" % [parts[0], hits])
+
+
+## Terrain clearance with a margin, ignoring the last 2 m before the target
+## (the ground the target stands on).
+func _clear_terrain_margin(from: Vector3, to: Vector3, margin: float) -> bool:
+	var length := from.distance_to(to)
+	var steps := int(length / TERRAIN_STEP_M)
+	for i in range(1, steps):
+		var p := from.lerp(to, float(i) / float(steps))
+		if p.distance_to(to) < 2.0:
+			break
+		if p.y < float(_terrain_data.call("get_height", Vector3(p.x, 0, p.z))) + margin:
+			return false
+	return true
 
 
 ## Worst terrain drop over a 5 m pad, in degrees.

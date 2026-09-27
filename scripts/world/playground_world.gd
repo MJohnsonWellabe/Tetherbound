@@ -477,8 +477,19 @@ const BROKEN_CART_YAW_DEG := 40.0
 ## or soft scatter within 6m, no authored Meadows content within 45m. Closer to
 ## the loop the bank is steeper than 5 degrees. `world_ledger.gd::DOSS_AT` is
 ## the authority's copy and must move with it (tests/test_world_ledger_races.gd).
-const RIVER_NEST_AT := Vector2(-19.0, 4180.0)
-const RIVER_NEST_FACING_DEG := 30.0
+##
+## F03#0 (lure judge D, 2026-09-27): at (-19,4180) the camp sat on the ridge
+## plateau just past its west crest, so from the loop the crest hid Doss, the
+## fire and the perch until the prompt; only the smoke column showed. Moved
+## 15 m south-west to the crest's road-facing edge on the same ridge above the
+## river: 56 m off the loop, and `probe_lure_road_visibility.gd
+## --camp-grid=doss:-32,4174,14,2 --camp-margin=0.25` finds loop samples at
+## 51-58 m that see both the ground (+0.3 m) and body height here, where the
+## old site had none inside 70 m. 4.0-degree worst slope over a 5 m pad.
+## Facing -74 puts him toward the loop and the perch (offset -4,0,3) on the
+## visible crest edge at (-26,4163).
+const RIVER_NEST_AT := Vector2(-22.0, 4166.0)
+const RIVER_NEST_FACING_DEG := -74.0
 
 ## Where Grandpa's house stands: the west building pad in
 ## data/config/terrain_playground.json's `flats`. One source of truth would be
