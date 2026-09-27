@@ -84,9 +84,6 @@ const BRIDGE_APPROACH := Vector2(11.0, 1270.0)
 ## the view spot is 8 m short of the leaf, on the crossing road's last run.
 const BRIDGE_VIEW := Vector2(8.4, 1313.5)
 const BRIDGE_CENTRE := Vector2(8.0, 1330.0)
-## NPC frames orbit the camera this far off the player->NPC line so the
-## player's body does not hide the person being visited.
-const NPC_VIEW_ORBIT_DEG := 40.0
 const SPINE_CAPTURE_EVERY_S := 20.0
 ## Photo mode: frames the 3D view draws before a capture is read back, so
 ## shadows, LOD and scatter streaming settle.
@@ -106,8 +103,16 @@ const EVENT_NEAR_M := 6.0
 ## rest of village_npcs.json stands out on the bands.
 const VILLAGE_RADIUS_M := 70.0
 const WELL := Vector2(10.0, -10.0)
-const CAMP_AT := Vector2(30.0, -40.0)
+## The Practice Meadow's authored `trainer_camp` cluster (band1 props.json:
+## a travelling trainer's pack -- Bag (24.9,-27.3), Crate (26.4,-28.9),
+## Barrel (26.62,-28.1)) inside the clearing map_landmarks.json names at
+## (30,-40). The walk used to stop at the clearing's centre, where a judge
+## saw only the objective beam and no camp.
+const CAMP_AT := Vector2(26.0, -28.1)
 const CAMP_ARRIVAL_M := 4.0
+## Stop this far short of the pack: its crate and barrel are solid, and the
+## trainer who owns it stands beside them.
+const CAMP_STOP_M := 2.5
 const GATE_ARRIVAL_M := 3.0
 ## Where a spur to a person stops: inside every prompt radius in use (Greet
 ## prompts are 2.4m+, Grandpa's 3.8m) without walking into the body. The walk
@@ -350,6 +355,14 @@ func _play_the_opening() -> bool:
 	_rig = opening.get("rig") as Node3D
 	print("[village-walk] OPENING played: starter=%s at %s" % [
 		str(opening.get("starter_species", "")), str(_player.global_position if _player != null else "?")])
+	# The opening leaves the starter out and following. Put it away the way a
+	# player does (creature_recall's pad button) so the companion does not
+	# stand between the camera and a gate or villager (judge: gate frames
+	# filled by the companion). Nothing else about the walk depends on it.
+	var director := _world.get_node_or_null(^"EncounterDirector")
+	if director != null and director.call("ally_body") != null:
+		await _press("creature_recall")
+		print("[village-walk] OPENING companion put away: %s" % str(director.call("ally_body") == null))
 	return _world != null and _game != null
 
 
@@ -810,9 +823,14 @@ func _walk() -> void:
 
 func _press(action: String) -> void:
 	_pad_press(action, 1.0)
+	# Each edge spans a process frame: parsed events flush once per frame, and
+	# under a slow renderer a press and release inside one flush can be missed
+	# (gate_a_opening_drive.gd::_tap_action, same finding).
+	await process_frame
 	for i in 2:
 		await physics_frame
 	_pad_release(action)
+	await process_frame
 	for i in 30:
 		await physics_frame
 
@@ -970,9 +988,10 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 		for i in through.size() - 1:
 			leg.append(through[i] as Vector2)
 		stop = through[through.size() - 1] as Vector2
-	elif kind in ["grandpa", "villager", "key"]:
+	elif kind in ["grandpa", "villager", "key", "camp"]:
+		var short := CAMP_STOP_M if kind == "camp" else NPC_STOP_M
 		var back := leg[leg.size() - 1] - at
-		stop = at + (back.normalized() * NPC_STOP_M if back.length() > NPC_STOP_M else back)
+		stop = at + (back.normalized() * short if back.length() > short else back)
 	if leg[leg.size() - 1].distance_to(stop) > 0.05:
 		leg.append(stop)
 	_set_leg(leg, from_road, until_road)
@@ -1024,10 +1043,47 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 			_failed = "stood %.2fm from %s but its prompt never won the arbiter" % [d, t.label]
 			return
 	_visited.append(str(t.label))
-	if kind in ["grandpa", "villager"]:
-		await _look_stick_to(_yaw_toward(_xz(), at) + deg_to_rad(NPC_VIEW_ORBIT_DEG))
+	await _frame_for_photo(at, kind in ["grandpa", "villager"])
 	await _capture("reached %s" % t.label)
 	print("[village-walk] VISIT %s kind=%s dist_m=%.2f prompt=\"%s\"" % [t.label, kind, d, prompt])
+
+
+## Orbit the camera with the look stick to the first of PHOTO_ORBITS_DEG (off
+## the player->target bearing) from which nothing solid stands between the
+## lens and the target, or between the lens and the player: a code-blind
+## judge failed frames shot through the inn's railing and walls. Only the
+## look stick moves; the player stays where the walk stopped.
+const PHOTO_ORBITS_DEG := [40.0, -40.0, 70.0, -70.0, 100.0, -100.0, 20.0, -20.0, 140.0, -140.0]
+const PHOTO_SETTLE_ARM_FRAMES := 12
+
+func _frame_for_photo(at: Vector2, person: bool) -> void:
+	var camera := _rig.get_node_or_null(^"Camera3D") as Camera3D
+	var bearing := _yaw_toward(_xz(), at)
+	for offset: float in PHOTO_ORBITS_DEG:
+		await _look_stick_to(bearing + deg_to_rad(offset))
+		for _f in PHOTO_SETTLE_ARM_FRAMES:
+			await physics_frame
+		if camera == null or _clear_shot(camera.global_position, at, person):
+			return
+	print("[village-walk] NOTE no clear photo angle toward (%.1f,%.1f); last orbit kept" % [at.x, at.y])
+	await _look_stick_to(bearing + deg_to_rad(float(PHOTO_ORBITS_DEG[0])))
+
+
+func _clear_shot(lens: Vector3, at: Vector2, person: bool) -> bool:
+	var space := _player.get_world_3d().direct_space_state
+	var head := _player.global_position + Vector3.UP * 1.2
+	var target := Vector3(at.x, _player.global_position.y + (1.2 if person else 1.0), at.y)
+	for point: Vector3 in [head, target]:
+		var q := PhysicsRayQueryParameters3D.create(lens, point)
+		q.exclude = [_player.get_rid()]
+		var hit := space.intersect_ray(q)
+		if hit.is_empty():
+			continue
+		# Reaching the target's own body (the NPC, the gate leaf) is the shot.
+		if (hit.position as Vector3).distance_to(point) < 0.9:
+			continue
+		return false
+	return true
 
 
 ## The arbiter's winning label when the winner belongs to `owner`, else "".
