@@ -5315,6 +5315,10 @@ func _send_out_next_creature() -> bool:
 	body.call("face_towards", _player.global_position)
 
 	_trainer_body = body
+	# F04#6: the round's aftermath camera faces the trainer, not where this
+	# creature falls (combat_manager.gd::aftermath_focus, consumed by _finish).
+	if _manager != null:
+		_manager.set("aftermath_focus", _trainer_node)
 	_start_fight(body, true)
 	if not bool(_manager.call("is_fighting")):
 		body.queue_free()

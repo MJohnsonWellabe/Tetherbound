@@ -84,9 +84,9 @@ func _setup_fixture() -> void:
 func _free_fixture() -> void:
 	fixture.free()
 
-func _begin(owned: bool) -> bool:
+func _begin(owned: bool, realm_owned: bool = false) -> bool:
 	var party: Array[RefCounted] = [ally.instance]
-	return manager.begin(player, enemy, ally, party, null, null, owned)
+	return manager.begin(player, enemy, ally, party, null, null, owned, realm_owned)
 
 func _case_a_trainer_round_releases_toward_the_trainer() -> void:
 	manager.aftermath_focus = trainer
@@ -117,7 +117,16 @@ func _case_a_freed_trainer_falls_back_to_the_creature() -> void:
 	assert_eq(manager.released_at, enemy.global_position,
 		"a focus that left the tree falls back to the opponent's spot")
 
-const CASES := ["_case_a_trainer_round_releases_toward_the_trainer",
+func _case_a_hosted_realm_fight_drops_a_stale_focus() -> void:
+	# The shared-host path (encounter_director.gd::_begin_shared_host_local)
+	# begins realm-owned and not opponent-owned: never a trainer's aftermath.
+	manager.aftermath_focus = trainer
+	assert_true(_begin(false, true), "a hosted-realm fight begins")
+	assert_true(manager.aftermath_focus == null, "a hosted-realm fight clears a focus nobody consumed")
+	manager._finish()
+	assert_eq(manager.released_at, enemy.global_position, "a hosted-realm aftermath looks at the opponent")
+
+const CASES := ["_case_a_hosted_realm_fight_drops_a_stale_focus", "_case_a_trainer_round_releases_toward_the_trainer",
 	"_case_an_unnamed_trainer_round_keeps_the_creature_spot",
 	"_case_a_wild_fight_drops_a_stale_focus", "_case_a_freed_trainer_falls_back_to_the_creature"]
 
@@ -143,5 +152,39 @@ func test_aftermath_focus_in_an_initialized_tree() -> void:
 	var parsed: Variant = JSON.parse_string(text.substr(marker + "AFTERMATH_FOCUS_RESULT=".length()).get_slice("\n", 0))
 	var result: Dictionary = parsed as Dictionary if parsed is Dictionary else {}
 	assert_eq(result.get("failures", ["unparsed"]), [], "every aftermath-focus case passes")
-	assert_true(int(result.get("assertions", 0)) >= 9, "the cases asserted (%s)" % str(result.get("assertions")))
+	assert_true(int(result.get("assertions", 0)) >= 12, "the cases asserted (%s)" % str(result.get("assertions")))
 	assert_eq(code, 0, "the child exited cleanly")
+
+
+## Only a Meadows trainer battle names a focus: the one write is the director's
+## `_send_out_next_creature()`. Wild spawns, the shared-host realm path and the
+## Stormwood/Tidewake directors and hosted trainer never set it, so their
+## aftermath keeps the opponent's spot.
+func test_only_the_meadows_trainer_round_names_an_aftermath_focus() -> void:
+	var writers: Array[String] = []
+	var dirs: Array[String] = ["res://scripts"]
+	while not dirs.is_empty():
+		var dir := dirs.pop_back() as String
+		for sub in DirAccess.get_directories_at(dir):
+			dirs.append(dir.path_join(sub))
+		for file in DirAccess.get_files_at(dir):
+			if not file.ends_with(".gd") or file == "combat_manager.gd":
+				continue
+			var path := dir.path_join(file)
+			var text := FileAccess.get_file_as_string(path)
+			if text.contains("aftermath_focus"):
+				writers.append(path)
+	assert_eq(writers, ["res://scripts/combat/encounter_director.gd"],
+		"only the Meadows encounter director names an aftermath focus")
+	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
+	assert_eq(director.count('set("aftermath_focus"'), 1, "the director sets it in exactly one place")
+	var at := director.find('set("aftermath_focus"')
+	var owner_func := director.rfind("\nfunc ", at)
+	assert_true(director.substr(owner_func, 40).begins_with("\nfunc _send_out_next_creature("),
+		"the one write is inside _send_out_next_creature(), right before its fight starts")
+	for other in ["res://scripts/combat/stormwood_encounter_director.gd",
+			"res://scripts/combat/water_encounter_director.gd",
+			"res://scripts/combat/stormwood_hosted_trainer.gd"]:
+		assert_true(FileAccess.file_exists(other), "%s still exists to check" % other)
+		assert_false(FileAccess.get_file_as_string(other).contains("aftermath_focus"),
+			"%s never names an aftermath focus" % other)
