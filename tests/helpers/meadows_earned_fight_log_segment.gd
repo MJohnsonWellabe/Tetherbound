@@ -39,7 +39,9 @@ const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const CLIMAX_CONFIG := "res://data/config/stronghold_climax.json"
 const CAPTAIN_IDS := ["captain_riverwatch", "captain_field", "captain_ridge"]
 const AFTERMATH_DIR := "user://aftermath"
-const AFTERMATH_DELAY_S := 0.75
+## 2.0 s (was 0.75): GPU FAIL meadows-warden-aftermath caught the level-up
+## toast and team HUD over the pair and the defeat pose unsettled.
+const AFTERMATH_DELAY_S := 2.0
 ## An enemy tell counts as resolved by the first hit/miss this long after it.
 const TELL_WINDOW_S := 3.0
 
@@ -383,13 +385,26 @@ func _party(game: Node) -> Array:
 
 func _capture(due: Dictionary) -> void:
 	_capturing = true
+	# Coordinator ruling (#356, 21:00): the HUD and toasts are hidden for this
+	# one capture only, and restored straight after; disclosed in the sidecar.
+	var hidden: Array[CanvasLayer] = []
+	for node: Node in get_tree().root.find_children("*", "CanvasLayer", true, false):
+		var layer := node as CanvasLayer
+		if layer != null and layer.visible:
+			layer.visible = false
+			hidden.append(layer)
+	await RenderingServer.frame_post_draw
 	await RenderingServer.frame_post_draw
 	var fight := str(due["fight"])
 	var path := "%s/%s.png" % [AFTERMATH_DIR, fight]
 	var image := get_viewport().get_texture().get_image()
+	for layer: CanvasLayer in hidden:
+		if is_instance_valid(layer):
+			layer.visible = true
 	var err := image.save_png(path) if image != null else ERR_CANT_CREATE
 	var context := _frame_context(str(due["id"]))
 	context["png"] = path
+	context["hud_hidden"] = hidden.size()
 	context["saved"] = err == OK
 	if image != null:
 		context["image_size"] = [image.get_width(), image.get_height()]
