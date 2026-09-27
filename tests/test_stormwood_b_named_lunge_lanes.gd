@@ -54,12 +54,12 @@ func test_the_live_body_honours_the_key() -> void:
 
 ## C2 dry run: with the default half-tell heading lock a 0.8 s travelling lunge
 ## left 0.4 s to walk out of a Voltarach-wide lane and the reader never could.
-## The two 0.8 s CHARGER alphas lock at 0.3 of the tell; BOSSES' 0.8 s stays.
+## The two 0.8 s CHARGER alphas lock at 0.25 of the tell; BOSSES' 0.8 s stays.
 func test_short_tell_lane_fights_lock_early_enough_to_step_out() -> void:
 	var named := _named()
 	for id: String in ["hollows_alpha", "glass_field_alpha"]:
 		var combat := CATALOGUE.named_combat(named[id])
 		assert_almost_eq(float(combat.telegraph), 0.8, 0.001, "%s keeps BOSSES' 0.8 s tell" % id)
-		assert_almost_eq(float(combat.get("face_lock_fraction", 0.5)), 0.3, 0.001, "%s locks at 0.3 of the tell" % id)
+		assert_almost_eq(float(combat.get("face_lock_fraction", 0.5)), 0.25, 0.001, "%s locks at 0.25 of the tell" % id)
 	assert_false(CATALOGUE.named_combat(named.old_rodfolk_hall_guardian).has("face_lock_fraction"),
 		"The 1.1 s Hall Guardian keeps the default lock")
