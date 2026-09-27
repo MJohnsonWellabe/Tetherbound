@@ -50,11 +50,26 @@ following the first frame. Scaled review sheets are not native-resolution proof.
 Raw local paths, hashes and placement/grounding receipts are retained in
 `MESHY-DRINKS-EVIDENCE.json`.
 
-Final focused tests: **36 tests, 799 assertions, 0 failures** across stat-drink
+Final focused tests: **34 tests, 799 assertions, 0 failures** across stat-drink
 imports, cache pickup behavior, shared pickup glow and Stormwood pickup runtime.
-These include preservation of root/prompt/claim data, bottle scale, single glow
+Live-tree smoke on the real Compatibility backend: **7 completed cases,
+156 assertions, 0 failures**, exit zero and empty stderr. This checks all six
+production bottles and direct teardown. It includes root/prompt/claim data, scale, single glow
 registration through repeated offsets, exclusion of reward beams, and teardown
-after claims and direct removal.
+after claims and direct removal, including the actual halo MultiMesh transforms.
+
+The two initial live-tree checks were incorrectly placed in the pure unit
+runner, which executes before Godot exposes the scene tree. Its green summary
+hid script errors; those cases were moved into
+`tests/smoke_stat_draught_presentation.gd`. The standalone smoke requires a
+completion/assertion count and has a failure watchdog. Run it with a real
+Compatibility backend, not headless's dummy RenderingServer, which cannot
+read back the MultiMesh transforms. The reported 34-unit/7-smoke results
+supersede the earlier misleading 36-test summary.
+
+Draft-PR CI is not engine verification: the observed run at `c8a77087c`
+reported a green `ci-gate` while unit, region and export jobs were skipped.
+The evidence above is from local engine runs; no packaged build is claimed.
 
 Independent source/asset review: all badge binaries have zero degenerate
 triangles, no inconsistent shared-edge directions and no normals opposing their
