@@ -449,7 +449,7 @@ func _run_hall_activity() -> void:
 ## along the authored `band5_stronghold_approach` trail polyline past the
 ## aggressive pack. Fails if any fight starts, the pack follows the trainer to
 ## the far waypoint, or the road is not walked.
-const HALL_PACK_CENTRE := Vector2(-30.0, 7295.0)
+const HALL_PACK_CENTRE := Vector2(-58.0, 7255.0)
 ## Deliberately wider than the authored 18 m cluster radius, as a margin.
 const HALL_PACK_TERRITORY_M := 25.0
 const HALL_DECLINE_WAYPOINTS := [Vector2(-20.0, 7250.0), Vector2(30.0, 7310.0), Vector2(80.0, 7370.0)]

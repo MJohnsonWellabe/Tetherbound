@@ -575,8 +575,8 @@
         {
           "model": "log_large",
           "at": [
-            298.7,
-            983.9
+            193.7,
+            905.9
           ],
           "yaw_deg": 18.0,
           "scale": 1.0,
@@ -586,8 +586,8 @@
         {
           "model": "Rock_Medium_1",
           "at": [
-            301.9,
-            982.6
+            196.9,
+            904.6
           ],
           "yaw_deg": 40.0,
           "scale": 0.19,
@@ -597,8 +597,8 @@
         {
           "model": "Rock_Medium_3",
           "at": [
-            301.2,
-            984.6
+            196.2,
+            906.6
           ],
           "yaw_deg": 110.0,
           "scale": 0.16,
@@ -608,8 +608,8 @@
         {
           "model": "Rock_Medium_2",
           "at": [
-            302.4,
-            984.1
+            197.4,
+            906.1
           ],
           "yaw_deg": 260.0,
           "scale": 0.14,
@@ -619,8 +619,8 @@
         {
           "model": "Bag",
           "at": [
-            297.4,
-            983.4
+            192.4,
+            905.4
           ],
           "yaw_deg": 25.0,
           "scale": 1.0,
@@ -629,8 +629,8 @@
         {
           "model": "Bush_Common",
           "at": [
-            303.6,
-            985.9
+            198.6,
+            907.9
           ],
           "yaw_deg": 0.0,
           "scale": 0.45,
@@ -640,8 +640,8 @@
         {
           "model": "Grass_Wide_Tall",
           "at": [
-            296.6,
-            980.8
+            191.6,
+            902.8
           ],
           "yaw_deg": 0.0,
           "scale": 0.5,
@@ -1546,21 +1546,19 @@
           "sink_m": 0.03,
           "scale": 0.6,
           "glow_scale": 1.9,
-          "smoke_top_m": 42.0,
-          "smoke_alpha": 1.0,
-          "smoke_top_size_m": 14.0,
-          "smoke_fade": 0.2,
-          "smoke_base_size_m": 2.5,
-          "smoke_colour": "#2e2a27",
-          "_why_f03_0_smoke": "Coordinator ruling on #356 (12:00, 2026-09-27): reuse the Tether holding camp's column values (TetherHoldingFire as set in f46b6669; batch 47 later dropped that column from Juno's camp). Code-blind lure judge C failed this 28 m #4f4a45 column as thin and pale against the sky from the road; Juno's 42 m #2e2a27 column is the one the judges read. It is a data reuse of an in-game treatment, with no new asset.",
+          "smoke_top_m": 28.0,
+          "smoke_alpha": 0.9,
+          "smoke_top_size_m": 12.0,
+          "smoke_fade": 0.35,
+          "smoke_base_size_m": 2.0,
+          "smoke_colour": "#4f4a45",
           "glow": "campfire",
           "name": "OldBramCampFire",
           "_why_r7_bram_road": "Walk on main integration-32 (ralph/reports/MEADOWS-PAYOFFS/six-activities/discovery-snowball/bram-woods-integration32/): Bram is 55 m east of the band1 woodland road behind dense trunks; neither this fire nor a trial 42 m column (reverted: smoke colour/opacity are art under the Codex rule, and it had no passing capture) read from the road. Relocating the camp needs a coordinator decision.",
           "_why_r6": "Round-6 code-blind judge: at (174, 903.4) the fire sat exactly on the road-to-Bram line, so on approach its flames and smoke column stood between the player and Bram, who never appeared at 30 m. Moved 6 m north of that line to (176, 909); tests/probe_lure_road_visibility.gd --at=bram:176,909 finds 2 hard-clear road samples at ground level (nearest 42.4 m), against 0 at the old spot, and the 28 m column clears the canopy from the older road line (not from the integration-32 woodland road; see _why_r7_bram_road).",
-          "_why_f03_0_site": "Moved with Bram to his woodline-edge site (300,983), coordinator option A on #356. The fire sits 13 m from him toward the trail-camp road (359,939), outside the 11 m fight ring, and 5 m north of the road-to-Bram line, so it never stands between an approaching player and him (the round-6 defect).",
           "at": [
-            313.4,
-            979.2
+            176.0,
+            909.0
           ],
           "yaw_deg": 30.0
         }

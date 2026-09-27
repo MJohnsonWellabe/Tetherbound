@@ -1543,23 +1543,6 @@ func _build_vault_door_seam(along_x: bool, width: float, height: float, size: Ve
 	under.position = -toward * push + Vector3.UP * (height * -0.5 + 0.25)
 	_vault_door_mesh.add_child(under)
 
-	# F03#0 (lure judge E). From the den threshold the door sits side-on in
-	# its passage recess: the seam's face and the floor pool are mostly hidden,
-	# and a judge read the door as "an unlit dark slab in a recess". A second
-	# den-side light just under the lintel lights the arch and the recess walls,
-	# which ARE in view from the threshold. Off unless `lintel_energy_scale`
-	# is set; scaled off the seam's own energy like the pool.
-	var lintel_scale := float(cfg.get("lintel_energy_scale", 0.0))
-	if lintel_scale > 0.0:
-		var lintel := OmniLight3D.new()
-		lintel.name = "VaultDoorLintelGlow"
-		lintel.light_color = glow
-		lintel.light_energy = energy * lintel_scale
-		lintel.omni_range = float(cfg.get("lintel_range_m", 4.0))
-		lintel.position = -toward * float(cfg.get("lintel_offset_m", 0.7)) \
-			+ Vector3.UP * (height * 0.5 - 0.5)
-		_vault_door_mesh.add_child(lintel)
-
 
 ## The way in, and the reason this is not just a doorway: the cave floor sits
 ## `floor_clearance` above the hillside, and a 0.35m sill is a WALL to a

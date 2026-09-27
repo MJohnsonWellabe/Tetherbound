@@ -26,11 +26,10 @@
       "species": "galecrest",
       "count": 3,
       "centre": [
-        -30.0,
+        -58.0,
         0.0,
-        7295.0
+        7255.0
       ],
-      "_why_f03_0_site": "F03#0 lure, coordinator decision on #356 (2026-09-27): give the Hall alpha a road-facing sightline by moving its placement, not by thinning trees. The earned lure walk saw it from the road only as a 12 px fleck through trunks at (-58,7255). tests/probe_lure_road_visibility.gd --grid=hall:-58,7255,40,4 scores (-30,7295) at 13 hard and 12 soft clear road samples, 4.7 degree slope, 36.5 m off the road. The old centre was 32.4 m from the walked line (-20,7250)->(30,7310); this one is 36.5 m, so the road-walker decline margin grows. Count, level, alpha dressing and reward are unchanged. A save that already discovered this alpha keeps its map pin at the old position.",
       "radius": 18.0,
       "_why": "The approach's hunters hold the west shoulder beside the spine rather than standing on the ordinary camera and walking line. Galecrest is the `aggressor` role and this remains the largest aggressive cluster in the chapter (3, against the usual 2) because this is the last stretch before the Hall and it should not be safer than the river crossing was. The 18m territory leaves a clear gap to the travelled road while keeping the ungated pack immediately reachable from it, per the head file's rule that the aggressor role is always reachable.",
       "alpha": {

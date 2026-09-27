@@ -200,7 +200,7 @@ func test_the_west_shoulder_alpha_has_a_durable_completion_receipt() -> void:
 			target = raw as Dictionary
 			break
 	assert_false(target.is_empty(), "Band 5 has no authored west-shoulder alpha at order 5001")
-	assert_eq(target.get("centre", []), [-30.0, 0.0, 7295.0], "the F03#0 road-sightline site (#356)")
+	assert_eq(target.get("centre", []), [-58.0, 0.0, 7255.0])
 	var alpha: Dictionary = target.get("alpha", {}) as Dictionary
 	var reward: Dictionary = alpha.get("completion_reward", {}) as Dictionary
 	assert_eq(str(reward.get("title", "")), "Alpha Galecrest")
