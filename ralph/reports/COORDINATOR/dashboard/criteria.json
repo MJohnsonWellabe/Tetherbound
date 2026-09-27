@@ -338,8 +338,8 @@
     {
      "text": "One shared world healing/relic/key",
      "status": "partial",
-     "evidence": "Two-peer handoff 32/0: key/gate flags on both after reload (main, fixture); blind verdict: healing has no visible payoff",
-     "gap": "Evidence passes (code-blind judge YES; two-peer PASS); held only for the open owner decision on the healed look."
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/MEADOWS-FINALE/heal-r7/JUDGE-VERDICT.txt code-blind YES (healed ground reads as green grass, Bars A/B YES); full-refusal-two-peer-476e8ea7.txt 46/0 ALL CHECKS PASSED. Shortcuts disclosed: legendary_freed set directly, player placed at vantages, HUD and wilds hidden; two-peer asserts the healing node. Independent re-check: MET.",
+     "gap": "Landing in batch 52."
     },
     {
      "text": "Physical gate opens exactly once and carries the same five into Cloudreach",
@@ -637,8 +637,8 @@
     {
      "text": "Dynamo and Stormheart resolve from the earned route",
      "status": "partial",
-     "evidence": "test_stormwood_earned_dynamo_segment (main, historical); not from C3 save",
-     "gap": "Continuous earned witness",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/STORMWOOD/f11_0/head-1c977611/marrow_press.txt MARROW PRESS OK (36 s window, four conduits, release) plus window36/run1-3; offer from the F11#3 two-peer proof on main. Shortcuts disclosed: fixture flags and L46 party, placed at the core anchor, harness-driven fight and Break, no single run from fight to offer. Independent re-check: MET.",
+     "gap": "Landing in batch 52.",
      "note": "Verifier rejected the claim: Marrow, the Break and Stormheart never ran (stops at core_reached). Stormwood lane (#305)."
     },
     {
