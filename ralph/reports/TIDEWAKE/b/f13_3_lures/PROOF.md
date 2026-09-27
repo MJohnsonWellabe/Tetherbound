@@ -85,11 +85,11 @@ Fixtures that remain in `--continuous`, all disclosed and printed:
 - the tool axe and pickaxe are not crafted;
 - solo only.
 
-Result of the continuous run: see the section below.
+Result of the continuous run: still in progress (WIP; no overall result claimed here). Its logs land with the continuous-run evidence.
 
 ## Finding: the Gull Rest crossing at swimming level 0 (reported, not tuned)
 
-In the continuous run B log (`../f13_3_continuous/`), the route `reedhaven_to_gull_rest_sheltered` was swum with real input at level 0 with the retained five. It is 157.6 m of measured surface polyline with no rest shoal.
+**Evidence status: not yet committed.** The continuous run B log (`../f13_3_continuous/`) is not on the branch yet, so treat this finding as unverified until that log lands. In that run, the route `reedhaven_to_gull_rest_sheltered` was swum with real input at level 0 with the retained five. It is 157.6 m of measured surface polyline with no rest shoal.
 
 | Direction | Swum | Min stamina | Health | Result |
 |---|---|---|---|---|
