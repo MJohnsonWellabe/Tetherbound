@@ -46,7 +46,7 @@
     {
       "id": "healer_iven", "portrait": "res://assets/ui/portraits/wilhelm.png", "portrait_mode": "installed_body_render", "facing_deg": 90.0,
       "greeting": "cloudreach_iven_waycamp",
-      "greeting_when": [{"if_flag": "cloudreach_winds_restored", "conversation": "cloudreach_iven_after_restoration"}]
+      "greeting_when": [{"if_flag": "cloudreach_winds_restored", "conversation": "cloudreach_iven_after_restoration"}, {"if_flag": "side_waycamp_shelter_complete", "conversation": "cloudreach_iven_waycamp_shelter"}]
     },
     {
       "id": "bridgekeeper_orrin", "portrait": "res://assets/ui/portraits/wandering_trainer.png", "portrait_mode": "installed_body_render", "facing_deg": 180.0,
@@ -104,7 +104,7 @@
     {
       "id": "defector_rusk", "portrait": "res://assets/ui/portraits/ren.png", "portrait_mode": "installed_body_render", "facing_deg": 180.0,
       "greeting": "cloudreach_rusk_observatory",
-      "greeting_when": [{"if_flag": "cloudreach_winds_restored", "conversation": "cloudreach_rusk_after_restoration"}],
+      "greeting_when": [{"if_flag": "cloudreach_winds_restored", "conversation": "cloudreach_rusk_after_restoration"}, {"if_flag": "side_observatory_latch_complete", "conversation": "cloudreach_rusk_observatory_latch"}],
       "topic_interactions": [{"id": "rusk_anchor_advice", "label": "Ask Rusk about the upper defenses", "conversation": "cloudreach_rusk_upper_anchor_warning", "requires_flags": ["cloudreach_act_ii_complete"], "offset": [1.8, 0.0, 0.0]}]
     },
     {

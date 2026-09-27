@@ -248,6 +248,9 @@ func activate(id: String) -> bool:
 		return false
 	if spec.get("action", "") == "start_trial":
 		return _start_trial()
+	if spec.has("requires_resting_bed_index") and not party_resting_in_bed(int(spec["requires_resting_bed_index"])):
+		_message(str(spec.get("refusal", "Assign a companion to the bed first.")))
+		return false
 	var cost: Dictionary = spec.get("cost", {})
 	var inventory: RefCounted = _game.get("inventory")
 	if not cost.is_empty() and (inventory == null or int(inventory.call("count", cost["item_id"])) < int(cost["count"])):
@@ -524,6 +527,9 @@ func sync_progression() -> void:
 		var visual: Node3D = entry["root"].get_node_or_null("Presentation")
 		if visual != null:
 			visual.rotation.y = PI * 0.5 if _flags.call("has", entry["spec"].get("completion_flag", "")) else 0.0
+		var decor: Node3D = entry["root"].get_node_or_null("CompletionDecor")
+		if decor != null:
+			decor.visible = bool(_flags.call("has", entry["spec"].get("completion_flag", "")))
 	if _build_content:
 		_sync_pickups_and_camps()
 		_sync_npcs()
@@ -717,8 +723,9 @@ func _build_trial_markers() -> void:
 
 func _build_prop(root: Node3D, spec: Dictionary) -> void:
 	var kind := str(spec.get("kind", ""))
-	if kind in ["bell", "vane", "windlass", "launch"]:
-		_build_authored_marker(root, kind)
+	if kind in ["bell", "vane", "windlass", "launch", "latch"]:
+		_build_authored_marker(root, "windlass" if kind == "latch" else kind)
+		_build_completion_decor(root, spec)
 		return
 	var path := "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf"
 	if spec.get("kind", "") == "pack":
@@ -737,6 +744,7 @@ func _build_prop(root: Node3D, spec: Dictionary) -> void:
 			visual.add_child(prop)
 			if kind == "anchor":
 				_apply_pylon_material(prop)
+			_build_completion_decor(root, spec)
 			return
 	var marker := MeshInstance3D.new()
 	var mesh := CylinderMesh.new()
@@ -746,6 +754,40 @@ func _build_prop(root: Node3D, spec: Dictionary) -> void:
 	marker.mesh = mesh
 	marker.position.y = 0.55
 	visual.add_child(marker)
+
+
+## F07#0: an interaction may leave something in the world once complete
+## (`completion_decor`: an installed scene, local offset and yaw), e.g. the
+## Waycamp shelter's rain cover. Hidden until its completion flag holds.
+func _build_completion_decor(root: Node3D, spec: Dictionary) -> void:
+	var decor: Dictionary = spec.get("completion_decor", {})
+	var path := str(decor.get("scene", ""))
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return
+	var resource: Resource = load(path)
+	if not resource is PackedScene:
+		return
+	var holder := Node3D.new()
+	holder.name = "CompletionDecor"
+	var offset: Array = decor.get("offset", [0, 0, 0])
+	holder.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
+	holder.rotation.y = deg_to_rad(float(decor.get("yaw_deg", 0.0)))
+	holder.scale = Vector3.ONE * float(decor.get("scale", 1.0))
+	holder.add_child((resource as PackedScene).instantiate())
+	holder.visible = false
+	root.add_child(holder)
+
+
+## F07#0 Waycamp: "assign a companion to its existing bed once". True when one
+## of THIS peer's party members is resting in the creature bed with that index.
+func party_resting_in_bed(bed_index: int) -> bool:
+	var party: Variant = _game.get("party") if _game != null else null
+	if party == null:
+		return false
+	for member: Variant in party.call("members"):
+		if member != null and bool(member.get("resting")) and int(member.get("rest_bed_index")) == bed_index:
+			return true
+	return false
 
 
 func _apply_pylon_material(node: Node) -> void:
