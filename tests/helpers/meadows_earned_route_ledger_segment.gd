@@ -86,6 +86,67 @@ func stop() -> Dictionary:
 	return summary
 
 
+## F02#5 solvency over the per-stage ledger rows, per PROGRESSION §6 as read
+## for this lane (ralph/reports/MEADOWS-PAYOFFS/earned-bridge, 2026-09-27):
+## - reserve (PROGRESSION.md §6 emergency reserve): before each gauntlet stage
+##   the player can field two basic heals, carried or affordable,
+##   `potion_small + floor(coin / potion_price) >= 2`;
+## - two-loss: restocking to the SYSTEMS §"Target supply policy" basket after
+##   two losses (4 small potions, 2 revives) is affordable from the coin held,
+##   `coin >= potion_price * max(0, 4 - P) + revive_price * max(0, 2 - R)`.
+##   The loss basket is this lane's derived assumption (the docs define no coin
+##   cost per loss) and is reported as such;
+## - repeated wilds: no wild body fought twice (fight_started beats).
+## Four-character shared-node depletion is NOT computed here (it needs the
+## route's harvest node totals or a four-peer run) and says so.
+const RESERVE_STAGES := ["rested_team", "tournament_won", "south_bridge_crossed",
+	"warrens_cleared_and_exited", "relay_disabled_and_mill_crossed", "warden_arena_entered"]
+const RESERVE_HEALS := 2
+const LOSS_POTIONS := 4
+const LOSS_REVIVES := 2
+
+
+static func solvency(rows: Array, beat_list: Array, potion_price: int, revive_price: int) -> Dictionary:
+	var stages: Array = []
+	var reserve_ok := true
+	var two_loss_ok := true
+	var worst := {}
+	for raw: Variant in rows:
+		var row := raw as Dictionary
+		if not RESERVE_STAGES.has(str(row.get("stage", ""))):
+			continue
+		var items: Dictionary = row.get("items", {})
+		var coin := int(items.get("coin", 0))
+		var potions := int(items.get("potion_small", 0))
+		var revives := int(items.get("revive", 0))
+		var heals := potions + (coin / potion_price if potion_price > 0 else 0)
+		var restock := potion_price * maxi(0, LOSS_POTIONS - potions) + revive_price * maxi(0, LOSS_REVIVES - revives)
+		var margin := coin - restock
+		var entry := {"stage": row["stage"], "coin": coin, "potion_small": potions, "revive": revives,
+			"reserve_heals": heals, "reserve_ok": heals >= RESERVE_HEALS,
+			"two_loss_restock": restock, "two_loss_margin": margin}
+		stages.append(entry)
+		reserve_ok = reserve_ok and heals >= RESERVE_HEALS
+		two_loss_ok = two_loss_ok and margin >= 0
+		if worst.is_empty() or margin < int(worst["two_loss_margin"]):
+			worst = entry
+	var fought := {}
+	var repeated: Array = []
+	for raw: Variant in beat_list:
+		var beat := raw as Dictionary
+		if str(beat.get("kind", "")) != "fight_started" or not str(beat.get("detail", "")).begins_with("Wild_"):
+			continue
+		var name := str(beat["detail"])
+		if fought.has(name) and not repeated.has(name):
+			repeated.append(name)
+		fought[name] = true
+	return {"stages": stages, "reserve_ok": reserve_ok and not stages.is_empty(),
+		"two_loss_ok": two_loss_ok and not stages.is_empty(), "two_loss_worst": worst,
+		"two_loss_basket": {"potion_small": LOSS_POTIONS, "revive": LOSS_REVIVES, "assumption": true},
+		"wilds_fought": fought.size(), "repeated_wilds": repeated,
+		"four_character": "not computed: needs route harvest totals or a four-peer run"}
+
+
 func summary() -> Dictionary:
 	var gaps := spacing_gaps(beats)
 	var over: Array = []
@@ -99,7 +160,19 @@ func summary() -> Dictionary:
 		"beats": beats.size(), "discontinuities": _discontinuities,
 		"a7_longest_active_gap": _worst_gap, "a7_violations": _a7_violations,
 		"spacing_median_m": snappedf(float(lengths[lengths.size() / 2]), 0.1) if not lengths.is_empty() else -1.0,
-		"spacing_over_window": over, "stages": ledger.size()}
+		"spacing_over_window": over, "stages": ledger.size(),
+		"solvency": solvency(ledger, beats, _price("potion_small"), _price("revive"))}
+
+
+static func _price(item_id: String) -> int:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/trade.json"))
+	var dearest := 0
+	if parsed is Dictionary:
+		for raw: Variant in ((parsed as Dictionary).get("vendors", {}) as Dictionary).values():
+			var goods: Dictionary = (raw as Dictionary).get("goods", {})
+			if goods.has(item_id):
+				dearest = maxi(dearest, int((goods[item_id] as Dictionary).get("buy", 0)))
+	return dearest
 
 
 ## Walked-path distance between consecutive beats. Pure, so a unit test can
