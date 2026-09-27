@@ -289,6 +289,22 @@
   },
   "settlement": {
     "visibility_range_m": 850.0,
+    "windwatch": {
+      "_comment": "Installed Quaternius castle lookout on a lower stone base. Gallery floor is seated above the existing crown; houses, paths and gameplay remain authored in their existing locations.",
+      "upper_stone_height_m": 12.0,
+      "lower_stone_height_m": 14.0,
+      "gallery_width_m": 10.5,
+      "gallery_vertical_scale": 2.9,
+      "source_gallery_floor_y": 2.012,
+      "deck_clearance_m": 0.28,
+      "roof": {
+        "albedo": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png",
+        "normal": "res://assets/buildings/quaternius_medieval/T_RoundTiles_Normal.png",
+        "tint": "#5a6572",
+        "uv_scale": 0.35,
+        "normal_depth": 0.3
+      }
+    },
     "houses": [
       {"prefab": "cottage_a", "position": [-10.0, 0.0, -8.0], "yaw_deg": 28.0},
       {"prefab": "cottage_b", "position": [10.0, 0.0, -7.0], "yaw_deg": -38.0},

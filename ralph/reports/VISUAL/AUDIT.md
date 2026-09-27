@@ -55,6 +55,16 @@ views, terrain form and route joins, inhabited settlements, landmark approaches
 and visible aftermath. Main `4d55fddfd` is integrated after capture without
 Cloudreach/camera changes. [Evidence and capture limitations](CLOUDREACH-BANKS.md).
 
+**Settlement follow-up:** main `f04d82fa1` integrated. Roofed lookouts from the
+installed castle kit improve Galefoot/Cliffhold identity: anonymous final review
+prefers 9/10 native pairs with one tie. Raising Galefoot's base resolves the
+intermediate night-approach overlap regression. Source review has no blocker;
+21 imported-geometry checks pass. Complete Bars A/B and F08#4 remain open.
+The next scene repair is the square courtyard wear artifact (the coverage shader
+discards whole `floor(world_at.xz * 18)` cells), followed by floating/oversized
+vegetation and night focal hierarchy. This does not reprioritize minor tower
+polish ahead of those scene defects. [Evidence](CLOUDREACH-WINDWATCH.md).
+
 ## Cross-game diagnostic ranking
 
 This order supersedes taking the oldest or easiest table row next. It ranks

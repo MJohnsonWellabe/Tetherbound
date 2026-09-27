@@ -56,6 +56,7 @@ const CASTLE_GATE := preload("res://assets/buildings/quaternius_castle/WallEntra
 ## Iron grille panel (1.95 x 2.87 m) tiled into a closed ground gate's portcullis.
 const GATE_PORTCULLIS_PANEL := preload("res://assets/buildings/quaternius_medieval/Prop_MetalFence_Simple.gltf")
 const CASTLE_TOWER := preload("res://assets/buildings/quaternius_castle/SmallSquareTowerBricks.obj")
+const WINDWATCH := preload("res://scripts/world/cloudreach_windwatch.gd")
 const CASTLE_WALL := preload("res://assets/buildings/quaternius_castle/TallWallBricks.obj")
 const TETHER_PYLON := preload("res://assets/environment/team_tether/tether_pylon.glb")
 const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
@@ -3716,10 +3717,13 @@ func _build_cliff_settlement(root: Node3D) -> void:
 	# then read as an inhabited terrace instead of five same-sized boxes.
 	var upper_settlement := root.global_position.y > 700.0
 	var watch := Vector3(-20, 0, 18) if upper_settlement else Vector3(-22, 0, 15)
-	var watch_height := 19.0 if upper_settlement else 16.0
+	var watch_cfg: Dictionary = _visual_config.get("settlement", {}).get("windwatch", {})
+	var watch_height := float(watch_cfg.get("upper_stone_height_m", 12.0) if upper_settlement else watch_cfg.get("lower_stone_height_m", 10.0))
 	_castle_piece(root, "WindwatchTower", CASTLE_TOWER, watch, Vector3(10.0, watch_height, 10.0), _materials["stone_light"])
 	_box(root, "WindwatchCrown", watch + Vector3.UP * (watch_height - 0.2), Vector3(11.0, 1.0, 11.0), _materials["wood"], false)
 	_box(root,"WindwatchSplayedFoot",watch+Vector3.UP*0.65,Vector3(10.5,1.3,10.5),_materials["masonry"],false)
+	var lookout_roof := _textured_material(watch_cfg.get("roof", {}), Color("#5a6572"))
+	WINDWATCH.build(root, watch, watch_height, watch_cfg, _materials["weathered_timber"], lookout_roof)
 	for side: float in [-1.0, 1.0]:
 		_box(root, "WindBanner", watch + Vector3(side * 4.6, watch_height - 2.8, 0),
 			Vector3(0.18, 4.2, 2.4), _materials["leaf_gold"], false)

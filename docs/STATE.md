@@ -41,6 +41,16 @@ stands and fixture-forced companion overlaps. Main `4d55fddfd` is integrated
 in `f8df14db3` after the captures; its changes do not touch their Cloudreach
 render path. See `ralph/reports/VISUAL/CLOUDREACH-BANKS.md`.
 
+Main `f04d82fa1` is now integrated in `9425066d0`. Galefoot and Cliffhold gain
+installed roofed lookouts over their stone towers. Final native comparison
+prefers the candidate in 9/10 views with one tie; the first candidate's Galefoot
+night overlap regression is resolved. Imported-geometry smoke passes 21 checks;
+source review has no blocker. Whole Cloudreach Bars A/B and F08#4 still fail.
+Next confirmed scene defect is square courtyard wear from the ground coverage
+shader, followed by unsupported/oversized vegetation and night hierarchy.
+`ralph/reports/VISUAL/CLOUDREACH-WINDWATCH.md` records all comparisons and limits,
+including decorative, collisionless galleries. Claude owns merging draft PR365.
+
 The current Codex visual queue is `ralph/reports/VISUAL/AUDIT.md`: its whole-game
 ranking uses 508 native frames across four regions, 57 creatures and 41 cast
 entries, plus the 89-item icon census. Draft PR365 owns the shared visual work
