@@ -313,6 +313,10 @@ static func commit_sha() -> String:
 	if OS.execute("git", ["-C", project, "rev-parse", "HEAD"], output, true) == 0 and not output.is_empty():
 		var sha := str(output[0]).strip_edges()
 		if sha.length() == 40:
+			var status: Array = []
+			if OS.execute("git", ["-C", project, "status", "--porcelain", "--untracked-files=no"], status, true) == 0 \
+					and not status.is_empty() and not str(status[0]).strip_edges().is_empty():
+				return sha + "-dirty"
 			return sha
 	return _sha_from_git_dir(project.path_join(".git"))
 

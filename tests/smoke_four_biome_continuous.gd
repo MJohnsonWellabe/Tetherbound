@@ -55,6 +55,8 @@ var checkpoint_args: Dictionary = {}
 var checkpoint_dir := ""
 var resume_boundary := ""
 var resume_info: Dictionary = {}
+## Absolute path of the checkpoint this run resumed from; an export never overwrites it.
+var resume_source_abs := ""
 var carried_receipts: Dictionary = {}
 var prior_elapsed_seconds := 0.0
 var checkpoints_written: Array = []
@@ -384,8 +386,15 @@ func _checkpoint_boundary(game: Node, boundary: String) -> bool:
 			"flags": (game.get("progression").call("all_set") as Array).duplicate(),
 			"resumed_from": resume_info,
 		})
-		out = CHECKPOINTS.export_checkpoint(scratch, checkpoint_dir, boundary, boundary, receipt, carried_receipts)
-		if out.is_empty():
+		var target_abs := ProjectSettings.globalize_path(checkpoint_dir.path_join(boundary)).simplify_path()
+		if not resume_source_abs.is_empty() and (target_abs == resume_source_abs or resume_source_abs.begins_with(target_abs + "/")):
+			out = ""
+			problem = "checkpoint export refused: target %s would overwrite the resume source %s (use a different --checkpoint-dir)" % [target_abs, resume_source_abs]
+		else:
+			out = CHECKPOINTS.export_checkpoint(scratch, checkpoint_dir, boundary, boundary, receipt, carried_receipts)
+		if not problem.is_empty():
+			pass  # refused above: never overwrite the checkpoint this run resumed from
+		elif out.is_empty():
 			problem = "checkpoint export to %s failed at boundary %s" % [checkpoint_dir, boundary]
 		else:
 			carried_receipts[boundary] = receipt
@@ -413,6 +422,7 @@ func _stage_resume_files() -> bool:
 		failures.append("RESUME: no checkpoint with a save/ at '%s' (as a dir, under %s, or under %s)" % [
 			checkpoint_args["resume_source"], checkpoint_dir, CHECKPOINTS.FIXTURE_ROOT])
 		return false
+	resume_source_abs = ProjectSettings.globalize_path(source).simplify_path()
 	resume_boundary = CHECKPOINTS.pick_boundary(source, str(checkpoint_args["resume_boundary"]))
 	if resume_boundary.is_empty():
 		failures.append("RESUME: %s has no receipt for boundary '%s' (known: %s)" % [source,

@@ -130,3 +130,14 @@ Dispatch render.yml with `checkout_ref=<sha>`,
   and `:water_arrived` with no stop-at for the ending.
 - Set `TB_WORLD_SEED` only if the lane pins one. The loaded save carries its
   own `world_seed`, and the resume checks it against the receipt.
+
+## Review follow-ups (independent review: APPROVE on 340b9b20)
+
+- **Fixed: a checkpoint could overwrite itself.** An export whose target is the resume source (or contains it) is now refused, so a checkpoint this run resumed from is never rewritten. Run 6 (`run6_self_overwrite_refused.log`) used `--resume-from=/tmp/cp/hall --checkpoint-dir=/tmp/cp --stop-at=hall`. It exited 1 with `checkpoint export refused: target ... would overwrite the resume source ...`, and the md5 of every file in the source was unchanged.
+- **Fixed: a dirty tree is now visible in receipts.** `commit_sha()` appends `-dirty` when `git status --porcelain --untracked-files=no` shows local changes.
+- **Open, non-blocking:**
+  - The cumulative elapsed time after a chain-runner resume also counts receipts after the resume boundary (8849 s here).
+  - The seed check has no unit test.
+  - The no-fixture statement does not point to seed4_hall's own B5 "helper Satchel care" disclosures.
+  - Runs 1, 2 and 4 have no explicit `exit=` line; read their result JSON.
+- **Unchanged blocker:** `c1_arrival` and later boundaries cannot be demonstrated from seed4_hall until the Meadows owner fixes B8 (the Warden helper waits 120 frames while the dialogue panel owns input).
