@@ -239,12 +239,12 @@ void fragment() {
 	ALBEDO = tint.rgb;
 	float end_distance = max(max(-UV2.x, UV2.x - UV2.y), 0.0) / max(UV.y, 0.0001);
 	float d2 = UV.x * UV.x + end_distance * end_distance;
-	ALPHA = exp(-4.0 * d2) * (1.0 - smoothstep(0.64, 1.0, d2)) * tint.a;
+	ALPHA = exp(-6.0 * d2) * (1.0 - smoothstep(0.64, 1.0, d2)) * tint.a;
 }
 """
 		_bolt_material = ShaderMaterial.new()
 		_bolt_material.shader = core_shader
-		_bolt_material.set_shader_parameter("tint", colour.lerp(Color.WHITE, 0.62))
+		_bolt_material.set_shader_parameter("tint", colour.lerp(Color.WHITE, 0.85))
 		_bolt_glow_mesh = _build_strike_bolt(cfg, float(cfg.get("strike_glow_radius_scale", 4.0)))
 		var glow_shader := Shader.new()
 		glow_shader.code = """
@@ -340,7 +340,7 @@ func _build_strike_bolt(cfg: Dictionary, radius_scale: float = 1.0) -> ArrayMesh
 			start + away * 1.75 - across * 0.13 + Vector3.DOWN * 1.6,
 			start + away * 2.55 + across * 0.16 + Vector3.DOWN * 2.8,
 			start + away * 2.95 + Vector3.DOWN * 3.9]))
-		widths.append(0.34)
+		widths.append(0.48)
 	# A second scale of hairline leaders supplies the irregular branching
 	# hierarchy of the inspected electrical-channel reference. This visual
 	# generator owns its seed and never touches encounter or weather RNG.
@@ -351,7 +351,7 @@ func _build_strike_bolt(cfg: Dictionary, radius_scale: float = 1.0) -> ArrayMesh
 			start + Vector3(side * 0.34, -0.19, 0.12),
 			start + Vector3(side * 0.65, -0.55, 0.25),
 			start + Vector3(side * 0.88, -0.91, 0.3)]))
-		widths.append(0.18)
+		widths.append(0.26)
 	# Short upward return leaders give the discharge a visible termination
 	# outside the trainer's boots, instead of burying all contact under them.
 	for k in 7:
@@ -373,7 +373,7 @@ func _build_strike_bolt(cfg: Dictionary, radius_scale: float = 1.0) -> ArrayMesh
 			var tangent := (points[k + 1] - points[k]).normalized()
 			var length_m := points[k].distance_to(points[k + 1])
 			var fraction := (float(k) + 0.5) / float(points.size() - 1)
-			var radius := lerpf(tip, width, fraction) if path_index == 0 else lerpf(width * widths[path_index], 0.001, fraction)
+			var radius := lerpf(tip, width, fraction) if path_index == 0 else lerpf(width * widths[path_index], 0.004, fraction)
 			radius *= radius_scale * (0.82 + 0.18 * sin((float(k) + 0.5) * 0.39 + float(path_index)))
 			for endpoint in [k, k + 1]:
 				var extension := -radius if endpoint == k else radius
