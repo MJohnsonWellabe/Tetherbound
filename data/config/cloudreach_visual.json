@@ -194,6 +194,8 @@
     "max_steps": 26
   },
   "landmass": {
+    "route_shelf_headroom_m": 3.2,
+    "_route_shelf_headroom_note": "Route blocker B1 (#294): a colliding VegetatedGeologicalShelf inside a drawn-only RockShoulder spur overhung a road. A colliding embedded shelf is not built when it would overlap the band from 0.3 m above any ground route's surface up to this headroom, within the ribbon plus its own radius (cloudreach_world.gd::_shelf_in_route_headroom).",
     "_shoulder_overpass_clearance_m": "F07#2: a road/deck lying more than this far below a route-shoulder vertex passes UNDER it (an overpass) and does not pin the vertex down to its height; pinning folded the counterweight-pass shoulder into a slab standing on the Windscar chain-bridge deck. Junction drops stay well under it (max shoulder edge drop 22 m).",
     "shoulder_overpass_clearance_m": 30.0,
     "_shoulder_overpass_arch": "F07#2 review: where such an overpass road/deck crosses a route shoulder's cross-section (+- reach_factor x shoulder half width, within corridor_margin of the deck), that station's cliff rings end headroom_m above the deck and a soffit closes the underside, so the deck runs under a rock arch instead of through rendered, non-colliding rock. Walkable top and collision unchanged.",
