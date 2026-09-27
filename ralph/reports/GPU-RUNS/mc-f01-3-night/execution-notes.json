@@ -1,0 +1,12 @@
+{
+  "requested_window": "1920x1080 borderless Compatibility",
+  "saved_image_sizes": [
+    [
+      1280,
+      720
+    ]
+  ],
+  "saved_png_count": 26,
+  "capture_limit": "Pinned script resizes saved images; source was not changed.",
+  "failure": "Mira prompt did not win the arbiter at a reported 2.34 m."
+}
