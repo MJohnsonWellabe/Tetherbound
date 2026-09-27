@@ -4,7 +4,7 @@
 First import adds --source assets_raw/stat_draught_bottle/model.glb.
 Rebuilds reuse committed bottle_base.glb. No API calls. One shared 0.80m
 Meshy bottle, six small badge GLBs and composition scenes. Symbols follow
-gen_item_icons.icon_stat_draught; three gold pips mark permanent elixirs.
+gen_item_icons.icon_stat_draught; light enamel marks permanent elixirs.
 """
 import argparse
 import math
@@ -23,6 +23,8 @@ SPECS = {
  'stoneguard_brew': ('defence', False, '#465764'),
 }
 BADGE_PLANES = {}
+REVERSE_SCALE = 1.0
+INLAY_EMISSION = 0.28
 
 def linear(v):
     return v/12.92 if v <= .04045 else ((v+.055)/1.055)**2.4
@@ -55,7 +57,7 @@ def export(objects, path):
     bpy.context.view_layer.objects.active=objects[0]
     bpy.ops.export_scene.gltf(filepath=str(path),export_format='GLB',use_selection=True,export_yup=True,export_normals=True,export_cameras=False,export_lights=False)
 
-def prepare(source,out):
+def prepare(source,out,write_base=True):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=str(source))
     objects=[o for o in bpy.context.scene.objects if o.type=='MESH']
@@ -74,13 +76,14 @@ def prepare(source,out):
     for obj in objects:obj.select_set(True)
     bpy.context.view_layer.objects.active=objects[0];bpy.ops.object.join()
     bottle=bpy.context.object;bottle.name='Shared Meshy bottle'
-    bpy.context.view_layer.update();export([bottle],out/'bottle_base.glb')
+    bpy.context.view_layer.update()
+    if write_base:export([bottle],out/'bottle_base.glb')
     # Fit a shallow planar insert within each mount. Projecting every glyph
     # vertex separately bent concave polygons through their backing surface.
     # One shared plane per face keeps all inlay layers parallel and separated.
     for front in (True,False):
         direction=1 if front else -1
-        radius=.066 if front else .071*.70
+        radius=.066 if front else .071*REVERSE_SCALE
         samples=[]
         for k in range(5):
             for j in range(48):
@@ -97,7 +100,7 @@ def fitted_point(bottle,x,z,front,depth):
 
 def disc(bottle,mat,front,radius,depth,name,inner=0):
     # Thin enamel insert, seated inside the existing mount's silhouette.
-    n=48;verts=[];scale=1 if front else .70
+    n=48;verts=[];scale=1 if front else REVERSE_SCALE
     if inner==0:verts.append(fitted_point(bottle,0,.33,front,depth))
     for r in ((inner,radius) if inner else (radius,)):
         for j in range(n):
@@ -116,7 +119,7 @@ def disc(bottle,mat,front,radius,depth,name,inner=0):
     return obj
 
 def relief(bottle,points,mat,front,name,depth=.009):
-    factor=.48 if front else .48*.70
+    factor=.54 if front else .54*REVERSE_SCALE
     points=[(x*factor,.33+z*factor) for x,z in points]
     area=sum(a[0]*b[1]-b[0]*a[1] for a,b in zip(points,points[1:]+points[:1]))
     if area<0:points.reverse()
@@ -130,30 +133,31 @@ def relief(bottle,points,mat,front,name,depth=.009):
 def badge(bottle,item,stat,permanent,colour,out):
     enamel=material('Enamel '+item,colour,.62)
     ivory=material('Ivory inlay','#ead8aa',.48)
+    # A low, local luminous inlay keeps the mark readable in night shadows.
+    # The bottle/enamel/brass remain ordinarily lit, with no added light/halo.
+    principled=ivory.node_tree.nodes.get('Principled BSDF')
+    principled.inputs['Emission Color'].default_value=principled.inputs['Base Color'].default_value
+    principled.inputs['Emission Strength'].default_value=INLAY_EMISSION
     gold=material('Brass badge rim','#b49a60',.46)
     parts=[]
+    field=ivory if permanent else enamel
+    glyph=enamel if permanent else ivory
     for front in (True,False):
-        parts.append(disc(bottle,enamel,front,.066,.006,'Fitted enamel'))
+        parts.append(disc(bottle,field,front,.066,.006,'Fitted enamel'))
         if not front:parts.append(disc(bottle,gold,front,.071,.0065,'Reverse rim',.065))
         points=symbol(stat)
         if stat=='attack' and permanent:
-            # Crossed blades distinguish Might from the single Attack sword
-            # at pickup range without relying solely on the tiny seal pips.
+            # Broad crossed blades distinguish Might from the single Attack
+            # sword; the light field carries the permanent-item class.
             for angle in (-.55,.55):
                 c,s=math.cos(angle),math.sin(angle)
-                blade=[((x*.65*c-z*.82*s)*.88,(x*.65*s+z*.82*c)*.88-.016) for x,z in points]
-                parts.append(relief(bottle,blade,ivory,front,'Might crossed blade'))
+                blade=[((x*.80*c-z*s)*.95,(x*.80*s+z*c)*.95) for x,z in points]
+                parts.append(relief(bottle,blade,glyph,front,'Might crossed blade'))
             points=[]
-        if permanent:points=[(x*.88,z*.88-.016) for x,z in points]
-        if points:parts.append(relief(bottle,points,ivory,front,'Stat '+stat))
-        if stat=='defence':
+        if points:parts.append(relief(bottle,points,glyph,front,'Stat '+stat))
+        if stat=='defence' and not permanent:
             inset=[(x*.52,z*.52) for x,z in symbol(stat)]
-            if permanent:inset=[(x*.88,z*.88-.016) for x,z in inset]
             parts.append(relief(bottle,inset,enamel,front,'Armour inset',.011))
-        if permanent:
-            for x in (-.051,0,.051):
-                diamond=[(x-.01,.105),(x,.115),(x+.01,.105),(x,.095)]
-                parts.append(relief(bottle,diamond,gold,front,'Permanent seal pip'))
     bpy.ops.object.select_all(action='DESELECT')
     for obj in parts:obj.select_set(True)
     bpy.context.view_layer.objects.active=parts[0];bpy.ops.object.join()
@@ -174,5 +178,5 @@ def badge(bottle,item,stat,permanent,colour,out):
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--output',type=Path,required=True);parser.add_argument('--source',type=Path)
     args=parser.parse_args(sys.argv[sys.argv.index('--')+1:]);args.output.mkdir(parents=True,exist_ok=True)
-    bottle=prepare(args.source or args.output/'bottle_base.glb',args.output)
+    bottle=prepare(args.source or args.output/'bottle_base.glb',args.output,write_base=args.source is not None)
     for item,(stat,permanent,colour) in SPECS.items():badge(bottle,item,stat,permanent,colour,args.output)
