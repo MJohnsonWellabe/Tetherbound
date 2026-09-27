@@ -26,6 +26,7 @@ Every counted run below starts from the earned save `tests/fixtures/earned_saves
 | F06#2 Fly training, landing, invalid landing | `f06-2-fly-training/earned/` | 0883848d, `--leg=flight` | PASS. Refused trial escape, sealed Upper refusal, exhausted-fall recovery, 4 verified landings, equal reload. Threshold test: `tests/test_cloudreach_b_landing_threshold.gd`. |
 | F06#3 loaner never bypasses a gate or loses a creature | `f06-3-loaner/earned-full-v2/` | 36f915d6, full chapter | PASS. 5 loaner launches, 0 violations, refused trial escape. The pre-Voss overfly got 312 m past Voss's road point airborne but never landed past it. |
 | F08#0 Veyra's team and relay exam | `f08-0-veyra-exam/earned/` | 581fdfa7, full chapter | PASS, strict re-score CLOSES. |
+| F07#0 six activities (fixture start) | `f07-0-six-activities-witness/` | headless witness | 5/6 PASS with the default five; the Cliff Circuit prize is refused (all three TMs are air-only), and it passes with a disclosed air member. |
 | F08#0 re-check additions (dry run) | `f08-0-veyra-exam/earned-dryrun-recheck-assertions/` | 601eab3f | Failed-exam return, phase order, lee pocket and wind pushes all held. One assertion was misread and has been fixed since (see `run.txt`). |
 
 ## Other folders

@@ -1,0 +1,6 @@
+CLOUDREACH GROUND TRUTH: colliders=2165 trimesh_colliders=1825 trimesh_triangles=404326
+CLOUDREACH GROUND TRUTH: 42250 sample points checked, 0 holes, 36 height mismatches (>0.15m), 944 buried under visible geometry
+CLOUDREACH GROUND TRUTH: mismatch rate 0.09% (holes + mismatches over samples)
+CLOUDREACH GROUND TRUTH: worst offenders (largest gap first):
+CLOUDREACH GROUND TRUTH: PASS
+exit 0

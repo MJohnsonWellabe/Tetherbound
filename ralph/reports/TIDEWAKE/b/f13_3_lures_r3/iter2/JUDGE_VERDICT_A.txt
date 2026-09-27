@@ -1,0 +1,32 @@
+I've reviewed all twelve frames plus the keyart. Here's the judgment:
+
+frame_01: WEAK — In the far distance, dead-center, there's a wooden gallows-like post with a blue banner and a faint dark shape beside it, plus rolling green hills. The banner is small and low-contrast against the sky/hills, easy to miss on a first glance since the empty sandy foreground dominates the frame. A brighter color, larger silhouette, or something moving would help it read as a destination.
+
+frame_02: NOT NOTICEABLE — The only strong visual event here is a bizarre thin black cone/spike descending from the sky at top-center, which reads as a rendering artifact (shadow or particle glitch) rather than an intentional lure. The actual landmark (banner post) is tiny and mostly hidden behind it. The turtle-like creature next to the player is the most legible object but it's beside the player, not a destination.
+
+frame_03: WEAK — A thin gray smoke plume rises center-frame above a distant blue banner post; smoke is a classic "something is happening over there" cue, but it's thin, pale, and blends into the sky, plus the banner beneath it is partly obscured by terrain. The onscreen quest text naming "the pump" helps a player connect smoke = destination, but the visual alone is subtle.
+
+frame_04: NOTICEABLE — Two blue banner posts (one closer on the right, one farther on the ridge left-of-center) plus a rising smoke column between them create a clear, repeated landmark motif against the sky. The blue flags contrast well with the green/brown palette and lead the eye along the ridge path toward them.
+
+frame_05: WEAK — A small camp (tent, table, campfire, a tiny NPC figure) sits center-frame near a tree and banner, but everything is small and low in the frame, competing with the sandy foreground; the smoke column above it is the strongest cue. It reads as "there's something over there" more than a strong pull.
+
+frame_06: NOTICEABLE — A tall gray smoke column rises straight up center-frame in a narrow canyon corridor, with the path visually funneled toward it by rock walls on both sides; a green creature and a banner/rock formation are visible at the corridor's end. Strong linear composition plus smoke makes this a clear destination cue.
+
+frame_07: WEAK — Two blue banner flags on wooden posts stand on the ridge above the player, with a strange thin black spike again above them; the flags are recognizable but placed high and small relative to the wide sandy foreground, and the odd black cone artifact competes for attention.
+
+frame_08: WEAK — A single blue banner on a wooden gallows post sits center-top against the sky, on a grassy hill crest the player is climbing; it's a clean, isolated silhouette which helps, but it's small and there's no strong color/light contrast to make it pop as urgent.
+
+frame_09: NOTICEABLE — Same banner post now closer and larger, with a lantern hanging beside it and a distinctly placed box/crate below — good size, clear silhouette, and it's dead-center on the horizon the player is walking toward.
+
+frame_10: NOTICEABLE — The banner, lantern-post, and a crate/altar-like object are now close and large, filling much of the upper-mid frame with good contrast (dark blue flag against green grass); this clearly reads as an arrival point/objective marker.
+
+frame_11: NOTICEABLE — A small camp with tent, campfire (lit orange flame), banner post, and a visible NPC figure standing beside it are all clustered center-frame; the lit campfire and human silhouette are strong "someone is here" cues that pull the eye and suggest a destination with a reason to visit.
+
+frame_12: NOTICEABLE — A distinctive pale blue jellyfish/manta-like creature floats at the shoreline on the left, and a curved cyan light-trail/arc effect near the player in the water draws the eye toward open water; combined with the camp visible on the beach behind, this frame has multiple competing but individually strong points of interest.
+
+PLACE 1 (frames 01+02): NO — the distant banner is too weak and frame 02 is dominated by a distracting black artifact rather than a legible landmark.
+PLACE 2 (frames 03+04): WEAK — smoke and banners are present but subtle in 03; 04 is clearly better and does the work of establishing the destination.
+PLACE 3 (frames 05+06): WEAK — the camp in 05 barely registers, but the canyon-funnel composition and smoke in 06 strongly recover the lure.
+PLACE 4 (frames 07+08): WEAK — banners are visible in both but small/high and undercut by the black cone artifact in 07; 08 is a clean but modest cue.
+PLACE 5 (frames 09+10): YES — the banner/lantern/crate landmark reads clearly and grows convincingly as a destination across both frames.
+PLACE 6 (frames 11+12): YES — the camp with lit fire and NPC in 11, followed by the creature and effects at the shoreline in 12, both give strong, legible pulls.

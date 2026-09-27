@@ -10,9 +10,10 @@
       "_comment": "The first Team Tether trainer in the game. Levels are Band 2's own authored band (chapter_curve.json `trainer_levels` [9, 14]) at its floor, against a team the curve expects to ENTER this region at 8: one level up, which is what a first encounter with a new faction should be. Never player-scaled (spec sec11/D30). TUNABLE.",
       "rank": "grunt",
       "position": [
-        315.0,
-        1668.0
+        317.5,
+        1666.4
       ],
+      "_why_b14": "B14: moved 3m off the band2 centreline, perpendicular to the (310,1660)->(400,1800) leg, from (315,1668) where his own body collider blocked the road a player walks. Still on the road's edge, same facing, still between the player and the quarry.",
       "facing_deg": -135.7,
       "_why_here": "On the spine's own painted road at (310,1660), the last point before the quarry floor at (400,1800) -- so he stands between the player and the rootstone seams, which is the entire reason the player came into this band. The saddle and the Greater Orb are both priced in rootstone (tools/_probe_pacing.py's materials block), so this fight has a purpose the player already understands before a word is spoken. Facing back down the road the player walks up, derived from the spine's previous point (190,1540) the same way the relay picket's facing was derived from its own approach bearing.",
       "challenge": "quarry_dorn_challenge",

@@ -1,0 +1,76 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/stormwood_world.gd:90)
+         [1] _run (res://tests/smoke_stormwood_closed_arch_bypass.gd:97)
+STORMWOOD BUILD shell=false elapsed_ms=288 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=895 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=1288 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=1299 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=1303 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=1313 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=1313 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=1313 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=1321 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=1321 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1604 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1634 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1635 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=71 reorder[7 layers]=26
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=132 mark_harvestable=19 group_by_model=41 register_mesh_assets=17 build_batches_total=780 (of which harvest_points[11099 nodes]=607, initial_collision_stream[11161 solid]=43) update_mmis=535
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+  PASS: production Stormwood built
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:771)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:552)
+STORMWOOD ENCOUNTERS READY wild=808
+  PASS: negative control: the walker reaches (-560, 2480) along the conductor road (0.0 m left)
+CLOSED ARCH E approach 0 from (1405.0, 2700.0): void edge (standable ground ends) 693.5 m, closest 658.6 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 4
+CLOSED ARCH E approach 1 from (1198.51, 3198.51): void edge (standable ground ends) 689.0 m, closest 679.9 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 0
+CLOSED ARCH E approach 2 from (699.9999, 3405.0): void edge (standable ground ends) 691.5 m, closest 657.5 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 5
+CLOSED ARCH E approach 3 from (201.4897, 3198.51): void edge (standable ground ends) 689.0 m, closest 658.9 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 2
+CLOSED ARCH E approach 4 from (-5.0, 2700.0): void edge (standable ground ends) 691.0 m, closest 659.7 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 5
+CLOSED ARCH E approach 5 from (201.4897, 2201.49): void edge (standable ground ends) 691.0 m, closest 660.5 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 5
+CLOSED ARCH E approach 6 from (700.0, 1995.0): void edge (standable ground ends) 685.0 m, closest 662.1 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 3
+CLOSED ARCH E approach 7 from (1198.51, 2201.49): void edge (standable ground ends) 685.0 m, closest 666.5 m to the plateau centre, reached_edge=true, on_island=false, fall recoveries 0
+  PASS: every pair E approach reached the void edge on its line (within 5 m, or fell in): 8 of 8
+  PASS: with no Still Grove twin, none of 8 approaches from the mainland edge (with jumps) reaches the Crown plateau (closest 657.5 m; 24 fall recoveries)
+CONTROL ARCH E bridged approach 4: closest 2.0 m, on_island=true
+  PASS: negative control: with a temporary bridge over the void, the same walker on approach 4's line reaches the Crown plateau (closest 2.0 m)
+ROOTGATE line (-650.0, 3480.0) -> (-650.0, 3640.0): max z=3542.1 (face 3542.5, crossing 3562.0) final z=3541.0 reached=true crossed=false
+ROOTGATE line (-650.0, 3480.0) -> (-740.0, 3640.0): max z=3542.1 (face 3542.5, crossing 3562.0) final z=3542.1 reached=true crossed=false
+ROOTGATE line (-650.0, 3480.0) -> (-560.0, 3640.0): max z=3542.1 (face 3542.5, crossing 3562.0) final z=3542.1 reached=true crossed=false
+ROOTGATE line (-650.0, 3480.0) -> (-800.0, 3620.0): max z=3542.1 (face 3542.5, crossing 3562.0) final z=3540.6 reached=true crossed=false
+ROOTGATE line (-650.0, 3480.0) -> (-500.0, 3620.0): max z=3542.1 (face 3542.5, crossing 3562.0) final z=3542.1 reached=true crossed=false
+  PASS: every Rootgate line's furthest-north point came within 6 m of the wall face z=3542.5: 5 of 5
+  PASS: with the Rootgate closed, none of 5 lines (through and around it, with jumps) crosses north of z=3562.0
+  PASS: the closed Rootgate collider exists and is enabled
+ROOTGATE line (-650.0, 3480.0) -> (-650.0, 3640.0): max z=3638.0 (face 3542.5, crossing 3562.0) final z=3638.0 reached=true crossed=true
+  PASS: negative control: with the wall collider temporarily disabled, the same line counts as crossed (max z 3638.0 > 3562.0)
+  PASS: the Rootgate collider is restored after the control
+  PASS: Rootgate world fact committed
+  PASS: with the Rootgate open, the same player walks through to (-650, 3640)
+  PASS: arch recipe fact committed
+  PASS: Still Grove twin placed through the ledger: 
+  PASS: with the pair open, walking through the Still Grove twin puts the player on the Crown plateau at (488.5, 74.8, 2700.0)
+STORMWOOD CLOSED ARCH BYPASS OK: 15 passed, 0 failed

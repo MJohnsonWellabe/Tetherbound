@@ -1,0 +1,23 @@
+{
+	"clock_elapsed_seconds": 214.379783333334,
+	"created_at": "2026-09-27T19:13:54",
+	"day": 1,
+	"death_satchels": [],
+	"display_name": "",
+	"farm_plots": [],
+	"felled_vegetation": {},
+	"flags": {
+		"flags": []
+	},
+	"harvested_vegetation": {},
+	"last_played": "2026-09-27T19:13:54",
+	"migrated_from": "",
+	"placed_buildings": [],
+	"realm_environment": {},
+	"reward_deliveries": {},
+	"reward_delivery_namespace": "ab70509bd9f5428ee6b73122015b71c9",
+	"version": 2,
+	"water_capture_claims": {},
+	"world_id": "slot-0",
+	"world_seed": 951439563
+}

@@ -98,3 +98,20 @@ func test_the_bed_check_reads_this_peers_resting_companion() -> void:
 	assert_false(bool(runtime.call("party_resting_in_bed", -25)), "a different camp's bed does not count")
 	runtime.free()
 	game.free()
+
+
+func test_the_sheltered_bed_pays_its_rest_xp_once_more() -> void:
+	var cfg: Dictionary = RULES.read(RUNTIME.DATA_PATH)["sheltered_rest"]
+	assert_eq(int(cfg.bed_index), int(_specs()["waycamp_shelter_rest"].requires_resting_bed_index), "Galefoot's own bed")
+	var progression := preload("res://scripts/creatures/progression.gd")
+	var rest_xp: int = progression.rest_xp(progression.config())
+	assert_true(rest_xp > 0, "the bed pays rest XP")
+	var flags: RefCounted = FLAGS.new()
+	var member: RefCounted = SPECIES.spawn("sparkit")
+	assert_eq(RUNTIME.sheltered_rest_xp(member, -21, flags, cfg), 0, "nothing before the shelter is built")
+	flags.set_flag("side_waycamp_shelter_complete")
+	assert_eq(RUNTIME.sheltered_rest_xp(member, -25, flags, cfg), 0, "another camp's bed pays nothing extra")
+	assert_eq(RUNTIME.sheltered_rest_xp(member, -1, flags, cfg), 0, "no bed pays nothing extra")
+	var before := int(member.get("xp"))
+	assert_eq(RUNTIME.sheltered_rest_xp(member, -21, flags, cfg), int(round(rest_xp * float(cfg.rest_xp_multiplier))), "the sheltered bed pays rest XP again")
+	assert_eq(int(member.get("xp")), before + rest_xp, "the companion actually gains it")

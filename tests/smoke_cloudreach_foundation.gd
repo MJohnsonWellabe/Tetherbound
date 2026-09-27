@@ -28,8 +28,9 @@ func _run() -> void:
 		_expect(absf(player.global_position.y - ground) < 2.0,
 			"Player did not settle on entry ground (player %.2f, ground %.2f)" % [player.global_position.y, ground], failures)
 	var bridges := world.get_node_or_null(^"SuspendedBridges")
-	_expect(bridges != null and bridges.get_child_count() == 5,
-		"five authored bridges were not constructed", failures)
+	# Five authored bridges plus the F07#0 latch-built stair's two spans.
+	_expect(bridges != null and bridges.get_child_count() == 7,
+		"seven authored bridges were not constructed", failures)
 	var bridge_gap_sections: Array = world.call("_ground_sections_for_segment",
 		"causeway_west_loop", Vector3(-1200.0, 420.0, 1700.0),
 		Vector3(-760.0, 400.0, 2050.0))

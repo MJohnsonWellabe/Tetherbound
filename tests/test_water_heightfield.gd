@@ -123,7 +123,7 @@ func test_real_rest_shoals_are_dry_gentle_bounded_and_inside_baked_regions() -> 
 	var shoals: Array = _config.get("rest_shoals", [])
 	assert_eq(_config.get("islands", []).size(), 12,
 		"rest stops must not expand the twelve named-island map")
-	assert_eq(shoals.size(), 17)
+	assert_eq(shoals.size(), 27)
 	for shoal: Dictionary in shoals:
 		var center: Array = shoal.get("center_xz_m", [])
 		var radius := float(shoal.get("shore_radius_m", 0.0))

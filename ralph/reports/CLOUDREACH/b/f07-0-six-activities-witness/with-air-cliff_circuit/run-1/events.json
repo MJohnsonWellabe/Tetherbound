@@ -1,0 +1,693 @@
+{
+  "accelerated": true,
+  "activity_intervals": [
+    {
+      "end_seconds": 8.0,
+      "from": "meaningful_offer",
+      "from_stage": "cliff_circuit",
+      "gap_seconds": 7.0,
+      "start_seconds": 1.0,
+      "to": "meaningful_offer",
+      "to_stage": "battle_young_trainer_tavi_upper_ring"
+    },
+    {
+      "end_seconds": 8.6,
+      "from": "meaningful_offer",
+      "from_stage": "battle_young_trainer_tavi_upper_ring",
+      "gap_seconds": 0.6,
+      "start_seconds": 8.0,
+      "to": "input_interact",
+      "to_stage": "battle_young_trainer_tavi_upper_ring"
+    },
+    {
+      "end_seconds": 17.0,
+      "from": "input_interact",
+      "from_stage": "battle_young_trainer_tavi_upper_ring",
+      "gap_seconds": 8.4,
+      "start_seconds": 8.6,
+      "to": "meaningful_offer",
+      "to_stage": "battle_young_trainer_tavi_upper_ring"
+    },
+    {
+      "end_seconds": 18.0,
+      "from": "meaningful_offer",
+      "from_stage": "battle_young_trainer_tavi_upper_ring",
+      "gap_seconds": 1.0,
+      "start_seconds": 17.0,
+      "to": "meaningful_offer",
+      "to_stage": "battle_young_trainer_tavi_upper_ring"
+    },
+    {
+      "end_seconds": 18.0,
+      "from": "meaningful_offer",
+      "from_stage": "battle_young_trainer_tavi_upper_ring",
+      "gap_seconds": 0.0,
+      "start_seconds": 18.0,
+      "to": "meaningful_offer",
+      "to_stage": "battle_young_trainer_tavi_upper_ring"
+    },
+    {
+      "end_seconds": 18.63,
+      "from": "meaningful_offer",
+      "from_stage": "battle_young_trainer_tavi_upper_ring",
+      "gap_seconds": 0.63,
+      "start_seconds": 18.0,
+      "to": "physical_interaction",
+      "to_stage": "circuit_prize_wind_blade"
+    },
+    {
+      "end_seconds": 18.82,
+      "from": "physical_interaction",
+      "from_stage": "circuit_prize_wind_blade",
+      "gap_seconds": 0.19,
+      "start_seconds": 18.63,
+      "to": "input_interact",
+      "to_stage": "circuit_prize_wind_blade"
+    },
+    {
+      "end_seconds": 20.0,
+      "from": "input_interact",
+      "from_stage": "circuit_prize_wind_blade",
+      "gap_seconds": 1.18,
+      "start_seconds": 18.82,
+      "to": "input_interact",
+      "to_stage": "circuit_prize_wind_blade"
+    }
+  ],
+  "combat_mode": "test_only_lethal",
+  "distance_m": 4477.73533899337,
+  "events": [
+    {
+      "description": "Fixture start (disclosed): chapter flags through Act II, level-30 retained five, no owned flier",
+      "flags": 27,
+      "kind": "precondition",
+      "position": "(0.0, 105.0302, -260.0)",
+      "simulated_seconds": 0.5,
+      "stage": "boot",
+      "team": [
+        {
+          "hp": 241.12,
+          "label": "Sparkit",
+          "level": 30,
+          "species_id": "sparkit",
+          "xp": 0
+        },
+        {
+          "hp": 274.0,
+          "label": "Mudsnout",
+          "level": 30,
+          "species_id": "mudsnout",
+          "xp": 0
+        },
+        {
+          "hp": 260.3,
+          "label": "Bramblebun",
+          "level": 30,
+          "species_id": "bramblebun",
+          "xp": 0
+        },
+        {
+          "hp": 328.8,
+          "label": "Terrapup",
+          "level": 30,
+          "species_id": "terrapup",
+          "xp": 0
+        },
+        {
+          "hp": 213.72,
+          "label": "Pipwing",
+          "level": 30,
+          "species_id": "pipwing",
+          "xp": 0
+        }
+      ],
+      "wall_seconds": 180.772674
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.12346649169922,
+      "kind": "meaningful_offer",
+      "label": "Greet Tavi",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/Interactable",
+      "position": "(-177.0, 850.0305, 4100.0)",
+      "simulated_seconds": 1.0,
+      "stage": "cliff_circuit",
+      "wall_seconds": 180.837211
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-177.0, 850.0305, 4100.0)",
+      "kind": "travel_start",
+      "position": "(-177.0, 850.0305, 4100.0)",
+      "simulated_seconds": 1.0,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-168.6837, 850.024, 4087.919)",
+      "wall_seconds": 180.83881
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-173.0368, 850.0308, 4094.251)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 2.63,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 181.006525
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-168.8643, 850.0308, 4088.183)",
+      "simulated_seconds": 4.25,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-168.6837, 850.024, 4087.919)",
+      "wall_seconds": 182.619527
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-168.8643, 850.0308, 4088.183)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 4.25,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 182.621965
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-168.8643, 850.0308, 4088.183)",
+      "kind": "travel_start",
+      "position": "(-168.8643, 850.0308, 4088.183)",
+      "simulated_seconds": 4.25,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-168.6837, 850.024, 4087.919)",
+      "wall_seconds": 182.622918
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-168.8643, 850.0308, 4088.183)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 4.32,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 182.631045
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-168.8643, 850.0308, 4088.183)",
+      "simulated_seconds": 4.53,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-168.6837, 850.024, 4087.919)",
+      "wall_seconds": 182.855757
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-168.8643, 850.0308, 4088.183)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 4.53,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 182.859931
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(-168.8643, 850.0308, 4088.183)",
+      "kind": "travel_start",
+      "position": "(-168.8643, 850.0308, 4088.183)",
+      "simulated_seconds": 4.53,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-177.0, 850.0, 4100.0)",
+      "wall_seconds": 182.861072
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-172.6883, 850.0308, 4093.735)",
+      "reason": "grounded precision approach",
+      "simulated_seconds": 5.93,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 183.026829
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "simulated_seconds": 7.53,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "target": "(-177.0, 850.0, 4100.0)",
+      "wall_seconds": 184.622631
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 7.53,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 184.624643
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "reason": "button creature_recall",
+      "simulated_seconds": 7.62,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 184.636297
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 7.83,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 184.849503
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.98693811893463,
+      "kind": "meaningful_offer",
+      "label": "Challenge Tavi",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/CloudreachChallenge",
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "simulated_seconds": 8.0,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 184.88053
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "reason": "physical interaction",
+      "simulated_seconds": 8.37,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 1.0,
+      "wall_seconds": 184.929091
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/CloudreachChallenge",
+      "prompt_position": "(-178.5, 851.05, 4100.0)",
+      "root_distance": 3.19563937187195,
+      "root_position": "(-180.0, 850.0, 4100.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 8.4,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 184.945159
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/CloudreachChallenge",
+      "simulated_seconds": 8.6,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 185.148709
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/CloudreachChallenge",
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "simulated_seconds": 8.6,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 185.1502
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 8.6,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "time_scale": 8.0,
+      "wall_seconds": 185.153412
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input started young_trainer_tavi_upper_ring",
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "simulated_seconds": 8.93,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 185.216776
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.98693811893463,
+      "kind": "meaningful_offer",
+      "label": "Challenge Tavi · Circuit Mastery",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/@Node3D@6284",
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "simulated_seconds": 17.0,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 186.253282
+    },
+    {
+      "coins_gained": 90,
+      "damage_seam": "test-only lethal after actual production start",
+      "evidence_scope": "mechanics_only",
+      "id": "young_trainer_tavi_upper_ring",
+      "kind": "battle_resolved",
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "rounds": 3,
+      "simulated_seconds": 17.08,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "team_after": [
+        {
+          "hp": 241.12,
+          "label": "Sparkit",
+          "level": 30,
+          "species_id": "sparkit",
+          "xp": 1418
+        },
+        {
+          "hp": 274.0,
+          "label": "Mudsnout",
+          "level": 30,
+          "species_id": "mudsnout",
+          "xp": 709
+        },
+        {
+          "hp": 260.3,
+          "label": "Bramblebun",
+          "level": 30,
+          "species_id": "bramblebun",
+          "xp": 709
+        },
+        {
+          "hp": 328.8,
+          "label": "Terrapup",
+          "level": 30,
+          "species_id": "terrapup",
+          "xp": 709
+        },
+        {
+          "hp": 213.72,
+          "label": "Pipwing",
+          "level": 30,
+          "species_id": "pipwing",
+          "xp": 709
+        }
+      ],
+      "team_before": [
+        {
+          "hp": 241.12,
+          "label": "Sparkit",
+          "level": 30,
+          "species_id": "sparkit",
+          "xp": 0
+        },
+        {
+          "hp": 274.0,
+          "label": "Mudsnout",
+          "level": 30,
+          "species_id": "mudsnout",
+          "xp": 0
+        },
+        {
+          "hp": 260.3,
+          "label": "Bramblebun",
+          "level": 30,
+          "species_id": "bramblebun",
+          "xp": 0
+        },
+        {
+          "hp": 328.8,
+          "label": "Terrapup",
+          "level": 30,
+          "species_id": "terrapup",
+          "xp": 0
+        },
+        {
+          "hp": 213.72,
+          "label": "Pipwing",
+          "level": 30,
+          "species_id": "pipwing",
+          "xp": 0
+        }
+      ],
+      "wall_seconds": 186.261604
+    },
+    {
+      "kind": "assertion",
+      "label": "Production round callbacks finished young_trainer_tavi_upper_ring",
+      "position": "(-176.816, 850.0308, 4099.729)",
+      "simulated_seconds": 17.08,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 186.263122
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.68584823608398,
+      "kind": "meaningful_offer",
+      "label": "Claim the circuit prize: TM Wind Blade",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/circuit_prize_wind_blade/Interactable",
+      "position": "(-186.5, 850.0305, 4103.0)",
+      "simulated_seconds": 18.0,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 186.344104
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.61829853057861,
+      "kind": "meaningful_offer",
+      "label": "Claim the circuit prize: TM Heavenfall",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/circuit_prize_heavenfall/Interactable",
+      "position": "(-186.5, 850.0305, 4103.0)",
+      "simulated_seconds": 18.0,
+      "stage": "battle_young_trainer_tavi_upper_ring",
+      "wall_seconds": 186.345942
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-186.5, 850.0305, 4103.0)",
+      "reason": "physical interaction",
+      "simulated_seconds": 18.58,
+      "stage": "circuit_prize_wind_blade",
+      "time_scale": 1.0,
+      "wall_seconds": 186.415157
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-186.5, 850.0305, 4103.0)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/circuit_prize_wind_blade/Interactable",
+      "prompt_position": "(-186.5, 850.8, 4104.5)",
+      "root_distance": 1.50031042098999,
+      "root_position": "(-186.5, 850.0, 4104.5)",
+      "senn_defeated": true,
+      "simulated_seconds": 18.62,
+      "stage": "circuit_prize_wind_blade",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 186.431722
+    },
+    {
+      "id": "circuit_prize_wind_blade",
+      "kind": "physical_interaction",
+      "position": "(-186.5, 850.0305, 4103.0)",
+      "simulated_seconds": 18.63,
+      "stage": "circuit_prize_wind_blade",
+      "wall_seconds": 186.447064
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-186.5, 850.0305, 4103.0)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/circuit_prize_wind_blade/Interactable",
+      "simulated_seconds": 18.82,
+      "stage": "circuit_prize_wind_blade",
+      "wall_seconds": 186.642152
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/circuit_prize_wind_blade/Interactable",
+      "position": "(-186.5, 850.0305, 4103.0)",
+      "simulated_seconds": 18.82,
+      "stage": "circuit_prize_wind_blade",
+      "wall_seconds": 186.64413
+    },
+    {
+      "kind": "assertion",
+      "label": "Input completed side_cliff_circuit_tm_chosen",
+      "position": "(-186.5, 850.0305, 4103.0)",
+      "simulated_seconds": 18.82,
+      "stage": "circuit_prize_wind_blade",
+      "wall_seconds": 186.646185
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-186.5, 850.0305, 4103.0)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 18.82,
+      "stage": "circuit_prize_wind_blade",
+      "time_scale": 8.0,
+      "wall_seconds": 186.650104
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 60,
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "reason": "dialogue young_trainer_tavi",
+      "simulated_seconds": 19.77,
+      "stage": "circuit_prize_wind_blade",
+      "time_scale": 1.0,
+      "wall_seconds": 186.761718
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/Interactable",
+      "prompt_position": "(-180.0, 850.9, 4100.0)",
+      "root_distance": 2.50018620491028,
+      "root_position": "(-180.0, 850.0, 4100.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 19.8,
+      "stage": "circuit_prize_wind_blade",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 186.775977
+    },
+    {
+      "kind": "input_interact",
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/Interactable",
+      "simulated_seconds": 20.0,
+      "stage": "circuit_prize_wind_blade",
+      "wall_seconds": 186.979278
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Tavi/Interactable",
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "simulated_seconds": 20.0,
+      "stage": "circuit_prize_wind_blade",
+      "wall_seconds": 186.981053
+    },
+    {
+      "id": "cloudreach_tavi_defeated",
+      "kind": "dialogue_finished",
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "simulated_seconds": 20.88,
+      "stage": "circuit_prize_wind_blade",
+      "wall_seconds": 187.866083
+    },
+    {
+      "kind": "clock_mode",
+      "physics_hz": 480,
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "reason": "resume route diagnosis",
+      "simulated_seconds": 21.32,
+      "stage": "circuit_prize_wind_blade",
+      "time_scale": 8.0,
+      "wall_seconds": 188.303182
+    },
+    {
+      "id": "cliff_circuit",
+      "kind": "activity",
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "row": {
+        "ack": "cloudreach_tavi_defeated",
+        "ack_expected": "cloudreach_tavi_defeated",
+        "battle": true,
+        "chain_complete": true,
+        "lure": true,
+        "other_prizes_refused": true,
+        "pairs_from_fixture": true,
+        "pass": true,
+        "payoff_tm": 1,
+        "payoff_tm_item": "tm_wind_blade",
+        "prize": true,
+        "prize_id": "circuit_prize_wind_blade",
+        "prizes_before": {
+          "circuit_prize_aerial_flash": {
+            "available": true,
+            "item": "tm_aerial_flash",
+            "refusal": ""
+          },
+          "circuit_prize_heavenfall": {
+            "available": true,
+            "item": "tm_heavenfall",
+            "refusal": ""
+          },
+          "circuit_prize_wind_blade": {
+            "available": true,
+            "item": "tm_wind_blade",
+            "refusal": ""
+          }
+        },
+        "region": "upper_cloudreach",
+        "saved_after_reload": true,
+        "saved_flags": [
+          "side_cliff_circuit_lower",
+          "side_cliff_circuit_windscar",
+          "side_cliff_circuit_complete",
+          "side_cliff_circuit_tm_chosen"
+        ],
+        "trainer_id": "young_trainer_tavi_upper_ring",
+        "trainer_ids": [
+          "young_trainer_tavi_upper_ring",
+          "young_trainer_tavi_rematch"
+        ]
+      },
+      "simulated_seconds": 21.32,
+      "stage": "circuit_prize_wind_blade",
+      "wall_seconds": 188.304945
+    },
+    {
+      "flags_equal": true,
+      "flags_set_before_save": [
+        "side_cliff_circuit_lower",
+        "side_cliff_circuit_windscar",
+        "side_cliff_circuit_complete",
+        "side_cliff_circuit_tm_chosen"
+      ],
+      "inventory_after": {
+        "potion_small": 0,
+        "tm_aerial_flash": 0,
+        "tm_heavenfall": 0,
+        "tm_wind_blade": 1
+      },
+      "inventory_before": {
+        "potion_small": 0,
+        "tm_aerial_flash": 0,
+        "tm_heavenfall": 0,
+        "tm_wind_blade": 1
+      },
+      "kind": "persistence",
+      "load_ok": true,
+      "missing_flags": [],
+      "ok": true,
+      "party_size": 5,
+      "position": "(-180.0, 850.0305, 4097.5)",
+      "save_ok": true,
+      "simulated_seconds": 22.48,
+      "stage": "save_reload",
+      "wall_seconds": 189.240921
+    }
+  ],
+  "evidence_scope": "mechanics_only_test_lethal",
+  "from_save": "",
+  "leg": "",
+  "leg_completed": false,
+  "longest_dead_travel_seconds": 8.40000000000031,
+  "mechanics_route_completed": false,
+  "passed": false,
+  "recovery_choices": [],
+  "stage": "save_reload"
+}

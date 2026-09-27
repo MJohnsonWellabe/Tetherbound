@@ -1,0 +1,40 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+peer[0/host]: starting scene=water control_port=37383 enet_port=35481 xdg_data_home=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/net/net-proof_two_peer-20260927T143806Z/home-0 user_data_dir=/home/user/wt/f15-3-full/ralph/reports/TIDEWAKE/b/card_t1/proof/f12_remote_rider_identity_reconnect/net/net-proof_two_peer-20260927T143806Z/home-0/godot/app_userdata/Tetherbound
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _boot_scene (res://tools/net/peer_runner.gd:374)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/35481 (cap 4, channels 2); local peer id 1
+[session] transport: peer 155037996 connected
+[session] peer 155037996 joined as 'Trainer' (character-16f916a1bdb2c3791b9b62e895ca8d6e) in water
+[trainers] spawning a body for peer 1 at (0.0, 162.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[trainers] spawning a body for peer 155037996 at (0.0, 162.0)
+[trainers] built Trainer_155037996 for peer 155037996, authority 155037996 (this peer is 1)
+[trainers] Trainer_155037996 stands up: authority 155037996, this peer is 1 (another player)
+[fly] peer 155037996 claimed a landing at (0.0, 1.931024, 162.0) -- granted (ok)
+[fly] peer 155037996 claimed a landing at (57.36812, 1.931098, 151.5021) -- refused (too_far)
+[fly] peer 155037996 claimed a landing at (57.36812, 1.931098, 151.5021) -- granted (ok)
+[creatures] spawning 155037996's creature 'water_aquaryn' at (57.4, 151.5)
+[creatures] built AllyCreature_155037996 for peer 155037996, authority 155037996 (this peer is 1)
+[creatures] AllyCreature_155037996 stands up: owner 155037996, authority 155037996, this peer is 1 (another player's creature)
+[session] holding a seat for 'character-16f916a1bdb2c3791b9b62e895ca8d6e' for 120 s
+[session] peer 155037996 left; 1 remain
+[session] transport: peer 361132757 connected
+[session] peer 361132757 joined as 'Trainer' (character-16f916a1bdb2c3791b9b62e895ca8d6e) in water
+[trainers] spawning a body for peer 361132757 at (0.0, 162.0)
+[trainers] built Trainer_361132757 for peer 361132757, authority 361132757 (this peer is 1)
+[trainers] Trainer_361132757 stands up: authority 361132757, this peer is 1 (another player)
+[creatures] spawning 361132757's creature 'water_aquaryn' at (0.0, 162.0)
+[creatures] built AllyCreature_361132757 for peer 361132757, authority 361132757 (this peer is 1)
+[creatures] AllyCreature_361132757 stands up: owner 361132757, authority 361132757, this peer is 1 (another player's creature)

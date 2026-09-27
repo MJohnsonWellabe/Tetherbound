@@ -5,9 +5,10 @@
   "foundations": [
     {
       "prefab": "quarry_foundation",
-      "at": [397.0, 1805.0],
+      "at": [407.5, 1799.5],
       "yaw_deg": 30.0,
-      "_why": "the larger ruin, on the quarry floor's north-west side, its standing course facing the approach so it is the first thing read on the way in"
+      "_why": "the larger ruin, its standing course facing the approach so it is the first thing read on the way in",
+      "_why_b14": "B14: moved from (397,1805), where the 6x4m slab's collider covered band2's centreline at the quarry vertex (0.6m) and players stuck on it. Now on the floor's east side, 7.5m from the pit centre, the slab edge ~4m off the road and clear of the pylon (404,1804), the second foundation and the station pile."
     },
     {
       "prefab": "quarry_foundation",

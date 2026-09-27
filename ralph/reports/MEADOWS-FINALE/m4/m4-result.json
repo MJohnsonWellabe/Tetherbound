@@ -1,0 +1,523 @@
+{
+ "completed": true,
+ "disclosures": [
+  "offer-open production save (slot 2) copied byte-for-byte to /root/.local/share/godot/app_userdata/Tetherbound/four_biome_fresh_6245_8032_m4_offer_open as the declared start of branches C and A",
+  "4C: started from the byte-copied offer-open production save (declared start save)",
+  "5A: started from the byte-copied offer-open production save (declared start save)",
+  "Kell acknowledgement skipped (B13); the Rift precondition meadows_acknowledged is not required by this helper"
+ ],
+ "failures": [],
+ "frames_watched": 24557,
+ "max_party_size_any_frame": 5,
+ "passed": true,
+ "steps": [
+  {
+   "expected": "5 earned UIDs at the Warden arena; no Warden/ending flags",
+   "observed": {
+    "arena_m": 0.528320968151093,
+    "ending_flags": [],
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "0_resume_seed4_hall"
+  },
+  {
+   "expected": "real Warden win: defeated_warden, realm_key_cloudreach, realm_heart_meadows_earned; shutter open; same five",
+   "observed": {
+    "missing": [],
+    "reward_flags": [
+     "realm_key_cloudreach",
+     "realm_heart_meadows_earned"
+    ],
+    "shutter_open": true,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "1_warden_fight"
+  },
+  {
+   "expected": "legendary_freed; choice open with both prompts; no answer flag; party 5 unchanged",
+   "observed": {
+    "accept_prompt": true,
+    "choice_open": true,
+    "joined": false,
+    "legendary_freed": true,
+    "pending": false,
+    "refuse_prompt": true,
+    "refused": false,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "2_offer_open"
+  },
+  {
+   "expected": "title Load of the offer-open save re-offers the same unanswered choice",
+   "observed": {
+    "accept_prompt": true,
+    "choice_open": true,
+    "joined": false,
+    "legendary_freed": true,
+    "pending": false,
+    "refuse_prompt": true,
+    "refused": false,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "2_offer_survives_reload"
+  },
+  {
+   "expected": "legendary_refused + refused receipt; not joined; same earned five; no Veridian; herd display stands; healing applied; key/heart; Rift open once",
+   "observed": {
+    "healing_applied": true,
+    "healing_report": {
+     "barriers_opened": 0,
+     "bloomed": 1963,
+     "cables_hidden": 168,
+     "dead_ground_faded": 2,
+     "drain_lifted": 0,
+     "field_greened": 17,
+     "herd_returned": 7,
+     "lights_killed": 133,
+     "patrols_withdrawn": 4,
+     "pylons_left_standing": 0,
+     "pylons_toppled": 29,
+     "regreened": 37304,
+     "regrown": 886
+    },
+    "heart": true,
+    "herd_display": true,
+    "joined": false,
+    "key": true,
+    "pending": false,
+    "receipt": "legendary_resolution:refused:character-afb79936a9ddebd411e54dfa2817d5b0",
+    "receipt_set": true,
+    "refused": true,
+    "rift": {
+     "crossings_fired": 0,
+     "openings": 1,
+     "span_ready": true
+    },
+    "rift_ok": true,
+    "settled": true,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ],
+    "veridians": 0
+   },
+   "pass": true,
+   "step": "3R_refuse_prompt"
+  },
+  {
+   "expected": "legendary_refused + refused receipt; not joined; same earned five; no Veridian; herd display stands; healing applied; key/heart; Rift open once",
+   "observed": {
+    "healing_applied": true,
+    "healing_report": {
+     "barriers_opened": 0,
+     "bloomed": 1963,
+     "cables_hidden": 168,
+     "dead_ground_faded": 2,
+     "drain_lifted": 0,
+     "field_greened": 17,
+     "herd_returned": 7,
+     "lights_killed": 132,
+     "patrols_withdrawn": 4,
+     "pylons_left_standing": 0,
+     "pylons_toppled": 29,
+     "regreened": 37304,
+     "regrown": 886
+    },
+    "heart": true,
+    "herd_display": true,
+    "joined": false,
+    "key": true,
+    "pending": false,
+    "receipt": "legendary_resolution:refused:character-afb79936a9ddebd411e54dfa2817d5b0",
+    "receipt_set": true,
+    "refused": true,
+    "rift": {
+     "crossings_fired": 0,
+     "openings": 1,
+     "span_ready": true
+    },
+    "rift_ok": true,
+    "settled": true,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ],
+    "veridians": 0
+   },
+   "pass": true,
+   "step": "3R_after_reload"
+  },
+  {
+   "expected": "standing in the chamber for 480 frames: no join/choice/ceremony, answer and belt unchanged",
+   "observed": {
+    "joined": false,
+    "player_to_climax_m": 7648.4072265625,
+    "refused": true,
+    "reoffered": false,
+    "stages_seen": [
+     "done"
+    ],
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "3R_reload_no_reoffer"
+  },
+  {
+   "expected": "standing in the chamber for 480 frames: no join/choice/ceremony, answer and belt unchanged",
+   "observed": {
+    "joined": false,
+    "player_to_climax_m": 0.920589923858643,
+    "refused": true,
+    "reoffered": false,
+    "stages_seen": [
+     "failure",
+     "done"
+    ],
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "3R_offer_save_no_second_grant"
+  },
+  {
+   "expected": "the offer-open save with the answered character keeps legendary_refused, same five",
+   "observed": {
+    "joined": false,
+    "refused": true,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "3R_answer_kept_across_saves"
+  },
+  {
+   "expected": "the declared offer-open start re-offers the unanswered choice to the same five",
+   "observed": {
+    "accept_prompt": true,
+    "choice_open": true,
+    "joined": false,
+    "legendary_freed": true,
+    "pending": false,
+    "refuse_prompt": true,
+    "refused": false,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "4C_offer_restored"
+  },
+  {
+   "expected": "legendary_refused + refused receipt; not joined; same earned five; no Veridian; herd display stands; healing applied; key/heart; Rift open once",
+   "observed": {
+    "healing_applied": true,
+    "healing_report": {
+     "barriers_opened": 0,
+     "bloomed": 1963,
+     "cables_hidden": 168,
+     "dead_ground_faded": 2,
+     "drain_lifted": 0,
+     "field_greened": 17,
+     "herd_returned": 7,
+     "lights_killed": 133,
+     "patrols_withdrawn": 4,
+     "pylons_left_standing": 0,
+     "pylons_toppled": 29,
+     "regreened": 37304,
+     "regrown": 886
+    },
+    "heart": true,
+    "herd_display": true,
+    "joined": false,
+    "key": true,
+    "pending": false,
+    "receipt": "legendary_resolution:refused:character-afb79936a9ddebd411e54dfa2817d5b0",
+    "receipt_set": true,
+    "refused": true,
+    "rift": {
+     "crossings_fired": 0,
+     "openings": 1,
+     "span_ready": true
+    },
+    "rift_ok": true,
+    "settled": true,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ],
+    "veridians": 0
+   },
+   "pass": true,
+   "step": "4C_ceremony_let_newcomer_go"
+  },
+  {
+   "expected": "the declared offer-open start re-offers the unanswered choice to the same five",
+   "observed": {
+    "accept_prompt": true,
+    "choice_open": true,
+    "joined": false,
+    "legendary_freed": true,
+    "pending": false,
+    "refuse_prompt": true,
+    "refused": false,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-3fd010116aee4ec96d669fb5d4ecca74",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "5A_offer_restored"
+  },
+  {
+   "expected": "the four earned members kept + the Veridian; the lowest-level member released",
+   "observed": {
+    "joined": {
+     "level": 22,
+     "species": "veridian",
+     "uid": "creature-8e164085d15b2d633f698f8f2a62b611"
+    },
+    "released": {
+     "index": 4,
+     "level": 15,
+     "species": "bramblebun",
+     "uid": "creature-3fd010116aee4ec96d669fb5d4ecca74"
+    },
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-8e164085d15b2d633f698f8f2a62b611",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "5A_party_after_release"
+  },
+  {
+   "expected": "legendary_joined + accepted receipt; not refused; the new five with one Veridian; no herd display; healing applied; key/heart; Rift open once",
+   "observed": {
+    "healing_applied": true,
+    "healing_report": {
+     "barriers_opened": 0,
+     "bloomed": 1963,
+     "cables_hidden": 168,
+     "dead_ground_faded": 2,
+     "drain_lifted": 0,
+     "field_greened": 17,
+     "herd_returned": 7,
+     "lights_killed": 133,
+     "patrols_withdrawn": 4,
+     "pylons_left_standing": 0,
+     "pylons_toppled": 29,
+     "regreened": 37304,
+     "regrown": 886
+    },
+    "heart": true,
+    "herd_display": false,
+    "joined": true,
+    "key": true,
+    "pending": false,
+    "receipt": "legendary_resolution:accepted:character-afb79936a9ddebd411e54dfa2817d5b0",
+    "receipt_set": true,
+    "refused": false,
+    "rift": {
+     "crossings_fired": 0,
+     "openings": 1,
+     "span_ready": true
+    },
+    "rift_ok": true,
+    "settled": true,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-8e164085d15b2d633f698f8f2a62b611",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ],
+    "veridians": 1
+   },
+   "pass": true,
+   "step": "5A_accept_release_lowest"
+  },
+  {
+   "expected": "legendary_joined + accepted receipt; not refused; the new five with one Veridian; no herd display; healing applied; key/heart; Rift open once",
+   "observed": {
+    "healing_applied": true,
+    "healing_report": {
+     "barriers_opened": 0,
+     "bloomed": 1963,
+     "cables_hidden": 168,
+     "dead_ground_faded": 2,
+     "drain_lifted": 0,
+     "field_greened": 17,
+     "herd_returned": 7,
+     "lights_killed": 132,
+     "patrols_withdrawn": 4,
+     "pylons_left_standing": 0,
+     "pylons_toppled": 29,
+     "regreened": 37304,
+     "regrown": 886
+    },
+    "heart": true,
+    "herd_display": false,
+    "joined": true,
+    "key": true,
+    "pending": false,
+    "receipt": "legendary_resolution:accepted:character-afb79936a9ddebd411e54dfa2817d5b0",
+    "receipt_set": true,
+    "refused": false,
+    "rift": {
+     "crossings_fired": 0,
+     "openings": 1,
+     "span_ready": true
+    },
+    "rift_ok": true,
+    "settled": true,
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-8e164085d15b2d633f698f8f2a62b611",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ],
+    "veridians": 1
+   },
+   "pass": true,
+   "step": "5A_after_reload"
+  },
+  {
+   "expected": "standing in the chamber for 480 frames: no join/choice/ceremony, answer and belt unchanged",
+   "observed": {
+    "joined": true,
+    "player_to_climax_m": 7651.958984375,
+    "refused": false,
+    "reoffered": false,
+    "stages_seen": [
+     "done"
+    ],
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-8e164085d15b2d633f698f8f2a62b611",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "5A_reload_no_reoffer"
+  },
+  {
+   "expected": "span standing once (openings 1), 0 crossings yet, Cloudreach admitted by the key",
+   "observed": {
+    "can_enter_realm": true,
+    "crossings_fired": 0,
+    "meadows_acknowledged": false,
+    "openings": 1,
+    "span_ready": true
+   },
+   "pass": true,
+   "step": "6_rift_ready"
+  },
+  {
+   "expected": "trigger entered once; crossings_fired 1; openings 1",
+   "observed": {
+    "crossings_fired": 1,
+    "openings": 1,
+    "trigger_entries": 1
+   },
+   "pass": true,
+   "step": "6_rift_fires_once"
+  },
+  {
+   "expected": "realm cloudreach reached by the physical crossing with the recorded five",
+   "observed": {
+    "expected": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-8e164085d15b2d633f698f8f2a62b611",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ],
+    "heart": true,
+    "key": true,
+    "legendary_joined": true,
+    "realm": "cloudreach",
+    "realm_gate_cloudreach_unlocked": true,
+    "scene": "CloudreachCliffs",
+    "uids": [
+     "creature-390db8e0de00cd1fcaaf1747203b0768",
+     "creature-8e12dace31044e591f02b96391ca2372",
+     "creature-8e164085d15b2d633f698f8f2a62b611",
+     "creature-c785f517af159966b72ca0f49f61d386",
+     "creature-f4118d54a2317867246afbf1e8ea834f"
+    ]
+   },
+   "pass": true,
+   "step": "6_cloudreach_same_five"
+  }
+ ],
+ "steps_passed": 19,
+ "steps_total": 19,
+ "title_loads": 6,
+ "wall_seconds": 937.471
+}
