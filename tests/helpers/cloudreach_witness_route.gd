@@ -217,9 +217,11 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 			_relay_detouring = true
 			_log("witness_relay_windbreak_detour", {"to": str(target), "via": str(via),
 				"reason": "the straight relay leg grazes a lee-pocket windbreak (summit presentation box); stick-walked through the open arena centre"})
-			var ok: bool = await super._walk(via, 1.5, body)
+			var ok: bool = await _relay_leg(via, 1.5, body)
 			_relay_detouring = false
 			if not ok: return false
+		if not _relay_detouring:
+			return await _relay_leg(target, radius, body)
 	var bed_prompt := _camp_bed_prompt_for(target) if body == null and str(stage).begins_with("rest_") else null
 	if bed_prompt != null:
 		return await _approach_bed_offer(bed_prompt, target, radius)
@@ -285,6 +287,34 @@ func _relay_windbreak_detour(target: Vector3, body: CharacterBody3D) -> Vector3:
 			if absf(p.x - centre.x) <= 3.0 + 1.5 and absf(p.y - centre.y) <= 0.6 + 1.5:
 				return Vector3(origin.x, target.y, origin.z)
 	return Vector3.INF
+
+
+## A relay leg that passes within 1.6 m of a standing person (Captain Veyra's
+## own body stands in the arena during break_the_eye) snags the piloted
+## creature on that capsule (C1 run at cde65499, 3183 s: the ally against
+## "Captain Veyra/Body"). Stick-walk round the person on the side away from the
+## leg first, 3.5 m clear, then finish the leg.
+func _relay_leg(target: Vector3, radius: float, body: CharacterBody3D) -> bool:
+	var mover: Node3D = body if body != null else runtime.controlled_body()
+	var people := physical.get_node_or_null(^"CloudreachPeople") if physical != null else null
+	if mover != null and people != null:
+		var from := Vector2(mover.global_position.x, mover.global_position.z)
+		var to := Vector2(target.x, target.z)
+		for person: Node in people.get_children():
+			var person_body := person as Node3D
+			if person_body == null or not person_body.is_visible_in_tree(): continue
+			var at := Vector2(person_body.global_position.x, person_body.global_position.z)
+			var closest := Geometry2D.get_closest_point_to_segment(at, from, to)
+			if closest.distance_to(at) < 1.6 and closest.distance_to(to) > 0.5:
+				var side := (closest - at)
+				if side.length() < 0.05:
+					side = (to - from).orthogonal()
+				var around := at + side.normalized() * 3.5
+				var waypoint := Vector3(around.x, target.y, around.y)
+				_log("witness_relay_person_detour", {"person": str(person_body.get_path()), "via": str(waypoint), "to": str(target)})
+				if not await super._walk(waypoint, 1.0, body): return false
+				break
+	return await super._walk(target, radius, body)
 
 
 func _navigate(target: Vector3) -> bool:
