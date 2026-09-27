@@ -170,7 +170,7 @@ These five families give the shared quick/charged rosters distinct jobs without 
 | `cloudfang` | air | 95/24/18 | 0.35 | `quick_flit` / `sky_rend` | E:12% | — | ambush diver; veil |
 | `cliffspike` | air | 95/24/18 | 0.35 | `quick_flit` / `storm_strike` | S:12% | — | terrain punisher; shove |
 | `tempestwing` | air | 140/32/24 | 0.15 | `quick_flit` / `gust_burst` | P:20% | — | elite air controller; slow field |
-| `solmane` | air | 220/42/30 | 0.05 | `quick_flit` / `sky_rend` | P:30% | — | legendary sky guardian; veil |
+| `solmane` | air | 220/42/30 | 0.05 | `quick_flit` / `sky_rend` | P:30% | — | legendary sky guardian, volunteered after Veyra, never wild or catchable (the summit wild tables use `tempestwing`); veil |
 
 The eleven mono-Electric species deliberately stop being one `spark_bite/arc_lash` role: Sparkit closes, Voltwig pins a line, Mosshock counters, Staticub peels, Voltarach anchors, Fulgocobra sweeps lanes, Stormraven dives, Stormbrush screens, Tanglevolt zones, Thundertunnel breaks formations and Glimmermoth decoys. Their target Y family is only the first differentiator; encounter behavior, ranges and presentation must prove the role without changing mesh identity.
 

@@ -4,7 +4,7 @@ What each image is for, and how it may be used to judge the build.
 
 **This folder is the world target.** Characters have their own, in
 `docs/art/reference/` — nineteen creature and human references, with
-`docs/art/REFERENCE_CANON.md` deciding which of the four contradictory rosters in
+`archive/docs/art/REFERENCE_CANON.md` (archived) deciding which of the four contradictory rosters in
 that pack is authoritative. The visual critic judges terrain, foliage, palette
 and composition against the images here, and creatures and the trainer against
 the sheets there. Neither set substitutes for the other, and item 4 below is the
@@ -29,7 +29,7 @@ It carries five usable things:
    be rather than against a general impression.
 4. **A creature silhouette row** — rabbit, boar, deer, raptor, turtle, canine.
    This was the acceptance test for a bought creature pack: cover those six
-   cohesively, or bend `docs/specs/GAME_DESIGN.md` §26 to fit what the pack holds.
+   cohesively, or bend the archived `archive/docs/specs-2026-09-19/GAME_DESIGN.md` §26 to fit what the pack holds.
    **That trade is off the table now.** The owner's reference pack names all
    nineteen characters and gives production sheets for four of them, so the
    roster is built to the design rather than the design to the roster. The row
@@ -62,4 +62,4 @@ kind of finding worth chasing.
 
 Judge against these images for **palette, composition, landmark language,
 silhouette and mood**. Judge fidelity against what the engine can hold at frame
-rate on the Ally.
+rate on the handheld device profile (ACCEPTANCE §7).

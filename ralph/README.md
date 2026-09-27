@@ -3,7 +3,7 @@
 This directory is **not** a planning or routing location any more. The Ralph
 control-plane documents (start-here, backlog, done ledger, conventions, handovers, lane
 briefs) were retired at the 2026-09-02 reset and live under `archive/ralph/`. Current
-routing is `docs/00_START_HERE.md`.
+routing starts at `AGENTS.md` (= `CLAUDE.md`) and `docs/STATE.md`.
 
 What stays here:
 

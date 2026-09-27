@@ -4,7 +4,7 @@
 
 This file is the source of truth for **which humanoid character meshes already exist on current `main` and should be reused**.
 
-It supersedes older availability/status statements in `archive/docs/art/HUMANOIDS_PRODUCTION_REPORT.md` and `docs/art/REFERENCE_CANON.md` where those files describe only the trainer/Grandpa/Warden set or say the Warden still needs to be rebuilt.
+It supersedes older availability/status statements in `archive/docs/art/HUMANOIDS_PRODUCTION_REPORT.md` and `archive/docs/art/REFERENCE_CANON.md` where those files describe only the trainer/Grandpa/Warden set or say the Warden still needs to be rebuilt.
 
 ## Current production humanoid rigs
 
@@ -15,7 +15,7 @@ It supersedes older availability/status statements in `archive/docs/art/HUMANOID
 > animated and keyed into `data/config/art.json`. A pass that reads only the
 > table below will conclude the village has two civilian bodies to work with
 > when it actually has fifteen, and that is exactly the mistake this file exists
-> to prevent. The full list is in the **All 28 installed humanoid bodies**
+> to prevent. The full list is in the **All 31 installed humanoid bodies**
 > section further down; the six below remain the *base* families and the
 > paragraph about reusing them still governs.
 
