@@ -1,0 +1,37 @@
+Stormwood ENVIRONMENT frames. Hand-checked traversal stands, production gameplay camera. Stormwood has no day/night by design (a fixed purple storm); each stand is shot in three Surge storm phases: calm, building, break. The trainer (1.80 m) stands with their companion creature beside them; the companion IS expected in frame. Wild-creature spawning is paused for capture, so absence of wild creatures is not a defect.
+E001 001_stormwood_env_cinder_verge_0_calm.png | stand: cinder_verge / The Struck Sentinel | companion: terrapup
+E002 002_stormwood_env_cinder_verge_0_building.png | stand: cinder_verge / The Struck Sentinel | companion: terrapup
+E003 003_stormwood_env_cinder_verge_0_break.png | stand: cinder_verge / The Struck Sentinel | companion: terrapup
+E004 004_stormwood_env_cinder_verge_1_calm.png | stand: cinder_verge / Verge Rod Station | companion: terrapup
+E005 005_stormwood_env_cinder_verge_1_building.png | stand: cinder_verge / Verge Rod Station | companion: terrapup
+E006 006_stormwood_env_cinder_verge_1_break.png | stand: cinder_verge / Verge Rod Station | companion: terrapup
+E007 007_stormwood_env_glowmoss_hollows_0_calm.png | stand: glowmoss_hollows / The Lantern Pools | companion: terrapup
+E008 008_stormwood_env_glowmoss_hollows_0_building.png | stand: glowmoss_hollows / The Lantern Pools | companion: terrapup
+E009 009_stormwood_env_glowmoss_hollows_0_break.png | stand: glowmoss_hollows / The Lantern Pools | companion: terrapup
+E010 010_stormwood_env_glowmoss_hollows_1_calm.png | stand: glowmoss_hollows / Crown Overlook | companion: terrapup
+E011 011_stormwood_env_glowmoss_hollows_1_building.png | stand: glowmoss_hollows / Crown Overlook | companion: terrapup
+E012 012_stormwood_env_glowmoss_hollows_1_break.png | stand: glowmoss_hollows / Crown Overlook | companion: terrapup
+E013 013_stormwood_env_conductor_run_0_calm.png | stand: conductor_run / Rodline Post | companion: terrapup
+E014 014_stormwood_env_conductor_run_0_building.png | stand: conductor_run / Rodline Post | companion: terrapup
+E015 015_stormwood_env_conductor_run_0_break.png | stand: conductor_run / Rodline Post | companion: terrapup
+E016 016_stormwood_env_conductor_run_1_calm.png | stand: conductor_run / The Capacitor Grove | companion: terrapup
+E017 017_stormwood_env_conductor_run_1_building.png | stand: conductor_run / The Capacitor Grove | companion: terrapup
+E018 018_stormwood_env_conductor_run_1_break.png | stand: conductor_run / The Capacitor Grove | companion: terrapup
+SKIPPED stormwood_env_hollow_crown_0_calm: camera 35.2 m from the trainer pivot (rig detached); interruptions []
+SKIPPED stormwood_env_hollow_crown_0_building: camera 29.6 m from the trainer pivot (rig detached); interruptions []
+SKIPPED stormwood_env_hollow_crown_0_break: camera 29.4 m from the trainer pivot (rig detached); interruptions []
+E019 019_stormwood_env_hollow_crown_1_calm.png | stand: hollow_crown / The Crown Heartstone | companion: terrapup
+E020 020_stormwood_env_hollow_crown_1_building.png | stand: hollow_crown / The Crown Heartstone | companion: terrapup
+E021 021_stormwood_env_hollow_crown_1_break.png | stand: hollow_crown / The Crown Heartstone | companion: terrapup
+E022 022_stormwood_env_deepwood_0_calm.png | stand: deepwood / Lantern Hollow | companion: terrapup
+E023 023_stormwood_env_deepwood_0_building.png | stand: deepwood / Lantern Hollow | companion: terrapup
+E024 024_stormwood_env_deepwood_0_break.png | stand: deepwood / Lantern Hollow | companion: terrapup
+E025 025_stormwood_env_deepwood_1_calm.png | stand: deepwood / The Fallen Giant | companion: terrapup
+E026 026_stormwood_env_deepwood_1_building.png | stand: deepwood / The Fallen Giant | companion: terrapup
+E027 027_stormwood_env_deepwood_1_break.png | stand: deepwood / The Fallen Giant | companion: terrapup
+E028 028_stormwood_env_dynamo_0_calm.png | stand: dynamo / The Glass Field | companion: terrapup
+E029 029_stormwood_env_dynamo_0_building.png | stand: dynamo / The Glass Field | companion: terrapup
+E030 030_stormwood_env_dynamo_0_break.png | stand: dynamo / The Glass Field | companion: terrapup
+E031 031_stormwood_env_dynamo_1_calm.png | stand: dynamo / The Stormheart Tree | companion: terrapup
+E032 032_stormwood_env_dynamo_1_building.png | stand: dynamo / The Stormheart Tree | companion: terrapup
+E033 033_stormwood_env_dynamo_1_break.png | stand: dynamo / The Stormheart Tree | companion: terrapup
