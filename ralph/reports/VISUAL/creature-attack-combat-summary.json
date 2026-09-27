@@ -1,0 +1,207 @@
+{
+  "tuskroot": {
+    "evidence_kind": "DRY RUN - does not count toward earned-play or feature acceptance",
+    "build": "d7138284a",
+    "path": "shots/attack-contact-revised-native/tuskroot-production",
+    "frames": 61,
+    "failures": [],
+    "verified_native_raster": [
+      1920,
+      1080
+    ],
+    "attack_first_time": 0.0333333333333333,
+    "attack_last_sample_time": 0.933333333333335,
+    "animation_transitions": [
+      {
+        "frame": 0,
+        "animation": "idle",
+        "animation_time": 2.76666666666666
+      },
+      {
+        "frame": 2,
+        "animation": "attack",
+        "animation_time": 0.0333333333333333
+      },
+      {
+        "frame": 60,
+        "animation": "hit",
+        "animation_time": 0.0
+      },
+      {
+        "frame": 94,
+        "animation": "",
+        "animation_time": -1.0
+      },
+      {
+        "frame": 96,
+        "animation": "idle",
+        "animation_time": 0.0166666666666667
+      }
+    ],
+    "limits": "A subsequent enemy hit occurs near attack end, then idle; this does not prove an uninterrupted attack-to-idle transition."
+  },
+  "riptusk": {
+    "evidence_kind": "DRY RUN - does not count toward earned-play or feature acceptance",
+    "build": "d7138284a",
+    "path": "shots/attack-contact-revised-native/riptusk-production",
+    "frames": 61,
+    "failures": [],
+    "verified_native_raster": [
+      1920,
+      1080
+    ],
+    "attack_first_time": 0.0333333333333333,
+    "attack_last_sample_time": 0.933333333333335,
+    "animation_transitions": [
+      {
+        "frame": 0,
+        "animation": "idle",
+        "animation_time": 2.7
+      },
+      {
+        "frame": 2,
+        "animation": "attack",
+        "animation_time": 0.0333333333333333
+      },
+      {
+        "frame": 60,
+        "animation": "hit",
+        "animation_time": 0.0
+      },
+      {
+        "frame": 94,
+        "animation": "",
+        "animation_time": -1.0
+      },
+      {
+        "frame": 96,
+        "animation": "idle",
+        "animation_time": 0.0166666666666667
+      }
+    ],
+    "limits": "A subsequent enemy hit occurs near attack end, then idle; this does not prove an uninterrupted attack-to-idle transition."
+  },
+  "staticub": {
+    "evidence_kind": "DRY RUN - does not count toward earned-play or feature acceptance",
+    "build": "c126bacfe",
+    "path": "shots/attack-contact-candidate-native/staticub-production",
+    "frames": 61,
+    "failures": [],
+    "verified_native_raster": [
+      1920,
+      1080
+    ],
+    "attack_first_time": 0.0333333333333333,
+    "attack_last_sample_time": 0.933333333333335,
+    "animation_transitions": [
+      {
+        "frame": 0,
+        "animation": "idle",
+        "animation_time": 2.81666666666666
+      },
+      {
+        "frame": 2,
+        "animation": "attack",
+        "animation_time": 0.0333333333333333
+      },
+      {
+        "frame": 60,
+        "animation": "hit",
+        "animation_time": 0.0
+      },
+      {
+        "frame": 94,
+        "animation": "",
+        "animation_time": -1.0
+      },
+      {
+        "frame": 96,
+        "animation": "idle",
+        "animation_time": 0.0166666666666667
+      }
+    ],
+    "limits": "A subsequent enemy hit occurs near attack end, then idle; this does not prove an uninterrupted attack-to-idle transition."
+  },
+  "fulgocobra": {
+    "evidence_kind": "DRY RUN - does not count toward earned-play or feature acceptance",
+    "build": "c126bacfe",
+    "path": "shots/attack-contact-candidate-native/fulgocobra-production",
+    "frames": 61,
+    "failures": [],
+    "verified_native_raster": [
+      1920,
+      1080
+    ],
+    "attack_first_time": 0.0333333333333333,
+    "attack_last_sample_time": 0.933333333333335,
+    "animation_transitions": [
+      {
+        "frame": 0,
+        "animation": "idle",
+        "animation_time": 2.61666666666666
+      },
+      {
+        "frame": 2,
+        "animation": "attack",
+        "animation_time": 0.0333333333333333
+      },
+      {
+        "frame": 60,
+        "animation": "hit",
+        "animation_time": 0.0
+      },
+      {
+        "frame": 94,
+        "animation": "",
+        "animation_time": -1.0
+      },
+      {
+        "frame": 96,
+        "animation": "idle",
+        "animation_time": 0.0166666666666667
+      }
+    ],
+    "limits": "A subsequent enemy hit occurs near attack end, then idle; this does not prove an uninterrupted attack-to-idle transition."
+  },
+  "solmane": {
+    "evidence_kind": "DRY RUN - does not count toward earned-play or feature acceptance",
+    "build": "d7138284a",
+    "path": "shots/attack-contact-candidate-native/solmane-production",
+    "frames": 61,
+    "failures": [],
+    "verified_native_raster": [
+      1920,
+      1080
+    ],
+    "attack_first_time": 0.0333333333333333,
+    "attack_last_sample_time": 0.933333333333335,
+    "animation_transitions": [
+      {
+        "frame": 0,
+        "animation": "idle",
+        "animation_time": 0.816666666666668
+      },
+      {
+        "frame": 2,
+        "animation": "attack",
+        "animation_time": 0.0333333333333333
+      },
+      {
+        "frame": 60,
+        "animation": "hit",
+        "animation_time": 0.0
+      },
+      {
+        "frame": 94,
+        "animation": "",
+        "animation_time": -1.0
+      },
+      {
+        "frame": 96,
+        "animation": "idle",
+        "animation_time": 0.0166666666666667
+      }
+    ],
+    "limits": "A subsequent enemy hit occurs near attack end, then idle; this does not prove an uninterrupted attack-to-idle transition."
+  }
+}

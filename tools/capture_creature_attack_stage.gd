@@ -1,6 +1,7 @@
 extends "res://tools/capture_visual_audit.gd"
 
 ## Flat-floor diagnostic supplement to the production combat witness.
+## DRY RUN — does not count toward earned-play or full feature acceptance.
 ## Uses the audit's unchanged light/floor and production CreatureBody fit/animator.
 ## Captures uninterrupted playback and the authored return pose at fixed 60 Hz.
 ## --section=roster --only=tuskroot,riptusk,staticub,fulgocobra,solmane --out=<dir>

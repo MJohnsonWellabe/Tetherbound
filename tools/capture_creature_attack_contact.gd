@@ -1,6 +1,7 @@
 extends "res://tools/capture_combat_depth.gd"
 
 ## Production combat witness, with disclosed species/start-position fixtures.
+## DRY RUN — does not count toward earned-play or full feature acceptance.
 ## --species=tuskroot|fulgocobra|solmane --out=<absolute dir> [--view=side]
 ## Shared RENDER_LOCK.json must be held_by combat. One quick-attack input;
 ## no stat, animation, terrain, combat timing or body transform overrides.

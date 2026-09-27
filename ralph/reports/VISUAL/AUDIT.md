@@ -48,9 +48,14 @@ Codex marks an item "in progress" with its PR number when it starts. When the wo
 | V33 | F10#3 | Strike impact bolt reads as a soft grey pillar; normal-motion impact flash washes the whole frame grey-white, like daylight (judge in `ralph/reports/STORMWOOD/b/f10_3/VERDICT.md` (#303)) | `stormwood_lightning.gd` `_strike_flash`, presentation.flash `strike_*`: jagged forked core with glow plus a ground spark/scorch; cap or localise the frame wash | open |
 | V34 | F10#3 | Always-glowing gold road veins read as a hazard and compete with the strike telegraph (judge in `ralph/reports/STORMWOOD/b/f10_3/VERDICT.md` (#303)) | Stormwood road current (`stormwood_road_current.gd`, `data/config/stormwood_road_current.json`) | open |
 | V35 | shared items | Three permanent elixirs and three temporary tonics share the same potion icon | `tools/gen_item_icons.py`, `data/items/items.json` | #331; six distinct icons pass 32/64 px, grayscale and production satchel review |
+| V-CX-1 | ART_DIRECTION §5.1 / ordinary combat | Fulgocobra's ordinary combat view makes the body heavily transparent and clips the upright head above the frame; Solmane also loses body readability under the proximity fade. Actual input/camera dry-run witnesses in `shots/attack-contact-candidate-native/`, PR #342. | Large-creature camera framing and proximity-fade presentation; coordinate with gameplay ownership | open; attack-contact repair does not accept these camera views |
+| V-CX-2 | A-C3 / ART_DIRECTION §5.1 | Installed Tuskroot, Riptusk, Staticub, Fulgocobra and Solmane attacks fold through the floor; confirmed beyond the diagnostic stage in combat dry runs. | `CREATURE-ATTACK-CONTACT.md`, attack-only GLB channels | #342 draft; revised contact-plus-motion repair passes scoped image review; complete visual criterion and earned-play evidence remain open |
 
 Fresh main `025a09d9d` coverage: 183 roster, 128 cast and 30 representative
-four-region native 1080p frames. This is sampled coverage, not chapter acceptance.
+four-region frames. The requested 1080p startup viewport was constrained by Windows
+to 1920×1061 in the raw PNGs; these remain diagnostic samples, not satisfaction of
+the exact 1080p requirement or chapter acceptance. PR #342's new witnesses set and
+verify the actual 1920×1080 viewport after window initialization.
 Independent review confirms broad attack-stage clipping, degraded faces and
 duplicated rank silhouettes. Region priorities are Cloudreach landmark architecture,
 terrain/material transitions and foliage hierarchy, then Stormwood landmark framing

@@ -11,7 +11,10 @@ overlap this implementation. The captures remain explicitly based on `025a09d9d`
 ## Fresh coverage
 
 Native Windows Godot 4.7 `5b4e0cb0f`, Compatibility, GTX 1060 3 GB, driver
-560.94; 1920×1080. Existing `tools/capture_visual_audit.gd`, without `--fast`:
+560.94. Requested 1920×1080; subsequent inspection of the raw survey PNGs confirms
+**1920×1061**, because Windows constrained the startup client area. The survey
+remains diagnostic evidence, not satisfaction of the exact 1080p requirement.
+Existing `tools/capture_visual_audit.gd`, without `--fast`:
 
 - Complete roster: 183 frames, zero skipped, including 57 species in front,
   rear and 45%-attack poses plus lineups. Neutral stage; attack-floor failures
