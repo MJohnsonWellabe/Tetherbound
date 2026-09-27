@@ -18,8 +18,10 @@ const STANDS := [
 	# cliff face falls away below the lip and the roost needles read against sky.
 	{"id": "glide-approach", "player": Vector2(900.0, 2687.0), "face": Vector2(900.0, 2640.0),
 		"camera": Vector3(900.0, 1033.0, 2630.0), "look": Vector3(900.0, 1016.0, 2694.0)},
+	# c2 (Codex frame review: trainer obscured): lower and further south so the
+	# lip, not a needle, is between the lens and the trainer's feet.
 	{"id": "southeast-glide-approach", "player": Vector2(900.0, 2687.0), "face": Vector2(930.0, 2650.0),
-		"camera": Vector3(956.0, 1038.0, 2642.0), "look": Vector3(902.0, 1018.0, 2696.0)},
+		"camera": Vector3(944.0, 1030.0, 2628.0), "look": Vector3(901.0, 1021.0, 2689.0)},
 	# Height from the west: a high glide in from the open side, the crown and its
 	# needles above the cliff with the cloud layer far below.
 	{"id": "west-glide-high", "player": Vector2(900.0, 2700.0), "face": Vector2(860.0, 2690.0),
@@ -33,7 +35,9 @@ const STANDS := [
 	# the crown, rig behind looking at the crown. Departure: the same off the
 	# north side looking out. On-crown: standing on the rim looking out over it.
 	{"id": "rig-fly-arrival", "rig": true, "position": Vector2(915.0, 2610.0), "air_y": 1008.0, "target": Vector3(900.0, 1030.0, 2700.0)},
-	{"id": "rig-fly-departure", "rig": true, "position": Vector2(930.0, 2760.0), "air_y": 1026.0, "target": Vector3(880.0, 1000.0, 2830.0)},
+	# c2 (Codex frame review: departure lacked the perch): the trainer lifts off
+	# north of the rim and the rig looks back over it at the crown it left.
+	{"id": "rig-fly-departure", "rig": true, "position": Vector2(906.0, 2748.0), "air_y": 1030.0, "target": Vector3(900.0, 1022.0, 2700.0)},
 ]
 
 var _output := DEFAULT_OUTPUT
@@ -165,6 +169,12 @@ func _pose_rig(stand: Dictionary) -> bool:
 	# over open air (a disclosed pose shortcut) with the production rig behind.
 	var y := float(stand.get("air_y", ground + 0.10))
 	_player.global_position = Vector3(at.x, y, at.y)
+	if stand.has("air_y"):
+		# c2 (Codex frame review: no carrier in either Fly view): enter the
+		# production glide state so the controller builds and poses its own
+		# carrier (Maela's loaner; Fly unlocked is a disclosed capture flag).
+		# The trainer stays frozen mid-glide (player processing is disabled).
+		_enter_glide()
 	_player.velocity = Vector3.ZERO
 	var target := stand.target as Vector3
 	var sightline := target - _player.global_position
@@ -190,6 +200,22 @@ func _pose_rig(stand: Dictionary) -> bool:
 		await physics_frame
 	return Vector2(_player.global_position.x, _player.global_position.z).distance_to(at) <= 0.6 \
 		and (not stand.has("air_y") or absf(_player.global_position.y - float(stand.air_y)) <= 0.6)
+
+
+func _enter_glide() -> void:
+	var fly: Node = _player.get("fly_controller")
+	if fly == null or bool(fly.call("is_flying")):
+		return
+	var game := root.get_node_or_null(^"Game")
+	game.get("progression").call("set_flag", "fly_traversal_unlocked")
+	if fly.call("eligible_creature") == null:
+		_fail("no Fly carrier is eligible for the rig stand")
+		return
+	fly.call("_launch")
+	for _frame in 6:
+		await process_frame
+	if not bool(fly.call("is_flying")):
+		_fail("the rig stand did not enter the glide state")
 
 
 func _pin_time(time_name: String) -> Dictionary:
