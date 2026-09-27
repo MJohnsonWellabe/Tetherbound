@@ -58,14 +58,11 @@ func test_cloud_sea_uses_clustered_banks_instead_of_independent_white_ovals() ->
 		"Every bank includes a broad body intersecting its deck")
 
 
-func test_terrain_wear_is_true_coverage_and_route_joints_do_not_restart_fades() -> void:
-	var worn := FileAccess.get_file_as_string("res://shaders/cloudreach_worn_ground.gdshader")
+func test_route_joints_do_not_restart_fades() -> void:
 	var trail := FileAccess.get_file_as_string("res://shaders/cloudreach_trail.gdshader")
 	var world := FileAccess.get_file_as_string("res://scripts/world/cloudreach_world.gd")
-	assert_true(worn.contains("if(dirt<=coverage_hash){discard;}"),
-		"Settlement wear reveals the real crown outside its dirt mask")
-	assert_false(worn.contains("mix(turf,soil,dirt)"),
-		"Wear no longer paints imitation turf over its polygon footprint")
+	# Settlement wear is judged in native paired captures across grass and
+	# paving. The former source assertions required its square-grid cutout.
 	# Trail-edge appearance is verified in matched native captures. The old
 	# exact discard-expression check pinned the visible square-grid defect.
 	assert_true(trail.contains("end_distance=UV2.y"),

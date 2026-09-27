@@ -80,7 +80,8 @@ static func ground(dry: bool, geology: ShaderMaterial = null, bank: Dictionary =
 static func worn_ground(centre: Vector3,radius: float) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=preload("res://shaders/cloudreach_worn_ground.gdshader")
-	turf_parameters(material,centre.y>=700.0)
+	# Soil is an overlay on turf or paving. Draw it before live hazard tells.
+	material.render_priority=-1
 	material.set_shader_parameter("soil_tex",preload("res://assets/environment/terrain/stylised/dirt_path_Color.png"))
 	material.set_shader_parameter("soil_tint",Color("#9b805f"))
 	material.set_shader_parameter("patch_centre",centre)

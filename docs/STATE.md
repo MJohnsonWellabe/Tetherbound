@@ -46,8 +46,13 @@ installed roofed lookouts over their stone towers. Final native comparison
 prefers the candidate in 9/10 views with one tie; the first candidate's Galefoot
 night overlap regression is resolved. Imported-geometry smoke passes 21 checks;
 source review has no blocker. Whole Cloudreach Bars A/B and F08#4 still fail.
-Next confirmed scene defect is square courtyard wear from the ground coverage
-shader, followed by unsupported/oversized vegetation and night hierarchy.
+The square courtyard coverage repair now has 22 native paired views: blind
+review prefers the candidate in 10 and ties in 12, with no control preference.
+Soil fades over the actual underlying surface and renders beneath hazard tells.
+Four environment tests/12 assertions pass; inherited diagnostic errors remain
+disclosed. Main `5dac88621` is integrated in `4e41ad25c`. F08#4 remains open;
+unsupported/oversized vegetation, disconnected ground and night hierarchy remain.
+See `ralph/reports/VISUAL/CLOUDREACH-COURTYARD-WEAR.md` for evidence and limits.
 `ralph/reports/VISUAL/CLOUDREACH-WINDWATCH.md` records all comparisons and limits,
 including decorative, collisionless galleries. Claude owns merging draft PR365.
 

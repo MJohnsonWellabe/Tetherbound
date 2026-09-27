@@ -60,10 +60,14 @@ installed castle kit improve Galefoot/Cliffhold identity: anonymous final review
 prefers 9/10 native pairs with one tie. Raising Galefoot's base resolves the
 intermediate night-approach overlap regression. Source review has no blocker;
 21 imported-geometry checks pass. Complete Bars A/B and F08#4 remain open.
-The next scene repair is the square courtyard wear artifact (the coverage shader
-discards whole `floor(world_at.xz * 18)` cells), followed by floating/oversized
-vegetation and night focal hierarchy. This does not reprioritize minor tower
-polish ahead of those scene defects. [Evidence](CLOUDREACH-WINDWATCH.md).
+The square courtyard wear artifact now has a retained alpha-overlay repair:
+22 native pairs, 10 candidate preferences and 12 ties, no control preference.
+It fades soil over the real substrate and renders before live hazard tells.
+Four environment tests/12 assertions pass; exact diagnostic limits are preserved.
+Main `5dac88621` is integrated. Whole Bars A/B and F08#4 remain open.
+Next scene work is floating/oversized vegetation, disconnected paths/clearings
+and night focal hierarchy, ahead of minor tower polish. See
+[wear evidence](CLOUDREACH-COURTYARD-WEAR.md) and [tower evidence](CLOUDREACH-WINDWATCH.md).
 
 ## Cross-game diagnostic ranking
 
