@@ -883,7 +883,6 @@ const GATHER_SEARCH_M := 120.0
 func _gather_for_doss() -> Dictionary:
 	var inventory: RefCounted = _game.get("inventory")
 	var out := {"gathered": {}}
-	var home := _xz()
 	for item: String in DOSS_NEEDS:
 		var have := int(inventory.call("count", item)) if inventory != null else 0
 		out["gathered"][item] = {"before": have}
@@ -896,24 +895,58 @@ func _gather_for_doss() -> Dictionary:
 		var prompt := point.get_node_or_null(^"Interactable")
 		await _walk_straight_to(point.global_position, 1.6, prompt)
 		await _capture("act-0a-gather-%s" % item)
+		# RG9: the standing plant is cut with its tool in hand ("press slot,
+		# tool in hand"), which fells it into a pile gathered bare-handed.
+		var items_db: RefCounted = _game.get("items")
+		var tool := str(items_db.call("gathered_with", item)) if items_db != null else ""
+		var slot := int(_game.call("hotbar_slot_of", tool)) if not tool.is_empty() else -1
+		var drew := false
+		if slot >= 0 and str(_game.get("equipped_tool")) != tool:
+			await _press("hotbar_%d" % (slot + 1))
+			for i in 30:
+				await physics_frame
+			drew = str(_game.get("equipped_tool")) == tool
+		out["gathered"][item]["tool"] = tool
+		out["gathered"][item]["tool_in_hand"] = str(_game.get("equipped_tool")) == tool
 		for tries in 3:
 			await _press("interact")
-			for i in 45:
+			for i in 90:
 				await physics_frame
-			if int(inventory.call("count", item)) > have:
+			if not is_instance_valid(point) or not point.is_inside_tree():
 				break
+		if drew:
+			await _press("hotbar_%d" % (slot + 1))
+			for i in 30:
+				await physics_frame
+		# Gather the felled pile by hand.
+		var pile := _nearest_harvest_point(item, 12.0)
+		if pile != null:
+			await _walk_straight_to(pile.global_position, 1.4, pile.get_node_or_null(^"Interactable"))
+			for tries in 3:
+				await _press("interact")
+				for i in 45:
+					await physics_frame
+				if int(inventory.call("count", item)) > have:
+					break
 		out["gathered"][item]["after"] = int(inventory.call("count", item))
 		await _capture("act-0b-gathered-%s" % item)
-	await _walk_straight_to(Vector3(home.x, 0.0, home.y), 2.0, null)
+	# Back to Doss until his own prompt wins (a nearby gather prompt must not
+	# take the press).
+	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+	await _walk_straight_to(body.global_position, 1.8, _prompt)
 	await _face_lure()
+	out["doss_prompt_winning_after_gather"] = _prompt_offered()
 	return out
 
 
-func _nearest_harvest_point(item: String) -> Node3D:
+func _nearest_harvest_point(item: String, within_m: float = GATHER_SEARCH_M) -> Node3D:
 	var best: Node3D = null
-	var best_d := GATHER_SEARCH_M
+	var best_d := within_m
 	for node: Node in _world.find_children("*", "", true, false):
-		if not node is Node3D or str(node.get("_item_id")) != item:
+		if not node is Node3D or not node.is_inside_tree():
+			continue
+		var node_item := str(node.call("resource_item")) if node.has_method("resource_item") else str(node.get("_item_id"))
+		if node_item != item:
 			continue
 		if node.get_node_or_null(^"Interactable") == null:
 			continue
