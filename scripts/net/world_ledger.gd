@@ -868,6 +868,10 @@ const CLIENT_GRANT_SOURCES := {
 	# the complete flag or the second step.
 	"stormwood_pims_parcels": {"item": "potion_small", "count": 2, "flag": "",
 		"requires_any": ["stormwood:side_pims_parcels_complete", "stormwood:side_pims_parcels_2"]},
+	# scripts/world/stormwood_rook_circuit_reward.gd REWARD_*; claim_reward() pays on
+	# the complete flag or the second step (owner ruling 2026-09-26: Thunder Break).
+	"stormwood_deepwood_circuit": {"item": "tm_thunder_break", "count": 1, "flag": "",
+		"requires_any": ["stormwood:side_deepwood_circuit_complete", "stormwood:side_deepwood_circuit_2"]},
 }
 const CLOUDREACH_RUNTIME := "res://data/config/cloudreach_physical_runtime.json"
 ## scripts/world/meadowhart_herd_visit.gd REVEAL_FLAG / COMPLETE_FLAG.

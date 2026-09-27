@@ -72,6 +72,10 @@ func test_completed_circuit_preserves_rooks_prior_dialogue_fallback() -> void:
 	flags.set_flag("stormwood:side_deepwood_circuit_1")
 	flags.set_flag("stormwood:side_deepwood_circuit_2")
 	flags.set_flag("stormwood:side_deepwood_circuit_complete")
+	# Owner ruling 2026-09-26 (Thunder Break): Rook's thanks pays any character
+	# still owed; once this character heard it while paid he returns to his
+	# story lines (stormwood_rook_circuit_reward.gd, Pim's rule).
+	flags.set_flag("stormwood:deepwood_circuit_reward_received")
 	var spec := CHAPTER_RUNTIME.npc_spec({"id": "ace_trainer_rook", "name": "Rook",
 		"body_profile": "rival_trainer", "position": [-150, 61.14, 4460]})
 	assert_eq(PEOPLE.greeting_for(spec, flags), "stormwood_ace_trainer_rook_in_progress",

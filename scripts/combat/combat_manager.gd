@@ -1389,7 +1389,8 @@ func _update_combat_clear_orbit(framing: Dictionary, desired: float, delta: floa
 		float(framing.get("min_ally_clearance_m", 1.5)), _rig_float("pitch", deg_to_rad(-25.0)))
 	_camera_clear_orbit_target = float(_camera_rig.call("clear_orbit_offset_deg", length,
 		orbit.get("samples_deg", [30.0, 60.0, 90.0]), float(orbit.get("min_fraction", 0.75)),
-		ally_room, float(orbit.get("switch_margin_m", 1.0))))
+		ally_room, float(orbit.get("switch_margin_m", 1.0)),
+		float(orbit.get("keep_opponent_in_frame", 0.0))))
 	var target := _camera_clear_orbit_target
 	var rate := maxf(float(orbit.get("ease_deg_per_s", 90.0)), 1.0)
 	_camera_clear_orbit_deg = move_toward(_camera_clear_orbit_deg, target, rate * delta)

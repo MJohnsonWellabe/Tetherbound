@@ -1,0 +1,81 @@
+{
+  "accelerated": true,
+  "combat_mode": "mechanics_only_test_lethal",
+  "criterion": "F06#1",
+  "distance_m": 1446.83630175386,
+  "failure": [
+    {
+      "kind": "FAIL",
+      "message": "Fell below authored segment toward (-260.0, 235.0, 790.0)",
+      "position": "(-278.0, 181.0, 522.0)",
+      "simulated_seconds": 270.4,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 411.862448
+    }
+  ],
+  "locked_region_entries": [],
+  "passed": false,
+  "region_sequence": [
+    {
+      "mode": "foot",
+      "region": "gate_lower_cliffs",
+      "simulated_seconds": 0.02,
+      "stage": "boot"
+    }
+  ],
+  "regions": [
+    {
+      "access_mode": "ground",
+      "first_entry": {
+        "mode": "foot",
+        "position": "(0.0, 105.18, -260.0)",
+        "simulated_seconds": 0.02,
+        "stage": "boot"
+      },
+      "frames": {
+        "foot": 16224
+      },
+      "passed": true,
+      "region": "gate_lower_cliffs"
+    },
+    {
+      "access_mode": "ground",
+      "first_entry": {},
+      "frames": {},
+      "passed": false,
+      "region": "broken_causeways"
+    },
+    {
+      "access_mode": "ground",
+      "first_entry": {},
+      "frames": {},
+      "passed": false,
+      "region": "windscar_ravine"
+    },
+    {
+      "access_mode": "fly_only",
+      "first_entry": {},
+      "frames": {},
+      "passed": false,
+      "region": "high_roost_sky_shrine"
+    },
+    {
+      "access_mode": "ground_after_unlock",
+      "first_entry": {},
+      "frames": {},
+      "passed": false,
+      "region": "upper_cloudreach"
+    },
+    {
+      "access_mode": "ground_after_unlock",
+      "first_entry": {},
+      "frames": {},
+      "passed": false,
+      "region": "summit_final_stronghold"
+    }
+  ],
+  "sealed_violations": [],
+  "stage": "lower_west_anchor",
+  "start_state": "committed completed-Meadows fixture (smoke_cloudreach_continuous default; earned c1_arrival save not yet available)",
+  "witness_frames": 16224
+}
