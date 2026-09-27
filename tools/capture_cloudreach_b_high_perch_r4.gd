@@ -17,13 +17,13 @@ const STANDS := [
 	# approaches from, looking back up at the trainer on the south rim, so the
 	# cliff face falls away below the lip and the roost needles read against sky.
 	{"id": "glide-approach", "player": Vector2(900.0, 2687.0), "face": Vector2(900.0, 2640.0),
-		"camera": Vector3(900.0, 1010.0, 2638.0), "look": Vector3(900.0, 1022.0, 2692.0)},
+		"camera": Vector3(900.0, 1033.0, 2630.0), "look": Vector3(900.0, 1016.0, 2694.0)},
 	{"id": "southeast-glide-approach", "player": Vector2(900.0, 2687.0), "face": Vector2(930.0, 2650.0),
 		"camera": Vector3(952.0, 1004.0, 2646.0), "look": Vector3(902.0, 1020.0, 2694.0)},
-	# Height from the lip: behind and above the trainer at the rim, pitched down
-	# so the lip, the drop and the lower cloud layer share the frame.
-	{"id": "rim-overlook-down", "player": Vector2(900.0, 2687.0), "face": Vector2(900.0, 2640.0),
-		"camera": Vector3(900.0, 1031.0, 2697.0), "look": Vector3(900.0, 965.0, 2610.0)},
+	# Height from the west: a high glide in from the open side, the crown and its
+	# needles above the cliff with the cloud layer far below.
+	{"id": "west-glide-high", "player": Vector2(900.0, 2700.0), "face": Vector2(860.0, 2690.0),
+		"camera": Vector3(838.0, 1036.0, 2662.0), "look": Vector3(900.0, 1016.0, 2702.0)},
 	# Crowding: the court seen from high on its southwest side, pulled back so the
 	# needles stand apart instead of filling the rim line.
 	{"id": "court-high-oblique", "player": Vector2(900.0, 2700.0), "face": Vector2(905.0, 2712.0),
