@@ -626,9 +626,9 @@
       "peer": 0,
       "action": "party_uids",
       "args": {
-        "equals": "uids0"
+        "remember": "uids0_after_restart"
       },
-      "label": "same five owned UIDs after the realm crossing, restart and rejoin"
+      "label": "host's five owned UIDs after the restart (the remember store is process memory; compared against the pre-restart row by the card)"
     },
     {
       "peer": 0,
