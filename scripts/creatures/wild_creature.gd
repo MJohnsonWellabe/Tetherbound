@@ -1033,6 +1033,10 @@ func _finish_lunge(contact: bool, stopped_by: String) -> void:
 
 ## Stops a charge (and its lane) without a strike: stagger, faint, disengage.
 func _cancel_lunge() -> void:
+	# F10#2: every path that abandons a tell (stagger, faint, disengage) comes
+	# through here, so a route cue or guard cone never outlives its tell.
+	_route_cue_left = 0.0
+	_hide_guard_cone()
 	if _lunge_active:
 		_lunge_active = false
 		cancel_combat_burst()
@@ -1063,7 +1067,9 @@ func set_catch_aim_active(value: bool) -> void:
 
 
 func is_winding_up() -> bool:
-	return engaged and _intent == AI.Intent.TELEGRAPH
+	# A route cue (F10#2) comes BEFORE the wind-up: only the tell proper counts
+	# for interrupts and the HUD's warning. Unset, `_route_cue_left` is 0.
+	return engaged and _intent == AI.Intent.TELEGRAPH and _route_cue_left <= 0.0
 
 
 func _poise_config() -> Dictionary:

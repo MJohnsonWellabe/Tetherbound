@@ -82,8 +82,12 @@ func test_route_cue_shows_the_route_first_then_the_ordinary_tell() -> void:
 	assert_eq(tells.size(), 0, "the ring and anticipation wait for the route cue")
 	assert_almost_eq(float(wild.get("_beat_left")), 1.9, 0.0001, "1.1 s cue + 0.8 s tell")
 	assert_almost_eq(float(wild.call("route_cue_left")), 1.1, 0.0001)
-	assert_true(bool(wild.call("is_winding_up")), "the whole cue is a committed wind-up")
+	assert_false(bool(wild.call("is_winding_up")), "the cue comes before the wind-up (no interrupt or HUD warning yet)")
 	assert_false(bool(wild.call("_lunge_heading_is_locked")), "the route still tracks during the cue")
+	# The lock clock measures the 0.8 s tell only: still unlocked just before the
+	# tell starts, locked inside it (lane lock at half the tell).
+	wild.set("_beat_left", 0.9)
+	assert_false(bool(wild.call("_lunge_heading_is_locked")), "unlocked 0.1 s before the tell")
 	# The tick counts the beat and the cue down together.
 	wild.set("_beat_left", 1.3)
 	wild.call("_advance_route_cue", 0.6)
@@ -92,6 +96,9 @@ func test_route_cue_shows_the_route_first_then_the_ordinary_tell() -> void:
 	wild.call("_advance_route_cue", 0.5)
 	assert_eq(tells.size(), 1, "the ordinary tell starts when the cue ends")
 	assert_almost_eq(float(tells[0]), 0.8, 0.0001, "and it is the authored 0.8 s tell")
+	assert_true(bool(wild.call("is_winding_up")), "the wind-up is the tell proper")
+	wild.set("_beat_left", 0.3)
+	assert_true(bool(wild.call("_lunge_heading_is_locked")), "locked late in the tell")
 	wild.call("_advance_route_cue", 0.5)
 	assert_eq(tells.size(), 1, "announced once")
 	wild.call("_enter", AI.Intent.RECOVER)
@@ -146,3 +153,31 @@ func test_stormwood_data_opts_the_two_fights_in() -> void:
 			assert_false(named[id].has("route_cue_seconds"), "%s has no route cue" % id)
 		if id != "crown_guardian":
 			assert_false(named[id].has("guard_stance"), "%s has no guard stance" % id)
+
+
+func test_every_exit_from_a_tell_drops_the_cue_and_the_cone() -> void:
+	var override := {"route_cue_seconds": 1.1, "guard_stance": true, "telegraph": 0.8}
+	# Stagger mid-cue: no cone, no cue, and no late announcement.
+	var staggered := _wild(override)
+	var tells := _tells(staggered)
+	staggered.call("_enter", AI.Intent.TELEGRAPH)
+	assert_true(staggered.find_child("GuardCone", true, false) != null, "precondition: cone drawn")
+	staggered.call("apply_poise_damage", 999.0, true)
+	assert_eq(staggered.get("_guard_cone"), null, "a stagger drops the guard cone")
+	assert_almost_eq(float(staggered.call("route_cue_left")), 0.0, 0.0001, "and the route cue")
+	staggered.call("_advance_route_cue", 2.0)
+	assert_eq(tells.size(), 0, "a staggered cue never announces a tell")
+	staggered.free()
+	# Disengage (fight over, party wipe) mid-tell.
+	var released := _wild(override)
+	released.call("_enter", AI.Intent.TELEGRAPH)
+	released.call("set_engaged", false)
+	assert_eq(released.get("_guard_cone"), null, "leaving the fight drops the guard cone")
+	assert_almost_eq(float(released.call("route_cue_left")), 0.0, 0.0001)
+	released.free()
+	# Faint mid-tell.
+	var fainted := _wild(override)
+	fainted.call("_enter", AI.Intent.TELEGRAPH)
+	fainted.call("notify_fainted")
+	assert_eq(fainted.get("_guard_cone"), null, "a faint drops the guard cone")
+	fainted.free()
