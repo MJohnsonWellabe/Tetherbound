@@ -709,6 +709,11 @@ func _perform_action() -> void:
 	# Doss's action changes the world: the buckled bank perch straightens.
 	# Frame the perch itself before and after, not only Doss's lines.
 	var perch := _world.get_node_or_null(^"RiverNestClear/BankPerch") as Node3D if _activity == "doss" else null
+	# From an earned save the player may not carry Doss's materials. Gather
+	# what is missing from the nearest harvest points by ordinary input first,
+	# as a player sent off by his request would, then come back.
+	if _activity == "doss":
+		actions.append(await _gather_for_doss())
 	if perch != null:
 		await _capture_perch(perch, "act-00-perch-before")
 		await _face_lure()
@@ -867,6 +872,75 @@ func _act_escort_home(panel: Node) -> Dictionary:
 		await _press("menu_cancel")
 	out["reunion_dialogue_lines"] = lines
 	return out
+
+
+const DOSS_NEEDS := {"wood": 1, "fiber": 1}
+const GATHER_SEARCH_M := 120.0
+
+## For each material Doss asks for that the satchel lacks: find the nearest
+## harvest point of that item, walk to it with forward input, tap its prompt,
+## and walk back to the prompt spot. Returns counts before/after per item.
+func _gather_for_doss() -> Dictionary:
+	var inventory: RefCounted = _game.get("inventory")
+	var out := {"gathered": {}}
+	var home := _xz()
+	for item: String in DOSS_NEEDS:
+		var have := int(inventory.call("count", item)) if inventory != null else 0
+		out["gathered"][item] = {"before": have}
+		if have >= int(DOSS_NEEDS[item]):
+			continue
+		var point := _nearest_harvest_point(item)
+		if point == null:
+			out["gathered"][item]["result"] = "no %s harvest point within %.0f m" % [item, GATHER_SEARCH_M]
+			continue
+		var prompt := point.get_node_or_null(^"Interactable")
+		await _walk_straight_to(point.global_position, 1.6, prompt)
+		await _capture("act-0a-gather-%s" % item)
+		for tries in 3:
+			await _press("interact")
+			for i in 45:
+				await physics_frame
+			if int(inventory.call("count", item)) > have:
+				break
+		out["gathered"][item]["after"] = int(inventory.call("count", item))
+		await _capture("act-0b-gathered-%s" % item)
+	await _walk_straight_to(Vector3(home.x, 0.0, home.y), 2.0, null)
+	await _face_lure()
+	return out
+
+
+func _nearest_harvest_point(item: String) -> Node3D:
+	var best: Node3D = null
+	var best_d := GATHER_SEARCH_M
+	for node: Node in _world.find_children("*", "", true, false):
+		if not node is Node3D or str(node.get("_item_id")) != item:
+			continue
+		if node.get_node_or_null(^"Interactable") == null:
+			continue
+		var d := _xz().distance_to(_xz3((node as Node3D).global_position))
+		if d < best_d:
+			best_d = d
+			best = node as Node3D
+	return best
+
+
+## Forward input toward a point, steering the look yaw, with the walk's
+## unstick; stops within `radius` or when `prompt` wins the arbiter.
+func _walk_straight_to(at: Vector3, radius: float, prompt: Node) -> void:
+	var stuck := {"best": INF, "at": _clock, "attempt": 0}
+	Input.action_press("move_forward")
+	for frame in 3600:
+		var to := _xz3(at) - _xz()
+		if to.length() <= radius or (prompt != null and _arbiter.call("winning_provider") == prompt):
+			break
+		_rig.set("yaw", atan2(-to.x, -to.y))
+		await physics_frame
+		_tick()
+		if await _escort_unstick(stuck, to.length()):
+			Input.action_press("move_forward")
+	_release()
+	for i in 20:
+		await physics_frame
 
 
 ## Reads an open dialogue out with ordinary interact presses, capturing up to
