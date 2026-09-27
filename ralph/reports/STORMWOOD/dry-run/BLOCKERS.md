@@ -27,3 +27,5 @@ Crown arch and Crown arrival.
 Reached in run2 before B2, with 0 SCRIPT ERROR: everything above plus the Crown guardian, Wen, the Rootgate (Act II), Lantern Hollow, Sable, Nysa's Deepwood rod, Lieutenant Sera and the last rod, Ember Bivouac, and Officer Kestrel.
 
 Reached in run4 before B4, with 0 SCRIPT ERROR (note: the dry-run framing changed under the 06:58 owner ruling; the fixture start is now a disclosed shortcut): everything in run2, plus the route round the approach slab to its foot and the start of the Stormheart climb.
+
+**Diagnostic, not evidence** (`diag-marrow-aftermath-from-run8-save.txt`, d3414e84): from run8's save, with the player placed on the Dynamo core anchor by a scratch driver, the real Marrow and aftermath segments passed with 0 SCRIPT ERROR. That covers five Marrow rounds, four conduits in one Break window, the automatic release, the Stormheart offer accepted at five (belt row 4 released), the Waterward reveal, `realm_key_water` and `chapter_complete`. So nothing downstream of the climb is known to block run9.
