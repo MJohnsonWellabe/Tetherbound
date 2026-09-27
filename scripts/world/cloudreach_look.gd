@@ -125,6 +125,7 @@ var _cover_patch_centres: Array[Vector3] = []
 var _cover_counts_by_index: Array[int] = []
 var _ellipse_patches_cache: Array = []
 var _tree_positions: Array[Vector3] = []
+var _architectural_tree_clearings: Array[Dictionary] = []
 var _route_bounds_cache: Array = []
 var _cover_fill_surfaces := 0
 var _cover_fill_area := 0.0
@@ -1392,6 +1393,13 @@ func _dress_alpine_rim(ellipse_patches: Array, cfg: Dictionary, budget: int) -> 
 
 func _dress_trees_and_stones(config_data: Dictionary) -> void:
 	var cfg: Dictionary = _cfg.get("trees_stones", {})
+	_architectural_tree_clearings.clear()
+	for clearing: Dictionary in cfg.get("architectural_clearings", []):
+		for landmark: Dictionary in config_data.get("landmarks", []):
+			if str(landmark.get("id", "")) == str(clearing.get("landmark_id", "")):
+				var resolved := clearing.duplicate()
+				resolved["centre"] = _vec3(landmark.get("position", []))
+				_architectural_tree_clearings.append(resolved)
 	var root := Node3D.new()
 	root.name = "LookTreesAndStones"
 	add_child(root)
@@ -1491,11 +1499,33 @@ func _plant_tree_clusters(root: Node3D, centre: Vector3, half: Vector2, cfg: Dic
 			tree.position = ground
 			tree.rotation.y = rng.randf_range(0.0, TAU)
 			tree.scale = Vector3.ONE * rng.randf_range(scale_min, scale_max)
+			# Consume the same random values before skipping a tree, preserving
+			# every other site's authored deterministic scatter.
+			if _inside_architectural_tree_clearing(ground):
+				tree.free()
+				continue
 			_world.call("_apply_tree_palette", tree, c * 13 + t)
 			root.add_child(tree)
 			_set_visibility(tree, 1050.0)
 			_tree_count += 1
 			_tree_positions.append(ground)
+
+
+func _inside_architectural_tree_clearing(at: Vector3) -> bool:
+	for clearing: Dictionary in _architectural_tree_clearings:
+		var centre: Vector3 = clearing["centre"]
+		if absf(at.y - centre.y) > float(clearing.get("height_tolerance_m", 30.0)):
+			continue
+		var point := Vector2(at.x - centre.x, at.z - centre.z)
+		if point.length() < float(clearing.get("radius_m", 0.0)):
+			return true
+		var offset := _vec3(clearing.get("approach_offset", [0, 0, 0]))
+		var end := Vector2(offset.x, offset.z)
+		if end.length_squared() > 0.01:
+			var along := clampf(point.dot(end) / end.length_squared(), 0.0, 1.0)
+			if point.distance_to(end * along) < float(clearing.get("approach_half_width_m", 0.0)):
+				return true
+	return false
 
 
 func _plant_stone_clusters(root: Node3D, centre: Vector3, half: Vector2, cfg: Dictionary,
