@@ -1,0 +1,5 @@
+doss_01 <- doss_06_act-00-perch-before.png
+doss_02 <- doss_03.jpg
+doss_03 <- doss_08_act-05-dialogue-01.png
+doss_04 <- doss_14_act-98-perch-after.png
+(doss_02 is round 1's request frame from the no-materials save; the rest are the local act render with the dark-timber perch, distinct-actions/doss-perch/)
