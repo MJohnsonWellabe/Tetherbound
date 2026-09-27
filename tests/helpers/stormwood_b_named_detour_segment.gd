@@ -44,6 +44,8 @@ var reader_named := true
 var _named_tell_until_ms := -1
 var _named_tell_from_ms := -1
 var _named_side := 1.0
+## Game milliseconds elapsed in the current detour fight (physics ticks).
+var _game_ms := 0
 
 
 func run_named(tree: SceneTree, world: Node3D, game: Node, ids: Array) -> Dictionary:
@@ -130,9 +132,13 @@ func _detour(id: String) -> String:
 	return "not_cleared:%s" % _last_combat_outcome
 
 
+## Every fight in a detour (road wilds included) is played by the reader on a
+## GAME clock: the inherited pilot times its presses and its 180 s cap on the
+## wall clock, which a slow rendering process stretches until a road fight
+## times out unresolved (render DRY RUN, road_blocked).
 func _fight_current(label: String) -> bool:
 	var enemy := _manager.call("enemy_body") as Node3D
-	if not reader_named or enemy == null or str(enemy.get_meta("stormwood_named_encounter", "")).is_empty():
+	if not reader_named or enemy == null:
 		return await super._fight_current(label)
 	return await _fight_named_as_reader(label, enemy)
 
@@ -140,11 +146,11 @@ func _fight_current(label: String) -> bool:
 func _fight_named_as_reader(label: String, enemy: Node3D) -> bool:
 	_fights_seen += 1
 	_last_combat_outcome = ""
-	var started := Time.get_ticks_msec()
+	_game_ms = 0
 	var previous_scale := Engine.time_scale
 	var previous_hz := Engine.physics_ticks_per_second
 	var on_tell := func(seconds: float) -> void:
-		var now := Time.get_ticks_msec()
+		var now := _game_ms
 		_named_tell_from_ms = now + int(seconds * 250.0)
 		_named_tell_until_ms = now + int(seconds * 1000.0) + 500
 		_named_side = -_named_side
@@ -159,10 +165,10 @@ func _fight_named_as_reader(label: String, enemy: Node3D) -> bool:
 	var next_quick_ms := 0
 	var tick := 0
 	var release_tick := -1
-	while bool(_manager.call("is_fighting")) and Time.get_ticks_msec() - started < 180000:
+	while bool(_manager.call("is_fighting")) and _game_ms < 300000:
 		var foe := _manager.call("enemy_body") as Node3D
 		var ally := _director.call("ally_body") as Node3D
-		var now := Time.get_ticks_msec()
+		var now := _game_ms
 		if foe != null and ally != null:
 			var offset := foe.global_position - ally.global_position
 			offset.y = 0.0
@@ -188,6 +194,7 @@ func _fight_named_as_reader(label: String, enemy: Node3D) -> bool:
 				next_quick_ms = now + 900
 		tick += 1
 		await _tree.physics_frame
+		_game_ms += int(1000.0 / float(Engine.physics_ticks_per_second))
 	_set_action(&"combat_quick", false)
 	_drive_stick.call(0.0, 0.0)
 	if is_instance_valid(enemy) and enemy.is_connected("telegraph_started", on_tell):
@@ -197,8 +204,7 @@ func _fight_named_as_reader(label: String, enemy: Node3D) -> bool:
 	await _tree.process_frame
 	Engine.time_scale = previous_scale
 	Engine.physics_ticks_per_second = previous_hz
-	_note("FIGHT end %s (reader) outcome=%s elapsed_ms=%d" % [label, _last_combat_outcome,
-		Time.get_ticks_msec() - started])
+	_note("FIGHT end %s (reader) outcome=%s game_ms=%d" % [label, _last_combat_outcome, _game_ms])
 	if bool(_manager.call("is_fighting")) or _last_combat_outcome.is_empty():
 		return _fail("combat during %s did not resolve and publish an outcome" % label)
 	return true

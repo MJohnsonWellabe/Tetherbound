@@ -31,7 +31,7 @@ func _run() -> void:
 		elif arg.begins_with("--named-out="):
 			out = arg.trim_prefix("--named-out=")
 	print("NAMED_DETOUR DRY RUN — does not count (chapter-entry seam, no route)")
-	var recorder: Node = NAMED_RECORDER.new(out, 1.0, true)
+	var recorder: Node = NAMED_RECORDER.new(out, 1.0, false)
 	root.add_child(recorder)
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
