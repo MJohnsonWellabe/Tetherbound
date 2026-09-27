@@ -218,6 +218,13 @@ func _note_camera(cam: Camera3D, enemy: Node3D, ally: Node3D) -> void:
 		hides = OCCLUSION.hidden_points(cam.global_position, base, ally_world.size.y,
 			foe_model.global_transform, foe_bounds)
 	var to_foe := enemy.global_position - ally.global_position
+	if foe_model != null:
+		var fb: AABB = foe_model.global_transform * RENDER_BOUNDS.measure(foe_model)
+		var flat := Vector3(fb.get_center().x, 0.0, fb.get_center().z) - Vector3(enemy.global_position.x, 0.0, enemy.global_position.z)
+		_note("  foe radius=%.2f render_half=(%.2f, %.2f, %.2f) render_centre_off=%.2f ally_radius=%.2f flat_sep=%.2f" % [
+			float(enemy.call("body_radius")), fb.size.x * 0.5, fb.size.y * 0.5, fb.size.z * 0.5, flat.length(),
+			float(ally.call("body_radius")) if ally.has_method("body_radius") else -1.0,
+			Vector2(to_foe.x, to_foe.z).length()])
 	var axis := rad_to_deg(atan2(-to_foe.x, -to_foe.z))
 	_note("  cam yaw=%.0f axis=%.0f comp_extra=%.0f clear_extra=%.0f shoulder=%.2f arm=%.2f foe_hides_ally=%d ally_px=%s" % [
 		rad_to_deg(float(_rig.get("yaw"))), axis, float(_rig.call("composition_extra")),
