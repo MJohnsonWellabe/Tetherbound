@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cebib8tr6kscv"
-path="res://.godot/imported/elixir_vigour.glb-57e1e1313d6fa5d58b48cb3e7923b283.scn"
+uid="uid://ws4fbbi2fqht"
+path="res://.godot/imported/swift_tonic_badge.glb-899a7dc44a8e781a12ece9b3428ea8c3.scn"
 
 [deps]
 
-source_file="res://assets/props/stat_draughts/elixir_vigour.glb"
-dest_files=["res://.godot/imported/elixir_vigour.glb-57e1e1313d6fa5d58b48cb3e7923b283.scn"]
+source_file="res://assets/props/stat_draughts/swift_tonic_badge.glb"
+dest_files=["res://.godot/imported/swift_tonic_badge.glb-899a7dc44a8e781a12ece9b3428ea8c3.scn"]
 
 [params]
 

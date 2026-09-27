@@ -1,97 +1,43 @@
-"""Reference-backed world bottles matching gen_item_icons.icon_stat_draught.
+"""Normalize Meshy's bottle and fit six authored stat badges (Blender 4.2).
 
-Run with Blender 4.2: blender --background --python <this file> -- --output <dir>
-Existing item icons are the silhouette/stat reference; no downloaded/generated
-third-party geometry. Opaque glazed ceramic avoids transparency sorting at
-pickup distance. Geometry, trim, cork and relief emblems are authored here.
-All assets stand at z=0, export Y-up, and are 0.80m high at scale 1.
+--background --python <script> -- --output assets/props/stat_draughts
+First import adds --source assets_raw/stat_draught_bottle/model.glb.
+Rebuilds reuse committed bottle_base.glb. No API calls. One shared 0.80m
+Meshy bottle, six small badge GLBs and composition scenes. Symbols follow
+gen_item_icons.icon_stat_draught; three gold pips mark permanent elixirs.
 """
 import argparse
 import math
 from pathlib import Path
 import sys
 import bpy
+import bmesh
+from mathutils import Vector
 
 SPECS = {
-    'elixir_might': ('attack', True, '#bc713d'),
-    'elixir_guard': ('defence', True, '#477fc1'),
-    'elixir_vigour': ('health', True, '#469c67'),
-    'swift_tonic': ('speed', False, '#d5a433'),
-    'attack_tonic': ('attack', False, '#bc713d'),
-    'stoneguard_brew': ('defence', False, '#667f8d'),
+ 'elixir_might': ('attack', True, '#905021'),
+ 'elixir_guard': ('defence', True, '#295493'),
+ 'elixir_vigour': ('health', True, '#286645'),
+ 'swift_tonic': ('speed', False, '#98711d'),
+ 'attack_tonic': ('attack', False, '#905021'),
+ 'stoneguard_brew': ('defence', False, '#465764'),
 }
 
 def linear(v):
     return v/12.92 if v <= .04045 else ((v+.055)/1.055)**2.4
 
-def mat(name, colour, rough=.4, metal=0):
-    m=bpy.data.materials.new(name)
-    m.use_nodes=True
+def material(name, colour, rough=.55):
+    m=bpy.data.materials.new(name);m.use_nodes=True
     p=m.node_tree.nodes.get('Principled BSDF')
-    c=tuple(linear(int(colour[i:i+2],16)/255) for i in (1,3,5))
-    p.inputs['Base Color'].default_value=(*c,1)
+    p.inputs['Base Color'].default_value=tuple(linear(int(colour[i:i+2],16)/255) for i in (1,3,5))+(1,)
     p.inputs['Roughness'].default_value=rough
-    p.inputs['Metallic'].default_value=metal
-    if metal:
-        # Both production loaders retain textured metal; the harvest loader
-        # deliberately strips untextured imported metallic scalars.
-        image=bpy.data.images.new(name+' ORM',width=1,height=1)
-        image.colorspace_settings.name='Non-Color'
-        image.pixels=(1.0,rough,metal,1.0)
-        image.pack()
-        tex=m.node_tree.nodes.new('ShaderNodeTexImage');tex.image=image
-        split=m.node_tree.nodes.new('ShaderNodeSeparateColor')
-        m.node_tree.links.new(tex.outputs['Color'],split.inputs['Color'])
-        m.node_tree.links.new(split.outputs['Green'],p.inputs['Roughness'])
-        m.node_tree.links.new(split.outputs['Blue'],p.inputs['Metallic'])
     return m
 
-def mesh(name, verts, faces, material, bevel=0):
-    data=bpy.data.meshes.new(name)
-    data.from_pydata(verts,[],faces)
-    data.update()
-    # Constant UV0 is sufficient for the one-pixel ORM material and makes
-    # every texture reference valid even outside Godot's default-UV fallback.
-    uv=data.uv_layers.new(name='UVMap')
-    for loop in uv.data:
-        loop.uv=(.5,.5)
-    obj=bpy.data.objects.new(name,data)
-    bpy.context.collection.objects.link(obj)
-    obj.data.materials.append(material)
-    if bevel:
-        mod=obj.modifiers.new('Crafted rounded edges','BEVEL')
-        mod.width=bevel
-        mod.segments=3
-        mod.affect='EDGES'
-        norm=obj.modifiers.new('Face normals','WEIGHTED_NORMAL')
-        norm.keep_sharp=True
+def mesh(name, verts, faces, mat):
+    data=bpy.data.meshes.new(name);data.from_pydata(verts,[],faces);data.update()
+    obj=bpy.data.objects.new(name,data);bpy.context.collection.objects.link(obj)
+    obj.data.materials.append(mat)
     return obj
-
-def profile(name, rings, material, power=2.0, n=24, bevel=.005):
-    # A continuous closed shell; each ring is height, half-width, half-depth.
-    verts=[]
-    for z,w,d in rings:
-        for j in range(n):
-            t=2*math.pi*j/n
-            c,s=math.cos(t),math.sin(t)
-            verts.append((w*math.copysign(abs(c)**(2/power),c),d*math.copysign(abs(s)**(2/power),s),z))
-    faces=[tuple(reversed(range(n)))]
-    for k in range(len(rings)-1):
-        for j in range(n):
-            a=k*n+j;b=k*n+(j+1)%n
-            faces.append((a,b,b+n,a+n))
-    faces.append(tuple(range((len(rings)-1)*n,len(rings)*n)))
-    return mesh(name,verts,faces,material,bevel)
-
-def relief(name, points, yfront, thickness, material, bevel=.003):
-    # Polygon in X/Z; positive signed area is outward toward negative Y.
-    area=sum(a[0]*b[1]-b[0]*a[1] for a,b in zip(points,points[1:]+points[:1]))
-    if area<0: points=list(reversed(points))
-    n=len(points)
-    v=[(x,yfront,z) for x,z in points]+[(x,yfront+thickness,z) for x,z in points]
-    faces=[tuple(range(n)),tuple(reversed(range(n,2*n)))]
-    faces += [(j,(j+1)%n,(j+1)%n+n,j+n) for j in range(n)]
-    return mesh(name,v,faces,material,bevel)
 
 def symbol(stat):
     if stat=='attack':
@@ -99,78 +45,111 @@ def symbol(stat):
     if stat=='speed':
         return [(.018,.115),(-.073,-.012),(-.015,-.012),(-.043,-.12),(.079,.036),(.018,.036),(.06,.115)]
     if stat=='health':
-        return [(math.sin(t)**3*.105,(13*math.cos(t)-5*math.cos(2*t)-2*math.cos(3*t)-math.cos(4*t))*.007) for t in [2*math.pi*i/48 for i in range(48)]]
+        return [(math.sin(t)**3*.105,(13*math.cos(t)-5*math.cos(2*t)-2*math.cos(3*t)-math.cos(4*t))*.007) for t in [2*math.pi*i/32 for i in range(32)]]
     return [(-.092,.078),(0,.112),(.092,.078),(.082,-.032),(0,-.115),(-.082,-.032)]
 
-def bottle(item,stat,permanent,colour,out):
-    bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
-    glaze=mat('Glazed ceramic '+colour,colour,.29)
-    edge=mat('Foot and neck ceramic',colour,.38)
-    brass=mat('Warm aged brass','#cbb078',.34,.6)
-    cork=mat('Natural cork','#91704b',.88)
-    dark=mat('Dark leather label','#343631',.82)
-    ink=mat('Ivory stat relief','#eee3bd',.42)
-    if permanent:
-        rings=[(0,.155,.12),(.025,.193,.146),(.055,.207,.152),(.55,.207,.152),(.59,.19,.144),(.665,.10,.092),(.737,.10,.092)]
-        bodypower=3.6
-        bottom=[(.02,.196,.148),(.034,.216,.160),(.065,.216,.160),(.08,.205,.153)]
-        label_z=.31; label_y=-.159
-    else:
-        rings=[(0,.205,.15),(.024,.252,.171),(.065,.263,.178),(.105,.256,.174),(.565,.105,.090),(.615,.082,.078),(.735,.082,.078)]
-        bodypower=2.8
-        bottom=[(.019,.245,.168),(.034,.266,.181),(.065,.270,.184),(.085,.262,.180)]
-        label_z=.285; label_y=-.149
-    profile('Bottle body',rings,glaze,bodypower)
-    profile('Protective foot ring',bottom,brass,bodypower)
-    r=.109 if permanent else .091
-    profile('Rolled neck lip',[(.708,r,.095),(.721,r+.012,.106),(.739,r+.012,.106),(.749,r,.095)],brass)
-    profile('Stopper',[(.734,r-.01,.080),(.785,r-.006,.084),(.800,r-.017,.077)],cork,2.0,20,.003)
-    if permanent:
-        profile('Permanent seal collar',[(.664,.112,.101),(.675,.123,.112),(.692,.123,.112),(.704,.112,.101)],brass,2,24)
-        # A closed metal clasp connects the collar to the stopper.
-        relief('Seal clasp',[(-.029,.68),(.029,.68),(.029,.785),(-.029,.785)],-.11,.03,brass,.004)
-    else:
-        # A simple opaque rope winding distinguishes a reusable corked tonic.
-        profile('Cord lower',[(.646,.087,.083),(.651,.092,.088),(.660,.092,.088),(.664,.087,.083)],cork,2,24,.002)
-        profile('Cord upper',[(.667,.087,.083),(.672,.092,.088),(.681,.092,.088),(.685,.087,.083)],cork,2,24,.002)
-    # The framed front plate follows the existing icon's large stat symbol.
-    # Small flanges bed it into the curved body instead of floating a label.
-    frame=[(-.134,label_z-.136),(-.118,label_z-.155),(.118,label_z-.155),(.134,label_z-.136),(.134,label_z+.133),(.118,label_z+.151),(-.118,label_z+.151),(-.134,label_z+.133)]
-    relief('Brass label frame',frame,label_y,.047,brass,.008)
-    panel=[(x*.9,label_z+(z-label_z)*.9) for x,z in frame]
-    relief('Inlaid leather plate',panel,label_y-.004,.012,dark,.004)
-    points=[(x,label_z+z) for x,z in symbol(stat)]
-    relief('Stat '+stat,points,label_y-.012,.012,ink,.002)
-    if stat=='defence':
-        # Central inset makes this an armour plate, matching the UI glyph.
-        relief('Armour plate inset',[(x*.54,label_z+(z-label_z)*.54) for x,z in points],label_y-.014,.003,dark,.002)
-    # Matching reverse face keeps the stat readable from opposing approaches.
-    front=[o for o in bpy.context.scene.objects if o.name.startswith(('Brass label','Inlaid leather','Stat ','Armour plate'))]
-    if not permanent:
-        # Seat the plate along the flask's taper instead of burying its base
-        # or floating the upper edge in front of the narrow shoulder.
-        for obj in front:
-            for v in obj.data.vertices:
-                v.co.y += .19*(v.co.z-label_z)
-    for obj in front:
-        back=obj.copy();back.data=obj.data.copy();back.name=obj.name+' reverse'
-        bpy.context.collection.objects.link(back);back.rotation_euler.z=math.pi
-    # Consolidate the evaluated parts into one mesh with shared material
-    # surfaces, so trim pieces do not each cost a separate draw call.
-    for obj in list(bpy.context.scene.objects):
-        bpy.context.view_layer.objects.active=obj
-        for modifier in list(obj.modifiers):
-            bpy.ops.object.modifier_apply(modifier=modifier.name)
-    bpy.ops.object.select_all(action='SELECT')
-    bpy.context.view_layer.objects.active=bpy.context.scene.objects[0]
-    bpy.ops.object.join()
-    bpy.context.object.name=item
-    # Export evaluated geometry only; all materials are opaque PBR, no lights.
-    bpy.ops.object.select_all(action='SELECT')
-    bpy.ops.export_scene.gltf(filepath=str(out/f'{item}.glb'),export_format='GLB',use_selection=True,export_apply=True,export_yup=True,export_texcoords=True,export_normals=True,export_materials='EXPORT',export_cameras=False,export_lights=False)
-    print('DRAUGHT',item,'objects',len(bpy.context.scene.objects))
+def export(objects, path):
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in objects:obj.select_set(True)
+    bpy.context.view_layer.objects.active=objects[0]
+    bpy.ops.export_scene.gltf(filepath=str(path),export_format='GLB',use_selection=True,export_yup=True,export_normals=True,export_cameras=False,export_lights=False)
+
+def prepare(source,out):
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    bpy.ops.import_scene.gltf(filepath=str(source))
+    objects=[o for o in bpy.context.scene.objects if o.type=='MESH']
+    points=[o.matrix_world@v.co for o in objects for v in o.data.vertices]
+    lo=Vector(tuple(min(p[i] for p in points) for i in range(3)))
+    hi=Vector(tuple(max(p[i] for p in points) for i in range(3)))
+    center=Vector(((hi.x+lo.x)/2,(hi.y+lo.y)/2,lo.z));scale=.8/(hi.z-lo.z)
+    for obj in objects:
+        for v in obj.data.vertices:v.co=(obj.matrix_world@v.co-center)*scale
+        obj.matrix_world.identity()
+        # Weld seam duplicates while retaining per-loop UVs.
+        bm=bmesh.new();bm.from_mesh(obj.data)
+        bmesh.ops.remove_doubles(bm,verts=list(bm.verts),dist=.000001)
+        bm.to_mesh(obj.data);bm.free();obj.data.update()
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in objects:obj.select_set(True)
+    bpy.context.view_layer.objects.active=objects[0];bpy.ops.object.join()
+    bottle=bpy.context.object;bottle.name='Shared Meshy bottle'
+    bpy.context.view_layer.update();export([bottle],out/'bottle_base.glb')
+    return bottle
+
+def fitted_point(bottle,x,z,front,depth):
+    direction=1 if front else -1
+    hit,at,_,_=bottle.ray_cast(Vector((x,-2*direction,z)),Vector((0,direction,0)))
+    if not hit:raise RuntimeError(f'Badge misses bottle at {x},{z}')
+    return (x,at.y-direction*depth,z)
+
+def disc(bottle,mat,front,radius,depth,name,inner=0):
+    # Subdivision conforms to the modeled leather face's gentle curvature.
+    n=48;rings=3;verts=[];scale=1 if front else .70
+    for k in range(rings+1):
+        r=inner+(radius-inner)*k/rings
+        for j in range(n):
+            a=2*math.pi*j/n
+            verts.append(fitted_point(bottle,math.cos(a)*r*scale,.33+math.sin(a)*r*scale*1.10,front,depth))
+    faces=[]
+    for k in range(rings):
+        for j in range(n):
+            a=k*n+j;b=k*n+(j+1)%n
+            # Angular-then-radial ordering faces +Y; the front faces -Y.
+            face=(a,b,b+n,a+n);faces.append(tuple(reversed(face)) if front else face)
+    obj=mesh(name,verts,faces,mat)
+    for polygon in obj.data.polygons:polygon.use_smooth=True
+    return obj
+
+def relief(bottle,points,mat,front,name,depth=.009):
+    factor=.48 if front else .48*.70
+    points=[(x*factor,.33+z*factor) for x,z in points]
+    area=sum(a[0]*b[1]-b[0]*a[1] for a,b in zip(points,points[1:]+points[:1]))
+    if area<0:points.reverse()
+    n=len(points)
+    verts=[fitted_point(bottle,x,z,front,d) for d in (depth,depth-.0015) for x,z in points]
+    faces=[tuple(range(n)),tuple(reversed(range(n,2*n)))]
+    faces += [(j,(j+1)%n,(j+1)%n+n,j+n) for j in range(n)]
+    if not front:faces=[tuple(reversed(f)) for f in faces]
+    return mesh(name,verts,faces,mat)
+
+def badge(bottle,item,stat,permanent,colour,out):
+    enamel=material('Enamel '+item,colour,.62)
+    ivory=material('Ivory inlay','#ead8aa',.48)
+    gold=material('Brass badge rim','#b49a60',.46)
+    parts=[]
+    for front in (True,False):
+        parts.append(disc(bottle,enamel,front,.066,.006,'Fitted enamel'))
+        if not front:parts.append(disc(bottle,gold,front,.071,.0065,'Reverse rim',.065))
+        points=symbol(stat)
+        if permanent:points=[(x*.88,z*.88-.016) for x,z in points]
+        parts.append(relief(bottle,points,ivory,front,'Stat '+stat))
+        if stat=='defence':
+            inset=[(x*.52,z*.52) for x,z in symbol(stat)]
+            if permanent:inset=[(x*.88,z*.88-.016) for x,z in inset]
+            parts.append(relief(bottle,inset,enamel,front,'Armour inset',.011))
+        if permanent:
+            for x in (-.051,0,.051):
+                diamond=[(x-.01,.105),(x,.115),(x+.01,.105),(x,.095)]
+                parts.append(relief(bottle,diamond,gold,front,'Permanent seal pip'))
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in parts:obj.select_set(True)
+    bpy.context.view_layer.objects.active=parts[0];bpy.ops.object.join()
+    joined=bpy.context.object;joined.name=item+' badge'
+    export([joined],out/f'{item}_badge.glb');bpy.data.objects.remove(joined,do_unlink=True)
+    (out/f'{item}.tscn').write_text(f'''[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/props/stat_draughts/bottle_base.glb" id="1"]
+[ext_resource type="PackedScene" path="res://assets/props/stat_draughts/{item}_badge.glb" id="2"]
+
+[node name="{item}" type="Node3D"]
+
+[node name="Bottle" parent="." instance=ExtResource("1")]
+
+[node name="Badge" parent="." instance=ExtResource("2")]
+''')
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True)
-    args=p.parse_args(sys.argv[sys.argv.index('--')+1:]);args.output.mkdir(parents=True,exist_ok=True)
-    for item,(stat,permanent,colour) in SPECS.items(): bottle(item,stat,permanent,colour,args.output)
+    parser=argparse.ArgumentParser();parser.add_argument('--output',type=Path,required=True);parser.add_argument('--source',type=Path)
+    args=parser.parse_args(sys.argv[sys.argv.index('--')+1:]);args.output.mkdir(parents=True,exist_ok=True)
+    bottle=prepare(args.source or args.output/'bottle_base.glb',args.output)
+    for item,(stat,permanent,colour) in SPECS.items():badge(bottle,item,stat,permanent,colour,args.output)

@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dign8x73yckih"
-path="res://.godot/imported/elixir_guard.glb-137d105560372c21bed1e00511192d1c.scn"
+uid="uid://cruenf4ixd6oo"
+path="res://.godot/imported/bottle_base.glb-f15452cb4fc1fa64651c6bd3b8a2a246.scn"
 
 [deps]
 
-source_file="res://assets/props/stat_draughts/elixir_guard.glb"
-dest_files=["res://.godot/imported/elixir_guard.glb-137d105560372c21bed1e00511192d1c.scn"]
+source_file="res://assets/props/stat_draughts/bottle_base.glb"
+dest_files=["res://.godot/imported/bottle_base.glb-f15452cb4fc1fa64651c6bd3b8a2a246.scn"]
 
 [params]
 

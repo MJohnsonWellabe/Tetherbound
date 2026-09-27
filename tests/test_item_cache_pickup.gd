@@ -28,6 +28,8 @@ extends "res://tests/test_case.gd"
 
 const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const GLOW := preload("res://scripts/world/pickup_glow.gd")
+const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 const MODEL_PATH := "res://assets/props/quaternius_fantasy/Barrel.gltf"
 
@@ -42,6 +44,13 @@ const MODEL_PATH := "res://assets/props/quaternius_fantasy/Barrel.gltf"
 class FakeCacheGame:
 	extends Node
 	var progression: RefCounted = PROGRESSION_STATE.new()
+
+
+## Exercise the real glow registry without allocating its rendering layers.
+class RegistryOnlyGlow:
+	extends "res://scripts/world/pickup_glow.gd"
+	func _ready() -> void:
+		set_process(false)
 
 
 func _walk(node: Node) -> Array[Node]:
@@ -187,3 +196,99 @@ func test_every_cache_placement_names_a_model_that_actually_exists() -> void:
 	var start := at + marker.length()
 	var path := text.substr(start, text.find("\"", start) - start)
 	assert_true(ResourceLoader.exists(path), "CACHE_MODEL names '%s', which does not exist" % path)
+
+
+func _offset_fixture() -> Dictionary:
+	var tree := Engine.get_main_loop() as SceneTree
+	var previous := tree.current_scene
+	var world := Node3D.new()
+	tree.root.add_child(world)
+	tree.current_scene = world
+	var field := RegistryOnlyGlow.new()
+	field.name = GLOW.FIELD_NAME
+	world.add_child(field)
+	var pickup := ITEM_CACHE_PICKUP.new()
+	world.add_child(pickup)
+	pickup.position = Vector3(10.0, 0.35, 20.0)
+	pickup.setup("elixir_might", "Take it", MODEL_PATH, 0.8, "offset_fixture", "stormwood", 3)
+	# A known 0.8m, ground-origin model at scale 0.8 isolates transform math
+	# from the production bottle asset, which may be replaced independently.
+	(pickup.get("_visual") as Node3D).free()
+	var visual := Node3D.new()
+	visual.scale = Vector3.ONE * 0.8
+	var mesh := MeshInstance3D.new()
+	var box := BoxMesh.new()
+	box.size = Vector3(0.4, 0.8, 0.3)
+	mesh.mesh = box
+	mesh.position.y = 0.4
+	visual.add_child(mesh)
+	pickup.add_child(visual)
+	pickup.set("_visual", visual)
+	return {"tree": tree, "previous": previous, "world": world,
+		"pickup": pickup, "visual": visual, "field": field}
+
+
+func _free_offset_fixture(fixture: Dictionary) -> void:
+	(fixture.world as Node).free()
+	(fixture.tree as SceneTree).current_scene = fixture.previous
+
+
+func test_visual_offset_keeps_root_prompt_and_claim_while_grounding_one_glow() -> void:
+	var fixture := _offset_fixture()
+	var pickup: Node3D = fixture.pickup
+	var visual: Node3D = fixture.visual
+	var field: Node3D = fixture.field
+	var prompt := pickup.get_node("Interactable") as Node3D
+	var root_transform := pickup.global_transform
+	var prompt_transform := prompt.global_transform
+	var key := str(pickup.call("_key"))
+	assert_eq(field.call("highlight_count"), 1)
+	pickup.call("set_visual_offset", Vector3(0.0, -0.35, 0.0))
+	var anchor := visual.get_parent() as Node3D
+	assert_eq(pickup.get("_visual"), visual, "bounds callers retain the same visual")
+	assert_eq(anchor.scale, Vector3.ONE, "glow measures the model's scale exactly once")
+	assert_eq(visual.scale, Vector3.ONE * 0.8)
+	assert_eq(pickup.global_transform, root_transform)
+	assert_eq(prompt.global_transform, prompt_transform)
+	assert_eq(float(prompt.get("radius")), 2.4)
+	assert_eq(str(pickup.call("_key")), key)
+	assert_eq(int(pickup.get("_count")), 3)
+	var bounds := BOUNDS.measure(anchor)
+	assert_true(absf(bounds.size.y - 0.64) < 0.00001)
+	assert_true(absf((anchor.global_transform * bounds.position).y) < 0.00001,
+		"rendered bottle base must reach ground while claim root stays at 0.35m")
+	# Reward beams stay siblings of presentation, never part of item bounds.
+	var beam := MeshInstance3D.new()
+	var beam_mesh := BoxMesh.new()
+	beam_mesh.size = Vector3(1.0, 34.0, 1.0)
+	beam.mesh = beam_mesh
+	beam.position.y = 17.0
+	pickup.add_child(beam)
+	var glow_height := GLOW.prop_glow_height(anchor, 0.28)
+	assert_true(absf(glow_height - 0.352) < 0.00001,
+		"glow belongs to scaled bottle, not elevated root or 34m reward beam")
+	var positions: Array = field.call("highlight_positions")
+	assert_eq(positions.size(), 1)
+	assert_true((positions[0] as Vector3).is_equal_approx(Vector3(10.0, 0.0, 20.0)))
+	# Repeated corrections must reuse the anchor/registration, not accumulate.
+	pickup.call("set_visual_offset", Vector3(0.0, -0.25, 0.0))
+	assert_eq(visual.get_parent(), anchor)
+	assert_eq(field.call("highlight_count"), 1)
+	positions = field.call("highlight_positions")
+	assert_true(absf((positions[0] as Vector3).y - 0.1) < 0.00001)
+	assert_eq(pickup.global_transform, root_transform)
+	pickup.call("_deactivate")
+	assert_eq(field.call("highlight_count"), 0, "claim removal immediately unregisters anchored glow")
+	assert_false(bool(prompt.get("enabled")))
+	_free_offset_fixture(fixture)
+
+
+func test_freeing_offset_pickup_unregisters_glow_without_a_claim() -> void:
+	var fixture := _offset_fixture()
+	var pickup: Node3D = fixture.pickup
+	var field: Node3D = fixture.field
+	pickup.call("set_visual_offset", Vector3(0.0, -0.35, 0.0))
+	assert_eq(field.call("highlight_count"), 1)
+	pickup.free()
+	assert_eq(field.call("highlight_count"), 0, "residency removal must not leave a registered emitter")
+	_free_offset_fixture(fixture)

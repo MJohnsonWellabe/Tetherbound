@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cg0n302pnl6q4"
-path="res://.godot/imported/elixir_might.glb-dcf67521f6095ec4d14eef53e58e8f98.scn"
+uid="uid://crmynvuxdu0e"
+path="res://.godot/imported/elixir_vigour_badge.glb-ce4b9840e6efdfafafe66457b9e0bd1a.scn"
 
 [deps]
 
-source_file="res://assets/props/stat_draughts/elixir_might.glb"
-dest_files=["res://.godot/imported/elixir_might.glb-dcf67521f6095ec4d14eef53e58e8f98.scn"]
+source_file="res://assets/props/stat_draughts/elixir_vigour_badge.glb"
+dest_files=["res://.godot/imported/elixir_vigour_badge.glb-ce4b9840e6efdfafafe66457b9e0bd1a.scn"]
 
 [params]
 

@@ -134,10 +134,17 @@ func _mount_pickup(spec: Dictionary) -> void:
 	var presentation := presentation_for(item_id, definition)
 	var pocket := _pocket_rewards().get(id, {}) as Dictionary
 	var beacon: Dictionary = POCKETS.config().get("reward_beacon", {}) if not pocket.is_empty() else {}
-	var scale := float(presentation.get("scale", 1.0)) * float(beacon.get("model_scale_mul", 1.0))
+	var reward_scale := float(definition.get("world_model_reward_scale", beacon.get("model_scale_mul", 1.0)))
+	var scale := float(presentation.get("scale", 1.0)) * reward_scale
 	pickup.setup(item_id, "Take " + str(definition.get("name", item_id)),
 		str(presentation.get("model", "")), scale,
 		id, REALM_ID, int(spec.get("count", 1)))
+	# Some authored pickup anchors include a 0.35m display offset. Grounded
+	# props opt out visually without moving their identity/interaction anchor.
+	if bool(definition.get("world_model_grounded", false)) and world.has_method("ground_height_at"):
+		var ground := float(world.call("ground_height_at", pickup.global_position.x, pickup.global_position.z))
+		if is_finite(ground):
+			pickup.set_visual_offset(Vector3(0.0, ground - pickup.global_position.y, 0.0))
 	if not beacon.is_empty() and world.get("simulation_only") != true:
 		_reward_beacon(pickup, beacon, pocket)
 	_placements[id] = pickup

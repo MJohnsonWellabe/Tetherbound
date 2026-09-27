@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c5wu0q2q80avu"
-path="res://.godot/imported/swift_tonic.glb-f81cb7e948fcef5207219c642e7adcdd.scn"
+uid="uid://cuf73a2phhms3"
+path="res://.godot/imported/attack_tonic_badge.glb-09d55df30a738c1cb28bafc49f80d7ac.scn"
 
 [deps]
 
-source_file="res://assets/props/stat_draughts/swift_tonic.glb"
-dest_files=["res://.godot/imported/swift_tonic.glb-f81cb7e948fcef5207219c642e7adcdd.scn"]
+source_file="res://assets/props/stat_draughts/attack_tonic_badge.glb"
+dest_files=["res://.godot/imported/attack_tonic_badge.glb-09d55df30a738c1cb28bafc49f80d7ac.scn"]
 
 [params]
 

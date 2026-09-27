@@ -1,0 +1,30 @@
+{
+  "task_id": "01a0e076-a807-73f5-9c96-b1fba0d4c41e",
+  "prompt": "One complete stylized fantasy potion bottle matching reference: sea-green glass, rounded hexagonal body, short neck and cork, aged brass lip and heel, dark leather band with fitted round blank brass badge bezel. Opaque hand-painted PBR finish. Closed base, no pedestal, no loose parts, no symbols or text. Preserve all reference proportions and material separation.",
+  "negative_prompt": "text, letters, symbols, floating parts, pedestal, transparent glass, glow, red, extra bottles, detached cork, spikes, weapons",
+  "balance_before": {
+    "balance": 13695
+  },
+  "target_polycount": 10000,
+  "reference": "assets/props/stat_draughts/reference/bottle.png",
+  "status": "SUCCEEDED",
+  "created_at": 1790472268783,
+  "finished_at": 1790472346408,
+  "balance_after": {
+    "balance": 13665
+  },
+  "service": "Meshy",
+  "endpoint": "/openapi/v1/multi-image-to-3d",
+  "credits_used": 30,
+  "candidates": 1,
+  "reference_generator": "OpenAI imagegen; agent-drafted reference, visually inspected before submission",
+  "source_height_m": 0.8,
+  "world_scale": 0.8,
+  "world_height_m": 0.64,
+  "source_triangles": 9858,
+  "processing": "Normalize origin and height, weld coincident position vertices preserving corner UVs, preserve texture/material; fit colored stat badges on front and back. One shared bottle base across six composition scenes.",
+  "badge_authoring": "tools/art_pipeline/author_stat_draught_models.py",
+  "reference_sha256": "015bc3f00f0237fccb6db738221236fe9a178ffeb95f9b8d745dfd2393ff5411",
+  "raw_meshy_glb_sha256": "8595a2a1dd66e3bd15e41796903f7709be98b432e20ba3f2e4e30fd097fac04a",
+  "reference_prompt": "Create one polished game-asset concept reference for a single collectible fantasy potion bottle for Tetherbound, a warm stylized creature-adventure RPG. This will be the image-to-3D reference for Meshy, so show exactly ONE complete upright bottle, isolated on a plain light gray background, full object including bottom, centered, three-quarter front view with front nearly square to camera. No grid, no other views, no text, no symbols, no ingredients, no pedestal, no detached parts. Design: a squat rounded hexagonal glass vessel with gently bulging sides and smoothly curved shoulders, narrow short neck, a fitted natural cork stopper, an aged warm brass rolled lip and small protective brass heel ring. Bottle body is opaque-looking hand-painted desaturated sea-green glass with rich but restrained tonal variation, a deeper teal lower body, softly luminous-looking turquoise edges rendered by paint and lighting rather than actual glow or transparency; no see-through background, no bloom. Around the lower-middle body is a beautifully fitted dark brown leather band with subtle edge stitching, a shallow circular warm-brass badge bezel integrated tightly into the FRONT of the band; the bezel's circular center is blank dark leather, ready for a different stat emblem to be added in 3D later. Badge occupies approximately one third of body width, not a billboard. Craftsmanship: curved and softened edges, fine controlled cork grain, restrained leather grain, slight brass patina, appealing sturdy handmade proportions, readable large forms, excellent material separation. Art style: high-quality hand-painted stylized PBR fantasy prop, polished enough to sit beside detailed adventure characters, not low-poly primitive/blockout, not photorealistic and not toy plastic. Soft studio key from upper left and gentle fill show surface shape without harsh glossy white streaks. Bottle should feel like a memorable usable adventurer's item. Do not add red, skulls, wings, spikes, runes or words."
+}

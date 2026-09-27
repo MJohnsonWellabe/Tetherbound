@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://pe551qv4d5lj"
-path="res://.godot/imported/attack_tonic.glb-703a0b05d9b213db712e0970fa8e341d.scn"
+uid="uid://ceyg8pwsm8iiq"
+path="res://.godot/imported/elixir_guard_badge.glb-d92551488a3dbd1d6322a4da4d4389fb.scn"
 
 [deps]
 
-source_file="res://assets/props/stat_draughts/attack_tonic.glb"
-dest_files=["res://.godot/imported/attack_tonic.glb-703a0b05d9b213db712e0970fa8e341d.scn"]
+source_file="res://assets/props/stat_draughts/elixir_guard_badge.glb"
+dest_files=["res://.godot/imported/elixir_guard_badge.glb-d92551488a3dbd1d6322a4da4d4389fb.scn"]
 
 [params]
 

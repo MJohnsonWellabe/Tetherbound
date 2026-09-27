@@ -54,6 +54,7 @@ var _realm_id := "meadows"
 var _count := 1
 var _taken := false
 var _visual: Node3D = null
+var _presentation_anchor: Node3D = null
 var _prompt: Node3D = null
 ## True between submitting a `claim_pickup` and hearing back. It is what tells
 ## "MY claim committed" from "somebody else's did" when the delta lands on both
@@ -118,9 +119,32 @@ func _deactivate() -> void:
 	_taken = true
 	if _prompt != null and is_instance_valid(_prompt):
 		_prompt.call("set_enabled", false)
-	PICKUP_GLOW.detach(self)
+	_detach_visual_glow()
 	visible = false
 	queue_free()
+
+
+## Move presentation without moving the authored claim/interaction anchor.
+## The unscaled emitter measures only the scaled item, excluding reward beams.
+func set_visual_offset(offset: Vector3) -> void:
+	if _visual == null or _taken or not offset.is_finite():
+		return
+	if _presentation_anchor == null:
+		PICKUP_GLOW.detach(self)
+		_presentation_anchor = Node3D.new()
+		_presentation_anchor.name = "PickupPresentation"
+		add_child(_presentation_anchor)
+		_visual.reparent(_presentation_anchor, false)
+		_presentation_anchor.tree_exiting.connect(_detach_visual_glow)
+	_presentation_anchor.position = offset
+	# Re-registering also marks the shared field dirty after a later offset.
+	PICKUP_GLOW.attach(_presentation_anchor, _item_colour())
+
+
+func _detach_visual_glow() -> void:
+	PICKUP_GLOW.detach(self)
+	if is_instance_valid(_presentation_anchor) and _presentation_anchor.is_inside_tree():
+		PICKUP_GLOW.detach(_presentation_anchor)
 
 
 ## The find's own colour, from `data/items/items.json` -- the same source
@@ -273,3 +297,5 @@ func _listen_for_refusals() -> void:
 func _ready() -> void:
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
 	_listen_for_refusals()
+	if _presentation_anchor != null and not _taken:
+		PICKUP_GLOW.attach(_presentation_anchor, _item_colour())

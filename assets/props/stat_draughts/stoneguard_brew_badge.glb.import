@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bk8lek8sv7e7k"
-path="res://.godot/imported/stoneguard_brew.glb-d9b8b2691594c8907d6e49166ab55b47.scn"
+uid="uid://deh2875aaeu43"
+path="res://.godot/imported/stoneguard_brew_badge.glb-046dce9b1e9f4c13d8057123e86a8b55.scn"
 
 [deps]
 
-source_file="res://assets/props/stat_draughts/stoneguard_brew.glb"
-dest_files=["res://.godot/imported/stoneguard_brew.glb-d9b8b2691594c8907d6e49166ab55b47.scn"]
+source_file="res://assets/props/stat_draughts/stoneguard_brew_badge.glb"
+dest_files=["res://.godot/imported/stoneguard_brew_badge.glb-046dce9b1e9f4c13d8057123e86a8b55.scn"]
 
 [params]
 

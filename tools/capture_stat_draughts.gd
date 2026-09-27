@@ -59,9 +59,43 @@ func _run_roster() -> void:
 				await process_frame
 
 func _build_rows(_spec: Dictionary) -> Array:
+	if _region == "tidewake":
+		return [
+			{"id": "attack_tonic", "label": "First Shore authored Attack", "stands": [Vector3(94, NAN, 137)], "target": Vector3(94, NAN, 162), "target_ground": 1.8, "times": ["day", "night"]},
+			{"id": "swift_tonic", "label": "First Shore authored Swift", "stands": [Vector3(172, NAN, -7)], "target": Vector3(172, NAN, 18), "target_ground": 1.8, "times": ["day", "night"]}
+		]
+	if _region == "stormwood":
+		return [
+			{"id": "swift_tonic", "label": "Stormwood pocket 178", "stands": [Vector3(-128, 98.79, 5235)], "target": Vector3(-128, 100.0, 5260), "times": ["break"]},
+			{"id": "stoneguard_brew", "label": "Stormwood enlarged pocket 188", "stands": [Vector3(-453.03, 80.22, 5251.82)], "target": Vector3(-453.03, 82.0, 5277.82), "times": ["break"]}
+		]
 	return [
 		{"id": "stoneguard_brew", "label": "Authored Stoneguard Brew", "stands": [Vector3(-347, NAN, 2584)], "target": Vector3(-347, NAN, 2610), "target_ground": 1.8, "times": ["day", "night"]},
 		{"id": "attack_tonic", "label": "Authored Attack Tonic", "stands": [Vector3(198, NAN, 3687)], "target": Vector3(198, NAN, 3713), "target_ground": 1.8, "times": ["day", "night"]},
 		{"id": "swift_tonic", "label": "Authored Swift Tonic", "stands": [Vector3(153, NAN, 5604)], "target": Vector3(153, NAN, 5630), "target_ground": 1.8, "times": ["day", "night"]},
 		{"id": "elixir_might", "label": "Authored Might cache", "stands": [Vector3(-167, NAN, 7064)], "target": Vector3(-167, NAN, 7090), "target_ground": 1.8, "times": ["day", "night"]}
 	]
+
+func _shoot(name: String, info: Dictionary) -> void:
+	info["viewport"] = [root.size.x, root.size.y]
+	info["proof"] = "DRY RUN — does not count"
+	if root.size != Vector2i(1920, 1080):
+		_skip(name, "viewport changed from native 1920x1080")
+		return
+	if _section == "region":
+		var contacts: Array = []
+		for node: Node in get_nodes_in_group("progression_restore"):
+			if not (node is CACHE or node is HARVEST):
+				continue
+			if str(node.get("_item_id")) != str(info.get("subject", "")):
+				continue
+			var body := node as Node3D
+			if body.global_position.distance_to(_player.global_position) > 8.0:
+				continue
+			var visual := body.get("_visual") as Node3D
+			if visual != null:
+				var box := visual.global_transform * RENDER_BOUNDS.measure(visual)
+				var ground := _ground_guess(body.global_position.x, body.global_position.z, body.global_position.y)
+				contacts.append({"node": str(body.get_path()), "anchor": _v(body.global_position), "base_y": box.position.y, "ground_y": ground, "height_m": box.size.y, "ground_gap_m": box.position.y - ground})
+		info["pickup_contacts"] = contacts
+	await super._shoot(name, info)

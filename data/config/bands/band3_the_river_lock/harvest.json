@@ -199,7 +199,7 @@
       "amount": 1,
       "label": "A stashed tonic",
       "at": [200.0, 3688.0],
-      "model": "res://assets/props/stat_draughts/attack_tonic.glb",
+      "model": "res://assets/props/stat_draughts/attack_tonic.tscn",
       "model_scale": 0.8,
       "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: 'found in world / merchants' -- attack_tonic/swift_tonic/stoneguard_brew (items.json's own TEMPORARY tonic trio) were shop-only at Mira's (trade.json) before this pass, with no world presence at all. Beside the riverwatch_rest staging camp (props.json order 3000, centre (211,3700)) -- the one authored recovery/staging point before the Relay's own gauntlet, matching the coordinator's own guidance that a temporary tonic suits a cache near where a fight is about to go badly."
     },

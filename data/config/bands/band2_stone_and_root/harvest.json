@@ -326,7 +326,7 @@
       "amount": 1,
       "label": "A stashed tonic",
       "at": [-345.0, 2585.0],
-      "model": "res://assets/props/stat_draughts/stoneguard_brew.glb",
+      "model": "res://assets/props/stat_draughts/stoneguard_brew.tscn",
       "model_scale": 0.8,
       "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: stoneguard_brew was shop-only at Mira's before this pass, no world presence. Just outside the Burrow Warrens mouth (burrow_warrens.json site.at (-357,2610)) -- a defence tonic where a player braces before the Guardian, matching the coordinator's own guidance that a temporary tonic suits a cache near where a fight is about to go badly."
     },
