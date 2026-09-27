@@ -1,0 +1,175 @@
+{
+  "accelerated": true,
+  "card": "C1",
+  "combat_mode": "live_input",
+  "distance_m": 19101.349726604,
+  "exhausted_fall": {
+    "anchor": "(1110.239, 1050.131, 2950.534)",
+    "controller_safe_anchor": "(1110.239, 1050.131, 2950.534)",
+    "drop_below_anchor_m": 99.9150390625,
+    "end": "(1110.249, 1050.131, 2950.533)",
+    "end_distance_to_anchor_m": 0.00981433130800724,
+    "exhausted_after_frames": 3853,
+    "exhausted_at": "(1047.263, 1086.0, 2961.813)",
+    "exhaustion_cause": "stamina",
+    "flight_seconds_at_exhaustion": 64.3999999999976,
+    "floor_path": "/root/CloudreachCliffs/Landmarks/SkyShrineHeartstone/LandmarkLedge/Collision",
+    "flying_after": false,
+    "hover_frames": 3853,
+    "landed_elsewhere": false,
+    "launch_blocker_at_landing": {
+      "at": "(1110.239, 1050.131, 2950.534)",
+      "clear": true,
+      "overlapping": []
+    },
+    "lowest_y_before_recovery": 950.215698242188,
+    "on_floor": true,
+    "party_size": 5,
+    "recovered_after_frames": 928,
+    "recovered_at": "(1110.239, 1050.21, 2950.534)",
+    "recovery_drop_m": 100.0,
+    "recovery_reasons": [
+      "The wind carried you back to your last safe landing."
+    ],
+    "stamina_at_exhaustion": 0.0,
+    "state_before_recovery": "exhausted"
+  },
+  "exhausted_rows": 1,
+  "failure": [],
+  "fly_launches": 6,
+  "loaner_violations": [],
+  "owned_carrier_fly": "OPEN DEBT: no starter path gives a flier (opening.json starters terrapup/ripplet/galewisp; only galecrest has a fly_traversal carry capability, and galewisp has none). The earned five (ripplet, bramblebun, mudsnout x2, veridian) have no carrier, so every flight is Maela's loaner. A wild galecrest is catchable in Meadows band 1; an earned save that caught one would close this.",
+  "passed": true,
+  "post_chapter_probe": {
+    "after_disk_reload": true,
+    "chapter_complete": true,
+    "eligible_carrier": false,
+    "ends_at_flag": "cloudreach_chapter_complete",
+    "flying_after_double_jump": false,
+    "loaner_used": false,
+    "party_size": 5,
+    "position": "(-413.9773, 1111.073, 5642.472)"
+  },
+  "pre_voss_overfly_recoveries": 1,
+  "region_order": [
+    "gate_lower_cliffs",
+    "broken_causeways",
+    "windscar_ravine",
+    "upper_cloudreach",
+    "high_roost_sky_shrine",
+    "summit_final_stronghold"
+  ],
+  "regions": [
+    {
+      "access_mode": "ground",
+      "frames": {
+        "air": 3,
+        "fly": 0,
+        "foot": 18976
+      },
+      "passed": true,
+      "region": "gate_lower_cliffs"
+    },
+    {
+      "access_mode": "ground",
+      "frames": {
+        "air": 0,
+        "fly": 0,
+        "foot": 23287
+      },
+      "passed": true,
+      "region": "broken_causeways"
+    },
+    {
+      "access_mode": "ground",
+      "frames": {
+        "air": 93,
+        "fly": 7837,
+        "foot": 57801
+      },
+      "passed": true,
+      "region": "windscar_ravine"
+    },
+    {
+      "access_mode": "fly_only",
+      "frames": {
+        "air": 51,
+        "fly": 8269,
+        "foot": 1682
+      },
+      "passed": true,
+      "region": "high_roost_sky_shrine"
+    },
+    {
+      "access_mode": "ground_after_unlock",
+      "frames": {
+        "air": 27,
+        "fly": 2836,
+        "foot": 42302
+      },
+      "passed": true,
+      "region": "upper_cloudreach"
+    },
+    {
+      "access_mode": "ground_after_unlock",
+      "frames": {
+        "air": 226,
+        "fly": 3215,
+        "foot": 47176
+      },
+      "passed": true,
+      "region": "summit_final_stronghold"
+    }
+  ],
+  "sealed_attempt": {
+    "climb_end_y": 770.281311035156,
+    "closest_gap_to_box_m": 0.750244140625,
+    "denials": [
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper."
+    ],
+    "end": "(439.5117, 724.8401, 3599.25)",
+    "frames_inside_sealed_box": 0,
+    "on_floor": false,
+    "refused_after_frames": 1415,
+    "still_flying": true,
+    "target": "(450.0, 700.0, 3750.0)"
+  },
+  "stage": "c1_stormwood_entry",
+  "start_state": "earned save res://tests/fixtures/earned_saves/c1_arrival",
+  "static_stall_sidesteps": [],
+  "stormwood": {
+    "arrival_position": "(-300.0, 32.27173, 180.0)",
+    "failures": [],
+    "gate_unlocked_after": true,
+    "gate_unlocked_before": false,
+    "key_before": true,
+    "key_retained": true,
+    "left_cloudreach": true,
+    "ok": true,
+    "party_keys_equal": true,
+    "party_size": 5,
+    "realm": "stormwood",
+    "scene": "Stormwood",
+    "species": [
+      "ripplet",
+      "bramblebun",
+      "mudsnout",
+      "mudsnout",
+      "veridian"
+    ]
+  },
+  "trial_escape": {
+    "directions_tried": [
+      "(0.0, 0.0, -1.0)"
+    ],
+    "end": "(426.1411, 641.0496, 3215.856)",
+    "from": "(417.3346, 627.3306, 3249.79)",
+    "inside_trial": true,
+    "loaner": true,
+    "refused": true,
+    "still_flying": true,
+    "trial_active": true
+  }
+}

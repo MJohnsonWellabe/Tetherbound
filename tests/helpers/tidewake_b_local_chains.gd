@@ -339,12 +339,13 @@ func _lastlight() -> String:
 	_check(game.world.flags.has(lead), "Lastlight: lead recorded")
 	if continuous:
 		# Gathered: reed patches on Veilfall (3) and Sluice Isle (3, swum to and
-		# back), driftwood from two Veilfall rows with the carried axe (3 + 3).
-		_check(await _gather_hand("water:veilfall:harvest:005"), "Lastlight: Veilfall reed gathered by walk + Interact")
+		# back) with the carried knife (Reed Fiber is gathered_with knife), driftwood
+		# from two Veilfall rows with the carried axe (3 + 3).
+		_check(await _mine_seam("water:veilfall:harvest:005"), "Lastlight: Veilfall reed cut with the carried knife by walk + Interact")
 		_check(await _mine_seam("water:veilfall:harvest:007"), "Lastlight: Veilfall driftwood 007 cut by walk + Interact")
 		_check(await _mine_seam("water:veilfall:harvest:011"), "Lastlight: Veilfall driftwood 011 cut by walk + Interact")
 		if game.inventory.count("reed_fiber") < 4:
-			_check(await _gather_hand("water:sluice_isle:harvest:012"), "Lastlight: Sluice Isle reed gathered by walk + Interact")
+			_check(await _mine_seam("water:sluice_isle:harvest:012"), "Lastlight: Sluice Isle reed cut with the carried knife by walk + Interact")
 		_check(game.inventory.count("driftwood") >= 4 and game.inventory.count("reed_fiber") >= 4,
 			"Lastlight: gathered 4+ driftwood and 4+ reed (%d, %d)" % [game.inventory.count("driftwood"), game.inventory.count("reed_fiber")])
 	else:
@@ -523,7 +524,12 @@ func _mine_seam(id: String) -> bool:
 		await _tree.physics_frame
 	if not _check(node != null, id + " resident on arrival"):
 		return false
-	var tool := str(row.get("gather_action", "pickaxe"))
+	# The harvest node asks ItemDB's gathered_with, not the row's gather_action
+	# label (Water reed rows say "hand" but Reed Fiber needs a knife).
+	var items: RefCounted = game.get("items")
+	var tool := str(items.call("gathered_with", str(row.get("item_id", "")))) if items != null else ""
+	if tool.is_empty():
+		tool = str(row.get("gather_action", "pickaxe"))
 	if str(game.equipped_tool) != tool:
 		await _tap(StringName("hotbar_%d" % (game.hotbar.find(tool) + 1)))
 		await _frames(20)

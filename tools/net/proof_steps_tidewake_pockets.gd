@@ -120,9 +120,18 @@ static func _claim(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if not tool.is_empty():
 		if int(game.inventory.count(tool)) < 1 or not bool(game.assign_hotbar(TOOL_SLOT, tool)):
 			return {"verdict": "ERROR", "detail": "no %s in the satchel to bind (storage_grant it first)" % tool, "data": _snapshot(tree, id)}
-		await _tap(tree, "hotbar_%d" % (TOOL_SLOT + 1))
-		for f in 20:
-			await tree.physics_frame
+		# Real hotbar input. The binding toggles, so an already-held tool is left
+		# alone; a tap swallowed while the post-teleport settle still owns input
+		# is retried once (two-peer proof at tb/tidewake-full: host or guest
+		# intermittently still held nothing after one tap and 20 frames).
+		for attempt in 2:
+			if str(game.equipped_tool) == tool:
+				break
+			await _tap(tree, "hotbar_%d" % (TOOL_SLOT + 1))
+			for f in 60:
+				await tree.physics_frame
+				if str(game.equipped_tool) == tool:
+					break
 		if str(game.equipped_tool) != tool:
 			return {"verdict": "FAIL", "detail": "hotbar press did not equip %s (holding '%s')" % [tool, str(game.equipped_tool)], "data": _snapshot(tree, id)}
 	var prompt := body.get_node_or_null(^"Interactable")

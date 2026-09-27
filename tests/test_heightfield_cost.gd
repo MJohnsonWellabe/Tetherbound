@@ -38,6 +38,14 @@ const MAX_COST_RATIO := 6.0
 
 const TIMED_SAMPLES := 400
 
+## The ratio is still two stopwatch readings, and a sibling process (a parallel
+## test shard, a CI neighbour) can steal the core during either one. So each
+## method is timed in ROUNDS interleaved batches, alternating which goes first,
+## and the fastest batch of each is compared. Interference only ever adds time,
+## so the minimum is the closest reading of the real cost on both sides; the
+## 6.0x bound itself is unchanged.
+const ROUNDS := 15
+
 
 func test_height_at_does_not_re_derive_the_pads_every_query() -> void:
 	var field: RefCounted = COUNTING.new()
@@ -84,15 +92,24 @@ func test_height_at_costs_only_a_small_multiple_of_the_noise_it_needs() -> void:
 	# 262,144-sample bake actually pays rather than the first call's setup.
 	field.call("height_at", 0.0, 0.0)
 	field.call("_raw_height", 0.0, 0.0)
+	_time_of(field, "height_at")
+	_time_of(field, "_raw_height")
 
-	var full := _time_of(field, "height_at")
-	var raw := _time_of(field, "_raw_height")
+	var full := INF
+	var raw := INF
+	for r in ROUNDS:
+		if r % 2 == 0:
+			full = minf(full, _time_of(field, "height_at"))
+			raw = minf(raw, _time_of(field, "_raw_height"))
+		else:
+			raw = minf(raw, _time_of(field, "_raw_height"))
+			full = minf(full, _time_of(field, "height_at"))
 	assert_true(raw > 0.0, "_raw_height should take measurable time")
 
 	var ratio := full / raw
 	assert_true(ratio < MAX_COST_RATIO,
-		"height_at costs %.1fx _raw_height (%.1f us vs %.1f us); above %.1fx it is re-deriving constants, not computing terrain" % [
-			ratio, full, raw, MAX_COST_RATIO])
+		"height_at costs %.1fx _raw_height (%.1f us vs %.1f us, fastest of %d interleaved rounds); above %.1fx it is re-deriving constants, not computing terrain" % [
+			ratio, full, raw, ROUNDS, MAX_COST_RATIO])
 
 
 ## Average microseconds per call over a spread of the map, so no single cheap

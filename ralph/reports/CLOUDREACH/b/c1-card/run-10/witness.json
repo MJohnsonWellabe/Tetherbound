@@ -1,0 +1,795 @@
+{
+  "accelerated": true,
+  "combat_mode": "live_input",
+  "counterweight_crown_seal": "active coverage: tests/test_cloudreach_counterweight_seal.gd (crown and stair boxes); watched per frame here",
+  "criterion": "F06#3",
+  "failure": [],
+  "final_party": [
+    "ripplet",
+    "bramblebun",
+    "mudsnout",
+    "mudsnout",
+    "veridian"
+  ],
+  "flight_frames": 23228,
+  "initial_party_keys": [
+    "creature-f4118d54a2317867246afbf1e8ea834f",
+    "creature-390db8e0de00cd1fcaaf1747203b0768",
+    "creature-c785f517af159966b72ca0f49f61d386",
+    "creature-8e12dace31044e591f02b96391ca2372",
+    "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+  ],
+  "launches": [
+    {
+      "fly_unlocked": false,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(400.071, 611.3936, 3248.44)",
+      "stage": "flight_trial_start",
+      "trial_active": true
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(399.7941, 611.3935, 3248.897)",
+      "stage": "witness_sealed_upper_attempt",
+      "trial_active": false
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(399.8238, 611.3935, 3250.024)",
+      "stage": "mandatory_high_roost_flight",
+      "trial_active": false
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(1110.239, 1051.393, 2950.534)",
+      "stage": "witness_exhausted_fall",
+      "trial_active": false
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(1110.249, 1051.393, 2950.533)",
+      "stage": "return_glide_to_grounded_counterweight",
+      "trial_active": false
+    },
+    {
+      "fly_unlocked": true,
+      "loaner": true,
+      "party_size": 5,
+      "position": "(435.687, 921.2935, 4503.026)",
+      "stage": "witness_pre_voss_overfly",
+      "trial_active": false
+    }
+  ],
+  "leg": "",
+  "leg_persistence": {},
+  "loaner_frames": 23228,
+  "loaner_species": "galecrest",
+  "owned_carrier_frames": 0,
+  "passed": true,
+  "post_chapter_probe": {
+    "after_disk_reload": true,
+    "chapter_complete": true,
+    "eligible_carrier": false,
+    "ends_at_flag": "cloudreach_chapter_complete",
+    "flying_after_double_jump": false,
+    "loaner_used": false,
+    "party_size": 5,
+    "position": "(-413.9773, 1111.073, 5642.472)"
+  },
+  "pre_trial_probe": {
+    "eligible_carrier": false,
+    "fly_unlocked": false,
+    "flying_after_double_jump": false,
+    "position": "(388.3366, 610.4976, 3258.971)",
+    "trial_active": false
+  },
+  "pre_voss_overfly": {
+    "climb_frames": 739,
+    "closest_to_summit_m": 189.7,
+    "end": "(435.6872, 920.0303, 4503.027)",
+    "end_distance_to_start_m": 0.0,
+    "flight_frames": 4268,
+    "furthest_past_voss_plane_m": 312.4,
+    "gated_flags_after": [],
+    "gated_flags_before": [],
+    "grounded_frames_past_voss_plane": 0,
+    "launched": true,
+    "loaner": true,
+    "party_size": 5,
+    "peak_y": 1080.4,
+    "recoveries_to_last_safe_landing": 1,
+    "start": "(435.687, 920.0308, 4503.026)",
+    "trajectory_1s": [
+      {
+        "at": "(435.7, 929.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2631.4
+      },
+      {
+        "at": "(435.7, 943.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2632.4
+      },
+      {
+        "at": "(435.7, 957.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2633.4
+      },
+      {
+        "at": "(435.7, 971.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2634.4
+      },
+      {
+        "at": "(435.7, 985.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2635.4
+      },
+      {
+        "at": "(435.7, 999.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2636.4
+      },
+      {
+        "at": "(435.7, 1013.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2637.4
+      },
+      {
+        "at": "(435.7, 1027.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2638.4
+      },
+      {
+        "at": "(435.7, 1041.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2639.4
+      },
+      {
+        "at": "(435.7, 1055.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2640.4
+      },
+      {
+        "at": "(435.7, 1069.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2641.4
+      },
+      {
+        "at": "(435.7, 1079.8, 4503.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2642.4
+      },
+      {
+        "at": "(435.6, 1079.3, 4503.5)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -550.5,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2643.4
+      },
+      {
+        "at": "(433.5, 1077.3, 4512.8)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -541.9,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2644.4
+      },
+      {
+        "at": "(429.9, 1075.3, 4528.4)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -527.5,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2645.4
+      },
+      {
+        "at": "(426.4, 1074.0, 4544.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -513.1,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2646.4
+      },
+      {
+        "at": "(422.8, 1074.0, 4559.6)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -498.7,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2647.4
+      },
+      {
+        "at": "(419.3, 1074.0, 4575.2)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -484.3,
+        "region": "upper_cloudreach",
+        "state": "climb",
+        "t": 2648.4
+      },
+      {
+        "at": "(415.7, 1074.0, 4590.9)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -469.9,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2649.4
+      },
+      {
+        "at": "(412.2, 1072.1, 4606.5)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -455.5,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2650.4
+      },
+      {
+        "at": "(408.6, 1070.1, 4622.1)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -441.1,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2651.4
+      },
+      {
+        "at": "(405.1, 1068.1, 4637.7)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -426.6,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2652.4
+      },
+      {
+        "at": "(401.5, 1066.1, 4653.3)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -412.2,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2653.4
+      },
+      {
+        "at": "(398.0, 1064.1, 4668.9)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -397.8,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2654.4
+      },
+      {
+        "at": "(394.5, 1062.1, 4684.5)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -383.4,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2655.4
+      },
+      {
+        "at": "(390.9, 1060.1, 4700.2)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -369.0,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2656.4
+      },
+      {
+        "at": "(387.4, 1058.1, 4715.8)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -354.6,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2657.4
+      },
+      {
+        "at": "(383.8, 1056.1, 4731.4)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -340.2,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2658.4
+      },
+      {
+        "at": "(380.3, 1054.1, 4747.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -325.8,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2659.4
+      },
+      {
+        "at": "(376.7, 1052.1, 4762.6)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -311.4,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2660.4
+      },
+      {
+        "at": "(373.2, 1050.1, 4778.2)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -297.0,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2661.4
+      },
+      {
+        "at": "(369.6, 1048.1, 4793.9)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -282.6,
+        "region": "upper_cloudreach",
+        "state": "glide",
+        "t": 2662.4
+      },
+      {
+        "at": "(366.1, 1046.1, 4809.5)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -268.1,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2663.4
+      },
+      {
+        "at": "(362.5, 1044.1, 4825.1)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -253.7,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2664.4
+      },
+      {
+        "at": "(359.0, 1042.1, 4840.7)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -239.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2665.4
+      },
+      {
+        "at": "(355.4, 1040.1, 4856.3)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -224.9,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2666.4
+      },
+      {
+        "at": "(351.9, 1038.1, 4871.9)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -210.5,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2667.4
+      },
+      {
+        "at": "(348.3, 1036.1, 4887.5)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -196.1,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2668.4
+      },
+      {
+        "at": "(344.8, 1034.1, 4903.2)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -181.7,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2669.4
+      },
+      {
+        "at": "(341.2, 1032.1, 4918.8)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -167.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2670.4
+      },
+      {
+        "at": "(337.7, 1030.1, 4934.4)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -152.9,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2671.4
+      },
+      {
+        "at": "(334.1, 1028.1, 4950.0)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -138.5,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2672.4
+      },
+      {
+        "at": "(330.6, 1026.1, 4965.6)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -124.0,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2673.4
+      },
+      {
+        "at": "(327.0, 1024.1, 4981.2)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -109.6,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2674.4
+      },
+      {
+        "at": "(323.5, 1022.1, 4996.9)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -95.2,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2675.4
+      },
+      {
+        "at": "(319.9, 1020.1, 5012.5)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -80.8,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2676.4
+      },
+      {
+        "at": "(316.4, 1018.1, 5028.1)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -66.4,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2677.4
+      },
+      {
+        "at": "(312.8, 1016.1, 5043.7)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -52.0,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2678.4
+      },
+      {
+        "at": "(309.3, 1014.1, 5059.3)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -37.6,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2679.4
+      },
+      {
+        "at": "(305.7, 1012.1, 5074.9)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -23.2,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2680.4
+      },
+      {
+        "at": "(302.2, 1010.1, 5090.5)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": -8.8,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2681.4
+      },
+      {
+        "at": "(295.4, 1008.1, 5104.5)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 6.4,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2682.4
+      },
+      {
+        "at": "(285.5, 1006.1, 5117.1)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 22.4,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2683.4
+      },
+      {
+        "at": "(275.5, 1004.1, 5129.6)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 38.4,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2684.4
+      },
+      {
+        "at": "(265.5, 1002.1, 5142.1)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 54.4,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2685.4
+      },
+      {
+        "at": "(255.6, 1000.1, 5154.6)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 70.4,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2686.4
+      },
+      {
+        "at": "(245.6, 998.1, 5167.1)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 86.4,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2687.4
+      },
+      {
+        "at": "(235.6, 996.1, 5179.6)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 102.4,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2688.4
+      },
+      {
+        "at": "(225.7, 994.1, 5192.1)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 118.4,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2689.4
+      },
+      {
+        "at": "(215.7, 992.1, 5204.6)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 134.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2690.4
+      },
+      {
+        "at": "(205.7, 990.1, 5217.1)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 150.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2691.4
+      },
+      {
+        "at": "(195.8, 988.1, 5229.6)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 166.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2692.4
+      },
+      {
+        "at": "(185.8, 986.1, 5242.2)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 182.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2693.4
+      },
+      {
+        "at": "(175.9, 984.1, 5254.7)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 198.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2694.4
+      },
+      {
+        "at": "(165.9, 982.1, 5267.2)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 214.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2695.4
+      },
+      {
+        "at": "(155.9, 980.1, 5279.7)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 230.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2696.4
+      },
+      {
+        "at": "(146.0, 978.1, 5292.2)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 246.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2697.4
+      },
+      {
+        "at": "(136.0, 976.1, 5304.7)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 262.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2698.4
+      },
+      {
+        "at": "(126.1, 974.1, 5317.2)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 278.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2699.4
+      },
+      {
+        "at": "(116.1, 972.1, 5329.7)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 294.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2700.4
+      },
+      {
+        "at": "(106.1, 970.1, 5342.3)",
+        "flying": true,
+        "grounded": false,
+        "past_voss_m": 310.3,
+        "region": "summit_final_stronghold",
+        "state": "glide",
+        "t": 2701.4
+      },
+      {
+        "at": "(435.7, 920.0, 4503.0)",
+        "flying": false,
+        "grounded": true,
+        "past_voss_m": -550.9,
+        "region": "upper_cloudreach",
+        "state": "grounded",
+        "t": 2720.8
+      }
+    ],
+    "voss_defeated": false,
+    "voss_plane_margin_m": 20.0
+  },
+  "sealed_attempt": {
+    "climb_end_y": 770.281311035156,
+    "closest_gap_to_box_m": 0.750244140625,
+    "denials": [
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper.",
+      "This wind route is still sealed: cloudreach_upper."
+    ],
+    "end": "(439.5117, 724.8401, 3599.25)",
+    "frames_inside_sealed_box": 0,
+    "on_floor": false,
+    "refused_after_frames": 1415,
+    "still_flying": true,
+    "target": "(450.0, 700.0, 3750.0)"
+  },
+  "skipped_steps": 0,
+  "stage": "c1_stormwood_entry",
+  "start_state": "earned save res://tests/fixtures/earned_saves/c1_arrival",
+  "trial_escape": {
+    "directions_tried": [
+      "(0.0, 0.0, -1.0)"
+    ],
+    "end": "(426.1411, 641.0496, 3215.856)",
+    "from": "(417.3346, 627.3306, 3249.79)",
+    "inside_trial": true,
+    "loaner": true,
+    "refused": true,
+    "still_flying": true,
+    "trial_active": true
+  },
+  "violations": []
+}

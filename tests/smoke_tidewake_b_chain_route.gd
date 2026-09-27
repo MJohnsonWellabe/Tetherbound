@@ -55,7 +55,7 @@ extends SceneTree
 ## rows (hand reed, axe driftwood) by walk + Interact, the bed rest goes through
 ## the bed's Rest prompt and rest panel (ui_accept / menu_cancel), and Tidecoil
 ## is fought for real (tests/helpers/tidewake_b_tidecoil_fight.gd). Remaining
-## fixtures in that mode: the retained five at L43, a carried pickaxe + axe,
+## fixtures in that mode: the retained five at L43, a carried pickaxe + axe + knife,
 ## the upstream flags above plus the Shellwatch and Sluice departure facts, and
 ## one landing write after the Tidecoil win if stranded under Deep Watch's
 ## cliff (no owned swimmer yet). `--save-dir=user://<dir>` writes a production
@@ -150,6 +150,10 @@ func _run() -> void:
 			game.local.party.add(creature)
 		if game.inventory.add("axe", 1) != 0 or not game.assign_hotbar(1, "axe"):
 			_check(false, "could not create the disclosed carried axe fixture")
+			_finish()
+			return
+		if game.inventory.add("knife", 1) != 0 or not game.assign_hotbar(2, "knife"):
+			_check(false, "could not create the disclosed carried knife fixture")
 			_finish()
 			return
 		if OS.get_cmdline_user_args().has("--mount-fixture"):
