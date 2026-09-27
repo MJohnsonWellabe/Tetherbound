@@ -35,10 +35,13 @@ these PRs as open/draft describe their historical evidence, not current state.
 The latest lightning branch integrates main `9850b3be1` in `63f3006b1`, preserves
 Claude's warning-centre and sky-phase changes, and passes 64 focused tests /
 819 assertions after the capsule revision. Native normal/reduced samples exist;
-R5 passed warning/countdown, lightning identification and retained reduced
-information but failed thin-channel/contact finish; whole Bars A/B remain NO.
-A stronger channel and short return leaders with soft capsule joins are
-being independently judged on native normal/reduced frames.
+R7 independently passes the bounded lightning still-image art at source
+`20f86ab46` (warning/countdown, branching silhouette/material, contact/recovery,
+reduced information). All38 native frames inspected. Whole-frame Bars A/B
+remain NO; no whole F10#3 closure. Evidence: LIGHTNING-SHAPE.md.
+Cloudreach HANDOFF b764a197a and main43e6949f2 are merged in53514232a.
+Fresh C2 baseline:36 native Windows frames,0 skipped; targeted spire/native-
+follower capture:8 native frames,0 skipped. M1–M12 remain open.
 
 **Current owner-directed visual goal (Codex):** inspect and improve every visual
 domain against ART_DIRECTION and ACCEPTANCE §4, on isolated branches from current

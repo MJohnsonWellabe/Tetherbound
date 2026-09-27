@@ -1,0 +1,75 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+[reduced-motion] mode=reduced MOTION_PREFS.reduced_motion() = true
+CATALOGUE BOOT stormwood load begin t=3479
+CATALOGUE BOOT stormwood instantiate begin t=9974
+CATALOGUE BOOT stormwood attach begin t=10021
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/world/stormwood_world.gd:89)
+       [1] _mount_production_world (res://tools/catalogue_survey.gd:279)
+       [2] _run (res://tools/capture_stormwood_surge_phases.gd:103)
+       [3] _run (res://tools/capture_stormwood_reduced_motion.gd:43)
+       [4] _run (res://tools/vis_capture_strike_motion.gd:58)
+CATALOGUE BOOT stormwood attached t=10333
+STORMWOOD BUILD shell=false elapsed_ms=375 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=732 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=1049 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=1091 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=1129 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=1162 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=1187 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=1214 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=1242 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=1268 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1657 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1706 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1723 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=145 reorder[7 layers]=22
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=209 mark_harvestable=32 group_by_model=29 register_mesh_assets=30 build_batches_total=1080 (of which harvest_points[11099 nodes]=925, initial_collision_stream[11161 solid]=36) update_mmis=395
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(8864812499031) region_map=1024 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:771)
+       [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+       [2] _ready (res://scripts/combat/encounter_director.gd:552)
+STORMWOOD ENCOUNTERS READY wild=808
+SURGE CAPTURE [  24.1s] world mounted
+SURGE CAPTURE [  33.0s] VIS frame art-shape-reduced-corefinish_h12_t000 ticks=0 ring=0.014 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  33.8s] VIS frame art-shape-reduced-corefinish_h12_t010 ticks=6 ring=0.097 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  34.7s] VIS frame art-shape-reduced-corefinish_h12_t020 ticks=12 ring=0.181 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  35.6s] VIS frame art-shape-reduced-corefinish_h12_t030 ticks=18 ring=0.264 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  36.5s] VIS frame art-shape-reduced-corefinish_h12_t040 ticks=24 ring=0.347 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  37.4s] VIS frame art-shape-reduced-corefinish_h12_t050 ticks=30 ring=0.431 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  38.2s] VIS frame art-shape-reduced-corefinish_h12_t060 ticks=36 ring=0.514 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  39.1s] VIS frame art-shape-reduced-corefinish_h12_t070 ticks=42 ring=0.597 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  40.0s] VIS frame art-shape-reduced-corefinish_h12_t080 ticks=48 ring=0.681 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  40.9s] VIS frame art-shape-reduced-corefinish_h12_t090 ticks=54 ring=0.764 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  41.8s] VIS frame art-shape-reduced-corefinish_h12_t100 ticks=60 ring=0.847 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  42.6s] VIS frame art-shape-reduced-corefinish_h12_t110 ticks=66 ring=0.931 nodes={ "bolt": false, "light_energy": 0.0, "ring": true } flash=0.0
+SURGE CAPTURE [  43.5s] VIS frame art-shape-reduced-corefinish_h12_t120 ticks=72 ring=-1.000 nodes={ "bolt": true, "light_energy": 0.43, "ring": true } flash=0.0
+SURGE CAPTURE [  44.3s] VIS frame art-shape-reduced-corefinish_h12_t125 ticks=75 ring=-1.000 nodes={ "bolt": true, "light_energy": 0.37, "ring": true } flash=0.0
+SURGE CAPTURE [  45.1s] VIS frame art-shape-reduced-corefinish_h12_t130 ticks=78 ring=-1.000 nodes={ "bolt": true, "light_energy": 0.3, "ring": true } flash=0.0
+SURGE CAPTURE [  46.0s] VIS frame art-shape-reduced-corefinish_h12_t140 ticks=84 ring=-1.000 nodes={ "bolt": false, "light_energy": 0.18, "ring": true } flash=0.0
+SURGE CAPTURE [  46.9s] VIS frame art-shape-reduced-corefinish_h12_t150 ticks=90 ring=-1.000 nodes={ "bolt": false, "light_energy": 0.05, "ring": false } flash=0.0
+SURGE CAPTURE [  47.8s] VIS frame art-shape-reduced-corefinish_h12_t160 ticks=96 ring=-1.000 nodes={ "bolt": false, "light_energy": 0.0, "ring": false } flash=0.0
+SURGE CAPTURE [  48.6s] VIS frame art-shape-reduced-corefinish_h12_t170 ticks=102 ring=-1.000 nodes={ "bolt": false, "light_energy": 0.0, "ring": false } flash=0.0
+SURGE CAPTURE [  49.4s] DONE 19 frames, 0 failures

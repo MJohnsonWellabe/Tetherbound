@@ -1,0 +1,5 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+VIS STRIKE launcher: D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe --path D:/tetherbound/gpu-runs-worktrees/sw-f10-3-countdown/ --rendering-driver opengl3 --resolution 1920x1080 --fixed-fps 60 --script res://tools/vis_capture_strike_motion.gd -- --motion=normal --hours=12 --out=res://shots/sw_f10_3_countdown/seqA --label=seqA --only=quick --vis-child
+VIS STRIKE launcher: child exit=0
