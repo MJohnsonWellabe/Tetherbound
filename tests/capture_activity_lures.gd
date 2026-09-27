@@ -602,6 +602,7 @@ func _walk() -> void:
 	var seen := false
 	var readable := false
 	var looked := false
+	var glanced := false
 	var approach_saved := false
 	var best_remaining := INF
 	var best_at := 0.0
@@ -711,6 +712,25 @@ func _walk() -> void:
 				_release()
 				await _capture("left-road-lure-not-yet-on-screen")
 				await _face_lure()
+				continue
+			if cursor == _road_count() and not glanced:
+				# Always frame the glance from the road exit, companion put away
+				# with the ordinary key: the view a player has of the place from
+				# the road, whether or not the lure was already detected.
+				glanced = true
+				_release()
+				var stowed := false
+				if _director != null and _director.call("ally_body") != null:
+					await _press("creature_recall")
+					for i in 60:
+						await physics_frame
+					stowed = _director.call("ally_body") == null
+				await _face_lure()
+				_receipt["road_exit_glance"] = {"t_s": snappedf(_clock, 0.1),
+					"camera_to_lure_m": snappedf(here.distance_to(_xz3(_lure.global_position)), 0.1)}
+				await _capture("road-exit-glance-toward-lure")
+				if stowed:
+					await _ensure_companion_out("road-exit glance; ")
 				continue
 		var lure_d := here.distance_to(_xz3(_lure.global_position))
 		if not near_checked and lure_d <= APPROACH_FRAME_M:
