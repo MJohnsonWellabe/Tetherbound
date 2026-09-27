@@ -27,8 +27,8 @@ const BIRD_PALETTE: Array[Color] = [
 const BOUNDS := preload("res://scripts/world/building_prefabs.gd")
 
 ## D111 -- OP-0906-05: the Summit Stronghold should read as a domed aviary
-## with rustic stone remaining, not a castle keep. This is a STANDALONE
-## builder -- nothing in this file is wired into `cloudreach_world.gd` yet.
+## with rustic stone remaining, not a castle keep. The production summit
+## calls this builder and seats its original ground boxes on the road cutting.
 ## `build()` takes a root Node3D and populates it with a low masonry drum
 ## (real colliders), an open lattice dome over it (no collision -- ribs and
 ## rings are ornament), aviary furniture, and hands back every node the
@@ -83,6 +83,7 @@ static func build(root: Node3D, materials: Dictionary, spec: Dictionary) -> Dict
 
 	var piers := _build_piers(drum_root, drum_spec, masonry, rx, rz, drum_height)
 	var arches := _build_arch_frames(drum_root, arch_spec, stone, rx, rz)
+	_build_cornice(drum_root, drum_spec, masonry, rx, rz, drum_height, gaps, segment_count)
 
 	var colliders: Array = []
 	for piece: Node3D in wall_pieces + plinth_pieces:
@@ -316,7 +317,36 @@ static func _build_ring_course(root: Node3D, label: String, rx: float, rz: float
 	return pieces
 
 
-## ---- piers + crenellation stubs ("still keep some rustic stone") ------
+## ---- articulated masonry supports ------------------------------------
+
+## Direct mesh children cannot be mistaken for grounded boxes by the summit
+## footing pass. Their parent keeps its original first mesh and collision.
+static func _detail_box(parent: Node3D, label: String, centre: Vector3,
+		size: Vector3, material: Material) -> MeshInstance3D:
+	var node := MeshInstance3D.new()
+	node.name = label
+	node.position = centre
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	node.mesh = mesh
+	node.material_override = material
+	parent.add_child(node)
+	return node
+
+
+static func _build_cornice(root: Node3D, drum_spec: Dictionary, material: Material,
+		rx: float, rz: float, height: float, gaps: Array, segments: int) -> void:
+	var thickness := float(drum_spec.get("wall_thickness_m", 1.6))
+	var projection := float(drum_spec.get("cornice_projection_m", 0.25))
+	var band_height := float(drum_spec.get("cornice_band_height_m", 0.42))
+	# The projection remains inside the existing wider plinth envelope. All
+	# courses use the same gap mask as the walls and stand above ground level.
+	_build_ring_course(root, "AviaryCrownFrieze", rx, rz,
+		height - band_height * 1.5, thickness + projection, band_height,
+		material, false, gaps, segments)
+	_build_ring_course(root, "AviaryCrownCornice", rx, rz,
+		height - band_height * 0.5, thickness + projection * 2.0, band_height,
+		material, false, gaps, segments)
 
 static func _build_piers(root: Node3D, drum_spec: Dictionary, masonry: Material,
 		rx: float, rz: float, drum_height: float) -> Array:
@@ -324,10 +354,9 @@ static func _build_piers(root: Node3D, drum_spec: Dictionary, masonry: Material,
 	var extra := float(drum_spec.get("pier_extra_radius_m", 0.6))
 	var width := float(drum_spec.get("pier_width_m", 3.2))
 	var depth := float(drum_spec.get("pier_depth_m", 2.4))
-	var stub_count := int(drum_spec.get("crenellation_count_per_pier", 3))
-	var stub_size_raw: Array = drum_spec.get("crenellation_size_m", [0.9, 0.9, 0.9])
-	var stub_size := Vector3(float(stub_size_raw[0]), float(stub_size_raw[1]), float(stub_size_raw[2]))
-	var stub_gap := float(drum_spec.get("crenellation_gap_m", 1.1))
+	var base_height := float(drum_spec.get("pier_base_height_m", 0.7))
+	var capital_height := float(drum_spec.get("pier_capital_height_m", 0.8))
+	var inset := float(drum_spec.get("pier_shaft_inset_m", 0.22))
 	for angle_deg: Variant in drum_spec.get("pier_angles_deg", [45.0, 135.0, 225.0, 315.0]):
 		var theta := deg_to_rad(float(angle_deg))
 		var centreline := _drum_point(theta, rx, rz, drum_height * 0.5)
@@ -335,11 +364,18 @@ static func _build_piers(root: Node3D, drum_spec: Dictionary, masonry: Material,
 		var basis := _segment_basis(_drum_point(theta - 0.02, rx, rz, 0.0), _drum_point(theta + 0.02, rx, rz, 0.0))
 		var pier_node := _box(root, "AviaryPier", centreline + normal * extra,
 			Vector3(depth, drum_height, width), masonry, true, basis)
-		for k in stub_count:
-			var offset := (float(k) - float(stub_count - 1) * 0.5) * stub_gap
-			_box(pier_node, "AviaryCrenellation",
-				Vector3(0.0, drum_height * 0.5 + stub_size.y * 0.5, offset),
-				stub_size, masonry, false)
+		# Preserve the original first BoxMesh: _seat_drum_piece reads it to
+		# construct the existing summit-cut footing, even when it is hidden.
+		(pier_node.get_child(0) as MeshInstance3D).visible = false
+		_detail_box(pier_node, "AviaryPierBase", Vector3.DOWN * (drum_height - base_height) * 0.5,
+			Vector3(depth, base_height, width), masonry)
+		var shaft_height := drum_height - base_height - capital_height
+		_detail_box(pier_node, "AviaryPierShaft", Vector3.UP * (base_height - capital_height) * 0.5,
+			Vector3(depth - inset * 2.0, shaft_height, width - inset * 2.0), masonry)
+		_detail_box(pier_node, "AviaryPierCapital", Vector3.UP * (drum_height - capital_height) * 0.5,
+			Vector3(depth, capital_height, width), masonry)
+		_detail_box(pier_node, "AviaryPierNeck", Vector3.UP * (drum_height * 0.5 - capital_height),
+			Vector3(depth - inset, capital_height * 0.3, width - inset), masonry)
 		piers.append({"angle_deg": float(angle_deg), "node": pier_node})
 	return piers
 
@@ -349,7 +385,10 @@ static func _build_piers(root: Node3D, drum_spec: Dictionary, masonry: Material,
 static func _build_arch_frames(root: Node3D, arch_spec: Dictionary, stone: Material,
 		rx: float, rz: float) -> Array:
 	var jamb_width := float(arch_spec.get("jamb_width_m", 1.1))
-	var lintel_thickness := float(arch_spec.get("lintel_thickness_m", 0.9))
+	var arch_thickness := float(arch_spec.get("arch_stone_thickness_m", 1.1))
+	var arch_depth := float(arch_spec.get("arch_depth_m", 1.5))
+	var arch_segments := int(arch_spec.get("arch_stone_count", 19))
+	var joint := float(arch_spec.get("arch_joint_m", 0.025))
 	var margin := deg_to_rad(float(arch_spec.get("arch_gap_margin_deg", 2.0)))
 	var arches: Array = []
 	var groups := [
@@ -385,16 +424,71 @@ static func _build_arch_frames(root: Node3D, arch_spec: Dictionary, stone: Mater
 				Vector3(jamb_width, clear_height, jamb_width), stone, false, jamb_basis)
 			_box(arch_root, "AviaryJambRight", right + Vector3.UP * clear_height * 0.5,
 				Vector3(jamb_width, clear_height, jamb_width), stone, false, jamb_basis)
-			var lintel_basis := _segment_basis(left, right)
-			_box(arch_root, "AviaryLintel", (left + right) * 0.5 + Vector3.UP * clear_height,
-				Vector3(jamb_width * 1.4, lintel_thickness, left.distance_to(right) + jamb_width),
-				stone, false, lintel_basis)
+			var half_span := left.distance_to(right) * 0.5
+			var rise := float(arch_spec.get(str(group["kind"]) + "_arch_rise_m", 3.6))
+			var arch_mesh := MeshInstance3D.new()
+			arch_mesh.name = "AviaryStoneArch"
+			arch_mesh.mesh = _stone_arch_mesh(half_span - jamb_width * 0.5,
+				rise, arch_thickness, arch_depth, arch_segments, joint)
+			arch_mesh.material_override = stone
+			arch_mesh.position = (left + right) * 0.5 + Vector3.UP * clear_height
+			var along := (right - left).normalized()
+			arch_mesh.basis = Basis(along, Vector3.UP, along.cross(Vector3.UP))
+			arch_root.add_child(arch_mesh)
 			arches.append({
 				"kind": group["kind"], "angle_deg": float(angle_deg),
 				"half_angle_deg": rad_to_deg(half_angle), "clear_height_m": clear_height,
 				"half_width_m": left.distance_to(right) * 0.5, "node": arch_root,
 			})
 	return arches
+
+
+## A shallow elliptical opening, built from solid stone voussoirs. Its entire
+## underside stays at or above the old clear-height plane, including the end
+## stones. This changes the arch silhouette without narrowing the route below.
+static func _stone_arch_mesh(half_width: float, rise: float, thickness: float,
+		depth: float, segments: int, joint: float) -> ArrayMesh:
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var count := maxi(segments, 3)
+	var pad := minf(joint / maxf(half_width, 0.1) * 0.5, PI / float(count) * 0.1)
+	for i in count:
+		var a := PI * float(i) / float(count) + (pad if i > 0 else 0.0)
+		var b := PI * float(i + 1) / float(count) - (pad if i < count - 1 else 0.0)
+		var inner_a := Vector3(cos(a) * half_width, sin(a) * rise, 0.0)
+		var inner_b := Vector3(cos(b) * half_width, sin(b) * rise, 0.0)
+		var outer_a := Vector3(cos(a) * (half_width + thickness), sin(a) * (rise + thickness), 0.0)
+		var outer_b := Vector3(cos(b) * (half_width + thickness), sin(b) * (rise + thickness), 0.0)
+		var front := Vector3.BACK * depth * 0.5
+		var back := -front
+		_arch_quad(surface, inner_a + front, inner_b + front, outer_b + front, outer_a + front, Vector3.BACK)
+		_arch_quad(surface, inner_a + back, outer_a + back, outer_b + back, inner_b + back, Vector3.FORWARD)
+		var middle := (a + b) * 0.5
+		var outward := Vector3(cos(middle) / (half_width + thickness), sin(middle) / (rise + thickness), 0.0).normalized()
+		var inward := -Vector3(cos(middle) / half_width, sin(middle) / rise, 0.0).normalized()
+		_arch_quad(surface, outer_a + back, outer_a + front, outer_b + front, outer_b + back, outward)
+		_arch_quad(surface, inner_a + back, inner_b + back, inner_b + front, inner_a + front, inward)
+		_arch_quad(surface, inner_a + back, inner_a + front, outer_a + front, outer_a + back,
+			Vector3(sin(a), -cos(a), 0.0))
+		_arch_quad(surface, inner_b + back, outer_b + back, outer_b + front, inner_b + front,
+			Vector3(-sin(b), cos(b), 0.0))
+	return surface.commit()
+
+
+static func _arch_quad(surface: SurfaceTool, a: Vector3, b: Vector3,
+		c: Vector3, d: Vector3, normal: Vector3) -> void:
+	# Godot front faces wind clockwise. Explicit normals also keep the reveal
+	# and front stone surfaces distinct under the production masonry shader.
+	if (b - a).cross(c - a).dot(normal) > 0.0:
+		var swap := b
+		b = d
+		d = swap
+	var tangent := (b - a).normalized()
+	var bitangent := normal.cross(tangent).normalized()
+	for vertex: Vector3 in [a, b, c, a, c, d]:
+		surface.set_normal(normal)
+		surface.set_uv(Vector2(vertex.dot(tangent), vertex.dot(bitangent)))
+		surface.add_vertex(vertex)
 
 
 ## ---- dome: meridian ribs + latitude rings + oculus --------------------
@@ -410,10 +504,14 @@ static func _build_dome(root: Node3D, dome_spec: Dictionary, drum_height: float,
 	var rib_segments := maxi(int(dome_spec.get("rib_segments", 5)), 1)
 	var base_r := float(dome_spec.get("rib_base_radius_m", 0.35))
 	var tip_r := float(dome_spec.get("rib_tip_radius_m", 0.2))
+	var primary_every := maxi(int(dome_spec.get("primary_rib_every", 3)), 1)
+	var primary_scale := float(dome_spec.get("primary_rib_radius_scale", 2.2))
 	var oculus_radius := float(dome_spec.get("oculus_radius_m", 6.0))
 	var ring_tube := float(dome_spec.get("ring_tube_radius_m", 0.16))
 	var oculus_tube := float(dome_spec.get("oculus_ring_tube_radius_m", 0.4))
 	var ring_count := maxi(int(dome_spec.get("latitude_ring_count", 5)), 0)
+	var main_ring_every := maxi(int(dome_spec.get("primary_ring_every", 3)), 1)
+	var main_ring_scale := float(dome_spec.get("primary_ring_radius_scale", 2.0))
 
 	var alpha_rim := PI * 0.5
 	var alpha_top := asin(clampf(oculus_radius / maxf(radius, 0.01), -1.0, 1.0))
@@ -427,6 +525,8 @@ static func _build_dome(root: Node3D, dome_spec: Dictionary, drum_height: float,
 		var phi := TAU * float(m) / float(meridians)
 		var rib_root := Node3D.new()
 		rib_root.name = "AviaryRib"
+		var primary := m % primary_every == 0
+		rib_root.set_meta("primary_rib", primary)
 		dome_root.add_child(rib_root)
 		var prev := _dome_point(alpha_rim, phi, radius, drum_height)
 		for s in rib_segments:
@@ -434,7 +534,7 @@ static func _build_dome(root: Node3D, dome_spec: Dictionary, drum_height: float,
 			var alpha := lerpf(alpha_rim, alpha_top, t)
 			var point := _dome_point(alpha, phi, radius, drum_height)
 			var frac := float(s) / float(maxi(rib_segments - 1, 1))
-			var rib_radius := lerpf(base_r, tip_r, frac)
+			var rib_radius := lerpf(base_r, tip_r, frac) * (primary_scale if primary else 1.0)
 			_cylinder_between(rib_root, "AviaryRibSegment", prev, point, rib_radius, timber)
 			prev = point
 		ribs.append(rib_root)
@@ -446,8 +546,9 @@ static func _build_dome(root: Node3D, dome_spec: Dictionary, drum_height: float,
 		var radius_here := radius * sin(alpha)
 		var height_here := drum_height + radius * cos(alpha)
 		var torus := TorusMesh.new()
-		torus.inner_radius = maxf(radius_here - ring_tube, 0.05)
-		torus.outer_radius = radius_here + ring_tube
+		var tube := ring_tube * (main_ring_scale if r % main_ring_every == 0 else 1.0)
+		torus.inner_radius = maxf(radius_here - tube, 0.05)
+		torus.outer_radius = radius_here + tube
 		var ring_node := MeshInstance3D.new()
 		ring_node.name = "AviaryLatitudeRing"
 		ring_node.mesh = torus
@@ -455,6 +556,18 @@ static func _build_dome(root: Node3D, dome_spec: Dictionary, drum_height: float,
 		ring_node.position = Vector3(0.0, height_here, 0.0)
 		dome_root.add_child(ring_node)
 		rings.append(ring_node)
+	# A continuous springing hoop ties the ribs together over the four open
+	# entries. It stays within the original wall/plinth footprint.
+	var spring_tube := float(dome_spec.get("spring_ring_tube_radius_m", 0.32))
+	var spring_torus := TorusMesh.new()
+	spring_torus.inner_radius = radius - spring_tube
+	spring_torus.outer_radius = radius + spring_tube
+	var spring_ring := MeshInstance3D.new()
+	spring_ring.name = "AviarySpringRing"
+	spring_ring.mesh = spring_torus
+	spring_ring.material_override = iron
+	spring_ring.position.y = drum_height
+	dome_root.add_child(spring_ring)
 
 	var oculus_torus := TorusMesh.new()
 	oculus_torus.inner_radius = maxf(oculus_radius - oculus_tube, 0.05)
@@ -957,8 +1070,8 @@ static func _build_furniture(root: Node3D, furniture_spec: Dictionary, dome: Dic
 
 	var lanterns: Array = []
 	var lantern_post_height := float(furniture_spec.get("lantern_post_height_m", 3.4))
-	var lantern_post_radius := float(furniture_spec.get("lantern_post_radius_m", 0.12))
-	var lantern_box_size := float(furniture_spec.get("lantern_box_size_m", 0.32))
+	var lantern_height := float(furniture_spec.get("lantern_prop_height_m", 1.1))
+	var mount_offset := float(furniture_spec.get("lantern_mount_offset_m", 0.7))
 	for arch: Dictionary in arches:
 		if lanterns.size() >= int(furniture_spec.get("lantern_count", 4)):
 			break
@@ -966,20 +1079,33 @@ static func _build_furniture(root: Node3D, furniture_spec: Dictionary, dome: Dic
 		var flank: Node3D = arch_node.get_node_or_null("AviaryJambRight") as Node3D
 		if flank == null:
 			continue
-		var base := arch_node.position + flank.position
+		# Jamb transforms locate their CENTRE, not their foot. The old post
+		# started halfway up the opening and floated above the stone frame.
+		var base := arch_node.position + flank.position - Vector3.UP * float(arch["clear_height_m"]) * 0.5
+		var inward := -Vector3(base.x, 0.0, base.z).normalized()
 		var lantern_root := Node3D.new()
 		lantern_root.name = "AviaryLantern"
+		lantern_root.position = base + Vector3.UP * lantern_post_height + inward * mount_offset
+		lantern_root.rotation.y = atan2(inward.x, inward.z)
 		furniture_root.add_child(lantern_root)
-		_cylinder(lantern_root, "LanternPost", base + Vector3.UP * lantern_post_height * 0.5,
-			lantern_post_radius, lantern_post_height, timber)
-		var glow := MeshInstance3D.new()
-		glow.name = "LanternGlow"
-		var box := BoxMesh.new()
-		box.size = Vector3.ONE * lantern_box_size
-		glow.mesh = box
-		glow.material_override = lantern_glow
-		glow.position = base + Vector3.UP * (lantern_post_height + lantern_box_size * 0.5)
-		lantern_root.add_child(glow)
+		_install_prop(lantern_root, WALL_LANTERN, "AviaryEntryLanternHousing", Vector3.ZERO,
+			lantern_height, 0.0, false)
+		# The installed lantern has a single metal material, without a glass or
+		# emissive surface. A small inset core supplies the flame; the housing
+		# keeps its authored metal. Coordinates are fractions of fitted height.
+		var core_offset: Array = furniture_spec.get("lantern_core_offset", [0.0, 0.27, 0.2])
+		var core_at := Vector3(float(core_offset[0]), float(core_offset[1]), float(core_offset[2])) * lantern_height
+		_cylinder(lantern_root, "AviaryEntryLanternCore", core_at,
+			float(furniture_spec.get("lantern_core_radius_m", 0.065)),
+			float(furniture_spec.get("lantern_core_height_m", 0.2)), lantern_glow)
+		var light := OmniLight3D.new()
+		light.name = "AviaryEntryLanternLight"
+		light.position = core_at + Vector3.BACK * float(furniture_spec.get("lantern_light_offset_m", 0.3))
+		light.light_color = Color(str(furniture_spec.get("lantern_light_colour", "#ffbd79")))
+		light.light_energy = float(furniture_spec.get("lantern_light_energy", 1.6))
+		light.omni_range = float(furniture_spec.get("lantern_light_range_m", 9.0))
+		light.shadow_enabled = false
+		lantern_root.add_child(light)
 		lanterns.append(lantern_root)
 
 	var ring_anchors: Array = []
