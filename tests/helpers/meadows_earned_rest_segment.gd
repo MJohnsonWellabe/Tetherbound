@@ -12,6 +12,12 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const MAX_NIGHTS := 3
 const MAX_BITES := 12
 const FOOD := "berries"
+## Nourishment points fed above the tournament's `fed_at` line. Nourishment
+## drains in real time (creature_condition.json `drain_per_minute` 1.1), so a
+## creature fed exactly to the line slipped under it on the walk from camp to
+## Halda (seed 15, r4: "Bramblebun needs feeding" before the final). A player
+## fills the bowl; 15 points is roughly thirteen minutes of walking and a round.
+const FEED_MARGIN := 15.0
 
 
 class BedInput extends TAIL:
@@ -292,7 +298,7 @@ func _sleep_the_team_into_condition() -> bool:
 			return false
 		var wanted := 0
 		for member: RefCounted in _entrants:
-			wanted += berries_needed(member, food, CONDITION.config())
+			wanted += berries_needed(member, food, CONDITION.config(), FEED_MARGIN)
 		if not await _gather_food_to(wanted):
 			return false
 		for ordinal in _indices.size():
@@ -356,7 +362,7 @@ func _feed_with_satchel() -> bool:
 			# Food solves hunger. A fed but unhappy entrant can spend another
 			# real night in its bed; do not keep feeding until the Satchel's
 			# full-creature refusal turns that valid care route into a failure.
-			if CONDITION.is_fed(member, CONDITION.config()):
+			if float(member.get("nourishment")) >= feed_target(CONDITION.config(), FEED_MARGIN):
 				break
 			if not await _gather_food_to(1):
 				return false
@@ -438,9 +444,14 @@ static func entrant_indices(party: RefCounted) -> Array[int]:
 	return indices
 
 
-static func berries_needed(member: RefCounted, food: Dictionary, cfg: Dictionary) -> int:
+static func feed_target(cfg: Dictionary, margin: float = 0.0) -> float:
 	var nourishment: Dictionary = cfg.get("nourishment", {})
-	var missing_food := maxf(0.0, float(nourishment.get("max", 100)) * float(nourishment.get("fed_at", 0.55)) - float(member.get("nourishment")))
+	var top := float(nourishment.get("max", 100))
+	return minf(top, top * float(nourishment.get("fed_at", 0.55)) + margin)
+
+
+static func berries_needed(member: RefCounted, food: Dictionary, cfg: Dictionary, margin: float = 0.0) -> int:
+	var missing_food := maxf(0.0, feed_target(cfg, margin) - float(member.get("nourishment")))
 	return ceili(missing_food / maxf(float(food.get("nourishment", 0)), 0.001))
 
 
