@@ -6,6 +6,10 @@ with main `8203fb251` integrated through `c126bacfe`. Five installed attack clip
 now retain visible body/ground contact and distinct attack phases. Whole-creature
 and whole-game Bars A/B remain open. Claude owns integration.
 
+The same PR also addresses the V-SW-4 body hit wash on main `7f875a85d`,
+integrated through `0fb26c841`. The separate bounded evidence is below; the
+original attack evidence retains its recorded build identities.
+
 ## Reproduction
 
 **DRY RUN — does not count toward earned-play or full feature acceptance.**
@@ -162,3 +166,79 @@ Actual combat also exposes heavy proximity transparency and head cropping on
 large creatures, particularly Fulgocobra. Those remain open in AUDIT V-CX-1; fixing
 the asset floor fold does not accept the player-camera view. Hardware performance,
 full chapter/whole-game Bars A/B and pre-merge engine CI are not claimed.
+
+## Hit-body readability (V-SW-4)
+
+**DRY RUN — does not count** toward earned-play or full visual acceptance.
+The baseline overlay bleaches Voltarach's shell and limb shading at the instant
+of damage, including during an enemy tell. This is an extra blended material
+pass; it does not reduce the original body's opacity. The independent proximity
+fade/head-crop problem in V-CX-1 remains separate and open.
+
+Only `data/config/vfx.json::hit_flash` changes: quick strength 0.9 → 0.3,
+charged 1.0 → 0.4, flat mix 0.3 → 0.05, rim power 1.6 → 2.8. At peak this caps
+the overlay contribution at 30%/40% on the silhouette and 1.5%/2% on a surface
+facing the camera. Duration stays 0.16 s. Impact sparks, hit animations, shader,
+level-up pulse, body materials, camera, combat authority and gameplay are unchanged.
+Remote presentation inherits the ordinary quick-flash settings through its
+existing path. Reduced-motion behavior is unchanged.
+
+`tools/capture_creature_hit_read.gd` freezes each production body/animation in
+the calibrated stage and advances the production overlay manually to 0/40/100 ms
+for quick and charged hits, with unhit/restored controls. Four subjects cover
+thin spider limbs, fur, a light chest/foliage and broad cobra surfaces: Voltarach,
+Sparkit, Bramblebun, Fulgocobra. Each version supplies 32 native 1920×1080 PNGs,
+zero skips, exit 0 and empty stderr. This diagnoses the overlay component;
+it does not prove uninterrupted motion or habitat readability.
+
+`tools/capture_creature_hit_combat.gd` extends the existing Stormwood named-fight
+witness: production world, input Engage, AI and quick-attack input. It uses the
+parent's disclosed level-42 party, initial placement, nearby-wild hiding,
+Calm weather pin and end-of-run flee fixtures. Both captures start the actual
+Hollows Alpha/Voltarach fight and observe real hits on enemy and ally. Additional
+frames follow damage signals and record actual overlay strengths. Baseline
+contact samples show 0.9; candidate contact samples show 0.3.
+Baseline supplies 65 PNGs and candidate 74; all 139 combat PNGs measure
+1920×1080. Both processes exit 0 with no script/runtime errors. Damage rolls and
+later combat timings vary between runs; the first hit is the matched comparison,
+not a claim of pixel-identical world simulation.
+
+Capture limits: the parent saves only one simultaneously due request, so some
+scheduled samples are omitted. Damage signals may precede projectile arrival;
+the filename alone does not prove a flash. Use the recorded nonempty strengths.
+The parent exit code does not validate encounter success or PNG saves: the
+summary, files, dimensions and logs are checked independently. These are fixed
+60 Hz captures on Windows Godot 4.7 Compatibility/GTX 1060 3 GB, not Ally or
+performance evidence. Existing world-placement/deprecation warnings occur.
+
+The existing combat VFX suite passes **14 tests / 81 assertions / 0 failures**,
+with no script errors or warnings. Independent source review finds exactly four
+presentation-value changes and no correctness blocker; the capture limits above
+come from that review. No new implementation-mirroring test is added for this
+reversible config retune.
+
+The code-blind reviewer inspected all 64 isolated stage images and confirms the
+candidate preserves each species' colors, face/appendages and solidity, with the
+baseline broad whitening removed. Fulgocobra's hood/coils show the clearest gain.
+The remaining edge cue is faint; quick versus charged cannot reliably be named
+from the body overlay alone in these stills. This is not a charge-class cue pass.
+The same reviewer inspected seven matched production frames per version and
+accepts the bounded removal of whitening: Voltarach's tell body remains solid,
+Sparkit's gold body/dark ears remain visible, and contact spots plus the following
+burst/ring/particles keep the overall hit response visible. The existing early
+particle cloud still covers much of Voltarach's face and Sparkit's torso in both
+versions. Face readability throughout impact, charged distinction, continuous
+reaction timing/weight and full Bars A/B remain open. The reviewer read images
+only, with no source/configuration inspection.
+
+[PNG hashes, dimensions, fight summaries and overlay samples](creature-hit-evidence.json).
+Raw local directories: `shots/hit-read-baseline-wide/roster`,
+`shots/hit-read-candidate/roster`, `shots/hit-combat-baseline`,
+`shots/hit-combat-candidate`. Earlier tight-framing stage directories are not the
+matched comparison. Reproduce with the two named tools, `--fixed-fps 60`, native
+1920×1080 borderless Compatibility and the shared render lock; combat additionally
+uses `--ids=hollows_alpha --seconds=14 --interval=2 --out=<absolute directory>`.
+
+![Unhit and charged-hit stage comparison](_sheet_creature_hit_stage.jpg)
+
+![Real damage-frame comparisons](_sheet_creature_hit_combat.jpg)

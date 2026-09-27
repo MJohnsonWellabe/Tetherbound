@@ -1,0 +1,1052 @@
+{
+  "proof": "DRY RUN - does not count toward earned-play or full visual acceptance",
+  "base_commit": "0fb26c841",
+  "main_commit": "7f875a85d",
+  "runs": {
+    "hit-read-baseline-wide/roster": {
+      "native_raster": [
+        1920,
+        1080
+      ],
+      "frames": 32,
+      "images": [
+        {
+          "file": "001_voltarach_unhit.png",
+          "sha256": "a43ff8c24a23a5404e7d1bf05ada8408802e5d943dcd045f7e74416c1b8162f3"
+        },
+        {
+          "file": "002_voltarach_quick_0.png",
+          "sha256": "374c689eb8c8942fc47bdcf9f366c7eaf7c05428b77f3874d70ec22e45d63a6f"
+        },
+        {
+          "file": "003_voltarach_quick_40.png",
+          "sha256": "daee9aaf1b2122e034489d92f61183a409ea9259aa61a246da2b68058d19bbc4"
+        },
+        {
+          "file": "004_voltarach_quick_100.png",
+          "sha256": "eb57ea10f3cc2acda8010e323d85423be75f6bc0afe0deede647daf0d5cfd07d"
+        },
+        {
+          "file": "005_voltarach_charged_0.png",
+          "sha256": "192b444d85bc2527dd5c0b981b0b4c92577c21da5debce186d2a8c5c47327d33"
+        },
+        {
+          "file": "006_voltarach_charged_40.png",
+          "sha256": "e56531247d8ba5babd9c1ed8b7634e38bc85fa277755af254ada57e5876710b0"
+        },
+        {
+          "file": "007_voltarach_charged_100.png",
+          "sha256": "46959d655dd2a836b7ff045eb311c659ca3a444ddaf32fc38e66b472ba7548a5"
+        },
+        {
+          "file": "008_voltarach_restored.png",
+          "sha256": "5b5b0a058e973e5f57b38b360bc4e95dccef42cfb28964611c734c191e8245d7"
+        },
+        {
+          "file": "009_sparkit_unhit.png",
+          "sha256": "5eebbe4b1dfad7ee5d1a8076ffd89cca88aed6d970b6b225c4f131914969d49a"
+        },
+        {
+          "file": "010_sparkit_quick_0.png",
+          "sha256": "215eb2ba0bbfaa3dc4407127cc8cfec5b0c23f5347d7b9cf5d42b85a4caec8d9"
+        },
+        {
+          "file": "011_sparkit_quick_40.png",
+          "sha256": "2ac425c9d6ffe2998c8a66ce1855eefc75c6f28827f824adc2cc77d58498143d"
+        },
+        {
+          "file": "012_sparkit_quick_100.png",
+          "sha256": "88dc76de0ac532a1425592b103671e310dc1694bbedb09caa3fa2390b48211b1"
+        },
+        {
+          "file": "013_sparkit_charged_0.png",
+          "sha256": "040a913538364cebdffcb6355fb40d26710e1aeb8c5c40a40525cdc9d4541ca7"
+        },
+        {
+          "file": "014_sparkit_charged_40.png",
+          "sha256": "07a4279d4c17939d968999e610fc4b307bd527026beaa2cccf8242d6a4622283"
+        },
+        {
+          "file": "015_sparkit_charged_100.png",
+          "sha256": "a3b97bdca2532325f164b1b3d6aba64a11015c32db74bf80c95417d0006a2c62"
+        },
+        {
+          "file": "016_sparkit_restored.png",
+          "sha256": "0f328f24553e72002fa8b13c647730840f017448c4d2013968810220ce6f8961"
+        },
+        {
+          "file": "017_bramblebun_unhit.png",
+          "sha256": "9b93895aa1d20f1273f30b1aa18a78b87aac35fc7a145e1f002bc106885f59a3"
+        },
+        {
+          "file": "018_bramblebun_quick_0.png",
+          "sha256": "94c188abf47cf0075847cd2b293e5e9e64ae6bc5a91323c401e02837da7956cd"
+        },
+        {
+          "file": "019_bramblebun_quick_40.png",
+          "sha256": "20c673da0c467718cba3bf0a73f161b4e166ccdcd2b4638f17939256b51bded3"
+        },
+        {
+          "file": "020_bramblebun_quick_100.png",
+          "sha256": "16f836449e26eea866100faeda1523ea2ee6d55c37a3de3bd87b1bbf8df833b6"
+        },
+        {
+          "file": "021_bramblebun_charged_0.png",
+          "sha256": "3887671a03417c5a3bb1dd228fe86a2362e6bd89bbe14b32d8851c28cd3ff8b2"
+        },
+        {
+          "file": "022_bramblebun_charged_40.png",
+          "sha256": "3f726154172c0f947f191b63075404e7c0759fe9fd06bd75ab43bcb54b11f601"
+        },
+        {
+          "file": "023_bramblebun_charged_100.png",
+          "sha256": "e5a7bf55b5874bb80a4c923438bf88b63a08003343f14844762c4a6ab4c58a80"
+        },
+        {
+          "file": "024_bramblebun_restored.png",
+          "sha256": "3347014d82fae73ba82e19f121c72917d1ef4e8c657105983ad486fc32bb37de"
+        },
+        {
+          "file": "025_fulgocobra_unhit.png",
+          "sha256": "e1bed8e8f8d6af77ab09683bd1b641a5a568fe7a87800d050cf1b8861862b150"
+        },
+        {
+          "file": "026_fulgocobra_quick_0.png",
+          "sha256": "bfb4aee8911e177c12431581d9bf788356dcaf1670d08f3dcf8f2dd97ca3524d"
+        },
+        {
+          "file": "027_fulgocobra_quick_40.png",
+          "sha256": "7cbac658b02e3977ba43d91d9ca3b69224aac5f266931bdd5404b69d2d043198"
+        },
+        {
+          "file": "028_fulgocobra_quick_100.png",
+          "sha256": "dc9f450b6b6385640f748814f6dbb42b875e977115b18ca5da39f791ead50c02"
+        },
+        {
+          "file": "029_fulgocobra_charged_0.png",
+          "sha256": "58bbab1cdd6f3a60cdb17d2d3ff02743740388d44a814f12112d408feb95524c"
+        },
+        {
+          "file": "030_fulgocobra_charged_40.png",
+          "sha256": "bc159067ecfa2afbf63ccc46ce004249b18539f153ad50627c39a952fb71090f"
+        },
+        {
+          "file": "031_fulgocobra_charged_100.png",
+          "sha256": "3f224ad6506b2e258380856b61c1cc47c996a232a93ca57b7c75816862019ea5"
+        },
+        {
+          "file": "032_fulgocobra_restored.png",
+          "sha256": "382eb59e5610980ec17e2ec7b8f46ba92a7706b87641307853567334dd07b78a"
+        }
+      ]
+    },
+    "hit-read-candidate/roster": {
+      "native_raster": [
+        1920,
+        1080
+      ],
+      "frames": 32,
+      "images": [
+        {
+          "file": "001_voltarach_unhit.png",
+          "sha256": "a43ff8c24a23a5404e7d1bf05ada8408802e5d943dcd045f7e74416c1b8162f3"
+        },
+        {
+          "file": "002_voltarach_quick_0.png",
+          "sha256": "577bfbbc1743cf8cee12863c970861179589f5b0e690de780505d4b537342fd0"
+        },
+        {
+          "file": "003_voltarach_quick_40.png",
+          "sha256": "22a40ad3b17ce7ac941752e6c4f1c4cdc4150bd561057619cd140cc20f58d25d"
+        },
+        {
+          "file": "004_voltarach_quick_100.png",
+          "sha256": "a2f9e85e33323cd2961e3a63700b4d8858e9ae5e162731737d57385894ceed21"
+        },
+        {
+          "file": "005_voltarach_charged_0.png",
+          "sha256": "e9e8f028e796e505f9920a1e49c84a6e095e1e8f8809da152c12faaf860b1dd4"
+        },
+        {
+          "file": "006_voltarach_charged_40.png",
+          "sha256": "be18481668c0d36fb7a95cebce7e3ab39d1bf2e1af85708a999b849b9d371afa"
+        },
+        {
+          "file": "007_voltarach_charged_100.png",
+          "sha256": "465c0a8678f7c5b215b51a08fe58e2a9ff47e9abdf3a0a6aed3c3091ea358409"
+        },
+        {
+          "file": "008_voltarach_restored.png",
+          "sha256": "5b5b0a058e973e5f57b38b360bc4e95dccef42cfb28964611c734c191e8245d7"
+        },
+        {
+          "file": "009_sparkit_unhit.png",
+          "sha256": "5eebbe4b1dfad7ee5d1a8076ffd89cca88aed6d970b6b225c4f131914969d49a"
+        },
+        {
+          "file": "010_sparkit_quick_0.png",
+          "sha256": "27a786b605c8c14515c73dfbcc0347cfccaed53735e7817cc71a73470063340f"
+        },
+        {
+          "file": "011_sparkit_quick_40.png",
+          "sha256": "d66a0eb72a32dc5e0d617ed77ef85bc57f6cdde898dfa3c549a8927a5b8d7a7a"
+        },
+        {
+          "file": "012_sparkit_quick_100.png",
+          "sha256": "c65061af547b937f4bf77d9f85c4e5491ed624d5d64707fa72601f3b66cb7105"
+        },
+        {
+          "file": "013_sparkit_charged_0.png",
+          "sha256": "1d69a15e3241bf5fc525769dbd049f056a733e677363ff5330f627a33d10e831"
+        },
+        {
+          "file": "014_sparkit_charged_40.png",
+          "sha256": "938197b1dd9b256e5a21079c866f8dea44461e487b2f0f6f1b64147052df601c"
+        },
+        {
+          "file": "015_sparkit_charged_100.png",
+          "sha256": "d0c8b4c701114d304e5022fed66a381650b439642b54ce07f53fca95884214b1"
+        },
+        {
+          "file": "016_sparkit_restored.png",
+          "sha256": "0f328f24553e72002fa8b13c647730840f017448c4d2013968810220ce6f8961"
+        },
+        {
+          "file": "017_bramblebun_unhit.png",
+          "sha256": "9b93895aa1d20f1273f30b1aa18a78b87aac35fc7a145e1f002bc106885f59a3"
+        },
+        {
+          "file": "018_bramblebun_quick_0.png",
+          "sha256": "70d04f1dfceed3459ceb69a66a176ad2f6f267cdeb7cbb1fadf07662dd40fbef"
+        },
+        {
+          "file": "019_bramblebun_quick_40.png",
+          "sha256": "2393035c9e389a4b01b94c92fa8b862a97f37f35b4a492251e05241b7f8e50ac"
+        },
+        {
+          "file": "020_bramblebun_quick_100.png",
+          "sha256": "002ef46067bd035ffc544941597a0ac694d7da25cfe5dd8ea2dfc249736c1566"
+        },
+        {
+          "file": "021_bramblebun_charged_0.png",
+          "sha256": "8e690a883c055dee639780c461b97eed049819734097d6e90266048c2318197c"
+        },
+        {
+          "file": "022_bramblebun_charged_40.png",
+          "sha256": "bc0f60e074836e79af1725b539c0f4c82cf4fb56c7556f4e9b10784142c98a66"
+        },
+        {
+          "file": "023_bramblebun_charged_100.png",
+          "sha256": "b36329882b788aa8423204e6cb27a95ef4daca9fcfbb0b0afb1a4659369daafd"
+        },
+        {
+          "file": "024_bramblebun_restored.png",
+          "sha256": "3347014d82fae73ba82e19f121c72917d1ef4e8c657105983ad486fc32bb37de"
+        },
+        {
+          "file": "025_fulgocobra_unhit.png",
+          "sha256": "e1bed8e8f8d6af77ab09683bd1b641a5a568fe7a87800d050cf1b8861862b150"
+        },
+        {
+          "file": "026_fulgocobra_quick_0.png",
+          "sha256": "84012ad970b9338196379442475471f92f9fa260f235734118742df97cde8bdd"
+        },
+        {
+          "file": "027_fulgocobra_quick_40.png",
+          "sha256": "279a236460b5fd7d2201105b2176756f2b313f975f65c27c82ac8c8abecda9e2"
+        },
+        {
+          "file": "028_fulgocobra_quick_100.png",
+          "sha256": "89b05cb42a73f73e3baa16953cd10869b47f345910c1b2debf7203bbb8d6b64f"
+        },
+        {
+          "file": "029_fulgocobra_charged_0.png",
+          "sha256": "1bba6a5f34ba323c2106be37252b65a48b52c30342dbe68380093256348da017"
+        },
+        {
+          "file": "030_fulgocobra_charged_40.png",
+          "sha256": "f612935e1cebbcbd6677a54eb2a2ee18c25f9177cec444544ce40fb86009948d"
+        },
+        {
+          "file": "031_fulgocobra_charged_100.png",
+          "sha256": "c3c76b0efc6d5d587831f53a3e4b8e537476d986ea91de6f370d182311667154"
+        },
+        {
+          "file": "032_fulgocobra_restored.png",
+          "sha256": "382eb59e5610980ec17e2ec7b8f46ba92a7706b87641307853567334dd07b78a"
+        }
+      ]
+    },
+    "hit-combat-baseline": {
+      "native_raster": [
+        1920,
+        1080
+      ],
+      "frames": 65,
+      "images": [
+        {
+          "file": "hollows_alpha-00-before.png",
+          "sha256": "c5984859e5e861f0ddfe30f5d5203d965e3a16c1d997b4a39e38b79888cc29c7"
+        },
+        {
+          "file": "hollows_alpha-99-after.png",
+          "sha256": "17532843d52d7840a93a86d96e81ca097cb4fb3e57fff130399ea40288b4f351"
+        },
+        {
+          "file": "hollows_alpha-hit01_enemy_contact.png",
+          "sha256": "a40c9ab404d4d41df6dafaeef77d66f3300be83e740429fed0c0b9ab6b57afc6"
+        },
+        {
+          "file": "hollows_alpha-hit01_enemy_early.png",
+          "sha256": "243df21062b9339fca6a619cf429b413f8510f5be4190c3c4dc3e48b5b441dc5"
+        },
+        {
+          "file": "hollows_alpha-hit01_enemy_late.png",
+          "sha256": "e5baad9e85302933e53e1f8dafb3feb68cf0a7356fc59db7792c11ecc8ad64fb"
+        },
+        {
+          "file": "hollows_alpha-hit02_ally_contact.png",
+          "sha256": "0275116014cd6cbd5b43dcfdff4b06fb0a89e8e1ad0ce6fdc499f98b7988dad6"
+        },
+        {
+          "file": "hollows_alpha-hit02_ally_early.png",
+          "sha256": "3307a68be10ed6f995df6d69036ed14b3a9f300dd9e79f05731c75853f91d013"
+        },
+        {
+          "file": "hollows_alpha-hit03_enemy_contact.png",
+          "sha256": "7be0e19d03c56402a6b8c3342cb434ef0d0a774dd714f5644050f604bd6cc476"
+        },
+        {
+          "file": "hollows_alpha-hit03_enemy_early.png",
+          "sha256": "f9ae2b8b30a5e83cd48c4d2e7141304ff6da463c506e00e5a6ccca01315c3a64"
+        },
+        {
+          "file": "hollows_alpha-hit03_enemy_late.png",
+          "sha256": "30462535093a73346dca801882a28d96313ef8666da8710276eaa492598a677b"
+        },
+        {
+          "file": "hollows_alpha-hit04_enemy_contact.png",
+          "sha256": "1f589438b93eb7d4c8c44776a61e87b1bb1a16968c1062a2aeb990b6907457cf"
+        },
+        {
+          "file": "hollows_alpha-hit04_enemy_early.png",
+          "sha256": "6679b4d9b55d1091e733da6ef2a93234eee759925c5ca86d27a0ab96e85cc81c"
+        },
+        {
+          "file": "hollows_alpha-hit04_enemy_late.png",
+          "sha256": "150143cd380c8fddcd99cc4e04fa0a8b86b3bfd8fd5f600ae4a1d784d23034ae"
+        },
+        {
+          "file": "hollows_alpha-hit05_enemy_contact.png",
+          "sha256": "e395ea5304e1a4898bf5bd7cee64d51aff7c8e072cb3cc0848a54a93f48f68e7"
+        },
+        {
+          "file": "hollows_alpha-hit05_enemy_early.png",
+          "sha256": "b7944a317fe54722c20257515e047c8df2c2dbf03173bbbb0c3553c21af7756e"
+        },
+        {
+          "file": "hollows_alpha-hit05_enemy_late.png",
+          "sha256": "64fdd3e8b9122c124a8f7d2718466f7af91a42a704fe3b6e0e731f9e7b363c49"
+        },
+        {
+          "file": "hollows_alpha-hit06_enemy_contact.png",
+          "sha256": "fdeeeae4c975b0155c18a49f598046b7dd4bd80d717cc421fed7495fe1ca17ac"
+        },
+        {
+          "file": "hollows_alpha-hit06_enemy_early.png",
+          "sha256": "657e0a456de96542cff3e04f82eae82b0a53f7712a3a16baa4619973bc77d782"
+        },
+        {
+          "file": "hollows_alpha-hit06_enemy_late.png",
+          "sha256": "017fc1be0f265ddfe67331e3471bf290216314a22da7d36c65a781f2745ff6d4"
+        },
+        {
+          "file": "hollows_alpha-hit07_enemy_contact.png",
+          "sha256": "4f1216294998cd86fe8810e408b460e7302947d803342818c0f16e71dbfce7e0"
+        },
+        {
+          "file": "hollows_alpha-hit07_enemy_early.png",
+          "sha256": "c20f51a68ca3ce650ac1e88f61f9bcd640e6d770129f97c301d26a86451642f1"
+        },
+        {
+          "file": "hollows_alpha-hit07_enemy_late.png",
+          "sha256": "70ca978981ab53882dc54aa6a5f943b8e8ae8b03e7ef0a5ee1f2019f9a3ed655"
+        },
+        {
+          "file": "hollows_alpha-hit08_enemy_contact.png",
+          "sha256": "08d3ee2ef03c496c7747e9a0e6ae8116b571841367c26338c48f8278a4aff144"
+        },
+        {
+          "file": "hollows_alpha-hit08_enemy_early.png",
+          "sha256": "c6c9906c76ae3338c116b2cfce6ae5da5be59ec3482c4a4b921c6f4dd7626bde"
+        },
+        {
+          "file": "hollows_alpha-hit08_enemy_late.png",
+          "sha256": "147ced6f13d0f18475f6dc422c4b4c6070e34682cd2db2ccb7497fd7950330fc"
+        },
+        {
+          "file": "hollows_alpha-hit09_enemy_contact.png",
+          "sha256": "fc4446b0b0a20bd72cbf42c4e6d270ab1944b4f117ba55d2c94bdfedea95b23a"
+        },
+        {
+          "file": "hollows_alpha-hit09_enemy_early.png",
+          "sha256": "62d6854cd3265f91197887a3ea74a5bd4cc5554f7d9bb5c7820c6eb454178727"
+        },
+        {
+          "file": "hollows_alpha-hit09_enemy_late.png",
+          "sha256": "5917d2f7d9833b64b359ba50e61fe296fe65ea9fe8eb0bdbcc913e2dc5786e2f"
+        },
+        {
+          "file": "hollows_alpha-hit10_enemy_contact.png",
+          "sha256": "2cd12dd043bee5e82f2c91ba4d568c70575bf7f6506969620b891249130a885e"
+        },
+        {
+          "file": "hollows_alpha-hit10_enemy_early.png",
+          "sha256": "143e010462534b4504f3cbb58d913dbf9beafe8c18d139d38f65e4262a1ce167"
+        },
+        {
+          "file": "hollows_alpha-hit10_enemy_late.png",
+          "sha256": "2d7d2c1fd2684b994a1c9059821150bc5eb1e5f8f3e8c6d5ec62dae33a7a3bb5"
+        },
+        {
+          "file": "hollows_alpha-hit11_enemy_contact.png",
+          "sha256": "790d37f5f41a8450705a97d3545d14f41c1025d879f56b69ddd43f546639cfab"
+        },
+        {
+          "file": "hollows_alpha-hit11_enemy_early.png",
+          "sha256": "aa51817c71c8d27983b7c1ee6d1d42e06444b80e51ca4083e81a3152aec7a57a"
+        },
+        {
+          "file": "hollows_alpha-hit11_enemy_late.png",
+          "sha256": "c92246481a71071b307a39a03fc187e82e6183689f223efcfd6cc9432ce9d304"
+        },
+        {
+          "file": "hollows_alpha-i00.png",
+          "sha256": "3dd277ab4e832f09c5b9367126919b87662bc79f63037a81e28b78caf661b553"
+        },
+        {
+          "file": "hollows_alpha-i01.png",
+          "sha256": "00522f60af522fe14288123106e43f2aa1cdadc36a0ab85e3de36e685ede0e86"
+        },
+        {
+          "file": "hollows_alpha-i02.png",
+          "sha256": "d52a9da8fcd4f5d680f5fe7eaa69f6f579bd812ce86078b50c302495497f7f71"
+        },
+        {
+          "file": "hollows_alpha-i03.png",
+          "sha256": "befb37472c9a84e3030cc1b76edeb623edaf85373a39622bd7a6b6f2ece9eca3"
+        },
+        {
+          "file": "hollows_alpha-i04.png",
+          "sha256": "af7c8189896e04ebaa182b3ccdcf079ddb1211d45b8bccfd31f0b5f9d25122b5"
+        },
+        {
+          "file": "hollows_alpha-i05.png",
+          "sha256": "c419abbe2861241f72c58fda69697940b5d64fd33fa4d7e8b0558c811566b35e"
+        },
+        {
+          "file": "hollows_alpha-i06.png",
+          "sha256": "d4d0a9f04567a6fa92f7c3416ee812b24e64af1023d755fbd250023ec6ef74e2"
+        },
+        {
+          "file": "hollows_alpha-tell1-a-start.png",
+          "sha256": "748bde594310a00d21c03e785ded546016789e04285e3dbc0ef083d284e727fe"
+        },
+        {
+          "file": "hollows_alpha-tell1-b-mid.png",
+          "sha256": "e34dedc22a30833065e81428b6ddcba41ab1816f1c99a9aba061bd91eea07822"
+        },
+        {
+          "file": "hollows_alpha-tell1-c-late.png",
+          "sha256": "a513406a96fd37afb2f9fb675f626ea4a140a8894ea1eede9141984eb76f8ee8"
+        },
+        {
+          "file": "hollows_alpha-tell1-d-strike.png",
+          "sha256": "a6762a649e676e13da27d5e873c3826e650c51788249a12188a501c60af546a3"
+        },
+        {
+          "file": "hollows_alpha-tell1-e-impact.png",
+          "sha256": "43ba6e28e2705320293734e0e08afd3495b58b6ef2784b31db797a3936ffab49"
+        },
+        {
+          "file": "hollows_alpha-tell1-f-recovery.png",
+          "sha256": "3e4edfec9883fe0c1c07fb3b6a741f5b8da31f39fd0649868ba4c7d1a303aa12"
+        },
+        {
+          "file": "hollows_alpha-tell2-a-start.png",
+          "sha256": "266bc7153251fc3956c9d1bbdcf9df433572f8f0eb48228e2fe6ed9617c1b5d3"
+        },
+        {
+          "file": "hollows_alpha-tell2-b-mid.png",
+          "sha256": "b0b8893da848fbebac408538a018e45e39220a29cbbe5f1ac865ff1036c0d6bf"
+        },
+        {
+          "file": "hollows_alpha-tell2-c-late.png",
+          "sha256": "9c29e4deb2c17a095d5f6227b6660d7bff1ac72c8e02cd94b6b2eb0abe514ac8"
+        },
+        {
+          "file": "hollows_alpha-tell2-d-strike.png",
+          "sha256": "e2e205f5fd1c8c67cea611a64f577cab7f9483c78b5f8c412e7f7c7613a2b363"
+        },
+        {
+          "file": "hollows_alpha-tell2-e-impact.png",
+          "sha256": "c86d1734d78318981528d8c21926417a7bc3215b1331331fd9d1870b2a8fd802"
+        },
+        {
+          "file": "hollows_alpha-tell2-f-recovery.png",
+          "sha256": "afc59d0e6766681008533277b644d629db0bc85dd8ce7e1987ec74df9032b26a"
+        },
+        {
+          "file": "hollows_alpha-tell3-a-start.png",
+          "sha256": "1c4e1fad2d1df94c9d6808ae2853761db32b8f41bee87b70194d7e0819a42004"
+        },
+        {
+          "file": "hollows_alpha-tell3-b-mid.png",
+          "sha256": "f959c2213008c31911d15b4f853d34dce42c3470fc611b7bb5aed442ad7adc48"
+        },
+        {
+          "file": "hollows_alpha-tell3-c-late.png",
+          "sha256": "6d562b86db8adb239a250dfad45e5e83b437e9762533987138cd6f411ae961be"
+        },
+        {
+          "file": "hollows_alpha-tell3-d-strike.png",
+          "sha256": "040019b6c210c40be38913b433aa870dad7644664c8883258c69347d73b1e981"
+        },
+        {
+          "file": "hollows_alpha-tell3-e-impact.png",
+          "sha256": "f7073ef5d25a4ec7ea2d9508fbcb2baae02d0de12ed091d1e35818581bd0b197"
+        },
+        {
+          "file": "hollows_alpha-tell3-f-recovery.png",
+          "sha256": "7adcd0b7dcab931f758335603564683f5d8f9b645f2b44f1b0bed2ec42557b38"
+        },
+        {
+          "file": "hollows_alpha-tell4-a-start.png",
+          "sha256": "0548733b33eb33a4ef5a32bbc97d6e3a7f61c0851922ab14b1aa4ce60e2da41f"
+        },
+        {
+          "file": "hollows_alpha-tell4-b-mid.png",
+          "sha256": "8d558f418a596f82017d76ddcd20d2c88c5721412122d3d3b9b0117908bd9756"
+        },
+        {
+          "file": "hollows_alpha-tell4-c-late.png",
+          "sha256": "9ea2210cf143bee18725a34b5872abbe984e894db479f6fcc66f0a13a5e21c97"
+        },
+        {
+          "file": "hollows_alpha-tell4-d-strike.png",
+          "sha256": "6abe7e4df759987fbec469cd92b746d52f0023626d7b89380040a3b3cdbd7eeb"
+        },
+        {
+          "file": "hollows_alpha-tell4-e-impact.png",
+          "sha256": "7749776f415288ce2386547227b27e60d61f0ec1df9ee7ca616e413dce774c8b"
+        },
+        {
+          "file": "hollows_alpha-tell4-f-recovery.png",
+          "sha256": "f368bc31f75653d72db9810d88c688331f9da79174e6a8581a6fe52e1aea26fa"
+        }
+      ],
+      "fight_summary": {
+        "ended_at_s": 14.0,
+        "enemy_is_named": true,
+        "engaged_by": "Engage press",
+        "fighting_at_end": true,
+        "frames": 63,
+        "hits": [
+          "hollows_alpha t=1.03 ally->enemy 9.8",
+          "hollows_alpha t=1.88 enemy->ally 24.9",
+          "hollows_alpha t=2.83 ally->enemy 8.3",
+          "hollows_alpha t=3.73 ally->enemy 8.6",
+          "hollows_alpha t=4.80 enemy miss",
+          "hollows_alpha t=5.02 ally->enemy 9.9",
+          "hollows_alpha t=5.92 ally->enemy 10.0",
+          "hollows_alpha t=6.82 ally->enemy 9.3",
+          "hollows_alpha t=8.27 enemy miss",
+          "hollows_alpha t=9.35 ally->enemy 8.7",
+          "hollows_alpha t=10.25 ally->enemy 8.6",
+          "hollows_alpha t=10.90 enemy miss",
+          "hollows_alpha t=11.15 ally->enemy 8.9",
+          "hollows_alpha t=12.05 ally->enemy 8.3",
+          "hollows_alpha t=13.50 enemy miss"
+        ],
+        "id": "hollows_alpha",
+        "note": "",
+        "started": true,
+        "tells": [
+          {
+            "authored": 0.8,
+            "kind": "lunge_started",
+            "measured_tell_s": 0.85,
+            "n": 1
+          },
+          {
+            "authored": 0.8,
+            "kind": "lunge_started",
+            "measured_tell_s": 0.85,
+            "n": 2
+          },
+          {
+            "authored": 0.8,
+            "kind": "lunge_started",
+            "measured_tell_s": 0.8,
+            "n": 3
+          },
+          {
+            "authored": 0.8,
+            "kind": "lunge_started",
+            "measured_tell_s": 0.85,
+            "n": 4
+          },
+          {
+            "authored": 0.8,
+            "kind": "lunge_started",
+            "measured_tell_s": 0.8,
+            "n": 5
+          }
+        ]
+      },
+      "hit_overlay_samples": [
+        "HIT_FRAME hit01_enemy_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit01_enemy_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit01_enemy_late overlay_strengths=[0.20667569704733]",
+        "HIT_FRAME hit02_ally_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit02_ally_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit03_enemy_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit03_enemy_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit03_enemy_late overlay_strengths=[0.20667569704733]",
+        "HIT_FRAME hit04_enemy_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit04_enemy_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit04_enemy_late overlay_strengths=[0.20667569704733]",
+        "HIT_FRAME hit05_enemy_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit05_enemy_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit05_enemy_late overlay_strengths=[0.20667569704733]",
+        "HIT_FRAME hit06_enemy_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit06_enemy_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit06_enemy_late overlay_strengths=[0.20667569704733]",
+        "HIT_FRAME hit07_enemy_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit07_enemy_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit07_enemy_late overlay_strengths=[0.20667569704733]",
+        "HIT_FRAME hit08_enemy_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit08_enemy_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit08_enemy_late overlay_strengths=[0.20667569704733]",
+        "HIT_FRAME hit09_enemy_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit09_enemy_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit09_enemy_late overlay_strengths=[0.20667569704733]",
+        "HIT_FRAME hit10_enemy_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit10_enemy_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit10_enemy_late overlay_strengths=[0.20667569704733]",
+        "HIT_FRAME hit11_enemy_contact overlay_strengths=[0.9]",
+        "HIT_FRAME hit11_enemy_early overlay_strengths=[0.63395152121436]",
+        "HIT_FRAME hit11_enemy_late overlay_strengths=[0.20667569704733]"
+      ]
+    },
+    "hit-combat-candidate": {
+      "native_raster": [
+        1920,
+        1080
+      ],
+      "frames": 74,
+      "images": [
+        {
+          "file": "hollows_alpha-00-before.png",
+          "sha256": "98cfb66f603c830903e2a0b61c664023e84f7e34569f7c9270e623c7a4ec3dcf"
+        },
+        {
+          "file": "hollows_alpha-99-after.png",
+          "sha256": "693b1da9fa729a46c9077e456dfb8eb986533dfab392550dd0a45b6870e622ca"
+        },
+        {
+          "file": "hollows_alpha-hit01_enemy_contact.png",
+          "sha256": "90e382ec0d672681921b84fb27a00d576f9b70eda14b999de31aee008ac7b6fc"
+        },
+        {
+          "file": "hollows_alpha-hit01_enemy_early.png",
+          "sha256": "4bf411e4f3eee0cb6632b56efee782535cc839d9dfc0fb3268fa1afc1e7ab363"
+        },
+        {
+          "file": "hollows_alpha-hit01_enemy_late.png",
+          "sha256": "e38a2878d2f18fb5d38072445ac9f5fa7ef50dd6dab5b8871e893c50123aacc2"
+        },
+        {
+          "file": "hollows_alpha-hit02_ally_contact.png",
+          "sha256": "4703db10b9fe52bc556b49f7b73dfab57665fbe8629467170567b9c2f6282d9f"
+        },
+        {
+          "file": "hollows_alpha-hit02_ally_early.png",
+          "sha256": "db1407b02099bfeb7080c1b55a8d9c61964dd6106bcf7b9fdf266009bdb2ed7d"
+        },
+        {
+          "file": "hollows_alpha-hit03_enemy_contact.png",
+          "sha256": "e38f2b6222349f05de02a42ca3d27ae4efadacc7b074c1936c351b4748a1abef"
+        },
+        {
+          "file": "hollows_alpha-hit03_enemy_early.png",
+          "sha256": "eb32df27c043fdc91a1420296d33e9027a5d066d94c2835cdaac0a2674d49d6a"
+        },
+        {
+          "file": "hollows_alpha-hit03_enemy_late.png",
+          "sha256": "dff4f194198c0470feb5c954eeda87808ffd3b11582f1049db4ea580a80e8340"
+        },
+        {
+          "file": "hollows_alpha-hit04_enemy_contact.png",
+          "sha256": "556397cd4cc323e97c8f487971527a311d9c187389d20a99c6f82413766d70e1"
+        },
+        {
+          "file": "hollows_alpha-hit04_enemy_early.png",
+          "sha256": "9b189bb8079e450e3843c6ae04a13676cb3007c94ea07a821b83c689355b7216"
+        },
+        {
+          "file": "hollows_alpha-hit04_enemy_late.png",
+          "sha256": "de3c621b85c281e9e6b88b0cd9bea21bb1f79e37e28aeed28dd09ccde860add0"
+        },
+        {
+          "file": "hollows_alpha-hit05_enemy_contact.png",
+          "sha256": "fb10d312ce12240b653bc62825070b8580c0b7b818d86783bbde1e39c6d42e6f"
+        },
+        {
+          "file": "hollows_alpha-hit05_enemy_early.png",
+          "sha256": "363072241e85019ecbf0d5abeac1afcff070462979c630eb1f6dcd5be0e792af"
+        },
+        {
+          "file": "hollows_alpha-hit05_enemy_late.png",
+          "sha256": "8e3470bbe6f564e1c32758bbf196b0a6bfe9b7b7b1b0a07eadc88d0c38992d5b"
+        },
+        {
+          "file": "hollows_alpha-hit06_enemy_contact.png",
+          "sha256": "9b09117c08d6a1dee65659632dc8b6ac40a067b6c680daa18cf984ca21b86e77"
+        },
+        {
+          "file": "hollows_alpha-hit06_enemy_early.png",
+          "sha256": "94d6f3fa76b26fb1d2acf46460717b26b62d436ab8d0b1f550576b1cbcd0e708"
+        },
+        {
+          "file": "hollows_alpha-hit06_enemy_late.png",
+          "sha256": "87cf12cd4938fd8525534e8e4aa2cd9902e27f218982259f74d1ec40cff6b736"
+        },
+        {
+          "file": "hollows_alpha-hit07_enemy_contact.png",
+          "sha256": "762ac1857efaa2485290924e7aff9c9db5c547f523468871f803820fd74005ed"
+        },
+        {
+          "file": "hollows_alpha-hit07_enemy_early.png",
+          "sha256": "2c633af5efaaf4b51ef77b32b1fc16d45e23e7cf0914b3baa18d84180a87a78c"
+        },
+        {
+          "file": "hollows_alpha-hit07_enemy_late.png",
+          "sha256": "c4c76211357d40a817aea86d5e4d222a297a74561b90820b7c802551d0e7d080"
+        },
+        {
+          "file": "hollows_alpha-hit08_enemy_contact.png",
+          "sha256": "12285a2fc138c2854a5efaa96299a572c349d97b4b89c64b0abb73174d0de360"
+        },
+        {
+          "file": "hollows_alpha-hit08_enemy_early.png",
+          "sha256": "1255b46970a89010fec150aabd916de02c01a929658ba4d438ca59f8485ace98"
+        },
+        {
+          "file": "hollows_alpha-hit08_enemy_late.png",
+          "sha256": "5ceaf9d1b9254e5264b93dd36abc4bab196f50ac8e366d8d6183b347845377e7"
+        },
+        {
+          "file": "hollows_alpha-hit09_enemy_contact.png",
+          "sha256": "03de51569a3f1e0164f4c933ceea6de29a9eb94dd3ab7f4feb8e26e2a95bf4e7"
+        },
+        {
+          "file": "hollows_alpha-hit09_enemy_early.png",
+          "sha256": "45d9cbfe48ea7a93ddd937b9c0f97369795bdc8d7b7d2cbff8ed3643cd482186"
+        },
+        {
+          "file": "hollows_alpha-hit09_enemy_late.png",
+          "sha256": "f51968d9924cbc3cd64c00d35ffd4626bd3c57b3280af2e0ccd2f451fac4711c"
+        },
+        {
+          "file": "hollows_alpha-hit10_enemy_contact.png",
+          "sha256": "3d64427793fda1a13d146bdb5b8c74117bb229047addf24d56e22fa3e58db337"
+        },
+        {
+          "file": "hollows_alpha-hit10_enemy_early.png",
+          "sha256": "fa6752cb1bff02862b5768c1992bde57739e7bef25cf377a31fc35f780995db7"
+        },
+        {
+          "file": "hollows_alpha-hit10_enemy_late.png",
+          "sha256": "f21461448179da314d3dfbb7a8b2e06fcd13ef465c137876583ce395463e18f5"
+        },
+        {
+          "file": "hollows_alpha-hit11_ally_contact.png",
+          "sha256": "79d4ea722eb5cacb485cb792706ad545d1024cad40fc23bd58f1ccd79b31a47a"
+        },
+        {
+          "file": "hollows_alpha-hit11_ally_early.png",
+          "sha256": "85e37bc7c2ba4de12cc3718b1d14fa24e219666331b62a05bd445e35692123a6"
+        },
+        {
+          "file": "hollows_alpha-hit11_ally_late.png",
+          "sha256": "08925e10d29e841c1ad52a742d38b2c6f80fb6dd02f282570a91e6384d792205"
+        },
+        {
+          "file": "hollows_alpha-hit12_enemy_contact.png",
+          "sha256": "2eb52b7c278f70327993e7248f91e5eafe6f0ecd21445c2ade27238519543f90"
+        },
+        {
+          "file": "hollows_alpha-hit12_enemy_early.png",
+          "sha256": "9053875cf108898a1af0689280b65cff5c0094a7b1884a6b8625f7853ab85179"
+        },
+        {
+          "file": "hollows_alpha-hit13_enemy_contact.png",
+          "sha256": "dd05533262824722318e33027642070f9f34dd1eb5e42d00127b77199ba8ed40"
+        },
+        {
+          "file": "hollows_alpha-hit13_enemy_early.png",
+          "sha256": "9b55bf3cba5731e12674796bbd971bcc9295404d86a57ab4cf827ef25fc1600c"
+        },
+        {
+          "file": "hollows_alpha-hit13_enemy_late.png",
+          "sha256": "8b8f380b707c0b35358062fa76f9fd4e8c466e58f22e14ee6888870bae872e73"
+        },
+        {
+          "file": "hollows_alpha-hit14_enemy_contact.png",
+          "sha256": "736615693b15e00112d3a3d0fa4803260bc888a0732e8ea88d6f6fef2d5981b3"
+        },
+        {
+          "file": "hollows_alpha-hit14_enemy_early.png",
+          "sha256": "a156676080d1efe9770e17b2fc03ea4f955286d1d523a9aedadc6c3d8e733133"
+        },
+        {
+          "file": "hollows_alpha-hit14_enemy_late.png",
+          "sha256": "b9de9495bbbebfec6f7cc8da638fc587b8db6200a003f75ab7abf66d269caa90"
+        },
+        {
+          "file": "hollows_alpha-hit15_ally_contact.png",
+          "sha256": "561d28ae54386f420e776d0888021ef9aebf743477e14623b84a20f96a50a6dc"
+        },
+        {
+          "file": "hollows_alpha-i00.png",
+          "sha256": "b53b8d0da37489d63f7c6fa989674f300e726536aef3149f2c7e1d7b6640139b"
+        },
+        {
+          "file": "hollows_alpha-i01.png",
+          "sha256": "27625062d4e2c928ab11d480831daf0a1050104b98dcec752795dc62c7677714"
+        },
+        {
+          "file": "hollows_alpha-i02.png",
+          "sha256": "bd4c22e523357fe33a6404351e57a498dbe71e36d5d1f31ba19ae62132bf9ea7"
+        },
+        {
+          "file": "hollows_alpha-i03.png",
+          "sha256": "24e69eddfd609880903ff56370bac6c06b8ddc11c1c47e3a3b0ae2696d9859dc"
+        },
+        {
+          "file": "hollows_alpha-i04.png",
+          "sha256": "0762949e80b7decf69ea5c9764e2b08094ba76366089b8b62656b07a98620b5e"
+        },
+        {
+          "file": "hollows_alpha-i05.png",
+          "sha256": "41bedd56c8214e14540409e53bf1150ae666525e6d8a87cf761db596ec7fb62b"
+        },
+        {
+          "file": "hollows_alpha-i06.png",
+          "sha256": "ec68307225fe0eafb093031e44aaa556323b0d2ee6bc7c3bd11bb52e3dfffe53"
+        },
+        {
+          "file": "hollows_alpha-tell1-a-start.png",
+          "sha256": "d24d8ee09916fe3fc99fedf30a5c30168a8adb83b3b3fa84fde2bed3eb5615d4"
+        },
+        {
+          "file": "hollows_alpha-tell1-b-mid.png",
+          "sha256": "321bfe990fcda7e71fc82bc0ca4f5eb793d70a6443cbd14b7aac5bf2ea5a249b"
+        },
+        {
+          "file": "hollows_alpha-tell1-c-late.png",
+          "sha256": "8534fd5e517ecaae06691a4ebfd0cdf7c6b8db7df6a4148ff80bc9c9a151ca0b"
+        },
+        {
+          "file": "hollows_alpha-tell1-d-strike.png",
+          "sha256": "fb0e66baf6ab4e8f039e397b6e4197cfb0942c56ba12808e21a5dc82dbda6ee3"
+        },
+        {
+          "file": "hollows_alpha-tell1-e-impact.png",
+          "sha256": "1a122bb2dffda654645abcf831f8a107ecb8877019653dccd338e72c6783652f"
+        },
+        {
+          "file": "hollows_alpha-tell1-f-recovery.png",
+          "sha256": "186d02890309bf65917b1c1fe642af5c0aec7dd0faf97c969acdcd3995303729"
+        },
+        {
+          "file": "hollows_alpha-tell2-a-start.png",
+          "sha256": "0b814da6e9875b89d2d9097a640389cfe5164383523dc964768ed8d5cd72893b"
+        },
+        {
+          "file": "hollows_alpha-tell2-b-mid.png",
+          "sha256": "64dd2c150b1e9aa15bb788693de988d4d1f0cffc08d99139830fe12282f48cf3"
+        },
+        {
+          "file": "hollows_alpha-tell2-c-late.png",
+          "sha256": "0ad63fd565db36ad40e927df9bfa1573683c8939142434a550f15bcdeec5ae88"
+        },
+        {
+          "file": "hollows_alpha-tell2-d-strike.png",
+          "sha256": "cd0ea0724f58e30973e3cf1b23536dd8443a47221b264014c23ceecc16c32166"
+        },
+        {
+          "file": "hollows_alpha-tell2-e-impact.png",
+          "sha256": "ed4c181a6bacc1fc6ab0e702eee17ee02378f71f9900fd6bafb4d49e589cc226"
+        },
+        {
+          "file": "hollows_alpha-tell2-f-recovery.png",
+          "sha256": "e7120d749fc9bb2bdd1edd5498fd0f52cfafc3d661afb09be7e0e94109a32ccc"
+        },
+        {
+          "file": "hollows_alpha-tell3-a-start.png",
+          "sha256": "317431b908f8637b1e81e2eb21ecf2ae07d60b9b76aa3a7fa0335bfd8da7299d"
+        },
+        {
+          "file": "hollows_alpha-tell3-b-mid.png",
+          "sha256": "7b1622ee7b7965e49ca69f126c8916a2d722f27d1d18e0aa2fe7bbc68047e649"
+        },
+        {
+          "file": "hollows_alpha-tell3-c-late.png",
+          "sha256": "66db7224c7c140af5f813abc4498a2bfb329c182f3212f24149a0b04eeabbd10"
+        },
+        {
+          "file": "hollows_alpha-tell3-d-strike.png",
+          "sha256": "b41b7b0f17371c6652e4f6137cd0b7132f4a59043902e7e12ec2871f01152fce"
+        },
+        {
+          "file": "hollows_alpha-tell3-e-impact.png",
+          "sha256": "9f26f1cf2270a677f5cac1e00cc6c5818c519cde7cdf440124c3202201b4d0ee"
+        },
+        {
+          "file": "hollows_alpha-tell3-f-recovery.png",
+          "sha256": "6982e21ec10b174c1db72f1dd429ae29d72c4fca52293eff0977024aa28953cb"
+        },
+        {
+          "file": "hollows_alpha-tell4-a-start.png",
+          "sha256": "08d6a96a25139f723bf0186fd5fe9a7ed8f7a909bb539be9a748338c0a29e77c"
+        },
+        {
+          "file": "hollows_alpha-tell4-b-mid.png",
+          "sha256": "7a7ca21e4d3dd55609ee78e1a5f8335868359dcb4374c88e4dc936b85430177e"
+        },
+        {
+          "file": "hollows_alpha-tell4-c-late.png",
+          "sha256": "376a7944398fe38b8ba5840434854b729215156d4397576dad7f0792c3cd893f"
+        },
+        {
+          "file": "hollows_alpha-tell4-d-strike.png",
+          "sha256": "84dd40190835a051b8eb2c25250dc194a8e1b9f70442b3269060faf2b8f880d0"
+        },
+        {
+          "file": "hollows_alpha-tell4-e-impact.png",
+          "sha256": "91605d93f862fe95188e2d589727ba2e57a1a2a36d079fb9c52df8617fa01e25"
+        },
+        {
+          "file": "hollows_alpha-tell4-f-recovery.png",
+          "sha256": "240d65c483670b5ad6542dbfc0dd71ae777f8cf3c33d7ae41ee7b98131566b2e"
+        }
+      ],
+      "fight_summary": {
+        "ended_at_s": 14.0,
+        "enemy_is_named": true,
+        "engaged_by": "Engage press",
+        "fighting_at_end": true,
+        "frames": 72,
+        "hits": [
+          "hollows_alpha t=1.03 ally->enemy 9.2",
+          "hollows_alpha t=1.88 enemy->ally 22.6",
+          "hollows_alpha t=2.83 ally->enemy 8.5",
+          "hollows_alpha t=3.73 ally->enemy 9.6",
+          "hollows_alpha t=4.87 enemy miss",
+          "hollows_alpha t=5.02 ally->enemy 9.5",
+          "hollows_alpha t=5.92 ally->enemy 9.0",
+          "hollows_alpha t=6.82 ally->enemy 9.8",
+          "hollows_alpha t=8.55 enemy miss",
+          "hollows_alpha t=8.75 ally->enemy 8.9",
+          "hollows_alpha t=9.65 ally->enemy 9.3",
+          "hollows_alpha t=10.55 ally->enemy 9.4",
+          "hollows_alpha t=11.23 enemy->ally 25.0",
+          "hollows_alpha t=11.57 ally->enemy 5.8",
+          "hollows_alpha t=12.47 ally->enemy 5.9",
+          "hollows_alpha t=13.37 ally->enemy 5.2",
+          "hollows_alpha t=13.97 enemy->ally 24.4"
+        ],
+        "id": "hollows_alpha",
+        "note": "",
+        "started": true,
+        "tells": [
+          {
+            "authored": 0.8,
+            "kind": "lunge_started",
+            "measured_tell_s": 0.85,
+            "n": 1
+          },
+          {
+            "authored": 0.8,
+            "kind": "lunge_started",
+            "measured_tell_s": 0.85,
+            "n": 2
+          },
+          {
+            "authored": 0.8,
+            "kind": "lunge_started",
+            "measured_tell_s": 0.8,
+            "n": 3
+          },
+          {
+            "authored": 0.8,
+            "kind": "lunge_started",
+            "measured_tell_s": 0.85,
+            "n": 4
+          },
+          {
+            "authored": 0.8,
+            "kind": "lunge_started",
+            "measured_tell_s": 0.85,
+            "n": 5
+          }
+        ]
+      },
+      "hit_overlay_samples": [
+        "HIT_FRAME hit01_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit01_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit01_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit02_ally_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit02_ally_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit03_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit03_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit03_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit04_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit04_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit04_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit05_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit05_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit05_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit06_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit06_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit06_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit07_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit07_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit07_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit08_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit08_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit08_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit09_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit09_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit09_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit10_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit10_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit10_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit11_ally_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit11_ally_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit11_ally_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit12_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit12_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit13_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit13_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit13_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit14_enemy_contact overlay_strengths=[0.3]",
+        "HIT_FRAME hit14_enemy_early overlay_strengths=[0.21131717373812]",
+        "HIT_FRAME hit14_enemy_late overlay_strengths=[0.06889189901578]",
+        "HIT_FRAME hit15_ally_contact overlay_strengths=[0.3]"
+      ]
+    }
+  }
+}

@@ -57,10 +57,10 @@
     "enabled": true,
     "duration": 0.16,
     "colour": "#fff1d6",
-    "strength": 0.9,
-    "rim_power": 1.6,
-    "flat_mix": 0.3,
-    "charged_strength": 1.0
+    "strength": 0.3,
+    "rim_power": 2.8,
+    "flat_mix": 0.05,
+    "charged_strength": 0.4
   },
 
   "_comment_ko_puff": "The creature that just fainted lets out a soft cloud: slow, pale, mostly upward, bigger and longer than a hit. Fired from the same damage hook as the spark, on the blow that emptied the bar, so a trainer's second creature falling mid-battle puffs the same as a wild one ending the fight.",
