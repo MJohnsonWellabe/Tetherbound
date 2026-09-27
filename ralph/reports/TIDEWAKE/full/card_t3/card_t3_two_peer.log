@@ -1,0 +1,135 @@
+== card_t3_two_peer: tools/net/run_two_peer_proof.sh tools/net/proof_scenarios/card_t3_tidewake_ending.json --out=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer
+proof:    card_t3_tidewake_ending
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/card_t3_tidewake_ending.json
+out:      /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer
+run id:  net-20260927T202747Z-3345
+run dir: /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/net/net-proof_two_peer-20260927T202747Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=3367 control_port=43885 home=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/net/net-proof_two_peer-20260927T202747Z/home-0 log=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/net/net-proof_two_peer-20260927T202747Z/peer-0.log
+coordinator: launched peer 1 (client) pid=3368 control_port=36533 home=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/net/net-proof_two_peer-20260927T202747Z/home-1 log=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/net/net-proof_two_peer-20260927T202747Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":29181.0,"godot_version":"4.7-stable (official)","main_sha":"95aa83573dd2","peer":0.0,"pid":3367.0,"role":"host","type":"hello","user_data_dir":"/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/net/net-proof_two_peer-20260927T202747Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":29182.0,"godot_version":"4.7-stable (official)","main_sha":"95aa83573dd2","peer":1.0,"pid":3368.0,"role":"client","type":"hello","user_data_dir":"/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/net/net-proof_two_peer-20260927T202747Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 host -> PASS -- hosting udp/29181 as peer 1
+PASS: #2 peer 1 join -> PASS -- joined 127.0.0.1:29181 as peer 503092422 after 12 frames; snapshot applied; 2 peer(s) in registry
+PASS: #3 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #3 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #4 peer 0 story_flag (FIXTURE 1: world past the Meadows opening (Grandpa at home)) -> PASS -- defeated_warden: ok=true pending=false code='' reason=''
+PASS: #5 peer 0 story_flag (FIXTURE: the Water route is open (stands in for Stormwood)) -> PASS -- realm_gate_water_unlocked: ok=true pending=false code='' reason=''
+PASS: #6 peer 0 story_flag (FIXTURE: the Water key Stormwood granted) -> PASS -- realm_key_water: ok=true pending=false code='' reason=''
+PASS: #7 peer 0 story_flag (FIXTURE: the swim lesson (the dock repair's prerequisite)) -> PASS -- water_swim_lesson_complete: ok=true pending=false code='' reason=''
+PASS: #8 peer 0 story_flag (FIXTURE: Tidecoil resolved (the free chart's prerequisite)) -> PASS -- water_named_deep_watch_tidecoil_resolved: ok=true pending=false code='' reason=''
+PASS: #9 peer 0 story_flag (FIXTURE: one Local Request revealed (Old Bram)) -> PASS -- old_champion_met: ok=true pending=false code='' reason=''
+PASS: #10 peer 0 wait_flag -> PASS -- flag water_named_deep_watch_tidecoil_resolved (world) set after 0 frames
+PASS: #10 peer 1 wait_flag -> PASS -- flag water_named_deep_watch_tidecoil_resolved (world) set after 0 frames
+PASS: #11 peer 0 party_grant (FIXTURE 2: companions by name) -> PASS -- 'terrapup' at level 3 joined the party (1 member(s))
+PASS: #12 peer 0 party_grant -> PASS -- 'sparkit' at level 3 joined the party (2 member(s))
+PASS: #13 peer 0 party_grant -> PASS -- 'mudsnout' at level 3 joined the party (3 member(s))
+PASS: #14 peer 0 party_grant -> PASS -- 'mosshell' at level 3 joined the party (4 member(s))
+PASS: #15 peer 0 party_grant -> PASS -- 'meadowhart' at level 3 joined the party (5 member(s))
+PASS: #16 peer 1 party_grant -> PASS -- 'ripplet' at level 3 joined the party (1 member(s))
+PASS: #17 peer 1 party_grant -> PASS -- 'bramblebun' at level 3 joined the party (2 member(s))
+PASS: #18 peer 0 water_dock_state (SETUP: 8 reed fiber + 6 driftwood gathered and saved (cost is 6 + 4)) -> PASS -- SETUP (stands in for gathering): bag { "driftwood": 6, "reed_fiber": 8 }, on disk { "driftwood": 6, "reed_fiber": 8 }, saved=true; then { "character_id": "character-cfdf88515e45e6427b1e7e2928b26ab2", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_cr
+PASS: #18 peer 1 water_dock_state (SETUP: 8 reed fiber + 6 driftwood gathered and saved (cost is 6 + 4)) -> PASS -- SETUP (stands in for gathering): bag { "driftwood": 6, "reed_fiber": 8 }, on disk { "driftwood": 6, "reed_fiber": 8 }, saved=true; then { "character_id": "character-2a360d7377e5c61fff6af8b21f113249", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_cr
+PASS: #19 peer 0 water_dock_state (before: nothing done, the repair offered (baseline)) -> PASS -- { "character_id": "character-cfdf88515e45e6427b1e7e2928b26ab2", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 8, "d
+PASS: #19 peer 1 water_dock_state (before: nothing done, the repair offered (baseline)) -> PASS -- { "character_id": "character-2a360d7377e5c61fff6af8b21f113249", "done": { "reedhaven_repair": false, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 8, "d
+PASS: #20 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-cfdf88515e45e6427b1e7e2928b26ab2' on disk=true; copied 3 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-0/before
+PASS: #20 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-2a360d7377e5c61fff6af8b21f113249' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-1/before
+PASS: #21 peer 1 water_dock_act (guest pays for the repair through the real prompt (F15 escrow: the cost is debited and saved at the press; the host sends no item_take)) -> PASS -- interact on the offered prompt standing (1.4, 0.3, 0.0); flag false -> true; bag { "reed_fiber": 8, "driftwood": 6 } -> { "reed_fiber": 2, "driftwood": 2 } (disk { "reed_fiber": 8, "driftwood": 6 } -> { "reed_fiber": 2, "driftwood": 2 }); item_take ops seen []; refusals []
+PASS: #22 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #23 peer 0 wait_flag -> PASS -- flag water_dock_reedhaven_repaired (world) set after 0 frames
+PASS: #24 peer 0 water_dock_state (host sees it done and paid nothing) -> PASS -- { "character_id": "character-cfdf88515e45e6427b1e7e2928b26ab2", "done": { "reedhaven_repair": true, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": false }, "bag": { "reed_fiber": 8, "dr
+PASS: #25 peer 0 water_dock_act (host does a different (free) dock action) -> PASS -- interact on the offered prompt standing (1.4, 0.3, 0.0); flag false -> true; bag {  } -> {  } (disk {  } -> {  }); item_take ops seen []; refusals []
+PASS: #26 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #27 peer 1 wait_flag -> PASS -- flag water_dock_deep_watch_current_charted (world) set after 0 frames
+PASS: #28 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-2a360d7377e5c61fff6af8b21f113249' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-1/after_pay
+PASS: #29 peer 1 water_dock_state (guest charged exactly once, in memory and on disk) -> PASS -- { "character_id": "character-2a360d7377e5c61fff6af8b21f113249", "done": { "reedhaven_repair": true, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": true }, "bag": { "reed_fiber": 2, "dri
+PASS: #30 peer 1 water_dock_act (guest retries the finished repair (stale resend): no second charge) -> PASS -- prompt activated (FORCED: prompt dark, stale-client resend) standing (not offered); flag true -> true; bag { "reed_fiber": 2, "driftwood": 2 } -> { "reed_fiber": 2, "driftwood": 2 } (disk { "reed_fiber": 2, "driftwood": 2 } -> { "reed_fiber": 2, "driftwood": 2 }); item_take ops seen []; refusals []
+PASS: #31 peer 0 water_dock_act (host presses the finished repair: not charged) -> PASS -- prompt activated (FORCED: prompt dark, stale-client resend) standing (not offered); flag true -> true; bag { "reed_fiber": 8, "driftwood": 6 } -> { "reed_fiber": 8, "driftwood": 6 } (disk { "reed_fiber": 8, "driftwood": 6 } -> { "reed_fiber": 8, "driftwood": 6 }); item_take ops seen []; refusals []
+PASS: #32 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-cfdf88515e45e6427b1e7e2928b26ab2' on disk=true; copied 3 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-0/after
+PASS: #32 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-2a360d7377e5c61fff6af8b21f113249' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-1/after
+PASS: #33 peer 0 water_dock_state (final) -> PASS -- { "character_id": "character-cfdf88515e45e6427b1e7e2928b26ab2", "done": { "reedhaven_repair": true, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": true }, "bag": { "reed_fiber": 8, "dri
+PASS: #33 peer 1 water_dock_state (final) -> PASS -- { "character_id": "character-2a360d7377e5c61fff6af8b21f113249", "done": { "reedhaven_repair": true, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": true }, "bag": { "reed_fiber": 2, "dri
+PASS: #34 peer 1 water_dock_state (guest: still charged exactly once) -> PASS -- { "character_id": "character-2a360d7377e5c61fff6af8b21f113249", "done": { "reedhaven_repair": true, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": true }, "bag": { "reed_fiber": 2, "dri
+PASS: #35 peer 0 water_dock_state (host: never charged) -> PASS -- { "character_id": "character-cfdf88515e45e6427b1e7e2928b26ab2", "done": { "reedhaven_repair": true, "shellwatch_release": false, "shellwatch_pump": false, "salt_crown_chart": false, "sluice_west_control": false, "sluice_east_control": false, "deep_watch_chart": true }, "bag": { "reed_fiber": 8, "dri
+PASS: #36 peer 0 guardian_state (the host's belt is full (five), Rill third) -> PASS -- {"character_id":"character-cfdf88515e45e6427b1e7e2928b26ab2","claim_id":"9aea895d30f2be8a1d61dc50904e9261b5d282e1266973a3c196a3e2c1b96faa","guardian_freed":false,"guardians_owned":0,"host_open_claims":[],"host_settled":false,"offered":false,"participants":[],"party":["Acorn","Pip","Rill","Shelby","V
+PASS: #37 peer 0 guardian_fixture (FIXTURE 3: both fought Nerissa (director's own session path journals one reward row each)) -> PASS -- prerequisites committed ["water_dock_sluice_isle_both_controls_disabled", "water_veilfall_intake_stopped", "water_veilfall_return_opened"]; Nerissa fought by peers [1, 503092422]; session path handled=true; 'water_captain_nerissa_defeated' set=true; participant characters ["character-cfdf88515e45e64
+PASS: #38 peer 0 wait_flag -> PASS -- flag water_captain_nerissa_defeated (world) set after 0 frames
+PASS: #38 peer 1 wait_flag -> PASS -- flag water_captain_nerissa_defeated (world) set after 0 frames
+PASS: #39 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-cfdf88515e45e6427b1e7e2928b26ab2' on disk=true; copied 3 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-0/before
+PASS: #39 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-2a360d7377e5c61fff6af8b21f113249' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-1/before
+PASS: #40 peer 0 veilfall_press (the host frees the Guardian at the chamber's real control) -> PASS -- pressed 'Release the Abyssal Guardian' standing at (0.0, -1.2, -1.6); 'water_guardian_freed' set
+PASS: #41 peer 0 wait_flag -> PASS -- flag water_guardian_freed (world) set after 0 frames
+PASS: #41 peer 1 wait_flag -> PASS -- flag water_guardian_freed (world) set after 0 frames
+PASS: #42 peer 0 veilfall_press (the host asks for its own offer at the chamber's real prompt) -> PASS -- pressed 'Invite the Deep Watcher' standing at (0.0, -1.2, -1.6)
+PASS: #43 peer 0 guardian_answer (REAL RELEASE MENU at a full five: Rill's row, ui_accept, confirm, 'Let them go', Done; the Guardian takes Rill's holder) -> PASS -- answered let Rill go: party ["Acorn", "Pip", "Rill", "Shelby", "Volt"] -> ["Acorn", "Pip", "Abyssal Guardian", "Shelby", "Volt"]; Guardians owned 1; receipt on the saved character=true
+PASS: #44 peer 0 wait_flag (the Guardian resolution itself restored the currents (not the ledger)) -> PASS -- flag water_currents_restored (world) set after 0 frames
+PASS: #44 peer 1 wait_flag (the Guardian resolution itself restored the currents (not the ledger)) -> PASS -- flag water_currents_restored (world) set after 0 frames
+PASS: #45 peer 1 veilfall_press (the guest asks for its own offer) -> PASS -- pressed 'Invite the Deep Watcher' standing at (0.0, -1.2, -1.6)
+PASS: #46 peer 1 guardian_answer (WITH ROOM: the guest accepts its own Guardian) -> PASS -- answered Accept: party ["Kestrel", "Bramble"] -> ["Kestrel", "Bramble", "Abyssal Guardian"]; Guardians owned 1; receipt on the saved character=true
+PASS: #47 peer 0 guardian_state (host: Rill gone, the Guardian in Rill's holder, never a sixth) -> PASS -- {"character_id":"character-cfdf88515e45e6427b1e7e2928b26ab2","claim_id":"9aea895d30f2be8a1d61dc50904e9261b5d282e1266973a3c196a3e2c1b96faa","guardian_freed":true,"guardians_owned":1,"host_open_claims":[],"host_settled":true,"offered":true,"participants":["character-2a360d7377e5c61fff6af8b21f113249","
+PASS: #48 peer 1 guardian_state -> PASS -- {"character_id":"character-2a360d7377e5c61fff6af8b21f113249","claim_id":"37a687d242c96e85aabae8a6184eeee0521678696da3fc38b6a33c1f0d9e6c13","guardian_freed":true,"guardians_owned":1,"offered":true,"party":["Kestrel","Bramble","Abyssal Guardian"],"party_size":3,"pending_guardian_id":"","receipt_saved"
+PASS: #49 peer 0 menu_toggle (the host leaves the Creatures tab with B (menu_cancel presses), as a player would) -> PASS -- the menu is shut 1 frames after press 1 of 'menu_cancel' (context 'world', tree paused=false)
+PASS: #50 peer 1 menu_toggle (the guest leaves the Creatures tab with B) -> PASS -- the menu is shut 1 frames after press 1 of 'menu_cancel' (context 'world', tree paused=false)
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:516)
+       [1] write_snapshot (res://scripts/save/save_game.gd:501)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:490)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:477)
+         [3] _tick_autosave (res://autoload/game_state.gd:1005)
+         [4] _process (res://autoload/game_state.gd:1050)
+PASS: #51 peer 0 enter_realm (FIXTURE 4: the host crosses home to the Meadows (Game.enter_realm)) -> PASS -- crossed 'water' -> 'meadows' after 1790 observed physics frames / 108697 ms (budget 6000 physics frames); current scene is /root/MeadowsPlayground
+PASS: #52 peer 1 enter_realm (FIXTURE 4: the guest crosses home to the Meadows) -> PASS -- crossed 'water' -> 'meadows' after 1735 observed physics frames / 101466 ms (budget 6000 physics frames); current scene is /root/MeadowsPlayground
+PASS: #53 peer 0 grandpa_homecoming (host (FIXTURE 5 teleport beside Grandpa): its current five incl. the Guardian; the released Rill is NOT named) -> PASS -- conversation 'regional_homecoming_5' (expected 'regional_homecoming_5', 9 lines) for party ["Acorn", "Pip", "Abyssal Guardian", "Shelby", "Volt"]; homecoming_seen=true; missing names []; wrongly named []; credits opened=true; lines: Grandpa Elias: You're home. Word reached us that the Tidewake cross
+PASS: #54 peer 1 grandpa_homecoming (guest (FIXTURE 5): its own current three, nobody else's) -> PASS -- conversation 'regional_homecoming_3' (expected 'regional_homecoming_3', 7 lines) for party ["Kestrel", "Bramble", "Abyssal Guardian"]; homecoming_seen=true; missing names []; wrongly named []; credits opened=true; lines: Grandpa Elias: You're home. Word reached us that the Tidewake crossings are fre
+PASS: #55 peer 0 credits_continue (host: the credits Grandpa's homecoming opened, watched, Continue once) -> PASS -- credits watched 3.80s, Continue pressed; acknowledged 1 time(s) (after the first press 1), open after=false, receipt in memory=true on disk=true, pending=false; second press opened 'regional_homecoming_repeat', roll reopened=false
+PASS: #56 peer 1 credits_continue (guest: its own credits, Continue once) -> PASS -- credits watched 3.07s, Continue pressed; acknowledged 1 time(s) (after the first press 1), open after=false, receipt in memory=true on disk=true, pending=false; second press opened 'regional_homecoming_repeat', roll reopened=false
+PASS: #57 peer 0 ending_state (after the credits, before reload) -> PASS -- { "character_id": "character-cfdf88515e45e6427b1e7e2928b26ab2", "host_owned": true, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_water"], "realm_key_c
+PASS: #57 peer 1 ending_state (after the credits, before reload) -> PASS -- { "character_id": "character-2a360d7377e5c61fff6af8b21f113249", "host_owned": false, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_water"], "realm_key_
+PASS: #58 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-cfdf88515e45e6427b1e7e2928b26ab2' on disk=true; copied 3 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-0/after_credits
+PASS: #58 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-2a360d7377e5c61fff6af8b21f113249' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-1/after_credits
+PASS: #59 peer 0 check_saved (host's saved character holds both receipts) -> PASS -- missing []; unexpectedly present []; read ["character-cfdf88515e45e6427b1e7e2928b26ab2/character.json"] under after_credits/characters
+PASS: #60 peer 1 check_saved (guest's saved character holds both receipts) -> PASS -- missing []; unexpectedly present []; read ["character-2a360d7377e5c61fff6af8b21f113249/character.json"] under after_credits/characters
+PASS: #61 peer 0 ending_state (host: save, empty memory, reload its slot from disk) -> PASS -- host slot (world + character): saved, memory emptied (homecoming receipt gone=true), read back from disk=true, same character=true; then { "character_id": "character-cfdf88515e45e6427b1e7e2928b26ab2", "host_owned": true, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "cred
+PASS: #62 peer 1 ending_state (guest: save, empty memory, reload its character from disk) -> PASS -- guest character file: saved, memory emptied (homecoming receipt gone=true), read back from disk=true, same character=true; then { "character_id": "character-2a360d7377e5c61fff6af8b21f113249", "host_owned": false, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pend
+PASS: #63 peer 0 ending_state (after the disk reload: a safe completed world) -> PASS -- { "character_id": "character-cfdf88515e45e6427b1e7e2928b26ab2", "host_owned": true, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_cloudreach", "realm_k
+PASS: #63 peer 1 ending_state (after the disk reload: a safe completed world) -> PASS -- { "character_id": "character-2a360d7377e5c61fff6af8b21f113249", "host_owned": false, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_water"], "realm_key_
+PASS: #64 peer 0 homecoming_complete (after the reload, Grandpa again (pressed now): the repeat greeting, no second roll) -> PASS -- Grandpa: 'regional_homecoming_repeat' (expected 'regional_homecoming_repeat'), 2 line(s), 1 press(es) on the prompt standing (1.4, 0.3, 0.0); homecoming_seen=true credits_open=false
+PASS: #64 peer 1 homecoming_complete (after the reload, Grandpa again (pressed now): the repeat greeting, no second roll) -> PASS -- Grandpa: 'regional_homecoming_repeat' (expected 'regional_homecoming_repeat'), 4 line(s), 1 press(es) on the prompt standing (1.4, 0.3, 0.0); homecoming_seen=true credits_open=false
+PASS: #65 peer 0 ending_state (final) -> PASS -- { "character_id": "character-cfdf88515e45e6427b1e7e2928b26ab2", "host_owned": true, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_cloudreach", "realm_k
+PASS: #65 peer 1 ending_state (final) -> PASS -- { "character_id": "character-2a360d7377e5c61fff6af8b21f113249", "host_owned": false, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_water"], "realm_key_
+PASS: #66 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #66 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #67 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-cfdf88515e45e6427b1e7e2928b26ab2' on disk=true; copied 3 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-0/after_reload
+PASS: #67 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-2a360d7377e5c61fff6af8b21f113249' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-1/after_reload
+PASS: #68 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-cfdf88515e45e6427b1e7e2928b26ab2' on disk=true; copied 3 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-0/after
+PASS: #68 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-2a360d7377e5c61fff6af8b21f113249' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/peer-1/after
+PASS: #69 peer 0 check_saved (non-vacuous: the pre-offer world save had NO water_currents_restored) -> PASS -- missing []; unexpectedly present []; read ["slot-0/world.json"] under before/worlds
+PASS: #70 peer 0 check_saved (non-vacuous: the host's pre-offer save held Rill, no Guardian, no homecoming) -> PASS -- missing []; unexpectedly present []; read ["character-cfdf88515e45e6427b1e7e2928b26ab2/character.json"] under before/characters
+PASS: #71 peer 0 check_saved (the world is restored; the homecoming is personal (not in the shared world)) -> PASS -- missing []; unexpectedly present []; read ["slot-0/world.json"] under after/worlds
+PASS: #72 peer 0 check_saved (host's saved character: homecoming seen, Rill released, Guardian kept) -> PASS -- missing []; unexpectedly present []; read ["character-cfdf88515e45e6427b1e7e2928b26ab2/character.json"] under after/characters
+PASS: #73 peer 1 check_saved (guest's saved character: homecoming seen, own team) -> PASS -- missing []; unexpectedly present []; read ["character-2a360d7377e5c61fff6af8b21f113249/character.json"] under after/characters
+ALL CHECKS PASSED
+
+=== /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/net/net-proof_two_peer-20260927T202747Z/SUMMARY.md ===
+# Net smoke run net-20260927T202747Z-3345
+
+Scene: water
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=3367 exited=true unexpected_exit=false
+- peer 1 (client) pid=3368 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+PROOF.md: /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/card_t3_two_peer/PROOF.md (exit 0)
+== card_t3_two_peer exit=0

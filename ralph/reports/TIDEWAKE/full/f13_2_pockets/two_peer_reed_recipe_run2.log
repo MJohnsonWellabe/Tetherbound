@@ -1,0 +1,52 @@
+proof:    f13_tidewake_b_reed_recipe_two_character_pockets
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/f13_tidewake_b_reed_recipe_two_character_pockets.json
+out:      /tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z
+run id:  net-20260927T193755Z-31456
+run dir: /tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/net/net-proof_two_peer-20260927T193755Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=31478 control_port=42165 home=/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/net/net-proof_two_peer-20260927T193755Z/home-0 log=/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/net/net-proof_two_peer-20260927T193755Z/peer-0.log
+coordinator: launched peer 1 (client) pid=31479 control_port=45207 home=/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/net/net-proof_two_peer-20260927T193755Z/home-1 log=/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/net/net-proof_two_peer-20260927T193755Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":31661.0,"godot_version":"4.7-stable (official)","main_sha":"56259a5e31e3","peer":0.0,"pid":31478.0,"role":"host","type":"hello","user_data_dir":"/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/net/net-proof_two_peer-20260927T193755Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":31662.0,"godot_version":"4.7-stable (official)","main_sha":"56259a5e31e3","peer":1.0,"pid":31479.0,"role":"client","type":"hello","user_data_dir":"/tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/net/net-proof_two_peer-20260927T193755Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 host -> PASS -- hosting udp/31661 as peer 1
+PASS: #2 peer 1 join -> PASS -- joined 127.0.0.1:31661 as peer 1833007733 after 9 frames; snapshot applied; 2 peer(s) in registry
+PASS: #3 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #3 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #4 peer 0 water_pocket_state (non-vacuous: neither fresh character knows Reed Camp Cordage at chapter start) -> PASS -- { "pickup_id": "water:reedhaven:harvest:012", "character_id": "character-536c47a7b9892cb7f71e72eafed79710", "item": "reed_fiber", "count": 0, "receipt": false, "learn_flag": "water_cordage_recipe_learned", "learned": false, "recipe": "water_camp_cordage", "recipe_known": false, "resident": false }
+PASS: #4 peer 1 water_pocket_state (non-vacuous: neither fresh character knows Reed Camp Cordage at chapter start) -> PASS -- { "pickup_id": "water:reedhaven:harvest:012", "character_id": "character-8b553c7eaf5f19198f47fd3d4b02fef9", "item": "reed_fiber", "count": 0, "receipt": false, "learn_flag": "water_cordage_recipe_learned", "learned": false, "recipe": "water_camp_cordage", "recipe_known": false, "resident": false }
+PASS: #5 peer 0 storage_grant (FIXTURE 1: a carried knife (reed fiber is gathered with a knife)) -> PASS -- granted 1 knife (0 did not fit)
+PASS: #6 peer 1 storage_grant (FIXTURE 1: a carried knife) -> PASS -- granted 1 knife (0 did not fit)
+PASS: #7 peer 0 water_pocket_claim (host gathers the reed_root_hollow patch by the real prompt: +3 fiber, learns cordage) -> PASS -- water:reedhaven:harvest:012: +3 reed_fiber receipt=true recipe_known false -> true resident_after=false
+PASS: #8 peer 1 water_pocket_state (the host's claim taught and paid the guest nothing) -> PASS -- { "pickup_id": "water:reedhaven:harvest:012", "character_id": "character-8b553c7eaf5f19198f47fd3d4b02fef9", "item": "reed_fiber", "count": 0, "receipt": false, "learn_flag": "water_cordage_recipe_learned", "learned": false, "recipe": "water_camp_cordage", "recipe_known": false, "resident": true }
+PASS: #9 peer 1 water_pocket_claim (guest walks up (teleport) to the patch the host already gathered: it still stands and is offered for the guest; gathered through host validation: +3 fiber, learns its own cordage) -> PASS -- water:reedhaven:harvest:012: +3 reed_fiber receipt=true recipe_known false -> true resident_after=false
+PASS: #10 peer 0 water_pocket_state (the guest's claim paid the host nothing more) -> PASS -- { "pickup_id": "water:reedhaven:harvest:012", "character_id": "character-536c47a7b9892cb7f71e72eafed79710", "item": "reed_fiber", "count": 3, "receipt": true, "learn_flag": "water_cordage_recipe_learned", "learned": true, "recipe": "water_camp_cordage", "recipe_known": true, "resident": false }
+PASS: #11 peer 0 water_pocket_resend (host repeat (hand-made request denying its receipt) refused) -> PASS -- water:reedhaven:harvest:012 resend: code=already_taken committed=false count 3 -> 3
+PASS: #12 peer 1 water_pocket_resend (guest repeat refused by the host's world receipt) -> PASS -- water:reedhaven:harvest:012 resend: code=already_taken committed=false count 3 -> 3
+PASS: #13 peer 0 water_pocket_claim (second pocket (lantern_hidden_cache Skill Candy I): host claims its own) -> PASS -- water:lantern_cove:pickup:002: +1 skill_candy_i receipt=true recipe_known false -> false resident_after=false
+PASS: #14 peer 1 water_pocket_state (the host's candy claim paid the guest nothing) -> PASS -- { "pickup_id": "water:lantern_cove:pickup:002", "character_id": "character-8b553c7eaf5f19198f47fd3d4b02fef9", "item": "skill_candy_i", "count": 0, "receipt": false, "learn_flag": "", "learned": false, "recipe": "", "recipe_known": false, "resident": true }
+PASS: #15 peer 1 water_pocket_claim (guest claims its own candy) -> PASS -- water:lantern_cove:pickup:002: +1 skill_candy_i receipt=true recipe_known false -> false resident_after=false
+PASS: #16 peer 0 water_pocket_resend -> PASS -- water:lantern_cove:pickup:002 resend: code=already_taken committed=false count 1 -> 1
+PASS: #17 peer 1 water_pocket_resend -> PASS -- water:lantern_cove:pickup:002 resend: code=already_taken committed=false count 1 -> 1
+PASS: #18 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-536c47a7b9892cb7f71e72eafed79710' on disk=true; copied 3 files to /tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/peer-0/after
+PASS: #18 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-8b553c7eaf5f19198f47fd3d4b02fef9' on disk=true; copied 1 files to /tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/peer-1/after
+PASS: #19 peer 0 check_saved (host's saved character holds its own recipe and receipts) -> PASS -- missing []; unexpectedly present []; read ["character-536c47a7b9892cb7f71e72eafed79710/character.json"] under after/characters
+PASS: #20 peer 1 check_saved (guest's saved character holds its own recipe and receipts) -> PASS -- missing []; unexpectedly present []; read ["character-8b553c7eaf5f19198f47fd3d4b02fef9/character.json"] under after/characters
+PASS: #21 peer 0 check_saved (the world records one receipt per character per pocket; the recipe is not world state) -> PASS -- missing []; unexpectedly present []; read ["slot-0/world.json"] under after/worlds
+ALL CHECKS PASSED
+
+=== /tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/net/net-proof_two_peer-20260927T193755Z/SUMMARY.md ===
+# Net smoke run net-20260927T193755Z-31456
+
+Scene: water
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=31478 exited=true unexpected_exit=false
+- peer 1 (client) pid=31479 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+PROOF.md: /tmp/proof-f13_tidewake_b_reed_recipe_two_character_pockets-20260927T193755Z/PROOF.md (exit 0)

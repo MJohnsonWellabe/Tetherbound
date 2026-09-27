@@ -1,0 +1,43 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+DRY RUN - does not count: declared fixture start (see header)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+WALK water_pell DIRECT (no baked-ground plan from (0.0, 1.931193, 162.0) to (53.368, 2.075612, 151.502))
+WALK water_pell island=first_shore walked=53m legs=1
+TALK water_pell conversation=water_pell_lantern_lead hud='Pell's lead: the dry nook beneath Lantern Cove's rock arch, west of First Shore.'
+WALK start of first_shore_to_lantern_cove_sheltered DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+WALK start of first_shore_to_lantern_cove_sheltered island=first_shore walked=225m legs=2
+SWIM first_shore_to_lantern_cove_sheltered swum=95m min_stamina=29.1 rest_frames=285 health 100->100 dry=true elapsed_s=39
+WALK water:lantern_cove:pickup:002 island=lantern_cove walked=204m legs=34
+CLAIM water:lantern_cove:pickup:002 skill_candy_i 0->1
+WALK start of first_shore_to_lantern_cove_sheltered (reversed) island=lantern_cove walked=200m legs=33
+SWIM first_shore_to_lantern_cove_sheltered (reversed) swum=95m min_stamina=33.8 rest_frames=269 health 100->100 dry=true elapsed_s=38
+WALK water_pell DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+WALK water_pell island=first_shore walked=226m legs=2
+TALK water_pell conversation=water_pell_lantern_return hud='Pell marks your Lantern Cove return line. The swim back from the arch is yours to reuse.'
+WALK water_pell island=first_shore walked=0m legs=1
+TALK water_pell conversation=water_pell_lantern_thanks hud=''
+CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+WALK water_pell island=first_shore walked=0m legs=1
+TALK water_pell conversation=water_pell_lantern_thanks hud=''
+CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks
+RELOAD lantern water_pell -> water_pell_lantern_thanks
+POSES (0 disclosed position writes):
+Walked total 908m with left-stick input
+SWIMS (2 inter-island crossings with real move_forward input):
+  SWIM first_shore_to_lantern_cove_sheltered swum=95m min_stamina=29.1 rest_frames=285 health 100->100 dry=true elapsed_s=39
+  SWIM first_shore_to_lantern_cove_sheltered (reversed) swum=95m min_stamina=33.8 rest_frames=269 health 100->100 dry=true elapsed_s=38
+RIDES (0 crossings ridden on the owned swimmer):
+Tidewake-B chain route witness: 70 checks, 0 failures
+EXIT 0

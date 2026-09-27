@@ -1,0 +1,107 @@
+== f15_homecoming_real_save_reload: tools/net/run_two_peer_proof.sh tools/net/proof_scenarios/f15_homecoming_real_save_reload.json --out=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload
+proof:    f15_homecoming_real_save_reload
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/f15_homecoming_real_save_reload.json
+out:      /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload
+run id:  net-20260927T205113Z-5745
+run dir: /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/net/net-proof_two_peer-20260927T205113Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=5770 control_port=44039 home=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/net/net-proof_two_peer-20260927T205113Z/home-0 log=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/net/net-proof_two_peer-20260927T205113Z/peer-0.log
+coordinator: launched peer 1 (client) pid=5771 control_port=36577 home=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/net/net-proof_two_peer-20260927T205113Z/home-1 log=/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/net/net-proof_two_peer-20260927T205113Z/peer-1.log
+coordinator: peer 1 hello: {"enet_port":29742.0,"godot_version":"4.7-stable (official)","main_sha":"95aa83573dd2","peer":1.0,"pid":5771.0,"role":"client","type":"hello","user_data_dir":"/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/net/net-proof_two_peer-20260927T205113Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":29741.0,"godot_version":"4.7-stable (official)","main_sha":"95aa83573dd2","peer":0.0,"pid":5770.0,"role":"host","type":"hello","user_data_dir":"/home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/net/net-proof_two_peer-20260927T205113Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 load_save (named save: the host's Meadows world) -> PASS -- loaded host_meadows_stormwood_route_open (captured directory (split path)) as slot 0; realm 'meadows' booted as 'world'; character 'character-f41f4a49223483d6bfdf56715944bb7b'
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:516)
+       [1] write_snapshot (res://scripts/save/save_game.gd:501)
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:490)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:477)
+         [3] _tick_autosave (res://autoload/game_state.gd:1005)
+         [4] _process (res://autoload/game_state.gd:1050)
+PASS: #2 peer 1 boot (guest: its own trainer in the Meadows) -> PASS -- booted world (240 settle frames)
+PASS: #3 peer 0 host -> PASS -- hosting udp/29741 as peer 1
+PASS: #4 peer 1 join -> PASS -- joined 127.0.0.1:29741 as peer 882602332 after 14 frames; snapshot applied; 2 peer(s) in registry
+PASS: #5 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #5 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #6 peer 0 story_flag (SETUP: end of Tidewake (stands in for playing it)) -> PASS -- water_captain_nerissa_defeated: ok=true pending=false code='' reason=''
+PASS: #7 peer 0 story_flag (SETUP) -> PASS -- realm_gate_water_unlocked: ok=true pending=false code='' reason=''
+PASS: #8 peer 0 story_flag (SETUP: the Water key Stormwood granted) -> PASS -- realm_key_water: ok=true pending=false code='' reason=''
+PASS: #9 peer 0 story_flag (SETUP: currents restored) -> PASS -- water_currents_restored: ok=true pending=false code='' reason=''
+PASS: #10 peer 0 story_flag (SETUP: one Local Request revealed (Old Bram), as the single-player proof's fixture does) -> PASS -- old_champion_met: ok=true pending=false code='' reason=''
+PASS: #11 peer 0 wait_flag -> PASS -- flag water_currents_restored (world) set after 0 frames
+PASS: #11 peer 1 wait_flag -> PASS -- flag water_currents_restored (world) set after 0 frames
+PASS: #12 peer 0 ending_state (before: no receipts (non-vacuous baseline)) -> PASS -- { "character_id": "character-f41f4a49223483d6bfdf56715944bb7b", "host_owned": true, "currents_restored": true, "homecoming_seen": false, "credits_seen": false, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_0", "realm_keys": ["realm_key_stormwood", "realm_key_w
+PASS: #12 peer 1 ending_state (before: no receipts (non-vacuous baseline)) -> PASS -- { "character_id": "character-716dfbfff7b2851db2d15375a9e2ffbf", "host_owned": false, "currents_restored": true, "homecoming_seen": false, "credits_seen": false, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_0", "realm_keys": ["realm_key_stormwood", "realm_key_
+PASS: #13 peer 0 capture_saves (the LAST harness save of the run, before the ending: from here on only the game writes a save) -> PASS -- host (world + character): autosave_here()=true, character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk=true; copied 3 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/peer-0/before
+PASS: #13 peer 1 capture_saves (the LAST harness save of the run, before the ending: from here on only the game writes a save) -> PASS -- client (character only): autosave_here()=false, character 'character-716dfbfff7b2851db2d15375a9e2ffbf' on disk=true; copied 1 files to /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/peer-1/before
+PASS: #14 peer 0 save_witness (mark this peer's character file on disk before the ending: neither receipt) -> PASS -- character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk (character.json, sha fe68c74960d4, mtime 1790542548): missing [], unexpectedly present []; marked 'pre'; copied to witness_0_pre/character-f41f4a49223483d6bfdf56715944bb7b.character.json
+PASS: #15 peer 1 save_witness (mark this peer's character file on disk before the ending: neither receipt) -> PASS -- character 'character-716dfbfff7b2851db2d15375a9e2ffbf' on disk (character.json, sha 339b83d7dc85, mtime 1790542549): missing [], unexpectedly present []; marked 'pre'; copied to witness_0_pre/character-716dfbfff7b2851db2d15375a9e2ffbf.character.json
+PASS: #16 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #16 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #17 peer 0 homecoming_complete (host greets Grandpa: its own homecoming) -> PASS -- Grandpa: 'regional_homecoming_0' (expected 'regional_homecoming_0'), 2 line(s), 1 press(es) on the prompt standing (1.4, 0.3, 0.0); homecoming_seen=true credits_open=true
+PASS: #18 peer 0 save_witness (PRODUCTION SAVE 1: the homecoming transaction (regional_homecoming.gd::complete -> save_character) rewrote the file with homecoming_seen, before any credits receipt; no harness save ran since the mark) -> PASS -- character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk (character.json, sha 2967501c4707, mtime 1790542550): missing [], unexpectedly present []; rewritten since mark 'pre' (sha fe68c74960d4 -> 2967501c4707, mtime 1790542548 -> 1790542550)=true; marked 'homecoming'; copied to witness_1_homec
+PASS: #19 peer 0 screenshot (the production credits roll, open on this peer) -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #20 peer 1 ending_state (the host's homecoming is not the guest's) -> PASS -- { "character_id": "character-716dfbfff7b2851db2d15375a9e2ffbf", "host_owned": false, "currents_restored": true, "homecoming_seen": false, "credits_seen": false, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_0", "realm_keys": ["realm_key_stormwood", "realm_key_
+PASS: #21 peer 0 credits_continue (host watches the roll, Continue once) -> PASS -- credits watched 3.08s, Continue pressed; acknowledged 1 time(s) (after the first press 1), open after=false, receipt in memory=true on disk=true, pending=false; second press opened 'regional_homecoming_repeat', roll reopened=false
+PASS: #22 peer 0 save_witness (PRODUCTION SAVE 2: the credits Continue (regional_credits acknowledged -> complete_credits -> save_character) rewrote the file again, now with both receipts) -> PASS -- character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk (character.json, sha cd8bfe7a1b74, mtime 1790542553): missing [], unexpectedly present []; rewritten since mark 'homecoming' (sha 2967501c4707 -> cd8bfe7a1b74, mtime 1790542550 -> 1790542553)=true; marked 'credits'; copied to witness_2_c
+PASS: #23 peer 1 homecoming_complete (guest greets Grandpa: its own homecoming) -> PASS -- Grandpa: 'regional_homecoming_0' (expected 'regional_homecoming_0'), 4 line(s), 1 press(es) on the prompt standing (1.4, 0.3, 0.0); homecoming_seen=true credits_open=true
+PASS: #24 peer 1 save_witness (PRODUCTION SAVE 1: the homecoming transaction (regional_homecoming.gd::complete -> save_character) rewrote the file with homecoming_seen, before any credits receipt; no harness save ran since the mark) -> PASS -- character 'character-716dfbfff7b2851db2d15375a9e2ffbf' on disk (character.json, sha 10738afdb9e7, mtime 1790542557): missing [], unexpectedly present []; rewritten since mark 'pre' (sha 339b83d7dc85 -> 10738afdb9e7, mtime 1790542549 -> 1790542557)=true; marked 'homecoming'; copied to witness_1_homec
+PASS: #25 peer 1 screenshot (the production credits roll, open on this peer) -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #26 peer 1 credits_continue (guest watches the roll, Continue once) -> PASS -- credits watched 3.07s, Continue pressed; acknowledged 1 time(s) (after the first press 1), open after=false, receipt in memory=true on disk=true, pending=false; second press opened 'regional_homecoming_repeat', roll reopened=false
+PASS: #27 peer 1 save_witness (PRODUCTION SAVE 2: the credits Continue (regional_credits acknowledged -> complete_credits -> save_character) rewrote the file again, now with both receipts) -> PASS -- character 'character-716dfbfff7b2851db2d15375a9e2ffbf' on disk (character.json, sha 4e2a221257db, mtime 1790542560): missing [], unexpectedly present []; rewritten since mark 'homecoming' (sha 10738afdb9e7 -> 4e2a221257db, mtime 1790542557 -> 1790542560)=true; marked 'credits'; copied to witness_2_c
+PASS: #28 peer 0 ending_state (after the credits, before quitting) -> PASS -- { "character_id": "character-f41f4a49223483d6bfdf56715944bb7b", "host_owned": true, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_stormwood", "realm_ke
+PASS: #28 peer 1 ending_state (after the credits, before quitting) -> PASS -- { "character_id": "character-716dfbfff7b2851db2d15375a9e2ffbf", "host_owned": false, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_stormwood", "realm_k
+PASS: #29 peer 1 leave (guest quits (session.leave: the client's own quit save of its character)) -> PASS -- client left cleanly after 0 frames
+PASS: #30 peer 0 leave (host quits (session.leave: the host's own quit save of its slot)) -> PASS -- host left cleanly after 0 frames
+PASS: #31 peer 0 title_continue (HOST RELOAD, production path: title screen, fresh-process reset, Load Game -> the autosave slot -> Game.load_game -> Meadows rebuilt and hosted) -> PASS -- title: reset as a fresh process (receipts and world facts gone=true), Load Game pressed 'Autosave — Day 1 · 0 Pals' -> Game.load_game(0) -> scene 'MeadowsPlayground' hosting udp/29741; character 'character-f41f4a49223483d6bfdf56715944bb7b' back=true
+ERROR: Could not create directory: 'user://saves'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+   GDScript backtrace (most recent call first):
+       [0] _write_snapshot_locked (res://scripts/save/save_game.gd:516)
+       [1] write_snapshot (res://scripts/save/save_game.gd:501)
+PASS: #32 peer 1 wipe_character (guest: the live character blanked (a fresh process), id kept so the title can find its file) -> PASS -- in-memory character blanked (party 0 -> 0), id 'character-716dfbfff7b2851db2d15375a9e2ffbf' kept, file untouched
+WARNING: fallback autosave: could not commit save
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _on_fallback_completed (res://scripts/save/save_game.gd:490)
+         [1] poll (res://scripts/save/fallback_save_worker.gd:29)
+         [2] poll_fallback (res://scripts/save/save_game.gd:477)
+         [3] _tick_autosave (res://autoload/game_state.gd:1005)
+         [4] _process (res://autoload/game_state.gd:1050)
+PASS: #33 peer 1 production_join (GUEST RELOAD, production path: title returning route (_join_via -> _restore_portable_returning_character reads its character file) -> JoinDriver -> the host's world) -> PASS -- title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:29741 as peer 319532219 after 107 frames
+PASS: #34 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #34 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #35 peer 0 save_witness (host: the same character came back, its file holds both receipts) -> PASS -- character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk (character.json, sha 4aa61bfb0477, mtime 1790542562): missing [], unexpectedly present []
+PASS: #36 peer 1 save_witness (guest: the same character came back, its file holds both receipts) -> PASS -- character 'character-716dfbfff7b2851db2d15375a9e2ffbf' on disk (character.json, sha 91b821975efb, mtime 1790542562): missing [], unexpectedly present []
+PASS: #37 peer 0 ending_state (after the production reload: a safe completed world, both receipts, credits not pending, local requests, no fifth key, no sequel prompt) -> PASS -- { "character_id": "character-f41f4a49223483d6bfdf56715944bb7b", "host_owned": true, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_stormwood", "realm_ke
+PASS: #37 peer 1 ending_state (after the production reload: a safe completed world, both receipts, credits not pending, local requests, no fifth key, no sequel prompt) -> PASS -- { "character_id": "character-716dfbfff7b2851db2d15375a9e2ffbf", "host_owned": false, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_stormwood", "realm_k
+PASS: #38 peer 0 homecoming_complete (after the reload, Grandpa again (pressed now): the repeat greeting, no second roll) -> PASS -- Grandpa: 'regional_homecoming_repeat' (expected 'regional_homecoming_repeat'), 2 line(s), 1 press(es) on the prompt standing (1.4, 0.3, 0.0); homecoming_seen=true credits_open=false
+PASS: #38 peer 1 homecoming_complete (after the reload, Grandpa again (pressed now): the repeat greeting, no second roll) -> PASS -- Grandpa: 'regional_homecoming_repeat' (expected 'regional_homecoming_repeat'), 1 line(s), 1 press(es) on the prompt standing (1.4, 0.3, 0.0); homecoming_seen=true credits_open=false
+PASS: #39 peer 0 ending_state (final) -> PASS -- { "character_id": "character-f41f4a49223483d6bfdf56715944bb7b", "host_owned": true, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_stormwood", "realm_ke
+PASS: #39 peer 1 ending_state (final) -> PASS -- { "character_id": "character-716dfbfff7b2851db2d15375a9e2ffbf", "host_owned": false, "currents_restored": true, "homecoming_seen": true, "credits_seen": true, "credits_pending": false, "credits_open": false, "grandpa_next": "regional_homecoming_repeat", "realm_keys": ["realm_key_stormwood", "realm_k
+PASS: #40 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #40 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+ALL CHECKS PASSED
+
+=== /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/net/net-proof_two_peer-20260927T205113Z/SUMMARY.md ===
+# Net smoke run net-20260927T205113Z-5745
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=5770 exited=true unexpected_exit=false
+- peer 1 (client) pid=5771 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+PROOF.md: /home/user/Tetherbound/ralph/reports/TIDEWAKE/full/card_t3/proof/f15_homecoming_real_save_reload/PROOF.md (exit 0)
+== f15_homecoming_real_save_reload exit=0
