@@ -1,0 +1,23 @@
+# Instrumented host log (temporary DIAG prints in interaction_arbiter/_physics_process and realm_heart_shrine/_on_activated; not committed)
+## FAIL run: one injected press, two just_pressed edges -> activate then release
+DIAG interact just_pressed owner=<null> winner=/root/MeadowsPlayground/MeadowsRealmHeartShrine/RelicSlot_stormwood/Interactable
+DIAG after recompute winner=/root/MeadowsPlayground/MeadowsRealmHeartShrine/RelicSlot_stormwood/Interactable actionable=true
+DIAG shrine stormwood activated state=placed_inactive
+DIAG activate -> true
+DIAG interact just_pressed owner=<null> winner=/root/MeadowsPlayground/MeadowsRealmHeartShrine/RelicSlot_stormwood/Interactable
+DIAG after recompute winner=/root/MeadowsPlayground/MeadowsRealmHeartShrine/RelicSlot_stormwood/Interactable actionable=true
+DIAG shrine stormwood activated state=active
+DIAG activate -> true
+
+## With the _inject await-process_frame patch: one edge per press
+DIAG shrine stormwood activated state=placed_inactive
+DIAG shrine stormwood activated state=earned_unplaced
+
+## Guest SCRIPT ERROR in the press-fix-only run (conversation_camera.gd:178 ordering)
+SCRIPT ERROR: Left operand of 'is' is a previously freed instance.
+          at: current_speaker (res://scripts/player/conversation_camera.gd:178)
+          GDScript backtrace (most recent call first):
+              [0] current_speaker (res://scripts/player/conversation_camera.gd:178)
+              [1] begin (res://scripts/player/conversation_camera.gd:134)
+              [2] _push_the_camera_in (res://scripts/ui/dialogue_panel.gd:391)
+              [3] start (res://scripts/ui/dialogue_panel.gd:215)
