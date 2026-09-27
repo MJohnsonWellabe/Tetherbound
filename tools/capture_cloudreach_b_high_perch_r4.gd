@@ -19,7 +19,7 @@ const STANDS := [
 	{"id": "glide-approach", "player": Vector2(900.0, 2687.0), "face": Vector2(900.0, 2640.0),
 		"camera": Vector3(900.0, 1033.0, 2630.0), "look": Vector3(900.0, 1016.0, 2694.0)},
 	{"id": "southeast-glide-approach", "player": Vector2(900.0, 2687.0), "face": Vector2(930.0, 2650.0),
-		"camera": Vector3(952.0, 1004.0, 2646.0), "look": Vector3(902.0, 1020.0, 2694.0)},
+		"camera": Vector3(956.0, 1038.0, 2642.0), "look": Vector3(902.0, 1018.0, 2696.0)},
 	# Height from the west: a high glide in from the open side, the crown and its
 	# needles above the cliff with the cloud layer far below.
 	{"id": "west-glide-high", "player": Vector2(900.0, 2700.0), "face": Vector2(860.0, 2690.0),
@@ -27,7 +27,14 @@ const STANDS := [
 	# Crowding: the court seen from high on its southwest side, pulled back so the
 	# needles stand apart instead of filling the rim line.
 	{"id": "court-high-oblique", "player": Vector2(900.0, 2700.0), "face": Vector2(905.0, 2712.0),
-		"camera": Vector3(872.0, 1040.0, 2672.0), "look": Vector3(905.0, 1021.0, 2708.0)},
+		"camera": Vector3(866.0, 1046.0, 2664.0), "look": Vector3(906.0, 1016.0, 2710.0)},
+	# Production CameraRig frames (judge r4: gameplay camera also required).
+	# Arrival: the trainer on the Fly approach 45 m south of the rim, 8 m above
+	# the crown, rig behind looking at the crown. Departure: the same off the
+	# north side looking out. On-crown: standing on the rim looking out over it.
+	{"id": "rig-fly-arrival", "rig": true, "position": Vector2(900.0, 2642.0), "air_y": 1030.0, "target": Vector3(900.0, 1022.0, 2700.0)},
+	{"id": "rig-on-crown-rim", "rig": true, "position": Vector2(906.0, 2690.0), "target": Vector3(960.0, 990.0, 2640.0)},
+	{"id": "rig-fly-departure", "rig": true, "position": Vector2(900.0, 2752.0), "air_y": 1028.0, "target": Vector3(900.0, 990.0, 2820.0)},
 ]
 
 var _output := DEFAULT_OUTPUT
@@ -120,6 +127,8 @@ func _run() -> void:
 
 
 func _pose(stand: Dictionary) -> bool:
+	if bool(stand.get("rig", false)):
+		return await _pose_rig(stand)
 	_camera = _evidence_camera
 	_camera.make_current()
 	var at := stand.player as Vector2
@@ -150,10 +159,13 @@ func _pose_rig(stand: Dictionary) -> bool:
 	_camera.make_current()
 	var at := stand.position as Vector2
 	var ground := _surface(at)
-	if not is_finite(ground):
+	if not is_finite(ground) and not stand.has("air_y"):
 		_fail("stand %s has no production ground" % at)
 		return false
-	_player.global_position = Vector3(at.x, ground + 0.10, at.y)
+	# `air_y`: a Fly arrival/departure pose -- the trainer held at that height
+	# over open air (a disclosed pose shortcut) with the production rig behind.
+	var y := float(stand.get("air_y", ground + 0.10))
+	_player.global_position = Vector3(at.x, y, at.y)
 	_player.velocity = Vector3.ZERO
 	var target := stand.target as Vector3
 	var sightline := target - _player.global_position
@@ -177,7 +189,8 @@ func _pose_rig(stand: Dictionary) -> bool:
 	_hide_overlays()
 	for _frame in 24:
 		await physics_frame
-	return Vector2(_player.global_position.x, _player.global_position.z).distance_to(at) <= 0.6
+	return Vector2(_player.global_position.x, _player.global_position.z).distance_to(at) <= 0.6 \
+		and (not stand.has("air_y") or absf(_player.global_position.y - float(stand.air_y)) <= 0.6)
 
 
 func _pin_time(time_name: String) -> Dictionary:
