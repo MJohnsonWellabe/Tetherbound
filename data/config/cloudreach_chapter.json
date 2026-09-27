@@ -314,6 +314,7 @@
       ],
       "visible_state_change": "A canvas rain cover stands over Galefoot Waycamp's fire and creature bed."
     },
+    {"id": "observatory_return_latch", "title": "The Far-Side Latch", "category": "exploration", "giver_npc_id": "defector_rusk", "revealed_by": "cloudreach_upper_route_unlocked", "completion_flag": "side_observatory_latch_complete", "scope": "world", "persistence": "save", "_why_f07_0": "WORLD §11 Summit (coordinator ruling (b), #356): the summit loop's west pad and the plateau fork are an existing Fly-only drop; the latch deploys the observatory_latch_stair span between them (a world route gated on side_observatory_latch_complete, built but absent until then), turning it into an on-foot descent to the plateau circuit and the Observatory. No terrain crown is added.", "steps": [{"id": "sight_latch", "flag_id": "side_observatory_latch_sighted", "region_id": "upper_cloudreach", "requires_flags": [], "label": "At the plateau fork, sight the rusted latch on the summit's far side."}, {"id": "throw_latch", "flag_id": "side_observatory_latch_complete", "region_id": "summit_final_stronghold", "requires_flags": ["side_observatory_latch_sighted", "cloudreach_upper_anchors_disabled"], "label": "Reach the summit's west edge and throw the latch."}], "visible_state_change": "A stone descent stair spans from the summit's west edge down to the plateau fork."},
     {
       "id": "packs_on_the_wrong_side",
       "title": "Packs on the Wrong Side",
