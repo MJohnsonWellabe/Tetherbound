@@ -140,8 +140,6 @@ func _present_shape(shape: Dictionary) -> void:
 	if reach > 0.0:
 		if shape_guard_cone() == null:
 			_show_guard_cone(reach, _shape_number(shape, "guard_cone"))
-		else:
-			_seat_guard_cone()
 	else:
 		_hide_guard_cone()
 

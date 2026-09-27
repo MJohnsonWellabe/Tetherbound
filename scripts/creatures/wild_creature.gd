@@ -586,7 +586,6 @@ func _tick_combat(delta: float) -> void:
 	if not _selected_heading_is_locked() and not _lunge_heading_is_locked():
 		face_towards(_opponent.global_position)
 	_aim_lunge_lane()
-	_seat_guard_cone()
 
 	var waiting := distance <= float(spaced.get("preferred_range", 2.1))
 	var direction := AI.movement_for(_intent, to, _side_sign, waiting)
@@ -874,105 +873,45 @@ func _advance_route_cue(delta: float) -> void:
 		_announce_tell()
 
 
-## A fan on the ground in front of the body, `range` long and `cone_degrees`
+## A flat fan on the ground in front of the body, `range` long and `cone_degrees`
 ## wide -- the same shape the manager's hit test uses -- in the shared hazard
 ## colour. A child, so it turns with the body and holds when its heading locks.
 ## A guest's proxy passes the host body's `reach`/`cone` instead of its own.
-##
-## F10#2 C3 (Blackwater Elder r3): a flat fan at the feet was buried by the
-## sloping pool edge and a judge saw only the feet ring. The fan is now drawn
-## the way `lunge_lane.gd` draws a lane: vertices seated on the real ground
-## height (re-seated whenever the body moves or turns) and the lane's
-## depth-pull shader, so it lies on slopes and still sits behind a body.
-const GUARD_CONE_RING_STEP := 0.75
-const GUARD_CONE_RIM := 0.2
-static var _guard_cone_shader: Shader = null
-var _guard_cone_seated := Transform3D()
-
-
 func _show_guard_cone(reach_override: float = 0.0, cone_override: float = 0.0) -> void:
 	_hide_guard_cone()
 	var cfg := combat_config()
 	var reach := maxf(0.5, reach_override if reach_override > 0.0 else float(cfg.get("range", 2.6)))
 	var cone := clampf(cone_override if cone_override > 0.0 else float(cfg.get("cone_degrees", 90.0)),
 		5.0, 360.0)
-	if _guard_cone_shader == null:
-		_guard_cone_shader = Shader.new()
-		_guard_cone_shader.code = LUNGE_LANE.LANE_SHADER
-	var material := ShaderMaterial.new()
-	material.shader = _guard_cone_shader
-	material.set_shader_parameter("depth_pull", maxf(0.0, float(_lunge_cfg().get("lane_depth_pull", 0.45))))
+	var colour := Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff40e6")))
+	colour.a = 0.35
+	var steps := maxi(6, int(cone / 6.0))
+	var points := PackedVector3Array()
+	var half := deg_to_rad(cone) * 0.5
+	for i in steps:
+		var a0 := -half + (2.0 * half) * float(i) / float(steps)
+		var a1 := -half + (2.0 * half) * float(i + 1) / float(steps)
+		points.append(Vector3(0.0, 0.05, 0.0))
+		points.append(Vector3(sin(a0) * reach, 0.05, cos(a0) * reach))
+		points.append(Vector3(sin(a1) * reach, 0.05, cos(a1) * reach))
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = points
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.albedo_color = colour
 	_guard_cone = MeshInstance3D.new()
 	_guard_cone.name = "GuardCone"
+	_guard_cone.mesh = mesh
 	_guard_cone.material_override = material
 	_guard_cone.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_guard_cone.set_meta("reach", reach)
 	_guard_cone.set_meta("cone_degrees", cone)
 	add_child(_guard_cone)
-	_seat_guard_cone(true)
-
-
-## Rebuilds the fan's mesh on the ground under it; a no-op while the body has
-## neither moved nor turned since the last seating.
-func _seat_guard_cone(force: bool = false) -> void:
-	if _guard_cone == null or not is_instance_valid(_guard_cone):
-		return
-	var here := global_transform if is_inside_tree() else transform
-	if not force and here.is_equal_approx(_guard_cone_seated):
-		return
-	_guard_cone_seated = here
-	var reach := float(_guard_cone.get_meta("reach", 2.6))
-	var cone := float(_guard_cone.get_meta("cone_degrees", 90.0))
-	var colour := Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff40e6")))
-	var fill := Color(colour, 0.35)
-	var rim := Color(colour, 0.9)
-	var steps := maxi(6, int(cone / 6.0))
-	var rings := maxi(1, ceili((reach - GUARD_CONE_RIM) / GUARD_CONE_RING_STEP))
-	var half := deg_to_rad(cone) * 0.5
-	var radii: Array[float] = []
-	for r in rings + 1:
-		radii.append((reach - GUARD_CONE_RIM) * float(r) / float(rings))
-	radii.append(reach)
-	var seated := is_inside_tree()
-	var bias := 0.0
-	if seated:
-		var under := _ground_height(global_position.x, global_position.z)
-		if is_finite(under):
-			bias = clampf(global_position.y - under, 0.0, LUNGE_LANE.MAX_SURFACE_BIAS)
-	var point := func(radius: float, angle: float) -> Vector3:
-		var local := Vector3(sin(angle) * radius, 0.05, cos(angle) * radius)
-		if not seated:
-			return local
-		var world := global_transform * Vector3(local.x, 0.0, local.z)
-		var height := _ground_height(world.x, world.z)
-		if not is_finite(height):
-			return local
-		world.y = height + bias + LUNGE_LANE.GROUND_LIFT
-		return global_transform.affine_inverse() * world
-	var grid: Array = []
-	for radius: float in radii:
-		var row := PackedVector3Array()
-		for i in steps + 1:
-			row.append(point.call(radius, -half + 2.0 * half * float(i) / float(steps)))
-		grid.append(row)
-	var vertices := PackedVector3Array()
-	var colours := PackedColorArray()
-	for r in radii.size() - 1:
-		var tint := rim if r == radii.size() - 2 else fill
-		var inner: PackedVector3Array = grid[r]
-		var outer: PackedVector3Array = grid[r + 1]
-		for i in steps:
-			for v: Vector3 in [inner[i], outer[i], outer[i + 1], inner[i], outer[i + 1], inner[i + 1]]:
-				vertices.append(v)
-				colours.append(tint)
-	var arrays := []
-	arrays.resize(Mesh.ARRAY_MAX)
-	arrays[Mesh.ARRAY_VERTEX] = vertices
-	arrays[Mesh.ARRAY_COLOR] = colours
-	var mesh := ArrayMesh.new()
-	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-	_guard_cone.mesh = mesh
-	_guard_cone.custom_aabb = AABB(Vector3(-reach, -4.0, -reach), Vector3(reach * 2.0, 8.0, reach * 2.0))
 
 
 func _hide_guard_cone() -> void:
