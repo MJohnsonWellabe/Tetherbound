@@ -10,7 +10,7 @@ extends SceneTree
 ## the real baked ground on rings out to the camera distance. It reports the
 ## flattest candidates: arena disc (11 m) within ±--flat-m of the centre, and
 ## no ground more than --wall-m above the centre inside the camera ring.
-##   godot --headless --path . --script tests/probe_tidewake_venn_pad.gd [-- --search-m=70] [--trainer=<id>]
+##   godot --headless --path . --script tests/probe_tidewake_venn_pad.gd [-- --search-m=70] [--trainer=<id>] [--min-m=<m>]
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const ARENA_M := 11.0
 const CAMERA_M := 16.0
@@ -25,11 +25,13 @@ func _run() -> void:
 	var flat := 1.6
 	var wall := 3.0
 	var trainer := "water_trainer_venn"
+	var min_moved := 0.0
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--search-m="): search = float(arg.trim_prefix("--search-m="))
 		elif arg.begins_with("--flat-m="): flat = float(arg.trim_prefix("--flat-m="))
 		elif arg.begins_with("--wall-m="): wall = float(arg.trim_prefix("--wall-m="))
 		elif arg.begins_with("--trainer="): trainer = arg.trim_prefix("--trainer=")
+		elif arg.begins_with("--min-m="): min_moved = float(arg.trim_prefix("--min-m="))
 	await process_frame
 	root.get_node("Game").current_realm = "water"
 	var world: Node3D = WORLD.instantiate()
@@ -50,7 +52,7 @@ func _run() -> void:
 		var z := -search
 		while z <= search:
 			var p := centre + Vector2(x, z)
-			if Vector2(x, z).length() <= search:
+			if Vector2(x, z).length() <= search and Vector2(x, z).length() >= min_moved:
 				var s := _score(world, p, flat, wall)
 				if bool(s.ok):
 					s["at"] = [snappedf(p.x, 0.01), snappedf(p.y, 0.01)]

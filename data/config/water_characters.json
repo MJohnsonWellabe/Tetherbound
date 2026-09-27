@@ -629,11 +629,11 @@
       "portrait": "res://assets/ui/portraits/officer_b.png",
       "portrait_mode": "installed_body_render",
       "island_local_offset": [
-        129.779,
+        165.78,
         0.0,
-        -259.567
+        -345.57
       ],
-      "_why_offset_0927": "Moved 23 m down the Veilfall climb onto terrain.graded_pads veilfall_venn_fight_pad (B4/V-TW-7).",
+      "_why_offset_0927": "F14#1 C3 (tb/tidewake-full): Venn guards the foot of the Veilfall climb, on the open landing shelf 21 m from sluice_isle_to_veilfall_arrival (probe_tidewake_venn_pad.gd: 1.2 m arena deviation, 2.3 m max rise). Every stand within 60 m of the gate needs >=18 m of cut or fill (the gate is on a sheer face), and the earlier graded pad beside the gate put the waterfall curtain inside his arena (B4/V-TW-7).",
       "greeting": "water_venn_pre",
       "greeting_when": [
         {
