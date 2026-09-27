@@ -69,6 +69,7 @@ var _probe_hotbar := false
 var _probe_stands := false
 ## Path index -> {label, face}: frames taken on reaching a named leg.
 var _leg_shots := {}
+var _pending_shot := {}
 ## Doss's perch framed from its east side, where the river channel runs
 ## behind it (chosen from the diagnostic stand probe; offset from the perch).
 const PERCH_RIVER_STAND := Vector3(8.0, 0.0, 4.0)
@@ -673,12 +674,22 @@ func _walk() -> void:
 		# Advance the cursor along the path.
 		while cursor < _path.size() - 1 and here.distance_to(_xz3(_path[cursor])) < 3.0:
 			if _leg_shots.has(cursor):
-				var shot: Dictionary = _leg_shots[cursor]
+				_pending_shot = _leg_shots[cursor]
 				_leg_shots.erase(cursor)
-				_release()
-				await _face_point(shot["face"])
-				await _capture(str(shot["label"]))
 			cursor += 1
+		# A leg shot is taken only while walking: a fight that starts on the
+		# same step would turn it into a combat close-up, so it waits for the
+		# walk to resume after the fight.
+		if not _pending_shot.is_empty():
+			_release()
+			for i in 20:
+				await physics_frame
+			if _manager == null or not bool(_manager.call("is_fighting")):
+				await _face_point(_pending_shot["face"])
+				if _manager == null or not bool(_manager.call("is_fighting")):
+					await _capture(str(_pending_shot["label"]))
+					_pending_shot = {}
+			continue
 			if cursor == _road_count() and not seen and not looked:
 				# At the point the route leaves the road. Glance at the activity,
 				# as a player would at a named place, and record that it took a look.
