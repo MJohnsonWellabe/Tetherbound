@@ -35,13 +35,14 @@ var _named_detours_done := false
 func _init() -> void:
 	var out := "res://shots/sw_b_named_route"
 	var interval := 1.0
+	var gate := not OS.get_cmdline_user_args().has("--named-no-gate")
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--named-out="):
 			out = arg.trim_prefix("--named-out=")
 		elif arg.begins_with("--named-interval="):
 			interval = float(arg.trim_prefix("--named-interval="))
 	print("NAMED_ROUTE DRY RUN — does not count (inherits the chapter-entry seam)")
-	_named_recorder = NAMED_RECORDER.new(out, interval, true)
+	_named_recorder = NAMED_RECORDER.new(out, interval, gate)
 	root.add_child.call_deferred(_named_recorder)
 	super()
 

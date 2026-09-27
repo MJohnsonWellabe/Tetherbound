@@ -27,6 +27,14 @@ const PLAN := {
 }
 
 var outcomes: Dictionary = {}
+## The detour fights a named wild as a READER: the same approach-and-quick
+## cadence as the route pilot, plus, from 25% of each tell until half a second
+## after the strike, the move stick steps sideways out of the shown lane or
+## cone (no dodge verb exists). Road wilds keep the route's own pilot.
+var reader_named := true
+var _named_tell_until_ms := -1
+var _named_tell_from_ms := -1
+var _named_side := 1.0
 
 
 func run_named(tree: SceneTree, world: Node3D, game: Node, ids: Array) -> Dictionary:
@@ -100,6 +108,80 @@ func _detour(id: String) -> String:
 			return "cleared"
 		_note("DETOUR %s attempt %d ended %s" % [id, attempt + 1, _last_combat_outcome])
 	return "not_cleared:%s" % _last_combat_outcome
+
+
+func _fight_current(label: String) -> bool:
+	var enemy := _manager.call("enemy_body") as Node3D
+	if not reader_named or enemy == null or str(enemy.get_meta("stormwood_named_encounter", "")).is_empty():
+		return await super._fight_current(label)
+	return await _fight_named_as_reader(label, enemy)
+
+
+func _fight_named_as_reader(label: String, enemy: Node3D) -> bool:
+	_fights_seen += 1
+	_last_combat_outcome = ""
+	var started := Time.get_ticks_msec()
+	var previous_scale := Engine.time_scale
+	var previous_hz := Engine.physics_ticks_per_second
+	var on_tell := func(seconds: float) -> void:
+		var now := Time.get_ticks_msec()
+		_named_tell_from_ms = now + int(seconds * 250.0)
+		_named_tell_until_ms = now + int(seconds * 1000.0) + 500
+		_named_side = -_named_side
+	enemy.connect("telegraph_started", on_tell)
+	_note("FIGHT start %s (reader) ally=%s enemy=%s" % [label,
+		_fighter_snapshot(_director.call("ally_instance") as RefCounted),
+		_fighter_snapshot(_manager.call("enemy") as RefCounted)])
+	await _tree.process_frame
+	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	await _tree.process_frame
+	var next_quick_ms := 0
+	var tick := 0
+	var release_tick := -1
+	while bool(_manager.call("is_fighting")) and Time.get_ticks_msec() - started < 180000:
+		var foe := _manager.call("enemy_body") as Node3D
+		var ally := _director.call("ally_body") as Node3D
+		var now := Time.get_ticks_msec()
+		if foe != null and ally != null:
+			var offset := foe.global_position - ally.global_position
+			offset.y = 0.0
+			var basis := (_camera.call("planar_basis") as Basis).inverse()
+			if now >= _named_tell_from_ms and now < _named_tell_until_ms:
+				# Leave the lane/cone: sideways across the foe's facing, a little back.
+				var facing := foe.call("facing") as Vector3
+				var side := facing.cross(Vector3.UP).normalized() * _named_side
+				var local := basis * (side - offset.normalized() * 0.3).normalized()
+				_drive_stick.call(local.x, local.z)
+			elif offset.length() > float(_manager.call("combat_move_reach", "quick")) * 0.8:
+				var local := basis * offset.normalized()
+				_drive_stick.call(local.x, local.z)
+			else:
+				_drive_stick.call(0.0, 0.0)
+			if release_tick >= 0 and tick >= release_tick:
+				_set_action(&"combat_quick", false)
+				release_tick = -1
+			if (now < _named_tell_from_ms or now >= _named_tell_until_ms) \
+					and now >= next_quick_ms and bool(_manager.call("quick_ready")):
+				_set_action(&"combat_quick", true)
+				release_tick = tick + 2
+				next_quick_ms = now + 900
+		tick += 1
+		await _tree.physics_frame
+	_set_action(&"combat_quick", false)
+	_drive_stick.call(0.0, 0.0)
+	if is_instance_valid(enemy) and enemy.is_connected("telegraph_started", on_tell):
+		enemy.disconnect("telegraph_started", on_tell)
+	_named_tell_from_ms = -1
+	_named_tell_until_ms = -1
+	await _tree.process_frame
+	Engine.time_scale = previous_scale
+	Engine.physics_ticks_per_second = previous_hz
+	_note("FIGHT end %s (reader) outcome=%s elapsed_ms=%d" % [label, _last_combat_outcome,
+		Time.get_ticks_msec() - started])
+	if bool(_manager.call("is_fighting")) or _last_combat_outcome.is_empty():
+		return _fail("combat during %s did not resolve and publish an outcome" % label)
+	return true
 
 
 func detour_result() -> Dictionary:
