@@ -36,10 +36,9 @@ Closed geometry and four baked-texture turntable views inspected. Two summit
 bank-cut trials failed geometry/support checks and were reverted; restored
 crown smoke passes with zero failures. Details: CLOUDREACH-DISTANT-SPIRES.md.
 Turf-linked grass has eight native subset frames and independent comparison:
-preferred over prior grass, but Bars A NO/B NO, full C2 still open. Owner
-creature defects diagnosed: Cloudfang shiny invokes a hot-pink placeholder
-(missing authored shiny texture); Galecrest rest/idle requires motion/weight
-review before deciding on Meshy replacement. Cloudfang now has an authored shiny texture with six native day/night frames
+preferred over prior grass, but Bars A NO/B NO, full C2 still open.
+Completed bounded creature repairs (do not reopen without new regression evidence):
+Cloudfang has an authored shiny texture with six native day/night frames
 and scoped placeholder-replacement PASS; coarse fur/night variant recognition
 remain open. Galecrest strained neck is reproduced in live head tracking: the
 Galecrest-only candidate corrects its turn axis, limit and trainer gaze target.
@@ -62,8 +61,15 @@ to express height. Separately, yard planting now clips to its supporting
 floor without redistributing supported tufts (six tests/587assertions pass).
 Ten paired native settlement frames still show a separate floating clump;
 V-CX-11 remains open. Evidence: `cloudreach-c2-candidate/settlement-terrace`
-and `cloudreach-c2-candidate/yard-bounds`. Next: identify that clump's actual
-patch/surface, then return to occupied terraces and cliff identity.
+and `cloudreach-c2-candidate/yard-bounds`. The next native probe identified
+the remaining clump as route CoverPatch1274: original centreline roots were
+about0.7m above its clamped shoulder. Exact triangle sampling now matches
+physics, with nine tests/1616assertions passing. Ten final native frames have
+blind scoped grounding PASS (baseline FAIL), four preferences/six ties, Bars
+A/B NO for both. V-CX-11's reproduced floating-root defect is resolved on this
+branch; broader planting shape/edges, fence joins and settlement depth remain.
+Evidence: `cloudreach-c2-candidate/route-root-support`. Return to occupied
+terraces and cliff identity after this bounded repair; F08#4 remains open.
 Native high-perch
 request cb-f08-3-c2 is terminal GPU FAIL after one retry (5857258521):
 missing Fly carrier, obscured trainer, omitted perch in six of twelve frames.

@@ -265,3 +265,27 @@ and uses its existing upward pitches (recorded in manifests); it is not full
 C2 or motion proof. The arcade's C2 comparisons keep the native companion;
 wild/follower poses differ. All renders used native Windows NVIDIA1920x1080
 Compatibility. No full unit suite, Ally telemetry, F08#4 closure or READY.
+
+## Exact support for route vegetation
+
+Native probe identified the remaining Cliffhold court clump as
+ProceduralGroundCover/CoverPatch1274/Grass. Its original route-line roots were
+about0.7m above the clamped shoulder. The route builder now shares its generated
+top rows with vegetation, which samples their exact triangle split. Terrain,
+collision and camera are unchanged. Corrected roots use an XZ exclusion broad
+phase followed by the existing height-sensitive check for stacked surfaces.
+
+Nine tests/1616assertions pass, including independent engine ray-triangle
+checks of actual grass/flower/bush uploads and stacked exclusions. Independent
+source review found no remaining blocker after the broad-phase correction.
+Ten native final day/night frames were individually opened; a fresh blind
+comparison gives grounding PASS versus baseline FAIL, four preferences/six ties.
+The reproduced V-CX-11 floating-root defect is resolved on the visual branch.
+Bars A/B remain NO: coarse blade shapes, hard planting/ground edges, disconnected
+fence rails and thin settlement composition remain. Next: occupied settlement
+composition and cliff identity, not another pass on completed creature repairs.
+
+Evidence: `cloudreach-c2-candidate/route-root-support` (probes, final frames,
+tests, source review and blind verdict); before frames are the prior yard-bounds
+after set at c461d5e6f. Same stationary production-rig fixture and disclosures
+as above. No full C2 closure, motion/Ally proof or READY FOR INTEGRATION.

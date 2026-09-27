@@ -1,0 +1,38 @@
+extends "res://tools/capture_cloudreach_settlement_identity.gd"
+
+func _build_rows(spec: Dictionary) -> Array:
+	var rows: Array = []
+	for row: Dictionary in super._build_rows(spec):
+		if str(row.id) == "place_cliffhold_court":
+			row["times"] = ["day"]
+			rows.append(row)
+	return rows
+
+func _shoot(label: String, info: Dictionary) -> void:
+	await super._shoot(label, info)
+	var patch: Dictionary = _world.get("_cover_patches")[1274]
+	var source := patch.duplicate()
+	source.erase("surface_rows")
+	_log_line({"kind":"patch_source","index":1274,"patch":str(source),"row_count":(patch.get("surface_rows",[]) as Array).size()})
+	for point: Vector3 in [Vector3(-310.2,833.7,3993.8),Vector3(-310.2,833.7,3993.6)]:
+		_log_line({"kind":"support_probe","at":_v(point),"sample":preload("res://scripts/world/cloudreach_ground_cover.gd")._ridge_surface_height(patch.get("surface_rows",[]),point),"floor":_floor_hit(point,60.0)})
+	var area := Rect2(410, 595, 275, 125)
+	for node: Node in _world.find_children("*", "GeometryInstance3D", true, false):
+		if node is MultiMeshInstance3D:
+			var batch := node as MultiMeshInstance3D
+			if batch.multimesh == null:
+				continue
+			var hits: Array = []
+			for i in batch.multimesh.instance_count:
+				var at: Vector3 = (batch.global_transform * batch.multimesh.get_instance_transform(i)).origin
+				if at.distance_to(_rcam.global_position) > 350 or _rcam.is_position_behind(at) or not area.has_point(_rcam.unproject_position(at)):
+					continue
+				if hits.size() < 8:
+					hits.append({"index":i,"at":_v(at),"screen":str(_rcam.unproject_position(at)),"floor":_floor_hit(at, 60.0)})
+			if not hits.is_empty():
+				_log_line({"kind":"suspect_batch","path":str(batch.get_path()),"hits":hits})
+		elif node is MeshInstance3D:
+			var mesh := node as MeshInstance3D
+			var at := mesh.global_transform * mesh.get_aabb().get_center()
+			if at.distance_to(_rcam.global_position) < 350 and not _rcam.is_position_behind(at) and area.has_point(_rcam.unproject_position(at)):
+				_log_line({"kind":"suspect_mesh","path":str(mesh.get_path()),"at":_v(at),"screen":str(_rcam.unproject_position(at))})

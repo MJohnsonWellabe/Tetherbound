@@ -2257,7 +2257,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 			# is clamped per vertex onto any road ribbon, bridge deck or
 			# pad/landmark crown within reach (`_walkable_height`), rather than
 			# an entire segment near a detected "hub" going collision-free.
-			_route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
+			var surface_rows := _route_ridge(shoulder_root, "Ridge%03d" % serial, a, b, half_width,
 				segment_index + int(spec.get("order", 0)) * 17 + serial,
 				_materials["upland_dry"] if route_is_dry else _materials["upland"], landmass,
 				route_id, overpass_lines)
@@ -2276,6 +2276,7 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 					"path_half_width": float(landmass.get("path_visible_width_m", 4.2)) * 0.5,
 					"seed": serial * 3701 + chunk * 101 + absi(route_name.hash()),
 					"surface_offset_y": 0.025,
+					"surface_rows": surface_rows,
 					"dry": route_is_dry,
 				})
 			serial += 1
@@ -2486,10 +2487,10 @@ func _resource_position(authored: Vector3) -> Vector3:
 
 func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		half_width: float, seed_value: int, top_material: Material, config: Dictionary,
-		self_route_id: String = "", overpass_lines: Array[Dictionary] = []) -> void:
+		self_route_id: String = "", overpass_lines: Array[Dictionary] = []) -> Array:
 	var flat := Vector3(b.x - a.x, 0.0, b.z - a.z)
 	if flat.length_squared() < 0.01:
-		return
+		return []
 	var forward := flat.normalized()
 	var right := Vector3.UP.cross(forward).normalized()
 	var spacing := float(config.get("route_station_spacing_m", 48.0))
@@ -2763,6 +2764,7 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 	shape_node.shape = collision_mesh.create_trimesh_shape()
 	body.add_child(shape_node)
 	ridge.add_child(body)
+	return rows
 
 
 ## The ridge's crest and shoulders as one quad grid: `rows` is a list of

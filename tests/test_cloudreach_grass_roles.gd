@@ -64,6 +64,170 @@ func test_settlement_yard_discards_roots_beyond_its_supporting_floor() -> void:
 	assert_true(retained > 0, "supported vegetation remains")
 
 
+func test_ridge_height_follows_triangles_across_irregular_rotated_rows() -> void:
+	# Uneven station spacing and saddle-shaped cells distinguish the actual
+	# triangle split from centreline, bilinear and evenly-spaced-row guesses.
+	for variant: int in 3:
+		var rows := _ridge_test_rows(variant)
+		for row_index: int in rows.size() - 1:
+			for column: int in 6:
+				var a: Vector3 = rows[row_index][column]
+				var b: Vector3 = rows[row_index + 1][column]
+				var c: Vector3 = rows[row_index][column + 1]
+				var d: Vector3 = rows[row_index + 1][column + 1]
+				# Construct points from known barycentric weights. Their expected
+				# Y comes from construction, independently of the height solver.
+				for expected: Vector3 in [a * 0.2 + b * 0.3 + c * 0.5,
+						c * 0.2 + b * 0.3 + d * 0.5, b.lerp(c, 0.5), a]:
+					var query := Vector3(expected.x, -500.0, expected.z)
+					var actual: float = COVER._ridge_surface_height(rows, query)
+					assert_true(is_finite(actual) and absf(actual - expected.y) < 0.002,
+						"exact triangle height at interior, diagonal and row/column boundaries")
+		var last_corner: Vector3 = rows[rows.size() - 1][6]
+		assert_true(absf(COVER._ridge_surface_height(rows, last_corner) - last_corner.y) < 0.002,
+			"last row and outside column boundary remain supported")
+		for outside: Vector3 in [Vector3(-19, 0, 12), Vector3(19, 0, 12),
+				Vector3(0, 0, -1), Vector3(0, 0, 54)]:
+			assert_true(is_nan(COVER._ridge_surface_height(rows, _ridge_test_point(outside, variant))),
+				"outside the generated footprint returns no support")
+	assert_true(is_nan(COVER._ridge_surface_height([], Vector3.ZERO)), "empty surface has no support")
+	assert_true(is_nan(COVER._ridge_surface_height([_ridge_test_rows(0)[0]], Vector3.ZERO)),
+		"one cross-section has no surface area")
+
+
+func test_route_cover_preserves_distribution_and_roots_every_tier_on_drawn_triangles() -> void:
+	var cfg := _config()
+	cfg["grass_density_per_m2"] = 1.0
+	cfg["route_grass_patch_cap"] = 90
+	cfg["flower_density_per_m2"] = 1.0
+	cfg["route_flower_patch_cap"] = 20
+	cfg["bush_density_per_m2"] = 1.0
+	cfg["route_bush_patch_cap"] = 8
+	cfg["cluster_threshold"] = -3.0
+	var adjusted := 0
+	for variant: int in 3:
+		var rows := _ridge_test_rows(variant)
+		var a: Vector3 = rows[0][3]
+		var b: Vector3 = rows[rows.size() - 1][3]
+		# Deliberately incorrect source centreline, reproducing the old source
+		# of floating roots while keeping the same patch bounds and RNG stream.
+		a.y = 175.0
+		b.y = 190.0
+		var patch := {"kind":"segment", "a":a, "b":b, "half_width":16.0,
+			"path_half_width":2.0, "seed":193, "surface_offset_y":0.025}
+		var grounded := patch.duplicate()
+		grounded["surface_rows"] = rows
+		var original := RecordingCover.new()
+		var candidate := RecordingCover.new()
+		await original.build([patch], cfg, [])
+		await candidate.build([grounded], cfg, [])
+		assert_eq(candidate.recorded.size(), 3, "grounded build uploads grass, flowers and bushes")
+		var origin := a.lerp(b, 0.5)
+		for key: String in original.recorded:
+			var before: Array = original.recorded[key]
+			var after: Array = candidate.recorded.get(key, [])
+			assert_true(not before.is_empty(), "fixture creates each visible tier")
+			assert_eq(after.size(), before.size(), "grounding preserves tier count without exclusions")
+			for index: int in mini(before.size(), after.size()):
+				var old_transform: Transform3D = before[index]
+				var new_transform: Transform3D = after[index]
+				assert_eq(Vector2(new_transform.origin.x, new_transform.origin.z),
+					Vector2(old_transform.origin.x, old_transform.origin.z),
+					"same random stream preserves every root XZ")
+				assert_eq(new_transform.basis, old_transform.basis,
+					"grounding preserves every tuft yaw, width and height")
+				var world_at := new_transform.origin + origin
+				# Independent engine ray/triangle intersection, not a second call
+				# to the production sampler under test or its barycentric helper.
+				var expected := _ridge_test_triangle_ray(rows, world_at)
+				assert_true(is_finite(expected) and absf(world_at.y - expected - 0.025) < 0.002,
+					"uploaded root rests on the exact drawn triangle plus its offset")
+				if absf(new_transform.origin.y - old_transform.origin.y) > 1.0:
+					adjusted += 1
+		original.free()
+		candidate.free()
+	assert_true(adjusted > 0, "fixture catches the old floating-centreline placement")
+
+
+func test_grounded_route_exclusions_use_corrected_height_without_crossing_strata() -> void:
+	var rows := _ridge_test_rows(0)
+	var a: Vector3 = rows[0][3]
+	var b: Vector3 = rows[rows.size() - 1][3]
+	# The source line is deliberately far above the drawn surface. A broad
+	# phase using that stale height loses exclusions on the actual surface.
+	a.y = 500.0
+	b.y = 500.0
+	var patch := {"kind":"segment", "a":a, "b":b, "half_width":16.0,
+		"surface_rows":rows}
+	var root_at: Vector3 = (rows[1][1] as Vector3) * 0.2 \
+		+ (rows[2][1] as Vector3) * 0.3 + (rows[1][2] as Vector3) * 0.5
+	root_at.y += 0.025
+	var rectangle := {"kind":"rect", "centre":root_at,
+		"half":Vector2(1.0, 1.0), "rotation":0.0}
+	# This segment slopes sharply in Y. A 3D closest-point projection from
+	# the stale source line also moves far away in X, so this exercises the
+	# segment projection fix separately from the final distance metric.
+	var segment := {"kind":"segment", "a":root_at - Vector3(100, 100, 0),
+		"b":root_at + Vector3(100, 100, 0), "half_width":1.0}
+	var cover := COVER.new()
+	for exclusion: Dictionary in [rectangle, segment]:
+		cover._exclusions = [exclusion]
+		cover._active_exclusions = cover._nearby_exclusions(patch)
+		assert_eq(cover._active_exclusions.size(), 1,
+			"broad phase retains actual-surface exclusion despite stale source height")
+		assert_true(cover._excluded(root_at, true),
+			"correctly grounded root obeys rectangle and sloping-segment exclusions")
+		assert_false(cover._excluded(root_at + Vector3.UP * 40.0, true),
+			"another stratum sharing XZ is not excluded")
+	var stacked := rectangle.duplicate()
+	stacked["centre"] = root_at + Vector3.UP * 40.0
+	cover._exclusions = [stacked]
+	cover._active_exclusions = cover._nearby_exclusions(patch)
+	assert_eq(cover._active_exclusions.size(), 1,
+		"conservative XZ broad phase may retain an exclusion on another stratum")
+	assert_false(cover._excluded(root_at, true),
+		"narrow phase rejects the other-stratum exclusion at the grounded root")
+	cover.free()
+
+
+func _ridge_test_rows(variant: int) -> Array:
+	var rows: Array = []
+	var stations: Array[float] = [0.0, 5.0, 21.0, 53.0]
+	for row_index: int in stations.size():
+		var row: Array[Vector3] = []
+		for column: int in 7:
+			var height := 100.0 + row_index * 3.0 + column * 0.7
+			height += 7.0 if (row_index + column) % 2 == 0 else -4.0
+			row.append(_ridge_test_point(Vector3(-18.0 + column * 6.0, height,
+				stations[row_index]), variant))
+		rows.append(row)
+	return rows
+
+
+func _ridge_test_point(point: Vector3, variant: int) -> Vector3:
+	if variant == 1:
+		point = Vector3(point.z, point.y, point.x)
+	elif variant == 2:
+		point = Basis(Vector3.UP, 0.63) * point
+	return point + Vector3(-310.0, 0.0, 3990.0)
+
+
+func _ridge_test_triangle_ray(rows: Array, at: Vector3) -> float:
+	for row_index: int in rows.size() - 1:
+		for column: int in 6:
+			var a: Vector3 = rows[row_index][column]
+			var b: Vector3 = rows[row_index + 1][column]
+			var c: Vector3 = rows[row_index][column + 1]
+			var d: Vector3 = rows[row_index + 1][column + 1]
+			for triangle: Array in [[a, b, c], [c, b, d]]:
+				var hit: Variant = Geometry3D.ray_intersects_triangle(
+					Vector3(at.x, 1000.0, at.z), Vector3.DOWN,
+					triangle[0], triangle[1], triangle[2])
+				if hit is Vector3:
+					return (hit as Vector3).y
+	return NAN
+
+
 func test_world_field_has_low_led_hierarchy_and_one_metre_coherent_clumps() -> void:
 	var cfg: Dictionary = _config()
 	var counts: Array[int] = [0, 0, 0]

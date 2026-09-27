@@ -1,0 +1,65 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+AUDIT {"kind":"note","text":"flags set: [\"realm_key_cloudreach\", \"realm_gate_cloudreach_unlocked\", \"cloudreach_chapter_started\", \"cloudreach_crisis_learned\", \"storm_anchor_lower_west_mapped\", \"storm_anchor_lower_east_mapped\", \"cloudreach_lower_anchors_investigated\", \"causeway_survivors_reconnected\", \"windscar_aerie_prepared\", \"cloudreach_act_i_complete\", \"fly_traversal_unlocked\", \"sky_shrine_reached\", \"cloudreach_shrine_vane_west_aligned\", \"cloudreach_shrine_vane_east_aligned\", \"cloudreach_shrine_vane_crown_aligned\", \"storm_anchor_engine_truth_learned\", \"cloudreach_upper_route_unlocked\", \"cloudreach_act_ii_complete\"]"}
+WARNING: 'res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb': In external resource #0, invalid UID: 'uid://bmt3u8pvs2wgx' - using text path instead: 'res://assets/environment/cloudreach/cliff_buttress/limestone_buttress_CloudreachLimestoneColour.png'.
+   at: open (core/io/resource_format_binary.cpp:1025)
+   GDScript backtrace (most recent call first):
+       [0] _boot_region (res://tools/capture_visual_audit.gd:751)
+       [1] _run_region (res://tools/capture_visual_audit.gd:493)
+       [2] _run (res://tools/capture_visual_audit.gd:125)
+ERROR: unscoped chapter flag: fly_tutorial_completed
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _write_flag (res://scripts/world/realm_chapter_events.gd:135)
+       [1] _set_flag (res://scripts/world/realm_chapter_progression.gd:171)
+       [2] _complete (res://scripts/world/realm_chapter_progression.gd:145)
+       [3] reconcile (res://scripts/world/realm_chapter_progression.gd:110)
+       [4] restore_progression_from_game (res://scripts/world/realm_chapter_events.gd:83)
+       [5] _ready (res://scripts/world/realm_chapter_events.gd:44)
+       [6] _ready (res://scripts/world/cloudreach_chapter.gd:73)
+       [7] _ready (res://scripts/world/cloudreach_world.gd:450)
+       [8] _boot_region (res://tools/capture_visual_audit.gd:756)
+       [9] _run_region (res://tools/capture_visual_audit.gd:493)
+       [10] _run (res://tools/capture_visual_audit.gd:125)
+WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _resolve (res://scripts/world/cloudreach_physical_runtime.gd:1041)
+       [1] _sync_pickups_and_camps (res://scripts/world/cloudreach_physical_runtime.gd:632)
+       [2] sync_progression (res://scripts/world/cloudreach_physical_runtime.gd:597)
+       [3] configure (res://scripts/world/cloudreach_physical_runtime.gd:119)
+       [4] _ready (res://scripts/world/cloudreach_chapter.gd:82)
+       [5] _ready (res://scripts/world/cloudreach_world.gd:450)
+       [6] _boot_region (res://tools/capture_visual_audit.gd:756)
+       [7] _run_region (res://tools/capture_visual_audit.gd:493)
+       [8] _run (res://tools/capture_visual_audit.gd:125)
+[village_npcs] placed 11 of 11
+WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:451)
+       [4] _boot_region (res://tools/capture_visual_audit.gd:756)
+       [5] _run_region (res://tools/capture_visual_audit.gd:493)
+       [6] _run (res://tools/capture_visual_audit.gd:125)
+WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] resolve_wild_sites (res://scripts/world/cloudreach_world_runtime.gd:225)
+       [1] resolved_encounter_data (res://scripts/world/cloudreach_world_runtime.gd:201)
+       [2] mount (res://scripts/world/cloudreach_world_runtime.gd:109)
+       [3] _ready (res://scripts/world/cloudreach_world.gd:451)
+       [4] _boot_region (res://tools/capture_visual_audit.gd:756)
+       [5] _run_region (res://tools/capture_visual_audit.gd:493)
+       [6] _run (res://tools/capture_visual_audit.gd:125)
+[village_npcs] placed 1 of 1
+[village_npcs] placed 1 of 1
+visual audit: cloudreach booted after 30 frames (director true)
+AUDIT {"kind":"note","text":"cloudreach: 1 rows (env+places)"}
+AUDIT {"camera":[-304.2,834.0,3992.6],"closed_dialogue":[],"companion":"parked behind camera","companion_gap_m":-1.0,"companion_side_m":0.0,"feet":[-309.2,832.9,3991.2],"file":"001_cloudreach_place_cliffhold_court_day.png","kind":"frame","label":"place_cliffhold_court","pitch_deg":8.0,"region":"cloudreach","subject":"place_cliffhold_court","target":[-350.0,841.0,3980.0],"target_dist_m":42.3,"time":"day","why":"Settlement identity diagnostic; production camera and physical seating; companion parked behind camera by base place fixture","yaw_deg":74.6}
+AUDIT {"hits":[{"at":[-310.2,833.7,3993.8],"floor":832.996459960938,"index":1412,"screen":"(558.8002, 688.6689)"},{"at":[-310.2,833.7,3993.8],"floor":832.997985839844,"index":1668,"screen":"(560.5711, 688.6367)"},{"at":[-310.2,833.7,3993.6],"floor":832.9833984375,"index":2382,"screen":"(590.782, 689.9813)"},{"at":[-310.2,833.7,3993.8],"floor":832.994323730469,"index":2908,"screen":"(560.0269, 688.791)"}],"kind":"suspect_batch","path":"/root/CloudreachCliffs/ProceduralGroundCover/CoverPatch1274/Grass"}
+AUDIT sheet res://shots/cloudreach-settlement-probe/region/cloudreach/_sheet_cloudreach_places.jpg (1 frames)
+AUDIT {"kind":"summary","text":"visual audit region/cloudreach: 1 frames, 0 skips"}
