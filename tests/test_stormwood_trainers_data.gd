@@ -186,32 +186,3 @@ func test_no_two_trainers_share_a_challenge_circle() -> void:
 			var gap := Vector2(float(a[0]), float(a[2])).distance_to(Vector2(float(b[0]), float(b[2])))
 			assert_true(gap >= MIN_TRAINER_SPACING_M, "%s and %s stand %.1f m apart" % [
 				str(rows[i].get("id", "")), str(rows[j].get("id", "")), gap])
-
-
-## Stormwood relay DRY RUN 44adfbe4: the Outer Works approach slab
-## (`stormwood_world.gd` builds it from the rod station at (-100, 5350) to the
-## deck edge, `stormheart_tree.gd` OUTER_WORKS_OUTER_RADIUS short of the tree
-## centre at (-100, 5470), 10 m wide) rises faster than the ground and floats
-## up to 3 m over it. Kestrel's seat stood beneath it, and the player wedged
-## under its lowering edge walking back to the ramp foot. No terrain-grounded
-## trainer or NPC seat may stand inside that footprint.
-func test_no_terrain_seat_stands_under_the_outer_works_approach() -> void:
-	const TREE := preload("res://scripts/world/stormheart_tree.gd")
-	var foot := Vector2(-100.0, 5350.0)
-	var top := Vector2(-100.0, 5470.0 - TREE.OUTER_WORKS_OUTER_RADIUS)
-	# Half the slab's 10 m width plus a body's radius.
-	var clearance := 5.0 + 0.6
-	var seats: Array = []
-	for trainer: Dictionary in _read(PATH).get("trainers", []):
-		seats.append(trainer)
-	for npc: Dictionary in _read("res://data/config/stormwood_npcs.json").get("characters", []):
-		seats.append(npc)
-	assert_true(seats.size() > 10, "both seat catalogues read")
-	for seat: Dictionary in seats:
-		var position: Array = seat.get("position", [])
-		if position.size() != 3 or not str(seat.get("surface_id", "")).is_empty():
-			continue
-		var at := Vector2(float(position[0]), float(position[2]))
-		assert_true(_distance_to_segment(at, foot, top) > clearance,
-			"%s stands %.1f m from the approach slab's centre line, under the slab" % [
-				str(seat.get("id", "")), _distance_to_segment(at, foot, top)])

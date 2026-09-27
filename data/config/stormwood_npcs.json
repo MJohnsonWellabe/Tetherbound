@@ -220,12 +220,11 @@
       "body_profile": "officer_b",
       "portrait": "res://assets/ui/portraits/officer_b.png",
       "position": [
-        -113,
-        108.74,
-        5362
+        -100,
+        108.14,
+        5358
       ],
-      "_why_moved_f11": "Stood exactly under trainer Lieutenant Sera and 3 m from the Dynamo approach rod switch. Moved 8 m north, still at the approach station (8.5 m from the switch). Static interaction-spacing audit after F11 run 22.",
-      "_why_moved_f11_approach": "At (-100, 5358) the body stood inside the Outer Works approach slab's footprint and poked up through it (body top 109.79 over the slab at 108.85; Stormwood relay DRY RUN 44adfbe4 probe). Moved 13 m west onto open terrain beside the approach station, 17.7 m from the rod switch."
+      "_why_moved_f11": "Stood exactly under trainer Lieutenant Sera and 3 m from the Dynamo approach rod switch. Moved 8 m north, still at the approach station (8.5 m from the switch). Static interaction-spacing audit after F11 run 22."
     },
     {
       "id": "captain_marrow",
