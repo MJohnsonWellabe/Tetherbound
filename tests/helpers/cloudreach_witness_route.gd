@@ -236,10 +236,68 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 		if off > 0.3 and off < 1.0 and absf(mover.global_position.y - _last_walk_target.y) < 3.0:
 			_log("witness_waypoint_recentre", {"waypoint": str(_last_walk_target), "off_m": snappedf(off, 0.01), "next": str(target)})
 			if not await super._walk(_last_walk_target, 0.3, body): return false
-	var walked: bool = await super._walk(target, radius, body)
+	var walked: bool = await _walk_with_static_sidestep(target, radius, body)
 	if body == null:
 		_last_walk_target = target if walked else Vector3.INF
 	return walked
+
+
+## A player whose stick walk stops dead against STATIC geometry on open ground
+## (the cliff-shoulder ridge colliders: Windscar Ridge003, lower causeway
+## Ridge000, summit road Ridge001 across C1 runs 1, 5 and 6, each at velocity 0
+## with only that ridge in contact) backs off and steers round it. The base
+## walker reports that as "Walking stalled"; here, at most twice per walk, the
+## stall is withdrawn, logged as a disclosed recovery, the stick pulls back and
+## to the side for a moment, and the same walk is retried. A stall against a
+## moving body keeps the base walker's own handling.
+const STATIC_SIDESTEP_ATTEMPTS := 2
+var static_sidesteps: Array[Dictionary] = []
+
+func _walk_with_static_sidestep(target: Vector3, radius: float, body: CharacterBody3D) -> bool:
+	for attempt in STATIC_SIDESTEP_ATTEMPTS + 1:
+		var rows_before := rows.size()
+		var ok: bool = await super._walk(target, radius, body)
+		if ok or attempt == STATIC_SIDESTEP_ATTEMPTS or rows.size() <= rows_before:
+			return ok
+		var fail_row: Dictionary = rows[rows.size() - 1]
+		if str(fail_row.get("kind", "")) != "FAIL" or not str(fail_row.get("message", "")).begins_with("Walking stalled"):
+			return false
+		var block: Dictionary = {}
+		for index in range(rows.size() - 1, rows_before - 1, -1):
+			if str(rows[index].get("kind", "")) == "collision_block":
+				block = rows[index]
+				break
+		var collisions: Array = block.get("collisions", [])
+		if collisions.is_empty() or collisions.any(func(c: Dictionary) -> bool:
+				var node := get_root().get_node_or_null(NodePath(str(c.get("body", ""))))
+				return node == null or node is CharacterBody3D):
+			return false
+		_unfail()
+		var mover: Node3D = body if body != null else player
+		var ahead := target - mover.global_position
+		ahead.y = 0.0
+		ahead = ahead.normalized() if ahead.length() > 0.01 else Vector3.FORWARD
+		var side := ahead.cross(Vector3.UP) * (1.0 if attempt == 0 else -1.0)
+		var record := {"at": str(mover.global_position), "target": str(target), "attempt": attempt + 1,
+			"blocker": str(collisions[0].get("body", "")), "normal": str(collisions[0].get("normal", ""))}
+		static_sidesteps.append(record)
+		_log("witness_static_stall_sidestep", record)
+		var previous_clock := await _normal_input_clock("static stall sidestep")
+		for vector: Vector3 in [-ahead * 3.0, side * 3.0]:
+			for frame in 45:
+				_steer(vector, 1.0)
+				await _frames(1)
+		_release()
+		await _frames(10)
+		await _restore_route_clock(previous_clock)
+	return false
+
+
+## Withdraw the stall just reported (see `_walk_with_static_sidestep`).
+func _unfail() -> void:
+	failed = false
+	if not rows.is_empty() and str(rows[rows.size() - 1].get("kind", "")) == "FAIL":
+		rows.remove_at(rows.size() - 1)
 
 
 var _last_walk_target := Vector3.INF

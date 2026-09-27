@@ -82,6 +82,12 @@ func _log(kind: String, details: Dictionary = {}) -> void:
 	super._log(kind, details)
 
 
+func _unfail() -> void:
+	super._unfail()
+	if not failures.is_empty():
+		failures.remove_at(failures.size() - 1)
+
+
 func _record_frame() -> void:
 	if _crossed or not is_instance_valid(world) or not is_instance_valid(player):
 		simulated_seconds += 1.0 / 60.0
@@ -161,7 +167,7 @@ func _write_c1() -> void:
 		"exhausted_fall": exhausted_fall, "sealed_attempt": sealed_attempt, "trial_escape": trial_escape,
 		"pre_voss_overfly_recoveries": overfly_recoveries, "post_chapter_probe": post_chapter_probe,
 		"loaner_violations": violations, "stormwood": stormwood,
-		"exhausted_rows": recoveries.size(),
+		"exhausted_rows": recoveries.size(), "static_stall_sidesteps": static_sidesteps,
 		"owned_carrier_fly": "OPEN DEBT: no starter path gives a flier (opening.json starters terrapup/ripplet/galewisp; only galecrest has a fly_traversal carry capability, and galewisp has none). The earned five (ripplet, bramblebun, mudsnout x2, veridian) have no carrier, so every flight is Maela's loaner. A wild galecrest is catchable in Meadows band 1; an earned save that caught one would close this.",
 		"failure": rows.filter(func(r: Dictionary) -> bool: return r.kind == "FAIL")}
 	DirAccess.make_dir_recursive_absolute(_witness_dir(C1_DIR))
