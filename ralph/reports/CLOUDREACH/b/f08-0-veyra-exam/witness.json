@@ -1,0 +1,28 @@
+{
+  "accelerated_route_clock": true,
+  "battle_losses": [],
+  "battle_wins": [],
+  "combat_mode": "live_input",
+  "criterion": "F08#0",
+  "failure": [
+    {
+      "kind": "FAIL",
+      "message": "Walking exceeded measured-distance time limit toward (-260.0, 235.0, 790.0)",
+      "position": "(-127.6895, 205.4075, 704.5063)",
+      "simulated_seconds": 387.95,
+      "stage": "lower_west_anchor",
+      "wall_seconds": 437.977607
+    }
+  ],
+  "passed": false,
+  "relay_state": {
+    "cloudreach_summit_relay_crown_disabled": false,
+    "cloudreach_summit_relay_east_disabled": false,
+    "cloudreach_summit_relay_west_disabled": false
+  },
+  "relay_strikes": [],
+  "stage": "lower_west_anchor",
+  "start_state": "committed completed-Meadows fixture (smoke_cloudreach_continuous default; earned c1_arrival save not yet available)",
+  "veyra_battle": {},
+  "veyra_opposition": []
+}

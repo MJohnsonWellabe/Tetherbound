@@ -109,6 +109,11 @@ class HostSessionStub extends Node:
 	func peer_count() -> int:
 		return count
 
+	var held := 0
+
+	func held_seat_count() -> int:
+		return held
+
 	func max_peers() -> int:
 		return 4
 
@@ -635,3 +640,58 @@ func test_quitting_without_a_steam_lobby_is_a_no_op() -> void:
 	STEAM_LOBBY.leave_for_quit(null)
 	assert_eq(game.get_node_or_null(^"SteamLobby"), null, "no lobby is created just to quit")
 	game.free()
+
+
+## Re-hosting creates a new lobby id, so an old invitation's join is answered
+## "doesn't exist" (response 2); say why and what to do, not a bare error.
+func test_an_invitation_to_a_closed_or_rehosted_lobby_explains_itself() -> void:
+	var steam := MockSteam.new()
+	var lobby := STEAM_LOBBY.new()
+	lobby._inject_native_for_test(steam)
+	assert_true(lobby.initialize())
+	assert_true(lobby.request_join(5150))
+	steam.lobby_joined.emit(5150, 0, false, 2)
+	assert_eq(lobby.last_error(),
+		"That invitation has expired: your friend closed or reopened their world. Ask them to invite you again.")
+	assert_eq(lobby.retry_pending_reason(5150), "", "nothing is left pending after the refusal")
+	lobby.free()
+	steam.free()
+
+
+
+## A player who dropped at 4/4 keeps a held seat for the reconnect window.
+## The lobby must stay joinable so THAT player can come back, but no fresh
+## invitation may go out for the seat, and the Players tab says why.
+func test_a_seat_held_for_a_returning_player_stops_new_invites_but_keeps_the_lobby_open() -> void:
+	var h := _ready_host()
+	var steam: MockSteam = h.steam
+	var lobby: Node = h.lobby
+	var session: HostSessionStub = h.session
+	steam.overlay_enabled = true
+	session.count = 3
+	session.held = 1
+	session.peer_left.emit(4)
+	assert_false(lobby.is_full(), "three connected players: not full")
+	assert_true(lobby.seats_held_full())
+	assert_eq(steam.joinable_calls.back(), [777, true], "joinable, so the dropped player can rejoin")
+	assert_false(lobby.invite_friends(), "no fresh invitation for a held seat")
+	assert_eq(steam.overlay_opened, 0)
+	assert_true(lobby.last_error().contains("held for a player who is reconnecting"))
+	var menu := MenuStub.new()
+	menu.game = h.game
+	var tab: Node = PLAYERS_TAB.new()
+	tab.menu = menu
+	tab.build()
+	var invite: Button = tab.first_focus()
+	tab.poll()
+	assert_true(invite.disabled)
+	assert_eq(invite.text, "Seat Held for a Returning Player")
+	session.held = 0
+	tab.poll()
+	assert_false(invite.disabled, "the hold ending frees the seat for an invitation")
+	assert_eq(invite.text, "Invite Friends")
+	assert_true(lobby.invite_friends())
+	tab.free()
+	menu.free()
+	h.game.free()
+	steam.free()
