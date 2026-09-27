@@ -37,6 +37,39 @@ class WaterHarvest extends "res://scripts/world/harvest_node.gd":
 					retained.append(material)
 					instance.set_surface_override_material(surface, null)
 
+## F13#2: a reward-pocket harvest patch marked `claim_policy: character_once`
+## (reed_root_hollow). Gathering keeps every tool/yield rule of the ordinary
+## node, but the claim is the host-validated personal one: each character
+## gathers it once for itself (and learns the row's `learn_recipe_flag`), and
+## another character's gather never retires it for this viewer.
+class PersonalHarvest extends WaterHarvest:
+	const RULE := preload("res://scripts/world/water_personal_pickup.gd")
+	var authored_id := ""
+	func _already_taken(game: Node) -> bool:
+		return game != null and game.get("local") != null \
+			and bool(game.get("local").flags.has(RULE.personal_flag(authored_id)))
+	func _claim_intent(_actual_amount: int) -> Dictionary:
+		var game := get_node_or_null(^"/root/Game")
+		return {"kind": "water_personal_pickup", "realm": "water", "pickup_id": authored_id,
+			"personal_claimed": _already_taken(game)}
+	func _claim_committed(delta: Dictionary) -> bool:
+		for op: Dictionary in delta.get("ops", []):
+			if str(op.get("scope", "")) == "player" and str(op.get("op", "")) == "flag" \
+					and str(op.get("id", "")) == RULE.personal_flag(authored_id) \
+					and op.get("peers", []).has(multiplayer.get_unique_id()):
+				return true
+		return false
+	func _ready() -> void:
+		super._ready()
+		var transport := LEDGER_CLAIM.transport(self)
+		if transport != null and not transport.is_connected("intent_refused", _on_intent_refused):
+			transport.connect("intent_refused", _on_intent_refused)
+	## A guest hears the host's refusal a round trip later; release the press.
+	func _on_intent_refused(kind: String, _code: String, _reason: String, _detail: Dictionary) -> void:
+		if kind == "water_personal_pickup" and _claiming:
+			_claiming = false
+			_claim = {}
+
 class PersonalCandy extends "res://scripts/world/item_cache_pickup.gd":
 	const RULE := preload("res://scripts/world/water_personal_pickup.gd")
 	var authored_id := ""
@@ -140,7 +173,7 @@ static func admitted(row: Dictionary, world_flags: Variant) -> bool:
 	return PERSONAL.requirements_met(row, world_flags)
 
 func _taken(row: Dictionary) -> bool:
-	if str(row.placement_kind) == "harvest":
+	if str(row.placement_kind) == "harvest" and str(row.get("claim_policy", "")) != "character_once":
 		return HARVEST.was_taken(_game, "order:" + str(row.id))
 	if str(row.get("claim_policy", "")) == "character_once":
 		return _game.get("local").flags.has(PERSONAL.personal_flag(str(row.id)))
@@ -160,7 +193,10 @@ func _spawn(row: Dictionary) -> void:
 		return
 	var node: Node3D
 	if str(row.placement_kind) == "harvest":
-		node = WaterHarvest.new()
+		var personal_patch := str(row.get("claim_policy", "")) == "character_once"
+		node = PersonalHarvest.new() if personal_patch else WaterHarvest.new()
+		if personal_patch:
+			node.set("authored_id", id)
 		add_child(node)
 		node.global_position = spot
 		var model: Array = RESOURCE_MODELS.get(str(row.item_id), [CRATE, 0.35])

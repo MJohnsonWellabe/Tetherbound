@@ -1,9 +1,8 @@
 {
- "updated": "2026-09-27 08:47 UTC",
+ "updated": "2026-09-27 14:30 UTC",
  "headline": [
-  "Criteria met: 61 of 101. Batch 48 (PR #367) flipped F06#1, F06#2, F06#3, F11#3 and F15#3 on green full CI 36304146998, under the owner's relaxed-proof ruling (shortcuts disclosed per criterion).",
-  "Next: F08#0 (one passing rerun of the tightened Veyra witness), F02#4 (one passing recovery rerun), F01#2/#3 (code-blind judge of the reframed village walks), F03#0 (Bram and Hall sightlines).",
-  "Rules in force: owner ruling 2026-09-27 — fixtures, teleports, state writes, harness fights and skipped sub-parts allowed if disclosed; held Fly input lawful. Still required: code-blind judge for visual rows, two-peer evidence for co-op rows, green full CI on main."
+  "Criteria met: 76 of 101 (counted at merge). F09#0 lands in batch 58.",
+  "WIND-DOWN (owner, 14:07): lanes finish in-flight items only, post FINAL, then are archived. Archived: VIS, Stormwood, Stormwood-B."
  ],
  "batches": [
   {
@@ -227,6 +226,12 @@
    "sha": "",
    "state": "Merged",
    "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13–V34"
+  },
+  {
+   "name": "Batch 58",
+   "sha": "pending",
+   "state": "Auto-merge",
+   "contents": "Stormwood F09#0 earned six-region traversal"
   }
  ],
  "lanes": [

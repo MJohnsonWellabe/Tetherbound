@@ -1,0 +1,395 @@
+{
+	"capture_finished_utc": "2026-09-27T10:20:41",
+	"complete": true,
+	"failures": [],
+	"fixture_disclosure": "Production Cloudreach world, terrain, High Perches landmark, player and WorldLook. HUD/modal overlays are hidden, player locomotion is frozen on two real crown stands, and the south Fly arrival uses the production CameraRig spring arm while the court oblique keeps a fixed 65-degree evidence camera. No route, terrain, encounter, progression, landmark or actor transform is injected.",
+	"named_location": "The High Perches",
+	"records": [
+		{
+			"bytes": 1348516,
+			"camera": "production_rig",
+			"camera_fov": 70.0,
+			"camera_position": [
+				900.669494628906,
+				1023.06109619141,
+				2691.91650390625
+			],
+			"file": "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r3/high-perches-south-flight-arrival-day.png",
+			"frame_id": "high-perches-south-flight-arrival-day",
+			"observed_clock": {
+				"hour": 8.00519874666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				900.5,
+				1020.22998046875,
+				2697.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"banner_mast": 4,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"rig_pitch_deg": -12.0000003339304,
+			"rig_spring_hit_length": 5.19999980926514,
+			"stand_id": "south-flight-arrival"
+		},
+		{
+			"bytes": 1198723,
+			"camera": "production_rig",
+			"camera_fov": 70.0,
+			"camera_position": [
+				900.669494628906,
+				1023.06109619141,
+				2691.91650390625
+			],
+			"file": "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r3/high-perches-south-flight-arrival-night.png",
+			"frame_id": "high-perches-south-flight-arrival-night",
+			"observed_clock": {
+				"hour": 23.0058386533333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				900.5,
+				1020.22998046875,
+				2697.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"banner_mast": 4,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"rig_pitch_deg": -12.0000003339304,
+			"rig_spring_hit_length": 5.19999980926514,
+			"stand_id": "south-flight-arrival"
+		},
+		{
+			"bytes": 1416157,
+			"camera": "production_rig",
+			"camera_fov": 70.0,
+			"camera_position": [
+				904.582214355469,
+				1022.62622070312,
+				2686.51635742188
+			],
+			"file": "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r3/high-perches-portal-threshold-day.png",
+			"frame_id": "high-perches-portal-threshold-day",
+			"observed_clock": {
+				"hour": 8.01057328,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				904.0,
+				1020.22991943359,
+				2689.5
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"banner_mast": 4,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"rig_pitch_deg": -12.0000003339304,
+			"rig_spring_hit_length": 3.10781240463257,
+			"stand_id": "portal-threshold"
+		},
+		{
+			"bytes": 1285912,
+			"camera": "production_rig",
+			"camera_fov": 70.0,
+			"camera_position": [
+				904.582214355469,
+				1022.62622070312,
+				2686.51635742188
+			],
+			"file": "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r3/high-perches-portal-threshold-night.png",
+			"frame_id": "high-perches-portal-threshold-night",
+			"observed_clock": {
+				"hour": 23.0053789066667,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				904.0,
+				1020.22991943359,
+				2689.5
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"banner_mast": 4,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"rig_pitch_deg": -12.0000003339304,
+			"rig_spring_hit_length": 3.10781240463257,
+			"stand_id": "portal-threshold"
+		},
+		{
+			"bytes": 900668,
+			"camera": "production_rig",
+			"camera_fov": 70.0,
+			"camera_position": [
+				900.0,
+				1034.58117675781,
+				2691.08666992188
+			],
+			"file": "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r3/high-perches-rim-looking-out-day.png",
+			"frame_id": "high-perches-rim-looking-out-day",
+			"observed_clock": {
+				"hour": 8.01091801333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				900.0,
+				1031.75,
+				2686.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"banner_mast": 4,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"rig_pitch_deg": -12.0000003339304,
+			"rig_spring_hit_length": 5.19999980926514,
+			"stand_id": "rim-looking-out"
+		},
+		{
+			"bytes": 844637,
+			"camera": "production_rig",
+			"camera_fov": 70.0,
+			"camera_position": [
+				900.0,
+				1034.58117675781,
+				2691.08666992188
+			],
+			"file": "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r3/high-perches-rim-looking-out-night.png",
+			"frame_id": "high-perches-rim-looking-out-night",
+			"observed_clock": {
+				"hour": 23.0058833466667,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				900.0,
+				1031.75,
+				2686.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"banner_mast": 4,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"rig_pitch_deg": -12.0000003339304,
+			"rig_spring_hit_length": 5.19999980926514,
+			"stand_id": "rim-looking-out"
+		},
+		{
+			"bytes": 745442,
+			"camera": "production_rig",
+			"camera_fov": 70.0,
+			"camera_position": [
+				909.403381347656,
+				1023.06121826172,
+				2690.5966796875
+			],
+			"file": "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r3/high-perches-southeast-rim-looking-out-day.png",
+			"frame_id": "high-perches-southeast-rim-looking-out-day",
+			"observed_clock": {
+				"hour": 8.01092578666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				913.0,
+				1020.22998046875,
+				2687.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"banner_mast": 4,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"rig_pitch_deg": -12.0000003339304,
+			"rig_spring_hit_length": 5.19999980926514,
+			"stand_id": "southeast-rim-looking-out"
+		},
+		{
+			"bytes": 661636,
+			"camera": "production_rig",
+			"camera_fov": 70.0,
+			"camera_position": [
+				909.403381347656,
+				1023.06121826172,
+				2690.5966796875
+			],
+			"file": "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r3/high-perches-southeast-rim-looking-out-night.png",
+			"frame_id": "high-perches-southeast-rim-looking-out-night",
+			"observed_clock": {
+				"hour": 23.00567744,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				913.0,
+				1020.22998046875,
+				2687.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"banner_mast": 4,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"rig_pitch_deg": -12.0000003339304,
+			"rig_spring_hit_length": 5.19999980926514,
+			"stand_id": "southeast-rim-looking-out"
+		},
+		{
+			"bytes": 1265572,
+			"camera": "evidence",
+			"camera_fov": 65.0,
+			"camera_position": [
+				880.359802246094,
+				1023.13000488281,
+				2680.21435546875
+			],
+			"file": "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r3/high-perches-southwest-court-oblique-day.png",
+			"frame_id": "high-perches-southwest-court-oblique-day",
+			"observed_clock": {
+				"hour": 8.01068092,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				886.0,
+				1020.34997558594,
+				2689.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"banner_mast": 4,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"rig_pitch_deg": -12.0000003339304,
+			"rig_spring_hit_length": 5.19999980926514,
+			"stand_id": "southwest-court-oblique"
+		},
+		{
+			"bytes": 1077964,
+			"camera": "evidence",
+			"camera_fov": 65.0,
+			"camera_position": [
+				880.359802246094,
+				1023.13000488281,
+				2680.21435546875
+			],
+			"file": "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r3/high-perches-southwest-court-oblique-night.png",
+			"frame_id": "high-perches-southwest-court-oblique-night",
+			"observed_clock": {
+				"hour": 23.00528288,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				886.0,
+				1020.34997558594,
+				2689.0
+			],
+			"presentation_collision_count": 0,
+			"presentation_roles": {
+				"arrival_portal": 2,
+				"banner_mast": 4,
+				"keeper_supplies": 8,
+				"landing_apron": 1,
+				"landing_light": 4,
+				"landing_signal": 4,
+				"raised_roost": 28,
+				"roost_binding": 8,
+				"wind_banner": 4,
+				"wind_compass": 10
+			},
+			"rig_pitch_deg": -12.0000003339304,
+			"rig_spring_hit_length": 5.19999980926514,
+			"stand_id": "southwest-court-oblique"
+		}
+	],
+	"resolution": [
+		1280,
+		720
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1
+}

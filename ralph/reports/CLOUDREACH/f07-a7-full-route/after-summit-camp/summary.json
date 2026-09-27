@@ -1,0 +1,61 @@
+{
+  "verdict": "PASS",
+  "distance_m": 14779.3216103551,
+  "combat": "live_input_spacer_switch",
+  "evidence_scope": "live_combat_acceptance",
+  "intervals": 272,
+  "longest_interval_s": 95.0,
+  "longest_dead_travel_s": 94.9999999999136,
+  "over_120s": [],
+  "windscar_return": {
+    "intervals": 43,
+    "longest_s": 36.42
+  },
+  "top5": [
+    {
+      "end_seconds": 962.0,
+      "from": "meaningful_offer",
+      "from_stage": "battle_keeper_maela_trial",
+      "gap_seconds": 95.0,
+      "start_seconds": 867.0,
+      "to": "meaningful_offer",
+      "to_stage": "battle_keeper_maela_trial"
+    },
+    {
+      "end_seconds": 2160.5,
+      "from": "meaningful_offer",
+      "from_stage": "upper_anchor_east",
+      "gap_seconds": 91.0,
+      "start_seconds": 2069.5,
+      "to": "meaningful_offer",
+      "to_stage": "upper_anchor_east"
+    },
+    {
+      "end_seconds": 2720.28,
+      "from": "input_interact",
+      "from_stage": "battle_captain_veyra_storm_anchor",
+      "gap_seconds": 89.85,
+      "start_seconds": 2630.43,
+      "to": "battle_victory",
+      "to_stage": "battle_captain_veyra_storm_anchor"
+    },
+    {
+      "end_seconds": 2064.5,
+      "from": "meaningful_offer",
+      "from_stage": "upper_anchor_east",
+      "gap_seconds": 76.5,
+      "start_seconds": 1988.0,
+      "to": "meaningful_offer",
+      "to_stage": "upper_anchor_east"
+    },
+    {
+      "end_seconds": 2492.77,
+      "from": "input_interact",
+      "from_stage": "battle_officer_voss_summit_approach",
+      "gap_seconds": 75.25,
+      "start_seconds": 2417.52,
+      "to": "battle_victory",
+      "to_stage": "battle_officer_voss_summit_approach"
+    }
+  ]
+}

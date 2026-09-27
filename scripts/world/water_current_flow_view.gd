@@ -8,6 +8,11 @@ extends MeshInstance3D
 ## (water_current_field.gd uses the same vector). Brighter and faster for
 ## stronger currents; calmer once `water_currents_restored` is set. One mesh,
 ## one draw call, no particles. Tunables: water_veilfall.json::current_flow.
+## F14#2: the restoration state picks a whole look, not only calm_scale:
+## current_flow.state_shader.live / .restored (streak density, dash fill,
+## chop flecks, scroll speed, opacity, brightness) are applied on build and on
+## every flag change, so load, reload and the live settlement on each peer
+## (the flag is a replicated world fact) all show the same state.
 const SHADER := preload("res://shaders/water_current_flow.gdshader")
 const RESTORED_FLAG := "water_currents_restored"
 const POLL_SECONDS := 1.0
@@ -15,6 +20,7 @@ const POLL_SECONDS := 1.0
 var ribbon_count := 0
 var _flags: RefCounted
 var _calm_scale := 0.5
+var _state_shader: Dictionary = {}
 var _poll := 0.0
 var _restored := false
 
@@ -22,6 +28,7 @@ var _restored := false
 func build(world_config: Dictionary, config: Dictionary, flags: RefCounted) -> void:
 	_flags = flags
 	_calm_scale = float(config.get("restored_calm_scale", 0.5))
+	_state_shader = config.get("state_shader", {})
 	var sea := float(world_config.get("terrain", {}).get("sea_level_m", 0.0)) + float(config.get("lift_m", 0.05))
 	var width_scale := float(config.get("width_scale", 0.7))
 	var full_strength := maxf(0.01, float(config.get("full_strength_m_s", 1.8)))
@@ -65,7 +72,27 @@ func _refresh(force: bool) -> void:
 	if restored == _restored and not force:
 		return
 	_restored = restored
-	(material_override as ShaderMaterial).set_shader_parameter("calm_scale", _calm_scale if restored else 1.0)
+	var material := material_override as ShaderMaterial
+	var values := state_parameters(restored)
+	for key: String in values:
+		var value: Variant = values[key]
+		material.set_shader_parameter(key, Color(str(value)) if value is String else value)
+
+
+## The shader uniforms for one restoration state (config values, colours as
+## strings), including calm_scale. Public so tests and captures can compare the
+## two sets and check the applied material follows the flag.
+func state_parameters(restored: bool) -> Dictionary:
+	var values: Dictionary = {"calm_scale": _calm_scale if restored else 1.0}
+	var set_values: Dictionary = _state_shader.get("restored" if restored else "live", {})
+	for key: String in set_values:
+		if not key.begins_with("_"):
+			values[key] = set_values[key]
+	return values
+
+
+func is_restored_look() -> bool:
+	return _restored
 
 
 func _densify(points: Array, segment: float) -> PackedVector2Array:

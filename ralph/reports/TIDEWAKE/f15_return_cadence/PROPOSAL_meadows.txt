@@ -1,0 +1,4 @@
+F15#2 PROPOSAL arches=false minutes=114.2 over_a7=["138s meadows:wild:band1_lower_meadows:1003 -> meadows:wild:band1_lower_meadows:1075 @(65.24759, 468.5728)", "132s meadows:wild:band2_stone_and_root:2073 -> meadows:wild:band1_lower_meadows:1039 @(316.4899, 1535.347)"] meadows_worst_s=138
+F15#2 PROPOSAL arches=true minutes=100.0 over_a7=["138s meadows:wild:band1_lower_meadows:1003 -> meadows:wild:band1_lower_meadows:1075 @(65.24759, 468.5728)", "132s meadows:wild:band2_stone_and_root:2073 -> meadows:wild:band1_lower_meadows:1039 @(316.4899, 1535.347)"] meadows_worst_s=138
+F15#2 PROPOSAL arches=false minutes=114.2 over_a7=[] meadows_worst_s=84
+F15#2 PROPOSAL arches=true minutes=100.0 over_a7=[] meadows_worst_s=84

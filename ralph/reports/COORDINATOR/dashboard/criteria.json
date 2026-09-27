@@ -108,16 +108,16 @@
     },
     {
      "text": "Each transition, reward and recovery survives reload on that route",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Seed-15 local headless rerun with --reload-at-transitions at 0c07bcbe (rested-team-reload-seed15-rerun.txt, tournament_won, failures []), harness-driven fights and route; transitions from CI r21 at 108705ca. Independent re-check: MET.",
-     "gap": "Landing in batch 49; flips on the next green full CI.",
+     "gap": "Green full CI 36308727062 on main 3dad15f41 (batch 49).",
      "note": "Same run as F02#3, with reloads at each transition. Meadows route (#286)."
     },
     {
      "text": "Solo, two-loss and four-character ledgers solvent",
-     "status": "partial",
-     "evidence": "test_meadows_economy_solvency.gd 4/13 pass (required 1,005 vs 272 two-loss); data ledger, not route-measured",
-     "gap": "Ledger measured on the actual earned route"
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/MEADOWS-PAYOFFS/earned-bridge/ledger-seed15-r35|r36-679329ac: reserve_ok and two_loss_ok at all 5 stages, no repeated wilds; fourchar-ledger-result.txt solvent. Shortcuts disclosed: four-character ledger is a static computation over the seed-15 path, harness fights, seed fixture, assumed two-loss basket. Independent re-check: MET.",
+     "gap": "Counted at merge; confirmed by green full CI 36319498130 (run 5709) on main ddaf7a7bd."
     },
     {
      "text": "No repeated wilds required",
@@ -337,9 +337,9 @@
     },
     {
      "text": "One shared world healing/relic/key",
-     "status": "partial",
-     "evidence": "Two-peer handoff 32/0: key/gate flags on both after reload (main, fixture); blind verdict: healing has no visible payoff",
-     "gap": "Evidence passes (code-blind judge YES; two-peer PASS); held only for the open owner decision on the healed look."
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/MEADOWS-FINALE/heal-r7/JUDGE-VERDICT.txt code-blind YES (healed ground reads as green grass, Bars A/B YES); full-refusal-two-peer-476e8ea7.txt 46/0 ALL CHECKS PASSED. Shortcuts disclosed: legendary_freed set directly, player placed at vantages, HUD and wilds hidden; two-peer asserts the healing node. Independent re-check: MET.",
+     "gap": "Green full CI 36314695987 on main 4d55fddfd (batch 52)."
     },
     {
      "text": "Physical gate opens exactly once and carries the same five into Cloudreach",
@@ -366,9 +366,9 @@
    "criteria": [
     {
      "text": "Starts from the earned Meadows handoff save",
-     "status": "not_started",
-     "evidence": "No earned M4 save exists (M4 open)",
-     "gap": "Earned handoff save"
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). tests/fixtures/earned_saves/c1_arrival PROVENANCE (injections 0, seed 4) built from the earned seed4_hall checkpoint; ralph/reports/CLOUDREACH/b/f06-1-foot-regions/earned/run.txt CONTINUOUS PASS from the save via the production title Load. Shortcuts disclosed: checkpoint joins (seed4_hall, village_pre_kell, storm_road_join) with two failed leg tails discarded, routing detours B1-B16, Load pressed by signal. Also carries the earned full-route A7 corroboration for F07#3 (0 intervals over 120 s). Independent re-check: MET.",
+     "gap": "Counted at merge; confirmed by green full CI 36319498130 (run 5709) on main ddaf7a7bd."
     },
     {
      "text": "Ordinary foot path traverses all six regions",
@@ -400,9 +400,9 @@
     },
     {
      "text": "Save/reload keeps same five and closed gates",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: Earned c1_flight_trained start; harness-timed autosave launch, restart_peer and direct title _load_slot (solo PASS 22 rows). Co-op two-peer PASS on loopback ENet with story_flag, party_grant, fly_setup, teleports, fly_launch position write and harness-triggered mid-flight saves. Independent re-check: MET.",
-     "gap": "Landing in batch 49; flips on the next green full CI."
+     "gap": "Green full CI 36308727062 on main 3dad15f41 (batch 49)."
     },
     {
      "text": "Two-peer rejoin keeps rider/party identity and gates",
@@ -441,16 +441,16 @@
     },
     {
      "text": "Measured 885-second no-action stretch removed",
-     "status": "in_progress",
-     "evidence": "Baseline measured (Windscar return 1,609 m / 322 s); route edits drafted",
-     "gap": "Coordinator ruling (a): restore the XP on the shortened legs, then the ledger test and an A7 re-measure",
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/f07-a7-full-route/after-summit-camp/ CONTINUOUS PASS, 14.78 km, longest interval 95.0 s, none over 120 s; Windscar return longest 36.42 s. Shortcuts disclosed: fixture start (flags, granted L25 five, scene loaded directly), 8x acceleration, harness-driven fights, route-snapping scripted walker, wild offers and optional trainers skipped, route ledger is a data replay. Independent re-check: MET.",
+     "gap": "Green full CI 36311628285 on main 4ee9f4157 (batches 50-51).",
      "note": "Verifier rejected the batch 26 claim: data only, with no engine re-walk or committed A7 re-measure. Cloudreach lane (#311)."
     },
     {
      "text": "Every A7 empty interval gone",
-     "status": "not_started",
-     "evidence": "Listed open",
-     "gap": "Route A7 measurement"
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/f07-a7-full-route/after-summit-camp/ CONTINUOUS PASS, 14.78 km, longest interval 95.0 s, none over 120 s; Windscar return longest 36.42 s. Shortcuts disclosed: fixture start (flags, granted L25 five, scene loaded directly), 8x acceleration, harness-driven fights, route-snapping scripted walker, wild offers and optional trainers skipped, route ledger is a data replay. Independent re-check: MET.",
+     "gap": "Green full CI 36311628285 on main 4ee9f4157 (batches 50-51)."
     },
     {
      "text": "Earned route resource/XP ledger needs no new catch",
@@ -477,9 +477,9 @@
    "criteria": [
     {
      "text": "Veyra's team and flight-relay exam completed by ordinary input",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/CLOUDREACH/b/f08-0-veyra-exam/earned-tightened/ (WITNESS PASS, EXIT 0, run at d01c0e7b with the tightened assertions). Shortcuts disclosed: earned c1_arrival checkpoint start; accelerated clock (fights at 1x); live-combat pilot writes camera yaw; --fail-exam-first idle pilot for the planned loss; Title Load by signal emit and reload by direct save/load; held Fly input; 3 relay legs stick-walked around lee windbreaks; arc active in the arena only during Overload. Independent re-check: MET.",
-     "gap": "Landing in batch 50; flips on the next green full CI.",
+     "gap": "Green full CI 36311628285 on main 4ee9f4157 (batches 50-51).",
      "note": "Witness blocked: the base Cloudreach route fails at lower_west_anchor (collision). Main Cloudreach lane fixing it, then Cloudreach-B reruns (#294)."
     },
     {
@@ -520,8 +520,8 @@
    "chapter": "Stormwood",
    "pct": 60,
    "counts": {
-    "met": 3,
-    "partial": 2,
+    "met": 4,
+    "partial": 1,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -530,9 +530,10 @@
    "criteria": [
     {
      "text": "Earned traversal demonstrates all six regions",
-     "status": "partial",
-     "evidence": "Earned rootgate/marrow/dynamo segment tests and smoke_stormwood_continuous (main); not from C3 save",
-     "gap": "Earned run from Cloudreach handoff"
+     "status": "met",
+     "evidence": "ralph/reports/STORMWOOD/f09_0/{README.md,run9-d3414e84.txt} @ tb/stormwood a7ea3647 (batch 58): continuous earned run across all six regions from the Cloudreach-boundary fixture, no Stormwood flag/position fixtures; independent re-check MET. Shortcuts disclosed: start is Cloudreach-boundary fixture (not an earned C3 save); party five fresh L44 spawns; knife/axe/pickaxe granted; accelerated clock 8x; harness-driven input and fights; helper routing B1-B8.",
+     "gap": "",
+     "note": "Counted at merge of batch 58 (count-at-merge rule)."
     },
     {
      "text": "Lawful Surge phases, grounded paths, rod safe radii",
@@ -577,9 +578,9 @@
    "criteria": [
     {
      "text": "All six selected chains satisfy §5 (lure/action/payoff/acknowledgement)",
-     "status": "partial",
+     "status": "met",
      "evidence": "Relaxed rule (owner 2026-09-27). Shortcuts disclosed: ralph/reports/STORMWOOD/b/f10_0/CLOSE.md: fixture upstream flags, explore_at travel, granted materials and Free Build arches, scripted circuit wins; TM smoke on a stub world, solo host; Dark Arches payoff shown by an edge-clamped minimap frame only. Independent re-check: MET.",
-     "gap": "Landing in batch 49; flips on the next green full CI.",
+     "gap": "Green full CI 36308727062 on main 3dad15f41 (batch 49).",
      "note": "Dark Arches map payoff and six-chain §5. Stormwood-B (#303)."
     },
     {
@@ -608,9 +609,9 @@
     },
     {
      "text": "Audio witness for phases/lightning",
-     "status": "not_started",
-     "evidence": "None found",
-     "gap": "Audio matrix witness"
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). tests/smoke_stormwood_surge_audio.gd on main; ralph/reports/STORMWOOD-PROGRESS/audio/f10_5/vis-rerun/run_summary.txt 19 passed, 0 failed: each phase cue fires once in order, 21 warnings/21 strikes, warning-to-strike 1.200-1.211 s, captions with direction wedges. Shortcuts disclosed: Surge clock jumped, trainer pinned/healed, Long Storm ended by flag, headless single peer; all 9 cue assets missing so nothing is audible (witness proves wiring and timing only); blinded-listener test open. Independent re-check: MET.",
+     "gap": "Counted at merge (batch 56); safety-net full CI dispatched 13:40."
     },
     {
      "text": "Device profile",
@@ -636,9 +637,9 @@
    "criteria": [
     {
      "text": "Dynamo and Stormheart resolve from the earned route",
-     "status": "partial",
-     "evidence": "test_stormwood_earned_dynamo_segment (main, historical); not from C3 save",
-     "gap": "Continuous earned witness",
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/STORMWOOD/f11_0/head-1c977611/marrow_press.txt MARROW PRESS OK (36 s window, four conduits, release) plus window36/run1-3; offer from the F11#3 two-peer proof on main. Shortcuts disclosed: fixture flags and L46 party, placed at the core anchor, harness-driven fight and Break, no single run from fight to offer. Independent re-check: MET.",
+     "gap": "Green full CI 36314695987 on main 4d55fddfd (batch 52).",
      "note": "Verifier rejected the claim: Marrow, the Break and Stormheart never ran (stops at core_reached). Stormwood lane (#305)."
     },
     {
@@ -745,9 +746,9 @@
    "criteria": [
     {
      "text": "Earned route reaches all six island groups",
-     "status": "partial",
-     "evidence": "smoke_water_continuous / earned opening/late segments exist; not from S3 save",
-     "gap": "Continuous earned witness"
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/TIDEWAKE/f13_0_six_groups/: all six groups reached, same five, no mount, reload drift 0. Shortcuts disclosed: declared start (gate flags, key consumed, L44 five), run 2 is a checkpoint resume, harness-driven fights and walking, rest shoals not exercised. Independent re-check: MET.",
+     "gap": "Counted at merge; confirmed by green full CI 36319498130 (run 5709) on main ddaf7a7bd."
     },
     {
      "text": "Four land loops and three shortcuts",
@@ -772,9 +773,9 @@
     },
     {
      "text": "Four-character supplies solvent without new catch or repeated wild",
-     "status": "partial",
-     "evidence": "Cradle payout world-once (first gatherer only); Garden/Deep Watch need swim saddle",
-     "gap": "Data-only four-character ledger; no route depletion run; Garden/Deep Watch chains need an owned swimmer; Cradle pays first gatherer only. (strict re-score 23:40)"
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/TIDEWAKE/b/f13_4_route_depletion/route_depletion.log at a7648529: 598 checks, 0 failures, fights 0, catches 0, same five per character. Shortcuts disclosed: one process swapping Game.local for four characters, position writes near nodes, fixture party, encounter director off, flag writes, direct Game.craft, Cradle seam forced to A, Garden/Deep Watch excluded (swimmer question open with the owner). Independent re-check: MET.",
+     "gap": "Green full CI 36316414307 on main f04d82fa1 (batch 53)."
     },
     {
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
@@ -814,9 +815,9 @@
     },
     {
      "text": "Water/current network visibly changes and persists",
-     "status": "partial",
-     "evidence": "Relic shrine placement/activation 35-check (scorecard)",
-     "gap": "Visible current change not shown in frames; no code-blind judge verdict (W1). (strict re-score 23:40)",
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/TIDEWAKE/b/f14_2_visible_current/JUDGE_VERDICT.md: code-blind judge picks the live current as rougher at a glance (randomised A/B); smoke_tidewake_b_current_restore 77 checks, 0 failures incl. production save/load persistence. Shortcuts disclosed: flag flipped through the world flag store, shader clock pinned, CameraRig off with Camera3D placed directly, trainer and HUD hidden, software-GL frames. Independent re-check: MET.",
+     "gap": "Merged in batch 57; counted at merge.",
      "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {

@@ -2,5 +2,5 @@ phase,trainer,path_m,wild_sites_available,wild_defeats_credited,wild_xp_to_lead,
 0,tether_lieutenant_senn,3261,29,14,4452,8,24,22,19,"[24, 21, 21, 21, 21]","lead 255/1546 ; weakest 973/1326",2,2,796,0,"[24, 22, 22, 22, 22]",80,"{ 'potion_large': 2 }","{ 'potion_small': 7, 'revive': 3, 'potion_large': 1 }",""
 1,keeper_maela_trial,2003,20,10,3948,8,25,23,20,"[27, 25, 25, 25, 25]","lead 138/1770 ; weakest 473/1620",4,5,828,0,"[27, 25, 25, 25, 25]",75,"{ 'revive': 1, 'skyplume': 2 }","{ 'potion_small': 3, 'potion_large': 1, 'revive': 2 }",""
 2,officer_voss_summit_approach,5241,32,16,7456,7,31,29,26,"[31, 29, 29, 29, 28]","lead 886/2075 ; weakest 1150/1846",2,2,1530,1600,"[32, 30, 30, 30, 29]",120,"{ 'revive': 2 }","{ 'potion_small': 2, 'potion_large': 1, 'revive': 2 }","aerie_repair needs 3 gale_fiber / reached 7"
-3,captain_veyra_storm_anchor,1717,6,3,1530,4,34,32,29,"[33, 32, 32, 32, 31]","lead 1319/2230 ; weakest 436/2075",1,2,1642,600,"[34, 32, 32, 32, 31]",150,"{ 'rare_candy': 1 }","{  }",""
-4,,1122,2,1,510,0,,,,"[34, 32, 32, 32, 32]","lead 1841/2308 ; weakest 37/2152",,,0,0,"[34, 32, 32, 32, 32]",0,"{  }","{  }",""
+3,captain_veyra_storm_anchor,555,4,2,1020,4,34,32,29,"[33, 31, 31, 31, 31]","lead 809/2230 ; weakest 181/2075",1,2,1642,600,"[34, 32, 32, 32, 31]",150,"{ 'rare_candy': 1 }","{  }",""
+4,,1122,4,2,1020,0,,,,"[34, 32, 32, 32, 32]","lead 1841/2308 ; weakest 37/2152",,,0,0,"[34, 32, 32, 32, 32]",0,"{  }","{  }",""

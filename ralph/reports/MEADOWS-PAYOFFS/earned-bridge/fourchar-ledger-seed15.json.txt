@@ -1,0 +1,110 @@
+{
+ "route_points_all": 1458,
+ "route_points_camp": 229,
+ "scatter_world_total": {
+  "fiber": 16174,
+  "stone": 12852,
+  "wood": 128652
+ },
+ "supply": {
+  "to_rested_team|20m|authored": {
+   "wood": 32,
+   "stone": 16,
+   "fiber": 32,
+   "berries": 18
+  },
+  "to_rested_team|20m|scatter": {
+   "wood": 381,
+   "stone": 84,
+   "fiber": 56,
+   "berries": 0
+  },
+  "to_rested_team|40m|authored": {
+   "wood": 32,
+   "stone": 16,
+   "fiber": 32,
+   "berries": 18
+  },
+  "to_rested_team|40m|scatter": {
+   "wood": 855,
+   "stone": 226,
+   "fiber": 78,
+   "berries": 0
+  },
+  "to_rested_team|80m|authored": {
+   "wood": 32,
+   "stone": 20,
+   "fiber": 36,
+   "berries": 18
+  },
+  "to_rested_team|80m|scatter": {
+   "wood": 1500,
+   "stone": 564,
+   "fiber": 126,
+   "berries": 0
+  },
+  "whole_route|20m|authored": {
+   "wood": 80,
+   "stone": 83,
+   "fiber": 84,
+   "berries": 36
+  },
+  "whole_route|20m|scatter": {
+   "wood": 22599,
+   "stone": 498,
+   "fiber": 2456,
+   "berries": 0
+  },
+  "whole_route|40m|authored": {
+   "wood": 99,
+   "stone": 95,
+   "fiber": 115,
+   "berries": 60
+  },
+  "whole_route|40m|scatter": {
+   "wood": 47196,
+   "stone": 1068,
+   "fiber": 6394,
+   "berries": 0
+  },
+  "whole_route|80m|authored": {
+   "wood": 147,
+   "stone": 132,
+   "fiber": 149,
+   "berries": 81
+  },
+  "whole_route|80m|scatter": {
+   "wood": 78846,
+   "stone": 2116,
+   "fiber": 9278,
+   "berries": 0
+  }
+ },
+ "demand": {
+  "solo": [
+   30,
+   8,
+   34
+  ],
+  "four_A_bedroll_personal": [
+   96,
+   8,
+   124
+  ],
+  "four_B_bedroll_shared": [
+   84,
+   8,
+   106
+  ],
+  "potions_2_per_char_berries_fiber": {
+   "solo": [
+    8,
+    2
+   ],
+   "four": [
+    32,
+    8
+   ]
+  }
+ }
+}

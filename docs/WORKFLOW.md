@@ -407,9 +407,12 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   manual dispatch, and on a PR labelled `full-ci`. Label `full-ci` when a
   change touches net/authority, save/migration or a harness that fast CI does
   not run (adding the label starts a run; the two known-red jobs show red there
-  by design and do not fail the gate). A criterion counts as MET only on a SHA a green FULL run covered. A
-  red scheduled full run is the coordinator's first job: bisect the batches
-  merged since the last green full run and hand the fix to the owning lane.
+  by design and do not fail the gate). A criterion counts as MET when its batch merges to `main` with a passing
+  independent re-check (owner, 2026-09-27). The coordinator still dispatches
+  a FULL run after each batch as a safety net: if it goes red, that batch's
+  criteria return to landing until the fix lands. A red full run is the
+  coordinator's first job: bisect the batches merged since the last green
+  full run and hand the fix to the owning lane.
 - **Offload long runs, never wait idle (coordinator, 2026-09-26).** Lane
   containers have 4 CPUs and no GPU; renders are software-rasterised. Start
   runs over ~2 minutes in the background and keep working; iterate captures
@@ -422,6 +425,12 @@ judge is required are all in **`ACCEPTANCE.md` §4**.
   every file the run wrote, `user://` and `run.log`. Several may run at once.
   `tools/cloud_setup.sh` installs the pinned Godot, xvfb and a warm import
   cache in a fresh container (also usable as the environment setup script).
+- **GPU runs through Codex (owner, 2026-09-27).** Codex runs on the owner's
+  GPU machine and serves heavy visual renders after its art queue. A lane
+  posts on #356 `GPU RUN <label>: sha=<commit> script=<tests/ or tools/ .gd>
+  args=<...> mode=<render|headless>`; Codex answers `GPU DONE <label>` with
+  the output under `ralph/reports/GPU-RUNS/<label>/` on `tb/gpu-runs`. Lanes
+  fetch it from there. Headless logic runs stay on GitHub runners.
 - **A CI run under five minutes is not a verification.** CI skips every code
   job when the diff against the base is documentation-only — check the run
   duration **and** that code jobs actually ran.

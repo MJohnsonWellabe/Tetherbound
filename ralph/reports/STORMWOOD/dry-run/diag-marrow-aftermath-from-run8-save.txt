@@ -1,0 +1,144 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[lan] advertising udp/27016 for a session on udp/27015
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/stormwood_world.gd:89)
+STORMWOOD BUILD shell=false elapsed_ms=230 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=558 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=825 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=832 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=833 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=835 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=835 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=835 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=837 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=837 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=1121 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=1143 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=1143 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=119 reorder[7 layers]=47
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=201 mark_harvestable=22 group_by_model=36 register_mesh_assets=16 build_batches_total=957 (of which harvest_points[11099 nodes]=777, initial_collision_stream[11161 solid]=39) update_mmis=170
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+ERROR: Parameter "material" is null.
+   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _spawn_creatures (res://scripts/combat/encounter_director.gd:771)
+         [1] _spawn_creatures (res://scripts/combat/stormwood_encounter_director.gd:20)
+         [2] _ready (res://scripts/combat/encounter_director.gd:552)
+STORMWOOD ENCOUNTERS READY wild=806
+DRIVE start at (-124.8569, 252.9728, 5470.386)
+DRIVE climb_core returned true at (-100.0, 262.0594, 5445.0) failures=[]
+STORMWOOD CROWN BUILD — EARNED stormwood:core_reached
+DRIVE core receipt true
+STORMWOOD CROWN BUILD — PARTY before captain_marrow_dynamo_core: sparkit 330/330, mudsnout 382/382, bramblebun 362/362, terrapup 458/458, brooktail 345/345
+STORMWOOD CROWN BUILD — LB press 1 (joypad button, 7 physics frames): active brooktail -> sparkit
+STORMWOOD CROWN BUILD — LB press 2 (joypad button, 9 physics frames): active sparkit -> mudsnout
+STORMWOOD CROWN BUILD — LB press 3 (joypad button, 8 physics frames): active mudsnout -> bramblebun
+STORMWOOD CROWN BUILD — LB press 4 (joypad button, 7 physics frames): active bramblebun -> terrapup
+STORMWOOD CROWN BUILD — DIALOGUE captain_marrow_dynamo_core opened 'stormwood_trainer_captain_marrow_dynamo_core_challenge'
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 1 at 33.4 s: { "species": "tanglevolt", "level": 42 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 2 at 54.7 s: { "species": "stormraven", "level": 43 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 3 at 109.5 s: { "species": "stormbrush", "level": 43 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 4 at 164.1 s: { "species": "sparkit", "level": 44 }
+STORMWOOD CROWN BUILD — OBSERVED Marrow round 5 at 209.7 s: { "species": "voltarach", "level": 44 }
+STORMWOOD CROWN BUILD — ENTERED first actual conduit cycle 0
+STORMWOOD CROWN BUILD — CONDUIT feasibility start_world=(-94.05709, 262.0599, 5444.075) local=(5.942909, -0.150116, -25.9248) base_speed=5.600 remaining_cycle_s=27.993 conservative_travel_s=24.454 ally={ "species": "terrapup", "level": 49, "hp": 465.6, "max_hp": 465.6, "fainted": false, "resting": false }
+STORMWOOD CROWN BUILD — BREAK lap [3, 0, 1, 2] from (5.942909, -25.9248)
+STORMWOOD CROWN BUILD — BREAK t=306.0s ally_local=(3.909355, -0.149933, -29.87549) piloted=true waiting=-1 fired=[] struck=[] window_left=35.2 fighting=false target=3 active=0 bank_state=charge leg=(0.0, -38.0) next_quick_in=-2761 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK lap [0, 1, 2] from (1.090057, -32.81104)
+STORMWOOD CROWN BUILD — ACCEPTED ordinary conduit 3
+STORMWOOD CROWN BUILD — BREAK t=308.0s ally_local=(4.269623, -0.150024, -28.82275) piloted=true waiting=-1 fired=[3] struck=[3] window_left=33.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-804 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=310.0s ally_local=(12.95039, -0.150299, -21.9502) piloted=true waiting=-1 fired=[3] struck=[3] window_left=31.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-2812 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=312.0s ally_local=(21.91701, -0.150269, -15.24268) piloted=true waiting=-1 fired=[3] struck=[3] window_left=29.2 fighting=false target=0 active=-1 bank_state=recovery leg=(37.8554, -3.311911) next_quick_in=-4813 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=314.0s ally_local=(30.88279, -0.150024, -8.533691) piloted=true waiting=-1 fired=[3] struck=[3] window_left=27.2 fighting=false target=0 active=1 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-6807 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK lap [1, 2] from (34.74721, -2.407715)
+STORMWOOD CROWN BUILD — ACCEPTED ordinary conduit 0
+STORMWOOD CROWN BUILD — BREAK t=316.0s ally_local=(37.43047, -0.150024, -0.380859) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=25.2 fighting=false target=1 active=1 bank_state=charge leg=(38.0, 0.0) next_quick_in=-174 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=318.0s ally_local=(31.4337, -0.150024, 7.052734) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=23.2 fighting=false target=1 active=1 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-2183 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=320.0s ally_local=(23.20938, -0.150024, 14.6543) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=21.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-4178 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=322.0s ally_local=(14.98491, -0.150177, 22.26025) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=19.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-6181 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=324.0s ally_local=(6.758881, -0.150024, 29.86426) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=17.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-8178 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK lap [2] from (2.240646, 34.03906)
+STORMWOOD CROWN BUILD — ACCEPTED ordinary conduit 1
+STORMWOOD CROWN BUILD — BREAK t=326.0s ally_local=(-1.643295, -0.150085, 33.79688) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=15.2 fighting=false target=2 active=-1 bank_state=recovery leg=(-35.0, 1.199997) next_quick_in=-447 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=328.0s ally_local=(-9.653557, -0.150055, 25.96875) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=13.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-2454 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=330.0s ally_local=(-17.66393, -0.150116, 18.14111) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=11.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-4447 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=332.0s ally_local=(-25.67451, -0.150024, 10.31201) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=9.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-6448 release_tick=-1
+STORMWOOD CROWN BUILD — BREAK t=334.0s ally_local=(-33.68477, -0.150055, 2.483887) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=7.2 fighting=false target=2 active=0 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-8447 release_tick=-1
+STORMWOOD CROWN BUILD — EARNED actual Marrow five-round victory, four conduits and automatic Stormheart release; STOP before offer
+DRIVE marrow — PARTY before captain_marrow_dynamo_core: sparkit 330/330, mudsnout 382/382, bramblebun 362/362, terrapup 458/458, brooktail 345/345
+DRIVE marrow — LB press 1 (joypad button, 7 physics frames): active brooktail -> sparkit
+DRIVE marrow — LB press 2 (joypad button, 9 physics frames): active sparkit -> mudsnout
+DRIVE marrow — LB press 3 (joypad button, 8 physics frames): active mudsnout -> bramblebun
+DRIVE marrow — LB press 4 (joypad button, 7 physics frames): active bramblebun -> terrapup
+DRIVE marrow — DIALOGUE captain_marrow_dynamo_core opened 'stormwood_trainer_captain_marrow_dynamo_core_challenge'
+DRIVE marrow — OBSERVED Marrow round 1 at 33.4 s: { "species": "tanglevolt", "level": 42 }
+DRIVE marrow — OBSERVED Marrow round 2 at 54.7 s: { "species": "stormraven", "level": 43 }
+DRIVE marrow — OBSERVED Marrow round 3 at 109.5 s: { "species": "stormbrush", "level": 43 }
+DRIVE marrow — OBSERVED Marrow round 4 at 164.1 s: { "species": "sparkit", "level": 44 }
+DRIVE marrow — OBSERVED Marrow round 5 at 209.7 s: { "species": "voltarach", "level": 44 }
+DRIVE marrow — ENTERED first actual conduit cycle 0
+DRIVE marrow — CONDUIT feasibility start_world=(-94.05709, 262.0599, 5444.075) local=(5.942909, -0.150116, -25.9248) base_speed=5.600 remaining_cycle_s=27.993 conservative_travel_s=24.454 ally={ "species": "terrapup", "level": 49, "hp": 465.6, "max_hp": 465.6, "fainted": false, "resting": false }
+DRIVE marrow — BREAK lap [3, 0, 1, 2] from (5.942909, -25.9248)
+DRIVE marrow — BREAK t=306.0s ally_local=(3.909355, -0.149933, -29.87549) piloted=true waiting=-1 fired=[] struck=[] window_left=35.2 fighting=false target=3 active=0 bank_state=charge leg=(0.0, -38.0) next_quick_in=-2761 release_tick=-1
+DRIVE marrow — BREAK lap [0, 1, 2] from (1.090057, -32.81104)
+DRIVE marrow — ACCEPTED ordinary conduit 3
+DRIVE marrow — BREAK t=308.0s ally_local=(4.269623, -0.150024, -28.82275) piloted=true waiting=-1 fired=[3] struck=[3] window_left=33.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-804 release_tick=-1
+DRIVE marrow — BREAK t=310.0s ally_local=(12.95039, -0.150299, -21.9502) piloted=true waiting=-1 fired=[3] struck=[3] window_left=31.2 fighting=false target=0 active=0 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-2812 release_tick=-1
+DRIVE marrow — BREAK t=312.0s ally_local=(21.91701, -0.150269, -15.24268) piloted=true waiting=-1 fired=[3] struck=[3] window_left=29.2 fighting=false target=0 active=-1 bank_state=recovery leg=(37.8554, -3.311911) next_quick_in=-4813 release_tick=-1
+DRIVE marrow — BREAK t=314.0s ally_local=(30.88279, -0.150024, -8.533691) piloted=true waiting=-1 fired=[3] struck=[3] window_left=27.2 fighting=false target=0 active=1 bank_state=charge leg=(37.8554, -3.311911) next_quick_in=-6807 release_tick=-1
+DRIVE marrow — BREAK lap [1, 2] from (34.74721, -2.407715)
+DRIVE marrow — ACCEPTED ordinary conduit 0
+DRIVE marrow — BREAK t=316.0s ally_local=(37.43047, -0.150024, -0.380859) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=25.2 fighting=false target=1 active=1 bank_state=charge leg=(38.0, 0.0) next_quick_in=-174 release_tick=-1
+DRIVE marrow — BREAK t=318.0s ally_local=(31.4337, -0.150024, 7.052734) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=23.2 fighting=false target=1 active=1 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-2183 release_tick=-1
+DRIVE marrow — BREAK t=320.0s ally_local=(23.20938, -0.150024, 14.6543) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=21.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-4178 release_tick=-1
+DRIVE marrow — BREAK t=322.0s ally_local=(14.98491, -0.150177, 22.26025) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=19.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-6181 release_tick=-1
+DRIVE marrow — BREAK t=324.0s ally_local=(6.758881, -0.150024, 29.86426) piloted=true waiting=-1 fired=[3, 0] struck=[3, 0] window_left=17.2 fighting=false target=1 active=2 bank_state=charge leg=(1.199998, 35.0) next_quick_in=-8178 release_tick=-1
+DRIVE marrow — BREAK lap [2] from (2.240646, 34.03906)
+DRIVE marrow — ACCEPTED ordinary conduit 1
+DRIVE marrow — BREAK t=326.0s ally_local=(-1.643295, -0.150085, 33.79688) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=15.2 fighting=false target=2 active=-1 bank_state=recovery leg=(-35.0, 1.199997) next_quick_in=-447 release_tick=-1
+DRIVE marrow — BREAK t=328.0s ally_local=(-9.653557, -0.150055, 25.96875) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=13.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-2454 release_tick=-1
+DRIVE marrow — BREAK t=330.0s ally_local=(-17.66393, -0.150116, 18.14111) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=11.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-4447 release_tick=-1
+DRIVE marrow — BREAK t=332.0s ally_local=(-25.67451, -0.150024, 10.31201) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=9.2 fighting=false target=2 active=3 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-6448 release_tick=-1
+DRIVE marrow — BREAK t=334.0s ally_local=(-33.68477, -0.150055, 2.483887) piloted=true waiting=-1 fired=[3, 0, 1] struck=[3, 0, 1] window_left=7.2 fighting=false target=2 active=0 bank_state=charge leg=(-35.0, 1.199997) next_quick_in=-8447 release_tick=-1
+DRIVE marrow — EARNED actual Marrow five-round victory, four conduits and automatic Stormheart release; STOP before offer
+DRIVE marrow passed=true failures=[]
+STORMWOOD CROWN BUILD — EARNED stormwood:legendary_offer_made
+STORMWOOD CROWN BUILD — ACCEPTED the Stormheart at five: kept creature-623458f8257153018d9df381e3bbd2f4, released belt row 4; world offer fact and personal receipt saved
+STORMWOOD CROWN BUILD — EARNED stormwood:waterward_revealed
+STORMWOOD CROWN BUILD — EARNED realm_key_water
+STORMWOOD CROWN BUILD — EARNED waterward_route_revealed
+STORMWOOD CROWN BUILD — EARNED stormwood:chapter_complete
+STORMWOOD CROWN BUILD — REVEALED the Waterward aftermath; Water key held; STOP before the gate
+DRIVE aftermath — EARNED stormwood:legendary_offer_made
+DRIVE aftermath — ACCEPTED the Stormheart at five: kept creature-623458f8257153018d9df381e3bbd2f4, released belt row 4; world offer fact and personal receipt saved
+DRIVE aftermath — EARNED stormwood:waterward_revealed
+DRIVE aftermath — EARNED realm_key_water
+DRIVE aftermath — EARNED waterward_route_revealed
+DRIVE aftermath — EARNED stormwood:chapter_complete
+DRIVE aftermath — REVEALED the Waterward aftermath; Water key held; STOP before the gate
+DRIVE aftermath passed=true failures=[]
