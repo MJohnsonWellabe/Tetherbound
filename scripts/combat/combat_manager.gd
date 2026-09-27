@@ -1245,6 +1245,15 @@ func _update_combat_body_clear(clear: Dictionary) -> void:
 	if not bool(clear.get("enabled", false)) or _wild == null or not is_instance_valid(_wild):
 		_camera_rig.call("set_body_limit", INF)
 		return
+	# F04#1: a CHARGER's travelling lunge runs through the ally and out along
+	# the arm behind it. Clamping short of it for those few frames put the
+	# lens on body_clear's 2m floor, inside the player's creature (probe at
+	# the relay, every lunge). A charging body briefly crossing the shot reads
+	# as the charge; the lens inside your own creature reads as nothing.
+	if bool(clear.get("ignore_lunging_foe", false)) and _wild.has_method("is_lunging") \
+			and bool(_wild.call("is_lunging")):
+		_camera_rig.call("set_body_limit", INF)
+		return
 	var pivot: Vector3 = (_camera_rig as Node3D).global_position
 	var arm := (_camera_rig as Node3D).global_basis.z * float(_camera_rig.get("_distance"))
 	_camera_rig.call("set_body_limit", body_limit_along_arm(pivot, pivot + arm,
