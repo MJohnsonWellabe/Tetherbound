@@ -48,6 +48,7 @@ const FELLED_RESOURCE := preload("res://scripts/world/felled_resource.gd")
 const BAKE := preload("res://scripts/world/scatter_bake.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
+const CAMERA_VISIBILITY := preload("res://scripts/world/foliage_camera_visibility.gd")
 const RIDGELINE_GROUNDMAT_VISUAL_PATH := "res://data/config/ridgeline_groundmat_visual.json"
 ## Presentation-only tints merged over vegetation.json's retint maps for the
 ## playground. Separate because scatter_bake.gd fingerprints vegetation.json
@@ -1161,6 +1162,7 @@ func _make_mesh_asset(model_path: String) -> Object:
 		swaps.merge(extra_swaps, true)
 	var retinted := _retint(mesh, tint_overrides, swaps, jitter > 0.0,
 		layer_cfg.get("retexture_adjust", {}))
+	retinted = CAMERA_VISIBILITY.apply(retinted, model_path, layer_cfg)
 
 	var holder := MeshInstance3D.new()
 	holder.mesh = retinted
