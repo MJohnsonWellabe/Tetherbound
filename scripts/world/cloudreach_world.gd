@@ -130,6 +130,9 @@ var _realm_map: RefCounted
 var _surface_cells: Dictionary = {}
 var _surface_index_count := -1
 var _all_route_lines: Array[Dictionary] = []
+## Embedded shelves not built because they would stand in a road's walking
+## space (`_shelf_in_route_headroom`). Reported by the route-blocker smoke.
+var shelves_skipped_for_routes := 0
 ## Audit hook (tools/audit_cloudreach_shoulder_overpass.gd): when set before
 ## the world enters the tree, every route-shoulder top vertex's UNclamped
 ## position is recorded here as {route, ridge, row, column, raw}.
@@ -5898,6 +5901,15 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			# this cannot move a collider. i<3 keep their authored heights.
 			shelf_top=maxf(shelf_top, -size.y*0.5+shelf_height+4.0)
 		var shelf := Vector3(cos(angle) * size.x * 0.44, shelf_top, sin(angle) * size.z * 0.44)
+		# Route blocker B1 (Cloudreach-B, #294): a colliding shelf inside a
+		# drawn-only RockShoulder spur overhung the arrival->lower_west_anchor
+		# road at (-128.4, 205.5, 704.5) and stopped every ordinary walk.
+		# A shelf that would stand in any ground route's walking space is
+		# not built at all (its tree and cover go with it).
+		if i < 3 and _shelf_in_route_headroom(parent.global_transform * shelf, shelf_width * 0.5,
+				shelf_height):
+			shelves_skipped_for_routes += 1
+			continue
 		_mesa(parent, "VegetatedGeologicalShelf%d" % i, shelf - Vector3.UP * shelf_height * 0.5,
 			Vector3(shelf_width, shelf_height, shelf_width * 0.78), _materials["cliff"], _materials["upland"],
 			i<3, seed_value + 131 + i)
@@ -5910,6 +5922,26 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			_apply_tree_palette(tree, seed_value + i)
 			parent.add_child(tree)
 			_set_geometry_visibility(tree, 1050.0)
+
+
+## Whether a colliding shelf whose top centre is `top` (global) would stand in
+## a ground route's walking space: horizontally within the road ribbon plus the
+## shelf's own radius, and vertically overlapping the band from just above the
+## road surface to a walker's headroom (ROUTE_HEADROOM_M).
+const ROUTE_HEADROOM_M := 3.2
+
+func _shelf_in_route_headroom(top: Vector3, radius: float, height: float) -> bool:
+	if _all_route_lines.is_empty():
+		_collect_all_route_lines()
+	var bottom_y := top.y - height
+	for line: Dictionary in _lines_near(top.x - radius, top.x + radius, top.z - radius, top.z + radius):
+		var hit := _line_point_xz(line, top)
+		if float(hit["distance"]) > float(line["half_width"]) + radius + 1.0:
+			continue
+		var road_y := float(hit["height"])
+		if bottom_y < road_y + ROUTE_HEADROOM_M and top.y > road_y + 0.3:
+			return true
+	return false
 
 
 func _cylinder(parent: Node, label: String, centre: Vector3, radius: float, height: float, material: Material) -> MeshInstance3D:

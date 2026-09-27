@@ -257,7 +257,8 @@
         630
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the lower_cliff_road walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "causeway_watch",
@@ -268,7 +269,8 @@
         1750
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the split_stone_viaduct deck end walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "ravine_wind",
@@ -280,7 +282,8 @@
       ],
       "count": 2,
       "radius_m": 8.0,
-      "_why_flight_aerie_composition_0911": "The original pair stood only 70m from the Aerie centre and both large flight creatures still filled the route-arrival frame after the lesson dais itself was cleared. This keeps the same count, table and radius on the same incoming Windscar route, but one route segment earlier at the interpolated road elevation, so wildlife remains part of the approach instead of becoming the landmark's dominant silhouette."
+      "_why_flight_aerie_composition_0911": "The original pair stood only 70m from the Aerie centre and both large flight creatures still filled the route-arrival frame after the lesson dais itself was cleared. This keeps the same count, table and radius on the same incoming Windscar route, but one route segment earlier at the interpolated road elevation, so wildlife remains part of the approach instead of becoming the landmark's dominant silhouette.",
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the windscar_floor_loop walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "roost_perches",
@@ -291,7 +294,8 @@
         3450
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the upper_summit_road walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "upper_scouts",
@@ -302,7 +306,8 @@
         4300
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the upper_plateau_circuit walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "summit_watch",
@@ -313,7 +318,8 @@
         5300
       ],
       "count": 2,
-      "radius_m": 8.0
+      "radius_m": 8.0,
+      "_why_road_visibility_0907": "Route blockers B2/B3 (#294, 2026-09-26): the runtime resolves this pair's authored point onto the summit_overlook_loop walking ribbon (resolved_encounter_data -> _resource_position; measured road clearance -1 to -3 m), and the ordinary route walk stalled against its bodies. Like every ROAD CP-2 pair it now takes the trainer-corridor exception (keep_trainer_corridor_clear): the bodies still collide with terrain, attacks and every other body, only the trainer walks through. Position, table, count and radius unchanged, so the route ledger and cadence are unchanged."
     },
     {
       "id": "road_visibility_arrival_gate_road_01",
