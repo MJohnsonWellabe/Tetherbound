@@ -21,6 +21,9 @@ func _run() -> void:
 			ids = arg.trim_prefix("--trainer=").split(",", false)
 		elif arg.begins_with("--seconds="):
 			_probe_seconds = float(arg.trim_prefix("--seconds="))
+		elif arg.begins_with("--live-member="):
+			for pair: String in arg.trim_prefix("--live-member=").split(",", false):
+				_live_member[pair.get_slice(":", 0)] = int(pair.get_slice(":", 1))
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
@@ -41,6 +44,8 @@ func _run() -> void:
 		if not bool(_manager.call("is_fighting")):
 			print("probe %s: no fight" % _tid)
 			continue
+		if _live_member.has(_tid):
+			await _advance_to_member(int(_live_member[_tid]))
 		var steps := int(_probe_seconds / PROBE_STEP_S)
 		for n in steps:
 			_probe_line(n)
