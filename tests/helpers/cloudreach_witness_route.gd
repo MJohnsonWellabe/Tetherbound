@@ -223,6 +223,22 @@ func _walk(target: Vector3, radius: float = 0.75, body: CharacterBody3D = null) 
 	return await super._walk(target, radius, body)
 
 
+## The summit bivouac (132,1160,5342) reaches the threshold only through a
+## ~4 m band (z 5330-5332) between a wall at x~126 and an 8 m lip south of
+## z~5328 (tests/probe_cloudreach_summit_camp_reach.gd --from-camp=132,5342).
+## The base exit's first waypoint (132,5330) sits on that lip: two earned runs
+## at 5707e0fb slid off it or pinned on CarvedCrown. Take the band's middle.
+const BIVOUAC_EXIT: Array[Vector3] = [Vector3(132, 1160, 5332), Vector3(116, 1160, 5333), Vector3(100, 1160, 5350)]
+
+
+func _leave_summit_bivouac() -> bool:
+	_log("witness_bivouac_exit", {"waypoints": str(BIVOUAC_EXIT),
+		"reason": "base exit's first waypoint sits on the 8 m lip; stick-walk the middle of the 4 m band"})
+	for waypoint: Vector3 in BIVOUAC_EXIT:
+		if not await _walk(waypoint): return false
+	return true
+
+
 var _relay_detouring := false
 
 
