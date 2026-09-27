@@ -235,6 +235,11 @@ func _run() -> void:
 		legs.append(entrance)
 		for leg: String in ["mouth", "hall", "den"]:
 			legs.append(warrens.call("marker", leg))
+			if leg == "hall":
+				# From the hall, look across to the den: with the guardian still
+				# standing, the shut vault door's lit seam is the designed lure.
+				_leg_shots[legs.size() - 1] = {"label": "hall-toward-den-and-vault-door",
+					"face": warrens.call("marker", "vault")}
 		# The optional branch: from the (already cleared) guardian's den, the
 		# passage to the lit vault. Frame the den looking down it, and the
 		# passage itself, so the branch being taken is on screen.
