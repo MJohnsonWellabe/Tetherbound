@@ -190,6 +190,8 @@
       "min_shoulder": -1.5
     },
     "body_clear": {
+        "_why_ignore_lunging_foe": "F04#1 (tools/f04_fight_camera_probe.gd --live-member=relay_captain:2): a CHARGER's travelling lunge ends on the arm behind the ally, and the clamp put the lens on min_length_m inside the player's creature for every lunge. While the foe is mid-lunge the clamp stands down; the charging body crosses the shot instead. combat_manager.gd::_update_combat_body_clear.",
+        "ignore_lunging_foe": true,
       "_why": "F10#2 C3 (V-SW-7): the SpringArm stops at collision capsules, but a large foe's render mesh (Voltarach's legs) reaches well past its capsule, so at the strike the lens sat inside the mesh and the frame was flat geometry. The arm is clamped short of the foe's live render box along the arm. TUNABLE.",
       "enabled": true,
       "margin_m": 0.35,
