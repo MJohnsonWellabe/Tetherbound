@@ -1108,7 +1108,10 @@ func test_aftermath_deck_is_still_but_structured() -> void:
 	var calm: Dictionary = surge._resolved(surge.presentation_for("calm"))
 	for phase: String in PHASES:
 		var row: Dictionary = surge._resolved(surge.presentation_for(phase, true))
-		assert_true(float(row.ceiling_contrast) >= 0.55, "%s aftermath deck contrast %.2f (>= 0.55)" % [phase, float(row.ceiling_contrast)])
+		# F10#4 (coordinator 13:20, #356): the restored-sky pass softens the
+		# round-3 deck from 0.6 to 0.45 and lifts its rims and thin glow
+		# instead; it stays more defined than Calm (test above).
+		assert_true(float(row.ceiling_contrast) >= 0.45, "%s aftermath deck contrast %.2f (>= 0.45)" % [phase, float(row.ceiling_contrast)])
 		assert_true(float(row.ceiling_definition) >= 0.5, "%s aftermath cloud body is defined" % phase)
 		assert_true(float(row.ceiling_rim) >= 0.2 and float(row.ceiling_thin_glow) > 0.0, "%s aftermath deck has lit rims and thin spots" % phase)
 		assert_true(float(row.ceiling_speed) <= float(calm.ceiling_speed) * 0.5, "%s aftermath still almost still" % phase)

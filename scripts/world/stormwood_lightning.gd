@@ -13,6 +13,8 @@ var session: Node
 var _next := 0.0
 var _pending: Array[Dictionary] = []
 var _visuals: Dictionary = {}
+## Each drawn warning's ring centre by strike id, so its bolt lands there.
+var _warning_centres: Dictionary = {}
 var _received_impacts: Array[int] = []
 var _rng := RandomNumberGenerator.new()
 
@@ -135,6 +137,7 @@ func _receive(event: Dictionary) -> void:
 		# Hold decorative sky bolts while this warning is drawn (F10#3).
 		if surge != null and surge.has_method("hold_sky_bolts"):
 			surge.hold_sky_bolts(float(rules.config.strike.telegraph_seconds) + 0.3)
+		_warning_centres[id] = event.at
 		var ring := _build_telegraph(event.at)
 		add_child(ring)
 		ring.global_position = event.at
@@ -167,7 +170,8 @@ func _receive(event: Dictionary) -> void:
 		else:
 			tween.tween_interval(0.12)
 		tween.tween_callback(ring.queue_free)
-	_strike_flash(event.at)
+	_strike_flash(bolt_centre(_warning_centres.get(id), event.at))
+	_warning_centres.erase(id)
 	var hits: Dictionary = event.get("hits", {})
 	if not hits.has(session.local_peer_id()):
 		return
@@ -418,6 +422,7 @@ uniform float rim_heights[16];
 uniform float lift = 0.07;
 uniform float depth_pull = 0.28;
 uniform float pull_start_radius = 2.88;
+uniform float ramp_start = 0.75;
 varying float r;
 varying vec2 ground_xz;
 void vertex() {
@@ -448,8 +453,8 @@ void fragment() {
 	// so the phase never jumps.
 	float t = progress * telegraph_seconds;
 	float phase = pulse_hz_start * t + (pulse_hz_end - pulse_hz_start) * t * t / (2.0 * telegraph_seconds);
-	// Under reduced motion the rim is steady; the fill growing with
-	// `progress` still carries the timing.
+	// Under reduced motion the rim is steady; the leaders growing with
+	// `progress` still carry the timing.
 	float pulse = mix(1.0, 0.94 + 0.06 * cos(phase * 6.2832), pulse_enabled);
 	float rim = 1.0 - smoothstep(0.0, rim_width, abs(r - rim_fraction));
 	float outer = r > rim_fraction ? 1.0 - smoothstep(rim_fraction, 1.0, r) : 0.0;
@@ -472,7 +477,7 @@ void fragment() {
 	float charge_radius = rim_radius * (1.0 - progress);
 	float head = 1.0 - smoothstep(leader_head_width * 0.25, leader_head_width, abs(distance_m - charge_radius));
 	float charged = smoothstep(charge_radius - 0.08, charge_radius + 0.08, distance_m);
-	float urgency = smoothstep(0.75, 1.0, progress);
+	float urgency = smoothstep(ramp_start, 1.0, progress);
 	float leaders = leader * (charged * 0.70 + head * 0.9 + urgency * 0.16);
 	// A compact lightning-shaped contact mark distinguishes the intended
 	// impact point from a persistent electrical floor. It stays readable
@@ -497,6 +502,26 @@ void fragment() {
 static var _telegraph_mesh: ArrayMesh
 ## Test/probe hook: ground_height_near calls made by the last warning build.
 var last_telegraph_height_calls := 0
+
+## Where the final brightening ramp starts, as a fraction of the telegraph.
+static func telegraph_ramp_start(telegraph_seconds: float, final_ramp_seconds: float) -> float:
+	return clampf(1.0 - final_ramp_seconds / maxf(telegraph_seconds, 0.001), 0.0, 1.0)
+
+
+## The leader heads advance from rim to contact over the warning duration.
+## This probe reports their remaining radius and final charge ramp.
+static func telegraph_state(elapsed: float, telegraph_seconds: float, final_ramp_seconds: float) -> Dictionary:
+	var progress := clampf(elapsed / maxf(telegraph_seconds, 0.001), 0.0, 1.0)
+	var ramp := smoothstep(telegraph_ramp_start(telegraph_seconds, final_ramp_seconds), 1.0, progress)
+	return {"progress": progress, "closing_radius_fraction": 1.0 - progress,
+		"ramp": ramp}
+
+
+## The bolt lands at the centre of the ring that warned of it: the warning's
+## own position, whatever an impact event carries.
+static func bolt_centre(warning_at: Variant, impact_at: Vector3) -> Vector3:
+	return warning_at if warning_at is Vector3 else impact_at
+
 
 ## The game's one hazard colour: combat.json telegraph.colour (magenta,
 ## settled by its `_why_colour_0905` note after amber read as reward gold,
@@ -574,6 +599,8 @@ func _telegraph_material() -> ShaderMaterial:
 	material.set_shader_parameter("lift", float(cfg.get("ground_lift_m", 0.07)))
 	material.set_shader_parameter("depth_pull", float(cfg.get("depth_pull_m", 0.28)))
 	material.set_shader_parameter("pulse_enabled", 0.0 if MOTION_PREFS.reduced_motion() else 1.0)
+	material.set_shader_parameter("ramp_start", telegraph_ramp_start(float(rules.config.strike.telegraph_seconds),
+		float(cfg.get("final_ramp_seconds", 0.3))))
 	material.set_shader_parameter("pull_start_radius", rim_r - 0.15)
 	return material
 
@@ -643,6 +670,7 @@ func _prewarm_telegraph() -> void:
 func _expire_warning(id: int) -> void:
 	var ring: Variant = _visuals.get(id)
 	_visuals.erase(id)
+	_warning_centres.erase(id)
 	if is_instance_valid(ring):
 		ring.queue_free()
 
