@@ -203,6 +203,8 @@ func _save(tag: String) -> void:
 		str(enemy.get("_intent")) if enemy != null else "-"])
 	if cam != null and enemy != null and ally != null:
 		_note_camera(cam, enemy, ally)
+		if tag.begins_with("tell"):
+			_note_aim(tag)
 
 
 ## Camera state beside each saved frame, and how many of the ally's three
@@ -267,6 +269,38 @@ func _on_strike_begin(kind: String) -> void:
 func _on_hit(on_enemy: bool, amount: float) -> void:
 	_hits.append("%s t=%.2f %s %.1f" % [_id, _t(), "ally->enemy" if on_enemy else "enemy->ally", amount])
 	_note("HIT %s t=%.2f amount=%.1f" % ["ally->enemy" if on_enemy else "enemy->ally", _t(), amount])
+	if not on_enemy:
+		_note_aim("at hit")
+
+
+## The foe's strike geometry: its facing against the bearing to the ally, the
+## reach/arc the hit test reads, and where its drawn guard cone points.
+func _note_aim(when: String) -> void:
+	var enemy := _manager.call("enemy_body") as Node3D if bool(_manager.call("is_fighting")) else null
+	var ally := _director.call("ally_body") as Node3D
+	if enemy == null or ally == null or not enemy.has_method("facing"):
+		return
+	var facing: Vector3 = enemy.call("facing")
+	var to_ally := ally.global_position - enemy.global_position
+	to_ally.y = 0.0
+	var cfg: Dictionary = enemy.call("combat_config") if enemy.has_method("combat_config") else {}
+	var cone := enemy.get_node_or_null(^"GuardCone") as Node3D
+	var cone_off := "none"
+	if cone != null:
+		var z := cone.global_transform.basis.z
+		z.y = 0.0
+		cone_off = "%.0f reach=%.2f arc=%.0f" % [rad_to_deg(facing.signed_angle_to(z.normalized(), Vector3.UP)),
+			float(cone.get_meta("reach", 0.0)), float(cone.get_meta("cone_degrees", 0.0))]
+	var model := enemy.call("model_pivot") as Node3D if enemy.has_method("model_pivot") else null
+	var model_off := "?"
+	if model != null:
+		var mz := model.global_transform.basis.z
+		mz.y = 0.0
+		model_off = "%.0f" % rad_to_deg(facing.signed_angle_to(mz.normalized(), Vector3.UP))
+	_note("  AIM %s ally_bearing_off=%.0f dist=%.2f range=%.2f arc=%.0f move=%s cone_off=%s model_off=%s" % [when,
+		rad_to_deg(facing.signed_angle_to(to_ally.normalized(), Vector3.UP)), to_ally.length(),
+		float(cfg.get("range", -1.0)), float(cfg.get("cone_degrees", -1.0)), str(cfg.get("move_id", "")),
+		cone_off, model_off])
 
 
 func _on_miss(by_player: bool) -> void:

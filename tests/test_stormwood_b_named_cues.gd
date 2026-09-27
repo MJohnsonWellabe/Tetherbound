@@ -153,6 +153,8 @@ func test_stormwood_data_opts_the_two_fights_in() -> void:
 	# the manager's ring at its feet did not show where it lands.
 	assert_true(bool(named.blackwater_elder.get("guard_stance", false)), "the Blackwater Elder shows its strike cone")
 	assert_almost_eq(float(named.blackwater_elder.telegraph), 0.8, 0.0001, "at BOSSES' 0.8 s tell")
+	assert_almost_eq(float(named.blackwater_elder.get("face_lock_fraction", 0.0)), 0.5, 0.0001,
+		"and locks it halfway (COMBAT section 5), so a sidestep can leave the drawn cone")
 	for id: String in named:
 		if id != "capacitor_alpha":
 			assert_false(named[id].has("route_cue_seconds"), "%s has no route cue" % id)
