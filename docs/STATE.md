@@ -25,6 +25,13 @@ and obstructed framing both contribute. Existing combat lanes own shared
 camera/collision changes; Codex's packet is in
 `ralph/reports/VISUAL/CRITERION-READABILITY.md`. No criterion closes from this run.
 
+The fresh F09#3 pocket packet at `5ef340260` independently recognizes all five
+road lures (superseding the old 1/5 result at those stands). All five ordinary-input
+pocket walks and reward claims pass 117 checks, zero failures. This closes the
+reported pocket-visibility defect for the captured approaches; whole F09 route
+coverage and repeated-room art finish remain open. See
+`ralph/reports/VISUAL/POCKET-READABILITY.md` and V12 in the existing audit.
+
 The current Codex visual queue is `ralph/reports/VISUAL/AUDIT.md`: its whole-game
 ranking uses 508 native frames across four regions, 57 creatures and 41 cast
 entries, plus the 89-item icon census. Draft PR365 owns the shared visual work

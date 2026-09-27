@@ -1,0 +1,107 @@
+{
+  "build": "5ef34026078477bf1ed11c762f4160186497763d",
+  "main": "4ee9f4157",
+  "renderer": "Godot 4.7 Compatibility, GTX 1060, native 1920x1080",
+  "files": [
+    {
+      "path": "conductor_ridge_cleft_1_road_lure.png",
+      "bytes": 3013803,
+      "sha256": "97139ddbb415a81dbec1c827c9afc981a46829d92313c6624633fe8792bd1f7d"
+    },
+    {
+      "path": "conductor_ridge_cleft_2_mouth.png",
+      "bytes": 3262015,
+      "sha256": "9cb9a3c7bfe727acd9fd92e240ef5011dfb5011653d77d2b32334ac76113bfdd"
+    },
+    {
+      "path": "conductor_ridge_cleft_3a_reward_before.png",
+      "bytes": 3029050,
+      "sha256": "dcee736868ab66f5335358cdd39ac40bce9a0ab79b80f3f51764cca850968ef0"
+    },
+    {
+      "path": "conductor_ridge_cleft_3b_reward_claimed.png",
+      "bytes": 2885380,
+      "sha256": "1286951aad0f0a0763d6cbd436b644aaca59fbb6bc16c3b24923db4cbed8059f"
+    },
+    {
+      "path": "deepwood_ridge_shelter_1_road_lure.png",
+      "bytes": 3250470,
+      "sha256": "f74e7db4ed05485926659156216fdc14d5fe9acea34d1662c128a47275314718"
+    },
+    {
+      "path": "deepwood_ridge_shelter_2_mouth.png",
+      "bytes": 3301260,
+      "sha256": "26b1c13c885b7b51d125217a90213e53456173a15bbec52e6fbfb43b904ca9a1"
+    },
+    {
+      "path": "deepwood_ridge_shelter_3a_reward_before.png",
+      "bytes": 3034907,
+      "sha256": "fa1de7012955954681256d7871fb84e89f0ca3e2979032bf1b68edc8917504a9"
+    },
+    {
+      "path": "deepwood_ridge_shelter_3b_reward_claimed.png",
+      "bytes": 2856807,
+      "sha256": "196900fb835945609862b41d4a4b7ac642662714365df7bf30ef9a183e974f55"
+    },
+    {
+      "path": "dynamo_scorch_pen_1_road_lure.png",
+      "bytes": 3366989,
+      "sha256": "1eca67dc725f1d1f98c7faa3a8743663684fe6460ee7d592fc0b2bc318ade04c"
+    },
+    {
+      "path": "dynamo_scorch_pen_2_mouth.png",
+      "bytes": 3343620,
+      "sha256": "7de3e05a1ce7527fe72a01d14dcc71cb2bd7bf4c981c13b9f34aecb52d952676"
+    },
+    {
+      "path": "dynamo_scorch_pen_3a_reward_before.png",
+      "bytes": 3217663,
+      "sha256": "47a24741f539e2de8d86291c5824b82eff0f4032a706e3cf87657b4736fde39c"
+    },
+    {
+      "path": "dynamo_scorch_pen_3b_reward_claimed.png",
+      "bytes": 3067597,
+      "sha256": "c9727855da350beda4106158adae48eac4630a1d517d10d51816c5e045defb8e"
+    },
+    {
+      "path": "hollows_moss_nook_1_road_lure.png",
+      "bytes": 3375325,
+      "sha256": "131d3337995f47f5d236b61596644e44ae1f063a8a8aa8ef4ec1d1ec59cf0a88"
+    },
+    {
+      "path": "hollows_moss_nook_2_mouth.png",
+      "bytes": 3405988,
+      "sha256": "7c2fff6b8b9a4fa56da27cd43671bddaf8971edb9c47d804e155492550d7c8b5"
+    },
+    {
+      "path": "hollows_moss_nook_3a_reward_before.png",
+      "bytes": 3030657,
+      "sha256": "a4c18002b4e408f6b159d6071f8f99139676ef0da5ec4aef1acca3c8e4128757"
+    },
+    {
+      "path": "hollows_moss_nook_3b_reward_claimed.png",
+      "bytes": 2916697,
+      "sha256": "51fef329ff62dc8a11fba55dc9ab1cab7d3bfec962f06de55f8095f83ef98056"
+    },
+    {
+      "path": "verge_ash_hollow_1_road_lure.png",
+      "bytes": 3271575,
+      "sha256": "0c2ec4b5332a87a26a51b166dd382a3074c3cbcd48b7a696a43cb0e630cd41af"
+    },
+    {
+      "path": "verge_ash_hollow_2_mouth.png",
+      "bytes": 3342128,
+      "sha256": "eafe42407eb7deb3fce4a0eff0e1cf0bd0de555fcabf0cbef3f54f073da3b4e9"
+    },
+    {
+      "path": "verge_ash_hollow_3a_reward_before.png",
+      "bytes": 2964133,
+      "sha256": "dad9c4013e23d08ec988dce063d5584a10b3a16dd72ac1ea4c4dc3dba360006c"
+    },
+    {
+      "path": "verge_ash_hollow_3b_reward_claimed.png",
+      "bytes": 2842305,
+      "sha256": "281b72d4f60b7a286fab628c80b9e9f151f05bef34f7a998bd8fcdad47b908f7"
+    }
+  ]
+}

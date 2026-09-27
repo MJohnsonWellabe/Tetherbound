@@ -1,0 +1,67 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+F09 CAPTURE [   0.0s] scatter bake fresh: true fast=false back=25m
+CATALOGUE BOOT stormwood load begin t=3722
+CATALOGUE BOOT stormwood instantiate begin t=10183
+CATALOGUE BOOT stormwood attach begin t=10247
+CATALOGUE BOOT stormwood attached t=10677
+STORMWOOD BUILD shell=false elapsed_ms=542 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=941 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=1311 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=1417 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=1496 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=1522 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=1547 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=1568 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=1609 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=1630 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=2024 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=2068 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=2084 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 34638 placements, 0 skipped]=142 reorder[7 layers]=23
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=199 mark_harvestable=26 group_by_model=29 register_mesh_assets=28 build_batches_total=1081 (of which harvest_points[11099 nodes]=917, initial_collision_stream[11161 solid]=36) update_mmis=388
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(8864812499031) region_map=1024 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+STORMWOOD ENCOUNTERS READY wild=808
+F09 CAPTURE [  33.5s] captured verge_ash_hollow_1_road_lure prompt='' phase=calm cam=5.8m
+F09 CAPTURE [  33.5s] SPURPIX verge_ash_hollow side=along reads=true (current=false paint=true) lane_px=652 contrast=60.0 gold_px=1 lane_rgb=[75, 65, 62] flank_rgb=[38, 34, 24] current_changed=286 first=286 lamp_changed=4586 lamp_on_screen=true frozen_wild=0
+F09 CAPTURE [  36.1s] captured verge_ash_hollow_2_mouth prompt='' phase=calm cam=5.9m
+F09 CAPTURE [  38.5s] captured verge_ash_hollow_3a_reward_before prompt='[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Good Candy' phase=calm cam=5.8m
+F09 CAPTURE [  40.2s] captured verge_ash_hollow_3b_reward_claimed prompt='' phase=calm cam=5.8m
+F09 CAPTURE [  47.3s] captured hollows_moss_nook_1_road_lure prompt='' phase=calm cam=5.8m
+F09 CAPTURE [  47.3s] SPURPIX hollows_moss_nook side=along reads=false (current=false paint=false) lane_px=630 contrast=10.7 gold_px=3 lane_rgb=[64, 80, 52] flank_rgb=[57, 76, 45] current_changed=338 first=338 lamp_changed=5084 lamp_on_screen=true frozen_wild=0
+F09 CAPTURE [  50.8s] captured hollows_moss_nook_2_mouth prompt='' phase=calm cam=5.9m
+F09 CAPTURE [  54.8s] captured hollows_moss_nook_3a_reward_before prompt='[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy' phase=calm cam=5.8m
+F09 CAPTURE [  56.8s] captured hollows_moss_nook_3b_reward_claimed prompt='' phase=calm cam=5.8m
+F09 CAPTURE [  62.2s] captured conductor_ridge_cleft_1_road_lure prompt='' phase=calm cam=5.8m
+F09 CAPTURE [  62.3s] SPURPIX conductor_ridge_cleft side=along reads=true (current=false paint=true) lane_px=647 contrast=91.6 gold_px=0 lane_rgb=[92, 102, 101] flank_rgb=[44, 54, 40] current_changed=37 first=37 lamp_changed=3591 lamp_on_screen=true frozen_wild=2
+F09 CAPTURE [  62.3s] WILD conductor_ridge_cleft Wild_tanglevolt_881250922_1 species=tanglevolt at=(-654.6638, 52.44807, 3437.472) screen=(1800,499) frozen=false
+F09 CAPTURE [  64.7s] captured conductor_ridge_cleft_2_mouth prompt='' phase=calm cam=5.9m
+F09 CAPTURE [  67.1s] captured conductor_ridge_cleft_3a_reward_before prompt='[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Great Candy' phase=calm cam=5.8m
+F09 CAPTURE [  68.6s] captured conductor_ridge_cleft_3b_reward_claimed prompt='' phase=calm cam=5.8m
+F09 CAPTURE [  73.5s] captured deepwood_ridge_shelter_1_road_lure prompt='' phase=calm cam=5.8m
+F09 CAPTURE [  73.5s] SPURPIX deepwood_ridge_shelter side=along reads=false (current=false paint=false) lane_px=625 contrast=14.7 gold_px=3 lane_rgb=[68, 78, 48] flank_rgb=[59, 69, 41] current_changed=659 first=659 lamp_changed=5268 lamp_on_screen=true frozen_wild=0
+F09 CAPTURE [  76.8s] captured deepwood_ridge_shelter_2_mouth prompt='' phase=calm cam=5.9m
+F09 CAPTURE [  79.9s] captured deepwood_ridge_shelter_3a_reward_before prompt='[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Revive' phase=calm cam=5.8m
+F09 CAPTURE [  81.7s] captured deepwood_ridge_shelter_3b_reward_claimed prompt='' phase=calm cam=5.8m
+F09 CAPTURE [  87.2s] captured dynamo_scorch_pen_1_road_lure prompt='' phase=calm cam=5.8m
+F09 CAPTURE [  87.8s] SPURPIX dynamo_scorch_pen side=along reads=false (current=false paint=false) lane_px=652 contrast=9.1 gold_px=10 lane_rgb=[58, 52, 38] flank_rgb=[48, 51, 34] current_changed=591 first=591 lamp_changed=3761 lamp_on_screen=true frozen_wild=0
+F09 CAPTURE [  90.4s] captured dynamo_scorch_pen_2_mouth prompt='' phase=calm cam=5.9m
+F09 CAPTURE [  93.3s] captured dynamo_scorch_pen_3a_reward_before prompt='[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Stoneguard Brew' phase=calm cam=5.8m
+F09 CAPTURE [  95.2s] captured dynamo_scorch_pen_3b_reward_claimed prompt='' phase=calm cam=5.8m
+F09 CAPTURE [  95.5s] DONE 20 frames, 0 failures
