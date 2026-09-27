@@ -204,7 +204,7 @@ func test_cadence_sites_are_gated_native_route_pairs() -> void:
 		assert_true(float(projected.offset_m) <= 1.01, "%s stands in the one-metre route core" % id)
 		assert_almost_eq(float(site.position[1]), float(projected.height), 0.05,
 			"%s keeps the authored route stratum" % id)
-	assert_eq(added, 11, "F07 adds exactly eleven cadence pairs")
+	assert_eq(added, 13, "F07 (11) and the F15#2 return (2) add exactly thirteen cadence pairs")
 
 
 # --- measurement ------------------------------------------------------------

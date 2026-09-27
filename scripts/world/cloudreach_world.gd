@@ -130,6 +130,9 @@ var _realm_map: RefCounted
 var _surface_cells: Dictionary = {}
 var _surface_index_count := -1
 var _all_route_lines: Array[Dictionary] = []
+## Embedded shelves not built because they would stand in a road's walking
+## space (`_shelf_in_route_headroom`). Reported by the route-blocker smoke.
+var shelves_skipped_for_routes := 0
 ## Audit hook (tools/audit_cloudreach_shoulder_overpass.gd): when set before
 ## the world enters the tree, every route-shoulder top vertex's UNclamped
 ## position is recorded here as {route, ridge, row, column, raw}.
@@ -4315,9 +4318,11 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	var aviary_veil := _wind_veil_material()
 	aviary_veil.albedo_color.a = 0.13
 	aviary_veil.emission_energy_multiplier = 0.3
+	var aviary_spec := _read_json(AVIARY_CONFIG_PATH)
+	var aviary_surface: Dictionary = aviary_spec.get("surface", {})
 	var aviary_materials := {
-		"masonry": _materials["masonry_trim"],
-		"stone": _materials["masonry"],
+		"masonry": ENVIRONMENT_MATERIALS.aviary_masonry(true, aviary_surface),
+		"stone": ENVIRONMENT_MATERIALS.aviary_masonry(false, aviary_surface),
 		"timber": _materials["wood"],
 		"iron": _material(Color("#4a4d52"), 0.55),
 		"rope": _materials["rope"],
@@ -4330,11 +4335,11 @@ func _build_summit_stronghold(root: Node3D) -> void:
 		# keeper's floor matches the world rather than introducing a material;
 		# `cloth` is the existing banner shader with the device switched off,
 		# because plain wind cloth hanging in an aviary is not a faction banner.
-		"membrane": _aviary_membrane_material(),
+		"membrane": _aviary_membrane_material(aviary_surface),
 		"floor": ENVIRONMENT_MATERIALS.worn_ground(root.global_position, 26.0),
 		"cloth": _aviary_cloth_material(),
 	}
-	var aviary: Dictionary = AVIARY.build(root, aviary_materials, _read_json(AVIARY_CONFIG_PATH))
+	var aviary: Dictionary = AVIARY.build(root, aviary_materials, aviary_spec)
 	_seat_aviary_on_summit_carve(root, aviary)
 	# Corner tether pylons: they stood on the watchtower tops; they now stand
 	# on the ground at the four corners outside the drum, flanking the wings.
@@ -4638,20 +4643,12 @@ func _recut_aviary_floor(floor_node: MeshInstance3D) -> void:
 ## glass. Depth WRITE is off so the panels around the far side of the drum do
 ## not stack into an opaque wall where the eye grazes the curve; depth TEST
 ## stays on so the drum's own masonry still occludes it.
-func _aviary_membrane_material() -> StandardMaterial3D:
+func _aviary_membrane_material(surface: Dictionary = {}) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
-	# Round 1 of this round skinned the dome at alpha 0.34 with a strong rim,
-	# and it read as GLASS -- the frame turned from an unbuilt planetarium into
-	# a greenhouse, which is a different wrong object. This is stretched hide
-	# and canvas over ribs instead: a warm parchment tone, more opaque, fully
-	# rough, and no rim term. That is what a working aviary's wind-skin is, and
-	# it cannot be mistaken for glazing.
-	# Alpha raised from 0.62 after a blind verdict sampled the dome at two
-	# points and got flat sky colour (134,155,156) back -- i.e. the skin was
-	# not reading as a surface at all, and the object was still "an open
-	# lattice of wooden ribs". At 0.82 it is stretched hide that light comes
-	# through, not a tint over the sky.
-	material.albedo_color = Color(0.86, 0.81, 0.68, 0.82)
+	# Subordinate weathered panes to the structural ribs. The old near-opaque
+	# cream shell became a white tent at night and hid the inhabited interior.
+	material.albedo_color = Color(str(surface.get("pane_tint", "#6e8f96")))
+	material.albedo_color.a = float(surface.get("pane_opacity", 0.28))
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL
@@ -5898,6 +5895,15 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			# this cannot move a collider. i<3 keep their authored heights.
 			shelf_top=maxf(shelf_top, -size.y*0.5+shelf_height+4.0)
 		var shelf := Vector3(cos(angle) * size.x * 0.44, shelf_top, sin(angle) * size.z * 0.44)
+		# Route blocker B1 (Cloudreach-B, #294): a colliding shelf inside a
+		# drawn-only RockShoulder spur overhung the arrival->lower_west_anchor
+		# road at (-128.4, 205.5, 704.5) and stopped every ordinary walk.
+		# A shelf that would stand in any ground route's walking space is
+		# not built at all (its tree and cover go with it).
+		if i < 3 and _shelf_in_route_headroom(parent.global_transform * shelf, shelf_width * 0.5,
+				shelf_height):
+			shelves_skipped_for_routes += 1
+			continue
 		_mesa(parent, "VegetatedGeologicalShelf%d" % i, shelf - Vector3.UP * shelf_height * 0.5,
 			Vector3(shelf_width, shelf_height, shelf_width * 0.78), _materials["cliff"], _materials["upland"],
 			i<3, seed_value + 131 + i)
@@ -5910,6 +5916,25 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			_apply_tree_palette(tree, seed_value + i)
 			parent.add_child(tree)
 			_set_geometry_visibility(tree, 1050.0)
+
+
+## Whether a colliding shelf whose top centre is `top` (global) would stand in
+## a ground route's walking space: horizontally within the road ribbon plus the
+## shelf's own radius, and vertically overlapping the band from just above the
+## road surface to a walker's headroom (`landmass.route_shelf_headroom_m`).
+func _shelf_in_route_headroom(top: Vector3, radius: float, height: float) -> bool:
+	if _all_route_lines.is_empty():
+		_collect_all_route_lines()
+	var bottom_y := top.y - height
+	var headroom := float(_visual_config.get("landmass", {}).get("route_shelf_headroom_m", 3.2))
+	for line: Dictionary in _lines_near(top.x - radius, top.x + radius, top.z - radius, top.z + radius):
+		var hit := _line_point_xz(line, top)
+		if float(hit["distance"]) > float(line["half_width"]) + radius + 1.0:
+			continue
+		var road_y := float(hit["height"])
+		if bottom_y < road_y + headroom and top.y > road_y + 0.3:
+			return true
+	return false
 
 
 func _cylinder(parent: Node, label: String, centre: Vector3, radius: float, height: float, material: Material) -> MeshInstance3D:
