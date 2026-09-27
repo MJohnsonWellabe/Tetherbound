@@ -244,44 +244,19 @@ func _build_distance_presentation() -> void:
 		flow.build(world.config, flow_config, _game.world.flags)
 
 func _build_heart_chamber() -> void:
-	var crystal := MeshInstance3D.new()
+	# Codex's reference-backed heart crystal (#356 5859533602; cherry-picked
+	# asset from tb/x04-cross-game-visual-sweep 0196a32e4, provenance in
+	# assets/environment/tidewake/heart_crystal/source/). `_crystal` stays the
+	# gameplay parent whose visibility the freed state owns; the authored
+	# crystal is base-origin and ten metres tall, so it sits 5 m below it.
+	var crystal := Node3D.new()
 	_crystal = crystal
 	crystal.name = "CaptiveHeartChamberCrystal"
-	var prism := PrismMesh.new()
-	prism.size = Vector3(5, 10, 5)
-	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(rules.colours.crystal)
-	material.emission_enabled = true
-	material.emission = material.albedo_color
-	material.emission_energy_multiplier = float(rules.get("crystal_glow", 0.3))
-	# The C3 judge read the pale opaque prism as an untextured slab: with a
-	# `crystal_look` it is a deeper, glassy, rim-lit blue (the board's
-	# "Crystal (Subtle)" swatch).
-	var look: Dictionary = rules.get("crystal_look", {})
-	if not look.is_empty():
-		material.albedo_color = Color(str(look.get("albedo", rules.colours.crystal)))
-		material.emission = Color(str(look.get("emission", rules.colours.crystal)))
-		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		material.roughness = float(look.get("roughness", 0.08))
-		material.metallic = float(look.get("metallic", 0.25))
-		material.rim_enabled = true
-		material.rim = float(look.get("rim", 0.6))
-	prism.material = material
-	crystal.mesh = prism
+	var visual: Node3D = preload("res://assets/environment/tidewake/heart_crystal/heart_crystal.tscn").instantiate()
+	crystal.add_child(visual)
+	visual.position.y = -5.0
 	interior.add_child(crystal)
 	crystal.position = _v(rules.crystal_position)
-	# A faceted cluster rather than one smooth prism: smaller shards of the same
-	# material lean out of its base (`crystal_shards`: [x, y, z, w, h, lean_deg, yaw_deg]).
-	for shard: Array in rules.get("crystal_shards", []):
-		var piece := MeshInstance3D.new()
-		piece.name = "CaptiveHeartChamberShard"
-		var shape := PrismMesh.new()
-		shape.size = Vector3(float(shard[3]), float(shard[4]), float(shard[3]))
-		shape.material = material
-		piece.mesh = shape
-		interior.add_child(piece)
-		piece.position = crystal.position + Vector3(float(shard[0]), float(shard[1]), float(shard[2]))
-		piece.rotation = Vector3(0.0, deg_to_rad(float(shard[6])), deg_to_rad(float(shard[5])))
 	if rules.has("crystal_light"):
 		var glow := OmniLight3D.new()
 		glow.name = "HeartCrystalLight"

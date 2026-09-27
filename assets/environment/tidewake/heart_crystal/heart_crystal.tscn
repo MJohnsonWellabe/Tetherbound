@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/environment/tidewake/heart_crystal/heart_crystal.glb" id="1_mesh"]
+[ext_resource type="Shader" path="res://assets/environment/tidewake/heart_crystal/heart_crystal.gdshader" id="2_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mineral"]
+shader = ExtResource("2_shader")
+
+[node name="VeilfallHeartCrystal" type="Node3D"]
+
+[node name="Geometry" parent="." instance=ExtResource("1_mesh")]
+
+[node name="HeartCrystal" parent="Geometry" index="0"]
+material_override = SubResource("ShaderMaterial_mineral")
+
+[editable path="Geometry"]
