@@ -70,11 +70,17 @@ func _detour(id: String) -> String:
 		return "no_plan"
 	var plan: Dictionary = PLAN[id]
 	for attempt in ATTEMPTS:
+		if await _wait_flag(flag, 240):
+			return "cleared"
 		if not await _rest_party_at_camp(str(plan.camp)):
 			return "rest_failed"
 		for point: Vector2 in plan.road:
 			if not await _walk_xz(point, "%s road" % id, 2.5, false):
 				return "road_blocked"
+		# The named wild may have come to us on the road (it is aggressive):
+		# that fight is the named fight, played by the same reader pilot.
+		if await _wait_flag(flag, 240):
+			return "cleared"
 		if not await _ensure_usable_ally(id):
 			return "no_usable_ally"
 		var body := _named_wild(id)
@@ -87,6 +93,8 @@ func _detour(id: String) -> String:
 			float(body.call("body_radius")), radius)
 		if not await _walk_xz(at, "%s engage stance" % id, 1.2, false):
 			return "stance_blocked"
+		if await _wait_flag(flag, 240) or not is_instance_valid(body) or not bool(body.call("is_alive")):
+			return "cleared" if _has(flag) else "defeated_without_receipt"
 		for _frame in 240:
 			if _manager.is_fighting():
 				break
