@@ -5770,7 +5770,8 @@
       "placeholder_species": "voltarach",
       "replacement_point": "named_encounters.capacitor_alpha_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 0.8, "lunge": 5.5, "recovery": 0.6, "attack_cooldown": 0.9, "reposition_distance": 7.0, "reposition_time": 1.6, "power": 7.2},
+      "_why_route_cue_f10": "BOSSES §7: a 1.1 s visible route-line cue before the 0.8 s strike tell. route_cue_seconds draws the dive lane for 1.1 s first (wild_creature.gd, granted on #345); the dive then travels its 5.5 m down that lane (lunge_travels) and locks its heading at 0.25 of the tell like the 0.8 s lane CHARGERs.",
+      "combat": {"route_cue_seconds": 1.1, "lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 5.5, "recovery": 0.6, "attack_cooldown": 0.9, "reposition_distance": 7.0, "reposition_time": 1.6, "power": 7.2},
       "once_only": true
     },
     {
@@ -5787,7 +5788,8 @@
       "placeholder_species": "staticub",
       "replacement_point": "named_encounters.crown_guardian_placeholder",
       "catchable": true,
-      "combat": {"telegraph": 0.85, "recovery": 1.1, "attack_cooldown": 1.6, "chase_speed": 3.4, "reposition_distance": 2.5, "power": 12.0},
+      "_why_guard_stance_f10": "BOSSES §7: a stationary frontal guard stance provides the look. guard_stance draws its frontal cone (its own range and cone) on the ground for the tell; presentation only, no block or damage change (wild_creature.gd, granted on #345). Its numbers are unchanged.",
+      "combat": {"guard_stance": true, "telegraph": 0.85, "recovery": 1.1, "attack_cooldown": 1.6, "chase_speed": 3.4, "reposition_distance": 2.5, "power": 12.0},
       "once_only": true
     },
     {
