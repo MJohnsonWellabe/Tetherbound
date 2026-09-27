@@ -49,6 +49,19 @@ extends SceneTree
 ## rewards and quest-log `done` are re-asserted and each requester is greeted
 ## again by a real walk + Interact to hear the acknowledgement, not a re-offer.
 ## Solo host only.
+## `--continuous` (DRY RUN until it starts from an earned save): inter-island
+## legs are SWUM with real move_forward along the authored water_routes (no
+## position write), Lastlight's materials are gathered from production harvest
+## rows (hand reed, axe driftwood) by walk + Interact, the bed rest goes through
+## the bed's Rest prompt and rest panel (ui_accept / menu_cancel), and Tidecoil
+## is fought for real (tests/helpers/tidewake_b_tidecoil_fight.gd). Remaining
+## fixtures in that mode: the retained five at L43, a carried pickaxe + axe,
+## the upstream flags above plus the Shellwatch and Sluice departure facts, and
+## one landing write after the Tidecoil win if stranded under Deep Watch's
+## cliff (no owned swimmer yet). `--save-dir=user://<dir>` writes a production
+## checkpoint save after each chain (slot 2 of <save-dir>/ck_<chain index>/);
+## `--resume-from=<chain>` loads the previous chain's checkpoint (DRY RUN);
+## `--start-slot=<n>` starts from a save in --save-dir through Game.load_game.
 ## `-- --only=lantern,gull,cradle,garden,deep,lastlight` selects chains; the
 ## PROOF run used one process per chain (each: own world, own save/reload).
 ##   godot --headless --path . --script tests/smoke_tidewake_b_chain_route.gd [-- --only=<chain>]
@@ -86,6 +99,11 @@ var only: PackedStringArray = []
 ## Interact, and the Lastlight rest goes through the bed's real prompt and
 ## rest panel. See CONTINUOUS MODE below.
 var continuous := false
+const CHAINS := ["lantern", "gull", "cradle", "garden", "deep", "lastlight"]
+const CHECKPOINT_SLOT := 2
+const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+var save_dir := ""
+var resume_from := ""
 var swimming: Node
 var swims: Array[String] = []
 
@@ -109,6 +127,19 @@ func _run() -> void:
 	game.current_realm = "water"
 	game.local.character_id = CHARACTER
 	RELOAD.isolate(game, "tidewake_b_chain_route")
+	# Checkpoints (continuous debugging aid): `--save-dir=<dir>` keeps the
+	# production SaveGame in a stable directory; after each chain the run saves
+	# through Game.save_game(CHECKPOINT_SLOT) in <save-dir>/ck_<chain index>/. `--resume-from=<chain>`
+	# loads the checkpoint written after the previous chain through
+	# Game.load_game and runs from <chain> on. A resumed run is a DRY RUN: it is
+	# never the closing proof, which must be one uninterrupted run.
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--save-dir="):
+			save_dir = argument.trim_prefix("--save-dir=")
+		elif argument.begins_with("--resume-from="):
+			resume_from = argument.trim_prefix("--resume-from=")
+	if save_dir != "":
+		game.save_system = SAVE_GAME.new(save_dir.trim_suffix("/") + "/")
 	for upstream: String in ["water_swim_lesson_complete", "water_dock_reedhaven_repaired",
 			"water_dock_brine_steps_trial_won", "water_aquaryn_resolved", "water_dock_salt_crown_landing_charted"]:
 		game.world.flags.set_flag(upstream)
@@ -139,18 +170,61 @@ func _run() -> void:
 	pickups_data = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_pickups.json"))
 	reader = QUEST_LOG.new()
 	reader.set_realm("water")
+	var start_slot := -1
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--start-slot="):
+			start_slot = int(argument.trim_prefix("--start-slot="))
+	if start_slot >= 0:
+		# Start from a declared save through the normal load path (to be
+		# re-pointed at an EARNED Water-arrival save once one exists). Loading
+		# replaces the fixture state set above.
+		var started := bool(game.load_game(start_slot))
+		print("START from save slot %d in %s loaded=%s realm=%s party=%d" % [start_slot, save_dir, started, game.current_realm, game.local.party.size()])
+		if not _check(started and str(game.current_realm) == "water", "start save loads into Water"):
+			_finish()
+			return
+	else:
+		print("DRY RUN - does not count: declared fixture start (see header)")
+	if resume_from != "":
+		var index := CHAINS.find(resume_from)
+		if not _check(index > 0 and save_dir != "", "--resume-from needs a later chain and --save-dir"):
+			_finish()
+			return
+		var base: RefCounted = game.save_system
+		game.save_system = SAVE_GAME.new(_checkpoint_dir(index - 1))
+		var loaded := bool(game.load_game(CHECKPOINT_SLOT))
+		game.save_system = base
+		print("DRY RUN: resumed from checkpoint %s (after %s) loaded=%s" % [_checkpoint_dir(index - 1), CHAINS[index - 1], loaded])
+		if not _check(loaded, "checkpoint loaded"):
+			_finish()
+			return
+		only = PackedStringArray(CHAINS.slice(index))
 	if not await _build_world(WORLD.instantiate()):
 		return
 	await _frames(30)
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--only="):
 			only = argument.trim_prefix("--only=").split(",")
-	if _on("lantern"): summary.append(await _lantern())
-	if _on("gull"): summary.append(await _gull())
-	if _on("cradle"): summary.append(await _cradle())
-	if _on("garden"): summary.append(await _garden())
-	if _on("deep"): summary.append(await _deep_watch())
-	if _on("lastlight"): summary.append(await _lastlight())
+	for index in CHAINS.size():
+		var chain: String = CHAINS[index]
+		if not _on(chain):
+			continue
+		match chain:
+			"lantern": summary.append(await _lantern())
+			"gull": summary.append(await _gull())
+			"cradle": summary.append(await _cradle())
+			"garden": summary.append(await _garden())
+			"deep": summary.append(await _deep_watch())
+			"lastlight": summary.append(await _lastlight())
+		print(summary[-1])
+		if save_dir != "":
+			# SaveGame has 5 slots, so each checkpoint is slot CHECKPOINT_SLOT
+			# in its own directory <save-dir>/ck_<chain index>/.
+			var base: RefCounted = game.save_system
+			game.save_system = SAVE_GAME.new(_checkpoint_dir(index))
+			var saved := bool(game.save_game(CHECKPOINT_SLOT))
+			game.save_system = base
+			print("CHECKPOINT %s slot=%d after %s saved=%s at %s" % [_checkpoint_dir(index), CHECKPOINT_SLOT, chain, saved, player.global_position])
 	await _reload_leg()
 	_finish()
 
@@ -691,7 +765,16 @@ func _walk_attempt(target: Vector3, tolerance: float, label: String, want: Strin
 	var route: Array = plan.points
 	if route.is_empty() and continuous:
 		var hub := _landing(want)
-		if hub.is_finite() and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
+		# First choice: straight to the landing (the way the trainer usually
+		# came from a dock), then the baked-ground plan from the landing.
+		var onward: Array = []
+		if hub.is_finite() and attempt == 0 and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
+			onward = (POCKET.plan_route(world, Vector2(hub.x, hub.z), Vector2(target.x, target.z)).points as Array)
+		if hub.is_finite() and attempt == 0 and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
+			print("WALK %s DIRECT TO %s landing THEN %s (attempt %d)" % [label, want, "PLANNED" if not onward.is_empty() else "DIRECT", attempt + 1])
+			route = [Vector2(hub.x, hub.z)]
+			route.append_array(onward if not onward.is_empty() else [Vector2(target.x, target.z)])
+		elif hub.is_finite() and Vector2(hub.x - from.x, hub.z - from.y).length() > 3.0:
 			var hub_plan: Dictionary = POCKET.plan_route(world, from, Vector2(hub.x, hub.z))
 			if not (hub_plan.points as Array).is_empty():
 				print("WALK %s VIA %s landing (attempt %d)" % [label, want, attempt + 1])
@@ -845,6 +928,10 @@ func _finish() -> void:
 # the real `move_forward` action with the camera yawed at each polyline vertex
 # in turn (rest shoals included), idling to full on any dry vertex, until the
 # far anchor. No position or stamina write.
+
+func _checkpoint_dir(index: int) -> String:
+	return "%s/ck_%d/" % [save_dir.trim_suffix("/"), index]
+
 
 func _route_island(anchor_id: String) -> String:
 	for anchor: Dictionary in config.anchors:
