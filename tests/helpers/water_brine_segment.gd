@@ -211,6 +211,15 @@ func _fight_tovin() -> bool:
 		await _tree.physics_frame
 	_stop_combat_input()
 	if _director.trainer_battle_active():
+		# Diagnostic only: a fighter lost through terrain (combat_arena
+		# hold_inside, fixed on tb/tidewake-b) stalls a fight exactly here.
+		var stalled_ally: Node3D = _director.ally_body()
+		var stalled_enemy: Node3D = _manager.enemy_body()
+		print("WATER BRINE stall: ally=%s enemy=%s ally_hp=%s enemy_hp=%s" % [
+			stalled_ally.global_position if is_instance_valid(stalled_ally) else "none",
+			stalled_enemy.global_position if is_instance_valid(stalled_enemy) else "none",
+			str(_director.ally_instance().hp) if _director.ally_instance() != null else "?",
+			str(stalled_enemy.instance.hp) if is_instance_valid(stalled_enemy) else "?"])
 		return _fail("Tovin combat exceeded 180 seconds after opponents=%s" %
 			str(opponents.values()))
 	if opponents.size() != 2:
