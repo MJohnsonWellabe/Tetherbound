@@ -13,7 +13,9 @@ This is the citation that WORKFLOW §8's "Earned checkpoints are allowed starts"
     - base **10b635d38** (integration-7, 2026-09-25) on the Cloudreach lane's `ralph/cloudreach-earned-c1-save` branch;
     - the `hall` segment ran on **92a977213df6d41f75f06542fe236bc4c314233f** ("earned chain hall: route pre-Sigil rest around the Relay; log B6 and apply B5 ruling step 2", 2026-09-26 12:52 UTC). Its receipt's wall-clock window is 12:52–13:28 UTC.
   - The earlier segments ran on the chain's commits between 10b635d38 and 92a97721; `git log 2950ac0e -- tools/earned_saves` lists them.
-- **Log:** the per-segment receipts committed with the save at 2950ac0e, in `tests/fixtures/earned_saves/checkpoints/seed4_hall/receipts/*.json`. They record flags gained, party, items, position, wall time and disclosures. The raw `/tmp` logs are gone. These committed receipts are offered as the "log"; **the coordinator is asked to confirm that they count.**
+- **Log:** the per-segment receipts committed with the save at 2950ac0e, in `tests/fixtures/earned_saves/checkpoints/seed4_hall/receipts/*.json`. They record flags gained, party, items, position, wall time and disclosures. The raw `/tmp` logs are gone. The coordinator ruled on #356 that these receipts, plus `tools/earned_saves/BLOCKERS.md` and `run_chain.sh` at the recorded commits, count as the producing run's log (Rulings3, 03:17 UTC).
+- **Inferred, not recorded:** the segment receipts carry no commit SHA or timestamp field. That the `hall` segment ran on 92a97721 is inferred from BLOCKERS.md's 12:52–13:28 UTC window and that commit's 12:52:15 time. A clean worktree is not recorded either.
+- **Not part of this checkpoint:** `receipts/warden.json` in the same directory is a later, failed `warden` segment run made after this save was written. No F03 proof uses its output.
 - **No fixtures, position writes, flag/ledger sets or granted parties:**
   - `free_build` is false in every segment.
   - Between-fight care is Satchel use through the menu (`meadows_earned_team_segment.gd::_use_remedy`).
