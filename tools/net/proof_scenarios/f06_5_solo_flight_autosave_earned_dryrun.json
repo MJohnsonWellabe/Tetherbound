@@ -39,9 +39,15 @@
       "peer": 0,
       "action": "party_uids",
       "args": {
-        "remember": "five"
+        "equals": [
+          "creature-f4118d54a2317867246afbf1e8ea834f",
+          "creature-390db8e0de00cd1fcaaf1747203b0768",
+          "creature-c785f517af159966b72ca0f49f61d386",
+          "creature-8e12dace31044e591f02b96391ca2372",
+          "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+        ]
       },
-      "label": "the earned five"
+      "label": "the earned five, as the loaded checkpoint holds them (same UIDs as c1_arrival's PROVENANCE party; literal so the check survives the restart)"
     },
     {
       "peer": 0,
@@ -91,13 +97,6 @@
     },
     {
       "peer": 0,
-      "action": "capture_saves",
-      "args": {
-        "label": "saved_mid_flight"
-      }
-    },
-    {
-      "peer": 0,
       "action": "restart_peer",
       "args": {
         "scene": "title"
@@ -137,7 +136,13 @@
       "peer": 0,
       "action": "party_uids",
       "args": {
-        "equals": "five"
+        "equals": [
+          "creature-f4118d54a2317867246afbf1e8ea834f",
+          "creature-390db8e0de00cd1fcaaf1747203b0768",
+          "creature-c785f517af159966b72ca0f49f61d386",
+          "creature-8e12dace31044e591f02b96391ca2372",
+          "creature-9d1cb676a71c2f31e5555ec9eec9905f"
+        ]
       },
       "label": "RELOAD: exactly the same five UIDs, same order"
     },

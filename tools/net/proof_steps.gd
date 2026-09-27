@@ -1465,10 +1465,11 @@ static func _party_uids(tree: SceneTree, args: Dictionary) -> Dictionary:
 		tree.set_meta(&"proof_party_uids", kept)
 		detail += "; kept as '%s'" % str(args.remember)
 	if args.has("equals"):
-		var name := str(args.equals)
-		if not kept.has(name):
+		# A literal list survives a process restart; a remembered name does not.
+		var name := "literal" if args.equals is Array else str(args.equals)
+		if not (args.equals is Array) and not kept.has(name):
 			return {"verdict": "ERROR", "detail": "no party UIDs kept as '%s'" % name}
-		var want: Array = kept[name]
+		var want: Array = args.equals if args.equals is Array else kept[name]
 		data["equals"] = want == uids
 		if want != uids:
 			return {"verdict": "FAIL", "detail": "%s; '%s' was %s" % [detail, name, str(want)], "data": data}
