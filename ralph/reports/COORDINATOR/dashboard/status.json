@@ -1,8 +1,9 @@
 {
  "updated": "2026-09-27T23:25Z",
  "headline": [
-  "Criteria met: 82 of 101 once batch 67 lands. Batch 67 consolidates every lane's work, partial work included: cards T3 (complete) and C3 run, F08#5 Solmane, F04#0 guardian, plus game fixes across all four chapters. Unit tests once, then CI once.",
-  "Lanes wound down (owner, 22:30). Partial work lands switched off or unwired; the list below says how to pick each item up."
+  "Criteria met: 82 of 101 once batch 67 lands. Batch 67 consolidates every lane's work, partial work included: cards T3, S3 and T1 complete (5 of 13 with M4 and C1), C3 run, F08#5 Solmane, F04#0 guardian, plus game fixes across all four chapters. Unit tests once, then CI once.",
+  "Lanes wound down (owner, 22:30). Partial work lands switched off or unwired; the list below says how to pick each item up.",
+  "Documentation cleaned up in batch 67: every live doc is current and consistent with today's rulings; dated handoffs moved to archive/."
  ],
  "batches": [
   {

@@ -17,8 +17,8 @@ Read this first. Update it in place and keep it under 25KB. No dated status, goa
 
 | Card | State |
 |---|---|
-| M4, C1, T3 | **Complete** (batches 59, 65 and 67). |
-| S1, S3, T1 | Integrated runs passed (batches 64, 63, 63). The cards stay open on their feeders; S1 needs F09#3. |
+| M4, C1, T3, S3, T1 | **Complete.** M4, C1 and T3 in batches 59, 65 and 67. S3 and T1 had their integrated runs in batch 63 and all feeders (F11, F12) met, and are recorded as complete in batch 67. |
+| S1 | Integrated run passed (batch 64); the card waits only on F09#3. |
 | C3 | The Solmane two-peer rerun passed (batch 67). The card waits on F08#3 and F08#4. |
 | M1 | In progress: F01#2/#3 day and night walks need a render and a judge. |
 | M2, S2 | Partial. M2 needs the Hall-exit ruling below; S2 needs F10#2/#3/#4/#6. |
