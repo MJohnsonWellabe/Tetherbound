@@ -1,6 +1,6 @@
 name: Multiplayer wide (3/4 peers)
 
-# Stage B Wave 7 lane 7.A. `docs/specs/MP_NET_HARNESS_CONTRACT.md` §8 and §10.
+# Stage B Wave 7 lane 7.A. `archive/docs/specs-2026-09-19/MP_NET_HARNESS_CONTRACT.md` §8 and §10.
 #
 # THE 3- AND 4-PEER NET SMOKES, AND ONLY THOSE. They are here, in a workflow of
 # their own, rather than as another job in `ci.yml`, for one measured reason:
@@ -42,7 +42,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  # Same pin as ci.yml. See docs/decisions/D01-godot-version-and-renderer.md.
+  # Same pin as ci.yml. See archive/docs/decisions/D01-godot-version-and-renderer.md.
   GODOT_VERSION: 4.7-stable
 
 jobs:

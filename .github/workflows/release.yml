@@ -188,7 +188,7 @@ jobs:
         #
         # The kickoff pair ships in the same zip (D73): the owner downloads the
         # game from the website, unzips, and double-clicks KICKOFF.cmd to run
-        # the whole evidence pass -- docs/acceptance/KICKOFF_RUN.md.
+        # the whole evidence pass -- archive/docs/acceptance/KICKOFF_RUN.md.
         run: |
           set -euo pipefail
           cp tools/owner/KICKOFF.cmd tools/owner/kickoff.ps1 build/windows/
@@ -215,7 +215,7 @@ jobs:
 
             **Evidence run.** Double-click `KICKOFF.cmd` from the same folder
             and walk away; it fetches the repo, plays the chapter with video,
-            and pushes the evidence. See `docs/acceptance/KICKOFF_RUN.md`.
+            and pushes the evidence. See `archive/docs/acceptance/KICKOFF_RUN.md`.
 
             This is a vertical-slice prototype in progress, not a finished game.
 
