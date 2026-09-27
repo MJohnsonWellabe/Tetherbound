@@ -36,6 +36,7 @@
             "give:pickaxe:1",
             "flag:recipe_orb_basic",
             "give:coin:140",
+            "give:fiber:20",
             "flag:mira_shop_open",
             "flag:opening:mira_visited"
           ]
