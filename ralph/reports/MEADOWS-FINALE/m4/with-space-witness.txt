@@ -1,0 +1,44 @@
+# tests/smoke_veridian_offer_choice.gd, headless, one run (disclosed fixture witness for WITH-SPACE accept/refuse).
+# Command: timeout 1200 godot --headless --path . --script res://tests/smoke_veridian_offer_choice.gd
+# Trimmed to scenario/result lines. The process was stopped by the 1200 s timeout (exit 124) during its
+# last sub-check of capacity-accept-release-one (personal receipt alone), before save-while-choice-open; no FAIL was printed.
+
+--- space-accept
+(space-accept) read 'veridian_choice': Step to its shoulder to take it with you, or step back to leave it free. Both are final.
+(space-accept) walked 2.40 m to the accept prompt; offered 'Walk out with the Veridian Stag (final)'
+(space-accept) answered: party 5, veridian 1, receipt legendary_resolution:accepted:character-23077bf085fa2a6f4ad6d62b02feb3f5
+(space-accept) reload: no re-offer, same party, receipts kept
+(space-accept) the personal receipt alone prevents a second offer
+--- space-refuse
+(space-refuse) read 'veridian_choice': Step to its shoulder to take it with you, or step back to leave it free. Both are final.
+(space-refuse) walked 2.40 m to the refuse prompt; offered 'Leave the Veridian Stag free (final)'
+(space-refuse) herd display stands at (398.0, -6.098061, 5869.0) after the answer
+(space-refuse) answered: party 4, veridian 0, receipt legendary_resolution:refused:character-23077bf085fa2a6f4ad6d62b02feb3f5
+(space-refuse) herd display stands at (398.0, -6.098061, 5869.0) after reload
+(space-refuse) reload: no re-offer, same party, receipts kept
+(space-refuse) the personal receipt alone prevents a second offer
+--- capacity-refuse-at-prompt
+(capacity-refuse-at-prompt) read 'veridian_choice': Step to its shoulder to take it with you, or step back to leave it free. Both are final.
+(capacity-refuse-at-prompt) walked 2.40 m to the refuse prompt; offered 'Leave the Veridian Stag free (final)'
+(capacity-refuse-at-prompt) herd display stands at (398.0, -6.098061, 5869.0) after the answer
+(capacity-refuse-at-prompt) answered: party 5, veridian 0, receipt legendary_resolution:refused:character-23077bf085fa2a6f4ad6d62b02feb3f5
+(capacity-refuse-at-prompt) herd display stands at (398.0, -6.098061, 5869.0) after reload
+(capacity-refuse-at-prompt) reload: no re-offer, same party, receipts kept
+(capacity-refuse-at-prompt) the personal receipt alone prevents a second offer
+--- capacity-accept-then-let-newcomer-go
+(capacity-accept-then-let-newcomer-go) read 'veridian_choice': Step to its shoulder to take it with you, or step back to leave it free. Both are final.
+(capacity-accept-then-let-newcomer-go) walked 2.40 m to the accept prompt; offered 'Walk out with the Veridian Stag (final)'
+(capacity-accept-then-let-newcomer-go) herd display stands at (398.0, -6.098061, 5869.0) after the answer
+(capacity-accept-then-let-newcomer-go) answered: party 5, veridian 0, receipt legendary_resolution:refused:character-23077bf085fa2a6f4ad6d62b02feb3f5
+(capacity-accept-then-let-newcomer-go) herd display stands at (398.0, -6.098061, 5869.0) after reload
+(capacity-accept-then-let-newcomer-go) reload: no re-offer, same party, receipts kept
+(capacity-accept-then-let-newcomer-go) the personal receipt alone prevents a second offer
+--- capacity-accept-release-one
+(capacity-accept-release-one) read 'veridian_choice': Step to its shoulder to take it with you, or step back to leave it free. Both are final.
+(capacity-accept-release-one) walked 2.40 m to the accept prompt; offered 'Walk out with the Veridian Stag (final)'
+(capacity-accept-release-one) answered: party 5, veridian 1, receipt legendary_resolution:accepted:character-23077bf085fa2a6f4ad6d62b02feb3f5
+(capacity-accept-release-one) reload: no re-offer, same party, receipts kept
+real	20m0.091s
+user	19m47.197s
+sys	0m15.572s
+exit=124 (timeout)
