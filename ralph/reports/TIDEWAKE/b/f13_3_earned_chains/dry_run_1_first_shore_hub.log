@@ -1,0 +1,63 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+FRESH CAMPAIGN scratch=/root/.local/share/godot/app_userdata/Tetherbound/four_biome_fresh_5249_6909 slot=user://four_biome_fresh_5249_6909/slot_0.json checkpoints=/root/.local/share/godot/app_userdata/Tetherbound/four_biome_checkpoints_5249_6909
+DRY RUN — does not count: declared Water-arrival fixture (tests/helpers/tidewake_b_water_arrival_dry_fixture.gd), not an earned water_arrived save
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+ERROR: Cannot open file 'res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://assets/props/realm_gate_meshy/models/realm_gate_frame.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+SCRIPT ERROR: Cannot call method 'instantiate' on a null value.
+          at: frame (res://scripts/world/realm_gate_presentation.gd:13)
+          GDScript backtrace (most recent call first):
+              [0] frame (res://scripts/world/realm_gate_presentation.gd:13)
+              [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+              [2] _ready (res://scripts/world/realm_gate.gd:77)
+              [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+              [4] _ready (res://scripts/world/water_world.gd:113)
+DRY RUN fixture ready: realm=water player=(0.0, 1.931024, 162.0) party=5
+WATER EARNED OPENING ARRIVED: actual First Shore pose=(0.0, 1.931024, 162.0)
+WATER OPENING BRIEFED through Pell's production dialogue
+WATER EARNED OPENING: Pell and physical lesson complete; swimming=64.676m
+F13#3 VISIT ["lantern"] from (102.6175, 1.915687, 125.547) on first_shore (party=[{"level":46,"nickname":"","species":"terrapup","uid":"creature-08ec4ceb4b73b7fd83800e937add8112"},{"level":46,"nickname":"","species":"bramblebun","uid":"creature-3a2b54a983ff3184ec43eae43bc06a06"},{"level":46,"nickname":"","species":"mudsnout","uid":"creature-d6380fbaf7fe8cdebb5a02013e9421af"},{"level":46,"nickname":"","species":"sparkit","uid":"creature-be52f42b7745af0aba81bfda14545abd"},{"level":46,"nickname":"","species":"sparkit","uid":"creature-708966db7d1043d43bdc5d8dc6e3f2c5"}])
+WALK water_pell DIRECT (no baked-ground plan from (102.6175, 1.915687, 125.547) to (53.368, 2.075612, 151.502))
+WALK water_pell island=first_shore walked=54m legs=1
+TALK water_pell conversation=water_pell_lantern_lead hud='Pell's lead: the dry nook beneath Lantern Cove's rock arch, west of First Shore.'
+WALK start of first_shore_to_lantern_cove_sheltered DIRECT TO first_shore landing THEN DIRECT (attempt 1)
+RETRY start of first_shore_to_lantern_cove_sheltered: stalled at leg 2/2 player=(68.26953, 7.466274, 111.0374) goal=(-145.72, 0.0, 70.778)
+WALK start of first_shore_to_lantern_cove_sheltered VIA first_shore landing (attempt 2)
+RETRY start of first_shore_to_lantern_cove_sheltered: stalled at leg 7/7 player=(69.48221, 6.469292, 111.7854) goal=(-145.72, 0.0, 70.778)
+WALK start of first_shore_to_lantern_cove_sheltered VIA first_shore landing (attempt 3)
+FAIL: start of first_shore_to_lantern_cove_sheltered: walk stalled at leg 7/7 player=(68.26465, 7.71792, 110.4646) goal=(-145.72, 0.0, 70.778)
+FAIL: Lantern: cache claimed by walk + Interact
+FAIL: Lantern: per-character cache receipt
+RETRY water_pell: stalled at leg 1/8 player=(72.224, 5.065613, 117.018) goal=(64.0, 0.0, 116.0)

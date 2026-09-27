@@ -1,0 +1,227 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+DRY RUN - does not count: declared fixture start (see header)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _build_world (res://tests/smoke_tidewake_b_chain_route.gd:214)
+         [2] _run (res://tests/smoke_tidewake_b_chain_route.gd:183)
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+ERROR: Cannot open file 'res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://assets/props/realm_gate_meshy/models/realm_gate_frame.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+SCRIPT ERROR: Cannot call method 'instantiate' on a null value.
+          at: frame (res://scripts/world/realm_gate_presentation.gd:13)
+          GDScript backtrace (most recent call first):
+              [0] frame (res://scripts/world/realm_gate_presentation.gd:13)
+              [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+              [2] _ready (res://scripts/world/realm_gate.gd:77)
+              [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+              [4] _ready (res://scripts/world/water_world.gd:113)
+WALK water_pell DIRECT (no baked-ground plan from (0.0, 1.931193, 162.0) to (53.368, 2.075612, 151.502))
+WALK water_pell island=first_shore walked=53m legs=1
+TALK water_pell conversation=water_pell_lantern_lead hud='Pell's lead: the dry nook beneath Lantern Cove's rock arch, west of First Shore.'
+POSE lantern_cove arrival landing for water:lantern_cove:pickup:002 -> (-267.245, 1.929, 129.805)
+WALK water:lantern_cove:pickup:002 island=lantern_cove walked=204m legs=34
+CLAIM water:lantern_cove:pickup:002 skill_candy_i 0->1
+POSE first_shore arrival landing for water_pell -> (0.0, 2.078572, 162.0)
+WALK water_pell DIRECT (no baked-ground plan from (0.0, 1.931163, 162.0) to (53.368, 2.075612, 151.502))
+WALK water_pell island=first_shore walked=53m legs=1
+TALK water_pell conversation=water_pell_lantern_return hud='Pell marks your Lantern Cove return line. The swim back from the arch is yours to reuse.'
+WALK water_pell island=first_shore walked=0m legs=1
+TALK water_pell conversation=water_pell_lantern_thanks hud=''
+CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks
+POSE brine_steps arrival landing for water_adair -> (267.637, 1.929, 580.191)
+WALK water_adair island=brine_steps walked=455m legs=70
+TALK water_adair conversation=water_adair_gull_lead hud='Adair's request: recover the survey satchel left at Gull Rest, off Reedhaven's sheltered line.'
+POSE gull_rest arrival landing for gull_research_satchel -> (-56.825, 1.929, 789.065)
+WALK gull_research_satchel island=gull_rest walked=125m legs=21
+SITE gull_research_satchel hud='Survey satchel recovered: Adair's current observations. Carry them back on your next Brine Steps passage.'
+WALK water:gull_rest:pickup:002 island=gull_rest walked=4m legs=1
+CLAIM water:gull_rest:pickup:002 skill_candy_ii 0->1
+POSE brine_steps arrival landing for water_adair -> (267.637, 1.929, 580.191)
+WALK water_adair island=brine_steps walked=455m legs=70
+TALK water_adair conversation=water_adair_gull_return hud='Adair charts the safe Gull Rest crossing from the recovered observations.'
+WALK water_adair island=brine_steps walked=0m legs=1
+TALK water_adair conversation=water_adair_gull_thanks hud=''
+CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks
+POSE tidal_cradle arrival landing for water_otto -> (535.497, 1.929, 1352.51)
+WALK water_otto island=tidal_cradle walked=20m legs=4
+TALK water_otto conversation=water_otto_nest_lead hud='Otto's lead: the dry shell nest on Tidal Cradle's upper slope, with exposed Reef Stone.'
+WALK water:tidal_cradle:harvest:007 island=tidal_cradle walked=486m legs=69
+MINE water:tidal_cradle:harvest:007 reef_stone 0->4
+WALK water_otto island=tidal_cradle walked=485m legs=69
+TALK water_otto conversation=water_otto_nest_return hud='Otto shares 3 berries and marks where Mosshell, Riverdrake and Sirenseal swim.'
+WALK water_otto island=tidal_cradle walked=0m legs=1
+TALK water_otto conversation=water_otto_nest_thanks hud=''
+CHAIN side_water_cradle_care PASS reward=berries +3 reef_stone +4 ack=water_otto_nest_thanks
+POSE salt_crown arrival landing for water_edda -> (289.458, 1.929, 2112.224)
+FAIL: water_edda: walk stalled at leg 36/73 player=(72.10811, 38.64928, 2205.018) goal=(76.0, 0.0, 2206.0)
+FAIL: Garden: Edda gives the lead ()
+FAIL: Garden: lead recorded
+FAIL: garden_records_wall visible and offered after the lead
+POSE drowned_garden arrival landing for garden_records_wall -> (1058.315, 1.929, 2249.446)
+WALK garden_records_wall island=drowned_garden walked=220m legs=35
+FAIL: garden_records_wall prompt offered (winner=)
+FAIL: Garden: wall account recorded by walk + Interact
+FAIL: Garden: account message points home: 
+WALK water:drowned_garden:pickup:002 island=drowned_garden walked=3m legs=1
+CLAIM water:drowned_garden:pickup:002 skill_candy_ii 1->2
+POSE salt_crown arrival landing for water_edda -> (289.458, 1.929, 2112.224)
+WALK water_edda island=salt_crown walked=478m legs=73
+TALK water_edda conversation=water_edda_garden_lead hud='Edda's request: copy the account on the Drowned Garden's exposed vault wall and bring it to Salt Crown.'
+FAIL: Garden: Edda hears the account (water_edda_garden_lead)
+FAIL: Garden: completion recorded
+WALK water_edda island=salt_crown walked=0m legs=1
+TALK water_edda conversation=water_edda_garden_reminder hud=''
+FAIL: Garden: quest log done
+CHAIN side_water_garden_records FAIL reward=Candy II +1 ack=return:water_edda_garden_return after=water_edda_garden_reminder
+POSE sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+WALK water_orsen island=sluice_isle walked=998m legs=156
+TALK water_orsen conversation=water_orsen_pre hud=''
+POSE tidecoil stand (fight fixture) -> (1456.812, -0.406972, 3442.196)
+POSE sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+WALK water_orsen island=sluice_isle walked=998m legs=156
+TALK water_orsen conversation=water_orsen_deep_watch_chart_lead hud=''
+POSE deep_watch arrival landing for water:deep_watch:pickup:002 -> (1260.318, 1.929, 3403.144)
+WALK water:deep_watch:pickup:002 island=deep_watch walked=231m legs=31
+CLAIM water:deep_watch:pickup:002 skill_candy_iii 0->1
+WALK deep_watch_chart island=deep_watch walked=218m legs=29
+POSE sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+WALK water_orsen island=sluice_isle walked=998m legs=156
+TALK water_orsen conversation=water_orsen_deep_watch_charted hud=''
+CHAIN side_water_deep_watch_chart PASS reward=Candy III +1 ack=water_orsen_deep_watch_charted
+POSE veilfall arrival landing for water_halen -> (384.311, 1.929, 3805.405)
+WALK water_halen island=veilfall walked=13m legs=2
+TALK water_halen conversation=water_halen_shelter_lead hud='Halen's request: 4 driftwood and 4 reed fiber to roof the creature bed at the landing camp beside Lastlight.'
+WALK lastlight_shelter_supply island=veilfall walked=5m legs=1
+SITE lastlight_shelter_supply hud='The creature bed at the Veilfall camp is sheltered now. Rest a companion there.'
+WALK water_halen island=veilfall walked=1m legs=1
+TALK water_halen conversation=water_halen_shelter_rest hud=''
+WALK veilfall_creature_bed island=veilfall walked=2m legs=1
+WALK water_halen island=veilfall walked=2m legs=1
+TALK water_halen conversation=water_halen_shelter_thanks hud=''
+CHAIN side_water_lastlight_shelter PASS reward=shelter built=true ack=water_halen_shelter_thanks
+[water vegetation] 10437 instances in 1343 model batches; layers={"groundcover":6211,"rocks":654,"shrubs":2755,"trees":817} islands={"brine_steps":651,"deep_watch":535,"drowned_garden":1111,"first_shore":1101,"gull_rest":550,"lantern_cove":718,"reedhaven":1273,"salt_crown":897,"shellwatch":1089,"sluice_isle":996,"tidal_cradle":1509,"veilfall":7}
+[grass_field] grass ring: 57836 instances over 9 lattice layers (tuft_count asked for 54000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2104 instances over 2 lattice layers (count 2200)
+[grass_field] cover tier strand_flowers 1920 instances over 2 lattice layers (count 1800)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 57836 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+ERROR: Cannot open file 'res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn'.
+   at: load (core/io/resource_format_binary.cpp:1156)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://.godot/imported/realm_gate_frame.glb-d8ce9329f843b69c9f1e6a57e7e1d6ea.scn.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+ERROR: Failed loading resource: res://assets/props/realm_gate_meshy/models/realm_gate_frame.glb.
+   at: _load (core/io/resource_loader.cpp:317)
+   GDScript backtrace (most recent call first):
+       [0] frame (res://scripts/world/realm_gate_presentation.gd:12)
+       [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+       [2] _ready (res://scripts/world/realm_gate.gd:77)
+       [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+       [4] _ready (res://scripts/world/water_world.gd:113)
+SCRIPT ERROR: Cannot call method 'instantiate' on a null value.
+          at: frame (res://scripts/world/realm_gate_presentation.gd:13)
+          GDScript backtrace (most recent call first):
+              [0] frame (res://scripts/world/realm_gate_presentation.gd:13)
+              [1] _build_visual (res://scripts/world/realm_gate.gd:229)
+              [2] _ready (res://scripts/world/realm_gate.gd:77)
+              [3] _build_return_gate (res://scripts/world/water_world.gd:300)
+              [4] _ready (res://scripts/world/water_world.gd:113)
+WALK water_pell DIRECT (no baked-ground plan from (0.0, 1.931228, 162.0) to (53.368, 2.075612, 151.502))
+WALK water_pell island=first_shore walked=53m legs=1
+TALK water_pell conversation=water_pell_lantern_thanks hud=''
+POSE brine_steps arrival landing for water_adair -> (267.637, 1.929, 580.191)
+WALK water_adair island=brine_steps walked=455m legs=70
+TALK water_adair conversation=water_adair_gull_thanks hud=''
+POSE tidal_cradle arrival landing for water_otto -> (535.497, 1.929, 1352.51)
+WALK water_otto island=tidal_cradle walked=20m legs=4
+TALK water_otto conversation=water_otto_nest_thanks hud=''
+FAIL: Reload keeps world record water_claim:local:garden_records:complete
+FAIL: Reloaded quest log: Drowned Garden done
+POSE salt_crown arrival landing for water_edda -> (289.458, 1.929, 2112.224)
+WALK water_edda island=salt_crown walked=478m legs=73
+TALK water_edda conversation=water_edda_garden_reminder hud=''
+POSE sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+WALK water_orsen island=sluice_isle walked=998m legs=156
+TALK water_orsen conversation=water_orsen_deep_watch_charted hud=''
+POSE veilfall arrival landing for water_halen -> (384.311, 1.929, 3805.405)
+WALK water_halen island=veilfall walked=13m legs=2
+TALK water_halen conversation=water_halen_shelter_thanks hud=''
+CHAIN side_water_lantern_return PASS reward=Candy I +1 ack=water_pell_lantern_thanks
+CHAIN side_water_gull_research PASS reward=Candy II +1 ack=water_adair_gull_thanks
+CHAIN side_water_cradle_care PASS reward=berries +3 reef_stone +4 ack=water_otto_nest_thanks
+CHAIN side_water_garden_records FAIL reward=Candy II +1 ack=return:water_edda_garden_return after=water_edda_garden_reminder
+CHAIN side_water_deep_watch_chart PASS reward=Candy III +1 ack=water_orsen_deep_watch_charted
+CHAIN side_water_lastlight_shelter PASS reward=shelter built=true ack=water_halen_shelter_thanks
+RELOAD lantern water_pell -> water_pell_lantern_thanks
+RELOAD gull water_adair -> water_adair_gull_thanks
+RELOAD cradle water_otto -> water_otto_nest_thanks
+RELOAD garden water_edda -> water_edda_garden_reminder
+RELOAD deep water_orsen -> water_orsen_deep_watch_charted
+RELOAD lastlight water_halen -> water_halen_shelter_thanks
+POSES (20 disclosed position writes):
+  lantern_cove arrival landing for water:lantern_cove:pickup:002 -> (-267.245, 1.929, 129.805)
+  first_shore arrival landing for water_pell -> (0.0, 2.078572, 162.0)
+  brine_steps arrival landing for water_adair -> (267.637, 1.929, 580.191)
+  gull_rest arrival landing for gull_research_satchel -> (-56.825, 1.929, 789.065)
+  brine_steps arrival landing for water_adair -> (267.637, 1.929, 580.191)
+  tidal_cradle arrival landing for water_otto -> (535.497, 1.929, 1352.51)
+  salt_crown arrival landing for water_edda -> (289.458, 1.929, 2112.224)
+  drowned_garden arrival landing for garden_records_wall -> (1058.315, 1.929, 2249.446)
+  salt_crown arrival landing for water_edda -> (289.458, 1.929, 2112.224)
+  sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+  tidecoil stand (fight fixture) -> (1456.812, -0.406972, 3442.196)
+  sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+  deep_watch arrival landing for water:deep_watch:pickup:002 -> (1260.318, 1.929, 3403.144)
+  sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+  veilfall arrival landing for water_halen -> (384.311, 1.929, 3805.405)
+  brine_steps arrival landing for water_adair -> (267.637, 1.929, 580.191)
+  tidal_cradle arrival landing for water_otto -> (535.497, 1.929, 1352.51)
+  salt_crown arrival landing for water_edda -> (289.458, 1.929, 2112.224)
+  sluice_isle arrival landing for water_orsen -> (650.68, 1.929, 2774.917)
+  veilfall arrival landing for water_halen -> (384.311, 1.929, 3805.405)
+Walked total 8763m with left-stick input
+SWIMS (0 inter-island crossings with real move_forward input):
+RIDES (0 crossings ridden on the owned swimmer):
+Tidewake-B chain route witness: 250 checks, 12 failures
+EXIT 1

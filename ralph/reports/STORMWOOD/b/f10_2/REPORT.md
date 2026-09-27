@@ -62,3 +62,33 @@ These are the ACCEPTANCE C2/C3 bars, applied per fight × starter:
 
 - **Footage slice:** production fight-camera frames and a code-blind judge per fight, for C3 framing and readability.
 - **Optional:** re-run from an earned Stormwood save's party once F09#0 produces one.
+
+## Co-op findings (hosted shared fights)
+
+These were found by reading the hosted path. They are not yet two-peer evidence.
+
+1. **The host ignores the lane outcome.**
+   - Where: `SharedWildHostFight` (through `stormwood_authoritative_fight.gd::_on_enemy_strike`) never reads `take_lunge_outcome()`.
+   - Effect on a `lunge_travels` body: after the charge, the host adds a second impulse and judges the blow with the ordinary cone from where the charge stopped. A co-op player who stepped off the lane can still be hit.
+   - Status: a fix is parked pending a SHARED-FILE REQUEST on #356 (comment 5851571019). `tests/test_stormwood_b_hosted_lunge_outcome.gd` fails 2/3 without the fix and passes 3/3 with it.
+2. **Guests see none of the cues.**
+   - Cause: `SharedOpponentProxy` receives only `present_telegraph`, which draws a ring and plays the anticipation.
+   - Effect: a guest sees no lane, no Capacitor route line (its tell arrives only after the 1.1 s cue) and no Crown guard cone.
+   - Status: a presentation-only fix is proposed as a question on #356 (comment 5851577069).
+
+F10#2 cannot close on two-peer evidence until both are fixed.
+
+## Round 3: Capacitor route cue and Crown guard cone (fixture captures; partial)
+
+This judge round uses fixture captures: teleport placement, a granted L42 party and the storm pinned to Calm. The answers and key are in `JUDGE_ANSWERS_r3.txt`.
+- **Capacitor Alpha:** all five questions PASS.
+  - The route line is visible about 1 s before the warning (i08, i09, i14 show the lane without "incoming"; the warning appears at i15), and the dive runs down it.
+  - Tells measured 0.867 s after the cue on three tells.
+- **Crown Guardian:** (a), (b) and (d) PASS.
+  - The frontal cone shows the covered area, and a pilot outside it is missed.
+  - Tells measured 0.85–0.90 s.
+  - (c) FAILS on HUD occlusion of the companion (V-SW-3).
+  - (e) FAILS on identity: no crown glass, no guard pose, and the body looks like the background herd. Filed as **V-SW-6**.
+- **Across both:** the hit-flash whitening during tells (V-SW-4) recurs.
+
+Every remaining failure is a LOOK row in the Codex queue. The two cues' logic reads as intended.
