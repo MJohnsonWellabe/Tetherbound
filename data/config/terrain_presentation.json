@@ -8,6 +8,11 @@
     "aerial_desaturate": 0.3,
     "aerial_fade_strength": 0.18,
     "_comment_blend": "terrain_ground.gdshader raises each control texel's weight to the power 8 + 56 * blend_sharpness; at terrain_playground.json's 0.5 that is 36, so every 2m texel boundary between two surfaces rendered as a hard polygon edge -- a blind round read the grass on The Rise's rocky crown as 'yellow-grass islands with hard polygonal edges, like camouflage'. 0.12 (exponent about 15) keeps the height-aware blend but feathers the boundary. TUNABLE.",
-    "blend_sharpness": 0.12
+    "blend_sharpness": 0.12,
+    "_comment_steep_rock": "Expose the installed rock material on steep rendered faces, including road-painted cuts. Runtime material only: no height, collision, control paint or bake changes. Ordinary ground above normal.y 0.55 retains its authored material.",
+    "steep_rock_strength": 1.0,
+    "steep_rock_texture_id": 2,
+    "steep_rock_start_y": 0.55,
+    "steep_rock_full_y": 0.25
   }
 }

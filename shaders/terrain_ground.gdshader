@@ -93,6 +93,13 @@ uniform bool flat_terrain_normals = false;
 uniform bool enable_projection = true;
 uniform float projection_threshold : hint_range(0.0, 0.99, 0.01) = 0.8;
 
+// Runtime presentation only: exposed rock on steep rendered faces. Control
+// texel normals can stay flat beside a cliff, so they cannot select this mask.
+uniform float steep_rock_strength : hint_range(0.0, 1.0) = 0.0;
+uniform int steep_rock_texture_id : hint_range(0, 31) = 2;
+uniform float steep_rock_start_y : hint_range(0.0, 1.0) = 0.55;
+uniform float steep_rock_full_y : hint_range(0.0, 1.0) = 0.25;
+
 uniform float mipmap_bias : hint_range(0.5, 1.5, 0.01) = 1.0;
 uniform float depth_blur : hint_range(0.0, 35.0, 0.1) = 0.0;
 uniform float bias_distance : hint_range(0.0, 16384.0, 0.1) = 512.0;
@@ -632,6 +639,51 @@ void fragment() {
 	mat.normal_rough *= weight_inv;
 	mat.normal_map_depth *= weight_inv;
 	mat.ao_strength *= weight_inv;
+
+	// Derivatives are evaluated before the branch, including on ordinary ground.
+	// Use the rasterized face, not a bilerp of adjacent control-cell normals.
+	vec3 rock_dx = dFdx(v_vertex);
+	vec3 rock_dy = dFdy(v_vertex);
+	vec3 rock_face = normalize(cross(rock_dy, rock_dx));
+	float rock_weight = steep_rock_strength * (1.0 - smoothstep(
+		steep_rock_full_y, max(steep_rock_start_y, steep_rock_full_y + 0.001), abs(rock_face.y)));
+	if (rock_weight > 0.001) {
+		int rock_id = steep_rock_texture_id;
+		float rock_scale = _texture_uv_scale_array[rock_id];
+		vec2 side_sign = vec2(rock_face.x < 0.0 ? -1.0 : 1.0, rock_face.z < 0.0 ? -1.0 : 1.0);
+		vec2 side_weight = abs(rock_face.xz);
+		side_weight /= max(side_weight.x + side_weight.y, 0.001);
+		vec2 uv_x = vec2(-side_sign.x * v_vertex.z, -v_vertex.y) * rock_scale;
+		vec2 uv_z = vec2(side_sign.y * v_vertex.x, -v_vertex.y) * rock_scale;
+		vec2 dx_x = vec2(-side_sign.x * rock_dx.z, -rock_dx.y) * rock_scale;
+		vec2 dy_x = vec2(-side_sign.x * rock_dy.z, -rock_dy.y) * rock_scale;
+		vec2 dx_z = vec2(side_sign.y * rock_dx.x, -rock_dx.y) * rock_scale;
+		vec2 dy_z = vec2(side_sign.y * rock_dy.x, -rock_dy.y) * rock_scale;
+		vec4 rock_albedo = textureGrad(_texture_array_albedo, vec3(uv_x, float(rock_id)), dx_x, dy_x) * side_weight.x
+			+ textureGrad(_texture_array_albedo, vec3(uv_z, float(rock_id)), dx_z, dy_z) * side_weight.y;
+		vec4 normal_x = textureGrad(_texture_array_normal, vec3(uv_x, float(rock_id)), dx_x, dy_x);
+		vec4 normal_z = textureGrad(_texture_array_normal, vec3(uv_z, float(rock_id)), dx_z, dy_z);
+		rock_albedo.rgb *= _texture_color_array[rock_id].rgb;
+		float rock_rough = clamp(normal_x.a * side_weight.x + normal_z.a * side_weight.y
+			+ _texture_roughness_mod_array[rock_id], 0.0, 1.0);
+		normal_x.xyz = normal_x.xyz * 2.0 - 1.0;
+		normal_z.xyz = normal_z.xyz * 2.0 - 1.0;
+		// Signed world bases match each projection. Reorient their detail onto
+		// the existing smooth (or configured flat) normal: neutral maps must
+		// preserve terrain lighting on all four wall orientations.
+		vec3 detail = vec3(0.0, normal_x.y, -side_sign.x * normal_x.x) * side_weight.x
+			+ vec3(side_sign.y * normal_z.x, normal_z.y, 0.0) * side_weight.y;
+		vec3 surface_normal = normalize(mat3(INV_VIEW_MATRIX) * NORMAL);
+		detail -= surface_normal * dot(surface_normal, detail);
+		float detail_z = normal_x.z * side_weight.x + normal_z.z * side_weight.y;
+		vec3 detail_view = mat3(VIEW_MATRIX) * normalize(surface_normal * max(detail_z, 0.01) + detail);
+		vec3 rock_normal = vec3(dot(detail_view, normalize(TANGENT)),
+			dot(detail_view, normalize(NORMAL)), dot(detail_view, normalize(BINORMAL)));
+		mat.albedo_height = mix(mat.albedo_height, rock_albedo, rock_weight);
+		mat.normal_rough = mix(mat.normal_rough, vec4(rock_normal, rock_rough), rock_weight);
+		mat.normal_map_depth = mix(mat.normal_map_depth, _texture_normal_depth_array[rock_id], rock_weight);
+		mat.ao_strength = mix(mat.ao_strength, _texture_ao_strength_array[rock_id], rock_weight);
+	}
 
 	// Macro variation. 2 lookups
 	vec3 macrov = vec3(1.);
