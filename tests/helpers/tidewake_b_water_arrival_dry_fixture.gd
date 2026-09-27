@@ -12,12 +12,15 @@ extends RefCounted
 ## Stormwood world facts through the production ledger, five carried
 ## creatures at the Tidewake entry band (one duplicate species so the earned
 ## swimmer preparation's farewell policy has a candidate, as in the earned
-## run), carried knife/axe/pickaxe on the hotbar, then the production router
+## run), carried knife/axe/pickaxe on the hotbar, a carried stack of Greater
+## Orbs (the earned Stormwood arrival still holds orbs; DRY RUN 8 stalled at
+## the swimmer throw with none), then the production router
 ## `enter_realm("water", "water_arrival_from_stormwood")`. Everything after
 ## this point is the unchanged earned Water stage.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const ENTRY_LEVEL := 55
+const ENTRY_ORBS := 8
 const ENTRY_PARTY: Array[String] = ["terrapup", "bramblebun", "mudsnout", "sparkit", "sparkit"]
 const COMPLETED_STORMWOOD_FLAGS: Array[String] = ["stormwood:marrow_defeated", "stormwood:legendary_freed",
 	"realm_heart_stormwood_earned", "stormwood:long_storm_ended", "stormwood:legendary_offer_made",
@@ -44,6 +47,7 @@ func start(tree: SceneTree, game: Node) -> Dictionary:
 		game.get("party").call("add", creature)
 	for item_id: String in ["knife", "axe", "pickaxe"]:
 		game.get("inventory").call("add", item_id, 1)
+	game.get("inventory").call("add", "orb_greater", ENTRY_ORBS)
 	game.call("assign_hotbar", 0, "knife")
 	game.call("assign_hotbar", 1, "axe")
 	game.call("assign_hotbar", 2, "pickaxe")
