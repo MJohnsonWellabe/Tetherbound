@@ -356,7 +356,9 @@ func _assign_with_retry(party_index: int, member: RefCounted) -> bool:
 		if attempt == BED_ATTEMPTS - 1:
 			break
 		_driver.failures.clear()
-		for _frame in 180:
+		# Long enough for a wandering wild to leave the bed (CI r16: a
+		# Mudsnout held bed 2's prompt through three 3 s waits).
+		for _frame in 600:
 			await _tree.physics_frame
 		var roll := _bedroll.get_node_or_null("Interactable") as Node3D
 		if roll != null:

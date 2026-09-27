@@ -323,6 +323,8 @@ const SPIKE_BYPASS: Array[Vector2] = [Vector2(-409.0, 2512.0)]
 
 
 const BANK_RISE_M := 1.5
+const GO_AROUND_M := 10.0
+var _going_around := false
 const MAX_WILD_LOSSES := 3
 var _wild_losses := 0
 
@@ -512,6 +514,30 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort :
 	_stick(0.0, 0.0)
 	if _sidestepping or best_effort:
 		return false  # Best effort; the leg or stand search it serves resumes.
+	# A route leg that ran out of budget gets one go-around before it fails:
+	# ten metres to either side of the heading, then the target again, as a
+	# player walks round whatever the straight line keeps meeting (CI r14/r15:
+	# the quarry approach near (394,1797) and the relay exit toward (-152,4170)).
+	if not _going_around:
+		_going_around = true
+		var at := _player.global_position
+		var heading := target - at
+		heading.y = 0.0
+		var side := Vector3(-heading.z, 0.0, heading.x).normalized() * GO_AROUND_M
+		for sign: float in [1.0, -1.0]:
+			var aside := Vector2(at.x + side.x * sign, at.z + side.z * sign)
+			_receipt("leg_go_around", {"player": at, "target": target, "aside": aside})
+			await _walk(Vector3(aside.x, float(_world.call("ground_height_at", aside.x, aside.y)), aside.y), 1.5, SIDESTEP_FRAMES, true)
+			if not _failures.is_empty():
+				_going_around = false
+				return false
+			if await _walk(target, radius, -1, true):
+				_going_around = false
+				return true
+			if not _failures.is_empty():
+				_going_around = false
+				return false
+		_going_around = false
 	return _fail("Ordinary quarry/Warrens movement did not reach %s; player=%s" % [target, _player.global_position])
 
 
