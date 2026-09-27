@@ -1,0 +1,32 @@
+[village-walk] OPENING title interactive
+[village-walk] OPENING answered the returning-player fresh-game confirmation
+[village-walk] OPENING answered the character-choice step
+[village-walk] OPENING confirmed the configured trainer-name prefill
+[village-walk] OPENING new game world entered
+[village-walk] OPENING wake/Get Up complete
+[village-walk] OPENING Grandpa briefing and pack complete
+[village-walk] OPENING starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+[village-walk] OPENING starter selected and named (terrapup, uid creature-756c7bb83a8914293c3e4bfa562b1756)
+[village-walk] OPENING Grandpa's first-catch supplies received (50 Basic Orbs)
+[village-walk] OPENING usable house/front doorway exited
+[village-walk] OPENING played: starter=terrapup at (-16.13398, 1.200746, -15.92304)
+[village-walk] OPENING companion put away: true
+[village-walk] START route=visits time=day capture_dir=/tmp/claude-0/hl headless=true path_m=2.5 road_arcs=[inf,-inf] events=0
+[village-walk] VISITS Grandpa, Mira, Oskar, Tam, Bram, Halda, the old key, Practice Meadow camp, gate RoadGate, gate PondGate, gate TrailGate
+[village-walk] VISIT Grandpa kind=grandpa dist_m=1.66 prompt="Talk to Grandpa"
+[village-walk] NOTE pressed interact on "Open Door" at (-2.9,-7.6)
+[village-walk] VISIT Bram kind=villager dist_m=2.24 prompt="Greet Bram"
+[village-walk] VISIT Tam kind=villager dist_m=1.65 prompt="Greet Tam"
+[village-walk] NOTE pressed interact on "Open Door" at (14.4,4.5)
+[village-walk] VISIT Mira kind=villager dist_m=2.34 prompt="Greet Mira"
+[village-walk] VISIT Oskar kind=villager dist_m=1.63 prompt="Greet Oskar"
+[village-walk] VISIT Halda kind=villager dist_m=1.65 prompt="Greet Halda"
+[village-walk] NOTE key-take: pressed interact on "Take the old key" at 1.28m; satchel has key=true
+[village-walk] VISIT the old key kind=key dist_m=1.28 prompt="Take the old key"
+[village-walk] NOTE pressed interact on "Try the gate" at gate RoadGate; road_gate_open=true
+[village-walk] VISIT gate RoadGate kind=gate dist_m=0.47 prompt="Try the gate"
+[village-walk] VISIT Practice Meadow camp kind=camp dist_m=2.96 prompt="-"
+[village-walk] NOTE sidestep 1 at (23.0,-31.3) -- bodies near: Spawned/Trainers/Trainer_1, Wild_mudsnout_1070_2
+[village-walk] VISIT gate TrailGate kind=gate dist_m=0.50 prompt="-"
+[village-walk] VISIT gate PondGate kind=gate dist_m=0.51 prompt="-"
+[village-walk] PASS route=visits time=day captures=92 max_off_road_m=0.00 visited=11
