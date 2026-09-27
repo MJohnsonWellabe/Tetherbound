@@ -120,17 +120,8 @@ func _dialogue_finished(id: String) -> void:
 		return
 	# Rook's return completes the circuit and pays this character's TM; his
 	# thanks pays any character still owed (stormwood_rook_circuit_reward.gd).
-	if _rook_reward != null:
-		if bool(_rook_reward.call("dialogue_finished", id, self)):
-			return
-	else:
-		# No reward node (a chapter built without its world mount): the story
-		# still advances exactly as before; only the TM payment needs the node.
-		var rook: Dictionary = ROOK_REWARD.outcome_for(id)
-		if not rook.is_empty():
-			for event: String in rook.events:
-				events.emit_event(event)
-			return
+	if _rook_reward != null and bool(_rook_reward.call("dialogue_finished", id, self)):
+		return
 	if id == WEN_RECORDS_RETURN_CONVERSATION:
 		events.emit_event("side:stormwood_crown_remembers:step_3")
 		return
