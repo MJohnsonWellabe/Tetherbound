@@ -15,7 +15,7 @@ extends SceneTree
 ##     --activity=bram --save=/abs/S04-exit.json --capture-dir=/abs/out
 ##   (--save also takes res://tests/fixtures/f03_lure_saves/<name>.json.gz)
 ##
-## `--activity`    bram | herd | vault | doss | juno | hall
+## `--activity`    bram | herd | vault | doss | juno | hall | cart
 ## `--save`        absolute path of a real `S0x-exit.json` (copied, unmodified,
 ##                 into slot 1 of a scratch save directory, then loaded)
 ## `--capture-dir` absolute directory for the PNG frames
@@ -118,10 +118,10 @@ func _run() -> void:
 			_act = true
 		elif a.begins_with("--capture-dir="):
 			_capture_dir = a.trim_prefix("--capture-dir=")
-	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall"] \
+	if not _activity in ["bram", "herd", "vault", "doss", "juno", "hall", "cart"] \
 			or not _save_path.is_absolute_path() or not FileAccess.file_exists(_save_path) \
 			or not _capture_dir.is_absolute_path():
-		print("[lure-walk] FAIL usage: --activity=bram|herd|vault|doss|juno|hall --save=/abs/file --capture-dir=/abs/dir")
+		print("[lure-walk] FAIL usage: --activity=bram|herd|vault|doss|juno|hall|cart --save=/abs/file --capture-dir=/abs/dir")
 		quit(2)
 		return
 	if DisplayServer.get_name() == "headless":
@@ -262,6 +262,13 @@ func _resolve_lure() -> void:
 			_lure_body = _herd_member()
 		"doss":
 			_lure = _world.get_node_or_null(^"RiverNestClear/Doss") as Node3D
+		"cart":
+			# WORLD §11's band1 broken cart: the wagon off the bridge road.
+			_lure = _world.get_node_or_null(^"BrokenCart") as Node3D
+			if _lure != null:
+				var wagon := _lure.find_child("Wagon", true, false) as Node3D
+				if wagon != null:
+					_lure_body = wagon
 		"vault":
 			var warrens := _world.get_node_or_null(^"BurrowWarrens")
 			if warrens != null:
