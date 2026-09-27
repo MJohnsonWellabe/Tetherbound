@@ -366,9 +366,9 @@
    "criteria": [
     {
      "text": "Starts from the earned Meadows handoff save",
-     "status": "not_started",
-     "evidence": "No earned M4 save exists (M4 open)",
-     "gap": "Earned handoff save"
+     "status": "partial",
+     "evidence": "Relaxed rule (owner 2026-09-27). tests/fixtures/earned_saves/c1_arrival PROVENANCE (injections 0, seed 4) built from the earned seed4_hall checkpoint; ralph/reports/CLOUDREACH/b/f06-1-foot-regions/earned/run.txt CONTINUOUS PASS from the save via the production title Load. Shortcuts disclosed: checkpoint joins (seed4_hall, village_pre_kell, storm_road_join) with two failed leg tails discarded, routing detours B1-B16, Load pressed by signal. Also carries the earned full-route A7 corroboration for F07#3 (0 intervals over 120 s). Independent re-check: MET.",
+     "gap": "Landing in batch 54."
     },
     {
      "text": "Ordinary foot path traverses all six regions",
