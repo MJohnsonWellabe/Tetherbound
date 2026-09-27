@@ -38,6 +38,12 @@ var _policy := "QUICK"
 ## (e.g. Calder needs `water_dock_salt_crown_landing_charted`).
 var _extra_flags: PackedStringArray = []
 var _reader: RefCounted
+## --render-only-saves: the render loop is off during the fight and turned on
+## only for the few frames around each saved image. llvmpipe drawing every
+## physics tick at 1080p ran ~200x slower than the fight clock; the fight
+## itself (physics, AI, pilot, camera _process) is unchanged.
+var _sparse := false
+const SPARSE_WARM_FRAMES := 3
 
 var _out := ""
 var _interval := 1.0
@@ -69,6 +75,7 @@ func _run() -> void:
 		elif arg.begins_with("--pilot="): _policy = arg.trim_prefix("--pilot=").to_upper()
 		elif arg.begins_with("--cap-s="): _fight_cap_s = maxf(30.0, float(arg.trim_prefix("--cap-s=")))
 		elif arg.begins_with("--flags="): _extra_flags = arg.trim_prefix("--flags=").split(",", false)
+		elif arg == "--render-only-saves": _sparse = true
 	if ids.is_empty() or _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --trainer=, --out= and a rendering display")
 		quit(1)
@@ -175,6 +182,8 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 			_reader._entry_maxima[member.get_instance_id()] = float(member.max_hp)
 		manager.hit_landed.connect(_reader._on_hit)
 		manager.state_changed.connect(_reader._on_state_changed)
+	if _sparse:
+		RenderingServer.render_loop_enabled = false
 	while director.trainer_battle_active() and _fight_t < _fight_cap_s and saved < _max_frames:
 		var enemy: Node3D = manager.enemy_body()
 		var ally: Node3D = director.ally_body()
@@ -222,6 +231,7 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 		tick += 1
 		await physics_frame
 		_fight_t += 1.0 / Engine.physics_ticks_per_second
+	RenderingServer.render_loop_enabled = true
 	_release()
 	if _reader != null:
 		_reader._release_attack()
@@ -243,9 +253,15 @@ func _winding_up(enemy: Node3D) -> bool:
 
 
 func _save(dir: String, tag: String, t: float, enemy: Node3D, ally: Node3D, tell: Dictionary) -> int:
+	if _sparse:
+		RenderingServer.render_loop_enabled = true
+		for i in SPARSE_WARM_FRAMES:
+			await RenderingServer.frame_post_draw
 	await RenderingServer.frame_post_draw
 	var name := "%s-%06.2f.png" % [tag, t]
 	var image := root.get_viewport().get_texture().get_image()
+	if _sparse:
+		RenderingServer.render_loop_enabled = false
 	if image == null or image.save_png(dir.path_join(name)) != OK:
 		return 0
 	var gap := -1.0
