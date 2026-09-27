@@ -40,7 +40,7 @@
         "sky_top":"#544d7b","sky_horizon":"#706992","sky_ground_horizon":"#635c85",
         "ceiling_colour":"#696094","ceiling_opacity":1.0,"ceiling_speed":0.03,"ceiling_contrast":0.5,"ceiling_breakup":0.0,
         "rain_visible":true,"rain_amount":0.65,"flashes":false,"wind":0.85,"sheet_glow":0.22,"sheet_glow_rate":0.35,"steam":0.0,"afterglow":0.0,"intensity":0.65},
-      "break": {"sun_energy_mult":0.2,"ambient_colour":"#8a88b8","ambient_energy_mult":0.38,"fog_density_add":0.0026,
+      "break": {"sun_energy_mult":0.2,"ambient_colour":"#8a88b8","ambient_energy_mult":0.44,"fog_density_add":0.0026,
         "sky_top":"#534984","sky_horizon":"#696192","sky_ground_horizon":"#5d5486",
         "ceiling_colour":"#625897","ceiling_opacity":1.0,"ceiling_speed":0.045,"ceiling_contrast":0.55,"ceiling_breakup":0.0,
         "rain_visible":true,"rain_amount":1.0,"flashes":true,"wind":1.0,"sheet_glow":0.9,"sheet_glow_rate":0.8,"steam":0.0,"afterglow":0.0,"intensity":1.0},
