@@ -849,6 +849,11 @@ func _place_fighters() -> void:
 ## follower stranded on the route must still enter the fight it is asked to
 ## pilot. Use the same contained, grounded ally spot as ordinary combat without
 ## moving the enemy or stepping the trainer aside.
+## How far a realm fight seats the player's creature beside the trainer's line
+## to the shared opponent (see `_place_realm_owned_ally`).
+const REALM_SEAT_LATERAL_M := 2.4
+
+
 func _place_realm_owned_ally() -> void:
 	var cfg: Dictionary = MATH.config().get("arena", {})
 	var ally_spot: Vector3 = _staging_spots(cfg)[0]
@@ -865,6 +870,18 @@ func _place_realm_owned_ally() -> void:
 			var deploy := float(cfg.get("deploy_offset", 2.6))
 			ally_spot = _combat_position(_player) \
 				+ away * _staging_reach(_combat_position(_player), away, deploy)
+	# F14#0 C3 (#356 grant 5860240387, Aquaryn): spot 0 is on the trainer's
+	# own line to the shared opponent, and the fight camera sits behind the
+	# ally, so the ally opened every realm fight squarely between the lens and
+	# the target (judge r1: 3 of 4 framing fails in the first 1.6 s). Seat it
+	# beside that line instead, on the side with room.
+	var line := enemy_at - _combat_position(_player)
+	line.y = 0.0
+	if line.length_squared() > 0.001 and REALM_SEAT_LATERAL_M > 0.0:
+		var side := Vector3(-line.z, 0.0, line.x).normalized()
+		var right := _staging_reach(ally_spot, side, REALM_SEAT_LATERAL_M)
+		var left := _staging_reach(ally_spot, -side, REALM_SEAT_LATERAL_M)
+		ally_spot += side * right if right >= left else -side * left
 	_ally_body.visible = true
 	_place(_ally_body, ally_spot)
 	_ally_body.call("face_towards", _combat_position(_wild))
