@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-27 13:20 UTC",
+ "updated": "2026-09-27 13:50 UTC",
  "headline": [
-  "Criteria met: 74 of 101 (counted at merge). F10#5 landed in batch 56. Stormwood-B's fight-camera fix (95664d01) unblocks F10#2, F14#0, F14#1 and the F04 Meadows fights; every lane is on a coding task; renders go to the owner's desktop GPU.",
+  "Criteria met: 75 of 101 (counted at merge). F14#2 landed in batch 57. Batches 54-55 confirmed by green full CI 5709.",
   "Next: F10#5 (re-check MET) lands after that CI. Stormwood-B pushed the fight-camera fix (95664d01), which unblocks F10#2, F14#0, F14#1 and the F04 Meadows fights. Every lane is on a coding task; renders go to the owner's desktop GPU via Codex.",
   "Rules: relaxed proofs with disclosed shortcuts; independent re-check per close; one render per lane; a green full CI on main flips a criterion."
  ],

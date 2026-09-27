@@ -814,9 +814,9 @@
     },
     {
      "text": "Water/current network visibly changes and persists",
-     "status": "partial",
-     "evidence": "Relic shrine placement/activation 35-check (scorecard)",
-     "gap": "Visible current change not shown in frames; no code-blind judge verdict (W1). (strict re-score 23:40)",
+     "status": "met",
+     "evidence": "Relaxed rule (owner 2026-09-27). ralph/reports/TIDEWAKE/b/f14_2_visible_current/JUDGE_VERDICT.md: code-blind judge picks the live current as rougher at a glance (randomised A/B); smoke_tidewake_b_current_restore 77 checks, 0 failures incl. production save/load persistence. Shortcuts disclosed: flag flipped through the world flag store, shader clock pinned, CameraRig off with Camera3D placed directly, trainer and HUD hidden, software-GL frames. Independent re-check: MET.",
+     "gap": "Merged in batch 57; counted at merge.",
      "note": "Landing in batch 30 (#316): READY, review pass, local smoke green. MET after full CI on main."
     },
     {
