@@ -659,8 +659,9 @@
       "selection_key": "cloudreach.wild.summit_restored",
       "replaceable": true,
       "catchable": true,
-      "requires_unlock": "cloudreach_winds_restored",
+      "requires_unlock": "captain_veyra_defeated",
       "_why_cadence_f07": "Aftermath consequence (WORLD 4.3, restored wind reconnects the routes): once the winds return, summit wildlife comes back to the stronghold loop the player walks from the finale deck to the Waterward overlook. Same species, weights and level band as cloudreach_summit_wild; only the gate differs, so these pairs never appear before Veyra falls.",
+      "_why_gate_0927": "F07#3: gated on captain_veyra_defeated, not cloudreach_winds_restored. The finale sets winds_restored only on physical arrival at the overlook (cloudreach_finale_controller.gd::witness_restoration), so under that gate these pairs could never appear on the walk TO the overlook they exist for. The full live continuous DRY RUN measured that walk at 161 s with no action (ralph/reports/CLOUDREACH/f07-a7-full-route/).",
       "entries": [
         {"role": "summit_sentinel", "placeholder_species": "solmane", "weight": 2, "roster_identity": "legendary"},
         {"role": "engine_scavenger", "placeholder_species": "breezetail", "weight": 2},

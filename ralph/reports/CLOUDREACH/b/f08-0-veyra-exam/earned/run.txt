@@ -1,0 +1,5 @@
+F08#0 WITNESS PASS veyra=true relays={"cloudreach_summit_relay_crown_disabled":true,"cloudreach_summit_relay_east_disabled":true,"cloudreach_summit_relay_west_disabled":true}
+CLOUDREACH CONTINUOUS PASS from_save=res://tests/fixtures/earned_saves/c1_arrival stage=complete distance_m=16016.3 dead_travel_max_s=153.8
+EXIT 0
+timeout 10800 /tmp/claude-0/godot_slot.sh $HOME/godot-bin/godot --headless --path . --script tests/smoke_cloudreach_veyra_exam_witness.gd -- --from-save=res://tests/fixtures/earned_saves/c1_arrival  --live-combat --accelerated > /tmp/claude-0/runs/e_veyra_exam/log.txt 2>&1
+run code: tb/cloudreach-b 581fdfa7 (tb/cloudreach merged; witness/test code identical to 797002bd)

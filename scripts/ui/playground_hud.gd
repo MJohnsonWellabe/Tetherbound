@@ -4638,7 +4638,10 @@ func _read_world_hotkeys() -> void:
 	# (the arbiter is disabled in all three, and `allow_armed_build` defaults
 	# to false here) -- the same input_owner path, not a parallel one that
 	# could disagree with it and soft-lock the world.
-	if Input.is_action_just_pressed(&"build_shortcut") and not _build_menu_is_open():
+	# X03: LT is also `fly_descend`. While flight or a carry owns the triggers
+	# (`input_owner.gd::traversal`) the pull is theirs, never the catalogue's.
+	if Input.is_action_just_pressed(&"build_shortcut") and not _build_menu_is_open() \
+			and INPUT_OWNER.traversal(get_tree()) == null:
 		BUILD_MENU.get_or_make(get_tree()).call_deferred("open")
 		return
 	if Input.is_action_just_pressed(&"torch_place"):

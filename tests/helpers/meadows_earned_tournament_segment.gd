@@ -7,6 +7,10 @@ var _marshal: Node3D
 var _dialogue_finished := ""
 var _hits := 0
 var _round_wins := 0
+## Optional mid-bracket recovery the caller owns (its paid camp): returns a
+## segment result. Called only when an entrant is not condition-ready before a
+## round -- fainting in the previous round clears rest, as in play.
+var recover: Callable
 
 
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
@@ -118,6 +122,19 @@ func _fight_the_bracket() -> bool:
 
 func _fight_and_win(spec: Dictionary) -> bool:
 	var trainer_id := str(spec["trainer"])
+	if not TOURNAMENT.condition_ready(_party):
+		var before := Array(TOURNAMENT.readiness_report(_party))
+		if not recover.is_valid():
+			_fail("an entrant is not ready for %s and no camp recovery was given: %s" % [trainer_id, str(before)])
+			return false
+		var recovered: Dictionary = await recover.call()
+		if not bool(recovered.get("passed", false)) or not TOURNAMENT.condition_ready(_party):
+			_fail("camp recovery before %s failed: %s; readiness %s" % [trainer_id,
+				str(recovered.get("failures", [])), str(Array(TOURNAMENT.readiness_report(_party)))])
+			return false
+		var receipt := "recovered before %s: %s" % [trainer_id, str(before)]
+		transcript.append(receipt)
+		print("EARNED TOURNAMENT — ", receipt)
 	await _play(str(spec["conversation"]))
 	if not failures.is_empty():
 		return false
