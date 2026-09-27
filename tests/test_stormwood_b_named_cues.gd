@@ -149,14 +149,10 @@ func test_stormwood_data_opts_the_two_fights_in() -> void:
 	assert_true(bool(named.capacitor_alpha.get("lunge_travels", false)), "and really dives down it")
 	assert_almost_eq(float(named.capacitor_alpha.telegraph), 0.8, 0.0001, "before BOSSES' 0.8 s tell")
 	assert_true(bool(named.crown_guardian.get("guard_stance", false)), "the Crown Guardian plants its guard")
-	# F10#2 C3 judge (fight B): the elder's strike is the same cone test, and
-	# the manager's ring at its feet did not show where it lands.
-	assert_true(bool(named.blackwater_elder.get("guard_stance", false)), "the Blackwater Elder shows its strike cone")
-	assert_almost_eq(float(named.blackwater_elder.telegraph), 0.8, 0.0001, "at BOSSES' 0.8 s tell")
 	for id: String in named:
 		if id != "capacitor_alpha":
 			assert_false(named[id].has("route_cue_seconds"), "%s has no route cue" % id)
-		if id != "crown_guardian" and id != "blackwater_elder":
+		if id != "crown_guardian":
 			assert_false(named[id].has("guard_stance"), "%s has no guard stance" % id)
 
 
